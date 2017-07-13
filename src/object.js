@@ -94,7 +94,7 @@ Entry.EntryObject = function(model) {
                 };
                 image.onerror = function(err) {
                     Entry.Loader.removeQueue();
-                }
+                };
             })(this.pictures[i]);
 
             Entry.requestUpdate = true;
@@ -1020,15 +1020,21 @@ Entry.EntryObject = function(model) {
     p.removePicture = function(pictureId) {
         if (this.pictures.length < 2)
             return false;
+
+        var playground = Entry.playground;
+
         var picture = this.getPicture(pictureId);
         var index = this.pictures.indexOf(picture);
+
         this.pictures.splice(index, 1);
         if (picture === this.selectedPicture)
-            Entry.playground.selectPicture(this.pictures[0]);
+            playground.selectPicture(this.pictures[0]);
 
-        Entry.playground.injectPicture(this);
-        Entry.playground.reloadPlayground();
+        Entry.container.unCachePictures(
+            this.entity, picture);
 
+        playground.injectPicture(this);
+        playground.reloadPlayground();
         return true;
     };
 
@@ -1228,46 +1234,37 @@ Entry.EntryObject = function(model) {
      * @param {?xml block} script
      */
     p.addCloneEntity = function(object, entity, script) {
-        if (this.clonedEntities.length > Entry.maxCloneLimit) return;
+        if (this.clonedEntities.length > Entry.maxCloneLimit)
+            return;
 
         var clonedEntity = new Entry.EntityObject(this);
-        if (entity) {
-            clonedEntity.injectModel(
-                entity.picture ? entity.picture : null,
-                entity.toJSON()
-            );
-            clonedEntity.snapshot_ = entity.snapshot_;
-            if (entity.effect) {
-                clonedEntity.effect = Entry.cloneSimpleObject(entity.effect);
-                clonedEntity.applyFilter();
-            }
-            if(entity.brush) {
-                Entry.setCloneBrush(clonedEntity, entity.brush);
-            }
-        } else {
-            clonedEntity.injectModel(
-                this.entity.picture ? this.entity.picture : null,
-                this.entity.toJSON(clonedEntity)
-            );
-            clonedEntity.snapshot_ = this.entity.snapshot_;
-            if (this.entity.effect) {
-                clonedEntity.effect = Entry.cloneSimpleObject(this.entity.effect);
-                clonedEntity.applyFilter();
-            }
-            if(this.entity.brush) {
-                Entry.setCloneBrush(clonedEntity, this.entity.brush);
-            }
-        }
-        Entry.engine.raiseEventOnEntity(
-            clonedEntity, [clonedEntity, 'when_clone_start']
+
+        entity = entity || this.entity;
+
+        clonedEntity.injectModel(
+            entity.picture ? entity.picture : null,
+            entity.toJSON()
         );
-        //Entry.engine.pushQueue(
-            //clonedEntity, [clonedEntity, 'when_clone_start']);
+        clonedEntity.snapshot_ = entity.snapshot_;
+        if (entity.effect) {
+            clonedEntity.effect = Entry.cloneSimpleObject(entity.effect);
+            clonedEntity.applyFilter();
+        }
+        if (entity.brush)
+            Entry.setCloneBrush(clonedEntity, entity.brush);
+
+        Entry.engine.raiseEventOnEntity(
+            clonedEntity,
+            [clonedEntity, 'when_clone_start']
+        );
+
         clonedEntity.isClone = true;
         clonedEntity.isStarted = true;
-        this.addCloneVariables(this, clonedEntity,
-                               entity ? entity.variables : null,
-                               entity ? entity.lists : null);
+        this.addCloneVariables(
+            this, clonedEntity,
+            entity ? entity.variables : null,
+            entity ? entity.lists : null
+        );
 
         this.clonedEntities.push(clonedEntity);
         Entry.stage.loadEntity(clonedEntity);
@@ -1331,9 +1328,8 @@ Entry.EntryObject = function(model) {
      * destroy this object
      */
     p.destroy = function() {
-        Entry.stage.unloadEntity(this.entity);
-        if (this.view_)
-            Entry.removeElement(this.view_);
+        this.entity && this.entity.destroy();
+        this.view_ && Entry.removeElement(this.view_);
     };
 
     /**
