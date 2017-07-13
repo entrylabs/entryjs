@@ -313,5 +313,44 @@ describe('EntryPython', function(){
             
             Entry.clearProject();
         });
+
+         it("set x, y block test", function(){
+
+            Entry.variableContainer.addVariable({
+                "type": "variable", "name": "테스트변수1", "id": "asdf"
+            });
+
+            Entry.variableContainer.addVariable({
+                "type": "variable", "name": "테스트변수2", "id": "asde"
+            });
+
+            Entry.variableContainer.addVariable({
+                "type": "variable", "name": "테스트변수3", "id": "asdh"
+            });
+
+            assert.ok(Test.pythonToBlock(
+                "Entry.set_xy_for_sec(테스트변수1, 테스트변수2, 테스트변수3)",
+                [[{
+                    type : "locate_xy_time",
+                    params : [
+                        {   
+                            type: "get_variable",   
+                            params : ['asdf']
+                        },
+                        {
+                            type: "get_variable",   
+                            params : ['asde']
+                        },
+                        {
+                            type: "get_variable",   
+                            params : ['asdh']
+                        }
+                    ]
+                }]]
+            ));
+            
+            Entry.clearProject();
+        });
+
     })
 });
