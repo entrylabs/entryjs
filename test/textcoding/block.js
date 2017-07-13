@@ -123,11 +123,93 @@ describe('EntryPython', function(){
 
     });
 
+    describe('convert float and integer block test', function() { // variable add ,
+        it("calc_basic" , function() {
+            assert.ok(Test.pythonToBlock(
+                "('10.12345' - '10.0003')", 
+                [[{
+                    "type": "calc_basic",
+                    "params": [
+                        {
+                            params : ["10.12345"]
+                        },
+                        "MINUS",
+                        {
+                            params : ["10.0003"]
+                        }
+                    ]
+                }]]
+            ));
+        });
+
+        it("quotient_and_mod" , function() {
+            assert.ok(Test.pythonToBlock(
+                "(11.0002 // 10.0003)", 
+                [[{
+                    "type": "quotient_and_mod",
+                    "params": [
+                        null,
+                        {
+                            params : ["11.0002"]
+                        },
+                        null,
+                        {
+                            params : ["10.0003"]
+                        }
+                    ]
+                }]]
+            ));
+        });
+
+
+        it("Minus action use variable" , function(){
+
+            
+            Entry.variableContainer.addVariable({
+                "type": "variable", "name": "테스트변수1", "id": "abcd" , "value" : "11.0002"
+            });
+
+            Entry.variableContainer.addVariable({
+                "type": "variable", "name": "테스트변수2", "id": "abce" , "value" : "10.0003"
+            });
+
+            assert.ok(Test.pythonToBlock(
+                "(테스트변수1 - 테스트변수2)", 
+                [[{
+                    "type": "calc_basic",
+                    "params": [
+                        {
+                            type: "get_variable",
+                            params: [
+                                "abcd"
+                            ]
+                        },
+                        "MINUS",
+                        {
+                            type: "get_variable",
+                            params: [
+                                "abce"
+                            ]
+                        }
+                    ]
+                }]]
+            )); 
+            Entry.clearProject();
+        });
+
+
+    });
+
+
+
     describe('should convert block', function(){
         it ("get_variable", function() {
-            Entry.variableContainer.addVariable({
+            
+             Entry.variableContainer.addVariable({
                 "type": "variable", "name": "테스트변수1", "id": "asdf"
             })
+
+           
             assert.ok(Test.pythonToBlock(
                 "테스트변수1",
                 [[{
@@ -137,6 +219,7 @@ describe('EntryPython', function(){
                     ]
                 }]]
             ));
+
             Entry.clearProject();
         });
     });
