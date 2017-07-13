@@ -161,18 +161,13 @@ describe('EntryPython', function(){
             ));
         });
 
-
-        it("Minus action use variable" , function(){
-
-            
+        it("Minus action use variable" , function(){          
             Entry.variableContainer.addVariable({
                 "type": "variable", "name": "테스트변수1", "id": "abcd" , "value" : "11.0002"
             });
-
             Entry.variableContainer.addVariable({
                 "type": "variable", "name": "테스트변수2", "id": "abce" , "value" : "10.0003"
             });
-
             assert.ok(Test.pythonToBlock(
                 "(테스트변수1 - 테스트변수2)", 
                 [[{
@@ -196,16 +191,12 @@ describe('EntryPython', function(){
             )); 
             Entry.clearProject();
         });
-
-
     });
-
-
 
     describe('should convert block', function(){
         it ("get_variable", function() {
             
-             Entry.variableContainer.addVariable({
+            Entry.variableContainer.addVariable({
                 "type": "variable", "name": "테스트변수1", "id": "asdf"
             })
 
@@ -223,4 +214,104 @@ describe('EntryPython', function(){
             Entry.clearProject();
         });
     });
+
+    describe('parameter process test' , function() {
+        Entry.variableContainer.addVariable({
+            "type": "variable", "name": "테스트변수1", "id": "asdf"
+        })
+
+
+        it("dialog block test", function() { // (테스트변수)를 말하기 블록
+
+            assert.ok(Test.pythonToBlock(
+                "Entry.print(테스트변수1)",
+                [[{
+                    type: "dialog",
+                    params: [
+                        {   
+                            type: "get_variable",   
+                            params: [
+                                "asdf"
+                            ]
+                        }
+                    ]
+                }]]
+            ));
+            Entry.clearProject();               
+        });
+
+        Entry.variableContainer.addVariable({
+            "type": "variable", "name": "테스트변수1", "id": "asdf"
+        })
+
+        Entry.variableContainer.addVariable({
+            "type": "variable", "name": "테스트변수2", "id": "asde"
+        })
+
+        it("dialog time block test", function() {
+            assert.ok(Test.pythonToBlock(
+                "Entry.print(테스트변수1 , 테스트변수2)",
+                [[{
+                    type: "dialog",
+                    params: [
+                        {   
+                            type: "get_variable",   
+                            params: [
+                                "asdf"
+                            ]
+                        },
+                        {   
+                            type: "get_variable",   
+                            params: [
+                                "asde"
+                            ]
+                        }
+                    ]
+                }]]
+            ));
+
+            Entry.clearProject();
+        });
+
+   
+        it("while not block test", function(){
+            Entry.variableContainer.addVariable({
+                "type": "variable", "name": "테스트변수1", "id": "asdf"
+            });
+
+            Entry.variableContainer.addVariable({
+                "type": "variable", "name": "테스트변수2", "id": "asde"
+            });
+
+
+            assert.ok(Test.pythonToBlock(
+                "while not (테스트변수1 == 테스트변수2):",
+                [[{
+                    type : "repeat_while_true",
+                    params : [
+                        {
+                            "type" : "boolean_basic_operator",
+                            "params" : [
+                                {
+                                    "type": "get_variable",
+                                    "params" : [
+                                        "asdf"
+                                    ]
+                                },
+                                "EQUAL",
+                                {
+                                    "type": "get_variable",
+                                    "params" : [
+                                        "asde"
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                }]]
+            ));
+            
+            Entry.clearProject();
+        });
+    })
 });
