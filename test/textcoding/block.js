@@ -314,7 +314,7 @@ describe('EntryPython', function(){
             Entry.clearProject();
         });
 
-         it("set x, y block test", function(){
+        it("set x, y block test", function(){
 
             Entry.variableContainer.addVariable({
                 "type": "variable", "name": "테스트변수1", "id": "asdf"
@@ -351,6 +351,28 @@ describe('EntryPython', function(){
             
             Entry.clearProject();
         });
+
+        it("add_brush_size block test", function(){
+            Entry.variableContainer.addVariable({
+                "type": "variable", "name": "테스트변수1", "id": "asdf"
+            });
+
+            assert.ok(Test.pythonToBlock(
+                "Entry.add_brush_size(테스트변수1)",
+                [[{
+                    type : "change_thickness",
+                    params : [
+                        {   
+                            type: "get_variable",   
+                            params : ['asdf']
+                        }
+                    ]
+                }]]
+            ));
+            
+            Entry.clearProject();
+        });
+
 
     })
 });
