@@ -414,6 +414,7 @@ Entry.Variable.prototype.updateView = function() {
             this.view_.y = this.getY();
             this.resizeHandle_.x = this.width_ - 2;
             this.resizeHandle_.y = this.height_ - 2;
+            var arr = this.array_;
 
             var name = this.getName();
             if (this.object_) {
@@ -430,7 +431,6 @@ Entry.Variable.prototype.updateView = function() {
                     this.titleView_.text = name;
                 }
             }
-            //name = name.length > 7 ? name.substr(0,6) + '..' : name;
             this.titleView_.x = this.width_/2;
             this.rect_.graphics.clear().f("#ffffff").ss(1, 2, 0).s("#A0A1A1")
                 .rect(0,0,this.width_, this.height_);
@@ -438,38 +438,77 @@ Entry.Variable.prototype.updateView = function() {
             while(this.view_.children[4])
                 this.view_.removeChild(this.view_.children[4]);
             var maxView = Math.floor((this.getHeight()-20) / 20);
-            if (maxView < this.array_.length) {
+
+            var isOverFlow = maxView < arr.length;
+            var totalWidth = this.getWidth();
+            var wrapperWidth = totalWidth - 2*this.BORDER -
+                (isOverFlow ? 30 : 20);
+
+            if (isOverFlow) {
                 if (this.scrollButton_.y > this.getHeight() - 40)
                     this.scrollButton_.y = this.getHeight() - 40;
                 this.elementView.valueWrapper.graphics.clear()
-                    .f("#1bafea")
-                    .rr(20,-2,this.getWidth() - 20 - 10 - 2*this.BORDER, 17, 2);
-                this.scrollButton_.visible = true;
-                this.scrollButton_.x = this.getWidth() - 12;
+                    .f("#1bafea").rr(20,-2, wrapperWidth, 17, 2);
+                this.scrollButton_.x = totalWidth - 12;
                 this.scrollPosition =
                     Math.floor(((this.scrollButton_.y - 23) /
                     (this.getHeight() - 23 - 40)) *
-                    (this.array_.length - maxView));
+                    (arr.length - maxView));
             } else {
                 this.elementView.valueWrapper.graphics.clear()
-                    .f("#1bafea")
-                    .rr(20,-2,this.getWidth() - 20 - 2*this.BORDER, 17, 2);
-                this.scrollButton_.visible = false;
+                    .f("#1bafea").rr(20,-2, wrapperWidth, 17, 2);
                 this.scrollPosition = 0;
             }
+            this.scrollButton_.visible = isOverFlow;
+
+            var _cache = {};
+            //because of min Width of list
+            //maxLen can not be under 3
+            //so start from 3
+            var maxLen = 3;
+            wrapperWidth -= 6;
+
             for (var i = this.scrollPosition;
-                 i < this.scrollPosition + maxView && i < this.array_.length;
-                 i++) {
-                if (Entry.getMainWS() && Entry.getMainWS().getMode() === Entry.Workspace.MODE_VIMBOARD)
+                i < this.scrollPosition + maxView && i < arr.length; i++) {
+                if (Entry.getMainWS() && Entry.getMainWS().getMode() ===
+                    Entry.Workspace.MODE_VIMBOARD)
                     this.elementView.indexView.text = i;
-                else
-                    this.elementView.indexView.text = i + 1;
-                var data = String(this.array_[i].data);
-                var stringLength = Math.floor((this.getWidth() - 50)/7);
-                data = Entry.cutStringByLength(data, stringLength);
-                data = String(this.array_[i].data).length > data.length ?
-                    data + '..' : data;
-                this.elementView.valueView.text = data;
+                else this.elementView.indexView.text = i + 1;
+
+                var text = String(arr[i].data);
+                var valueView = this.elementView.valueView;
+                var cachedText = _cache[text.substr(0, 150)];
+
+                if (cachedText) valueView.text = cachedText;
+                else {
+                    console.log('here');
+                    var execText = text.substr(0, maxLen);
+                    var charIndex = maxLen;
+
+                    valueView.text = text;
+
+                    if (valueView.getMeasuredWidth() > wrapperWidth) {
+                        valueView.text = execText;
+
+                        while (valueView.getMeasuredWidth() < wrapperWidth &&
+                            text[charIndex] !== undefined) {
+                            execText += text[charIndex++];
+                            valueView.text = execText;
+                        }
+
+                        var subCnt = 1;
+                        while (valueView.getMeasuredWidth() > wrapperWidth) {
+                            execText =
+                                execText.substr(0, execText.length - subCnt) + "..";
+                            valueView.text = execText;
+                            subCnt = 3;
+                        }
+                    } else execText = text;
+
+                    _cache[text.substr(0, 150)] = execText;
+                    maxLen = Math.max(execText.length, maxLen);
+                }
+
                 var view = this.elementView.clone(true);
                 view.y = (i - this.scrollPosition)*20 + 23;
                 this.view_.addChild(view);
@@ -725,19 +764,19 @@ Entry.Variable.prototype.loadSnapshot = function() {
  * @private
  */
 Entry.Variable.prototype.syncModel_ = function(variableModel) {
-    this.setX(variableModel.x);
-    this.setY(variableModel.y);
-    this.setVisible(variableModel.visible);
-    if (!this.isCloud_)
-        this.setValue(variableModel.value);
-    this.setName(variableModel.name);
-    this.isCloud_ = variableModel.isCloud;
+    var isCloud = this.isCloud_;
     if (this.type == 'list') {
-        if (!this.isCloud_)
-            this.array_ = variableModel.array;
+        if (!isCloud) this.array_ = variableModel.array;
         this.setWidth(variableModel.width);
         this.setHeight(variableModel.height);
     }
+    if (!isCloud) this.setValue(variableModel.value);
+
+    this.setName(variableModel.name);
+    this.setX(variableModel.x);
+    this.setY(variableModel.y);
+    this.setVisible(variableModel.visible);
+    this.isCloud_ = variableModel.isCloud;
 };
 
 /**
