@@ -489,10 +489,8 @@ Entry.Engine = function() {
         var variableContainer = Entry.variableContainer;
         var container = Entry.container;
 
-        if (this.state === 'pause') {
-            this.togglePause();
-            return;
-        }
+        if (this.state === 'pause')
+            return this.togglePause();
 
         Entry.Utils.blur();
 
@@ -505,6 +503,7 @@ Entry.Engine = function() {
         }
 
         Entry.addActivity("run");
+
         if (this.state == 'stop') {
             container.mapEntity(function(entity) {
                 entity.takeSnapshot();

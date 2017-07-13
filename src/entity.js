@@ -16,6 +16,7 @@ Entry.EntityObject = function(object) {
     this.flip = false;
     this.collision = Entry.Utils.COLLISION.NONE;
     this.id = Entry.generateHash();
+    this.removed = false;
 
     if (this.type == 'sprite') {
         this.object = new createjs.Bitmap();
@@ -28,8 +29,8 @@ Entry.EntityObject = function(object) {
         this.textObject.textBaseline = "middle";
         this.textObject.textAlign = "center";
         this.bgObject = new createjs.Shape();
-        this.bgObject.graphics.setStrokeStyle(1).beginStroke("#f00")
-                     .drawRect(0,0,100,100);
+        this.bgObject.graphics.setStrokeStyle(1)
+            .beginStroke("#f00").drawRect(0,0,100,100);
         this.object.addChild(this.bgObject);
         this.object.addChild(this.textObject);
 
@@ -845,7 +846,8 @@ Entry.EntityObject.prototype.setImage = function(pictureModel) {
         this.object.image = image;
         this.object.cache(0,0,this.getWidth(),this.getHeight());
         image.onload = function(e) {
-            Entry.container.cachePicture(cacheId, image);
+            if (!that.removed)
+                Entry.container.cachePicture(cacheId, image);
             Entry.image = image;
             that.object.image = image;
             that.object.cache(0,0,that.getWidth(),that.getHeight());
@@ -1013,17 +1015,23 @@ Entry.EntityObject.prototype.loadSnapshot = function() {
  * Remove itself when this is clone
  */
 Entry.EntityObject.prototype.removeClone = function() {
-    if (this.isClone) {
-        if (this.dialog)
-            this.dialog.remove();
-        if (this.brush)
-            this.removeBrush();
-        Entry.stage.unloadEntity(this);
-        var index = this.parent.clonedEntities.indexOf(this);
-        this.parent.clonedEntities.splice(index, 1);
-        if (Entry.Utils.isFunction(this.clearExecutor))
-            this.clearExecutor();
-    }
+    if (!this.isClone) return;
+
+    var parent = this.parent;
+    var clonedEntities = parent.clonedEntities;
+    var container = Entry.container;
+
+    this.dialog && this.dialog.remove();
+    this.brush && this.removeBrush();
+    Entry.stage.unloadEntity(this);
+    var index = clonedEntities.indexOf(this);
+    if (index > -1) clonedEntities.splice(index, 1);
+    if (Entry.Utils.isFunction(this.clearExecutor))
+        this.clearExecutor();
+
+    if (container)
+        container.unCachePictures(this, parent.pictures);
+    this.removed = true;
 };
 
 Entry.EntityObject.prototype.clearExecutor = function() {
@@ -1165,6 +1173,19 @@ Entry.EntityObject.prototype.alignTextBox = function () {
 };
 
 Entry.EntityObject.prototype.syncDialogVisible = function() {
-    if (this.dialog)
-        this.dialog.object.visible = this.visible;
+    if (this.dialog) this.dialog.object.visible = this.visible;
+};
+
+Entry.EntityObject.prototype.destroy = function() {
+    if (this.removed) return;
+
+    var parent = this.parent;
+    var container = Entry.container;
+
+    this.dialog && this.dialog.remove();
+    this.brush && this.removeBrush();
+    Entry.stage.unloadEntity(this);
+    if (container)
+        container.unCachePictures(this, parent.pictures);
+    this.removed = true;
 };

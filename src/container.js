@@ -383,7 +383,6 @@ Entry.Container.prototype.removeObject = function(object) {
 
     if (currentObjects.length)
         this.selectObject(currentObjects[0].id);
-
     else {
         this.selectObject();
         Entry.playground.flushPlayground();
@@ -830,6 +829,22 @@ Entry.Container.prototype.getCachedPicture = function(pictureId) {
  */
 Entry.Container.prototype.cachePicture = function(pictureId, image) {
     this.cachedPicture[pictureId] = image;
+};
+
+Entry.Container.prototype.unCachePictures = function(entity, pictures) {
+    if (!entity || !pictures) return;
+    var entityId;
+
+    if (pictures.constructor !== Array)
+        pictures = [pictures];
+
+    if (entity.constructor === Entry.EntityObject)
+        entityId = entity.id;
+    else entityId = entity;
+
+    pictures.forEach(function(p) {
+        delete this.cachedPicture[p.id + entityId];
+    }.bind(this));
 };
 
 /**
