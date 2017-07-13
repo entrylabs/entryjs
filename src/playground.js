@@ -1191,6 +1191,8 @@ Entry.Playground = function() {
                     this.pictureView_.object != this.object) {
                     this.pictureView_.object = this.object;
                     this.injectPicture();
+                } else if(this.object && this.pictureListView_ && !this.pictureListView_.hasChildNodes()) {
+                    this.injectPicture();
                 }
             } else this.painter.hide();
         }
