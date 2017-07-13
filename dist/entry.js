@@ -15541,13 +15541,10 @@ Entry.Playground = function() {
         var f = d[c];
         -1 < f.id.toUpperCase().indexOf(b.toUpperCase()) ? f.removeClass("entryRemove") : f.addClass("entryRemove");
       }
-      Entry.pictureEditable && ("picture" == b ? (this.painter.show(), this.pictureView_.object && this.pictureView_.object == this.object || (this.pictureView_.object = this.object, this.injectPicture())) : this.painter.hide());
-      if ("sound" == b && (!this.soundView_.object || this.soundView_.object != this.object)) {
-        this.soundView_.object = this.object, this.injectSound();
-      } else {
-        if ("text" == b && "textBox" == this.object.objectType || this.textView_.object != this.object) {
-          this.textView_.object = this.object, this.injectText();
-        }
+      Entry.pictureEditable && ("picture" == b ? (this.painter.show(), this.pictureView_.object && this.pictureView_.object == this.object) ? this.object && this.pictureListView_ && !this.pictureListView_.hasChildNodes() && (c = this.object.pictures) && c.length && this.injectPicture() : (this.pictureView_.object = this.object, this.injectPicture()) : this.painter.hide());
+      "sound" == b && (this.soundView_.object && this.soundView_.object == this.object ? this.object && this.soundListView_ && !this.soundListView_.hasChildNodes() && (c = this.object.sounds) && c.length && this.injectSound() : (this.soundView_.object = this.object, this.injectSound()));
+      if ("text" == b && "textBox" == this.object.objectType || this.textView_.object != this.object) {
+        this.textView_.object = this.object, this.injectText();
       }
       "code" == b && (this.resizeHandle_ && this.resizeHandle_.removeClass("entryRemove"), this.blockMenu.reDraw());
       Entry.engine.isState("run") && this.curtainView_.removeClass("entryRemove");
