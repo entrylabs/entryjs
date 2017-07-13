@@ -105,7 +105,7 @@ describe('EntryPython', function(){
     describe('String merge and add block test', function() { // variable add ,
         it("calc_basic" , function() {
             assert.ok(Test.pythonToBlock(
-                "('안녕' + '하세요')", 
+                "('안녕' + '하세요')",
                 [[{
                     "type": "calc_basic",
                     "params": [
@@ -123,11 +123,11 @@ describe('EntryPython', function(){
 
     });
 
-
-
     describe('should convert block', function(){
         it ("get_variable", function() {
-            Entry.variableContainer.addVariable({"name": "테스트변수1", "id": "asdf"})
+            Entry.variableContainer.addVariable({
+                "type": "variable", "name": "테스트변수1", "id": "asdf"
+            })
             assert.ok(Test.pythonToBlock(
                 "테스트변수1",
                 [[{
