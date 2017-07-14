@@ -190,7 +190,7 @@ Entry.TextCodingUtil = {};
             }
         }
         else if(menuName == "pictures") {
-            currentObject = VIM._currentObject;
+            currentObject = Entry.playground.object;
             var pictures = currentObject.pictures;
             for(var p in pictures) {
                 var picture = pictures[p];
@@ -200,7 +200,7 @@ Entry.TextCodingUtil = {};
             }
         }
         else if(menuName == "sounds") {
-            currentObject = VIM._currentObject;
+            currentObject = Entry.playground.object;
             var sounds = currentObject.sounds;
             for(var p in sounds) {
                 var sound = sounds[p];

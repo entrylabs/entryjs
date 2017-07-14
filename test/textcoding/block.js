@@ -4,6 +4,8 @@ describe('EntryPython', function(){
     Entry.init(null, {type: "invisible"});
 
     Entry.loadProject(Entry.getStartProject());
+    Entry.playground.object = Entry.container.objects_[0];
+
     //Entry.variableContainer.addVariable({"name": "testVar"})
 
     function pairConvertTest(blockType) {
@@ -161,7 +163,10 @@ describe('EntryPython', function(){
             ));
         });
 
-        it("Minus action use variable" , function(){          
+        it("Minus action use variable" , function(){ 
+            Entry.loadProject(Entry.getStartProject());
+            Entry.playground.object = Entry.container.objects_[0];
+                     
             Entry.variableContainer.addVariable({
                 "type": "variable", "name": "테스트변수1", "id": "abcd" , "value" : "11.0002"
             });
@@ -195,6 +200,8 @@ describe('EntryPython', function(){
 
     describe('should convert block', function(){
         it ("get_variable", function() {
+            Entry.loadProject(Entry.getStartProject());
+            Entry.playground.object = Entry.container.objects_[0];
             
             Entry.variableContainer.addVariable({
                 "type": "variable", "name": "테스트변수1", "id": "asdf"
@@ -216,12 +223,14 @@ describe('EntryPython', function(){
     });
 
     describe('parameter process test' , function() {
-        Entry.variableContainer.addVariable({
-            "type": "variable", "name": "테스트변수1", "id": "asdf"
-        })
-
-
+        
         it("dialog block test", function() { // (테스트변수)를 말하기 블록
+            Entry.loadProject(Entry.getStartProject());
+            Entry.playground.object = Entry.container.objects_[0];
+            
+            Entry.variableContainer.addVariable({
+                "type": "variable", "name": "테스트변수1", "id": "asdf"
+            })
 
             assert.ok(Test.pythonToBlock(
                 "Entry.print(테스트변수1)",
@@ -240,19 +249,24 @@ describe('EntryPython', function(){
             Entry.clearProject();               
         });
 
-        Entry.variableContainer.addVariable({
-            "type": "variable", "name": "테스트변수1", "id": "asdf"
-        })
-
-        Entry.variableContainer.addVariable({
-            "type": "variable", "name": "테스트변수2", "id": "asde"
-        })
+        
 
         it("dialog time block test", function() {
+            Entry.loadProject(Entry.getStartProject());
+            Entry.playground.object = Entry.container.objects_[0];
+            
+            Entry.variableContainer.addVariable({
+                "type": "variable", "name": "테스트변수1", "id": "asdf"
+            })
+
+            Entry.variableContainer.addVariable({
+                "type": "variable", "name": "테스트변수2", "id": "asde"
+            })
+
             assert.ok(Test.pythonToBlock(
-                "Entry.print(테스트변수1 , 테스트변수2)",
+                "Entry.print_for_sec(테스트변수1 , 테스트변수2)",
                 [[{
-                    type: "dialog",
+                    type: "dialog_time",
                     params: [
                         {   
                             type: "get_variable",   
@@ -275,6 +289,9 @@ describe('EntryPython', function(){
 
    
         it("while not block test", function(){
+            Entry.loadProject(Entry.getStartProject());
+            Entry.playground.object = Entry.container.objects_[0];
+
             Entry.variableContainer.addVariable({
                 "type": "variable", "name": "테스트변수1", "id": "asdf"
             });
@@ -315,6 +332,8 @@ describe('EntryPython', function(){
         });
 
         it("set x, y block test", function(){
+            Entry.loadProject(Entry.getStartProject());
+            Entry.playground.object = Entry.container.objects_[0];
 
             Entry.variableContainer.addVariable({
                 "type": "variable", "name": "테스트변수1", "id": "asdf"
@@ -329,7 +348,7 @@ describe('EntryPython', function(){
             });
 
             assert.ok(Test.pythonToBlock(
-                "Entry.set_xy_for_sec(테스트변수1, 테스트변수2, 테스트변수3)",
+                "Entry.set_xy_for_sec(테스트변수2, 테스트변수3, 테스트변수1)",
                 [[{
                     type : "locate_xy_time",
                     params : [
@@ -353,6 +372,9 @@ describe('EntryPython', function(){
         });
 
         it("add_brush_size block test", function(){
+            Entry.loadProject(Entry.getStartProject());
+            Entry.playground.object = Entry.container.objects_[0];
+
             Entry.variableContainer.addVariable({
                 "type": "variable", "name": "테스트변수1", "id": "asdf"
             });
@@ -365,6 +387,43 @@ describe('EntryPython', function(){
                         {   
                             type: "get_variable",   
                             params : ['asdf']
+                        }
+                    ]
+                }]]
+            ));
+            
+            Entry.clearProject();
+        });
+
+        it("play_sound_from_to block test", function(){
+            Entry.loadProject(Entry.getStartProject());
+            Entry.playground.object = Entry.container.objects_[0];
+
+
+            Entry.variableContainer.addVariable({
+                "type": "variable", "name": "테스트변수1", "id": "asdf"
+            });
+
+            Entry.variableContainer.addVariable({
+                "type": "variable", "name": "테스트변수2", "id": "abce" 
+            });
+
+            assert.ok(Test.pythonToBlock(
+                "Entry.play_sound_from_to('강아지 짖는소리', 테스트변수1, 테스트변수2)",
+                [[{
+                    type : "sound_from_to",
+                    params : [
+                        {   
+                            type: "get_sounds",   
+                            params : ['8el5']
+                        },
+                        {   
+                            type: "get_variable",   
+                            params : ['asdf']
+                        },
+                        {   
+                            type: "get_variable",   
+                            params : ['abce']
                         }
                     ]
                 }]]
