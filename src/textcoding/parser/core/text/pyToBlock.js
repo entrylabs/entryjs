@@ -5337,7 +5337,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
     // Utils
     p.codeInit = function() {
         this.threadInit();
-        this._currentObject = Entry.playground.object;
+        this._currentObject = Entry.getMainWS() ? Entry.playground.object : {};
         this._funcMap = {};
         this._code = [];
         this._threadCount = 0;

@@ -14538,7 +14538,7 @@ Entry.PyToBlockParser = function(c) {
   };
   c.codeInit = function() {
     this.threadInit();
-    this._currentObject = Entry.playground.object;
+    this._currentObject = Entry.getMainWS() ? Entry.playground.object : {};
     this._funcMap = {};
     this._code = [];
     this._blockCount = this._threadCount = 0;
@@ -14828,7 +14828,6 @@ Entry.Parser = function(c, b, f, d) {
             }
           }
           e = this._execParser.Program(h);
-          console.log(e);
           this._onError = !1;
         } catch (A) {
           if (this._onError = !0, e = [], this.codeMirror) {
