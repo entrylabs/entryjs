@@ -470,12 +470,21 @@ Entry.Scene.prototype.cloneScene = function(scene) {
     var objects = Entry.container.getSceneObjects(scene);
 
     try {
+        var oldIds = [];
+        var newIds = [];
         this.isSceneCloning = true;
-        for (var i=objects.length-1; i>=0; i--)
-            Entry.container.addCloneObject(objects[i], clonedScene.id);
+        for (var i=objects.length-1; i>=0; i--) {
+            var obj = objects[i];
+            var ret = Entry.container.addCloneObject(obj, clonedScene.id);
+            oldIds.push(obj.id);
+            newIds.push(ret.id);
+        }
+        Entry.container.adjustClonedValues(oldIds, newIds);
+        var WS = Entry.getMainWS();
+        var board = WS && WS.board && WS.board.reDraw();
         this._focusSceneNameField(clonedScene);
         this.isSceneCloning = false;
-    } catch(e) {}
+    } catch (e) { console.log('error', e); }
 };
 
 /**

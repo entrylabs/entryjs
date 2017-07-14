@@ -353,6 +353,7 @@ Entry.Container.prototype.addCloneObject = function(object, scene) {
     json.id = newObjectId;
     json.scene = scene || Entry.scene.selectedScene;
     this.addObject(json);
+    return this.getObject(newObjectId);
 };
 
 /**
@@ -1117,4 +1118,26 @@ Entry.Container.prototype.getDom = function(query) {
         }
     } else {
     }
+};
+
+Entry.Container.prototype.adjustClonedValues = function(oldIds, newIds) {
+    if (!(oldIds && newIds)) return;
+    var that = this;
+    newIds.forEach(function(newId) {
+        that.getObject(newId)
+            .script.getBlockList()
+            .forEach(function(b) {
+                if (!b || !b.params) return;
+                var changed = false;
+                var ret = b.params.map(function(p) {
+                    if (typeof p !== 'string') return p;
+                    var index = oldIds.indexOf(p);
+                    if (index < 0) return p;
+                    changed = true;
+                    return newIds[index];
+                });
+                changed && b.set({params: ret});
+            });
+    });
+
 };
