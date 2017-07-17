@@ -536,5 +536,43 @@ describe('EntryPython', function(){
 
         });
 
+        it("change_value_list_index block", function() {
+            Entry.loadProject(Entry.getStartProject());
+            Entry.playground.object = Entry.container.objects_[0];
+
+            Entry.variableContainer.addList({
+                "type": "list", "name": "테스트리스트", "id": "asdf"
+            });
+
+            Entry.variableContainer.addVariable({
+                "type": "variable", "name": "테스트변수", "id": "asde"
+            });
+
+            Entry.variableContainer.addVariable({
+                "type": "variable", "name": "테스트변수2", "id": "asdz"
+            });
+
+
+            assert.ok(Test.pythonToBlock(
+                "테스트리스트[테스트변수2-1] = 테스트변수",
+                [[{
+                    type : "change_value_list_index",
+                    params : [
+                       'asdf',
+                       {
+                            type: "get_variable",
+                            params: ['asdz']
+                       },
+                       {
+                            type: "get_variable",
+                            params: ['asde']
+                       }
+                    ]
+                }]]
+            ));
+
+            Entry.clearProject();
+        });
+
     });
 });
