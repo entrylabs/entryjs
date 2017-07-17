@@ -125,10 +125,7 @@ Entry.TextCodingUtil = {};
 
     tu.dropdownDynamicNameToIdConvertor = function(name, menuName, currentObject) {
         var result = name;
-        if(Entry.getMainWS() && Entry.getMainWS().vimBoard) {
-            var VIM = Entry.getMainWS().vimBoard;
-            if(VIM) var currentScene = VIM._currentScene;
-        }
+        var currentScene = Entry.scene.selectedScene;
 
         if(menuName == "scenes") {
             var scenes = Entry.scene.getScenes();

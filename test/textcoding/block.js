@@ -649,6 +649,23 @@ describe('EntryPython', function(){
             ));
             Entry.clearProject();
         });
+        
+        it("object" , function(){
+            Entry.loadProject(Entry.getStartProject());
+            Entry.playground.object = Entry.container.objects_[0];
+
+            assert.ok(Test.pythonToBlock(
+                'Entry.make_clone_of("엔트리봇")',
+                [[{
+                    type : "create_clone",
+                    params : [
+                        "7y0y"
+                    ]
+                }]]
+            ));
+            Entry.clearProject();
+        });
     
+
     });
 });
