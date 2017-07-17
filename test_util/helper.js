@@ -12,7 +12,7 @@ Test.randomNumber = function() {
     return Math.floor(Math.random() * 100);
 };
 
-Test.pythonToBlock = function(textCode, block) {
+Test.parsePython = function(textCode) {
     var parser = new Entry.Parser(Entry.Vim.WORKSPACE_MODE);
     var syntax = parser.mappingSyntax(Entry.Vim.WORKSPACE_MODE);
     var pyToBlockParser = new Entry.PyToBlockParser(syntax);
@@ -20,6 +20,13 @@ Test.pythonToBlock = function(textCode, block) {
 
     var blockOutput = pyToBlockParser.processProgram(
         [filbert.parse(textCode, options)]);
+
+    return blockOutput;
+};
+
+
+Test.pythonToBlock = function(textCode, block) {
+    var blockOutput = this.parsePython(textCode);
     var result = Test.objectSimilarCheck(block, blockOutput);
     if (!result){
         console.log(JSON.stringify(blockOutput));
@@ -45,5 +52,6 @@ Test.objectSimilarCheck = function(obj, targetObj) {
     }
     return true;
 };
+
 
 window.Test = Test;

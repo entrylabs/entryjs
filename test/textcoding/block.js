@@ -575,4 +575,36 @@ describe('EntryPython', function(){
         });
 
     });
+
+    describe('declare', function(){
+
+        it("variable" , function() {
+            Entry.loadProject(Entry.getStartProject());
+            Entry.playground.object = Entry.container.objects_[0];
+            Test.parsePython("test = 2");
+            var variable = Entry.variableContainer.variables_[0];
+
+            assert.ok(variable);
+            assert.equal(variable.name_ , 'test');
+            assert.equal(variable.value_ , '2');
+
+            Entry.clearProject();
+
+        });
+
+        it("list" , function() {
+            Entry.loadProject(Entry.getStartProject());
+            Entry.playground.object = Entry.container.objects_[0];
+            Test.parsePython("test = ['2']");
+            var list = Entry.variableContainer.lists_[0];
+
+            assert.ok(list);
+            assert.equal(list.name_ , 'test');
+            assert.equal(list.array_[0].data , '2');
+            
+            Entry.clearProject();
+
+        });
+
+    });
 });
