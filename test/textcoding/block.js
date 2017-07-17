@@ -466,5 +466,36 @@ describe('EntryPython', function(){
             Entry.clearProject();
 
         });
+
+        it("remove_value_from_list block", function() {
+            Entry.loadProject(Entry.getStartProject());
+            Entry.playground.object = Entry.container.objects_[0];
+
+            Entry.variableContainer.addList({
+                "type": "list", "name": "테스트리스트", "id": "asdf"
+            });
+
+            Entry.variableContainer.addVariable({
+                "type": "variable", "name": "테스트변수", "id": "asde"
+            });
+
+            assert.ok(Test.pythonToBlock(
+                "테스트리스트.pop(테스트변수-1)",
+                [[{
+                    type : "remove_value_from_list",
+                    params : [
+                       {
+                            type: "get_variable",
+                            params: ['asde']
+                       },
+                       'asdf'
+                    ]
+                }]]
+            ));
+
+            Entry.clearProject();
+
+        });
+
     });
 });
