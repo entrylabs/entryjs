@@ -431,7 +431,40 @@ describe('EntryPython', function(){
             
             Entry.clearProject();
         });
-
-
     })
+
+    
+    describe('list index change block is ', function(){
+        it("value_of_index_from_list block", function() {
+            Entry.loadProject(Entry.getStartProject());
+            Entry.playground.object = Entry.container.objects_[0];
+
+            Entry.variableContainer.addList({
+                "type": "list", "name": "테스트리스트", "id": "asdf"
+            });
+            Entry.variableContainer.addVariable({
+                "type": "variable", "name": "테스트변수", "id": "asde"
+            });
+
+
+            assert.ok(Test.pythonToBlock(
+                "테스트리스트[테스트변수-1]",
+                [[{
+                    type : "value_of_index_from_list",
+                    params : [
+                        null,
+                        'asdf',                
+                        null,
+                       {   
+                            type: "get_variable",   
+                            params : ['asde']
+                        }
+                    ]
+                }]]
+            ));
+
+            Entry.clearProject();
+
+        });
+    });
 });
