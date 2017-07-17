@@ -607,4 +607,48 @@ describe('EntryPython', function(){
         });
 
     });
+
+    describe('parse', function(){
+
+        it("sound" , function(){
+            Entry.loadProject(Entry.getStartProject());
+            Entry.playground.object = Entry.container.objects_[0];
+
+            assert.ok(Test.pythonToBlock(
+                "Entry.play_sound('강아지 짖는소리')",
+                [[{
+                    type : "sound_something_with_block",
+                    params : [
+                       {
+                            type: "get_sounds",
+                            params: ['8el5']
+                       },
+                       null
+                    ]
+                }]]
+            ));
+            Entry.clearProject();
+        });
+
+        it("picture" , function(){
+            Entry.loadProject(Entry.getStartProject());
+            Entry.playground.object = Entry.container.objects_[0];
+
+            assert.ok(Test.pythonToBlock(
+                "Entry.change_shape('엔트리봇_걷기2')",
+                [[{
+                    type : "change_to_some_shape",
+                    params : [
+                       {
+                            type: "get_pictures",
+                            params: ["4t48"]
+                       },
+                       null
+                    ]
+                }]]
+            ));
+            Entry.clearProject();
+        });
+    
+    });
 });
