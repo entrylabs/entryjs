@@ -760,14 +760,28 @@ describe('EntryPython', function(){
 
             });
 
-            // it(' method' , function() {
-            //     assert.ok(Test.pythonToBlock(
-            //         "",
-            //         [[{
+            it('change_variable method' , function() {
+                Entry.loadProject(Entry.getStartProject());
+                Entry.playground.object = Entry.container.objects_[0];
 
-            //         }]]
-            //     ));
-            // })
+                Entry.variableContainer.addVariable({
+                    "type": "variable", "name": "테스트변수1", "id": "abcd"
+                });
+
+                assert.ok(Test.pythonToBlock(
+                    "테스트변수1 += 10",
+                    [[{
+                        type: "change_variable",
+                        params : [
+                            "abcd",
+                            {
+                                "type": 'number',
+                                "params" : [ 10 ]
+                            }
+                        ]
+                    }]]
+                ));
+            })
 
             // it(' method' , function() {
             //     assert.ok(Test.pythonToBlock(
