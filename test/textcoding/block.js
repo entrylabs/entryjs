@@ -787,8 +787,6 @@ describe('EntryPython', function(){
         });
 
         describe('list method' , function() {
-            
-
             it('show_list method' , function() {
                 Entry.loadProject(Entry.getStartProject());
                 Entry.playground.object = Entry.container.objects_[0];
@@ -873,10 +871,31 @@ describe('EntryPython', function(){
                         ]
                     }]]
                 ));
+                Entry.clearProject();
+
             });
+            // list length block is not work.
+            // it('length_of_list method' , function() {
+            //      Entry.loadProject(Entry.getStartProject());
+            //     Entry.playground.object = Entry.container.objects_[0];
+
+            //     Entry.variableContainer.addList({
+            //         "type": "list", "name": "테스트리스트", "id": "asdf"
+            //     });
 
 
-            Entry.clearProject();
+            //     assert.ok(Test.pythonToBlock(
+            //         "len(테스트리스트)",
+            //         [[{ 
+            //             type : "length_of_list",
+            //             params : [
+            //                 null ,
+            //                 "asdf"
+            //             ]
+            //         }]]
+            //     ));
+            //     Entry.clearProject();
+            // })  
         });
     })
 
