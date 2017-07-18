@@ -691,9 +691,7 @@ describe('EntryPython', function(){
     });
     
     describe('call' , function() {
-        describe('variable' , function() {
-          
-
+        describe('variable' , function() {          
             it('ask_and_wait method' , function() {
                 Entry.loadProject(Entry.getStartProject());
                 Entry.playground.object = Entry.container.objects_[0];
@@ -714,25 +712,53 @@ describe('EntryPython', function(){
                         ]
                     }]]
                 ));
+
+                Entry.clearProject();
             });
 
-            // it(' method' , function() {
-            //     assert.ok(Test.pythonToBlock(
-            //         "",
-            //         [[{
+            it('show_variable method' , function() {
+                Entry.loadProject(Entry.getStartProject());
+                Entry.playground.object = Entry.container.objects_[0];
 
-            //         }]]
-            //     ));
-            // });
+                Entry.variableContainer.addVariable({
+                    "type": "variable", "name": "테스트변수1", "id": "abcd"
+                });
 
-            // it(' method' , function() {
-            //     assert.ok(Test.pythonToBlock(
-            //         "",
-            //         [[{
+                assert.ok(Test.pythonToBlock(
+                    "Entry.show_variable('테스트변수1')",
+                    [[{
+                        "type" : "show_variable",
+                        "params" : [
+                            "abcd"
+                        ]
+                    }]]
+                ));
+                
+                Entry.clearProject();
 
-            //         }]]
-            //     ));
-            // });
+            });
+
+            it('hide_variable method' , function() {
+                Entry.loadProject(Entry.getStartProject());
+                Entry.playground.object = Entry.container.objects_[0];
+
+                Entry.variableContainer.addVariable({
+                    "type": "variable", "name": "테스트변수1", "id": "abcd"
+                });
+
+                assert.ok(Test.pythonToBlock(
+                    "Entry.hide_variable('테스트변수1')",
+                    [[{
+                        type : 'hide_variable',
+                        params: [
+                            'abcd'
+                        ]
+                    }]]
+                ));
+
+                Entry.clearProject();
+
+            });
 
             // it(' method' , function() {
             //     assert.ok(Test.pythonToBlock(
