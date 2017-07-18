@@ -666,6 +666,27 @@ describe('EntryPython', function(){
             Entry.clearProject();
         });
     
+        describe('create ' , function() {
+            it('local variable' , function() {
 
+                Entry.variableContainer.addVariable({
+                    "type": "variable", "name": "테스트변수1", "id": "abcd" , object_ : "7y0y"
+
+                });
+
+                Entry.loadProject(Entry.getStartProject());
+                Entry.playground.object = Entry.container.objects_[0];
+
+                assert.ok(Test.pythonToBlock(
+                    "테스트변수1",
+                    [[{
+                        type : 'get_variable',
+                        params : [ 'abcd' ]
+                    }]]
+                ));
+
+                Entry.clearProject();
+            })
+        });
     });
 });
