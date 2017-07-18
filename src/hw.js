@@ -68,6 +68,7 @@ Entry.HW = function() {
         '15.1': Entry.coconut,
         '16.1': Entry.MODI,
         '18.1': Entry.Altino,
+        'F.4': Entry.byrobot_petroneV2_controller,    // 테스트 하드웨어id = '999999'이지만, hw가 3개여서 변경. 편의상 'F.4'
     };
 };
 

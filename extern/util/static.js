@@ -744,6 +744,29 @@ EntryStatic.getAllBlocks = function() {
                 "byrobot_dronefighter_flight_controller_vibrator_delay",
                 "byrobot_dronefighter_flight_controller_vibrator_reserve",
 
+                // BYROBOT - PetroneV2 Controller
+                "byrobot_petrone_v2_controller_controller_value_button",
+                "byrobot_petrone_v2_controller_controller_value_joystick",
+                "byrobot_petrone_v2_controller_controller_if_button_press",
+                "byrobot_petrone_v2_controller_controller_if_joystick_direction",
+                "byrobot_petrone_v2_controller_controller_light_manual_single_off",
+                "byrobot_petrone_v2_controller_controller_light_manual_single",
+                "byrobot_petrone_v2_controller_controller_light_manual_single_input",
+                "byrobot_petrone_v2_controller_controller_buzzer_off",
+                "byrobot_petrone_v2_controller_controller_buzzer_scale",
+                "byrobot_petrone_v2_controller_controller_buzzer_scale_delay",
+                "byrobot_petrone_v2_controller_controller_buzzer_scale_reserve",
+                "byrobot_petrone_v2_controller_controller_buzzer_hz",
+                "byrobot_petrone_v2_controller_controller_buzzer_hz_delay",
+                "byrobot_petrone_v2_controller_controller_buzzer_hz_reserve",
+                "byrobot_petrone_v2_controller_controller_vibrator_off",
+                "byrobot_petrone_v2_controller_controller_vibrator_on_delay",
+                "byrobot_petrone_v2_controller_controller_vibrator_on_reserve",
+                "byrobot_petrone_v2_controller_controller_vibrator_delay",
+                "byrobot_petrone_v2_controller_controller_vibrator_reserve",
+                // "byrobot_petrone_v2_controller_controller_userinterface_preset",     추후 삭제예정
+                // "byrobot_petrone_v2_controller_controller_userinterface",            추후 삭제예정
+
                 //MODI
                 "modi_microphone_value",
                 "modi_environment_value",
