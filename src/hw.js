@@ -311,18 +311,20 @@ p.closeConnection = function() {
 };
 
 p.downloadConnector = function() {
-    Entry.dispatchEvent("hwDownload");
+    Entry.dispatchEvent("hwDownload", "hardware");
 };
 
 p.downloadGuide = function() {
-    var url = "http://download.play-entry.org/data/hardware_manual.zip";
-    window.open(url, 'download');
+    Entry.dispatchEvent("hwDownload", "manual");
+    // var url = "http://download.play-entry.org/data/hardware_manual.zip";
+    // window.open(url, 'download');
 };
 
 p.downloadSource = function() {
-    var url = "http://play-entry.com/down/board.ino";
-    var win = window.open(url, '_blank');
-    win.focus();
+    Entry.dispatchEvent("hwDownload", "ino");
+    // var url = "http://play-entry.com/down/board.ino";
+    // var win = window.open(url, '_blank');
+    // win.focus();
 };
 
 p.setZero = function() {
