@@ -783,70 +783,98 @@ describe('EntryPython', function(){
                 ));
             })
 
-            // it(' method' , function() {
-            //     assert.ok(Test.pythonToBlock(
-            //         "",
-            //         [[{
-
-            //         }]]
-            //     ));
-            // })
-
             Entry.clearProject();
         });
 
         describe('list method' , function() {
-            Entry.loadProject(Entry.getStartProject());
-            Entry.playground.object = Entry.container.objects_[0];
+            
 
-            Entry.variableContainer.addList({
-                "type": "list", "name": "테스트리스트", "id": "asdf"
+            it('show_list method' , function() {
+                Entry.loadProject(Entry.getStartProject());
+                Entry.playground.object = Entry.container.objects_[0];
+
+                Entry.variableContainer.addList({
+                    "type": "list", "name": "테스트리스트", "id": "asdf"
+                });
+
+                assert.ok(Test.pythonToBlock(
+                    "Entry.show_list('테스트리스트')",
+                    [[{
+                        type: 'show_list',
+                        params : ['asdf']
+                    }]]
+                ));
+                Entry.clearProject();
             });
 
-            // it(' method' , function() {
-            //     assert.ok(Test.pythonToBlock(
-            //         "",
-            //         [[{
+            it('hide_list method' , function() {
+                Entry.loadProject(Entry.getStartProject());
+                Entry.playground.object = Entry.container.objects_[0];
 
-            //         }]]
-            //     ));
-            // });
+                Entry.variableContainer.addList({
+                    "type": "list", "name": "테스트리스트", "id": "asdf"
+                });
 
-            // it(' method' , function() {
-            //     assert.ok(Test.pythonToBlock(
-            //         "",
-            //         [[{
+                assert.ok(Test.pythonToBlock(
+                    "Entry.hide_list('테스트리스트')",
+                    [[{
+                        type: 'hide_list',
+                        params : ['asdf']
+                    }]]
+                ));
+                Entry.clearProject();
+            });
 
-            //         }]]
-            //     ));
-            // });
+            it('add_value_to_list method' , function() {
+                Entry.loadProject(Entry.getStartProject());
+                Entry.playground.object = Entry.container.objects_[0];
 
-            // it(' method' , function() {
-            //     assert.ok(Test.pythonToBlock(
-            //         "",
-            //         [[{
+                Entry.variableContainer.addList({
+                    "type": "list", "name": "테스트리스트", "id": "asdf"
+                });
 
-            //         }]]
-            //     ));
-            // });
+                assert.ok(Test.pythonToBlock(
+                    "테스트리스트.append('10')",
+                    [[{
+                        type: "add_value_to_list",
+                        params : [
+                            {
+                                type : "text",
+                                params : ["10"]
+                            },
+                            "asdf"
+                        ]
+                    }]]
+                ));
+                Entry.clearProject();
+            });
 
-            // it(' method' , function() {
-            //     assert.ok(Test.pythonToBlock(
-            //         "",
-            //         [[{
+            it('is_included_in_list method' , function() {
+                Entry.loadProject(Entry.getStartProject());
+                Entry.playground.object = Entry.container.objects_[0];
 
-            //         }]]
-            //     ));
-            // });
+                Entry.variableContainer.addList({
+                    "type": "list", "name": "테스트리스트", "id": "asdf"
+                });
 
-            // it(' method' , function() {
-            //     assert.ok(Test.pythonToBlock(
-            //         "",
-            //         [[{
 
-            //         }]]
-            //     ));
-            // });
+                assert.ok(Test.pythonToBlock(
+                    "'10' in 테스트리스트",
+                    [[{ 
+                        type : "is_included_in_list",
+                        params : [
+                            null ,
+                            "asdf",
+                            null,
+                            {
+                                type : 'text',
+                                params : ['10']
+                            }
+                        ]
+                    }]]
+                ));
+            });
+
 
             Entry.clearProject();
         });
