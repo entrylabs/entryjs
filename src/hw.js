@@ -330,7 +330,7 @@ p.downloadGuide = function() {
 };
 
 p.downloadSource = function() {
-    var url = "http://play-entry.com/down/board.ino";
+    var url = "http://download.play-entry.org/apps/board.ino";
     var win = window.open(url, '_blank');
     win.focus();
 };
