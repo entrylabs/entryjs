@@ -665,28 +665,151 @@ describe('EntryPython', function(){
             ));
             Entry.clearProject();
         });
+    });
     
-        describe('create ' , function() {
-            it('local variable' , function() {
+    describe('create ' , function() {
+        it('local variable' , function() {
+            Entry.loadProject(Entry.getStartProject());
+            Entry.playground.object = Entry.container.objects_[0];
 
-                Entry.variableContainer.addVariable({
-                    "type": "variable", "name": "테스트변수1", "id": "abcd" , object_ : "7y0y"
+            Entry.variableContainer.addVariable({
+                "type": "variable", "name": "테스트변수1", "id": "abcd" , object_ : "7y0y"
 
-                });
+            });
 
+
+            assert.ok(Test.pythonToBlock(
+                "테스트변수1",
+                [[{
+                    type : 'get_variable',
+                    params : [ 'abcd' ]
+                }]]
+            ));
+
+            Entry.clearProject();
+        })
+    });
+    
+    describe('call' , function() {
+        describe('variable' , function() {
+          
+
+            it('ask_and_wait method' , function() {
                 Entry.loadProject(Entry.getStartProject());
                 Entry.playground.object = Entry.container.objects_[0];
 
+                Entry.variableContainer.addVariable({
+                    "type": "variable", "name": "테스트변수1", "id": "abcd"
+                });
+                
                 assert.ok(Test.pythonToBlock(
-                    "테스트변수1",
-                    [[{
-                        type : 'get_variable',
-                        params : [ 'abcd' ]
+                    "Entry.input(테스트변수1)",
+                    [[{ 
+                        "type" : "ask_and_wait",
+                        "params" : [
+                            {   
+                                type : 'get_variable',
+                                params : ["abcd"]
+                            }
+                        ]
                     }]]
                 ));
+            });
 
-                Entry.clearProject();
-            })
+            // it(' method' , function() {
+            //     assert.ok(Test.pythonToBlock(
+            //         "",
+            //         [[{
+
+            //         }]]
+            //     ));
+            // });
+
+            // it(' method' , function() {
+            //     assert.ok(Test.pythonToBlock(
+            //         "",
+            //         [[{
+
+            //         }]]
+            //     ));
+            // });
+
+            // it(' method' , function() {
+            //     assert.ok(Test.pythonToBlock(
+            //         "",
+            //         [[{
+
+            //         }]]
+            //     ));
+            // })
+
+            // it(' method' , function() {
+            //     assert.ok(Test.pythonToBlock(
+            //         "",
+            //         [[{
+
+            //         }]]
+            //     ));
+            // })
+
+            Entry.clearProject();
         });
-    });
+
+        describe('list method' , function() {
+            Entry.loadProject(Entry.getStartProject());
+            Entry.playground.object = Entry.container.objects_[0];
+
+            Entry.variableContainer.addList({
+                "type": "list", "name": "테스트리스트", "id": "asdf"
+            });
+
+            // it(' method' , function() {
+            //     assert.ok(Test.pythonToBlock(
+            //         "",
+            //         [[{
+
+            //         }]]
+            //     ));
+            // });
+
+            // it(' method' , function() {
+            //     assert.ok(Test.pythonToBlock(
+            //         "",
+            //         [[{
+
+            //         }]]
+            //     ));
+            // });
+
+            // it(' method' , function() {
+            //     assert.ok(Test.pythonToBlock(
+            //         "",
+            //         [[{
+
+            //         }]]
+            //     ));
+            // });
+
+            // it(' method' , function() {
+            //     assert.ok(Test.pythonToBlock(
+            //         "",
+            //         [[{
+
+            //         }]]
+            //     ));
+            // });
+
+            // it(' method' , function() {
+            //     assert.ok(Test.pythonToBlock(
+            //         "",
+            //         [[{
+
+            //         }]]
+            //     ));
+            // });
+
+            Entry.clearProject();
+        });
+    })
+
 });
