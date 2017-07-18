@@ -311,17 +311,7 @@ p.closeConnection = function() {
 };
 
 p.downloadConnector = function() {
-    var path;
-    var platform = navigator.platform;
-
-    if(platform === 'MacIntel') {
-        path = this.downloadPathOsx;
-    } else {
-        path = this.downloadPath;
-    }
-
-    var win = window.open(path, '_blank');
-    win.focus();
+    Entry.dispatchEvent("hwDownload");
 };
 
 p.downloadGuide = function() {
