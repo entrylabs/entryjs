@@ -173,10 +173,15 @@ Entry.Scene.prototype.generateElement = function(scene) {
             e.stopPropagation();
             if (Entry.engine.isState('run'))
                 return;
-            var a = confirm(Lang.Workspace.will_you_delete_scene);
-            if (a)
-                Entry.scene.removeScene(this.scene);
-            return;
+            entrylms.confirm(Lang.Workspace.will_you_delete_scene).then(function(result){
+                if (result === true)
+                    Entry.scene.removeScene(this.scene);
+            }.bind(this));
+
+            // var a = entrylms.confirm(Lang.Workspace.will_you_delete_scene);
+            // if (a)
+            //     Entry.scene.removeScene(this.scene);
+            // return;
         });
         removeButtonCover.appendChild(removeButton);
     }
