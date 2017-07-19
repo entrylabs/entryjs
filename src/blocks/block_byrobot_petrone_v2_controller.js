@@ -48,12 +48,12 @@ Entry.byrobot_petrone_v2_controller =
             "joystick_left_y"               :{name: Lang.Blocks.byrobot_petrone_v2_controller_joystick_left_y,            type: "input", pos: {x: 0, y: 0}},
             "joystick_left_direction"       :{name: Lang.Blocks.byrobot_petrone_v2_controller_joystick_left_direction,    type: "input", pos: {x: 0, y: 0}},
             "joystick_left_event"           :{name: Lang.Blocks.byrobot_petrone_v2_controller_joystick_left_event,        type: "input", pos: {x: 0, y: 0}},
-            "joystick_left_command"         :{name: Lang.Blocks.byrobot_petrone_v2_controller_joystick_left_command,      type: "input", pos: {x: 0, y: 0}},
+        //  "joystick_left_command"         :{name: Lang.Blocks.byrobot_petrone_v2_controller_joystick_left_command,      type: "input", pos: {x: 0, y: 0}},
             "joystick_right_x"              :{name: Lang.Blocks.byrobot_petrone_v2_controller_joystick_right_x,           type: "input", pos: {x: 0, y: 0}},
             "joystick_right_y"              :{name: Lang.Blocks.byrobot_petrone_v2_controller_joystick_right_y,           type: "input", pos: {x: 0, y: 0}},
             "joystick_right_direction"      :{name: Lang.Blocks.byrobot_petrone_v2_controller_joystick_right_direction,   type: "input", pos: {x: 0, y: 0}},
             "joystick_right_event"          :{name: Lang.Blocks.byrobot_petrone_v2_controller_joystick_right_event,       type: "input", pos: {x: 0, y: 0}},
-            "joystick_right_command"        :{name: Lang.Blocks.byrobot_petrone_v2_controller_joystick_right_command,     type: "input", pos: {x: 0, y: 0}},
+        //  "joystick_right_command"        :{name: Lang.Blocks.byrobot_petrone_v2_controller_joystick_right_command,     type: "input", pos: {x: 0, y: 0}},
             "button_button"                 :{name: Lang.Blocks.byrobot_petrone_v2_controller_button_button,              type: "input", pos: {x: 0, y: 0}},
             "button_event"                  :{name: Lang.Blocks.byrobot_petrone_v2_controller_button_event,               type: "input", pos: {x: 0, y: 0}},
             "entryhw_countTransferReserved" :{name: Lang.Blocks.byrobot_petrone_v2_entryhw_count_transfer_reserved,       type: "output", pos: {x: 0, y: 0}},
@@ -439,7 +439,8 @@ Entry.byrobot_petrone_v2_controller =
             return script.callReturn();
         }
     },
-    
+
+    /*
     setUserInterface: function(script, uicommand, uifunction)
     {
         switch( this.checkFinish(script, 40) )
@@ -460,4 +461,5 @@ Entry.byrobot_petrone_v2_controller =
             return script.callReturn();
         }
     },
+    */
 };
