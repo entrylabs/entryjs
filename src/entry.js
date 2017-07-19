@@ -166,6 +166,7 @@ Entry.enableArduino = function() {
  * @param {sound object} sound
  */
 Entry.initSound = function(sound) {
+    if (!sound || !sound.duration || sound.duration == 0) return;
     if (sound.fileurl) {
         sound.path = sound.fileurl;
     } else {
