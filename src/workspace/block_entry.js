@@ -8913,44 +8913,44 @@ Entry.block = {
                 Entry.hw.setDigitalPortValue("ELED_B", 0);
             }
             else if(value == 'Red') {
-                Entry.hw.setDigitalPortValue("ELED_R", 80);
+                Entry.hw.setDigitalPortValue("ELED_R", 10);
                 Entry.hw.setDigitalPortValue("ELED_G", 0);
                 Entry.hw.setDigitalPortValue("ELED_B", 0);
             }
             else if(value == 'Orange') {
-                Entry.hw.setDigitalPortValue("ELED_R", 80);
-                Entry.hw.setDigitalPortValue("ELED_G", 20);
+                Entry.hw.setDigitalPortValue("ELED_R", 10);
+                Entry.hw.setDigitalPortValue("ELED_G", 3);
                 Entry.hw.setDigitalPortValue("ELED_B", 0);
             }
             else if(value == 'Yellow') {
-                Entry.hw.setDigitalPortValue("ELED_R", 80);
-                Entry.hw.setDigitalPortValue("ELED_G", 80);
+                Entry.hw.setDigitalPortValue("ELED_R", 10);
+                Entry.hw.setDigitalPortValue("ELED_G", 10);
                 Entry.hw.setDigitalPortValue("ELED_B", 0);
             }
             else if(value == 'Green') {
                 Entry.hw.setDigitalPortValue("ELED_R", 0);
-                Entry.hw.setDigitalPortValue("ELED_G", 80);
+                Entry.hw.setDigitalPortValue("ELED_G", 10);
                 Entry.hw.setDigitalPortValue("ELED_B", 0);
             }
             else if(value == 'Blue') {
                 Entry.hw.setDigitalPortValue("ELED_R", 0);
                 Entry.hw.setDigitalPortValue("ELED_G", 0);
-                Entry.hw.setDigitalPortValue("ELED_B", 80);
+                Entry.hw.setDigitalPortValue("ELED_B", 10);
             }
             else if(value == 'Dark Blue') {
                 Entry.hw.setDigitalPortValue("ELED_R", 0);
-                Entry.hw.setDigitalPortValue("ELED_G", 50);
-                Entry.hw.setDigitalPortValue("ELED_B", 80);
+                Entry.hw.setDigitalPortValue("ELED_G", 7);
+                Entry.hw.setDigitalPortValue("ELED_B", 10);
             }
             else if(value == 'Purple') {
-                Entry.hw.setDigitalPortValue("ELED_R", 80);
+                Entry.hw.setDigitalPortValue("ELED_R", 10);
                 Entry.hw.setDigitalPortValue("ELED_G", 0);
-                Entry.hw.setDigitalPortValue("ELED_B", 80);
+                Entry.hw.setDigitalPortValue("ELED_B", 10);
             }
             else if(value == 'White') {
-                Entry.hw.setDigitalPortValue("ELED_R", 80);
-                Entry.hw.setDigitalPortValue("ELED_G", 80);
-                Entry.hw.setDigitalPortValue("ELED_B", 80);
+                Entry.hw.setDigitalPortValue("ELED_R", 10);
+                Entry.hw.setDigitalPortValue("ELED_G", 10);
+                Entry.hw.setDigitalPortValue("ELED_B", 10);
             }
             
                 
@@ -32411,6 +32411,1073 @@ Entry.block = {
         "syntax": { "js": [], "py": [] }
     },
     // ardublock Added 2016-06-01
+    // mkboard Added 2017-07-04
+    "mkboard_analog_list": {
+        "color": "#00979D",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "template": "%1",
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [ "A0", "0" ],
+                    [ "A1", "1" ],
+                    [ "A2", "2" ],
+                    [ "A3", "3" ],
+                    [ "A4", "4" ],
+                    [ "A5", "5" ]
+                ],
+                "value": "0",
+                "fontSize": 11
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null ]
+        },
+        "paramsKeyMap": {
+            "PORT": 0
+        },
+        "func": function (sprite, script) {
+            return script.getField("PORT");
+        },
+        "syntax": {"js": [], "py": []}
+    },
+    "mkboard_get_analog_value": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "arduino_ext_analog_list"
+                }
+            ],
+            "type": "mkboard_get_analog_value"
+        },
+        "paramsKeyMap": {
+            "PORT": 0
+        },
+        "class": "mkboardGet",
+        "isNotFor": [ "mkboard" ],
+        "func": function (sprite, script) {
+            var port = script.getValue("PORT", script);
+            var ANALOG = Entry.hw.portData.ANALOG;
+            if (port[0] === "A")
+                port = port.substring(1)
+            return ANALOG ? ANALOG[port] || 0 : 0;
+        },
+        "syntax": {"js": [], "py": []}
+    },
+    "mkboard_get_analog_value_map": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "mkboard_get_analog_value",
+                    "params": [
+                        {
+                            "type": "arduino_ext_analog_list"
+                        }
+                    ]
+                },
+                {
+                    "type": "number",
+                    "params": [ "0" ]
+                },
+                {
+                    "type": "number",
+                    "params": [ "1023" ]
+                },
+                {
+                    "type": "number",
+                    "params": [ "0" ]
+                },
+                {
+                    "type": "number",
+                    "params": [ "100" ]
+                }
+            ],
+            "type": "mkboard_get_analog_value_map"
+        },
+        "paramsKeyMap": {
+            "PORT": 0,
+            "VALUE2": 1,
+            "VALUE3": 2,
+            "VALUE4": 3,
+            "VALUE5": 4
+        },
+        "class": "mkboardGet",
+        "isNotFor": [ "mkboard" ],
+        "func": function (sprite, script) {
+            var result = script.getValue("PORT", script);
+            var ANALOG = Entry.hw.portData.ANALOG;
+            var value2 = script.getNumberValue("VALUE2", script);
+            var value3 = script.getNumberValue("VALUE3", script);
+            var value4 = script.getNumberValue("VALUE4", script);
+            var value5 = script.getNumberValue("VALUE5", script);
+
+            if (value2 > value3) {
+                var swap = value2;
+                value2 = value3;
+                value3 = swap;
+            }
+            if (value4 > value5) {
+                var swap = value4;
+                value4 = value5;
+                value5 = swap;
+            }
+            result -= value2;
+            result = result * ((value5 - value4) / (value3 - value2));
+            result += value4;
+            result = Math.min(value5, result);
+            result = Math.max(value4, result);
+
+            return result
+        },
+        "syntax": {"js": [], "py": []}
+    },
+    "mkboard_get_ultrasonic_value": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [{
+                type: 'arduino_get_port_number',
+                params: [ '13' ],
+            }, {
+                type: 'arduino_get_port_number',
+                params: [ '12' ],
+            }],
+            "type": "mkboard_get_ultrasonic_value"
+        },
+        "paramsKeyMap": {
+            "PORT1": 0,
+            "PORT2": 1,
+        },
+        "class": "mkboardGet",
+        "isNotFor": [ "mkboard" ],
+        "func": function (sprite, script) {
+            var port1 = script.getNumberValue("PORT1", script);
+            var port2 = script.getNumberValue("PORT2", script);
+
+            if(!Entry.hw.sendQueue['SET']) {
+                Entry.hw.sendQueue['SET'] = {};
+            }
+            delete Entry.hw.sendQueue['SET'][port1];
+            delete Entry.hw.sendQueue['SET'][port2];
+
+            if(!Entry.hw.sendQueue['GET']) {
+                Entry.hw.sendQueue['GET'] = {};
+            }
+            Entry.hw.sendQueue['GET'][Entry.mkboard.sensorTypes.ULTRASONIC] = {
+                port: [port1, port2],
+                time: new Date().getTime()
+            };
+            return Entry.hw.portData.ULTRASONIC || 0;
+        },
+        "syntax": {"js": [], "py": []}
+    },
+    "mkboard_get_digital": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_boolean_field",
+        "params": [{
+            "type": "Block",
+            "accept": "string"
+        }],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "arduino_get_port_number"
+                }
+            ],
+            "type": "mkboard_get_digital"
+        },
+        "paramsKeyMap": {
+            "PORT": 0
+        },
+        "class": "mkboardGet",
+        "isNotFor": [ "mkboard" ],
+        "func": function (sprite, script) {
+            var port = script.getNumberValue("PORT", script);
+            var DIGITAL = Entry.hw.portData.DIGITAL;
+            if(!Entry.hw.sendQueue['GET']) {
+                Entry.hw.sendQueue['GET'] = {};
+            }
+            Entry.hw.sendQueue['GET'][Entry.mkboard.sensorTypes.DIGITAL] = {
+                port: port,
+                time: new Date().getTime()
+            };
+            return (DIGITAL) ? DIGITAL[port] || 0 : 0;
+        },
+        "syntax": {"js": [], "py": []}
+    },
+    "mkboard_toggle_led": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "arduino_get_port_number"
+                },
+                {
+                    "type": "arduino_get_digital_toggle",
+                    "params": [ "on" ],
+                },
+                null
+            ],
+            "type": "mkboard_toggle_led"
+        },
+        "paramsKeyMap": {
+            "PORT": 0,
+            "VALUE": 1
+        },
+        "class": "mkboard",
+        "isNotFor": [ "mkboard" ],
+        "func": function (sprite, script) {
+            var port = script.getNumberValue("PORT");
+            var value = script.getValue("VALUE");
+
+            if(typeof value === 'string') {
+                value = value.toLowerCase();
+            }
+            if(Entry.mkboard.highList.indexOf(value) > -1) {
+                value = 255;
+            } else if(Entry.mkboard.lowList.indexOf(value) > -1) {
+                value = 0;
+            } else {
+                throw new Error();
+            }
+            if(!Entry.hw.sendQueue['SET']) {
+                Entry.hw.sendQueue['SET'] = {};
+            }
+            Entry.hw.sendQueue['SET'][port] = {
+                type: Entry.mkboard.sensorTypes.DIGITAL,
+                data: value,
+                time: new Date().getTime()
+            };
+            return script.callReturn();
+        },
+        "syntax": {"js": [], "py": []}
+    },
+    "mkboard_digital_pwm": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "arduino_get_pwm_port_number"
+                },
+                {
+                    "type": "text",
+                    "params": [ "255" ]
+                },
+                null
+            ],
+            "type": "mkboard_digital_pwm"
+        },
+        "paramsKeyMap": {
+            "PORT": 0,
+            "VALUE": 1
+        },
+        "class": "mkboard",
+        "isNotFor": [ "mkboard" ],
+        "func": function (sprite, script) {
+            var port = script.getNumberValue("PORT");
+            var value = script.getNumberValue("VALUE");
+            value = Math.round(value);
+            value = Math.max(value, 0);
+            value = Math.min(value, 255);
+            if(!Entry.hw.sendQueue['SET']) {
+                Entry.hw.sendQueue['SET'] = {};
+            }
+            Entry.hw.sendQueue['SET'][port] = {
+                type: Entry.mkboard.sensorTypes.PWM,
+                data: value,
+                time: new Date().getTime()
+            };
+            return script.callReturn();
+        },
+        "syntax": {"js": [], "py": []}
+    },
+    "mkboard_tone_list": {
+        "color": "#00979D",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "template": "%1",
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.silent, "0"],
+                    [Lang.Blocks.do_name, "C"],
+                    [Lang.Blocks.do_sharp_name, "CS"],
+                    [Lang.Blocks.re_name, "D"],
+                    [Lang.Blocks.re_sharp_name, "DS"],
+                    [Lang.Blocks.mi_name, "E"],
+                    [Lang.Blocks.fa_name, "F"],
+                    [Lang.Blocks.fa_sharp_name, "FS"],
+                    [Lang.Blocks.sol_name, "G"],
+                    [Lang.Blocks.sol_sharp_name, "GS"],
+                    [Lang.Blocks.la_name, "A"],
+                    [Lang.Blocks.la_sharp_name, "AS"],
+                    [Lang.Blocks.si_name, "B"]
+                ],
+                "value": "C",
+                "fontSize": 11
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null ]
+        },
+        "paramsKeyMap": {
+            "NOTE": 0
+        },
+        "func": function (sprite, script) {
+            return script.getField("NOTE");
+        },
+        "syntax": {"js": [], "py": []}
+    },
+    "mkboard_tone_value": {
+        "color": "#00979D",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "template": "%1",
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "mkboard_tone_list"
+                }
+            ],
+            "type": "mkboard_tone_value"
+        },
+        "paramsKeyMap": {
+            "NOTE": 0
+        },
+        "func": function (sprite, script) {
+            return script.getNumberValue("NOTE");
+        },
+        "syntax": {"js": [], "py": []}
+    },
+    "mkboard_octave_list": {
+        "color": "#00979D",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "template": "%1",
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    ["1", "1"],
+                    ["2", "2"],
+                    ["3", "3"],
+                    ["4", "4"],
+                    ["5", "5"],
+                    ["6", "6"]
+                ],
+                "value": "3",
+                "fontSize": 11
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null ]
+        },
+        "paramsKeyMap": {
+            "OCTAVE": 0
+        },
+        "func": function (sprite, script) {
+            return script.getField("OCTAVE");
+        },
+        "syntax": {"js": [], "py": []}
+    },
+    "mkboard_set_tone": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [{
+            "type": "Block",
+            "accept": "string"
+        }, {
+            "type": "Block",
+            "accept": "string"
+        }, {
+            "type": "Block",
+            "accept": "string"
+        }, {
+            "type": "Block",
+            "accept": "string"
+        }, {
+            "type": "Indicator",
+            "img": "block_icon/hardware_03.png",
+            "size": 12
+        }],
+        "events": {},
+        "def": {
+            "params": [{
+                    "type": "arduino_get_port_number",
+                    "value": 4,
+                    "params": [ "11" ]
+                },
+                {
+                    "type": "mkboard_tone_list"
+                },
+                {
+                    "type": "mkboard_octave_list"
+                },
+                {
+                    "type": "text",
+                    "params": [ "1" ]
+                },
+                null
+            ],
+            "type": "mkboard_set_tone"
+        },
+        "paramsKeyMap": {
+            "PORT": 0,
+            "NOTE": 1,
+            "OCTAVE": 2,
+            "DURATION": 3
+        },
+        "class": "mkboard",
+        "isNotFor": [ "mkboard" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var port = script.getNumberValue("PORT", script);
+
+            if (!script.isStart) {
+                var note = script.getValue("NOTE", script);
+                if(!Entry.Utils.isNumber(note))
+                    note = Entry.mkboard.toneTable[note];
+
+                if(note < 0) {
+                    note = 0;
+                } else if(note > 12) {
+                    note = 12;
+                }
+
+                var duration = script.getNumberValue("DURATION", script);
+
+                if(duration < 0) {
+                    duration = 0;
+                }
+
+                if(!sq['SET']) {
+                    sq['SET'] = {};
+                }
+
+                if(duration === 0) {
+                    sq['SET'][port] = {
+                        type: Entry.mkboard.sensorTypes.TONE,
+                        data: 0,
+                        time: new Date().getTime()
+                    };
+                    return script.callReturn();
+                }
+
+                var octave = script.getNumberValue("OCTAVE", script) - 1;
+                if(octave < 0) {
+                    octave = 0;
+                } else if(octave > 5) {
+                    octave = 5;
+                }
+
+                var value = 0;
+
+                if(note != 0) {
+                    value = Entry.mkboard.toneMap[note][octave];
+                }
+
+                duration = duration * 1000;
+                script.isStart = true;
+                script.timeFlag = 1;
+
+                sq['SET'][port] = {
+                    type: Entry.mkboard.sensorTypes.TONE,
+                    data: {
+                        value: value,
+                        duration: duration
+                    },
+                    time: new Date().getTime()
+                };
+
+                setTimeout(function() {
+                    script.timeFlag = 0;
+                }, duration + 32);
+                return script;
+            } else if (script.timeFlag == 1) {
+                return script;
+            } else {
+                delete script.timeFlag;
+                delete script.isStart;
+                sq['SET'][port] = {
+                    type: Entry.mkboard.sensorTypes.TONE,
+                    data: 0,
+                    time: new Date().getTime()
+                };
+                Entry.engine.isContinue = false;
+                return script.callReturn();
+            }
+        },
+        "syntax": {"js": [], "py": []}
+    },
+    "mkboard_set_servo": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [{
+            "type": "Block",
+            "accept": "string"
+        }, {
+            "type": "Block",
+            "accept": "string"
+        }, {
+            "type": "Indicator",
+            "img": "block_icon/hardware_03.png",
+            "size": 12
+        }],
+        "events": {},
+        "def": {
+            "params": [{
+                    "type": "arduino_get_port_number",
+                    "params": [ "10" ]
+                },
+                null
+            ],
+            "type": "mkboard_set_servo"
+        },
+        "paramsKeyMap": {
+            "PORT": 0,
+            "VALUE": 1
+        },
+        "class": "mkboard",
+        "isNotFor": [ "mkboard" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var port = script.getNumberValue("PORT", script);
+            var value = script.getNumberValue("VALUE", script);
+            value = Math.min(180, value);
+            value = Math.max(0, value);
+
+            if(!sq['SET']) {
+                sq['SET'] = {};
+            }
+            sq['SET'][port] = {
+                type: Entry.mkboard.sensorTypes.SERVO_PIN,
+                data: value,
+                time: new Date().getTime()
+            };
+
+            return script.callReturn();
+        },
+        "syntax": {"js": [], "py": []}
+    },    
+    "mkboard_dc_motor_direction_list": {
+        "color": "#00979D",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "template": "%1",
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.mkboard_dc_motor_forward, "0"],
+                    [Lang.Blocks.mkboard_dc_motor_backward, "1"]
+                ],
+                "value": "0",
+                "fontSize": 11
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null ]
+        },
+        "paramsKeyMap": {
+            "DC_MOTOR_DIRECTION": 0
+        },
+        "func": function (sprite, script) {
+            return script.getField("DC_MOTOR_DIRECTION");
+        },
+        "syntax": {"js": [], "py": []}
+    },
+    "mkboard_set_left_dc_motor": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [{
+            "type": "Block",
+            "accept": "string"
+        }, {
+            "type": "Block",
+            "accept": "string"
+        }, {
+            "type": "Indicator",
+            "img": "block_icon/hardware_03.png",
+            "size": 12
+        }],
+        "events": {},
+        "def": {
+            "params": [{
+                    "type": "mkboard_dc_motor_direction_list"
+                },
+                {
+                    "type": "text",
+                    "params": [ "100" ]
+                },
+                null
+            ],
+            "type": "mkboard_set_left_dc_motor"
+        },
+        "paramsKeyMap": {
+            "DC_MOTOR_DIRECTION": 0,
+            "DC_MOTOR_SPEED": 1
+        },
+        "class": "mkboard",
+        "isNotFor": [ "mkboard" ],
+        "func": function (sprite, script) {
+            // var sq = Entry.hw.sendQueue;
+            var direction = script.getValue("DC_MOTOR_DIRECTION", script);
+            if(!Entry.Utils.isNumber(direction))
+                direction = Entry.mkboard.directionTable[direction];
+
+            if(direction < 0) {
+                direction = 0;
+            } else if(direction > 1) {
+                direction = 1;
+            } 
+
+            var speed = script.getNumberValue("DC_MOTOR_SPEED", script) - 1;
+            if(speed < 0) {
+                speed = 0;
+            } else if(speed > 254) {
+                speed = 254;
+            }
+
+
+            if(!Entry.hw.sendQueue['SET']) {
+                Entry.hw.sendQueue['SET'] = {};
+            }            
+
+            Entry.hw.sendQueue['SET'][0] = {
+                type: Entry.mkboard.sensorTypes.DC_MOTOR_LEFT,
+                data: {
+                    direction: direction,
+                    speed: speed
+                 },
+                time: new Date().getTime()
+            };
+
+            setTimeout(function() {
+                script.timeFlag = 0;
+            }, 10);       
+            
+            return script.callReturn();            
+        },
+        "syntax": {"js": [], "py": []}
+    },   
+    "mkboard_set_right_dc_motor": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [{
+            "type": "Block",
+            "accept": "string"
+        }, {
+            "type": "Block",
+            "accept": "string"
+        }, {
+            "type": "Indicator",
+            "img": "block_icon/hardware_03.png",
+            "size": 12
+        }],
+        "events": {},
+        "def": {
+            "params": [{
+                    "type": "mkboard_dc_motor_direction_list"
+                },
+                {
+                    "type": "text",
+                    "params": [ "100" ]
+                },
+                null
+            ],
+            "type": "mkboard_set_right_dc_motor"
+        },
+        "paramsKeyMap": {
+            "DC_MOTOR_DIRECTION": 0,
+            "DC_MOTOR_SPEED": 1
+        },
+        "class": "mkboard",
+        "isNotFor": [ "mkboard" ],
+        "func": function (sprite, script) {
+            // var sq = Entry.hw.sendQueue;
+            var direction = script.getValue("DC_MOTOR_DIRECTION", script);
+            if(!Entry.Utils.isNumber(direction))
+                direction = Entry.mkboard.directionTable[direction];
+
+            if(direction < 0) {
+                direction = 0;
+            } else if(direction > 1) {
+                direction = 1;
+            }
+
+            var speed = script.getNumberValue("DC_MOTOR_SPEED", script) - 1;
+            if(speed < 0) {
+                speed = 0;
+            } else if(speed > 254) {
+                speed = 254;
+            }
+
+            if(!Entry.hw.sendQueue['SET']) {
+                Entry.hw.sendQueue['SET'] = {};
+            } 
+
+            Entry.hw.sendQueue['SET'][1] = {
+                type: Entry.mkboard.sensorTypes.DC_MOTOR_RIGHT,
+                data: {
+                    direction: direction,
+                    speed: speed
+                 },
+                time: new Date().getTime()
+            };
+
+            setTimeout(function() {
+                script.timeFlag = 0;
+            }, 10);              
+            
+            return script.callReturn();            
+        },
+        "syntax": {"js": [], "py": []}
+    },       
+    "mkboard_get_left_cds_analog_value": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "arduino_ext_analog_list",
+                    "params": [ "0" ]
+                }
+            ],
+            "type": "mkboard_get_left_cds_analog_value"
+        },
+        "paramsKeyMap": {
+            "PORT": 0
+        },
+        "class": "mkboardGet",
+        "isNotFor": [ "mkboard" ],
+        "func": function (sprite, script) {
+            var port = script.getValue("PORT", script);
+            var ANALOG = Entry.hw.portData.ANALOG;
+            if (port[0] === "A")
+                port = port.substring(1)
+            return ANALOG ? ANALOG[port] || 0 : 0;
+        },
+        "syntax": {"js": [], "py": []}
+    },   
+    "mkboard_get_right_cds_analog_value": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "arduino_ext_analog_list",
+                    "params": [ "1" ]
+                }
+            ],
+            "type": "mkboard_get_right_cds_analog_value"
+        },
+        "paramsKeyMap": {
+            "PORT": 0
+        },
+        "class": "mkboardGet",
+        "isNotFor": [ "mkboard" ],
+        "func": function (sprite, script) {
+            var port = script.getValue("PORT", script);
+            var ANALOG = Entry.hw.portData.ANALOG;
+            if (port[0] === "A")
+                port = port.substring(1)
+            return ANALOG ? ANALOG[port] || 0 : 0;
+        },
+        "syntax": {"js": [], "py": []}
+    },        
+    "mkboard_toggle_left_led": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "arduino_get_port_number",
+                    "params": [ "3" ]
+                },
+                {
+                    "type": "arduino_get_digital_toggle",
+                    "params": [ "on" ],
+                },
+                null
+            ],
+            "type": "mkboard_toggle_left_led"
+        },
+        "paramsKeyMap": {
+            "PORT": 0,
+            "VALUE": 1
+        },
+        "class": "mkboard",
+        "isNotFor": [ "mkboard" ],
+        "func": function (sprite, script) {
+            var port = script.getNumberValue("PORT");
+            var value = script.getValue("VALUE");
+
+            if(typeof value === 'string') {
+                value = value.toLowerCase();
+            }
+            if(Entry.mkboard.highList.indexOf(value) > -1) {
+                value = 255;
+            } else if(Entry.mkboard.lowList.indexOf(value) > -1) {
+                value = 0;
+            } else {
+                throw new Error();
+            }
+            if(!Entry.hw.sendQueue['SET']) {
+                Entry.hw.sendQueue['SET'] = {};
+            }
+            Entry.hw.sendQueue['SET'][port] = {
+                type: Entry.mkboard.sensorTypes.DIGITAL,
+                data: value,
+                time: new Date().getTime()
+            };
+            return script.callReturn();
+        },
+        "syntax": {"js": [], "py": []}
+    },
+    "mkboard_toggle_right_led": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "arduino_get_port_number",
+                    "params": [ "9" ]
+                },
+                {
+                    "type": "arduino_get_digital_toggle",
+                    "params": [ "on" ],
+                },
+                null
+            ],
+            "type": "mkboard_toggle_right_led"
+        },
+        "paramsKeyMap": {
+            "PORT": 0,
+            "VALUE": 1
+        },
+        "class": "mkboard",
+        "isNotFor": [ "mkboard" ],
+        "func": function (sprite, script) {
+            var port = script.getNumberValue("PORT");
+            var value = script.getValue("VALUE");
+
+            if(typeof value === 'string') {
+                value = value.toLowerCase();
+            }
+            if(Entry.mkboard.highList.indexOf(value) > -1) {
+                value = 255;
+            } else if(Entry.mkboard.lowList.indexOf(value) > -1) {
+                value = 0;
+            } else {
+                throw new Error();
+            }
+            if(!Entry.hw.sendQueue['SET']) {
+                Entry.hw.sendQueue['SET'] = {};
+            }
+            Entry.hw.sendQueue['SET'][port] = {
+                type: Entry.mkboard.sensorTypes.DIGITAL,
+                data: value,
+                time: new Date().getTime()
+            };
+            return script.callReturn();
+        },
+        "syntax": {"js": [], "py": []}
+    },       
+    "mkboard_get_sound_analog_value": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            }
+        ],
+        "events": {}, 
+        "def": {
+            "params": [  
+                {
+                    "type": "arduino_ext_analog_list",
+                    "params": [ "2" ]
+                }
+            ],
+            "type": "mkboard_get_sound_analog_value"
+        },
+        "paramsKeyMap": {
+            "PORT": 0
+        },
+        "class": "mkboardGet",
+        "isNotFor": [ "mkboard" ],
+        "func": function (sprite, script) {
+            var port = script.getValue("PORT", script);
+            var ANALOG = Entry.hw.portData.ANALOG;
+            if (port[0] === "A")
+                port = port.substring(1)
+            return ANALOG ? ANALOG[port] || 0 : 0;
+        },
+        "syntax": {"js": [], "py": []}
+    },
+    // mkboard Added 2017-07-04
     "joystick_get_number_sensor_value": {
         "parent": "arduino_get_number_sensor_value",
         "isNotFor": [
