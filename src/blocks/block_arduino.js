@@ -106,6 +106,11 @@ Entry.ArduinoExt = {
     }
 }
 
+Entry.ArduinoNano = $.extend(true, {}, Entry.ArduinoExt, {
+    name: 'ArduinoNano',
+});
+
+
 Entry.SmartBoard = {
     name: 'smartBoard',
     setZero: function() {

@@ -11,7 +11,7 @@ Entry.getStartProject = function(mediaFilePath) {
         ],
         "variables" : [
             {
-                "name" : "초시계",
+                "name" : Lang.Workspace.Variable_Timer,
                 "id" : "brih",
                 "visible" : false,
                 "value" : "0",
@@ -23,7 +23,7 @@ Entry.getStartProject = function(mediaFilePath) {
                 "isCloud" : false
             },
             {
-                "name" : "대답",
+                "name" : Lang.Blocks.VARIABLE_get_canvas_input_value,
                 "id" : "1vu8",
                 "visible" : false,
                 "value" : "0",

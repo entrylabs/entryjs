@@ -430,8 +430,13 @@ Entry.Scene.prototype.loadStartSceneSnapshot = function() {
  * @return {scene modal} scene
  */
 Entry.Scene.prototype.createScene = function() {
+    var regex = /[0-9]/;
+    var name = Entry.getOrderedName(Lang.Blocks.SCENE + ' ', this.scenes_, "name");
+    if(!regex.test(name)) {
+        name += '1';
+    }
     var scene = {
-        name: Lang.Blocks.SCENE + ' ' + (this.getScenes().length + 1),
+        name: name,
         id: Entry.generateHash()
     };
 
