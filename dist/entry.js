@@ -20646,7 +20646,7 @@ Entry.VariableContainer = function() {
       return;
     }
     this.functions_[b.id] || (this.functions_[b.id] = b, this.createFunctionView(b));
-    b.listElement.nameField.innerHTML = b.description;
+    b.listElement && (b.listElement.nameField.innerHTML = b.description);
     this.updateList();
   };
   c.createFunctionView = function(b) {

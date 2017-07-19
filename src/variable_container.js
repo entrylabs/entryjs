@@ -760,6 +760,7 @@ Entry.VariableContainer = function() {
     p.saveFunction = function(func) {
         /* add to function list when not exist */
         var ws = Entry.getMainWS();
+
         if (ws && (ws.overlayModefrom == Entry.Workspace.MODE_VIMBOARD)) {
             if(func && func.description) {
                 var funcName = func.description.substring(1, func.description.length-1);
@@ -775,7 +776,9 @@ Entry.VariableContainer = function() {
             this.functions_[func.id] = func;
             this.createFunctionView(func);
         }
-        func.listElement.nameField.innerHTML = func.description;
+        if(func.listElement)
+            func.listElement.nameField.innerHTML = func.description;
+
         this.updateList();
     };
 

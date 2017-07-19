@@ -897,6 +897,144 @@ describe('EntryPython', function(){
             //     Entry.clearProject();
             // })  
         });
-    })
+
+        describe('recursive', function(){
+            it('add block',function(){
+
+                assert.ok(Test.pythonToBlock(
+                    "((('10'+'10') + '10')+'10')",
+                    [[{ 
+                        "type" : "calc_basic",
+                        "params" : [
+                            {
+                                "type" : "calc_basic",
+                                "params" : [
+                                    {
+                                        "type" : "calc_basic",
+                                        "params" : [
+                                            {
+                                                "type" : "number",
+                                                "params" : ["10"]
+                                            },
+                                            "PLUS",
+                                            {
+                                                "type" : "number",
+                                                "params" : ["10"]
+                                            }
+
+                                        ]
+                                    },
+                                    "PLUS",
+                                    {
+                                        "type": "number",
+                                        "params": ["10"]
+                                    }
+
+                                ]
+                            },
+                            "PLUS",
+                            {
+                                "type": "number",
+                                "params" : ["10"]
+                            }
+                        ]
+                    }]]
+                ));
+            });
+
+            it('minus block',function(){
+                assert.ok(Test.pythonToBlock(
+                    "((('10'-'10') - '10')-'10')",
+                    [[{ 
+                        "type" : "calc_basic",
+                        "params" : [
+                            {
+                                "type" : "calc_basic",
+                                "params" : [
+                                    {
+                                        "type" : "calc_basic",
+                                        "params" : [
+                                            {
+                                                "type" : "number",
+                                                "params" : ["10"]
+                                            },
+                                            "MINUS",
+                                            {
+                                                "type" : "number",
+                                                "params" : ["10"]
+                                            }
+
+                                        ]
+                                    },
+                                    "MINUS",
+                                    {
+                                        "type": "number",
+                                        "params": ["10"]
+                                    }
+
+                                ]
+                            },
+                            "MINUS",
+                            {
+                                "type": "number",
+                                "params" : ["10"]
+                            }
+                        ]
+                    }]]
+                ));
+            })
+
+
+            it('calc_operation block',function(){
+                assert.ok(Test.pythonToBlock(
+                    "((('10'**2)**2)**2)",
+                    [[{ 
+                        "type" : "calc_operation",
+                        "params" : [
+                            null,
+                            {
+                                type: "calc_operation",
+                                params: [
+                                    null,
+                                    {   
+                                        type: 'calc_operation',
+                                        params : [
+                                            null,
+                                            {   
+                                                "type": "number",
+                                                "params" : [ "10" ]
+                                            },
+                                            null,
+                                            null
+                                        ]
+                                    },
+                                    null,
+                                    null
+                                ]
+                            },
+                            null,
+                            null
+                        ]
+                    }]]
+                ));
+            })
+        });
+
+        describe('parse' , function() {
+            it('python function to block' , function() {
+                Entry.loadProject(Entry.getStartProject());
+                Entry.playground.object = Entry.container.objects_[0];
+                Test.parsePython("def 함수(param1, param2):\n    Entry.move_to_direction(10)");
+                var functions = Entry.variableContainer.functions_;
+                var functionKey = Object.keys(functions)[0];
+                var func = functions[functionKey];
+
+                assert.equal(func.description.trim() , '함수');
+                assert.equal(func.content._data[0]._data[1].data.type , 'move_direction');
+                assert.equal(func.content._data[0]._data[1].data.params[0].data.params[0] , '10');
+
+            });
+        })
+    });
 
 });
