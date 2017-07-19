@@ -1020,8 +1020,8 @@ describe('EntryPython', function(){
             })
         });
 
-        describe('parse' , function() {
-            it('python function to block' , function() {
+        describe('about function python mode' , function() {
+            it('define' , function() {
                 Entry.loadProject(Entry.getStartProject());
                 Entry.playground.object = Entry.container.objects_[0];
                 Test.parsePython("def 함수(param1, param2):\n    Entry.move_to_direction(10)");
@@ -1033,6 +1033,33 @@ describe('EntryPython', function(){
                 assert.equal(func.content._data[0]._data[1].data.type , 'move_direction');
                 assert.equal(func.content._data[0]._data[1].data.params[0].data.params[0] , '10');
 
+                Entry.clearProject();
+            });
+
+            it('params' , function(){
+                Entry.loadProject(Entry.getStartProject());
+                Entry.playground.object = Entry.container.objects_[0];
+
+                var resultBlock = Test.parsePython("def 함수(param1, param2):\n    Entry.move_to_direction(10)\n함수(10,True)");
+                var functions = Entry.variableContainer.functions_;
+                var functionKey = Object.keys(functions)[0];
+                var func = functions[functionKey];
+
+                assert.ok(Test.objectSimilarCheck(resultBlock[0][0], 
+                    {
+                        "type": 'func_' + functionKey,
+                        "params" : [
+                            {
+                                "type" : 'number',
+                                "params" : [10]
+                            },
+                            {
+                                "type" : "True"
+                            }
+                        ]
+                    }
+                ));
+                
             });
         })
     });
