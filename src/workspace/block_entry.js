@@ -42032,12 +42032,12 @@ Entry.block = {
                     [Lang.Blocks.byrobot_petrone_v2_controller_joystick_left_y, "joystick_left_y"],
                     [Lang.Blocks.byrobot_petrone_v2_controller_joystick_left_direction, "joystick_left_direction"],
                     [Lang.Blocks.byrobot_petrone_v2_controller_joystick_left_event, "joystick_left_event"],
-                    [Lang.Blocks.byrobot_petrone_v2_controller_joystick_left_command, "joystick_left_command"],
+    //              [Lang.Blocks.byrobot_petrone_v2_controller_joystick_left_command, "joystick_left_command"],
                     [Lang.Blocks.byrobot_petrone_v2_controller_joystick_right_x, "joystick_right_x"],
                     [Lang.Blocks.byrobot_petrone_v2_controller_joystick_right_y, "joystick_right_y"],
                     [Lang.Blocks.byrobot_petrone_v2_controller_joystick_right_direction, "joystick_right_direction"],
                     [Lang.Blocks.byrobot_petrone_v2_controller_joystick_right_event, "joystick_right_event"],
-                    [Lang.Blocks.byrobot_petrone_v2_controller_joystick_right_command, "joystick_right_command"],
+    //              [Lang.Blocks.byrobot_petrone_v2_controller_joystick_right_command, "joystick_right_command"],
                 ],
                 "value": "joystick_left_x",             // 초기 선택항목 지정
                 "fontSize": 11
