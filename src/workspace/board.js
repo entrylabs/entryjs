@@ -342,6 +342,14 @@ Entry.Board.DRAG_RADIUS = 5;
             left: offset.left - scrollLeft
         };
 
+        var svgDom = this.svgDom;
+        if (svgDom) {
+            this._svgDomRect = {
+                width: svgDom.width(),
+                height: svgDom.height()
+            };
+        }
+
         if (this.btnWrapper) {
             this.btnWrapper.attr({
                 "transform": "translate(" +
@@ -831,8 +839,9 @@ Entry.Board.DRAG_RADIUS = 5;
         var blockX = pos.x,
             blockY = pos.y;
 
-        var dx = svgDom.width()/2 - blockX;
-        var dy = svgDom.height()/2 - blockY - 100;
+        var rect = this.getSvgDomRect();
+        var dx = rect.width/2 - blockX;
+        var dy = rect.height/2 - blockY - 100;
         this.scroller.scroll(
             dx, dy
         );
@@ -1136,5 +1145,13 @@ Entry.Board.DRAG_RADIUS = 5;
         this.scroller.scroll(newX, newY, true);
         return [newX, newY];
     };
+
+    p.getSvgDomRect = function() {
+        if (!this._svgDomRect)
+            this.updateOffset();
+        return this._svgDomRect;
+    };
+
+
 
 })(Entry.Board.prototype);

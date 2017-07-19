@@ -176,8 +176,7 @@ Entry.Container.prototype.disableSort = function() {
  * update list view to sort item.
  */
 Entry.Container.prototype.updateListView = function() {
-    if (!this.listView_)
-        return;
+    if (!this.listView_) return;
 
     var view = this.listView_;
 
@@ -404,20 +403,21 @@ Entry.Container.prototype.selectObject = function(objectId, changeScene) {
     var object = this.getObject(objectId);
     var workspace = Entry.getMainWS();
 
-    if (changeScene && object) {
+    if (changeScene && object)
         Entry.scene.selectScene(object.scene);
-    }
 
-    this.mapObjectOnScene(function(object) {
-        !object.view_ && object.generateView && object.generateView();
-        object.view_ && object.view_.removeClass('selectedObject');
-        object.isSelected_ = false;
+    var className = 'selectedObject'
+    this.mapObjectOnScene(function(o) {
+        !o.view_ && o.generateView && o.generateView();
+        var selected = o === object;
+        var view = o.view_;
+        if (selected) view && view.addClass(className);
+        else view && view.removeClass(className);
+
+        o.isSelected_ = selected;
     });
 
     if (object) {
-        object.view_ && object.view_.addClass('selectedObject');
-        object.isSelected_ = true;
-
         if(workspace && workspace.vimBoard && Entry.isTextMode) {
             var sObject = workspace.vimBoard._currentObject;
             var parser = workspace.vimBoard._parser;
@@ -428,7 +428,7 @@ Entry.Container.prototype.selectObject = function(objectId, changeScene) {
                         catch(e) {}
                         if(parser && !parser._onError) {
                             Entry.container.selectObject(object.id, true);
-                            return
+                            return;
                         }
                         else {
                             Entry.container.selectObject(sObject.id, true);
@@ -728,6 +728,7 @@ Entry.Container.prototype.mapObjectOnScene = function(mapFunction, param) {
     var objects = this.getCurrentObjects();
     var length = objects.length;
     var output = [];
+
     for (var i = 0; i<this._extensionObjects.length; i++) {
         var object = this._extensionObjects[i];
         output.push(mapFunction(object, param));
@@ -802,13 +803,11 @@ Entry.Container.prototype.mapEntityIncludeCloneOnScene = function(mapFunction, p
     }
     for (var i = 0; i<length; i++) {
         var object = objects[i];
-        var lenx = object.clonedEntities.length;
         output.push(mapFunction(object.entity, param));
-        for (var j = 0; j<lenx; j++) {
-            var entity = object.clonedEntities[j];
-            if (entity && !entity.isStamp)
-                output.push(mapFunction(entity, param));
-        }
+
+        object.getClonedEntities().forEach(function(entity) {
+            output.push(mapFunction(entity, param));
+        });
     }
     return output;
 };
@@ -831,7 +830,7 @@ Entry.Container.prototype.cachePicture = function(pictureId, image) {
     this.cachedPicture[pictureId] = image;
 };
 
-Entry.Container.prototype.unCachePictures = function(entity, pictures) {
+Entry.Container.prototype.unCachePictures = function(entity, pictures, isClone) {
     if (!entity || !pictures) return;
     var entityId;
 
@@ -843,7 +842,8 @@ Entry.Container.prototype.unCachePictures = function(entity, pictures) {
     else entityId = entity;
 
     pictures.forEach(function(p) {
-        delete this.cachedPicture[p.id + entityId];
+        var id = p.id + (isClone ? '' : entityId);
+        delete this.cachedPicture[id];
     }.bind(this));
 };
 
@@ -918,12 +918,9 @@ Entry.Container.prototype.setInputValue = function(inputValue) {
 Entry.Container.prototype.resetSceneDuringRun = function() {
     this.mapEntityOnScene(function(entity){
         entity.loadSnapshot();
-        entity.object.filters = [];
         entity.resetFilter();
-        if (entity.dialog)
-            entity.dialog.remove();
-        if (entity.shape)
-            entity.removeBrush();
+        entity.dialog && entity.dialog.remove();
+        entity.shape && entity.removeBrush();
     });
     this.clearRunningStateOnScene();
 };

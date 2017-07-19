@@ -488,14 +488,14 @@ Entry.generateHash = function() {
  * @param {function} fn
  */
 Entry.addEventListener = function(eventName, fn) {
-    if (!this.events_)
-        this.events_ = {};
-     if (!this.events_[eventName]) {
-        this.events_[eventName] = [];
+    if (!this.events_) this.events_ = {};
+
+    if (!this.events_[eventName]) {
+       this.events_[eventName] = [];
     }
-    if (fn instanceof Function) {
+    if (fn instanceof Function)
         this.events_[eventName].push(fn);
-    }
+
     return true;
 };
 
@@ -505,15 +505,20 @@ Entry.addEventListener = function(eventName, fn) {
  * @param {?} params
  */
 Entry.dispatchEvent = function(eventName, params) {
-    if (!this.events_)
+    if (!this.events_) {
         this.events_ = {};
+        return;
+    }
 
     var events = this.events_[eventName];
-    if (!events) return;
+    if (!events || events.length === 0) return;
 
-    for (var index = 0, l = events.length; index < l; index++) {
-        events[index].apply(window, Array.prototype.slice.call(arguments).splice(1));
-    }
+    var args = Array.prototype.slice.call(arguments);
+    args.shift();
+
+    events.forEach(function(func) {
+        func.apply(window, args);
+    });
 };
 
 /**
@@ -810,18 +815,31 @@ Entry.nodeListToArray = function(nl) {
     return arr;
 };
 
-Entry.computeInputWidth = function(value){
-    var elem = document.getElementById('entryInputForComputeWidth');
-    if (!elem) {
-        elem = document.createElement("span");
-        elem.setAttribute('id', 'entryInputForComputeWidth');
-        elem.className = "elem-element";
-        document.body.appendChild(elem);
-    }
+Entry.computeInputWidth = (function() {
+    var elem;
+    var _cache = {};
+    return function(value) {
+        value = value.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 
-    elem.innerHTML = value.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-    return Number(elem.offsetWidth + 10) + 'px';
-};
+        var cached = _cache[value];
+        if (cached) return cached;
+        else {
+            elem = elem || document.getElementById('entryInputForComputeWidth');
+            if (!elem) {
+                elem = document.createElement("span");
+                elem.setAttribute('id', 'entryInputForComputeWidth');
+                elem.className = "elem-element";
+                document.body.appendChild(elem);
+            }
+
+            elem.innerHTML = value;
+            var ret = Number(elem.offsetWidth + 10) + 'px';
+
+            if (window.fontLoaded) _cache[value] = ret;
+            return ret;
+        }
+    };
+})();
 
 Entry.isArrowOrBackspace = function(keyCode){
     var codes = [37,38,39,40, 8];
@@ -1631,4 +1649,29 @@ Entry.Utils.glideBlock = function(svgGroup, x, y, callback) {
         },
         easing: "ease-in-out"
     });
+};
+//
+Entry.Utils.copy = function(target) {
+    return JSON.parse(JSON.stringify(target));
+};
+
+//helper function for development and debug
+Entry.Utils.getAllObjectsBlockList = function() {
+    return Entry.container.objects_.reduce(function(prev, o) {
+        return prev.concat(o.script.getBlockList());
+    }, []);
+};
+
+Entry.Utils.toFixed = function (value, len) {
+    len = len || 1;
+    var powValue = Math.pow(10, len);
+
+    value = Math.round(value * powValue) / powValue;
+
+    if (Entry.isFloat(value)) return String(value);
+    else {
+        value += '.';
+        for (var i=0; i<len; i++) value += '0';
+        return value;
+    }
 };

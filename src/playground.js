@@ -886,10 +886,10 @@ Entry.Playground = function() {
         }
 
         var board = workspace.getBoard();
-        workspace.changeBoardCode(
-            object.script,
-            board.adjustThreadsPosition.bind(board)
-        );
+        var engine = Entry.engine;
+        var cb = engine && engine.isState('run') ?
+            undefined : board.adjustThreadsPosition.bind(board);
+        workspace.changeBoardCode(object.script, cb);
     };
 
     /**
@@ -899,9 +899,8 @@ Entry.Playground = function() {
         var view = this.pictureListView_;
         if (!view) return;
 
-        while (view.hasChildNodes()) {
+        while (view.hasChildNodes())
             view.removeChild(view.lastChild);
-        }
 
         if (this.object) {
             var pictures = this.object.pictures;
@@ -909,7 +908,6 @@ Entry.Playground = function() {
                 var picture = pictures[i];
                 !picture.view && Entry.playground.generatePictureElement(picture);
                 var element = pictures[i].view;
-                if (!element) console.log(element);
                 element.orderHolder.innerHTML = i+1;
                 view.appendChild(element);
             }
@@ -929,7 +927,7 @@ Entry.Playground = function() {
         if (isNew === true) delete tempPicture.id;
         delete tempPicture.view;
 
-        picture = JSON.parse(JSON.stringify(tempPicture));
+        picture = Entry.Utils.copy(tempPicture);
         if (!picture.id) picture.id = Entry.generateHash();
 
         picture.name = Entry.getOrderedName(picture.name, this.object.pictures);
@@ -1136,7 +1134,7 @@ Entry.Playground = function() {
         if (isNew === true)
             delete tempSound.id;
 
-        sound = JSON.parse(JSON.stringify(tempSound));
+        sound = Entry.Utils.copy(tempSound);
         if (!sound.id)
             sound.id = Entry.generateHash();
         sound.name = Entry.getOrderedName(sound.name, this.object.sounds);
