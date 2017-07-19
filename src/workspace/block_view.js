@@ -504,7 +504,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
                     if (longPressTimer) {
                         longPressTimer = null;
                         onMouseUp();
-                        blockView._rightClick(e);
+                        blockView._rightClick(e, 'longPress');
                     }
                 }, 1000);
             }
@@ -1283,7 +1283,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
         });
     };
 
-    p._rightClick = function(e) {
+    p._rightClick = function(e, eventSource) {
         var disposeEvent = Entry.disposeEvent;
         if (disposeEvent) disposeEvent.notify(e);
 
@@ -1293,7 +1293,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
         if (this.isInBlockMenu) {
             //if long pressed block is function_general block
             //edit function
-            block.getFuncId() &&
+            if (eventSource === 'longPress' && block.getFuncId())
                 this._schema.events.dblclick[0](this);
             return;
         }
