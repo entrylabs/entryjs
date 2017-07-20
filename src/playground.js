@@ -1158,6 +1158,17 @@ Entry.Playground = function() {
         this.injectSound();
     };
 
+    p.downloadSound = function(soundId) {
+        var sound = Entry.playground.object.getSound(soundId);
+        if (sound.fileurl) {
+            window.open(sound.fileurl);
+        } else {
+            window.open('/api/sprite/download/mp3/'+
+                    encodeURIComponent(sound.filename)+'/'+encodeURIComponent(sound.name) + '.mp3');
+        }
+    }
+
+
     /**
      * select view mode
      * @param {string} viewType
@@ -1576,6 +1587,13 @@ Entry.Playground = function() {
                             Entry.toast.alert(Lang.Workspace.sound_remove_fail,'');
                         }
                         Entry.removeElement(element);
+                    }
+                },
+                { divider: true },
+                {
+                    text: Lang.Workspace.context_download,
+                    callback: function(){
+                        Entry.playground.downloadSound(sound.id);
                     }
                 }
             ];
