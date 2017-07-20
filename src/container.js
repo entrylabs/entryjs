@@ -1120,6 +1120,7 @@ Entry.Container.prototype.getDom = function(query) {
 Entry.Container.prototype.isSceneObjectsExist = function() {
     var objects = this.getSceneObjects();
     return !!(objects && objects.length);
+}
 
 Entry.Container.prototype.adjustClonedValues = function(oldIds, newIds) {
     if (!(oldIds && newIds)) return;
