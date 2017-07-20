@@ -33034,7 +33034,6 @@ Entry.block = {
         },
         "syntax": {"js": [], "py": []}
     },    
-    /* 
     "mkboard_dc_motor_direction_list": {
         "color": "#00979D",
         "skeleton": "basic_string_field",
@@ -33208,11 +33207,10 @@ Entry.block = {
                 script.timeFlag = 0;
             }, 10);              
             
-            return script.callReturn();            
+            return script.callReturn();
         },
         "syntax": {"js": [], "py": []}
-    },       
-    */
+    },
     "mkboard_get_left_cds_analog_value": {
         "color": "#00979D",
         "fontColor": "#fff",
