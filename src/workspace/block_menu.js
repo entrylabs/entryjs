@@ -284,7 +284,22 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
 
         if (board && (workspaceMode === WORKSPACE.MODE_BOARD ||
             workspaceMode === WORKSPACE.MODE_OVERLAYBOARD)) {
-            if (!board.code) return;
+            if (!board.code) {
+                if (Entry.toast) {
+                    Entry.toast.alert(
+                        Lang.Workspace.add_object_alert,
+                        Lang.Workspace.add_object_alert_msg
+                    );
+                }
+                if (this.selectedBlockView) {
+                    this.selectedBlockView.removeSelected();
+                    this.set({
+                        selectedBlockView: null,
+                        dragBlock: null
+                    });
+                }
+                return;
+            }
 
             var block = blockView.block;
             var code = this.code;

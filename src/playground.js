@@ -332,7 +332,14 @@ Entry.Playground = function() {
             var pictureAdd = Entry.createElement('div', 'entryAddPicture');
             pictureAdd.addClass('entryPlaygroundAddPicture');
             pictureAdd.bindOnClick(function(e) {
-                Entry.do('playgroundClickAddPicture');
+                if (!Entry.container || Entry.container.isSceneObjectsExist())
+                    Entry.do('playgroundClickAddPicture');
+                else {
+                    Entry.toast.alert(
+                        Lang.Workspace.add_object_alert,
+                        Lang.Workspace.add_object_alert_msg
+                    );
+                }
             });
             var innerPictureAdd = Entry.createElement('div', 'entryAddPictureInner');
             innerPictureAdd.addClass('entryPlaygroundAddPictureInner');
@@ -769,7 +776,14 @@ Entry.Playground = function() {
             var soundAdd = Entry.createElement('div', 'entryAddSound');
             soundAdd.addClass('entryPlaygroundAddSound');
             soundAdd.bindOnClick(function(e) {
-                Entry.do('playgroundClickAddSound');
+                if (!Entry.container || Entry.container.isSceneObjectsExist())
+                    Entry.do('playgroundClickAddSound');
+                else {
+                    Entry.toast.alert(
+                        Lang.Workspace.add_object_alert,
+                        Lang.Workspace.add_object_alert_msg
+                    );
+                }
             });
             var innerSoundAdd = Entry.createElement('div', 'entryAddSoundInner');
             innerSoundAdd.addClass('entryPlaygroundAddSoundInner');
