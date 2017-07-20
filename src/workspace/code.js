@@ -129,7 +129,9 @@ Entry.PARAM = -1;
         return executors;
     };
 
-    p.getEventMap = function(eventType) {return this._eventMap[eventType];};
+    p.getEventMap = function(eventType) {
+        return this._eventMap[eventType];
+    };
 
     p.map = function(func) {
         this._data.map(func);
@@ -137,18 +139,24 @@ Entry.PARAM = -1;
 
     p.tick = function() {
         var executors = this.executors;
+        var watchEvent = this.watchEvent;
+        var shouldNotifyWatch = watchEvent.hasListeners();
+        var ret;
         var executedBlocks = [];
+
         for (var i = 0; i < executors.length; i++) {
             var executor = executors[i];
-            if (!executor.isEnd())
-                executedBlocks = executedBlocks.concat(executor.execute(true));
-            else {
+            if (!executor.isEnd()) {
+                ret = executor.execute(true);
+                if (shouldNotifyWatch)
+                    executedBlocks = executedBlocks.concat(ret);
+            } else {
                 executors.splice(i--, 1);
                 if (executors.length === 0)
                     this.executeEndEvent.notify();
             }
         }
-        this.watchEvent.notify(executedBlocks);
+        shouldNotifyWatch && watchEvent.notify(executedBlocks);
     };
 
     p.removeExecutor = function(executor) {

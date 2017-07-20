@@ -431,9 +431,9 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
         this.updateSplitters();
     };
 
-    p.setMenu = function() {
-        if (!this.hasCategory())
-            return;
+    p.setMenu = function(doNotAlign) {
+        if (!this.hasCategory()) return;
+
         this._categoryData.forEach(function(data) {
             var category = data.category;
             var threads = data.blocks;
@@ -453,7 +453,8 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
             if (count === 0) elem.addClass('entryRemove');
             else elem.removeClass('entryRemove');
         }.bind(this));
-        this.selectMenu(0, true);
+
+        this.selectMenu(0, true, doNotAlign);
     };
 
 

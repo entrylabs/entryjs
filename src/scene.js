@@ -162,6 +162,7 @@ Entry.Scene.prototype.generateElement = function(scene) {
         that.resize();
     };
     divide.appendChild(nameField);
+    viewTemplate.nameField = nameField;
     var removeButtonCover = Entry.createElement('span');
     removeButtonCover.addClass('entrySceneRemoveButtonCoverWorkspace');
     viewTemplate.appendChild(removeButtonCover);
@@ -308,8 +309,7 @@ Entry.Scene.prototype.selectScene = function(scene) {
         prevSelectedView.removeClass('selectedScene');
         var elem = document.activeElement;
 
-        if ($(elem).hasClass('entrySceneFieldWorkspace'))
-            elem.blur();
+        elem === prevSelectedView.nameField  && elem.blur();
     }
 
     this.selectedScene = scene;
@@ -503,6 +503,7 @@ Entry.Scene.prototype.resize = function() {
     var firstScene = scenes[0];
 
     if (scenes.length === 0 || !firstScene) return;
+
     var startPos = $(firstScene.view).offset().left;
     var marginLeft = parseFloat($(selectedScene.view).css('margin-left'));
     var totalWidth = Math.floor($(this.view_).width() - startPos - 5);
@@ -510,10 +511,13 @@ Entry.Scene.prototype.resize = function() {
 
     var normWidth = startPos + 15;
     var diff = 0;
+    var isSelectedView = false;
+    var selectedViewWidth = 0;
     for (var i in scenes) {
         var scene = scenes[i];
         var view = scene.view;
         view.addClass('minValue');
+        isSelectedView = view === this.selectedScene.view;
         view = $(view);
 
         var width = parseFloat(Entry.computeInputWidth(scene.name));
@@ -521,7 +525,9 @@ Entry.Scene.prototype.resize = function() {
         if (scene === this.selectedScene)
             diff = adjusted - width;
         $(scene.inputWrapper).width(adjusted + 'px');
-        normWidth += view.width() + LEFT_MARGIN;
+        var viewWidth = view.width();
+        if (isSelectedView) selectedViewWidth = viewWidth;
+        normWidth += viewWidth + LEFT_MARGIN;
     }
 
     if (normWidth > totalWidth) align();
@@ -529,8 +535,10 @@ Entry.Scene.prototype.resize = function() {
     function align() {
         var dummyWidth = 30.5;
         var len = scenes.length - 1;
-        totalWidth = totalWidth - Math.round($(selectedScene.view).width())
-                        - dummyWidth*len - diff;
+        totalWidth = totalWidth -
+            Math.round(selectedViewWidth || $(selectedScene.view).width()) -
+            dummyWidth*len - diff;
+
         var fieldWidth = Math.floor(totalWidth/len);
         for (i in scenes) {
             scene = scenes[i];
@@ -554,7 +562,7 @@ Entry.Scene.prototype.isMax = function() {
 Entry.Scene.prototype.clear = function() {
     this.scenes_.map(function(s) {
         Entry.stage.removeObjectContainer(s);
-    })
+    });
     $(this.listView_).html("");
     this.scenes_ = [];
     this.selectedScene = null;

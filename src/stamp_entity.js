@@ -18,7 +18,9 @@ Entry.StampEntity = function(object, entity) {
     this.width = entity.getWidth();
     this.height = entity.getHeight();
     if (this.type == 'sprite') {
-        this.object = entity.object.clone(true);
+        this.object = entity.object.clone();
+        this.object.mouseEnabled = false;
+        this.object.tickEnabled = false;
         this.object.filters = null;
         if (entity.effect) {
             this.effect = Entry.cloneSimpleObject(entity.effect);
@@ -31,15 +33,14 @@ Entry.StampEntity = function(object, entity) {
 
 
 (function(p, origin) {
-    p.applyFilter = origin.applyFilter;
-
-    p.removeClone = origin.removeClone;
-
-    p.getWidth = origin.getWidth;
-
-    p.getHeight = origin.getHeight;
-
-    p.getInitialEffectValue = origin.getInitialEffectValue;
-
+    [
+        'applyFilter',
+        'removeClone',
+        'getWidth',
+        'getHeight',
+        'getInitialEffectValue',
+        'destroy',
+        'cache'
+    ].forEach(function(key) { p[key] = origin[key]; });
 })(Entry.StampEntity.prototype, Entry.EntityObject.prototype);
 

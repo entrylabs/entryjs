@@ -105,11 +105,13 @@ Entry.Stage.prototype.initStage = function(canvas) {
         var x = ((e.pageX - roundRect.left - scrollPos.left) / roundRect.width - 0.5) * 480;
         var y = ((e.pageY - roundRect.top - scrollPos.top) / roundRect.height - 0.5) * -270;
 
-        Entry.stage.mouseCoordinate = {
-            x: x.toFixed(1), y: y.toFixed(1)
+        this.mouseCoordinate = {
+            x: Entry.Utils.toFixed(x),
+            y: Entry.Utils.toFixed(y)
         };
         Entry.dispatchEvent('stageMouseMove');
-    };
+    }.bind(this);
+
     canvas.onmousemove = moveFunc;
     canvas.ontouchmove = moveFunc;
 
@@ -117,10 +119,21 @@ Entry.Stage.prototype.initStage = function(canvas) {
         Entry.dispatchEvent('stageMouseOut');
     };
 
-    Entry.addEventListener('updateObject', function(e){
+    Entry.addEventListener('updateObject', updateObjectFunc);
+
+    Entry.addEventListener('run', function(e){
+        Entry.removeEventListener('updateObject', updateObjectFunc);
+    });
+
+    Entry.addEventListener('stop', function(e){
+        Entry.addEventListener('updateObject', updateObjectFunc);
+    });
+
+
+    var updateObjectFunc = function(e) {
         if (Entry.engine.isState('stop'))
             Entry.stage.updateObject();
-    });
+    };
 
     Entry.addEventListener('canvasInputComplete', function (e){
         try {
@@ -147,7 +160,8 @@ Entry.Stage.prototype.render = function() {
     var time = new Date().getTime();
     Entry.stage.update();
     time = new Date().getTime() - time;
-    Entry.stage.timer = setTimeout(Entry.stage.render, 16 - time % 16 + 16 * Math.floor(time / 16));
+    Entry.stage.timer = setTimeout(
+        Entry.stage.render, 16 - time % 16 + 16 * Math.floor(time / 16));
 };
 
 /**
@@ -166,12 +180,12 @@ Entry.Stage.prototype.update = function() {
     } else {
         this.canvas.update();
     }
-    if ( this.inputField && !this.inputField._isHidden )
-        this.inputField.render();
+    var inputField = this.inputField;
+    if (inputField && !inputField._isHidden)
+        inputField.render();
     if (Entry.requestUpdateTwice)
         Entry.requestUpdateTwice = false;
-    else
-        Entry.requestUpdate = false;
+    else Entry.requestUpdate = false;
 };
 
 /**
@@ -196,8 +210,6 @@ Entry.Stage.prototype.loadEntity = function(entity) {
     var objContainer = Entry.stage.getObjectContainerByScene(scene);
     objContainer.addChild(entity.object);
     this.sortZorder();
-    //this.canvas.update();
-    Entry.requestUpdate = true;
 };
 
 /**
@@ -206,8 +218,7 @@ Entry.Stage.prototype.loadEntity = function(entity) {
  */
 Entry.Stage.prototype.unloadEntity = function(entity) {
     var scene = entity.parent.scene;
-    var objContainer = Entry.stage.getObjectContainerByScene(scene);
-    objContainer.removeChild(entity.object);
+    Entry.stage.getObjectContainerByScene(scene).removeChild(entity.object);
     Entry.requestUpdate = true;
 };
 
@@ -257,23 +268,19 @@ Entry.Stage.prototype.sortZorder = function() {
         container = this.selectedObjectContainer,
         index = 0;
 
-    for (var i = length-1; i>=0; i--) {
+    for (var i=length-1; i>=0; i--) {
         var object = objects[i];
+
+        object.clonedEntities.forEach(function(ce) {
+            ce.shape && container.setChildIndex(ce.shape, index++);
+            container.setChildIndex(ce.object, index++);
+        });
+
         var entity = object.entity;
-        var clonedEntities = object.clonedEntities;
-
-        for (var j=0, len=clonedEntities.length; j<len; j++) {
-            if (clonedEntities[j].shape) {
-                container.setChildIndex(clonedEntities[j].shape, index++);
-            }
-            container.setChildIndex(clonedEntities[j].object, index++);
-        }
-
-        if (entity.shape) {
-            container.setChildIndex(entity.shape, index++);
-        }
+        entity.shape && container.setChildIndex(entity.shape, index++);
         container.setChildIndex(entity.object, index++);
     }
+
     Entry.requestUpdate = true;
 };
 
@@ -287,10 +294,13 @@ Entry.Stage.prototype.initCoordinator = function() {
     img.scaleY = 0.5;
     img.x = -240;
     img.y = -135;
-    coordinator.addChild(img);
-    this.canvas.addChild(coordinator);
-
+    coordinator.mouseEnabled = false;
+    coordinator.tickEnabled = false;
+    coordinator.tickChildren = false;
     coordinator.visible = false;
+    coordinator.addChild(img);
+
+    this.canvas.addChild(coordinator);
 
     /** @type {createjs.Container} */
     this.coordinator = coordinator;
@@ -496,6 +506,7 @@ Entry.Stage.prototype.endEdit = function () {
 
 Entry.Stage.prototype.initWall = function () {
     var wall = new createjs.Container();
+    wall.mouseEnabled = false;
     var bound = new Image();
     bound.src = Entry.mediaFilePath + "media/bound.png";
     wall.up = new createjs.Bitmap();
@@ -636,24 +647,6 @@ Entry.Stage.prototype.selectObjectContainer = function(scene) {
     }
     this.selectedObjectContainer = this.getObjectContainerByScene(scene);
     this.canvas.addChildAt(this.selectedObjectContainer, 2);
-    // this.reAttachToCanvas();
-};
-
-/**
- *  reattach easel object
- * @param {easel object} obj
- */
-Entry.Stage.prototype.reAttachToCanvas = function() {
-    var objs = [this.selectedObjectContainer,
-                this.variableContainer,
-                this.coordinator,
-                this.handle,
-                this.dialogContainer];
-    for (var i=0; i<objs.length; i++) {
-        this.canvas.removeChild(objs[i]);
-        this.canvas.addChild(objs[i]);
-    }
-    console.log(this.canvas.getChildIndex(this.selectedObjectContainer));
 };
 
 /**
