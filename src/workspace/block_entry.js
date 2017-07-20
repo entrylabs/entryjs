@@ -13323,7 +13323,7 @@ Entry.block = {
                     if (mode !== Entry.Workspace.MODE_BOARD) return;
                     if (Entry.type !== "workspace") return;
                     var block = blockView.block;
-                    var id = block.type.substr(5);
+                    var id = block.getFuncId();
                     Entry.Func.edit(Entry.variableContainer.functions_[id]);
                 }
             ]
@@ -13341,7 +13341,7 @@ Entry.block = {
                 }
 
                 var func = Entry.variableContainer.getFunction(
-                    this.block.type.substr(5, 9)
+                    this.block.getFuncId()
                 );
                 this.funcCode = func.content;
                 this.funcExecutor = this.funcCode.raiseEvent("funcDef", entity)[0];
