@@ -1095,4 +1095,53 @@ describe('EntryPython', function(){
         })
     });
 
+    describe('indent' , function(){
+        it('block' , function(){
+            Entry.loadProject(Entry.getStartProject());
+            Entry.playground.object = Entry.container.objects_[0];
+            var resultBlock = Test.parsePython("while True:\n    if True:\n    Entry.move_to_direction(0)");
+            console.log(JSON.stringify(resultBlock));
+            assert.ok(Test.pythonToBlock(
+                "while True:\n    if True:\n    Entry.move_to_direction(0)",
+                [[{ 
+                    "statements":[  
+                       [  
+                          {  
+                             "statements":[  
+
+                             ],
+                             "type":"_if",
+                             "params":[  
+                                {  
+                                   "type":"True"
+                                }
+                             ]
+                          },
+                          {  
+                             "type":"move_direction",
+                             "params":[  
+                                {  
+                                   "type":"number",
+                                   "params":[  
+                                      0
+                                   ]
+                                },
+                                null
+                             ]
+                          }
+                       ]
+                    ],
+                    "type":"repeat_inf",
+                    "params":[  
+                       {  
+                          "type":"True"
+                       }
+                    ]
+                }]]
+            ));
+            Entry.clearProject();
+
+
+        })
+    });
 });
