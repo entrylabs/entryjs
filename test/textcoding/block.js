@@ -1147,14 +1147,37 @@ describe('EntryPython', function(){
 
     describe('check' , function(){
         it('hardware block' , function() {
-            var resultBlock = Test.parsePython("Hamster.io_modes(Hamster.IO_MODE_DIGITAL_INPUT)");
+            var resultBlock = Test.parsePython("Hamster.io_modes(Hamster.IO_MODE_DIGITAL_OUTPUT)");
 
+            console.log(JSON.stringify(resultBlock));
             assert.ok(Test.pythonToBlock('Hamster.io_modes(Hamster.IO_MODE_DIGITAL_INPUT)', 
                 [[{
                     "type":"hamster_set_port_to",
                     "params":["AB","1",null]
                 }]]
             ));
+
+            assert.ok(Test.pythonToBlock('Hamster.io_modes(Hamster.IO_MODE_SERVO_OUTPUT)', 
+                [[{
+                    "type":"hamster_set_port_to",
+                    "params":["AB","8",null]
+                }]]
+            ));
+
+            assert.ok(Test.pythonToBlock('Hamster.io_modes(Hamster.IO_MODE_PWM_OUTPUT)', 
+                [[{
+                    "type":"hamster_set_port_to",
+                    "params":["AB","9",null]
+                }]]
+            ));
+
+            assert.ok(Test.pythonToBlock('Hamster.io_modes(Hamster.IO_MODE_DIGITAL_OUTPUT)', 
+                [[{
+                    "type":"hamster_set_port_to",
+                    "params":["AB","10",null]
+                }]]
+            ));
+
         })
     });
 });
