@@ -33034,6 +33034,7 @@ Entry.block = {
         },
         "syntax": {"js": [], "py": []}
     },    
+    /* 
     "mkboard_dc_motor_direction_list": {
         "color": "#00979D",
         "skeleton": "basic_string_field",
@@ -33211,6 +33212,7 @@ Entry.block = {
         },
         "syntax": {"js": [], "py": []}
     },       
+    */
     "mkboard_get_left_cds_analog_value": {
         "color": "#00979D",
         "fontColor": "#fff",
@@ -33448,6 +33450,140 @@ Entry.block = {
         },
         "syntax": {"js": [], "py": []}
     },
+
+    "mkboard_list_digital_lcd": {
+        "color": "#00979D",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "template": "%1",
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [ Lang.Blocks.mkboard_lcd_first_line, "0" ],
+                    [ Lang.Blocks.mkboard_lcd_seconds_line, "1" ]
+                ],
+                "value": "0",
+                "fontSize": 11
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null ]
+        },
+        "paramsKeyMap": {
+            "LINE": 0
+        },
+        "func": function (sprite, script) {
+            return script.getField("LINE");
+        }
+    },  
+
+    "mkboard_set_digital_lcd": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic",
+        "template": Lang.template.mkboard_set_digital_lcd,
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "mkboard_list_digital_lcd"
+                },
+                {
+                    "type": "text",
+                    "params": [ "Type text !!" ]
+                },
+                null
+            ],
+            "type": "mkboard_set_digital_lcd"
+        },
+        "paramsKeyMap": {
+            "LINE": 0,
+            "STRING": 1,
+        },
+        "class": "mkboardSet",
+        "isNotFor": [ "mkboard" ],
+        "func": function (sprite, script) {
+            var line = script.getNumberValue("LINE");
+            var string = script.getValue("STRING");
+            var text = [];
+
+            if(!script.isStart) {
+                if(typeof string === 'string') {
+                    for (var i = 0; i < string.length; i++) {  
+                        text[i] = Entry.mkboard.toByte(string[i]);
+                    }
+                }
+                else {
+                    text[0] = string;
+                }
+                if(!Entry.hw.sendQueue['SET']) {
+                    Entry.hw.sendQueue['SET'] = {};
+                }
+                
+                script.isStart = true;
+                script.timeFlag = 1;
+                var fps = Entry.FPS || 60;
+                timeValue = 60/fps*50;
+
+                Entry.hw.sendQueue['SET'][line] = {
+                    type: Entry.mkboard.sensorTypes.LCD,
+                    data: {
+                        text0 : text[0],
+                        text1 : text[1],
+                        text2 : text[2],
+                        text3 : text[3],
+                        text4 : text[4],
+                        text5 : text[5],
+                        text6 : text[6],
+                        text7 : text[7],
+                        text8 : text[8],
+                        text9 : text[9],
+                        text10 : text[10],
+                        text11 : text[11],
+                        text12 : text[12],
+                        text13 : text[13],
+                        text14 : text[14],
+                        text15 : text[15]
+                    },
+                    time: new Date().getTime()                
+                };
+
+                setTimeout(function() {
+                    script.timeFlag = 0;
+                }, timeValue);
+                return script;
+            }
+            else if(script.timeFlag == 1) {
+                return script;
+            }
+            else {
+                delete script.timeFlag;
+                delete script.isStart;
+                Entry.engine.isContinue = false;
+                return script.callReturn();
+            }
+        },
+        "syntax": {"js": [], "py": ["mkboard.set_digital_lcd(%1, %2)"]}
+    },    
+
     // mkboard Added 2017-07-04
     "joystick_get_number_sensor_value": {
         "parent": "arduino_get_number_sensor_value",
