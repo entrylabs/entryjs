@@ -1100,7 +1100,7 @@ describe('EntryPython', function(){
             Entry.loadProject(Entry.getStartProject());
             Entry.playground.object = Entry.container.objects_[0];
             var resultBlock = Test.parsePython("while True:\n    if True:\n    Entry.move_to_direction(0)");
-            console.log(JSON.stringify(resultBlock));
+
             assert.ok(Test.pythonToBlock(
                 "while True:\n    if True:\n    Entry.move_to_direction(0)",
                 [[{ 
@@ -1142,6 +1142,19 @@ describe('EntryPython', function(){
             Entry.clearProject();
 
 
+        })
+    });
+
+    describe('check' , function(){
+        it('hardware block' , function() {
+            var resultBlock = Test.parsePython("Hamster.io_modes(Hamster.IO_MODE_DIGITAL_INPUT)");
+
+            assert.ok(Test.pythonToBlock('Hamster.io_modes(Hamster.IO_MODE_DIGITAL_INPUT)', 
+                [[{
+                    "type":"hamster_set_port_to",
+                    "params":["AB","1",null]
+                }]]
+            ));
         })
     });
 });
