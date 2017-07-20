@@ -4130,7 +4130,8 @@ Entry.block = {
         "def": {
             "params": [
                 {
-                    "type": "arduino_get_port_number"
+                    "type": "arduino_get_port_number",
+                    "params": [2]
                 }
             ],
             "type": "arduino_ext_get_digital"
@@ -4236,7 +4237,8 @@ Entry.block = {
         "def": {
             "params": [
                 {
-                    "type": "arduino_get_port_number"
+                    "type": "arduino_get_port_number",
+                    "params": [ 3 ],
                 },
                 {
                     "type": "arduino_get_digital_toggle",
@@ -4526,7 +4528,7 @@ Entry.block = {
         "def": {
             "params": [{
                     "type": "arduino_get_port_number",
-                    "value": 4
+                    "params": [ 3 ]
                 },
                 {
                     "type": "arduino_ext_tone_list"
@@ -4670,7 +4672,10 @@ Entry.block = {
         "events": {},
         "def": {
             "params": [{
-                    "type": "arduino_get_port_number"
+                    "type": "arduino_get_port_number",
+                    "params": [
+                        "3"
+                    ]
                 },
                 null
             ],
@@ -4826,7 +4831,7 @@ Entry.block = {
     },
     "arduino_nano_get_digital": {
         "template": Lang.template.arduino_ext_get_digital,
-        "parent": "arduino_ext_get_digital",        
+        "parent": "arduino_ext_get_digital",
         "def": {
             "params": [
                 {
@@ -4839,7 +4844,7 @@ Entry.block = {
     },
     "arduino_nano_toggle_led": {
         "template": Lang.template.arduino_ext_toggle_led,
-        "parent": "arduino_ext_toggle_led",        
+        "parent": "arduino_ext_toggle_led",
         "def": {
             "params": [
                 {
@@ -4899,7 +4904,7 @@ Entry.block = {
     },
     "arduino_nano_set_servo": {
         "template": Lang.template.arduino_ext_set_servo,
-        "parent": "arduino_ext_set_servo",        
+        "parent": "arduino_ext_set_servo",
         "def": {
             "params": [{
                     "type": "arduino_get_port_number"
@@ -5042,7 +5047,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Dropdown",
-                "options": [                
+                "options": [
                     [Lang.Blocks.blacksmith_toggle_on,"on"],
                     [Lang.Blocks.blacksmith_toggle_off,"off"]
                 ],
@@ -5126,7 +5131,7 @@ Entry.block = {
         "func": function (sprite, script) {
             return script.getField("LINE");
         }
-    },   
+    },
     "blacksmith_get_analog_value": {
         "color": "#00979D",
         "fontColor": "#fff",
@@ -5141,7 +5146,7 @@ Entry.block = {
         ],
         "events": {},
         "def": {
-            "params": [ 
+            "params": [
                 {
                     "type": "blacksmith_list_analog_basic"
                 }
@@ -5289,7 +5294,7 @@ Entry.block = {
                 time: new Date().getTime()
             };
 
-            return Entry.hw.portData.rxBLUETOOTH || 0;            
+            return Entry.hw.portData.rxBLUETOOTH || 0;
         },
         "syntax": {"js": [], "py": ["blacksmith.get_digital_bluetooth()"]}
     },
@@ -5493,7 +5498,7 @@ Entry.block = {
                     "params": [ "255" ]
                 },
                 null
-            ], 
+            ],
             "type": "blacksmith_set_digital_pwm"
         },
         "paramsKeyMap": {
@@ -5506,7 +5511,7 @@ Entry.block = {
             var port = script.getNumberValue("PORT");
             var value = script.getNumberValue("VALUE");
 
-            value = Math.round(value);            
+            value = Math.round(value);
             value = Math.min(value, 255);
             value = Math.max(value, 0);
             if(!Entry.hw.sendQueue['SET']) {
@@ -5554,7 +5559,7 @@ Entry.block = {
                     "params": [ "90" ]
                 },
                 null
-            ], 
+            ],
             "type": "blacksmith_set_digital_servo"
         },
         "paramsKeyMap": {
@@ -5592,19 +5597,19 @@ Entry.block = {
             {
                 "type": "Block",
                 "accept": "string"
-            }, 
+            },
             {
                 "type": "Block",
                 "accept": "string"
-            }, 
+            },
             {
                 "type": "Block",
                 "accept": "string"
-            }, 
+            },
             {
                 "type": "Block",
                 "accept": "string"
-            }, 
+            },
             {
                 "type": "Indicator",
                 "img": "block_icon/hardware_03.png",
@@ -5617,7 +5622,7 @@ Entry.block = {
                 {
                     "type": "blacksmith_list_digital_basic"
                 },
-                {                    
+                {
                     "type": "blacksmith_list_digital_octave"
                 },
                 {
@@ -5632,7 +5637,7 @@ Entry.block = {
             "type": "blacksmith_set_digital_buzzer"
         },
         "paramsKeyMap": {
-            "PORT": 0,            
+            "PORT": 0,
             "OCTAVE": 1,
             "NOTE": 2,
             "DURATION": 3
@@ -5646,13 +5651,13 @@ Entry.block = {
             var value = 0;
 
             if (!script.isStart) {
-                var note = script.getValue("NOTE");                
+                var note = script.getValue("NOTE");
                 if(!Entry.Utils.isNumber(note)) {
                     note = Entry.Blacksmith.toneTable[note];
                 }
                 if(note < 0) {
                     note = 0;
-                } 
+                }
                 else if(note > 12) {
                     note = 12;
                 }
@@ -5669,10 +5674,10 @@ Entry.block = {
                         time: new Date().getTime()
                     };
                     return script.callReturn();
-                }                
+                }
                 if(octave < 0) {
                     octave = 0;
-                } 
+                }
                 else if(octave > 8) {
                     octave = 8;
                 }
@@ -5695,10 +5700,10 @@ Entry.block = {
 
                 setTimeout(function() { script.timeFlag = 0; }, duration + 32);
                 return script;
-            } 
+            }
             else if (script.timeFlag == 1) {
                 return script;
-            } 
+            }
             else {
                 delete script.timeFlag;
                 delete script.isStart;
@@ -5761,7 +5766,7 @@ Entry.block = {
 
             if(!script.isStart) {
                 if(typeof string === 'string') {
-                    for (var i = 0; i < string.length; i++) {  
+                    for (var i = 0; i < string.length; i++) {
                         text[i] = Entry.Blacksmith.toByte(string[i]);
                     }
                 }
@@ -5771,7 +5776,7 @@ Entry.block = {
                 if(!Entry.hw.sendQueue['SET']) {
                     Entry.hw.sendQueue['SET'] = {};
                 }
-                
+
                 script.isStart = true;
                 script.timeFlag = 1;
                 var fps = Entry.FPS || 60;
@@ -5797,7 +5802,7 @@ Entry.block = {
                         text14 : text[14],
                         text15 : text[15]
                     },
-                    time: new Date().getTime()                
+                    time: new Date().getTime()
                 };
 
                 setTimeout(function() {
@@ -5823,7 +5828,7 @@ Entry.block = {
         "skeleton": "basic",
         "template": Lang.template.blacksmith_set_digital_bluetooth,
         "statements": [],
-        "params": [    
+        "params": [
             {
                 "type": "Block",
                 "accept": "string"
@@ -5852,12 +5857,12 @@ Entry.block = {
         "isNotFor": [ "blacksmith" ],
         "func": function (sprite, script) {
             if(!script.isStart) {
-                var string = script.getValue("STRING");            
+                var string = script.getValue("STRING");
                 var port = 3;
                 var text = [];
 
                 if(typeof string === 'string') {
-                    for (var i = 0; i < string.length; i++) {  
+                    for (var i = 0; i < string.length; i++) {
                         text[i] = Entry.Blacksmith.toByte(string[i]);
                     }
                 }
@@ -8904,9 +8909,9 @@ Entry.block = {
         "func": function(sprite, script) {
             var led = script.getStringField("PORT");
             var value = script.getStringField("OPERATOR");
-            
+
             Entry.hw.setDigitalPortValue("ELED_IDX", led);
-            
+
             if(value == 'OFF') {
                 Entry.hw.setDigitalPortValue("ELED_R", 0);
                 Entry.hw.setDigitalPortValue("ELED_G", 0);
@@ -8952,8 +8957,8 @@ Entry.block = {
                 Entry.hw.setDigitalPortValue("ELED_G", 80);
                 Entry.hw.setDigitalPortValue("ELED_B", 80);
             }
-            
-                
+
+
             Entry.hw.update();
 
             delete Entry.hw.sendQueue["ELED_IDX"];

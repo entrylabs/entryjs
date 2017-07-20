@@ -421,7 +421,7 @@ Entry.Playground = function() {
                 if (/[\u4E00-\u9FFF]/.exec(textValue) != null) {
                     font = "KoPub Batang";
                     fontName.value = font;
-                    alert(Lang.Menus.not_supported_text);
+                    entrylms.alert(Lang.Menus.not_supported_text);
                 }
             }
             Entry.playground.object.entity.setFontType(font);
@@ -608,7 +608,7 @@ Entry.Playground = function() {
                     var font = "KoPub Batang";
                     fontName.value = font;
                     Entry.playground.object.entity.setFontType(font);
-                    alert(Lang.Menus.not_supported_text);
+                    entrylms.alert(Lang.Menus.not_supported_text);
                 }
             }
             Entry.playground.object.setText(this.value);
@@ -1484,7 +1484,7 @@ Entry.Playground = function() {
         function nameViewBlur() {
             if (this.value.trim() === '') {
                 Entry.deAttachEventListener(this, 'blur', nameViewBlur);
-                alert(Lang.Workspace.enter_the_name);
+                entrylms.alert(Lang.Workspace.enter_the_name);
                 this.focus();
                 Entry.attachEventListener(this, 'blur', nameViewBlur);
                 return;
@@ -1495,7 +1495,7 @@ Entry.Playground = function() {
                 if(nameViewArray.eq(i).val()==nameView.value &&
                    nameViewArray[i] != this) {
                     Entry.deAttachEventListener(this, 'blur', nameViewBlur);
-                    alert(Lang.Workspace.name_already_exists);
+                    entrylms.alert(Lang.Workspace.name_already_exists);
                     this.focus();
                     Entry.attachEventListener(this, 'blur', nameViewBlur);
                     return;
@@ -1621,7 +1621,7 @@ Entry.Playground = function() {
         function nameViewBlur() {
             if (this.value.trim() === '') {
                 Entry.deAttachEventListener(this, 'blur', nameViewBlur);
-                alert(Lang.Workspace.enter_the_name);
+                entrylms.alert(Lang.Workspace.enter_the_name);
                 this.focus();
                 Entry.attachEventListener(this, 'blur', nameViewBlur);
                 return;
@@ -1631,7 +1631,7 @@ Entry.Playground = function() {
             for (var i=0; i<nameViewArray.length; i++) {
                 if(nameViewArray.eq(i).val() == nameView.value && nameViewArray[i] != this) {
                     Entry.deAttachEventListener(this, 'blur', nameViewBlur);
-                    alert(Lang.Workspace.name_already_exists);
+                    entrylms.alert(Lang.Workspace.name_already_exists);
                     this.focus();
                     Entry.attachEventListener(this, 'blur', nameViewBlur);
                     return;
