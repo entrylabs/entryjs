@@ -144,7 +144,8 @@ p._updateSelectedBlock = function() {
 
 p.renderBlock = function(type) {
     var description = Lang.Helper[type];
-    if (!type || !this.visible || !description || Entry.block[type].isPrimitive) return;
+    if (!type || !this.visible || !description || Entry.block[type].isPrimitive)
+        return;
 
     if (this.first) {
         this.blockHelperContent_.removeClass('entryBlockHelperIntro');
@@ -152,7 +153,7 @@ p.renderBlock = function(type) {
     }
 
     var code = this.code;
-    this.code.clear();
+    code.clear();
     var def = Entry.block[type].def || {type: type};
 
     if (this.workspace.getMode() === Entry.Workspace.MODE_VIMBOARD) {
@@ -196,10 +197,10 @@ p.renderBlock = function(type) {
         this.blockHelperDescription_.innerHTML = description;
     }
 
-    this.code.createThread([def]);
+    code.createThread([def]);
 
-    this.code.board.align();
-    this.code.board.resize();
+    code.board.align();
+    code.board.resize();
 
     this._renderView.align();
     this._renderView.setDomSize();

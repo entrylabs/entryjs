@@ -162,6 +162,7 @@ Entry.Scene.prototype.generateElement = function(scene) {
         that.resize();
     };
     divide.appendChild(nameField);
+    viewTemplate.nameField = nameField;
     var removeButtonCover = Entry.createElement('span');
     removeButtonCover.addClass('entrySceneRemoveButtonCoverWorkspace');
     viewTemplate.appendChild(removeButtonCover);
@@ -173,10 +174,15 @@ Entry.Scene.prototype.generateElement = function(scene) {
             e.stopPropagation();
             if (Entry.engine.isState('run'))
                 return;
-            var a = confirm(Lang.Workspace.will_you_delete_scene);
-            if (a)
-                Entry.scene.removeScene(this.scene);
-            return;
+            entrylms.confirm(Lang.Workspace.will_you_delete_scene).then(function(result){
+                if (result === true)
+                    Entry.scene.removeScene(this.scene);
+            }.bind(this));
+
+            // var a = entrylms.confirm(Lang.Workspace.will_you_delete_scene);
+            // if (a)
+            //     Entry.scene.removeScene(this.scene);
+            // return;
         });
         removeButtonCover.appendChild(removeButton);
     }
@@ -303,8 +309,7 @@ Entry.Scene.prototype.selectScene = function(scene) {
         prevSelectedView.removeClass('selectedScene');
         var elem = document.activeElement;
 
-        if ($(elem).hasClass('entrySceneFieldWorkspace'))
-            elem.blur();
+        elem === prevSelectedView.nameField  && elem.blur();
     }
 
     this.selectedScene = scene;
@@ -430,8 +435,13 @@ Entry.Scene.prototype.loadStartSceneSnapshot = function() {
  * @return {scene modal} scene
  */
 Entry.Scene.prototype.createScene = function() {
+    var regex = /[0-9]/;
+    var name = Entry.getOrderedName(Lang.Blocks.SCENE + ' ', this.scenes_, "name");
+    if(!regex.test(name)) {
+        name += '1';
+    }
     var scene = {
-        name: Lang.Blocks.SCENE + ' ' + (this.getScenes().length + 1),
+        name: name,
         id: Entry.generateHash()
     };
 
@@ -465,12 +475,21 @@ Entry.Scene.prototype.cloneScene = function(scene) {
     var objects = Entry.container.getSceneObjects(scene);
 
     try {
+        var oldIds = [];
+        var newIds = [];
         this.isSceneCloning = true;
-        for (var i=objects.length-1; i>=0; i--)
-            Entry.container.addCloneObject(objects[i], clonedScene.id);
+        for (var i=objects.length-1; i>=0; i--) {
+            var obj = objects[i];
+            var ret = Entry.container.addCloneObject(obj, clonedScene.id);
+            oldIds.push(obj.id);
+            newIds.push(ret.id);
+        }
+        Entry.container.adjustClonedValues(oldIds, newIds);
+        var WS = Entry.getMainWS();
+        var board = WS && WS.board && WS.board.reDraw();
         this._focusSceneNameField(clonedScene);
         this.isSceneCloning = false;
-    } catch(e) {}
+    } catch (e) { console.log('error', e); }
 };
 
 /**
@@ -484,6 +503,7 @@ Entry.Scene.prototype.resize = function() {
     var firstScene = scenes[0];
 
     if (scenes.length === 0 || !firstScene) return;
+
     var startPos = $(firstScene.view).offset().left;
     var marginLeft = parseFloat($(selectedScene.view).css('margin-left'));
     var totalWidth = Math.floor($(this.view_).width() - startPos - 5);
@@ -491,10 +511,13 @@ Entry.Scene.prototype.resize = function() {
 
     var normWidth = startPos + 15;
     var diff = 0;
+    var isSelectedView = false;
+    var selectedViewWidth = 0;
     for (var i in scenes) {
         var scene = scenes[i];
         var view = scene.view;
         view.addClass('minValue');
+        isSelectedView = view === this.selectedScene.view;
         view = $(view);
 
         var width = parseFloat(Entry.computeInputWidth(scene.name));
@@ -502,7 +525,9 @@ Entry.Scene.prototype.resize = function() {
         if (scene === this.selectedScene)
             diff = adjusted - width;
         $(scene.inputWrapper).width(adjusted + 'px');
-        normWidth += view.width() + LEFT_MARGIN;
+        var viewWidth = view.width();
+        if (isSelectedView) selectedViewWidth = viewWidth;
+        normWidth += viewWidth + LEFT_MARGIN;
     }
 
     if (normWidth > totalWidth) align();
@@ -510,8 +535,10 @@ Entry.Scene.prototype.resize = function() {
     function align() {
         var dummyWidth = 30.5;
         var len = scenes.length - 1;
-        totalWidth = totalWidth - Math.round($(selectedScene.view).width())
-                        - dummyWidth*len - diff;
+        totalWidth = totalWidth -
+            Math.round(selectedViewWidth || $(selectedScene.view).width()) -
+            dummyWidth*len - diff;
+
         var fieldWidth = Math.floor(totalWidth/len);
         for (i in scenes) {
             scene = scenes[i];
@@ -535,7 +562,7 @@ Entry.Scene.prototype.isMax = function() {
 Entry.Scene.prototype.clear = function() {
     this.scenes_.map(function(s) {
         Entry.stage.removeObjectContainer(s);
-    })
+    });
     $(this.listView_).html("");
     this.scenes_ = [];
     this.selectedScene = null;

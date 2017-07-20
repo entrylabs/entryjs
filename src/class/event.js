@@ -42,4 +42,8 @@ Entry.Event = function(sender) {
             );
         });
     };
+
+    p.hasListeners = function () {
+        return !!this._listeners.length;
+    };
 })(Entry.Event.prototype);

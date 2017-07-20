@@ -26,11 +26,8 @@ Entry.Scroller = function(board, horizontal, vertical) {
     this._visible = true;
     this._opacity = -1;
 
-
-
     this.createScrollBar();
     this.setOpacity(0);
-
 
     this._bindEvent();
 
@@ -172,8 +169,10 @@ Entry.Scroller.RADIUS = 7;
 
     p.scroll = function(x, y, skipCommand) {
         if (!this.board.code) return;
-        var clientRect = this.board.svgBlockGroup.getBoundingClientRect(),
-            svgDom = this.board.svgDom,
+
+        var board = this.board;
+        var svgRect = board.getSvgDomRect();
+        var clientRect = board.svgBlockGroup.getBoundingClientRect(),
             bBox = {
                 x: clientRect.left - this.board.offset().left,
                 y: clientRect.top - this.board.offset().top,
@@ -183,7 +182,7 @@ Entry.Scroller.RADIUS = 7;
         x = Math.max(-bBox.width + Entry.BOARD_PADDING - bBox.x, x);
         y = Math.max(-bBox.height + Entry.BOARD_PADDING - bBox.y, y);
         y = Math.min(
-            svgDom.height() - Entry.BOARD_PADDING - bBox.y,
+            svgRect.height - Entry.BOARD_PADDING - bBox.y,
             y
         );
 
@@ -234,13 +233,16 @@ Entry.Scroller.RADIUS = 7;
         if (!this._visible) return;
 
         var board = this.board,
-            bRect = board.svgBlockGroup.getBoundingClientRect(),
+            offset = board.offset(),
             svgDom = board.svgDom,
-            bWidth = svgDom.width(),
-            bHeight = svgDom.height(),
+            svgRect = board.getSvgDomRect();
+
+        var bRect = board.svgBlockGroup.getBoundingClientRect(),
+            bWidth = svgRect.width,
+            bHeight = svgRect.height,
             bBox = {
-                x: bRect.left - board.offset().left,
-                y: bRect.top - board.offset().top,
+                x: bRect.left - offset.left,
+                y: bRect.top - offset.top,
                 width: bRect.width,
                 height: bRect.height
             };
@@ -284,7 +286,7 @@ Entry.Scroller.RADIUS = 7;
     };
 
     p._bindEvent = function() {
-        var dResizeScrollBar = _.debounce(this.resizeScrollBar, 200);
+        var dResizeScrollBar = _.debounce(this.resizeScrollBar, 250);
         this.board.changeEvent.attach(this, dResizeScrollBar);
         if (Entry.windowResized)
             Entry.windowResized.attach(this, dResizeScrollBar);

@@ -94,13 +94,19 @@ p.changePicture = function(picture) {
     //painter.selectToolbox('cursor');
     if (this.file && this.file.id === picture.id)
         return;
-
     if (this.file.modified) {
-        var save = confirm('수정된 내용을 저장하시겠습니까?');
-        if (save) {
-            this.file_save(true);
-        }
+        entrylms.confirm(Lang.Menus.save_modified_shape).then(function(result){
+            if (result === true){
+                this.file_save(true);
+            }
+            this.afterModified(picture);
+        }.bind(this));
+        return;
     }
+    this.afterModified(picture);
+};
+
+p.afterModified = function(picture) {
     this.file.modified = false;
     this.lc.clear(false);
 

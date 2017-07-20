@@ -464,19 +464,21 @@ Entry.Func.generateWsBlock = function(targetFunc, isRestore) {
     var hashMap = targetFunc.hashMap;
     var paramMap = targetFunc.paramMap;
     var blockIds = [];
-    while(outputBlock) {
+
+    while (outputBlock) {
         var value = outputBlock.params[0];
+        var valueType = value.type;
         switch (outputBlock.type) {
             case 'function_field_label':
                 schemaTemplate = schemaTemplate + " " + value;
                 break;
             case 'function_field_boolean':
-                Entry.Mutator.mutate(value.type, {
+                Entry.Mutator.mutate(valueType, {
                     template: Lang.Blocks.FUNCTION_logical_variable +
                         " " + (booleanIndex + 1)
                 });
-                hashMap[value.type] = false;
-                paramMap[value.type] = booleanIndex + stringIndex;
+                hashMap[valueType] = false;
+                paramMap[valueType] = booleanIndex + stringIndex;
                 booleanIndex++;
                 schemaParams.push({
                     type: "Block",
@@ -486,12 +488,12 @@ Entry.Func.generateWsBlock = function(targetFunc, isRestore) {
                 blockIds.push(outputBlock.id);
                 break;
             case 'function_field_string':
-                Entry.Mutator.mutate(value.type, {
+                Entry.Mutator.mutate(valueType, {
                     template: Lang.Blocks.FUNCTION_character_variable +
                         " " + (stringIndex + 1)
                 });
-                hashMap[value.type] = false;
-                paramMap[value.type] = booleanIndex + stringIndex;
+                hashMap[valueType] = false;
+                paramMap[valueType] = booleanIndex + stringIndex;
                 stringIndex++;
                 schemaTemplate += " %" + (booleanIndex + stringIndex);
                 schemaParams.push({
@@ -504,8 +506,7 @@ Entry.Func.generateWsBlock = function(targetFunc, isRestore) {
         outputBlock = outputBlock.getOutputBlock();
     }
 
-    booleanIndex++;
-    schemaTemplate += " %" + (booleanIndex + stringIndex);
+    schemaTemplate += " %" + (booleanIndex + stringIndex + 1);
     schemaParams.push({
         "type": "Indicator",
         "img": "block_icon/function_03.png",
@@ -513,13 +514,10 @@ Entry.Func.generateWsBlock = function(targetFunc, isRestore) {
     });
 
     var funcName = "func_" + targetFunc.id;
-    var originSchema = Entry.block[funcName];
-
     var block = Entry.block[funcName];
-    var originParams = block.params.slice();
-    originParams.pop();
-    var newParams = schemaParams.slice();
-    newParams.pop();
+
+    var originParams = block.params.slice(0, block.params.length - 1);
+    var newParams = schemaParams.slice(0, schemaParams.length - 1);
     var originParamsLength = originParams.length;
     var newParamsLength = newParams.length;
 
@@ -529,11 +527,12 @@ Entry.Func.generateWsBlock = function(targetFunc, isRestore) {
         var outputBlockIds = targetFunc.outputBlockIds;
         if (outputBlockIds) {
             var startPos = 0;
-            while(outputBlockIds[startPos] === blockIds[startPos])
+            while (outputBlockIds[startPos] === blockIds[startPos])
                 startPos++;
 
             var endPos = 0;
-            while(outputBlockIds[outputBlockIds.length - endPos -1] === blockIds[blockIds.length - endPos - 1])
+            while (outputBlockIds[outputBlockIds.length - endPos -1] ===
+                blockIds[blockIds.length - endPos - 1])
                 endPos++;
 
             endPos = blockIds.length - endPos -1;
@@ -548,8 +547,7 @@ Entry.Func.generateWsBlock = function(targetFunc, isRestore) {
             type: 'cut',
             pos: newParamsLength
         };
-    } else
-        changeData = { type: 'noChange' };
+    } else changeData = { type: 'noChange' };
 
     changeData.isRestore = isRestore;
 
@@ -567,17 +565,12 @@ Entry.Func.generateWsBlock = function(targetFunc, isRestore) {
     for (var key in hashMap) {
         var state = hashMap[key];
         if (state) {
-            var text;
-            if (key.indexOf("string") > -1)
-                text = Lang.Blocks.FUNCTION_character_variable;
-            else
-                text = Lang.Blocks.FUNCTION_logical_variable;
-            Entry.Mutator.mutate(key, {
-                template: text
-            });
-        } else {
-            hashMap[key] = true;
-        }
+            var text = /string/.test(key) ?
+                Lang.Blocks.FUNCTION_character_variable :
+                Lang.Blocks.FUNCTION_logical_variable;
+
+            Entry.Mutator.mutate(key, { template: text });
+        } else hashMap[key] = true;
     }
 
     this.bindFuncChangeEvent(targetFunc);

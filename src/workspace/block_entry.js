@@ -3342,8 +3342,6 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [ "0", "0" ],
-                    [ "1", "1" ],
                     [ "2", "2" ],
                     [ "3", "3" ],
                     [ "4", "4" ],
@@ -3752,6 +3750,15 @@ Entry.block = {
             var value3 = script.getNumberValue("VALUE3", script);
             var value4 = script.getNumberValue("VALUE4", script);
             var value5 = script.getNumberValue("VALUE5", script);
+
+            var stringValue4 = script.getValue("VALUE4", script);
+            var stringValue5 = script.getValue("VALUE5", script);
+            var isFloat = false;
+
+            if((Entry.Utils.isNumber(stringValue4) && stringValue4.indexOf('.') > -1) || (Entry.Utils.isNumber(stringValue5) && stringValue5.indexOf('.') > -1)) {
+                isFloat = true;
+            }
+
             var result = value1;
             if (value2 > value3) {
                 var swap = value2;
@@ -3768,7 +3775,14 @@ Entry.block = {
             result += value4;
             result = Math.min(value5, result);
             result = Math.max(value4, result);
-            return Math.round(result);
+
+            if(isFloat) {
+                result = Math.round(result * 100) / 100;
+            } else {
+                result = Math.round(result);
+            }
+
+            return result;
         },
         "syntax": {"js": [], "py": [
             {
@@ -3972,6 +3986,13 @@ Entry.block = {
             var value3 = script.getNumberValue("VALUE3", script);
             var value4 = script.getNumberValue("VALUE4", script);
             var value5 = script.getNumberValue("VALUE5", script);
+            var stringValue4 = script.getValue("VALUE4", script);
+            var stringValue5 = script.getValue("VALUE5", script);
+            var isFloat = false;
+
+            if((Entry.Utils.isNumber(stringValue4) && stringValue4.indexOf('.') > -1) || (Entry.Utils.isNumber(stringValue5) && stringValue5.indexOf('.') > -1)) {
+                isFloat = true;
+            }
 
             if (value2 > value3) {
                 var swap = value2;
@@ -3988,6 +4009,12 @@ Entry.block = {
             result += value4;
             result = Math.min(value5, result);
             result = Math.max(value4, result);
+
+            if(isFloat) {
+                result = Math.round(result * 100) / 100;
+            } else {
+                result = Math.round(result);
+            }
 
             return result
         },
@@ -4101,7 +4128,8 @@ Entry.block = {
         "def": {
             "params": [
                 {
-                    "type": "arduino_get_port_number"
+                    "type": "arduino_get_port_number",
+                    "params": [2]
                 }
             ],
             "type": "arduino_ext_get_digital"
@@ -4207,7 +4235,8 @@ Entry.block = {
         "def": {
             "params": [
                 {
-                    "type": "arduino_get_port_number"
+                    "type": "arduino_get_port_number",
+                    "params": [ 3 ],
                 },
                 {
                     "type": "arduino_get_digital_toggle",
@@ -4451,7 +4480,7 @@ Entry.block = {
                     ["5", "5"],
                     ["6", "6"]
                 ],
-                "value": "3",
+                "value": "4",
                 "fontSize": 11
             }
         ],
@@ -4497,7 +4526,7 @@ Entry.block = {
         "def": {
             "params": [{
                     "type": "arduino_get_port_number",
-                    "value": 4
+                    "params": [ 3 ]
                 },
                 {
                     "type": "arduino_ext_tone_list"
@@ -4641,7 +4670,10 @@ Entry.block = {
         "events": {},
         "def": {
             "params": [{
-                    "type": "arduino_get_port_number"
+                    "type": "arduino_get_port_number",
+                    "params": [
+                        "3"
+                    ]
                 },
                 null
             ],
@@ -4686,6 +4718,1203 @@ Entry.block = {
                 ]
             }
         ]}
+    },
+    "arduino_nano_analog_list": {
+        "parent": "arduino_ext_analog_list",
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [ "A0", "0" ],
+                    [ "A1", "1" ],
+                    [ "A2", "2" ],
+                    [ "A3", "3" ],
+                    [ "A4", "4" ],
+                    [ "A5", "5" ],
+                    [ "A6", "6" ],
+                    [ "A7", "7" ],
+                ],
+                "value": "0",
+                "fontSize": 11
+            }
+        ],
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "%1",
+                blockType: "param",
+                textParams: [
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [ "A0", "0" ],
+                            [ "A1", "1" ],
+                            [ "A2", "2" ],
+                            [ "A3", "3" ],
+                            [ "A4", "4" ],
+                            [ "A5", "5" ],
+                            [ "A6", "6" ],
+                            [ "A7", "7" ],
+                        ],
+                        "value": "0",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringKey,
+                        codeMap:"Entry.CodeMap.Arduino.arduino_nano_analog_list[0]"
+                    }
+                ],
+                keyOption: "arduino_nano_analog_list"
+            }
+        ]}
+    },
+    "arduino_nano_get_analog_value": {
+        "parent": "arduino_ext_get_analog_value",
+        "template": Lang.template.arduino_ext_get_analog_value,
+        "def": {
+            "params": [
+                {
+                    "type": "arduino_nano_analog_list"
+                }
+            ],
+            "type": "arduino_nano_get_analog_value"
+        },
+        "isNotFor": [ "ArduinoNano" ],
+    },
+    "arduino_nano_get_analog_value_map": {
+        "parent": "arduino_ext_get_analog_value_map",
+        "template": Lang.template.arduino_ext_get_analog_value_map,
+        "def": {
+            "params": [
+                {
+                    "type": "arduino_nano_get_analog_value",
+                    "params": [
+                        {
+                            "type": "arduino_nano_analog_list"
+                        }
+                    ]
+                },
+                {
+                    "type": "number",
+                    "params": [ "0" ]
+                },
+                {
+                    "type": "number",
+                    "params": [ "1023" ]
+                },
+                {
+                    "type": "number",
+                    "params": [ "0" ]
+                },
+                {
+                    "type": "number",
+                    "params": [ "100" ]
+                }
+            ],
+            "type": "arduino_nano_get_analog_value_map"
+        },
+        "isNotFor": [ "ArduinoNano" ],
+    },
+    "arduino_nano_get_ultrasonic_value": {
+        "template": Lang.template.arduino_ext_get_ultrasonic_value,
+        "parent": "arduino_ext_get_ultrasonic_value",
+        "def": {
+            "params": [{
+                type: 'arduino_get_port_number',
+                params: [ '2' ],
+            }, {
+                type: 'arduino_get_port_number',
+                params: [ '4' ],
+            }],
+            "type": "arduino_nano_get_ultrasonic_value"
+        },
+        "isNotFor": [ "ArduinoNano" ],
+    },
+    "arduino_nano_get_digital": {
+        "template": Lang.template.arduino_ext_get_digital,
+        "parent": "arduino_ext_get_digital",
+        "def": {
+            "params": [
+                {
+                    "type": "arduino_get_port_number"
+                }
+            ],
+            "type": "arduino_nano_get_digital"
+        },
+        "isNotFor": [ "ArduinoNano" ],
+    },
+    "arduino_nano_toggle_led": {
+        "template": Lang.template.arduino_ext_toggle_led,
+        "parent": "arduino_ext_toggle_led",
+        "def": {
+            "params": [
+                {
+                    "type": "arduino_get_port_number"
+                },
+                {
+                    "type": "arduino_get_digital_toggle",
+                    "params": [ "on" ],
+                },
+                null
+            ],
+            "type": "arduino_nano_toggle_led"
+        },
+        "isNotFor": [ "ArduinoNano" ],
+    },
+    "arduino_nano_digital_pwm": {
+        "template": Lang.template.arduino_ext_digital_pwm,
+        "parent": "arduino_ext_digital_pwm",
+        "def": {
+            "params": [
+                {
+                    "type": "arduino_get_pwm_port_number"
+                },
+                {
+                    "type": "text",
+                    "params": [ "255" ]
+                },
+                null
+            ],
+            "type": "arduino_nano_digital_pwm"
+        },
+        "isNotFor": [ "ArduinoNano" ],
+    },
+    "arduino_nano_set_tone": {
+        "template": Lang.template.arduino_ext_set_tone,
+        "parent": "arduino_ext_set_tone",
+        "def": {
+            "params": [{
+                    "type": "arduino_get_port_number",
+                    "value": 4
+                },
+                {
+                    "type": "arduino_ext_tone_list"
+                },
+                {
+                    "type": "arduino_ext_octave_list"
+                },
+                {
+                    "type": "text",
+                    "params": [ "1" ]
+                },
+                null
+            ],
+            "type": "arduino_nano_set_tone"
+        },
+        "isNotFor": [ "ArduinoNano" ],
+    },
+    "arduino_nano_set_servo": {
+        "template": Lang.template.arduino_ext_set_servo,
+        "parent": "arduino_ext_set_servo",
+        "def": {
+            "params": [{
+                    "type": "arduino_get_port_number"
+                },
+                null
+            ],
+            "type": "arduino_nano_set_servo"
+        },
+        "isNotFor": [ "ArduinoNano" ],
+    },
+    "blacksmith_list_analog_basic": {
+        "color": "#00979D",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "template": "%1",
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [ "A0", "0" ],
+                    [ "A1", "1" ],
+                    [ "A2", "2" ],
+                    [ "A3", "3" ]
+                ],
+                "value": "0",
+                "fontSize": 11
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null ]
+        },
+        "paramsKeyMap": {
+            "PORT": 0
+        },
+        "func": function (sprite, script) {
+            return script.getField("PORT");
+        }
+    },
+    "blacksmith_list_digital_basic": {
+        "color": "#00979D",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "template": "%1",
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [ "6", "6" ],
+                    [ "7", "7" ],
+                    [ "8", "8" ],
+                    [ "9", "9" ],
+                    [ "10", "10" ],
+                    [ "11", "11" ]
+                ],
+                "value": "10",
+                "fontSize": 11,
+                'arrowColor': EntryStatic.ARROW_COLOR_HW
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null ]
+        },
+        "paramsKeyMap": {
+            "PORT": 0
+        },
+        "func": function (sprite, script) {
+            return script.getStringField("PORT");
+        }
+    },
+    "blacksmith_list_digital_octave": {
+        "color": "#00979D",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "template": "%1",
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    ["1", "1"],
+                    ["2", "2"],
+                    ["3", "3"],
+                    ["4", "4"],
+                    ["5", "5"],
+                    ["6", "6"],
+                    ["7", "7"],
+                    ["8", "8"]
+                ],
+                "value": "3",
+                "fontSize": 11
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null ]
+        },
+        "paramsKeyMap": {
+            "OCTAVE": 0
+        },
+        "func": function (sprite, script) {
+            return script.getField("OCTAVE");
+        }
+    },
+    "blacksmith_list_digital_pwm": {
+        "color": "#00979D",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "template": "%1",
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [ "~6", "6" ],
+                    [ "~9", "9" ],
+                    [ "~10", "10" ],
+                    [ "~11", "11" ]
+                ],
+                "value": "10",
+                "fontSize": 11,
+                'arrowColor': EntryStatic.ARROW_COLOR_HW
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null ]
+        },
+        "paramsKeyMap": {
+            "PORT": 0
+        },
+        "func": function (sprite, script) {
+            return script.getStringField("PORT");
+        }
+    },
+    "blacksmith_list_digital_toggle": {
+        "color": "#00979D",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "template": "%1",
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.blacksmith_toggle_on,"on"],
+                    [Lang.Blocks.blacksmith_toggle_off,"off"]
+                ],
+                "value": "on",
+                "fontSize": 11,
+                'arrowColor': EntryStatic.ARROW_COLOR_HW
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null ]
+        },
+        "paramsKeyMap": {
+            "OPERATOR": 0
+        },
+        "func": function (sprite, script) {
+            return script.getStringField("OPERATOR");
+        }
+    },
+    "blacksmith_list_digital_tone": {
+        "color": "#00979D",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "template": "%1",
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.silent, "0"],
+                    [Lang.Blocks.do_name, "C"],
+                    [Lang.Blocks.do_sharp_name, "CS"],
+                    [Lang.Blocks.re_name, "D"],
+                    [Lang.Blocks.re_sharp_name, "DS"],
+                    [Lang.Blocks.mi_name, "E"],
+                    [Lang.Blocks.fa_name, "F"],
+                    [Lang.Blocks.fa_sharp_name, "FS"],
+                    [Lang.Blocks.sol_name, "G"],
+                    [Lang.Blocks.sol_sharp_name, "GS"],
+                    [Lang.Blocks.la_name, "A"],
+                    [Lang.Blocks.la_sharp_name, "AS"],
+                    [Lang.Blocks.si_name, "B"]
+                ],
+                "value": "C",
+                "fontSize": 11
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null ]
+        },
+        "paramsKeyMap": {
+            "NOTE": 0
+        },
+        "func": function (sprite, script) {
+            return script.getField("NOTE");
+        }
+    },
+    "blacksmith_list_digital_lcd": {
+        "color": "#00979D",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "template": "%1",
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [ Lang.Blocks.blacksmith_lcd_first_line, "0" ],
+                    [ Lang.Blocks.blacksmith_lcd_seconds_line, "1" ]
+                ],
+                "value": "0",
+                "fontSize": 11
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null ]
+        },
+        "paramsKeyMap": {
+            "LINE": 0
+        },
+        "func": function (sprite, script) {
+            return script.getField("LINE");
+        }
+    },
+    "blacksmith_get_analog_value": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "template": Lang.template.blacksmith_get_analog_value,
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "blacksmith_list_analog_basic"
+                }
+            ],
+            "type": "blacksmith_get_analog_value"
+        },
+        "paramsKeyMap": {
+            "PORT": 0
+        },
+        "class": "blacksmithGet",
+        "isNotFor": [ "blacksmith" ],
+        "func": function (sprite, script) {
+            var port = script.getValue("PORT", script);
+            var ANALOG = Entry.hw.portData.ANALOG;
+
+            if (port[0] === "A")
+                port = port.substring(1)
+
+            return ANALOG ? ANALOG[port] || 0 : 0;
+        },
+        "syntax": {"js": [], "py": ["blacksmith.get_analog_value(%1)"]}
+    },
+    "blacksmith_get_analog_mapping": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "template": Lang.template.blacksmith_get_analog_mapping,
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "blacksmith_list_analog_basic",
+                },
+                {
+                    "type": "number",
+                    "params": [ "0" ]
+                },
+                {
+                    "type": "number",
+                    "params": [ "1023" ]
+                },
+                {
+                    "type": "number",
+                    "params": [ "0" ]
+                },
+                {
+                    "type": "number",
+                    "params": [ "100" ]
+                }
+            ],
+            "type": "blacksmith_get_analog_mapping"
+        },
+        "paramsKeyMap": {
+            "PORT": 0,
+            "VALUE2": 1,
+            "VALUE3": 2,
+            "VALUE4": 3,
+            "VALUE5": 4
+        },
+        "class": "blacksmithGet",
+        "isNotFor": [ "blacksmith" ],
+        "func": function (sprite, script) {
+            var port = script.getValue("PORT", script);
+            var result = 0;
+            var ANALOG = Entry.hw.portData.ANALOG;
+            var value2 = script.getNumberValue("VALUE2", script);
+            var value3 = script.getNumberValue("VALUE3", script);
+            var value4 = script.getNumberValue("VALUE4", script);
+            var value5 = script.getNumberValue("VALUE5", script);
+
+            if (port[0] === "A") {
+                port = port.substring(1)
+            }
+            result = ANALOG ? ANALOG[port] || 0 : 0;
+            if (value2 > value3) {
+                var swap = value2;
+                value2 = value3;
+                value3 = swap;
+            }
+            if (value4 > value5) {
+                var swap = value4;
+                value4 = value5;
+                value5 = swap;
+            }
+            result -= value2;
+            result = result * ((value5 - value4) / (value3 - value2));
+            result += value4;
+            result = Math.min(value5, result);
+            result = Math.max(value4, result);
+
+            return result
+        },
+        "syntax": {"js": [], "py": ["blacksmith.get_analog_mapping(%1, %2, %3, %4, %5)"]}
+    },
+    "blacksmith_get_digital_bluetooth": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "template": Lang.template.blacksmith_get_digital_bluetooth,
+        "statements": [],
+        "params": [],
+        "events": {},
+        "def": {
+            "params": [],
+            "type": "blacksmith_get_digital_bluetooth"
+        },
+        "paramsKeyMap": { },
+        "class": "blacksmithGet",
+        "isNotFor": [ "blacksmith" ],
+        "func": function (sprite, script) {
+            var port = 2;
+
+            if(!Entry.hw.sendQueue['SET']) {
+                Entry.hw.sendQueue['SET'] = {};
+            }
+            delete Entry.hw.sendQueue['SET'][port];
+            if(!Entry.hw.sendQueue['GET']) {
+                Entry.hw.sendQueue['GET'] = {};
+            }
+            Entry.hw.sendQueue['GET'][Entry.Blacksmith.sensorTypes.rxBLUETOOTH] = {
+                port: port,
+                time: new Date().getTime()
+            };
+
+            return Entry.hw.portData.rxBLUETOOTH || 0;
+        },
+        "syntax": {"js": [], "py": ["blacksmith.get_digital_bluetooth()"]}
+    },
+    "blacksmith_get_digital_ultrasonic": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "template": Lang.template.blacksmith_get_digital_ultrasonic,
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "text",
+                    "params": [ "4" ]
+                },
+                                {
+                    "type": "text",
+                    "params": [ "5" ]
+                },
+            ],
+            "type": "blacksmith_get_digital_ultrasonic"
+        },
+        "paramsKeyMap": {
+            "PORT1": 0,
+            "PORT2": 1,
+        },
+        "class": "blacksmithGet",
+        "isNotFor": [ "blacksmith" ],
+        "func": function (sprite, script) {
+            var port1 = script.getNumberValue("PORT1");
+            var port2 = script.getNumberValue("PORT2");
+
+            if(!Entry.hw.sendQueue['SET']) {
+                Entry.hw.sendQueue['SET'] = {};
+            }
+            delete Entry.hw.sendQueue['SET'][port1];
+            delete Entry.hw.sendQueue['SET'][port2];
+            if(!Entry.hw.sendQueue['GET']) {
+                Entry.hw.sendQueue['GET'] = {};
+            }
+            Entry.hw.sendQueue['GET'][Entry.Blacksmith.sensorTypes.ULTRASONIC] = {
+                port: [port1, port2],
+                time: new Date().getTime()
+            };
+
+            return Entry.hw.portData.ULTRASONIC || 0;
+        },
+        "syntax": {"js": [], "py": ["blacksmith.get_digital_ultrasonic(%1, %2)"]}
+    },
+    "blacksmith_get_digital_toggle": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_boolean_field",
+        "statements": [],
+        "template": Lang.template.blacksmith_get_digital_toggle,
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "blacksmith_list_digital_basic"
+                }
+            ],
+            "type": "blacksmith_get_digital_toggle"
+        },
+        "paramsKeyMap": {
+            "PORT": 0
+        },
+        "class": "blacksmithGet",
+        "isNotFor": [ "blacksmith" ],
+        "func": function (sprite, script) {
+            var port = script.getNumberValue("PORT");
+            var DIGITAL = Entry.hw.portData.DIGITAL;
+
+            if(!Entry.hw.sendQueue['GET']) {
+                Entry.hw.sendQueue['GET'] = {};
+            }
+            Entry.hw.sendQueue['GET'][Entry.Blacksmith.sensorTypes.DIGITAL] = {
+                port: port,
+                time: new Date().getTime()
+            };
+
+            return (DIGITAL) ? DIGITAL[port] || 0 : 0;
+        },
+        "syntax": {"js": [], "py": ["blacksmith.get_digital_toggle(%1)"]}
+    },
+    "blacksmith_set_digital_toggle": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic",
+        "statements": [],
+        "template": Lang.template.blacksmith_set_digital_toggle,
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "blacksmith_list_digital_basic"
+                },
+                {
+                    "type": "blacksmith_list_digital_toggle"
+                },
+                null
+            ],
+            "type": "blacksmith_set_digital_toggle"
+        },
+        "paramsKeyMap": {
+            "PORT": 0,
+            "VALUE": 1
+        },
+        "class": "blacksmithSet",
+        "isNotFor": [ "blacksmith" ],
+        "func": function (sprite, script) {
+            var port = script.getNumberValue("PORT");
+            var value = script.getValue("VALUE");
+
+            if(typeof value === 'string') {
+                value = value.toLowerCase();
+            }
+            if(Entry.Blacksmith.highList.indexOf(value) > -1) {
+                value = 255;
+            }
+            else if(Entry.Blacksmith.lowList.indexOf(value) > -1) {
+                value = 0;
+            }
+            else {
+                throw new Error();
+            }
+            if(!Entry.hw.sendQueue['SET']) {
+                Entry.hw.sendQueue['SET'] = {};
+            }
+            Entry.hw.sendQueue['SET'][port] = {
+                type: Entry.Blacksmith.sensorTypes.DIGITAL,
+                data: value,
+                time: new Date().getTime()
+            };
+
+            return script.callReturn();
+        },
+        "syntax": {"js": [], "py": ["blacksmith.set_digital_toggle(%1, %2)"]}
+    },
+    "blacksmith_set_digital_pwm": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic",
+        "statements": [],
+        "template": Lang.template.blacksmith_set_digital_pwm,
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "blacksmith_list_digital_pwm"
+                },
+                {
+                    "type": "text",
+                    "params": [ "255" ]
+                },
+                null
+            ],
+            "type": "blacksmith_set_digital_pwm"
+        },
+        "paramsKeyMap": {
+            "PORT": 0,
+            "VALUE": 1
+        },
+        "class": "blacksmithSet",
+        "isNotFor": [ "blacksmith" ],
+        "func": function (sprite, script) {
+            var port = script.getNumberValue("PORT");
+            var value = script.getNumberValue("VALUE");
+
+            value = Math.round(value);
+            value = Math.min(value, 255);
+            value = Math.max(value, 0);
+            if(!Entry.hw.sendQueue['SET']) {
+                Entry.hw.sendQueue['SET'] = {};
+            }
+            Entry.hw.sendQueue['SET'][port] = {
+                type: Entry.Blacksmith.sensorTypes.PWM,
+                data: value,
+                time: new Date().getTime()
+            };
+
+            return script.callReturn();
+        },
+        "syntax": {"js": [], "py": ["blacksmith.set_digital_pwm(%1, %2)"]}
+    },
+    "blacksmith_set_digital_servo": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic",
+        "statements": [],
+        "template": Lang.template.blacksmith_set_digital_servo,
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "blacksmith_list_digital_basic"
+                },
+                {
+                    "type": "text",
+                    "params": [ "90" ]
+                },
+                null
+            ],
+            "type": "blacksmith_set_digital_servo"
+        },
+        "paramsKeyMap": {
+            "PORT": 0,
+            "VALUE": 1
+        },
+        "class": "blacksmithSet",
+        "isNotFor": [ "blacksmith" ],
+        "func": function (sprite, script) {
+            var port = script.getNumberValue("PORT");
+            var value = script.getNumberValue("VALUE");
+            value = Math.min(value, 180);
+            value = Math.max(value, 0);
+
+            if(!Entry.hw.sendQueue['SET']) {
+                Entry.hw.sendQueue['SET'] = {};
+            }
+            Entry.hw.sendQueue['SET'][port] = {
+                type: Entry.Blacksmith.sensorTypes.SERVO,
+                data: value,
+                time: new Date().getTime()
+            };
+
+            return script.callReturn();
+        },
+        "syntax": {"js": [], "py": ["blacksmith.set_digital_servo(%1, %2)"]}
+    },
+    "blacksmith_set_digital_buzzer" : {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic",
+        "statements": [],
+        "template": Lang.template.blacksmith_set_digital_buzzer,
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "blacksmith_list_digital_basic"
+                },
+                {
+                    "type": "blacksmith_list_digital_octave"
+                },
+                {
+                    "type": "blacksmith_list_digital_tone"
+                },
+                {
+                    "type": "text",
+                    "params": [ "1" ]
+                },
+                null
+            ],
+            "type": "blacksmith_set_digital_buzzer"
+        },
+        "paramsKeyMap": {
+            "PORT": 0,
+            "OCTAVE": 1,
+            "NOTE": 2,
+            "DURATION": 3
+        },
+        "class": "blacksmithSet",
+        "isNotFor": [ "blacksmith" ],
+        "func": function (sprite, script) {
+            var port = script.getNumberValue("PORT");
+            var duration = script.getNumberValue("DURATION");
+            var octave = script.getNumberValue("OCTAVE") - 1;
+            var value = 0;
+
+            if (!script.isStart) {
+                var note = script.getValue("NOTE");
+                if(!Entry.Utils.isNumber(note)) {
+                    note = Entry.Blacksmith.toneTable[note];
+                }
+                if(note < 0) {
+                    note = 0;
+                }
+                else if(note > 12) {
+                    note = 12;
+                }
+                if(duration < 0) {
+                    duration = 0;
+                }
+                if(!Entry.hw.sendQueue['SET']) {
+                    Entry.hw.sendQueue['SET'] = {};
+                }
+                if(duration === 0) {
+                    Entry.hw.sendQueue['SET'][port] = {
+                        type: Entry.Blacksmith.sensorTypes.TONE,
+                        data: 0,
+                        time: new Date().getTime()
+                    };
+                    return script.callReturn();
+                }
+                if(octave < 0) {
+                    octave = 0;
+                }
+                else if(octave > 8) {
+                    octave = 8;
+                }
+                if(note != 0) {
+                    value = Entry.Blacksmith.toneMap[note][octave];
+                }
+
+                duration = duration * 1000;
+                script.isStart = true;
+                script.timeFlag = 1;
+
+                Entry.hw.sendQueue['SET'][port] = {
+                    type: Entry.Blacksmith.sensorTypes.TONE,
+                    data: {
+                        value: value,
+                        duration: duration
+                    },
+                    time: new Date().getTime()
+                };
+
+                setTimeout(function() { script.timeFlag = 0; }, duration + 32);
+                return script;
+            }
+            else if (script.timeFlag == 1) {
+                return script;
+            }
+            else {
+                delete script.timeFlag;
+                delete script.isStart;
+                Entry.hw.sendQueue['SET'][port] = {
+                    type: Entry.Blacksmith.sensorTypes.TONE,
+                    data: 0,
+                    time: new Date().getTime()
+                };
+                Entry.engine.isContinue = false;
+                return script.callReturn();
+            }
+        },
+        "syntax": {"js": [], "py": ["blacksmith.set_digital_toggle(%1, %2, %3, %4)"]}
+    },
+    "blacksmith_set_digital_lcd": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic",
+        "template": Lang.template.blacksmith_set_digital_lcd,
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "blacksmith_list_digital_lcd"
+                },
+                {
+                    "type": "text",
+                    "params": [ "My Entry!!" ]
+                },
+                null
+            ],
+            "type": "blacksmith_set_digital_lcd"
+        },
+        "paramsKeyMap": {
+            "LINE": 0,
+            "STRING": 1,
+        },
+        "class": "blacksmithSet",
+        "isNotFor": [ "blacksmith" ],
+        "func": function (sprite, script) {
+            var line = script.getNumberValue("LINE");
+            var string = script.getValue("STRING");
+            var text = [];
+
+            if(!script.isStart) {
+                if(typeof string === 'string') {
+                    for (var i = 0; i < string.length; i++) {
+                        text[i] = Entry.Blacksmith.toByte(string[i]);
+                    }
+                }
+                else {
+                    text[0] = string;
+                }
+                if(!Entry.hw.sendQueue['SET']) {
+                    Entry.hw.sendQueue['SET'] = {};
+                }
+
+                script.isStart = true;
+                script.timeFlag = 1;
+                var fps = Entry.FPS || 60;
+                timeValue = 60/fps*50;
+
+                Entry.hw.sendQueue['SET'][line] = {
+                    type: Entry.Blacksmith.sensorTypes.LCD,
+                    data: {
+                        text0 : text[0],
+                        text1 : text[1],
+                        text2 : text[2],
+                        text3 : text[3],
+                        text4 : text[4],
+                        text5 : text[5],
+                        text6 : text[6],
+                        text7 : text[7],
+                        text8 : text[8],
+                        text9 : text[9],
+                        text10 : text[10],
+                        text11 : text[11],
+                        text12 : text[12],
+                        text13 : text[13],
+                        text14 : text[14],
+                        text15 : text[15]
+                    },
+                    time: new Date().getTime()
+                };
+
+                setTimeout(function() {
+                    script.timeFlag = 0;
+                }, timeValue);
+                return script;
+            }
+            else if(script.timeFlag == 1) {
+                return script;
+            }
+            else {
+                delete script.timeFlag;
+                delete script.isStart;
+                Entry.engine.isContinue = false;
+                return script.callReturn();
+            }
+        },
+        "syntax": {"js": [], "py": ["blacksmith.set_digital_lcd(%1, %2)"]}
+    },
+    "blacksmith_set_digital_bluetooth": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic",
+        "template": Lang.template.blacksmith_set_digital_bluetooth,
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "text",
+                    "params": [ "My Entry!!" ]
+                },
+                null
+            ],
+            "type": "blacksmith_set_digital_bluetooth"
+        },
+        "paramsKeyMap": {
+            "STRING": 0
+        },
+        "class": "blacksmithSet",
+        "isNotFor": [ "blacksmith" ],
+        "func": function (sprite, script) {
+            if(!script.isStart) {
+                var string = script.getValue("STRING");
+                var port = 3;
+                var text = [];
+
+                if(typeof string === 'string') {
+                    for (var i = 0; i < string.length; i++) {
+                        text[i] = Entry.Blacksmith.toByte(string[i]);
+                    }
+                }
+                else {
+                    text[0] = string;
+                }
+                if(!Entry.hw.sendQueue['SET']) {
+                    Entry.hw.sendQueue['SET'] = {};
+                }
+
+                script.isStart = true;
+                script.timeFlag = 1;
+                var fps = Entry.FPS || 60;
+                timeValue = 60/fps*50;
+
+                Entry.hw.sendQueue['SET'][port] = {
+                    type: Entry.Blacksmith.sensorTypes.txBLUETOOTH,
+                    data: {
+                        text0 : text[0],
+                        text1 : text[1],
+                        text2 : text[2],
+                        text3 : text[3],
+                        text4 : text[4],
+                        text5 : text[5],
+                        text6 : text[6],
+                        text7 : text[7],
+                        text8 : text[8],
+                        text9 : text[9],
+                        text10 : text[10],
+                        text11 : text[11],
+                        text12 : text[12],
+                        text13 : text[13],
+                        text14 : text[14],
+                        text15 : text[15]
+                    },
+                    time: new Date().getTime()
+                };
+
+                setTimeout(function() {
+                    script.timeFlag = 0;
+                }, timeValue);
+                return script;
+            }
+            else if(script.timeFlag == 1) {
+                return script;
+            }
+            else {
+                delete script.timeFlag;
+                delete script.isStart;
+                Entry.engine.isContinue = false;
+                return script.callReturn();
+            }
+        },
+        "syntax": {"js": [], "py": ["blacksmith.set_digital_bluetooth(%1)"]}
     },
     "sensorBoard_get_named_sensor_value": {
         "color": "#00979D",
@@ -7630,11 +8859,117 @@ Entry.block = {
             return script.callReturn();
         }
     },
+    "cobl_external_RainBowled": {
+        color: "#00979D",
+        fontColor: "#fff",
+        skeleton: "basic",
+        template: "18-1.외부LED%1 (1~64)%2 %3",
+        params: [
+            {
+                type: "TextInput",
+                value: 0,
+                fontSize: 11
+            },
+            {
+                type: "Dropdown",
+                options: [
+                  ["OFF","OFF"],
+                  ["빨강","Red"],
+                  ["주황","Orange"],
+                  ["노랑","Yellow"],
+                  ["초록","Green"],
+                  ["파랑","Blue"],
+                  ["남색","Dark Blue"],
+                  ["보라","Purple"],
+                  ["흰색","White"]
+                ],
+                fontSize: 11
+            },
+            {
+                type: "Indicator",
+                img: "block_icon/hardware_03.png",
+                size: 12
+            }
+        ],
+        def: {
+            params: [
+                "1",
+                "OFF"
+            ],
+            type: "cobl_external_RainBowled"
+        },
+        paramsKeyMap: {
+            PORT: 0,
+            OPERATOR: 1
+        },
+        class: "cobl",
+        isNotFor : [ "cobl" ],
+        "func": function(sprite, script) {
+            var led = script.getStringField("PORT");
+            var value = script.getStringField("OPERATOR");
+
+            Entry.hw.setDigitalPortValue("ELED_IDX", led);
+
+            if(value == 'OFF') {
+                Entry.hw.setDigitalPortValue("ELED_R", 0);
+                Entry.hw.setDigitalPortValue("ELED_G", 0);
+                Entry.hw.setDigitalPortValue("ELED_B", 0);
+            }
+            else if(value == 'Red') {
+                Entry.hw.setDigitalPortValue("ELED_R", 80);
+                Entry.hw.setDigitalPortValue("ELED_G", 0);
+                Entry.hw.setDigitalPortValue("ELED_B", 0);
+            }
+            else if(value == 'Orange') {
+                Entry.hw.setDigitalPortValue("ELED_R", 80);
+                Entry.hw.setDigitalPortValue("ELED_G", 20);
+                Entry.hw.setDigitalPortValue("ELED_B", 0);
+            }
+            else if(value == 'Yellow') {
+                Entry.hw.setDigitalPortValue("ELED_R", 80);
+                Entry.hw.setDigitalPortValue("ELED_G", 80);
+                Entry.hw.setDigitalPortValue("ELED_B", 0);
+            }
+            else if(value == 'Green') {
+                Entry.hw.setDigitalPortValue("ELED_R", 0);
+                Entry.hw.setDigitalPortValue("ELED_G", 80);
+                Entry.hw.setDigitalPortValue("ELED_B", 0);
+            }
+            else if(value == 'Blue') {
+                Entry.hw.setDigitalPortValue("ELED_R", 0);
+                Entry.hw.setDigitalPortValue("ELED_G", 0);
+                Entry.hw.setDigitalPortValue("ELED_B", 80);
+            }
+            else if(value == 'Dark Blue') {
+                Entry.hw.setDigitalPortValue("ELED_R", 0);
+                Entry.hw.setDigitalPortValue("ELED_G", 50);
+                Entry.hw.setDigitalPortValue("ELED_B", 80);
+            }
+            else if(value == 'Purple') {
+                Entry.hw.setDigitalPortValue("ELED_R", 80);
+                Entry.hw.setDigitalPortValue("ELED_G", 0);
+                Entry.hw.setDigitalPortValue("ELED_B", 80);
+            }
+            else if(value == 'White') {
+                Entry.hw.setDigitalPortValue("ELED_R", 80);
+                Entry.hw.setDigitalPortValue("ELED_G", 80);
+                Entry.hw.setDigitalPortValue("ELED_B", 80);
+            }
+
+
+            Entry.hw.update();
+
+            delete Entry.hw.sendQueue["ELED_IDX"];
+            delete Entry.hw.sendQueue["ELED_R"];
+            delete Entry.hw.sendQueue["ELED_G"];
+            delete Entry.hw.sendQueue["ELED_B"];
+        }
+    },
     "cobl_external_led": {
         color: "#00979D",
         fontColor: "#fff",
         skeleton: "basic",
-        template: "18.외부LED%1(1~64)R%2G%3B%4 %5",
+        template: "18-2.외부LED%1(1~64)R%2G%3B%4 %5",
         params: [
             {
                 type: "TextInput",
@@ -11824,7 +13159,7 @@ Entry.block = {
             NEXT: 1
         },
         "def": {
-            "params": [ "이름" ],
+            "params": [ Lang.Blocks.FUNCTION_explanation_1 ],
             "type": "function_field_label"
         },
         //"syntax": {"js": [], "py": ["%1function_field_label#"]}
@@ -11853,7 +13188,7 @@ Entry.block = {
             "params": [
                 {
                     "type": "text",
-                    "params": [ "문자/숫자값" ]
+                    "params": [ Lang.template.function_param_string ]
                 }
             ],
             "type": "function_field_string"
@@ -11884,7 +13219,7 @@ Entry.block = {
             "params": [
                 {
                     "type": "True",
-                    "params": [ "판단값" ]
+                    "params": [ Lang.template.function_param_boolean ]
                 }
             ],
             "type": "function_field_boolean"
@@ -11986,7 +13321,7 @@ Entry.block = {
                     if (mode !== Entry.Workspace.MODE_BOARD) return;
                     if (Entry.type !== "workspace") return;
                     var block = blockView.block;
-                    var id = block.type.substr(5);
+                    var id = block.getFuncId();
                     Entry.Func.edit(Entry.variableContainer.functions_[id]);
                 }
             ]
@@ -12004,7 +13339,7 @@ Entry.block = {
                 }
 
                 var func = Entry.variableContainer.getFunction(
-                    this.block.type.substr(5, 9)
+                    this.block.getFuncId()
                 );
                 this.funcCode = func.content;
                 this.funcExecutor = this.funcCode.raiseEvent("funcDef", entity)[0];
@@ -33608,7 +34943,7 @@ Entry.block = {
                     [ "빠른 속도로 돌리기", "205" ],
                     [ "매우 빠른 속도로 돌리기", "255"]
                 ],
-                "value": "210",
+                "value": "160",
                 "fontSize": 11
             },
             {

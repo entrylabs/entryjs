@@ -378,20 +378,31 @@ Entry.Variable.prototype.updateView = function() {
                 this._nameWidth = this.textView_.getMeasuredWidth();
             this.valueView_.x = this._nameWidth + 14;
             this.valueView_.y = 1;
-            this.valueView_.text =
-                Number(this.getValue())
-                .toFixed(2)
-                .replace('.00', '');
+            var value = String(this.getValue());
+
+            if (this.isFloatPoint()) {
+                var reg = /\.(.*)/;
+
+                //check the value is float
+                var ret = reg.exec(value);
+                if (!ret) value += '.00';
+                else {
+                    while (reg.exec(value)[1].length < 2)
+                        value += '0';
+                }
+            }
+
+            this.valueView_.text = value;
 
             if (this._valueWidth === null)
                 this._valueWidth = this.valueView_.getMeasuredWidth();
             var width = this._nameWidth + this._valueWidth + 26;
             width = Math.max(width, 90);
-            this.rect_.graphics.clear().f("#ffffff").ss(1, 2, 0).s("#A0A1A1")
-                .rc(0, -14,
-                    width, 33,
-                    4, 4, 4, 4);
-            this.wrapper_.graphics.clear().f("#1bafea").ss(1, 2, 0).s("#1bafea")
+            this.rect_.graphics.clear().f("#ffffff")
+                .ss(1, 2, 0).s("#A0A1A1")
+                .rc(0, -14, width, 33, 4, 4, 4, 4);
+            this.wrapper_.graphics.clear().f("#1bafea")
+                .ss(1, 2, 0).s("#1bafea")
                 .rc(this._nameWidth + 7, -11,
                     this._valueWidth + 15, 14,
                     7, 7, 7, 7);
@@ -401,14 +412,12 @@ Entry.Variable.prototype.updateView = function() {
             this.maxWidth = width -20;
 
             this.slideBar_.graphics.clear().beginFill('#A0A1A1')
-                         .s('#A0A1A1')
-                         .ss(1)
-                         .dr(10, 10, this.maxWidth, 1.5);
+                        .s('#A0A1A1').ss(1)
+                        .dr(10, 10, this.maxWidth, 1.5);
             var position = this.getSlidePosition(this.maxWidth);
             this.valueSetter_.graphics.clear().beginFill('#1bafea')
-                         .s('#A0A1A1')
-                         .ss(1)
-                         .dc(position, 10 + 0.5, 3);
+                        .s('#A0A1A1').ss(1)
+                        .dc(position, 10 + 0.5, 3);
         } else if (this.type == 'list') {
             this.view_.x = this.getX();
             this.view_.y = this.getY();
@@ -418,8 +427,7 @@ Entry.Variable.prototype.updateView = function() {
             var name = this.getName();
             if (this.object_) {
                 var obj = Entry.container.getObject(this.object_);
-                if (obj)
-                    name = obj.name + ':' + name;
+                if (obj) name = obj.name + ':' + name;
             }
 
             this.titleView_.text = name;
@@ -835,12 +843,14 @@ Entry.Variable.prototype.getMinValue = function() {
 };
 
 Entry.Variable.prototype.setMinValue = function(minValue) {
+    this._valueWidth = null;
+
     minValue = minValue || 0;
     this.minValue_ = minValue;
     if (this.value_ < minValue)
         this.setValue(minValue);
-    this.updateView();
     this.isMinFloat = Entry.isFloat(this.minValue_);
+    this.updateView();
 };
 
 Entry.Variable.prototype.getMaxValue = function() {
@@ -848,12 +858,14 @@ Entry.Variable.prototype.getMaxValue = function() {
 };
 
 Entry.Variable.prototype.setMaxValue = function(maxValue) {
+    this._valueWidth = null;
+
     maxValue = maxValue || 100;
     this.maxValue_ = maxValue;
     if (this.value_ > maxValue)
         this.value_ = maxValue;
-    this.updateView();
     this.isMaxFloat = Entry.isFloat(this.maxValue_);
+    this.updateView();
 };
 
 Entry.Variable.prototype.isFloatPoint = function() {
