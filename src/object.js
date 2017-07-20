@@ -28,12 +28,11 @@ Entry.EntryObject = function(model) {
         this.script = new Entry.Code(script, this);
 
         /** @type {Array.<picture object>} */
-        this.pictures =
-            JSON.parse(JSON.stringify(model.sprite.pictures || []));
+        this.pictures = Entry.Utils.copy(model.sprite.pictures || []);
 
         /** @type {Array.<sound object>} */
-        this.sounds =
-            JSON.parse(JSON.stringify(model.sprite.sounds || []));
+        this.sounds = Entry.Utils.copy(model.sprite.sounds || []);
+
         for (var i=0; i<this.sounds.length; i++) {
             if (!this.sounds[i].id) {
                 this.sounds[i].id = Entry.generateHash();
@@ -53,7 +52,6 @@ Entry.EntryObject = function(model) {
                 this.selectedPicture = this.getPicture(model.selectedPictureId);
         }
 
-
         this.scene = Entry.scene.getSceneById(model.scene) || Entry.scene.selectedScene;
 
         this.setRotateMethod(model.rotateMethod);
@@ -69,36 +67,43 @@ Entry.EntryObject = function(model) {
 
         Entry.stage.loadObject(this);
 
-        for (var i in this.pictures) {
+        var entityId = this.entity.id;
+        var cachePicture = Entry.container.cachePicture.bind(Entry.container);
+        var pictures = this.pictures;
+
+        for (var i in pictures) {
             (function (picture) {
                 picture.objectId = this.id;
                 if (!picture.id)
                     picture.id = Entry.generateHash();
-                var image = new Image();
-                if (picture.fileurl) {
-                    image.src = picture.fileurl;
-                } else {
-                    if (picture.fileurl) {
-                        image.src = picture.fileurl;
-                    } else {
-                        var fileName = picture.filename;
-                        image.src = Entry.defaultPath + '/uploads/' + fileName.substring(0, 2) + '/' +
-                            fileName.substring(2, 4) + '/image/' + fileName + '.png';
-                    }
-                }
+
                 Entry.Loader.addQueue();
+
+                var image = new Image();
+
                 image.onload = function(e) {
-                    Entry.container.cachePicture(
-                        picture.id + that.entity.id, this);
+                    cachePicture(picture.id + entityId, this);
                     Entry.Loader.removeQueue();
+                    this.onload = null;
                 };
+
                 image.onerror = function(err) {
                     Entry.Loader.removeQueue();
+                    this.onerror = null;
                 };
-            })(this.pictures[i]);
 
-            Entry.requestUpdate = true;
+                if (picture.fileurl) image.src = picture.fileurl;
+                else {
+                    var fileName = picture.filename;
+
+                    image.src = Entry.defaultPath + '/uploads/' +
+                        fileName.substring(0, 2) + '/' +
+                        fileName.substring(2, 4) + '/image/' +
+                        fileName + '.png';
+                }
+            })(pictures[i]);
         }
+        Entry.requestUpdate = true;
     }
     this._isContextMenuEnabled = true;
 };
@@ -118,7 +123,7 @@ Entry.EntryObject = function(model) {
             // generate context menu
             Entry.Utils.disableContextmenu(objectView);
             var object = this;
-            longPressTimer = null;
+            var longPressTimer = null;
 
             $(objectView).bind('mousedown touchstart', function(e){
                 if (Entry.container.getObject(this.id)) {
@@ -920,20 +925,22 @@ Entry.EntryObject = function(model) {
      * Update thumbnail view;
      */
     p.updateThumbnailView = function() {
-        if (this.objectType == 'sprite') {
-            if (this.entity.picture.fileurl) {
-                this.thumbnailView_.style.backgroundImage = 'url("' + this.entity.picture.fileurl + '")';
+        var thumb = this.thumbnailView_;
+        var picture = this.entity.picture;
+        var objectType = this.objectType;
+
+        if (objectType == 'sprite') {
+            if (picture.fileurl) {
+                thumb.style.backgroundImage = 'url("' + picture.fileurl + '")';
             } else {
-                var fileName = this.entity.picture.filename;
-                this.thumbnailView_.style.backgroundImage =
+                var fileName = picture.filename;
+                thumb.style.backgroundImage =
                     'url("' + Entry.defaultPath + '/uploads/' + fileName.substring(0, 2) + '/' +
                     fileName.substring(2, 4) + '/thumb/' + fileName + '.png")';
             }
-        }
-        else if (this.objectType == 'textBox') {
+        } else if (objectType == 'textBox') {
             var textIconPath = Entry.mediaFilePath + '/text_icon.png';
-            this.thumbnailView_.style.backgroundImage =
-                "url("+textIconPath+")";
+            thumb.style.backgroundImage = "url(" + textIconPath + ")";
         }
     };
 
@@ -943,19 +950,23 @@ Entry.EntryObject = function(model) {
     p.updateCoordinateView = function(isForced) {
         if (!this.isSelected() && !isForced)
             return;
-        if (this.coordinateView_ && this.coordinateView_.xInput_&& this.coordinateView_.yInput_) {
-            var originX = this.coordinateView_.xInput_.value,
-                originY = this.coordinateView_.yInput_.value,
-                size = this.coordinateView_.sizeInput_.value,
-                newX = this.entity.getX().toFixed(1),
-                newY = this.entity.getY().toFixed(1),
-                newSize = this.entity.getSize().toFixed(1);
+
+        var view = this.coordinateView_;
+        if (view && view.xInput_ && view.yInput_) {
+            var originX = view.xInput_.value,
+                originY = view.yInput_.value,
+                size = view.sizeInput_.value,
+                entity = this.entity,
+                newX = entity.getX(1),
+                newY = entity.getY(1),
+                newSize = entity.getSize(1);
+
             if (originX != newX)
-                this.coordinateView_.xInput_.value = newX;
+                view.xInput_.value = newX;
             if (originY != newY)
-                this.coordinateView_.yInput_.value = newY;
+                view.yInput_.value = newY;
             if (size != newSize)
-                this.coordinateView_.sizeInput_.value = newSize;
+                view.sizeInput_.value = newSize;
         }
     };
 
@@ -966,28 +977,19 @@ Entry.EntryObject = function(model) {
         if ((!this.isSelected() || !this.view_) && !isForced)
             return;
         var rotateMethod = this.getRotateMethod();
-        var content = '';
+        var entity = this.entity;
+        var className = 'entryRemove';
+
         if (rotateMethod == 'free') {
-            this.rotateSpan_.removeClass('entryRemove');
-            this.rotateInput_.removeClass('entryRemove');
+            this.rotateSpan_.removeClass(className);
+            this.rotateInput_.removeClass(className);
 
-            content += this.entity.getRotation().toFixed(1);
-            content += '˚';
-            this.rotateInput_.value = content;
-
-            content = '';
-            content += this.entity.getDirection().toFixed(1);
-            content += '˚';
-            this.directionInput_.value = content;
-
+            this.rotateInput_.value = entity.getRotation(1) + '˚';
+            this.directionInput_.value = entity.getDirection(1) + '˚';
         } else {
-            this.rotateSpan_.addClass('entryRemove');
-            this.rotateInput_.addClass('entryRemove');
-
-            content = '';
-            content += this.entity.getDirection().toFixed(1);
-            content += '˚';
-            this.directionInput_.value = content;
+            this.rotateSpan_.addClass(className);
+            this.rotateInput_.addClass(className);
+            this.directionInput_.value = entity.getDirection(1) + '˚';
         }
     };
 
@@ -1238,6 +1240,7 @@ Entry.EntryObject = function(model) {
             return;
 
         var clonedEntity = new Entry.EntityObject(this);
+        clonedEntity.isClone = true;
 
         entity = entity || this.entity;
 
@@ -1258,7 +1261,6 @@ Entry.EntryObject = function(model) {
             [clonedEntity, 'when_clone_start']
         );
 
-        clonedEntity.isClone = true;
         clonedEntity.isStarted = true;
         this.addCloneVariables(
             this, clonedEntity,
@@ -1401,8 +1403,8 @@ Entry.EntryObject = function(model) {
             this.coordinateView_.sizeInput_
         ];
         if (isLocked){
-            if(inputs[0].getAttribute("readonly")!= true){
-                for(var i=0; i<inputs.length; i++){
+            if(inputs[0].getAttribute("readonly") != true){
+                for (var i=0; i<inputs.length; i++) {
                     inputs[i].removeClass('selectedEditingObject');
                     inputs[i].setAttribute('readonly', false);
                     this.isEditing = false;
@@ -1488,13 +1490,9 @@ Entry.EntryObject = function(model) {
      *  @return {Array<clone Entity> } entities
      */
     p.getClonedEntities = function() {
-        var entities = [],
-        clonedEntities = this.clonedEntities;
-        clonedEntities.map(function (entity) {
-            if (!entity.isStamp)
-                entities.push(entity);
+        return this.clonedEntities.filter(function (e) {
+            return !e.isStamp;
         });
-        return entities;
     };
 
     /**
@@ -1502,22 +1500,17 @@ Entry.EntryObject = function(model) {
      *  @return {Array<stampEntity> } entities
      */
     p.getStampEntities = function() {
-        var entities = [],
-        clonedEntities = this.clonedEntities;
-        clonedEntities.map(function (entity) {
-            if (entity.isStamp)
-                entities.push(entity);
+        return this.clonedEntities.filter(function (e) {
+            return e.isStamp;
         });
-        return entities;
     };
 
     p.clearExecutor = function() {
         this.script.clearExecutors();
-        for (var j = this.clonedEntities.length; j>0; j--) {
-            var entity = this.clonedEntities[j-1];
-            entity.removeClone();
-        }
-        this.clonedEntities = [];
+
+        var clonedEntities = this.clonedEntities;
+        for (var j = clonedEntities.length-1; j>=0; j--)
+            clonedEntities[j].removeClone(true);
     };
 
     p._rightClick = function(e) {
