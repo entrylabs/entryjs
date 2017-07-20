@@ -1045,6 +1045,8 @@ describe('EntryPython', function(){
                 var functionKey = Object.keys(functions)[0];
                 var func = functions[functionKey];
 
+
+
                 assert.ok(Test.objectSimilarCheck(resultBlock[0][0], 
                     {
                         "type": 'func_' + functionKey,
@@ -1059,8 +1061,37 @@ describe('EntryPython', function(){
                         ]
                     }
                 ));
-                
+                Entry.clearProject();
             });
+
+            it('params' , function() {
+                Entry.loadProject(Entry.getStartProject());
+                Entry.playground.object = Entry.container.objects_[0];
+                var resultBlock = Test.parsePython("def 함수(param1):\n    함수(param1)\n함수(10)");
+                var functions = Entry.variableContainer.functions_;
+                var functionKey = Object.keys(functions)[0];
+                var func = functions[functionKey];
+                var functionContent = func.content.toJSON();
+
+                assert.equal(functionContent[0][0].params[0].params[1].params[0].type , functionContent[0][1].params[0].type);
+
+                Entry.clearProject();
+            })
+
+            it('recursive' , function() {
+                Entry.loadProject(Entry.getStartProject());
+                Entry.playground.object = Entry.container.objects_[0];
+                var resultBlock = Test.parsePython("def 함수(param1):\n    함수(param1)\n함수(10)");
+                var functions = Entry.variableContainer.functions_;
+                var functionKey = Object.keys(functions)[0];
+                var func = functions[functionKey];
+                var functionData = func.content._data[0];
+                var functionDefineParam = functionData._data[1].data.type;
+
+                assert.ok(functionDefineParam.indexOf('func_') > -1);
+
+
+            })
         })
     });
 
