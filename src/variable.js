@@ -489,7 +489,6 @@ Entry.Variable.prototype.updateView = function() {
 
                 if (cachedText) valueView.text = cachedText;
                 else {
-                    console.log('here');
                     var execText = text.substr(0, maxLen);
                     var charIndex = maxLen;
 
