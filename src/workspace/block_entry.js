@@ -32397,7 +32397,9 @@ Entry.block = {
                     [ "A2", "2" ],
                     [ "A3", "3" ],
                     [ "A4", "4" ],
-                    [ "A5", "5" ]
+                    [ "A5", "5" ],
+                    [ "A6", "6" ],
+                    [ "A7", "7" ]
                 ],
                 "value": "0",
                 "fontSize": 11
@@ -32430,7 +32432,7 @@ Entry.block = {
         "def": {
             "params": [
                 {
-                    "type": "arduino_ext_analog_list"
+                    "type": "mkboard_analog_list"
                 }
             ],
             "type": "mkboard_get_analog_value"
@@ -32483,7 +32485,7 @@ Entry.block = {
                     "type": "mkboard_get_analog_value",
                     "params": [
                         {
-                            "type": "arduino_ext_analog_list"
+                            "type": "mkboard_analog_list"
                         }
                     ]
                 },
@@ -33226,7 +33228,7 @@ Entry.block = {
         "def": {
             "params": [
                 {
-                    "type": "arduino_ext_analog_list",
+                    "type": "mkboard_analog_list",
                     "params": [ "0" ]
                 }
             ],
@@ -33261,7 +33263,7 @@ Entry.block = {
         "def": {
             "params": [
                 {
-                    "type": "arduino_ext_analog_list",
+                    "type": "mkboard_analog_list",
                     "params": [ "1" ]
                 }
             ],
@@ -33428,7 +33430,7 @@ Entry.block = {
         "def": {
             "params": [  
                 {
-                    "type": "arduino_ext_analog_list",
+                    "type": "mkboard_analog_list",
                     "params": [ "2" ]
                 }
             ],
@@ -33449,6 +33451,7 @@ Entry.block = {
         "syntax": {"js": [], "py": []}
     },
 
+    /*
     "mkboard_list_digital_lcd": {
         "color": "#00979D",
         "skeleton": "basic_string_field",
@@ -33581,6 +33584,7 @@ Entry.block = {
         },
         "syntax": {"js": [], "py": ["mkboard.set_digital_lcd(%1, %2)"]}
     },    
+    */
 
     // mkboard Added 2017-07-04
     "joystick_get_number_sensor_value": {
