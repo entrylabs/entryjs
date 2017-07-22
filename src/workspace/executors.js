@@ -21,32 +21,34 @@ Entry.Executor.MAXIMUM_CALLSTACK = 100;
             return;
 
         var executedBlocks = [];
+        var block;
         if (isFromOrigin)
             Entry.callStackLength = 0;
+
+        var entity = this.entity;
+
         while (true) {
             var returnVal = null;
             executedBlocks.push(this.scope.block);
             try {
                 var schema = this.scope.block.getSchema();
                 if (schema)
-                    returnVal = schema.func.call(this.scope, this.entity, this.scope);
+                    returnVal = schema.func.call(this.scope, entity, this.scope);
             } catch(e) {
                 if(e.name === 'AsyncError') {
                     returnVal = Entry.STATIC.BREAK;
                 } else {
-                    var errorMsg = '런타임 에러';
-                    var isToastHide = false;
-                    if(e.message != errorMsg) {
-                        isToastHide = true;
-                    }
-                    Entry.Utils.stopProjectWithToast(this.scope, errorMsg, isToastHide, e);
+                    Entry.Utils.stopProjectWithToast(
+                        this.scope, undefined, e);
                 }
             }
 
             //executor can be ended after block function call
             if (this.isEnd()) return executedBlocks;
 
-            if (returnVal === undefined || returnVal === null || returnVal === Entry.STATIC.PASS) {
+            if (returnVal === undefined ||
+                    returnVal === null ||
+                    returnVal === Entry.STATIC.PASS) {
                 this.scope = new Entry.Scope(this.scope.block.getNextBlock(), this);
                 if (this.scope.block === null) {
                     if (this._callStack.length) {

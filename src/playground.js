@@ -332,7 +332,14 @@ Entry.Playground = function() {
             var pictureAdd = Entry.createElement('div', 'entryAddPicture');
             pictureAdd.addClass('entryPlaygroundAddPicture');
             pictureAdd.bindOnClick(function(e) {
-                Entry.do('playgroundClickAddPicture');
+                if (!Entry.container || Entry.container.isSceneObjectsExist())
+                    Entry.do('playgroundClickAddPicture');
+                else {
+                    Entry.toast.alert(
+                        Lang.Workspace.add_object_alert,
+                        Lang.Workspace.add_object_alert_msg
+                    );
+                }
             });
             var innerPictureAdd = Entry.createElement('div', 'entryAddPictureInner');
             innerPictureAdd.addClass('entryPlaygroundAddPictureInner');
@@ -421,7 +428,7 @@ Entry.Playground = function() {
                 if (/[\u4E00-\u9FFF]/.exec(textValue) != null) {
                     font = "KoPub Batang";
                     fontName.value = font;
-                    alert(Lang.Menus.not_supported_text);
+                    entrylms.alert(Lang.Menus.not_supported_text);
                 }
             }
             Entry.playground.object.entity.setFontType(font);
@@ -608,7 +615,7 @@ Entry.Playground = function() {
                     var font = "KoPub Batang";
                     fontName.value = font;
                     Entry.playground.object.entity.setFontType(font);
-                    alert(Lang.Menus.not_supported_text);
+                    entrylms.alert(Lang.Menus.not_supported_text);
                 }
             }
             Entry.playground.object.setText(this.value);
@@ -656,7 +663,7 @@ Entry.Playground = function() {
 
         var fontSizeLabel = Entry.createElement("div");
         fontSizeLabel.addClass("entryPlaygroundFontSizeLabel");
-        fontSizeLabel.innerHTML = "글자 크기";
+        fontSizeLabel.innerHTML = Lang.General.font_size;
         fontSizeWrapper.appendChild(fontSizeLabel);
 
         var isFontSizing = false;
@@ -769,7 +776,14 @@ Entry.Playground = function() {
             var soundAdd = Entry.createElement('div', 'entryAddSound');
             soundAdd.addClass('entryPlaygroundAddSound');
             soundAdd.bindOnClick(function(e) {
-                Entry.do('playgroundClickAddSound');
+                if (!Entry.container || Entry.container.isSceneObjectsExist())
+                    Entry.do('playgroundClickAddSound');
+                else {
+                    Entry.toast.alert(
+                        Lang.Workspace.add_object_alert,
+                        Lang.Workspace.add_object_alert_msg
+                    );
+                }
             });
             var innerSoundAdd = Entry.createElement('div', 'entryAddSoundInner');
             innerSoundAdd.addClass('entryPlaygroundAddSoundInner');
@@ -866,6 +880,7 @@ Entry.Playground = function() {
             this.changeViewMode('picture');
         else if (viewMode == 'sound')
             this.changeViewMode('sound');
+
         this.reloadPlayground();
     };
 
@@ -873,30 +888,22 @@ Entry.Playground = function() {
      * Inject code
      */
     p.injectCode = function() {
-        var code = this.object.script;
-        var ws = this.mainWorkspace;
-
         var workspace = Entry.getMainWS();
-        if (Entry.textCodingEnable && workspace && !workspace.vimBoard._parser._onError) {
-            if(workspace.vimBoard._changedObject) {
-                workspace.vimBoard._currentObject = workspace.vimBoard._changedObject;
-                workspace.vimBoard._currentScene = workspace.vimBoard._changedObject.scene;
-            }
-            else
-                if(Entry.playground) {
-                    workspace.vimBoard._currentObject = Entry.playground.object;
-                    workspace.vimBoard._currentScene = Entry.playground.object.scene;
-                }
+        if (!workspace) return;
 
-            if(Entry.playground && Entry.textCodingEnable) {
-                workspace.vimBoard._changedObject = Entry.playground.object;
-                workspace.vimBoard._currentScene = Entry.playground.object.scene;
-            }
+        var object = this.object;
+        var vimBoard = workspace.vimBoard;
+
+        if (vimBoard && Entry.textCodingEnable && !vimBoard._parser._onError) {
+            vimBoard._changedObject = object;
+            vimBoard._currentScene = object.scene;
         }
 
-        ws.changeBoardCode(code, function() {
-            ws.getBoard().adjustThreadsPosition();
-        });
+        var board = workspace.getBoard();
+        var engine = Entry.engine;
+        var cb = engine && engine.isState('run') ?
+            undefined : board.adjustThreadsPosition.bind(board);
+        workspace.changeBoardCode(object.script, cb);
     };
 
     /**
@@ -906,9 +913,8 @@ Entry.Playground = function() {
         var view = this.pictureListView_;
         if (!view) return;
 
-        while (view.hasChildNodes()) {
+        while (view.hasChildNodes())
             view.removeChild(view.lastChild);
-        }
 
         if (this.object) {
             var pictures = this.object.pictures;
@@ -916,8 +922,6 @@ Entry.Playground = function() {
                 var picture = pictures[i];
                 !picture.view && Entry.playground.generatePictureElement(picture);
                 var element = pictures[i].view;
-                if (!element)
-                    console.log(element);
                 element.orderHolder.innerHTML = i+1;
                 view.appendChild(element);
             }
@@ -937,7 +941,7 @@ Entry.Playground = function() {
         if (isNew === true) delete tempPicture.id;
         delete tempPicture.view;
 
-        picture = JSON.parse(JSON.stringify(tempPicture));
+        picture = Entry.Utils.copy(tempPicture);
         if (!picture.id) picture.id = Entry.generateHash();
 
         picture.name = Entry.getOrderedName(picture.name, this.object.pictures);
@@ -1144,7 +1148,7 @@ Entry.Playground = function() {
         if (isNew === true)
             delete tempSound.id;
 
-        sound = JSON.parse(JSON.stringify(tempSound));
+        sound = Entry.Utils.copy(tempSound);
         if (!sound.id)
             sound.id = Entry.generateHash();
         sound.name = Entry.getOrderedName(sound.name, this.object.sounds);
@@ -1191,15 +1195,29 @@ Entry.Playground = function() {
                     this.pictureView_.object != this.object) {
                     this.pictureView_.object = this.object;
                     this.injectPicture();
+                } else if(this.object && this.pictureListView_ && !this.pictureListView_.hasChildNodes()) {
+                    var pictures = this.object.pictures;
+                    if(pictures && pictures.length) {
+                        this.injectPicture();
+                    }
                 }
             } else this.painter.hide();
         }
 
-        if (viewType == 'sound' && (!this.soundView_.object ||
-            this.soundView_.object != this.object)) {
-            this.soundView_.object = this.object;
-            this.injectSound();
-        } else if (viewType == 'text' && this.object.objectType == 'textBox' ||
+        if (viewType == 'sound') {
+            if (!this.soundView_.object ||
+                this.soundView_.object != this.object) {
+                this.soundView_.object = this.object;
+                this.injectSound();
+            } else if(this.object && this.soundListView_ && !this.soundListView_.hasChildNodes()) {
+                var sounds = this.object.sounds;
+                if(sounds && sounds.length) {
+                    this.injectSound();
+                }
+            }
+        }
+
+        if (viewType == 'text' && this.object.objectType == 'textBox' ||
             (this.textView_.object != this.object)) {
             this.textView_.object = this.object;
             this.injectText();
@@ -1305,11 +1323,11 @@ Entry.Playground = function() {
      */
     p.setMenu = function(objectType) {
         if (this.currentObjectType == objectType) return;
+
         var blockMenu = this.blockMenu;
-        blockMenu.unbanClass(this.currentObjectType);
-        blockMenu.banClass(objectType);
-        blockMenu.setMenu();
-        blockMenu.selectMenu(0, true);
+        blockMenu.unbanClass(this.currentObjectType, true);
+        blockMenu.banClass(objectType, true);
+        blockMenu.setMenu(true);
         this.currentObjectType = objectType;
     };
 
@@ -1374,6 +1392,10 @@ Entry.Playground = function() {
      * Reload playground
      */
     p.reloadPlayground = function () {
+        var engine = Entry.engine;
+
+        if (engine && engine.isState('run')) return;
+
         (function(workspace) {
             if (workspace) {
                 workspace.getBlockMenu().reDraw();
@@ -1490,7 +1512,7 @@ Entry.Playground = function() {
         function nameViewBlur() {
             if (this.value.trim() === '') {
                 Entry.deAttachEventListener(this, 'blur', nameViewBlur);
-                alert('이름을 입력하여 주세요.');
+                entrylms.alert(Lang.Workspace.enter_the_name);
                 this.focus();
                 Entry.attachEventListener(this, 'blur', nameViewBlur);
                 return;
@@ -1501,7 +1523,7 @@ Entry.Playground = function() {
                 if(nameViewArray.eq(i).val()==nameView.value &&
                    nameViewArray[i] != this) {
                     Entry.deAttachEventListener(this, 'blur', nameViewBlur);
-                    alert('이름이 중복 되었습니다.');
+                    entrylms.alert(Lang.Workspace.name_already_exists);
                     this.focus();
                     Entry.attachEventListener(this, 'blur', nameViewBlur);
                     return;
@@ -1622,28 +1644,32 @@ Entry.Playground = function() {
         nameView.addClass('entryPlaygroundSoundName');
         nameView.sound = sound;
         nameView.value = sound.name;
-        var nameViewArray = document.getElementsByClassName('entryPlaygroundSoundName');
-        nameView.onblur = function() {
-            if (this.value === '') {
-                alert('이름을 입력하여 주세요.');
+        Entry.attachEventListener(nameView, 'blur', nameViewBlur);
+
+        function nameViewBlur() {
+            if (this.value.trim() === '') {
+                Entry.deAttachEventListener(this, 'blur', nameViewBlur);
+                entrylms.alert(Lang.Workspace.enter_the_name);
                 this.focus();
+                Entry.attachEventListener(this, 'blur', nameViewBlur);
                 return;
             }
-            var count=0;
+
+            var nameViewArray = $(".entryPlaygroundSoundName");
             for (var i=0; i<nameViewArray.length; i++) {
-                if(nameViewArray[i].value==nameView.value) {
-                    count = count+1;
-                    if (count > 1) {
-                        alert('이름이 중복 되었습니다.');
-                        this.focus();
-                        return;
-                    }
+                if(nameViewArray.eq(i).val() == nameView.value && nameViewArray[i] != this) {
+                    Entry.deAttachEventListener(this, 'blur', nameViewBlur);
+                    entrylms.alert(Lang.Workspace.name_already_exists);
+                    this.focus();
+                    Entry.attachEventListener(this, 'blur', nameViewBlur);
+                    return;
                 }
             }
-
-            this.sound.name = this.value;
+            var newValue = this.value;
+            this.sound.name = newValue;
             Entry.playground.reloadPlayground();
-        };
+        }
+
         nameView.onkeypress = function(e) {
             if (e.keyCode == 13)
                 this.blur();
@@ -1651,7 +1677,7 @@ Entry.Playground = function() {
         element.appendChild(nameView);
         var lengthView = Entry.createElement('div');
         lengthView.addClass('entryPlaygroundSoundLength');
-        lengthView.innerHTML = sound.duration + ' 초';
+        lengthView.innerHTML = sound.duration + ' ' + Lang.General.second;
         element.appendChild(lengthView);
     };
 

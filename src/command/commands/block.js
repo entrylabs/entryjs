@@ -569,7 +569,6 @@ goog.require("Entry.Utils");
             content: data.tooltip.content,
             target: domQuery
         }], {
-            indicator: true,
             callBack: function() {
             }
         });

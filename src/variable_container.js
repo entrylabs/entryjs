@@ -764,7 +764,7 @@ Entry.VariableContainer = function() {
             if(func && func.description) {
                 var funcName = func.description.substring(1, func.description.length-1);
                 if (alert_msg = Entry.TextCodingUtil.isNameIncludeSpace(funcName, 'function')) {
-                    alert(alert_msg);
+                    entrylms.alert(alert_msg);
                     Entry.Func.cancelEdit();
                     return;
                 }
@@ -800,10 +800,12 @@ Entry.VariableContainer = function() {
         removeButton.addClass('entryVariableListElementDeleteWorkspace');
         removeButton.bindOnClick(function(e) {
             e.stopPropagation();
-            if (confirm(Lang.Workspace.will_you_delete_function)) {
-                that.removeFunction(func);
-                that.selected = null;
-            }
+            entrylms.confirm(Lang.Workspace.will_you_delete_function).then(function(result){
+                    if (result === true) {
+                        that.removeFunction(func);
+                        that.selected = null;
+                    }
+            });
         });
 
         var editButton = Entry.createElement('button');
@@ -851,7 +853,7 @@ Entry.VariableContainer = function() {
             var panel = this.variableAddPanel;
             var variableName = panel.view.name.value;
             if (alert_msg = Entry.TextCodingUtil.isNameIncludeSpace(variableName, 'variable')) {
-                alert(alert_msg);
+                entrylms.alert(alert_msg);
                 this.variableAddPanel.view.addClass('entryRemove');
                 this.resetVariableAddPanel('variable');
                 return;
@@ -925,7 +927,7 @@ Entry.VariableContainer = function() {
 
         if (Entry.isTextMode) {
             if (alert_msg = Entry.TextCodingUtil.isNameIncludeSpace(name, 'variable')) {
-                alert(alert_msg);
+                entrylms.alert(alert_msg);
                 variable.listElement.nameField.value = variable.name_;
                 return;
             }
@@ -961,7 +963,7 @@ Entry.VariableContainer = function() {
 
         if (Entry.isTextMode) {
             if (alert_msg = Entry.TextCodingUtil.isNameIncludeSpace(name, 'list')) {
-                alert(alert_msg);
+                entrylms.alert(alert_msg);
                 list.listElement.nameField.value = list.name_;
                 return;
             }
@@ -1258,7 +1260,7 @@ Entry.VariableContainer = function() {
             var panel = this.listAddPanel;
             var listName = panel.view.name.value;
             if (alert_msg = Entry.TextCodingUtil.isNameIncludeSpace(listName, 'list')) {
-                alert(alert_msg);
+                entrylms.alert(alert_msg);
                 this.listAddPanel.view.addClass('entryRemove');
                 this.resetVariableAddPanel('list');
                 return;

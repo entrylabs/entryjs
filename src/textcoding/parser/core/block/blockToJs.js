@@ -293,7 +293,8 @@ Entry.BlockToJsParser = function(syntax, parentParser) {
 
         var assist = {};
         for (var key in this.syntax.Scope) {
-            assist[key + '();\n'] = this.syntax.Scope[key];
+            if (key.indexOf("%") < 0)
+                assist[key + '();\n'] = this.syntax.Scope[key];
         }
         this._assist = assist;
         return assist;

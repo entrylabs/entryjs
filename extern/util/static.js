@@ -301,6 +301,15 @@ EntryStatic.getAllBlocks = function() {
                 "arduino_ext_digital_pwm",
                 "arduino_ext_set_servo",
                 "arduino_ext_set_tone",
+                //arduinoNano
+                "arduino_nano_get_analog_value",
+                "arduino_nano_get_analog_value_map",
+                "arduino_nano_get_ultrasonic_value",
+                "arduino_nano_get_digital",
+                "arduino_nano_toggle_led",
+                "arduino_nano_digital_pwm",
+                "arduino_nano_set_servo",
+                "arduino_nano_set_tone",
                 //blacksmith
                 "blacksmith_get_analog_value",
                 "blacksmith_get_analog_mapping",
@@ -395,6 +404,7 @@ EntryStatic.getAllBlocks = function() {
                 "cobl_melody",
                 "cobl_dcmotor",
                 "cobl_extention_port",
+                "cobl_external_RainBowled",
                 "cobl_external_led",
                 "cobl_7_segment",
                 "hamster_hand_found",
@@ -2645,7 +2655,7 @@ EntryStatic.blockInfo = {
         "xml": "<block type='robotis_carCont_cm_calibration'><value name='VALUE'><block type='number'><field name='NUM'>0</field></block></value></block>",
         "class": "robotis_carCont_cm"
     },
-	"coconut_move_forward_once": {
+    "coconut_move_forward_once": {
         "isNotFor": ["coconut"],
         "xml": "<block type='coconut_move_forward_once'></block>",
         "class": "coconut_board"
@@ -2671,7 +2681,7 @@ EntryStatic.blockInfo = {
         "xml": "<block type='coconut_turn_for_secs'><value name='VALUE'><block type='text'><field name='NAME'>1</field></block></value></block>",
         "class": "coconut_wheel"
     },
-	"coconut_change_both_wheels_by": {
+    "coconut_change_both_wheels_by": {
         "isNotFor": ["coconut"],
         "xml": "<block type='coconut_change_both_wheels_by'><value name='LEFT'><block type='text'><field name='NAME'>10</field></block></value><value name='RIGHT'><block type='text'><field name='NAME'>10</field></block></value></block>",
         "class": "coconut_wheel"
@@ -2691,17 +2701,17 @@ EntryStatic.blockInfo = {
         "xml": "<block type='coconut_set_wheel_to'><value name='VALUE'><block type='text'><field name='NAME'>30</field></block></value></block>",
         "class": "coconut_wheel"
     },
-	"coconut_follow_line_using": {
+    "coconut_follow_line_using": {
         "isNotFor": ["coconut"],
         "xml": "<block type='coconut_follow_line_using'></block>",
         "class": "coconut_wheel"
     },
-	"coconut_follow_line_until": {
+    "coconut_follow_line_until": {
         "isNotFor": ["coconut"],
         "xml": "<block type='coconut_follow_line_until'></block>",
         "class": "coconut_wheel"
     },
-	"coconut_set_following_speed_to": {
+    "coconut_set_following_speed_to": {
         "isNotFor": ["coconut"],
         "xml": "<block type='coconut_set_following_speed_to'><field name='SPEED'>5</field></block>",
         "class": "coconut_wheel"
@@ -2711,7 +2721,7 @@ EntryStatic.blockInfo = {
         "xml": "<block type='coconut_stop'></block>",
         "class": "coconut_wheel"
     },
-	"coconut_set_led_to": {
+    "coconut_set_led_to": {
         "isNotFor": ["coconut"],
         "xml": "<block type='coconut_set_led_to'></block>",
         "class": "coconut_led"
@@ -2726,7 +2736,7 @@ EntryStatic.blockInfo = {
         "xml": "<block type='coconut_beep'></block>",
         "class": "coconut_buzzer"
     },
-	"coconut_change_buzzer_by": {
+    "coconut_change_buzzer_by": {
         "isNotFor": ["coconut"],
         "xml": "<block type='coconut_change_buzzer_by'><value name='VALUE'><block type='text'><field name='NAME'>10</field></block></value></block>",
         "class": "coconut_buzzer"

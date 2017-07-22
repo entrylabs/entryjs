@@ -89,6 +89,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
     }.bind(this));
 
     Entry.addEventListener('cancelBlockMenuDynamic', this._cancelDynamic.bind(this));
+    Entry.addEventListener('fontLoaded', this.reDraw.bind(this));
 };
 
 (function(p) {
@@ -283,7 +284,22 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
 
         if (board && (workspaceMode === WORKSPACE.MODE_BOARD ||
             workspaceMode === WORKSPACE.MODE_OVERLAYBOARD)) {
-            if (!board.code) return;
+            if (!board.code) {
+                if (Entry.toast) {
+                    Entry.toast.alert(
+                        Lang.Workspace.add_object_alert,
+                        Lang.Workspace.add_object_alert_msg
+                    );
+                }
+                if (this.selectedBlockView) {
+                    this.selectedBlockView.removeSelected();
+                    this.set({
+                        selectedBlockView: null,
+                        dragBlock: null
+                    });
+                }
+                return;
+            }
 
             var block = blockView.block;
             var code = this.code;
@@ -430,9 +446,9 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
         this.updateSplitters();
     };
 
-    p.setMenu = function() {
-        if (!this.hasCategory())
-            return;
+    p.setMenu = function(doNotAlign) {
+        if (!this.hasCategory()) return;
+
         this._categoryData.forEach(function(data) {
             var category = data.category;
             var threads = data.blocks;
@@ -452,7 +468,8 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
             if (count === 0) elem.addClass('entryRemove');
             else elem.removeClass('entryRemove');
         }.bind(this));
-        this.selectMenu(0, true);
+
+        this.selectMenu(0, true, doNotAlign);
     };
 
 
