@@ -28,8 +28,8 @@ Entry.byrobot_petrone_v2_controller =
         {
             this.transferVibrator(0, 0, 0, 0);
             this.transferbuzzer(0, 0, 0);
-            this.transferLightManual(0x11, 0xFF, 0);
-            this.transferCommand(0x11, 0x81, 0);
+            this.transferLightManual(0x31, 0xFF, 0);        // 조종기, flags = 0xFF
+            this.transferCommand(0x31, 0x81, 0);            // 조종기, command = 0x81
         }
     },
     
@@ -128,7 +128,7 @@ Entry.byrobot_petrone_v2_controller =
     transferbuzzer: function(mode, value, time)
     {
         // 전송
-        Entry.hw.setDigitalPortValue("target", 0x11);
+        Entry.hw.setDigitalPortValue("target", 0x31);
         Entry.hw.setDigitalPortValue("buzzer_mode", mode);
         Entry.hw.setDigitalPortValue("buzzer_value", value);
         Entry.hw.setDigitalPortValue("buzzer_time", time);
@@ -150,7 +150,7 @@ Entry.byrobot_petrone_v2_controller =
         timeOff = Math.min(timeOff, 60000);
         
         // 전송
-        Entry.hw.setDigitalPortValue("target", 0x11);
+        Entry.hw.setDigitalPortValue("target", 0x31);
         Entry.hw.setDigitalPortValue("vibrator_mode", mode);
         Entry.hw.setDigitalPortValue("vibrator_on", timeOn);
         Entry.hw.setDigitalPortValue("vibrator_off", timeOff);
@@ -182,7 +182,7 @@ Entry.byrobot_petrone_v2_controller =
     transferUserInterface: function(uicommand, uifunction)
     {
         // 전송
-        Entry.hw.setDigitalPortValue("target", 0x11);
+        Entry.hw.setDigitalPortValue("target", 0x31);
         Entry.hw.setDigitalPortValue("userinterface_command", uicommand);
         Entry.hw.setDigitalPortValue("userinterface_function", uifunction);
 
