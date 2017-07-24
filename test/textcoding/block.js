@@ -1147,9 +1147,9 @@ describe('EntryPython', function(){
 
     describe('check' , function(){
         it('hardware block' , function() {
-            var resultBlock = Test.parsePython("Hamster.io_modes(Hamster.IO_MODE_DIGITAL_OUTPUT)");
+            // var resultBlock = Test.parsePython("Hamster.left_led(Hamster.LED_RED)");
 
-            console.log(JSON.stringify(resultBlock));
+            // console.log(JSON.stringify(resultBlock));
             assert.ok(Test.pythonToBlock('Hamster.io_modes(Hamster.IO_MODE_DIGITAL_INPUT)', 
                 [[{
                     "type":"hamster_set_port_to",
@@ -1177,6 +1177,78 @@ describe('EntryPython', function(){
                     "params":["AB","10",null]
                 }]]
             ));
+
+            assert.ok(Test.pythonToBlock('Hamster.note(0,0.25)', 
+                [[{
+                    "type":"hamster_rest_for",
+                    "params":[
+                            {
+                                "type":"text",
+                                "params":["0.25"]
+                            },
+                                null
+                        ]
+                }]]
+            ));
+
+            assert.ok(Test.pythonToBlock('Hamster.note(HAMSTER.NOTE_C, 4, 0.5)', 
+                [[{
+                    "type":"hamster_play_note_for",
+                    "params":[
+                            4,
+                            "4",
+                            {
+                                "type":"text","params":["0.5"]
+                            }
+                            ,null
+                        ]
+                }]]
+            ));
+
+            assert.ok(Test.pythonToBlock('Hamster.left_led(Hamster.LED_RED)', 
+                [[{
+                    "type":"hamster_set_led_to",
+                    "params": [
+                            "LEFT",
+                            "4",
+                            null
+                        ]
+                }]]
+            ));
+
+            assert.ok(Test.pythonToBlock('Hamster.left_led(Hamster.LED_YELLOW)', 
+                [[{
+                    "type":"hamster_set_led_to",
+                    "params": [
+                            "LEFT",
+                            "6",
+                            null
+                        ]
+                }]]
+            ));
+
+            assert.ok(Test.pythonToBlock('Hamster.line_tracer_mode(Hamster.LINE_TRACER_MODE_BLACK_LEFT_SENSOR)', 
+                [[{
+                    "type":"hamster_follow_line_using",
+                    "params":[
+                        "BLACK",
+                        "LEFT",
+                        null
+                    ]
+                }]]
+            ));
+
+            assert.ok(Test.pythonToBlock('Hamster.line_tracer_mode(Hamster.LINE_TRACER_MODE_BLACK_TURN_LEFT)', 
+                [[{
+                    "type":"hamster_follow_line_until",
+                    "params":[
+                        "BLACK",
+                        "LEFT",
+                        null
+                    ]
+                }]]
+            ));
+
 
         })
     });
