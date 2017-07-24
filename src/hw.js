@@ -46,6 +46,8 @@ Entry.HW = function() {
         '1.B': Entry.Blacksmith,
         '2.4': Entry.Hamster,
         '2.5': Entry.Albert,
+        '2.9': Entry.Turtle,
+        '2.FF': Entry.Roboid,
         '3.1': Entry.Bitbrick,
         '4.2': Entry.Arduino,
         '5.1': Entry.Neobot,
