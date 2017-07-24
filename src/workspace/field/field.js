@@ -220,9 +220,7 @@ Entry.Field = function() {};
     };
 
     p.getFontSize = function(size) {
-        size =
-            size || this._blockView.getSkeleton().fontSize || 12;
-        return size;
+        return size || this._blockView.getSkeleton().fontSize || 12;
     };
 
     p.getContentHeight = function() {
@@ -331,5 +329,35 @@ Entry.Field = function() {};
         var board = this.getBoard();
         return board && board.code;
     };
+
+    p.getTextValue = function() {
+        return this.getValue();
+    };
+
+    p.getTextBBox = (function() {
+        var cache = {};
+
+        return function() {
+            var value = this.getTextValue();
+            if (value === '')
+                return { width: 0, height: 0 };
+            var fontSize = this._font_size || '';
+
+            var key = value + '&&' + fontSize;
+            var bBox = cache[key];
+
+            if (!bBox) {
+                bBox = this.textElement.getBoundingClientRect();
+
+                bBox = {
+                    width: Math.round(bBox.width*100)/100,
+                    height: Math.round(bBox.height*100)/100,
+                };
+                if (fontSize && window.fontLoaded)
+                    cache[key] = bBox;
+            }
+            return bBox;
+        };
+    })();
 
 })(Entry.Field.prototype);

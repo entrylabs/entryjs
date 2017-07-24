@@ -31,7 +31,7 @@ Entry.FieldDropdown = function(content, blockView, index) {
 
     this._CONTENT_HEIGHT = this.getContentHeight(content.dropdownHeight);
 
-    this._FONT_SIZE = this.getFontSize(content.fontSize);
+    this._font_size = this.getFontSize(content.fontSize);
 
     this._ROUND = content.roundValue || 3;
 
@@ -54,23 +54,24 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
         var that = this;
         var contents = this._contents;
 
-
         this.svgGroup = blockView.contentSvgGroup.elem(
             "g", { class: 'entry-field-dropdown' });
 
         this.textElement =
-            this.svgGroup.elem("text", { x: 5 });
+            this.svgGroup.elem("text", {
+                x: 5,
+                'style': 'white-space: pre;',
+                'font-size': + that._font_size + 'px',
+            });
         this._setTextValue();
 
-        var bBox = this.textElement.getBBox();
+        var bBox = this.getTextBBox();
+
         this.textElement.attr({
-            'style': 'white-space: pre;',
-            'font-size': + that._FONT_SIZE + 'px',
-            'y': bBox.height * 0.23
+            y: bBox.height * 0.27
         });
 
-        var width =
-            this.textElement.getBoundingClientRect().width + X_PADDING;
+        var width = bBox.width + X_PADDING;
 
         if (this._noArrow) width -= X_PADDING_SUBT;
 
@@ -290,11 +291,13 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
 
     p._setTextValue = function() {
         var textValue = this.getTextByValue(this.getValue());
-        this.textElement.textContent =
-            this._convert(textValue, this.getValue());
+        var newValue = this._convert(textValue, this.getValue());
+        if (this.textElement.textContent !== newValue)
+            this.textElement.textContent = newValue;
     };
 
     p.getTextValue = function() {
         return this.textElement.textContent;
     };
+
 })(Entry.FieldDropdown.prototype);

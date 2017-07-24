@@ -1,4 +1,4 @@
-/*
+/*i
  */
 "use strict";
 
@@ -15,8 +15,7 @@ Entry.FieldBlock = function(content, blockView, index, mode, contentIndex) {
     this._valueBlock = null;
     this._oldPrimitiveValue = null;
 
-    var box = new Entry.BoxModel();
-    this.box = box;
+    this.box = new Entry.BoxModel();
 
     this.changeEvent = new Entry.Event(this);
 
@@ -33,7 +32,6 @@ Entry.FieldBlock = function(content, blockView, index, mode, contentIndex) {
 
     this._position = content.position;
 
-    this.box.observe(blockView, "dAlignContent", ["width", "height"]);
     this.observe(this, "_updateBG", ["magneting"], false);
 
     this.renderStart(blockView.getBoard(), mode);
@@ -46,21 +44,16 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
         magneting: false
     };
 
-    p.renderStart = function(board, mode, renderMode) {
+    p.renderStart = function(board, mode, renderMode, isReDraw) {
         if (!this.svgGroup)
             this.svgGroup =
                 this._blockView.contentSvgGroup.elem("g");
+
         this.renderMode = mode !== undefined ?
             mode : this._blockView.renderMode;
 
         this.view = this;
         this._nextGroup = this.svgGroup;
-        this.box.set({
-            x: 0,
-            y: 0,
-            width: 0,
-            height: 20
-        });
 
         var block = this.getValue();
         if (block) {
@@ -75,10 +68,12 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
         }
 
         this.updateValueBlock(block);
-        this._valueBlock.view._startContentRender(this.renderMode);
+        if (isReDraw)
+            this._valueBlock.view._startContentRender(this.renderMode);
 
         if (this._blockView.getBoard().constructor !== Entry.Board)
             this._valueBlock.view.removeControl();
+        this.setBoxObserver();
     };
 
     p.align = function(x, y, animate) {
@@ -107,26 +102,31 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
                 transform: transform
             });
 
-        this.box.set({
-            x: x,
-            y: y
-        });
+        x = Math.round(x*100)/100;
+        y = Math.round(y*100)/100;
+
+        var box = this.box;
+        if (box.x === x && box.y === y) return;
+
+        box.set({ x: x, y: y });
     };
 
     p.calcWH = function() {
         var block = this._valueBlock;
-        if (block && (block && block.view)) {
+        var box = this.box;
+        if (block && block.view) {
             var blockView = block.view;
-            this.box.set({
-                width: blockView.width,
-                height: blockView.height
+            var oldWidth = box.width;
+            var oldHeight = box.height;
+            var newWidth = blockView.width;
+            var newHeight = blockView.height;
+            if (newWidth === oldWidth && newHeight === oldHeight)
+                return;
+            box.set({
+                width: newWidth,
+                height: newHeight
             });
-        } else {
-            this.box.set({
-                width: 15,
-                height: 20
-            });
-        }
+        } else box.set({ width: 15, height: 20 });
     };
 
     p.calcHeight = p.calcWH;
@@ -188,9 +188,6 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
         this._blockView.alignContent();
         this._posObserver = view.observe(this, "updateValueBlock", ["x", "y"], false);
         this._sizeObserver = view.observe(this, "calcWH", ["width", "height"]);
-        var board = this._blockView.getBoard();// performance issue
-        if (board.constructor === Entry.Board)
-            board.generateCodeMagnetMap();
     };
 
     p._destroyObservers = function() {
@@ -334,6 +331,17 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
 
     p.isParamBlockType = function() {
         return true;
+    };
+
+
+    p.setBoxObserver = function() {
+        if (this.boxObserver) return;
+        this.boxObserver =
+            this.box.observe(this._blockView, "dAlignContent", ["width", "height"], false);
+    };
+
+    p.destroyBoxObserver = function() {
+        this.boxObserver && this.boxObserver.destroy();
     };
 
 })(Entry.FieldBlock.prototype);
