@@ -10120,7 +10120,7 @@ p.downloadGuide = function() {
   window.open("http://download.play-entry.org/data/hardware_manual.zip", "download");
 };
 p.downloadSource = function() {
-  window.open("http://play-entry.com/down/board.ino", "_blank").focus();
+  window.open("http://download.play-entry.org/apps/board.ino", "_blank").focus();
 };
 p.setZero = function() {
   Entry.hw.hwModule && Entry.hw.hwModule.setZero();
