@@ -42032,12 +42032,10 @@ Entry.block = {
                     [Lang.Blocks.byrobot_petrone_v2_controller_joystick_left_y, "joystick_left_y"],
                     [Lang.Blocks.byrobot_petrone_v2_controller_joystick_left_direction, "joystick_left_direction"],
                     [Lang.Blocks.byrobot_petrone_v2_controller_joystick_left_event, "joystick_left_event"],
-    //              [Lang.Blocks.byrobot_petrone_v2_controller_joystick_left_command, "joystick_left_command"],
                     [Lang.Blocks.byrobot_petrone_v2_controller_joystick_right_x, "joystick_right_x"],
                     [Lang.Blocks.byrobot_petrone_v2_controller_joystick_right_y, "joystick_right_y"],
                     [Lang.Blocks.byrobot_petrone_v2_controller_joystick_right_direction, "joystick_right_direction"],
                     [Lang.Blocks.byrobot_petrone_v2_controller_joystick_right_event, "joystick_right_event"],
-    //              [Lang.Blocks.byrobot_petrone_v2_controller_joystick_right_command, "joystick_right_command"],
                 ],
                 "value": "joystick_left_x",             // 초기 선택항목 지정
                 "fontSize": 11
@@ -42934,128 +42932,6 @@ Entry.block = {
         },
     },
     // */
-    /*
-    "byrobot_petrone_v2_controller_controller_userinterface_preset":    페트론V2에서 삭제된 기능. 임시로 주석처리. 추후 삭제예정.
-    {
-        "color": "#00979D",
-        "skeleton": "basic",
-        "statements": [],
-        "params": [
-            {
-                "type": "Dropdown",
-                "options": [
-                    [Lang.Blocks.byrobot_petrone_v2_controller_userinterface_preset_clear, "1"],
-                    [Lang.Blocks.byrobot_petrone_v2_controller_userinterface_preset_dronefighter2017, "3"],
-                    [Lang.Blocks.byrobot_petrone_v2_controller_userinterface_preset_education, "4"]
-                ],
-                "value": "4",
-                "fontSize": 11
-            },
-            {
-                "type": "Indicator",
-                "img": "block_icon/hardware_03.png",
-                "size": 12
-            }
-        ],
-        "events": {},
-        "def": {
-            "params": [
-                null,
-                null
-            ],
-            "type": "byrobot_petrone_v2_controller_controller_userinterface_preset"
-        },
-        "paramsKeyMap": {
-            "PRESET": 0
-        },
-        "class": "byrobot_petrone_v2_controller_userinterface",
-        "isNotFor": ["byrobot_petrone_v2_controller"],
-        "func": function (sprite, script) {
-            var preset = parseInt(script.getField('PRESET'));
-            return Entry.byrobot_petrone_v2_controller.sendCommand(script, 0x11, 0x80, preset);
-        },
-    },
-    */
-    /*
-    "byrobot_petrone_v2_controller_controller_userinterface":
-    {
-        "color": "#00979D",
-        "skeleton": "basic",
-        "statements": [],
-        "params": [
-            {
-                "type": "Dropdown",
-                "options": [
-                    [Lang.Blocks.byrobot_petrone_v2_controller_userinterface_command_setup_button_frontleft_down, "1"],
-                    [Lang.Blocks.byrobot_petrone_v2_controller_userinterface_command_setup_button_frontright_down, "2"],
-                    [Lang.Blocks.byrobot_petrone_v2_controller_userinterface_command_setup_button_midturnleft_down, "3"],
-                    [Lang.Blocks.byrobot_petrone_v2_controller_userinterface_command_setup_button_midturnright_down, "4"],
-                    [Lang.Blocks.byrobot_petrone_v2_controller_userinterface_command_setup_button_midup_down, "5"],
-                    [Lang.Blocks.byrobot_petrone_v2_controller_userinterface_command_setup_button_midleft_down, "6"],
-                    [Lang.Blocks.byrobot_petrone_v2_controller_userinterface_command_setup_button_midright_down, "7"],
-                    [Lang.Blocks.byrobot_petrone_v2_controller_userinterface_command_setup_button_middown_down, "8"],
-                    [Lang.Blocks.byrobot_petrone_v2_controller_userinterface_command_setup_joystick_left_up_in, "9"],
-                    [Lang.Blocks.byrobot_petrone_v2_controller_userinterface_command_setup_joystick_left_left_in, "10"],
-                    [Lang.Blocks.byrobot_petrone_v2_controller_userinterface_command_setup_joystick_left_right_in, "11"],
-                    [Lang.Blocks.byrobot_petrone_v2_controller_userinterface_command_setup_joystick_left_down_in, "12"],
-                    [Lang.Blocks.byrobot_petrone_v2_controller_userinterface_command_setup_joystick_right_up_in, "13"],
-                    [Lang.Blocks.byrobot_petrone_v2_controller_userinterface_command_setup_joystick_right_left_in, "14"],
-                    [Lang.Blocks.byrobot_petrone_v2_controller_userinterface_command_setup_joystick_right_right_in, "15"],
-                    [Lang.Blocks.byrobot_petrone_v2_controller_userinterface_command_setup_joystick_right_down_in, "16"],
-                ],
-                "value": "1",
-                "fontSize": 11
-            },
-            {
-                "type": "Dropdown",
-                "options": [
-                    [Lang.Blocks.byrobot_petrone_v2_controller_userinterface_function_joystickcalibration_reset, "1"],
-                    [Lang.Blocks.byrobot_petrone_v2_controller_userinterface_function_change_team_red, "2"],
-                    [Lang.Blocks.byrobot_petrone_v2_controller_userinterface_function_change_team_blue, "3"],
-                    [Lang.Blocks.byrobot_petrone_v2_controller_userinterface_function_change_mode_vehicle_flight, "4"],
-                    [Lang.Blocks.byrobot_petrone_v2_controller_userinterface_function_change_mode_vehicle_flightnoguard, "5"],
-                    [Lang.Blocks.byrobot_petrone_v2_controller_userinterface_function_change_mode_vehicle_drive, "6"],
-                    [Lang.Blocks.byrobot_petrone_v2_controller_userinterface_function_change_coordinate_local, "7"],
-                    [Lang.Blocks.byrobot_petrone_v2_controller_userinterface_function_change_coordinate_world, "8"],
-                    [Lang.Blocks.byrobot_petrone_v2_controller_userinterface_function_change_mode_control_mode1, "9"],
-                    [Lang.Blocks.byrobot_petrone_v2_controller_userinterface_function_change_mode_control_mode2, "10"],
-                    [Lang.Blocks.byrobot_petrone_v2_controller_userinterface_function_change_mode_control_mode3, "11"],
-                    [Lang.Blocks.byrobot_petrone_v2_controller_userinterface_function_change_mode_control_mode4, "12"],
-                    [Lang.Blocks.byrobot_petrone_v2_controller_userinterface_function_gyrobias_reset, "13"],
-                    [Lang.Blocks.byrobot_petrone_v2_controller_userinterface_function_change_mode_usb_cdc, "14"],
-                    [Lang.Blocks.byrobot_petrone_v2_controller_userinterface_function_change_mode_usb_hid, "15"],
-                ],
-                "value": "1",
-                "fontSize": 11
-            },
-            {
-                "type": "Indicator",
-                "img": "block_icon/hardware_03.png",
-                "size": 12
-            }
-        ],
-        "events": {},
-        "def": {
-            "params": [
-                null,
-                null,
-                null
-            ],
-            "type": "byrobot_petrone_v2_controller_controller_userinterface"
-        },
-        "paramsKeyMap": {
-            "COMMAND": 0,
-            "FUNCTION": 1
-        },
-        "class": "byrobot_petrone_v2_controller_userinterface",
-        "isNotFor": ["byrobot_petrone_v2_controller"],
-        "func": function (sprite, script) {
-            var uicommand = parseInt(script.getField('COMMAND'));
-            var uifunction = parseInt(script.getField('FUNCTION'));
-            return Entry.byrobot_petrone_v2_controller.setUserInterface(script, uicommand, uifunction);
-        },
-    },
-    */
     /* BYROBOT PetroneV2 Controller End */    
     "boolean_shell": {
         "color": "#AEB8FF",
