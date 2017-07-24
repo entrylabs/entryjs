@@ -38,7 +38,7 @@ Entry.Robotis_carCont = {
     },
     name: 'robotis_carCont',
     delay: 40,
-    postCallReturn: function(script, data, ms) {
+    postCallReturn: function (script, data, ms) {
         if (ms <= 0) {
             this.setRobotisData(data);
             this.update();
@@ -143,6 +143,12 @@ Entry.Robotis_openCM70 = {
         AUX_MOTOR_SPEED: [136, 2],
         AUX_LED_MODULE: [210, 1],
     },
+    IRS_MODULEWRITE : {
+        PORT3: false,
+        PORT4: false,
+        PORT5: false,
+        PORT6: false
+    },
     setZero: function() {
         // instruction / address / length / value / default length
         Entry.hw.sendQueue['setZero'] = [1];
@@ -150,7 +156,7 @@ Entry.Robotis_openCM70 = {
         Entry.Robotis_carCont.setRobotisData(null);
         Entry.hw.sendQueue['setZero'] = null;
         Entry.Robotis_carCont.update();
-        Entry.Robotis_carCont.setRobotisData([
+        Entry.Robotis_carCont.setRobotisData([            
             [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 136, 2, 0],
             [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 138, 2, 0],
             [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 140, 2, 0],
@@ -159,10 +165,25 @@ Entry.Robotis_openCM70 = {
             [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 146, 2, 0],
             [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 79, 1, 0],
             [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 80, 1, 0],
-            [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 81, 1, 0]
+            [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 81, 1, 0],
+            [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 86, 1, 0], // 최종 소리 // add by kjs start 170605 
+            [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 108, 1, 0], // port 3
+            [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 109, 1, 0], // port 4
+            [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 110, 1, 0], // port 5
+            [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 111, 1, 0] // port 6 // add by kjs end 170605             
         ]);
         
         Entry.Robotis_carCont.update();
+
+        Entry.Robotis_openCM70.IRS_MODULEWRITE.PORT3 = false;
+        Entry.Robotis_openCM70.IRS_MODULEWRITE.PORT4 = false;
+        Entry.Robotis_openCM70.IRS_MODULEWRITE.PORT5 = false;
+        Entry.Robotis_openCM70.IRS_MODULEWRITE.PORT6 = false;
+        /*
+        Entry.hw.sendQueue['temp'] = [0];
+        Entry.Robotis_carCont.update();
+        Entry.hw.sendQueue['temp'] = null;*/
+        //Entry.Robotis_carCont.update();
     },
     name: 'robotis_openCM70',
     delay: 15,

@@ -204,6 +204,12 @@ EntryStatic.getAllBlocks = function() {
             "roborobo_turn_for",
             "roborobo_stop_for",
             "practical_course_set_servo2",
+            //robotis
+            "robotis_aux_move_for",
+            "robotis_aux_stop_for",
+            "robotis_set_servo_joint",
+            "robotis_set_servo_wheel",
+            "robotis_move_for_secs",
         ]
     }, {
         category: "hw_melody",
@@ -211,6 +217,8 @@ EntryStatic.getAllBlocks = function() {
         blocks: [
             "practical_course_dummy",
             "practical_course_melody_note_for",
+            //robotis
+            "robotis_melody_note_for",
         ]
     }, {
         category: "hw_sensor",
@@ -233,7 +241,24 @@ EntryStatic.getAllBlocks = function() {
             "roborobo_sound_value",
             "roborobo_sound_value_boolean",
             "roborobo_irs_value",
-            "roborobo_irs_value_boolean"
+            "roborobo_irs_value_boolean",
+            //robotis
+            "robotis_touch_value",
+            "robotis_touch_value_boolean",
+            "robotis_irs_value",
+            "robotis_irs_value_boolean",
+            "robotis_light_value",
+            "robotis_light_value_boolean",
+            "robotis_detectedsound_value",
+            "robotis_detectingsound_value",
+            "robotis_detectedsound_value_boolean",
+            "robotis_detectingsound_value_boolean",
+            "robotis_color_value",
+            "robotis_color_value_boolean",
+            "robotis_humidity_value",
+            "robotis_humidity_value_boolean",
+            "robotis_temperature_value",
+            "robotis_temperature_value_boolean"
         ]
     }, {
         category: "hw_led",
@@ -772,7 +797,7 @@ EntryStatic.initOptions = {
 
 EntryStatic.hwCategoryList = ['hw_motor', 'hw_melody', 'hw_sensor', 'hw_led'];
 
-EntryStatic.hwMiniSupportList = ['neobot', 'ArduinoExt', 'roborobo_schoolkit'];
+EntryStatic.hwMiniSupportList = ['neobot', 'ArduinoExt', 'roborobo_schoolkit', 'robotis_openCM70'];
 
 EntryStatic.COMMAND_TYPES = {
     addThread: 101,
