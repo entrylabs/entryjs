@@ -764,8 +764,6 @@ EntryStatic.getAllBlocks = function() {
                 "byrobot_petrone_v2_controller_controller_vibrator_on_reserve",
                 "byrobot_petrone_v2_controller_controller_vibrator_delay",
                 "byrobot_petrone_v2_controller_controller_vibrator_reserve",
-                // "byrobot_petrone_v2_controller_controller_userinterface_preset",     추후 삭제예정
-                // "byrobot_petrone_v2_controller_controller_userinterface",            추후 삭제예정
 
                 //MODI
                 "modi_microphone_value",
