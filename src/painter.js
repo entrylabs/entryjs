@@ -1869,7 +1869,7 @@ Entry.Painter.prototype.generateView = function(painterView) {
 
         this.objectWidthInput = Entry.createElement('input', 'entryPainterAttrWidth');
         this.objectWidthInput.onblur = function() {
-            if (isNaN(this.value)) {
+            if (!Entry.Utils.isNumber(this.value)) {
                 alert('숫자만 입력 가능합니다.');
                 return false;
             }
@@ -1899,7 +1899,7 @@ Entry.Painter.prototype.generateView = function(painterView) {
 
         this.objectHeightInput = Entry.createElement('input', 'entryPainterAttrHeight');
         this.objectHeightInput.onblur = function() {
-            if (isNaN(this.value)) {
+            if (!Entry.Utils.isNumber(this.value)) {
                 alert('숫자만 입력 가능합니다.');
                 return false;
             }
@@ -1931,7 +1931,7 @@ Entry.Painter.prototype.generateView = function(painterView) {
 
         this.objectRotateInput = Entry.createElement('input', 'entryPainterAttrDegree');
         this.objectRotateInput.onblur = function() {
-            if (isNaN(this.value)) {
+            if (!Entry.Utils.isNumber(this.value)) {
                 alert('숫자만 입력 가능합니다.');
                 return false;
             }

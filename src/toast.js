@@ -80,9 +80,13 @@ Entry.Toast.prototype.success = function(title, message, isNotAutoDispose) {
 
 Entry.Toast.prototype.alert = function(title, message, isNotAutoDispose) {
     var toast = Entry.createElement('div', 'entryToast');
+    var timer;
     toast.addClass('entryToast');
     toast.addClass('entryToastAlert');
-    toast.bindOnClick(function() {Entry.toast.body_.removeChild(this);});
+    toast.bindOnClick(function() {
+        Entry.toast.body_.removeChild(this);
+        if (timer) clearInterval(timer);
+    });
     var toastTitle = Entry.createElement('div', 'entryToast');
     toastTitle.addClass('entryToastTitle');
     toastTitle.innerHTML = title;
@@ -95,11 +99,13 @@ Entry.Toast.prototype.alert = function(title, message, isNotAutoDispose) {
     this.body_.appendChild(toast);
     var f = function() {
         toast.style.opacity = 1;
-        var timer = setInterval(function () {
+        timer = setInterval(function () {
             if (toast.style.opacity < 0.05) {
                 clearInterval(timer);
                 toast.style.display = 'none';
-                Entry.toast.body_.removeChild(toast);
+                //check element already removed from parent
+                if (toast.parentElement)
+                    Entry.toast.body_.removeChild(toast);
             }
             toast.style.opacity *= 0.90;
         }, 20);

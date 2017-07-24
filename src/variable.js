@@ -55,6 +55,8 @@ Entry.Variable = function(variable) {
         this.BORDER = 6;
         this.FONT = "10pt NanumGothic";
     }
+
+    Entry.addEventListener('workspaceChangeMode', this.updateView.bind(this));
 };
 
 /**
@@ -275,7 +277,7 @@ Entry.Variable.prototype.generateView = function(variableIndex) {
             // if(Entry.type != 'workspace') return;
             this.list.isResizing = true;
             this.cursor = 'pointer';
-            this.offsetY = isNaN(this.offsetY) || (this.offsetY < 0) ? evt.rawY/2 : this.offsetY;
+            this.offsetY = !Entry.Utils.isNumber(this.offsetY) || (this.offsetY < 0) ? evt.rawY/2 : this.offsetY;
         });
         this.scrollButton_.on("pressmove", function(evt) {
             // if(Entry.type != 'workspace') return;
@@ -341,10 +343,10 @@ Entry.Variable.prototype.updateView = function() {
                 this._nameWidth = this.textView_.getMeasuredWidth();
             this.valueView_.x = this._nameWidth + 14;
             this.valueView_.y = 1;
+            // INFO: Number체크는 slide 일때만 하도록 처리 기본 문자로 처리함(#4876)
             if (this.isNumber())
-                this.valueView_.text = this.getValue().toFixed(2).replace('.00', '');
-            else
-                this.valueView_.text = this.getValue();
+                this.valueView_.text = Number(this.getValue()).toFixed(2).replace('.00', '');
+            else this.valueView_.text = this.getValue();
 
             if (this._valueWidth === null)
                 this._valueWidth = this.valueView_.getMeasuredWidth();
@@ -376,11 +378,10 @@ Entry.Variable.prototype.updateView = function() {
                 this._nameWidth = this.textView_.getMeasuredWidth();
             this.valueView_.x = this._nameWidth + 14;
             this.valueView_.y = 1;
-            if (this.isNumber()) {
-                this.valueView_.text = this.getValue().toFixed(2).replace('.00', '');
-            } else {
-                this.valueView_.text = this.getValue();
-            }
+            this.valueView_.text =
+                Number(this.getValue())
+                .toFixed(2)
+                .replace('.00', '');
 
             if (this._valueWidth === null)
                 this._valueWidth = this.valueView_.getMeasuredWidth();
@@ -421,8 +422,15 @@ Entry.Variable.prototype.updateView = function() {
                     name = obj.name + ':' + name;
             }
 
-            name = name.length > 7 ? name.substr(0,6) + '..' : name;
             this.titleView_.text = name;
+            if (this.titleView_.getMeasuredWidth() > this.width_) {
+                name = name + "..";
+                while (this.titleView_.getMeasuredWidth() > this.width_) {
+                    name = name.substr(0, name.length - 3) + "..";
+                    this.titleView_.text = name;
+                }
+            }
+            //name = name.length > 7 ? name.substr(0,6) + '..' : name;
             this.titleView_.x = this.width_/2;
             this.rect_.graphics.clear().f("#ffffff").ss(1, 2, 0).s("#A0A1A1")
                 .rect(0,0,this.width_, this.height_);
@@ -452,7 +460,10 @@ Entry.Variable.prototype.updateView = function() {
             for (var i = this.scrollPosition;
                  i < this.scrollPosition + maxView && i < this.array_.length;
                  i++) {
-                this.elementView.indexView.text = i + 1;
+                if (Entry.getMainWS() && Entry.getMainWS().getMode() === Entry.Workspace.MODE_VIMBOARD)
+                    this.elementView.indexView.text = i;
+                else
+                    this.elementView.indexView.text = i + 1;
                 var data = String(this.array_[i].data);
                 var stringLength = Math.floor((this.getWidth() - 50)/7);
                 data = Entry.cutStringByLength(data, stringLength);
@@ -469,12 +480,12 @@ Entry.Variable.prototype.updateView = function() {
             this.textView_.text = this.getName();
             this.valueView_.y = 1;
             if (this.isNumber()) {
+                var v = Number(this.getValue());
                 if (parseInt(this.getValue(),10) == this.getValue())
-                    this.valueView_.text = this.getValue();
+                    this.valueView_.text = v;
                 else
-                    this.valueView_.text = this.getValue().toFixed(1).replace('.00', '');
-            }
-            else {
+                    this.valueView_.text = v.toFixed(1).replace('.00', '');
+            } else {
                 this.valueView_.text = this.getValue();
             }
             if (this._nameWidth === null)
@@ -556,7 +567,8 @@ Entry.Variable.prototype.getId = function() {
  * @return {number}
  */
 Entry.Variable.prototype.getValue = function() {
-    if (this.isNumber())
+    // INFO: Number체크는 slide 일때만 하도록 처리 기본 문자로 처리함(#4876)
+    if (this.type === 'slide' && this.isNumber())
         return Number(this.value_);
     else
         return this.value_;
@@ -567,10 +579,7 @@ Entry.Variable.prototype.getValue = function() {
  * @return {boolean}
  */
 Entry.Variable.prototype.isNumber = function() {
-    if (isNaN(this.value_))
-        return false;
-    else
-        return true;
+    return Entry.Utils.isNumber(this.value_);
 };
 
 /**
@@ -586,7 +595,6 @@ Entry.Variable.prototype.setValue = function(value) {
         else this.value_ = value;
     }
 
-    if (this.isCloud_) Entry.variableContainer.updateCloudVariables();
     this._valueWidth = null;
     this.updateView();
     Entry.requestUpdateTwice = true;

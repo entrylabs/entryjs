@@ -1,6 +1,8 @@
 'use strict';
 
-goog.provide("Entry.Vim");
+goog.provide("Entry.Vim");   
+  
+goog.require("Entry.TextCodingUtil");
 
 Entry.Vim = function(dom, textType) {
     //Definition For Textmode
@@ -12,20 +14,24 @@ Entry.Vim = function(dom, textType) {
     if (dom.prop("tagName") !== "DIV")
         return console.error("Dom is not div element");
 
+    this._parentView = dom;
     this.createDom(dom);
-    //this._parser = new Entry.Parser("maze", "js", this.codeMirror);
-    //this._blockParser = new Entry.Parser("maze", "block");
 
-    this._mode = Entry.Vim.WORKSPACE_MODE;
-    this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_PY;
-    this._parser = new Entry.Parser(this._mode, this._parserType, this.codeMirror);
+    this._parser = new Entry.Parser(null, null, this.codeMirror);
 
-    //this._pyBlockParser = new Entry.Parser("ws", "blockPy", this.codeMirror);
-    //this._jsParser = new Entry.Parser("ws", "js", this.codeMirror);
-    //this._pyParser = new Entry.Parser("ws", "py", this.codeMirror);
-
-    Entry.Model(this, false);
-    window.eventset = [];
+    Entry.addEventListener('hwChanged', function(e){
+        if (Entry.hw.hwModule) {
+            var name = Entry.hw.hwModule.name;
+            name = name[0].toUpperCase() + name.slice(1);
+            if (name == "ArduinoExt")
+                name = "Arduino";
+            Entry.Vim.PYTHON_IMPORT_HW = "\nimport " + name + "\n";
+            Entry.Vim.INEDITABLE_LINE_PY = 4;
+        } else {
+            Entry.Vim.PYTHON_IMPORT_HW = "";
+            Entry.Vim.INEDITABLE_LINE_PY = 3;
+        }
+    });
 };
 
 Entry.Vim.MAZE_MODE = 1;
@@ -39,10 +45,10 @@ Entry.Vim.PARSER_TYPE_PY_TO_BLOCK = 1;
 Entry.Vim.PARSER_TYPE_BLOCK_TO_JS = 2;
 Entry.Vim.PARSER_TYPE_BLOCK_TO_PY = 3;
 
-Entry.Vim.PYTHON_IMPORT_ENTRY = "import Entry";
-Entry.Vim.PYTHON_IMPORT_HW = "import Arduino, Hamster, Albert, Bitbrick, Codeino, Dplay" +
-                                " \n\t   Neobot, Nemoino, Robotis, Sensorboard, Xbot from Hw";
+Entry.Vim.INEDITABLE_LINE_PY = 3;
 
+Entry.Vim.PYTHON_IMPORT_ENTRY = "import Entry";
+Entry.Vim.PYTHON_IMPORT_HW = "";
 
 (function(p) {
     p.createDom = function (dom) {
@@ -53,6 +59,8 @@ Entry.Vim.PYTHON_IMPORT_HW = "import Arduino, Hamster, Albert, Bitbrick, Codeino
             class: 'entryVimBoard'
         });
 
+        var that = this;
+
         this.codeMirror = CodeMirror(this.view[0], {
             lineNumbers: true,
             value: "",
@@ -62,40 +70,94 @@ Entry.Vim.PYTHON_IMPORT_HW = "import Arduino, Hamster, Albert, Bitbrick, Codeino
             indentWithTabs: true,
             styleActiveLine: true,
             extraKeys: {
-                "Ctrl-Space": "autocomplete"/*,
+                "Ctrl-Space": "autocomplete",
                 "Tab": function(cm) {
                     var spaces = Array(cm.getOption("indentUnit") + 1).join(" ");
                     cm.replaceSelection(spaces);
-                }*/
+                }
             },
-            // gutters: ["CodeMirror-lint-markers"],
+            //gutters: ["CodeMirror-linenumbers", "breakpoints"],
             lint: true,
             viewportMargin: 10
         });
+
+        var dShowHint =
+            Entry.Utils.debounce(function(){
+                if (Entry.isTextMode) {
+                    this.codeMirror.showHint(
+                        {
+                            completeSingle: false,
+                            globalScope: this._getAssistScope()
+                        }
+                    );
+                }
+            }.bind(this), 250);
+
+        this.codeMirror.on("keydown", function(cm, event) {
+            if (Entry && Entry.keyPressed) {
+                Entry.keyPressed.notify(event, true);
+            }
+            if (event.key.length === 1) {
+                dShowHint();
+            }
+        }.bind(this));
+
+        var dClear = Entry.Utils.debounce(function() {
+            var input = this.codeMirror.display && this.codeMirror.display.input ?
+                            this.codeMirror.display.input : undefined;
+            if (input && input.composing) {
+                input.poll();
+                input.composing.range.clear();
+                input.composing = null;
+            }
+        }.bind(this), 250);
+
+        this.codeMirror.on("keyup", function(cm, event) {
+            //i.e composition bug
+            dClear();
+
+            if (event.key === "Backspace")
+                dShowHint();
+        }.bind(this));
 
         this.doc = this.codeMirror.getDoc();
 
         _self = this;
         target = this.view[0];
+
         function eventDragEnd(e) {
-            var textCode = _self.getCodeToText(e.block);
-            _self.codeMirror.display.dragFunctions.leave(e);
-            var mousedown = Entry.Utils.createMouseEvent('mousedown', e);
-            _self.codeMirror.display.scroller.dispatchEvent(mousedown);
+            var block = e.block;
+
+            if (!block) return;
+
+            var codeMirror = _self.codeMirror;
+            var textCode = _self.getCodeToText(block, Entry.Parser.PARSE_BLOCK);
+
+            codeMirror.display.dragFunctions.leave(e);
+            codeMirror.display.scroller.dispatchEvent(
+                Entry.Utils.createMouseEvent('mousedown', e));
+
             var testArr = textCode.split('\n');
             var max = testArr.length - 1;
-            var lastLine = 0;
+            var statementCursorLine = _self.doc.getCursor().line;
             testArr.forEach(function (text, i) {
-                _self.codeMirror.replaceSelection(text);
-                var cursor = _self.doc.getCursor();
-                lastLine = cursor.line;
-                _self.codeMirror.indentLine(lastLine);
-                if(i === 0 || max !== i) {
-                    _self.codeMirror.replaceSelection('\n');
-                }
+                if (i != max) text += '\n';
+                codeMirror.replaceSelection(text);
             });
-            var mouseup = Entry.Utils.createMouseEvent('mouseup', e);
-            _self.codeMirror.display.scroller.dispatchEvent(mouseup);
+
+            //set cursor for statement block
+            if (block.statements && block.statements.length) {
+                statementCursorLine++;
+                codeMirror.setCursor(statementCursorLine);
+                if (codeMirror.getLine(statementCursorLine)) {
+                    codeMirror.replaceSelection('\n');
+                    codeMirror.setCursor(statementCursorLine);
+                }
+                CodeMirror.commands.indentAuto(codeMirror);
+            }
+
+            codeMirror.display.scroller.dispatchEvent(
+                Entry.Utils.createMouseEvent('mouseup', e));
         }
 
         function eventDragOver(e) {
@@ -110,14 +172,19 @@ Entry.Vim.PYTHON_IMPORT_HW = "import Arduino, Hamster, Albert, Bitbrick, Codeino
 
     p.hide = function() {
         this.view.addClass('entryRemove');
+        this.view.remove();
     };
 
     p.show = function() {
         this.view.removeClass('entryRemove');
+        this._parentView.append(this.view);
+    };
+
+    p.clearText = function() {
+        this.codeMirror.setValue("");
     };
 
     p.textToCode = function(textType) {
-        //console.log("textToCode", textType);
         var type = textType;
         if (type === Entry.Vim.TEXT_TYPE_JS) {
             this._parserType = Entry.Vim.PARSER_TYPE_JS_TO_BLOCK;
@@ -129,75 +196,114 @@ Entry.Vim.PYTHON_IMPORT_HW = "import Arduino, Hamster, Albert, Bitbrick, Codeino
 
         var textCode = this.codeMirror.getValue();
         var code = this._parser.parse(textCode);
-        //console.log("code", code);
-        /*if(code.length === 0) {
-            throw {
-                message : '지원되지 않는 표현식을 포함하고 있습니다.',
-            };
-        }*/
         return code;
     };
 
     p.codeToText = function(code, mode) {
-        var object;
         var codeDescription;
         if(mode)
             this._mode = mode.runType;
 
-        if(Entry.playground) {
-            object = Entry.playground.object;
-            codeDescription = "# " + object.name + " 오브젝트의 파이썬 코드";
-        }
-
-        ////console.log("codeToText mode", mode);
-
         var textType = mode.textType;
+        this._oldParserType = mode.textType;
 
         if (textType === Entry.Vim.TEXT_TYPE_JS) {
             this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_JS;
-            this._parser.setParser(this._mode, this._parserType, this.codeMirror);
+            if(this._oldParserType != this._parserType)
+                this._parser.setParser(this._mode, this._parserType, this.codeMirror);
+            this._oldParserType = this._parserType;
         } else if(textType === Entry.Vim.TEXT_TYPE_PY) {
             this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_PY;
-            this._parser.setParser(this._mode, this._parserType, this.codeMirror);
+            if(this._oldParserType != this._parserType)
+                this._parser.setParser(this._mode, this._parserType, this.codeMirror);
+            this._oldParserType = this._parserType;
         }
 
-        var textCode = this._parser.parse(code, Entry.Parser.PARSE_GENERAL);
+        if (Entry.playground)
+            this._currentObject = Entry.playground.object;
 
-        if(textType === Entry.Vim.TEXT_TYPE_PY) {
-            textCode = codeDescription
-            .concat("\n\n")
-            .concat(Entry.Vim.PYTHON_IMPORT_ENTRY)
-            //.concat("\n")
-            //.concat(Entry.Vim.PYTHON_IMPORT_HW)
-            .concat("\n\n")
-            .concat(textCode);
+        this._parser._hasDeclaration = false;
+
+        if (textType == Entry.Vim.TEXT_TYPE_PY) {
+            if(this._currentObject) {
+                codeDescription = "# " + this._currentObject.name + " 오브젝트의 파이선 코드";
+                var textCode = this._parser.parse(code, Entry.Parser.PARSE_GENERAL);
+
+                if (textType === Entry.Vim.TEXT_TYPE_PY) {
+                    textCode = codeDescription
+                    .concat("\n\n")
+                    .concat(Entry.Vim.PYTHON_IMPORT_ENTRY)
+                    .concat(Entry.Vim.PYTHON_IMPORT_HW)
+                    .concat("\n\n")
+                    .concat(textCode);
+                }
+                this.codeMirror.setValue(textCode);
+                if (textType == Entry.Vim.TEXT_TYPE_PY)
+                    this.codeMirror.getDoc().markText(
+                        {line:0, ch:0},
+                        {line: Entry.Vim.INEDITABLE_LINE_PY, ch:0},
+                        {readOnly: true, inclusiveLeft: true}
+                    );
+
+                var doc = this.codeMirror.getDoc();
+                doc.setCursor({ line: doc.lastLine() - 1});
+            }
+            else {
+                this.clearText();
+            }
+        } else if(textType == Entry.Vim.TEXT_TYPE_JS) {
+            var textCode = this._parser.parse(code, Entry.Parser.PARSE_GENERAL);
+            this.codeMirror.setValue(textCode);
+            var doc = this.codeMirror.getDoc();
+            doc.setCursor({line: doc.lastLine() - 1});
         }
-        textCode += '\n';
-        this.codeMirror.setValue(textCode);
-        if(textType == Entry.Vim.TEXT_TYPE_PY)
-            this.codeMirror.getDoc().markText({line:0, ch:0}, {line: 4, ch:0}, {readOnly: true});
 
-        var doc = this.codeMirror.getDoc();
-        doc.setCursor({ line: doc.lastLine() - 1});
+        if(Entry.isTextMode)
+            this._parser._onRunError = false;
     };
 
-
-    p.getCodeToText = function(code) {
+    p.getCodeToText = function(code, parseType) {
         var textType = this.workspace.oldTextType;
 
         if (textType === Entry.Vim.TEXT_TYPE_JS){
             this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_JS;
             this._parser.setParser(this._mode, this._parserType, this.codeMirror);
-        } else if(textType === Entry.Vim.TEXT_TYPE_PY){
+        } else if (textType === Entry.Vim.TEXT_TYPE_PY){
             this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_PY;
             this._parser.setParser(this._mode, this._parserType, this.codeMirror);
         }
-        var textCode = this._parser.parse(code, Entry.Parser.PARSE_SYNTAX);
-        return textCode;
+
+        return parseType ?
+            this._parser.parse(code, parseType) :
+            this._parser.parse(code, Entry.Parser.PARSE_SYNTAX);
     };
 
     p.setParserAvailableCode = function(blockMenuCode, boardCode) {
         this._parser.setAvailableCode(blockMenuCode, boardCode);
     };
+
+    p.getBlockSyntax = function(datum) {
+        var syntax = null;
+        var textType = this.workspace.oldTextType;
+        if (textType === Entry.Vim.TEXT_TYPE_JS){
+            this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_JS;
+            this._parser.setParser(this._mode, this._parserType, this.codeMirror);
+        } else if (textType === Entry.Vim.TEXT_TYPE_PY){
+            this._parserType = Entry.Vim.PARSER_TYPE_BLOCK_TO_PY;
+            this._parser.setParser(this._mode, this._parserType, this.codeMirror);
+        }
+
+        if (this._parser._execParser)
+            syntax = this._parser._execParser.searchSyntax(datum);
+
+        return syntax;
+    };
+
+    p._getAssistScope = function() {
+        var execParser = this._parser._execParser;
+        if (execParser && execParser.getAssistScope)
+            return execParser.getAssistScope();
+    };
+
 
 })(Entry.Vim.prototype);

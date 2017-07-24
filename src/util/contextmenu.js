@@ -107,5 +107,49 @@ goog.provide('Entry.ContextMenu');
         }
     };
 
+    ctx.onContextmenu = function(target, callback) {
+        target.on('touchstart mousemove mouseup contextmenu', function (e) {
+            switch(e.type) {
+                case 'touchstart':
+                    var startEvent = Entry.Utils.convertMouseEvent(e);
+                    this.coordi = {
+                        x: startEvent.clientX,
+                        y: startEvent.clientY,
+                    }
+
+                    this.longTouchEvent = setTimeout((function() {
+                        callback(this.coordi);
+                        this.longTouchEvent = undefined;
+                    }).bind(this), 900);
+                    break;
+                case 'mousemove':
+                    if(!this.coordi) return;
+                    var diff = Math.sqrt(Math.pow(e.pageX - this.coordi.x, 2) +
+                            Math.pow(e.pageY - this.coordi.y, 2));
+                    if (diff > 5 && this.longTouchEvent) {
+                        clearTimeout(this.longTouchEvent);
+                        this.longTouchEvent = undefined;
+                    }
+                    break;
+                case 'mouseup':
+                    // e.stopPropagation();
+                    if (this.longTouchEvent) {
+                        clearTimeout(this.longTouchEvent);
+                        this.longTouchEvent = null;
+                    }
+                    break;
+                case 'contextmenu':
+                    clearTimeout(this.longTouchEvent);
+                    this.longTouchEvent = undefined;
+                    if(e.type === 'contextmenu') {
+                        // e.stopPropagation();
+                        // e.preventDefault();
+                        callback(this.coordi);
+                    }
+                    break;
+            }
+        });
+    }
+
 
 })(Entry.ContextMenu);

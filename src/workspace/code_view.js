@@ -48,8 +48,10 @@ Entry.CodeView = function(code, board) {
 
     p.reDraw = function() {
         this.code.map(function(thread) {
-            thread.view.reDraw();
-        });
+            if (thread.view)
+                thread.view.reDraw();
+            else thread.createView(this.board);
+        }.bind(this));
     };
 
     p.destroy = function() {

@@ -5,7 +5,7 @@ Entry.getStartProject = function(mediaFilePath) {
         "category" : "기타",
         "scenes" : [
             {
-                "name" : "장면 1",
+                "name" : Lang.Blocks.SCENE + " 1",
                 "id" : "7dwq"
             }
         ],

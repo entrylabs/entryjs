@@ -51,7 +51,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
                 'font-size' : '11px'
             });
 
-        this.textElement.textContent = Entry.getKeyCodeMap()[this.getValue()];
+        this._setTextValue();
 
         var width = this.getTextWidth() + 1;
 
@@ -81,7 +81,8 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
 
     p.renderOptions = function() {
         if (Entry.keyPressed)
-            this.keyPressed = Entry.keyPressed.attach(this, this._keyboardControl);
+            this.keyPressed =
+                Entry.keyPressed.attach(this, this._keyboardControl);
         var that = this;
         this._optionVisible = true;
 
@@ -94,8 +95,18 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
 
         this.optionGroup = Entry.Dom('img', {
             class:'entry-widget-keyboard-input',
-            src: Entry.mediaFilePath + '/media/keyboard_workspace.png',
             parent: $('body')
+        });
+
+        this.optionGroup.on('load', function() {
+            that.optionDomCreated();
+        });
+
+        this.optionGroup[0].src =
+            Entry.mediaFilePath + '/media/keyboard_workspace.png';
+
+        this.optionGroup.on('mousedown', function(e) {
+            e.stopPropagation();
         });
 
         this.optionGroup.css({
@@ -103,7 +114,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
         });
     };
 
-    p.destroyOption = function() {
+    p.destroyOption = function(forceCommand) {
         if (this.disposeEvent) {
             Entry.disposeEvent.detach(this.disposeEvent);
             delete this.disposeEvent;
@@ -115,7 +126,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
         }
 
         this._optionVisible = false;
-        this.command();
+        this.command(forceCommand);
         if (this.keyPressed) {
             Entry.keyPressed.detach(this.keyPressed);
             delete this.keyPressed;
@@ -128,14 +139,15 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
 
         var value = event.keyCode;
         var text = Entry.getKeyCodeMap()[value];
-        if (text !== undefined) this.applyValue(text, value);
+        if (text !== undefined)
+            this.applyValue(text, value, true);
     };
 
-    p.applyValue = function(text, value) {
+    p.applyValue = function(text, value, forceCommand) {
         this.setValue(String(value));
-        this.destroyOption();
-        this.textElement.textContent = text;
+        this._setTextValue();
         this.resize();
+        this.destroyOption(forceCommand);
     };
 
     p.resize = function() {
@@ -144,7 +156,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
         this._header.attr({width: width});
 
         this.box.set({width: width});
-        this._blockView.alignContent();
+        this._blockView.dAlignContent();
     };
 
     p.getTextWidth = function() {
@@ -156,6 +168,13 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
 
         if (Entry.keyPressed && this.keyPressed)
            Entry.keyPressed.detach(this.keyPressed);
+    };
+
+    p._setTextValue = function() {
+        var value = Entry.getKeyCodeMap()[this.getValue()];
+        value = this._convert(value, this.getValue());
+        this.textElement.textContent =
+            value === undefined ? Lang.Blocks.no_target : value;
     };
 
 })(Entry.FieldKeyboard.prototype);

@@ -208,4 +208,14 @@ Entry.FieldStatement = function(content, blockView, index) {
         }
     };
 
+    p.pointer = function(pointer) {
+        pointer = pointer || [];
+        pointer.unshift(this._index);
+        return this.block.pointer(pointer);
+    };
+
+    p.isParamBlockType = function() {
+        return false;
+    };
+
 })(Entry.FieldStatement.prototype);

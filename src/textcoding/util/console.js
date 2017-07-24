@@ -54,7 +54,7 @@ Entry.Console = function() {
             cm.execCommand("goDocEnd");
         });
 
-        Entry.addEventListener("stop", this.clear.bind(this))
+        Entry.addEventListener("stop", this.clear.bind(this));
 
         this.clear();
     };
@@ -65,12 +65,15 @@ Entry.Console = function() {
 
     p.clear = function() {
         this.setEditing(true);
-        this.codeMirror.setValue("Entry Console \n")
+        this.codeMirror.setValue("Entry Console \n");
         this.codeMirror.execCommand("goDocEnd");
         this.setEditing(false);
     };
 
     p.print = function(message, mode) {
+        if (!this.visible)
+            return;
+
         this.setEditing(true);
         this.codeMirror.execCommand("goDocEnd");
         var cursor = this._doc.getCursor();

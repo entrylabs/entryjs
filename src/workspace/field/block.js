@@ -13,6 +13,7 @@ Entry.FieldBlock = function(content, blockView, index, mode, contentIndex) {
     this._blockView = blockView;
     this._block = blockView.block;
     this._valueBlock = null;
+    this._oldPrimitiveValue = null;
 
     var box = new Entry.BoxModel();
     this.box = box;
@@ -32,7 +33,7 @@ Entry.FieldBlock = function(content, blockView, index, mode, contentIndex) {
 
     this._position = content.position;
 
-    this.box.observe(blockView, "alignContent", ["width", "height"]);
+    this.box.observe(blockView, "dAlignContent", ["width", "height"]);
     this.observe(this, "_updateBG", ["magneting"], false);
 
     this.renderStart(blockView.getBoard(), mode);
@@ -45,10 +46,13 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
         magneting: false
     };
 
-    p.renderStart = function(board, mode) {
+    p.renderStart = function(board, mode, renderMode) {
         if (!this.svgGroup)
             this.svgGroup =
                 this._blockView.contentSvgGroup.elem("g");
+        this.renderMode = mode !== undefined ?
+            mode : this._blockView.renderMode;
+
         this.view = this;
         this._nextGroup = this.svgGroup;
         this.box.set({
@@ -57,20 +61,24 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
             width: 0,
             height: 20
         });
+
         var block = this.getValue();
-        if (block && !block.view) {
-            block.setThread(this);
-            block.createView(board, mode);
-            block.getThread().view.setParent(this);
-        } else if (block && block.view) {
-            block.view.reDraw();
+        if (block) {
+            if (block.constructor !== Entry.Block)
+                block = new Entry.Block(block, this._block.thread);
+
+            if (!block.view) {
+                block.setThread(this);
+                block.createView(board, this.renderMode);
+                block.getThread().view.setParent(this);
+            }
         }
 
         this.updateValueBlock(block);
+        this._valueBlock.view._startContentRender(this.renderMode);
 
         if (this._blockView.getBoard().constructor !== Entry.Board)
             this._valueBlock.view.removeControl();
-
     };
 
     p.align = function(x, y, animate) {
@@ -85,9 +93,9 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
 
         var block = this._valueBlock;
 
-        if (block && (block && block.view)) {
+        if (block && block.view)
             y = block.view.height * -0.5;
-        }
+
         var transform = "translate(" + x + "," + y + ")";
 
         if (animate)
@@ -123,7 +131,9 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
 
     p.calcHeight = p.calcWH;
 
-    p.destroy = function() {};
+    p.destroy = function() {
+        this._valueBlock && this._valueBlock.destroyView();
+    };
 
     p.inspectBlock = function() {
         var blockType = null;
@@ -131,7 +141,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
             blockType = this._originBlock.type;
             delete this._originBlock;
         } else {
-            switch (this.acceptType) {
+            switch (this.acceptType.toLowerCase()) {
                 case "boolean":
                     blockType = "True";
                     break;
@@ -232,21 +242,27 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
     p.replace = function(block) {
         if (typeof block === "string")
             block = this._createBlockByType(block);
+
         var valueBlock = this._valueBlock;
-        var valueBlockType = valueBlock.type;
-        if (Entry.block[valueBlockType].isPrimitive) {
+
+        if (Entry.block[valueBlock.type].isPrimitive) {
             valueBlock.doNotSplice = true;
+            this._oldPrimitiveValue = valueBlock.getParam(0);
             valueBlock.destroy();
         } else if (this.acceptType === "param") {
             this._destroyObservers();
             valueBlock.view._toGlobalCoordinate();
-            block.getTerminateOutputBlock().view._contents[1].replace(
-                valueBlock
-            );
+            block.getTerminateOutputBlock()
+                .view._contents[1]
+                .replace(valueBlock);
         } else {
             this._destroyObservers();
             valueBlock.view._toGlobalCoordinate();
-            this.separate(valueBlock);
+
+            Entry.do(
+                'separateBlockByCommand',
+                valueBlock
+            ).isPass(true);
             valueBlock.view.bumpAway(30, 150);
         }
         this.updateValueBlock(block);
@@ -266,14 +282,23 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
     p._createBlockByType = function(blockType) {
         var thread = this._block.getThread();
         var board = this._blockView.getBoard();
+        var isFromUserAction;
+        if (board.workspace) {
+            var selectedBlockView = board.workspace.selectedBlockView;
+            isFromUserAction = !!(selectedBlockView && selectedBlockView.dragInstance);
+        }
 
-        var block = new Entry.Block({type: blockType}, this);
-        var workspace = board.workspace;
-        var mode;
-        if (workspace)
-            mode = workspace.getMode();
+        var value = isFromUserAction ?
+            undefined : this._oldPrimitiveValue;
 
-        block.createView(board, mode);
+        var block = new Entry.Block({
+            type: blockType,
+            params: [ value ]
+        }, this);
+
+        block.createView(board, this.renderMode);
+
+        delete this._oldPrimitiveValue;
         return block;
     };
 
@@ -301,9 +326,14 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
     p.getThread = function() {return this;};
 
     p.pointer = function(pointer) {
+        pointer = pointer || [];
         pointer.unshift(this._index);
         pointer.unshift(Entry.PARAM);
         return this._block.pointer(pointer);
+    };
+
+    p.isParamBlockType = function() {
+        return true;
     };
 
 })(Entry.FieldBlock.prototype);

@@ -19,6 +19,7 @@ Entry.FieldTextInput = function(content, blockView, index) {
 
     this.position = content.position;
     this._contents = content;
+    this._isClearBG = content.clearBG || false;
     this._index = index;
     this.value = this.getValue()  || '';
     this._CONTENT_HEIGHT = this.getContentHeight();
@@ -46,9 +47,11 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
         this.textElement = this.svgGroup.elem("text", {
             x: X_PADDING/2,
             y: TEXT_Y_PADDING,
+            fill: this._contents.color || "black",
             'font-size' : '12px'
         });
-        this.textElement.textContent = this.truncate();
+
+        this._setTextValue();
 
         var width = this.getTextWidth();
 
@@ -61,8 +64,10 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
             y: y,
             rx: 3, ry: 3,
             fill: "#fff",
-            'fill-opacity': 0.4
+            'fill-opacity': this._isClearBG ? 0 : 0.4
         });
+        if (this._isClearBG)
+            $(this._header).css({ stroke: "none" });
 
         this.svgGroup.appendChild(this.textElement);
 
@@ -81,9 +86,9 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
 
         var blockView = this._blockView;
 
-        var func = function() {
-            that.applyValue();
-            that.destroyOption();
+        var func = function(skipCommand) {
+            skipCommand !== true && that.applyValue();
+            that.destroyOption(skipCommand);
         };
 
         this._attachDisposeEvent(func);
@@ -105,7 +110,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
             that.applyValue(e);
 
             if (exitKeys.indexOf(keyCode) > -1)
-                that.destroyOption();
+                that.destroyOption(undefined, true);
         });
 
         var pos = this.getAbsolutePosFromDocument();
@@ -120,12 +125,14 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
         this.optionGroup.focus();
         var optionGroup = this.optionGroup[0];
         optionGroup.setSelectionRange(0, optionGroup.value.length, "backward");
+
+        this.optionDomCreated();
     };
 
     p.applyValue = function(event) {
         var value = this.optionGroup.val();
         this.setValue(value);
-        this.textElement.textContent = this.truncate();
+        this._setTextValue();
         this.resize();
     };
 
@@ -136,10 +143,15 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
         this.optionGroup.css({width: width});
 
         this.box.set({width: width});
-        this._blockView.alignContent();
+        this._blockView.dAlignContent();
     };
 
     p.getTextWidth = function() {
         return this.textElement.getBoundingClientRect().width + X_PADDING + 2;
     };
+
+    p._setTextValue = function() {
+        this.textElement.textContent = this._convert(this.getValue(), this.getValue());
+    };
+
 })(Entry.FieldTextInput.prototype);

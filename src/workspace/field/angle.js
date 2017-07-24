@@ -38,7 +38,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
         RADIUS = 49,
         FILL_PATH = 'M 0,0 v -49 A 49,49 0 %LARGE 1 %X,%Y z';
 
-    p.renderStart = function() {
+    p.renderStart = function(board, mode) {
         if (this.svgGroup) $(this.svgGroup).remove();
         var blockView = this._blockView;
         var that = this;
@@ -54,7 +54,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
                 'font-size': '11px'
             });
 
-        this.textElement.textContent = this.getText();
+        this._setTextValue();
 
         var width = this.getTextWidth();
 
@@ -62,9 +62,9 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
         var y = this.position && this.position.y ? this.position.y : 0;
         y -= CONTENT_HEIGHT/2;
         this._header = this.svgGroup.elem('rect', {
-                x: 0, 
+                x: 0,
                 y: y,
-                rx: 3, 
+                rx: 3,
                 ry: 3,
                 width: width,
                 height: CONTENT_HEIGHT,
@@ -88,9 +88,9 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
         var that = this;
 
         var blockView = this._block.view;
-        var func = function() {
-            that.applyValue();
-            that.destroyOption();
+        var func = function(skipCommand) {
+            skipCommand !== true && that.applyValue();
+            that.destroyOption(skipCommand);
         };
 
         this._attachDisposeEvent(func);
@@ -113,7 +113,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
             that.applyValue(e);
 
             if (exitKeys.indexOf(keyCode) > -1)
-                that.destroyOption();
+                that.destroyOption(undefined, true);
         });
 
         var pos = this.getAbsolutePosFromDocument();
@@ -126,18 +126,18 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
         });
 
         //svg option dom
-        this.svgOptionGroup = this.appendSvgOptionGroup();
-        var circle = this.svgOptionGroup.elem('circle', {
+        this.angleOptionGroup = this.appendSvgOptionGroup();
+        var circle = this.angleOptionGroup.elem('circle', {
             x:0, y:0, r:RADIUS,
             class:'entry-field-angle-circle'
         });
 
-        $(this.svgOptionGroup).on('mousedown touchstart', function(e) {
+        $(this.angleOptionGroup).on('mousedown touchstart', function(e) {
             e.stopPropagation();
             that._updateByCoord(e);
         });
 
-        this._dividerGroup = this.svgOptionGroup.elem('g');
+        this._dividerGroup = this.angleOptionGroup.elem('g');
         for (var a = 0; a < 360; a += 15) {
             this._dividerGroup.elem('line', {
                 x1:RADIUS, y1:0,
@@ -151,19 +151,20 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
         pos.x = pos.x + this.box.width/2;
         pos.y = pos.y + this.box.height/2 + RADIUS + 1;
 
-        this.svgOptionGroup.attr({
+        this.angleOptionGroup.attr({
             class: 'entry-field-angle',
             transform: "translate(" + pos.x + "," + pos.y + ")"
         });
 
-        $(this.svgOptionGroup).bind('mousemove touchmove',
+        $(this.angleOptionGroup).bind('mousemove touchmove',
             this._updateByCoord.bind(this));
 
-        $(this.svgOptionGroup).bind('mouseup touchend',
+        $(this.angleOptionGroup).bind('mouseup touchend',
             this.destroyOption.bind(this));
         this.updateGraph();
         this.optionGroup.focus();
         this.optionGroup.select();
+        this.optionDomCreated();
     };
 
     p._updateByCoord = function(e) {
@@ -202,7 +203,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
         var largeFlag = (angleRadians > Math.PI) ? 1 : 0;
 
 
-        this._fillPath = this.svgOptionGroup.elem('path', {
+        this._fillPath = this.angleOptionGroup.elem('path', {
             d: FILL_PATH.
                 replace('%X', x).
                 replace('%Y', y).
@@ -210,12 +211,12 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
             class: 'entry-angle-fill-area'
         });
 
-        this.svgOptionGroup.appendChild(this._dividerGroup);
+        this.angleOptionGroup.appendChild(this._dividerGroup);
 
         if (this._indicator) this._indicator.remove();
 
         this._indicator =
-            this.svgOptionGroup.elem('line', {
+            this.angleOptionGroup.elem('line', {
                 x1: 0, y1: 0, x2: x, y2: y
             });
 
@@ -224,7 +225,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
 
     p.applyValue = function() {
         var value = this.optionGroup.val();
-        if (isNaN(value) || value === '') return;
+        if (!Entry.Utils.isNumber(value) || value === '') return;
         value = this.modValue(value);
         this.setValue(value);
         this.updateGraph();
@@ -241,21 +242,30 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
             this.optionGroup.css({width: width});
 
         this.box.set({width: width});
-        this._block.view.alignContent();
+        this._block.view.dAlignContent();
     };
 
     p.getTextWidth = function() {
         if (!this.textElement) return X_PADDING;
-        return this.textElement.getComputedTextLength() + X_PADDING;
+        return this.textElement.getBoundingClientRect().width + X_PADDING;
     };
 
     p.getText = function() {
-        return this.getValue() + '\u00B0';
+        var value = this.getValue();
+        var reg = /&value/gm;
+        if (reg.test(value))
+            return value.replace(reg, '');
+        return value + '\u00B0';
     };
 
-    p.modValue = function(value) {return value % 360;};
+    p.modValue = function(value) {
+        var reg = /&value/gm;
+        if (reg.test(value))
+            return value;
+        return value % 360;
+    };
 
-    p.destroyOption = function() {
+    p.destroyOption = function(skipCommand, forceCommand) {
         if (this.disposeEvent) {
             Entry.disposeEvent.detach(this.disposeEvent);
             delete this.documentDownEvent;
@@ -266,12 +276,18 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
             delete this.optionGroup;
         }
 
-        if (this.svgOptionGroup) {
-            this.svgOptionGroup.remove();
-            delete this.svgOptionGroup;
+        if (this.angleOptionGroup) {
+            this.angleOptionGroup.remove();
+            delete this.angleOptionGroup;
         }
-        this.textElement.textContent = this.getText();
-        this.command();
+        this._setTextValue();
+        skipCommand !== true && this.command(forceCommand);
+    };
+
+    p._setTextValue = function() {
+        var value = this._convert(this.getText(), this.getValue());
+
+        this.textElement.textContent = value;
     };
 
 })(Entry.FieldAngle.prototype);

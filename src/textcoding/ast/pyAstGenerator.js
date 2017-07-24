@@ -12,21 +12,47 @@ Entry.PyAstGenerator = function() {
 (function(p){
     p.generate = function(code) {
     	var filbertParse = filbert.parse;
-        var ranges = false;
-        var locations = false;
+        var locations = true;
+        var ranges = true;
         var options = { locations: locations, ranges: ranges };
-        var astTree;
         try {
-            astTree = filbertParse(code, options);
-            console.log("astTree", astTree);
+            var astTree = filbertParse(code, options);
             return astTree;
         }
-        catch (error) {
-            error.message = "  파이썬 문법을 확인해주세요";
-            throw error;
+        catch (error) { 
+            var msgTokens = error.message.split('\''); 
+            var title = Entry.TextCodingError.TITLE_SYNTAX;
+            console.log("msgTokens", msgTokens);
 
-            //Entry.toast.alert('에러(Error)', error.message);
-            console.log("AST Error", error.toString());
+            if(msgTokens[0].trim() == "Unexpected token") {
+                var message = Entry.TextCodingError.MESSAGE_SYNTAX_UNEXPECTED_TOKEN;
+                var subject = Entry.TextCodingError.SUBJECT_SYNTAX_TOKEN;
+            }
+            else if(msgTokens[0].trim() == "Unexpected character") {
+                var message = Entry.TextCodingError.MESSAGE_SYNTAX_UNEXPECTED_CHARACTER;
+                var subject = Entry.TextCodingError.SUBJECT_SYNTAX_CHARACTER;
+            }
+            else if(msgTokens[0].trim() == "Unexpected indent") {
+                var message = Entry.TextCodingError.MESSAGE_SYNTAX_UNEXPECTED_CHARACTER;
+                var subject = Entry.TextCodingError.SUBJECT_SYNTAX_INDENT
+            }
+            else {
+                var message = Entry.TextCodingError.MESSAGE_SYNTAX_DEFAULT;
+                var subject = Entry.TextCodingError.SUBJECT_SYNTAX_DEFAULT;
+            }
+
+            if(msgTokens[1])
+                var keyword = msgTokens[1];
+
+            error.title = Lang.TextCoding[title];
+            error.message = Lang.TextCoding[message];
+            if(keyword)
+                error.keyword = keyword;
+            else
+                error.keyword = '';
+            error.subject = Lang.TextCoding[subject];
+            
+            throw error;
         }
     }
 })(Entry.PyAstGenerator.prototype);

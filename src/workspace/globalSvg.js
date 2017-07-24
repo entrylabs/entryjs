@@ -56,6 +56,13 @@ goog.provide('Entry.GlobalSvg');
         var blockView = this._view;
         if (this._svg) this.remove();
         var isVimMode = this._mode == Entry.Workspace.MODE_VIMBOARD;
+        var bBox = blockView.svgGroup.getBBox();
+
+        this.svgDom.attr({
+            width: Math.round(bBox.width + 4) + 'px',
+            height: Math.round(bBox.height + 4) + 'px'
+        });
+
 
         this.svgGroup = Entry.SVG.createElement(
             blockView.svgGroup.cloneNode(true),
@@ -66,8 +73,10 @@ goog.provide('Entry.GlobalSvg');
         //TODO selectAll function replace
         if (isVimMode) {
             var svg = $(this.svgGroup);
+
             svg.find('g').css({filter: 'none'});
-            svg.find('path').velocity({
+
+            svg.find('path, rect, polygon').velocity({
                 opacity: 0
             }, {
                 duration: 500
@@ -123,8 +132,23 @@ goog.provide('Entry.GlobalSvg');
         this.left = pos.x + offset.left - this._offsetX;
         this.top = pos.y + offset.top - this._offsetY;
 
+        this._applyDomPos(this.left, this.top);
+    };
+
+    gs.adjust = function(adjustX, adjustY) {
+        var left = this.left + (adjustX || 0);
+        var top = this.top + (adjustY || 0);
+        if (left === this.left && top === this.top)
+            return;
+
+        this.left = left;
+        this.top = top;
+        this._applyDomPos(this.left, this.top);
+    };
+
+    gs._applyDomPos = function(left, top) {
         this.svgDom.css({
-            transform: 'translate3d('+ this.left + 'px,' + this.top +'px, 0px)'
+            transform: 'translate3d('+ left + 'px,' + top +'px, 0px)'
         });
     };
 
@@ -147,7 +171,6 @@ goog.provide('Entry.GlobalSvg');
         this.onMouseDown.apply(this, arguments);
     };
 
-
     gs.onMouseDown = function(e) {
         this._startY = e.pageY;
         var that = this;
@@ -168,9 +191,7 @@ goog.provide('Entry.GlobalSvg');
             var dY = newY - that._startY;
             var newLeft = that.left + dX;
             var newTop = that.top + dY;
-            that.svgDom.css({
-                transform: 'translate3d('+ newLeft + 'px,' + newTop +'px, 0px)'
-            });
+            that._applyDomPos(newLeft, newTop);
             that._startX = newX;
             that._startY = newY;
             that.left = newLeft;

@@ -19,7 +19,13 @@ Entry.FieldDropdown = function(content, blockView, index) {
 
     this._contents = content;
     this._noArrow = content.noArrow;
-    this._arrowColor = content.arrowColor;
+
+    var arrowColor = content.arrowColor;
+    if (this._block.deletable === Entry.Block.DELETABLE_FALSE_LIGHTEN || this._block.emphasized) {
+        arrowColor = blockView._fillColor;
+    }
+
+    this._arrowColor = arrowColor;
     this._index = index;
     this.setValue(this.getValue());
 
@@ -54,7 +60,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
 
         this.textElement =
             this.svgGroup.elem("text", { x: 5 });
-        this.textElement.textContent = this.getTextByValue(this.getValue());
+        this._setTextValue();
 
         var bBox = this.textElement.getBBox();
         this.textElement.attr({
@@ -124,7 +130,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
         });
 
         this.box.set({width: width});
-        this._block.view.alignContent();
+        this._block.view.dAlignContent();
     };
 
     p.renderOptions = function() {
@@ -143,8 +149,6 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
             e.stopPropagation();
         });
 
-        var options = this._contents.options;
-
         var OPTION_X_PADDING = 30;
         var maxWidth = 0;
         var options = this._contents.options;
@@ -153,7 +157,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
 
         for (var i=0, len=options.length; i<len; i++) {
             var option = options[i];
-            var text = option[0];
+            var text = option[0] = this._convert(option[0], option[1]);
             var value = option[1];
             var element = Entry.Dom('li', {
                 class: 'rect',
@@ -181,12 +185,14 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
                 elem.bind('mouseup touchend', function(e){
                     e.stopPropagation();
                     that.applyValue(value);
-                    that.destroyOption();
+                    that.destroyOption(undefined, true);
                     that._selectBlockView();
                 });
             })(element, value);
         }
         this._position();
+
+        this.optionDomCreated();
     };
 
     p._position = function() {
@@ -235,11 +241,15 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
     p.applyValue = function(value) {
         if (this.value != value)
             this.setValue(value);
-        this.textElement.textContent = this.getTextByValue(value);
+        this._setTextValue();
         this.resize();
     };
 
     p.getTextByValue = function(value) {
+        var reg = /&value/gm;
+        if (reg.test(value))
+            return value.replace(reg, '');
+
         if ((!value && typeof value !== 'number') || value === 'null')
             return Lang.Blocks.no_target;
 
@@ -250,7 +260,8 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
                 return option[0];
         }
         //no match found
-        if (value === "?") return value;
+        //check should return value as it is
+        if (this._shouldReturnValue(value)) return value;
         return Lang.Blocks.no_target;
     };
 
@@ -275,5 +286,15 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
             height: height,
             width: width
         };
+    };
+
+    p._setTextValue = function() {
+        var textValue = this.getTextByValue(this.getValue());
+        this.textElement.textContent =
+            this._convert(textValue, this.getValue());
+    };
+
+    p.getTextValue = function() {
+        return this.textElement.textContent;
     };
 })(Entry.FieldDropdown.prototype);

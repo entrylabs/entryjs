@@ -12,7 +12,11 @@ goog.require("Entry.Utils");
  */
 Entry.Func = function(func) {
     this.id = func ? func.id : Entry.generateHash();
-    this.content = func ? new Entry.Code(func.content) : new Entry.Code([
+    var content;
+    //inspect empty content
+    if (func && func.content && func.content.length > 4)
+        content = func.content;
+    this.content = content ? new Entry.Code(content) : new Entry.Code([
         [
             {
                 type: "function_create",
@@ -31,7 +35,7 @@ Entry.Func = function(func) {
 
     Entry.generateFunctionSchema(this.id);
 
-    if (func) {
+    if (func && func.content) {
         var blockMap = this.content._blockMap;
         for (var key in blockMap) {
             Entry.Func.registerParamBlock(blockMap[key].type);
@@ -51,9 +55,12 @@ Entry.Func.registerFunction = function(func) {
     var workspace = Entry.playground.mainWorkspace;
     if (!workspace) return;
     var blockMenu = workspace.getBlockMenu();
-    var menuCode = blockMenu.getCategoryCodes("func");
+    var menuCode = blockMenu.code;
+
     this._targetFuncBlock = menuCode.createThread([{
-        type: "func_" + func.id
+        type: "func_" + func.id,
+        category: 'func',
+        x: -9999
     }]);
     func.blockMenuBlock = this._targetFuncBlock;
 };
@@ -82,7 +89,7 @@ Entry.Func.prototype.init = function(model) {
 };
 
 Entry.Func.prototype.destroy = function() {
-    this.blockMenuBlock.destroy();
+    this.blockMenuBlock && this.blockMenuBlock.destroy();
 };
 
 Entry.Func.edit = function(func) {
@@ -102,6 +109,10 @@ Entry.Func.edit = function(func) {
     this.bindFuncChangeEvent();
     this.updateMenu();
     setTimeout(function() {
+        var schema = Entry.block["func_" + func.id];
+        if (schema && schema.paramsBackupEvent)
+            schema.paramsBackupEvent.notify();
+
         this._backupContent = func.content.stringify();
     }.bind(this), 0);
 };
@@ -109,22 +120,28 @@ Entry.Func.edit = function(func) {
 Entry.Func.initEditView = function(content) {
     if (!this.menuCode)
         this.setupMenuCode();
-    var workspace = Entry.playground.mainWorkspace;
+    var workspace = Entry.getMainWS();
     workspace.setMode(Entry.Workspace.MODE_OVERLAYBOARD);
     workspace.changeOverlayBoardCode(content);
-    content.recreateView();
-    workspace.changeOverlayBoardCode(content);
     this._workspaceStateEvent =
-        workspace.changeEvent.attach(this, this.endEdit);
-    content.view.reDraw();
-    content.view.board.alignThreads();
+        workspace.changeEvent.attach(this, function(message) {
+            this.endEdit(message || 'cancelEdit');
+            if (workspace.getMode() === Entry.Workspace.MODE_VIMBOARD) {
+                workspace.blockMenu.banClass('functionInit');
+            }
+        });
+    content.board.alignThreads();
 };
 
 Entry.Func.endEdit = function(message) {
     this.unbindFuncChangeEvent();
     this.unbindWorkspaceStateChangeEvent();
+    var targetFuncId = this.targetFunc.id;
 
-    switch(message) {
+    if (this.targetFunc && this.targetFunc.content)
+        this.targetFunc.content.destroyView();
+
+    switch (message) {
         case "save":
             this.save();
             break;
@@ -134,7 +151,11 @@ Entry.Func.endEdit = function(message) {
     }
 
     this._backupContent = null;
+
     delete this.targetFunc;
+    var blockSchema = Entry.block["func_" + targetFuncId];
+    if (blockSchema && blockSchema.destroyParamsBackupEvent)
+        blockSchema.destroyParamsBackupEvent.notify();
     this.updateMenu();
     Entry.Func.isEdit = false;
 };
@@ -142,6 +163,16 @@ Entry.Func.endEdit = function(message) {
 Entry.Func.save = function() {
     this.targetFunc.generateBlock(true);
     Entry.variableContainer.saveFunction(this.targetFunc);
+
+    var ws = Entry.getMainWS();
+    if (ws && (ws.overlayModefrom == Entry.Workspace.MODE_VIMBOARD)) {
+        var mode = {};
+        mode.boardType = Entry.Workspace.MODE_VIMBOARD;
+        mode.textType = Entry.Vim.TEXT_TYPE_PY;
+        mode.runType = Entry.Vim.WORKSPACE_MODE;
+        Entry.getMainWS().setMode(mode);
+        Entry.variableContainer.functionAddButton_.addClass('disable');
+    }
 };
 
 Entry.Func.syncFuncName = function(dstFName) {
@@ -199,10 +230,20 @@ Entry.Func.cancelEdit = function() {
         if (this._backupContent) {
             this.targetFunc.content.load(this._backupContent);
             Entry.generateFunctionSchema(this.targetFunc.id);
-            Entry.Func.generateWsBlock(this.targetFunc);
+            Entry.Func.generateWsBlock(this.targetFunc, true);
         }
     }
     Entry.variableContainer.updateList();
+
+    var ws = Entry.getMainWS();
+    if (ws && (ws.overlayModefrom == Entry.Workspace.MODE_VIMBOARD)) {
+        var mode = {};
+        mode.boardType = Entry.Workspace.MODE_VIMBOARD;
+        mode.textType = Entry.Vim.TEXT_TYPE_PY;
+        mode.runType = Entry.Vim.WORKSPACE_MODE;
+        Entry.getMainWS().setMode(mode);
+        Entry.variableContainer.functionAddButton_.addClass('disable');
+    }
 };
 
 Entry.Func.getMenuXml = function() {
@@ -249,42 +290,49 @@ Entry.Func.setupMenuCode = function() {
     var workspace = Entry.playground.mainWorkspace;
     if (!workspace) return;
     var blockMenu = workspace.getBlockMenu();
-    var menuCode = blockMenu.getCategoryCodes("func");
+    var menuCode = blockMenu.code;
+    var CATEGORY = 'func';
     this._fieldLabel = menuCode.createThread([{
-        type: "function_field_label"
+        type: "function_field_label",
+        category: CATEGORY,
+        x: -9999
     }]).getFirstBlock();
+
     this._fieldString = menuCode.createThread([{
         type: "function_field_string",
+        category: CATEGORY,
+        x: -9999,
+        copyable: false,
         params: [
             {type: this.requestParamBlock("string")}
         ]
     }]).getFirstBlock();
+
     this._fieldBoolean = menuCode.createThread([{
         type: "function_field_boolean",
+        copyable: false,
+        category: CATEGORY,
+        x: -9999,
         params: [
             {type: this.requestParamBlock("boolean")}
         ]
     }]).getFirstBlock();
+
     this.menuCode = menuCode;
-}
+    blockMenu.align();
+};
 
 Entry.Func.refreshMenuCode = function() {
-    var workspace = Entry.playground.mainWorkspace;
-    if (!workspace) return;
-    if (!this.menuCode)
-        this.setupMenuCode();
-    var stringType = this._fieldString.params[0].type;
-    var referenceCount = Entry.block[stringType].changeEvent._listeners.length;
-    if (referenceCount > 2) // check new block type is used
-        this._fieldString.params[0].changeType(this.requestParamBlock("string"));
-    var booleanType = this._fieldBoolean.params[0].type;
-    referenceCount = Entry.block[booleanType].changeEvent._listeners.length;
-    if (referenceCount > 2)
-        this._fieldBoolean.params[0].changeType(this.requestParamBlock("boolean"));
+    if (!Entry.playground.mainWorkspace) return;
+    if (!this.menuCode) this.setupMenuCode();
+
+    this._fieldString.params[0]
+        .changeType(this.requestParamBlock("string"));
+    this._fieldBoolean.params[0]
+        .changeType(this.requestParamBlock("boolean"));
 };
 
 Entry.Func.requestParamBlock = function(type) {
-    var id = Entry.generateHash();
     var blockPrototype;
     switch (type) {
         case "string":
@@ -297,23 +345,31 @@ Entry.Func.requestParamBlock = function(type) {
             return null;
     }
 
-    var blockType = type + "Param_" + id;
-    var blockSchema = Entry.Func.createParamBlock(blockType, blockPrototype, type);
-    Entry.block[blockType] = blockSchema;
+    var blockType = type + "Param_" + Entry.generateHash();
+    Entry.block[blockType] =
+        Entry.Func.createParamBlock(blockType, blockPrototype, type);
     return blockType;
 };
 
 Entry.Func.registerParamBlock = function(type) {
-    if (type.indexOf("stringParam") > -1) {
-        Entry.Func.createParamBlock(type, Entry.block.function_param_string, type);
-    } else if (type.indexOf("booleanParam") > -1 ) {
-        Entry.Func.createParamBlock(type, Entry.block.function_param_boolean, type);
-    }
+    if (!type) return;
+
+    var blockPrototype;
+    if (type.indexOf("stringParam") > -1)
+        blockPrototype = Entry.block.function_param_string;
+    else if (type.indexOf("booleanParam") > -1)
+        blockPrototype = Entry.block.function_param_boolean;
+
+    //not a function param block
+    if (!blockPrototype) return;
+
+    Entry.Func.createParamBlock(type, blockPrototype, type);
 };
 
 Entry.Func.createParamBlock = function(type, blockPrototype, originalType) {
+    originalType = /string/gi.test(originalType) ?
+        "function_param_string" : "function_param_boolean";
     var blockSchema = function () {};
-    originalType = originalType === "string" ? "function_param_string" : "function_param_boolean";
     blockSchema.prototype = blockPrototype;
     blockSchema = new blockSchema();
     blockSchema.changeEvent = new Entry.Event();
@@ -321,22 +377,21 @@ Entry.Func.createParamBlock = function(type, blockPrototype, originalType) {
 
     Entry.block[type] = blockSchema;
     return blockSchema;
-}
+};
 
 Entry.Func.updateMenu = function() {
-    if (!Entry.playground || !Entry.playground.mainWorkspace) return;
-    var workspace = Entry.playground.mainWorkspace;
+    var workspace = Entry.getMainWS();
+    if (!workspace) return;
     var blockMenu = workspace.getBlockMenu();
     if (this.targetFunc) {
-        if (!this.menuCode)
-            this.setupMenuCode();
+        !this.menuCode && this.setupMenuCode();
         blockMenu.banClass("functionInit", true);
         blockMenu.unbanClass("functionEdit", true);
     } else {
-        blockMenu.unbanClass("functionInit", true);
+        !workspace.isVimMode() && blockMenu.unbanClass("functionInit", true);
         blockMenu.banClass("functionEdit", true);
     }
-    blockMenu.reDraw();
+    blockMenu.lastSelector === 'func' && blockMenu.align();
 };
 
 Entry.Func.prototype.edit = function() {
@@ -392,10 +447,13 @@ Entry.Func.prototype.generateBlock = function(toSave) {
     this.description = generatedInfo.description;
 };
 
-Entry.Func.generateWsBlock = function(targetFunc) {
+Entry.Func.generateWsBlock = function(targetFunc, isRestore) {
     this.unbindFuncChangeEvent();
     targetFunc = targetFunc ? targetFunc : this.targetFunc;
     var defBlock = targetFunc.content.getEventMap("funcDef")[0];
+
+    if (!defBlock) return;
+
     var outputBlock = defBlock.params[0];
     var booleanIndex = 0;
     var stringIndex = 0;
@@ -403,9 +461,10 @@ Entry.Func.generateWsBlock = function(targetFunc) {
     var schemaTemplate = "";
     var hashMap = targetFunc.hashMap;
     var paramMap = targetFunc.paramMap;
+    var blockIds = [];
     while(outputBlock) {
         var value = outputBlock.params[0];
-        switch(outputBlock.type) {
+        switch (outputBlock.type) {
             case 'function_field_label':
                 schemaTemplate = schemaTemplate + " " + value;
                 break;
@@ -422,6 +481,7 @@ Entry.Func.generateWsBlock = function(targetFunc) {
                     accept: "boolean"
                 });
                 schemaTemplate += " %" + (booleanIndex + stringIndex);
+                blockIds.push(outputBlock.id);
                 break;
             case 'function_field_string':
                 Entry.Mutator.mutate(value.type, {
@@ -436,10 +496,12 @@ Entry.Func.generateWsBlock = function(targetFunc) {
                     type: "Block",
                     accept: "string"
                 });
+                blockIds.push(outputBlock.id);
                 break;
         }
         outputBlock = outputBlock.getOutputBlock();
     }
+
     booleanIndex++;
     schemaTemplate += " %" + (booleanIndex + stringIndex);
     schemaParams.push({
@@ -451,33 +513,54 @@ Entry.Func.generateWsBlock = function(targetFunc) {
     var funcName = "func_" + targetFunc.id;
     var originSchema = Entry.block[funcName];
 
-    var shouldFuncMutate = false;
+    var block = Entry.block[funcName];
+    var originParams = block.params.slice();
+    originParams.pop();
+    var newParams = schemaParams.slice();
+    newParams.pop();
+    var originParamsLength = originParams.length;
+    var newParamsLength = newParams.length;
 
-    if (originSchema.template !== schemaTemplate)
-        shouldFuncMutate = true;
-    else if (originSchema.params.length === schemaParams.length) {
-        for (var i=0; i<originSchema.params.length-1; i++) {
-            var originParam = originSchema.params[i];
-            var newParam = schemaParams[i];
-            if (originParam.type === newParam.type &&
-                originParam.accept === newParam.accept)
-                continue;
-            else {
-                shouldFuncMutate = true;
-                break;
-            }
+    var changeData = {};
+
+    if (newParamsLength > originParamsLength) {
+        var outputBlockIds = targetFunc.outputBlockIds;
+        if (outputBlockIds) {
+            var startPos = 0;
+            while(outputBlockIds[startPos] === blockIds[startPos])
+                startPos++;
+
+            var endPos = 0;
+            while(outputBlockIds[outputBlockIds.length - endPos -1] === blockIds[blockIds.length - endPos - 1])
+                endPos++;
+
+            endPos = blockIds.length - endPos -1;
+            changeData = {
+                type: 'insert',
+                startPos: startPos,
+                endPos: endPos
+            };
         }
-    }
+    } else if (newParamsLength < originParamsLength) {
+        changeData = {
+            type: 'cut',
+            pos: newParamsLength
+        };
+    } else
+        changeData = { type: 'noChange' };
 
-    if (shouldFuncMutate) {
-        Entry.Mutator.mutate(
-            funcName,
-            {
-                params: schemaParams,
-                template: schemaTemplate
-            }
-        );
-    }
+    changeData.isRestore = isRestore;
+
+    targetFunc.outputBlockIds = blockIds;
+
+    Entry.Mutator.mutate(
+        funcName,
+        {
+            params: schemaParams,
+            template: schemaTemplate,
+        },
+        changeData
+    );
 
     for (var key in hashMap) {
         var state = hashMap[key];

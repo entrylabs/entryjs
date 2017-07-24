@@ -2,6 +2,8 @@
 
 var EntryStatic = {};
 
+EntryStatic.isPracticalCourse = true;
+
 EntryStatic.objectTypes = [
     "sprite",
     "textBox"
@@ -275,17 +277,16 @@ EntryStatic.getAllBlocks = function() {
             "roborobo_diode_toggle",
             "roborobo_diode_inout_toggle",
             "roborobo_diode_set_output",
-            "roborobo_diode_input_value"
+            // "roborobo_diode_input_value"
         ]
     }, {
         category: "hw_robot",
         blocks: [
             "arduino_download_connector",
             "download_guide",
-            "arduino_download_source",
             "arduino_connected",
             "arduino_connect",
-            "arduino_reconnect",
+            "robot_reconnect",
             "arduino_open",
             "arduino_cloud_pc_open",
         ]
@@ -293,14 +294,6 @@ EntryStatic.getAllBlocks = function() {
         category: "arduino",
         visible: false,
         blocks: [
-            "arduino_download_connector",
-            "download_guide",
-            "arduino_download_source",
-            "arduino_connected",
-            "arduino_connect",
-            "arduino_reconnect",
-            "arduino_open",
-            "arduino_cloud_pc_open",
             "arduino_get_number_sensor_value",
             "arduino_get_digital_value",
             "arduino_toggle_led",

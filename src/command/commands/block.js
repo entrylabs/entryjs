@@ -5,83 +5,128 @@
 
 goog.require("Entry.Command");
 goog.require("Entry.STATIC");
+goog.require("Entry.Utils");
 
 (function(c) {
-    c.addThread = {
-        type: Entry.STATIC.COMMAND_TYPES.addThread,
-        do: function(thread) {
-            return this.editor.board.code.createThread(thread);
+    var COMMAND_TYPES = Entry.STATIC.COMMAND_TYPES;
+    var obj, command;
+
+    c[COMMAND_TYPES.addThread] = {
+        do: function(blocks, index) {
+            return this.editor.board.code.createThread(blocks, index);
         },
-        state: function(thread) {
-            if (thread.length)
-                thread[0].id = Entry.Utils.generateId();
-            return [thread];
+        state: function(blocks, index) {
+            if (index === undefined || index === null)
+                index = this.editor.board.code.getThreadCount();
+            return [index];
         },
-        log: function(thread) {
-            var lastThread = this.editor.board.code.getThreads().pop();
+        log: function(blocks, index) {
+            if (blocks instanceof Entry.Thread)
+                blocks = blocks.toJSON();
             return [
-                c.addThread.type,
-                ['thread', lastThread.stringify()],
-                ['code', this.editor.board.code.stringify()]
+                ['blocks', blocks],
+                ['index', index]
             ];
         },
-        undo: "destroyThread"
+        undo: "destroyThread",
+        recordable: Entry.STATIC.RECORDABLE.SUPPORT,
+        validate: false,
+        dom: ['playground', 'blockMenu', '&0']
     };
 
-    c.destroyThread = {
-        type: Entry.STATIC.COMMAND_TYPES.destroyThread,
-        do: function(thread) {
-            var blockId = thread[0].id;
-            var block = this.editor.board.findById(blockId);
+    obj = Entry.cloneSimpleObject(c[COMMAND_TYPES.addThread]);
+    obj.showMe = function(restrictor) {
+        if (restrictor.isTooltipFaded())
+            return;
+        restrictor.fadeOutTooltip();
+        var svgGroup = Entry.getDom(restrictor.processDomQuery(this.dom));
+        var nextCmd = restrictor.requestNextData().content;
+        var cmdType = nextCmd[0];
+        var targetDomQuery;
+        if (cmdType === COMMAND_TYPES.moveBlockFromBlockMenu)
+            targetDomQuery = ['playground', 'board', 'coord', '&1', '&2'];
+        else
+            targetDomQuery = [ 'playground', 'board', '&1', 'magnet', 'next', 0 ];
+
+        var targetDom = Entry.getDom(restrictor.processDomQuery(targetDomQuery, nextCmd));
+        var targetRect = targetDom.getBoundingClientRect();
+
+        Entry.Utils.glideBlock(
+            svgGroup, targetRect.left, targetRect.top,
+            function() {
+                restrictor.fadeInTooltip();
+            }
+        );
+    };
+    obj.followCmd = true;
+    obj.restrict = function(data, domQuery, callback, restrictor) {
+        var nextCmd = restrictor.requestNextData().content;
+        if (nextCmd[0] === Entry.STATIC.COMMAND_TYPES.insertBlockFromBlockMenu)
+            Entry.Command.editor.board.scrollToPointer(nextCmd[2][1]);
+        var isDone = false;
+        var tooltip = new Entry.Tooltip([{
+            title: data.tooltip.title,
+            content: data.tooltip.content,
+            target: domQuery
+        }], {
+            dimmed: true,
+            restrict: true,
+            callBack: callback
+        });
+        return tooltip;
+    };
+    c[COMMAND_TYPES.addThreadFromBlockMenu] = obj;
+
+    c[COMMAND_TYPES.destroyThread] = {
+        do: function(thread) {// thread can be index
+            if (!(thread instanceof Entry.Thread))
+                thread = this.editor.board.code.getThread(thread);
+            var block = thread.getFirstBlock();
             block.destroy(true, true);
         },
         state: function(thread) {
-            var blockId = thread[0].id;
-            var block = this.editor.board.findById(blockId);
-            return [block.thread.toJSON()];
+            if (!(thread instanceof Entry.Thread))
+                thread = this.editor.board.code.getThread(thread);
+            var index = this.editor.board.code.getThreadIndex(thread);
+            return [thread.toJSON(), index];
         },
-        log: function(thread) {
-            var blockId = thread[0].id;
-            var block = this.editor.board.findById(blockId);
+        log: function(threadIndex) {
+            if (threadIndex instanceof Entry.Thread)
+                threadIndex =this.editor.board.code.getThreadIndex(threadIndex);
+
             return [
-                c.destroyThread.type,
-                ['blockId', blockId],
-                ['code', this.editor.board.code.stringify()]
+                ['index', threadIndex]
             ];
         },
+        recordable: Entry.STATIC.RECORDABLE.SUPPORT,
+        restrict: function(data, domQuery, callback) {
+            callback();
+        },
+        validate: false,
         undo: "addThread"
     };
 
-    c.destroyBlock = {
-        type: Entry.STATIC.COMMAND_TYPES.destroyBlock,
+    c[COMMAND_TYPES.destroyBlock] = {
         do: function(block) {
-            if (typeof block === "string")
-                block = this.editor.board.findById(block);
+            block = this.editor.board.findBlock(block);
             block.doDestroy(true);
         },
         state: function(block) {
-            if (typeof block === "string")
-                block = this.editor.board.findById(block);
+            block = this.editor.board.findBlock(block);
             return [block.toJSON(), block.pointer()];
         },
         log: function(block) {
-            if (typeof block === "string")
-                block = this.editor.board.findById(block);
+            block = this.editor.board.findBlock(block);
             return [
-                c.destroyBlock.type,
-                ['blockId', block.id],
-                ['code', this.editor.board.code.stringify()]
+                ['block', block.pointer ? block.pointer() : block]
             ];
         },
         undo: "recoverBlock"
     };
 
-    c.recoverBlock = {
-        type: Entry.STATIC.COMMAND_TYPES.recoverBlock,
+    c[COMMAND_TYPES.recoverBlock] = {
         do: function(blockModel, pointer) {
             var block = this.editor.board.code.createThread([blockModel]).getFirstBlock();
-            if (typeof block === "string")
-                block = this.editor.board.findById(block);
             this.editor.board.insert(block, pointer);
         },
         state: function(block) {
@@ -90,165 +135,449 @@ goog.require("Entry.STATIC");
             return [block];
         },
         log: function(block, pointer) {
-            block = this.editor.board.findById(block.id);
+            block = this.editor.board.findBlock(block.id);
             return [
-                c.recoverBlock.type,
-                ['block', block.stringify()],
-                ['pointer', pointer],
-                ['code', this.editor.board.code.stringify()]
+                ['block', block],
+                ['pointer', pointer]
             ];
         },
         undo: "destroyBlock"
     };
 
-    c.insertBlock = {
-        type: Entry.STATIC.COMMAND_TYPES.insertBlock,
+    c[COMMAND_TYPES.insertBlock] = {
         do: function(block, targetBlock, count) {
-            if (typeof block === "string")
-                block = this.editor.board.findById(block);
+            block = this.editor.board.findBlock(block);
             this.editor.board.insert(block, targetBlock, count);
         },
         state: function(block, targetBlock) {
-            if (typeof block === "string")
-                block = this.editor.board.findById(block);
+            block = this.editor.board.findBlock(block);
             var data = [
-                block.id
+                block,
+                block.targetPointer()
             ];
-            var pointer = block.targetPointer()
-            data.push(pointer);
 
             if (typeof block !== "string" && block.getBlockType() === "basic")
                 data.push(block.thread.getCount(block));
             return data;
         },
         log: function(block, targetBlock, count) {
-            if (typeof block === "string")
-                block = this.editor.board.findById(block);
+            block = this.editor.board.findBlock(block);
+            if (!(targetBlock instanceof Array))
+                targetBlock = targetBlock.pointer();
 
-            return [
-                c.insertBlock.type,
-                ['blockId', block.id],
-                ['targetPointer', block.targetPointer()],
-                ['count', count],
-                ['code', this.editor.board.code.stringify()]
+            var result = [
+                ['block', block ? block.pointer() : ""],
+                ['targetPointer', targetBlock]
             ];
+            if (count)
+                result.push(['count', count ? count : null]);
+            return result;
         },
-        undo: "insertBlock"
+        recordable: Entry.STATIC.RECORDABLE.SUPPORT,
+        undo: "insertBlock",
+        restrict: function(data, domQuery, callback, restrictor) {
+            var board = Entry.Command.editor.board;
+            var block = board.code.getByPointer(data.content[1][1]);
+            var blockView;
+            board.scrollToPointer(data.content[1][1]);
+
+            if (restrictor.toolTipRender) {
+                restrictor.toolTipRender.titleIndex = 0;
+                restrictor.toolTipRender.contentIndex = 0;
+            }
+            var isDefault = data.tooltip.isDefault;
+            var isDone = false;
+            var tooltip = new Entry.Tooltip([{
+                title: data.tooltip.title,
+                content: data.tooltip.content,
+                target: domQuery
+            }], {
+                dimmed: true,
+                restrict: true,
+                callBack: function(isFromInit) {
+                    if (isDone || !isFromInit)
+                        return;
+                    isDone = true;
+                    callback();
+
+                    var ret = board.scrollToPointer(data.content[2][1]);
+                    if (block)
+                        blockView = block.view;
+                    if (blockView) {
+                        blockView = blockView.getSvgRoot().blockView;
+                        if (blockView && ret) blockView.moveBy(-ret[0], -ret[1]);
+                    }
+
+                    restrictor.toolTipRender.titleIndex = 1;
+
+                    if (restrictor.toolTipRender) {
+                        if (!isDefault) {
+                            restrictor.toolTipRender.contentIndex = 1;
+                        } else {
+                            var target = Entry.Command.editor
+                                .board.code.getTargetByPointer(data.content[2][1]);
+
+                            if (target && target.isParamBlockType()) {
+                                restrictor.toolTipRender.contentIndex = 2;
+                            } else {
+                                restrictor.toolTipRender.contentIndex = 1;
+                            }
+                        }
+                    }
+
+                    var processedDomQuery = restrictor.processDomQuery([
+                            'playground', 'board', '&1', 'magnet'
+                        ]);
+
+                    tooltip.init([{
+                        title: data.tooltip.title,
+                        content: data.tooltip.content,
+                        target: processedDomQuery
+                    }], {
+                        indicator: true,
+                        callBack: function() {
+                        }
+                    });
+                }
+            });
+            return tooltip;
+        },
+        showMe: function(restrictor) {
+            if (restrictor.isTooltipFaded())
+                return;
+            restrictor.fadeOutTooltip();
+            var svgGroup = Entry.getDom(restrictor.processDomQuery(this.dom));
+            var targetDom = Entry.getDom(restrictor.processDomQuery([
+                'playground', 'board', '&1', 'magnet', 'next', 0
+            ]));
+            var targetRect = targetDom.getBoundingClientRect();
+
+            Entry.Utils.glideBlock(
+                svgGroup, targetRect.left, targetRect.top,
+                function() {
+                    restrictor.fadeInTooltip();
+                }
+            );
+        },
+        dom: ['playground', 'board', '&0']
     };
 
-    c.separateBlock = {
-        type: Entry.STATIC.COMMAND_TYPES.separateBlock,
-        do: function(block) {
+    obj = Entry.cloneSimpleObject(c[COMMAND_TYPES.insertBlock]);
+    obj.followCmd = true;
+    c[COMMAND_TYPES.insertBlockFollowSeparate] = obj;
+
+    obj = Entry.cloneSimpleObject(c[COMMAND_TYPES.insertBlock]);
+    obj.restrict = function(data, domQuery, callback, restrictor) {
+        if (restrictor.toolTipRender) {
+            if (restrictor.toolTipRender) {
+                var target = Entry.Command.editor
+                    .board.code.getByPointer(data.content[2][1]);
+
+                if (!target || target.isParamBlockType()) {
+                    restrictor.toolTipRender.contentIndex = 1;
+                } else {
+                    restrictor.toolTipRender.contentIndex = 0;
+                }
+            }
+        }
+        callback();
+        return new Entry.Tooltip([{
+            title: data.tooltip.title,
+            content: data.tooltip.content,
+            target: domQuery
+        }], {
+            indicator: true,
+            callBack: function() {
+            }
+        });
+    };
+    obj.dom = ['playground', 'board', '&1', 'magnet'];
+    c[COMMAND_TYPES.insertBlockFromBlockMenu] = obj;
+
+    obj = Entry.cloneSimpleObject(c[COMMAND_TYPES.insertBlockFromBlockMenu]);
+    obj.followCmd = true;
+    c[COMMAND_TYPES.insertBlockFromBlockMenuFollowSeparate] = obj;
+
+    c[COMMAND_TYPES.separateBlock] = {
+        do: function(block, dragMode, y) {
+            block = this.editor.board.findBlock(block);
+            if (typeof y === "number") {
+                block.view._moveTo(dragMode, y);
+                dragMode = undefined;
+            }
+
+            dragMode =
+                dragMode === undefined ?
+                Entry.DRAG_MODE_DRAG :
+                dragMode;
+
             if (block.view)
-                block.view._toGlobalCoordinate(Entry.DRAG_MODE_DRAG);
+                block.view._toGlobalCoordinate(dragMode);
             block.doSeparate();
         },
         state: function(block) {
+            block = this.editor.board.findBlock(block);
             var data = [
-                block.id
+                block
             ];
-            var pointer = block.targetPointer()
+            var pointer = block.targetPointer();
             data.push(pointer);
 
             if (block.getBlockType() === "basic")
                 data.push(block.thread.getCount(block));
             return data;
         },
+        recordable: Entry.STATIC.RECORDABLE.SUPPORT,
         log: function(block) {
-            if (typeof block === "string")
-                block = this.editor.board.findById(block);
+            block = this.editor.board.findBlock(block);
+            var blockPointer = block.pointer();
+            if (block.view)
+                block = block.view;
 
             return [
-                c.separateBlock.type,
-                ['blockId', block.id],
-                ['x', block.x], ['y', block.y],
-                ['code', this.editor.board.code.stringify()]
+                ['block', blockPointer],
+                ['x', block.x], ['y', block.y]
             ];
         },
-        undo: "insertBlock"
+        restrict: function(data, domQuery, callback, restrictor) {
+            Entry.Command.editor.board.scrollToPointer(data.content[1][1]);
+            var isDone = false;
+            if (restrictor.toolTipRender) {
+                restrictor.toolTipRender.titleIndex = 0;
+                restrictor.toolTipRender.contentIndex = 0;
+            }
+            var tooltip = new Entry.Tooltip([{
+                title: data.tooltip.title,
+                content: data.tooltip.content,
+                target: domQuery
+            }], {
+                dimmed: true,
+                restrict: true,
+                callBack: function(isFromInit) {
+                    if (isDone || !isFromInit)
+                        return;
+                    if (restrictor.toolTipRender) {
+                        restrictor.toolTipRender.titleIndex = 1;
+                        restrictor.toolTipRender.contentIndex = 1;
+                    }
+                    callback();
+                    isDone = true;
+                    tooltip.init([{
+                        title: data.tooltip.title,
+                        content: data.tooltip.content,
+                        target: restrictor.processDomQuery([
+                            'playground', 'board', 'coord', '&1', '&2'
+                        ])
+                    }], {
+                        indicator: true,
+                        callBack: function() {
+                            callback();
+                        }
+                    });
+                }
+            });
+            return tooltip;
+        },
+        undo: "insertBlock",
+        dom: ['playground', 'board', '&0']
     };
 
-    c.moveBlock = {
-        type: Entry.STATIC.COMMAND_TYPES.moveBlock,
+    obj = Entry.cloneSimpleObject(c[COMMAND_TYPES.separateBlock])
+    obj.restrict = function(data, domQuery, callback, restrictor) {
+        Entry.Command.editor.board.scrollToPointer(data.content[1][1]);
+        var isDone = false;
+        if (restrictor.toolTipRender) {
+            restrictor.toolTipRender.titleIndex = 0;
+            restrictor.toolTipRender.contentIndex = 0;
+        }
+        var tooltip = new Entry.Tooltip([{
+            title: data.tooltip.title,
+            content: data.tooltip.content,
+            target: domQuery
+        }], {
+            dimmed: true,
+            restrict: true,
+            callBack: function(isFromInit) {
+                if (isDone || !isFromInit)
+                    return;
+                callback();
+                if (restrictor.toolTipRender) {
+                    restrictor.toolTipRender.titleIndex = 1;
+                    restrictor.toolTipRender.contentIndex = 1;
+                }
+                isDone = true;
+                tooltip.init([{
+                    title: data.tooltip.title,
+                    content: data.tooltip.content,
+                    target: [
+                        'playground', 'board', 'trashcan'
+                    ]
+                }], {
+                    indicator: true,
+                    callBack: function() {
+                        callback();
+                    }
+                });
+            }
+        });
+        return tooltip;
+    };
+    obj.showMe = function(restrictor) {
+        if (restrictor.isTooltipFaded())
+            return;
+        restrictor.fadeOutTooltip();
+        var svgGroup = Entry.getDom(restrictor.processDomQuery(this.dom));
+        var targetDom = Entry.getDom([
+            'playground', 'board', 'trashcan'
+        ]);
+        var targetRect = targetDom.getBoundingClientRect();
+
+        Entry.Utils.glideBlock(
+            svgGroup, targetRect.left, targetRect.top,
+            function() {
+                restrictor.fadeInTooltip();
+            }
+        );
+    };
+    obj.followCmd = true;
+    c[COMMAND_TYPES.separateBlockForDestroy] = obj;
+
+    c[COMMAND_TYPES.moveBlock] = {
         do: function(block, x, y) {
             if (x !== undefined) { // do from undo stack
-                block = this.editor.board.findById(block);
+                block = this.editor.board.findBlock(block);
                 block.moveTo(x, y);
             } else {
                 block._updatePos();
             }
         },
         state: function(block) {
-            if (typeof block === "string")
-                block = this.editor.board.findById(block);
+            block = this.editor.board.findBlock(block);
             return [
-                block.id,
+                block,
                 block.x,
                 block.y
             ];
         },
+        recordable: Entry.STATIC.RECORDABLE.SUPPORT,
+        restrict: function(data, domQuery, callback, restrictor) {
+            var isDone = false;
+            var tooltip = new Entry.Tooltip([{
+                title: data.tooltip.title,
+                content: data.tooltip.content,
+                target: domQuery
+            }], {
+                dimmed: true,
+                restrict: true,
+                callBack: function(isFromInit) {
+                    if (isDone || !isFromInit)
+                        return;
+                    isDone = true;
+                    callback();
+                    tooltip.init([{
+                        title: data.tooltip.title,
+                        content: data.tooltip.content,
+                        target: restrictor.processDomQuery([
+                            'playground', 'board', 'coord', '&1', '&2'
+                        ])
+                    }], {
+                        indicator: true,
+                        callBack: function() {
+                        }
+                    });
+                }
+            });
+            return tooltip;
+        },
+        validate: false,
         log: function(block, x, y) {
+            block = this.editor.board.findBlock(block);
             return [
-                c.moveBlock.type,
-                ['blockId', block.id],
-                ['x', block.x], ['y', block.y],
-                ['code', this.editor.board.code.stringify()]
+                ['block', block.pointer()],
+                ['x', block.view.x], ['y', block.view.y]
             ];
         },
-        undo: "moveBlock"
+        undo: "moveBlock",
+        dom: ['playground', 'board', '&0']
     };
 
-    c.cloneBlock = {
-        type: Entry.STATIC.COMMAND_TYPES.cloneBlock,
-        do: function(block) {
-            if (typeof block === "string")
-                block = this.editor.board.findById(block);
-            this.editor.board.code.createThread(block.copy());
-        },
-        state: function(block) {
-            if (typeof block !== "string")
-                block = block.id;
-            return [block];
-        },
-        log: function(block) {
-            if (typeof block === "string")
-                block = this.editor.board.findById(block);
-            var lastThread = this.editor.board.code.getThreads().pop();
-            return [
-                c.cloneBlock.type,
-                ['blockId', block.id],
-                ['thread', lastThread.stringify()],
-                ['code', this.editor.board.code.stringify()]
-            ];
-        },
-        undo: "uncloneBlock"
+    obj = Entry.cloneSimpleObject(c[COMMAND_TYPES.moveBlock])
+    obj.followCmd = true;
+    obj.restrict = function(data, domQuery, callback, restrictor) {
+        Entry.Command.editor.board.scrollToPointer(data.content[1][1]);
+        var isDone = false;
+        if (restrictor.toolTipRender) {
+            restrictor.toolTipRender.titleIndex = 0;
+            restrictor.toolTipRender.contentIndex = 0;
+        }
+        var tooltip = new Entry.Tooltip([{
+            title: data.tooltip.title,
+            content: data.tooltip.content,
+            target: domQuery
+        }], {
+            dimmed: true,
+            restrict: true,
+            callBack: function(isFromInit) {
+                if (isDone || !isFromInit)
+                    return;
+                isDone = true;
+                callback();
+                if (restrictor.toolTipRender) {
+                    restrictor.toolTipRender.titleIndex = 1;
+                    restrictor.toolTipRender.contentIndex = 1;
+                }
+                tooltip.init([{
+                    title: data.tooltip.title,
+                    content: data.tooltip.content,
+                    target: [
+                        'playground', 'board', 'trashcan'
+                    ]
+                }], {
+                    indicator: true,
+                    callBack: function() {
+                        callback();
+                    }
+                });
+            }
+        });
+        return tooltip;
     };
+    c[COMMAND_TYPES.moveBlockForDestroy] = obj;
 
-    c.uncloneBlock = {
-        type: Entry.STATIC.COMMAND_TYPES.uncloneBlock,
-        do: function(block) {
-            var threads = this.editor.board.code.getThreads();
-            var lastBlock = threads.pop().getFirstBlock();
-            this._tempStorage = lastBlock.id;
-            lastBlock.destroy(true, true);
-        },
-        state: function(block) {
-            return [block];
-        },
-        log: function(block) {
-            var blockId = this._tempStorage;
-            this._tempStorage = null;
-            return [
-                c.uncloneBlock.type,
-                ['blockId', blockId],
-                ['code', this.editor.board.code.stringify()]
-            ];
-        },
-        undo: "cloneBlock"
+    obj = Entry.cloneSimpleObject(c[COMMAND_TYPES.moveBlock]);
+    obj.restrict = function(data, domQuery, callback) {
+        callback();
+        return new Entry.Tooltip([{
+            title: data.tooltip.title,
+            content: data.tooltip.content,
+            target: domQuery
+        }], {
+            indicator: true,
+            callBack: function() {
+            }
+        });
     };
+    obj.dom = ['playground', 'board', 'coord', '&1', '&2'];
+    c[COMMAND_TYPES.moveBlockFromBlockMenu] = obj;
 
-    c.scrollBoard = {
-        type: Entry.STATIC.COMMAND_TYPES.scrollBoard,
+    cloneCommand(
+        COMMAND_TYPES.cloneBlock,
+        COMMAND_TYPES.addThread,
+        [
+            ['undo', 'uncloneBlock'],
+            ['dom', undefined]
+        ]
+    );
+
+    cloneCommand(
+        COMMAND_TYPES.uncloneBlock,
+        COMMAND_TYPES.destroyThread,
+        [
+            ['undo', 'cloneBlock']
+        ]
+    );
+
+    c[COMMAND_TYPES.scrollBoard] = {
         do: function(dx, dy, isPass) {
             if (!isPass)
                 this.editor.board.scroller._scroll(dx, dy);
@@ -259,30 +588,247 @@ goog.require("Entry.STATIC");
         },
         log: function(dx, dy) {
             return [
-                c.scrollBoard.type,
                 ['dx', dx], ['dy', dy]
             ];
         },
+        recordable: Entry.STATIC.RECORDABLE.SKIP,
         undo: "scrollBoard"
     };
 
-    c.setFieldValue = {
-        type: Entry.STATIC.COMMAND_TYPES.setFieldValue,
-        do: function(block, field, pointer, oldValue, newValue) {
-            field.setValue(newValue, true);
+    c[COMMAND_TYPES.setFieldValue] = {
+        do: function(pointer, value) {
+            var field = this.editor.board.findBlock(pointer);
+            field.setValue(value, true);
+            Entry.disposeEvent.notify(true);
+            field._blockView.disableMouseEvent = false;
         },
-        state: function(block, field, pointer, oldValue, newValue) {
-            return [block, field, pointer, newValue, oldValue];
+        state: function(pointer, value) {
+            var field = this.editor.board.findBlock(pointer);
+            return [pointer, field._startValue || field.getValue()];
         },
-        log: function(block, field, pointer, oldValue, newValue) {
+        log: function(pointer, value) {
             return [
-                c.setFieldValue.type,
                 ['pointer', pointer],
-                ['newValue', newValue],
-                ['code', this.editor.board.code.stringify()]
+                ['value', value]
             ];
         },
+        restrict: function(data, domQuery, callback, restrictor) {
+            var isDone = false;
+            var isDefault = data.tooltip.isDefault;
+
+            Entry.Command.editor.board.scrollToPointer(data.content[1][1]);
+
+            var field = Entry.Command.editor.board.findBlock(data.content[1][1]);
+            var blockView = field._blockView;
+            blockView.disableMouseEvent = true;
+            var fieldType = field.getFieldRawType();
+
+            if (restrictor.toolTipRender) {
+                if (!isDefault) {
+                    restrictor.toolTipRender.contentIndex = 0;
+                } else {
+                    switch (fieldType) {
+                        case 'textInput':
+                            restrictor.toolTipRender.contentIndex = 0;
+                            break;
+                        case 'dropdown':
+                        case 'dropdownDynamic':
+                            restrictor.toolTipRender.contentIndex = 1;
+                            break;
+                        case 'keyboard':
+                            restrictor.toolTipRender.contentIndex = 2;
+                            break;
+                    }
+                }
+            }
+
+            var nextValue = data.content[2][1];
+            if (field instanceof Entry.FieldTextInput)
+                field.fixNextValue(nextValue);
+
+            var tooltip = new Entry.Tooltip([{
+                title: data.tooltip.title,
+                content: data.tooltip.content,
+                direction: "left",
+                target: domQuery
+            }], {
+                dimmed: true,
+                restrict: true,
+                callBack: function(isFromInit) {
+                    if (isDone || !isFromInit)
+                        return;
+                    isDone = true;
+                    callback();
+                    callback();
+                    restrictor.toolTipRender.replaceContent(
+                        /&value&/gi, field.getTextValueByValue(nextValue)
+                    );
+
+                    if (restrictor.toolTipRender) {
+                        if (!isDefault) {
+                            restrictor.toolTipRender.titleIndex = 1;
+                            restrictor.toolTipRender.contentIndex = 1;
+                        } else {
+                            switch (fieldType) {
+                                case 'textInput':
+                                    restrictor.toolTipRender.contentIndex = 3;
+                                    break;
+                                case 'dropdown':
+                                case 'dropdownDynamic':
+                                    restrictor.toolTipRender.contentIndex = 4;
+                                    break;
+                                case 'keyboard':
+                                    restrictor.toolTipRender.contentIndex = 5;
+                                    break;
+                            }
+                        }
+                    }
+
+
+                    tooltip.init([{
+                        title: data.tooltip.title,
+                        content: data.tooltip.content,
+                        target: restrictor.processDomQuery([
+                            'playground', 'board', '&0', 'option'
+                        ])
+                    }], {
+                        dimmed: true,
+                        restrict: true,
+                        callBack: function() {
+                            blockView.disableMouseEvent = false;
+                        }
+                    });
+                }
+            });
+            return tooltip;
+        },
+        disableMouseUpDispose: true,
+        recordable: Entry.STATIC.RECORDABLE.SUPPORT,
+        dom: ['playground', 'board', '&0'],
         undo: "setFieldValue"
     };
 
+    c[COMMAND_TYPES.selectBlockMenu] = {
+        do: function(selector, doNotFold, doNotAlign) {
+            var blockMenu = Entry.getMainWS().blockMenu;
+            blockMenu.selectMenu(selector, doNotFold, doNotAlign);
+            blockMenu.align();
+        },
+        state: function(selector, doNotFold, doNotAlign) {
+            var blockMenu = Entry.getMainWS().blockMenu;
+            return [blockMenu.lastSelector, doNotFold, doNotAlign];
+        },
+        log: function(selector, doNotFold, doNotAlign) {
+            return [
+                ['selector', selector]
+            ];
+        },
+        skipUndoStack: true,
+        recordable: Entry.STATIC.RECORDABLE.SUPPORT,
+        dom: ['playground', 'blockMenu', 'category', '&0'],
+        undo: "selectBlockMenu"
+    };
+
+    c[COMMAND_TYPES.destroyThreads] = {
+        do: function() {
+            var threads =
+                this.editor.board.code.getThreads()
+                    .filter(function(t) {
+                        return t.getFirstBlock().isDeletable();
+                    })
+                    .forEach(function(t) {
+                        t.destroy();
+                    });
+        },
+        state: function() {
+            var threads =
+                this.editor.board.code.getThreads()
+                    .filter(function(t) {
+                        return t.getFirstBlock().isDeletable();
+                    })
+                    .map(function(t) {
+                        return t.toJSON();
+                    });
+
+            return [threads];
+        },
+        log: function() {
+            return [];
+        },
+        undo: 'addThreads'
+    };
+
+    c[COMMAND_TYPES.addThreads] = {
+        do: function(threads) {
+            var code = this.editor.board.code;
+            threads.forEach(function(t) {
+                code.createThread(t);
+            });
+        },
+        state: function() {
+            return [];
+        },
+        log: function() {
+            return [];
+        },
+        undo: 'destroyThreads'
+    };
+
+    c[COMMAND_TYPES.destroyBlockBelow] = {
+        do: function(block) {
+            block = this.editor.board.findBlock(block);
+            block.doDestroyBelow(true);
+        },
+        state: function(block) {
+            block = this.editor.board.findBlock(block);
+            var thread = block.thread;
+            var data;
+            if (thread instanceof Entry.Thread) {
+                data = thread.toJSON(false, block);
+            } else data = [block.toJSON()];
+
+            return [
+                data,
+                block.targetPointer()
+            ];
+        },
+        log: function(block) {
+            return [
+            ];
+        },
+        recordable: Entry.STATIC.RECORDABLE.SUPPORT,
+        undo: "recoverBlockBelow"
+    };
+
+    c[COMMAND_TYPES.recoverBlockBelow] = {
+        do: function(thread, targetPointer) {
+            var board = this.editor.board;
+            var thread = board.code.createThread(thread);
+            board.insert(thread.getFirstBlock(), targetPointer);
+        },
+        state: function(thread, targetPointer) {
+            return [
+                thread[0]
+            ];
+        },
+        log: function(thread, targetPointer) {
+            return [];
+        },
+        undo: "destroyBlockBelow"
+    };
+
+    cloneCommand(
+        COMMAND_TYPES.separateBlockByCommand,
+        COMMAND_TYPES.separateBlock
+    );
+
+    function cloneCommand(newType, oldType, props) {
+        c[newType] = Entry.cloneSimpleObject(c[oldType]);
+        if (props && props instanceof Array) {
+            props.forEach(function(prop) {
+                c[newType][prop[0]] = prop[1];
+            });
+        }
+        return c[newType];
+    }
 })(Entry.Command);

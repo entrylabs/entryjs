@@ -6,8 +6,11 @@
 goog.provide("Entry.BlockToJsParser");
 goog.require("Entry.TextCodingUtil");
 
-Entry.BlockToJsParser = function(syntax) {
+Entry.BlockToJsParser = function(syntax, parentParser) {
+    this._type = "BlockToJsParser";
     this.syntax = syntax;
+
+    this._parentParser = parentParser;
 
     this._iterVariableCount = 0;
     this._iterVariableChunk = ["i", "j", "k"];
@@ -131,7 +134,7 @@ Entry.BlockToJsParser = function(syntax) {
         if(!notParenthesis)
             result += "();";
 
-        result = Entry.TextCodingUtil.prototype.jsAdjustSyntax(block, result);
+        result = Entry.TextCodingUtil.jsAdjustSyntax(block, result);
 
         return result;
 
@@ -141,7 +144,7 @@ Entry.BlockToJsParser = function(syntax) {
     p.BasicFunction = function(block) {
         var statementCode = this.Thread(block.statements[0]);
         var code = "function promise() {\n" +
-            this.indent(statementCode).trim() + "}"
+            this.indent(statementCode).trim() + "}";
         return code;
     };
 
@@ -157,7 +160,8 @@ Entry.BlockToJsParser = function(syntax) {
     };
 
     p.BasicIf = function(block) {
-        if(block.data.statements.length == 2) {
+        var code;
+        if (block.data.statements.length == 2) {
             var statementCode1 = this.Thread(block.statements[0]);
             var statementCode2 = this.Thread(block.statements[1]);
             var syntax = block._schema.syntax.concat();
@@ -174,7 +178,7 @@ Entry.BlockToJsParser = function(syntax) {
                     var param = this.Block(paramBlock);
             }
 
-            var code = "if (" + param + ") {\n" +
+            code = "if (" + param + ") {\n" +
                 this.indent(statementCode1) + "}\n" +
                 "else {\n" + this.indent(statementCode2) + "}\n";
         } else {
@@ -193,7 +197,7 @@ Entry.BlockToJsParser = function(syntax) {
                     var param = this.Block(paramBlock);
             }
 
-            var code = "if (" + param + ") {\n" +
+            code = "if (" + param + ") {\n" +
                 this.indent(statementCode1) + "}\n";
         }
 
@@ -204,7 +208,7 @@ Entry.BlockToJsParser = function(syntax) {
         var statementCode = this.Thread(block.statements[0]);
         var syntax = block._schema.syntax.concat();
         var code = "while (" + syntax[1] + ") {\n" +
-            this.indent(statementCode) + "}\n"
+            this.indent(statementCode) + "}\n";
         return code;
     };
 
@@ -245,7 +249,6 @@ Entry.BlockToJsParser = function(syntax) {
     };
 
     p.Dropdown = function(dataParam) {
-        //console.log("Dropdown", dataParam);
         var value = dataParam;
         if(value == 'OBSTACLE')
             value = 'stone';
@@ -271,10 +274,30 @@ Entry.BlockToJsParser = function(syntax) {
         if(dataParam == "null") {
             dataParam = "none";
         } else {
-            dataParam = Entry.TextCodingUtil.prototype.dropdownDynamicValueConvertor(dataParam, schemaParam);
+            dataParam = Entry.TextCodingUtil.dropdownDynamicValueConvertor(dataParam, schemaParam);
         }
 
         return dataParam;
     };
+
+    p.searchSyntax = function(datum) {
+        if (datum instanceof Entry.BlockView)
+            datum = datum.block;
+        return this._parentParser.parse(datum,
+            Entry.Parser.PARSE_SYNTAX);
+    };
+
+    p.getAssistScope = function() {
+        if (this._assist)
+            return this._assist;
+
+        var assist = {};
+        for (var key in this.syntax.Scope) {
+            assist[key + '();\n'] = this.syntax.Scope[key];
+        }
+        this._assist = assist;
+        return assist;
+    };
+
 
 })(Entry.BlockToJsParser.prototype);
