@@ -15,7 +15,7 @@ Entry.Field = function() {};
 
     p.destroy = function() {
         this.svgGroup && $(this.svgGroup).unbind('mouseup touchend');
-        this.destroyOption();
+        this.destroyOption(true);
     };
 
     p.command = function(forceCommand) {
