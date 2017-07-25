@@ -251,7 +251,6 @@ Lang.Blocks = {
     "byrobot_dronefighter_drone_control_quad_yaw_right": "오른쪽 회전",
     "byrobot_dronefighter_drone_control_quad_throttle_up": "위",
     "byrobot_dronefighter_drone_control_quad_throttle_down": "아래",
-    /* BYROBOT PetroneV2 Start */
     "byrobot_petrone_v2_drone_state_mode_system": "시스템 모드",
     "byrobot_petrone_v2_drone_state_mode_vehicle": "페트론V2 모드",
     "byrobot_petrone_v2_drone_state_mode_flight": "비행 모드",
@@ -353,7 +352,6 @@ Lang.Blocks = {
     "byrobot_petrone_v2_drone_control_quad_yaw_right": "오른쪽 회전",
     "byrobot_petrone_v2_drone_control_quad_throttle_up": "위",
     "byrobot_petrone_v2_drone_control_quad_throttle_down": "아래",
-    /* BYROBOT PetroneV2 End */
     "chocopi_control_event_pressed": "누를 때",
     "chocopi_control_event_released": "뗄 때",
     "chocopi_joystick_X": "조이스틱 좌우",
@@ -2281,11 +2279,9 @@ Lang.Menus = {
     "byrobot_dronefighter_controller": "바이로봇 드론파이터 조종기",
     "byrobot_dronefighter_drive": "바이로봇 드론파이터 자동차",
     "byrobot_dronefighter_flight": "바이로봇 드론파이터 드론",
-    /* BYROBOT PetroneV2 Start */
     "byrobot_petrone_v2_controller": "바이로봇 페트론V2 조종기",
     "byrobot_petrone_v2_drive": "바이로봇 페트론V2 자동차",
     "byrobot_petrone_v2_flight": "바이로봇 페트론V2 드론",
-    /* BYROBOT PetroneV2 End */
     "codeino": "코드이노",
     "e-sensor": "E-센서보드",
     "e-sensorUsb": "E-센서보드(유선연결)",
@@ -4413,8 +4409,7 @@ Lang.Helper = {
     "byrobot_dronefighter_flight_controller_vibrator_on_delay": "<br>진동을 지정한 시간동안 켭니다. 이 블럭을 만났을 경우 진동이 켜져있거나 예약된 진동이 있다면 모두 삭제합니다. 이 블럭은 지정한 시간이 끝날 때까지 다음 블럭으로 넘어가지 않습니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#진동</font> <font color='forestgreen'>#즉시</font> <font color='peru'>#시간지연</font>",
     "byrobot_dronefighter_flight_controller_vibrator_on_reserve": "<br>진동을 지정한 시간동안 켜는 것을 예약합니다. 이 블럭은 명령을 전달 후 바로 다음 블럭으로 넘어갑니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#진동</font> <font color='forestgreen'>#예약</font>",
     "byrobot_dronefighter_flight_controller_vibrator_delay": "<br>진동을 지정한 시간동안 켜고 끄는 것을 지정한 시간동안 반복합니다. 이 블럭을 만났을 경우 진동이 켜져있거나 예약된 진동이 있다면 모두 삭제합니다. 이 블럭은 지정한 시간이 끝날 때까지 다음 블럭으로 넘어가지 않습니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#진동</font> <font color='forestgreen'>#즉시</font> <font color='peru'>#시간지연</font>",
-    "byrobot_dronefighter_flight_controller_vibrator_reserve": "<br>진동을 지정한 시간동안 켜고 끄는 것을 지정한 시간동안 반복하도록 예약합니다. 이 블럭은 명령을 전달 후 바로 다음 블럭으로 넘어갑니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#진동</font> <font color='forestgreen'>#예약</font>"
-    /* BYROBOT PetroneV2 Start */
+    "byrobot_dronefighter_flight_controller_vibrator_reserve": "<br>진동을 지정한 시간동안 켜고 끄는 것을 지정한 시간동안 반복하도록 예약합니다. 이 블럭은 명령을 전달 후 바로 다음 블럭으로 넘어갑니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#진동</font> <font color='forestgreen'>#예약</font>",
     "byrobot_petrone_v2_controller_controller_value_button": "<br>조종기에서 눌러진 버튼과 관련된 이벤트를 반환합니다.<br><br><font color='crimson'>#값</font> <font color='dodgerblue'>#조종기</font> <font color='forestgreen'>#버튼</font>",
     "byrobot_petrone_v2_controller_controller_value_joystick": "<br>조종기의 조이스틱과 관련된 입력 값을 반환합니다. 각 축의 범위는 -100 ~ 100 입니다.<br><br><font color='crimson'>#값</font> <font color='dodgerblue'>#조종기</font> <font color='forestgreen'>#조이스틱</font>",
     "byrobot_petrone_v2_controller_controller_if_button_press": "<br>지정한 조종기의 버튼이 눌러졌을 때 true를 반환합니다.<br><br><font color='crimson'>#조건</font> <font color='dodgerblue'>#조종기</font> <font color='forestgreen'>#버튼</font>",
@@ -4500,7 +4495,6 @@ Lang.Helper = {
     "byrobot_petrone_v2_flight_controller_vibrator_on_reserve": "<br>진동을 지정한 시간동안 켜는 것을 예약합니다. 이 블럭은 명령을 전달 후 바로 다음 블럭으로 넘어갑니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#진동</font> <font color='forestgreen'>#예약</font>",
     "byrobot_petrone_v2_flight_controller_vibrator_delay": "<br>진동을 지정한 시간동안 켜고 끄는 것을 지정한 시간동안 반복합니다. 이 블럭을 만났을 경우 진동이 켜져있거나 예약된 진동이 있다면 모두 삭제합니다. 이 블럭은 지정한 시간이 끝날 때까지 다음 블럭으로 넘어가지 않습니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#진동</font> <font color='forestgreen'>#즉시</font> <font color='peru'>#시간지연</font>",
     "byrobot_petrone_v2_flight_controller_vibrator_reserve": "<br>진동을 지정한 시간동안 켜고 끄는 것을 지정한 시간동안 반복하도록 예약합니다. 이 블럭은 명령을 전달 후 바로 다음 블럭으로 넘어갑니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#진동</font> <font color='forestgreen'>#예약</font>"
-    /* BYROBOT PetroneV2 End */
 };
 Lang.Category = {
     "entrybot_friends": "엔트리봇 친구들",
@@ -4800,7 +4794,6 @@ Lang.template = {
     "byrobot_dronefighter_flight_controller_vibrator_on_reserve": "진동 %1 초 예약 %2",
     "byrobot_dronefighter_flight_controller_vibrator_delay": "진동 %1 초 켜기, %2 초 끄기를 %3 초 실행 %4",
     "byrobot_dronefighter_flight_controller_vibrator_reserve": "진동 %1 초 켜기, %2 초 끄기를 %3 초 예약 %4",
-    /* BYROBOT PetroneV2 Start */
     "byrobot_petrone_v2_controller_controller_value_button": "%1",
     "byrobot_petrone_v2_controller_controller_value_joystick": "%1",
     "byrobot_petrone_v2_controller_controller_if_button_press": "조종기 %1 눌렀을 때",
@@ -4886,7 +4879,6 @@ Lang.template = {
     "byrobot_petrone_v2_flight_controller_vibrator_on_reserve": "진동 %1 초 예약 %2",
     "byrobot_petrone_v2_flight_controller_vibrator_delay": "진동 %1 초 켜기, %2 초 끄기를 %3 초 실행 %4",
     "byrobot_petrone_v2_flight_controller_vibrator_reserve": "진동 %1 초 켜기, %2 초 끄기를 %3 초 예약 %4",
-    /* BYROBOT PetroneV2 End */
     "dplay_get_number_sensor_value": "아날로그 %1 번 센서값  ",
     "nemoino_get_number_sensor_value": "아날로그 %1 번 센서값  ",
     "sensorBoard_get_number_sensor_value": "아날로그 %1 번 센서값  ",
