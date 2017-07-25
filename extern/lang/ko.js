@@ -4544,11 +4544,9 @@ Lang.Device = {
     "byrobot_dronefighter_controller": "바이로봇 드론파이터 컨트롤러",
     "byrobot_dronefighter_drive": "바이로봇 드론파이터 자동차",
     "byrobot_dronefighter_flight": "바이로봇 드론파이터 드론",
-    /* BYROBOT PetroneV2 Start */
     "byrobot_petrone_v2_controller": "바이로봇 페트론V2 컨트롤러",
     "byrobot_petrone_v2_drive": "바이로봇 페트론V2 자동차",
     "byrobot_petrone_v2_flight": "바이로봇 페트론V2 드론",
-    /* BYROBOT PetroneV2 End */
     "hamster": "햄스터",
     "albert": "알버트",
     "robotis_carCont": "로보티즈 자동차 로봇",
