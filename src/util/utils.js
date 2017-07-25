@@ -1389,6 +1389,7 @@ Entry.isMobile = function() {
 Entry.Utils.convertMouseEvent = function(e) {
     if (e.originalEvent && e.originalEvent.touches)
         return e.originalEvent.touches[0];
+    else if (e.changedTouches) return e.changedTouches[0];
     else return e;
 }
 
@@ -1652,7 +1653,16 @@ Entry.Utils.glideBlock = function(svgGroup, x, y, callback) {
         easing: "ease-in-out"
     });
 };
-//
+
+Entry.Utils.getScrollPos = function() {
+    var elem = Entry.getBrowserType().indexOf("IE") > -1 ?
+        document.documentElement : document.body;
+    return {
+        left: elem.scrollLeft,
+        top: elem.scrollTop
+    };
+}
+
 Entry.Utils.copy = function(target) {
     return JSON.parse(JSON.stringify(target));
 };

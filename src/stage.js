@@ -99,19 +99,11 @@ Entry.Stage.prototype.initStage = function(canvas) {
 
     var moveFunc = function(e){
         e.preventDefault();
-        var roundRect = this.getBoundRect();
-        var x, y;
-        if (Entry.getBrowserType().indexOf("IE") > -1) {
-            x = ((e.pageX - roundRect.left - document.documentElement.scrollLeft) / roundRect.width - 0.5) * 480;
-            y = ((e.pageY - roundRect.top - document.documentElement.scrollTop) / roundRect.height - 0.5) * -270;
-        } else if (e.changedTouches) {
-            // for Android Chrome
-            x = ((e.changedTouches[0].pageX - roundRect.left - document.body.scrollLeft) / roundRect.width - 0.5) * 480;
-            y = ((e.changedTouches[0].pageY - roundRect.top - document.body.scrollTop) / roundRect.height - 0.5) * -270;
-        } else {
-            x = ((e.pageX - roundRect.left - document.body.scrollLeft) / roundRect.width - 0.5) * 480;
-            y = ((e.pageY - roundRect.top - document.body.scrollTop) / roundRect.height - 0.5) * -270;
-        }
+        e = Entry.Utils.convertMouseEvent(e);
+        var roundRect = Entry.stage.getBoundRect();
+        var scrollPos = Entry.Utils.getScrollPos();
+        var x = ((e.pageX - roundRect.left - scrollPos.left) / roundRect.width - 0.5) * 480;
+        var y = ((e.pageY - roundRect.top - scrollPos.top) / roundRect.height - 0.5) * -270;
 
         this.mouseCoordinate = {
             x: Entry.Utils.toFixed(x),
@@ -548,20 +540,20 @@ Entry.Stage.prototype.initWall = function () {
 /**
  * show inputfield from the canvas
  */
-Entry.Stage.prototype.showInputField = function (sprite) {
-    var scale = 1/1.5;
+Entry.Stage.prototype.showInputField = function () {
     if (!this.inputField) {
+        var scale = 1/1.5;
         this.inputField = new CanvasInput({
             canvas: document.getElementById('entryCanvas'),
             fontSize: 30 * scale,
             fontFamily: 'NanumGothic',
             fontColor: '#212121',
-            width: 556 * scale,
+            width: Math.round(556 * scale),
             height: 26 * scale,
             padding: 8 * scale,
             borderWidth: 1 * scale,
             borderColor: '#000',
-            borderRadius: 3 * scale,
+            borderRadius: 3,
             boxShadow: 'none',
             innerShadow: '0px 0px 5px rgba(0, 0, 0, 0.5)',
             x: 202 * scale,
@@ -575,8 +567,12 @@ Entry.Stage.prototype.showInputField = function (sprite) {
 
     var inputSubmitButton = new createjs.Container();
     var buttonImg = new Image();
-    buttonImg.src = Entry.mediaFilePath + "confirm_button.png";
     var button = new createjs.Bitmap();
+    buttonImg.onload = function() {
+        button.image = this;
+        Entry.requestUpdate = true;
+    };
+    buttonImg.src = Entry.mediaFilePath + "confirm_button.png";
     button.scaleX = 0.23;
     button.scaleY = 0.23;
     button.x = 160;
