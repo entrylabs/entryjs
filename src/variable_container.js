@@ -2312,26 +2312,28 @@ Entry.VariableContainer = function() {
         });
     };
 
-    p.addRef = function(type, block) {
+    p.addRef = function(type, blockData) {
         if (!this.view_ || !Entry.playground.mainWorkspace ||
             Entry.getMainWS().getMode() !== Entry.Workspace.MODE_BOARD)
             return;
 
         var datum = {
-            object:block.getCode().object,
-            block: block
+            object:blockData.getCode().object,
+            block: blockData
         };
 
-        if (block.funcBlock) {
-            datum.funcBlock = block.funcBlock;
-            delete block.funcBlock;
+        if (blockData.funcBlock) {
+            datum.funcBlock = blockData.funcBlock;
+            delete blockData.funcBlock;
         }
 
         this[type].push(datum);
 
         if (type == '_functionRefs') {
-            var id = block.type.substr(5);
+            var id = blockData.type.substr(5);
             var func = Entry.variableContainer.functions_[id];
+            if (func.isAdded) return;
+            func.isAdded = true;
             var blocks = func.content.getBlockList();
 
             for (var i=0; i<blocks.length; i++) {
@@ -2350,7 +2352,7 @@ Entry.VariableContainer = function() {
                             block.funcBlock = datum.block;
                             fn(block);
                         }
-                    });;
+                    });
                 }
 
                 if (events && events.dataAdd) {
@@ -2360,7 +2362,7 @@ Entry.VariableContainer = function() {
                             block.funcBlock = datum.block;
                             fn(block);
                         }
-                    });;
+                    });
                 }
             }
         }
@@ -2386,6 +2388,8 @@ Entry.VariableContainer = function() {
         if (type == '_functionRefs') {
             var id = block.type.substr(5);
             var func = Entry.variableContainer.functions_[id];
+            if (func.isRemoved) return;
+            func.isRemoved = true;
             if (func) {
                 var blocks = func.content.getBlockList();
                 for (var i=0; i<blocks.length; i++) {
@@ -2399,13 +2403,13 @@ Entry.VariableContainer = function() {
                     if (events && events.viewDestroy) {
                         events.viewDestroy.forEach(function(fn) {
                             if (fn) fn(block);
-                        });;
+                        });
                     }
 
                     if (events && events.dataDestroy) {
                         events.dataDestroy.forEach(function(fn) {
                             if (fn) fn(block);
-                        });;
+                        });
                     }
                 }
             }
