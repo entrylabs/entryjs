@@ -1165,10 +1165,13 @@ Entry.Playground = function() {
     p.downloadSound = function(soundId) {
         var sound = Entry.playground.object.getSound(soundId);
         if (sound.fileurl) {
-            window.open(sound.fileurl);
+            if(sound.fileurl.indexOf('bark.mp3') > -1) {
+                window.open('/api/sprite/download/bark/' + encodeURIComponent(sound.fileurl) + '/' + encodeURIComponent(sound.name));    
+            } else {
+                window.open(sound.fileurl);
+            }
         } else {
-            window.open('/api/sprite/download/mp3/'+
-                    encodeURIComponent(sound.filename)+'/'+encodeURIComponent(sound.name) + '.mp3');
+            window.open('/api/sprite/download/sound/' + encodeURIComponent(sound.filename) + '/' + encodeURIComponent(sound.name));
         }
     }
 
