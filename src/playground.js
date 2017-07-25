@@ -1409,8 +1409,8 @@ Entry.Playground = function() {
 
         (function(workspace) {
             if (workspace) {
-                workspace.getBlockMenu().reDraw();
                 workspace.getBoard().reDraw();
+                workspace.getBlockMenu().reDraw();
             }
         })(this.mainWorkspace);
     };
