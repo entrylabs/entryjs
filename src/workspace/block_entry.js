@@ -13349,6 +13349,7 @@ Entry.block = {
                 var paramMap = {};
                 this.funcExecutor.register.paramMap = func.paramMap;
                 this.funcExecutor.parentExecutor = this.executor;
+                this.funcExecutor.isFuncExecutor = true;
             }
             this.funcExecutor.execute();
             if (!this.funcExecutor.isEnd()) {

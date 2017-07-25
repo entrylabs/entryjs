@@ -11,6 +11,7 @@ Entry.Executor = function(block, entity) {
     this._callStack = [];
     this.register = {};
     this.parentExecutor = null;
+    this.id = Entry.Utils.generateId();
 };
 
 Entry.Executor.MAXIMUM_CALLSTACK = 100;
@@ -30,14 +31,17 @@ Entry.Executor.MAXIMUM_CALLSTACK = 100;
         while (true) {
             var returnVal = null;
             executedBlocks.push(this.scope.block);
+
             try {
                 var schema = this.scope.block.getSchema();
                 if (schema)
                     returnVal = schema.func.call(this.scope, entity, this.scope);
-            } catch(e) {
-                if(e.name === 'AsyncError') {
+            } catch (e) {
+                if (e.name === 'AsyncError') {
                     returnVal = Entry.STATIC.BREAK;
-                } else {
+                } else if (this.isFuncExecutor) //function executor
+                    throw new Error();
+                else {
                     Entry.Utils.stopProjectWithToast(
                         this.scope, undefined, e);
                 }

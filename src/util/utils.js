@@ -1257,28 +1257,27 @@ Entry.Utils.stopProjectWithToast = function(scope, message, error) {
     var block = scope.block;
     message = message || '런타임 에러 발생';
 
-    Entry.engine && Entry.engine.toggleStop();
+    var engine = Entry.engine;
 
-    var isErrorInFuncScope = false;
+    engine && engine.toggleStop();
 
     if (Entry.type === 'workspace') {
         if (scope.block && 'funcBlock' in scope.block) {
             block = scope.block.funcBlock;
-            isErrorInFuncScope = true;
         } else if (scope.funcExecutor){
             block = scope.funcExecutor.scope.block;
             Entry.Func.edit(scope.type);
-            isErrorInFuncScope = true;
         }
 
         if (block) {
-            Entry.container.selectObject(block.getCode().object.id, true);
+            var id = block.getCode().object && block.getCode().object.id;
+            if (id) Entry.container.selectObject(block.getCode().object.id, true);
             var view = block.view;
             view && view.getBoard().activateBlock(block);
         }
     }
 
-    if (Entry.toast && isErrorInFuncScope) {
+    if (Entry.toast) {
         Entry.toast.alert(
             Lang.Msgs.warn,
             Lang.Workspace.check_runtime_error,
