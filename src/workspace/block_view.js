@@ -76,10 +76,11 @@ Entry.BlockView = function(block, board, mode) {
     this._startRender(block, mode);
 
     // observe
-    this._observers.push(this.block.observe(this, "_setMovable", ["movable"]));
-    this._observers.push(this.block.observe(this, "_setReadOnly", ["movable"]));
-    this._observers.push(this.block.observe(this, "_setCopyable", ["copyable"]));
-    this._observers.push(this.block.observe(this, "_updateColor", ["deletable"], false));
+    var thisBlock = this.block;
+    this._observers.push(thisBlock.observe(this, "_setMovable", ["movable"]));
+    this._observers.push(thisBlock.observe(this, "_setReadOnly", ["movable"]));
+    this._observers.push(thisBlock.observe(this, "_setCopyable", ["copyable"]));
+    this._observers.push(thisBlock.observe(this, "_updateColor", ["deletable"], false));
     this._observers.push(this.observe(this, "_updateBG", ["magneting"], false));
 
     this._observers.push(this.observe(this, "_updateOpacity", ["visible"], false));
@@ -208,7 +209,6 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
         mode = mode === undefined ?
             this.renderMode : mode;
 
-
         this.contentSvgGroup && this.contentSvgGroup.remove();
         this.statementSvgGroup && this.statementSvgGroup.remove();
 
@@ -222,6 +222,8 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
         }
 
         var reg = /(%\d+)/mi;
+        var parsingReg = /%(\d+)/mi;
+        var parsingRet;
 
         var template = this._getTemplate(mode);
         var params = this._getSchemaParams(mode);
@@ -234,16 +236,19 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
         }
 
         var templateParams = template.split(reg);
+
         for (var i=0; i<templateParams.length; i++) {
             var param = templateParams[i];
             if (param[0] === " ") param = param.substring(1);
             if (param[param.length - 1] === " ") param = param.substring(0, param.length - 1);
             if (param.length === 0) continue;
 
-            if (reg.test(param)) {
-                var paramIndex = Number(param.split('%')[1]) - 1;
+            parsingRet = parsingReg.exec(param);
+            if (parsingRet) {
+                var paramIndex = parsingRet[1] - 1;
                 param = params[paramIndex];
-                var field = new Entry['Field' + param.type](param, this, paramIndex, mode || this.renderMode, i);
+                var field = new Entry['Field' + param.type](
+                    param, this, paramIndex, mode || this.renderMode, i);
                 this._contents.push(field);
                 this._paramMap[paramIndex] = field;
             } else {
@@ -279,6 +284,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
         var statementIndex = 0;
         var width = 0;
         var secondLineHeight = 0;
+
         for (var i = 0; i < this._contents.length; i++) {
             var c = this._contents[i];
             if (c instanceof Entry.FieldLineBreak) {
@@ -311,11 +317,10 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
             }
         }
 
-        if (secondLineHeight) {
+        if (secondLineHeight)
             this.set({
                 contentHeight: cursor.height + secondLineHeight
             });
-        }
 
         if (this._statements.length != statementIndex)
             this._alignStatement(animate, statementIndex);
@@ -326,7 +331,6 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
         );
         this.contentPos = contentPos;
         this._render();
-
 
         this._updateMagnet();
         var ws = this.getBoard().workspace;
@@ -386,8 +390,8 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
         animate = animate === undefined ? true : animate;
         //this.svgGroup.stop();
         var transform = "translate(" +
-            (this.x) + "," +
-            (this.y) + ")";
+            this.x + "," + this.y + ")";
+
         if (animate && Entry.ANIMATION_DURATION !== 0) {
             this.svgGroup.attr(
                 "transform", transform

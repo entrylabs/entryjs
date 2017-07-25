@@ -335,27 +335,56 @@ Entry.Field = function() {};
     };
 
     p.getTextBBox = (function() {
-        var cache = {};
+        var _cache = {};
+        var svg;
+
+        //make invisible svg dom to body
+        //in order to calculate text width
+        function generateDom() {
+            svg = Entry.Dom(
+               $('<svg id="invisibleBoard" class="entryBoard" width="1px" height="1px"' +
+                'version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'),
+               { parent: $('body') }
+            );
+        }
+
+        var clearDoms = Entry.Utils.debounce(function() {
+            if (!svg) return;
+            $(svg).empty();
+        }, 500);
 
         return function() {
+            if (window.fontLoaded && !svg) generateDom();
+
             var value = this.getTextValue();
-            if (value === '')
-                return { width: 0, height: 0 };
+
+            //empty string check
+            if (!value) return { width: 0, height: 0 };
+
             var fontSize = this._font_size || '';
 
             var key = value + '&&' + fontSize;
-            var bBox = cache[key];
+            var bBox = _cache[key];
 
-            if (!bBox) {
-                bBox = this.textElement.getBoundingClientRect();
+            if (bBox) return bBox;
 
-                bBox = {
-                    width: Math.round(bBox.width*100)/100,
-                    height: Math.round(bBox.height*100)/100,
-                };
-                if (fontSize && window.fontLoaded)
-                    cache[key] = bBox;
+            var textElement = this.textElement;
+            if (svg) {
+                textElement = textElement.cloneNode(true);
+                svg.append(textElement);
             }
+
+            bBox = textElement.getBoundingClientRect();
+            clearDoms();
+
+            bBox = {
+                width: Math.round(bBox.width*100)/100,
+                height: Math.round(bBox.height*100)/100,
+            };
+
+            if (fontSize && window.fontLoaded &&
+                bBox.width && bBox.height)
+                _cache[key] = bBox;
             return bBox;
         };
     })();

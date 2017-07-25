@@ -1339,6 +1339,12 @@ svg .svgBlockGroup text {
     left: 64px;
   }
 }
+#invisibleBoard {
+  visibility: hidden;
+  position: fixed;
+  left: -1000px;
+  top: -1000px;
+}
 .entryContainerWorkspace {
   background-color: #e7e7e7;
 }

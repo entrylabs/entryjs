@@ -42,27 +42,47 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
 
 (function(p) {
     p.renderStart = function() {
-        if (this.svgGroup) $(this.svgGroup).remove();
-        //should update value dynamically
-        if (this instanceof Entry.FieldDropdownDynamic)
-            this._updateValue();
-
         var blockView = this._blockView;
         var isBig = Entry.isMobile();
         var X_PADDING = isBig ? 33 : 20;
         var X_PADDING_SUBT = isBig ? 24 : 10;
         var that = this;
-        var contents = this._contents;
+        var CONTENT_HEIGHT = this._CONTENT_HEIGHT;
+        var arrowInfo = this.getArrow();
 
-        this.svgGroup = blockView.contentSvgGroup.elem(
-            "g", { class: 'entry-field-dropdown' });
+        if (!this.svgGroup)
+            this.svgGroup = blockView.contentSvgGroup.elem(
+                "g", { class: 'entry-field-dropdown' });
 
-        this.textElement =
-            this.svgGroup.elem("text", {
-                x: 5,
-                'style': 'white-space: pre;',
-                'font-size': + that._font_size + 'px',
+
+        if (!this._header)
+            this._header = this.svgGroup.elem("rect", {
+                height: CONTENT_HEIGHT,
+                y: -CONTENT_HEIGHT/2,
+                rx: that._ROUND,
+                ry: that._ROUND,
+                fill: "#fff",
+                'fill-opacity': 0.4
             });
+
+        if (!this.textElement)
+            this.textElement =
+                this.svgGroup.elem("text", {
+                    x: 5,
+                    'style': 'white-space: pre;',
+                    'font-size': + that._font_size + 'px',
+                });
+
+        if (!this._noArrow && !this._arrow)
+            this._arrow = this.svgGroup.elem("polygon",{
+                points: arrowInfo.points,
+                fill: arrowInfo.color,
+                stroke: arrowInfo.color
+            });
+
+        if (this instanceof Entry.FieldDropdownDynamic)
+            this._updateValue();
+
         this._setTextValue();
 
         var bBox = this.getTextBBox();
@@ -75,29 +95,12 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
 
         if (this._noArrow) width -= X_PADDING_SUBT;
 
-
-        var CONTENT_HEIGHT = this._CONTENT_HEIGHT;
-
-        this._header = this.svgGroup.elem("rect", {
-            width: width,
-            height: CONTENT_HEIGHT,
-            y: -CONTENT_HEIGHT/2,
-            rx: that._ROUND,
-            ry: that._ROUND,
-            fill: "#fff",
-            'fill-opacity': 0.4
-        });
-
-        this.svgGroup.appendChild(this.textElement);
+        this._header.attr({width: width});
 
         if (!this._noArrow) {
-            var arrowInfo = this.getArrow();
-            this._arrow = this.svgGroup.elem("polygon",{
-                points: arrowInfo.points,
-                fill: arrowInfo.color,
-                stroke: arrowInfo.color,
-                transform: "translate("+ (width - arrowInfo.width - 5) + ","
-                    + (-arrowInfo.height/2) +")"
+            this._arrow.attr({transform: "translate(" +
+                (width - arrowInfo.width - 5) +
+                "," + (-arrowInfo.height/2) +")"
             });
         }
 
@@ -292,7 +295,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
     p._setTextValue = function() {
         var textValue = this.getTextByValue(this.getValue());
         var newValue = this._convert(textValue, this.getValue());
-        if (this.textElement.textContent !== newValue)
+        if (this.getTextValue() !== newValue)
             this.textElement.textContent = newValue;
     };
 
