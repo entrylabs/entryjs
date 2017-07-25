@@ -69,8 +69,6 @@ Entry.HW = function() {
         '16.1': Entry.MODI,
         '18.1': Entry.Altino,
         'F.4': Entry.byrobot_petrone_v2_controller,
-        'F.5': Entry.byrobot_petrone_v2_drive,
-        'F.6': Entry.byrobot_petrone_v2_flight
     };
     // 테스트 하드웨어id = '999999'이지만, hw가 3개여서 불가능. 임시로 'F.4', 'F.5', 'F.6'
 };
