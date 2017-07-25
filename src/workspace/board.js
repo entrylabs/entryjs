@@ -936,29 +936,27 @@ Entry.Board.DRAG_RADIUS = 5;
     };
 
     p.adjustThreadsPosition = function() {
-        setTimeout(function() {
-            var code = this.code;
-            if (!code) return;
-            if (!code.view) return;
+        var code = this.code;
+        if (!code) return;
+        if (!code.view) return;
 
-            var threads = code.getThreads();
-            if (!threads || threads.length === 0) return;
+        var threads = code.getThreads();
+        if (!threads || threads.length === 0) return;
 
-            threads = threads.sort(function(a,b) {
-                return a.getFirstBlock().view.x - b.getFirstBlock().view.x;
-            });
+        threads = threads.sort(function(a,b) {
+            return a.getFirstBlock().view.x - b.getFirstBlock().view.x;
+        });
 
-            var block  = threads[0].getFirstBlock();
-            if (block) {
-                block = block.view;
-                var pos = block.getAbsoluteCoordinate();
+        var block  = threads[0].getFirstBlock();
+        if (block) {
+            block = block.view;
+            var pos = block.getAbsoluteCoordinate();
 
-                this.scroller.scroll(
-                    50 - pos.x, 30 - pos.y,
-                    true
-                );
-            }
-        }.bind(this));
+            this.scroller.scroll(
+                50 - pos.x, 30 - pos.y,
+                true
+            );
+        }
     };
 
     p._initContextOptions = function() {
