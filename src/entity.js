@@ -1207,3 +1207,11 @@ Entry.EntityObject.prototype.cache = function() {
     Entry.requestUpdate = true;
 };
 
+Entry.EntityObject.prototype.reset = function() {
+    this.loadSnapshot();
+    this.resetFilter();
+    this.dialog && this.dialog.remove();
+    this.shape && this.removeBrush();
+};
+
+
