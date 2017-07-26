@@ -35,11 +35,13 @@ Entry.PyToBlockParser = function(blockSyntax) {
     };
 
     p.processProgram = function(astArr) {
+        var code = [];
 
-        var thread = [];
         for(i=0; i < astArr.length; i++) {
             var ast = astArr[i];
             var nodes = ast.body;
+            var thread = []; 
+
             if(ast.type !== "Program")
                 return;
 
@@ -47,9 +49,10 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 var node = nodes[j];
                 thread.push(this[node.type](node));
             }
+            code.push(thread);
         }
 
-        return thread;
+        return code;
     }
 
     p.ExpressionStatement = function(component) {
@@ -74,17 +77,10 @@ Entry.PyToBlockParser = function(blockSyntax) {
             }, this)
         }
 
-
         var obj = this[callee.type](callee);
-        
-
         obj.params = this.sortParams(obj.syntax , params);
 
-        console.log(obj);
-
-        return [
-            obj
-        ];
+        return obj;
 
     };
 
@@ -166,7 +162,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
     p.UpdateExpression = function(component) {};
 
     p.FunctionDeclaration = function(component) {
-        console.log("@FunctionDeclaration");
+        console.log("@FunctionDeclaration component" , component );
 
         var id = component.id;
         var idData = this[id.type](id);

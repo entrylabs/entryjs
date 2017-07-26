@@ -12836,14 +12836,15 @@ Entry.PyToBlockParser = function(c) {
   c.processProgram = function(b) {
     var c = [];
     for (i = 0;i < b.length;i++) {
-      var d = b[i], e = d.body;
+      var d = b[i], e = d.body, g = [];
       if ("Program" !== d.type) {
         return;
       }
       for (d = 0;d < e.length;d++) {
-        var g = e[d];
-        c.push(this[g.type](g));
+        var h = e[d];
+        g.push(this[h.type](h));
       }
+      c.push(g);
     }
     return c;
   };
@@ -12860,8 +12861,7 @@ Entry.PyToBlockParser = function(c) {
     }, this);
     b = this[c.type](c);
     b.params = this.sortParams(b.syntax, d);
-    console.log(b);
-    return [b];
+    return b;
   };
   c.Identifier = function(b, c, d) {
     console.log("@Identifier");
@@ -12923,7 +12923,7 @@ Entry.PyToBlockParser = function(c) {
   c.UpdateExpression = function(b) {
   };
   c.FunctionDeclaration = function(b) {
-    console.log("@FunctionDeclaration");
+    console.log("@FunctionDeclaration component", b);
     var c = b.id;
     this[c.type](c);
     this.callFunc(b, "body");
