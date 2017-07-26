@@ -107,7 +107,8 @@ Entry.byrobot_petrone_v2_controller =
         target = Math.max(target, 0);
         target = Math.min(target, 255);
         flags = Math.max(flags, 0);
-        flags = Math.min(flags, 255);
+        // flags = Math.min(flags, 255);    페트론V2 에서는 자료형 u16 이므로 아래와 같이 수정함(2017.07.26)
+        flags = Math.min(flags, 65535);
         brightness = Math.max(brightness, 0);
         brightness = Math.min(brightness, 255);
         

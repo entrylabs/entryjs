@@ -42191,7 +42191,7 @@ Entry.block = {
         "class": "byrobot_petrone_v2_controller_controller_light",
         "isNotFor": ["byrobot_petrone_v2_controller"],
         "func": function (sprite, script) {
-            return Entry.byrobot_petrone_v2_controller.setLightManual(script, 0x11, 0xff, 0);
+            return Entry.byrobot_petrone_v2_controller.setLightManual(script, 0x31, 0xff, 0);
         },
     },
     // */
@@ -42205,17 +42205,12 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [Lang.Blocks.byrobot_petrone_v2_common_light_manual_all, "255"],
-                    [Lang.Blocks.byrobot_petrone_v2_common_light_manual_1, "128"],
-                    [Lang.Blocks.byrobot_petrone_v2_common_light_manual_2, "64"],
-                    [Lang.Blocks.byrobot_petrone_v2_common_light_manual_3, "32"],
-                    [Lang.Blocks.byrobot_petrone_v2_common_light_manual_4, "16"],
-                    [Lang.Blocks.byrobot_petrone_v2_common_light_manual_5, "8"],
-                    [Lang.Blocks.byrobot_petrone_v2_common_light_manual_6, "4"],
+                    [Lang.Blocks.byrobot_petrone_v2_common_light_manual_none, "0"],
+                    [Lang.Blocks.byrobot_petrone_v2_common_light_manual_red, "8"],
+                    [Lang.Blocks.byrobot_petrone_v2_common_light_manual_green, "4"],
                     [Lang.Blocks.byrobot_petrone_v2_common_light_manual_blue, "2"],
-                    [Lang.Blocks.byrobot_petrone_v2_common_light_manual_red, "1"],
                 ],
-                "value": "128",
+                "value": "8",
                 "fontSize": 11
             },
             {
