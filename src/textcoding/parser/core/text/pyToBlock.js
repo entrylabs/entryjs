@@ -11,8 +11,6 @@ goog.require("Entry.TextCodingError");
 goog.require("Entry.Queue");
 
 Entry.PyToBlockParser = function(blockSyntax) {
-    console.log(blockSyntax);
-
     this._type ="PyToBlockParser";
     this.blockSyntax = blockSyntax;
 
@@ -22,9 +20,9 @@ Entry.PyToBlockParser = function(blockSyntax) {
 (function(p){
     p.util = Entry.TextCodingUtil;
 
-    p.Program = function(astArr) {
+    p.Programs = function(astArr) {
         try {
-            return this.processProgram(astArr);
+            return this.processPrograms(astArr);
         } catch(error) {
             var err = {};
             err.title = error.title;
@@ -34,59 +32,36 @@ Entry.PyToBlockParser = function(blockSyntax) {
         }
     };
 
-    p.processProgram = function(astArr) {
-        var code = [];
+    p.processPrograms = function(astArr) {
+        return astArr.map(this.processNode, this)
+    };
 
-        for(i=0; i < astArr.length; i++) {
-            var ast = astArr[i];
-            var nodes = ast.body;
-            var thread = []; 
-
-            if(ast.type !== "Program")
-                return;
-
-            for(var j=0; j<nodes.length; j++) {
-                var node = nodes[j];
-                thread.push(this[node.type](node));
-            }
-            code.push(thread);
-        }
-
-        return code;
-    }
+    p.Program = function(component) {
+        return component.body.map(this.processNode, this)
+    };
 
     p.ExpressionStatement = function(component) {
-        console.log("@ExpressionStatement");
-        
-        component = component.expression;
-        return this[component.type](component);
+        return this.processNode(component.expression);
     };
 
     p.CallExpression = function(component) {
-        console.log("@callExpression");
-
         var callee = component.callee;
         var property = component.property;
         var name = property.name;
         var args = component.arguments;
         var params = [];
 
-        if(component.arguments) {    
-            component.arguments.map(function(argument){
-                params.push(this[argument.type](argument));
-            }, this)
+        if(component.arguments) {
+            params = component.arguments.map(this.processNode, this)
         }
 
-        var obj = this[callee.type](callee);
+        var obj = this.processNode(callee);
         obj.params = this.sortParams(obj.syntax , params);
 
         return obj;
-
     };
 
     p.Identifier = function(component, paramMeta, paramDefMeta) {
-        console.log('@Identifier');
-
         return component.name;
     };
 
@@ -97,13 +72,10 @@ Entry.PyToBlockParser = function(blockSyntax) {
     p.AssignmentExpression = function(component) {};
 
     p.Literal = function(component, paramMeta, paramDefMeta, textParam) {
-       console.log('@Literal');
-
        return {
             type: 'number',
             params : [ component.value ]
        }
-
     };
 
     p.ParamBlock = function(value, paramMeta, paramDefMeta) {};
@@ -123,12 +95,11 @@ Entry.PyToBlockParser = function(blockSyntax) {
     p.Indicator = function(blockParam, blockDefParam, arg) {};
 
     p.MemberExpression = function(component) {
-        console.log("@MemberExpression");
         var obj = component.object;
         var property = component.property;
         var type = {};
 
-        var blockInfo = this.blockSyntax[obj.name][this[property.type](property)];
+        var blockInfo = this.blockSyntax[obj.name][this.processNode(property)];
         if(property && property.type){
             type.type = blockInfo.key;
             type.syntax = blockInfo.syntax;
@@ -140,7 +111,6 @@ Entry.PyToBlockParser = function(blockSyntax) {
     p.WhileStatement = function(component) {};
 
     p.BlockStatement = function(component) {
-        console.log("@BlockStatement");
         this.callFunc(component , 'body')
     };
 
@@ -162,10 +132,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
     p.UpdateExpression = function(component) {};
 
     p.FunctionDeclaration = function(component) {
-        console.log("@FunctionDeclaration component" , component );
-
         var id = component.id;
-        var idData = this[id.type](id);
+        var idData = this.processNode(id);
 
         this.callFunc(component , 'body');
 
@@ -177,7 +145,6 @@ Entry.PyToBlockParser = function(blockSyntax) {
     };
 
     p.ReturnStatement = function(component) {
-        console.log("@ReturnStatement");
         this.callFunc(component , 'argument');
     };
 
@@ -185,23 +152,9 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
     p.NewExpression = function(component) {};
 
-    /////////////////////////////////////////////////////////////////
-    // Utils
-    p.codeInit = function() {};
-
-    p.threadInit = function() {};
-
-    p.getBlockSyntax = function(syntax) {
-
-    };
-
-    p.getParamIndex = function(syntax) {}
-
-    p.extractContents = function(content, thread) {}
-
-    ///////////////////////////////////////////////////////////
-    //Not Yet Used Syntax
-    ///////////////////////////////////////////////////////////
+    /**
+     * Not Supported
+     */
 
     p.RegExp = function(component) {};
 
@@ -241,6 +194,9 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
     p.searchSyntax = function(datum) {};
 
+    /**
+     * util Function
+     */
 
     p.callFunc = function(component , type) {
         var arr = component[type];
@@ -249,7 +205,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
             this[component.type](a);
         } ,this);
         return;
-    }
+    };
 
     p.sortParams = function(syntax , arr) {
         var indexes = syntax.match( /\d+/g, '');
@@ -261,6 +217,14 @@ Entry.PyToBlockParser = function(blockSyntax) {
         }
 
         return returnArr;
-    }
- 
+    };
+
+    p.processNode = function(nodeType, node) {
+        if (typeof nodeType === "string" && nodeType !== node.type)
+            throw new Error("Not expected node type");
+        else
+            node = nodeType;
+        return this[node.type](node);
+    };
+
 })(Entry.PyToBlockParser.prototype);

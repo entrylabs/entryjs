@@ -201,7 +201,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
                         if (ast.body.length !== 0)
                             astArray.push(ast);
                     }
-                    result = this._execParser.Program(astArray);
+                    result = this._execParser.Programs(astArray);
                     this._onError = false;
                     break;
                 } catch(error) {

@@ -18,7 +18,7 @@ Test.parsePython = function(textCode) {
     var pyToBlockParser = new Entry.PyToBlockParser(syntax);
     var options = { locations: true, ranges: true };
 
-    var blockOutput = pyToBlockParser.processProgram(
+    var blockOutput = pyToBlockParser.processPrograms(
         [filbert.parse(textCode, options)]);
 
     return blockOutput;
