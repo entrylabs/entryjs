@@ -215,6 +215,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
         var syntax = this.getPySyntax(blockSchema);
 
         var indexes = syntax.match( /\d+/g, '');
+        if (!indexes)
+            return []
         var sortedArgs = new Array();
 
         for(var i=0; i < indexes.length; i++) {

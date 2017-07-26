@@ -17710,6 +17710,9 @@ Entry.PyToBlockParser = function(c) {
   c.processArguments = function(b, c) {
     var e = Entry.block[b];
     b = this.getPySyntax(e).match(/\d+/g, "");
+    if (!b) {
+      return [];
+    }
     for (var f = [], g = 0;g < b.length;g++) {
       var h = parseInt(b[g]) - 1;
       f[h] = c[g];
