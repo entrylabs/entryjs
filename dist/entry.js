@@ -17592,11 +17592,9 @@ Entry.PyToBlockParser = function(c) {
     return this.processNode(b.expression);
   };
   c.CallExpression = function(b) {
-    var c = b.callee, d = [];
-    b.arguments && (d = b.arguments.map(this.processNode, this));
-    b = this.processNode(c);
-    b.params = this.sortParams(b.syntax, d);
-    return b;
+    var c = this.processNode(b.callee);
+    b.arguments && (c.params = this.processArguments(c.type, b.arguments));
+    return c;
   };
   c.Identifier = function(b, c, d) {
     return b.name;
@@ -17607,8 +17605,8 @@ Entry.PyToBlockParser = function(c) {
   };
   c.AssignmentExpression = function(b) {
   };
-  c.Literal = function(b, c, d, f) {
-    return {type:"number", params:[b.value]};
+  c.Literal = function(b, c) {
+    return c ? b.value : {type:"number", params:[b.value]};
   };
   c.ParamBlock = function(b, c, d) {
   };
@@ -17629,7 +17627,7 @@ Entry.PyToBlockParser = function(c) {
   c.MemberExpression = function(b) {
     var c = b.property, d = {};
     b = this.blockSyntax[b.object.name][this.processNode(c)];
-    c && c.type && (d.type = b.key, d.syntax = b.syntax);
+    c && c.type && (d.type = b.key);
     return d;
   };
   c.WhileStatement = function(b) {
@@ -17709,20 +17707,31 @@ Entry.PyToBlockParser = function(c) {
       this[b.type](c);
     }, this);
   };
-  c.sortParams = function(b, c) {
-    b = b.match(/\d+/g, "");
-    for (var e = [], f = 0;f < b.length;f++) {
-      var g = parseInt(b[f]) - 1;
-      e[g] = c[f];
+  c.processArguments = function(b, c) {
+    var e = Entry.block[b];
+    b = this.getPySyntax(e).match(/\d+/g, "");
+    for (var f = [], g = 0;g < b.length;g++) {
+      var h = parseInt(b[g]) - 1;
+      f[h] = c[g];
     }
-    return e;
+    return f.map(function(b, c) {
+      return this.processNode(b, "Literal" === b.type && "Block" !== e.params[c].type ? !0 : void 0);
+    }, this);
   };
   c.processNode = function(b, c) {
+    var e = !1;
     if ("string" === typeof b && b !== c.type) {
       throw Error("Not expected node type");
     }
-    c = b;
-    return this[c.type](c);
+    "string" === typeof b && (e = !0);
+    var f = Array.prototype.slice.call(arguments);
+    e && f.shift();
+    c = f[0];
+    return this[c.type].apply(this, f);
+  };
+  c.getPySyntax = function(b) {
+    b = b.syntax.py[0];
+    return b.syntax || b;
   };
 })(Entry.PyToBlockParser.prototype);
 Entry.Console = function() {
