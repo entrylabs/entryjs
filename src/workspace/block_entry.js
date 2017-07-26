@@ -42191,7 +42191,7 @@ Entry.block = {
         "class": "byrobot_petrone_v2_controller_controller_light",
         "isNotFor": ["byrobot_petrone_v2_controller"],
         "func": function (sprite, script) {
-            return Entry.byrobot_petrone_v2_controller.setLightManual(script, 0x31, 0xff, 0);
+            return Entry.byrobot_petrone_v2_controller.setLightManual(script, 0x31, 0, 0);
         },
     },
     // */
@@ -42248,9 +42248,9 @@ Entry.block = {
         "class": "byrobot_petrone_v2_controller_controller_light",
         "isNotFor": ["byrobot_petrone_v2_controller"],
         "func": function (sprite, script) {
-            var flags = parseInt(script.getField('FLAGS'));
+            var flags = parseInt(script.getField('FLAGS'));     // 자료형 u16 인데 이대로 가도 되는지? (2017.07.26)
             var brightness = parseInt(script.getField('BRIGHTNESS'));
-            return Entry.byrobot_petrone_v2_controller.setLightManual(script, 0x11, flags, brightness);
+            return Entry.byrobot_petrone_v2_controller.setLightManual(script, 0x31, flags, brightness);
         },
     },
     // */
@@ -42299,7 +42299,7 @@ Entry.block = {
         "func": function (sprite, script) {
             var flags = script.getNumberValue('FLAGS');
             var brightness = script.getNumberValue('BRIGHTNESS');
-            return Entry.byrobot_petrone_v2_controller.setLightManual(script, 0x11, flags, brightness);
+            return Entry.byrobot_petrone_v2_controller.setLightManual(script, 0x31, flags, brightness);
         },
     },
     // */
