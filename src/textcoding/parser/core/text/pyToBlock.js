@@ -75,9 +75,15 @@ Entry.PyToBlockParser = function(blockSyntax) {
     p.Literal = function(component, isLiteral) {
         if (isLiteral)
             return component.value;
-        return {
-             type: 'number',
-             params : [ component.value ]
+
+        switch(typeof component.value) {
+            case "boolean":
+                return { type: component.value ? "True" : "False" }
+            default:
+                return {
+                    type: 'number',
+                    params : [ component.value ]
+                }
         }
     };
 
