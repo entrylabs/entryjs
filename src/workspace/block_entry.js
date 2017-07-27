@@ -16252,7 +16252,8 @@ Entry.block = {
             {
                 syntax: "(%1 and %3)",
                 template: "%1 and %3",
-                blockType: "param"
+                blockType: "param",
+                dic: "&&"
             }
         ]}
     },
