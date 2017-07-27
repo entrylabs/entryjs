@@ -150,7 +150,11 @@ Entry.PyToBlockParser = function(blockSyntax) {
     // p.ForInStatement = function(component) {};
 
 
-    // p.BreakStatement = function(component) {};
+    p.BreakStatement = function(component) {
+        return {
+            type: this.blockSyntax.break.key
+        }
+    };
 
     // p.UnaryExpression = function(component) {};
 

@@ -17599,6 +17599,9 @@ Entry.PyToBlockParser = function(c) {
   c.BlockStatement = function(b) {
     return b.body.map(this.processNode, this);
   };
+  c.BreakStatement = function(b) {
+    return {type:this.blockSyntax.break.key};
+  };
   c.LogicalExpression = function(b) {
     return {type:this.dic[b.operator], params:[this.processNode(b.left), void 0, this.processNode(b.right)]};
   };
