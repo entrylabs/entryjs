@@ -7771,9 +7771,9 @@ Entry.EntryObject = function(c) {
   c.select = function(b) {
     console.log(this);
   };
-  c.addPicture = function(b, c) {
+  c.addPicture = function(b, f) {
     b.objectId = this.id;
-    c || 0 === c ? this.pictures.splice(c, 0, b) : this.pictures.push(b);
+    f || 0 === f ? this.pictures.splice(f, 0, b) : this.pictures.push(b);
     Entry.playground.injectPicture(this);
   };
   c.removePicture = function(b) {
@@ -7781,8 +7781,8 @@ Entry.EntryObject = function(c) {
       return !1;
     }
     b = this.getPicture(b);
-    var c = this.pictures.indexOf(b);
-    this.pictures.splice(c, 1);
+    var f = this.pictures.indexOf(b);
+    this.pictures.splice(f, 1);
     b === this.selectedPicture && Entry.playground.selectPicture(this.pictures[0]);
     Entry.playground.injectPicture(this);
     Entry.playground.reloadPlayground();
@@ -7793,35 +7793,35 @@ Entry.EntryObject = function(c) {
       return this.selectedPicture;
     }
     b = b.trim();
-    for (var c = this.pictures, d = c.length, e = 0;e < d;e++) {
-      if (c[e].id == b) {
-        return c[e];
+    for (var f = this.pictures, c = f.length, e = 0;e < c;e++) {
+      if (f[e].id == b) {
+        return f[e];
       }
     }
-    for (e = 0;e < d;e++) {
-      if (c[e].name == b) {
-        return c[e];
+    for (e = 0;e < c;e++) {
+      if (f[e].name == b) {
+        return f[e];
       }
     }
     b = Entry.parseNumber(b);
-    if ((!1 !== b || "boolean" != typeof b) && d >= b && 0 < b) {
-      return c[b - 1];
+    if ((!1 !== b || "boolean" != typeof b) && c >= b && 0 < b) {
+      return f[b - 1];
     }
     throw Error("No picture found");
   };
   c.setPicture = function(b) {
-    for (var c in this.pictures) {
-      if (b.id === this.pictures[c].id) {
-        this.pictures[c] = b;
+    for (var f in this.pictures) {
+      if (b.id === this.pictures[f].id) {
+        this.pictures[f] = b;
         return;
       }
     }
     throw Error("No picture found");
   };
   c.getPrevPicture = function(b) {
-    for (var c = this.pictures, d = c.length, e = 0;e < d;e++) {
-      if (c[e].id == b) {
-        return c[0 == e ? d - 1 : e - 1];
+    for (var f = this.pictures, c = f.length, e = 0;e < c;e++) {
+      if (f[e].id == b) {
+        return f[0 == e ? c - 1 : e - 1];
       }
     }
   };
@@ -12836,7 +12836,9 @@ Entry.PyToBlockParser = function(c) {
     return b.map(this.processNode, this);
   };
   c.Program = function(b) {
-    return b.body.map(this.processNode, this);
+    b = b.body.map(this.processNode, this);
+    console.log("@program console ", b);
+    return b.constructor == Array ? b[0] : b;
   };
   c.ExpressionStatement = function(b) {
     return this.processNode(b.expression);
@@ -12876,11 +12878,12 @@ Entry.PyToBlockParser = function(c) {
     return b.body.map(this.processNode, this);
   };
   c.FunctionDeclaration = function(b) {
-    b = b.id;
-    b = this[b.type](b);
-    b = this.blockSyntax["def " + b];
-    var c = {};
-    b && (c.type = b.key);
+    var c = b.id, c = this[c.type](c), d = this.blockSyntax["def " + c], e = {}, c = [e];
+    b = b.body.body[0].argument.callee.object.body.body.map(this.processNode, this);
+    d && (e.type = d.key);
+    for (d = 0;d < b.length;d++) {
+      c.push(b[d]);
+    }
     return c;
   };
   c.ReturnStatement = function(b) {
