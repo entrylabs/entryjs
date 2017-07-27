@@ -156,7 +156,26 @@ Entry.PyToBlockParser = function(blockSyntax) {
         }
     };
 
-    // p.UnaryExpression = function(component) {};
+    p.UnaryExpression = function(component) {
+        switch(component.operator) {
+            case "!":
+                return {
+                    type: "boolean_not",
+                    params: [
+                        undefined,
+                        this.processNode(component.argument)
+                    ]
+                }
+            case "-":
+            case "+":
+                var result = this.processNode(component.argument);
+                this.assert(result.type === "number", "Can't convert this operation")
+                result.params = ["-" + result.params[0]];
+                return result;
+            default:
+                throw new Error("Unary operator " + component.operator + " is not supported");
+        }
+    };
 
     p.LogicalExpression = function(component) {
         return {
@@ -321,6 +340,11 @@ Entry.PyToBlockParser = function(blockSyntax) {
     p.getPySyntax = function(blockSchema) {
         var syntaxObj = blockSchema.syntax.py[0];
         return syntaxObj.syntax || syntaxObj;
+    };
+
+    p.assert = function(data, message) {
+        if (!data)
+            throw new Error(message);
     };
 
 })(Entry.PyToBlockParser.prototype);
