@@ -589,12 +589,11 @@ Entry.Engine = function() {
         container.clearRunningState();
         container.loadSequenceSnapshot();
         this.projectTimer.loadSnapshot();
-        Entry.container.inputValue.loadSnapshot();
+        container.inputValue.loadSnapshot();
         Entry.scene.loadStartSceneSnapshot();
         Entry.Func.clearThreads();
         createjs.Sound.setVolume(1);
         createjs.Sound.stop();
-
 
         this.view_.removeClass('entryEngineBlueWorkspace');
         if (this.runButton) {

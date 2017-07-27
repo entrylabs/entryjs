@@ -924,6 +924,7 @@ Entry.Container.prototype.resetSceneDuringRun = function() {
         entity.shape && entity.removeBrush();
     });
     this.clearRunningStateOnScene();
+    Entry.stage.hideInputField();
 };
 
 Entry.Container.prototype.setCopiedObject = function(object) {
