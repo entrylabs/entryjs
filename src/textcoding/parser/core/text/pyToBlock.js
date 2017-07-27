@@ -50,13 +50,14 @@ Entry.PyToBlockParser = function(blockSyntax) {
         var name = property.name;
         var args = component.arguments;
         var params = [];
+        var obj = this.processNode(callee);
 
         if(component.arguments) {
-            params = component.arguments.map(this.processNode, this)
+            obj.params = this.processArguments(
+                obj.type,
+                component.arguments
+            )
         }
-
-        var obj = this.processNode(callee);
-        obj.params = this.sortParams(obj.syntax , params);
 
         return obj;
     };
@@ -71,13 +72,13 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
     p.AssignmentExpression = function(component) {};
 
-    p.Literal = function(component, paramMeta, paramDefMeta, textParam) {
-        
-
-       return {
-            type: 'number',
-            params : [ component.value ]
-       }
+    p.Literal = function(component, isLiteral) {
+        if (isLiteral)
+            return component.value;
+        return {
+             type: 'number',
+             params : [ component.value ]
+        }
     };
 
     // p.ParamBlock = function(value, paramMeta, paramDefMeta) {};
@@ -99,15 +100,14 @@ Entry.PyToBlockParser = function(blockSyntax) {
     p.MemberExpression = function(component) {
         var obj = component.object;
         var property = component.property;
-        var type = {};
+        var result = {};
 
         var blockInfo = this.blockSyntax[obj.name][this.processNode(property)];
         if(property && property.type){
-            type.type = blockInfo.key;
-            type.syntax = blockInfo.syntax;
+            result.type = blockInfo.key;
         }
 
-        return type;
+        return result;
     };
 
     // p.WhileStatement = function(component) {};
@@ -224,27 +224,49 @@ Entry.PyToBlockParser = function(blockSyntax) {
         return;
     };
 
-    p.sortParams = function(syntax , arr) {
+    p.processArguments = function(blockType, args) {
+        var blockSchema = Entry.block[blockType];
+        var syntax = this.getPySyntax(blockSchema);
+
         var indexes = syntax.match( /\d+/g, '');
-        var returnArr = new Array();
+        if (!indexes)
+            return []
+        var sortedArgs = new Array();
 
         for(var i=0; i < indexes.length; i++) {
             var idx = parseInt(indexes[i])-1;
-            returnArr[idx] = arr[i];
+            sortedArgs[idx] = args[i];
         }
 
-        return returnArr;
+        var results = sortedArgs.map(function(arg, index) {
+            return this.processNode(
+                arg,
+                (arg.type === "Literal" && blockSchema.params[index].type !== "Block") ? true : undefined
+            );
+        }, this);
+
+        return results;
     };
 
     p.processNode = function(nodeType, node) {
+        var hasType = false;
         if (typeof nodeType === "string" && nodeType !== node.type)
             throw new Error("Not expected node type");
-        else
-            node = nodeType;
+        else if (typeof nodeType === "string")
+            hasType = true;
 
-        console.log('@'+node.type , node);
+        var args = Array.prototype.slice.call(arguments);
+        if (hasType) args.shift();
 
-        return this[node.type](node);
+        node = args[0];
+
+        return this[node.type].apply(this, args);
+    };
+
+
+    p.getPySyntax = function(blockSchema) {
+        var syntaxObj = blockSchema.syntax.py[0];
+        return syntaxObj.syntax || syntaxObj;
     };
 
     

@@ -7771,9 +7771,9 @@ Entry.EntryObject = function(c) {
   c.select = function(b) {
     console.log(this);
   };
-  c.addPicture = function(b, f) {
+  c.addPicture = function(b, c) {
     b.objectId = this.id;
-    f || 0 === f ? this.pictures.splice(f, 0, b) : this.pictures.push(b);
+    c || 0 === c ? this.pictures.splice(c, 0, b) : this.pictures.push(b);
     Entry.playground.injectPicture(this);
   };
   c.removePicture = function(b) {
@@ -7781,8 +7781,8 @@ Entry.EntryObject = function(c) {
       return !1;
     }
     b = this.getPicture(b);
-    var f = this.pictures.indexOf(b);
-    this.pictures.splice(f, 1);
+    var c = this.pictures.indexOf(b);
+    this.pictures.splice(c, 1);
     b === this.selectedPicture && Entry.playground.selectPicture(this.pictures[0]);
     Entry.playground.injectPicture(this);
     Entry.playground.reloadPlayground();
@@ -7793,19 +7793,19 @@ Entry.EntryObject = function(c) {
       return this.selectedPicture;
     }
     b = b.trim();
-    for (var f = this.pictures, c = f.length, e = 0;e < c;e++) {
-      if (f[e].id == b) {
-        return f[e];
+    for (var c = this.pictures, d = c.length, e = 0;e < d;e++) {
+      if (c[e].id == b) {
+        return c[e];
       }
     }
-    for (e = 0;e < c;e++) {
-      if (f[e].name == b) {
-        return f[e];
+    for (e = 0;e < d;e++) {
+      if (c[e].name == b) {
+        return c[e];
       }
     }
     b = Entry.parseNumber(b);
-    if ((!1 !== b || "boolean" != typeof b) && c >= b && 0 < b) {
-      return f[b - 1];
+    if ((!1 !== b || "boolean" != typeof b) && d >= b && 0 < b) {
+      return c[b - 1];
     }
     throw Error("No picture found");
   };
@@ -12842,11 +12842,9 @@ Entry.PyToBlockParser = function(c) {
     return this.processNode(b.expression);
   };
   c.CallExpression = function(b) {
-    var c = b.callee, d = [];
-    b.arguments && (d = b.arguments.map(this.processNode, this));
-    b = this.processNode(c);
-    b.params = this.sortParams(b.syntax, d);
-    return b;
+    var c = this.processNode(b.callee);
+    b.arguments && (c.params = this.processArguments(c.type, b.arguments));
+    return c;
   };
   c.Identifier = function(b, c, d) {
     return b.name;
@@ -12857,13 +12855,13 @@ Entry.PyToBlockParser = function(c) {
   };
   c.AssignmentExpression = function(b) {
   };
-  c.Literal = function(b, c, d, e) {
-    return {type:"number", params:[b.value]};
+  c.Literal = function(b, c) {
+    return c ? b.value : {type:"number", params:[b.value]};
   };
   c.MemberExpression = function(b) {
     var c = b.property, d = {};
     b = this.blockSyntax[b.object.name][this.processNode(c)];
-    c && c.type && (d.type = b.key, d.syntax = b.syntax);
+    c && c.type && (d.type = b.key);
     return d;
   };
   c.BlockStatement = function(b) {
@@ -12885,20 +12883,33 @@ Entry.PyToBlockParser = function(c) {
       this[b.type](c);
     }, this);
   };
-  c.sortParams = function(b, c) {
-    for (var d = b.match(/\d+/g, ""), e = [], g = 0;g < d.length;g++) {
-      var h = parseInt(d[g]) - 1;
-      e[h] = c[g];
+  c.processArguments = function(b, c) {
+    var d = Entry.block[b], e = this.getPySyntax(d).match(/\d+/g, "");
+    if (!e) {
+      return [];
     }
-    return e;
+    for (var g = [], h = 0;h < e.length;h++) {
+      var k = parseInt(e[h]) - 1;
+      g[k] = c[h];
+    }
+    return g.map(function(b, c) {
+      return this.processNode(b, "Literal" === b.type && "Block" !== d.params[c].type ? !0 : void 0);
+    }, this);
   };
   c.processNode = function(b, c) {
+    var d = !1;
     if ("string" === typeof b && b !== c.type) {
       throw Error("Not expected node type");
     }
-    c = b;
-    console.log("@" + c.type, c);
-    return this[c.type](c);
+    "string" === typeof b && (d = !0);
+    var e = Array.prototype.slice.call(arguments);
+    d && e.shift();
+    c = e[0];
+    return this[c.type].apply(this, e);
+  };
+  c.getPySyntax = function(b) {
+    b = b.syntax.py[0];
+    return b.syntax || b;
   };
 })(Entry.PyToBlockParser.prototype);
 Entry.Parser = function(c, b, f, d) {
