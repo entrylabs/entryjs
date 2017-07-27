@@ -17588,7 +17588,8 @@ Entry.PyToBlockParser = function(c) {
     return b.map(this.processNode, this);
   };
   c.Program = function(b) {
-    return b.body.map(this.processNode, this);
+    b = b.body.map(this.processNode, this);
+    return b[0].constructor == Array ? b[0] : b;
   };
   c.ExpressionStatement = function(b) {
     return this.processNode(b.expression);
@@ -17630,10 +17631,12 @@ Entry.PyToBlockParser = function(c) {
   c.LogicalExpression = function(b) {
   };
   c.FunctionDeclaration = function(b) {
-    b = this.processNode(b.id);
-    b = this.blockSyntax["def " + b];
-    var c = {};
-    b && (c.type = b.key);
+    var c = this.processNode(b.id), d = this.blockSyntax["def " + c], f = {}, c = [f];
+    b = b.body.body[0].argument.callee.object.body.body.map(this.processNode, this);
+    d && (f.type = d.key);
+    for (d = 0;d < b.length;d++) {
+      c.push(b[d]);
+    }
     return c;
   };
   c.ReturnStatement = function(b) {
@@ -17806,9 +17809,7 @@ Entry.Parser = function(c, b, e, d) {
         try {
           this._pyBlockCount = {};
           this._pyThreadCount = 1;
-          var n = new Entry.PyAstGenerator, d = this.makeThreads(b);
-          console.log("parser threads ", d);
-          var h = [], r = 0;
+          var n = new Entry.PyAstGenerator, d = this.makeThreads(b), h = [], r = 0;
           for (k = 0;k < d.length;k++) {
             if (l = d[k], 0 !== l.length && (l = l.replace(/\t/gm, "    "), m = n.generate(l))) {
               this._pyThreadCount = r++, this._pyBlockCount[r] = l.split("\n").length - 1, 0 !== m.body.length && h.push(m);
@@ -26433,12 +26434,12 @@ Entry.GlobalSvg = {};
     function c(b) {
       var c = b.pageX;
       b = b.pageY;
-      var e = f.left + (c - f._startX), d = f.top + (b - f._startY);
-      f._applyDomPos(e, d);
+      var d = f.left + (c - f._startX), e = f.top + (b - f._startY);
+      f._applyDomPos(d, e);
       f._startX = c;
       f._startY = b;
-      f.left = e;
-      f.top = d;
+      f.left = d;
+      f.top = e;
     }
     function d(b) {
       $(document).unbind(".block");

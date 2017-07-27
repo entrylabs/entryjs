@@ -38,7 +38,12 @@ Entry.PyToBlockParser = function(blockSyntax) {
     };
 
     p.Program = function(component) {
-        return component.body.map(this.processNode, this)
+        var thread = component.body.map(this.processNode, this);
+
+        if(thread[0].constructor == Array)
+            return thread[0];
+        else
+            return thread;
     };
 
     p.ExpressionStatement = function(component) {
@@ -108,8 +113,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
         var obj = component.object;
         var property = component.property;
         var result = {};
-
         var blockInfo = this.blockSyntax[obj.name][this.processNode(property)];
+
         if(property && property.type){
             result.type = blockInfo.key;
         }
@@ -145,24 +150,18 @@ Entry.PyToBlockParser = function(blockSyntax) {
         var blockName = this.processNode(component.id);
         var blockInfo = this.blockSyntax['def '+blockName];
         var type = {};
+        var ThreadArr = [type];
+        var funcDef = component.body.body[0].argument.callee.object.body.body.map(this.processNode , this);
 
         if(blockInfo){
             type.type = blockInfo.key;
         }
 
-        // var funcDef =  component.body.body[0].argument.callee.object.body.body.map(this.processNode , this);
-        // console.log(funcDef);
+        for(var i=0; i<funcDef.length; i++) {
+            ThreadArr.push(funcDef[i]);
+        }
 
-        // var blockInfo = this.blockSyntax[obj.name][this.processNode(property)];
-
-        // if(property && property.type){
-        //     type.type = blockInfo.key;
-        //     type.syntax = blockInfo.syntax;
-        // }
-
-        return type;
-
-
+        return ThreadArr;
     };
 
     // p.FunctionExpression = function(component) {};
