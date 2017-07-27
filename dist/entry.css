@@ -546,11 +546,11 @@ span.CodeMirror-selectedtext {
   fill: #f4f4f4;
 }
 .block {
-  cursor: url('../images/handopen.cur') 8 5, auto;
+  cursor: url('/media/handopen.cur'), auto;
   -ms-touch-action: none;
 }
 .block.dragging {
-  cursor: url('../images/handclosed.cur') 8 5, auto;
+  cursor: url('/media/handclosed.cur'), auto;
 }
 .block.selected > path {
   stroke-width: 3px;
@@ -1338,6 +1338,12 @@ svg .svgBlockGroup text {
   from {
     left: 64px;
   }
+}
+#invisibleBoard {
+  visibility: hidden;
+  position: fixed;
+  left: -1000px;
+  top: -1000px;
 }
 .entryContainerWorkspace {
   background-color: #e7e7e7;
@@ -2663,9 +2669,6 @@ svg .svgBlockGroup text {
   bottom: 0px;
   overflow-y: auto;
   overflow-x: hidden;
-}
-#entryBlockHelperContentWorkspace.lecture {
-  top: 0px;
 }
 .entryBlockHelperIntro {
   background-image: url("../images/block_help_icon.png");
