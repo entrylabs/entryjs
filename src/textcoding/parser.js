@@ -185,6 +185,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
                     var pyAstGenerator = new Entry.PyAstGenerator();
                     var threads = this.makeThreads(code);
 
+                    console.log('parser threads ' , threads);
                     var astArray = [];
                     var threadCount = 0;
                     var ast;
@@ -581,6 +582,9 @@ Entry.Parser = function(mode, type, cm, syntax) {
                 }
 
                 optText += textLine;
+                
+                console.log(optText);
+
             }
         }
         threads.push(optText);

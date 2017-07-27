@@ -72,27 +72,29 @@ Entry.PyToBlockParser = function(blockSyntax) {
     p.AssignmentExpression = function(component) {};
 
     p.Literal = function(component, paramMeta, paramDefMeta, textParam) {
+        
+
        return {
             type: 'number',
             params : [ component.value ]
        }
     };
 
-    p.ParamBlock = function(value, paramMeta, paramDefMeta) {};
+    // p.ParamBlock = function(value, paramMeta, paramDefMeta) {};
 
-    p.ParamAngle = function (value, paramMeta, paramDefMeta) {};
+    // p.ParamAngle = function (value, paramMeta, paramDefMeta) {};
 
-    p.ParamTextInput = function(value, paramMeta, paramDefMeta) {};
+    // p.ParamTextInput = function(value, paramMeta, paramDefMeta) {};
 
-    p.ParamColor = function(value, paramMeta, paramDefMeta, textParam) {};
+    // p.ParamColor = function(value, paramMeta, paramDefMeta, textParam) {};
 
-    p.ParamDropdown = function(value, paramMeta, paramDefMeta, textParam) {};
+    // p.ParamDropdown = function(value, paramMeta, paramDefMeta, textParam) {};
 
-    p.ParamDropdownDynamic = function(value, paramMeta, paramDefMeta, textParam, currentObject) {};
+    // p.ParamDropdownDynamic = function(value, paramMeta, paramDefMeta, textParam, currentObject) {};
 
-    p.ParamKeyboard = function(value, paramMeta, paramDefMeta) {};
+    // p.ParamKeyboard = function(value, paramMeta, paramDefMeta) {};
 
-    p.Indicator = function(blockParam, blockDefParam, arg) {};
+    // p.Indicator = function(blockParam, blockDefParam, arg) {};
 
     p.MemberExpression = function(component) {
         var obj = component.object;
@@ -108,91 +110,106 @@ Entry.PyToBlockParser = function(blockSyntax) {
         return type;
     };
 
-    p.WhileStatement = function(component) {};
+    // p.WhileStatement = function(component) {};
 
     p.BlockStatement = function(component) {
-        this.callFunc(component , 'body')
+        return component.body.map(this.processNode, this);
     };
 
-    p.IfStatement = function(component) {};
+    // p.IfStatement = function(component) {};
 
-     p.ForStatement = function(component) {};
+    //  p.ForStatement = function(component) {};
 
-    p.ForInStatement = function(component) {};
+    // p.ForInStatement = function(component) {};
 
 
-    p.BreakStatement = function(component) {};
+    // p.BreakStatement = function(component) {};
 
-    p.UnaryExpression = function(component) {};
+    // p.UnaryExpression = function(component) {};
 
-    p.LogicalExpression = function(component) {};
+    // p.LogicalExpression = function(component) {};
 
-    p.BinaryExpression = function(component) {};
+    // p.BinaryExpression = function(component) {};
 
-    p.UpdateExpression = function(component) {};
+    // p.UpdateExpression = function(component) {};
 
     p.FunctionDeclaration = function(component) {
         var id = component.id;
-        var idData = this.processNode(id);
 
-        this.callFunc(component , 'body');
+        var blockName = this[id.type](id);
+        var blockInfo = this.blockSyntax['def '+blockName];
+        var type = {};
 
-        // this[component.type](component ,)
+        if(blockInfo){
+            type.type = blockInfo.key;
+        }
+
+        // var funcDef =  component.body.body[0].argument.callee.object.body.body.map(this.processNode , this);
+        // console.log(funcDef);
+
+        // var blockInfo = this.blockSyntax[obj.name][this.processNode(property)];
+
+        // if(property && property.type){
+        //     type.type = blockInfo.key;
+        //     type.syntax = blockInfo.syntax;
+        // }
+
+        return type;
+
+        
     };
 
-    p.FunctionExpression = function(component) {
-
-    };
+    // p.FunctionExpression = function(component) {};
 
     p.ReturnStatement = function(component) {
-        this.callFunc(component , 'argument');
+        return component.argument.map(this.processNode , this );
     };
 
-    p.ThisExpression = function(component) {};
+    // p.ThisExpression = function(component) {};
 
-    p.NewExpression = function(component) {};
+    // p.NewExpression = function(component) {};
 
     /**
      * Not Supported
      */
 
-    p.RegExp = function(component) {};
+    // p.RegExp = function(component) {};
 
-    p.Function = function(component) {};
+    // p.Function = function(component) {};
 
-    p.EmptyStatement = function(component) {};
+    // p.EmptyStatement = function(component) {};
 
-    p.DebuggerStatement = function(component) {};
+    // p.DebuggerStatement = function(component) {};
 
-    p.WithStatement = function(component) {};
+    // p.WithStatement = function(component) {};
 
-    p.LabeledStatement = function(component) {};
+    // p.LabeledStatement = function(component) {};
 
-    p.ContinueStatement = function(component) {};
+    // p.ContinueStatement = function(component) {};
 
-    p.SwitchStatement = function(component) {};
+    // p.SwitchStatement = function(component) {};
 
-    p.SwitchCase = function(component) {};
+    // p.SwitchCase = function(component) {};
 
-    p.ThrowStatement = function(component) {};
+    // p.ThrowStatement = function(component) {};
 
-    p.TryStatement = function(component) {};
+    // p.TryStatement = function(component) {};
 
-    p.CatchClause = function(component) {};
+    // p.CatchClause = function(component) {};
 
-    p.DoWhileStatement = function(component) {};
+    // p.DoWhileStatement = function(component) {};
 
-    p.ArrayExpression = function(component) {};
+    // p.ArrayExpression = function(component) {};
 
-    p.ObjectExpression = function(component) {};
+    // p.ObjectExpression = function(component) {};
 
-    p.Property = function(component) {};
+    // p.Property = function(component) {};
 
-    p.ConditionalExpression = function(component) {};
+    // p.ConditionalExpression = function(component) {};
 
-    p.SequenceExpression = function(component) {};
+    // p.SequenceExpression = function(component) {};
 
-    p.searchSyntax = function(datum) {};
+    // p.searchSyntax = function(datum) {};
 
     /**
      * util Function
@@ -224,7 +241,12 @@ Entry.PyToBlockParser = function(blockSyntax) {
             throw new Error("Not expected node type");
         else
             node = nodeType;
+
+        console.log('@'+node.type , node);
+
         return this[node.type](node);
     };
+
+    
 
 })(Entry.PyToBlockParser.prototype);
