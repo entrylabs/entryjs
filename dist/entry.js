@@ -12837,8 +12837,7 @@ Entry.PyToBlockParser = function(c) {
   };
   c.Program = function(b) {
     b = b.body.map(this.processNode, this);
-    console.log("@program console ", b);
-    return b.constructor == Array ? b[0] : b;
+    return b[0].constructor == Array ? b[0] : b;
   };
   c.ExpressionStatement = function(b) {
     return this.processNode(b.expression);

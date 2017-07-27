@@ -39,9 +39,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
     p.Program = function(component) {
         var thread = component.body.map(this.processNode, this);
 
-        console.log('@program console ' , thread);
-
-        if(thread.constructor == Array)
+        if(thread[0].constructor == Array)
             return thread[0];
         else 
             return thread;
