@@ -17606,7 +17606,15 @@ Entry.PyToBlockParser = function(c) {
   c.AssignmentExpression = function(b) {
   };
   c.Literal = function(b, c) {
-    return c ? b.value : {type:"number", params:[b.value]};
+    if (c) {
+      return b.value;
+    }
+    switch(typeof b.value) {
+      case "boolean":
+        return {type:b.value ? "True" : "False"};
+      default:
+        return {type:"number", params:[b.value]};
+    }
   };
   c.ParamBlock = function(b, c, d) {
   };
