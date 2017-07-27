@@ -8,10 +8,11 @@ goog.provide("Entry.PyToBlockParser");
 goog.require("Entry.KeyboardCode");
 goog.require("Entry.TextCodingUtil");
 goog.require("Entry.TextCodingError");
-goog.require("Entry.Queue");
 
 Entry.PyToBlockParser = function(blockSyntax) {
     this._type ="PyToBlockParser";
+    this.dic = blockSyntax["#dic"];
+    delete blockSyntax["#dic"];
     this.blockSyntax = blockSyntax;
 
     this._funcMap = {};
@@ -133,16 +134,15 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
     // p.UnaryExpression = function(component) {};
 
-    // p.LogicalExpression = function(component) {};
+    p.LogicalExpression = function(component) {
+    };
 
     // p.BinaryExpression = function(component) {};
 
     // p.UpdateExpression = function(component) {};
 
     p.FunctionDeclaration = function(component) {
-        var id = component.id;
-
-        var blockName = this[id.type](id);
+        var blockName = this.processNode(component.id);
         var blockInfo = this.blockSyntax['def '+blockName];
         var type = {};
 
@@ -162,7 +162,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
         return type;
 
-        
+
     };
 
     // p.FunctionExpression = function(component) {};
@@ -266,6 +266,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
         node = args[0];
 
+        if (!this[node.type])
+            throw new Error(node.type + " is not supported");
         return this[node.type].apply(this, args);
     };
 
@@ -275,6 +277,6 @@ Entry.PyToBlockParser = function(blockSyntax) {
         return syntaxObj.syntax || syntaxObj;
     };
 
-    
+
 
 })(Entry.PyToBlockParser.prototype);

@@ -185,7 +185,6 @@ Entry.Parser = function(mode, type, cm, syntax) {
                     var pyAstGenerator = new Entry.PyAstGenerator();
                     var threads = this.makeThreads(code);
 
-                    console.log('parser threads ' , threads);
                     var astArray = [];
                     var threadCount = 0;
                     var ast;
@@ -337,6 +336,8 @@ Entry.Parser = function(mode, type, cm, syntax) {
 
         var types = Object.keys(Entry.block);
         var syntax = {};
+        if(mode === Entry.Vim.WORKSPACE_MODE)
+            syntax["#dic"] = {};
 
         for (var i = 0; i < types.length; i++) {
             var type = types[i];
@@ -395,6 +396,8 @@ Entry.Parser = function(mode, type, cm, syntax) {
                             s.key = key;
                             if(!s.template)
                                 result.template = s.syntax;
+                            if (s.dic)
+                                syntax["#dic"][s.dic] = key;
                         }
 
                         tokens = tokens.split('(');
@@ -582,8 +585,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
                 }
 
                 optText += textLine;
-                
-                console.log(optText);
+
 
             }
         }
