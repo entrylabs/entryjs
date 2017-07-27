@@ -17546,7 +17546,8 @@ Entry.PyToBlockParser = function(c) {
 };
 (function(c) {
   c.util = Entry.TextCodingUtil;
-  c.dict = {"==":"EQUAL", ">":"GREATER", "<":"LESS", ">=":"GREATER_OR_EQUAL", "<=":"LESS_OR_EQUAL", "+":"PLUS", "-":"MINUS", "*":"MULTIFLY", "/":"DIVIDE"};
+  c.binaryOperator = {"==":"EQUAL", ">":"GREATER", "<":"LESS", ">=":"GREATER_OR_EQUAL", "<=":"LESS_OR_EQUAL"};
+  c.arithmeticOperator = {"+":"PLUS", "-":"MINUS", "*":"MULTIFLY", "/":"DIVIDE"};
   c.Programs = function(b) {
     try {
       return this.processPrograms(b);
@@ -17602,7 +17603,17 @@ Entry.PyToBlockParser = function(c) {
     return {type:this.dic[b.operator], params:[this.processNode(b.left), void 0, this.processNode(b.right)]};
   };
   c.BinaryExpression = function(b) {
-    return {type:"boolean_basic_operator", params:[this.processNode(b.left), this.dict[b.operator], this.processNode(b.right)]};
+    var c = b.operator, d;
+    if (this.binaryOperator[c]) {
+      d = "boolean_basic_operator", c = this.binaryOperator[c];
+    } else {
+      if (this.arithmeticOperator[c]) {
+        d = "calc_basic", c = this.arithmeticOperator[c];
+      } else {
+        throw Error("Not supported operator " + b.operator);
+      }
+    }
+    return {type:d, params:[this.processNode(b.left), c, this.processNode(b.right)]};
   };
   c.FunctionDeclaration = function(b) {
     var c = this.processNode(b.id), d = this.blockSyntax["def " + c], f = {}, c = [f];

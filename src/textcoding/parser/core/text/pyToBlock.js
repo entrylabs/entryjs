@@ -21,12 +21,15 @@ Entry.PyToBlockParser = function(blockSyntax) {
 (function(p){
     p.util = Entry.TextCodingUtil;
 
-    p.dict = {
+    p.binaryOperator = {
             '==': "EQUAL",
             '>': "GREATER",
             '<': "LESS",
             '>=': "GREATER_OR_EQUAL",
             '<=': "LESS_OR_EQUAL",
+    };
+
+    p.arithmeticOperator = {
             '+': "PLUS",
             '-': "MINUS",
             '*': "MULTIFLY",
@@ -163,11 +166,22 @@ Entry.PyToBlockParser = function(blockSyntax) {
     };
 
     p.BinaryExpression = function(component) {
+        var operator = component.operator,
+            blockType;
+        if (this.binaryOperator[operator]) {
+            blockType = "boolean_basic_operator";
+            operator = this.binaryOperator[operator];
+        } else if (this.arithmeticOperator[operator]) {
+            blockType = "calc_basic";
+            operator = this.arithmeticOperator[operator];
+        } else {
+            throw new Error("Not supported operator " + component.operator);
+        }
         return {
-            type: "boolean_basic_operator",
+            type: blockType,
             params: [
                 this.processNode(component.left),
-                this.dict[component.operator],
+                operator,
                 this.processNode(component.right)
             ]
         };
