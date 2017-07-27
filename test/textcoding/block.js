@@ -1249,6 +1249,52 @@ describe('EntryPython', function(){
                 }]]
             ));
 
+            describe('def' , function() {
+                it('when_start_click block' , function() {
+
+                    Entry.loadProject(Entry.getStartProject());
+                    Entry.playground.object = Entry.container.objects_[0];
+
+                    assert.ok(Test.pythonToBlock('def when_start():\n    Entry.move_to_direction(10)',
+                        [  
+                           [  
+                              {  
+                                 "type":"when_run_button_click",
+                                 "params":[  
+                                    null
+                                 ],
+                                 "contents":[  
+                                    {  
+                                       "type":"move_direction",
+                                       "params":[  
+                                          {  
+                                             "type":"number",
+                                             "params":[  
+                                                10
+                                             ]
+                                          },
+                                          null
+                                       ]
+                                    }
+                                 ]
+                              },
+                              {  
+                                 "type":"move_direction",
+                                 "params":[  
+                                    {  
+                                       "type":"number",
+                                       "params":[  
+                                          10
+                                       ]
+                                    },
+                                    null
+                                 ]
+                              }
+                           ]
+                        ]
+                    ));
+                });
+            });
 
         })
     });
