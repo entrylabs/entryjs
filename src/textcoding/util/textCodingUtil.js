@@ -59,52 +59,6 @@ Entry.TextCodingUtil = {};
         return false;
     };
 
-    tu.binaryOperatorConvert = function(operator) {
-        var result;
-        switch(operator) {
-            case '==': {
-                result = "EQUAL";
-                break;
-            }
-            case '>': {
-                result = "GREATER";
-                break;
-            }
-            case '<': {
-                result = "LESS";
-                break;
-            }
-            case '>=': {
-                result = "GREATER_OR_EQUAL";
-                break;
-            }
-            case '<=': {
-                result = "LESS_OR_EQUAL";
-                break;
-            }
-            case '+': {
-                result = "PLUS";
-                break;
-            }
-            case '-': {
-                result = "MINUS";
-                break;
-            }
-            case '*': {
-                result = "MULTIFLY";
-                break;
-            }
-            case '/': {
-                result = "DIVIDE";
-                break;
-            }
-            default: {
-                result = operator;
-            }
-        }
-        return result;
-    };
-
     tu.logicalExpressionConvert = function(operator) {
         var result;
         switch(operator) {

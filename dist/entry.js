@@ -13188,37 +13188,6 @@ Entry.TextCodingUtil = {};
   c.isBinaryOperator = function(b) {
     return "==" == b || ">" == b || "<" == b || ">=" == b || "<=" == b || "+" == b || "-" == b || "*" == b || "/" == b ? !0 : !1;
   };
-  c.binaryOperatorConvert = function(b) {
-    switch(b) {
-      case "==":
-        b = "EQUAL";
-        break;
-      case ">":
-        b = "GREATER";
-        break;
-      case "<":
-        b = "LESS";
-        break;
-      case ">=":
-        b = "GREATER_OR_EQUAL";
-        break;
-      case "<=":
-        b = "LESS_OR_EQUAL";
-        break;
-      case "+":
-        b = "PLUS";
-        break;
-      case "-":
-        b = "MINUS";
-        break;
-      case "*":
-        b = "MULTIFLY";
-        break;
-      case "/":
-        b = "DIVIDE";
-    }
-    return b;
-  };
   c.logicalExpressionConvert = function(b) {
     switch(b) {
       case "&&":
@@ -17577,6 +17546,7 @@ Entry.PyToBlockParser = function(c) {
 };
 (function(c) {
   c.util = Entry.TextCodingUtil;
+  c.dict = {"==":"EQUAL", ">":"GREATER", "<":"LESS", ">=":"GREATER_OR_EQUAL", "<=":"LESS_OR_EQUAL", "+":"PLUS", "-":"MINUS", "*":"MULTIFLY", "/":"DIVIDE"};
   c.Programs = function(b) {
     try {
       return this.processPrograms(b);
@@ -17629,6 +17599,10 @@ Entry.PyToBlockParser = function(c) {
     return b.body.map(this.processNode, this);
   };
   c.LogicalExpression = function(b) {
+    return {type:this.dic[b.operator], params:[this.processNode(b.left), void 0, this.processNode(b.right)]};
+  };
+  c.BinaryExpression = function(b) {
+    return {type:"boolean_basic_operator", params:[this.processNode(b.left), this.dict[b.operator], this.processNode(b.right)]};
   };
   c.FunctionDeclaration = function(b) {
     var c = this.processNode(b.id), d = this.blockSyntax["def " + c], f = {}, c = [f];

@@ -21,6 +21,18 @@ Entry.PyToBlockParser = function(blockSyntax) {
 (function(p){
     p.util = Entry.TextCodingUtil;
 
+    p.dict = {
+            '==': "EQUAL",
+            '>': "GREATER",
+            '<': "LESS",
+            '>=': "GREATER_OR_EQUAL",
+            '<=': "LESS_OR_EQUAL",
+            '+': "PLUS",
+            '-': "MINUS",
+            '*': "MULTIFLY",
+            '/': "DIVIDE"
+    };
+
     p.Programs = function(astArr) {
         try {
             return this.processPrograms(astArr);
@@ -140,9 +152,26 @@ Entry.PyToBlockParser = function(blockSyntax) {
     // p.UnaryExpression = function(component) {};
 
     p.LogicalExpression = function(component) {
+        return {
+            type: this.dic[component.operator],
+            params: [
+                this.processNode(component.left),
+                undefined,
+                this.processNode(component.right)
+            ]
+        }
     };
 
-    // p.BinaryExpression = function(component) {};
+    p.BinaryExpression = function(component) {
+        return {
+            type: "boolean_basic_operator",
+            params: [
+                this.processNode(component.left),
+                this.dict[component.operator],
+                this.processNode(component.right)
+            ]
+        };
+    };
 
     // p.UpdateExpression = function(component) {};
 
@@ -275,7 +304,5 @@ Entry.PyToBlockParser = function(blockSyntax) {
         var syntaxObj = blockSchema.syntax.py[0];
         return syntaxObj.syntax || syntaxObj;
     };
-
-
 
 })(Entry.PyToBlockParser.prototype);
