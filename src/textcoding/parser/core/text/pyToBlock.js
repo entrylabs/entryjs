@@ -32,7 +32,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
     p.arithmeticOperator = {
             '+': "PLUS",
             '-': "MINUS",
-            '*': "MULTIFLY",
+            '*': "MULTI",
             '/': "DIVIDE"
     };
 

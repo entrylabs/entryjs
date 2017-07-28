@@ -17547,7 +17547,7 @@ Entry.PyToBlockParser = function(c) {
 (function(c) {
   c.util = Entry.TextCodingUtil;
   c.binaryOperator = {"==":"EQUAL", ">":"GREATER", "<":"LESS", ">=":"GREATER_OR_EQUAL", "<=":"LESS_OR_EQUAL"};
-  c.arithmeticOperator = {"+":"PLUS", "-":"MINUS", "*":"MULTIFLY", "/":"DIVIDE"};
+  c.arithmeticOperator = {"+":"PLUS", "-":"MINUS", "*":"MULTI", "/":"DIVIDE"};
   c.Programs = function(b) {
     try {
       return this.processPrograms(b);

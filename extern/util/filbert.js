@@ -2183,12 +2183,6 @@
             var notLit = nc.createNodeSpan(node, node, "Literal", { value: op === _not });
             exprNode = nc.createNodeRuntimeCall(node, 'ops', 'in', [left, right, notLit]);
           } else raise(tokPos, "Expected 'not in' comparison operator");
-        } else if (op === _plusMin && val === '+' || op === _multiplyModulo && val === '*') {
-          node.arguments = [left];
-          node.arguments.push(parseExprOp(parseMaybeUnary(noIn), prec, noIn));
-          finishNode(node, "CallExpression");
-          node.callee = nc.createNodeOpsCallee(node, op === _plusMin ? "add" : "multiply");
-          exprNode = node;
         } else {
           if (op === _is) {
             if (eat(_not)) node.operator = "!==";
