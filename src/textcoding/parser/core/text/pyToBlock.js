@@ -87,9 +87,13 @@ Entry.PyToBlockParser = function(blockSyntax) {
         return component.name;
     };
 
-    p.VariableDeclaration = function(component) {};
+    p.VariableDeclaration = function(component) {
+        return component.declarations.map(this.processNode , this);
+    };
 
-    p.VariableDeclarator = function(component) {};
+    p.VariableDeclarator = function(component) {
+        return 'init' in component ? component.init.arguments.map(this.processNode , this) : this.processNode(component.id);
+    };
 
     p.AssignmentExpression = function(component) {};
 
@@ -140,14 +144,34 @@ Entry.PyToBlockParser = function(blockSyntax) {
     // p.WhileStatement = function(component) {};
 
     p.BlockStatement = function(component) {
-        return component.body.map(this.processNode, this);
+        var a = component.body.map(this.processNode, this);
+        console.log(a);
+
+        a = { type : a[a.length-1][0].type,
+              params: a[0][0]
+            }
+        return a;
     };
 
-    // p.IfStatement = function(component) {};
+    p.IfStatement = function(component) {
+        // console.log('@ifStatement ' , JSON.stringify(component));
+        var alternate;
+        var consequent;
+        if('alternate' in component)
+            alternate = component.alternate.body.map(this.processNode , this);    
+    
+        return alternate;
+    };
 
-    //  p.ForStatement = function(component) {};
+     p.ForStatement = function(component) {
+        return component.body.map(this.processNode , this);
+     };
 
-    // p.ForInStatement = function(component) {};
+    p.ForInStatement = function(component) {
+        return {
+            type : 'repeat_basic'
+        }
+    };
 
 
     p.BreakStatement = function(component) {
