@@ -22,18 +22,23 @@ Entry.PyToBlockParser = function(blockSyntax) {
     p.util = Entry.TextCodingUtil;
 
     p.binaryOperator = {
-            '==': "EQUAL",
-            '>': "GREATER",
-            '<': "LESS",
-            '>=': "GREATER_OR_EQUAL",
-            '<=': "LESS_OR_EQUAL",
+        '==': "EQUAL",
+        '>': "GREATER",
+        '<': "LESS",
+        '>=': "GREATER_OR_EQUAL",
+        '<=': "LESS_OR_EQUAL",
     };
 
     p.arithmeticOperator = {
-            '+': "PLUS",
-            '-': "MINUS",
-            '*': "MULTI",
-            '/': "DIVIDE"
+        '+': "PLUS",
+        '-': "MINUS",
+        '*': "MULTI",
+        '/': "DIVIDE"
+    };
+
+    p.divideOperator = {
+        '//': "QUOTIENT",
+        '%': "MOD"
     };
 
     p.Programs = function(astArr) {
@@ -76,7 +81,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
         if(component.arguments) {
             obj.params = this.processArguments(
                 obj.type,
-                component.arguments
+                component.arguments,
+                obj.params
             )
         }
 
@@ -137,6 +143,9 @@ Entry.PyToBlockParser = function(blockSyntax) {
         if(property && property.type){
             result.type = blockInfo.key;
         }
+
+        if (blockInfo.params)
+            result.params = blockInfo.params.concat();
 
         return result;
     };
@@ -221,6 +230,18 @@ Entry.PyToBlockParser = function(blockSyntax) {
         } else if (this.arithmeticOperator[operator]) {
             blockType = "calc_basic";
             operator = this.arithmeticOperator[operator];
+        } else if (this.divideOperator[operator]) {
+            return {
+                type: "quotient_and_mod",
+                params: [
+                    undefined,
+                    this.processNode(component.left),
+                    undefined,
+                    this.processNode(component.right),
+                    undefined,
+                    this.divideOperator[operator]
+                ]
+            };
         } else {
             throw new Error("Not supported operator " + component.operator);
         }
@@ -319,25 +340,28 @@ Entry.PyToBlockParser = function(blockSyntax) {
         return;
     };
 
-    p.processArguments = function(blockType, args) {
+    p.processArguments = function(blockType, args, defaultParams) {
         var blockSchema = Entry.block[blockType];
-        var syntax = this.getPySyntax(blockSchema);
+        var syntax = this.getPySyntax(blockSchema, defaultParams);
 
-        var indexes = syntax.match( /\d+/g, '');
+        var indexes = syntax.match( /%\d+/g, '');
         if (!indexes)
             return []
-        var sortedArgs = new Array();
+        var sortedArgs = defaultParams || new Array();
 
         for(var i=0; i < indexes.length; i++) {
-            var idx = parseInt(indexes[i])-1;
+            var idx = parseInt(indexes[i].substring(1))-1;
             sortedArgs[idx] = args[i];
         }
 
         var results = sortedArgs.map(function(arg, index) {
-            return this.processNode(
-                arg,
-                (arg.type === "Literal" && blockSchema.params[index].type !== "Block") ? true : undefined
-            );
+            if (arg && arg.type)
+                return this.processNode(
+                    arg,
+                    (arg.type === "Literal" && blockSchema.params[index].type !== "Block") ? true : undefined
+                );
+            else
+                return arg;
         }, this);
 
         return results;
@@ -361,7 +385,21 @@ Entry.PyToBlockParser = function(blockSyntax) {
     };
 
 
-    p.getPySyntax = function(blockSchema) {
+    p.getPySyntax = function(blockSchema, defaultParams) {
+        if (defaultParams) {
+            var syntaxes = blockSchema.syntax.py.filter(function(s) {
+                if (!s.params)
+                    return false;
+                var isSame = true;
+                s.params.map(function(p, index) {
+                    if (p != defaultParams[index])
+                        isSame = false;
+                })
+                return isSame;
+            });
+            if (syntaxes.length)
+                return syntaxes[0].syntax;
+        }
         var syntaxObj = blockSchema.syntax.py[0];
         return syntaxObj.syntax || syntaxObj;
     };

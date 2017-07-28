@@ -2165,7 +2165,7 @@
       node = startNodeFrom(left);
       next();
       right = parseExprOp(parseMaybeUnary(noIn), prec, noIn);
-      exprNode = nc.createNodeMemberCall(node, "Math", "pow", [left, right]);
+      exprNode = nc.createNodeMemberCall(node, "math", "pow", [left, right]);
       return parseExprOp(exprNode, minPrec, noIn);
     } else if (prec != null && (!noIn || op !== _in)) {
       if (prec > minPrec) {
@@ -2174,8 +2174,7 @@
         if (op === _floorDiv) {
           right = parseExprOp(parseMaybeUnary(noIn), prec, noIn);
           finishNode(node);
-          var binExpr = nc.createNodeSpan(node, node, "BinaryExpression", { left: left, operator: '/', right: right });
-          exprNode = nc.createNodeMemberCall(node, "Math", "floor", [binExpr]);
+          exprNode = nc.createNodeSpan(node, node, "BinaryExpression", { left: left, operator: '//', right: right });
         } else if (op === _in || op === _not) {
           if (op === _in || eat(_in)) {
             right = parseExprOp(parseMaybeUnary(noIn), prec, noIn);

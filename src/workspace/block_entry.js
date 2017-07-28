@@ -9328,6 +9328,20 @@ Entry.block = {
                     null
                 ]
             },
+            { // for square
+                syntax: "math.pow(%2)",
+                params: [null, null, null, "square"],
+                blockType: "param",
+                textParams: [
+                    undefined,
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    undefined,
+                    null
+                ]
+            },
             {
                 syntax: "math.sqrt(%2)",
                 params: [null, null, null, "root"],
