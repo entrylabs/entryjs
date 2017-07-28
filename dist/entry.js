@@ -17548,6 +17548,7 @@ Entry.PyToBlockParser = function(c) {
   c.util = Entry.TextCodingUtil;
   c.binaryOperator = {"==":"EQUAL", ">":"GREATER", "<":"LESS", ">=":"GREATER_OR_EQUAL", "<=":"LESS_OR_EQUAL"};
   c.arithmeticOperator = {"+":"PLUS", "-":"MINUS", "*":"MULTI", "/":"DIVIDE"};
+  c.divideOperator = {"//":"QUOTIENT", "%":"MOD"};
   c.Programs = function(b) {
     try {
       return this.processPrograms(b);
@@ -17624,6 +17625,9 @@ Entry.PyToBlockParser = function(c) {
       if (this.arithmeticOperator[c]) {
         e = "calc_basic", c = this.arithmeticOperator[c];
       } else {
+        if (this.divideOperator[c]) {
+          return {type:"quotient_and_mod", params:[void 0, this.processNode(b.left), void 0, this.processNode(b.right), void 0, this.divideOperator[c]]};
+        }
         throw Error("Not supported operator " + b.operator);
       }
     }

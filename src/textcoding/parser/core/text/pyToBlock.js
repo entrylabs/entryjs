@@ -22,18 +22,23 @@ Entry.PyToBlockParser = function(blockSyntax) {
     p.util = Entry.TextCodingUtil;
 
     p.binaryOperator = {
-            '==': "EQUAL",
-            '>': "GREATER",
-            '<': "LESS",
-            '>=': "GREATER_OR_EQUAL",
-            '<=': "LESS_OR_EQUAL",
+        '==': "EQUAL",
+        '>': "GREATER",
+        '<': "LESS",
+        '>=': "GREATER_OR_EQUAL",
+        '<=': "LESS_OR_EQUAL",
     };
 
     p.arithmeticOperator = {
-            '+': "PLUS",
-            '-': "MINUS",
-            '*': "MULTI",
-            '/': "DIVIDE"
+        '+': "PLUS",
+        '-': "MINUS",
+        '*': "MULTI",
+        '/': "DIVIDE"
+    };
+
+    p.divideOperator = {
+        '//': "QUOTIENT",
+        '%': "MOD"
     };
 
     p.Programs = function(astArr) {
@@ -197,6 +202,18 @@ Entry.PyToBlockParser = function(blockSyntax) {
         } else if (this.arithmeticOperator[operator]) {
             blockType = "calc_basic";
             operator = this.arithmeticOperator[operator];
+        } else if (this.divideOperator[operator]) {
+            return {
+                type: "quotient_and_mod",
+                params: [
+                    undefined,
+                    this.processNode(component.left),
+                    undefined,
+                    this.processNode(component.right),
+                    undefined,
+                    this.divideOperator[operator]
+                ]
+            };
         } else {
             throw new Error("Not supported operator " + component.operator);
         }
