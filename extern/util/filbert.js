@@ -2165,7 +2165,7 @@
       node = startNodeFrom(left);
       next();
       right = parseExprOp(parseMaybeUnary(noIn), prec, noIn);
-      exprNode = nc.createNodeMemberCall(node, "Math", "pow", [left, right]);
+      exprNode = nc.createNodeMemberCall(node, "math", "pow", [left, right]);
       return parseExprOp(exprNode, minPrec, noIn);
     } else if (prec != null && (!noIn || op !== _in)) {
       if (prec > minPrec) {

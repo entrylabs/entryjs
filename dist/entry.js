@@ -17568,7 +17568,7 @@ Entry.PyToBlockParser = function(c) {
   };
   c.CallExpression = function(b) {
     var c = this.processNode(b.callee);
-    b.arguments && (c.params = this.processArguments(c.type, b.arguments));
+    b.arguments && (c.params = this.processArguments(c.type, b.arguments, c.params));
     return c;
   };
   c.Identifier = function(b, c, e) {
@@ -17595,6 +17595,7 @@ Entry.PyToBlockParser = function(c) {
     var c = b.property, e = {};
     b = this.blockSyntax[b.object.name][this.processNode(c)];
     c && c.type && (e.type = b.key);
+    b.params && (e.params = b.params.concat());
     return e;
   };
   c.BlockStatement = function(b) {
@@ -17650,18 +17651,19 @@ Entry.PyToBlockParser = function(c) {
       this[b.type](c);
     }, this);
   };
-  c.processArguments = function(b, c) {
+  c.processArguments = function(b, c, e) {
     var d = Entry.block[b];
-    b = this.getPySyntax(d).match(/\d+/g, "");
+    b = this.getPySyntax(d, e).match(/%\d+/g, "");
     if (!b) {
       return [];
     }
-    for (var f = [], g = 0;g < b.length;g++) {
-      var h = parseInt(b[g]) - 1;
-      f[h] = c[g];
+    e = e || [];
+    for (var g = 0;g < b.length;g++) {
+      var h = parseInt(b[g].substring(1)) - 1;
+      e[h] = c[g];
     }
-    return f.map(function(b, c) {
-      return this.processNode(b, "Literal" === b.type && "Block" !== d.params[c].type ? !0 : void 0);
+    return e.map(function(b, c) {
+      return b && b.type ? this.processNode(b, "Literal" === b.type && "Block" !== d.params[c].type ? !0 : void 0) : b;
     }, this);
   };
   c.processNode = function(b, c) {
@@ -17678,7 +17680,22 @@ Entry.PyToBlockParser = function(c) {
     }
     return this[c.type].apply(this, f);
   };
-  c.getPySyntax = function(b) {
+  c.getPySyntax = function(b, c) {
+    if (c) {
+      var d = b.syntax.py.filter(function(b) {
+        if (!b.params) {
+          return !1;
+        }
+        var d = !0;
+        b.params.map(function(b, e) {
+          b != c[e] && (d = !1);
+        });
+        return d;
+      });
+      if (d.length) {
+        return d[0].syntax;
+      }
+    }
     b = b.syntax.py[0];
     return b.syntax || b;
   };
