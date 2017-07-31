@@ -5692,33 +5692,33 @@ Entry.toRadian = function(c) {
 Entry.toDegrees = function(c) {
   return 180 * c / Math.PI;
 };
-Entry.getPicturesJSON = function(c) {
-  for (var b = [], e = 0, d = c.length; e < d; e++) {
-    var f = c[e], g = {};
-    g._id = f._id;
-    g.id = f.id;
-    g.dimension = f.dimension;
-    g.filename = f.filename;
-    g.fileurl = f.fileurl;
-    g.name = f.name;
-    g.scale = f.scale;
-    b.push(g);
+Entry.getPicturesJSON = function(c, b) {
+  for (var e = [], d = 0, f = c.length; d < f; d++) {
+    var g = c[d], h = {};
+    h._id = g._id;
+    h.id = b ? Entry.generateHash() : g.id;
+    h.dimension = g.dimension;
+    h.filename = g.filename;
+    h.fileurl = g.fileurl;
+    h.name = g.name;
+    h.scale = g.scale;
+    e.push(h);
   }
-  return b;
+  return e;
 };
-Entry.getSoundsJSON = function(c) {
-  for (var b = [], e = 0, d = c.length; e < d; e++) {
-    var f = c[e], g = {};
-    g._id = f._id;
-    g.duration = f.duration;
-    g.ext = f.ext;
-    g.id = f.id;
-    g.filename = f.filename;
-    g.fileurl = f.fileurl;
-    g.name = f.name;
-    b.push(g);
+Entry.getSoundsJSON = function(c, b) {
+  for (var e = [], d = 0, f = c.length; d < f; d++) {
+    var g = c[d], h = {};
+    h._id = g._id;
+    h.duration = g.duration;
+    h.ext = g.ext;
+    h.id = b ? Entry.generateHash() : g.id;
+    h.filename = g.filename;
+    h.fileurl = g.fileurl;
+    h.name = g.name;
+    e.push(h);
   }
-  return b;
+  return e;
 };
 Entry.cutDecimal = function(c) {
   return Math.round(100 * c) / 100;
@@ -7117,13 +7117,11 @@ Entry.Container.prototype.removeExtension = function(c) {
   }
 };
 Entry.Container.prototype.addCloneObject = function(c, b) {
-  c = c.toJSON();
-  var e = Entry.generateHash();
-  Entry.variableContainer.addCloneLocalVariables({objectId:c.id, newObjectId:e, json:c});
-  c.id = e;
-  c.scene = b || Entry.scene.selectedScene;
-  this.addObject(c);
-  return this.getObject(e);
+  var e = c.toJSON(!0);
+  Entry.variableContainer.addCloneLocalVariables({objectId:c.id, newObjectId:e.id, json:e});
+  e.scene = b || Entry.scene.selectedScene;
+  this.addObject(e);
+  return this.getObject(e.id);
 };
 Entry.Container.prototype.removeObject = function(c) {
   var b = this.objects_.indexOf(c), e = c.toJSON();
@@ -10923,20 +10921,20 @@ Entry.EntryObject = function(c) {
   c.isSelected = function() {
     return this.isSelected_;
   };
-  c.toJSON = function() {
-    var b = {};
-    b.id = this.id;
-    b.name = this.name;
-    "textBox" == this.objectType && (b.text = this.text);
-    b.script = this.getScriptText();
-    "sprite" == this.objectType && (b.selectedPictureId = this.selectedPicture.id);
-    b.objectType = this.objectType;
-    b.rotateMethod = this.getRotateMethod();
-    b.scene = this.scene.id;
-    b.sprite = {pictures:Entry.getPicturesJSON(this.pictures), sounds:Entry.getSoundsJSON(this.sounds)};
-    b.lock = this.lock;
-    b.entity = this.entity.toJSON();
-    return b;
+  c.toJSON = function(b) {
+    var c = {};
+    c.id = b ? Entry.generateHash() : this.id;
+    c.name = this.name;
+    "textBox" == this.objectType && (c.text = this.text);
+    c.script = this.getScriptText();
+    c.objectType = this.objectType;
+    c.rotateMethod = this.getRotateMethod();
+    c.scene = this.scene.id;
+    c.sprite = {pictures:Entry.getPicturesJSON(this.pictures, b), sounds:Entry.getSoundsJSON(this.sounds, b)};
+    "sprite" == this.objectType && (c.selectedPictureId = c.sprite.pictures[this.pictures.indexOf(this.selectedPicture)].id);
+    c.lock = this.lock;
+    c.entity = this.entity.toJSON();
+    return c;
   };
   c.destroy = function() {
     this.entity && this.entity.destroy();
