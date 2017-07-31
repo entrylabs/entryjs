@@ -270,7 +270,7 @@ Entry.EntityObject.prototype.setRotation = function(rotation) {
  * @return {number}
  */
 Entry.EntityObject.prototype.getRotation = function(toFixedValue) {
-    if (toFixedValue) return Entry.Utils.toFixed(toFixedValue);
+    if (toFixedValue) return Entry.Utils.toFixed(this.rotation, toFixedValue);
     else return this.rotation;
 };
 

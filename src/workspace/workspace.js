@@ -128,7 +128,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
 
         var alert_message;
         if (!checkObjectAndAlert(object))
-            return;
+            return false; // change mode fail
 
         switch (this.mode) {
             case WORKSPACE.MODE_VIMBOARD:

@@ -107,7 +107,8 @@ Entry.Func.edit = function(func) {
 
     Entry.Func.isEdit = true;
     this.targetFunc = func;
-    this.initEditView(func.content);
+    if (!this.initEditView(func.content) === false)
+        return; // edit fail
     this.bindFuncChangeEvent();
     this.updateMenu();
     setTimeout(function() {
@@ -123,7 +124,10 @@ Entry.Func.initEditView = function(content) {
     if (!this.menuCode)
         this.setupMenuCode();
     var workspace = Entry.getMainWS();
-    workspace.setMode(Entry.Workspace.MODE_OVERLAYBOARD);
+    if (workspace.setMode(Entry.Workspace.MODE_OVERLAYBOARD) === false) {
+        this.endEdit("cancelEdit");
+        return false;
+    }
     workspace.changeOverlayBoardCode(content);
     this._workspaceStateEvent =
         workspace.changeEvent.attach(this, function(message) {
