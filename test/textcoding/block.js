@@ -1294,6 +1294,92 @@ describe('EntryPython', function(){
                         ]
                     ));
                 });
+
+                it('repeat basic block' , function() {
+                    Entry.loadProject(Entry.getStartProject()); 
+                    Entry.playground.object = Entry.container.objects_[0];
+                    // var resultBlock = Test.parsePython("def when_start():\n    for i in range(10):\n    Entry.move_to_direction(10)");
+                    // console.log(JSON.stringify(resultBlock));
+                    assert.ok(Test.pythonToBlock(
+                        "def when_start():\n    for i in range(10):\n    Entry.move_to_direction(10)",
+                        [  
+                           [  
+                              {  
+                                 "type":"when_run_button_click",
+                                 "params":[  
+                                    null
+                                 ],
+                                 "contents":[  
+                                    {  
+                                       "type":"repeat_basic",
+                                       "params":[  
+                                          {  
+                                             "callee":"__pythonRuntime.functions.range",
+                                             "arguments":[  
+                                                10
+                                             ],
+                                             "type":"number",
+                                             "params":[  
+                                                10
+                                             ]
+                                          }
+                                       ],
+                                       "statements":[  
+                                          [  
+
+                                          ]
+                                       ]
+                                    },
+                                    {  
+                                       "type":"move_direction",
+                                       "params":[  
+                                          {  
+                                             "type":"number",
+                                             "params":[  
+                                                10
+                                             ]
+                                          },
+                                          null
+                                       ]
+                                    }
+                                 ]
+                              },
+                              {  
+                                 "type":"repeat_basic",
+                                 "params":[  
+                                    {  
+                                       "callee":"__pythonRuntime.functions.range",
+                                       "arguments":[  
+                                          10
+                                       ],
+                                       "type":"number",
+                                       "params":[  
+                                          10
+                                       ]
+                                    }
+                                 ],
+                                 "statements":[  
+                                    [  
+
+                                    ]
+                                 ]
+                              },
+                              {  
+                                 "type":"move_direction",
+                                 "params":[  
+                                    {  
+                                       "type":"number",
+                                       "params":[  
+                                          10
+                                       ]
+                                    },
+                                    null
+                                 ]
+                              }
+                           ]
+                        ]
+                    ));
+                });
             });
 
         })
