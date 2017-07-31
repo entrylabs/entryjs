@@ -8337,7 +8337,7 @@ Entry.EntityObject.prototype.setRotation = function(c) {
   Entry.requestUpdate = !0;
 };
 Entry.EntityObject.prototype.getRotation = function(c) {
-  return c ? Entry.Utils.toFixed(c) : this.rotation;
+  return c ? Entry.Utils.toFixed(this.rotation, c) : this.rotation;
 };
 Entry.EntityObject.prototype.setRegX = function(c) {
   "textBox" == this.type && (c = 0);
@@ -8960,16 +8960,18 @@ Entry.Func.prototype.destroy = function() {
   this.blockMenuBlock && this.blockMenuBlock.destroy();
 };
 Entry.Func.edit = function(c) {
-  c && ("string" === typeof c && (c = Entry.variableContainer.getFunction(/(func_)?(.*)/.exec(c)[2])), this.unbindFuncChangeEvent(), this.unbindWorkspaceStateChangeEvent(), this.cancelEdit(), Entry.Func.isEdit = !0, this.targetFunc = c, this.initEditView(c.content), this.bindFuncChangeEvent(), this.updateMenu(), setTimeout(function() {
+  c && ("string" === typeof c && (c = Entry.variableContainer.getFunction(/(func_)?(.*)/.exec(c)[2])), this.unbindFuncChangeEvent(), this.unbindWorkspaceStateChangeEvent(), this.cancelEdit(), Entry.Func.isEdit = !0, this.targetFunc = c, !1 !== !this.initEditView(c.content) && (this.bindFuncChangeEvent(), this.updateMenu(), setTimeout(function() {
     var b = Entry.block["func_" + c.id];
     b && b.paramsBackupEvent && b.paramsBackupEvent.notify();
     this._backupContent = c.content.stringify();
-  }.bind(this), 0));
+  }.bind(this), 0)));
 };
 Entry.Func.initEditView = function(c) {
   this.menuCode || this.setupMenuCode();
   var b = Entry.getMainWS();
-  b.setMode(Entry.Workspace.MODE_OVERLAYBOARD);
+  if (!1 === b.setMode(Entry.Workspace.MODE_OVERLAYBOARD)) {
+    return this.endEdit("cancelEdit"), !1;
+  }
   b.changeOverlayBoardCode(c);
   this._workspaceStateEvent = b.changeEvent.attach(this, function(c) {
     this.endEdit(c || "cancelEdit");
@@ -14202,49 +14204,50 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
       var g = Entry.Vim;
       var h = Entry.Workspace, k = this.blockMenu;
       e && !f ? (entrylms.alert("\uc624\ube0c\uc81d\ud2b8\uac00 \uc874\uc7ac\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4. \uc624\ube0c\uc81d\ud2b8\ub97c \ucd94\uac00\ud55c \ud6c4 \uc2dc\ub3c4\ud574\uc8fc\uc138\uc694."), e = !1) : e = !0;
-      if (e) {
-        switch(this.mode) {
-          case h.MODE_VIMBOARD:
-            if (g = Entry.TextCodingUtil.isNamesIncludeSpace()) {
-              entrylms.alert(g);
-              b = {};
-              b.boardType = h.MODE_BOARD;
-              b.textType = -1;
-              Entry.getMainWS().setMode(b);
-              break;
-            }
-            if (g = Entry.TextCodingUtil.canConvertTextModeForOverlayMode(Entry.Workspace.MODE_VIMBOARD)) {
-              entrylms.alert(g);
-              return;
-            }
-            this.board && this.board.hide();
-            this.overlayBoard && this.overlayBoard.hide();
-            this.set({selectedBoard:this.vimBoard});
-            this.vimBoard.show();
-            k.banClass("functionInit", !0);
-            this.codeToText(this.board.code, b);
-            this.board.clear();
-            this.oldTextType = this.textType;
-            break;
-          case h.MODE_BOARD:
-            try {
-              this.board.show(), k.unbanClass("functionInit", !0), this.set({selectedBoard:this.board}), this.textToCode(this.oldMode, this.oldTextType), this.overlayBoard && this.overlayBoard.hide(), this.oldTextType = this.textType, this.vimBoard && this.vimBoard.hide();
-            } catch (l) {
-              this.board && this.board.code && this.board.code.clear(), this.board && this.board.hide(), this.set({selectedBoard:this.vimBoard}), k.banClass("functionInit"), this.mode = h.MODE_VIMBOARD, this.oldTextType == g.TEXT_TYPE_JS ? (b.boardType = h.MODE_VIMBOARD, b.textType = g.TEXT_TYPE_JS, b.runType = g.MAZE_MODE, this.oldTextType = g.TEXT_TYPE_JS) : this.oldTextType == g.TEXT_TYPE_PY && (b.boardType = h.MODE_VIMBOARD, b.textType = g.TEXT_TYPE_PY, b.runType = g.WORKSPACE_MODE, this.oldTextType = 
-              g.TEXT_TYPE_PY), Entry.getMainWS().setMode(b);
-            }
-            Entry.commander.setCurrentEditor("board", this.board);
-            break;
-          case h.MODE_OVERLAYBOARD:
-            this.oldMode == h.MODE_VIMBOARD ? this.overlayModefrom = h.MODE_VIMBOARD : this.oldMode == h.MODE_BOARD && (this.overlayModefrom = h.MODE_BOARD), this.overlayBoard || this.initOverlayBoard(), this.overlayBoard.show(), this.set({selectedBoard:this.overlayBoard}), Entry.commander.setCurrentEditor("board", this.overlayBoard);
-        }
-        this.oldMode = this.mode;
-        Entry.isTextMode = this.mode == h.MODE_VIMBOARD;
-        k.align();
-        Entry.dispatchEvent("workspaceChangeMode");
-        this.changeEvent.notify(c);
-        Entry.dispatchEvent("cancelBlockMenuDynamic");
+      if (!e) {
+        return !1;
       }
+      switch(this.mode) {
+        case h.MODE_VIMBOARD:
+          if (g = Entry.TextCodingUtil.isNamesIncludeSpace()) {
+            entrylms.alert(g);
+            b = {};
+            b.boardType = h.MODE_BOARD;
+            b.textType = -1;
+            Entry.getMainWS().setMode(b);
+            break;
+          }
+          if (g = Entry.TextCodingUtil.canConvertTextModeForOverlayMode(Entry.Workspace.MODE_VIMBOARD)) {
+            entrylms.alert(g);
+            return;
+          }
+          this.board && this.board.hide();
+          this.overlayBoard && this.overlayBoard.hide();
+          this.set({selectedBoard:this.vimBoard});
+          this.vimBoard.show();
+          k.banClass("functionInit", !0);
+          this.codeToText(this.board.code, b);
+          this.board.clear();
+          this.oldTextType = this.textType;
+          break;
+        case h.MODE_BOARD:
+          try {
+            this.board.show(), k.unbanClass("functionInit", !0), this.set({selectedBoard:this.board}), this.textToCode(this.oldMode, this.oldTextType), this.overlayBoard && this.overlayBoard.hide(), this.oldTextType = this.textType, this.vimBoard && this.vimBoard.hide();
+          } catch (l) {
+            this.board && this.board.code && this.board.code.clear(), this.board && this.board.hide(), this.set({selectedBoard:this.vimBoard}), k.banClass("functionInit"), this.mode = h.MODE_VIMBOARD, this.oldTextType == g.TEXT_TYPE_JS ? (b.boardType = h.MODE_VIMBOARD, b.textType = g.TEXT_TYPE_JS, b.runType = g.MAZE_MODE, this.oldTextType = g.TEXT_TYPE_JS) : this.oldTextType == g.TEXT_TYPE_PY && (b.boardType = h.MODE_VIMBOARD, b.textType = g.TEXT_TYPE_PY, b.runType = g.WORKSPACE_MODE, this.oldTextType = 
+            g.TEXT_TYPE_PY), Entry.getMainWS().setMode(b);
+          }
+          Entry.commander.setCurrentEditor("board", this.board);
+          break;
+        case h.MODE_OVERLAYBOARD:
+          this.oldMode == h.MODE_VIMBOARD ? this.overlayModefrom = h.MODE_VIMBOARD : this.oldMode == h.MODE_BOARD && (this.overlayModefrom = h.MODE_BOARD), this.overlayBoard || this.initOverlayBoard(), this.overlayBoard.show(), this.set({selectedBoard:this.overlayBoard}), Entry.commander.setCurrentEditor("board", this.overlayBoard);
+      }
+      this.oldMode = this.mode;
+      Entry.isTextMode = this.mode == h.MODE_VIMBOARD;
+      k.align();
+      Entry.dispatchEvent("workspaceChangeMode");
+      this.changeEvent.notify(c);
+      Entry.dispatchEvent("cancelBlockMenuDynamic");
     }
   };
   c.changeBoardCode = function(b, c) {
