@@ -5115,9 +5115,9 @@ Entry.Collection = function(c) {
       c[g.id] = g;
     }
   };
-  c.insert = function(c, d) {
-    b.splice.call(this, d, 0, c);
-    this._hashMap[c.id] = c;
+  c.insert = function(f, c) {
+    b.splice.call(this, c, 0, f);
+    this._hashMap[f.id] = f;
   };
   c.has = function(b) {
     return !!this._hashMap[b];
@@ -12797,6 +12797,7 @@ Entry.PyToBlockParser = function(c) {
   c.util = Entry.TextCodingUtil;
   c.binaryOperator = {"==":"EQUAL", ">":"GREATER", "<":"LESS", ">=":"GREATER_OR_EQUAL", "<=":"LESS_OR_EQUAL"};
   c.arithmeticOperator = {"+":"PLUS", "-":"MINUS", "*":"MULTI", "/":"DIVIDE"};
+  c.divideOperator = {"//":"QUOTIENT", "%":"MOD"};
   c.Programs = function(b) {
     try {
       return this.processPrograms(b);
@@ -12816,7 +12817,7 @@ Entry.PyToBlockParser = function(c) {
   };
   c.CallExpression = function(b) {
     var c = this.processNode(b.callee);
-    b.arguments && (c.params = this.processArguments(c.type, b.arguments));
+    b.arguments && (c.params = this.processArguments(c.type, b.arguments, c.params));
     return c;
   };
   c.Identifier = function(b, c, d) {
@@ -12826,7 +12827,8 @@ Entry.PyToBlockParser = function(c) {
     return b.declarations.map(this.processNode, this);
   };
   c.VariableDeclarator = function(b) {
-    return "init" in b ? b.init.arguments.map(this.processNode, this) : this.processNode(b.id);
+    console.log("@VariableDeclarator", b);
+    return "init" in b && "arguments" in b.init ? b.init.arguments.map(this.processNode, this) : this.processNode(b.id);
   };
   c.AssignmentExpression = function(b) {
   };
@@ -12845,24 +12847,29 @@ Entry.PyToBlockParser = function(c) {
     var c = b.property, d = {};
     b = this.blockSyntax[b.object.name][this.processNode(c)];
     c && c.type && (d.type = b.key);
+    b.params && (d.params = b.params.concat());
     return d;
   };
   c.BlockStatement = function(b) {
-    b = b.body.map(this.processNode, this);
-    console.log(b);
-    return b = {type:b[b.length - 1][0].type, params:b[0][0]};
+    return b.body.map(this.processNode, this);
   };
   c.IfStatement = function(b) {
-    var c;
-    "alternate" in b && (c = b.alternate.body.map(this.processNode, this));
+    var c = [], d;
+    "alternate" in b && (d = b.alternate.body.map(this.processNode, this), c.push(d[0]), console.log("alternate ", d));
+    "consequent" in b && (b = b.consequent.body.map(this.processNode, this), c.push(b[0]), console.log("consequent ", b));
+    console.log("Ifstatement array === ", JSON.stringify(c));
     return c;
   };
   c.ForStatement = function(b) {
-    console.log("@Forstatement", b);
-    return b.body.map(this.processNode, this);
+    b = b.body.body;
+    return this.processNode(b[b.length - 1]);
   };
   c.ForInStatement = function(b) {
-    return {type:"repeat_basic"};
+    b = b.body.body[0] && "expression" in b.body.body[0] ? b.body.body[0].expression.arguments.map(this.processNode, this) : null;
+    console.log("##for in statement ", b);
+    var c = {type:"repeat_basic", params:b, statements:[[]]};
+    c.params[0].arguments = b[0].params;
+    return c;
   };
   c.BreakStatement = function(b) {
     return {type:this.blockSyntax.break.key};
@@ -12890,6 +12897,9 @@ Entry.PyToBlockParser = function(c) {
       if (this.arithmeticOperator[c]) {
         d = "calc_basic", c = this.arithmeticOperator[c];
       } else {
+        if (this.divideOperator[c]) {
+          return {type:"quotient_and_mod", params:[void 0, this.processNode(b.left), void 0, this.processNode(b.right), void 0, this.divideOperator[c]]};
+        }
         throw Error("Not supported operator " + b.operator);
       }
     }
@@ -12897,32 +12907,39 @@ Entry.PyToBlockParser = function(c) {
   };
   c.FunctionDeclaration = function(b) {
     var c = this.processNode(b.id), d = this.blockSyntax["def " + c], e = {}, c = [e];
-    b = b.body.body[0].argument.callee.object.body.body.map(this.processNode, this);
+    c[0].contents = [];
+    b = b.body.body[0].argument.callee.object.body.body;
+    b = 0 < b.length ? b.map(this.processNode, this) : [];
+    0 < b.length && b[0].constructor == Array && (b = b[0][b[0].length - 1]);
+    console.log("FunctionDeclaration", b);
     d && (e.type = d.key);
     for (d = 0;d < b.length;d++) {
-      c.push(b[d]);
+      c[0].contents.push(b[d]), c.push(b[d]);
     }
+    console.log("thread array == ", c);
     return c;
   };
   c.ReturnStatement = function(b) {
-    return b.argument.map(this.processNode, this);
+    return b.argument.arguments.map(this.processNode, this);
   };
   c.callFunc = function(b, c) {
     b[c].map(function(c) {
       this[b.type](c);
     }, this);
   };
-  c.processArguments = function(b, c) {
-    var d = Entry.block[b], e = this.getPySyntax(d).match(/\d+/g, "");
-    if (!e) {
+  c.processArguments = function(b, c, d) {
+    var e = Entry.block[b];
+    b = this.getPySyntax(e, d).match(/%\d+/g, "");
+    if (!b) {
       return [];
     }
-    for (var g = [], h = 0;h < e.length;h++) {
-      var k = parseInt(e[h]) - 1;
-      g[k] = c[h];
+    d = d || [];
+    for (var g = 0;g < b.length;g++) {
+      var h = parseInt(b[g].substring(1)) - 1;
+      d[h] = c[g];
     }
-    return g.map(function(b, c) {
-      return this.processNode(b, "Literal" === b.type && "Block" !== d.params[c].type ? !0 : void 0);
+    return d.map(function(b, c) {
+      return b && b.type ? this.processNode(b, "Literal" === b.type && "Block" !== e.params[c].type ? !0 : void 0) : b;
     }, this);
   };
   c.processNode = function(b, c) {
@@ -12939,9 +12956,24 @@ Entry.PyToBlockParser = function(c) {
     }
     return this[c.type].apply(this, e);
   };
-  c.getPySyntax = function(b) {
-    b = b.syntax.py[0];
-    return b.syntax || b;
+  c.getPySyntax = function(b, c) {
+    if (c) {
+      var d = b.syntax.py.filter(function(b) {
+        if (!b.params) {
+          return !1;
+        }
+        var d = !0;
+        b.params.map(function(b, e) {
+          b != c[e] && (d = !1);
+        });
+        return d;
+      });
+      if (d.length) {
+        return d[0].syntax;
+      }
+    }
+    d = b.syntax.py[0];
+    return d.syntax || d;
   };
   c.assert = function(b, c) {
     if (!b) {

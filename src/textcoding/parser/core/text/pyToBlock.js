@@ -98,7 +98,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
     };
 
     p.VariableDeclarator = function(component) {
-        return 'init' in component ? component.init.arguments.map(this.processNode , this) : this.processNode(component.id);
+        console.log('@VariableDeclarator' , component);
+        return ('init' in component) && ('arguments' in component.init) ? component.init.arguments.map(this.processNode , this) : this.processNode(component.id);
     };
 
     p.AssignmentExpression = function(component) {};
@@ -153,33 +154,50 @@ Entry.PyToBlockParser = function(blockSyntax) {
     // p.WhileStatement = function(component) {};
 
     p.BlockStatement = function(component) {
-        var a = component.body.map(this.processNode, this);
-        console.log(a);
-
-        a = { type : a[a.length-1][0].type,
-              params: a[0][0]
-            }
-        return a;
+       return component.body.map(this.processNode, this);
     };
 
     p.IfStatement = function(component) {
-        // console.log('@ifStatement ' , JSON.stringify(component));
-        var alternate;
+        var arr = []; 
         var consequent;
-        if('alternate' in component)
-            alternate = component.alternate.body.map(this.processNode , this);    
-    
-        return alternate;
+        var alternate;
+
+        if('alternate' in component){
+            alternate = component.alternate.body.map(this.processNode , this);
+            arr.push(alternate[0]);
+            console.log('alternate ' , alternate);
+        }
+
+        if('consequent' in component) {
+            consequent = component.consequent.body.map(this.processNode , this);
+            arr.push(consequent[0]);
+            console.log('consequent ' , consequent);
+
+        }
+
+        console.log('Ifstatement array === ' , JSON.stringify(arr));
+        
+        return arr;
     };
 
      p.ForStatement = function(component) {
-        return component.body.map(this.processNode , this);
+        var body = component.body.body;
+        return this.processNode(body[body.length-1]);
      };
 
     p.ForInStatement = function(component) {
-        return {
-            type : 'repeat_basic'
+        var  expression = component.body.body[0] && 'expression' in component.body.body[0] ?
+                            component.body.body[0].expression.arguments.map(this.processNode , this) : null;
+       
+        console.log('##for in statement ' , expression);
+        var obj =  {
+            "type" : "repeat_basic",
+            "params": expression,
+            "statements" : [[]]
         }
+
+        obj.params[0].arguments  = expression[0].params;
+        return obj;
     };
 
 
@@ -261,24 +279,35 @@ Entry.PyToBlockParser = function(blockSyntax) {
         var blockName = this.processNode(component.id);
         var blockInfo = this.blockSyntax['def '+blockName];
         var type = {};
-        var ThreadArr = [type];
-        var funcDef = component.body.body[0].argument.callee.object.body.body.map(this.processNode , this);
+        var threadArr = [type];
+        threadArr[0].contents = [];
+        var contents = component.body.body[0].argument.callee.object.body.body;
+
+        var definedBlocks = contents.length > 0 ? contents.map(this.processNode , this) : [];
+
+        if(definedBlocks.length > 0 && definedBlocks[0].constructor == Array) {
+            definedBlocks = definedBlocks[0][definedBlocks[0].length-1];
+        }
+
+        console.log('FunctionDeclaration' , definedBlocks);
 
         if(blockInfo){
             type.type = blockInfo.key;
         }
 
-        for(var i=0; i<funcDef.length; i++) {
-            ThreadArr.push(funcDef[i]);
+        for(var i=0; i < definedBlocks.length; i++) {
+             threadArr[0].contents.push(definedBlocks[i]);
+             threadArr.push(definedBlocks[i]);
         }
 
-        return ThreadArr;
+        console.log('thread array == ' , threadArr);
+        return threadArr;
     };
 
     // p.FunctionExpression = function(component) {};
 
     p.ReturnStatement = function(component) {
-        return component.argument.map(this.processNode , this );
+        return component.argument.arguments.map(this.processNode , this );
     };
 
     // p.ThisExpression = function(component) {};

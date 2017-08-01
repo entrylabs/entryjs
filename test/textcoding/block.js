@@ -1301,7 +1301,7 @@ describe('EntryPython', function(){
                     // var resultBlock = Test.parsePython("def when_start():\n    for i in range(10):\n    Entry.move_to_direction(10)");
                     // console.log(JSON.stringify(resultBlock));
                     assert.ok(Test.pythonToBlock(
-                        "def when_start():\n    for i in range(10):\n    Entry.move_to_direction(10)",
+                        "def when_start():\n    for i in range(10):\n        Entry.move_to_direction(10)",
                         [  
                            [  
                               {  
