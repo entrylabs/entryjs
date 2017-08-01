@@ -12832,14 +12832,17 @@ Entry.PyToBlockParser = function(c) {
   c.AssignmentExpression = function(b) {
   };
   c.Literal = function(b, c) {
-    if (c) {
-      return b.value;
-    }
     switch(typeof b.value) {
       case "boolean":
         return {type:b.value ? "True" : "False"};
-      default:
+    }
+    switch(c ? c.type : "Block") {
+      case "DropdownDynamic":
+        return b.value;
+      case "Block":
         return {type:"number", params:[b.value]};
+      default:
+        return b.value;
     }
   };
   c.MemberExpression = function(b) {
@@ -12864,7 +12867,6 @@ Entry.PyToBlockParser = function(c) {
   };
   c.ForInStatement = function(b) {
     b.body.body[0] && "expression" in b.body.body[0] && b.body.body[0].expression.arguments.map(this.processNode, this);
-    console.log(JSON.stringify(b));
     return {type:"repeat_basic", params:[], statements:[]};
   };
   c.BreakStatement = function(b) {
@@ -12910,7 +12912,6 @@ Entry.PyToBlockParser = function(c) {
       var h = b[g];
       h.constructor == Array && (b[g] = 0 < h.length ? h[h.length - 1][0] : h[0][0]);
     }
-    console.log("FunctionDeclaration", b);
     c && (d.type = c.key);
     for (g = 0;g < b.length;g++) {
       e[0].blocks.push(b[g]), e.push(b[g]);
@@ -12918,9 +12919,7 @@ Entry.PyToBlockParser = function(c) {
     return e;
   };
   c.FunctionExpression = function(b) {
-    b = this.processNode(b.body);
-    console.log("#FunctionExpression", b);
-    return b;
+    return this.processNode(b.body);
   };
   c.ReturnStatement = function(b) {
     return b.argument.arguments.map(this.processNode, this);
@@ -12942,7 +12941,7 @@ Entry.PyToBlockParser = function(c) {
       d[h] = c[g];
     }
     return d.map(function(b, c) {
-      return b && b.type ? this.processNode(b, "Literal" === b.type && "Block" !== e.params[c].type ? !0 : void 0) : b;
+      return b && b.type ? this.processNode(b, "Literal" === b.type ? e.params[c] : void 0) : b;
     }, this);
   };
   c.processNode = function(b, c) {

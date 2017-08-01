@@ -98,7 +98,6 @@ Entry.PyToBlockParser = function(blockSyntax) {
     };
 
     p.VariableDeclarator = function(component) {
-        
         if('init' in component && 'arguments' in component.init) {
             return component.init.arguments.map(this.processNode , this);
         }     
@@ -107,18 +106,23 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
     p.AssignmentExpression = function(component) {};
 
-    p.Literal = function(component, isLiteral) {
-        if (isLiteral)
-            return component.value;
-
+    p.Literal = function(component, paramSchema) {
         switch(typeof component.value) {
             case "boolean":
                 return { type: component.value ? "True" : "False" }
             default:
+        }
+        var paramType = paramSchema ? paramSchema.type : "Block";
+        switch(paramType) {
+            case "DropdownDynamic":
+                return component.value;
+            case "Block":
                 return {
                     type: 'number',
                     params : [ component.value ]
                 }
+            default:
+                return component.value;
         }
     };
 
@@ -161,15 +165,15 @@ Entry.PyToBlockParser = function(blockSyntax) {
     };
 
     p.IfStatement = function(component) {
-        var arr = []; 
+        var arr = [];
         var alternate;
 
         if('alternate' in component)
             alternate = component.alternate.body.map(this.processNode , this);
 
-        if('consequent' in component) 
+        if('consequent' in component)
             alternate[0].statements.push(component.consequent.body[0].body.body.map(this.processNode , this));
-        
+
         return alternate;
     };
 
@@ -385,7 +389,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
             if (arg && arg.type)
                 return this.processNode(
                     arg,
-                    (arg.type === "Literal" && blockSchema.params[index].type !== "Block") ? true : undefined
+                    (arg.type === "Literal") ? blockSchema.params[index] : undefined
                 );
             else
                 return arg;
