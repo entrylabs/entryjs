@@ -1298,10 +1298,11 @@ describe('EntryPython', function(){
                 it('repeat basic block' , function() {
                     Entry.loadProject(Entry.getStartProject()); 
                     Entry.playground.object = Entry.container.objects_[0];
-                    // var resultBlock = Test.parsePython("def when_start():\n    for i in range(10):\n    Entry.move_to_direction(10)");
+                    // var resultBlock = Test.parsePython("def when_start():\n    for i in range(10):\n        Entry.move_to_direction(10)");
                     // console.log(JSON.stringify(resultBlock));
+
                     assert.ok(Test.pythonToBlock(
-                        "def when_start():\n    for i in range(10):\n    Entry.move_to_direction(10)",
+                        "def when_start():\n    for i in range(10):\n        Entry.move_to_direction(10)",
                         [  
                            [  
                               {  
@@ -1326,20 +1327,19 @@ describe('EntryPython', function(){
                                        ],
                                        "statements":[  
                                           [  
-
+                                             {  
+                                                "type":"move_direction",
+                                                "params":[  
+                                                   {  
+                                                      "type":"number",
+                                                      "params":[  
+                                                         10
+                                                      ]
+                                                   },
+                                                   null
+                                                ]
+                                             }
                                           ]
-                                       ]
-                                    },
-                                    {  
-                                       "type":"move_direction",
-                                       "params":[  
-                                          {  
-                                             "type":"number",
-                                             "params":[  
-                                                10
-                                             ]
-                                          },
-                                          null
                                        ]
                                     }
                                  ]
@@ -1360,20 +1360,19 @@ describe('EntryPython', function(){
                                  ],
                                  "statements":[  
                                     [  
-
+                                       {  
+                                          "type":"move_direction",
+                                          "params":[  
+                                             {  
+                                                "type":"number",
+                                                "params":[  
+                                                   10
+                                                ]
+                                             },
+                                             null
+                                          ]
+                                       }
                                     ]
-                                 ]
-                              },
-                              {  
-                                 "type":"move_direction",
-                                 "params":[  
-                                    {  
-                                       "type":"number",
-                                       "params":[  
-                                          10
-                                       ]
-                                    },
-                                    null
                                  ]
                               }
                            ]
