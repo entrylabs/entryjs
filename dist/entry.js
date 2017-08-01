@@ -8958,7 +8958,7 @@ Entry.Func.prototype.destroy = function() {
   this.blockMenuBlock && this.blockMenuBlock.destroy();
 };
 Entry.Func.edit = function(c) {
-  c && ("string" === typeof c && (c = Entry.variableContainer.getFunction(/(func_)?(.*)/.exec(c)[2])), this.unbindFuncChangeEvent(), this.unbindWorkspaceStateChangeEvent(), this.cancelEdit(), Entry.Func.isEdit = !0, this.targetFunc = c, !1 !== !this.initEditView(c.content) && (this.bindFuncChangeEvent(), this.updateMenu(), setTimeout(function() {
+  c && ("string" === typeof c && (c = Entry.variableContainer.getFunction(/(func_)?(.*)/.exec(c)[2])), this.unbindFuncChangeEvent(), this.unbindWorkspaceStateChangeEvent(), this.cancelEdit(), this.targetFunc = c, !1 !== this.initEditView(c.content) && (Entry.Func.isEdit = !0, this.bindFuncChangeEvent(c), this.updateMenu(), setTimeout(function() {
     var b = Entry.block["func_" + c.id];
     b && b.paramsBackupEvent && b.paramsBackupEvent.notify();
     this._backupContent = c.content.stringify();
