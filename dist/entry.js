@@ -17571,29 +17571,32 @@ Entry.PyToBlockParser = function(c) {
     b.arguments && (c.params = this.Arguments(c.type, b.arguments, c.params));
     return c;
   };
-  c.Identifier = function(b, c, e) {
-    return b.name;
+  c.Identifier = function(b) {
+    b = b.name;
+    var c = Entry.variableContainer.getVariableByName(b);
+    return c ? {type:"get_variable", params:[c.id_]} : (c = Entry.variableContainer.getListByName(b)) ? {type:"get_list", params:[c.id_]} : b;
   };
   c.VariableDeclaration = function(b) {
     return b.declarations.map(this.Node, this);
   };
   c.VariableDeclarator = function(b) {
-    return "init" in b && "arguments" in b.init ? b.init.arguments.map(this.Node, this) : null;
+    return b.init && b.init.arguments ? b.init.arguments.map(this.Node, this) : [];
   };
   c.AssignmentExpression = function(b) {
   };
   c.Literal = function(b, c) {
-    switch(typeof b.value) {
+    b = b.value;
+    switch(typeof b) {
       case "boolean":
-        return {type:b.value ? "True" : "False"};
+        return {type:b ? "True" : "False"};
     }
     switch(c ? c.type : "Block") {
       case "DropdownDynamic":
-        return b.value;
+        return this.DropdownDynamic(b, c);
       case "Block":
-        return {type:"number", params:[b.value]};
+        return {type:"number", params:[b]};
       default:
-        return b.value;
+        return b;
     }
   };
   c.MemberExpression = function(b) {
@@ -17688,6 +17691,16 @@ Entry.PyToBlockParser = function(c) {
     return e.map(function(b, c) {
       return b && b.type ? this.Node(b, "Literal" === b.type ? d.params[c] : void 0) : b;
     }, this);
+  };
+  c.DropdownDynamic = function(b, c) {
+    switch(c.menuName) {
+      case "variables":
+        return (b = Entry.variableContainer.getVariableByName(b)) ? b.id_ : void 0;
+      case "lists":
+        return (b = Entry.variableContainer.getListByName(b).id_) ? b.id_ : void 0;
+      default:
+        return b;
+    }
   };
   c.Node = function(b, c) {
     var d = !1;

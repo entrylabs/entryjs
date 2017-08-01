@@ -701,7 +701,7 @@ describe('EntryPython', function(){
                 });
 
                 assert.ok(Test.pythonToBlock(
-                    "Entry.input(테스트변수1)",
+                    'Entry.input(테스트변수1)',
                     [[{
                         "type" : "ask_and_wait",
                         "params" : [
@@ -725,7 +725,7 @@ describe('EntryPython', function(){
                 });
 
                 assert.ok(Test.pythonToBlock(
-                    "Entry.show_variable('테스트변수1')",
+                    'Entry.show_variable("테스트변수1")',
                     [[{
                         "type" : "show_variable",
                         "params" : [
@@ -1256,20 +1256,20 @@ describe('EntryPython', function(){
                     Entry.playground.object = Entry.container.objects_[0];
 
                     assert.ok(Test.pythonToBlock('def when_start():\n    Entry.move_to_direction(10)',
-                        [  
-                           [  
-                              {  
+                        [
+                           [
+                              {
                                  "type":"when_run_button_click",
-                                 "params":[  
+                                 "params":[
                                     null
                                  ],
-                                 "contents":[  
-                                    {  
+                                 "contents":[
+                                    {
                                        "type":"move_direction",
-                                       "params":[  
-                                          {  
+                                       "params":[
+                                          {
                                              "type":"number",
-                                             "params":[  
+                                             "params":[
                                                 10
                                              ]
                                           },
@@ -1278,12 +1278,12 @@ describe('EntryPython', function(){
                                     }
                                  ]
                               },
-                              {  
+                              {
                                  "type":"move_direction",
-                                 "params":[  
-                                    {  
+                                 "params":[
+                                    {
                                        "type":"number",
-                                       "params":[  
+                                       "params":[
                                           10
                                        ]
                                     },
@@ -1296,43 +1296,43 @@ describe('EntryPython', function(){
                 });
 
                 it('repeat basic block' , function() {
-                    Entry.loadProject(Entry.getStartProject()); 
+                    Entry.loadProject(Entry.getStartProject());
                     Entry.playground.object = Entry.container.objects_[0];
                     // var resultBlock = Test.parsePython("def when_start():\n    for i in range(10):\n        Entry.move_to_direction(10)");
                     // console.log(JSON.stringify(resultBlock));
 
                     assert.ok(Test.pythonToBlock(
                         "def when_start():\n    for i in range(10):\n        Entry.move_to_direction(10)",
-                        [  
-                           [  
-                              {  
+                        [
+                           [
+                              {
                                  "type":"when_run_button_click",
-                                 "params":[  
+                                 "params":[
                                     null
                                  ],
-                                 "contents":[  
-                                    {  
+                                 "contents":[
+                                    {
                                        "type":"repeat_basic",
-                                       "params":[  
-                                          {  
+                                       "params":[
+                                          {
                                              "callee":"__pythonRuntime.functions.range",
-                                             "arguments":[  
+                                             "arguments":[
                                                 10
                                              ],
                                              "type":"number",
-                                             "params":[  
+                                             "params":[
                                                 10
                                              ]
                                           }
                                        ],
-                                       "statements":[  
-                                          [  
-                                             {  
+                                       "statements":[
+                                          [
+                                             {
                                                 "type":"move_direction",
-                                                "params":[  
-                                                   {  
+                                                "params":[
+                                                   {
                                                       "type":"number",
-                                                      "params":[  
+                                                      "params":[
                                                          10
                                                       ]
                                                    },
@@ -1344,28 +1344,28 @@ describe('EntryPython', function(){
                                     }
                                  ]
                               },
-                              {  
+                              {
                                  "type":"repeat_basic",
-                                 "params":[  
-                                    {  
+                                 "params":[
+                                    {
                                        "callee":"__pythonRuntime.functions.range",
-                                       "arguments":[  
+                                       "arguments":[
                                           10
                                        ],
                                        "type":"number",
-                                       "params":[  
+                                       "params":[
                                           10
                                        ]
                                     }
                                  ],
-                                 "statements":[  
-                                    [  
-                                       {  
+                                 "statements":[
+                                    [
+                                       {
                                           "type":"move_direction",
-                                          "params":[  
-                                             {  
+                                          "params":[
+                                             {
                                                 "type":"number",
-                                                "params":[  
+                                                "params":[
                                                    10
                                                 ]
                                              },
