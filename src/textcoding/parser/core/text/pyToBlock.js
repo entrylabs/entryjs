@@ -54,11 +54,11 @@ Entry.PyToBlockParser = function(blockSyntax) {
     };
 
     p.processPrograms = function(astArr) {
-        return astArr.map(this.processNode, this)
+        return astArr.map(this.Node, this)
     };
 
     p.Program = function(component) {
-        var thread = component.body.map(this.processNode, this);
+        var thread = component.body.map(this.Node, this);
 
         if(thread[0].constructor == Array)
             return thread[0];
@@ -67,7 +67,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
     };
 
     p.ExpressionStatement = function(component) {
-        return this.processNode(component.expression);
+        return this.Node(component.expression);
     };
 
     p.CallExpression = function(component) {
@@ -76,10 +76,10 @@ Entry.PyToBlockParser = function(blockSyntax) {
         var name = property.name;
         var args = component.arguments;
         var params = [];
-        var obj = this.processNode(callee);
+        var obj = this.Node(callee);
 
         if(component.arguments) {
-            obj.params = this.processArguments(
+            obj.params = this.Arguments(
                 obj.type,
                 component.arguments,
                 obj.params
@@ -94,14 +94,14 @@ Entry.PyToBlockParser = function(blockSyntax) {
     };
 
     p.VariableDeclaration = function(component) {
-        return component.declarations.map(this.processNode , this);
+        return component.declarations.map(this.Node , this);
     };
 
     p.VariableDeclarator = function(component) {
         if('init' in component && 'arguments' in component.init) {
-            return component.init.arguments.map(this.processNode , this);
-        }     
-        return null;    
+            return component.init.arguments.map(this.Node , this);
+        }
+        return null;
     };
 
     p.AssignmentExpression = function(component) {};
@@ -146,7 +146,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
         var obj = component.object;
         var property = component.property;
         var result = {};
-        var blockInfo = this.blockSyntax[obj.name][this.processNode(property)];
+        var blockInfo = this.blockSyntax[obj.name][this.Node(property)];
 
         if(property && property.type){
             result.type = blockInfo.key;
@@ -161,7 +161,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
     // p.WhileStatement = function(component) {};
 
     p.BlockStatement = function(component) {
-       return component.body.map(this.processNode, this);
+       return component.body.map(this.Node, this);
     };
 
     p.IfStatement = function(component) {
@@ -169,22 +169,22 @@ Entry.PyToBlockParser = function(blockSyntax) {
         var alternate;
 
         if('alternate' in component)
-            alternate = component.alternate.body.map(this.processNode , this);
+            alternate = component.alternate.body.map(this.Node , this);
 
         if('consequent' in component)
-            alternate[0].statements.push(component.consequent.body[0].body.body.map(this.processNode , this));
+            alternate[0].statements.push(component.consequent.body[0].body.body.map(this.Node , this));
 
         return alternate;
     };
 
      p.ForStatement = function(component) {
         var body = component.body.body;
-        return this.processNode(body[body.length-1]);
+        return this.Node(body[body.length-1]);
      };
 
     p.ForInStatement = function(component) {
         var  expression = component.body.body[0] && 'expression' in component.body.body[0] ?
-                            component.body.body[0].expression.arguments.map(this.processNode , this) : null;
+                            component.body.body[0].expression.arguments.map(this.Node , this) : null;
 
         var obj =  {
             "type" : "repeat_basic",
@@ -209,12 +209,12 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     type: "boolean_not",
                     params: [
                         undefined,
-                        this.processNode(component.argument)
+                        this.Node(component.argument)
                     ]
                 }
             case "-":
             case "+":
-                var result = this.processNode(component.argument);
+                var result = this.Node(component.argument);
                 this.assert(result.type === "number", "Can't convert this operation")
                 result.params = ["-" + result.params[0]];
                 return result;
@@ -227,9 +227,9 @@ Entry.PyToBlockParser = function(blockSyntax) {
         return {
             type: this.dic[component.operator],
             params: [
-                this.processNode(component.left),
+                this.Node(component.left),
                 undefined,
-                this.processNode(component.right)
+                this.Node(component.right)
             ]
         }
     };
@@ -248,9 +248,9 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 type: "quotient_and_mod",
                 params: [
                     undefined,
-                    this.processNode(component.left),
+                    this.Node(component.left),
                     undefined,
-                    this.processNode(component.right),
+                    this.Node(component.right),
                     undefined,
                     this.divideOperator[operator]
                 ]
@@ -261,9 +261,9 @@ Entry.PyToBlockParser = function(blockSyntax) {
         return {
             type: blockType,
             params: [
-                this.processNode(component.left),
+                this.Node(component.left),
                 operator,
-                this.processNode(component.right)
+                this.Node(component.right)
             ]
         };
     };
@@ -271,21 +271,21 @@ Entry.PyToBlockParser = function(blockSyntax) {
     // p.UpdateExpression = function(component) {};
 
     p.FunctionDeclaration = function(component) {
-        var blockName = this.processNode(component.id);
+        var blockName = this.Node(component.id);
         var blockInfo = this.blockSyntax['def '+blockName];
         var type = {};
         var threadArr = [type];
         threadArr[0].blocks = [];
 
-        var blocks = component.body.body[0].argument.callee.object.body.body;        
-        var definedBlocks = blocks.length ? blocks.map(this.processNode , this) : [];
-        
+        var blocks = component.body.body[0].argument.callee.object.body.body;
+        var definedBlocks = blocks.length ? blocks.map(this.Node , this) : [];
+
         for(var i=0; i<definedBlocks.length; i++){
             var db = definedBlocks[i];
             if(db.constructor == Array) {
                 if(db.length > 0)
                     definedBlocks[i] = db[db.length-1][0];
-                else 
+                else
                     definedBlocks[i] = db[0][0];
             }
         }
@@ -303,13 +303,13 @@ Entry.PyToBlockParser = function(blockSyntax) {
     };
 
     p.FunctionExpression = function(component) {
-        var a =  this.processNode(component.body);
+        var a =  this.Node(component.body);
         return a;
 
     };
 
     p.ReturnStatement = function(component) {
-        return component.argument.arguments.map(this.processNode , this );
+        return component.argument.arguments.map(this.Node , this );
     };
 
     // p.ThisExpression = function(component) {};
@@ -362,18 +362,9 @@ Entry.PyToBlockParser = function(blockSyntax) {
      * util Function
      */
 
-    p.callFunc = function(component , type) {
-        var arr = component[type];
-
-        arr.map(function(a){
-            this[component.type](a);
-        } ,this);
-        return;
-    };
-
-    p.processArguments = function(blockType, args, defaultParams) {
+    p.Arguments = function(blockType, args, defaultParams) {
         var blockSchema = Entry.block[blockType];
-        var syntax = this.getPySyntax(blockSchema, defaultParams);
+        var syntax = this.PySyntax(blockSchema, defaultParams);
 
         var indexes = syntax.match( /%\d+/g, '');
         if (!indexes)
@@ -387,7 +378,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
         var results = sortedArgs.map(function(arg, index) {
             if (arg && arg.type)
-                return this.processNode(
+                return this.Node(
                     arg,
                     (arg.type === "Literal") ? blockSchema.params[index] : undefined
                 );
@@ -398,7 +389,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
         return results;
     };
 
-    p.processNode = function(nodeType, node) {
+    p.Node = function(nodeType, node) {
         var hasType = false;
         if (typeof nodeType === "string" && nodeType !== node.type)
             throw new Error("Not expected node type");
@@ -416,7 +407,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
     };
 
 
-    p.getPySyntax = function(blockSchema, defaultParams) {
+    p.PySyntax = function(blockSchema, defaultParams) {
         if (defaultParams) {
             var syntaxes = blockSchema.syntax.py.filter(function(s) {
                 if (!s.params)
