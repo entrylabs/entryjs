@@ -105,11 +105,11 @@ Entry.Func.edit = function(func) {
 
     this.cancelEdit();
 
-    Entry.Func.isEdit = true;
     this.targetFunc = func;
-    if (!this.initEditView(func.content) === false)
+    if (this.initEditView(func.content) === false)
         return; // edit fail
-    this.bindFuncChangeEvent();
+    Entry.Func.isEdit = true;
+    this.bindFuncChangeEvent(func);
     this.updateMenu();
     setTimeout(function() {
         var schema = Entry.block["func_" + func.id];
