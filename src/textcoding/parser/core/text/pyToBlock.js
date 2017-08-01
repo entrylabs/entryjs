@@ -159,25 +159,15 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
     p.IfStatement = function(component) {
         var arr = []; 
-        var consequent;
         var alternate;
 
-        if('alternate' in component){
+        if('alternate' in component)
             alternate = component.alternate.body.map(this.processNode , this);
-            arr.push(alternate[0]);
-            console.log('alternate ' , alternate);
-        }
 
-        if('consequent' in component) {
-            consequent = component.consequent.body.map(this.processNode , this);
-            arr.push(consequent[0]);
-            console.log('consequent ' , consequent);
-
-        }
-
-        console.log('Ifstatement array === ' , JSON.stringify(arr));
+        if('consequent' in component) 
+            alternate[0].statements.push(component.consequent.body[0].body.body.map(this.processNode , this));
         
-        return arr;
+        return alternate;
     };
 
      p.ForStatement = function(component) {
@@ -193,10 +183,9 @@ Entry.PyToBlockParser = function(blockSyntax) {
         var obj =  {
             "type" : "repeat_basic",
             "params": expression,
-            "statements" : [[]]
+            "statements" : []
         }
 
-        obj.params[0].arguments  = expression[0].params;
         return obj;
     };
 

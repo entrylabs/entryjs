@@ -12854,10 +12854,9 @@ Entry.PyToBlockParser = function(c) {
     return b.body.map(this.processNode, this);
   };
   c.IfStatement = function(b) {
-    var c = [], d;
-    "alternate" in b && (d = b.alternate.body.map(this.processNode, this), c.push(d[0]), console.log("alternate ", d));
-    "consequent" in b && (b = b.consequent.body.map(this.processNode, this), c.push(b[0]), console.log("consequent ", b));
-    console.log("Ifstatement array === ", JSON.stringify(c));
+    var c;
+    "alternate" in b && (c = b.alternate.body.map(this.processNode, this));
+    "consequent" in b && c[0].statements.push(b.consequent.body[0].body.body.map(this.processNode, this));
     return c;
   };
   c.ForStatement = function(b) {
@@ -12867,9 +12866,7 @@ Entry.PyToBlockParser = function(c) {
   c.ForInStatement = function(b) {
     b = b.body.body[0] && "expression" in b.body.body[0] ? b.body.body[0].expression.arguments.map(this.processNode, this) : null;
     console.log("##for in statement ", b);
-    var c = {type:"repeat_basic", params:b, statements:[[]]};
-    c.params[0].arguments = b[0].params;
-    return c;
+    return {type:"repeat_basic", params:b, statements:[]};
   };
   c.BreakStatement = function(b) {
     return {type:this.blockSyntax.break.key};
