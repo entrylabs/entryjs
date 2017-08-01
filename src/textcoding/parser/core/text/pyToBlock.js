@@ -98,8 +98,11 @@ Entry.PyToBlockParser = function(blockSyntax) {
     };
 
     p.VariableDeclarator = function(component) {
-        console.log('@VariableDeclarator' , component);
-        return ('init' in component) && ('arguments' in component.init) ? component.init.arguments.map(this.processNode , this) : this.processNode(component.id);
+        
+        if('init' in component && 'arguments' in component.init) {
+            return component.init.arguments.map(this.processNode , this);
+        }     
+        return null;    
     };
 
     p.AssignmentExpression = function(component) {};
@@ -178,11 +181,10 @@ Entry.PyToBlockParser = function(blockSyntax) {
     p.ForInStatement = function(component) {
         var  expression = component.body.body[0] && 'expression' in component.body.body[0] ?
                             component.body.body[0].expression.arguments.map(this.processNode , this) : null;
-       
-        console.log('##for in statement ' , expression);
+
         var obj =  {
             "type" : "repeat_basic",
-            "params": expression,
+            "params": [],
             "statements" : []
         }
 
@@ -269,31 +271,38 @@ Entry.PyToBlockParser = function(blockSyntax) {
         var blockInfo = this.blockSyntax['def '+blockName];
         var type = {};
         var threadArr = [type];
-        threadArr[0].contents = [];
-        var contents = component.body.body[0].argument.callee.object.body.body;
+        threadArr[0].blocks = [];
 
-        var definedBlocks = contents.length > 0 ? contents.map(this.processNode , this) : [];
-
-        if(definedBlocks.length > 0 && definedBlocks[0].constructor == Array) {
-            definedBlocks = definedBlocks[0][definedBlocks[0].length-1];
+        var blocks = component.body.body[0].argument.callee.object.body.body;        
+        var definedBlocks = blocks.length ? blocks.map(this.processNode , this) : [];
+        
+        for(var i=0; i<definedBlocks.length; i++){
+            var db = definedBlocks[i];
+            if(db.constructor == Array) {
+                if(db.length > 0)
+                    definedBlocks[i] = db[db.length-1][0];
+                else 
+                    definedBlocks[i] = db[0][0];
+            }
         }
-
-        console.log('FunctionDeclaration' , definedBlocks);
 
         if(blockInfo){
             type.type = blockInfo.key;
         }
 
         for(var i=0; i < definedBlocks.length; i++) {
-             threadArr[0].contents.push(definedBlocks[i]);
+             threadArr[0].blocks.push(definedBlocks[i]);
              threadArr.push(definedBlocks[i]);
         }
 
-        console.log('thread array == ' , threadArr);
         return threadArr;
     };
 
-    // p.FunctionExpression = function(component) {};
+    p.FunctionExpression = function(component) {
+        var a =  this.processNode(component.body);
+        return a;
+
+    };
 
     p.ReturnStatement = function(component) {
         return component.argument.arguments.map(this.processNode , this );

@@ -12827,8 +12827,7 @@ Entry.PyToBlockParser = function(c) {
     return b.declarations.map(this.processNode, this);
   };
   c.VariableDeclarator = function(b) {
-    console.log("@VariableDeclarator", b);
-    return "init" in b && "arguments" in b.init ? b.init.arguments.map(this.processNode, this) : this.processNode(b.id);
+    return "init" in b && "arguments" in b.init ? b.init.arguments.map(this.processNode, this) : null;
   };
   c.AssignmentExpression = function(b) {
   };
@@ -12864,9 +12863,9 @@ Entry.PyToBlockParser = function(c) {
     return this.processNode(b[b.length - 1]);
   };
   c.ForInStatement = function(b) {
-    b = b.body.body[0] && "expression" in b.body.body[0] ? b.body.body[0].expression.arguments.map(this.processNode, this) : null;
-    console.log("##for in statement ", b);
-    return {type:"repeat_basic", params:b, statements:[]};
+    b.body.body[0] && "expression" in b.body.body[0] && b.body.body[0].expression.arguments.map(this.processNode, this);
+    console.log(JSON.stringify(b));
+    return {type:"repeat_basic", params:[], statements:[]};
   };
   c.BreakStatement = function(b) {
     return {type:this.blockSyntax.break.key};
@@ -12903,18 +12902,25 @@ Entry.PyToBlockParser = function(c) {
     return {type:d, params:[this.processNode(b.left), c, this.processNode(b.right)]};
   };
   c.FunctionDeclaration = function(b) {
-    var c = this.processNode(b.id), d = this.blockSyntax["def " + c], e = {}, c = [e];
-    c[0].contents = [];
+    var c = this.processNode(b.id), c = this.blockSyntax["def " + c], d = {}, e = [d];
+    e[0].blocks = [];
     b = b.body.body[0].argument.callee.object.body.body;
-    b = 0 < b.length ? b.map(this.processNode, this) : [];
-    0 < b.length && b[0].constructor == Array && (b = b[0][b[0].length - 1]);
-    console.log("FunctionDeclaration", b);
-    d && (e.type = d.key);
-    for (d = 0;d < b.length;d++) {
-      c[0].contents.push(b[d]), c.push(b[d]);
+    b = b.length ? b.map(this.processNode, this) : [];
+    for (var g = 0;g < b.length;g++) {
+      var h = b[g];
+      h.constructor == Array && (b[g] = 0 < h.length ? h[h.length - 1][0] : h[0][0]);
     }
-    console.log("thread array == ", c);
-    return c;
+    console.log("FunctionDeclaration", b);
+    c && (d.type = c.key);
+    for (g = 0;g < b.length;g++) {
+      e[0].blocks.push(b[g]), e.push(b[g]);
+    }
+    return e;
+  };
+  c.FunctionExpression = function(b) {
+    b = this.processNode(b.body);
+    console.log("#FunctionExpression", b);
+    return b;
   };
   c.ReturnStatement = function(b) {
     return b.argument.arguments.map(this.processNode, this);
