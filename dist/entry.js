@@ -17612,7 +17612,7 @@ Entry.PyToBlockParser = function(c) {
   c.IfStatement = function(b) {
     var c;
     "alternate" in b && (c = b.alternate.body.map(this.Node, this));
-    "consequent" in b && c[0].statements.push(b.consequent.body[0].body.body.map(this.Node, this));
+    "consequent" in b && (b = this.setParams(b.consequent.body[0].body.body), c[0].statements.push(b));
     return c;
   };
   c.ForStatement = function(b) {
@@ -17657,19 +17657,14 @@ Entry.PyToBlockParser = function(c) {
     return {type:e, params:[this.Node(b.left), c, this.Node(b.right)]};
   };
   c.FunctionDeclaration = function(b) {
-    var c = this.Node(b.id), c = this.blockSyntax["def " + c], e = {}, f = [e];
-    f[0].blocks = [];
-    b = b.body.body[0].argument.callee.object.body.body;
-    b = b.length ? b.map(this.Node, this) : [];
-    for (var g = 0;g < b.length;g++) {
-      var h = b[g];
-      h.constructor == Array && (b[g] = 0 < h.length ? h[h.length - 1][0] : h[0][0]);
+    var c = this.Node(b.id), e = this.blockSyntax["def " + c], f = {}, c = [f];
+    c[0].blocks = [];
+    b = this.setParams(b.body.body[0].argument.callee.object.body.body);
+    e && (f.type = e.key);
+    for (e = 0;e < b.length;e++) {
+      c[0].blocks.push(b[e]), c.push(b[e]);
     }
-    c && (e.type = c.key);
-    for (g = 0;g < b.length;g++) {
-      f[0].blocks.push(b[g]), f.push(b[g]);
-    }
-    return f;
+    return c;
   };
   c.FunctionExpression = function(b) {
     return this.Node(b.body);
@@ -17739,6 +17734,14 @@ Entry.PyToBlockParser = function(c) {
     if (!b) {
       throw Error(c);
     }
+  };
+  c.setParams = function(b) {
+    b = b.length ? b.map(this.Node, this) : [];
+    for (var c = 0;c < b.length;c++) {
+      var e = b[c];
+      e.constructor == Array && e[0] && (0 < e.length ? (e[e.length - 1][0].params = e[0][0][0].params, b[c] = e[e.length - 1][0]) : b[c] = e[0][0]);
+    }
+    return b;
   };
 })(Entry.PyToBlockParser.prototype);
 Entry.Console = function() {

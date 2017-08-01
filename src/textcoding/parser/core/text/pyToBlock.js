@@ -187,8 +187,11 @@ Entry.PyToBlockParser = function(blockSyntax) {
         if('alternate' in component)
             alternate = component.alternate.body.map(this.Node , this);
 
-        if('consequent' in component)
-            alternate[0].statements.push(component.consequent.body[0].body.body.map(this.Node , this));
+        if('consequent' in component){
+            var blocks = component.consequent.body[0].body.body;
+            var params = this.setParams(blocks);
+            alternate[0].statements.push(params);
+        }
 
         return alternate;
     };
@@ -292,19 +295,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
         var type = {};
         var threadArr = [type];
         threadArr[0].blocks = [];
-
         var blocks = component.body.body[0].argument.callee.object.body.body;
-        var definedBlocks = blocks.length ? blocks.map(this.Node , this) : [];
-
-        for(var i=0; i<definedBlocks.length; i++){
-            var db = definedBlocks[i];
-            if(db.constructor == Array) {
-                if(db.length > 0)
-                    definedBlocks[i] = db[db.length-1][0];
-                else
-                    definedBlocks[i] = db[0][0];
-            }
-        }
+        var definedBlocks = this.setParams(blocks);
 
         if(blockInfo){
             type.type = blockInfo.key;
@@ -459,5 +451,24 @@ Entry.PyToBlockParser = function(blockSyntax) {
     // p.SequenceExpression = function(component) {};
 
     // p.searchSyntax = function(datum) {};
+
+    p.setParams = function(params) {
+        var definedBlocks = params.length ? params.map(this.Node , this) : [];
+
+        for(var i=0; i<definedBlocks.length; i++){
+            var db = definedBlocks[i];
+
+            if(db.constructor == Array && db[0]) {
+                if(db.length > 0){
+                    db[db.length-1][0].params = db[0][0][0].params;
+                    definedBlocks[i] = db[db.length-1][0];
+                } else {
+                    definedBlocks[i] = db[0][0];
+                }
+            }
+        }
+
+        return definedBlocks;
+    }
 
 })(Entry.PyToBlockParser.prototype);
