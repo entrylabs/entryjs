@@ -98,24 +98,28 @@ Entry.PyToBlockParser = function(blockSyntax) {
     };
 
     p.VariableDeclarator = function(component) {
-        console.log('@VariableDeclarator' , component);
         return ('init' in component) && ('arguments' in component.init) ? component.init.arguments.map(this.processNode , this) : this.processNode(component.id);
     };
 
     p.AssignmentExpression = function(component) {};
 
-    p.Literal = function(component, isLiteral) {
-        if (isLiteral)
-            return component.value;
-
+    p.Literal = function(component, paramSchema) {
         switch(typeof component.value) {
             case "boolean":
                 return { type: component.value ? "True" : "False" }
             default:
+        }
+        var paramType = paramSchema ? paramSchema.type : "Block";
+        switch(paramType) {
+            case "DropdownDynamic":
+                return component.value;
+            case "Block":
                 return {
                     type: 'number',
                     params : [ component.value ]
                 }
+            default:
+                return component.value;
         }
     };
 
@@ -158,15 +162,15 @@ Entry.PyToBlockParser = function(blockSyntax) {
     };
 
     p.IfStatement = function(component) {
-        var arr = []; 
+        var arr = [];
         var alternate;
 
         if('alternate' in component)
             alternate = component.alternate.body.map(this.processNode , this);
 
-        if('consequent' in component) 
+        if('consequent' in component)
             alternate[0].statements.push(component.consequent.body[0].body.body.map(this.processNode , this));
-        
+
         return alternate;
     };
 
@@ -178,8 +182,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
     p.ForInStatement = function(component) {
         var  expression = component.body.body[0] && 'expression' in component.body.body[0] ?
                             component.body.body[0].expression.arguments.map(this.processNode , this) : null;
-       
-        console.log('##for in statement ' , expression);
+
         var obj =  {
             "type" : "repeat_basic",
             "params": expression,
@@ -278,7 +281,6 @@ Entry.PyToBlockParser = function(blockSyntax) {
             definedBlocks = definedBlocks[0][definedBlocks[0].length-1];
         }
 
-        console.log('FunctionDeclaration' , definedBlocks);
 
         if(blockInfo){
             type.type = blockInfo.key;
@@ -289,7 +291,6 @@ Entry.PyToBlockParser = function(blockSyntax) {
              threadArr.push(definedBlocks[i]);
         }
 
-        console.log('thread array == ' , threadArr);
         return threadArr;
     };
 
@@ -376,7 +377,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
             if (arg && arg.type)
                 return this.processNode(
                     arg,
-                    (arg.type === "Literal" && blockSchema.params[index].type !== "Block") ? true : undefined
+                    (arg.type === "Literal") ? blockSchema.params[index] : undefined
                 );
             else
                 return arg;
