@@ -77,6 +77,11 @@ Entry.PyToBlockParser = function(blockSyntax) {
         var params = [];
         var obj = this.Node(callee);
 
+        if (obj.preParams) {
+            component.arguments = obj.preParams.concat(component.arguments);
+            delete obj.preParams;
+        }
+
         if(component.arguments) {
             obj.params = this.Arguments(
                 obj.type,
@@ -167,9 +172,14 @@ Entry.PyToBlockParser = function(blockSyntax) {
     // p.Indicator = function(blockParam, blockDefParam, arg) {};
 
     p.MemberExpression = function(component) {
-        var obj = this.Node(component.object);
-        var property = component.property;
+        var obj;
         var result = {};
+        if (component.object.type === "Literal") { // string member
+            obj = "%2";
+            result.preParams = [ component.object ];
+        } else
+            obj = this.Node(component.object);
+        var property = component.property;
 
         var blockInfo = this.blockSyntax[obj][property.name];
 
