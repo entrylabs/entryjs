@@ -17701,7 +17701,10 @@ Entry.PyToBlockParser = function(c) {
       case "lists":
         return (b = Entry.variableContainer.getListByName(b).id_) ? b.id_ : void 0;
       case "sounds":
-        return (b = Entry.playground.object.getSound(b)) ? b.id : void 0;
+        if (b) {
+          var d = Entry.playground.object.getSound(b);
+        }
+        return d ? d.id : void 0;
     }
   };
   c.Node = function(b, c) {
@@ -17746,7 +17749,7 @@ Entry.PyToBlockParser = function(c) {
     b = b.length ? b.map(this.Node, this) : [];
     for (var c = 0;c < b.length;c++) {
       var e = b[c];
-      e.constructor == Array && e[0] && (0 < e.length ? (e[e.length - 1][0].params = e[0][0][0].params, b[c] = e[e.length - 1][0]) : b[c] = e[0][0]);
+      e.constructor == Array && e[0].length && (0 < e.length ? (e[e.length - 1][0].params = e[0][0][0].params, b[c] = e[e.length - 1][0]) : b[c] = e[0][0]);
     }
     return b;
   };

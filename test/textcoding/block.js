@@ -10,6 +10,9 @@ describe('EntryPython', function(){
 
     function pairConvertTest(blockType) {
         it (blockType, function(){
+            Entry.loadProject(Entry.getStartProject());
+            Entry.playground.object = Entry.container.objects_[0];
+
             var parser = new Entry.Parser(Entry.Vim.WORKSPACE_MODE);
             var syntax = parser.mappingSyntax(Entry.Vim.WORKSPACE_MODE);
             var blockToPyParser = new Entry.BlockToPyParser(syntax);
@@ -36,6 +39,7 @@ describe('EntryPython', function(){
                     blockOutput
                 );
             assert.equal(pythonOutput, secondPythonOutput);
+            Entry.clearProject();
         });
     }
 
@@ -1381,39 +1385,39 @@ describe('EntryPython', function(){
                 });
 
                 it('while block ' , function() {
-                    Entry.loadProject(Entry.getStartProject()); 
+                    Entry.loadProject(Entry.getStartProject());
                     Entry.playground.object = Entry.container.objects_[0];
                     var resultBlock = Test.parsePython("def when_start():\n    while True:\n        for i in range(10):\n            Entry.move_to_direction(10)");
                     // console.log(JSON.stringify(resultBlock));
 
                     assert.ok(Test.pythonToBlock(
                         "def when_start():\n    while True:\n        for i in range(10):\n            Entry.move_to_direction(10)" ,
-                        [  
-                           [  
-                              {  
+                        [
+                           [
+                              {
                                  "type":"when_run_button_click",
-                                 "params":[  
+                                 "params":[
                                     null
                                  ],
-                                 "contents":[  
-                                    {  
+                                 "contents":[
+                                    {
                                        "type":"repeat_inf",
-                                       "params":[  
-                                          {  
+                                       "params":[
+                                          {
                                              "type":"True"
                                           }
                                        ],
-                                       "statements":[  
-                                          [  
-                                             {  
-                                                "statements":[  
-                                                   [  
-                                                      {  
+                                       "statements":[
+                                          [
+                                             {
+                                                "statements":[
+                                                   [
+                                                      {
                                                          "type":"move_direction",
-                                                         "params":[  
-                                                            {  
+                                                         "params":[
+                                                            {
                                                                "type":"number",
-                                                               "params":[  
+                                                               "params":[
                                                                   10
                                                                ]
                                                             },
@@ -1422,34 +1426,34 @@ describe('EntryPython', function(){
                                                       }
                                                    ]
                                                 ],
-                                                "data":[  
-                                                   {  
-                                                      "declarations":[  
-                                                         {  
-                                                            "id":{  
+                                                "data":[
+                                                   {
+                                                      "declarations":[
+                                                         {
+                                                            "id":{
                                                                "name":"__filbertRight1",
                                                                "isCallParam":false
                                                             },
-                                                            "init":{  
+                                                            "init":{
                                                                "callee":"__pythonRuntime.functions.range",
-                                                               "arguments":[  
+                                                               "arguments":[
                                                                   10
                                                                ],
                                                                "type":"number",
-                                                               "params":[  
+                                                               "params":[
                                                                   10
                                                                ]
                                                             },
                                                             "type":"set_variable",
-                                                            "params":[  
+                                                            "params":[
                                                                "__filbertRight1",
-                                                               {  
+                                                               {
                                                                   "callee":"__pythonRuntime.functions.range",
-                                                                  "arguments":[  
+                                                                  "arguments":[
                                                                      10
                                                                   ],
                                                                   "type":"number",
-                                                                  "params":[  
+                                                                  "params":[
                                                                      10
                                                                   ]
                                                                }
@@ -1457,29 +1461,29 @@ describe('EntryPython', function(){
                                                          }
                                                       ],
                                                       "type":"set_variable",
-                                                      "params":[  
+                                                      "params":[
                                                          "__filbertRight1",
-                                                         {  
+                                                         {
                                                             "callee":"__pythonRuntime.functions.range",
-                                                            "arguments":[  
+                                                            "arguments":[
                                                                10
                                                             ],
                                                             "type":"number",
-                                                            "params":[  
+                                                            "params":[
                                                                10
                                                             ]
                                                          }
                                                       ]
                                                    },
-                                                   {  
-                                                      "statements":[  
-                                                         [  
-                                                            {  
+                                                   {
+                                                      "statements":[
+                                                         [
+                                                            {
                                                                "type":"move_direction",
-                                                               "params":[  
-                                                                  {  
+                                                               "params":[
+                                                                  {
                                                                      "type":"number",
-                                                                     "params":[  
+                                                                     "params":[
                                                                         10
                                                                      ]
                                                                   },
@@ -1489,21 +1493,21 @@ describe('EntryPython', function(){
                                                          ]
                                                       ],
                                                       "type":"repeat_basic",
-                                                      "params":[  
-                                                         {  
+                                                      "params":[
+                                                         {
 
                                                          }
                                                       ]
                                                    }
                                                 ],
-                                                "params":[  
-                                                   {  
+                                                "params":[
+                                                   {
                                                       "callee":"__pythonRuntime.functions.range",
-                                                      "arguments":[  
+                                                      "arguments":[
                                                          10
                                                       ],
                                                       "type":"number",
-                                                      "params":[  
+                                                      "params":[
                                                          10
                                                       ]
                                                    }
@@ -1515,24 +1519,24 @@ describe('EntryPython', function(){
                                     }
                                  ]
                               },
-                              {  
+                              {
                                  "type":"repeat_inf",
-                                 "params":[  
-                                    {  
+                                 "params":[
+                                    {
                                        "type":"True"
                                     }
                                  ],
-                                 "statements":[  
-                                    [  
-                                       {  
-                                          "statements":[  
-                                             [  
-                                                {  
+                                 "statements":[
+                                    [
+                                       {
+                                          "statements":[
+                                             [
+                                                {
                                                    "type":"move_direction",
-                                                   "params":[  
-                                                      {  
+                                                   "params":[
+                                                      {
                                                          "type":"number",
-                                                         "params":[  
+                                                         "params":[
                                                             10
                                                          ]
                                                       },
@@ -1541,34 +1545,34 @@ describe('EntryPython', function(){
                                                 }
                                              ]
                                           ],
-                                          "data":[  
-                                             {  
-                                                "declarations":[  
-                                                   {  
-                                                      "id":{  
+                                          "data":[
+                                             {
+                                                "declarations":[
+                                                   {
+                                                      "id":{
                                                          "name":"__filbertRight1",
                                                          "isCallParam":false
                                                       },
-                                                      "init":{  
+                                                      "init":{
                                                          "callee":"__pythonRuntime.functions.range",
-                                                         "arguments":[  
+                                                         "arguments":[
                                                             10
                                                          ],
                                                          "type":"number",
-                                                         "params":[  
+                                                         "params":[
                                                             10
                                                          ]
                                                       },
                                                       "type":"set_variable",
-                                                      "params":[  
+                                                      "params":[
                                                          "__filbertRight1",
-                                                         {  
+                                                         {
                                                             "callee":"__pythonRuntime.functions.range",
-                                                            "arguments":[  
+                                                            "arguments":[
                                                                10
                                                             ],
                                                             "type":"number",
-                                                            "params":[  
+                                                            "params":[
                                                                10
                                                             ]
                                                          }
@@ -1576,29 +1580,29 @@ describe('EntryPython', function(){
                                                    }
                                                 ],
                                                 "type":"set_variable",
-                                                "params":[  
+                                                "params":[
                                                    "__filbertRight1",
-                                                   {  
+                                                   {
                                                       "callee":"__pythonRuntime.functions.range",
-                                                      "arguments":[  
+                                                      "arguments":[
                                                          10
                                                       ],
                                                       "type":"number",
-                                                      "params":[  
+                                                      "params":[
                                                          10
                                                       ]
                                                    }
                                                 ]
                                              },
-                                             {  
-                                                "statements":[  
-                                                   [  
-                                                      {  
+                                             {
+                                                "statements":[
+                                                   [
+                                                      {
                                                          "type":"move_direction",
-                                                         "params":[  
-                                                            {  
+                                                         "params":[
+                                                            {
                                                                "type":"number",
-                                                               "params":[  
+                                                               "params":[
                                                                   10
                                                                ]
                                                             },
@@ -1608,21 +1612,21 @@ describe('EntryPython', function(){
                                                    ]
                                                 ],
                                                 "type":"repeat_basic",
-                                                "params":[  
-                                                   {  
+                                                "params":[
+                                                   {
 
                                                    }
                                                 ]
                                              }
                                           ],
-                                          "params":[  
-                                             {  
+                                          "params":[
+                                             {
                                                 "callee":"__pythonRuntime.functions.range",
-                                                "arguments":[  
+                                                "arguments":[
                                                    10
                                                 ],
                                                 "type":"number",
-                                                "params":[  
+                                                "params":[
                                                    10
                                                 ]
                                              }
@@ -1634,7 +1638,114 @@ describe('EntryPython', function(){
                               }
                            ]
                         ]
-                        ));
+                    ));
+                });
+
+                it('Do while block ' , function() {
+                    Entry.loadProject(Entry.getStartProject());
+                    Entry.playground.object = Entry.container.objects_[0];
+
+                    var resultBlock = Test.parsePython("def when_start():\n    while not (10 > 10):\n       Entry.move_to_direction(10)");
+                    // console.log(JSON.stringify(resultBlock));
+
+                    assert.ok(Test.pythonToBlock(
+                        "def when_start():\n    while not (10 > 10):\n        Entry.move_to_direction(10)" ,
+                        [
+                           [
+                              {
+                                 "type":"when_run_button_click",
+                                 "params":[
+                                    null
+                                 ],
+                                 "contents":[
+                                    {
+                                       "type":"repeat_while_true",
+                                       "params":[
+                                          {
+                                             "operator":">",
+                                             "type":"boolean_basic_operator",
+                                             "params":[
+                                                {
+                                                   "type":"text",
+                                                   "params":[
+                                                      10
+                                                   ]
+                                                },
+                                                "GREATER",
+                                                {
+                                                   "type":"text",
+                                                   "params":[
+                                                      10
+                                                   ]
+                                                }
+                                             ]
+                                          },
+                                          "until"
+                                       ],
+                                       "statements":[
+                                          [
+                                             {
+                                                "type":"move_direction",
+                                                "params":[
+                                                   {
+                                                      "type":"number",
+                                                      "params":[
+                                                         10
+                                                      ]
+                                                   },
+                                                   null
+                                                ]
+                                             }
+                                          ]
+                                       ]
+                                    }
+                                 ]
+                              },
+                              {
+                                 "type":"repeat_while_true",
+                                 "params":[
+                                    {
+                                       "operator":">",
+                                       "type":"boolean_basic_operator",
+                                       "params":[
+                                          {
+                                             "type":"text",
+                                             "params":[
+                                                10
+                                             ]
+                                          },
+                                          "GREATER",
+                                          {
+                                             "type":"text",
+                                             "params":[
+                                                10
+                                             ]
+                                          }
+                                       ]
+                                    },
+                                    "until"
+                                 ],
+                                 "statements":[
+                                    [
+                                       {
+                                          "type":"move_direction",
+                                          "params":[
+                                             {
+                                                "type":"number",
+                                                "params":[
+                                                   10
+                                                ]
+                                             },
+                                             null
+                                          ]
+                                       }
+                                    ]
+                                 ]
+                              }
+                           ]
+                        ]
+
+                    ));
                 });
             });
 
