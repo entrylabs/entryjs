@@ -17602,6 +17602,7 @@ Entry.PyToBlockParser = function(c) {
   c.MemberExpression = function(b) {
     var c, e = {};
     "Literal" === b.object.type ? (c = "%2", e.preParams = [b.object]) : c = this.Node(b.object);
+    "object" === typeof c && (e.preParams = [c.params[0]], c = "%2");
     b = b.property;
     c = this.blockSyntax[c][b.name];
     b && b.type && (e.type = c.key);
@@ -17690,7 +17691,7 @@ Entry.PyToBlockParser = function(c) {
       var h = parseInt(b[g].substring(1)) - 1;
       e[h] = c[g];
     }
-    var k = d.def && d.def.params ? d.def.params : null;
+    var k = d.def && d.def.params ? d.def.params : void 0;
     return e.map(function(b, c) {
       return b && b.type ? this.Node(b, "Literal" === b.type ? d.params[c] : void 0, "Literal" === b.type && k ? k[c] : void 0) : b;
     }, this);
@@ -17702,7 +17703,7 @@ Entry.PyToBlockParser = function(c) {
       case "variables":
         return (b = Entry.variableContainer.getVariableByName(b)) ? b.id_ : void 0;
       case "lists":
-        return (b = Entry.variableContainer.getListByName(b).id_) ? b.id_ : void 0;
+        return (b = Entry.variableContainer.getListByName(b)) ? b.id_ : void 0;
       case "sounds":
         if (b) {
           var d = Entry.playground.object.getSound(b);

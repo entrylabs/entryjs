@@ -165,8 +165,6 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
     // p.ParamDropdown = function(value, paramMeta, paramDefMeta, textParam) {};
 
-    // p.ParamDropdownDynamic = function(value, paramMeta, paramDefMeta, textParam, currentObject) {};
-
     // p.ParamKeyboard = function(value, paramMeta, paramDefMeta) {};
 
     // p.Indicator = function(blockParam, blockDefParam, arg) {};
@@ -179,6 +177,10 @@ Entry.PyToBlockParser = function(blockSyntax) {
             result.preParams = [ component.object ];
         } else
             obj = this.Node(component.object);
+        if (typeof obj === "object") {
+            result.preParams = [ obj.params[0] ];
+            obj = "%2"
+        }
         var property = component.property;
 
         var blockInfo = this.blockSyntax[obj][property.name];
@@ -374,7 +376,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
             var idx = parseInt(indexes[i].substring(1))-1;
             sortedArgs[idx] = args[i];
         }
-        var defParams = (blockSchema.def && blockSchema.def.params) ? blockSchema.def.params : null;
+        var defParams = (blockSchema.def && blockSchema.def.params) ? blockSchema.def.params : undefined;
 
         var results = sortedArgs.map(function(arg, index) {
             if (arg && arg.type)
@@ -406,7 +408,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 var variable = Entry.variableContainer.getVariableByName(value);
                 return variable ? variable.id_ : undefined;
             case 'lists':
-                var list = Entry.variableContainer.getListByName(value).id_;
+                var list = Entry.variableContainer.getListByName(value);
                 return list ? list.id_ : undefined;
             case 'scenes':
                 break;
