@@ -762,15 +762,9 @@ Entry.EntityObject.prototype.setLineBreak = function(lineBreak) {
         this.setScaleX(1);
         this.setScaleY(1);
         this.textObject.lineWidth = this.getWidth();
-        this.syncFont();
-        this.alignTextBox();
-        /*
-        if (this.fontType == "Nanum Gothic Coding") {
-            var textObjectHeight = this.textObject.getMeasuredLineHeight();
-            this.textObject.y = (textObjectHeight / 2 - this.getHeight() / 2) + 10;
-        }
-        */
     }
+    this.syncFont();
+    this.alignTextBox();
 
     Entry.stage.updateObject();
 };
