@@ -89,8 +89,23 @@ Entry.PyToBlockParser = function(blockSyntax) {
         return obj;
     };
 
-    p.Identifier = function(component, paramMeta, paramDefMeta) {
-        return component.name;
+    p.Identifier = function(component) {
+        var name = component.name;
+
+        var variable = Entry.variableContainer.getVariableByName(name);
+        if (variable)
+            return {
+                type: "get_variable",
+                params: [ variable.id_ ]
+            };
+
+        var list = Entry.variableContainer.getListByName(name);
+        if (list)
+            return {
+                type: "get_list",
+                params: [ list.id_ ]
+            };
+        return name;
     };
 
     p.VariableDeclaration = function(component) {
@@ -98,31 +113,32 @@ Entry.PyToBlockParser = function(blockSyntax) {
     };
 
     p.VariableDeclarator = function(component) {
-        if('init' in component && 'arguments' in component.init) {
+        if(component.init && component.init.arguments) {
             return component.init.arguments.map(this.Node , this);
         }
-        return null;
+        return [];
     };
 
     p.AssignmentExpression = function(component) {};
 
     p.Literal = function(component, paramSchema) {
-        switch(typeof component.value) {
+        var value = component.value;
+        switch(typeof value) {
             case "boolean":
-                return { type: component.value ? "True" : "False" }
+                return { type: value ? "True" : "False" }
             default:
         }
         var paramType = paramSchema ? paramSchema.type : "Block";
         switch(paramType) {
             case "DropdownDynamic":
-                return component.value;
+                return this.DropdownDynamic(value, paramSchema);
             case "Block":
                 return {
                     type: 'number',
-                    params : [ component.value ]
+                    params : [ value ]
                 }
             default:
-                return component.value;
+                return value;
         }
     };
 
@@ -143,10 +159,11 @@ Entry.PyToBlockParser = function(blockSyntax) {
     // p.Indicator = function(blockParam, blockDefParam, arg) {};
 
     p.MemberExpression = function(component) {
-        var obj = component.object;
+        var obj = this.Node(component.object);
         var property = component.property;
         var result = {};
-        var blockInfo = this.blockSyntax[obj.name][this.Node(property)];
+
+        var blockInfo = this.blockSyntax[obj][property.name];
 
         if(property && property.type){
             result.type = blockInfo.key;
@@ -317,48 +334,6 @@ Entry.PyToBlockParser = function(blockSyntax) {
     // p.NewExpression = function(component) {};
 
     /**
-     * Not Supported
-     */
-
-    // p.RegExp = function(component) {};
-
-    // p.Function = function(component) {};
-
-    // p.EmptyStatement = function(component) {};
-
-    // p.DebuggerStatement = function(component) {};
-
-    // p.WithStatement = function(component) {};
-
-    // p.LabeledStatement = function(component) {};
-
-    // p.ContinueStatement = function(component) {};
-
-    // p.SwitchStatement = function(component) {};
-
-    // p.SwitchCase = function(component) {};
-
-    // p.ThrowStatement = function(component) {};
-
-    // p.TryStatement = function(component) {};
-
-    // p.CatchClause = function(component) {};
-
-    // p.DoWhileStatement = function(component) {};
-
-    // p.ArrayExpression = function(component) {};
-
-    // p.ObjectExpression = function(component) {};
-
-    // p.Property = function(component) {};
-
-    // p.ConditionalExpression = function(component) {};
-
-    // p.SequenceExpression = function(component) {};
-
-    // p.searchSyntax = function(datum) {};
-
-    /**
      * util Function
      */
 
@@ -387,6 +362,19 @@ Entry.PyToBlockParser = function(blockSyntax) {
         }, this);
 
         return results;
+    };
+
+    p.DropdownDynamic = function(value, paramSchema) {
+        switch(paramSchema.menuName) {
+            case "variables":
+                var variable = Entry.variableContainer.getVariableByName(value);
+                return variable ? variable.id_ : undefined;
+            case "lists":
+                var list = Entry.variableContainer.getListByName(value).id_;
+                return list ? list.id_ : undefined;
+            default:
+                return value;
+        }
     };
 
     p.Node = function(nodeType, node) {
@@ -431,11 +419,53 @@ Entry.PyToBlockParser = function(blockSyntax) {
             throw new Error(message);
     };
 
+    /**
+     * Not Supported
+     */
+
+    // p.RegExp = function(component) {};
+
+    // p.Function = function(component) {};
+
+    // p.EmptyStatement = function(component) {};
+
+    // p.DebuggerStatement = function(component) {};
+
+    // p.WithStatement = function(component) {};
+
+    // p.LabeledStatement = function(component) {};
+
+    // p.ContinueStatement = function(component) {};
+
+    // p.SwitchStatement = function(component) {};
+
+    // p.SwitchCase = function(component) {};
+
+    // p.ThrowStatement = function(component) {};
+
+    // p.TryStatement = function(component) {};
+
+    // p.CatchClause = function(component) {};
+
+    // p.DoWhileStatement = function(component) {};
+
+    // p.ArrayExpression = function(component) {};
+
+    // p.ObjectExpression = function(component) {};
+
+    // p.Property = function(component) {};
+
+    // p.ConditionalExpression = function(component) {};
+
+    // p.SequenceExpression = function(component) {};
+
+    // p.searchSyntax = function(datum) {};
+
     p.setParams = function(params) {
         var definedBlocks = params.length ? params.map(this.Node , this) : [];
         for(var i=0; i<definedBlocks.length; i++){
             var db = definedBlocks[i];
-            
+
             if(db.constructor == Array && db[0]) {
                 if(db.length > 0){
                     db[db.length-1][0].params = db[0][0][0].params;

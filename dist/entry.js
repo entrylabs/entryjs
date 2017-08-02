@@ -5134,8 +5134,8 @@ Entry.Collection = function(c) {
     }
     return c;
   };
-  c.indexOf = function(c) {
-    return b.indexOf.call(this, c);
+  c.indexOf = function(f) {
+    return b.indexOf.call(this, f);
   };
   c.find = function(b) {
     for (var c = [], e, g = 0, h = this.length;g < h;g++) {
@@ -12820,36 +12820,40 @@ Entry.PyToBlockParser = function(c) {
     b.arguments && (c.params = this.Arguments(c.type, b.arguments, c.params));
     return c;
   };
-  c.Identifier = function(b, c, d) {
-    return b.name;
+  c.Identifier = function(b) {
+    b = b.name;
+    var c = Entry.variableContainer.getVariableByName(b);
+    return c ? {type:"get_variable", params:[c.id_]} : (c = Entry.variableContainer.getListByName(b)) ? {type:"get_list", params:[c.id_]} : b;
   };
   c.VariableDeclaration = function(b) {
     return b.declarations.map(this.Node, this);
   };
   c.VariableDeclarator = function(b) {
-    return "init" in b && "arguments" in b.init ? b.init.arguments.map(this.Node, this) : null;
+    return b.init && b.init.arguments ? b.init.arguments.map(this.Node, this) : [];
   };
   c.AssignmentExpression = function(b) {
   };
   c.Literal = function(b, c) {
-    switch(typeof b.value) {
+    var d = b.value;
+    switch(typeof d) {
       case "boolean":
-        return {type:b.value ? "True" : "False"};
+        return {type:d ? "True" : "False"};
     }
     switch(c ? c.type : "Block") {
       case "DropdownDynamic":
-        return b.value;
+        return this.DropdownDynamic(d, c);
       case "Block":
-        return {type:"number", params:[b.value]};
+        return {type:"number", params:[d]};
       default:
-        return b.value;
+        return d;
     }
   };
   c.MemberExpression = function(b) {
-    var c = b.property, d = {};
-    b = this.blockSyntax[b.object.name][this.Node(c)];
-    c && c.type && (d.type = b.key);
-    b.params && (d.params = b.params.concat());
+    var c = this.Node(b.object);
+    b = b.property;
+    var d = {}, c = this.blockSyntax[c][b.name];
+    b && b.type && (d.type = c.key);
+    c.params && (d.params = c.params.concat());
     return d;
   };
   c.WhileStatement = function(b) {
@@ -12936,6 +12940,17 @@ Entry.PyToBlockParser = function(c) {
     return d.map(function(b, c) {
       return b && b.type ? this.Node(b, "Literal" === b.type ? e.params[c] : void 0) : b;
     }, this);
+  };
+  c.DropdownDynamic = function(b, c) {
+    switch(c.menuName) {
+      case "variables":
+        var d = Entry.variableContainer.getVariableByName(b);
+        return d ? d.id_ : void 0;
+      case "lists":
+        return (d = Entry.variableContainer.getListByName(b).id_) ? d.id_ : void 0;
+      default:
+        return b;
+    }
   };
   c.Node = function(b, c) {
     var d = !1;
