@@ -305,7 +305,7 @@ Lang.Blocks = {
     "byrobot_petrone_v2_common_light_manual_b50": "밝기 50%",
     "byrobot_petrone_v2_common_light_manual_b75": "밝기 75%",
     "byrobot_petrone_v2_common_light_manual_b100": "밝기 100%",
-    "byrobot_petrone_v2_common_light_manual_none": "없음",
+    "byrobot_petrone_v2_common_light_manual_all": "전체",
     "byrobot_petrone_v2_common_light_manual_red": "빨강",
     "byrobot_petrone_v2_common_light_manual_green": "초록",
     "byrobot_petrone_v2_common_light_manual_blue": "파랑",

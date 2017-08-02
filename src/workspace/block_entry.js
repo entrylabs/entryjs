@@ -42205,7 +42205,7 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [Lang.Blocks.byrobot_petrone_v2_common_light_manual_none, "0"],
+                    [Lang.Blocks.byrobot_petrone_v2_common_light_manual_all, "255"],
                     [Lang.Blocks.byrobot_petrone_v2_common_light_manual_red, "8"],
                     [Lang.Blocks.byrobot_petrone_v2_common_light_manual_green, "4"],
                     [Lang.Blocks.byrobot_petrone_v2_common_light_manual_blue, "2"],
@@ -42280,7 +42280,7 @@ Entry.block = {
             "params": [
                 {
                     "type": "text",
-                    "params": ["0b11111111"]
+                    "params": ["0b00001110"]
                 },
                 {
                     "type": "text",
