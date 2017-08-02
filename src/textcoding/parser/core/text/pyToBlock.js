@@ -466,7 +466,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
         for(var i=0; i<definedBlocks.length; i++){
             var db = definedBlocks[i];
 
-            if(db.constructor == Array && db[0]) {
+            if(db.constructor == Array && db[0].length) {
                 if(db.length > 0){
                     db[db.length-1][0].params = db[0][0][0].params;
                     definedBlocks[i] = db[db.length-1][0];

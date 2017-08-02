@@ -12994,7 +12994,7 @@ Entry.PyToBlockParser = function(c) {
     b = b.length ? b.map(this.Node, this) : [];
     for (var c = 0;c < b.length;c++) {
       var d = b[c];
-      d.constructor == Array && d[0] && (0 < d.length ? (d[d.length - 1][0].params = d[0][0][0].params, b[c] = d[d.length - 1][0]) : b[c] = d[0][0]);
+      d.constructor == Array && d[0].length && (0 < d.length ? (d[d.length - 1][0].params = d[0][0][0].params, b[c] = d[d.length - 1][0]) : b[c] = d[0][0]);
     }
     return b;
   };
