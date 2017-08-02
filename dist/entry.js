@@ -5152,17 +5152,17 @@ Entry.Collection = function(c) {
     return c;
   };
   c.pop = function() {
-    var c = b.pop.call(this);
-    delete this._hashMap[c.id];
-    return c;
+    var f = b.pop.call(this);
+    delete this._hashMap[f.id];
+    return f;
   };
   c.shift = function() {
-    var c = b.shift.call(this);
-    delete this._hashMap[c.id];
-    return c;
+    var f = b.shift.call(this);
+    delete this._hashMap[f.id];
+    return f;
   };
-  c.slice = function(c, d) {
-    var e = b.slice.call(this, c, d), g = this._hashMap, h;
+  c.slice = function(f, c) {
+    var e = b.slice.call(this, f, c), g = this._hashMap, h;
     for (h in e) {
       delete g[e[h].id];
     }
@@ -12789,7 +12789,6 @@ Entry.JsToBlockParser = function(c, b) {
 Entry.PyToBlockParser = function(c) {
   this._type = "PyToBlockParser";
   this.dic = c["#dic"];
-  delete c["#dic"];
   this.blockSyntax = c;
   this._funcMap = {};
 };
@@ -12857,7 +12856,9 @@ Entry.PyToBlockParser = function(c) {
     return d;
   };
   c.WhileStatement = function(b) {
-    return {type:"repeat_inf", statements:[this.setParams(b.body.body)]};
+    var c = {statements:[this.setParams(b.body.body)]};
+    "operator" in b.test ? (c.type = "repeat_while_true", c.params = [this.Node(b.test.argument)]) : c.type = "repeat_inf";
+    return c;
   };
   c.BlockStatement = function(b) {
     return b.body.map(this.Node, this);

@@ -12,7 +12,6 @@ goog.require("Entry.TextCodingError");
 Entry.PyToBlockParser = function(blockSyntax) {
     this._type ="PyToBlockParser";
     this.dic = blockSyntax["#dic"];
-    delete blockSyntax["#dic"];
     this.blockSyntax = blockSyntax;
 
     this._funcMap = {};
@@ -26,7 +25,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
         '>': "GREATER",
         '<': "LESS",
         '>=': "GREATER_OR_EQUAL",
-        '<=': "LESS_OR_EQUAL",
+        '<=': "LESS_OR_EQUAL"
     };
 
     p.arithmeticOperator = {
@@ -177,11 +176,17 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
     p.WhileStatement = function(component) {
         var blocks = component.body.body;
+        var obj = {
+            statements: [this.setParams(blocks)]
+        };
+        if('operator' in component.test){
+            obj.type = "repeat_while_true";
+            obj.params = [this.Node(component.test.argument)];
+        } else {
+            obj.type = "repeat_inf";
+        }
 
-        return {
-            type: "repeat_inf",
-            statements : [this.setParams(blocks)]
-        }    
+        return obj;
     };
 
     p.BlockStatement = function(component) {
@@ -447,7 +452,10 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
     // p.CatchClause = function(component) {};
 
-    // p.DoWhileStatement = function(component) {};
+    // p.DoWhileStatement = function(component) {
+    //     console.log('DoWhileStatement' , component);
+    //     return component.body.map(this.Node,  this);
+    // };
 
     // p.ArrayExpression = function(component) {};
 
