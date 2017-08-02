@@ -159,10 +159,11 @@ Entry.PyToBlockParser = function(blockSyntax) {
     // p.Indicator = function(blockParam, blockDefParam, arg) {};
 
     p.MemberExpression = function(component) {
-        var obj = component.object;
+        var obj = this.Node(component.object);
         var property = component.property;
         var result = {};
-        var blockInfo = this.blockSyntax[obj.name][this.Node(property)];
+
+        var blockInfo = this.blockSyntax[obj][property.name];
 
         if(property && property.type){
             result.type = blockInfo.key;

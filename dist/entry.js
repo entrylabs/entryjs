@@ -17600,10 +17600,11 @@ Entry.PyToBlockParser = function(c) {
     }
   };
   c.MemberExpression = function(b) {
-    var c = b.property, e = {};
-    b = this.blockSyntax[b.object.name][this.Node(c)];
-    c && c.type && (e.type = b.key);
-    b.params && (e.params = b.params.concat());
+    var c = this.Node(b.object);
+    b = b.property;
+    var e = {}, c = this.blockSyntax[c][b.name];
+    b && b.type && (e.type = c.key);
+    c.params && (e.params = c.params.concat());
     return e;
   };
   c.BlockStatement = function(b) {
