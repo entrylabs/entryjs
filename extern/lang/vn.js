@@ -4686,7 +4686,7 @@ Lang.template = {
     "blacksmith_set_digital_toggle": "Digital %1 pin %2 %3",
     "blacksmith_set_digital_pwm": "Digital pwm %1 Pin %2 %3",
     "blacksmith_set_digital_servo": "Set servo pin %1 angle as %2 %3",
-    "blacksmith_set_digital_buzzer": "Play tone pin %1 on octave %2 note %3 beat %4 %5",
+    "blacksmith_set_digital_buzzer": "Play tone pin %1 on note %2 octave %3 beat %4 %5",
     "blacksmith_set_digital_lcd": "LCD %1 line %2 appear %3",
     "blacksmith_set_digital_bluetooth": "Bluetooth TX 3 Pin %1 data send %2",
     "byrobot_dronefighter_controller_controller_value_button": "%1",

@@ -4686,7 +4686,7 @@ Lang.template = {
     "blacksmith_set_digital_toggle": "디지털 %1 번 핀 %2 %3",
     "blacksmith_set_digital_pwm": "디지털 %1 번 핀을 %2 (으)로 정하기 %3",
     "blacksmith_set_digital_servo": "디지털 %1 번 핀의 서보모터를 %2 의 각도로 정하기 %3",
-    "blacksmith_set_digital_buzzer": "디지털 %1 번 핀의 버저를 %2 옥타브 %3 음으로 %4 초 연주하기 %5",
+    "blacksmith_set_digital_buzzer": "디지털 %1 번 핀의 버저를 %2 %3 음으로 %4 초 연주하기 %5",
     "blacksmith_set_digital_lcd": "LCD화면 %1 줄에 %2 나타내기 %3",
     "blacksmith_set_digital_bluetooth": "블루투스 TX 3 핀에 %1 데이터 보내기 %2",
     "byrobot_dronefighter_controller_controller_value_button": "%1",
