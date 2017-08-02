@@ -34,7 +34,8 @@ Entry.SVG.createElement = function (tag, options) {
             el.setAttributeNS(Entry.SVG.NS_XLINK, 'href', options.href);
             delete options.href;
         }
-        for (var key in options) {
+
+        for (var key in options)  {
             el.setAttribute(key, options[key]);
         }
     }

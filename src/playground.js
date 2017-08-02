@@ -1162,6 +1162,20 @@ Entry.Playground = function() {
         this.injectSound();
     };
 
+    p.downloadSound = function(soundId) {
+        var sound = Entry.playground.object.getSound(soundId);
+        if (sound.fileurl) {
+            if(sound.fileurl.indexOf('bark.mp3') > -1) {
+                window.open('/api/sprite/download/entryjs/' + encodeURIComponent(sound.fileurl) + '/' + encodeURIComponent(sound.name+'.mp3'));    
+            } else {
+                window.open(sound.fileurl);
+            }
+        } else {
+            window.open('/api/sprite/download/sound/' + encodeURIComponent(sound.filename) + '/' + encodeURIComponent(sound.name));
+        }
+    }
+
+
     /**
      * select view mode
      * @param {string} viewType
@@ -1398,8 +1412,8 @@ Entry.Playground = function() {
 
         (function(workspace) {
             if (workspace) {
-                workspace.getBlockMenu().reDraw();
                 workspace.getBoard().reDraw();
+                workspace.getBlockMenu().reDraw();
             }
         })(this.mainWorkspace);
     };
@@ -1598,6 +1612,13 @@ Entry.Playground = function() {
                             Entry.toast.alert(Lang.Workspace.sound_remove_fail,'');
                         }
                         Entry.removeElement(element);
+                    }
+                },
+                { divider: true },
+                {
+                    text: Lang.Workspace.context_download,
+                    callback: function(){
+                        Entry.playground.downloadSound(sound.id);
                     }
                 }
             ];

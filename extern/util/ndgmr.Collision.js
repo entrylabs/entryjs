@@ -57,7 +57,7 @@ this.ndgmr = this.ndgmr || {};
     if (Math.min(b1.width, b1.height, b2.width, b2.height) < 2)
         threshold = 1;
     else
-        threshold = 2;
+        threshold = 1;
     return calculateIntersection(b1,b2);
   }
   ndgmr.checkRectCollision = checkRectCollision;

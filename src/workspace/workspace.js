@@ -107,10 +107,10 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
 
     p.setMode = function(mode, message) {
         var playground = Entry.playground;
-        var object = playground && playground.object ?
-            playground.object : undefined;
+        var object = playground && playground.object;
 
         Entry.disposeEvent.notify();
+
         if (Entry.Utils.isNumber(mode)) this.mode = mode;
         else {
             this.mode = mode.boardType;
@@ -127,12 +127,12 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
             blockMenu = this.blockMenu;
 
         var alert_message;
-        //var message;
         if (!checkObjectAndAlert(object))
             return;
+
         switch (this.mode) {
             case WORKSPACE.MODE_VIMBOARD:
-                    alert_message = Entry.TextCodingUtil.isNamesIncludeSpace();
+                    var alert_message = Entry.TextCodingUtil.isNamesIncludeSpace();
                     if(alert_message) {
                         entrylms.alert(alert_message);
                         var mode = {};
@@ -212,7 +212,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
         Entry.dispatchEvent('cancelBlockMenuDynamic');
 
         function checkObjectAndAlert(object, message) {
-            if (!object) {
+            if (playground && !object) {
                 message = message || "오브젝트가 존재하지 않습니다. 오브젝트를 추가한 후 시도해주세요.";
                 entrylms.alert(message);
                 return false;

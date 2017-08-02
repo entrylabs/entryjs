@@ -16,8 +16,8 @@ Entry.HW = function() {
     this.isFirstConnect = true;
     //this.requireVerion = 'v1.6.1';
     this.requireVerion = 'v1.6.1';
-    this.downloadPath = "http://download.play-entry.org/apps/Entry_HW_1.6.10_Setup.exe";
-    this.downloadPathOsx = "http://download.play-entry.org/apps/Entry_HW-1.6.10.dmg";
+    this.downloadPath = "http://download.play-entry.org/apps/Entry_HW_1.6.11_Setup.exe";
+    this.downloadPathOsx = "http://download.play-entry.org/apps/Entry_HW-1.6.11.dmg";
     this.hwPopupCreate();
     this.initSocket();
     this.connected = false;
@@ -46,9 +46,12 @@ Entry.HW = function() {
         '1.B': Entry.Blacksmith,
         '2.4': Entry.Hamster,
         '2.5': Entry.Albert,
+        '2.9': Entry.Turtle,
+        '2.FF': Entry.Roboid,
         '3.1': Entry.Bitbrick,
         '4.2': Entry.Arduino,
         '5.1': Entry.Neobot,
+        '6.1': Entry.mkboard,
         '7.1': Entry.Robotis_carCont,
         '7.2': Entry.Robotis_openCM70,
         '8.1': Entry.Arduino,
@@ -330,7 +333,7 @@ p.downloadGuide = function() {
 };
 
 p.downloadSource = function() {
-    var url = "http://play-entry.com/down/board.ino";
+    var url = "http://download.play-entry.org/apps/board.ino";
     var win = window.open(url, '_blank');
     win.focus();
 };
