@@ -108,6 +108,8 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
     p.setMode = function(mode, message) {
         var playground = Entry.playground;
         var object = playground && playground.object;
+        if (!checkObjectAndAlert(object))
+            return false; // change mode fail
 
         Entry.disposeEvent.notify();
 
@@ -127,8 +129,6 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
             blockMenu = this.blockMenu;
 
         var alert_message;
-        if (!checkObjectAndAlert(object))
-            return false; // change mode fail
 
         switch (this.mode) {
             case WORKSPACE.MODE_VIMBOARD:
