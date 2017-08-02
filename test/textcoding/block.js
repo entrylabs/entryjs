@@ -1634,7 +1634,114 @@ describe('EntryPython', function(){
                               }
                            ]
                         ]
-                        ));
+                    ));
+                });
+                
+                it('Do while block ' , function() {
+                    Entry.loadProject(Entry.getStartProject()); 
+                    Entry.playground.object = Entry.container.objects_[0];
+
+                    var resultBlock = Test.parsePython("def when_start():\n    while not (10 > 10):\n       Entry.move_to_direction(10)");
+                    // console.log(JSON.stringify(resultBlock));
+
+                    assert.ok(Test.pythonToBlock(
+                        "def when_start():\n    while not (10 > 10):\n        Entry.move_to_direction(10)" ,
+                        [  
+                           [  
+                              {  
+                                 "type":"when_run_button_click",
+                                 "params":[  
+                                    null
+                                 ],
+                                 "contents":[  
+                                    {  
+                                       "type":"repeat_while_true",
+                                       "params":[  
+                                          {  
+                                             "operator":">",
+                                             "type":"boolean_basic_operator",
+                                             "params":[  
+                                                {  
+                                                   "type":"text",
+                                                   "params":[  
+                                                      10
+                                                   ]
+                                                },
+                                                "GREATER",
+                                                {  
+                                                   "type":"text",
+                                                   "params":[  
+                                                      10
+                                                   ]
+                                                }
+                                             ]
+                                          },
+                                          "until"
+                                       ],
+                                       "statements":[  
+                                          [  
+                                             {  
+                                                "type":"move_direction",
+                                                "params":[  
+                                                   {  
+                                                      "type":"number",
+                                                      "params":[  
+                                                         10
+                                                      ]
+                                                   },
+                                                   null
+                                                ]
+                                             }
+                                          ]
+                                       ]
+                                    }
+                                 ]
+                              },
+                              {  
+                                 "type":"repeat_while_true",
+                                 "params":[  
+                                    {  
+                                       "operator":">",
+                                       "type":"boolean_basic_operator",
+                                       "params":[  
+                                          {  
+                                             "type":"text",
+                                             "params":[  
+                                                10
+                                             ]
+                                          },
+                                          "GREATER",
+                                          {  
+                                             "type":"text",
+                                             "params":[  
+                                                10
+                                             ]
+                                          }
+                                       ]
+                                    },
+                                    "until"
+                                 ],
+                                 "statements":[  
+                                    [  
+                                       {  
+                                          "type":"move_direction",
+                                          "params":[  
+                                             {  
+                                                "type":"number",
+                                                "params":[  
+                                                   10
+                                                ]
+                                             },
+                                             null
+                                          ]
+                                       }
+                                    ]
+                                 ]
+                              }
+                           ]
+                        ]
+
+                    ));
                 });
             });
 
