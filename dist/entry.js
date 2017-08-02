@@ -9568,8 +9568,8 @@ Entry.HW = function() {
   this.connectTrial = 0;
   this.isFirstConnect = !0;
   this.requireVerion = "v1.6.1";
-  this.downloadPath = "http://download.play-entry.org/apps/Entry_HW_1.6.11_Setup.exe";
-  this.downloadPathOsx = "http://download.play-entry.org/apps/Entry_HW-1.6.11.dmg";
+  this.downloadPath = "http://download.play-entry.org/apps/Entry_HW_1.6.12_Setup.exe";
+  this.downloadPathOsx = "http://download.play-entry.org/apps/Entry_HW-1.6.12.dmg";
   this.hwPopupCreate();
   this.initSocket();
   this.connected = !1;
