@@ -158,7 +158,14 @@ Entry.PyToBlockParser = function(blockSyntax) {
         return result;
     };
 
-    // p.WhileStatement = function(component) {};
+    p.WhileStatement = function(component) {
+        var blocks = component.body.body;
+
+        return {
+            type: "repeat_inf",
+            statements : [this.setParams(blocks)]
+        }    
+    };
 
     p.BlockStatement = function(component) {
        return component.body.map(this.Node, this);
@@ -280,6 +287,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
         var threadArr = [type];
         threadArr[0].blocks = [];
         var blocks = component.body.body[0].argument.callee.object.body.body;
+
         var definedBlocks = this.setParams(blocks);
 
         if(blockInfo){
@@ -425,7 +433,6 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
     p.setParams = function(params) {
         var definedBlocks = params.length ? params.map(this.Node , this) : [];
-
         for(var i=0; i<definedBlocks.length; i++){
             var db = definedBlocks[i];
             

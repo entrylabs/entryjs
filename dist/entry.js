@@ -12852,6 +12852,9 @@ Entry.PyToBlockParser = function(c) {
     b.params && (d.params = b.params.concat());
     return d;
   };
+  c.WhileStatement = function(b) {
+    return {type:"repeat_inf", statements:[this.setParams(b.body.body)]};
+  };
   c.BlockStatement = function(b) {
     return b.body.map(this.Node, this);
   };
