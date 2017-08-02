@@ -12832,19 +12832,19 @@ Entry.PyToBlockParser = function(c) {
   };
   c.AssignmentExpression = function(b) {
   };
-  c.Literal = function(b, c) {
-    var d = b.value;
-    switch(typeof d) {
+  c.Literal = function(b, c, d) {
+    var e = b.value;
+    switch(typeof e) {
       case "boolean":
-        return {type:d ? "True" : "False"};
+        return {type:e ? "True" : "False"};
     }
     switch(c ? c.type : "Block") {
       case "DropdownDynamic":
-        return this.DropdownDynamic(d, c);
+        return this.DropdownDynamic(e, c);
       case "Block":
-        return {type:"number", params:[d]};
+        return d && d.type ? {type:d.type, params:this.Arguments(d.type, [b])} : {type:"number", params:[e]};
       default:
-        return d;
+        return e;
     }
   };
   c.MemberExpression = function(b) {
@@ -12938,19 +12938,22 @@ Entry.PyToBlockParser = function(c) {
       var h = parseInt(b[g].substring(1)) - 1;
       d[h] = c[g];
     }
+    var k = e.def && e.def.params ? e.def.params : null;
     return d.map(function(b, c) {
-      return b && b.type ? this.Node(b, "Literal" === b.type ? e.params[c] : void 0) : b;
+      return b && b.type ? this.Node(b, "Literal" === b.type ? e.params[c] : void 0, "Literal" === b.type && k ? k[c] : void 0) : b;
     }, this);
   };
   c.DropdownDynamic = function(b, c) {
     switch(c.menuName) {
+      case "pictures":
+        var d = Entry.playground.object.getPicture(b);
+        return d ? d.id : void 0;
       case "variables":
-        var d = Entry.variableContainer.getVariableByName(b);
-        return d ? d.id_ : void 0;
+        return (d = Entry.variableContainer.getVariableByName(b)) ? d.id_ : void 0;
       case "lists":
         return (d = Entry.variableContainer.getListByName(b).id_) ? d.id_ : void 0;
-      default:
-        return b;
+      case "sounds":
+        return b && (d = Entry.playground.object.getSound(b)), d ? d.id : void 0;
     }
   };
   c.Node = function(b, c) {

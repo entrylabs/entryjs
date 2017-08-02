@@ -120,7 +120,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
     p.AssignmentExpression = function(component) {};
 
-    p.Literal = function(component, paramSchema) {
+    p.Literal = function(component, paramSchema, paramDef) {
         var value = component.value;
         switch(typeof value) {
             case "boolean":
@@ -132,6 +132,15 @@ Entry.PyToBlockParser = function(blockSyntax) {
             case "DropdownDynamic":
                 return this.DropdownDynamic(value, paramSchema);
             case "Block":
+                if (paramDef && paramDef.type) { // process primitive block
+                    return {
+                        type: paramDef.type,
+                        params: this.Arguments(
+                            paramDef.type,
+                            [ component ]
+                        )
+                    }
+                }
                 return {
                     type: 'number',
                     params : [ value ]
@@ -355,12 +364,14 @@ Entry.PyToBlockParser = function(blockSyntax) {
             var idx = parseInt(indexes[i].substring(1))-1;
             sortedArgs[idx] = args[i];
         }
+        var defParams = (blockSchema.def && blockSchema.def.params) ? blockSchema.def.params : null;
 
         var results = sortedArgs.map(function(arg, index) {
             if (arg && arg.type)
                 return this.Node(
                     arg,
-                    (arg.type === "Literal") ? blockSchema.params[index] : undefined
+                    (arg.type === "Literal") ? blockSchema.params[index] : undefined,
+                    (arg.type === "Literal" && defParams) ? defParams[index] : undefined
                 );
             else
                 return arg;
@@ -371,14 +382,30 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
     p.DropdownDynamic = function(value, paramSchema) {
         switch(paramSchema.menuName) {
-            case "variables":
+            case 'sprites':
+            case 'spritesWithMouse':
+            case 'spritesWithSelf':
+            case 'collision':
+                break;
+            case 'pictures':
+                var picture = Entry.playground.object.getPicture(value);
+                return picture ? picture.id : undefined;
+            case 'messages':
+                break;
+            case 'variables':
                 var variable = Entry.variableContainer.getVariableByName(value);
                 return variable ? variable.id_ : undefined;
-            case "lists":
+            case 'lists':
                 var list = Entry.variableContainer.getListByName(value).id_;
                 return list ? list.id_ : undefined;
-            default:
-                return value;
+            case 'scenes':
+                break;
+            case 'sounds':
+                if (value)
+                    var sound = Entry.playground.object.getSound(value);
+                return sound ? sound.id : undefined;
+            case 'clone':
+            case 'objectSequence':
         }
     };
 
