@@ -202,21 +202,35 @@ Entry.PyToBlockParser = function(blockSyntax) {
     };
 
     p.BlockStatement = function(component) {
-       return component.body.map(this.Node, this);
+        var db = component.body.map(this.Node, this);
+    
+        if(db.constructor == Array && db[0].length) {
+            if(db.length > 0){
+                db[db.length-1][0].params = db[0][0][0].params;
+            } 
+
+            db = db[db.length-1][0];
+        }
+        
+        return db;
     };
 
     p.IfStatement = function(component) {
-        var arr = [];
-        var alternate;
+        var arr = [],
+            alternate,
+            blocks,
+            pararms;
 
-        if('alternate' in component)
+        if('alternate' in component && component.alternate){
             alternate = component.alternate.body.map(this.Node , this);
-
-        if('consequent' in component){
-            var blocks = component.consequent.body[0].body.body;
-            var params = this.setParams(blocks);
-            alternate[0].statements.push(params);
-        }
+            blocks = component.consequent.body[0].body.body;
+            alternate[0].statements.push(this.setParams(blocks));
+        } else {
+            alternate = [{
+                type : '_if',
+                statements : [this.setParams(component.consequent.body)],
+            }];
+        }           
 
         return alternate;
     };
@@ -230,12 +244,12 @@ Entry.PyToBlockParser = function(blockSyntax) {
         var  expression = component.body.body[0] && 'expression' in component.body.body[0] ?
                             component.body.body[0].expression.arguments.map(this.Node , this) : null;
 
+
         var obj =  {
             "type" : "repeat_basic",
             "params": [],
             "statements" : []
         }
-
         return obj;
     };
 
@@ -321,7 +335,6 @@ Entry.PyToBlockParser = function(blockSyntax) {
         var threadArr = [type];
         threadArr[0].blocks = [];
         var blocks = component.body.body[0].argument.callee.object.body.body;
-
         var definedBlocks = this.setParams(blocks);
 
         if(blockInfo){

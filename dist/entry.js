@@ -17613,12 +17613,13 @@ Entry.PyToBlockParser = function(c) {
     return c;
   };
   c.BlockStatement = function(b) {
-    return b.body.map(this.Node, this);
+    b = b.body.map(this.Node, this);
+    b.constructor == Array && b[0].length && (0 < b.length && (b[b.length - 1][0].params = b[0][0][0].params), b = b[b.length - 1][0]);
+    return b;
   };
   c.IfStatement = function(b) {
     var c;
-    "alternate" in b && (c = b.alternate.body.map(this.Node, this));
-    "consequent" in b && (b = this.setParams(b.consequent.body[0].body.body), c[0].statements.push(b));
+    "alternate" in b && b.alternate ? (c = b.alternate.body.map(this.Node, this), b = b.consequent.body[0].body.body, c[0].statements.push(this.setParams(b))) : c = [{type:"_if", statements:[this.setParams(b.consequent.body)]}];
     return c;
   };
   c.ForStatement = function(b) {
