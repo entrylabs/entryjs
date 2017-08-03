@@ -1061,8 +1061,9 @@ Entry.Playground = function() {
                 Entry.playground.object.entity.getText();
             Entry.playground.textEditArea.value =
                 Entry.playground.object.entity.getText();
-            Entry.playground.fontName_.value =
-                Entry.playground.object.entity.getFontName();
+
+            $("#entryPainterAttrFontName").val(
+                Entry.playground.object.entity.getFontName());
 
             if (Entry.playground.object.entity.font) {
                 var isBold = Entry.playground.object.entity.font.indexOf("bold") > -1 || false;
