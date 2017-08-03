@@ -451,6 +451,7 @@ Entry.Stage.prototype.updateHandle = function() {
     }
     var direction = handle.rotation / 180 * Math.PI;
     if (entity.type == "textBox") {
+        entity.syncFont();
         var newRegX = handle.regX / entity.scaleX;
         var newRegY = handle.regY / entity.scaleY;
 
