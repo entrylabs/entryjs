@@ -921,6 +921,7 @@ Entry.Container.prototype.resetSceneDuringRun = function() {
 
     this.mapEntityOnScene(function(entity){ entity.reset(); });
     this.clearRunningStateOnScene();
+    Entry.stage.hideInputField();
 };
 
 Entry.Container.prototype.setCopiedObject = function(object) {
