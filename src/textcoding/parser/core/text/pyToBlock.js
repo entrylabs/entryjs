@@ -226,10 +226,11 @@ Entry.PyToBlockParser = function(blockSyntax) {
             blocks = component.consequent.body[0].body.body;
             alternate[0].statements.push(this.setParams(blocks));
         } else {
-            alternate = [{
+            alternate = {
                 type : '_if',
                 statements : [this.setParams(component.consequent.body)],
-            }];
+                params : [this.Node(component.test)]
+            };
         }           
 
         return alternate;
@@ -337,6 +338,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
         var blocks = component.body.body[0].argument.callee.object.body.body;
         var definedBlocks = this.setParams(blocks);
 
+
         if(blockInfo){
             type.type = blockInfo.key;
         }
@@ -440,7 +442,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
         if (hasType) args.shift();
 
         node = args[0];
-
+        
         if (!this[node.type])
             throw new Error(node.type + " is not supported");
         return this[node.type].apply(this, args);
@@ -508,7 +510,6 @@ Entry.PyToBlockParser = function(blockSyntax) {
     // p.CatchClause = function(component) {};
 
     // p.DoWhileStatement = function(component) {
-    //     console.log('DoWhileStatement' , component);
     //     return component.body.map(this.Node,  this);
     // };
 
