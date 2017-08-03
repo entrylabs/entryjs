@@ -171,15 +171,24 @@ Entry.PyToBlockParser = function(blockSyntax) {
         if (component.object.type === "Literal") { // string member
             obj = "%2";
             result.preParams = [ component.object ];
-        } else
+        } else {
             obj = this.Node(component.object);
+        }
+
         if (typeof obj === "object") { // list member
             result.preParams = [ obj.params[0] ];
             obj = "%2"
         }
         var property = component.property;
 
-        var blockInfo = this.blockSyntax[obj][property.name];
+        var blockInfo;
+        if (property.type === "CallExpression") {
+            this.assert();
+        } else if (property.name === "_pySlice") {
+            blockInfo = this.blockSyntax["%2[%4:%6]"];
+        } else {
+            blockInfo = this.blockSyntax[obj][property.name];
+        }
 
         this.Block(result, blockInfo);
 

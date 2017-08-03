@@ -17604,7 +17604,10 @@ Entry.PyToBlockParser = function(c) {
     var c, e = {};
     "Literal" === b.object.type ? (c = "%2", e.preParams = [b.object]) : c = this.Node(b.object);
     "object" === typeof c && (e.preParams = [c.params[0]], c = "%2");
-    this.Block(e, this.blockSyntax[c][b.property.name]);
+    b = b.property;
+    var f;
+    "CallExpression" === b.type ? this.assert() : f = "_pySlice" === b.name ? this.blockSyntax["%2[%4:%6]"] : this.blockSyntax[c][b.name];
+    this.Block(e, f);
     return e;
   };
   c.WhileStatement = function(b) {
