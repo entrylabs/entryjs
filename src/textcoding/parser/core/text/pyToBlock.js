@@ -377,11 +377,15 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     (arg.type === "Literal") ? paramSchema : undefined,
                     (arg.type === "Literal" && defParams) ? defParams[index] : undefined
                 );
-                if (paramSchema.type !== "Block" && param &&  param.params) // for list and variable dropdown
+
+                if (paramSchema.type !== "Block" && param && param.params) // for list and variable dropdown
                     param = param.params[0];
+                else if (paramSchema.type === "Block" && paramSchema.isListIndex)
+                    param = this.ListIndex(param);
+
                 return param;
             } else
-                return arg;
+                return arg; // default params
         }, this);
 
         return results;
@@ -459,12 +463,58 @@ Entry.PyToBlockParser = function(blockSyntax) {
         if (blockInfo.params)
             result.params = blockInfo.params.concat();
         return result;
-    }
+    };
+
+    p.ListIndex = function(param) {
+        if (this.isParamPrimitive(param)) { // literal
+            param.params = [ param.params[0] + 1 ];
+        } else if (param.type === "calc_basic" && // x - 1
+                   param.params[1] === "MINUS" &&
+                   this.isParamPrimitive(param.params[2]) &&
+                   param.params[2].params[0] + "" === "1") {
+            param = param.params[0];
+        } else {
+            param = {
+                type: "calc_basic",
+                params: [
+                    param,
+                    "PLUS",
+                    {
+                        type: "text",
+                        params: [ 1 ]
+                    }
+                ]
+            }
+        }
+        return param;
+    };
+
+    p.isParamPrimitive = function(param) {
+        return param && (param.type === "number" || param.type === "text");
+    };
 
     p.assert = function(data, message, errorNode) {
         if (!data)
             throw new Error(message);
     };
+
+    p.setParams = function(params) {
+        var definedBlocks = params.length ? params.map(this.Node , this) : [];
+        for(var i=0; i<definedBlocks.length; i++){
+            var db = definedBlocks[i];
+
+            if(db.constructor == Array && db[0].length) {
+                if(db.length > 0){
+                    db[db.length-1][0].params = db[0][0][0].params;
+                    definedBlocks[i] = db[db.length-1][0];
+                } else {
+                    definedBlocks[i] = db[0][0];
+                }
+            }
+        }
+
+        return definedBlocks;
+    }
 
     /**
      * Not Supported
@@ -508,25 +558,5 @@ Entry.PyToBlockParser = function(blockSyntax) {
     // p.ConditionalExpression = function(component) {};
 
     // p.SequenceExpression = function(component) {};
-
-    // p.searchSyntax = function(datum) {};
-
-    p.setParams = function(params) {
-        var definedBlocks = params.length ? params.map(this.Node , this) : [];
-        for(var i=0; i<definedBlocks.length; i++){
-            var db = definedBlocks[i];
-
-            if(db.constructor == Array && db[0].length) {
-                if(db.length > 0){
-                    db[db.length-1][0].params = db[0][0][0].params;
-                    definedBlocks[i] = db[db.length-1][0];
-                } else {
-                    definedBlocks[i] = db[0][0];
-                }
-            }
-        }
-
-        return definedBlocks;
-    }
 
 })(Entry.PyToBlockParser.prototype);

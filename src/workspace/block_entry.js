@@ -24539,6 +24539,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Block",
+                "isListIndex": true,
                 "accept": "string"
             },
             {
@@ -24649,7 +24650,8 @@ Entry.block = {
             },
             {
                 "type": "Block",
-                "accept": "string"
+                "accept": "string",
+                "isListIndex": true
             },
             {
                 "type": "Indicator",
@@ -24761,6 +24763,7 @@ Entry.block = {
             },
             {
                 "type": "Block",
+                "isListIndex": true,
                 "accept": "string"
             },
             {
@@ -24888,6 +24891,7 @@ Entry.block = {
             },
             {
                 "type": "Block",
+                "isListIndex": true,
                 "accept": "string"
             },
             {

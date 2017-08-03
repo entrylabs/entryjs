@@ -17694,7 +17694,7 @@ Entry.PyToBlockParser = function(c) {
       if (b && b.type) {
         var e = d.params[c];
         b = this.Node(b, "Literal" === b.type ? e : void 0, "Literal" === b.type && k ? k[c] : void 0);
-        "Block" !== e.type && b && b.params && (b = b.params[0]);
+        "Block" !== e.type && b && b.params ? b = b.params[0] : "Block" === e.type && e.isListIndex && (b = this.ListIndex(b));
       }
       return b;
     }, this);
@@ -17751,6 +17751,13 @@ Entry.PyToBlockParser = function(c) {
     b.type = c.key;
     c.params && (b.params = c.params.concat());
     return b;
+  };
+  c.ListIndex = function(b) {
+    this.isParamPrimitive(b) ? b.params = [b.params[0] + 1] : b = "calc_basic" === b.type && "MINUS" === b.params[1] && this.isParamPrimitive(b.params[2]) && "1" === b.params[2].params[0] + "" ? b.params[0] : {type:"calc_basic", params:[b, "PLUS", {type:"text", params:[1]}]};
+    return b;
+  };
+  c.isParamPrimitive = function(b) {
+    return b && ("number" === b.type || "text" === b.type);
   };
   c.assert = function(b, c, e) {
     if (!b) {
