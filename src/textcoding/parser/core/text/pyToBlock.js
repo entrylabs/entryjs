@@ -214,10 +214,9 @@ Entry.PyToBlockParser = function(blockSyntax) {
         var db = component.body.map(this.Node, this);
 
         if(db.constructor == Array && db[0].length) {
-            if(db.length > 0){
-                db[db.length-1][0].params = db[0][0][0].params;
-            }
-
+            if(db.length > 0)
+                db[db.length-1][0].params.push(db[0][0][0]);
+            
             db = db[db.length-1][0];
         }
 
@@ -236,6 +235,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                          tempAlt.body[0] &&
                          'type' in tempAlt.body[0] && 
                          tempAlt.body[0].type === 'ForInStatement';
+        
         if(isForState){
             alternate = component.alternate.body.map(this.Node , this);
             blocks = component.consequent.body[0].body.body;

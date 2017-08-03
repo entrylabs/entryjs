@@ -12867,7 +12867,7 @@ Entry.PyToBlockParser = function(c) {
   };
   c.BlockStatement = function(b) {
     b = b.body.map(this.Node, this);
-    b.constructor == Array && b[0].length && (0 < b.length && (b[b.length - 1][0].params = b[0][0][0].params), b = b[b.length - 1][0]);
+    b.constructor == Array && b[0].length && (0 < b.length && b[b.length - 1][0].params.push(b[0][0][0]), b = b[b.length - 1][0]);
     return b;
   };
   c.IfStatement = function(b) {
