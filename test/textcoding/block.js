@@ -1379,7 +1379,110 @@ describe('EntryPython', function(){
                         ]
                     ));
                 });
+                
+                it('if else block' , function() {
+                    Entry.loadProject(Entry.getStartProject()); 
+                    Entry.playground.object = Entry.container.objects_[0];
+                    var resultBlock = Test.parsePython("def when_start():\n    if (True and True):\n        Entry.add_x(10)\n    else:\n        Entry.bounce_on_edge()");
 
+                    assert.ok(Test.parsePython(
+                        "def when_start():\n    if (True and True):\n        Entry.add_x(10)\n    else:\n        Entry.bounce_on_edge()" ,
+                        [  
+                           [  
+                              {  
+                                 "type":"when_run_button_click",
+                                 "params":[  
+                                    null
+                                 ],
+                                 "contents":[  
+                                    {  
+                                       "type":"if_else",
+                                       "params":[  
+                                          {  
+                                             "type":"boolean_and",
+                                             "params":[  
+                                                {  
+                                                   "type":"True"
+                                                },
+                                                null,
+                                                {  
+                                                   "type":"True"
+                                                }
+                                             ]
+                                          }
+                                       ],
+                                       "statements":[  
+                                          [  
+                                             {  
+                                                "type":"move_x",
+                                                "params":[  
+                                                   {  
+                                                      "type":"number",
+                                                      "params":[  
+                                                         10
+                                                      ]
+                                                   },
+                                                   null
+                                                ]
+                                             }
+                                          ],
+                                          [  
+                                             {  
+                                                "type":"bounce_wall",
+                                                "params":[  
+                                                   null
+                                                ]
+                                             }
+                                          ]
+                                       ]
+                                    }
+                                 ]
+                              },
+                              {  
+                                 "type":"if_else",
+                                 "params":[  
+                                    {  
+                                       "type":"boolean_and",
+                                       "params":[  
+                                          {  
+                                             "type":"True"
+                                          },
+                                          null,
+                                          {  
+                                             "type":"True"
+                                          }
+                                       ]
+                                    }
+                                 ],
+                                 "statements":[  
+                                    [  
+                                       {  
+                                          "type":"move_x",
+                                          "params":[  
+                                             {  
+                                                "type":"number",
+                                                "params":[  
+                                                   10
+                                                ]
+                                             },
+                                             null
+                                          ]
+                                       }
+                                    ],
+                                    [  
+                                       {  
+                                          "type":"bounce_wall",
+                                          "params":[  
+                                             null
+                                          ]
+                                       }
+                                    ]
+                                 ]
+                              }
+                           ]
+                        ]
+                        ));
+                });
                 it('while block ' , function() {
                     Entry.loadProject(Entry.getStartProject()); 
                     Entry.playground.object = Entry.container.objects_[0];
