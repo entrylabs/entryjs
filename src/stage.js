@@ -639,14 +639,17 @@ Entry.Stage.prototype.initObjectContainers = function() {
  * @param {Entry.Scene} scene
  */
 Entry.Stage.prototype.selectObjectContainer = function(scene) {
-    if (!this.canvas)
-        return;
     var containers = this.objectContainers;
-    for (var i = 0; i < containers.length; i++) {
-        this.canvas.removeChild(containers[i]);
-    }
-    this.selectedObjectContainer = this.getObjectContainerByScene(scene);
-    this.canvas.addChildAt(this.selectedObjectContainer, 2);
+    var canvas = this.canvas;
+    if (!canvas || !containers || !containers.length)
+        return;
+
+    containers.forEach(function(c) { canvas.removeChild(c); });
+
+    this.selectedObjectContainer =
+        this.getObjectContainerByScene(scene);
+
+    canvas.addChildAt(this.selectedObjectContainer, 2);
 };
 
 /**

@@ -667,7 +667,8 @@ Entry.Engine = function() {
      */
     p.fireEvent = function(eventName) {
         if (this.state !== 'run') return;
-        Entry.container.mapEntityIncludeCloneOnScene(this.raiseEvent, eventName);
+        Entry.container.mapEntityIncludeCloneOnScene(
+            this.raiseEvent, eventName);
     };
 
     /**
@@ -676,8 +677,7 @@ Entry.Engine = function() {
      * @param {string} eventName
      */
     p.raiseEvent = function(entity, eventName) {
-        var code = entity.parent.script;
-        code.raiseEvent(eventName, entity);
+        entity.parent.script.raiseEvent(eventName, entity);
     };
 
     /**

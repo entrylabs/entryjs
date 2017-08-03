@@ -917,12 +917,9 @@ Entry.Container.prototype.setInputValue = function(inputValue) {
 };
 
 Entry.Container.prototype.resetSceneDuringRun = function() {
-    this.mapEntityOnScene(function(entity){
-        entity.loadSnapshot();
-        entity.resetFilter();
-        entity.dialog && entity.dialog.remove();
-        entity.shape && entity.removeBrush();
-    });
+    if (!Entry.engine.isState('run')) return;
+
+    this.mapEntityOnScene(function(entity){ entity.reset(); });
     this.clearRunningStateOnScene();
 };
 
