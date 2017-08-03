@@ -17604,10 +17604,11 @@ Entry.PyToBlockParser = function(c) {
     var c, e = {};
     "Literal" === b.object.type ? (c = "%2", e.preParams = [b.object]) : c = this.Node(b.object);
     "object" === typeof c && (e.preParams = [c.params[0]], c = "%2");
-    b = b.property;
-    var f;
-    "CallExpression" === b.type ? this.assert() : f = "_pySlice" === b.name ? this.blockSyntax["%2[%4:%6]"] : this.blockSyntax[c][b.name];
-    this.Block(e, f);
+    var f = b.property;
+    if ("CallExpression" === f.type) {
+      return this.SubscriptIndex(b);
+    }
+    this.Block(e, "_pySlice" === f.name ? this.blockSyntax["%2[%4:%6]"] : this.blockSyntax[c][f.name]);
     return e;
   };
   c.WhileStatement = function(b) {
@@ -17681,6 +17682,13 @@ Entry.PyToBlockParser = function(c) {
   };
   c.ReturnStatement = function(b) {
     return b.argument.arguments.map(this.Node, this);
+  };
+  c.SubscriptIndex = function(b) {
+    var c = this.Node(b.object);
+    this.isParamPrimitive(c) ? c = this.blockSyntax["%2[%4]#char_at"] : (this.assert("get_list" === c.type, "Subscript index can be use to array", b), c = this.blockSyntax["%2[%4]"]);
+    c = this.Block({}, c);
+    c.params = this.Arguments(c.type, b.property.arguments);
+    return c;
   };
   c.Arguments = function(b, c, e) {
     var d = Entry.block[b];

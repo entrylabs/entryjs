@@ -183,7 +183,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
         var blockInfo;
         if (property.type === "CallExpression") {
-            this.assert();
+            return this.SubscriptIndex(component);
         } else if (property.name === "_pySlice") {
             blockInfo = this.blockSyntax["%2[%4:%6]"];
         } else {
@@ -373,6 +373,24 @@ Entry.PyToBlockParser = function(blockSyntax) {
     // p.ThisExpression = function(component) {};
 
     // p.NewExpression = function(component) {};
+
+    p.SubscriptIndex = function(component) {
+        var obj = this.Node(component.object);
+        var blockInfo;
+
+        if (this.isParamPrimitive(obj)) { // list
+            blockInfo = this.blockSyntax["%2[%4]#char_at"];
+        } else { // string
+            this.assert(obj.type === "get_list", "Subscript index can be use to array", component);
+            blockInfo = this.blockSyntax["%2[%4]"];
+        }
+        var result = this.Block({}, blockInfo);
+        result.params = this.Arguments(
+            result.type,
+            component.property.arguments
+        );
+        return result;
+    };
 
     /**
      * util Function
