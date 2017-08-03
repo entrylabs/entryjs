@@ -5196,9 +5196,9 @@ Entry.Collection = function(c) {
     }
     return e;
   };
-  c.moveFromTo = function(c, d) {
+  c.moveFromTo = function(f, c) {
     var e = this.length - 1;
-    0 > c || 0 > d || c > e || d > e || b.splice.call(this, d, 0, b.splice.call(this, c, 1)[0]);
+    0 > f || 0 > c || f > e || c > e || b.splice.call(this, c, 0, b.splice.call(this, f, 1)[0]);
   };
   c.sort = function() {
   };
@@ -12867,8 +12867,9 @@ Entry.PyToBlockParser = function(c) {
     return b;
   };
   c.IfStatement = function(b) {
-    var c;
-    "alternate" in b && b.alternate ? (c = b.alternate.body.map(this.Node, this), b = b.consequent.body[0].body.body, c[0].statements.push(this.setParams(b))) : c = {type:"_if", statements:[this.setParams(b.consequent.body)], params:[this.Node(b.test)]};
+    var c, d;
+    (c = b.alternate) && c.body && c.body[0] && "type" in c.body[0] && "ForInStatement" === c.body[0].type ? (c = b.alternate.body.map(this.Node, this), d = b.consequent.body[0].body.body, c[0].statements.push(this.setParams(d)), console.log("@ForStatement  in if", b)) : "alternate" in b ? (console.log("if else in!"), c = b.consequent ? b.consequent.body.map(this.Node, this) : [], d = b.alternate ? b.alternate.body.map(this.Node, this) : [], c = {type:"if_else", statements:[c, d], params:[this.Node(b.test)]}) : 
+    c = {type:"_if", statements:[this.setParams(b.consequent.body)], params:[this.Node(b.test)]};
     return c;
   };
   c.ForStatement = function(b) {
@@ -12917,7 +12918,6 @@ Entry.PyToBlockParser = function(c) {
     var c = this.Node(b.id), d = this.blockSyntax["def " + c], e = {}, c = [e];
     c[0].blocks = [];
     b = this.setParams(b.body.body[0].argument.callee.object.body.body);
-    console.log(b);
     d && (e.type = d.key);
     for (d = 0;d < b.length;d++) {
       c[0].blocks.push(b[d]), c.push(b[d]);
@@ -12973,7 +12973,6 @@ Entry.PyToBlockParser = function(c) {
     var e = Array.prototype.slice.call(arguments);
     d && e.shift();
     c = e[0];
-    console.log(c.type);
     if (!this[c.type]) {
       throw Error(c.type + " is not supported");
     }

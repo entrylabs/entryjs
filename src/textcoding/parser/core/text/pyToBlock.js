@@ -221,14 +221,30 @@ Entry.PyToBlockParser = function(blockSyntax) {
             blocks,
             pararms;
 
-        if('alternate' in component && component.alternate){
+        var tempAlt = component.alternate;
+        var isForState = tempAlt &&
+                         tempAlt.body &&
+                         tempAlt.body[0] &&
+                         'type' in tempAlt.body[0] && 
+                         tempAlt.body[0].type === 'ForInStatement';
+        if(isForState){
             alternate = component.alternate.body.map(this.Node , this);
             blocks = component.consequent.body[0].body.body;
             alternate[0].statements.push(this.setParams(blocks));
-        } else {
+            console.log('@ForStatement  in if' , component);
+        } else if(!('alternate' in component)){
             alternate = {
                 type : '_if',
                 statements : [this.setParams(component.consequent.body)],
+                params : [this.Node(component.test)]
+            };
+        } else {
+            console.log('if else in!');
+            var consequents = component.consequent ? component.consequent.body.map(this.Node , this) : [];
+            var alternates = component.alternate ? component.alternate.body.map(this.Node , this) : [];
+            alternate = {
+                type : 'if_else',
+                statements : [ consequents, alternates ],
                 params : [this.Node(component.test)]
             };
         }           
