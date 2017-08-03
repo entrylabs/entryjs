@@ -77,6 +77,16 @@ Entry.PyToBlockParser = function(blockSyntax) {
         var params = [];
         var obj = this.Node(callee);
 
+        if (callee.type === "Identifier") { // global function
+            this.assert(!(obj.type === "get_variable"), "variable is not function", callee)
+            this.assert(!(obj.type === "get_list"), "list is not function", callee)
+            this.assert(typeof obj === "string", "error", callee);
+
+            var blockInfo = this.blockSyntax[obj];
+            this.assert(blockInfo && blockInfo.key, "function is not defined", callee);
+            obj = this.Block({}, blockInfo);
+        }
+
         if (obj.preParams) {
             component.arguments = obj.preParams.concat(component.arguments);
             delete obj.preParams;
@@ -155,20 +165,6 @@ Entry.PyToBlockParser = function(blockSyntax) {
         }
     };
 
-    // p.ParamBlock = function(value, paramMeta, paramDefMeta) {};
-
-    // p.ParamAngle = function (value, paramMeta, paramDefMeta) {};
-
-    // p.ParamTextInput = function(value, paramMeta, paramDefMeta) {};
-
-    // p.ParamColor = function(value, paramMeta, paramDefMeta, textParam) {};
-
-    // p.ParamDropdown = function(value, paramMeta, paramDefMeta, textParam) {};
-
-    // p.ParamKeyboard = function(value, paramMeta, paramDefMeta) {};
-
-    // p.Indicator = function(blockParam, blockDefParam, arg) {};
-
     p.MemberExpression = function(component) {
         var obj;
         var result = {};
@@ -177,7 +173,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
             result.preParams = [ component.object ];
         } else
             obj = this.Node(component.object);
-        if (typeof obj === "object") {
+        if (typeof obj === "object") { // list member
             result.preParams = [ obj.params[0] ];
             obj = "%2"
         }
@@ -185,12 +181,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
         var blockInfo = this.blockSyntax[obj][property.name];
 
-        if(property && property.type){
-            result.type = blockInfo.key;
-        }
-
-        if (blockInfo.params)
-            result.params = blockInfo.params.concat();
+        this.Block(result, blockInfo);
 
         return result;
     };
@@ -379,13 +370,17 @@ Entry.PyToBlockParser = function(blockSyntax) {
         var defParams = (blockSchema.def && blockSchema.def.params) ? blockSchema.def.params : undefined;
 
         var results = sortedArgs.map(function(arg, index) {
-            if (arg && arg.type)
-                return this.Node(
+            if (arg && arg.type) {
+                var paramSchema = blockSchema.params[index];
+                var param = this.Node(
                     arg,
-                    (arg.type === "Literal") ? blockSchema.params[index] : undefined,
+                    (arg.type === "Literal") ? paramSchema : undefined,
                     (arg.type === "Literal" && defParams) ? defParams[index] : undefined
                 );
-            else
+                if (paramSchema.type !== "Block" && param &&  param.params) // for list and variable dropdown
+                    param = param.params[0];
+                return param;
+            } else
                 return arg;
         }, this);
 
@@ -458,7 +453,15 @@ Entry.PyToBlockParser = function(blockSyntax) {
         return syntaxObj.syntax || syntaxObj;
     };
 
-    p.assert = function(data, message) {
+    p.Block = function(result, blockInfo) {
+        result.type = blockInfo.key;
+
+        if (blockInfo.params)
+            result.params = blockInfo.params.concat();
+        return result;
+    }
+
+    p.assert = function(data, message, errorNode) {
         if (!data)
             throw new Error(message);
     };

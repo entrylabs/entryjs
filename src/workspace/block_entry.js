@@ -10190,7 +10190,6 @@ Entry.block = {
         "syntax": {"js": [], "py": [
             {
                 syntax: "len(%2)",
-                passTest: true,
                 blockType: "param",
                 keyOption: "length_of_string"
             }

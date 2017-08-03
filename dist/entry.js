@@ -17566,10 +17566,11 @@ Entry.PyToBlockParser = function(c) {
     return this.Node(b.expression);
   };
   c.CallExpression = function(b) {
-    var c = this.Node(b.callee);
-    c.preParams && (b.arguments = c.preParams.concat(b.arguments), delete c.preParams);
-    b.arguments && (c.params = this.Arguments(c.type, b.arguments, c.params));
-    return c;
+    var c = b.callee, e = this.Node(c);
+    "Identifier" === c.type && (this.assert("get_variable" !== e.type, "variable is not function", c), this.assert("get_list" !== e.type, "list is not function", c), this.assert("string" === typeof e, "error", c), e = this.blockSyntax[e], this.assert(e && e.key, "function is not defined", c), e = this.Block({}, e));
+    e.preParams && (b.arguments = e.preParams.concat(b.arguments), delete e.preParams);
+    b.arguments && (e.params = this.Arguments(e.type, b.arguments, e.params));
+    return e;
   };
   c.Identifier = function(b) {
     b = b.name;
@@ -17603,10 +17604,7 @@ Entry.PyToBlockParser = function(c) {
     var c, e = {};
     "Literal" === b.object.type ? (c = "%2", e.preParams = [b.object]) : c = this.Node(b.object);
     "object" === typeof c && (e.preParams = [c.params[0]], c = "%2");
-    b = b.property;
-    c = this.blockSyntax[c][b.name];
-    b && b.type && (e.type = c.key);
-    c.params && (e.params = c.params.concat());
+    this.Block(e, this.blockSyntax[c][b.property.name]);
     return e;
   };
   c.WhileStatement = function(b) {
@@ -17693,7 +17691,12 @@ Entry.PyToBlockParser = function(c) {
     }
     var k = d.def && d.def.params ? d.def.params : void 0;
     return e.map(function(b, c) {
-      return b && b.type ? this.Node(b, "Literal" === b.type ? d.params[c] : void 0, "Literal" === b.type && k ? k[c] : void 0) : b;
+      if (b && b.type) {
+        var e = d.params[c];
+        b = this.Node(b, "Literal" === b.type ? e : void 0, "Literal" === b.type && k ? k[c] : void 0);
+        "Block" !== e.type && b && b.params && (b = b.params[0]);
+      }
+      return b;
     }, this);
   };
   c.DropdownDynamic = function(b, c) {
@@ -17744,7 +17747,12 @@ Entry.PyToBlockParser = function(c) {
     b = b.syntax.py[0];
     return b.syntax || b;
   };
-  c.assert = function(b, c) {
+  c.Block = function(b, c) {
+    b.type = c.key;
+    c.params && (b.params = c.params.concat());
+    return b;
+  };
+  c.assert = function(b, c, e) {
     if (!b) {
       throw Error(c);
     }
