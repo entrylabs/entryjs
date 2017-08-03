@@ -12853,7 +12853,11 @@ Entry.PyToBlockParser = function(c) {
     var c, d = {};
     "Literal" === b.object.type ? (c = "%2", d.preParams = [b.object]) : c = this.Node(b.object);
     "object" === typeof c && (d.preParams = [c.params[0]], c = "%2");
-    this.Block(d, this.blockSyntax[c][b.property.name]);
+    var e = b.property;
+    if ("CallExpression" === e.type) {
+      return this.SubscriptIndex(b);
+    }
+    this.Block(d, "_pySlice" === e.name ? this.blockSyntax["%2[%4:%6]"] : this.blockSyntax[c][e.name]);
     return d;
   };
   c.WhileStatement = function(b) {
@@ -12867,9 +12871,18 @@ Entry.PyToBlockParser = function(c) {
     return b;
   };
   c.IfStatement = function(b) {
-    var c, d;
-    (c = b.alternate) && c.body && c.body[0] && "type" in c.body[0] && "ForInStatement" === c.body[0].type ? (c = b.alternate.body.map(this.Node, this), d = b.consequent.body[0].body.body, c[0].statements.push(this.setParams(d)), console.log("@ForStatement  in if", b)) : "alternate" in b ? (console.log("if else in!"), c = b.consequent ? b.consequent.body.map(this.Node, this) : [], d = b.alternate ? b.alternate.body.map(this.Node, this) : [], c = {type:"if_else", statements:[c, d], params:[this.Node(b.test)]}) : 
-    c = {type:"_if", statements:[this.setParams(b.consequent.body)], params:[this.Node(b.test)]};
+    var c;
+    if ((c = b.alternate) && c.body && c.body[0] && "type" in c.body[0] && "ForInStatement" === c.body[0].type) {
+      c = b.alternate.body.map(this.Node, this), b = b.consequent.body[0].body.body, c[0].statements.push(this.setParams(b));
+    } else {
+      if ("alternate" in b) {
+        c = b.consequent ? b.consequent.body.map(this.Node, this) : [];
+        var d = b.alternate ? b.alternate.body.map(this.Node, this) : [];
+        c = {type:"if_else", statements:[c, d], params:[this.Node(b.test)]};
+      } else {
+        c = {type:"_if", statements:[this.setParams(b.consequent.body)], params:[this.Node(b.test)]};
+      }
+    }
     return c;
   };
   c.ForStatement = function(b) {
@@ -12930,6 +12943,13 @@ Entry.PyToBlockParser = function(c) {
   c.ReturnStatement = function(b) {
     return b.argument.arguments.map(this.Node, this);
   };
+  c.SubscriptIndex = function(b) {
+    var c = this.Node(b.object);
+    this.isParamPrimitive(c) ? c = this.blockSyntax["%2[%4]#char_at"] : (this.assert("get_list" === c.type, "Subscript index can be use to array", b), c = this.blockSyntax["%2[%4]"]);
+    c = this.Block({}, c);
+    c.params = this.Arguments(c.type, b.property.arguments);
+    return c;
+  };
   c.Arguments = function(b, c, d) {
     var e = Entry.block[b];
     b = this.PySyntax(e, d).match(/%\d+/g, "");
@@ -12945,7 +12965,7 @@ Entry.PyToBlockParser = function(c) {
     return d.map(function(b, c) {
       if (b && b.type) {
         var f = e.params[c], d = this.Node(b, "Literal" === b.type ? f : void 0, "Literal" === b.type && k ? k[c] : void 0);
-        "Block" !== f.type && d && d.params && (d = d.params[0]);
+        "Block" !== f.type && d && d.params ? d = d.params[0] : "Block" === f.type && f.isListIndex && (d = this.ListIndex(d));
         return d;
       }
       return b;
@@ -13001,6 +13021,13 @@ Entry.PyToBlockParser = function(c) {
     b.type = c.key;
     c.params && (b.params = c.params.concat());
     return b;
+  };
+  c.ListIndex = function(b) {
+    this.isParamPrimitive(b) ? b.params = [b.params[0] + 1] : b = "calc_basic" === b.type && "MINUS" === b.params[1] && this.isParamPrimitive(b.params[2]) && "1" === b.params[2].params[0] + "" ? b.params[0] : {type:"calc_basic", params:[b, "PLUS", {type:"text", params:[1]}]};
+    return b;
+  };
+  c.isParamPrimitive = function(b) {
+    return b && ("number" === b.type || "text" === b.type);
   };
   c.assert = function(b, c, d) {
     if (!b) {

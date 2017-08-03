@@ -171,15 +171,24 @@ Entry.PyToBlockParser = function(blockSyntax) {
         if (component.object.type === "Literal") { // string member
             obj = "%2";
             result.preParams = [ component.object ];
-        } else
+        } else {
             obj = this.Node(component.object);
+        }
+
         if (typeof obj === "object") { // list member
             result.preParams = [ obj.params[0] ];
             obj = "%2"
         }
         var property = component.property;
 
-        var blockInfo = this.blockSyntax[obj][property.name];
+        var blockInfo;
+        if (property.type === "CallExpression") {
+            return this.SubscriptIndex(component);
+        } else if (property.name === "_pySlice") {
+            blockInfo = this.blockSyntax["%2[%4:%6]"];
+        } else {
+            blockInfo = this.blockSyntax[obj][property.name];
+        }
 
         this.Block(result, blockInfo);
 
@@ -203,15 +212,15 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
     p.BlockStatement = function(component) {
         var db = component.body.map(this.Node, this);
-    
+
         if(db.constructor == Array && db[0].length) {
             if(db.length > 0){
                 db[db.length-1][0].params = db[0][0][0].params;
-            } 
+            }
 
             db = db[db.length-1][0];
         }
-        
+
         return db;
     };
 
@@ -231,7 +240,6 @@ Entry.PyToBlockParser = function(blockSyntax) {
             alternate = component.alternate.body.map(this.Node , this);
             blocks = component.consequent.body[0].body.body;
             alternate[0].statements.push(this.setParams(blocks));
-            console.log('@ForStatement  in if' , component);
         } else if(!('alternate' in component)){
             alternate = {
                 type : '_if',
@@ -239,7 +247,6 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 params : [this.Node(component.test)]
             };
         } else {
-            console.log('if else in!');
             var consequents = component.consequent ? component.consequent.body.map(this.Node , this) : [];
             var alternates = component.alternate ? component.alternate.body.map(this.Node , this) : [];
             alternate = {
@@ -248,6 +255,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 params : [this.Node(component.test)]
             };
         }           
+
 
         return alternate;
     };
@@ -381,6 +389,24 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
     // p.NewExpression = function(component) {};
 
+    p.SubscriptIndex = function(component) {
+        var obj = this.Node(component.object);
+        var blockInfo;
+
+        if (this.isParamPrimitive(obj)) { // list
+            blockInfo = this.blockSyntax["%2[%4]#char_at"];
+        } else { // string
+            this.assert(obj.type === "get_list", "Subscript index can be use to array", component);
+            blockInfo = this.blockSyntax["%2[%4]"];
+        }
+        var result = this.Block({}, blockInfo);
+        result.params = this.Arguments(
+            result.type,
+            component.property.arguments
+        );
+        return result;
+    };
+
     /**
      * util Function
      */
@@ -408,11 +434,15 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     (arg.type === "Literal") ? paramSchema : undefined,
                     (arg.type === "Literal" && defParams) ? defParams[index] : undefined
                 );
-                if (paramSchema.type !== "Block" && param &&  param.params) // for list and variable dropdown
+
+                if (paramSchema.type !== "Block" && param && param.params) // for list and variable dropdown
                     param = param.params[0];
+                else if (paramSchema.type === "Block" && paramSchema.isListIndex)
+                    param = this.ListIndex(param);
+
                 return param;
             } else
-                return arg;
+                return arg; // default params
         }, this);
 
         return results;
@@ -458,7 +488,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
         if (hasType) args.shift();
 
         node = args[0];
-        
+
         if (!this[node.type])
             throw new Error(node.type + " is not supported");
         return this[node.type].apply(this, args);
@@ -490,12 +520,58 @@ Entry.PyToBlockParser = function(blockSyntax) {
         if (blockInfo.params)
             result.params = blockInfo.params.concat();
         return result;
-    }
+    };
+
+    p.ListIndex = function(param) {
+        if (this.isParamPrimitive(param)) { // literal
+            param.params = [ param.params[0] + 1 ];
+        } else if (param.type === "calc_basic" && // x - 1
+                   param.params[1] === "MINUS" &&
+                   this.isParamPrimitive(param.params[2]) &&
+                   param.params[2].params[0] + "" === "1") {
+            param = param.params[0];
+        } else {
+            param = {
+                type: "calc_basic",
+                params: [
+                    param,
+                    "PLUS",
+                    {
+                        type: "text",
+                        params: [ 1 ]
+                    }
+                ]
+            }
+        }
+        return param;
+    };
+
+    p.isParamPrimitive = function(param) {
+        return param && (param.type === "number" || param.type === "text");
+    };
 
     p.assert = function(data, message, errorNode) {
         if (!data)
             throw new Error(message);
     };
+
+    p.setParams = function(params) {
+        var definedBlocks = params.length ? params.map(this.Node , this) : [];
+        for(var i=0; i<definedBlocks.length; i++){
+            var db = definedBlocks[i];
+
+            if(db.constructor == Array && db[0].length) {
+                if(db.length > 0){
+                    db[db.length-1][0].params = db[0][0][0].params;
+                    definedBlocks[i] = db[db.length-1][0];
+                } else {
+                    definedBlocks[i] = db[0][0];
+                }
+            }
+        }
+
+        return definedBlocks;
+    }
 
     /**
      * Not Supported
@@ -538,25 +614,5 @@ Entry.PyToBlockParser = function(blockSyntax) {
     // p.ConditionalExpression = function(component) {};
 
     // p.SequenceExpression = function(component) {};
-
-    // p.searchSyntax = function(datum) {};
-
-    p.setParams = function(params) {
-        var definedBlocks = params.length ? params.map(this.Node , this) : [];
-        for(var i=0; i<definedBlocks.length; i++){
-            var db = definedBlocks[i];
-
-            if(db.constructor == Array && db[0].length) {
-                if(db.length > 0){
-                    db[db.length-1][0].params = db[0][0][0].params;
-                    definedBlocks[i] = db[db.length-1][0];
-                } else {
-                    definedBlocks[i] = db[0][0];
-                }
-            }
-        }
-
-        return definedBlocks;
-    }
 
 })(Entry.PyToBlockParser.prototype);
