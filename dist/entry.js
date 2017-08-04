@@ -17567,7 +17567,9 @@ Entry.PyToBlockParser = function(c) {
   };
   c.CallExpression = function(b) {
     var c = b.callee, e = this.Node(c);
-    "string" === typeof e && console.log(e);
+    if ("string" === typeof e && "MemberExpression" === c.type) {
+      return this[e](b);
+    }
     if ("Identifier" === c.type) {
       this.assert("get_variable" !== e.type, "variable is not function", c);
       this.assert("get_list" !== e.type, "list is not function", c);
@@ -17818,7 +17820,33 @@ Entry.PyToBlockParser = function(c) {
     b = this.Node(b.arguments[0]);
     return this.isParamPrimitive(b) ? {type:"length_of_string", params:[void 0, b]} : {type:"length_of_list", params:[void 0, b.params[0]]};
   };
-  c["Hamster.line_tracer_mode"] = function() {
+  c["Hamster.line_tracer_mode"] = function(b) {
+    return this.Special(b, "Hamster", "line_tracer_mode");
+  };
+  c["Hamster.io_mode_a"] = function(b) {
+    return this.Special(b, "Hamster", "io_mode_a");
+  };
+  c["Hamster.io_mode_b"] = function(b) {
+    return this.Special(b, "Hamster", "io_mode_b");
+  };
+  c["Hamster.io_modes"] = function(b) {
+    return this.Special(b, "Hamster", "io_modes");
+  };
+  c["Hamster.leds"] = function(b) {
+    return this.Special(b, "Hamster", "leds");
+  };
+  c["Hamster.left_led"] = function(b) {
+    return this.Special(b, "Hamster", "left_led");
+  };
+  c["Hamster.right_led"] = function(b) {
+    return this.Special(b, "Hamster", "right_led");
+  };
+  c.Special = function(b, c, e) {
+    var d = {};
+    b = this.Node(b.arguments[0]);
+    this.isParamPrimitive(b) && (b = b.params[0]);
+    this.Block(d, this.blockSyntax[c][e + "(" + b + ")"]);
+    return d;
   };
 })(Entry.PyToBlockParser.prototype);
 Entry.Console = function() {

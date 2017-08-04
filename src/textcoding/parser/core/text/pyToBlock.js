@@ -77,8 +77,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
         var params = [];
         var obj = this.Node(callee);
 
-        if (typeof obj === "string")
-            console.log(obj)
+        if (typeof obj === "string" && callee.type === "MemberExpression")
+            return this[obj](component);
 
         if (callee.type === "Identifier") { // global function
             this.assert(!(obj.type === "get_variable"), "variable is not function", callee)
@@ -601,8 +601,45 @@ Entry.PyToBlockParser = function(blockSyntax) {
         }
     };
 
-    p["Hamster.line_tracer_mode"] = function() {
-        return;
+    p["Hamster.line_tracer_mode"] = function(component) {
+        return this.Special(component, "Hamster", "line_tracer_mode");
+    };
+
+    p["Hamster.io_mode_a"] = function(component) {
+        return this.Special(component, "Hamster", "io_mode_a");
+    };
+
+    p["Hamster.io_mode_b"] = function(component) {
+        return this.Special(component, "Hamster", "io_mode_b");
+    };
+
+    p["Hamster.io_modes"] = function(component) {
+        return this.Special(component, "Hamster", "io_modes");
+    };
+
+    p["Hamster.leds"] = function(component) {
+        return this.Special(component, "Hamster", "leds");
+    };
+
+    p["Hamster.left_led"] = function(component) {
+        return this.Special(component, "Hamster", "left_led");
+    };
+
+    p["Hamster.right_led"] = function(component) {
+        return this.Special(component, "Hamster", "right_led");
+    };
+
+    p.Special = function(component, name, key) {
+        var result = {};
+        var param = this.Node(component.arguments[0]);
+        if (this.isParamPrimitive(param))
+            param = param.params[0];
+        var blockInfo = this.blockSyntax[name][
+            key + "(" + param + ")"
+        ];
+
+        this.Block(result, blockInfo);
+        return result;
     };
 
     /**
