@@ -42304,6 +42304,64 @@ Entry.block = {
     },
     // */
     //*
+    "byrobot_petrone_v2_controller_controller_light_manual_rgb_input":
+    {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "text",
+                    "params": ["255"]
+                },
+                {
+                    "type": "text",
+                    "params": ["255"]
+                },
+                {
+                    "type": "text",
+                    "params": ["255"]
+                },
+                null
+            ],
+            "type": "byrobot_petrone_v2_controller_controller_light_manual_rgb_input"
+        },
+/* 여기부터 내일 작업 *****************************************************/
+        "paramsKeyMap": {
+            "FLAGS": 0,
+            "BRIGHTNESS": 1
+        },
+        "class": "byrobot_petrone_v2_controller_controller_light",
+        "isNotFor": ["byrobot_petrone_v2_controller"],
+        "func": function (sprite, script) {
+            var flags = script.getNumberValue('FLAGS');
+            var brightness = script.getNumberValue('BRIGHTNESS');
+            return Entry.byrobot_petrone_v2_controller.setLightManual(script, 0x31, flags, brightness);
+        },
+    },
+    // */
+    //*
     "byrobot_petrone_v2_controller_controller_buzzer_off":
     {
         "color": "#00979D",
