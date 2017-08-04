@@ -17638,12 +17638,22 @@ Entry.PyToBlockParser = function(c) {
   };
   c.BlockStatement = function(b) {
     b = b.body.map(this.Node, this);
-    b.constructor == Array && b[0].length && (0 < b.length && (b[b.length - 1][0].params = b[0][0][0].params), b = b[b.length - 1][0]);
+    b.constructor == Array && b[0].length && (0 < b.length && b[b.length - 1][0].params.push(b[0][0][0]), b = b[b.length - 1][0]);
     return b;
   };
   c.IfStatement = function(b) {
     var c;
-    "alternate" in b && b.alternate ? (c = b.alternate.body.map(this.Node, this), b = b.consequent.body[0].body.body, c[0].statements.push(this.setParams(b))) : c = {type:"_if", statements:[this.setParams(b.consequent.body)], params:[this.Node(b.test)]};
+    if ((c = b.alternate) && c.body && c.body[0] && "type" in c.body[0] && "ForInStatement" === c.body[0].type) {
+      c = b.alternate.body.map(this.Node, this), b = b.consequent.body[0].body.body, c[0].statements.push(this.setParams(b));
+    } else {
+      if ("alternate" in b) {
+        c = b.consequent ? b.consequent.body.map(this.Node, this) : [];
+        var e = b.alternate ? b.alternate.body.map(this.Node, this) : [];
+        c = {type:"if_else", statements:[c, e], params:[this.Node(b.test)]};
+      } else {
+        c = {type:"_if", statements:[this.setParams(b.consequent.body)], params:[this.Node(b.test)]};
+      }
+    }
     return c;
   };
   c.ForStatement = function(b) {
