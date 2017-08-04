@@ -17567,7 +17567,18 @@ Entry.PyToBlockParser = function(c) {
   };
   c.CallExpression = function(b) {
     var c = b.callee, e = this.Node(c);
-    "Identifier" === c.type && (this.assert("get_variable" !== e.type, "variable is not function", c), this.assert("get_list" !== e.type, "list is not function", c), this.assert("string" === typeof e, "error", c), e = this.blockSyntax[e], this.assert(e && e.key, "function is not defined", c), e = this.Block({}, e));
+    "string" === typeof e && console.log(e);
+    if ("Identifier" === c.type) {
+      this.assert("get_variable" !== e.type, "variable is not function", c);
+      this.assert("get_list" !== e.type, "list is not function", c);
+      this.assert("string" === typeof e, "error", c);
+      if (this[e]) {
+        return this[e](b);
+      }
+      e = this.blockSyntax[e];
+      this.assert(e && e.key, "function is not defined", c);
+      e = this.Block({}, e);
+    }
     e.preParams && (b.arguments = e.preParams.concat(b.arguments), delete e.preParams);
     b.arguments && (e.params = this.Arguments(e.type, b.arguments, e.params));
     return e;
@@ -17608,7 +17619,16 @@ Entry.PyToBlockParser = function(c) {
     if ("CallExpression" === f.type) {
       return this.SubscriptIndex(b);
     }
-    this.Block(e, "_pySlice" === f.name ? this.blockSyntax["%2[%4:%6]"] : this.blockSyntax[c][f.name]);
+    if ("_pySlice" === f.name) {
+      b = this.blockSyntax["%2[%4:%6]"];
+    } else {
+      if (this.blockSyntax[c] && this.blockSyntax[c][f.name]) {
+        b = this.blockSyntax[c][f.name];
+      } else {
+        return c + "." + f.name;
+      }
+    }
+    this.Block(e, b);
     return e;
   };
   c.WhileStatement = function(b) {
@@ -17783,6 +17803,12 @@ Entry.PyToBlockParser = function(c) {
       e.constructor == Array && e[0].length && (0 < e.length ? (e[e.length - 1][0].params = e[0][0][0].params, b[c] = e[e.length - 1][0]) : b[c] = e[0][0]);
     }
     return b;
+  };
+  c.len = function(b) {
+    b = this.Node(b.arguments[0]);
+    return this.isParamPrimitive(b) ? {type:"length_of_string", params:[void 0, b]} : {type:"length_of_list", params:[void 0, b.params[0]]};
+  };
+  c["Hamster.line_tracer_mode"] = function() {
   };
 })(Entry.PyToBlockParser.prototype);
 Entry.Console = function() {

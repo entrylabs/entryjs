@@ -1383,46 +1383,46 @@ describe('EntryPython', function(){
                         ]
                     ));
                 });
-                
+
                 it('if else block' , function() {
-                    Entry.loadProject(Entry.getStartProject()); 
+                    Entry.loadProject(Entry.getStartProject());
                     Entry.playground.object = Entry.container.objects_[0];
                     var resultBlock = Test.parsePython("def when_start():\n    if (True and True):\n        Entry.add_x(10)\n    else:\n        Entry.bounce_on_edge()");
 
                     assert.ok(Test.parsePython(
                         "def when_start():\n    if (True and True):\n        Entry.add_x(10)\n    else:\n        Entry.bounce_on_edge()" ,
-                        [  
-                           [  
-                              {  
+                        [
+                           [
+                              {
                                  "type":"when_run_button_click",
-                                 "params":[  
+                                 "params":[
                                     null
                                  ],
-                                 "contents":[  
-                                    {  
+                                 "contents":[
+                                    {
                                        "type":"if_else",
-                                       "params":[  
-                                          {  
+                                       "params":[
+                                          {
                                              "type":"boolean_and",
-                                             "params":[  
-                                                {  
+                                             "params":[
+                                                {
                                                    "type":"True"
                                                 },
                                                 null,
-                                                {  
+                                                {
                                                    "type":"True"
                                                 }
                                              ]
                                           }
                                        ],
-                                       "statements":[  
-                                          [  
-                                             {  
+                                       "statements":[
+                                          [
+                                             {
                                                 "type":"move_x",
-                                                "params":[  
-                                                   {  
+                                                "params":[
+                                                   {
                                                       "type":"number",
-                                                      "params":[  
+                                                      "params":[
                                                          10
                                                       ]
                                                    },
@@ -1430,10 +1430,10 @@ describe('EntryPython', function(){
                                                 ]
                                              }
                                           ],
-                                          [  
-                                             {  
+                                          [
+                                             {
                                                 "type":"bounce_wall",
-                                                "params":[  
+                                                "params":[
                                                    null
                                                 ]
                                              }
@@ -1442,30 +1442,30 @@ describe('EntryPython', function(){
                                     }
                                  ]
                               },
-                              {  
+                              {
                                  "type":"if_else",
-                                 "params":[  
-                                    {  
+                                 "params":[
+                                    {
                                        "type":"boolean_and",
-                                       "params":[  
-                                          {  
+                                       "params":[
+                                          {
                                              "type":"True"
                                           },
                                           null,
-                                          {  
+                                          {
                                              "type":"True"
                                           }
                                        ]
                                     }
                                  ],
-                                 "statements":[  
-                                    [  
-                                       {  
+                                 "statements":[
+                                    [
+                                       {
                                           "type":"move_x",
-                                          "params":[  
-                                             {  
+                                          "params":[
+                                             {
                                                 "type":"number",
-                                                "params":[  
+                                                "params":[
                                                    10
                                                 ]
                                              },
@@ -1473,10 +1473,10 @@ describe('EntryPython', function(){
                                           ]
                                        }
                                     ],
-                                    [  
-                                       {  
+                                    [
+                                       {
                                           "type":"bounce_wall",
-                                          "params":[  
+                                          "params":[
                                              null
                                           ]
                                        }

@@ -77,11 +77,16 @@ Entry.PyToBlockParser = function(blockSyntax) {
         var params = [];
         var obj = this.Node(callee);
 
+        if (typeof obj === "string")
+            console.log(obj)
+
         if (callee.type === "Identifier") { // global function
             this.assert(!(obj.type === "get_variable"), "variable is not function", callee)
             this.assert(!(obj.type === "get_list"), "list is not function", callee)
             this.assert(typeof obj === "string", "error", callee);
 
+            if (this[obj]) // special block like len
+                return this[obj](component);
             var blockInfo = this.blockSyntax[obj];
             this.assert(blockInfo && blockInfo.key, "function is not defined", callee);
             obj = this.Block({}, blockInfo);
@@ -187,7 +192,10 @@ Entry.PyToBlockParser = function(blockSyntax) {
         } else if (property.name === "_pySlice") {
             blockInfo = this.blockSyntax["%2[%4:%6]"];
         } else {
-            blockInfo = this.blockSyntax[obj][property.name];
+            if (this.blockSyntax[obj] && this.blockSyntax[obj][property.name])
+                blockInfo = this.blockSyntax[obj][property.name];
+            else
+                return obj + "." + property.name; // block syntax not exist. pass to special
         }
 
         this.Block(result, blockInfo);
@@ -557,6 +565,30 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
         return definedBlocks;
     }
+
+    /**
+     * Special Blocks
+     */
+
+    p.len = function(component) {
+        var param = this.Node(component.arguments[0]);
+
+        if (this.isParamPrimitive(param)) { // string len
+            return {
+                type: "length_of_string",
+                params: [ undefined, param ]
+            }
+        } else { // array len
+            return {
+                type: "length_of_list",
+                params: [ undefined, param.params[0] ]
+            }
+        }
+    };
+
+    p["Hamster.line_tracer_mode"] = function() {
+        return;
+    };
 
     /**
      * Not Supported
