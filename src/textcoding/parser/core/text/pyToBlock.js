@@ -163,7 +163,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 }
                 return {
                     type: 'number',
-                    params : [ value ]
+                    params : [ value + "" ]
                 }
             default:
                 return value;

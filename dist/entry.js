@@ -17608,7 +17608,7 @@ Entry.PyToBlockParser = function(c) {
       case "DropdownDynamic":
         return this.DropdownDynamic(d, c);
       case "Block":
-        return e && e.type ? {type:e.type, params:this.Arguments(e.type, [b])} : {type:"number", params:[d]};
+        return e && e.type ? {type:e.type, params:this.Arguments(e.type, [b])} : {type:"number", params:[d + ""]};
       default:
         return d;
     }
