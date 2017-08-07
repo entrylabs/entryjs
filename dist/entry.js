@@ -8581,6 +8581,7 @@ Entry.EntityObject.prototype.getVisible = function() {
 Entry.EntityObject.prototype.setImage = function(c) {
   function b(b) {
     Entry.image = b;
+    e.object.uncache();
     e.object.image = b;
     Entry.requestUpdate = !0;
   }
@@ -8602,7 +8603,7 @@ Entry.EntityObject.prototype.setImage = function(c) {
     e.removed || Entry.container.cachePicture(h, this);
     this.onload = null;
     b(this);
-  }, (g = c.fileurl) ? d.src = g : (c = c.filename, d.src = Entry.defaultPath + "/uploads/" + c.substring(0, 2) + "/" + c.substring(2, 4) + "/image/" + c + ".png"), e.object.image = d);
+  }, (g = c.fileurl) ? d.src = g : (c = c.filename, d.src = Entry.defaultPath + "/uploads/" + c.substring(0, 2) + "/" + c.substring(2, 4) + "/image/" + c + ".png"), e.object.uncache(), e.object.image = d);
   Entry.dispatchEvent("updateObject");
 };
 Entry.EntityObject.prototype.applyFilter = function(c, b) {
