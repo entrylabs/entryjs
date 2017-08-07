@@ -855,11 +855,13 @@ Entry.EntityObject.prototype.setImage = function(pictureModel) {
                 fileName + '.png';
         }
 
+        that.object.uncache();
         that.object.image = image;
     } else setImage(image);
 
     function setImage(datum) {
         Entry.image = datum;
+        that.object.uncache();
         that.object.image = datum;
         Entry.requestUpdate = true;
     }
