@@ -8581,8 +8581,8 @@ Entry.EntityObject.prototype.getVisible = function() {
 Entry.EntityObject.prototype.setImage = function(c) {
   function b(b) {
     Entry.image = b;
-    e.object.uncache();
     e.object.image = b;
+    e.object.filters && e.object.filters.length ? e.cache() : e.object.uncache();
     Entry.requestUpdate = !0;
   }
   var e = this;
@@ -8603,7 +8603,7 @@ Entry.EntityObject.prototype.setImage = function(c) {
     e.removed || Entry.container.cachePicture(h, this);
     this.onload = null;
     b(this);
-  }, (g = c.fileurl) ? d.src = g : (c = c.filename, d.src = Entry.defaultPath + "/uploads/" + c.substring(0, 2) + "/" + c.substring(2, 4) + "/image/" + c + ".png"), e.object.uncache(), e.object.image = d);
+  }, (g = c.fileurl) ? d.src = g : (c = c.filename, d.src = Entry.defaultPath + "/uploads/" + c.substring(0, 2) + "/" + c.substring(2, 4) + "/image/" + c + ".png"), e.object.image = d, e.object.filters && e.object.filters.length ? e.cache() : e.object.uncache());
   Entry.dispatchEvent("updateObject");
 };
 Entry.EntityObject.prototype.applyFilter = function(c, b) {
@@ -27083,15 +27083,15 @@ Entry.Board.DRAG_RADIUS = 5;
   c.scrollToPointer = function(b, c) {
     b = this.code.getByPointer(b);
     if (b instanceof Entry.Block) {
-      var d = b.view.getAbsoluteCoordinate();
+      var e = b.view.getAbsoluteCoordinate();
       b.view.dominate();
     } else {
-      b instanceof Entry.Thread ? d = b.view.requestAbsoluteCoordinate() : b.getAbsolutePosFromBoard && (d = b.getAbsolutePosFromBoard());
+      b instanceof Entry.Thread ? e = b.view.requestAbsoluteCoordinate() : b.getAbsolutePosFromBoard && (e = b.getAbsolutePosFromBoard());
     }
     c = b = 0;
-    var e = this._offset, g = e.width, e = e.height;
-    d.x > g - 200 ? b = g - 200 - d.x : 100 > d.x && (b = 100 - d.x);
-    d.y > e - 200 ? c = e - 200 - d.y : 100 > d.y && (c = 100 - d.y);
+    var f = this._offset, g = f.width, f = f.height;
+    e.x > g - 200 ? b = g - 200 - e.x : 100 > e.x && (b = 100 - e.x);
+    e.y > f - 200 ? c = f - 200 - e.y : 100 > e.y && (c = 100 - e.y);
     this.scroller.scroll(b, c, !0);
     return [b, c];
   };
