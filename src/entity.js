@@ -838,7 +838,7 @@ Entry.EntityObject.prototype.setImage = function(pictureModel) {
         pictureModel.id + this.id : pictureModel.id;
 
     var image = Entry.container.getCachedPicture(cacheId);
-
+    var diffEffects = this.isEqualEffects(this.effect, this.getInitialEffectValue());
     if (!image) {
         image = new Image();
 
@@ -867,6 +867,9 @@ Entry.EntityObject.prototype.setImage = function(pictureModel) {
     function setImage(datum) {
         Entry.image = datum;
         that.object.image = datum;
+        if(diffEffects.length) {
+            that.cache();
+        }
         Entry.requestUpdate = true;
     }
 
@@ -879,8 +882,8 @@ Entry.EntityObject.prototype.setImage = function(pictureModel) {
 Entry.EntityObject.prototype.applyFilter = function(isForce, forceEffects) {
     var effects = this.effect;
     var object = this.object;
+    var diffEffects = this.isEqualEffects(effects, this.getInitialEffectValue());
 
-    var diffEffects = isEqualEffects(effects, this.getInitialEffectValue());
     if (!isForce && diffEffects.length === 0)
         return;
 
@@ -967,17 +970,17 @@ Entry.EntityObject.prototype.applyFilter = function(isForce, forceEffects) {
     })(effects, object);
 
     this.cache();
-
-    function isEqualEffects(effectsA, effectsB) {
-        var diffEffects = [];
-        for (var key in effectsA) {
-            if (effectsA[key] !== effectsB[key]) {
-                diffEffects.push(key);
-            }
-        }
-        return diffEffects;
-    }
 };
+
+Entry.EntityObject.prototype.isEqualEffects = function(effectsA, effectsB) {
+    var diffEffects = [];
+    for (var key in effectsA) {
+        if (effectsA[key] !== effectsB[key]) {
+            diffEffects.push(key);
+        }
+    }
+    return diffEffects;
+}
 
 /**
  * Remove all filter
