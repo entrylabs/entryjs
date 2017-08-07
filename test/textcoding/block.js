@@ -1846,8 +1846,55 @@ describe('EntryPython', function(){
 
                     ));
                 });
-            });
 
+                it('set variable block ' , function() {
+                    Entry.loadProject(Entry.getStartProject()); 
+                    Entry.playground.object = Entry.container.objects_[0];
+
+                    var resultBlock = Test.parsePython("def when_start():\n    test = 22");
+
+                    console.log(JSON.stringify(resultBlock));
+
+                    assert.ok(Test.pythonToBlock(
+                        "def when_start():\n    test = 22" ,
+                        [  
+                           [  
+                              {  
+                                 "type":"when_run_button_click",
+                                 "params":[  
+                                    null
+                                 ],
+                                 "contents":[  
+                                    {  
+                                       "type":"set_variable",
+                                       "params":[  
+                                          {  
+                                             "type":"number",
+                                             "params":[  
+                                                22
+                                             ]
+                                          }
+                                       ]
+                                    }
+                                 ]
+                              },
+                              {  
+                                 "type":"set_variable",
+                                 "params":[  
+                                    {  
+                                       "type":"number",
+                                       "params":[  
+                                          22
+                                       ]
+                                    }
+                                 ]
+                              }
+                           ]
+                        ]
+                    ));
+                });
+
+            });
         })
     });
 });
