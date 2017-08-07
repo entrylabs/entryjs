@@ -29,6 +29,7 @@ Entry.byrobot_petrone_v2_controller =
             this.transferVibrator(0, 0, 0, 0);
             this.transferbuzzer(0, 0, 0);
             this.transferLightManual(0x31, 0xFF, 0);        // 조종기, flags = 0xFF (전체선택)
+            this.transferLightColorRgb(0x31, 0, 0, 0);
             this.transferCommand(0x31, 0x80, 0);            // 조종기, command = 0x80 (DataStorageWrite)
         }
     },
@@ -122,6 +123,32 @@ Entry.byrobot_petrone_v2_controller =
         delete Entry.hw.sendQueue["light_manual_flags"];
         delete Entry.hw.sendQueue["light_manual_brightness"];
     },
+
+    transferLightColorRgb: function (target, red, green, blue) 
+    {
+        // 범위 조정
+        target = Math.max(target, 0);
+        target = Math.min(target, 255);
+        red = Math.max(red, 0);
+        red = Math.min(red, 255);
+        green = Math.max(green, 0);
+        green = Math.min(green, 255);
+        blue = Math.max(blue, 0);
+        blue = Math.min(blue, 255);
+
+        // 전송
+        Entry.hw.setDigitalPortValue("target", target);
+        Entry.hw.setDigitalPortValue("light_color_r", red);
+        Entry.hw.setDigitalPortValue("light_color_g", green);
+        Entry.hw.setDigitalPortValue("light_color_b", blue);
+
+        Entry.hw.update();
+
+        delete Entry.hw.sendQueue["target"];
+        delete Entry.hw.sendQueue["light_color_r"];
+        delete Entry.hw.sendQueue["light_color_g"];
+        delete Entry.hw.sendQueue["light_color_b"];
+    },
     
     transferbuzzer: function(mode, value, time)
     {
@@ -204,6 +231,26 @@ Entry.byrobot_petrone_v2_controller =
             
         default:
             return script.callReturn();
+        }
+    },
+
+    // LED 수동 설정 - RGB 값 직접 지정
+    setLightColorRgb: function (script, target, red, green, blue) {
+        switch (this.checkFinish(script, 40)) {
+            case "Start":
+                {
+                    this.transferLightColorRgb(target, red, green, blue);
+                }
+                return script;
+
+            case "Running":
+                return script;
+
+            case "Finish":
+                return script.callReturn();
+
+            default:
+                return script.callReturn();
         }
     },
     

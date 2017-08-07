@@ -42304,7 +42304,7 @@ Entry.block = {
     },
     // */
     //*
-    "byrobot_petrone_v2_controller_controller_light_manual_rgb_input":
+    "byrobot_petrone_v2_controller_controller_light_color_rgb_input":
     {
         "color": "#00979D",
         "skeleton": "basic",
@@ -42345,19 +42345,20 @@ Entry.block = {
                 },
                 null
             ],
-            "type": "byrobot_petrone_v2_controller_controller_light_manual_rgb_input"
+            "type": "byrobot_petrone_v2_controller_controller_light_color_rgb_input"
         },
-/* 여기부터 내일 작업 *****************************************************/
         "paramsKeyMap": {
-            "FLAGS": 0,
-            "BRIGHTNESS": 1
+            "RED": 0,
+            "GREEN": 1,
+            "BLUE": 1
         },
         "class": "byrobot_petrone_v2_controller_controller_light",
         "isNotFor": ["byrobot_petrone_v2_controller"],
         "func": function (sprite, script) {
-            var flags = script.getNumberValue('FLAGS');
-            var brightness = script.getNumberValue('BRIGHTNESS');
-            return Entry.byrobot_petrone_v2_controller.setLightManual(script, 0x31, flags, brightness);
+            var red = script.getNumberValue('RED');
+            var green = script.getNumberValue('GREEN');
+            var blue = script.getNumberValue('BLUE');
+            return Entry.byrobot_petrone_v2_controller.setLightColorRgb(script, 0x31, red, green, blue);
         },
     },
     // */
