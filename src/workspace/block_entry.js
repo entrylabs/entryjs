@@ -42350,7 +42350,7 @@ Entry.block = {
         "paramsKeyMap": {
             "RED": 0,
             "GREEN": 1,
-            "BLUE": 1
+            "BLUE": 2
         },
         "class": "byrobot_petrone_v2_controller_controller_light",
         "isNotFor": ["byrobot_petrone_v2_controller"],

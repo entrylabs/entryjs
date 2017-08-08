@@ -29,7 +29,6 @@ Entry.byrobot_petrone_v2_controller =
             this.transferVibrator(0, 0, 0, 0);
             this.transferbuzzer(0, 0, 0);
             this.transferLightManual(0x31, 0xFF, 0);        // 조종기, flags = 0xFF (전체선택)
-            this.transferLightColorRgb(0x31, 0, 0, 0);
             this.transferCommand(0x31, 0x80, 0);            // 조종기, command = 0x80 (DataStorageWrite)
         }
     },
