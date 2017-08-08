@@ -574,7 +574,20 @@ Entry.EntityObject.prototype.syncFont = function() {
         this.setLineHeight();
     } else {
         this.setWidth(this.textObject.getMeasuredWidth());
-        this.setHeight(this.textObject.getMeasuredHeight());
+        switch(this.getFontType()) {
+            case "KoPub Batang": {
+                this.setHeight(this.fontSize * 1.1);
+                break;
+            }
+            case "Nanum Gothic": {
+                this.setHeight(this.fontSize * 1.1);
+                break;
+            }
+            default: {
+                this.setHeight(this.fontSize);
+                break;
+            }
+        }
     }
     Entry.stage.updateObject();
     Entry.requestUpdate = true;
