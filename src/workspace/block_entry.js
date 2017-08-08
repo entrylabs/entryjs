@@ -42366,6 +42366,88 @@ Entry.block = {
     },
     // */
     //*
+    "byrobot_petrone_v2_controller_controller_light_color_rgb_select":
+    {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.byrobot_petrone_v2_common_light_color_sunset, "sunset"],
+                    [Lang.Blocks.byrobot_petrone_v2_common_light_color_cottoncandy, "cottonCandy"],
+                    [Lang.Blocks.byrobot_petrone_v2_common_light_color_muscat, "muscat"],
+                    [Lang.Blocks.byrobot_petrone_v2_common_light_color_strawberrymilk, "strawberryMilk"],
+                    [Lang.Blocks.byrobot_petrone_v2_common_light_color_emerald, "emerald"],
+                    [Lang.Blocks.byrobot_petrone_v2_common_light_color_lavender, "lavender"],
+                ],
+                "value": "sunset",
+                "fontSize": 11
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                null,
+                null
+            ],
+            "type": "byrobot_petrone_v2_controller_controller_light_color_rgb_select"
+        },
+        "paramsKeyMap": {
+            "SELECT": 0,
+        },
+        "class": "byrobot_petrone_v2_controller_controller_light",
+        "isNotFor": ["byrobot_petrone_v2_controller"],
+        "func": function (sprite, script) {
+            var select = parseInt(script.getField('SELECT'));
+            var red   = 0;
+            var green = 0;
+            var blue  = 0;
+
+            switch (select) {
+                case "sunset":
+                    red   = 255;
+                    green = 100;
+                    blue  = 0;
+                    break;
+                case "cottonCandy":
+                    red   = 20;
+                    green = 250;
+                    blue  = 150;
+                    break;
+                case "muscat":
+                    red   = 70;
+                    green = 255;
+                    blue  = 0;
+                    break;
+                case "strawberryMilk":
+                    red   = 255;
+                    green = 50;
+                    blue  = 200;
+                    break;
+                case "emerald":
+                    red   = 0;
+                    green = 255;
+                    blue  = 30;
+                    break;
+                case "lavender":
+                    red   = 40;
+                    green = 0;
+                    blue  = 100;
+                    break;
+            }
+
+            return Entry.byrobot_petrone_v2_controller.setLightColorRgb(script, 0x31, red, green, blue);
+        },
+    },
+    // */
+    //*
     "byrobot_petrone_v2_controller_controller_buzzer_off":
     {
         "color": "#00979D",
