@@ -17553,10 +17553,14 @@ Entry.PyToBlockParser = function(c) {
     this._funcParamMap = {};
     this._funcMap = {};
     try {
-      var c = b[0].body, e = this.getVariables(c[0]);
-      c.splice(1, c.length - 1);
-      var f = this.processPrograms(b);
-      return e.concat(f);
+      var c = b[0].body;
+      if (c && c[0] && "ExpressionStatement" === c[0].type) {
+        var e = this.getVariables(b[0]);
+        b.splice(0, 1);
+        var f = this.processPrograms(b);
+        return e.concat(f);
+      }
+      return b.body.map(this.Node, this);
     } catch (g) {
       throw b = {}, b.title = g.title, b.message = g.message, b.line = g.line, b;
     }
@@ -17658,8 +17662,6 @@ Entry.PyToBlockParser = function(c) {
       if ("alternate" in b && b.alternate) {
         c = b.consequent ? b.consequent.body.map(this.Node, this) : [];
         var e = b.alternate ? b.alternate.body.map(this.Node, this) : [];
-        console.log("consequent", c);
-        console.log("alternates", e);
         c = {type:"if_else", statements:[c, e], params:[this.Node(b.test)]};
       } else {
         c = {type:"_if", statements:[this.setParams(b.consequent.body)], params:[this.Node(b.test)]};
@@ -17824,7 +17826,19 @@ Entry.PyToBlockParser = function(c) {
     return b;
   };
   c.getVariables = function(b) {
+    b.body.map(function(b) {
+      b = b.expression;
+      var c = b.left, d = b.right;
+      Entry.generateHash();
+      "=" == b.operator && ((b = this.variableExist(c.name)) ? b.value_ = d.value : Entry.variableContainer.addVariable({type:"variable", name:c.name, value:d.value, visible:!0}));
+    }, this);
     return [];
+  };
+  c.variableExist = function(b) {
+    var c = Entry.variableContainer.variables_, c = c.map(function(b) {
+      return b.name_;
+    });
+    return -1 < c.indexOf(b) ? Entry.variableContainer.variables_[c.indexOf(b)] : !1;
   };
   c.len = function(b) {
     b = this.Node(b.arguments[0]);

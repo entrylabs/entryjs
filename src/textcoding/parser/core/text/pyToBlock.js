@@ -48,15 +48,17 @@ Entry.PyToBlockParser = function(blockSyntax) {
             var astArrBody = astArr[0].body;
             var hasVariable = astArrBody &&
                               astArrBody[0] &&
-                              astArrBody[0].type === 'VariableDeclaration';
+                              astArrBody[0].type === 'ExpressionStatement';
 
+            if(hasVariable) {
+                var variableArr = this.getVariables(astArr[0]);
+                astArr.splice(0,1);
+                var contentArr = this.processPrograms(astArr);
 
-            var variableArr = this.getVariables(astArrBody[0]);
-
-            var AstArr = astArrBody.splice(1, astArrBody.length-1)
-            var contentArr = this.processPrograms(astArr);
-
-            return variableArr.concat(contentArr);
+                return variableArr.concat(contentArr);
+            }  else {
+                return astArr.body.map(this.Node , this);
+            }
 
 
         } catch(error) {
@@ -289,9 +291,6 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
             var consequents = component.consequent ? component.consequent.body.map(this.Node , this) : [];
             var alternates = component.alternate ? component.alternate.body.map(this.Node , this) : [];
-
-            console.log('consequent' , consequents);
-            console.log('alternates' , alternates);
             alternate = {
                 type : 'if_else',
                 statements : [ consequents, alternates ],
@@ -625,12 +624,46 @@ Entry.PyToBlockParser = function(blockSyntax) {
         return definedBlocks;
     }
 
-    p.getVariables = function(arr) {
+    p.getVariables = function(program) {
         // var arr = new Array(arr.length);
         // return arr;
+        var nodes = program.body;
+
+        nodes.map(function(n){
+            n = n.expression;
+            var left = n.left;
+            var right = n.right;
+            var id = Entry.generateHash();
+
+            if (n.operator != '=')
+                return;
+
+            var existVar = this.variableExist(left.name);
+            if(existVar) {
+                existVar.value_ = right.value;
+                return;
+            }
+
+            Entry.variableContainer.addVariable({
+                "type": "variable", "name": left.name , "value" : right.value , visible : true
+            });
+        } , this);
+
 
         return [];
     };
+
+    p.variableExist = function(name){
+        var variables_ = Entry.variableContainer.variables_;
+
+        variables_ = variables_.map(function(v){
+            return v.name_;
+        });
+
+        if(variables_.indexOf(name)  > -1)
+            return Entry.variableContainer.variables_[variables_.indexOf(name)];
+        return false
+    }
 
     /**
      * Special Blocks
