@@ -13,7 +13,6 @@ Entry.PyToBlockParser = function(blockSyntax) {
     this._type ="PyToBlockParser";
     this.dic = blockSyntax["#dic"];
     this.blockSyntax = blockSyntax;
-
     this._funcMap = {};
 };
 
@@ -41,8 +40,24 @@ Entry.PyToBlockParser = function(blockSyntax) {
     };
 
     p.Programs = function(astArr) {
-        try {
-            return this.processPrograms(astArr);
+
+        try {  
+            var astArrBody = astArr[0].body;
+            var hasVariable = astArrBody && 
+                              astArrBody[0] && 
+                              astArrBody[0].type === 'VariableDeclaration';
+
+            if(hasVariable){
+                var variableArr = this.getVariables(astArrBody);
+
+                var AstArr = astArr.splice(0,1)
+                var contentArr = this.processPrograms(astArr);
+
+                return variableArr.concat(contentArr);
+
+            } else {
+                return this.processPrograms(astArr);
+            }
         } catch(error) {
             var err = {};
             err.title = error.title;
@@ -57,12 +72,15 @@ Entry.PyToBlockParser = function(blockSyntax) {
     };
 
     p.Program = function(component) {
-        var thread = component.body.map(this.Node, this);
+        component.body = this.setVariable(component.body);
 
+        var thread = this.setVariableFormat(component.body);
+        
         if(thread[0].constructor == Array)
             return thread[0];
-        else
+        else 
             return thread;
+        
     };
 
     p.ExpressionStatement = function(component) {
@@ -123,17 +141,39 @@ Entry.PyToBlockParser = function(blockSyntax) {
     };
 
     p.VariableDeclaration = function(component) {
-        return component.declarations.map(this.Node , this);
+        var results = component.declarations.map(this.Node, this);
+
+        return results;
     };
 
     p.VariableDeclarator = function(component) {
+        if('type_' in component){
+
+            return {
+                type : 'set_variable',
+                params : [
+                    Entry.variableContainer.getVariableByName(component.id.name).id_,
+                    this.Node(component.init)
+                ]
+            }
+        }
+
         if(component.init && component.init.arguments) {
             return component.init.arguments.map(this.Node , this);
+        } else {
+            return [];
         }
-        return [];
     };
 
-    p.AssignmentExpression = function(component) {};
+    p.AssignmentExpression = function(component) {
+        return {
+                type : 'set_variable',
+                params : [
+                    Entry.variableContainer.getVariableByName(component.left.name).id_,
+                    this.Node(component.right)
+                ]
+            }
+    };
 
     p.Literal = function(component, paramSchema, paramDef) {
         var value = component.value;
@@ -180,8 +220,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
             obj = "%2"
         }
         var property = component.property;
-
         var blockInfo;
+
         if (property.type === "CallExpression") {
             return this.SubscriptIndex(component);
         } else if (property.name === "_pySlice") {
@@ -216,7 +256,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
         if(db.constructor == Array && db[0].length) {
             if(db.length > 0)
                 db[db.length-1][0].params.push(db[0][0][0]);
-            
+
             db = db[db.length-1][0];
         }
 
@@ -235,20 +275,34 @@ Entry.PyToBlockParser = function(blockSyntax) {
                          tempAlt.body[0] &&
                          'type' in tempAlt.body[0] && 
                          tempAlt.body[0].type === 'ForInStatement';
-        
+        var consequent = component.consequent;
+
         if(isForState){
+            component.consequent.body[0].body.body = this.setVariable(consequent.body[0].body.body , 1);
             alternate = component.alternate.body.map(this.Node , this);
             blocks = component.consequent.body[0].body.body;
             alternate[0].statements.push(this.setParams(blocks));
-        } else if(!('alternate' in component)){
+
+        } else if(!('alternate' in component) || !component.alternate){
+            component.consequent.body = this.setVariable(consequent.body);
             alternate = {
                 type : '_if',
                 statements : [this.setParams(component.consequent.body)],
                 params : [this.Node(component.test)]
             };
         } else {
+            component.consequent.body = this.setVariable(consequent.body);
+            component.alternate.body = this.setVariable(component.alternate.body);
+
+
+
             var consequents = component.consequent ? component.consequent.body.map(this.Node , this) : [];
             var alternates = component.alternate ? component.alternate.body.map(this.Node , this) : [];
+            consequents = this.setVariableFormat(consequents);
+            alternates = this.setVariableFormat(alternates);
+            
+            console.log('consequent' , consequents);
+            console.log('alternates' , alternates);
             alternate = {
                 type : 'if_else',
                 statements : [ consequents, alternates ],
@@ -268,13 +322,12 @@ Entry.PyToBlockParser = function(blockSyntax) {
     p.ForInStatement = function(component) {
         var  expression = component.body.body[0] && 'expression' in component.body.body[0] ?
                             component.body.body[0].expression.arguments.map(this.Node , this) : null;
-
-
         var obj =  {
             "type" : "repeat_basic",
             "params": [],
             "statements" : []
         }
+
         return obj;
     };
 
@@ -359,14 +412,17 @@ Entry.PyToBlockParser = function(blockSyntax) {
         var type = {};
         var threadArr = [type];
         threadArr[0].blocks = [];
-        var blocks = component.body.body[0].argument.callee.object.body.body;
+        var blocks;
+        if(component.body.body[0].argument.callee) {
+            component.body.body[0].argument.callee.object.body.body = this.setVariable(component.body.body[0].argument.callee.object.body.body);
+            blocks = component.body.body[0].argument.callee.object.body.body;
+        }
         var definedBlocks = this.setParams(blocks);
-
 
         if(blockInfo){
             type.type = blockInfo.key;
         }
-
+   
         for(var i=0; i < definedBlocks.length; i++) {
              threadArr[0].blocks.push(definedBlocks[i]);
              threadArr.push(definedBlocks[i]);
@@ -414,7 +470,6 @@ Entry.PyToBlockParser = function(blockSyntax) {
     p.Arguments = function(blockType, args, defaultParams) {
         var blockSchema = Entry.block[blockType];
         var syntax = this.PySyntax(blockSchema, defaultParams);
-
         var indexes = syntax.match( /%\d+/g, '');
         if (!indexes)
             return []
@@ -425,7 +480,6 @@ Entry.PyToBlockParser = function(blockSyntax) {
             sortedArgs[idx] = args[i];
         }
         var defParams = (blockSchema.def && blockSchema.def.params) ? blockSchema.def.params : undefined;
-
         var results = sortedArgs.map(function(arg, index) {
             if (arg && arg.type) {
                 var paramSchema = blockSchema.params[index];
@@ -557,6 +611,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
     p.setParams = function(params) {
         var definedBlocks = params.length ? params.map(this.Node , this) : [];
+
         for(var i=0; i<definedBlocks.length; i++){
             var db = definedBlocks[i];
 
@@ -567,11 +622,49 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 } else {
                     definedBlocks[i] = db[0][0];
                 }
-            }
+            } else if(db.constructor == Array && db[0].constructor == Object){
+                definedBlocks[i] = db[0];
+            } 
         }
 
         return definedBlocks;
     }
+
+    p.getVariables = function(arr) {        
+        // var arr = new Array(arr.length);
+        // return arr;
+
+        return [];
+    };
+
+    p.setVariable = function(body , index ) {
+        var i = index ? index : 0;
+
+        while(i < body.length) {
+            var body_ = body[i];
+            if(body_.type == "VariableDeclaration") {
+                var declarations = body_.declarations;
+
+                for(var j=0; j < declarations.length; j++) {
+                    body[i].declarations[j].type_ = "setVariable";
+                }
+            }
+            i++;
+        }
+
+        return body
+    };
+
+    p.setVariableFormat = function(array) {
+        var variablArr = array.map(this.Node, this);
+        variablArr = variablArr.map(function(t) {
+            if(t.constructor == Array && t[0].type =='set_variable')
+                return t[0];
+            return t;
+        });
+
+        return variablArr;
+    };
 
     /**
      * Not Supported

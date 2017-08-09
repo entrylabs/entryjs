@@ -5224,18 +5224,18 @@ Entry.Event = function(c) {
   this._listeners = [];
 };
 (function(c) {
-  c.attach = function(b, c) {
-    var d = this, e = {obj:b, fn:c, destroy:function() {
-      d.detach(this);
+  c.attach = function(b, f) {
+    var c = this, e = {obj:b, fn:f, destroy:function() {
+      c.detach(this);
     }};
     this._listeners.push(e);
     return e;
   };
   c.detach = function(b) {
-    var c = this._listeners;
-    b = c.indexOf(b);
+    var f = this._listeners;
+    b = f.indexOf(b);
     if (-1 < b) {
-      return c.splice(b, 1);
+      return f.splice(b, 1);
     }
   };
   c.clear = function() {
@@ -5245,8 +5245,8 @@ Entry.Event = function(c) {
   };
   c.notify = function() {
     var b = arguments;
-    this._listeners.slice().forEach(function(c) {
-      c.fn.apply(c.obj, b);
+    this._listeners.slice().forEach(function(f) {
+      f.fn.apply(f.obj, b);
     });
   };
 })(Entry.Event.prototype);
@@ -5259,8 +5259,8 @@ Entry.Observer = function(c, b, f, d) {
 };
 (function(c) {
   c.destroy = function() {
-    var b = this.parent, c = b.indexOf(this);
-    -1 < c && b.splice(c, 1);
+    var b = this.parent, f = b.indexOf(this);
+    -1 < f && b.splice(f, 1);
     return this;
   };
 })(Entry.Observer.prototype);
@@ -5342,12 +5342,12 @@ Entry.Container.prototype.updateListView = function() {
     var b = document.createDocumentFragment("div"), f = this.getCurrentObjects().slice();
     f.filter(function(b) {
       return void 0 !== b.index;
-    }).length === f.length && (f = f.sort(function(b, c) {
-      return b.index - c.index;
+    }).length === f.length && (f = f.sort(function(b, f) {
+      return b.index - f.index;
     }));
-    f.forEach(function(c) {
-      !c.view_ && c.generateView();
-      b.appendChild(c.view_);
+    f.forEach(function(f) {
+      !f.view_ && f.generateView();
+      b.appendChild(f.view_);
     });
     c.appendChild(b);
     Entry.stage.sortZorder();
@@ -5867,9 +5867,9 @@ Entry.db = {data:{}, typeMap:{}};
 (function(c) {
   c.add = function(b) {
     this.data[b.id] = b;
-    var c = b.type;
-    void 0 === this.typeMap[c] && (this.typeMap[c] = {});
-    this.typeMap[c][b.id] = b;
+    var f = b.type;
+    void 0 === this.typeMap[f] && (this.typeMap[f] = {});
+    this.typeMap[f][b.id] = b;
   };
   c.has = function(b) {
     return this.data.hasOwnProperty(b);
@@ -5901,17 +5901,17 @@ Entry.Dom = function(c, b) {
   b.src && d.attr("src", b.src);
   b.parent && b.parent.append(d);
   d.bindOnClick = function() {
-    var b, c, f = function(b) {
+    var b, f, c = function(b) {
       b.stopImmediatePropagation();
-      b.handled || (b.handled = !0, c.call(this, b));
+      b.handled || (b.handled = !0, f.call(this, b));
     };
-    1 < arguments.length ? (c = arguments[1] instanceof Function ? arguments[1] : function() {
-    }, b = "string" === typeof arguments[0] ? arguments[0] : "") : c = arguments[0] instanceof Function ? arguments[0] : function() {
+    1 < arguments.length ? (f = arguments[1] instanceof Function ? arguments[1] : function() {
+    }, b = "string" === typeof arguments[0] ? arguments[0] : "") : f = arguments[0] instanceof Function ? arguments[0] : function() {
     };
     if (b) {
-      $(this).on("click tab", b, f);
+      $(this).on("click tab", b, c);
     } else {
-      $(this).on("click tab", f);
+      $(this).on("click tab", c);
     }
   };
   return d;
@@ -6073,8 +6073,8 @@ p.resize = function() {
 };
 Entry.Engine = function() {
   function c(b) {
-    var c = [37, 38, 39, 40, 32], d = b.keyCode || b.which, e = Entry.stage.inputField;
-    32 == d && e && e.hasFocus() || -1 < c.indexOf(d) && b.preventDefault();
+    var f = [37, 38, 39, 40, 32], c = b.keyCode || b.which, e = Entry.stage.inputField;
+    32 == c && e && e.hasFocus() || -1 < f.indexOf(c) && b.preventDefault();
   }
   this.state = "stop";
   this.popup = null;
@@ -6111,9 +6111,9 @@ Entry.Engine = function() {
   Entry.message = new Entry.Event(window);
 };
 (function(c) {
-  c.generateView = function(b, c) {
-    if (c && "workspace" != c) {
-      "minimize" == c ? (this.view_ = b, this.view_.addClass("entryEngine"), this.view_.addClass("entryEngineMinimize"), this.maximizeButton = Entry.createElement("button"), this.maximizeButton.addClass("entryEngineButtonMinimize"), this.maximizeButton.addClass("entryMaximizeButtonMinimize"), this.view_.appendChild(this.maximizeButton), this.maximizeButton.bindOnClick(function(b) {
+  c.generateView = function(b, f) {
+    if (f && "workspace" != f) {
+      "minimize" == f ? (this.view_ = b, this.view_.addClass("entryEngine"), this.view_.addClass("entryEngineMinimize"), this.maximizeButton = Entry.createElement("button"), this.maximizeButton.addClass("entryEngineButtonMinimize"), this.maximizeButton.addClass("entryMaximizeButtonMinimize"), this.view_.appendChild(this.maximizeButton), this.maximizeButton.bindOnClick(function(b) {
         Entry.engine.toggleFullScreen();
       }), this.coordinateButton = Entry.createElement("button"), this.coordinateButton.addClass("entryEngineButtonMinimize"), this.coordinateButton.addClass("entryCoordinateButtonMinimize"), this.view_.appendChild(this.coordinateButton), this.coordinateButton.bindOnClick(function(b) {
         this.hasClass("toggleOn") ? this.removeClass("toggleOn") : this.addClass("toggleOn");
@@ -6129,7 +6129,7 @@ Entry.Engine = function() {
         this.runButton.bindOnClick(function(b) {
           Entry.engine.toggleRun();
         });
-      }.bind(this))) : "phone" == c && (this.view_ = b, this.view_.addClass("entryEngine", "entryEnginePhone"), this.headerView_ = Entry.createElement("div", "entryEngineHeader"), this.headerView_.addClass("entryEngineHeaderPhone"), this.view_.appendChild(this.headerView_), this.maximizeButton = Entry.createElement("button"), this.maximizeButton.addClass("entryEngineButtonPhone", "entryMaximizeButtonPhone"), this.headerView_.appendChild(this.maximizeButton), this.maximizeButton.bindOnClick(function(b) {
+      }.bind(this))) : "phone" == f && (this.view_ = b, this.view_.addClass("entryEngine", "entryEnginePhone"), this.headerView_ = Entry.createElement("div", "entryEngineHeader"), this.headerView_.addClass("entryEngineHeaderPhone"), this.view_.appendChild(this.headerView_), this.maximizeButton = Entry.createElement("button"), this.maximizeButton.addClass("entryEngineButtonPhone", "entryMaximizeButtonPhone"), this.headerView_.appendChild(this.maximizeButton), this.maximizeButton.bindOnClick(function(b) {
         Entry.engine.footerView_.addClass("entryRemove");
         Entry.engine.headerView_.addClass("entryRemove");
         Entry.launchFullScreen(Entry.engine.view_);
@@ -6148,13 +6148,13 @@ Entry.Engine = function() {
       this.view_ = b;
       this.view_.addClass("entryEngine_w");
       this.view_.addClass("entryEngineWorkspace_w");
-      var d = Entry.createElement("button");
-      this.speedButton = d;
+      var c = Entry.createElement("button");
+      this.speedButton = c;
       this.speedButton.addClass("entrySpeedButtonWorkspace", "entryEngineTopWorkspace", "entryEngineButtonWorkspace_w");
       this.view_.appendChild(this.speedButton);
       this.speedButton.bindOnClick(function(b) {
         Entry.engine.toggleSpeedPanel();
-        d.blur();
+        c.blur();
       });
       this.maximizeButton = Entry.createElement("button");
       this.maximizeButton.addClass("entryEngineButtonWorkspace_w", "entryEngineTopWorkspace", "entryMaximizeButtonWorkspace_w");
@@ -6248,33 +6248,33 @@ Entry.Engine = function() {
       this.speedLabel_.innerHTML = Lang.Workspace.speed;
       this.view_.insertBefore(this.speedLabel_, this.maximizeButton);
       this.speedProgress_ = Entry.createElement("table", "entrySpeedProgressWorkspace");
-      for (var b = Entry.createElement("tr"), c = this.speeds, d = 0;5 > d;d++) {
-        (function(d) {
-          var e = Entry.createElement("td", "progressCell" + d);
-          e.bindOnClick(function() {
-            Entry.engine.setSpeedMeter(c[d]);
+      for (var b = Entry.createElement("tr"), f = this.speeds, c = 0;5 > c;c++) {
+        (function(c) {
+          var d = Entry.createElement("td", "progressCell" + c);
+          d.bindOnClick(function() {
+            Entry.engine.setSpeedMeter(f[c]);
           });
-          b.appendChild(e);
-        })(d);
+          b.appendChild(d);
+        })(c);
       }
       this.view_.insertBefore(this.speedProgress_, this.maximizeButton);
       this.speedProgress_.appendChild(b);
       this.speedHandle_ = Entry.createElement("div", "entrySpeedHandleWorkspace");
       var e = (Entry.interfaceState.canvasWidth - 84) / 5;
       $(this.speedHandle_).bind("mousedown.speedPanel touchstart.speedPanel", function(b) {
-        function c(b) {
+        function f(b) {
           b.stopPropagation();
           b = Entry.Utils.convertMouseEvent(b);
           b = Math.floor((b.clientX - 80) / (5 * e) * 5);
           0 > b || 4 < b || Entry.engine.setSpeedMeter(Entry.engine.speeds[b]);
         }
-        function f(b) {
+        function c(b) {
           $(document).unbind(".speedPanel");
         }
         b.stopPropagation && b.stopPropagation();
         b.preventDefault && b.preventDefault();
         if (0 === b.button || b.originalEvent && b.originalEvent.touches) {
-          Entry.Utils.convertMouseEvent(b), b = $(document), b.bind("mousemove.speedPanel touchmove.speedPanel", c), b.bind("mouseup.speedPanel touchend.speedPanel", f);
+          Entry.Utils.convertMouseEvent(b), b = $(document), b.bind("mousemove.speedPanel touchmove.speedPanel", f), b.bind("mouseup.speedPanel touchend.speedPanel", c);
         }
       });
       this.view_.insertBefore(this.speedHandle_, this.maximizeButton);
@@ -6282,8 +6282,8 @@ Entry.Engine = function() {
     }
   };
   c.setSpeedMeter = function(b) {
-    var c = this.speeds.indexOf(b);
-    0 > c || (c = Math.min(4, c), c = Math.max(0, c), this.speedPanelOn && (this.speedHandle_.style.left = (Entry.interfaceState.canvasWidth - 80) / 10 * (2 * c + 1) + 80 - 9 + "px"), Entry.FPS != b && (clearInterval(this.ticker), this.ticker = setInterval(this.update, Math.floor(1E3 / b)), Entry.FPS = b));
+    var f = this.speeds.indexOf(b);
+    0 > f || (f = Math.min(4, f), f = Math.max(0, f), this.speedPanelOn && (this.speedHandle_.style.left = (Entry.interfaceState.canvasWidth - 80) / 10 * (2 * f + 1) + 80 - 9 + "px"), Entry.FPS != b && (clearInterval(this.ticker), this.ticker = setInterval(this.update, Math.floor(1E3 / b)), Entry.FPS = b));
   };
   c.start = function(b) {
     createjs.Ticker.setFPS(Entry.FPS);
@@ -6303,14 +6303,14 @@ Entry.Engine = function() {
   c.computeFunction = function(b) {
     b.script.tick();
   };
-  Entry.Engine.computeThread = function(b, c) {
+  Entry.Engine.computeThread = function(b, f) {
     Entry.engine.isContinue = !0;
-    for (var d = !1;c && Entry.engine.isContinue && !d;) {
-      Entry.engine.isContinue = !c.isRepeat;
-      var e = c.run(), d = e && e === c;
-      c = e;
+    for (var c = !1;f && Entry.engine.isContinue && !c;) {
+      Entry.engine.isContinue = !f.isRepeat;
+      var e = f.run(), c = e && e === f;
+      f = e;
     }
-    return c;
+    return f;
   };
   c.isState = function(b) {
     return -1 < this.state.indexOf(b);
@@ -12799,16 +12799,24 @@ Entry.PyToBlockParser = function(c) {
   c.divideOperator = {"//":"QUOTIENT", "%":"MOD"};
   c.Programs = function(b) {
     try {
+      var c = b[0].body;
+      if (c && c[0] && "VariableDeclaration" === c[0].type) {
+        var d = this.getVariables(c);
+        b.splice(0, 1);
+        var e = this.processPrograms(b);
+        return d.concat(e);
+      }
       return this.processPrograms(b);
-    } catch (c) {
-      throw b = {}, b.title = c.title, b.message = c.message, b.line = c.line, b;
+    } catch (g) {
+      throw b = {}, b.title = g.title, b.message = g.message, b.line = g.line, b;
     }
   };
   c.processPrograms = function(b) {
     return b.map(this.Node, this);
   };
   c.Program = function(b) {
-    b = b.body.map(this.Node, this);
+    b.body = this.setVariable(b.body);
+    b = this.setVariableFormat(b.body);
     return b[0].constructor == Array ? b[0] : b;
   };
   c.ExpressionStatement = function(b) {
@@ -12830,9 +12838,10 @@ Entry.PyToBlockParser = function(c) {
     return b.declarations.map(this.Node, this);
   };
   c.VariableDeclarator = function(b) {
-    return b.init && b.init.arguments ? b.init.arguments.map(this.Node, this) : [];
+    return "type_" in b ? {type:"set_variable", params:[Entry.variableContainer.getVariableByName(b.id.name).id_, this.Node(b.init)]} : b.init && b.init.arguments ? b.init.arguments.map(this.Node, this) : [];
   };
   c.AssignmentExpression = function(b) {
+    return {type:"set_variable", params:[Entry.variableContainer.getVariableByName(b.left.name).id_, this.Node(b.right)]};
   };
   c.Literal = function(b, c, d) {
     var e = b.value;
@@ -12872,17 +12881,10 @@ Entry.PyToBlockParser = function(c) {
   };
   c.IfStatement = function(b) {
     var c;
-    if ((c = b.alternate) && c.body && c.body[0] && "type" in c.body[0] && "ForInStatement" === c.body[0].type) {
-      c = b.alternate.body.map(this.Node, this), b = b.consequent.body[0].body.body, c[0].statements.push(this.setParams(b));
-    } else {
-      if ("alternate" in b) {
-        c = b.consequent ? b.consequent.body.map(this.Node, this) : [];
-        var d = b.alternate ? b.alternate.body.map(this.Node, this) : [];
-        c = {type:"if_else", statements:[c, d], params:[this.Node(b.test)]};
-      } else {
-        c = {type:"_if", statements:[this.setParams(b.consequent.body)], params:[this.Node(b.test)]};
-      }
-    }
+    c = b.alternate;
+    var d = b.consequent;
+    c && c.body && c.body[0] && "type" in c.body[0] && "ForInStatement" === c.body[0].type ? (b.consequent.body[0].body.body = this.setVariable(d.body[0].body.body, 1), c = b.alternate.body.map(this.Node, this), b = b.consequent.body[0].body.body, c[0].statements.push(this.setParams(b))) : "alternate" in b && b.alternate ? (b.consequent.body = this.setVariable(d.body), b.alternate.body = this.setVariable(b.alternate.body), c = b.consequent ? b.consequent.body.map(this.Node, this) : [], d = b.alternate ? 
+    b.alternate.body.map(this.Node, this) : [], c = this.setVariableFormat(c), d = this.setVariableFormat(d), console.log("consequent", c), console.log("alternates", d), c = {type:"if_else", statements:[c, d], params:[this.Node(b.test)]}) : (b.consequent.body = this.setVariable(d.body), c = {type:"_if", statements:[this.setParams(b.consequent.body)], params:[this.Node(b.test)]});
     return c;
   };
   c.ForStatement = function(b) {
@@ -12930,7 +12932,9 @@ Entry.PyToBlockParser = function(c) {
   c.FunctionDeclaration = function(b) {
     var c = this.Node(b.id), d = this.blockSyntax["def " + c], e = {}, c = [e];
     c[0].blocks = [];
-    b = this.setParams(b.body.body[0].argument.callee.object.body.body);
+    var g;
+    b.body.body[0].argument.callee && (b.body.body[0].argument.callee.object.body.body = this.setVariable(b.body.body[0].argument.callee.object.body.body), g = b.body.body[0].argument.callee.object.body.body);
+    b = this.setParams(g);
     d && (e.type = d.key);
     for (d = 0;d < b.length;d++) {
       c[0].blocks.push(b[d]), c.push(b[d]);
@@ -13038,9 +13042,30 @@ Entry.PyToBlockParser = function(c) {
     b = b.length ? b.map(this.Node, this) : [];
     for (var c = 0;c < b.length;c++) {
       var d = b[c];
-      d.constructor == Array && d[0].length && (0 < d.length ? (d[d.length - 1][0].params = d[0][0][0].params, b[c] = d[d.length - 1][0]) : b[c] = d[0][0]);
+      d.constructor == Array && d[0].length ? 0 < d.length ? (d[d.length - 1][0].params = d[0][0][0].params, b[c] = d[d.length - 1][0]) : b[c] = d[0][0] : d.constructor == Array && d[0].constructor == Object && (b[c] = d[0]);
     }
     return b;
+  };
+  c.getVariables = function(b) {
+    return [];
+  };
+  c.setVariable = function(b, c) {
+    for (var d = c ? c : 0;d < b.length;) {
+      var e = b[d];
+      if ("VariableDeclaration" == e.type) {
+        for (var e = e.declarations, g = 0;g < e.length;g++) {
+          b[d].declarations[g].type_ = "setVariable";
+        }
+      }
+      d++;
+    }
+    return b;
+  };
+  c.setVariableFormat = function(b) {
+    b = b.map(this.Node, this);
+    return b = b.map(function(b) {
+      return b.constructor == Array && "set_variable" == b[0].type ? b[0] : b;
+    });
   };
 })(Entry.PyToBlockParser.prototype);
 Entry.Parser = function(c, b, f, d) {
@@ -14194,10 +14219,10 @@ Entry.createDom = function(c, b) {
     f.addEventListener("mousewheel", function(b) {
       var c = Entry.variableContainer.getListById(Entry.stage.mouseCoordinate);
       b = 0 < b.wheelDelta ? !0 : !1;
-      for (var d = 0;d < c.length;d++) {
-        var f = c[d];
-        f.scrollButton_.y = b ? 46 <= f.scrollButton_.y ? f.scrollButton_.y - 23 : 23 : f.scrollButton_.y + 23;
-        f.updateView();
+      for (var f = 0;f < c.length;f++) {
+        var d = c[f];
+        d.scrollButton_.y = b ? 46 <= d.scrollButton_.y ? d.scrollButton_.y - 23 : 23 : d.scrollButton_.y + 23;
+        d.updateView();
       }
     });
     this.canvas_ = f;
