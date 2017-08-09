@@ -2562,6 +2562,7 @@
     // The caller may pass a complex parameter object as a single parameter like this:
     // {formals:[<expr>, <expr>, ...], keywords:{<id>:<expr>, <id>:<expr>, ...}}
 
+    /*
     if (formals.length > 0 || argsId || kwargsId) {
       // var __params = arguments.length === 1 && arguments[0].formals && arguments[0].keywords ? arguments[0] : null;
       node.body.body.push(nc.createNodeParamsCheck(node.id, suffix));
@@ -2576,6 +2577,7 @@
         nc.createNodeSpan(node.id, node.id, "Identifier", { name: '__args' + suffix }),
         nc.createNodeSpan(node.id, node.id, "Identifier", { name: 'arguments' })));
     }
+    */
 
     if (formals.length > 0) {
       // function __getParam(v, d) {
@@ -2592,16 +2594,12 @@
       //   }
       //   return r;
       // }
-      node.body.body.push(nc.createNodeGetParamFn(node.id, suffix));
+      //node.body.body.push(nc.createNodeGetParamFn(node.id, suffix));
 
+      node.arguments = [];
       for (var i = 0; i < formals.length; i++) {
         // var <param> = __getParam('<param>', <optional default>);
-        var __getParamCall = nc.createNodeSpan(formals[i].id, formals[i].id, "CallExpression", {
-          callee: nc.createNodeSpan(formals[i].id, formals[i].id, "Identifier", { name: '__getParam' + suffix }),
-          arguments: [nc.createNodeSpan(formals[i].id, formals[i].id, "Literal", { value: formals[i].id.name })]
-        });
-        if (formals[i].expr) __getParamCall.arguments.push(formals[i].expr);
-        node.body.body.push(nc.createGeneratedVarDeclFromId(formals[i].id, formals[i].id, __getParamCall));
+        node.arguments.push(nc.createNodeSpan(formals[i].id, formals[i].id, "Identifier", { name: formals[i].id.name }));
       }
     }
 

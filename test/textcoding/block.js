@@ -1033,7 +1033,7 @@ describe('EntryPython', function(){
                 var functionKey = Object.keys(functions)[0];
                 var func = functions[functionKey];
 
-                assert.equal(func.description.trim() , '함수');
+                assert.equal(func.description.trim().substr(0, 2) , '함수');
                 assert.equal(func.content._data[0]._data[1].data.type , 'move_direction');
                 assert.equal(func.content._data[0]._data[1].data.params[0].data.params[0] , '10');
 
@@ -1852,7 +1852,7 @@ describe('EntryPython', function(){
                 });
 
                 it('set variable block ' , function() {
-                    Entry.loadProject(Entry.getStartProject()); 
+                    Entry.loadProject(Entry.getStartProject());
                     Entry.playground.object = Entry.container.objects_[0];
 
                     var resultBlock = Test.parsePython("def when_start():\n    test = 22");
@@ -1861,20 +1861,20 @@ describe('EntryPython', function(){
 
                     assert.ok(Test.pythonToBlock(
                         "def when_start():\n    test = 22" ,
-                        [  
-                           [  
-                              {  
+                        [
+                           [
+                              {
                                  "type":"when_run_button_click",
-                                 "params":[  
+                                 "params":[
                                     null
                                  ],
-                                 "contents":[  
-                                    {  
+                                 "contents":[
+                                    {
                                        "type":"set_variable",
-                                       "params":[  
-                                          {  
+                                       "params":[
+                                          {
                                              "type":"number",
-                                             "params":[  
+                                             "params":[
                                                 22
                                              ]
                                           }
@@ -1882,12 +1882,12 @@ describe('EntryPython', function(){
                                     }
                                  ]
                               },
-                              {  
+                              {
                                  "type":"set_variable",
-                                 "params":[  
-                                    {  
+                                 "params":[
+                                    {
                                        "type":"number",
-                                       "params":[  
+                                       "params":[
                                           22
                                        ]
                                     }

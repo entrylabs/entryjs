@@ -13,6 +13,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
     this._type ="PyToBlockParser";
     this.dic = blockSyntax["#dic"];
     this.blockSyntax = blockSyntax;
+
+    this._funcParamMap = {};
     this._funcMap = {};
 };
 
@@ -40,14 +42,15 @@ Entry.PyToBlockParser = function(blockSyntax) {
     };
 
     p.Programs = function(astArr) {
-
-        try {  
+        this._funcParamMap = {};
+        this._funcMap = {};
+        try {
             var astArrBody = astArr[0].body;
-            var hasVariable = astArrBody && 
-                              astArrBody[0] && 
+            var hasVariable = astArrBody &&
+                              astArrBody[0] &&
                               astArrBody[0].type === 'VariableDeclaration';
 
-            
+
             var variableArr = this.getVariables(astArrBody[0]);
 
             var AstArr = astArrBody.splice(1, astArrBody.length-1)
@@ -74,9 +77,9 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
         if(thread[0].constructor == Array)
             return thread[0];
-        else 
+        else
             return thread;
-        
+
     };
 
     p.ExpressionStatement = function(component) {
@@ -286,7 +289,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
             var consequents = component.consequent ? component.consequent.body.map(this.Node , this) : [];
             var alternates = component.alternate ? component.alternate.body.map(this.Node , this) : [];
-            
+
             console.log('consequent' , consequents);
             console.log('alternates' , alternates);
             alternate = {
@@ -393,51 +396,34 @@ Entry.PyToBlockParser = function(blockSyntax) {
     // p.UpdateExpression = function(component) {};
 
     p.FunctionDeclaration = function(component) {
-// <<<<<<< HEAD
-        var blockName = this.Node(component.id);
-        var blockInfo = this.blockSyntax['def '+blockName];
-        var type = {};
-        var threadArr = [type];
-        threadArr[0].blocks = [];
-        var blocks;
-
+        var funcName = this.Node(component.id);
+        var startBlock = {};
         var blocks = component.body.body[0].argument.callee.object.body.body;
-        var definedBlocks = this.setParams(blocks);
 
-        if(blockInfo){
-            type.type = blockInfo.key;
+        var blockInfo = this.blockSyntax['def '+ funcName];
+        var threadArr;
+        if(blockInfo){ // event block
+            startBlock.type = blockInfo.key;
+            var definedBlocks = this.setParams(blocks);
+
+            threadArr = [startBlock];
+            threadArr[0].blocks = [];
+
+            definedBlocks.unshift(startBlock)
+            return definedBlocks;
+        } else {
+            this.createFunction(component, funcName, blocks);
+            //var functionKey = Object.keys(functions)[0];
+            //var func = functions[functionKey];
+            // generate function
+            // search exist function
+            // read param, register param to this
+            // generate content
+            //
+            // add to map list
+            // different param count different function
+            return [];
         }
-   
-// =======
-//         var funcName = this.Node(component.id);
-//         var startBlock = {};
-//         var blocks = component.body.body[0].argument.callee.object.body.body;
-
-//         var blockInfo = this.blockSyntax['def '+ funcName];
-//         var threadArr;
-//         if(blockInfo){ // event block
-//             startBlock.type = blockInfo.key;
-//         } else {
-//             // generate function
-//             // search exist function
-//             // read param, register param to this
-//             // generate content
-//             //
-//             // add to map list
-//             // different param count different function
-//         }
-//         var definedBlocks = this.setParams(blocks);
-
-//         threadArr = [startBlock];
-//         threadArr[0].blocks = [];
-
-// >>>>>>> origin/rebuild/pyParser
-        for(var i=0; i < definedBlocks.length; i++) {
-             threadArr[0].blocks.push(definedBlocks[i]);
-             threadArr.push(definedBlocks[i]);
-        }
-
-        return threadArr;
     };
 
     p.FunctionExpression = function(component) {
@@ -633,19 +619,19 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 }
             } else if(db.constructor == Array && db[0].constructor == Object){
                 definedBlocks[i] = db[0];
-            } 
+            }
         }
 
         return definedBlocks;
     }
 
-    p.getVariables = function(arr) {        
+    p.getVariables = function(arr) {
         // var arr = new Array(arr.length);
         // return arr;
 
         return [];
     };
-    
+
     /**
      * Special Blocks
      */
@@ -705,6 +691,57 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
         this.Block(result, blockInfo);
         return result;
+    };
+
+    p.createFunction = function(component, funcName, blocks) {
+        var params = component.arguments ? component.arguments.map(this.Node, this) : [];
+        //var functions = Entry.variableContainer.functions_;
+
+        var funcContent = [];
+
+        var funcParamPointer = {
+            type: "function_field_label",
+            params: [
+                funcName
+            ]
+        }
+        var func = {
+            id: Entry.generateHash(),
+            content: [[{
+                type: "function_create",
+                params: [
+                    funcParamPointer
+                ]
+            }]]
+        };
+
+        if (!this._funcMap[funcName])
+            this._funcMap[funcName] = {};
+        this._funcMap[funcName][params.length] = func.id;
+
+        while (params.length) {
+            var param = params.shift();
+            var paramId = Entry.generateHash();
+            var newFuncParam = {
+                type: "function_field_string",
+                params: [
+                    {
+                        type: "stringParam_" + paramId
+                    }
+                ]
+            }
+            funcParamPointer.params.push(newFuncParam);
+            funcParamPointer = newFuncParam;
+        }
+
+
+        var definedBlocks = this.setParams(blocks);
+
+        func.content[0] = func.content[0].concat(definedBlocks);
+
+        func.content = JSON.stringify(func.content);
+
+        Entry.variableContainer.setFunctions([func]);
     };
 
     /**
