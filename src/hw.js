@@ -60,6 +60,9 @@ Entry.HW = function() {
         'F.1': Entry.byrobot_dronefighter_controller,
         'F.2': Entry.byrobot_dronefighter_drive,
         'F.3': Entry.byrobot_dronefighter_flight,
+        'F.4': Entry.byrobot_petrone_v2_controller,
+        // 'F.5': Entry.byrobot_petrone_v2_drive,
+        'F.6': Entry.byrobot_petrone_v2_flight,
         '10.1': Entry.Roborobo_Roduino,
         '10.2': Entry.Roborobo_SchoolKit,
         '12.1': Entry.EV3,
@@ -68,9 +71,7 @@ Entry.HW = function() {
         '15.1': Entry.coconut,
         '16.1': Entry.MODI,
         '18.1': Entry.Altino,
-        'F.4': Entry.byrobot_petrone_v2_controller,
     };
-    // 테스트 하드웨어id = '999999'이지만, hw가 3개여서 불가능. 임시로 'F.4', 'F.5', 'F.6'
 };
 
 Entry.HW.TRIAL_LIMIT = 2;
