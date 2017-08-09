@@ -17700,14 +17700,18 @@ Entry.PyToBlockParser = function(c) {
     return {type:e, params:[this.Node(b.left), c, this.Node(b.right)]};
   };
   c.FunctionDeclaration = function(b) {
-    var c = this.Node(b.id), e = this.blockSyntax["def " + c], f = {}, c = [f];
-    c[0].blocks = [];
-    b = this.setParams(b.body.body[0].argument.callee.object.body.body);
-    e && (f.type = e.key);
-    for (e = 0;e < b.length;e++) {
-      c[0].blocks.push(b[e]), c.push(b[e]);
+    var c = this.Node(b.id), e = {};
+    b = b.body.body[0].argument.callee.object.body.body;
+    if (c = this.blockSyntax["def " + c]) {
+      e.type = c.key;
     }
-    return c;
+    c = this.setParams(b);
+    e = [e];
+    e[0].blocks = [];
+    for (b = 0;b < c.length;b++) {
+      e[0].blocks.push(c[b]), e.push(c[b]);
+    }
+    return e;
   };
   c.FunctionExpression = function(b) {
     return this.Node(b.body);

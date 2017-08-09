@@ -362,18 +362,27 @@ Entry.PyToBlockParser = function(blockSyntax) {
     // p.UpdateExpression = function(component) {};
 
     p.FunctionDeclaration = function(component) {
-        var blockName = this.Node(component.id);
-        var blockInfo = this.blockSyntax['def '+blockName];
-        var type = {};
-        var threadArr = [type];
-        threadArr[0].blocks = [];
+        var funcName = this.Node(component.id);
+        var startBlock = {};
         var blocks = component.body.body[0].argument.callee.object.body.body;
+
+        var blockInfo = this.blockSyntax['def '+ funcName];
+        var threadArr;
+        if(blockInfo){ // event block
+            startBlock.type = blockInfo.key;
+        } else {
+            // generate function
+            // search exist function
+            // read param, register param to this
+            // generate content
+            //
+            // add to map list
+            // different param count different function
+        }
         var definedBlocks = this.setParams(blocks);
 
-
-        if(blockInfo){
-            type.type = blockInfo.key;
-        }
+        threadArr = [startBlock];
+        threadArr[0].blocks = [];
 
         for(var i=0; i < definedBlocks.length; i++) {
              threadArr[0].blocks.push(definedBlocks[i]);
