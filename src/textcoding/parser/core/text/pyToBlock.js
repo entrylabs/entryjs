@@ -95,11 +95,16 @@ Entry.PyToBlockParser = function(blockSyntax) {
         var params = [];
         var obj = this.Node(callee);
 
+        if (typeof obj === "string" && callee.type === "MemberExpression")
+            return this[obj](component);
+
         if (callee.type === "Identifier") { // global function
             this.assert(!(obj.type === "get_variable"), "variable is not function", callee)
             this.assert(!(obj.type === "get_list"), "list is not function", callee)
             this.assert(typeof obj === "string", "error", callee);
 
+            if (this[obj]) // special block like len
+                return this[obj](component);
             var blockInfo = this.blockSyntax[obj];
             this.assert(blockInfo && blockInfo.key, "function is not defined", callee);
             obj = this.Block({}, blockInfo);
@@ -147,8 +152,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
     };
 
     p.VariableDeclarator = function(component) {
+        
         if('type_' in component){
-
             return {
                 type : 'set_variable',
                 params : [
@@ -198,7 +203,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 }
                 return {
                     type: 'number',
-                    params : [ value ]
+                    params : [ value + "" ]
                 }
             default:
                 return value;
@@ -227,7 +232,10 @@ Entry.PyToBlockParser = function(blockSyntax) {
         } else if (property.name === "_pySlice") {
             blockInfo = this.blockSyntax["%2[%4:%6]"];
         } else {
-            blockInfo = this.blockSyntax[obj][property.name];
+            if (this.blockSyntax[obj] && this.blockSyntax[obj][property.name])
+                blockInfo = this.blockSyntax[obj][property.name];
+            else
+                return obj + "." + property.name; // block syntax not exist. pass to special
         }
 
         this.Block(result, blockInfo);
@@ -273,12 +281,13 @@ Entry.PyToBlockParser = function(blockSyntax) {
         var isForState = tempAlt &&
                          tempAlt.body &&
                          tempAlt.body[0] &&
-                         'type' in tempAlt.body[0] && 
+                         'type' in tempAlt.body[0] &&
                          tempAlt.body[0].type === 'ForInStatement';
         var consequent = component.consequent;
 
         if(isForState){
             component.consequent.body[0].body.body = this.setVariable(consequent.body[0].body.body , 1);
+            
             alternate = component.alternate.body.map(this.Node , this);
             blocks = component.consequent.body[0].body.body;
             alternate[0].statements.push(this.setParams(blocks));
@@ -298,6 +307,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
             var consequents = component.consequent ? component.consequent.body.map(this.Node , this) : [];
             var alternates = component.alternate ? component.alternate.body.map(this.Node , this) : [];
+            
             consequents = this.setVariableFormat(consequents);
             alternates = this.setVariableFormat(alternates);
             
@@ -308,7 +318,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 statements : [ consequents, alternates ],
                 params : [this.Node(component.test)]
             };
-        }           
+        }
 
 
         return alternate;
@@ -407,22 +417,49 @@ Entry.PyToBlockParser = function(blockSyntax) {
     // p.UpdateExpression = function(component) {};
 
     p.FunctionDeclaration = function(component) {
+// <<<<<<< HEAD
         var blockName = this.Node(component.id);
         var blockInfo = this.blockSyntax['def '+blockName];
         var type = {};
         var threadArr = [type];
         threadArr[0].blocks = [];
         var blocks;
+
         if(component.body.body[0].argument.callee) {
             component.body.body[0].argument.callee.object.body.body = this.setVariable(component.body.body[0].argument.callee.object.body.body);
             blocks = component.body.body[0].argument.callee.object.body.body;
         }
+
         var definedBlocks = this.setParams(blocks);
 
         if(blockInfo){
             type.type = blockInfo.key;
         }
    
+// =======
+//         var funcName = this.Node(component.id);
+//         var startBlock = {};
+//         var blocks = component.body.body[0].argument.callee.object.body.body;
+
+//         var blockInfo = this.blockSyntax['def '+ funcName];
+//         var threadArr;
+//         if(blockInfo){ // event block
+//             startBlock.type = blockInfo.key;
+//         } else {
+//             // generate function
+//             // search exist function
+//             // read param, register param to this
+//             // generate content
+//             //
+//             // add to map list
+//             // different param count different function
+//         }
+//         var definedBlocks = this.setParams(blocks);
+
+//         threadArr = [startBlock];
+//         threadArr[0].blocks = [];
+
+// >>>>>>> origin/rebuild/pyParser
         for(var i=0; i < definedBlocks.length; i++) {
              threadArr[0].blocks.push(definedBlocks[i]);
              threadArr.push(definedBlocks[i]);
@@ -664,6 +701,67 @@ Entry.PyToBlockParser = function(blockSyntax) {
         });
 
         return variablArr;
+    };
+
+    /**
+     * Special Blocks
+     */
+
+    p.len = function(component) {
+        var param = this.Node(component.arguments[0]);
+
+        if (this.isParamPrimitive(param)) { // string len
+            return {
+                type: "length_of_string",
+                params: [ undefined, param ]
+            }
+        } else { // array len
+            return {
+                type: "length_of_list",
+                params: [ undefined, param.params[0] ]
+            }
+        }
+    };
+
+    p["Hamster.line_tracer_mode"] = function(component) {
+        return this.Special(component, "Hamster", "line_tracer_mode");
+    };
+
+    p["Hamster.io_mode_a"] = function(component) {
+        return this.Special(component, "Hamster", "io_mode_a");
+    };
+
+    p["Hamster.io_mode_b"] = function(component) {
+        return this.Special(component, "Hamster", "io_mode_b");
+    };
+
+    p["Hamster.io_modes"] = function(component) {
+        return this.Special(component, "Hamster", "io_modes");
+    };
+
+    p["Hamster.leds"] = function(component) {
+        return this.Special(component, "Hamster", "leds");
+    };
+
+    p["Hamster.left_led"] = function(component) {
+        return this.Special(component, "Hamster", "left_led");
+    };
+
+    p["Hamster.right_led"] = function(component) {
+        return this.Special(component, "Hamster", "right_led");
+    };
+
+    p.Special = function(component, name, key) {
+        var result = {};
+        var param = this.Node(component.arguments[0]);
+        if (this.isParamPrimitive(param))
+            param = param.params[0];
+        var blockInfo = this.blockSyntax[name][
+            key + "(" + param + ")"
+        ];
+
+        this.Block(result, blockInfo);
+        return result;
     };
 
     /**

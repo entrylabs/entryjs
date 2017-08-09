@@ -6262,19 +6262,19 @@ Entry.Engine = function() {
       this.speedHandle_ = Entry.createElement("div", "entrySpeedHandleWorkspace");
       var e = (Entry.interfaceState.canvasWidth - 84) / 5;
       $(this.speedHandle_).bind("mousedown.speedPanel touchstart.speedPanel", function(b) {
-        function f(b) {
+        function c(b) {
           b.stopPropagation();
           b = Entry.Utils.convertMouseEvent(b);
           b = Math.floor((b.clientX - 80) / (5 * e) * 5);
           0 > b || 4 < b || Entry.engine.setSpeedMeter(Entry.engine.speeds[b]);
         }
-        function c(b) {
+        function f(b) {
           $(document).unbind(".speedPanel");
         }
         b.stopPropagation && b.stopPropagation();
         b.preventDefault && b.preventDefault();
         if (0 === b.button || b.originalEvent && b.originalEvent.touches) {
-          Entry.Utils.convertMouseEvent(b), b = $(document), b.bind("mousemove.speedPanel touchmove.speedPanel", f), b.bind("mouseup.speedPanel touchend.speedPanel", c);
+          Entry.Utils.convertMouseEvent(b), b = $(document), b.bind("mousemove.speedPanel touchmove.speedPanel", c), b.bind("mouseup.speedPanel touchend.speedPanel", f);
         }
       });
       this.view_.insertBefore(this.speedHandle_, this.maximizeButton);
@@ -6282,8 +6282,8 @@ Entry.Engine = function() {
     }
   };
   c.setSpeedMeter = function(b) {
-    var f = this.speeds.indexOf(b);
-    0 > f || (f = Math.min(4, f), f = Math.max(0, f), this.speedPanelOn && (this.speedHandle_.style.left = (Entry.interfaceState.canvasWidth - 80) / 10 * (2 * f + 1) + 80 - 9 + "px"), Entry.FPS != b && (clearInterval(this.ticker), this.ticker = setInterval(this.update, Math.floor(1E3 / b)), Entry.FPS = b));
+    var c = this.speeds.indexOf(b);
+    0 > c || (c = Math.min(4, c), c = Math.max(0, c), this.speedPanelOn && (this.speedHandle_.style.left = (Entry.interfaceState.canvasWidth - 80) / 10 * (2 * c + 1) + 80 - 9 + "px"), Entry.FPS != b && (clearInterval(this.ticker), this.ticker = setInterval(this.update, Math.floor(1E3 / b)), Entry.FPS = b));
   };
   c.start = function(b) {
     createjs.Ticker.setFPS(Entry.FPS);
@@ -6303,14 +6303,14 @@ Entry.Engine = function() {
   c.computeFunction = function(b) {
     b.script.tick();
   };
-  Entry.Engine.computeThread = function(b, f) {
+  Entry.Engine.computeThread = function(b, c) {
     Entry.engine.isContinue = !0;
-    for (var c = !1;f && Entry.engine.isContinue && !c;) {
-      Entry.engine.isContinue = !f.isRepeat;
-      var e = f.run(), c = e && e === f;
-      f = e;
+    for (var d = !1;c && Entry.engine.isContinue && !d;) {
+      Entry.engine.isContinue = !c.isRepeat;
+      var e = c.run(), d = e && e === c;
+      c = e;
     }
-    return f;
+    return c;
   };
   c.isState = function(b) {
     return -1 < this.state.indexOf(b);
@@ -12824,7 +12824,20 @@ Entry.PyToBlockParser = function(c) {
   };
   c.CallExpression = function(b) {
     var c = b.callee, d = this.Node(c);
-    "Identifier" === c.type && (this.assert("get_variable" !== d.type, "variable is not function", c), this.assert("get_list" !== d.type, "list is not function", c), this.assert("string" === typeof d, "error", c), d = this.blockSyntax[d], this.assert(d && d.key, "function is not defined", c), d = this.Block({}, d));
+    if ("string" === typeof d && "MemberExpression" === c.type) {
+      return this[d](b);
+    }
+    if ("Identifier" === c.type) {
+      this.assert("get_variable" !== d.type, "variable is not function", c);
+      this.assert("get_list" !== d.type, "list is not function", c);
+      this.assert("string" === typeof d, "error", c);
+      if (this[d]) {
+        return this[d](b);
+      }
+      d = this.blockSyntax[d];
+      this.assert(d && d.key, "function is not defined", c);
+      d = this.Block({}, d);
+    }
     d.preParams && (b.arguments = d.preParams.concat(b.arguments), delete d.preParams);
     b.arguments && (d.params = this.Arguments(d.type, b.arguments, d.params));
     return d;
@@ -12853,7 +12866,7 @@ Entry.PyToBlockParser = function(c) {
       case "DropdownDynamic":
         return this.DropdownDynamic(e, c);
       case "Block":
-        return d && d.type ? {type:d.type, params:this.Arguments(d.type, [b])} : {type:"number", params:[e]};
+        return d && d.type ? {type:d.type, params:this.Arguments(d.type, [b])} : {type:"number", params:[e + ""]};
       default:
         return e;
     }
@@ -12866,7 +12879,16 @@ Entry.PyToBlockParser = function(c) {
     if ("CallExpression" === e.type) {
       return this.SubscriptIndex(b);
     }
-    this.Block(d, "_pySlice" === e.name ? this.blockSyntax["%2[%4:%6]"] : this.blockSyntax[c][e.name]);
+    if ("_pySlice" === e.name) {
+      b = this.blockSyntax["%2[%4:%6]"];
+    } else {
+      if (this.blockSyntax[c] && this.blockSyntax[c][e.name]) {
+        b = this.blockSyntax[c][e.name];
+      } else {
+        return c + "." + e.name;
+      }
+    }
+    this.Block(d, b);
     return d;
   };
   c.WhileStatement = function(b) {
@@ -13066,6 +13088,38 @@ Entry.PyToBlockParser = function(c) {
     return b = b.map(function(b) {
       return b.constructor == Array && "set_variable" == b[0].type ? b[0] : b;
     });
+  };
+  c.len = function(b) {
+    b = this.Node(b.arguments[0]);
+    return this.isParamPrimitive(b) ? {type:"length_of_string", params:[void 0, b]} : {type:"length_of_list", params:[void 0, b.params[0]]};
+  };
+  c["Hamster.line_tracer_mode"] = function(b) {
+    return this.Special(b, "Hamster", "line_tracer_mode");
+  };
+  c["Hamster.io_mode_a"] = function(b) {
+    return this.Special(b, "Hamster", "io_mode_a");
+  };
+  c["Hamster.io_mode_b"] = function(b) {
+    return this.Special(b, "Hamster", "io_mode_b");
+  };
+  c["Hamster.io_modes"] = function(b) {
+    return this.Special(b, "Hamster", "io_modes");
+  };
+  c["Hamster.leds"] = function(b) {
+    return this.Special(b, "Hamster", "leds");
+  };
+  c["Hamster.left_led"] = function(b) {
+    return this.Special(b, "Hamster", "left_led");
+  };
+  c["Hamster.right_led"] = function(b) {
+    return this.Special(b, "Hamster", "right_led");
+  };
+  c.Special = function(b, c, d) {
+    var e = {};
+    b = this.Node(b.arguments[0]);
+    this.isParamPrimitive(b) && (b = b.params[0]);
+    this.Block(e, this.blockSyntax[c][d + "(" + b + ")"]);
+    return e;
   };
 })(Entry.PyToBlockParser.prototype);
 Entry.Parser = function(c, b, f, d) {
@@ -14219,10 +14273,10 @@ Entry.createDom = function(c, b) {
     f.addEventListener("mousewheel", function(b) {
       var c = Entry.variableContainer.getListById(Entry.stage.mouseCoordinate);
       b = 0 < b.wheelDelta ? !0 : !1;
-      for (var f = 0;f < c.length;f++) {
-        var d = c[f];
-        d.scrollButton_.y = b ? 46 <= d.scrollButton_.y ? d.scrollButton_.y - 23 : 23 : d.scrollButton_.y + 23;
-        d.updateView();
+      for (var d = 0;d < c.length;d++) {
+        var f = c[d];
+        f.scrollButton_.y = b ? 46 <= f.scrollButton_.y ? f.scrollButton_.y - 23 : 23 : f.scrollButton_.y + 23;
+        f.updateView();
       }
     });
     this.canvas_ = f;
