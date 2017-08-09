@@ -42405,10 +42405,10 @@ Entry.block = {
         "class": "byrobot_petrone_v2_controller_controller_light",
         "isNotFor": ["byrobot_petrone_v2_controller"],
         "func": function (sprite, script) {
-            var select = parseInt(script.getField('SELECT'));
-            var red   = 0;
-            var green = 0;
-            var blue  = 0;
+            var select = script.getField('SELECT');
+            var red    = 0;
+            var green  = 0;
+            var blue   = 0;
 
             switch (select) {
                 case "sunset":
@@ -42427,9 +42427,9 @@ Entry.block = {
                     blue  = 0;
                     break;
                 case "strawberryMilk":
-                    red   = 255;
-                    green = 50;
-                    blue  = 200;
+                    red   = 150;
+                    green = 60;
+                    blue  = 20;
                     break;
                 case "emerald":
                     red   = 0;
@@ -42437,9 +42437,9 @@ Entry.block = {
                     blue  = 30;
                     break;
                 case "lavender":
-                    red   = 40;
+                    red   = 80;
                     green = 0;
-                    blue  = 100;
+                    blue  = 200;
                     break;
             }
 
