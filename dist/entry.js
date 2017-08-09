@@ -12851,7 +12851,7 @@ Entry.PyToBlockParser = function(c) {
     return b.declarations.map(this.Node, this);
   };
   c.VariableDeclarator = function(b) {
-    return "type_" in b ? {type:"set_variable", params:[Entry.variableContainer.getVariableByName(b.id.name).id_, this.Node(b.init)]} : b.init && b.init.arguments ? b.init.arguments.map(this.Node, this) : [];
+    return b.init && b.init.arguments ? b.init.arguments.map(this.Node, this) : [];
   };
   c.AssignmentExpression = function(b) {
     return {type:"set_variable", params:[Entry.variableContainer.getVariableByName(b.left.name).id_, this.Node(b.right)]};

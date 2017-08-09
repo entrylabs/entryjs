@@ -47,17 +47,17 @@ Entry.PyToBlockParser = function(blockSyntax) {
                               astArrBody[0] && 
                               astArrBody[0].type === 'VariableDeclaration';
 
-            if(hasVariable){
-                var variableArr = this.getVariables(astArrBody);
+            // if(hasVariable){
+            var variableArr = this.getVariables(astArrBody[0]);
 
-                var AstArr = astArr.splice(0,1)
-                var contentArr = this.processPrograms(astArr);
+            var AstArr = astArrBody.splice(0,1)
+            var contentArr = this.processPrograms(astArr);
 
-                return variableArr.concat(contentArr);
+            return variableArr.concat(contentArr);
 
-            } else {
-                return this.processPrograms(astArr);
-            }
+            // } else {
+            //     return this.processPrograms(astArr);
+            // }
         } catch(error) {
             var err = {};
             err.title = error.title;
@@ -72,10 +72,6 @@ Entry.PyToBlockParser = function(blockSyntax) {
     };
 
     p.Program = function(component) {
-        component.body = this.setVariable(component.body);
-
-        var thread = this.setVariableFormat(component.body);
-        
         if(thread[0].constructor == Array)
             return thread[0];
         else 
@@ -152,17 +148,6 @@ Entry.PyToBlockParser = function(blockSyntax) {
     };
 
     p.VariableDeclarator = function(component) {
-        
-        if('type_' in component){
-            return {
-                type : 'set_variable',
-                params : [
-                    Entry.variableContainer.getVariableByName(component.id.name).id_,
-                    this.Node(component.init)
-                ]
-            }
-        }
-
         if(component.init && component.init.arguments) {
             return component.init.arguments.map(this.Node , this);
         } else {
@@ -286,30 +271,20 @@ Entry.PyToBlockParser = function(blockSyntax) {
         var consequent = component.consequent;
 
         if(isForState){
-            component.consequent.body[0].body.body = this.setVariable(consequent.body[0].body.body , 1);
-            
             alternate = component.alternate.body.map(this.Node , this);
             blocks = component.consequent.body[0].body.body;
             alternate[0].statements.push(this.setParams(blocks));
 
         } else if(!('alternate' in component) || !component.alternate){
-            component.consequent.body = this.setVariable(consequent.body);
-            alternate = {
                 type : '_if',
                 statements : [this.setParams(component.consequent.body)],
                 params : [this.Node(component.test)]
             };
         } else {
-            component.consequent.body = this.setVariable(consequent.body);
-            component.alternate.body = this.setVariable(component.alternate.body);
-
 
 
             var consequents = component.consequent ? component.consequent.body.map(this.Node , this) : [];
             var alternates = component.alternate ? component.alternate.body.map(this.Node , this) : [];
-            
-            consequents = this.setVariableFormat(consequents);
-            alternates = this.setVariableFormat(alternates);
             
             console.log('consequent' , consequents);
             console.log('alternates' , alternates);
@@ -426,8 +401,6 @@ Entry.PyToBlockParser = function(blockSyntax) {
         var blocks;
 
         if(component.body.body[0].argument.callee) {
-            component.body.body[0].argument.callee.object.body.body = this.setVariable(component.body.body[0].argument.callee.object.body.body);
-            blocks = component.body.body[0].argument.callee.object.body.body;
         }
 
         var definedBlocks = this.setParams(blocks);
@@ -527,7 +500,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 );
 
                 if (paramSchema.type !== "Block" && param && param.params) // for list and variable dropdown
-                    param = param.params[0];
+                param = param.params[0];
                 else if (paramSchema.type === "Block" && paramSchema.isListIndex)
                     param = this.ListIndex(param);
 
@@ -673,36 +646,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
         return [];
     };
-
-    p.setVariable = function(body , index ) {
-        var i = index ? index : 0;
-
-        while(i < body.length) {
-            var body_ = body[i];
-            if(body_.type == "VariableDeclaration") {
-                var declarations = body_.declarations;
-
-                for(var j=0; j < declarations.length; j++) {
-                    body[i].declarations[j].type_ = "setVariable";
-                }
-            }
-            i++;
-        }
-
-        return body
-    };
-
-    p.setVariableFormat = function(array) {
-        var variablArr = array.map(this.Node, this);
-        variablArr = variablArr.map(function(t) {
-            if(t.constructor == Array && t[0].type =='set_variable')
-                return t[0];
-            return t;
-        });
-
-        return variablArr;
-    };
-
+    
     /**
      * Special Blocks
      */

@@ -2125,7 +2125,8 @@
       if (left.type === "Identifier" && !scope.exists(left.name)) {
         if (!node.operator || node.length > 1) unexpected();
         scope.addVar(left.name);
-        return nc.createVarDeclFromId(node.left, node.left, node.right);
+        // return nc.createVarDeclFromId(node.left, node.left, node.right);
+        // customized variable must be assign
       }
       return finishNode(node, "AssignmentExpression");
     }
