@@ -270,7 +270,7 @@ Entry.EntityObject.prototype.setRotation = function(rotation) {
  * @return {number}
  */
 Entry.EntityObject.prototype.getRotation = function(toFixedValue) {
-    if (toFixedValue) return Entry.Utils.toFixed(toFixedValue);
+    if (toFixedValue) return Entry.Utils.toFixed(this.rotation, toFixedValue);
     else return this.rotation;
 };
 
@@ -862,11 +862,19 @@ Entry.EntityObject.prototype.setImage = function(pictureModel) {
         }
 
         that.object.image = image;
+        if (that.object.filters && that.object.filters.length)
+            that.cache();
+        else
+            that.object.uncache();
     } else setImage(image);
 
     function setImage(datum) {
         Entry.image = datum;
         that.object.image = datum;
+        if (that.object.filters && that.object.filters.length)
+            that.cache();
+        else
+            that.object.uncache();
         Entry.requestUpdate = true;
     }
 

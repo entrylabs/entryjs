@@ -105,10 +105,11 @@ Entry.Func.edit = function(func) {
 
     this.cancelEdit();
 
-    Entry.Func.isEdit = true;
     this.targetFunc = func;
-    this.initEditView(func.content);
-    this.bindFuncChangeEvent();
+    if (this.initEditView(func.content) === false)
+        return; // edit fail
+    Entry.Func.isEdit = true;
+    this.bindFuncChangeEvent(func);
     this.updateMenu();
     setTimeout(function() {
         var schema = Entry.block["func_" + func.id];
@@ -123,7 +124,10 @@ Entry.Func.initEditView = function(content) {
     if (!this.menuCode)
         this.setupMenuCode();
     var workspace = Entry.getMainWS();
-    workspace.setMode(Entry.Workspace.MODE_OVERLAYBOARD);
+    if (workspace.setMode(Entry.Workspace.MODE_OVERLAYBOARD) === false) {
+        this.endEdit("cancelEdit");
+        return false;
+    }
     workspace.changeOverlayBoardCode(content);
     this._workspaceStateEvent =
         workspace.changeEvent.attach(this, function(message) {
