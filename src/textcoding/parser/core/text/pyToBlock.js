@@ -96,19 +96,25 @@ Entry.PyToBlockParser = function(blockSyntax) {
         var params = [];
         var obj = this.Node(callee);
 
-        if (typeof obj === "string" && callee.type === "MemberExpression")
+        if (typeof obj === "string" && callee.type === "MemberExpression" && this[obj])
             return this[obj](component);
 
         if (callee.type === "Identifier") { // global function
             this.assert(!(obj.type === "get_variable"), "variable is not function", callee)
             this.assert(!(obj.type === "get_list"), "list is not function", callee)
-            this.assert(typeof obj === "string", "error", callee);
 
-            if (this[obj]) // special block like len
+            if (this._funcMap[obj]) {
+                var funcType = this._funcMap[obj][args.length];
+                obj = {
+                    type: "func_" + funcType
+                }
+            } else if (this[obj]) {// special block like len
                 return this[obj](component);
-            var blockInfo = this.blockSyntax[obj];
-            this.assert(blockInfo && blockInfo.key, "function is not defined", callee);
-            obj = this.Block({}, blockInfo);
+            } else {
+                var blockInfo = this.blockSyntax[obj];
+                this.assert(blockInfo && blockInfo.key, "function is not defined", callee);
+                obj = this.Block({}, blockInfo);
+            }
         }
 
         if (obj.preParams) {
@@ -462,29 +468,36 @@ Entry.PyToBlockParser = function(blockSyntax) {
      */
 
     p.Arguments = function(blockType, args, defaultParams) {
-        var blockSchema = Entry.block[blockType];
-        var syntax = this.PySyntax(blockSchema, defaultParams);
-        var indexes = syntax.match( /%\d+/g, '');
-        if (!indexes)
-            return []
-        var sortedArgs = defaultParams || new Array();
+        var defParams, sortedArgs, blockSchema;
+        blockSchema = Entry.block[blockType];
+        if (!blockSchema) {// function block, etc
+            sortedArgs = args;
+        } else {
+            var syntax = this.PySyntax(blockSchema, defaultParams);
+            var indexes = syntax.match( /%\d+/g, '');
+            if (!indexes)
+                return []
+            sortedArgs = defaultParams || new Array();
 
-        for(var i=0; i < indexes.length; i++) {
-            var idx = parseInt(indexes[i].substring(1))-1;
-            sortedArgs[idx] = args[i];
+            for(var i=0; i < indexes.length; i++) {
+                var idx = parseInt(indexes[i].substring(1))-1;
+                sortedArgs[idx] = args[i];
+            }
+            defParams = (blockSchema.def && blockSchema.def.params) ? blockSchema.def.params : undefined;
         }
-        var defParams = (blockSchema.def && blockSchema.def.params) ? blockSchema.def.params : undefined;
         var results = sortedArgs.map(function(arg, index) {
             if (arg && arg.type) {
-                var paramSchema = blockSchema.params[index];
+                var paramSchema = blockSchema ? blockSchema.params[index] : null;
                 var param = this.Node(
                     arg,
                     (arg.type === "Literal") ? paramSchema : undefined,
                     (arg.type === "Literal" && defParams) ? defParams[index] : undefined
                 );
 
-                if (paramSchema.type !== "Block" && param && param.params) // for list and variable dropdown
-                param = param.params[0];
+                if (!paramSchema)
+                    param = param;
+                else if (paramSchema.type !== "Block" && param && param.params) // for list and variable dropdown
+                    param = param.params[0];
                 else if (paramSchema.type === "Block" && paramSchema.isListIndex)
                     param = this.ListIndex(param);
 
@@ -730,6 +743,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
         var params = component.arguments ? component.arguments.map(this.Node, this) : [];
         //var functions = Entry.variableContainer.functions_;
 
+
+        this.assert(!this.blockSyntax[funcName], "function name duplicate")
         var funcContent = [];
 
         var funcParamPointer = {

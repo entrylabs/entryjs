@@ -17576,24 +17576,25 @@ Entry.PyToBlockParser = function(c) {
     return this.Node(b.expression);
   };
   c.CallExpression = function(b) {
-    var c = b.callee, e = this.Node(c);
-    if ("string" === typeof e && "MemberExpression" === c.type) {
-      return this[e](b);
+    var c = b.callee, e = b.arguments, f = this.Node(c);
+    if ("string" === typeof f && "MemberExpression" === c.type && this[f]) {
+      return this[f](b);
     }
     if ("Identifier" === c.type) {
-      this.assert("get_variable" !== e.type, "variable is not function", c);
-      this.assert("get_list" !== e.type, "list is not function", c);
-      this.assert("string" === typeof e, "error", c);
-      if (this[e]) {
-        return this[e](b);
+      if (this.assert("get_variable" !== f.type, "variable is not function", c), this.assert("get_list" !== f.type, "list is not function", c), this._funcMap[f]) {
+        f = {type:"func_" + this._funcMap[f][e.length]};
+      } else {
+        if (this[f]) {
+          return this[f](b);
+        }
+        e = this.blockSyntax[f];
+        this.assert(e && e.key, "function is not defined", c);
+        f = this.Block({}, e);
       }
-      e = this.blockSyntax[e];
-      this.assert(e && e.key, "function is not defined", c);
-      e = this.Block({}, e);
     }
-    e.preParams && (b.arguments = e.preParams.concat(b.arguments), delete e.preParams);
-    b.arguments && (e.params = this.Arguments(e.type, b.arguments, e.params));
-    return e;
+    f.preParams && (b.arguments = f.preParams.concat(b.arguments), delete f.preParams);
+    b.arguments && (f.params = this.Arguments(f.type, b.arguments, f.params));
+    return f;
   };
   c.Identifier = function(b) {
     b = b.name;
@@ -17732,22 +17733,26 @@ Entry.PyToBlockParser = function(c) {
     return c;
   };
   c.Arguments = function(b, c, e) {
-    var d = Entry.block[b];
-    b = this.PySyntax(d, e).match(/%\d+/g, "");
-    if (!b) {
-      return [];
+    var d, g;
+    if (g = Entry.block[b]) {
+      b = this.PySyntax(g, e).match(/%\d+/g, "");
+      if (!b) {
+        return [];
+      }
+      e = e || [];
+      for (var h = 0;h < b.length;h++) {
+        var k = parseInt(b[h].substring(1)) - 1;
+        e[k] = c[h];
+      }
+      d = g.def && g.def.params ? g.def.params : void 0;
+    } else {
+      e = c;
     }
-    e = e || [];
-    for (var g = 0;g < b.length;g++) {
-      var h = parseInt(b[g].substring(1)) - 1;
-      e[h] = c[g];
-    }
-    var k = d.def && d.def.params ? d.def.params : void 0;
     return e.map(function(b, c) {
       if (b && b.type) {
-        var e = d.params[c];
-        b = this.Node(b, "Literal" === b.type ? e : void 0, "Literal" === b.type && k ? k[c] : void 0);
-        "Block" !== e.type && b && b.params ? b = b.params[0] : "Block" === e.type && e.isListIndex && (b = this.ListIndex(b));
+        var e = g ? g.params[c] : null;
+        b = this.Node(b, "Literal" === b.type ? e : void 0, "Literal" === b.type && d ? d[c] : void 0);
+        e && ("Block" !== e.type && b && b.params ? b = b.params[0] : "Block" === e.type && e.isListIndex && (b = this.ListIndex(b)));
       }
       return b;
     }, this);
@@ -17873,7 +17878,9 @@ Entry.PyToBlockParser = function(c) {
     return d;
   };
   c.createFunction = function(b, c, e) {
-    var d = b.arguments ? b.arguments.map(this.Node, this) : [], g = {type:"function_field_label", params:[c]};
+    var d = b.arguments ? b.arguments.map(this.Node, this) : [];
+    this.assert(!this.blockSyntax[c], "function name duplicate");
+    var g = {type:"function_field_label", params:[c]};
     b = {id:Entry.generateHash(), content:[[{type:"function_create", params:[g]}]]};
     this._funcMap[c] || (this._funcMap[c] = {});
     for (this._funcMap[c][d.length] = b.id;d.length;) {
