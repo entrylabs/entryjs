@@ -136,6 +136,11 @@ Entry.PyToBlockParser = function(blockSyntax) {
     p.Identifier = function(component) {
         var name = component.name;
 
+        if (this._funcParamMap[name])
+            return {
+                type: "stringParam_" + this._funcParamMap[name]
+            };
+
         var variable = Entry.variableContainer.getVariableByName(name);
         if (variable)
             return {
@@ -470,7 +475,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
     p.Arguments = function(blockType, args, defaultParams) {
         var defParams, sortedArgs, blockSchema;
         blockSchema = Entry.block[blockType];
-        if (!blockSchema) {// function block, etc
+        if ((blockType && blockType.substr(0, 5) === "func_") || !blockSchema) {// function block, etc
             sortedArgs = args;
         } else {
             var syntax = this.PySyntax(blockSchema, defaultParams);
@@ -778,12 +783,14 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     }
                 ]
             }
+            this._funcParamMap[param] = paramId;
             funcParamPointer.params.push(newFuncParam);
             funcParamPointer = newFuncParam;
         }
 
 
         var definedBlocks = this.setParams(blocks);
+        this._funcParamMap = {};
 
         func.content[0] = func.content[0].concat(definedBlocks);
 

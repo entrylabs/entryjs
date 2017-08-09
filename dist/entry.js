@@ -17598,6 +17598,9 @@ Entry.PyToBlockParser = function(c) {
   };
   c.Identifier = function(b) {
     b = b.name;
+    if (this._funcParamMap[b]) {
+      return {type:"stringParam_" + this._funcParamMap[b]};
+    }
     var c = Entry.variableContainer.getVariableByName(b);
     return c ? {type:"get_variable", params:[c.id_]} : (c = Entry.variableContainer.getListByName(b)) ? {type:"get_list", params:[c.id_]} : b;
   };
@@ -17734,7 +17737,10 @@ Entry.PyToBlockParser = function(c) {
   };
   c.Arguments = function(b, c, e) {
     var d, g;
-    if (g = Entry.block[b]) {
+    g = Entry.block[b];
+    if (b && "func_" === b.substr(0, 5) || !g) {
+      e = c;
+    } else {
       b = this.PySyntax(g, e).match(/%\d+/g, "");
       if (!b) {
         return [];
@@ -17745,8 +17751,6 @@ Entry.PyToBlockParser = function(c) {
         e[k] = c[h];
       }
       d = g.def && g.def.params ? g.def.params : void 0;
-    } else {
-      e = c;
     }
     return e.map(function(b, c) {
       if (b && b.type) {
@@ -17884,9 +17888,14 @@ Entry.PyToBlockParser = function(c) {
     b = {id:Entry.generateHash(), content:[[{type:"function_create", params:[g]}]]};
     this._funcMap[c] || (this._funcMap[c] = {});
     for (this._funcMap[c][d.length] = b.id;d.length;) {
-      d.shift(), c = {type:"function_field_string", params:[{type:"stringParam_" + Entry.generateHash()}]}, g.params.push(c), g = c;
+      c = d.shift();
+      var h = Entry.generateHash(), k = {type:"function_field_string", params:[{type:"stringParam_" + h}]};
+      this._funcParamMap[c] = h;
+      g.params.push(k);
+      g = k;
     }
     e = this.setParams(e);
+    this._funcParamMap = {};
     b.content[0] = b.content[0].concat(e);
     b.content = JSON.stringify(b.content);
     Entry.variableContainer.setFunctions([b]);

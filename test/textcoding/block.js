@@ -1040,7 +1040,7 @@ describe('EntryPython', function(){
                 Entry.clearProject();
             });
 
-            it('params' , function(){
+            it('params convert' , function(){
                 Entry.loadProject(Entry.getStartProject());
                 Entry.playground.object = Entry.container.objects_[0];
 
