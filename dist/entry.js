@@ -5224,18 +5224,18 @@ Entry.Event = function(c) {
   this._listeners = [];
 };
 (function(c) {
-  c.attach = function(b, c) {
-    var d = this, e = {obj:b, fn:c, destroy:function() {
-      d.detach(this);
+  c.attach = function(b, f) {
+    var c = this, e = {obj:b, fn:f, destroy:function() {
+      c.detach(this);
     }};
     this._listeners.push(e);
     return e;
   };
   c.detach = function(b) {
-    var c = this._listeners;
-    b = c.indexOf(b);
+    var f = this._listeners;
+    b = f.indexOf(b);
     if (-1 < b) {
-      return c.splice(b, 1);
+      return f.splice(b, 1);
     }
   };
   c.clear = function() {
@@ -5245,8 +5245,8 @@ Entry.Event = function(c) {
   };
   c.notify = function() {
     var b = arguments;
-    this._listeners.slice().forEach(function(c) {
-      c.fn.apply(c.obj, b);
+    this._listeners.slice().forEach(function(f) {
+      f.fn.apply(f.obj, b);
     });
   };
 })(Entry.Event.prototype);
@@ -5259,8 +5259,8 @@ Entry.Observer = function(c, b, f, d) {
 };
 (function(c) {
   c.destroy = function() {
-    var b = this.parent, c = b.indexOf(this);
-    -1 < c && b.splice(c, 1);
+    var b = this.parent, f = b.indexOf(this);
+    -1 < f && b.splice(f, 1);
     return this;
   };
 })(Entry.Observer.prototype);
@@ -5342,12 +5342,12 @@ Entry.Container.prototype.updateListView = function() {
     var b = document.createDocumentFragment("div"), f = this.getCurrentObjects().slice();
     f.filter(function(b) {
       return void 0 !== b.index;
-    }).length === f.length && (f = f.sort(function(b, c) {
-      return b.index - c.index;
+    }).length === f.length && (f = f.sort(function(b, f) {
+      return b.index - f.index;
     }));
-    f.forEach(function(c) {
-      !c.view_ && c.generateView();
-      b.appendChild(c.view_);
+    f.forEach(function(f) {
+      !f.view_ && f.generateView();
+      b.appendChild(f.view_);
     });
     c.appendChild(b);
     Entry.stage.sortZorder();
@@ -5867,9 +5867,9 @@ Entry.db = {data:{}, typeMap:{}};
 (function(c) {
   c.add = function(b) {
     this.data[b.id] = b;
-    var c = b.type;
-    void 0 === this.typeMap[c] && (this.typeMap[c] = {});
-    this.typeMap[c][b.id] = b;
+    var f = b.type;
+    void 0 === this.typeMap[f] && (this.typeMap[f] = {});
+    this.typeMap[f][b.id] = b;
   };
   c.has = function(b) {
     return this.data.hasOwnProperty(b);
@@ -5901,17 +5901,17 @@ Entry.Dom = function(c, b) {
   b.src && d.attr("src", b.src);
   b.parent && b.parent.append(d);
   d.bindOnClick = function() {
-    var b, c, f = function(b) {
+    var b, f, c = function(b) {
       b.stopImmediatePropagation();
-      b.handled || (b.handled = !0, c.call(this, b));
+      b.handled || (b.handled = !0, f.call(this, b));
     };
-    1 < arguments.length ? (c = arguments[1] instanceof Function ? arguments[1] : function() {
-    }, b = "string" === typeof arguments[0] ? arguments[0] : "") : c = arguments[0] instanceof Function ? arguments[0] : function() {
+    1 < arguments.length ? (f = arguments[1] instanceof Function ? arguments[1] : function() {
+    }, b = "string" === typeof arguments[0] ? arguments[0] : "") : f = arguments[0] instanceof Function ? arguments[0] : function() {
     };
     if (b) {
-      $(this).on("click tab", b, f);
+      $(this).on("click tab", b, c);
     } else {
-      $(this).on("click tab", f);
+      $(this).on("click tab", c);
     }
   };
   return d;
@@ -6073,8 +6073,8 @@ p.resize = function() {
 };
 Entry.Engine = function() {
   function c(b) {
-    var c = [37, 38, 39, 40, 32], d = b.keyCode || b.which, e = Entry.stage.inputField;
-    32 == d && e && e.hasFocus() || -1 < c.indexOf(d) && b.preventDefault();
+    var f = [37, 38, 39, 40, 32], c = b.keyCode || b.which, e = Entry.stage.inputField;
+    32 == c && e && e.hasFocus() || -1 < f.indexOf(c) && b.preventDefault();
   }
   this.state = "stop";
   this.popup = null;
@@ -6111,9 +6111,9 @@ Entry.Engine = function() {
   Entry.message = new Entry.Event(window);
 };
 (function(c) {
-  c.generateView = function(b, c) {
-    if (c && "workspace" != c) {
-      "minimize" == c ? (this.view_ = b, this.view_.addClass("entryEngine"), this.view_.addClass("entryEngineMinimize"), this.maximizeButton = Entry.createElement("button"), this.maximizeButton.addClass("entryEngineButtonMinimize"), this.maximizeButton.addClass("entryMaximizeButtonMinimize"), this.view_.appendChild(this.maximizeButton), this.maximizeButton.bindOnClick(function(b) {
+  c.generateView = function(b, f) {
+    if (f && "workspace" != f) {
+      "minimize" == f ? (this.view_ = b, this.view_.addClass("entryEngine"), this.view_.addClass("entryEngineMinimize"), this.maximizeButton = Entry.createElement("button"), this.maximizeButton.addClass("entryEngineButtonMinimize"), this.maximizeButton.addClass("entryMaximizeButtonMinimize"), this.view_.appendChild(this.maximizeButton), this.maximizeButton.bindOnClick(function(b) {
         Entry.engine.toggleFullScreen();
       }), this.coordinateButton = Entry.createElement("button"), this.coordinateButton.addClass("entryEngineButtonMinimize"), this.coordinateButton.addClass("entryCoordinateButtonMinimize"), this.view_.appendChild(this.coordinateButton), this.coordinateButton.bindOnClick(function(b) {
         this.hasClass("toggleOn") ? this.removeClass("toggleOn") : this.addClass("toggleOn");
@@ -6129,7 +6129,7 @@ Entry.Engine = function() {
         this.runButton.bindOnClick(function(b) {
           Entry.engine.toggleRun();
         });
-      }.bind(this))) : "phone" == c && (this.view_ = b, this.view_.addClass("entryEngine", "entryEnginePhone"), this.headerView_ = Entry.createElement("div", "entryEngineHeader"), this.headerView_.addClass("entryEngineHeaderPhone"), this.view_.appendChild(this.headerView_), this.maximizeButton = Entry.createElement("button"), this.maximizeButton.addClass("entryEngineButtonPhone", "entryMaximizeButtonPhone"), this.headerView_.appendChild(this.maximizeButton), this.maximizeButton.bindOnClick(function(b) {
+      }.bind(this))) : "phone" == f && (this.view_ = b, this.view_.addClass("entryEngine", "entryEnginePhone"), this.headerView_ = Entry.createElement("div", "entryEngineHeader"), this.headerView_.addClass("entryEngineHeaderPhone"), this.view_.appendChild(this.headerView_), this.maximizeButton = Entry.createElement("button"), this.maximizeButton.addClass("entryEngineButtonPhone", "entryMaximizeButtonPhone"), this.headerView_.appendChild(this.maximizeButton), this.maximizeButton.bindOnClick(function(b) {
         Entry.engine.footerView_.addClass("entryRemove");
         Entry.engine.headerView_.addClass("entryRemove");
         Entry.launchFullScreen(Entry.engine.view_);
@@ -6148,13 +6148,13 @@ Entry.Engine = function() {
       this.view_ = b;
       this.view_.addClass("entryEngine_w");
       this.view_.addClass("entryEngineWorkspace_w");
-      var d = Entry.createElement("button");
-      this.speedButton = d;
+      var c = Entry.createElement("button");
+      this.speedButton = c;
       this.speedButton.addClass("entrySpeedButtonWorkspace", "entryEngineTopWorkspace", "entryEngineButtonWorkspace_w");
       this.view_.appendChild(this.speedButton);
       this.speedButton.bindOnClick(function(b) {
         Entry.engine.toggleSpeedPanel();
-        d.blur();
+        c.blur();
       });
       this.maximizeButton = Entry.createElement("button");
       this.maximizeButton.addClass("entryEngineButtonWorkspace_w", "entryEngineTopWorkspace", "entryMaximizeButtonWorkspace_w");
@@ -6248,14 +6248,14 @@ Entry.Engine = function() {
       this.speedLabel_.innerHTML = Lang.Workspace.speed;
       this.view_.insertBefore(this.speedLabel_, this.maximizeButton);
       this.speedProgress_ = Entry.createElement("table", "entrySpeedProgressWorkspace");
-      for (var b = Entry.createElement("tr"), c = this.speeds, d = 0;5 > d;d++) {
-        (function(d) {
-          var e = Entry.createElement("td", "progressCell" + d);
-          e.bindOnClick(function() {
-            Entry.engine.setSpeedMeter(c[d]);
+      for (var b = Entry.createElement("tr"), f = this.speeds, c = 0;5 > c;c++) {
+        (function(c) {
+          var d = Entry.createElement("td", "progressCell" + c);
+          d.bindOnClick(function() {
+            Entry.engine.setSpeedMeter(f[c]);
           });
-          b.appendChild(e);
-        })(d);
+          b.appendChild(d);
+        })(c);
       }
       this.view_.insertBefore(this.speedProgress_, this.maximizeButton);
       this.speedProgress_.appendChild(b);
@@ -12799,10 +12799,14 @@ Entry.PyToBlockParser = function(c) {
   c.divideOperator = {"//":"QUOTIENT", "%":"MOD"};
   c.Programs = function(b) {
     try {
-      var c = b[0].body, d = this.getVariables(c[0]);
-      c.splice(1, c.length - 1);
-      var e = this.processPrograms(b);
-      return d.concat(e);
+      var c = b[0].body;
+      if (c && c[0] && "ExpressionStatement" === c[0].type) {
+        var d = this.getVariables(b[0]);
+        b.splice(0, 1);
+        var e = this.processPrograms(b);
+        return d.concat(e);
+      }
+      return b.body.map(this.Node, this);
     } catch (g) {
       throw b = {}, b.title = g.title, b.message = g.message, b.line = g.line, b;
     }
@@ -12904,8 +12908,6 @@ Entry.PyToBlockParser = function(c) {
       if ("alternate" in b && b.alternate) {
         c = b.consequent ? b.consequent.body.map(this.Node, this) : [];
         var d = b.alternate ? b.alternate.body.map(this.Node, this) : [];
-        console.log("consequent", c);
-        console.log("alternates", d);
         c = {type:"if_else", statements:[c, d], params:[this.Node(b.test)]};
       } else {
         c = {type:"_if", statements:[this.setParams(b.consequent.body)], params:[this.Node(b.test)]};
@@ -13071,7 +13073,19 @@ Entry.PyToBlockParser = function(c) {
     return b;
   };
   c.getVariables = function(b) {
+    b.body.map(function(b) {
+      b = b.expression;
+      var c = b.left, e = b.right;
+      Entry.generateHash();
+      "=" == b.operator && ((b = this.variableExist(c.name)) ? b.value_ = e.value : Entry.variableContainer.addVariable({type:"variable", name:c.name, value:e.value, visible:!0}));
+    }, this);
     return [];
+  };
+  c.variableExist = function(b) {
+    var c = Entry.variableContainer.variables_, c = c.map(function(b) {
+      return b.name_;
+    });
+    return -1 < c.indexOf(b) ? Entry.variableContainer.variables_[c.indexOf(b)] : !1;
   };
   c.len = function(b) {
     b = this.Node(b.arguments[0]);
