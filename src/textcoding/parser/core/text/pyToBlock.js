@@ -47,17 +47,15 @@ Entry.PyToBlockParser = function(blockSyntax) {
                               astArrBody[0] && 
                               astArrBody[0].type === 'VariableDeclaration';
 
-            // if(hasVariable){
+            
             var variableArr = this.getVariables(astArrBody[0]);
 
-            var AstArr = astArrBody.splice(0,1)
+            var AstArr = astArrBody.splice(1, astArrBody.length-1)
             var contentArr = this.processPrograms(astArr);
 
             return variableArr.concat(contentArr);
 
-            // } else {
-            //     return this.processPrograms(astArr);
-            // }
+
         } catch(error) {
             var err = {};
             err.title = error.title;
@@ -72,6 +70,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
     };
 
     p.Program = function(component) {
+        var thread = component.body.map(this.Node ,this);
+
         if(thread[0].constructor == Array)
             return thread[0];
         else 
@@ -276,6 +276,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
             alternate[0].statements.push(this.setParams(blocks));
 
         } else if(!('alternate' in component) || !component.alternate){
+            alternate = {
                 type : '_if',
                 statements : [this.setParams(component.consequent.body)],
                 params : [this.Node(component.test)]
@@ -400,9 +401,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
         threadArr[0].blocks = [];
         var blocks;
 
-        if(component.body.body[0].argument.callee) {
-        }
-
+        var blocks = component.body.body[0].argument.callee.object.body.body;
         var definedBlocks = this.setParams(blocks);
 
         if(blockInfo){
