@@ -57,7 +57,9 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
                 return variableArr.concat(contentArr);
             }  else {
-                return astArr.body.map(this.Node , this);
+                return astArr.map(this.Node , this).filter(function(t) {
+                    return t.length > 0
+                });
             }
 
 
@@ -663,12 +665,12 @@ Entry.PyToBlockParser = function(blockSyntax) {
             }
 
             var right = n.right;
-            var id = Entry.generateHash();            
+            var id = Entry.generateHash();
             var existVar = this.variableExist(name);
 
             if (n.operator != '=')
                 return;
-            
+
             if(existVar) {
                 existVar.value_ = right.value;
                 return;
@@ -691,7 +693,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
         variables_ = variables_.map(function(v){
             return v.name_;
         });
-   
+
         if(variables_.indexOf(name)  > -1)
             return Entry.variableContainer.variables_[variables_.indexOf(name)];
         return false
@@ -773,7 +775,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
             ]
         }
         var func = {
-            id: Entry.generateHash(),
+            //id: Entry.generateHash(),
+            id: "dxik",
             content: [[{
                 type: "function_create",
                 params: [
