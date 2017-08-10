@@ -585,7 +585,12 @@ describe('EntryPython', function(){
         it("variable" , function() {
             Entry.loadProject(Entry.getStartProject());
             Entry.playground.object = Entry.container.objects_[0];
-            Test.parsePython("test = 2");
+            Entry.variableContainer.addVariable({
+                "type": "variable", "name": "test", "id": "abcd" , object_ : "7y0y" ,
+                'value' : 2
+
+            });
+
             var variable = Entry.variableContainer.variables_[0];
 
             assert.ok(variable);
@@ -1319,10 +1324,6 @@ describe('EntryPython', function(){
                                        "type":"repeat_basic",
                                        "params":[
                                           {
-                                             "callee":"__pythonRuntime.functions.range",
-                                             "arguments":[
-                                                10
-                                             ],
                                              "type":"number",
                                              "params":[
                                                 10
@@ -1352,10 +1353,6 @@ describe('EntryPython', function(){
                                  "type":"repeat_basic",
                                  "params":[
                                     {
-                                       "callee":"__pythonRuntime.functions.range",
-                                       "arguments":[
-                                          10
-                                       ],
                                        "type":"number",
                                        "params":[
                                           10
@@ -1534,14 +1531,9 @@ describe('EntryPython', function(){
                                                       "declarations":[
                                                          {
                                                             "id":{
-                                                               "name":"__filbertRight1",
                                                                "isCallParam":false
                                                             },
                                                             "init":{
-                                                               "callee":"__pythonRuntime.functions.range",
-                                                               "arguments":[
-                                                                  10
-                                                               ],
                                                                "type":"number",
                                                                "params":[
                                                                   10
@@ -1549,12 +1541,7 @@ describe('EntryPython', function(){
                                                             },
                                                             "type":"set_variable",
                                                             "params":[
-                                                               "__filbertRight1",
                                                                {
-                                                                  "callee":"__pythonRuntime.functions.range",
-                                                                  "arguments":[
-                                                                     10
-                                                                  ],
                                                                   "type":"number",
                                                                   "params":[
                                                                      10
@@ -1565,12 +1552,7 @@ describe('EntryPython', function(){
                                                       ],
                                                       "type":"set_variable",
                                                       "params":[
-                                                         "__filbertRight1",
                                                          {
-                                                            "callee":"__pythonRuntime.functions.range",
-                                                            "arguments":[
-                                                               10
-                                                            ],
                                                             "type":"number",
                                                             "params":[
                                                                10
@@ -1605,10 +1587,6 @@ describe('EntryPython', function(){
                                                 ],
                                                 "params":[
                                                    {
-                                                      "callee":"__pythonRuntime.functions.range",
-                                                      "arguments":[
-                                                         10
-                                                      ],
                                                       "type":"number",
                                                       "params":[
                                                          10
@@ -1653,14 +1631,9 @@ describe('EntryPython', function(){
                                                 "declarations":[
                                                    {
                                                       "id":{
-                                                         "name":"__filbertRight1",
                                                          "isCallParam":false
                                                       },
                                                       "init":{
-                                                         "callee":"__pythonRuntime.functions.range",
-                                                         "arguments":[
-                                                            10
-                                                         ],
                                                          "type":"number",
                                                          "params":[
                                                             10
@@ -1668,12 +1641,7 @@ describe('EntryPython', function(){
                                                       },
                                                       "type":"set_variable",
                                                       "params":[
-                                                         "__filbertRight1",
                                                          {
-                                                            "callee":"__pythonRuntime.functions.range",
-                                                            "arguments":[
-                                                               10
-                                                            ],
                                                             "type":"number",
                                                             "params":[
                                                                10
@@ -1684,12 +1652,7 @@ describe('EntryPython', function(){
                                                 ],
                                                 "type":"set_variable",
                                                 "params":[
-                                                   "__filbertRight1",
                                                    {
-                                                      "callee":"__pythonRuntime.functions.range",
-                                                      "arguments":[
-                                                         10
-                                                      ],
                                                       "type":"number",
                                                       "params":[
                                                          10
@@ -1724,10 +1687,6 @@ describe('EntryPython', function(){
                                           ],
                                           "params":[
                                              {
-                                                "callee":"__pythonRuntime.functions.range",
-                                                "arguments":[
-                                                   10
-                                                ],
                                                 "type":"number",
                                                 "params":[
                                                    10
@@ -1857,17 +1816,12 @@ describe('EntryPython', function(){
 
                     var resultBlock = Test.parsePython("def when_start():\n    test = 22");
 
-                    console.log(JSON.stringify(resultBlock));
-
                     assert.ok(Test.pythonToBlock(
                         "def when_start():\n    test = 22" ,
                         [
                            [
                               {
                                  "type":"when_run_button_click",
-                                 "params":[
-                                    null
-                                 ],
                                  "contents":[
                                     {
                                        "type":"set_variable",
