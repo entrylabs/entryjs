@@ -12927,7 +12927,7 @@ Entry.PyToBlockParser = function(c) {
     return this.Node(b[b.length - 1]);
   };
   c.ForInStatement = function(b) {
-    b.body.body[0] && "expression" in b.body.body[0] && b.body.body[0].expression.arguments.map(this.Node, this);
+    b.body.body[0] && "expression" in b.body.body[0] && this.Node(b.body.body[0].expression);
     return {type:"repeat_basic", params:[], statements:[]};
   };
   c.BreakStatement = function(b) {

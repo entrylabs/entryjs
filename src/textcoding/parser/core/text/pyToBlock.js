@@ -75,6 +75,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
     };
 
     p.Program = function(component) {
+
         var thread = component.body.map(this.Node ,this);
 
         if(thread[0].constructor == Array)
@@ -320,7 +321,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
     p.ForInStatement = function(component) {
         var  expression = component.body.body[0] && 'expression' in component.body.body[0] ?
-                            component.body.body[0].expression.arguments.map(this.Node , this) : null;
+                            this.Node(component.body.body[0].expression) : null;
         var obj =  {
             "type" : "repeat_basic",
             "params": [],
