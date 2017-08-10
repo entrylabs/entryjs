@@ -14195,8 +14195,9 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
     return this.mode;
   };
   c.setMode = function(b, c) {
-    var e = Entry.playground, f = e && e.object;
-    e && !f ? (entrylms.alert("\uc624\ube0c\uc81d\ud2b8\uac00 \uc874\uc7ac\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4. \uc624\ube0c\uc81d\ud2b8\ub97c \ucd94\uac00\ud55c \ud6c4 \uc2dc\ub3c4\ud574\uc8fc\uc138\uc694."), e = !1) : e = !0;
+    var e = Entry.playground;
+    var f = e && e.object;
+    e && Entry.container.getView() && !f ? (entrylms.alert("\uc624\ube0c\uc81d\ud2b8\uac00 \uc874\uc7ac\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4. \uc624\ube0c\uc81d\ud2b8\ub97c \ucd94\uac00\ud55c \ud6c4 \uc2dc\ub3c4\ud574\uc8fc\uc138\uc694."), e = !1) : e = !0;
     if (!e) {
       return !1;
     }
