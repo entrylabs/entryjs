@@ -13,6 +13,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
     this._type ="PyToBlockParser";
     this.dic = blockSyntax["#dic"];
     this.blockSyntax = blockSyntax;
+
+    this._funcParamMap = {};
     this._funcMap = {};
 };
 
@@ -40,11 +42,12 @@ Entry.PyToBlockParser = function(blockSyntax) {
     };
 
     p.Programs = function(astArr) {
-
+        this._funcParamMap = {};
+        this._funcMap = {};
         try {
             var astArrBody = astArr[0].body;
-            var hasVariable = astArrBody && 
-                              astArrBody[0] && 
+            var hasVariable = astArrBody &&
+                              astArrBody[0] &&
                               astArrBody[0].type === 'ExpressionStatement';
 
             if(hasVariable) {
@@ -76,9 +79,9 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
         if(thread[0].constructor == Array)
             return thread[0];
-        else 
+        else
             return thread;
-        
+
     };
 
     p.ExpressionStatement = function(component) {
@@ -93,19 +96,25 @@ Entry.PyToBlockParser = function(blockSyntax) {
         var params = [];
         var obj = this.Node(callee);
 
-        if (typeof obj === "string" && callee.type === "MemberExpression")
+        if (typeof obj === "string" && callee.type === "MemberExpression" && this[obj])
             return this[obj](component);
 
         if (callee.type === "Identifier") { // global function
             this.assert(!(obj.type === "get_variable"), "variable is not function", callee)
             this.assert(!(obj.type === "get_list"), "list is not function", callee)
-            this.assert(typeof obj === "string", "error", callee);
 
-            if (this[obj]) // special block like len
+            if (this._funcMap[obj]) {
+                var funcType = this._funcMap[obj][args.length];
+                obj = {
+                    type: "func_" + funcType
+                }
+            } else if (this[obj]) {// special block like len
                 return this[obj](component);
-            var blockInfo = this.blockSyntax[obj];
-            this.assert(blockInfo && blockInfo.key, "function is not defined", callee);
-            obj = this.Block({}, blockInfo);
+            } else {
+                var blockInfo = this.blockSyntax[obj];
+                this.assert(blockInfo && blockInfo.key, "function is not defined", callee);
+                obj = this.Block({}, blockInfo);
+            }
         }
 
         if (obj.preParams) {
@@ -126,6 +135,11 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
     p.Identifier = function(component) {
         var name = component.name;
+
+        if (this._funcParamMap[name])
+            return {
+                type: "stringParam_" + this._funcParamMap[name]
+            };
 
         var variable = Entry.variableContainer.getVariableByName(name);
         if (variable)
@@ -288,7 +302,6 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
             var consequents = component.consequent ? component.consequent.body.map(this.Node , this) : [];
             var alternates = component.alternate ? component.alternate.body.map(this.Node , this) : [];
-            
             alternate = {
                 type : 'if_else',
                 statements : [ consequents, alternates ],
@@ -393,26 +406,34 @@ Entry.PyToBlockParser = function(blockSyntax) {
     // p.UpdateExpression = function(component) {};
 
     p.FunctionDeclaration = function(component) {
-        var blockName = this.Node(component.id);
-        var blockInfo = this.blockSyntax['def '+blockName];
-        var type = {};
-        var threadArr = [type];
-        threadArr[0].blocks = [];
-        var blocks;
-
+        var funcName = this.Node(component.id);
+        var startBlock = {};
         var blocks = component.body.body[0].argument.callee.object.body.body;
-        var definedBlocks = this.setParams(blocks);
 
-        if(blockInfo){
-            type.type = blockInfo.key;
+        var blockInfo = this.blockSyntax['def '+ funcName];
+        var threadArr;
+        if(blockInfo){ // event block
+            startBlock.type = blockInfo.key;
+            var definedBlocks = this.setParams(blocks);
+
+            threadArr = [startBlock];
+            threadArr[0].blocks = [];
+
+            definedBlocks.unshift(startBlock)
+            return definedBlocks;
+        } else {
+            this.createFunction(component, funcName, blocks);
+            //var functionKey = Object.keys(functions)[0];
+            //var func = functions[functionKey];
+            // generate function
+            // search exist function
+            // read param, register param to this
+            // generate content
+            //
+            // add to map list
+            // different param count different function
+            return [];
         }
-
-        for(var i=0; i < definedBlocks.length; i++) {
-             threadArr[0].blocks.push(definedBlocks[i]);
-             threadArr.push(definedBlocks[i]);
-        }
-
-        return threadArr;
     };
 
     p.FunctionExpression = function(component) {
@@ -452,29 +473,36 @@ Entry.PyToBlockParser = function(blockSyntax) {
      */
 
     p.Arguments = function(blockType, args, defaultParams) {
-        var blockSchema = Entry.block[blockType];
-        var syntax = this.PySyntax(blockSchema, defaultParams);
-        var indexes = syntax.match( /%\d+/g, '');
-        if (!indexes)
-            return []
-        var sortedArgs = defaultParams || new Array();
+        var defParams, sortedArgs, blockSchema;
+        blockSchema = Entry.block[blockType];
+        if ((blockType && blockType.substr(0, 5) === "func_") || !blockSchema) {// function block, etc
+            sortedArgs = args;
+        } else {
+            var syntax = this.PySyntax(blockSchema, defaultParams);
+            var indexes = syntax.match( /%\d+/g, '');
+            if (!indexes)
+                return []
+            sortedArgs = defaultParams || new Array();
 
-        for(var i=0; i < indexes.length; i++) {
-            var idx = parseInt(indexes[i].substring(1))-1;
-            sortedArgs[idx] = args[i];
+            for(var i=0; i < indexes.length; i++) {
+                var idx = parseInt(indexes[i].substring(1))-1;
+                sortedArgs[idx] = args[i];
+            }
+            defParams = (blockSchema.def && blockSchema.def.params) ? blockSchema.def.params : undefined;
         }
-        var defParams = (blockSchema.def && blockSchema.def.params) ? blockSchema.def.params : undefined;
         var results = sortedArgs.map(function(arg, index) {
             if (arg && arg.type) {
-                var paramSchema = blockSchema.params[index];
+                var paramSchema = blockSchema ? blockSchema.params[index] : null;
                 var param = this.Node(
                     arg,
                     (arg.type === "Literal") ? paramSchema : undefined,
                     (arg.type === "Literal" && defParams) ? defParams[index] : undefined
                 );
 
-                if (paramSchema.type !== "Block" && param && param.params) // for list and variable dropdown
-                param = param.params[0];
+                if (!paramSchema)
+                    param = param;
+                else if (paramSchema.type !== "Block" && param && param.params) // for list and variable dropdown
+                    param = param.params[0];
                 else if (paramSchema.type === "Block" && paramSchema.isListIndex)
                     param = this.ListIndex(param);
 
@@ -608,14 +636,13 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 }
             } else if(db.constructor == Array && db[0].constructor == Object){
                 definedBlocks[i] = db[0];
-            } 
+            }
         }
 
         return definedBlocks;
     }
 
-   
-    p.getVariables = function(program) {        
+    p.getVariables = function(program) {
         // var arr = new Array(arr.length);
         // return arr;
         var nodes = program.body;
@@ -645,7 +672,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 existVar.value_ = right.value;
                 return;
             }
-            
+
             Entry.variableContainer.addVariable({
                 "type": "variable", "name": name , "value" : right.value , visible : true , object: object
             });
@@ -728,6 +755,61 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
         this.Block(result, blockInfo);
         return result;
+    };
+
+    p.createFunction = function(component, funcName, blocks) {
+        var params = component.arguments ? component.arguments.map(this.Node, this) : [];
+        //var functions = Entry.variableContainer.functions_;
+
+
+        this.assert(!this.blockSyntax[funcName], "function name duplicate")
+        var funcContent = [];
+
+        var funcParamPointer = {
+            type: "function_field_label",
+            params: [
+                funcName
+            ]
+        }
+        var func = {
+            id: Entry.generateHash(),
+            content: [[{
+                type: "function_create",
+                params: [
+                    funcParamPointer
+                ]
+            }]]
+        };
+
+        if (!this._funcMap[funcName])
+            this._funcMap[funcName] = {};
+        this._funcMap[funcName][params.length] = func.id;
+
+        while (params.length) {
+            var param = params.shift();
+            var paramId = Entry.generateHash();
+            var newFuncParam = {
+                type: "function_field_string",
+                params: [
+                    {
+                        type: "stringParam_" + paramId
+                    }
+                ]
+            }
+            this._funcParamMap[param] = paramId;
+            funcParamPointer.params.push(newFuncParam);
+            funcParamPointer = newFuncParam;
+        }
+
+
+        var definedBlocks = this.setParams(blocks);
+        this._funcParamMap = {};
+
+        func.content[0] = func.content[0].concat(definedBlocks);
+
+        func.content = JSON.stringify(func.content);
+
+        Entry.variableContainer.setFunctions([func]);
     };
 
     /**
