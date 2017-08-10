@@ -623,21 +623,33 @@ Entry.PyToBlockParser = function(blockSyntax) {
         nodes.map(function(n){
             n = n.expression;
             var left = n.left;
+            var name;
+            var object = false;
+
+            if('name' in n.left) {
+                name = left.name;
+            } else  {
+                object = Entry.getMainWS().data.selectedBoard.data.code.object;
+                name = left.property.name;
+                object = object.id;
+            }
+
             var right = n.right;
             var id = Entry.generateHash();            
-            
+            var existVar = this.variableExist(name);
+
             if (n.operator != '=')
                 return;
-
-            var existVar = this.variableExist(left.name);
+            
             if(existVar) {
                 existVar.value_ = right.value;
                 return;
             }
             
             Entry.variableContainer.addVariable({
-                "type": "variable", "name": left.name , "value" : right.value , visible : true
+                "type": "variable", "name": name , "value" : right.value , visible : true , object: object
             });
+
         } , this);
 
 
@@ -646,11 +658,12 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
     p.variableExist = function(name){
         var variables_ = Entry.variableContainer.variables_;
+        var result;
 
         variables_ = variables_.map(function(v){
             return v.name_;
         });
-
+   
         if(variables_.indexOf(name)  > -1)
             return Entry.variableContainer.variables_[variables_.indexOf(name)];
         return false

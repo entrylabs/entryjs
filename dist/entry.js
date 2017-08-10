@@ -13075,9 +13075,12 @@ Entry.PyToBlockParser = function(c) {
   c.getVariables = function(b) {
     b.body.map(function(b) {
       b = b.expression;
-      var c = b.left, e = b.right;
+      var c = b.left, e = !1;
+      "name" in b.left ? c = c.name : (e = Entry.getMainWS().data.selectedBoard.data.code.object, c = c.property.name, e = e.id);
+      var g = b.right;
       Entry.generateHash();
-      "=" == b.operator && ((b = this.variableExist(c.name)) ? b.value_ = e.value : Entry.variableContainer.addVariable({type:"variable", name:c.name, value:e.value, visible:!0}));
+      var h = this.variableExist(c);
+      "=" == b.operator && (h ? h.value_ = g.value : Entry.variableContainer.addVariable({type:"variable", name:c, value:g.value, visible:!0, object:e}));
     }, this);
     return [];
   };
