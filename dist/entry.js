@@ -17887,23 +17887,31 @@ Entry.PyToBlockParser = function(c) {
     return d;
   };
   c.createFunction = function(b, c, e) {
-    var d = b.arguments ? b.arguments.map(this.Node, this) : [];
+    b = b.arguments ? b.arguments.map(this.Node, this) : [];
+    var d = Entry.variableContainer.functions_;
     this.assert(!this.blockSyntax[c], "function name duplicate");
-    var g = {type:"function_field_label", params:[c]};
-    b = {id:"dxik", content:[[{type:"function_create", params:[g]}]]};
+    var g = Entry.generateHash(), h;
+    for (h in d) {
+      if (d = Entry.block["func_" + h], d.params.length === b.length + 1 && d.template.trim().split(" ")[0].trim() === c) {
+        g = h;
+        break;
+      }
+    }
+    h = {type:"function_field_label", params:[c]};
+    g = {id:g, content:[[{type:"function_create", params:[h]}]]};
     this._funcMap[c] || (this._funcMap[c] = {});
-    for (this._funcMap[c][d.length] = b.id;d.length;) {
-      c = d.shift();
-      var h = Entry.generateHash(), k = {type:"function_field_string", params:[{type:"stringParam_" + h}]};
-      this._funcParamMap[c] = h;
-      g.params.push(k);
-      g = k;
+    for (this._funcMap[c][b.length] = g.id;b.length;) {
+      c = b.shift();
+      var d = Entry.generateHash(), k = {type:"function_field_string", params:[{type:"stringParam_" + d}]};
+      this._funcParamMap[c] = d;
+      h.params.push(k);
+      h = k;
     }
     e = this.setParams(e);
     this._funcParamMap = {};
-    b.content[0] = b.content[0].concat(e);
-    b.content = JSON.stringify(b.content);
-    Entry.variableContainer.setFunctions([b]);
+    g.content[0] = g.content[0].concat(e);
+    g.content = JSON.stringify(g.content);
+    Entry.variableContainer.setFunctions([g]);
   };
 })(Entry.PyToBlockParser.prototype);
 Entry.Console = function() {
