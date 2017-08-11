@@ -1140,12 +1140,7 @@ describe('EntryPython', function(){
                           }
                        ]
                     ],
-                    "type":"repeat_inf",
-                    "params":[
-                       {
-                          "type":"True"
-                       }
-                    ]
+                    "type":"repeat_inf"
                 }]]
             ));
             Entry.clearProject();
