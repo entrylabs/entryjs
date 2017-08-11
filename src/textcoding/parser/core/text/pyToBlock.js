@@ -45,6 +45,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
         this._funcParamMap = {};
         this._funcMap = {};
         try {
+            var result;
             var astArrBody = astArr[0].body;
             var hasVariable = astArrBody &&
                               astArrBody[0] &&
@@ -56,15 +57,14 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 astArr.splice(0,1);
                 var contentArr = this.processPrograms(astArr);
 
-                return variableArr.concat(contentArr);
+                result = variableArr.concat(contentArr);
             }  else {
 
-                return astArr.map(this.Node , this).filter(function(t) {
-                    return t.length > 0
-                });
+                result = astArr.map(this.Node, this)
             }
-
-
+            return result.filter(function(t) {
+                return t.length > 0
+            });
         } catch(error) {
             var err = {};
             err.title = error.title;
@@ -120,7 +120,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 this.assert(blockInfo && blockInfo.key, "function is not defined", callee);
                 obj = this.Block({}, blockInfo);
             }
-        } 
+        }
 
         if (obj.preParams) {
             component.arguments = obj.preParams.concat(component.arguments);
