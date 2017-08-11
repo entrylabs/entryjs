@@ -12809,7 +12809,9 @@ Entry.PyToBlockParser = function(c) {
         var e = this.processPrograms(b);
         return d.concat(e);
       }
-      return b.map(this.Node, this);
+      return b.map(this.Node, this).filter(function(b) {
+        return 0 < b.length;
+      });
     } catch (g) {
       throw b = {}, b.title = g.title, b.message = g.message, b.line = g.line, b;
     }
@@ -13136,7 +13138,7 @@ Entry.PyToBlockParser = function(c) {
     var e = b.arguments ? b.arguments.map(this.Node, this) : [];
     this.assert(!this.blockSyntax[c], "function name duplicate");
     var g = {type:"function_field_label", params:[c]};
-    b = {id:Entry.generateHash(), content:[[{type:"function_create", params:[g]}]]};
+    b = {id:"dxik", content:[[{type:"function_create", params:[g]}]]};
     this._funcMap[c] || (this._funcMap[c] = {});
     for (this._funcMap[c][e.length] = b.id;e.length;) {
       c = e.shift();

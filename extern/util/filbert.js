@@ -2249,11 +2249,7 @@
       expect(_bracketR);
       return parseSubscripts(finishNode(node, "MemberExpression"), noCalls);
     } else if (!noCalls && eat(_parenL)) {
-      if (scope.isUserFunction(base.name)) {
-        // Unpack parameters into JavaScript-friendly parameters, further processed at runtime
-        var createParamsCall = nc.createNodeRuntimeCall(node, 'utils', 'createParamsObj', parseParamsList());
-        node.arguments = [createParamsCall];
-      } else node.arguments = parseExprList(_parenR, false);
+      node.arguments = parseExprList(_parenR, false);
       if (scope.isNewObj(base.name)) finishNode(node, "NewExpression");
       else finishNode(node, "CallExpression");
       if (pythonRuntime.functions[base.name]) {
