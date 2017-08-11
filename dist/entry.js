@@ -12803,13 +12803,13 @@ Entry.PyToBlockParser = function(c) {
     this._funcMap = {};
     try {
       var c = b[0].body;
-      if (c && c[0] && "ExpressionStatement" === c[0].type) {
+      if (c && c[0] && "ExpressionStatement" === c[0].type && "AssignmentExpression" === c[0].expression.type) {
         var d = this.getVariables(b[0]);
         b.splice(0, 1);
         var e = this.processPrograms(b);
         return d.concat(e);
       }
-      return b.body.map(this.Node, this);
+      return b.map(this.Node, this);
     } catch (g) {
       throw b = {}, b.title = g.title, b.message = g.message, b.line = g.line, b;
     }

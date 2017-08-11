@@ -48,7 +48,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
             var astArrBody = astArr[0].body;
             var hasVariable = astArrBody &&
                               astArrBody[0] &&
-                              astArrBody[0].type === 'ExpressionStatement';
+                              astArrBody[0].type === 'ExpressionStatement' &&
+                              astArrBody[0].expression.type === "AssignmentExpression";
 
             if(hasVariable) {
                 var variableArr = this.getVariables(astArr[0]);
@@ -57,7 +58,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
                 return variableArr.concat(contentArr);
             }  else {
-                return astArr.body.map(this.Node , this);
+                return astArr.map(this.Node , this);
             }
 
 
