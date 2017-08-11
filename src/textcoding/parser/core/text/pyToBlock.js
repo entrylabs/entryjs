@@ -120,7 +120,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 this.assert(blockInfo && blockInfo.key, "function is not defined", callee);
                 obj = this.Block({}, blockInfo);
             }
-        } 
+        }
 
         if (obj.preParams) {
             component.arguments = obj.preParams.concat(component.arguments);
@@ -128,11 +128,13 @@ Entry.PyToBlockParser = function(blockSyntax) {
         }
 
         if(component.arguments) {
+        
             obj.params = this.Arguments(
                 obj.type,
                 component.arguments,
                 obj.params
             )
+
         }
 
         return obj;
@@ -544,6 +546,20 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     var sound = Entry.playground.object.getSound(value);
                 return sound ? sound.id : undefined;
             case 'clone':
+                    var object;
+
+                    if(value == 'self') {
+                        object = value;
+                    } else {
+                        var objects = Entry.container.objects_.filter(function(obj){
+                            return obj.name === value;
+                        });
+                        
+                        object = objects[0].id;
+                    } 
+
+                return object;
+
             case 'objectSequence':
         }
     };
