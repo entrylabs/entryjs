@@ -12802,18 +12802,20 @@ Entry.PyToBlockParser = function(c) {
     this._funcParamMap = {};
     this._funcMap = {};
     try {
-      var c = b[0].body;
-      if (c && c[0] && "ExpressionStatement" === c[0].type && "AssignmentExpression" === c[0].expression.type) {
-        var d = this.getVariables(b[0]);
+      var c, d = b[0].body;
+      if (d && d[0] && "ExpressionStatement" === d[0].type && "AssignmentExpression" === d[0].expression.type) {
+        var e = this.getVariables(b[0]);
         b.splice(0, 1);
-        var e = this.processPrograms(b);
-        return d.concat(e);
+        var g = this.processPrograms(b);
+        c = e.concat(g);
+      } else {
+        c = b.map(this.Node, this);
       }
-      return b.map(this.Node, this).filter(function(b) {
+      return c.filter(function(b) {
         return 0 < b.length;
       });
-    } catch (g) {
-      throw b = {}, b.title = g.title, b.message = g.message, b.line = g.line, b;
+    } catch (h) {
+      throw b = {}, b.title = h.title, b.message = h.message, b.line = h.line, b;
     }
   };
   c.processPrograms = function(b) {
@@ -13139,31 +13141,32 @@ Entry.PyToBlockParser = function(c) {
     return e;
   };
   c.createFunction = function(b, c, d) {
-    b = b.arguments ? b.arguments.map(this.Node, this) : [];
-    var e = Entry.variableContainer.functions_;
+    var e = b.arguments ? b.arguments.map(this.Node, this) : [];
+    b = Entry.variableContainer.functions_;
     this.assert(!this.blockSyntax[c], "function name duplicate");
     var g = Entry.generateHash(), h;
-    for (h in e) {
-      if (e = Entry.block["func_" + h], e.params.length === b.length + 1 && e.template.trim().split(" ")[0].trim() === c) {
+    for (h in b) {
+      var k = Entry.block["func_" + h];
+      if (k.params.length === e.length + 1 && k.template.trim().split(" ")[0].trim() === c) {
         g = h;
         break;
       }
     }
-    h = {type:"function_field_label", params:[c]};
-    g = {id:g, content:[[{type:"function_create", params:[h]}]]};
+    k = {type:"function_field_label", params:[c]};
+    h = {id:g, content:[[{type:"function_create", params:[k]}]]};
     this._funcMap[c] || (this._funcMap[c] = {});
-    for (this._funcMap[c][b.length] = g.id;b.length;) {
-      c = b.shift();
-      var e = Entry.generateHash(), k = {type:"function_field_string", params:[{type:"stringParam_" + e}]};
-      this._funcParamMap[c] = e;
-      h.params.push(k);
-      h = k;
+    for (this._funcMap[c][e.length] = h.id;e.length;) {
+      c = e.shift();
+      var l = Entry.generateHash(), m = {type:"function_field_string", params:[{type:"stringParam_" + l}]};
+      this._funcParamMap[c] = l;
+      k.params.push(m);
+      k = m;
     }
     d = this.setParams(d);
     this._funcParamMap = {};
-    g.content[0] = g.content[0].concat(d);
-    g.content = JSON.stringify(g.content);
-    Entry.variableContainer.setFunctions([g]);
+    h.content[0] = h.content[0].concat(d);
+    h.content = JSON.stringify(h.content);
+    b[g] ? (d = b[g], d.content = new Entry.Code(h.content), d.generateBlock(!0)) : Entry.variableContainer.setFunctions([h]);
   };
 })(Entry.PyToBlockParser.prototype);
 Entry.Parser = function(c, b, f, d) {
@@ -15350,8 +15353,8 @@ Entry.Model = function(c, b) {
 (function(c) {
   function b(b, f, d) {
     c[b] = Entry.cloneSimpleObject(c[f]);
-    d && d instanceof Array && d.forEach(function(f) {
-      c[b][f[0]] = f[1];
+    d && d instanceof Array && d.forEach(function(d) {
+      c[b][d[0]] = d[1];
     });
     return c[b];
   }
@@ -15378,10 +15381,10 @@ Entry.Model = function(c, b) {
     }
   };
   d.followCmd = !0;
-  d.restrict = function(b, c, f, d) {
-    d = d.requestNextData().content;
-    d[0] === Entry.STATIC.COMMAND_TYPES.insertBlockFromBlockMenu && Entry.Command.editor.board.scrollToPointer(d[2][1]);
-    return new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:c}], {dimmed:!0, restrict:!0, callBack:f});
+  d.restrict = function(b, c, d, f) {
+    f = f.requestNextData().content;
+    f[0] === Entry.STATIC.COMMAND_TYPES.insertBlockFromBlockMenu && Entry.Command.editor.board.scrollToPointer(f[2][1]);
+    return new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:c}], {dimmed:!0, restrict:!0, callBack:d});
   };
   c[f.addThreadFromBlockMenu] = d;
   c[f.destroyThread] = {do:function(b) {

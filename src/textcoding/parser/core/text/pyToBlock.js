@@ -45,6 +45,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
         this._funcParamMap = {};
         this._funcMap = {};
         try {
+            var result;
             var astArrBody = astArr[0].body;
             var hasVariable = astArrBody &&
                               astArrBody[0] &&
@@ -56,15 +57,14 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 astArr.splice(0,1);
                 var contentArr = this.processPrograms(astArr);
 
-                return variableArr.concat(contentArr);
+                result = variableArr.concat(contentArr);
             }  else {
 
-                return astArr.map(this.Node , this).filter(function(t) {
-                    return t.length > 0
-                });
+                result = astArr.map(this.Node, this)
             }
-
-
+            return result.filter(function(t) {
+                return t.length > 0
+            });
         } catch(error) {
             var err = {};
             err.title = error.title;
@@ -430,15 +430,6 @@ Entry.PyToBlockParser = function(blockSyntax) {
             return definedBlocks;
         } else {
             this.createFunction(component, funcName, blocks);
-            //var functionKey = Object.keys(functions)[0];
-            //var func = functions[functionKey];
-            // generate function
-            // search exist function
-            // read param, register param to this
-            // generate content
-            //
-            // add to map list
-            // different param count different function
             return [];
         }
     };
@@ -835,8 +826,13 @@ Entry.PyToBlockParser = function(blockSyntax) {
         func.content[0] = func.content[0].concat(definedBlocks);
 
         func.content = JSON.stringify(func.content);
-
-        Entry.variableContainer.setFunctions([func]);
+        if (functions[funcId]) {
+            var targetFunc = functions[funcId];
+            targetFunc.content = new Entry.Code(func.content);
+            targetFunc.generateBlock(true);
+        } else {
+            Entry.variableContainer.setFunctions([func]);
+        }
     };
 
     /**
