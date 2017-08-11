@@ -764,11 +764,18 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
     p.createFunction = function(component, funcName, blocks) {
         var params = component.arguments ? component.arguments.map(this.Node, this) : [];
-        //var functions = Entry.variableContainer.functions_;
-
+        var functions = Entry.variableContainer.functions_;
 
         this.assert(!this.blockSyntax[funcName], "function name duplicate")
-        var funcContent = [];
+        var funcId = Entry.generateHash();
+        for (var key in functions) {
+            var funcSchema = Entry.block["func_" + key];
+            if ((funcSchema.params.length === params.length + 1) &&
+                (funcSchema.template.trim().split(" ")[0].trim() === funcName)) {
+                funcId = key;
+                break;
+            }
+        }
 
         var funcParamPointer = {
             type: "function_field_label",
@@ -777,8 +784,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
             ]
         }
         var func = {
-            //id: Entry.generateHash(),
-            id: "dxik",
+            id: funcId,
             content: [[{
                 type: "function_create",
                 params: [
@@ -791,7 +797,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
             this._funcMap[funcName] = {};
         this._funcMap[funcName][params.length] = func.id;
 
-        while (params.length) {
+        while (params.length) { // generate param
             var param = params.shift();
             var paramId = Entry.generateHash();
             var newFuncParam = {
@@ -807,8 +813,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
             funcParamPointer = newFuncParam;
         }
 
-
-        var definedBlocks = this.setParams(blocks);
+        var definedBlocks = this.setParams(blocks); // function content
         this._funcParamMap = {};
 
         func.content[0] = func.content[0].concat(definedBlocks);
