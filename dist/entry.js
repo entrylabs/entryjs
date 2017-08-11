@@ -17889,31 +17889,32 @@ Entry.PyToBlockParser = function(c) {
     return d;
   };
   c.createFunction = function(b, c, e) {
-    b = b.arguments ? b.arguments.map(this.Node, this) : [];
-    var d = Entry.variableContainer.functions_;
+    var d = b.arguments ? b.arguments.map(this.Node, this) : [];
+    b = Entry.variableContainer.functions_;
     this.assert(!this.blockSyntax[c], "function name duplicate");
     var g = Entry.generateHash(), h;
-    for (h in d) {
-      if (d = Entry.block["func_" + h], d.params.length === b.length + 1 && d.template.trim().split(" ")[0].trim() === c) {
+    for (h in b) {
+      var k = Entry.block["func_" + h];
+      if (k.params.length === d.length + 1 && k.template.trim().split(" ")[0].trim() === c) {
         g = h;
         break;
       }
     }
-    h = {type:"function_field_label", params:[c]};
-    g = {id:g, content:[[{type:"function_create", params:[h]}]]};
+    k = {type:"function_field_label", params:[c]};
+    h = {id:g, content:[[{type:"function_create", params:[k]}]]};
     this._funcMap[c] || (this._funcMap[c] = {});
-    for (this._funcMap[c][b.length] = g.id;b.length;) {
-      c = b.shift();
-      var d = Entry.generateHash(), k = {type:"function_field_string", params:[{type:"stringParam_" + d}]};
-      this._funcParamMap[c] = d;
-      h.params.push(k);
-      h = k;
+    for (this._funcMap[c][d.length] = h.id;d.length;) {
+      c = d.shift();
+      var l = Entry.generateHash(), m = {type:"function_field_string", params:[{type:"stringParam_" + l}]};
+      this._funcParamMap[c] = l;
+      k.params.push(m);
+      k = m;
     }
     e = this.setParams(e);
     this._funcParamMap = {};
-    g.content[0] = g.content[0].concat(e);
-    g.content = JSON.stringify(g.content);
-    Entry.variableContainer.setFunctions([g]);
+    h.content[0] = h.content[0].concat(e);
+    h.content = JSON.stringify(h.content);
+    b[g] ? (e = b[g], e.content = new Entry.Code(h.content), e.generateBlock(!0)) : Entry.variableContainer.setFunctions([h]);
   };
 })(Entry.PyToBlockParser.prototype);
 Entry.Console = function() {
