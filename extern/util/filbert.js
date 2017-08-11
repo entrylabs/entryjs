@@ -2105,23 +2105,6 @@
       node.right = parseMaybeTuple(noIn);
       checkLVal(left);
 
-      if (node.operator === '+=' || node.operator === '*=') {
-        var right = nc.createNodeSpan(node.right, node.right, "CallExpression");
-        right.callee = nc.createNodeOpsCallee(right, node.operator === '+=' ? "add" : "multiply");
-        right.arguments = [left, node.right];
-        node.right = right;
-        node.operator = '=';
-      }
-
-      if (node.operator === '-=') {
-        var right = nc.createNodeSpan(node.right, node.right, "CallExpression");
-        right.callee = nc.createNodeOpsCallee(right, "minus");
-        right.arguments = [left, node.right];
-        console.log(node.right, right);
-        node.right = right;
-        node.operator = '=';
-      }
-
       if (left.type === "Identifier" && !scope.exists(left.name)) {
         if (!node.operator || node.length > 1) unexpected();
         scope.addVar(left.name);

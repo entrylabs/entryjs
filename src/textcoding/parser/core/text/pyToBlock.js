@@ -128,7 +128,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
         }
 
         if(component.arguments) {
-        
+
             obj.params = this.Arguments(
                 obj.type,
                 component.arguments,
@@ -179,13 +179,24 @@ Entry.PyToBlockParser = function(blockSyntax) {
     };
 
     p.AssignmentExpression = function(component) {
-        return {
-                type : 'set_variable',
-                params : [
-                    Entry.variableContainer.getVariableByName(component.left.name).id_,
-                    this.Node(component.right)
-                ]
-            }
+        switch (component.operator) {
+            case "+=":
+                return {
+                    type : 'change_variable',
+                    params : [
+                        Entry.variableContainer.getVariableByName(component.left.name).id_,
+                        this.Node(component.right)
+                    ]
+                }
+            case "=":
+                return {
+                    type : 'set_variable',
+                    params : [
+                        Entry.variableContainer.getVariableByName(component.left.name).id_,
+                        this.Node(component.right)
+                    ]
+                }
+        }
     };
 
     p.Literal = function(component, paramSchema, paramDef) {
@@ -545,9 +556,9 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         var objects = Entry.container.objects_.filter(function(obj){
                             return obj.name === value;
                         });
-                        
+
                         object = objects[0].id;
-                    } 
+                    }
 
                 return object;
 

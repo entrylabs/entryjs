@@ -785,7 +785,7 @@ describe('EntryPython', function(){
                             "abcd",
                             {
                                 "type": 'number',
-                                "params" : [ 10 ]
+                                "params" : [ "10" ]
                             }
                         ]
                     }]]
