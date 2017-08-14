@@ -103,7 +103,7 @@ Entry.EntryObject = function(model) {
                         this.onerror = null;
                     }
                 }
-                
+
                 image.src = getImageSrc(picture);
             })(this.pictures[i]);
 
@@ -1318,22 +1318,22 @@ Entry.EntryObject = function(model) {
      * convert this object's data to JSON.
      * @return {JSON}
      */
-    p.toJSON = function() {
+    p.toJSON = function(isClone) {
         var json = {};
-        json.id = this.id;
+        json.id = isClone ? Entry.generateHash() : this.id;
         json.name = this.name;
         if (this.objectType == 'textBox')
             json.text = this.text;
         json.script = this.getScriptText();
-        if (this.objectType == 'sprite')
-            json.selectedPictureId = this.selectedPicture.id;
         json.objectType = this.objectType;
         json.rotateMethod = this.getRotateMethod();
         json.scene = this.scene.id;
         json.sprite = {
-            pictures: Entry.getPicturesJSON(this.pictures),
-            sounds: Entry.getSoundsJSON(this.sounds)
+            pictures: Entry.getPicturesJSON(this.pictures, isClone),
+            sounds: Entry.getSoundsJSON(this.sounds, isClone)
         };
+        if (this.objectType == 'sprite')
+            json.selectedPictureId = json.sprite.pictures[this.pictures.indexOf(this.selectedPicture)].id;
         json.lock = this.lock;
         json.entity = this.entity.toJSON();
         return json;

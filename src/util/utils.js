@@ -901,13 +901,13 @@ Entry.toDegrees = function(radians){
     return radians * 180 / Math.PI;
 };
 
-Entry.getPicturesJSON = function (pictures) {
+Entry.getPicturesJSON = function (pictures, isClone) {
     var json = [];
     for (var i=0, len=pictures.length; i<len; i++) {
         var p = pictures[i];
         var o = {};
         o._id = p._id;
-        o.id = p.id;
+        o.id = isClone ? Entry.generateHash() : p.id;
         o.dimension = p.dimension;
         o.filename = p.filename;
         o.fileurl = p.fileurl;
@@ -918,7 +918,7 @@ Entry.getPicturesJSON = function (pictures) {
     return json;
 };
 
-Entry.getSoundsJSON = function (sounds) {
+Entry.getSoundsJSON = function (sounds, isClone) {
     var json = [];
     for (var i=0, len=sounds.length; i<len; i++) {
         var s = sounds[i];
@@ -926,7 +926,7 @@ Entry.getSoundsJSON = function (sounds) {
         o._id = s._id;
         o.duration = s.duration;
         o.ext = s.ext;
-        o.id = s.id;
+        o.id = isClone ? Entry.generateHash() : s.id;
         o.filename = s.filename;
         o.fileurl = s.fileurl;
         o.name = s.name;
