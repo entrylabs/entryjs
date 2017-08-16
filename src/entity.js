@@ -583,6 +583,10 @@ Entry.EntityObject.prototype.syncFont = function() {
                 this.setHeight(this.fontSize * 1.1);
                 break;
             }
+            case "Nanum Myeongjo": {
+                this.setHeight(this.fontSize * 1.1);
+                break;
+            }
             default: {
                 this.setHeight(this.fontSize);
                 break;
