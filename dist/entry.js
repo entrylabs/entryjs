@@ -6345,7 +6345,7 @@ Entry.Engine = function() {
     }
   };
   c.toggleStop = function() {
-    var b = Entry.container, c = Entry.variableContainer;
+    var b = Entry.container, f = Entry.variableContainer;
     Entry.Utils.blur();
     Entry.addActivity("stop");
     b.mapEntity(function(b) {
@@ -6355,10 +6355,10 @@ Entry.Engine = function() {
       b.dialog && b.dialog.remove();
       b.brush && b.removeBrush();
     });
-    c.mapVariable(function(b) {
+    f.mapVariable(function(b) {
       b.loadSnapshot();
     });
-    c.mapList(function(b) {
+    f.mapList(function(b) {
       b.loadSnapshot();
     });
     this.stopProjectTimer();
@@ -6387,23 +6387,23 @@ Entry.Engine = function() {
   c.fireEvent = function(b) {
     "run" === this.state && Entry.container.mapEntityIncludeCloneOnScene(this.raiseEvent, b);
   };
-  c.raiseEvent = function(b, c) {
-    b.parent.script.raiseEvent(c, b);
+  c.raiseEvent = function(b, f) {
+    b.parent.script.raiseEvent(f, b);
   };
-  c.fireEventOnEntity = function(b, c) {
-    "run" == this.state && Entry.container.mapEntityIncludeCloneOnScene(this.raiseEventOnEntity, [c, b]);
+  c.fireEventOnEntity = function(b, f) {
+    "run" == this.state && Entry.container.mapEntityIncludeCloneOnScene(this.raiseEventOnEntity, [f, b]);
   };
-  c.raiseEventOnEntity = function(b, c) {
-    b === c[0] && b.parent.script.raiseEvent(c[1], b);
+  c.raiseEventOnEntity = function(b, f) {
+    b === f[0] && b.parent.script.raiseEvent(f[1], b);
   };
-  c.captureKeyEvent = function(b, c) {
-    var d = b.keyCode, e = Entry.type;
-    if (!Entry.Utils.isInInput(b) || c) {
-      b.ctrlKey && "workspace" == e ? 83 == d ? (b.preventDefault(), Entry.dispatchEvent("saveWorkspace")) : 82 == d ? (b.preventDefault(), Entry.engine.run()) : 90 == d && (b.preventDefault(), Entry.dispatchEvent(b.shiftKey ? "redo" : "undo")) : Entry.engine.isState("run") && Entry.container.mapEntityIncludeCloneOnScene(Entry.engine.raiseKeyEvent, ["keyPress", d]), Entry.engine.isState("stop") && "workspace" === e && 37 <= d && 40 >= d && Entry.stage.moveSprite(b);
+  c.captureKeyEvent = function(b, f) {
+    var c = b.keyCode, e = Entry.type;
+    if (!Entry.Utils.isInInput(b) || f) {
+      b.ctrlKey && "workspace" == e ? 83 == c ? (b.preventDefault(), Entry.dispatchEvent("saveWorkspace")) : 82 == c ? (b.preventDefault(), Entry.engine.run()) : 90 == c && (b.preventDefault(), Entry.dispatchEvent(b.shiftKey ? "redo" : "undo")) : Entry.engine.isState("run") && Entry.container.mapEntityIncludeCloneOnScene(Entry.engine.raiseKeyEvent, ["keyPress", c]), Entry.engine.isState("stop") && "workspace" === e && 37 <= c && 40 >= c && Entry.stage.moveSprite(b);
     }
   };
-  c.raiseKeyEvent = function(b, c) {
-    return b.parent.script.raiseEvent(c[0], b, String(c[1]));
+  c.raiseKeyEvent = function(b, f) {
+    return b.parent.script.raiseEvent(f[0], b, String(f[1]));
   };
   c.updateMouseView = function() {
     var b = Entry.stage.mouseCoordinate;
@@ -6428,13 +6428,13 @@ Entry.Engine = function() {
   c.showProjectTimer = function() {
     Entry.engine.projectTimer && this.projectTimer.setVisible(!0);
   };
-  c.hideProjectTimer = function(b, c) {
-    var d = this.projectTimer;
-    if (d && d.isVisible() && !this.isState("run")) {
+  c.hideProjectTimer = function(b, f) {
+    var c = this.projectTimer;
+    if (c && c.isVisible() && !this.isState("run")) {
       for (var e = Entry.container.getAllObjects(), g = ["get_project_timer_value", "reset_project_timer", "set_visible_project_timer", "choose_project_timer_action"], h = 0, k = e.length;h < k;h++) {
         for (var l = e[h].script, m = 0;m < g.length;m++) {
           var n = l.getBlockList(!1, g[m]);
-          if (c) {
+          if (f) {
             var q = n.indexOf(b);
             -1 < q && n.splice(q, 1);
           }
@@ -6443,7 +6443,7 @@ Entry.Engine = function() {
           }
         }
       }
-      d.setVisible(!1);
+      c.setVisible(!1);
     }
   };
   c.clearTimer = function() {
@@ -6463,20 +6463,20 @@ Entry.Engine = function() {
   c.resetTimer = function() {
     var b = this.projectTimer;
     if (b.isInit) {
-      var c = b.isPaused;
+      var f = b.isPaused;
       delete b.pauseStart;
       this.updateProjectTimer(0);
       b.pausedTime = 0;
-      if (b.isPaused = c) {
+      if (b.isPaused = f) {
         clearInterval(b.tick), b.isInit = !1, delete b.start;
       }
     }
   };
   c.updateProjectTimer = function(b) {
-    var c = Entry.engine, d = c.projectTimer;
-    if (d) {
+    var f = Entry.engine, c = f.projectTimer;
+    if (c) {
       var e = (new Date).getTime();
-      "undefined" == typeof b ? d.isPaused || c.isState("pause") || d.setValue((e - (d.start || e) - d.pausedTime) / 1E3) : (d.setValue(b), d.pausedTime = 0, d.start = e);
+      "undefined" == typeof b ? c.isPaused || f.isState("pause") || c.setValue((e - (c.start || e) - c.pausedTime) / 1E3) : (c.setValue(b), c.pausedTime = 0, c.start = e);
     }
   };
   c.raiseMessage = function(b) {
@@ -12864,7 +12864,31 @@ Entry.PyToBlockParser = function(c) {
     return b.init && b.init.arguments ? b.init.arguments.map(this.Node, this) : [];
   };
   c.AssignmentExpression = function(b) {
-    return {type:"set_variable", params:[Entry.variableContainer.getVariableByName(b.left.name).id_, this.Node(b.right)]};
+    var c = {params:[]}, d;
+    switch(b.left.type) {
+      case "MemberExpression":
+        c.type = "change_value_list_index";
+        d = Entry.variableContainer.getListByName(b.left.object.name);
+        this.assert(d, "list not exist", b.left);
+        c.params.push(d.id_);
+        c.params.push(this.ListIndex(this.Node(b.left.property.arguments[1])));
+        break;
+      case "Identifier":
+        c.type = "set_variable";
+        d = Entry.variableContainer.getVariableByName(b.left.name);
+        this.assert(d, "variable not exist", b.left);
+        c.params.push(d.id_);
+        break;
+      default:
+        this.assert(!1, "left hand must be list or variable", b.left);
+    }
+    d = this.Node(b.right);
+    switch(b.operator) {
+      case "+=":
+        c.type = "change_variable";
+    }
+    c.params.push(d);
+    return c;
   };
   c.Literal = function(b, c, d) {
     var e = b.value;
@@ -13074,7 +13098,7 @@ Entry.PyToBlockParser = function(c) {
     return b;
   };
   c.ListIndex = function(b) {
-    this.isParamPrimitive(b) ? b.params = [b.params[0] + 1] : b = "calc_basic" === b.type && "MINUS" === b.params[1] && this.isParamPrimitive(b.params[2]) && "1" === b.params[2].params[0] + "" ? b.params[0] : {type:"calc_basic", params:[b, "PLUS", {type:"text", params:[1]}]};
+    this.isParamPrimitive(b) ? b.params = [Number(b.params[0]) + 1] : b = "calc_basic" === b.type && "MINUS" === b.params[1] && this.isParamPrimitive(b.params[2]) && "1" === b.params[2].params[0] + "" ? b.params[0] : {type:"calc_basic", params:[b, "PLUS", {type:"text", params:[1]}]};
     return b;
   };
   c.isParamPrimitive = function(b) {
@@ -13175,6 +13199,32 @@ Entry.PyToBlockParser = function(c) {
     h.content[0] = h.content[0].concat(d);
     h.content = JSON.stringify(h.content);
     b[g] ? (d = b[g], d.content = new Entry.Code(h.content), d.generateBlock(!0)) : Entry.variableContainer.setFunctions([h]);
+  };
+  c.searchSyntax = function(b) {
+    var c, d, e = !1;
+    b instanceof Entry.BlockView ? (c = b.block._schema, d = b.block.data.params) : b instanceof Entry.Block ? (c = b._schema, d = b.params) : (c = b, e = !0);
+    if (c && c.syntax) {
+      for (b = c.syntax.py.concat();b.length;) {
+        c = !1;
+        var g = b.shift();
+        if ("string" === typeof g) {
+          return {syntax:g, template:g};
+        }
+        if (g.params) {
+          for (var h = 0;h < g.params.length;h++) {
+            if (!0 !== e && g.params[h] && g.params[h] !== d[h]) {
+              c = !0;
+              break;
+            }
+          }
+        }
+        g.template || (g.template = g.syntax);
+        if (!c) {
+          return g;
+        }
+      }
+    }
+    return null;
   };
 })(Entry.PyToBlockParser.prototype);
 Entry.Parser = function(c, b, f, d) {
@@ -15359,10 +15409,10 @@ Entry.Model = function(c, b) {
   };
 })(Entry.Model);
 (function(c) {
-  function b(b, d, f) {
-    c[b] = Entry.cloneSimpleObject(c[d]);
-    f && f instanceof Array && f.forEach(function(d) {
-      c[b][d[0]] = d[1];
+  function b(b, f, d) {
+    c[b] = Entry.cloneSimpleObject(c[f]);
+    d && d instanceof Array && d.forEach(function(f) {
+      c[b][f[0]] = f[1];
     });
     return c[b];
   }
@@ -15389,10 +15439,10 @@ Entry.Model = function(c, b) {
     }
   };
   d.followCmd = !0;
-  d.restrict = function(b, c, d, f) {
-    f = f.requestNextData().content;
-    f[0] === Entry.STATIC.COMMAND_TYPES.insertBlockFromBlockMenu && Entry.Command.editor.board.scrollToPointer(f[2][1]);
-    return new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:c}], {dimmed:!0, restrict:!0, callBack:d});
+  d.restrict = function(b, c, f, d) {
+    d = d.requestNextData().content;
+    d[0] === Entry.STATIC.COMMAND_TYPES.insertBlockFromBlockMenu && Entry.Command.editor.board.scrollToPointer(d[2][1]);
+    return new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:c}], {dimmed:!0, restrict:!0, callBack:f});
   };
   c[f.addThreadFromBlockMenu] = d;
   c[f.destroyThread] = {do:function(b) {
@@ -15405,8 +15455,8 @@ Entry.Model = function(c, b) {
   }, log:function(b) {
     b instanceof Entry.Thread && (b = this.editor.board.code.getThreadIndex(b));
     return [["index", b]];
-  }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, restrict:function(b, c, d) {
-    d();
+  }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, restrict:function(b, c, f) {
+    f();
   }, validate:!1, undo:"addThread"};
   c[f.destroyBlock] = {do:function(b) {
     b = this.editor.board.findBlock(b);
@@ -15414,16 +15464,16 @@ Entry.Model = function(c, b) {
   }, state:function(b) {
     var c = !1;
     b = this.editor.board.findBlock(b);
-    var d = b.targetPointer(), f = b.toJSON();
-    3 === d.length && (1 === b.thread.getCount() ? c = !0 : d.push(-1));
-    "output" === b.getBlockType() && (f.params[1] = void 0);
-    return [f, d, c];
+    var f = b.targetPointer(), d = b.toJSON();
+    3 === f.length && (1 === b.thread.getCount() ? c = !0 : f.push(-1));
+    "output" === b.getBlockType() && (d.params[1] = void 0);
+    return [d, f, c];
   }, log:function(b) {
     b = this.editor.board.findBlock(b);
     return [["block", b.pointer ? b.pointer() : b]];
   }, undo:"recoverBlock"};
-  c[f.recoverBlock] = {do:function(b, c, d) {
-    if (d) {
+  c[f.recoverBlock] = {do:function(b, c, f) {
+    if (f) {
       return this.editor.board.code.createThread([b], c[2]);
     }
     b = this.editor.board.code.createThread([b]).getFirstBlock();
@@ -15435,26 +15485,26 @@ Entry.Model = function(c, b) {
     b = this.editor.board.findBlock(b.id);
     return [["block", b], ["pointer", c]];
   }, undo:"destroyBlock"};
-  c[f.insertBlock] = {do:function(b, c, d) {
+  c[f.insertBlock] = {do:function(b, c, f) {
     b = this.editor.board.findBlock(b);
-    this.editor.board.insert(b, c, d);
-  }, state:function(b, c, d) {
+    this.editor.board.insert(b, c, f);
+  }, state:function(b, c, f) {
     b = this.editor.board.findBlock(b);
     c = [b, b.targetPointer()];
-    "string" !== typeof b && "basic" === b.getBlockType() ? c.push(b.thread.getCount(b)) : "string" !== typeof b && "output" === b.getBlockType() && c.push(d || b.getOutputBlockCount() + 1);
+    "string" !== typeof b && "basic" === b.getBlockType() ? c.push(b.thread.getCount(b)) : "string" !== typeof b && "output" === b.getBlockType() && c.push(f || b.getOutputBlockCount() + 1);
     return c;
-  }, log:function(b, c, d) {
+  }, log:function(b, c, f) {
     b = this.editor.board.findBlock(b);
     c instanceof Array || (c = c.pointer());
     b = [["block", b ? b.pointer() : ""], ["targetPointer", c]];
-    d && b.push(["count", d ? d : null]);
+    f && b.push(["count", f ? f : null]);
     return b;
-  }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, undo:"insertBlock", restrict:function(b, c, d, f) {
+  }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, undo:"insertBlock", restrict:function(b, c, f, d) {
     var l = Entry.Command.editor.board, m = l.code.getByPointer(b.content[1][1]), n;
     l.scrollToPointer(b.content[1][1]);
-    f.toolTipRender && (f.toolTipRender.titleIndex = 0, f.toolTipRender.contentIndex = 0);
+    d.toolTipRender && (d.toolTipRender.titleIndex = 0, d.toolTipRender.contentIndex = 0);
     var q = b.tooltip.isDefault, r = !1, t = new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:c}], {dimmed:!0, restrict:!0, callBack:function(c) {
-      !r && c && (r = !0, d(), c = l.scrollToPointer(b.content[2][1]), m && (n = m.view), n && (n = n.getSvgRoot().blockView) && c && n.moveBy(-c[0], -c[1]), f.toolTipRender.titleIndex = 1, f.toolTipRender && (q ? (c = Entry.Command.editor.board.code.getTargetByPointer(b.content[2][1])) && c.isParamBlockType() ? f.toolTipRender.contentIndex = 2 : f.toolTipRender.contentIndex = 1 : f.toolTipRender.contentIndex = 1), c = f.processDomQuery(["playground", "board", "&1", "magnet"]), t.init([{title:b.tooltip.title, 
+      !r && c && (r = !0, f(), c = l.scrollToPointer(b.content[2][1]), m && (n = m.view), n && (n = n.getSvgRoot().blockView) && c && n.moveBy(-c[0], -c[1]), d.toolTipRender.titleIndex = 1, d.toolTipRender && (q ? (c = Entry.Command.editor.board.code.getTargetByPointer(b.content[2][1])) && c.isParamBlockType() ? d.toolTipRender.contentIndex = 2 : d.toolTipRender.contentIndex = 1 : d.toolTipRender.contentIndex = 1), c = d.processDomQuery(["playground", "board", "&1", "magnet"]), t.init([{title:b.tooltip.title, 
       content:b.tooltip.content, target:c}], {indicator:!0, callBack:function() {
       }}));
     }});
@@ -15462,8 +15512,8 @@ Entry.Model = function(c, b) {
   }, showMe:function(b) {
     if (!b.isTooltipFaded()) {
       b.fadeOutTooltip();
-      var c = Entry.getDom(b.processDomQuery(this.dom)), d = Entry.getDom(b.processDomQuery(["playground", "board", "&1", "magnet", "next", 0])).getBoundingClientRect();
-      Entry.Utils.glideBlock(c, d.left, d.top, function() {
+      var c = Entry.getDom(b.processDomQuery(this.dom)), f = Entry.getDom(b.processDomQuery(["playground", "board", "&1", "magnet", "next", 0])).getBoundingClientRect();
+      Entry.Utils.glideBlock(c, f.left, f.top, function() {
         b.fadeInTooltip();
       });
     }
@@ -15472,12 +15522,12 @@ Entry.Model = function(c, b) {
   d.followCmd = !0;
   c[f.insertBlockFollowSeparate] = d;
   d = Entry.cloneSimpleObject(c[f.insertBlock]);
-  d.restrict = function(b, c, d, f) {
-    if (f.toolTipRender && f.toolTipRender) {
+  d.restrict = function(b, c, f, d) {
+    if (d.toolTipRender && d.toolTipRender) {
       var l = Entry.Command.editor.board.code.getByPointer(b.content[2][1]);
-      !l || l.isParamBlockType() ? f.toolTipRender.contentIndex = 1 : f.toolTipRender.contentIndex = 0;
+      !l || l.isParamBlockType() ? d.toolTipRender.contentIndex = 1 : d.toolTipRender.contentIndex = 0;
     }
-    d();
+    f();
     return new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:c}], {indicator:!0, callBack:function() {
     }});
   };
@@ -15486,16 +15536,16 @@ Entry.Model = function(c, b) {
   d = Entry.cloneSimpleObject(c[f.insertBlockFromBlockMenu]);
   d.followCmd = !0;
   c[f.insertBlockFromBlockMenuFollowSeparate] = d;
-  c[f.separateBlock] = {do:function(b, c, d) {
+  c[f.separateBlock] = {do:function(b, c, f) {
     b = this.editor.board.findBlock(b);
-    "number" === typeof d && (b.view._moveTo(c, d), c = void 0);
+    "number" === typeof f && (b.view._moveTo(c, f), c = void 0);
     c = void 0 === c ? Entry.DRAG_MODE_DRAG : c;
     b.view && b.view._toGlobalCoordinate(c);
     b.doSeparate();
   }, state:function(b) {
     b = this.editor.board.findBlock(b);
-    var c = [b], d = b.targetPointer();
-    c.push(d);
+    var c = [b], f = b.targetPointer();
+    c.push(f);
     "basic" === b.getBlockType() && c.push(b.thread.getCount(b));
     return c;
   }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, log:function(b) {
@@ -15503,25 +15553,25 @@ Entry.Model = function(c, b) {
     var c = b.pointer();
     b.view && (b = b.view);
     return [["block", c], ["x", b.x], ["y", b.y]];
-  }, restrict:function(b, c, d, f) {
+  }, restrict:function(b, c, f, d) {
     Entry.Command.editor.board.scrollToPointer(b.content[1][1]);
     var l = !1;
-    f.toolTipRender && (f.toolTipRender.titleIndex = 0, f.toolTipRender.contentIndex = 0);
+    d.toolTipRender && (d.toolTipRender.titleIndex = 0, d.toolTipRender.contentIndex = 0);
     var m = new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:c}], {dimmed:!0, restrict:!0, callBack:function(c) {
-      !l && c && (f.toolTipRender && (f.toolTipRender.titleIndex = 1, f.toolTipRender.contentIndex = 1), d(), l = !0, m.init([{title:b.tooltip.title, content:b.tooltip.content, target:f.processDomQuery(["playground", "board", "coord", "&1", "&2"])}], {indicator:!0, callBack:function() {
-        d();
+      !l && c && (d.toolTipRender && (d.toolTipRender.titleIndex = 1, d.toolTipRender.contentIndex = 1), f(), l = !0, m.init([{title:b.tooltip.title, content:b.tooltip.content, target:d.processDomQuery(["playground", "board", "coord", "&1", "&2"])}], {indicator:!0, callBack:function() {
+        f();
       }}));
     }});
     return m;
   }, undo:"insertBlock", dom:["playground", "board", "&0"]};
   d = Entry.cloneSimpleObject(c[f.separateBlock]);
-  d.restrict = function(b, c, d, f) {
+  d.restrict = function(b, c, f, d) {
     Entry.Command.editor.board.scrollToPointer(b.content[1][1]);
     var l = !1;
-    f.toolTipRender && (f.toolTipRender.titleIndex = 0, f.toolTipRender.contentIndex = 0);
+    d.toolTipRender && (d.toolTipRender.titleIndex = 0, d.toolTipRender.contentIndex = 0);
     var m = new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:c}], {dimmed:!0, restrict:!0, callBack:function(c) {
-      !l && c && (d(), f.toolTipRender && (f.toolTipRender.titleIndex = 1, f.toolTipRender.contentIndex = 1), l = !0, m.init([{title:b.tooltip.title, content:b.tooltip.content, target:["playground", "board", "trashcan"]}], {indicator:!0, callBack:function() {
-        d();
+      !l && c && (f(), d.toolTipRender && (d.toolTipRender.titleIndex = 1, d.toolTipRender.contentIndex = 1), l = !0, m.init([{title:b.tooltip.title, content:b.tooltip.content, target:["playground", "board", "trashcan"]}], {indicator:!0, callBack:function() {
+        f();
       }}));
     }});
     return m;
@@ -15529,46 +15579,46 @@ Entry.Model = function(c, b) {
   d.showMe = function(b) {
     if (!b.isTooltipFaded()) {
       b.fadeOutTooltip();
-      var c = Entry.getDom(b.processDomQuery(this.dom)), d = Entry.getDom(["playground", "board", "trashcan"]).getBoundingClientRect();
-      Entry.Utils.glideBlock(c, d.left, d.top, function() {
+      var c = Entry.getDom(b.processDomQuery(this.dom)), f = Entry.getDom(["playground", "board", "trashcan"]).getBoundingClientRect();
+      Entry.Utils.glideBlock(c, f.left, f.top, function() {
         b.fadeInTooltip();
       });
     }
   };
   d.followCmd = !0;
   c[f.separateBlockForDestroy] = d;
-  c[f.moveBlock] = {do:function(b, c, d) {
-    void 0 !== c ? (b = this.editor.board.findBlock(b), b.moveTo(c, d)) : b._updatePos();
+  c[f.moveBlock] = {do:function(b, c, f) {
+    void 0 !== c ? (b = this.editor.board.findBlock(b), b.moveTo(c, f)) : b._updatePos();
   }, state:function(b) {
     b = this.editor.board.findBlock(b);
     return [b, b.x, b.y];
-  }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, restrict:function(b, c, d, f) {
+  }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, restrict:function(b, c, f, d) {
     var l = !1, m = new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:c}], {dimmed:!0, restrict:!0, callBack:function(c) {
-      !l && c && (l = !0, d(), m.init([{title:b.tooltip.title, content:b.tooltip.content, target:f.processDomQuery(["playground", "board", "coord", "&1", "&2"])}], {indicator:!0, callBack:function() {
+      !l && c && (l = !0, f(), m.init([{title:b.tooltip.title, content:b.tooltip.content, target:d.processDomQuery(["playground", "board", "coord", "&1", "&2"])}], {indicator:!0, callBack:function() {
       }}));
     }});
     return m;
-  }, validate:!1, log:function(b, c, d) {
+  }, validate:!1, log:function(b, c, f) {
     b = this.editor.board.findBlock(b);
     return [["block", b.pointer()], ["x", b.view.x], ["y", b.view.y]];
   }, undo:"moveBlock", dom:["playground", "board", "&0"]};
   d = Entry.cloneSimpleObject(c[f.moveBlock]);
   d.followCmd = !0;
-  d.restrict = function(b, c, d, f) {
+  d.restrict = function(b, c, f, d) {
     Entry.Command.editor.board.scrollToPointer(b.content[1][1]);
     var l = !1;
-    f.toolTipRender && (f.toolTipRender.titleIndex = 0, f.toolTipRender.contentIndex = 0);
+    d.toolTipRender && (d.toolTipRender.titleIndex = 0, d.toolTipRender.contentIndex = 0);
     var m = new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:c}], {dimmed:!0, restrict:!0, callBack:function(c) {
-      !l && c && (l = !0, d(), f.toolTipRender && (f.toolTipRender.titleIndex = 1, f.toolTipRender.contentIndex = 1), m.init([{title:b.tooltip.title, content:b.tooltip.content, target:["playground", "board", "trashcan"]}], {indicator:!0, callBack:function() {
-        d();
+      !l && c && (l = !0, f(), d.toolTipRender && (d.toolTipRender.titleIndex = 1, d.toolTipRender.contentIndex = 1), m.init([{title:b.tooltip.title, content:b.tooltip.content, target:["playground", "board", "trashcan"]}], {indicator:!0, callBack:function() {
+        f();
       }}));
     }});
     return m;
   };
   c[f.moveBlockForDestroy] = d;
   d = Entry.cloneSimpleObject(c[f.moveBlock]);
-  d.restrict = function(b, c, d) {
-    d();
+  d.restrict = function(b, c, f) {
+    f();
     return new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, target:c}], {indicator:!0, callBack:function() {
     }});
   };
@@ -15576,46 +15626,46 @@ Entry.Model = function(c, b) {
   c[f.moveBlockFromBlockMenu] = d;
   b(f.cloneBlock, f.addThread, [["undo", "uncloneBlock"], ["dom", void 0]]);
   b(f.uncloneBlock, f.destroyThread, [["undo", "cloneBlock"]]);
-  c[f.scrollBoard] = {do:function(b, c, d) {
-    d || this.editor.board.scroller._scroll(b, c);
+  c[f.scrollBoard] = {do:function(b, c, f) {
+    f || this.editor.board.scroller._scroll(b, c);
     delete this.editor.board.scroller._diffs;
   }, state:function(b, c) {
     return [-b, -c];
   }, log:function(b, c) {
     return [["dx", b], ["dy", c]];
   }, recordable:Entry.STATIC.RECORDABLE.SKIP, undo:"scrollBoard"};
-  c[f.setFieldValue] = {do:function(b, c, d) {
-    b = d ? d.getByPointer(b) : this.editor.board.findBlock(b);
+  c[f.setFieldValue] = {do:function(b, c, f) {
+    b = f ? f.getByPointer(b) : this.editor.board.findBlock(b);
     b.setValue(c, !0);
     Entry.disposeEvent.notify(!0);
     b._blockView.disableMouseEvent = !1;
-  }, state:function(b, c, d) {
-    c = d ? d.getByPointer(b) : this.editor.board.findBlock(b);
+  }, state:function(b, c, f) {
+    c = f ? f.getByPointer(b) : this.editor.board.findBlock(b);
     return [b, c._startValue || c.getValue()];
   }, log:function(b, c) {
     return [["pointer", b], ["value", c]];
-  }, restrict:function(b, c, d, f) {
+  }, restrict:function(b, c, f, d) {
     var l = !1, m = b.tooltip.isDefault;
     Entry.Command.editor.board.scrollToPointer(b.content[1][1]);
     var n = Entry.Command.editor.board.findBlock(b.content[1][1]), q = n._blockView;
     q.disableMouseEvent = !0;
     var r = n.getFieldRawType();
-    if (f.toolTipRender) {
+    if (d.toolTipRender) {
       if (m) {
         switch(r) {
           case "textInput":
-            f.toolTipRender.contentIndex = 0;
+            d.toolTipRender.contentIndex = 0;
             break;
           case "dropdown":
           ;
           case "dropdownDynamic":
-            f.toolTipRender.contentIndex = 1;
+            d.toolTipRender.contentIndex = 1;
             break;
           case "keyboard":
-            f.toolTipRender.contentIndex = 2;
+            d.toolTipRender.contentIndex = 2;
         }
       } else {
-        f.toolTipRender.contentIndex = 0;
+        d.toolTipRender.contentIndex = 0;
       }
     }
     var t = b.content[2][1];
@@ -15623,41 +15673,41 @@ Entry.Model = function(c, b) {
     var u = new Entry.Tooltip([{title:b.tooltip.title, content:b.tooltip.content, direction:"left", target:c}], {dimmed:!0, restrict:!0, callBack:function(c) {
       if (!l && c) {
         l = !0;
-        d();
-        d();
-        f.toolTipRender.replaceContent(/&value&/gi, n.getTextValueByValue(t));
-        if (f.toolTipRender) {
+        f();
+        f();
+        d.toolTipRender.replaceContent(/&value&/gi, n.getTextValueByValue(t));
+        if (d.toolTipRender) {
           if (m) {
             switch(r) {
               case "textInput":
-                f.toolTipRender.contentIndex = 3;
+                d.toolTipRender.contentIndex = 3;
                 break;
               case "dropdown":
               ;
               case "dropdownDynamic":
-                f.toolTipRender.contentIndex = 4;
+                d.toolTipRender.contentIndex = 4;
                 break;
               case "keyboard":
-                f.toolTipRender.contentIndex = 5;
+                d.toolTipRender.contentIndex = 5;
             }
           } else {
-            f.toolTipRender.titleIndex = 1, f.toolTipRender.contentIndex = 1;
+            d.toolTipRender.titleIndex = 1, d.toolTipRender.contentIndex = 1;
           }
         }
-        u.init([{title:b.tooltip.title, content:b.tooltip.content, target:f.processDomQuery(["playground", "board", "&0", "option"])}], {dimmed:!0, restrict:!0, callBack:function() {
+        u.init([{title:b.tooltip.title, content:b.tooltip.content, target:d.processDomQuery(["playground", "board", "&0", "option"])}], {dimmed:!0, restrict:!0, callBack:function() {
           q.disableMouseEvent = !1;
         }});
       }
     }});
     return u;
   }, disableMouseUpDispose:!0, recordable:Entry.STATIC.RECORDABLE.SUPPORT, dom:["playground", "board", "&0"], undo:"setFieldValue"};
-  c[f.selectBlockMenu] = {do:function(b, c, d) {
-    var f = Entry.getMainWS().blockMenu;
-    f.selectMenu(b, c, d);
-    f.align();
-  }, state:function(b, c, d) {
-    return [Entry.getMainWS().blockMenu.lastSelector, c, d];
-  }, log:function(b, c, d) {
+  c[f.selectBlockMenu] = {do:function(b, c, f) {
+    var d = Entry.getMainWS().blockMenu;
+    d.selectMenu(b, c, f);
+    d.align();
+  }, state:function(b, c, f) {
+    return [Entry.getMainWS().blockMenu.lastSelector, c, f];
+  }, log:function(b, c, f) {
     return [["selector", b]];
   }, skipUndoStack:!0, recordable:Entry.STATIC.RECORDABLE.SUPPORT, dom:["playground", "blockMenu", "category", "&0"], undo:"selectBlockMenu"};
   c[f.destroyThreads] = {do:function() {
@@ -15696,9 +15746,9 @@ Entry.Model = function(c, b) {
     return [];
   }, recordable:Entry.STATIC.RECORDABLE.SUPPORT, undo:"recoverBlockBelow"};
   c[f.recoverBlockBelow] = {do:function(b, c) {
-    var d = this.editor.board;
-    b = d.code.createThread(b);
-    d.insert(b.getFirstBlock(), c);
+    var f = this.editor.board;
+    b = f.code.createThread(b);
+    f.insert(b.getFirstBlock(), c);
   }, state:function(b, c) {
     return [b[0]];
   }, log:function(b, c) {

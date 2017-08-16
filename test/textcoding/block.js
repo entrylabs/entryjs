@@ -785,7 +785,7 @@ describe('EntryPython', function(){
                             "abcd",
                             {
                                 "type": 'number',
-                                "params" : [ 10 ]
+                                "params" : [ "10" ]
                             }
                         ]
                     }]]
@@ -1140,12 +1140,7 @@ describe('EntryPython', function(){
                           }
                        ]
                     ],
-                    "type":"repeat_inf",
-                    "params":[
-                       {
-                          "type":"True"
-                       }
-                    ]
+                    "type":"repeat_inf"
                 }]]
             ));
             Entry.clearProject();
