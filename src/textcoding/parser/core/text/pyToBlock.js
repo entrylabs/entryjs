@@ -708,7 +708,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
             };
             if (n.operator != '=')
                 return;
-            
+
             if('name' in n.left) {
                 name = left.name;
             }  else {
@@ -720,13 +720,14 @@ Entry.PyToBlockParser = function(blockSyntax) {
             if(right.type === "NewExpression" && right.callee.property.name == 'list'){
                 type = 'lists_';
                 var temp = right.arguments.map(this.Node , this);
-               
+
                 temp = temp.map(function(m){
                     if(m.constructor === Object && 'params' in m)
                         return {data : m.params[0] + ''};
                     else 
                         return {data : m + ''};
                 });
+                
                 obj.array = temp;
             } else {
                 obj.value = right.value + '';
@@ -814,6 +815,16 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
     p["Hamster.right_led"] = function(component) {
         return this.Special(component, "Hamster", "right_led");
+    };
+
+    p["__pythonRuntime.ops.in"] = function(component) { // "10 in list"
+        return {
+            type: "is_included_in_list",
+            params: this.Arguments(
+                "is_included_in_list",
+                component.arguments
+            )
+        }
     };
 
     p.Special = function(component, name, key) {
