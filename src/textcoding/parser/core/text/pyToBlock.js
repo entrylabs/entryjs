@@ -179,24 +179,41 @@ Entry.PyToBlockParser = function(blockSyntax) {
     };
 
     p.AssignmentExpression = function(component) {
+        var result = { params: [] };
+        var leftVar;
+        switch(component.left.type) {
+            case "MemberExpression":
+                result.type = 'change_value_list_index';
+                leftVar = Entry.variableContainer.getListByName(component.left.object.name)
+                this.assert(leftVar, "list not exist", component.left);
+                result.params.push(leftVar.id_);
+                result.params.push(
+                    this.ListIndex(this.Node(component.left.property.arguments[1]))
+                );
+                break;
+            case "Identifier":
+                result.type = 'set_variable';
+                leftVar = Entry.variableContainer.getVariableByName(component.left.name)
+                this.assert(leftVar, "variable not exist", component.left);
+                result.params.push(leftVar.id_);
+                break;
+            default:
+                this.assert(false, "left hand must be list or variable", component.left)
+        }
+
+        var rightHand = this.Node(component.right);
+
         switch (component.operator) {
             case "+=":
-                return {
-                    type : 'change_variable',
-                    params : [
-                        Entry.variableContainer.getVariableByName(component.left.name).id_,
-                        this.Node(component.right)
-                    ]
-                }
+                result.type = 'change_variable';
+                break;
+            case "-=": // TODO
+            case "/=": // TODO
+            case "*=": // TODO
             case "=":
-                return {
-                    type : 'set_variable',
-                    params : [
-                        Entry.variableContainer.getVariableByName(component.left.name).id_,
-                        this.Node(component.right)
-                    ]
-                }
         }
+        result.params.push(rightHand);
+        return result;
     };
 
     p.Literal = function(component, paramSchema, paramDef) {
@@ -613,7 +630,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
     p.ListIndex = function(param) {
         if (this.isParamPrimitive(param)) { // literal
-            param.params = [ param.params[0] + 1 ];
+            param.params = [ Number(param.params[0]) + 1 ];
         } else if (param.type === "calc_basic" && // x - 1
                    param.params[1] === "MINUS" &&
                    this.isParamPrimitive(param.params[2]) &&
@@ -887,5 +904,48 @@ Entry.PyToBlockParser = function(blockSyntax) {
     // p.ConditionalExpression = function(component) {};
 
     // p.SequenceExpression = function(component) {};
+
+    p.searchSyntax = function(datum) { //legacy
+        var schema;
+        var appliedParams;
+        var doNotCheckParams = false;
+
+        if (datum instanceof Entry.BlockView) {
+            schema = datum.block._schema;
+            appliedParams = datum.block.data.params;
+        } else if (datum instanceof Entry.Block) {
+            schema = datum._schema;
+            appliedParams = datum.params;
+        } else {
+            schema = datum;
+            doNotCheckParams = true;
+        }
+
+        if (schema && schema.syntax) {
+            var syntaxes = schema.syntax.py.concat();
+            while (syntaxes.length) {
+                var isFail = false;
+                var syntax = syntaxes.shift();
+                if (typeof syntax === "string")
+                    return {syntax: syntax, template: syntax};
+                if (syntax.params) {
+                    for (var i = 0; i < syntax.params.length; i++) {
+                        if (doNotCheckParams !== true && syntax.params[i] &&
+                            syntax.params[i] !== appliedParams[i]) {
+                            isFail = true;
+                            break;
+                        }
+                    }
+                }
+                if (!syntax.template)
+                    syntax.template = syntax.syntax;
+                if (isFail) {
+                    continue;
+                }
+                return syntax;
+            }
+        }
+        return null;
+    };
 
 })(Entry.PyToBlockParser.prototype);

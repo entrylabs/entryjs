@@ -17615,12 +17615,31 @@ Entry.PyToBlockParser = function(c) {
     return b.init && b.init.arguments ? b.init.arguments.map(this.Node, this) : [];
   };
   c.AssignmentExpression = function(b) {
+    var c = {params:[]}, e;
+    switch(b.left.type) {
+      case "MemberExpression":
+        c.type = "change_value_list_index";
+        e = Entry.variableContainer.getListByName(b.left.object.name);
+        this.assert(e, "list not exist", b.left);
+        c.params.push(e.id_);
+        c.params.push(this.ListIndex(this.Node(b.left.property.arguments[1])));
+        break;
+      case "Identifier":
+        c.type = "set_variable";
+        e = Entry.variableContainer.getVariableByName(b.left.name);
+        this.assert(e, "variable not exist", b.left);
+        c.params.push(e.id_);
+        break;
+      default:
+        this.assert(!1, "left hand must be list or variable", b.left);
+    }
+    e = this.Node(b.right);
     switch(b.operator) {
       case "+=":
-        return {type:"change_variable", params:[Entry.variableContainer.getVariableByName(b.left.name).id_, this.Node(b.right)]};
-      case "=":
-        return {type:"set_variable", params:[Entry.variableContainer.getVariableByName(b.left.name).id_, this.Node(b.right)]};
+        c.type = "change_variable";
     }
+    c.params.push(e);
+    return c;
   };
   c.Literal = function(b, c, e) {
     var d = b.value;
@@ -17828,7 +17847,7 @@ Entry.PyToBlockParser = function(c) {
     return b;
   };
   c.ListIndex = function(b) {
-    this.isParamPrimitive(b) ? b.params = [b.params[0] + 1] : b = "calc_basic" === b.type && "MINUS" === b.params[1] && this.isParamPrimitive(b.params[2]) && "1" === b.params[2].params[0] + "" ? b.params[0] : {type:"calc_basic", params:[b, "PLUS", {type:"text", params:[1]}]};
+    this.isParamPrimitive(b) ? b.params = [Number(b.params[0]) + 1] : b = "calc_basic" === b.type && "MINUS" === b.params[1] && this.isParamPrimitive(b.params[2]) && "1" === b.params[2].params[0] + "" ? b.params[0] : {type:"calc_basic", params:[b, "PLUS", {type:"text", params:[1]}]};
     return b;
   };
   c.isParamPrimitive = function(b) {
@@ -17924,6 +17943,32 @@ Entry.PyToBlockParser = function(c) {
     h.content[0] = h.content[0].concat(e);
     h.content = JSON.stringify(h.content);
     b[g] ? (e = b[g], e.content = new Entry.Code(h.content), e.generateBlock(!0)) : Entry.variableContainer.setFunctions([h]);
+  };
+  c.searchSyntax = function(b) {
+    var c, e, f = !1;
+    b instanceof Entry.BlockView ? (c = b.block._schema, e = b.block.data.params) : b instanceof Entry.Block ? (c = b._schema, e = b.params) : (c = b, f = !0);
+    if (c && c.syntax) {
+      for (b = c.syntax.py.concat();b.length;) {
+        c = !1;
+        var g = b.shift();
+        if ("string" === typeof g) {
+          return {syntax:g, template:g};
+        }
+        if (g.params) {
+          for (var h = 0;h < g.params.length;h++) {
+            if (!0 !== f && g.params[h] && g.params[h] !== e[h]) {
+              c = !0;
+              break;
+            }
+          }
+        }
+        g.template || (g.template = g.syntax);
+        if (!c) {
+          return g;
+        }
+      }
+    }
+    return null;
   };
 })(Entry.PyToBlockParser.prototype);
 Entry.Console = function() {
