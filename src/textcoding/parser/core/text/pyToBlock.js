@@ -42,29 +42,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
     };
 
     p.Programs = function(astArr) {
-        this._funcParamMap = {};
-        this._funcMap = {};
         try {
-            var result;
-            var astArrBody = astArr[0].body;
-            var hasVariable = astArrBody &&
-                              astArrBody[0] &&
-                              astArrBody[0].type === 'ExpressionStatement' &&
-                              astArrBody[0].expression.type === "AssignmentExpression";
-
-            if(hasVariable) {
-                var variableArr = this.getVariables(astArr[0]);
-                astArr.splice(0,1);
-                var contentArr = this.processPrograms(astArr);
-
-                result = variableArr.concat(contentArr);
-            }  else {
-
-                result = astArr.map(this.Node, this)
-            }
-            return result.filter(function(t) {
-                return t.length > 0
-            });
+            return this.processPrograms(astArr);
         } catch(error) {
             var err = {};
             err.title = error.title;
@@ -75,11 +54,32 @@ Entry.PyToBlockParser = function(blockSyntax) {
     };
 
     p.processPrograms = function(astArr) {
-        return astArr.map(this.Node, this)
+        this._funcParamMap = {};
+        this._funcMap = {};
+
+        var result;
+        var astArrBody = astArr[0].body;
+        var hasVariable = astArrBody &&
+                          astArrBody[0] &&
+                          astArrBody[0].type === 'ExpressionStatement' &&
+                          astArrBody[0].expression.type === "AssignmentExpression";
+
+        if(hasVariable) {
+            var variableArr = this.getVariables(astArr[0]);
+            astArr.splice(0,1);
+            var contentArr = astArr.map(this.Node, this);
+
+            result = variableArr.concat(contentArr);
+        }  else {
+            result = astArr.map(this.Node, this);
+        }
+
+        return result.filter(function(t) {
+            return t.length > 0
+        });
     };
 
     p.Program = function(component) {
-
         var thread = component.body.map(this.Node ,this);
 
         if(thread[0].constructor == Array)
@@ -703,7 +703,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 variableType : 'variable',
                 name : '',
                 visible : true,
-                object : {}
+                object : {},
+                value : ''
             };
             if (n.operator != '=')
                 return;
@@ -722,11 +723,13 @@ Entry.PyToBlockParser = function(blockSyntax) {
                
                 temp = temp.map(function(m){
                     if(m.constructor === Object && 'params' in m)
-                        return {data : m.params[0]};
+                        return {data : m.params[0] + ''};
                     else 
-                        return {data : m};
+                        return {data : m + ''};
                 });
                 obj.array = temp;
+            } else {
+                obj.value = right.value + '';
             }
 
             var functionType =  'add'+ type[0].toUpperCase() + type.slice(1,type.length-2);
@@ -737,7 +740,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     existVar.array_ = obj.array;
                     return;
                 }
-                existVar.value_ = right.value;
+                existVar.value_ = right.value + '';
                 return;
             }
 

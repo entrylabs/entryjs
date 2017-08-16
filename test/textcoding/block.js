@@ -585,12 +585,8 @@ describe('EntryPython', function(){
         it("variable" , function() {
             Entry.loadProject(Entry.getStartProject());
             Entry.playground.object = Entry.container.objects_[0];
-            Entry.variableContainer.addVariable({
-                "type": "variable", "name": "test", "id": "abcd" , object_ : "7y0y" ,
-                'value' : 2
-
-            });
-
+    
+            var resultBlock = Test.parsePython("test = 2");
             var variable = Entry.variableContainer.variables_[0];
 
             assert.ok(variable);
@@ -602,9 +598,11 @@ describe('EntryPython', function(){
         });
 
         it("list" , function() {
+
             Entry.loadProject(Entry.getStartProject());
             Entry.playground.object = Entry.container.objects_[0];
-            Test.parsePython("test = ['2']");
+
+            var resultBlock = Test.parsePython("test = ['2']");
             var list = Entry.variableContainer.lists_[0];
 
             assert.ok(list);
@@ -662,6 +660,8 @@ describe('EntryPython', function(){
         it("object" , function(){
             Entry.loadProject(Entry.getStartProject());
             Entry.playground.object = Entry.container.objects_[0];
+
+            var resultBlock = Test.pythonToBlock('Entry.make_clone_of("엔트리봇")');
 
             assert.ok(Test.pythonToBlock(
                 'Entry.make_clone_of("엔트리봇")',
@@ -1153,7 +1153,6 @@ describe('EntryPython', function(){
         it('hardware block' , function() {
             // var resultBlock = Test.parsePython("Hamster.left_led(Hamster.LED_RED)");
 
-            // console.log(JSON.stringify(resultBlock));
             assert.ok(Test.pythonToBlock('Hamster.io_modes(Hamster.IO_MODE_DIGITAL_INPUT)',
                 [[{
                     "type":"hamster_set_port_to",
@@ -1303,7 +1302,6 @@ describe('EntryPython', function(){
                     Entry.loadProject(Entry.getStartProject());
                     Entry.playground.object = Entry.container.objects_[0];
                     // var resultBlock = Test.parsePython("def when_start():\n    for i in range(10):\n        Entry.move_to_direction(10)");
-                    // console.log(JSON.stringify(resultBlock));
 
                     assert.ok(Test.pythonToBlock(
                         "def when_start():\n    for i in range(10):\n        Entry.move_to_direction(10)",
@@ -1483,7 +1481,6 @@ describe('EntryPython', function(){
                     Entry.loadProject(Entry.getStartProject());
                     Entry.playground.object = Entry.container.objects_[0];
                     var resultBlock = Test.parsePython("def when_start():\n    while True:\n        for i in range(10):\n            Entry.move_to_direction(10)");
-                    // console.log(JSON.stringify(resultBlock));
 
                     assert.ok(Test.pythonToBlock(
                         "def when_start():\n    while True:\n        for i in range(10):\n            Entry.move_to_direction(10)" ,
@@ -1703,8 +1700,6 @@ describe('EntryPython', function(){
                     Entry.playground.object = Entry.container.objects_[0];
 
                     var resultBlock = Test.parsePython("def when_start():\n    while not (10 > 10):\n       Entry.move_to_direction(10)");
-                    // console.log(JSON.stringify(resultBlock));
-
                     assert.ok(Test.pythonToBlock(
                         "def when_start():\n    while not (10 > 10):\n        Entry.move_to_direction(10)" ,
                         [

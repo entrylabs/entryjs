@@ -6514,10 +6514,10 @@ Entry.EntityObject = function(c) {
   this.object.entity = this;
   this.object.cursor = "pointer";
   this.object.on("mousedown", function(b) {
-    var c = this.entity.parent.id;
+    var f = this.entity.parent.id;
     Entry.dispatchEvent("entityClick", this.entity);
     Entry.stage.isObjectClick = !0;
-    "minimize" != Entry.type && Entry.stage.isEntitySelectable() && (this.offset = {x:-this.parent.x + this.entity.getX() - (.75 * b.stageX - 240), y:-this.parent.y - this.entity.getY() - (.75 * b.stageY - 135)}, this.cursor = "move", this.entity.initCommand(), Entry.container.selectObject(c));
+    "minimize" != Entry.type && Entry.stage.isEntitySelectable() && (this.offset = {x:-this.parent.x + this.entity.getX() - (.75 * b.stageX - 240), y:-this.parent.y - this.entity.getY() - (.75 * b.stageY - 135)}, this.cursor = "move", this.entity.initCommand(), Entry.container.selectObject(f));
   });
   this.object.on("pressup", function(b) {
     Entry.dispatchEvent("entityClickCanceled", this.entity);
@@ -6870,7 +6870,7 @@ Entry.EntityObject.prototype.setImage = function(c) {
   this.setRegX(this.width / 2 + d);
   this.setRegY(this.height / 2 + e);
   var g = c.id + this.id, h = Entry.container.getCachedPicture(g);
-  h ? (Entry.image = h, this.object.image = h, this.object.cache(0, 0, this.getWidth(), this.getHeight())) : (h = new Image, c.fileurl ? h.src = c.fileurl : (c = c.filename, h.src = Entry.defaultPath + "/uploads/" + c.substring(0, 2) + "/" + c.substring(2, 4) + "/image/" + c + ".png"), this.object.image = h, this.object.cache(0, 0, this.getWidth(), this.getHeight()), h.onload = function(c) {
+  h ? (Entry.image = h, this.object.image = h, this.object.cache(0, 0, this.getWidth(), this.getHeight())) : (h = new Image, c.fileurl ? h.src = c.fileurl : (c = c.filename, h.src = Entry.defaultPath + "/uploads/" + c.substring(0, 2) + "/" + c.substring(2, 4) + "/image/" + c + ".png"), this.object.image = h, this.object.cache(0, 0, this.getWidth(), this.getHeight()), h.onload = function(f) {
     Entry.container.cachePicture(g, h);
     Entry.image = h;
     b.object.image = h;
@@ -6880,34 +6880,34 @@ Entry.EntityObject.prototype.setImage = function(c) {
   Entry.dispatchEvent("updateObject");
 };
 Entry.EntityObject.prototype.applyFilter = function(c, b) {
-  var f = this.effect, d = this.object, e = function(b, c) {
-    var f = [], d;
+  var f = this.effect, d = this.object, e = function(b, f) {
+    var c = [], d;
     for (d in b) {
-      b[d] !== c[d] && f.push(d);
+      b[d] !== f[d] && c.push(d);
     }
-    return f;
+    return c;
   }(f, this.getInitialEffectValue());
   if (c || 0 !== e.length) {
-    Array.isArray(b) && (e = e.concat(b)), function(b, c) {
-      var f = [], d = Entry.adjustValueWithMaxMin;
+    Array.isArray(b) && (e = e.concat(b)), function(b, f) {
+      var c = [], d = Entry.adjustValueWithMaxMin;
       if (-1 < e.indexOf("brightness")) {
         b.brightness = b.brightness;
         var m = new createjs.ColorMatrix;
         m.adjustColor(d(b.brightness, -100, 100), 0, 0, 0);
         m = new createjs.ColorMatrixFilter(m);
-        f.push(m);
+        c.push(m);
       }
-      -1 < e.indexOf("hue") && (b.hue = b.hue.mod(360), m = new createjs.ColorMatrix, m.adjustColor(0, 0, 0, b.hue), m = new createjs.ColorMatrixFilter(m), f.push(m));
+      -1 < e.indexOf("hue") && (b.hue = b.hue.mod(360), m = new createjs.ColorMatrix, m.adjustColor(0, 0, 0, b.hue), m = new createjs.ColorMatrixFilter(m), c.push(m));
       if (-1 < e.indexOf("hsv")) {
         var m = [1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1], n = 10.8 * b.hsv * Math.PI / 180, q = Math.cos(n), n = Math.sin(n), r = Math.abs(b.hsv / 100);
         1 < r && (r -= Math.floor(r));
         0 < r && .33 >= r ? m = [1, 0, 0, 0, 0, 0, q, n, 0, 0, 0, -1 * n, q, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1] : .66 >= r ? m = [q, 0, n, 0, 0, 0, 1, 0, 0, 0, n, 0, q, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1] : .99 >= r && (m = [q, n, 0, 0, 0, -1 * n, q, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1]);
         m = (new createjs.ColorMatrix).concat(m);
         m = new createjs.ColorMatrixFilter(m);
-        f.push(m);
+        c.push(m);
       }
-      -1 < e.indexOf("alpha") && (c.alpha = b.alpha = d(b.alpha, 0, 1));
-      c.filters = f;
+      -1 < e.indexOf("alpha") && (f.alpha = b.alpha = d(b.alpha, 0, 1));
+      f.filters = c;
     }(f, d), d.cache(0, 0, this.getWidth(), this.getHeight()), Entry.requestUpdate = !0;
   }
 };
@@ -7165,8 +7165,8 @@ Entry.ActivityReporter = function() {
   c.add = function(b) {
     if (b && 0 !== b.length) {
       if (!(b instanceof Entry.Activity)) {
-        var c = b.shift();
-        b = new Entry.Activity(c, b);
+        var f = b.shift();
+        b = new Entry.Activity(f, b);
       }
       this._activities.push(b);
     }
@@ -7356,26 +7356,26 @@ Entry.EntryObject = function(c) {
     this.clonedEntities = [];
     Entry.stage.loadObject(this);
     for (f in this.pictures) {
-      (function(c) {
-        c.objectId = this.id;
-        c.id || (c.id = Entry.generateHash());
-        var f = new Image;
-        if (c.fileurl) {
-          f.src = c.fileurl;
+      (function(f) {
+        f.objectId = this.id;
+        f.id || (f.id = Entry.generateHash());
+        var c = new Image;
+        if (f.fileurl) {
+          c.src = f.fileurl;
         } else {
-          if (c.fileurl) {
-            f.src = c.fileurl;
+          if (f.fileurl) {
+            c.src = f.fileurl;
           } else {
-            var g = c.filename;
-            f.src = Entry.defaultPath + "/uploads/" + g.substring(0, 2) + "/" + g.substring(2, 4) + "/image/" + g + ".png";
+            var g = f.filename;
+            c.src = Entry.defaultPath + "/uploads/" + g.substring(0, 2) + "/" + g.substring(2, 4) + "/image/" + g + ".png";
           }
         }
         Entry.Loader.addQueue();
-        f.onload = function(f) {
-          Entry.container.cachePicture(c.id + b.entity.id, this);
+        c.onload = function(c) {
+          Entry.container.cachePicture(f.id + b.entity.id, this);
           Entry.Loader.removeQueue();
         };
-        f.onerror = function(b) {
+        c.onerror = function(b) {
           Entry.Loader.removeQueue();
         };
       })(this.pictures[f]), Entry.requestUpdate = !0;
@@ -7391,44 +7391,44 @@ Entry.EntryObject = function(c) {
       b.addClass("entryContainerListElementWorkspace");
       b.object = this;
       Entry.Utils.disableContextmenu(b);
-      var c = this;
+      var f = this;
       longPressTimer = null;
       $(b).bind("mousedown touchstart", function(b) {
+        function c(b) {
+          b.stopPropagation();
+          k && 5 < Math.sqrt(Math.pow(b.pageX - k.x, 2) + Math.pow(b.pageY - k.y, 2)) && longPressTimer && (clearTimeout(longPressTimer), longPressTimer = null);
+        }
         function d(b) {
           b.stopPropagation();
-          l && 5 < Math.sqrt(Math.pow(b.pageX - l.x, 2) + Math.pow(b.pageY - l.y, 2)) && longPressTimer && (clearTimeout(longPressTimer), longPressTimer = null);
-        }
-        function e(b) {
-          b.stopPropagation();
-          g.unbind(".object");
+          e.unbind(".object");
           longPressTimer && (clearTimeout(longPressTimer), longPressTimer = null);
         }
         Entry.container.getObject(this.id) && Entry.do("containerSelectObject", this.id);
-        var g = $(document), h = b.type, k = !1;
+        var e = $(document), g = b.type, h = !1;
         if (Entry.Utils.isRightButton(b)) {
-          b.stopPropagation(), Entry.documentMousedown.notify(b), k = !0, c._rightClick(b);
+          b.stopPropagation(), Entry.documentMousedown.notify(b), h = !0, f._rightClick(b);
         } else {
-          var l = {x:b.clientX, y:b.clientY};
-          "touchstart" !== h || k || (b.stopPropagation(), Entry.documentMousedown.notify(b), longPressTimer = setTimeout(function() {
-            longPressTimer && (longPressTimer = null, c._rightClick(b));
-          }, 1E3), g.bind("mousemove.object touchmove.object", d), g.bind("mouseup.object touchend.object", e));
+          var k = {x:b.clientX, y:b.clientY};
+          "touchstart" !== g || h || (b.stopPropagation(), Entry.documentMousedown.notify(b), longPressTimer = setTimeout(function() {
+            longPressTimer && (longPressTimer = null, f._rightClick(b));
+          }, 1E3), e.bind("mousemove.object touchmove.object", c), e.bind("mouseup.object touchend.object", d));
         }
       });
       this.view_ = b;
-      var d = this, b = Entry.createElement("ul");
+      var c = this, b = Entry.createElement("ul");
       b.addClass("objectInfoView");
       Entry.objectEditable || b.addClass("entryHide");
       var e = Entry.createElement("li");
       e.addClass("objectInfo_visible");
       this.entity.getVisible() || e.addClass("objectInfo_unvisible");
       e.bindOnClick(function(b) {
-        Entry.engine.isState("run") || (b = d.entity, b.setVisible(!b.getVisible()) ? this.removeClass("objectInfo_unvisible") : this.addClass("objectInfo_unvisible"));
+        Entry.engine.isState("run") || (b = c.entity, b.setVisible(!b.getVisible()) ? this.removeClass("objectInfo_unvisible") : this.addClass("objectInfo_unvisible"));
       });
       var g = Entry.createElement("li");
       g.addClass("objectInfo_unlock");
       this.getLock() && g.addClass("objectInfo_lock");
       g.bindOnClick(function(b) {
-        Entry.engine.isState("run") || (b = d, b.setLock(!b.getLock()) ? this.addClass("objectInfo_lock") : this.removeClass("objectInfo_lock"), b.updateInputViews(b.getLock()));
+        Entry.engine.isState("run") || (b = c, b.setLock(!b.getLock()) ? this.addClass("objectInfo_lock") : this.removeClass("objectInfo_lock"), b.updateInputViews(b.getLock()));
       });
       b.appendChild(e);
       b.appendChild(g);
@@ -7467,10 +7467,10 @@ Entry.EntryObject = function(c) {
       $(e).mousedown(function(b) {
         b.stopPropagation();
         Entry.documentMousedown.notify(b);
-        Entry.do("objectEditButtonClick", c.id);
+        Entry.do("objectEditButtonClick", f.id);
       });
       e.blur = function(b) {
-        c.editObjectComplete();
+        f.editObjectComplete();
       };
       Entry.objectEditable && Entry.objectDeletable && (e = Entry.createElement("div"), e.addClass("entryObjectDeleteWorkspace"), e.object = this, this.deleteView_ = e, this.view_.appendChild(e), e.bindOnClick(function(b) {
         Entry.engine.isState("run") || Entry.container.removeObject(this.object);
@@ -7528,29 +7528,29 @@ Entry.EntryObject = function(c) {
       e.yInput_ = m;
       e.sizeInput_ = q;
       this.coordinateView_ = e;
-      d = this;
+      c = this;
       k.onkeypress = function(b) {
-        13 == b.keyCode && d.editObjectValues(!1);
+        13 == b.keyCode && c.editObjectValues(!1);
       };
       k.onblur = function(b) {
-        Entry.Utils.isNumber(k.value) && d.entity.setX(Number(k.value));
-        d.updateCoordinateView();
+        Entry.Utils.isNumber(k.value) && c.entity.setX(Number(k.value));
+        c.updateCoordinateView();
         Entry.stage.updateObject();
       };
       m.onkeypress = function(b) {
-        13 == b.keyCode && d.editObjectValues(!1);
+        13 == b.keyCode && c.editObjectValues(!1);
       };
       m.onblur = function(b) {
-        Entry.Utils.isNumber(m.value) && d.entity.setY(Number(m.value));
-        d.updateCoordinateView();
+        Entry.Utils.isNumber(m.value) && c.entity.setY(Number(m.value));
+        c.updateCoordinateView();
         Entry.stage.updateObject();
       };
       q.onkeypress = function(b) {
-        13 == b.keyCode && d.editObjectValues(!1);
+        13 == b.keyCode && c.editObjectValues(!1);
       };
       q.onblur = function(b) {
-        Entry.Utils.isNumber(q.value) && d.entity.setSize(Number(q.value));
-        d.updateCoordinateView();
+        Entry.Utils.isNumber(q.value) && c.entity.setSize(Number(q.value));
+        c.updateCoordinateView();
         Entry.stage.updateObject();
       };
       e = Entry.createElement("div");
@@ -7586,25 +7586,25 @@ Entry.EntryObject = function(c) {
       e.appendChild(t);
       e.rotateInput_ = r;
       e.directionInput_ = t;
-      d = this;
+      c = this;
       r.onkeypress = function(b) {
-        13 == b.keyCode && d.editObjectValues(!1);
+        13 == b.keyCode && c.editObjectValues(!1);
       };
       r.onblur = function(b) {
         b = r.value;
         -1 != b.indexOf("\u02da") && (b = b.substring(0, b.indexOf("\u02da")));
-        Entry.Utils.isNumber(b) && d.entity.setRotation(Number(b));
-        d.updateRotationView();
+        Entry.Utils.isNumber(b) && c.entity.setRotation(Number(b));
+        c.updateRotationView();
         Entry.stage.updateObject();
       };
       t.onkeypress = function(b) {
-        13 == b.keyCode && d.editObjectValues(!1);
+        13 == b.keyCode && c.editObjectValues(!1);
       };
       t.onblur = function(b) {
         b = t.value;
         -1 != b.indexOf("\u02da") && (b = b.substring(0, b.indexOf("\u02da")));
-        Entry.Utils.isNumber(b) && d.entity.setDirection(Number(b));
-        d.updateRotationView();
+        Entry.Utils.isNumber(b) && c.entity.setDirection(Number(b));
+        c.updateRotationView();
         Entry.stage.updateObject();
       };
       e = Entry.createElement("div");
@@ -7650,20 +7650,20 @@ Entry.EntryObject = function(c) {
     if ("phone" == Entry.type) {
       return b = Entry.createElement("li", this.id), b.addClass("entryContainerListElementWorkspace"), b.object = this, b.bindOnClick(function(b) {
         Entry.container.getObject(this.id) && Entry.container.selectObject(this.id);
-      }), $ && (c = this, context.attach("#" + this.id, [{text:Lang.Workspace.context_rename, href:"/", action:function(b) {
+      }), $ && (f = this, context.attach("#" + this.id, [{text:Lang.Workspace.context_rename, href:"/", action:function(b) {
         b.preventDefault();
       }}, {text:Lang.Workspace.context_duplicate, href:"/", action:function(b) {
         b.preventDefault();
-        Entry.container.addCloneObject(c);
+        Entry.container.addCloneObject(f);
       }}, {text:Lang.Workspace.context_remove, href:"/", action:function(b) {
         b.preventDefault();
-        Entry.container.removeObject(c);
+        Entry.container.removeObject(f);
       }}])), this.view_ = b, b = Entry.createElement("ul"), b.addClass("objectInfoView"), e = Entry.createElement("li"), e.addClass("objectInfo_visible"), g = Entry.createElement("li"), g.addClass("objectInfo_lock"), b.appendChild(e), b.appendChild(g), this.view_.appendChild(b), b = Entry.createElement("div"), b.addClass("entryObjectThumbnailWorkspace"), this.view_.appendChild(b), this.thumbnailView_ = b, b = Entry.createElement("div"), b.addClass("entryObjectWrapperWorkspace"), this.view_.appendChild(b), 
       e = Entry.createElement("input"), e.addClass("entryObjectNameWorkspace"), b.appendChild(e), this.nameView_ = e, this.nameView_.entryObject = this, this.nameView_.onblur = function() {
         this.entryObject.name = this.value;
         Entry.playground.reloadPlayground();
       }, this.nameView_.onkeypress = function(b) {
-        13 == b.keyCode && d.editObjectValues(!1);
+        13 == b.keyCode && c.editObjectValues(!1);
       }, this.nameView_.value = this.name, Entry.objectEditable && Entry.objectDeletable && (e = Entry.createElement("div"), e.addClass("entryObjectDeletePhone"), e.object = this, this.deleteView_ = e, this.view_.appendChild(e), e.bindOnClick(function(b) {
         Entry.engine.isState("run") || Entry.container.removeObject(this.object);
       })), e = Entry.createElement("button"), e.addClass("entryObjectEditPhone"), e.object = this, e.bindOnClick(function(b) {
@@ -7671,27 +7671,27 @@ Entry.EntryObject = function(c) {
           Entry.container.selectObject(b.id), Entry.playground.injectObject(b);
         }
       }), this.view_.appendChild(e), e = Entry.createElement("div"), e.addClass("entryObjectInformationWorkspace"), e.object = this, this.isInformationToggle = !1, b.appendChild(e), this.informationView_ = e, e = Entry.createElement("div"), e.addClass("entryObjectRotateLabelWrapperWorkspace"), this.view_.appendChild(e), this.rotateLabelWrapperView_ = e, g = Entry.createElement("span"), g.addClass("entryObjectRotateSpanWorkspace"), g.innerHTML = Lang.Workspace.rotation + " : ", r = Entry.createElement("input"), 
-      r.addClass("entryObjectRotateInputWorkspace"), this.rotateSpan_ = g, this.rotateInput_ = r, l = Entry.createElement("span"), l.addClass("entryObjectDirectionSpanWorkspace"), l.innerHTML = Lang.Workspace.direction + " : ", t = Entry.createElement("input"), t.addClass("entryObjectDirectionInputWorkspace"), this.directionInput_ = t, e.appendChild(g), e.appendChild(r), e.appendChild(l), e.appendChild(t), e.rotateInput_ = r, e.directionInput_ = t, d = this, r.onkeypress = function(b) {
-        13 == b.keyCode && (b = r.value, -1 != b.indexOf("\u02da") && (b = b.substring(0, b.indexOf("\u02da"))), Entry.Utils.isNumber(b) && d.entity.setRotation(Number(b)), d.updateRotationView(), r.blur());
+      r.addClass("entryObjectRotateInputWorkspace"), this.rotateSpan_ = g, this.rotateInput_ = r, l = Entry.createElement("span"), l.addClass("entryObjectDirectionSpanWorkspace"), l.innerHTML = Lang.Workspace.direction + " : ", t = Entry.createElement("input"), t.addClass("entryObjectDirectionInputWorkspace"), this.directionInput_ = t, e.appendChild(g), e.appendChild(r), e.appendChild(l), e.appendChild(t), e.rotateInput_ = r, e.directionInput_ = t, c = this, r.onkeypress = function(b) {
+        13 == b.keyCode && (b = r.value, -1 != b.indexOf("\u02da") && (b = b.substring(0, b.indexOf("\u02da"))), Entry.Utils.isNumber(b) && c.entity.setRotation(Number(b)), c.updateRotationView(), r.blur());
       }, r.onblur = function(b) {
-        d.entity.setRotation(d.entity.getRotation());
+        c.entity.setRotation(c.entity.getRotation());
         Entry.stage.updateObject();
       }, t.onkeypress = function(b) {
-        13 == b.keyCode && (b = t.value, -1 != b.indexOf("\u02da") && (b = b.substring(0, b.indexOf("\u02da"))), Entry.Utils.isNumber(b) && d.entity.setDirection(Number(b)), d.updateRotationView(), t.blur());
+        13 == b.keyCode && (b = t.value, -1 != b.indexOf("\u02da") && (b = b.substring(0, b.indexOf("\u02da"))), Entry.Utils.isNumber(b) && c.entity.setDirection(Number(b)), c.updateRotationView(), t.blur());
       }, t.onblur = function(b) {
-        d.entity.setDirection(d.entity.getDirection());
+        c.entity.setDirection(c.entity.getDirection());
         Entry.stage.updateObject();
       }, b = Entry.createElement("div"), b.addClass("entryObjectRotationWrapperWorkspace"), b.object = this, this.view_.appendChild(b), e = Entry.createElement("span"), e.addClass("entryObjectCoordinateWorkspace"), b.appendChild(e), g = Entry.createElement("span"), g.addClass("entryObjectCoordinateSpanWorkspace"), g.innerHTML = "X:", k = Entry.createElement("input"), k.addClass("entryObjectCoordinateInputWorkspace"), l = Entry.createElement("span"), l.addClass("entryObjectCoordinateSpanWorkspace"), 
       l.innerHTML = "Y:", m = Entry.createElement("input"), m.addClass("entryObjectCoordinateInputWorkspace entryObjectCoordinateInputWorkspace_right"), n = Entry.createElement("span"), n.addClass("entryObjectCoordinateSpanWorkspace"), n.innerHTML = Lang.Workspace.Size, q = Entry.createElement("input"), q.addClass("entryObjectCoordinateInputWorkspace", "entryObjectCoordinateInputWorkspace_size"), e.appendChild(g), e.appendChild(k), e.appendChild(l), e.appendChild(m), e.appendChild(n), e.appendChild(q), 
-      e.xInput_ = k, e.yInput_ = m, e.sizeInput_ = q, this.coordinateView_ = e, d = this, k.onkeypress = function(b) {
-        13 == b.keyCode && (Entry.Utils.isNumber(k.value) && d.entity.setX(Number(k.value)), d.updateCoordinateView(), d.blur());
+      e.xInput_ = k, e.yInput_ = m, e.sizeInput_ = q, this.coordinateView_ = e, c = this, k.onkeypress = function(b) {
+        13 == b.keyCode && (Entry.Utils.isNumber(k.value) && c.entity.setX(Number(k.value)), c.updateCoordinateView(), c.blur());
       }, k.onblur = function(b) {
-        d.entity.setX(d.entity.getX());
+        c.entity.setX(c.entity.getX());
         Entry.stage.updateObject();
       }, m.onkeypress = function(b) {
-        13 == b.keyCode && (Entry.Utils.isNumber(m.value) && d.entity.setY(Number(m.value)), d.updateCoordinateView(), d.blur());
+        13 == b.keyCode && (Entry.Utils.isNumber(m.value) && c.entity.setY(Number(m.value)), c.updateCoordinateView(), c.blur());
       }, m.onblur = function(b) {
-        d.entity.setY(d.entity.getY());
+        c.entity.setY(c.entity.getY());
         Entry.stage.updateObject();
       }, e = Entry.createElement("div"), e.addClass("rotationMethodWrapper"), b.appendChild(e), this.rotationMethodWrapper_ = e, b = Entry.createElement("span"), b.addClass("entryObjectRotateMethodLabelWorkspace"), e.appendChild(b), b.innerHTML = Lang.Workspace.rotate_method + " : ", b = Entry.createElement("div"), b.addClass("entryObjectRotateModeWorkspace"), b.addClass("entryObjectRotateModeAWorkspace"), b.object = this, this.rotateModeAView_ = b, e.appendChild(b), b.bindOnClick(function(b) {
         Entry.engine.isState("run") || this.object.setRotateMethod("free");
@@ -12799,27 +12799,20 @@ Entry.PyToBlockParser = function(c) {
   c.arithmeticOperator = {"+":"PLUS", "-":"MINUS", "*":"MULTI", "/":"DIVIDE"};
   c.divideOperator = {"//":"QUOTIENT", "%":"MOD"};
   c.Programs = function(b) {
-    this._funcParamMap = {};
-    this._funcMap = {};
     try {
-      var c, d = b[0].body;
-      if (d && d[0] && "ExpressionStatement" === d[0].type && "AssignmentExpression" === d[0].expression.type) {
-        var e = this.getVariables(b[0]);
-        b.splice(0, 1);
-        var g = this.processPrograms(b);
-        c = e.concat(g);
-      } else {
-        c = b.map(this.Node, this);
-      }
-      return c.filter(function(b) {
-        return 0 < b.length;
-      });
-    } catch (h) {
-      throw b = {}, b.title = h.title, b.message = h.message, b.line = h.line, b;
+      return this.processPrograms(b);
+    } catch (c) {
+      throw b = {}, b.title = c.title, b.message = c.message, b.line = c.line, b;
     }
   };
   c.processPrograms = function(b) {
-    return b.map(this.Node, this);
+    this._funcParamMap = {};
+    this._funcMap = {};
+    var c = b[0].body;
+    c && c[0] && "ExpressionStatement" === c[0].type && "AssignmentExpression" === c[0].expression.type ? (c = this.getVariables(b[0]), b.splice(0, 1), b = b.map(this.Node, this), b = c.concat(b)) : b = b.map(this.Node, this);
+    return b.filter(function(b) {
+      return 0 < b.length;
+    });
   };
   c.Program = function(b) {
     b = b.body.map(this.Node, this);
@@ -12864,6 +12857,7 @@ Entry.PyToBlockParser = function(c) {
     return b.init && b.init.arguments ? b.init.arguments.map(this.Node, this) : [];
   };
   c.AssignmentExpression = function(b) {
+    console.log("@AssignmentExpression", JSON.stringify(b));
     var c = {params:[]}, d;
     switch(b.left.type) {
       case "MemberExpression":
@@ -13122,14 +13116,14 @@ Entry.PyToBlockParser = function(c) {
       b = b.expression;
       var c = b.left, e = b.right, g = !1, h = "variables_";
       Entry.generateHash();
-      var k = {variableType:"variable", name:"", visible:!0, object:{}};
+      var k = {variableType:"variable", name:"", visible:!0, object:{}, value:""};
       if ("=" == b.operator) {
         "name" in b.left ? b = c.name : (g = Entry.getMainWS().data.selectedBoard.data.code.object, b = c.property.name, g = g.id);
-        "NewExpression" === e.type && "list" == e.callee.property.name && (h = "lists_", c = e.arguments.map(this.Node, this), c = c.map(function(b) {
-          return b.constructor === Object && "params" in b ? {data:b.params[0]} : {data:b};
-        }), k.array = c);
+        "NewExpression" === e.type && "list" == e.callee.property.name ? (h = "lists_", c = e.arguments.map(this.Node, this), c = c.map(function(b) {
+          return b.constructor === Object && "params" in b ? {data:b.params[0] + ""} : {data:b + ""};
+        }), k.array = c) : k.value = e.value + "";
         var c = "add" + h[0].toUpperCase() + h.slice(1, h.length - 2), l = this.variableExist(b, h);
-        l ? "lists_" == h ? l.array_ = k.array : l.value_ = e.value : (k.variableType = h.slice(0, length - 2), k.name = b, k.object = g, Entry.variableContainer[c](k));
+        l ? "lists_" == h ? l.array_ = k.array : l.value_ = e.value + "" : (k.variableType = h.slice(0, length - 2), k.name = b, k.object = g, Entry.variableContainer[c](k));
       }
     }, this);
     return [];
@@ -16685,29 +16679,29 @@ p.executeHardware = function() {
   }
   var d = this, e = {_bNotInstalled:!1, init:function(b, c) {
     this._w = window.open("/views/hwLoading.html", "entry_hw_launcher", "width=220, height=225,  top=" + window.screenTop + ", left=" + window.screenLeft);
-    var d = null, d = setTimeout(function() {
+    var f = null, f = setTimeout(function() {
       e.runViewer(b, c);
-      clearInterval(d);
+      clearInterval(f);
     }, 1E3);
   }, runViewer:function(b, c) {
     this._w.document.write("<iframe src='" + b + "' onload='opener.Entry.hw.ieLauncher.set()' style='display:none;width:0;height:0'></iframe>");
-    var d = 0, f = null, f = setInterval(function() {
+    var f = 0, d = null, d = setInterval(function() {
       try {
         this._w.location.href;
       } catch (b) {
         this._bNotInstalled = !0;
       }
-      if (10 < d) {
-        clearInterval(f);
+      if (10 < f) {
+        clearInterval(d);
         var e = 0, g = null, g = setInterval(function() {
           e++;
           this._w.closed || 2 < e ? clearInterval(g) : this._w.close();
           this._bNotInstalled = !1;
-          d = 0;
+          f = 0;
         }.bind(this), 5E3);
         c(!this._bNotInstalled);
       }
-      d++;
+      f++;
     }.bind(this), 100);
   }, set:function() {
     this._bNotInstalled = !0;
