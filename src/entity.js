@@ -1184,6 +1184,7 @@ Entry.EntityObject.prototype.alignTextBox = function () {
                 textObject.x = this.getWidth() / 2;
                 break;
         }
+        textObject.maxHeight = this.getHeight();
     } else {
         textObject.x = 0;
         textObject.y = 0;
