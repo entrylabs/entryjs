@@ -712,7 +712,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
             if('name' in n.left) {
                 name = left.name;
             }  else {
-                object = Entry.getMainWS().data.selectedBoard.data.code.object;
+                object = Entry.playground.object;
                 name = left.property.name;
                 object = object.id;
             }
@@ -724,10 +724,10 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 temp = temp.map(function(m){
                     if(m.constructor === Object && 'params' in m)
                         return {data : m.params[0] + ''};
-                    else 
+                    else
                         return {data : m + ''};
                 });
-                
+
                 obj.array = temp;
             } else {
                 obj.value = right.value + '';

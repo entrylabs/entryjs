@@ -585,7 +585,7 @@ describe('EntryPython', function(){
         it("variable" , function() {
             Entry.loadProject(Entry.getStartProject());
             Entry.playground.object = Entry.container.objects_[0];
-    
+
             var resultBlock = Test.parsePython("test = 2");
             var variable = Entry.variableContainer.variables_[0];
 
