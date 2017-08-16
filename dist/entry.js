@@ -12857,7 +12857,6 @@ Entry.PyToBlockParser = function(c) {
     return b.init && b.init.arguments ? b.init.arguments.map(this.Node, this) : [];
   };
   c.AssignmentExpression = function(b) {
-    console.log("@AssignmentExpression", JSON.stringify(b));
     var c = {params:[]}, d;
     switch(b.left.type) {
       case "MemberExpression":
