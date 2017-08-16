@@ -12982,6 +12982,9 @@ Entry.PyToBlockParser = function(c) {
   c.ReturnStatement = function(b) {
     return b.argument.arguments.map(this.Node, this);
   };
+  c.NewExpression = function(b) {
+    return this.Node(b.callee);
+  };
   c.SubscriptIndex = function(b) {
     var c = this.Node(b.object);
     this.isParamPrimitive(c) ? c = this.blockSyntax["%2[%4]#char_at"] : (this.assert("get_list" === c.type, "Subscript index can be use to array", b), c = this.blockSyntax["%2[%4]"]);
@@ -13093,20 +13096,25 @@ Entry.PyToBlockParser = function(c) {
   c.getVariables = function(b) {
     b.body.map(function(b) {
       b = b.expression;
-      var c = b.left, e = !1;
-      "name" in b.left ? c = c.name : (e = Entry.getMainWS().data.selectedBoard.data.code.object, c = c.property.name, e = e.id);
-      var g = b.right;
+      var c = b.left, e = b.right, g = !1, h = "variables_";
       Entry.generateHash();
-      var h = this.variableExist(c);
-      "=" == b.operator && (h ? h.value_ = g.value : Entry.variableContainer.addVariable({type:"variable", name:c, value:g.value, visible:!0, object:e}));
+      var k = {variableType:"variable", name:"", visible:!0, object:{}};
+      if ("=" == b.operator) {
+        "name" in b.left ? b = c.name : (g = Entry.getMainWS().data.selectedBoard.data.code.object, b = c.property.name, g = g.id);
+        "NewExpression" === e.type && "list" == e.callee.property.name && (h = "lists_", c = e.arguments.map(this.Node, this), c = c.map(function(b) {
+          return b.constructor === Object && "params" in b ? {data:b.params[0]} : {data:b};
+        }), k.array = c);
+        var c = "add" + h[0].toUpperCase() + h.slice(1, h.length - 2), l = this.variableExist(b, h);
+        l ? "lists_" == h ? l.array_ = k.array : l.value_ = e.value : (k.variableType = h.slice(0, length - 2), k.name = b, k.object = g, Entry.variableContainer[c](k));
+      }
     }, this);
     return [];
   };
-  c.variableExist = function(b) {
-    var c = Entry.variableContainer.variables_, c = c.map(function(b) {
+  c.variableExist = function(b, c) {
+    var d = Entry.variableContainer[c], d = d.map(function(b) {
       return b.name_;
     });
-    return -1 < c.indexOf(b) ? Entry.variableContainer.variables_[c.indexOf(b)] : !1;
+    return -1 < d.indexOf(b) ? Entry.variableContainer[c][d.indexOf(b)] : !1;
   };
   c.len = function(b) {
     b = this.Node(b.arguments[0]);
@@ -15351,9 +15359,9 @@ Entry.Model = function(c, b) {
   };
 })(Entry.Model);
 (function(c) {
-  function b(b, f, d) {
-    c[b] = Entry.cloneSimpleObject(c[f]);
-    d && d instanceof Array && d.forEach(function(d) {
+  function b(b, d, f) {
+    c[b] = Entry.cloneSimpleObject(c[d]);
+    f && f instanceof Array && f.forEach(function(d) {
       c[b][d[0]] = d[1];
     });
     return c[b];

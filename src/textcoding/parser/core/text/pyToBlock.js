@@ -446,7 +446,13 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
     // p.ThisExpression = function(component) {};
 
-    // p.NewExpression = function(component) {};
+    p.NewExpression = function(component) {
+        var callee = component.callee;
+        var args = component.arguments;
+
+        return this.Node(callee)
+
+    };
 
     p.SubscriptIndex = function(component) {
         var obj = this.Node(component.object);
@@ -655,39 +661,64 @@ Entry.PyToBlockParser = function(blockSyntax) {
     }
 
     p.getVariables = function(program) {
-        // var arr = new Array(arr.length);
-        // return arr;
         var nodes = program.body;
 
         nodes.map(function(n){
             n = n.expression;
             var left = n.left;
+            var right = n.right;
             var name;
             var object = false;
-
+            var type = 'variables_';
+            var id = Entry.generateHash();
+            var obj = {
+                variableType : 'variable',
+                name : '',
+                visible : true,
+                object : {}
+            };
+            if (n.operator != '=')
+                return;
+            
             if('name' in n.left) {
                 name = left.name;
-            } else  {
+            }  else {
                 object = Entry.getMainWS().data.selectedBoard.data.code.object;
                 name = left.property.name;
                 object = object.id;
             }
 
-            var right = n.right;
-            var id = Entry.generateHash();
-            var existVar = this.variableExist(name);
+            if(right.type === "NewExpression" && right.callee.property.name == 'list'){
+                type = 'lists_';
+                var temp = right.arguments.map(this.Node , this);
+               
+                temp = temp.map(function(m){
+                    if(m.constructor === Object && 'params' in m)
+                        return {data : m.params[0]};
+                    else 
+                        return {data : m};
+                });
+                obj.array = temp;
+            }
 
-            if (n.operator != '=')
-                return;
+            var functionType =  'add'+ type[0].toUpperCase() + type.slice(1,type.length-2);
+            var existVar = this.variableExist(name , type);
 
             if(existVar) {
+                if(type == 'lists_'){
+                    existVar.array_ = obj.array;
+                    return;
+                }
                 existVar.value_ = right.value;
                 return;
             }
 
-            Entry.variableContainer.addVariable({
-                "type": "variable", "name": name , "value" : right.value , visible : true , object: object
-            });
+
+            obj.variableType = type.slice(0,length-2);
+            obj.name = name;
+            obj.object = object;
+
+            Entry.variableContainer[functionType](obj);
 
         } , this);
 
@@ -695,17 +726,15 @@ Entry.PyToBlockParser = function(blockSyntax) {
         return [];
     };
 
-    p.variableExist = function(name){
-        var variables_ = Entry.variableContainer.variables_;
-        var result;
-
+    p.variableExist = function(name , type){
+        var variables_ = Entry.variableContainer[type];
         variables_ = variables_.map(function(v){
             return v.name_;
         });
 
         if(variables_.indexOf(name)  > -1)
-            return Entry.variableContainer.variables_[variables_.indexOf(name)];
-        return false
+            return Entry.variableContainer[type][variables_.indexOf(name)];
+        return false;
     }
 
     /**
