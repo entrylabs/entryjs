@@ -131,11 +131,13 @@ Entry.byrobot_petrone_v2_flight =
         delete Entry.hw.sendQueue["light_manual_brightness"];
     },
 
-    transferLightColorRgb: function (target, red, green, blue) 
+    transferLightColorRgb: function (target, mode, red, green, blue) 
     {
         // 범위 조정
         target = Math.max(target, 0);
         target = Math.min(target, 255);
+        mode = Math.max(mode, 0);
+        mode = Math.min(mode, 255);
         red = Math.max(red, 0);
         red = Math.min(red, 255);
         green = Math.max(green, 0);
@@ -145,6 +147,7 @@ Entry.byrobot_petrone_v2_flight =
 
         // 전송
         Entry.hw.setDigitalPortValue("target", target);
+        Entry.hw.setDigitalPortValue("light_mode_mode", mode);
         Entry.hw.setDigitalPortValue("light_color_r", red);
         Entry.hw.setDigitalPortValue("light_color_g", green);
         Entry.hw.setDigitalPortValue("light_color_b", blue);
@@ -152,6 +155,7 @@ Entry.byrobot_petrone_v2_flight =
         Entry.hw.update();
 
         delete Entry.hw.sendQueue["target"];
+        delete Entry.hw.sendQueue["light_mode_mode"];
         delete Entry.hw.sendQueue["light_color_r"];
         delete Entry.hw.sendQueue["light_color_g"];
         delete Entry.hw.sendQueue["light_color_b"];
@@ -324,7 +328,27 @@ Entry.byrobot_petrone_v2_flight =
             return script.callReturn();
         }
     },
-    
+
+    // LED 수동 설정 - RGB 값 직접 지정
+    setLightColorRgb: function (script, target, mode, red, green, blue) {
+        switch (this.checkFinish(script, 40)) {
+            case "Start":
+                {
+                    this.transferLightColorRgb(target, mode, red, green, blue);
+                }
+                return script;
+
+            case "Running":
+                return script;
+
+            case "Finish":
+                return script.callReturn();
+
+            default:
+                return script.callReturn();
+        }
+    },
+
     // 버저 설정(함수 호출 시 시간은 모두 ms 단위 사용)
     /*  
         MuteInstantally     = 1,    // 묵음 즉시 적용

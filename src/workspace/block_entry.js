@@ -43187,12 +43187,10 @@ Entry.block = {
                     [Lang.Blocks.byrobot_petrone_v2_controller_joystick_left_y, "joystick_left_y"],
                     [Lang.Blocks.byrobot_petrone_v2_controller_joystick_left_direction, "joystick_left_direction"],
                     [Lang.Blocks.byrobot_petrone_v2_controller_joystick_left_event, "joystick_left_event"],
-                    [Lang.Blocks.byrobot_petrone_v2_controller_joystick_left_command, "joystick_left_command"],
                     [Lang.Blocks.byrobot_petrone_v2_controller_joystick_right_x, "joystick_right_x"],
                     [Lang.Blocks.byrobot_petrone_v2_controller_joystick_right_y, "joystick_right_y"],
                     [Lang.Blocks.byrobot_petrone_v2_controller_joystick_right_direction, "joystick_right_direction"],
                     [Lang.Blocks.byrobot_petrone_v2_controller_joystick_right_event, "joystick_right_event"],
-                    [Lang.Blocks.byrobot_petrone_v2_controller_joystick_right_command, "joystick_right_command"],
                 ],
                 "value": "joystick_left_x",             // 초기 선택항목 지정
                 "fontSize": 11
@@ -43347,7 +43345,7 @@ Entry.block = {
         "class": "byrobot_petrone_v2_flight_controller_light",
         "isNotFor": ["byrobot_petrone_v2_flight"],
         "func": function (sprite, script) {
-            return Entry.byrobot_petrone_v2_flight.setLightManual(script, 0x11, 0xff, 0);
+            return Entry.byrobot_petrone_v2_flight.setLightManual(script, 0x31, 0xff, 0);
         },
     },
     // */
@@ -43361,15 +43359,13 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [Lang.Blocks.byrobot_petrone_v2_common_light_manual_all, "255"],
-                    [Lang.Blocks.byrobot_petrone_v2_common_light_manual_1, "128"],
-                    [Lang.Blocks.byrobot_petrone_v2_common_light_manual_2, "64"],
-                    [Lang.Blocks.byrobot_petrone_v2_common_light_manual_3, "32"],
-                    [Lang.Blocks.byrobot_petrone_v2_common_light_manual_4, "16"],
-                    [Lang.Blocks.byrobot_petrone_v2_common_light_manual_5, "8"],
-                    [Lang.Blocks.byrobot_petrone_v2_common_light_manual_6, "4"],
-                    [Lang.Blocks.byrobot_petrone_v2_common_light_manual_blue, "2"],
-                    [Lang.Blocks.byrobot_petrone_v2_common_light_manual_red, "1"],
+                    [Lang.Blocks.byrobot_petrone_v2_common_light_manual_red, "128"],
+                    [Lang.Blocks.byrobot_petrone_v2_common_light_manual_green, "64"],
+                    [Lang.Blocks.byrobot_petrone_v2_common_light_manual_blue, "32"],
+                    [Lang.Blocks.byrobot_petrone_v2_common_light_manual_yellow, "192"],
+                    [Lang.Blocks.byrobot_petrone_v2_common_light_manual_magenta, "160"],
+                    [Lang.Blocks.byrobot_petrone_v2_common_light_manual_cyan, "96"],
+                    [Lang.Blocks.byrobot_petrone_v2_common_light_manual_white, "255"],
                 ],
                 "value": "128",
                 "fontSize": 11
@@ -43411,7 +43407,7 @@ Entry.block = {
         "func": function (sprite, script) {
             var flags = parseInt(script.getField('FLAGS'));
             var brightness = parseInt(script.getField('BRIGHTNESS'));
-            return Entry.byrobot_petrone_v2_flight.setLightManual(script, 0x11, flags, brightness);
+            return Entry.byrobot_petrone_v2_flight.setLightManual(script, 0x31, flags, brightness);
         },
     },
     // */
@@ -43441,7 +43437,7 @@ Entry.block = {
             "params": [
                 {
                     "type": "text",
-                    "params": ["0b11111111"]
+                    "params": ["0b11100000"]
                 },
                 {
                     "type": "text",
@@ -43460,7 +43456,148 @@ Entry.block = {
         "func": function (sprite, script) {
             var flags = script.getNumberValue('FLAGS');
             var brightness = script.getNumberValue('BRIGHTNESS');
-            return Entry.byrobot_petrone_v2_flight.setLightManual(script, 0x11, flags, brightness);
+            return Entry.byrobot_petrone_v2_flight.setLightManual(script, 0x31, flags, brightness);
+        },
+    },
+    // */
+    //*
+    "byrobot_petrone_v2_flight_controller_light_color_rgb_input":
+    {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "text",
+                    "params": ["255"]
+                },
+                {
+                    "type": "text",
+                    "params": ["255"]
+                },
+                {
+                    "type": "text",
+                    "params": ["255"]
+                },
+                null
+            ],
+            "type": "byrobot_petrone_v2_flight_controller_light_color_rgb_input"
+        },
+        "paramsKeyMap": {
+            "RED": 0,
+            "GREEN": 1,
+            "BLUE": 2
+        },
+        "class": "byrobot_petrone_v2_flight_controller_light",
+        "isNotFor": ["byrobot_petrone_v2_flight"],
+        "func": function (sprite, script) {
+            var red = script.getNumberValue('RED');
+            var green = script.getNumberValue('GREEN');
+            var blue = script.getNumberValue('BLUE');
+            return Entry.byrobot_petrone_v2_flight.setLightColorRgb(script, 0x31, red, green, blue);
+        },
+    },
+    // */
+    //*
+    "byrobot_petrone_v2_flight_controller_light_color_rgb_select":
+    {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.byrobot_petrone_v2_common_light_color_sunset, "sunset"],
+                    [Lang.Blocks.byrobot_petrone_v2_common_light_color_cottoncandy, "cottonCandy"],
+                    [Lang.Blocks.byrobot_petrone_v2_common_light_color_muscat, "muscat"],
+                    [Lang.Blocks.byrobot_petrone_v2_common_light_color_strawberrymilk, "strawberryMilk"],
+                    [Lang.Blocks.byrobot_petrone_v2_common_light_color_emerald, "emerald"],
+                    [Lang.Blocks.byrobot_petrone_v2_common_light_color_lavender, "lavender"],
+                ],
+                "value": "sunset",
+                "fontSize": 11
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                null,
+                null
+            ],
+            "type": "byrobot_petrone_v2_flight_controller_light_color_rgb_select"
+        },
+        "paramsKeyMap": {
+            "SELECT": 0,
+        },
+        "class": "byrobot_petrone_v2_flight_controller_light",
+        "isNotFor": ["byrobot_petrone_v2_flight"],
+        "func": function (sprite, script) {
+            var select = script.getField('SELECT');
+            var red = 0;
+            var green = 0;
+            var blue = 0;
+
+            switch (select) {
+                case "sunset":
+                    red = 255;
+                    green = 100;
+                    blue = 0;
+                    break;
+                case "cottonCandy":
+                    red = 20;
+                    green = 250;
+                    blue = 150;
+                    break;
+                case "muscat":
+                    red = 70;
+                    green = 255;
+                    blue = 0;
+                    break;
+                case "strawberryMilk":
+                    red = 150;
+                    green = 60;
+                    blue = 20;
+                    break;
+                case "emerald":
+                    red = 0;
+                    green = 255;
+                    blue = 30;
+                    break;
+                case "lavender":
+                    red = 80;
+                    green = 0;
+                    blue = 200;
+                    break;
+            }
+
+            return Entry.byrobot_petrone_v2_flight.setLightColorRgb(script, 0x31, red, green, blue);
         },
     },
     // */
@@ -43489,7 +43626,7 @@ Entry.block = {
         "class": "byrobot_petrone_v2_flight_drone_light",
         "isNotFor": ["byrobot_petrone_v2_flight"],
         "func": function (sprite, script) {
-            return Entry.byrobot_petrone_v2_flight.setLightManual(script, 0x10, 0xff, 0);
+            return Entry.byrobot_petrone_v2_flight.setLightManual(script, 0x30, 0xff, 0);
         },
     },
     // */
@@ -43503,13 +43640,12 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [Lang.Blocks.byrobot_petrone_v2_common_light_manual_all, "255"],
-                    [Lang.Blocks.byrobot_petrone_v2_common_light_manual_1, "128"],
-                    [Lang.Blocks.byrobot_petrone_v2_common_light_manual_2, "64"],
-                    [Lang.Blocks.byrobot_petrone_v2_common_light_manual_3, "32"],
-                    [Lang.Blocks.byrobot_petrone_v2_common_light_manual_4, "16"],
-                    [Lang.Blocks.byrobot_petrone_v2_common_light_manual_blue, "8"],
-                    [Lang.Blocks.byrobot_petrone_v2_common_light_manual_red, "4"],
+                    [Lang.Blocks.byrobot_petrone_v2_drone_light_manual_eye_red, "128"],
+                    [Lang.Blocks.byrobot_petrone_v2_drone_light_manual_eye_green, "64"],
+                    [Lang.Blocks.byrobot_petrone_v2_drone_light_manual_eye_blue, "32"],
+                    [Lang.Blocks.byrobot_petrone_v2_drone_light_manual_arm_red, "16"],
+                    [Lang.Blocks.byrobot_petrone_v2_drone_light_manual_arm_green, "8"],
+                    [Lang.Blocks.byrobot_petrone_v2_drone_light_manual_arm_blue, "4"],
                 ],
                 "value": "128",
                 "fontSize": 11
@@ -43551,7 +43687,7 @@ Entry.block = {
         "func": function (sprite, script) {
             var flags = parseInt(script.getField('FLAGS'));
             var brightness = parseInt(script.getField('BRIGHTNESS'));
-            return Entry.byrobot_petrone_v2_flight.setLightManual(script, 0x10, flags, brightness);
+            return Entry.byrobot_petrone_v2_flight.setLightManual(script, 0x30, flags, brightness);
         },
     },
     // */
@@ -43581,7 +43717,7 @@ Entry.block = {
             "params": [
                 {
                     "type": "text",
-                    "params": ["0b11111111"]
+                    "params": ["0b11111100"]
                 },
                 {
                     "type": "text",
@@ -43600,7 +43736,172 @@ Entry.block = {
         "func": function (sprite, script) {
             var flags = script.getNumberValue('FLAGS');
             var brightness = script.getNumberValue('BRIGHTNESS');
-            return Entry.byrobot_petrone_v2_flight.setLightManual(script, 0x10, flags, brightness);
+            return Entry.byrobot_petrone_v2_flight.setLightManual(script, 0x30, flags, brightness);
+        },
+    },
+    // */
+    //*
+    "byrobot_petrone_v2_flight_drone_light_color_rgb_input":
+    {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.byrobot_petrone_v2_drone_light_color_eye, "18"],       // EyeHold = 0x12
+                    [Lang.Blocks.byrobot_petrone_v2_drone_light_color_arm, "66"],       // ArmHold = 0x42
+                ],
+                "value": "18",
+                "fontSize": 11
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                null,
+                {
+                    "type": "text",
+                    "params": ["255"]
+                },
+                {
+                    "type": "text",
+                    "params": ["255"]
+                },
+                {
+                    "type": "text",
+                    "params": ["255"]
+                },
+                null
+            ],
+            "type": "byrobot_petrone_v2_flight_drone_light_color_rgb_input"
+        },
+        "paramsKeyMap": {
+            "MODE": 0,
+            "RED": 1,
+            "GREEN": 2,
+            "BLUE": 3
+        },
+        "class": "byrobot_petrone_v2_flight_drone_light",
+        "isNotFor": ["byrobot_petrone_v2_flight"],
+        "func": function (sprite, script) {
+            var mode = parseInt(script.getField('MODE'));
+            var red = script.getNumberValue('RED');
+            var green = script.getNumberValue('GREEN');
+            var blue = script.getNumberValue('BLUE');
+            return Entry.byrobot_petrone_v2_flight.setLightColorRgb(script, 0x31, mode, red, green, blue);
+        },
+    },
+    // */
+    //*
+    "byrobot_petrone_v2_flight_drone_light_color_rgb_select":
+    {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.byrobot_petrone_v2_drone_light_color_eye, "18"],       // EyeHold = 0x12
+                    [Lang.Blocks.byrobot_petrone_v2_drone_light_color_arm, "66"],       // ArmHold = 0x42
+                ],
+                "value": "18",
+                "fontSize": 11
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.byrobot_petrone_v2_common_light_color_sunset, "sunset"],
+                    [Lang.Blocks.byrobot_petrone_v2_common_light_color_cottoncandy, "cottonCandy"],
+                    [Lang.Blocks.byrobot_petrone_v2_common_light_color_muscat, "muscat"],
+                    [Lang.Blocks.byrobot_petrone_v2_common_light_color_strawberrymilk, "strawberryMilk"],
+                    [Lang.Blocks.byrobot_petrone_v2_common_light_color_emerald, "emerald"],
+                    [Lang.Blocks.byrobot_petrone_v2_common_light_color_lavender, "lavender"],
+                ],
+                "value": "sunset",
+                "fontSize": 11
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                null,
+                null,
+                null
+            ],
+            "type": "byrobot_petrone_v2_flight_drone_light_color_rgb_select"
+        },
+        "paramsKeyMap": {
+            "MODE": 0,
+            "SELECT": 1,
+        },
+        "class": "byrobot_petrone_v2_flight_drone_light",
+        "isNotFor": ["byrobot_petrone_v2_flight"],
+        "func": function (sprite, script) {
+            var mode = parseInt(script.getField('MODE'));
+            var select = script.getField('SELECT');
+            var red = 0;
+            var green = 0;
+            var blue = 0;
+
+            switch (select) {
+                case "sunset":
+                    red = 255;
+                    green = 100;
+                    blue = 0;
+                    break;
+                case "cottonCandy":
+                    red = 20;
+                    green = 250;
+                    blue = 150;
+                    break;
+                case "muscat":
+                    red = 70;
+                    green = 255;
+                    blue = 0;
+                    break;
+                case "strawberryMilk":
+                    red = 150;
+                    green = 60;
+                    blue = 20;
+                    break;
+                case "emerald":
+                    red = 0;
+                    green = 255;
+                    blue = 30;
+                    break;
+                case "lavender":
+                    red = 80;
+                    green = 0;
+                    blue = 200;
+                    break;
+            }
+
+            return Entry.byrobot_petrone_v2_flight.setLightColorRgb(script, 0x31, mode, red, green, blue);
         },
     },
     // */
