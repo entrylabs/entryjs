@@ -692,7 +692,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
             }
         }
 
-        return definedBlocks;
+        return definedBlocks.filter(function(b){return b.constructor === Object});
     }
 
     p.getVariables = function(program) {

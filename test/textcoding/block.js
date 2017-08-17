@@ -1284,7 +1284,7 @@ describe('EntryPython', function(){
                                     {
                                        "type":"number",
                                        "params":[
-                                          10
+                                          "10"
                                        ]
                                     }
                                  ],
@@ -1296,7 +1296,7 @@ describe('EntryPython', function(){
                                              {
                                                 "type":"number",
                                                 "params":[
-                                                   10
+                                                   "10"
                                                 ]
                                              },
                                              null
@@ -1349,7 +1349,7 @@ describe('EntryPython', function(){
                                                    {
                                                       "type":"number",
                                                       "params":[
-                                                         10
+                                                         "10"
                                                       ]
                                                    },
                                                    null
@@ -1392,7 +1392,7 @@ describe('EntryPython', function(){
                                              {
                                                 "type":"number",
                                                 "params":[
-                                                   10
+                                                   "10"
                                                 ]
                                              },
                                              null
@@ -1423,118 +1423,10 @@ describe('EntryPython', function(){
                         [
                            [
                               {
-                                 "type":"when_run_button_click",
-                                 "params":[
-                                    null
-                                 ],
-                                 "contents":[
-                                    {
-                                       "type":"repeat_inf",
-                                       "params":[
-                                          {
-                                             "type":"True"
-                                          }
-                                       ],
-                                       "statements":[
-                                          [
-                                             {
-                                                "statements":[
-                                                   [
-                                                      {
-                                                         "type":"move_direction",
-                                                         "params":[
-                                                            {
-                                                               "type":"number",
-                                                               "params":[
-                                                                  "10"
-                                                               ]
-                                                            },
-                                                            null
-                                                         ]
-                                                      }
-                                                   ]
-                                                ],
-                                                "data":[
-                                                   {
-                                                      "declarations":[
-                                                         {
-                                                            "id":{
-                                                               "isCallParam":false
-                                                            },
-                                                            "init":{
-                                                               "type":"number",
-                                                               "params":[
-                                                                  "10"
-                                                               ]
-                                                            },
-                                                            "type":"set_variable",
-                                                            "params":[
-                                                               {
-                                                                  "type":"number",
-                                                                  "params":[
-                                                                     "10"
-                                                                  ]
-                                                               }
-                                                            ]
-                                                         }
-                                                      ],
-                                                      "type":"set_variable",
-                                                      "params":[
-                                                         {
-                                                            "type":"number",
-                                                            "params":[
-                                                               "10"
-                                                            ]
-                                                         }
-                                                      ]
-                                                   },
-                                                   {
-                                                      "statements":[
-                                                         [
-                                                            {
-                                                               "type":"move_direction",
-                                                               "params":[
-                                                                  {
-                                                                     "type":"number",
-                                                                     "params":[
-                                                                        "10"
-                                                                     ]
-                                                                  },
-                                                                  null
-                                                               ]
-                                                            }
-                                                         ]
-                                                      ],
-                                                      "type":"repeat_basic",
-                                                      "params":[
-                                                         {
-
-                                                         }
-                                                      ]
-                                                   }
-                                                ],
-                                                "params":[
-                                                   {
-                                                      "type":"number",
-                                                      "params":[
-                                                         "10"
-                                                      ]
-                                                   }
-                                                ],
-                                                "type":"repeat_basic"
-                                             }
-                                          ]
-                                       ]
-                                    }
-                                 ]
+                                 "type":"when_run_button_click"
                               },
                               {
                                  "type":"repeat_inf",
-                                 "params":[
-                                    {
-                                       "type":"True"
-                                    }
-                                 ],
                                  "statements":[
                                     [
                                        {
@@ -1553,65 +1445,6 @@ describe('EntryPython', function(){
                                                    ]
                                                 }
                                              ]
-                                          ],
-                                          "data":[
-                                             {
-                                                "declarations":[
-                                                   {
-                                                      "id":{
-                                                         "isCallParam":false
-                                                      },
-                                                      "init":{
-                                                         "type":"number",
-                                                         "params":[
-                                                            "10"
-                                                         ]
-                                                      },
-                                                      "type":"set_variable",
-                                                      "params":[
-                                                         {
-                                                            "type":"number",
-                                                            "params":[
-                                                               "10"
-                                                            ]
-                                                         }
-                                                      ]
-                                                   }
-                                                ],
-                                                "type":"set_variable",
-                                                "params":[
-                                                   {
-                                                      "type":"number",
-                                                      "params":[
-                                                         "10"
-                                                      ]
-                                                   }
-                                                ]
-                                             },
-                                             {
-                                                "statements":[
-                                                   [
-                                                      {
-                                                         "type":"move_direction",
-                                                         "params":[
-                                                            {
-                                                               "type":"number",
-                                                               "params":[
-                                                                  "10"
-                                                               ]
-                                                            },
-                                                            null
-                                                         ]
-                                                      }
-                                                   ]
-                                                ],
-                                                "type":"repeat_basic",
-                                                "params":[
-                                                   {
-
-                                                   }
-                                                ]
-                                             }
                                           ],
                                           "params":[
                                              {
@@ -1641,59 +1474,12 @@ describe('EntryPython', function(){
                         [
                            [
                               {
-                                 "type":"when_run_button_click",
-                                 "params":[
-                                    null
-                                 ],
-                                 "contents":[
-                                    {
-                                       "type":"repeat_while_true",
-                                       "params":[
-                                          {
-                                             "operator":">",
-                                             "type":"boolean_basic_operator",
-                                             "params":[
-                                                {
-                                                   "type":"text",
-                                                   "params":[
-                                                      "10"
-                                                   ]
-                                                },
-                                                "GREATER",
-                                                {
-                                                   "type":"text",
-                                                   "params":[
-                                                      "10"
-                                                   ]
-                                                }
-                                             ]
-                                          },
-                                          "until"
-                                       ],
-                                       "statements":[
-                                          [
-                                             {
-                                                "type":"move_direction",
-                                                "params":[
-                                                   {
-                                                      "type":"number",
-                                                      "params":[
-                                                         "10"
-                                                      ]
-                                                   },
-                                                   null
-                                                ]
-                                             }
-                                          ]
-                                       ]
-                                    }
-                                 ]
+                                 "type":"when_run_button_click"
                               },
                               {
                                  "type":"repeat_while_true",
                                  "params":[
                                     {
-                                       "operator":">",
                                        "type":"boolean_basic_operator",
                                        "params":[
                                           {

@@ -17875,7 +17875,9 @@ Entry.PyToBlockParser = function(c) {
       var e = b[c];
       e.constructor == Array && e[0].length ? 0 < e.length ? (e[e.length - 1][0].params = e[0][0][0].params, b[c] = e[e.length - 1][0]) : b[c] = e[0][0] : e.constructor == Array && e[0].constructor == Object && (b[c] = e[0]);
     }
-    return b;
+    return b.filter(function(b) {
+      return b.constructor === Object;
+    });
   };
   c.getVariables = function(b) {
     b.body.map(function(b) {
