@@ -1236,327 +1236,326 @@ describe('EntryPython', function(){
                     ]
                 }]]
             ));
+        });
+    });
 
-            describe('def' , function() {
-                it('when_start_click block' , function() {
+    describe('def' , function() {
+        it('when_start_click block' , function() {
 
-                    Entry.loadProject(Entry.getStartProject());
-                    Entry.playground.object = Entry.container.objects_[0];
+            Entry.loadProject(Entry.getStartProject());
+            Entry.playground.object = Entry.container.objects_[0];
 
-                    assert.ok(Test.pythonToBlock('def when_start():\n    Entry.move_to_direction(10)',
-                        [
-                           [
-                              {
-                                 "type":"when_run_button_click"
-                              },
-                              {
-                                 "type":"move_direction",
-                                 "params":[
-                                    {
-                                       "type":"number",
-                                       "params":[
-                                          "10"
-                                       ]
-                                    },
-                                    null
-                                 ]
-                              }
-                           ]
-                        ]
-                    ));
-                });
+            assert.ok(Test.pythonToBlock('def when_start():\n    Entry.move_to_direction(10)',
+                [
+                   [
+                      {
+                         "type":"when_run_button_click"
+                      },
+                      {
+                         "type":"move_direction",
+                         "params":[
+                            {
+                               "type":"number",
+                               "params":[
+                                  "10"
+                               ]
+                            },
+                            null
+                         ]
+                      }
+                   ]
+                ]
+            ));
+        });
 
-                it('repeat basic block' , function() {
-                    Entry.loadProject(Entry.getStartProject());
-                    Entry.playground.object = Entry.container.objects_[0];
-                    // var resultBlock = Test.parsePython("def when_start():\n    for i in range(10):\n        Entry.move_to_direction(10)");
+        it('repeat basic block' , function() {
+            Entry.loadProject(Entry.getStartProject());
+            Entry.playground.object = Entry.container.objects_[0];
+            // var resultBlock = Test.parsePython("def when_start():\n    for i in range(10):\n        Entry.move_to_direction(10)");
 
-                    assert.ok(Test.pythonToBlock(
-                        "def when_start():\n    for i in range(10):\n        Entry.move_to_direction(10)",
-                        [
-                           [
-                              {
-                                 "type":"when_run_button_click"
-                              },
-                              {
-                                 "type":"repeat_basic",
-                                 "params":[
-                                    {
-                                       "type":"number",
-                                       "params":[
-                                          "10"
-                                       ]
-                                    }
-                                 ],
-                                 "statements":[
-                                    [
-                                       {
-                                          "type":"move_direction",
-                                          "params":[
-                                             {
-                                                "type":"number",
-                                                "params":[
-                                                   "10"
-                                                ]
-                                             },
-                                             null
-                                          ]
-                                       }
-                                    ]
-                                 ]
-                              }
-                           ]
-                        ]
-                    ));
-                });
+            assert.ok(Test.pythonToBlock(
+                "def when_start():\n    for i in range(10):\n        Entry.move_to_direction(10)",
+                [
+                   [
+                      {
+                         "type":"when_run_button_click"
+                      },
+                      {
+                         "type":"repeat_basic",
+                         "params":[
+                            {
+                               "type":"number",
+                               "params":[
+                                  "10"
+                               ]
+                            }
+                         ],
+                         "statements":[
+                            [
+                               {
+                                  "type":"move_direction",
+                                  "params":[
+                                     {
+                                        "type":"number",
+                                        "params":[
+                                           "10"
+                                        ]
+                                     },
+                                     null
+                                  ]
+                               }
+                            ]
+                         ]
+                      }
+                   ]
+                ]
+            ));
+        });
 
-                it('if else block' , function() {
-                    Entry.loadProject(Entry.getStartProject());
-                    Entry.playground.object = Entry.container.objects_[0];
-                    var resultBlock = Test.parsePython("def when_start():\n    if (True and True):\n        Entry.add_x(10)\n    else:\n        Entry.bounce_on_edge()");
+        it('if else block' , function() {
+            Entry.loadProject(Entry.getStartProject());
+            Entry.playground.object = Entry.container.objects_[0];
+            var resultBlock = Test.parsePython("def when_start():\n    if (True and True):\n        Entry.add_x(10)\n    else:\n        Entry.bounce_on_edge()");
 
-                    assert.ok(Test.parsePython(
-                        "def when_start():\n    if (True and True):\n        Entry.add_x(10)\n    else:\n        Entry.bounce_on_edge()" ,
-                        [
-                           [
-                              {
-                                 "type":"when_run_button_click",
-                                 "params":[
-                                    null
-                                 ],
-                                 "contents":[
-                                    {
-                                       "type":"if_else",
-                                       "params":[
-                                          {
-                                             "type":"boolean_and",
-                                             "params":[
-                                                {
-                                                   "type":"True"
-                                                },
-                                                null,
-                                                {
-                                                   "type":"True"
-                                                }
-                                             ]
-                                          }
-                                       ],
-                                       "statements":[
-                                          [
-                                             {
-                                                "type":"move_x",
-                                                "params":[
-                                                   {
-                                                      "type":"number",
-                                                      "params":[
-                                                         "10"
-                                                      ]
-                                                   },
-                                                   null
-                                                ]
-                                             }
-                                          ],
-                                          [
-                                             {
-                                                "type":"bounce_wall",
-                                                "params":[
-                                                   null
-                                                ]
-                                             }
-                                          ]
-                                       ]
-                                    }
-                                 ]
-                              },
-                              {
-                                 "type":"if_else",
-                                 "params":[
-                                    {
-                                       "type":"boolean_and",
-                                       "params":[
-                                          {
-                                             "type":"True"
-                                          },
-                                          null,
-                                          {
-                                             "type":"True"
-                                          }
-                                       ]
-                                    }
-                                 ],
-                                 "statements":[
-                                    [
-                                       {
-                                          "type":"move_x",
-                                          "params":[
-                                             {
-                                                "type":"number",
-                                                "params":[
-                                                   "10"
-                                                ]
-                                             },
-                                             null
-                                          ]
-                                       }
-                                    ],
-                                    [
-                                       {
-                                          "type":"bounce_wall",
-                                          "params":[
-                                             null
-                                          ]
-                                       }
-                                    ]
-                                 ]
-                              }
-                           ]
-                        ]
-                        ));
-                });
-                it('while block ' , function() {
-                    Entry.loadProject(Entry.getStartProject());
-                    Entry.playground.object = Entry.container.objects_[0];
-                    var resultBlock = Test.parsePython("def when_start():\n    while True:\n        for i in range(10):\n            Entry.move_to_direction(10)");
+            assert.ok(Test.parsePython(
+                "def when_start():\n    if (True and True):\n        Entry.add_x(10)\n    else:\n        Entry.bounce_on_edge()" ,
+                [
+                   [
+                      {
+                         "type":"when_run_button_click",
+                         "params":[
+                            null
+                         ],
+                         "contents":[
+                            {
+                               "type":"if_else",
+                               "params":[
+                                  {
+                                     "type":"boolean_and",
+                                     "params":[
+                                        {
+                                           "type":"True"
+                                        },
+                                        null,
+                                        {
+                                           "type":"True"
+                                        }
+                                     ]
+                                  }
+                               ],
+                               "statements":[
+                                  [
+                                     {
+                                        "type":"move_x",
+                                        "params":[
+                                           {
+                                              "type":"number",
+                                              "params":[
+                                                 "10"
+                                              ]
+                                           },
+                                           null
+                                        ]
+                                     }
+                                  ],
+                                  [
+                                     {
+                                        "type":"bounce_wall",
+                                        "params":[
+                                           null
+                                        ]
+                                     }
+                                  ]
+                               ]
+                            }
+                         ]
+                      },
+                      {
+                         "type":"if_else",
+                         "params":[
+                            {
+                               "type":"boolean_and",
+                               "params":[
+                                  {
+                                     "type":"True"
+                                  },
+                                  null,
+                                  {
+                                     "type":"True"
+                                  }
+                               ]
+                            }
+                         ],
+                         "statements":[
+                            [
+                               {
+                                  "type":"move_x",
+                                  "params":[
+                                     {
+                                        "type":"number",
+                                        "params":[
+                                           "10"
+                                        ]
+                                     },
+                                     null
+                                  ]
+                               }
+                            ],
+                            [
+                               {
+                                  "type":"bounce_wall",
+                                  "params":[
+                                     null
+                                  ]
+                               }
+                            ]
+                         ]
+                      }
+                   ]
+                ]
+                ));
+        });
+        it('while block ' , function() {
+            Entry.loadProject(Entry.getStartProject());
+            Entry.playground.object = Entry.container.objects_[0];
+            var resultBlock = Test.parsePython("def when_start():\n    while True:\n        for i in range(10):\n            Entry.move_to_direction(10)");
 
-                    assert.ok(Test.pythonToBlock(
-                        "def when_start():\n    while True:\n        for i in range(10):\n            Entry.move_to_direction(10)" ,
-                        [
-                           [
-                              {
-                                 "type":"when_run_button_click"
-                              },
-                              {
-                                 "type":"repeat_inf",
-                                 "statements":[
-                                    [
-                                       {
-                                          "statements":[
-                                             [
-                                                {
-                                                   "type":"move_direction",
-                                                   "params":[
-                                                      {
-                                                         "type":"number",
-                                                         "params":[
-                                                            "10"
-                                                         ]
-                                                      },
-                                                      null
-                                                   ]
-                                                }
-                                             ]
-                                          ],
-                                          "params":[
-                                             {
-                                                "type":"number",
-                                                "params":[
-                                                   "10"
-                                                ]
-                                             }
-                                          ],
-                                          "type":"repeat_basic"
-                                       }
-                                    ]
-                                 ]
-                              }
-                           ]
-                        ]
-                    ));
-                });
+            assert.ok(Test.pythonToBlock(
+                "def when_start():\n    while True:\n        for i in range(10):\n            Entry.move_to_direction(10)" ,
+                [
+                   [
+                      {
+                         "type":"when_run_button_click"
+                      },
+                      {
+                         "type":"repeat_inf",
+                         "statements":[
+                            [
+                               {
+                                  "statements":[
+                                     [
+                                        {
+                                           "type":"move_direction",
+                                           "params":[
+                                              {
+                                                 "type":"number",
+                                                 "params":[
+                                                    "10"
+                                                 ]
+                                              },
+                                              null
+                                           ]
+                                        }
+                                     ]
+                                  ],
+                                  "params":[
+                                     {
+                                        "type":"number",
+                                        "params":[
+                                           "10"
+                                        ]
+                                     }
+                                  ],
+                                  "type":"repeat_basic"
+                               }
+                            ]
+                         ]
+                      }
+                   ]
+                ]
+            ));
+        });
 
-                it('Do while block ' , function() {
-                    Entry.loadProject(Entry.getStartProject());
-                    Entry.playground.object = Entry.container.objects_[0];
+        it('Do while block ' , function() {
+            Entry.loadProject(Entry.getStartProject());
+            Entry.playground.object = Entry.container.objects_[0];
 
-                    var resultBlock = Test.parsePython("def when_start():\n    while not (10 > 10):\n       Entry.move_to_direction(10)");
-                    assert.ok(Test.pythonToBlock(
-                        "def when_start():\n    while not (10 > 10):\n        Entry.move_to_direction(10)" ,
-                        [
-                           [
-                              {
-                                 "type":"when_run_button_click"
-                              },
-                              {
-                                 "type":"repeat_while_true",
-                                 "params":[
-                                    {
-                                       "type":"boolean_basic_operator",
-                                       "params":[
-                                          {
-                                             "type":"text",
-                                             "params":[
-                                                "10"
-                                             ]
-                                          },
-                                          "GREATER",
-                                          {
-                                             "type":"text",
-                                             "params":[
-                                                "10"
-                                             ]
-                                          }
-                                       ]
-                                    },
-                                    "until"
-                                 ],
-                                 "statements":[
-                                    [
-                                       {
-                                          "type":"move_direction",
-                                          "params":[
-                                             {
-                                                "type":"number",
-                                                "params":[
-                                                   "10"
-                                                ]
-                                             },
-                                             null
-                                          ]
-                                       }
-                                    ]
-                                 ]
-                              }
-                           ]
-                        ]
+            var resultBlock = Test.parsePython("def when_start():\n    while not (10 > 10):\n       Entry.move_to_direction(10)");
+            assert.ok(Test.pythonToBlock(
+                "def when_start():\n    while not (10 > 10):\n        Entry.move_to_direction(10)" ,
+                [
+                   [
+                      {
+                         "type":"when_run_button_click"
+                      },
+                      {
+                         "type":"repeat_while_true",
+                         "params":[
+                            {
+                               "type":"boolean_basic_operator",
+                               "params":[
+                                  {
+                                     "type":"text",
+                                     "params":[
+                                        "10"
+                                     ]
+                                  },
+                                  "GREATER",
+                                  {
+                                     "type":"text",
+                                     "params":[
+                                        "10"
+                                     ]
+                                  }
+                               ]
+                            },
+                            "until"
+                         ],
+                         "statements":[
+                            [
+                               {
+                                  "type":"move_direction",
+                                  "params":[
+                                     {
+                                        "type":"number",
+                                        "params":[
+                                           "10"
+                                        ]
+                                     },
+                                     null
+                                  ]
+                               }
+                            ]
+                         ]
+                      }
+                   ]
+                ]
 
-                    ));
-                });
+            ));
+        });
 
-                it('set variable block ' , function() {
-                    Entry.loadProject(Entry.getStartProject());
-                    Entry.playground.object = Entry.container.objects_[0];
+        it('set variable block ' , function() {
+            Entry.loadProject(Entry.getStartProject());
+            Entry.playground.object = Entry.container.objects_[0];
 
-                    Entry.variableContainer.addVariable({
-                        "type": "variable", "name": "test", "id": "abcd"
-                    });
-
-                    var resultBlock = Test.parsePython("test = 0\n\ndef when_start():\n    test = 22");
-
-                    assert.ok(Test.pythonToBlock(
-                        "def when_start():\n    test = 22" ,
-                        [
-                           [
-                              {
-                                 "type":"when_run_button_click"
-                              },
-                              {
-                                 "type":"set_variable",
-                                 "params":[
-                                    "abcd",
-                                    {
-                                       "type":"number",
-                                       "params":[
-                                          "22"
-                                       ]
-                                    }
-                                 ]
-                              }
-                           ]
-                        ]
-                    ));
-                });
-
+            Entry.variableContainer.addVariable({
+                "type": "variable", "name": "test", "id": "abcd"
             });
-        })
+
+            var resultBlock = Test.parsePython("test = 0\n\ndef when_start():\n    test = 22");
+
+            assert.ok(Test.pythonToBlock(
+                "def when_start():\n    test = 22" ,
+                [
+                   [
+                      {
+                         "type":"when_run_button_click"
+                      },
+                      {
+                         "type":"set_variable",
+                         "params":[
+                            "abcd",
+                            {
+                               "type":"number",
+                               "params":[
+                                  "22"
+                               ]
+                            }
+                         ]
+                      }
+                   ]
+                ]
+            ));
+        });
     });
 });
