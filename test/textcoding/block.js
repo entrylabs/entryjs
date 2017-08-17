@@ -1471,37 +1471,38 @@ describe('EntryPython', function(){
             Entry.playground.object = Entry.container.objects_[0];
 
             var resultBlock = Test.parsePython("def when_start():\n    while not (10 > 10):\n       Entry.move_to_direction(10)");
+            console.log(resultBlock);
+
             assert.ok(Test.pythonToBlock(
                 "def when_start():\n    while not (10 > 10):\n        Entry.move_to_direction(10)" ,
                 [
                    [
-                      {
+                        {
                          "type":"when_run_button_click"
-                      },
-                      {
+                        },
+                        {
                          "type":"repeat_while_true",
                          "params":[
                             {
                                "type":"boolean_basic_operator",
                                "params":[
                                   {
-                                     "type":"text",
+                                     "type":"number",
                                      "params":[
                                         "10"
                                      ]
                                   },
                                   "GREATER",
                                   {
-                                     "type":"text",
+                                     "type":"number",
                                      "params":[
                                         "10"
                                      ]
                                   }
                                ]
-                            },
-                            "until"
-                         ],
-                         "statements":[
+                            }
+                        ],
+                        "statements":[
                             [
                                {
                                   "type":"move_direction",
@@ -1511,18 +1512,16 @@ describe('EntryPython', function(){
                                         "params":[
                                            "10"
                                         ]
-                                     },
-                                     null
+                                     }
                                   ]
                                }
                             ]
-                         ]
-                      }
-                   ]
+                        ]  
+                    }
                 ]
-
-            ));
-        });
+            ]
+        ));
+    });
 
         it('set variable block ' , function() {
             Entry.loadProject(Entry.getStartProject());
