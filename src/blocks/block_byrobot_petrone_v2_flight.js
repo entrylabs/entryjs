@@ -13,9 +13,9 @@
  *  장치와 연관된 변수 및 함수 정의
  ***************************************************************************************/
 
-Entry.byrobot_dronefighter_flight =
+Entry.byrobot_petrone_v2_flight =
 {
-    name: 'byrobot_dronefighter_flight',
+    name: 'byrobot_petrone_v2_flight',
     
     // 초기화
     setZero: function()
@@ -26,11 +26,11 @@ Entry.byrobot_dronefighter_flight =
         // 명령을 각각 분리하여 전송하게 함(2017.01.03)
         for (var i = 0; i < 1; i++)
         {
-            this.transferCommand(0x10, 0x24, 0);
+            this.transferCommand(0x30, 0x24, 0);        // 드론, command = 0x24 (Stop)
             this.transferVibrator(0, 0, 0, 0);
             this.transferbuzzer(0, 0, 0);
-            this.transferLightManual(0x10, 0xFF, 0);
-            this.transferLightManual(0x11, 0xFF, 0);
+            this.transferLightManual(0x30, 0xFF, 0);
+            this.transferLightManual(0x31, 0xFF, 0);
         }
     },
     
@@ -38,34 +38,32 @@ Entry.byrobot_dronefighter_flight =
     // listPorts와 ports 두 곳 동시에 동일한 속성을 표시할 수는 없음
     monitorTemplate:
     {
-        imgPath: "hw/byrobot_dronefighter_flight.png",      // 배경 이미지
+        imgPath: "hw/byrobot_petrone_v2_flight.png",      // 배경 이미지
         width: 500,     // 이미지의 폭
         height: 500,    // 이미지의 높이
         
         // 모니터 화면 상단에 차례대로 나열하는 값
         listPorts:
         {
-            "state_modeVehicle"             :{name: Lang.Blocks.byrobot_dronefighter_drone_state_mode_vehicle,              type: "input", pos: {x: 0, y: 0}},
-            "state_modeFlight"              :{name: Lang.Blocks.byrobot_dronefighter_drone_state_mode_flight,               type: "input", pos: {x: 0, y: 0}},
-            "state_coordinate"              :{name: Lang.Blocks.byrobot_dronefighter_drone_state_mode_coordinate,           type: "input", pos: {x: 0, y: 0}},
-            "state_battery"                 :{name: Lang.Blocks.byrobot_dronefighter_drone_state_battery,                   type: "input", pos: {x: 0, y: 0}},
-            "attitude_roll"                 :{name: Lang.Blocks.byrobot_dronefighter_drone_attitude_roll,                   type: "input", pos: {x: 0, y: 0}},
-            "attitude_pitch"                :{name: Lang.Blocks.byrobot_dronefighter_drone_attitude_pitch,                  type: "input", pos: {x: 0, y: 0}},
-            "attitude_yaw"                  :{name: Lang.Blocks.byrobot_dronefighter_drone_attitude_yaw,                    type: "input", pos: {x: 0, y: 0}},
-            "irmessage_irdata"              :{name: Lang.Blocks.byrobot_dronefighter_drone_irmessage,                       type: "input", pos: {x: 0, y: 0}},
-            "joystick_left_x"               :{name: Lang.Blocks.byrobot_dronefighter_controller_joystick_left_x,            type: "input", pos: {x: 0, y: 0}},
-            "joystick_left_y"               :{name: Lang.Blocks.byrobot_dronefighter_controller_joystick_left_y,            type: "input", pos: {x: 0, y: 0}},
-            "joystick_left_direction"       :{name: Lang.Blocks.byrobot_dronefighter_controller_joystick_left_direction,    type: "input", pos: {x: 0, y: 0}},
-            "joystick_left_event"           :{name: Lang.Blocks.byrobot_dronefighter_controller_joystick_left_event,        type: "input", pos: {x: 0, y: 0}},
-            "joystick_left_command"         :{name: Lang.Blocks.byrobot_dronefighter_controller_joystick_left_command,      type: "input", pos: {x: 0, y: 0}},
-            "joystick_right_x"              :{name: Lang.Blocks.byrobot_dronefighter_controller_joystick_right_x,           type: "input", pos: {x: 0, y: 0}},
-            "joystick_right_y"              :{name: Lang.Blocks.byrobot_dronefighter_controller_joystick_right_y,           type: "input", pos: {x: 0, y: 0}},
-            "joystick_right_direction"      :{name: Lang.Blocks.byrobot_dronefighter_controller_joystick_right_direction,   type: "input", pos: {x: 0, y: 0}},
-            "joystick_right_event"          :{name: Lang.Blocks.byrobot_dronefighter_controller_joystick_right_event,       type: "input", pos: {x: 0, y: 0}},
-            "joystick_right_command"        :{name: Lang.Blocks.byrobot_dronefighter_controller_joystick_right_command,     type: "input", pos: {x: 0, y: 0}},
-            "button_button"                 :{name: Lang.Blocks.byrobot_dronefighter_controller_button_button,              type: "input", pos: {x: 0, y: 0}},
-            "button_event"                  :{name: Lang.Blocks.byrobot_dronefighter_controller_button_event,               type: "input", pos: {x: 0, y: 0}},
-            "entryhw_countTransferReserved" :{name: Lang.Blocks.byrobot_dronefighter_entryhw_count_transfer_reserved,       type: "output", pos: {x: 0, y: 0}},
+            "state_modeVehicle"             :{name: Lang.Blocks.byrobot_petrone_v2_drone_state_mode_vehicle,              type: "input", pos: {x: 0, y: 0}},
+            "state_modeFlight"              :{name: Lang.Blocks.byrobot_petrone_v2_drone_state_mode_flight,               type: "input", pos: {x: 0, y: 0}},
+            "state_coordinate"              :{name: Lang.Blocks.byrobot_petrone_v2_drone_state_mode_coordinate,           type: "input", pos: {x: 0, y: 0}},
+            "state_battery"                 :{name: Lang.Blocks.byrobot_petrone_v2_drone_state_battery,                   type: "input", pos: {x: 0, y: 0}},
+            "attitude_roll"                 :{name: Lang.Blocks.byrobot_petrone_v2_drone_attitude_roll,                   type: "input", pos: {x: 0, y: 0}},
+            "attitude_pitch"                :{name: Lang.Blocks.byrobot_petrone_v2_drone_attitude_pitch,                  type: "input", pos: {x: 0, y: 0}},
+            "attitude_yaw"                  :{name: Lang.Blocks.byrobot_petrone_v2_drone_attitude_yaw,                    type: "input", pos: {x: 0, y: 0}},
+            "irmessage_irdata"              :{name: Lang.Blocks.byrobot_petrone_v2_drone_irmessage,                       type: "input", pos: {x: 0, y: 0}},
+            "joystick_left_x"               :{name: Lang.Blocks.byrobot_petrone_v2_controller_joystick_left_x,            type: "input", pos: {x: 0, y: 0}},
+            "joystick_left_y"               :{name: Lang.Blocks.byrobot_petrone_v2_controller_joystick_left_y,            type: "input", pos: {x: 0, y: 0}},
+            "joystick_left_direction"       :{name: Lang.Blocks.byrobot_petrone_v2_controller_joystick_left_direction,    type: "input", pos: {x: 0, y: 0}},
+            "joystick_left_event"           :{name: Lang.Blocks.byrobot_petrone_v2_controller_joystick_left_event,        type: "input", pos: {x: 0, y: 0}},
+            "joystick_right_x"              :{name: Lang.Blocks.byrobot_petrone_v2_controller_joystick_right_x,           type: "input", pos: {x: 0, y: 0}},
+            "joystick_right_y"              :{name: Lang.Blocks.byrobot_petrone_v2_controller_joystick_right_y,           type: "input", pos: {x: 0, y: 0}},
+            "joystick_right_direction"      :{name: Lang.Blocks.byrobot_petrone_v2_controller_joystick_right_direction,   type: "input", pos: {x: 0, y: 0}},
+            "joystick_right_event"          :{name: Lang.Blocks.byrobot_petrone_v2_controller_joystick_right_event,       type: "input", pos: {x: 0, y: 0}},
+            "button_button"                 :{name: Lang.Blocks.byrobot_petrone_v2_controller_button_button,              type: "input", pos: {x: 0, y: 0}},
+            "button_event"                  :{name: Lang.Blocks.byrobot_petrone_v2_controller_button_event,               type: "input", pos: {x: 0, y: 0}},
+            "entryhw_countTransferReserved" :{name: Lang.Blocks.byrobot_petrone_v2_entryhw_count_transfer_reserved,       type: "output", pos: {x: 0, y: 0}},
         },
 
         // 모니터 화면 지정 위치와 선으로 연결하여 표시하는 값
@@ -132,11 +130,37 @@ Entry.byrobot_dronefighter_flight =
         delete Entry.hw.sendQueue["light_manual_flags"];
         delete Entry.hw.sendQueue["light_manual_brightness"];
     },
-    
+
+    transferLightColorRgb: function (target, red, green, blue) 
+    {
+        // 범위 조정
+        target = Math.max(target, 0);
+        target = Math.min(target, 255);
+        red = Math.max(red, 0);
+        red = Math.min(red, 255);
+        green = Math.max(green, 0);
+        green = Math.min(green, 255);
+        blue = Math.max(blue, 0);
+        blue = Math.min(blue, 255);
+
+        // 전송
+        Entry.hw.setDigitalPortValue("target", target);
+        Entry.hw.setDigitalPortValue("light_color_r", red);
+        Entry.hw.setDigitalPortValue("light_color_g", green);
+        Entry.hw.setDigitalPortValue("light_color_b", blue);
+
+        Entry.hw.update();
+
+        delete Entry.hw.sendQueue["target"];
+        delete Entry.hw.sendQueue["light_color_r"];
+        delete Entry.hw.sendQueue["light_color_g"];
+        delete Entry.hw.sendQueue["light_color_b"];
+    },
+
     transferbuzzer: function(mode, value, time)
     {
         // 전송
-        Entry.hw.setDigitalPortValue("target", 0x11);
+        Entry.hw.setDigitalPortValue("target", 0x31);
         Entry.hw.setDigitalPortValue("buzzer_mode", mode);
         Entry.hw.setDigitalPortValue("buzzer_value", value);
         Entry.hw.setDigitalPortValue("buzzer_time", time);
@@ -158,7 +182,7 @@ Entry.byrobot_dronefighter_flight =
         timeOff = Math.min(timeOff, 60000);
         
         // 전송
-        Entry.hw.setDigitalPortValue("target", 0x11);
+        Entry.hw.setDigitalPortValue("target", 0x31);
         Entry.hw.setDigitalPortValue("vibrator_mode", mode);
         Entry.hw.setDigitalPortValue("vibrator_on", timeOn);
         Entry.hw.setDigitalPortValue("vibrator_off", timeOff);
@@ -180,7 +204,7 @@ Entry.byrobot_dronefighter_flight =
         irmessage = Math.min(irmessage, 127);
         
         // 전송
-        Entry.hw.setDigitalPortValue("target", 0x10);
+        Entry.hw.setDigitalPortValue("target", 0x30);
         Entry.hw.setDigitalPortValue("irmessage_data", irmessage);
 
         Entry.hw.update();
@@ -189,23 +213,23 @@ Entry.byrobot_dronefighter_flight =
         delete Entry.hw.sendQueue["irmessage_data"];
     },
     
-    transferMotorSingle: function(motorIndex, motorDirection, motorSpeed)
+    transferMotorSingle: function(motorIndex, motorRotation, motorSpeed)
     {
         // 범위 조정
         motorSpeed = Math.max(motorSpeed, 0);
         motorSpeed = Math.min(motorSpeed, 4096);
         
         // 전송
-        Entry.hw.setDigitalPortValue("target", 0x10);
+        Entry.hw.setDigitalPortValue("target", 0x30);
         Entry.hw.setDigitalPortValue("motorsingle_target", motorIndex);
-        Entry.hw.setDigitalPortValue("motorsingle_direction", motorDirection);
+        Entry.hw.setDigitalPortValue("motorsingle_rotation", motorRotation);
         Entry.hw.setDigitalPortValue("motorsingle_value", motorSpeed);
 
         Entry.hw.update();
 
         delete Entry.hw.sendQueue["target"];
         delete Entry.hw.sendQueue["motorsingle_target"];
-        delete Entry.hw.sendQueue["motorsingle_direction"];
+        delete Entry.hw.sendQueue["motorsingle_rotation"];
         delete Entry.hw.sendQueue["motorsingle_value"];
     },
     
@@ -228,11 +252,11 @@ Entry.byrobot_dronefighter_flight =
         // 범위 조정
         wheel       = Math.max(wheel, -100);
         wheel       = Math.min(wheel, 100);
-        accel       = Math.max(accel, 0);
+        accel       = Math.max(accel, 0);           // -100 아닌가?
         accel       = Math.min(accel, 100);
         
         // 전송
-        Entry.hw.setDigitalPortValue("target", 0x10);
+        Entry.hw.setDigitalPortValue("target", 0x30);
         Entry.hw.setDigitalPortValue("control_wheel", wheel);
         Entry.hw.setDigitalPortValue("control_accel", accel);
 
@@ -256,7 +280,7 @@ Entry.byrobot_dronefighter_flight =
         throttle    = Math.min(throttle,     100);
         
         // 전송
-        Entry.hw.setDigitalPortValue("target", 0x10);
+        Entry.hw.setDigitalPortValue("target", 0x30);
         Entry.hw.setDigitalPortValue("control_roll",        roll);
         Entry.hw.setDigitalPortValue("control_pitch",       pitch);
         Entry.hw.setDigitalPortValue("control_yaw",         yaw);
