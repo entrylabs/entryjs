@@ -13,6 +13,11 @@ goog.require("Entry.Commander");
  */
 Entry.init = function(container, options) {
     Entry.assert(typeof options === "object", 'Init option is not object');
+    
+    if (!window.entrylms) {
+        Entry.Utils.setDummyEntrylms();
+    }
+
     this.events_ = {};
     this.interfaceState = {
         menuWidth: 264

@@ -1687,3 +1687,36 @@ Entry.Utils.toFixed = function (value, len) {
         return value;
     }
 };
+
+Entry.Utils.setDummyEntrylms = function () {
+    var alertEvent = {
+        on: function (event, callback) {
+            if(callback) {
+                callback();
+            }
+        } 
+    };
+
+    var confirmEvent = function (isConfirm) {
+        var promise = {
+            then: function (callback) {
+                if(callback) {
+                    callback(isConfirm);
+                }
+                return promise;
+            }
+        }
+        return promise;
+    };
+
+    window.entrylms = {
+        alert: function (message) {
+            alert(message);
+            return alertEvent;
+        },
+        confirm: function (message) {
+            var result = confirm(message);
+            return confirmEvent(result);
+        }
+    };
+}
