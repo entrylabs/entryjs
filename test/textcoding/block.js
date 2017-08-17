@@ -772,12 +772,11 @@ describe('EntryPython', function(){
                 Entry.loadProject(Entry.getStartProject());
                 Entry.playground.object = Entry.container.objects_[0];
 
-                var variable = Entry.variableContainer.variables_[0];
-
                 var resultBlock = Test.parsePython("test=0\n\ntest += 10");
+
+                var variable = Entry.variableContainer.variables_[0];
                 assert.equal(variable.name_ , 'test');
                 assert.equal(variable.value_ , '10');
-
             })
 
             Entry.clearProject();
@@ -1037,12 +1036,10 @@ describe('EntryPython', function(){
                 Entry.loadProject(Entry.getStartProject());
                 Entry.playground.object = Entry.container.objects_[0];
 
-                var resultBlock = Test.parsePython("def 함수(param1, param2):\n    Entry.move_to_direction(10)\n함수(10,True)");
+                var resultBlock = Test.parsePython("def 함수(param1, param2):\n    Entry.move_to_direction(10)\n\n함수(10,True)");
                 var functions = Entry.variableContainer.functions_;
                 var functionKey = Object.keys(functions)[0];
                 var func = functions[functionKey];
-
-
 
                 assert.ok(Test.objectSimilarCheck(resultBlock[0][0],
                     {
@@ -1050,7 +1047,7 @@ describe('EntryPython', function(){
                         "params" : [
                             {
                                 "type" : 'number',
-                                "params" : [10]
+                                "params" : ["10"]
                             },
                             {
                                 "type" : "True"
