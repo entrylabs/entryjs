@@ -38,6 +38,7 @@ describe('EntryPython', function(){
                     secondPythonOutput,
                     blockOutput
                 );
+
             assert.equal(pythonOutput, secondPythonOutput);
             Entry.clearProject();
         });
@@ -661,8 +662,6 @@ describe('EntryPython', function(){
             Entry.loadProject(Entry.getStartProject());
             Entry.playground.object = Entry.container.objects_[0];
 
-            var resultBlock = Test.pythonToBlock('Entry.make_clone_of("엔트리봇")');
-
             assert.ok(Test.pythonToBlock(
                 'Entry.make_clone_of("엔트리봇")',
                 [[{
@@ -773,23 +772,12 @@ describe('EntryPython', function(){
                 Entry.loadProject(Entry.getStartProject());
                 Entry.playground.object = Entry.container.objects_[0];
 
-                Entry.variableContainer.addVariable({
-                    "type": "variable", "name": "테스트변수1", "id": "abcd"
-                });
+                var variable = Entry.variableContainer.variables_[0];
 
-                assert.ok(Test.pythonToBlock(
-                    "테스트변수1 += 10",
-                    [[{
-                        type: "change_variable",
-                        params : [
-                            "abcd",
-                            {
-                                "type": 'number',
-                                "params" : [ "10" ]
-                            }
-                        ]
-                    }]]
-                ));
+                var resultBlock = Test.parsePython("test=0\n\ntest += 10");
+                assert.equal(variable.name_ , 'test');
+                assert.equal(variable.value_ , '10');
+
             })
 
             Entry.clearProject();

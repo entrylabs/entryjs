@@ -570,10 +570,13 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 if (value)
                     var sound = Entry.playground.object.getSound(value);
                 return sound ? sound.id : undefined;
+                break;
             case 'clone':
                     var object;
 
-                    if(value == 'self') {
+                    if(!value){
+                        object = 'None'
+                    } else if(value == 'self') {
                         object = value;
                     } else {
                         var objects = Entry.container.objects_.filter(function(obj){
@@ -584,7 +587,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     }
 
                 return object;
-
+                break;
             case 'objectSequence':
         }
     };
