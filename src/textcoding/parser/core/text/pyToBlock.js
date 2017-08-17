@@ -8,6 +8,7 @@ goog.provide("Entry.PyToBlockParser");
 goog.require("Entry.KeyboardCode");
 goog.require("Entry.TextCodingUtil");
 goog.require("Entry.TextCodingError");
+goog.require("Entry.CodeMap");
 
 Entry.PyToBlockParser = function(blockSyntax) {
     this._type ="PyToBlockParser";
@@ -268,10 +269,14 @@ Entry.PyToBlockParser = function(blockSyntax) {
         } else if (property.name === "_pySlice") {
             blockInfo = this.blockSyntax["%2[%4:%6]"];
         } else {
-            if (this.blockSyntax[obj] && this.blockSyntax[obj][property.name])
+            var rawSyntax = obj + "." + property.name;
+            if (this.blockSyntax[obj] && this.blockSyntax[obj][property.name]) {
+                if (this[rawSyntax])
+                    return rawSyntax;
                 blockInfo = this.blockSyntax[obj][property.name];
+            }
             else
-                return obj + "." + property.name; // block syntax not exist. pass to special
+                return rawSyntax; // block syntax not exist. pass to special
         }
 
         this.Block(result, blockInfo);
@@ -790,6 +795,24 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 params: [ undefined, param.params[0] ]
             }
         }
+    };
+
+    p["Hamster.note"] = function(component) {
+        var blockInfo;
+        if (component.arguments.length > 2) {
+            blockInfo = this.blockSyntax.Hamster.note;
+        } else {
+            blockInfo = this.blockSyntax.Hamster["note#0"];
+        }
+        var obj = this.Block({}, blockInfo);
+        obj.params = this.Arguments(
+            blockInfo.key,
+            component.arguments
+        )
+        if (component.arguments.length > 2) {
+            obj.params[0] = Entry.CodeMap.Hamster.hamster_play_note_for[0][obj.params[0].toLowerCase()];
+        }
+        return obj;
     };
 
     p["Hamster.line_tracer_mode"] = function(component) {
