@@ -74,7 +74,7 @@ describe('EntryPython', function(){
                 [[{
                     type: "move_direction",
                     params: [{
-                        params: [10]
+                        params: ["10"]
                     }]
                 }]]
             ));
@@ -88,7 +88,7 @@ describe('EntryPython', function(){
                 [[{
                     "type": "move_x",
                     "params": [{
-                        params : [10]
+                        params : ["10"]
                     }]
                 }]]
             ));
@@ -1117,7 +1117,7 @@ describe('EntryPython', function(){
                                 {
                                    "type":"number",
                                    "params":[
-                                      0
+                                      "0"
                                    ]
                                 },
                                 null
@@ -1247,24 +1247,7 @@ describe('EntryPython', function(){
                         [
                            [
                               {
-                                 "type":"when_run_button_click",
-                                 "params":[
-                                    null
-                                 ],
-                                 "contents":[
-                                    {
-                                       "type":"move_direction",
-                                       "params":[
-                                          {
-                                             "type":"number",
-                                             "params":[
-                                                10
-                                             ]
-                                          },
-                                          null
-                                       ]
-                                    }
-                                 ]
+                                 "type":"when_run_button_click"
                               },
                               {
                                  "type":"move_direction",
@@ -1272,7 +1255,7 @@ describe('EntryPython', function(){
                                     {
                                        "type":"number",
                                        "params":[
-                                          10
+                                          "10"
                                        ]
                                     },
                                     null
@@ -1293,39 +1276,7 @@ describe('EntryPython', function(){
                         [
                            [
                               {
-                                 "type":"when_run_button_click",
-                                 "params":[
-                                    null
-                                 ],
-                                 "contents":[
-                                    {
-                                       "type":"repeat_basic",
-                                       "params":[
-                                          {
-                                             "type":"number",
-                                             "params":[
-                                                10
-                                             ]
-                                          }
-                                       ],
-                                       "statements":[
-                                          [
-                                             {
-                                                "type":"move_direction",
-                                                "params":[
-                                                   {
-                                                      "type":"number",
-                                                      "params":[
-                                                         10
-                                                      ]
-                                                   },
-                                                   null
-                                                ]
-                                             }
-                                          ]
-                                       ]
-                                    }
-                                 ]
+                                 "type":"when_run_button_click"
                               },
                               {
                                  "type":"repeat_basic",
@@ -1495,7 +1446,7 @@ describe('EntryPython', function(){
                                                             {
                                                                "type":"number",
                                                                "params":[
-                                                                  10
+                                                                  "10"
                                                                ]
                                                             },
                                                             null
@@ -1513,7 +1464,7 @@ describe('EntryPython', function(){
                                                             "init":{
                                                                "type":"number",
                                                                "params":[
-                                                                  10
+                                                                  "10"
                                                                ]
                                                             },
                                                             "type":"set_variable",
@@ -1521,7 +1472,7 @@ describe('EntryPython', function(){
                                                                {
                                                                   "type":"number",
                                                                   "params":[
-                                                                     10
+                                                                     "10"
                                                                   ]
                                                                }
                                                             ]
@@ -1532,7 +1483,7 @@ describe('EntryPython', function(){
                                                          {
                                                             "type":"number",
                                                             "params":[
-                                                               10
+                                                               "10"
                                                             ]
                                                          }
                                                       ]
@@ -1546,7 +1497,7 @@ describe('EntryPython', function(){
                                                                   {
                                                                      "type":"number",
                                                                      "params":[
-                                                                        10
+                                                                        "10"
                                                                      ]
                                                                   },
                                                                   null
@@ -1566,7 +1517,7 @@ describe('EntryPython', function(){
                                                    {
                                                       "type":"number",
                                                       "params":[
-                                                         10
+                                                         "10"
                                                       ]
                                                    }
                                                 ],
@@ -1595,7 +1546,7 @@ describe('EntryPython', function(){
                                                       {
                                                          "type":"number",
                                                          "params":[
-                                                            10
+                                                            "10"
                                                          ]
                                                       },
                                                       null
@@ -1613,7 +1564,7 @@ describe('EntryPython', function(){
                                                       "init":{
                                                          "type":"number",
                                                          "params":[
-                                                            10
+                                                            "10"
                                                          ]
                                                       },
                                                       "type":"set_variable",
@@ -1621,7 +1572,7 @@ describe('EntryPython', function(){
                                                          {
                                                             "type":"number",
                                                             "params":[
-                                                               10
+                                                               "10"
                                                             ]
                                                          }
                                                       ]
@@ -1632,7 +1583,7 @@ describe('EntryPython', function(){
                                                    {
                                                       "type":"number",
                                                       "params":[
-                                                         10
+                                                         "10"
                                                       ]
                                                    }
                                                 ]
@@ -1646,7 +1597,7 @@ describe('EntryPython', function(){
                                                             {
                                                                "type":"number",
                                                                "params":[
-                                                                  10
+                                                                  "10"
                                                                ]
                                                             },
                                                             null
@@ -1666,7 +1617,7 @@ describe('EntryPython', function(){
                                              {
                                                 "type":"number",
                                                 "params":[
-                                                   10
+                                                   "10"
                                                 ]
                                              }
                                           ],
@@ -1705,14 +1656,14 @@ describe('EntryPython', function(){
                                                 {
                                                    "type":"text",
                                                    "params":[
-                                                      10
+                                                      "10"
                                                    ]
                                                 },
                                                 "GREATER",
                                                 {
                                                    "type":"text",
                                                    "params":[
-                                                      10
+                                                      "10"
                                                    ]
                                                 }
                                              ]
@@ -1727,7 +1678,7 @@ describe('EntryPython', function(){
                                                    {
                                                       "type":"number",
                                                       "params":[
-                                                         10
+                                                         "10"
                                                       ]
                                                    },
                                                    null
@@ -1748,14 +1699,14 @@ describe('EntryPython', function(){
                                           {
                                              "type":"text",
                                              "params":[
-                                                10
+                                                "10"
                                              ]
                                           },
                                           "GREATER",
                                           {
                                              "type":"text",
                                              "params":[
-                                                10
+                                                "10"
                                              ]
                                           }
                                        ]
@@ -1770,7 +1721,7 @@ describe('EntryPython', function(){
                                              {
                                                 "type":"number",
                                                 "params":[
-                                                   10
+                                                   "10"
                                                 ]
                                              },
                                              null
@@ -1789,35 +1740,27 @@ describe('EntryPython', function(){
                     Entry.loadProject(Entry.getStartProject());
                     Entry.playground.object = Entry.container.objects_[0];
 
-                    var resultBlock = Test.parsePython("def when_start():\n    test = 22");
+                    Entry.variableContainer.addVariable({
+                        "type": "variable", "name": "test", "id": "abcd"
+                    });
+
+                    var resultBlock = Test.parsePython("test = 0\n\ndef when_start():\n    test = 22");
 
                     assert.ok(Test.pythonToBlock(
                         "def when_start():\n    test = 22" ,
                         [
                            [
                               {
-                                 "type":"when_run_button_click",
-                                 "contents":[
-                                    {
-                                       "type":"set_variable",
-                                       "params":[
-                                          {
-                                             "type":"number",
-                                             "params":[
-                                                22
-                                             ]
-                                          }
-                                       ]
-                                    }
-                                 ]
+                                 "type":"when_run_button_click"
                               },
                               {
                                  "type":"set_variable",
                                  "params":[
+                                    "abcd",
                                     {
                                        "type":"number",
                                        "params":[
-                                          22
+                                          "22"
                                        ]
                                     }
                                  ]

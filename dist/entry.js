@@ -17658,7 +17658,7 @@ Entry.PyToBlockParser = function(c) {
       case "Block":
         return e && e.type ? {type:e.type, params:this.Arguments(e.type, [b])} : {type:"number", params:[d + ""]};
       default:
-        return d;
+        return d + "";
     }
   };
   c.MemberExpression = function(b) {
@@ -17753,7 +17753,7 @@ Entry.PyToBlockParser = function(c) {
   c.FunctionDeclaration = function(b) {
     var c = this.Node(b.id), e = {}, f = b.body.body[0].argument.callee.object.body.body, g = this.blockSyntax["def " + c];
     if (g) {
-      return e.type = g.key, c = this.setParams(f), b = [e], b[0].blocks = [], c.unshift(e), c;
+      return e.type = g.key, b = this.setParams(f), b.unshift(e), b;
     }
     this.createFunction(b, c, f);
     return [];
@@ -17858,7 +17858,7 @@ Entry.PyToBlockParser = function(c) {
     return b;
   };
   c.ListIndex = function(b) {
-    this.isParamPrimitive(b) ? b.params = [Number(b.params[0]) + 1] : b = "calc_basic" === b.type && "MINUS" === b.params[1] && this.isParamPrimitive(b.params[2]) && "1" === b.params[2].params[0] + "" ? b.params[0] : {type:"calc_basic", params:[b, "PLUS", {type:"text", params:[1]}]};
+    this.isParamPrimitive(b) ? b.params = [Number(b.params[0]) + 1] : b = "calc_basic" === b.type && "MINUS" === b.params[1] && this.isParamPrimitive(b.params[2]) && "1" === b.params[2].params[0] + "" ? b.params[0] : {type:"calc_basic", params:[b, "PLUS", {type:"text", params:["1"]}]};
     return b;
   };
   c.isParamPrimitive = function(b) {
@@ -17906,7 +17906,7 @@ Entry.PyToBlockParser = function(c) {
   };
   c["Hamster.note"] = function(b) {
     var c;
-    c = 2 < b.arguments.length ? this.blockSyntax.Hamster.note : this.blockSyntax.Hamster["note#0"];
+    2 < b.arguments.length ? c = this.blockSyntax.Hamster.note : (c = this.blockSyntax.Hamster["note#0"], b.arguments.shift());
     var e = this.Block({}, c);
     e.params = this.Arguments(c.key, b.arguments);
     2 < b.arguments.length && (e.params[0] = Entry.CodeMap.Hamster.hamster_play_note_for[0][e.params[0].toLowerCase()]);

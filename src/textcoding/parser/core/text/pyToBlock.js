@@ -243,7 +243,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     params : [ value + "" ]
                 }
             default:
-                return value;
+                return value + "";
         }
     };
 
@@ -457,7 +457,6 @@ Entry.PyToBlockParser = function(blockSyntax) {
             var definedBlocks = this.setParams(blocks);
 
             threadArr = [startBlock];
-            threadArr[0].blocks = [];
 
             definedBlocks.unshift(startBlock)
             return definedBlocks;
@@ -658,7 +657,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     "PLUS",
                     {
                         type: "text",
-                        params: [ 1 ]
+                        params: [ "1" ]
                     }
                 ]
             }
@@ -803,6 +802,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
             blockInfo = this.blockSyntax.Hamster.note;
         } else {
             blockInfo = this.blockSyntax.Hamster["note#0"];
+            component.arguments.shift();
         }
         var obj = this.Block({}, blockInfo);
         obj.params = this.Arguments(
