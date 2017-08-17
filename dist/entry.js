@@ -6178,6 +6178,24 @@ Entry.Utils.toFixed = function(c, b) {
   }
   return c;
 };
+Entry.Utils.setDummyEntrylms = function() {
+  var c = {on:function(b, c) {
+    c && c();
+  }}, b = function(b) {
+    var c = {then:function(e) {
+      e && e(b);
+      return c;
+    }};
+    return c;
+  };
+  window.entrylms = {alert:function(b) {
+    alert(b);
+    return c;
+  }, confirm:function(c) {
+    c = confirm(c);
+    return b(c);
+  }};
+};
 Entry.Model = function(c, b) {
   var e = Entry.Model;
   e.generateSchema(c);
@@ -9944,6 +9962,7 @@ Entry.PropertyPanel = function() {
 })(Entry.PropertyPanel.prototype);
 Entry.init = function(c, b) {
   Entry.assert("object" === typeof b, "Init option is not object");
+  window.entrylms || Entry.Utils.setDummyEntrylms();
   this.events_ = {};
   this.interfaceState = {menuWidth:264};
   Entry.Utils.bindGlobalEvent("resize mousedown mousemove keydown keyup dispose".split(" "));
