@@ -771,12 +771,30 @@ describe('EntryPython', function(){
             it('change_variable method' , function() {
                 Entry.loadProject(Entry.getStartProject());
                 Entry.playground.object = Entry.container.objects_[0];
-
+                Entry.variableContainer.addVariable({
+                    "type": "variable", "name": "test", "id": "abcd"
+                });
                 var resultBlock = Test.parsePython("test=0\n\ntest += 10");
-
-                var variable = Entry.variableContainer.variables_[0];
-                assert.equal(variable.name_ , 'test');
-                assert.equal(variable.value_ , '10');
+                
+                assert.ok(Test.pythonToBlock(
+                    "test=0\n\ntest += 10",
+                    [  
+                       [  
+                          {  
+                             "type":"change_variable",
+                             "params":[  
+                                "abcd",
+                                {  
+                                   "type":"number",
+                                   "params":[  
+                                      "10"
+                                   ]
+                                }
+                             ]
+                          }
+                       ]
+                    ]
+                ));
             })
 
             Entry.clearProject();
@@ -1471,7 +1489,6 @@ describe('EntryPython', function(){
             Entry.playground.object = Entry.container.objects_[0];
 
             var resultBlock = Test.parsePython("def when_start():\n    while not (10 > 10):\n       Entry.move_to_direction(10)");
-            console.log(resultBlock);
 
             assert.ok(Test.pythonToBlock(
                 "def when_start():\n    while not (10 > 10):\n        Entry.move_to_direction(10)" ,
