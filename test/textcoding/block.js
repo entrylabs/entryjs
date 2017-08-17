@@ -558,7 +558,7 @@ describe('EntryPython', function(){
 
 
             assert.ok(Test.pythonToBlock(
-                "테스트리스트[테스트변수2-1] = 테스트변수",
+                "테스트리스트 = []\n\n테스트리스트[테스트변수2-1] = 테스트변수",
                 [[{
                     type : "change_value_list_index",
                     params : [

@@ -13,13 +13,11 @@ Test.randomNumber = function() {
 };
 
 Test.parsePython = function(textCode) {
-    var parser = new Entry.Parser(Entry.Vim.WORKSPACE_MODE);
-    var syntax = parser.mappingSyntax(Entry.Vim.WORKSPACE_MODE);
-    var pyToBlockParser = new Entry.PyToBlockParser(syntax);
-    var options = { locations: true, ranges: true };
+    textCode = "# object code\n\nimport Entry\n\n" + textCode;
+    var parser = new Entry.Parser();
+    parser.setParser(Entry.Vim.WORKSPACE_MODE, Entry.Vim.PARSER_TYPE_PY_TO_BLOCK);
 
-    var blockOutput = pyToBlockParser.processPrograms(
-        [filbert.parse(textCode, options)]);
+    var blockOutput = parser.parse(textCode);
 
     return blockOutput;
 };
@@ -40,6 +38,8 @@ Test.objectSimilarCheck = function(obj, targetObj) {
         switch (typeof value) {
             case "object":
             case "array":
+                if (!obj || !targetObj)
+                    return false;
                 var testResult = this.objectSimilarCheck(obj[key], targetObj[key]);
                 if (!testResult)
                     return false;
