@@ -547,6 +547,17 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 return arg; // default params
         }, this);
 
+        var codeMap = this.CodeMap(blockType);
+        if (codeMap) {
+            results = results.map(function(arg, index) {
+                if (codeMap[index]) {
+                    return codeMap[index][arg] || arg;
+                } else {
+                    return arg;
+                }
+            });
+        }
+
         return results;
     };
 
@@ -631,6 +642,27 @@ Entry.PyToBlockParser = function(blockSyntax) {
         }
         var syntaxObj = blockSchema.syntax.py[0];
         return syntaxObj.syntax || syntaxObj;
+    };
+
+    p.CodeMap = function(blockType) {
+        var blockSchema = Entry.block[blockType];
+        if (!blockSchema || !blockSchema.syntax || !blockSchema.syntax.py)
+            return;
+
+        var syntax = blockSchema.syntax.py[0].syntax;
+
+        if (!syntax)
+            return;
+
+        var callSyntax = syntax.split("(")[0];
+        var identifiers = callSyntax.split(".")
+
+        if (identifiers.length < 2)
+            return;
+
+        var objName = identifiers[0];
+        if (Entry.CodeMap[objName] && Entry.CodeMap[objName][blockType])
+            return Entry.CodeMap[objName][blockType];
     };
 
     p.Block = function(result, blockInfo) {

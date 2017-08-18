@@ -17780,18 +17780,18 @@ Entry.PyToBlockParser = function(c) {
     if (b && "func_" === b.substr(0, 5) || !g) {
       e = c;
     } else {
-      b = this.PySyntax(g, e).match(/%\d+/g, "");
-      if (!b) {
+      var h = this.PySyntax(g, e).match(/%\d+/g, "");
+      if (!h) {
         return [];
       }
       e = e || [];
-      for (var h = 0;h < b.length;h++) {
-        var k = parseInt(b[h].substring(1)) - 1;
-        e[k] = c[h];
+      for (var k = 0;k < h.length;k++) {
+        var l = parseInt(h[k].substring(1)) - 1;
+        e[l] = c[k];
       }
       d = g.def && g.def.params ? g.def.params : void 0;
     }
-    return e.map(function(b, c) {
+    c = e.map(function(b, c) {
       if (b && b.type) {
         var e = g ? g.params[c] : null;
         b = this.Node(b, "Literal" === b.type ? e : void 0, "Literal" === b.type && d ? d[c] : void 0);
@@ -17799,6 +17799,11 @@ Entry.PyToBlockParser = function(c) {
       }
       return b;
     }, this);
+    var m = this.CodeMap(b);
+    m && (c = c.map(function(b, c) {
+      return m[c] ? m[c][b] || b : b;
+    }));
+    return c;
   };
   c.DropdownDynamic = function(b, c) {
     switch(c.menuName) {
@@ -17851,6 +17856,12 @@ Entry.PyToBlockParser = function(c) {
     }
     b = b.syntax.py[0];
     return b.syntax || b;
+  };
+  c.CodeMap = function(b) {
+    var c = Entry.block[b];
+    if (c && c.syntax && c.syntax.py && (c = c.syntax.py[0].syntax) && (c = c.split("(")[0].split("."), !(2 > c.length) && (c = c[0], Entry.CodeMap[c] && Entry.CodeMap[c][b]))) {
+      return Entry.CodeMap[c][b];
+    }
   };
   c.Block = function(b, c) {
     b.type = c.key;
