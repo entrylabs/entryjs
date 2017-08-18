@@ -12866,10 +12866,8 @@ Entry.PyToBlockParser = function(c) {
     switch(b.left.type) {
       case "MemberExpression":
         c.type = "change_value_list_index";
-        d = Entry.variableContainer.getListByName(b.left.object.name);
-        this.assert(d, "list not exist", b.left);
-        c.params.push(d.id_);
-        c.params.push(this.ListIndex(this.Node(b.left.property.arguments[1])));
+        d = b.left.object.name;
+        "self" === d ? (c.type = "set_variable", d = Entry.variableContainer.getVariableByName(b.left.property.name), this.assert(d, "variable not exist", b.left), c.params.push(d.id_)) : (d = Entry.variableContainer.getListByName(d), this.assert(d, "list not exist", b.left), c.params.push(d.id_), c.params.push(this.ListIndex(this.Node(b.left.property.arguments[1]))));
         break;
       case "Identifier":
         c.type = "set_variable";
@@ -12905,6 +12903,9 @@ Entry.PyToBlockParser = function(c) {
   };
   c.MemberExpression = function(b) {
     var c, d = {};
+    if ("self" === b.object.name) {
+      return d = Entry.variableContainer.getVariableByName(b.property.name), this.assert(d, "variable not exist", b), {type:"get_variable", params:[d.id_]};
+    }
     "Literal" === b.object.type ? (c = "%2", d.preParams = [b.object]) : c = this.Node(b.object);
     "object" === typeof c && (d.preParams = [c.params[0]], c = "%2");
     var e = b.property;
@@ -12912,18 +12913,18 @@ Entry.PyToBlockParser = function(c) {
       return this.SubscriptIndex(b);
     }
     if ("_pySlice" === e.name) {
-      c = this.blockSyntax["%2[%4:%6]"];
+      b = this.blockSyntax["%2[%4:%6]"];
     } else {
       if (b = c + "." + e.name, this.blockSyntax[c] && this.blockSyntax[c][e.name]) {
         if (this[b]) {
           return b;
         }
-        c = this.blockSyntax[c][e.name];
+        b = this.blockSyntax[c][e.name];
       } else {
         return b;
       }
     }
-    this.Block(d, c);
+    this.Block(d, b);
     return d;
   };
   c.WhileStatement = function(b) {
@@ -13025,18 +13026,18 @@ Entry.PyToBlockParser = function(c) {
     if (b && "func_" === b.substr(0, 5) || !g) {
       d = c;
     } else {
-      b = this.PySyntax(g, d).match(/%\d+/g, "");
-      if (!b) {
+      var h = this.PySyntax(g, d).match(/%\d+/g, "");
+      if (!h) {
         return [];
       }
       d = d || [];
-      for (var h = 0;h < b.length;h++) {
-        var k = parseInt(b[h].substring(1)) - 1;
-        d[k] = c[h];
+      for (var k = 0;k < h.length;k++) {
+        var l = parseInt(h[k].substring(1)) - 1;
+        d[l] = c[k];
       }
       e = g.def && g.def.params ? g.def.params : void 0;
     }
-    return d.map(function(b, c) {
+    c = d.map(function(b, c) {
       if (b && b.type) {
         var f = g ? g.params[c] : null, d = this.Node(b, "Literal" === b.type ? f : void 0, "Literal" === b.type && e ? e[c] : void 0);
         f && ("Block" !== f.type && d && d.params ? d = d.params[0] : "Block" === f.type && f.isListIndex && (d = this.ListIndex(d)));
@@ -13044,6 +13045,11 @@ Entry.PyToBlockParser = function(c) {
       }
       return b;
     }, this);
+    var m = this.CodeMap(b);
+    m && (c = c.map(function(b, c) {
+      return m[c] ? m[c][b] || b : b;
+    }));
+    return c;
   };
   c.DropdownDynamic = function(b, c) {
     switch(c.menuName) {
@@ -13095,6 +13101,12 @@ Entry.PyToBlockParser = function(c) {
     d = b.syntax.py[0];
     return d.syntax || d;
   };
+  c.CodeMap = function(b) {
+    var c = Entry.block[b];
+    if (c && c.syntax && c.syntax.py && (c = c.syntax.py[0].syntax) && (c = c.split("(")[0].split("."), !(2 > c.length) && (c = c[0], Entry.CodeMap[c] && Entry.CodeMap[c][b]))) {
+      return Entry.CodeMap[c][b];
+    }
+  };
   c.Block = function(b, c) {
     b.type = c.key;
     c.params && (b.params = c.params.concat());
@@ -13132,7 +13144,7 @@ Entry.PyToBlockParser = function(c) {
         "name" in b.left ? b = c.name : (g = Entry.playground.object, b = c.property.name, g = g.id);
         "NewExpression" === e.type && "list" == e.callee.property.name ? (h = "lists_", c = e.arguments.map(this.Node, this), c = c.map(function(b) {
           return b.constructor === Object && "params" in b ? {data:b.params[0] + ""} : {data:b + ""};
-        }), k.array = c) : k.value = String(e.value);
+        }), k.array = c) : k.value = e.value + "";
         var c = "add" + h[0].toUpperCase() + h.slice(1, h.length - 2), l = this.variableExist(b, h);
         l ? "lists_" == h ? l.array_ = k.array : l.value_ = e.value + "" : (k.variableType = h.slice(0, length - 2), k.name = b, k.object = g, Entry.variableContainer[c](k));
       }
@@ -16701,29 +16713,29 @@ p.executeHardware = function() {
   }
   var d = this, e = {_bNotInstalled:!1, init:function(b, c) {
     this._w = window.open("/views/hwLoading.html", "entry_hw_launcher", "width=220, height=225,  top=" + window.screenTop + ", left=" + window.screenLeft);
-    var f = null, f = setTimeout(function() {
+    var d = null, d = setTimeout(function() {
       e.runViewer(b, c);
-      clearInterval(f);
+      clearInterval(d);
     }, 1E3);
   }, runViewer:function(b, c) {
     this._w.document.write("<iframe src='" + b + "' onload='opener.Entry.hw.ieLauncher.set()' style='display:none;width:0;height:0'></iframe>");
-    var f = 0, d = null, d = setInterval(function() {
+    var d = 0, f = null, f = setInterval(function() {
       try {
         this._w.location.href;
       } catch (b) {
         this._bNotInstalled = !0;
       }
-      if (10 < f) {
-        clearInterval(d);
+      if (10 < d) {
+        clearInterval(f);
         var e = 0, g = null, g = setInterval(function() {
           e++;
           this._w.closed || 2 < e ? clearInterval(g) : this._w.close();
           this._bNotInstalled = !1;
-          f = 0;
+          d = 0;
         }.bind(this), 5E3);
         c(!this._bNotInstalled);
       }
-      f++;
+      d++;
     }.bind(this), 100);
   }, set:function() {
     this._bNotInstalled = !0;
