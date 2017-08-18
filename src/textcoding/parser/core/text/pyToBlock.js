@@ -450,14 +450,16 @@ Entry.PyToBlockParser = function(blockSyntax) {
         var startBlock = {};
         var blocks = component.body.body[0].argument.callee.object.body.body;
 
+        if(funcName == 'when_press_key')
+            startBlock.params = [ null , Entry.KeyboardCode.map[ component.arguments[0].name ]];
+
         var blockInfo = this.blockSyntax['def '+ funcName];
         var threadArr;
         if(blockInfo){ // event block
             startBlock.type = blockInfo.key;
             var definedBlocks = this.setParams(blocks);
-
+           
             threadArr = [startBlock];
-
             definedBlocks.unshift(startBlock)
             return definedBlocks;
         } else {

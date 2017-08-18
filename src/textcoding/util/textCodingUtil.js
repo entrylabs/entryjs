@@ -2124,9 +2124,12 @@ Entry.TextCodingUtil = {};
 
                 }*/
 
-                if(isNaN(data))
+                if(isNaN(data) || (data.length > 1 && String(data)[0] === '0'))
                     data = "\"" + data + "\"";
-                value += data;
+                
+                if(data.trim().length > 0)
+                    value += data;
+                
                 if(va != lArray.length-1)
                     value += ", ";
             }

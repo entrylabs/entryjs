@@ -1540,6 +1540,7 @@ describe('EntryPython', function(){
         ));
     });
 
+
         it('set variable block ' , function() {
             Entry.loadProject(Entry.getStartProject());
             Entry.playground.object = Entry.container.objects_[0];
@@ -1573,5 +1574,28 @@ describe('EntryPython', function(){
                 ]
             ));
         });
+
+        it('when press key ' , function() {
+            Entry.loadProject(Entry.getStartProject()); 
+            Entry.playground.object = Entry.container.objects_[0];
+
+            var resultBlock = Test.parsePython('def when_press_key(space):');
+
+            assert.ok(Test.pythonToBlock(
+                'def when_press_key(space):',
+               [  
+                   [  
+                      {  
+                         "type":"when_some_key_pressed",
+                         "params":[  
+                            null,
+                            "32"
+                         ]
+                      }
+                   ]
+                ]
+            ));
+        });
+
     });
 });
