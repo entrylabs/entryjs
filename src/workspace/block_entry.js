@@ -43512,10 +43512,11 @@ Entry.block = {
         "class": "byrobot_petrone_v2_flight_controller_light",
         "isNotFor": ["byrobot_petrone_v2_flight"],
         "func": function (sprite, script) {
+            var mode = 0x12;
             var red = script.getNumberValue('RED');
             var green = script.getNumberValue('GREEN');
             var blue = script.getNumberValue('BLUE');
-            return Entry.byrobot_petrone_v2_flight.setLightColorRgb(script, 0x31, red, green, blue);
+            return Entry.byrobot_petrone_v2_flight.setLightColorRgb(script, 0x31, mode, red, green, blue);
         },
     },
     // */
@@ -43559,6 +43560,7 @@ Entry.block = {
         "class": "byrobot_petrone_v2_flight_controller_light",
         "isNotFor": ["byrobot_petrone_v2_flight"],
         "func": function (sprite, script) {
+            var mode = 0x12;
             var select = script.getField('SELECT');
             var red = 0;
             var green = 0;
@@ -43597,7 +43599,7 @@ Entry.block = {
                     break;
             }
 
-            return Entry.byrobot_petrone_v2_flight.setLightColorRgb(script, 0x31, red, green, blue);
+            return Entry.byrobot_petrone_v2_flight.setLightColorRgb(script, 0x31, mode, red, green, blue);
         },
     },
     // */
@@ -43807,7 +43809,7 @@ Entry.block = {
             var red = script.getNumberValue('RED');
             var green = script.getNumberValue('GREEN');
             var blue = script.getNumberValue('BLUE');
-            return Entry.byrobot_petrone_v2_flight.setLightColorRgb(script, 0x31, mode, red, green, blue);
+            return Entry.byrobot_petrone_v2_flight.setLightColorRgb(script, 0x30, mode, red, green, blue);
         },
     },
     // */
@@ -43871,7 +43873,7 @@ Entry.block = {
             switch (select) {
                 case "sunset":
                     red = 255;
-                    green = 100;
+                    green = 50;
                     blue = 0;
                     break;
                 case "cottonCandy":
@@ -43901,7 +43903,7 @@ Entry.block = {
                     break;
             }
 
-            return Entry.byrobot_petrone_v2_flight.setLightColorRgb(script, 0x31, mode, red, green, blue);
+            return Entry.byrobot_petrone_v2_flight.setLightColorRgb(script, 0x30, mode, red, green, blue);
         },
     },
     // */
