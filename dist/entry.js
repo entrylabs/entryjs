@@ -17624,10 +17624,8 @@ Entry.PyToBlockParser = function(c) {
     switch(b.left.type) {
       case "MemberExpression":
         c.type = "change_value_list_index";
-        e = Entry.variableContainer.getListByName(b.left.object.name);
-        this.assert(e, "list not exist", b.left);
-        c.params.push(e.id_);
-        c.params.push(this.ListIndex(this.Node(b.left.property.arguments[1])));
+        e = b.left.object.name;
+        "self" === e ? (c.type = "set_variable", e = Entry.variableContainer.getVariableByName(b.left.property.name), this.assert(e, "variable not exist", b.left), c.params.push(e.id_)) : (e = Entry.variableContainer.getListByName(e), this.assert(e, "list not exist", b.left), c.params.push(e.id_), c.params.push(this.ListIndex(this.Node(b.left.property.arguments[1]))));
         break;
       case "Identifier":
         c.type = "set_variable";
@@ -17663,6 +17661,9 @@ Entry.PyToBlockParser = function(c) {
   };
   c.MemberExpression = function(b) {
     var c, e = {};
+    if ("self" === b.object.name) {
+      return e = Entry.variableContainer.getVariableByName(b.property.name), this.assert(e, "variable not exist", b), {type:"get_variable", params:[e.id_]};
+    }
     "Literal" === b.object.type ? (c = "%2", e.preParams = [b.object]) : c = this.Node(b.object);
     "object" === typeof c && (e.preParams = [c.params[0]], c = "%2");
     var f = b.property;
@@ -17670,18 +17671,18 @@ Entry.PyToBlockParser = function(c) {
       return this.SubscriptIndex(b);
     }
     if ("_pySlice" === f.name) {
-      c = this.blockSyntax["%2[%4:%6]"];
+      b = this.blockSyntax["%2[%4:%6]"];
     } else {
       if (b = c + "." + f.name, this.blockSyntax[c] && this.blockSyntax[c][f.name]) {
         if (this[b]) {
           return b;
         }
-        c = this.blockSyntax[c][f.name];
+        b = this.blockSyntax[c][f.name];
       } else {
         return b;
       }
     }
-    this.Block(e, c);
+    this.Block(e, b);
     return e;
   };
   c.WhileStatement = function(b) {

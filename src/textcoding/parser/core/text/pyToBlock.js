@@ -185,12 +185,20 @@ Entry.PyToBlockParser = function(blockSyntax) {
         switch(component.left.type) {
             case "MemberExpression":
                 result.type = 'change_value_list_index';
-                leftVar = Entry.variableContainer.getListByName(component.left.object.name)
-                this.assert(leftVar, "list not exist", component.left);
-                result.params.push(leftVar.id_);
-                result.params.push(
-                    this.ListIndex(this.Node(component.left.property.arguments[1]))
-                );
+                var leftName = component.left.object.name;
+                if (leftName === "self") {
+                    result.type = 'set_variable';
+                    leftVar = Entry.variableContainer.getVariableByName(component.left.property.name)
+                    this.assert(leftVar, "variable not exist", component.left);
+                    result.params.push(leftVar.id_);
+                } else {
+                    leftVar = Entry.variableContainer.getListByName(leftName)
+                    this.assert(leftVar, "list not exist", component.left);
+                    result.params.push(leftVar.id_);
+                    result.params.push(
+                        this.ListIndex(this.Node(component.left.property.arguments[1]))
+                    );
+                }
                 break;
             case "Identifier":
                 result.type = 'set_variable';
@@ -250,7 +258,14 @@ Entry.PyToBlockParser = function(blockSyntax) {
     p.MemberExpression = function(component) {
         var obj;
         var result = {};
-        if (component.object.type === "Literal") { // string member
+        if (component.object.name === "self") { // local variable
+            var localVar = Entry.variableContainer.getVariableByName(component.property.name)
+            this.assert(localVar, "variable not exist", component);
+            return {
+                type: "get_variable",
+                params: [ localVar.id_ ]
+            }
+        } else if (component.object.type === "Literal") { // string member
             obj = "%2";
             result.preParams = [ component.object ];
         } else {
