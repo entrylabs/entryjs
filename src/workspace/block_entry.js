@@ -44856,7 +44856,7 @@ Entry.block = {
         "isNotFor": ["byrobot_petrone_v2_flight"],
         "func": function (sprite, script) {
             var coordinate = script.getField('COORDINATE');
-            return Entry.byrobot_petrone_v2_flight.sendCommand(script, 0x10, 0x20, coordinate);
+            return Entry.byrobot_petrone_v2_flight.sendCommand(script, 0x30, 0x20, coordinate);
         },
     },
     // */
@@ -44885,7 +44885,7 @@ Entry.block = {
         "class": "byrobot_petrone_v2_flight_control_flight",
         "isNotFor": ["byrobot_petrone_v2_flight"],
         "func": function (sprite, script) {
-            return Entry.byrobot_petrone_v2_flight.sendCommand(script, 0x10, 0x22, 0xA0); // 0x22 : CommandType::FlightEvent  // 0xA0 : FlightEvent::ResetHeading
+            return Entry.byrobot_petrone_v2_flight.sendCommand(script, 0x30, 0x22, 0xA0); // 0x22 : CommandType::FlightEvent  // 0xA0 : FlightEvent::ResetHeading
         },
     },
     // */

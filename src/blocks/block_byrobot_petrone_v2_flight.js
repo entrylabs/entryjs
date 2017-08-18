@@ -567,7 +567,7 @@ Entry.byrobot_petrone_v2_flight =
     
     sendStop: function(script)
     {
-        return this.sendCommand(script, 0x10, 0x24, 0);
+        return this.sendCommand(script, 0x30, 0x24, 0);
     },
 
     sendCommand: function(script, target, command, option)
@@ -629,7 +629,7 @@ Entry.byrobot_petrone_v2_flight =
         {
         case "Start":
             {
-                this.transferCommand(0x10, 0x10, modeVehicle);
+                this.transferCommand(0x30, 0x10, modeVehicle);
         
                 this.transferControlQuad(0, 0, 0, 0);
                 this.transferControlDouble(0, 0);
@@ -653,7 +653,7 @@ Entry.byrobot_petrone_v2_flight =
         {
         case "Start":
             {
-                this.transferCommand(0x10, 0x22, eventFlight);  // 0x22 : CommandType::FlightEvent
+                this.transferCommand(0x30, 0x22, eventFlight);  // 0x22 : CommandType::FlightEvent
                 this.transferControlQuad(0, 0, 0, 0);
             }
             return script;
@@ -684,7 +684,7 @@ Entry.byrobot_petrone_v2_flight =
                 value       = Math.min(value, 100);
                         
                 // 전송
-                Entry.hw.setDigitalPortValue("target", 0x10);
+                Entry.hw.setDigitalPortValue("target", 0x30);
                 Entry.hw.setDigitalPortValue(controlTarget, value);
 
                 Entry.hw.update();
@@ -701,7 +701,7 @@ Entry.byrobot_petrone_v2_flight =
             if( flagDelay )
             {
                 // 전송
-                Entry.hw.setDigitalPortValue("target", 0x10);
+                Entry.hw.setDigitalPortValue("target", 0x30);
                 Entry.hw.setDigitalPortValue(controlTarget, 0);
 
                 Entry.hw.update();
