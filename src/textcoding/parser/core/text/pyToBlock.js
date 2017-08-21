@@ -581,6 +581,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
     p.DropdownDynamic = function(value, paramSchema) {
         switch(paramSchema.menuName) {
             case 'sprites':
+
             case 'spritesWithMouse':
                 var object;
                 if(value === 'mouse_pointer')
@@ -594,8 +595,25 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 }
 
                 return object;
+
                 break;
             case 'spritesWithSelf':
+                var object;
+
+                if(!value){
+                    object = 'None'
+                } else if(value == 'self') {
+                    object = value;
+                } else {
+                    var objects = Entry.container.objects_.filter(function(obj){
+                        return obj.name === value;
+                    });
+
+                    object = objects[0].id;
+                }
+
+                return object;
+                break;
             case 'collision':
                 break;
             case 'pictures':
@@ -622,21 +640,21 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 return sound ? sound.id : undefined;
                 break;
             case 'clone':
-                    var object;
+                var object;
 
-                    if(!value){
-                        object = 'None'
-                    } else if(value == 'self') {
-                        object = value;
-                    } else {
-                        var objects = Entry.container.objects_.filter(function(obj){
-                            return obj.name === value;
-                        });
+                if(!value){
+                    object = 'None'
+                } else if(value == 'self') {
+                    object = value;
+                } else {
+                    var objects = Entry.container.objects_.filter(function(obj){
+                        return obj.name === value;
+                    });
 
-                        object = objects[0].id;
-                    }
+                    object = objects[0].id;
+                }
 
-                return object;
+            return object;
                 break;
             case 'objectSequence':
         }

@@ -13061,6 +13061,10 @@ Entry.PyToBlockParser = function(c) {
           return c.name === b;
         }), d = d[0].id);
         return d;
+      case "spritesWithSelf":
+        return b ? "self" == b ? d = b : (d = Entry.container.objects_.filter(function(c) {
+          return c.name === b;
+        }), d = d[0].id) : d = "None", d;
       case "pictures":
         return (d = Entry.playground.object.getPicture(b)) ? d.id : void 0;
       case "variables":
