@@ -43107,6 +43107,41 @@ Entry.block = {
     },
     // */
     //*
+    "byrobot_petrone_v2_flight_drone_value_sensor":
+    {
+        "color": "#00979D",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.byrobot_petrone_v2_drone_pressure_temperature, "pressure_temperature"],
+                    [Lang.Blocks.byrobot_petrone_v2_drone_pressure_pressure, "pressure_pressure"],
+                    [Lang.Blocks.byrobot_petrone_v2_drone_imageflow_positionX, "imageflow_positionX"],
+                    [Lang.Blocks.byrobot_petrone_v2_drone_imageflow_positionY, "imageflow_positionY"],
+                    [Lang.Blocks.byrobot_petrone_v2_drone_range_bottom, "range_bottom"],
+                ],
+                "value": "pressure_temperature",                // 초기 선택항목 지정
+                "fontSize": 11
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [null],
+            "type": "byrobot_petrone_v2_flight_drone_value_sensor"       // 언어 파일에서 읽어들일 템플릿. 객체 이름과 동일하게
+        },
+        "paramsKeyMap": {
+            "DEVICE": 0
+        },
+        "class": "byrobot_petrone_v2_flight_monitor",         // 같은 이름인 객체들이 그룹으로 형성됨
+        "isNotFor": ["byrobot_petrone_v2_flight"],
+        "func": function (sprite, script) {
+            return Entry.hw.portData[script.getField('DEVICE')];
+        },
+    },
+    // */
+    //*
     "byrobot_petrone_v2_flight_drone_value_etc":
     {
         "color": "#00979D",
