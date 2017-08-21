@@ -17901,7 +17901,7 @@ Entry.PyToBlockParser = function(c) {
     return b && ("number" === b.type || "text" === b.type);
   };
   c.assert = function(b, c, e, f, g) {
-    b || Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError["MESSAGE_CONV_" + f], c, e.loc.start.line, Entry.TextCodingError["SUBJECT_CONV_" + g]);
+    b || Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError["MESSAGE_CONV_" + f], c, e.loc.start.line + 2, Entry.TextCodingError["SUBJECT_CONV_" + g]);
   };
   c.setParams = function(b) {
     b = b.length ? b.map(this.Node, this) : [];

@@ -473,7 +473,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
         if(blockInfo){ // event block
             startBlock.type = blockInfo.key;
             var definedBlocks = this.setParams(blocks);
-           
+
             threadArr = [startBlock];
             definedBlocks.unshift(startBlock)
             return definedBlocks;
@@ -584,7 +584,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
             case 'spritesWithMouse':
                 var object;
-             
+
                 var objects = Entry.container.objects_.filter(function(obj){
                         return obj.name === value;
                     });
@@ -776,7 +776,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
             Entry.TextCodingError.TITLE_CONVERTING,
             Entry.TextCodingError["MESSAGE_CONV_" + message],
             keyword,
-            errorNode.loc.start.line,
+            errorNode.loc.start.line + 2,
             Entry.TextCodingError["SUBJECT_CONV_" + subject]
         );
     };

@@ -9328,6 +9328,20 @@ Entry.block = {
                     null
                 ]
             },
+            { // for square
+                syntax: "math.pow(%2)",
+                params: [null, null, null, "square"],
+                blockType: "param",
+                textParams: [
+                    undefined,
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    undefined,
+                    null
+                ]
+            },
             {
                 syntax: "math.sqrt(%2)",
                 params: [null, null, null, "root"],
@@ -10033,6 +10047,7 @@ Entry.block = {
             },
             {
                 "type": "Block",
+                "isListIndex": true,
                 "accept": "string"
             },
             {
@@ -10176,7 +10191,6 @@ Entry.block = {
         "syntax": {"js": [], "py": [
             {
                 syntax: "len(%2)",
-                passTest: true,
                 blockType: "param",
                 keyOption: "length_of_string"
             }
@@ -10203,6 +10217,7 @@ Entry.block = {
             },
             {
                 "type": "Block",
+                "isListIndex": true,
                 "accept": "string"
             },
             {
@@ -16252,7 +16267,8 @@ Entry.block = {
             {
                 syntax: "(%1 and %3)",
                 template: "%1 and %3",
-                blockType: "param"
+                blockType: "param",
+                dic: "&&"
             }
         ]}
     },
@@ -16313,7 +16329,8 @@ Entry.block = {
             {
                 syntax: "(%1 or %3)",
                 template: "%1 or %3",
-                blockType: "param"
+                blockType: "param",
+                dic: "||"
             }
         ]}
     },
@@ -24524,6 +24541,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Block",
+                "isListIndex": true,
                 "accept": "string"
             },
             {
@@ -24746,6 +24764,7 @@ Entry.block = {
             },
             {
                 "type": "Block",
+                "isListIndex": true,
                 "accept": "string"
             },
             {
@@ -24873,6 +24892,7 @@ Entry.block = {
             },
             {
                 "type": "Block",
+                "isListIndex": true,
                 "accept": "string"
             },
             {
