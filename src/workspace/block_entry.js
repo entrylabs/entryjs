@@ -39057,6 +39057,51 @@ Entry.block = {
             }
         }
     },
+    "maze_ladder_climb": {
+        "skeleton": "basic",
+        "mode": "maze",
+        "color": "#71C11B",
+        "syntax": [
+            "Scope",
+            "climb"
+        ],
+        "params": [
+            {
+                "type": "Image",
+                "img": "/img/assets/week/blocks/ladder.png",
+                "size": 24
+            }
+        ],
+        func: function(sprite, script) {
+            if (!script.isContinue) {
+                script.isContinue = true;
+                script.isAction = true;
+                var entities = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT);
+                var unitId;
+                $.each(entities, function (id, entity) {
+                    unitId = id;
+                    components = entity.components;
+                });
+                var unitComp = Ntry.entityManager.getComponent(unitId, Ntry.STATIC.UNIT);
+                script.direction = unitComp.direction;
+                unitComp.direction = Ntry.STATIC.NORTH;
+                var callBack = function() {
+                    unitComp.direction = script.direction;
+                    script.isAction = false;
+                };
+
+                // turn direction
+                Ntry.dispatchEvent("unitAction", Ntry.STATIC.CLIMB, callBack);
+
+                return Entry.STATIC.BREAK;
+            } else if (script.isAction) {
+                return Entry.STATIC.BREAK;
+            } else {
+                delete script.isAction;
+                delete script.isContinue;
+            }
+        }
+    },
     "maze_rotate_left": {
         "skeleton": "basic",
         "mode": "maze",
