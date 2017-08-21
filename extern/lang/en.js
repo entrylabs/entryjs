@@ -4872,7 +4872,7 @@ Lang.template = {
     "byrobot_petrone_v2_flight_controller_if_button_press": "when press %1",
     "byrobot_petrone_v2_flight_controller_if_joystick_direction": "when %1 stick move to %2",
     "byrobot_petrone_v2_flight_drone_control_drone_stop": "stop %1",
-    "byrobot_petrone_v2_flight_drone_control_coordinate": "set coordinate reference to %1 %2",
+    "byrobot_petrone_v2_flight_drone_control_coordinate": "Headless mode (Absolute mode) %1 %2",
     "byrobot_petrone_v2_flight_drone_control_drone_reset_heading": "reset heading reference %1",
     "byrobot_petrone_v2_flight_drone_control_quad_one": "set %1 to %2 %3",
     "byrobot_petrone_v2_flight_drone_control_quad_one_delay": "set %1 to %2 and run for %3 second %4",

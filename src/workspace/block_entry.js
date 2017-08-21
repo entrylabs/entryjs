@@ -44744,10 +44744,10 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [Lang.Blocks.byrobot_petrone_v2_drone_coordinate_world, "1"],
-                    [Lang.Blocks.byrobot_petrone_v2_drone_coordinate_local, "2"],
+                    [Lang.Blocks.byrobot_petrone_v2_drone_coordinate_world, "on (초보자용)"],
+                    [Lang.Blocks.byrobot_petrone_v2_drone_coordinate_local, "off (숙련자용)"],
                 ],
-                "value": "1",
+                "value": "on (초보자용)",
                 "fontSize": 11
             },
             {
@@ -44771,6 +44771,16 @@ Entry.block = {
         "isNotFor": ["byrobot_petrone_v2_flight"],
         "func": function (sprite, script) {
             var coordinate = script.getField('COORDINATE');
+
+            switch (coordinate) {
+                case "on (초보자용)":
+                    coordinate = 1;
+                    break;
+                case "off (숙련자용)":
+                    coordinate = 2;
+                    break;
+            }
+
             return Entry.byrobot_petrone_v2_flight.sendCommand(script, 0x30, 0x20, coordinate);
         },
     },
