@@ -13056,15 +13056,18 @@ Entry.PyToBlockParser = function(c) {
       case "sprites":
       ;
       case "spritesWithMouse":
-        var d;
-        "mouse_pointer" === b ? d = "mouse_pointer" : (d = Entry.container.objects_.filter(function(c) {
+        var d, e = Entry.container.objects_.filter(function(c) {
           return c.name === b;
-        }), d = d[0].id);
-        return d;
+        });
+        return d = d && 0 < d.length ? e[0].id : b;
       case "spritesWithSelf":
-        return b ? "self" == b ? d = b : (d = Entry.container.objects_.filter(function(c) {
+        return b ? "self" == b ? d = b : (e = Entry.container.objects_.filter(function(c) {
           return c.name === b;
-        }), d = d[0].id) : d = "None", d;
+        }), d = e[0].id) : d = "None", d;
+      case "collision":
+        return e = Entry.container.objects_.filter(function(c) {
+          return c.name === b;
+        }), d = d && 0 < d.length ? e[0].id : b;
       case "pictures":
         return (d = Entry.playground.object.getPicture(b)) ? d.id : void 0;
       case "variables":
@@ -13076,11 +13079,11 @@ Entry.PyToBlockParser = function(c) {
           return c.name === b;
         })[0].id;
       case "sounds":
-        return b && (d = Entry.playground.object.getSound(b)), d ? d.id : void 0;
+        return b && (e = Entry.playground.object.getSound(b)), e ? e.id : void 0;
       case "clone":
-        return b ? "self" == b ? d = b : (d = Entry.container.objects_.filter(function(c) {
+        return b ? "self" == b ? d = b : (e = Entry.container.objects_.filter(function(c) {
           return c.name === b;
-        }), d = d[0].id) : d = "None", d;
+        }), d = e[0].id) : d = "None", d;
     }
   };
   c.Node = function(b, c) {

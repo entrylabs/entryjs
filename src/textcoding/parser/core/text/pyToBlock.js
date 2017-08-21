@@ -584,14 +584,15 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
             case 'spritesWithMouse':
                 var object;
-                if(value === 'mouse_pointer')
-                    object = 'mouse_pointer';
-                else {
-                    var objects = Entry.container.objects_.filter(function(obj){
-                            return obj.name === value;
-                        });
+             
+                var objects = Entry.container.objects_.filter(function(obj){
+                        return obj.name === value;
+                    });
 
+                if(object && object.length > 0)
                     object = objects[0].id;
+                else {
+                    object = value;
                 }
 
                 return object;
@@ -615,6 +616,20 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 return object;
                 break;
             case 'collision':
+                var object;
+
+                var objects = Entry.container.objects_.filter(function(obj){
+                            return obj.name === value;
+                        });
+
+                if(object && object.length > 0)
+                    object = objects[0].id;
+                else {
+                    object = value;
+                }
+
+                return object;
+
                 break;
             case 'pictures':
                 var picture = Entry.playground.object.getPicture(value);
