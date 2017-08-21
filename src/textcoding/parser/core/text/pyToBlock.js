@@ -589,7 +589,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         return obj.name === value;
                     });
 
-                if(object && object.length > 0)
+                if(objects && objects.length > 0)
                     object = objects[0].id;
                 else {
                     object = value;
@@ -622,7 +622,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                             return obj.name === value;
                         });
 
-                if(object && object.length > 0)
+                if(objects && objects.length > 0)
                     object = objects[0].id;
                 else {
                     object = value;
