@@ -129,7 +129,6 @@ Entry.PyToBlockParser = function(blockSyntax) {
         }
 
         if(component.arguments) {
-
             obj.params = this.Arguments(
                 obj.type,
                 component.arguments,
@@ -137,6 +136,12 @@ Entry.PyToBlockParser = function(blockSyntax) {
             )
 
         }
+
+        if(obj.type == 'is_press_some_key') {
+            obj.params = [ Entry.KeyboardCode.map[ component.arguments[0].value ]];
+        }
+       
+
 
         return obj;
     };
@@ -193,7 +198,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     result.params.push(leftVar.id_);
                 } else {
                     leftVar = Entry.variableContainer.getListByName(leftName)
-                    this.assert(leftVar, leftName, component.left, "NO_LIST", "LIST");
+                    this.assert(leftVar, "list not exist", component.left);
                     result.params.push(leftVar.id_);
                     result.params.push(
                         this.ListIndex(this.Node(component.left.property.arguments[1]))
@@ -473,7 +478,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
         if(blockInfo){ // event block
             startBlock.type = blockInfo.key;
             var definedBlocks = this.setParams(blocks);
-
+           
             threadArr = [startBlock];
             definedBlocks.unshift(startBlock)
             return definedBlocks;
@@ -584,7 +589,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
             case 'spritesWithMouse':
                 var object;
-
+             
                 var objects = Entry.container.objects_.filter(function(obj){
                         return obj.name === value;
                     });
@@ -769,16 +774,9 @@ Entry.PyToBlockParser = function(blockSyntax) {
         return param && (param.type === "number" || param.type === "text");
     };
 
-    p.assert = function(data, keyword, errorNode, message, subject) {
-        if (data)
-            return;
-        Entry.TextCodingError.error(
-            Entry.TextCodingError.TITLE_CONVERTING,
-            Entry.TextCodingError["MESSAGE_CONV_" + message],
-            keyword,
-            errorNode.loc.start.line + 2,
-            Entry.TextCodingError["SUBJECT_CONV_" + subject]
-        );
+    p.assert = function(data, message, errorNode) {
+        if (!data)
+            throw new Error(message);
     };
 
     p.setParams = function(params) {
