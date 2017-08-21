@@ -597,6 +597,11 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 var list = Entry.variableContainer.getListByName(value);
                 return list ? list.id_ : undefined;
             case 'scenes':
+
+                return  Entry.scene.scenes_.filter(function(s){
+                    return s.name === value;
+                })[0].id;
+
                 break;
             case 'sounds':
                 if (value)

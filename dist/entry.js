@@ -13060,6 +13060,10 @@ Entry.PyToBlockParser = function(c) {
         return (d = Entry.variableContainer.getVariableByName(b)) ? d.id_ : void 0;
       case "lists":
         return (d = Entry.variableContainer.getListByName(b)) ? d.id_ : void 0;
+      case "scenes":
+        return Entry.scene.scenes_.filter(function(c) {
+          return c.name == b;
+        })[0].id;
       case "sounds":
         return b && (d = Entry.playground.object.getSound(b)), d ? d.id : void 0;
       case "clone":
