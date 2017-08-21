@@ -13053,23 +13053,30 @@ Entry.PyToBlockParser = function(c) {
   };
   c.DropdownDynamic = function(b, c) {
     switch(c.menuName) {
+      case "sprites":
+      ;
+      case "spritesWithMouse":
+        var d;
+        "mouse_pointer" === b ? d = "mouse_pointer" : (d = Entry.container.objects_.filter(function(c) {
+          return c.name === b;
+        }), d = d[0].id);
+        return d;
       case "pictures":
-        var d = Entry.playground.object.getPicture(b);
-        return d ? d.id : void 0;
+        return (d = Entry.playground.object.getPicture(b)) ? d.id : void 0;
       case "variables":
         return (d = Entry.variableContainer.getVariableByName(b)) ? d.id_ : void 0;
       case "lists":
         return (d = Entry.variableContainer.getListByName(b)) ? d.id_ : void 0;
       case "scenes":
         return Entry.scene.scenes_.filter(function(c) {
-          return c.name == b;
+          return c.name === b;
         })[0].id;
       case "sounds":
         return b && (d = Entry.playground.object.getSound(b)), d ? d.id : void 0;
       case "clone":
-        return b ? "self" == b ? b : Entry.container.objects_.filter(function(c) {
+        return b ? "self" == b ? d = b : (d = Entry.container.objects_.filter(function(c) {
           return c.name === b;
-        })[0].id : "None";
+        }), d = d[0].id) : d = "None", d;
     }
   };
   c.Node = function(b, c) {

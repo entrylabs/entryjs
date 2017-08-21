@@ -582,6 +582,19 @@ Entry.PyToBlockParser = function(blockSyntax) {
         switch(paramSchema.menuName) {
             case 'sprites':
             case 'spritesWithMouse':
+                var object;
+                if(value === 'mouse_pointer')
+                    object = 'mouse_pointer';
+                else {
+                    var objects = Entry.container.objects_.filter(function(obj){
+                            return obj.name === value;
+                        });
+
+                    object = objects[0].id;
+                }
+
+                return object;
+                break;
             case 'spritesWithSelf':
             case 'collision':
                 break;
