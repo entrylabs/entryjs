@@ -17624,8 +17624,8 @@ Entry.PyToBlockParser = function(c) {
     switch(b.left.type) {
       case "MemberExpression":
         c.type = "change_value_list_index";
-        e = b.left.object.name;
-        "self" === e ? (c.type = "set_variable", e = Entry.variableContainer.getVariableByName(b.left.property.name), this.assert(e, "variable not exist", b.left), c.params.push(e.id_)) : (e = Entry.variableContainer.getListByName(e), this.assert(e, "list not exist", b.left), c.params.push(e.id_), c.params.push(this.ListIndex(this.Node(b.left.property.arguments[1]))));
+        var f = b.left.object.name;
+        "self" === f ? (c.type = "set_variable", e = Entry.variableContainer.getVariableByName(b.left.property.name), this.assert(e, "variable not exist", b.left), c.params.push(e.id_)) : (e = Entry.variableContainer.getListByName(f), this.assert(e, f, b.left, "NO_LIST", "LIST"), c.params.push(e.id_), c.params.push(this.ListIndex(this.Node(b.left.property.arguments[1]))));
         break;
       case "Identifier":
         c.type = "set_variable";
@@ -17876,10 +17876,8 @@ Entry.PyToBlockParser = function(c) {
   c.isParamPrimitive = function(b) {
     return b && ("number" === b.type || "text" === b.type);
   };
-  c.assert = function(b, c, e) {
-    if (!b) {
-      throw Error(c);
-    }
+  c.assert = function(b, c, e, f, g) {
+    b || Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError["MESSAGE_CONV_" + f], c, e.loc.start.line, Entry.TextCodingError["SUBJECT_CONV_" + g]);
   };
   c.setParams = function(b) {
     b = b.length ? b.map(this.Node, this) : [];
@@ -18317,13 +18315,16 @@ Entry.Parser = function(c, b, d, e) {
     return c;
   };
   c.makeThreads = function(b) {
-    b = b.split("\n");
-    for (var c = [], d = "", g = !1, h = 3;h < b.length;h++) {
-      var k = b[h] + "\n", k = k.replace(/\t/gm, "    ");
-      Entry.TextCodingUtil.isEntryEventFuncByFullText(k) ? (k = this.entryEventParamConverter(k), 0 !== d.length && c.push(d), d = "", d += k, g = !0) : (Entry.TextCodingUtil.isEntryEventFuncByFullText(k.trim()) && (k = this.entryEventParamConverter(k)), 1 != k.length || g ? 1 != k.length && " " != k.charAt(0) && g && (c.push(d), d = "", g = !1) : (c.push(d), d = ""), d += k);
+    function c(b) {
+      return Array(k + 1).join("\n") + b;
     }
-    c.push(d);
-    return c;
+    b = b.split("\n");
+    for (var d = [], g = "", h = !1, k = 0, l = 3;l < b.length;l++) {
+      var m = b[l] + "\n", m = m.replace(/\t/gm, "    ");
+      Entry.TextCodingUtil.isEntryEventFuncByFullText(m) ? (m = this.entryEventParamConverter(m), 0 !== g.length && (d.push(c(g)), k = l - 2), g = "", g += m, h = !0) : (Entry.TextCodingUtil.isEntryEventFuncByFullText(m.trim()) && (m = this.entryEventParamConverter(m)), 1 != m.length || h ? 1 != m.length && " " != m.charAt(0) && h && (d.push(c(g)), k = l - 2, g = "", h = !1) : (d.push(c(g)), k = l - 2, g = ""), g += m);
+    }
+    d.push(c(g));
+    return d;
   };
   c.entryEventParamConverter = function(b) {
     var c = b.indexOf("("), d = b.indexOf(")"), g = b.substring(0, c);

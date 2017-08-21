@@ -559,13 +559,15 @@ Entry.Parser = function(mode, type, cm, syntax) {
         var optText = "";
         var onEntryEvent = false;
 
+        var startLine = 0;
         for(var i = 3; i < textArr.length; i++) {
             var textLine = textArr[i] + "\n";
             textLine = textLine.replace(/\t/gm, '    ');
             if(Entry.TextCodingUtil.isEntryEventFuncByFullText(textLine)) {
                 textLine = this.entryEventParamConverter(textLine);
                 if(optText.length !== 0) {
-                    threads.push(optText);
+                    threads.push(makeLine(optText));
+                    startLine = i - 2;
                 }
 
                 optText = "";
@@ -575,11 +577,13 @@ Entry.Parser = function(mode, type, cm, syntax) {
                 if(Entry.TextCodingUtil.isEntryEventFuncByFullText(textLine.trim()))
                     textLine = this.entryEventParamConverter(textLine);
                 if(textLine.length == 1 && !onEntryEvent) { //empty line
-                    threads.push(optText);
+                    threads.push(makeLine(optText));
+                    startLine = i - 2;
                     optText = "";
                 }
                 else if(textLine.length != 1 && textLine.charAt(0) != ' ' && onEntryEvent) { //general line
-                    threads.push(optText);
+                    threads.push(makeLine(optText));
+                    startLine = i - 2;
                     optText = "";
                     onEntryEvent = false;
                 }
@@ -589,7 +593,11 @@ Entry.Parser = function(mode, type, cm, syntax) {
 
             }
         }
-        threads.push(optText);
+
+        threads.push(makeLine(optText));
+        function makeLine(text) {
+            return new Array( startLine + 1 ).join( "\n" ) + text;
+        }
         return threads;
     };
 

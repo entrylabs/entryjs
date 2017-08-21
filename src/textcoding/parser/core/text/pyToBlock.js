@@ -193,7 +193,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     result.params.push(leftVar.id_);
                 } else {
                     leftVar = Entry.variableContainer.getListByName(leftName)
-                    this.assert(leftVar, "list not exist", component.left);
+                    this.assert(leftVar, leftName, component.left, "NO_LIST", "LIST");
                     result.params.push(leftVar.id_);
                     result.params.push(
                         this.ListIndex(this.Node(component.left.property.arguments[1]))
@@ -716,9 +716,16 @@ Entry.PyToBlockParser = function(blockSyntax) {
         return param && (param.type === "number" || param.type === "text");
     };
 
-    p.assert = function(data, message, errorNode) {
-        if (!data)
-            throw new Error(message);
+    p.assert = function(data, keyword, errorNode, message, subject) {
+        if (data)
+            return;
+        Entry.TextCodingError.error(
+            Entry.TextCodingError.TITLE_CONVERTING,
+            Entry.TextCodingError["MESSAGE_CONV_" + message],
+            keyword,
+            errorNode.loc.start.line,
+            Entry.TextCodingError["SUBJECT_CONV_" + subject]
+        );
     };
 
     p.setParams = function(params) {
