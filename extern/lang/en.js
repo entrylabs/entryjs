@@ -327,7 +327,6 @@ Lang.Blocks = {
     "byrobot_petrone_v2_drone_light_manual_arm_blue": "arm - blue",
     "byrobot_petrone_v2_drone_light_color_eye": "eye",
     "byrobot_petrone_v2_drone_light_color_arm": "arm",
-
     "byrobot_petrone_v2_controller_buzzer": "buzzer",
     "byrobot_petrone_v2_controller_buzzer_mute": "mute",
     "byrobot_petrone_v2_controller_buzzer_c": "C",
@@ -345,8 +344,8 @@ Lang.Blocks = {
     "byrobot_petrone_v2_drone_team": "team",
     "byrobot_petrone_v2_drone_team_red": "red",
     "byrobot_petrone_v2_drone_team_blue": "blue",
-    "byrobot_petrone_v2_drone_coordinate_world": "absolute",
-    "byrobot_petrone_v2_drone_coordinate_local": "normal",
+    "byrobot_petrone_v2_drone_coordinate_world": "on (easy)",
+    "byrobot_petrone_v2_drone_coordinate_local": "off (hard)",
     "byrobot_petrone_v2_drone_mode_vehicle_flight": "flight",
     "byrobot_petrone_v2_drone_mode_vehicle_drive": "drive",
     "byrobot_petrone_v2_drone_control_double_wheel": "direction",
