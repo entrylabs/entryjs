@@ -14071,7 +14071,12 @@ Entry.TextCodingUtil = {};
           }
         }
         for (var l in k) {
-          f = k[l].data, isNaN(f) && (f = '"' + f + '"'), h += f, l != k.length - 1 && (h += ", ");
+          f = k[l].data;
+          if (isNaN(f) || 1 < f.length && "0" === String(f)[0]) {
+            f = '"' + f + '"';
+          }
+          0 < f.trim().length && (h += f);
+          l != k.length - 1 && (h += ", ");
         }
         b += g + " = [" + h + "]\n";
       }
@@ -17752,7 +17757,9 @@ Entry.PyToBlockParser = function(c) {
     return {type:e, params:[this.Node(b.left), c, this.Node(b.right)]};
   };
   c.FunctionDeclaration = function(b) {
-    var c = this.Node(b.id), e = {}, f = b.body.body[0].argument.callee.object.body.body, g = this.blockSyntax["def " + c];
+    var c = this.Node(b.id), e = {}, f = b.body.body[0].argument.callee.object.body.body;
+    "when_press_key" == c && (e.params = [null, Entry.KeyboardCode.map[b.arguments[0].name]]);
+    var g = this.blockSyntax["def " + c];
     if (g) {
       return e.type = g.key, b = this.setParams(f), b.unshift(e), b;
     }
@@ -17808,21 +17815,38 @@ Entry.PyToBlockParser = function(c) {
   };
   c.DropdownDynamic = function(b, c) {
     switch(c.menuName) {
+      case "sprites":
+      case "spritesWithMouse":
+        return c = (c = Entry.container.objects_.filter(function(c) {
+          return c.name === b;
+        })) && 0 < c.length ? c[0].id : b;
+      case "spritesWithSelf":
+        return b ? "self" == b ? c = b : (c = Entry.container.objects_.filter(function(c) {
+          return c.name === b;
+        }), c = c[0].id) : c = "None", c;
+      case "collision":
+        return c = (c = Entry.container.objects_.filter(function(c) {
+          return c.name === b;
+        })) && 0 < c.length ? c[0].id : b;
       case "pictures":
         return (c = Entry.playground.object.getPicture(b)) ? c.id : void 0;
       case "variables":
         return (c = Entry.variableContainer.getVariableByName(b)) ? c.id_ : void 0;
       case "lists":
         return (c = Entry.variableContainer.getListByName(b)) ? c.id_ : void 0;
+      case "scenes":
+        return Entry.scene.scenes_.filter(function(c) {
+          return c.name === b;
+        })[0].id;
       case "sounds":
         if (b) {
           var d = Entry.playground.object.getSound(b);
         }
         return d ? d.id : void 0;
       case "clone":
-        return b ? "self" == b ? b : Entry.container.objects_.filter(function(c) {
+        return b ? "self" == b ? c = b : (c = Entry.container.objects_.filter(function(c) {
           return c.name === b;
-        })[0].id : "None";
+        }), c = c[0].id) : c = "None", c;
     }
   };
   c.Node = function(b, c) {

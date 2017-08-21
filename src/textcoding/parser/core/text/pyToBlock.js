@@ -465,14 +465,16 @@ Entry.PyToBlockParser = function(blockSyntax) {
         var startBlock = {};
         var blocks = component.body.body[0].argument.callee.object.body.body;
 
+        if(funcName == 'when_press_key')
+            startBlock.params = [ null , Entry.KeyboardCode.map[ component.arguments[0].name ]];
+
         var blockInfo = this.blockSyntax['def '+ funcName];
         var threadArr;
         if(blockInfo){ // event block
             startBlock.type = blockInfo.key;
             var definedBlocks = this.setParams(blocks);
-
+           
             threadArr = [startBlock];
-
             definedBlocks.unshift(startBlock)
             return definedBlocks;
         } else {
@@ -579,9 +581,55 @@ Entry.PyToBlockParser = function(blockSyntax) {
     p.DropdownDynamic = function(value, paramSchema) {
         switch(paramSchema.menuName) {
             case 'sprites':
+
             case 'spritesWithMouse':
+                var object;
+             
+                var objects = Entry.container.objects_.filter(function(obj){
+                        return obj.name === value;
+                    });
+
+                if(objects && objects.length > 0)
+                    object = objects[0].id;
+                else {
+                    object = value;
+                }
+
+                return object;
+
+                break;
             case 'spritesWithSelf':
+                var object;
+
+                if(!value){
+                    object = 'None'
+                } else if(value == 'self') {
+                    object = value;
+                } else {
+                    var objects = Entry.container.objects_.filter(function(obj){
+                        return obj.name === value;
+                    });
+
+                    object = objects[0].id;
+                }
+
+                return object;
+                break;
             case 'collision':
+                var object;
+
+                var objects = Entry.container.objects_.filter(function(obj){
+                            return obj.name === value;
+                        });
+
+                if(objects && objects.length > 0)
+                    object = objects[0].id;
+                else {
+                    object = value;
+                }
+
+                return object;
+
                 break;
             case 'pictures':
                 var picture = Entry.playground.object.getPicture(value);
@@ -595,6 +643,11 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 var list = Entry.variableContainer.getListByName(value);
                 return list ? list.id_ : undefined;
             case 'scenes':
+
+                return  Entry.scene.scenes_.filter(function(s){
+                    return s.name === value;
+                })[0].id;
+
                 break;
             case 'sounds':
                 if (value)
@@ -602,21 +655,21 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 return sound ? sound.id : undefined;
                 break;
             case 'clone':
-                    var object;
+                var object;
 
-                    if(!value){
-                        object = 'None'
-                    } else if(value == 'self') {
-                        object = value;
-                    } else {
-                        var objects = Entry.container.objects_.filter(function(obj){
-                            return obj.name === value;
-                        });
+                if(!value){
+                    object = 'None'
+                } else if(value == 'self') {
+                    object = value;
+                } else {
+                    var objects = Entry.container.objects_.filter(function(obj){
+                        return obj.name === value;
+                    });
 
-                        object = objects[0].id;
-                    }
+                    object = objects[0].id;
+                }
 
-                return object;
+            return object;
                 break;
             case 'objectSequence':
         }
