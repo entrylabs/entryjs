@@ -99,8 +99,6 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
     p.CallExpression = function(component) {
         var callee = component.callee;
-        var property = component.property;
-        var name = property.name;
         var args = component.arguments;
         var params = [];
         var obj = this.Node(callee);
@@ -109,8 +107,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
             return this[obj](component);
 
         if (callee.type === "Identifier") { // global function
-            this.assert(!(obj.type === "get_variable"), name, callee, "NO_SUPPORT", "GENERAL")
-            this.assert(!(obj.type === "get_list"), name, callee, "NO_SUPPORT", "GENERAL")
+            this.assert(!(obj.type === "get_variable"), "", callee, "NO_SUPPORT", "GENERAL")
+            this.assert(!(obj.type === "get_list"), "", callee, "NO_SUPPORT", "GENERAL")
 
             if (this._funcMap[obj]) {
                 var funcType = this._funcMap[obj][args.length];
@@ -121,7 +119,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 return this[obj](component);
             } else {
                 var blockInfo = this.blockSyntax[obj];
-                this.assert(blockInfo && blockInfo.key, name, callee, "NO_FUNCTION", "GENERAL");
+                this.assert(blockInfo && blockInfo.key, "", callee, "NO_FUNCTION", "GENERAL");
                 obj = this.Block({}, blockInfo);
             }
         }

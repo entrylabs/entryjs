@@ -17594,25 +17594,25 @@ Entry.PyToBlockParser = function(c) {
     return this.Node(b.expression);
   };
   c.CallExpression = function(b) {
-    var c = b.callee, e = b.property.name, f = b.arguments, g = this.Node(c);
-    if ("string" === typeof g && "MemberExpression" === c.type && this[g]) {
-      return this[g](b);
+    var c = b.callee, e = b.arguments, f = this.Node(c);
+    if ("string" === typeof f && "MemberExpression" === c.type && this[f]) {
+      return this[f](b);
     }
     if ("Identifier" === c.type) {
-      if (this.assert("get_variable" !== g.type, e, c, "NO_SUPPORT", "GENERAL"), this.assert("get_list" !== g.type, e, c, "NO_SUPPORT", "GENERAL"), this._funcMap[g]) {
-        g = {type:"func_" + this._funcMap[g][f.length]};
+      if (this.assert("get_variable" !== f.type, "", c, "NO_SUPPORT", "GENERAL"), this.assert("get_list" !== f.type, "", c, "NO_SUPPORT", "GENERAL"), this._funcMap[f]) {
+        f = {type:"func_" + this._funcMap[f][e.length]};
       } else {
-        if (this[g]) {
-          return this[g](b);
+        if (this[f]) {
+          return this[f](b);
         }
-        f = this.blockSyntax[g];
-        this.assert(f && f.key, e, c, "NO_FUNCTION", "GENERAL");
-        g = this.Block({}, f);
+        e = this.blockSyntax[f];
+        this.assert(e && e.key, "", c, "NO_FUNCTION", "GENERAL");
+        f = this.Block({}, e);
       }
     }
-    g.preParams && (b.arguments = g.preParams.concat(b.arguments), delete g.preParams);
-    b.arguments && (g.params = this.Arguments(g.type, b.arguments, g.params));
-    return g;
+    f.preParams && (b.arguments = f.preParams.concat(b.arguments), delete f.preParams);
+    b.arguments && (f.params = this.Arguments(f.type, b.arguments, f.params));
+    return f;
   };
   c.Identifier = function(b) {
     b = b.name;
