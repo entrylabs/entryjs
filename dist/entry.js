@@ -17594,25 +17594,25 @@ Entry.PyToBlockParser = function(c) {
     return this.Node(b.expression);
   };
   c.CallExpression = function(b) {
-    var c = b.callee, e = b.arguments, f = this.Node(c);
-    if ("string" === typeof f && "MemberExpression" === c.type && this[f]) {
-      return this[f](b);
+    var c = b.callee, e = b.property.name, f = b.arguments, g = this.Node(c);
+    if ("string" === typeof g && "MemberExpression" === c.type && this[g]) {
+      return this[g](b);
     }
     if ("Identifier" === c.type) {
-      if (this.assert("get_variable" !== f.type, "variable is not function", c), this.assert("get_list" !== f.type, "list is not function", c), this._funcMap[f]) {
-        f = {type:"func_" + this._funcMap[f][e.length]};
+      if (this.assert("get_variable" !== g.type, e, c, "NO_SUPPORT", "GENERAL"), this.assert("get_list" !== g.type, e, c, "NO_SUPPORT", "GENERAL"), this._funcMap[g]) {
+        g = {type:"func_" + this._funcMap[g][f.length]};
       } else {
-        if (this[f]) {
-          return this[f](b);
+        if (this[g]) {
+          return this[g](b);
         }
-        e = this.blockSyntax[f];
-        this.assert(e && e.key, "function is not defined", c);
-        f = this.Block({}, e);
+        f = this.blockSyntax[g];
+        this.assert(f && f.key, e, c, "NO_FUNCTION", "GENERAL");
+        g = this.Block({}, f);
       }
     }
-    f.preParams && (b.arguments = f.preParams.concat(b.arguments), delete f.preParams);
-    b.arguments && (f.params = this.Arguments(f.type, b.arguments, f.params));
-    return f;
+    g.preParams && (b.arguments = g.preParams.concat(b.arguments), delete g.preParams);
+    b.arguments && (g.params = this.Arguments(g.type, b.arguments, g.params));
+    return g;
   };
   c.Identifier = function(b) {
     b = b.name;
@@ -17643,7 +17643,7 @@ Entry.PyToBlockParser = function(c) {
         c.params.push(e.id_);
         break;
       default:
-        this.assert(!1, "left hand must be list or variable", b.left);
+        this.assert(!1, "error", b.left, "NO_SUPPORT", "GENERAL");
     }
     e = this.Node(b.right);
     switch(b.operator) {
