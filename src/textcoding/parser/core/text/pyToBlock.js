@@ -17,6 +17,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
     this._funcParamMap = {};
     this._funcMap = {};
+
+    this._isInFuncDef = false;
 };
 
 (function(p){
@@ -57,6 +59,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
     p.processPrograms = function(astArr) {
         this._funcParamMap = {};
         this._funcMap = {};
+        this._isInFuncDef = false;
 
         var result;
         var astArrBody = astArr[0].body;
@@ -462,6 +465,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
     p.FunctionDeclaration = function(component) {
         var funcName = this.Node(component.id);
+        this.assert(!this._isInFuncDef, funcName, component, "NO_ENTRY_EVENT_FUNCTION", "FUNCTION");
+        this._isInFuncDef = true;
         var startBlock = {};
         var blocks = component.body.body[0].argument.callee.object.body.body;
 
@@ -476,9 +481,11 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
             threadArr = [startBlock];
             definedBlocks.unshift(startBlock)
+            this._isInFuncDef = false;
             return definedBlocks;
         } else {
             this.createFunction(component, funcName, blocks);
+            this._isInFuncDef = false;
             return [];
         }
     };
@@ -774,10 +781,10 @@ Entry.PyToBlockParser = function(blockSyntax) {
             return;
         Entry.TextCodingError.error(
             Entry.TextCodingError.TITLE_CONVERTING,
-            Entry.TextCodingError["MESSAGE_CONV_" + message],
+            Entry.TextCodingError["MESSAGE_CONV_" + (message || "NO_SUPPORT")],
             keyword,
             errorNode.loc,
-            Entry.TextCodingError["SUBJECT_CONV_" + subject]
+            Entry.TextCodingError["SUBJECT_CONV_" + (subject || "GENERAL")]
         );
     };
 
@@ -977,7 +984,6 @@ Entry.PyToBlockParser = function(blockSyntax) {
         var params = component.arguments ? component.arguments.map(this.Node, this) : [];
         var functions = Entry.variableContainer.functions_;
 
-        this.assert(!this.blockSyntax[funcName], "function name duplicate")
         var funcId = Entry.generateHash();
         for (var key in functions) {
             var funcSchema = Entry.block["func_" + key];

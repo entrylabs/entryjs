@@ -17562,6 +17562,7 @@ Entry.PyToBlockParser = function(c) {
   this.blockSyntax = c;
   this._funcParamMap = {};
   this._funcMap = {};
+  this._isInFuncDef = !1;
 };
 (function(c) {
   c.util = Entry.TextCodingUtil;
@@ -17578,6 +17579,7 @@ Entry.PyToBlockParser = function(c) {
   c.processPrograms = function(b) {
     this._funcParamMap = {};
     this._funcMap = {};
+    this._isInFuncDef = !1;
     var c = b[0].body;
     c && c[0] && "ExpressionStatement" === c[0].type && "AssignmentExpression" === c[0].expression.type ? (c = this.getVariables(b[0]), b.splice(0, 1), b = b.map(this.Node, this), b = c.concat(b)) : b = b.map(this.Node, this);
     return b.filter(function(b) {
@@ -17759,13 +17761,17 @@ Entry.PyToBlockParser = function(c) {
     return {type:e, params:[this.Node(b.left), c, this.Node(b.right)]};
   };
   c.FunctionDeclaration = function(b) {
-    var c = this.Node(b.id), e = {}, f = b.body.body[0].argument.callee.object.body.body;
+    var c = this.Node(b.id);
+    this.assert(!this._isInFuncDef, c, b, "NO_ENTRY_EVENT_FUNCTION", "FUNCTION");
+    this._isInFuncDef = !0;
+    var e = {}, f = b.body.body[0].argument.callee.object.body.body;
     "when_press_key" == c && (e.params = [null, Entry.KeyboardCode.map[b.arguments[0].name]]);
     var g = this.blockSyntax["def " + c];
     if (g) {
-      return e.type = g.key, b = this.setParams(f), b.unshift(e), b;
+      return e.type = g.key, b = this.setParams(f), b.unshift(e), this._isInFuncDef = !1, b;
     }
     this.createFunction(b, c, f);
+    this._isInFuncDef = !1;
     return [];
   };
   c.FunctionExpression = function(b) {
@@ -17900,7 +17906,7 @@ Entry.PyToBlockParser = function(c) {
     return b && ("number" === b.type || "text" === b.type);
   };
   c.assert = function(b, c, e, f, g) {
-    b || Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError["MESSAGE_CONV_" + f], c, e.loc, Entry.TextCodingError["SUBJECT_CONV_" + g]);
+    b || Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError["MESSAGE_CONV_" + (f || "NO_SUPPORT")], c, e.loc, Entry.TextCodingError["SUBJECT_CONV_" + (g || "GENERAL")]);
   };
   c.setParams = function(b) {
     b = b.length ? b.map(this.Node, this) : [];
@@ -17981,7 +17987,6 @@ Entry.PyToBlockParser = function(c) {
   c.createFunction = function(b, c, e) {
     var d = b.arguments ? b.arguments.map(this.Node, this) : [];
     b = Entry.variableContainer.functions_;
-    this.assert(!this.blockSyntax[c], "function name duplicate");
     var g = Entry.generateHash(), h;
     for (h in b) {
       var k = Entry.block["func_" + h];
