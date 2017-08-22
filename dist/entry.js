@@ -17764,7 +17764,9 @@ Entry.PyToBlockParser = function(c) {
     var c = this.Node(b.id);
     this.assert(!this._isInFuncDef, c, b, "NO_ENTRY_EVENT_FUNCTION", "FUNCTION");
     this._isInFuncDef = !0;
-    var e = {}, f = b.body.body[0].argument.callee.object.body.body;
+    var e = {};
+    this.assert(b.body.body[0], c, b, "NO_OBJECT", "OBJECT");
+    var f = b.body.body[0].argument.callee.object.body.body;
     "when_press_key" == c && (e.params = [null, Entry.KeyboardCode.map[b.arguments[0].name]]);
     var g = this.blockSyntax["def " + c];
     if (g) {
@@ -18010,6 +18012,10 @@ Entry.PyToBlockParser = function(c) {
     h.content[0] = h.content[0].concat(e);
     h.content = JSON.stringify(h.content);
     b[g] ? (e = b[g], e.content = new Entry.Code(h.content), e.generateBlock(!0)) : Entry.variableContainer.setFunctions([h]);
+  };
+  c.ClassDeclaration = function(b) {
+    var c = this.Node(b.id);
+    this.assert(!1, c, b, "NO_OBJECT", "OBJECT");
   };
   c.searchSyntax = function(b) {
     var c, e, f = !1;

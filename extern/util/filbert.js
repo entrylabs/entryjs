@@ -1575,7 +1575,7 @@
         // Finish class constructor
 
         ctorNode.body = finishNode(ctorBlock, "BlockStatement");
-        finishNode(ctorNode, "FunctionDeclaration");
+        finishNode(ctorNode, "ClassDeclaration");
         container.body.push(ctorNode);
 
         // Add inheritance via 'MyClass.prototype = Object.create(ParentClass.prototype)'

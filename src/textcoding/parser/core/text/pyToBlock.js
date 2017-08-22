@@ -468,6 +468,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
         this.assert(!this._isInFuncDef, funcName, component, "NO_ENTRY_EVENT_FUNCTION", "FUNCTION");
         this._isInFuncDef = true;
         var startBlock = {};
+        this.assert(component.body.body[0], funcName, component, "NO_OBJECT", "OBJECT");
         var blocks = component.body.body[0].argument.callee.object.body.body;
 
         if(funcName == 'when_press_key')
@@ -1048,6 +1049,11 @@ Entry.PyToBlockParser = function(blockSyntax) {
     /**
      * Not Supported
      */
+
+    p.ClassDeclaration = function(component) {
+        var funcName = this.Node(component.id);
+        this.assert(false, funcName, component, "NO_OBJECT", "OBJECT");
+    };
 
     // p.RegExp = function(component) {};
 
