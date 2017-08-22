@@ -17587,7 +17587,11 @@ Entry.PyToBlockParser = function(c) {
     });
   };
   c.Program = function(b) {
-    b = b.body.map(this.Node, this);
+    b = b.body.map(function(b) {
+      var c = this.Node(b);
+      this.assert("object" === typeof c, "", b, "NO_SUPPORT", "GENERAL");
+      return c;
+    }, this);
     return b[0].constructor == Array ? b[0] : b;
   };
   c.ExpressionStatement = function(b) {
@@ -17911,7 +17915,11 @@ Entry.PyToBlockParser = function(c) {
     b || Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError["MESSAGE_CONV_" + (f || "NO_SUPPORT")], c, e.loc, Entry.TextCodingError["SUBJECT_CONV_" + (g || "GENERAL")]);
   };
   c.setParams = function(b) {
-    b = b.length ? b.map(this.Node, this) : [];
+    b = b.length ? b.map(function(b) {
+      var c = this.Node(b);
+      this.assert("object" === typeof c, "", b, "NO_SUPPORT", "GENERAL");
+      return c;
+    }, this) : [];
     for (var c = 0;c < b.length;c++) {
       var e = b[c];
       e.constructor == Array && e[0].length ? 0 < e.length ? (e[e.length - 1][0].params = e[0][0][0].params, b[c] = e[e.length - 1][0]) : b[c] = e[0][0] : e.constructor == Array && e[0].constructor == Object && (b[c] = e[0]);

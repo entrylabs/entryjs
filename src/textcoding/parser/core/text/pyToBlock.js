@@ -84,7 +84,11 @@ Entry.PyToBlockParser = function(blockSyntax) {
     };
 
     p.Program = function(component) {
-        var thread = component.body.map(this.Node ,this);
+        var thread = component.body.map(function(n) {
+            var result = this.Node(n);
+            this.assert(typeof result === "object", "", n, "NO_SUPPORT", "GENERAL");
+            return result;
+        },this);
 
         if(thread[0].constructor == Array)
             return thread[0];
@@ -788,7 +792,11 @@ Entry.PyToBlockParser = function(blockSyntax) {
     };
 
     p.setParams = function(params) {
-        var definedBlocks = params.length ? params.map(this.Node , this) : [];
+        var definedBlocks = params.length ? params.map(function(n) {
+            var result = this.Node(n);
+            this.assert(typeof result === "object", "", n, "NO_SUPPORT", "GENERAL");
+            return result;
+        }, this) : [];
 
         for(var i=0; i<definedBlocks.length; i++){
             var db = definedBlocks[i];
