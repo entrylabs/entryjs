@@ -16540,7 +16540,9 @@ Entry.TextCodingError = {};
     var d = {};
     d.title = Lang.TextCoding[b];
     c = Lang.TextCoding[c];
-    d.message = "[" + (h ? Lang.TextCoding[h] : Lang.TextCoding[this.SUBJECT_CONV_GENERAL]) + "] " + (f ? "'" + f + "' " : "") + " : " + c + " (line " + g + ")";
+    b = h ? Lang.TextCoding[h] : Lang.TextCoding[this.SUBJECT_CONV_GENERAL];
+    "object" === typeof g && (g = g.start.line + 2);
+    d.message = "[" + b + "] " + (f ? "'" + f + "' " : "") + " : " + c + " (line " + g + ")";
     return d;
   };
 })(Entry.TextCodingError);
@@ -17630,12 +17632,12 @@ Entry.PyToBlockParser = function(c) {
       case "MemberExpression":
         c.type = "change_value_list_index";
         var f = b.left.object.name;
-        "self" === f ? (c.type = "set_variable", e = Entry.variableContainer.getVariableByName(b.left.property.name), this.assert(e, "variable not exist", b.left), c.params.push(e.id_)) : (e = Entry.variableContainer.getListByName(f), this.assert(e, f, b.left, "NO_LIST", "LIST"), c.params.push(e.id_), c.params.push(this.ListIndex(this.Node(b.left.property.arguments[1]))));
+        "self" === f ? (c.type = "set_variable", e = Entry.variableContainer.getVariableByName(b.left.property.name), this.assert(e, b.left.property.name, b.left.property, "NO_VARIABLE", "VARIABLE"), c.params.push(e.id_)) : (e = Entry.variableContainer.getListByName(f), this.assert(e, f, b.left.object, "NO_LIST", "LIST"), c.params.push(e.id_), c.params.push(this.ListIndex(this.Node(b.left.property.arguments[1]))));
         break;
       case "Identifier":
         c.type = "set_variable";
         e = Entry.variableContainer.getVariableByName(b.left.name);
-        this.assert(e, "variable not exist", b.left);
+        this.assert(e, b.left.name, b.left, "NO_VARIABLE", "VARIABLE");
         c.params.push(e.id_);
         break;
       default:
@@ -17851,10 +17853,7 @@ Entry.PyToBlockParser = function(c) {
   };
   c.Node = function(b, c) {
     var d = !1;
-    if ("string" === typeof b && b !== c.type) {
-      throw Error("Not expected node type");
-    }
-    "string" === typeof b && (d = !0);
+    "string" === typeof b && b !== c.type ? this.assert(!1, c.name || c.value || c.operator, c, "NO_SUPPORT", "GENERAL") : "string" === typeof b && (d = !0);
     var f = Array.prototype.slice.call(arguments);
     d && f.shift();
     c = f[0];
@@ -17901,7 +17900,7 @@ Entry.PyToBlockParser = function(c) {
     return b && ("number" === b.type || "text" === b.type);
   };
   c.assert = function(b, c, e, f, g) {
-    b || Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError["MESSAGE_CONV_" + f], c, e.loc.start.line + 2, Entry.TextCodingError["SUBJECT_CONV_" + g]);
+    b || Entry.TextCodingError.error(Entry.TextCodingError.TITLE_CONVERTING, Entry.TextCodingError["MESSAGE_CONV_" + f], c, e.loc, Entry.TextCodingError["SUBJECT_CONV_" + g]);
   };
   c.setParams = function(b) {
     b = b.length ? b.map(this.Node, this) : [];
@@ -18177,7 +18176,7 @@ Entry.Parser = function(c, b, d, e) {
               var t = this.findSyntaxError(v, r), d = {from:{line:t.from.line - 1, ch:t.from.ch}, to:{line:t.to.line - 1, ch:t.to.ch}};
               v.type = "syntax";
             } else {
-              t = this.findConvError(v), d = {from:{line:t.from.line - 1, ch:t.from.ch}, to:{line:t.to.line - 1, ch:t.to.ch}}, v.type = "converting";
+              t = v.line, d = {from:{line:t.start.line + 1, ch:t.start.column}, to:{line:t.end.line + 1, ch:t.end.column}}, v.type = "converting";
             }
             this._marker = this.codeMirror.markText(d.from, d.to, {className:"CodeMirror-lint-mark-error", __annotation:d, clearOnEnter:!0, inclusiveLeft:!0, inclusiveRigth:!0, clearWhenEmpty:!1});
             if ("syntax" == v.type) {
@@ -18322,29 +18321,13 @@ Entry.Parser = function(c, b, d, e) {
     c.to.ch = b.length;
     return c;
   };
-  c.findConvError = function(b) {
-    var c = {from:{}, to:{}};
-    b = b.line - 1;
-    for (var d = this.codeMirror.getValue().split("\n"), g = 0, h, k, l = 3;l < d.length;l++) {
-      if (h = d[l], 0 === h.trim().length && g++, b + g + 3 == l) {
-        k = l + 1;
-        break;
-      }
-    }
-    k > d.length && (k = d.length);
-    c.from.line = k;
-    c.from.ch = 0;
-    c.to.line = k;
-    c.to.ch = h.length;
-    return c;
-  };
   c.makeThreads = function(b) {
     function c(b) {
       return Array(k + 1).join("\n") + b;
     }
     b = b.split("\n");
     for (var d = [], g = "", h = !1, k = 0, l = 3;l < b.length;l++) {
-      var m = b[l] + "\n", m = m.replace(/\t/gm, "    ");
+      var m = b[l] + "\n";
       Entry.TextCodingUtil.isEntryEventFuncByFullText(m) ? (m = this.entryEventParamConverter(m), 0 !== g.length && (d.push(c(g)), k = l - 2), g = "", g += m, h = !0) : (Entry.TextCodingUtil.isEntryEventFuncByFullText(m.trim()) && (m = this.entryEventParamConverter(m)), 1 != m.length || h ? 1 != m.length && " " != m.charAt(0) && h && (d.push(c(g)), k = l - 2, g = "", h = !1) : (d.push(c(g)), k = l - 2, g = ""), g += m);
     }
     d.push(c(g));
@@ -26120,6 +26103,10 @@ Entry.Vim.PYTHON_IMPORT_HW = "";
   c.textToCode = function(b) {
     b === Entry.Vim.TEXT_TYPE_JS ? (this._parserType = Entry.Vim.PARSER_TYPE_JS_TO_BLOCK, this._parser.setParser(this._mode, this._parserType, this.codeMirror)) : b === Entry.Vim.TEXT_TYPE_PY && (this._parserType = Entry.Vim.PARSER_TYPE_PY_TO_BLOCK, this._parser.setParser(this._mode, this._parserType, this.codeMirror));
     b = this.codeMirror.getValue();
+    var c = this.doc.getCursor();
+    b = b.replace(/\t/gm, "    ");
+    this.codeMirror.setValue(b);
+    this.doc.setCursor(c);
     return this._parser.parse(b);
   };
   c.codeToText = function(b, c) {

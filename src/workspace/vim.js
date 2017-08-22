@@ -1,7 +1,7 @@
 'use strict';
 
-goog.provide("Entry.Vim");   
-  
+goog.provide("Entry.Vim");
+
 goog.require("Entry.TextCodingUtil");
 
 Entry.Vim = function(dom, textType) {
@@ -195,6 +195,10 @@ Entry.Vim.PYTHON_IMPORT_HW = "";
         }
 
         var textCode = this.codeMirror.getValue();
+        var cursor = this.doc.getCursor();
+        textCode = textCode.replace(/\t/gm, "    ");
+        this.codeMirror.setValue(textCode);
+        this.doc.setCursor(cursor);
         var code = this._parser.parse(textCode);
         return code;
     };

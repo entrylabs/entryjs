@@ -189,11 +189,11 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 if (leftName === "self") {
                     result.type = 'set_variable';
                     leftVar = Entry.variableContainer.getVariableByName(component.left.property.name)
-                    this.assert(leftVar, "variable not exist", component.left);
+                    this.assert(leftVar, component.left.property.name, component.left.property, "NO_VARIABLE", "VARIABLE");
                     result.params.push(leftVar.id_);
                 } else {
                     leftVar = Entry.variableContainer.getListByName(leftName)
-                    this.assert(leftVar, leftName, component.left, "NO_LIST", "LIST");
+                    this.assert(leftVar, leftName, component.left.object, "NO_LIST", "LIST");
                     result.params.push(leftVar.id_);
                     result.params.push(
                         this.ListIndex(this.Node(component.left.property.arguments[1]))
@@ -203,7 +203,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
             case "Identifier":
                 result.type = 'set_variable';
                 leftVar = Entry.variableContainer.getVariableByName(component.left.name)
-                this.assert(leftVar, "variable not exist", component.left);
+                this.assert(leftVar, component.left.name, component.left, "NO_VARIABLE", "VARIABLE");
                 result.params.push(leftVar.id_);
                 break;
             default:
@@ -678,7 +678,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
     p.Node = function(nodeType, node) {
         var hasType = false;
         if (typeof nodeType === "string" && nodeType !== node.type)
-            throw new Error("Not expected node type");
+            this.assert(false, node.name || node.value || node.operator, node, "NO_SUPPORT", "GENERAL");
         else if (typeof nodeType === "string")
             hasType = true;
 
@@ -776,7 +776,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
             Entry.TextCodingError.TITLE_CONVERTING,
             Entry.TextCodingError["MESSAGE_CONV_" + message],
             keyword,
-            errorNode.loc.start.line + 2,
+            errorNode.loc,
             Entry.TextCodingError["SUBJECT_CONV_" + subject]
         );
     };

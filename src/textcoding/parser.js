@@ -218,10 +218,10 @@ Entry.Parser = function(mode, type, cm, syntax) {
                             };
                             error.type = "syntax";
                         } else {
-                            var err = this.findConvError(error);
+                            var err = error.line;
                             var annotation = {
-                                from: {line: err.from.line-1, ch: err.from.ch},
-                                to: {line: err.to.line-1, ch: err.to.ch}
+                                from: {line: err.start.line + 1, ch: err.start.column},
+                                to: {line: err.end.line + 1, ch: err.end.column}
                             };
                             error.type = "converting";
                         }
@@ -513,44 +513,6 @@ Entry.Parser = function(mode, type, cm, syntax) {
         return err;
     };
 
-    p.findConvError = function(error) {
-        var err = {};
-        err.from = {};
-        err.to = {};
-
-        var errorLine = error.line-1;
-        var contents = this.codeMirror.getValue();
-        var contentsArr = contents.split("\n");
-        var currentLineCount = 0;
-        var emptyLineCount = 0;
-        var currentText;
-        var targetLine;
-
-        for (var i = 3; i < contentsArr.length; i++) {
-            currentText = contentsArr[i];
-
-            var length = currentText.trim().length;
-            if(length === 0)
-                emptyLineCount++;
-
-
-            if(errorLine + emptyLineCount + 3 == i) {
-                targetLine = i+1;
-                break;
-            }
-        }
-
-        if(targetLine > contentsArr.length)
-            targetLine = contentsArr.length;
-
-        err.from.line = targetLine;
-        err.from.ch = 0;
-        err.to.line = targetLine;
-        err.to.ch = currentText.length;
-
-        return err;
-    };
-
     p.makeThreads = function(text) {
         var textArr = text.split("\n");
         var thread = "";
@@ -562,7 +524,6 @@ Entry.Parser = function(mode, type, cm, syntax) {
         var startLine = 0;
         for(var i = 3; i < textArr.length; i++) {
             var textLine = textArr[i] + "\n";
-            textLine = textLine.replace(/\t/gm, '    ');
             if(Entry.TextCodingUtil.isEntryEventFuncByFullText(textLine)) {
                 textLine = this.entryEventParamConverter(textLine);
                 if(optText.length !== 0) {

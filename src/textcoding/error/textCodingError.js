@@ -32,8 +32,8 @@ Entry.TextCodingError = {};
 	tce.SUBJECT_SYNTAX_INDENT = "subject_syntax_indent";
 
 	tce.SUBJECT_CONV_DEFAULT = "subject_conv_default";
-	tce.SUBJECT_CONV_GENERAL = "subject_conv_general"; 
-	tce.SUBJECT_CONV_VARIABLE = "subject_conv_variable"; 
+	tce.SUBJECT_CONV_GENERAL = "subject_conv_general";
+	tce.SUBJECT_CONV_VARIABLE = "subject_conv_variable";
 	tce.SUBJECT_CONV_LIST = "subject_conv_list";
 	tce.SUBJECT_CONV_OBJECT = "subject_conv_object";
 	tce.SUBJECT_CONV_FUNCTION = "subject_conv_function";
@@ -57,12 +57,12 @@ Entry.TextCodingError = {};
 
 
 	var error = {};
- 
+
 	tce.error = function(title, message, keyword, line, subject) {
 		console.log("error control", title, message, keyword, line);
 		var errorInfo = this.getErrorInfo(title, message, keyword, line, subject);
 		error.title = errorInfo.title;
-		error.message = errorInfo.message;  
+		error.message = errorInfo.message;
 		error.line = line;
 		throw error;
 	};
@@ -75,7 +75,7 @@ Entry.TextCodingError = {};
 		var contents;
         if(keyword)
             var kw = "\'" + keyword + "\' ";
-        else 
+        else
             var kw = '';
 
         if(subject)
@@ -83,12 +83,15 @@ Entry.TextCodingError = {};
         else
         	var sj = Lang.TextCoding[this.SUBJECT_CONV_GENERAL];
 
+        if (typeof line === "object")
+            line = line.start.line + 2;
+
         contents = '[' + sj + ']' + ' ' + kw + ' : ' +
                     message + ' ' + '(line ' + line + ')';
-		
+
         info.message = contents;
 
 		return info;
 
 	};
-})(Entry.TextCodingError); 
+})(Entry.TextCodingError);
