@@ -567,6 +567,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     (arg.type === "Literal" && defParams) ? defParams[index] : undefined
                 );
 
+                this.assert(!(typeof param === "string" && arg.type === "Identifier"), param, arg, "NO_VARIABLE", "VARIABLE");
+
                 if (!paramSchema)
                     param = param;
                 else if (paramSchema.type !== "Block" && param && param.params) // for list and variable dropdown

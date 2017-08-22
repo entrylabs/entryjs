@@ -17817,8 +17817,10 @@ Entry.PyToBlockParser = function(c) {
     c = e.map(function(b, c) {
       if (b && b.type) {
         var e = g ? g.params[c] : null;
-        b = this.Node(b, "Literal" === b.type ? e : void 0, "Literal" === b.type && d ? d[c] : void 0);
-        e && ("Block" !== e.type && b && b.params ? b = b.params[0] : "Block" === e.type && e.isListIndex && (b = this.ListIndex(b)));
+        c = this.Node(b, "Literal" === b.type ? e : void 0, "Literal" === b.type && d ? d[c] : void 0);
+        this.assert(!("string" === typeof c && "Identifier" === b.type), c, b, "NO_VARIABLE", "VARIABLE");
+        e && ("Block" !== e.type && c && c.params ? c = c.params[0] : "Block" === e.type && e.isListIndex && (c = this.ListIndex(c)));
+        return c;
       }
       return b;
     }, this);
