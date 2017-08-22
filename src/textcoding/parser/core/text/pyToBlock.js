@@ -134,7 +134,6 @@ Entry.PyToBlockParser = function(blockSyntax) {
         }
 
         if(component.arguments) {
-
             obj.params = this.Arguments(
                 obj.type,
                 component.arguments,
@@ -142,6 +141,12 @@ Entry.PyToBlockParser = function(blockSyntax) {
             )
 
         }
+
+        if(obj.type == 'is_press_some_key') {
+            obj.params = [ Entry.KeyboardCode.map[ component.arguments[0].value ]];
+        }
+
+
 
         return obj;
     };

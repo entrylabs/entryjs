@@ -17616,6 +17616,7 @@ Entry.PyToBlockParser = function(c) {
     }
     f.preParams && (b.arguments = f.preParams.concat(b.arguments), delete f.preParams);
     b.arguments && (f.params = this.Arguments(f.type, b.arguments, f.params));
+    "is_press_some_key" == f.type && (f.params = [Entry.KeyboardCode.map[b.arguments[0].value]]);
     return f;
   };
   c.Identifier = function(b) {

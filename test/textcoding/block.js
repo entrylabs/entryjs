@@ -1580,6 +1580,7 @@ describe('EntryPython', function(){
             Entry.playground.object = Entry.container.objects_[0];
 
             var resultBlock = Test.parsePython('def when_press_key(space):');
+            console.log(resultBlock);
 
             assert.ok(Test.pythonToBlock(
                 'def when_press_key(space):',
@@ -1589,7 +1590,7 @@ describe('EntryPython', function(){
                          "type":"when_some_key_pressed",
                          "params":[  
                             null,
-                            "32"
+                            32
                          ]
                       }
                    ]
