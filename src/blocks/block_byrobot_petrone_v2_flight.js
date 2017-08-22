@@ -206,19 +206,23 @@ Entry.byrobot_petrone_v2_flight =
         delete Entry.hw.sendQueue["vibrator_total"];
     },
     
-    transferIrMessage: function(irmessage)
+    transferIrMessage: function(irdirection, irmessage)
     {
         // 범위 조정
+        irdirection = Math.max(irdirection, 0);
+        irdirection = Math.min(irdirection, 255);
         irmessage = Math.max(irmessage, 0);
-        irmessage = Math.min(irmessage, 127);
+        irmessage = Math.min(irmessage, 4294967295);
         
         // 전송
         Entry.hw.setDigitalPortValue("target", 0x30);
+        Entry.hw.setDigitalPortValue("irmessage_direction", irdirection);
         Entry.hw.setDigitalPortValue("irmessage_data", irmessage);
 
         Entry.hw.update();
 
         delete Entry.hw.sendQueue["target"];
+        delete Entry.hw.sendQueue["irmessage_direction"];
         delete Entry.hw.sendQueue["irmessage_data"];
     },
     
@@ -549,13 +553,13 @@ Entry.byrobot_petrone_v2_flight =
         }
     },
     
-    sendIrMessage: function(script, irmessage)
+    sendIrMessage: function(script, irdirection, irmessage)
     {
         switch( this.checkFinish(script, 40) )
         {
         case "Start":
             {
-                this.transferIrMessage(irmessage);
+                this.transferIrMessage(irdirection, irmessage);
             }
             return script;
             
