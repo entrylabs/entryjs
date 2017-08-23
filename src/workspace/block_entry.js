@@ -39061,6 +39061,7 @@ Entry.block = {
         "skeleton": "basic",
         "mode": "maze",
         "color": "#71C11B",
+        "emphasizedColor": "#9BDB40",
         "syntax": [
             "Scope",
             "climb"
