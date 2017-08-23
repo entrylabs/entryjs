@@ -217,13 +217,13 @@ Entry.byrobot_petrone_v2_flight =
         // 전송
         Entry.hw.setDigitalPortValue("target", 0x30);
         Entry.hw.setDigitalPortValue("irmessage_direction", irdirection);
-        Entry.hw.setDigitalPortValue("irmessage_data", irmessage);
+        Entry.hw.setDigitalPortValue("irmessage_irdata", irmessage);
 
         Entry.hw.update();
 
         delete Entry.hw.sendQueue["target"];
         delete Entry.hw.sendQueue["irmessage_direction"];
-        delete Entry.hw.sendQueue["irmessage_data"];
+        delete Entry.hw.sendQueue["irmessage_irdata"];
     },
     
     transferMotorSingle: function(motorIndex, motorRotation, motorSpeed)
