@@ -62,6 +62,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
         this._isInFuncDef = false;
 
         var result;
+        if (!astArr[0])
+            return [];
         var astArrBody = astArr[0].body;
         var hasVariable = astArrBody &&
                           astArrBody[0] &&
@@ -907,7 +909,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
     p.len = function(component) {
         var param = this.Node(component.arguments[0]);
 
-        if (this.isParamPrimitive(param)) { // string len
+        if (this.isParamPrimitive(param) || (param.type === "get_variable")) { // string len
             return {
                 type: "length_of_string",
                 params: [ undefined, param ]

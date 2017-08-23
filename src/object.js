@@ -1059,7 +1059,7 @@ Entry.EntryObject = function(model) {
         if (!(checker === false && typeof checker == 'boolean') && len >= checker && checker > 0) {
             return pictures[checker-1];
         }
-        throw new Error('No picture found');
+        return null;
     };
 
     p.setPicture = function(picture) {
@@ -1360,7 +1360,7 @@ Entry.EntryObject = function(model) {
             len >= checker && checker > 0) {
             return sounds[checker-1];
         }
-        throw new Error('No Sound');
+        return null;
     };
 
     p.addCloneVariables = function(object, entity, variables, lists) {

@@ -10854,10 +10854,7 @@ Entry.EntryObject = function(c) {
       }
     }
     b = Entry.parseNumber(b);
-    if ((!1 !== b || "boolean" != typeof b) && e >= b && 0 < b) {
-      return c[b - 1];
-    }
-    throw Error("No picture found");
+    return (!1 !== b || "boolean" != typeof b) && e >= b && 0 < b ? c[b - 1] : null;
   };
   c.setPicture = function(b) {
     for (var c in this.pictures) {
@@ -10977,10 +10974,7 @@ Entry.EntryObject = function(c) {
       }
     }
     b = Entry.parseNumber(b);
-    if ((!1 !== b || "boolean" != typeof b) && e >= b && 0 < b) {
-      return c[b - 1];
-    }
-    throw Error("No Sound");
+    return (!1 !== b || "boolean" != typeof b) && e >= b && 0 < b ? c[b - 1] : null;
   };
   c.addCloneVariables = function(b, c, e, f) {
     c.variables = [];
@@ -17580,6 +17574,9 @@ Entry.PyToBlockParser = function(c) {
     this._funcParamMap = {};
     this._funcMap = {};
     this._isInFuncDef = !1;
+    if (!b[0]) {
+      return [];
+    }
     var c = b[0].body;
     c && c[0] && "ExpressionStatement" === c[0].type && "AssignmentExpression" === c[0].expression.type ? (c = this.getVariables(b[0]), b.splice(0, 1), b = b.map(this.Node, this), b = c.concat(b)) : b = b.map(this.Node, this);
     return b.filter(function(b) {
@@ -17956,7 +17953,7 @@ Entry.PyToBlockParser = function(c) {
   };
   c.len = function(b) {
     b = this.Node(b.arguments[0]);
-    return this.isParamPrimitive(b) ? {type:"length_of_string", params:[void 0, b]} : {type:"length_of_list", params:[void 0, b.params[0]]};
+    return this.isParamPrimitive(b) || "get_variable" === b.type ? {type:"length_of_string", params:[void 0, b]} : {type:"length_of_list", params:[void 0, b.params[0]]};
   };
   c["Hamster.note"] = function(b) {
     var c;
