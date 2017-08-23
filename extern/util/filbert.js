@@ -213,7 +213,7 @@
   function raise(pos, message) {
     var loc = getLineInfo(input, pos);
     var err = new SyntaxError(message);
-    err.pos = pos; err.loc = loc; err.raisedAt = tokPos; err.tokLen = tokEnd - tokPos + 1;
+    err.pos = pos; err.loc = loc; err.raisedAt = tokPos; err.tokLen = tokEnd - tokStart + 1;
     throw err;
   }
 
