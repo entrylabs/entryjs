@@ -57,6 +57,7 @@ Entry.byrobot_petrone_v2_flight =
             "imageflow_positionX"           :{name: Lang.Blocks.byrobot_petrone_v2_drone_imageflow_positionX,             type: "input", pos: {x: 0, y: 0}},
             "imageflow_positionY"           :{name: Lang.Blocks.byrobot_petrone_v2_drone_imageflow_positionY,             type: "input", pos: {x: 0, y: 0}},
             "range_bottom"                  :{name: Lang.Blocks.byrobot_petrone_v2_drone_range_bottom,                    type: "input", pos: {x: 0, y: 0}},
+            "irmessage_direction"           :{name: Lang.Blocks.byrobot_petrone_v2_drone_irmessage_direction,             type: "input", pos: {x: 0, y: 0}},
             "irmessage_irdata"              :{name: Lang.Blocks.byrobot_petrone_v2_drone_irmessage,                       type: "input", pos: {x: 0, y: 0}},
             "joystick_left_x"               :{name: Lang.Blocks.byrobot_petrone_v2_controller_joystick_left_x,            type: "input", pos: {x: 0, y: 0}},
             "joystick_left_y"               :{name: Lang.Blocks.byrobot_petrone_v2_controller_joystick_left_y,            type: "input", pos: {x: 0, y: 0}},
@@ -211,8 +212,8 @@ Entry.byrobot_petrone_v2_flight =
         // 범위 조정
         irdirection = Math.max(irdirection, 0);
         irdirection = Math.min(irdirection, 255);
-        irmessage = Math.max(irmessage, 0);
-        irmessage = Math.min(irmessage, 4294967295);
+        irmessage = Math.max(irmessage, -2147483647);
+        irmessage = Math.min(irmessage, 2147483647);
         
         // 전송
         Entry.hw.setDigitalPortValue("target", 0x30);

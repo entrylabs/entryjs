@@ -44574,15 +44574,6 @@ Entry.block = {
         "statements": [],
         "params": [
             {
-                "type": "Dropdown",
-                "options": [
-                    [Lang.Blocks.byrobot_petrone_v2_drone_irmessage_direction_front, "2"],
-                    [Lang.Blocks.byrobot_petrone_v2_drone_irmessage_direction_rear, "4"],
-                ],
-                "value": "2",
-                "fontSize": 11
-            },
-            {
                 "type": "Block",
                 "accept": "string"
             },
@@ -44595,23 +44586,21 @@ Entry.block = {
         "events": {},
         "def": {
             "params": [
-                null,
                 {
                     "type": "text",
-                    "params": ["4294967295"]
+                    "params": ["2147483647"]
                 },
                 null
             ],
             "type": "byrobot_petrone_v2_flight_drone_irmessage"
         },
         "paramsKeyMap": {
-            "IRDIRECTION": 0,
-            "IRMESSAGE": 1
+            "IRMESSAGE": 0
         },
         "class": "byrobot_petrone_v2_flight_irmessage",
         "isNotFor": ["byrobot_petrone_v2_flight"],
         "func": function (sprite, script) {
-            var irdirection = parseInt(script.getField('IRDIRECTION'));
+            var irdirection = 0;
             var irmessage = script.getNumberValue("IRMESSAGE", script);
             return Entry.byrobot_petrone_v2_flight.sendIrMessage(script, irdirection, irmessage);
         },
