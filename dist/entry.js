@@ -12242,8 +12242,8 @@ Entry.Painter.prototype.generateView = function(c) {
     e.addClass("entryPlaygroundPainterAttrLineStyleLine1");
     x.appendChild(e);
     e.value = "line";
-    var y = Entry.createElement("div");
-    y.addClass("painterAttrLineStyleBackgroundLine");
+    var v = Entry.createElement("div");
+    v.addClass("painterAttrLineStyleBackgroundLine");
     u.bindOnClick(function(b) {
       x.removeClass("entryRemove");
     });
@@ -12255,11 +12255,11 @@ Entry.Painter.prototype.generateView = function(c) {
     };
     e.bindOnClick(function(b) {
       this.attrLineArea.removeClass(u);
-      this.attrLineArea.appendChild(y);
+      this.attrLineArea.appendChild(v);
       this.attrLineArea.onchange(b);
       x.blur();
     });
-    y.bindOnClick(function(b) {
+    v.bindOnClick(function(b) {
       x.removeClass("entryRemove");
     });
     this.attrLineArea.onchange = function(c) {
@@ -13722,8 +13722,8 @@ Entry.TextCodingUtil = {};
             }
           }
           if (d && m.statements && 0 != m.statements.length) {
-            for (var y in m.statements) {
-              d = this.isFuncContentsMatch(l.data.statements[y]._data, m.statements[y], e, f);
+            for (var v in m.statements) {
+              d = this.isFuncContentsMatch(l.data.statements[v]._data, m.statements[v], e, f);
             }
           }
         } else {
@@ -14866,34 +14866,34 @@ Entry.Playground = function() {
     x.addClass("entryPlaygroundFontSizeIndicator");
     u.appendChild(x);
     this.fontSizeIndiciator = x;
-    var y = Entry.createElement("div");
-    y.addClass("entryPlaygroundFontSizeKnob");
-    u.appendChild(y);
-    this.fontSizeKnob = y;
+    var v = Entry.createElement("div");
+    v.addClass("entryPlaygroundFontSizeKnob");
+    u.appendChild(v);
+    this.fontSizeKnob = v;
     g = Entry.createElement("div");
     g.addClass("entryPlaygroundFontSizeLabel");
     g.innerHTML = "\uae00\uc790 \ud06c\uae30";
     b.appendChild(g);
-    var v = !1, B = 0;
-    y.onmousedown = function(b) {
-      v = !0;
+    var y = !1, B = 0;
+    v.onmousedown = function(b) {
+      y = !0;
       B = $(u).offset().left;
     };
-    y.addEventListener("touchstart", function(b) {
-      v = !0;
+    v.addEventListener("touchstart", function(b) {
+      y = !0;
       B = $(u).offset().left;
     });
     document.addEventListener("mousemove", function(b) {
-      v && (b = b.pageX - B, b = Math.max(b, 5), b = Math.min(b, 88), y.style.left = b + "px", b /= .88, x.style.width = b + "%", Entry.playground.object.entity.setFontSize(b));
+      y && (b = b.pageX - B, b = Math.max(b, 5), b = Math.min(b, 88), v.style.left = b + "px", b /= .88, x.style.width = b + "%", Entry.playground.object.entity.setFontSize(b));
     });
     document.addEventListener("touchmove", function(b) {
-      v && (b = b.touches[0].pageX - B, b = Math.max(b, 5), b = Math.min(b, 88), y.style.left = b + "px", b /= .88, x.style.width = b + "%", Entry.playground.object.entity.setFontSize(b));
+      y && (b = b.touches[0].pageX - B, b = Math.max(b, 5), b = Math.min(b, 88), v.style.left = b + "px", b /= .88, x.style.width = b + "%", Entry.playground.object.entity.setFontSize(b));
     });
     document.addEventListener("mouseup", function(b) {
-      v = !1;
+      y = !1;
     });
     document.addEventListener("touchend", function(b) {
-      v = !1;
+      y = !1;
     });
     b = Entry.createElement("div");
     b.addClass("entryPlaygroundLinebreakWrapper");
@@ -18196,33 +18196,28 @@ Entry.Parser = function(c, b, d, e) {
           this._onError = !1;
         } catch (v) {
           if (this._onError = !0, d = [], this.codeMirror) {
-            if (v instanceof SyntaxError) {
-              var t = this.findSyntaxError(v, r), d = {from:{line:t.from.line - 1, ch:t.from.ch}, to:{line:t.to.line - 1, ch:t.to.ch}};
-              v.type = "syntax";
-            } else {
-              t = v.line, d = {from:{line:t.start.line + 1, ch:t.start.column}, to:{line:t.end.line + 1, ch:t.end.column}}, v.type = "converting";
-            }
+            v instanceof SyntaxError ? (r = this.findSyntaxError(v), d = {from:{line:r.from.line - 1, ch:r.from.ch}, to:{line:r.to.line - 1, ch:r.to.ch}}, v.type = "syntax") : (r = v.line, d = {from:{line:r.start.line + 1, ch:r.start.column}, to:{line:r.end.line + 1, ch:r.end.column}}, v.type = "converting");
             this._marker = this.codeMirror.markText(d.from, d.to, {className:"CodeMirror-lint-mark-error", __annotation:d, clearOnEnter:!0, inclusiveLeft:!0, inclusiveRigth:!0, clearWhenEmpty:!1});
             if ("syntax" == v.type) {
-              var u = v.title, x = this.makeSyntaxErrorDisplay(v.subject, v.keyword, v.message, t.from.line);
+              var t = v.title, u = this.makeSyntaxErrorDisplay(v.subject, v.keyword, v.message, r.from.line);
             } else {
-              "converting" == v.type && (u = v.title, x = v.message);
+              "converting" == v.type && (t = v.title, u = v.message);
             }
-            Entry.toast.alert(u, x);
+            Entry.toast.alert(t, u);
             throw v;
           }
         }
         break;
       case Entry.Vim.PARSER_TYPE_BLOCK_TO_JS:
-        d = q = this._execParser.Code(b, c);
+        d = t = this._execParser.Code(b, c);
         break;
       case Entry.Vim.PARSER_TYPE_BLOCK_TO_PY:
         Entry.getMainWS().blockMenu.renderText();
         d = "";
         if (c === Entry.Parser.PARSE_BLOCK && "func_" === b.type.substr(0, 5)) {
-          var y = Object.keys(this._execParser._funcDefMap);
+          var x = Object.keys(this._execParser._funcDefMap);
         }
-        q = this._execParser.Code(b, c);
+        t = this._execParser.Code(b, c);
         this._pyHinter || (this._pyHinter = new Entry.PyHint(this.syntax));
         this._hasDeclaration || this.initDeclaration();
         if (c == Entry.Parser.PARSE_GENERAL) {
@@ -18232,15 +18227,15 @@ Entry.Parser = function(c, b, d, e) {
             d += "\n";
           }
           u = this._execParser._funcDefMap;
-          x = "";
-          for (t in u) {
-            x += u[t] + "\n\n";
+          q = "";
+          for (r in u) {
+            q += u[r] + "\n\n";
           }
-          d += x;
+          d += q;
         } else {
-          c === Entry.Parser.PARSE_BLOCK && y && 0 > y.indexOf(b.type) && (d += this._execParser._funcDefMap[b.type] + "\n\n");
+          c === Entry.Parser.PARSE_BLOCK && x && 0 > x.indexOf(b.type) && (d += this._execParser._funcDefMap[b.type] + "\n\n");
         }
-        q && (d += q.trim());
+        t && (d += t.trim());
         d = d.replace(/\t/g, "    ");
         this._hasDeclaration && this.removeDeclaration();
     }
@@ -18329,21 +18324,9 @@ Entry.Parser = function(c, b, d, e) {
     this.availableCode = this.availableCode.concat(d);
   };
   c.findSyntaxError = function(b, c) {
-    c = {from:{}, to:{}};
-    var d = b.loc.line;
-    b = this.codeMirror.getValue().split("\n");
-    var e = 0, h;
-    for (h in this._pyBlockCount) {
-      var k = parseInt(this._pyBlockCount[h]), e = e + k;
-    }
-    h = d + e + 3;
-    h > b.length && (h = b.length);
-    b = b[h - 1];
-    c.from.line = h;
-    c.from.ch = 0;
-    c.to.line = h;
-    c.to.ch = b.length;
-    return c;
+    c = b.loc;
+    c.line += 2;
+    return {from:{line:c.line, ch:c.column}, to:{line:c.line, ch:c.column + b.tokLen}};
   };
   c.makeThreads = function(b) {
     function c(b) {
@@ -23243,7 +23226,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
         b.setAttribute("alignment-baseline", "baseline");
       })(b[x]);
     }
-    var y = 0;
+    var v = 0;
     if (0 === r.length) {
       d();
     } else {
@@ -23252,7 +23235,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
           var c = b.getAttribute("href");
           f(c, b.getAttribute("width"), b.getAttribute("height")).then(function(c) {
             b.setAttribute("href", c);
-            if (++y == r.length) {
+            if (++v == r.length) {
               return d();
             }
           });

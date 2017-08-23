@@ -211,7 +211,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
                     if (this.codeMirror) {
                         var line;
                         if (error instanceof SyntaxError) {
-                            var err = this.findSyntaxError(error, threadCount);
+                            var err = this.findSyntaxError(error);
                             var annotation = {
                                 from: {line: err.from.line-1, ch: err.from.ch},
                                 to: {line: err.to.line-1, ch: err.to.ch}
@@ -480,37 +480,12 @@ Entry.Parser = function(mode, type, cm, syntax) {
     };
 
     p.findSyntaxError = function(error, threadCount) {
-        var err = {};
-        err.from = {};
-        err.to = {};
-
-        var errorLine = error.loc.line;
-        var errorColumn = error.loc.column;
-        var errorPos = error.pos;
-        var errorRaisedAt = error.raisedAt;
-        var errorMessage = error.message;
-
-        var contents = this.codeMirror.getValue();
-        var contentsArr = contents.split("\n");
-        var currentThreadCount = 0;
-        var currentLineCount = 0;
-
-        for (var key in this._pyBlockCount) {
-            var count = parseInt(this._pyBlockCount[key]);
-            currentLineCount += count;
-        }
-
-        var targetLine = errorLine + currentLineCount + 3;
-        if (targetLine > contentsArr.length)
-            targetLine = contentsArr.length;
-        var targetText = contentsArr[targetLine-1];
-
-        err.from.line = targetLine;
-        err.from.ch = 0;
-        err.to.line = targetLine;
-        err.to.ch = targetText.length;
-
-        return err;
+        var loc = error.loc;
+        loc.line = loc.line + 2;
+        return {
+            from: {line: loc.line, ch: loc.column},
+            to: {line: loc.line, ch: loc.column + error.tokLen}
+        };
     };
 
     p.makeThreads = function(text) {
