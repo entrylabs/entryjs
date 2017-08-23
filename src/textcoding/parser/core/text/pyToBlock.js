@@ -660,22 +660,19 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 var list = Entry.variableContainer.getListByName(value);
                 return list ? list.id_ : undefined;
             case 'scenes':
-
-                return  Entry.scene.scenes_.filter(function(s){
+                var scenes =  Entry.scene.scenes_.filter(function(s){
                     return s.name === value;
-                })[0].id;
-
-                break;
+                });
+                return scenes[0] ? scenes[0].id : undefined;
             case 'sounds':
                 if (value)
                     var sound = Entry.playground.object.getSound(value);
                 return sound ? sound.id : undefined;
-                break;
             case 'clone':
                 var object;
 
                 if(!value){
-                    object = 'None'
+                    object = null
                 } else if(value == 'self') {
                     object = value;
                 } else {
@@ -683,11 +680,10 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         return obj.name === value;
                     });
 
-                    object = objects[0].id;
+                    object = objects[0] ? objects[0].id : null;
                 }
 
-            return object;
-                break;
+                return object;
             case 'objectSequence':
         }
     };
