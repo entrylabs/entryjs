@@ -775,18 +775,18 @@ describe('EntryPython', function(){
                     "type": "variable", "name": "test", "id": "abcd"
                 });
                 var resultBlock = Test.parsePython("test=0\n\ntest += 10");
-                
+
                 assert.ok(Test.pythonToBlock(
                     "test=0\n\ntest += 10",
-                    [  
-                       [  
-                          {  
+                    [
+                       [
+                          {
                              "type":"change_variable",
-                             "params":[  
+                             "params":[
                                 "abcd",
-                                {  
+                                {
                                    "type":"number",
-                                   "params":[  
+                                   "params":[
                                       "10"
                                    ]
                                 }
@@ -1533,7 +1533,7 @@ describe('EntryPython', function(){
                                   ]
                                }
                             ]
-                        ]  
+                        ]
                     }
                 ]
             ]
@@ -1576,19 +1576,18 @@ describe('EntryPython', function(){
         });
 
         it('when press key ' , function() {
-            Entry.loadProject(Entry.getStartProject()); 
+            Entry.loadProject(Entry.getStartProject());
             Entry.playground.object = Entry.container.objects_[0];
 
             var resultBlock = Test.parsePython('def when_press_key(space):');
-            console.log(resultBlock);
 
             assert.ok(Test.pythonToBlock(
                 'def when_press_key(space):',
-               [  
-                   [  
-                      {  
+               [
+                   [
+                      {
                          "type":"when_some_key_pressed",
-                         "params":[  
+                         "params":[
                             null,
                             32
                          ]

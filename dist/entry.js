@@ -17665,10 +17665,15 @@ Entry.PyToBlockParser = function(c) {
       case "DropdownDynamic":
         return this.DropdownDynamic(d, c);
       case "Block":
-        return e && e.type ? {type:e.type, params:this.Arguments(e.type, [b])} : {type:"number", params:[d + ""]};
+        return e && e.type ? {type:e.type, params:this.Arguments(e.type, [b])} : {type:"number", params:[this.getValue(b)]};
       default:
-        return d + "";
+        return this.getValue(b);
     }
+  };
+  c.getValue = function(b) {
+    var c = b.raw;
+    b.value.constructor === String && (c = b.raw.substr(1, b.raw.length - 2));
+    return c + "";
   };
   c.MemberExpression = function(b) {
     var c, e = {};
@@ -17938,9 +17943,9 @@ Entry.PyToBlockParser = function(c) {
         "name" in b.left ? b = c.name : (g = Entry.playground.object, b = c.property.name, g = g.id);
         "NewExpression" === d.type && "list" == d.callee.property.name ? (h = "lists_", c = d.arguments.map(this.Node, this), c = c.map(function(b) {
           return b.constructor === Object && "params" in b ? {data:b.params[0] + ""} : {data:b + ""};
-        }), k.array = c) : k.value = d.value + "";
+        }), k.array = c) : k.value = this.getValue(d);
         var c = "add" + h[0].toUpperCase() + h.slice(1, h.length - 2), l = this.variableExist(b, h);
-        l ? "lists_" == h ? l.array_ = k.array : l.value_ = d.value + "" : (k.variableType = h.slice(0, length - 2), k.name = b, k.object = g, Entry.variableContainer[c](k));
+        l ? "lists_" == h ? l.array_ = k.array : l.value_ = this.getValue(d) : (k.variableType = h.slice(0, length - 2), k.name = b, k.object = g, Entry.variableContainer[c](k));
       }
     }, this);
     return [];

@@ -260,12 +260,21 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 }
                 return {
                     type: 'number',
-                    params : [ value + "" ]
+                    params : [ this.getValue(component) ]
                 }
             default:
-                return value + "";
+                return this.getValue(component);
         }
     };
+
+    p.getValue = function(component){
+        var value = component.raw;
+
+        if(component.value.constructor === String)
+            value = component.raw.substr(1, component.raw.length-2);
+
+        return value + "";
+    }
 
     p.MemberExpression = function(component) {
         var obj;
@@ -863,7 +872,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
                 obj.array = temp;
             } else {
-                obj.value = right.value + '';
+                obj.value = this.getValue(right);
             }
 
             var functionType =  'add'+ type[0].toUpperCase() + type.slice(1,type.length-2);
@@ -874,7 +883,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     existVar.array_ = obj.array;
                     return;
                 }
-                existVar.value_ = right.value + '';
+                existVar.value_ = this.getValue(right);
                 return;
             }
 
