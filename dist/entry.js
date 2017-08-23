@@ -12905,10 +12905,14 @@ Entry.PyToBlockParser = function(c) {
       case "DropdownDynamic":
         return this.DropdownDynamic(e, c);
       case "Block":
-        return d && d.type ? {type:d.type, params:this.Arguments(d.type, [b])} : {type:"number", params:[b.raw + ""]};
+        return d && d.type ? {type:d.type, params:this.Arguments(d.type, [b])} : {type:"number", params:[this.getValue(b.raw) + ""]};
       default:
-        return b.raw + "";
+        return this.getValue(b.raw) + "";
     }
+  };
+  c.getValue = function(b) {
+    b.constructor === String && (b = b.substring(1, b.length - 1));
+    return b;
   };
   c.MemberExpression = function(b) {
     var c, d = {};

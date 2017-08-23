@@ -258,12 +258,19 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 }
                 return {
                     type: 'number',
-                    params : [ component.raw + "" ]
+                    params : [ this.getValue(component.raw) + "" ]
                 }
             default:
-                return component.raw + "";
+                return this.getValue(component.raw) + "";
         }
     };
+
+    p.getValue = function(value){
+        if(value.constructor === String)
+            value = value.substring(1,value.length-1);
+
+        return value;
+    }
 
     p.MemberExpression = function(component) {
         var obj;
