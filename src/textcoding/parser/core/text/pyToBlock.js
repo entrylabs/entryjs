@@ -258,10 +258,10 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 }
                 return {
                     type: 'number',
-                    params : [ value + "" ]
+                    params : [ component.raw + "" ]
                 }
             default:
-                return value + "";
+                return component.raw + "";
         }
     };
 
@@ -861,7 +861,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
                 obj.array = temp;
             } else {
-                obj.value = right.value + '';
+                obj.value = right.raw + '';
             }
 
             var functionType =  'add'+ type[0].toUpperCase() + type.slice(1,type.length-2);
@@ -872,7 +872,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     existVar.array_ = obj.array;
                     return;
                 }
-                existVar.value_ = right.value + '';
+                existVar.value_ = right.raw + '';
                 return;
             }
 
