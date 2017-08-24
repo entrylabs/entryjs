@@ -520,13 +520,14 @@ Entry.PyToBlockParser = function(blockSyntax) {
         var startBlock = {};
         this.assert(component.body.body[0], funcName, component, "NO_OBJECT", "OBJECT");
         var blocks = component.body.body[0].argument.callee.object.body.body;
-        var name = component.arguments[0].name;
 
         if(funcName === 'when_press_key')
+            var name = component.arguments[0].name;
+
             startBlock.params = [ null , Entry.KeyboardCode.map[ name ]];
 
         if(funcName === 'when_get_signal'){
-            
+            var name = component.arguments[0].name;
             startBlock.params = [null , this.getMessage(name) ]
         
         }
@@ -645,6 +646,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
     };
 
     p.getMessage = function(name) {
+        if(!name)
+            return
         var message = Entry.variableContainer.messages_.filter(function(obj){
                     return obj.name === name;
                 });
@@ -728,18 +731,6 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 var picture = Entry.playground.object.getPicture(value);
                 return picture ? picture.id : undefined;
             case 'messages':
-                    // var object;
-
-                    // var objects = Entry.variableContainer.messages_.filter(function(obj){
-                    //             return obj.name === value;
-                    //         });
-
-                    // if(objects && objects.length > 0)
-                    //     object = objects[0].id;
-                    // else {
-                    //     object = value;
-                    // }
-
                     return this.getMessage(value);
                 break;
             case 'variables':

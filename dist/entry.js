@@ -13010,9 +13010,12 @@ Entry.PyToBlockParser = function(c) {
     this._isInFuncDef = !0;
     var d = {};
     this.assert(b.body.body[0], c, b, "NO_OBJECT", "OBJECT");
-    var e = b.body.body[0].argument.callee.object.body.body, g = b.arguments[0].name;
-    "when_press_key" === c && (d.params = [null, Entry.KeyboardCode.map[g]]);
-    "when_get_signal" === c && (d.params = [null, this.getMessage(g)]);
+    var e = b.body.body[0].argument.callee.object.body.body;
+    if ("when_press_key" === c) {
+      var g = b.arguments[0].name
+    }
+    d.params = [null, Entry.KeyboardCode.map[g]];
+    "when_get_signal" === c && (g = b.arguments[0].name, d.params = [null, this.getMessage(g)]);
     if (g = this.blockSyntax["def " + c]) {
       return d.type = g.key, b = this.setParams(e), b.unshift(d), this._isInFuncDef = !1, b;
     }
@@ -13069,14 +13072,16 @@ Entry.PyToBlockParser = function(c) {
     return c;
   };
   c.getMessage = function(b) {
-    var c = Entry.variableContainer.messages_.filter(function(c) {
-      return c.name === b;
-    });
-    0 >= c.length && Entry.variableContainer.addMessage({name:b});
-    var c = b.replace("_space_", " "), d = Entry.variableContainer.messages_.filter(function(c) {
-      return c.name === b;
-    });
-    return object = d && 0 < d.length ? d[0].id : c;
+    if (b) {
+      var c = Entry.variableContainer.messages_.filter(function(c) {
+        return c.name === b;
+      });
+      0 >= c.length && Entry.variableContainer.addMessage({name:b});
+      var c = b.replace("_space_", " "), d = Entry.variableContainer.messages_.filter(function(c) {
+        return c.name === b;
+      });
+      return object = d && 0 < d.length ? d[0].id : c;
+    }
   };
   c.DropdownDynamic = function(b, c) {
     switch(c.menuName) {
