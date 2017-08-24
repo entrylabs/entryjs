@@ -328,11 +328,16 @@ Entry.PyToBlockParser = function(blockSyntax) {
         var obj = {
             statements: [this.setParams(blocks)]
         };
-        if('operator' in component.test){
-            obj.type = "repeat_while_true";
-            obj.params = [this.Node(component.test.argument)];
-        } else {
+        var test = component.test;
+        if (test.raw === "True") {
             obj.type = "repeat_inf";
+        } else {
+            obj.type = "repeat_while_true";
+            if (test.type === "UnaryExpression" && test.operator === "!") {
+                obj.params = [this.Node(component.test.argument), "until"];
+            } else {
+                obj.params = [this.Node(component.test), "while"];
+            }
         }
 
         return obj;

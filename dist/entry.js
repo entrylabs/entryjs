@@ -17702,8 +17702,8 @@ Entry.PyToBlockParser = function(c) {
     return e;
   };
   c.WhileStatement = function(b) {
-    var c = {statements:[this.setParams(b.body.body)]};
-    "operator" in b.test ? (c.type = "repeat_while_true", c.params = [this.Node(b.test.argument)]) : c.type = "repeat_inf";
+    var c = {statements:[this.setParams(b.body.body)]}, e = b.test;
+    "True" === e.raw ? c.type = "repeat_inf" : (c.type = "repeat_while_true", c.params = "UnaryExpression" === e.type && "!" === e.operator ? [this.Node(b.test.argument), "until"] : [this.Node(b.test), "while"]);
     return c;
   };
   c.BlockStatement = function(b) {
