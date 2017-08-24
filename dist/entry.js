@@ -17714,7 +17714,7 @@ Entry.PyToBlockParser = function(c) {
   c.IfStatement = function(b) {
     var c;
     if ((c = b.alternate) && c.body && c.body[0] && "type" in c.body[0] && "ForInStatement" === c.body[0].type) {
-      c = b.alternate.body.map(this.Node, this), b = b.consequent.body[0].body.body, c[0].statements.push(this.setParams(b));
+      c = b.alternate.body.map(this.Node, this), b.consequent.body[0].body.body.shift(), b = b.consequent.body[0].body.body, c[0].statements.push(this.setParams(b));
     } else {
       if ("alternate" in b && b.alternate) {
         c = b.consequent ? b.consequent.body.map(this.Node, this) : [];
@@ -17731,7 +17731,6 @@ Entry.PyToBlockParser = function(c) {
     return this.Node(b[b.length - 1]);
   };
   c.ForInStatement = function(b) {
-    b.body.body[0] && "expression" in b.body.body[0] && this.Node(b.body.body[0].expression);
     return {type:"repeat_basic", params:[], statements:[]};
   };
   c.BreakStatement = function(b) {

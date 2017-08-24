@@ -363,10 +363,13 @@ Entry.PyToBlockParser = function(blockSyntax) {
                          tempAlt.body[0] &&
                          'type' in tempAlt.body[0] &&
                          tempAlt.body[0].type === 'ForInStatement';
+
         var consequent = component.consequent;
 
         if(isForState){
             alternate = component.alternate.body.map(this.Node , this);
+            component.consequent.body[0].body.body.shift();
+
             blocks = component.consequent.body[0].body.body;
             alternate[0].statements.push(this.setParams(blocks));
 
@@ -398,8 +401,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
      };
 
     p.ForInStatement = function(component) {
-        var  expression = component.body.body[0] && 'expression' in component.body.body[0] ?
-                            this.Node(component.body.body[0].expression) : null;
+        // var  expression = component.body.body[0] && 'expression' in component.body.body[0] ?
+        //                     this.Node(component.body.body[0].expression) : null;
         var obj =  {
             "type" : "repeat_basic",
             "params": [],
