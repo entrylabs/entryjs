@@ -795,9 +795,66 @@ describe('EntryPython', function(){
                        ]
                     ]
                 ));
+                Entry.clearProject();
             })
 
-            Entry.clearProject();
+            it('char_at method' , function() {
+                Entry.loadProject(Entry.getStartProject());
+                Entry.playground.object = Entry.container.objects_[0];
+                Entry.variableContainer.addVariable({
+                    "type": "variable", "name": "test", "id": "abcd"
+                });
+                assert.ok(Test.pythonToBlock(
+                    "test=\"asdf\"\n\ntest[0]",
+                    [
+                       [
+                          {
+                             "type":"char_at",
+                             "params":[
+                                 undefined,
+                                 {
+                                    type: "get_variable",
+                                    params: [ "abcd" ]
+                                 },
+                                 undefined,
+                                 {
+                                    type: "number",
+                                    params: [ 1 ]
+                                 }
+                             ]
+                          }
+                       ]
+                    ]
+                ));
+                Entry.clearProject();
+            })
+
+            it('char_at answer method' , function() {
+                Entry.loadProject(Entry.getStartProject());
+                Entry.playground.object = Entry.container.objects_[0];
+                assert.ok(Test.pythonToBlock(
+                    "Entry.answer()[0]",
+                    [
+                       [
+                          {
+                             "type":"char_at",
+                             "params":[
+                                 undefined,
+                                 {
+                                    type: "get_canvas_input_value"
+                                 },
+                                 undefined,
+                                 {
+                                    type: "number",
+                                    params: [ 1 ]
+                                 }
+                             ]
+                          }
+                       ]
+                    ]
+                ));
+                Entry.clearProject();
+            })
         });
 
         describe('list method' , function() {

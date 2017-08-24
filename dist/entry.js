@@ -17681,7 +17681,7 @@ Entry.PyToBlockParser = function(c) {
       return e = Entry.variableContainer.getVariableByName(b.property.name), this.assert(e, "variable not exist", b), {type:"get_variable", params:[e.id_]};
     }
     "Literal" === b.object.type ? (c = "%2", e.preParams = [b.object]) : c = this.Node(b.object);
-    "object" === typeof c && (e.preParams = [c.params[0]], c = "%2");
+    "object" === typeof c && (e.preParams = "get_list" === c.type ? [c.params[0]] : [b.object], c = "%2");
     var f = b.property;
     if ("CallExpression" === f.type) {
       return this.SubscriptIndex(b);
@@ -17793,8 +17793,8 @@ Entry.PyToBlockParser = function(c) {
     return this.Node(b.callee);
   };
   c.SubscriptIndex = function(b) {
-    var c = this.Node(b.object);
-    this.isParamPrimitive(c) ? c = this.blockSyntax["%2[%4]#char_at"] : (this.assert("get_list" === c.type, "Subscript index can be use to array", b), c = this.blockSyntax["%2[%4]"]);
+    var c;
+    c = "get_list" === this.Node(b.object).type ? this.blockSyntax["%2[%4]"] : this.blockSyntax["%2[%4]#char_at"];
     c = this.Block({}, c);
     c.params = this.Arguments(c.type, b.property.arguments);
     return c;
@@ -17958,7 +17958,7 @@ Entry.PyToBlockParser = function(c) {
   };
   c.len = function(b) {
     b = this.Node(b.arguments[0]);
-    return this.isParamPrimitive(b) || "get_variable" === b.type ? {type:"length_of_string", params:[void 0, b]} : {type:"length_of_list", params:[void 0, b.params[0]]};
+    return "get_list" === b.type ? {type:"length_of_list", params:[void 0, b.params[0]]} : {type:"length_of_string", params:[void 0, b]};
   };
   c["Hamster.note"] = function(b) {
     var c;
