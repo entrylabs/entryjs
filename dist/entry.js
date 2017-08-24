@@ -9191,8 +9191,8 @@ Entry.Painter.prototype.generateView = function(c) {
     d.addClass("entryPlaygroundPainterAttrLineStyleLine1");
     x.appendChild(d);
     d.value = "line";
-    var y = Entry.createElement("div");
-    y.addClass("painterAttrLineStyleBackgroundLine");
+    var v = Entry.createElement("div");
+    v.addClass("painterAttrLineStyleBackgroundLine");
     u.bindOnClick(function(b) {
       x.removeClass("entryRemove");
     });
@@ -9204,11 +9204,11 @@ Entry.Painter.prototype.generateView = function(c) {
     };
     d.bindOnClick(function(b) {
       this.attrLineArea.removeClass(u);
-      this.attrLineArea.appendChild(y);
+      this.attrLineArea.appendChild(v);
       this.attrLineArea.onchange(b);
       x.blur();
     });
-    y.bindOnClick(function(b) {
+    v.bindOnClick(function(b) {
       x.removeClass("entryRemove");
     });
     this.attrLineArea.onchange = function(c) {
@@ -11530,8 +11530,8 @@ Entry.TextCodingUtil = {};
             }
           }
           if (h && m.statements && 0 != m.statements.length) {
-            for (var y in m.statements) {
-              h = this.isFuncContentsMatch(l.data.statements[y]._data, m.statements[y], d, e);
+            for (var v in m.statements) {
+              h = this.isFuncContentsMatch(l.data.statements[v]._data, m.statements[v], d, e);
             }
           }
         } else {
@@ -13377,33 +13377,28 @@ Entry.Parser = function(c, b, f, d) {
           this._onError = !1;
         } catch (v) {
           if (this._onError = !0, e = [], this.codeMirror) {
-            if (v instanceof SyntaxError) {
-              var t = this.findSyntaxError(v, r), e = {from:{line:t.from.line - 1, ch:t.from.ch}, to:{line:t.to.line - 1, ch:t.to.ch}};
-              v.type = "syntax";
-            } else {
-              t = v.line, e = {from:{line:t.start.line + 1, ch:t.start.column}, to:{line:t.end.line + 1, ch:t.end.column}}, v.type = "converting";
-            }
+            v instanceof SyntaxError ? (r = this.findSyntaxError(v), e = {from:{line:r.from.line - 1, ch:r.from.ch}, to:{line:r.to.line - 1, ch:r.to.ch}}, v.type = "syntax") : (r = v.line, e = {from:{line:r.start.line + 1, ch:r.start.column}, to:{line:r.end.line + 1, ch:r.end.column}}, v.type = "converting");
             this._marker = this.codeMirror.markText(e.from, e.to, {className:"CodeMirror-lint-mark-error", __annotation:e, clearOnEnter:!0, inclusiveLeft:!0, inclusiveRigth:!0, clearWhenEmpty:!1});
             if ("syntax" == v.type) {
-              var u = v.title, x = this.makeSyntaxErrorDisplay(v.subject, v.keyword, v.message, t.from.line)
+              var t = v.title, u = this.makeSyntaxErrorDisplay(v.subject, v.keyword, v.message, r.from.line)
             } else {
-              "converting" == v.type && (u = v.title, x = v.message);
+              "converting" == v.type && (t = v.title, u = v.message);
             }
-            Entry.toast.alert(u, x);
+            Entry.toast.alert(t, u);
             throw v;
           }
         }
         break;
       case Entry.Vim.PARSER_TYPE_BLOCK_TO_JS:
-        e = n = this._execParser.Code(b, c);
+        e = t = this._execParser.Code(b, c);
         break;
       case Entry.Vim.PARSER_TYPE_BLOCK_TO_PY:
         Entry.getMainWS().blockMenu.renderText();
         e = "";
         if (c === Entry.Parser.PARSE_BLOCK && "func_" === b.type.substr(0, 5)) {
-          var y = Object.keys(this._execParser._funcDefMap)
+          var x = Object.keys(this._execParser._funcDefMap)
         }
-        n = this._execParser.Code(b, c);
+        t = this._execParser.Code(b, c);
         this._pyHinter || (this._pyHinter = new Entry.PyHint(this.syntax));
         this._hasDeclaration || this.initDeclaration();
         if (c == Entry.Parser.PARSE_GENERAL) {
@@ -13413,15 +13408,15 @@ Entry.Parser = function(c, b, f, d) {
             e += "\n";
           }
           u = this._execParser._funcDefMap;
-          x = "";
-          for (t in u) {
-            x += u[t] + "\n\n";
+          n = "";
+          for (r in u) {
+            n += u[r] + "\n\n";
           }
-          e += x;
+          e += n;
         } else {
-          c === Entry.Parser.PARSE_BLOCK && y && 0 > y.indexOf(b.type) && (e += this._execParser._funcDefMap[b.type] + "\n\n");
+          c === Entry.Parser.PARSE_BLOCK && x && 0 > x.indexOf(b.type) && (e += this._execParser._funcDefMap[b.type] + "\n\n");
         }
-        n && (e += n.trim());
+        t && (e += t.trim());
         e = e.replace(/\t/g, "    ");
         this._hasDeclaration && this.removeDeclaration();
     }
@@ -13509,18 +13504,9 @@ Entry.Parser = function(c, b, f, d) {
     this.availableCode = this.availableCode.concat(e);
   };
   c.findSyntaxError = function(b, c) {
-    var e = {from:{}, to:{}}, g = b.loc.line, h = this.codeMirror.getValue().split("\n"), k = 0, l;
-    for (l in this._pyBlockCount) {
-      var m = parseInt(this._pyBlockCount[l]), k = k + m
-    }
-    g = g + k + 3;
-    g > h.length && (g = h.length);
-    h = h[g - 1];
-    e.from.line = g;
-    e.from.ch = 0;
-    e.to.line = g;
-    e.to.ch = h.length;
-    return e;
+    var e = b.loc;
+    e.line += 2;
+    return {from:{line:e.line, ch:e.column}, to:{line:e.line, ch:e.column + b.tokLen}};
   };
   c.makeThreads = function(b) {
     function c(b) {
@@ -21002,7 +20988,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
     }() ? .9 : .95;
     -1 < this.type.indexOf("func_") && (q *= .99);
     l.setAttribute("transform", "scale(%SCALE) translate(%X,%Y)".replace("%X", -m.offsetX).replace("%Y", -m.offsetY).replace("%SCALE", n));
-    for (var r = this.getBoard().svgDom.find("defs"), t = l.getElementsByTagName("image"), m = l.getElementsByTagName("text"), u = ["\u2265", "\u2264"], x = "\u2265\u2264-><=+-x/".split(""), y = 0;y < m.length;y++) {
+    for (var r = this.getBoard().svgDom.find("defs"), t = l.getElementsByTagName("image"), m = l.getElementsByTagName("text"), u = ["\u2265", "\u2264"], x = "\u2265\u2264-><=+-x/".split(""), v = 0;v < m.length;v++) {
       (function(b) {
         b.setAttribute("font-family", "'nanumBarunRegular', 'NanumGothic', '\ub098\ub214\uace0\ub515','NanumGothicWeb', '\ub9d1\uc740 \uace0\ub515', 'Malgun Gothic', Dotum");
         var c = parseInt(b.getAttribute("font-size")), d = $(b).text();
@@ -21013,22 +20999,22 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
         }
         -1 < x.indexOf(d) ? b.setAttribute("font-size", c + "px") : b.setAttribute("font-size", c * q + "px");
         b.setAttribute("alignment-baseline", "baseline");
-      })(m[y]);
+      })(m[v]);
     }
-    var v = 0;
+    var y = 0;
     if (0 === t.length) {
       d();
     } else {
-      for (y = 0;y < t.length;y++) {
+      for (v = 0;v < t.length;v++) {
         (function(b) {
           var c = b.getAttribute("href");
           e(c, b.getAttribute("width"), b.getAttribute("height")).then(function(c) {
             b.setAttribute("href", c);
-            if (++v == t.length) {
+            if (++y == t.length) {
               return d();
             }
           });
-        })(t[y]);
+        })(t[v]);
       }
     }
     return g.promise();
@@ -25481,34 +25467,34 @@ Entry.Playground = function() {
     x.addClass("entryPlaygroundFontSizeIndicator");
     u.appendChild(x);
     this.fontSizeIndiciator = x;
-    var y = Entry.createElement("div");
-    y.addClass("entryPlaygroundFontSizeKnob");
-    u.appendChild(y);
-    this.fontSizeKnob = y;
+    var v = Entry.createElement("div");
+    v.addClass("entryPlaygroundFontSizeKnob");
+    u.appendChild(v);
+    this.fontSizeKnob = v;
     g = Entry.createElement("div");
     g.addClass("entryPlaygroundFontSizeLabel");
     g.innerHTML = "\uae00\uc790 \ud06c\uae30";
     b.appendChild(g);
-    var v = !1, B = 0;
-    y.onmousedown = function(b) {
-      v = !0;
+    var y = !1, B = 0;
+    v.onmousedown = function(b) {
+      y = !0;
       B = $(u).offset().left;
     };
-    y.addEventListener("touchstart", function(b) {
-      v = !0;
+    v.addEventListener("touchstart", function(b) {
+      y = !0;
       B = $(u).offset().left;
     });
     document.addEventListener("mousemove", function(b) {
-      v && (b = b.pageX - B, b = Math.max(b, 5), b = Math.min(b, 88), y.style.left = b + "px", b /= .88, x.style.width = b + "%", Entry.playground.object.entity.setFontSize(b));
+      y && (b = b.pageX - B, b = Math.max(b, 5), b = Math.min(b, 88), v.style.left = b + "px", b /= .88, x.style.width = b + "%", Entry.playground.object.entity.setFontSize(b));
     });
     document.addEventListener("touchmove", function(b) {
-      v && (b = b.touches[0].pageX - B, b = Math.max(b, 5), b = Math.min(b, 88), y.style.left = b + "px", b /= .88, x.style.width = b + "%", Entry.playground.object.entity.setFontSize(b));
+      y && (b = b.touches[0].pageX - B, b = Math.max(b, 5), b = Math.min(b, 88), v.style.left = b + "px", b /= .88, x.style.width = b + "%", Entry.playground.object.entity.setFontSize(b));
     });
     document.addEventListener("mouseup", function(b) {
-      v = !1;
+      y = !1;
     });
     document.addEventListener("touchend", function(b) {
-      v = !1;
+      y = !1;
     });
     b = Entry.createElement("div");
     b.addClass("entryPlaygroundLinebreakWrapper");
