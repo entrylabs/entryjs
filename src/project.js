@@ -39,6 +39,10 @@ Entry.getStartProject = function(mediaFilePath) {
             {
                 "id" : "7y0y",
                 "name" : "엔트리봇",
+                "label": {
+                    "ko": "엔트리봇",
+                    "en": "Entrybot"
+                },
                 "script" : [
                     [
                         {
@@ -67,7 +71,11 @@ Entry.getStartProject = function(mediaFilePath) {
                             "ext" : ".mp3",
                             "id" : "8el5",
                             "fileurl" : mediaFilePath + "media/bark.mp3",
-                            "name" : "강아지 짖는소리"
+                            "name" : "강아지 짖는소리",
+                            "label": {
+                                "ko": "강아지 짖는소리",
+                                "en": "Doggi's Bark"
+                            }
                         }
                     ],
                     "pictures" : [

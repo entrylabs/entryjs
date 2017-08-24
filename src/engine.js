@@ -446,8 +446,7 @@ Entry.Engine = function() {
      * @param {Entry.EntryObject} object
      */
     p.computeFunction = function(object) {
-        var code = object.script;
-        code.tick();
+        object.script.tick();
     };
 
     Entry.Engine.computeThread = function(entity, script) {
@@ -488,23 +487,23 @@ Entry.Engine = function() {
     p.toggleRun = function(disableAchieve) {
         var variableContainer = Entry.variableContainer;
         var container = Entry.container;
+        var playground = Entry.playground;
 
-        if (this.state === 'pause') {
-            this.togglePause();
-            return;
-        }
+        if (this.state === 'pause')
+            return this.togglePause();
 
         Entry.Utils.blur();
 
         //Text Coding Mode
-        if (Entry.playground && Entry.playground.mainWorkspace) {
-            var mainWorkspace = Entry.playground.mainWorkspace;
+        if (playground && playground.mainWorkspace) {
+            var mainWorkspace = playground.mainWorkspace;
             var boardMode = mainWorkspace.mode;
             if(boardMode == Entry.Workspace.MODE_VIMBOARD)
                 mainWorkspace._syncTextCode();
         }
 
         Entry.addActivity("run");
+
         if (this.state == 'stop') {
             container.mapEntity(function(entity) {
                 entity.takeSnapshot();
@@ -576,10 +575,8 @@ Entry.Engine = function() {
             entity.loadSnapshot();
             entity.object.filters = [];
             entity.resetFilter();
-            if (entity.dialog)
-                entity.dialog.remove();
-            if (entity.brush)
-                entity.removeBrush();
+            if (entity.dialog) entity.dialog.remove();
+            if (entity.brush) entity.removeBrush();
         });
 
         variableContainer.mapVariable(function(variable){
@@ -597,6 +594,8 @@ Entry.Engine = function() {
         Entry.Func.clearThreads();
         createjs.Sound.setVolume(1);
         createjs.Sound.stop();
+
+
         this.view_.removeClass('entryEngineBlueWorkspace');
         if (this.runButton) {
             this.runButton.removeClass('entryRemove');
@@ -699,8 +698,7 @@ Entry.Engine = function() {
         if (entity !== param[0])
             return;
         var eventName = param[1];
-        var code = entity.parent.script;
-        code.raiseEvent(eventName, entity);
+        entity.parent.script.raiseEvent(eventName, entity);
     };
 
     /**
@@ -757,7 +755,8 @@ Entry.Engine = function() {
      */
     p.updateMouseView = function() {
         var coordinate = Entry.stage.mouseCoordinate;
-        this.mouseView.textContent = 'X : ' + coordinate.x + ', Y : ' + coordinate.y;
+        this.mouseView.textContent = 'X : ' +
+            coordinate.x + ', Y : ' + coordinate.y;
         this.mouseView.removeClass('entryRemove');
     };
 

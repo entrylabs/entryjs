@@ -15,7 +15,7 @@ Entry.Field = function() {};
 
     p.destroy = function() {
         this.svgGroup && $(this.svgGroup).unbind('mouseup touchend');
-        this.destroyOption();
+        this.destroyOption(true);
     };
 
     p.command = function(forceCommand) {
@@ -220,9 +220,7 @@ Entry.Field = function() {};
     };
 
     p.getFontSize = function(size) {
-        size =
-            size || this._blockView.getSkeleton().fontSize || 12;
-        return size;
+        return size || this._blockView.getSkeleton().fontSize || 12;
     };
 
     p.getContentHeight = function() {
@@ -331,5 +329,64 @@ Entry.Field = function() {};
         var board = this.getBoard();
         return board && board.code;
     };
+
+    p.getTextValue = function() {
+        return this.getValue();
+    };
+
+    p.getTextBBox = (function() {
+        var _cache = {};
+        var svg;
+
+        //make invisible svg dom to body
+        //in order to calculate text width
+        function generateDom() {
+            svg = Entry.Dom(
+               $('<svg id="invisibleBoard" class="entryBoard" width="1px" height="1px"' +
+                'version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'),
+               { parent: $('body') }
+            );
+        }
+
+        var clearDoms = Entry.Utils.debounce(function() {
+            if (!svg) return;
+            $(svg).empty();
+        }, 500);
+
+        return function() {
+            if (window.fontLoaded && !svg) generateDom();
+
+            var value = this.getTextValue();
+
+            //empty string check
+            if (!value) return { width: 0, height: 0 };
+
+            var fontSize = this._font_size || '';
+
+            var key = value + '&&' + fontSize;
+            var bBox = _cache[key];
+
+            if (bBox) return bBox;
+
+            var textElement = this.textElement;
+            if (svg) {
+                textElement = textElement.cloneNode(true);
+                svg.append(textElement);
+            }
+
+            bBox = textElement.getBoundingClientRect();
+            clearDoms();
+
+            bBox = {
+                width: Math.round(bBox.width*100)/100,
+                height: Math.round(bBox.height*100)/100,
+            };
+
+            if (fontSize && window.fontLoaded &&
+                bBox.width && bBox.height)
+                _cache[key] = bBox;
+            return bBox;
+        };
+    })();
 
 })(Entry.Field.prototype);

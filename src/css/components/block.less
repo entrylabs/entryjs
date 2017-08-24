@@ -17,12 +17,14 @@
 }
 
 .block {
-    cursor: url('@{image_url}handopen.cur') 8 5, auto;
+    cursor: url('/media/handopen.cur'),
+            auto;
     -ms-touch-action: none;
 }
 
 .block.dragging {
-    cursor: url('@{image_url}handclosed.cur') 8 5, auto;
+    cursor: url('/media/handclosed.cur'),
+            auto;
 }
 
 .block.selected > path {

@@ -177,6 +177,23 @@ if (Entry && Entry.block) {
             }
             return '"()"'.replace('()', value).toLowerCase();
         };
+        
+        c.returnValuePartialUpperCase = function(key, value) {
+            if(this.codeMap)
+                var codeMap = eval(this.codeMap);
+            var codeMapKey = value;
+            if(codeMap) {
+                var codeMapValue = codeMap[codeMapKey];
+                if(codeMapValue)
+                    value = codeMapValue;
+            }
+            var dot = value.indexOf(".") + 1;
+            if(dot > 1) {
+                return value.charAt(0).toUpperCase() + value.substring(1, dot) + value.substring(dot).toUpperCase();
+            } else {
+                return value.toUpperCase();
+            }
+        };
 
     })(Entry.block.converters);
 }
@@ -3752,6 +3769,15 @@ Entry.block = {
             var value3 = script.getNumberValue("VALUE3", script);
             var value4 = script.getNumberValue("VALUE4", script);
             var value5 = script.getNumberValue("VALUE5", script);
+
+            var stringValue4 = script.getValue("VALUE4", script);
+            var stringValue5 = script.getValue("VALUE5", script);
+            var isFloat = false;
+
+            if((Entry.Utils.isNumber(stringValue4) && stringValue4.indexOf('.') > -1) || (Entry.Utils.isNumber(stringValue5) && stringValue5.indexOf('.') > -1)) {
+                isFloat = true;
+            }
+
             var result = value1;
             if (value2 > value3) {
                 var swap = value2;
@@ -3768,7 +3794,14 @@ Entry.block = {
             result += value4;
             result = Math.min(value5, result);
             result = Math.max(value4, result);
-            return Math.round(result);
+
+            if(isFloat) {
+                result = Math.round(result * 100) / 100;
+            } else {
+                result = Math.round(result);
+            }
+
+            return result;
         },
         "syntax": {"js": [], "py": [
             {
@@ -3972,6 +4005,13 @@ Entry.block = {
             var value3 = script.getNumberValue("VALUE3", script);
             var value4 = script.getNumberValue("VALUE4", script);
             var value5 = script.getNumberValue("VALUE5", script);
+            var stringValue4 = script.getValue("VALUE4", script);
+            var stringValue5 = script.getValue("VALUE5", script);
+            var isFloat = false;
+
+            if((Entry.Utils.isNumber(stringValue4) && stringValue4.indexOf('.') > -1) || (Entry.Utils.isNumber(stringValue5) && stringValue5.indexOf('.') > -1)) {
+                isFloat = true;
+            }
 
             if (value2 > value3) {
                 var swap = value2;
@@ -3988,6 +4028,12 @@ Entry.block = {
             result += value4;
             result = Math.min(value5, result);
             result = Math.max(value4, result);
+
+            if(isFloat) {
+                result = Math.round(result * 100) / 100;
+            } else {
+                result = Math.round(result);
+            }
 
             return result
         },
@@ -4101,7 +4147,8 @@ Entry.block = {
         "def": {
             "params": [
                 {
-                    "type": "arduino_get_port_number"
+                    "type": "arduino_get_port_number",
+                    "params": [2]
                 }
             ],
             "type": "arduino_ext_get_digital"
@@ -4207,7 +4254,8 @@ Entry.block = {
         "def": {
             "params": [
                 {
-                    "type": "arduino_get_port_number"
+                    "type": "arduino_get_port_number",
+                    "params": [ 3 ],
                 },
                 {
                     "type": "arduino_get_digital_toggle",
@@ -4451,7 +4499,7 @@ Entry.block = {
                     ["5", "5"],
                     ["6", "6"]
                 ],
-                "value": "3",
+                "value": "4",
                 "fontSize": 11
             }
         ],
@@ -4497,7 +4545,7 @@ Entry.block = {
         "def": {
             "params": [{
                     "type": "arduino_get_port_number",
-                    "value": 4
+                    "params": [ 3 ]
                 },
                 {
                     "type": "arduino_ext_tone_list"
@@ -4641,7 +4689,10 @@ Entry.block = {
         "events": {},
         "def": {
             "params": [{
-                    "type": "arduino_get_port_number"
+                    "type": "arduino_get_port_number",
+                    "params": [
+                        "3"
+                    ]
                 },
                 null
             ],
@@ -4797,7 +4848,7 @@ Entry.block = {
     },
     "arduino_nano_get_digital": {
         "template": Lang.template.arduino_ext_get_digital,
-        "parent": "arduino_ext_get_digital",        
+        "parent": "arduino_ext_get_digital",
         "def": {
             "params": [
                 {
@@ -4810,7 +4861,7 @@ Entry.block = {
     },
     "arduino_nano_toggle_led": {
         "template": Lang.template.arduino_ext_toggle_led,
-        "parent": "arduino_ext_toggle_led",        
+        "parent": "arduino_ext_toggle_led",
         "def": {
             "params": [
                 {
@@ -4870,7 +4921,7 @@ Entry.block = {
     },
     "arduino_nano_set_servo": {
         "template": Lang.template.arduino_ext_set_servo,
-        "parent": "arduino_ext_set_servo",        
+        "parent": "arduino_ext_set_servo",
         "def": {
             "params": [{
                     "type": "arduino_get_port_number"
@@ -5013,7 +5064,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Dropdown",
-                "options": [                
+                "options": [
                     [Lang.Blocks.blacksmith_toggle_on,"on"],
                     [Lang.Blocks.blacksmith_toggle_off,"off"]
                 ],
@@ -5097,7 +5148,7 @@ Entry.block = {
         "func": function (sprite, script) {
             return script.getField("LINE");
         }
-    },   
+    },
     "blacksmith_get_analog_value": {
         "color": "#00979D",
         "fontColor": "#fff",
@@ -5112,7 +5163,7 @@ Entry.block = {
         ],
         "events": {},
         "def": {
-            "params": [ 
+            "params": [
                 {
                     "type": "blacksmith_list_analog_basic"
                 }
@@ -5260,7 +5311,7 @@ Entry.block = {
                 time: new Date().getTime()
             };
 
-            return Entry.hw.portData.rxBLUETOOTH || 0;            
+            return Entry.hw.portData.rxBLUETOOTH || 0;
         },
         "syntax": {"js": [], "py": ["blacksmith.get_digital_bluetooth()"]}
     },
@@ -5464,7 +5515,7 @@ Entry.block = {
                     "params": [ "255" ]
                 },
                 null
-            ], 
+            ],
             "type": "blacksmith_set_digital_pwm"
         },
         "paramsKeyMap": {
@@ -5477,7 +5528,7 @@ Entry.block = {
             var port = script.getNumberValue("PORT");
             var value = script.getNumberValue("VALUE");
 
-            value = Math.round(value);            
+            value = Math.round(value);
             value = Math.min(value, 255);
             value = Math.max(value, 0);
             if(!Entry.hw.sendQueue['SET']) {
@@ -5525,7 +5576,7 @@ Entry.block = {
                     "params": [ "90" ]
                 },
                 null
-            ], 
+            ],
             "type": "blacksmith_set_digital_servo"
         },
         "paramsKeyMap": {
@@ -5563,19 +5614,19 @@ Entry.block = {
             {
                 "type": "Block",
                 "accept": "string"
-            }, 
+            },
             {
                 "type": "Block",
                 "accept": "string"
-            }, 
+            },
             {
                 "type": "Block",
                 "accept": "string"
-            }, 
+            },
             {
                 "type": "Block",
                 "accept": "string"
-            }, 
+            },
             {
                 "type": "Indicator",
                 "img": "block_icon/hardware_03.png",
@@ -5588,7 +5639,7 @@ Entry.block = {
                 {
                     "type": "blacksmith_list_digital_basic"
                 },
-                {                    
+                {
                     "type": "blacksmith_list_digital_octave"
                 },
                 {
@@ -5603,7 +5654,7 @@ Entry.block = {
             "type": "blacksmith_set_digital_buzzer"
         },
         "paramsKeyMap": {
-            "PORT": 0,            
+            "PORT": 0,
             "OCTAVE": 1,
             "NOTE": 2,
             "DURATION": 3
@@ -5617,13 +5668,13 @@ Entry.block = {
             var value = 0;
 
             if (!script.isStart) {
-                var note = script.getValue("NOTE");                
+                var note = script.getValue("NOTE");
                 if(!Entry.Utils.isNumber(note)) {
                     note = Entry.Blacksmith.toneTable[note];
                 }
                 if(note < 0) {
                     note = 0;
-                } 
+                }
                 else if(note > 12) {
                     note = 12;
                 }
@@ -5640,10 +5691,10 @@ Entry.block = {
                         time: new Date().getTime()
                     };
                     return script.callReturn();
-                }                
+                }
                 if(octave < 0) {
                     octave = 0;
-                } 
+                }
                 else if(octave > 8) {
                     octave = 8;
                 }
@@ -5666,10 +5717,10 @@ Entry.block = {
 
                 setTimeout(function() { script.timeFlag = 0; }, duration + 32);
                 return script;
-            } 
+            }
             else if (script.timeFlag == 1) {
                 return script;
-            } 
+            }
             else {
                 delete script.timeFlag;
                 delete script.isStart;
@@ -5732,7 +5783,7 @@ Entry.block = {
 
             if(!script.isStart) {
                 if(typeof string === 'string') {
-                    for (var i = 0; i < string.length; i++) {  
+                    for (var i = 0; i < string.length; i++) {
                         text[i] = Entry.Blacksmith.toByte(string[i]);
                     }
                 }
@@ -5742,7 +5793,7 @@ Entry.block = {
                 if(!Entry.hw.sendQueue['SET']) {
                     Entry.hw.sendQueue['SET'] = {};
                 }
-                
+
                 script.isStart = true;
                 script.timeFlag = 1;
                 var fps = Entry.FPS || 60;
@@ -5768,7 +5819,7 @@ Entry.block = {
                         text14 : text[14],
                         text15 : text[15]
                     },
-                    time: new Date().getTime()                
+                    time: new Date().getTime()
                 };
 
                 setTimeout(function() {
@@ -5794,7 +5845,7 @@ Entry.block = {
         "skeleton": "basic",
         "template": Lang.template.blacksmith_set_digital_bluetooth,
         "statements": [],
-        "params": [    
+        "params": [
             {
                 "type": "Block",
                 "accept": "string"
@@ -5823,12 +5874,12 @@ Entry.block = {
         "isNotFor": [ "blacksmith" ],
         "func": function (sprite, script) {
             if(!script.isStart) {
-                var string = script.getValue("STRING");            
+                var string = script.getValue("STRING");
                 var port = 3;
                 var text = [];
 
                 if(typeof string === 'string') {
-                    for (var i = 0; i < string.length; i++) {  
+                    for (var i = 0; i < string.length; i++) {
                         text[i] = Entry.Blacksmith.toByte(string[i]);
                     }
                 }
@@ -8875,56 +8926,56 @@ Entry.block = {
         "func": function(sprite, script) {
             var led = script.getStringField("PORT");
             var value = script.getStringField("OPERATOR");
-            
+
             Entry.hw.setDigitalPortValue("ELED_IDX", led);
-            
+
             if(value == 'OFF') {
                 Entry.hw.setDigitalPortValue("ELED_R", 0);
                 Entry.hw.setDigitalPortValue("ELED_G", 0);
                 Entry.hw.setDigitalPortValue("ELED_B", 0);
             }
             else if(value == 'Red') {
-                Entry.hw.setDigitalPortValue("ELED_R", 80);
+                Entry.hw.setDigitalPortValue("ELED_R", 10);
                 Entry.hw.setDigitalPortValue("ELED_G", 0);
                 Entry.hw.setDigitalPortValue("ELED_B", 0);
             }
             else if(value == 'Orange') {
-                Entry.hw.setDigitalPortValue("ELED_R", 80);
-                Entry.hw.setDigitalPortValue("ELED_G", 20);
+                Entry.hw.setDigitalPortValue("ELED_R", 10);
+                Entry.hw.setDigitalPortValue("ELED_G", 3);
                 Entry.hw.setDigitalPortValue("ELED_B", 0);
             }
             else if(value == 'Yellow') {
-                Entry.hw.setDigitalPortValue("ELED_R", 80);
-                Entry.hw.setDigitalPortValue("ELED_G", 80);
+                Entry.hw.setDigitalPortValue("ELED_R", 10);
+                Entry.hw.setDigitalPortValue("ELED_G", 10);
                 Entry.hw.setDigitalPortValue("ELED_B", 0);
             }
             else if(value == 'Green') {
                 Entry.hw.setDigitalPortValue("ELED_R", 0);
-                Entry.hw.setDigitalPortValue("ELED_G", 80);
+                Entry.hw.setDigitalPortValue("ELED_G", 10);
                 Entry.hw.setDigitalPortValue("ELED_B", 0);
             }
             else if(value == 'Blue') {
                 Entry.hw.setDigitalPortValue("ELED_R", 0);
                 Entry.hw.setDigitalPortValue("ELED_G", 0);
-                Entry.hw.setDigitalPortValue("ELED_B", 80);
+                Entry.hw.setDigitalPortValue("ELED_B", 10);
             }
             else if(value == 'Dark Blue') {
                 Entry.hw.setDigitalPortValue("ELED_R", 0);
-                Entry.hw.setDigitalPortValue("ELED_G", 50);
-                Entry.hw.setDigitalPortValue("ELED_B", 80);
+                Entry.hw.setDigitalPortValue("ELED_G", 7);
+                Entry.hw.setDigitalPortValue("ELED_B", 10);
             }
             else if(value == 'Purple') {
-                Entry.hw.setDigitalPortValue("ELED_R", 80);
+                Entry.hw.setDigitalPortValue("ELED_R", 10);
                 Entry.hw.setDigitalPortValue("ELED_G", 0);
-                Entry.hw.setDigitalPortValue("ELED_B", 80);
+                Entry.hw.setDigitalPortValue("ELED_B", 10);
             }
             else if(value == 'White') {
-                Entry.hw.setDigitalPortValue("ELED_R", 80);
-                Entry.hw.setDigitalPortValue("ELED_G", 80);
-                Entry.hw.setDigitalPortValue("ELED_B", 80);
+                Entry.hw.setDigitalPortValue("ELED_R", 10);
+                Entry.hw.setDigitalPortValue("ELED_G", 10);
+                Entry.hw.setDigitalPortValue("ELED_B", 10);
             }
-            
-                
+
+
             Entry.hw.update();
 
             delete Entry.hw.sendQueue["ELED_IDX"];
@@ -13289,7 +13340,7 @@ Entry.block = {
                     if (mode !== Entry.Workspace.MODE_BOARD) return;
                     if (Entry.type !== "workspace") return;
                     var block = blockView.block;
-                    var id = block.type.substr(5);
+                    var id = block.getFuncId();
                     Entry.Func.edit(Entry.variableContainer.functions_[id]);
                 }
             ]
@@ -13307,7 +13358,7 @@ Entry.block = {
                 }
 
                 var func = Entry.variableContainer.getFunction(
-                    this.block.type.substr(5, 9)
+                    this.block.getFuncId()
                 );
                 this.funcCode = func.content;
                 this.funcExecutor = this.funcCode.raiseEvent("funcDef", entity)[0];
@@ -13315,6 +13366,7 @@ Entry.block = {
                 var paramMap = {};
                 this.funcExecutor.register.paramMap = func.paramMap;
                 this.funcExecutor.parentExecutor = this.executor;
+                this.funcExecutor.isFuncExecutor = true;
             }
             this.funcExecutor.execute();
             if (!this.funcExecutor.isEnd()) {
@@ -13738,16 +13790,20 @@ Entry.block = {
         "func": function (sprite, script) {
             var sq = Entry.hw.sendQueue;
             var pd = Entry.hw.portData;
+            Entry.Hamster.setModule(sq); // akaii: add
             if (!script.isStart) {
                 script.isStart = true;
                 script.isMoving = true;
                 script.count = 0;
                 script.boardState = 1;
+                sq.motion = 0; // akaii: add
                 sq.leftWheel = 45;
                 sq.rightWheel = 45;
+                Entry.Hamster.boardCommand = 1; // akaii: add
                 Entry.Hamster.setLineTracerMode(sq, 0);
                 return script;
             } else if (script.isMoving) {
+                if(Entry.Hamster.boardCommand != 1) return script; // akaii: add
                 switch(script.boardState) {
                     case 1: {
                         if(script.count < 2) {
@@ -13797,6 +13853,7 @@ Entry.block = {
                 delete script.count;
                 delete script.boardState;
                 Entry.engine.isContinue = false;
+                Entry.Hamster.boardCommand = 0; // akaii: add
                 sq.leftWheel = 0;
                 sq.rightWheel = 0;
                 return script.callReturn();
@@ -13841,11 +13898,13 @@ Entry.block = {
         "func": function (sprite, script) {
             var sq = Entry.hw.sendQueue;
             var pd = Entry.hw.portData;
+            Entry.Hamster.setModule(sq); // akaii: add
             if (!script.isStart) {
                 script.isStart = true;
                 script.isMoving = true;
                 script.count = 0;
                 script.boardState = 1;
+                sq.motion = 0; // akaii: add
                 var direction = script.getField("DIRECTION", script);
                 if (direction == 'LEFT') {
                     script.isLeft = true;
@@ -13856,9 +13915,11 @@ Entry.block = {
                     sq.leftWheel = 45;
                     sq.rightWheel = -45;
                 }
+                Entry.Hamster.boardCommand = 2; // akaii: add
                 Entry.Hamster.setLineTracerMode(sq, 0);
                 return script;
             } else if (script.isMoving) {
+                if(Entry.Hamster.boardCommand != 2) return script; // akaii: add
                 if(script.isLeft) {
                     switch(script.boardState) {
                         case 1: {
@@ -13964,6 +14025,7 @@ Entry.block = {
                 delete script.boardState;
                 delete script.isLeft;
                 Entry.engine.isContinue = false;
+                Entry.Hamster.boardCommand = 0; // akaii: add
                 sq.leftWheel = 0;
                 sq.rightWheel = 0;
                 return script.callReturn();
@@ -14037,11 +14099,14 @@ Entry.block = {
         "isNotFor": [ "hamster" ],
         "func": function (sprite, script) {
             var sq = Entry.hw.sendQueue;
+            Entry.Hamster.setModule(sq); // akaii: add
             if (!script.isStart) {
                 script.isStart = true;
                 script.timeFlag = 1;
+                sq.motion = 1; // akaii: add
                 sq.leftWheel = 30;
                 sq.rightWheel = 30;
+                Entry.Hamster.boardCommand = 0; // akaii: add
                 Entry.Hamster.setLineTracerMode(sq, 0);
                 var timeValue = script.getNumberValue("VALUE") * 1000;
                 var timer = setTimeout(function() {
@@ -14056,6 +14121,7 @@ Entry.block = {
                 delete script.isStart;
                 delete script.timeFlag;
                 Entry.engine.isContinue = false;
+                sq.motion = 0; // akaii: add
                 sq.leftWheel = 0;
                 sq.rightWheel = 0;
                 return script.callReturn();
@@ -14106,11 +14172,14 @@ Entry.block = {
         "isNotFor": [ "hamster" ],
         "func": function (sprite, script) {
             var sq = Entry.hw.sendQueue;
+            Entry.Hamster.setModule(sq); // akaii: add
             if (!script.isStart) {
                 script.isStart = true;
                 script.timeFlag = 1;
+                sq.motion = 2; // akaii: add
                 sq.leftWheel = -30;
                 sq.rightWheel = -30;
+                Entry.Hamster.boardCommand = 0; // akaii: add
                 Entry.Hamster.setLineTracerMode(sq, 0);
                 var timeValue = script.getNumberValue("VALUE") * 1000;
                 var timer = setTimeout(function() {
@@ -14125,6 +14194,7 @@ Entry.block = {
                 delete script.isStart;
                 delete script.timeFlag;
                 Entry.engine.isContinue = false;
+                sq.motion = 0; // akaii: add
                 sq.leftWheel = 0;
                 sq.rightWheel = 0;
                 return script.callReturn();
@@ -14186,17 +14256,21 @@ Entry.block = {
         "isNotFor": [ "hamster" ],
         "func": function (sprite, script) {
             var sq = Entry.hw.sendQueue;
+            Entry.Hamster.setModule(sq); // akaii: add
             if (!script.isStart) {
                 script.isStart = true;
                 script.timeFlag = 1;
                 var direction = script.getField("DIRECTION", script);
                 if (direction == 'LEFT') {
+                    sq.motion = 3; // akaii: add
                     sq.leftWheel = -30;
                     sq.rightWheel = 30;
                 } else {
+                    sq.motion = 4; // akaii: add
                     sq.leftWheel = 30;
                     sq.rightWheel = -30;
                 }
+                Entry.Hamster.boardCommand = 0; // akaii: add
                 Entry.Hamster.setLineTracerMode(sq, 0);
                 var timeValue = script.getNumberValue("VALUE") * 1000;
                 var timer = setTimeout(function() {
@@ -14211,6 +14285,7 @@ Entry.block = {
                 delete script.isStart;
                 delete script.timeFlag;
                 Entry.engine.isContinue = false;
+                sq.motion = 0; // akaii: add
                 sq.leftWheel = 0;
                 sq.rightWheel = 0;
                 return script.callReturn();
@@ -14301,10 +14376,13 @@ Entry.block = {
         "isNotFor": [ "hamster" ],
         "func": function (sprite, script) {
             var sq = Entry.hw.sendQueue;
+            Entry.Hamster.setModule(sq); // akaii: add
             var left = script.getNumberValue('LEFT');
             var right = script.getNumberValue('RIGHT');
+            sq.motion = 0; // akaii: add
             sq.leftWheel = sq.leftWheel != undefined ? sq.leftWheel + left : left;
             sq.rightWheel = sq.rightWheel != undefined ? sq.rightWheel + right : right;
+            Entry.Hamster.boardCommand = 0; // akaii: add
             Entry.Hamster.setLineTracerMode(sq, 0);
             return script.callReturn();
         },
@@ -14366,8 +14444,11 @@ Entry.block = {
         "isNotFor": [ "hamster" ],
         "func": function (sprite, script) {
             var sq = Entry.hw.sendQueue;
+            Entry.Hamster.setModule(sq); // akaii: add
+            sq.motion = 0; // akaii: add
             sq.leftWheel = script.getNumberValue('LEFT');
             sq.rightWheel = script.getNumberValue('RIGHT');
+            Entry.Hamster.boardCommand = 0; // akaii: add
             Entry.Hamster.setLineTracerMode(sq, 0);
             return script.callReturn();
         },
@@ -14432,8 +14513,10 @@ Entry.block = {
         "isNotFor": [ "hamster" ],
         "func": function (sprite, script) {
             var sq = Entry.hw.sendQueue;
+            Entry.Hamster.setModule(sq); // akaii: add
             var direction = script.getField('DIRECTION');
             var value = script.getNumberValue('VALUE');
+            sq.motion = 0; // akaii: add
             if (direction == 'LEFT') {
                 sq.leftWheel = sq.leftWheel != undefined ? sq.leftWheel + value : value;
             } else if (direction == 'RIGHT') {
@@ -14442,6 +14525,7 @@ Entry.block = {
                 sq.leftWheel = sq.leftWheel != undefined ? sq.leftWheel + value : value;
                 sq.rightWheel = sq.rightWheel != undefined ? sq.rightWheel + value : value;
             }
+            Entry.Hamster.boardCommand = 0; // akaii: add
             Entry.Hamster.setLineTracerMode(sq, 0);
             return script.callReturn();
         },
@@ -14557,8 +14641,10 @@ Entry.block = {
         "isNotFor": [ "hamster" ],
         "func": function (sprite, script) {
             var sq = Entry.hw.sendQueue;
+            Entry.Hamster.setModule(sq); // akaii: add
             var direction = script.getField('DIRECTION');
             var value = script.getNumberValue('VALUE');
+            sq.motion = 0; // akaii: add
             if (direction == 'LEFT') {
                 sq.leftWheel = value;
             } else if (direction == 'RIGHT') {
@@ -14567,6 +14653,7 @@ Entry.block = {
                 sq.leftWheel = value;
                 sq.rightWheel = value;
             }
+            Entry.Hamster.boardCommand = 0; // akaii: add
             Entry.Hamster.setLineTracerMode(sq, 0);
             return script.callReturn();
         },
@@ -14680,6 +14767,7 @@ Entry.block = {
         "isNotFor": [ "hamster" ],
         "func": function (sprite, script) {
             var sq = Entry.hw.sendQueue;
+            Entry.Hamster.setModule(sq); // akaii: add
             var color = script.getField('COLOR');
             var direction = script.getField('DIRECTION');
 
@@ -14688,8 +14776,10 @@ Entry.block = {
             else if (direction == 'BOTH') mode = 3;
             if (color == 'WHITE') mode += 7;
 
+            sq.motion = 0; // akaii: add
             sq.leftWheel = 0;
             sq.rightWheel = 0;
+            Entry.Hamster.boardCommand = 0; // akaii: add
             Entry.Hamster.setLineTracerMode(sq, mode);
             return script.callReturn();
         },
@@ -14902,6 +14992,7 @@ Entry.block = {
         "isNotFor": [ "hamster" ],
         "func": function (sprite, script) {
             var sq = Entry.hw.sendQueue;
+            Entry.Hamster.setModule(sq); // akaii: add
             var pd = Entry.hw.portData;
             var color = script.getField('COLOR');
             var direction = script.getField('DIRECTION');
@@ -14914,8 +15005,10 @@ Entry.block = {
 
             if (!script.isStart) {
                 script.isStart = true;
+                sq.motion = 0; // akaii: add
                 sq.leftWheel = 0;
                 sq.rightWheel = 0;
+                Entry.Hamster.boardCommand = 0; // akaii: add
                 Entry.Hamster.setLineTracerMode(sq, mode);
                 return script;
             } else {
@@ -15197,6 +15290,7 @@ Entry.block = {
         "isNotFor": [ "hamster" ],
         "func": function (sprite, script) {
             var sq = Entry.hw.sendQueue;
+            Entry.Hamster.setModule(sq); // akaii: add
             sq.lineTracerSpeed = Number(script.getField("SPEED", script));
             return script.callReturn();
         },
@@ -15244,8 +15338,11 @@ Entry.block = {
         "isNotFor": [ "hamster" ],
         "func": function (sprite, script) {
             var sq = Entry.hw.sendQueue;
+            Entry.Hamster.setModule(sq); // akaii: add
+            sq.motion = 0; // akaii: add
             sq.leftWheel = 0;
             sq.rightWheel = 0;
+            Entry.Hamster.boardCommand = 0; // akaii: add
             Entry.Hamster.setLineTracerMode(sq, 0);
             return script.callReturn();
         },
@@ -15304,6 +15401,7 @@ Entry.block = {
         "isNotFor": [ "hamster" ],
         "func": function (sprite, script) {
             var sq = Entry.hw.sendQueue;
+            Entry.Hamster.setModule(sq); // akaii: add
             var direction = script.getField("DIRECTION", script);
             var color = Number(script.getField("COLOR", script));
             if (direction == 'LEFT') {
@@ -16025,6 +16123,7 @@ Entry.block = {
         "isNotFor": [ "hamster" ],
         "func": function (sprite, script) {
             var sq = Entry.hw.sendQueue;
+            Entry.Hamster.setModule(sq); // akaii: add
             var direction = script.getField("DIRECTION", script);
             if (direction == 'LEFT') {
                 sq.leftLed = 0;
@@ -16072,7 +16171,7 @@ Entry.block = {
                 params: ["LEFT"]
             },
             {
-                syntax: "Hamster.left_led(Hamster.LED_OFF,Hamster.LED_OFF)",
+                syntax: "Hamster.left_led(Hamster.LED_OFF, Hamster.LED_OFF)",
                 textParams: [
                     {
                         "type": "Dropdown",
@@ -16123,7 +16222,7 @@ Entry.block = {
                 params: ["RIGHT"]
             },
             {
-                syntax: "Hamster.right_led(Hamster.LED_OFF,Hamster.LED_OFF)",
+                syntax: "Hamster.right_led(Hamster.LED_OFF, Hamster.LED_OFF)",
                 textParams: [
                     {
                         "type": "Dropdown",
@@ -16174,7 +16273,7 @@ Entry.block = {
                 params: ["BOTH"]
             },
             {
-                syntax: "Hamster.leds(Hamster.LED_OFF,Hamster.LED_OFF)",
+                syntax: "Hamster.leds(Hamster.LED_OFF, Hamster.LED_OFF)",
                 textParams: [
                     {
                         "type": "Dropdown",
@@ -16212,6 +16311,7 @@ Entry.block = {
         "isNotFor": [ "hamster" ],
         "func": function (sprite, script) {
             var sq = Entry.hw.sendQueue;
+            Entry.Hamster.setModule(sq); // akaii: add
             if (!script.isStart) {
                 script.isStart = true;
                 script.timeFlag = 1;
@@ -16273,6 +16373,7 @@ Entry.block = {
         "isNotFor": [ "hamster" ],
         "func": function (sprite, script) {
             var sq = Entry.hw.sendQueue;
+            Entry.Hamster.setModule(sq); // akaii: add
             var value = script.getNumberValue('VALUE');
             sq.buzzer = sq.buzzer != undefined ? sq.buzzer + value : value;
             sq.note = 0;
@@ -16280,7 +16381,7 @@ Entry.block = {
         },
         "syntax": {"js": [], "py": [
             {
-                syntax: "Hamster.add_buzzer_sound(%1)"
+                syntax: "Hamster.buzzer_by(%1)" // akaii: modify
             }
         ]}
     },
@@ -16317,6 +16418,7 @@ Entry.block = {
         "isNotFor": [ "hamster" ],
         "func": function (sprite, script) {
             var sq = Entry.hw.sendQueue;
+            Entry.Hamster.setModule(sq); // akaii: add
             sq.buzzer = script.getNumberValue('VALUE');
             sq.note = 0;
             return script.callReturn();
@@ -16347,6 +16449,7 @@ Entry.block = {
         "isNotFor": [ "hamster" ],
         "func": function (sprite, script) {
             var sq = Entry.hw.sendQueue;
+            Entry.Hamster.setModule(sq); // akaii: add
             sq.buzzer = 0;
             sq.note = 0;
             return script.callReturn();
@@ -16427,6 +16530,7 @@ Entry.block = {
         "isNotFor": [ "hamster" ],
         "func": function (sprite, script) {
             var sq = Entry.hw.sendQueue;
+            Entry.Hamster.setModule(sq); // akaii: add
             if (!script.isStart) {
                 var note = script.getNumberField("NOTE", script);
                 var octave = script.getNumberField("OCTAVE", script);
@@ -16483,7 +16587,7 @@ Entry.block = {
                         ],
                         "value": "4",
                         "fontSize": 11,
-                        converter: Entry.block.converters.returnValueUpperCase,
+                        converter: Entry.block.converters.returnValuePartialUpperCase, // akaii: modify
                         codeMap: "Entry.CodeMap.Hamster.hamster_play_note_for[0]"
 
                     },
@@ -16543,6 +16647,7 @@ Entry.block = {
         "isNotFor": [ "hamster" ],
         "func": function (sprite, script) {
             var sq = Entry.hw.sendQueue;
+            Entry.Hamster.setModule(sq); // akaii: add
             if (!script.isStart) {
                 script.isStart = true;
                 script.timeFlag = 1;
@@ -16567,7 +16672,7 @@ Entry.block = {
         },
         "syntax": {"js": [], "py": [
             {
-                syntax: "Hamster.note(0,%1)",
+                syntax: "Hamster.note(0, %1)",
                 textParams: [
                     {
                         "type": "Block",
@@ -16577,7 +16682,7 @@ Entry.block = {
                 keyOption: "0"
             },
             {
-                syntax: "Hamster.note(Hamster.NOTE_OFF,%1)",
+                syntax: "Hamster.note(Hamster.NOTE_OFF, %1)",
                 textParams: [
                     {
                         "type": "Block",
@@ -16620,6 +16725,7 @@ Entry.block = {
         "class": "hamster_buzzer",
         "isNotFor": [ "hamster" ],
         "func": function (sprite, script) {
+            Entry.Hamster.setModule(Entry.hw.sendQueue); // akaii: add
             Entry.Hamster.tempo += script.getNumberValue('VALUE');
             if (Entry.Hamster.tempo < 1) Entry.Hamster.tempo = 1;
             return script.callReturn();
@@ -16668,6 +16774,7 @@ Entry.block = {
         "class": "hamster_buzzer",
         "isNotFor": [ "hamster" ],
         "func": function (sprite, script) {
+            Entry.Hamster.setModule(Entry.hw.sendQueue); // akaii: add
             Entry.Hamster.tempo = script.getNumberValue('VALUE');
             if (Entry.Hamster.tempo < 1) Entry.Hamster.tempo = 1;
             return script.callReturn();
@@ -16730,6 +16837,7 @@ Entry.block = {
         "isNotFor": [ "hamster" ],
         "func": function (sprite, script) {
             var sq = Entry.hw.sendQueue;
+            Entry.Hamster.setModule(sq); // akaii: add
             var port = script.getField("PORT", script);
             var mode = Number(script.getField("MODE", script));
             if (port == 'A') {
@@ -16865,6 +16973,7 @@ Entry.block = {
         "isNotFor": [ "hamster" ],
         "func": function (sprite, script) {
             var sq = Entry.hw.sendQueue;
+            Entry.Hamster.setModule(sq); // akaii: add
             var port = script.getField('PORT');
             var value = script.getNumberValue('VALUE');
             if (port == 'A') {
@@ -16988,6 +17097,7 @@ Entry.block = {
         "isNotFor": [ "hamster" ],
         "func": function (sprite, script) {
             var sq = Entry.hw.sendQueue;
+            Entry.Hamster.setModule(sq); // akaii: add
             var port = script.getField('PORT');
             var value = script.getNumberValue('VALUE');
             if (port == 'A') {
@@ -17066,6 +17176,10201 @@ Entry.block = {
             }
         ]}
     },
+    // akaii: add from here -----
+    "turtle_touching_color": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_boolean_field",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.ROBOID_color_red, "2"],
+                    [Lang.Blocks.ROBOID_color_orange, "3"],
+                    [Lang.Blocks.ROBOID_color_yellow, "4"],
+                    [Lang.Blocks.ROBOID_color_green, "5"],
+                    [Lang.Blocks.ROBOID_color_sky_blue, "6"],
+                    [Lang.Blocks.ROBOID_color_blue, "7"],
+                    [Lang.Blocks.ROBOID_color_purple, "8"],
+                    [Lang.Blocks.ROBOID_color_black, "1"],
+                    [Lang.Blocks.ROBOID_color_white, "9"]
+                ],
+                "value": "2",
+                "fontSize": 11
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null ],
+            "type": "turtle_touching_color"
+        },
+        "paramsKeyMap": {
+            "COLOR": 0
+        },
+        "class": "turtle_sensor",
+        "isNotFor": [ "turtle" ],
+        "func": function (sprite, script) {
+            var pd = Entry.hw.portData;
+            return (Number(script.getField("COLOR")) - 1) == pd.colorNumber;
+        },
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Turtle.touching(%1)",
+                blockType: "param",
+                textParams: [
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.ROBOID_color_red, "2"],
+                            [Lang.Blocks.ROBOID_color_orange, "3"],
+                            [Lang.Blocks.ROBOID_color_yellow, "4"],
+                            [Lang.Blocks.ROBOID_color_green, "5"],
+                            [Lang.Blocks.ROBOID_color_sky_blue, "6"],
+                            [Lang.Blocks.ROBOID_color_blue, "7"],
+                            [Lang.Blocks.ROBOID_color_purple, "8"],
+                            [Lang.Blocks.ROBOID_color_black, "1"],
+                            [Lang.Blocks.ROBOID_color_white, "9"]
+                        ],
+                        "value": "2",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnValuePartialUpperCase,
+                        codeMap: "Entry.CodeMap.Turtle.touching_colors"
+                    }
+                ]
+            }
+        ]}
+    },
+    "turtle_is_color_pattern": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_boolean_field",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.ROBOID_color_red, "1"],
+                    [Lang.Blocks.ROBOID_color_yellow, "3"],
+                    [Lang.Blocks.ROBOID_color_green, "4"],
+                    [Lang.Blocks.ROBOID_color_sky_blue, "5"],
+                    [Lang.Blocks.ROBOID_color_blue, "6"],
+                    [Lang.Blocks.ROBOID_color_purple, "7"]
+                ],
+                "value": "1",
+                "fontSize": 11
+            },
+             {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.ROBOID_color_red, "1"],
+                    [Lang.Blocks.ROBOID_color_yellow, "3"],
+                    [Lang.Blocks.ROBOID_color_green, "4"],
+                    [Lang.Blocks.ROBOID_color_sky_blue, "5"],
+                    [Lang.Blocks.ROBOID_color_blue, "6"],
+                    [Lang.Blocks.ROBOID_color_purple, "7"]
+                ],
+                "value": "3",
+                "fontSize": 11
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null, null ],
+            "type": "turtle_is_color_pattern"
+        },
+        "paramsKeyMap": {
+            "COLOR1": 0,
+            "COLOR2": 1
+        },
+        "class": "turtle_sensor",
+        "isNotFor": [ "turtle" ],
+        "func": function (sprite, script) {
+            var pd = Entry.hw.portData;
+            return (Number(script.getField("COLOR1")) * 10 + Number(script.getField("COLOR2"))) == pd.colorPattern;
+        },
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Turtle.match_color_pattern(%1, %2)",
+                blockType: "param",
+                textParams: [
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.ROBOID_color_red, "1"],
+                            [Lang.Blocks.ROBOID_color_yellow, "3"],
+                            [Lang.Blocks.ROBOID_color_green, "4"],
+                            [Lang.Blocks.ROBOID_color_sky_blue, "5"],
+                            [Lang.Blocks.ROBOID_color_blue, "6"],
+                            [Lang.Blocks.ROBOID_color_purple, "7"]
+                        ],
+                        "value": "1",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnValuePartialUpperCase,
+                        codeMap: "Entry.CodeMap.Turtle.pattern_colors"
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.ROBOID_color_red, "1"],
+                            [Lang.Blocks.ROBOID_color_yellow, "3"],
+                            [Lang.Blocks.ROBOID_color_green, "4"],
+                            [Lang.Blocks.ROBOID_color_sky_blue, "5"],
+                            [Lang.Blocks.ROBOID_color_blue, "6"],
+                            [Lang.Blocks.ROBOID_color_purple, "7"]
+                        ],
+                        "value": "3",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnValuePartialUpperCase,
+                        codeMap: "Entry.CodeMap.Turtle.pattern_colors"
+                    }
+                ]
+            }
+        ]}
+    },
+    "turtle_button_state": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_boolean_field",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.ROBOID_clicked, "clicked"],
+                    [Lang.Blocks.ROBOID_double_clicked, "doubleClicked"],
+                    [Lang.Blocks.ROBOID_long_pressed, "longPressed"]
+                ],
+                "value": "clicked",
+                "fontSize": 11
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null ],
+            "type": "turtle_button_state"
+        },
+        "paramsKeyMap": {
+            "EVENT": 0
+        },
+        "class": "turtle_sensor",
+        "isNotFor": [ "turtle" ],
+        "func": function (sprite, script) {
+            var pd = Entry.hw.portData;
+            var event = script.getField("EVENT");
+            return pd[event] == 1;
+        },
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Turtle.clicked()",
+                blockType: "param",
+                textParams: [
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.ROBOID_clicked, "clicked"],
+                            [Lang.Blocks.ROBOID_double_clicked, "doubleClicked"],
+                            [Lang.Blocks.ROBOID_long_pressed, "longPressed"]
+                        ],
+                        "value": "clicked",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    }
+                ],
+                params: ["clicked"]
+            },
+            {
+                syntax: "Turtle.double_clicked()",
+                blockType: "param",
+                textParams: [
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.ROBOID_clicked, "clicked"],
+                            [Lang.Blocks.ROBOID_double_clicked, "doubleClicked"],
+                            [Lang.Blocks.ROBOID_long_pressed, "longPressed"]
+                        ],
+                        "value": "clicked",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    }
+                ],
+                params: ["doubleClicked"]
+            },
+            {
+                syntax: "Turtle.long_pressed()",
+                blockType: "param",
+                textParams: [
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.ROBOID_clicked, "clicked"],
+                            [Lang.Blocks.ROBOID_double_clicked, "doubleClicked"],
+                            [Lang.Blocks.ROBOID_long_pressed, "longPressed"]
+                        ],
+                        "value": "clicked",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    }
+                ],
+                params: ["longPressed"]
+            }
+        ]}
+    },
+    "turtle_value": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.ROBOID_color_number, "colorNumber"],
+                    [Lang.Blocks.ROBOID_color_pattern, "colorPattern"],
+                    [Lang.Blocks.ROBOID_floor, "floor"],
+                    [Lang.Blocks.ROBOID_button, "button"],
+                    [Lang.Blocks.ROBOID_acceleration_x, "accelerationX"],
+                    [Lang.Blocks.ROBOID_acceleration_y, "accelerationY"],
+                    [Lang.Blocks.ROBOID_acceleration_z, "accelerationZ"]
+                ],
+                "value": "colorNumber",
+                "fontSize": 11
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null ],
+            "type": "turtle_value"
+        },
+        "paramsKeyMap": {
+            "DEVICE": 0
+        },
+        "class": "turtle_sensor",
+        "isNotFor": [ "turtle" ],
+        "func": function (sprite, script) {
+            var pd = Entry.hw.portData;
+            var dev = script.getField("DEVICE");
+            return pd[dev];
+        },
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Turtle.color_number()",
+                blockType: "param",
+                textParams:[
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.ROBOID_color_number, "colorNumber"],
+                            [Lang.Blocks.ROBOID_color_pattern, "colorPattern"],
+                            [Lang.Blocks.ROBOID_floor, "floor"],
+                            [Lang.Blocks.ROBOID_button, "button"],
+                            [Lang.Blocks.ROBOID_acceleration_x, "accelerationX"],
+                            [Lang.Blocks.ROBOID_acceleration_y, "accelerationY"],
+                            [Lang.Blocks.ROBOID_acceleration_z, "accelerationZ"]
+                        ],
+                        "value": "colorNumber",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    }
+                ],
+                params: ["colorNumber"]
+            },
+            {
+                syntax: "Turtle.color_pattern()",
+                blockType: "param",
+                textParams:[
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.ROBOID_color_number, "colorNumber"],
+                            [Lang.Blocks.ROBOID_color_pattern, "colorPattern"],
+                            [Lang.Blocks.ROBOID_floor, "floor"],
+                            [Lang.Blocks.ROBOID_button, "button"],
+                            [Lang.Blocks.ROBOID_acceleration_x, "accelerationX"],
+                            [Lang.Blocks.ROBOID_acceleration_y, "accelerationY"],
+                            [Lang.Blocks.ROBOID_acceleration_z, "accelerationZ"]
+                        ],
+                        "value": "colorNumber",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    }
+                ],
+                params: ["colorPattern"]
+            },
+            {
+                syntax: "Turtle.floor()",
+                blockType: "param",
+                textParams:[
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.ROBOID_color_number, "colorNumber"],
+                            [Lang.Blocks.ROBOID_color_pattern, "colorPattern"],
+                            [Lang.Blocks.ROBOID_floor, "floor"],
+                            [Lang.Blocks.ROBOID_button, "button"],
+                            [Lang.Blocks.ROBOID_acceleration_x, "accelerationX"],
+                            [Lang.Blocks.ROBOID_acceleration_y, "accelerationY"],
+                            [Lang.Blocks.ROBOID_acceleration_z, "accelerationZ"]
+                        ],
+                        "value": "colorNumber",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    }
+                ],
+                params: ["floor"]
+            },
+            {
+                syntax: "Turtle.button()",
+                blockType: "param",
+                textParams:[
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.ROBOID_color_number, "colorNumber"],
+                            [Lang.Blocks.ROBOID_color_pattern, "colorPattern"],
+                            [Lang.Blocks.ROBOID_floor, "floor"],
+                            [Lang.Blocks.ROBOID_button, "button"],
+                            [Lang.Blocks.ROBOID_acceleration_x, "accelerationX"],
+                            [Lang.Blocks.ROBOID_acceleration_y, "accelerationY"],
+                            [Lang.Blocks.ROBOID_acceleration_z, "accelerationZ"]
+                        ],
+                        "value": "colorNumber",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    }
+                ],
+                params: ["button"]
+            },
+            {
+                syntax: "Turtle.acceleration_x()",
+                blockType: "param",
+                textParams:[
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.ROBOID_color_number, "colorNumber"],
+                            [Lang.Blocks.ROBOID_color_pattern, "colorPattern"],
+                            [Lang.Blocks.ROBOID_floor, "floor"],
+                            [Lang.Blocks.ROBOID_button, "button"],
+                            [Lang.Blocks.ROBOID_acceleration_x, "accelerationX"],
+                            [Lang.Blocks.ROBOID_acceleration_y, "accelerationY"],
+                            [Lang.Blocks.ROBOID_acceleration_z, "accelerationZ"]
+                        ],
+                        "value": "colorNumber",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    }
+                ],
+                params: ["accelerationX"]
+            },
+            {
+                syntax: "Turtle.acceleration_y()",
+                blockType: "param",
+                textParams:[
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.ROBOID_color_number, "colorNumber"],
+                            [Lang.Blocks.ROBOID_color_pattern, "colorPattern"],
+                            [Lang.Blocks.ROBOID_floor, "floor"],
+                            [Lang.Blocks.ROBOID_button, "button"],
+                            [Lang.Blocks.ROBOID_acceleration_x, "accelerationX"],
+                            [Lang.Blocks.ROBOID_acceleration_y, "accelerationY"],
+                            [Lang.Blocks.ROBOID_acceleration_z, "accelerationZ"]
+                        ],
+                        "value": "colorNumber",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    }
+                ],
+                params: ["accelerationY"]
+            },
+            {
+                syntax: "Turtle.acceleration_z()",
+                blockType: "param",
+                textParams:[
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.ROBOID_color_number, "colorNumber"],
+                            [Lang.Blocks.ROBOID_color_pattern, "colorPattern"],
+                            [Lang.Blocks.ROBOID_floor, "floor"],
+                            [Lang.Blocks.ROBOID_button, "button"],
+                            [Lang.Blocks.ROBOID_acceleration_x, "accelerationX"],
+                            [Lang.Blocks.ROBOID_acceleration_y, "accelerationY"],
+                            [Lang.Blocks.ROBOID_acceleration_z, "accelerationZ"]
+                        ],
+                        "value": "colorNumber",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    }
+                ],
+                params: ["accelerationZ"]
+            }
+        ]}
+    },
+    "turtle_move_forward_unit": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+            "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.ROBOID_unit_cm, "CM"],
+                    [Lang.Blocks.ROBOID_unit_sec, "SEC"],
+                    [Lang.Blocks.ROBOID_unit_pulse, "PULSE"]
+                ],
+                "value": "CM",
+                "fontSize": 11
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "text",
+                    "params": [ "6" ]
+                },
+                null,
+                null
+            ],
+            "type": "turtle_move_forward_unit"
+        },
+        "paramsKeyMap": {
+            "VALUE": 0,
+            "UNIT": 1
+        },
+        "class": "turtle_wheel",
+        "isNotFor": [ "turtle" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var pd = Entry.hw.portData;
+            var turtle = Entry.Turtle;
+            turtle.setModule(sq);
+            if (!script.isStart) {
+                script.isStart = true;
+                sq.leftWheel = 0;
+                sq.rightWheel = 0;
+                turtle.setPulse(sq, 0);
+                turtle.setLineTracerMode(sq, 0);
+                var field = script.getField("UNIT");
+                var unit = 1;
+                if(field == "SEC") unit = 2;
+                else if(field == "PULSE") unit = 3;
+                var value = script.getNumberValue("VALUE");
+                turtle.setMotion(sq, 1, unit, 0, value, 0);
+                return script;
+            } else {
+                if(pd.wheelStateId != turtle.wheelStateId) {
+                    turtle.wheelStateId = pd.wheelStateId;
+                    if(pd.wheelState == 0) {
+                        delete script.isStart;
+                        Entry.engine.isContinue = false;
+                        sq.leftWheel = 0;
+                        sq.rightWheel = 0;
+                        return script.callReturn();
+                    }
+                }
+                return script;
+            }
+        },
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Turtle.move_forward(%1, %2)",
+                textParams: [
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.ROBOID_unit_cm, "CM"],
+                            [Lang.Blocks.ROBOID_unit_sec, "SEC"],
+                            [Lang.Blocks.ROBOID_unit_pulse, "PULSE"]
+                        ],
+                        "value": "CM",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnValuePartialUpperCase,
+                        codeMap: "Entry.CodeMap.Turtle.units"
+                    }
+                ]
+            }
+        ]}
+    },
+    "turtle_move_backward_unit": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+            "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.ROBOID_unit_cm, "CM"],
+                    [Lang.Blocks.ROBOID_unit_sec, "SEC"],
+                    [Lang.Blocks.ROBOID_unit_pulse, "PULSE"]
+                ],
+                "value": "CM",
+                "fontSize": 11
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "text",
+                    "params": [ "6" ]
+                },
+                null,
+                null
+            ],
+            "type": "turtle_move_backward_unit"
+        },
+        "paramsKeyMap": {
+            "VALUE": 0,
+            "UNIT": 1
+        },
+        "class": "turtle_wheel",
+        "isNotFor": [ "turtle" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var pd = Entry.hw.portData;
+            var turtle = Entry.Turtle;
+            turtle.setModule(sq);
+            if (!script.isStart) {
+                script.isStart = true;
+                sq.leftWheel = 0;
+                sq.rightWheel = 0;
+                turtle.setPulse(sq, 0);
+                turtle.setLineTracerMode(sq, 0);
+                var field = script.getField("UNIT");
+                var unit = 1;
+                if(field == "SEC") unit = 2;
+                else if(field == "PULSE") unit = 3;
+                var value = script.getNumberValue("VALUE");
+                turtle.setMotion(sq, 2, unit, 0, value, 0);
+                return script;
+            } else {
+                if(pd.wheelStateId != turtle.wheelStateId) {
+                    turtle.wheelStateId = pd.wheelStateId;
+                    if(pd.wheelState == 0) {
+                        delete script.isStart;
+                        Entry.engine.isContinue = false;
+                        sq.leftWheel = 0;
+                        sq.rightWheel = 0;
+                        return script.callReturn();
+                    }
+                }
+                return script;
+            }
+        },
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Turtle.move_backward(%1, %2)",
+                textParams: [
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.ROBOID_unit_cm, "CM"],
+                            [Lang.Blocks.ROBOID_unit_sec, "SEC"],
+                            [Lang.Blocks.ROBOID_unit_pulse, "PULSE"]
+                        ],
+                        "value": "CM",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnValuePartialUpperCase,
+                        codeMap: "Entry.CodeMap.Turtle.units"
+                    }
+                ]
+            }
+        ]}
+    },
+    "turtle_turn_unit_in_place": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.ROBOID_left, "LEFT"],
+                    [Lang.Blocks.ROBOID_right, "RIGHT"]
+                ],
+                "value": "LEFT",
+                "fontSize": 11
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+            "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.ROBOID_unit_deg, "DEG"],
+                    [Lang.Blocks.ROBOID_unit_sec, "SEC"],
+                    [Lang.Blocks.ROBOID_unit_pulse, "PULSE"]
+                ],
+                "value": "DEG",
+                "fontSize": 11
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                null,
+                {
+                    "type": "text",
+                    "params": [ "90" ]
+                },
+                null,
+                null
+            ],
+            "type": "turtle_turn_unit_in_place"
+        },
+        "paramsKeyMap": {
+            "DIRECTION": 0,
+            "VALUE": 1,
+            "UNIT": 2
+        },
+        "class": "turtle_wheel",
+        "isNotFor": [ "turtle" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var pd = Entry.hw.portData;
+            var turtle = Entry.Turtle;
+            turtle.setModule(sq);
+            if (!script.isStart) {
+                script.isStart = true;
+                sq.leftWheel = 0;
+                sq.rightWheel = 0;
+                turtle.setPulse(sq, 0);
+                turtle.setLineTracerMode(sq, 0);
+                var direction = script.getField("DIRECTION");
+                var field = script.getField("UNIT");
+                var unit = 1;
+                if(field == "SEC") unit = 2;
+                else if(field == "PULSE") unit = 3;
+                var value = script.getNumberValue("VALUE");
+                if(direction == "LEFT") turtle.setMotion(sq, 3, unit, 0, value, 0);
+                else turtle.setMotion(sq, 4, unit, 0, value, 0);
+                return script;
+            } else {
+                if(pd.wheelStateId != turtle.wheelStateId) {
+                    turtle.wheelStateId = pd.wheelStateId;
+                    if(pd.wheelState == 0) {
+                        delete script.isStart;
+                        Entry.engine.isContinue = false;
+                        sq.leftWheel = 0;
+                        sq.rightWheel = 0;
+                        return script.callReturn();
+                    }
+                }
+                return script;
+            }
+        },
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Turtle.turn_left(%2, %3)",
+                textParams: [
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.ROBOID_left, "LEFT"],
+                            [Lang.Blocks.ROBOID_right, "RIGHT"]
+                        ],
+                        "value": "LEFT",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue,
+                    },
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.ROBOID_unit_deg, "DEG"],
+                            [Lang.Blocks.ROBOID_unit_sec, "SEC"],
+                            [Lang.Blocks.ROBOID_unit_pulse, "PULSE"]
+                        ],
+                        "value": "DEG",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnValuePartialUpperCase,
+                        codeMap: "Entry.CodeMap.Turtle.units"
+                    }
+                ],
+                params: ["LEFT"]
+            },
+            {
+                syntax: "Turtle.turn_right(%2, %3)",
+                textParams: [
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.ROBOID_left, "LEFT"],
+                            [Lang.Blocks.ROBOID_right, "RIGHT"]
+                        ],
+                        "value": "LEFT",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue,
+                    },
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.ROBOID_unit_deg, "DEG"],
+                            [Lang.Blocks.ROBOID_unit_sec, "SEC"],
+                            [Lang.Blocks.ROBOID_unit_pulse, "PULSE"]
+                        ],
+                        "value": "DEG",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnValuePartialUpperCase,
+                        codeMap: "Entry.CodeMap.Turtle.units"
+                    }
+                ],
+                params: ["RIGHT"]
+            }
+        ]}
+    },
+    "turtle_turn_unit_with_radius_in_direction": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.ROBOID_left, "LEFT"],
+                    [Lang.Blocks.ROBOID_right, "RIGHT"]
+                ],
+                "value": "LEFT",
+                "fontSize": 11
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+            "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.ROBOID_unit_deg, "DEG"],
+                    [Lang.Blocks.ROBOID_unit_sec, "SEC"],
+                    [Lang.Blocks.ROBOID_unit_pulse, "PULSE"]
+                ],
+                "value": "DEG",
+                "fontSize": 11
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.ROBOID_head, "HEAD"],
+                    [Lang.Blocks.ROBOID_tail, "TAIL"]
+                ],
+                "value": "HEAD",
+                "fontSize": 11
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                null,
+                {
+                    "type": "text",
+                    "params": [ "90" ]
+                },
+                null,
+                {
+                    "type": "text",
+                    "params": [ "6" ]
+                },
+                null,
+                null
+            ],
+            "type": "turtle_turn_unit_with_radius_in_direction"
+        },
+        "paramsKeyMap": {
+            "DIRECTION": 0,
+            "VALUE": 1,
+            "UNIT": 2,
+            "RADIUS": 3,
+            "HEAD": 4
+        },
+        "class": "turtle_wheel",
+        "isNotFor": [ "turtle" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var pd = Entry.hw.portData;
+            var turtle = Entry.Turtle;
+            turtle.setModule(sq);
+            if (!script.isStart) {
+                script.isStart = true;
+                sq.leftWheel = 0;
+                sq.rightWheel = 0;
+                turtle.setPulse(sq, 0);
+                turtle.setLineTracerMode(sq, 0);
+                var direction = script.getField("DIRECTION");
+                var field = script.getField("UNIT");
+                var unit = 1;
+                if(field == "SEC") unit = 2;
+                else if(field == "PULSE") unit = 3;
+                var value = script.getNumberValue("VALUE");
+                var head = script.getField("HEAD");
+                var radius = script.getNumberValue("RADIUS");
+                if(direction == "LEFT") {
+                    if(head == "HEAD") turtle.setMotion(sq, 9, unit, 0, value, radius);
+                    else turtle.setMotion(sq, 10, unit, 0, value, radius);
+                } else {
+                    if(head == "HEAD") turtle.setMotion(sq, 11, unit, 0, value, radius);
+                    else turtle.setMotion(sq, 12, unit, 0, value, radius);
+                }
+                return script;
+            } else {
+                if(pd.wheelStateId != turtle.wheelStateId) {
+                    turtle.wheelStateId = pd.wheelStateId;
+                    if(pd.wheelState == 0) {
+                        delete script.isStart;
+                        Entry.engine.isContinue = false;
+                        sq.leftWheel = 0;
+                        sq.rightWheel = 0;
+                        return script.callReturn();
+                    }
+                }
+                return script;
+            }
+        },
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Turtle.swing_left(%2, %3, %4, %5)",
+                textParams: [
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.ROBOID_left, "LEFT"],
+                            [Lang.Blocks.ROBOID_right, "RIGHT"]
+                        ],
+                        "value": "LEFT",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue,
+                    },
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.ROBOID_unit_deg, "DEG"],
+                            [Lang.Blocks.ROBOID_unit_sec, "SEC"],
+                            [Lang.Blocks.ROBOID_unit_pulse, "PULSE"]
+                        ],
+                        "value": "DEG",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnValuePartialUpperCase,
+                        codeMap: "Entry.CodeMap.Turtle.units"
+                    },
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.ROBOID_head, "HEAD"],
+                            [Lang.Blocks.ROBOID_tail, "TAIL"]
+                        ],
+                        "value": "HEAD",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnValuePartialUpperCase,
+                        codeMap: "Entry.CodeMap.Turtle.head_tail"
+                    }
+                ],
+                params: ["LEFT"]
+            },
+            {
+                syntax: "Turtle.swing_right(%2, %3, %4, %5)",
+                textParams: [
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.ROBOID_left, "LEFT"],
+                            [Lang.Blocks.ROBOID_right, "RIGHT"]
+                        ],
+                        "value": "LEFT",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue,
+                    },
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.ROBOID_unit_deg, "DEG"],
+                            [Lang.Blocks.ROBOID_unit_sec, "SEC"],
+                            [Lang.Blocks.ROBOID_unit_pulse, "PULSE"]
+                        ],
+                        "value": "DEG",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnValuePartialUpperCase,
+                        codeMap: "Entry.CodeMap.Turtle.units"
+                    },
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.ROBOID_head, "HEAD"],
+                            [Lang.Blocks.ROBOID_tail, "TAIL"]
+                        ],
+                        "value": "HEAD",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnValuePartialUpperCase,
+                        codeMap: "Entry.CodeMap.Turtle.head_tail"
+                    }
+                ],
+                params: ["RIGHT"]
+            }
+        ]}
+    },
+    "turtle_pivot_around_wheel_unit_in_direction": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.ROBOID_left, "LEFT"],
+                    [Lang.Blocks.ROBOID_right, "RIGHT"]
+                ],
+                "value": "LEFT",
+                "fontSize": 11
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+            "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.ROBOID_unit_deg, "DEG"],
+                    [Lang.Blocks.ROBOID_unit_sec, "SEC"],
+                    [Lang.Blocks.ROBOID_unit_pulse, "PULSE"]
+                ],
+                "value": "DEG",
+                "fontSize": 11
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.ROBOID_head, "HEAD"],
+                    [Lang.Blocks.ROBOID_tail, "TAIL"]
+                ],
+                "value": "HEAD",
+                "fontSize": 11
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                null,
+                {
+                    "type": "text",
+                    "params": [ "90" ]
+                },
+                null,
+                null,
+                null
+            ],
+            "type": "turtle_pivot_around_wheel_unit_in_direction"
+        },
+        "paramsKeyMap": {
+            "DIRECTION": 0,
+            "VALUE": 1,
+            "UNIT": 2,
+            "HEAD": 3
+        },
+        "class": "turtle_wheel",
+        "isNotFor": [ "turtle" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var pd = Entry.hw.portData;
+            var turtle = Entry.Turtle;
+            turtle.setModule(sq);
+            if (!script.isStart) {
+                script.isStart = true;
+                sq.leftWheel = 0;
+                sq.rightWheel = 0;
+                turtle.setPulse(sq, 0);
+                turtle.setLineTracerMode(sq, 0);
+                var direction = script.getField("DIRECTION");
+                var field = script.getField("UNIT");
+                var unit = 1;
+                if(field == "SEC") unit = 2;
+                else if(field == "PULSE") unit = 3;
+                var value = script.getNumberValue("VALUE");
+                var head = script.getField("HEAD");
+                if(direction == "LEFT") {
+                    if(head == "HEAD") turtle.setMotion(sq, 5, unit, 0, value, 0);
+                    else turtle.setMotion(sq, 6, unit, 0, value, 0);
+                } else {
+                    if(head == "HEAD") turtle.setMotion(sq, 7, unit, 0, value, 0);
+                    else turtle.setMotion(sq, 8, unit, 0, value, 0);
+                }
+                return script;
+            } else {
+                if(pd.wheelStateId != turtle.wheelStateId) {
+                    turtle.wheelStateId = pd.wheelStateId;
+                    if(pd.wheelState == 0) {
+                        delete script.isStart;
+                        Entry.engine.isContinue = false;
+                        sq.leftWheel = 0;
+                        sq.rightWheel = 0;
+                        return script.callReturn();
+                    }
+                }
+                return script;
+            }
+        },
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Turtle.pivot_left(%2, %3, %4)",
+                textParams: [
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.ROBOID_left, "LEFT"],
+                            [Lang.Blocks.ROBOID_right, "RIGHT"]
+                        ],
+                        "value": "LEFT",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue,
+                    },
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.ROBOID_unit_deg, "DEG"],
+                            [Lang.Blocks.ROBOID_unit_sec, "SEC"],
+                            [Lang.Blocks.ROBOID_unit_pulse, "PULSE"]
+                        ],
+                        "value": "DEG",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnValuePartialUpperCase,
+                        codeMap: "Entry.CodeMap.Turtle.units"
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.ROBOID_head, "HEAD"],
+                            [Lang.Blocks.ROBOID_tail, "TAIL"]
+                        ],
+                        "value": "HEAD",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnValuePartialUpperCase,
+                        codeMap: "Entry.CodeMap.Turtle.head_tail"
+                    }
+                ],
+                params: ["LEFT"]
+            },
+            {
+                syntax: "Turtle.pivot_right(%2, %3, %4)",
+                textParams: [
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.ROBOID_left, "LEFT"],
+                            [Lang.Blocks.ROBOID_right, "RIGHT"]
+                        ],
+                        "value": "LEFT",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue,
+                    },
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.ROBOID_unit_deg, "DEG"],
+                            [Lang.Blocks.ROBOID_unit_sec, "SEC"],
+                            [Lang.Blocks.ROBOID_unit_pulse, "PULSE"]
+                        ],
+                        "value": "DEG",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnValuePartialUpperCase,
+                        codeMap: "Entry.CodeMap.Turtle.units"
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.ROBOID_head, "HEAD"],
+                            [Lang.Blocks.ROBOID_tail, "TAIL"]
+                        ],
+                        "value": "HEAD",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnValuePartialUpperCase,
+                        codeMap: "Entry.CodeMap.Turtle.head_tail"
+                    }
+                ],
+                params: ["RIGHT"]
+            }
+        ]}
+    },
+    "turtle_change_wheels_by_left_right": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "text",
+                    "params": [ "10" ]
+                },
+                {
+                    "type": "text",
+                    "params": [ "10" ]
+                },
+                null
+            ],
+            "type": "turtle_change_wheels_by_left_right"
+        },
+        "paramsKeyMap": {
+            "LEFT": 0,
+            "RIGHT": 1
+        },
+        "class": "turtle_wheel",
+        "isNotFor": [ "turtle" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var left = script.getNumberValue("LEFT");
+            var right = script.getNumberValue("RIGHT");
+            var turtle = Entry.Turtle;
+            turtle.setModule(sq);
+            turtle.setPulse(sq, 0);
+            turtle.setLineTracerMode(sq, 0);
+            turtle.setMotion(sq, 0, 0, 0, 0, 0);
+            sq.leftWheel = sq.leftWheel != undefined ? sq.leftWheel + left : left;
+            sq.rightWheel = sq.rightWheel != undefined ? sq.rightWheel + right : right;
+            return script.callReturn();
+        },
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Turtle.wheels_by(%1, %2)",
+                textParams: [
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    }
+                ]
+            }
+        ]}
+    },
+    "turtle_set_wheels_to_left_right": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "text",
+                    "params": [ "50" ]
+                },
+                {
+                    "type": "text",
+                    "params": [ "50" ]
+                },
+                null
+            ],
+            "type": "turtle_set_wheels_to_left_right"
+        },
+        "paramsKeyMap": {
+            "LEFT": 0,
+            "RIGHT": 1
+        },
+        "class": "turtle_wheel",
+        "isNotFor": [ "turtle" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var turtle = Entry.Turtle;
+            turtle.setModule(sq);
+            turtle.setPulse(sq, 0);
+            turtle.setLineTracerMode(sq, 0);
+            turtle.setMotion(sq, 0, 0, 0, 0, 0);
+            sq.leftWheel = script.getNumberValue("LEFT");
+            sq.rightWheel = script.getNumberValue("RIGHT");
+            return script.callReturn();
+        },
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Turtle.wheels(%1, %2)",
+                textParams: [
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    }
+                ]
+            }
+        ]}
+    },
+    "turtle_change_wheel_by": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.ROBOID_left, "LEFT"],
+                    [Lang.Blocks.ROBOID_right, "RIGHT"],
+                    [Lang.Blocks.ROBOID_both, "BOTH"]
+                ],
+                "value": "LEFT",
+                "fontSize": 11
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                null,
+                {
+                    "type": "text",
+                    "params": [ "10" ]
+                },
+                null
+            ],
+            "type": "turtle_change_wheel_by"
+        },
+        "paramsKeyMap": {
+            "DIRECTION": 0,
+            "VALUE": 1
+        },
+        "class": "turtle_wheel",
+        "isNotFor": [ "turtle" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var direction = script.getField("DIRECTION");
+            var value = script.getNumberValue("VALUE");
+            var turtle = Entry.Turtle;
+            turtle.setModule(sq);
+            turtle.setPulse(sq, 0);
+            turtle.setLineTracerMode(sq, 0);
+            turtle.setMotion(sq, 0, 0, 0, 0, 0);
+            if(direction == "LEFT") {
+                sq.leftWheel = sq.leftWheel != undefined ? sq.leftWheel + value : value;
+            } else if(direction == "RIGHT") {
+                sq.rightWheel = sq.rightWheel != undefined ? sq.rightWheel + value : value;
+            } else {
+                sq.leftWheel = sq.leftWheel != undefined ? sq.leftWheel + value : value;
+                sq.rightWheel = sq.rightWheel != undefined ? sq.rightWheel + value : value;
+            }
+            return script.callReturn();
+        },
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Turtle.left_wheel_by(%2)",
+                textParams: [
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.ROBOID_left, "LEFT"],
+                            [Lang.Blocks.ROBOID_right, "RIGHT"],
+                            [Lang.Blocks.ROBOID_both, "BOTH"]
+                        ],
+                        "value": "LEFT",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue,
+                    },
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    }
+                ],
+                params: ["LEFT"]
+            },
+            {
+                syntax: "Turtle.right_wheel_by(%2)",
+                textParams: [
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.ROBOID_left, "LEFT"],
+                            [Lang.Blocks.ROBOID_right, "RIGHT"],
+                            [Lang.Blocks.ROBOID_both, "BOTH"]
+                        ],
+                        "value": "LEFT",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue,
+                    },
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    }
+                ],
+                params: ["RIGHT"]
+            },
+            {
+                syntax: "Turtle.wheels_by(%2)",
+                textParams: [
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.ROBOID_left, "LEFT"],
+                            [Lang.Blocks.ROBOID_right, "RIGHT"],
+                            [Lang.Blocks.ROBOID_both, "BOTH"]
+                        ],
+                        "value": "LEFT",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue,
+                    },
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    }
+                ],
+                params: ["BOTH"],
+                keyOption: "SAME"
+            }
+        ]}
+    },
+    "turtle_set_wheel_to": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.ROBOID_left, "LEFT"],
+                    [Lang.Blocks.ROBOID_right, "RIGHT"],
+                    [Lang.Blocks.ROBOID_both, "BOTH"]
+                ],
+                "value": "LEFT",
+                "fontSize": 11
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                null,
+                {
+                    "type": "text",
+                    "params": [ "50" ]
+                },
+                null
+            ],
+            "type": "turtle_set_wheel_to"
+        },
+        "paramsKeyMap": {
+            "DIRECTION": 0,
+            "VALUE": 1
+        },
+        "class": "turtle_wheel",
+        "isNotFor": [ "turtle" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var direction = script.getField("DIRECTION");
+            var value = script.getNumberValue("VALUE");
+            var turtle = Entry.Turtle;
+            turtle.setModule(sq);
+            turtle.setPulse(sq, 0);
+            turtle.setLineTracerMode(sq, 0);
+            turtle.setMotion(sq, 0, 0, 0, 0, 0);
+            if(direction == "LEFT") {
+                sq.leftWheel = value;
+            } else if(direction == "RIGHT") {
+                sq.rightWheel = value;
+            } else {
+                sq.leftWheel = value;
+                sq.rightWheel = value;
+            }
+            return script.callReturn();
+        },
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Turtle.left_wheel(%2)",
+                textParams: [
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.ROBOID_left, "LEFT"],
+                            [Lang.Blocks.ROBOID_right, "RIGHT"],
+                            [Lang.Blocks.ROBOID_both, "BOTH"]
+                        ],
+                        "value": "LEFT",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue,
+                    },
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    }
+                ],
+                params: ["LEFT"]
+            },
+            {
+                syntax: "Turtle.right_wheel(%2)",
+                textParams: [
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.ROBOID_left, "LEFT"],
+                            [Lang.Blocks.ROBOID_right, "RIGHT"],
+                            [Lang.Blocks.ROBOID_both, "BOTH"]
+                        ],
+                        "value": "LEFT",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue,
+                    },
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    }
+                ],
+                params: ["RIGHT"]
+            },
+            {
+                syntax: "Turtle.wheels(%2)",
+                textParams: [
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.ROBOID_left, "LEFT"],
+                            [Lang.Blocks.ROBOID_right, "RIGHT"],
+                            [Lang.Blocks.ROBOID_both, "BOTH"]
+                        ],
+                        "value": "LEFT",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue,
+                    },
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    }
+                ],
+                params: ["BOTH"],
+                keyOption: "SAME"
+            }
+        ]}
+    },
+    "turtle_follow_line": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.ROBOID_color_black, "10"],
+                    [Lang.Blocks.ROBOID_color_red, "11"],
+                    [Lang.Blocks.ROBOID_color_green, "13"],
+                    [Lang.Blocks.ROBOID_color_blue, "15"],
+                    [Lang.Blocks.ROBOID_color_any, "17"]
+                ],
+                "value": "10",
+                "fontSize": 11
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                null,
+                null
+            ],
+            "type": "turtle_follow_line"
+        },
+        "paramsKeyMap": {
+            "COLOR": 0
+        },
+        "class": "turtle_wheel",
+        "isNotFor": [ "turtle" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var turtle = Entry.Turtle;
+            turtle.setModule(sq);
+            sq.leftWheel = 0;
+            sq.rightWheel = 0;
+            turtle.setPulse(sq, 0);
+            turtle.setMotion(sq, 0, 0, 0, 0, 0);
+            var mode = Number(script.getField("COLOR"));
+            turtle.setLineTracerMode(sq, mode);
+            return script.callReturn();
+        },
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Turtle.follow_line(%1)",
+                textParams: [
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.ROBOID_color_black, "10"],
+                            [Lang.Blocks.ROBOID_color_red, "11"],
+                            [Lang.Blocks.ROBOID_color_green, "13"],
+                            [Lang.Blocks.ROBOID_color_blue, "15"],
+                            [Lang.Blocks.ROBOID_color_any, "17"]
+                        ],
+                        "value": "10",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnValuePartialUpperCase,
+                        codeMap: "Entry.CodeMap.Turtle.line_colors"
+                    }
+                ]
+            }
+        ]}
+    },
+    "turtle_follow_line_until": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.ROBOID_color_red, "61"],
+                    [Lang.Blocks.ROBOID_color_yellow, "62"],
+                    [Lang.Blocks.ROBOID_color_green, "63"],
+                    [Lang.Blocks.ROBOID_color_sky_blue, "64"],
+                    [Lang.Blocks.ROBOID_color_blue, "65"],
+                    [Lang.Blocks.ROBOID_color_purple, "66"],
+                    [Lang.Blocks.ROBOID_color_any, "67"]
+                ],
+                "value": "61",
+                "fontSize": 11
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                null,
+                null
+            ],
+            "type": "turtle_follow_line_until"
+        },
+        "paramsKeyMap": {
+            "COLOR": 0
+        },
+        "class": "turtle_wheel",
+        "isNotFor": [ "turtle" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var pd = Entry.hw.portData;
+            var turtle = Entry.Turtle;
+            turtle.setModule(sq);
+            if (!script.isStart) {
+                script.isStart = true;
+                sq.leftWheel = 0;
+                sq.rightWheel = 0;
+                turtle.setPulse(sq, 0);
+                turtle.setMotion(sq, 0, 0, 0, 0, 0);
+                var mode = Number(script.getField("COLOR"));
+                turtle.setLineTracerMode(sq, mode);
+                return script;
+            } else {
+                if(pd.lineTracerStateId != turtle.lineTracerStateId) {
+                    turtle.lineTracerStateId = pd.lineTracerStateId;
+                    if(pd.lineTracerState == 0x02) {
+                        delete script.isStart;
+                        Entry.engine.isContinue = false;
+                        turtle.setLineTracerMode(sq, 0);
+                        return script.callReturn();
+                    }
+                }
+                return script;
+            }
+        },
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Turtle.follow_black_line_until(%1)",
+                textParams: [
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.ROBOID_color_red, "61"],
+                            [Lang.Blocks.ROBOID_color_yellow, "62"],
+                            [Lang.Blocks.ROBOID_color_green, "63"],
+                            [Lang.Blocks.ROBOID_color_sky_blue, "64"],
+                            [Lang.Blocks.ROBOID_color_blue, "65"],
+                            [Lang.Blocks.ROBOID_color_purple, "66"],
+                            [Lang.Blocks.ROBOID_color_any, "67"]
+                        ],
+                        "value": "61",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnValuePartialUpperCase,
+                        codeMap: "Entry.CodeMap.Turtle.target_colors"
+                    }
+                ]
+            }
+        ]}
+    },
+    "turtle_follow_line_until_black": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.ROBOID_color_red, "71"],
+                    [Lang.Blocks.ROBOID_color_green, "73"],
+                    [Lang.Blocks.ROBOID_color_blue, "75"],
+                    [Lang.Blocks.ROBOID_color_any, "77"]
+                ],
+                "value": "71",
+                "fontSize": 11
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                null,
+                null
+            ],
+            "type": "turtle_follow_line_until_black"
+        },
+        "paramsKeyMap": {
+            "COLOR": 0
+        },
+        "class": "turtle_wheel",
+        "isNotFor": [ "turtle" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var pd = Entry.hw.portData;
+            var turtle = Entry.Turtle;
+            turtle.setModule(sq);
+            if (!script.isStart) {
+                script.isStart = true;
+                sq.leftWheel = 0;
+                sq.rightWheel = 0;
+                turtle.setPulse(sq, 0);
+                turtle.setMotion(sq, 0, 0, 0, 0, 0);
+                var mode = Number(script.getField("COLOR"));
+                turtle.setLineTracerMode(sq, mode);
+                return script;
+            } else {
+                if(pd.lineTracerStateId != turtle.lineTracerStateId) {
+                    turtle.lineTracerStateId = pd.lineTracerStateId;
+                    if(pd.lineTracerState == 0x02) {
+                        delete script.isStart;
+                        Entry.engine.isContinue = false;
+                        turtle.setLineTracerMode(sq, 0);
+                        return script.callReturn();
+                    }
+                }
+                return script;
+            }
+        },
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Turtle.follow_line_until_black(%1)",
+                textParams: [
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.ROBOID_color_red, "71"],
+                            [Lang.Blocks.ROBOID_color_green, "73"],
+                            [Lang.Blocks.ROBOID_color_blue, "75"],
+                            [Lang.Blocks.ROBOID_color_any, "77"]
+                        ],
+                        "value": "71",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnValuePartialUpperCase,
+                        codeMap: "Entry.CodeMap.Turtle.color_lines"
+                    }
+                ]
+            }
+        ]}
+    },
+    "turtle_cross_intersection": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                null
+            ],
+            "type": "turtle_cross_intersection"
+        },
+        "class": "turtle_wheel",
+        "isNotFor": [ "turtle" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var pd = Entry.hw.portData;
+            var turtle = Entry.Turtle;
+            turtle.setModule(sq);
+            if (!script.isStart) {
+                script.isStart = true;
+                sq.leftWheel = 0;
+                sq.rightWheel = 0;
+                turtle.setPulse(sq, 0);
+                turtle.setMotion(sq, 0, 0, 0, 0, 0);
+                turtle.setLineTracerMode(sq, 40);
+                return script;
+            } else {
+                if(pd.lineTracerStateId != turtle.lineTracerStateId) {
+                    turtle.lineTracerStateId = pd.lineTracerStateId;
+                    if(pd.lineTracerState == 0x02) {
+                        delete script.isStart;
+                        Entry.engine.isContinue = false;
+                        turtle.setLineTracerMode(sq, 0);
+                        return script.callReturn();
+                    }
+                }
+                return script;
+            }
+        },
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Turtle.intersection_forward()"
+            }
+        ]}
+    },
+    "turtle_turn_at_intersection": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.ROBOID_left, "20"],
+                    [Lang.Blocks.ROBOID_right, "30"],
+                    [Lang.Blocks.ROBOID_back, "50"]
+                ],
+                "value": "20",
+                "fontSize": 11
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                null,
+                null
+            ],
+            "type": "turtle_turn_at_intersection"
+        },
+        "paramsKeyMap": {
+            "DIRECTION": 0
+        },
+        "class": "turtle_wheel",
+        "isNotFor": [ "turtle" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var pd = Entry.hw.portData;
+            var turtle = Entry.Turtle;
+            turtle.setModule(sq);
+            if (!script.isStart) {
+                script.isStart = true;
+                sq.leftWheel = 0;
+                sq.rightWheel = 0;
+                turtle.setPulse(sq, 0);
+                turtle.setMotion(sq, 0, 0, 0, 0, 0);
+                var mode = Number(script.getField("DIRECTION"));
+                Entry.Turtle.setLineTracerMode(sq, mode);
+                return script;
+            } else {
+                if(pd.lineTracerStateId != turtle.lineTracerStateId) {
+                    turtle.lineTracerStateId = pd.lineTracerStateId;
+                    if(pd.lineTracerState == 0x02) {
+                        delete script.isStart;
+                        Entry.engine.isContinue = false;
+                        turtle.setLineTracerMode(sq, 0);
+                        return script.callReturn();
+                    }
+                }
+                return script;
+            }
+        },
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Turtle.intersection_left()",
+                textParams: [
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.ROBOID_left, "20"],
+                            [Lang.Blocks.ROBOID_right, "30"],
+                            [Lang.Blocks.ROBOID_back, "50"]
+                        ],
+                        "value": "20",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    }
+                ],
+                params: ["20"]
+            },
+            {
+                syntax: "Turtle.intersection_right()",
+                textParams: [
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.ROBOID_left, "20"],
+                            [Lang.Blocks.ROBOID_right, "30"],
+                            [Lang.Blocks.ROBOID_back, "50"]
+                        ],
+                        "value": "20",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    }
+                ],
+                params: ["30"]
+            },
+            {
+                syntax: "Turtle.intersection_uturn()",
+                textParams: [
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.ROBOID_left, "20"],
+                            [Lang.Blocks.ROBOID_right, "30"],
+                            [Lang.Blocks.ROBOID_back, "50"]
+                        ],
+                        "value": "20",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    }
+                ],
+                params: ["50"]
+            }
+        ]}
+    },
+    "turtle_set_following_speed_to": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [ "1", "1" ],
+                    [ "2", "2" ],
+                    [ "3", "3" ],
+                    [ "4", "4" ],
+                    [ "5", "5" ],
+                    [ "6", "6" ],
+                    [ "7", "7" ],
+                    [ "8", "8" ]
+                ],
+                "value": "1",
+                "fontSize": 11
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                "5",
+                null
+            ],
+            "type": "turtle_set_following_speed_to"
+        },
+        "paramsKeyMap": {
+            "SPEED": 0
+        },
+        "class": "turtle_wheel",
+        "isNotFor": [ "turtle" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            Entry.Turtle.setModule(sq);
+            var speed = Number(script.getField("SPEED"));
+            sq.lineTracerSpeed = speed;
+            sq.lineTracerGain = speed;
+            return script.callReturn();
+        },
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Turtle.line_tracer_speed(%1)",
+                textParams: [
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [ "1", "1" ],
+                            [ "2", "2" ],
+                            [ "3", "3" ],
+                            [ "4", "4" ],
+                            [ "5", "5" ],
+                            [ "6", "6" ],
+                            [ "7", "7" ],
+                            [ "8", "8" ]
+                        ],
+                        "value": "1",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringOrNumberByValue
+                    }
+                ]
+            }
+        ]}
+    },
+    "turtle_stop": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                null
+            ],
+            "type": "turtle_stop"
+        },
+        "class": "turtle_wheel",
+        "isNotFor": [ "turtle" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var turtle = Entry.Turtle;
+            turtle.setModule(sq);
+            sq.leftWheel = 0;
+            sq.rightWheel = 0;
+            turtle.setPulse(sq, 0);
+            turtle.setLineTracerMode(sq, 0);
+            turtle.setMotion(sq, 0, 0, 0, 0, 0);
+            return script.callReturn();
+        },
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Turtle.stop()"
+            }
+        ]}
+    },
+    "turtle_set_head_led_to": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.ROBOID_color_red, "RED"],
+                    [Lang.Blocks.ROBOID_color_orange, "ORANGE"],
+                    [Lang.Blocks.ROBOID_color_yellow, "YELLOW"],
+                    [Lang.Blocks.ROBOID_color_green, "GREEN"],
+                    [Lang.Blocks.ROBOID_color_sky_blue, "CYAN"],
+                    [Lang.Blocks.ROBOID_color_blue, "BLUE"],
+                    [Lang.Blocks.ROBOID_color_violet, "VIOLET"],
+                    [Lang.Blocks.ROBOID_color_purple, "MAGENTA"],
+                    [Lang.Blocks.ROBOID_color_white, "WHITE"]
+                ],
+                "value": "RED",
+                "fontSize": 11
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                null,
+                null
+            ],
+            "type": "turtle_set_head_led_to"
+        },
+        "paramsKeyMap": {
+            "COLOR": 0
+        },
+        "class": "turtle_led",
+        "isNotFor": [ "turtle" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var color = script.getField("COLOR");
+            Entry.Turtle.setModule(sq);
+            Entry.Turtle.setLedColor(sq, color);
+            return script.callReturn();
+        },
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Turtle.led_color(%1)",
+                textParams: [
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.ROBOID_color_red, "RED"],
+                            [Lang.Blocks.ROBOID_color_orange, "ORANGE"],
+                            [Lang.Blocks.ROBOID_color_yellow, "YELLOW"],
+                            [Lang.Blocks.ROBOID_color_green, "GREEN"],
+                            [Lang.Blocks.ROBOID_color_sky_blue, "CYAN"],
+                            [Lang.Blocks.ROBOID_color_blue, "BLUE"],
+                            [Lang.Blocks.ROBOID_color_violet, "VIOLET"],
+                            [Lang.Blocks.ROBOID_color_purple, "MAGENTA"],
+                            [Lang.Blocks.ROBOID_color_white, "WHITE"]
+                        ],
+                        "value": "RED",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnValuePartialUpperCase,
+                        codeMap: "Entry.CodeMap.Turtle.led_colors"
+                    }
+                ]
+            }
+        ]}
+    },
+    "turtle_change_head_led_by_rgb": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "text",
+                    "params": [ "10" ]
+                },
+                {
+                    "type": "text",
+                    "params": [ "0" ]
+                },
+                {
+                    "type": "text",
+                    "params": [ "0" ]
+                },
+                null
+            ],
+            "type": "turtle_change_head_led_by_rgb"
+        },
+        "paramsKeyMap": {
+            "RED": 0,
+            "GREEN": 1,
+            "BLUE": 2
+        },
+        "class": "turtle_led",
+        "isNotFor": [ "turtle" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            Entry.Turtle.setModule(sq);
+            var red = script.getNumberValue("RED");
+            var green = script.getNumberValue("GREEN");
+            var blue = script.getNumberValue("BLUE");
+            sq.ledRed = sq.ledRed != undefined ? sq.ledRed + red : red;
+            sq.ledGreen = sq.ledGreen != undefined ? sq.ledGreen + green : green;
+            sq.ledBlue = sq.ledBlue != undefined ? sq.ledBlue + blue : blue;
+            return script.callReturn();
+        },
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Turtle.led_by(%1, %2, %3)",
+                textParams: [
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    }
+                ]
+            }
+        ]}
+    },
+    "turtle_set_head_led_to_rgb": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "text",
+                    "params": [ "255" ]
+                },
+                {
+                    "type": "text",
+                    "params": [ "0" ]
+                },
+                {
+                    "type": "text",
+                    "params": [ "0" ]
+                },
+                null
+            ],
+            "type": "turtle_set_head_led_to_rgb"
+        },
+        "paramsKeyMap": {
+            "RED": 0,
+            "GREEN": 1,
+            "BLUE": 2
+        },
+        "class": "turtle_led",
+        "isNotFor": [ "turtle" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            Entry.Turtle.setModule(sq);
+            sq.ledRed = script.getNumberValue("RED");
+            sq.ledGreen = script.getNumberValue("GREEN");
+            sq.ledBlue = script.getNumberValue("BLUE");
+            return script.callReturn();
+        },
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Turtle.led(%1, %2, %3)",
+                textParams: [
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    }
+                ]
+            }
+        ]}
+    },
+    "turtle_clear_head_led": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                null
+            ],
+            "type": "turtle_clear_head_led"
+        },
+        "class": "turtle_led",
+        "isNotFor": [ "turtle" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            Entry.Turtle.setModule(sq);
+            sq.ledRed = 0;
+            sq.ledGreen = 0;
+            sq.ledBlue = 0;
+            return script.callReturn();
+        },
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Turtle.led(0)"
+            }
+        ]}
+    },
+    "turtle_play_sound_times": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.ROBOID_sound_beep, "1"],
+                    [Lang.Blocks.ROBOID_sound_random_beep, "2"],
+                    [Lang.Blocks.ROBOID_sound_siren, "3"],
+                    [Lang.Blocks.ROBOID_sound_engine, "4"],
+                    [Lang.Blocks.ROBOID_sound_robot, "5"],
+                    [Lang.Blocks.ROBOID_sound_march, "6"],
+                    [Lang.Blocks.ROBOID_sound_birthday, "7"],
+                    [Lang.Blocks.ROBOID_sound_dibidibidip, "8"],
+                    [Lang.Blocks.ROBOID_sound_good_job, "9"]
+                ],
+                "value": "1",
+                "fontSize": 11
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                null,
+                 {
+                    "type": "text",
+                    "params": [ "1" ]
+                },
+                null
+            ],
+            "type": "turtle_play_sound_times"
+        },
+        "paramsKeyMap": {
+            "SOUND": 0,
+            "COUNT": 1
+        },
+        "class": "turtle_sound",
+        "isNotFor": [ "turtle" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            Entry.Turtle.setModule(sq);
+            sq.buzzer = 0;
+            sq.note = 0;
+            var sound = Number(script.getField("SOUND"));
+            var count = script.getNumberValue("COUNT");
+            if(count) Entry.Turtle.setSound(sq, sound, count);
+            return script.callReturn();
+        },
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Turtle.sound(%1, %2)",
+                textParams: [
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.ROBOID_sound_beep, "1"],
+                            [Lang.Blocks.ROBOID_sound_random_beep, "2"],
+                            [Lang.Blocks.ROBOID_sound_siren, "3"],
+                            [Lang.Blocks.ROBOID_sound_engine, "4"],
+                            [Lang.Blocks.ROBOID_sound_robot, "5"],
+                            [Lang.Blocks.ROBOID_sound_march, "6"],
+                            [Lang.Blocks.ROBOID_sound_birthday, "7"],
+                            [Lang.Blocks.ROBOID_sound_dibidibidip, "8"],
+                            [Lang.Blocks.ROBOID_sound_good_job, "9"]
+                        ],
+                        "value": "1",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnValuePartialUpperCase,
+                        codeMap: "Entry.CodeMap.Turtle.sounds"
+                    },
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    }
+                ]
+            }
+        ]}
+    },
+    "turtle_play_sound_times_until_done": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.ROBOID_sound_beep, "1"],
+                    [Lang.Blocks.ROBOID_sound_random_beep, "2"],
+                    [Lang.Blocks.ROBOID_sound_siren, "3"],
+                    [Lang.Blocks.ROBOID_sound_engine, "4"],
+                    [Lang.Blocks.ROBOID_sound_robot, "5"],
+                    [Lang.Blocks.ROBOID_sound_march, "6"],
+                    [Lang.Blocks.ROBOID_sound_birthday, "7"],
+                    [Lang.Blocks.ROBOID_sound_dibidibidip, "8"],
+                    [Lang.Blocks.ROBOID_sound_good_job, "9"]
+                ],
+                "value": "1",
+                "fontSize": 11
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                null,
+                 {
+                    "type": "text",
+                    "params": [ "1" ]
+                },
+                null
+            ],
+            "type": "turtle_play_sound_times_until_done"
+        },
+        "paramsKeyMap": {
+            "SOUND": 0,
+            "COUNT": 1
+        },
+        "class": "turtle_sound",
+        "isNotFor": [ "turtle" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var pd = Entry.hw.portData;
+            var turtle = Entry.Turtle;
+            turtle.setModule(sq);
+            if (!script.isStart) {
+                script.isStart = true;
+                sq.buzzer = 0;
+                sq.note = 0;
+                var sound = Number(script.getField("SOUND"));
+                var count = script.getNumberValue("COUNT");
+                if(count) {
+                    turtle.setSound(sq, sound, count);
+                    return script;
+                } else {
+                    turtle.sound = 0;
+                    turtle.soundRepeat = 1;
+                    delete script.isStart;
+                    Entry.engine.isContinue = false;
+                    return script.callReturn();
+                }
+            } else {
+                if(pd.soundStateId != turtle.soundStateId) {
+                    turtle.soundStateId = pd.soundStateId;
+                    if(pd.soundState == 0) {
+                        delete script.isStart;
+                        Entry.engine.isContinue = false;
+                        return script.callReturn();
+                    }
+                }
+                return script;
+            }
+        },
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Turtle.sound_until_done(%1, %2)",
+                textParams: [
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.ROBOID_sound_beep, "1"],
+                            [Lang.Blocks.ROBOID_sound_random_beep, "2"],
+                            [Lang.Blocks.ROBOID_sound_siren, "3"],
+                            [Lang.Blocks.ROBOID_sound_engine, "4"],
+                            [Lang.Blocks.ROBOID_sound_robot, "5"],
+                            [Lang.Blocks.ROBOID_sound_march, "6"],
+                            [Lang.Blocks.ROBOID_sound_birthday, "7"],
+                            [Lang.Blocks.ROBOID_sound_dibidibidip, "8"],
+                            [Lang.Blocks.ROBOID_sound_good_job, "9"]
+                        ],
+                        "value": "1",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnValuePartialUpperCase,
+                        codeMap: "Entry.CodeMap.Turtle.sounds"
+                    },
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    }
+                ]
+            }
+        ]}
+    },
+    "turtle_change_buzzer_by": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                 {
+                    "type": "text",
+                    "params": [ "10" ]
+                },
+                null
+            ],
+            "type": "turtle_change_buzzer_by"
+        },
+        "paramsKeyMap": {
+            "VALUE": 0
+        },
+        "class": "turtle_sound",
+        "isNotFor": [ "turtle" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            Entry.Turtle.setModule(sq);
+            var value = script.getNumberValue("VALUE");
+            sq.buzzer = sq.buzzer != undefined ? sq.buzzer + value : value;
+            sq.note = 0;
+            Entry.Turtle.setSound(sq, 0);
+            return script.callReturn();
+        },
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Turtle.buzzer_by(%1)"
+            }
+        ]}
+    },
+    "turtle_set_buzzer_to": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                 {
+                    "type": "text",
+                    "params": [ "1000" ]
+                },
+                null
+            ],
+            "type": "turtle_set_buzzer_to"
+        },
+        "paramsKeyMap": {
+            "VALUE": 0
+        },
+        "class": "turtle_sound",
+        "isNotFor": [ "turtle" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            Entry.Turtle.setModule(sq);
+            sq.buzzer = script.getNumberValue("VALUE");
+            sq.note = 0;
+            Entry.Turtle.setSound(sq, 0);
+            return script.callReturn();
+        },
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Turtle.buzzer(%1)"
+            }
+        ]}
+    },
+    "turtle_clear_sound": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                null
+            ],
+            "type": "turtle_clear_sound"
+        },
+        "class": "turtle_sound",
+        "isNotFor": [ "turtle" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            Entry.Turtle.setModule(sq);
+            sq.buzzer = 0;
+            sq.note = 0;
+            Entry.Turtle.setSound(sq, 0);
+            return script.callReturn();
+        },
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Turtle.sound(0)",
+                params: [null]
+            },
+            {
+                syntax: "Turtle.sound(Turtle.SOUND_OFF)",
+                params: [null]
+            },
+            {
+                syntax: "Turtle.buzzer(0)",
+                params: [null]
+            }
+        ]}
+    },
+    "turtle_play_note": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.ALBERT_note_c + '',"4"],
+                    [Lang.Blocks.ALBERT_note_c + '#',"5"],
+                    [Lang.Blocks.ALBERT_note_d + '',"6"],
+                    [Lang.Blocks.ALBERT_note_e + 'b',"7"],
+                    [Lang.Blocks.ALBERT_note_e + '',"8"],
+                    [Lang.Blocks.ALBERT_note_f + '',"9"],
+                    [Lang.Blocks.ALBERT_note_f + '#',"10"],
+                    [Lang.Blocks.ALBERT_note_g + '',"11"],
+                    [Lang.Blocks.ALBERT_note_g + '#',"12"],
+                    [Lang.Blocks.ALBERT_note_a + '',"13"],
+                    [Lang.Blocks.ALBERT_note_b + 'b',"14"],
+                    [Lang.Blocks.ALBERT_note_b + '',"15"]
+                ],
+                "value": "4",
+                "fontSize": 11
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [ "1", "1" ],
+                    [ "2", "2" ],
+                    [ "3", "3" ],
+                    [ "4", "4" ],
+                    [ "5", "5" ],
+                    [ "6", "6" ],
+                    [ "7", "7" ]
+                ],
+                "value": "1",
+                "fontSize": 11
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                null,
+                "4",
+                null
+            ],
+            "type": "turtle_play_note"
+        },
+        "paramsKeyMap": {
+            "NOTE": 0,
+            "OCTAVE": 1
+        },
+        "class": "turtle_sound",
+        "isNotFor": [ "turtle" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var note = script.getNumberField("NOTE", script);
+            var octave = script.getNumberField("OCTAVE", script);
+            Entry.Turtle.setModule(sq);
+            sq.buzzer = 0;
+            note += (octave-1)*12;
+            sq.note = note;
+            Entry.Turtle.setSound(sq, 0);
+            return script.callReturn();
+        },
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Turtle.pitch(%1, %2)",
+                textParams: [
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.ALBERT_note_c + '',"4"],
+                            [Lang.Blocks.ALBERT_note_c + '#',"5"],
+                            [Lang.Blocks.ALBERT_note_d + '',"6"],
+                            [Lang.Blocks.ALBERT_note_e + 'b',"7"],
+                            [Lang.Blocks.ALBERT_note_e + '',"8"],
+                            [Lang.Blocks.ALBERT_note_f + '',"9"],
+                            [Lang.Blocks.ALBERT_note_f + '#',"10"],
+                            [Lang.Blocks.ALBERT_note_g + '',"11"],
+                            [Lang.Blocks.ALBERT_note_g + '#',"12"],
+                            [Lang.Blocks.ALBERT_note_a + '',"13"],
+                            [Lang.Blocks.ALBERT_note_b + 'b',"14"],
+                            [Lang.Blocks.ALBERT_note_b + '',"15"]
+                        ],
+                        "value": "4",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnValuePartialUpperCase,
+                        codeMap: "Entry.CodeMap.Turtle.notes"
+
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [ "1", "1" ],
+                            [ "2", "2" ],
+                            [ "3", "3" ],
+                            [ "4", "4" ],
+                            [ "5", "5" ],
+                            [ "6", "6" ],
+                            [ "7", "7" ]
+                        ],
+                        "value": "1",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringOrNumberByValue
+                    }
+                ]
+            },
+        ]}
+    },
+    "turtle_play_note_for_beats": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.ALBERT_note_c + '',"4"],
+                    [Lang.Blocks.ALBERT_note_c + '#',"5"],
+                    [Lang.Blocks.ALBERT_note_d + '',"6"],
+                    [Lang.Blocks.ALBERT_note_e + 'b',"7"],
+                    [Lang.Blocks.ALBERT_note_e + '',"8"],
+                    [Lang.Blocks.ALBERT_note_f + '',"9"],
+                    [Lang.Blocks.ALBERT_note_f + '#',"10"],
+                    [Lang.Blocks.ALBERT_note_g + '',"11"],
+                    [Lang.Blocks.ALBERT_note_g + '#',"12"],
+                    [Lang.Blocks.ALBERT_note_a + '',"13"],
+                    [Lang.Blocks.ALBERT_note_b + 'b',"14"],
+                    [Lang.Blocks.ALBERT_note_b + '',"15"]
+                ],
+                "value": "4",
+                "fontSize": 11
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [ "1", "1" ],
+                    [ "2", "2" ],
+                    [ "3", "3" ],
+                    [ "4", "4" ],
+                    [ "5", "5" ],
+                    [ "6", "6" ],
+                    [ "7", "7" ]
+                ],
+                "value": "1",
+                "fontSize": 11
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                null,
+                "4",
+                {
+                    "type": "text",
+                    "params": [ "0.5" ]
+                },
+                null
+            ],
+            "type": "turtle_play_note_for_beats"
+        },
+        "paramsKeyMap": {
+            "NOTE": 0,
+            "OCTAVE": 1,
+            "VALUE": 2
+        },
+        "class": "turtle_sound",
+        "isNotFor": [ "turtle" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var turtle = Entry.Turtle;
+            turtle.setModule(sq);
+            if(!script.isStart) {
+                var note = script.getNumberField("NOTE", script);
+                var octave = script.getNumberField("OCTAVE", script);
+                var beat = script.getNumberValue("VALUE", script);
+                note += (octave-1)*12;
+                var timeValue = beat*60*1000/turtle.tempo;
+                script.isStart = true;
+                script.timeFlag = 1;
+                sq.buzzer = 0;
+                sq.note = note;
+                turtle.setSound(sq, 0);
+                if(timeValue > 100) {
+                    var timer1 = setTimeout(function() {
+                        sq.note = 0;
+                        turtle.removeTimeout(timer1);
+                    }, timeValue-100);
+                    turtle.timeouts.push(timer1);
+                }
+                var timer2 = setTimeout(function() {
+                    script.timeFlag = 0;
+                    turtle.removeTimeout(timer2);
+                }, timeValue);
+                turtle.timeouts.push(timer2);
+                return script;
+            } else if (script.timeFlag == 1) {
+                return script;
+            } else {
+                delete script.isStart;
+                delete script.timeFlag;
+                Entry.engine.isContinue = false;
+                sq.note = 0;
+                return script.callReturn();
+            }
+        },
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Turtle.note(%1, %2, %3)",
+                textParams: [
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.ALBERT_note_c + '',"4"],
+                            [Lang.Blocks.ALBERT_note_c + '#',"5"],
+                            [Lang.Blocks.ALBERT_note_d + '',"6"],
+                            [Lang.Blocks.ALBERT_note_e + 'b',"7"],
+                            [Lang.Blocks.ALBERT_note_e + '',"8"],
+                            [Lang.Blocks.ALBERT_note_f + '',"9"],
+                            [Lang.Blocks.ALBERT_note_f + '#',"10"],
+                            [Lang.Blocks.ALBERT_note_g + '',"11"],
+                            [Lang.Blocks.ALBERT_note_g + '#',"12"],
+                            [Lang.Blocks.ALBERT_note_a + '',"13"],
+                            [Lang.Blocks.ALBERT_note_b + 'b',"14"],
+                            [Lang.Blocks.ALBERT_note_b + '',"15"]
+                        ],
+                        "value": "4",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnValuePartialUpperCase,
+                        codeMap: "Entry.CodeMap.Turtle.notes"
+
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [ "1", "1" ],
+                            [ "2", "2" ],
+                            [ "3", "3" ],
+                            [ "4", "4" ],
+                            [ "5", "5" ],
+                            [ "6", "6" ],
+                            [ "7", "7" ]
+                        ],
+                        "value": "1",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringOrNumberByValue
+                    },
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    }
+                ]
+            },
+        ]}
+    },
+    "turtle_rest_for_beats": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "text",
+                    "params": [ "0.25" ]
+                },
+                null
+            ],
+            "type": "turtle_rest_for_beats"
+        },
+        "paramsKeyMap": {
+            "VALUE": 0
+        },
+        "class": "turtle_sound",
+        "isNotFor": [ "turtle" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var turtle = Entry.Turtle;
+            turtle.setModule(sq);
+            if (!script.isStart) {
+                script.isStart = true;
+                script.timeFlag = 1;
+                var timeValue = script.getNumberValue("VALUE");
+                timeValue = timeValue*60*1000/turtle.tempo;
+                sq.buzzer = 0;
+                sq.note = 0;
+                turtle.setSound(sq, 0);
+                var timer = setTimeout(function() {
+                    script.timeFlag = 0;
+                    turtle.removeTimeout(timer);
+                }, timeValue);
+                turtle.timeouts.push(timer);
+                return script;
+            } else if (script.timeFlag == 1) {
+                return script;
+            } else {
+                delete script.isStart;
+                delete script.timeFlag;
+                Entry.engine.isContinue = false;
+                return script.callReturn();
+            }
+        },
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Turtle.note(0, %1)",
+                textParams: [
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    }
+                ],
+                keyOption: "0"
+            },
+            {
+                syntax: "Turtle.note(Turtle.NOTE_OFF, %1)",
+                textParams: [
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    }
+                ],
+                keyOption: "Turtle.NOTE_OFF"
+            }
+        ]}
+    },
+    "turtle_change_tempo_by": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "text",
+                    "params": [ "20" ]
+                },
+                null
+            ],
+            "type": "turtle_change_tempo_by"
+        },
+        "paramsKeyMap": {
+            "VALUE": 0
+        },
+        "class": "turtle_sound",
+        "isNotFor": [ "turtle" ],
+        "func": function (sprite, script) {
+            var turtle = Entry.Turtle;
+            turtle.setModule(Entry.hw.sendQueue);
+            turtle.tempo += script.getNumberValue('VALUE');
+            if (turtle.tempo < 1) turtle.tempo = 1;
+            return script.callReturn();
+        },
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Turtle.tempo_by(%1)",
+                textParams: [
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    }
+                ]
+            }
+        ]}
+    },
+    "turtle_set_tempo_to": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "text",
+                    "params": [ "60" ]
+                },
+                null
+            ],
+            "type": "turtle_set_tempo_to"
+        },
+        "paramsKeyMap": {
+            "VALUE": 0
+        },
+        "class": "turtle_sound",
+        "isNotFor": [ "turtle" ],
+        "func": function (sprite, script) {
+            var turtle = Entry.Turtle;
+            turtle.setModule(Entry.hw.sendQueue);
+            turtle.tempo = script.getNumberValue('VALUE');
+            if (turtle.tempo < 1) turtle.tempo = 1;
+            return script.callReturn();
+        },
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Turtle.tempo(%1)",
+                textParams: [
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    }
+                ]
+            }
+        ]}
+    },
+    "roboid_hamster_hand_found": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_boolean_field",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "text",
+                    "params": [ "0" ]
+                }
+            ],
+            "type": "roboid_hamster_hand_found"
+        },
+        "paramsKeyMap": {
+            "INDEX": 0
+        },
+        "class": "hamster_sensor",
+        "isNotFor": [ "roboid" ],
+        "func": function (sprite, script) {
+            var pd = Entry.hw.portData;
+            var index = script.getNumberValue('INDEX');
+            var key = 'hamster' + index;
+            var leftProximity = pd[key + 'leftProximity'];
+            var rightProximity = pd[key + 'rightProximity'];
+            if(!leftProximity) leftProximity = 0;
+            if(!rightProximity) rightProximity = 0;
+            return leftProximity > 50 || rightProximity > 50;
+        },
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Roboid.hamster_hand_found(%1)",
+                textParams: [
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    }
+                ],
+                blockType: "param"
+            }
+        ]}
+    },
+    "roboid_hamster_value": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "params": [
+             {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.HAMSTER_sensor_left_proximity, "leftProximity"],
+                    [Lang.Blocks.HAMSTER_sensor_right_proximity, "rightProximity"],
+                    [Lang.Blocks.HAMSTER_sensor_left_floor, "leftFloor"],
+                    [Lang.Blocks.HAMSTER_sensor_right_floor, "rightFloor"],
+                    [Lang.Blocks.HAMSTER_sensor_acceleration_x, "accelerationX"],
+                    [Lang.Blocks.HAMSTER_sensor_acceleration_y, "accelerationY"],
+                    [Lang.Blocks.HAMSTER_sensor_acceleration_z, "accelerationZ"],
+                    [Lang.Blocks.HAMSTER_sensor_light, "light"],
+                    [Lang.Blocks.HAMSTER_sensor_temperature, "temperature"],
+                    [Lang.Blocks.HAMSTER_sensor_signal_strength, "signalStrength"],
+                    [Lang.Blocks.HAMSTER_sensor_input_a, "inputA"],
+                    [Lang.Blocks.HAMSTER_sensor_input_b, "inputB"]
+                ],
+                "value": "leftProximity",
+                "fontSize": 11
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "text",
+                    "params": [ "0" ]
+                },
+                null
+            ],
+            "type": "roboid_hamster_value"
+        },
+        "paramsKeyMap": {
+            "INDEX": 0,
+            "DEVICE": 1
+        },
+        "class": "hamster_sensor",
+        "isNotFor": [ "roboid" ],
+        "func": function (sprite, script) {
+            var pd = Entry.hw.portData;
+            var index = script.getNumberValue('INDEX');
+            var dev = script.getField('DEVICE');
+            var value = pd['hamster' + index + dev];
+            if(typeof value !== 'number') value = 0;
+            return value;
+        },
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Roboid.hamster_left_proximity(%1)",
+                blockType: "param",
+                textParams:[
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_sensor_left_proximity, "leftProximity"],
+                            [Lang.Blocks.HAMSTER_sensor_right_proximity, "rightProximity"],
+                            [Lang.Blocks.HAMSTER_sensor_left_floor, "leftFloor"],
+                            [Lang.Blocks.HAMSTER_sensor_right_floor, "rightFloor"],
+                            [Lang.Blocks.HAMSTER_sensor_acceleration_x, "accelerationX"],
+                            [Lang.Blocks.HAMSTER_sensor_acceleration_y, "accelerationY"],
+                            [Lang.Blocks.HAMSTER_sensor_acceleration_z, "accelerationZ"],
+                            [Lang.Blocks.HAMSTER_sensor_light, "light"],
+                            [Lang.Blocks.HAMSTER_sensor_temperature, "temperature"],
+                            [Lang.Blocks.HAMSTER_sensor_signal_strength, "signalStrength"],
+                            [Lang.Blocks.HAMSTER_sensor_input_a, "inputA"],
+                            [Lang.Blocks.HAMSTER_sensor_input_b, "inputB"]
+                        ],
+                        "value": "leftProximity",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    }
+                ],
+                params: [null, "leftProximity"]
+            },
+            {
+                syntax: "Roboid.hamster_right_proximity(%1)",
+                blockType: "param",
+                textParams:[
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_sensor_left_proximity, "leftProximity"],
+                            [Lang.Blocks.HAMSTER_sensor_right_proximity, "rightProximity"],
+                            [Lang.Blocks.HAMSTER_sensor_left_floor, "leftFloor"],
+                            [Lang.Blocks.HAMSTER_sensor_right_floor, "rightFloor"],
+                            [Lang.Blocks.HAMSTER_sensor_acceleration_x, "accelerationX"],
+                            [Lang.Blocks.HAMSTER_sensor_acceleration_y, "accelerationY"],
+                            [Lang.Blocks.HAMSTER_sensor_acceleration_z, "accelerationZ"],
+                            [Lang.Blocks.HAMSTER_sensor_light, "light"],
+                            [Lang.Blocks.HAMSTER_sensor_temperature, "temperature"],
+                            [Lang.Blocks.HAMSTER_sensor_signal_strength, "signalStrength"],
+                            [Lang.Blocks.HAMSTER_sensor_input_a, "inputA"],
+                            [Lang.Blocks.HAMSTER_sensor_input_b, "inputB"]
+                        ],
+                        "value": "leftProximity",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    }
+                ],
+                params: [null, "rightProximity"]
+            },
+            {
+                syntax: "Roboid.hamster_left_floor(%1)",
+                blockType: "param",
+                textParams:[
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_sensor_left_proximity, "leftProximity"],
+                            [Lang.Blocks.HAMSTER_sensor_right_proximity, "rightProximity"],
+                            [Lang.Blocks.HAMSTER_sensor_left_floor, "leftFloor"],
+                            [Lang.Blocks.HAMSTER_sensor_right_floor, "rightFloor"],
+                            [Lang.Blocks.HAMSTER_sensor_acceleration_x, "accelerationX"],
+                            [Lang.Blocks.HAMSTER_sensor_acceleration_y, "accelerationY"],
+                            [Lang.Blocks.HAMSTER_sensor_acceleration_z, "accelerationZ"],
+                            [Lang.Blocks.HAMSTER_sensor_light, "light"],
+                            [Lang.Blocks.HAMSTER_sensor_temperature, "temperature"],
+                            [Lang.Blocks.HAMSTER_sensor_signal_strength, "signalStrength"],
+                            [Lang.Blocks.HAMSTER_sensor_input_a, "inputA"],
+                            [Lang.Blocks.HAMSTER_sensor_input_b, "inputB"]
+                        ],
+                        "value": "leftProximity",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    }
+                ],
+                params: [null, "leftFloor"]
+            },
+            {
+                syntax: "Roboid.hamster_right_floor(%1)",
+                blockType: "param",
+                textParams:[
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_sensor_left_proximity, "leftProximity"],
+                            [Lang.Blocks.HAMSTER_sensor_right_proximity, "rightProximity"],
+                            [Lang.Blocks.HAMSTER_sensor_left_floor, "leftFloor"],
+                            [Lang.Blocks.HAMSTER_sensor_right_floor, "rightFloor"],
+                            [Lang.Blocks.HAMSTER_sensor_acceleration_x, "accelerationX"],
+                            [Lang.Blocks.HAMSTER_sensor_acceleration_y, "accelerationY"],
+                            [Lang.Blocks.HAMSTER_sensor_acceleration_z, "accelerationZ"],
+                            [Lang.Blocks.HAMSTER_sensor_light, "light"],
+                            [Lang.Blocks.HAMSTER_sensor_temperature, "temperature"],
+                            [Lang.Blocks.HAMSTER_sensor_signal_strength, "signalStrength"],
+                            [Lang.Blocks.HAMSTER_sensor_input_a, "inputA"],
+                            [Lang.Blocks.HAMSTER_sensor_input_b, "inputB"]
+                        ],
+                        "value": "leftProximity",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    }
+                ],
+                params: [null, "rightFloor"]
+            },
+            {
+                syntax: "Roboid.hamster_acceleration_x(%1)",
+                blockType: "param",
+                textParams:[
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_sensor_left_proximity, "leftProximity"],
+                            [Lang.Blocks.HAMSTER_sensor_right_proximity, "rightProximity"],
+                            [Lang.Blocks.HAMSTER_sensor_left_floor, "leftFloor"],
+                            [Lang.Blocks.HAMSTER_sensor_right_floor, "rightFloor"],
+                            [Lang.Blocks.HAMSTER_sensor_acceleration_x, "accelerationX"],
+                            [Lang.Blocks.HAMSTER_sensor_acceleration_y, "accelerationY"],
+                            [Lang.Blocks.HAMSTER_sensor_acceleration_z, "accelerationZ"],
+                            [Lang.Blocks.HAMSTER_sensor_light, "light"],
+                            [Lang.Blocks.HAMSTER_sensor_temperature, "temperature"],
+                            [Lang.Blocks.HAMSTER_sensor_signal_strength, "signalStrength"],
+                            [Lang.Blocks.HAMSTER_sensor_input_a, "inputA"],
+                            [Lang.Blocks.HAMSTER_sensor_input_b, "inputB"]
+                        ],
+                        "value": "leftProximity",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    }
+                ],
+                params: [null, "accelerationX"]
+            },
+            {
+                syntax: "Roboid.hamster_acceleration_y(%1)",
+                blockType: "param",
+                textParams:[
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_sensor_left_proximity, "leftProximity"],
+                            [Lang.Blocks.HAMSTER_sensor_right_proximity, "rightProximity"],
+                            [Lang.Blocks.HAMSTER_sensor_left_floor, "leftFloor"],
+                            [Lang.Blocks.HAMSTER_sensor_right_floor, "rightFloor"],
+                            [Lang.Blocks.HAMSTER_sensor_acceleration_x, "accelerationX"],
+                            [Lang.Blocks.HAMSTER_sensor_acceleration_y, "accelerationY"],
+                            [Lang.Blocks.HAMSTER_sensor_acceleration_z, "accelerationZ"],
+                            [Lang.Blocks.HAMSTER_sensor_light, "light"],
+                            [Lang.Blocks.HAMSTER_sensor_temperature, "temperature"],
+                            [Lang.Blocks.HAMSTER_sensor_signal_strength, "signalStrength"],
+                            [Lang.Blocks.HAMSTER_sensor_input_a, "inputA"],
+                            [Lang.Blocks.HAMSTER_sensor_input_b, "inputB"]
+                        ],
+                        "value": "leftProximity",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    }
+                ],
+                params: [null, "accelerationY"]
+            },
+            {
+                syntax: "Roboid.hamster_acceleration_z(%1)",
+                blockType: "param",
+                textParams:[
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_sensor_left_proximity, "leftProximity"],
+                            [Lang.Blocks.HAMSTER_sensor_right_proximity, "rightProximity"],
+                            [Lang.Blocks.HAMSTER_sensor_left_floor, "leftFloor"],
+                            [Lang.Blocks.HAMSTER_sensor_right_floor, "rightFloor"],
+                            [Lang.Blocks.HAMSTER_sensor_acceleration_x, "accelerationX"],
+                            [Lang.Blocks.HAMSTER_sensor_acceleration_y, "accelerationY"],
+                            [Lang.Blocks.HAMSTER_sensor_acceleration_z, "accelerationZ"],
+                            [Lang.Blocks.HAMSTER_sensor_light, "light"],
+                            [Lang.Blocks.HAMSTER_sensor_temperature, "temperature"],
+                            [Lang.Blocks.HAMSTER_sensor_signal_strength, "signalStrength"],
+                            [Lang.Blocks.HAMSTER_sensor_input_a, "inputA"],
+                            [Lang.Blocks.HAMSTER_sensor_input_b, "inputB"]
+                        ],
+                        "value": "leftProximity",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    }
+                ],
+                params: [null, "accelerationZ"]
+            },
+            {
+                syntax: "Roboid.hamster_light(%1)",
+                blockType: "param",
+                textParams:[
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_sensor_left_proximity, "leftProximity"],
+                            [Lang.Blocks.HAMSTER_sensor_right_proximity, "rightProximity"],
+                            [Lang.Blocks.HAMSTER_sensor_left_floor, "leftFloor"],
+                            [Lang.Blocks.HAMSTER_sensor_right_floor, "rightFloor"],
+                            [Lang.Blocks.HAMSTER_sensor_acceleration_x, "accelerationX"],
+                            [Lang.Blocks.HAMSTER_sensor_acceleration_y, "accelerationY"],
+                            [Lang.Blocks.HAMSTER_sensor_acceleration_z, "accelerationZ"],
+                            [Lang.Blocks.HAMSTER_sensor_light, "light"],
+                            [Lang.Blocks.HAMSTER_sensor_temperature, "temperature"],
+                            [Lang.Blocks.HAMSTER_sensor_signal_strength, "signalStrength"],
+                            [Lang.Blocks.HAMSTER_sensor_input_a, "inputA"],
+                            [Lang.Blocks.HAMSTER_sensor_input_b, "inputB"]
+                        ],
+                        "value": "leftProximity",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    }
+                ],
+                params: [null, "light"]
+            },
+            {
+                syntax: "Roboid.hamster_temperature(%1)",
+                blockType: "param",
+                textParams:[
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_sensor_left_proximity, "leftProximity"],
+                            [Lang.Blocks.HAMSTER_sensor_right_proximity, "rightProximity"],
+                            [Lang.Blocks.HAMSTER_sensor_left_floor, "leftFloor"],
+                            [Lang.Blocks.HAMSTER_sensor_right_floor, "rightFloor"],
+                            [Lang.Blocks.HAMSTER_sensor_acceleration_x, "accelerationX"],
+                            [Lang.Blocks.HAMSTER_sensor_acceleration_y, "accelerationY"],
+                            [Lang.Blocks.HAMSTER_sensor_acceleration_z, "accelerationZ"],
+                            [Lang.Blocks.HAMSTER_sensor_light, "light"],
+                            [Lang.Blocks.HAMSTER_sensor_temperature, "temperature"],
+                            [Lang.Blocks.HAMSTER_sensor_signal_strength, "signalStrength"],
+                            [Lang.Blocks.HAMSTER_sensor_input_a, "inputA"],
+                            [Lang.Blocks.HAMSTER_sensor_input_b, "inputB"]
+                        ],
+                        "value": "leftProximity",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    }
+                ],
+                params: [null, "temperature"]
+            },
+            {
+                syntax: "Roboid.hamster_signal_strength(%1)",
+                blockType: "param",
+                textParams:[
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_sensor_left_proximity, "leftProximity"],
+                            [Lang.Blocks.HAMSTER_sensor_right_proximity, "rightProximity"],
+                            [Lang.Blocks.HAMSTER_sensor_left_floor, "leftFloor"],
+                            [Lang.Blocks.HAMSTER_sensor_right_floor, "rightFloor"],
+                            [Lang.Blocks.HAMSTER_sensor_acceleration_x, "accelerationX"],
+                            [Lang.Blocks.HAMSTER_sensor_acceleration_y, "accelerationY"],
+                            [Lang.Blocks.HAMSTER_sensor_acceleration_z, "accelerationZ"],
+                            [Lang.Blocks.HAMSTER_sensor_light, "light"],
+                            [Lang.Blocks.HAMSTER_sensor_temperature, "temperature"],
+                            [Lang.Blocks.HAMSTER_sensor_signal_strength, "signalStrength"],
+                            [Lang.Blocks.HAMSTER_sensor_input_a, "inputA"],
+                            [Lang.Blocks.HAMSTER_sensor_input_b, "inputB"]
+                        ],
+                        "value": "leftProximity",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    }
+                ],
+                params: [null, "signalStrength"]
+            },
+            {
+                syntax: "Roboid.hamster_input_a(%1)",
+                blockType: "param",
+                textParams:[
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_sensor_left_proximity, "leftProximity"],
+                            [Lang.Blocks.HAMSTER_sensor_right_proximity, "rightProximity"],
+                            [Lang.Blocks.HAMSTER_sensor_left_floor, "leftFloor"],
+                            [Lang.Blocks.HAMSTER_sensor_right_floor, "rightFloor"],
+                            [Lang.Blocks.HAMSTER_sensor_acceleration_x, "accelerationX"],
+                            [Lang.Blocks.HAMSTER_sensor_acceleration_y, "accelerationY"],
+                            [Lang.Blocks.HAMSTER_sensor_acceleration_z, "accelerationZ"],
+                            [Lang.Blocks.HAMSTER_sensor_light, "light"],
+                            [Lang.Blocks.HAMSTER_sensor_temperature, "temperature"],
+                            [Lang.Blocks.HAMSTER_sensor_signal_strength, "signalStrength"],
+                            [Lang.Blocks.HAMSTER_sensor_input_a, "inputA"],
+                            [Lang.Blocks.HAMSTER_sensor_input_b, "inputB"]
+                        ],
+                        "value": "leftProximity",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    }
+                ],
+                params: [null, "inputA"]
+            },
+            {
+                syntax: "Roboid.hamster_input_b(%1)",
+                blockType: "param",
+                textParams:[
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_sensor_left_proximity, "leftProximity"],
+                            [Lang.Blocks.HAMSTER_sensor_right_proximity, "rightProximity"],
+                            [Lang.Blocks.HAMSTER_sensor_left_floor, "leftFloor"],
+                            [Lang.Blocks.HAMSTER_sensor_right_floor, "rightFloor"],
+                            [Lang.Blocks.HAMSTER_sensor_acceleration_x, "accelerationX"],
+                            [Lang.Blocks.HAMSTER_sensor_acceleration_y, "accelerationY"],
+                            [Lang.Blocks.HAMSTER_sensor_acceleration_z, "accelerationZ"],
+                            [Lang.Blocks.HAMSTER_sensor_light, "light"],
+                            [Lang.Blocks.HAMSTER_sensor_temperature, "temperature"],
+                            [Lang.Blocks.HAMSTER_sensor_signal_strength, "signalStrength"],
+                            [Lang.Blocks.HAMSTER_sensor_input_a, "inputA"],
+                            [Lang.Blocks.HAMSTER_sensor_input_b, "inputB"]
+                        ],
+                        "value": "leftProximity",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    }
+                ],
+                params: [null, "inputB"]
+            }
+        ]}
+    },
+    "roboid_hamster_move_forward_once": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "text",
+                    "params": [ "0" ]
+                },
+                null
+            ],
+            "type": "roboid_hamster_move_forward_once"
+        },
+        "paramsKeyMap": {
+            "INDEX": 0
+        },
+        "class": "hamster_board",
+        "isNotFor": [ "roboid" ],
+        "func": function (sprite, script) {
+            var pd = Entry.hw.portData;
+            var index = script.getNumberValue('INDEX');
+            var robot = Entry.Roboid.getHamster(index);
+            var packet = robot.packet;
+            if (!script.isStart) {
+                script.isStart = true;
+                script.isMoving = true;
+                script.count = 0;
+                script.boardState = 1;
+                packet.motion = 0;
+                packet.leftWheel = 45;
+                packet.rightWheel = 45;
+                robot.boardCommand = 1;
+                robot.setLineTracerMode(0);
+                return script;
+            } else if (script.isMoving) {
+                if(robot.boardCommand != 1) return script;
+                var leftFloor = pd['hamster' + index + 'leftFloor'];
+                var rightFloor = pd['hamster' + index + 'rightFloor'];
+                switch(script.boardState) {
+                    case 1: {
+                        if(script.count < 2) {
+                            if(leftFloor < 50 && rightFloor < 50)
+                                script.count ++;
+                            else
+                                script.count = 0;
+                            var diff = leftFloor - rightFloor;
+                            packet.leftWheel = 45 + diff * 0.25;
+                            packet.rightWheel = 45 - diff * 0.25;
+                        } else {
+                            script.count = 0;
+                            script.boardState = 2;
+                        }
+                        break;
+                    }
+                    case 2: {
+                        var diff = leftFloor - rightFloor;
+                        packet.leftWheel = 45 + diff * 0.25;
+                        packet.rightWheel = 45 - diff * 0.25;
+                        script.boardState = 3;
+                        var timer = setTimeout(function() {
+                            script.boardState = 4;
+                            Entry.Roboid.removeTimeout(timer);
+                        }, 250);
+                        Entry.Roboid.timeouts.push(timer);
+                        break;
+                    }
+                    case 3: {
+                        var diff = leftFloor - rightFloor;
+                        packet.leftWheel = 45 + diff * 0.25;
+                        packet.rightWheel = 45 - diff * 0.25;
+                        break;
+                    }
+                    case 4: {
+                        packet.leftWheel = 0;
+                        packet.rightWheel = 0;
+                        script.boardState = 0;
+                        script.isMoving = false;
+                        break;
+                    }
+                }
+                return script;
+            } else {
+                delete script.isStart;
+                delete script.isMoving;
+                delete script.count;
+                delete script.boardState;
+                Entry.engine.isContinue = false;
+                robot.boardCommand = 0;
+                packet.leftWheel = 0;
+                packet.rightWheel = 0;
+                return script.callReturn();
+            }
+        },
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Roboid.hamster_board_forward(%1)",
+                textParams:[
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    }
+                ]
+            }
+        ]}
+    },
+    "roboid_hamster_turn_once": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.HAMSTER_turn_once_left,"LEFT"],
+                    [Lang.Blocks.HAMSTER_turn_right,"RIGHT"]
+                ],
+                "value": "LEFT",
+                "fontSize": 11
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "text",
+                    "params": [ "0" ]
+                },
+                null, null
+            ],
+            "type": "roboid_hamster_turn_once"
+        },
+        "paramsKeyMap": {
+            "INDEX": 0,
+            "DIRECTION": 1
+        },
+        "class": "hamster_board",
+        "isNotFor": [ "roboid" ],
+        "func": function (sprite, script) {
+            var pd = Entry.hw.portData;
+            var index = script.getNumberValue('INDEX');
+            var robot = Entry.Roboid.getHamster(index);
+            var packet = robot.packet;
+            if (!script.isStart) {
+                script.isStart = true;
+                script.isMoving = true;
+                script.count = 0;
+                script.boardState = 1;
+                packet.motion = 0;
+                var direction = script.getField("DIRECTION", script);
+                if (direction == 'LEFT') {
+                    script.isLeft = true;
+                    packet.leftWheel = -45;
+                    packet.rightWheel = 45;
+                } else {
+                    script.isLeft = false;
+                    packet.leftWheel = 45;
+                    packet.rightWheel = -45;
+                }
+                robot.boardCommand = 2;
+                robot.setLineTracerMode(0);
+                return script;
+            } else if (script.isMoving) {
+                if(robot.boardCommand != 2) return script;
+                var leftFloor = pd['hamster' + index + 'leftFloor'];
+                var rightFloor = pd['hamster' + index + 'rightFloor'];
+                if(script.isLeft) {
+                    switch(script.boardState) {
+                        case 1: {
+                            if(script.count < 2) {
+                                if(leftFloor > 50)
+                                    script.count ++;
+                            } else {
+                                script.count = 0;
+                                script.boardState = 2;
+                            }
+                            break;
+                        }
+                        case 2: {
+                            if(leftFloor < 20) {
+                                script.boardState = 3;
+                            }
+                            break;
+                        }
+                        case 3: {
+                            if(script.count < 2) {
+                                if(leftFloor < 20)
+                                    script.count ++;
+                            } else {
+                                script.count = 0;
+                                script.boardState = 4;
+                            }
+                            break;
+                        }
+                        case 4: {
+                            if(leftFloor > 50) {
+                                script.boardState = 5;
+                            }
+                            break;
+                        }
+                        case 5: {
+                            var diff = leftFloor - rightFloor;
+                            if(diff > -15) {
+                                packet.leftWheel = 0;
+                                packet.rightWheel = 0;
+                                script.boardState = 0;
+                                script.isMoving = false;
+                            } else {
+                                packet.leftWheel = diff * 0.5;
+                                packet.rightWheel = -diff * 0.5;
+                            }
+                            break;
+                        }
+                    }
+                } else {
+                    switch(script.boardState) {
+                        case 1: {
+                            if(script.count < 2) {
+                                if(rightFloor > 50)
+                                    script.count ++;
+                            } else {
+                                script.count = 0;
+                                script.boardState = 2;
+                            }
+                            break;
+                        }
+                        case 2: {
+                            if(rightFloor < 20) {
+                                script.boardState = 3;
+                            }
+                            break;
+                        }
+                        case 3: {
+                            if(script.count < 2) {
+                                if(rightFloor < 20)
+                                    script.count ++;
+                            } else {
+                                script.count = 0;
+                                script.boardState = 4;
+                            }
+                            break;
+                        }
+                        case 4: {
+                            if(rightFloor > 50) {
+                                script.boardState = 5;
+                            }
+                            break;
+                        }
+                        case 5: {
+                            var diff = rightFloor - leftFloor;
+                            if(diff > -15) {
+                                packet.leftWheel = 0;
+                                packet.rightWheel = 0;
+                                script.boardState = 0;
+                                script.isMoving = false;
+                            } else {
+                                packet.leftWheel = -diff * 0.5;
+                                packet.rightWheel = diff * 0.5;
+                            }
+                            break;
+                        }
+                    }
+                }
+                return script;
+            } else {
+                delete script.isStart;
+                delete script.isMoving;
+                delete script.count;
+                delete script.boardState;
+                delete script.isLeft;
+                Entry.engine.isContinue = false;
+                robot.boardCommand = 0;
+                packet.leftWheel = 0;
+                packet.rightWheel = 0;
+                return script.callReturn();
+            }
+        },
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Roboid.hamster_board_left(%1)",
+                textParams: [
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_turn_once_left,"LEFT"],
+                            [Lang.Blocks.HAMSTER_turn_right,"RIGHT"]
+                        ],
+                        "value": "LEFT",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue,
+                    }
+                ],
+                params: [null, "LEFT"]
+            },
+            {
+                syntax: "Roboid.hamster_board_right(%1)",
+                textParams: [
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_turn_once_left,"LEFT"],
+                            [Lang.Blocks.HAMSTER_turn_right,"RIGHT"]
+                        ],
+                        "value": "LEFT",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    }
+                ],
+                params: [null, "RIGHT"]
+            }
+        ]}
+    },
+    "roboid_hamster_move_forward_for_secs": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "text",
+                    "params": [ "0" ]
+                },
+                {
+                    "type": "text",
+                    "params": [ "1" ]
+                },
+                null
+            ],
+            "type": "roboid_hamster_move_forward_for_secs"
+        },
+        "paramsKeyMap": {
+            "INDEX": 0,
+            "VALUE": 1
+        },
+        "class": "hamster_wheel",
+        "isNotFor": [ "roboid" ],
+        "func": function (sprite, script) {
+            var index = script.getNumberValue('INDEX');
+            var robot = Entry.Roboid.getHamster(index);
+            var packet = robot.packet;
+            if (!script.isStart) {
+                script.isStart = true;
+                script.timeFlag = 1;
+                packet.motion = 1;
+                packet.leftWheel = 30;
+                packet.rightWheel = 30;
+                robot.boardCommand = 0;
+                robot.setLineTracerMode(0);
+                var timeValue = script.getNumberValue("VALUE") * 1000;
+                var timer = setTimeout(function() {
+                    script.timeFlag = 0;
+                    Entry.Roboid.removeTimeout(timer);
+                }, timeValue);
+                Entry.Roboid.timeouts.push(timer);
+                return script;
+            } else if (script.timeFlag == 1) {
+                return script;
+            } else {
+                delete script.isStart;
+                delete script.timeFlag;
+                Entry.engine.isContinue = false;
+                packet.motion = 0;
+                packet.leftWheel = 0;
+                packet.rightWheel = 0;
+                return script.callReturn();
+            }
+        },
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Roboid.hamster_move_forward(%1, %2)",
+                textParams: [
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    }
+                ]
+            }
+        ]}
+    },
+    "roboid_hamster_move_backward_for_secs": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "text",
+                    "params": [ "0" ]
+                },
+                {
+                    "type": "text",
+                    "params": [ "1" ]
+                },
+                null
+            ],
+            "type": "roboid_hamster_move_backward_for_secs"
+        },
+        "paramsKeyMap": {
+            "INDEX": 0,
+            "VALUE": 1
+        },
+        "class": "hamster_wheel",
+        "isNotFor": [ "roboid" ],
+        "func": function (sprite, script) {
+            var index = script.getNumberValue('INDEX');
+            var robot = Entry.Roboid.getHamster(index);
+            var packet = robot.packet;
+            if (!script.isStart) {
+                script.isStart = true;
+                script.timeFlag = 1;
+                packet.motion = 2;
+                packet.leftWheel = -30;
+                packet.rightWheel = -30;
+                robot.boardCommand = 0;
+                robot.setLineTracerMode(0);
+                var timeValue = script.getNumberValue("VALUE") * 1000;
+                var timer = setTimeout(function() {
+                    script.timeFlag = 0;
+                    Entry.Roboid.removeTimeout(timer);
+                }, timeValue);
+                Entry.Roboid.timeouts.push(timer);
+                return script;
+            } else if (script.timeFlag == 1) {
+                return script;
+            } else {
+                delete script.isStart;
+                delete script.timeFlag;
+                Entry.engine.isContinue = false;
+                packet.motion = 0;
+                packet.leftWheel = 0;
+                packet.rightWheel = 0;
+                return script.callReturn();
+            }
+        },
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Roboid.hamster_move_backward(%1, %2)",
+                textParams: [
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    }
+                ]
+            }
+        ]}
+    },
+    "roboid_hamster_turn_for_secs": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.HAMSTER_turn_once_left,"LEFT"],
+                    [Lang.Blocks.HAMSTER_turn_right,"RIGHT"]
+                ],
+                "value": "LEFT",
+                "fontSize": 11
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "text",
+                    "params": [ "0" ]
+                },
+                null,
+                {
+                    "type": "text",
+                    "params": [ "1" ]
+                },
+                null
+            ],
+            "type": "roboid_hamster_turn_for_secs"
+        },
+        "paramsKeyMap": {
+            "INDEX": 0,
+            "DIRECTION": 1,
+            "VALUE": 2
+        },
+        "class": "hamster_wheel",
+        "isNotFor": [ "roboid" ],
+        "func": function (sprite, script) {
+            var index = script.getNumberValue('INDEX');
+            var robot = Entry.Roboid.getHamster(index);
+            var packet = robot.packet;
+            if (!script.isStart) {
+                script.isStart = true;
+                script.timeFlag = 1;
+                var direction = script.getField("DIRECTION", script);
+                if (direction == 'LEFT') {
+                    packet.motion = 3;
+                    packet.leftWheel = -30;
+                    packet.rightWheel = 30;
+                } else {
+                    packet.motion = 4;
+                    packet.leftWheel = 30;
+                    packet.rightWheel = -30;
+                }
+                robot.boardCommand = 0;
+                robot.setLineTracerMode(0);
+                var timeValue = script.getNumberValue("VALUE") * 1000;
+                var timer = setTimeout(function() {
+                    script.timeFlag = 0;
+                    Entry.Roboid.removeTimeout(timer);
+                }, timeValue);
+                Entry.Roboid.timeouts.push(timer);
+                return script;
+            } else if (script.timeFlag == 1) {
+                return script;
+            } else {
+                delete script.isStart;
+                delete script.timeFlag;
+                Entry.engine.isContinue = false;
+                packet.motion = 0;
+                packet.leftWheel = 0;
+                packet.rightWheel = 0;
+                return script.callReturn();
+            }
+        },
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Roboid.hamster_turn_left(%1, %3)",
+                textParams: [
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_turn_once_left,"LEFT"],
+                            [Lang.Blocks.HAMSTER_turn_right,"RIGHT"]
+                        ],
+                        "value": "LEFT",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue,
+                    },
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    }
+                ],
+                params: [null, "LEFT"]
+            },
+            {
+                syntax: "Roboid.hamster_turn_right(%1, %3)",
+                textParams: [
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_turn_once_left,"LEFT"],
+                            [Lang.Blocks.HAMSTER_turn_right,"RIGHT"]
+                        ],
+                        "value": "LEFT",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    },
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    }
+                ],
+                params: [null, "RIGHT"]
+            }
+        ]}
+    },
+    "roboid_hamster_change_both_wheels_by": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "text",
+                    "params": [ "0" ]
+                },
+                {
+                    "type": "text",
+                    "params": [ "10" ]
+                },
+                {
+                    "type": "text",
+                    "params": [ "10" ]
+                },
+                null
+            ],
+            "type": "roboid_hamster_change_both_wheels_by"
+        },
+        "paramsKeyMap": {
+            "INDEX": 0,
+            "LEFT": 1,
+            "RIGHT": 2
+        },
+        "class": "hamster_wheel",
+        "isNotFor": [ "roboid" ],
+        "func": function (sprite, script) {
+            var index = script.getNumberValue('INDEX');
+            var robot = Entry.Roboid.getHamster(index);
+            var packet = robot.packet;
+            var left = script.getNumberValue('LEFT');
+            var right = script.getNumberValue('RIGHT');
+            packet.motion = 0;
+            packet.leftWheel = packet.leftWheel != undefined ? packet.leftWheel + left : left;
+            packet.rightWheel = packet.rightWheel != undefined ? packet.rightWheel + right : right;
+            robot.boardCommand = 0;
+            robot.setLineTracerMode(0);
+            return script.callReturn();
+        },
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Roboid.hamster_wheels_by(%1, %2, %3)",
+                textParams: [
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    }
+                ]
+            }
+        ]}
+    },
+    "roboid_hamster_set_both_wheels_to": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "text",
+                    "params": [ "0" ]
+                },
+                {
+                    "type": "text",
+                    "params": [ "30" ]
+                },
+                {
+                    "type": "text",
+                    "params": [ "30" ]
+                },
+                null
+            ],
+            "type": "roboid_hamster_set_both_wheels_to"
+        },
+        "paramsKeyMap": {
+            "INDEX": 0,
+            "LEFT": 1,
+            "RIGHT": 2
+        },
+        "class": "hamster_wheel",
+        "isNotFor": [ "roboid" ],
+        "func": function (sprite, script) {
+            var index = script.getNumberValue('INDEX');
+            var robot = Entry.Roboid.getHamster(index);
+            var packet = robot.packet;
+            packet.motion = 0;
+            packet.leftWheel = script.getNumberValue('LEFT');
+            packet.rightWheel = script.getNumberValue('RIGHT');
+            robot.boardCommand = 0;
+            robot.setLineTracerMode(0);
+            return script.callReturn();
+        },
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Roboid.hamster_wheels(%1, %2, %3)",
+                textParams: [
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    }
+                ]
+            }
+        ]}
+    },
+    "roboid_hamster_change_wheel_by": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.HAMSTER_left_wheel,"LEFT"],
+                    [Lang.Blocks.HAMSTER_right_wheel,"RIGHT"],
+                    [Lang.Blocks.HAMSTER_both_wheels,"BOTH"]
+                ],
+                "value": "LEFT",
+                "fontSize": 11
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "text",
+                    "params": [ "0" ]
+                },
+                null,
+                {
+                    "type": "text",
+                    "params": [ "10" ]
+                },
+                null
+            ],
+            "type": "roboid_hamster_change_wheel_by"
+        },
+        "paramsKeyMap": {
+            "INDEX": 0,
+            "DIRECTION": 1,
+            "VALUE": 2
+        },
+        "class": "hamster_wheel",
+        "isNotFor": [ "roboid" ],
+        "func": function (sprite, script) {
+            var index = script.getNumberValue('INDEX');
+            var robot = Entry.Roboid.getHamster(index);
+            var packet = robot.packet;
+            var direction = script.getField('DIRECTION');
+            var value = script.getNumberValue('VALUE');
+            packet.motion = 0;
+            if (direction == 'LEFT') {
+                packet.leftWheel = packet.leftWheel != undefined ? packet.leftWheel + value : value;
+            } else if (direction == 'RIGHT') {
+                packet.rightWheel = packet.rightWheel != undefined ? packet.rightWheel + value : value;
+            } else {
+                packet.leftWheel = packet.leftWheel != undefined ? packet.leftWheel + value : value;
+                packet.rightWheel = packet.rightWheel != undefined ? packet.rightWheel + value : value;
+            }
+            robot.boardCommand = 0;
+            robot.setLineTracerMode(0);
+            return script.callReturn();
+        },
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Roboid.hamster_left_wheel_by(%1, %3)",
+                textParams: [
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_left_wheel,"LEFT"],
+                            [Lang.Blocks.HAMSTER_right_wheel,"RIGHT"],
+                            [Lang.Blocks.HAMSTER_both_wheels,"BOTH"]
+                        ],
+                        "value": "LEFT",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    },
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    }
+                ],
+                params: [null, "LEFT"]
+            },
+            {
+                syntax: "Roboid.hamster_right_wheel_by(%1, %3)",
+                textParams: [
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_left_wheel,"LEFT"],
+                            [Lang.Blocks.HAMSTER_right_wheel,"RIGHT"],
+                            [Lang.Blocks.HAMSTER_both_wheels,"BOTH"]
+                        ],
+                        "value": "LEFT",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    },
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    }
+                ],
+                params: [null, "RIGHT"]
+            },
+            {
+                syntax: "Roboid.hamster_both_wheels_by(%1, %3)",
+                textParams: [
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_left_wheel,"LEFT"],
+                            [Lang.Blocks.HAMSTER_right_wheel,"RIGHT"],
+                            [Lang.Blocks.HAMSTER_both_wheels,"BOTH"]
+                        ],
+                        "value": "LEFT",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    },
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    }
+                ],
+                params: [null, "BOTH"]
+            }
+        ]}
+    },
+    "roboid_hamster_set_wheel_to": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.HAMSTER_left_wheel,"LEFT"],
+                    [Lang.Blocks.HAMSTER_right_wheel,"RIGHT"],
+                    [Lang.Blocks.HAMSTER_both_wheels,"BOTH"]
+                ],
+                "value": "LEFT",
+                "fontSize": 11
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "text",
+                    "params": [ "0" ]
+                },
+                null,
+                {
+                    "type": "text",
+                    "params": [ "30" ]
+                },
+                null
+            ],
+            "type": "roboid_hamster_set_wheel_to"
+        },
+        "paramsKeyMap": {
+            "INDEX": 0,
+            "DIRECTION": 1,
+            "VALUE": 2
+        },
+        "class": "hamster_wheel",
+        "isNotFor": [ "roboid" ],
+        "func": function (sprite, script) {
+            var index = script.getNumberValue('INDEX');
+            var robot = Entry.Roboid.getHamster(index);
+            var packet = robot.packet;
+            var direction = script.getField('DIRECTION');
+            var value = script.getNumberValue('VALUE');
+            packet.motion = 0;
+            if (direction == 'LEFT') {
+                packet.leftWheel = value;
+            } else if (direction == 'RIGHT') {
+                packet.rightWheel = value;
+            } else {
+                packet.leftWheel = value;
+                packet.rightWheel = value;
+            }
+            robot.boardCommand = 0;
+            robot.setLineTracerMode(0);
+            return script.callReturn();
+        },
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Roboid.hamster_left_wheel(%1, %3)",
+                textParams: [
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_left_wheel,"LEFT"],
+                            [Lang.Blocks.HAMSTER_right_wheel,"RIGHT"],
+                            [Lang.Blocks.HAMSTER_both_wheels,"BOTH"]
+                        ],
+                        "value": "LEFT",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    },
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    }
+                ],
+                params: [null, "LEFT"]
+            },
+            {
+                syntax: "Roboid.hamster_right_wheel(%1, %3)",
+                textParams: [
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_left_wheel,"LEFT"],
+                            [Lang.Blocks.HAMSTER_right_wheel,"RIGHT"],
+                            [Lang.Blocks.HAMSTER_both_wheels,"BOTH"]
+                        ],
+                        "value": "LEFT",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    },
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    }
+                ],
+                params: [null, "RIGHT"]
+            },
+            {
+                syntax: "Roboid.hamster_both_wheels(%1, %3)",
+                textParams: [
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_left_wheel,"LEFT"],
+                            [Lang.Blocks.HAMSTER_right_wheel,"RIGHT"],
+                            [Lang.Blocks.HAMSTER_both_wheels,"BOTH"]
+                        ],
+                        "value": "LEFT",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    },
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    }
+                ],
+                params: [null, "BOTH"]
+            }
+        ]}
+    },
+    "roboid_hamster_follow_line_using": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.HAMSTER_color_black,"BLACK"],
+                    [Lang.Blocks.HAMSTER_color_white,"WHITE"]
+                ],
+                "value": "BLACK",
+                "fontSize": 11
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.HAMSTER_left_floor_sensor,"LEFT"],
+                    [Lang.Blocks.HAMSTER_right_floor_sensor,"RIGHT"],
+                    [Lang.Blocks.HAMSTER_both_floor_sensors,"BOTH"]
+                ],
+                "value": "LEFT",
+                "fontSize": 11
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "text",
+                    "params": [ "0" ]
+                },
+                null, null, null
+            ],
+            "type": "roboid_hamster_follow_line_using"
+        },
+        "paramsKeyMap": {
+            "INDEX": 0,
+            "COLOR": 1,
+            "DIRECTION": 2
+        },
+        "class": "hamster_wheel",
+        "isNotFor": [ "roboid" ],
+        "func": function (sprite, script) {
+            var index = script.getNumberValue('INDEX');
+            var robot = Entry.Roboid.getHamster(index);
+            var packet = robot.packet;
+            var color = script.getField('COLOR');
+            var direction = script.getField('DIRECTION');
+
+            var mode = 1;
+            if (direction == 'RIGHT') mode = 2;
+            else if (direction == 'BOTH') mode = 3;
+            if (color == 'WHITE') mode += 7;
+
+            packet.motion = 0;
+            packet.leftWheel = 0;
+            packet.rightWheel = 0;
+            robot.boardCommand = 0;
+            robot.setLineTracerMode(mode);
+            return script.callReturn();
+        },
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Roboid.hamster_follow_line(%1, %2, %3)",
+                textParams: [
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_color_black,"BLACK"],
+                            [Lang.Blocks.HAMSTER_color_white,"WHITE"]
+                        ],
+                        "value": "BLACK",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_left_floor_sensor,"LEFT"],
+                            [Lang.Blocks.HAMSTER_right_floor_sensor,"RIGHT"],
+                            [Lang.Blocks.HAMSTER_both_floor_sensors,"BOTH"]
+                        ],
+                        "value": "LEFT",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    }
+                ]
+            }
+        ]}
+    },
+    "roboid_hamster_follow_line_until": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.HAMSTER_color_black,"BLACK"],
+                    [Lang.Blocks.HAMSTER_color_white,"WHITE"]
+                ],
+                "value": "BLACK",
+                "fontSize": 11
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.HAMSTER_left_floor_sensor,"LEFT"],
+                    [Lang.Blocks.HAMSTER_right_floor_sensor,"RIGHT"],
+                    [Lang.Blocks.HAMSTER_front,"FRONT"],
+                    [Lang.Blocks.HAMSTER_rear,"REAR"]
+                ],
+                "value": "LEFT",
+                "fontSize": 11
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "text",
+                    "params": [ "0" ]
+                },
+                null, null, null
+            ],
+            "type": "roboid_hamster_follow_line_until"
+        },
+        "paramsKeyMap": {
+            "INDEX": 0,
+            "COLOR": 1,
+            "DIRECTION": 2
+        },
+        "class": "hamster_wheel",
+        "isNotFor": [ "roboid" ],
+        "func": function (sprite, script) {
+            var index = script.getNumberValue('INDEX');
+            var robot = Entry.Roboid.getHamster(index);
+            var packet = robot.packet;
+            var pd = Entry.hw.portData;
+            var color = script.getField('COLOR');
+            var direction = script.getField('DIRECTION');
+
+            var mode = 4;
+            if (direction == 'RIGHT') mode = 5;
+            else if (direction == 'FRONT') mode = 6;
+            else if (direction == 'REAR') mode = 7;
+            if (color == 'WHITE') mode += 7;
+
+            if (!script.isStart) {
+                script.isStart = true;
+                packet.motion = 0;
+                packet.leftWheel = 0;
+                packet.rightWheel = 0;
+                robot.boardCommand = 0;
+                robot.setLineTracerMode(mode);
+                return script;
+            } else {
+                var lineTracerStateId = pd['hamster' + index + 'lineTracerStateId'];
+                if (lineTracerStateId != robot.lineTracerStateId) {
+                    robot.lineTracerStateId = lineTracerStateId;
+                    var lineTracerState = pd['hamster' + index + 'lineTracerState'];
+                    if (lineTracerState == 0x40) {
+                        delete script.isStart;
+                        Entry.engine.isContinue = false;
+                        robot.setLineTracerMode(0);
+                        return script.callReturn();
+                    }
+                }
+                return script;
+            }
+        },
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Roboid.hamster_follow_line_until(%1, %2, %3)",
+                textParams: [
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_color_black,"BLACK"],
+                            [Lang.Blocks.HAMSTER_color_white,"WHITE"]
+                        ],
+                        "value": "BLACK",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_left_floor_sensor,"LEFT"],
+                            [Lang.Blocks.HAMSTER_right_floor_sensor,"RIGHT"],
+                            [Lang.Blocks.HAMSTER_front,"FRONT"],
+                            [Lang.Blocks.HAMSTER_rear,"REAR"]
+                        ],
+                        "value": "LEFT",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    },
+                ]
+            }
+        ]}
+    },
+    "roboid_hamster_set_following_speed_to": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [ "1", "1" ],
+                    [ "2", "2" ],
+                    [ "3", "3" ],
+                    [ "4", "4" ],
+                    [ "5", "5" ],
+                    [ "6", "6" ],
+                    [ "7", "7" ],
+                    [ "8", "8" ]
+                ],
+                "value": "1",
+                "fontSize": 11
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "text",
+                    "params": [ "0" ]
+                },
+                "5", null
+            ],
+            "type": "roboid_hamster_set_following_speed_to"
+        },
+        "paramsKeyMap": {
+            "INDEX": 0,
+            "SPEED": 1
+        },
+        "class": "hamster_wheel",
+        "isNotFor": [ "roboid" ],
+        "func": function (sprite, script) {
+            var index = script.getNumberValue('INDEX');
+            var robot = Entry.Roboid.getHamster(index);
+            var packet = robot.packet;
+            packet.lineTracerSpeed = Number(script.getField("SPEED", script));
+            return script.callReturn();
+        },
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Roboid.hamster_line_tracer_speed(%1, %2)",
+                textParams: [
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [ "1", "1" ],
+                            [ "2", "2" ],
+                            [ "3", "3" ],
+                            [ "4", "4" ],
+                            [ "5", "5" ],
+                            [ "6", "6" ],
+                            [ "7", "7" ],
+                            [ "8", "8" ]
+                        ],
+                        "value": "1",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringOrNumberByValue
+                    }
+                ]
+            }
+        ]}
+    },
+    "roboid_hamster_stop": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "text",
+                    "params": [ "0" ]
+                },
+                null
+            ],
+            "type": "roboid_hamster_stop"
+        },
+        "paramsKeyMap": {
+            "INDEX": 0
+        },
+        "class": "hamster_wheel",
+        "isNotFor": [ "roboid" ],
+        "func": function (sprite, script) {
+            var index = script.getNumberValue('INDEX');
+            var robot = Entry.Roboid.getHamster(index);
+            var packet = robot.packet;
+            packet.motion = 0;
+            packet.leftWheel = 0;
+            packet.rightWheel = 0;
+            robot.boardCommand = 0;
+            robot.setLineTracerMode(0);
+            return script.callReturn();
+        },
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Roboid.hamster_stop(%1)",
+                textParams:[
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    }
+                ]
+            }
+
+        ]}
+    },
+    "roboid_hamster_set_led_to": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.HAMSTER_left_led,"LEFT"],
+                    [Lang.Blocks.HAMSTER_right_led,"RIGHT"],
+                    [Lang.Blocks.HAMSTER_both_leds,"BOTH"]
+                ],
+                "value": "LEFT",
+                "fontSize": 11
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.HAMSTER_color_red,"4"],
+                    [Lang.Blocks.HAMSTER_color_yellow,"6"],
+                    [Lang.Blocks.HAMSTER_color_green,"2"],
+                    [Lang.Blocks.HAMSTER_color_cyan,"3"],
+                    [Lang.Blocks.HAMSTER_color_blue,"1"],
+                    [Lang.Blocks.HAMSTER_color_magenta,"5"],
+                    [Lang.Blocks.HAMSTER_color_white,"7"]
+                ],
+                "value": "4",
+                "fontSize": 11
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "text",
+                    "params": [ "0" ]
+                },
+                null, null, null
+            ],
+            "type": "roboid_hamster_set_led_to"
+        },
+        "paramsKeyMap": {
+            "INDEX": 0,
+            "DIRECTION": 1,
+            "COLOR": 2
+        },
+        "class": "hamster_led",
+        "isNotFor": [ "roboid" ],
+        "func": function (sprite, script) {
+            var index = script.getNumberValue('INDEX');
+            var robot = Entry.Roboid.getHamster(index);
+            var packet = robot.packet;
+            var direction = script.getField("DIRECTION", script);
+            var color = Number(script.getField("COLOR", script));
+            if (direction == 'LEFT') {
+                packet.leftLed = color;
+            } else if (direction == 'RIGHT') {
+                packet.rightLed = color;
+            } else {
+                packet.leftLed = color;
+                packet.rightLed = color;
+            }
+            return script.callReturn();
+        },
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Roboid.hamster_left_led(%1, %3)",
+                textParams: [
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_left_led,"LEFT"],
+                            [Lang.Blocks.HAMSTER_right_led,"RIGHT"],
+                            [Lang.Blocks.HAMSTER_both_leds,"BOTH"]
+                        ],
+                        "value": "LEFT",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_color_red,"4"],
+                            [Lang.Blocks.HAMSTER_color_yellow,"6"],
+                            [Lang.Blocks.HAMSTER_color_green,"2"],
+                            [Lang.Blocks.HAMSTER_color_cyan,"3"],
+                            [Lang.Blocks.HAMSTER_color_blue,"1"],
+                            [Lang.Blocks.HAMSTER_color_magenta,"5"],
+                            [Lang.Blocks.HAMSTER_color_white,"7"]
+                        ],
+                        "value": "4",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnValuePartialUpperCase,
+                        codeMap: "Entry.CodeMap.Hamster.colors"
+                    }
+                ],
+                params: [null, "LEFT"]
+            },
+            {
+                syntax: "Roboid.hamster_right_led(%1, %3)",
+                textParams: [
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_left_led,"LEFT"],
+                            [Lang.Blocks.HAMSTER_right_led,"RIGHT"],
+                            [Lang.Blocks.HAMSTER_both_leds,"BOTH"]
+                        ],
+                        "value": "LEFT",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_color_red,"4"],
+                            [Lang.Blocks.HAMSTER_color_yellow,"6"],
+                            [Lang.Blocks.HAMSTER_color_green,"2"],
+                            [Lang.Blocks.HAMSTER_color_cyan,"3"],
+                            [Lang.Blocks.HAMSTER_color_blue,"1"],
+                            [Lang.Blocks.HAMSTER_color_magenta,"5"],
+                            [Lang.Blocks.HAMSTER_color_white,"7"]
+                        ],
+                        "value": "4",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnValuePartialUpperCase,
+                        codeMap: "Entry.CodeMap.Hamster.colors"
+                    }
+                ],
+                params: [null, "RIGHT"]
+            },
+            {
+                syntax: "Roboid.hamster_both_leds(%1, %3)",
+                textParams: [
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_left_led,"LEFT"],
+                            [Lang.Blocks.HAMSTER_right_led,"RIGHT"],
+                            [Lang.Blocks.HAMSTER_both_leds,"BOTH"]
+                        ],
+                        "value": "LEFT",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_color_red,"4"],
+                            [Lang.Blocks.HAMSTER_color_yellow,"6"],
+                            [Lang.Blocks.HAMSTER_color_green,"2"],
+                            [Lang.Blocks.HAMSTER_color_cyan,"3"],
+                            [Lang.Blocks.HAMSTER_color_blue,"1"],
+                            [Lang.Blocks.HAMSTER_color_magenta,"5"],
+                            [Lang.Blocks.HAMSTER_color_white,"7"]
+                        ],
+                        "value": "4",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnValuePartialUpperCase,
+                        codeMap: "Entry.CodeMap.Hamster.colors"
+                    }
+                ],
+                params: [null, "BOTH"]
+            }
+        ]}
+    },
+    "roboid_hamster_clear_led": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.HAMSTER_left_led,"LEFT"],
+                    [Lang.Blocks.HAMSTER_right_led,"RIGHT"],
+                    [Lang.Blocks.HAMSTER_both_leds,"BOTH"]
+                ],
+                "value": "LEFT",
+                "fontSize": 11
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "text",
+                    "params": [ "0" ]
+                },
+                null, null
+            ],
+            "type": "roboid_hamster_clear_led"
+        },
+        "paramsKeyMap": {
+            "INDEX": 0,
+            "DIRECTION": 1
+        },
+        "class": "hamster_led",
+        "isNotFor": [ "roboid" ],
+        "func": function (sprite, script) {
+            var index = script.getNumberValue('INDEX');
+            var robot = Entry.Roboid.getHamster(index);
+            var packet = robot.packet;
+            var direction = script.getField("DIRECTION", script);
+            if (direction == 'LEFT') {
+                packet.leftLed = 0;
+            } else if (direction == 'RIGHT') {
+                packet.rightLed = 0;
+            } else {
+                packet.leftLed = 0;
+                packet.rightLed = 0;
+            }
+            return script.callReturn();
+        },
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Roboid.hamster_left_led_off(%1)",
+                textParams: [
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_left_led,"LEFT"],
+                            [Lang.Blocks.HAMSTER_right_led,"RIGHT"],
+                            [Lang.Blocks.HAMSTER_both_leds,"BOTH"]
+                        ],
+                        "value": "LEFT",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    }
+                ],
+                params: [null, "LEFT"]
+            },
+            {
+                syntax: "Roboid.hamster_right_led_off(%1)",
+                textParams: [
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_left_led,"LEFT"],
+                            [Lang.Blocks.HAMSTER_right_led,"RIGHT"],
+                            [Lang.Blocks.HAMSTER_both_leds,"BOTH"]
+                        ],
+                        "value": "LEFT",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    }
+                ],
+                params: [null, "RIGHT"]
+            },
+            {
+                syntax: "Roboid.hamster_both_leds_off(%1)",
+                textParams: [
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_left_led,"LEFT"],
+                            [Lang.Blocks.HAMSTER_right_led,"RIGHT"],
+                            [Lang.Blocks.HAMSTER_both_leds,"BOTH"]
+                        ],
+                        "value": "LEFT",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    }
+                ],
+                params: [null, "BOTH"]
+            }
+        ]}
+    },
+    "roboid_hamster_beep": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "text",
+                    "params": [ "0" ]
+                },
+                null
+            ],
+            "type": "roboid_hamster_beep"
+        },
+        "paramsKeyMap": {
+            "INDEX": 0
+        },
+        "class": "hamster_buzzer",
+        "isNotFor": [ "roboid" ],
+        "func": function (sprite, script) {
+            var index = script.getNumberValue('INDEX');
+            var robot = Entry.Roboid.getHamster(index);
+            var packet = robot.packet;
+            if (!script.isStart) {
+                script.isStart = true;
+                script.timeFlag = 1;
+                packet.buzzer = 440;
+                packet.note = 0;
+                var timeValue = 0.2 * 1000;
+                var timer = setTimeout(function() {
+                    script.timeFlag = 0;
+                    Entry.Roboid.removeTimeout(timer);
+                }, timeValue);
+                Entry.Roboid.timeouts.push(timer);
+                return script;
+            } else if (script.timeFlag == 1) {
+                return script;
+            } else {
+                delete script.isStart;
+                delete script.timeFlag;
+                Entry.engine.isContinue = false;
+                packet.buzzer = 0;
+                return script.callReturn();
+            }
+        },
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Roboid.hamster_beep(%1)",
+                textParams:[
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    }
+                ]
+            }
+        ]}
+    },
+    "roboid_hamster_change_buzzer_by": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "text",
+                    "params": [ "0" ]
+                },
+                {
+                    "type": "text",
+                    "params": [ "10" ]
+                },
+                null
+            ],
+            "type": "roboid_hamster_change_buzzer_by"
+        },
+        "paramsKeyMap": {
+            "INDEX": 0,
+            "VALUE": 1
+        },
+        "class": "hamster_buzzer",
+        "isNotFor": [ "roboid" ],
+        "func": function (sprite, script) {
+            var index = script.getNumberValue('INDEX');
+            var robot = Entry.Roboid.getHamster(index);
+            var packet = robot.packet;
+            var value = script.getNumberValue('VALUE');
+            packet.buzzer = packet.buzzer != undefined ? packet.buzzer + value : value;
+            packet.note = 0;
+            return script.callReturn();
+        },
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Roboid.hamster_buzzer_by(%1, %2)",
+                textParams:[
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    }
+                ]
+            }
+        ]}
+    },
+    "roboid_hamster_set_buzzer_to": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "text",
+                    "params": [ "0" ]
+                },
+                {
+                    "type": "text",
+                    "params": [ "1000" ]
+                },
+                null
+            ],
+            "type": "roboid_hamster_set_buzzer_to"
+        },
+        "paramsKeyMap": {
+            "INDEX": 0,
+            "VALUE": 1
+        },
+        "class": "hamster_buzzer",
+        "isNotFor": [ "roboid" ],
+        "func": function (sprite, script) {
+            var index = script.getNumberValue('INDEX');
+            var robot = Entry.Roboid.getHamster(index);
+            var packet = robot.packet;
+            packet.buzzer = script.getNumberValue('VALUE');
+            packet.note = 0;
+            return script.callReturn();
+        },
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Roboid.hamster_buzzer(%1, %2)"
+            }
+        ]}
+    },
+    "roboid_hamster_clear_buzzer": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "text",
+                    "params": [ "0" ]
+                },
+                null
+            ],
+            "type": "roboid_hamster_clear_buzzer"
+        },
+        "paramsKeyMap": {
+            "INDEX": 0
+        },
+        "class": "hamster_buzzer",
+        "isNotFor": [ "roboid" ],
+        "func": function (sprite, script) {
+            var index = script.getNumberValue('INDEX');
+            var robot = Entry.Roboid.getHamster(index);
+            var packet = robot.packet;
+            packet.buzzer = 0;
+            packet.note = 0;
+            return script.callReturn();
+        },
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Roboid.hamster_buzzer_off(%1)"
+            }
+        ]}
+    },
+    "roboid_hamster_play_note_for": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.ALBERT_note_c + '',"4"],
+                    [Lang.Blocks.ALBERT_note_c + '#',"5"],
+                    [Lang.Blocks.ALBERT_note_d + '',"6"],
+                    [Lang.Blocks.ALBERT_note_e + 'b',"7"],
+                    [Lang.Blocks.ALBERT_note_e + '',"8"],
+                    [Lang.Blocks.ALBERT_note_f + '',"9"],
+                    [Lang.Blocks.ALBERT_note_f + '#',"10"],
+                    [Lang.Blocks.ALBERT_note_g + '',"11"],
+                    [Lang.Blocks.ALBERT_note_g + '#',"12"],
+                    [Lang.Blocks.ALBERT_note_a + '',"13"],
+                    [Lang.Blocks.ALBERT_note_b + 'b',"14"],
+                    [Lang.Blocks.ALBERT_note_b + '',"15"]
+                ],
+                "value": "4",
+                "fontSize": 11
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [ "1", "1" ],
+                    [ "2", "2" ],
+                    [ "3", "3" ],
+                    [ "4", "4" ],
+                    [ "5", "5" ],
+                    [ "6", "6" ],
+                    [ "7", "7" ]
+                ],
+                "value": "1",
+                "fontSize": 11
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "text",
+                    "params": [ "0" ]
+                },
+                null,
+                "4",
+                {
+                    "type": "text",
+                    "params": [ "0.5" ]
+                },
+                null
+            ],
+            "type": "roboid_hamster_play_note_for"
+        },
+        "paramsKeyMap": {
+            "INDEX": 0,
+            "NOTE": 1,
+            "OCTAVE": 2,
+            "VALUE": 3
+        },
+        "class": "hamster_buzzer",
+        "isNotFor": [ "roboid" ],
+        "func": function (sprite, script) {
+            var index = script.getNumberValue('INDEX');
+            var robot = Entry.Roboid.getHamster(index);
+            var packet = robot.packet;
+            if (!script.isStart) {
+                var note = script.getNumberField("NOTE", script);
+                var octave = script.getNumberField("OCTAVE", script);
+                var beat = script.getNumberValue("VALUE", script);
+                note += (octave-1)*12;
+                var timeValue = beat*60*1000/robot.tempo;
+                script.isStart = true;
+                script.timeFlag = 1;
+                packet.buzzer = 0;
+                packet.note = note;
+                if (timeValue > 100) {
+                    var timer1 = setTimeout(function() {
+                        packet.note = 0;
+                        Entry.Roboid.removeTimeout(timer1);
+                    }, timeValue-100);
+                    Entry.Roboid.timeouts.push(timer1);
+                }
+                var timer2 = setTimeout(function() {
+                    script.timeFlag = 0;
+                    Entry.Roboid.removeTimeout(timer2);
+                }, timeValue);
+                Entry.Roboid.timeouts.push(timer2);
+                return script;
+            } else if (script.timeFlag == 1) {
+                return script;
+            } else {
+                delete script.isStart;
+                delete script.timeFlag;
+                Entry.engine.isContinue = false;
+                packet.note = 0;
+                return script.callReturn();
+            }
+        },
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Roboid.hamster_note(%1, %2, %3, %4)",
+                textParams: [
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.ALBERT_note_c + '',"4"],
+                            [Lang.Blocks.ALBERT_note_c + '#',"5"],
+                            [Lang.Blocks.ALBERT_note_d + '',"6"],
+                            [Lang.Blocks.ALBERT_note_e + 'b',"7"],
+                            [Lang.Blocks.ALBERT_note_e + '',"8"],
+                            [Lang.Blocks.ALBERT_note_f + '',"9"],
+                            [Lang.Blocks.ALBERT_note_f + '#',"10"],
+                            [Lang.Blocks.ALBERT_note_g + '',"11"],
+                            [Lang.Blocks.ALBERT_note_g + '#',"12"],
+                            [Lang.Blocks.ALBERT_note_a + '',"13"],
+                            [Lang.Blocks.ALBERT_note_b + 'b',"14"],
+                            [Lang.Blocks.ALBERT_note_b + '',"15"]
+                        ],
+                        "value": "4",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnValuePartialUpperCase,
+                        codeMap: "Entry.CodeMap.Hamster.hamster_play_note_for[0]"
+
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [ "1", "1" ],
+                            [ "2", "2" ],
+                            [ "3", "3" ],
+                            [ "4", "4" ],
+                            [ "5", "5" ],
+                            [ "6", "6" ],
+                            [ "7", "7" ]
+                        ],
+                        "value": "1",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringOrNumberByValue
+                    },
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    }
+                ]
+            },
+        ]}
+    },
+    "roboid_hamster_rest_for": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "text",
+                    "params": [ "0" ]
+                },
+                {
+                    "type": "text",
+                    "params": [ "0.25" ]
+                },
+                null
+            ],
+            "type": "roboid_hamster_rest_for"
+        },
+        "paramsKeyMap": {
+            "INDEX": 0,
+            "VALUE": 1
+        },
+        "class": "hamster_buzzer",
+        "isNotFor": [ "roboid" ],
+        "func": function (sprite, script) {
+            var index = script.getNumberValue('INDEX');
+            var robot = Entry.Roboid.getHamster(index);
+            var packet = robot.packet;
+            if (!script.isStart) {
+                script.isStart = true;
+                script.timeFlag = 1;
+                var timeValue = script.getNumberValue('VALUE');
+                timeValue = timeValue*60*1000/robot.tempo;
+                packet.buzzer = 0;
+                packet.note = 0;
+                var timer = setTimeout(function() {
+                    script.timeFlag = 0;
+                    Entry.Roboid.removeTimeout(timer);
+                }, timeValue);
+                Entry.Roboid.timeouts.push(timer);
+                return script;
+            } else if (script.timeFlag == 1) {
+                return script;
+            } else {
+                delete script.isStart;
+                delete script.timeFlag;
+                Entry.engine.isContinue = false;
+                return script.callReturn();
+            }
+        },
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Roboid.hamster_note_off(%1, %2)",
+                textParams: [
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    }
+                ]
+            }
+        ]}
+    },
+    "roboid_hamster_change_tempo_by": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "text",
+                    "params": [ "0" ]
+                },
+                {
+                    "type": "text",
+                    "params": [ "20" ]
+                },
+                null
+            ],
+            "type": "roboid_hamster_change_tempo_by"
+        },
+        "paramsKeyMap": {
+            "INDEX": 0,
+            "VALUE": 1
+        },
+        "class": "hamster_buzzer",
+        "isNotFor": [ "roboid" ],
+        "func": function (sprite, script) {
+            var index = script.getNumberValue('INDEX');
+            var robot = Entry.Roboid.getHamster(index);
+            var packet = robot.packet;
+            robot.tempo += script.getNumberValue('VALUE');
+            if (robot.tempo < 1) robot.tempo = 1;
+            return script.callReturn();
+        },
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Roboid.hamster_tempo_by(%1, %2)",
+                textParams: [
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    }
+                ]
+            }
+        ]}
+    },
+    "roboid_hamster_set_tempo_to": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "text",
+                    "params": [ "0" ]
+                },
+                {
+                    "type": "text",
+                    "params": [ "60" ]
+                },
+                null
+            ],
+            "type": "roboid_hamster_set_tempo_to"
+        },
+        "paramsKeyMap": {
+            "INDEX": 0,
+            "VALUE": 1
+        },
+        "class": "hamster_buzzer",
+        "isNotFor": [ "roboid" ],
+        "func": function (sprite, script) {
+            var index = script.getNumberValue('INDEX');
+            var robot = Entry.Roboid.getHamster(index);
+            var packet = robot.packet;
+            robot.tempo = script.getNumberValue('VALUE');
+            if (robot.tempo < 1) robot.tempo = 1;
+            return script.callReturn();
+        },
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Roboid.hamster_tempo(%1, %2)",
+                textParams: [
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    }
+                ]
+            }
+        ]}
+    },
+    "roboid_hamster_set_port_to": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.HAMSTER_port_a, "A"],
+                    [Lang.Blocks.HAMSTER_port_b, "B"],
+                    [Lang.Blocks.HAMSTER_port_ab, "AB"]
+                ],
+                "value": "A",
+                "fontSize": 11
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.HAMSTER_analog_input, "1"],
+                    [Lang.Blocks.HAMSTER_digital_input, "2"],
+                    [Lang.Blocks.HAMSTER_servo_output, "9"],
+                    [Lang.Blocks.HAMSTER_pwm_output, "10"],
+                    [Lang.Blocks.HAMSTER_digital_output, "11"]
+                ],
+                "value": "1",
+                "fontSize": 11
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "text",
+                    "params": [ "0" ]
+                },
+                null, null, null
+            ],
+            "type": "roboid_hamster_set_port_to"
+        },
+        "paramsKeyMap": {
+            "INDEX": 0,
+            "PORT": 1,
+            "MODE": 2
+        },
+        "class": "hamster_port",
+        "isNotFor": [ "roboid" ],
+        "func": function (sprite, script) {
+            var index = script.getNumberValue('INDEX');
+            var robot = Entry.Roboid.getHamster(index);
+            var packet = robot.packet;
+            var port = script.getField("PORT", script);
+            var mode = Number(script.getField("MODE", script)) - 1;
+            if (port == 'A') {
+                packet.ioModeA = mode;
+            } else if (port == 'B') {
+                packet.ioModeB = mode;
+            } else {
+                packet.ioModeA = mode;
+                packet.ioModeB = mode;
+            }
+            return script.callReturn();
+        },
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Roboid.hamster_io_mode_a(%1, %3)",
+                textParams: [
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        converter: Entry.block.converters.returnStringValue
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_analog_input, "1"],
+                            [Lang.Blocks.HAMSTER_digital_input, "2"],
+                            [Lang.Blocks.HAMSTER_servo_output, "9"],
+                            [Lang.Blocks.HAMSTER_pwm_output, "10"],
+                            [Lang.Blocks.HAMSTER_digital_output, "11"]
+                        ],
+                        "value": "1",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnValuePartialUpperCase,
+                        codeMap: "Entry.CodeMap.Hamster.modes"
+                    }
+                ],
+                params: [null, "A"]
+            },
+            {
+                syntax: "Roboid.hamster_io_mode_b(%1, %3)",
+                textParams: [
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        converter: Entry.block.converters.returnStringValue
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_analog_input, "1"],
+                            [Lang.Blocks.HAMSTER_digital_input, "2"],
+                            [Lang.Blocks.HAMSTER_servo_output, "9"],
+                            [Lang.Blocks.HAMSTER_pwm_output, "10"],
+                            [Lang.Blocks.HAMSTER_digital_output, "11"]
+                        ],
+                        "value": "1",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnValuePartialUpperCase,
+                        codeMap: "Entry.CodeMap.Hamster.modes"
+                    }
+                ],
+                params: [null, "B"]
+            },
+            {
+                syntax: "Roboid.hamster_io_modes(%1, %3)",
+                textParams: [
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        converter: Entry.block.converters.returnStringValue
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_analog_input, "1"],
+                            [Lang.Blocks.HAMSTER_digital_input, "2"],
+                            [Lang.Blocks.HAMSTER_servo_output, "9"],
+                            [Lang.Blocks.HAMSTER_pwm_output, "10"],
+                            [Lang.Blocks.HAMSTER_digital_output, "11"]
+                        ],
+                        "value": "1",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnValuePartialUpperCase,
+                        codeMap: "Entry.CodeMap.Hamster.modes"
+                    }
+                ],
+                params: [null, "AB"]
+            }
+        ]}
+    },
+    "roboid_hamster_change_output_by": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.HAMSTER_port_a, "A"],
+                    [Lang.Blocks.HAMSTER_port_b, "B"],
+                    [Lang.Blocks.HAMSTER_port_ab, "AB"]
+                ],
+                "value": "A",
+                "fontSize": 11
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "text",
+                    "params": [ "0" ]
+                },
+                null,
+                {
+                    "type": "text",
+                    "params": [ "10" ]
+                },
+                null
+            ],
+            "type": "roboid_hamster_change_output_by"
+        },
+        "paramsKeyMap": {
+            "INDEX": 0,
+            "PORT": 1,
+            "VALUE": 2
+        },
+        "class": "hamster_port",
+        "isNotFor": [ "roboid" ],
+        "func": function (sprite, script) {
+            var index = script.getNumberValue('INDEX');
+            var robot = Entry.Roboid.getHamster(index);
+            var packet = robot.packet;
+            var port = script.getField('PORT');
+            var value = script.getNumberValue('VALUE');
+            if (port == 'A') {
+                packet.outputA = packet.outputA != undefined ? packet.outputA + value : value;
+            } else if (port == 'B') {
+                packet.outputB = packet.outputB != undefined ? packet.outputB + value : value;
+            } else {
+                packet.outputA = packet.outputA != undefined ? packet.outputA + value : value;
+                packet.outputB = packet.outputB != undefined ? packet.outputB + value : value;
+            }
+            return script.callReturn();
+        },
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Roboid.hamster_output_a_by(%1, %3)",
+                textParams: [
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_port_a, "A"],
+                            [Lang.Blocks.HAMSTER_port_b, "B"],
+                            [Lang.Blocks.HAMSTER_port_ab, "AB"]
+                        ],
+                        "value": "A",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    },
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    }
+                ],
+                params: [null, "A"]
+            },
+            {
+                syntax: "Roboid.hamster_output_b_by(%1, %3)",
+                textParams: [
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_port_a, "A"],
+                            [Lang.Blocks.HAMSTER_port_b, "B"],
+                            [Lang.Blocks.HAMSTER_port_ab, "AB"]
+                        ],
+                        "value": "A",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    },
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    }
+                ],
+                params: [null, "B"]
+            },
+            {
+                syntax: "Roboid.hamster_outputs_by(%1, %3)",
+                textParams: [
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_port_a, "A"],
+                            [Lang.Blocks.HAMSTER_port_b, "B"],
+                            [Lang.Blocks.HAMSTER_port_ab, "AB"]
+                        ],
+                        "value": "A",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    },
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    }
+                ],
+                params: [null, "AB"]
+            }
+        ]}
+    },
+    "roboid_hamster_set_output_to": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.HAMSTER_port_a, "A"],
+                    [Lang.Blocks.HAMSTER_port_b, "B"],
+                    [Lang.Blocks.HAMSTER_port_ab, "AB"]
+                ],
+                "value": "A",
+                "fontSize": 11
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "text",
+                    "params": [ "0" ]
+                },
+                null,
+                {
+                    "type": "text",
+                    "params": [ "100" ]
+                },
+                null
+            ],
+            "type": "roboid_hamster_set_output_to"
+        },
+        "paramsKeyMap": {
+            "INDEX": 0,
+            "PORT": 1,
+            "VALUE": 2
+        },
+        "class": "hamster_port",
+        "isNotFor": [ "roboid" ],
+        "func": function (sprite, script) {
+            var index = script.getNumberValue('INDEX');
+            var robot = Entry.Roboid.getHamster(index);
+            var packet = robot.packet;
+            var port = script.getField('PORT');
+            var value = script.getNumberValue('VALUE');
+            if (port == 'A') {
+                packet.outputA = value;
+            } else if (port == 'B') {
+                packet.outputB = value;
+            } else {
+                packet.outputA = value;
+                packet.outputB = value
+            }
+            return script.callReturn();
+        },
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Roboid.hamster_output_a(%1, %3)",
+                textParams: [
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_port_a, "A"],
+                            [Lang.Blocks.HAMSTER_port_b, "B"],
+                            [Lang.Blocks.HAMSTER_port_ab, "AB"]
+                        ],
+                        "value": "A",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    },
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    }
+                ],
+                params: [null, "A"]
+            },
+            {
+                syntax: "Roboid.hamster_output_b(%1, %3)",
+                textParams: [
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_port_a, "A"],
+                            [Lang.Blocks.HAMSTER_port_b, "B"],
+                            [Lang.Blocks.HAMSTER_port_ab, "AB"]
+                        ],
+                        "value": "A",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    },
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    }
+                ],
+                params: [null, "B"]
+            },
+            {
+                syntax: "Roboid.hamster_outputs(%1, %3)",
+                textParams: [
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_port_a, "A"],
+                            [Lang.Blocks.HAMSTER_port_b, "B"],
+                            [Lang.Blocks.HAMSTER_port_ab, "AB"]
+                        ],
+                        "value": "A",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    },
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    }
+                ],
+                params: [null, "AB"]
+            }
+        ]}
+    },
+    "roboid_turtle_touching_color": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_boolean_field",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.ROBOID_color_red, "2"],
+                    [Lang.Blocks.ROBOID_color_orange, "3"],
+                    [Lang.Blocks.ROBOID_color_yellow, "4"],
+                    [Lang.Blocks.ROBOID_color_green, "5"],
+                    [Lang.Blocks.ROBOID_color_sky_blue, "6"],
+                    [Lang.Blocks.ROBOID_color_blue, "7"],
+                    [Lang.Blocks.ROBOID_color_purple, "8"],
+                    [Lang.Blocks.ROBOID_color_black, "1"],
+                    [Lang.Blocks.ROBOID_color_white, "9"]
+                ],
+                "value": "2",
+                "fontSize": 11
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "text",
+                    "params": [ "0" ]
+                },
+                null
+            ],
+            "type": "roboid_turtle_touching_color"
+        },
+        "paramsKeyMap": {
+            "INDEX": 0,
+            "COLOR": 1
+        },
+        "class": "turtle_sensor",
+        "isNotFor": [ "roboid" ],
+        "func": function (sprite, script) {
+            var pd = Entry.hw.portData;
+            var index = script.getNumberValue('INDEX');
+            return (Number(script.getField("COLOR")) - 1) === pd['turtle' + index + 'colorNumber'];
+        },
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Roboid.turtle_touching(%1, %2)",
+                blockType: "param",
+                textParams: [
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.ROBOID_color_red, "2"],
+                            [Lang.Blocks.ROBOID_color_orange, "3"],
+                            [Lang.Blocks.ROBOID_color_yellow, "4"],
+                            [Lang.Blocks.ROBOID_color_green, "5"],
+                            [Lang.Blocks.ROBOID_color_sky_blue, "6"],
+                            [Lang.Blocks.ROBOID_color_blue, "7"],
+                            [Lang.Blocks.ROBOID_color_purple, "8"],
+                            [Lang.Blocks.ROBOID_color_black, "1"],
+                            [Lang.Blocks.ROBOID_color_white, "9"]
+                        ],
+                        "value": "2",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnValuePartialUpperCase,
+                        codeMap: "Entry.CodeMap.Turtle.touching_colors"
+                    }
+                ]
+            }
+        ]}
+    },
+    "roboid_turtle_is_color_pattern": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_boolean_field",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.ROBOID_color_red, "1"],
+                    [Lang.Blocks.ROBOID_color_yellow, "3"],
+                    [Lang.Blocks.ROBOID_color_green, "4"],
+                    [Lang.Blocks.ROBOID_color_sky_blue, "5"],
+                    [Lang.Blocks.ROBOID_color_blue, "6"],
+                    [Lang.Blocks.ROBOID_color_purple, "7"]
+                ],
+                "value": "1",
+                "fontSize": 11
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.ROBOID_color_red, "1"],
+                    [Lang.Blocks.ROBOID_color_yellow, "3"],
+                    [Lang.Blocks.ROBOID_color_green, "4"],
+                    [Lang.Blocks.ROBOID_color_sky_blue, "5"],
+                    [Lang.Blocks.ROBOID_color_blue, "6"],
+                    [Lang.Blocks.ROBOID_color_purple, "7"]
+                ],
+                "value": "3",
+                "fontSize": 11
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "text",
+                    "params": [ "0" ]
+                },
+                null, null
+            ],
+            "type": "roboid_turtle_is_color_pattern"
+        },
+        "paramsKeyMap": {
+            "INDEX": 0,
+            "COLOR1": 1,
+            "COLOR2": 2
+        },
+        "class": "turtle_sensor",
+        "isNotFor": [ "roboid" ],
+        "func": function (sprite, script) {
+            var pd = Entry.hw.portData;
+            var index = script.getNumberValue('INDEX');
+            return (Number(script.getField("COLOR1")) * 10 + Number(script.getField("COLOR2"))) === pd['turtle' + index + 'colorPattern'];
+        },
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Roboid.turtle_match_color_pattern(%1, %2, %3)",
+                blockType: "param",
+                textParams: [
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.ROBOID_color_red, "1"],
+                            [Lang.Blocks.ROBOID_color_yellow, "3"],
+                            [Lang.Blocks.ROBOID_color_green, "4"],
+                            [Lang.Blocks.ROBOID_color_sky_blue, "5"],
+                            [Lang.Blocks.ROBOID_color_blue, "6"],
+                            [Lang.Blocks.ROBOID_color_purple, "7"]
+                        ],
+                        "value": "1",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnValuePartialUpperCase,
+                        codeMap: "Entry.CodeMap.Turtle.pattern_colors"
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.ROBOID_color_red, "1"],
+                            [Lang.Blocks.ROBOID_color_yellow, "3"],
+                            [Lang.Blocks.ROBOID_color_green, "4"],
+                            [Lang.Blocks.ROBOID_color_sky_blue, "5"],
+                            [Lang.Blocks.ROBOID_color_blue, "6"],
+                            [Lang.Blocks.ROBOID_color_purple, "7"]
+                        ],
+                        "value": "3",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnValuePartialUpperCase,
+                        codeMap: "Entry.CodeMap.Turtle.pattern_colors"
+                    }
+                ]
+            }
+        ]}
+    },
+    "roboid_turtle_button_state": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_boolean_field",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.ROBOID_clicked, "clicked"],
+                    [Lang.Blocks.ROBOID_double_clicked, "doubleClicked"],
+                    [Lang.Blocks.ROBOID_long_pressed, "longPressed"]
+                ],
+                "value": "clicked",
+                "fontSize": 11
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "text",
+                    "params": [ "0" ]
+                },
+                null
+            ],
+            "type": "roboid_turtle_button_state"
+        },
+        "paramsKeyMap": {
+            "INDEX": 0,
+            "EVENT": 1
+        },
+        "class": "turtle_sensor",
+        "isNotFor": [ "roboid" ],
+        "func": function (sprite, script) {
+            var pd = Entry.hw.portData;
+            var index = script.getNumberValue('INDEX');
+            var event = script.getField("EVENT");
+            return pd['turtle' + index + event] === 1;
+        },
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Roboid.turtle_clicked(%1)",
+                blockType: "param",
+                textParams: [
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.ROBOID_clicked, "clicked"],
+                            [Lang.Blocks.ROBOID_double_clicked, "doubleClicked"],
+                            [Lang.Blocks.ROBOID_long_pressed, "longPressed"]
+                        ],
+                        "value": "clicked",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    }
+                ],
+                params: [null, "clicked"]
+            },
+            {
+                syntax: "Roboid.turtle_double_clicked(%1)",
+                blockType: "param",
+                textParams: [
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.ROBOID_clicked, "clicked"],
+                            [Lang.Blocks.ROBOID_double_clicked, "doubleClicked"],
+                            [Lang.Blocks.ROBOID_long_pressed, "longPressed"]
+                        ],
+                        "value": "clicked",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    }
+                ],
+                params: [null, "doubleClicked"]
+            },
+            {
+                syntax: "Roboid.turtle_long_pressed(%1)",
+                blockType: "param",
+                textParams: [
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.ROBOID_clicked, "clicked"],
+                            [Lang.Blocks.ROBOID_double_clicked, "doubleClicked"],
+                            [Lang.Blocks.ROBOID_long_pressed, "longPressed"]
+                        ],
+                        "value": "clicked",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    }
+                ],
+                params: [null, "longPressed"]
+            }
+        ]}
+    },
+    "roboid_turtle_value": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.ROBOID_color_number, "colorNumber"],
+                    [Lang.Blocks.ROBOID_color_pattern, "colorPattern"],
+                    [Lang.Blocks.ROBOID_floor, "floor"],
+                    [Lang.Blocks.ROBOID_button, "button"],
+                    [Lang.Blocks.ROBOID_acceleration_x, "accelerationX"],
+                    [Lang.Blocks.ROBOID_acceleration_y, "accelerationY"],
+                    [Lang.Blocks.ROBOID_acceleration_z, "accelerationZ"]
+                ],
+                "value": "colorNumber",
+                "fontSize": 11
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "text",
+                    "params": [ "0" ]
+                },
+                null
+            ],
+            "type": "roboid_turtle_value"
+        },
+        "paramsKeyMap": {
+            "INDEX": 0,
+            "DEVICE": 1
+        },
+        "class": "turtle_sensor",
+        "isNotFor": [ "roboid" ],
+        "func": function (sprite, script) {
+            var pd = Entry.hw.portData;
+            var index = script.getNumberValue('INDEX');
+            var dev = script.getField("DEVICE");
+            var value = pd['turtle' + index + dev];
+            if(typeof value !== 'number') value = Entry.Roboid.TURTLE_SENSOR[dev];
+            return value;
+        },
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Roboid.turtle_color_number(%1)",
+                blockType: "param",
+                textParams:[
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.ROBOID_color_number, "colorNumber"],
+                            [Lang.Blocks.ROBOID_color_pattern, "colorPattern"],
+                            [Lang.Blocks.ROBOID_floor, "floor"],
+                            [Lang.Blocks.ROBOID_button, "button"],
+                            [Lang.Blocks.ROBOID_acceleration_x, "accelerationX"],
+                            [Lang.Blocks.ROBOID_acceleration_y, "accelerationY"],
+                            [Lang.Blocks.ROBOID_acceleration_z, "accelerationZ"]
+                        ],
+                        "value": "colorNumber",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    }
+                ],
+                params: [null, "colorNumber"]
+            },
+            {
+                syntax: "Roboid.turtle_color_pattern(%1)",
+                blockType: "param",
+                textParams:[
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.ROBOID_color_number, "colorNumber"],
+                            [Lang.Blocks.ROBOID_color_pattern, "colorPattern"],
+                            [Lang.Blocks.ROBOID_floor, "floor"],
+                            [Lang.Blocks.ROBOID_button, "button"],
+                            [Lang.Blocks.ROBOID_acceleration_x, "accelerationX"],
+                            [Lang.Blocks.ROBOID_acceleration_y, "accelerationY"],
+                            [Lang.Blocks.ROBOID_acceleration_z, "accelerationZ"]
+                        ],
+                        "value": "colorNumber",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    }
+                ],
+                params: [null, "colorPattern"]
+            },
+            {
+                syntax: "Roboid.turtle_floor(%1)",
+                blockType: "param",
+                textParams:[
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.ROBOID_color_number, "colorNumber"],
+                            [Lang.Blocks.ROBOID_color_pattern, "colorPattern"],
+                            [Lang.Blocks.ROBOID_floor, "floor"],
+                            [Lang.Blocks.ROBOID_button, "button"],
+                            [Lang.Blocks.ROBOID_acceleration_x, "accelerationX"],
+                            [Lang.Blocks.ROBOID_acceleration_y, "accelerationY"],
+                            [Lang.Blocks.ROBOID_acceleration_z, "accelerationZ"]
+                        ],
+                        "value": "colorNumber",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    }
+                ],
+                params: [null, "floor"]
+            },
+            {
+                syntax: "Roboid.turtle_button(%1)",
+                blockType: "param",
+                textParams:[
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.ROBOID_color_number, "colorNumber"],
+                            [Lang.Blocks.ROBOID_color_pattern, "colorPattern"],
+                            [Lang.Blocks.ROBOID_floor, "floor"],
+                            [Lang.Blocks.ROBOID_button, "button"],
+                            [Lang.Blocks.ROBOID_acceleration_x, "accelerationX"],
+                            [Lang.Blocks.ROBOID_acceleration_y, "accelerationY"],
+                            [Lang.Blocks.ROBOID_acceleration_z, "accelerationZ"]
+                        ],
+                        "value": "colorNumber",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    }
+                ],
+                params: [null, "button"]
+            },
+            {
+                syntax: "Roboid.turtle_acceleration_x(%1)",
+                blockType: "param",
+                textParams:[
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.ROBOID_color_number, "colorNumber"],
+                            [Lang.Blocks.ROBOID_color_pattern, "colorPattern"],
+                            [Lang.Blocks.ROBOID_floor, "floor"],
+                            [Lang.Blocks.ROBOID_button, "button"],
+                            [Lang.Blocks.ROBOID_acceleration_x, "accelerationX"],
+                            [Lang.Blocks.ROBOID_acceleration_y, "accelerationY"],
+                            [Lang.Blocks.ROBOID_acceleration_z, "accelerationZ"]
+                        ],
+                        "value": "colorNumber",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    }
+                ],
+                params: [null, "accelerationX"]
+            },
+            {
+                syntax: "Roboid.turtle_acceleration_y(%1)",
+                blockType: "param",
+                textParams:[
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.ROBOID_color_number, "colorNumber"],
+                            [Lang.Blocks.ROBOID_color_pattern, "colorPattern"],
+                            [Lang.Blocks.ROBOID_floor, "floor"],
+                            [Lang.Blocks.ROBOID_button, "button"],
+                            [Lang.Blocks.ROBOID_acceleration_x, "accelerationX"],
+                            [Lang.Blocks.ROBOID_acceleration_y, "accelerationY"],
+                            [Lang.Blocks.ROBOID_acceleration_z, "accelerationZ"]
+                        ],
+                        "value": "colorNumber",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    }
+                ],
+                params: [null, "accelerationY"]
+            },
+            {
+                syntax: "Roboid.turtle_acceleration_z(%1)",
+                blockType: "param",
+                textParams:[
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.ROBOID_color_number, "colorNumber"],
+                            [Lang.Blocks.ROBOID_color_pattern, "colorPattern"],
+                            [Lang.Blocks.ROBOID_floor, "floor"],
+                            [Lang.Blocks.ROBOID_button, "button"],
+                            [Lang.Blocks.ROBOID_acceleration_x, "accelerationX"],
+                            [Lang.Blocks.ROBOID_acceleration_y, "accelerationY"],
+                            [Lang.Blocks.ROBOID_acceleration_z, "accelerationZ"]
+                        ],
+                        "value": "colorNumber",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    }
+                ],
+                params: [null, "accelerationZ"]
+            }
+        ]}
+    },
+    "roboid_turtle_move_forward_unit": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+            "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.ROBOID_unit_cm, "CM"],
+                    [Lang.Blocks.ROBOID_unit_sec, "SEC"],
+                    [Lang.Blocks.ROBOID_unit_pulse, "PULSE"]
+                ],
+                "value": "CM",
+                "fontSize": 11
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "text",
+                    "params": [ "0" ]
+                },
+                {
+                    "type": "text",
+                    "params": [ "6" ]
+                },
+                null,
+                null
+            ],
+            "type": "roboid_turtle_move_forward_unit"
+        },
+        "paramsKeyMap": {
+            "INDEX": 0,
+            "VALUE": 1,
+            "UNIT": 2
+        },
+        "class": "turtle_wheel",
+        "isNotFor": [ "roboid" ],
+        "func": function (sprite, script) {
+            var pd = Entry.hw.portData;
+            var index = script.getNumberValue('INDEX');
+            var robot = Entry.Roboid.getTurtle(index);
+            var packet = robot.packet;
+            if (!script.isStart) {
+                script.isStart = true;
+                packet.leftWheel = 0;
+                packet.rightWheel = 0;
+                robot.setPulse(0);
+                robot.setLineTracerMode(0);
+                var field = script.getField("UNIT");
+                var unit = 1;
+                if(field == "SEC") unit = 2;
+                else if(field == "PULSE") unit = 3;
+                var value = script.getNumberValue("VALUE");
+                robot.setMotion(1, unit, 0, value, 0);
+                return script;
+            } else {
+                var wheelStateId = pd['turtle' + index + 'wheelStateId'];
+                if(wheelStateId != robot.wheelStateId) {
+                    robot.wheelStateId = wheelStateId;
+                    var wheelState = pd['turtle' + index + 'wheelState'];
+                    if(wheelState == 0) {
+                        delete script.isStart;
+                        Entry.engine.isContinue = false;
+                        packet.leftWheel = 0;
+                        packet.rightWheel = 0;
+                        return script.callReturn();
+                    }
+                }
+                return script;
+            }
+        },
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Roboid.turtle_move_forward(%1, %2, %3)",
+                textParams: [
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.ROBOID_unit_cm, "CM"],
+                            [Lang.Blocks.ROBOID_unit_sec, "SEC"],
+                            [Lang.Blocks.ROBOID_unit_pulse, "PULSE"]
+                        ],
+                        "value": "CM",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnValuePartialUpperCase,
+                        codeMap: "Entry.CodeMap.Turtle.units"
+                    }
+                ]
+            }
+        ]}
+    },
+    "roboid_turtle_move_backward_unit": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+            "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.ROBOID_unit_cm, "CM"],
+                    [Lang.Blocks.ROBOID_unit_sec, "SEC"],
+                    [Lang.Blocks.ROBOID_unit_pulse, "PULSE"]
+                ],
+                "value": "CM",
+                "fontSize": 11
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "text",
+                    "params": [ "0" ]
+                },
+                {
+                    "type": "text",
+                    "params": [ "6" ]
+                },
+                null,
+                null
+            ],
+            "type": "roboid_turtle_move_backward_unit"
+        },
+        "paramsKeyMap": {
+            "INDEX": 0,
+            "VALUE": 1,
+            "UNIT": 2
+        },
+        "class": "turtle_wheel",
+        "isNotFor": [ "roboid" ],
+        "func": function (sprite, script) {
+            var pd = Entry.hw.portData;
+            var index = script.getNumberValue('INDEX');
+            var robot = Entry.Roboid.getTurtle(index);
+            var packet = robot.packet;
+            if (!script.isStart) {
+                script.isStart = true;
+                packet.leftWheel = 0;
+                packet.rightWheel = 0;
+                robot.setPulse(0);
+                robot.setLineTracerMode(0);
+                var field = script.getField("UNIT");
+                var unit = 1;
+                if(field == "SEC") unit = 2;
+                else if(field == "PULSE") unit = 3;
+                var value = script.getNumberValue("VALUE");
+                robot.setMotion(2, unit, 0, value, 0);
+                return script;
+            } else {
+                var wheelStateId = pd['turtle' + index + 'wheelStateId'];
+                if(wheelStateId != robot.wheelStateId) {
+                    robot.wheelStateId = wheelStateId;
+                    var wheelState = pd['turtle' + index + 'wheelState'];
+                    if(wheelState == 0) {
+                        delete script.isStart;
+                        Entry.engine.isContinue = false;
+                        packet.leftWheel = 0;
+                        packet.rightWheel = 0;
+                        return script.callReturn();
+                    }
+                }
+                return script;
+            }
+        },
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Roboid.turtle_move_backward(%1, %2, %3)",
+                textParams: [
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.ROBOID_unit_cm, "CM"],
+                            [Lang.Blocks.ROBOID_unit_sec, "SEC"],
+                            [Lang.Blocks.ROBOID_unit_pulse, "PULSE"]
+                        ],
+                        "value": "CM",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnValuePartialUpperCase,
+                        codeMap: "Entry.CodeMap.Turtle.units"
+                    }
+                ]
+            }
+        ]}
+    },
+    "roboid_turtle_turn_unit_in_place": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.ROBOID_left, "LEFT"],
+                    [Lang.Blocks.ROBOID_right, "RIGHT"]
+                ],
+                "value": "LEFT",
+                "fontSize": 11
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+            "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.ROBOID_unit_deg, "DEG"],
+                    [Lang.Blocks.ROBOID_unit_sec, "SEC"],
+                    [Lang.Blocks.ROBOID_unit_pulse, "PULSE"]
+                ],
+                "value": "DEG",
+                "fontSize": 11
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "text",
+                    "params": [ "0" ]
+                },
+                null,
+                {
+                    "type": "text",
+                    "params": [ "90" ]
+                },
+                null,
+                null
+            ],
+            "type": "roboid_turtle_turn_unit_in_place"
+        },
+        "paramsKeyMap": {
+            "INDEX": 0,
+            "DIRECTION": 1,
+            "VALUE": 2,
+            "UNIT": 3
+        },
+        "class": "turtle_wheel",
+        "isNotFor": [ "roboid" ],
+        "func": function (sprite, script) {
+            var pd = Entry.hw.portData;
+            var index = script.getNumberValue('INDEX');
+            var robot = Entry.Roboid.getTurtle(index);
+            var packet = robot.packet;
+            if (!script.isStart) {
+                script.isStart = true;
+                packet.leftWheel = 0;
+                packet.rightWheel = 0;
+                robot.setPulse(0);
+                robot.setLineTracerMode(0);
+                var direction = script.getField("DIRECTION");
+                var field = script.getField("UNIT");
+                var unit = 1;
+                if(field == "SEC") unit = 2;
+                else if(field == "PULSE") unit = 3;
+                var value = script.getNumberValue("VALUE");
+                if(direction == "LEFT") robot.setMotion(3, unit, 0, value, 0);
+                else robot.setMotion(4, unit, 0, value, 0);
+                return script;
+            } else {
+                var wheelStateId = pd['turtle' + index + 'wheelStateId'];
+                if(wheelStateId != robot.wheelStateId) {
+                    robot.wheelStateId = wheelStateId;
+                    var wheelState = pd['turtle' + index + 'wheelState'];
+                    if(wheelState == 0) {
+                        delete script.isStart;
+                        Entry.engine.isContinue = false;
+                        packet.leftWheel = 0;
+                        packet.rightWheel = 0;
+                        return script.callReturn();
+                    }
+                }
+                return script;
+            }
+        },
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Roboid.turtle_turn_left(%1, %3, %4)",
+                textParams: [
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.ROBOID_left, "LEFT"],
+                            [Lang.Blocks.ROBOID_right, "RIGHT"]
+                        ],
+                        "value": "LEFT",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue,
+                    },
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.ROBOID_unit_deg, "DEG"],
+                            [Lang.Blocks.ROBOID_unit_sec, "SEC"],
+                            [Lang.Blocks.ROBOID_unit_pulse, "PULSE"]
+                        ],
+                        "value": "DEG",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnValuePartialUpperCase,
+                        codeMap: "Entry.CodeMap.Turtle.units"
+                    }
+                ],
+                params: [null, "LEFT"]
+            },
+            {
+                syntax: "Roboid.turtle_turn_right(%1, %3, %4)",
+                textParams: [
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.ROBOID_left, "LEFT"],
+                            [Lang.Blocks.ROBOID_right, "RIGHT"]
+                        ],
+                        "value": "LEFT",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue,
+                    },
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.ROBOID_unit_deg, "DEG"],
+                            [Lang.Blocks.ROBOID_unit_sec, "SEC"],
+                            [Lang.Blocks.ROBOID_unit_pulse, "PULSE"]
+                        ],
+                        "value": "DEG",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnValuePartialUpperCase,
+                        codeMap: "Entry.CodeMap.Turtle.units"
+                    }
+                ],
+                params: [null, "RIGHT"]
+            }
+        ]}
+    },
+    "roboid_turtle_turn_unit_with_radius_in_direction": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.ROBOID_left, "LEFT"],
+                    [Lang.Blocks.ROBOID_right, "RIGHT"]
+                ],
+                "value": "LEFT",
+                "fontSize": 11
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+            "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.ROBOID_unit_deg, "DEG"],
+                    [Lang.Blocks.ROBOID_unit_sec, "SEC"],
+                    [Lang.Blocks.ROBOID_unit_pulse, "PULSE"]
+                ],
+                "value": "DEG",
+                "fontSize": 11
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.ROBOID_head, "HEAD"],
+                    [Lang.Blocks.ROBOID_tail, "TAIL"]
+                ],
+                "value": "HEAD",
+                "fontSize": 11
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "text",
+                    "params": [ "0" ]
+                },
+                null,
+                {
+                    "type": "text",
+                    "params": [ "90" ]
+                },
+                null,
+                {
+                    "type": "text",
+                    "params": [ "6" ]
+                },
+                null,
+                null
+            ],
+            "type": "roboid_turtle_turn_unit_with_radius_in_direction"
+        },
+        "paramsKeyMap": {
+            "INDEX": 0,
+            "DIRECTION": 1,
+            "VALUE": 2,
+            "UNIT": 3,
+            "RADIUS": 4,
+            "HEAD": 5
+        },
+        "class": "turtle_wheel",
+        "isNotFor": [ "roboid" ],
+        "func": function (sprite, script) {
+            var pd = Entry.hw.portData;
+            var index = script.getNumberValue('INDEX');
+            var robot = Entry.Roboid.getTurtle(index);
+            var packet = robot.packet;
+            if (!script.isStart) {
+                script.isStart = true;
+                packet.leftWheel = 0;
+                packet.rightWheel = 0;
+                robot.setPulse(0);
+                robot.setLineTracerMode(0);
+                var direction = script.getField("DIRECTION");
+                var field = script.getField("UNIT");
+                var unit = 1;
+                if(field == "SEC") unit = 2;
+                else if(field == "PULSE") unit = 3;
+                var value = script.getNumberValue("VALUE");
+                var head = script.getField("HEAD");
+                var radius = script.getNumberValue("RADIUS");
+                if(direction == "LEFT") {
+                    if(head == "HEAD") robot.setMotion(9, unit, 0, value, radius);
+                    else robot.setMotion(10, unit, 0, value, radius);
+                } else {
+                    if(head == "HEAD") robot.setMotion(11, unit, 0, value, radius);
+                    else robot.setMotion(12, unit, 0, value, radius);
+                }
+                return script;
+            } else {
+                var wheelStateId = pd['turtle' + index + 'wheelStateId'];
+                if(wheelStateId != robot.wheelStateId) {
+                    robot.wheelStateId = wheelStateId;
+                    var wheelState = pd['turtle' + index + 'wheelState'];
+                    if(wheelState == 0) {
+                        delete script.isStart;
+                        Entry.engine.isContinue = false;
+                        packet.leftWheel = 0;
+                        packet.rightWheel = 0;
+                        return script.callReturn();
+                    }
+                }
+                return script;
+            }
+        },
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Roboid.turtle_swing_left(%1, %3, %4, %5, %6)",
+                textParams: [
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.ROBOID_left, "LEFT"],
+                            [Lang.Blocks.ROBOID_right, "RIGHT"]
+                        ],
+                        "value": "LEFT",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue,
+                    },
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.ROBOID_unit_deg, "DEG"],
+                            [Lang.Blocks.ROBOID_unit_sec, "SEC"],
+                            [Lang.Blocks.ROBOID_unit_pulse, "PULSE"]
+                        ],
+                        "value": "DEG",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnValuePartialUpperCase,
+                        codeMap: "Entry.CodeMap.Turtle.units"
+                    },
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.ROBOID_head, "HEAD"],
+                            [Lang.Blocks.ROBOID_tail, "TAIL"]
+                        ],
+                        "value": "HEAD",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnValuePartialUpperCase,
+                        codeMap: "Entry.CodeMap.Turtle.head_tail"
+                    }
+                ],
+                params: [null, "LEFT"]
+            },
+            {
+                syntax: "Roboid.turtle_swing_right(%1, %3, %4, %5, %6)",
+                textParams: [
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.ROBOID_left, "LEFT"],
+                            [Lang.Blocks.ROBOID_right, "RIGHT"]
+                        ],
+                        "value": "LEFT",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue,
+                    },
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.ROBOID_unit_deg, "DEG"],
+                            [Lang.Blocks.ROBOID_unit_sec, "SEC"],
+                            [Lang.Blocks.ROBOID_unit_pulse, "PULSE"]
+                        ],
+                        "value": "DEG",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnValuePartialUpperCase,
+                        codeMap: "Entry.CodeMap.Turtle.units"
+                    },
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.ROBOID_head, "HEAD"],
+                            [Lang.Blocks.ROBOID_tail, "TAIL"]
+                        ],
+                        "value": "HEAD",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnValuePartialUpperCase,
+                        codeMap: "Entry.CodeMap.Turtle.head_tail"
+                    }
+                ],
+                params: [null, "RIGHT"]
+            }
+        ]}
+    },
+    "roboid_turtle_pivot_around_wheel_unit_in_direction": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.ROBOID_left, "LEFT"],
+                    [Lang.Blocks.ROBOID_right, "RIGHT"]
+                ],
+                "value": "LEFT",
+                "fontSize": 11
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+            "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.ROBOID_unit_deg, "DEG"],
+                    [Lang.Blocks.ROBOID_unit_sec, "SEC"],
+                    [Lang.Blocks.ROBOID_unit_pulse, "PULSE"]
+                ],
+                "value": "DEG",
+                "fontSize": 11
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.ROBOID_head, "HEAD"],
+                    [Lang.Blocks.ROBOID_tail, "TAIL"]
+                ],
+                "value": "HEAD",
+                "fontSize": 11
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "text",
+                    "params": [ "0" ]
+                },
+                null,
+                {
+                    "type": "text",
+                    "params": [ "90" ]
+                },
+                null,
+                null,
+                null
+            ],
+            "type": "roboid_turtle_pivot_around_wheel_unit_in_direction"
+        },
+        "paramsKeyMap": {
+            "INDEX": 0,
+            "DIRECTION": 1,
+            "VALUE": 2,
+            "UNIT": 3,
+            "HEAD": 4
+        },
+        "class": "turtle_wheel",
+        "isNotFor": [ "roboid" ],
+        "func": function (sprite, script) {
+            var pd = Entry.hw.portData;
+            var index = script.getNumberValue('INDEX');
+            var robot = Entry.Roboid.getTurtle(index);
+            var packet = robot.packet;
+            if (!script.isStart) {
+                script.isStart = true;
+                packet.leftWheel = 0;
+                packet.rightWheel = 0;
+                robot.setPulse(0);
+                robot.setLineTracerMode(0);
+                var direction = script.getField("DIRECTION");
+                var field = script.getField("UNIT");
+                var unit = 1;
+                if(field == "SEC") unit = 2;
+                else if(field == "PULSE") unit = 3;
+                var value = script.getNumberValue("VALUE");
+                var head = script.getField("HEAD");
+                if(direction == "LEFT") {
+                    if(head == "HEAD") robot.setMotion(5, unit, 0, value, 0);
+                    else robot.setMotion(6, unit, 0, value, 0);
+                } else {
+                    if(head == "HEAD") robot.setMotion(7, unit, 0, value, 0);
+                    else robot.setMotion(8, unit, 0, value, 0);
+                }
+                return script;
+            } else {
+                var wheelStateId = pd['turtle' + index + 'wheelStateId'];
+                if(wheelStateId != robot.wheelStateId) {
+                    robot.wheelStateId = wheelStateId;
+                    var wheelState = pd['turtle' + index + 'wheelState'];
+                    if(wheelState == 0) {
+                        delete script.isStart;
+                        Entry.engine.isContinue = false;
+                        packet.leftWheel = 0;
+                        packet.rightWheel = 0;
+                        return script.callReturn();
+                    }
+                }
+                return script;
+            }
+        },
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Roboid.turtle_pivot_left(%1, %3, %4, %5)",
+                textParams: [
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.ROBOID_left, "LEFT"],
+                            [Lang.Blocks.ROBOID_right, "RIGHT"]
+                        ],
+                        "value": "LEFT",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue,
+                    },
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.ROBOID_unit_deg, "DEG"],
+                            [Lang.Blocks.ROBOID_unit_sec, "SEC"],
+                            [Lang.Blocks.ROBOID_unit_pulse, "PULSE"]
+                        ],
+                        "value": "DEG",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnValuePartialUpperCase,
+                        codeMap: "Entry.CodeMap.Turtle.units"
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.ROBOID_head, "HEAD"],
+                            [Lang.Blocks.ROBOID_tail, "TAIL"]
+                        ],
+                        "value": "HEAD",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnValuePartialUpperCase,
+                        codeMap: "Entry.CodeMap.Turtle.head_tail"
+                    }
+                ],
+                params: [null, "LEFT"]
+            },
+            {
+                syntax: "Roboid.turtle_pivot_right(%1, %3, %4, %5)",
+                textParams: [
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.ROBOID_left, "LEFT"],
+                            [Lang.Blocks.ROBOID_right, "RIGHT"]
+                        ],
+                        "value": "LEFT",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue,
+                    },
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.ROBOID_unit_deg, "DEG"],
+                            [Lang.Blocks.ROBOID_unit_sec, "SEC"],
+                            [Lang.Blocks.ROBOID_unit_pulse, "PULSE"]
+                        ],
+                        "value": "DEG",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnValuePartialUpperCase,
+                        codeMap: "Entry.CodeMap.Turtle.units"
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.ROBOID_head, "HEAD"],
+                            [Lang.Blocks.ROBOID_tail, "TAIL"]
+                        ],
+                        "value": "HEAD",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnValuePartialUpperCase,
+                        codeMap: "Entry.CodeMap.Turtle.head_tail"
+                    }
+                ],
+                params: [null, "RIGHT"]
+            }
+        ]}
+    },
+    "roboid_turtle_change_wheels_by_left_right": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "text",
+                    "params": [ "0" ]
+                },
+                {
+                    "type": "text",
+                    "params": [ "10" ]
+                },
+                {
+                    "type": "text",
+                    "params": [ "10" ]
+                },
+                null
+            ],
+            "type": "roboid_turtle_change_wheels_by_left_right"
+        },
+        "paramsKeyMap": {
+            "INDEX": 0,
+            "LEFT": 1,
+            "RIGHT": 2
+        },
+        "class": "turtle_wheel",
+        "isNotFor": [ "roboid" ],
+        "func": function (sprite, script) {
+            var index = script.getNumberValue('INDEX');
+            var robot = Entry.Roboid.getTurtle(index);
+            var packet = robot.packet;
+            var left = script.getNumberValue("LEFT");
+            var right = script.getNumberValue("RIGHT");
+            robot.setPulse(0);
+            robot.setLineTracerMode(0);
+            robot.setMotion(0, 0, 0, 0, 0);
+            packet.leftWheel = packet.leftWheel != undefined ? packet.leftWheel + left : left;
+            packet.rightWheel = packet.rightWheel != undefined ? packet.rightWheel + right : right;
+            return script.callReturn();
+        },
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Roboid.turtle_wheels_by(%1, %2, %3)",
+                textParams: [
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    }
+                ]
+            }
+        ]}
+    },
+    "roboid_turtle_set_wheels_to_left_right": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "text",
+                    "params": [ "0" ]
+                },
+                {
+                    "type": "text",
+                    "params": [ "50" ]
+                },
+                {
+                    "type": "text",
+                    "params": [ "50" ]
+                },
+                null
+            ],
+            "type": "roboid_turtle_set_wheels_to_left_right"
+        },
+        "paramsKeyMap": {
+            "INDEX": 0,
+            "LEFT": 1,
+            "RIGHT": 2
+        },
+        "class": "turtle_wheel",
+        "isNotFor": [ "roboid" ],
+        "func": function (sprite, script) {
+            var index = script.getNumberValue('INDEX');
+            var robot = Entry.Roboid.getTurtle(index);
+            var packet = robot.packet;
+            robot.setPulse(0);
+            robot.setLineTracerMode(0);
+            robot.setMotion(0, 0, 0, 0, 0);
+            packet.leftWheel = script.getNumberValue("LEFT");
+            packet.rightWheel = script.getNumberValue("RIGHT");
+            return script.callReturn();
+        },
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Roboid.turtle_wheels(%1, %2, %3)",
+                textParams: [
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    }
+                ]
+            }
+        ]}
+    },
+    "roboid_turtle_change_wheel_by": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.ROBOID_left, "LEFT"],
+                    [Lang.Blocks.ROBOID_right, "RIGHT"],
+                    [Lang.Blocks.ROBOID_both, "BOTH"]
+                ],
+                "value": "LEFT",
+                "fontSize": 11
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "text",
+                    "params": [ "0" ]
+                },
+                null,
+                {
+                    "type": "text",
+                    "params": [ "10" ]
+                },
+                null
+            ],
+            "type": "roboid_turtle_change_wheel_by"
+        },
+        "paramsKeyMap": {
+            "INDEX": 0,
+            "DIRECTION": 1,
+            "VALUE": 2
+        },
+        "class": "turtle_wheel",
+        "isNotFor": [ "roboid" ],
+        "func": function (sprite, script) {
+            var index = script.getNumberValue('INDEX');
+            var robot = Entry.Roboid.getTurtle(index);
+            var packet = robot.packet;
+            var direction = script.getField("DIRECTION");
+            var value = script.getNumberValue("VALUE");
+            robot.setPulse(0);
+            robot.setLineTracerMode(0);
+            robot.setMotion(0, 0, 0, 0, 0);
+            if(direction == "LEFT") {
+                packet.leftWheel = packet.leftWheel != undefined ? packet.leftWheel + value : value;
+            } else if(direction == "RIGHT") {
+                packet.rightWheel = packet.rightWheel != undefined ? packet.rightWheel + value : value;
+            } else {
+                packet.leftWheel = packet.leftWheel != undefined ? packet.leftWheel + value : value;
+                packet.rightWheel = packet.rightWheel != undefined ? packet.rightWheel + value : value;
+            }
+            return script.callReturn();
+        },
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Roboid.turtle_left_wheel_by(%1, %3)",
+                textParams: [
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.ROBOID_left, "LEFT"],
+                            [Lang.Blocks.ROBOID_right, "RIGHT"],
+                            [Lang.Blocks.ROBOID_both, "BOTH"]
+                        ],
+                        "value": "LEFT",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue,
+                    },
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    }
+                ],
+                params: [null, "LEFT"]
+            },
+            {
+                syntax: "Roboid.turtle_right_wheel_by(%1, %3)",
+                textParams: [
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.ROBOID_left, "LEFT"],
+                            [Lang.Blocks.ROBOID_right, "RIGHT"],
+                            [Lang.Blocks.ROBOID_both, "BOTH"]
+                        ],
+                        "value": "LEFT",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue,
+                    },
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    }
+                ],
+                params: [null, "RIGHT"]
+            },
+            {
+                syntax: "Roboid.turtle_both_wheels_by(%1, %3)",
+                textParams: [
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.ROBOID_left, "LEFT"],
+                            [Lang.Blocks.ROBOID_right, "RIGHT"],
+                            [Lang.Blocks.ROBOID_both, "BOTH"]
+                        ],
+                        "value": "LEFT",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue,
+                    },
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    }
+                ],
+                params: [null, "BOTH"]
+            }
+        ]}
+    },
+    "roboid_turtle_set_wheel_to": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.ROBOID_left, "LEFT"],
+                    [Lang.Blocks.ROBOID_right, "RIGHT"],
+                    [Lang.Blocks.ROBOID_both, "BOTH"]
+                ],
+                "value": "LEFT",
+                "fontSize": 11
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "text",
+                    "params": [ "0" ]
+                },
+                null,
+                {
+                    "type": "text",
+                    "params": [ "50" ]
+                },
+                null
+            ],
+            "type": "roboid_turtle_set_wheel_to"
+        },
+        "paramsKeyMap": {
+            "INDEX": 0,
+            "DIRECTION": 1,
+            "VALUE": 2
+        },
+        "class": "turtle_wheel",
+        "isNotFor": [ "roboid" ],
+        "func": function (sprite, script) {
+            var index = script.getNumberValue('INDEX');
+            var robot = Entry.Roboid.getTurtle(index);
+            var packet = robot.packet;
+            var direction = script.getField("DIRECTION");
+            var value = script.getNumberValue("VALUE");
+            robot.setPulse(0);
+            robot.setLineTracerMode(0);
+            robot.setMotion(0, 0, 0, 0, 0);
+            if(direction == "LEFT") {
+                packet.leftWheel = value;
+            } else if(direction == "RIGHT") {
+                packet.rightWheel = value;
+            } else {
+                packet.leftWheel = value;
+                packet.rightWheel = value;
+            }
+            return script.callReturn();
+        },
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Roboid.turtle_left_wheel(%1, %3)",
+                textParams: [
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.ROBOID_left, "LEFT"],
+                            [Lang.Blocks.ROBOID_right, "RIGHT"],
+                            [Lang.Blocks.ROBOID_both, "BOTH"]
+                        ],
+                        "value": "LEFT",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue,
+                    },
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    }
+                ],
+                params: [null, "LEFT"]
+            },
+            {
+                syntax: "Roboid.turtle_right_wheel(%1, %3)",
+                textParams: [
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.ROBOID_left, "LEFT"],
+                            [Lang.Blocks.ROBOID_right, "RIGHT"],
+                            [Lang.Blocks.ROBOID_both, "BOTH"]
+                        ],
+                        "value": "LEFT",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue,
+                    },
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    }
+                ],
+                params: [null, "RIGHT"]
+            },
+            {
+                syntax: "Roboid.turtle_both_wheels(%1, %3)",
+                textParams: [
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.ROBOID_left, "LEFT"],
+                            [Lang.Blocks.ROBOID_right, "RIGHT"],
+                            [Lang.Blocks.ROBOID_both, "BOTH"]
+                        ],
+                        "value": "LEFT",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue,
+                    },
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    }
+                ],
+                params: [null, "BOTH"]
+            }
+        ]}
+    },
+    "roboid_turtle_follow_line": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.ROBOID_color_black, "10"],
+                    [Lang.Blocks.ROBOID_color_red, "11"],
+                    [Lang.Blocks.ROBOID_color_green, "13"],
+                    [Lang.Blocks.ROBOID_color_blue, "15"],
+                    [Lang.Blocks.ROBOID_color_any, "17"]
+                ],
+                "value": "10",
+                "fontSize": 11
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "text",
+                    "params": [ "0" ]
+                },
+                null,
+                null
+            ],
+            "type": "roboid_turtle_follow_line"
+        },
+        "paramsKeyMap": {
+            "INDEX": 0,
+            "COLOR": 1
+        },
+        "class": "turtle_wheel",
+        "isNotFor": [ "roboid" ],
+        "func": function (sprite, script) {
+            var index = script.getNumberValue('INDEX');
+            var robot = Entry.Roboid.getTurtle(index);
+            var packet = robot.packet;
+            packet.leftWheel = 0;
+            packet.rightWheel = 0;
+            robot.setPulse(0);
+            robot.setMotion(0, 0, 0, 0, 0);
+            var mode = Number(script.getField("COLOR"));
+            robot.setLineTracerMode(mode);
+            return script.callReturn();
+        },
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Roboid.turtle_follow_line(%1, %2)",
+                textParams: [
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.ROBOID_color_black, "10"],
+                            [Lang.Blocks.ROBOID_color_red, "11"],
+                            [Lang.Blocks.ROBOID_color_green, "13"],
+                            [Lang.Blocks.ROBOID_color_blue, "15"],
+                            [Lang.Blocks.ROBOID_color_any, "17"]
+                        ],
+                        "value": "10",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnValuePartialUpperCase,
+                        codeMap: "Entry.CodeMap.Turtle.line_colors"
+                    }
+                ]
+            }
+        ]}
+    },
+    "roboid_turtle_follow_line_until": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.ROBOID_color_red, "61"],
+                    [Lang.Blocks.ROBOID_color_yellow, "62"],
+                    [Lang.Blocks.ROBOID_color_green, "63"],
+                    [Lang.Blocks.ROBOID_color_sky_blue, "64"],
+                    [Lang.Blocks.ROBOID_color_blue, "65"],
+                    [Lang.Blocks.ROBOID_color_purple, "66"],
+                    [Lang.Blocks.ROBOID_color_any, "67"]
+                ],
+                "value": "61",
+                "fontSize": 11
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "text",
+                    "params": [ "0" ]
+                },
+                null,
+                null
+            ],
+            "type": "roboid_turtle_follow_line_until"
+        },
+        "paramsKeyMap": {
+            "INDEX": 0,
+            "COLOR": 1
+        },
+        "class": "turtle_wheel",
+        "isNotFor": [ "roboid" ],
+        "func": function (sprite, script) {
+            var pd = Entry.hw.portData;
+            var index = script.getNumberValue('INDEX');
+            var robot = Entry.Roboid.getTurtle(index);
+            var packet = robot.packet;
+            if (!script.isStart) {
+                script.isStart = true;
+                packet.leftWheel = 0;
+                packet.rightWheel = 0;
+                robot.setPulse(0);
+                robot.setMotion(0, 0, 0, 0, 0);
+                var mode = Number(script.getField("COLOR"));
+                robot.setLineTracerMode(mode);
+                return script;
+            } else {
+                var lineTracerStateId = pd['turtle' + index + 'lineTracerStateId'];
+                if(lineTracerStateId != robot.lineTracerStateId) {
+                    robot.lineTracerStateId = lineTracerStateId;
+                    var lineTracerState = pd['turtle' + index + 'lineTracerState'];
+                    if(lineTracerState == 0x02) {
+                        delete script.isStart;
+                        Entry.engine.isContinue = false;
+                        robot.setLineTracerMode(0);
+                        return script.callReturn();
+                    }
+                }
+                return script;
+            }
+        },
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Roboid.turtle_follow_black_line_until(%1, %2)",
+                textParams: [
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.ROBOID_color_red, "61"],
+                            [Lang.Blocks.ROBOID_color_yellow, "62"],
+                            [Lang.Blocks.ROBOID_color_green, "63"],
+                            [Lang.Blocks.ROBOID_color_sky_blue, "64"],
+                            [Lang.Blocks.ROBOID_color_blue, "65"],
+                            [Lang.Blocks.ROBOID_color_purple, "66"],
+                            [Lang.Blocks.ROBOID_color_any, "67"]
+                        ],
+                        "value": "61",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnValuePartialUpperCase,
+                        codeMap: "Entry.CodeMap.Turtle.target_colors"
+                    }
+                ]
+            }
+        ]}
+    },
+    "roboid_turtle_follow_line_until_black": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.ROBOID_color_red, "71"],
+                    [Lang.Blocks.ROBOID_color_green, "73"],
+                    [Lang.Blocks.ROBOID_color_blue, "75"],
+                    [Lang.Blocks.ROBOID_color_any, "77"]
+                ],
+                "value": "71",
+                "fontSize": 11
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "text",
+                    "params": [ "0" ]
+                },
+                null,
+                null
+            ],
+            "type": "roboid_turtle_follow_line_until_black"
+        },
+        "paramsKeyMap": {
+            "INDEX": 0,
+            "COLOR": 1
+        },
+        "class": "turtle_wheel",
+        "isNotFor": [ "roboid" ],
+        "func": function (sprite, script) {
+            var pd = Entry.hw.portData;
+            var index = script.getNumberValue('INDEX');
+            var robot = Entry.Roboid.getTurtle(index);
+            var packet = robot.packet;
+            if (!script.isStart) {
+                script.isStart = true;
+                packet.leftWheel = 0;
+                packet.rightWheel = 0;
+                robot.setPulse(0);
+                robot.setMotion(0, 0, 0, 0, 0);
+                var mode = Number(script.getField("COLOR"));
+                robot.setLineTracerMode(mode);
+                return script;
+            } else {
+                var lineTracerStateId = pd['turtle' + index + 'lineTracerStateId'];
+                if(lineTracerStateId != robot.lineTracerStateId) {
+                    robot.lineTracerStateId = lineTracerStateId;
+                    var lineTracerState = pd['turtle' + index + 'lineTracerState'];
+                    if(lineTracerState == 0x02) {
+                        delete script.isStart;
+                        Entry.engine.isContinue = false;
+                        robot.setLineTracerMode(0);
+                        return script.callReturn();
+                    }
+                }
+                return script;
+            }
+        },
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Roboid.turtle_follow_line_until_black(%1, %2)",
+                textParams: [
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.ROBOID_color_red, "71"],
+                            [Lang.Blocks.ROBOID_color_green, "73"],
+                            [Lang.Blocks.ROBOID_color_blue, "75"],
+                            [Lang.Blocks.ROBOID_color_any, "77"]
+                        ],
+                        "value": "71",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnValuePartialUpperCase,
+                        codeMap: "Entry.CodeMap.Turtle.color_lines"
+                    }
+                ]
+            }
+        ]}
+    },
+    "roboid_turtle_cross_intersection": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "text",
+                    "params": [ "0" ]
+                },
+                null
+            ],
+            "type": "roboid_turtle_cross_intersection"
+        },
+        "paramsKeyMap": {
+            "INDEX": 0
+        },
+        "class": "turtle_wheel",
+        "isNotFor": [ "roboid" ],
+        "func": function (sprite, script) {
+            var pd = Entry.hw.portData;
+            var index = script.getNumberValue('INDEX');
+            var robot = Entry.Roboid.getTurtle(index);
+            var packet = robot.packet;
+            if (!script.isStart) {
+                script.isStart = true;
+                packet.leftWheel = 0;
+                packet.rightWheel = 0;
+                robot.setPulse(0);
+                robot.setMotion(0, 0, 0, 0, 0);
+                robot.setLineTracerMode(40);
+                return script;
+            } else {
+                var lineTracerStateId = pd['turtle' + index + 'lineTracerStateId'];
+                if(lineTracerStateId != robot.lineTracerStateId) {
+                    robot.lineTracerStateId = lineTracerStateId;
+                    var lineTracerState = pd['turtle' + index + 'lineTracerState'];
+                    if(lineTracerState == 0x02) {
+                        delete script.isStart;
+                        Entry.engine.isContinue = false;
+                        robot.setLineTracerMode(0);
+                        return script.callReturn();
+                    }
+                }
+                return script;
+            }
+        },
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Roboid.turtle_intersection_forward(%1)",
+                textParams: [
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    }
+                ]
+            }
+        ]}
+    },
+    "roboid_turtle_turn_at_intersection": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.ROBOID_left, "20"],
+                    [Lang.Blocks.ROBOID_right, "30"],
+                    [Lang.Blocks.ROBOID_back, "50"]
+                ],
+                "value": "20",
+                "fontSize": 11
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "text",
+                    "params": [ "0" ]
+                },
+                null,
+                null
+            ],
+            "type": "roboid_turtle_turn_at_intersection"
+        },
+        "paramsKeyMap": {
+            "INDEX": 0,
+            "DIRECTION": 1
+        },
+        "class": "turtle_wheel",
+        "isNotFor": [ "roboid" ],
+        "func": function (sprite, script) {
+            var pd = Entry.hw.portData;
+            var index = script.getNumberValue('INDEX');
+            var robot = Entry.Roboid.getTurtle(index);
+            var packet = robot.packet;
+            if (!script.isStart) {
+                script.isStart = true;
+                packet.leftWheel = 0;
+                packet.rightWheel = 0;
+                robot.setPulse(0);
+                robot.setMotion(0, 0, 0, 0, 0);
+                var mode = Number(script.getField("DIRECTION"));
+                robot.setLineTracerMode(mode);
+                return script;
+            } else {
+                var lineTracerStateId = pd['turtle' + index + 'lineTracerStateId'];
+                if(lineTracerStateId != robot.lineTracerStateId) {
+                    robot.lineTracerStateId = lineTracerStateId;
+                    var lineTracerState = pd['turtle' + index + 'lineTracerState'];
+                    if(lineTracerState == 0x02) {
+                        delete script.isStart;
+                        Entry.engine.isContinue = false;
+                        robot.setLineTracerMode(0);
+                        return script.callReturn();
+                    }
+                }
+                return script;
+            }
+        },
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Roboid.turtle_intersection_left(%1)",
+                textParams: [
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.ROBOID_left, "20"],
+                            [Lang.Blocks.ROBOID_right, "30"],
+                            [Lang.Blocks.ROBOID_back, "50"]
+                        ],
+                        "value": "20",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    }
+                ],
+                params: [null, "20"]
+            },
+            {
+                syntax: "Roboid.turtle_intersection_right(%1)",
+                textParams: [
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.ROBOID_left, "20"],
+                            [Lang.Blocks.ROBOID_right, "30"],
+                            [Lang.Blocks.ROBOID_back, "50"]
+                        ],
+                        "value": "20",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    }
+                ],
+                params: [null, "30"]
+            },
+            {
+                syntax: "Roboid.turtle_intersection_uturn(%1)",
+                textParams: [
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.ROBOID_left, "20"],
+                            [Lang.Blocks.ROBOID_right, "30"],
+                            [Lang.Blocks.ROBOID_back, "50"]
+                        ],
+                        "value": "20",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    }
+                ],
+                params: [null, "50"]
+            }
+        ]}
+    },
+    "roboid_turtle_set_following_speed_to": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [ "1", "1" ],
+                    [ "2", "2" ],
+                    [ "3", "3" ],
+                    [ "4", "4" ],
+                    [ "5", "5" ],
+                    [ "6", "6" ],
+                    [ "7", "7" ],
+                    [ "8", "8" ]
+                ],
+                "value": "1",
+                "fontSize": 11
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "text",
+                    "params": [ "0" ]
+                },
+                "5",
+                null
+            ],
+            "type": "roboid_turtle_set_following_speed_to"
+        },
+        "paramsKeyMap": {
+            "INDEX": 0,
+            "SPEED": 1
+        },
+        "class": "turtle_wheel",
+        "isNotFor": [ "roboid" ],
+        "func": function (sprite, script) {
+            var index = script.getNumberValue('INDEX');
+            var robot = Entry.Roboid.getTurtle(index);
+            var packet = robot.packet;
+            var speed = Number(script.getField("SPEED"));
+            packet.lineTracerSpeed = speed;
+            packet.lineTracerGain = speed;
+            return script.callReturn();
+        },
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Roboid.turtle_line_tracer_speed(%1, %2)",
+                textParams: [
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [ "1", "1" ],
+                            [ "2", "2" ],
+                            [ "3", "3" ],
+                            [ "4", "4" ],
+                            [ "5", "5" ],
+                            [ "6", "6" ],
+                            [ "7", "7" ],
+                            [ "8", "8" ]
+                        ],
+                        "value": "1",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringOrNumberByValue
+                    }
+                ]
+            }
+        ]}
+    },
+    "roboid_turtle_stop": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "text",
+                    "params": [ "0" ]
+                },
+                null
+            ],
+            "type": "roboid_turtle_stop"
+        },
+        "paramsKeyMap": {
+            "INDEX": 0
+        },
+        "class": "turtle_wheel",
+        "isNotFor": [ "roboid" ],
+        "func": function (sprite, script) {
+            var index = script.getNumberValue('INDEX');
+            var robot = Entry.Roboid.getTurtle(index);
+            var packet = robot.packet;
+            packet.leftWheel = 0;
+            packet.rightWheel = 0;
+            robot.setPulse(0);
+            robot.setLineTracerMode(0);
+            robot.setMotion(0, 0, 0, 0, 0);
+            return script.callReturn();
+        },
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Roboid.turtle_stop(%1)",
+                textParams: [
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    }
+                ]
+            }
+        ]}
+    },
+    "roboid_turtle_set_head_led_to": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.ROBOID_color_red, "RED"],
+                    [Lang.Blocks.ROBOID_color_orange, "ORANGE"],
+                    [Lang.Blocks.ROBOID_color_yellow, "YELLOW"],
+                    [Lang.Blocks.ROBOID_color_green, "GREEN"],
+                    [Lang.Blocks.ROBOID_color_sky_blue, "CYAN"],
+                    [Lang.Blocks.ROBOID_color_blue, "BLUE"],
+                    [Lang.Blocks.ROBOID_color_violet, "VIOLET"],
+                    [Lang.Blocks.ROBOID_color_purple, "MAGENTA"],
+                    [Lang.Blocks.ROBOID_color_white, "WHITE"]
+                ],
+                "value": "RED",
+                "fontSize": 11
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "text",
+                    "params": [ "0" ]
+                },
+                null,
+                null
+            ],
+            "type": "roboid_turtle_set_head_led_to"
+        },
+        "paramsKeyMap": {
+            "INDEX": 0,
+            "COLOR": 1
+        },
+        "class": "turtle_led",
+        "isNotFor": [ "roboid" ],
+        "func": function (sprite, script) {
+            var index = script.getNumberValue('INDEX');
+            var robot = Entry.Roboid.getTurtle(index);
+            var packet = robot.packet;
+            var color = script.getField("COLOR");
+            robot.setLedColor(color);
+            return script.callReturn();
+        },
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Roboid.turtle_led_color(%1, %2)",
+                textParams: [
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.ROBOID_color_red, "RED"],
+                            [Lang.Blocks.ROBOID_color_orange, "ORANGE"],
+                            [Lang.Blocks.ROBOID_color_yellow, "YELLOW"],
+                            [Lang.Blocks.ROBOID_color_green, "GREEN"],
+                            [Lang.Blocks.ROBOID_color_sky_blue, "CYAN"],
+                            [Lang.Blocks.ROBOID_color_blue, "BLUE"],
+                            [Lang.Blocks.ROBOID_color_violet, "VIOLET"],
+                            [Lang.Blocks.ROBOID_color_purple, "MAGENTA"],
+                            [Lang.Blocks.ROBOID_color_white, "WHITE"]
+                        ],
+                        "value": "RED",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnValuePartialUpperCase,
+                        codeMap: "Entry.CodeMap.Turtle.led_colors"
+                    }
+                ]
+            }
+        ]}
+    },
+    "roboid_turtle_change_head_led_by_rgb": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "text",
+                    "params": [ "0" ]
+                },
+                {
+                    "type": "text",
+                    "params": [ "10" ]
+                },
+                {
+                    "type": "text",
+                    "params": [ "0" ]
+                },
+                {
+                    "type": "text",
+                    "params": [ "0" ]
+                },
+                null
+            ],
+            "type": "roboid_turtle_change_head_led_by_rgb"
+        },
+        "paramsKeyMap": {
+            "INDEX": 0,
+            "RED": 1,
+            "GREEN": 2,
+            "BLUE": 3
+        },
+        "class": "turtle_led",
+        "isNotFor": [ "roboid" ],
+        "func": function (sprite, script) {
+            var index = script.getNumberValue('INDEX');
+            var robot = Entry.Roboid.getTurtle(index);
+            var packet = robot.packet;
+            var red = script.getNumberValue("RED");
+            var green = script.getNumberValue("GREEN");
+            var blue = script.getNumberValue("BLUE");
+            packet.ledRed = packet.ledRed != undefined ? packet.ledRed + red : red;
+            packet.ledGreen = packet.ledGreen != undefined ? packet.ledGreen + green : green;
+            packet.ledBlue = packet.ledBlue != undefined ? packet.ledBlue + blue : blue;
+            return script.callReturn();
+        },
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Roboid.turtle_led_by(%1, %2, %3, %4)",
+                textParams: [
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    }
+                ]
+            }
+        ]}
+    },
+    "roboid_turtle_set_head_led_to_rgb": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "text",
+                    "params": [ "0" ]
+                },
+                {
+                    "type": "text",
+                    "params": [ "255" ]
+                },
+                {
+                    "type": "text",
+                    "params": [ "0" ]
+                },
+                {
+                    "type": "text",
+                    "params": [ "0" ]
+                },
+                null
+            ],
+            "type": "roboid_turtle_set_head_led_to_rgb"
+        },
+        "paramsKeyMap": {
+            "INDEX": 0,
+            "RED": 1,
+            "GREEN": 2,
+            "BLUE": 3
+        },
+        "class": "turtle_led",
+        "isNotFor": [ "roboid" ],
+        "func": function (sprite, script) {
+            var index = script.getNumberValue('INDEX');
+            var robot = Entry.Roboid.getTurtle(index);
+            var packet = robot.packet;
+            packet.ledRed = script.getNumberValue("RED");
+            packet.ledGreen = script.getNumberValue("GREEN");
+            packet.ledBlue = script.getNumberValue("BLUE");
+            return script.callReturn();
+        },
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Roboid.turtle_led(%1, %2, %3, %4)",
+                textParams: [
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    }
+                ]
+            }
+        ]}
+    },
+    "roboid_turtle_clear_head_led": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "text",
+                    "params": [ "0" ]
+                },
+                null
+            ],
+            "type": "roboid_turtle_clear_head_led"
+        },
+        "paramsKeyMap": {
+            "INDEX": 0
+        },
+        "class": "turtle_led",
+        "isNotFor": [ "roboid" ],
+        "func": function (sprite, script) {
+            var index = script.getNumberValue('INDEX');
+            var robot = Entry.Roboid.getTurtle(index);
+            var packet = robot.packet;
+            packet.ledRed = 0;
+            packet.ledGreen = 0;
+            packet.ledBlue = 0;
+            return script.callReturn();
+        },
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Roboid.turtle_led_off(%1)",
+                textParams: [
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    }
+                ]
+            }
+        ]}
+    },
+    "roboid_turtle_play_sound_times": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.ROBOID_sound_beep, "1"],
+                    [Lang.Blocks.ROBOID_sound_random_beep, "2"],
+                    [Lang.Blocks.ROBOID_sound_siren, "3"],
+                    [Lang.Blocks.ROBOID_sound_engine, "4"],
+                    [Lang.Blocks.ROBOID_sound_robot, "5"],
+                    [Lang.Blocks.ROBOID_sound_march, "6"],
+                    [Lang.Blocks.ROBOID_sound_birthday, "7"],
+                    [Lang.Blocks.ROBOID_sound_dibidibidip, "8"],
+                    [Lang.Blocks.ROBOID_sound_good_job, "9"]
+                ],
+                "value": "1",
+                "fontSize": 11
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "text",
+                    "params": [ "0" ]
+                },
+                null,
+                {
+                    "type": "text",
+                    "params": [ "1" ]
+                },
+                null
+            ],
+            "type": "roboid_turtle_play_sound_times"
+        },
+        "paramsKeyMap": {
+            "INDEX": 0,
+            "SOUND": 1,
+            "COUNT": 2
+        },
+        "class": "turtle_sound",
+        "isNotFor": [ "roboid" ],
+        "func": function (sprite, script) {
+            var index = script.getNumberValue('INDEX');
+            var robot = Entry.Roboid.getTurtle(index);
+            var packet = robot.packet;
+            packet.buzzer = 0;
+            packet.note = 0;
+            var sound = Number(script.getField("SOUND"));
+            var count = script.getNumberValue("COUNT");
+            if(count) robot.setSound(sound, count);
+            return script.callReturn();
+        },
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Roboid.turtle_sound(%1, %2, %3)",
+                textParams: [
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.ROBOID_sound_beep, "1"],
+                            [Lang.Blocks.ROBOID_sound_random_beep, "2"],
+                            [Lang.Blocks.ROBOID_sound_siren, "3"],
+                            [Lang.Blocks.ROBOID_sound_engine, "4"],
+                            [Lang.Blocks.ROBOID_sound_robot, "5"],
+                            [Lang.Blocks.ROBOID_sound_march, "6"],
+                            [Lang.Blocks.ROBOID_sound_birthday, "7"],
+                            [Lang.Blocks.ROBOID_sound_dibidibidip, "8"],
+                            [Lang.Blocks.ROBOID_sound_good_job, "9"]
+                        ],
+                        "value": "1",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnValuePartialUpperCase,
+                        codeMap: "Entry.CodeMap.Turtle.sounds"
+                    },
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    }
+                ]
+            }
+        ]}
+    },
+    "roboid_turtle_play_sound_times_until_done": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.ROBOID_sound_beep, "1"],
+                    [Lang.Blocks.ROBOID_sound_random_beep, "2"],
+                    [Lang.Blocks.ROBOID_sound_siren, "3"],
+                    [Lang.Blocks.ROBOID_sound_engine, "4"],
+                    [Lang.Blocks.ROBOID_sound_robot, "5"],
+                    [Lang.Blocks.ROBOID_sound_march, "6"],
+                    [Lang.Blocks.ROBOID_sound_birthday, "7"],
+                    [Lang.Blocks.ROBOID_sound_dibidibidip, "8"],
+                    [Lang.Blocks.ROBOID_sound_good_job, "9"]
+                ],
+                "value": "1",
+                "fontSize": 11
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "text",
+                    "params": [ "0" ]
+                },
+                null,
+                {
+                    "type": "text",
+                    "params": [ "1" ]
+                },
+                null
+            ],
+            "type": "roboid_turtle_play_sound_times_until_done"
+        },
+        "paramsKeyMap": {
+            "INDEX": 0,
+            "SOUND": 1,
+            "COUNT": 2
+        },
+        "class": "turtle_sound",
+        "isNotFor": [ "roboid" ],
+        "func": function (sprite, script) {
+            var pd = Entry.hw.portData;
+            var index = script.getNumberValue('INDEX');
+            var robot = Entry.Roboid.getTurtle(index);
+            var packet = robot.packet;
+            if (!script.isStart) {
+                script.isStart = true;
+                packet.buzzer = 0;
+                packet.note = 0;
+                var sound = Number(script.getField("SOUND"));
+                var count = script.getNumberValue("COUNT");
+                if(count) {
+                    robot.setSound(sound, count);
+                    return script;
+                } else {
+                    robot.sound = 0;
+                    robot.soundRepeat = 1;
+                    delete script.isStart;
+                    Entry.engine.isContinue = false;
+                    return script.callReturn();
+                }
+            } else {
+                var soundStateId = pd['turtle' + index + 'soundStateId'];
+                if(soundStateId != robot.soundStateId) {
+                    robot.soundStateId = soundStateId;
+                    var soundState = pd['turtle' + index + 'soundState'];
+                    if(soundState == 0) {
+                        delete script.isStart;
+                        Entry.engine.isContinue = false;
+                        return script.callReturn();
+                    }
+                }
+                return script;
+            }
+        },
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Roboid.turtle_sound_until_done(%1, %2, %3)",
+                textParams: [
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.ROBOID_sound_beep, "1"],
+                            [Lang.Blocks.ROBOID_sound_random_beep, "2"],
+                            [Lang.Blocks.ROBOID_sound_siren, "3"],
+                            [Lang.Blocks.ROBOID_sound_engine, "4"],
+                            [Lang.Blocks.ROBOID_sound_robot, "5"],
+                            [Lang.Blocks.ROBOID_sound_march, "6"],
+                            [Lang.Blocks.ROBOID_sound_birthday, "7"],
+                            [Lang.Blocks.ROBOID_sound_dibidibidip, "8"],
+                            [Lang.Blocks.ROBOID_sound_good_job, "9"]
+                        ],
+                        "value": "1",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnValuePartialUpperCase,
+                        codeMap: "Entry.CodeMap.Turtle.sounds"
+                    },
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    }
+                ]
+            }
+        ]}
+    },
+    "roboid_turtle_change_buzzer_by": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "text",
+                    "params": [ "0" ]
+                },
+                {
+                    "type": "text",
+                    "params": [ "10" ]
+                },
+                null
+            ],
+            "type": "roboid_turtle_change_buzzer_by"
+        },
+        "paramsKeyMap": {
+            "INDEX": 0,
+            "VALUE": 1
+        },
+        "class": "turtle_sound",
+        "isNotFor": [ "roboid" ],
+        "func": function (sprite, script) {
+            var index = script.getNumberValue('INDEX');
+            var robot = Entry.Roboid.getTurtle(index);
+            var packet = robot.packet;
+            var value = script.getNumberValue("VALUE");
+            packet.buzzer = packet.buzzer != undefined ? packet.buzzer + value : value;
+            packet.note = 0;
+            robot.setSound(0);
+            return script.callReturn();
+        },
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Roboid.turtle_buzzer_by(%1, %2)",
+                textParams: [
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    }
+                ]
+            }
+        ]}
+    },
+    "roboid_turtle_set_buzzer_to": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "text",
+                    "params": [ "0" ]
+                },
+                {
+                    "type": "text",
+                    "params": [ "1000" ]
+                },
+                null
+            ],
+            "type": "roboid_turtle_set_buzzer_to"
+        },
+        "paramsKeyMap": {
+            "INDEX": 0,
+            "VALUE": 1
+        },
+        "class": "turtle_sound",
+        "isNotFor": [ "roboid" ],
+        "func": function (sprite, script) {
+            var index = script.getNumberValue('INDEX');
+            var robot = Entry.Roboid.getTurtle(index);
+            var packet = robot.packet;
+            packet.buzzer = script.getNumberValue("VALUE");
+            packet.note = 0;
+            robot.setSound(0);
+            return script.callReturn();
+        },
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Roboid.turtle_buzzer(%1, %2)",
+                textParams: [
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    }
+                ]
+            }
+        ]}
+    },
+    "roboid_turtle_clear_sound": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "text",
+                    "params": [ "0" ]
+                },
+                null
+            ],
+            "type": "roboid_turtle_clear_sound"
+        },
+        "paramsKeyMap": {
+            "INDEX": 0
+        },
+        "class": "turtle_sound",
+        "isNotFor": [ "roboid" ],
+        "func": function (sprite, script) {
+            var index = script.getNumberValue('INDEX');
+            var robot = Entry.Roboid.getTurtle(index);
+            var packet = robot.packet;
+            packet.buzzer = 0;
+            packet.note = 0;
+            robot.setSound(0);
+            return script.callReturn();
+        },
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Roboid.turtle_sound_off(%1)",
+                textParams: [
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    }
+                ],
+                params: [null, null]
+            }
+        ]}
+    },
+    "roboid_turtle_play_note": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.ALBERT_note_c + '',"4"],
+                    [Lang.Blocks.ALBERT_note_c + '#',"5"],
+                    [Lang.Blocks.ALBERT_note_d + '',"6"],
+                    [Lang.Blocks.ALBERT_note_e + 'b',"7"],
+                    [Lang.Blocks.ALBERT_note_e + '',"8"],
+                    [Lang.Blocks.ALBERT_note_f + '',"9"],
+                    [Lang.Blocks.ALBERT_note_f + '#',"10"],
+                    [Lang.Blocks.ALBERT_note_g + '',"11"],
+                    [Lang.Blocks.ALBERT_note_g + '#',"12"],
+                    [Lang.Blocks.ALBERT_note_a + '',"13"],
+                    [Lang.Blocks.ALBERT_note_b + 'b',"14"],
+                    [Lang.Blocks.ALBERT_note_b + '',"15"]
+                ],
+                "value": "4",
+                "fontSize": 11
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [ "1", "1" ],
+                    [ "2", "2" ],
+                    [ "3", "3" ],
+                    [ "4", "4" ],
+                    [ "5", "5" ],
+                    [ "6", "6" ],
+                    [ "7", "7" ]
+                ],
+                "value": "1",
+                "fontSize": 11
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "text",
+                    "params": [ "0" ]
+                },
+                null,
+                "4",
+                null
+            ],
+            "type": "roboid_turtle_play_note"
+        },
+        "paramsKeyMap": {
+            "INDEX": 0,
+            "NOTE": 1,
+            "OCTAVE": 2
+        },
+        "class": "turtle_sound",
+        "isNotFor": [ "roboid" ],
+        "func": function (sprite, script) {
+            var index = script.getNumberValue('INDEX');
+            var robot = Entry.Roboid.getTurtle(index);
+            var packet = robot.packet;
+            var note = script.getNumberField("NOTE", script);
+            var octave = script.getNumberField("OCTAVE", script);
+            packet.buzzer = 0;
+            note += (octave-1)*12;
+            packet.note = note;
+            robot.setSound(0);
+            return script.callReturn();
+        },
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Roboid.turtle_pitch(%1, %2, %3)",
+                textParams: [
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.ALBERT_note_c + '',"4"],
+                            [Lang.Blocks.ALBERT_note_c + '#',"5"],
+                            [Lang.Blocks.ALBERT_note_d + '',"6"],
+                            [Lang.Blocks.ALBERT_note_e + 'b',"7"],
+                            [Lang.Blocks.ALBERT_note_e + '',"8"],
+                            [Lang.Blocks.ALBERT_note_f + '',"9"],
+                            [Lang.Blocks.ALBERT_note_f + '#',"10"],
+                            [Lang.Blocks.ALBERT_note_g + '',"11"],
+                            [Lang.Blocks.ALBERT_note_g + '#',"12"],
+                            [Lang.Blocks.ALBERT_note_a + '',"13"],
+                            [Lang.Blocks.ALBERT_note_b + 'b',"14"],
+                            [Lang.Blocks.ALBERT_note_b + '',"15"]
+                        ],
+                        "value": "4",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnValuePartialUpperCase,
+                        codeMap: "Entry.CodeMap.Turtle.notes"
+
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [ "1", "1" ],
+                            [ "2", "2" ],
+                            [ "3", "3" ],
+                            [ "4", "4" ],
+                            [ "5", "5" ],
+                            [ "6", "6" ],
+                            [ "7", "7" ]
+                        ],
+                        "value": "1",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringOrNumberByValue
+                    }
+                ]
+            }
+        ]}
+    },
+    "roboid_turtle_play_note_for_beats": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.ALBERT_note_c + '',"4"],
+                    [Lang.Blocks.ALBERT_note_c + '#',"5"],
+                    [Lang.Blocks.ALBERT_note_d + '',"6"],
+                    [Lang.Blocks.ALBERT_note_e + 'b',"7"],
+                    [Lang.Blocks.ALBERT_note_e + '',"8"],
+                    [Lang.Blocks.ALBERT_note_f + '',"9"],
+                    [Lang.Blocks.ALBERT_note_f + '#',"10"],
+                    [Lang.Blocks.ALBERT_note_g + '',"11"],
+                    [Lang.Blocks.ALBERT_note_g + '#',"12"],
+                    [Lang.Blocks.ALBERT_note_a + '',"13"],
+                    [Lang.Blocks.ALBERT_note_b + 'b',"14"],
+                    [Lang.Blocks.ALBERT_note_b + '',"15"]
+                ],
+                "value": "4",
+                "fontSize": 11
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [ "1", "1" ],
+                    [ "2", "2" ],
+                    [ "3", "3" ],
+                    [ "4", "4" ],
+                    [ "5", "5" ],
+                    [ "6", "6" ],
+                    [ "7", "7" ]
+                ],
+                "value": "1",
+                "fontSize": 11
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "text",
+                    "params": [ "0" ]
+                },
+                null,
+                "4",
+                {
+                    "type": "text",
+                    "params": [ "0.5" ]
+                },
+                null
+            ],
+            "type": "roboid_turtle_play_note_for_beats"
+        },
+        "paramsKeyMap": {
+            "INDEX": 0,
+            "NOTE": 1,
+            "OCTAVE": 2,
+            "VALUE": 3
+        },
+        "class": "turtle_sound",
+        "isNotFor": [ "roboid" ],
+        "func": function (sprite, script) {
+            var index = script.getNumberValue('INDEX');
+            var robot = Entry.Roboid.getTurtle(index);
+            var packet = robot.packet;
+            if(!script.isStart) {
+                var note = script.getNumberField("NOTE", script);
+                var octave = script.getNumberField("OCTAVE", script);
+                var beat = script.getNumberValue("VALUE", script);
+                note += (octave-1)*12;
+                var timeValue = beat*60*1000/robot.tempo;
+                script.isStart = true;
+                script.timeFlag = 1;
+                packet.buzzer = 0;
+                packet.note = note;
+                robot.setSound(0);
+                if(timeValue > 100) {
+                    var timer1 = setTimeout(function() {
+                        packet.note = 0;
+                        Entry.Roboid.removeTimeout(timer1);
+                    }, timeValue-100);
+                    Entry.Roboid.timeouts.push(timer1);
+                }
+                var timer2 = setTimeout(function() {
+                    script.timeFlag = 0;
+                    Entry.Roboid.removeTimeout(timer2);
+                }, timeValue);
+                Entry.Roboid.timeouts.push(timer2);
+                return script;
+            } else if (script.timeFlag == 1) {
+                return script;
+            } else {
+                delete script.isStart;
+                delete script.timeFlag;
+                Entry.engine.isContinue = false;
+                packet.note = 0;
+                return script.callReturn();
+            }
+        },
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Roboid.turtle_note(%1, %2, %3, %4)",
+                textParams: [
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.ALBERT_note_c + '',"4"],
+                            [Lang.Blocks.ALBERT_note_c + '#',"5"],
+                            [Lang.Blocks.ALBERT_note_d + '',"6"],
+                            [Lang.Blocks.ALBERT_note_e + 'b',"7"],
+                            [Lang.Blocks.ALBERT_note_e + '',"8"],
+                            [Lang.Blocks.ALBERT_note_f + '',"9"],
+                            [Lang.Blocks.ALBERT_note_f + '#',"10"],
+                            [Lang.Blocks.ALBERT_note_g + '',"11"],
+                            [Lang.Blocks.ALBERT_note_g + '#',"12"],
+                            [Lang.Blocks.ALBERT_note_a + '',"13"],
+                            [Lang.Blocks.ALBERT_note_b + 'b',"14"],
+                            [Lang.Blocks.ALBERT_note_b + '',"15"]
+                        ],
+                        "value": "4",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnValuePartialUpperCase,
+                        codeMap: "Entry.CodeMap.Turtle.notes"
+
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [ "1", "1" ],
+                            [ "2", "2" ],
+                            [ "3", "3" ],
+                            [ "4", "4" ],
+                            [ "5", "5" ],
+                            [ "6", "6" ],
+                            [ "7", "7" ]
+                        ],
+                        "value": "1",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringOrNumberByValue
+                    },
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    }
+                ]
+            },
+        ]}
+    },
+    "roboid_turtle_rest_for_beats": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "text",
+                    "params": [ "0" ]
+                },
+                {
+                    "type": "text",
+                    "params": [ "0.25" ]
+                },
+                null
+            ],
+            "type": "roboid_turtle_rest_for_beats"
+        },
+        "paramsKeyMap": {
+            "INDEX": 0,
+            "VALUE": 1
+        },
+        "class": "turtle_sound",
+        "isNotFor": [ "roboid" ],
+        "func": function (sprite, script) {
+            var index = script.getNumberValue('INDEX');
+            var robot = Entry.Roboid.getTurtle(index);
+            var packet = robot.packet;
+            if (!script.isStart) {
+                script.isStart = true;
+                script.timeFlag = 1;
+                var timeValue = script.getNumberValue("VALUE");
+                timeValue = timeValue*60*1000/robot.tempo;
+                packet.buzzer = 0;
+                packet.note = 0;
+                robot.setSound(0);
+                var timer = setTimeout(function() {
+                    script.timeFlag = 0;
+                    Entry.Roboid.removeTimeout(timer);
+                }, timeValue);
+                Entry.Roboid.timeouts.push(timer);
+                return script;
+            } else if (script.timeFlag == 1) {
+                return script;
+            } else {
+                delete script.isStart;
+                delete script.timeFlag;
+                Entry.engine.isContinue = false;
+                return script.callReturn();
+            }
+        },
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Roboid.turtle_note_off(%1, %2)",
+                textParams: [
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    }
+                ]
+            }
+        ]}
+    },
+    "roboid_turtle_change_tempo_by": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "text",
+                    "params": [ "0" ]
+                },
+                {
+                    "type": "text",
+                    "params": [ "20" ]
+                },
+                null
+            ],
+            "type": "roboid_turtle_change_tempo_by"
+        },
+        "paramsKeyMap": {
+            "INDEX": 0,
+            "VALUE": 1
+        },
+        "class": "turtle_sound",
+        "isNotFor": [ "roboid" ],
+        "func": function (sprite, script) {
+            var index = script.getNumberValue('INDEX');
+            var robot = Entry.Roboid.getTurtle(index);
+            robot.tempo += script.getNumberValue('VALUE');
+            if (robot.tempo < 1) robot.tempo = 1;
+            return script.callReturn();
+        },
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Roboid.turtle_tempo_by(%1, %2)",
+                textParams: [
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    }
+                ]
+            }
+        ]}
+    },
+    "roboid_turtle_set_tempo_to": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "text",
+                    "params": [ "0" ]
+                },
+                {
+                    "type": "text",
+                    "params": [ "60" ]
+                },
+                null
+            ],
+            "type": "roboid_turtle_set_tempo_to"
+        },
+        "paramsKeyMap": {
+            "INDEX": 0,
+            "VALUE": 1
+        },
+        "class": "turtle_sound",
+        "isNotFor": [ "roboid" ],
+        "func": function (sprite, script) {
+            var index = script.getNumberValue('INDEX');
+            var robot = Entry.Roboid.getTurtle(index);
+            robot.tempo = script.getNumberValue('VALUE');
+            if (robot.tempo < 1) robot.tempo = 1;
+            return script.callReturn();
+        },
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Roboid.turtle_tempo(%1, %2)",
+                textParams: [
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    }
+                ]
+            }
+        ]}
+    },
+    // ----- akaii: add until here
     "is_clicked": {
         "color": "#AEB8FF",
         "skeleton": "basic_boolean_field",
@@ -32382,6 +42687,1211 @@ Entry.block = {
         "syntax": { "js": [], "py": [] }
     },
     // ardublock Added 2016-06-01
+    // mkboard Added 2017-07-04
+    "mkboard_analog_list": {
+        "color": "#00979D",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "template": "%1",
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [ "A0", "0" ],
+                    [ "A1", "1" ],
+                    [ "A2", "2" ],
+                    [ "A3", "3" ],
+                    [ "A4", "4" ],
+                    [ "A5", "5" ],
+                    [ "A6", "6" ],
+                    [ "A7", "7" ]
+                ],
+                "value": "0",
+                "fontSize": 11
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null ]
+        },
+        "paramsKeyMap": {
+            "PORT": 0
+        },
+        "func": function (sprite, script) {
+            return script.getField("PORT");
+        },
+        "syntax": {"js": [], "py": []}
+    },
+    "mkboard_get_analog_value": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "mkboard_analog_list"
+                }
+            ],
+            "type": "mkboard_get_analog_value"
+        },
+        "paramsKeyMap": {
+            "PORT": 0
+        },
+        "class": "mkboardGet",
+        "isNotFor": [ "mkboard" ],
+        "func": function (sprite, script) {
+            var port = script.getValue("PORT", script);
+            var ANALOG = Entry.hw.portData.ANALOG;
+            if (port[0] === "A")
+                port = port.substring(1)
+            return ANALOG ? ANALOG[port] || 0 : 0;
+        },
+        "syntax": {"js": [], "py": []}
+    },
+    "mkboard_get_analog_value_map": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "mkboard_get_analog_value",
+                    "params": [
+                        {
+                            "type": "mkboard_analog_list"
+                        }
+                    ]
+                },
+                {
+                    "type": "number",
+                    "params": [ "0" ]
+                },
+                {
+                    "type": "number",
+                    "params": [ "1023" ]
+                },
+                {
+                    "type": "number",
+                    "params": [ "0" ]
+                },
+                {
+                    "type": "number",
+                    "params": [ "100" ]
+                }
+            ],
+            "type": "mkboard_get_analog_value_map"
+        },
+        "paramsKeyMap": {
+            "PORT": 0,
+            "VALUE2": 1,
+            "VALUE3": 2,
+            "VALUE4": 3,
+            "VALUE5": 4
+        },
+        "class": "mkboardGet",
+        "isNotFor": [ "mkboard" ],
+        "func": function (sprite, script) {
+            var result = script.getValue("PORT", script);
+            var ANALOG = Entry.hw.portData.ANALOG;
+            var value2 = script.getNumberValue("VALUE2", script);
+            var value3 = script.getNumberValue("VALUE3", script);
+            var value4 = script.getNumberValue("VALUE4", script);
+            var value5 = script.getNumberValue("VALUE5", script);
+
+            if (value2 > value3) {
+                var swap = value2;
+                value2 = value3;
+                value3 = swap;
+            }
+            if (value4 > value5) {
+                var swap = value4;
+                value4 = value5;
+                value5 = swap;
+            }
+            result -= value2;
+            result = result * ((value5 - value4) / (value3 - value2));
+            result += value4;
+            result = Math.min(value5, result);
+            result = Math.max(value4, result);
+
+            return result
+        },
+        "syntax": {"js": [], "py": []}
+    },
+    "mkboard_get_ultrasonic_value": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [{
+                type: 'arduino_get_port_number',
+                params: [ '13' ],
+            }, {
+                type: 'arduino_get_port_number',
+                params: [ '12' ],
+            }],
+            "type": "mkboard_get_ultrasonic_value"
+        },
+        "paramsKeyMap": {
+            "PORT1": 0,
+            "PORT2": 1,
+        },
+        "class": "mkboardGet",
+        "isNotFor": [ "mkboard" ],
+        "func": function (sprite, script) {
+            var port1 = script.getNumberValue("PORT1", script);
+            var port2 = script.getNumberValue("PORT2", script);
+
+            if(!Entry.hw.sendQueue['SET']) {
+                Entry.hw.sendQueue['SET'] = {};
+            }
+            delete Entry.hw.sendQueue['SET'][port1];
+            delete Entry.hw.sendQueue['SET'][port2];
+
+            if(!Entry.hw.sendQueue['GET']) {
+                Entry.hw.sendQueue['GET'] = {};
+            }
+            Entry.hw.sendQueue['GET'][Entry.mkboard.sensorTypes.ULTRASONIC] = {
+                port: [port1, port2],
+                time: new Date().getTime()
+            };
+            return Entry.hw.portData.ULTRASONIC || 0;
+        },
+        "syntax": {"js": [], "py": []}
+    },
+    "mkboard_get_digital": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_boolean_field",
+        "params": [{
+            "type": "Block",
+            "accept": "string"
+        }],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "arduino_get_port_number"
+                }
+            ],
+            "type": "mkboard_get_digital"
+        },
+        "paramsKeyMap": {
+            "PORT": 0
+        },
+        "class": "mkboardGet",
+        "isNotFor": [ "mkboard" ],
+        "func": function (sprite, script) {
+            var port = script.getNumberValue("PORT", script);
+            var DIGITAL = Entry.hw.portData.DIGITAL;
+            if(!Entry.hw.sendQueue['GET']) {
+                Entry.hw.sendQueue['GET'] = {};
+            }
+            Entry.hw.sendQueue['GET'][Entry.mkboard.sensorTypes.DIGITAL] = {
+                port: port,
+                time: new Date().getTime()
+            };
+            return (DIGITAL) ? DIGITAL[port] || 0 : 0;
+        },
+        "syntax": {"js": [], "py": []}
+    },
+    "mkboard_toggle_led": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "arduino_get_port_number"
+                },
+                {
+                    "type": "arduino_get_digital_toggle",
+                    "params": [ "on" ],
+                },
+                null
+            ],
+            "type": "mkboard_toggle_led"
+        },
+        "paramsKeyMap": {
+            "PORT": 0,
+            "VALUE": 1
+        },
+        "class": "mkboard",
+        "isNotFor": [ "mkboard" ],
+        "func": function (sprite, script) {
+            var port = script.getNumberValue("PORT");
+            var value = script.getValue("VALUE");
+
+            if(typeof value === 'string') {
+                value = value.toLowerCase();
+            }
+            if(Entry.mkboard.highList.indexOf(value) > -1) {
+                value = 255;
+            } else if(Entry.mkboard.lowList.indexOf(value) > -1) {
+                value = 0;
+            } else {
+                throw new Error();
+            }
+            if(!Entry.hw.sendQueue['SET']) {
+                Entry.hw.sendQueue['SET'] = {};
+            }
+            Entry.hw.sendQueue['SET'][port] = {
+                type: Entry.mkboard.sensorTypes.DIGITAL,
+                data: value,
+                time: new Date().getTime()
+            };
+            return script.callReturn();
+        },
+        "syntax": {"js": [], "py": []}
+    },
+    "mkboard_digital_pwm": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "arduino_get_pwm_port_number"
+                },
+                {
+                    "type": "text",
+                    "params": [ "255" ]
+                },
+                null
+            ],
+            "type": "mkboard_digital_pwm"
+        },
+        "paramsKeyMap": {
+            "PORT": 0,
+            "VALUE": 1
+        },
+        "class": "mkboard",
+        "isNotFor": [ "mkboard" ],
+        "func": function (sprite, script) {
+            var port = script.getNumberValue("PORT");
+            var value = script.getNumberValue("VALUE");
+            value = Math.round(value);
+            value = Math.max(value, 0);
+            value = Math.min(value, 255);
+            if(!Entry.hw.sendQueue['SET']) {
+                Entry.hw.sendQueue['SET'] = {};
+            }
+            Entry.hw.sendQueue['SET'][port] = {
+                type: Entry.mkboard.sensorTypes.PWM,
+                data: value,
+                time: new Date().getTime()
+            };
+            return script.callReturn();
+        },
+        "syntax": {"js": [], "py": []}
+    },
+    "mkboard_tone_list": {
+        "color": "#00979D",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "template": "%1",
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.silent, "0"],
+                    [Lang.Blocks.do_name, "C"],
+                    [Lang.Blocks.do_sharp_name, "CS"],
+                    [Lang.Blocks.re_name, "D"],
+                    [Lang.Blocks.re_sharp_name, "DS"],
+                    [Lang.Blocks.mi_name, "E"],
+                    [Lang.Blocks.fa_name, "F"],
+                    [Lang.Blocks.fa_sharp_name, "FS"],
+                    [Lang.Blocks.sol_name, "G"],
+                    [Lang.Blocks.sol_sharp_name, "GS"],
+                    [Lang.Blocks.la_name, "A"],
+                    [Lang.Blocks.la_sharp_name, "AS"],
+                    [Lang.Blocks.si_name, "B"]
+                ],
+                "value": "C",
+                "fontSize": 11
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null ]
+        },
+        "paramsKeyMap": {
+            "NOTE": 0
+        },
+        "func": function (sprite, script) {
+            return script.getField("NOTE");
+        },
+        "syntax": {"js": [], "py": []}
+    },
+    "mkboard_tone_value": {
+        "color": "#00979D",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "template": "%1",
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "mkboard_tone_list"
+                }
+            ],
+            "type": "mkboard_tone_value"
+        },
+        "paramsKeyMap": {
+            "NOTE": 0
+        },
+        "func": function (sprite, script) {
+            return script.getNumberValue("NOTE");
+        },
+        "syntax": {"js": [], "py": []}
+    },
+    "mkboard_octave_list": {
+        "color": "#00979D",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "template": "%1",
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    ["1", "1"],
+                    ["2", "2"],
+                    ["3", "3"],
+                    ["4", "4"],
+                    ["5", "5"],
+                    ["6", "6"]
+                ],
+                "value": "3",
+                "fontSize": 11
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null ]
+        },
+        "paramsKeyMap": {
+            "OCTAVE": 0
+        },
+        "func": function (sprite, script) {
+            return script.getField("OCTAVE");
+        },
+        "syntax": {"js": [], "py": []}
+    },
+    "mkboard_set_tone": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [{
+            "type": "Block",
+            "accept": "string"
+        }, {
+            "type": "Block",
+            "accept": "string"
+        }, {
+            "type": "Block",
+            "accept": "string"
+        }, {
+            "type": "Block",
+            "accept": "string"
+        }, {
+            "type": "Indicator",
+            "img": "block_icon/hardware_03.png",
+            "size": 12
+        }],
+        "events": {},
+        "def": {
+            "params": [{
+                    "type": "arduino_get_port_number",
+                    "value": 4,
+                    "params": [ "11" ]
+                },
+                {
+                    "type": "mkboard_tone_list"
+                },
+                {
+                    "type": "mkboard_octave_list"
+                },
+                {
+                    "type": "text",
+                    "params": [ "1" ]
+                },
+                null
+            ],
+            "type": "mkboard_set_tone"
+        },
+        "paramsKeyMap": {
+            "PORT": 0,
+            "NOTE": 1,
+            "OCTAVE": 2,
+            "DURATION": 3
+        },
+        "class": "mkboard",
+        "isNotFor": [ "mkboard" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var port = script.getNumberValue("PORT", script);
+
+            if (!script.isStart) {
+                var note = script.getValue("NOTE", script);
+                if(!Entry.Utils.isNumber(note))
+                    note = Entry.mkboard.toneTable[note];
+
+                if(note < 0) {
+                    note = 0;
+                } else if(note > 12) {
+                    note = 12;
+                }
+
+                var duration = script.getNumberValue("DURATION", script);
+
+                if(duration < 0) {
+                    duration = 0;
+                }
+
+                if(!sq['SET']) {
+                    sq['SET'] = {};
+                }
+
+                if(duration === 0) {
+                    sq['SET'][port] = {
+                        type: Entry.mkboard.sensorTypes.TONE,
+                        data: 0,
+                        time: new Date().getTime()
+                    };
+                    return script.callReturn();
+                }
+
+                var octave = script.getNumberValue("OCTAVE", script) - 1;
+                if(octave < 0) {
+                    octave = 0;
+                } else if(octave > 5) {
+                    octave = 5;
+                }
+
+                var value = 0;
+
+                if(note != 0) {
+                    value = Entry.mkboard.toneMap[note][octave];
+                }
+
+                duration = duration * 1000;
+                script.isStart = true;
+                script.timeFlag = 1;
+
+                sq['SET'][port] = {
+                    type: Entry.mkboard.sensorTypes.TONE,
+                    data: {
+                        value: value,
+                        duration: duration
+                    },
+                    time: new Date().getTime()
+                };
+
+                setTimeout(function() {
+                    script.timeFlag = 0;
+                }, duration + 32);
+                return script;
+            } else if (script.timeFlag == 1) {
+                return script;
+            } else {
+                delete script.timeFlag;
+                delete script.isStart;
+                sq['SET'][port] = {
+                    type: Entry.mkboard.sensorTypes.TONE,
+                    data: 0,
+                    time: new Date().getTime()
+                };
+                Entry.engine.isContinue = false;
+                return script.callReturn();
+            }
+        },
+        "syntax": {"js": [], "py": []}
+    },
+    "mkboard_set_servo": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [{
+            "type": "Block",
+            "accept": "string"
+        }, {
+            "type": "Block",
+            "accept": "string"
+        }, {
+            "type": "Indicator",
+            "img": "block_icon/hardware_03.png",
+            "size": 12
+        }],
+        "events": {},
+        "def": {
+            "params": [{
+                    "type": "arduino_get_port_number",
+                    "params": [ "10" ]
+                },
+                null
+            ],
+            "type": "mkboard_set_servo"
+        },
+        "paramsKeyMap": {
+            "PORT": 0,
+            "VALUE": 1
+        },
+        "class": "mkboard",
+        "isNotFor": [ "mkboard" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var port = script.getNumberValue("PORT", script);
+            var value = script.getNumberValue("VALUE", script);
+            value = Math.min(180, value);
+            value = Math.max(0, value);
+
+            if(!sq['SET']) {
+                sq['SET'] = {};
+            }
+            sq['SET'][port] = {
+                type: Entry.mkboard.sensorTypes.SERVO_PIN,
+                data: value,
+                time: new Date().getTime()
+            };
+
+            return script.callReturn();
+        },
+        "syntax": {"js": [], "py": []}
+    },    
+    "mkboard_dc_motor_direction_list": {
+        "color": "#00979D",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "template": "%1",
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.mkboard_dc_motor_forward, "0"],
+                    [Lang.Blocks.mkboard_dc_motor_backward, "1"]
+                ],
+                "value": "0",
+                "fontSize": 11
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null ]
+        },
+        "paramsKeyMap": {
+            "DC_MOTOR_DIRECTION": 0
+        },
+        "func": function (sprite, script) {
+            return script.getField("DC_MOTOR_DIRECTION");
+        },
+        "syntax": {"js": [], "py": []}
+    },
+    "mkboard_set_left_dc_motor": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [{
+            "type": "Block",
+            "accept": "string"
+        }, {
+            "type": "Block",
+            "accept": "string"
+        }, {
+            "type": "Indicator",
+            "img": "block_icon/hardware_03.png",
+            "size": 12
+        }],
+        "events": {},
+        "def": {
+            "params": [{
+                    "type": "mkboard_dc_motor_direction_list"
+                },
+                {
+                    "type": "text",
+                    "params": [ "100" ]
+                },
+                null
+            ],
+            "type": "mkboard_set_left_dc_motor"
+        },
+        "paramsKeyMap": {
+            "DC_MOTOR_DIRECTION": 0,
+            "DC_MOTOR_SPEED": 1
+        },
+        "class": "mkboard",
+        "isNotFor": [ "mkboard" ],
+        "func": function (sprite, script) {
+            // var sq = Entry.hw.sendQueue;
+            var direction = script.getValue("DC_MOTOR_DIRECTION", script);
+            if(!Entry.Utils.isNumber(direction))
+                direction = Entry.mkboard.directionTable[direction];
+
+            if(direction < 0) {
+                direction = 0;
+            } else if(direction > 1) {
+                direction = 1;
+            } 
+
+            var speed = script.getNumberValue("DC_MOTOR_SPEED", script) - 1;
+            if(speed < 0) {
+                speed = 0;
+            } else if(speed > 254) {
+                speed = 254;
+            }
+
+
+            if(!Entry.hw.sendQueue['SET']) {
+                Entry.hw.sendQueue['SET'] = {};
+            }            
+
+            Entry.hw.sendQueue['SET'][0] = {
+                type: Entry.mkboard.sensorTypes.DC_MOTOR_LEFT,
+                data: {
+                    direction: direction,
+                    speed: speed
+                 },
+                time: new Date().getTime()
+            };
+
+            setTimeout(function() {
+                script.timeFlag = 0;
+            }, 10);       
+            
+            return script.callReturn();            
+        },
+        "syntax": {"js": [], "py": []}
+    },   
+    "mkboard_set_right_dc_motor": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [{
+            "type": "Block",
+            "accept": "string"
+        }, {
+            "type": "Block",
+            "accept": "string"
+        }, {
+            "type": "Indicator",
+            "img": "block_icon/hardware_03.png",
+            "size": 12
+        }],
+        "events": {},
+        "def": {
+            "params": [{
+                    "type": "mkboard_dc_motor_direction_list"
+                },
+                {
+                    "type": "text",
+                    "params": [ "100" ]
+                },
+                null
+            ],
+            "type": "mkboard_set_right_dc_motor"
+        },
+        "paramsKeyMap": {
+            "DC_MOTOR_DIRECTION": 0,
+            "DC_MOTOR_SPEED": 1
+        },
+        "class": "mkboard",
+        "isNotFor": [ "mkboard" ],
+        "func": function (sprite, script) {
+            // var sq = Entry.hw.sendQueue;
+            var direction = script.getValue("DC_MOTOR_DIRECTION", script);
+            if(!Entry.Utils.isNumber(direction))
+                direction = Entry.mkboard.directionTable[direction];
+
+            if(direction < 0) {
+                direction = 0;
+            } else if(direction > 1) {
+                direction = 1;
+            }
+
+            var speed = script.getNumberValue("DC_MOTOR_SPEED", script) - 1;
+            if(speed < 0) {
+                speed = 0;
+            } else if(speed > 254) {
+                speed = 254;
+            }
+
+            if(!Entry.hw.sendQueue['SET']) {
+                Entry.hw.sendQueue['SET'] = {};
+            } 
+
+            Entry.hw.sendQueue['SET'][1] = {
+                type: Entry.mkboard.sensorTypes.DC_MOTOR_RIGHT,
+                data: {
+                    direction: direction,
+                    speed: speed
+                 },
+                time: new Date().getTime()
+            };
+
+            setTimeout(function() {
+                script.timeFlag = 0;
+            }, 10);              
+            
+            return script.callReturn();
+        },
+        "syntax": {"js": [], "py": []}
+    },
+    "mkboard_get_left_cds_analog_value": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "mkboard_analog_list",
+                    "params": [ "0" ]
+                }
+            ],
+            "type": "mkboard_get_left_cds_analog_value"
+        },
+        "paramsKeyMap": {
+            "PORT": 0
+        },
+        "class": "mkboardGet",
+        "isNotFor": [ "mkboard" ],
+        "func": function (sprite, script) {
+            var port = script.getValue("PORT", script);
+            var ANALOG = Entry.hw.portData.ANALOG;
+            if (port[0] === "A")
+                port = port.substring(1)
+            return ANALOG ? ANALOG[port] || 0 : 0;
+        },
+        "syntax": {"js": [], "py": []}
+    },   
+    "mkboard_get_right_cds_analog_value": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "mkboard_analog_list",
+                    "params": [ "1" ]
+                }
+            ],
+            "type": "mkboard_get_right_cds_analog_value"
+        },
+        "paramsKeyMap": {
+            "PORT": 0
+        },
+        "class": "mkboardGet",
+        "isNotFor": [ "mkboard" ],
+        "func": function (sprite, script) {
+            var port = script.getValue("PORT", script);
+            var ANALOG = Entry.hw.portData.ANALOG;
+            if (port[0] === "A")
+                port = port.substring(1)
+            return ANALOG ? ANALOG[port] || 0 : 0;
+        },
+        "syntax": {"js": [], "py": []}
+    },        
+    "mkboard_toggle_left_led": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "arduino_get_port_number",
+                    "params": [ "3" ]
+                },
+                {
+                    "type": "arduino_get_digital_toggle",
+                    "params": [ "on" ],
+                },
+                null
+            ],
+            "type": "mkboard_toggle_left_led"
+        },
+        "paramsKeyMap": {
+            "PORT": 0,
+            "VALUE": 1
+        },
+        "class": "mkboard",
+        "isNotFor": [ "mkboard" ],
+        "func": function (sprite, script) {
+            var port = script.getNumberValue("PORT");
+            var value = script.getValue("VALUE");
+
+            if(typeof value === 'string') {
+                value = value.toLowerCase();
+            }
+            if(Entry.mkboard.highList.indexOf(value) > -1) {
+                value = 255;
+            } else if(Entry.mkboard.lowList.indexOf(value) > -1) {
+                value = 0;
+            } else {
+                throw new Error();
+            }
+            if(!Entry.hw.sendQueue['SET']) {
+                Entry.hw.sendQueue['SET'] = {};
+            }
+            Entry.hw.sendQueue['SET'][port] = {
+                type: Entry.mkboard.sensorTypes.DIGITAL,
+                data: value,
+                time: new Date().getTime()
+            };
+            return script.callReturn();
+        },
+        "syntax": {"js": [], "py": []}
+    },
+    "mkboard_toggle_right_led": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "arduino_get_port_number",
+                    "params": [ "9" ]
+                },
+                {
+                    "type": "arduino_get_digital_toggle",
+                    "params": [ "on" ],
+                },
+                null
+            ],
+            "type": "mkboard_toggle_right_led"
+        },
+        "paramsKeyMap": {
+            "PORT": 0,
+            "VALUE": 1
+        },
+        "class": "mkboard",
+        "isNotFor": [ "mkboard" ],
+        "func": function (sprite, script) {
+            var port = script.getNumberValue("PORT");
+            var value = script.getValue("VALUE");
+
+            if(typeof value === 'string') {
+                value = value.toLowerCase();
+            }
+            if(Entry.mkboard.highList.indexOf(value) > -1) {
+                value = 255;
+            } else if(Entry.mkboard.lowList.indexOf(value) > -1) {
+                value = 0;
+            } else {
+                throw new Error();
+            }
+            if(!Entry.hw.sendQueue['SET']) {
+                Entry.hw.sendQueue['SET'] = {};
+            }
+            Entry.hw.sendQueue['SET'][port] = {
+                type: Entry.mkboard.sensorTypes.DIGITAL,
+                data: value,
+                time: new Date().getTime()
+            };
+            return script.callReturn();
+        },
+        "syntax": {"js": [], "py": []}
+    },       
+    "mkboard_get_sound_analog_value": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            }
+        ],
+        "events": {}, 
+        "def": {
+            "params": [  
+                {
+                    "type": "mkboard_analog_list",
+                    "params": [ "2" ]
+                }
+            ],
+            "type": "mkboard_get_sound_analog_value"
+        },
+        "paramsKeyMap": {
+            "PORT": 0
+        },
+        "class": "mkboardGet",
+        "isNotFor": [ "mkboard" ],
+        "func": function (sprite, script) {
+            var port = script.getValue("PORT", script);
+            var ANALOG = Entry.hw.portData.ANALOG;
+            if (port[0] === "A")
+                port = port.substring(1)
+            return ANALOG ? ANALOG[port] || 0 : 0;
+        },
+        "syntax": {"js": [], "py": []}
+    },
+
+    /*
+    "mkboard_list_digital_lcd": {
+        "color": "#00979D",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "template": "%1",
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [ Lang.Blocks.mkboard_lcd_first_line, "0" ],
+                    [ Lang.Blocks.mkboard_lcd_seconds_line, "1" ]
+                ],
+                "value": "0",
+                "fontSize": 11
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null ]
+        },
+        "paramsKeyMap": {
+            "LINE": 0
+        },
+        "func": function (sprite, script) {
+            return script.getField("LINE");
+        }
+    },  
+
+    "mkboard_set_digital_lcd": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic",
+        "template": Lang.template.mkboard_set_digital_lcd,
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "mkboard_list_digital_lcd"
+                },
+                {
+                    "type": "text",
+                    "params": [ "Type text !!" ]
+                },
+                null
+            ],
+            "type": "mkboard_set_digital_lcd"
+        },
+        "paramsKeyMap": {
+            "LINE": 0,
+            "STRING": 1,
+        },
+        "class": "mkboardSet",
+        "isNotFor": [ "mkboard" ],
+        "func": function (sprite, script) {
+            var line = script.getNumberValue("LINE");
+            var string = script.getValue("STRING");
+            var text = [];
+
+            if(!script.isStart) {
+                if(typeof string === 'string') {
+                    for (var i = 0; i < string.length; i++) {  
+                        text[i] = Entry.mkboard.toByte(string[i]);
+                    }
+                }
+                else {
+                    text[0] = string;
+                }
+                if(!Entry.hw.sendQueue['SET']) {
+                    Entry.hw.sendQueue['SET'] = {};
+                }
+                
+                script.isStart = true;
+                script.timeFlag = 1;
+                var fps = Entry.FPS || 60;
+                timeValue = 60/fps*50;
+
+                Entry.hw.sendQueue['SET'][line] = {
+                    type: Entry.mkboard.sensorTypes.LCD,
+                    data: {
+                        text0 : text[0],
+                        text1 : text[1],
+                        text2 : text[2],
+                        text3 : text[3],
+                        text4 : text[4],
+                        text5 : text[5],
+                        text6 : text[6],
+                        text7 : text[7],
+                        text8 : text[8],
+                        text9 : text[9],
+                        text10 : text[10],
+                        text11 : text[11],
+                        text12 : text[12],
+                        text13 : text[13],
+                        text14 : text[14],
+                        text15 : text[15]
+                    },
+                    time: new Date().getTime()                
+                };
+
+                setTimeout(function() {
+                    script.timeFlag = 0;
+                }, timeValue);
+                return script;
+            }
+            else if(script.timeFlag == 1) {
+                return script;
+            }
+            else {
+                delete script.timeFlag;
+                delete script.isStart;
+                Entry.engine.isContinue = false;
+                return script.callReturn();
+            }
+        },
+        "syntax": {"js": [], "py": ["mkboard.set_digital_lcd(%1, %2)"]}
+    },    
+    */
+
+    // mkboard Added 2017-07-04
     "joystick_get_number_sensor_value": {
         "parent": "arduino_get_number_sensor_value",
         "isNotFor": [

@@ -332,7 +332,14 @@ Entry.Playground = function() {
             var pictureAdd = Entry.createElement('div', 'entryAddPicture');
             pictureAdd.addClass('entryPlaygroundAddPicture');
             pictureAdd.bindOnClick(function(e) {
-                Entry.do('playgroundClickAddPicture');
+                if (!Entry.container || Entry.container.isSceneObjectsExist())
+                    Entry.do('playgroundClickAddPicture');
+                else {
+                    Entry.toast.alert(
+                        Lang.Workspace.add_object_alert,
+                        Lang.Workspace.add_object_alert_msg
+                    );
+                }
             });
             var innerPictureAdd = Entry.createElement('div', 'entryAddPictureInner');
             innerPictureAdd.addClass('entryPlaygroundAddPictureInner');
@@ -421,7 +428,7 @@ Entry.Playground = function() {
                 if (/[\u4E00-\u9FFF]/.exec(textValue) != null) {
                     font = "KoPub Batang";
                     fontName.value = font;
-                    alert(Lang.Menus.not_supported_text);
+                    entrylms.alert(Lang.Menus.not_supported_text);
                 }
             }
             Entry.playground.object.entity.setFontType(font);
@@ -608,7 +615,7 @@ Entry.Playground = function() {
                     var font = "KoPub Batang";
                     fontName.value = font;
                     Entry.playground.object.entity.setFontType(font);
-                    alert(Lang.Menus.not_supported_text);
+                    entrylms.alert(Lang.Menus.not_supported_text);
                 }
             }
             Entry.playground.object.setText(this.value);
@@ -769,7 +776,14 @@ Entry.Playground = function() {
             var soundAdd = Entry.createElement('div', 'entryAddSound');
             soundAdd.addClass('entryPlaygroundAddSound');
             soundAdd.bindOnClick(function(e) {
-                Entry.do('playgroundClickAddSound');
+                if (!Entry.container || Entry.container.isSceneObjectsExist())
+                    Entry.do('playgroundClickAddSound');
+                else {
+                    Entry.toast.alert(
+                        Lang.Workspace.add_object_alert,
+                        Lang.Workspace.add_object_alert_msg
+                    );
+                }
             });
             var innerSoundAdd = Entry.createElement('div', 'entryAddSoundInner');
             innerSoundAdd.addClass('entryPlaygroundAddSoundInner');
@@ -866,6 +880,7 @@ Entry.Playground = function() {
             this.changeViewMode('picture');
         else if (viewMode == 'sound')
             this.changeViewMode('sound');
+
         this.reloadPlayground();
     };
 
@@ -873,30 +888,22 @@ Entry.Playground = function() {
      * Inject code
      */
     p.injectCode = function() {
-        var code = this.object.script;
-        var ws = this.mainWorkspace;
-
         var workspace = Entry.getMainWS();
-        if (Entry.textCodingEnable && workspace && !workspace.vimBoard._parser._onError) {
-            if(workspace.vimBoard._changedObject) {
-                workspace.vimBoard._currentObject = workspace.vimBoard._changedObject;
-                workspace.vimBoard._currentScene = workspace.vimBoard._changedObject.scene;
-            }
-            else
-                if(Entry.playground) {
-                    workspace.vimBoard._currentObject = Entry.playground.object;
-                    workspace.vimBoard._currentScene = Entry.playground.object.scene;
-                }
+        if (!workspace) return;
 
-            if(Entry.playground && Entry.textCodingEnable) {
-                workspace.vimBoard._changedObject = Entry.playground.object;
-                workspace.vimBoard._currentScene = Entry.playground.object.scene;
-            }
+        var object = this.object;
+        var vimBoard = workspace.vimBoard;
+
+        if (vimBoard && Entry.textCodingEnable && !vimBoard._parser._onError) {
+            vimBoard._changedObject = object;
+            vimBoard._currentScene = object.scene;
         }
 
-        ws.changeBoardCode(code, function() {
-            ws.getBoard().adjustThreadsPosition();
-        });
+        var board = workspace.getBoard();
+        var engine = Entry.engine;
+        var cb = engine && engine.isState('run') ?
+            undefined : board.adjustThreadsPosition.bind(board);
+        workspace.changeBoardCode(object.script, cb);
     };
 
     /**
@@ -906,9 +913,8 @@ Entry.Playground = function() {
         var view = this.pictureListView_;
         if (!view) return;
 
-        while (view.hasChildNodes()) {
+        while (view.hasChildNodes())
             view.removeChild(view.lastChild);
-        }
 
         if (this.object) {
             var pictures = this.object.pictures;
@@ -916,8 +922,6 @@ Entry.Playground = function() {
                 var picture = pictures[i];
                 !picture.view && Entry.playground.generatePictureElement(picture);
                 var element = pictures[i].view;
-                if (!element)
-                    console.log(element);
                 element.orderHolder.innerHTML = i+1;
                 view.appendChild(element);
             }
@@ -937,7 +941,7 @@ Entry.Playground = function() {
         if (isNew === true) delete tempPicture.id;
         delete tempPicture.view;
 
-        picture = JSON.parse(JSON.stringify(tempPicture));
+        picture = Entry.Utils.copy(tempPicture);
         if (!picture.id) picture.id = Entry.generateHash();
 
         picture.name = Entry.getOrderedName(picture.name, this.object.pictures);
@@ -1144,7 +1148,7 @@ Entry.Playground = function() {
         if (isNew === true)
             delete tempSound.id;
 
-        sound = JSON.parse(JSON.stringify(tempSound));
+        sound = Entry.Utils.copy(tempSound);
         if (!sound.id)
             sound.id = Entry.generateHash();
         sound.name = Entry.getOrderedName(sound.name, this.object.sounds);
@@ -1157,6 +1161,20 @@ Entry.Playground = function() {
         );
         this.injectSound();
     };
+
+    p.downloadSound = function(soundId) {
+        var sound = Entry.playground.object.getSound(soundId);
+        if (sound.fileurl) {
+            if(sound.fileurl.indexOf('bark.mp3') > -1) {
+                window.open('/api/sprite/download/entryjs/' + encodeURIComponent(sound.fileurl) + '/' + encodeURIComponent(sound.name+'.mp3'));    
+            } else {
+                window.open(sound.fileurl);
+            }
+        } else {
+            window.open('/api/sprite/download/sound/' + encodeURIComponent(sound.filename) + '/' + encodeURIComponent(sound.name));
+        }
+    }
+
 
     /**
      * select view mode
@@ -1191,15 +1209,29 @@ Entry.Playground = function() {
                     this.pictureView_.object != this.object) {
                     this.pictureView_.object = this.object;
                     this.injectPicture();
+                } else if(this.object && this.pictureListView_ && !this.pictureListView_.hasChildNodes()) {
+                    var pictures = this.object.pictures;
+                    if(pictures && pictures.length) {
+                        this.injectPicture();
+                    }
                 }
             } else this.painter.hide();
         }
 
-        if (viewType == 'sound' && (!this.soundView_.object ||
-            this.soundView_.object != this.object)) {
-            this.soundView_.object = this.object;
-            this.injectSound();
-        } else if (viewType == 'text' && this.object.objectType == 'textBox' ||
+        if (viewType == 'sound') {
+            if (!this.soundView_.object ||
+                this.soundView_.object != this.object) {
+                this.soundView_.object = this.object;
+                this.injectSound();
+            } else if(this.object && this.soundListView_ && !this.soundListView_.hasChildNodes()) {
+                var sounds = this.object.sounds;
+                if(sounds && sounds.length) {
+                    this.injectSound();
+                }
+            }
+        }
+
+        if (viewType == 'text' && this.object.objectType == 'textBox' ||
             (this.textView_.object != this.object)) {
             this.textView_.object = this.object;
             this.injectText();
@@ -1305,11 +1337,11 @@ Entry.Playground = function() {
      */
     p.setMenu = function(objectType) {
         if (this.currentObjectType == objectType) return;
+
         var blockMenu = this.blockMenu;
-        blockMenu.unbanClass(this.currentObjectType);
-        blockMenu.banClass(objectType);
-        blockMenu.setMenu();
-        blockMenu.selectMenu(0, true);
+        blockMenu.unbanClass(this.currentObjectType, true);
+        blockMenu.banClass(objectType, true);
+        blockMenu.setMenu(true);
         this.currentObjectType = objectType;
     };
 
@@ -1374,10 +1406,14 @@ Entry.Playground = function() {
      * Reload playground
      */
     p.reloadPlayground = function () {
+        var engine = Entry.engine;
+
+        if (engine && engine.isState('run')) return;
+
         (function(workspace) {
             if (workspace) {
-                workspace.getBlockMenu().reDraw();
                 workspace.getBoard().reDraw();
+                workspace.getBlockMenu().reDraw();
             }
         })(this.mainWorkspace);
     };
@@ -1490,7 +1526,7 @@ Entry.Playground = function() {
         function nameViewBlur() {
             if (this.value.trim() === '') {
                 Entry.deAttachEventListener(this, 'blur', nameViewBlur);
-                alert(Lang.Workspace.enter_the_name);
+                entrylms.alert(Lang.Workspace.enter_the_name);
                 this.focus();
                 Entry.attachEventListener(this, 'blur', nameViewBlur);
                 return;
@@ -1501,7 +1537,7 @@ Entry.Playground = function() {
                 if(nameViewArray.eq(i).val()==nameView.value &&
                    nameViewArray[i] != this) {
                     Entry.deAttachEventListener(this, 'blur', nameViewBlur);
-                    alert(Lang.Workspace.name_already_exists);
+                    entrylms.alert(Lang.Workspace.name_already_exists);
                     this.focus();
                     Entry.attachEventListener(this, 'blur', nameViewBlur);
                     return;
@@ -1577,6 +1613,13 @@ Entry.Playground = function() {
                         }
                         Entry.removeElement(element);
                     }
+                },
+                { divider: true },
+                {
+                    text: Lang.Workspace.context_download,
+                    callback: function(){
+                        Entry.playground.downloadSound(sound.id);
+                    }
                 }
             ];
             Entry.ContextMenu.show(options, 'workspace-contextmenu');
@@ -1627,7 +1670,7 @@ Entry.Playground = function() {
         function nameViewBlur() {
             if (this.value.trim() === '') {
                 Entry.deAttachEventListener(this, 'blur', nameViewBlur);
-                alert(Lang.Workspace.enter_the_name);
+                entrylms.alert(Lang.Workspace.enter_the_name);
                 this.focus();
                 Entry.attachEventListener(this, 'blur', nameViewBlur);
                 return;
@@ -1637,7 +1680,7 @@ Entry.Playground = function() {
             for (var i=0; i<nameViewArray.length; i++) {
                 if(nameViewArray.eq(i).val() == nameView.value && nameViewArray[i] != this) {
                     Entry.deAttachEventListener(this, 'blur', nameViewBlur);
-                    alert(Lang.Workspace.name_already_exists);
+                    entrylms.alert(Lang.Workspace.name_already_exists);
                     this.focus();
                     Entry.attachEventListener(this, 'blur', nameViewBlur);
                     return;

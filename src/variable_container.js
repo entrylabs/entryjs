@@ -764,7 +764,7 @@ Entry.VariableContainer = function() {
             if(func && func.description) {
                 var funcName = func.description.substring(1, func.description.length-1);
                 if (alert_msg = Entry.TextCodingUtil.isNameIncludeSpace(funcName, 'function')) {
-                    alert(alert_msg);
+                    entrylms.alert(alert_msg);
                     Entry.Func.cancelEdit();
                     return;
                 }
@@ -800,10 +800,12 @@ Entry.VariableContainer = function() {
         removeButton.addClass('entryVariableListElementDeleteWorkspace');
         removeButton.bindOnClick(function(e) {
             e.stopPropagation();
-            if (confirm(Lang.Workspace.will_you_delete_function)) {
-                that.removeFunction(func);
-                that.selected = null;
-            }
+            entrylms.confirm(Lang.Workspace.will_you_delete_function).then(function(result){
+                    if (result === true) {
+                        that.removeFunction(func);
+                        that.selected = null;
+                    }
+            });
         });
 
         var editButton = Entry.createElement('button');
@@ -851,7 +853,7 @@ Entry.VariableContainer = function() {
             var panel = this.variableAddPanel;
             var variableName = panel.view.name.value;
             if (alert_msg = Entry.TextCodingUtil.isNameIncludeSpace(variableName, 'variable')) {
-                alert(alert_msg);
+                entrylms.alert(alert_msg);
                 this.variableAddPanel.view.addClass('entryRemove');
                 this.resetVariableAddPanel('variable');
                 return;
@@ -925,7 +927,7 @@ Entry.VariableContainer = function() {
 
         if (Entry.isTextMode) {
             if (alert_msg = Entry.TextCodingUtil.isNameIncludeSpace(name, 'variable')) {
-                alert(alert_msg);
+                entrylms.alert(alert_msg);
                 variable.listElement.nameField.value = variable.name_;
                 return;
             }
@@ -961,7 +963,7 @@ Entry.VariableContainer = function() {
 
         if (Entry.isTextMode) {
             if (alert_msg = Entry.TextCodingUtil.isNameIncludeSpace(name, 'list')) {
-                alert(alert_msg);
+                entrylms.alert(alert_msg);
                 list.listElement.nameField.value = list.name_;
                 return;
             }
@@ -1258,7 +1260,7 @@ Entry.VariableContainer = function() {
             var panel = this.listAddPanel;
             var listName = panel.view.name.value;
             if (alert_msg = Entry.TextCodingUtil.isNameIncludeSpace(listName, 'list')) {
-                alert(alert_msg);
+                entrylms.alert(alert_msg);
                 this.listAddPanel.view.addClass('entryRemove');
                 this.resetVariableAddPanel('list');
                 return;
@@ -2310,26 +2312,28 @@ Entry.VariableContainer = function() {
         });
     };
 
-    p.addRef = function(type, block) {
+    p.addRef = function(type, blockData) {
         if (!this.view_ || !Entry.playground.mainWorkspace ||
             Entry.getMainWS().getMode() !== Entry.Workspace.MODE_BOARD)
             return;
 
         var datum = {
-            object:block.getCode().object,
-            block: block
+            object:blockData.getCode().object,
+            block: blockData
         };
 
-        if (block.funcBlock) {
-            datum.funcBlock = block.funcBlock;
-            delete block.funcBlock;
+        if (blockData.funcBlock) {
+            datum.funcBlock = blockData.funcBlock;
+            delete blockData.funcBlock;
         }
 
         this[type].push(datum);
 
         if (type == '_functionRefs') {
-            var id = block.type.substr(5);
+            var id = blockData.type.substr(5);
             var func = Entry.variableContainer.functions_[id];
+            if (func.isAdded) return;
+            func.isAdded = true;
             var blocks = func.content.getBlockList();
 
             for (var i=0; i<blocks.length; i++) {
@@ -2348,7 +2352,7 @@ Entry.VariableContainer = function() {
                             block.funcBlock = datum.block;
                             fn(block);
                         }
-                    });;
+                    });
                 }
 
                 if (events && events.dataAdd) {
@@ -2358,7 +2362,7 @@ Entry.VariableContainer = function() {
                             block.funcBlock = datum.block;
                             fn(block);
                         }
-                    });;
+                    });
                 }
             }
         }
@@ -2384,6 +2388,8 @@ Entry.VariableContainer = function() {
         if (type == '_functionRefs') {
             var id = block.type.substr(5);
             var func = Entry.variableContainer.functions_[id];
+            if (func.isRemoved) return;
+            func.isRemoved = true;
             if (func) {
                 var blocks = func.content.getBlockList();
                 for (var i=0; i<blocks.length; i++) {
@@ -2397,13 +2403,13 @@ Entry.VariableContainer = function() {
                     if (events && events.viewDestroy) {
                         events.viewDestroy.forEach(function(fn) {
                             if (fn) fn(block);
-                        });;
+                        });
                     }
 
                     if (events && events.dataDestroy) {
                         events.dataDestroy.forEach(function(fn) {
                             if (fn) fn(block);
-                        });;
+                        });
                     }
                 }
             }

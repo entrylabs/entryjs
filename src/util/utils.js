@@ -488,14 +488,14 @@ Entry.generateHash = function() {
  * @param {function} fn
  */
 Entry.addEventListener = function(eventName, fn) {
-    if (!this.events_)
-        this.events_ = {};
-     if (!this.events_[eventName]) {
-        this.events_[eventName] = [];
+    if (!this.events_) this.events_ = {};
+
+    if (!this.events_[eventName]) {
+       this.events_[eventName] = [];
     }
-    if (fn instanceof Function) {
+    if (fn instanceof Function)
         this.events_[eventName].push(fn);
-    }
+
     return true;
 };
 
@@ -505,15 +505,20 @@ Entry.addEventListener = function(eventName, fn) {
  * @param {?} params
  */
 Entry.dispatchEvent = function(eventName, params) {
-    if (!this.events_)
+    if (!this.events_) {
         this.events_ = {};
+        return;
+    }
 
     var events = this.events_[eventName];
-    if (!events) return;
+    if (!events || events.length === 0) return;
 
-    for (var index = 0, l = events.length; index < l; index++) {
-        events[index].apply(window, Array.prototype.slice.call(arguments).splice(1));
-    }
+    var args = Array.prototype.slice.call(arguments);
+    args.shift();
+
+    events.forEach(function(func) {
+        func.apply(window, args);
+    });
 };
 
 /**
@@ -810,18 +815,31 @@ Entry.nodeListToArray = function(nl) {
     return arr;
 };
 
-Entry.computeInputWidth = function(value){
-    var elem = document.getElementById('entryInputForComputeWidth');
-    if (!elem) {
-        elem = document.createElement("span");
-        elem.setAttribute('id', 'entryInputForComputeWidth');
-        elem.className = "elem-element";
-        document.body.appendChild(elem);
-    }
+Entry.computeInputWidth = (function() {
+    var elem;
+    var _cache = {};
+    return function(value) {
+        value = value.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 
-    elem.innerHTML = value.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-    return Number(elem.offsetWidth + 10) + 'px';
-};
+        var cached = _cache[value];
+        if (cached) return cached;
+        else {
+            elem = elem || document.getElementById('entryInputForComputeWidth');
+            if (!elem) {
+                elem = document.createElement("span");
+                elem.setAttribute('id', 'entryInputForComputeWidth');
+                elem.className = "elem-element";
+                document.body.appendChild(elem);
+            }
+
+            elem.innerHTML = value;
+            var ret = Number(elem.offsetWidth + 10) + 'px';
+
+            if (window.fontLoaded) _cache[value] = ret;
+            return ret;
+        }
+    };
+})();
 
 Entry.isArrowOrBackspace = function(keyCode){
     var codes = [37,38,39,40, 8];
@@ -883,13 +901,13 @@ Entry.toDegrees = function(radians){
     return radians * 180 / Math.PI;
 };
 
-Entry.getPicturesJSON = function (pictures) {
+Entry.getPicturesJSON = function (pictures, isClone) {
     var json = [];
     for (var i=0, len=pictures.length; i<len; i++) {
         var p = pictures[i];
         var o = {};
         o._id = p._id;
-        o.id = p.id;
+        o.id = isClone ? Entry.generateHash() : p.id;
         o.dimension = p.dimension;
         o.filename = p.filename;
         o.fileurl = p.fileurl;
@@ -900,7 +918,7 @@ Entry.getPicturesJSON = function (pictures) {
     return json;
 };
 
-Entry.getSoundsJSON = function (sounds) {
+Entry.getSoundsJSON = function (sounds, isClone) {
     var json = [];
     for (var i=0, len=sounds.length; i<len; i++) {
         var s = sounds[i];
@@ -908,7 +926,7 @@ Entry.getSoundsJSON = function (sounds) {
         o._id = s._id;
         o.duration = s.duration;
         o.ext = s.ext;
-        o.id = s.id;
+        o.id = isClone ? Entry.generateHash() : s.id;
         o.filename = s.filename;
         o.fileurl = s.fileurl;
         o.name = s.name;
@@ -1235,34 +1253,36 @@ Entry.Utils.xmlToJsonData = function(xml) {
     return result;
 };
 
-Entry.Utils.stopProjectWithToast = function(scope, message, isHide, error) {
+Entry.Utils.stopProjectWithToast = function(scope, message, error) {
     var block = scope.block;
     message = message || '런타임 에러 발생';
 
-    if (Entry.toast && !isHide)
+    var engine = Entry.engine;
+
+    engine && engine.toggleStop();
+
+    if (Entry.type === 'workspace') {
+        if (scope.block && 'funcBlock' in scope.block) {
+            block = scope.block.funcBlock;
+        } else if (scope.funcExecutor){
+            block = scope.funcExecutor.scope.block;
+            Entry.Func.edit(scope.type);
+        }
+
+        if (block) {
+            var id = block.getCode().object && block.getCode().object.id;
+            if (id) Entry.container.selectObject(block.getCode().object.id, true);
+            var view = block.view;
+            view && view.getBoard().activateBlock(block);
+        }
+    }
+
+    if (Entry.toast) {
         Entry.toast.alert(
             Lang.Msgs.warn,
             Lang.Workspace.check_runtime_error,
             true
         );
-
-    if (Entry.engine)
-        Entry.engine.toggleStop();
-
-    if (Entry.type === 'workspace') {
-        if(scope.block && 'funcBlock' in scope.block) {
-            block = scope.block.funcBlock;
-        } else if(scope.funcExecutor){
-            block = scope.funcExecutor.scope.block;
-            var funcName = scope.type.replace('func_', '');
-            Entry.Func.edit(Entry.variableContainer.functions_[funcName]);
-        }
-
-        if(block) {
-            Entry.container.selectObject(block.getCode().object.id, true);
-            var view = block.view;
-            view && view.getBoard().activateBlock(block);
-        }
     }
 
     throw new Error(message);
@@ -1369,6 +1389,7 @@ Entry.isMobile = function() {
 Entry.Utils.convertMouseEvent = function(e) {
     if (e.originalEvent && e.originalEvent.touches)
         return e.originalEvent.touches[0];
+    else if (e.changedTouches) return e.changedTouches[0];
     else return e;
 }
 
@@ -1631,4 +1652,38 @@ Entry.Utils.glideBlock = function(svgGroup, x, y, callback) {
         },
         easing: "ease-in-out"
     });
+};
+
+Entry.Utils.getScrollPos = function() {
+    var elem = Entry.getBrowserType().indexOf("IE") > -1 ?
+        document.documentElement : document.body;
+    return {
+        left: elem.scrollLeft,
+        top: elem.scrollTop
+    };
+}
+
+Entry.Utils.copy = function(target) {
+    return JSON.parse(JSON.stringify(target));
+};
+
+//helper function for development and debug
+Entry.Utils.getAllObjectsBlockList = function() {
+    return Entry.container.objects_.reduce(function(prev, o) {
+        return prev.concat(o.script.getBlockList());
+    }, []);
+};
+
+Entry.Utils.toFixed = function (value, len) {
+    len = len || 1;
+    var powValue = Math.pow(10, len);
+
+    value = Math.round(value * powValue) / powValue;
+
+    if (Entry.isFloat(value)) return String(value);
+    else {
+        value += '.';
+        for (var i=0; i<len; i++) value += '0';
+        return value;
+    }
 };

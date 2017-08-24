@@ -18,10 +18,11 @@ Entry.skeleton.basic = {
         var height = blockView.contentHeight;
         height = Math.max(30, height + 2);
         width = Math.max(0, width + 9 - height / 2);
-        return "m -8,0 l 8,8 8,-8 h %w a %h,%h 0 0,1 0,%wh h -%w l -8,8 -8,-8 v -%wh z"
-            .replace(/%wh/gi, height)
-            .replace(/%w/gi, width)
-            .replace(/%h/gi, height / 2);
+        var halfHeight = height/2;
+
+        return "m -8,0 l 8,8 8,-8 h " + width +" a " + halfHeight + "," +
+            halfHeight + " 0 0,1 0," + height + " h -" + width + " l -8,8 -8,-8 v -" +
+            height + " z";
     },
     box: function(blockView) {
         var width = blockView ? blockView.contentWidth : 150;
@@ -87,9 +88,10 @@ Entry.skeleton.basic_event = {
     path: function(blockView) {
         var width = blockView.contentWidth;
         width = Math.max(0, width);
-        return ("m -8,0 m 0,-5 a 19.5,19.5 0, 0,1 16,0 c 10,5 15,5 20,5 h %w " +
-            "a 15,15 0 0,1 0,30 H 8 l -8,8 -8,-8 l 0,0.5 a 19.5,19.5 0, 0,1 0,-35 z")
-            .replace(/%w/gi, width - 30);
+        width -= 30;
+
+        return "m -8,0 m 0,-5 a 19.5,19.5 0, 0,1 16,0 c 10,5 15,5 20,5 h " +
+            width + " " + "a 15,15 0 0,1 0,30 H 8 l -8,8 -8,-8 l 0,0.5 a 19.5,19.5 0, 0,1 0,-35 z";
     },
     box: function(blockView) {
         return {
@@ -119,13 +121,13 @@ Entry.skeleton.basic_loop = {
         height = Math.max(30, height + 2);
         width = Math.max(0, width + 9 - height / 2);
         var statementHeight = blockView._statements[0] ? blockView._statements[0].height : 20;
-        statementHeight = Math.max(statementHeight, 20);
-        return ("m -8,0 l 8,8 8,-8 h %w a %h,%h 0 0,1 0,%wh H 24 l -8,8 -8,-8 h -0.4 v %sh h 0.4 l 8,8 8,-8 h %bw a 8,8 0 0,1 0,16 H 8 l -8,8 -8,-8 z")
-            .replace(/%wh/gi, height)
-            .replace(/%w/gi, width)
-            .replace(/%bw/gi, width - 8)
-            .replace(/%h/gi, height / 2)
-            .replace(/%sh/gi, statementHeight + 1);
+        statementHeight = Math.max(statementHeight, 20) + 1;
+        var bw = width - 8;
+        var halfHeight = height / 2;
+
+        return "m -8,0 l 8,8 8,-8 h " +  width + " a " + halfHeight + "," +
+            halfHeight + " 0 0,1 0," + height + " H 24 l -8,8 -8,-8 h -0.4 v " +
+            statementHeight + " h 0.4 l 8,8 8,-8 h " + bw + " a 8,8 0 0,1 0,16 H 8 l -8,8 -8,-8 z";
     },
     magnets: function(blockView) {
         var contentHeight = Math.max(blockView.contentHeight + 2, 30);
@@ -335,10 +337,9 @@ Entry.skeleton.basic_string_field = {
         var height = blockView.contentHeight;
         height = Math.max(18, height + 2);
         width = Math.max(0, width - height + 12);
-        return "m %h,0 h %w a %h,%h 0 1,1 0,%wh H %h A %h,%h 0 1,1 %h,0 z"
-            .replace(/%wh/gi, height)
-            .replace(/%w/gi, width)
-            .replace(/%h/gi, height / 2);
+        var halfHeight = height/2;
+
+        return "m " + halfHeight + ",0 h " + width + " a " + halfHeight +"," + halfHeight + " 0 1,1 0," + height + " H " + halfHeight + " A " + halfHeight +","+ halfHeight + " 0 1,1 "+ halfHeight + ",0 z";
     },
     color: "#000",
     outerLine: '#768dce',
@@ -370,10 +371,12 @@ Entry.skeleton.basic_boolean_field = {
         var height = blockView.contentHeight;
         height = Math.max(18, height + 2);
         width = Math.max(0, width - height + 19);
-        return "m %h,0 h %w l %h,%h -%h,%h H %h l -%h,-%h %h,-%h z"
-            .replace(/%wh/gi, height)
-            .replace(/%w/gi, width)
-            .replace(/%h/gi, height / 2);
+        var halfHeight = height/2;
+
+        return "m " + halfHeight + ",0 h " + width + " l " + halfHeight + "," +
+            halfHeight + " -" + halfHeight + "," + halfHeight + " H "+ halfHeight +
+            " l -" + halfHeight + ",-" + halfHeight + " " + halfHeight + ",-" +
+            halfHeight + " z";
     },
     color: "#000",
     outerLine: '#768dce',
@@ -461,10 +464,10 @@ Entry.skeleton.basic_without_next = {
         var height = blockView.contentHeight;
         height = Math.max(30, height + 2);
         width = Math.max(0, width + 9 - height / 2);
-        return "m -8,0 l 8,8 8,-8 h %w a %h,%h 0 0,1 0, %wh H -8 z"
-            .replace(/%wh/gi, height)
-            .replace(/%w/gi, width)
-            .replace(/%h/gi, height / 2);
+        var halfHeight = height/2;
+
+        return "m -8,0 l 8,8 8,-8 h " + width + " a " + halfHeight + "," +
+            halfHeight + " 0 0,1 0, " + height + " H -8 z";
     },
     magnets: function(blockView) {
         // apply scale required.
@@ -486,19 +489,18 @@ Entry.skeleton.basic_double_loop = {
         var statements = blockView._statements;
         var statementHeight1 = statements[0] ? statements[0].height : 20;
         var statementHeight2 = statements[1] ? statements[1].height : 20;
+        var bw = width - 8;
+        var halfHeight1 = height1/2;
+        var halfHeight2 = height2/2;
 
-        statementHeight1 = Math.max(statementHeight1, 20);
-        statementHeight2 = Math.max(statementHeight2, 20);
+        statementHeight1 = Math.max(statementHeight1, 20) + 1;
+        statementHeight2 = Math.max(statementHeight2, 20) + 1;
 
-        return ("m -8,0 l 8,8 8,-8 h %w a %h1,%h1 0 0,1 0,%wh1 H 24 l -8,8 -8,-8 h -0.4 v %sh1 h 0.4 l 8,8 8,-8 h %bw a %h2,%h2 0 0,1 0,%wh2 H 24 l -8,8 -8,-8 h -0.4 v %sh2 h 0.4 l 8,8 8,-8 h %bw a 8,8 0 0,1 0,16 H 8 l -8,8 -8,-8 z")
-            .replace(/%wh1/gi, height1)
-            .replace(/%wh2/gi, height2)
-            .replace(/%w/gi, width)
-            .replace(/%bw/gi, width - 8)
-            .replace(/%h1/gi, height1 / 2)
-            .replace(/%h2/gi, height2 / 2)
-            .replace(/%sh1/gi, statementHeight1 + 1)
-            .replace(/%sh2/gi, statementHeight2 + 1);
+        return "m -8,0 l 8,8 8,-8 h " + width + " a " + halfHeight1 + "," +
+            halfHeight1 + " 0 0,1 0," + height1 + " H 24 l -8,8 -8,-8 h -0.4 v " +
+            statementHeight1 + " h 0.4 l 8,8 8,-8 h " + bw + " a " + halfHeight2 +
+            "," + halfHeight2 + " 0 0,1 0," + height2 + " H 24 l -8,8 -8,-8 h -0.4 v " +
+            statementHeight2 + " h 0.4 l 8,8 8,-8 h " + bw + " a 8,8 0 0,1 0,16 H 8 l -8,8 -8,-8 z";
     },
     magnets: function(blockView) {
         var contentHeight1 = Math.max(blockView.contentHeight%1000000 + 2, 30);
