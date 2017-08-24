@@ -9740,13 +9740,13 @@ p.closeConnection = function() {
   this.socket && this.socket.close();
 };
 p.downloadConnector = function() {
-  window.open("MacIntel" === navigator.platform ? this.downloadPathOsx : this.downloadPath, "_blank").focus();
+  Entry.dispatchEvent("hwDownload", "hardware");
 };
 p.downloadGuide = function() {
-  window.open("http://download.play-entry.org/data/hardware_manual.zip", "download");
+  Entry.dispatchEvent("hwDownload", "manual");
 };
 p.downloadSource = function() {
-  window.open("http://download.play-entry.org/apps/board.ino", "_blank").focus();
+  Entry.dispatchEvent("hwDownload", "ino");
 };
 p.setZero = function() {
   Entry.hw.hwModule && Entry.hw.hwModule.setZero();
