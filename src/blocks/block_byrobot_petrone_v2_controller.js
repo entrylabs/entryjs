@@ -123,7 +123,7 @@ Entry.byrobot_petrone_v2_controller =
         delete Entry.hw.sendQueue["light_manual_brightness"];
     },
 
-    transferLightColorRgb: function (target, red, green, blue) 
+    transferLightColorRgb: function(target, red, green, blue) 
     {
         // 범위 조정
         target = Math.max(target, 0);
@@ -148,7 +148,53 @@ Entry.byrobot_petrone_v2_controller =
         delete Entry.hw.sendQueue["light_color_g"];
         delete Entry.hw.sendQueue["light_color_b"];
     },
-    
+
+    transferDisplayClear: function(target, pixel, clearAll, x, y, width, height)
+    {
+        if( clearAll )
+        {
+            // 전송
+            Entry.hw.setDigitalPortValue("target", target);
+            Entry.hw.setDigitalPortValue("display_clearall_pixel", pixel);
+
+            Entry.hw.update();
+
+            delete Entry.hw.sendQueue["target"];
+            delete Entry.hw.sendQueue["display_clearall_pixel"];
+        }
+        else 
+        {
+            // 범위 조정
+            x = Math.max(x, 0);
+            x = Math.min(x, 128);
+            y = Math.max(y, 0);
+            y = Math.min(y, 64);
+            width = Math.max(width, 0);
+            width = Math.min(width, 128);
+            height = Math.max(height, 0);
+            height = Math.min(height, 64);
+
+            // 전송
+            Entry.hw.setDigitalPortValue("target", target);
+            Entry.hw.setDigitalPortValue("display_clear_x", x);
+            Entry.hw.setDigitalPortValue("display_clear_y", y);
+            Entry.hw.setDigitalPortValue("display_clear_width", width);
+            Entry.hw.setDigitalPortValue("display_clear_height", height);
+            Entry.hw.setDigitalPortValue("display_clear_pixel", pixel);
+
+            Entry.hw.update();
+
+            delete Entry.hw.sendQueue["target"];
+            delete Entry.hw.sendQueue["display_clear_x"];
+            delete Entry.hw.sendQueue["display_clear_y"];
+            delete Entry.hw.sendQueue["display_clear_width"];
+            delete Entry.hw.sendQueue["display_clear_height"];
+            delete Entry.hw.sendQueue["display_clear_pixel"];
+        }
+    },
+
+    // 작업중
+
     transferbuzzer: function(mode, value, time)
     {
         // 전송
@@ -234,24 +280,50 @@ Entry.byrobot_petrone_v2_controller =
     },
 
     // LED 수동 설정 - RGB 값 직접 지정
-    setLightColorRgb: function (script, target, red, green, blue) {
-        switch (this.checkFinish(script, 40)) {
-            case "Start":
-                {
-                    this.transferLightColorRgb(target, red, green, blue);
-                }
-                return script;
+    setLightColorRgb: function(script, target, red, green, blue)
+    {
+        switch( this.checkFinish(script, 40) )
+        {
+        case "Start":
+            {
+                this.transferLightColorRgb(target, red, green, blue);
+            }
+            return script;
 
-            case "Running":
-                return script;
+        case "Running":
+            return script;
 
-            case "Finish":
-                return script.callReturn();
+        case "Finish":
+            return script.callReturn();
 
-            default:
-                return script.callReturn();
+        default:
+            return script.callReturn();
         }
     },
+
+    // OLED - 화면 전체 지우기, 선택 영역 지우기
+    setDisplayClear: function(script, target, pixel, clearAll, x, y, width, height)
+    {
+        switch( this.checkFinish(script, 40) )
+        {
+        case "Start":
+            {
+                this.transferDisplayClear(target, pixel, clearAll, x, y, width, height);
+            }
+            return script;
+
+        case "Running":
+            return script;
+
+        case "Finish":
+            return script.callReturn();
+
+        default:
+            return script.callReturn();
+        }
+    },
+
+    // 작업중
     
     // 버저 설정(함수 호출 시 시간은 모두 ms 단위 사용)
     /*  

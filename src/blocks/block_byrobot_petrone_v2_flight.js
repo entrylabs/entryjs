@@ -210,8 +210,6 @@ Entry.byrobot_petrone_v2_flight =
     transferIrMessage: function(irdirection, irmessage)
     {
         // 범위 조정
-        irdirection = Math.max(irdirection, 0);
-        irdirection = Math.min(irdirection, 255);
         irmessage = Math.max(irmessage, -2147483647);
         irmessage = Math.min(irmessage, 2147483647);
         
@@ -561,6 +559,7 @@ Entry.byrobot_petrone_v2_flight =
         case "Start":
             {
                 this.transferIrMessage(irdirection, irmessage);
+                // Light Event
             }
             return script;
             
