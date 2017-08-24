@@ -522,14 +522,20 @@ Entry.PyToBlockParser = function(blockSyntax) {
         var blocks = component.body.body[0].argument.callee.object.body.body;
 
         if(funcName === 'when_press_key')
-            var name = component.arguments[0].name;
-
-            startBlock.params = [ null , Entry.KeyboardCode.map[ name ]];
-
+            if(!component.arguments || !component.arguments[0]) {
+                startBlock.params = [ null, null];
+            } else {
+                var name = component.arguments[0].name;
+                startBlock.params = [ null, Entry.KeyboardCode.map[ name ]];
+            }
+           
         if(funcName === 'when_get_signal'){
-            var name = component.arguments[0].name;
-            startBlock.params = [null , this.getMessage(name) ]
-        
+            if(!component.arguments || !component.arguments[0]) {
+                startBlock.params = [ null, null];
+            } else {
+                var name = component.arguments[0].name;
+                startBlock.params = [null , this.getMessage(name)]
+            }
         }
 
         var blockInfo = this.blockSyntax['def '+ funcName];

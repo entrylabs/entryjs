@@ -13012,10 +13012,14 @@ Entry.PyToBlockParser = function(c) {
     this.assert(b.body.body[0], c, b, "NO_OBJECT", "OBJECT");
     var e = b.body.body[0].argument.callee.object.body.body;
     if ("when_press_key" === c) {
-      var g = b.arguments[0].name
+      if (b.arguments && b.arguments[0]) {
+        var g = b.arguments[0].name;
+        d.params = [null, Entry.KeyboardCode.map[g]];
+      } else {
+        d.params = [null, null];
+      }
     }
-    d.params = [null, Entry.KeyboardCode.map[g]];
-    "when_get_signal" === c && (g = b.arguments[0].name, d.params = [null, this.getMessage(g)]);
+    "when_get_signal" === c && (b.arguments && b.arguments[0] ? (g = b.arguments[0].name, d.params = [null, this.getMessage(g)]) : d.params = [null, null]);
     if (g = this.blockSyntax["def " + c]) {
       return d.type = g.key, b = this.setParams(e), b.unshift(d), this._isInFuncDef = !1, b;
     }
