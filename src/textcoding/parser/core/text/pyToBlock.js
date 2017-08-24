@@ -57,8 +57,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
     };
 
     p.processPrograms = function(astArr) {
+        this.createFunctionMap();
         this._funcParamMap = {};
-        this._funcMap = {};
         this._isInFuncDef = false;
 
         var result;
@@ -212,9 +212,9 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
                         leftVar = Entry.variableContainer.getVariableByName(component.left.property.name , true);
                     }
-                
+
                     result.params.push(leftVar.id_);
-                    
+
                 } else {
                     leftVar = Entry.variableContainer.getListByName(leftName)
                     this.assert(leftVar, leftName, component.left.object, "NO_LIST", "LIST");
@@ -222,7 +222,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     result.params.push(
                         this.ListIndex(this.Node(component.left.property.arguments[1]))
                     );
-                
+
                 }
                 break;
             case "Identifier":
@@ -236,8 +236,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
                                         value : 0
                                     });
                     leftVar = Entry.variableContainer.getVariableByName(component.left.name, false).id_;
-                } 
-                result.params.push(leftVar.id_);    
+                }
+                result.params.push(leftVar.id_);
                 break;
             default:
                 this.assert(false, "error", component.left, "NO_SUPPORT", "GENERAL")
@@ -528,7 +528,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 var name = component.arguments[0].name;
                 startBlock.params = [ null, Entry.KeyboardCode.map[ name ]];
             }
-           
+
         if(funcName === 'when_get_signal'){
             if(!component.arguments || !component.arguments[0]) {
                 startBlock.params = [ null, null];
@@ -657,16 +657,16 @@ Entry.PyToBlockParser = function(blockSyntax) {
         var message = Entry.variableContainer.messages_.filter(function(obj){
                     return obj.name === name;
                 });
-        
+
         if(message.length <= 0) {
-           
+
             Entry.variableContainer.addMessage({
                 name : name
             });
         }
-        
+
         message = name.replace('_space_' , ' ');
-        
+
         var objects = Entry.variableContainer.messages_.filter(function(obj){
                     return obj.name === name;
                 });
@@ -679,7 +679,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
         return object;
     }
-    
+
     p.DropdownDynamic = function(value, paramSchema) {
         switch(paramSchema.menuName) {
             case 'sprites':
@@ -1074,6 +1074,18 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
         this.Block(result, blockInfo);
         return result;
+    };
+
+    p.createFunctionMap = function() {
+        this._funcMap = {};
+        var functions = Entry.variableContainer.functions_;
+        for (var key in functions) {
+            var funcSchema = Entry.block["func_" + key];
+            var funcName = funcSchema.template.trim().split(" ")[0].trim();
+            if (!this._funcMap[funcName])
+                this._funcMap[funcName] = {};
+            this._funcMap[funcName][funcSchema.params.length - 1] = key;
+        }
     };
 
     p.createFunction = function(component, funcName, blocks) {
