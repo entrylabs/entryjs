@@ -756,6 +756,7 @@ EntryStatic.getAllBlocks = function() {
                 "byrobot_petrone_v2_controller_controller_light_color_rgb_select",
                 "byrobot_petrone_v2_controller_controller_display_clear_all",
                 "byrobot_petrone_v2_controller_controller_display_clear",
+                "byrobot_petrone_v2_controller_controller_display_invert",
 
                 "byrobot_petrone_v2_controller_controller_buzzer_off",
                 "byrobot_petrone_v2_controller_controller_buzzer_scale",

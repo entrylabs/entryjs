@@ -42569,6 +42569,76 @@ Entry.block = {
         },
     },
     // */
+    //*
+    "byrobot_petrone_v2_controller_controller_display_invert":
+    {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "text",
+                    "params": ["32"]
+                },
+                {
+                    "type": "text",
+                    "params": ["16"]
+                },
+                {
+                    "type": "text",
+                    "params": ["64"]
+                },
+                {
+                    "type": "text",
+                    "params": ["32"]
+                },
+                null,
+                null
+            ],
+            "type": "byrobot_petrone_v2_controller_controller_display_invert"
+        },
+        "paramsKeyMap": {
+            "X": 0,
+            "Y": 1,
+            "WIDTH": 2,
+            "HEIGHT": 3,
+        },
+        "class": "byrobot_petrone_v2_controller_controller_display",
+        "isNotFor": ["byrobot_petrone_v2_controller"],
+        "func": function (sprite, script) {
+            var x = script.getNumberValue('X');
+            var y = script.getNumberValue('Y');
+            var width = script.getNumberValue('WIDTH');
+            var height = script.getNumberValue('HEIGHT');
+            return Entry.byrobot_petrone_v2_controller.setDisplayInvert(script, 0x31, x, y, width, height);
+        },
+    },
+    // */
     // 작업중
 
     //*

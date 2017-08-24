@@ -193,6 +193,35 @@ Entry.byrobot_petrone_v2_controller =
         }
     },
 
+    transferDisplayInvert: function(target, x, y, width, height)
+    {
+        // 범위 조정
+        x = Math.max(x, 0);
+        x = Math.min(x, 128);
+        y = Math.max(y, 0);
+        y = Math.min(y, 64);
+        width = Math.max(width, 0);
+        width = Math.min(width, 128);
+        height = Math.max(height, 0);
+        height = Math.min(height, 64);
+
+        // 전송
+        Entry.hw.setDigitalPortValue("target", target);
+        Entry.hw.setDigitalPortValue("display_invert_x", x);
+        Entry.hw.setDigitalPortValue("display_invert_y", y);
+        Entry.hw.setDigitalPortValue("display_invert_width", width);
+        Entry.hw.setDigitalPortValue("display_invert_height", height);
+
+        Entry.hw.update();
+
+        delete Entry.hw.sendQueue["target"];
+        delete Entry.hw.sendQueue["display_invert_x"];
+        delete Entry.hw.sendQueue["display_invert_y"];
+        delete Entry.hw.sendQueue["display_invert_width"];
+        delete Entry.hw.sendQueue["display_invert_height"];
+    },
+
+
     // 작업중
 
     transferbuzzer: function(mode, value, time)
@@ -309,6 +338,28 @@ Entry.byrobot_petrone_v2_controller =
         case "Start":
             {
                 this.transferDisplayClear(target, pixel, clearAll, x, y, width, height);
+            }
+            return script;
+
+        case "Running":
+            return script;
+
+        case "Finish":
+            return script.callReturn();
+
+        default:
+            return script.callReturn();
+        }
+    },
+
+    // OLED - 선택 영역 반전
+    setDisplayInvert: function(script, target, x, y, width, height)
+    {
+        switch( this.checkFinish(script, 40) )
+        {
+        case "Start":
+            {
+                this.transferDisplayInvert(target, x, y, width, height);
             }
             return script;
 
