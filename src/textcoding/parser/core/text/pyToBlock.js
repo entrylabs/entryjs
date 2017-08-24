@@ -500,8 +500,28 @@ Entry.PyToBlockParser = function(blockSyntax) {
         this.assert(component.body.body[0], funcName, component, "NO_OBJECT", "OBJECT");
         var blocks = component.body.body[0].argument.callee.object.body.body;
 
-        if(funcName == 'when_press_key')
+        if(funcName === 'when_press_key')
             startBlock.params = [ null , Entry.KeyboardCode.map[ component.arguments[0].name ]];
+
+        if(funcName === 'when_get_signal'){
+            var object;
+            this.assert(component.arguments[0], '', component, 'NO_SUPPORT' , 'GENERAL');
+            if(!component.arguments[0])
+                startBlock.params = [null, null];
+            else {
+                var value = component.arguments[0].name.replace('_space_' , ' ');
+                var objects = Entry.variableContainer.messages_.filter(function(obj){
+                            return obj.name === value;
+                        });
+
+                if(objects && objects.length > 0)
+                    object = objects[0].id;
+                else {
+                    object = value;
+                }
+                startBlock.params = [ null , object]
+            }
+        }
 
         var blockInfo = this.blockSyntax['def '+ funcName];
         var threadArr;
@@ -673,6 +693,19 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 var picture = Entry.playground.object.getPicture(value);
                 return picture ? picture.id : undefined;
             case 'messages':
+                    var object;
+
+                    var objects = Entry.variableContainer.messages_.filter(function(obj){
+                                return obj.name === value;
+                            });
+
+                    if(objects && objects.length > 0)
+                        object = objects[0].id;
+                    else {
+                        object = value;
+                    }
+
+                    return object;
                 break;
             case 'variables':
                 var variable = Entry.variableContainer.getVariableByName(value);

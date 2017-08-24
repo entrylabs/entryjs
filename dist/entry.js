@@ -17773,9 +17773,21 @@ Entry.PyToBlockParser = function(c) {
     var e = {};
     this.assert(b.body.body[0], c, b, "NO_OBJECT", "OBJECT");
     var f = b.body.body[0].argument.callee.object.body.body;
-    "when_press_key" == c && (e.params = [null, Entry.KeyboardCode.map[b.arguments[0].name]]);
-    var g = this.blockSyntax["def " + c];
-    if (g) {
+    "when_press_key" === c && (e.params = [null, Entry.KeyboardCode.map[b.arguments[0].name]]);
+    if ("when_get_signal" === c) {
+      var g;
+      this.assert(b.arguments[0], "", b, "NO_SUPPORT", "GENERAL");
+      if (b.arguments[0]) {
+        var h = b.arguments[0].name.replace("_space_", " ");
+        g = (g = Entry.variableContainer.messages_.filter(function(b) {
+          return b.name === h;
+        })) && 0 < g.length ? g[0].id : h;
+        e.params = [null, g];
+      } else {
+        e.params = [null, null];
+      }
+    }
+    if (g = this.blockSyntax["def " + c]) {
       return e.type = g.key, b = this.setParams(f), b.unshift(e), this._isInFuncDef = !1, b;
     }
     this.createFunction(b, c, f);
@@ -17848,6 +17860,10 @@ Entry.PyToBlockParser = function(c) {
         })) && 0 < c.length ? c[0].id : b;
       case "pictures":
         return (c = Entry.playground.object.getPicture(b)) ? c.id : void 0;
+      case "messages":
+        return c = (c = Entry.variableContainer.messages_.filter(function(c) {
+          return c.name === b;
+        })) && 0 < c.length ? c[0].id : b;
       case "variables":
         return (c = Entry.variableContainer.getVariableByName(b)) ? c.id_ : void 0;
       case "lists":
