@@ -13010,21 +13010,9 @@ Entry.PyToBlockParser = function(c) {
     this._isInFuncDef = !0;
     var d = {};
     this.assert(b.body.body[0], c, b, "NO_OBJECT", "OBJECT");
-    var e = b.body.body[0].argument.callee.object.body.body;
-    "when_press_key" === c && (d.params = [null, Entry.KeyboardCode.map[b.arguments[0].name]]);
-    if ("when_get_signal" === c) {
-      var g;
-      this.assert(b.arguments[0], "", b, "NO_SUPPORT", "GENERAL");
-      if (b.arguments[0]) {
-        var h = b.arguments[0].name.replace("_space_", " ");
-        g = (g = Entry.variableContainer.messages_.filter(function(b) {
-          return b.name === h;
-        })) && 0 < g.length ? g[0].id : h;
-        d.params = [null, g];
-      } else {
-        d.params = [null, null];
-      }
-    }
+    var e = b.body.body[0].argument.callee.object.body.body, g = b.arguments[0].name;
+    "when_press_key" === c && (d.params = [null, Entry.KeyboardCode.map[g]]);
+    "when_get_signal" === c && (d.params = [null, this.getMessage(g)]);
     if (g = this.blockSyntax["def " + c]) {
       return d.type = g.key, b = this.setParams(e), b.unshift(d), this._isInFuncDef = !1, b;
     }
@@ -13080,6 +13068,16 @@ Entry.PyToBlockParser = function(c) {
     }));
     return c;
   };
+  c.getMessage = function(b) {
+    var c = Entry.variableContainer.messages_.filter(function(c) {
+      return c.name === b;
+    });
+    0 >= c.length && Entry.variableContainer.addMessage({name:b});
+    var c = b.replace("_space_", " "), d = Entry.variableContainer.messages_.filter(function(c) {
+      return c.name === b;
+    });
+    return object = d && 0 < d.length ? d[0].id : c;
+  };
   c.DropdownDynamic = function(b, c) {
     switch(c.menuName) {
       case "sprites":
@@ -13100,9 +13098,7 @@ Entry.PyToBlockParser = function(c) {
       case "pictures":
         return (d = Entry.playground.object.getPicture(b)) ? d.id : void 0;
       case "messages":
-        return d = (d = Entry.variableContainer.messages_.filter(function(c) {
-          return c.name === b;
-        })) && 0 < d.length ? d[0].id : b;
+        return this.getMessage(b);
       case "variables":
         return (d = Entry.variableContainer.getVariableByName(b)) ? d.id_ : void 0;
       case "lists":

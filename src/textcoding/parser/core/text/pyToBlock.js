@@ -520,28 +520,15 @@ Entry.PyToBlockParser = function(blockSyntax) {
         var startBlock = {};
         this.assert(component.body.body[0], funcName, component, "NO_OBJECT", "OBJECT");
         var blocks = component.body.body[0].argument.callee.object.body.body;
+        var name = component.arguments[0].name;
 
         if(funcName === 'when_press_key')
-            startBlock.params = [ null , Entry.KeyboardCode.map[ component.arguments[0].name ]];
+            startBlock.params = [ null , Entry.KeyboardCode.map[ name ]];
 
         if(funcName === 'when_get_signal'){
-            var object;
-            this.assert(component.arguments[0], '', component, 'NO_SUPPORT' , 'GENERAL');
-            if(!component.arguments[0])
-                startBlock.params = [null, null];
-            else {
-                var value = component.arguments[0].name.replace('_space_' , ' ');
-                var objects = Entry.variableContainer.messages_.filter(function(obj){
-                            return obj.name === value;
-                        });
-
-                if(objects && objects.length > 0)
-                    object = objects[0].id;
-                else {
-                    object = value;
-                }
-                startBlock.params = [ null , object]
-            }
+            
+            startBlock.params = [null , this.getMessage(name) ]
+        
         }
 
         var blockInfo = this.blockSyntax['def '+ funcName];
@@ -657,6 +644,33 @@ Entry.PyToBlockParser = function(blockSyntax) {
         return results;
     };
 
+    p.getMessage = function(name) {
+        var message = Entry.variableContainer.messages_.filter(function(obj){
+                    return obj.name === name;
+                });
+        
+        if(message.length <= 0) {
+           
+            Entry.variableContainer.addMessage({
+                name : name
+            });
+        }
+        
+        message = name.replace('_space_' , ' ');
+        
+        var objects = Entry.variableContainer.messages_.filter(function(obj){
+                    return obj.name === name;
+                });
+
+        if(objects && objects.length > 0)
+            object = objects[0].id;
+        else {
+            object = message;
+        }
+
+        return object;
+    }
+    
     p.DropdownDynamic = function(value, paramSchema) {
         switch(paramSchema.menuName) {
             case 'sprites':
@@ -714,19 +728,19 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 var picture = Entry.playground.object.getPicture(value);
                 return picture ? picture.id : undefined;
             case 'messages':
-                    var object;
+                    // var object;
 
-                    var objects = Entry.variableContainer.messages_.filter(function(obj){
-                                return obj.name === value;
-                            });
+                    // var objects = Entry.variableContainer.messages_.filter(function(obj){
+                    //             return obj.name === value;
+                    //         });
 
-                    if(objects && objects.length > 0)
-                        object = objects[0].id;
-                    else {
-                        object = value;
-                    }
+                    // if(objects && objects.length > 0)
+                    //     object = objects[0].id;
+                    // else {
+                    //     object = value;
+                    // }
 
-                    return object;
+                    return this.getMessage(value);
                 break;
             case 'variables':
                 var variable = Entry.variableContainer.getVariableByName(value);
