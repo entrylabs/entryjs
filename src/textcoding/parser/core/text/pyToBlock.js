@@ -294,7 +294,10 @@ Entry.PyToBlockParser = function(blockSyntax) {
         }
 
         if (typeof obj === "object") { // list member
-            result.preParams = [ obj.params[0] ];
+            if (obj.type === "get_list")
+                result.preParams = [ obj.params[0] ];
+            else
+                result.preParams = [ component.object ];
             obj = "%2"
         }
         var property = component.property;
@@ -556,11 +559,10 @@ Entry.PyToBlockParser = function(blockSyntax) {
         var obj = this.Node(component.object);
         var blockInfo;
 
-        if (this.isParamPrimitive(obj)) { // list
-            blockInfo = this.blockSyntax["%2[%4]#char_at"];
-        } else { // string
-            this.assert(obj.type === "get_list", "Subscript index can be use to array", component);
+        if (obj.type === "get_list") { // string
             blockInfo = this.blockSyntax["%2[%4]"];
+        } else { // var, list
+            blockInfo = this.blockSyntax["%2[%4]#char_at"];
         }
         var result = this.Block({}, blockInfo);
         result.params = this.Arguments(
@@ -954,15 +956,15 @@ Entry.PyToBlockParser = function(blockSyntax) {
     p.len = function(component) {
         var param = this.Node(component.arguments[0]);
 
-        if (this.isParamPrimitive(param) || (param.type === "get_variable")) { // string len
-            return {
-                type: "length_of_string",
-                params: [ undefined, param ]
-            }
-        } else { // array len
+        if (param.type === 'get_list') { // string len
             return {
                 type: "length_of_list",
                 params: [ undefined, param.params[0] ]
+            }
+        } else { // array len
+            return {
+                type: "length_of_string",
+                params: [ undefined, param ]
             }
         }
     };
