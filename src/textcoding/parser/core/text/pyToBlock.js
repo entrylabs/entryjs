@@ -200,9 +200,21 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 var leftName = component.left.object.name;
                 if (leftName === "self") {
                     result.type = 'set_variable';
-                    leftVar = Entry.variableContainer.getVariableByName(component.left.property.name)
-                    this.assert(leftVar, component.left.property.name, component.left.property, "NO_VARIABLE", "VARIABLE");
+                    leftVar = Entry.variableContainer.getVariableByName(component.left.property.name , true)
+                    if(!leftVar) {
+                        Entry.variableContainer.addVariable({
+                                            variableType : 'variable',
+                                            name : component.left.property.name,
+                                            visible : true,
+                                            object : Entry.playground.object.id,
+                                            value : 0
+                                        });
+
+                        leftVar = Entry.variableContainer.getVariableByName(component.left.property.name , true);
+                    }
+                
                     result.params.push(leftVar.id_);
+                    
                 } else {
                     leftVar = Entry.variableContainer.getListByName(leftName)
                     this.assert(leftVar, leftName, component.left.object, "NO_LIST", "LIST");
@@ -210,13 +222,22 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     result.params.push(
                         this.ListIndex(this.Node(component.left.property.arguments[1]))
                     );
+                
                 }
                 break;
             case "Identifier":
                 result.type = 'set_variable';
-                leftVar = Entry.variableContainer.getVariableByName(component.left.name)
-                this.assert(leftVar, component.left.name, component.left, "NO_VARIABLE", "VARIABLE");
-                result.params.push(leftVar.id_);
+                leftVar = Entry.variableContainer.getVariableByName(component.left.name, false)
+                if(!leftVar) {
+                    Entry.variableContainer.addVariable({
+                                        variableType : 'variable',
+                                        name : component.left.name,
+                                        visible : true,
+                                        value : 0
+                                    });
+                    leftVar = Entry.variableContainer.getVariableByName(component.left.name, false).id_;
+                } 
+                result.params.push(leftVar.id_);    
                 break;
             default:
                 this.assert(false, "error", component.left, "NO_SUPPORT", "GENERAL")

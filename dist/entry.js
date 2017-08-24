@@ -12873,12 +12873,12 @@ Entry.PyToBlockParser = function(c) {
       case "MemberExpression":
         c.type = "change_value_list_index";
         var e = b.left.object.name;
-        "self" === e ? (c.type = "set_variable", d = Entry.variableContainer.getVariableByName(b.left.property.name), this.assert(d, b.left.property.name, b.left.property, "NO_VARIABLE", "VARIABLE"), c.params.push(d.id_)) : (d = Entry.variableContainer.getListByName(e), this.assert(d, e, b.left.object, "NO_LIST", "LIST"), c.params.push(d.id_), c.params.push(this.ListIndex(this.Node(b.left.property.arguments[1]))));
+        "self" === e ? (c.type = "set_variable", d = Entry.variableContainer.getVariableByName(b.left.property.name, !0), d || (Entry.variableContainer.addVariable({variableType:"variable", name:b.left.property.name, visible:!0, object:Entry.playground.object.id, value:0}), d = Entry.variableContainer.getVariableByName(b.left.property.name, !0)), c.params.push(d.id_)) : (d = Entry.variableContainer.getListByName(e), this.assert(d, e, b.left.object, "NO_LIST", "LIST"), c.params.push(d.id_), c.params.push(this.ListIndex(this.Node(b.left.property.arguments[1]))));
         break;
       case "Identifier":
         c.type = "set_variable";
-        d = Entry.variableContainer.getVariableByName(b.left.name);
-        this.assert(d, b.left.name, b.left, "NO_VARIABLE", "VARIABLE");
+        d = Entry.variableContainer.getVariableByName(b.left.name, !1);
+        d || (Entry.variableContainer.addVariable({variableType:"variable", name:b.left.name, visible:!0, value:0}), d = Entry.variableContainer.getVariableByName(b.left.name, !1).id_);
         c.params.push(d.id_);
         break;
       default:
@@ -18127,11 +18127,20 @@ Entry.VariableContainer = function() {
     c && c.isClone && d.object_ && (d = Entry.findObjsByKey(c.variables, "id_", b)[0]);
     return d;
   };
-  c.getVariableByName = function(b) {
-    for (var c = 0;c < this.variables_.length;c++) {
-      var d = this.variables_[c];
-      if (d.getName() === b) {
-        return d;
+  c.getVariableByName = function(b, c) {
+    for (var d = 0;d < this.variables_.length;d++) {
+      var e = this.variables_[d];
+      if (!0 === c) {
+        if (!e.object_) {
+          continue;
+        }
+      } else {
+        if (!1 === c && e.object_) {
+          continue;
+        }
+      }
+      if (e.getName() === b) {
+        return e;
       }
     }
   };

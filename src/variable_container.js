@@ -653,9 +653,17 @@ Entry.VariableContainer = function() {
         return variable;
     };
 
-    p.getVariableByName = function(variableName) {
+    p.getVariableByName = function(variableName, isSelf) {
         for (var i = 0; i < this.variables_.length; i++) {
             var v = this.variables_[i];
+            if(isSelf === true){
+                if(!v.object_)
+                    continue;
+            } else if(isSelf === false) {
+                if(v.object_)
+                    continue;
+            }
+
             if (v.getName() === variableName)
                 return v;
         }
