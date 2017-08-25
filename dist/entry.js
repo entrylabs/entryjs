@@ -7718,29 +7718,29 @@ Entry.EntryObject = function(c) {
     return JSON.stringify(this.script.toJSON());
   };
   c.initEntity = function(b) {
-    var c = {};
-    c.x = c.y = 0;
-    c.rotation = 0;
-    c.direction = 90;
+    var f = {};
+    f.x = f.y = 0;
+    f.rotation = 0;
+    f.direction = 90;
     if ("sprite" == this.objectType) {
-      var d = b.sprite.pictures[0].dimension;
-      c.regX = d.width / 2;
-      c.regY = d.height / 2;
-      c.scaleX = c.scaleY = "background" == b.sprite.category.main || "new" == b.sprite.category.main ? Math.max(270 / d.height, 480 / d.width) : "new" == b.sprite.category.main ? 1 : 200 / (d.width + d.height);
-      c.width = d.width;
-      c.height = d.height;
+      var c = b.sprite.pictures[0].dimension;
+      f.regX = c.width / 2;
+      f.regY = c.height / 2;
+      f.scaleX = f.scaleY = "background" == b.sprite.category.main || "new" == b.sprite.category.main ? Math.max(270 / c.height, 480 / c.width) : "new" == b.sprite.category.main ? 1 : 200 / (c.width + c.height);
+      f.width = c.width;
+      f.height = c.height;
     } else {
       if ("textBox" == this.objectType) {
-        if (c.regX = 25, c.regY = 12, c.scaleX = c.scaleY = 1.5, c.width = 50, c.height = 24, c.text = b.text, b.options) {
-          if (b = b.options, d = "", b.bold && (d += "bold "), b.italic && (d += "italic "), c.underline = b.underline, c.strike = b.strike, c.font = d + "20px " + b.font.family, c.colour = b.colour, c.bgColor = b.background, c.lineBreak = b.lineBreak) {
-            c.width = 256, c.height = .5625 * c.width, c.regX = c.width / 2, c.regY = c.height / 2;
+        if (f.regX = 25, f.regY = 12, f.scaleX = f.scaleY = 1.5, f.width = 50, f.height = 24, f.text = b.text, b.options) {
+          if (b = b.options, c = "", b.bold && (c += "bold "), b.italic && (c += "italic "), f.underline = b.underline, f.strike = b.strike, f.font = c + "20px " + b.font.family, f.colour = b.colour, f.bgColor = b.background, f.lineBreak = b.lineBreak) {
+            f.width = 256, f.height = .5625 * f.width, f.regX = f.width / 2, f.regY = f.height / 2;
           }
         } else {
-          c.underline = !1, c.strike = !1, c.font = "20px Nanum Gothic", c.colour = "#000000", c.bgColor = "#ffffff";
+          f.underline = !1, f.strike = !1, f.font = "20px Nanum Gothic", f.colour = "#000000", f.bgColor = "#ffffff";
         }
       }
     }
-    return c;
+    return f;
   };
   c.updateThumbnailView = function() {
     if ("sprite" == this.objectType) {
@@ -12808,8 +12808,8 @@ Entry.PyToBlockParser = function(c) {
     }
   };
   c.processPrograms = function(b) {
+    this.createFunctionMap();
     this._funcParamMap = {};
-    this._funcMap = {};
     this._isInFuncDef = !1;
     if (!b[0]) {
       return [];
@@ -12906,11 +12906,6 @@ Entry.PyToBlockParser = function(c) {
       default:
         return this.getValue(b);
     }
-  };
-  c.getValue = function(b) {
-    var c = b.raw;
-    b.value.constructor === String && (c = b.raw.substr(1, b.raw.length - 2));
-    return c + "";
   };
   c.MemberExpression = function(b) {
     var c, d = {};
@@ -13075,16 +13070,24 @@ Entry.PyToBlockParser = function(c) {
     }));
     return c;
   };
+  c.getValue = function(b) {
+    var c;
+    if ("Literal" === b.type) {
+      return c = b.raw, b.value.constructor === String && (c = b.raw.substr(1, b.raw.length - 2)), c + "";
+    }
+    c = this.Node(b);
+    return c.params && c.params[0] ? c.params[0] : null;
+  };
   c.getMessage = function(b) {
     if (b) {
+      b = b.replace("_space_", " ");
       var c = Entry.variableContainer.messages_.filter(function(c) {
         return c.name === b;
       });
-      0 >= c.length && Entry.variableContainer.addMessage({name:b});
-      var c = b.replace("_space_", " "), d = Entry.variableContainer.messages_.filter(function(c) {
+      0 >= c.length && (Entry.variableContainer.addMessage({name:b}), c = Entry.variableContainer.messages_.filter(function(c) {
         return c.name === b;
-      });
-      return object = d && 0 < d.length ? d[0].id : c;
+      }));
+      return object = c && 0 < c.length ? c[0].id : b;
     }
   };
   c.DropdownDynamic = function(b, c) {
@@ -13254,6 +13257,15 @@ Entry.PyToBlockParser = function(c) {
     this.isParamPrimitive(b) && (b = b.params[0]);
     this.Block(e, this.blockSyntax[c][d + "(" + b + ")"]);
     return e;
+  };
+  c.createFunctionMap = function() {
+    this._funcMap = {};
+    var b = Entry.variableContainer.functions_, c;
+    for (c in b) {
+      var b = Entry.block["func_" + c], d = b.template.trim().split(" ")[0].trim();
+      this._funcMap[d] || (this._funcMap[d] = {});
+      this._funcMap[d][b.params.length - 1] = c;
+    }
   };
   c.createFunction = function(b, c, d) {
     var e = b.arguments ? b.arguments.map(this.Node, this) : [];
@@ -16744,29 +16756,29 @@ p.executeHardware = function() {
   }
   var d = this, e = {_bNotInstalled:!1, init:function(b, c) {
     this._w = window.open("/views/hwLoading.html", "entry_hw_launcher", "width=220, height=225,  top=" + window.screenTop + ", left=" + window.screenLeft);
-    var d = null, d = setTimeout(function() {
+    var f = null, f = setTimeout(function() {
       e.runViewer(b, c);
-      clearInterval(d);
+      clearInterval(f);
     }, 1E3);
   }, runViewer:function(b, c) {
     this._w.document.write("<iframe src='" + b + "' onload='opener.Entry.hw.ieLauncher.set()' style='display:none;width:0;height:0'></iframe>");
-    var d = 0, f = null, f = setInterval(function() {
+    var f = 0, d = null, d = setInterval(function() {
       try {
         this._w.location.href;
       } catch (b) {
         this._bNotInstalled = !0;
       }
-      if (10 < d) {
-        clearInterval(f);
+      if (10 < f) {
+        clearInterval(d);
         var e = 0, g = null, g = setInterval(function() {
           e++;
           this._w.closed || 2 < e ? clearInterval(g) : this._w.close();
           this._bNotInstalled = !1;
-          d = 0;
+          f = 0;
         }.bind(this), 5E3);
         c(!this._bNotInstalled);
       }
-      d++;
+      f++;
     }.bind(this), 100);
   }, set:function() {
     this._bNotInstalled = !0;
