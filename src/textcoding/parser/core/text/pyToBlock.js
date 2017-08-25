@@ -659,7 +659,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
     p.getMessage = function(name) {
         if(!name)
             return
-        name = name.replace('_space_' , ' ');
+        name = name.replace(/_space_/gi, ' ');
 
         var objects = Entry.variableContainer.messages_.filter(function(obj){
                 return obj.name === name;

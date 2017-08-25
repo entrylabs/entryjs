@@ -17843,7 +17843,7 @@ Entry.PyToBlockParser = function(c) {
   };
   c.getMessage = function(b) {
     if (b) {
-      b = b.replace("_space_", " ");
+      b = b.replace(/_space_/gi, " ");
       var c = Entry.variableContainer.messages_.filter(function(c) {
         return c.name === b;
       });
