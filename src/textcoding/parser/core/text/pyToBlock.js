@@ -214,7 +214,6 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     }
                 
                     result.params.push(leftVar.id_);
-                    
                 } else {
                     leftVar = Entry.variableContainer.getListByName(leftName)
                     this.assert(leftVar, leftName, component.left.object, "NO_LIST", "LIST");
@@ -222,7 +221,6 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     result.params.push(
                         this.ListIndex(this.Node(component.left.property.arguments[1]))
                     );
-                
                 }
                 break;
             case "Identifier":
@@ -301,7 +299,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
         var obj;
         var result = {};
         if (component.object.name === "self") { // local variable
-            var localVar = Entry.variableContainer.getVariableByName(component.property.name)
+            var localVar = Entry.variableContainer.getVariableByName(component.property.name , true)
             this.assert(localVar, "variable not exist", component);
             return {
                 type: "get_variable",

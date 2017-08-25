@@ -656,8 +656,9 @@ Entry.VariableContainer = function() {
     p.getVariableByName = function(variableName, isSelf) {
         for (var i = 0; i < this.variables_.length; i++) {
             var v = this.variables_[i];
+            var currentObject = Entry.playground.object.id;
             if(isSelf === true){
-                if(!v.object_)
+                if(!v.object_ || v.object_ !== currentObject)
                     continue;
             } else if(isSelf === false) {
                 if(v.object_)
