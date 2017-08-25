@@ -60,6 +60,9 @@ Entry.PyToBlockParser = function(blockSyntax) {
         this.createFunctionMap();
         this._funcParamMap = {};
         this._isInFuncDef = false;
+        this.object = Entry.playground.mainWorkspace ?
+            Entry.playground.mainWorkspace.board.code.object :
+            Entry.playground.object;
 
         var result;
         if (!astArr[0])
@@ -206,7 +209,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                                             variableType : 'variable',
                                             name : component.left.property.name,
                                             visible : true,
-                                            object : Entry.playground.object.id,
+                                            object : this.object.id,
                                             value : 0
                                         });
 
@@ -738,7 +741,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
                 break;
             case 'pictures':
-                var picture = Entry.playground.object.getPicture(value);
+                var picture = this.object.getPicture(value);
                 return picture ? picture.id : undefined;
             case 'messages':
                     return this.getMessage(value);
@@ -756,7 +759,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 return scenes[0] ? scenes[0].id : undefined;
             case 'sounds':
                 if (value)
-                    var sound = Entry.playground.object.getSound(value);
+                    var sound = this.object.getSound(value);
                 return sound ? sound.id : undefined;
             case 'clone':
                 var object;
@@ -933,7 +936,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
             if('name' in n.left) {
                 name = left.name;
             }  else {
-                object = Entry.playground.object;
+                object = this.object;
                 name = left.property.name;
                 object = object.id;
             }

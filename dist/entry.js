@@ -17574,6 +17574,7 @@ Entry.PyToBlockParser = function(c) {
     this.createFunctionMap();
     this._funcParamMap = {};
     this._isInFuncDef = !1;
+    this.object = Entry.playground.mainWorkspace ? Entry.playground.mainWorkspace.board.code.object : Entry.playground.object;
     if (!b[0]) {
       return [];
     }
@@ -17636,7 +17637,7 @@ Entry.PyToBlockParser = function(c) {
       case "MemberExpression":
         c.type = "change_value_list_index";
         var f = b.left.object.name;
-        "self" === f ? (c.type = "set_variable", e = Entry.variableContainer.getVariableByName(b.left.property.name, !0), e || (Entry.variableContainer.addVariable({variableType:"variable", name:b.left.property.name, visible:!0, object:Entry.playground.object.id, value:0}), e = Entry.variableContainer.getVariableByName(b.left.property.name, !0)), c.params.push(e.id_)) : (e = Entry.variableContainer.getListByName(f), this.assert(e, f, b.left.object, "NO_LIST", "LIST"), c.params.push(e.id_), c.params.push(this.ListIndex(this.Node(b.left.property.arguments[1]))));
+        "self" === f ? (c.type = "set_variable", e = Entry.variableContainer.getVariableByName(b.left.property.name, !0), e || (Entry.variableContainer.addVariable({variableType:"variable", name:b.left.property.name, visible:!0, object:this.object.id, value:0}), e = Entry.variableContainer.getVariableByName(b.left.property.name, !0)), c.params.push(e.id_)) : (e = Entry.variableContainer.getListByName(f), this.assert(e, f, b.left.object, "NO_LIST", "LIST"), c.params.push(e.id_), c.params.push(this.ListIndex(this.Node(b.left.property.arguments[1]))));
         break;
       case "Identifier":
         c.type = "set_variable";
@@ -17869,7 +17870,7 @@ Entry.PyToBlockParser = function(c) {
           return c.name === b;
         })) && 0 < c.length ? c[0].id : b;
       case "pictures":
-        return (c = Entry.playground.object.getPicture(b)) ? c.id : void 0;
+        return (c = this.object.getPicture(b)) ? c.id : void 0;
       case "messages":
         return this.getMessage(b);
       case "variables":
@@ -17882,7 +17883,7 @@ Entry.PyToBlockParser = function(c) {
         }), c[0] ? c[0].id : void 0;
       case "sounds":
         if (b) {
-          var d = Entry.playground.object.getSound(b);
+          var d = this.object.getSound(b);
         }
         return d ? d.id : void 0;
       case "clone":
@@ -17963,7 +17964,7 @@ Entry.PyToBlockParser = function(c) {
       Entry.generateHash();
       var k = {variableType:"variable", name:"", visible:!0, object:{}, value:""};
       if ("=" == b.operator) {
-        "name" in b.left ? b = c.name : (g = Entry.playground.object, b = c.property.name, g = g.id);
+        "name" in b.left ? b = c.name : (g = this.object, b = c.property.name, g = g.id);
         "NewExpression" === d.type && "list" == d.callee.property.name ? (h = "lists_", c = d.arguments.map(this.Node, this), c = c.map(function(b) {
           return b.constructor === Object && "params" in b ? {data:b.params[0] + ""} : {data:b + ""};
         }), k.array = c) : k.value = this.getValue(d);
