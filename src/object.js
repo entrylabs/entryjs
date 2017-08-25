@@ -1044,7 +1044,7 @@ Entry.EntryObject = function(model) {
         //3. index
         if (!value)
             return this.selectedPicture;
-        value = value.trim();
+        value = (value + "").trim();
         var pictures = this.pictures,
             len = pictures.length;
         for (var i=0; i<len; i++) {
@@ -1346,7 +1346,7 @@ Entry.EntryObject = function(model) {
         //1. soundId
         //2. soundName
         //3. index
-        value = value.trim();
+        value = (value + "").trim();
         var sounds = this.sounds,
             len = sounds.length;
         for (var i=0; i<len; i++)

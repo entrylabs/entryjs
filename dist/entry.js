@@ -10842,7 +10842,7 @@ Entry.EntryObject = function(c) {
     if (!b) {
       return this.selectedPicture;
     }
-    b = b.trim();
+    b = (b + "").trim();
     for (var c = this.pictures, e = c.length, f = 0;f < e;f++) {
       if (c[f].id == b) {
         return c[f];
@@ -10962,7 +10962,7 @@ Entry.EntryObject = function(c) {
     this.view_ && Entry.removeElement(this.view_);
   };
   c.getSound = function(b) {
-    b = b.trim();
+    b = (b + "").trim();
     for (var c = this.sounds, e = c.length, f = 0;f < e;f++) {
       if (c[f].id == b) {
         return c[f];
