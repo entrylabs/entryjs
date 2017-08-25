@@ -288,15 +288,6 @@ Entry.PyToBlockParser = function(blockSyntax) {
         }
     };
 
-    p.getValue = function(component){
-        var value = component.raw;
-
-        if(component.value.constructor === String)
-            value = component.raw.substr(1, component.raw.length-2);
-
-        return value + "";
-    }
-
     p.MemberExpression = function(component) {
         var obj;
         var result = {};
@@ -650,6 +641,21 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
         return results;
     };
+
+    p.getValue = function(component){
+        var value;
+        if (component.type === "Literal") {
+            value = component.raw;
+
+            if(component.value.constructor === String)
+                value = component.raw.substr(1, component.raw.length-2);
+
+            return value + "";
+        } else {
+            value = this.Node(component);
+            return value.params && value.params[0] ? value.params[0] : null;
+        }
+    }
 
     p.getMessage = function(name) {
         if(!name)

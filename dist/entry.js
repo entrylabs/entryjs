@@ -17670,11 +17670,6 @@ Entry.PyToBlockParser = function(c) {
         return this.getValue(b);
     }
   };
-  c.getValue = function(b) {
-    var c = b.raw;
-    b.value.constructor === String && (c = b.raw.substr(1, b.raw.length - 2));
-    return c + "";
-  };
   c.MemberExpression = function(b) {
     var c, e = {};
     if ("self" === b.object.name) {
@@ -17837,6 +17832,14 @@ Entry.PyToBlockParser = function(c) {
       return m[c] ? m[c][b] || b : b;
     }));
     return c;
+  };
+  c.getValue = function(b) {
+    var c;
+    if ("Literal" === b.type) {
+      return c = b.raw, b.value.constructor === String && (c = b.raw.substr(1, b.raw.length - 2)), c + "";
+    }
+    c = this.Node(b);
+    return c.params && c.params[0] ? c.params[0] : null;
   };
   c.getMessage = function(b) {
     if (b) {
