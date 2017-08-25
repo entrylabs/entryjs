@@ -17673,7 +17673,7 @@ Entry.PyToBlockParser = function(c) {
   c.MemberExpression = function(b) {
     var c, e = {};
     if ("self" === b.object.name) {
-      return e = Entry.variableContainer.getVariableByName(b.property.name), this.assert(e, "variable not exist", b), {type:"get_variable", params:[e.id_]};
+      return e = Entry.variableContainer.getVariableByName(b.property.name, !0), this.assert(e, "variable not exist", b), {type:"get_variable", params:[e.id_]};
     }
     "Literal" === b.object.type ? (c = "%2", e.preParams = [b.object]) : c = this.Node(b.object);
     "object" === typeof c && (e.preParams = "get_list" === c.type ? [c.params[0]] : [b.object], c = "%2");
@@ -19560,9 +19560,9 @@ Entry.VariableContainer = function() {
   };
   c.getVariableByName = function(b, c) {
     for (var d = 0;d < this.variables_.length;d++) {
-      var f = this.variables_[d];
+      var f = this.variables_[d], g = Entry.playground.object.id;
       if (!0 === c) {
-        if (!f.object_) {
+        if (!f.object_ || f.object_ !== g) {
           continue;
         }
       } else {
