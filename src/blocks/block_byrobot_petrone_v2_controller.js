@@ -273,6 +273,38 @@ Entry.byrobot_petrone_v2_controller =
         delete Entry.hw.sendQueue["display_draw_line_pixel"];
     },
 
+    transferDisplayDrawRect: function(target, x, y, width, height, pixel, flagFill)
+    {
+        // 범위 조정
+        x = Math.max(x, 0);
+        x = Math.min(x, 128);
+        y = Math.max(y, 0);
+        y = Math.min(y, 64);
+        width = Math.max(width, 0);
+        width = Math.min(width, 128);
+        height = Math.max(height, 0);
+        height = Math.min(height, 64);
+
+        // 전송
+        Entry.hw.setDigitalPortValue("target", target);
+        Entry.hw.setDigitalPortValue("display_draw_rect_x", x);
+        Entry.hw.setDigitalPortValue("display_draw_rect_y", y);
+        Entry.hw.setDigitalPortValue("display_draw_rect_width", width);
+        Entry.hw.setDigitalPortValue("display_draw_rect_height", height);
+        Entry.hw.setDigitalPortValue("display_draw_rect_pixel", pixel);
+        Entry.hw.setDigitalPortValue("display_draw_rect_flagfill", flagFill);
+
+        Entry.hw.update();
+
+        delete Entry.hw.sendQueue["target"];
+        delete Entry.hw.sendQueue["display_draw_rect_x"];
+        delete Entry.hw.sendQueue["display_draw_rect_y"];
+        delete Entry.hw.sendQueue["display_draw_rect_width"];
+        delete Entry.hw.sendQueue["display_draw_rect_height"];
+        delete Entry.hw.sendQueue["display_draw_rect_pixel"];
+        delete Entry.hw.sendQueue["display_draw_rect_flagfill"];
+    },
+
     // 작업중..
 
     transferbuzzer: function(mode, value, time)
@@ -455,6 +487,28 @@ Entry.byrobot_petrone_v2_controller =
         case "Start":
             {
                 this.transferDisplayDrawLine(target, x1, y1, x2, y2, pixel);
+            }
+            return script;
+
+        case "Running":
+            return script;
+
+        case "Finish":
+            return script.callReturn();
+
+        default:
+            return script.callReturn();
+        }
+    },
+
+    // OLED - 화면에 사각형 그리기
+    setDisplayDrawRect: function(script, target, x, y, width, height, pixel, flagFill)
+    {
+        switch( this.checkFinish(script, 40) )
+        {
+        case "Start":
+            {
+                this.transferDisplayDrawRect(target, x, y, width, height, pixel, flagFill);
             }
             return script;
 

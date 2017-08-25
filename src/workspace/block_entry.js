@@ -42781,7 +42781,99 @@ Entry.block = {
         },
     },
     // */
-
+    //*
+    "byrobot_petrone_v2_controller_controller_display_draw_rect":
+    {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.byrobot_petrone_v2_controller_display_pixel_black, "0"],
+                    [Lang.Blocks.byrobot_petrone_v2_controller_display_pixel_white, "1"],
+                ],
+                "value": "0",
+                "fontSize": 11
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.byrobot_petrone_v2_controller_display_flagfill_off, "0"],
+                    [Lang.Blocks.byrobot_petrone_v2_controller_display_flagfill_on, "1"],
+                ],
+                "value": "0",
+                "fontSize": 11
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "text",
+                    "params": ["64"]
+                },
+                {
+                    "type": "text",
+                    "params": ["32"]
+                },
+                {
+                    "type": "text",
+                    "params": ["32"]
+                },
+                {
+                    "type": "text",
+                    "params": ["16"]
+                },
+                null,
+                null,
+                null
+            ],
+            "type": "byrobot_petrone_v2_controller_controller_display_draw_rect"
+        },
+        "paramsKeyMap": {
+            "X": 0,
+            "Y": 1,
+            "WIDTH": 2,
+            "HEIGHT": 3,
+            "PIXEL": 4,
+            "FLAGFILL": 5,
+        },
+        "class": "byrobot_petrone_v2_controller_controller_display",
+        "isNotFor": ["byrobot_petrone_v2_controller"],
+        "func": function (sprite, script) {
+            var x = script.getNumberValue('X');
+            var y = script.getNumberValue('Y');
+            var width = script.getNumberValue('WIDTH');
+            var height = script.getNumberValue('HEIGHT');
+            var pixel = parseInt(script.getField('PIXEL'));
+            var flagFill = parseInt(script.getField('FLAGFILL'));
+            return Entry.byrobot_petrone_v2_controller.setDisplayDrawRect(script, 0x31, x, y, width, height, pixel, flagFill);
+        },
+    },
+    // */
 
     // 작업중
 
