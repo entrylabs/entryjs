@@ -243,6 +243,36 @@ Entry.byrobot_petrone_v2_controller =
         delete Entry.hw.sendQueue["display_draw_point_pixel"];
     },
 
+    transferDisplayDrawLine: function(target, x1, y1, x2, y2, pixel)
+    {
+        // 범위 조정
+        x1 = Math.max(x, 0);
+        x1 = Math.min(x, 128);
+        y1 = Math.max(y, 0);
+        y1 = Math.min(y, 64);
+        x2 = Math.max(x, 0);
+        x2 = Math.min(x, 128);
+        y2 = Math.max(y, 0);
+        y2 = Math.min(y, 64);
+
+        // 전송
+        Entry.hw.setDigitalPortValue("target", target);
+        Entry.hw.setDigitalPortValue("display_draw_line_x1", x1);
+        Entry.hw.setDigitalPortValue("display_draw_line_y1", y1);
+        Entry.hw.setDigitalPortValue("display_draw_line_x2", x2);
+        Entry.hw.setDigitalPortValue("display_draw_line_y2", y2);
+        Entry.hw.setDigitalPortValue("display_draw_line_pixel", pixel);
+
+        Entry.hw.update();
+
+        delete Entry.hw.sendQueue["target"];
+        delete Entry.hw.sendQueue["display_draw_line_x1"];
+        delete Entry.hw.sendQueue["display_draw_line_y1"];
+        delete Entry.hw.sendQueue["display_draw_line_x2"];
+        delete Entry.hw.sendQueue["display_draw_line_y2"];
+        delete Entry.hw.sendQueue["display_draw_line_pixel"];
+    },
+
     // 작업중..
 
     transferbuzzer: function(mode, value, time)
@@ -403,6 +433,28 @@ Entry.byrobot_petrone_v2_controller =
         case "Start":
             {
                 this.transferDisplayDrawPoint(target, x, y, pixel);
+            }
+            return script;
+
+        case "Running":
+            return script;
+
+        case "Finish":
+            return script.callReturn();
+
+        default:
+            return script.callReturn();
+        }
+    },
+
+    // OLED - 화면에 선 그리기
+    setDisplayDrawLine: function(script, target, x1, y1, x2, y2, pixel)
+    {
+        switch( this.checkFinish(script, 40) )
+        {
+        case "Start":
+            {
+                this.transferDisplayDrawLine(target, x1, y1, x2, y2, pixel);
             }
             return script;
 

@@ -42700,7 +42700,89 @@ Entry.block = {
         },
     },
     // */
-    
+    //*
+    "byrobot_petrone_v2_controller_controller_display_draw_line":
+    {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.byrobot_petrone_v2_controller_display_pixel_black, "0"],
+                    [Lang.Blocks.byrobot_petrone_v2_controller_display_pixel_white, "1"],
+                ],
+                "value": "0",
+                "fontSize": 11
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "text",
+                    "params": ["32"]
+                },
+                {
+                    "type": "text",
+                    "params": ["16"]
+                },
+                {
+                    "type": "text",
+                    "params": ["96"]
+                },
+                {
+                    "type": "text",
+                    "params": ["48"]
+                },
+                null,
+                null
+            ],
+            "type": "byrobot_petrone_v2_controller_controller_display_draw_line"
+        },
+        "paramsKeyMap": {
+            "X1": 0,
+            "Y1": 1,
+            "X2": 2,
+            "Y2": 3,
+            "PIXEL": 4,
+        },
+        "class": "byrobot_petrone_v2_controller_controller_display",
+        "isNotFor": ["byrobot_petrone_v2_controller"],
+        "func": function (sprite, script) {
+            var x1 = script.getNumberValue('X1');
+            var y1 = script.getNumberValue('Y1');
+            var x2 = script.getNumberValue('X2');
+            var y2 = script.getNumberValue('Y2');
+            var pixel = parseInt(script.getField('PIXEL'));
+            return Entry.byrobot_petrone_v2_controller.setDisplayDrawLine(script, 0x31, x1, y1, x2, y2, pixel);
+        },
+    },
+    // */
+
+
     // 작업중
 
     //*
