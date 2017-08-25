@@ -17843,14 +17843,14 @@ Entry.PyToBlockParser = function(c) {
   };
   c.getMessage = function(b) {
     if (b) {
+      b = b.replace("_space_", " ");
       var c = Entry.variableContainer.messages_.filter(function(c) {
         return c.name === b;
       });
-      0 >= c.length && Entry.variableContainer.addMessage({name:b});
-      var c = b.replace("_space_", " "), e = Entry.variableContainer.messages_.filter(function(c) {
+      0 >= c.length && (Entry.variableContainer.addMessage({name:b}), c = Entry.variableContainer.messages_.filter(function(c) {
         return c.name === b;
-      });
-      return object = e && 0 < e.length ? e[0].id : c;
+      }));
+      return object = c && 0 < c.length ? c[0].id : b;
     }
   };
   c.DropdownDynamic = function(b, c) {

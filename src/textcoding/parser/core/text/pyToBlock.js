@@ -660,27 +660,26 @@ Entry.PyToBlockParser = function(blockSyntax) {
     p.getMessage = function(name) {
         if(!name)
             return
-        var message = Entry.variableContainer.messages_.filter(function(obj){
-                    return obj.name === name;
-                });
+        name = name.replace('_space_' , ' ');
 
-        if(message.length <= 0) {
+        var objects = Entry.variableContainer.messages_.filter(function(obj){
+                return obj.name === name;
+            });
 
+        if(objects.length <= 0) {
             Entry.variableContainer.addMessage({
                 name : name
             });
+            objects = Entry.variableContainer.messages_.filter(function(obj){
+                return obj.name === name;
+            });
         }
 
-        message = name.replace('_space_' , ' ');
-
-        var objects = Entry.variableContainer.messages_.filter(function(obj){
-                    return obj.name === name;
-                });
 
         if(objects && objects.length > 0)
             object = objects[0].id;
         else {
-            object = message;
+            object = name;
         }
 
         return object;
