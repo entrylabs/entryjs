@@ -4445,6 +4445,8 @@ Lang.Helper = {
     "byrobot_petrone_v2_controller_controller_display_clear_all": "<br>조종기 OLED 화면 전체를 지웁니다. 흰색/검은색 중에서 원하는 색을 선택할 수 있습니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#Display</font>",
     "byrobot_petrone_v2_controller_controller_display_clear": "<br>조종기 OLED 화면의 선택한 영역을 지웁니다. x, y 좌표값과 너비, 높이를 지정합니다. 사용 가능한 값의 범위는 x값과 너비는 (0~128), y값과 높이는 (0~64)입니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#Display</font>",
     "byrobot_petrone_v2_controller_controller_display_invert": "<br>조종기 OLED 화면에서 선택한 영역의 색을 반전시킵니다. x, y 좌표값과 너비, 높이를 지정합니다. 사용 가능한 값의 범위는 x값과 너비는 (0~128), y값과 높이는 (0~64)입니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#Display</font>",
+    "byrobot_petrone_v2_controller_controller_display_draw_point": "<br>조종기 OLED 화면에서 지정한 위치에 점을 찍습니다. 흰색/검은색 중에서 원하는 색을 선택할 수 있습니다. x, y 좌표값으로 지정합니다. 사용 가능한 값의 범위는 x값은 (0~128), y값은 (0~64)입니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#Display</font>",
+
     "byrobot_petrone_v2_controller_controller_buzzer_off": "<br>버저 작동을 중단합니다. 예약된 소리가 있다면 모두 삭제합니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#버저끄기</font>",
     "byrobot_petrone_v2_controller_controller_buzzer_scale": "<br>지정한 옥타브의 음을 계속해서 연주합니다(최대 60초). 이 블럭을 만났을 경우 소리가 켜져있거나 예약된 소리가 있다면 모두 삭제합니다. 이 블럭은 연주 명령을 실행 후 바로 다음 블럭으로 넘어갑니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#버저</font> <font color='forestgreen'>#음계</font> <font color='peru'>#즉시</font>",
     "byrobot_petrone_v2_controller_controller_buzzer_scale_delay": "<br>지정한 옥타브의 음을 지정한 시간동안 연주합니다. 이 블럭을 만났을 경우 소리가 켜져있거나 예약된 소리가 있다면 모두 삭제합니다. 이 블럭을 사용하면 소리가 끝날때까지 다음 블럭으로 넘어가지 않습니다.<br><br><font color='crimson'>#조종기</font> <font color='dodgerblue'>#버저</font> <font color='forestgreen'>#음계</font> <font color='peru'>#즉시</font> <font color='blueviolet'>#시간지연</font>",
@@ -4837,6 +4839,8 @@ Lang.template = {
     "byrobot_petrone_v2_controller_controller_display_clear_all": "조종기 화면 전체 지우기%1 %2",
     "byrobot_petrone_v2_controller_controller_display_clear": "조종기 화면 선택영역 지우기 x:%1, y:%2, 너비:%3, 높이:%4, %5 %6",
     "byrobot_petrone_v2_controller_controller_display_invert": "조종기 화면 선택영역 반전 x:%1, y:%2, 너비:%3, 높이:%4 %5",
+    "byrobot_petrone_v2_controller_controller_display_draw_point": "조종기 화면 점 찍기 x:%1, y:%2, %3 %4",
+
     "byrobot_petrone_v2_controller_controller_buzzer_off": "버저 끄기 %1",
     "byrobot_petrone_v2_controller_controller_buzzer_scale": "%1 옥타브 %2 을(를) 연주 %3",
     "byrobot_petrone_v2_controller_controller_buzzer_scale_delay": "%1 옥타브 %2 을(를) %3 초 연주 %4",

@@ -559,7 +559,7 @@ Entry.byrobot_petrone_v2_flight =
         case "Start":
             {
                 this.transferIrMessage(irdirection, irmessage);
-                // Light Event
+                // Light Event (transferLightEvent 만들어야 할 듯)
             }
             return script;
             

@@ -221,8 +221,29 @@ Entry.byrobot_petrone_v2_controller =
         delete Entry.hw.sendQueue["display_invert_height"];
     },
 
+    transferDisplayDrawPoint: function(target, x, y, pixel)
+    {
+        // 범위 조정
+        x = Math.max(x, 0);
+        x = Math.min(x, 128);
+        y = Math.max(y, 0);
+        y = Math.min(y, 64);
 
-    // 작업중
+        // 전송
+        Entry.hw.setDigitalPortValue("target", target);
+        Entry.hw.setDigitalPortValue("display_draw_point_x", x);
+        Entry.hw.setDigitalPortValue("display_draw_point_y", y);
+        Entry.hw.setDigitalPortValue("display_draw_point_pixel", pixel);
+
+        Entry.hw.update();
+
+        delete Entry.hw.sendQueue["target"];
+        delete Entry.hw.sendQueue["display_draw_point_x"];
+        delete Entry.hw.sendQueue["display_draw_point_y"];
+        delete Entry.hw.sendQueue["display_draw_point_pixel"];
+    },
+
+    // 작업중..
 
     transferbuzzer: function(mode, value, time)
     {
@@ -374,7 +395,29 @@ Entry.byrobot_petrone_v2_controller =
         }
     },
 
-    // 작업중
+    // OLED - 화면에 점 찍기
+    setDisplayDrawPoint: function(script, target, x, y, pixel)
+    {
+        switch( this.checkFinish(script, 40) )
+        {
+        case "Start":
+            {
+                this.transferDisplayDrawPoint(target, x, y, pixel);
+            }
+            return script;
+
+        case "Running":
+            return script;
+
+        case "Finish":
+            return script.callReturn();
+
+        default:
+            return script.callReturn();
+        }
+    },
+
+    // 작업중..
     
     // 버저 설정(함수 호출 시 시간은 모두 ms 단위 사용)
     /*  

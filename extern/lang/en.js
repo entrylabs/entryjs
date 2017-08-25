@@ -4445,6 +4445,8 @@ Lang.Helper = {
     "byrobot_petrone_v2_controller_controller_display_clear_all": "",
     "byrobot_petrone_v2_controller_controller_display_clear": "",
     "byrobot_petrone_v2_controller_controller_display_invert": "",
+    "byrobot_petrone_v2_controller_controller_display_draw_point": "",
+
     "byrobot_petrone_v2_controller_controller_buzzer_off": "",
     "byrobot_petrone_v2_controller_controller_buzzer_scale": "",
     "byrobot_petrone_v2_controller_controller_buzzer_scale_delay": "",
@@ -4837,6 +4839,8 @@ Lang.template = {
     "byrobot_petrone_v2_controller_controller_display_clear_all": "clear controller display with %1 color %2",
     "byrobot_petrone_v2_controller_controller_display_clear": "clear controller display x:%1, y:%2, width:%3, height:%4, color:%5 %6",
     "byrobot_petrone_v2_controller_controller_display_invert": "invert controller display x:%1, y:%2, width:%3, height:%4 %5",
+    "byrobot_petrone_v2_controller_controller_display_draw_point": "draw a point in controller display  x:%1, y:%2, color:%3 %4",
+
     "byrobot_petrone_v2_controller_controller_buzzer_off": "turn off the buzzer %1",
     "byrobot_petrone_v2_controller_controller_buzzer_scale": "play %1 octave %2 %3",
     "byrobot_petrone_v2_controller_controller_buzzer_scale_delay": "play %1 octave %2 for %3 second %4",
