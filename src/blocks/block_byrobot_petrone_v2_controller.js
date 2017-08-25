@@ -305,6 +305,34 @@ Entry.byrobot_petrone_v2_controller =
         delete Entry.hw.sendQueue["display_draw_rect_flagfill"];
     },
 
+    transferDisplayDrawCircle: function(target, x, y, radius, pixel, flagFill)
+    {
+        // 범위 조정
+        x = Math.max(x, -50);
+        x = Math.min(x, 178);
+        y = Math.max(y, -50);
+        y = Math.min(y, 114);
+        radius = Math.max(radius, 1);
+        radius = Math.min(radius, 200);
+        
+        // 전송
+        Entry.hw.setDigitalPortValue("target", target);
+        Entry.hw.setDigitalPortValue("display_draw_circle_x", x);
+        Entry.hw.setDigitalPortValue("display_draw_circle_y", y);
+        Entry.hw.setDigitalPortValue("display_draw_circle_radius", radius);
+        Entry.hw.setDigitalPortValue("display_draw_circle_pixel", pixel);
+        Entry.hw.setDigitalPortValue("display_draw_circle_flagfill", flagFill);
+
+        Entry.hw.update();
+
+        delete Entry.hw.sendQueue["target"];
+        delete Entry.hw.sendQueue["display_draw_circle_x"];
+        delete Entry.hw.sendQueue["display_draw_circle_y"];
+        delete Entry.hw.sendQueue["display_draw_circle_radius"];
+        delete Entry.hw.sendQueue["display_draw_circle_pixel"];
+        delete Entry.hw.sendQueue["display_draw_circle_flagfill"];
+    },
+
     // 작업중..
 
     transferbuzzer: function(mode, value, time)
@@ -509,6 +537,28 @@ Entry.byrobot_petrone_v2_controller =
         case "Start":
             {
                 this.transferDisplayDrawRect(target, x, y, width, height, pixel, flagFill);
+            }
+            return script;
+
+        case "Running":
+            return script;
+
+        case "Finish":
+            return script.callReturn();
+
+        default:
+            return script.callReturn();
+        }
+    },
+
+    // OLED - 화면에 원 그리기
+    setDisplayDrawCircle: function(script, target, x, y, radius, pixel, flagFill)
+    {
+        switch( this.checkFinish(script, 40) )
+        {
+        case "Start":
+            {
+                this.transferDisplayDrawCircle(target, x, y, radius, pixel, flagFill);
             }
             return script;
 
