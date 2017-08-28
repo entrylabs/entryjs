@@ -603,7 +603,7 @@ Entry.Engine = function() {
                 this.pauseButton.addClass('entryRemove');
             if (this.pauseButtonFull)
                 this.pauseButtonFull.addClass('entryRemove');
-            if (this.addButton)
+            if (this.addButton && Entry.objectAddable)
                 this.addButton.removeClass('entryRemove');
 
             if (this.runButton2)
