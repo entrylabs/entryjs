@@ -10423,7 +10423,7 @@ Entry.EntryObject = function(c) {
           this.onload = null;
         };
         d.onerror = function(d) {
-          this.triedCnt ? 3 > this.triedCnt ? (this.triedCnt++, this.src = Entry.mediaFilePath + "_1x1.png") : (delete this.triedCnt, Entry.Loader.removeQueue(), this.onerror = null) : (console.log("err=", c.name, "load failed"), this.triedCnt = 1, this.src = b(c));
+          this.triedCnt ? 3 > this.triedCnt ? (this.triedCnt++, this.src = Entry.mediaFilePath + "_1x1.png") : (delete this.triedCnt, Entry.Loader.removeQueue(), this.onerror = null) : ("invisible" !== Entry.type && console.log("err=", c.name, "load failed"), this.triedCnt = 1, this.src = b(c));
         };
         d.src = b(c);
       })(this.pictures[d]);

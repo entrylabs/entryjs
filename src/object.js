@@ -90,6 +90,7 @@ Entry.EntryObject = function(model) {
 
                 image.onerror = function(err) {
                     if (!this.triedCnt) {
+                        if (Entry.type !== "invisible")
                         console.log('err=', picture.name, 'load failed');
                         this.triedCnt = 1;
                         this.src = getImageSrc(picture);

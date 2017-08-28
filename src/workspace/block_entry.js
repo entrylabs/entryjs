@@ -177,7 +177,7 @@ if (Entry && Entry.block) {
             }
             return '"()"'.replace('()', value).toLowerCase();
         };
-        
+
         c.returnValuePartialUpperCase = function(key, value) {
             if(this.codeMap)
                 var codeMap = eval(this.codeMap);
@@ -11579,7 +11579,6 @@ Entry.block = {
             },
             {
                 "type": "Block",
-                "isListIndex": true,
                 "accept": "string"
             },
             {
@@ -13373,7 +13372,7 @@ Entry.block = {
             if (!this.initiated) {
                 this.initiated = true;
                 Entry.callStackLength++;
-                
+
                 if (Entry.callStackLength > Entry.Executor.MAXIMUM_CALLSTACK) {
                     Entry.toast.alert(
                         Lang.Workspace.RecursiveCallWarningTitle,
@@ -13398,7 +13397,7 @@ Entry.block = {
                 this.funcCode.removeExecutor(this.funcExecutor);
                 return Entry.STATIC.BREAK;
             }
-            
+
             Entry.callStackLength--;
         },
         "syntax": {"js": [], "py": [""]}
@@ -30315,7 +30314,7 @@ Entry.block = {
                 "type": "Block",
                 "accept": "string"
             },
-            { 
+            {
                 "type": "angle",
                 "params": [ "10" ]
             },
@@ -30891,7 +30890,7 @@ Entry.block = {
         "events": {},
         "def": {
             "params": [
-                { 
+                {
                     "type": "angle",
                     "params": [ "10" ]
                 },
@@ -30939,7 +30938,7 @@ Entry.block = {
         "events": {},
         "def": {
             "params": [
-                { 
+                {
                     "type": "angle",
                     "params": [ "10" ]
                 },
@@ -30986,7 +30985,7 @@ Entry.block = {
         "events": {},
         "def": {
             "params": [
-                { 
+                {
                     "type": "angle",
                     "params": [ "10" ]
                 },
@@ -31233,7 +31232,7 @@ Entry.block = {
                     "type": "text",
                     "params": [ "2" ]
                 },
-                { 
+                {
                     "type": "angle",
                     "params": [ "10" ]
                 },
@@ -34574,7 +34573,7 @@ Entry.block = {
          "syntax": {"js": [], "py": [{
             passTest: true,
             syntax : "Entry.play_sound_from_to_and_wait(%1, %2, %3)"
-        }]}              
+        }]}
     },
     "sound_from_to_and_wait": {
         "color": "#A4D01D",
@@ -35545,7 +35544,7 @@ Entry.block = {
                 syntax: "%1 += %2",
                 passTest: true,
                 textParams: [
-                    {   
+                    {
                         "type": "DropdownDynamic",
                         "value": null,
                         "menuName": "variables",
@@ -36121,6 +36120,7 @@ Entry.block = {
         "syntax": {"js": [], "py": [
             {
                 passTest : true,
+                syntax: "%2.append(%1)",
                 textParams: [
                     {
                         "type": "Block",
@@ -43417,7 +43417,7 @@ Entry.block = {
             return script.callReturn();
         },
         "syntax": {"js": [], "py": []}
-    },    
+    },
     "mkboard_dc_motor_direction_list": {
         "color": "#00979D",
         "skeleton": "basic_string_field",
@@ -43490,7 +43490,7 @@ Entry.block = {
                 direction = 0;
             } else if(direction > 1) {
                 direction = 1;
-            } 
+            }
 
             var speed = script.getNumberValue("DC_MOTOR_SPEED", script) - 1;
             if(speed < 0) {
@@ -43502,7 +43502,7 @@ Entry.block = {
 
             if(!Entry.hw.sendQueue['SET']) {
                 Entry.hw.sendQueue['SET'] = {};
-            }            
+            }
 
             Entry.hw.sendQueue['SET'][0] = {
                 type: Entry.mkboard.sensorTypes.DC_MOTOR_LEFT,
@@ -43515,12 +43515,12 @@ Entry.block = {
 
             setTimeout(function() {
                 script.timeFlag = 0;
-            }, 10);       
-            
-            return script.callReturn();            
+            }, 10);
+
+            return script.callReturn();
         },
         "syntax": {"js": [], "py": []}
-    },   
+    },
     "mkboard_set_right_dc_motor": {
         "color": "#00979D",
         "skeleton": "basic",
@@ -43576,7 +43576,7 @@ Entry.block = {
 
             if(!Entry.hw.sendQueue['SET']) {
                 Entry.hw.sendQueue['SET'] = {};
-            } 
+            }
 
             Entry.hw.sendQueue['SET'][1] = {
                 type: Entry.mkboard.sensorTypes.DC_MOTOR_RIGHT,
@@ -43589,8 +43589,8 @@ Entry.block = {
 
             setTimeout(function() {
                 script.timeFlag = 0;
-            }, 10);              
-            
+            }, 10);
+
             return script.callReturn();
         },
         "syntax": {"js": [], "py": []}
@@ -43629,7 +43629,7 @@ Entry.block = {
             return ANALOG ? ANALOG[port] || 0 : 0;
         },
         "syntax": {"js": [], "py": []}
-    },   
+    },
     "mkboard_get_right_cds_analog_value": {
         "color": "#00979D",
         "fontColor": "#fff",
@@ -43664,7 +43664,7 @@ Entry.block = {
             return ANALOG ? ANALOG[port] || 0 : 0;
         },
         "syntax": {"js": [], "py": []}
-    },        
+    },
     "mkboard_toggle_left_led": {
         "color": "#00979D",
         "skeleton": "basic",
@@ -43796,7 +43796,7 @@ Entry.block = {
             return script.callReturn();
         },
         "syntax": {"js": [], "py": []}
-    },       
+    },
     "mkboard_get_sound_analog_value": {
         "color": "#00979D",
         "fontColor": "#fff",
@@ -43808,9 +43808,9 @@ Entry.block = {
                 "accept": "string"
             }
         ],
-        "events": {}, 
+        "events": {},
         "def": {
-            "params": [  
+            "params": [
                 {
                     "type": "mkboard_analog_list",
                     "params": [ "2" ]
@@ -43860,7 +43860,7 @@ Entry.block = {
         "func": function (sprite, script) {
             return script.getField("LINE");
         }
-    },  
+    },
 
     "mkboard_set_digital_lcd": {
         "color": "#00979D",
@@ -43910,7 +43910,7 @@ Entry.block = {
 
             if(!script.isStart) {
                 if(typeof string === 'string') {
-                    for (var i = 0; i < string.length; i++) {  
+                    for (var i = 0; i < string.length; i++) {
                         text[i] = Entry.mkboard.toByte(string[i]);
                     }
                 }
@@ -43920,7 +43920,7 @@ Entry.block = {
                 if(!Entry.hw.sendQueue['SET']) {
                     Entry.hw.sendQueue['SET'] = {};
                 }
-                
+
                 script.isStart = true;
                 script.timeFlag = 1;
                 var fps = Entry.FPS || 60;
@@ -43946,7 +43946,7 @@ Entry.block = {
                         text14 : text[14],
                         text15 : text[15]
                     },
-                    time: new Date().getTime()                
+                    time: new Date().getTime()
                 };
 
                 setTimeout(function() {
@@ -43965,7 +43965,7 @@ Entry.block = {
             }
         },
         "syntax": {"js": [], "py": ["mkboard.set_digital_lcd(%1, %2)"]}
-    },    
+    },
     */
 
     // mkboard Added 2017-07-04
