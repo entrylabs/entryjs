@@ -116,9 +116,6 @@ Entry.PyToBlockParser = function(blockSyntax) {
             return this[obj](component);
 
         if (callee.type === "Identifier") { // global function
-            this.assert(!(obj.type === "get_variable"), "", callee, "NO_SUPPORT", "GENERAL")
-            this.assert(!(obj.type === "get_list"), "", callee, "NO_SUPPORT", "GENERAL")
-
             if (this._funcMap[obj]) {
                 var funcType = this._funcMap[obj][args.length];
                 obj = {
@@ -188,7 +185,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
     p.VariableDeclarator = function(component) {
         if(component.init && component.init.arguments) {
-            return component.init.arguments.map(this.Node , this);
+            return component.init.arguments.map(this.Node, this);
         } else {
             return [];
         }
@@ -386,7 +383,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
         var consequent = component.consequent;
 
         if(isForState){
-            alternate = component.alternate.body.map(this.Node , this);
+            alternate = component.alternate.body.map(this.Node, this);
             component.consequent.body[0].body.body.shift();
 
             blocks = component.consequent.body[0].body.body;
@@ -401,8 +398,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
         } else {
 
 
-            var consequents = component.consequent ? component.consequent.body.map(this.Node , this) : [];
-            var alternates = component.alternate ? component.alternate.body.map(this.Node , this) : [];
+            var consequents = component.consequent ? component.consequent.body.map(this.Node, this) : [];
+            var alternates = component.alternate ? component.alternate.body.map(this.Node, this) : [];
             alternate = {
                 type : 'if_else',
                 statements : [ consequents, alternates ],
@@ -527,7 +524,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 startBlock.params = [ null, null];
             } else {
                 var name = component.arguments[0].name;
-                startBlock.params = [null , this.getMessage(name)]
+                startBlock.params = [null, this.getMessage(name)]
             }
         }
 
@@ -555,7 +552,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
     };
 
     p.ReturnStatement = function(component) {
-        return component.argument.arguments.map(this.Node , this );
+        return component.argument.arguments.map(this.Node, this );
     };
 
     // p.ThisExpression = function(component) {};
@@ -945,7 +942,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
             if(right.type === "NewExpression" && right.callee.property.name == 'list'){
                 type = 'lists_';
-                var temp = right.arguments.map(this.Node , this);
+                var temp = right.arguments.map(this.Node, this);
 
                 temp = temp.map(function(m){
                     if(m.constructor === Object && 'params' in m)
@@ -978,13 +975,13 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
 
 
-        } , this);
+        }, this);
 
 
         return [];
     };
 
-    p.variableExist = function(name , type){
+    p.variableExist = function(name, type){
         var variables_ = Entry.variableContainer[type];
         variables_ = variables_.map(function(v){
             return v.name_;

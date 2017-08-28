@@ -17696,7 +17696,7 @@ Entry.PyToBlockParser = function(c) {
       return this[f](b);
     }
     if ("Identifier" === c.type) {
-      if (this.assert("get_variable" !== f.type, "", c, "NO_SUPPORT", "GENERAL"), this.assert("get_list" !== f.type, "", c, "NO_SUPPORT", "GENERAL"), this._funcMap[f]) {
+      if (this._funcMap[f]) {
         f = {type:"func_" + this._funcMap[f][e.length]};
       } else {
         if (this[f]) {
