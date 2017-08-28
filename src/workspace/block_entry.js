@@ -36497,6 +36497,7 @@ Entry.block = {
             },
             {
                 "type": "Block",
+                "isListIndex": true,
                 "accept": "string"
             },
             {
