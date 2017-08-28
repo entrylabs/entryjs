@@ -17838,7 +17838,7 @@ Entry.PyToBlockParser = function(c) {
   c.getValue = function(b) {
     var c;
     if ("Literal" === b.type) {
-      return c = b.raw, b.value.constructor === String && (c = b.raw.substr(1, b.raw.length - 2)), c + "";
+      return c = b.raw, b.value.constructor === String ? c = b.raw.substr(1, b.raw.length - 2) : b.value.constructor === Number && (c = b.value), c;
     }
     c = this.Node(b);
     return c.params && c.params[0] ? c.params[0] : null;
@@ -17967,7 +17967,7 @@ Entry.PyToBlockParser = function(c) {
       if ("=" == b.operator) {
         "name" in b.left ? b = c.name : (g = this.object, b = c.property.name, g = g.id);
         "NewExpression" === d.type && "list" == d.callee.property.name ? (h = "lists_", c = d.arguments.map(this.Node, this), c = c.map(function(b) {
-          return b.constructor === Object && "params" in b ? {data:b.params[0] + ""} : {data:b + ""};
+          return b.constructor === Object && "params" in b ? {data:b.params[0]} : {data:b};
         }), k.array = c) : k.value = this.getValue(d);
         var c = "add" + h[0].toUpperCase() + h.slice(1, h.length - 2), l = this.variableExist(b, h);
         l ? "lists_" == h ? l.array_ = k.array : l.value_ = this.getValue(d) : (k.variableType = h.slice(0, length - 2), k.name = b, k.object = g, Entry.variableContainer[c](k));
