@@ -246,14 +246,14 @@ Entry.byrobot_petrone_v2_controller =
     transferDisplayDrawLine: function(target, x1, y1, x2, y2, pixel)
     {
         // 범위 조정
-        x1 = Math.max(x, 0);
-        x1 = Math.min(x, 128);
-        y1 = Math.max(y, 0);
-        y1 = Math.min(y, 64);
-        x2 = Math.max(x, 0);
-        x2 = Math.min(x, 128);
-        y2 = Math.max(y, 0);
-        y2 = Math.min(y, 64);
+        x1 = Math.max(x1, 0);
+        x1 = Math.min(x1, 128);
+        y1 = Math.max(y1, 0);
+        y1 = Math.min(y1, 64);
+        x2 = Math.max(x2, 0);
+        x2 = Math.min(x2, 128);
+        y2 = Math.max(y2, 0);
+        y2 = Math.min(y2, 64);
 
         // 전송
         Entry.hw.setDigitalPortValue("target", target);
@@ -331,6 +331,32 @@ Entry.byrobot_petrone_v2_controller =
         delete Entry.hw.sendQueue["display_draw_circle_radius"];
         delete Entry.hw.sendQueue["display_draw_circle_pixel"];
         delete Entry.hw.sendQueue["display_draw_circle_flagfill"];
+    },
+
+    transferDisplayDrawString: function(target, x, y, font, pixel, string)
+    {
+        // 범위 조정
+        x = Math.max(x, 0);
+        x = Math.min(x, 120);
+        y = Math.max(y, 0);
+        y = Math.min(y, 60);
+
+        // 전송
+        Entry.hw.setDigitalPortValue("target", target);
+        Entry.hw.setDigitalPortValue("display_draw_string_x", x);
+        Entry.hw.setDigitalPortValue("display_draw_string_y", y);
+        Entry.hw.setDigitalPortValue("display_draw_string_font", font);
+        Entry.hw.setDigitalPortValue("display_draw_string_pixel", pixel);
+        Entry.hw.setDigitalPortValue("display_draw_string_string", string);
+
+        Entry.hw.update();
+
+        delete Entry.hw.sendQueue["target"];
+        delete Entry.hw.sendQueue["display_draw_string_x"];
+        delete Entry.hw.sendQueue["display_draw_string_y"];
+        delete Entry.hw.sendQueue["display_draw_string_font"];
+        delete Entry.hw.sendQueue["display_draw_string_pixel"];
+        delete Entry.hw.sendQueue["display_draw_string_string"];
     },
 
     // 작업중..
@@ -559,6 +585,28 @@ Entry.byrobot_petrone_v2_controller =
         case "Start":
             {
                 this.transferDisplayDrawCircle(target, x, y, radius, pixel, flagFill);
+            }
+            return script;
+
+        case "Running":
+            return script;
+
+        case "Finish":
+            return script.callReturn();
+
+        default:
+            return script.callReturn();
+        }
+    },
+
+    // OLED - 화면에 문자열 쓰기
+    setDisplayDrawString: function(script, target, x, y, font, pixel, string)
+    {
+        switch( this.checkFinish(script, 40) )
+        {
+        case "Start":
+            {
+                this.transferDisplayDrawString(target, x, y, font, pixel, string);
             }
             return script;
 

@@ -42957,7 +42957,89 @@ Entry.block = {
         },
     },
     // */
-
+    //*
+    "byrobot_petrone_v2_controller_controller_display_draw_string":
+    {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.byrobot_petrone_v2_controller_display_font_5x8, "0"],
+                    [Lang.Blocks.byrobot_petrone_v2_controller_display_font_10x16, "1"],
+                ],
+                "value": "1",
+                "fontSize": 11
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.byrobot_petrone_v2_controller_display_pixel_black, "0"],
+                    [Lang.Blocks.byrobot_petrone_v2_controller_display_pixel_white, "1"],
+                ],
+                "value": "0",
+                "fontSize": 11
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "text",
+                    "params": ["32"]
+                },
+                {
+                    "type": "text",
+                    "params": ["32"]
+                },
+                null,
+                null,
+                {
+                    "type": "text",
+                    "params": ["PetroneV2"]
+                },
+                null
+            ],
+            "type": "byrobot_petrone_v2_controller_controller_display_draw_string"
+        },
+        "paramsKeyMap": {
+            "X": 0,
+            "Y": 1,
+            "FONT": 2,
+            "PIXEL": 3,
+            "STRING": 4,
+        },
+        "class": "byrobot_petrone_v2_controller_controller_display",
+        "isNotFor": ["byrobot_petrone_v2_controller"],
+        "func": function (sprite, script) {
+            var x = script.getNumberValue('X');
+            var y = script.getNumberValue('Y');
+            var font = parseInt(script.getField('FONT'));
+            var pixel = parseInt(script.getField('PIXEL'));
+            var string = script.getStringValue('STRING');
+            return Entry.byrobot_petrone_v2_controller.setDisplayDrawString(script, 0x31, x, y, font, pixel, string);
+        },
+    },
+    // */
 
     // 작업중
 

@@ -761,6 +761,7 @@ EntryStatic.getAllBlocks = function() {
                 "byrobot_petrone_v2_controller_controller_display_draw_line",
                 "byrobot_petrone_v2_controller_controller_display_draw_rect",
                 "byrobot_petrone_v2_controller_controller_display_draw_circle",
+                "byrobot_petrone_v2_controller_controller_display_draw_string",
 
                 "byrobot_petrone_v2_controller_controller_buzzer_off",
                 "byrobot_petrone_v2_controller_controller_buzzer_scale",

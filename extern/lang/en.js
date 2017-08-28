@@ -339,6 +339,8 @@ Lang.Blocks = {
     "byrobot_petrone_v2_controller_display_pixel_white": "white",
     "byrobot_petrone_v2_controller_display_flagfill_off": "not fill",
     "byrobot_petrone_v2_controller_display_flagfill_on": "fill",
+    "byrobot_petrone_v2_controller_display_font_5x8": "small",
+    "byrobot_petrone_v2_controller_display_font_10x16": "big",
     "byrobot_petrone_v2_controller_buzzer": "buzzer",
     "byrobot_petrone_v2_controller_buzzer_mute": "mute",
     "byrobot_petrone_v2_controller_buzzer_c": "C",
@@ -4451,6 +4453,7 @@ Lang.Helper = {
     "byrobot_petrone_v2_controller_controller_display_draw_line": "",
     "byrobot_petrone_v2_controller_controller_display_draw_rect": "",
     "byrobot_petrone_v2_controller_controller_display_draw_circle": "",
+    "byrobot_petrone_v2_controller_controller_display_draw_string": "",
 
     "byrobot_petrone_v2_controller_controller_buzzer_off": "",
     "byrobot_petrone_v2_controller_controller_buzzer_scale": "",
@@ -4848,6 +4851,7 @@ Lang.template = {
     "byrobot_petrone_v2_controller_controller_display_draw_line": "draw a line in controller display x1:%1, y1:%2, x2:%3, y2:%4, %5 %6",
     "byrobot_petrone_v2_controller_controller_display_draw_rect": "draw a rectangle in controller display x:%1, y:%2, width:%3, height:%4, %5, %6 %7",
     "byrobot_petrone_v2_controller_controller_display_draw_circle": "draw a circle in controller display x:%1, y:%2, radius:%3, %4, %5, %6",
+    "byrobot_petrone_v2_controller_controller_display_draw_string": "draw a string in controller display x:%1, y:%2, font size:%3, %4, input:%5, %6",
 
     "byrobot_petrone_v2_controller_controller_buzzer_off": "turn off the buzzer %1",
     "byrobot_petrone_v2_controller_controller_buzzer_scale": "play %1 octave %2 %3",
