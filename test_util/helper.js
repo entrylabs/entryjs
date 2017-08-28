@@ -44,6 +44,11 @@ Test.objectSimilarCheck = function(obj, targetObj) {
                 if (!testResult)
                     return false;
                 break;
+            case "string":
+            case "number":
+                if (value + "" !== targetObj[key] + "")
+                    return false;
+                break;
             default:
                 if (value !== targetObj[key])
                     return false;
