@@ -31,7 +31,7 @@ Entry.FieldDropdown = function(content, blockView, index) {
 
     this._CONTENT_HEIGHT = this.getContentHeight(content.dropdownHeight);
 
-    this._FONT_SIZE = this.getFontSize(content.fontSize);
+    this._font_size = this.getFontSize(content.fontSize);
 
     this._ROUND = content.roundValue || 3;
 
@@ -42,61 +42,65 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
 
 (function(p) {
     p.renderStart = function() {
-        if (this.svgGroup) $(this.svgGroup).remove();
-        //should update value dynamically
-        if (this instanceof Entry.FieldDropdownDynamic)
-            this._updateValue();
-
         var blockView = this._blockView;
         var isBig = Entry.isMobile();
         var X_PADDING = isBig ? 33 : 20;
         var X_PADDING_SUBT = isBig ? 24 : 10;
         var that = this;
-        var contents = this._contents;
-
-
-        this.svgGroup = blockView.contentSvgGroup.elem(
-            "g", { class: 'entry-field-dropdown' });
-
-        this.textElement =
-            this.svgGroup.elem("text", { x: 5 });
-        this._setTextValue();
-
-        var bBox = this.textElement.getBBox();
-        this.textElement.attr({
-            'style': 'white-space: pre;',
-            'font-size': + that._FONT_SIZE + 'px',
-            'y': bBox.height * 0.23
-        });
-
-        var width =
-            this.textElement.getBoundingClientRect().width + X_PADDING;
-
-        if (this._noArrow) width -= X_PADDING_SUBT;
-
-
         var CONTENT_HEIGHT = this._CONTENT_HEIGHT;
+        var arrowInfo = this.getArrow();
 
-        this._header = this.svgGroup.elem("rect", {
-            width: width,
-            height: CONTENT_HEIGHT,
-            y: -CONTENT_HEIGHT/2,
-            rx: that._ROUND,
-            ry: that._ROUND,
-            fill: "#fff",
-            'fill-opacity': 0.4
-        });
+        if (!this.svgGroup)
+            this.svgGroup = blockView.contentSvgGroup.elem(
+                "g", { class: 'entry-field-dropdown' });
 
-        this.svgGroup.appendChild(this.textElement);
 
-        if (!this._noArrow) {
-            var arrowInfo = this.getArrow();
+        if (!this._header)
+            this._header = this.svgGroup.elem("rect", {
+                height: CONTENT_HEIGHT,
+                y: -CONTENT_HEIGHT/2,
+                rx: that._ROUND,
+                ry: that._ROUND,
+                fill: "#fff",
+                'fill-opacity': 0.4
+            });
+
+        if (!this.textElement)
+            this.textElement =
+                this.svgGroup.elem("text", {
+                    x: 5,
+                    'style': 'white-space: pre;',
+                    'font-size': + that._font_size + 'px',
+                });
+
+        if (!this._noArrow && !this._arrow)
             this._arrow = this.svgGroup.elem("polygon",{
                 points: arrowInfo.points,
                 fill: arrowInfo.color,
-                stroke: arrowInfo.color,
-                transform: "translate("+ (width - arrowInfo.width - 5) + ","
-                    + (-arrowInfo.height/2) +")"
+                stroke: arrowInfo.color
+            });
+
+        if (this instanceof Entry.FieldDropdownDynamic)
+            this._updateValue();
+
+        this._setTextValue();
+
+        var bBox = this.getTextBBox();
+
+        this.textElement.attr({
+            y: bBox.height * 0.27
+        });
+
+        var width = bBox.width + X_PADDING;
+
+        if (this._noArrow) width -= X_PADDING_SUBT;
+
+        this._header.attr({width: width});
+
+        if (!this._noArrow) {
+            this._arrow.attr({transform: "translate(" +
+                (width - arrowInfo.width - 5) +
+                "," + (-arrowInfo.height/2) +")"
             });
         }
 
@@ -290,11 +294,13 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
 
     p._setTextValue = function() {
         var textValue = this.getTextByValue(this.getValue());
-        this.textElement.textContent =
-            this._convert(textValue, this.getValue());
+        var newValue = this._convert(textValue, this.getValue());
+        if (this.getTextValue() !== newValue)
+            this.textElement.textContent = newValue;
     };
 
     p.getTextValue = function() {
         return this.textElement.textContent;
     };
+
 })(Entry.FieldDropdown.prototype);

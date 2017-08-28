@@ -40,7 +40,7 @@ Entry.FieldStatement = function(content, blockView, index) {
         x: 0,
         y: 0,
         width: 100,
-        height: 20,
+        height: 31,
         magneting: false
     };
 
@@ -86,7 +86,8 @@ Entry.FieldStatement = function(content, blockView, index) {
 
         var transform = "translate(" + x + "," + y + ")";
 
-        this.set({x: x, y: y});
+        if (this.x !== x || this.y !== y)
+            this.set({x: x, y: y});
 
         if (animate)
             svgGroup.animate({
@@ -100,6 +101,7 @@ Entry.FieldStatement = function(content, blockView, index) {
 
     p.calcHeight = function() {
         var height = this._thread.view.requestPartHeight(null);
+        if (this.height === height) return;
         this.set({height: height});
     };
 
@@ -121,7 +123,7 @@ Entry.FieldStatement = function(content, blockView, index) {
     p.destroy = function() {
         while (this._events.length) {
             var evt = this._events.pop();
-            evt[0].detach(evt[1])
+            evt[0].detach(evt[1]);
         }
     };
 

@@ -23,6 +23,7 @@ Entry.FieldTextInput = function(content, blockView, index) {
     this._index = index;
     this.value = this.getValue()  || '';
     this._CONTENT_HEIGHT = this.getContentHeight();
+    this._font_size = 12;
 
     this.renderStart();
 };
@@ -34,22 +35,21 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
         TEXT_Y_PADDING = 4;
 
     p.renderStart = function() {
-        if (this.svgGroup) $(this.svgGroup).remove();
         var blockView = this._blockView;
+        if (!this.svgGroup)
+            this.svgGroup = blockView.contentSvgGroup.elem("g");
+        if (!this.textElement)
+            this.textElement = this.svgGroup.elem("text", {
+                x: X_PADDING/2,
+                y: TEXT_Y_PADDING,
+                fill: this._contents.color || "black",
+                'font-size' : this._font_size + 'px'
+            });
+
         var that = this;
         var contents = this._contents;
 
-        this.svgGroup = blockView.contentSvgGroup.elem("g");
-        this.svgGroup.attr({
-            class: 'entry-input-field'
-        });
-
-        this.textElement = this.svgGroup.elem("text", {
-            x: X_PADDING/2,
-            y: TEXT_Y_PADDING,
-            fill: this._contents.color || "black",
-            'font-size' : '12px'
-        });
+        this.svgGroup.attr({ class: 'entry-input-field' });
 
         this._setTextValue();
 
@@ -58,14 +58,19 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
         var y = this.position && this.position.y ? this.position.y : 0;
         var CONTENT_HEIGHT = this._CONTENT_HEIGHT;
         y -= CONTENT_HEIGHT/2;
-        this._header = this.svgGroup.elem("rect", {
-            width: width,
-            height: CONTENT_HEIGHT,
-            y: y,
-            rx: 3, ry: 3,
-            fill: "#fff",
-            'fill-opacity': this._isClearBG ? 0 : 0.4
-        });
+        if (!this._header)
+            this._header = this.svgGroup.elem("rect", {
+                width: width,
+                height: CONTENT_HEIGHT,
+                y: y,
+                rx: 3, ry: 3,
+                fill: "#fff",
+                'fill-opacity': this._isClearBG ? 0 : 0.4
+            });
+        else {
+            this._header.setAttribute('width', width);
+        }
+
         if (this._isClearBG)
             $(this._header).css({ stroke: "none" });
 
@@ -147,11 +152,13 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
     };
 
     p.getTextWidth = function() {
-        return this.textElement.getBoundingClientRect().width + X_PADDING + 2;
+        return this.getTextBBox().width + X_PADDING + 2;
     };
 
     p._setTextValue = function() {
-        this.textElement.textContent = this._convert(this.getValue(), this.getValue());
+        var newValue = this._convert(this.getValue(), this.getValue());
+        if (this.textElement.textContent !== newValue)
+            this.textElement.textContent = newValue;
     };
 
 })(Entry.FieldTextInput.prototype);

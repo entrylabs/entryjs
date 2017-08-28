@@ -166,12 +166,10 @@ Entry.enableArduino = function() {
  * @param {sound object} sound
  */
 Entry.initSound = function(sound) {
-    if (sound.fileurl) {
-        sound.path = sound.fileurl;
-    } else {
-        sound.path = Entry.defaultPath + '/uploads/' + sound.filename.substring(0,2)+'/'+
-            sound.filename.substring(2,4)+'/'+sound.filename+sound.ext;
-    }
+    if (!sound || !sound.duration || sound.duration == 0) return;
+    sound.path = sound.fileurl ||
+        Entry.defaultPath + '/uploads/' + sound.filename.substring(0,2) + '/' +
+        sound.filename.substring(2,4) + '/' + sound.filename + sound.ext;
 
     Entry.soundQueue.loadFile({
         id: sound.id,
@@ -279,6 +277,13 @@ Entry.resizeElement = function(interfaceModel) {
             if (Entry.objectAddable) {
                 addButton.style.top = (canvasHeight + 25) + 'px';
                 addButton.style.width = (canvasSize * 0.7) + 'px';
+            }
+        }
+        var pauseButton = Entry.engine.view_.getElementsByClassName('entryPauseButtonWorkspace_w')[0];
+        if (pauseButton) {
+            if (Entry.objectAddable) {
+                pauseButton.style.top = (canvasHeight + 25) + 'px';
+                pauseButton.style.width = (canvasSize * 0.7) + 'px';
             }
         }
 

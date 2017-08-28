@@ -42,33 +42,44 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldIndicator);
 
 (function(p) {
     p.renderStart = function() {
-        if (this.svgGroup) this.svgGroup.remove();
+        if (!this.svgGroup)
+            this.svgGroup = this._blockView.contentSvgGroup.elem("g");
 
-        this.svgGroup = this._blockView.contentSvgGroup.elem("g");
+        var options;
+
         if (this._imgUrl) {
-            this._imgElement = this.svgGroup.elem("image", {
+            options = {
                 href: Entry.mediaFilePath + this._imgUrl,
                 x: this._position ? this._size * -1 : 0,
                 y: this._size * -1,
                 width: this._size * 2,
                 height: this._size * 2,
-                // style: this._block.emphasized ? "opacity: 0.5" : ""
-            });
-            
-            if(this._block.emphasized && this._imgUrl.lastIndexOf('_un.png') === -1) {
+            };
+            if (!this._imgElement)
+                this._imgElement = this.svgGroup.elem("image");
+
+            this._imgElement.attr(options);
+
+            if (this._block.emphasized && this._imgUrl.lastIndexOf('_un.png') === -1) {
                 this._imgUrl = this._imgUrl.replace('.png', '_un.png');
             }
         }
 
         var path = "m %s,-%s a %s,%s 0 1,1 -0.1,0 z"
             .replace(/%s/gi, this._size);
-        this._path = this.svgGroup.elem("path", {
+
+        options = {
             d: path,
             x: this._position ? this._size * -1 : 0,
             y: this._size * -1,
             stroke: "none",
             fill: this._color ? this._color : "none"
-        });
+        };
+
+        if (!this._path)
+            this._path = this.svgGroup.elem("path");
+
+        this._path.attr(options);
 
         this.box.set({
             width: this._size * this._boxMultiplier +

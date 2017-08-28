@@ -99,15 +99,21 @@ Entry.Model = function(obj, isSeal) {
         if (typeof keys === 'string') keys = [keys];
 
         var that = this;
-        that.observers.map(function (observeData) {
+        var observers = that.observers;
+
+        if (!observers.length) return;
+
+        var intersect = Entry.Utils.intersectArray;
+
+        observers.forEach(function (observeData) {
             var attrs = keys;
             if (observeData.attrs !== undefined)
-                attrs = Entry.Utils.intersectArray(observeData.attrs, keys);
+                attrs = intersect(observeData.attrs, keys);
 
             if (!attrs.length) return;
 
             observeData.object[observeData.funcName](
-                attrs.map(function(key){
+                attrs.forEach(function(key){
                     return {
                         name: key,
                         object: that,

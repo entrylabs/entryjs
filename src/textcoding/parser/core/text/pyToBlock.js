@@ -164,7 +164,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 type: "stringParam_" + this._funcParamMap[name]
             };
 
-        var variable = Entry.variableContainer.getVariableByName(name, null, this.object.id);
+        var variable = Entry.variableContainer.getVariableByName(name);
         if (variable)
             return {
                 type: "get_variable",
@@ -229,7 +229,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 break;
             case "Identifier":
                 result.type = 'set_variable';
-                leftVar = Entry.variableContainer.getVariableByName(component.left.name, false, this.object.id)
+                leftVar = Entry.variableContainer.getVariableByName(component.left.name, false)
                 if(!leftVar) {
                     Entry.variableContainer.addVariable({
                                         variableType : 'variable',
@@ -237,7 +237,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                                         visible : true,
                                         value : 0
                                     });
-                    leftVar = Entry.variableContainer.getVariableByName(component.left.name, false, this.object.id).id_;
+                    leftVar = Entry.variableContainer.getVariableByName(component.left.name, false).id_;
                 }
                 result.params.push(leftVar.id_);
                 break;
@@ -651,8 +651,10 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
             if(component.value.constructor === String)
                 value = component.raw.substr(1, component.raw.length-2);
+            else if(component.value.constructor === Number)
+                value = component.value;
 
-            return value + "";
+            return value;
         } else {
             value = this.Node(component);
             return value.params && value.params[0] ? value.params[0] : null;
@@ -747,7 +749,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     return this.getMessage(value);
                 break;
             case 'variables':
-                var variable = Entry.variableContainer.getVariableByName(value, null, this.object.id);
+                var variable = Entry.variableContainer.getVariableByName(value);
                 return variable ? variable.id_ : undefined;
             case 'lists':
                 var list = Entry.variableContainer.getListByName(value);
@@ -947,9 +949,9 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
                 temp = temp.map(function(m){
                     if(m.constructor === Object && 'params' in m)
-                        return {data : m.params[0] + ''};
+                        return {data : m.params[0]};
                     else
-                        return {data : m + ''};
+                        return {data : m};
                 });
 
                 obj.array = temp;
@@ -957,8 +959,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 obj.value = this.getValue(right);
             }
 
-            var functionType =  'add'+ type[0].toUpperCase() + type.slice(1,type.length-2);
-            var existVar = this.variableExist(name , type);
+            var functionType =  'add'+ type[0].toUpperCase() + type.slice(1, type.length-2);
+            var existVar = this.variableExist(name, type);
 
             if(existVar) {
                 if(type == 'lists_'){

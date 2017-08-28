@@ -1,6 +1,8 @@
 module.exports = function(grunt) {
     'use strict';
 
+    var ClosureCompiler = require('google-closure-compiler').compiler;
+
     grunt.initConfig({
         concurrent: {
             tasks: ['watch'],
@@ -71,7 +73,7 @@ module.exports = function(grunt) {
         },
         closureCompiler: {
             options: {
-                compilerFile: 'node_modules/closurecompiler/compiler/compiler.jar',
+                compilerFile: ClosureCompiler.COMPILER_PATH,
                 checkModified: true,
                 compilerOpts: {
                     create_source_map: 'entry.js.map',
@@ -131,4 +133,9 @@ module.exports = function(grunt) {
     ]);
 
     grunt.registerTask('closure', ['closureCompiler']);
+
+    grunt.registerTask('build', [
+        'closureCompiler',
+        'less'
+    ]);
 };

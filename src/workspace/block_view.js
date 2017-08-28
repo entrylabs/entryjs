@@ -76,10 +76,11 @@ Entry.BlockView = function(block, board, mode) {
     this._startRender(block, mode);
 
     // observe
-    this._observers.push(this.block.observe(this, "_setMovable", ["movable"]));
-    this._observers.push(this.block.observe(this, "_setReadOnly", ["movable"]));
-    this._observers.push(this.block.observe(this, "_setCopyable", ["copyable"]));
-    this._observers.push(this.block.observe(this, "_updateColor", ["deletable"], false));
+    var thisBlock = this.block;
+    this._observers.push(thisBlock.observe(this, "_setMovable", ["movable"]));
+    this._observers.push(thisBlock.observe(this, "_setReadOnly", ["movable"]));
+    this._observers.push(thisBlock.observe(this, "_setCopyable", ["copyable"]));
+    this._observers.push(thisBlock.observe(this, "_updateColor", ["deletable"], false));
     this._observers.push(this.observe(this, "_updateBG", ["magneting"], false));
 
     this._observers.push(this.observe(this, "_updateOpacity", ["visible"], false));
@@ -133,20 +134,22 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
         if (this.display === false)
             attr.display = 'none';
 
-        this.svgGroup.attr(attr);
+        var svgGroup = this.svgGroup;
+
+        svgGroup.attr(attr);
 
         if (this._schema.css)
-            this.svgGroup.attr({
+            svgGroup.attr({
                 style: this._schema.css
             });
 
         var classes = skeleton.classes;
         if (classes && classes.length !== 0)
-            classes.forEach(function(c){that.svgGroup.addClass(c);});
+            classes.forEach(function(c){svgGroup.addClass(c);});
 
         var path = skeleton.path(this);
 
-        this.pathGroup = this.svgGroup.elem("g");
+        this.pathGroup = svgGroup.elem("g");
         this._updateMagnet();
 
         this._path = this.pathGroup.elem("path");
@@ -197,7 +200,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
         }
 
         var guide = this.guideSvgGroup;
-        guide && this.svgGroup.insertBefore(guide, this.svgGroup.firstChild);
+        guide && svgGroup.insertBefore(guide, svgGroup.firstChild);
 
         this.bindPrev();
     };
@@ -205,7 +208,6 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
     p._startContentRender = function(mode) {
         mode = mode === undefined ?
             this.renderMode : mode;
-
 
         this.contentSvgGroup && this.contentSvgGroup.remove();
         this.statementSvgGroup && this.statementSvgGroup.remove();
@@ -219,7 +221,9 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
                 this.svgGroup.elem("g", { class: 'statementGroup' });
         }
 
-        var reg = /(%\d)/mi;
+        var reg = /(%\d+)/mi;
+        var parsingReg = /%(\d+)/mi;
+        var parsingRet;
 
         var template = this._getTemplate(mode);
         var params = this._getSchemaParams(mode);
@@ -232,16 +236,19 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
         }
 
         var templateParams = template.split(reg);
+
         for (var i=0; i<templateParams.length; i++) {
             var param = templateParams[i];
             if (param[0] === " ") param = param.substring(1);
             if (param[param.length - 1] === " ") param = param.substring(0, param.length - 1);
             if (param.length === 0) continue;
 
-            if (reg.test(param)) {
-                var paramIndex = Number(param.split('%')[1]) - 1;
+            parsingRet = parsingReg.exec(param);
+            if (parsingRet) {
+                var paramIndex = parsingRet[1] - 1;
                 param = params[paramIndex];
-                var field = new Entry['Field' + param.type](param, this, paramIndex, mode || this.renderMode, i);
+                var field = new Entry['Field' + param.type](
+                    param, this, paramIndex, mode || this.renderMode, i);
                 this._contents.push(field);
                 this._paramMap[paramIndex] = field;
             } else {
@@ -277,6 +284,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
         var statementIndex = 0;
         var width = 0;
         var secondLineHeight = 0;
+
         for (var i = 0; i < this._contents.length; i++) {
             var c = this._contents[i];
             if (c instanceof Entry.FieldLineBreak) {
@@ -301,15 +309,18 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
 
             cursor.x += box.width;
             width = Math.max(width, cursor.x);
-            this.set({
-                contentWidth: width,
-                contentHeight: cursor.height
-            });
+            if (this.contentWidth !== width || this.contentHeight !== cursor.height) {
+                this.set({
+                    contentWidth: width,
+                    contentHeight: cursor.height
+                });
+            }
         }
 
-        this.set({
-            contentHeight: cursor.height + secondLineHeight
-        });
+        if (secondLineHeight)
+            this.set({
+                contentHeight: cursor.height + secondLineHeight
+            });
 
         if (this._statements.length != statementIndex)
             this._alignStatement(animate, statementIndex);
@@ -320,6 +331,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
         );
         this.contentPos = contentPos;
         this._render();
+
         this._updateMagnet();
         var ws = this.getBoard().workspace;
         if (ws && (this.isFieldEditing() || ws.widgetUpdateEveryTime))
@@ -351,31 +363,35 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
     };
 
     p._renderPath = function() {
-        var path = this._skeleton.path(this);
+        var oldPath = this._path.getAttribute('d');
+        var newPath = this._skeleton.path(this);
+
+        //no change occured
+        if (oldPath === newPath) return;
+
         var that = this;
 
         if (false && Entry.ANIMATION_DURATION !== 0) {
             setTimeout(function() {
                 that._path.animate({
-                    d: path
+                    d: newPath
                 }, Entry.ANIMATION_DURATION, mina.easeinout);
             }, 0);
         } else {
             this._path.attr({
-                d: path
+                d: newPath
             });
 
             this.set({animating: false});
         }
-        this._setBackgroundPath();
     };
 
     p._setPosition = function(animate) {
         animate = animate === undefined ? true : animate;
         //this.svgGroup.stop();
         var transform = "translate(" +
-            (this.x) + "," +
-            (this.y) + ")";
+            this.x + "," + this.y + ")";
+
         if (animate && Entry.ANIMATION_DURATION !== 0) {
             this.svgGroup.attr(
                 "transform", transform
@@ -504,7 +520,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
                     if (longPressTimer) {
                         longPressTimer = null;
                         onMouseUp();
-                        blockView._rightClick(e);
+                        blockView._rightClick(e, 'longPress');
                     }
                 }, 1000);
             }
@@ -1067,9 +1083,9 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
         this._updateContents();
     };
 
-    p._updateContents = function() {
+    p._updateContents = function(isReDraw) {
         this._contents.forEach(function(c) {
-            c.renderStart(undefined, undefined,  this.renderMode);
+            c.renderStart(undefined, undefined,  this.renderMode, isReDraw);
         }.bind(this));
         this.alignContent(false);
     };
@@ -1091,8 +1107,13 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
         var board = this.getBoard();
         if (isPattern) {
             fillColor = "url(#blockHoverPattern_" + this.getBoard().suffix +")";
+            this._setBackgroundPath();
             board.enablePattern();
-        } else board.disablePattern();
+        } else {
+            board.disablePattern();
+            this._removeBackgroundPath();
+        }
+
         path.attr({fill:fillColor});
     };
 
@@ -1109,7 +1130,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
             return;
 
         var block = this.block;
-        this._updateContents();
+        this._updateContents(true);
 
         var statements = block.statements || [];
         for (var i=0; i<statements.length; i++) {
@@ -1283,13 +1304,20 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
         });
     };
 
-    p._rightClick = function(e) {
+    p._rightClick = function(e, eventSource) {
         var disposeEvent = Entry.disposeEvent;
-        if (disposeEvent)
-            disposeEvent.notify(e);
+        if (disposeEvent) disposeEvent.notify(e);
+
         var that = this;
         var block = that.block;
-        if (this.isInBlockMenu) return;
+
+        if (this.isInBlockMenu) {
+            //if long pressed block is function_general block
+            //edit function
+            if (eventSource === 'longPress' && block.getFuncId())
+                this._schema.events.dblclick[0](this);
+            return;
+        }
 
         var options = [];
         var isBoardReadOnly = this._board.readOnly;
@@ -1345,15 +1373,21 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
     };
 
     p._setBackgroundPath = function() {
-        this._backgroundPath && $(this._backgroundPath).remove();
+        this._removeBackgroundPath();
 
-        var backgroundPath = this._path.cloneNode(true);
-        backgroundPath.setAttribute('class', 'blockBackgroundPath');
-        backgroundPath.setAttribute('fill', this._fillColor);
+        var path = this._path.cloneNode(true);
+        path.setAttribute('class', 'blockBackgroundPath');
+        path.setAttribute('fill', this._fillColor);
 
-        this._backgroundPath = backgroundPath;
-        this.pathGroup.insertBefore(backgroundPath, this._path);
+        this._backgroundPath = path;
+        this.pathGroup.insertBefore(path, this._path);
     };
+
+    p._removeBackgroundPath = function() {
+        this._backgroundPath && $(this._backgroundPath).remove();
+        this._backgroundPath = null;
+    };
+
 
     p._getTemplate = function(renderMode) {
         var schema = this._schema;
