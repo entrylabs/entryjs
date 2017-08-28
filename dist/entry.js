@@ -17622,7 +17622,7 @@ Entry.PyToBlockParser = function(c) {
     if (this._funcParamMap[b]) {
       return {type:"stringParam_" + this._funcParamMap[b]};
     }
-    var c = Entry.variableContainer.getVariableByName(b, null, this.object.id);
+    var c = Entry.variableContainer.getVariableByName(b);
     return c ? {type:"get_variable", params:[c.id_]} : (c = Entry.variableContainer.getListByName(b)) ? {type:"get_list", params:[c.id_]} : b;
   };
   c.VariableDeclaration = function(b) {
@@ -17642,8 +17642,8 @@ Entry.PyToBlockParser = function(c) {
         break;
       case "Identifier":
         c.type = "set_variable";
-        e = Entry.variableContainer.getVariableByName(b.left.name, !1, this.object.id);
-        e || (Entry.variableContainer.addVariable({variableType:"variable", name:b.left.name, visible:!0, value:0}), e = Entry.variableContainer.getVariableByName(b.left.name, !1, this.object.id).id_);
+        e = Entry.variableContainer.getVariableByName(b.left.name, !1);
+        e || (Entry.variableContainer.addVariable({variableType:"variable", name:b.left.name, visible:!0, value:0}), e = Entry.variableContainer.getVariableByName(b.left.name, !1).id_);
         c.params.push(e.id_);
         break;
       default:
@@ -17875,7 +17875,7 @@ Entry.PyToBlockParser = function(c) {
       case "messages":
         return this.getMessage(b);
       case "variables":
-        return (c = Entry.variableContainer.getVariableByName(b, null, this.object.id)) ? c.id_ : void 0;
+        return (c = Entry.variableContainer.getVariableByName(b)) ? c.id_ : void 0;
       case "lists":
         return (c = Entry.variableContainer.getListByName(b)) ? c.id_ : void 0;
       case "scenes":
