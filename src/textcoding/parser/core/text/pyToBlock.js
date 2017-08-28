@@ -164,7 +164,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 type: "stringParam_" + this._funcParamMap[name]
             };
 
-        var variable = Entry.variableContainer.getVariableByName(name);
+        var variable = Entry.variableContainer.getVariableByName(name, null, this.object.id);
         if (variable)
             return {
                 type: "get_variable",
@@ -203,7 +203,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 var leftName = component.left.object.name;
                 if (leftName === "self") {
                     result.type = 'set_variable';
-                    leftVar = Entry.variableContainer.getVariableByName(component.left.property.name , true)
+                    leftVar = Entry.variableContainer.getVariableByName(component.left.property.name, true, this.object.id)
                     if(!leftVar) {
                         Entry.variableContainer.addVariable({
                                             variableType : 'variable',
@@ -213,7 +213,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                                             value : 0
                                         });
 
-                        leftVar = Entry.variableContainer.getVariableByName(component.left.property.name , true);
+                        leftVar = Entry.variableContainer.getVariableByName(component.left.property.name, true, this.object.id);
                     }
 
                     result.params.push(leftVar.id_);
@@ -229,7 +229,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 break;
             case "Identifier":
                 result.type = 'set_variable';
-                leftVar = Entry.variableContainer.getVariableByName(component.left.name, false)
+                leftVar = Entry.variableContainer.getVariableByName(component.left.name, false, this.object.id)
                 if(!leftVar) {
                     Entry.variableContainer.addVariable({
                                         variableType : 'variable',
@@ -237,7 +237,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                                         visible : true,
                                         value : 0
                                     });
-                    leftVar = Entry.variableContainer.getVariableByName(component.left.name, false).id_;
+                    leftVar = Entry.variableContainer.getVariableByName(component.left.name, false, this.object.id).id_;
                 }
                 result.params.push(leftVar.id_);
                 break;
@@ -294,7 +294,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
         var obj;
         var result = {};
         if (component.object.name === "self") { // local variable
-            var localVar = Entry.variableContainer.getVariableByName(component.property.name , true)
+            var localVar = Entry.variableContainer.getVariableByName(component.property.name, true, this.object.id)
             this.assert(localVar, "variable not exist", component);
             return {
                 type: "get_variable",
@@ -747,7 +747,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     return this.getMessage(value);
                 break;
             case 'variables':
-                var variable = Entry.variableContainer.getVariableByName(value);
+                var variable = Entry.variableContainer.getVariableByName(value, null, this.object.id);
                 return variable ? variable.id_ : undefined;
             case 'lists':
                 var list = Entry.variableContainer.getListByName(value);

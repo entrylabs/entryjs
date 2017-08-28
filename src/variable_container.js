@@ -653,12 +653,12 @@ Entry.VariableContainer = function() {
         return variable;
     };
 
-    p.getVariableByName = function(variableName, isSelf) {
+    p.getVariableByName = function(variableName, isSelf, currentObjectId) {
         for (var i = 0; i < this.variables_.length; i++) {
             var v = this.variables_[i];
-            var currentObject = Entry.playground.object.id;
+            currentObjectId = currentObjectId ? currentObjectId : Entry.playground.object.id;
             if(isSelf === true){
-                if(!v.object_ || v.object_ !== currentObject)
+                if(!v.object_ || v.object_ !== currentObjectId)
                     continue;
             } else if(isSelf === false) {
                 if(v.object_)

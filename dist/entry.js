@@ -17622,7 +17622,7 @@ Entry.PyToBlockParser = function(c) {
     if (this._funcParamMap[b]) {
       return {type:"stringParam_" + this._funcParamMap[b]};
     }
-    var c = Entry.variableContainer.getVariableByName(b);
+    var c = Entry.variableContainer.getVariableByName(b, null, this.object.id);
     return c ? {type:"get_variable", params:[c.id_]} : (c = Entry.variableContainer.getListByName(b)) ? {type:"get_list", params:[c.id_]} : b;
   };
   c.VariableDeclaration = function(b) {
@@ -17637,12 +17637,13 @@ Entry.PyToBlockParser = function(c) {
       case "MemberExpression":
         c.type = "change_value_list_index";
         var f = b.left.object.name;
-        "self" === f ? (c.type = "set_variable", e = Entry.variableContainer.getVariableByName(b.left.property.name, !0), e || (Entry.variableContainer.addVariable({variableType:"variable", name:b.left.property.name, visible:!0, object:this.object.id, value:0}), e = Entry.variableContainer.getVariableByName(b.left.property.name, !0)), c.params.push(e.id_)) : (e = Entry.variableContainer.getListByName(f), this.assert(e, f, b.left.object, "NO_LIST", "LIST"), c.params.push(e.id_), c.params.push(this.ListIndex(this.Node(b.left.property.arguments[1]))));
+        "self" === f ? (c.type = "set_variable", e = Entry.variableContainer.getVariableByName(b.left.property.name, !0, this.object.id), e || (Entry.variableContainer.addVariable({variableType:"variable", name:b.left.property.name, visible:!0, object:this.object.id, value:0}), e = Entry.variableContainer.getVariableByName(b.left.property.name, !0, this.object.id)), c.params.push(e.id_)) : (e = Entry.variableContainer.getListByName(f), this.assert(e, f, b.left.object, "NO_LIST", "LIST"), c.params.push(e.id_), 
+        c.params.push(this.ListIndex(this.Node(b.left.property.arguments[1]))));
         break;
       case "Identifier":
         c.type = "set_variable";
-        e = Entry.variableContainer.getVariableByName(b.left.name, !1);
-        e || (Entry.variableContainer.addVariable({variableType:"variable", name:b.left.name, visible:!0, value:0}), e = Entry.variableContainer.getVariableByName(b.left.name, !1).id_);
+        e = Entry.variableContainer.getVariableByName(b.left.name, !1, this.object.id);
+        e || (Entry.variableContainer.addVariable({variableType:"variable", name:b.left.name, visible:!0, value:0}), e = Entry.variableContainer.getVariableByName(b.left.name, !1, this.object.id).id_);
         c.params.push(e.id_);
         break;
       default:
@@ -17674,7 +17675,7 @@ Entry.PyToBlockParser = function(c) {
   c.MemberExpression = function(b) {
     var c, e = {};
     if ("self" === b.object.name) {
-      return e = Entry.variableContainer.getVariableByName(b.property.name, !0), this.assert(e, "variable not exist", b), {type:"get_variable", params:[e.id_]};
+      return e = Entry.variableContainer.getVariableByName(b.property.name, !0, this.object.id), this.assert(e, "variable not exist", b), {type:"get_variable", params:[e.id_]};
     }
     "Literal" === b.object.type ? (c = "%2", e.preParams = [b.object]) : c = this.Node(b.object);
     "object" === typeof c && (e.preParams = "get_list" === c.type ? [c.params[0]] : [b.object], c = "%2");
@@ -17874,7 +17875,7 @@ Entry.PyToBlockParser = function(c) {
       case "messages":
         return this.getMessage(b);
       case "variables":
-        return (c = Entry.variableContainer.getVariableByName(b)) ? c.id_ : void 0;
+        return (c = Entry.variableContainer.getVariableByName(b, null, this.object.id)) ? c.id_ : void 0;
       case "lists":
         return (c = Entry.variableContainer.getListByName(b)) ? c.id_ : void 0;
       case "scenes":
@@ -19559,20 +19560,21 @@ Entry.VariableContainer = function() {
     c && c.isClone && d.object_ && (d = Entry.findObjsByKey(c.variables, "id_", b)[0]);
     return d;
   };
-  c.getVariableByName = function(b, c) {
+  c.getVariableByName = function(b, c, e) {
     for (var d = 0;d < this.variables_.length;d++) {
-      var f = this.variables_[d], g = Entry.playground.object.id;
+      var g = this.variables_[d];
+      e = e ? e : Entry.playground.object.id;
       if (!0 === c) {
-        if (!f.object_ || f.object_ !== g) {
+        if (!g.object_ || g.object_ !== e) {
           continue;
         }
       } else {
-        if (!1 === c && f.object_) {
+        if (!1 === c && g.object_) {
           continue;
         }
       }
-      if (f.getName() === b) {
-        return f;
+      if (g.getName() === b) {
+        return g;
       }
     }
   };
