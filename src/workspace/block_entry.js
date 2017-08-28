@@ -43005,17 +43005,17 @@ Entry.block = {
             "params": [
                 {
                     "type": "text",
-                    "params": ["32"]
+                    "params": ["4"]
                 },
                 {
                     "type": "text",
-                    "params": ["32"]
+                    "params": ["24"]
                 },
                 null,
                 null,
                 {
                     "type": "text",
-                    "params": ["PetroneV2"]
+                    "params": ["{Petrone V2}"]
                 },
                 null
             ],
