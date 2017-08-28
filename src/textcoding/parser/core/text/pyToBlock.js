@@ -967,13 +967,10 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 }
                 existVar.value_ = this.getValue(right);
                 return;
-            }
-
-            obj.variableType = type.slice(0,length-2);
-            obj.name = name;
-            obj.object = object;
-
-            if(!existVar){
+            } else {
+                obj.variableType = type.slice(0,length-2);
+                obj.name = name;
+                obj.object = object;
                 Entry.variableContainer[functionType](obj);
             }
 

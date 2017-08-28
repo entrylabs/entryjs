@@ -13206,13 +13206,7 @@ Entry.PyToBlockParser = function(c) {
           return b.constructor === Object && "params" in b ? {data:b.params[0] + ""} : {data:b + ""};
         }), k.array = c) : k.value = this.getValue(e);
         var c = "add" + h[0].toUpperCase() + h.slice(1, h.length - 2), l = this.variableExist(b, h);
-        if (l) {
-          "lists_" == h ? l.array_ = k.array : l.value_ = this.getValue(e);
-        } else {
-          if (k.variableType = h.slice(0, length - 2), k.name = b, k.object = g, !l) {
-            Entry.variableContainer[c](k);
-          }
-        }
+        l ? "lists_" == h ? l.array_ = k.array : l.value_ = this.getValue(e) : (k.variableType = h.slice(0, length - 2), k.name = b, k.object = g, Entry.variableContainer[c](k));
       }
     }, this);
     return [];
