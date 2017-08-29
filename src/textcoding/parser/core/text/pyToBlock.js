@@ -294,11 +294,18 @@ Entry.PyToBlockParser = function(blockSyntax) {
         var result = {};
         if (component.object.name === "self") { // local variable
             var localVar = Entry.variableContainer.getVariableByName(component.property.name, true, this.object.id)
+            if (localVar)
+                return {
+                    type: "get_variable",
+                    params: [ localVar.id_ ]
+                }
+            localVar = Entry.variableContainer.getListByName(component.property.name, true, this.object.id)
+            if (localVar)
+                return {
+                    type: "get_list",
+                    params: [ localVar.id_ ]
+                }
             this.assert(localVar, "variable not exist", component);
-            return {
-                type: "get_variable",
-                params: [ localVar.id_ ]
-            }
         } else if (component.object.type === "Literal") { // string member
             obj = "%2";
             result.preParams = [ component.object ];

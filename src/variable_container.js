@@ -751,7 +751,8 @@ Entry.VariableContainer = function() {
 
     p.getListByName = function(name, isSelf, currentObjectId) {
         var lists = this.lists_;
-        currentObjectId = currentObjectId ? currentObjectId : Entry.playground.object.id;
+        if (!currentObjectId && Entry.playground && Entry.playground.object)
+            currentObjectId = Entry.playground.object.id;
 
         for (var i = 0; i < lists.length; i++) {
             var l = lists[i];
@@ -765,8 +766,8 @@ Entry.VariableContainer = function() {
             }
 
             if (l.getName() === name)
-                return v;
-        }    
+                return l;
+        }
     };
 
     /**
