@@ -525,7 +525,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 startBlock.params = [ null, null];
             } else {
                 var name = component.arguments[0].name;
-                startBlock.params = [ null, Entry.KeyboardCode.map[ name ]];
+                startBlock.params = [ null, Entry.KeyboardCode.map[ name ] + ""];
             }
 
         if(funcName === 'when_get_signal'){
