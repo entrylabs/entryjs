@@ -236,7 +236,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                                         visible : true,
                                         value : 0
                                     });
-                    leftVar = Entry.variableContainer.getVariableByName(component.left.name, false).id_;
+                    leftVar = Entry.variableContainer.getVariableByName(component.left.name, false);
                 }
                 result.params.push(leftVar.id_);
                 break;
