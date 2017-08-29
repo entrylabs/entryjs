@@ -12232,37 +12232,37 @@ Entry.Painter.prototype.generateView = function(c) {
     var u = Entry.createElement("div");
     u.addClass("entryPlaygroundPainterAttrLineStyleLine");
     this.attrLineArea.appendChild(u);
-    var x = Entry.createElement("div");
-    x.addClass("entryPlaygroundPaitnerAttrLineArea");
-    this.attrLineArea.appendChild(x);
+    var y = Entry.createElement("div");
+    y.addClass("entryPlaygroundPaitnerAttrLineArea");
+    this.attrLineArea.appendChild(y);
     e = Entry.createElement("div");
     e.addClass("entryPlaygroundPainterAttrLineStyleLine1");
-    x.appendChild(e);
+    y.appendChild(e);
     e.value = "line";
-    var v = Entry.createElement("div");
-    v.addClass("painterAttrLineStyleBackgroundLine");
+    var x = Entry.createElement("div");
+    x.addClass("painterAttrLineStyleBackgroundLine");
     u.bindOnClick(function(b) {
-      x.removeClass("entryRemove");
+      y.removeClass("entryRemove");
     });
-    x.blur = function(b) {
+    y.blur = function(b) {
       this.addClass("entryRemove");
     };
-    x.onmouseleave = function(b) {
+    y.onmouseleave = function(b) {
       this.addClass("entryRemove");
     };
     e.bindOnClick(function(b) {
       this.attrLineArea.removeClass(u);
-      this.attrLineArea.appendChild(v);
+      this.attrLineArea.appendChild(x);
       this.attrLineArea.onchange(b);
-      x.blur();
+      y.blur();
     });
-    v.bindOnClick(function(b) {
-      x.removeClass("entryRemove");
+    x.bindOnClick(function(b) {
+      y.removeClass("entryRemove");
     });
     this.attrLineArea.onchange = function(c) {
       b.stroke.style = c.target.value;
     };
-    x.blur();
+    y.blur();
   }
 };
 Entry.Painter.prototype.restoreHandle = function() {
@@ -13735,16 +13735,16 @@ Entry.TextCodingUtil = {};
               k = n[u] == r[u] ? !0 : !1;
             } else {
               if (n[u].name) {
-                var x = f[n[u].name];
-                x ? r[u].data.type == x && (k = !0) : n[u].params && r[u].data.params && n[u].params[0] == r[u].data.params[0] && (k = !0);
+                var y = f[n[u].name];
+                y ? r[u].data.type == y && (k = !0) : n[u].params && r[u].data.params && n[u].params[0] == r[u].data.params[0] && (k = !0);
               } else {
                 "True" == n[u].type || "False" == n[u].type ? r[u].data ? n[u].type == r[u].data.type && (k = !0) : n[u].type == r[u].type && (k = !0) : n[u].type && n[u].params && (k = this.isFuncContentsParamsMatch(r[u], n[u], e, f));
               }
             }
           }
           if (k && q.statements && 0 != q.statements.length) {
-            for (var v in q.statements) {
-              k = this.isFuncContentsMatch(m.data.statements[v]._data, q.statements[v], e, f);
+            for (var x in q.statements) {
+              k = this.isFuncContentsMatch(m.data.statements[x]._data, q.statements[x], e, f);
             }
           }
         } else {
@@ -14895,38 +14895,38 @@ Entry.Playground = function() {
     var u = Entry.createElement("div");
     u.addClass("entryPlaygroundFontSizeSlider");
     b.appendChild(u);
+    var y = Entry.createElement("div");
+    y.addClass("entryPlaygroundFontSizeIndicator");
+    u.appendChild(y);
+    this.fontSizeIndiciator = y;
     var x = Entry.createElement("div");
-    x.addClass("entryPlaygroundFontSizeIndicator");
+    x.addClass("entryPlaygroundFontSizeKnob");
     u.appendChild(x);
-    this.fontSizeIndiciator = x;
-    var v = Entry.createElement("div");
-    v.addClass("entryPlaygroundFontSizeKnob");
-    u.appendChild(v);
-    this.fontSizeKnob = v;
+    this.fontSizeKnob = x;
     g = Entry.createElement("div");
     g.addClass("entryPlaygroundFontSizeLabel");
     g.innerHTML = Lang.General.font_size;
     b.appendChild(g);
-    var y = !1, A = 0;
-    v.onmousedown = function(b) {
-      y = !0;
-      A = $(u).offset().left;
+    var z = !1, B = 0;
+    x.onmousedown = function(b) {
+      z = !0;
+      B = $(u).offset().left;
     };
-    v.addEventListener("touchstart", function(b) {
-      y = !0;
-      A = $(u).offset().left;
+    x.addEventListener("touchstart", function(b) {
+      z = !0;
+      B = $(u).offset().left;
     });
     document.addEventListener("mousemove", function(b) {
-      y && (b = b.pageX - A, b = Math.max(b, 5), b = Math.min(b, 88), v.style.left = b + "px", b /= 0.88, x.style.width = b + "%", Entry.playground.object.entity.setFontSize(b));
+      z && (b = b.pageX - B, b = Math.max(b, 5), b = Math.min(b, 88), x.style.left = b + "px", b /= 0.88, y.style.width = b + "%", Entry.playground.object.entity.setFontSize(b));
     });
     document.addEventListener("touchmove", function(b) {
-      y && (b = b.touches[0].pageX - A, b = Math.max(b, 5), b = Math.min(b, 88), v.style.left = b + "px", b /= 0.88, x.style.width = b + "%", Entry.playground.object.entity.setFontSize(b));
+      z && (b = b.touches[0].pageX - B, b = Math.max(b, 5), b = Math.min(b, 88), x.style.left = b + "px", b /= 0.88, y.style.width = b + "%", Entry.playground.object.entity.setFontSize(b));
     });
     document.addEventListener("mouseup", function(b) {
-      y = !1;
+      z = !1;
     });
     document.addEventListener("touchend", function(b) {
-      y = !1;
+      z = !1;
     });
     b = Entry.createElement("div");
     b.addClass("entryPlaygroundLinebreakWrapper");
@@ -14940,9 +14940,9 @@ Entry.Playground = function() {
     g = Entry.createElement("img");
     g.bindOnClick(function() {
       Entry.playground.toggleLineBreak(!1);
-      B.innerHTML = Lang.Menus.linebreak_off_desc_1;
-      C.innerHTML = Lang.Menus.linebreak_off_desc_2;
-      z.innerHTML = Lang.Menus.linebreak_off_desc_3;
+      C.innerHTML = Lang.Menus.linebreak_off_desc_1;
+      D.innerHTML = Lang.Menus.linebreak_off_desc_2;
+      A.innerHTML = Lang.Menus.linebreak_off_desc_3;
     });
     g.src = Entry.mediaFilePath + "text-linebreak-off-true.png";
     c.appendChild(g);
@@ -14950,9 +14950,9 @@ Entry.Playground = function() {
     g = Entry.createElement("img");
     g.bindOnClick(function() {
       Entry.playground.toggleLineBreak(!0);
-      B.innerHTML = Lang.Menus.linebreak_on_desc_1;
-      C.innerHTML = Lang.Menus.linebreak_on_desc_2;
-      z.innerHTML = Lang.Menus.linebreak_on_desc_3;
+      C.innerHTML = Lang.Menus.linebreak_on_desc_1;
+      D.innerHTML = Lang.Menus.linebreak_on_desc_2;
+      A.innerHTML = Lang.Menus.linebreak_on_desc_3;
     });
     g.src = Entry.mediaFilePath + "text-linebreak-on-false.png";
     c.appendChild(g);
@@ -14960,17 +14960,17 @@ Entry.Playground = function() {
     c = Entry.createElement("div");
     c.addClass("entryPlaygroundLinebreakDescription");
     b.appendChild(c);
-    var B = Entry.createElement("p");
-    B.innerHTML = Lang.Menus.linebreak_off_desc_1;
-    c.appendChild(B);
+    var C = Entry.createElement("p");
+    C.innerHTML = Lang.Menus.linebreak_off_desc_1;
+    c.appendChild(C);
     b = Entry.createElement("ul");
     c.appendChild(b);
-    var C = Entry.createElement("li");
-    C.innerHTML = Lang.Menus.linebreak_off_desc_2;
-    b.appendChild(C);
-    var z = Entry.createElement("li");
-    z.innerHTML = Lang.Menus.linebreak_off_desc_3;
-    b.appendChild(z);
+    var D = Entry.createElement("li");
+    D.innerHTML = Lang.Menus.linebreak_off_desc_2;
+    b.appendChild(D);
+    var A = Entry.createElement("li");
+    A.innerHTML = Lang.Menus.linebreak_off_desc_3;
+    b.appendChild(A);
   };
   c.generateSoundView = function(b) {
     if ("workspace" == Entry.type) {
@@ -18315,20 +18315,20 @@ Entry.Parser = function(c, b, d, e) {
             l.push(n);
           }
           h = this._execParser.Program(l);
-        } catch (v) {
+        } catch (x) {
           if (this.codeMirror) {
-            v instanceof SyntaxError ? (h = {from:{line:v.loc.line - 1, ch:0}, to:{line:v.loc.line - 1, ch:v.loc.column}}, v.message = "\ubb38\ubc95(Syntax) \uc624\ub958\uc785\ub2c8\ub2e4.", v.type = 1) : (h = this.getLineNumber(v.node.start, v.node.end), h.message = v.message, h.severity = "converting error", v.type = 2);
+            x instanceof SyntaxError ? (h = {from:{line:x.loc.line - 1, ch:0}, to:{line:x.loc.line - 1, ch:x.loc.column}}, x.message = "\ubb38\ubc95(Syntax) \uc624\ub958\uc785\ub2c8\ub2e4.", x.type = 1) : (h = this.getLineNumber(x.node.start, x.node.end), h.message = x.message, h.severity = "converting error", x.type = 2);
             this.codeMirror.markText(h.from, h.to, {className:"CodeMirror-lint-mark-error", __annotation:h, clearOnEnter:!0});
-            h = v.title ? v.title : "\ubb38\ubc95 \uc624\ub958";
+            h = x.title ? x.title : "\ubb38\ubc95 \uc624\ub958";
             var r;
-            2 == v.type && v.message ? r = v.message : 2 != v.type || v.message ? 1 == v.type && (r = "\uc790\ubc14\uc2a4\ud06c\ub9bd\ud2b8 \ubb38\ubc95\uc744 \ud655\uc778\ud574\uc8fc\uc138\uc694.") : r = "\uc790\ubc14\uc2a4\ud06c\ub9bd\ud2b8 \ucf54\ub4dc\ub97c \ud655\uc778\ud574\uc8fc\uc138\uc694.";
+            2 == x.type && x.message ? r = x.message : 2 != x.type || x.message ? 1 == x.type && (r = "\uc790\ubc14\uc2a4\ud06c\ub9bd\ud2b8 \ubb38\ubc95\uc744 \ud655\uc778\ud574\uc8fc\uc138\uc694.") : r = "\uc790\ubc14\uc2a4\ud06c\ub9bd\ud2b8 \ucf54\ub4dc\ub97c \ud655\uc778\ud574\uc8fc\uc138\uc694.";
             Entry.toast.alert(h, r);
             h = {};
             h.boardType = Entry.Workspace.MODE_BOARD;
             h.textType = Entry.Vim.TEXT_TYPE_JS;
             h.runType = Entry.Vim.MAZE_MODE;
             Ntry.dispatchEvent("textError", h);
-            throw v;
+            throw x;
           }
           h = [];
         }
@@ -18347,29 +18347,29 @@ Entry.Parser = function(c, b, d, e) {
           }
           h = this._execParser.Programs(l);
           this._onError = !1;
-        } catch (v) {
+        } catch (x) {
           if (this._onError = !0, h = [], this.codeMirror) {
-            v instanceof SyntaxError ? (e = this.findSyntaxError(v), h = {from:{line:e.from.line - 1, ch:e.from.ch}, to:{line:e.to.line - 1, ch:e.to.ch}}, v.type = "syntax") : (e = v.line, h = {from:{line:e.start.line + 1, ch:e.start.column}, to:{line:e.end.line + 1, ch:e.end.column}}, v.type = "converting");
+            x instanceof SyntaxError ? (e = this.findSyntaxError(x), h = {from:{line:e.from.line - 1, ch:e.from.ch}, to:{line:e.to.line - 1, ch:e.to.ch}}, x.type = "syntax") : (e = x.line, h = {from:{line:e.start.line + 1, ch:e.start.column}, to:{line:e.end.line + 1, ch:e.end.column}}, x.type = "converting");
             this._marker = this.codeMirror.markText(h.from, h.to, {className:"CodeMirror-lint-mark-error", __annotation:h, clearOnEnter:!0, inclusiveLeft:!0, inclusiveRigth:!0, clearWhenEmpty:!1});
-            if ("syntax" == v.type) {
-              var u = v.title;
-              var x = this.makeSyntaxErrorDisplay(v.subject, v.keyword, v.message, e.from.line);
+            if ("syntax" == x.type) {
+              var u = x.title;
+              var y = this.makeSyntaxErrorDisplay(x.subject, x.keyword, x.message, e.from.line);
             } else {
-              "converting" == v.type && (u = v.title, x = v.message);
+              "converting" == x.type && (u = x.title, y = x.message);
             }
-            Entry.toast.alert(u, x);
-            throw v;
+            Entry.toast.alert(u, y);
+            throw x;
           }
         }
         break;
       case Entry.Vim.PARSER_TYPE_BLOCK_TO_JS:
-        h = x = this._execParser.Code(b, c);
+        h = y = this._execParser.Code(b, c);
         break;
       case Entry.Vim.PARSER_TYPE_BLOCK_TO_PY:
         Entry.getMainWS().blockMenu.renderText();
         h = "";
         c === Entry.Parser.PARSE_BLOCK && "func_" === b.type.substr(0, 5) && (d = Object.keys(this._execParser._funcDefMap));
-        x = this._execParser.Code(b, c);
+        y = this._execParser.Code(b, c);
         this._pyHinter || (this._pyHinter = new Entry.PyHint(this.syntax));
         this._hasDeclaration || this.initDeclaration();
         if (c == Entry.Parser.PARSE_GENERAL) {
@@ -18387,7 +18387,7 @@ Entry.Parser = function(c, b, d, e) {
         } else {
           c === Entry.Parser.PARSE_BLOCK && d && 0 > d.indexOf(b.type) && (h += this._execParser._funcDefMap[b.type] + "\n\n");
         }
-        x && (h += x.trim());
+        y && (h += y.trim());
         h = h.replace(/\t/g, "    ");
         this._hasDeclaration && this.removeDeclaration();
     }
@@ -19799,11 +19799,24 @@ Entry.VariableContainer = function() {
     }
     return !1;
   };
-  c.getListByName = function(b) {
-    var c = this.lists_, c = c.filter(function(c) {
-      return c.getName() === b;
-    });
-    return c[0];
+  c.getListByName = function(b, c, e) {
+    var d = this.lists_;
+    e = e ? e : Entry.playground.object.id;
+    for (var g = 0; g < d.length; g++) {
+      var h = d[g];
+      if (!0 === c) {
+        if (!h.object_ || h.object_ !== e) {
+          continue;
+        }
+      } else {
+        if (!1 === c && h.object_) {
+          continue;
+        }
+      }
+      if (h.getName() === b) {
+        return v;
+      }
+    }
   };
   c.editFunction = function(b, c) {
   };
@@ -23460,7 +23473,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
     l.setAttribute("transform", "scale(%SCALE) translate(%X,%Y)".replace("%X", -b.offsetX).replace("%Y", -b.offsetY).replace("%SCALE", m));
     var n = this.getBoard().svgDom.find("defs"), r = l.getElementsByTagName("image");
     b = l.getElementsByTagName("text");
-    for (var t = ["\u2265", "\u2264"], u = "\u2265\u2264-><=+-x/".split(""), x = 0; x < b.length; x++) {
+    for (var t = ["\u2265", "\u2264"], u = "\u2265\u2264-><=+-x/".split(""), y = 0; y < b.length; y++) {
       (function(b) {
         b.setAttribute("font-family", "'nanumBarunRegular', 'NanumGothic', '\ub098\ub214\uace0\ub515','NanumGothicWeb', '\ub9d1\uc740 \uace0\ub515', 'Malgun Gothic', Dotum");
         var c = parseInt(b.getAttribute("font-size")), d = $(b).text();
@@ -23471,22 +23484,22 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
         }
         -1 < u.indexOf(d) ? b.setAttribute("font-size", c + "px") : b.setAttribute("font-size", c * q + "px");
         b.setAttribute("alignment-baseline", "baseline");
-      })(b[x]);
+      })(b[y]);
     }
-    var v = 0;
+    var x = 0;
     if (0 === r.length) {
       d();
     } else {
-      for (x = 0; x < r.length; x++) {
+      for (y = 0; y < r.length; y++) {
         (function(b) {
           var c = b.getAttribute("href");
           f(c, b.getAttribute("width"), b.getAttribute("height")).then(function(c) {
             b.setAttribute("href", c);
-            if (++v == r.length) {
+            if (++x == r.length) {
               return d();
             }
           });
-        })(r[x]);
+        })(r[y]);
       }
     }
     return g.promise();

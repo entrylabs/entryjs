@@ -749,10 +749,24 @@ Entry.VariableContainer = function() {
         return false;
     };
 
-    p.getListByName = function(name) {
+    p.getListByName = function(name, isSelf, currentObjectId) {
         var lists = this.lists_;
-        lists = lists.filter(function(l) {return l.getName() === name})
-        return lists[0];
+        currentObjectId = currentObjectId ? currentObjectId : Entry.playground.object.id;
+
+        for (var i = 0; i < lists.length; i++) {
+            var l = lists[i];
+
+            if(isSelf === true){
+                if(!l.object_ || l.object_ !== currentObjectId)
+                    continue;
+            } else if(isSelf === false) {
+                if(l.object_)
+                    continue;
+            }
+
+            if (l.getName() === name)
+                return v;
+        }    
     };
 
     /**
