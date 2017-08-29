@@ -137,11 +137,26 @@ Entry.Tooltip = function(data, opts) {
     };
 
     p._alignTooltip = function(data) {
-        var rect;
+        var target;
         if (data.targetDom instanceof $)
-            rect = data.targetDom.get(0).getBoundingClientRect();
+            target = data.targetDom.get(0);
         else
-            rect = data.targetDom.getBoundingClientRect();
+            target = data.targetDom;
+
+        var rect = target.getBoundingClientRect();
+        if (rect.width == 0 || rect.height == 0) {
+            var selector = target.tagName;
+            if (target.className)
+                selector += "." + target.className.replace(" ", ".");
+            var dest = $(selector);
+            if (dest && dest.length > 0) {
+                target = dest[0];
+                rect = target.getBoundingClientRect();
+            } else {
+                return;
+            }
+        }
+
         var tooltipRect = data.dom[0].getBoundingClientRect();
         var clientWidth = document.body.clientWidth;
         var clientHeight = document.body.clientHeight;
