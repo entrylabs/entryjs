@@ -947,7 +947,7 @@ describe('EntryPython', function(){
             });
 
             it('length_of_list method' , function() {
-                 Entry.loadProject(Entry.getStartProject());
+                Entry.loadProject(Entry.getStartProject());
                 Entry.playground.object = Entry.container.objects_[0];
 
                 Entry.variableContainer.addList({

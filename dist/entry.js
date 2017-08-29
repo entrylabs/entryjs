@@ -17714,7 +17714,7 @@ Entry.PyToBlockParser = function(c) {
   };
   c.Identifier = function(b) {
     b = b.name;
-    if (this._funcParamMap[b]) {
+    if (this._isInFuncDef && this._funcParamMap[b]) {
       return {type:"stringParam_" + this._funcParamMap[b]};
     }
     var c = Entry.variableContainer.getVariableByName(b);
@@ -17943,11 +17943,12 @@ Entry.PyToBlockParser = function(c) {
   c.getValue = function(b) {
     if ("Literal" === b.type) {
       var c = b.raw;
-      b.value.constructor === String ? c = b.raw.substr(1, b.raw.length - 2) : b.value.constructor === Number && (c = b.value);
-      return c;
+      if ("None" !== c) {
+        return b.value.constructor === String ? c = b.raw.substr(1, b.raw.length - 2) : b.value.constructor === Number && (c = b.value), c;
+      }
+    } else {
+      return c = this.Node(b), c.params && c.params[0] ? c.params[0] : null;
     }
-    c = this.Node(b);
-    return c.params && c.params[0] ? c.params[0] : null;
   };
   c.getMessage = function(b) {
     if (b) {

@@ -31085,7 +31085,10 @@ Entry.block = {
         "events": {},
         "def": {
             "params": [
-                { "type": "angle" },
+                {
+                    "type": "angle",
+                    "params": [ "10" ]
+                },
                 {
                     "type": "number",
                     "params": [ "10" ]
@@ -31153,7 +31156,8 @@ Entry.block = {
                     "params": [ "2" ]
                 },
                 {
-                    "type": "angle"
+                    "type": "angle",
+                    "params": [ "10" ]
                 },
                 null
             ],
@@ -34572,7 +34576,7 @@ Entry.block = {
         },
          "syntax": {"js": [], "py": [{
             passTest: true,
-            syntax : "Entry.play_sound_from_to_and_wait(%1, %2, %3)"
+            syntax : "Entry.play_sound_from_to(%1, %2, %3)"
         }]}
     },
     "sound_from_to_and_wait": {
@@ -36647,6 +36651,7 @@ Entry.block = {
             {
                 syntax: "len(%2)",
                 blockType: "param",
+                passTest: true,
                 textParams: [
                     undefined,
                     {

@@ -156,7 +156,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
     p.Identifier = function(component) {
         var name = component.name;
 
-        if (this._funcParamMap[name])
+        if (this._isInFuncDef && this._funcParamMap[name])
             return {
                 type: "stringParam_" + this._funcParamMap[name]
             };
@@ -646,7 +646,9 @@ Entry.PyToBlockParser = function(blockSyntax) {
         if (component.type === "Literal") {
             value = component.raw;
 
-            if(component.value.constructor === String)
+            if (value === "None")
+                return;
+            else if(component.value.constructor === String)
                 value = component.raw.substr(1, component.raw.length-2);
             else if(component.value.constructor === Number)
                 value = component.value;
