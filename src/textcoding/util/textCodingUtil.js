@@ -168,82 +168,95 @@ Entry.TextCodingUtil = {};
         //var found = false;
         var result;
 
-        if(menuName == "variables") {
-            var entryVariables = Entry.variableContainer.variables_;
-            for(var e in entryVariables) {
-                var entryVariable = entryVariables[e];
-                if(entryVariable.id_ == id) {
-                    if(entryVariable.object_)
-                        result = "self." + entryVariable.name_;
-                    else
-                        result = entryVariable.name_;
-                    break;
-                }
+        switch (menuName) {
+            case "variables":
+                var entryVariables = Entry.variableContainer.variables_;
+                for(var e in entryVariables) {
+                    var entryVariable = entryVariables[e];
+                    if(entryVariable.id_ == id) {
+                        if(entryVariable.object_)
+                            result = "self." + entryVariable.name_;
+                        else
+                            result = entryVariable.name_;
+                        break;
+                    }
 
-            }
-        }
-        else if(menuName == "lists") {
-            var entryLists = Entry.variableContainer.lists_;
-            for(var e in entryLists) {
-                var entryList = entryLists[e];
-                if(entryList.id_ == id) {
-                    if(entryList.object_)
-                        result = "self." + entryList.name_;
-                    else
-                        result = entryList.name_;
-                    break;
                 }
+                break;
+            case "lists":
+                var entryLists = Entry.variableContainer.lists_;
+                for(var e in entryLists) {
+                    var entryList = entryLists[e];
+                    if(entryList.id_ == id) {
+                        if(entryList.object_)
+                            result = "self." + entryList.name_;
+                        else
+                            result = entryList.name_;
+                        break;
+                    }
 
-            }
-        }
-        else if(menuName == "messages") {
-            var entryMessages = Entry.variableContainer.messages_;
-            for(var e in entryMessages) {
-                var entryList = entryMessages[e];
-                if(entryList.id == id) {
-                    result = entryList.name;
-                    break;
                 }
+                break;
+            case "messages":
+                var entryMessages = Entry.variableContainer.messages_;
+                for(var e in entryMessages) {
+                    var entryList = entryMessages[e];
+                    if(entryList.id == id) {
+                        result = entryList.name;
+                        break;
+                    }
 
-            }
-        }
-        else if(menuName == "pictures") {
-            var objects = Entry.container.getAllObjects();
-            for(var o in objects) {
-                var object = objects[o];
-                var pictures = object.pictures;
-                for(var p in pictures) {
-                    var picture = pictures[p];
-                    if(picture.id == id) {
-                        result = picture.name;
-                        return result;
+                }
+                break;
+            case "pictures":
+                var objects = Entry.container.getAllObjects();
+                for(var o in objects) {
+                    var object = objects[o];
+                    var pictures = object.pictures;
+                    for(var p in pictures) {
+                        var picture = pictures[p];
+                        if(picture.id == id) {
+                            result = picture.name;
+                            return result;
+                        }
                     }
                 }
-            }
-        }
-        else if(menuName == "sounds") {
-            var objects = Entry.container.getAllObjects();
-            for(var o in objects) {
-                var object = objects[o];
-                var sounds = object.sounds;
-                for(var p in sounds) {
-                    var sound = sounds[p];
-                    if(sound.id == id) {
-                        result = sound.name;
-                        return result;
+                break;
+            case "sounds":
+                var objects = Entry.container.getAllObjects();
+                for(var o in objects) {
+                    var object = objects[o];
+                    var sounds = object.sounds;
+                    for(var p in sounds) {
+                        var sound = sounds[p];
+                        if(sound.id == id) {
+                            result = sound.name;
+                            return result;
+                        }
                     }
                 }
-            }
-        }
-        else if(menuName == "scenes") {
-            var scenes = Entry.scene.getScenes();
-            for(var s in scenes) {
-                var scene = scenes[s];
-                if(scene.id == id) {
-                    result = scene.name;
-                    break;
+                break;
+            case "scenes":
+                var scenes = Entry.scene.getScenes();
+                for(var s in scenes) {
+                    var scene = scenes[s];
+                    if(scene.id == id) {
+                        result = scene.name;
+                        break;
+                    }
                 }
-            }
+                break;
+            case "clone":
+                if(id == 'self') {
+                    result = id;
+                } else {
+                    var objects = Entry.container.objects_.filter(function(obj){
+                        return obj.id === id;
+                    });
+
+                    result = objects[0] ? objects[0].name : null;
+                }
+                break;
         }
 
 
@@ -2126,10 +2139,10 @@ Entry.TextCodingUtil = {};
 
                 if(isNaN(data) || (data.length > 1 && String(data)[0] === '0'))
                     data = "\"" + data + "\"";
-                
-                if(data.trim().length > 0)
+
+                if(typeof data === "number" || data.trim().length > 0)
                     value += data;
-                
+
                 if(va != lArray.length-1)
                     value += ", ";
             }

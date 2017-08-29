@@ -111,6 +111,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
         var args = component.arguments;
         var params = [];
         var obj = this.Node(callee);
+        if (obj.type && component.callee.type === "Identifier") // Duplicate name with variable
+            obj = callee.name;
 
         if (typeof obj === "string" && callee.type === "MemberExpression" && this[obj])
             return this[obj](component);
@@ -504,7 +506,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
     // p.UpdateExpression = function(component) {};
 
     p.FunctionDeclaration = function(component) {
-        var funcName = this.Node(component.id);
+        var funcName = component.id.name;
         this.assert(!this._isInFuncDef, funcName, component, "NO_ENTRY_EVENT_FUNCTION", "FUNCTION");
         this._isInFuncDef = true;
         var startBlock = {};
@@ -1000,6 +1002,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
     p.len = function(component) {
         var param = this.Node(component.arguments[0]);
+        this.assert(!(typeof param === "string" && component.arguments[0].type === "Identifier"), param, component.arguments[0], "NO_VARIABLE", "VARIABLE");
 
         if (param.type === 'get_list') { // string len
             return {

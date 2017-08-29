@@ -8103,7 +8103,7 @@ Entry.Engine = function() {
     createjs.Sound.setVolume(1);
     createjs.Sound.stop();
     this.view_.removeClass("entryEngineBlueWorkspace");
-    this.runButton && (this.runButton.removeClass("entryRemove"), this.stopButton.addClass("entryRemove"), this.pauseButton && this.pauseButton.addClass("entryRemove"), this.pauseButtonFull && this.pauseButtonFull.addClass("entryRemove"), this.addButton && this.addButton.removeClass("entryRemove"), this.runButton2 && this.runButton2.removeClass("entryRemove"), this.stopButton2 && this.stopButton2.addClass("entryRemove"));
+    this.runButton && (this.runButton.removeClass("entryRemove"), this.stopButton.addClass("entryRemove"), this.pauseButton && this.pauseButton.addClass("entryRemove"), this.pauseButtonFull && this.pauseButtonFull.addClass("entryRemove"), this.addButton && Entry.objectAddable && this.addButton.removeClass("entryRemove"), this.runButton2 && this.runButton2.removeClass("entryRemove"), this.stopButton2 && this.stopButton2.addClass("entryRemove"));
     this.state = "stop";
     Entry.dispatchEvent("stop");
     Entry.stage.hideInputField();
@@ -13287,65 +13287,70 @@ Entry.TextCodingUtil = {};
     return b;
   };
   c.dropdownDynamicIdToNameConvertor = function(b, c) {
-    if ("variables" == c) {
-      var d = Entry.variableContainer.variables_;
-      for (h in d) {
-        var f = d[h];
-        if (f.id_ == b) {
-          var g = f.object_ ? "self." + f.name_ : f.name_;
-          break;
+    switch(c) {
+      case "variables":
+        var d = Entry.variableContainer.variables_;
+        for (h in d) {
+          var f = d[h];
+          if (f.id_ == b) {
+            var g = f.object_ ? "self." + f.name_ : f.name_;
+            break;
+          }
         }
-      }
-    } else {
-      if ("lists" == c) {
-        for (h in f = Entry.variableContainer.lists_, f) {
+        break;
+      case "lists":
+        f = Entry.variableContainer.lists_;
+        for (h in f) {
           if (d = f[h], d.id_ == b) {
             g = d.object_ ? "self." + d.name_ : d.name_;
             break;
           }
         }
-      } else {
-        if ("messages" == c) {
-          for (h in f = Entry.variableContainer.messages_, f) {
-            if (d = f[h], d.id == b) {
-              g = d.name;
-              break;
-            }
+        break;
+      case "messages":
+        f = Entry.variableContainer.messages_;
+        for (h in f) {
+          if (d = f[h], d.id == b) {
+            g = d.name;
+            break;
           }
-        } else {
-          if ("pictures" == c) {
-            var h = Entry.container.getAllObjects();
-            for (d in h) {
-              var k = h[d];
-              k = k.pictures;
-              for (f in k) {
-                if (c = k[f], c.id == b) {
-                  return g = c.name;
-                }
-              }
-            }
-          } else {
-            if ("sounds" == c) {
-              for (d in h = Entry.container.getAllObjects(), h) {
-                for (f in k = h[d], k = k.sounds, k) {
-                  if (c = k[f], c.id == b) {
-                    return g = c.name;
-                  }
-                }
-              }
-            } else {
-              if ("scenes" == c) {
-                for (k in d = Entry.scene.getScenes(), d) {
-                  if (f = d[k], f.id == b) {
-                    g = f.name;
-                    break;
-                  }
-                }
-              }
+        }
+        break;
+      case "pictures":
+        var h = Entry.container.getAllObjects();
+        for (d in h) {
+          var k = h[d];
+          k = k.pictures;
+          for (f in k) {
+            if (c = k[f], c.id == b) {
+              return g = c.name;
             }
           }
         }
-      }
+        break;
+      case "sounds":
+        h = Entry.container.getAllObjects();
+        for (d in h) {
+          for (f in k = h[d], k = k.sounds, k) {
+            if (c = k[f], c.id == b) {
+              return g = c.name;
+            }
+          }
+        }
+        break;
+      case "scenes":
+        d = Entry.scene.getScenes();
+        for (k in d) {
+          if (f = d[k], f.id == b) {
+            g = f.name;
+            break;
+          }
+        }
+        break;
+      case "clone":
+        "self" == b ? g = b : (h = Entry.container.objects_.filter(function(c) {
+          return c.id === b;
+        }), g = h[0] ? h[0].name : null);
     }
     return g;
   };
@@ -14086,7 +14091,9 @@ Entry.TextCodingUtil = {};
           if (isNaN(f) || 1 < f.length && "0" === String(f)[0]) {
             f = '"' + f + '"';
           }
-          0 < f.trim().length && (h += f);
+          if ("number" === typeof f || 0 < f.trim().length) {
+            h += f;
+          }
           l != k.length - 1 && (h += ", ");
         }
         b += g + " = [" + h + "]\n";
@@ -17692,6 +17699,7 @@ Entry.PyToBlockParser = function(c) {
   };
   c.CallExpression = function(b) {
     var c = b.callee, e = b.arguments, f = this.Node(c);
+    f.type && "Identifier" === b.callee.type && (f = c.name);
     if ("string" === typeof f && "MemberExpression" === c.type && this[f]) {
       return this[f](b);
     }
@@ -17871,7 +17879,7 @@ Entry.PyToBlockParser = function(c) {
     return {type:e, params:[this.Node(b.left), c, this.Node(b.right)]};
   };
   c.FunctionDeclaration = function(b) {
-    var c = this.Node(b.id);
+    var c = b.id.name;
     this.assert(!this._isInFuncDef, c, b, "NO_ENTRY_EVENT_FUNCTION", "FUNCTION");
     this._isInFuncDef = !0;
     var e = {};
@@ -18087,8 +18095,9 @@ Entry.PyToBlockParser = function(c) {
     return -1 < d.indexOf(b) ? Entry.variableContainer[c][d.indexOf(b)] : !1;
   };
   c.len = function(b) {
-    b = this.Node(b.arguments[0]);
-    return "get_list" === b.type ? {type:"length_of_list", params:[void 0, b.params[0]]} : {type:"length_of_string", params:[void 0, b]};
+    var c = this.Node(b.arguments[0]);
+    this.assert(!("string" === typeof c && "Identifier" === b.arguments[0].type), c, b.arguments[0], "NO_VARIABLE", "VARIABLE");
+    return "get_list" === c.type ? {type:"length_of_list", params:[void 0, c.params[0]]} : {type:"length_of_string", params:[void 0, c]};
   };
   c["Hamster.note"] = function(b) {
     if (2 < b.arguments.length) {
