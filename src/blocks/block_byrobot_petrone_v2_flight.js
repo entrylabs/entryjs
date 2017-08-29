@@ -21,6 +21,7 @@ Entry.byrobot_petrone_v2_flight =
     setZero: function()
     {
         // 초기화
+        this.transferBufferClear();
         
         // 한 번에 명령을 전송하면 hw까지 제대로 전달되지 않는 경우가 있어
         // 명령을 각각 분리하여 전송하게 함(2017.01.03)
@@ -112,6 +113,15 @@ Entry.byrobot_petrone_v2_flight =
             Entry.engine.isContinue = false;
             return "Finish";
         }
+    },
+
+    transferBufferClear: function ()
+    {
+        Entry.hw.setDigitalPortValue("buffer_clear", 0);
+
+        Entry.hw.update();
+
+        delete Entry.hw.sendQueue["buffer_clear"];
     },
     
     // 데이터 전송
