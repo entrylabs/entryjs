@@ -66,10 +66,23 @@ goog.require('Entry.Dom');
 
         var doms = this._doms;
 
-        if (!dom.get(0))
+        var target = dom.get(0);
+        if (!target)
             return;
 
-        var rect = dom.get(0).getBoundingClientRect();
+        var rect = target.getBoundingClientRect();
+        if (rect.width == 0 || rect.height == 0) {
+            var selector = target.tagName;
+            if (target.className)
+                selector += "." + target.className.replace(" ", ".");
+            var dest = $(selector);
+            if (dest && dest.length > 0) {
+                target = dest[0];
+                rect = target.getBoundingClientRect();
+            } else {
+                return;
+            }
+        }
 
         var topPos = Math.round(rect.top);
         var rightPos = Math.round(rect.right);
