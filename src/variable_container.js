@@ -654,9 +654,9 @@ Entry.VariableContainer = function() {
     };
 
     p.getVariableByName = function(variableName, isSelf, currentObjectId) {
+            currentObjectId = currentObjectId ? currentObjectId : Entry.playground.object.id;
         for (var i = 0; i < this.variables_.length; i++) {
             var v = this.variables_[i];
-            currentObjectId = currentObjectId ? currentObjectId : Entry.playground.object.id;
             if(isSelf === true){
                 if(!v.object_ || v.object_ !== currentObjectId)
                     continue;
@@ -765,7 +765,7 @@ Entry.VariableContainer = function() {
             }
 
             if (l.getName() === name)
-                return v;
+                return l;
         }    
     };
 
