@@ -778,6 +778,7 @@ EntryStatic.getAllBlocks = function() {
 
                 // BYROBOT - PetroneV2 Flight
                 "byrobot_petrone_v2_flight_drone_value_attitude",
+                "byrobot_petrone_v2_flight_drone_value_imu",
                 "byrobot_petrone_v2_flight_drone_value_sensor",
                 "byrobot_petrone_v2_flight_drone_value_etc",
                 "byrobot_petrone_v2_flight_controller_value_button",

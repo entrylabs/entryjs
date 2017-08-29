@@ -43679,11 +43679,11 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [Lang.Blocks.byrobot_petrone_v2_drone_attitude_roll, "attitude_roll"],
-                    [Lang.Blocks.byrobot_petrone_v2_drone_attitude_pitch, "attitude_pitch"],
-                    [Lang.Blocks.byrobot_petrone_v2_drone_attitude_yaw, "attitude_yaw"],
+                    [Lang.Blocks.byrobot_petrone_v2_drone_attitude_roll, "imu_angleRoll"],
+                    [Lang.Blocks.byrobot_petrone_v2_drone_attitude_pitch, "imu_anglePitch"],
+                    [Lang.Blocks.byrobot_petrone_v2_drone_attitude_yaw, "imu_angleYaw"],
                 ],
-                "value": "attitude_roll",               // 초기 선택항목 지정
+                "value": "imu_angleRoll",               // 초기 선택항목 지정
                 "fontSize": 11
             }
         ],
@@ -43691,6 +43691,42 @@ Entry.block = {
         "def": {
             "params": [null],
             "type": "byrobot_petrone_v2_flight_drone_value_attitude"      // 언어 파일에서 읽어들일 템플릿. 객체 이름과 동일하게
+        },
+        "paramsKeyMap": {
+            "DEVICE": 0
+        },
+        "class": "byrobot_petrone_v2_flight_monitor",         // 같은 이름인 객체들이 그룹으로 형성됨
+        "isNotFor": ["byrobot_petrone_v2_flight"],
+        "func": function (sprite, script) {
+            return Entry.hw.portData[script.getField('DEVICE')];
+        },
+    },
+    // */
+    //*
+    "byrobot_petrone_v2_flight_drone_value_imu":
+    {
+        "color": "#00979D",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.byrobot_petrone_v2_drone_accel_x, "imu_accX"],
+                    [Lang.Blocks.byrobot_petrone_v2_drone_accel_y, "imu_accY"],
+                    [Lang.Blocks.byrobot_petrone_v2_drone_accel_z, "imu_accZ"],
+                    [Lang.Blocks.byrobot_petrone_v2_drone_gyro_roll, "imu_gyroRoll"],
+                    [Lang.Blocks.byrobot_petrone_v2_drone_gyro_pitch, "imu_gyroPitch"],
+                    [Lang.Blocks.byrobot_petrone_v2_drone_gyro_yaw, "imu_gyroYaw"],
+                ],
+                "value": "imu_accX",                // 초기 선택항목 지정
+                "fontSize": 11
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [null],
+            "type": "byrobot_petrone_v2_flight_drone_value_imu"       // 언어 파일에서 읽어들일 템플릿. 객체 이름과 동일하게
         },
         "paramsKeyMap": {
             "DEVICE": 0
@@ -45184,7 +45220,7 @@ Entry.block = {
             "params": [
                 {
                     "type": "text",
-                    "params": ["2147483647"]
+                    "params": ["0"]
                 },
                 null
             ],

@@ -50,9 +50,15 @@ Entry.byrobot_petrone_v2_flight =
             "state_modeFlight"              :{name: Lang.Blocks.byrobot_petrone_v2_drone_state_mode_flight,               type: "input", pos: {x: 0, y: 0}},
             "state_coordinate"              :{name: Lang.Blocks.byrobot_petrone_v2_drone_state_mode_coordinate,           type: "input", pos: {x: 0, y: 0}},
             "state_battery"                 :{name: Lang.Blocks.byrobot_petrone_v2_drone_state_battery,                   type: "input", pos: {x: 0, y: 0}},
-            "attitude_roll"                 :{name: Lang.Blocks.byrobot_petrone_v2_drone_attitude_roll,                   type: "input", pos: {x: 0, y: 0}},
-            "attitude_pitch"                :{name: Lang.Blocks.byrobot_petrone_v2_drone_attitude_pitch,                  type: "input", pos: {x: 0, y: 0}},
-            "attitude_yaw"                  :{name: Lang.Blocks.byrobot_petrone_v2_drone_attitude_yaw,                    type: "input", pos: {x: 0, y: 0}},
+            "imu_angleRoll"                 :{name: Lang.Blocks.byrobot_petrone_v2_drone_attitude_roll,                   type: "input", pos: {x: 0, y: 0}},
+            "imu_anglePitch"                :{name: Lang.Blocks.byrobot_petrone_v2_drone_attitude_pitch,                  type: "input", pos: {x: 0, y: 0}},
+            "imu_angleYaw"                  :{name: Lang.Blocks.byrobot_petrone_v2_drone_attitude_yaw,                    type: "input", pos: {x: 0, y: 0}},
+            "imu_accX"                      :{name: Lang.Blocks.byrobot_petrone_v2_drone_accel_x,                         type: "input", pos: {x: 0, y: 0}},
+            "imu_accY"                      :{name: Lang.Blocks.byrobot_petrone_v2_drone_accel_y,                         type: "input", pos: {x: 0, y: 0}},
+            "imu_accZ"                      :{name: Lang.Blocks.byrobot_petrone_v2_drone_accel_z,                         type: "input", pos: {x: 0, y: 0}},
+            "imu_gyroRoll"                  :{name: Lang.Blocks.byrobot_petrone_v2_drone_gyro_roll,                       type: "input", pos: {x: 0, y: 0}},
+            "imu_gyroPitch"                 :{name: Lang.Blocks.byrobot_petrone_v2_drone_gyro_pitch,                      type: "input", pos: {x: 0, y: 0}},
+            "imu_gyroYaw"                   :{name: Lang.Blocks.byrobot_petrone_v2_drone_gyro_yaw,                        type: "input", pos: {x: 0, y: 0}},
             "pressure_temperature"          :{name: Lang.Blocks.byrobot_petrone_v2_drone_pressure_temperature,            type: "input", pos: {x: 0, y: 0}},
             "pressure_pressure"             :{name: Lang.Blocks.byrobot_petrone_v2_drone_pressure_pressure,               type: "input", pos: {x: 0, y: 0}},
             "imageflow_positionX"           :{name: Lang.Blocks.byrobot_petrone_v2_drone_imageflow_positionX,             type: "input", pos: {x: 0, y: 0}},
@@ -348,22 +354,24 @@ Entry.byrobot_petrone_v2_flight =
     },
 
     // LED 수동 설정 - RGB 값 직접 지정
-    setLightColorRgb: function (script, target, mode, red, green, blue) {
-        switch (this.checkFinish(script, 40)) {
-            case "Start":
-                {
-                    this.transferLightColorRgb(target, mode, red, green, blue);
-                }
-                return script;
+    setLightColorRgb: function (script, target, mode, red, green, blue)
+    {
+        switch (this.checkFinish(script, 40))
+        {
+        case "Start":
+            {
+                this.transferLightColorRgb(target, mode, red, green, blue);
+            }
+            return script;
 
-            case "Running":
-                return script;
+        case "Running":
+            return script;
 
-            case "Finish":
-                return script.callReturn();
+        case "Finish":
+            return script.callReturn();
 
-            default:
-                return script.callReturn();
+        default:
+            return script.callReturn();
         }
     },
 
