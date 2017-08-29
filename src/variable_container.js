@@ -2421,7 +2421,7 @@ Entry.VariableContainer = function() {
         if (type == '_functionRefs') {
             var id = block.type.substr(5);
             var func = Entry.variableContainer.functions_[id];
-            if (func.isRemoved) return;
+            if (!func || func.isRemoved) return;
             func.isRemoved = true;
             if (func) {
                 var blocks = func.content.getBlockList();
