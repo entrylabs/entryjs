@@ -247,13 +247,44 @@ Entry.PyToBlockParser = function(blockSyntax) {
         var rightHand = this.Node(component.right);
 
         switch (component.operator) {
-            case "+=":
-                result.type = 'change_variable';
-                break;
-            case "-=": // TODO
-            case "/=": // TODO
-            case "*=": // TODO
             case "=":
+                break;
+            case "+=":
+                if (result.type === 'set_variable') {
+                    result.type = 'change_variable';
+                    break;
+                }
+            case "-=":
+            case "/=":
+            case "*=":
+            default:
+                var operator = this.arithmeticOperator[component.operator[0]]
+                if (operator) {
+                    var getBlock;
+                    if (result.type === "set_variable")
+                        getBlock = {
+                            type: "get_variable",
+                            params: [ leftVar.id_ ]
+                        }
+                    else
+                        getBlock = {
+                            type: "value_of_index_from_list",
+                            params: [
+                                undefined,
+                                leftVar.id_,
+                                undefined,
+                                this.ListIndex(this.Node(component.left.property.arguments[1])) // do not change this
+                            ]
+                        }
+                    rightHand = {
+                        type: "calc_basic",
+                        params: [
+                            getBlock,
+                            operator,
+                            rightHand
+                        ]
+                    }
+                }
         }
         result.params.push(rightHand);
         return result;
