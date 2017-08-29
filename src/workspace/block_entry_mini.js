@@ -2021,6 +2021,71 @@
                 return script.callReturn();
             }
         },
+        robotis_set_led: {
+            color: '#2AB4D3',
+            skeleton: 'basic',
+            fontColor: '#fff',
+            statements: [],
+            isNotFor: ['robotis_openCM70'],
+            template: '%1번 포트 LED를 %2',
+            params: [{
+                type: 'Dropdown',
+                options: [
+                    ['PORT 3', '3'],
+                    ['PORT 4', '4'],
+                    ['PORT 5', '5'],
+                    ['PORT 6', '6']
+                ],
+                value: '3',
+                fontsIze: 11
+            },{
+            type: 'Dropdown',
+            options: [
+                ['모두 끄기', '0'],
+                ['노랑색 켜기', '1'],
+                ['파랑색 켜기', '2'],
+                ['모두 켜기', '3']
+            ],
+            value: '0',
+            fontsIze: 11
+        }],
+            events: {},
+            def: {
+                params: [null],
+                type: 'robotis_set_led'
+            },
+            paramsKeyMap: {
+                PORT: 0,
+                'COLOR': 1
+            },
+            class: 'robotis_led',
+            func: function (sprite, script) {
+                var port = script.getStringField('PORT');
+                var value = 0;
+                var data_instruction = Entry.Robotis_openCM70.INSTRUCTION.WRITE;
+                var data_address = 0;
+                var data_length = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_LED_MODULE[1];
+                var data_value = script.getNumberField('COLOR');
+                switch (port) {
+                    case '3':
+                        data_address = 212;
+                        break;
+                    case '4':
+                        data_address = 213;
+                        break;
+                    case '5':
+                        data_address = 214;
+                        break;
+                    case '6':
+                        data_address = 215;
+                        break;
+                }
+                var data_sendqueue = [[data_instruction, data_address, data_length, data_value]];
+                //Entry.Robotis_carCont.setRobotisData(data_sendqueue);
+                //Entry.Robotis_carCont.update();
+                return Entry.Robotis_carCont.postCallReturn(script, data_sendqueue, Entry.Robotis_openCM70.delay);
+            }
+        },
         robotis_touch_value: {
             color: '#2AB4D3',
             skeleton: 'basic_string_field',
@@ -2050,7 +2115,8 @@
             class: 'robotis_touch',
             func: function (sprite, script) {
                 var port = script.getStringField('PORT');
-                var value = 0;
+                var value = 0;                
+
                 switch (port) {
                     case '3':
                         value = Entry.hw.portData['TOUCH0'];
@@ -3485,15 +3551,19 @@
                 switch (port) {
                     case "3":
                         data_address2 = 108;
+                        Entry.Robotis_openCM70.SERVO_MODULEWRITE.PORT3 = true;
                         break;
                     case "4":
                         data_address2 = 109;
+                        Entry.Robotis_openCM70.SERVO_MODULEWRITE.PORT4 = true;
                         break;
                     case "5":
                         data_address2 = 110;
+                        Entry.Robotis_openCM70.SERVO_MODULEWRITE.PORT5 = true;
                         break;
                     case "6":
                         data_address2 = 111;
+                        Entry.Robotis_openCM70.SERVO_MODULEWRITE.PORT6 = true;
                         break;
                 }                
 
@@ -3531,6 +3601,24 @@
                 //
                 if (!script.isStart) {
 
+                    if (!Entry.Robotis_openCM70.SERVO_MODULEWRITE.PORT3 && port == '3' || !Entry.Robotis_openCM70.SERVO_MODULEWRITE.PORT4 && port == '4'
+                        || !Entry.Robotis_openCM70.SERVO_MODULEWRITE.PORT5 && port == '5' || !Entry.Robotis_openCM70.SERVO_MODULEWRITE.PORT6 && port == '6') {
+
+                        var data_sendqueue = [[data_instruction, data_address2, data_length2, data_value2]];
+                        Entry.Robotis_carCont.setRobotisData(data_sendqueue);
+                        Entry.Robotis_carCont.update();
+                        script.isStart = true;
+                        script.timeFlag = 1;
+                        setTimeout(function () {
+                            script.timeFlag = 0;
+                        }, 1 * 650);
+
+                    } else {
+                        script.isStart = true;
+                        script.timeFlag = 0;
+                    }
+
+                    /*
                     var data_sendqueue = [[data_instruction, data_address2, data_length2, data_value2]];
                     Entry.Robotis_carCont.setRobotisData(data_sendqueue);
                     Entry.Robotis_carCont.update();
@@ -3538,8 +3626,9 @@
                     script.timeFlag = 1;
                     setTimeout(function () {
                         script.timeFlag = 0;
-                    }, 1 * 10);
-
+                    }, 1 * 650);
+                    */
+                    
                     return script;
 
                 } else if (script.timeFlag == 1) {
@@ -3694,13 +3783,19 @@
                 if (!script.isStart) {
 
                     var data_sendqueue = [[data_instruction, data_address2, data_length2, data_value2]];
-                    Entry.Robotis_carCont.setRobotisData(data_sendqueue);
-                    Entry.Robotis_carCont.update();
-                    script.isStart = true;
-                    script.timeFlag = 1;
-                    setTimeout(function () {
+                    //Entry.Robotis_carCont.setRobotisData(data_sendqueue);
+                    //Entry.Robotis_carCont.update();
+                    if (!Entry.Robotis_openCM70.SERVO_MODULEWRITE.PORT3 && port == '3' || !Entry.Robotis_openCM70.SERVO_MODULEWRITE.PORT4 && port == '4'
+                        || !Entry.Robotis_openCM70.SERVO_MODULEWRITE.PORT5 && port == '5' || !Entry.Robotis_openCM70.SERVO_MODULEWRITE.PORT6 && port == '6') {
+                        script.isStart = true;
+                        script.timeFlag = 1;
+                        setTimeout(function () {
+                            script.timeFlag = 0;
+                        }, 1 * 650);
+                    } else {
+                        script.isStart = true;
                         script.timeFlag = 0;
-                    }, 1 * 10);
+                    }
 
                     return script;
 
@@ -3712,6 +3807,10 @@
                     delete script.isStart;
                     delete script.wheelMode;
                     Entry.engine.isContinue = false;
+
+                    setTimeout(function () {
+                        script.timeFlag = 0;
+                    }, 1 * 70);
 
                     data_sendqueue = [[data_instruction, data_address, data_length, data_value],[data_instruction, data_address4, data_length4, data_value4], [data_instruction, data_address3, data_length3, data_value3]];
                     Entry.Robotis_carCont.setRobotisData(data_sendqueue);
@@ -3763,11 +3862,14 @@
             }, {
                 type: 'Dropdown',
                 options: [
-                    ['온음표', '1'],
+                    ['온음표', '4'],
                     ['2분음표', '2'],
-                    ['4분음표', '4'],
+                    ['4분음표', '1'],
+                    ['8분음표', '0.5'],
+                    ['16분음표', '0.25'],
+                    /*['4분음표', '4'],
                     ['8분음표', '8'],
-                    ['16분음표', '16'],
+                    ['16분음표', '16'],*/
                 ],
                 value: '4',
                 fontsIze: 11
@@ -3797,6 +3899,8 @@
                 var cmBuzzerIndex = note + (octave * 12);
                 if (cmBuzzerIndex > 51)
                     cmBuzzerIndex = 51;
+                if (cmBuzzerIndex < 0)
+                    cmBuzzerIndex = 0;
 
                 var data_instruction = Entry.Robotis_openCM70.INSTRUCTION.WRITE;
                 var data_address_1 = 0;
@@ -3815,7 +3919,7 @@
                 if (data_value_1 > 50) {
                     data_value_1 = 50;
                 }
-
+                //data_value_1
                 data_address_2 = Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_INDEX[0];
                 data_length_2 = Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_INDEX[1];
                 data_value_2 = cmBuzzerIndex;

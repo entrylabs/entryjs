@@ -257,7 +257,8 @@ EntryStatic.getAllBlocks = function() {
             "robotis_humidity_value",
             "robotis_humidity_value_boolean",
             "robotis_temperature_value",
-            "robotis_temperature_value_boolean"
+            "robotis_temperature_value_boolean",
+            "robotis_set_led"
         ]
     }, {
         category: "hw_led",

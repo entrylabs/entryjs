@@ -5376,19 +5376,22 @@ Entry.Robotis_carCont = {INSTRUCTION:{NONE:0, WRITE:3, READ:2}, CONTROL_TABLE:{C
   Entry.hw.sendQueue.ROBOTIS_DATA = null == b ? a : a ? a.concat(b) : b;
 }};
 Entry.Robotis_openCM70 = {INSTRUCTION:{NONE:0, WRITE:3, READ:2}, CONTROL_TABLE:{CM_LED_R:[79, 1], CM_LED_G:[80, 1], CM_LED_B:[81, 1], CM_BUZZER_INDEX:[84, 1], CM_BUZZER_TIME:[85, 1], CM_SOUND_DETECTED:[86, 1], CM_SOUND_DETECTING:[87, 1], CM_USER_BUTTON:[26, 1], CM_MOTION:[66, 1], AUX_SERVO_POSITION:[152, 2], AUX_IR:[168, 2], AUX_TOUCH:[202, 1], AUX_TEMPERATURE:[234, 1], AUX_ULTRASONIC:[242, 1], AUX_MAGNETIC:[250, 1], AUX_MOTION_DETECTION:[258, 1], AUX_COLOR:[266, 1], AUX_CUSTOM:[216, 2], AUX_BRIGHTNESS:[288, 
-2], AUX_HYDRO_THEMO_HUMIDITY:[274, 1], AUX_HYDRO_THEMO_TEMPER:[282, 1], AUX_SERVO_MODE:[126, 1], AUX_SERVO_SPEED:[136, 2], AUX_MOTOR_SPEED:[136, 2], AUX_LED_MODULE:[210, 1]}, IRS_MODULEWRITE:{PORT3:!1, PORT4:!1, PORT5:!1, PORT6:!1}, setZero:function() {
+2], AUX_HYDRO_THEMO_HUMIDITY:[274, 1], AUX_HYDRO_THEMO_TEMPER:[282, 1], AUX_SERVO_MODE:[126, 1], AUX_SERVO_SPEED:[136, 2], AUX_MOTOR_SPEED:[136, 2], AUX_LED_MODULE:[210, 1]}, IRS_MODULEWRITE:{PORT3:!1, PORT4:!1, PORT5:!1, PORT6:!1}, SERVO_MODULEWRITE:{PORT3:!1, PORT4:!1, PORT5:!1, PORT6:!1}, setZero:function() {
   Entry.hw.sendQueue.setZero = [1];
   Entry.Robotis_carCont.update();
   Entry.Robotis_carCont.setRobotisData(null);
   Entry.hw.sendQueue.setZero = null;
   Entry.Robotis_carCont.update();
-  Entry.Robotis_carCont.setRobotisData([[Entry.Robotis_openCM70.INSTRUCTION.WRITE, 136, 2, 0], [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 138, 2, 0], [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 140, 2, 0], [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 142, 2, 0], [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 144, 2, 0], [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 146, 2, 0], [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 79, 1, 0], [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 80, 1, 0], [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 
-  81, 1, 0], [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 86, 1, 0], [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 108, 1, 0], [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 109, 1, 0], [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 110, 1, 0], [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 111, 1, 0]]);
+  Entry.Robotis_carCont.setRobotisData([[Entry.Robotis_openCM70.INSTRUCTION.WRITE, 136, 12, 0], [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 79, 3, 0], [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 86, 1, 0], [Entry.Robotis_openCM70.INSTRUCTION.WRITE, 108, 4, 0]]);
   Entry.Robotis_carCont.update();
   Entry.Robotis_openCM70.IRS_MODULEWRITE.PORT3 = !1;
   Entry.Robotis_openCM70.IRS_MODULEWRITE.PORT4 = !1;
   Entry.Robotis_openCM70.IRS_MODULEWRITE.PORT5 = !1;
   Entry.Robotis_openCM70.IRS_MODULEWRITE.PORT6 = !1;
+  Entry.Robotis_openCM70.SERVO_MODULEWRITE.PORT3 = !1;
+  Entry.Robotis_openCM70.SERVO_MODULEWRITE.PORT4 = !1;
+  Entry.Robotis_openCM70.SERVO_MODULEWRITE.PORT5 = !1;
+  Entry.Robotis_openCM70.SERVO_MODULEWRITE.PORT6 = !1;
 }, name:"robotis_openCM70", delay:15};
 Blockly.Blocks.robotis_openCM70_cm_custom_value = {init:function() {
   this.setColour("#00979D");
@@ -22292,6 +22295,24 @@ Entry.block.basic_button = {skeleton:"basic_button", color:"#eee", template:"%1"
     Entry.hw.sendQueue.digitalPinMode[b] = Entry.Roborobo_SchoolKit.pinMode.PWM;
     Entry.hw.sendQueue[b] = c;
     return a.callReturn();
+  }}, robotis_set_led:{color:"#2AB4D3", skeleton:"basic", fontColor:"#fff", statements:[], isNotFor:["robotis_openCM70"], template:"%1\ubc88 \ud3ec\ud2b8 LED\ub97c %2", params:[{type:"Dropdown", options:[["PORT 3", "3"], ["PORT 4", "4"], ["PORT 5", "5"], ["PORT 6", "6"]], value:"3", fontsIze:11}, {type:"Dropdown", options:[["\ubaa8\ub450 \ub044\uae30", "0"], ["\ub178\ub791\uc0c9 \ucf1c\uae30", "1"], ["\ud30c\ub791\uc0c9 \ucf1c\uae30", "2"], ["\ubaa8\ub450 \ucf1c\uae30", "3"]], value:"0", fontsIze:11}], 
+  events:{}, def:{params:[null], type:"robotis_set_led"}, paramsKeyMap:{PORT:0, COLOR:1}, class:"robotis_led", func:function(b, a) {
+    b = a.getStringField("PORT");
+    var c = Entry.Robotis_openCM70.INSTRUCTION.WRITE, d = 0, e = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_LED_MODULE[1], f = a.getNumberField("COLOR");
+    switch(b) {
+      case "3":
+        d = 212;
+        break;
+      case "4":
+        d = 213;
+        break;
+      case "5":
+        d = 214;
+        break;
+      case "6":
+        d = 215;
+    }
+    return Entry.Robotis_carCont.postCallReturn(a, [[c, d, e, f]], Entry.Robotis_openCM70.delay);
   }}, robotis_touch_value:{color:"#2AB4D3", skeleton:"basic_string_field", fontColor:"#fff", statements:[], isNotFor:["robotis_openCM70"], template:"%1\ubc88 \ud3ec\ud2b8 \uc811\ucd09 \uc13c\uc11c \uac12", params:[{type:"Dropdown", options:[["PORT 3", "3"], ["PORT 4", "4"], ["PORT 5", "5"], ["PORT 6", "6"]], value:"3", fontsIze:11}], events:{}, def:{params:[null], type:"robotis_touch_value"}, paramsKeyMap:{PORT:0}, class:"robotis_touch", func:function(b, a) {
     b = 0;
     switch(a.getStringField("PORT")) {
@@ -22346,7 +22367,7 @@ Entry.block.basic_button = {skeleton:"basic_button", color:"#eee", template:"%1"
       case "6":
         a = Entry.hw.portData.IR3, c = 111;
     }
-    c = [[Entry.Robotis_openCM70.INSTRUCTION.WRITE, c, 1, 5]];
+    c = [[Entry.Robotis_openCM70.INSTRUCTION.WRITE, c, 1, 2]];
     Entry.Robotis_openCM70.IRS_MODULEWRITE.PORT3 || "3" != b || (Entry.Robotis_carCont.setRobotisData(c), Entry.Robotis_carCont.update(), Entry.Robotis_openCM70.IRS_MODULEWRITE.PORT3 = !0);
     Entry.Robotis_openCM70.IRS_MODULEWRITE.PORT4 || "4" != b || (Entry.Robotis_carCont.setRobotisData(c), Entry.Robotis_carCont.update(), Entry.Robotis_openCM70.IRS_MODULEWRITE.PORT4 = !0);
     Entry.Robotis_openCM70.IRS_MODULEWRITE.PORT5 || "5" != b || (Entry.Robotis_carCont.setRobotisData(c), Entry.Robotis_carCont.update(), Entry.Robotis_openCM70.IRS_MODULEWRITE.PORT5 = !0);
@@ -22354,27 +22375,48 @@ Entry.block.basic_button = {skeleton:"basic_button", color:"#eee", template:"%1"
     return a;
   }}, robotis_irs_value_boolean:{color:"#C4065C", skeleton:"basic_boolean_field", fontColor:"#fff", isNotFor:["robotis_openCM70"], template:"%1\ubc88 \ud3ec\ud2b8 \uc801\uc678\uc120 \uc13c\uc11c \uac12 %2 %3", params:[{type:"Dropdown", options:[["PORT 3", "3"], ["PORT 4", "4"], ["PORT 5", "5"], ["PORT 6", "6"]], value:"3", fontsIze:11}, {type:"Dropdown", options:[["=", "EQUAL"], [">", "GREATER"], ["<", "LESS"], ["\u2265", "GREATER_OR_EQUAL"], ["\u2264", "LESS_OR_EQUAL"]], value:"LESS", fontsIze:11, 
   noaRrow:!0}, {type:"Block", accept:"string"}], def:{params:[null, null, {type:"number", params:["100"]}], type:"robotis_irs_value_boolean"}, paramsKeyMap:{PORT:0, OPERATOR:1, RIGHTVALUE:2}, class:"robotis_irs", func:function(b, a) {
-    var c = a.getNumberField("PORT", a);
-    b = a.getField("OPERATOR", a);
+    b = a.getStringField("PORT", a);
+    var c = a.getField("OPERATOR", a);
     a = a.getNumberValue("RIGHTVALUE", a);
-    var c = Entry.hw.portData["IR" + c], d = !1;
+    var d = 0, e = !1;
     switch(b) {
+      case "3":
+        d = Entry.hw.portData.IR0;
+        data_address = 108;
+        break;
+      case "4":
+        d = Entry.hw.portData.IR1;
+        data_address = 109;
+        break;
+      case "5":
+        d = Entry.hw.portData.IR2;
+        data_address = 110;
+        break;
+      case "6":
+        d = Entry.hw.portData.IR3, data_address = 111;
+    }
+    var f = [[Entry.Robotis_openCM70.INSTRUCTION.WRITE, data_address, 1, 2]];
+    Entry.Robotis_openCM70.IRS_MODULEWRITE.PORT3 || "3" != b || (Entry.Robotis_carCont.setRobotisData(f), Entry.Robotis_carCont.update(), Entry.Robotis_openCM70.IRS_MODULEWRITE.PORT3 = !0);
+    Entry.Robotis_openCM70.IRS_MODULEWRITE.PORT4 || "4" != b || (Entry.Robotis_carCont.setRobotisData(f), Entry.Robotis_carCont.update(), Entry.Robotis_openCM70.IRS_MODULEWRITE.PORT4 = !0);
+    Entry.Robotis_openCM70.IRS_MODULEWRITE.PORT5 || "5" != b || (Entry.Robotis_carCont.setRobotisData(f), Entry.Robotis_carCont.update(), Entry.Robotis_openCM70.IRS_MODULEWRITE.PORT5 = !0);
+    Entry.Robotis_openCM70.IRS_MODULEWRITE.PORT6 || "6" != b || (Entry.Robotis_carCont.setRobotisData(f), Entry.Robotis_carCont.update(), Entry.Robotis_openCM70.IRS_MODULEWRITE.PORT6 = !0);
+    switch(c) {
       case "EQUAL":
-        d = c == a;
+        e = d == a;
         break;
       case "GREATER":
-        d = Number(c) > Number(a);
+        e = Number(d) > Number(a);
         break;
       case "LESS":
-        d = Number(c) < Number(a);
+        e = Number(d) < Number(a);
         break;
       case "GREATER_OR_EQUAL":
-        d = Number(c) >= Number(a);
+        e = Number(d) >= Number(a);
         break;
       case "LESS_OR_EQUAL":
-        d = Number(c) <= Number(a);
+        e = Number(d) <= Number(a);
     }
-    return d;
+    return e;
   }}, robotis_light_value:{color:"#498DEB", skeleton:"basic_string_field", fontColor:"#fff", statements:[], isNotFor:["robotis_openCM70"], template:"%1\ubc88 \ud3ec\ud2b8 \ube5b \uac10\uc9c0 \uc13c\uc11c \uac12", params:[{type:"Dropdown", options:[["PORT 3", "0"], ["PORT 4", "1"], ["PORT 5", "2"], ["PORT 6", "3"]], value:"0", fontsIze:11}], events:{}, def:{params:[null], type:"robotis_light_value"}, paramsKeyMap:{PORT:0}, class:"robotis_light", func:function(b, a) {
     b = a.getStringField("PORT");
     return Entry.hw.portData["LIGHT" + b];
@@ -22662,7 +22704,7 @@ Entry.block.basic_button = {skeleton:"basic_button", color:"#eee", template:"%1"
     b = a.getNumberValue("DURATION");
     var c = a.getNumberField("WHEEL");
     var d = a.getNumberValue("SPEED");
-    var e = a.getNumberField("DIRECTION"), f = Entry.Robotis_openCM70.INSTRUCTION.WRITE, g = 0, h = 0, g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MOTOR_SPEED[0];
+    var e = a.getStringField("DIRECTION"), f = Entry.Robotis_openCM70.INSTRUCTION.WRITE, g = 0, h = 0, g = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MOTOR_SPEED[0];
     "3" == c ? (h = 4, g = 136) : (h = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MOTOR_SPEED[1], g += (c - 1) * h);
     if (a.isStart) {
       if (1 == a.timeFlag) {
@@ -22679,7 +22721,7 @@ Entry.block.basic_button = {skeleton:"basic_button", color:"#eee", template:"%1"
       return a.callReturn();
     }
     d *= 68;
-    "CW" == e ? (d += 1024, 2047 < d && (d = 2047)) : 1023 < d && (d = 1023);
+    "3" == c || "1" == c ? "CCW" == e ? (d += 1024, 2047 < d && (d = 2047)) : 1023 < d && (d = 1023) : "CW" == e ? (d += 1024, 2047 < d && (d = 2047)) : 1023 < d && (d = 1023);
     d = [[f, g, h, d]];
     a.wheelMode = c;
     a.isStart = !0;
@@ -22724,15 +22766,18 @@ Entry.block.basic_button = {skeleton:"basic_button", color:"#eee", template:"%1"
     switch(b) {
       case "3":
         e = 108;
+        Entry.Robotis_openCM70.SERVO_MODULEWRITE.PORT3 = !0;
         break;
       case "4":
         e = 109;
+        Entry.Robotis_openCM70.SERVO_MODULEWRITE.PORT4 = !0;
         break;
       case "5":
         e = 110;
+        Entry.Robotis_openCM70.SERVO_MODULEWRITE.PORT5 = !0;
         break;
       case "6":
-        e = 111;
+        e = 111, Entry.Robotis_openCM70.SERVO_MODULEWRITE.PORT6 = !0;
     }
     l = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_SPEED[0];
     m = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_SPEED[1];
@@ -22756,14 +22801,11 @@ Entry.block.basic_button = {skeleton:"basic_button", color:"#eee", template:"%1"
       Entry.Robotis_carCont.update();
       return a.callReturn();
     }
-    b = [[f, e, 1, 7]];
-    Entry.Robotis_carCont.setRobotisData(b);
-    Entry.Robotis_carCont.update();
-    a.isStart = !0;
-    a.timeFlag = 1;
-    setTimeout(function() {
-      a.timeFlag = 0;
-    }, 10);
+    if (!Entry.Robotis_openCM70.SERVO_MODULEWRITE.PORT3 && "3" == b || !Entry.Robotis_openCM70.SERVO_MODULEWRITE.PORT4 && "4" == b || !Entry.Robotis_openCM70.SERVO_MODULEWRITE.PORT5 && "5" == b || !Entry.Robotis_openCM70.SERVO_MODULEWRITE.PORT6 && "6" == b) {
+      b = [[f, e, 1, 7]], Entry.Robotis_carCont.setRobotisData(b), Entry.Robotis_carCont.update(), a.isStart = !0, a.timeFlag = 1, setTimeout(function() {
+        a.timeFlag = 0;
+      }, 650);
+    }
     return a;
   }}, robotis_set_servo_joint:{color:"#D126BD", skeleton:"basic", statements:[], isNotFor:["robotis_openCM70"], template:"%1 \ud3ec\ud2b8\uc758 \uc11c\ubcf4\ubaa8\ud130\ub97c %2 \ub3c4 %3\uc18d\ub3c4\ub85c \uc774\ub3d9 %4", params:[{type:"Dropdown", options:[["PORT 3", "3"], ["PORT 4", "4"], ["PORT 5", "5"], ["PORT 6", "6"]], value:"3", fontsIze:11}, {type:"Block", accept:"string"}, {type:"Dropdown", options:[["1", 1], ["2", 2], ["3", 3], ["4", 4], ["5", 5], ["6", 6], ["7", 7], ["8", 8], ["9", 9], 
   ["10", 10], ["11", 11], ["12", 12], ["13", 13], ["14", 14], ["15", 15]], value:7, fontsIze:11}, {type:"Indicator", img:"block_icon/practical_course/servo.png", size:12}], events:{}, def:{params:[null, {type:"number", params:["512"]}, null, null], type:"robotis_set_servo_joint"}, paramsKeyMap:{PORT:0, VALUE:1, SPEED:2}, class:"robotis_servo_motor", func:function(b, a) {
@@ -22803,6 +22845,9 @@ Entry.block.basic_button = {skeleton:"basic_button", color:"#eee", template:"%1"
       delete a.isStart;
       delete a.wheelMode;
       Entry.engine.isContinue = !1;
+      setTimeout(function() {
+        a.timeFlag = 0;
+      }, 70);
       b = [[e, l, m, q], [e, n, r, t], [e, f, g, h]];
       Entry.Robotis_carCont.setRobotisData(b);
       Entry.engine.isContinue = !1;
@@ -22810,8 +22855,6 @@ Entry.block.basic_button = {skeleton:"basic_button", color:"#eee", template:"%1"
       return a.callReturn();
     }
     b = [[e, k, 1, 7]];
-    Entry.Robotis_carCont.setRobotisData(b);
-    Entry.Robotis_carCont.update();
     a.isStart = !0;
     a.timeFlag = 1;
     setTimeout(function() {
@@ -22819,12 +22862,13 @@ Entry.block.basic_button = {skeleton:"basic_button", color:"#eee", template:"%1"
     }, 10);
     return a;
   }}, robotis_melody_note_for:{color:"#FC327F", skeleton:"basic", statements:[], isNotFor:["robotis_openCM70"], template:"\uba5c\ub85c\ub514 %1 \uc744(\ub97c) %2 \uc625\ud0c0\ube0c\ub85c %3 \ub9cc\ud07c \uc18c\ub9ac\ub0b4\uae30 %4", params:[{type:"Dropdown", options:[["\ub3c4", "0"], ["\ub3c4#(\ub808\u266d)", "1"], ["\ub808", "2"], ["\ub808#(\ubbf8\u266d)", "3"], ["\ubbf8", "4"], ["\ud30c", "5"], ["\ud30c#(\uc194\u266d)", "6"], ["\uc194", "7"], ["\uc194#(\ub77c\u266d)", "8"], ["\ub77c", "9"], ["\ub77c#(\uc2dc\u266d)", 
-  "10"], ["\uc2dc", "11"]], value:"0", fontsIze:11}, {type:"Dropdown", options:[["1", "0"], ["2", "1"], ["3", "2"], ["4", "3"], ["5", "4"], ["6", "5"]], value:"2", fontsIze:11}, {type:"Dropdown", options:[["\uc628\uc74c\ud45c", "1"], ["2\ubd84\uc74c\ud45c", "2"], ["4\ubd84\uc74c\ud45c", "4"], ["8\ubd84\uc74c\ud45c", "8"], ["16\ubd84\uc74c\ud45c", "16"]], value:"4", fontsIze:11}, {type:"Indicator", img:"block_icon/practical_course/melody.png", size:12}], events:{}, def:{params:[null, null, null, null], 
-  type:"robotis_melody_note_for"}, paramsKeyMap:{NOTE:0, OCTAVE:1, DURATION:2}, class:"robotis_melody", func:function(b, a) {
+  "10"], ["\uc2dc", "11"]], value:"0", fontsIze:11}, {type:"Dropdown", options:[["1", "0"], ["2", "1"], ["3", "2"], ["4", "3"], ["5", "4"], ["6", "5"]], value:"2", fontsIze:11}, {type:"Dropdown", options:[["\uc628\uc74c\ud45c", "4"], ["2\ubd84\uc74c\ud45c", "2"], ["4\ubd84\uc74c\ud45c", "1"], ["8\ubd84\uc74c\ud45c", "0.5"], ["16\ubd84\uc74c\ud45c", "0.25"]], value:"4", fontsIze:11}, {type:"Indicator", img:"block_icon/practical_course/melody.png", size:12}], events:{}, def:{params:[null, null, null, 
+  null], type:"robotis_melody_note_for"}, paramsKeyMap:{NOTE:0, OCTAVE:1, DURATION:2}, class:"robotis_melody", func:function(b, a) {
     var c = a.getNumberField("NOTE", a), d = a.getNumberField("OCTAVE", a);
     b = a.getNumberField("DURATION", a);
     c += 12 * d;
     51 < c && (c = 51);
+    0 > c && (c = 0);
     var d = Entry.Robotis_openCM70.INSTRUCTION.WRITE;
     var e = Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_TIME[0];
     var f = Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_TIME[1];
