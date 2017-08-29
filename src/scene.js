@@ -111,10 +111,7 @@ Entry.Scene.prototype.generateElement = function(scene) {
     var viewTemplate = Entry.createElement('li', scene.id);
     var fragment = document.createDocumentFragment('div');
     fragment.appendChild(viewTemplate);
-    var className = '';
-    className += 'entrySceneElementWorkspace';
-    className += ' entrySceneButtonWorkspace';
-    className += ' minValue';
+    var className = 'entrySceneElementWorkspace  entrySceneButtonWorkspace minValue';
     viewTemplate.addClass(className);
     $(viewTemplate).on('mousedown', function(e){
         if (Entry.engine.isState('run')) {
@@ -297,61 +294,65 @@ Entry.Scene.prototype.removeScene = function(scene) {
  */
 Entry.Scene.prototype.selectScene = function(scene) {
     scene = scene || this.getScenes()[0];
+    var container = Entry.container;
+
+    container.resetSceneDuringRun();
+
     if (this.selectedScene && (this.selectedScene.id == scene.id))
         return;
-
-    if (Entry.engine.isState('run'))
-        Entry.container.resetSceneDuringRun();
 
     var prevSelected = this.selectedScene;
     if (prevSelected) {
         var prevSelectedView = prevSelected.view;
         prevSelectedView.removeClass('selectedScene');
         var elem = document.activeElement;
-
         elem === prevSelectedView.nameField  && elem.blur();
     }
 
     this.selectedScene = scene;
     scene.view.addClass('selectedScene');
-    Entry.container.setCurrentObjects();
-    if (Entry.stage.objectContainers &&
-        Entry.stage.objectContainers.length !== 0)
-        Entry.stage.selectObjectContainer(scene);
 
-    var targetObject = Entry.container.getCurrentObjects()[0];
-    if (targetObject && Entry.type != 'minimize') {
-        Entry.container.selectObject(targetObject.id);
-        Entry.playground.refreshPlayground();
-    }
-    else {
-        if(Entry.isTextMode) {
+    var stage = Entry.stage;
+    var playground = Entry.playground;
+
+    container.setCurrentObjects();
+
+    stage.selectObjectContainer(scene);
+
+    var targetObject = container.getCurrentObjects()[0];
+
+    if (targetObject && Entry.type !== 'minimize') {
+        container.selectObject(targetObject.id);
+        playground.refreshPlayground();
+    } else {
+        if (Entry.isTextMode) {
             var workspace = Entry.getMainWS();
-            if(workspace && workspace.vimBoard) {
-                var sObject = workspace.vimBoard._currentObject;
-                var sScene = workspace.vimBoard._currentScene;
-                var parser = workspace.vimBoard._parser;
+            var vimBoard = workspace && workspace.vimBoard;
+            if (vimBoard) {
+                var sObject = vimBoard._currentObject;
+                var sScene = vimBoard._currentScene;
+                var parser = vimBoard._parser;
                 try {
-                    if(scene.id != sScene.id)
+                    if (scene.id != sScene.id)
                         workspace._syncTextCode();
-                }
-                catch(e) {}
-                if(parser._onError) {
-                    Entry.container.selectObject(sObject.id, true);
+                } catch(e) {}
+
+                if (parser._onError) {
+                    container.selectObject(sObject.id, true);
                     return;
                 }
             }
-            workspace && workspace.vimBoard && workspace.vimBoard.clearText();
+            vimBoard && vimBoard.clearText();
         }
 
-        Entry.stage.selectObject(null);
-        Entry.playground.flushPlayground();
+        stage.selectObject(null);
+        playground.flushPlayground();
         Entry.variableContainer.updateList();
     }
 
-    if (!Entry.container.listView_)
-        Entry.stage.sortZorder();
-    Entry.container.updateListView();
+    !container.listView_ && stage.sortZorder();
+
+    container.updateListView();
     this.updateView();
     Entry.requestUpdate = true;
 };
@@ -437,7 +438,7 @@ Entry.Scene.prototype.loadStartSceneSnapshot = function() {
 Entry.Scene.prototype.createScene = function() {
     var regex = /[0-9]/;
     var name = Entry.getOrderedName(Lang.Blocks.SCENE + ' ', this.scenes_, "name");
-    if(!regex.test(name)) {
+    if (!regex.test(name)) {
         name += '1';
     }
     var scene = {
@@ -472,7 +473,8 @@ Entry.Scene.prototype.cloneScene = function(scene) {
     this.generateElement(clonedScene);
     this.addScene(clonedScene);
 
-    var objects = Entry.container.getSceneObjects(scene);
+    var container = Entry.container;
+    var objects = container.getSceneObjects(scene);
 
     try {
         var oldIds = [];
@@ -480,13 +482,13 @@ Entry.Scene.prototype.cloneScene = function(scene) {
         this.isSceneCloning = true;
         for (var i=objects.length-1; i>=0; i--) {
             var obj = objects[i];
-            var ret = Entry.container.addCloneObject(obj, clonedScene.id);
+            var ret = container.addCloneObject(obj, clonedScene.id);
             oldIds.push(obj.id);
             newIds.push(ret.id);
         }
-        Entry.container.adjustClonedValues(oldIds, newIds);
+        container.adjustClonedValues(oldIds, newIds);
         var WS = Entry.getMainWS();
-        var board = WS && WS.board && WS.board.reDraw();
+        WS && WS.board && WS.board.reDraw();
         this._focusSceneNameField(clonedScene);
         this.isSceneCloning = false;
     } catch (e) { console.log('error', e); }
@@ -560,7 +562,7 @@ Entry.Scene.prototype.isMax = function() {
 };
 
 Entry.Scene.prototype.clear = function() {
-    this.scenes_.map(function(s) {
+    this.scenes_.forEach(function(s) {
         Entry.stage.removeObjectContainer(s);
     });
     $(this.listView_).html("");
@@ -570,6 +572,6 @@ Entry.Scene.prototype.clear = function() {
 
 
 Entry.Scene.prototype._focusSceneNameField = function(scene) {
-    var input = $(scene.view).find('input');
+    var input = scene.view && scene.view.nameField;
     input && input.focus && input.focus();
 };

@@ -542,9 +542,22 @@ Entry.EntityObject.prototype.setFont = function(font) {
 };
 
 Entry.EntityObject.prototype.setLineHeight = function() {
+    var textObjectHeight = this.textObject.getMeasuredLineHeight();
+    this.textObject.y = textObjectHeight / 2 - this.getHeight() / 2;
     switch(this.getFontType()) {
         case "Nanum Gothic Coding": {
             this.textObject.lineHeight = this.fontSize;
+            this.textObject.y += 20;
+            break;
+        }
+        case "Nanum Pen Script": {
+            this.textObject.lineHeight = this.fontSize;
+            this.textObject.y += 10;
+            break;
+        }
+        case "Nanum Gothic": {
+            this.textObject.lineHeight = this.fontSize;
+            this.textObject.y += 10;
             break;
         }
         default: {
@@ -556,16 +569,29 @@ Entry.EntityObject.prototype.setLineHeight = function() {
 
 Entry.EntityObject.prototype.syncFont = function() {
     this.textObject.font = this.getFont();
-    this.setLineHeight();
     Entry.stage.update();
     if (this.getLineBreak()) {
-        if (this.fontType == "Nanum Gothic Coding") {
-            var textObjectHeight = this.textObject.getMeasuredLineHeight();
-            this.textObject.y = (textObjectHeight / 2 - this.getHeight() / 2) + 10;
-        }
-
+        this.setLineHeight();
     } else {
         this.setWidth(this.textObject.getMeasuredWidth());
+        switch(this.getFontType()) {
+            case "KoPub Batang": {
+                this.setHeight(this.fontSize * 1.1);
+                break;
+            }
+            case "Nanum Gothic": {
+                this.setHeight(this.fontSize * 1.1);
+                break;
+            }
+            case "Nanum Myeongjo": {
+                this.setHeight(this.fontSize * 1.1);
+                break;
+            }
+            default: {
+                this.setHeight(this.fontSize);
+                break;
+            }
+        }
     }
     Entry.stage.updateObject();
     Entry.requestUpdate = true;
@@ -753,12 +779,9 @@ Entry.EntityObject.prototype.setLineBreak = function(lineBreak) {
         this.setScaleX(1);
         this.setScaleY(1);
         this.textObject.lineWidth = this.getWidth();
-        this.alignTextBox();
-        if (this.fontType == "Nanum Gothic Coding") {
-            var textObjectHeight = this.textObject.getMeasuredLineHeight();
-            this.textObject.y = (textObjectHeight / 2 - this.getHeight() / 2) + 10;
-        }
     }
+    this.syncFont();
+    this.alignTextBox();
 
     Entry.stage.updateObject();
 };
@@ -1158,11 +1181,6 @@ Entry.EntityObject.prototype.alignTextBox = function () {
         return;
     var textObject = this.textObject;
     if (this.lineBreak) {
-        var textObjectHeight = textObject.getMeasuredLineHeight();
-        textObject.y = textObjectHeight / 2 - this.getHeight() / 2;
-        if (this.fontType == "Nanum Gothic Coding") {
-            textObject.y = (textObjectHeight / 2 - this.getHeight() / 2) + 10;
-        }
         switch (this.textAlign) {
             case Entry.TEXT_ALIGN_CENTER:
                 textObject.x = 0;
@@ -1214,4 +1232,12 @@ Entry.EntityObject.prototype.cache = function() {
     this.object && this.object.cache(0, 0, this.getWidth(), this.getHeight());
     Entry.requestUpdate = true;
 };
+
+Entry.EntityObject.prototype.reset = function() {
+    this.loadSnapshot();
+    this.resetFilter();
+    this.dialog && this.dialog.remove();
+    this.shape && this.removeBrush();
+};
+
 
