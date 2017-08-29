@@ -589,12 +589,11 @@ Entry.Engine = function() {
         container.clearRunningState();
         container.loadSequenceSnapshot();
         this.projectTimer.loadSnapshot();
-        Entry.container.inputValue.loadSnapshot();
+        container.inputValue.loadSnapshot();
         Entry.scene.loadStartSceneSnapshot();
         Entry.Func.clearThreads();
         createjs.Sound.setVolume(1);
         createjs.Sound.stop();
-
 
         this.view_.removeClass('entryEngineBlueWorkspace');
         if (this.runButton) {
@@ -667,7 +666,8 @@ Entry.Engine = function() {
      */
     p.fireEvent = function(eventName) {
         if (this.state !== 'run') return;
-        Entry.container.mapEntityIncludeCloneOnScene(this.raiseEvent, eventName);
+        Entry.container.mapEntityIncludeCloneOnScene(
+            this.raiseEvent, eventName);
     };
 
     /**
@@ -676,8 +676,7 @@ Entry.Engine = function() {
      * @param {string} eventName
      */
     p.raiseEvent = function(entity, eventName) {
-        var code = entity.parent.script;
-        code.raiseEvent(eventName, entity);
+        entity.parent.script.raiseEvent(eventName, entity);
     };
 
     /**

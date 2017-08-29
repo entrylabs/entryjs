@@ -59,52 +59,6 @@ Entry.TextCodingUtil = {};
         return false;
     };
 
-    tu.binaryOperatorConvert = function(operator) {
-        var result;
-        switch(operator) {
-            case '==': {
-                result = "EQUAL";
-                break;
-            }
-            case '>': {
-                result = "GREATER";
-                break;
-            }
-            case '<': {
-                result = "LESS";
-                break;
-            }
-            case '>=': {
-                result = "GREATER_OR_EQUAL";
-                break;
-            }
-            case '<=': {
-                result = "LESS_OR_EQUAL";
-                break;
-            }
-            case '+': {
-                result = "PLUS";
-                break;
-            }
-            case '-': {
-                result = "MINUS";
-                break;
-            }
-            case '*': {
-                result = "MULTIFLY";
-                break;
-            }
-            case '/': {
-                result = "DIVIDE";
-                break;
-            }
-            default: {
-                result = operator;
-            }
-        }
-        return result;
-    };
-
     tu.logicalExpressionConvert = function(operator) {
         var result;
         switch(operator) {
@@ -125,10 +79,7 @@ Entry.TextCodingUtil = {};
 
     tu.dropdownDynamicNameToIdConvertor = function(name, menuName, currentObject) {
         var result = name;
-        if(Entry.getMainWS() && Entry.getMainWS().vimBoard) {
-            var VIM = Entry.getMainWS().vimBoard;
-            if(VIM) var currentScene = VIM._currentScene;
-        }
+        var currentScene = Entry.scene.selectedScene;
 
         if(menuName == "scenes") {
             var scenes = Entry.scene.getScenes();
@@ -190,7 +141,7 @@ Entry.TextCodingUtil = {};
             }
         }
         else if(menuName == "pictures") {
-            currentObject = VIM._currentObject;
+            currentObject = Entry.playground.object;
             var pictures = currentObject.pictures;
             for(var p in pictures) {
                 var picture = pictures[p];
@@ -200,7 +151,7 @@ Entry.TextCodingUtil = {};
             }
         }
         else if(menuName == "sounds") {
-            currentObject = VIM._currentObject;
+            currentObject = Entry.playground.object;
             var sounds = currentObject.sounds;
             for(var p in sounds) {
                 var sound = sounds[p];
@@ -2173,9 +2124,12 @@ Entry.TextCodingUtil = {};
 
                 }*/
 
-                if(isNaN(data))
+                if(isNaN(data) || (data.length > 1 && String(data)[0] === '0'))
                     data = "\"" + data + "\"";
-                value += data;
+                
+                if(data.trim().length > 0)
+                    value += data;
+                
                 if(va != lArray.length-1)
                     value += ", ";
             }

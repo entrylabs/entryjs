@@ -342,17 +342,15 @@ Entry.Container.prototype.removeExtension = function(obj) {
  * @param {!Entry.EntryObject} object
  */
 Entry.Container.prototype.addCloneObject = function(object, scene) {
-    var json = object.toJSON();
-    var newObjectId = Entry.generateHash();
+    var json = object.toJSON(true);
     Entry.variableContainer.addCloneLocalVariables({
-        objectId: json.id,
-        newObjectId: newObjectId,
+        objectId: object.id,
+        newObjectId: json.id,
         json: json
     });
-    json.id = newObjectId;
     json.scene = scene || Entry.scene.selectedScene;
     this.addObject(json);
-    return this.getObject(newObjectId);
+    return this.getObject(json.id);
 };
 
 /**
@@ -917,13 +915,11 @@ Entry.Container.prototype.setInputValue = function(inputValue) {
 };
 
 Entry.Container.prototype.resetSceneDuringRun = function() {
-    this.mapEntityOnScene(function(entity){
-        entity.loadSnapshot();
-        entity.resetFilter();
-        entity.dialog && entity.dialog.remove();
-        entity.shape && entity.removeBrush();
-    });
+    if (!Entry.engine.isState('run')) return;
+
+    this.mapEntityOnScene(function(entity){ entity.reset(); });
     this.clearRunningStateOnScene();
+    Entry.stage.hideInputField();
 };
 
 Entry.Container.prototype.setCopiedObject = function(object) {

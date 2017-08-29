@@ -10,7 +10,7 @@ goog.require("Entry.TextCodingUtil");
 goog.require("Entry.Map");
 goog.require("Entry.Queue");
 
-Entry.BlockToPyParser = function(blockSyntax) {
+Entry.BlockToPyParser = function() {
     this._type ="BlockToPyParser";
 
     var funcParamMap = new Entry.Map();
@@ -98,6 +98,7 @@ Entry.BlockToPyParser = function(blockSyntax) {
     };
 
     p.Block = function(block, template) {
+        if (!block) return "";
         !block._schema && block.loadSchema();
 
         var result = "";

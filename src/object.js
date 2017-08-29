@@ -90,6 +90,7 @@ Entry.EntryObject = function(model) {
 
                 image.onerror = function(err) {
                     if (!this.triedCnt) {
+                        if (Entry.type !== "invisible")
                         console.log('err=', picture.name, 'load failed');
                         this.triedCnt = 1;
                         this.src = getImageSrc(picture);
@@ -103,7 +104,7 @@ Entry.EntryObject = function(model) {
                         this.onerror = null;
                     }
                 }
-                
+
                 image.src = getImageSrc(picture);
             })(this.pictures[i]);
 
@@ -1065,7 +1066,7 @@ Entry.EntryObject = function(model) {
         //3. index
         if (!value)
             return this.selectedPicture;
-        value = value.trim();
+        value = (value + "").trim();
         var pictures = this.pictures,
             len = pictures.length;
         for (var i=0; i<len; i++) {
@@ -1080,7 +1081,7 @@ Entry.EntryObject = function(model) {
         if (!(checker === false && typeof checker == 'boolean') && len >= checker && checker > 0) {
             return pictures[checker-1];
         }
-        throw new Error('No picture found');
+        return null;
     };
 
     p.setPicture = function(picture) {
@@ -1318,22 +1319,22 @@ Entry.EntryObject = function(model) {
      * convert this object's data to JSON.
      * @return {JSON}
      */
-    p.toJSON = function() {
+    p.toJSON = function(isClone) {
         var json = {};
-        json.id = this.id;
+        json.id = isClone ? Entry.generateHash() : this.id;
         json.name = this.name;
         if (this.objectType == 'textBox')
             json.text = this.text;
         json.script = this.getScriptText();
-        if (this.objectType == 'sprite')
-            json.selectedPictureId = this.selectedPicture.id;
         json.objectType = this.objectType;
         json.rotateMethod = this.getRotateMethod();
         json.scene = this.scene.id;
         json.sprite = {
-            pictures: Entry.getPicturesJSON(this.pictures),
-            sounds: Entry.getSoundsJSON(this.sounds)
+            pictures: Entry.getPicturesJSON(this.pictures, isClone),
+            sounds: Entry.getSoundsJSON(this.sounds, isClone)
         };
+        if (this.objectType == 'sprite')
+            json.selectedPictureId = json.sprite.pictures[this.pictures.indexOf(this.selectedPicture)].id;
         json.lock = this.lock;
         json.entity = this.entity.toJSON();
         return json;
@@ -1357,7 +1358,7 @@ Entry.EntryObject = function(model) {
         //1. soundId
         //2. soundName
         //3. index
-        value = value.trim();
+        value = (value + "").trim();
         var sounds = this.sounds,
             len = sounds.length;
         for (var i=0; i<len; i++)
@@ -1371,7 +1372,7 @@ Entry.EntryObject = function(model) {
             len >= checker && checker > 0) {
             return sounds[checker-1];
         }
-        throw new Error('No Sound');
+        return null;
     };
 
     p.addCloneVariables = function(object, entity, variables, lists) {
