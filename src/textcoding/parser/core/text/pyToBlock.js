@@ -1173,15 +1173,16 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
         while (params.length) { // generate param
             var param = params.shift();
-            var paramId = Entry.generateHash();
+            var paramId = Entry.Func.requestParamBlock("string");
             var newFuncParam = {
                 type: "function_field_string",
                 params: [
                     {
-                        type: "stringParam_" + paramId
+                        type: paramId
                     }
                 ]
             }
+            paramId = paramId.split("_")[1];
             this._funcParamMap[param] = paramId;
             funcParamPointer.params.push(newFuncParam);
             funcParamPointer = newFuncParam;
