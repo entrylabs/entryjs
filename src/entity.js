@@ -583,6 +583,10 @@ Entry.EntityObject.prototype.syncFont = function() {
                 this.setHeight(this.fontSize * 1.1);
                 break;
             }
+            case "Nanum Myeongjo": {
+                this.setHeight(this.fontSize * 1.1);
+                break;
+            }
             default: {
                 this.setHeight(this.fontSize);
                 break;
@@ -1188,6 +1192,7 @@ Entry.EntityObject.prototype.alignTextBox = function () {
                 textObject.x = this.getWidth() / 2;
                 break;
         }
+        textObject.maxHeight = this.getHeight();
     } else {
         textObject.x = 0;
         textObject.y = 0;

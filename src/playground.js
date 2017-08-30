@@ -997,7 +997,8 @@ Entry.Playground = function() {
     p.downloadPicture = function(pictureId) {
         var picture = Entry.playground.object.getPicture(pictureId);
         if (picture.fileurl) {
-            window.open(picture.fileurl);
+            window.open('/api/sprite/download/entryjs/'+
+                    encodeURIComponent(picture.fileurl)+'/'+encodeURIComponent(picture.name) + '.png');
         } else {
             window.open('/api/sprite/download/image/'+
                     encodeURIComponent(picture.filename)+'/'+encodeURIComponent(picture.name) + '.png');
