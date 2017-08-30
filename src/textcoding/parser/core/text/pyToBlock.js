@@ -790,7 +790,14 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     return this.getMessage(value);
                 break;
             case 'variables':
-                var variable = Entry.variableContainer.getVariableByName(value);
+                if (!value)
+                    return;
+                value = value.split(".");
+                var variable;
+                if (value.length > 1) // self variable
+                    variable = Entry.variableContainer.getVariableByName(value[1], true, this.object.id);
+                else
+                    variable = Entry.variableContainer.getVariableByName(value[0], false, this.object.id);
                 return variable ? variable.id_ : undefined;
             case 'lists':
                 var list = Entry.variableContainer.getListByName(value);
