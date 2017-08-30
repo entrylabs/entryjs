@@ -420,7 +420,7 @@ Entry.Container.prototype.selectObject = function(objectId, changeScene) {
         if(workspace && workspace.vimBoard && Entry.isTextMode) {
             var sObject = workspace.vimBoard._currentObject;
             var parser = workspace.vimBoard._parser;
-            if (!this.getObject(sObject.id)) {
+            if (sObject && !this.getObject(sObject.id)) {
             } else if(parser && parser._onError) {
                 if(sObject && (object.id != sObject.id)) {
                     if(!Entry.scene.isSceneCloning) {
