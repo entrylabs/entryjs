@@ -903,7 +903,7 @@ Entry.Engine = function() {
         var current = (new Date()).getTime();
         if (typeof value == 'undefined') {
             if (!timer.isPaused && !engine.isState('pause'))
-                timer.setValue(((current - (timer.start || current) - timer.pausedTime)/1000));
+                timer.setValue(Math.max(((current - (timer.start || current) - timer.pausedTime)/1000), 0));
         } else {
             timer.setValue(value);
             timer.pausedTime = 0;
