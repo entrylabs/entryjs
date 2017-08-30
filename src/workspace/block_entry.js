@@ -44575,6 +44575,599 @@ Entry.block = {
     },
     // */
     //*
+    "byrobot_petrone_v2_flight_controller_display_clear_all":
+    {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.byrobot_petrone_v2_controller_display_pixel_black, "0"],
+                    [Lang.Blocks.byrobot_petrone_v2_controller_display_pixel_white, "1"],
+                ],
+                "value": "0",
+                "fontSize": 11
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                null,
+                null
+            ],
+            "type": "byrobot_petrone_v2_flight_controller_display_clear_all"
+        },
+        "paramsKeyMap": {
+            "PIXEL": 0,
+        },
+        "class": "byrobot_petrone_v2_flight_controller_display",
+        "isNotFor": ["byrobot_petrone_v2_flight"],
+        "func": function (sprite, script) {
+            var pixel = parseInt(script.getField('PIXEL'));
+            return Entry.byrobot_petrone_v2_flight.setDisplayClear(script, 0x31, pixel, true, 0, 0, 0, 0);
+        },
+    },
+    // */
+    //*
+    "byrobot_petrone_v2_flight_controller_display_clear":
+    {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.byrobot_petrone_v2_controller_display_pixel_black, "0"],
+                    [Lang.Blocks.byrobot_petrone_v2_controller_display_pixel_white, "1"],
+                ],
+                "value": "0",
+                "fontSize": 11
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "text",
+                    "params": ["64"]
+                },
+                {
+                    "type": "text",
+                    "params": ["32"]
+                },
+                {
+                    "type": "text",
+                    "params": ["32"]
+                },
+                {
+                    "type": "text",
+                    "params": ["16"]
+                },
+                null,
+                null
+            ],
+            "type": "byrobot_petrone_v2_flight_controller_display_clear"
+        },
+        "paramsKeyMap": {
+            "X": 0,
+            "Y": 1,
+            "WIDTH": 2,
+            "HEIGHT": 3,
+            "PIXEL": 4,
+        },
+        "class": "byrobot_petrone_v2_flight_controller_display",
+        "isNotFor": ["byrobot_petrone_v2_flight"],
+        "func": function (sprite, script) {
+            var x = script.getNumberValue('X');
+            var y = script.getNumberValue('Y');
+            var width = script.getNumberValue('WIDTH');
+            var height = script.getNumberValue('HEIGHT');
+            var pixel = parseInt(script.getField('PIXEL'));
+            return Entry.byrobot_petrone_v2_flight.setDisplayClear(script, 0x31, pixel, false, x, y, width, height);
+        },
+    },
+    // */
+    //*
+    "byrobot_petrone_v2_flight_controller_display_invert":
+    {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "text",
+                    "params": ["32"]
+                },
+                {
+                    "type": "text",
+                    "params": ["16"]
+                },
+                {
+                    "type": "text",
+                    "params": ["64"]
+                },
+                {
+                    "type": "text",
+                    "params": ["32"]
+                },
+                null,
+                null
+            ],
+            "type": "byrobot_petrone_v2_flight_controller_display_invert"
+        },
+        "paramsKeyMap": {
+            "X": 0,
+            "Y": 1,
+            "WIDTH": 2,
+            "HEIGHT": 3,
+        },
+        "class": "byrobot_petrone_v2_flight_controller_display",
+        "isNotFor": ["byrobot_petrone_v2_flight"],
+        "func": function (sprite, script) {
+            var x = script.getNumberValue('X');
+            var y = script.getNumberValue('Y');
+            var width = script.getNumberValue('WIDTH');
+            var height = script.getNumberValue('HEIGHT');
+            return Entry.byrobot_petrone_v2_flight.setDisplayInvert(script, 0x31, x, y, width, height);
+        },
+    },
+    // */
+    //*
+    "byrobot_petrone_v2_flight_controller_display_draw_point":
+    {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.byrobot_petrone_v2_controller_display_pixel_black, "0"],
+                    [Lang.Blocks.byrobot_petrone_v2_controller_display_pixel_white, "1"],
+                ],
+                "value": "0",
+                "fontSize": 11
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "text",
+                    "params": ["64"]
+                },
+                {
+                    "type": "text",
+                    "params": ["32"]
+                },
+                null,
+                null
+            ],
+            "type": "byrobot_petrone_v2_flight_controller_display_draw_point"
+        },
+        "paramsKeyMap": {
+            "X": 0,
+            "Y": 1,
+            "PIXEL": 2,
+        },
+        "class": "byrobot_petrone_v2_flight_controller_display",
+        "isNotFor": ["byrobot_petrone_v2_flight"],
+        "func": function (sprite, script) {
+            var x = script.getNumberValue('X');
+            var y = script.getNumberValue('Y');
+            var pixel = parseInt(script.getField('PIXEL'));
+            return Entry.byrobot_petrone_v2_flight.setDisplayDrawPoint(script, 0x31, x, y, pixel);
+        },
+    },
+    // */
+    //*
+    "byrobot_petrone_v2_flight_controller_display_draw_line":
+    {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.byrobot_petrone_v2_controller_display_pixel_black, "0"],
+                    [Lang.Blocks.byrobot_petrone_v2_controller_display_pixel_white, "1"],
+                ],
+                "value": "0",
+                "fontSize": 11
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "text",
+                    "params": ["32"]
+                },
+                {
+                    "type": "text",
+                    "params": ["16"]
+                },
+                {
+                    "type": "text",
+                    "params": ["96"]
+                },
+                {
+                    "type": "text",
+                    "params": ["48"]
+                },
+                null,
+                null
+            ],
+            "type": "byrobot_petrone_v2_flight_controller_display_draw_line"
+        },
+        "paramsKeyMap": {
+            "X1": 0,
+            "Y1": 1,
+            "X2": 2,
+            "Y2": 3,
+            "PIXEL": 4,
+        },
+        "class": "byrobot_petrone_v2_flight_controller_display",
+        "isNotFor": ["byrobot_petrone_v2_flight"],
+        "func": function (sprite, script) {
+            var x1 = script.getNumberValue('X1');
+            var y1 = script.getNumberValue('Y1');
+            var x2 = script.getNumberValue('X2');
+            var y2 = script.getNumberValue('Y2');
+            var pixel = parseInt(script.getField('PIXEL'));
+            return Entry.byrobot_petrone_v2_flight.setDisplayDrawLine(script, 0x31, x1, y1, x2, y2, pixel);
+        },
+    },
+    // */
+    //*
+    "byrobot_petrone_v2_flight_controller_display_draw_rect":
+    {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.byrobot_petrone_v2_controller_display_pixel_black, "0"],
+                    [Lang.Blocks.byrobot_petrone_v2_controller_display_pixel_white, "1"],
+                ],
+                "value": "0",
+                "fontSize": 11
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.byrobot_petrone_v2_controller_display_flagfill_off, "0"],
+                    [Lang.Blocks.byrobot_petrone_v2_controller_display_flagfill_on, "1"],
+                ],
+                "value": "0",
+                "fontSize": 11
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "text",
+                    "params": ["64"]
+                },
+                {
+                    "type": "text",
+                    "params": ["32"]
+                },
+                {
+                    "type": "text",
+                    "params": ["32"]
+                },
+                {
+                    "type": "text",
+                    "params": ["16"]
+                },
+                null,
+                null,
+                null
+            ],
+            "type": "byrobot_petrone_v2_flight_controller_display_draw_rect"
+        },
+        "paramsKeyMap": {
+            "X": 0,
+            "Y": 1,
+            "WIDTH": 2,
+            "HEIGHT": 3,
+            "PIXEL": 4,
+            "FLAGFILL": 5,
+        },
+        "class": "byrobot_petrone_v2_flight_controller_display",
+        "isNotFor": ["byrobot_petrone_v2_flight"],
+        "func": function (sprite, script) {
+            var x = script.getNumberValue('X');
+            var y = script.getNumberValue('Y');
+            var width = script.getNumberValue('WIDTH');
+            var height = script.getNumberValue('HEIGHT');
+            var pixel = parseInt(script.getField('PIXEL'));
+            var flagFill = parseInt(script.getField('FLAGFILL'));
+            return Entry.byrobot_petrone_v2_flight.setDisplayDrawRect(script, 0x31, x, y, width, height, pixel, flagFill);
+        },
+    },
+    // */
+    //*
+    "byrobot_petrone_v2_flight_controller_display_draw_circle":
+    {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.byrobot_petrone_v2_controller_display_pixel_black, "0"],
+                    [Lang.Blocks.byrobot_petrone_v2_controller_display_pixel_white, "1"],
+                ],
+                "value": "0",
+                "fontSize": 11
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.byrobot_petrone_v2_controller_display_flagfill_off, "0"],
+                    [Lang.Blocks.byrobot_petrone_v2_controller_display_flagfill_on, "1"],
+                ],
+                "value": "0",
+                "fontSize": 11
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "text",
+                    "params": ["64"]
+                },
+                {
+                    "type": "text",
+                    "params": ["32"]
+                },
+                {
+                    "type": "text",
+                    "params": ["24"]
+                },
+                null,
+                null,
+                null
+            ],
+            "type": "byrobot_petrone_v2_flight_controller_display_draw_circle"
+        },
+        "paramsKeyMap": {
+            "X": 0,
+            "Y": 1,
+            "RADIUS": 2,
+            "PIXEL": 3,
+            "FLAGFILL": 4,
+        },
+        "class": "byrobot_petrone_v2_flight_controller_display",
+        "isNotFor": ["byrobot_petrone_v2_flight"],
+        "func": function (sprite, script) {
+            var x = script.getNumberValue('X');
+            var y = script.getNumberValue('Y');
+            var radius = script.getNumberValue('RADIUS');
+            var pixel = parseInt(script.getField('PIXEL'));
+            var flagFill = parseInt(script.getField('FLAGFILL'));
+            return Entry.byrobot_petrone_v2_flight.setDisplayDrawCircle(script, 0x31, x, y, radius, pixel, flagFill);
+        },
+    },
+    // */
+    //*
+    "byrobot_petrone_v2_flight_controller_display_draw_string":
+    {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.byrobot_petrone_v2_controller_display_font_5x8, "0"],
+                    [Lang.Blocks.byrobot_petrone_v2_controller_display_font_10x16, "1"],
+                ],
+                "value": "1",
+                "fontSize": 11
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.byrobot_petrone_v2_controller_display_pixel_black, "0"],
+                    [Lang.Blocks.byrobot_petrone_v2_controller_display_pixel_white, "1"],
+                ],
+                "value": "0",
+                "fontSize": 11
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "text",
+                    "params": ["4"]
+                },
+                {
+                    "type": "text",
+                    "params": ["24"]
+                },
+                null,
+                null,
+                {
+                    "type": "text",
+                    "params": ["{Petrone V2}"]
+                },
+                null
+            ],
+            "type": "byrobot_petrone_v2_flight_controller_display_draw_string"
+        },
+        "paramsKeyMap": {
+            "X": 0,
+            "Y": 1,
+            "FONT": 2,
+            "PIXEL": 3,
+            "STRING": 4,
+        },
+        "class": "byrobot_petrone_v2_flight_controller_display",
+        "isNotFor": ["byrobot_petrone_v2_flight"],
+        "func": function (sprite, script) {
+            var x = script.getNumberValue('X');
+            var y = script.getNumberValue('Y');
+            var font = parseInt(script.getField('FONT'));
+            var pixel = parseInt(script.getField('PIXEL'));
+            var string = script.getStringValue('STRING');
+            return Entry.byrobot_petrone_v2_flight.setDisplayDrawString(script, 0x31, x, y, font, pixel, string);
+        },
+    },
+    // */
+    //*
     "byrobot_petrone_v2_flight_controller_buzzer_off":
     {
         "color": "#00979D",
@@ -45399,6 +45992,48 @@ Entry.block = {
         "isNotFor": ["byrobot_petrone_v2_flight"],
         "func": function (sprite, script) {
             return Entry.byrobot_petrone_v2_flight.sendStop(script);
+        },
+    },
+    // */
+    //*
+    "byrobot_petrone_v2_flight_drone_control_vehicle_mode":
+    {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.byrobot_petrone_v2_drone_vehicle_flight, "16"],
+                    [Lang.Blocks.byrobot_petrone_v2_drone_vehicle_flight_noguard, "17"],
+                    [Lang.Blocks.byrobot_petrone_v2_drone_vehicle_flight_fpv, "18"],
+                ],
+                "value": "16",
+                "fontSize": 11
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                null,
+                null
+            ],
+            "type": "byrobot_petrone_v2_flight_drone_control_vehicle_mode"
+        },
+        "paramsKeyMap": {
+            "VEHICLE": 0,
+        },
+        "class": "byrobot_petrone_v2_flight_control_flight",
+        "isNotFor": ["byrobot_petrone_v2_flight"],
+        "func": function (sprite, script) {
+            var vehicle = script.getField('VEHICLE');
+            return Entry.byrobot_petrone_v2_flight.sendCommand(script, 0x30, 0x10, vehicle);
         },
     },
     // */

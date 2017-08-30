@@ -183,6 +183,216 @@ Entry.byrobot_petrone_v2_flight =
         delete Entry.hw.sendQueue["light_color_b"];
     },
 
+    transferDisplayClear: function(target, pixel, clearAll, x, y, width, height)
+    {
+        if( clearAll )
+        {
+            // 전송
+            Entry.hw.setDigitalPortValue("target", target);
+            Entry.hw.setDigitalPortValue("display_clearall_pixel", pixel);
+
+            Entry.hw.update();
+
+            delete Entry.hw.sendQueue["target"];
+            delete Entry.hw.sendQueue["display_clearall_pixel"];
+        }
+        else 
+        {
+            // 범위 조정
+            x = Math.max(x, 0);
+            x = Math.min(x, 128);
+            y = Math.max(y, 0);
+            y = Math.min(y, 64);
+            width = Math.max(width, 0);
+            width = Math.min(width, 128);
+            height = Math.max(height, 0);
+            height = Math.min(height, 64);
+
+            // 전송
+            Entry.hw.setDigitalPortValue("target", target);
+            Entry.hw.setDigitalPortValue("display_clear_x", x);
+            Entry.hw.setDigitalPortValue("display_clear_y", y);
+            Entry.hw.setDigitalPortValue("display_clear_width", width);
+            Entry.hw.setDigitalPortValue("display_clear_height", height);
+            Entry.hw.setDigitalPortValue("display_clear_pixel", pixel);
+
+            Entry.hw.update();
+
+            delete Entry.hw.sendQueue["target"];
+            delete Entry.hw.sendQueue["display_clear_x"];
+            delete Entry.hw.sendQueue["display_clear_y"];
+            delete Entry.hw.sendQueue["display_clear_width"];
+            delete Entry.hw.sendQueue["display_clear_height"];
+            delete Entry.hw.sendQueue["display_clear_pixel"];
+        }
+    },
+
+    transferDisplayInvert: function(target, x, y, width, height)
+    {
+        // 범위 조정
+        x = Math.max(x, 0);
+        x = Math.min(x, 128);
+        y = Math.max(y, 0);
+        y = Math.min(y, 64);
+        width = Math.max(width, 0);
+        width = Math.min(width, 128);
+        height = Math.max(height, 0);
+        height = Math.min(height, 64);
+
+        // 전송
+        Entry.hw.setDigitalPortValue("target", target);
+        Entry.hw.setDigitalPortValue("display_invert_x", x);
+        Entry.hw.setDigitalPortValue("display_invert_y", y);
+        Entry.hw.setDigitalPortValue("display_invert_width", width);
+        Entry.hw.setDigitalPortValue("display_invert_height", height);
+
+        Entry.hw.update();
+
+        delete Entry.hw.sendQueue["target"];
+        delete Entry.hw.sendQueue["display_invert_x"];
+        delete Entry.hw.sendQueue["display_invert_y"];
+        delete Entry.hw.sendQueue["display_invert_width"];
+        delete Entry.hw.sendQueue["display_invert_height"];
+    },
+
+    transferDisplayDrawPoint: function(target, x, y, pixel)
+    {
+        // 범위 조정
+        x = Math.max(x, 0);
+        x = Math.min(x, 128);
+        y = Math.max(y, 0);
+        y = Math.min(y, 64);
+
+        // 전송
+        Entry.hw.setDigitalPortValue("target", target);
+        Entry.hw.setDigitalPortValue("display_draw_point_x", x);
+        Entry.hw.setDigitalPortValue("display_draw_point_y", y);
+        Entry.hw.setDigitalPortValue("display_draw_point_pixel", pixel);
+
+        Entry.hw.update();
+
+        delete Entry.hw.sendQueue["target"];
+        delete Entry.hw.sendQueue["display_draw_point_x"];
+        delete Entry.hw.sendQueue["display_draw_point_y"];
+        delete Entry.hw.sendQueue["display_draw_point_pixel"];
+    },
+
+    transferDisplayDrawLine: function(target, x1, y1, x2, y2, pixel)
+    {
+        // 범위 조정
+        x1 = Math.max(x1, 0);
+        x1 = Math.min(x1, 128);
+        y1 = Math.max(y1, 0);
+        y1 = Math.min(y1, 64);
+        x2 = Math.max(x2, 0);
+        x2 = Math.min(x2, 128);
+        y2 = Math.max(y2, 0);
+        y2 = Math.min(y2, 64);
+
+        // 전송
+        Entry.hw.setDigitalPortValue("target", target);
+        Entry.hw.setDigitalPortValue("display_draw_line_x1", x1);
+        Entry.hw.setDigitalPortValue("display_draw_line_y1", y1);
+        Entry.hw.setDigitalPortValue("display_draw_line_x2", x2);
+        Entry.hw.setDigitalPortValue("display_draw_line_y2", y2);
+        Entry.hw.setDigitalPortValue("display_draw_line_pixel", pixel);
+
+        Entry.hw.update();
+
+        delete Entry.hw.sendQueue["target"];
+        delete Entry.hw.sendQueue["display_draw_line_x1"];
+        delete Entry.hw.sendQueue["display_draw_line_y1"];
+        delete Entry.hw.sendQueue["display_draw_line_x2"];
+        delete Entry.hw.sendQueue["display_draw_line_y2"];
+        delete Entry.hw.sendQueue["display_draw_line_pixel"];
+    },
+
+    transferDisplayDrawRect: function(target, x, y, width, height, pixel, flagFill)
+    {
+        // 범위 조정
+        x = Math.max(x, 0);
+        x = Math.min(x, 128);
+        y = Math.max(y, 0);
+        y = Math.min(y, 64);
+        width = Math.max(width, 0);
+        width = Math.min(width, 128);
+        height = Math.max(height, 0);
+        height = Math.min(height, 64);
+
+        // 전송
+        Entry.hw.setDigitalPortValue("target", target);
+        Entry.hw.setDigitalPortValue("display_draw_rect_x", x);
+        Entry.hw.setDigitalPortValue("display_draw_rect_y", y);
+        Entry.hw.setDigitalPortValue("display_draw_rect_width", width);
+        Entry.hw.setDigitalPortValue("display_draw_rect_height", height);
+        Entry.hw.setDigitalPortValue("display_draw_rect_pixel", pixel);
+        Entry.hw.setDigitalPortValue("display_draw_rect_flagfill", flagFill);
+
+        Entry.hw.update();
+
+        delete Entry.hw.sendQueue["target"];
+        delete Entry.hw.sendQueue["display_draw_rect_x"];
+        delete Entry.hw.sendQueue["display_draw_rect_y"];
+        delete Entry.hw.sendQueue["display_draw_rect_width"];
+        delete Entry.hw.sendQueue["display_draw_rect_height"];
+        delete Entry.hw.sendQueue["display_draw_rect_pixel"];
+        delete Entry.hw.sendQueue["display_draw_rect_flagfill"];
+    },
+
+    transferDisplayDrawCircle: function(target, x, y, radius, pixel, flagFill)
+    {
+        // 범위 조정
+        x = Math.max(x, -50);
+        x = Math.min(x, 178);
+        y = Math.max(y, -50);
+        y = Math.min(y, 114);
+        radius = Math.max(radius, 1);
+        radius = Math.min(radius, 200);
+        
+        // 전송
+        Entry.hw.setDigitalPortValue("target", target);
+        Entry.hw.setDigitalPortValue("display_draw_circle_x", x);
+        Entry.hw.setDigitalPortValue("display_draw_circle_y", y);
+        Entry.hw.setDigitalPortValue("display_draw_circle_radius", radius);
+        Entry.hw.setDigitalPortValue("display_draw_circle_pixel", pixel);
+        Entry.hw.setDigitalPortValue("display_draw_circle_flagfill", flagFill);
+
+        Entry.hw.update();
+
+        delete Entry.hw.sendQueue["target"];
+        delete Entry.hw.sendQueue["display_draw_circle_x"];
+        delete Entry.hw.sendQueue["display_draw_circle_y"];
+        delete Entry.hw.sendQueue["display_draw_circle_radius"];
+        delete Entry.hw.sendQueue["display_draw_circle_pixel"];
+        delete Entry.hw.sendQueue["display_draw_circle_flagfill"];
+    },
+
+    transferDisplayDrawString: function(target, x, y, font, pixel, string)
+    {
+        // 범위 조정
+        x = Math.max(x, 0);
+        x = Math.min(x, 120);
+        y = Math.max(y, 0);
+        y = Math.min(y, 60);
+
+        // 전송
+        Entry.hw.setDigitalPortValue("target", target);
+        Entry.hw.setDigitalPortValue("display_draw_string_x", x);
+        Entry.hw.setDigitalPortValue("display_draw_string_y", y);
+        Entry.hw.setDigitalPortValue("display_draw_string_font", font);
+        Entry.hw.setDigitalPortValue("display_draw_string_pixel", pixel);
+        Entry.hw.setDigitalPortValue("display_draw_string_string", string);
+
+        Entry.hw.update();
+
+        delete Entry.hw.sendQueue["target"];
+        delete Entry.hw.sendQueue["display_draw_string_x"];
+        delete Entry.hw.sendQueue["display_draw_string_y"];
+        delete Entry.hw.sendQueue["display_draw_string_font"];
+        delete Entry.hw.sendQueue["display_draw_string_pixel"];
+        delete Entry.hw.sendQueue["display_draw_string_string"];
+    },
+
     transferbuzzer: function(mode, value, time)
     {
         // 전송
@@ -361,6 +571,160 @@ Entry.byrobot_petrone_v2_flight =
         case "Start":
             {
                 this.transferLightColorRgb(target, mode, red, green, blue);
+            }
+            return script;
+
+        case "Running":
+            return script;
+
+        case "Finish":
+            return script.callReturn();
+
+        default:
+            return script.callReturn();
+        }
+    },
+
+    // OLED - 화면 전체 지우기, 선택 영역 지우기
+    setDisplayClear: function(script, target, pixel, clearAll, x, y, width, height)
+    {
+        switch( this.checkFinish(script, 40) )
+        {
+        case "Start":
+            {
+                this.transferDisplayClear(target, pixel, clearAll, x, y, width, height);
+            }
+            return script;
+
+        case "Running":
+            return script;
+
+        case "Finish":
+            return script.callReturn();
+
+        default:
+            return script.callReturn();
+        }
+    },
+
+    // OLED - 선택 영역 반전
+    setDisplayInvert: function(script, target, x, y, width, height)
+    {
+        switch( this.checkFinish(script, 40) )
+        {
+        case "Start":
+            {
+                this.transferDisplayInvert(target, x, y, width, height);
+            }
+            return script;
+
+        case "Running":
+            return script;
+
+        case "Finish":
+            return script.callReturn();
+
+        default:
+            return script.callReturn();
+        }
+    },
+
+    // OLED - 화면에 점 찍기
+    setDisplayDrawPoint: function(script, target, x, y, pixel)
+    {
+        switch( this.checkFinish(script, 40) )
+        {
+        case "Start":
+            {
+                this.transferDisplayDrawPoint(target, x, y, pixel);
+            }
+            return script;
+
+        case "Running":
+            return script;
+
+        case "Finish":
+            return script.callReturn();
+
+        default:
+            return script.callReturn();
+        }
+    },
+
+    // OLED - 화면에 선 그리기
+    setDisplayDrawLine: function(script, target, x1, y1, x2, y2, pixel)
+    {
+        switch( this.checkFinish(script, 40) )
+        {
+        case "Start":
+            {
+                this.transferDisplayDrawLine(target, x1, y1, x2, y2, pixel);
+            }
+            return script;
+
+        case "Running":
+            return script;
+
+        case "Finish":
+            return script.callReturn();
+
+        default:
+            return script.callReturn();
+        }
+    },
+
+    // OLED - 화면에 사각형 그리기
+    setDisplayDrawRect: function(script, target, x, y, width, height, pixel, flagFill)
+    {
+        switch( this.checkFinish(script, 40) )
+        {
+        case "Start":
+            {
+                this.transferDisplayDrawRect(target, x, y, width, height, pixel, flagFill);
+            }
+            return script;
+
+        case "Running":
+            return script;
+
+        case "Finish":
+            return script.callReturn();
+
+        default:
+            return script.callReturn();
+        }
+    },
+
+    // OLED - 화면에 원 그리기
+    setDisplayDrawCircle: function(script, target, x, y, radius, pixel, flagFill)
+    {
+        switch( this.checkFinish(script, 40) )
+        {
+        case "Start":
+            {
+                this.transferDisplayDrawCircle(target, x, y, radius, pixel, flagFill);
+            }
+            return script;
+
+        case "Running":
+            return script;
+
+        case "Finish":
+            return script.callReturn();
+
+        default:
+            return script.callReturn();
+        }
+    },
+
+    // OLED - 화면에 문자열 쓰기
+    setDisplayDrawString: function(script, target, x, y, font, pixel, string)
+    {
+        switch( this.checkFinish(script, 40) )
+        {
+        case "Start":
+            {
+                this.transferDisplayDrawString(target, x, y, font, pixel, string);
             }
             return script;
 
