@@ -1198,6 +1198,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
             var targetFunc = functions[funcId];
             targetFunc.content = new Entry.Code(func.content);
             targetFunc.generateBlock(true);
+            Entry.Func.generateWsBlock(targetFunc)
         } else {
             Entry.variableContainer.setFunctions([func]);
         }
