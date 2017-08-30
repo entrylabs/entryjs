@@ -60,8 +60,10 @@ Entry.PyToBlockParser = function(blockSyntax) {
         this.createFunctionMap();
         this._funcParamMap = {};
         this._isInFuncDef = false;
-        this.object = Entry.playground.mainWorkspace ?
-            Entry.playground.mainWorkspace.board.code.object :
+        var ws = Entry.playground.mainWorkspace;
+        if (ws && !ws.board.code)
+            return [];
+        this.object = ws ? ws.board.code.object :
             Entry.playground.object;
 
         var result;

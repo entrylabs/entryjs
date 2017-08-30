@@ -420,7 +420,8 @@ Entry.Container.prototype.selectObject = function(objectId, changeScene) {
         if(workspace && workspace.vimBoard && Entry.isTextMode) {
             var sObject = workspace.vimBoard._currentObject;
             var parser = workspace.vimBoard._parser;
-            if(parser && parser._onError) {
+            if (!this.getObject(sObject.id)) {
+            } else if(parser && parser._onError) {
                 if(sObject && (object.id != sObject.id)) {
                     if(!Entry.scene.isSceneCloning) {
                         try { workspace._syncTextCode(); }
@@ -438,8 +439,7 @@ Entry.Container.prototype.selectObject = function(objectId, changeScene) {
                         return;
                     }
                 }
-            }
-            else {
+            } else {
                 if (sObject && (object.id != sObject.id)) {
                     if(!Entry.scene.isSceneCloning) {
                         try { workspace._syncTextCode(); } catch(e) {}
