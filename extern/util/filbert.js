@@ -799,7 +799,11 @@
       // '0x' is a hexadecimal number.
     case 48: // '0'
       var next = input.charCodeAt(tokPos + 1);
-      if (next === 120 || next === 88) return readHexNumber();
+      if (next === 120 || next === 88) 
+        return readHexNumber();
+      else if(next === 49 || next === 48)
+        return readZero();
+      
       // Anything else beginning with a digit is an integer, octal
       // number, or float.
     case 49: case 50: case 51: case 52: case 53: case 54: case 55: case 56: case 57: // 1-9
@@ -840,6 +844,16 @@
     }
 
     return false;
+  }
+
+  function readZero() {
+    var val = '';
+    for(var i= tokPos; i < inputLen; i++){
+        val += input[i];
+        tokPos = i;
+    }
+
+    return finishToken(_string, String(val));
   }
 
   function readToken(forceRegexp) {
