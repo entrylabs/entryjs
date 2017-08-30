@@ -10252,10 +10252,12 @@ Entry.block = {
             var leftValue = script.getNumberValue("LEFTHAND", script);
             var rightValue = script.getNumberValue("RIGHTHAND", script);
             if (operator == "PLUS") {
-                if (isNaN(leftValue))
-                    leftValue = script.getStringValue("LEFTHAND", script);
-                if (isNaN(rightValue))
-                    rightValue = script.getStringValue("RIGHTHAND", script);
+                var leftStringValue = script.getValue("LEFTHAND", script);
+                var rightStringValue = script.getValue("RIGHTHAND", script);
+                if (!Entry.Utils.isNumber(leftStringValue))
+                    leftValue = leftStringValue;
+                if (!Entry.Utils.isNumber(rightStringValue))
+                    rightValue = rightStringValue;
                 return leftValue + rightValue;
             }
             else if (operator == "MINUS")
