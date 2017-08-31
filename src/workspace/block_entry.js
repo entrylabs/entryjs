@@ -177,7 +177,7 @@ if (Entry && Entry.block) {
             }
             return '"()"'.replace('()', value).toLowerCase();
         };
-        
+
         c.returnValuePartialUpperCase = function(key, value) {
             if(this.codeMap)
                 var codeMap = eval(this.codeMap);
@@ -1482,7 +1482,7 @@ Entry.block = {
             var pd = Entry.hw.portData
             return pd.leftProximity > 40 || pd.rightProximity > 40;
         },
-    "syntax": {"js": [], "py": ["Albert.hand_found()"]}
+        "syntax": {"js": [], "py": ["Albert.hand_found()"]}
     },
     "albert_is_oid_value": {
         "color": "#00979D",
@@ -2066,7 +2066,7 @@ Entry.block = {
             sq.padHeight = script.getNumberValue('HEIGHT');
             return script.callReturn();
         },
-    "syntax": {"js": [], "py": ["Albert.set_pad_size(%1, %2)"]}
+        "syntax": {"js": [], "py": ["Albert.set_pad_size(%1, %2)"]}
     },
     "albert_move_to_x_y_on_board": {
         "color": "#00979D",
@@ -4690,9 +4690,10 @@ Entry.block = {
         "def": {
             "params": [{
                     "type": "arduino_get_port_number",
-                    "params": [
-                        "3"
-                    ]
+                    "params": {
+                        "type": "number",
+                        "params": [ "10" ]
+                    }
                 },
                 null
             ],
@@ -8211,7 +8212,7 @@ Entry.block = {
             result = Math.max(value4, result);
             return Math.round(result);
         },
-    "syntax": {"js": [], "py": ["Bitbrick.convert_scale(%1, %2, %3, %4, %5)"]}
+        "syntax": {"js": [], "py": ["Bitbrick.convert_scale(%1, %2, %3, %4, %5)"]}
     },
     "cobl_read_ultrason": {
         color: "#00979D",
@@ -9530,7 +9531,7 @@ Entry.block = {
             sprite.eraseBrush && sprite.eraseBrush();
 
             var stampEntities = sprite.parent.getStampEntities();
-            stampEntities.forEach(function (entity) {
+            stampEntities.map(function (entity) {
                 entity.removeClone();
             });
             stampEntities = null;
@@ -10252,10 +10253,12 @@ Entry.block = {
             var leftValue = script.getNumberValue("LEFTHAND", script);
             var rightValue = script.getNumberValue("RIGHTHAND", script);
             if (operator == "PLUS") {
-                if (isNaN(leftValue))
-                    leftValue = script.getStringValue("LEFTHAND", script);
-                if (isNaN(rightValue))
-                    rightValue = script.getStringValue("RIGHTHAND", script);
+                var leftStringValue = script.getValue("LEFTHAND", script);
+                var rightStringValue = script.getValue("RIGHTHAND", script);
+                if (!Entry.Utils.isNumber(leftStringValue))
+                    leftValue = leftStringValue;
+                if (!Entry.Utils.isNumber(rightStringValue))
+                    rightValue = rightStringValue;
                 return leftValue + rightValue;
             }
             else if (operator == "MINUS")
@@ -10679,6 +10682,20 @@ Entry.block = {
                     null
                 ]
             },
+            { // for square
+                syntax: "math.pow(%2)",
+                params: [null, null, null, "square"],
+                blockType: "param",
+                textParams: [
+                    undefined,
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    undefined,
+                    null
+                ]
+            },
             {
                 syntax: "math.sqrt(%2)",
                 params: [null, null, null, "root"],
@@ -10687,6 +10704,7 @@ Entry.block = {
                     undefined,
                     {
                         "type": "Block",
+                        "isListIndex": true,
                         "accept": "string"
                     },
                     undefined,
@@ -11254,7 +11272,7 @@ Entry.block = {
         "class": "calc_timer",
         "isNotFor": [],
         "func": function (sprite, script) {
-            var action = script.getField("ACTION", script);
+           var action = script.getField('ACTION');
             var timer = Entry.engine.projectTimer;
             if (action == 'SHOW')
                 timer.setVisible(true);
@@ -11384,6 +11402,7 @@ Entry.block = {
             },
             {
                 "type": "Block",
+                "isListIndex": true,
                 "accept": "string"
             },
             {
@@ -11553,6 +11572,7 @@ Entry.block = {
             },
             {
                 "type": "Block",
+                "isListIndex": true,
                 "accept": "string"
             },
             {
@@ -13059,8 +13079,8 @@ Entry.block = {
                     for (var i = 0 ; i < executors.length; i++) {
                         var currentExecutor = executors[i];
                         if (currentExecutor !== executor &&
-                            currentExecutor.entity.id === spriteId &&
-                           currentExecutor !== this.executor.parentExecutor) {
+                            currentExecutor.entity.id === spriteId) {
+
                             code.removeExecutor(currentExecutor);
                             --i;
                         }
@@ -13355,6 +13375,7 @@ Entry.block = {
             if (!this.initiated) {
                 this.initiated = true;
                 Entry.callStackLength++;
+
                 if (Entry.callStackLength > Entry.Executor.MAXIMUM_CALLSTACK) {
                     Entry.toast.alert(
                         Lang.Workspace.RecursiveCallWarningTitle,
@@ -13379,6 +13400,7 @@ Entry.block = {
                 this.funcCode.removeExecutor(this.funcExecutor);
                 return Entry.STATIC.BREAK;
             }
+
             Entry.callStackLength--;
         },
         "syntax": {"js": [], "py": [""]}
@@ -27859,7 +27881,8 @@ Entry.block = {
             {
                 syntax: "(%1 and %3)",
                 template: "%1 and %3",
-                blockType: "param"
+                blockType: "param",
+                dic: "&&"
             }
         ]}
     },
@@ -27920,7 +27943,8 @@ Entry.block = {
             {
                 syntax: "(%1 or %3)",
                 template: "%1 or %3",
-                blockType: "param"
+                blockType: "param",
+                dic: "||"
             }
         ]}
     },
@@ -29127,7 +29151,10 @@ Entry.block = {
             sprite.setImage(picture);
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["Entry.change_shape(%1)"]}
+        "syntax": {"js": [], "py": [{
+            passTest: true,
+            syntax: "Entry.change_shape(%1)"
+        }]}
     },
     "add_effect_amount": {
         "color": "#EC4466",
@@ -30290,7 +30317,10 @@ Entry.block = {
                 "type": "Block",
                 "accept": "string"
             },
-            { "type": "Angle" },
+            {
+                "type": "angle",
+                "params": [ "10" ]
+            },
             {
                 "type": "Indicator",
                 "img": "block_icon/moving_03.png",
@@ -30863,7 +30893,10 @@ Entry.block = {
         "events": {},
         "def": {
             "params": [
-                { "type": "angle" },
+                {
+                    "type": "angle",
+                    "params": [ "10" ]
+                },
                 null
             ],
             "type": "rotate_absolute"
@@ -30908,7 +30941,10 @@ Entry.block = {
         "events": {},
         "def": {
             "params": [
-                { "type": "angle" },
+                {
+                    "type": "angle",
+                    "params": [ "10" ]
+                },
                 null
             ],
             "type": "rotate_relative"
@@ -30952,7 +30988,10 @@ Entry.block = {
         "events": {},
         "def": {
             "params": [
-                { "type": "angle" },
+                {
+                    "type": "angle",
+                    "params": [ "10" ]
+                },
                 null
             ],
             "type": "direction_absolute"
@@ -30997,7 +31036,10 @@ Entry.block = {
         "events": {},
         "def": {
             "params": [
-                { "type": "angle" },
+                {
+                    "type": "angle",
+                    "params": [ "10" ]
+                },
                 null
             ],
             "type": "direction_relative"
@@ -31046,7 +31088,10 @@ Entry.block = {
         "events": {},
         "def": {
             "params": [
-                { "type": "angle" },
+                {
+                    "type": "angle",
+                    "params": [ "10" ]
+                },
                 {
                     "type": "number",
                     "params": [ "10" ]
@@ -31114,7 +31159,8 @@ Entry.block = {
                     "params": [ "2" ]
                 },
                 {
-                    "type": "angle"
+                    "type": "angle",
+                    "params": [ "10" ]
                 },
                 null
             ],
@@ -31193,7 +31239,10 @@ Entry.block = {
                     "type": "text",
                     "params": [ "2" ]
                 },
-                { "type": "angle" },
+                {
+                    "type": "angle",
+                    "params": [ "10" ]
+                },
                 null
             ],
             "type": "direction_relative_duration"
@@ -34219,7 +34268,10 @@ Entry.block = {
 
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["Entry.play_sound(%1)"]}
+        "syntax": {"js": [], "py": [{
+            passTest: true,
+            syntax: "Entry.play_sound(%1)"
+        }]}
     },
     "sound_something_second_with_block": {
         "color": "#A4D01D",
@@ -34291,7 +34343,10 @@ Entry.block = {
             }
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["Entry.play_sound_for_sec(%1, %2)"]}
+        "syntax": {"js": [], "py": [{
+            passTest: true,
+            syntax: "Entry.play_sound_for_sec(%1, %2)"
+        }]}
     },
     "sound_something_wait_with_block": {
         "color": "#A4D01D",
@@ -34354,7 +34409,10 @@ Entry.block = {
                 return script.callReturn();
             }
         },
-        "syntax": {"js": [], "py": ["Entry.play_sound_and_wait(%1)"]}
+        "syntax": {"js": [], "py": [{
+            passTest: true,
+            syntax: "Entry.play_sound_and_wait(%1)"
+        }]}
     },
     "sound_something_second_wait_with_block": {
         "color": "#A4D01D",
@@ -34434,7 +34492,10 @@ Entry.block = {
                 return script.callReturn();
             }
         },
-        "syntax": {"js": [], "py": ["Entry.play_sound_for_sec_and_wait(%1, %2)"]}
+        "syntax": {"js": [], "py": [{
+            passTest: true,
+            syntax: "Entry.play_sound_for_sec_and_wait(%1, %2)"
+        }]}
     },
     "sound_from_to": {
         "color": "#A4D01D",
@@ -34516,7 +34577,10 @@ Entry.block = {
             }
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["Entry.play_sound_from_to(%1, %2, %3)"]}
+         "syntax": {"js": [], "py": [{
+            passTest: true,
+            syntax : "Entry.play_sound_from_to(%1, %2, %3)"
+        }]}
     },
     "sound_from_to_and_wait": {
         "color": "#A4D01D",
@@ -34742,13 +34806,14 @@ Entry.block = {
         "syntax": {"js": [], "py": [
             {
                 syntax: "def when_press_key(%2):",
+                passTest: true,
                 blockType: "event",
                 textParams: [
                     undefined,
                     {
                         "type": "Keyboard",
                         "value": '81',
-                        converter: Entry.block.converters.keyboardCode
+                        converter: Entry.block.converters.keyboardCode1
                     }
                 ]
             }
@@ -34970,6 +35035,7 @@ Entry.block = {
             {
                 syntax: "def when_get_signal(%2):",
                 blockType: "event",
+                passTest: true,
                 textParams: [
                     undefined,
                     {
@@ -35483,6 +35549,7 @@ Entry.block = {
         "syntax": {"js": [], "py": [
             {
                 syntax: "%1 += %2",
+                passTest: true,
                 textParams: [
                     {
                         "type": "DropdownDynamic",
@@ -35591,6 +35658,7 @@ Entry.block = {
         "syntax": {"js": [], "py": [
             {
                 syntax: "%1 = %2",
+                passTest: true,
                 blockType: "variable",
                 textParams: [
                     {
@@ -35797,6 +35865,7 @@ Entry.block = {
         "syntax": {"js": [], "py": [
             {
                 syntax: "%1",
+                passTest : true,
                 keyOption: "get_variable",
                 blockType: "param",
                 textParams: [
@@ -36057,6 +36126,7 @@ Entry.block = {
         },
         "syntax": {"js": [], "py": [
             {
+                passTest : true,
                 syntax: "%2.append(%1)",
                 textParams: [
                     {
@@ -36082,6 +36152,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Block",
+                "isListIndex": true,
                 "accept": "string"
             },
             {
@@ -36155,6 +36226,7 @@ Entry.block = {
         "syntax": {"js": [], "py": [
             {
                 syntax: "%2.pop(%1)",
+                passTest : true,
                 textParams: [
                     {
                         "type": "Block",
@@ -36191,6 +36263,7 @@ Entry.block = {
             },
             {
                 "type": "Block",
+                "isListIndex": true,
                 "accept": "string"
             },
             {
@@ -36266,6 +36339,7 @@ Entry.block = {
         "syntax": {"js": [], "py": [
             {
                 syntax: "%2.insert(%3, %1)",
+                passTest: true,
                 textParams: [
                     {
                         "type": "Block",
@@ -36302,6 +36376,7 @@ Entry.block = {
             },
             {
                 "type": "Block",
+                "isListIndex": true,
                 "accept": "string"
             },
             {
@@ -36381,6 +36456,7 @@ Entry.block = {
         "syntax": {"js": [], "py": [
             {
                 syntax: "%1\[%2\] = %3",
+                passTest: true,
                 textParams: [
                     {
                         "type": "DropdownDynamic",
@@ -36428,6 +36504,7 @@ Entry.block = {
             },
             {
                 "type": "Block",
+                "isListIndex": true,
                 "accept": "string"
             },
             {
@@ -36494,6 +36571,7 @@ Entry.block = {
         "syntax": {"js": [], "py": [
             {
                 syntax: "%2\[%4\]",
+                passTest: true,
                 blockType: "param",
                 textParams: [
                     undefined,
@@ -36576,6 +36654,7 @@ Entry.block = {
             {
                 syntax: "len(%2)",
                 blockType: "param",
+                passTest: true,
                 textParams: [
                     undefined,
                     {
@@ -36919,6 +36998,7 @@ Entry.block = {
             {
                 syntax: "%4 in %2",
                 blockType: "param",
+                passTest: true,
                 textParams: [
                     undefined,
                     {
@@ -43346,7 +43426,7 @@ Entry.block = {
             return script.callReturn();
         },
         "syntax": {"js": [], "py": []}
-    },    
+    },
     "mkboard_dc_motor_direction_list": {
         "color": "#00979D",
         "skeleton": "basic_string_field",
@@ -43419,7 +43499,7 @@ Entry.block = {
                 direction = 0;
             } else if(direction > 1) {
                 direction = 1;
-            } 
+            }
 
             var speed = script.getNumberValue("DC_MOTOR_SPEED", script) - 1;
             if(speed < 0) {
@@ -43431,7 +43511,7 @@ Entry.block = {
 
             if(!Entry.hw.sendQueue['SET']) {
                 Entry.hw.sendQueue['SET'] = {};
-            }            
+            }
 
             Entry.hw.sendQueue['SET'][0] = {
                 type: Entry.mkboard.sensorTypes.DC_MOTOR_LEFT,
@@ -43444,12 +43524,12 @@ Entry.block = {
 
             setTimeout(function() {
                 script.timeFlag = 0;
-            }, 10);       
-            
-            return script.callReturn();            
+            }, 10);
+
+            return script.callReturn();
         },
         "syntax": {"js": [], "py": []}
-    },   
+    },
     "mkboard_set_right_dc_motor": {
         "color": "#00979D",
         "skeleton": "basic",
@@ -43505,7 +43585,7 @@ Entry.block = {
 
             if(!Entry.hw.sendQueue['SET']) {
                 Entry.hw.sendQueue['SET'] = {};
-            } 
+            }
 
             Entry.hw.sendQueue['SET'][1] = {
                 type: Entry.mkboard.sensorTypes.DC_MOTOR_RIGHT,
@@ -43518,8 +43598,8 @@ Entry.block = {
 
             setTimeout(function() {
                 script.timeFlag = 0;
-            }, 10);              
-            
+            }, 10);
+
             return script.callReturn();
         },
         "syntax": {"js": [], "py": []}
@@ -43558,7 +43638,7 @@ Entry.block = {
             return ANALOG ? ANALOG[port] || 0 : 0;
         },
         "syntax": {"js": [], "py": []}
-    },   
+    },
     "mkboard_get_right_cds_analog_value": {
         "color": "#00979D",
         "fontColor": "#fff",
@@ -43593,7 +43673,7 @@ Entry.block = {
             return ANALOG ? ANALOG[port] || 0 : 0;
         },
         "syntax": {"js": [], "py": []}
-    },        
+    },
     "mkboard_toggle_left_led": {
         "color": "#00979D",
         "skeleton": "basic",
@@ -43725,7 +43805,7 @@ Entry.block = {
             return script.callReturn();
         },
         "syntax": {"js": [], "py": []}
-    },       
+    },
     "mkboard_get_sound_analog_value": {
         "color": "#00979D",
         "fontColor": "#fff",
@@ -43737,9 +43817,9 @@ Entry.block = {
                 "accept": "string"
             }
         ],
-        "events": {}, 
+        "events": {},
         "def": {
-            "params": [  
+            "params": [
                 {
                     "type": "mkboard_analog_list",
                     "params": [ "2" ]
@@ -43789,7 +43869,7 @@ Entry.block = {
         "func": function (sprite, script) {
             return script.getField("LINE");
         }
-    },  
+    },
 
     "mkboard_set_digital_lcd": {
         "color": "#00979D",
@@ -43839,7 +43919,7 @@ Entry.block = {
 
             if(!script.isStart) {
                 if(typeof string === 'string') {
-                    for (var i = 0; i < string.length; i++) {  
+                    for (var i = 0; i < string.length; i++) {
                         text[i] = Entry.mkboard.toByte(string[i]);
                     }
                 }
@@ -43849,7 +43929,7 @@ Entry.block = {
                 if(!Entry.hw.sendQueue['SET']) {
                     Entry.hw.sendQueue['SET'] = {};
                 }
-                
+
                 script.isStart = true;
                 script.timeFlag = 1;
                 var fps = Entry.FPS || 60;
@@ -43875,7 +43955,7 @@ Entry.block = {
                         text14 : text[14],
                         text15 : text[15]
                     },
-                    time: new Date().getTime()                
+                    time: new Date().getTime()
                 };
 
                 setTimeout(function() {
@@ -43894,7 +43974,7 @@ Entry.block = {
             }
         },
         "syntax": {"js": [], "py": ["mkboard.set_digital_lcd(%1, %2)"]}
-    },    
+    },
     */
 
     // mkboard Added 2017-07-04

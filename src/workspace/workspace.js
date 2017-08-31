@@ -212,7 +212,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
         Entry.dispatchEvent('cancelBlockMenuDynamic');
 
         function checkObjectAndAlert(object, message) {
-            if (playground && Entry.container.getView() && !object) {
+            if (Entry.type === "workspace" && !object) {
                 message = message || "오브젝트가 존재하지 않습니다. 오브젝트를 추가한 후 시도해주세요.";
                 entrylms.alert(message);
                 return false;
