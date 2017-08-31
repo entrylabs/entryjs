@@ -32,6 +32,7 @@ Entry.byrobot_petrone_v2_flight =
             this.transferbuzzer(0, 0, 0);
             this.transferLightManual(0x30, 0xFF, 0);
             this.transferLightManual(0x31, 0xFF, 0);
+            this.transferLightMode(0x30, 0x43, 2000);
         }
     },
     
@@ -46,6 +47,7 @@ Entry.byrobot_petrone_v2_flight =
         // 모니터 화면 상단에 차례대로 나열하는 값
         listPorts:
         {
+            // 팀 상태 보여주기
             "state_modeVehicle"             :{name: Lang.Blocks.byrobot_petrone_v2_drone_state_mode_vehicle,              type: "input", pos: {x: 0, y: 0}},
             "state_modeFlight"              :{name: Lang.Blocks.byrobot_petrone_v2_drone_state_mode_flight,               type: "input", pos: {x: 0, y: 0}},
             "state_coordinate"              :{name: Lang.Blocks.byrobot_petrone_v2_drone_state_mode_coordinate,           type: "input", pos: {x: 0, y: 0}},
@@ -151,6 +153,28 @@ Entry.byrobot_petrone_v2_flight =
         delete Entry.hw.sendQueue["target"];
         delete Entry.hw.sendQueue["light_manual_flags"];
         delete Entry.hw.sendQueue["light_manual_brightness"];
+    },
+
+    transferLightMode: function(target, mode, interval)
+    {
+        // 범위 조정
+        target = Math.max(target, 0);
+        target = Math.min(target, 255);
+        mode = Math.max(mode, 0);
+        mode = Math.min(mode, 255);
+        interval = Math.max(interval, 0);
+        interval = Math.min(interval, 65535);
+        
+        // 전송
+        Entry.hw.setDigitalPortValue("target", target);
+        Entry.hw.setDigitalPortValue("light_mode_mode", mode);
+        Entry.hw.setDigitalPortValue("light_mode_interval", interval);
+
+        Entry.hw.update();
+
+        delete Entry.hw.sendQueue["target"];
+        delete Entry.hw.sendQueue["light_mode_mode"];
+        delete Entry.hw.sendQueue["light_mode_interval"];
     },
 
     transferLightColorRgb: function (target, mode, red, green, blue) 
