@@ -682,13 +682,16 @@ Entry.getElementsByClassName = function(cl) {
  * @return {Boolean||Number} arr
  */
 Entry.parseNumber = function(value) {
-    if (typeof value == "string")
-        if(Entry.Utils.isNumber(value) && value[0] === '0')
+
+    if (typeof value == "string") {
+        if((Entry.Utils.isNumber(value) && value[0] === '0') || (value[0] === '0' && value[1].toLowerCase() === 'x'))
             return value;
         else 
             return Number(value);
-    else if (typeof value == "number" && Entry.Utils.isNumber(value))
+    } else if (typeof value == "number" && Entry.Utils.isNumber(value)) {
         return value;
+    }
+
     return false;
 };
 

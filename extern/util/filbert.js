@@ -799,9 +799,7 @@
       // '0x' is a hexadecimal number.
     case 48: // '0'
       var next = input.charCodeAt(tokPos + 1);
-      if (next === 120 || next === 88) 
-        return readHexNumber();
-      else if(next === 48 || next === 49)
+      if(next === 120 || next === 88 || next === 48 || next === 49)
         return readZero();
       
       // Anything else beginning with a digit is an integer, octal
@@ -1025,16 +1023,16 @@
           switch (ch) {
           case 110: out += "\n"; break; // 'n' -> '\n'
           case 114: out += "\r"; break; // 'r' -> '\r'
-          case 120: out += String.fromCharCode(readHexChar(2)); break; // 'x'
-          case 117: out += String.fromCharCode(readHexChar(4)); break; // 'u'
-          case 85: // 'U'
-            ch = readHexChar(8);
-            if (ch < 0xFFFF && (ch < 0xD800 || 0xDBFF < ch)) out += String.fromCharCode(ch); // If it's UTF-16
-            else { // If we need UCS-2
-              ch -= 0x10000;
-              out += String.fromCharCode((ch>>10)+0xd800)+String.fromCharCode((ch%0x400)+0xdc00);
-            }
-            break;
+          // case 120: out += String.fromCharCode(readHexChar(2)); break; // 'x'
+          // case 117: out += String.fromCharCode(readHexChar(4)); break; // 'u'
+          // case 85: // 'U'
+          //   ch = readHexChar(8);
+          //   if (ch < 0xFFFF && (ch < 0xD800 || 0xDBFF < ch)) out += String.fromCharCode(ch); // If it's UTF-16
+          //   else { // If we need UCS-2
+          //     ch -= 0x10000;
+          //     out += String.fromCharCode((ch>>10)+0xd800)+String.fromCharCode((ch%0x400)+0xdc00);
+          //   }
+          //   break;
           case 116: out += "\t"; break; // 't' -> '\t'
           case 98: out += "\b"; break; // 'b' -> '\b'
           case 118: out += "\u000b"; break; // 'v' -> '\u000b'
