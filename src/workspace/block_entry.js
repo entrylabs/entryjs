@@ -5641,10 +5641,10 @@ Entry.block = {
                     "type": "blacksmith_list_digital_basic"
                 },
                 {
-                    "type": "blacksmith_list_digital_octave"
+                    "type": "blacksmith_list_digital_tone"
                 },
                 {
-                    "type": "blacksmith_list_digital_tone"
+                    "type": "blacksmith_list_digital_octave"
                 },
                 {
                     "type": "text",
@@ -5656,8 +5656,8 @@ Entry.block = {
         },
         "paramsKeyMap": {
             "PORT": 0,
-            "OCTAVE": 1,
-            "NOTE": 2,
+            "NOTE": 1,
+            "OCTAVE": 2,
             "DURATION": 3
         },
         "class": "blacksmithSet",
@@ -5788,9 +5788,14 @@ Entry.block = {
                         text[i] = Entry.Blacksmith.toByte(string[i]);
                     }
                 }
+                else if (typeof string === 'number') {
+                    text[0] = 1;
+                    text[1] = string / 1;
+                }                
                 else {
                     text[0] = string;
                 }
+
                 if(!Entry.hw.sendQueue['SET']) {
                     Entry.hw.sendQueue['SET'] = {};
                 }
@@ -5873,12 +5878,13 @@ Entry.block = {
         },
         "class": "blacksmithSet",
         "isNotFor": [ "blacksmith" ],
-        "func": function (sprite, script) {
-            if(!script.isStart) {
+        "func": function (sprite, script) {           
+
                 var string = script.getValue("STRING");
                 var port = 3;
                 var text = [];
 
+            if(!script.isStart) {
                 if(typeof string === 'string') {
                     for (var i = 0; i < string.length; i++) {
                         text[i] = Entry.Blacksmith.toByte(string[i]);
@@ -12313,32 +12319,32 @@ Entry.block = {
         "class": "calc_timer",
         "isNotFor": [],
         "func": function (sprite, script) {
-            var action = script.getField('ACTION');
             var engine = Entry.engine;
             var timer = engine.projectTimer;
+            var isPaused = timer.isPaused;
+            var isInit = timer.isInit;
+            var currentTime = new Date().getTime();
 
-            if (action == 'START') {
-                if (!timer.isInit) {
-                    engine.startProjectTimer();
-                } else if (timer.isInit && timer.isPaused) {
-                    if (timer.pauseStart)
-                        timer.pausedTime += (new Date()).getTime() - timer.pauseStart;
-                    delete timer.pauseStart;
-                    timer.isPaused = false;
-                }
-            } else if (action == 'STOP') {
-                if (timer.isInit && !timer.isPaused) {
-                    timer.isPaused = true;
-                    timer.pauseStart = (new Date()).getTime();
-                }
-            } else if (action == 'RESET') {
-                if (timer.isInit) {
-                    timer.setValue(0);
-                    timer.start = (new Date()).getTime();
-                    timer.pausedTime = 0;
-                    if (!timer.isPaused) delete timer.pauseStart;
-                }
-
+            switch (script.getField('ACTION')) {
+                case 'START':
+                    if (!isInit) {
+                        engine.startProjectTimer();
+                    } else if (isInit && isPaused) {
+                        if (timer.pauseStart)
+                            timer.pausedTime += currentTime - timer.pauseStart;
+                        delete timer.pauseStart;
+                        timer.isPaused = false;
+                    }
+                break;
+                case 'STOP':
+                    if (isInit && !isPaused) {
+                        timer.isPaused = true;
+                        timer.pauseStart = currentTime;
+                    }
+                break;
+                case 'RESET':
+                    engine.resetTimer();
+                break;
             }
 
             return script.callReturn();
