@@ -566,6 +566,7 @@ Entry.EntityObject.prototype.syncFont = function() {
 
     } else {
         this.setWidth(this.textObject.getMeasuredWidth());
+        this.setHeight(this.textObject.getMeasuredHeight());
     }
     Entry.stage.updateObject();
     Entry.requestUpdate = true;
