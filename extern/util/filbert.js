@@ -801,7 +801,7 @@
       var next = input.charCodeAt(tokPos + 1);
       if (next === 120 || next === 88) 
         return readHexNumber();
-      else if(next === 49 || next === 48)
+      else if(next === 48 || next === 49)
         return readZero();
       
       // Anything else beginning with a digit is an integer, octal
@@ -849,6 +849,10 @@
   function readZero() {
     var val = '';
     for(var i= tokPos; i < inputLen; i++){
+        var ch = input.charCodeAt(tokPos);
+        if(isNewline(ch))
+          break;
+
         val += input[i];
         tokPos = i;
     }
