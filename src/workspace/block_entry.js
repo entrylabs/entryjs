@@ -12313,32 +12313,32 @@ Entry.block = {
         "class": "calc_timer",
         "isNotFor": [],
         "func": function (sprite, script) {
-            var action = script.getField('ACTION');
             var engine = Entry.engine;
             var timer = engine.projectTimer;
+            var isPaused = timer.isPaused;
+            var isInit = timer.isInit;
+            var currentTime = new Date().getTime();
 
-            if (action == 'START') {
-                if (!timer.isInit) {
-                    engine.startProjectTimer();
-                } else if (timer.isInit && timer.isPaused) {
-                    if (timer.pauseStart)
-                        timer.pausedTime += (new Date()).getTime() - timer.pauseStart;
-                    delete timer.pauseStart;
-                    timer.isPaused = false;
-                }
-            } else if (action == 'STOP') {
-                if (timer.isInit && !timer.isPaused) {
-                    timer.isPaused = true;
-                    timer.pauseStart = (new Date()).getTime();
-                }
-            } else if (action == 'RESET') {
-                if (timer.isInit) {
-                    timer.setValue(0);
-                    timer.start = (new Date()).getTime();
-                    timer.pausedTime = 0;
-                    if (!timer.isPaused) delete timer.pauseStart;
-                }
-
+            switch (script.getField('ACTION')) {
+                case 'START':
+                    if (!isInit) {
+                        engine.startProjectTimer();
+                    } else if (isInit && isPaused) {
+                        if (timer.pauseStart)
+                            timer.pausedTime += currentTime - timer.pauseStart;
+                        delete timer.pauseStart;
+                        timer.isPaused = false;
+                    }
+                break;
+                case 'STOP':
+                    if (isInit && !isPaused) {
+                        timer.isPaused = true;
+                        timer.pauseStart = currentTime;
+                    }
+                break;
+                case 'RESET':
+                    engine.resetTimer();
+                break;
             }
 
             return script.callReturn();
