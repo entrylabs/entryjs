@@ -9522,12 +9522,7 @@ Entry.block = {
         "class": "brush_clear",
         "isNotFor": [ "textBox" ],
         "func": function (sprite, script) {
-            var brush = sprite.brush;
-            if (brush) {
-                var stroke = brush._stroke.style;
-                var style = brush._strokeStyle.width;
-                brush.moveTo(sprite.getX(), sprite.getY()*-1);
-            }
+            sprite.eraseBrush && sprite.eraseBrush();
 
             var stampEntities = sprite.parent.getStampEntities();
             stampEntities.map(function (entity) {
