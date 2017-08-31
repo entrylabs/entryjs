@@ -807,7 +807,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 if (value.length > 1) // self variable
                     list = Entry.variableContainer.getListByName(value[1], true, this.object.id);
                 else
-                    list = Entry.variableContainer.getListByName(value[0], true, this.object.id);
+                    list = Entry.variableContainer.getListByName(value[0], false, this.object.id);
                 return list ? list.id_ : undefined;
             case 'scenes':
                 var scenes =  Entry.scene.scenes_.filter(function(s){
