@@ -4690,10 +4690,9 @@ Entry.block = {
         "def": {
             "params": [{
                     "type": "arduino_get_port_number",
-                    "params": {
-                        "type": "number",
-                        "params": [ "10" ]
-                    }
+                    "params": [
+                        "3"
+                    ]
                 },
                 null
             ],
