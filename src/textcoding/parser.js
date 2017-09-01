@@ -39,7 +39,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
     this._onError = false;
     this._onRunError = false;
 
-    if (Entry.getMainWS())
+    if (Entry.type === "workspace")
         this._console = new Entry.Console();
 };
 
