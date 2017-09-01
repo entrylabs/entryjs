@@ -37551,64 +37551,85 @@ Entry.block = {
         "isNotFor": [ "xbot_epor_edge" ],
         "func": function (sprite, script) {
             var sq = Entry.hw.sendQueue;
-            var note = script.getStringField("NOTE", script);
-            var octave = script.getStringField("OCTAVE", script);
-            var duration = script.getNumberValue("VALUE", script);
+
+            if (!script.isStart) {            
+                var note = script.getStringField("NOTE", script);
+                var octave = script.getStringField("OCTAVE", script);
+                var duration = script.getNumberValue("VALUE", script);
 
 
-            var noteOctave = note + octave; // 'C'+ 2 = "C2"
-            //console.log('xbot_buzzer noteOctave' + note + ' ' + octave + ' ' + duration);
+                var noteOctave = note + octave; // 'C'+ 2 = "C2"
+                //console.log('xbot_buzzer noteOctave' + note + ' ' + octave + ' ' + duration);
 
-            if(noteOctave == "C2") sq.note = 65;
-            else if(noteOctave == "D2") sq.note = 73;
-            else if(noteOctave == "E2") sq.note = 82;
-            else if(noteOctave == "F2") sq.note = 87;
-            else if(noteOctave == "G2") sq.note = 98;
-            else if(noteOctave == "A2") sq.note = 110;
-            else if(noteOctave == "B2") sq.note = 123;
-            else if(noteOctave == "C3") sq.note = 131;
-            else if(noteOctave == "D3") sq.note = 147;
-            else if(noteOctave == "E3") sq.note = 165;
-            else if(noteOctave == "F3") sq.note = 175;
-            else if(noteOctave == "G3") sq.note = 196;
-            else if(noteOctave == "A3") sq.note = 220;
-            else if(noteOctave == "B3") sq.note = 247;
-            else if(noteOctave == "C4") sq.note = 262;
-            else if(noteOctave == "D4") sq.note = 294;
-            else if(noteOctave == "E4") sq.note = 330;
-            else if(noteOctave == "F4") sq.note = 349;
-            else if(noteOctave == "G4") sq.note = 392;
-            else if(noteOctave == "A4") sq.note = 440;
-            else if(noteOctave == "B4") sq.note = 494;
-            else if(noteOctave == "C5") sq.note = 523;
-            else if(noteOctave == "D5") sq.note = 587;
-            else if(noteOctave == "E5") sq.note = 659;
-            else if(noteOctave == "F5") sq.note = 698;
-            else if(noteOctave == "G5") sq.note = 784;
-            else if(noteOctave == "A5") sq.note = 880;
-            else if(noteOctave == "B5") sq.note = 988;
-            else if(noteOctave == "C6") sq.note = 1047;
-            else if(noteOctave == "D6") sq.note = 1175;
-            else if(noteOctave == "E6") sq.note = 1319;
-            else if(noteOctave == "F6") sq.note = 1397;
-            else if(noteOctave == "G6") sq.note = 1568;
-            else if(noteOctave == "A6") sq.note = 1760;
-            else if(noteOctave == "B6") sq.note = 1976;
-            else if(noteOctave == "C7") sq.note = 2093;
-            else if(noteOctave == "D7") sq.note = 2349;
-            else if(noteOctave == "E7") sq.note = 2637;
-            else if(noteOctave == "F7") sq.note = 2794;
-            else if(noteOctave == "G7") sq.note = 3136;
-            else if(noteOctave == "A7") sq.note = 3520;
-            else if(noteOctave == "B7") sq.note = 3951;
-            else sq.note = 262;
+                if(noteOctave == "C2") sq.note = 65;
+                else if(noteOctave == "D2") sq.note = 73;
+                else if(noteOctave == "E2") sq.note = 82;
+                else if(noteOctave == "F2") sq.note = 87;
+                else if(noteOctave == "G2") sq.note = 98;
+                else if(noteOctave == "A2") sq.note = 110;
+                else if(noteOctave == "B2") sq.note = 123;
+                else if(noteOctave == "C3") sq.note = 131;
+                else if(noteOctave == "D3") sq.note = 147;
+                else if(noteOctave == "E3") sq.note = 165;
+                else if(noteOctave == "F3") sq.note = 175;
+                else if(noteOctave == "G3") sq.note = 196;
+                else if(noteOctave == "A3") sq.note = 220;
+                else if(noteOctave == "B3") sq.note = 247;
+                else if(noteOctave == "C4") sq.note = 262;
+                else if(noteOctave == "D4") sq.note = 294;
+                else if(noteOctave == "E4") sq.note = 330;
+                else if(noteOctave == "F4") sq.note = 349;
+                else if(noteOctave == "G4") sq.note = 392;
+                else if(noteOctave == "A4") sq.note = 440;
+                else if(noteOctave == "B4") sq.note = 494;
+                else if(noteOctave == "C5") sq.note = 523;
+                else if(noteOctave == "D5") sq.note = 587;
+                else if(noteOctave == "E5") sq.note = 659;
+                else if(noteOctave == "F5") sq.note = 698;
+                else if(noteOctave == "G5") sq.note = 784;
+                else if(noteOctave == "A5") sq.note = 880;
+                else if(noteOctave == "B5") sq.note = 988;
+                else if(noteOctave == "C6") sq.note = 1047;
+                else if(noteOctave == "D6") sq.note = 1175;
+                else if(noteOctave == "E6") sq.note = 1319;
+                else if(noteOctave == "F6") sq.note = 1397;
+                else if(noteOctave == "G6") sq.note = 1568;
+                else if(noteOctave == "A6") sq.note = 1760;
+                else if(noteOctave == "B6") sq.note = 1976;
+                else if(noteOctave == "C7") sq.note = 2093;
+                else if(noteOctave == "D7") sq.note = 2349;
+                else if(noteOctave == "E7") sq.note = 2637;
+                else if(noteOctave == "F7") sq.note = 2794;
+                else if(noteOctave == "G7") sq.note = 3136;
+                else if(noteOctave == "A7") sq.note = 3520;
+                else if(noteOctave == "B7") sq.note = 3951;
+                else sq.note = 262;
 
-            //sq.duration = 200;
+                //sq.duration = 200;
+                //duration *= 40; //  convert to mSec
+                sq.duration =  duration*40;
 
-            duration *= 40; //  convert to mSec
-            sq.duration =  duration;
+                script.isStart = true;
+                script.timeFlag = 1;
 
-            return script.callReturn();
+                var timeValue = duration * 1000;
+                var timer = setTimeout(function() {
+                    script.timeFlag = 0;
+                    Entry.Xbot.removeTimeout(timer);
+                }, timeValue);
+                Entry.Xbot.timeouts.push(timer);
+                return script;
+
+            } else if (script.timeFlag == 1) {
+                return script;
+            } else {
+                delete script.isStart;
+                delete script.timeFlag;
+                Entry.engine.isContinue = false;
+                sq.duration = 0;
+                return script.callReturn();
+            }
+
         },
         "syntax": {"js": [], "py": ["Xbot.buzzer(%1, %2, %3)"]}
     },
