@@ -127,6 +127,7 @@ EntryStatic.getAllBlocks = function() {
             "erase_all_effects",
             "change_scale_size",
             "set_scale_size",
+            "change_object_index",
         ]
     }, {
         category: "brush",
@@ -198,7 +199,9 @@ EntryStatic.getAllBlocks = function() {
         blocks: [
             "practical_course_dummy",
             "practical_course_move_for_secs",
+            "practical_course_move_for_secs2",
             "practical_course_move_for",
+            "practical_course_move_for2",
             "practical_course_stop_for",
             //roborobo
             "roborobo_move_for_secs",

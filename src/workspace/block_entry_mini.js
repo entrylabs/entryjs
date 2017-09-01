@@ -231,6 +231,97 @@
                 }
             }
         },
+        practical_course_move_for_secs2: {
+            color: '#00B200',
+            skeleton: 'basic',
+            fontColor: '#fff',
+            statements: [],
+            isNotFor: [ 'neobot' ],
+            template: '왼쪽 모터를 %1 %2의 속도로, 오른쪽 모터를 %3 %4의 속도로 %5초 동안 회전 %6',
+            params: [{
+                type: 'Dropdown',
+                options: [
+                    ['앞으로', '16'],
+                    ['뒤로', '32']
+                ],
+                value: '16',
+                fontsIze: 11
+            }, {
+                type: 'Block',
+                accept: 'string'
+            }, {
+                type: 'Dropdown',
+                options: [
+                    ['앞으로', '16'],
+                    ['뒤로', '32']
+                ],
+                value: '16',
+                fontsIze: 11
+            }, {
+                type: 'Block',
+                accept: 'string'
+            }, {
+                type: 'Block',
+                accept: 'string'
+            }, {
+                type: 'Indicator',
+                img: 'block_icon/practical_course/dcmotor.png',
+                size: 12
+            }],
+            events: {},
+            def: {
+                params: [null, {
+                    type: 'practical_course_motor_speed',
+                }, null, {
+                    type: 'practical_course_motor_speed',
+                }, {
+                    type: 'number',
+                    params: ['2'],
+                }, null],
+                type: 'practical_course_move_for_secs2'
+            },
+            paramsKeyMap: {
+                DIRECTION1: 0,
+                SPEED1: 1,
+                DIRECTION2: 2,
+                SPEED2: 3,
+                DURATION: 4
+            },
+            class: 'practical_course_motor',
+            func: function(sprite, script) {
+                if (!script.isStart) {
+                    // var wheel = script.getNumberField('WHEEL');
+                    var speed1 = script.getNumberValue('SPEED1');
+                    var speed2 = script.getNumberValue('SPEED2');
+                    var direction1 = script.getNumberField('DIRECTION1');
+                    var direction2 = script.getNumberField('DIRECTION2');
+                    var duration = script.getNumberValue('DURATION');
+                    var value1 = speed1 + direction1;
+                    var value2 = speed2 + direction2;
+
+                    Entry.hw.sendQueue['DCL'] = value1;
+                    Entry.hw.sendQueue['DCR'] = value2;
+                    
+                    script.isStart = true;
+                    script.timeFlag = 1;
+                    setTimeout(function() {
+                        script.timeFlag = 0;
+                    }, duration * 1000);
+                    return script;
+                } else if (script.timeFlag == 1) {
+                    return script;
+                } else {
+                    Entry.hw.sendQueue['DCL'] = 0;
+                    Entry.hw.sendQueue['DCR'] = 0;
+
+                    delete script.timeFlag;
+                    delete script.isStart;
+                    delete script.wheelMode;
+                    Entry.engine.isContinue = false;
+                    return script.callReturn();
+                }
+            }
+        },
         practical_course_move_for: {
             color: '#00B200',
             skeleton: 'basic',
@@ -303,6 +394,71 @@
                             break;
                         }
                 }
+
+                return script.callReturn();
+            }
+        },
+        practical_course_move_for2: {
+            color: '#00B200',
+            skeleton: 'basic',
+            fontColor: '#fff',
+            statements: [],
+            isNotFor: [ 'neobot' ],
+            template: '왼쪽 모터를 %1 %2의 속도로, 왼쪽 모터를 %3 %4의 속도로 계속 회전 %5',
+            params: [{
+                type: 'Dropdown',
+                options: [
+                    ['앞으로', '16'],
+                    ['뒤로', '32']
+                ],
+                value: '16',
+                fontsIze: 11
+            }, {
+                type: 'Block',
+                accept: 'string'
+            }, {
+                type: 'Dropdown',
+                options: [
+                    ['앞으로', '16'],
+                    ['뒤로', '32']
+                ],
+                value: '16',
+                fontsIze: 11
+            }, {
+                type: 'Block',
+                accept: 'string'
+            }, {
+                type: 'Indicator',
+                img: 'block_icon/practical_course/dcmotor.png',
+                size: 12
+            }],
+            events: {},
+            def: {
+                params: [null, {
+                    type: 'practical_course_motor_speed',
+                }, null, {
+                    type: 'practical_course_motor_speed',
+                }, null],
+                type: 'practical_course_move_for2'
+            },
+            paramsKeyMap: {
+                'DIRECTION1': 0,
+                'SPEED1': 1,
+                'DIRECTION2': 2,
+                'SPEED2': 3,
+            },
+            class: 'practical_course_motor',
+            //'isNotFor': ['mini'],
+            func: function(sprite, script) {
+                var speed1 = script.getNumberValue('SPEED1');
+                var direction1 = script.getNumberField('DIRECTION1');
+                var speed2 = script.getNumberValue('SPEED2');
+                var direction2 = script.getNumberField('DIRECTION2');
+                var value1 = speed1 + direction1;
+                var value2 = speed2 + direction2;
+
+                Entry.hw.sendQueue['DCL'] = value1;
+                Entry.hw.sendQueue['DCR'] = value2;
 
                 return script.callReturn();
             }
