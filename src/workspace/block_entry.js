@@ -5790,7 +5790,7 @@ Entry.block = {
                 else if (typeof string === 'number') {
                     text[0] = 1;
                     text[1] = string / 1;
-                }                
+                }
                 else {
                     text[0] = string;
                 }
@@ -5877,7 +5877,7 @@ Entry.block = {
         },
         "class": "blacksmithSet",
         "isNotFor": [ "blacksmith" ],
-        "func": function (sprite, script) {           
+        "func": function (sprite, script) {
 
                 var string = script.getValue("STRING");
                 var port = 3;
@@ -30318,7 +30318,7 @@ Entry.block = {
             },
             {
                 "type": "angle",
-                "params": [ "10" ]
+                "params": [ "90" ]
             },
             {
                 "type": "Indicator",
@@ -30894,7 +30894,7 @@ Entry.block = {
             "params": [
                 {
                     "type": "angle",
-                    "params": [ "10" ]
+                    "params": [ "90" ]
                 },
                 null
             ],
@@ -30942,7 +30942,7 @@ Entry.block = {
             "params": [
                 {
                     "type": "angle",
-                    "params": [ "10" ]
+                    "params": [ "90" ]
                 },
                 null
             ],
@@ -30989,7 +30989,7 @@ Entry.block = {
             "params": [
                 {
                     "type": "angle",
-                    "params": [ "10" ]
+                    "params": [ "90" ]
                 },
                 null
             ],
@@ -31037,7 +31037,7 @@ Entry.block = {
             "params": [
                 {
                     "type": "angle",
-                    "params": [ "10" ]
+                    "params": [ "90" ]
                 },
                 null
             ],
@@ -31089,7 +31089,7 @@ Entry.block = {
             "params": [
                 {
                     "type": "angle",
-                    "params": [ "10" ]
+                    "params": [ "90" ]
                 },
                 {
                     "type": "number",
@@ -31159,7 +31159,7 @@ Entry.block = {
                 },
                 {
                     "type": "angle",
-                    "params": [ "10" ]
+                    "params": [ "90" ]
                 },
                 null
             ],
@@ -31240,7 +31240,7 @@ Entry.block = {
                 },
                 {
                     "type": "angle",
-                    "params": [ "10" ]
+                    "params": [ "90" ]
                 },
                 null
             ],
