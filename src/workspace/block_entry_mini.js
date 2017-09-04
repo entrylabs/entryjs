@@ -1,10 +1,10 @@
-(function() {
+(function () {
     var miniBlock = {
         practical_course_dummy: {
             color: '#7C7C7C',
             skeleton: 'basic',
             statements: [],
-            isNotFor: [ 'arduinoDisconnected' ],
+            isNotFor: ['arduinoDisconnected'],
             template: '%1',
             params: [{
                 type: "Indicator",
@@ -21,14 +21,14 @@
             paramsKeyMap: {
                 VALUE: 0
             },
-            func: function(sprite, script) {
+            func: function (sprite, script) {
             }
-        },    
+        },
         practical_course_motor_speed: {
             color: '#00B200',
             skeleton: 'basic_string_field',
             statements: [],
-            isNotFor: [ 'neobot' ],
+            isNotFor: ['neobot'],
             template: '%1',
             params: [{
                 type: 'Dropdown',
@@ -59,7 +59,7 @@
             paramsKeyMap: {
                 VALUE: 0
             },
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 return script.getStringField('VALUE');
             }
         },
@@ -67,7 +67,7 @@
             color: '#D126BD',
             skeleton: 'basic',
             statements: [],
-            isNotFor: [ 'neobot' ],
+            isNotFor: ['neobot'],
             template: '%1 포트의 서보모터를 %2 도 이동 %3',
             params: [{
                 type: 'Dropdown',
@@ -96,7 +96,7 @@
                 'DEGREE': 1
             },
             class: 'practical_course_servo',
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 var port = script.getNumberField('PORT');
                 var degree = script.getNumberValue('DEGREE');
                 if (degree < 0) {
@@ -118,7 +118,7 @@
             skeleton: 'basic',
             fontColor: '#fff',
             statements: [],
-            isNotFor: [ 'neobot' ],
+            isNotFor: ['neobot'],
             template: '%1모터를 %2 %3의 속도로 %4초 동안 회전 %5',
             params: [{
                 type: 'Dropdown',
@@ -165,7 +165,7 @@
                 DURATION: 3
             },
             class: 'practical_course_motor',
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 if (!script.isStart) {
                     var wheel = script.getNumberField('WHEEL');
                     var speed = script.getNumberValue('SPEED');
@@ -196,7 +196,7 @@
                     script.wheelMode = wheel;
                     script.isStart = true;
                     script.timeFlag = 1;
-                    setTimeout(function() {
+                    setTimeout(function () {
                         script.timeFlag = 0;
                     }, duration * 1000);
                     return script;
@@ -236,7 +236,7 @@
             skeleton: 'basic',
             fontColor: '#fff',
             statements: [],
-            isNotFor: [ 'neobot' ],
+            isNotFor: ['neobot'],
             template: '%1모터를 %2 %3의 속도로 계속 회전 %4',
             params: [{
                 type: 'Dropdown',
@@ -277,7 +277,7 @@
             },
             class: 'practical_course_motor',
             //'isNotFor': ['mini'],
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 var wheel = script.getNumberField('WHEEL');
                 var speed = script.getNumberValue('SPEED');
                 var direction = script.getNumberField('DIRECTION');
@@ -312,7 +312,7 @@
             skeleton: 'basic',
             fontColor: '#fff',
             statements: [],
-            isNotFor: [ 'neobot' ],
+            isNotFor: ['neobot'],
             template: '%1모터를 정지 %2',
             params: [{
                 type: 'Dropdown',
@@ -337,7 +337,7 @@
                 'WHEEL': 0
             },
             class: 'practical_course_motor',
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 var wheel = script.getNumberField('WHEEL');
                 if (wheel == 2) {
                     Entry.hw.sendQueue['DCR'] = 0;
@@ -355,7 +355,7 @@
             skeleton: 'basic_string_field',
             fontColor: '#fff',
             statements: [],
-            isNotFor: [ 'neobot' ],
+            isNotFor: ['neobot'],
             template: '%1번 포트의 접촉 센서 값',
             params: [{
                 type: 'Dropdown',
@@ -376,7 +376,7 @@
                 PORT: 0
             },
             class: 'practical_course_touch',
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 var port = script.getStringField('PORT');
                 var value = (Entry.hw.portData['IN' + port] > 125) ? 1 : 0;
                 return value;
@@ -386,7 +386,7 @@
             color: '#2AB4D3',
             skeleton: 'basic_boolean_field',
             fontColor: '#fff',
-            isNotFor: [ 'neobot' ],
+            isNotFor: ['neobot'],
             template: '%1번 포트의 접촉 센서가 %2',
             params: [{
                 type: 'Dropdown',
@@ -415,7 +415,7 @@
                 'TOUCH': 1
             },
             class: 'practical_course_touch',
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 var port = script.getStringField('PORT');
                 var touch = script.getNumberField('TOUCH', script);
                 var value = Entry.hw.portData['IN' + port];
@@ -429,7 +429,7 @@
             skeleton: 'basic_string_field',
             fontColor: '#fff',
             statements: [],
-            isNotFor: [ 'neobot' ],
+            isNotFor: ['neobot'],
             template: '%1번 포트의 빛 감지 센서 값',
             params: [{
                 type: 'Dropdown',
@@ -450,7 +450,7 @@
                 PORT: 0
             },
             class: 'practical_course_light',
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 var port = script.getStringField('PORT');
                 return Entry.hw.portData['IN' + port];
             }
@@ -459,7 +459,7 @@
             color: '#498DEB',
             skeleton: 'basic_boolean_field',
             fontColor: '#fff',
-            isNotFor: [ 'neobot' ],
+            isNotFor: ['neobot'],
             template: '%1번 포트의 빛 감지 센서 값 %2 %3',
             params: [{
                 type: 'Dropdown',
@@ -499,7 +499,7 @@
                 'RIGHTVALUE': 2
             },
             class: 'practical_course_light',
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 var port = script.getNumberField('PORT', script);
                 var operator = script.getField('OPERATOR', script);
                 var rightValue = script.getNumberValue('RIGHTVALUE', script);
@@ -527,12 +527,12 @@
                 return isCheck;
             }
         },
-        practical_course_sound_value: { 
+        practical_course_sound_value: {
             color: '#00D67F',
             skeleton: 'basic_string_field',
             fontColor: '#fff',
             statements: [],
-            isNotFor: [ 'neobot' ],
+            isNotFor: ['neobot'],
             template: '%1번 포트의 소리 센서에 감지되는 소리 값',
             params: [{
                 type: 'Dropdown',
@@ -553,7 +553,7 @@
                 PORT: 0
             },
             class: 'practical_course_sound',
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 var port = script.getStringField('PORT');
                 return Entry.hw.portData['IN' + port];
             }
@@ -562,7 +562,7 @@
             color: '#00D67F',
             skeleton: 'basic_boolean_field',
             fontColor: '#fff',
-            isNotFor: [ 'neobot' ],
+            isNotFor: ['neobot'],
             template: '%1번 포트의 소리 센서에 감지되는 소리 값 %2 %3',
             params: [{
                 type: 'Dropdown',
@@ -602,7 +602,7 @@
                 'RIGHTVALUE': 2
             },
             class: 'practical_course_sound',
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 var port = script.getNumberField('PORT', script);
                 var operator = script.getField('OPERATOR', script);
                 var rightValue = script.getNumberValue('RIGHTVALUE', script);
@@ -635,7 +635,7 @@
             skeleton: 'basic_string_field',
             fontColor: '#fff',
             statements: [],
-            isNotFor: [ 'neobot' ],
+            isNotFor: ['neobot'],
             template: '%1번 포트의 적외선 센서에 감지되는 크기 값',
             params: [{
                 type: 'Dropdown',
@@ -657,7 +657,7 @@
             },
             class: 'practical_course_irs',
             //'isNotFor': ['mini'],
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 var port = script.getStringField('PORT');
                 return Entry.hw.portData['IN' + port];
             }
@@ -666,7 +666,7 @@
             color: '#C4065C',
             skeleton: 'basic_boolean_field',
             fontColor: '#fff',
-            isNotFor: [ 'neobot' ],
+            isNotFor: ['neobot'],
             template: '%1번 포트의 적외선 센서에 감지되는 크기 값이 %2 %3',
             params: [{
                 type: 'Dropdown',
@@ -707,7 +707,7 @@
             },
             class: 'practical_course_irs',
             //'isNotFor': ['mini'],
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 var port = script.getNumberField('PORT', script);
                 var operator = script.getField('OPERATOR', script);
                 var rightValue = script.getNumberValue('RIGHTVALUE', script);
@@ -740,7 +740,7 @@
             skeleton: 'basic',
             fontColor: '#fff',
             statements: [],
-            isNotFor: [ 'neobot' ],
+            isNotFor: ['neobot'],
             template: '%1번 포트의 발광다이오드를 %2초 동안 %3 %4',
             params: [{
                 type: 'Dropdown',
@@ -781,7 +781,7 @@
                 VALUE: 2
             },
             class: 'practical_course_diode',
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 if (!script.isStart) {
                     var port = script.getNumberField('PORT');
                     var duration = script.getNumberValue('DURATION');
@@ -804,7 +804,7 @@
                     Entry.hw.sendQueue['OUT' + port] = value;
                     Entry.hw.sendQueue['OPT'] = Entry.hw.sendQueue['OPT'] & (~option);
 
-                    setTimeout(function() {
+                    setTimeout(function () {
                         script.timeFlag = 0;
                     }, duration * 1000);
                     return script;
@@ -827,7 +827,7 @@
             skeleton: 'basic',
             fontColor: '#fff',
             statements: [],
-            isNotFor: [ 'neobot' ],
+            isNotFor: ['neobot'],
             template: '%1번 포트의 발광다이오드를 %2 %3',
             params: [{
                 type: 'Dropdown',
@@ -862,7 +862,7 @@
             },
             class: 'practical_course_diode',
             //'isNotFor': ['mini'],
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 var port = script.getNumberField('PORT');
                 var value = script.getNumberField('VALUE');
                 var option = port;
@@ -888,7 +888,7 @@
             skeleton: 'basic',
             fontColor: '#fff',
             statements: [],
-            isNotFor: [ 'neobot' ],
+            isNotFor: ['neobot'],
             template: '%1번 포트의 발광다이오드를 %2번 포트의 %3~%4의 범위로 켜기%5',
             params: [{
                 type: 'Dropdown',
@@ -936,7 +936,7 @@
             },
             class: 'practical_course_diode',
             //'isNotFor': ['mini'],
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 var outputPort = script.getNumberField('OUTPUT');
                 var inputPort = script.getNumberField('INPUT');
                 var option = inputPort;
@@ -965,7 +965,7 @@
             color: '#FF8D10',
             skeleton: 'basic',
             statements: [],
-            isNotFor: [ 'neobot' ],
+            isNotFor: ['neobot'],
             template: '%1번 포트의 발광다이오드를 %2의 밝기로 정하기 %3',
             params: [{
                 type: 'Dropdown',
@@ -998,7 +998,7 @@
             },
             class: 'practical_course_diode',
             //'isNotFor': ['mini'],
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 var port = script.getStringField('PORT', script);
                 var value = script.getNumberValue('VALUE', script);
                 var option = port;
@@ -1020,7 +1020,7 @@
             skeleton: 'basic_string_field',
             fontColor: '#fff',
             statements: [],
-            isNotFor: [ 'neobot' ],
+            isNotFor: ['neobot'],
             template: '%1번 포트의 값',
             params: [{
                 type: 'Dropdown',
@@ -1041,7 +1041,7 @@
                 PORT: 0
             },
             class: 'practical_course_diode',
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 var port = script.getStringField('PORT');
                 return Entry.hw.portData['IN' + port];
             }
@@ -1111,7 +1111,7 @@
             },
             class: 'practical_course_melody',
             //'isNotFor': ['mini'],
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 var sq = Entry.hw.sendQueue;
 
                 if (!script.isStart) {
@@ -1127,8 +1127,8 @@
                         value = 65;
                     }
                     sq.SND = value;
-                    setTimeout(function() {
-                        setTimeout(function() {
+                    setTimeout(function () {
+                        setTimeout(function () {
                             script.timeFlag = 0;
                         }, 50);
                     }, 1 / duration * 2000);
@@ -1147,17 +1147,17 @@
                 }
             }
         },
-        
+
         // roborobo_mini
         roborobo_motor_speed: {
             color: '#00B200',
             skeleton: 'basic_string_field',
             statements: [],
-            isNotFor: [ 'roborobo_schoolkit' ],
+            isNotFor: ['roborobo_schoolkit'],
             template: '%1',
             params: [{
                 type: 'Dropdown',
-                options: [                    
+                options: [
                     ['1', '51'],
                     ['2', '68'],
                     ['3', '85'],
@@ -1182,7 +1182,7 @@
             paramsKeyMap: {
                 VALUE: 0
             },
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 return script.getStringField('VALUE');
             }
         },
@@ -1191,7 +1191,7 @@
             skeleton: 'basic',
             fontColor: '#fff',
             statements: [],
-            isNotFor: [ 'roborobo_schoolkit' ],
+            isNotFor: ['roborobo_schoolkit'],
             template: '%1모터를 %2 %3의 속도로 %4초 동안 회전 %5',
             params: [{
                 type: 'Dropdown',
@@ -1238,48 +1238,48 @@
                 DURATION: 3
             },
             class: 'roborobo_motor',
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 var motor1 = 0;
                 var motor2 = 1;
                 var wheel = script.getNumberField('WHEEL');
                 var speed = script.getNumberValue('SPEED');
                 var direction = script.getNumberField('DIRECTION');
                 var duration = script.getNumberValue('DURATION');
-                
+
                 if (!script.isStart) {
-                    if(wheel == 1) {
+                    if (wheel == 1) {
                         Entry.hw.sendQueue.digitalPinMode[7] = Entry.Roborobo_SchoolKit.pinMode.PWM;
                         Entry.hw.sendQueue.digitalPinMode[0] = Entry.Roborobo_SchoolKit.pinMode.PWM;
                         Entry.hw.sendQueue.digitalPinMode[8] = Entry.Roborobo_SchoolKit.pinMode.PWM;
                         Entry.hw.sendQueue.digitalPinMode[1] = Entry.Roborobo_SchoolKit.pinMode.PWM;
-                        
-                        if(direction == 1) {
+
+                        if (direction == 1) {
                             Entry.hw.sendQueue[motor1] = speed;
                             Entry.hw.sendQueue[motor2] = speed;
-                        } else if(direction == 2) {
+                        } else if (direction == 2) {
                             Entry.hw.sendQueue[motor1] = -speed;
                             Entry.hw.sendQueue[motor2] = -speed;
                         }
-                    } else if(wheel == 2) {
+                    } else if (wheel == 2) {
                         Entry.hw.sendQueue.digitalPinMode[8] = Entry.Roborobo_SchoolKit.pinMode.PWM;
                         Entry.hw.sendQueue.digitalPinMode[1] = Entry.Roborobo_SchoolKit.pinMode.PWM;
-                        
-                        if(direction == 1) {
+
+                        if (direction == 1) {
                             Entry.hw.sendQueue[motor1] = 0x00;
                             Entry.hw.sendQueue[motor2] = speed;
-                        } else if(direction == 2) {
+                        } else if (direction == 2) {
                             Entry.hw.sendQueue[motor1] = 0x00;
                             Entry.hw.sendQueue[motor2] = -speed;
                         }
-                        
-                    } else if(wheel == 3) {
+
+                    } else if (wheel == 3) {
                         Entry.hw.sendQueue.digitalPinMode[7] = Entry.Roborobo_SchoolKit.pinMode.PWM;
                         Entry.hw.sendQueue.digitalPinMode[0] = Entry.Roborobo_SchoolKit.pinMode.PWM;
-                        
-                        if(direction == 1) {
+
+                        if (direction == 1) {
                             Entry.hw.sendQueue[motor1] = speed;
                             Entry.hw.sendQueue[motor2] = 0x00;
-                        } else if(direction == 2) {
+                        } else if (direction == 2) {
                             Entry.hw.sendQueue[motor1] = -speed;
                             Entry.hw.sendQueue[motor2] = 0x00;
                         }
@@ -1288,7 +1288,7 @@
                     script.wheelMode = wheel;
                     script.isStart = true;
                     script.timeFlag = 1;
-                    setTimeout(function() {
+                    setTimeout(function () {
                         script.timeFlag = 0;
                     }, duration * 1000);
                     return script;
@@ -1297,7 +1297,7 @@
                 } else {
                     Entry.hw.sendQueue[motor1] = 0x00;
                     Entry.hw.sendQueue[motor2] = 0x00;
-                    
+
                     delete script.timeFlag;
                     delete script.isStart;
                     delete script.wheelMode;
@@ -1311,7 +1311,7 @@
             skeleton: 'basic',
             fontColor: '#fff',
             statements: [],
-            isNotFor: [ 'roborobo_schoolkit' ],
+            isNotFor: ['roborobo_schoolkit'],
             template: '%1모터를 %2 %3의 속도로 계속 회전 %4',
             params: [{
                 type: 'Dropdown',
@@ -1352,45 +1352,45 @@
             },
             class: 'roborobo_motor',
             //'isNotFor': ['mini'],
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 var motor1 = 0;
                 var motor2 = 1;
                 var wheel = script.getNumberField('WHEEL');
                 var speed = script.getNumberValue('SPEED');
                 var direction = script.getNumberField('DIRECTION');
-                
-                if(wheel == 1) {
+
+                if (wheel == 1) {
                     Entry.hw.sendQueue.digitalPinMode[7] = Entry.Roborobo_SchoolKit.pinMode.PWM;
                     Entry.hw.sendQueue.digitalPinMode[0] = Entry.Roborobo_SchoolKit.pinMode.PWM;
                     Entry.hw.sendQueue.digitalPinMode[8] = Entry.Roborobo_SchoolKit.pinMode.PWM;
                     Entry.hw.sendQueue.digitalPinMode[1] = Entry.Roborobo_SchoolKit.pinMode.PWM;
-                    
-                    if(direction == 1) {
+
+                    if (direction == 1) {
                         Entry.hw.sendQueue[motor1] = speed;
                         Entry.hw.sendQueue[motor2] = speed;
-                    } else if(direction == 2) {
+                    } else if (direction == 2) {
                         Entry.hw.sendQueue[motor1] = -speed;
                         Entry.hw.sendQueue[motor2] = -speed;
                     }
-                } else if(wheel == 2) {
+                } else if (wheel == 2) {
                     Entry.hw.sendQueue.digitalPinMode[8] = Entry.Roborobo_SchoolKit.pinMode.PWM;
                     Entry.hw.sendQueue.digitalPinMode[1] = Entry.Roborobo_SchoolKit.pinMode.PWM;
-                    
-                    if(direction == 1) {
+
+                    if (direction == 1) {
                         Entry.hw.sendQueue[motor1] = 0x00;
                         Entry.hw.sendQueue[motor2] = speed;
-                    } else if(direction == 2) {
+                    } else if (direction == 2) {
                         Entry.hw.sendQueue[motor1] = 0x00;
                         Entry.hw.sendQueue[motor2] = -speed;
-                    }                    
-                } else if(wheel == 3) {
+                    }
+                } else if (wheel == 3) {
                     Entry.hw.sendQueue.digitalPinMode[7] = Entry.Roborobo_SchoolKit.pinMode.PWM;
                     Entry.hw.sendQueue.digitalPinMode[0] = Entry.Roborobo_SchoolKit.pinMode.PWM;
-                    
-                    if(direction == 1) {
+
+                    if (direction == 1) {
                         Entry.hw.sendQueue[motor1] = speed;
                         Entry.hw.sendQueue[motor2] = 0x00;
-                    } else if(direction == 2) {
+                    } else if (direction == 2) {
                         Entry.hw.sendQueue[motor1] = -speed;
                         Entry.hw.sendQueue[motor2] = 0x00;
                     }
@@ -1404,7 +1404,7 @@
             skeleton: 'basic',
             fontColor: '#fff',
             statements: [],
-            isNotFor: [ 'roborobo_schoolkit' ],
+            isNotFor: ['roborobo_schoolkit'],
             template: '%1모터를 정지 %2',
             params: [{
                 type: 'Dropdown',
@@ -1429,31 +1429,31 @@
                 'WHEEL': 0
             },
             class: 'roborobo_motor',
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 var motor1 = 0;
                 var motor2 = 1;
                 var wheel = script.getNumberField('WHEEL');
-                
-                if(wheel == 1) {
+
+                if (wheel == 1) {
                     Entry.hw.sendQueue.digitalPinMode[7] = Entry.Roborobo_SchoolKit.pinMode.PWM;
                     Entry.hw.sendQueue.digitalPinMode[0] = Entry.Roborobo_SchoolKit.pinMode.PWM;
                     Entry.hw.sendQueue.digitalPinMode[8] = Entry.Roborobo_SchoolKit.pinMode.PWM;
                     Entry.hw.sendQueue.digitalPinMode[1] = Entry.Roborobo_SchoolKit.pinMode.PWM;
-                    
+
                     Entry.hw.sendQueue[motor1] = 0x00;
                     Entry.hw.sendQueue[motor2] = 0x00;
-                } else if(wheel == 2) {
+                } else if (wheel == 2) {
                     Entry.hw.sendQueue.digitalPinMode[8] = Entry.Roborobo_SchoolKit.pinMode.PWM;
                     Entry.hw.sendQueue.digitalPinMode[1] = Entry.Roborobo_SchoolKit.pinMode.PWM;
-                    
+
                     Entry.hw.sendQueue[motor2] = 0x00;
-                } else if(wheel == 3) {
+                } else if (wheel == 3) {
                     Entry.hw.sendQueue.digitalPinMode[7] = Entry.Roborobo_SchoolKit.pinMode.PWM;
                     Entry.hw.sendQueue.digitalPinMode[0] = Entry.Roborobo_SchoolKit.pinMode.PWM;
-                    
+
                     Entry.hw.sendQueue[motor1] = 0x00;
                 }
-                
+
                 return script.callReturn();
             }
         },
@@ -1462,7 +1462,7 @@
             skeleton: 'basic_string_field',
             fontColor: '#fff',
             statements: [],
-            isNotFor: [ 'roborobo_schoolkit' ],
+            isNotFor: ['roborobo_schoolkit'],
             template: '접촉 센서 값',
             params: [{
                 type: 'Block',
@@ -1476,7 +1476,7 @@
             paramsKeyMap: {
             },
             class: 'roborobo_touch',
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 var port = Entry.Roborobo_SchoolKit.inputPort.contact;
                 Entry.hw.sendQueue.digitalPinMode[port] = Entry.Roborobo_SchoolKit.pinMode.INPUT;
                 Entry.hw.update();
@@ -1487,7 +1487,7 @@
             color: '#2AB4D3',
             skeleton: 'basic_boolean_field',
             fontColor: '#fff',
-            isNotFor: [ 'roborobo_schoolkit' ],
+            isNotFor: ['roborobo_schoolkit'],
             template: '접촉 센서가 %1',
             params: [{
                 type: 'Dropdown',
@@ -1506,25 +1506,25 @@
                 'TOUCH': 0
             },
             class: 'roborobo_touch',
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 var port = Entry.Roborobo_SchoolKit.inputPort.contact;
                 var touch = script.getNumberField('TOUCH', script);
-                
+
                 Entry.hw.sendQueue.digitalPinMode[port] = Entry.Roborobo_SchoolKit.pinMode.INPUT;
                 Entry.hw.update();
-                
+
                 var value = Entry.hw.portData[port - 7];
                 var isTouch = touch == value ? true : false;
-                
+
                 return isTouch;
             }
-        },        
+        },
         roborobo_light_value: {
             color: '#498DEB',
             skeleton: 'basic_string_field',
             fontColor: '#fff',
             statements: [],
-            isNotFor: [ 'roborobo_schoolkit' ],
+            isNotFor: ['roborobo_schoolkit'],
             template: 'CDS 센서 값',
             params: [{
                 type: 'Block',
@@ -1538,7 +1538,7 @@
             paramsKeyMap: {
             },
             class: 'roborobo_light',
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 var port = Entry.Roborobo_SchoolKit.inputPort.cds;
                 return Entry.hw.portData[port - 7];
             }
@@ -1547,7 +1547,7 @@
             color: '#498DEB',
             skeleton: 'basic_boolean_field',
             fontColor: '#fff',
-            isNotFor: [ 'roborobo_schoolkit' ],
+            isNotFor: ['roborobo_schoolkit'],
             template: 'CDS 센서 값 %1 %2',
             params: [{
                 type: 'Dropdown',
@@ -1577,19 +1577,19 @@
                 'RIGHTVALUE': 1
             },
             class: 'roborobo_light',
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 var port = Entry.Roborobo_SchoolKit.inputPort.cds;
-                var operator = script.getField('OPERATOR', script);             
+                var operator = script.getField('OPERATOR', script);
                 var rightValue = script.getNumberValue('RIGHTVALUE', script);
                 var leftValue = Entry.hw.portData[port - 7];
                 var isCheck = false;
-                
-                if(rightValue < 0) {
+
+                if (rightValue < 0) {
                     rightValue = 0;
-                } else if(rightValue > 1023) {
+                } else if (rightValue > 1023) {
                     rightValue = 1023;
                 }
-                
+
                 switch (operator) {
                     case 'EQUAL':
                         isCheck = leftValue == rightValue;
@@ -1606,7 +1606,7 @@
                     case 'LESS_OR_EQUAL':
                         isCheck = Number(leftValue) <= Number(rightValue);
                         break;
-                }               
+                }
 
                 return isCheck;
             }
@@ -1616,7 +1616,7 @@
             skeleton: 'basic_string_field',
             fontColor: '#fff',
             statements: [],
-            isNotFor: [ 'roborobo_schoolkit' ],
+            isNotFor: ['roborobo_schoolkit'],
             template: '소리 센서에 감지되는 소리 값',
             params: [{
                 type: 'Block',
@@ -1630,7 +1630,7 @@
             paramsKeyMap: {
             },
             class: 'roborobo_sound',
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 var port = Entry.Roborobo_SchoolKit.inputPort.sound;
                 return Entry.hw.portData[port - 7];
             }
@@ -1639,7 +1639,7 @@
             color: '#00D67F',
             skeleton: 'basic_boolean_field',
             fontColor: '#fff',
-            isNotFor: [ 'roborobo_schoolkit' ],
+            isNotFor: ['roborobo_schoolkit'],
             template: '소리 센서에 감지되는 소리 값 %1 %2',
             params: [{
                 type: 'Dropdown',
@@ -1669,19 +1669,19 @@
                 'RIGHTVALUE': 1
             },
             class: 'roborobo_sound',
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 var port = Entry.Roborobo_SchoolKit.inputPort.sound;
                 var operator = script.getField('OPERATOR', script);
                 var rightValue = script.getNumberValue('RIGHTVALUE', script);
                 var leftValue = Entry.hw.portData[port - 7];
                 var isCheck = false;
-                
-                if(rightValue < 0) {
+
+                if (rightValue < 0) {
                     rightValue = 0;
-                } else if(rightValue > 1023) {
+                } else if (rightValue > 1023) {
                     rightValue = 1023;
                 }
-                
+
                 switch (operator) {
                     case 'EQUAL':
                         isCheck = leftValue == rightValue;
@@ -1708,7 +1708,7 @@
             skeleton: 'basic_string_field',
             fontColor: '#fff',
             statements: [],
-            isNotFor: [ 'roborobo_schoolkit' ],
+            isNotFor: ['roborobo_schoolkit'],
             template: '적외선 센서 값',
             params: [{
                 type: 'Block',
@@ -1723,7 +1723,7 @@
             },
             class: 'roborobo_irs',
             //'isNotFor': ['mini'],
-            func: function(sprite, script) {                
+            func: function (sprite, script) {
                 var port = Entry.Roborobo_SchoolKit.inputPort.ir;
                 Entry.hw.sendQueue.digitalPinMode[port] = Entry.Roborobo_SchoolKit.pinMode.INPUT;
                 Entry.hw.update();
@@ -1734,7 +1734,7 @@
             color: '#C4065C',
             skeleton: 'basic_boolean_field',
             fontColor: '#fff',
-            isNotFor: [ 'roborobo_schoolkit' ],
+            isNotFor: ['roborobo_schoolkit'],
             template: '적외선 센서가 %1',
             params: [{
                 type: 'Dropdown',
@@ -1754,16 +1754,16 @@
             },
             class: 'roborobo_irs',
             //'isNotFor': ['mini'],
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 var port = Entry.Roborobo_SchoolKit.inputPort.ir;
                 var detect = script.getNumberField('DETECT', script);
-                
+
                 Entry.hw.sendQueue.digitalPinMode[port] = Entry.Roborobo_SchoolKit.pinMode.INPUT;
                 Entry.hw.update();
-                
+
                 var value = Entry.hw.portData[port - 7];
                 var isDetect = detect == value ? true : false;
-                
+
                 return isDetect;
             }
         },
@@ -1772,7 +1772,7 @@
             skeleton: 'basic',
             fontColor: '#fff',
             statements: [],
-            isNotFor: [ 'roborobo_schoolkit' ],
+            isNotFor: ['roborobo_schoolkit'],
             template: '%1번 포트의 발광다이오드를 %2초 동안 %3 %4',
             params: [{
                 type: 'Dropdown',
@@ -1814,18 +1814,18 @@
                 VALUE: 2
             },
             class: 'roborobo_diode',
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 var port = script.getNumberField('PORT');
                 var duration = script.getNumberValue('DURATION');
-                var value = script.getNumberField('VALUE');                
+                var value = script.getNumberField('VALUE');
                 Entry.hw.sendQueue.digitalPinMode[port] = Entry.Roborobo_SchoolKit.pinMode.PWM;
-                
+
                 if (!script.isStart) {
                     script.isStart = true;
                     script.timeFlag = 1;
                     Entry.hw.sendQueue[port] = value;
 
-                    setTimeout(function() {
+                    setTimeout(function () {
                         script.timeFlag = 0;
                     }, duration * 1000);
                     return script;
@@ -1845,7 +1845,7 @@
             skeleton: 'basic',
             fontColor: '#fff',
             statements: [],
-            isNotFor: [ 'roborobo_schoolkit' ],
+            isNotFor: ['roborobo_schoolkit'],
             template: '%1번 포트의 발광다이오드를 %2 %3',
             params: [{
                 type: 'Dropdown',
@@ -1881,10 +1881,10 @@
             },
             class: 'roborobo_diode',
             //'isNotFor': ['mini'],
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 var port = script.getNumberField('PORT');
                 var value = script.getNumberField('VALUE');
-                
+
                 Entry.hw.sendQueue.digitalPinMode[port] = Entry.Roborobo_SchoolKit.pinMode.PWM;
                 Entry.hw.sendQueue[port] = value;
 
@@ -1896,7 +1896,7 @@
             skeleton: 'basic',
             fontColor: '#fff',
             statements: [],
-            isNotFor: [ 'roborobo_schoolkit' ],
+            isNotFor: ['roborobo_schoolkit'],
             template: '%1번 포트의 발광다이오드를 %2번 포트의 %3~%4의 범위로 켜기%5',
             params: [{
                 type: 'Dropdown',
@@ -1944,23 +1944,23 @@
             },
             class: 'roborobo_diode',
             //'isNotFor': ['mini'],
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 var outputPort = script.getNumberField('OUTPUT');
                 var inputPort = script.getNumberField('INPUT');
-                
+
                 var oMin = script.getNumberValue('MIN');
                 var oMax = script.getNumberValue('MAX');
                 var nMin = 0;
                 var nMax = 255;
-                
-                var x = Entry.hw.portData[inputPort - 7] / 4;                
+
+                var x = Entry.hw.portData[inputPort - 7] / 4;
                 var percent = (x - oMin) / (oMax - oMin);
                 result = percent * (nMax - nMin) + nMin;
                 if (result > nMax)
                     result = nMax;
                 if (result < nMin)
                     result = nMin;
-                
+
                 Entry.hw.sendQueue.digitalPinMode[outputPort] = Entry.Roborobo_SchoolKit.pinMode.PWM;
                 Entry.hw.sendQueue[outputPort] = result;
 
@@ -1971,7 +1971,7 @@
             color: '#FF8D10',
             skeleton: 'basic',
             statements: [],
-            isNotFor: [ 'roborobo_schoolkit' ],
+            isNotFor: ['roborobo_schoolkit'],
             template: '%1번 포트의 발광다이오드를 %2의 밝기로 켜기 %3',
             params: [{
                 type: 'Dropdown',
@@ -2005,19 +2005,19 @@
             },
             class: 'roborobo_diode',
             //'isNotFor': ['mini'],
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 var port = script.getStringField('PORT', script);
                 var value = script.getNumberValue('VALUE', script);
-                
+
                 if (value < 0) {
                     value = 0;
                 } else if (value > 255) {
                     value = 255;
                 }
-                
+
                 Entry.hw.sendQueue.digitalPinMode[port] = Entry.Roborobo_SchoolKit.pinMode.PWM;
                 Entry.hw.sendQueue[port] = value;
-                
+
                 return script.callReturn();
             }
         },
@@ -2027,7 +2027,7 @@
             fontColor: '#fff',
             statements: [],
             isNotFor: ['robotis_openCM70'],
-            template: '%1번 포트 LED를 %2',
+            template: '%1번 포트 LED를 %2 %3',
             params: [{
                 type: 'Dropdown',
                 options: [
@@ -2038,17 +2038,21 @@
                 ],
                 value: '3',
                 fontsIze: 11
-            },{
-            type: 'Dropdown',
-            options: [
-                ['모두 끄기', '0'],
-                ['노랑색 켜기', '1'],
-                ['파랑색 켜기', '2'],
-                ['모두 켜기', '3']
-            ],
-            value: '0',
-            fontsIze: 11
-        }],
+            }, {
+                type: 'Dropdown',
+                options: [
+                    ['모두 끄기', '0'],
+                    ['노랑색 켜기', '1'],
+                    ['파랑색 켜기', '2'],
+                    ['모두 켜기', '3']
+                ],
+                value: '0',
+                fontsIze: 11
+            }, {
+                type: 'Indicator',
+                img: 'block_icon/practical_course/light.png',
+                size: 12
+            }],
             events: {},
             def: {
                 params: [null],
@@ -2115,7 +2119,7 @@
             class: 'robotis_touch',
             func: function (sprite, script) {
                 var port = script.getStringField('PORT');
-                var value = 0;                
+                var value = 0;
 
                 switch (port) {
                     case '3':
@@ -2124,7 +2128,7 @@
                     case '4':
                         value = Entry.hw.portData['TOUCH1'];
                         break;
-                    case '5':                        
+                    case '5':
                         value = Entry.hw.portData['TOUCH2'];
                         break;
                     case '6':
@@ -2549,7 +2553,7 @@
                 'RIGHTVALUE': 1
             },
             class: 'robotis_sound',
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 var operator = script.getField('OPERATOR', script);
                 var rightValue = script.getNumberValue('RIGHTVALUE', script);
                 var leftValue = Entry.hw.portData['DETECTEDSOUNDE'];
@@ -2740,7 +2744,7 @@
                         value = "노랑색";
                         break;
                 }
-                
+
                 return value;
             }
         },
@@ -2803,7 +2807,7 @@
                 var leftValue = 0;
                 var data_address = 0;
                 var isCheck = false;
-                
+
                 switch (port) {
                     case '3':
                         leftValue = Entry.hw.portData['COLOR0'];
@@ -2813,7 +2817,7 @@
                         leftValue = Entry.hw.portData['COLOR1'];
                         data_address = 109;
                         break;
-                    case '5':                        
+                    case '5':
                         leftValue = Entry.hw.portData['COLOR2'];
                         data_address = 110;
                         break;
@@ -2823,7 +2827,7 @@
                         break;
                 }
 
-                var data_instruction = Entry.Robotis_openCM70.INSTRUCTION.WRITE;                
+                var data_instruction = Entry.Robotis_openCM70.INSTRUCTION.WRITE;
                 var data_length = 1;
                 var data_value = 4;
 
@@ -2892,7 +2896,7 @@
                         value = Entry.hw.portData['HUMIDTY1'];
                         data_address = 109;
                         break;
-                    case '5':                        
+                    case '5':
                         value = Entry.hw.portData['HUMIDTY2'];
                         data_address = 110;
                         break;
@@ -2901,7 +2905,7 @@
                         data_address = 111;
                         break;
                 }
-                var data_instruction = Entry.Robotis_openCM70.INSTRUCTION.WRITE;                
+                var data_instruction = Entry.Robotis_openCM70.INSTRUCTION.WRITE;
                 var data_length = 1;
                 var data_value = 5;
 
@@ -2983,7 +2987,7 @@
                         data_address = 111;
                         break;
                 }
-                
+
                 var data_instruction = Entry.Robotis_openCM70.INSTRUCTION.WRITE;
                 var data_length = 1;
                 var data_value = 5;
@@ -3052,7 +3056,7 @@
                         value = Entry.hw.portData['TEMPERATURE1'];
                         data_address = 109;
                         break;
-                    case '5':                        
+                    case '5':
                         value = Entry.hw.portData['TEMPERATURE2'];
                         data_address = 110;
                         break;
@@ -3061,7 +3065,7 @@
                         data_address = 111;
                         break;
                 }
-                var data_instruction = Entry.Robotis_openCM70.INSTRUCTION.WRITE;                
+                var data_instruction = Entry.Robotis_openCM70.INSTRUCTION.WRITE;
                 var data_length = 1;
                 var data_value = 5;
 
@@ -3222,7 +3226,7 @@
                 'DIRECTION': 1,
                 'SPEED': 2,
                 DURATION: 3
-            }, 
+            },
             class: 'robotis_motor',
             func: function (sprite, script) {
                 var duration = script.getNumberValue('DURATION');
@@ -3246,7 +3250,7 @@
                 }
 
                 if (!script.isStart) {
-                    
+
                     value = value * 68;
                     if (wheel == '3' || wheel == '1') {
                         if (direction == 'CCW') {
@@ -3288,14 +3292,14 @@
                     Entry.Robotis_carCont.update();
                     //return Entry.Robotis_carCont.postCallReturn(script, data_sendqueue, 2000);
                     return script;
-                    
+
                 } else if (script.timeFlag == 1) {
-                    
+
                     //data_sendqueue = [[data_instruction, data_address, data_length, 0]];
                     //Entry.Robotis_carCont.setRobotisData(data_sendqueue);                    
                     return script;
                 } else {
-                    
+
                     delete script.timeFlag;
                     delete script.isStart;
                     delete script.wheelMode;
@@ -3307,7 +3311,7 @@
                     Entry.Robotis_carCont.update();
                     return script.callReturn();
                 }
-                    //return Entry.Robotis_carCont.postCallReturn(script, data_sendqueue, 2000);
+                //return Entry.Robotis_carCont.postCallReturn(script, data_sendqueue, 2000);
             }
         },
         robotis_aux_move_for: {
@@ -3356,7 +3360,7 @@
             },
             class: 'robotis_motor',
             //'isNotFor': ['mini'],
-            func: function (sprite, script) {                
+            func: function (sprite, script) {
                 var wheel = script.getNumberField('WHEEL');
                 var value = script.getNumberValue('SPEED');
                 var direction = script.getStringField('DIRECTION');
@@ -3403,7 +3407,7 @@
                 data_value = value;
 
                 var data_sendqueue = [[data_instruction, data_address, data_length, data_value]];
-                return Entry.Robotis_carCont.postCallReturn(script, data_sendqueue, Entry.Robotis_openCM70.delay);                
+                return Entry.Robotis_carCont.postCallReturn(script, data_sendqueue, Entry.Robotis_openCM70.delay);
             }
         },
         robotis_aux_stop_for: {
@@ -3512,7 +3516,7 @@
             }],
             events: {},
             def: {
-                params: [null,null,null, null],
+                params: [null, null, null, null],
                 type: 'robotis_set_servo_wheel'
             },
             paramsKeyMap: {
@@ -3565,7 +3569,7 @@
                         data_address2 = 111;
                         Entry.Robotis_openCM70.SERVO_MODULEWRITE.PORT6 = true;
                         break;
-                }                
+                }
 
                 data_address3 = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_POSITION[0];
                 data_length3 = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_POSITION[1];
@@ -3628,7 +3632,7 @@
                         script.timeFlag = 0;
                     }, 1 * 650);
                     */
-                    
+
                     return script;
 
                 } else if (script.timeFlag == 1) {
@@ -3705,7 +3709,7 @@
                     "type": "number",
                     "params": ["512"]
                 },
-                null,null],
+                null, null],
                 type: 'robotis_set_servo_joint'
             },
             paramsKeyMap: {
@@ -3717,9 +3721,9 @@
             func: function (sprite, script) {
                 // instruction / address / length / value / default length
                 var port = script.getField("PORT", script);
-                var value = script.getNumberValue('VALUE');                                
+                var value = script.getNumberValue('VALUE');
                 var speed = script.getNumberField('SPEED');
-                
+
                 var data_instruction = Entry.Robotis_openCM70.INSTRUCTION.WRITE;
                 var data_address3 = 0;
                 var data_length3 = 0;
@@ -3779,7 +3783,7 @@
                 }
 
                 data_value3 = value;
-                
+
                 if (!script.isStart) {
 
                     var data_sendqueue = [[data_instruction, data_address2, data_length2, data_value2]];
@@ -3799,7 +3803,7 @@
 
                     return script;
 
-                } else if (script.timeFlag == 1) {     
+                } else if (script.timeFlag == 1) {
                     return script;
                 } else {
 
@@ -3812,16 +3816,16 @@
                         script.timeFlag = 0;
                     }, 1 * 70);
 
-                    data_sendqueue = [[data_instruction, data_address, data_length, data_value],[data_instruction, data_address4, data_length4, data_value4], [data_instruction, data_address3, data_length3, data_value3]];
+                    data_sendqueue = [[data_instruction, data_address, data_length, data_value], [data_instruction, data_address4, data_length4, data_value4], [data_instruction, data_address3, data_length3, data_value3]];
                     Entry.Robotis_carCont.setRobotisData(data_sendqueue);
                     Entry.engine.isContinue = false;
                     Entry.Robotis_carCont.update();
                     return script.callReturn();
                 }
                 //
-                
+
             }
-        },    
+        },
         robotis_melody_note_for: {
             color: '#FC327F',
             skeleton: 'basic',
@@ -3891,7 +3895,7 @@
             class: 'robotis_melody',
             //'isNotFor': ['mini'],
             func: function (sprite, script) {
-                
+
                 var note = script.getNumberField('NOTE', script);
                 var octave = script.getNumberField('OCTAVE', script);
                 var cmBuzzerTime = script.getNumberField('DURATION', script);
@@ -3909,12 +3913,12 @@
                 var data_address_2 = 0;
                 var data_length_2 = 0;
                 var data_value_2 = 0;
-                
+
                 data_address_1 = Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_TIME[0];
                 data_length_1 = Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_TIME[1];
 
                 // TODO 텍스트 입력으로 바꾸고 최대는 5초 : 0.5 초 하려면 5를 입력  - console.log(parseInt(0.59 * 10)); max 는 5초
-                
+
                 data_value_1 = parseInt(cmBuzzerTime * 10);
                 if (data_value_1 > 50) {
                     data_value_1 = 50;
@@ -3923,7 +3927,7 @@
                 data_address_2 = Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_INDEX[0];
                 data_length_2 = Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_INDEX[1];
                 data_value_2 = cmBuzzerIndex;
-                
+
                 var data_sendqueue = [[data_instruction, data_address_1, data_length_1, data_value_1], [data_instruction, data_address_2, data_length_2, data_value_2]];
                 return Entry.Robotis_carCont.postCallReturn(script, data_sendqueue, cmBuzzerTime * 1000);
             }

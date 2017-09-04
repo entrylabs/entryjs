@@ -22295,8 +22295,8 @@ Entry.block.basic_button = {skeleton:"basic_button", color:"#eee", template:"%1"
     Entry.hw.sendQueue.digitalPinMode[b] = Entry.Roborobo_SchoolKit.pinMode.PWM;
     Entry.hw.sendQueue[b] = c;
     return a.callReturn();
-  }}, robotis_set_led:{color:"#2AB4D3", skeleton:"basic", fontColor:"#fff", statements:[], isNotFor:["robotis_openCM70"], template:"%1\ubc88 \ud3ec\ud2b8 LED\ub97c %2", params:[{type:"Dropdown", options:[["PORT 3", "3"], ["PORT 4", "4"], ["PORT 5", "5"], ["PORT 6", "6"]], value:"3", fontsIze:11}, {type:"Dropdown", options:[["\ubaa8\ub450 \ub044\uae30", "0"], ["\ub178\ub791\uc0c9 \ucf1c\uae30", "1"], ["\ud30c\ub791\uc0c9 \ucf1c\uae30", "2"], ["\ubaa8\ub450 \ucf1c\uae30", "3"]], value:"0", fontsIze:11}], 
-  events:{}, def:{params:[null], type:"robotis_set_led"}, paramsKeyMap:{PORT:0, COLOR:1}, class:"robotis_led", func:function(b, a) {
+  }}, robotis_set_led:{color:"#2AB4D3", skeleton:"basic", fontColor:"#fff", statements:[], isNotFor:["robotis_openCM70"], template:"%1\ubc88 \ud3ec\ud2b8 LED\ub97c %2 %3", params:[{type:"Dropdown", options:[["PORT 3", "3"], ["PORT 4", "4"], ["PORT 5", "5"], ["PORT 6", "6"]], value:"3", fontsIze:11}, {type:"Dropdown", options:[["\ubaa8\ub450 \ub044\uae30", "0"], ["\ub178\ub791\uc0c9 \ucf1c\uae30", "1"], ["\ud30c\ub791\uc0c9 \ucf1c\uae30", "2"], ["\ubaa8\ub450 \ucf1c\uae30", "3"]], value:"0", fontsIze:11}, 
+  {type:"Indicator", img:"block_icon/practical_course/light.png", size:12}], events:{}, def:{params:[null], type:"robotis_set_led"}, paramsKeyMap:{PORT:0, COLOR:1}, class:"robotis_led", func:function(b, a) {
     b = a.getStringField("PORT");
     var c = Entry.Robotis_openCM70.INSTRUCTION.WRITE, d = 0, e = Entry.Robotis_openCM70.CONTROL_TABLE.AUX_LED_MODULE[1], f = a.getNumberField("COLOR");
     switch(b) {
@@ -22801,16 +22801,15 @@ Entry.block.basic_button = {skeleton:"basic_button", color:"#eee", template:"%1"
       Entry.Robotis_carCont.update();
       return a.callReturn();
     }
-    if (!Entry.Robotis_openCM70.SERVO_MODULEWRITE.PORT3 && "3" == b || !Entry.Robotis_openCM70.SERVO_MODULEWRITE.PORT4 && "4" == b || !Entry.Robotis_openCM70.SERVO_MODULEWRITE.PORT5 && "5" == b || !Entry.Robotis_openCM70.SERVO_MODULEWRITE.PORT6 && "6" == b) {
-      b = [[f, e, 1, 7]], Entry.Robotis_carCont.setRobotisData(b), Entry.Robotis_carCont.update(), a.isStart = !0, a.timeFlag = 1, setTimeout(function() {
-        a.timeFlag = 0;
-      }, 650);
-    }
+    !Entry.Robotis_openCM70.SERVO_MODULEWRITE.PORT3 && "3" == b || !Entry.Robotis_openCM70.SERVO_MODULEWRITE.PORT4 && "4" == b || !Entry.Robotis_openCM70.SERVO_MODULEWRITE.PORT5 && "5" == b || !Entry.Robotis_openCM70.SERVO_MODULEWRITE.PORT6 && "6" == b ? (b = [[f, e, 1, 7]], Entry.Robotis_carCont.setRobotisData(b), Entry.Robotis_carCont.update(), a.isStart = !0, a.timeFlag = 1, setTimeout(function() {
+      a.timeFlag = 0;
+    }, 650)) : (a.isStart = !0, a.timeFlag = 0);
     return a;
   }}, robotis_set_servo_joint:{color:"#D126BD", skeleton:"basic", statements:[], isNotFor:["robotis_openCM70"], template:"%1 \ud3ec\ud2b8\uc758 \uc11c\ubcf4\ubaa8\ud130\ub97c %2 \ub3c4 %3\uc18d\ub3c4\ub85c \uc774\ub3d9 %4", params:[{type:"Dropdown", options:[["PORT 3", "3"], ["PORT 4", "4"], ["PORT 5", "5"], ["PORT 6", "6"]], value:"3", fontsIze:11}, {type:"Block", accept:"string"}, {type:"Dropdown", options:[["1", 1], ["2", 2], ["3", 3], ["4", 4], ["5", 5], ["6", 6], ["7", 7], ["8", 8], ["9", 9], 
   ["10", 10], ["11", 11], ["12", 12], ["13", 13], ["14", 14], ["15", 15]], value:7, fontsIze:11}, {type:"Indicator", img:"block_icon/practical_course/servo.png", size:12}], events:{}, def:{params:[null, {type:"number", params:["512"]}, null, null], type:"robotis_set_servo_joint"}, paramsKeyMap:{PORT:0, VALUE:1, SPEED:2}, class:"robotis_servo_motor", func:function(b, a) {
     b = a.getField("PORT", a);
-    var c = a.getNumberValue("VALUE"), d = a.getNumberField("SPEED"), e = Entry.Robotis_openCM70.INSTRUCTION.WRITE, f = 0, g = 0, h = 0, k = 0, e = Entry.Robotis_openCM70.INSTRUCTION.WRITE, l = 0, m = 0, q = 0, n = 0, r = 2, t = 0, t = 68 * d;
+    var c = a.getNumberValue("VALUE");
+    var d = a.getNumberField("SPEED"), e = Entry.Robotis_openCM70.INSTRUCTION.WRITE, f = 0, g = 0, h = 0, k = 0, e = Entry.Robotis_openCM70.INSTRUCTION.WRITE, l = 0, m = 0, q = 0, n = 0, r = 2, t = 0, t = 68 * d;
     1023 < t && (t = 1023);
     switch(b) {
       case "3":
@@ -22848,18 +22847,16 @@ Entry.block.basic_button = {skeleton:"basic_button", color:"#eee", template:"%1"
       setTimeout(function() {
         a.timeFlag = 0;
       }, 70);
-      b = [[e, l, m, q], [e, n, r, t], [e, f, g, h]];
-      Entry.Robotis_carCont.setRobotisData(b);
+      c = [[e, l, m, q], [e, n, r, t], [e, f, g, h]];
+      Entry.Robotis_carCont.setRobotisData(c);
       Entry.engine.isContinue = !1;
       Entry.Robotis_carCont.update();
       return a.callReturn();
     }
-    b = [[e, k, 1, 7]];
-    a.isStart = !0;
-    a.timeFlag = 1;
-    setTimeout(function() {
+    c = [[e, k, 1, 7]];
+    !Entry.Robotis_openCM70.SERVO_MODULEWRITE.PORT3 && "3" == b || !Entry.Robotis_openCM70.SERVO_MODULEWRITE.PORT4 && "4" == b || !Entry.Robotis_openCM70.SERVO_MODULEWRITE.PORT5 && "5" == b || !Entry.Robotis_openCM70.SERVO_MODULEWRITE.PORT6 && "6" == b ? (a.isStart = !0, a.timeFlag = 1, setTimeout(function() {
       a.timeFlag = 0;
-    }, 10);
+    }, 650)) : (a.isStart = !0, a.timeFlag = 0);
     return a;
   }}, robotis_melody_note_for:{color:"#FC327F", skeleton:"basic", statements:[], isNotFor:["robotis_openCM70"], template:"\uba5c\ub85c\ub514 %1 \uc744(\ub97c) %2 \uc625\ud0c0\ube0c\ub85c %3 \ub9cc\ud07c \uc18c\ub9ac\ub0b4\uae30 %4", params:[{type:"Dropdown", options:[["\ub3c4", "0"], ["\ub3c4#(\ub808\u266d)", "1"], ["\ub808", "2"], ["\ub808#(\ubbf8\u266d)", "3"], ["\ubbf8", "4"], ["\ud30c", "5"], ["\ud30c#(\uc194\u266d)", "6"], ["\uc194", "7"], ["\uc194#(\ub77c\u266d)", "8"], ["\ub77c", "9"], ["\ub77c#(\uc2dc\u266d)", 
   "10"], ["\uc2dc", "11"]], value:"0", fontsIze:11}, {type:"Dropdown", options:[["1", "0"], ["2", "1"], ["3", "2"], ["4", "3"], ["5", "4"], ["6", "5"]], value:"2", fontsIze:11}, {type:"Dropdown", options:[["\uc628\uc74c\ud45c", "4"], ["2\ubd84\uc74c\ud45c", "2"], ["4\ubd84\uc74c\ud45c", "1"], ["8\ubd84\uc74c\ud45c", "0.5"], ["16\ubd84\uc74c\ud45c", "0.25"]], value:"4", fontsIze:11}, {type:"Indicator", img:"block_icon/practical_course/melody.png", size:12}], events:{}, def:{params:[null, null, null, 
