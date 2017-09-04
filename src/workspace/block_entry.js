@@ -45939,7 +45939,7 @@ Entry.block = {
         color: '#00979D',
         skeleton: 'basic',
         statements: [],
-        template: '서버모터 %1 모터값 %2 %3',
+        template: '서보모터 %1 모터값 %2 %3',
         params: [{
             type: 'Dropdown',
             options: [['D3', 'D3'], ['D5', 'D5'], ['D6', 'D6'], ['D9', 'D9'], ['D10', 'D10'], ['D11', 'D11']]
@@ -46111,7 +46111,7 @@ Entry.block = {
         template: 'IR %1',
         params: [{
             type: 'Dropdown',
-            options: [['A0', '0'], ['A1', '1'], ['A4', '4'], ['A5', '5']]
+            options: [['A0', '0'], ['A4', '4'], ['A5', '5'], ['A7', '7']]
         }],
         events: {},
         def: {
@@ -46281,7 +46281,7 @@ Entry.block = {
         class: 'codestar_input_sensor',
         isNotFor: ['codestar'],
         func: function (sprite, script) {
-            return Entry.hw.getDigitalPortValue('4');
+            return Entry.hw.getDigitalPortValue('3');
         }
     },
     codestar_tilt: {
@@ -46300,7 +46300,7 @@ Entry.block = {
         class: 'codestar_input_sensor',
         isNotFor: ['codestar'],
         func: function (sprite, script) {
-            return Entry.hw.getDigitalPortValue('6');
+            return Entry.hw.portData.tilt;
         }
     },
     "smartBoard_get_named_sensor_value": {

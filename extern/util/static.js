@@ -704,6 +704,8 @@ EntryStatic.getAllBlocks = function() {
                 'codestar_sonar',
                 'codestar_mic',
                 'codestar_temperature',
+                'codestar_tilt',
+
 
                 //koreasci.com chocopi
                 'chocopi_sensor',
