@@ -39120,10 +39120,35 @@ Entry.block = {
             }
         ],
         func: function(sprite, script) {
-            if (!this.isFired) {
+            if (!script.isContinue) {
+                script.isContinue = true;
+                script.isAction = true;
+
+                var entities = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT);
+                var unitId;
+                $.each(entities, function (id, entity) {
+                    unitId = id;
+                });
+                var callBack = function() {
+                    script.isAction = false;
+                };
+
+                var unitComp = Ntry.entityManager.getComponent(unitId, Ntry.STATIC.UNIT);
+                var unitGrid = $.extend({}, Ntry.entityManager.getComponent(unitId, Ntry.STATIC.GRID));
+                if (!Ntry.checkTileByGrid(unitGrid, Ntry.STATIC.MEAT)) {
+                    Ntry.dispatchEvent("unitAction", Ntry.STATIC.SIMOOROOK, callBack);
+                    return Entry.STATIC.BREAK;
+                }
+
                 Ntry.dispatchEvent("unlockItem");
-                this.isFired = true;
+                Ntry.dispatchEvent("unitAction", Ntry.STATIC.EAT, callBack);
+
                 return Entry.STATIC.BREAK;
+            } else if (script.isAction) {
+                return Entry.STATIC.BREAK;
+            } else {
+                delete script.isAction;
+                delete script.isContinue;
             }
         }
     },
