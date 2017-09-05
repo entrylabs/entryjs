@@ -39084,16 +39084,31 @@ Entry.block = {
                     components = entity.components;
                 });
                 var unitComp = Ntry.entityManager.getComponent(unitId, Ntry.STATIC.UNIT);
+                var unitGrid = $.extend({}, Ntry.entityManager.getComponent(unitId, Ntry.STATIC.GRID));
                 script.direction = unitComp.direction;
-                unitComp.direction = Ntry.STATIC.NORTH;
+
                 var callBack = function() {
                     unitComp.direction = script.direction;
                     script.isAction = false;
                 };
-
-                // turn direction
-                Ntry.dispatchEvent("unitAction", Ntry.STATIC.CLIMB, callBack);
-
+                
+                var isCollisionPossible = false;
+                if(unitGrid.y > 3) {
+                    unitComp.direction = Ntry.STATIC.NORTH;
+                    isCollisionPossible = Ntry.checkCollisionTile(unitGrid, unitComp.direction, [Ntry.STATIC.LADDER], 2);
+                } else {
+                    unitComp.direction = Ntry.STATIC.SOUTH;
+                    var tile = Ntry.getTileByGrid(unitGrid);
+                    if(tile.tileType === Ntry.STATIC.LADDER) {
+                        isCollisionPossible = true;
+                    }
+                }
+                
+                if(isCollisionPossible) {
+                    Ntry.dispatchEvent("unitAction", Ntry.STATIC.CLIMB, callBack);
+                } else {
+                    Ntry.dispatchEvent("unitAction", Ntry.STATIC.NOT_FOUND_LADDER, callBack);
+                }
                 return Entry.STATIC.BREAK;
             } else if (script.isAction) {
                 return Entry.STATIC.BREAK;
