@@ -762,7 +762,7 @@ EntryStatic.getAllBlocks = function() {
                 "byrobot_petrone_v2_controller_controller_display_draw_rect",
                 "byrobot_petrone_v2_controller_controller_display_draw_circle",
                 "byrobot_petrone_v2_controller_controller_display_draw_string",
-                // 문자열 정렬
+                "byrobot_petrone_v2_controller_controller_display_draw_string_align",
                 "byrobot_petrone_v2_controller_controller_buzzer_off",
                 "byrobot_petrone_v2_controller_controller_buzzer_scale",
                 "byrobot_petrone_v2_controller_controller_buzzer_scale_delay",
@@ -785,7 +785,6 @@ EntryStatic.getAllBlocks = function() {
                 "byrobot_petrone_v2_flight_controller_value_joystick",
                 "byrobot_petrone_v2_flight_controller_if_button_press",
                 "byrobot_petrone_v2_flight_controller_if_joystick_direction",
-                // 팀선택
                 "byrobot_petrone_v2_flight_drone_control_drone_stop",
                 "byrobot_petrone_v2_flight_drone_control_vehicle_mode",
                 "byrobot_petrone_v2_flight_drone_control_coordinate",
@@ -815,6 +814,7 @@ EntryStatic.getAllBlocks = function() {
                 "byrobot_petrone_v2_flight_controller_display_draw_rect",
                 "byrobot_petrone_v2_flight_controller_display_draw_circle",
                 "byrobot_petrone_v2_flight_controller_display_draw_string",
+
                 "byrobot_petrone_v2_flight_controller_buzzer_off",
                 "byrobot_petrone_v2_flight_controller_buzzer_scale",
                 "byrobot_petrone_v2_flight_controller_buzzer_scale_delay",

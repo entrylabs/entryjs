@@ -359,7 +359,37 @@ Entry.byrobot_petrone_v2_controller =
         delete Entry.hw.sendQueue["display_draw_string_string"];
     },
 
-    // 작업중..
+    transferDisplayDrawStringAlign: function(target, xStart, xEnd, y, align, font, pixel, string)
+    {
+        // 범위 조정
+        xStart = Math.max(xStart, 0);
+        xStart = Math.min(xStart, 124);
+        xEnd = Math.max(xEnd, 4);
+        xEnd = Math.min(xEnd, 128);
+        y = Math.max(y, 0);
+        y = Math.min(y, 60);
+
+        // 전송
+        Entry.hw.setDigitalPortValue("target", target);
+        Entry.hw.setDigitalPortValue("display_draw_string_align_x_start", xStart);
+        Entry.hw.setDigitalPortValue("display_draw_string_align_x_end", xEnd);
+        Entry.hw.setDigitalPortValue("display_draw_string_align_y", y);
+        Entry.hw.setDigitalPortValue("display_draw_string_align_align", align);
+        Entry.hw.setDigitalPortValue("display_draw_string_align_font", font);
+        Entry.hw.setDigitalPortValue("display_draw_string_align_pixel", pixel);
+        Entry.hw.setDigitalPortValue("display_draw_string_align_string", string);
+
+        Entry.hw.update();
+
+        delete Entry.hw.sendQueue["target"];
+        delete Entry.hw.sendQueue["display_draw_string_align_x_start"];
+        delete Entry.hw.sendQueue["display_draw_string_align_x_end"];
+        delete Entry.hw.sendQueue["display_draw_string_align_y"];
+        delete Entry.hw.sendQueue["display_draw_string_align_align"];
+        delete Entry.hw.sendQueue["display_draw_string_align_font"];
+        delete Entry.hw.sendQueue["display_draw_string_align_pixel"];
+        delete Entry.hw.sendQueue["display_draw_string_align_string"];
+    },
 
     transferbuzzer: function(mode, value, time)
     {
@@ -621,7 +651,27 @@ Entry.byrobot_petrone_v2_controller =
         }
     },
 
-    // 작업중..
+    // OLED - 화면에 문자열 정렬하여 그리기
+    setDisplayDrawStringAlign: function(script, target, xStart, xEnd, y, align, font, pixel, string)
+    {
+        switch( this.checkFinish(script, 40) )
+        {
+        case "Start":
+            {
+                this.transferDisplayDrawStringAlign(target, xStart, xEnd, y, align, font, pixel, string);
+            }
+            return script;
+
+        case "Running":
+            return script;
+
+        case "Finish":
+            return script.callReturn();
+
+        default:
+            return script.callReturn();
+        }
+    },
     
     // 버저 설정(함수 호출 시 시간은 모두 ms 단위 사용)
     /*  
