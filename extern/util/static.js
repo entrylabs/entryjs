@@ -814,7 +814,7 @@ EntryStatic.getAllBlocks = function() {
                 "byrobot_petrone_v2_flight_controller_display_draw_rect",
                 "byrobot_petrone_v2_flight_controller_display_draw_circle",
                 "byrobot_petrone_v2_flight_controller_display_draw_string",
-
+                "byrobot_petrone_v2_flight_controller_display_draw_string_align",
                 "byrobot_petrone_v2_flight_controller_buzzer_off",
                 "byrobot_petrone_v2_flight_controller_buzzer_scale",
                 "byrobot_petrone_v2_flight_controller_buzzer_scale_delay",
