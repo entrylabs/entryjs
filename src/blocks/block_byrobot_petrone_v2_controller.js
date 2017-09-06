@@ -243,7 +243,7 @@ Entry.byrobot_petrone_v2_controller =
         delete Entry.hw.sendQueue["display_draw_point_pixel"];
     },
 
-    transferDisplayDrawLine: function(target, x1, y1, x2, y2, pixel)
+    transferDisplayDrawLine: function(target, x1, y1, x2, y2, pixel, line)
     {
         // 범위 조정
         x1 = Math.max(x1, 0);
@@ -262,6 +262,7 @@ Entry.byrobot_petrone_v2_controller =
         Entry.hw.setDigitalPortValue("display_draw_line_x2", x2);
         Entry.hw.setDigitalPortValue("display_draw_line_y2", y2);
         Entry.hw.setDigitalPortValue("display_draw_line_pixel", pixel);
+        Entry.hw.setDigitalPortValue("display_draw_line_line", line);
 
         Entry.hw.update();
 
@@ -271,9 +272,10 @@ Entry.byrobot_petrone_v2_controller =
         delete Entry.hw.sendQueue["display_draw_line_x2"];
         delete Entry.hw.sendQueue["display_draw_line_y2"];
         delete Entry.hw.sendQueue["display_draw_line_pixel"];
+        delete Entry.hw.sendQueue["display_draw_line_line"];
     },
 
-    transferDisplayDrawRect: function(target, x, y, width, height, pixel, flagFill)
+    transferDisplayDrawRect: function(target, x, y, width, height, pixel, flagFill, line)
     {
         // 범위 조정
         x = Math.max(x, 0);
@@ -293,6 +295,7 @@ Entry.byrobot_petrone_v2_controller =
         Entry.hw.setDigitalPortValue("display_draw_rect_height", height);
         Entry.hw.setDigitalPortValue("display_draw_rect_pixel", pixel);
         Entry.hw.setDigitalPortValue("display_draw_rect_flagfill", flagFill);
+        Entry.hw.setDigitalPortValue("display_draw_rect_line", line);
 
         Entry.hw.update();
 
@@ -303,6 +306,7 @@ Entry.byrobot_petrone_v2_controller =
         delete Entry.hw.sendQueue["display_draw_rect_height"];
         delete Entry.hw.sendQueue["display_draw_rect_pixel"];
         delete Entry.hw.sendQueue["display_draw_rect_flagfill"];
+        delete Entry.hw.sendQueue["display_draw_rect_line"];
     },
 
     transferDisplayDrawCircle: function(target, x, y, radius, pixel, flagFill)
@@ -564,13 +568,13 @@ Entry.byrobot_petrone_v2_controller =
     },
 
     // OLED - 화면에 선 그리기
-    setDisplayDrawLine: function(script, target, x1, y1, x2, y2, pixel)
+    setDisplayDrawLine: function(script, target, x1, y1, x2, y2, pixel, line)
     {
         switch( this.checkFinish(script, 40) )
         {
         case "Start":
             {
-                this.transferDisplayDrawLine(target, x1, y1, x2, y2, pixel);
+                this.transferDisplayDrawLine(target, x1, y1, x2, y2, pixel, line);
             }
             return script;
 
@@ -586,13 +590,13 @@ Entry.byrobot_petrone_v2_controller =
     },
 
     // OLED - 화면에 사각형 그리기
-    setDisplayDrawRect: function(script, target, x, y, width, height, pixel, flagFill)
+    setDisplayDrawRect: function(script, target, x, y, width, height, pixel, flagFill, line)
     {
         switch( this.checkFinish(script, 40) )
         {
         case "Start":
             {
-                this.transferDisplayDrawRect(target, x, y, width, height, pixel, flagFill);
+                this.transferDisplayDrawRect(target, x, y, width, height, pixel, flagFill, line);
             }
             return script;
 
