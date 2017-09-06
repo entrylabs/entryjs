@@ -786,6 +786,8 @@ EntryStatic.getAllBlocks = function() {
                 "byrobot_petrone_v2_flight_controller_if_button_press",
                 "byrobot_petrone_v2_flight_controller_if_joystick_direction",
                 "byrobot_petrone_v2_flight_drone_control_drone_stop",
+                "byrobot_petrone_v2_flight_drone_control_drone_takeoff",
+                "byrobot_petrone_v2_flight_drone_control_drone_landing",
                 "byrobot_petrone_v2_flight_drone_control_vehicle_mode",
                 "byrobot_petrone_v2_flight_drone_control_coordinate",
                 "byrobot_petrone_v2_flight_drone_control_drone_reset_heading",

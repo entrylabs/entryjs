@@ -46205,6 +46205,64 @@ Entry.block = {
     },
     // */
     //*
+    "byrobot_petrone_v2_flight_drone_control_drone_takeoff":
+    {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                null
+            ],
+            "type": "byrobot_petrone_v2_flight_drone_control_drone_takeoff"
+        },
+        "paramsKeyMap": {
+        },
+        "class": "byrobot_petrone_v2_flight_control_flight",
+        "isNotFor": ["byrobot_petrone_v2_flight"],
+        "func": function (sprite, script) {
+            return Entry.byrobot_petrone_v2_flight.setEventFlight(script, 0x11, 200); // 0x11 : FlightEvent::TakeOff
+        },
+    },
+    // */
+    //*
+    "byrobot_petrone_v2_flight_drone_control_drone_landing":
+    {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                null
+            ],
+            "type": "byrobot_petrone_v2_flight_drone_control_drone_landing"
+        },
+        "paramsKeyMap": {
+        },
+        "class": "byrobot_petrone_v2_flight_control_flight",
+        "isNotFor": ["byrobot_petrone_v2_flight"],
+        "func": function (sprite, script) {
+            return Entry.byrobot_petrone_v2_flight.setEventFlight(script, 0x12, 200); // 0x12 : FlightEvent::Landing
+        },
+    },
+    // */
+    //*
     "byrobot_petrone_v2_flight_drone_control_vehicle_mode":
     {
         "color": "#00979D",
