@@ -794,6 +794,7 @@ EntryStatic.getAllBlocks = function() {
                 "byrobot_petrone_v2_flight_drone_control_quad_one",
                 "byrobot_petrone_v2_flight_drone_control_quad_one_delay",
                 "byrobot_petrone_v2_flight_drone_control_quad",
+                "byrobot_petrone_v2_flight_drone_control_quad_delay",
                 "byrobot_petrone_v2_flight_drone_motor_stop",
                 "byrobot_petrone_v2_flight_drone_motorsingle",
                 "byrobot_petrone_v2_flight_drone_motorsingle_input",

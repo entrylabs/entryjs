@@ -46614,6 +46614,86 @@ Entry.block = {
         },
     },
     // */
+    //*
+    "byrobot_petrone_v2_flight_drone_control_quad_delay":
+    {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "number",
+                    "params": ["0"]
+                },
+                {
+                    "type": "number",
+                    "params": ["0"]
+                },
+                {
+                    "type": "number",
+                    "params": ["0"]
+                },
+                {
+                    "type": "number",
+                    "params": ["0"]
+                },
+                {
+                    "type": "number",
+                    "params": ["1"]
+                },
+                null
+            ],
+            "type": "byrobot_petrone_v2_flight_drone_control_quad_delay"
+        },
+        "paramsKeyMap": {
+            "ROLL": 0,
+            "PITCH": 1,
+            "YAW": 2,
+            "THROTTLE": 3,
+            "TIME": 4
+        },
+        "class": "byrobot_petrone_v2_flight_control_flight",
+        "isNotFor": ["byrobot_petrone_v2_flight"],
+        "func": function (sprite, script) {
+            var roll = parseInt(script.getNumberValue("ROLL", script));
+            var pitch = parseInt(script.getNumberValue("PITCH", script));
+            var yaw = parseInt(script.getNumberValue("YAW", script));
+            var throttle = parseInt(script.getNumberValue("THROTTLE", script));
+            var time = parseInt(script.getNumberValue("TIME", script) * 1000);
+
+            return Entry.byrobot_petrone_v2_flight.sendControlQuad(script, roll, pitch, yaw, throttle, time, true);
+        },
+    },
+    // */
     /* BYROBOT PetroneV2 Flight End */
     "boolean_shell": {
         "color": "#AEB8FF",
