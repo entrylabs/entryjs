@@ -39118,6 +39118,46 @@ Entry.block = {
             }
         }
     },
+    "maze_attack_yoyo": {
+        "skeleton": "basic",
+        "mode": "maze",
+        "color": "#ef6d6a",
+        "emphasizedColor": "#f29999",
+        "syntax": [
+            "Scope",
+            "yoyo"
+        ],
+        "params": [
+            {
+                "type": "Image",
+                "img": "/img/assets/week/blocks/lupin.png",
+                "size": 24
+            },
+            {
+                "type": "Image",
+                "img": "/img/assets/week/blocks/pinkbean_ic.png",
+                "size": 24
+            }
+        ],
+        func: function(sprite, script) {
+            if (!script.isContinue) {
+                script.isContinue = true;
+                script.isAction = true;
+
+                var callBack = function() {
+                    script.isAction = false;
+                };
+
+                Ntry.dispatchEvent("unitAction", Ntry.STATIC.YOYO, callBack);
+                return Entry.STATIC.BREAK;
+            } else if (script.isAction) {
+                return Entry.STATIC.BREAK;
+            } else {
+                delete script.isAction;
+                delete script.isContinue;
+            }
+        }
+    },
     "maze_eat_item": {
         "skeleton": "basic",
         "mode": "maze",
@@ -39458,6 +39498,7 @@ Entry.block = {
             }
         }
     },
+
     "maze_james_heart": {
         "skeleton": "basic",
         "mode": "maze",
