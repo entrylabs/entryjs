@@ -44989,6 +44989,16 @@ Entry.block = {
                 "fontSize": 11
             },
             {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.byrobot_petrone_v2_controller_display_line_solid, "0"],
+                    [Lang.Blocks.byrobot_petrone_v2_controller_display_line_dotted, "1"],
+                    [Lang.Blocks.byrobot_petrone_v2_controller_display_line_dashed, "2"],
+                ],
+                "value": "0",
+                "fontSize": 11
+            },
+            {
                 "type": "Indicator",
                 "img": "block_icon/hardware_03.png",
                 "size": 12
@@ -45014,6 +45024,7 @@ Entry.block = {
                     "params": ["48"]
                 },
                 null,
+                null,
                 null
             ],
             "type": "byrobot_petrone_v2_flight_controller_display_draw_line"
@@ -45024,6 +45035,7 @@ Entry.block = {
             "X2": 2,
             "Y2": 3,
             "PIXEL": 4,
+            "LINE": 5,
         },
         "class": "byrobot_petrone_v2_flight_controller_display",
         "isNotFor": ["byrobot_petrone_v2_flight"],
@@ -45033,7 +45045,8 @@ Entry.block = {
             var x2 = script.getNumberValue('X2');
             var y2 = script.getNumberValue('Y2');
             var pixel = parseInt(script.getField('PIXEL'));
-            return Entry.byrobot_petrone_v2_flight.setDisplayDrawLine(script, 0x31, x1, y1, x2, y2, pixel);
+            var line = parseInt(script.getField('LINE'));
+            return Entry.byrobot_petrone_v2_flight.setDisplayDrawLine(script, 0x31, x1, y1, x2, y2, pixel, line);
         },
     },
     // */
@@ -45079,6 +45092,16 @@ Entry.block = {
                 "fontSize": 11
             },
             {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.byrobot_petrone_v2_controller_display_line_solid, "0"],
+                    [Lang.Blocks.byrobot_petrone_v2_controller_display_line_dotted, "1"],
+                    [Lang.Blocks.byrobot_petrone_v2_controller_display_line_dashed, "2"],
+                ],
+                "value": "0",
+                "fontSize": 11
+            },
+            {
                 "type": "Indicator",
                 "img": "block_icon/hardware_03.png",
                 "size": 12
@@ -45105,6 +45128,7 @@ Entry.block = {
                 },
                 null,
                 null,
+                null,
                 null
             ],
             "type": "byrobot_petrone_v2_flight_controller_display_draw_rect"
@@ -45116,6 +45140,7 @@ Entry.block = {
             "HEIGHT": 3,
             "PIXEL": 4,
             "FLAGFILL": 5,
+            "LINE": 6,
         },
         "class": "byrobot_petrone_v2_flight_controller_display",
         "isNotFor": ["byrobot_petrone_v2_flight"],
@@ -45126,7 +45151,8 @@ Entry.block = {
             var height = script.getNumberValue('HEIGHT');
             var pixel = parseInt(script.getField('PIXEL'));
             var flagFill = parseInt(script.getField('FLAGFILL'));
-            return Entry.byrobot_petrone_v2_flight.setDisplayDrawRect(script, 0x31, x, y, width, height, pixel, flagFill);
+            var line = parseInt(script.getField('LINE'));
+            return Entry.byrobot_petrone_v2_flight.setDisplayDrawRect(script, 0x31, x, y, width, height, pixel, flagFill, line);
         },
     },
     // */

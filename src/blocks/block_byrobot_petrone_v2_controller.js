@@ -66,7 +66,6 @@ Entry.byrobot_petrone_v2_controller =
         mode : 'both'   // 표시 모드
     },
     
-    
     // functions
     
     // 시간 지연
