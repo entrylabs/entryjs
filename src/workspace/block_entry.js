@@ -39347,7 +39347,7 @@ Entry.block = {
                 var unitComp = Ntry.entityManager.getComponent(unitId, Ntry.STATIC.UNIT);
                 var unitGrid = $.extend({}, Ntry.entityManager.getComponent(unitId, Ntry.STATIC.GRID));
                 if (!Ntry.checkTileByGrid(unitGrid, Ntry.STATIC.MEAT)) {
-                    Ntry.dispatchEvent("unitAction", Ntry.STATIC.NOT_FOUND_LADDER, callBack);
+                    Ntry.dispatchEvent("unitAction", Ntry.STATIC.NOT_FOUND_MEAT, callBack);
                     return Entry.STATIC.BREAK;
                 }
 
