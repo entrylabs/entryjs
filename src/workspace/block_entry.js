@@ -41599,7 +41599,7 @@ Entry.block = {
             },
     },
     // */
-    //*
+    //*     삭제된 블럭(?)
     "byrobot_dronefighter_flight_drone_command_mode_vehicle_drone":
     {
         "color": "#00979D",
@@ -41629,7 +41629,7 @@ Entry.block = {
             },
     },
     // */
-    //*
+    //*     삭제된 블럭(?)
     "byrobot_dronefighter_flight_drone_control_drone_takeoff":
     {
         "color": "#00979D",
@@ -41659,7 +41659,7 @@ Entry.block = {
             },
     },
     // */
-    //*
+    //*     삭제된 블럭(?)
     "byrobot_dronefighter_flight_drone_control_drone_landing":
     {
         "color": "#00979D",
@@ -46228,12 +46228,22 @@ Entry.block = {
     },
     // */
     //*
-    "byrobot_petrone_v2_flight_drone_control_drone_stop":
+    "byrobot_petrone_v2_flight_drone_command_mode_vehicle_drone":
     {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
         "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.byrobot_petrone_v2_drone_vehicle_flight, "16"],
+                    [Lang.Blocks.byrobot_petrone_v2_drone_vehicle_flight_noguard, "17"],
+                    [Lang.Blocks.byrobot_petrone_v2_drone_vehicle_flight_fpv, "18"],
+                ],
+                "value": "16",
+                "fontSize": 11
+            },
             {
                 "type": "Indicator",
                 "img": "block_icon/hardware_03.png",
@@ -46243,16 +46253,19 @@ Entry.block = {
         "events": {},
         "def": {
             "params": [
+                null,
                 null
             ],
-            "type": "byrobot_petrone_v2_flight_drone_control_drone_stop"
+            "type": "byrobot_petrone_v2_flight_drone_command_mode_vehicle_drone"
         },
         "paramsKeyMap": {
+            "VEHICLE": 0,
         },
         "class": "byrobot_petrone_v2_flight_control_flight",
         "isNotFor": ["byrobot_petrone_v2_flight"],
         "func": function (sprite, script) {
-            return Entry.byrobot_petrone_v2_flight.sendStop(script);
+            var vehicle = script.getField('VEHICLE');
+            return Entry.byrobot_petrone_v2_flight.setModeVehicle(script, vehicle);
         },
     },
     // */
@@ -46315,22 +46328,12 @@ Entry.block = {
     },
     // */
     //*
-    "byrobot_petrone_v2_flight_drone_control_vehicle_mode":
+    "byrobot_petrone_v2_flight_drone_control_drone_stop":
     {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
         "params": [
-            {
-                "type": "Dropdown",
-                "options": [
-                    [Lang.Blocks.byrobot_petrone_v2_drone_vehicle_flight, "16"],
-                    [Lang.Blocks.byrobot_petrone_v2_drone_vehicle_flight_noguard, "17"],
-                    [Lang.Blocks.byrobot_petrone_v2_drone_vehicle_flight_fpv, "18"],
-                ],
-                "value": "16",
-                "fontSize": 11
-            },
             {
                 "type": "Indicator",
                 "img": "block_icon/hardware_03.png",
@@ -46340,19 +46343,16 @@ Entry.block = {
         "events": {},
         "def": {
             "params": [
-                null,
                 null
             ],
-            "type": "byrobot_petrone_v2_flight_drone_control_vehicle_mode"
+            "type": "byrobot_petrone_v2_flight_drone_control_drone_stop"
         },
         "paramsKeyMap": {
-            "VEHICLE": 0,
         },
         "class": "byrobot_petrone_v2_flight_control_flight",
         "isNotFor": ["byrobot_petrone_v2_flight"],
         "func": function (sprite, script) {
-            var vehicle = script.getField('VEHICLE');
-            return Entry.byrobot_petrone_v2_flight.sendCommand(script, 0x30, 0x10, vehicle);
+            return Entry.byrobot_petrone_v2_flight.sendStop(script);
         },
     },
     // */
