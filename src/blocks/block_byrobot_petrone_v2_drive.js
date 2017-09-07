@@ -1103,8 +1103,8 @@ Entry.byrobot_petrone_v2_drive =
             {
                 this.transferCommand(0x30, 0x10, modeVehicle);
         
-                this.transferControlQuad(0, 0, 0, 0);
                 this.transferControlDouble(0, 0);
+                this.transferControlQuad(0, 0, 0, 0);
             }
             return script;
             
@@ -1119,29 +1119,7 @@ Entry.byrobot_petrone_v2_drive =
         }
     },
     
-    setEventFlight: function(script, eventFlight, time)
-    {
-        switch( this.checkFinish(script, time) )
-        {
-        case "Start":
-            {
-                this.transferCommand(0x30, 0x22, eventFlight);  // 0x22 : CommandType::FlightEvent
-                this.transferControlQuad(0, 0, 0, 0);
-            }
-            return script;
-            
-        case "Running":
-            return script;
-        
-        case "Finish":
-            return script.callReturn();
-            
-        default:
-            return script.callReturn();
-        }
-    },
-
-    sendControlQuadSingle: function(script, controlTarget, value, time, flagDelay)
+    sendControlDoubleSingle: function(script, controlTarget, value, time, flagDelay)
     {
         var timeDelay = 40;
         if( flagDelay )
@@ -1151,10 +1129,25 @@ Entry.byrobot_petrone_v2_drive =
         {
         case "Start":
             {
-                // 범위 조정
-                value       = Math.max(value, -100);
-                value       = Math.min(value, 100);
-                        
+                switch(controlTarget)
+                {
+                case "control_wheel":
+                    {
+                        // 범위 조정
+                        value = Math.max(value, -100);
+                        value = Math.min(value, 100);
+                    }
+                    break;
+                    
+                case "control_accel":
+                    {
+                        // 범위 조정
+                        value = Math.max(value, 0);
+                        value = Math.min(value, 100);
+                    }
+                    break;
+                }
+                
                 // 전송
                 Entry.hw.setDigitalPortValue("target", 0x30);
                 Entry.hw.setDigitalPortValue(controlTarget, value);
@@ -1172,6 +1165,8 @@ Entry.byrobot_petrone_v2_drive =
         case "Finish":
             if( flagDelay )
             {
+                // 블럭을 빠져나갈 때 변경했던 값을 초기화
+                
                 // 전송
                 Entry.hw.setDigitalPortValue("target", 0x30);
                 Entry.hw.setDigitalPortValue(controlTarget, 0);
@@ -1187,8 +1182,8 @@ Entry.byrobot_petrone_v2_drive =
             return script.callReturn();
         }
     },
-    
-    sendControlQuad: function(script, roll, pitch, yaw, throttle, time, flagDelay)
+
+    sendControlDouble: function(script, wheel, accel, time, flagDelay)
     {
         var timeDelay = 40;
         if( flagDelay )
@@ -1198,7 +1193,7 @@ Entry.byrobot_petrone_v2_drive =
         {
         case "Start":
             {
-                this.transferControlQuad(roll, pitch, yaw, throttle);
+                this.transferControlDouble(wheel, accel);
             }
             return script;
             
@@ -1208,7 +1203,7 @@ Entry.byrobot_petrone_v2_drive =
         case "Finish":
             if( flagDelay )
             {
-                this.transferControlQuad(0, 0, 0, 0);
+                this.transferControlDouble(0, 0);
             }
             return script.callReturn();
             
@@ -1216,5 +1211,4 @@ Entry.byrobot_petrone_v2_drive =
             return script.callReturn();
         }
     },
-
 };
