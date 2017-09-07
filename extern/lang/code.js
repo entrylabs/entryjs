@@ -373,6 +373,8 @@ Lang.Blocks = {
     "byrobot_petrone_v2_drone_vehicle_flight": "드론(가드 포함)",
     "byrobot_petrone_v2_drone_vehicle_flight_noguard": "드론(가드 없음)",
     "byrobot_petrone_v2_drone_vehicle_flight_fpv": "드론(FPV)",
+    "byrobot_petrone_v2_drone_vehicle_drive": "자동차",
+    "byrobot_petrone_v2_drone_vehicle_drive_fpv": "자동차(FPV)",
     "byrobot_petrone_v2_drone_coordinate_world": "on (초보자용)",
     "byrobot_petrone_v2_drone_coordinate_local": "off (숙련자용)",
     "byrobot_petrone_v2_drone_control_double_wheel": "방향",

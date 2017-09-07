@@ -373,6 +373,8 @@ Lang.Blocks = {
     "byrobot_petrone_v2_drone_vehicle_flight": "drone(with guard)",
     "byrobot_petrone_v2_drone_vehicle_flight_noguard": "drone(without guard)",
     "byrobot_petrone_v2_drone_vehicle_flight_fpv": "drone(FPV)",
+    "byrobot_petrone_v2_drone_vehicle_drive": "drive",
+    "byrobot_petrone_v2_drone_vehicle_drive_fpv": "drive(FPV)",
     "byrobot_petrone_v2_drone_coordinate_world": "on (easy)",
     "byrobot_petrone_v2_drone_coordinate_local": "off (hard)",
     "byrobot_petrone_v2_drone_control_double_wheel": "direction",
