@@ -39233,7 +39233,7 @@ Entry.block = {
             }
         }
     },
-    "maze_attack_mushRoom": {
+    "maze_attack_mushroom": {
         "skeleton": "basic",
         "mode": "maze",
         "color": "#ef6d6a",
