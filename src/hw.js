@@ -61,7 +61,7 @@ Entry.HW = function() {
         'F.2': Entry.byrobot_dronefighter_drive,
         'F.3': Entry.byrobot_dronefighter_flight,
         'F.4': Entry.byrobot_petrone_v2_controller,
-        // 'F.5': Entry.byrobot_petrone_v2_drive,
+        'F.5': Entry.byrobot_petrone_v2_drive,
         'F.6': Entry.byrobot_petrone_v2_flight,
         '10.1': Entry.Roborobo_Roduino,
         '10.2': Entry.Roborobo_SchoolKit,
