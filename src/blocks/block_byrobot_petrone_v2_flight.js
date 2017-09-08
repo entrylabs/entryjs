@@ -1126,8 +1126,8 @@ Entry.byrobot_petrone_v2_flight =
         {
         case "Start":
             {
+                this.transferControlQuad(0, 0, 0, 0);           // 기존 입력되었던 조종기 방향 초기화 (수직으로 이륙, 착륙 하도록)
                 this.transferCommand(0x30, 0x22, eventFlight);  // 0x22 : CommandType::FlightEvent
-                // this.transferControlQuad(0, 0, 0, 0);
             }
             return script;
             
