@@ -39118,7 +39118,7 @@ Entry.block = {
             }
         }
     },
-    "maze_attack_yoyo": {
+    "maze_attack_lupin": {
         "skeleton": "basic",
         "mode": "maze",
         "color": "#ef6d6a",
@@ -39141,14 +39141,64 @@ Entry.block = {
         ],
         func: function(sprite, script) {
             if (!script.isContinue) {
+                var entities = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT);
+                var unitId;
+                $.each(entities, function (id, entity) {
+                    unitId = id;
+                    components = entity.components;
+                });
+                var unitComp = Ntry.entityManager.getComponent(unitId, Ntry.STATIC.UNIT);
+
                 script.isContinue = true;
-                script.isAction = true;
+                script.isAction = true;         
+
+                var isFoundMushroom = false;
+                var grid = $.extend({}, Ntry.entityManager.getComponent(unitId, Ntry.STATIC.GRID));
+                for(var i = 0; i < 2; i++) {
+                    Ntry.addVectorByDirection(grid, unitComp.direction, 1);
+                    var findTile = Ntry.entityManager.find(
+                        {
+                            type: Ntry.STATIC.GRID,
+                            x: grid.x,
+                            y: grid.y
+                        },
+                        {
+                            type: Ntry.STATIC.TILE,
+                            tileType: Ntry.STATIC.OBSTACLE_MUSHROOM
+                        }
+                    );
+                    if(findTile && findTile.length) {
+                        isFoundMushroom = true;
+                    }
+                }                
+                       
+                if(isFoundMushroom) {
+                    Ntry.dispatchEvent("unitAction", Ntry.STATIC.WRONG_ATTACK_OBSTACLE, function () {
+                        script.isAction = false;
+                    });
+                    return Entry.STATIC.BREAK;
+                } 
+
+                var unitGrid = $.extend({}, Ntry.entityManager.getComponent(unitId, Ntry.STATIC.GRID));
+                var isCollisionPossible = Ntry.checkCollisionTile(unitGrid, unitComp.direction, [Ntry.STATIC.OBSTACLE_LUPIN], 2);
+                if(!isCollisionPossible) {
+                    Ntry.dispatchEvent("unitAction", Ntry.STATIC.NOT_FOUND_DESTORY_OBJECT, function () {
+                        script.isAction = false;
+                    });
+                    return Entry.STATIC.BREAK;
+                }
 
                 var callBack = function() {
-                    script.isAction = false;
+                    Ntry.dispatchEvent('destroyObstacle', 2, function (state) {
+                        switch(state) {
+                            case Ntry.STATIC.OBSTACLE_DESTROY_SUCCESS:
+                                script.isAction = false;
+                                break;
+                        }
+                    });
                 };
 
-                Ntry.dispatchEvent("unitAction", Ntry.STATIC.YOYO, callBack);
+                Ntry.dispatchEvent("unitAction", Ntry.STATIC.ATTACK_LUPIN, callBack);
                 return Entry.STATIC.BREAK;
             } else if (script.isAction) {
                 return Entry.STATIC.BREAK;
@@ -39256,14 +39306,38 @@ Entry.block = {
         ],
         func: function(sprite, script) {
             if (!script.isContinue) {
+                var entities = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT);
+                var unitId;
+                $.each(entities, function (id, entity) {
+                    unitId = id;
+                    components = entity.components;
+                });
+                var unitComp = Ntry.entityManager.getComponent(unitId, Ntry.STATIC.UNIT);
+                var unitGrid = $.extend({}, Ntry.entityManager.getComponent(unitId, Ntry.STATIC.GRID));
+                var isCollisionPossible = Ntry.checkCollisionTile(unitGrid, unitComp.direction, [Ntry.STATIC.OBSTACLE_MUSHROOM], 1);
+
                 script.isContinue = true;
                 script.isAction = true;
 
+                if(!isCollisionPossible) {
+                    Ntry.dispatchEvent("unitAction", Ntry.STATIC.NOT_FOUND_DESTORY_OBJECT, function () {
+                        script.isAction = false;
+                    });
+                    // Ntry.dispatchEvent("unitAction", Ntry.STATIC.NOT_FOUND_MEAT, callBack);
+                    return Entry.STATIC.BREAK;
+                }
+
                 var callBack = function() {
-                    script.isAction = false;
+                    Ntry.dispatchEvent('destroyObstacle', 1, function (state) {
+                        switch(state) {
+                            case Ntry.STATIC.OBSTACLE_DESTROY_SUCCESS:
+                                script.isAction = false;
+                                break;
+                        }
+                    });
                 };
 
-                Ntry.dispatchEvent("unitAction", Ntry.STATIC.MUSHROOM, callBack);
+                Ntry.dispatchEvent("unitAction", Ntry.STATIC.ATTACK_MUSHROOM, callBack);
                 return Entry.STATIC.BREAK;
             } else if (script.isAction) {
                 return Entry.STATIC.BREAK;
@@ -39313,7 +39387,6 @@ Entry.block = {
             }
         }
     },
-
     "maze_eat_item": {
         "skeleton": "basic",
         "mode": "maze",
@@ -40062,7 +40135,7 @@ Entry.block = {
                     var tile = Ntry.entityManager.getComponent(entity.id, Ntry.STATIC.TILE);
                     var item = Ntry.entityManager.getComponent(entity.id, Ntry.STATIC.ITEM);
 
-                    if(tile && item && tile.tileType === Ntry.STATIC.GOAL && item.itemType === Ntry.STATIC.GOAL_ITEM) {
+                    if(tile && item && tile.tileType === Ntry.STATIC.GOAL && Ntry.STATIC.GOAL_ITEM_LIST.indexOf(item.itemType) > -1) {
                         isGoal = true;
                         break;
                     }
@@ -40257,6 +40330,16 @@ Entry.block = {
                 "img": "/img/assets/maze/bitmap/ws/tile_goal_04.png",
                 "size": 18
             },
+            {
+                "type": "Image",
+                "img": "/img/assets/week/blocks/for.png",
+                "size": 24
+            }
+        ],
+    },
+    "maze_repeat_until_goal": {
+        "parent": "maze_repeat_until_3",
+        "params": [
             {
                 "type": "Image",
                 "img": "/img/assets/week/blocks/for.png",
@@ -40536,6 +40619,412 @@ Entry.block = {
         "parent": "_if",
         "class": "",
         "syntax": {"js": [], "py": []}
+    },
+    "maze_step_if_mushroom": {
+        "skeleton": "basic_loop",
+        "mode": "maze",
+        "color": "#498DEB",
+        "syntax": [
+            "BasicIf",
+            "front == mushroom"
+        ],
+        "params": [
+            {
+                "type": "Image",
+                "img": "/img/assets/week/blocks/mushRoom.png",
+                "size": 24
+            },
+            {
+                "type": "Image",
+                "img": "/img/assets/week/blocks/if.png",
+                "size": 24
+            }        
+        ],
+        "statements": [
+            {
+                "accept": "basic"
+            }
+        ],
+        func: function() {
+            if (this.isContinue) return;
+
+            var entities = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT);
+
+            var entity;
+            for (var key in entities) {
+                entity = entities[key];
+            }
+
+            var unitComp = Ntry.entityManager.getComponent(entity.id, Ntry.STATIC.UNIT);
+            var gridComp = Ntry.entityManager.getComponent(entity.id, Ntry.STATIC.GRID);
+            var grid = {x: gridComp.x, y: gridComp.y};
+            Ntry.addVectorByDirection(grid, unitComp.direction, 1);
+
+            var fitEntities = Ntry.entityManager.find(
+                {
+                    type: Ntry.STATIC.GRID,
+                    x: grid.x,
+                    y: grid.y
+                },
+                {
+                    type: Ntry.STATIC.TILE,
+                    tileType: Ntry.STATIC.OBSTACLE_MUSHROOM
+                }
+            );
+
+            this.isContinue = true;
+
+            var statement = this.block.statements[0];
+            if (fitEntities.length === 0) {
+                return;
+            } else if (statement.getBlocks().length === 0)
+                return;
+            else {
+                this.executor.stepInto(statement);
+                return Entry.STATIC.BREAK;
+            }
+        }
+    },
+    "maze_step_if_lupin": {
+        "skeleton": "basic_loop",
+        "mode": "maze",
+        "color": "#498DEB",
+        "syntax": [
+            "BasicIf",
+            "front == lupin"
+        ],
+        "params": [
+            {
+                "type": "Image",
+                "img": "/img/assets/week/blocks/lupin.png",
+                "size": 24
+            },
+            {
+                "type": "Image",
+                "img": "/img/assets/week/blocks/if.png",
+                "size": 24
+            }        
+        ],
+        "statements": [
+            {
+                "accept": "basic"
+            }
+        ],
+        func: function() {
+            if (this.isContinue) return;
+
+            var entities = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT);
+
+            var entity;
+            for (var key in entities) {
+                entity = entities[key];
+            }
+
+            var unitComp = Ntry.entityManager.getComponent(entity.id, Ntry.STATIC.UNIT);
+            var gridComp = Ntry.entityManager.getComponent(entity.id, Ntry.STATIC.GRID);
+            var grid = {x: gridComp.x, y: gridComp.y};
+            Ntry.addVectorByDirection(grid, unitComp.direction, 2);
+
+            var fitEntities = Ntry.entityManager.find(
+                {
+                    type: Ntry.STATIC.GRID,
+                    x: grid.x,
+                    y: grid.y
+                },
+                {
+                    type: Ntry.STATIC.TILE,
+                    tileType: Ntry.STATIC.OBSTACLE_LUPIN
+                }
+            );
+
+            this.isContinue = true;
+
+            var statement = this.block.statements[0];
+            if (fitEntities.length === 0) {
+                return;
+            } else if (statement.getBlocks().length === 0)
+                return;
+            else {
+                this.executor.stepInto(statement);
+                return Entry.STATIC.BREAK;
+            }
+        }
+    },
+    "maze_step_if_else_road": {
+        "skeleton": "basic_double_loop",
+        "mode": "maze",
+        "color": "#498DEB",
+        "params": [
+            {
+                "type": "Image",
+                "img": "/img/assets/week/blocks/if.png",
+                "size": 24
+            },
+            {
+                "type": "LineBreak"
+            }
+        ],
+        "statements": [
+            {
+                "accept": "basic"
+            },
+            {
+                "accept": "basic"
+            }
+        ],
+        "statementsKeyMap": {
+            "STACK_IF": 0,
+            "STACK_ELSE": 1
+        },
+        func: function(sprite, script) {
+            if (script.isCondition) {
+                delete script.isCondition;
+                return script.callReturn();
+            }           
+
+            var entities = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT);
+
+            var entity;
+            for (var key in entities) {
+                entity = entities[key];
+            }
+
+            var unitComp = Ntry.entityManager.getComponent(entity.id, Ntry.STATIC.UNIT);
+            var gridComp = Ntry.entityManager.getComponent(entity.id, Ntry.STATIC.GRID);
+            var grid = {x: gridComp.x, y: gridComp.y};
+            Ntry.addVectorByDirection(grid, unitComp.direction, 1);
+
+            var fitEntities = Ntry.entityManager.find(
+                {
+                    type: Ntry.STATIC.GRID,
+                    x: grid.x,
+                    y: grid.y
+                },
+                {
+                    type: Ntry.STATIC.TILE,
+                    tileType: Ntry.STATIC.ROAD
+                }
+            );
+
+            script.isCondition = true;
+            if(fitEntities.length) {
+                return script.getStatement("STACK_IF", script);
+            } else {
+                return script.getStatement("STACK_ELSE", script);
+            }
+        }
+    },
+    "maze_step_if_else_mushroom": {
+        "skeleton": "basic_double_loop",
+        "mode": "maze",
+        "color": "#498DEB",
+        "params": [
+            {
+                "type": "Image",
+                "img": "/img/assets/week/blocks/mushroom.png",
+                "size": 24
+            },
+            {
+                "type": "Image",
+                "img": "/img/assets/week/blocks/if.png",
+                "size": 24
+            },
+            {
+                "type": "LineBreak"
+            }
+        ],
+        "statements": [
+            {
+                "accept": "basic"
+            },
+            {
+                "accept": "basic"
+            }
+        ],
+        "statementsKeyMap": {
+            "STACK_IF": 0,
+            "STACK_ELSE": 1
+        },
+        func: function(sprite, script) {
+            if (script.isCondition) {
+                delete script.isCondition;
+                return script.callReturn();
+            }           
+
+            var entities = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT);
+
+            var entity;
+            for (var key in entities) {
+                entity = entities[key];
+            }
+
+            var unitComp = Ntry.entityManager.getComponent(entity.id, Ntry.STATIC.UNIT);
+            var gridComp = Ntry.entityManager.getComponent(entity.id, Ntry.STATIC.GRID);
+            var grid = {x: gridComp.x, y: gridComp.y};
+            Ntry.addVectorByDirection(grid, unitComp.direction, 1);
+
+            var fitEntities = Ntry.entityManager.find(
+                {
+                    type: Ntry.STATIC.GRID,
+                    x: grid.x,
+                    y: grid.y
+                },
+                {
+                    type: Ntry.STATIC.TILE,
+                    tileType: Ntry.STATIC.OBSTACLE_MUSHROOM
+                }
+            );
+
+            script.isCondition = true;
+            if(fitEntities.length) {
+                return script.getStatement("STACK_IF", script);
+            } else {
+                return script.getStatement("STACK_ELSE", script);
+            }
+        }
+    },
+    "maze_step_if_else_lupin": {
+        "skeleton": "basic_double_loop",
+        "mode": "maze",
+        "color": "#498DEB",
+        "params": [
+            {
+                "type": "Image",
+                "img": "/img/assets/week/blocks/lupin.png",
+                "size": 24
+            },
+            {
+                "type": "Image",
+                "img": "/img/assets/week/blocks/if.png",
+                "size": 24
+            },
+            {
+                "type": "LineBreak"
+            }
+        ],
+        "statements": [
+            {
+                "accept": "basic"
+            },
+            {
+                "accept": "basic"
+            }
+        ],
+        "statementsKeyMap": {
+            "STACK_IF": 0,
+            "STACK_ELSE": 1
+        },
+        func: function(sprite, script) {
+            if (script.isCondition) {
+                delete script.isCondition;
+                return script.callReturn();
+            }           
+
+            var entities = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT);
+            var entity;
+            for (var key in entities) {
+                entity = entities[key];
+            }
+
+            var unitComp = Ntry.entityManager.getComponent(entity.id, Ntry.STATIC.UNIT);
+            var gridComp = Ntry.entityManager.getComponent(entity.id, Ntry.STATIC.GRID);
+            var grid = {x: gridComp.x, y: gridComp.y};
+
+            Ntry.addVectorByDirection(grid, unitComp.direction, 2);
+
+            var fitEntities = Ntry.entityManager.find(
+                {
+                    type: Ntry.STATIC.GRID,
+                    x: grid.x,
+                    y: grid.y
+                },
+                {
+                    type: Ntry.STATIC.TILE,
+                    tileType: Ntry.STATIC.OBSTACLE_LUPIN
+                }
+            );
+
+            script.isCondition = true;
+            if(fitEntities.length) {
+                return script.getStatement("STACK_IF", script);
+            } else {
+                return script.getStatement("STACK_ELSE", script);
+            }
+        }
+    },
+    "maze_step_if_else_ladder": {
+        "skeleton": "basic_double_loop",
+        "mode": "maze",
+        "color": "#498DEB",
+        "params": [
+            {
+                "type": "Image",
+                "img": "/img/assets/week/blocks/ic_ladder.png",
+                "size": 24
+            },
+            {
+                "type": "Image",
+                "img": "/img/assets/week/blocks/if.png",
+                "size": 24
+            },
+            {
+                "type": "LineBreak"
+            }
+        ],
+        "statements": [
+            {
+                "accept": "basic"
+            },
+            {
+                "accept": "basic"
+            }
+        ],
+        "statementsKeyMap": {
+            "STACK_IF": 0,
+            "STACK_ELSE": 1
+        },
+        func: function(sprite, script) {
+            if (script.isCondition) {
+                delete script.isCondition;
+                return script.callReturn();
+            }           
+
+            var entities = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT);
+
+            var entity;
+            for (var key in entities) {
+                entity = entities[key];
+            }
+
+            var unitComp = Ntry.entityManager.getComponent(entity.id, Ntry.STATIC.UNIT);
+            var gridComp = Ntry.entityManager.getComponent(entity.id, Ntry.STATIC.GRID);
+            var grid = {x: gridComp.x, y: gridComp.y};
+
+            if(grid.y > 3) {
+                grid.y = 2;
+            }
+            
+            Ntry.addVectorByDirection(grid, unitComp.direction, 1);
+
+            var fitEntities = Ntry.entityManager.find(
+                {
+                    type: Ntry.STATIC.GRID,
+                    x: grid.x,
+                    y: grid.y
+                },
+                {
+                    type: Ntry.STATIC.TILE,
+                    tileType: Ntry.STATIC.LADDER
+                }
+            );
+
+            script.isCondition = true;
+            if(fitEntities.length) {
+                return script.getStatement("STACK_IF", script);
+            } else {
+                return script.getStatement("STACK_ELSE", script);
+            }
+        }
     },
     "maze_step_if_else": {
         "parent": "if_else",
