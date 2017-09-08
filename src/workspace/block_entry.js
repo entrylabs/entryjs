@@ -43914,7 +43914,6 @@ Entry.block = {
                 "options": [
                     [Lang.Blocks.byrobot_petrone_v2_drone_state_mode_vehicle, "state_modeVehicle"],
                     [Lang.Blocks.byrobot_petrone_v2_drone_state_mode_drive, "state_modeDrive"],
-                    [Lang.Blocks.byrobot_petrone_v2_drone_state_mode_coordinate, "state_coordinate"],
                     [Lang.Blocks.byrobot_petrone_v2_drone_state_battery, "state_battery"],
                     [Lang.Blocks.byrobot_petrone_v2_drone_irmessage, "irmessage_irdata"],
                 ],
@@ -46457,7 +46456,7 @@ Entry.block = {
             var wheel = parseInt(script.getNumberValue("WHEEL", script));
             var accel = parseInt(script.getNumberValue("ACCEL", script));
             
-            return Entry.byrobot_dronefighter_drive.sendControlDouble(script, wheel, accel, 0, false);
+            return Entry.byrobot_petrone_v2_drive.sendControlDouble(script, wheel, accel, 0, false);
         },
     },
     // */
@@ -46517,7 +46516,7 @@ Entry.block = {
             var accel = parseInt(script.getNumberValue("ACCEL", script));
             var time = parseInt(script.getNumberValue("TIME", script) * 1000);
 
-            return Entry.byrobot_dronefighter_drive.sendControlDouble(script, wheel, accel, time, true);
+            return Entry.byrobot_petrone_v2_drive.sendControlDouble(script, wheel, accel, time, true);
         },
     },
     // */

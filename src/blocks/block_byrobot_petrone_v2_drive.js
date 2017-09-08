@@ -549,7 +549,7 @@ Entry.byrobot_petrone_v2_drive =
         // 범위 조정
         wheel       = Math.max(wheel, -100);
         wheel       = Math.min(wheel, 100);
-        accel       = Math.max(accel, 0);           // -100 아닌가?
+        accel       = Math.max(accel, 0);
         accel       = Math.min(accel, 100);
         
         // 전송
