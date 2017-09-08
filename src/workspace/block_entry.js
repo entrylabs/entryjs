@@ -39091,7 +39091,7 @@ Entry.block = {
                     unitComp.direction = script.direction;
                     script.isAction = false;
                 };
-                
+
                 var isCollisionPossible = false;
                 if(unitGrid.y > 3) {
                     unitComp.direction = Ntry.STATIC.NORTH;
@@ -39103,7 +39103,7 @@ Entry.block = {
                         isCollisionPossible = true;
                     }
                 }
-                
+
                 if(isCollisionPossible) {
                     Ntry.dispatchEvent("unitAction", Ntry.STATIC.CLIMB, callBack);
                 } else {
@@ -39242,7 +39242,7 @@ Entry.block = {
                 delete script.isContinue;
             }
         }
-    }, 
+    },
     "maze_attack_pepe": {
         "skeleton": "basic",
         "mode": "maze",
@@ -39262,11 +39262,16 @@ Entry.block = {
         ],
         func: function(sprite, script) {
             if (!script.isContinue) {
+                Ntry.dispatchEvent("stopEnemyWalk");
+                Ntry.dispatchEvent("destroyObstacle", 1, function(state) {
+                })
                 script.isContinue = true;
                 script.isAction = true;
 
                 var callBack = function() {
-                    script.isAction = false;
+                    Ntry.dispatchEvent("startEnemyWalk", true, function() {
+                        script.isAction = false;
+                    });
                 };
 
                 Ntry.dispatchEvent("unitAction", Ntry.STATIC.PEPE, callBack);
