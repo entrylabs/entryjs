@@ -42517,7 +42517,7 @@ Entry.block = {
                     [Lang.Blocks.byrobot_petrone_v2_controller_display_pixel_black, "0"],
                     [Lang.Blocks.byrobot_petrone_v2_controller_display_pixel_white, "1"],
                 ],
-                "value": "0",
+                "value": "1",
                 "fontSize": 11
             },
             {
@@ -42660,7 +42660,7 @@ Entry.block = {
                     [Lang.Blocks.byrobot_petrone_v2_controller_display_pixel_black, "0"],
                     [Lang.Blocks.byrobot_petrone_v2_controller_display_pixel_white, "1"],
                 ],
-                "value": "0",
+                "value": "1",
                 "fontSize": 11
             },
             {
@@ -42729,7 +42729,7 @@ Entry.block = {
                     [Lang.Blocks.byrobot_petrone_v2_controller_display_pixel_black, "0"],
                     [Lang.Blocks.byrobot_petrone_v2_controller_display_pixel_white, "1"],
                 ],
-                "value": "0",
+                "value": "1",
                 "fontSize": 11
             },
             {
@@ -42823,7 +42823,7 @@ Entry.block = {
                     [Lang.Blocks.byrobot_petrone_v2_controller_display_pixel_black, "0"],
                     [Lang.Blocks.byrobot_petrone_v2_controller_display_pixel_white, "1"],
                 ],
-                "value": "0",
+                "value": "1",
                 "fontSize": 11
             },
             {
@@ -42832,7 +42832,7 @@ Entry.block = {
                     [Lang.Blocks.byrobot_petrone_v2_controller_display_flagfill_off, "0"],
                     [Lang.Blocks.byrobot_petrone_v2_controller_display_flagfill_on, "1"],
                 ],
-                "value": "0",
+                "value": "1",
                 "fontSize": 11
             },
             {
@@ -42842,7 +42842,7 @@ Entry.block = {
                     [Lang.Blocks.byrobot_petrone_v2_controller_display_line_dotted, "1"],
                     [Lang.Blocks.byrobot_petrone_v2_controller_display_line_dashed, "2"],
                 ],
-                "value": "0",
+                "value": "2",
                 "fontSize": 11
             },
             {
@@ -42925,7 +42925,7 @@ Entry.block = {
                     [Lang.Blocks.byrobot_petrone_v2_controller_display_pixel_black, "0"],
                     [Lang.Blocks.byrobot_petrone_v2_controller_display_pixel_white, "1"],
                 ],
-                "value": "0",
+                "value": "1",
                 "fontSize": 11
             },
             {
@@ -42934,7 +42934,7 @@ Entry.block = {
                     [Lang.Blocks.byrobot_petrone_v2_controller_display_flagfill_off, "0"],
                     [Lang.Blocks.byrobot_petrone_v2_controller_display_flagfill_on, "1"],
                 ],
-                "value": "0",
+                "value": "1",
                 "fontSize": 11
             },
             {
@@ -43013,7 +43013,7 @@ Entry.block = {
                     [Lang.Blocks.byrobot_petrone_v2_controller_display_pixel_black, "0"],
                     [Lang.Blocks.byrobot_petrone_v2_controller_display_pixel_white, "1"],
                 ],
-                "value": "0",
+                "value": "1",
                 "fontSize": 11
             },
             {
@@ -43092,7 +43092,7 @@ Entry.block = {
                     [Lang.Blocks.byrobot_petrone_v2_controller_display_align_center, "1"],
                     [Lang.Blocks.byrobot_petrone_v2_controller_display_align_right, "2"],
                 ],
-                "value": "1",
+                "value": "0",
                 "fontSize": 11
             },
             {
@@ -43110,7 +43110,7 @@ Entry.block = {
                     [Lang.Blocks.byrobot_petrone_v2_controller_display_pixel_black, "0"],
                     [Lang.Blocks.byrobot_petrone_v2_controller_display_pixel_white, "1"],
                 ],
-                "value": "0",
+                "value": "1",
                 "fontSize": 11
             },
             {
@@ -44772,7 +44772,7 @@ Entry.block = {
                     [Lang.Blocks.byrobot_petrone_v2_controller_display_pixel_black, "0"],
                     [Lang.Blocks.byrobot_petrone_v2_controller_display_pixel_white, "1"],
                 ],
-                "value": "0",
+                "value": "1",
                 "fontSize": 11
             },
             {
@@ -44915,7 +44915,7 @@ Entry.block = {
                     [Lang.Blocks.byrobot_petrone_v2_controller_display_pixel_black, "0"],
                     [Lang.Blocks.byrobot_petrone_v2_controller_display_pixel_white, "1"],
                 ],
-                "value": "0",
+                "value": "1",
                 "fontSize": 11
             },
             {
@@ -44984,7 +44984,7 @@ Entry.block = {
                     [Lang.Blocks.byrobot_petrone_v2_controller_display_pixel_black, "0"],
                     [Lang.Blocks.byrobot_petrone_v2_controller_display_pixel_white, "1"],
                 ],
-                "value": "0",
+                "value": "1",
                 "fontSize": 11
             },
             {
@@ -45078,7 +45078,7 @@ Entry.block = {
                     [Lang.Blocks.byrobot_petrone_v2_controller_display_pixel_black, "0"],
                     [Lang.Blocks.byrobot_petrone_v2_controller_display_pixel_white, "1"],
                 ],
-                "value": "0",
+                "value": "1",
                 "fontSize": 11
             },
             {
@@ -45087,7 +45087,7 @@ Entry.block = {
                     [Lang.Blocks.byrobot_petrone_v2_controller_display_flagfill_off, "0"],
                     [Lang.Blocks.byrobot_petrone_v2_controller_display_flagfill_on, "1"],
                 ],
-                "value": "0",
+                "value": "1",
                 "fontSize": 11
             },
             {
@@ -45097,7 +45097,7 @@ Entry.block = {
                     [Lang.Blocks.byrobot_petrone_v2_controller_display_line_dotted, "1"],
                     [Lang.Blocks.byrobot_petrone_v2_controller_display_line_dashed, "2"],
                 ],
-                "value": "0",
+                "value": "2",
                 "fontSize": 11
             },
             {
@@ -45180,7 +45180,7 @@ Entry.block = {
                     [Lang.Blocks.byrobot_petrone_v2_controller_display_pixel_black, "0"],
                     [Lang.Blocks.byrobot_petrone_v2_controller_display_pixel_white, "1"],
                 ],
-                "value": "0",
+                "value": "1",
                 "fontSize": 11
             },
             {
@@ -45189,7 +45189,7 @@ Entry.block = {
                     [Lang.Blocks.byrobot_petrone_v2_controller_display_flagfill_off, "0"],
                     [Lang.Blocks.byrobot_petrone_v2_controller_display_flagfill_on, "1"],
                 ],
-                "value": "0",
+                "value": "1",
                 "fontSize": 11
             },
             {
@@ -45268,7 +45268,7 @@ Entry.block = {
                     [Lang.Blocks.byrobot_petrone_v2_controller_display_pixel_black, "0"],
                     [Lang.Blocks.byrobot_petrone_v2_controller_display_pixel_white, "1"],
                 ],
-                "value": "0",
+                "value": "1",
                 "fontSize": 11
             },
             {
@@ -45347,7 +45347,7 @@ Entry.block = {
                     [Lang.Blocks.byrobot_petrone_v2_controller_display_align_center, "1"],
                     [Lang.Blocks.byrobot_petrone_v2_controller_display_align_right, "2"],
                 ],
-                "value": "1",
+                "value": "0",
                 "fontSize": 11
             },
             {
@@ -45365,7 +45365,7 @@ Entry.block = {
                     [Lang.Blocks.byrobot_petrone_v2_controller_display_pixel_black, "0"],
                     [Lang.Blocks.byrobot_petrone_v2_controller_display_pixel_white, "1"],
                 ],
-                "value": "0",
+                "value": "1",
                 "fontSize": 11
             },
             {
@@ -47561,7 +47561,7 @@ Entry.block = {
                     [Lang.Blocks.byrobot_petrone_v2_controller_display_pixel_black, "0"],
                     [Lang.Blocks.byrobot_petrone_v2_controller_display_pixel_white, "1"],
                 ],
-                "value": "0",
+                "value": "1",
                 "fontSize": 11
             },
             {
@@ -47704,7 +47704,7 @@ Entry.block = {
                     [Lang.Blocks.byrobot_petrone_v2_controller_display_pixel_black, "0"],
                     [Lang.Blocks.byrobot_petrone_v2_controller_display_pixel_white, "1"],
                 ],
-                "value": "0",
+                "value": "1",
                 "fontSize": 11
             },
             {
@@ -47773,7 +47773,7 @@ Entry.block = {
                     [Lang.Blocks.byrobot_petrone_v2_controller_display_pixel_black, "0"],
                     [Lang.Blocks.byrobot_petrone_v2_controller_display_pixel_white, "1"],
                 ],
-                "value": "0",
+                "value": "1",
                 "fontSize": 11
             },
             {
@@ -47867,7 +47867,7 @@ Entry.block = {
                     [Lang.Blocks.byrobot_petrone_v2_controller_display_pixel_black, "0"],
                     [Lang.Blocks.byrobot_petrone_v2_controller_display_pixel_white, "1"],
                 ],
-                "value": "0",
+                "value": "1",
                 "fontSize": 11
             },
             {
@@ -47876,7 +47876,7 @@ Entry.block = {
                     [Lang.Blocks.byrobot_petrone_v2_controller_display_flagfill_off, "0"],
                     [Lang.Blocks.byrobot_petrone_v2_controller_display_flagfill_on, "1"],
                 ],
-                "value": "0",
+                "value": "1",
                 "fontSize": 11
             },
             {
@@ -47886,7 +47886,7 @@ Entry.block = {
                     [Lang.Blocks.byrobot_petrone_v2_controller_display_line_dotted, "1"],
                     [Lang.Blocks.byrobot_petrone_v2_controller_display_line_dashed, "2"],
                 ],
-                "value": "0",
+                "value": "2",
                 "fontSize": 11
             },
             {
@@ -47969,7 +47969,7 @@ Entry.block = {
                     [Lang.Blocks.byrobot_petrone_v2_controller_display_pixel_black, "0"],
                     [Lang.Blocks.byrobot_petrone_v2_controller_display_pixel_white, "1"],
                 ],
-                "value": "0",
+                "value": "1",
                 "fontSize": 11
             },
             {
@@ -47978,7 +47978,7 @@ Entry.block = {
                     [Lang.Blocks.byrobot_petrone_v2_controller_display_flagfill_off, "0"],
                     [Lang.Blocks.byrobot_petrone_v2_controller_display_flagfill_on, "1"],
                 ],
-                "value": "0",
+                "value": "1",
                 "fontSize": 11
             },
             {
@@ -48057,7 +48057,7 @@ Entry.block = {
                     [Lang.Blocks.byrobot_petrone_v2_controller_display_pixel_black, "0"],
                     [Lang.Blocks.byrobot_petrone_v2_controller_display_pixel_white, "1"],
                 ],
-                "value": "0",
+                "value": "1",
                 "fontSize": 11
             },
             {
@@ -48136,7 +48136,7 @@ Entry.block = {
                     [Lang.Blocks.byrobot_petrone_v2_controller_display_align_center, "1"],
                     [Lang.Blocks.byrobot_petrone_v2_controller_display_align_right, "2"],
                 ],
-                "value": "1",
+                "value": "0",
                 "fontSize": 11
             },
             {
@@ -48154,7 +48154,7 @@ Entry.block = {
                     [Lang.Blocks.byrobot_petrone_v2_controller_display_pixel_black, "0"],
                     [Lang.Blocks.byrobot_petrone_v2_controller_display_pixel_white, "1"],
                 ],
-                "value": "0",
+                "value": "1",
                 "fontSize": 11
             },
             {
