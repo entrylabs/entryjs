@@ -39150,7 +39150,7 @@ Entry.block = {
                 var unitComp = Ntry.entityManager.getComponent(unitId, Ntry.STATIC.UNIT);
 
                 script.isContinue = true;
-                script.isAction = true;         
+                script.isAction = true;
 
                 var isFoundMushroom = false;
                 var grid = $.extend({}, Ntry.entityManager.getComponent(unitId, Ntry.STATIC.GRID));
@@ -39170,14 +39170,14 @@ Entry.block = {
                     if(findTile && findTile.length) {
                         isFoundMushroom = true;
                     }
-                }                
-                       
+                }
+
                 if(isFoundMushroom) {
                     Ntry.dispatchEvent("unitAction", Ntry.STATIC.WRONG_ATTACK_OBSTACLE, function () {
                         script.isAction = false;
                     });
                     return Entry.STATIC.BREAK;
-                } 
+                }
 
                 var unitGrid = $.extend({}, Ntry.entityManager.getComponent(unitId, Ntry.STATIC.GRID));
                 var isCollisionPossible = Ntry.checkCollisionTile(unitGrid, unitComp.direction, [Ntry.STATIC.OBSTACLE_LUPIN], 2);
@@ -39226,11 +39226,18 @@ Entry.block = {
         ],
         func: function(sprite, script) {
             if (!script.isContinue) {
+                Ntry.dispatchEvent("stopEnemyWalk");
+                Ntry.dispatchEvent("destroyObstacle", 1, function(state) {
+                })
+                Ntry.dispatchEvent("destroyObstacle", -1, function(state) {
+                })
                 script.isContinue = true;
                 script.isAction = true;
 
                 var callBack = function() {
-                    script.isAction = false;
+                    Ntry.dispatchEvent("startEnemyWalk", true, function() {
+                        script.isAction = false;
+                    });
                 };
 
                 Ntry.dispatchEvent("unitAction", Ntry.STATIC.BOTH_SIDE, callBack);
@@ -39303,11 +39310,16 @@ Entry.block = {
         ],
         func: function(sprite, script) {
             if (!script.isContinue) {
+                Ntry.dispatchEvent("stopEnemyWalk");
+                Ntry.dispatchEvent("destroyObstacle", 1, function(state) {
+                })
                 script.isContinue = true;
                 script.isAction = true;
 
                 var callBack = function() {
-                    script.isAction = false;
+                    Ntry.dispatchEvent("startEnemyWalk", true, function() {
+                        script.isAction = false;
+                    });
                 };
 
                 Ntry.dispatchEvent("unitAction", Ntry.STATIC.PEPE, callBack);
@@ -39407,11 +39419,16 @@ Entry.block = {
         ],
         func: function(sprite, script) {
             if (!script.isContinue) {
+                Ntry.dispatchEvent("stopEnemyWalk");
+                Ntry.dispatchEvent("destroyObstacle", 1, function(state) {
+                })
                 script.isContinue = true;
                 script.isAction = true;
 
                 var callBack = function() {
-                    script.isAction = false;
+                    Ntry.dispatchEvent("startEnemyWalk", true, function() {
+                        script.isAction = false;
+                    });
                 };
 
                 Ntry.dispatchEvent("unitAction", Ntry.STATIC.PETI, callBack);
@@ -40675,7 +40692,7 @@ Entry.block = {
                 "type": "Image",
                 "img": "/img/assets/week/blocks/if.png",
                 "size": 24
-            }        
+            }
         ],
         "statements": [
             {
@@ -40740,7 +40757,7 @@ Entry.block = {
                 "type": "Image",
                 "img": "/img/assets/week/blocks/if.png",
                 "size": 24
-            }        
+            }
         ],
         "statements": [
             {
@@ -40817,7 +40834,7 @@ Entry.block = {
             if (script.isCondition) {
                 delete script.isCondition;
                 return script.callReturn();
-            }           
+            }
 
             var entities = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT);
 
@@ -40886,7 +40903,7 @@ Entry.block = {
             if (script.isCondition) {
                 delete script.isCondition;
                 return script.callReturn();
-            }           
+            }
 
             var entities = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT);
 
@@ -40955,7 +40972,7 @@ Entry.block = {
             if (script.isCondition) {
                 delete script.isCondition;
                 return script.callReturn();
-            }           
+            }
 
             var entities = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT);
             var entity;
@@ -41024,7 +41041,7 @@ Entry.block = {
             if (script.isCondition) {
                 delete script.isCondition;
                 return script.callReturn();
-            }           
+            }
 
             var entities = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT);
 
