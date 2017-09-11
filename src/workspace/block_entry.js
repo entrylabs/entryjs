@@ -49385,10 +49385,10 @@ Entry.block = {
         "isNotFor": [],
         "func": function (sprite, script) {}
     },
-    "hidden": {
+    "hidden_event": {
         "color": "#7C7C7C",
         "skeleton": "basic",
-        "template": "         %1       %2",
+        "template": "         %1       ",
         "statements": [],
         "params": [
             {
@@ -49408,7 +49408,7 @@ Entry.block = {
             "params": [
                 null
             ],
-            "type": "hidden"
+            "type": "hidden_event"
         },
         "paramsKeyMap": {
             "VALUE": 0
