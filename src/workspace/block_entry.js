@@ -49444,11 +49444,6 @@ Entry.block = {
             ],
             "type": "hidden_if"
         },
-        "statements": [
-            {
-                "accept": "basic"
-            }
-        ],
         "class": "etc",
         "isNotFor": [],
         "func": function (sprite, script) {}
@@ -49481,11 +49476,6 @@ Entry.block = {
             ],
             "type": "hidden_if"
         },
-        "statements": [
-            {
-                "accept": "basic"
-            }
-        ],
         "class": "etc",
         "isNotFor": [],
         "func": function (sprite, script) {}
