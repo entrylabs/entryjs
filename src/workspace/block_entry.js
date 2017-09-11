@@ -46272,7 +46272,7 @@ Entry.block = {
                 },
                 null
             ],
-            "type": "byrobot_petrone_v2_drive_drone_motorsingle"
+            "type": "byrobot_petrone_v2_drive_drone_motorsingle_rotation"
         },
         "paramsKeyMap": {
             "MOTORINDEX": 0,
@@ -49061,7 +49061,7 @@ Entry.block = {
                 },
                 null
             ],
-            "type": "byrobot_petrone_v2_flight_drone_motorsingle"
+            "type": "byrobot_petrone_v2_flight_drone_motorsingle_rotation"
         },
         "paramsKeyMap": {
             "MOTORINDEX": 0,
