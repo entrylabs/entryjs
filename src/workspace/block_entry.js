@@ -46168,10 +46168,10 @@ Entry.block = {
         "isNotFor": ["byrobot_petrone_v2_drive"],
         "func": function (sprite, script) {
             var motorIndex = parseInt(script.getField("MOTORINDEX"));
-            var motorDirection = 1;
+            var motorRotation = (motorIndex % 2) + 1;
             var motorSpeed = parseInt(script.getNumberValue("MOTORSPEED", script));
 
-            return Entry.byrobot_petrone_v2_drive.setMotorSingle(script, motorIndex, motorDirection, motorSpeed);
+            return Entry.byrobot_petrone_v2_drive.setMotorSingle(script, motorIndex, motorRotation, motorSpeed);
         },
     },
     // */
@@ -46219,10 +46219,74 @@ Entry.block = {
         "isNotFor": ["byrobot_petrone_v2_drive"],
         "func": function (sprite, script) {
             var motorIndex = parseInt(script.getNumberValue("MOTORINDEX", script)) - 1;
-            var motorDirection = 1;
+            var motorRotation = (motorIndex % 2) + 1;
             var motorSpeed = parseInt(script.getNumberValue("MOTORSPEED", script));
 
-            return Entry.byrobot_petrone_v2_drive.setMotorSingle(script, motorIndex, motorDirection, motorSpeed);
+            return Entry.byrobot_petrone_v2_drive.setMotorSingle(script, motorIndex, motorRotation, motorSpeed);
+        },
+    },
+    // */
+    //*
+    "byrobot_petrone_v2_drive_drone_motorsingle_rotation":
+    {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    ["1", "0"],
+                    ["2", "1"],
+                ],
+                "value": "0",
+                "fontSize": 11
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.byrobot_petrone_v2_drone_motor_rotation_clockwise, "1"],
+                    [Lang.Blocks.byrobot_petrone_v2_drone_motor_rotation_counterclockwise, "2"],
+                ],
+                "value": "1",
+                "fontSize": 11
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                null,
+                null,
+                {
+                    "type": "text",
+                    "params": ["1000"]
+                },
+                null
+            ],
+            "type": "byrobot_petrone_v2_drive_drone_motorsingle"
+        },
+        "paramsKeyMap": {
+            "MOTORINDEX": 0,
+            "MOTORROTATION": 1,
+            "MOTORSPEED": 2
+        },
+        "class": "byrobot_petrone_v2_drive_motor",
+        "isNotFor": ["byrobot_petrone_v2_drive"],
+        "func": function (sprite, script) {
+            var motorIndex = parseInt(script.getField("MOTORINDEX"));
+            var motorRotation = parseInt(script.getField("MOTORROTATION"));
+            var motorSpeed = parseInt(script.getNumberValue("MOTORSPEED", script));
+
+            return Entry.byrobot_petrone_v2_drive.setMotorSingle(script, motorIndex, motorRotation, motorSpeed);
         },
     },
     // */
@@ -48893,10 +48957,10 @@ Entry.block = {
         "isNotFor": ["byrobot_petrone_v2_flight"],
         "func": function (sprite, script) {
             var motorIndex = parseInt(script.getField("MOTORINDEX"));
-            var motorDirection = 1;
+            var motorRotation = (motorIndex % 2) + 1;
             var motorSpeed = parseInt(script.getNumberValue("MOTORSPEED", script));
 
-            return Entry.byrobot_petrone_v2_flight.setMotorSingle(script, motorIndex, motorDirection, motorSpeed);
+            return Entry.byrobot_petrone_v2_flight.setMotorSingle(script, motorIndex, motorRotation, motorSpeed);
         },
     },
     // */
@@ -48944,10 +49008,74 @@ Entry.block = {
         "isNotFor": ["byrobot_petrone_v2_flight"],
         "func": function (sprite, script) {
             var motorIndex = parseInt(script.getNumberValue("MOTORINDEX", script)) - 1;
-            var motorDirection = 1;
+            var motorRotation = (motorIndex % 2) + 1;
             var motorSpeed = parseInt(script.getNumberValue("MOTORSPEED", script));
 
-            return Entry.byrobot_petrone_v2_flight.setMotorSingle(script, motorIndex, motorDirection, motorSpeed);
+            return Entry.byrobot_petrone_v2_flight.setMotorSingle(script, motorIndex, motorRotation, motorSpeed);
+        },
+    },
+    // */
+    //*
+    "byrobot_petrone_v2_flight_drone_motorsingle_rotation":
+    {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    ["1", "0"],
+                    ["2", "1"],
+                ],
+                "value": "0",
+                "fontSize": 11
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.byrobot_petrone_v2_drone_motor_rotation_clockwise, "1"],
+                    [Lang.Blocks.byrobot_petrone_v2_drone_motor_rotation_counterclockwise, "2"],
+                ],
+                "value": "1",
+                "fontSize": 11
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                null,
+                null,
+                {
+                    "type": "text",
+                    "params": ["1000"]
+                },
+                null
+            ],
+            "type": "byrobot_petrone_v2_flight_drone_motorsingle"
+        },
+        "paramsKeyMap": {
+            "MOTORINDEX": 0,
+            "MOTORROTATION": 1,
+            "MOTORSPEED": 2
+        },
+        "class": "byrobot_petrone_v2_flight_motor",
+        "isNotFor": ["byrobot_petrone_v2_flight"],
+        "func": function (sprite, script) {
+            var motorIndex = parseInt(script.getField("MOTORINDEX"));
+            var motorRotation = parseInt(script.getField("MOTORROTATION"));
+            var motorSpeed = parseInt(script.getNumberValue("MOTORSPEED", script));
+
+            return Entry.byrobot_petrone_v2_flight.setMotorSingle(script, motorIndex, motorRotation, motorSpeed);
         },
     },
     // */

@@ -1063,13 +1063,13 @@ Entry.byrobot_petrone_v2_drive =
         }
     },
 
-    setMotorSingle: function(script, motorIndex, motorDirection, motorSpeed)
+    setMotorSingle: function(script, motorIndex, motorRotation, motorSpeed)
     {
         switch( this.checkFinish(script, 40) )
         {
         case "Start":
             {
-                this.transferMotorSingle(motorIndex, motorDirection, motorSpeed);
+                this.transferMotorSingle(motorIndex, motorRotation, motorSpeed);
             }
             return script;
             
