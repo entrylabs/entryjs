@@ -33,6 +33,8 @@ Entry.byrobot_petrone_v2_flight =
             this.transferLightManual(0x30, 0xFF, 0);
             this.transferLightManual(0x31, 0xFF, 0);
             this.transferLightMode(0x30, 0x43, 2000);
+            this.transferMotorSingle(0, 1, 0);
+            this.transferMotorSingle(1, 2, 0);
         }
     },
     
