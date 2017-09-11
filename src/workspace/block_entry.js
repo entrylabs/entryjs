@@ -49385,10 +49385,10 @@ Entry.block = {
         "isNotFor": [],
         "func": function (sprite, script) {}
     },
-    "hidden_event": {
+    "hidden": {
         "color": "#7C7C7C",
-        "skeleton": "basic_event",
-        "template": "         %1       ",
+        "skeleton": "basic",
+        "template": "         %1       %2",
         "statements": [],
         "params": [
             {
@@ -49408,11 +49408,84 @@ Entry.block = {
             "params": [
                 null
             ],
-            "type": "hidden_event"
+            "type": "hidden"
         },
         "paramsKeyMap": {
             "VALUE": 0
         },
+        "class": "etc",
+        "isNotFor": [],
+        "func": function (sprite, script) {}
+    },
+    "hidden_loop": {
+        "color": "#7C7C7C",
+        "skeleton": "basic_loop",
+        "template": "%1 번 반복하기 %2",
+        "statements": [],
+        "params": [
+            {
+                "type": "Image",
+                "img": "/img/assets/maze/icon/group.png",
+                "size": {
+                    width: 47,
+                    height: 20,
+                }
+            },
+            {
+                "type": "Indicator",
+                "color": "#6B6B6B",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                null
+            ],
+            "type": "hidden_if"
+        },
+        "statements": [
+            {
+                "accept": "basic"
+            }
+        ],
+        "class": "etc",
+        "isNotFor": [],
+        "func": function (sprite, script) {}
+    },
+    "hidden_if_else": {
+        "color": "#7C7C7C",
+        "skeleton": "basic_double_loop",
+        "template": "         %1       %2%3",
+        "statements": [],
+        "params": [
+            {
+                "type": "TextInput",
+                "value": "?",
+                "clearBG": true,
+                "color": "white"
+            },
+            {
+                "type": "Indicator",
+                "color": "#6B6B6B",
+                "size": 12
+            },
+            {
+                "type": "LineBreak"
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                null
+            ],
+            "type": "hidden_if"
+        },
+        "statements": [
+            {
+                "accept": "basic"
+            }
+        ],
         "class": "etc",
         "isNotFor": [],
         "func": function (sprite, script) {}
