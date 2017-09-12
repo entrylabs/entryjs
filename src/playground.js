@@ -997,7 +997,8 @@ Entry.Playground = function() {
     p.downloadPicture = function(pictureId) {
         var picture = Entry.playground.object.getPicture(pictureId);
         if (picture.fileurl) {
-            window.open(picture.fileurl);
+            window.open('/api/sprite/download/entryjs/'+
+                    encodeURIComponent(picture.fileurl)+'/'+encodeURIComponent(picture.name) + '.png');
         } else {
             window.open('/api/sprite/download/image/'+
                     encodeURIComponent(picture.filename)+'/'+encodeURIComponent(picture.name) + '.png');
@@ -1061,8 +1062,9 @@ Entry.Playground = function() {
                 Entry.playground.object.entity.getText();
             Entry.playground.textEditArea.value =
                 Entry.playground.object.entity.getText();
-            Entry.playground.fontName_.value =
-                Entry.playground.object.entity.getFontName();
+
+            $("#entryPainterAttrFontName").val(
+                Entry.playground.object.entity.getFontName());
 
             if (Entry.playground.object.entity.font) {
                 var isBold = Entry.playground.object.entity.font.indexOf("bold") > -1 || false;

@@ -39,7 +39,8 @@ Entry.Parser = function(mode, type, cm, syntax) {
     this._onError = false;
     this._onRunError = false;
 
-    this._console = new Entry.Console();
+    if (Entry.type === "workspace")
+        this._console = new Entry.Console();
 };
 
 (function(p) {
@@ -200,7 +201,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
                         if (ast.body.length !== 0)
                             astArray.push(ast);
                     }
-                    result = this._execParser.Program(astArray);
+                    result = this._execParser.Programs(astArray);
                     this._onError = false;
                     break;
                 } catch(error) {
@@ -210,17 +211,17 @@ Entry.Parser = function(mode, type, cm, syntax) {
                     if (this.codeMirror) {
                         var line;
                         if (error instanceof SyntaxError) {
-                            var err = this.findSyntaxError(error, threadCount);
+                            var err = this.findSyntaxError(error);
                             var annotation = {
                                 from: {line: err.from.line-1, ch: err.from.ch},
                                 to: {line: err.to.line-1, ch: err.to.ch}
                             };
                             error.type = "syntax";
                         } else {
-                            var err = this.findConvError(error);
+                            var err = error.line;
                             var annotation = {
-                                from: {line: err.from.line-1, ch: err.from.ch},
-                                to: {line: err.to.line-1, ch: err.to.ch}
+                                from: {line: err.start.line + 1, ch: err.start.column},
+                                to: {line: err.end.line + 1, ch: err.end.column}
                             };
                             error.type = "converting";
                         }
@@ -335,6 +336,8 @@ Entry.Parser = function(mode, type, cm, syntax) {
 
         var types = Object.keys(Entry.block);
         var syntax = {};
+        if(mode === Entry.Vim.WORKSPACE_MODE)
+            syntax["#dic"] = {};
 
         for (var i = 0; i < types.length; i++) {
             var type = types[i];
@@ -393,6 +396,8 @@ Entry.Parser = function(mode, type, cm, syntax) {
                             s.key = key;
                             if(!s.template)
                                 result.template = s.syntax;
+                            if (s.dic)
+                                syntax["#dic"][s.dic] = key;
                         }
 
                         tokens = tokens.split('(');
@@ -475,75 +480,12 @@ Entry.Parser = function(mode, type, cm, syntax) {
     };
 
     p.findSyntaxError = function(error, threadCount) {
-        var err = {};
-        err.from = {};
-        err.to = {};
-
-        var errorLine = error.loc.line;
-        var errorColumn = error.loc.column;
-        var errorPos = error.pos;
-        var errorRaisedAt = error.raisedAt;
-        var errorMessage = error.message;
-
-        var contents = this.codeMirror.getValue();
-        var contentsArr = contents.split("\n");
-        var currentThreadCount = 0;
-        var currentLineCount = 0;
-
-        for (var key in this._pyBlockCount) {
-            var count = parseInt(this._pyBlockCount[key]);
-            currentLineCount += count;
-        }
-
-        var targetLine = errorLine + currentLineCount + 3;
-        if (targetLine > contentsArr.length)
-            targetLine = contentsArr.length;
-        var targetText = contentsArr[targetLine-1];
-
-        err.from.line = targetLine;
-        err.from.ch = 0;
-        err.to.line = targetLine;
-        err.to.ch = targetText.length;
-
-        return err;
-    };
-
-    p.findConvError = function(error) {
-        var err = {};
-        err.from = {};
-        err.to = {};
-
-        var errorLine = error.line-1;
-        var contents = this.codeMirror.getValue();
-        var contentsArr = contents.split("\n");
-        var currentLineCount = 0;
-        var emptyLineCount = 0;
-        var currentText;
-        var targetLine;
-
-        for (var i = 3; i < contentsArr.length; i++) {
-            currentText = contentsArr[i];
-
-            var length = currentText.trim().length;
-            if(length === 0)
-                emptyLineCount++;
-
-
-            if(errorLine + emptyLineCount + 3 == i) {
-                targetLine = i+1;
-                break;
-            }
-        }
-
-        if(targetLine > contentsArr.length)
-            targetLine = contentsArr.length;
-
-        err.from.line = targetLine;
-        err.from.ch = 0;
-        err.to.line = targetLine;
-        err.to.ch = currentText.length;
-
-        return err;
+        var loc = error.loc;
+        loc.line = loc.line + 2;
+        return {
+            from: {line: loc.line, ch: loc.column},
+            to: {line: loc.line, ch: loc.column + error.tokLen}
+        };
     };
 
     p.makeThreads = function(text) {
@@ -554,13 +496,14 @@ Entry.Parser = function(mode, type, cm, syntax) {
         var optText = "";
         var onEntryEvent = false;
 
+        var startLine = 0;
         for(var i = 3; i < textArr.length; i++) {
             var textLine = textArr[i] + "\n";
-            textLine = textLine.replace(/\t/gm, '    ');
             if(Entry.TextCodingUtil.isEntryEventFuncByFullText(textLine)) {
                 textLine = this.entryEventParamConverter(textLine);
                 if(optText.length !== 0) {
-                    threads.push(optText);
+                    threads.push(makeLine(optText));
+                    startLine = i - 2;
                 }
 
                 optText = "";
@@ -570,19 +513,27 @@ Entry.Parser = function(mode, type, cm, syntax) {
                 if(Entry.TextCodingUtil.isEntryEventFuncByFullText(textLine.trim()))
                     textLine = this.entryEventParamConverter(textLine);
                 if(textLine.length == 1 && !onEntryEvent) { //empty line
-                    threads.push(optText);
+                    threads.push(makeLine(optText));
+                    startLine = i - 2;
                     optText = "";
                 }
                 else if(textLine.length != 1 && textLine.charAt(0) != ' ' && onEntryEvent) { //general line
-                    threads.push(optText);
+                    threads.push(makeLine(optText));
+                    startLine = i - 2;
                     optText = "";
                     onEntryEvent = false;
                 }
 
                 optText += textLine;
+
+
             }
         }
-        threads.push(optText);
+
+        threads.push(makeLine(optText));
+        function makeLine(text) {
+            return new Array( startLine + 1 ).join( "\n" ) + text;
+        }
         return threads;
     };
 

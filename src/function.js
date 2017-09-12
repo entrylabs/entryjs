@@ -300,6 +300,7 @@ Entry.Func.setupMenuCode = function() {
     var CATEGORY = 'func';
     this._fieldLabel = menuCode.createThread([{
         type: "function_field_label",
+        copyable: false,
         category: CATEGORY,
         x: -9999
     }]).getFirstBlock();

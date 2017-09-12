@@ -314,28 +314,20 @@ p.closeConnection = function() {
 };
 
 p.downloadConnector = function() {
-    var path;
-    var platform = navigator.platform;
-
-    if(platform === 'MacIntel') {
-        path = this.downloadPathOsx;
-    } else {
-        path = this.downloadPath;
-    }
-
-    var win = window.open(path, '_blank');
-    win.focus();
+    Entry.dispatchEvent("hwDownload", "hardware");
 };
 
 p.downloadGuide = function() {
-    var url = "http://download.play-entry.org/data/hardware_manual.zip";
-    window.open(url, 'download');
+    Entry.dispatchEvent("hwDownload", "manual");
+    // var url = "http://download.play-entry.org/data/hardware_manual.zip";
+    // window.open(url, 'download');
 };
 
 p.downloadSource = function() {
-    var url = "http://download.play-entry.org/apps/board.ino";
-    var win = window.open(url, '_blank');
-    win.focus();
+    Entry.dispatchEvent("hwDownload", "ino");
+    // var url = "http://play-entry.com/down/board.ino";
+    // var win = window.open(url, '_blank');
+    // win.focus();
 };
 
 p.setZero = function() {

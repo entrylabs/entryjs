@@ -589,12 +589,11 @@ Entry.Engine = function() {
         container.clearRunningState();
         container.loadSequenceSnapshot();
         this.projectTimer.loadSnapshot();
-        Entry.container.inputValue.loadSnapshot();
+        container.inputValue.loadSnapshot();
         Entry.scene.loadStartSceneSnapshot();
         Entry.Func.clearThreads();
         createjs.Sound.setVolume(1);
         createjs.Sound.stop();
-
 
         this.view_.removeClass('entryEngineBlueWorkspace');
         if (this.runButton) {
@@ -604,7 +603,7 @@ Entry.Engine = function() {
                 this.pauseButton.addClass('entryRemove');
             if (this.pauseButtonFull)
                 this.pauseButtonFull.addClass('entryRemove');
-            if (this.addButton)
+            if (this.addButton && Entry.objectAddable)
                 this.addButton.removeClass('entryRemove');
 
             if (this.runButton2)
@@ -667,7 +666,8 @@ Entry.Engine = function() {
      */
     p.fireEvent = function(eventName) {
         if (this.state !== 'run') return;
-        Entry.container.mapEntityIncludeCloneOnScene(this.raiseEvent, eventName);
+        Entry.container.mapEntityIncludeCloneOnScene(
+            this.raiseEvent, eventName);
     };
 
     /**
@@ -676,8 +676,7 @@ Entry.Engine = function() {
      * @param {string} eventName
      */
     p.raiseEvent = function(entity, eventName) {
-        var code = entity.parent.script;
-        code.raiseEvent(eventName, entity);
+        entity.parent.script.raiseEvent(eventName, entity);
     };
 
     /**
@@ -904,7 +903,7 @@ Entry.Engine = function() {
         var current = (new Date()).getTime();
         if (typeof value == 'undefined') {
             if (!timer.isPaused && !engine.isState('pause'))
-                timer.setValue(((current - (timer.start || current) - timer.pausedTime)/1000));
+                timer.setValue(Math.max(((current - (timer.start || current) - timer.pausedTime)/1000), 0));
         } else {
             timer.setValue(value);
             timer.pausedTime = 0;
