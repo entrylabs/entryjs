@@ -38415,6 +38415,43 @@ Entry.block = {
             }
         }
     },
+    "maze_step_jump_pinkbean": {
+        "parent": "maze_step_jump",
+        "template": Lang.template.maze_step_jump,
+        func: function() {
+            if (!this.isContinue) {
+                this.isContinue = true;
+                this.isAction = true;
+                var self = this;
+                var callBack = function() {
+                    self.isAction = false;
+                };
+
+                var unit = Ntry.getUnit();
+                var components = unit.components || {};
+                var unitComp = components[Ntry.STATIC.UNIT] || {};
+                var unitGrid = $.extend({}, components[Ntry.STATIC.GRID]);
+                var checkGrid = {
+                    x: unitGrid.x,
+                    y: unitGrid.y,
+                }
+                var isCollisionPossible = Ntry.checkCollisionTile(unitGrid, unitComp.direction, [Ntry.STATIC.OBSTACLE_MUSHROOM], 1);
+                if(isCollisionPossible) {
+                    Ntry.dispatchEvent("unitAction", Ntry.STATIC.FAIL_JUMP, callBack);
+                    Ntry.dispatchEvent("complete", false, Ntry.STATIC.HIT_UNIT_BY_MUSHROOM);
+                    return;
+                }
+
+                Ntry.dispatchEvent("unitAction", Ntry.STATIC.JUMP, callBack);
+                return Entry.STATIC.BREAK;
+            } else if (this.isAction) {
+                return Entry.STATIC.BREAK;
+            } else {
+                delete this.isAction;
+                delete this.isContinue;
+            }
+        }
+    },
     "maze_step_for": {
         "skeleton": "basic_loop",
         "mode": "maze",
@@ -39189,12 +39226,9 @@ Entry.block = {
                 }
 
                 var callBack = function() {
+                    Ntry.dispatchEvent('playSound', 'dieLupin');
                     Ntry.dispatchEvent('destroyObstacle', 2, function (state) {
-                        switch(state) {
-                            case Ntry.STATIC.OBSTACLE_DESTROY_SUCCESS:
-                                script.isAction = false;
-                                break;
-                        }
+                        script.isAction = false;
                     });
                 };
 
@@ -39377,15 +39411,12 @@ Entry.block = {
                 }
 
                 var callBack = function() {
+                    Ntry.dispatchEvent('playSound', 'dieMushroom');
                     Ntry.dispatchEvent('destroyObstacle', 1, function (state) {
-                        switch(state) {
-                            case Ntry.STATIC.OBSTACLE_DESTROY_SUCCESS:
-                                script.isAction = false;
-                                break;
-                        }
+                        script.isAction = false;
                     });
                 };
-
+                
                 Ntry.dispatchEvent("unitAction", Ntry.STATIC.ATTACK_MUSHROOM, callBack);
                 return Entry.STATIC.BREAK;
             } else if (script.isAction) {
