@@ -566,6 +566,7 @@ Entry.EntityObject.prototype.syncFont = function() {
 
     } else {
         this.setWidth(this.textObject.getMeasuredWidth());
+        this.setHeight(this.textObject.getMeasuredHeight());
     }
     Entry.stage.updateObject();
     Entry.requestUpdate = true;
@@ -1215,3 +1216,9 @@ Entry.EntityObject.prototype.cache = function() {
     Entry.requestUpdate = true;
 };
 
+Entry.EntityObject.prototype.reset = function() {
+    this.loadSnapshot();
+    this.resetFilter();
+    this.dialog && this.dialog.remove();
+    this.shape && this.removeBrush();
+};

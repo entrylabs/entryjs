@@ -11,7 +11,7 @@ Entry.CodeMap = {};
 (function(cc) {
     cc.Entry = {
         start_neighbor_scene: [
-            {"다음": "next", "이전": "pre"} 
+            {"다음": "next", "이전": "pre"}
         ],
         stop_object: [
             {"thisOnly": "self", "thisThread": "this", "otherThread": "others",
@@ -25,27 +25,27 @@ Entry.CodeMap = {};
             {"색깔": "color", "밝기": "brightness", "투명도": "transparency"}
         ],
         change_effect_amount: [
-            {"색깔": "color", "밝기": "brightness", "투명도": "transparency"}  
+            {"색깔": "color", "밝기": "brightness", "투명도": "transparency"}
         ],
         change_object_index: [
-            {"front": "FRONT", "forward": "FORWARD", "backward": "BACKWARD", "back": "BACK", 
+            {"front": "FRONT", "forward": "FORWARD", "backward": "BACKWARD", "back": "BACK",
             "맨 앞": "FRONT", "앞": "FORWARD", "뒤": "BACKWARD", "맨 뒤": "BACK"}
         ],
         set_color: [
-            {"red": "#FF0000", "orange": "#FF9966", "yellow": "#FFFF66", "green": "#009900", 
-             "blue": "#3333FF", "navy": "#000099", "purple": "#993399", "black": "#000000", 
+            {"red": "#FF0000", "orange": "#FF9966", "yellow": "#FFFF66", "green": "#009900",
+             "blue": "#3333FF", "navy": "#000099", "purple": "#993399", "black": "#000000",
              "white": "#FFFFFF", "brown": "#990000"}
         ],
         reach_something: [
-            null, 
-            {"mouse": "mouse_pointer", "wall":"edge", "wall_up":"edge_up", 
+            null,
+            {"mouse": "mouse_pointer", "wall":"edge", "wall_up":"edge_up",
             "wall_down":"edge_down", "wall_right":"edge_right", "wall_left":"edge_left",
-            "mouse_pointer": "mouse", "edge":"wall", "edge_up":"wall_up", "edge_down":"wall_down", 
-            "edge_right":"wall_right", "edge_left":"wall_left", "마우스포인터":"mouse"}, 
+            "mouse_pointer": "mouse", "edge":"wall", "edge_up":"wall_up", "edge_down":"wall_down",
+            "edge_right":"wall_right", "edge_left":"wall_left", "마우스포인터":"mouse"},
             null
         ],
         create_clone: [
-            {"자신": "self", "self": "self"} 
+            {"자신": "self", "self": "self"}
         ],
         locate: [
             {"mouse": "mouse_pointer", "mouse_pointer": "mouse", "마우스포인터": "mouse"}
@@ -64,13 +64,13 @@ Entry.CodeMap = {};
         ],
         coordinate_object: [
             null,
-            {"자신": "self", "self": "self"}, 
+            {"자신": "self", "self": "self"},
             null,
-            {"크기":"size", "방향":"rotation", "이동 방향":"direction", 
-            "모양 번호":"picture_index", "모양 이름":"picture_name", 
+            {"크기":"size", "방향":"rotation", "이동 방향":"direction",
+            "모양 번호":"picture_index", "모양 이름":"picture_name",
             "picture_index":"shape_number", "picture_name":"shape_name",
             "shape_number":"picture_index", "shape_name":"picture_name"
-            } 
+            }
         ],
         choose_project_timer_action: [
             null,

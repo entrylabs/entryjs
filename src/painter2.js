@@ -186,12 +186,12 @@ p.updateEditMenu = function() {
     this._pasteButton.style.display = this.clipboard ? "block" : "none";
 };
 
-p.file_save = function() {
+p.file_save = function(taskParam) {
     this.lc.trigger("dispose");
     var dataURL = this.lc.getImage().toDataURL();
     this.file_ = JSON.parse(JSON.stringify(this.file));
     Entry.dispatchEvent('saveCanvasImage',
-                        {file: this.file_, image: dataURL});
+                        {file: this.file_, image: dataURL, task: taskParam});
 
     this.file.modified = false;
 };

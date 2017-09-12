@@ -36,3 +36,4 @@ extern/closure-library
 
 .vscode/*
 dist
+dist/entry.js

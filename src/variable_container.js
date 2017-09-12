@@ -653,9 +653,20 @@ Entry.VariableContainer = function() {
         return variable;
     };
 
-    p.getVariableByName = function(variableName) {
+    p.getVariableByName = function(variableName, isSelf, currentObjectId) {
+        if (!currentObjectId && Entry.playground && Entry.playground.object)
+            currentObjectId = Entry.playground.object.id;
+
         for (var i = 0; i < this.variables_.length; i++) {
             var v = this.variables_[i];
+            if(isSelf === true){
+                if(!v.object_ || v.object_ !== currentObjectId)
+                    continue;
+            } else if(isSelf === false) {
+                if(v.object_)
+                    continue;
+            }
+
             if (v.getName() === variableName)
                 return v;
         }
@@ -740,10 +751,25 @@ Entry.VariableContainer = function() {
         return false;
     };
 
-    p.getListByName = function(name) {
+    p.getListByName = function(name, isSelf, currentObjectId) {
         var lists = this.lists_;
-        lists = lists.filter(function(l) {return l.getName() === name})
-        return lists[0];
+        if (!currentObjectId && Entry.playground && Entry.playground.object)
+            currentObjectId = Entry.playground.object.id;
+
+        for (var i = 0; i < lists.length; i++) {
+            var l = lists[i];
+
+            if(isSelf === true){
+                if(!l.object_ || l.object_ !== currentObjectId)
+                    continue;
+            } else if(isSelf === false) {
+                if(l.object_)
+                    continue;
+            }
+
+            if (l.getName() === name)
+                return l;
+        }
     };
 
     /**
@@ -760,6 +786,7 @@ Entry.VariableContainer = function() {
     p.saveFunction = function(func) {
         /* add to function list when not exist */
         var ws = Entry.getMainWS();
+
         if (ws && (ws.overlayModefrom == Entry.Workspace.MODE_VIMBOARD)) {
             if(func && func.description) {
                 var funcName = func.description.substring(1, func.description.length-1);
@@ -775,7 +802,9 @@ Entry.VariableContainer = function() {
             this.functions_[func.id] = func;
             this.createFunctionView(func);
         }
-        func.listElement.nameField.innerHTML = func.description;
+        if(func.listElement)
+            func.listElement.nameField.innerHTML = func.description;
+
         this.updateList();
     };
 
@@ -880,7 +909,8 @@ Entry.VariableContainer = function() {
                 variableType: 'variable'
             };
         }
-        panel.view.addClass('entryRemove');
+        if (panel.view)
+            panel.view.addClass('entryRemove');
         this.resetVariableAddPanel('variable');
         if (!(variable instanceof Entry.Variable))
             variable = new Entry.Variable(variable);
@@ -891,7 +921,8 @@ Entry.VariableContainer = function() {
         if (Entry.playground && Entry.playground.blockMenu)
             Entry.playground.blockMenu.deleteRendered('variable');
         Entry.playground.reloadPlayground();
-        panel.view.name.value = '';
+        if (panel.view)
+            panel.view.name.value = '';
         this.updateList();
     };
 
@@ -1483,6 +1514,8 @@ Entry.VariableContainer = function() {
     p.resetVariableAddPanel = function(type) {
         type = type || 'variable';
         var panel = type == 'variable' ? this.variableAddPanel : this.listAddPanel;
+        if (!panel.view)
+            return;
         var info = panel.info;
         info.isCloud = false,
         info.object = null;
@@ -2388,7 +2421,7 @@ Entry.VariableContainer = function() {
         if (type == '_functionRefs') {
             var id = block.type.substr(5);
             var func = Entry.variableContainer.functions_[id];
-            if (func.isRemoved) return;
+            if (!func || func.isRemoved) return;
             func.isRemoved = true;
             if (func) {
                 var blocks = func.content.getBlockList();

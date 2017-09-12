@@ -1482,7 +1482,7 @@ Entry.block = {
             var pd = Entry.hw.portData
             return pd.leftProximity > 40 || pd.rightProximity > 40;
         },
-    "syntax": {"js": [], "py": ["Albert.hand_found()"]}
+        "syntax": {"js": [], "py": ["Albert.hand_found()"]}
     },
     "albert_is_oid_value": {
         "color": "#00979D",
@@ -2066,7 +2066,7 @@ Entry.block = {
             sq.padHeight = script.getNumberValue('HEIGHT');
             return script.callReturn();
         },
-    "syntax": {"js": [], "py": ["Albert.set_pad_size(%1, %2)"]}
+        "syntax": {"js": [], "py": ["Albert.set_pad_size(%1, %2)"]}
     },
     "albert_move_to_x_y_on_board": {
         "color": "#00979D",
@@ -5640,10 +5640,10 @@ Entry.block = {
                     "type": "blacksmith_list_digital_basic"
                 },
                 {
-                    "type": "blacksmith_list_digital_octave"
+                    "type": "blacksmith_list_digital_tone"
                 },
                 {
-                    "type": "blacksmith_list_digital_tone"
+                    "type": "blacksmith_list_digital_octave"
                 },
                 {
                     "type": "text",
@@ -5655,8 +5655,8 @@ Entry.block = {
         },
         "paramsKeyMap": {
             "PORT": 0,
-            "OCTAVE": 1,
-            "NOTE": 2,
+            "NOTE": 1,
+            "OCTAVE": 2,
             "DURATION": 3
         },
         "class": "blacksmithSet",
@@ -5787,9 +5787,14 @@ Entry.block = {
                         text[i] = Entry.Blacksmith.toByte(string[i]);
                     }
                 }
+                else if (typeof string === 'number') {
+                    text[0] = 1;
+                    text[1] = string / 1;
+                }
                 else {
                     text[0] = string;
                 }
+
                 if(!Entry.hw.sendQueue['SET']) {
                     Entry.hw.sendQueue['SET'] = {};
                 }
@@ -5873,11 +5878,12 @@ Entry.block = {
         "class": "blacksmithSet",
         "isNotFor": [ "blacksmith" ],
         "func": function (sprite, script) {
-            if(!script.isStart) {
+
                 var string = script.getValue("STRING");
                 var port = 3;
                 var text = [];
 
+            if(!script.isStart) {
                 if(typeof string === 'string') {
                     for (var i = 0; i < string.length; i++) {
                         text[i] = Entry.Blacksmith.toByte(string[i]);
@@ -8205,7 +8211,7 @@ Entry.block = {
             result = Math.max(value4, result);
             return Math.round(result);
         },
-    "syntax": {"js": [], "py": ["Bitbrick.convert_scale(%1, %2, %3, %4, %5)"]}
+        "syntax": {"js": [], "py": ["Bitbrick.convert_scale(%1, %2, %3, %4, %5)"]}
     },
     "cobl_read_ultrason": {
         color: "#00979D",
@@ -9524,7 +9530,7 @@ Entry.block = {
             sprite.eraseBrush && sprite.eraseBrush();
 
             var stampEntities = sprite.parent.getStampEntities();
-            stampEntities.forEach(function (entity) {
+            stampEntities.map(function (entity) {
                 entity.removeClone();
             });
             stampEntities = null;
@@ -10246,10 +10252,12 @@ Entry.block = {
             var leftValue = script.getNumberValue("LEFTHAND", script);
             var rightValue = script.getNumberValue("RIGHTHAND", script);
             if (operator == "PLUS") {
-                if (isNaN(leftValue))
-                    leftValue = script.getStringValue("LEFTHAND", script);
-                if (isNaN(rightValue))
-                    rightValue = script.getStringValue("RIGHTHAND", script);
+                var leftStringValue = script.getValue("LEFTHAND", script);
+                var rightStringValue = script.getValue("RIGHTHAND", script);
+                if (!Entry.Utils.isNumber(leftStringValue))
+                    leftValue = leftStringValue;
+                if (!Entry.Utils.isNumber(rightStringValue))
+                    rightValue = rightStringValue;
                 return leftValue + rightValue;
             }
             else if (operator == "MINUS")
@@ -10673,6 +10681,20 @@ Entry.block = {
                     null
                 ]
             },
+            { // for square
+                syntax: "math.pow(%2)",
+                params: [null, null, null, "square"],
+                blockType: "param",
+                textParams: [
+                    undefined,
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    undefined,
+                    null
+                ]
+            },
             {
                 syntax: "math.sqrt(%2)",
                 params: [null, null, null, "root"],
@@ -10681,6 +10703,7 @@ Entry.block = {
                     undefined,
                     {
                         "type": "Block",
+                        "isListIndex": true,
                         "accept": "string"
                     },
                     undefined,
@@ -11248,7 +11271,7 @@ Entry.block = {
         "class": "calc_timer",
         "isNotFor": [],
         "func": function (sprite, script) {
-            var action = script.getField("ACTION", script);
+           var action = script.getField('ACTION');
             var timer = Entry.engine.projectTimer;
             if (action == 'SHOW')
                 timer.setVisible(true);
@@ -11378,6 +11401,7 @@ Entry.block = {
             },
             {
                 "type": "Block",
+                "isListIndex": true,
                 "accept": "string"
             },
             {
@@ -11547,6 +11571,7 @@ Entry.block = {
             },
             {
                 "type": "Block",
+                "isListIndex": true,
                 "accept": "string"
             },
             {
@@ -13053,8 +13078,8 @@ Entry.block = {
                     for (var i = 0 ; i < executors.length; i++) {
                         var currentExecutor = executors[i];
                         if (currentExecutor !== executor &&
-                            currentExecutor.entity.id === spriteId &&
-                           currentExecutor !== this.executor.parentExecutor) {
+                            currentExecutor.entity.id === spriteId) {
+
                             code.removeExecutor(currentExecutor);
                             --i;
                         }
@@ -13349,6 +13374,7 @@ Entry.block = {
             if (!this.initiated) {
                 this.initiated = true;
                 Entry.callStackLength++;
+
                 if (Entry.callStackLength > Entry.Executor.MAXIMUM_CALLSTACK) {
                     Entry.toast.alert(
                         Lang.Workspace.RecursiveCallWarningTitle,
@@ -13373,6 +13399,7 @@ Entry.block = {
                 this.funcCode.removeExecutor(this.funcExecutor);
                 return Entry.STATIC.BREAK;
             }
+
             Entry.callStackLength--;
         },
         "syntax": {"js": [], "py": [""]}
@@ -27853,7 +27880,8 @@ Entry.block = {
             {
                 syntax: "(%1 and %3)",
                 template: "%1 and %3",
-                blockType: "param"
+                blockType: "param",
+                dic: "&&"
             }
         ]}
     },
@@ -27914,7 +27942,8 @@ Entry.block = {
             {
                 syntax: "(%1 or %3)",
                 template: "%1 or %3",
-                blockType: "param"
+                blockType: "param",
+                dic: "||"
             }
         ]}
     },
@@ -29121,7 +29150,10 @@ Entry.block = {
             sprite.setImage(picture);
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["Entry.change_shape(%1)"]}
+        "syntax": {"js": [], "py": [{
+            passTest: true,
+            syntax: "Entry.change_shape(%1)"
+        }]}
     },
     "add_effect_amount": {
         "color": "#EC4466",
@@ -30284,7 +30316,10 @@ Entry.block = {
                 "type": "Block",
                 "accept": "string"
             },
-            { "type": "Angle" },
+            {
+                "type": "angle",
+                "params": [ "90" ]
+            },
             {
                 "type": "Indicator",
                 "img": "block_icon/moving_03.png",
@@ -30857,7 +30892,10 @@ Entry.block = {
         "events": {},
         "def": {
             "params": [
-                { "type": "angle" },
+                {
+                    "type": "angle",
+                    "params": [ "90" ]
+                },
                 null
             ],
             "type": "rotate_absolute"
@@ -30902,7 +30940,10 @@ Entry.block = {
         "events": {},
         "def": {
             "params": [
-                { "type": "angle" },
+                {
+                    "type": "angle",
+                    "params": [ "90" ]
+                },
                 null
             ],
             "type": "rotate_relative"
@@ -30946,7 +30987,10 @@ Entry.block = {
         "events": {},
         "def": {
             "params": [
-                { "type": "angle" },
+                {
+                    "type": "angle",
+                    "params": [ "90" ]
+                },
                 null
             ],
             "type": "direction_absolute"
@@ -30991,7 +31035,10 @@ Entry.block = {
         "events": {},
         "def": {
             "params": [
-                { "type": "angle" },
+                {
+                    "type": "angle",
+                    "params": [ "90" ]
+                },
                 null
             ],
             "type": "direction_relative"
@@ -31040,7 +31087,10 @@ Entry.block = {
         "events": {},
         "def": {
             "params": [
-                { "type": "angle" },
+                {
+                    "type": "angle",
+                    "params": [ "90" ]
+                },
                 {
                     "type": "number",
                     "params": [ "10" ]
@@ -31108,7 +31158,8 @@ Entry.block = {
                     "params": [ "2" ]
                 },
                 {
-                    "type": "angle"
+                    "type": "angle",
+                    "params": [ "90" ]
                 },
                 null
             ],
@@ -31187,7 +31238,10 @@ Entry.block = {
                     "type": "text",
                     "params": [ "2" ]
                 },
-                { "type": "angle" },
+                {
+                    "type": "angle",
+                    "params": [ "90" ]
+                },
                 null
             ],
             "type": "direction_relative_duration"
@@ -34213,7 +34267,10 @@ Entry.block = {
 
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["Entry.play_sound(%1)"]}
+        "syntax": {"js": [], "py": [{
+            passTest: true,
+            syntax: "Entry.play_sound(%1)"
+        }]}
     },
     "sound_something_second_with_block": {
         "color": "#A4D01D",
@@ -34285,7 +34342,10 @@ Entry.block = {
             }
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["Entry.play_sound_for_sec(%1, %2)"]}
+        "syntax": {"js": [], "py": [{
+            passTest: true,
+            syntax: "Entry.play_sound_for_sec(%1, %2)"
+        }]}
     },
     "sound_something_wait_with_block": {
         "color": "#A4D01D",
@@ -34348,7 +34408,10 @@ Entry.block = {
                 return script.callReturn();
             }
         },
-        "syntax": {"js": [], "py": ["Entry.play_sound_and_wait(%1)"]}
+        "syntax": {"js": [], "py": [{
+            passTest: true,
+            syntax: "Entry.play_sound_and_wait(%1)"
+        }]}
     },
     "sound_something_second_wait_with_block": {
         "color": "#A4D01D",
@@ -34428,7 +34491,10 @@ Entry.block = {
                 return script.callReturn();
             }
         },
-        "syntax": {"js": [], "py": ["Entry.play_sound_for_sec_and_wait(%1, %2)"]}
+        "syntax": {"js": [], "py": [{
+            passTest: true,
+            syntax: "Entry.play_sound_for_sec_and_wait(%1, %2)"
+        }]}
     },
     "sound_from_to": {
         "color": "#A4D01D",
@@ -34510,7 +34576,10 @@ Entry.block = {
             }
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["Entry.play_sound_from_to(%1, %2, %3)"]}
+         "syntax": {"js": [], "py": [{
+            passTest: true,
+            syntax : "Entry.play_sound_from_to(%1, %2, %3)"
+        }]}
     },
     "sound_from_to_and_wait": {
         "color": "#A4D01D",
@@ -34736,13 +34805,14 @@ Entry.block = {
         "syntax": {"js": [], "py": [
             {
                 syntax: "def when_press_key(%2):",
+                passTest: true,
                 blockType: "event",
                 textParams: [
                     undefined,
                     {
                         "type": "Keyboard",
                         "value": '81',
-                        converter: Entry.block.converters.keyboardCode
+                        converter: Entry.block.converters.keyboardCode1
                     }
                 ]
             }
@@ -34964,6 +35034,7 @@ Entry.block = {
             {
                 syntax: "def when_get_signal(%2):",
                 blockType: "event",
+                passTest: true,
                 textParams: [
                     undefined,
                     {
@@ -35477,6 +35548,7 @@ Entry.block = {
         "syntax": {"js": [], "py": [
             {
                 syntax: "%1 += %2",
+                passTest: true,
                 textParams: [
                     {
                         "type": "DropdownDynamic",
@@ -35585,6 +35657,7 @@ Entry.block = {
         "syntax": {"js": [], "py": [
             {
                 syntax: "%1 = %2",
+                passTest: true,
                 blockType: "variable",
                 textParams: [
                     {
@@ -35791,6 +35864,7 @@ Entry.block = {
         "syntax": {"js": [], "py": [
             {
                 syntax: "%1",
+                passTest : true,
                 keyOption: "get_variable",
                 blockType: "param",
                 textParams: [
@@ -36051,6 +36125,7 @@ Entry.block = {
         },
         "syntax": {"js": [], "py": [
             {
+                passTest : true,
                 syntax: "%2.append(%1)",
                 textParams: [
                     {
@@ -36076,6 +36151,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Block",
+                "isListIndex": true,
                 "accept": "string"
             },
             {
@@ -36149,6 +36225,7 @@ Entry.block = {
         "syntax": {"js": [], "py": [
             {
                 syntax: "%2.pop(%1)",
+                passTest : true,
                 textParams: [
                     {
                         "type": "Block",
@@ -36185,6 +36262,7 @@ Entry.block = {
             },
             {
                 "type": "Block",
+                "isListIndex": true,
                 "accept": "string"
             },
             {
@@ -36260,6 +36338,7 @@ Entry.block = {
         "syntax": {"js": [], "py": [
             {
                 syntax: "%2.insert(%3, %1)",
+                passTest: true,
                 textParams: [
                     {
                         "type": "Block",
@@ -36296,6 +36375,7 @@ Entry.block = {
             },
             {
                 "type": "Block",
+                "isListIndex": true,
                 "accept": "string"
             },
             {
@@ -36375,6 +36455,7 @@ Entry.block = {
         "syntax": {"js": [], "py": [
             {
                 syntax: "%1\[%2\] = %3",
+                passTest: true,
                 textParams: [
                     {
                         "type": "DropdownDynamic",
@@ -36422,6 +36503,7 @@ Entry.block = {
             },
             {
                 "type": "Block",
+                "isListIndex": true,
                 "accept": "string"
             },
             {
@@ -36488,6 +36570,7 @@ Entry.block = {
         "syntax": {"js": [], "py": [
             {
                 syntax: "%2\[%4\]",
+                passTest: true,
                 blockType: "param",
                 textParams: [
                     undefined,
@@ -36570,6 +36653,7 @@ Entry.block = {
             {
                 syntax: "len(%2)",
                 blockType: "param",
+                passTest: true,
                 textParams: [
                     undefined,
                     {
@@ -36913,6 +36997,7 @@ Entry.block = {
             {
                 syntax: "%4 in %2",
                 blockType: "param",
+                passTest: true,
                 textParams: [
                     undefined,
                     {
@@ -37466,64 +37551,85 @@ Entry.block = {
         "isNotFor": [ "xbot_epor_edge" ],
         "func": function (sprite, script) {
             var sq = Entry.hw.sendQueue;
-            var note = script.getStringField("NOTE", script);
-            var octave = script.getStringField("OCTAVE", script);
-            var duration = script.getNumberValue("VALUE", script);
+
+            if (!script.isStart) {            
+                var note = script.getStringField("NOTE", script);
+                var octave = script.getStringField("OCTAVE", script);
+                var duration = script.getNumberValue("VALUE", script);
 
 
-            var noteOctave = note + octave; // 'C'+ 2 = "C2"
-            //console.log('xbot_buzzer noteOctave' + note + ' ' + octave + ' ' + duration);
+                var noteOctave = note + octave; // 'C'+ 2 = "C2"
+                //console.log('xbot_buzzer noteOctave' + note + ' ' + octave + ' ' + duration);
 
-            if(noteOctave == "C2") sq.note = 65;
-            else if(noteOctave == "D2") sq.note = 73;
-            else if(noteOctave == "E2") sq.note = 82;
-            else if(noteOctave == "F2") sq.note = 87;
-            else if(noteOctave == "G2") sq.note = 98;
-            else if(noteOctave == "A2") sq.note = 110;
-            else if(noteOctave == "B2") sq.note = 123;
-            else if(noteOctave == "C3") sq.note = 131;
-            else if(noteOctave == "D3") sq.note = 147;
-            else if(noteOctave == "E3") sq.note = 165;
-            else if(noteOctave == "F3") sq.note = 175;
-            else if(noteOctave == "G3") sq.note = 196;
-            else if(noteOctave == "A3") sq.note = 220;
-            else if(noteOctave == "B3") sq.note = 247;
-            else if(noteOctave == "C4") sq.note = 262;
-            else if(noteOctave == "D4") sq.note = 294;
-            else if(noteOctave == "E4") sq.note = 330;
-            else if(noteOctave == "F4") sq.note = 349;
-            else if(noteOctave == "G4") sq.note = 392;
-            else if(noteOctave == "A4") sq.note = 440;
-            else if(noteOctave == "B4") sq.note = 494;
-            else if(noteOctave == "C5") sq.note = 523;
-            else if(noteOctave == "D5") sq.note = 587;
-            else if(noteOctave == "E5") sq.note = 659;
-            else if(noteOctave == "F5") sq.note = 698;
-            else if(noteOctave == "G5") sq.note = 784;
-            else if(noteOctave == "A5") sq.note = 880;
-            else if(noteOctave == "B5") sq.note = 988;
-            else if(noteOctave == "C6") sq.note = 1047;
-            else if(noteOctave == "D6") sq.note = 1175;
-            else if(noteOctave == "E6") sq.note = 1319;
-            else if(noteOctave == "F6") sq.note = 1397;
-            else if(noteOctave == "G6") sq.note = 1568;
-            else if(noteOctave == "A6") sq.note = 1760;
-            else if(noteOctave == "B6") sq.note = 1976;
-            else if(noteOctave == "C7") sq.note = 2093;
-            else if(noteOctave == "D7") sq.note = 2349;
-            else if(noteOctave == "E7") sq.note = 2637;
-            else if(noteOctave == "F7") sq.note = 2794;
-            else if(noteOctave == "G7") sq.note = 3136;
-            else if(noteOctave == "A7") sq.note = 3520;
-            else if(noteOctave == "B7") sq.note = 3951;
-            else sq.note = 262;
+                if(noteOctave == "C2") sq.note = 65;
+                else if(noteOctave == "D2") sq.note = 73;
+                else if(noteOctave == "E2") sq.note = 82;
+                else if(noteOctave == "F2") sq.note = 87;
+                else if(noteOctave == "G2") sq.note = 98;
+                else if(noteOctave == "A2") sq.note = 110;
+                else if(noteOctave == "B2") sq.note = 123;
+                else if(noteOctave == "C3") sq.note = 131;
+                else if(noteOctave == "D3") sq.note = 147;
+                else if(noteOctave == "E3") sq.note = 165;
+                else if(noteOctave == "F3") sq.note = 175;
+                else if(noteOctave == "G3") sq.note = 196;
+                else if(noteOctave == "A3") sq.note = 220;
+                else if(noteOctave == "B3") sq.note = 247;
+                else if(noteOctave == "C4") sq.note = 262;
+                else if(noteOctave == "D4") sq.note = 294;
+                else if(noteOctave == "E4") sq.note = 330;
+                else if(noteOctave == "F4") sq.note = 349;
+                else if(noteOctave == "G4") sq.note = 392;
+                else if(noteOctave == "A4") sq.note = 440;
+                else if(noteOctave == "B4") sq.note = 494;
+                else if(noteOctave == "C5") sq.note = 523;
+                else if(noteOctave == "D5") sq.note = 587;
+                else if(noteOctave == "E5") sq.note = 659;
+                else if(noteOctave == "F5") sq.note = 698;
+                else if(noteOctave == "G5") sq.note = 784;
+                else if(noteOctave == "A5") sq.note = 880;
+                else if(noteOctave == "B5") sq.note = 988;
+                else if(noteOctave == "C6") sq.note = 1047;
+                else if(noteOctave == "D6") sq.note = 1175;
+                else if(noteOctave == "E6") sq.note = 1319;
+                else if(noteOctave == "F6") sq.note = 1397;
+                else if(noteOctave == "G6") sq.note = 1568;
+                else if(noteOctave == "A6") sq.note = 1760;
+                else if(noteOctave == "B6") sq.note = 1976;
+                else if(noteOctave == "C7") sq.note = 2093;
+                else if(noteOctave == "D7") sq.note = 2349;
+                else if(noteOctave == "E7") sq.note = 2637;
+                else if(noteOctave == "F7") sq.note = 2794;
+                else if(noteOctave == "G7") sq.note = 3136;
+                else if(noteOctave == "A7") sq.note = 3520;
+                else if(noteOctave == "B7") sq.note = 3951;
+                else sq.note = 262;
 
-            //sq.duration = 200;
+                //sq.duration = 200;
+                //duration *= 40; //  convert to mSec
+                sq.duration =  duration*40;
 
-            duration *= 40; //  convert to mSec
-            sq.duration =  duration;
+                script.isStart = true;
+                script.timeFlag = 1;
 
-            return script.callReturn();
+                var timeValue = duration * 1000;
+                var timer = setTimeout(function() {
+                    script.timeFlag = 0;
+                    Entry.Xbot.removeTimeout(timer);
+                }, timeValue);
+                Entry.Xbot.timeouts.push(timer);
+                return script;
+
+            } else if (script.timeFlag == 1) {
+                return script;
+            } else {
+                delete script.isStart;
+                delete script.timeFlag;
+                Entry.engine.isContinue = false;
+                sq.duration = 0;
+                return script.callReturn();
+            }
+
         },
         "syntax": {"js": [], "py": ["Xbot.buzzer(%1, %2, %3)"]}
     },
