@@ -49558,7 +49558,11 @@ Entry.block = {
         "color": "#7C7C7C",
         "skeleton": "basic_loop",
         "template": "%1 번 반복하기 %2",
-        "statements": [],
+        "statements": [
+            {
+                "accept": "basic"
+            }
+        ],
         "params": [
             {
                 "type": "Image",
@@ -49589,7 +49593,14 @@ Entry.block = {
         "color": "#7C7C7C",
         "skeleton": "basic_double_loop",
         "template": "         %1       %2%3",
-        "statements": [],
+        "statements": [
+            {
+                "accept": "basic"
+            },
+            {
+                "accept": "basic"
+            }
+        ],
         "params": [
             {
                 "type": "TextInput",
