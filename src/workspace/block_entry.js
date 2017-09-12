@@ -39484,7 +39484,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Image",
-                "img": "/img/assets/week/blocks/mushRoom.png",
+                "img": "/img/assets/week/blocks/mushroom.png",
                 "size": 24
             },
             {
@@ -40822,7 +40822,7 @@ Entry.block = {
         "params": [
             {
                 "type": "Image",
-                "img": "/img/assets/week/blocks/mushRoom.png",
+                "img": "/img/assets/week/blocks/mushroom.png",
                 "size": 24
             },
             {
