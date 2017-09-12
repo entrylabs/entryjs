@@ -39375,7 +39375,7 @@ Entry.block = {
                 Ntry.addVectorByDirection(grid, Ntry.unitComp.direction, 1);
                 Ntry.addVectorByDirection(backGrid, Ntry.unitComp.direction, -1);
                 var frontExist = !!Ntry.entityManager.find(
-                    grid,
+                    grid
                 ).filter(function(e) {return e.components[Ntry.STATIC.ENEMY]}).length;
                 var backExist = !!Ntry.entityManager.find(
                     backGrid
@@ -39444,7 +39444,7 @@ Entry.block = {
                     backGrid
                 ).filter(function(e) {return e.components[Ntry.STATIC.ENEMY]});
                 var frontEnemyExist = !!Ntry.entityManager.find(
-                    grid,
+                    grid
                 ).filter(function(e) {return e.components[Ntry.STATIC.ENEMY]}).length;
 
                 var frontEnemyValid = !!findTile.length;
@@ -39529,7 +39529,7 @@ Entry.block = {
                     backGrid
                 ).filter(function(e) {return e.components[Ntry.STATIC.ENEMY]});
                 var frontEnemyExist = !!Ntry.entityManager.find(
-                    grid,
+                    grid
                 ).filter(function(e) {return e.components[Ntry.STATIC.ENEMY]}).length;
 
                 var frontEnemyValid = !!findTile.length;
@@ -39678,7 +39678,7 @@ Entry.block = {
                     backGrid
                 ).filter(function(e) {return e.components[Ntry.STATIC.ENEMY]});
                 var frontEnemyExist = !!Ntry.entityManager.find(
-                    grid,
+                    grid
                 ).filter(function(e) {return e.components[Ntry.STATIC.ENEMY]}).length;
 
                 var frontEnemyValid = !!findTile.length;
