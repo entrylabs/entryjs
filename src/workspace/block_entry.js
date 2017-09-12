@@ -38445,6 +38445,7 @@ Entry.block = {
 
             Ntry.unitComp = Ntry.entityManager.getComponent(
             this._unit.id, Ntry.STATIC.UNIT);
+            Ntry.unit = this._unit;
         }
     },
     "maze_step_jump": {
@@ -39367,12 +39368,28 @@ Entry.block = {
         func: function(sprite, script) {
             if (!script.isContinue) {
                 Ntry.dispatchEvent("stopEnemyWalk");
+                script.isContinue = true;
+                script.isAction = true;
+                var grid = $.extend({type: Ntry.STATIC.GRID}, Ntry.entityManager.getComponent(Ntry.unit.id, Ntry.STATIC.GRID));
+                var backGrid = $.extend({type: Ntry.STATIC.GRID}, Ntry.entityManager.getComponent(Ntry.unit.id, Ntry.STATIC.GRID));
+                Ntry.addVectorByDirection(grid, Ntry.unitComp.direction, 1);
+                Ntry.addVectorByDirection(backGrid, Ntry.unitComp.direction, -1);
+                var frontExist = !!Ntry.entityManager.find(
+                    grid,
+                ).filter(function(e) {return e.components[Ntry.STATIC.ENEMY]}).length;
+                var backExist = !!Ntry.entityManager.find(
+                    backGrid
+                ).filter(function(e) {return e.components[Ntry.STATIC.ENEMY]}).length;
+                if (!frontExist || !backExist) {
+                    Ntry.dispatchEvent("unitAction", Ntry.STATIC.BOTH_SIDE_FAIL, function () {
+                        script.isAction = false;
+                    });
+                    return Entry.STATIC.BREAK;
+                }
                 Ntry.dispatchEvent("destroyObstacle", 1, function(state) {
                 })
                 Ntry.dispatchEvent("destroyObstacle", -1, function(state) {
                 })
-                script.isContinue = true;
-                script.isAction = true;
 
                 var callBack = function() {
                     Ntry.dispatchEvent("startEnemyWalk", true, function() {
@@ -39410,18 +39427,62 @@ Entry.block = {
         func: function(sprite, script) {
             if (!script.isContinue) {
                 Ntry.dispatchEvent("stopEnemyWalk");
-                Ntry.dispatchEvent("destroyObstacle", 1, function(state) {
-                })
                 script.isContinue = true;
                 script.isAction = true;
+                var grid = $.extend({type: Ntry.STATIC.GRID}, Ntry.entityManager.getComponent(Ntry.unit.id, Ntry.STATIC.GRID));
+                var backGrid = $.extend({type: Ntry.STATIC.GRID}, Ntry.entityManager.getComponent(Ntry.unit.id, Ntry.STATIC.GRID));
+                Ntry.addVectorByDirection(grid, Ntry.unitComp.direction, 1);
+                var findTile = Ntry.entityManager.find(
+                    grid,
+                    {
+                        type: Ntry.STATIC.TILE,
+                        tileType: Ntry.STATIC.OBSTACLE_PEPE
+                    }
+                );
+                Ntry.addVectorByDirection(backGrid, Ntry.unitComp.direction, -1);
+                var findBackTile = Ntry.entityManager.find(
+                    backGrid
+                ).filter(function(e) {return e.components[Ntry.STATIC.ENEMY]});
+                var frontEnemyExist = !!Ntry.entityManager.find(
+                    grid,
+                ).filter(function(e) {return e.components[Ntry.STATIC.ENEMY]}).length;
 
-                var callBack = function() {
-                    Ntry.dispatchEvent("startEnemyWalk", true, function() {
+                var frontEnemyValid = !!findTile.length;
+                var backEnemyExist = !!findBackTile.length;
+                if(frontEnemyValid && !backEnemyExist) { // success
+                    Ntry.dispatchEvent("destroyObstacle", 1, function(state) {
+                    })
+
+                    var callBack = function() {
+                        Ntry.dispatchEvent("startEnemyWalk", true, function() {
+                            script.isAction = false;
+                        });
+                    };
+
+                    Ntry.dispatchEvent("unitAction", Ntry.STATIC.PEPE, callBack);
+                } else if (frontEnemyValid && backEnemyExist) { // attack and dead
+                    Ntry.dispatchEvent("destroyObstacle", 1, function(state) {
+                    })
+
+                    var callBack = function() {
+                        Ntry.dispatchEvent("startEnemyWalk", false, function() {
+                        });
+                    };
+
+                    Ntry.dispatchEvent("unitAction", Ntry.STATIC.PEPE, callBack);
+                } else if (backEnemyExist) { // dead
+                    if (frontEnemyExist)
+                        Ntry.dispatchEvent("unitAction", Ntry.STATIC.PEPE_FAIL, function () {
+                            script.isAction = false;
+                        });
+                    else
+                        Ntry.dispatchEvent("startEnemyWalk", false, function() {
+                        });
+                } else { // music time
+                    Ntry.dispatchEvent("unitAction", Ntry.STATIC.PEPE_FAIL, function () {
                         script.isAction = false;
                     });
-                };
-
-                Ntry.dispatchEvent("unitAction", Ntry.STATIC.PEPE, callBack);
+                }
                 return Entry.STATIC.BREAK;
             } else if (script.isAction) {
                 return Entry.STATIC.BREAK;
@@ -39451,18 +39512,62 @@ Entry.block = {
         func: function(sprite, script) {
             if (!script.isContinue) {
                 Ntry.dispatchEvent("stopEnemyWalk");
-                Ntry.dispatchEvent("destroyObstacle", 1, function(state) {
-                })
                 script.isContinue = true;
                 script.isAction = true;
+                var grid = $.extend({type: Ntry.STATIC.GRID}, Ntry.entityManager.getComponent(Ntry.unit.id, Ntry.STATIC.GRID));
+                var backGrid = $.extend({type: Ntry.STATIC.GRID}, Ntry.entityManager.getComponent(Ntry.unit.id, Ntry.STATIC.GRID));
+                Ntry.addVectorByDirection(grid, Ntry.unitComp.direction, 1);
+                var findTile = Ntry.entityManager.find(
+                    grid,
+                    {
+                        type: Ntry.STATIC.TILE,
+                        tileType: Ntry.STATIC.OBSTACLE_YETI
+                    }
+                );
+                Ntry.addVectorByDirection(backGrid, Ntry.unitComp.direction, -1);
+                var findBackTile = Ntry.entityManager.find(
+                    backGrid
+                ).filter(function(e) {return e.components[Ntry.STATIC.ENEMY]});
+                var frontEnemyExist = !!Ntry.entityManager.find(
+                    grid,
+                ).filter(function(e) {return e.components[Ntry.STATIC.ENEMY]}).length;
 
-                var callBack = function() {
-                    Ntry.dispatchEvent("startEnemyWalk", true, function() {
+                var frontEnemyValid = !!findTile.length;
+                var backEnemyExist = !!findBackTile.length;
+                if(frontEnemyValid && !backEnemyExist) { // success
+                    Ntry.dispatchEvent("destroyObstacle", 1, function(state) {
+                    })
+
+                    var callBack = function() {
+                        Ntry.dispatchEvent("startEnemyWalk", true, function() {
+                            script.isAction = false;
+                        });
+                    };
+
+                    Ntry.dispatchEvent("unitAction", Ntry.STATIC.YETI, callBack);
+                } else if (frontEnemyValid && backEnemyExist) { // attack and dead
+                    Ntry.dispatchEvent("destroyObstacle", 1, function(state) {
+                    })
+
+                    var callBack = function() {
+                        Ntry.dispatchEvent("startEnemyWalk", false, function() {
+                        });
+                    };
+
+                    Ntry.dispatchEvent("unitAction", Ntry.STATIC.YETI, callBack);
+                } else if (backEnemyExist) { // dead
+                    if (frontEnemyExist)
+                        Ntry.dispatchEvent("unitAction", Ntry.STATIC.YETI_FAIL, function () {
+                            script.isAction = false;
+                        });
+                    else
+                        Ntry.dispatchEvent("startEnemyWalk", false, function() {
+                        });
+                } else { // music time
+                    Ntry.dispatchEvent("unitAction", Ntry.STATIC.YETI_FAIL, function () {
                         script.isAction = false;
                     });
-                };
-
-                Ntry.dispatchEvent("unitAction", Ntry.STATIC.PEPE, callBack);
+                }
                 return Entry.STATIC.BREAK;
             } else if (script.isAction) {
                 return Entry.STATIC.BREAK;
@@ -39499,7 +39604,6 @@ Entry.block = {
                 var unitId;
                 $.each(entities, function (id, entity) {
                     unitId = id;
-                    components = entity.components;
                 });
                 var unitComp = Ntry.entityManager.getComponent(unitId, Ntry.STATIC.UNIT);
                 var unitGrid = $.extend({}, Ntry.entityManager.getComponent(unitId, Ntry.STATIC.GRID));
@@ -39557,18 +39661,62 @@ Entry.block = {
         func: function(sprite, script) {
             if (!script.isContinue) {
                 Ntry.dispatchEvent("stopEnemyWalk");
-                Ntry.dispatchEvent("destroyObstacle", 1, function(state) {
-                })
                 script.isContinue = true;
                 script.isAction = true;
+                var grid = $.extend({type: Ntry.STATIC.GRID}, Ntry.entityManager.getComponent(Ntry.unit.id, Ntry.STATIC.GRID));
+                var backGrid = $.extend({type: Ntry.STATIC.GRID}, Ntry.entityManager.getComponent(Ntry.unit.id, Ntry.STATIC.GRID));
+                Ntry.addVectorByDirection(grid, Ntry.unitComp.direction, 1);
+                var findTile = Ntry.entityManager.find(
+                    grid,
+                    {
+                        type: Ntry.STATIC.TILE,
+                        tileType: Ntry.STATIC.OBSTACLE_PETI
+                    }
+                );
+                Ntry.addVectorByDirection(backGrid, Ntry.unitComp.direction, -1);
+                var findBackTile = Ntry.entityManager.find(
+                    backGrid
+                ).filter(function(e) {return e.components[Ntry.STATIC.ENEMY]});
+                var frontEnemyExist = !!Ntry.entityManager.find(
+                    grid,
+                ).filter(function(e) {return e.components[Ntry.STATIC.ENEMY]}).length;
 
-                var callBack = function() {
-                    Ntry.dispatchEvent("startEnemyWalk", true, function() {
+                var frontEnemyValid = !!findTile.length;
+                var backEnemyExist = !!findBackTile.length;
+                if(frontEnemyValid && !backEnemyExist) { // success
+                    Ntry.dispatchEvent("destroyObstacle", 1, function(state) {
+                    })
+
+                    var callBack = function() {
+                        Ntry.dispatchEvent("startEnemyWalk", true, function() {
+                            script.isAction = false;
+                        });
+                    };
+
+                    Ntry.dispatchEvent("unitAction", Ntry.STATIC.PETI, callBack);
+                } else if (frontEnemyValid && backEnemyExist) { // attack and dead
+                    Ntry.dispatchEvent("destroyObstacle", 1, function(state) {
+                    })
+
+                    var callBack = function() {
+                        Ntry.dispatchEvent("startEnemyWalk", false, function() {
+                        });
+                    };
+
+                    Ntry.dispatchEvent("unitAction", Ntry.STATIC.PETI, callBack);
+                } else if (backEnemyExist) { // dead
+                    if (frontEnemyExist)
+                        Ntry.dispatchEvent("unitAction", Ntry.STATIC.PETI_FAIL, function () {
+                            script.isAction = false;
+                        });
+                    else
+                        Ntry.dispatchEvent("startEnemyWalk", false, function() {
+                        });
+                } else { // music time
+                    Ntry.dispatchEvent("unitAction", Ntry.STATIC.PETI_FAIL, function () {
                         script.isAction = false;
                     });
-                };
-
-                Ntry.dispatchEvent("unitAction", Ntry.STATIC.PETI, callBack);
+                }
                 return Entry.STATIC.BREAK;
             } else if (script.isAction) {
                 return Entry.STATIC.BREAK;
@@ -39724,7 +39872,6 @@ Entry.block = {
                 var unitId;
                 $.each(entities, function (id, entity) {
                     unitId = id;
-                    components = entity.components;
                 });
                 var unitComp = Ntry.entityManager.getComponent(unitId, Ntry.STATIC.UNIT);
                 var unitGrid = $.extend({}, Ntry.entityManager.getComponent(unitId, Ntry.STATIC.GRID));
