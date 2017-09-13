@@ -16,7 +16,7 @@ Entry.Codestar = {
         height: 409,
         listPorts: {
             '13':{name: '진동모터', type: 'output', pos: {x: 0, y: 0}},
-            '6':{name: '진동센서', type: 'input', pos: {x: 0, y: 0}},
+            'tilt':{name: '진동센서', type: 'input', pos: {x: 0, y: 0}},
         },
         ports: {
             '7':{name: '빨간색', type: 'output', pos: {x: 238, y: 108}},
