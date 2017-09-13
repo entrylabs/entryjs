@@ -14,10 +14,7 @@ Entry.HW = function() {
 
     this.connectTrial = 0;
     this.isFirstConnect = true;
-    //this.requireVerion = 'v1.6.1';
     this.requireVerion = 'v1.6.1';
-    this.downloadPath = "http://download.play-entry.org/apps/Entry_HW_1.6.12_Setup.exe";
-    this.downloadPathOsx = "http://download.play-entry.org/apps/Entry_HW-1.6.12.dmg";
     this.hwPopupCreate();
     this.initSocket();
     this.connected = false;
@@ -55,6 +52,7 @@ Entry.HW = function() {
         '7.1': Entry.Robotis_carCont,
         '7.2': Entry.Robotis_openCM70,
         '8.1': Entry.Arduino,
+        '9.1': Entry.iboard,
         'A.1': Entry.SmartBoard,
         'B.1': Entry.Codestar,
         'C.1': Entry.DaduBlock,
