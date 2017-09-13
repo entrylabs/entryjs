@@ -39240,7 +39240,7 @@ Entry.block = {
         }
     },
     "maze_step_if_left_monster": {
-        "skeleton": "basic_loop",
+        "skeleton": "basic_double_loop",
         "mode": "maze",
         "color": "#498DEB",
         "syntax": [
@@ -39252,6 +39252,9 @@ Entry.block = {
                 "type": "Image",
                 "img": "/img/assets/week/blocks/if.png",
                 "size": 24
+            },
+            {
+                "type": "LineBreak"
             }
         ],
         "statements": [
@@ -39259,6 +39262,18 @@ Entry.block = {
                 "accept": "basic"
             }
         ],
+        "statements": [
+            {
+                "accept": "basic"
+            },
+            {
+                "accept": "basic"
+            }
+        ],
+        "statementsKeyMap": {
+            "STACK_IF": 0,
+            "STACK_ELSE": 1
+        },
         func: function() {
             if (this.isContinue) return;
 
@@ -39288,7 +39303,7 @@ Entry.block = {
         }
     },
     "maze_step_if_right_monster": {
-        "skeleton": "basic_loop",
+        "skeleton": "basic_double_loop",
         "mode": "maze",
         "color": "#498DEB",
         "syntax": [
@@ -39300,6 +39315,9 @@ Entry.block = {
                 "type": "Image",
                 "img": "/img/assets/week/blocks/if.png",
                 "size": 24
+            },
+            {
+                "type": "LineBreak"
             }
         ], 
         "statements": [
@@ -39307,6 +39325,18 @@ Entry.block = {
                 "accept": "basic"
             }
         ],
+        "statements": [
+            {
+                "accept": "basic"
+            },
+            {
+                "accept": "basic"
+            }
+        ],
+        "statementsKeyMap": {
+            "STACK_IF": 0,
+            "STACK_ELSE": 1
+        },
         func: function() {
             if (this.isContinue) return;
 
@@ -39336,7 +39366,7 @@ Entry.block = {
         }
     },
     "maze_step_if_yeti": {
-        "skeleton": "basic_loop",
+        "skeleton": "basic_double_loop",
         "mode": "maze",
         "color": "#498DEB",
         "syntax": [
@@ -39353,6 +39383,9 @@ Entry.block = {
                 "type": "Image",
                 "img": "/img/assets/week/blocks/if.png",
                 "size": 24
+            },
+            {
+                "type": "LineBreak"
             }
         ],
         "statements": [
@@ -39360,6 +39393,18 @@ Entry.block = {
                 "accept": "basic"
             }
         ],
+        "statements": [
+            {
+                "accept": "basic"
+            },
+            {
+                "accept": "basic"
+            }
+        ],
+        "statementsKeyMap": {
+            "STACK_IF": 0,
+            "STACK_ELSE": 1
+        },
         func: function() {
             if (this.isContinue) return;
 
