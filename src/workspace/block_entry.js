@@ -39201,6 +39201,209 @@ Entry.block = {
             }
         }
     },
+    "maze_turn_right": {
+        "skeleton": "basic",
+        "mode": "maze",
+        "color": "#A751E3",
+        "syntax": [
+            "Scope",
+            "turn_right"
+        ],
+        "params": [
+            {
+                "type": "Image",
+                "img": "/img/assets/week/blocks/right_ic.png",
+                "size": 24
+            }
+        ],
+        func: function() {
+            Ntry.unit.components[Ntry.STATIC.UNIT].direction = Ntry.STATIC.EAST;
+        }
+    },
+    "maze_turn_left": {
+        "skeleton": "basic",
+        "mode": "maze",
+        "color": "#A751E3",
+        "syntax": [
+            "Scope",
+            "turn_left"
+        ],
+        "params": [
+            {
+                "type": "Image",
+                "img": "/img/assets/week/blocks/left_ic.png",
+                "size": 24
+            }
+        ],
+        func: function() { 
+            Ntry.unit.components[Ntry.STATIC.UNIT].direction = Ntry.STATIC.WEST;
+        }
+    },
+    "maze_step_if_left_monster": {
+        "skeleton": "basic_loop",
+        "mode": "maze",
+        "color": "#498DEB",
+        "syntax": [
+            "BasicIf",
+            "left == monster"
+        ],
+        "params": [
+            {
+                "type": "Image",
+                "img": "/img/assets/week/blocks/if.png",
+                "size": 24
+            }
+        ],
+        "statements": [
+            {
+                "accept": "basic"
+            }
+        ],
+        func: function() {
+            if (this.isContinue) return;
+
+            var unitComp = Ntry.entityManager.getComponent(Ntry.unit.id, Ntry.STATIC.UNIT);
+            var gridComp = Ntry.entityManager.getComponent(Ntry.unit.id, Ntry.STATIC.GRID);
+            var grid = {x: gridComp.x - 1, y: gridComp.y};
+           
+            var fitEntities = Ntry.entityManager.find(
+                {
+                    type: Ntry.STATIC.GRID,
+                    x: grid.x,
+                    y: grid.y
+                }
+            ).filter(function(e) {return e.components[Ntry.STATIC.ENEMY]});
+
+            this.isContinue = true;
+            var statement = this.block.statements[0];
+
+            if (fitEntities.length === 0) {
+                return;
+            } else if (statement.getBlocks().length === 0)
+                return;
+            else {
+                this.executor.stepInto(statement);
+                return Entry.STATIC.BREAK;
+            }
+        }
+    },
+    "maze_step_if_right_monster": {
+        "skeleton": "basic_loop",
+        "mode": "maze",
+        "color": "#498DEB",
+        "syntax": [
+            "BasicIf",
+            "right == monster"
+        ],
+        "params": [
+            {
+                "type": "Image",
+                "img": "/img/assets/week/blocks/if.png",
+                "size": 24
+            }
+        ], 
+        "statements": [
+            {
+                "accept": "basic"
+            }
+        ],
+        func: function() {
+            if (this.isContinue) return;
+
+            var unitComp = Ntry.entityManager.getComponent(Ntry.unit.id, Ntry.STATIC.UNIT);
+            var gridComp = Ntry.entityManager.getComponent(Ntry.unit.id, Ntry.STATIC.GRID);
+            var grid = {x: gridComp.x + 1, y: gridComp.y};
+           
+            var fitEntities = Ntry.entityManager.find(
+                {
+                    type: Ntry.STATIC.GRID,
+                    x: grid.x,
+                    y: grid.y
+                }
+            ).filter(function(e) {return e.components[Ntry.STATIC.ENEMY]});
+
+            this.isContinue = true;
+
+            var statement = this.block.statements[0];
+            if (fitEntities.length === 0) {
+                return;
+            } else if (statement.getBlocks().length === 0)
+                return;
+            else {
+                this.executor.stepInto(statement);
+                return Entry.STATIC.BREAK;
+            }
+        }
+    },
+    "maze_step_if_yeti": {
+        "skeleton": "basic_loop",
+        "mode": "maze",
+        "color": "#498DEB",
+        "syntax": [
+            "BasicIf",
+            "front == yeti"
+        ],
+        "params": [
+            {
+                "type": "Image",
+                "img": "/img/assets/week/blocks/yeti.png",
+                "size": 24
+            },
+            {
+                "type": "Image",
+                "img": "/img/assets/week/blocks/if.png",
+                "size": 24
+            }
+        ],
+        "statements": [
+            {
+                "accept": "basic"
+            }
+        ],
+        func: function() {
+            if (this.isContinue) return;
+
+            var unitComp = Ntry.entityManager.getComponent(Ntry.unit.id, Ntry.STATIC.UNIT);
+            var gridComp = Ntry.entityManager.getComponent(Ntry.unit.id, Ntry.STATIC.GRID);
+            var grid = {x: gridComp.x, y: gridComp.y};
+            Ntry.addVectorByDirection(grid, unitComp.direction, 1);
+           
+            var fitEntities = Ntry.entityManager.find(
+                {
+                    type: Ntry.STATIC.GRID,
+                    x: grid.x,
+                    y: grid.y
+                },
+                {
+                    type: Ntry.STATIC.TILE,
+                    tileType: Ntry.STATIC.OBSTACLE_YETI
+                }
+            );
+
+            this.isContinue = true;
+
+            var statement = this.block.statements[0];
+            if (fitEntities.length === 0) {
+                return;
+            } else if (statement.getBlocks().length === 0)
+                return;
+            else {
+                this.executor.stepInto(statement);
+                return Entry.STATIC.BREAK;
+            }
+        }
+    },
+    "maze_repeat_until_beat_monster": {
+        "parent": "repeat_inf",
+        "params": [
+            {
+                "type": "Image",
+                "img": "/img/assets/week/blocks/for.png",
+                "size": 24
+            }
+        ],
+    },
+
     "maze_ladder_climb": {
         "skeleton": "basic",
         "mode": "maze",
