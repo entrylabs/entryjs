@@ -37552,7 +37552,7 @@ Entry.block = {
         "func": function (sprite, script) {
             var sq = Entry.hw.sendQueue;
 
-            if (!script.isStart) {            
+            if (!script.isStart) {
                 var note = script.getStringField("NOTE", script);
                 var octave = script.getStringField("OCTAVE", script);
                 var duration = script.getNumberValue("VALUE", script);
@@ -39544,7 +39544,7 @@ Entry.block = {
                         });
                     };
 
-                    Ntry.dispatchEvent("unitAction", Ntry.STATIC.YETI, callBack);
+                    Ntry.dispatchEvent("unitAction", Ntry.STATIC.PEPE, callBack);
                 } else if (frontEnemyValid && backEnemyExist) { // attack and dead
                     Ntry.dispatchEvent("destroyObstacle", 1, function(state) {
                     })
@@ -39554,7 +39554,7 @@ Entry.block = {
                         });
                     };
 
-                    Ntry.dispatchEvent("unitAction", Ntry.STATIC.YETI, callBack);
+                    Ntry.dispatchEvent("unitAction", Ntry.STATIC.PEPE, callBack);
                 } else if (backEnemyExist) { // dead
                     if (frontEnemyExist)
                         Ntry.dispatchEvent("unitAction", Ntry.STATIC.YETI_FAIL, function () {
@@ -39626,7 +39626,7 @@ Entry.block = {
                         script.isAction = false;
                     });
                 };
-                
+
                 Ntry.dispatchEvent("unitAction", Ntry.STATIC.ATTACK_MUSHROOM, callBack);
                 return Entry.STATIC.BREAK;
             } else if (script.isAction) {
