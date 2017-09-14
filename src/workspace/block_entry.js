@@ -39260,11 +39260,6 @@ Entry.block = {
         "statements": [
             {
                 "accept": "basic"
-            }
-        ],
-        "statements": [
-            {
-                "accept": "basic"
             },
             {
                 "accept": "basic"
@@ -39318,11 +39313,6 @@ Entry.block = {
             },
             {
                 "type": "LineBreak"
-            }
-        ], 
-        "statements": [
-            {
-                "accept": "basic"
             }
         ],
         "statements": [
@@ -39386,11 +39376,6 @@ Entry.block = {
             },
             {
                 "type": "LineBreak"
-            }
-        ],
-        "statements": [
-            {
-                "accept": "basic"
             }
         ],
         "statements": [
