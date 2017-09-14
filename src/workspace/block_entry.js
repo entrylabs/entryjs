@@ -39211,9 +39211,9 @@ Entry.block = {
         ],
         "params": [
             {
-                "type": "Image",
-                "img": "/img/assets/week/blocks/right_ic.png",
-                "size": 24
+                "type": "Indicator",
+                "img": "../../../img/assets/week/blocks/right_ic.png",
+                "size": 12
             }
         ],
         func: function() {
@@ -39230,9 +39230,9 @@ Entry.block = {
         ],
         "params": [
             {
-                "type": "Image",
-                "img": "/img/assets/week/blocks/left_ic.png",
-                "size": 24
+                "type": "Indicator",
+                "img": "../../../img/assets/week/blocks/left_ic.png",
+                "size": 12
             }
         ],
         func: function() { 
@@ -39249,9 +39249,9 @@ Entry.block = {
         ],
         "params": [
             {
-                "type": "Image",
-                "img": "/img/assets/week/blocks/if.png",
-                "size": 24
+                "type": "Indicator",
+                "img": "../../../img/assets/week/blocks/if.png",
+                "size": 12
             },
             {
                 "type": "LineBreak"
@@ -39312,9 +39312,9 @@ Entry.block = {
         ],
         "params": [
             {
-                "type": "Image",
-                "img": "/img/assets/week/blocks/if.png",
-                "size": 24
+                "type": "Indicator",
+                "img": "../../../img/assets/week/blocks/if.png",
+                "size": 12
             },
             {
                 "type": "LineBreak"
@@ -39380,9 +39380,9 @@ Entry.block = {
                 "size": 24
             },
             {
-                "type": "Image",
-                "img": "/img/assets/week/blocks/if.png",
-                "size": 24
+                "type": "Indicator",
+                "img": "../../../img/assets/week/blocks/if.png",
+                "size": 12
             },
             {
                 "type": "LineBreak"
@@ -39442,9 +39442,9 @@ Entry.block = {
         "parent": "repeat_inf",
         "params": [
             {
-                "type": "Image",
-                "img": "/img/assets/week/blocks/for.png",
-                "size": 24
+                "type": "Indicator",
+                "img": "../../../img/assets/week/blocks/for.png",
+                "size": 12
             }
         ],
     },
