@@ -37,6 +37,7 @@ Entry.Board = function(option) {
     this._addControl();
     this._bindEvent();
     Entry.addEventListener('fontLoaded', this.reDraw.bind(this));
+    Entry.Utils.setSVGDom(this.svgDom);
 };
 
 Entry.Board.OPTION_PASTE = 0;
