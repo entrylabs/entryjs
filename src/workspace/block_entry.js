@@ -39269,7 +39269,7 @@ Entry.block = {
             "STACK_IF": 0,
             "STACK_ELSE": 1
         },
-        func: function() {
+        func: function(sprite, script) {
             if (this.isContinue) return;
 
             var unitComp = Ntry.entityManager.getComponent(Ntry.unit.id, Ntry.STATIC.UNIT);
@@ -39285,15 +39285,10 @@ Entry.block = {
             ).filter(function(e) {return e.components[Ntry.STATIC.ENEMY]});
 
             this.isContinue = true;
-            var statement = this.block.statements[0];
-
             if (fitEntities.length === 0) {
-                return;
-            } else if (statement.getBlocks().length === 0)
-                return;
-            else {
-                this.executor.stepInto(statement);
-                return Entry.STATIC.BREAK;
+                return script.getStatement("STACK_ELSE", script);
+            } else {
+                return script.getStatement("STACK_IF", script);
             }
         }
     },
@@ -39327,7 +39322,7 @@ Entry.block = {
             "STACK_IF": 0,
             "STACK_ELSE": 1
         },
-        func: function() {
+        func: function(sprite, script) {
             if (this.isContinue) return;
 
             var unitComp = Ntry.entityManager.getComponent(Ntry.unit.id, Ntry.STATIC.UNIT);
@@ -39343,15 +39338,11 @@ Entry.block = {
             ).filter(function(e) {return e.components[Ntry.STATIC.ENEMY]});
 
             this.isContinue = true;
-
-            var statement = this.block.statements[0];
+            
             if (fitEntities.length === 0) {
-                return;
-            } else if (statement.getBlocks().length === 0)
-                return;
-            else {
-                this.executor.stepInto(statement);
-                return Entry.STATIC.BREAK;
+                return script.getStatement("STACK_ELSE", script);
+            } else {
+                return script.getStatement("STACK_IF", script);
             }
         }
     },
@@ -39390,7 +39381,7 @@ Entry.block = {
             "STACK_IF": 0,
             "STACK_ELSE": 1
         },
-        func: function() {
+        func: function(sprite, script) {
             if (this.isContinue) return;
 
             var unitComp = Ntry.entityManager.getComponent(Ntry.unit.id, Ntry.STATIC.UNIT);
@@ -39411,15 +39402,10 @@ Entry.block = {
             );
 
             this.isContinue = true;
-
-            var statement = this.block.statements[0];
             if (fitEntities.length === 0) {
-                return;
-            } else if (statement.getBlocks().length === 0)
-                return;
-            else {
-                this.executor.stepInto(statement);
-                return Entry.STATIC.BREAK;
+                return script.getStatement("STACK_ELSE", script);
+            } else {
+                return script.getStatement("STACK_IF", script);
             }
         }
     },
