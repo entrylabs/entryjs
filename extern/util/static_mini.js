@@ -263,8 +263,7 @@ EntryStatic.getAllBlocks = function() {
             "robotis_humidity_value",
             "robotis_humidity_value_boolean",
             "robotis_temperature_value",
-            "robotis_temperature_value_boolean",
-            "robotis_set_led"
+            "robotis_temperature_value_boolean"            
         ]
     }, {
         category: "hw_led",
@@ -281,7 +280,9 @@ EntryStatic.getAllBlocks = function() {
             "roborobo_diode_toggle",
             "roborobo_diode_inout_toggle",
             "roborobo_diode_set_output",
-            // "roborobo_diode_input_value"
+            "roborobo_diode_input_value",
+            //robotis
+            "robotis_set_led"
         ]
     }, {
         category: "hw_robot",
