@@ -46154,7 +46154,7 @@ Entry.block = {
                 null,
                 {
                     "type": "text",
-                    "params": ["1000"]
+                    "params": ["3000"]
                 },
                 null
             ],
@@ -46205,7 +46205,7 @@ Entry.block = {
                 },
                 {
                     "type": "text",
-                    "params": ["1000"]
+                    "params": ["3000"]
                 },
                 null
             ],
@@ -46268,7 +46268,7 @@ Entry.block = {
                 null,
                 {
                     "type": "text",
-                    "params": ["1000"]
+                    "params": ["3000"]
                 },
                 null
             ],

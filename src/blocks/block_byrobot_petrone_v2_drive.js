@@ -1144,7 +1144,7 @@ Entry.byrobot_petrone_v2_drive =
                 case "control_accel":
                     {
                         // 범위 조정
-                        value = Math.max(value, 0);
+                        value = Math.max(value, -100);
                         value = Math.min(value, 100);
                     }
                     break;
