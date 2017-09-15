@@ -43,8 +43,8 @@ Entry.byrobot_petrone_v2_flight =
     monitorTemplate:
     {
         imgPath: "hw/byrobot_petrone_v2_flight.png",      // 배경 이미지
-        width: 500,     // 이미지의 폭
-        height: 500,    // 이미지의 높이
+        width: 256,     // 이미지의 폭
+        height: 256,    // 이미지의 높이
         
         // 모니터 화면 상단에 차례대로 나열하는 값
         listPorts:
