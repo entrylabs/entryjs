@@ -39211,9 +39211,9 @@ Entry.block = {
         ],
         "params": [
             {
-                "type": "Image",
-                "img": "/img/assets/week/blocks/right_ic.png",
-                "size": 24
+                "type": "Indicator",
+                "img": "../../../img/assets/week/blocks/right_ic.png",
+                "size": 12
             }
         ],
         func: function() {
@@ -39230,9 +39230,9 @@ Entry.block = {
         ],
         "params": [
             {
-                "type": "Image",
-                "img": "/img/assets/week/blocks/left_ic.png",
-                "size": 24
+                "type": "Indicator",
+                "img": "../../../img/assets/week/blocks/left_ic.png",
+                "size": 12
             }
         ],
         func: function() { 
@@ -39249,17 +39249,12 @@ Entry.block = {
         ],
         "params": [
             {
-                "type": "Image",
-                "img": "/img/assets/week/blocks/if.png",
-                "size": 24
+                "type": "Indicator",
+                "img": "../../../img/assets/week/blocks/if.png",
+                "size": 12
             },
             {
                 "type": "LineBreak"
-            }
-        ],
-        "statements": [
-            {
-                "accept": "basic"
             }
         ],
         "statements": [
@@ -39274,7 +39269,7 @@ Entry.block = {
             "STACK_IF": 0,
             "STACK_ELSE": 1
         },
-        func: function() {
+        func: function(sprite, script) {
             if (this.isContinue) return;
 
             var unitComp = Ntry.entityManager.getComponent(Ntry.unit.id, Ntry.STATIC.UNIT);
@@ -39290,15 +39285,10 @@ Entry.block = {
             ).filter(function(e) {return e.components[Ntry.STATIC.ENEMY]});
 
             this.isContinue = true;
-            var statement = this.block.statements[0];
-
             if (fitEntities.length === 0) {
-                return;
-            } else if (statement.getBlocks().length === 0)
-                return;
-            else {
-                this.executor.stepInto(statement);
-                return Entry.STATIC.BREAK;
+                return script.getStatement("STACK_ELSE", script);
+            } else {
+                return script.getStatement("STACK_IF", script);
             }
         }
     },
@@ -39312,17 +39302,12 @@ Entry.block = {
         ],
         "params": [
             {
-                "type": "Image",
-                "img": "/img/assets/week/blocks/if.png",
-                "size": 24
+                "type": "Indicator",
+                "img": "../../../img/assets/week/blocks/if.png",
+                "size": 12
             },
             {
                 "type": "LineBreak"
-            }
-        ], 
-        "statements": [
-            {
-                "accept": "basic"
             }
         ],
         "statements": [
@@ -39337,7 +39322,7 @@ Entry.block = {
             "STACK_IF": 0,
             "STACK_ELSE": 1
         },
-        func: function() {
+        func: function(sprite, script) {
             if (this.isContinue) return;
 
             var unitComp = Ntry.entityManager.getComponent(Ntry.unit.id, Ntry.STATIC.UNIT);
@@ -39353,15 +39338,11 @@ Entry.block = {
             ).filter(function(e) {return e.components[Ntry.STATIC.ENEMY]});
 
             this.isContinue = true;
-
-            var statement = this.block.statements[0];
+            
             if (fitEntities.length === 0) {
-                return;
-            } else if (statement.getBlocks().length === 0)
-                return;
-            else {
-                this.executor.stepInto(statement);
-                return Entry.STATIC.BREAK;
+                return script.getStatement("STACK_ELSE", script);
+            } else {
+                return script.getStatement("STACK_IF", script);
             }
         }
     },
@@ -39380,17 +39361,12 @@ Entry.block = {
                 "size": 24
             },
             {
-                "type": "Image",
-                "img": "/img/assets/week/blocks/if.png",
-                "size": 24
+                "type": "Indicator",
+                "img": "../../../img/assets/week/blocks/if.png",
+                "size": 12
             },
             {
                 "type": "LineBreak"
-            }
-        ],
-        "statements": [
-            {
-                "accept": "basic"
             }
         ],
         "statements": [
@@ -39405,7 +39381,7 @@ Entry.block = {
             "STACK_IF": 0,
             "STACK_ELSE": 1
         },
-        func: function() {
+        func: function(sprite, script) {
             if (this.isContinue) return;
 
             var unitComp = Ntry.entityManager.getComponent(Ntry.unit.id, Ntry.STATIC.UNIT);
@@ -39426,15 +39402,10 @@ Entry.block = {
             );
 
             this.isContinue = true;
-
-            var statement = this.block.statements[0];
             if (fitEntities.length === 0) {
-                return;
-            } else if (statement.getBlocks().length === 0)
-                return;
-            else {
-                this.executor.stepInto(statement);
-                return Entry.STATIC.BREAK;
+                return script.getStatement("STACK_ELSE", script);
+            } else {
+                return script.getStatement("STACK_IF", script);
             }
         }
     },
@@ -39442,9 +39413,9 @@ Entry.block = {
         "parent": "repeat_inf",
         "params": [
             {
-                "type": "Image",
-                "img": "/img/assets/week/blocks/for.png",
-                "size": 24
+                "type": "Indicator",
+                "img": "../../../img/assets/week/blocks/for.png",
+                "size": 12
             }
         ],
     },
