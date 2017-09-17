@@ -1,6 +1,6 @@
 "use strict";
 
-Entry.4d_mechatronics = {
+Entry.4D_Mechatronics = {
     name: '4d_mechatronics',
     setZero: function () {
         if(!Entry.hw.sendQueue.SET) {
