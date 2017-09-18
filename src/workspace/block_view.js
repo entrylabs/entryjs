@@ -973,6 +973,13 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
         this._startContentRender(Entry.BlockView.RENDER_MODE_BLOCK);
     };
 
+    p.renderByMode = function(mode, isReDraw) {
+        if (this.isRenderMode(mode) && !isReDraw) return;
+
+        this.renderMode = mode;
+        this._startContentRender(mode);
+    };
+
     p._updateOpacity = function() {
         this.svgGroup.attr({
             opacity:this.visible === false ? 0 : 1
@@ -1450,9 +1457,13 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
                     left: coord.x + boardOffset.left + magnet.x - halfWidth,
                     width: 2 * halfWidth,
                     height: 2 * halfWidth
-                }
+                };
             }.bind(this)
-        }
-    }
+        };
+    };
+
+    p.isRenderMode = function(mode) {
+        return this.renderMode === mode;
+    };
 
 })(Entry.BlockView.prototype);
