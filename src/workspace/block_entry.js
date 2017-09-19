@@ -39217,7 +39217,16 @@ Entry.block = {
             }
         ],
         func: function() {
-            Ntry.unit.components[Ntry.STATIC.UNIT].direction = Ntry.STATIC.EAST;
+            if (this.isDead) {
+                return Entry.STATIC.BREAK;
+            } else if (this.executor.register.isTurned) {
+                Ntry.dispatchEvent("startEnemyWalk", false, function() {});
+                this.isDead = true;
+                return Entry.STATIC.BREAK;
+            } else {
+                Ntry.unit.components[Ntry.STATIC.UNIT].direction = Ntry.STATIC.EAST;
+                this.executor.register.isTurned = true;
+            }
         }
     },
     "maze_turn_left": {
@@ -39235,8 +39244,17 @@ Entry.block = {
                 "size": 12
             }
         ],
-        func: function() { 
-            Ntry.unit.components[Ntry.STATIC.UNIT].direction = Ntry.STATIC.WEST;
+        func: function() {
+            if (this.isDead) {
+                return Entry.STATIC.BREAK;
+            } else if (this.executor.register.isTurned) {
+                Ntry.dispatchEvent("startEnemyWalk", false, function() {});
+                this.isDead = true;
+                return Entry.STATIC.BREAK;
+            } else {
+                Ntry.unit.components[Ntry.STATIC.UNIT].direction = Ntry.STATIC.WEST;
+                this.executor.register.isTurned = true;
+            }
         }
     },
     "maze_step_if_left_monster": {
@@ -39275,7 +39293,7 @@ Entry.block = {
             var unitComp = Ntry.entityManager.getComponent(Ntry.unit.id, Ntry.STATIC.UNIT);
             var gridComp = Ntry.entityManager.getComponent(Ntry.unit.id, Ntry.STATIC.GRID);
             var grid = {x: gridComp.x - 1, y: gridComp.y};
-           
+
             var fitEntities = Ntry.entityManager.find(
                 {
                     type: Ntry.STATIC.GRID,
@@ -39328,7 +39346,7 @@ Entry.block = {
             var unitComp = Ntry.entityManager.getComponent(Ntry.unit.id, Ntry.STATIC.UNIT);
             var gridComp = Ntry.entityManager.getComponent(Ntry.unit.id, Ntry.STATIC.GRID);
             var grid = {x: gridComp.x + 1, y: gridComp.y};
-           
+
             var fitEntities = Ntry.entityManager.find(
                 {
                     type: Ntry.STATIC.GRID,
@@ -39338,7 +39356,7 @@ Entry.block = {
             ).filter(function(e) {return e.components[Ntry.STATIC.ENEMY]});
 
             this.isContinue = true;
-            
+
             if (fitEntities.length === 0) {
                 return script.getStatement("STACK_ELSE", script);
             } else {
@@ -39388,7 +39406,7 @@ Entry.block = {
             var gridComp = Ntry.entityManager.getComponent(Ntry.unit.id, Ntry.STATIC.GRID);
             var grid = {x: gridComp.x, y: gridComp.y};
             Ntry.addVectorByDirection(grid, unitComp.direction, 1);
-           
+
             var fitEntities = Ntry.entityManager.find(
                 {
                     type: Ntry.STATIC.GRID,
@@ -39587,6 +39605,7 @@ Entry.block = {
         func: function(sprite, script) {
             if (!script.isContinue) {
                 Ntry.dispatchEvent("stopEnemyWalk");
+                this.executor.register.isTurned = false;
                 script.isContinue = true;
                 script.isAction = true;
                 var grid = $.extend({type: Ntry.STATIC.GRID}, Ntry.entityManager.getComponent(Ntry.unit.id, Ntry.STATIC.GRID));
@@ -39605,7 +39624,7 @@ Entry.block = {
                     });
                     return Entry.STATIC.BREAK;
                 }
-                
+
                 var callBack = function() {
                     Ntry.dispatchEvent("destroyObstacle", 1, function(state) {
                     });
@@ -39645,8 +39664,8 @@ Entry.block = {
         ],
         func: function(sprite, script) {
             if (!script.isContinue) {
-                console.log('pepe');
                 Ntry.dispatchEvent("stopEnemyWalk");
+                this.executor.register.isTurned = false;
                 script.isContinue = true;
                 script.isAction = true;
                 var grid = $.extend({type: Ntry.STATIC.GRID}, Ntry.entityManager.getComponent(Ntry.unit.id, Ntry.STATIC.GRID));
@@ -39669,8 +39688,8 @@ Entry.block = {
 
                 var frontEnemyValid = !!findTile.length;
                 var backEnemyExist = !!findBackTile.length;
-                if(frontEnemyValid && !backEnemyExist) { 
-                    // success                    
+                if(frontEnemyValid && !backEnemyExist) {
+                    // success
                     var callBack = function() {
                         Ntry.dispatchEvent("destroyObstacle", 1, function(state) {
                         });
@@ -39682,7 +39701,7 @@ Entry.block = {
 
                     Ntry.dispatchEvent("unitAction", Ntry.STATIC.PEPE, callBack);
                 } else if (frontEnemyValid && backEnemyExist) {
-                    // attack and dead                    
+                    // attack and dead
                     var callBack = function() {
                         Ntry.dispatchEvent("destroyObstacle", 1, function(state) {
                         });
@@ -39733,6 +39752,7 @@ Entry.block = {
         func: function(sprite, script) {
             if (!script.isContinue) {
                 Ntry.dispatchEvent("stopEnemyWalk");
+                this.executor.register.isTurned = false;
                 script.isContinue = true;
                 script.isAction = true;
                 var grid = $.extend({type: Ntry.STATIC.GRID}, Ntry.entityManager.getComponent(Ntry.unit.id, Ntry.STATIC.GRID));
@@ -39755,7 +39775,7 @@ Entry.block = {
 
                 var frontEnemyValid = !!findTile.length;
                 var backEnemyExist = !!findBackTile.length;
-                if(frontEnemyValid && !backEnemyExist) { 
+                if(frontEnemyValid && !backEnemyExist) {
                     // success
                     var callBack = function() {
                         Ntry.dispatchEvent("destroyObstacle", 1, function(state) {
@@ -39766,8 +39786,8 @@ Entry.block = {
                     };
 
                     Ntry.dispatchEvent("unitAction", Ntry.STATIC.PEPE, callBack);
-                } else if (frontEnemyValid && backEnemyExist) { 
-                    // attack and dead                    
+                } else if (frontEnemyValid && backEnemyExist) {
+                    // attack and dead
                     var callBack = function() {
                         Ntry.dispatchEvent("destroyObstacle", 1, function(state) {
                         });
@@ -39881,6 +39901,7 @@ Entry.block = {
         func: function(sprite, script) {
             if (!script.isContinue) {
                 Ntry.dispatchEvent("stopEnemyWalk");
+                this.executor.register.isTurned = false;
                 script.isContinue = true;
                 script.isAction = true;
                 var grid = $.extend({type: Ntry.STATIC.GRID}, Ntry.entityManager.getComponent(Ntry.unit.id, Ntry.STATIC.GRID));
@@ -39903,8 +39924,8 @@ Entry.block = {
 
                 var frontEnemyValid = !!findTile.length;
                 var backEnemyExist = !!findBackTile.length;
-                if(frontEnemyValid && !backEnemyExist) { 
-                    // success                    
+                if(frontEnemyValid && !backEnemyExist) {
+                    // success
                     var callBack = function() {
                         Ntry.dispatchEvent("destroyObstacle", 1, function(state) {
                         });
@@ -39914,7 +39935,7 @@ Entry.block = {
                     };
 
                     Ntry.dispatchEvent("unitAction", Ntry.STATIC.PETI, callBack);
-                } else if (frontEnemyValid && backEnemyExist) { 
+                } else if (frontEnemyValid && backEnemyExist) {
                     // attack and dead
                     var callBack = function() {
                         Ntry.dispatchEvent("destroyObstacle", 1, function(state) {
