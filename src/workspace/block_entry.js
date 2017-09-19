@@ -106,7 +106,9 @@ if (Entry && Entry.block) {
                 '+':"PLUS",
                 '-':"MINUS",
                 '*':"MULTI",
-                '/':"DIVIDE"
+                '/':"DIVIDE",
+                "AND": 'and',
+                "OR": 'or'
             };
             return map[value];
         };
@@ -27803,6 +27805,24 @@ Entry.block = {
         "def": {
             "params": [ null ]
         },
+        "defs": [
+            {
+                "params": [
+                    { "type": "True" },
+                    "AND",
+                    { "type": "True" }
+                ],
+                type: "boolean_and_or"
+            },
+            {
+                "params": [
+                    { "type": "True" },
+                    "OR",
+                    { "type": "False" }
+                ],
+                type: "boolean_and_or"
+            }
+        ],
         "paramsKeyMap": {
             "LEFTHAND": 0,
             "OPERATOR": 1,
@@ -27817,7 +27837,31 @@ Entry.block = {
             else
                 return leftValue || rightValue;
         },
-        "syntax": {"js": [], "py": [""]}
+        "syntax": {"js": [], "py": [{
+            syntax: "(%1 %2 %3)",
+            template: "%1 %2 %3",
+            blockType: "param",
+            textParams: [
+                {
+                    "type": "Block",
+                    "accept": "boolean"
+                },
+                {
+                    "type": "Dropdown",
+                    "options": [
+                        [ Lang.Blocks.JUDGEMENT_boolean_and, "AND" ],
+                        [ Lang.Blocks.JUDGEMENT_boolean_or, "OR" ]
+                    ],
+                    converter: Entry.block.converters.returnOperator,
+                    "value": "AND",
+                    "fontSize": 11
+                },
+                {
+                    "type": "Block",
+                    "accept": "boolean"
+                }
+            ]
+        }]}
     },
     "boolean_and": {
         "color": "#AEB8FF",
@@ -37552,7 +37596,7 @@ Entry.block = {
         "func": function (sprite, script) {
             var sq = Entry.hw.sendQueue;
 
-            if (!script.isStart) {            
+            if (!script.isStart) {
                 var note = script.getStringField("NOTE", script);
                 var octave = script.getStringField("OCTAVE", script);
                 var duration = script.getNumberValue("VALUE", script);
