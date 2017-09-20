@@ -27803,7 +27803,12 @@ Entry.block = {
         ],
         "events": {},
         "def": {
-            "params": [ null ]
+            "params": [
+                { "type": "True" },
+                "AND",
+                { "type": "True" }
+            ],
+            "type": "boolean_and_or"
         },
         "defs": [
             {
@@ -57702,6 +57707,7 @@ Entry.block = {
 (function() {
     for (var type in Entry.block) {
         var block = Entry.block[type];
+        if (!block.isNotFor) block.isNotFor = [];
         if (block.parent) {
             var f = function() {};
             f.prototype = Entry.block[block.parent];
