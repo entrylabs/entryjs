@@ -98,7 +98,7 @@ Entry.BlockToPyParser = function() {
     };
 
     p.Block = function(block, template) {
-        if (!block) return "";
+        if (!block || !(block instanceof Entry.Block)) return "";
         !block._schema && block.loadSchema();
 
         var result = "";
@@ -527,109 +527,54 @@ Entry.BlockToPyParser = function() {
 
     p.getFuncInfo = function(funcBlock) {
         var result = {};
-        var tokens = funcBlock.data.type.split('_');
-        var prefix = tokens[0];
-        var id = tokens[1];
+        var funcId = funcBlock.getFuncId();
 
-        if(id) {
-            var _functions = Entry.variableContainer.functions_;
-            var func = _functions[id];
-            if(!func) {
-                return null;
-            }
-        } else {
-            return null;
-        }
+        var func = funcId && Entry.variableContainer.getFunction(funcId);
+        if (!func) return null;
 
-        var template = func.block.template;
-        var index = template.search(/(%.)/);
-        var funcNameTemplate = template.substring(0, index).trim();
-        var funcNameArr = funcNameTemplate.split(' ');
+        var funcName = func.block.template
+            .split(/%\d/)[0].trim().split(' ').join('__');
 
-        //func name join
-        var funcName = funcNameArr.join('__');
         Entry.TextCodingUtil.initQueue();
-        Entry.TextCodingUtil.gatherFuncDefParam(func.content._data[0]._data[0].data.params[0]);
-        var funcDefParams = [];
 
-        if(!this._hasRootFunc) {
-            while(param = Entry.TextCodingUtil._funcParamQ.dequeue()) {
+        var funcContents = func.content.getEventMap('funcDef')[0]
+            .getThread().getBlocks();
+        var defBlock = funcContents.shift();
+
+        Entry.TextCodingUtil.gatherFuncDefParam(defBlock.getParam(0));
+
+        var that = this;
+        var funcParams = [];
+
+        if (!this._hasRootFunc) {
+            var funcDefParams = [];
+            var param;
+            while (param = Entry.TextCodingUtil._funcParamQ.dequeue())
                 funcDefParams.push(param);
-            }
-        }
 
-        /*var funcParamMap = {};
-        for(var p in funcParams) {
-            var funcParam = funcParams[p];
-            funcParamMap[funcParam] = p;
-        }*/
+            funcDefParams.forEach(function(value, index) {
+                if (/(string|boolean)Param/.test(value)) {
+                    var name = 'param' + (++index);
+                    funcParams.push(name);
+                    that._funcParamMap.put(value, name);
+                }
+            });
+        } else {
+            funcBlock.params
+                .filter(function(p) { return p instanceof Entry.Block; })
+                .forEach(function(p) {
+                    var paramText = that.Block(p);
+                    if (!paramText) return;
+                    paramText = that._funcParamMap.get(paramText) || paramText;
+                    funcParams.push(paramText);
+                });
+        }
 
         Entry.TextCodingUtil.clearQueue();
-        //var funcParamMap = paramMap;
 
-
-        //var funcParams = {};
-        var funcParams = [];
-        if(!this._hasRootFunc) {
-            //if(Object.keys(funcParamMap).length != 0) {
-                for(var index in funcDefParams) {
-                    var value = funcDefParams[index];
-                    var i = value.search('_');
-                    var fieldType = value.substring(0, i);
-
-                    if(fieldType == 'stringParam')
-                        var name = 'param' + (parseInt(index)+1);
-                    else if (fieldType == 'booleanParam')
-                        var name = 'param' + (parseInt(index)+1);
-
-                    if(name) {
-                        //funcParams[index] = name;
-                        funcParams.push(name);
-                        this._funcParamMap.put(value, name);
-                    }
-                }
-            //}
-        }
-        else {
-            var params = funcBlock.data.params;
-            for(var i in params) {
-                var param = params[i];
-                if(param) {
-                    var paramText = this.Block(param);
-                    if(paramType = this._funcParamMap.get(paramText))
-                        paramText = paramType;
-                    funcParams.push(paramText);
-                }
-            }
-        }
-
-        /*var params = funcBlock.data.params;
-        for(var i in params) {
-            var param = params[i];
-            if(param) {
-                var paramText = this.Block(param);
-                if(pText = this._funcParamMap.get(paramText))
-                    paramText = pText;
-                funcParams.push(paramText);
-            }
-
-        }*/
-
-        var contents  = func.content._data[0]._data;
-        var funcContents = [];
-        for(var c = 1; c < contents.length; c++) {
-            var block = contents[c]
-            funcContents.push(block);
-        }
-
-        if(funcName)
-            result.name = funcName;
-
-        if(funcParams.length != 0)
-            result.params = funcParams;
-
-        if(funcContents.length != 0)
-            result.statements = funcContents;
+        if (funcName) result.name = funcName;
+        if (funcParams.length !== 0) result.params = funcParams;
+        if (funcContents.length !== 0) result.statements = funcContents;
 
         return result;
     };
