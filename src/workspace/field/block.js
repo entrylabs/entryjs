@@ -59,7 +59,9 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
             if (block.constructor !== Entry.Block)
                 block = new Entry.Block(block, this._block.thread);
 
-            if (!block.view) {
+            var blockView = block.view;
+
+            if (!blockView) {
                 block.setThread(this);
                 block.createView(board, this.renderMode);
                 this.view.setParent(this);
@@ -68,12 +70,17 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
 
         this.updateValueBlock(block);
 
-        isReDraw && this._valueBlock.view._startContentRender(this.renderMode);
+        this._valueBlock.view.renderByMode(this.renderMode, isReDraw);
 
         if (this._blockView.getBoard().constructor !== Entry.Board)
             this._valueBlock.view.removeControl();
 
-        this.box.observe(this._blockView, "dAlignContent", ["width", "height"], false);
+        this.box.observe(
+            this._blockView,
+            "dAlignContent",
+            ["width", "height"],
+            false
+        );
     };
 
     p.align = function(x, y, animate) {
