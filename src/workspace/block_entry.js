@@ -16501,18 +16501,18 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [Lang.Blocks.ALBERT_note_c + '',"4"],
-                    [Lang.Blocks.ALBERT_note_c + '#',"5"],
-                    [Lang.Blocks.ALBERT_note_d + '',"6"],
-                    [Lang.Blocks.ALBERT_note_e + 'b',"7"],
-                    [Lang.Blocks.ALBERT_note_e + '',"8"],
-                    [Lang.Blocks.ALBERT_note_f + '',"9"],
-                    [Lang.Blocks.ALBERT_note_f + '#',"10"],
-                    [Lang.Blocks.ALBERT_note_g + '',"11"],
-                    [Lang.Blocks.ALBERT_note_g + '#',"12"],
-                    [Lang.Blocks.ALBERT_note_a + '',"13"],
-                    [Lang.Blocks.ALBERT_note_b + 'b',"14"],
-                    [Lang.Blocks.ALBERT_note_b + '',"15"]
+                    [Lang.Blocks.do_name, "4"],
+                    [Lang.Blocks.do_sharp_name, "5"],
+                    [Lang.Blocks.re_name, "6"],
+                    [Lang.Blocks.re_sharp_name, "7"],
+                    [Lang.Blocks.mi_name, "8"],
+                    [Lang.Blocks.fa_name, "9"],
+                    [Lang.Blocks.fa_sharp_name, "10"],
+                    [Lang.Blocks.sol_name, "11"],
+                    [Lang.Blocks.sol_sharp_name, "12"],
+                    [Lang.Blocks.la_name, "13"],
+                    [Lang.Blocks.la_sharp_name, "14"],
+                    [Lang.Blocks.si_name, "15"]
                 ],
                 "value": "4",
                 "fontSize": 11
