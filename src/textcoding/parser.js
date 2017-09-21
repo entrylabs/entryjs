@@ -543,7 +543,6 @@ Entry.Parser = function(mode, type, cm, syntax) {
 
         var stmt = text.substring(0, startIndex);
         var param = text.substring(startIndex+1, endIndex);
-        param = param.replace(/\"/g, "");
 
         if(param) {
             if(!Entry.Utils.isNumber(param))
