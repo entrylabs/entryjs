@@ -2524,7 +2524,7 @@
         next(); kwargsId = parseIdent();
       } else {
         if (kwargsId) raise(tokPos, "invalid syntax");
-        var paramId = parseIdent();
+        var paramId = parseIdent(null, true);
         if (eat(_eq)) {
           formals.push({ id: paramId, expr: parseExprOps(false) });
           defaultsFound = true;
@@ -2708,13 +2708,14 @@
   // Parse the next token as an identifier. If `liberal` is true (used
   // when parsing properties), it will also convert keywords into
   // identifiers.
+  // `isString` is use for Entry Python start block
 
   // TODO: liberal?
 
-  function parseIdent(liberal) {
+  function parseIdent(liberal, isString) {
     var node = startNode();
     if (liberal) liberal = false;
-    if (tokType === _name) {
+    if (tokType === _name || (isString && tokType === _string)) {
       if (!liberal && strict && input.slice(tokStart, tokEnd).indexOf("\\") == -1)
         raise(tokStart, "The keyword '" + tokVal + "' is reserved");
       node.name = tokVal;
