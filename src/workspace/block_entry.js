@@ -10260,14 +10260,18 @@ Entry.block = {
                     leftValue = leftStringValue;
                 if (!Entry.Utils.isNumber(rightStringValue))
                     rightValue = rightStringValue;
-                return leftValue + rightValue;
+                if (typeof leftValue === "number" && typeof rightValue === "number")
+                    return new BigNumber(leftValue).plus(rightValue).toNumber()
+                else
+                    return leftValue + rightValue;
             }
-            else if (operator == "MINUS")
-                return leftValue - rightValue;
+            leftValue = new BigNumber(leftValue);
+            if (operator == "MINUS")
+                return leftValue.minus(rightValue).toNumber();
             else if (operator == "MULTI")
-                return leftValue * rightValue;
+                return leftValue.times(rightValue).toNumber();
             else
-                return leftValue / rightValue;
+                return leftValue.dividedBy(rightValue).toNumber();
         },
         "syntax": {"js": [], "py": [
             {
@@ -35581,7 +35585,7 @@ Entry.block = {
                 value = Entry.parseNumber(value);
                 variableValue = Entry.parseNumber(variableValue);
                 fixed = Entry.getMaxFloatPoint([value, variable.getValue()]);
-                sumValue = (value + variableValue).toFixed(fixed);
+                sumValue = new BigNumber(value).plus(variableValue).toNumber().toFixed(fixed);
             } else {
                 sumValue = '' + variableValue + value;
             }
