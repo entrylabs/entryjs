@@ -538,27 +538,6 @@ Entry.Parser = function(mode, type, cm, syntax) {
     };
 
     p.entryEventParamConverter = function(text) {
-        var startIndex = text.indexOf("(");
-        var endIndex = text.indexOf(")");
-
-        var stmt = text.substring(0, startIndex);
-        var param = text.substring(startIndex+1, endIndex);
-
-        if(param) {
-            if(!Entry.Utils.isNumber(param))
-                if(Entry.Utils.isNumber(param.charAt(0)))
-                    param = 'num' + param;
-                else
-                    param = param.replace(/ /g, "_space_");
-            else
-                param = 'num' + param;
-
-            if(param == 'None')
-                param = 'none';
-        }
-
-        text = stmt + "(" + param + "):\n";
-
         return text;
     };
 
