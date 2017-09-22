@@ -9,12 +9,11 @@ EntryStatic.objectTypes = [
 ]
 
 EntryStatic.usageList = [
-    'usage_event','usage_signal','usage_scene','usage_repeat', 'usage_condition_repeat',
-    'usage_condition','usage_clone', 'usage_arrow_move', 'usage_rotation', 'usage_coordinate', 'usage_shape',
-    'usage_speak','usage_picture_effect', 'usage_textBox', 'usage_draw' , 'usage_sound',
-    'usage_confirm',  'usage_comp_operation' ,'usage_logical_operation' ,'usage_math_operation',
-    'usage_random', 'usage_timer', 'usage_variable', 'usage_list' ,'usage_ask_answer',
-    'usage_function', 'usage_arduino'
+   'usage_sequence' , 'usage_repeat', 'usage_condition_repeat', 'usage_condition', 'usage_parallel', 'usage_event',
+   'usage_signal', 'usage_random', 'usage_variable', 'usage_ask_answer' , 'usage_comp_operation', 'usage_math_operation',
+   'usage_logical_operation' , 'usage_list', 'usage_function', 'usage_arrow_move', 'usage_coordinate', 'usage_rotation', 'usage_speak',
+   'usage_picture_effect', 'usage_shape', 'usage_sound', 'usage_draw','usage_confirm', 'usage_timer', 'usage_textBox', 'usage_scene',
+   'usage_clone', 'usage_hw'
 ];
 
 EntryStatic.conceptList = [

@@ -1741,8 +1741,8 @@ Entry.TextCodingUtil = {};
 
     tu.isNamesIncludeSpace = function() {
         var vc = Entry.variableContainer;
-        if(!vc)
-            return;
+        if(!vc) return;
+
         //inspect variables
         var targets = vc.variables_ || [];
         for (var i=0; i<targets.length; i++) {
@@ -1767,63 +1767,53 @@ Entry.TextCodingUtil = {};
         }*/
 
         //inspect functions
-        targets = vc.functions_ || {};
-        for (i in targets) {
-            var target = targets[i];
 
-            var funcThread = target.content._data[0];
-            var funcBlock = funcThread._data[0];
-            if(funcBlock.data.type == "function_create") {
-                if(funcBlock.params.length == 2) {
-                    var paramBlock = funcBlock.params[0];
-                    if(paramBlock.data.type == "function_field_label") {
-                        var paramBlockParams = paramBlock.data.params;
-                        if(paramBlockParams.length == 2) {
-                            if(paramBlockParams[1] == undefined) {
-                                var name = paramBlockParams[0];
-                                if (test(name))
-                                    return Lang.TextCoding[Entry.TextCodingError.ALERT_FUNCTION_NAME_EMPTY_TEXT];
-                            }
-                            else
-                                if(paramBlockParams[1].data.type == "function_field_label")
-                                    return Lang.TextCoding[Entry.TextCodingError.ALERT_FUNCTION_NAME_FIELD_MULTI];
-                                else
-                                    if(this.hasFunctionFieldLabel(paramBlockParams[1]))
-                                        return Lang.TextCoding[Entry.TextCodingError.ALERT_FUNCTION_NAME_FIELD_MULTI];
-                        }
-                        else
-                            return Lang.TextCoding[Entry.TextCodingError.ALERT_FUNCTION_NAME_DISORDER];
-                    }
-                    else
-                        return Lang.TextCoding[Entry.TextCodingError.ALERT_FUNCTION_NAME_DISORDER];
-                } else
-                    return Lang.TextCoding[Entry.TextCodingError.ALERT_FUNCTION_NAME_DISORDER];
-            } else
-                return Lang.TextCoding[Entry.TextCodingError.ALERT_FUNCTION_NAME_DISORDER];
+        var ERROR_LANG = Lang.TextCoding;
+        var ERROR = Entry.TextCodingError;
+        var DISORDER = ERROR_LANG[ERROR.ALERT_FUNCTION_NAME_DISORDER];
+        var FIELD_MULTI = ERROR_LANG[ERROR.ALERT_FUNCTION_NAME_FIELD_MULTI];
+        var EMPTY_TEXT = ERROR_LANG[ERROR.ALERT_FUNCTION_NAME_EMPTY_TEXT];
+
+        targets = vc.functions_ || {};
+
+        for (i in targets) {
+            var paramBlock = targets[i].content.getEventMap("funcDef")[0];
+            paramBlock = paramBlock && paramBlock.params[0];
+
+            if (!paramBlock) continue;
+
+            if (paramBlock.type !== "function_field_label")
+                return DISORDER;
+
+            var params = paramBlock.params;
+
+            if (!params[1]) {
+                if (test(params[0]))
+                    return EMPTY_TEXT;
+            } else if (this.hasFunctionFieldLabel(params[1])) {
+                return FIELD_MULTI;
+            }
         }
 
         return false;
+
         function test(name) {
             return / /.test(name);
         }
     };
 
     tu.isNameIncludeSpace = function(name, type) {
-        if (type == "variable" && test(name)) {
+        if (!/ /.test(name)) return false;
+
+        if (type == "variable") {
             return Lang.TextCoding[Entry.TextCodingError.ALERT_VARIABLE_EMPTY_TEXT_ADD_CHANGE];
-        }
-        else if (type == "list" && test(name)) {
+        } else if (type == "list") {
             return Lang.TextCoding[Entry.TextCodingError.ALERT_LIST_EMPTY_TEXT_ADD_CHANGE];
-        }
-        else if (type == "function" && test(name)) {
+        } else if (type == "function") {
             return Lang.TextCoding[Entry.TextCodingError.ALERT_FUNCTION_NAME_EMPTY_TEXT_ADD_CHANGE];
         }
 
         return false;
-
-        function test(name) {
-            return / /.test(name);
-        }
     };
 
     tu.isNameIncludeNotValidChar = function() {
@@ -1851,6 +1841,7 @@ Entry.TextCodingUtil = {};
         if(!fBlock || !fBlock.data) return;
         if(fBlock.data.type == "function_field_label")
             return true;
+
         var params = fBlock.data.params;
         if(params[0]) {
             var type = params[0].data.type;
@@ -1871,7 +1862,6 @@ Entry.TextCodingUtil = {};
         }
 
         return false;
-
     };
 
     /*tu.addFuncParam = function(param) {

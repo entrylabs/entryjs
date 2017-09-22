@@ -10260,14 +10260,18 @@ Entry.block = {
                     leftValue = leftStringValue;
                 if (!Entry.Utils.isNumber(rightStringValue))
                     rightValue = rightStringValue;
-                return leftValue + rightValue;
+                if (typeof leftValue === "number" && typeof rightValue === "number")
+                    return new BigNumber(leftValue).plus(rightValue).toNumber()
+                else
+                    return leftValue + rightValue;
             }
-            else if (operator == "MINUS")
-                return leftValue - rightValue;
+            leftValue = new BigNumber(leftValue);
+            if (operator == "MINUS")
+                return leftValue.minus(rightValue).toNumber();
             else if (operator == "MULTI")
-                return leftValue * rightValue;
+                return leftValue.times(rightValue).toNumber();
             else
-                return leftValue / rightValue;
+                return leftValue.dividedBy(rightValue).toNumber();
         },
         "syntax": {"js": [], "py": [
             {
@@ -16497,18 +16501,18 @@ Entry.block = {
             {
                 "type": "Dropdown",
                 "options": [
-                    [Lang.Blocks.ALBERT_note_c + '',"4"],
-                    [Lang.Blocks.ALBERT_note_c + '#',"5"],
-                    [Lang.Blocks.ALBERT_note_d + '',"6"],
-                    [Lang.Blocks.ALBERT_note_e + 'b',"7"],
-                    [Lang.Blocks.ALBERT_note_e + '',"8"],
-                    [Lang.Blocks.ALBERT_note_f + '',"9"],
-                    [Lang.Blocks.ALBERT_note_f + '#',"10"],
-                    [Lang.Blocks.ALBERT_note_g + '',"11"],
-                    [Lang.Blocks.ALBERT_note_g + '#',"12"],
-                    [Lang.Blocks.ALBERT_note_a + '',"13"],
-                    [Lang.Blocks.ALBERT_note_b + 'b',"14"],
-                    [Lang.Blocks.ALBERT_note_b + '',"15"]
+                    [Lang.Blocks.do_name, "4"],
+                    [Lang.Blocks.do_sharp_name, "5"],
+                    [Lang.Blocks.re_name, "6"],
+                    [Lang.Blocks.re_sharp_name, "7"],
+                    [Lang.Blocks.mi_name, "8"],
+                    [Lang.Blocks.fa_name, "9"],
+                    [Lang.Blocks.fa_sharp_name, "10"],
+                    [Lang.Blocks.sol_name, "11"],
+                    [Lang.Blocks.sol_sharp_name, "12"],
+                    [Lang.Blocks.la_name, "13"],
+                    [Lang.Blocks.la_sharp_name, "14"],
+                    [Lang.Blocks.si_name, "15"]
                 ],
                 "value": "4",
                 "fontSize": 11
@@ -27803,7 +27807,12 @@ Entry.block = {
         ],
         "events": {},
         "def": {
-            "params": [ null ]
+            "params": [
+                { "type": "True" },
+                "AND",
+                { "type": "True" }
+            ],
+            "type": "boolean_and_or"
         },
         "defs": [
             {
@@ -35581,7 +35590,7 @@ Entry.block = {
                 value = Entry.parseNumber(value);
                 variableValue = Entry.parseNumber(variableValue);
                 fixed = Entry.getMaxFloatPoint([value, variable.getValue()]);
-                sumValue = (value + variableValue).toFixed(fixed);
+                sumValue = new BigNumber(value).plus(variableValue).toNumber().toFixed(fixed);
             } else {
                 sumValue = '' + variableValue + value;
             }
@@ -57702,6 +57711,7 @@ Entry.block = {
 (function() {
     for (var type in Entry.block) {
         var block = Entry.block[type];
+        if (!block.isNotFor) block.isNotFor = [];
         if (block.parent) {
             var f = function() {};
             f.prototype = Entry.block[block.parent];
