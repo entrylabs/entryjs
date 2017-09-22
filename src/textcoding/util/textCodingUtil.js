@@ -13,7 +13,6 @@ Entry.TextCodingUtil = {};
     this._funcParams;
     this._funcParamQ;
     this._currentObject;
-
     /*tu.init = function() {
         this._funcParams = [];
     };*/
@@ -1817,6 +1816,27 @@ Entry.TextCodingUtil = {};
         return false;
     };
 
+    tu.isNameIncludeNotValidChar = function() {
+        var vc = Entry.variableContainer;
+        if(!vc)
+            return;
+        //inspect variables
+        var targets = vc.variables_ || [];
+        for (var i=0; i<targets.length; i++) {
+            if (this.checkName(targets[i].name_ , '변수')) {
+                return this.checkName(targets[i].name_ , '변수');
+            }
+        }
+
+        //inspect lists
+        targets = vc.lists_ || [];
+        for (i=0; i<targets.length; i++) {
+            if (this.checkName(targets[i].name_ , '리스트')) {
+                return this.checkName(targets[i].name_ , '리스트');
+            }
+        }
+    }
+
     tu.hasFunctionFieldLabel = function(fBlock) {
         if(!fBlock || !fBlock.data) return;
         if(fBlock.data.type == "function_field_label")
@@ -2065,6 +2085,31 @@ Entry.TextCodingUtil = {};
         return result;
     };
 
+    tu.checkName = function(name , target) {
+        var keywords = [
+            'and', 'assert', 'break', 'class', 'continue', 'def', 'del', 'elif', 'else', 'except', 'exec', 'finally', 'for', 'from', 'global', 'if', 'import', 'in', 'is', 'lambda', 'not', 'or', 'pass', 'print', 'raise', 'return', 'try', 'while', 'with', 'yield'
+        ];
+        //숫자 검사
+        var regExp = /^[0-9]$/g;
+        
+        if(regExp.test(name[0])){
+            return '등록된 ' + target + ' 중에 변수 이름이 "' + name + '" 인 ' +  target + ' 가 있으면 모드 변환을 할 수 없습니다.';
+        }
+
+        //특수문자 검사
+        var regExp = /[\{\}\[\]\/?.,;:|\)*~`!^\-+<>@\#$%&\\\=\(\'\"]/gi;
+        if(regExp.test(name)){
+            return '등록된 '+ target +' 중 이름에 ' +  "_" + ' 를 제외한 특수 문자("' + name + '") 가 있으면 모드 변환을 할 수 없습니다.';
+        }
+
+        //예약어 검사
+        if(keywords.includes(name)){
+            return '등록된 ' + target + ' 중에 변수 이름이 "' + name + '" 인 ' + target + ' 가 있으면 모드 변환을 할 수 없습니다.';
+        }
+
+        return false;
+    }
+
     tu.generateVariablesDeclaration = function() {
         var result = "";
         var currentObject = Entry.playground.object;
@@ -2074,7 +2119,7 @@ Entry.TextCodingUtil = {};
         var targets = vc.variables_ || [];
 
         for (var i=targets.length-1; i>=0; i--) {
-            var v = targets[i];
+            var v = targets[i];           
             var name = v.name_;
             var value = v.value_;
 
@@ -2090,7 +2135,7 @@ Entry.TextCodingUtil = {};
 
             result += name + " = " + value + "\n";
         }
-
+        
         return result;
     };
 
