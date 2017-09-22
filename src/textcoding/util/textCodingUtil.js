@@ -2093,18 +2093,18 @@ Entry.TextCodingUtil = {};
         var regExp = /^[0-9]$/g;
         
         if(regExp.test(name[0])){
-            return '등록된 ' + target + ' 중에 변수 이름이 "' + name + '" 인 ' +  target + ' 가 있으면 모드 변환을 할 수 없습니다.';
+            return Lang.Menu.textcoding_numberError_1;
         }
 
         //특수문자 검사
         var regExp = /[\{\}\[\]\/?.,;:|\)*~`!^\-+<>@\#$%&\\\=\(\'\"]/gi;
         if(regExp.test(name)){
-            return '등록된 '+ target +' 중 이름에 ' +  "_" + ' 를 제외한 특수 문자("' + name + '") 가 있으면 모드 변환을 할 수 없습니다.';
+            return Lang.Menus.textcoding_specialCharError;
         }
 
         //예약어 검사
         if(keywords.includes(name)){
-            return '등록된 ' + target + ' 중에 변수 이름이 "' + name + '" 인 ' + target + ' 가 있으면 모드 변환을 할 수 없습니다.';
+            return Lang.Menus.textcoding_bookedError_1 + name + Lang.Menus.textcoding_bookedError_2;
         }
 
         return false;
