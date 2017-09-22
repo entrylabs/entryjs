@@ -5427,7 +5427,6 @@ Entry.block = {
     },
 	
 	"iboard_button": {
-        "template": "%1 버튼을 눌렀는가?",
         "parent": "arduino_ext_get_digital",
         "def": {
             "params": [
@@ -5439,10 +5438,8 @@ Entry.block = {
         },
 		"class": "iboard_sensor",
         "isNotFor": [ "iboard" ],
-    },
-	
+    },	
 	"iboard_led": {
-        "template": "LED %1 번을 %2 %3",
         "parent": "arduino_ext_toggle_led",
         "def": {
             "params": [
@@ -5459,10 +5456,8 @@ Entry.block = {
         },
 		"class": "iboard",
         "isNotFor": [ "iboard" ],
-    },
-	
+    },	
 	"iboard_rgb_led": {
-        "template": "RGB LED의 %1 LED %2 %3",
         "parent": "arduino_ext_toggle_led",
         "def": {
             "params": [
@@ -5479,10 +5474,8 @@ Entry.block = {
         },
 		"class": "iboard",
         "isNotFor": [ "iboard" ],
-    },
-	
+    },	
 	"iboard_pwm_led": {
-        "template": "LED %1 번의 밝기를 %2 (으)로 정하기 %3",
         "parent": "arduino_ext_digital_pwm",
         "def": {
             "params": [
@@ -5499,10 +5492,8 @@ Entry.block = {
         },
 		"class": "iboard",
         "isNotFor": [ "iboard" ],
-    },
-	
+    },	
 	"iboard_set_tone": {
-        "template": "버저를 %2 %3 음으로 %4 초 연주하기 %5",
         "parent": "arduino_ext_set_tone",
         "def": {
             "params": [{
@@ -5525,10 +5516,8 @@ Entry.block = {
         },
 		"class": "iboard",
         "isNotFor": [ "iboard" ],
-    },
-	
+    },	
 	"iboard_get_digital": {
-        "template": "디지털 %1 번 센서값  ",
         "parent": "arduino_ext_get_digital",
         "def": {
             "params": [
@@ -5540,11 +5529,9 @@ Entry.block = {
         },
 		"class": "arduino_ori",
         "isNotFor": [ "iboard" ],
-    },
-	
+    },	
 	"iboard_get_analog_value": {
         "parent": "arduino_ext_get_analog_value",
-        "template": "아날로그 %1 번 센서값  ",
         "def": {
             "params": [
                 {
@@ -5555,11 +5542,9 @@ Entry.block = {
         },
 		"class": "arduino_ori",
         "isNotFor": [ "iboard" ],
-    },
-	
+    },	
     "iboard_get_analog_value_map": {
         "parent": "arduino_ext_get_analog_value_map",
-        "template": "%1 값의 범위를 %2 ~ %3 에서 %4 ~ %5 (으)로 바꾼값  ",
         "def": {
             "params": [
                 {
@@ -5591,10 +5576,8 @@ Entry.block = {
         },
 		"class": "arduino_ori",
         "isNotFor": [ "iboard" ],
-    },
-	
+    },	
     "iboard_toggle_led": {
-        "template": "디지털 %1 번 핀 %2 %3",
         "parent": "arduino_ext_toggle_led",
         "def": {
             "params": [
@@ -5611,10 +5594,8 @@ Entry.block = {
         },
 		"class": "arduino_ori",
         "isNotFor": [ "iboard" ],
-    },
-	
+    },	
     "iboard_digital_pwm": {
-        "template": "디지털 %1 번 핀을 %2 (으)로 정하기 %3",
         "parent": "arduino_ext_digital_pwm",
         "def": {
             "params": [
