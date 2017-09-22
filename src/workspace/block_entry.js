@@ -39625,11 +39625,11 @@ Entry.block = {
                     return Entry.STATIC.BREAK;
                 }
 
+                Ntry.dispatchEvent("destroyObstacle", 1, function(state) {
+                });
+                Ntry.dispatchEvent("destroyObstacle", -1, function(state) {
+                });
                 var callBack = function() {
-                    Ntry.dispatchEvent("destroyObstacle", 1, function(state) {
-                    });
-                    Ntry.dispatchEvent("destroyObstacle", -1, function(state) {
-                    });
                     Ntry.dispatchEvent("startEnemyWalk", true, function() {
                         script.isAction = false;
                     });
@@ -39777,9 +39777,9 @@ Entry.block = {
                 var backEnemyExist = !!findBackTile.length;
                 if(frontEnemyValid && !backEnemyExist) {
                     // success
+                    Ntry.dispatchEvent("destroyObstacle", 1, function(state) {
+                    });
                     var callBack = function() {
-                        Ntry.dispatchEvent("destroyObstacle", 1, function(state) {
-                        });
                         Ntry.dispatchEvent("startEnemyWalk", true, function() {
                             script.isAction = false;
                         });
@@ -39788,9 +39788,9 @@ Entry.block = {
                     Ntry.dispatchEvent("unitAction", Ntry.STATIC.PEPE, callBack);
                 } else if (frontEnemyValid && backEnemyExist) {
                     // attack and dead
+                    Ntry.dispatchEvent("destroyObstacle", 1, function(state) {
+                    });
                     var callBack = function() {
-                        Ntry.dispatchEvent("destroyObstacle", 1, function(state) {
-                        });
                         Ntry.dispatchEvent("startEnemyWalk", false, function() {
                         });
                     };
