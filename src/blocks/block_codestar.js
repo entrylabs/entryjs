@@ -16,7 +16,7 @@ Entry.Codestar = {
         height: 409,
         listPorts: {
             '13':{name: '진동모터', type: 'output', pos: {x: 0, y: 0}},
-            'tilt':{name: '진동센서', type: 'input', pos: {x: 0, y: 0}},
+            'tilt':{name: '기울기센서', type: 'input', pos: {x: 0, y: 0}},
         },
         ports: {
             '7':{name: '빨간색', type: 'output', pos: {x: 238, y: 108}},
@@ -33,7 +33,7 @@ Entry.Codestar = {
             'a6':{name: '조도센서', type: 'input', pos: {x : 273, y: 22}},   
             'a7':{name: '오른쪽 벽감지', type: 'input', pos: {x: 103, y: 381}},
             'temperature':{name: '온도센서', type: 'input', pos: {x: 311, y: 238}},
-            'sonar':{name: '초음파', type: 'input', pos: {x: 7, y: 277}},
+            'sonar':{name: '초음파센서', type: 'input', pos: {x: 7, y: 277}},
             'leftwheel':{name: '왼쪽 바퀴', type: 'output', pos: {x: 177, y: 370}},
             'rightwheel':{name: '오른쪽 바퀴', type: 'output', pos: {x: 83, y: 218}},
         },
