@@ -46538,7 +46538,7 @@ codestar_color_single: {
     template: '%1 LED %2 %3',
     params: [{
         type: 'Dropdown',
-        options: [[Lang.Hw.leftEye, 7], [Lang.Hw.rightEye, 8]]
+        options: [['빨간색', 7], ['파란색', 8]]
     }, {
         type: 'Dropdown',
         options: [[Lang.Blocks.ARDUINO_on,"on"], [Lang.Blocks.ARDUINO_off,"off"]],
@@ -46823,7 +46823,7 @@ codestar_light: {
     fontColor: '#fff',
     skeleton: 'basic_string_field',
     statements: [],
-    template: '밝기센서',
+    template: '조도센서',
     params: [],
     events: {},
     def: {
@@ -46886,7 +46886,7 @@ codestar_sonar: {
     fontColor: '#fff',
     skeleton: 'basic_string_field',
     statements: [],
-    template: '초음파',
+    template: '초음파센서',
     params: [],
     events: {},
     def: {
@@ -46949,7 +46949,7 @@ codestar_temperature: {
     fontColor: '#fff',
     skeleton: 'basic_string_field',
     statements: [],
-    template: '온도',
+    template: '온도센서',
     params: [],
     events: {},
     def: {
@@ -47042,7 +47042,7 @@ codestar_tilt: {
     fontColor: '#fff',
     skeleton: 'basic_string_field',
     statements: [],
-    template: '틸트',
+    template: '기울기센서',
     params: [],
     events: {},
     def: {
