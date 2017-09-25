@@ -44,6 +44,11 @@ Entry.PyToBlockParser = function(blockSyntax) {
         '%': "MOD"
     };
 
+    p.logicalOperator = {
+        '&&': "AND",
+        '||': "OR"
+    };
+
     p.Programs = function(astArr) {
         try {
             return this.processPrograms(astArr);
@@ -500,13 +505,13 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
     p.LogicalExpression = function(component) {
         return {
-            type: this.dic[component.operator],
+            type: 'boolean_and_or',
             params: [
                 this.Node(component.left),
-                undefined,
+                this.logicalOperator[component.operator],
                 this.Node(component.right)
             ]
-        }
+        };
     };
 
     p.BinaryExpression = function(component) {
@@ -688,12 +693,16 @@ Entry.PyToBlockParser = function(blockSyntax) {
         if (component.type === "Literal") {
             value = component.raw;
 
-            if (value === "None")
+            if (value === "None"){
                 return;
-            else if(component.value.constructor === String)
-                value = component.raw.substr(1, component.raw.length-2);
-            else if(component.value.constructor === Number)
+            } else if(component.value.constructor === String){
+                if(component.raw.includes('"') || component.raw.includes("'"))
+                    value = component.raw.substr(1, component.raw.length-2);
+                else 
+                    value = component.raw;
+            } else if(component.value.constructor === Number){
                 value = component.value;
+            }
 
             return value;
         } else {

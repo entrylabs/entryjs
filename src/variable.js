@@ -339,15 +339,22 @@ Entry.Variable.prototype.updateView = function() {
                 this._nameWidth = null;
             }
 
+            if(this.isNumber() && this.value_[0] !==0 ) {
+                this.valueView_.text = '' + this.getValue();
+            } else if (this.isNumber()){
+                this.valueView_.text = Number(this.getValue()).toFixed(2).replace('.00', '');
+            } else {
+                this.valueView_.text = this.getValue();
+            }
+
+
             if (this._nameWidth === null)
                 this._nameWidth = this.textView_.getMeasuredWidth();
             this.valueView_.x = this._nameWidth + 14;
             this.valueView_.y = 1;
             // INFO: Number체크는 slide 일때만 하도록 처리 기본 문자로 처리함(#4876)
-            if (this.isNumber())
-                this.valueView_.text = Number(this.getValue()).toFixed(2).replace('.00', '');
-            else this.valueView_.text = this.getValue();
 
+            
             if (this._valueWidth === null)
                 this._valueWidth = this.valueView_.getMeasuredWidth();
             this.rect_.graphics.clear().f("#ffffff").ss(1, 2, 0).s("#A0A1A1")
@@ -530,7 +537,7 @@ Entry.Variable.prototype.updateView = function() {
                 if (parseInt(this.getValue(),10) == this.getValue())
                     this.valueView_.text = v;
                 else
-                    this.valueView_.text = v.toFixed(1).replace('.00', '');
+                    this.valueView_.text = Number(v).toFixed(1).replace('.00', '');
             } else {
                 this.valueView_.text = this.getValue();
             }
@@ -559,7 +566,7 @@ Entry.Variable.prototype.updateView = function() {
             this.valueView_.x = this._nameWidth + 14;
             this.valueView_.y = 1;
             if (this.isNumber())
-                this.valueView_.text = this.getValue().toFixed(1).replace('.00', '');
+                this.valueView_.text = Number(this.getValue()).toFixed(1).replace('.00', '');
             else
                 this.valueView_.text = this.getValue();
 

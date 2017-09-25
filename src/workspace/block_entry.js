@@ -87,29 +87,31 @@ Entry.block.converters = {};
         return '"()"'.replace('()', value);
     };
 
-    c.returnOperator = function(key, value) {
-        var map = {
-            "EQUAL": '==',
-            "GREATER": '>',
-            "LESS": '<',
-            "GREATER_OR_EQUAL": '>=',
-            "LESS_OR_EQUAL": '<=',
-            "PLUS": '+',
-            "MINUS": '-',
-            "MULTI": '*',
-            "DIVIDE": '/',
-            '==':"EQUAL",
-            '>':"GREATER",
-            '<':"LESS",
-            '>=':"GREATER_OR_EQUAL",
-            '<=':"LESS_OR_EQUAL",
-            '+':"PLUS",
-            '-':"MINUS",
-            '*':"MULTI",
-            '/':"DIVIDE"
+        c.returnOperator = function(key, value) {
+            var map = {
+                "EQUAL": '==',
+                "GREATER": '>',
+                "LESS": '<',
+                "GREATER_OR_EQUAL": '>=',
+                "LESS_OR_EQUAL": '<=',
+                "PLUS": '+',
+                "MINUS": '-',
+                "MULTI": '*',
+                "DIVIDE": '/',
+                '==':"EQUAL",
+                '>':"GREATER",
+                '<':"LESS",
+                '>=':"GREATER_OR_EQUAL",
+                '<=':"LESS_OR_EQUAL",
+                '+':"PLUS",
+                '-':"MINUS",
+                '*':"MULTI",
+                '/':"DIVIDE",
+                "AND": 'and',
+                "OR": 'or'
+            };
+            return map[value];
         };
-        return map[value];
-    };
 
     c.returnRawNumberValueByKey = function(key, value) {
         //return String(key).replace(/\D/, '');
@@ -10767,123 +10769,94 @@ Entry.block = {
         else
             targetEntity = Entry.container.getEntity(targetId);
 
-        var targetCoordinate = script.getField("COORDINATE", script);
-        switch(targetCoordinate) {
-            case 'x':
-                return targetEntity.getX();
-            case 'y':
-                return targetEntity.getY();
-            case 'rotation':
-                return targetEntity.getRotation();
-            case 'direction':
-                return targetEntity.getDirection();
-            case 'picture_index':
-                var object = targetEntity.parent;
-                var pictures = object.pictures;
-                return pictures.indexOf(targetEntity.picture) + 1;
-            case 'size':
-                return Number(targetEntity.getSize().toFixed(1));
-            case 'picture_name':
-                var object = targetEntity.parent;
-                var pictures = object.pictures;
-                var picture = pictures[pictures.indexOf(targetEntity.picture)];
-                return picture.name;
-        }
+            var targetCoordinate = script.getField("COORDINATE", script);
+            switch(targetCoordinate) {
+                case 'x':
+                    return targetEntity.getX();
+                case 'y':
+                    return targetEntity.getY();
+                case 'rotation':
+                    return targetEntity.getRotation();
+                case 'direction':
+                    return targetEntity.getDirection();
+                case 'picture_index':
+                    var object = targetEntity.parent;
+                    var pictures = object.pictures;
+                    return pictures.indexOf(targetEntity.picture) + 1;
+                case 'size':
+                    return Number(targetEntity.getSize().toFixed(1));
+                case 'picture_name':
+                    var object = targetEntity.parent;
+                    var pictures = object.pictures;
+                    var picture = pictures[pictures.indexOf(targetEntity.picture)];
+                    return picture.name;
+            }
+        },
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Entry.value_of_object(%2, %4)",
+                blockType: "param",
+                textParams: [
+                    undefined,
+                    {
+                        "type": "DropdownDynamic",
+                        "value": null,
+                        "menuName": "spritesWithSelf",
+                        "fontSize": 11,
+                        'arrowColor': EntryStatic.ARROW_COLOR_CALC,
+                        converter: Entry.block.converters.returnObjectOrStringValue,
+                        codeMap: "Entry.CodeMap.Entry.coordinate_object[1]"
+                    },
+                    undefined,
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.CALC_coordinate_x_value,"x"],
+                            [Lang.Blocks.CALC_coordinate_y_value, "y"],
+                            [Lang.Blocks.CALC_coordinate_rotation_value, "rotation"],
+                            [Lang.Blocks.CALC_coordinate_direction_value, "direction"],
+                            [Lang.Blocks.CALC_coordinate_size_value, "size"],
+                            [Lang.Blocks.CALC_picture_index, "picture_index"],
+                            [Lang.Blocks.CALC_picture_name, "picture_name"]
+                        ],
+                        "value": "x",
+                        "fontSize": 11,
+                        'arrowColor': EntryStatic.ARROW_COLOR_CALC,
+                        converter: Entry.block.converters.returnStringValue,
+                        codeMap: "Entry.CodeMap.Entry.coordinate_object[3]"
+                    }
+                ]
+            }
+        ]}
     },
-    "syntax": {"js": [], "py": [
-        {
-            syntax: "Entry.value_of_object(%2, %4)",
-            blockType: "param",
-            textParams: [
-                undefined,
-                {
-                    "type": "DropdownDynamic",
-                    "value": null,
-                    "menuName": "spritesWithSelf",
-                    "fontSize": 11,
-                    'arrowColor': EntryStatic.ARROW_COLOR_CALC,
-                    converter: Entry.block.converters.returnObjectOrStringValue,
-                    codeMap: "Entry.CodeMap.Entry.coordinate_object[1]"
-                },
-                undefined,
-                {
-                    "type": "Dropdown",
-                    "options": [
-                        [Lang.Blocks.CALC_coordinate_x_value,"x"],
-                        [Lang.Blocks.CALC_coordinate_y_value, "y"],
-                        [Lang.Blocks.CALC_coordinate_rotation_value, "rotation"],
-                        [Lang.Blocks.CALC_coordinate_direction_value, "direction"],
-                        [Lang.Blocks.CALC_coordinate_size_value, "size"],
-                        [Lang.Blocks.CALC_picture_index, "picture_index"],
-                        [Lang.Blocks.CALC_picture_name, "picture_name"]
-                    ],
-                    "value": "x",
-                    "fontSize": 11,
-                    'arrowColor': EntryStatic.ARROW_COLOR_CALC,
-                    converter: Entry.block.converters.returnStringValue,
-                    codeMap: "Entry.CodeMap.Entry.coordinate_object[3]"
-                }
-            ]
-        }
-    ]}
-},
-"calc_basic": {
-    "color": "#FFD974",
-    "skeleton": "basic_string_field",
-    "statements": [],
-    "params": [
-        {
-            "type": "Block",
-            "accept": "string"
-        },
-        {
-            "type": "Dropdown",
-            "options": [
-                [ "+", "PLUS" ],
-                [ "-", "MINUS" ],
-                [ "x", "MULTI" ],
-                [ "/", "DIVIDE" ]
-            ],
-            "value": "PLUS",
-            "fontSize": 11,
-            noArrow: true
-        },
-        {
-            "type": "Block",
-            "accept": "string"
-        }
-    ],
-    "events": {},
-    "def": {
+    "calc_basic": {
+        "color": "#FFD974",
+        "skeleton": "basic_string_field",
+        "statements": [],
         "params": [
             {
-                "type": "number",
-                "params": [ "10" ]
+                "type": "Block",
+                "accept": "string"
             },
-            "PLUS",
             {
-                "type": "number",
-                "params": [ "10" ]
+                "type": "Dropdown",
+                "options": [
+                    [ "+", "PLUS" ],
+                    [ "-", "MINUS" ],
+                    [ "x", "MULTI" ],
+                    [ "/", "DIVIDE" ]
+                ],
+                "value": "PLUS",
+                "fontSize": 11,
+                noArrow: true
+            },
+            {
+                "type": "Block",
+                "accept": "string"
             }
         ],
-        "type": "calc_basic"
-    },
-    "pyHelpDef": {
-        "params": [
-            {
-                "type": "number",
-                "params": [ "A&value" ]
-            },
-            "PLUS",
-            {
-                "type": "number",
-                "params": [ "B&value" ]
-            }
-        ],
-        "type": "calc_basic"
-    },
-    "defs": [
-        {
+        "events": {},
+        "def": {
             "params": [
                 {
                     "type": "number",
@@ -10897,433 +10870,466 @@ Entry.block = {
             ],
             "type": "calc_basic"
         },
-        {
+        "pyHelpDef": {
             "params": [
                 {
                     "type": "number",
-                    "params": [ "10" ]
+                    "params": [ "A&value" ]
                 },
-                "MINUS",
+                "PLUS",
                 {
                     "type": "number",
-                    "params": [ "10" ]
+                    "params": [ "B&value" ]
                 }
             ],
             "type": "calc_basic"
         },
-        {
-            "params": [
-                {
-                    "type": "number",
-                    "params": [ "10" ]
-                },
-                "MULTI",
-                {
-                    "type": "number",
-                    "params": [ "10" ]
-                }
-            ],
-            "type": "calc_basic"
+        "defs": [
+            {
+                "params": [
+                    {
+                        "type": "number",
+                        "params": [ "10" ]
+                    },
+                    "PLUS",
+                    {
+                        "type": "number",
+                        "params": [ "10" ]
+                    }
+                ],
+                "type": "calc_basic"
+            },
+            {
+                "params": [
+                    {
+                        "type": "number",
+                        "params": [ "10" ]
+                    },
+                    "MINUS",
+                    {
+                        "type": "number",
+                        "params": [ "10" ]
+                    }
+                ],
+                "type": "calc_basic"
+            },
+            {
+                "params": [
+                    {
+                        "type": "number",
+                        "params": [ "10" ]
+                    },
+                    "MULTI",
+                    {
+                        "type": "number",
+                        "params": [ "10" ]
+                    }
+                ],
+                "type": "calc_basic"
+            },
+            {
+                "params": [
+                    {
+                        "type": "number",
+                        "params": [ "10" ]
+                    },
+                    "DIVIDE",
+                    {
+                        "type": "number",
+                        "params": [ "10" ]
+                    }
+                ],
+                "type": "calc_basic"
+            }
+        ],
+        "paramsKeyMap": {
+            "LEFTHAND": 0,
+            "OPERATOR": 1,
+            "RIGHTHAND": 2
         },
-        {
-            "params": [
-                {
-                    "type": "number",
-                    "params": [ "10" ]
-                },
-                "DIVIDE",
-                {
-                    "type": "number",
-                    "params": [ "10" ]
-                }
-            ],
-            "type": "calc_basic"
-        }
-    ],
-    "paramsKeyMap": {
-        "LEFTHAND": 0,
-        "OPERATOR": 1,
-        "RIGHTHAND": 2
+        "class": "calc",
+        "isNotFor": [],
+        "func": function (sprite, script) {
+            var operator = script.getField("OPERATOR", script);
+            var leftValue = script.getNumberValue("LEFTHAND", script);
+            var rightValue = script.getNumberValue("RIGHTHAND", script);
+            if (operator == "PLUS") {
+                var leftStringValue = script.getValue("LEFTHAND", script);
+                var rightStringValue = script.getValue("RIGHTHAND", script);
+                if (!Entry.Utils.isNumber(leftStringValue))
+                    leftValue = leftStringValue;
+                if (!Entry.Utils.isNumber(rightStringValue))
+                    rightValue = rightStringValue;
+                if (typeof leftValue === "number" && typeof rightValue === "number")
+                    return new BigNumber(leftValue).plus(rightValue).toNumber()
+                else
+                    return leftValue + rightValue;
+            }
+            leftValue = new BigNumber(leftValue);
+            if (operator == "MINUS")
+                return leftValue.minus(rightValue).toNumber();
+            else if (operator == "MULTI")
+                return leftValue.times(rightValue).toNumber();
+            else
+                return leftValue.dividedBy(rightValue).toNumber();
+        },
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "(%1 %2 %3)",
+                template: "%1 %2 %3",
+                keyOption: "calc_basic",
+                blockType: "param",
+                textParams: [
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [ "+", "PLUS" ],
+                            [ "-", "MINUS" ],
+                            [ "x", "MULTI" ],
+                            [ "/", "DIVIDE" ]
+                        ],
+                        "value": "PLUS",
+                        "fontSize": 11,
+                        noArrow: true,
+                        converter: Entry.block.converters.returnOperator,
+                        paramType: "operator"
+                    },
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                ]
+            }
+        ]}
     },
-    "class": "calc",
-    "isNotFor": [],
-    "func": function (sprite, script) {
-        var operator = script.getField("OPERATOR", script);
-        var leftValue = script.getNumberValue("LEFTHAND", script);
-        var rightValue = script.getNumberValue("RIGHTHAND", script);
-        if (operator == "PLUS") {
-            var leftStringValue = script.getValue("LEFTHAND", script);
-            var rightStringValue = script.getValue("RIGHTHAND", script);
-            if (!Entry.Utils.isNumber(leftStringValue))
-                leftValue = leftStringValue;
-            if (!Entry.Utils.isNumber(rightStringValue))
-                rightValue = rightStringValue;
+    "calc_plus": {
+        "color": "#FFD974",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Text",
+                "text": "+",
+                "color": "#3D3D3D"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null ]
+        },
+        "paramsKeyMap": {
+            "LEFTHAND": 0,
+            "RIGHTHAND": 2
+        },
+        "func": function (sprite, script) {
+            var leftValue = script.getNumberValue("LEFTHAND", script);
+            var rightValue = script.getNumberValue("RIGHTHAND", script);
             return leftValue + rightValue;
-        }
-        else if (operator == "MINUS")
+        },
+        "syntax": {"js": [], "py": [""]}
+    },
+    "calc_minus": {
+        "color": "#FFD974",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Text",
+                "text": "-",
+                "color": "#3D3D3D"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null ]
+        },
+        "paramsKeyMap": {
+            "LEFTHAND": 0,
+            "RIGHTHAND": 2
+        },
+        "func": function (sprite, script) {
+            var leftValue = script.getNumberValue("LEFTHAND", script);
+            var rightValue = script.getNumberValue("RIGHTHAND", script);
             return leftValue - rightValue;
-        else if (operator == "MULTI")
+        },
+        "syntax": {"js": [], "py": [""]}
+    },
+    "calc_times": {
+        "color": "#FFD974",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Text",
+                "text": "x",
+                "color": "#3D3D3D"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null ]
+        },
+        "paramsKeyMap": {
+            "LEFTHAND": 0,
+            "RIGHTHAND": 2
+        },
+        "func": function (sprite, script) {
+            var leftValue = script.getNumberValue("LEFTHAND", script);
+            var rightValue = script.getNumberValue("RIGHTHAND", script);
             return leftValue * rightValue;
-        else
+        },
+        "syntax": {"js": [], "py": [""]}
+    },
+    "calc_divide": {
+        "color": "#FFD974",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Text",
+                "text": "/",
+                "color": "#3D3D3D"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null ]
+        },
+        "paramsKeyMap": {
+            "LEFTHAND": 0,
+            "RIGHTHAND": 2
+        },
+        "func": function (sprite, script) {
+            var leftValue = script.getNumberValue("LEFTHAND", script);
+            var rightValue = script.getNumberValue("RIGHTHAND", script);
             return leftValue / rightValue;
-    },
-    "syntax": {"js": [], "py": [
-        {
-            syntax: "(%1 %2 %3)",
-            template: "%1 %2 %3",
-            keyOption: "calc_basic",
-            blockType: "param",
-            textParams: [
-                {
-                    "type": "Block",
-                    "accept": "string"
-                },
-                {
-                    "type": "Dropdown",
-                    "options": [
-                        [ "+", "PLUS" ],
-                        [ "-", "MINUS" ],
-                        [ "x", "MULTI" ],
-                        [ "/", "DIVIDE" ]
-                    ],
-                    "value": "PLUS",
-                    "fontSize": 11,
-                    noArrow: true,
-                    converter: Entry.block.converters.returnOperator,
-                    paramType: "operator"
-                },
-                {
-                    "type": "Block",
-                    "accept": "string"
-                },
-            ]
-        }
-    ]}
-},
-"calc_plus": {
-    "color": "#FFD974",
-    "skeleton": "basic_string_field",
-    "statements": [],
-    "params": [
-        {
-            "type": "Block",
-            "accept": "string"
         },
-        {
-            "type": "Text",
-            "text": "+",
-            "color": "#3D3D3D"
-        },
-        {
-            "type": "Block",
-            "accept": "string"
-        }
-    ],
-    "events": {},
-    "def": {
-        "params": [ null ]
+        "syntax": {"js": [], "py": [""]}
     },
-    "paramsKeyMap": {
-        "LEFTHAND": 0,
-        "RIGHTHAND": 2
-    },
-    "func": function (sprite, script) {
-        var leftValue = script.getNumberValue("LEFTHAND", script);
-        var rightValue = script.getNumberValue("RIGHTHAND", script);
-        return leftValue + rightValue;
-    },
-    "syntax": {"js": [], "py": [""]}
-},
-"calc_minus": {
-    "color": "#FFD974",
-    "skeleton": "basic_string_field",
-    "statements": [],
-    "params": [
-        {
-            "type": "Block",
-            "accept": "string"
-        },
-        {
-            "type": "Text",
-            "text": "-",
-            "color": "#3D3D3D"
-        },
-        {
-            "type": "Block",
-            "accept": "string"
-        }
-    ],
-    "events": {},
-    "def": {
-        "params": [ null ]
-    },
-    "paramsKeyMap": {
-        "LEFTHAND": 0,
-        "RIGHTHAND": 2
-    },
-    "func": function (sprite, script) {
-        var leftValue = script.getNumberValue("LEFTHAND", script);
-        var rightValue = script.getNumberValue("RIGHTHAND", script);
-        return leftValue - rightValue;
-    },
-    "syntax": {"js": [], "py": [""]}
-},
-"calc_times": {
-    "color": "#FFD974",
-    "skeleton": "basic_string_field",
-    "statements": [],
-    "params": [
-        {
-            "type": "Block",
-            "accept": "string"
-        },
-        {
-            "type": "Text",
-            "text": "x",
-            "color": "#3D3D3D"
-        },
-        {
-            "type": "Block",
-            "accept": "string"
-        }
-    ],
-    "events": {},
-    "def": {
-        "params": [ null ]
-    },
-    "paramsKeyMap": {
-        "LEFTHAND": 0,
-        "RIGHTHAND": 2
-    },
-    "func": function (sprite, script) {
-        var leftValue = script.getNumberValue("LEFTHAND", script);
-        var rightValue = script.getNumberValue("RIGHTHAND", script);
-        return leftValue * rightValue;
-    },
-    "syntax": {"js": [], "py": [""]}
-},
-"calc_divide": {
-    "color": "#FFD974",
-    "skeleton": "basic_string_field",
-    "statements": [],
-    "params": [
-        {
-            "type": "Block",
-            "accept": "string"
-        },
-        {
-            "type": "Text",
-            "text": "/",
-            "color": "#3D3D3D"
-        },
-        {
-            "type": "Block",
-            "accept": "string"
-        }
-    ],
-    "events": {},
-    "def": {
-        "params": [ null ]
-    },
-    "paramsKeyMap": {
-        "LEFTHAND": 0,
-        "RIGHTHAND": 2
-    },
-    "func": function (sprite, script) {
-        var leftValue = script.getNumberValue("LEFTHAND", script);
-        var rightValue = script.getNumberValue("RIGHTHAND", script);
-        return leftValue / rightValue;
-    },
-    "syntax": {"js": [], "py": [""]}
-},
-"calc_mod": {
-    "color": "#FFD974",
-    "skeleton": "basic_string_field",
-    "statements": [],
-    "params": [
-        {
-            "type": "Block",
-            "accept": "string"
-        },
-        {
-            "type": "Text",
-            "text": "/",
-            "color": "#3D3D3D"
-        },
-        {
-            "type": "Block",
-            "accept": "string"
-        },
-        {
-            "type": "Text",
-            "text": Lang.Blocks.CALC_calc_mod_3,
-            "color": "#3D3D3D"
-        }
-    ],
-    "events": {},
-    "def": {
+    "calc_mod": {
+        "color": "#FFD974",
+        "skeleton": "basic_string_field",
+        "statements": [],
         "params": [
             {
-                "type": "number",
-                "params": [ "10" ]
+                "type": "Block",
+                "accept": "string"
             },
-            null,
             {
-                "type": "number",
-                "params": [ "10" ]
+                "type": "Text",
+                "text": "/",
+                "color": "#3D3D3D"
             },
-            null
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Text",
+                "text": Lang.Blocks.CALC_calc_mod_3,
+                "color": "#3D3D3D"
+            }
         ],
-        "type": "calc_mod"
-    },
-    "paramsKeyMap": {
-        "LEFTHAND": 0,
-        "RIGHTHAND": 2
-    },
-    "class": "calc",
-    "isNotFor": [],
-    "func": function (sprite, script) {
-        var leftValue = script.getNumberValue("LEFTHAND", script);
-        var rightValue = script.getNumberValue("RIGHTHAND", script);
-        return leftValue % rightValue;
-    },
-    "syntax": {"js": [], "py": ["Entry.get_remainder(%1, %3)"]}
-},
-"calc_share": {
-    "color": "#FFD974",
-    "skeleton": "basic_string_field",
-    "statements": [],
-    "params": [
-        {
-            "type": "Block",
-            "accept": "string"
-        },
-        {
-            "type": "Text",
-            "text": "/",
-            "color": "#3D3D3D"
-        },
-        {
-            "type": "Block",
-            "accept": "string"
-        },
-        {
-            "type": "Text",
-            "text": "의 몫",
-            "color": "#3D3D3D"
-        }
-    ],
-    "events": {},
-    "def": {
-        "params": [
-            {
-                "type": "number",
-                "params": [ "10" ]
-            },
-            null,
-            {
-                "type": "number",
-                "params": [ "10" ]
-            },
-            null
-        ],
-        "type": "calc_share"
-    },
-    "paramsKeyMap": {
-        "LEFTHAND": 0,
-        "RIGHTHAND": 2
-    },
-    "class": "calc",
-    "isNotFor": [],
-    "func": function (sprite, script) {
-        var leftValue = script.getNumberValue("LEFTHAND", script);
-        var rightValue = script.getNumberValue("RIGHTHAND", script);
-        return Math.floor(leftValue/rightValue);
-    },
-    "syntax": {"js": [], "py": [""]}
-},
-"calc_operation": {
-    "color": "#FFD974",
-    "skeleton": "basic_string_field",
-    "statements": [],
-    "params": [
-        {
-            "type": "Text",
-            "text": Lang.Blocks.CALC_calc_operation_of_1,
-            "color": "#3D3D3D"
-        },
-        {
-            "type": "Block",
-            "accept": "string"
-        },
-        {
-            "type": "Text",
-            "text": Lang.Blocks.CALC_calc_operation_of_2,
-            "color": "#3D3D3D"
-        },
-        {
-            "type": "Dropdown",
-            "options": [
-                [Lang.Blocks.CALC_calc_operation_square,"square"],
-                [Lang.Blocks.CALC_calc_operation_root, "root"],
-                [Lang.Blocks.CALC_calc_operation_sin, "sin"],
-                [Lang.Blocks.CALC_calc_operation_cos,"cos"],
-                [Lang.Blocks.CALC_calc_operation_tan,"tan"],
-                [Lang.Blocks.CALC_calc_operation_asin, "asin_radian"],
-                [Lang.Blocks.CALC_calc_operation_acos,"acos_radian"],
-                [Lang.Blocks.CALC_calc_operation_atan,"atan_radian"],
-                [Lang.Blocks.CALC_calc_operation_log,"log"],
-                [Lang.Blocks.CALC_calc_operation_ln,"ln"],
-                [Lang.Blocks.CALC_calc_operation_unnatural,"unnatural"],
-                [Lang.Blocks.CALC_calc_operation_floor,"floor"],
-                [Lang.Blocks.CALC_calc_operation_ceil,"ceil"],
-                [Lang.Blocks.CALC_calc_operation_round,"round"],
-                [Lang.Blocks.CALC_calc_operation_factorial,"factorial"],
-                [Lang.Blocks.CALC_calc_operation_abs,"abs"]
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "number",
+                    "params": [ "10" ]
+                },
+                null,
+                {
+                    "type": "number",
+                    "params": [ "10" ]
+                },
+                null
             ],
-            "value": "square",
-            "fontSize": 11,
-            'arrowColor': EntryStatic.ARROW_COLOR_CALC
-        }
-    ],
-    "events": {},
-    "def": {
+            "type": "calc_mod"
+        },
+        "paramsKeyMap": {
+            "LEFTHAND": 0,
+            "RIGHTHAND": 2
+        },
+        "class": "calc",
+        "isNotFor": [],
+        "func": function (sprite, script) {
+            var leftValue = script.getNumberValue("LEFTHAND", script);
+            var rightValue = script.getNumberValue("RIGHTHAND", script);
+            return leftValue % rightValue;
+        },
+        "syntax": {"js": [], "py": ["Entry.get_remainder(%1, %3)"]}
+    },
+    "calc_share": {
+        "color": "#FFD974",
+        "skeleton": "basic_string_field",
+        "statements": [],
         "params": [
-            null,
             {
-                "type": "number",
-                "params": [ "10" ]
+                "type": "Block",
+                "accept": "string"
             },
-            null,
-            null
+            {
+                "type": "Text",
+                "text": "/",
+                "color": "#3D3D3D"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Text",
+                "text": "의 몫",
+                "color": "#3D3D3D"
+            }
         ],
-        "type": "calc_operation"
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "number",
+                    "params": [ "10" ]
+                },
+                null,
+                {
+                    "type": "number",
+                    "params": [ "10" ]
+                },
+                null
+            ],
+            "type": "calc_share"
+        },
+        "paramsKeyMap": {
+            "LEFTHAND": 0,
+            "RIGHTHAND": 2
+        },
+        "class": "calc",
+        "isNotFor": [],
+        "func": function (sprite, script) {
+            var leftValue = script.getNumberValue("LEFTHAND", script);
+            var rightValue = script.getNumberValue("RIGHTHAND", script);
+            return Math.floor(leftValue/rightValue);
+        },
+        "syntax": {"js": [], "py": [""]}
     },
-    "pyHelpDef": {
+    "calc_operation": {
+        "color": "#FFD974",
+        "skeleton": "basic_string_field",
+        "statements": [],
         "params": [
-            null,
             {
-                "type": "number",
-                "params": [ "A&value" ]
+                "type": "Text",
+                "text": Lang.Blocks.CALC_calc_operation_of_1,
+                "color": "#3D3D3D"
             },
-            null,
-            null
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Text",
+                "text": Lang.Blocks.CALC_calc_operation_of_2,
+                "color": "#3D3D3D"
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.CALC_calc_operation_square,"square"],
+                    [Lang.Blocks.CALC_calc_operation_root, "root"],
+                    [Lang.Blocks.CALC_calc_operation_sin, "sin"],
+                    [Lang.Blocks.CALC_calc_operation_cos,"cos"],
+                    [Lang.Blocks.CALC_calc_operation_tan,"tan"],
+                    [Lang.Blocks.CALC_calc_operation_asin, "asin_radian"],
+                    [Lang.Blocks.CALC_calc_operation_acos,"acos_radian"],
+                    [Lang.Blocks.CALC_calc_operation_atan,"atan_radian"],
+                    [Lang.Blocks.CALC_calc_operation_log,"log"],
+                    [Lang.Blocks.CALC_calc_operation_ln,"ln"],
+                    [Lang.Blocks.CALC_calc_operation_unnatural,"unnatural"],
+                    [Lang.Blocks.CALC_calc_operation_floor,"floor"],
+                    [Lang.Blocks.CALC_calc_operation_ceil,"ceil"],
+                    [Lang.Blocks.CALC_calc_operation_round,"round"],
+                    [Lang.Blocks.CALC_calc_operation_factorial,"factorial"],
+                    [Lang.Blocks.CALC_calc_operation_abs,"abs"]
+                ],
+                "value": "square",
+                "fontSize": 11,
+                'arrowColor': EntryStatic.ARROW_COLOR_CALC
+            }
         ],
-        "type": "calc_operation"
-    },
-    "paramsKeyMap": {
-        "LEFTHAND": 1,
-        "VALUE": 3
-    },
-    "class": "calc",
-    "isNotFor": [],
-    "func": function (sprite, script) {
-        var value = script.getNumberValue("LEFTHAND", script);
-        var operator = script.getField("VALUE", script);
-        var xRangeCheckList = ['asin_radian', 'acos_radian'];
-        if ((xRangeCheckList.indexOf(operator) > -1) &&
-            (value > 1 || value < -1))
-            throw new Error('x range exceeded');
+        "events": {},
+        "def": {
+            "params": [
+                null,
+                {
+                    "type": "number",
+                    "params": [ "10" ]
+                },
+                null,
+                null
+            ],
+            "type": "calc_operation"
+        },
+        "pyHelpDef": {
+            "params": [
+                null,
+                {
+                    "type": "number",
+                    "params": [ "A&value" ]
+                },
+                null,
+                null
+            ],
+            "type": "calc_operation"
+        },
+        "paramsKeyMap": {
+            "LEFTHAND": 1,
+            "VALUE": 3
+        },
+        "class": "calc",
+        "isNotFor": [],
+        "func": function (sprite, script) {
+            var value = script.getNumberValue("LEFTHAND", script);
+            var operator = script.getField("VALUE", script);
+            var xRangeCheckList = ['asin_radian', 'acos_radian'];
+            if ((xRangeCheckList.indexOf(operator) > -1) &&
+                (value > 1 || value < -1))
+                throw new Error('x range exceeded');
 
         var needToConvertList = ['sin', 'cos', 'tan'];
         if (operator.indexOf('_'))
@@ -16175,1147 +16181,1147 @@ Entry.block = {
             params: ["LEFT", "4"]
         },
 
-        {
-            syntax: "Hamster.left_led(Hamster.LED_YELLOW)",
-            textParams: [
-                {
-                    "type": "Dropdown",
-                    "options": [
-                        [Lang.Blocks.HAMSTER_left_led,"LEFT"],
-                        [Lang.Blocks.HAMSTER_right_led,"RIGHT"],
-                        [Lang.Blocks.HAMSTER_both_leds,"BOTH"]
-                    ],
-                    "value": "LEFT",
-                    "fontSize": 11,
-                    converter: Entry.block.converters.returnStringValue
-                },
-                {
-                    "type": "Dropdown",
-                    "options": [
-                        [Lang.Blocks.HAMSTER_color_red,"4"],
-                        [Lang.Blocks.HAMSTER_color_yellow,"6"],
-                        [Lang.Blocks.HAMSTER_color_green,"2"],
-                        [Lang.Blocks.HAMSTER_color_cyan,"3"],
-                        [Lang.Blocks.HAMSTER_color_blue,"1"],
-                        [Lang.Blocks.HAMSTER_color_magenta,"5"],
-                        [Lang.Blocks.HAMSTER_color_white,"7"]
-                    ],
-                    "value": "4",
-                    "fontSize": 11,
-                    converter: Entry.block.converters.returnStringValue
-                }
-            ],
-            params: ["LEFT", "6"]
-        },
-        {
-            syntax: "Hamster.left_led(Hamster.LED_GREEN)",
-            textParams: [
-                {
-                    "type": "Dropdown",
-                    "options": [
-                        [Lang.Blocks.HAMSTER_left_led,"LEFT"],
-                        [Lang.Blocks.HAMSTER_right_led,"RIGHT"],
-                        [Lang.Blocks.HAMSTER_both_leds,"BOTH"]
-                    ],
-                    "value": "LEFT",
-                    "fontSize": 11,
-                    converter: Entry.block.converters.returnStringValue
-                },
-                {
-                    "type": "Dropdown",
-                    "options": [
-                        [Lang.Blocks.HAMSTER_color_red,"4"],
-                        [Lang.Blocks.HAMSTER_color_yellow,"6"],
-                        [Lang.Blocks.HAMSTER_color_green,"2"],
-                        [Lang.Blocks.HAMSTER_color_cyan,"3"],
-                        [Lang.Blocks.HAMSTER_color_blue,"1"],
-                        [Lang.Blocks.HAMSTER_color_magenta,"5"],
-                        [Lang.Blocks.HAMSTER_color_white,"7"]
-                    ],
-                    "value": "4",
-                    "fontSize": 11,
-                    converter: Entry.block.converters.returnStringValue
-                }
-            ],
-            params: ["LEFT", "2"]
-        },
-        {
-            syntax: "Hamster.left_led(Hamster.LED_CYAN)",
-            textParams: [
-                {
-                    "type": "Dropdown",
-                    "options": [
-                        [Lang.Blocks.HAMSTER_left_led,"LEFT"],
-                        [Lang.Blocks.HAMSTER_right_led,"RIGHT"],
-                        [Lang.Blocks.HAMSTER_both_leds,"BOTH"]
-                    ],
-                    "value": "LEFT",
-                    "fontSize": 11,
-                    converter: Entry.block.converters.returnStringValue
-                },
-                {
-                    "type": "Dropdown",
-                    "options": [
-                        [Lang.Blocks.HAMSTER_color_red,"4"],
-                        [Lang.Blocks.HAMSTER_color_yellow,"6"],
-                        [Lang.Blocks.HAMSTER_color_green,"2"],
-                        [Lang.Blocks.HAMSTER_color_cyan,"3"],
-                        [Lang.Blocks.HAMSTER_color_blue,"1"],
-                        [Lang.Blocks.HAMSTER_color_magenta,"5"],
-                        [Lang.Blocks.HAMSTER_color_white,"7"]
-                    ],
-                    "value": "4",
-                    "fontSize": 11,
-                    converter: Entry.block.converters.returnStringValue
-                }
-            ],
-            params: ["LEFT", "3"]
-        },
-        {
-            syntax: "Hamster.left_led(Hamster.LED_BLUE)",
-            textParams: [
-                {
-                    "type": "Dropdown",
-                    "options": [
-                        [Lang.Blocks.HAMSTER_left_led,"LEFT"],
-                        [Lang.Blocks.HAMSTER_right_led,"RIGHT"],
-                        [Lang.Blocks.HAMSTER_both_leds,"BOTH"]
-                    ],
-                    "value": "LEFT",
-                    "fontSize": 11,
-                    converter: Entry.block.converters.returnStringValue
-                },
-                {
-                    "type": "Dropdown",
-                    "options": [
-                        [Lang.Blocks.HAMSTER_color_red,"4"],
-                        [Lang.Blocks.HAMSTER_color_yellow,"6"],
-                        [Lang.Blocks.HAMSTER_color_green,"2"],
-                        [Lang.Blocks.HAMSTER_color_cyan,"3"],
-                        [Lang.Blocks.HAMSTER_color_blue,"1"],
-                        [Lang.Blocks.HAMSTER_color_magenta,"5"],
-                        [Lang.Blocks.HAMSTER_color_white,"7"]
-                    ],
-                    "value": "4",
-                    "fontSize": 11,
-                    converter: Entry.block.converters.returnStringValue
-                }
-            ],
-            params: ["LEFT", "1"]
-        },
-        {
-            syntax: "Hamster.left_led(Hamster.LED_MAGENTA)",
-            textParams: [
-                {
-                    "type": "Dropdown",
-                    "options": [
-                        [Lang.Blocks.HAMSTER_left_led,"LEFT"],
-                        [Lang.Blocks.HAMSTER_right_led,"RIGHT"],
-                        [Lang.Blocks.HAMSTER_both_leds,"BOTH"]
-                    ],
-                    "value": "LEFT",
-                    "fontSize": 11,
-                    converter: Entry.block.converters.returnStringValue
-                },
-                {
-                    "type": "Dropdown",
-                    "options": [
-                        [Lang.Blocks.HAMSTER_color_red,"4"],
-                        [Lang.Blocks.HAMSTER_color_yellow,"6"],
-                        [Lang.Blocks.HAMSTER_color_green,"2"],
-                        [Lang.Blocks.HAMSTER_color_cyan,"3"],
-                        [Lang.Blocks.HAMSTER_color_blue,"1"],
-                        [Lang.Blocks.HAMSTER_color_magenta,"5"],
-                        [Lang.Blocks.HAMSTER_color_white,"7"]
-                    ],
-                    "value": "4",
-                    "fontSize": 11,
-                    converter: Entry.block.converters.returnStringValue
-                }
-            ],
-            params: ["LEFT", "5"]
-        },
-        {
-            syntax: "Hamster.left_led(Hamster.LED_WHITE)",
-            textParams: [
-                {
-                    "type": "Dropdown",
-                    "options": [
-                        [Lang.Blocks.HAMSTER_left_led,"LEFT"],
-                        [Lang.Blocks.HAMSTER_right_led,"RIGHT"],
-                        [Lang.Blocks.HAMSTER_both_leds,"BOTH"]
-                    ],
-                    "value": "LEFT",
-                    "fontSize": 11,
-                    converter: Entry.block.converters.returnStringValue
-                },
-                {
-                    "type": "Dropdown",
-                    "options": [
-                        [Lang.Blocks.HAMSTER_color_red,"4"],
-                        [Lang.Blocks.HAMSTER_color_yellow,"6"],
-                        [Lang.Blocks.HAMSTER_color_green,"2"],
-                        [Lang.Blocks.HAMSTER_color_cyan,"3"],
-                        [Lang.Blocks.HAMSTER_color_blue,"1"],
-                        [Lang.Blocks.HAMSTER_color_magenta,"5"],
-                        [Lang.Blocks.HAMSTER_color_white,"7"]
-                    ],
-                    "value": "4",
-                    "fontSize": 11,
-                    converter: Entry.block.converters.returnStringValue
-                }
-            ],
-            params: ["LEFT", "7"]
-        },
-        {
-            syntax: "Hamster.right_led(Hamster.LED_RED)",
-            textParams: [
-                {
-                    "type": "Dropdown",
-                    "options": [
-                        [Lang.Blocks.HAMSTER_left_led,"LEFT"],
-                        [Lang.Blocks.HAMSTER_right_led,"RIGHT"],
-                        [Lang.Blocks.HAMSTER_both_leds,"BOTH"]
-                    ],
-                    "value": "LEFT",
-                    "fontSize": 11,
-                    converter: Entry.block.converters.returnStringValue
-                },
-                {
-                    "type": "Dropdown",
-                    "options": [
-                        [Lang.Blocks.HAMSTER_color_red,"4"],
-                        [Lang.Blocks.HAMSTER_color_yellow,"6"],
-                        [Lang.Blocks.HAMSTER_color_green,"2"],
-                        [Lang.Blocks.HAMSTER_color_cyan,"3"],
-                        [Lang.Blocks.HAMSTER_color_blue,"1"],
-                        [Lang.Blocks.HAMSTER_color_magenta,"5"],
-                        [Lang.Blocks.HAMSTER_color_white,"7"]
-                    ],
-                    "value": "4",
-                    "fontSize": 11,
-                    converter: Entry.block.converters.returnStringValue
-                }
-            ],
-            params: ["RIGHT", "4"]
-        },
-        {
-            syntax: "Hamster.right_led(Hamster.LED_YELLOW)",
-            textParams: [
-                {
-                    "type": "Dropdown",
-                    "options": [
-                        [Lang.Blocks.HAMSTER_left_led,"LEFT"],
-                        [Lang.Blocks.HAMSTER_right_led,"RIGHT"],
-                        [Lang.Blocks.HAMSTER_both_leds,"BOTH"]
-                    ],
-                    "value": "LEFT",
-                    "fontSize": 11,
-                    converter: Entry.block.converters.returnStringValue
-                },
-                {
-                    "type": "Dropdown",
-                    "options": [
-                        [Lang.Blocks.HAMSTER_color_red,"4"],
-                        [Lang.Blocks.HAMSTER_color_yellow,"6"],
-                        [Lang.Blocks.HAMSTER_color_green,"2"],
-                        [Lang.Blocks.HAMSTER_color_cyan,"3"],
-                        [Lang.Blocks.HAMSTER_color_blue,"1"],
-                        [Lang.Blocks.HAMSTER_color_magenta,"5"],
-                        [Lang.Blocks.HAMSTER_color_white,"7"]
-                    ],
-                    "value": "4",
-                    "fontSize": 11,
-                    converter: Entry.block.converters.returnStringValue
-                }
-            ],
-            params: ["RIGHT", "6"]
-        },
-        {
-            syntax: "Hamster.right_led(Hamster.LED_GREEN)",
-            textParams: [
-                {
-                    "type": "Dropdown",
-                    "options": [
-                        [Lang.Blocks.HAMSTER_left_led,"LEFT"],
-                        [Lang.Blocks.HAMSTER_right_led,"RIGHT"],
-                        [Lang.Blocks.HAMSTER_both_leds,"BOTH"]
-                    ],
-                    "value": "LEFT",
-                    "fontSize": 11,
-                    converter: Entry.block.converters.returnStringValue
-                },
-                {
-                    "type": "Dropdown",
-                    "options": [
-                        [Lang.Blocks.HAMSTER_color_red,"4"],
-                        [Lang.Blocks.HAMSTER_color_yellow,"6"],
-                        [Lang.Blocks.HAMSTER_color_green,"2"],
-                        [Lang.Blocks.HAMSTER_color_cyan,"3"],
-                        [Lang.Blocks.HAMSTER_color_blue,"1"],
-                        [Lang.Blocks.HAMSTER_color_magenta,"5"],
-                        [Lang.Blocks.HAMSTER_color_white,"7"]
-                    ],
-                    "value": "4",
-                    "fontSize": 11,
-                    converter: Entry.block.converters.returnStringValue
-                }
-            ],
-            params: ["RIGHT", "2"]
-        },
-        {
-            syntax: "Hamster.right_led(Hamster.LED_CYAN)",
-            textParams: [
-                {
-                    "type": "Dropdown",
-                    "options": [
-                        [Lang.Blocks.HAMSTER_left_led,"LEFT"],
-                        [Lang.Blocks.HAMSTER_right_led,"RIGHT"],
-                        [Lang.Blocks.HAMSTER_both_leds,"BOTH"]
-                    ],
-                    "value": "LEFT",
-                    "fontSize": 11,
-                    converter: Entry.block.converters.returnStringValue
-                },
-                {
-                    "type": "Dropdown",
-                    "options": [
-                        [Lang.Blocks.HAMSTER_color_red,"4"],
-                        [Lang.Blocks.HAMSTER_color_yellow,"6"],
-                        [Lang.Blocks.HAMSTER_color_green,"2"],
-                        [Lang.Blocks.HAMSTER_color_cyan,"3"],
-                        [Lang.Blocks.HAMSTER_color_blue,"1"],
-                        [Lang.Blocks.HAMSTER_color_magenta,"5"],
-                        [Lang.Blocks.HAMSTER_color_white,"7"]
-                    ],
-                    "value": "4",
-                    "fontSize": 11,
-                    converter: Entry.block.converters.returnStringValue
-                }
-            ],
-            params: ["RIGHT", "3"]
-        },
-        {
-            syntax: "Hamster.right_led(Hamster.LED_BLUE)",
-            textParams: [
-                {
-                    "type": "Dropdown",
-                    "options": [
-                        [Lang.Blocks.HAMSTER_left_led,"LEFT"],
-                        [Lang.Blocks.HAMSTER_right_led,"RIGHT"],
-                        [Lang.Blocks.HAMSTER_both_leds,"BOTH"]
-                    ],
-                    "value": "LEFT",
-                    "fontSize": 11,
-                    converter: Entry.block.converters.returnStringValue
-                },
-                {
-                    "type": "Dropdown",
-                    "options": [
-                        [Lang.Blocks.HAMSTER_color_red,"4"],
-                        [Lang.Blocks.HAMSTER_color_yellow,"6"],
-                        [Lang.Blocks.HAMSTER_color_green,"2"],
-                        [Lang.Blocks.HAMSTER_color_cyan,"3"],
-                        [Lang.Blocks.HAMSTER_color_blue,"1"],
-                        [Lang.Blocks.HAMSTER_color_magenta,"5"],
-                        [Lang.Blocks.HAMSTER_color_white,"7"]
-                    ],
-                    "value": "4",
-                    "fontSize": 11,
-                    converter: Entry.block.converters.returnStringValue
-                }
-            ],
-            params: ["RIGHT", "1"]
-        },
-        {
-            syntax: "Hamster.right_led(Hamster.LED_MAGENTA)",
-            textParams: [
-                {
-                    "type": "Dropdown",
-                    "options": [
-                        [Lang.Blocks.HAMSTER_left_led,"LEFT"],
-                        [Lang.Blocks.HAMSTER_right_led,"RIGHT"],
-                        [Lang.Blocks.HAMSTER_both_leds,"BOTH"]
-                    ],
-                    "value": "LEFT",
-                    "fontSize": 11,
-                    converter: Entry.block.converters.returnStringValue
-                },
-                {
-                    "type": "Dropdown",
-                    "options": [
-                        [Lang.Blocks.HAMSTER_color_red,"4"],
-                        [Lang.Blocks.HAMSTER_color_yellow,"6"],
-                        [Lang.Blocks.HAMSTER_color_green,"2"],
-                        [Lang.Blocks.HAMSTER_color_cyan,"3"],
-                        [Lang.Blocks.HAMSTER_color_blue,"1"],
-                        [Lang.Blocks.HAMSTER_color_magenta,"5"],
-                        [Lang.Blocks.HAMSTER_color_white,"7"]
-                    ],
-                    "value": "4",
-                    "fontSize": 11,
-                    converter: Entry.block.converters.returnStringValue
-                }
-            ],
-            params: ["RIGHT", "5"]
-        },
-        {
-            syntax: "Hamster.right_led(Hamster.LED_WHITE)",
-            textParams: [
-                {
-                    "type": "Dropdown",
-                    "options": [
-                        [Lang.Blocks.HAMSTER_left_led,"LEFT"],
-                        [Lang.Blocks.HAMSTER_right_led,"RIGHT"],
-                        [Lang.Blocks.HAMSTER_both_leds,"BOTH"]
-                    ],
-                    "value": "LEFT",
-                    "fontSize": 11,
-                    converter: Entry.block.converters.returnStringValue
-                },
-                {
-                    "type": "Dropdown",
-                    "options": [
-                        [Lang.Blocks.HAMSTER_color_red,"4"],
-                        [Lang.Blocks.HAMSTER_color_yellow,"6"],
-                        [Lang.Blocks.HAMSTER_color_green,"2"],
-                        [Lang.Blocks.HAMSTER_color_cyan,"3"],
-                        [Lang.Blocks.HAMSTER_color_blue,"1"],
-                        [Lang.Blocks.HAMSTER_color_magenta,"5"],
-                        [Lang.Blocks.HAMSTER_color_white,"7"]
-                    ],
-                    "value": "4",
-                    "fontSize": 11,
-                    converter: Entry.block.converters.returnStringValue
-                }
-            ],
-            params: ["RIGHT", "7"]
-        },
-        {
-            syntax: "Hamster.leds(Hamster.LED_RED)",
-            textParams: [
-                {
-                    "type": "Dropdown",
-                    "options": [
-                        [Lang.Blocks.HAMSTER_left_led,"LEFT"],
-                        [Lang.Blocks.HAMSTER_right_led,"RIGHT"],
-                        [Lang.Blocks.HAMSTER_both_leds,"BOTH"]
-                    ],
-                    "value": "LEFT",
-                    "fontSize": 11,
-                    converter: Entry.block.converters.returnStringValue
-                },
-                {
-                    "type": "Dropdown",
-                    "options": [
-                        [Lang.Blocks.HAMSTER_color_red,"4"],
-                        [Lang.Blocks.HAMSTER_color_yellow,"6"],
-                        [Lang.Blocks.HAMSTER_color_green,"2"],
-                        [Lang.Blocks.HAMSTER_color_cyan,"3"],
-                        [Lang.Blocks.HAMSTER_color_blue,"1"],
-                        [Lang.Blocks.HAMSTER_color_magenta,"5"],
-                        [Lang.Blocks.HAMSTER_color_white,"7"]
-                    ],
-                    "value": "4",
-                    "fontSize": 11,
-                    converter: Entry.block.converters.returnStringValue
-                }
-            ],
-            params: ["BOTH", "4"]
-        },
-        {
-            syntax: "Hamster.leds(Hamster.LED_YELLOW)",
-            textParams: [
-                {
-                    "type": "Dropdown",
-                    "options": [
-                        [Lang.Blocks.HAMSTER_left_led,"LEFT"],
-                        [Lang.Blocks.HAMSTER_right_led,"RIGHT"],
-                        [Lang.Blocks.HAMSTER_both_leds,"BOTH"]
-                    ],
-                    "value": "LEFT",
-                    "fontSize": 11,
-                    converter: Entry.block.converters.returnStringValue
-                },
-                {
-                    "type": "Dropdown",
-                    "options": [
-                        [Lang.Blocks.HAMSTER_color_red,"4"],
-                        [Lang.Blocks.HAMSTER_color_yellow,"6"],
-                        [Lang.Blocks.HAMSTER_color_green,"2"],
-                        [Lang.Blocks.HAMSTER_color_cyan,"3"],
-                        [Lang.Blocks.HAMSTER_color_blue,"1"],
-                        [Lang.Blocks.HAMSTER_color_magenta,"5"],
-                        [Lang.Blocks.HAMSTER_color_white,"7"]
-                    ],
-                    "value": "4",
-                    "fontSize": 11,
-                    converter: Entry.block.converters.returnStringValue
-                }
-            ],
-            params: ["BOTH", "6"]
-        },
-        {
-            syntax: "Hamster.leds(Hamster.LED_GREEN)",
-            textParams: [
-                {
-                    "type": "Dropdown",
-                    "options": [
-                        [Lang.Blocks.HAMSTER_left_led,"LEFT"],
-                        [Lang.Blocks.HAMSTER_right_led,"RIGHT"],
-                        [Lang.Blocks.HAMSTER_both_leds,"BOTH"]
-                    ],
-                    "value": "LEFT",
-                    "fontSize": 11,
-                    converter: Entry.block.converters.returnStringValue
-                },
-                {
-                    "type": "Dropdown",
-                    "options": [
-                        [Lang.Blocks.HAMSTER_color_red,"4"],
-                        [Lang.Blocks.HAMSTER_color_yellow,"6"],
-                        [Lang.Blocks.HAMSTER_color_green,"2"],
-                        [Lang.Blocks.HAMSTER_color_cyan,"3"],
-                        [Lang.Blocks.HAMSTER_color_blue,"1"],
-                        [Lang.Blocks.HAMSTER_color_magenta,"5"],
-                        [Lang.Blocks.HAMSTER_color_white,"7"]
-                    ],
-                    "value": "4",
-                    "fontSize": 11,
-                    converter: Entry.block.converters.returnStringValue
-                }
-            ],
-            params: ["BOTH", "2"]
-        },
-        {
-            syntax: "Hamster.leds(Hamster.LED_CYAN)",
-            textParams: [
-                {
-                    "type": "Dropdown",
-                    "options": [
-                        [Lang.Blocks.HAMSTER_left_led,"LEFT"],
-                        [Lang.Blocks.HAMSTER_right_led,"RIGHT"],
-                        [Lang.Blocks.HAMSTER_both_leds,"BOTH"]
-                    ],
-                    "value": "LEFT",
-                    "fontSize": 11,
-                    converter: Entry.block.converters.returnStringValue
-                },
-                {
-                    "type": "Dropdown",
-                    "options": [
-                        [Lang.Blocks.HAMSTER_color_red,"4"],
-                        [Lang.Blocks.HAMSTER_color_yellow,"6"],
-                        [Lang.Blocks.HAMSTER_color_green,"2"],
-                        [Lang.Blocks.HAMSTER_color_cyan,"3"],
-                        [Lang.Blocks.HAMSTER_color_blue,"1"],
-                        [Lang.Blocks.HAMSTER_color_magenta,"5"],
-                        [Lang.Blocks.HAMSTER_color_white,"7"]
-                    ],
-                    "value": "4",
-                    "fontSize": 11,
-                    converter: Entry.block.converters.returnStringValue
-                }
-            ],
-            params: ["BOTH", "3"]
-        },
-        {
-            syntax: "Hamster.leds(Hamster.LED_BLUE)",
-            textParams: [
-                {
-                    "type": "Dropdown",
-                    "options": [
-                        [Lang.Blocks.HAMSTER_left_led,"LEFT"],
-                        [Lang.Blocks.HAMSTER_right_led,"RIGHT"],
-                        [Lang.Blocks.HAMSTER_both_leds,"BOTH"]
-                    ],
-                    "value": "LEFT",
-                    "fontSize": 11,
-                    converter: Entry.block.converters.returnStringValue
-                },
-                {
-                    "type": "Dropdown",
-                    "options": [
-                        [Lang.Blocks.HAMSTER_color_red,"4"],
-                        [Lang.Blocks.HAMSTER_color_yellow,"6"],
-                        [Lang.Blocks.HAMSTER_color_green,"2"],
-                        [Lang.Blocks.HAMSTER_color_cyan,"3"],
-                        [Lang.Blocks.HAMSTER_color_blue,"1"],
-                        [Lang.Blocks.HAMSTER_color_magenta,"5"],
-                        [Lang.Blocks.HAMSTER_color_white,"7"]
-                    ],
-                    "value": "4",
-                    "fontSize": 11,
-                    converter: Entry.block.converters.returnStringValue
-                }
-            ],
-            params: ["BOTH", "1"]
-        },
-        {
-            syntax: "Hamster.leds(Hamster.LED_MAGENTA)",
-            textParams: [
-                {
-                    "type": "Dropdown",
-                    "options": [
-                        [Lang.Blocks.HAMSTER_left_led,"LEFT"],
-                        [Lang.Blocks.HAMSTER_right_led,"RIGHT"],
-                        [Lang.Blocks.HAMSTER_both_leds,"BOTH"]
-                    ],
-                    "value": "LEFT",
-                    "fontSize": 11,
-                    converter: Entry.block.converters.returnStringValue
-                },
-                {
-                    "type": "Dropdown",
-                    "options": [
-                        [Lang.Blocks.HAMSTER_color_red,"4"],
-                        [Lang.Blocks.HAMSTER_color_yellow,"6"],
-                        [Lang.Blocks.HAMSTER_color_green,"2"],
-                        [Lang.Blocks.HAMSTER_color_cyan,"3"],
-                        [Lang.Blocks.HAMSTER_color_blue,"1"],
-                        [Lang.Blocks.HAMSTER_color_magenta,"5"],
-                        [Lang.Blocks.HAMSTER_color_white,"7"]
-                    ],
-                    "value": "4",
-                    "fontSize": 11,
-                    converter: Entry.block.converters.returnStringValue
-                }
-            ],
-            params: ["BOTH", "5"]
-        },
-        {
-            syntax: "Hamster.leds(Hamster.LED_WHITE)",
-            textParams: [
-                {
-                    "type": "Dropdown",
-                    "options": [
-                        [Lang.Blocks.HAMSTER_left_led,"LEFT"],
-                        [Lang.Blocks.HAMSTER_right_led,"RIGHT"],
-                        [Lang.Blocks.HAMSTER_both_leds,"BOTH"]
-                    ],
-                    "value": "LEFT",
-                    "fontSize": 11,
-                    converter: Entry.block.converters.returnStringValue
-                },
-                {
-                    "type": "Dropdown",
-                    "options": [
-                        [Lang.Blocks.HAMSTER_color_red,"4"],
-                        [Lang.Blocks.HAMSTER_color_yellow,"6"],
-                        [Lang.Blocks.HAMSTER_color_green,"2"],
-                        [Lang.Blocks.HAMSTER_color_cyan,"3"],
-                        [Lang.Blocks.HAMSTER_color_blue,"1"],
-                        [Lang.Blocks.HAMSTER_color_magenta,"5"],
-                        [Lang.Blocks.HAMSTER_color_white,"7"]
-                    ],
-                    "value": "4",
-                    "fontSize": 11,
-                    converter: Entry.block.converters.returnStringValue
-                }
-            ],
-            params: ["BOTH", "7"]
-        }
-    ]}
-},
-"hamster_clear_led": {
-    "color": "#00979D",
-    "skeleton": "basic",
-    "statements": [],
-    "params": [
-        {
-            "type": "Dropdown",
-            "options": [
-                [Lang.Blocks.HAMSTER_left_led,"LEFT"],
-                [Lang.Blocks.HAMSTER_right_led,"RIGHT"],
-                [Lang.Blocks.HAMSTER_both_leds,"BOTH"]
-            ],
-            "value": "LEFT",
-            "fontSize": 11
-        },
-        {
-            "type": "Indicator",
-            "img": "block_icon/hardware_03.png",
-            "size": 12
-        }
-    ],
-    "events": {},
-    "def": {
-        "params": [ null, null ],
-        "type": "hamster_clear_led"
-    },
-    "paramsKeyMap": {
-        "DIRECTION": 0
-    },
-    "class": "hamster_led",
-    "isNotFor": [ "hamster" ],
-    "func": function (sprite, script) {
-        var sq = Entry.hw.sendQueue;
-        Entry.Hamster.setModule(sq); // akaii: add
-        var direction = script.getField("DIRECTION", script);
-        if (direction == 'LEFT') {
-            sq.leftLed = 0;
-        } else if (direction == 'RIGHT') {
-            sq.rightLed = 0;
-        } else {
-            sq.leftLed = 0;
-            sq.rightLed = 0;
-        }
-        return script.callReturn();
-    },
-    "syntax": {"js": [], "py": [
-        {
-            syntax: "Hamster.left_led(0)",
-            textParams: [
-                {
-                    "type": "Dropdown",
-                    "options": [
-                        [Lang.Blocks.HAMSTER_left_led,"LEFT"],
-                        [Lang.Blocks.HAMSTER_right_led,"RIGHT"],
-                        [Lang.Blocks.HAMSTER_both_leds,"BOTH"]
-                    ],
-                    "value": "LEFT",
-                    "fontSize": 11,
-                    converter: Entry.block.converters.returnStringValue
-                }
-            ],
-            params: ["LEFT"]
-        },
-        {
-            syntax: "Hamster.left_led(Hamster.LED_OFF)",
-            textParams: [
-                {
-                    "type": "Dropdown",
-                    "options": [
-                        [Lang.Blocks.HAMSTER_left_led,"LEFT"],
-                        [Lang.Blocks.HAMSTER_right_led,"RIGHT"],
-                        [Lang.Blocks.HAMSTER_both_leds,"BOTH"]
-                    ],
-                    "value": "LEFT",
-                    "fontSize": 11,
-                    converter: Entry.block.converters.returnStringValue
-                }
-            ],
-            params: ["LEFT"]
-        },
-        {
-            syntax: "Hamster.left_led(Hamster.LED_OFF, Hamster.LED_OFF)",
-            textParams: [
-                {
-                    "type": "Dropdown",
-                    "options": [
-                        [Lang.Blocks.HAMSTER_left_led,"LEFT"],
-                        [Lang.Blocks.HAMSTER_right_led,"RIGHT"],
-                        [Lang.Blocks.HAMSTER_both_leds,"BOTH"]
-                    ],
-                    "value": "LEFT",
-                    "fontSize": 11,
-                    converter: Entry.block.converters.returnStringValue
-                }
-            ],
-            params: ["LEFT"]
-        },
-        {
-            syntax: "Hamster.right_led(0)",
-            textParams: [
-                {
-                    "type": "Dropdown",
-                    "options": [
-                        [Lang.Blocks.HAMSTER_left_led,"LEFT"],
-                        [Lang.Blocks.HAMSTER_right_led,"RIGHT"],
-                        [Lang.Blocks.HAMSTER_both_leds,"BOTH"]
-                    ],
-                    "value": "LEFT",
-                    "fontSize": 11,
-                    converter: Entry.block.converters.returnStringValue
-                }
-            ],
-            params: ["RIGHT"]
-        },
-        {
-            syntax: "Hamster.right_led(Hamster.LED_OFF)",
-            textParams: [
-                {
-                    "type": "Dropdown",
-                    "options": [
-                        [Lang.Blocks.HAMSTER_left_led,"LEFT"],
-                        [Lang.Blocks.HAMSTER_right_led,"RIGHT"],
-                        [Lang.Blocks.HAMSTER_both_leds,"BOTH"]
-                    ],
-                    "value": "LEFT",
-                    "fontSize": 11,
-                    converter: Entry.block.converters.returnStringValue
-                }
-            ],
-            params: ["RIGHT"]
-        },
-        {
-            syntax: "Hamster.right_led(Hamster.LED_OFF, Hamster.LED_OFF)",
-            textParams: [
-                {
-                    "type": "Dropdown",
-                    "options": [
-                        [Lang.Blocks.HAMSTER_left_led,"LEFT"],
-                        [Lang.Blocks.HAMSTER_right_led,"RIGHT"],
-                        [Lang.Blocks.HAMSTER_both_leds,"BOTH"]
-                    ],
-                    "value": "LEFT",
-                    "fontSize": 11,
-                    converter: Entry.block.converters.returnStringValue
-                }
-            ],
-            params: ["RIGHT"]
-        },
-        {
-            syntax: "Hamster.leds(0)",
-            textParams: [
-                {
-                    "type": "Dropdown",
-                    "options": [
-                        [Lang.Blocks.HAMSTER_left_led,"LEFT"],
-                        [Lang.Blocks.HAMSTER_right_led,"RIGHT"],
-                        [Lang.Blocks.HAMSTER_both_leds,"BOTH"]
-                    ],
-                    "value": "LEFT",
-                    "fontSize": 11,
-                    converter: Entry.block.converters.returnStringValue
-                }
-            ],
-            params: ["BOTH"]
-        },
-        {
-            syntax: "Hamster.leds(Hamster.LED_OFF)",
-            textParams: [
-                {
-                    "type": "Dropdown",
-                    "options": [
-                        [Lang.Blocks.HAMSTER_left_led,"LEFT"],
-                        [Lang.Blocks.HAMSTER_right_led,"RIGHT"],
-                        [Lang.Blocks.HAMSTER_both_leds,"BOTH"]
-                    ],
-                    "value": "LEFT",
-                    "fontSize": 11,
-                    converter: Entry.block.converters.returnStringValue
-                }
-            ],
-            params: ["BOTH"]
-        },
-        {
-            syntax: "Hamster.leds(Hamster.LED_OFF, Hamster.LED_OFF)",
-            textParams: [
-                {
-                    "type": "Dropdown",
-                    "options": [
-                        [Lang.Blocks.HAMSTER_left_led,"LEFT"],
-                        [Lang.Blocks.HAMSTER_right_led,"RIGHT"],
-                        [Lang.Blocks.HAMSTER_both_leds,"BOTH"]
-                    ],
-                    "value": "LEFT",
-                    "fontSize": 11,
-                    converter: Entry.block.converters.returnStringValue
-                }
-            ],
-            params: ["BOTH"]
-        }
-    ]}
-},
-"hamster_beep": {
-    "color": "#00979D",
-    "skeleton": "basic",
-    "statements": [],
-    "params": [
-        {
-            "type": "Indicator",
-            "img": "block_icon/hardware_03.png",
-            "size": 12
-        }
-    ],
-    "events": {},
-    "def": {
-        "params": [ null ],
-        "type": "hamster_beep"
-    },
-    "class": "hamster_buzzer",
-    "isNotFor": [ "hamster" ],
-    "func": function (sprite, script) {
-        var sq = Entry.hw.sendQueue;
-        Entry.Hamster.setModule(sq); // akaii: add
-        if (!script.isStart) {
-            script.isStart = true;
-            script.timeFlag = 1;
-            sq.buzzer = 440;
-            sq.note = 0;
-            var timeValue = 0.2 * 1000;
-            var timer = setTimeout(function() {
-                script.timeFlag = 0;
-                Entry.Hamster.removeTimeout(timer);
-            }, timeValue);
-            Entry.Hamster.timeouts.push(timer);
-            return script;
-        } else if (script.timeFlag == 1) {
-            return script;
-        } else {
-            delete script.isStart;
-            delete script.timeFlag;
-            Entry.engine.isContinue = false;
-            sq.buzzer = 0;
-            return script.callReturn();
-        }
-    },
-    "syntax": {"js": [], "py": [
-        {
-            syntax: "Hamster.beep()"
-        }
-    ]}
-},
-"hamster_change_buzzer_by": {
-    "color": "#00979D",
-    "skeleton": "basic",
-    "statements": [],
-    "params": [
-        {
-            "type": "Block",
-            "accept": "string"
-        },
-        {
-            "type": "Indicator",
-            "img": "block_icon/hardware_03.png",
-            "size": 12
-        }
-    ],
-    "events": {},
-    "def": {
-        "params": [
             {
-                "type": "text",
-                "params": [ "10" ]
+                syntax: "Hamster.left_led(Hamster.LED_YELLOW)",
+                textParams: [
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_left_led,"LEFT"],
+                            [Lang.Blocks.HAMSTER_right_led,"RIGHT"],
+                            [Lang.Blocks.HAMSTER_both_leds,"BOTH"]
+                        ],
+                        "value": "LEFT",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_color_red,"4"],
+                            [Lang.Blocks.HAMSTER_color_yellow,"6"],
+                            [Lang.Blocks.HAMSTER_color_green,"2"],
+                            [Lang.Blocks.HAMSTER_color_cyan,"3"],
+                            [Lang.Blocks.HAMSTER_color_blue,"1"],
+                            [Lang.Blocks.HAMSTER_color_magenta,"5"],
+                            [Lang.Blocks.HAMSTER_color_white,"7"]
+                        ],
+                        "value": "4",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    }
+                ],
+                params: ["LEFT", "6"]
             },
-            null
-        ],
-        "type": "hamster_change_buzzer_by"
-    },
-    "paramsKeyMap": {
-        "VALUE": 0
-    },
-    "class": "hamster_buzzer",
-    "isNotFor": [ "hamster" ],
-    "func": function (sprite, script) {
-        var sq = Entry.hw.sendQueue;
-        Entry.Hamster.setModule(sq); // akaii: add
-        var value = script.getNumberValue('VALUE');
-        sq.buzzer = sq.buzzer != undefined ? sq.buzzer + value : value;
-        sq.note = 0;
-        return script.callReturn();
-    },
-    "syntax": {"js": [], "py": [
-        {
-            syntax: "Hamster.buzzer_by(%1)" // akaii: modify
-        }
-    ]}
-},
-"hamster_set_buzzer_to": {
-    "color": "#00979D",
-    "skeleton": "basic",
-    "statements": [],
-    "params": [
-        {
-            "type": "Block",
-            "accept": "string"
-        },
-        {
-            "type": "Indicator",
-            "img": "block_icon/hardware_03.png",
-            "size": 12
-        }
-    ],
-    "events": {},
-    "def": {
-        "params": [
             {
-                "type": "text",
-                "params": [ "1000" ]
+                syntax: "Hamster.left_led(Hamster.LED_GREEN)",
+                textParams: [
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_left_led,"LEFT"],
+                            [Lang.Blocks.HAMSTER_right_led,"RIGHT"],
+                            [Lang.Blocks.HAMSTER_both_leds,"BOTH"]
+                        ],
+                        "value": "LEFT",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_color_red,"4"],
+                            [Lang.Blocks.HAMSTER_color_yellow,"6"],
+                            [Lang.Blocks.HAMSTER_color_green,"2"],
+                            [Lang.Blocks.HAMSTER_color_cyan,"3"],
+                            [Lang.Blocks.HAMSTER_color_blue,"1"],
+                            [Lang.Blocks.HAMSTER_color_magenta,"5"],
+                            [Lang.Blocks.HAMSTER_color_white,"7"]
+                        ],
+                        "value": "4",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    }
+                ],
+                params: ["LEFT", "2"]
             },
-            null
-        ],
-        "type": "hamster_set_buzzer_to"
-    },
-    "paramsKeyMap": {
-        "VALUE": 0
-    },
-    "class": "hamster_buzzer",
-    "isNotFor": [ "hamster" ],
-    "func": function (sprite, script) {
-        var sq = Entry.hw.sendQueue;
-        Entry.Hamster.setModule(sq); // akaii: add
-        sq.buzzer = script.getNumberValue('VALUE');
-        sq.note = 0;
-        return script.callReturn();
-    },
-    "syntax": {"js": [], "py": [
-        {
-            syntax: "Hamster.buzzer(%1)"
-        }
-    ]}
-},
-"hamster_clear_buzzer": {
-    "color": "#00979D",
-    "skeleton": "basic",
-    "statements": [],
-    "params": [
-        {
-            "type": "Indicator",
-            "img": "block_icon/hardware_03.png",
-            "size": 12
-        }
-    ],
-    "events": {},
-    "def": {
-        "params": [ null ],
-        "type": "hamster_clear_buzzer"
-    },
-    "class": "hamster_buzzer",
-    "isNotFor": [ "hamster" ],
-    "func": function (sprite, script) {
-        var sq = Entry.hw.sendQueue;
-        Entry.Hamster.setModule(sq); // akaii: add
-        sq.buzzer = 0;
-        sq.note = 0;
-        return script.callReturn();
-    },
-    "syntax": {"js": [], "py": [
-        {
-            syntax: "Hamster.buzzer(0)", params: [null]
-        },
-    ]}
-},
-"hamster_play_note_for": {
-    "color": "#00979D",
-    "skeleton": "basic",
-    "statements": [],
-    "params": [
-        {
-            "type": "Dropdown",
-            "options": [
-                [Lang.Blocks.ALBERT_note_c + '',"4"],
-                [Lang.Blocks.ALBERT_note_c + '#',"5"],
-                [Lang.Blocks.ALBERT_note_d + '',"6"],
-                [Lang.Blocks.ALBERT_note_e + 'b',"7"],
-                [Lang.Blocks.ALBERT_note_e + '',"8"],
-                [Lang.Blocks.ALBERT_note_f + '',"9"],
-                [Lang.Blocks.ALBERT_note_f + '#',"10"],
-                [Lang.Blocks.ALBERT_note_g + '',"11"],
-                [Lang.Blocks.ALBERT_note_g + '#',"12"],
-                [Lang.Blocks.ALBERT_note_a + '',"13"],
-                [Lang.Blocks.ALBERT_note_b + 'b',"14"],
-                [Lang.Blocks.ALBERT_note_b + '',"15"]
-            ],
-            "value": "4",
-            "fontSize": 11
-        },
-        {
-            "type": "Dropdown",
-            "options": [
-                [ "1", "1" ],
-                [ "2", "2" ],
-                [ "3", "3" ],
-                [ "4", "4" ],
-                [ "5", "5" ],
-                [ "6", "6" ],
-                [ "7", "7" ]
-            ],
-            "value": "1",
-            "fontSize": 11
-        },
-        {
-            "type": "Block",
-            "accept": "string"
-        },
-        {
-            "type": "Indicator",
-            "img": "block_icon/hardware_03.png",
-            "size": 12
-        }
-    ],
-    "events": {},
-    "def": {
-        "params": [
-            null,
-            "4",
             {
-                "type": "text",
-                "params": [ "0.5" ]
+                syntax: "Hamster.left_led(Hamster.LED_CYAN)",
+                textParams: [
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_left_led,"LEFT"],
+                            [Lang.Blocks.HAMSTER_right_led,"RIGHT"],
+                            [Lang.Blocks.HAMSTER_both_leds,"BOTH"]
+                        ],
+                        "value": "LEFT",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_color_red,"4"],
+                            [Lang.Blocks.HAMSTER_color_yellow,"6"],
+                            [Lang.Blocks.HAMSTER_color_green,"2"],
+                            [Lang.Blocks.HAMSTER_color_cyan,"3"],
+                            [Lang.Blocks.HAMSTER_color_blue,"1"],
+                            [Lang.Blocks.HAMSTER_color_magenta,"5"],
+                            [Lang.Blocks.HAMSTER_color_white,"7"]
+                        ],
+                        "value": "4",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    }
+                ],
+                params: ["LEFT", "3"]
             },
-            null
-        ],
-        "type": "hamster_play_note_for"
-    },
-    "paramsKeyMap": {
-        "NOTE": 0,
-        "OCTAVE": 1,
-        "VALUE": 2
-    },
-    "class": "hamster_buzzer",
-    "isNotFor": [ "hamster" ],
-    "func": function (sprite, script) {
-        var sq = Entry.hw.sendQueue;
-        Entry.Hamster.setModule(sq); // akaii: add
-        if (!script.isStart) {
-            var note = script.getNumberField("NOTE", script);
-            var octave = script.getNumberField("OCTAVE", script);
-            var beat = script.getNumberValue("VALUE", script);
-            var tempo = Entry.Hamster.tempo;
-            note += (octave-1)*12;
-            var timeValue = beat*60*1000/tempo;
-            script.isStart = true;
-            script.timeFlag = 1;
-            sq.buzzer = 0;
-            sq.note = note;
-            if (timeValue > 100) {
-                var timer1 = setTimeout(function() {
-                    sq.note = 0;
-                    Entry.Hamster.removeTimeout(timer1);
-                }, timeValue-100);
-                Entry.Hamster.timeouts.push(timer1);
+            {
+                syntax: "Hamster.left_led(Hamster.LED_BLUE)",
+                textParams: [
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_left_led,"LEFT"],
+                            [Lang.Blocks.HAMSTER_right_led,"RIGHT"],
+                            [Lang.Blocks.HAMSTER_both_leds,"BOTH"]
+                        ],
+                        "value": "LEFT",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_color_red,"4"],
+                            [Lang.Blocks.HAMSTER_color_yellow,"6"],
+                            [Lang.Blocks.HAMSTER_color_green,"2"],
+                            [Lang.Blocks.HAMSTER_color_cyan,"3"],
+                            [Lang.Blocks.HAMSTER_color_blue,"1"],
+                            [Lang.Blocks.HAMSTER_color_magenta,"5"],
+                            [Lang.Blocks.HAMSTER_color_white,"7"]
+                        ],
+                        "value": "4",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    }
+                ],
+                params: ["LEFT", "1"]
+            },
+            {
+                syntax: "Hamster.left_led(Hamster.LED_MAGENTA)",
+                textParams: [
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_left_led,"LEFT"],
+                            [Lang.Blocks.HAMSTER_right_led,"RIGHT"],
+                            [Lang.Blocks.HAMSTER_both_leds,"BOTH"]
+                        ],
+                        "value": "LEFT",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_color_red,"4"],
+                            [Lang.Blocks.HAMSTER_color_yellow,"6"],
+                            [Lang.Blocks.HAMSTER_color_green,"2"],
+                            [Lang.Blocks.HAMSTER_color_cyan,"3"],
+                            [Lang.Blocks.HAMSTER_color_blue,"1"],
+                            [Lang.Blocks.HAMSTER_color_magenta,"5"],
+                            [Lang.Blocks.HAMSTER_color_white,"7"]
+                        ],
+                        "value": "4",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    }
+                ],
+                params: ["LEFT", "5"]
+            },
+            {
+                syntax: "Hamster.left_led(Hamster.LED_WHITE)",
+                textParams: [
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_left_led,"LEFT"],
+                            [Lang.Blocks.HAMSTER_right_led,"RIGHT"],
+                            [Lang.Blocks.HAMSTER_both_leds,"BOTH"]
+                        ],
+                        "value": "LEFT",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_color_red,"4"],
+                            [Lang.Blocks.HAMSTER_color_yellow,"6"],
+                            [Lang.Blocks.HAMSTER_color_green,"2"],
+                            [Lang.Blocks.HAMSTER_color_cyan,"3"],
+                            [Lang.Blocks.HAMSTER_color_blue,"1"],
+                            [Lang.Blocks.HAMSTER_color_magenta,"5"],
+                            [Lang.Blocks.HAMSTER_color_white,"7"]
+                        ],
+                        "value": "4",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    }
+                ],
+                params: ["LEFT", "7"]
+            },
+            {
+                syntax: "Hamster.right_led(Hamster.LED_RED)",
+                textParams: [
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_left_led,"LEFT"],
+                            [Lang.Blocks.HAMSTER_right_led,"RIGHT"],
+                            [Lang.Blocks.HAMSTER_both_leds,"BOTH"]
+                        ],
+                        "value": "LEFT",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_color_red,"4"],
+                            [Lang.Blocks.HAMSTER_color_yellow,"6"],
+                            [Lang.Blocks.HAMSTER_color_green,"2"],
+                            [Lang.Blocks.HAMSTER_color_cyan,"3"],
+                            [Lang.Blocks.HAMSTER_color_blue,"1"],
+                            [Lang.Blocks.HAMSTER_color_magenta,"5"],
+                            [Lang.Blocks.HAMSTER_color_white,"7"]
+                        ],
+                        "value": "4",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    }
+                ],
+                params: ["RIGHT", "4"]
+            },
+            {
+                syntax: "Hamster.right_led(Hamster.LED_YELLOW)",
+                textParams: [
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_left_led,"LEFT"],
+                            [Lang.Blocks.HAMSTER_right_led,"RIGHT"],
+                            [Lang.Blocks.HAMSTER_both_leds,"BOTH"]
+                        ],
+                        "value": "LEFT",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_color_red,"4"],
+                            [Lang.Blocks.HAMSTER_color_yellow,"6"],
+                            [Lang.Blocks.HAMSTER_color_green,"2"],
+                            [Lang.Blocks.HAMSTER_color_cyan,"3"],
+                            [Lang.Blocks.HAMSTER_color_blue,"1"],
+                            [Lang.Blocks.HAMSTER_color_magenta,"5"],
+                            [Lang.Blocks.HAMSTER_color_white,"7"]
+                        ],
+                        "value": "4",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    }
+                ],
+                params: ["RIGHT", "6"]
+            },
+            {
+                syntax: "Hamster.right_led(Hamster.LED_GREEN)",
+                textParams: [
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_left_led,"LEFT"],
+                            [Lang.Blocks.HAMSTER_right_led,"RIGHT"],
+                            [Lang.Blocks.HAMSTER_both_leds,"BOTH"]
+                        ],
+                        "value": "LEFT",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_color_red,"4"],
+                            [Lang.Blocks.HAMSTER_color_yellow,"6"],
+                            [Lang.Blocks.HAMSTER_color_green,"2"],
+                            [Lang.Blocks.HAMSTER_color_cyan,"3"],
+                            [Lang.Blocks.HAMSTER_color_blue,"1"],
+                            [Lang.Blocks.HAMSTER_color_magenta,"5"],
+                            [Lang.Blocks.HAMSTER_color_white,"7"]
+                        ],
+                        "value": "4",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    }
+                ],
+                params: ["RIGHT", "2"]
+            },
+            {
+                syntax: "Hamster.right_led(Hamster.LED_CYAN)",
+                textParams: [
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_left_led,"LEFT"],
+                            [Lang.Blocks.HAMSTER_right_led,"RIGHT"],
+                            [Lang.Blocks.HAMSTER_both_leds,"BOTH"]
+                        ],
+                        "value": "LEFT",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_color_red,"4"],
+                            [Lang.Blocks.HAMSTER_color_yellow,"6"],
+                            [Lang.Blocks.HAMSTER_color_green,"2"],
+                            [Lang.Blocks.HAMSTER_color_cyan,"3"],
+                            [Lang.Blocks.HAMSTER_color_blue,"1"],
+                            [Lang.Blocks.HAMSTER_color_magenta,"5"],
+                            [Lang.Blocks.HAMSTER_color_white,"7"]
+                        ],
+                        "value": "4",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    }
+                ],
+                params: ["RIGHT", "3"]
+            },
+            {
+                syntax: "Hamster.right_led(Hamster.LED_BLUE)",
+                textParams: [
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_left_led,"LEFT"],
+                            [Lang.Blocks.HAMSTER_right_led,"RIGHT"],
+                            [Lang.Blocks.HAMSTER_both_leds,"BOTH"]
+                        ],
+                        "value": "LEFT",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_color_red,"4"],
+                            [Lang.Blocks.HAMSTER_color_yellow,"6"],
+                            [Lang.Blocks.HAMSTER_color_green,"2"],
+                            [Lang.Blocks.HAMSTER_color_cyan,"3"],
+                            [Lang.Blocks.HAMSTER_color_blue,"1"],
+                            [Lang.Blocks.HAMSTER_color_magenta,"5"],
+                            [Lang.Blocks.HAMSTER_color_white,"7"]
+                        ],
+                        "value": "4",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    }
+                ],
+                params: ["RIGHT", "1"]
+            },
+            {
+                syntax: "Hamster.right_led(Hamster.LED_MAGENTA)",
+                textParams: [
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_left_led,"LEFT"],
+                            [Lang.Blocks.HAMSTER_right_led,"RIGHT"],
+                            [Lang.Blocks.HAMSTER_both_leds,"BOTH"]
+                        ],
+                        "value": "LEFT",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_color_red,"4"],
+                            [Lang.Blocks.HAMSTER_color_yellow,"6"],
+                            [Lang.Blocks.HAMSTER_color_green,"2"],
+                            [Lang.Blocks.HAMSTER_color_cyan,"3"],
+                            [Lang.Blocks.HAMSTER_color_blue,"1"],
+                            [Lang.Blocks.HAMSTER_color_magenta,"5"],
+                            [Lang.Blocks.HAMSTER_color_white,"7"]
+                        ],
+                        "value": "4",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    }
+                ],
+                params: ["RIGHT", "5"]
+            },
+            {
+                syntax: "Hamster.right_led(Hamster.LED_WHITE)",
+                textParams: [
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_left_led,"LEFT"],
+                            [Lang.Blocks.HAMSTER_right_led,"RIGHT"],
+                            [Lang.Blocks.HAMSTER_both_leds,"BOTH"]
+                        ],
+                        "value": "LEFT",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_color_red,"4"],
+                            [Lang.Blocks.HAMSTER_color_yellow,"6"],
+                            [Lang.Blocks.HAMSTER_color_green,"2"],
+                            [Lang.Blocks.HAMSTER_color_cyan,"3"],
+                            [Lang.Blocks.HAMSTER_color_blue,"1"],
+                            [Lang.Blocks.HAMSTER_color_magenta,"5"],
+                            [Lang.Blocks.HAMSTER_color_white,"7"]
+                        ],
+                        "value": "4",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    }
+                ],
+                params: ["RIGHT", "7"]
+            },
+            {
+                syntax: "Hamster.leds(Hamster.LED_RED)",
+                textParams: [
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_left_led,"LEFT"],
+                            [Lang.Blocks.HAMSTER_right_led,"RIGHT"],
+                            [Lang.Blocks.HAMSTER_both_leds,"BOTH"]
+                        ],
+                        "value": "LEFT",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_color_red,"4"],
+                            [Lang.Blocks.HAMSTER_color_yellow,"6"],
+                            [Lang.Blocks.HAMSTER_color_green,"2"],
+                            [Lang.Blocks.HAMSTER_color_cyan,"3"],
+                            [Lang.Blocks.HAMSTER_color_blue,"1"],
+                            [Lang.Blocks.HAMSTER_color_magenta,"5"],
+                            [Lang.Blocks.HAMSTER_color_white,"7"]
+                        ],
+                        "value": "4",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    }
+                ],
+                params: ["BOTH", "4"]
+            },
+            {
+                syntax: "Hamster.leds(Hamster.LED_YELLOW)",
+                textParams: [
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_left_led,"LEFT"],
+                            [Lang.Blocks.HAMSTER_right_led,"RIGHT"],
+                            [Lang.Blocks.HAMSTER_both_leds,"BOTH"]
+                        ],
+                        "value": "LEFT",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_color_red,"4"],
+                            [Lang.Blocks.HAMSTER_color_yellow,"6"],
+                            [Lang.Blocks.HAMSTER_color_green,"2"],
+                            [Lang.Blocks.HAMSTER_color_cyan,"3"],
+                            [Lang.Blocks.HAMSTER_color_blue,"1"],
+                            [Lang.Blocks.HAMSTER_color_magenta,"5"],
+                            [Lang.Blocks.HAMSTER_color_white,"7"]
+                        ],
+                        "value": "4",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    }
+                ],
+                params: ["BOTH", "6"]
+            },
+            {
+                syntax: "Hamster.leds(Hamster.LED_GREEN)",
+                textParams: [
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_left_led,"LEFT"],
+                            [Lang.Blocks.HAMSTER_right_led,"RIGHT"],
+                            [Lang.Blocks.HAMSTER_both_leds,"BOTH"]
+                        ],
+                        "value": "LEFT",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_color_red,"4"],
+                            [Lang.Blocks.HAMSTER_color_yellow,"6"],
+                            [Lang.Blocks.HAMSTER_color_green,"2"],
+                            [Lang.Blocks.HAMSTER_color_cyan,"3"],
+                            [Lang.Blocks.HAMSTER_color_blue,"1"],
+                            [Lang.Blocks.HAMSTER_color_magenta,"5"],
+                            [Lang.Blocks.HAMSTER_color_white,"7"]
+                        ],
+                        "value": "4",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    }
+                ],
+                params: ["BOTH", "2"]
+            },
+            {
+                syntax: "Hamster.leds(Hamster.LED_CYAN)",
+                textParams: [
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_left_led,"LEFT"],
+                            [Lang.Blocks.HAMSTER_right_led,"RIGHT"],
+                            [Lang.Blocks.HAMSTER_both_leds,"BOTH"]
+                        ],
+                        "value": "LEFT",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_color_red,"4"],
+                            [Lang.Blocks.HAMSTER_color_yellow,"6"],
+                            [Lang.Blocks.HAMSTER_color_green,"2"],
+                            [Lang.Blocks.HAMSTER_color_cyan,"3"],
+                            [Lang.Blocks.HAMSTER_color_blue,"1"],
+                            [Lang.Blocks.HAMSTER_color_magenta,"5"],
+                            [Lang.Blocks.HAMSTER_color_white,"7"]
+                        ],
+                        "value": "4",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    }
+                ],
+                params: ["BOTH", "3"]
+            },
+            {
+                syntax: "Hamster.leds(Hamster.LED_BLUE)",
+                textParams: [
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_left_led,"LEFT"],
+                            [Lang.Blocks.HAMSTER_right_led,"RIGHT"],
+                            [Lang.Blocks.HAMSTER_both_leds,"BOTH"]
+                        ],
+                        "value": "LEFT",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_color_red,"4"],
+                            [Lang.Blocks.HAMSTER_color_yellow,"6"],
+                            [Lang.Blocks.HAMSTER_color_green,"2"],
+                            [Lang.Blocks.HAMSTER_color_cyan,"3"],
+                            [Lang.Blocks.HAMSTER_color_blue,"1"],
+                            [Lang.Blocks.HAMSTER_color_magenta,"5"],
+                            [Lang.Blocks.HAMSTER_color_white,"7"]
+                        ],
+                        "value": "4",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    }
+                ],
+                params: ["BOTH", "1"]
+            },
+            {
+                syntax: "Hamster.leds(Hamster.LED_MAGENTA)",
+                textParams: [
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_left_led,"LEFT"],
+                            [Lang.Blocks.HAMSTER_right_led,"RIGHT"],
+                            [Lang.Blocks.HAMSTER_both_leds,"BOTH"]
+                        ],
+                        "value": "LEFT",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_color_red,"4"],
+                            [Lang.Blocks.HAMSTER_color_yellow,"6"],
+                            [Lang.Blocks.HAMSTER_color_green,"2"],
+                            [Lang.Blocks.HAMSTER_color_cyan,"3"],
+                            [Lang.Blocks.HAMSTER_color_blue,"1"],
+                            [Lang.Blocks.HAMSTER_color_magenta,"5"],
+                            [Lang.Blocks.HAMSTER_color_white,"7"]
+                        ],
+                        "value": "4",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    }
+                ],
+                params: ["BOTH", "5"]
+            },
+            {
+                syntax: "Hamster.leds(Hamster.LED_WHITE)",
+                textParams: [
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_left_led,"LEFT"],
+                            [Lang.Blocks.HAMSTER_right_led,"RIGHT"],
+                            [Lang.Blocks.HAMSTER_both_leds,"BOTH"]
+                        ],
+                        "value": "LEFT",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_color_red,"4"],
+                            [Lang.Blocks.HAMSTER_color_yellow,"6"],
+                            [Lang.Blocks.HAMSTER_color_green,"2"],
+                            [Lang.Blocks.HAMSTER_color_cyan,"3"],
+                            [Lang.Blocks.HAMSTER_color_blue,"1"],
+                            [Lang.Blocks.HAMSTER_color_magenta,"5"],
+                            [Lang.Blocks.HAMSTER_color_white,"7"]
+                        ],
+                        "value": "4",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    }
+                ],
+                params: ["BOTH", "7"]
             }
-            var timer2 = setTimeout(function() {
-                script.timeFlag = 0;
-                Entry.Hamster.removeTimeout(timer2);
-            }, timeValue);
-            Entry.Hamster.timeouts.push(timer2);
-            return script;
-        } else if (script.timeFlag == 1) {
-            return script;
-        } else {
-            delete script.isStart;
-            delete script.timeFlag;
-            Entry.engine.isContinue = false;
+        ]}
+    },
+    "hamster_clear_led": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.HAMSTER_left_led,"LEFT"],
+                    [Lang.Blocks.HAMSTER_right_led,"RIGHT"],
+                    [Lang.Blocks.HAMSTER_both_leds,"BOTH"]
+                ],
+                "value": "LEFT",
+                "fontSize": 11
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null, null ],
+            "type": "hamster_clear_led"
+        },
+        "paramsKeyMap": {
+            "DIRECTION": 0
+        },
+        "class": "hamster_led",
+        "isNotFor": [ "hamster" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            Entry.Hamster.setModule(sq); // akaii: add
+            var direction = script.getField("DIRECTION", script);
+            if (direction == 'LEFT') {
+                sq.leftLed = 0;
+            } else if (direction == 'RIGHT') {
+                sq.rightLed = 0;
+            } else {
+                sq.leftLed = 0;
+                sq.rightLed = 0;
+            }
+            return script.callReturn();
+        },
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Hamster.left_led(0)",
+                textParams: [
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_left_led,"LEFT"],
+                            [Lang.Blocks.HAMSTER_right_led,"RIGHT"],
+                            [Lang.Blocks.HAMSTER_both_leds,"BOTH"]
+                        ],
+                        "value": "LEFT",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    }
+                ],
+                params: ["LEFT"]
+            },
+            {
+                syntax: "Hamster.left_led(Hamster.LED_OFF)",
+                textParams: [
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_left_led,"LEFT"],
+                            [Lang.Blocks.HAMSTER_right_led,"RIGHT"],
+                            [Lang.Blocks.HAMSTER_both_leds,"BOTH"]
+                        ],
+                        "value": "LEFT",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    }
+                ],
+                params: ["LEFT"]
+            },
+            {
+                syntax: "Hamster.left_led(Hamster.LED_OFF, Hamster.LED_OFF)",
+                textParams: [
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_left_led,"LEFT"],
+                            [Lang.Blocks.HAMSTER_right_led,"RIGHT"],
+                            [Lang.Blocks.HAMSTER_both_leds,"BOTH"]
+                        ],
+                        "value": "LEFT",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    }
+                ],
+                params: ["LEFT"]
+            },
+            {
+                syntax: "Hamster.right_led(0)",
+                textParams: [
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_left_led,"LEFT"],
+                            [Lang.Blocks.HAMSTER_right_led,"RIGHT"],
+                            [Lang.Blocks.HAMSTER_both_leds,"BOTH"]
+                        ],
+                        "value": "LEFT",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    }
+                ],
+                params: ["RIGHT"]
+            },
+            {
+                syntax: "Hamster.right_led(Hamster.LED_OFF)",
+                textParams: [
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_left_led,"LEFT"],
+                            [Lang.Blocks.HAMSTER_right_led,"RIGHT"],
+                            [Lang.Blocks.HAMSTER_both_leds,"BOTH"]
+                        ],
+                        "value": "LEFT",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    }
+                ],
+                params: ["RIGHT"]
+            },
+            {
+                syntax: "Hamster.right_led(Hamster.LED_OFF, Hamster.LED_OFF)",
+                textParams: [
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_left_led,"LEFT"],
+                            [Lang.Blocks.HAMSTER_right_led,"RIGHT"],
+                            [Lang.Blocks.HAMSTER_both_leds,"BOTH"]
+                        ],
+                        "value": "LEFT",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    }
+                ],
+                params: ["RIGHT"]
+            },
+            {
+                syntax: "Hamster.leds(0)",
+                textParams: [
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_left_led,"LEFT"],
+                            [Lang.Blocks.HAMSTER_right_led,"RIGHT"],
+                            [Lang.Blocks.HAMSTER_both_leds,"BOTH"]
+                        ],
+                        "value": "LEFT",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    }
+                ],
+                params: ["BOTH"]
+            },
+            {
+                syntax: "Hamster.leds(Hamster.LED_OFF)",
+                textParams: [
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_left_led,"LEFT"],
+                            [Lang.Blocks.HAMSTER_right_led,"RIGHT"],
+                            [Lang.Blocks.HAMSTER_both_leds,"BOTH"]
+                        ],
+                        "value": "LEFT",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    }
+                ],
+                params: ["BOTH"]
+            },
+            {
+                syntax: "Hamster.leds(Hamster.LED_OFF, Hamster.LED_OFF)",
+                textParams: [
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.HAMSTER_left_led,"LEFT"],
+                            [Lang.Blocks.HAMSTER_right_led,"RIGHT"],
+                            [Lang.Blocks.HAMSTER_both_leds,"BOTH"]
+                        ],
+                        "value": "LEFT",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringValue
+                    }
+                ],
+                params: ["BOTH"]
+            }
+        ]}
+    },
+    "hamster_beep": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null ],
+            "type": "hamster_beep"
+        },
+        "class": "hamster_buzzer",
+        "isNotFor": [ "hamster" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            Entry.Hamster.setModule(sq); // akaii: add
+            if (!script.isStart) {
+                script.isStart = true;
+                script.timeFlag = 1;
+                sq.buzzer = 440;
+                sq.note = 0;
+                var timeValue = 0.2 * 1000;
+                var timer = setTimeout(function() {
+                    script.timeFlag = 0;
+                    Entry.Hamster.removeTimeout(timer);
+                }, timeValue);
+                Entry.Hamster.timeouts.push(timer);
+                return script;
+            } else if (script.timeFlag == 1) {
+                return script;
+            } else {
+                delete script.isStart;
+                delete script.timeFlag;
+                Entry.engine.isContinue = false;
+                sq.buzzer = 0;
+                return script.callReturn();
+            }
+        },
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Hamster.beep()"
+            }
+        ]}
+    },
+    "hamster_change_buzzer_by": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "text",
+                    "params": [ "10" ]
+                },
+                null
+            ],
+            "type": "hamster_change_buzzer_by"
+        },
+        "paramsKeyMap": {
+            "VALUE": 0
+        },
+        "class": "hamster_buzzer",
+        "isNotFor": [ "hamster" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            Entry.Hamster.setModule(sq); // akaii: add
+            var value = script.getNumberValue('VALUE');
+            sq.buzzer = sq.buzzer != undefined ? sq.buzzer + value : value;
             sq.note = 0;
             return script.callReturn();
-        }
+        },
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Hamster.buzzer_by(%1)" // akaii: modify
+            }
+        ]}
     },
-    "syntax": {"js": [], "py": [
-        {
-            syntax: "Hamster.note(%1, %2, %3)",
-            textParams: [
+    "hamster_set_buzzer_to": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
                 {
-                    "type": "Dropdown",
-                    "options": [
-                        [Lang.Blocks.ALBERT_note_c + '',"4"],
-                        [Lang.Blocks.ALBERT_note_c + '#',"5"],
-                        [Lang.Blocks.ALBERT_note_d + '',"6"],
-                        [Lang.Blocks.ALBERT_note_e + 'b',"7"],
-                        [Lang.Blocks.ALBERT_note_e + '',"8"],
-                        [Lang.Blocks.ALBERT_note_f + '',"9"],
-                        [Lang.Blocks.ALBERT_note_f + '#',"10"],
-                        [Lang.Blocks.ALBERT_note_g + '',"11"],
-                        [Lang.Blocks.ALBERT_note_g + '#',"12"],
-                        [Lang.Blocks.ALBERT_note_a + '',"13"],
-                        [Lang.Blocks.ALBERT_note_b + 'b',"14"],
-                        [Lang.Blocks.ALBERT_note_b + '',"15"]
-                    ],
-                    "value": "4",
-                    "fontSize": 11,
-                    converter: Entry.block.converters.returnValuePartialUpperCase, // akaii: modify
-                    codeMap: "Entry.CodeMap.Hamster.hamster_play_note_for[0]"
+                    "type": "text",
+                    "params": [ "1000" ]
+                },
+                null
+            ],
+            "type": "hamster_set_buzzer_to"
+        },
+        "paramsKeyMap": {
+            "VALUE": 0
+        },
+        "class": "hamster_buzzer",
+        "isNotFor": [ "hamster" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            Entry.Hamster.setModule(sq); // akaii: add
+            sq.buzzer = script.getNumberValue('VALUE');
+            sq.note = 0;
+            return script.callReturn();
+        },
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Hamster.buzzer(%1)"
+            }
+        ]}
+    },
+    "hamster_clear_buzzer": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null ],
+            "type": "hamster_clear_buzzer"
+        },
+        "class": "hamster_buzzer",
+        "isNotFor": [ "hamster" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            Entry.Hamster.setModule(sq); // akaii: add
+            sq.buzzer = 0;
+            sq.note = 0;
+            return script.callReturn();
+        },
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Hamster.buzzer(0)", params: [null]
+            },
+        ]}
+    },
+    "hamster_play_note_for": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.do_name, "4"],
+                    [Lang.Blocks.do_sharp_name, "5"],
+                    [Lang.Blocks.re_name, "6"],
+                    [Lang.Blocks.re_sharp_name, "7"],
+                    [Lang.Blocks.mi_name, "8"],
+                    [Lang.Blocks.fa_name, "9"],
+                    [Lang.Blocks.fa_sharp_name, "10"],
+                    [Lang.Blocks.sol_name, "11"],
+                    [Lang.Blocks.sol_sharp_name, "12"],
+                    [Lang.Blocks.la_name, "13"],
+                    [Lang.Blocks.la_sharp_name, "14"],
+                    [Lang.Blocks.si_name, "15"]
+                ],
+                "value": "4",
+                "fontSize": 11
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [ "1", "1" ],
+                    [ "2", "2" ],
+                    [ "3", "3" ],
+                    [ "4", "4" ],
+                    [ "5", "5" ],
+                    [ "6", "6" ],
+                    [ "7", "7" ]
+                ],
+                "value": "1",
+                "fontSize": 11
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                null,
+                "4",
+                {
+                    "type": "text",
+                    "params": [ "0.5" ]
+                },
+                null
+            ],
+            "type": "hamster_play_note_for"
+        },
+        "paramsKeyMap": {
+            "NOTE": 0,
+            "OCTAVE": 1,
+            "VALUE": 2
+        },
+        "class": "hamster_buzzer",
+        "isNotFor": [ "hamster" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            Entry.Hamster.setModule(sq); // akaii: add
+            if (!script.isStart) {
+                var note = script.getNumberField("NOTE", script);
+                var octave = script.getNumberField("OCTAVE", script);
+                var beat = script.getNumberValue("VALUE", script);
+                var tempo = Entry.Hamster.tempo;
+                note += (octave-1)*12;
+                var timeValue = beat*60*1000/tempo;
+                script.isStart = true;
+                script.timeFlag = 1;
+                sq.buzzer = 0;
+                sq.note = note;
+                if (timeValue > 100) {
+                    var timer1 = setTimeout(function() {
+                        sq.note = 0;
+                        Entry.Hamster.removeTimeout(timer1);
+                    }, timeValue-100);
+                    Entry.Hamster.timeouts.push(timer1);
+                }
+                var timer2 = setTimeout(function() {
+                    script.timeFlag = 0;
+                    Entry.Hamster.removeTimeout(timer2);
+                }, timeValue);
+                Entry.Hamster.timeouts.push(timer2);
+                return script;
+            } else if (script.timeFlag == 1) {
+                return script;
+            } else {
+                delete script.isStart;
+                delete script.timeFlag;
+                Entry.engine.isContinue = false;
+                sq.note = 0;
+                return script.callReturn();
+            }
+        },
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Hamster.note(%1, %2, %3)",
+                textParams: [
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [Lang.Blocks.ALBERT_note_c + '',"4"],
+                            [Lang.Blocks.ALBERT_note_c + '#',"5"],
+                            [Lang.Blocks.ALBERT_note_d + '',"6"],
+                            [Lang.Blocks.ALBERT_note_e + 'b',"7"],
+                            [Lang.Blocks.ALBERT_note_e + '',"8"],
+                            [Lang.Blocks.ALBERT_note_f + '',"9"],
+                            [Lang.Blocks.ALBERT_note_f + '#',"10"],
+                            [Lang.Blocks.ALBERT_note_g + '',"11"],
+                            [Lang.Blocks.ALBERT_note_g + '#',"12"],
+                            [Lang.Blocks.ALBERT_note_a + '',"13"],
+                            [Lang.Blocks.ALBERT_note_b + 'b',"14"],
+                            [Lang.Blocks.ALBERT_note_b + '',"15"]
+                        ],
+                        "value": "4",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnValuePartialUpperCase, // akaii: modify
+                        codeMap: "Entry.CodeMap.Hamster.hamster_play_note_for[0]"
 
                 },
                 {
@@ -27864,981 +27870,999 @@ Entry.block = {
                     converter: Entry.block.converters.returnValuePartialUpperCase,
                     codeMap: "Entry.CodeMap.Turtle.notes"
 
+                    },
+                    {
+                        "type": "Dropdown",
+                        "options": [
+                            [ "1", "1" ],
+                            [ "2", "2" ],
+                            [ "3", "3" ],
+                            [ "4", "4" ],
+                            [ "5", "5" ],
+                            [ "6", "6" ],
+                            [ "7", "7" ]
+                        ],
+                        "value": "1",
+                        "fontSize": 11,
+                        converter: Entry.block.converters.returnStringOrNumberByValue
+                    },
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    }
+                ]
+            },
+        ]}
+    },
+    "roboid_turtle_rest_for_beats": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "text",
+                    "params": [ "0" ]
+                },
+                {
+                    "type": "text",
+                    "params": [ "0.25" ]
+                },
+                null
+            ],
+            "type": "roboid_turtle_rest_for_beats"
+        },
+        "paramsKeyMap": {
+            "INDEX": 0,
+            "VALUE": 1
+        },
+        "class": "turtle_sound",
+        "isNotFor": [ "roboid" ],
+        "func": function (sprite, script) {
+            var index = script.getNumberValue('INDEX');
+            var robot = Entry.Roboid.getTurtle(index);
+            var packet = robot.packet;
+            if (!script.isStart) {
+                script.isStart = true;
+                script.timeFlag = 1;
+                var timeValue = script.getNumberValue("VALUE");
+                timeValue = timeValue*60*1000/robot.tempo;
+                packet.buzzer = 0;
+                packet.note = 0;
+                robot.setSound(0);
+                var timer = setTimeout(function() {
+                    script.timeFlag = 0;
+                    Entry.Roboid.removeTimeout(timer);
+                }, timeValue);
+                Entry.Roboid.timeouts.push(timer);
+                return script;
+            } else if (script.timeFlag == 1) {
+                return script;
+            } else {
+                delete script.isStart;
+                delete script.timeFlag;
+                Entry.engine.isContinue = false;
+                return script.callReturn();
+            }
+        },
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Roboid.turtle_note_off(%1, %2)",
+                textParams: [
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    }
+                ]
+            }
+        ]}
+    },
+    "roboid_turtle_change_tempo_by": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "text",
+                    "params": [ "0" ]
+                },
+                {
+                    "type": "text",
+                    "params": [ "20" ]
+                },
+                null
+            ],
+            "type": "roboid_turtle_change_tempo_by"
+        },
+        "paramsKeyMap": {
+            "INDEX": 0,
+            "VALUE": 1
+        },
+        "class": "turtle_sound",
+        "isNotFor": [ "roboid" ],
+        "func": function (sprite, script) {
+            var index = script.getNumberValue('INDEX');
+            var robot = Entry.Roboid.getTurtle(index);
+            robot.tempo += script.getNumberValue('VALUE');
+            if (robot.tempo < 1) robot.tempo = 1;
+            return script.callReturn();
+        },
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Roboid.turtle_tempo_by(%1, %2)",
+                textParams: [
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    }
+                ]
+            }
+        ]}
+    },
+    "roboid_turtle_set_tempo_to": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "text",
+                    "params": [ "0" ]
+                },
+                {
+                    "type": "text",
+                    "params": [ "60" ]
+                },
+                null
+            ],
+            "type": "roboid_turtle_set_tempo_to"
+        },
+        "paramsKeyMap": {
+            "INDEX": 0,
+            "VALUE": 1
+        },
+        "class": "turtle_sound",
+        "isNotFor": [ "roboid" ],
+        "func": function (sprite, script) {
+            var index = script.getNumberValue('INDEX');
+            var robot = Entry.Roboid.getTurtle(index);
+            robot.tempo = script.getNumberValue('VALUE');
+            if (robot.tempo < 1) robot.tempo = 1;
+            return script.callReturn();
+        },
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Roboid.turtle_tempo(%1, %2)",
+                textParams: [
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    },
+                    {
+                        "type": "Block",
+                        "accept": "string"
+                    }
+                ]
+            }
+        ]}
+    },
+    // ----- akaii: add until here
+    "is_clicked": {
+        "color": "#AEB8FF",
+        "skeleton": "basic_boolean_field",
+        "statements": [],
+        "params": [
+            {
+                "type": "Text",
+                "text": Lang.Blocks.JUDGEMENT_is_clicked,
+                "color": "#3D3D3D"
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null ],
+            "type": "is_clicked"
+        },
+        "class": "boolean_input",
+        "isNotFor": [],
+        "func": function (sprite, script) {
+            return Entry.stage.isClick;
+        },
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Entry.is_mouse_clicked()",
+                blockType: "param"
+            }
+        ]}
+    },
+    "is_press_some_key": {
+        "color": "#AEB8FF",
+        "skeleton": "basic_boolean_field",
+        "statements": [],
+        "params": [
+            {
+                "type": "Keyboard",
+                "value": 81
+            },
+            {
+                "type": "Text",
+                "text": Lang.Blocks.JUDGEMENT_is_press_some_key_2,
+                "color": "#3D3D3D"
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null, null ],
+            "type": "is_press_some_key"
+        },
+        "pyHelpDef": {
+            "params": [ "A&value", null ],
+            "type": "is_press_some_key"
+        },
+        "paramsKeyMap": {
+            "VALUE": 0
+        },
+        "class": "boolean_input",
+        "isNotFor": [],
+        "func": function (sprite, script) {
+            var keycode = Number(script.getField("VALUE", script));
+            return Entry.pressedKeys.indexOf(keycode) >= 0;
+        },
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Entry.is_key_pressed(%1)",
+                blockType: "param",
+                textParams: [
+                    {
+                        "type": "Keyboard",
+                        "value": '81',
+                        converter: Entry.block.converters.keyboardCode
+                    }
+                ]
+            }
+        ]}
+    },
+    "reach_something": {
+        "color": "#AEB8FF",
+        "skeleton": "basic_boolean_field",
+        "statements": [],
+        "params": [
+            {
+                "type": "Text",
+                "text": Lang.Blocks.JUDGEMENT_reach_something_1,
+                "color": "#3D3D3D"
+            },
+            {
+                "type": "DropdownDynamic",
+                "value": null,
+                "menuName": "collision",
+                "fontSize": 11,
+                'arrowColor': EntryStatic.ARROW_COLOR_JUDGE
+            },
+            {
+                "type": "Text",
+                "text": Lang.Blocks.JUDGEMENT_reach_something_2,
+                "color": "#3D3D3D"
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null, null, null ],
+            "type": "reach_something"
+        },
+        "pyHelpDef": {
+            "params": [ null, "A&value", null ],
+            "type": "reach_something"
+        },
+        "paramsKeyMap": {
+            "VALUE": 1
+        },
+        "class": "boolean_collision",
+        "isNotFor": [],
+        "func": function (sprite, script) {
+            if (!sprite.getVisible())
+                return false;
+            var targetSpriteId = script.getField("VALUE", script);
+            var reg = /wall/;
+            var ath = 0.2;
+            var object = sprite.object
+            var isWall = reg.test(targetSpriteId);
+            var collision = ndgmr.checkPixelCollision;
+            if (isWall) {
+                var wall = Entry.stage.wall;
+                switch(targetSpriteId) {
+                    case 'wall':
+                        return  !!(collision(object,wall.up,ath,true) ||
+                            collision(object,wall.down,ath,true) ||
+                            collision(object,wall.left,ath,true) ||
+                                collision(object,wall.right,ath, true));
+                    case 'wall_up':
+                        return !!collision(object,wall.up,ath,true);
+                    case 'wall_down':
+                        return !!collision(object,wall.down,ath,true);
+                    case 'wall_right':
+                        return !!collision(object,wall.right,ath,true);
+                    case 'wall_left':
+                        return !!collision(object,wall.left,ath,true);
+                }
+            } else if (targetSpriteId == 'mouse') {
+                var stage = Entry.stage.canvas;
+                var pt = object.globalToLocal(stage.mouseX, stage.mouseY);
+                return object.hitTest(pt.x, pt.y);
+            } else {
+                var targetSprite = Entry.container.getEntity(targetSpriteId);
+                if (targetSprite.type == "textBox" || sprite.type == 'textBox') {
+                    var targetBound = targetSprite.object.getTransformedBounds();
+                    var bound = object.getTransformedBounds();
+                    if (Entry.checkCollisionRect(bound, targetBound))
+                        return true;
+                    var clonedEntities = targetSprite.parent.clonedEntities;
+                    for (var i=0, len=clonedEntities.length; i<len; i++) {
+                        var entity = clonedEntities[i];
+                        if(entity.isStamp || !entity.getVisible()) continue;
+                        if (Entry.checkCollisionRect(bound, entity.object.getTransformedBounds()))
+                            return true;
+                    }
+                } else {
+                    if (targetSprite.getVisible() &&
+                        collision(object,targetSprite.object,ath,true))
+                        return true;
+                    var clonedEntities = targetSprite.parent.clonedEntities;
+                    for (var i=0, len=clonedEntities.length; i<len; i++) {
+                        var entity = clonedEntities[i];
+                        if(entity.isStamp || !entity.getVisible()) continue;
+                        if (collision(object,entity.object,ath,true))
+                            return true;
+                    }
+                }
+            }
+            return false;
+        },
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "Entry.is_touched(%2)",
+                blockType: "param",
+                textParams: [
+                    undefined,
+                    {
+                        "type": "DropdownDynamic",
+                        "value": null,
+                        "menuName": "collision",
+                        "fontSize": 11,
+                        'arrowColor': EntryStatic.ARROW_COLOR_JUDGE,
+                        converter: Entry.block.converters.returnObjectOrStringValue,
+                        codeMap: "Entry.CodeMap.Entry.reach_something[1]"
+                    },
+                ]
+            }
+        ]}
+    },
+    "boolean_comparison": {
+        "color": "#AEB8FF",
+        "skeleton": "basic_boolean_field",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [ "=", "EQUAL" ],
+                    [ "<", "SMALLER" ],
+                    [ ">", "BIGGER" ]
+                ],
+                "value": "EQUAL",
+                "fontSize": 11
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null ],
+            type: "boolean_comparison"
+        },
+        "paramsKeyMap": {
+            "LEFTHAND": 0,
+            "OPERATOR": 1,
+            "RIGHTHAND": 2
+        },
+        "func": function (sprite, script) {
+            var operator = script.getField("OPERATOR", script);
+            var leftValue = script.getNumberValue("LEFTHAND", script);
+            var rightValue = script.getNumberValue("RIGHTHAND", script);
+            if (operator == "EQUAL")
+                return leftValue == rightValue;
+            else if (operator == "BIGGER")
+                return leftValue > rightValue;
+            else
+                return leftValue < rightValue;
+        },
+        "syntax": {"js": [], "py": [""]}
+    },
+    "boolean_equal": {
+        "color": "#AEB8FF",
+        "skeleton": "basic_boolean_field",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Text",
+                "text": "=",
+                "color": "#3D3D3D"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "number",
+                    "params": [ "10" ]
+                },
+                null,
+                {
+                    "type": "number",
+                    "params": [ "10" ]
+                }
+            ],
+            "type": "boolean_equal"
+        },
+        "paramsKeyMap": {
+            "LEFTHAND": 0,
+            "RIGHTHAND": 2
+        },
+        "class": "boolean_compare",
+        "isNotFor": [],
+        "func": function (sprite, script) {
+            var leftValue = script.getStringValue("LEFTHAND", script);
+            var rightValue = script.getStringValue("RIGHTHAND", script);
+            return leftValue == rightValue;
+        },
+        "syntax": {"js": [], "py": [""]}
+    },
+    "boolean_bigger": {
+        "color": "#AEB8FF",
+        "skeleton": "basic_boolean_field",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Text",
+                "text": ">",
+                "color": "#3D3D3D"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "number",
+                    "params": [ "10" ]
+                },
+                null,
+                {
+                    "type": "number",
+                    "params": [ "10" ]
+                }
+            ],
+            "type": "boolean_bigger"
+        },
+        "paramsKeyMap": {
+            "LEFTHAND": 0,
+            "RIGHTHAND": 2
+        },
+        "class": "boolean_compare",
+        "isNotFor": [],
+        "func": function (sprite, script) {
+            var leftValue = script.getNumberValue("LEFTHAND", script);
+            var rightValue = script.getNumberValue("RIGHTHAND", script);
+            return leftValue > rightValue;
+        },
+        "syntax": {"js": [], "py": [""]}
+    },
+    "boolean_smaller": {
+        "color": "#AEB8FF",
+        "skeleton": "basic_boolean_field",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Text",
+                "text": "<",
+                "color": "#3D3D3D"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "number",
+                    "params": [ "10" ]
+                },
+                null,
+                {
+                    "type": "number",
+                    "params": [ "10" ]
+                }
+            ],
+            "type": "boolean_smaller"
+        },
+        "paramsKeyMap": {
+            "LEFTHAND": 0,
+            "RIGHTHAND": 2
+        },
+        "class": "boolean_compare",
+        "isNotFor": [],
+        "func": function (sprite, script) {
+            var leftValue = script.getNumberValue("LEFTHAND", script);
+            var rightValue = script.getNumberValue("RIGHTHAND", script);
+            return leftValue < rightValue;
+        },
+        "syntax": {"js": [], "py": [""]}
+    },
+    "boolean_and_or": {
+        "color": "#AEB8FF",
+        "skeleton": "basic_boolean_field",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "boolean"
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [ Lang.Blocks.JUDGEMENT_boolean_and, "AND" ],
+                    [ Lang.Blocks.JUDGEMENT_boolean_or, "OR" ]
+                ],
+                "value": "AND",
+                "fontSize": 11
+            },
+            {
+                "type": "Block",
+                "accept": "boolean"
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                { "type": "True" },
+                "AND",
+                { "type": "True" }
+            ],
+            "type": "boolean_and_or"
+        },
+        "defs": [
+            {
+                "params": [
+                    { "type": "True" },
+                    "AND",
+                    { "type": "True" }
+                ],
+                type: "boolean_and_or"
+            },
+            {
+                "params": [
+                    { "type": "True" },
+                    "OR",
+                    { "type": "False" }
+                ],
+                type: "boolean_and_or"
+            }
+        ],
+        "paramsKeyMap": {
+            "LEFTHAND": 0,
+            "OPERATOR": 1,
+            "RIGHTHAND": 2
+        },
+        "func": function (sprite, script) {
+            var operator = script.getField("OPERATOR", script);
+            var leftValue = script.getBooleanValue("LEFTHAND", script);
+            var rightValue = script.getBooleanValue("RIGHTHAND", script);
+            if (operator == "AND")
+                return leftValue && rightValue;
+            else
+                return leftValue || rightValue;
+        },
+        "syntax": {"js": [], "py": [{
+            syntax: "(%1 %2 %3)",
+            template: "%1 %2 %3",
+            blockType: "param",
+            textParams: [
+                {
+                    "type": "Block",
+                    "accept": "boolean"
                 },
                 {
                     "type": "Dropdown",
                     "options": [
-                        [ "1", "1" ],
-                        [ "2", "2" ],
-                        [ "3", "3" ],
-                        [ "4", "4" ],
-                        [ "5", "5" ],
-                        [ "6", "6" ],
-                        [ "7", "7" ]
+                        [ Lang.Blocks.JUDGEMENT_boolean_and, "AND" ],
+                        [ Lang.Blocks.JUDGEMENT_boolean_or, "OR" ]
                     ],
-                    "value": "1",
-                    "fontSize": 11,
-                    converter: Entry.block.converters.returnStringOrNumberByValue
+                    converter: Entry.block.converters.returnOperator,
+                    "value": "AND",
+                    "fontSize": 11
                 },
                 {
                     "type": "Block",
-                    "accept": "string"
+                    "accept": "boolean"
                 }
             ]
-        },
-    ]}
-},
-"roboid_turtle_rest_for_beats": {
-    "color": "#00979D",
-    "skeleton": "basic",
-    "statements": [],
-    "params": [
-        {
-            "type": "Block",
-            "accept": "string"
-        },
-        {
-            "type": "Block",
-            "accept": "string"
-        },
-        {
-            "type": "Indicator",
-            "img": "block_icon/hardware_03.png",
-            "size": 12
-        }
-    ],
-    "events": {},
-    "def": {
+        }]}
+    },
+    "boolean_and": {
+        "color": "#AEB8FF",
+        "skeleton": "basic_boolean_field",
+        "statements": [],
         "params": [
             {
-                "type": "text",
-                "params": [ "0" ]
+                "type": "Block",
+                "accept": "boolean"
             },
             {
-                "type": "text",
-                "params": [ "0.25" ]
-            },
-            null
-        ],
-        "type": "roboid_turtle_rest_for_beats"
-    },
-    "paramsKeyMap": {
-        "INDEX": 0,
-        "VALUE": 1
-    },
-    "class": "turtle_sound",
-    "isNotFor": [ "roboid" ],
-    "func": function (sprite, script) {
-        var index = script.getNumberValue('INDEX');
-        var robot = Entry.Roboid.getTurtle(index);
-        var packet = robot.packet;
-        if (!script.isStart) {
-            script.isStart = true;
-            script.timeFlag = 1;
-            var timeValue = script.getNumberValue("VALUE");
-            timeValue = timeValue*60*1000/robot.tempo;
-            packet.buzzer = 0;
-            packet.note = 0;
-            robot.setSound(0);
-            var timer = setTimeout(function() {
-                script.timeFlag = 0;
-                Entry.Roboid.removeTimeout(timer);
-            }, timeValue);
-            Entry.Roboid.timeouts.push(timer);
-            return script;
-        } else if (script.timeFlag == 1) {
-            return script;
-        } else {
-            delete script.isStart;
-            delete script.timeFlag;
-            Entry.engine.isContinue = false;
-            return script.callReturn();
-        }
-    },
-    "syntax": {"js": [], "py": [
-        {
-            syntax: "Roboid.turtle_note_off(%1, %2)",
-            textParams: [
-                {
-                    "type": "Block",
-                    "accept": "string"
-                },
-                {
-                    "type": "Block",
-                    "accept": "string"
-                }
-            ]
-        }
-    ]}
-},
-"roboid_turtle_change_tempo_by": {
-    "color": "#00979D",
-    "skeleton": "basic",
-    "statements": [],
-    "params": [
-        {
-            "type": "Block",
-            "accept": "string"
-        },
-        {
-            "type": "Block",
-            "accept": "string"
-        },
-        {
-            "type": "Indicator",
-            "img": "block_icon/hardware_03.png",
-            "size": 12
-        }
-    ],
-    "events": {},
-    "def": {
-        "params": [
-            {
-                "type": "text",
-                "params": [ "0" ]
+                "type": "Text",
+                "text": Lang.Blocks.JUDGEMENT_boolean_and,
+                "color": "#3D3D3D"
             },
             {
-                "type": "text",
-                "params": [ "20" ]
-            },
-            null
-        ],
-        "type": "roboid_turtle_change_tempo_by"
-    },
-    "paramsKeyMap": {
-        "INDEX": 0,
-        "VALUE": 1
-    },
-    "class": "turtle_sound",
-    "isNotFor": [ "roboid" ],
-    "func": function (sprite, script) {
-        var index = script.getNumberValue('INDEX');
-        var robot = Entry.Roboid.getTurtle(index);
-        robot.tempo += script.getNumberValue('VALUE');
-        if (robot.tempo < 1) robot.tempo = 1;
-        return script.callReturn();
-    },
-    "syntax": {"js": [], "py": [
-        {
-            syntax: "Roboid.turtle_tempo_by(%1, %2)",
-            textParams: [
-                {
-                    "type": "Block",
-                    "accept": "string"
-                },
-                {
-                    "type": "Block",
-                    "accept": "string"
-                }
-            ]
-        }
-    ]}
-},
-"roboid_turtle_set_tempo_to": {
-    "color": "#00979D",
-    "skeleton": "basic",
-    "statements": [],
-    "params": [
-        {
-            "type": "Block",
-            "accept": "string"
-        },
-        {
-            "type": "Block",
-            "accept": "string"
-        },
-        {
-            "type": "Indicator",
-            "img": "block_icon/hardware_03.png",
-            "size": 12
-        }
-    ],
-    "events": {},
-    "def": {
-        "params": [
-            {
-                "type": "text",
-                "params": [ "0" ]
-            },
-            {
-                "type": "text",
-                "params": [ "60" ]
-            },
-            null
-        ],
-        "type": "roboid_turtle_set_tempo_to"
-    },
-    "paramsKeyMap": {
-        "INDEX": 0,
-        "VALUE": 1
-    },
-    "class": "turtle_sound",
-    "isNotFor": [ "roboid" ],
-    "func": function (sprite, script) {
-        var index = script.getNumberValue('INDEX');
-        var robot = Entry.Roboid.getTurtle(index);
-        robot.tempo = script.getNumberValue('VALUE');
-        if (robot.tempo < 1) robot.tempo = 1;
-        return script.callReturn();
-    },
-    "syntax": {"js": [], "py": [
-        {
-            syntax: "Roboid.turtle_tempo(%1, %2)",
-            textParams: [
-                {
-                    "type": "Block",
-                    "accept": "string"
-                },
-                {
-                    "type": "Block",
-                    "accept": "string"
-                }
-            ]
-        }
-    ]}
-},
-// ----- akaii: add until here
-"is_clicked": {
-    "color": "#AEB8FF",
-    "skeleton": "basic_boolean_field",
-    "statements": [],
-    "params": [
-        {
-            "type": "Text",
-            "text": Lang.Blocks.JUDGEMENT_is_clicked,
-            "color": "#3D3D3D"
-        }
-    ],
-    "events": {},
-    "def": {
-        "params": [ null ],
-        "type": "is_clicked"
-    },
-    "class": "boolean_input",
-    "isNotFor": [],
-    "func": function (sprite, script) {
-        return Entry.stage.isClick;
-    },
-    "syntax": {"js": [], "py": [
-        {
-            syntax: "Entry.is_mouse_clicked()",
-            blockType: "param"
-        }
-    ]}
-},
-"is_press_some_key": {
-    "color": "#AEB8FF",
-    "skeleton": "basic_boolean_field",
-    "statements": [],
-    "params": [
-        {
-            "type": "Keyboard",
-            "value": 81
-        },
-        {
-            "type": "Text",
-            "text": Lang.Blocks.JUDGEMENT_is_press_some_key_2,
-            "color": "#3D3D3D"
-        }
-    ],
-    "events": {},
-    "def": {
-        "params": [ null, null ],
-        "type": "is_press_some_key"
-    },
-    "pyHelpDef": {
-        "params": [ "A&value", null ],
-        "type": "is_press_some_key"
-    },
-    "paramsKeyMap": {
-        "VALUE": 0
-    },
-    "class": "boolean_input",
-    "isNotFor": [],
-    "func": function (sprite, script) {
-        var keycode = Number(script.getField("VALUE", script));
-        return Entry.pressedKeys.indexOf(keycode) >= 0;
-    },
-    "syntax": {"js": [], "py": [
-        {
-            syntax: "Entry.is_key_pressed(%1)",
-            blockType: "param",
-            textParams: [
-                {
-                    "type": "Keyboard",
-                    "value": '81',
-                    converter: Entry.block.converters.keyboardCode
-                }
-            ]
-        }
-    ]}
-},
-"reach_something": {
-    "color": "#AEB8FF",
-    "skeleton": "basic_boolean_field",
-    "statements": [],
-    "params": [
-        {
-            "type": "Text",
-            "text": Lang.Blocks.JUDGEMENT_reach_something_1,
-            "color": "#3D3D3D"
-        },
-        {
-            "type": "DropdownDynamic",
-            "value": null,
-            "menuName": "collision",
-            "fontSize": 11,
-            'arrowColor': EntryStatic.ARROW_COLOR_JUDGE
-        },
-        {
-            "type": "Text",
-            "text": Lang.Blocks.JUDGEMENT_reach_something_2,
-            "color": "#3D3D3D"
-        }
-    ],
-    "events": {},
-    "def": {
-        "params": [ null, null, null ],
-        "type": "reach_something"
-    },
-    "pyHelpDef": {
-        "params": [ null, "A&value", null ],
-        "type": "reach_something"
-    },
-    "paramsKeyMap": {
-        "VALUE": 1
-    },
-    "class": "boolean_collision",
-    "isNotFor": [],
-    "func": function (sprite, script) {
-        if (!sprite.getVisible())
-            return false;
-        var targetSpriteId = script.getField("VALUE", script);
-        var reg = /wall/;
-        var ath = 0.2;
-        var object = sprite.object
-        var isWall = reg.test(targetSpriteId);
-        var collision = ndgmr.checkPixelCollision;
-        if (isWall) {
-            var wall = Entry.stage.wall;
-            switch(targetSpriteId) {
-                case 'wall':
-                    return  !!(collision(object,wall.up,ath,true) ||
-                        collision(object,wall.down,ath,true) ||
-                        collision(object,wall.left,ath,true) ||
-                            collision(object,wall.right,ath, true));
-                case 'wall_up':
-                    return !!collision(object,wall.up,ath,true);
-                case 'wall_down':
-                    return !!collision(object,wall.down,ath,true);
-                case 'wall_right':
-                    return !!collision(object,wall.right,ath,true);
-                case 'wall_left':
-                    return !!collision(object,wall.left,ath,true);
+                "type": "Block",
+                "accept": "boolean"
             }
-        } else if (targetSpriteId == 'mouse') {
-            var stage = Entry.stage.canvas;
-            var pt = object.globalToLocal(stage.mouseX, stage.mouseY);
-            return object.hitTest(pt.x, pt.y);
-        } else {
-            var targetSprite = Entry.container.getEntity(targetSpriteId);
-            if (targetSprite.type == "textBox" || sprite.type == 'textBox') {
-                var targetBound = targetSprite.object.getTransformedBounds();
-                var bound = object.getTransformedBounds();
-                if (Entry.checkCollisionRect(bound, targetBound))
-                    return true;
-                var clonedEntities = targetSprite.parent.clonedEntities;
-                for (var i=0, len=clonedEntities.length; i<len; i++) {
-                    var entity = clonedEntities[i];
-                    if(entity.isStamp || !entity.getVisible()) continue;
-                    if (Entry.checkCollisionRect(bound, entity.object.getTransformedBounds()))
-                        return true;
-                }
-            } else {
-                if (targetSprite.getVisible() &&
-                    collision(object,targetSprite.object,ath,true))
-                    return true;
-                var clonedEntities = targetSprite.parent.clonedEntities;
-                for (var i=0, len=clonedEntities.length; i<len; i++) {
-                    var entity = clonedEntities[i];
-                    if(entity.isStamp || !entity.getVisible()) continue;
-                    if (collision(object,entity.object,ath,true))
-                        return true;
-                }
-            }
-        }
-        return false;
-    },
-    "syntax": {"js": [], "py": [
-        {
-            syntax: "Entry.is_touched(%2)",
-            blockType: "param",
-            textParams: [
-                undefined,
+        ],
+        "events": {},
+        "def": {
+            "params": [
                 {
-                    "type": "DropdownDynamic",
-                    "value": null,
-                    "menuName": "collision",
-                    "fontSize": 11,
-                    'arrowColor': EntryStatic.ARROW_COLOR_JUDGE,
-                    converter: Entry.block.converters.returnObjectOrStringValue,
-                    codeMap: "Entry.CodeMap.Entry.reach_something[1]"
+                    "type": "True"
                 },
-            ]
-        }
-    ]}
-},
-"boolean_comparison": {
-    "color": "#AEB8FF",
-    "skeleton": "basic_boolean_field",
-    "statements": [],
-    "params": [
-        {
-            "type": "Block",
-            "accept": "string"
-        },
-        {
-            "type": "Dropdown",
-            "options": [
-                [ "=", "EQUAL" ],
-                [ "<", "SMALLER" ],
-                [ ">", "BIGGER" ]
+                null,
+                {
+                    "type": "True"
+                }
             ],
-            "value": "EQUAL",
-            "fontSize": 11
+            "type": "boolean_and"
         },
-        {
-            "type": "Block",
-            "accept": "string"
-        }
-    ],
-    "events": {},
-    "def": {
-        "params": [ null ],
-        type: "boolean_comparison"
-    },
-    "paramsKeyMap": {
-        "LEFTHAND": 0,
-        "OPERATOR": 1,
-        "RIGHTHAND": 2
-    },
-    "func": function (sprite, script) {
-        var operator = script.getField("OPERATOR", script);
-        var leftValue = script.getNumberValue("LEFTHAND", script);
-        var rightValue = script.getNumberValue("RIGHTHAND", script);
-        if (operator == "EQUAL")
-            return leftValue == rightValue;
-        else if (operator == "BIGGER")
-            return leftValue > rightValue;
-        else
-            return leftValue < rightValue;
-    },
-    "syntax": {"js": [], "py": [""]}
-},
-"boolean_equal": {
-    "color": "#AEB8FF",
-    "skeleton": "basic_boolean_field",
-    "statements": [],
-    "params": [
-        {
-            "type": "Block",
-            "accept": "string"
-        },
-        {
-            "type": "Text",
-            "text": "=",
-            "color": "#3D3D3D"
-        },
-        {
-            "type": "Block",
-            "accept": "string"
-        }
-    ],
-    "events": {},
-    "def": {
-        "params": [
-            {
-                "type": "number",
-                "params": [ "10" ]
-            },
-            null,
-            {
-                "type": "number",
-                "params": [ "10" ]
-            }
-        ],
-        "type": "boolean_equal"
-    },
-    "paramsKeyMap": {
-        "LEFTHAND": 0,
-        "RIGHTHAND": 2
-    },
-    "class": "boolean_compare",
-    "isNotFor": [],
-    "func": function (sprite, script) {
-        var leftValue = script.getStringValue("LEFTHAND", script);
-        var rightValue = script.getStringValue("RIGHTHAND", script);
-        return leftValue == rightValue;
-    },
-    "syntax": {"js": [], "py": [""]}
-},
-"boolean_bigger": {
-    "color": "#AEB8FF",
-    "skeleton": "basic_boolean_field",
-    "statements": [],
-    "params": [
-        {
-            "type": "Block",
-            "accept": "string"
-        },
-        {
-            "type": "Text",
-            "text": ">",
-            "color": "#3D3D3D"
-        },
-        {
-            "type": "Block",
-            "accept": "string"
-        }
-    ],
-    "events": {},
-    "def": {
-        "params": [
-            {
-                "type": "number",
-                "params": [ "10" ]
-            },
-            null,
-            {
-                "type": "number",
-                "params": [ "10" ]
-            }
-        ],
-        "type": "boolean_bigger"
-    },
-    "paramsKeyMap": {
-        "LEFTHAND": 0,
-        "RIGHTHAND": 2
-    },
-    "class": "boolean_compare",
-    "isNotFor": [],
-    "func": function (sprite, script) {
-        var leftValue = script.getNumberValue("LEFTHAND", script);
-        var rightValue = script.getNumberValue("RIGHTHAND", script);
-        return leftValue > rightValue;
-    },
-    "syntax": {"js": [], "py": [""]}
-},
-"boolean_smaller": {
-    "color": "#AEB8FF",
-    "skeleton": "basic_boolean_field",
-    "statements": [],
-    "params": [
-        {
-            "type": "Block",
-            "accept": "string"
-        },
-        {
-            "type": "Text",
-            "text": "<",
-            "color": "#3D3D3D"
-        },
-        {
-            "type": "Block",
-            "accept": "string"
-        }
-    ],
-    "events": {},
-    "def": {
-        "params": [
-            {
-                "type": "number",
-                "params": [ "10" ]
-            },
-            null,
-            {
-                "type": "number",
-                "params": [ "10" ]
-            }
-        ],
-        "type": "boolean_smaller"
-    },
-    "paramsKeyMap": {
-        "LEFTHAND": 0,
-        "RIGHTHAND": 2
-    },
-    "class": "boolean_compare",
-    "isNotFor": [],
-    "func": function (sprite, script) {
-        var leftValue = script.getNumberValue("LEFTHAND", script);
-        var rightValue = script.getNumberValue("RIGHTHAND", script);
-        return leftValue < rightValue;
-    },
-    "syntax": {"js": [], "py": [""]}
-},
-"boolean_and_or": {
-    "color": "#AEB8FF",
-    "skeleton": "basic_boolean_field",
-    "statements": [],
-    "params": [
-        {
-            "type": "Block",
-            "accept": "boolean"
-        },
-        {
-            "type": "Dropdown",
-            "options": [
-                [ Lang.Blocks.JUDGEMENT_boolean_and, "AND" ],
-                [ Lang.Blocks.JUDGEMENT_boolean_or, "OR" ]
+        "pyHelpDef": {
+            "params": [
+                {
+                    "type": "boolean_shell",
+                    params: ["A"]
+                },
+                null,
+                {
+                    "type": "boolean_shell",
+                    params: ["B"]
+                },
             ],
-            "value": "AND",
-            "fontSize": 11
+            "type": "boolean_and"
         },
-        {
-            "type": "Block",
-            "accept": "boolean"
-        }
-    ],
-    "events": {},
-    "def": {
-        "params": [ null ]
-    },
-    "paramsKeyMap": {
-        "LEFTHAND": 0,
-        "OPERATOR": 1,
-        "RIGHTHAND": 2
-    },
-    "func": function (sprite, script) {
-        var operator = script.getField("OPERATOR", script);
-        var leftValue = script.getBooleanValue("LEFTHAND", script);
-        var rightValue = script.getBooleanValue("RIGHTHAND", script);
-        if (operator == "AND")
+        "paramsKeyMap": {
+            "LEFTHAND": 0,
+            "RIGHTHAND": 2
+        },
+        "class": "boolean",
+        "isNotFor": [],
+        "func": function (sprite, script) {
+            var leftValue = script.getBooleanValue("LEFTHAND", script);
+            var rightValue = script.getBooleanValue("RIGHTHAND", script);
             return leftValue && rightValue;
-        else
-            return leftValue || rightValue;
+        },
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "(%1 and %3)",
+                template: "%1 and %3",
+                blockType: "param",
+                dic: "&&"
+            }
+        ]}
     },
-    "syntax": {"js": [], "py": [""]}
-},
-"boolean_and": {
-    "color": "#AEB8FF",
-    "skeleton": "basic_boolean_field",
-    "statements": [],
-    "params": [
-        {
-            "type": "Block",
-            "accept": "boolean"
-        },
-        {
-            "type": "Text",
-            "text": Lang.Blocks.JUDGEMENT_boolean_and,
-            "color": "#3D3D3D"
-        },
-        {
-            "type": "Block",
-            "accept": "boolean"
-        }
-    ],
-    "events": {},
-    "def": {
+    "boolean_or": {
+        "color": "#AEB8FF",
+        "skeleton": "basic_boolean_field",
+        "statements": [],
         "params": [
             {
-                "type": "True"
+                "type": "Block",
+                "accept": "boolean"
             },
-            null,
             {
-                "type": "True"
+                "type": "Text",
+                "text": Lang.Blocks.JUDGEMENT_boolean_or,
+                "color": "#3D3D3D"
+            },
+            {
+                "type": "Block",
+                "accept": "boolean"
             }
         ],
-        "type": "boolean_and"
-    },
-    "pyHelpDef": {
-        "params": [
-            {
-                "type": "boolean_shell",
-                params: ["A"]
-            },
-            null,
-            {
-                "type": "boolean_shell",
-                params: ["B"]
-            },
-        ],
-        "type": "boolean_and"
-    },
-    "paramsKeyMap": {
-        "LEFTHAND": 0,
-        "RIGHTHAND": 2
-    },
-    "class": "boolean",
-    "isNotFor": [],
-    "func": function (sprite, script) {
-        var leftValue = script.getBooleanValue("LEFTHAND", script);
-        var rightValue = script.getBooleanValue("RIGHTHAND", script);
-        return leftValue && rightValue;
-    },
-    "syntax": {"js": [], "py": [
-        {
-            syntax: "(%1 and %3)",
-            template: "%1 and %3",
-            blockType: "param",
-            dic: "&&"
-        }
-    ]}
-},
-"boolean_or": {
-    "color": "#AEB8FF",
-    "skeleton": "basic_boolean_field",
-    "statements": [],
-    "params": [
-        {
-            "type": "Block",
-            "accept": "boolean"
+        "events": {},
+        "def": {
+            "params": [
+                { "type": "True" },
+                null,
+                { "type": "False" }
+            ],
+            "type": "boolean_or"
         },
-        {
-            "type": "Text",
-            "text": Lang.Blocks.JUDGEMENT_boolean_or,
-            "color": "#3D3D3D"
-        },
-        {
-            "type": "Block",
-            "accept": "boolean"
-        }
-    ],
-    "events": {},
-    "def": {
-        "params": [
-            { "type": "True" },
-            null,
-            { "type": "False" }
-        ],
-        "type": "boolean_or"
-    },
-    "pyHelpDef": {
-        "params": [
-            {
-                "type": "boolean_shell",
-                params: ["A"]
-            },
-            null,
-            {
-                "type": "boolean_shell",
-                params: ["B"]
-            },
-        ],
-        "type": "boolean_or"
-    },
-    "paramsKeyMap": {
-        "LEFTHAND": 0,
-        "RIGHTHAND": 2
-    },
-    "class": "boolean",
-    "isNotFor": [],
-    "func": function (sprite, script) {
-        var leftValue = script.getBooleanValue("LEFTHAND", script);
-        var rightValue = script.getBooleanValue("RIGHTHAND", script);
-        return leftValue || rightValue;
-    },
-    "syntax": {"js": [], "py": [
-        {
-            syntax: "(%1 or %3)",
-            template: "%1 or %3",
-            blockType: "param",
-            dic: "||"
-        }
-    ]}
-},
-"boolean_not": {
-    "color": "#AEB8FF",
-    "skeleton": "basic_boolean_field",
-    "statements": [],
-    "params": [
-        {
-            "type": "Text",
-            "text": Lang.Blocks.JUDGEMENT_boolean_not_1,
-            "color": "#3D3D3D"
-        },
-        {
-            "type": "Block",
-            "accept": "boolean"
-        },
-        {
-            "type": "Text",
-            "text": Lang.Blocks.JUDGEMENT_boolean_not_2,
-            "color": "#3D3D3D"
-        }
-    ],
-    "events": {},
-    "def": {
-        "params": [
-            null,
-            { "type": "True" },
-            null
-        ],
-        "type": "boolean_not"
-    },
-    "pyHelpDef": {
-        "params": [
-            null,
-            { "type": "boolean_shell" },
-            null
-        ],
-        "type": "boolean_not"
-    },
-    "paramsKeyMap": {
-        "VALUE": 1
-    },
-    "class": "boolean",
-    "isNotFor": [],
-    "func": function (sprite, script) {
-        return !script.getBooleanValue("VALUE");
-    },
-    "syntax": {"js": [], "py": [
-        {
-            syntax: "not (%2)",
-            template: "not %2",
-            blockType: "param",
-            textParams: [
-                undefined,
+        "pyHelpDef": {
+            "params": [
                 {
-                    "type": "Block",
-                    "accept": "Boolean"
-                }
-            ]
-        }
-    ]}
-},
-"true_or_false": {
-    "color": "#AEB8FF",
-    "skeleton": "basic_boolean_field",
-    "statements": [],
-    "params": [
-        {
-            "type": "Dropdown",
-            "options": [
-                [Lang.Blocks.JUDGEMENT_true,"true"],
-                [Lang.Blocks.JUDGEMENT_false, "false"]
+                    "type": "boolean_shell",
+                    params: ["A"]
+                },
+                null,
+                {
+                    "type": "boolean_shell",
+                    params: ["B"]
+                },
             ],
-            "value": "true",
-            "fontSize": 11
-        }
-    ],
-    "events": {},
-    "def": {
-        "params": [ null ]
-    },
-    "paramsKeyMap": {
-        "VALUE": 0
-    },
-    "func": function (sprite, script) {
-        var value = script.children[0].textContent;
-        return value == "true";
-    },
-    "syntax": {"js": [], "py": [""]}
-},
-"True": {
-    "color": "#AEB8FF",
-    "skeleton": "basic_boolean_field",
-    "statements": [],
-    "params": [
-        {
-            "type": "Text",
-            "text": Lang.Blocks.JUDGEMENT_true,
-            "color": "#3D3D3D"
-        }
-    ],
-    "events": {},
-    "def": {
-        "params": [ null ],
-        type: "True"
-    },
-    "func": function (sprite, script) {
-        return true;
-    },
-    "isPrimitive": true,
-    "syntax": {"js": ["Scope", "true"], "py": ["True"]}
-},
-"False": {
-    "color": "#AEB8FF",
-    "skeleton": "basic_boolean_field",
-    "statements": [],
-    "params": [
-        {
-            "type": "Text",
-            "text": Lang.Blocks.JUDGEMENT_false,
-            "color": "#3D3D3D"
-        }
-    ],
-    "events": {},
-    "def": {
-        "params": [
-            null
-        ],
-        type: "False"
-    },
-    "func": function (sprite, script) {
-        return false;
-    },
-    "isPrimitive": true,
-    "syntax": {"js": [], "py": ["False"]}
-},
-"boolean_basic_operator": {
-    "color": "#AEB8FF",
-    "skeleton": "basic_boolean_field",
-    "statements": [],
-    "params": [
-        {
-            "type": "Block",
-            "accept": "string"
+            "type": "boolean_or"
         },
-        {
-            "type": "Dropdown",
-            "options": [
-                [ "=", "EQUAL" ],
-                [ ">", "GREATER" ],
-                [ "<", "LESS" ],
-                [ "≥", "GREATER_OR_EQUAL" ],
-                [ "≤", "LESS_OR_EQUAL" ]
-            ],
-            "value": "EQUAL",
-            "fontSize": 11,
-            noArrow: true
+        "paramsKeyMap": {
+            "LEFTHAND": 0,
+            "RIGHTHAND": 2
         },
-        {
-            "type": "Block",
-            "accept": "string"
-        }
-    ],
-    "events": {},
-    "def": {
+        "class": "boolean",
+        "isNotFor": [],
+        "func": function (sprite, script) {
+            var leftValue = script.getBooleanValue("LEFTHAND", script);
+            var rightValue = script.getBooleanValue("RIGHTHAND", script);
+            return leftValue || rightValue;
+        },
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "(%1 or %3)",
+                template: "%1 or %3",
+                blockType: "param",
+                dic: "||"
+            }
+        ]}
+    },
+    "boolean_not": {
+        "color": "#AEB8FF",
+        "skeleton": "basic_boolean_field",
+        "statements": [],
         "params": [
             {
-                "type": "text",
-                "params": [ "10" ]
+                "type": "Text",
+                "text": Lang.Blocks.JUDGEMENT_boolean_not_1,
+                "color": "#3D3D3D"
             },
-            "EQUAL",
             {
-                "type": "text",
-                "params": [ "10" ]
+                "type": "Block",
+                "accept": "boolean"
+            },
+            {
+                "type": "Text",
+                "text": Lang.Blocks.JUDGEMENT_boolean_not_2,
+                "color": "#3D3D3D"
             }
         ],
-        "type": "boolean_basic_operator"
+        "events": {},
+        "def": {
+            "params": [
+                null,
+                { "type": "True" },
+                null
+            ],
+            "type": "boolean_not"
+        },
+        "pyHelpDef": {
+            "params": [
+                null,
+                { "type": "boolean_shell" },
+                null
+            ],
+            "type": "boolean_not"
+        },
+        "paramsKeyMap": {
+            "VALUE": 1
+        },
+        "class": "boolean",
+        "isNotFor": [],
+        "func": function (sprite, script) {
+            return !script.getBooleanValue("VALUE");
+        },
+        "syntax": {"js": [], "py": [
+            {
+                syntax: "not (%2)",
+                template: "not %2",
+                blockType: "param",
+                textParams: [
+                    undefined,
+                    {
+                        "type": "Block",
+                        "accept": "Boolean"
+                    }
+                ]
+            }
+        ]}
     },
-    "pyHelpDef": {
+    "true_or_false": {
+        "color": "#AEB8FF",
+        "skeleton": "basic_boolean_field",
+        "statements": [],
         "params": [
             {
-                "type": "text",
-                "params": [ "A&value" ]
-            },
-            "EQUAL",
-            {
-                "type": "text",
-                "params": [ "B&value" ]
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.JUDGEMENT_true,"true"],
+                    [Lang.Blocks.JUDGEMENT_false, "false"]
+                ],
+                "value": "true",
+                "fontSize": 11
             }
         ],
-        "type": "boolean_basic_operator"
+        "events": {},
+        "def": {
+            "params": [ null ]
+        },
+        "paramsKeyMap": {
+            "VALUE": 0
+        },
+        "func": function (sprite, script) {
+            var value = script.children[0].textContent;
+            return value == "true";
+        },
+        "syntax": {"js": [], "py": [""]}
     },
-    "defs": [
-        {
+    "True": {
+        "color": "#AEB8FF",
+        "skeleton": "basic_boolean_field",
+        "statements": [],
+        "params": [
+            {
+                "type": "Text",
+                "text": Lang.Blocks.JUDGEMENT_true,
+                "color": "#3D3D3D"
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null ],
+            type: "True"
+        },
+        "func": function (sprite, script) {
+            return true;
+        },
+        "isPrimitive": true,
+        "syntax": {"js": ["Scope", "true"], "py": ["True"]}
+    },
+    "False": {
+        "color": "#AEB8FF",
+        "skeleton": "basic_boolean_field",
+        "statements": [],
+        "params": [
+            {
+                "type": "Text",
+                "text": Lang.Blocks.JUDGEMENT_false,
+                "color": "#3D3D3D"
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                null
+            ],
+            type: "False"
+        },
+        "func": function (sprite, script) {
+            return false;
+        },
+        "isPrimitive": true,
+        "syntax": {"js": [], "py": ["False"]}
+    },
+    "boolean_basic_operator": {
+        "color": "#AEB8FF",
+        "skeleton": "basic_boolean_field",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [ "=", "EQUAL" ],
+                    [ ">", "GREATER" ],
+                    [ "<", "LESS" ],
+                    [ "≥", "GREATER_OR_EQUAL" ],
+                    [ "≤", "LESS_OR_EQUAL" ]
+                ],
+                "value": "EQUAL",
+                "fontSize": 11,
+                noArrow: true
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            }
+        ],
+        "events": {},
+        "def": {
             "params": [
                 {
                     "type": "text",
@@ -28852,74 +28876,103 @@ Entry.block = {
             ],
             "type": "boolean_basic_operator"
         },
-        {
+        "pyHelpDef": {
             "params": [
                 {
                     "type": "text",
-                    "params": [ "10" ]
+                    "params": [ "A&value" ]
                 },
-                "GREATER",
+                "EQUAL",
                 {
                     "type": "text",
-                    "params": [ "10" ]
+                    "params": [ "B&value" ]
                 }
             ],
             "type": "boolean_basic_operator"
         },
-        {
-            "params": [
-                {
-                    "type": "text",
-                    "params": [ "10" ]
-                },
-                "LESS",
-                {
-                    "type": "text",
-                    "params": [ "10" ]
-                }
-            ],
-            "type": "boolean_basic_operator"
+        "defs": [
+            {
+                "params": [
+                    {
+                        "type": "text",
+                        "params": [ "10" ]
+                    },
+                    "EQUAL",
+                    {
+                        "type": "text",
+                        "params": [ "10" ]
+                    }
+                ],
+                "type": "boolean_basic_operator"
+            },
+            {
+                "params": [
+                    {
+                        "type": "text",
+                        "params": [ "10" ]
+                    },
+                    "GREATER",
+                    {
+                        "type": "text",
+                        "params": [ "10" ]
+                    }
+                ],
+                "type": "boolean_basic_operator"
+            },
+            {
+                "params": [
+                    {
+                        "type": "text",
+                        "params": [ "10" ]
+                    },
+                    "LESS",
+                    {
+                        "type": "text",
+                        "params": [ "10" ]
+                    }
+                ],
+                "type": "boolean_basic_operator"
+            },
+            {
+                "params": [
+                    {
+                        "type": "text",
+                        "params": [ "10" ]
+                    },
+                    "GREATER_OR_EQUAL",
+                    {
+                        "type": "text",
+                        "params": [ "10" ]
+                    }
+                ],
+                "type": "boolean_basic_operator"
+            },
+            {
+                "params": [
+                    {
+                        "type": "text",
+                        "params": [ "10" ]
+                    },
+                    "LESS_OR_EQUAL",
+                    {
+                        "type": "text",
+                        "params": [ "10" ]
+                    }
+                ],
+                "type": "boolean_basic_operator"
+            }
+        ],
+        "paramsKeyMap": {
+            "LEFTHAND": 0,
+            "OPERATOR": 1,
+            "RIGHTHAND": 2
         },
-        {
-            "params": [
-                {
-                    "type": "text",
-                    "params": [ "10" ]
-                },
-                "GREATER_OR_EQUAL",
-                {
-                    "type": "text",
-                    "params": [ "10" ]
-                }
-            ],
-            "type": "boolean_basic_operator"
-        },
-        {
-            "params": [
-                {
-                    "type": "text",
-                    "params": [ "10" ]
-                },
-                "LESS_OR_EQUAL",
-                {
-                    "type": "text",
-                    "params": [ "10" ]
-                }
-            ],
-            "type": "boolean_basic_operator"
-        }
-    ],
-    "paramsKeyMap": {
-        "LEFTHAND": 0,
-        "OPERATOR": 1,
-        "RIGHTHAND": 2
-    },
-    "class": "boolean_compare",
-    "isNotFor": [],
-    "func": function (sprite, script) {
-        var operator = script.getField("OPERATOR", script);
-        var leftValue = script.getStringValue("LEFTHAND", script);
-        var rightValue = script.getStringValue("RIGHTHAND", script);
+        "class": "boolean_compare",
+        "isNotFor": [],
+        "func": function (sprite, script) {
+            var operator = script.getField("OPERATOR", script);
+            var leftValue = script.getStringValue("LEFTHAND", script);
+            var rightValue = script.getStringValue("RIGHTHAND", script);
 
         switch(operator) {
             case 'EQUAL':
@@ -36230,17 +36283,17 @@ Entry.block = {
         if ((value == false && typeof value == 'boolean'))
             throw new Error('Type is not correct');
 
-        var variable = Entry.variableContainer.getVariable(variableId, sprite);
-        var variableValue = variable.getValue();
-        var sumValue;
-        if(Entry.Utils.isNumber(value) && variable.isNumber()) {
-            value = Entry.parseNumber(value);
-            variableValue = Entry.parseNumber(variableValue);
-            fixed = Entry.getMaxFloatPoint([value, variable.getValue()]);
-            sumValue = (value + variableValue).toFixed(fixed);
-        } else {
-            sumValue = '' + variableValue + value;
-        }
+            var variable = Entry.variableContainer.getVariable(variableId, sprite);
+            var variableValue = variable.getValue();
+            var sumValue;
+            if(Entry.Utils.isNumber(value) && variable.isNumber()) {
+                value = Entry.parseNumber(value);
+                variableValue = Entry.parseNumber(variableValue);
+                fixed = Entry.getMaxFloatPoint([value, variable.getValue()]);
+                sumValue = new BigNumber(value).plus(variableValue).toNumber().toFixed(fixed);
+            } else {
+                sumValue = '' + variableValue + value;
+            }
 
         variable.setValue(sumValue);
         return script.callReturn();
@@ -38252,10 +38305,10 @@ Entry.block = {
     "func": function (sprite, script) {
         var sq = Entry.hw.sendQueue;
 
-        if (!script.isStart) {            
-            var note = script.getStringField("NOTE", script);
-            var octave = script.getStringField("OCTAVE", script);
-            var duration = script.getNumberValue("VALUE", script);
+            if (!script.isStart) {
+                var note = script.getStringField("NOTE", script);
+                var octave = script.getStringField("OCTAVE", script);
+                var duration = script.getNumberValue("VALUE", script);
 
 
             var noteOctave = note + octave; // 'C'+ 2 = "C2"
@@ -65920,18 +65973,19 @@ chocopi_servo_motor: {
 };
 
 (function() {
-for (var type in Entry.block) {
-    var block = Entry.block[type];
-    if (block.parent) {
-        var f = function() {};
-        f.prototype = Entry.block[block.parent];
-        var schema = new f();
-        for (var key in block) {
-            schema[key] = block[key];
+    for (var type in Entry.block) {
+        var block = Entry.block[type];
+        if (!block.isNotFor) block.isNotFor = [];
+        if (block.parent) {
+            var f = function() {};
+            f.prototype = Entry.block[block.parent];
+            var schema = new f();
+            for (var key in block) {
+                schema[key] = block[key];
+            }
+            Entry.block[type] = schema;
         }
-        Entry.block[type] = schema;
     }
-}
 })();
 
 if (typeof exports == "object") {
