@@ -145,6 +145,10 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                     alert_message = Entry.TextCodingUtil.isNameIncludeNotValidChar();
                     if(alert_message) {
                         entrylms.alert(alert_message);
+                        var mode = {};
+                        mode.boardType = WORKSPACE.MODE_BOARD;
+                        mode.textType = -1;
+                        Entry.getMainWS().setMode(mode);
                         return;
                     }
 
