@@ -334,6 +334,7 @@ Entry.Utils.bindGlobalEvent = function(options) {
         Entry.keyPressed = new Entry.Event(window);
         doc.on('keydown', (function(e) {
             var keyCode = e.keyCode;
+
             if (Entry.pressedKeys.indexOf(keyCode) < 0)
                 Entry.pressedKeys.push(keyCode);
             Entry.keyPressed.notify(e);
@@ -686,7 +687,7 @@ Entry.parseNumber = function(value) {
     if (typeof value == "string") {
         if((Entry.Utils.isNumber(value) && value[0] === '0') || (value[0] === '0' && value[1].toLowerCase() === 'x'))
             return value;
-        else 
+        else
             return Number(value);
     } else if (typeof value == "number" && Entry.Utils.isNumber(value)) {
         return value;
@@ -789,7 +790,9 @@ Entry.getKeyCodeMap = function () {
         '40':Lang.Blocks.START_press_some_key_down,
         '48':'0', '49':'1', '50':'2', '51':'3', '52':'4',
         '53':'5', '54':'6', '55':'7', '56':'8', '57':'9',
-        '13':Lang.Blocks.START_press_some_key_enter
+        '13':Lang.Blocks.START_press_some_key_enter,
+        '27':'esc', '17': 'ctrl', '18': 'alt',
+        '9': 'tab', '16': 'shift', '8': 'backspace'
     };
 };
 
