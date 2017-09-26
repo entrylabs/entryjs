@@ -339,10 +339,10 @@ Entry.Variable.prototype.updateView = function() {
                 this._nameWidth = null;
             }
 
-            if(this.isNumber() && this.value_[0] !==0 ) {
-                this.valueView_.text = '' + this.getValue();
-            } else if (this.isNumber()){
-                this.valueView_.text = Number(this.getValue()).toFixed(2).replace('.00', '');
+            if (this.isNumber()) {
+                if (this.value_[0] !== 0 && Entry.isInteger(this.value_))
+                    this.valueView_.text = '' + this.getValue();
+                else this.valueView_.text = Number(this.getValue()).toFixed(2).replace('.00', '');
             } else {
                 this.valueView_.text = this.getValue();
             }
