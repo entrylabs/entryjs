@@ -1013,6 +1013,10 @@ Entry.isFloat = function (num) {
     return /\d+\.{1}\d+$/.test(num);
 };
 
+Entry.isInteger = function(value) {
+  return isFinite(value) && Math.floor(value) == value;
+};
+
 Entry.getStringIndex = function(str) {
     if (!str) return '';
     var result = {
