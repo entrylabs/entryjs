@@ -281,10 +281,8 @@ Entry.Container.prototype.selectPicture = function(pictureId, objectId) {
  * @return {Entry.EntryObject}
  */
 Entry.Container.prototype.addObject = function(objectModel, index) {
-    var backgroundStr = 'background';
     var object = new Entry.EntryObject(objectModel);
     object.name = Entry.getOrderedName(object.name, this.objects_);
-
 
     if (Entry.stateManager) {
         Entry.stateManager.addCommand(
@@ -294,18 +292,19 @@ Entry.Container.prototype.addObject = function(objectModel, index) {
               object
         );
     }
-    if (!object.scene)
-        object.scene = Entry.scene.selectedScene;
+
+    object.scene = object.scene || Entry.scene.selectedScene;
+
+    var isBackground = objectModel.sprite.category;
+    isBackground = isBackground && isBackground.main == 'background';
+
     if (typeof index == 'number') {
-        if (objectModel.sprite.category && objectModel.sprite.category.main == backgroundStr) {
+        if (isBackground) {
             object.setLock(true);
             this.objects_.push(object);
-        } else
-            this.objects_.splice(index, 0, object);
-    } else if (objectModel.sprite.category && objectModel.sprite.category.main == backgroundStr) {
-        this.objects_.push(object);
-    } else
-        this.objects_.unshift(object);
+        } else this.objects_.splice(index, 0, object);
+    } else if (isBackground) this.objects_.push(object);
+    else this.objects_.unshift(object);
 
     object.generateView();
     this.setCurrentObjects();
@@ -314,9 +313,11 @@ Entry.Container.prototype.addObject = function(objectModel, index) {
 
     this.selectObject(object.id);
     Entry.variableContainer.updateViews();
-    return new Entry.State(this,
-                           this.removeObject,
-                           object);
+    return new Entry.State(
+                    this,
+                    this.removeObject,
+                    object
+                );
 };
 
 Entry.Container.prototype.addExtension = function(obj) {
@@ -343,14 +344,26 @@ Entry.Container.prototype.removeExtension = function(obj) {
  */
 Entry.Container.prototype.addCloneObject = function(object, scene) {
     var json = object.toJSON(true);
+
+    json.script = change('sounds', object, json);
+    json.script = change('pictures', object, json);
+
     Entry.variableContainer.addCloneLocalVariables({
-        objectId: object.id,
-        newObjectId: json.id,
-        json: json
+        objectId: object.id, newObjectId: json.id, json: json
     });
     json.scene = scene || Entry.scene.selectedScene;
     this.addObject(json);
+
     return this.getObject(json.id);
+
+    function change(keyName, object, jsonData) {
+        var target = jsonData.sprite[keyName];
+        var script = jsonData.script;
+        (object[keyName] || []).forEach(function(value, index) {
+            script = script.replace(new RegExp(value.id, "g"), target[index].id);
+        });
+        return script;
+    }
 };
 
 /**
@@ -370,8 +383,7 @@ Entry.Container.prototype.removeObject = function(object) {
             index
         );
     }
-    var state =
-        new Entry.State(this.addObject, objectJSON, index);
+    var state = new Entry.State(this.addObject, objectJSON, index);
 
     object.destroy();
     this.objects_.splice(index, 1);
