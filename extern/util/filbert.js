@@ -1,4 +1,4 @@
-// Filbert is a Python parser written in JavaScript.
+// 1Filbert is a Python parser written in JavaScript.
 //
 // Filbert was written by Matt Lott and released under an MIT
 // license. It was adatped from [Acorn](https://github.com/marijnh/acorn.git)
@@ -480,7 +480,7 @@
   // Keywords
   // TODO: dict isn't a keyword, it's a builtin
 
-  var isKeyword = makePredicate("dict False None True and as assert break class continue def del elif else except finally for from global if import in is lambda nonlocal not or pass raise return try while with yield");
+  var isKeyword = makePredicate("dict False None True and as assert break class continue def del elif else except finally for from global if import in is lambda nonlocal not or pass raise return try while with yield print exec");
 
   // ## Character categories
 
@@ -870,6 +870,13 @@
     if (forceRegexp) return readRegexp();
     if (tokPos >= inputLen) return finishToken(_eof);
     if (tokType === _newline) return readToken_indent();
+
+    if(isKeyword(input.split('=')[0].trim())) {
+      if(input.split('=')[1].trim()[0] == '[')
+        raise(tokPos, "Reserved list word");
+      else
+        raise(tokPos, "Reserved variable word");
+    }
 
     var code = input.charCodeAt(tokPos);
     // Identifier or keyword. '\uXXXX' sequences are allowed in

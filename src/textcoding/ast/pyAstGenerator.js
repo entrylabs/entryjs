@@ -32,6 +32,14 @@ Entry.PyAstGenerator = function() {
                 var message = Entry.TextCodingError.MESSAGE_SYNTAX_UNEXPECTED_CHARACTER;
                 var subject = Entry.TextCodingError.SUBJECT_SYNTAX_CHARACTER;
             }
+            else if(msgTokens[0].trim() == "Reserved variable word") {
+                var message = Entry.TextCodingError.MESSAGE_SYNTAX_RESERVED_TOKEN;
+                var subject = Entry.TextCodingError.SUBJECT_CONV_VARIABLE;
+            }
+            else if(msgTokens[0].trim() == "Reserved list word") {
+                var message = Entry.TextCodingError.MESSAGE_SYNTAX_RESERVED_TOKEN_LIST;
+                var subject = Entry.TextCodingError.SUBJECT_CONV_LIST;
+            }
             else if(msgTokens[0].trim() == "Unexpected indent") {
                 var message = Entry.TextCodingError.MESSAGE_SYNTAX_UNEXPECTED_CHARACTER;
                 var subject = Entry.TextCodingError.SUBJECT_SYNTAX_INDENT
