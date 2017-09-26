@@ -686,7 +686,7 @@ Entry.parseNumber = function(value) {
     if (typeof value == "string") {
         if((Entry.Utils.isNumber(value) && value[0] === '0') || (value[0] === '0' && value[1].toLowerCase() === 'x'))
             return value;
-        else 
+        else if (Entry.Utils.isNumber(value))
             return Number(value);
     } else if (typeof value == "number" && Entry.Utils.isNumber(value)) {
         return value;

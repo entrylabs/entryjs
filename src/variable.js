@@ -354,7 +354,7 @@ Entry.Variable.prototype.updateView = function() {
             this.valueView_.y = 1;
             // INFO: Number체크는 slide 일때만 하도록 처리 기본 문자로 처리함(#4876)
 
-            
+
             if (this._valueWidth === null)
                 this._valueWidth = this.valueView_.getMeasuredWidth();
             this.rect_.graphics.clear().f("#ffffff").ss(1, 2, 0).s("#A0A1A1")

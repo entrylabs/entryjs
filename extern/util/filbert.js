@@ -480,7 +480,7 @@
   // Keywords
   // TODO: dict isn't a keyword, it's a builtin
 
-  var isKeyword = makePredicate("dict False None True and as assert break class continue def del elif else except finally for from global if import in is lambda nonlocal not or pass raise return try while with yield print exec");
+  var isKeyword = makePredicate("dict False None True and as assert break class continue def del elif else except finally for from global if import in is lambda nonlocal not or pass raise return try while with yield exec");
 
   // ## Character categories
 
@@ -871,7 +871,7 @@
     if (tokPos >= inputLen) return finishToken(_eof);
     if (tokType === _newline) return readToken_indent();
 
-    if(isKeyword(input.split('=')[0].trim())) {
+    if(input.split('=').length > 1 && isKeyword(input.split('=')[0].trim())) {
       if(input.split('=')[1].trim()[0] == '[')
         raise(tokPos, "Reserved list word");
       else
