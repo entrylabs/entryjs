@@ -5258,7 +5258,7 @@ Entry.block = {
         return script.getField("VALUE", script);
     }
 },
-    
+
 "iboard_tmp": {
     "color": "#00979D",
     "fontColor": "#fff",
@@ -28532,6 +28532,20 @@ Entry.block = {
                 type: "boolean_and_or"
             }
         ],
+        "pyHelpDef": {
+            "params": [
+                {
+                    "type": "boolean_shell",
+                    params: ["A"]
+                },
+                "AND",
+                {
+                    "type": "boolean_shell",
+                    params: ["B"]
+                },
+            ],
+            "type": "boolean_and_or"
+        },
         "paramsKeyMap": {
             "LEFTHAND": 0,
             "OPERATOR": 1,
@@ -54322,7 +54336,7 @@ codestar_tilt: {
         },
 },
 // */
-/* BYROBOT DroneFighter Flight End */    
+/* BYROBOT DroneFighter Flight End */
 /* BYROBOT PetroneV2 Controller Start */
 //*
 "byrobot_petrone_v2_controller_controller_value_button":
@@ -58859,7 +58873,7 @@ codestar_tilt: {
     "func": function (sprite, script) {
         var wheel = parseInt(script.getNumberValue("WHEEL", script));
         var accel = parseInt(script.getNumberValue("ACCEL", script));
-        
+
         return Entry.byrobot_petrone_v2_drive.sendControlDouble(script, wheel, accel, 0, false);
     },
 },
