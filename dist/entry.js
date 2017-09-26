@@ -2723,6 +2723,1642 @@ checkFinish:function(c, b) {
       return c.callReturn();
   }
 }};
+Entry.byrobot_petrone_v2_controller = {name:"byrobot_petrone_v2_controller", setZero:function() {
+  for (var c = 0; 1 > c; c++) {
+    this.transferVibrator(0, 0, 0, 0), this.transferbuzzer(0, 0, 0), this.transferLightManual(49, 255, 0), this.transferCommand(49, 128, 0);
+  }
+}, monitorTemplate:{imgPath:"hw/byrobot_petrone_v2_controller.png", width:500, height:500, listPorts:{joystick_left_x:{name:Lang.Blocks.byrobot_petrone_v2_controller_joystick_left_x, type:"input", pos:{x:0, y:0}}, joystick_left_y:{name:Lang.Blocks.byrobot_petrone_v2_controller_joystick_left_y, type:"input", pos:{x:0, y:0}}, joystick_left_direction:{name:Lang.Blocks.byrobot_petrone_v2_controller_joystick_left_direction, type:"input", pos:{x:0, y:0}}, joystick_left_event:{name:Lang.Blocks.byrobot_petrone_v2_controller_joystick_left_event, 
+type:"input", pos:{x:0, y:0}}, joystick_right_x:{name:Lang.Blocks.byrobot_petrone_v2_controller_joystick_right_x, type:"input", pos:{x:0, y:0}}, joystick_right_y:{name:Lang.Blocks.byrobot_petrone_v2_controller_joystick_right_y, type:"input", pos:{x:0, y:0}}, joystick_right_direction:{name:Lang.Blocks.byrobot_petrone_v2_controller_joystick_right_direction, type:"input", pos:{x:0, y:0}}, joystick_right_event:{name:Lang.Blocks.byrobot_petrone_v2_controller_joystick_right_event, type:"input", pos:{x:0, 
+y:0}}, button_button:{name:Lang.Blocks.byrobot_petrone_v2_controller_button_button, type:"input", pos:{x:0, y:0}}, button_event:{name:Lang.Blocks.byrobot_petrone_v2_controller_button_event, type:"input", pos:{x:0, y:0}}, entryhw_countTransferReserved:{name:Lang.Blocks.byrobot_petrone_v2_entryhw_count_transfer_reserved, type:"output", pos:{x:0, y:0}}}, ports:{}, mode:"both"}, checkFinish:function(c, b) {
+  if (c.isStart) {
+    if (1 == c.timeFlag) {
+      return "Running";
+    }
+    delete c.timeFlag;
+    delete c.isStart;
+    Entry.engine.isContinue = !1;
+    return "Finish";
+  }
+  c.isStart = !0;
+  c.timeFlag = 1;
+  setTimeout(function() {
+    c.timeFlag = 0;
+  }, 60 / (Entry.FPS || 60) * b);
+  return "Start";
+}, transferLightManual:function(c, b, d) {
+  c = Math.max(c, 0);
+  c = Math.min(c, 255);
+  b = Math.max(b, 0);
+  b = Math.min(b, 255);
+  d = Math.max(d, 0);
+  d = Math.min(d, 255);
+  Entry.hw.setDigitalPortValue("target", c);
+  Entry.hw.setDigitalPortValue("light_manual_flags", b);
+  Entry.hw.setDigitalPortValue("light_manual_brightness", d);
+  Entry.hw.update();
+  delete Entry.hw.sendQueue.target;
+  delete Entry.hw.sendQueue.light_manual_flags;
+  delete Entry.hw.sendQueue.light_manual_brightness;
+}, transferLightColorRgb:function(c, b, d, e) {
+  c = Math.max(c, 0);
+  c = Math.min(c, 255);
+  b = Math.max(b, 0);
+  b = Math.min(b, 255);
+  d = Math.max(d, 0);
+  d = Math.min(d, 255);
+  e = Math.max(e, 0);
+  e = Math.min(e, 255);
+  Entry.hw.setDigitalPortValue("target", c);
+  Entry.hw.setDigitalPortValue("light_color_r", b);
+  Entry.hw.setDigitalPortValue("light_color_g", d);
+  Entry.hw.setDigitalPortValue("light_color_b", e);
+  Entry.hw.update();
+  delete Entry.hw.sendQueue.target;
+  delete Entry.hw.sendQueue.light_color_r;
+  delete Entry.hw.sendQueue.light_color_g;
+  delete Entry.hw.sendQueue.light_color_b;
+}, transferDisplayClear:function(c, b, d, e, f, g, h) {
+  d ? (Entry.hw.setDigitalPortValue("target", c), Entry.hw.setDigitalPortValue("display_clearall_pixel", b), Entry.hw.update(), delete Entry.hw.sendQueue.target, delete Entry.hw.sendQueue.display_clearall_pixel) : (e = Math.max(e, 0), e = Math.min(e, 128), f = Math.max(f, 0), f = Math.min(f, 64), g = Math.max(g, 0), g = Math.min(g, 128), h = Math.max(h, 0), h = Math.min(h, 64), Entry.hw.setDigitalPortValue("target", c), Entry.hw.setDigitalPortValue("display_clear_x", e), Entry.hw.setDigitalPortValue("display_clear_y", 
+  f), Entry.hw.setDigitalPortValue("display_clear_width", g), Entry.hw.setDigitalPortValue("display_clear_height", h), Entry.hw.setDigitalPortValue("display_clear_pixel", b), Entry.hw.update(), delete Entry.hw.sendQueue.target, delete Entry.hw.sendQueue.display_clear_x, delete Entry.hw.sendQueue.display_clear_y, delete Entry.hw.sendQueue.display_clear_width, delete Entry.hw.sendQueue.display_clear_height, delete Entry.hw.sendQueue.display_clear_pixel);
+}, transferDisplayInvert:function(c, b, d, e, f) {
+  b = Math.max(b, 0);
+  b = Math.min(b, 128);
+  d = Math.max(d, 0);
+  d = Math.min(d, 64);
+  e = Math.max(e, 0);
+  e = Math.min(e, 128);
+  f = Math.max(f, 0);
+  f = Math.min(f, 64);
+  Entry.hw.setDigitalPortValue("target", c);
+  Entry.hw.setDigitalPortValue("display_invert_x", b);
+  Entry.hw.setDigitalPortValue("display_invert_y", d);
+  Entry.hw.setDigitalPortValue("display_invert_width", e);
+  Entry.hw.setDigitalPortValue("display_invert_height", f);
+  Entry.hw.update();
+  delete Entry.hw.sendQueue.target;
+  delete Entry.hw.sendQueue.display_invert_x;
+  delete Entry.hw.sendQueue.display_invert_y;
+  delete Entry.hw.sendQueue.display_invert_width;
+  delete Entry.hw.sendQueue.display_invert_height;
+}, transferDisplayDrawPoint:function(c, b, d, e) {
+  b = Math.max(b, 0);
+  b = Math.min(b, 128);
+  d = Math.max(d, 0);
+  d = Math.min(d, 64);
+  Entry.hw.setDigitalPortValue("target", c);
+  Entry.hw.setDigitalPortValue("display_draw_point_x", b);
+  Entry.hw.setDigitalPortValue("display_draw_point_y", d);
+  Entry.hw.setDigitalPortValue("display_draw_point_pixel", e);
+  Entry.hw.update();
+  delete Entry.hw.sendQueue.target;
+  delete Entry.hw.sendQueue.display_draw_point_x;
+  delete Entry.hw.sendQueue.display_draw_point_y;
+  delete Entry.hw.sendQueue.display_draw_point_pixel;
+}, transferDisplayDrawLine:function(c, b, d, e, f, g, h) {
+  b = Math.max(b, 0);
+  b = Math.min(b, 128);
+  d = Math.max(d, 0);
+  d = Math.min(d, 64);
+  e = Math.max(e, 0);
+  e = Math.min(e, 128);
+  f = Math.max(f, 0);
+  f = Math.min(f, 64);
+  Entry.hw.setDigitalPortValue("target", c);
+  Entry.hw.setDigitalPortValue("display_draw_line_x1", b);
+  Entry.hw.setDigitalPortValue("display_draw_line_y1", d);
+  Entry.hw.setDigitalPortValue("display_draw_line_x2", e);
+  Entry.hw.setDigitalPortValue("display_draw_line_y2", f);
+  Entry.hw.setDigitalPortValue("display_draw_line_pixel", g);
+  Entry.hw.setDigitalPortValue("display_draw_line_line", h);
+  Entry.hw.update();
+  delete Entry.hw.sendQueue.target;
+  delete Entry.hw.sendQueue.display_draw_line_x1;
+  delete Entry.hw.sendQueue.display_draw_line_y1;
+  delete Entry.hw.sendQueue.display_draw_line_x2;
+  delete Entry.hw.sendQueue.display_draw_line_y2;
+  delete Entry.hw.sendQueue.display_draw_line_pixel;
+  delete Entry.hw.sendQueue.display_draw_line_line;
+}, transferDisplayDrawRect:function(c, b, d, e, f, g, h, k) {
+  b = Math.max(b, 0);
+  b = Math.min(b, 128);
+  d = Math.max(d, 0);
+  d = Math.min(d, 64);
+  e = Math.max(e, 0);
+  e = Math.min(e, 128);
+  f = Math.max(f, 0);
+  f = Math.min(f, 64);
+  Entry.hw.setDigitalPortValue("target", c);
+  Entry.hw.setDigitalPortValue("display_draw_rect_x", b);
+  Entry.hw.setDigitalPortValue("display_draw_rect_y", d);
+  Entry.hw.setDigitalPortValue("display_draw_rect_width", e);
+  Entry.hw.setDigitalPortValue("display_draw_rect_height", f);
+  Entry.hw.setDigitalPortValue("display_draw_rect_pixel", g);
+  Entry.hw.setDigitalPortValue("display_draw_rect_flagfill", h);
+  Entry.hw.setDigitalPortValue("display_draw_rect_line", k);
+  Entry.hw.update();
+  delete Entry.hw.sendQueue.target;
+  delete Entry.hw.sendQueue.display_draw_rect_x;
+  delete Entry.hw.sendQueue.display_draw_rect_y;
+  delete Entry.hw.sendQueue.display_draw_rect_width;
+  delete Entry.hw.sendQueue.display_draw_rect_height;
+  delete Entry.hw.sendQueue.display_draw_rect_pixel;
+  delete Entry.hw.sendQueue.display_draw_rect_flagfill;
+  delete Entry.hw.sendQueue.display_draw_rect_line;
+}, transferDisplayDrawCircle:function(c, b, d, e, f, g) {
+  b = Math.max(b, -50);
+  b = Math.min(b, 178);
+  d = Math.max(d, -50);
+  d = Math.min(d, 114);
+  e = Math.max(e, 1);
+  e = Math.min(e, 200);
+  Entry.hw.setDigitalPortValue("target", c);
+  Entry.hw.setDigitalPortValue("display_draw_circle_x", b);
+  Entry.hw.setDigitalPortValue("display_draw_circle_y", d);
+  Entry.hw.setDigitalPortValue("display_draw_circle_radius", e);
+  Entry.hw.setDigitalPortValue("display_draw_circle_pixel", f);
+  Entry.hw.setDigitalPortValue("display_draw_circle_flagfill", g);
+  Entry.hw.update();
+  delete Entry.hw.sendQueue.target;
+  delete Entry.hw.sendQueue.display_draw_circle_x;
+  delete Entry.hw.sendQueue.display_draw_circle_y;
+  delete Entry.hw.sendQueue.display_draw_circle_radius;
+  delete Entry.hw.sendQueue.display_draw_circle_pixel;
+  delete Entry.hw.sendQueue.display_draw_circle_flagfill;
+}, transferDisplayDrawString:function(c, b, d, e, f, g) {
+  b = Math.max(b, 0);
+  b = Math.min(b, 120);
+  d = Math.max(d, 0);
+  d = Math.min(d, 60);
+  Entry.hw.setDigitalPortValue("target", c);
+  Entry.hw.setDigitalPortValue("display_draw_string_x", b);
+  Entry.hw.setDigitalPortValue("display_draw_string_y", d);
+  Entry.hw.setDigitalPortValue("display_draw_string_font", e);
+  Entry.hw.setDigitalPortValue("display_draw_string_pixel", f);
+  Entry.hw.setDigitalPortValue("display_draw_string_string", g);
+  Entry.hw.update();
+  delete Entry.hw.sendQueue.target;
+  delete Entry.hw.sendQueue.display_draw_string_x;
+  delete Entry.hw.sendQueue.display_draw_string_y;
+  delete Entry.hw.sendQueue.display_draw_string_font;
+  delete Entry.hw.sendQueue.display_draw_string_pixel;
+  delete Entry.hw.sendQueue.display_draw_string_string;
+}, transferDisplayDrawStringAlign:function(c, b, d, e, f, g, h, k) {
+  b = Math.max(b, 0);
+  b = Math.min(b, 124);
+  d = Math.max(d, 4);
+  d = Math.min(d, 128);
+  e = Math.max(e, 0);
+  e = Math.min(e, 60);
+  Entry.hw.setDigitalPortValue("target", c);
+  Entry.hw.setDigitalPortValue("display_draw_string_align_x_start", b);
+  Entry.hw.setDigitalPortValue("display_draw_string_align_x_end", d);
+  Entry.hw.setDigitalPortValue("display_draw_string_align_y", e);
+  Entry.hw.setDigitalPortValue("display_draw_string_align_align", f);
+  Entry.hw.setDigitalPortValue("display_draw_string_align_font", g);
+  Entry.hw.setDigitalPortValue("display_draw_string_align_pixel", h);
+  Entry.hw.setDigitalPortValue("display_draw_string_align_string", k);
+  Entry.hw.update();
+  delete Entry.hw.sendQueue.target;
+  delete Entry.hw.sendQueue.display_draw_string_align_x_start;
+  delete Entry.hw.sendQueue.display_draw_string_align_x_end;
+  delete Entry.hw.sendQueue.display_draw_string_align_y;
+  delete Entry.hw.sendQueue.display_draw_string_align_align;
+  delete Entry.hw.sendQueue.display_draw_string_align_font;
+  delete Entry.hw.sendQueue.display_draw_string_align_pixel;
+  delete Entry.hw.sendQueue.display_draw_string_align_string;
+}, transferbuzzer:function(c, b, d) {
+  Entry.hw.setDigitalPortValue("target", 49);
+  Entry.hw.setDigitalPortValue("buzzer_mode", c);
+  Entry.hw.setDigitalPortValue("buzzer_value", b);
+  Entry.hw.setDigitalPortValue("buzzer_time", d);
+  Entry.hw.update();
+  delete Entry.hw.sendQueue.target;
+  delete Entry.hw.sendQueue.buzzer_mode;
+  delete Entry.hw.sendQueue.buzzer_value;
+  delete Entry.hw.sendQueue.buzzer_time;
+}, transferVibrator:function(c, b, d, e) {
+  b = Math.max(b, 1);
+  b = Math.min(b, 60000);
+  d = Math.max(d, 1);
+  d = Math.min(d, 60000);
+  Entry.hw.setDigitalPortValue("target", 49);
+  Entry.hw.setDigitalPortValue("vibrator_mode", c);
+  Entry.hw.setDigitalPortValue("vibrator_on", b);
+  Entry.hw.setDigitalPortValue("vibrator_off", d);
+  Entry.hw.setDigitalPortValue("vibrator_total", e);
+  Entry.hw.update();
+  delete Entry.hw.sendQueue.target;
+  delete Entry.hw.sendQueue.vibrator_mode;
+  delete Entry.hw.sendQueue.vibrator_on;
+  delete Entry.hw.sendQueue.vibrator_off;
+  delete Entry.hw.sendQueue.vibrator_total;
+}, transferCommand:function(c, b, d) {
+  Entry.hw.setDigitalPortValue("target", c);
+  Entry.hw.setDigitalPortValue("command_command", b);
+  Entry.hw.setDigitalPortValue("command_option", d);
+  Entry.hw.update();
+  delete Entry.hw.sendQueue.target;
+  delete Entry.hw.sendQueue.command_command;
+  delete Entry.hw.sendQueue.command_option;
+}, getData:function(c, b) {
+  return Entry.hw.portData[b];
+}, setLightManual:function(c, b, d, e) {
+  switch(this.checkFinish(c, 40)) {
+    case "Start":
+      return this.transferLightManual(b, d, e), c;
+    case "Running":
+      return c;
+    case "Finish":
+      return c.callReturn();
+    default:
+      return c.callReturn();
+  }
+}, setLightColorRgb:function(c, b, d, e, f) {
+  switch(this.checkFinish(c, 40)) {
+    case "Start":
+      return this.transferLightColorRgb(b, d, e, f), c;
+    case "Running":
+      return c;
+    case "Finish":
+      return c.callReturn();
+    default:
+      return c.callReturn();
+  }
+}, setDisplayClear:function(c, b, d, e, f, g, h, k) {
+  switch(this.checkFinish(c, 40)) {
+    case "Start":
+      return this.transferDisplayClear(b, d, e, f, g, h, k), c;
+    case "Running":
+      return c;
+    case "Finish":
+      return c.callReturn();
+    default:
+      return c.callReturn();
+  }
+}, setDisplayInvert:function(c, b, d, e, f, g) {
+  switch(this.checkFinish(c, 40)) {
+    case "Start":
+      return this.transferDisplayInvert(b, d, e, f, g), c;
+    case "Running":
+      return c;
+    case "Finish":
+      return c.callReturn();
+    default:
+      return c.callReturn();
+  }
+}, setDisplayDrawPoint:function(c, b, d, e, f) {
+  switch(this.checkFinish(c, 40)) {
+    case "Start":
+      return this.transferDisplayDrawPoint(b, d, e, f), c;
+    case "Running":
+      return c;
+    case "Finish":
+      return c.callReturn();
+    default:
+      return c.callReturn();
+  }
+}, setDisplayDrawLine:function(c, b, d, e, f, g, h, k) {
+  switch(this.checkFinish(c, 40)) {
+    case "Start":
+      return this.transferDisplayDrawLine(b, d, e, f, g, h, k), c;
+    case "Running":
+      return c;
+    case "Finish":
+      return c.callReturn();
+    default:
+      return c.callReturn();
+  }
+}, setDisplayDrawRect:function(c, b, d, e, f, g, h, k, l) {
+  switch(this.checkFinish(c, 40)) {
+    case "Start":
+      return this.transferDisplayDrawRect(b, d, e, f, g, h, k, l), c;
+    case "Running":
+      return c;
+    case "Finish":
+      return c.callReturn();
+    default:
+      return c.callReturn();
+  }
+}, setDisplayDrawCircle:function(c, b, d, e, f, g, h) {
+  switch(this.checkFinish(c, 40)) {
+    case "Start":
+      return this.transferDisplayDrawCircle(b, d, e, f, g, h), c;
+    case "Running":
+      return c;
+    case "Finish":
+      return c.callReturn();
+    default:
+      return c.callReturn();
+  }
+}, setDisplayDrawString:function(c, b, d, e, f, g, h) {
+  switch(this.checkFinish(c, 40)) {
+    case "Start":
+      return this.transferDisplayDrawString(b, d, e, f, g, h), c;
+    case "Running":
+      return c;
+    case "Finish":
+      return c.callReturn();
+    default:
+      return c.callReturn();
+  }
+}, setDisplayDrawStringAlign:function(c, b, d, e, f, g, h, k, l) {
+  switch(this.checkFinish(c, 40)) {
+    case "Start":
+      return this.transferDisplayDrawStringAlign(b, d, e, f, g, h, k, l), c;
+    case "Running":
+      return c;
+    case "Finish":
+      return c.callReturn();
+    default:
+      return c.callReturn();
+  }
+}, setBuzzerStop:function(c) {
+  switch(this.checkFinish(c, 40)) {
+    case "Start":
+      return this.transferbuzzer(0, 0, 0), c;
+    case "Running":
+      return c;
+    case "Finish":
+      return c.callReturn();
+    default:
+      return c.callReturn();
+  }
+}, setBuzzerMute:function(c, b, d, e) {
+  b = Math.max(b, 0);
+  b = Math.min(b, 60000);
+  var f = 40;
+  d && (f = b);
+  switch(this.checkFinish(c, f)) {
+    case "Start":
+      return d = 2, e && (d = 1), this.transferbuzzer(d, 238, b), c;
+    case "Running":
+      return c;
+    case "Finish":
+      return c.callReturn();
+    default:
+      return c.callReturn();
+  }
+}, setBuzzerScale:function(c, b, d, e, f, g) {
+  e = Math.max(e, 0);
+  e = Math.min(e, 60000);
+  var h = 40;
+  f && (h = e);
+  switch(this.checkFinish(c, h)) {
+    case "Start":
+      return f = 4, g && (f = 3), this.transferbuzzer(f, 12 * b + d, e), c;
+    case "Running":
+      return c;
+    case "Finish":
+      return c.callReturn();
+    default:
+      return c.callReturn();
+  }
+}, setBuzzerHz:function(c, b, d, e, f) {
+  d = Math.max(d, 0);
+  d = Math.min(d, 60000);
+  var g = 40;
+  e && (g = d);
+  switch(this.checkFinish(c, g)) {
+    case "Start":
+      return e = 6, f && (e = 5), b = Math.max(b, 1), b = Math.min(b, 63999), this.transferbuzzer(e, b, d), c;
+    case "Running":
+      return c;
+    case "Finish":
+      return c.callReturn();
+    default:
+      return c.callReturn();
+  }
+}, setVibratorStop:function(c) {
+  switch(this.checkFinish(c, 40)) {
+    case "Start":
+      return this.transferVibrator(0, 0, 0, 0), c;
+    case "Running":
+      return c;
+    case "Finish":
+      return c.callReturn();
+    default:
+      return c.callReturn();
+  }
+}, setVibrator:function(c, b, d, e, f, g) {
+  e = Math.max(e, 0);
+  e = Math.min(e, 60000);
+  var h = 40;
+  f && (h = e);
+  switch(this.checkFinish(c, h)) {
+    case "Start":
+      return f = 2, g && (f = 1), this.transferVibrator(f, b, d, e), c;
+    case "Running":
+      return c;
+    case "Finish":
+      return c.callReturn();
+    default:
+      return c.callReturn();
+  }
+}, sendCommand:function(c, b, d, e) {
+  switch(this.checkFinish(c, 40)) {
+    case "Start":
+      return this.transferCommand(b, d, e), c;
+    case "Running":
+      return c;
+    case "Finish":
+      return c.callReturn();
+    default:
+      return c.callReturn();
+  }
+}};
+Entry.byrobot_petrone_v2_drive = {name:"byrobot_petrone_v2_drive", setZero:function() {
+  this.transferBufferClear();
+  for (var c = 0; 1 > c; c++) {
+    this.transferCommand(48, 36, 0), this.transferVibrator(0, 0, 0, 0), this.transferbuzzer(0, 0, 0), this.transferLightManual(48, 255, 0), this.transferLightManual(49, 255, 0), this.transferLightMode(48, 67, 2000), this.transferMotorSingle(0, 1, 0), this.transferMotorSingle(1, 2, 0);
+  }
+}, monitorTemplate:{imgPath:"hw/byrobot_petrone_v2_drive.png", width:256, height:256, listPorts:{state_modeVehicle:{name:Lang.Blocks.byrobot_petrone_v2_drone_state_mode_vehicle, type:"input", pos:{x:0, y:0}}, state_modeDrive:{name:Lang.Blocks.byrobot_petrone_v2_drone_state_mode_drive, type:"input", pos:{x:0, y:0}}, state_battery:{name:Lang.Blocks.byrobot_petrone_v2_drone_state_battery, type:"input", pos:{x:0, y:0}}, imu_angleRoll:{name:Lang.Blocks.byrobot_petrone_v2_drone_attitude_roll, type:"input", 
+pos:{x:0, y:0}}, imu_anglePitch:{name:Lang.Blocks.byrobot_petrone_v2_drone_attitude_pitch, type:"input", pos:{x:0, y:0}}, imu_angleYaw:{name:Lang.Blocks.byrobot_petrone_v2_drone_attitude_yaw, type:"input", pos:{x:0, y:0}}, imu_accX:{name:Lang.Blocks.byrobot_petrone_v2_drone_accel_x, type:"input", pos:{x:0, y:0}}, imu_accY:{name:Lang.Blocks.byrobot_petrone_v2_drone_accel_y, type:"input", pos:{x:0, y:0}}, imu_accZ:{name:Lang.Blocks.byrobot_petrone_v2_drone_accel_z, type:"input", pos:{x:0, y:0}}, imu_gyroRoll:{name:Lang.Blocks.byrobot_petrone_v2_drone_gyro_roll, 
+type:"input", pos:{x:0, y:0}}, imu_gyroPitch:{name:Lang.Blocks.byrobot_petrone_v2_drone_gyro_pitch, type:"input", pos:{x:0, y:0}}, imu_gyroYaw:{name:Lang.Blocks.byrobot_petrone_v2_drone_gyro_yaw, type:"input", pos:{x:0, y:0}}, pressure_temperature:{name:Lang.Blocks.byrobot_petrone_v2_drone_pressure_temperature, type:"input", pos:{x:0, y:0}}, pressure_pressure:{name:Lang.Blocks.byrobot_petrone_v2_drone_pressure_pressure, type:"input", pos:{x:0, y:0}}, imageflow_positionX:{name:Lang.Blocks.byrobot_petrone_v2_drone_imageflow_positionX, 
+type:"input", pos:{x:0, y:0}}, imageflow_positionY:{name:Lang.Blocks.byrobot_petrone_v2_drone_imageflow_positionY, type:"input", pos:{x:0, y:0}}, range_bottom:{name:Lang.Blocks.byrobot_petrone_v2_drone_range_bottom, type:"input", pos:{x:0, y:0}}, irmessage_direction:{name:Lang.Blocks.byrobot_petrone_v2_drone_irmessage_direction, type:"input", pos:{x:0, y:0}}, irmessage_irdata:{name:Lang.Blocks.byrobot_petrone_v2_drone_irmessage, type:"input", pos:{x:0, y:0}}, joystick_left_x:{name:Lang.Blocks.byrobot_petrone_v2_controller_joystick_left_x, 
+type:"input", pos:{x:0, y:0}}, joystick_left_y:{name:Lang.Blocks.byrobot_petrone_v2_controller_joystick_left_y, type:"input", pos:{x:0, y:0}}, joystick_left_direction:{name:Lang.Blocks.byrobot_petrone_v2_controller_joystick_left_direction, type:"input", pos:{x:0, y:0}}, joystick_left_event:{name:Lang.Blocks.byrobot_petrone_v2_controller_joystick_left_event, type:"input", pos:{x:0, y:0}}, joystick_right_x:{name:Lang.Blocks.byrobot_petrone_v2_controller_joystick_right_x, type:"input", pos:{x:0, y:0}}, 
+joystick_right_y:{name:Lang.Blocks.byrobot_petrone_v2_controller_joystick_right_y, type:"input", pos:{x:0, y:0}}, joystick_right_direction:{name:Lang.Blocks.byrobot_petrone_v2_controller_joystick_right_direction, type:"input", pos:{x:0, y:0}}, joystick_right_event:{name:Lang.Blocks.byrobot_petrone_v2_controller_joystick_right_event, type:"input", pos:{x:0, y:0}}, button_button:{name:Lang.Blocks.byrobot_petrone_v2_controller_button_button, type:"input", pos:{x:0, y:0}}, button_event:{name:Lang.Blocks.byrobot_petrone_v2_controller_button_event, 
+type:"input", pos:{x:0, y:0}}, entryhw_countTransferReserved:{name:Lang.Blocks.byrobot_petrone_v2_entryhw_count_transfer_reserved, type:"output", pos:{x:0, y:0}}}, ports:{}, mode:"both"}, checkFinish:function(c, b) {
+  if (c.isStart) {
+    if (1 == c.timeFlag) {
+      return "Running";
+    }
+    delete c.timeFlag;
+    delete c.isStart;
+    Entry.engine.isContinue = !1;
+    return "Finish";
+  }
+  c.isStart = !0;
+  c.timeFlag = 1;
+  setTimeout(function() {
+    c.timeFlag = 0;
+  }, 60 / (Entry.FPS || 60) * b);
+  return "Start";
+}, transferBufferClear:function() {
+  Entry.hw.setDigitalPortValue("buffer_clear", 0);
+  Entry.hw.update();
+  delete Entry.hw.sendQueue.buffer_clear;
+}, transferLightManual:function(c, b, d) {
+  c = Math.max(c, 0);
+  c = Math.min(c, 255);
+  b = Math.max(b, 0);
+  b = Math.min(b, 255);
+  d = Math.max(d, 0);
+  d = Math.min(d, 255);
+  Entry.hw.setDigitalPortValue("target", c);
+  Entry.hw.setDigitalPortValue("light_manual_flags", b);
+  Entry.hw.setDigitalPortValue("light_manual_brightness", d);
+  Entry.hw.update();
+  delete Entry.hw.sendQueue.target;
+  delete Entry.hw.sendQueue.light_manual_flags;
+  delete Entry.hw.sendQueue.light_manual_brightness;
+}, transferLightMode:function(c, b, d) {
+  c = Math.max(c, 0);
+  c = Math.min(c, 255);
+  b = Math.max(b, 0);
+  b = Math.min(b, 255);
+  d = Math.max(d, 0);
+  d = Math.min(d, 65535);
+  Entry.hw.setDigitalPortValue("target", c);
+  Entry.hw.setDigitalPortValue("light_mode_mode", b);
+  Entry.hw.setDigitalPortValue("light_mode_interval", d);
+  Entry.hw.update();
+  delete Entry.hw.sendQueue.target;
+  delete Entry.hw.sendQueue.light_mode_mode;
+  delete Entry.hw.sendQueue.light_mode_interval;
+}, transferLightColorRgb:function(c, b, d, e, f) {
+  c = Math.max(c, 0);
+  c = Math.min(c, 255);
+  b = Math.max(b, 0);
+  b = Math.min(b, 255);
+  d = Math.max(d, 0);
+  d = Math.min(d, 255);
+  e = Math.max(e, 0);
+  e = Math.min(e, 255);
+  f = Math.max(f, 0);
+  f = Math.min(f, 255);
+  Entry.hw.setDigitalPortValue("target", c);
+  Entry.hw.setDigitalPortValue("light_mode_mode", b);
+  Entry.hw.setDigitalPortValue("light_color_r", d);
+  Entry.hw.setDigitalPortValue("light_color_g", e);
+  Entry.hw.setDigitalPortValue("light_color_b", f);
+  Entry.hw.update();
+  delete Entry.hw.sendQueue.target;
+  delete Entry.hw.sendQueue.light_mode_mode;
+  delete Entry.hw.sendQueue.light_color_r;
+  delete Entry.hw.sendQueue.light_color_g;
+  delete Entry.hw.sendQueue.light_color_b;
+}, transferDisplayClear:function(c, b, d, e, f, g, h) {
+  d ? (Entry.hw.setDigitalPortValue("target", c), Entry.hw.setDigitalPortValue("display_clearall_pixel", b), Entry.hw.update(), delete Entry.hw.sendQueue.target, delete Entry.hw.sendQueue.display_clearall_pixel) : (e = Math.max(e, 0), e = Math.min(e, 128), f = Math.max(f, 0), f = Math.min(f, 64), g = Math.max(g, 0), g = Math.min(g, 128), h = Math.max(h, 0), h = Math.min(h, 64), Entry.hw.setDigitalPortValue("target", c), Entry.hw.setDigitalPortValue("display_clear_x", e), Entry.hw.setDigitalPortValue("display_clear_y", 
+  f), Entry.hw.setDigitalPortValue("display_clear_width", g), Entry.hw.setDigitalPortValue("display_clear_height", h), Entry.hw.setDigitalPortValue("display_clear_pixel", b), Entry.hw.update(), delete Entry.hw.sendQueue.target, delete Entry.hw.sendQueue.display_clear_x, delete Entry.hw.sendQueue.display_clear_y, delete Entry.hw.sendQueue.display_clear_width, delete Entry.hw.sendQueue.display_clear_height, delete Entry.hw.sendQueue.display_clear_pixel);
+}, transferDisplayInvert:function(c, b, d, e, f) {
+  b = Math.max(b, 0);
+  b = Math.min(b, 128);
+  d = Math.max(d, 0);
+  d = Math.min(d, 64);
+  e = Math.max(e, 0);
+  e = Math.min(e, 128);
+  f = Math.max(f, 0);
+  f = Math.min(f, 64);
+  Entry.hw.setDigitalPortValue("target", c);
+  Entry.hw.setDigitalPortValue("display_invert_x", b);
+  Entry.hw.setDigitalPortValue("display_invert_y", d);
+  Entry.hw.setDigitalPortValue("display_invert_width", e);
+  Entry.hw.setDigitalPortValue("display_invert_height", f);
+  Entry.hw.update();
+  delete Entry.hw.sendQueue.target;
+  delete Entry.hw.sendQueue.display_invert_x;
+  delete Entry.hw.sendQueue.display_invert_y;
+  delete Entry.hw.sendQueue.display_invert_width;
+  delete Entry.hw.sendQueue.display_invert_height;
+}, transferDisplayDrawPoint:function(c, b, d, e) {
+  b = Math.max(b, 0);
+  b = Math.min(b, 128);
+  d = Math.max(d, 0);
+  d = Math.min(d, 64);
+  Entry.hw.setDigitalPortValue("target", c);
+  Entry.hw.setDigitalPortValue("display_draw_point_x", b);
+  Entry.hw.setDigitalPortValue("display_draw_point_y", d);
+  Entry.hw.setDigitalPortValue("display_draw_point_pixel", e);
+  Entry.hw.update();
+  delete Entry.hw.sendQueue.target;
+  delete Entry.hw.sendQueue.display_draw_point_x;
+  delete Entry.hw.sendQueue.display_draw_point_y;
+  delete Entry.hw.sendQueue.display_draw_point_pixel;
+}, transferDisplayDrawLine:function(c, b, d, e, f, g, h) {
+  b = Math.max(b, 0);
+  b = Math.min(b, 128);
+  d = Math.max(d, 0);
+  d = Math.min(d, 64);
+  e = Math.max(e, 0);
+  e = Math.min(e, 128);
+  f = Math.max(f, 0);
+  f = Math.min(f, 64);
+  Entry.hw.setDigitalPortValue("target", c);
+  Entry.hw.setDigitalPortValue("display_draw_line_x1", b);
+  Entry.hw.setDigitalPortValue("display_draw_line_y1", d);
+  Entry.hw.setDigitalPortValue("display_draw_line_x2", e);
+  Entry.hw.setDigitalPortValue("display_draw_line_y2", f);
+  Entry.hw.setDigitalPortValue("display_draw_line_pixel", g);
+  Entry.hw.setDigitalPortValue("display_draw_line_line", h);
+  Entry.hw.update();
+  delete Entry.hw.sendQueue.target;
+  delete Entry.hw.sendQueue.display_draw_line_x1;
+  delete Entry.hw.sendQueue.display_draw_line_y1;
+  delete Entry.hw.sendQueue.display_draw_line_x2;
+  delete Entry.hw.sendQueue.display_draw_line_y2;
+  delete Entry.hw.sendQueue.display_draw_line_pixel;
+  delete Entry.hw.sendQueue.display_draw_line_line;
+}, transferDisplayDrawRect:function(c, b, d, e, f, g, h, k) {
+  b = Math.max(b, 0);
+  b = Math.min(b, 128);
+  d = Math.max(d, 0);
+  d = Math.min(d, 64);
+  e = Math.max(e, 0);
+  e = Math.min(e, 128);
+  f = Math.max(f, 0);
+  f = Math.min(f, 64);
+  Entry.hw.setDigitalPortValue("target", c);
+  Entry.hw.setDigitalPortValue("display_draw_rect_x", b);
+  Entry.hw.setDigitalPortValue("display_draw_rect_y", d);
+  Entry.hw.setDigitalPortValue("display_draw_rect_width", e);
+  Entry.hw.setDigitalPortValue("display_draw_rect_height", f);
+  Entry.hw.setDigitalPortValue("display_draw_rect_pixel", g);
+  Entry.hw.setDigitalPortValue("display_draw_rect_flagfill", h);
+  Entry.hw.setDigitalPortValue("display_draw_rect_line", k);
+  Entry.hw.update();
+  delete Entry.hw.sendQueue.target;
+  delete Entry.hw.sendQueue.display_draw_rect_x;
+  delete Entry.hw.sendQueue.display_draw_rect_y;
+  delete Entry.hw.sendQueue.display_draw_rect_width;
+  delete Entry.hw.sendQueue.display_draw_rect_height;
+  delete Entry.hw.sendQueue.display_draw_rect_pixel;
+  delete Entry.hw.sendQueue.display_draw_rect_flagfill;
+  delete Entry.hw.sendQueue.display_draw_rect_line;
+}, transferDisplayDrawCircle:function(c, b, d, e, f, g) {
+  b = Math.max(b, -50);
+  b = Math.min(b, 178);
+  d = Math.max(d, -50);
+  d = Math.min(d, 114);
+  e = Math.max(e, 1);
+  e = Math.min(e, 200);
+  Entry.hw.setDigitalPortValue("target", c);
+  Entry.hw.setDigitalPortValue("display_draw_circle_x", b);
+  Entry.hw.setDigitalPortValue("display_draw_circle_y", d);
+  Entry.hw.setDigitalPortValue("display_draw_circle_radius", e);
+  Entry.hw.setDigitalPortValue("display_draw_circle_pixel", f);
+  Entry.hw.setDigitalPortValue("display_draw_circle_flagfill", g);
+  Entry.hw.update();
+  delete Entry.hw.sendQueue.target;
+  delete Entry.hw.sendQueue.display_draw_circle_x;
+  delete Entry.hw.sendQueue.display_draw_circle_y;
+  delete Entry.hw.sendQueue.display_draw_circle_radius;
+  delete Entry.hw.sendQueue.display_draw_circle_pixel;
+  delete Entry.hw.sendQueue.display_draw_circle_flagfill;
+}, transferDisplayDrawString:function(c, b, d, e, f, g) {
+  b = Math.max(b, 0);
+  b = Math.min(b, 120);
+  d = Math.max(d, 0);
+  d = Math.min(d, 60);
+  Entry.hw.setDigitalPortValue("target", c);
+  Entry.hw.setDigitalPortValue("display_draw_string_x", b);
+  Entry.hw.setDigitalPortValue("display_draw_string_y", d);
+  Entry.hw.setDigitalPortValue("display_draw_string_font", e);
+  Entry.hw.setDigitalPortValue("display_draw_string_pixel", f);
+  Entry.hw.setDigitalPortValue("display_draw_string_string", g);
+  Entry.hw.update();
+  delete Entry.hw.sendQueue.target;
+  delete Entry.hw.sendQueue.display_draw_string_x;
+  delete Entry.hw.sendQueue.display_draw_string_y;
+  delete Entry.hw.sendQueue.display_draw_string_font;
+  delete Entry.hw.sendQueue.display_draw_string_pixel;
+  delete Entry.hw.sendQueue.display_draw_string_string;
+}, transferDisplayDrawStringAlign:function(c, b, d, e, f, g, h, k) {
+  b = Math.max(b, 0);
+  b = Math.min(b, 124);
+  d = Math.max(d, 4);
+  d = Math.min(d, 128);
+  e = Math.max(e, 0);
+  e = Math.min(e, 60);
+  Entry.hw.setDigitalPortValue("target", c);
+  Entry.hw.setDigitalPortValue("display_draw_string_align_x_start", b);
+  Entry.hw.setDigitalPortValue("display_draw_string_align_x_end", d);
+  Entry.hw.setDigitalPortValue("display_draw_string_align_y", e);
+  Entry.hw.setDigitalPortValue("display_draw_string_align_align", f);
+  Entry.hw.setDigitalPortValue("display_draw_string_align_font", g);
+  Entry.hw.setDigitalPortValue("display_draw_string_align_pixel", h);
+  Entry.hw.setDigitalPortValue("display_draw_string_align_string", k);
+  Entry.hw.update();
+  delete Entry.hw.sendQueue.target;
+  delete Entry.hw.sendQueue.display_draw_string_align_x_start;
+  delete Entry.hw.sendQueue.display_draw_string_align_x_end;
+  delete Entry.hw.sendQueue.display_draw_string_align_y;
+  delete Entry.hw.sendQueue.display_draw_string_align_align;
+  delete Entry.hw.sendQueue.display_draw_string_align_font;
+  delete Entry.hw.sendQueue.display_draw_string_align_pixel;
+  delete Entry.hw.sendQueue.display_draw_string_align_string;
+}, transferbuzzer:function(c, b, d) {
+  Entry.hw.setDigitalPortValue("target", 49);
+  Entry.hw.setDigitalPortValue("buzzer_mode", c);
+  Entry.hw.setDigitalPortValue("buzzer_value", b);
+  Entry.hw.setDigitalPortValue("buzzer_time", d);
+  Entry.hw.update();
+  delete Entry.hw.sendQueue.target;
+  delete Entry.hw.sendQueue.buzzer_mode;
+  delete Entry.hw.sendQueue.buzzer_value;
+  delete Entry.hw.sendQueue.buzzer_time;
+}, transferVibrator:function(c, b, d, e) {
+  b = Math.max(b, 1);
+  b = Math.min(b, 60000);
+  d = Math.max(d, 1);
+  d = Math.min(d, 60000);
+  Entry.hw.setDigitalPortValue("target", 49);
+  Entry.hw.setDigitalPortValue("vibrator_mode", c);
+  Entry.hw.setDigitalPortValue("vibrator_on", b);
+  Entry.hw.setDigitalPortValue("vibrator_off", d);
+  Entry.hw.setDigitalPortValue("vibrator_total", e);
+  Entry.hw.update();
+  delete Entry.hw.sendQueue.target;
+  delete Entry.hw.sendQueue.vibrator_mode;
+  delete Entry.hw.sendQueue.vibrator_on;
+  delete Entry.hw.sendQueue.vibrator_off;
+  delete Entry.hw.sendQueue.vibrator_total;
+}, transferIrMessage:function(c, b) {
+  b = Math.max(b, -2147483647);
+  b = Math.min(b, 2147483647);
+  Entry.hw.setDigitalPortValue("target", 48);
+  Entry.hw.setDigitalPortValue("irmessage_direction", c);
+  Entry.hw.setDigitalPortValue("irmessage_irdata", b);
+  Entry.hw.update();
+  delete Entry.hw.sendQueue.target;
+  delete Entry.hw.sendQueue.irmessage_direction;
+  delete Entry.hw.sendQueue.irmessage_irdata;
+}, transferMotorSingle:function(c, b, d) {
+  d = Math.max(d, 0);
+  d = Math.min(d, 4096);
+  Entry.hw.setDigitalPortValue("target", 48);
+  Entry.hw.setDigitalPortValue("motorsingle_target", c);
+  Entry.hw.setDigitalPortValue("motorsingle_rotation", b);
+  Entry.hw.setDigitalPortValue("motorsingle_value", d);
+  Entry.hw.update();
+  delete Entry.hw.sendQueue.target;
+  delete Entry.hw.sendQueue.motorsingle_target;
+  delete Entry.hw.sendQueue.motorsingle_rotation;
+  delete Entry.hw.sendQueue.motorsingle_value;
+}, transferCommand:function(c, b, d) {
+  Entry.hw.setDigitalPortValue("target", c);
+  Entry.hw.setDigitalPortValue("command_command", b);
+  Entry.hw.setDigitalPortValue("command_option", d);
+  Entry.hw.update();
+  delete Entry.hw.sendQueue.target;
+  delete Entry.hw.sendQueue.command_command;
+  delete Entry.hw.sendQueue.command_option;
+}, transferControlDouble:function(c, b) {
+  c = Math.max(c, -100);
+  c = Math.min(c, 100);
+  b = Math.max(b, -100);
+  b = Math.min(b, 100);
+  Entry.hw.setDigitalPortValue("target", 48);
+  Entry.hw.setDigitalPortValue("control_wheel", c);
+  Entry.hw.setDigitalPortValue("control_accel", b);
+  Entry.hw.update();
+  delete Entry.hw.sendQueue.target;
+  delete Entry.hw.sendQueue.control_wheel;
+  delete Entry.hw.sendQueue.control_accel;
+}, transferControlQuad:function(c, b, d, e) {
+  c = Math.max(c, -100);
+  c = Math.min(c, 100);
+  b = Math.max(b, -100);
+  b = Math.min(b, 100);
+  d = Math.max(d, -100);
+  d = Math.min(d, 100);
+  e = Math.max(e, -100);
+  e = Math.min(e, 100);
+  Entry.hw.setDigitalPortValue("target", 48);
+  Entry.hw.setDigitalPortValue("control_roll", c);
+  Entry.hw.setDigitalPortValue("control_pitch", b);
+  Entry.hw.setDigitalPortValue("control_yaw", d);
+  Entry.hw.setDigitalPortValue("control_throttle", e);
+  Entry.hw.update();
+  delete Entry.hw.sendQueue.target;
+  delete Entry.hw.sendQueue.control_roll;
+  delete Entry.hw.sendQueue.control_pitch;
+  delete Entry.hw.sendQueue.control_yaw;
+  delete Entry.hw.sendQueue.control_throttle;
+}, getData:function(c, b) {
+  return Entry.hw.portData[b];
+}, setLightManual:function(c, b, d, e) {
+  switch(this.checkFinish(c, 40)) {
+    case "Start":
+      return this.transferLightManual(b, d, e), c;
+    case "Running":
+      return c;
+    case "Finish":
+      return c.callReturn();
+    default:
+      return c.callReturn();
+  }
+}, setLightColorRgb:function(c, b, d, e, f, g) {
+  switch(this.checkFinish(c, 40)) {
+    case "Start":
+      return this.transferLightColorRgb(b, d, e, f, g), c;
+    case "Running":
+      return c;
+    case "Finish":
+      return c.callReturn();
+    default:
+      return c.callReturn();
+  }
+}, setDisplayClear:function(c, b, d, e, f, g, h, k) {
+  switch(this.checkFinish(c, 40)) {
+    case "Start":
+      return this.transferDisplayClear(b, d, e, f, g, h, k), c;
+    case "Running":
+      return c;
+    case "Finish":
+      return c.callReturn();
+    default:
+      return c.callReturn();
+  }
+}, setDisplayInvert:function(c, b, d, e, f, g) {
+  switch(this.checkFinish(c, 40)) {
+    case "Start":
+      return this.transferDisplayInvert(b, d, e, f, g), c;
+    case "Running":
+      return c;
+    case "Finish":
+      return c.callReturn();
+    default:
+      return c.callReturn();
+  }
+}, setDisplayDrawPoint:function(c, b, d, e, f) {
+  switch(this.checkFinish(c, 40)) {
+    case "Start":
+      return this.transferDisplayDrawPoint(b, d, e, f), c;
+    case "Running":
+      return c;
+    case "Finish":
+      return c.callReturn();
+    default:
+      return c.callReturn();
+  }
+}, setDisplayDrawLine:function(c, b, d, e, f, g, h, k) {
+  switch(this.checkFinish(c, 40)) {
+    case "Start":
+      return this.transferDisplayDrawLine(b, d, e, f, g, h, k), c;
+    case "Running":
+      return c;
+    case "Finish":
+      return c.callReturn();
+    default:
+      return c.callReturn();
+  }
+}, setDisplayDrawRect:function(c, b, d, e, f, g, h, k, l) {
+  switch(this.checkFinish(c, 40)) {
+    case "Start":
+      return this.transferDisplayDrawRect(b, d, e, f, g, h, k, l), c;
+    case "Running":
+      return c;
+    case "Finish":
+      return c.callReturn();
+    default:
+      return c.callReturn();
+  }
+}, setDisplayDrawCircle:function(c, b, d, e, f, g, h) {
+  switch(this.checkFinish(c, 40)) {
+    case "Start":
+      return this.transferDisplayDrawCircle(b, d, e, f, g, h), c;
+    case "Running":
+      return c;
+    case "Finish":
+      return c.callReturn();
+    default:
+      return c.callReturn();
+  }
+}, setDisplayDrawString:function(c, b, d, e, f, g, h) {
+  switch(this.checkFinish(c, 40)) {
+    case "Start":
+      return this.transferDisplayDrawString(b, d, e, f, g, h), c;
+    case "Running":
+      return c;
+    case "Finish":
+      return c.callReturn();
+    default:
+      return c.callReturn();
+  }
+}, setDisplayDrawStringAlign:function(c, b, d, e, f, g, h, k, l) {
+  switch(this.checkFinish(c, 40)) {
+    case "Start":
+      return this.transferDisplayDrawStringAlign(b, d, e, f, g, h, k, l), c;
+    case "Running":
+      return c;
+    case "Finish":
+      return c.callReturn();
+    default:
+      return c.callReturn();
+  }
+}, setBuzzerStop:function(c) {
+  switch(this.checkFinish(c, 40)) {
+    case "Start":
+      return this.transferbuzzer(0, 0, 0), c;
+    case "Running":
+      return c;
+    case "Finish":
+      return c.callReturn();
+    default:
+      return c.callReturn();
+  }
+}, setBuzzerMute:function(c, b, d, e) {
+  b = Math.max(b, 0);
+  b = Math.min(b, 60000);
+  var f = 40;
+  d && (f = b);
+  switch(this.checkFinish(c, f)) {
+    case "Start":
+      return d = 2, e && (d = 1), this.transferbuzzer(d, 238, b), c;
+    case "Running":
+      return c;
+    case "Finish":
+      return c.callReturn();
+    default:
+      return c.callReturn();
+  }
+}, setBuzzerScale:function(c, b, d, e, f, g) {
+  e = Math.max(e, 0);
+  e = Math.min(e, 60000);
+  var h = 40;
+  f && (h = e);
+  switch(this.checkFinish(c, h)) {
+    case "Start":
+      return f = 4, g && (f = 3), this.transferbuzzer(f, 12 * b + d, e), c;
+    case "Running":
+      return c;
+    case "Finish":
+      return c.callReturn();
+    default:
+      return c.callReturn();
+  }
+}, setBuzzerHz:function(c, b, d, e, f) {
+  d = Math.max(d, 0);
+  d = Math.min(d, 60000);
+  var g = 40;
+  e && (g = d);
+  switch(this.checkFinish(c, g)) {
+    case "Start":
+      return e = 6, f && (e = 5), b = Math.max(b, 1), b = Math.min(b, 63999), this.transferbuzzer(e, b, d), c;
+    case "Running":
+      return c;
+    case "Finish":
+      return c.callReturn();
+    default:
+      return c.callReturn();
+  }
+}, setVibratorStop:function(c) {
+  switch(this.checkFinish(c, 40)) {
+    case "Start":
+      return this.transferVibrator(0, 0, 0, 0), c;
+    case "Running":
+      return c;
+    case "Finish":
+      return c.callReturn();
+    default:
+      return c.callReturn();
+  }
+}, setVibrator:function(c, b, d, e, f, g) {
+  e = Math.max(e, 0);
+  e = Math.min(e, 60000);
+  var h = 40;
+  f && (h = e);
+  switch(this.checkFinish(c, h)) {
+    case "Start":
+      return f = 2, g && (f = 1), this.transferVibrator(f, b, d, e), c;
+    case "Running":
+      return c;
+    case "Finish":
+      return c.callReturn();
+    default:
+      return c.callReturn();
+  }
+}, sendIrMessage:function(c, b, d) {
+  switch(this.checkFinish(c, 40)) {
+    case "Start":
+      return this.transferIrMessage(b, d), c;
+    case "Running":
+      return c;
+    case "Finish":
+      return c.callReturn();
+    default:
+      return c.callReturn();
+  }
+}, sendStop:function(c) {
+  return this.sendCommand(c, 48, 36, 0);
+}, sendCommand:function(c, b, d, e) {
+  switch(this.checkFinish(c, 40)) {
+    case "Start":
+      return this.transferCommand(b, d, e), c;
+    case "Running":
+      return c;
+    case "Finish":
+      return c.callReturn();
+    default:
+      return c.callReturn();
+  }
+}, setMotorSingle:function(c, b, d, e) {
+  switch(this.checkFinish(c, 40)) {
+    case "Start":
+      return this.transferMotorSingle(b, d, e), c;
+    case "Running":
+      return c;
+    case "Finish":
+      return c.callReturn();
+    default:
+      return c.callReturn();
+  }
+}, setModeVehicle:function(c, b) {
+  switch(this.checkFinish(c, 40)) {
+    case "Start":
+      return this.transferCommand(48, 16, b), this.transferControlDouble(0, 0), this.transferControlQuad(0, 0, 0, 0), c;
+    case "Running":
+      return c;
+    case "Finish":
+      return c.callReturn();
+    default:
+      return c.callReturn();
+  }
+}, sendControlDoubleSingle:function(c, b, d, e, f) {
+  var g = 40;
+  f && (g = e);
+  switch(this.checkFinish(c, g)) {
+    case "Start":
+      switch(b) {
+        case "control_wheel":
+          d = Math.max(d, -100);
+          d = Math.min(d, 100);
+          break;
+        case "control_accel":
+          d = Math.max(d, -100), d = Math.min(d, 100);
+      }Entry.hw.setDigitalPortValue("target", 48);
+      Entry.hw.setDigitalPortValue(b, d);
+      Entry.hw.update();
+      delete Entry.hw.sendQueue.target;
+      delete Entry.hw.sendQueue[b];
+      return c;
+    case "Running":
+      return c;
+    case "Finish":
+      return f && (Entry.hw.setDigitalPortValue("target", 48), Entry.hw.setDigitalPortValue(b, 0), Entry.hw.update(), delete Entry.hw.sendQueue.target, delete Entry.hw.sendQueue[b]), c.callReturn();
+    default:
+      return c.callReturn();
+  }
+}, sendControlDouble:function(c, b, d, e, f) {
+  var g = 40;
+  f && (g = e);
+  switch(this.checkFinish(c, g)) {
+    case "Start":
+      return this.transferControlDouble(b, d), c;
+    case "Running":
+      return c;
+    case "Finish":
+      return f && this.transferControlDouble(0, 0), c.callReturn();
+    default:
+      return c.callReturn();
+  }
+}};
+Entry.byrobot_petrone_v2_flight = {name:"byrobot_petrone_v2_flight", setZero:function() {
+  this.transferBufferClear();
+  for (var c = 0; 1 > c; c++) {
+    this.transferCommand(48, 36, 0), this.transferVibrator(0, 0, 0, 0), this.transferbuzzer(0, 0, 0), this.transferLightManual(48, 255, 0), this.transferLightManual(49, 255, 0), this.transferLightMode(48, 67, 2000), this.transferMotorSingle(0, 1, 0), this.transferMotorSingle(1, 2, 0);
+  }
+}, monitorTemplate:{imgPath:"hw/byrobot_petrone_v2_flight.png", width:256, height:256, listPorts:{state_modeVehicle:{name:Lang.Blocks.byrobot_petrone_v2_drone_state_mode_vehicle, type:"input", pos:{x:0, y:0}}, state_modeFlight:{name:Lang.Blocks.byrobot_petrone_v2_drone_state_mode_flight, type:"input", pos:{x:0, y:0}}, state_coordinate:{name:Lang.Blocks.byrobot_petrone_v2_drone_state_mode_coordinate, type:"input", pos:{x:0, y:0}}, state_battery:{name:Lang.Blocks.byrobot_petrone_v2_drone_state_battery, 
+type:"input", pos:{x:0, y:0}}, imu_angleRoll:{name:Lang.Blocks.byrobot_petrone_v2_drone_attitude_roll, type:"input", pos:{x:0, y:0}}, imu_anglePitch:{name:Lang.Blocks.byrobot_petrone_v2_drone_attitude_pitch, type:"input", pos:{x:0, y:0}}, imu_angleYaw:{name:Lang.Blocks.byrobot_petrone_v2_drone_attitude_yaw, type:"input", pos:{x:0, y:0}}, imu_accX:{name:Lang.Blocks.byrobot_petrone_v2_drone_accel_x, type:"input", pos:{x:0, y:0}}, imu_accY:{name:Lang.Blocks.byrobot_petrone_v2_drone_accel_y, type:"input", 
+pos:{x:0, y:0}}, imu_accZ:{name:Lang.Blocks.byrobot_petrone_v2_drone_accel_z, type:"input", pos:{x:0, y:0}}, imu_gyroRoll:{name:Lang.Blocks.byrobot_petrone_v2_drone_gyro_roll, type:"input", pos:{x:0, y:0}}, imu_gyroPitch:{name:Lang.Blocks.byrobot_petrone_v2_drone_gyro_pitch, type:"input", pos:{x:0, y:0}}, imu_gyroYaw:{name:Lang.Blocks.byrobot_petrone_v2_drone_gyro_yaw, type:"input", pos:{x:0, y:0}}, pressure_temperature:{name:Lang.Blocks.byrobot_petrone_v2_drone_pressure_temperature, type:"input", 
+pos:{x:0, y:0}}, pressure_pressure:{name:Lang.Blocks.byrobot_petrone_v2_drone_pressure_pressure, type:"input", pos:{x:0, y:0}}, imageflow_positionX:{name:Lang.Blocks.byrobot_petrone_v2_drone_imageflow_positionX, type:"input", pos:{x:0, y:0}}, imageflow_positionY:{name:Lang.Blocks.byrobot_petrone_v2_drone_imageflow_positionY, type:"input", pos:{x:0, y:0}}, range_bottom:{name:Lang.Blocks.byrobot_petrone_v2_drone_range_bottom, type:"input", pos:{x:0, y:0}}, irmessage_direction:{name:Lang.Blocks.byrobot_petrone_v2_drone_irmessage_direction, 
+type:"input", pos:{x:0, y:0}}, irmessage_irdata:{name:Lang.Blocks.byrobot_petrone_v2_drone_irmessage, type:"input", pos:{x:0, y:0}}, joystick_left_x:{name:Lang.Blocks.byrobot_petrone_v2_controller_joystick_left_x, type:"input", pos:{x:0, y:0}}, joystick_left_y:{name:Lang.Blocks.byrobot_petrone_v2_controller_joystick_left_y, type:"input", pos:{x:0, y:0}}, joystick_left_direction:{name:Lang.Blocks.byrobot_petrone_v2_controller_joystick_left_direction, type:"input", pos:{x:0, y:0}}, joystick_left_event:{name:Lang.Blocks.byrobot_petrone_v2_controller_joystick_left_event, 
+type:"input", pos:{x:0, y:0}}, joystick_right_x:{name:Lang.Blocks.byrobot_petrone_v2_controller_joystick_right_x, type:"input", pos:{x:0, y:0}}, joystick_right_y:{name:Lang.Blocks.byrobot_petrone_v2_controller_joystick_right_y, type:"input", pos:{x:0, y:0}}, joystick_right_direction:{name:Lang.Blocks.byrobot_petrone_v2_controller_joystick_right_direction, type:"input", pos:{x:0, y:0}}, joystick_right_event:{name:Lang.Blocks.byrobot_petrone_v2_controller_joystick_right_event, type:"input", pos:{x:0, 
+y:0}}, button_button:{name:Lang.Blocks.byrobot_petrone_v2_controller_button_button, type:"input", pos:{x:0, y:0}}, button_event:{name:Lang.Blocks.byrobot_petrone_v2_controller_button_event, type:"input", pos:{x:0, y:0}}, entryhw_countTransferReserved:{name:Lang.Blocks.byrobot_petrone_v2_entryhw_count_transfer_reserved, type:"output", pos:{x:0, y:0}}}, ports:{}, mode:"both"}, checkFinish:function(c, b) {
+  if (c.isStart) {
+    if (1 == c.timeFlag) {
+      return "Running";
+    }
+    delete c.timeFlag;
+    delete c.isStart;
+    Entry.engine.isContinue = !1;
+    return "Finish";
+  }
+  c.isStart = !0;
+  c.timeFlag = 1;
+  setTimeout(function() {
+    c.timeFlag = 0;
+  }, 60 / (Entry.FPS || 60) * b);
+  return "Start";
+}, transferBufferClear:function() {
+  Entry.hw.setDigitalPortValue("buffer_clear", 0);
+  Entry.hw.update();
+  delete Entry.hw.sendQueue.buffer_clear;
+}, transferLightManual:function(c, b, d) {
+  c = Math.max(c, 0);
+  c = Math.min(c, 255);
+  b = Math.max(b, 0);
+  b = Math.min(b, 255);
+  d = Math.max(d, 0);
+  d = Math.min(d, 255);
+  Entry.hw.setDigitalPortValue("target", c);
+  Entry.hw.setDigitalPortValue("light_manual_flags", b);
+  Entry.hw.setDigitalPortValue("light_manual_brightness", d);
+  Entry.hw.update();
+  delete Entry.hw.sendQueue.target;
+  delete Entry.hw.sendQueue.light_manual_flags;
+  delete Entry.hw.sendQueue.light_manual_brightness;
+}, transferLightMode:function(c, b, d) {
+  c = Math.max(c, 0);
+  c = Math.min(c, 255);
+  b = Math.max(b, 0);
+  b = Math.min(b, 255);
+  d = Math.max(d, 0);
+  d = Math.min(d, 65535);
+  Entry.hw.setDigitalPortValue("target", c);
+  Entry.hw.setDigitalPortValue("light_mode_mode", b);
+  Entry.hw.setDigitalPortValue("light_mode_interval", d);
+  Entry.hw.update();
+  delete Entry.hw.sendQueue.target;
+  delete Entry.hw.sendQueue.light_mode_mode;
+  delete Entry.hw.sendQueue.light_mode_interval;
+}, transferLightColorRgb:function(c, b, d, e, f) {
+  c = Math.max(c, 0);
+  c = Math.min(c, 255);
+  b = Math.max(b, 0);
+  b = Math.min(b, 255);
+  d = Math.max(d, 0);
+  d = Math.min(d, 255);
+  e = Math.max(e, 0);
+  e = Math.min(e, 255);
+  f = Math.max(f, 0);
+  f = Math.min(f, 255);
+  Entry.hw.setDigitalPortValue("target", c);
+  Entry.hw.setDigitalPortValue("light_mode_mode", b);
+  Entry.hw.setDigitalPortValue("light_color_r", d);
+  Entry.hw.setDigitalPortValue("light_color_g", e);
+  Entry.hw.setDigitalPortValue("light_color_b", f);
+  Entry.hw.update();
+  delete Entry.hw.sendQueue.target;
+  delete Entry.hw.sendQueue.light_mode_mode;
+  delete Entry.hw.sendQueue.light_color_r;
+  delete Entry.hw.sendQueue.light_color_g;
+  delete Entry.hw.sendQueue.light_color_b;
+}, transferDisplayClear:function(c, b, d, e, f, g, h) {
+  d ? (Entry.hw.setDigitalPortValue("target", c), Entry.hw.setDigitalPortValue("display_clearall_pixel", b), Entry.hw.update(), delete Entry.hw.sendQueue.target, delete Entry.hw.sendQueue.display_clearall_pixel) : (e = Math.max(e, 0), e = Math.min(e, 128), f = Math.max(f, 0), f = Math.min(f, 64), g = Math.max(g, 0), g = Math.min(g, 128), h = Math.max(h, 0), h = Math.min(h, 64), Entry.hw.setDigitalPortValue("target", c), Entry.hw.setDigitalPortValue("display_clear_x", e), Entry.hw.setDigitalPortValue("display_clear_y", 
+  f), Entry.hw.setDigitalPortValue("display_clear_width", g), Entry.hw.setDigitalPortValue("display_clear_height", h), Entry.hw.setDigitalPortValue("display_clear_pixel", b), Entry.hw.update(), delete Entry.hw.sendQueue.target, delete Entry.hw.sendQueue.display_clear_x, delete Entry.hw.sendQueue.display_clear_y, delete Entry.hw.sendQueue.display_clear_width, delete Entry.hw.sendQueue.display_clear_height, delete Entry.hw.sendQueue.display_clear_pixel);
+}, transferDisplayInvert:function(c, b, d, e, f) {
+  b = Math.max(b, 0);
+  b = Math.min(b, 128);
+  d = Math.max(d, 0);
+  d = Math.min(d, 64);
+  e = Math.max(e, 0);
+  e = Math.min(e, 128);
+  f = Math.max(f, 0);
+  f = Math.min(f, 64);
+  Entry.hw.setDigitalPortValue("target", c);
+  Entry.hw.setDigitalPortValue("display_invert_x", b);
+  Entry.hw.setDigitalPortValue("display_invert_y", d);
+  Entry.hw.setDigitalPortValue("display_invert_width", e);
+  Entry.hw.setDigitalPortValue("display_invert_height", f);
+  Entry.hw.update();
+  delete Entry.hw.sendQueue.target;
+  delete Entry.hw.sendQueue.display_invert_x;
+  delete Entry.hw.sendQueue.display_invert_y;
+  delete Entry.hw.sendQueue.display_invert_width;
+  delete Entry.hw.sendQueue.display_invert_height;
+}, transferDisplayDrawPoint:function(c, b, d, e) {
+  b = Math.max(b, 0);
+  b = Math.min(b, 128);
+  d = Math.max(d, 0);
+  d = Math.min(d, 64);
+  Entry.hw.setDigitalPortValue("target", c);
+  Entry.hw.setDigitalPortValue("display_draw_point_x", b);
+  Entry.hw.setDigitalPortValue("display_draw_point_y", d);
+  Entry.hw.setDigitalPortValue("display_draw_point_pixel", e);
+  Entry.hw.update();
+  delete Entry.hw.sendQueue.target;
+  delete Entry.hw.sendQueue.display_draw_point_x;
+  delete Entry.hw.sendQueue.display_draw_point_y;
+  delete Entry.hw.sendQueue.display_draw_point_pixel;
+}, transferDisplayDrawLine:function(c, b, d, e, f, g, h) {
+  b = Math.max(b, 0);
+  b = Math.min(b, 128);
+  d = Math.max(d, 0);
+  d = Math.min(d, 64);
+  e = Math.max(e, 0);
+  e = Math.min(e, 128);
+  f = Math.max(f, 0);
+  f = Math.min(f, 64);
+  Entry.hw.setDigitalPortValue("target", c);
+  Entry.hw.setDigitalPortValue("display_draw_line_x1", b);
+  Entry.hw.setDigitalPortValue("display_draw_line_y1", d);
+  Entry.hw.setDigitalPortValue("display_draw_line_x2", e);
+  Entry.hw.setDigitalPortValue("display_draw_line_y2", f);
+  Entry.hw.setDigitalPortValue("display_draw_line_pixel", g);
+  Entry.hw.setDigitalPortValue("display_draw_line_line", h);
+  Entry.hw.update();
+  delete Entry.hw.sendQueue.target;
+  delete Entry.hw.sendQueue.display_draw_line_x1;
+  delete Entry.hw.sendQueue.display_draw_line_y1;
+  delete Entry.hw.sendQueue.display_draw_line_x2;
+  delete Entry.hw.sendQueue.display_draw_line_y2;
+  delete Entry.hw.sendQueue.display_draw_line_pixel;
+  delete Entry.hw.sendQueue.display_draw_line_line;
+}, transferDisplayDrawRect:function(c, b, d, e, f, g, h, k) {
+  b = Math.max(b, 0);
+  b = Math.min(b, 128);
+  d = Math.max(d, 0);
+  d = Math.min(d, 64);
+  e = Math.max(e, 0);
+  e = Math.min(e, 128);
+  f = Math.max(f, 0);
+  f = Math.min(f, 64);
+  Entry.hw.setDigitalPortValue("target", c);
+  Entry.hw.setDigitalPortValue("display_draw_rect_x", b);
+  Entry.hw.setDigitalPortValue("display_draw_rect_y", d);
+  Entry.hw.setDigitalPortValue("display_draw_rect_width", e);
+  Entry.hw.setDigitalPortValue("display_draw_rect_height", f);
+  Entry.hw.setDigitalPortValue("display_draw_rect_pixel", g);
+  Entry.hw.setDigitalPortValue("display_draw_rect_flagfill", h);
+  Entry.hw.setDigitalPortValue("display_draw_rect_line", k);
+  Entry.hw.update();
+  delete Entry.hw.sendQueue.target;
+  delete Entry.hw.sendQueue.display_draw_rect_x;
+  delete Entry.hw.sendQueue.display_draw_rect_y;
+  delete Entry.hw.sendQueue.display_draw_rect_width;
+  delete Entry.hw.sendQueue.display_draw_rect_height;
+  delete Entry.hw.sendQueue.display_draw_rect_pixel;
+  delete Entry.hw.sendQueue.display_draw_rect_flagfill;
+  delete Entry.hw.sendQueue.display_draw_rect_line;
+}, transferDisplayDrawCircle:function(c, b, d, e, f, g) {
+  b = Math.max(b, -50);
+  b = Math.min(b, 178);
+  d = Math.max(d, -50);
+  d = Math.min(d, 114);
+  e = Math.max(e, 1);
+  e = Math.min(e, 200);
+  Entry.hw.setDigitalPortValue("target", c);
+  Entry.hw.setDigitalPortValue("display_draw_circle_x", b);
+  Entry.hw.setDigitalPortValue("display_draw_circle_y", d);
+  Entry.hw.setDigitalPortValue("display_draw_circle_radius", e);
+  Entry.hw.setDigitalPortValue("display_draw_circle_pixel", f);
+  Entry.hw.setDigitalPortValue("display_draw_circle_flagfill", g);
+  Entry.hw.update();
+  delete Entry.hw.sendQueue.target;
+  delete Entry.hw.sendQueue.display_draw_circle_x;
+  delete Entry.hw.sendQueue.display_draw_circle_y;
+  delete Entry.hw.sendQueue.display_draw_circle_radius;
+  delete Entry.hw.sendQueue.display_draw_circle_pixel;
+  delete Entry.hw.sendQueue.display_draw_circle_flagfill;
+}, transferDisplayDrawString:function(c, b, d, e, f, g) {
+  b = Math.max(b, 0);
+  b = Math.min(b, 120);
+  d = Math.max(d, 0);
+  d = Math.min(d, 60);
+  Entry.hw.setDigitalPortValue("target", c);
+  Entry.hw.setDigitalPortValue("display_draw_string_x", b);
+  Entry.hw.setDigitalPortValue("display_draw_string_y", d);
+  Entry.hw.setDigitalPortValue("display_draw_string_font", e);
+  Entry.hw.setDigitalPortValue("display_draw_string_pixel", f);
+  Entry.hw.setDigitalPortValue("display_draw_string_string", g);
+  Entry.hw.update();
+  delete Entry.hw.sendQueue.target;
+  delete Entry.hw.sendQueue.display_draw_string_x;
+  delete Entry.hw.sendQueue.display_draw_string_y;
+  delete Entry.hw.sendQueue.display_draw_string_font;
+  delete Entry.hw.sendQueue.display_draw_string_pixel;
+  delete Entry.hw.sendQueue.display_draw_string_string;
+}, transferDisplayDrawStringAlign:function(c, b, d, e, f, g, h, k) {
+  b = Math.max(b, 0);
+  b = Math.min(b, 124);
+  d = Math.max(d, 4);
+  d = Math.min(d, 128);
+  e = Math.max(e, 0);
+  e = Math.min(e, 60);
+  Entry.hw.setDigitalPortValue("target", c);
+  Entry.hw.setDigitalPortValue("display_draw_string_align_x_start", b);
+  Entry.hw.setDigitalPortValue("display_draw_string_align_x_end", d);
+  Entry.hw.setDigitalPortValue("display_draw_string_align_y", e);
+  Entry.hw.setDigitalPortValue("display_draw_string_align_align", f);
+  Entry.hw.setDigitalPortValue("display_draw_string_align_font", g);
+  Entry.hw.setDigitalPortValue("display_draw_string_align_pixel", h);
+  Entry.hw.setDigitalPortValue("display_draw_string_align_string", k);
+  Entry.hw.update();
+  delete Entry.hw.sendQueue.target;
+  delete Entry.hw.sendQueue.display_draw_string_align_x_start;
+  delete Entry.hw.sendQueue.display_draw_string_align_x_end;
+  delete Entry.hw.sendQueue.display_draw_string_align_y;
+  delete Entry.hw.sendQueue.display_draw_string_align_align;
+  delete Entry.hw.sendQueue.display_draw_string_align_font;
+  delete Entry.hw.sendQueue.display_draw_string_align_pixel;
+  delete Entry.hw.sendQueue.display_draw_string_align_string;
+}, transferbuzzer:function(c, b, d) {
+  Entry.hw.setDigitalPortValue("target", 49);
+  Entry.hw.setDigitalPortValue("buzzer_mode", c);
+  Entry.hw.setDigitalPortValue("buzzer_value", b);
+  Entry.hw.setDigitalPortValue("buzzer_time", d);
+  Entry.hw.update();
+  delete Entry.hw.sendQueue.target;
+  delete Entry.hw.sendQueue.buzzer_mode;
+  delete Entry.hw.sendQueue.buzzer_value;
+  delete Entry.hw.sendQueue.buzzer_time;
+}, transferVibrator:function(c, b, d, e) {
+  b = Math.max(b, 1);
+  b = Math.min(b, 60000);
+  d = Math.max(d, 1);
+  d = Math.min(d, 60000);
+  Entry.hw.setDigitalPortValue("target", 49);
+  Entry.hw.setDigitalPortValue("vibrator_mode", c);
+  Entry.hw.setDigitalPortValue("vibrator_on", b);
+  Entry.hw.setDigitalPortValue("vibrator_off", d);
+  Entry.hw.setDigitalPortValue("vibrator_total", e);
+  Entry.hw.update();
+  delete Entry.hw.sendQueue.target;
+  delete Entry.hw.sendQueue.vibrator_mode;
+  delete Entry.hw.sendQueue.vibrator_on;
+  delete Entry.hw.sendQueue.vibrator_off;
+  delete Entry.hw.sendQueue.vibrator_total;
+}, transferIrMessage:function(c, b) {
+  b = Math.max(b, -2147483647);
+  b = Math.min(b, 2147483647);
+  Entry.hw.setDigitalPortValue("target", 48);
+  Entry.hw.setDigitalPortValue("irmessage_direction", c);
+  Entry.hw.setDigitalPortValue("irmessage_irdata", b);
+  Entry.hw.update();
+  delete Entry.hw.sendQueue.target;
+  delete Entry.hw.sendQueue.irmessage_direction;
+  delete Entry.hw.sendQueue.irmessage_irdata;
+}, transferMotorSingle:function(c, b, d) {
+  d = Math.max(d, 0);
+  d = Math.min(d, 4096);
+  Entry.hw.setDigitalPortValue("target", 48);
+  Entry.hw.setDigitalPortValue("motorsingle_target", c);
+  Entry.hw.setDigitalPortValue("motorsingle_rotation", b);
+  Entry.hw.setDigitalPortValue("motorsingle_value", d);
+  Entry.hw.update();
+  delete Entry.hw.sendQueue.target;
+  delete Entry.hw.sendQueue.motorsingle_target;
+  delete Entry.hw.sendQueue.motorsingle_rotation;
+  delete Entry.hw.sendQueue.motorsingle_value;
+}, transferCommand:function(c, b, d) {
+  Entry.hw.setDigitalPortValue("target", c);
+  Entry.hw.setDigitalPortValue("command_command", b);
+  Entry.hw.setDigitalPortValue("command_option", d);
+  Entry.hw.update();
+  delete Entry.hw.sendQueue.target;
+  delete Entry.hw.sendQueue.command_command;
+  delete Entry.hw.sendQueue.command_option;
+}, transferControlDouble:function(c, b) {
+  c = Math.max(c, -100);
+  c = Math.min(c, 100);
+  b = Math.max(b, 0);
+  b = Math.min(b, 100);
+  Entry.hw.setDigitalPortValue("target", 48);
+  Entry.hw.setDigitalPortValue("control_wheel", c);
+  Entry.hw.setDigitalPortValue("control_accel", b);
+  Entry.hw.update();
+  delete Entry.hw.sendQueue.target;
+  delete Entry.hw.sendQueue.control_wheel;
+  delete Entry.hw.sendQueue.control_accel;
+}, transferControlQuad:function(c, b, d, e) {
+  c = Math.max(c, -100);
+  c = Math.min(c, 100);
+  b = Math.max(b, -100);
+  b = Math.min(b, 100);
+  d = Math.max(d, -100);
+  d = Math.min(d, 100);
+  e = Math.max(e, -100);
+  e = Math.min(e, 100);
+  Entry.hw.setDigitalPortValue("target", 48);
+  Entry.hw.setDigitalPortValue("control_roll", c);
+  Entry.hw.setDigitalPortValue("control_pitch", b);
+  Entry.hw.setDigitalPortValue("control_yaw", d);
+  Entry.hw.setDigitalPortValue("control_throttle", e);
+  Entry.hw.update();
+  delete Entry.hw.sendQueue.target;
+  delete Entry.hw.sendQueue.control_roll;
+  delete Entry.hw.sendQueue.control_pitch;
+  delete Entry.hw.sendQueue.control_yaw;
+  delete Entry.hw.sendQueue.control_throttle;
+}, getData:function(c, b) {
+  return Entry.hw.portData[b];
+}, setLightManual:function(c, b, d, e) {
+  switch(this.checkFinish(c, 40)) {
+    case "Start":
+      return this.transferLightManual(b, d, e), c;
+    case "Running":
+      return c;
+    case "Finish":
+      return c.callReturn();
+    default:
+      return c.callReturn();
+  }
+}, setLightColorRgb:function(c, b, d, e, f, g) {
+  switch(this.checkFinish(c, 40)) {
+    case "Start":
+      return this.transferLightColorRgb(b, d, e, f, g), c;
+    case "Running":
+      return c;
+    case "Finish":
+      return c.callReturn();
+    default:
+      return c.callReturn();
+  }
+}, setDisplayClear:function(c, b, d, e, f, g, h, k) {
+  switch(this.checkFinish(c, 40)) {
+    case "Start":
+      return this.transferDisplayClear(b, d, e, f, g, h, k), c;
+    case "Running":
+      return c;
+    case "Finish":
+      return c.callReturn();
+    default:
+      return c.callReturn();
+  }
+}, setDisplayInvert:function(c, b, d, e, f, g) {
+  switch(this.checkFinish(c, 40)) {
+    case "Start":
+      return this.transferDisplayInvert(b, d, e, f, g), c;
+    case "Running":
+      return c;
+    case "Finish":
+      return c.callReturn();
+    default:
+      return c.callReturn();
+  }
+}, setDisplayDrawPoint:function(c, b, d, e, f) {
+  switch(this.checkFinish(c, 40)) {
+    case "Start":
+      return this.transferDisplayDrawPoint(b, d, e, f), c;
+    case "Running":
+      return c;
+    case "Finish":
+      return c.callReturn();
+    default:
+      return c.callReturn();
+  }
+}, setDisplayDrawLine:function(c, b, d, e, f, g, h, k) {
+  switch(this.checkFinish(c, 40)) {
+    case "Start":
+      return this.transferDisplayDrawLine(b, d, e, f, g, h, k), c;
+    case "Running":
+      return c;
+    case "Finish":
+      return c.callReturn();
+    default:
+      return c.callReturn();
+  }
+}, setDisplayDrawRect:function(c, b, d, e, f, g, h, k, l) {
+  switch(this.checkFinish(c, 40)) {
+    case "Start":
+      return this.transferDisplayDrawRect(b, d, e, f, g, h, k, l), c;
+    case "Running":
+      return c;
+    case "Finish":
+      return c.callReturn();
+    default:
+      return c.callReturn();
+  }
+}, setDisplayDrawCircle:function(c, b, d, e, f, g, h) {
+  switch(this.checkFinish(c, 40)) {
+    case "Start":
+      return this.transferDisplayDrawCircle(b, d, e, f, g, h), c;
+    case "Running":
+      return c;
+    case "Finish":
+      return c.callReturn();
+    default:
+      return c.callReturn();
+  }
+}, setDisplayDrawString:function(c, b, d, e, f, g, h) {
+  switch(this.checkFinish(c, 40)) {
+    case "Start":
+      return this.transferDisplayDrawString(b, d, e, f, g, h), c;
+    case "Running":
+      return c;
+    case "Finish":
+      return c.callReturn();
+    default:
+      return c.callReturn();
+  }
+}, setDisplayDrawStringAlign:function(c, b, d, e, f, g, h, k, l) {
+  switch(this.checkFinish(c, 40)) {
+    case "Start":
+      return this.transferDisplayDrawStringAlign(b, d, e, f, g, h, k, l), c;
+    case "Running":
+      return c;
+    case "Finish":
+      return c.callReturn();
+    default:
+      return c.callReturn();
+  }
+}, setBuzzerStop:function(c) {
+  switch(this.checkFinish(c, 40)) {
+    case "Start":
+      return this.transferbuzzer(0, 0, 0), c;
+    case "Running":
+      return c;
+    case "Finish":
+      return c.callReturn();
+    default:
+      return c.callReturn();
+  }
+}, setBuzzerMute:function(c, b, d, e) {
+  b = Math.max(b, 0);
+  b = Math.min(b, 60000);
+  var f = 40;
+  d && (f = b);
+  switch(this.checkFinish(c, f)) {
+    case "Start":
+      return d = 2, e && (d = 1), this.transferbuzzer(d, 238, b), c;
+    case "Running":
+      return c;
+    case "Finish":
+      return c.callReturn();
+    default:
+      return c.callReturn();
+  }
+}, setBuzzerScale:function(c, b, d, e, f, g) {
+  e = Math.max(e, 0);
+  e = Math.min(e, 60000);
+  var h = 40;
+  f && (h = e);
+  switch(this.checkFinish(c, h)) {
+    case "Start":
+      return f = 4, g && (f = 3), this.transferbuzzer(f, 12 * b + d, e), c;
+    case "Running":
+      return c;
+    case "Finish":
+      return c.callReturn();
+    default:
+      return c.callReturn();
+  }
+}, setBuzzerHz:function(c, b, d, e, f) {
+  d = Math.max(d, 0);
+  d = Math.min(d, 60000);
+  var g = 40;
+  e && (g = d);
+  switch(this.checkFinish(c, g)) {
+    case "Start":
+      return e = 6, f && (e = 5), b = Math.max(b, 1), b = Math.min(b, 63999), this.transferbuzzer(e, b, d), c;
+    case "Running":
+      return c;
+    case "Finish":
+      return c.callReturn();
+    default:
+      return c.callReturn();
+  }
+}, setVibratorStop:function(c) {
+  switch(this.checkFinish(c, 40)) {
+    case "Start":
+      return this.transferVibrator(0, 0, 0, 0), c;
+    case "Running":
+      return c;
+    case "Finish":
+      return c.callReturn();
+    default:
+      return c.callReturn();
+  }
+}, setVibrator:function(c, b, d, e, f, g) {
+  e = Math.max(e, 0);
+  e = Math.min(e, 60000);
+  var h = 40;
+  f && (h = e);
+  switch(this.checkFinish(c, h)) {
+    case "Start":
+      return f = 2, g && (f = 1), this.transferVibrator(f, b, d, e), c;
+    case "Running":
+      return c;
+    case "Finish":
+      return c.callReturn();
+    default:
+      return c.callReturn();
+  }
+}, sendIrMessage:function(c, b, d) {
+  switch(this.checkFinish(c, 40)) {
+    case "Start":
+      return this.transferIrMessage(b, d), c;
+    case "Running":
+      return c;
+    case "Finish":
+      return c.callReturn();
+    default:
+      return c.callReturn();
+  }
+}, sendStop:function(c) {
+  return this.sendCommand(c, 48, 36, 0);
+}, sendCommand:function(c, b, d, e) {
+  switch(this.checkFinish(c, 40)) {
+    case "Start":
+      return this.transferCommand(b, d, e), c;
+    case "Running":
+      return c;
+    case "Finish":
+      return c.callReturn();
+    default:
+      return c.callReturn();
+  }
+}, setMotorSingle:function(c, b, d, e) {
+  switch(this.checkFinish(c, 40)) {
+    case "Start":
+      return this.transferMotorSingle(b, d, e), c;
+    case "Running":
+      return c;
+    case "Finish":
+      return c.callReturn();
+    default:
+      return c.callReturn();
+  }
+}, setModeVehicle:function(c, b) {
+  switch(this.checkFinish(c, 40)) {
+    case "Start":
+      return this.transferCommand(48, 16, b), this.transferControlQuad(0, 0, 0, 0), this.transferControlDouble(0, 0), c;
+    case "Running":
+      return c;
+    case "Finish":
+      return c.callReturn();
+    default:
+      return c.callReturn();
+  }
+}, setEventFlight:function(c, b, d) {
+  switch(this.checkFinish(c, d)) {
+    case "Start":
+      return this.transferControlQuad(0, 0, 0, 0), this.transferCommand(48, 34, b), c;
+    case "Running":
+      return c;
+    case "Finish":
+      return c.callReturn();
+    default:
+      return c.callReturn();
+  }
+}, sendControlQuadSingle:function(c, b, d, e, f) {
+  var g = 40;
+  f && (g = e);
+  switch(this.checkFinish(c, g)) {
+    case "Start":
+      return d = Math.max(d, -100), d = Math.min(d, 100), Entry.hw.setDigitalPortValue("target", 48), Entry.hw.setDigitalPortValue(b, d), Entry.hw.update(), delete Entry.hw.sendQueue.target, delete Entry.hw.sendQueue[b], c;
+    case "Running":
+      return c;
+    case "Finish":
+      return f && (Entry.hw.setDigitalPortValue("target", 48), Entry.hw.setDigitalPortValue(b, 0), Entry.hw.update(), delete Entry.hw.sendQueue.target, delete Entry.hw.sendQueue[b]), c.callReturn();
+    default:
+      return c.callReturn();
+  }
+}, sendControlQuad:function(c, b, d, e, f, g, h) {
+  var k = 40;
+  h && (k = g);
+  switch(this.checkFinish(c, k)) {
+    case "Start":
+      return this.transferControlQuad(b, d, e, f), c;
+    case "Running":
+      return c;
+    case "Finish":
+      return h && this.transferControlQuad(0, 0, 0, 0), c.callReturn();
+    default:
+      return c.callReturn();
+  }
+}};
 Entry.Chocopi = {name:"chocopi", p:{}, ev:{}, blocks:[], setZero:function() {
 }, getport:function(c, b) {
   if (!this.blocks) {
@@ -3241,9 +4877,9 @@ Entry.Codestar = {name:"codestar", setZero:function() {
     Entry.hw.sendQueue[c] = 0, Entry.hw.sendQueue.readablePorts.push(c);
   }
   Entry.hw.update();
-}, monitorTemplate:{imgPath:"hw/codestar.png", width:333, height:409, listPorts:{13:{name:"\uc9c4\ub3d9\ubaa8\ud130", type:"output", pos:{x:0, y:0}}, 6:{name:"\uc9c4\ub3d9\uc13c\uc11c", type:"input", pos:{x:0, y:0}}}, ports:{7:{name:"\ube68\uac04\uc0c9", type:"output", pos:{x:238, y:108}}, 8:{name:"\ud30c\ub780\uc0c9", type:"output", pos:{x:265, y:126}}, 9:{name:"3\uc0c9 \ube68\uac04\uc0c9", type:"output", pos:{x:292, y:34}}, 10:{name:"3\uc0c9 \ub179\uc0c9", type:"output", pos:{x:292, y:34}}, 11:{name:"3\uc0c9 \ud30c\ub780\uc0c9", 
-type:"output", pos:{x:292, y:34}}, 12:{name:"\ubc84\ud2bc", type:"input", pos:{x:248, y:142}}, a0:{name:"\uc67c\ucabd \ubcbd\uac10\uc9c0", type:"input", pos:{x:24, y:231}}, a2:{name:"\ub9c8\uc774\ud06c", type:"input", pos:{x:225, y:67}}, a3:{name:"\ubd80\uc800", type:"output", pos:{x:283, y:105}}, a4:{name:"\uc67c\ucabd \ub77c\uc778\uac10\uc9c0", type:"input", pos:{x:37, y:353}}, a5:{name:"\uc624\ub978\ucabd \ub77c\uc778\uac10\uc9c0", type:"input", pos:{x:50, y:368}}, a6:{name:"\uc870\ub3c4\uc13c\uc11c", 
-type:"input", pos:{x:273, y:22}}, a7:{name:"\uc624\ub978\ucabd \ubcbd\uac10\uc9c0", type:"input", pos:{x:103, y:381}}, temperature:{name:"\uc628\ub3c4\uc13c\uc11c", type:"input", pos:{x:311, y:238}}, sonar:{name:"\ucd08\uc74c\ud30c", type:"input", pos:{x:7, y:277}}, leftwheel:{name:"\uc67c\ucabd \ubc14\ud034", type:"output", pos:{x:177, y:370}}, rightwheel:{name:"\uc624\ub978\ucabd \ubc14\ud034", type:"output", pos:{x:83, y:218}}}, mode:"both"}};
+}, monitorTemplate:{imgPath:"hw/codestar.png", width:333, height:409, listPorts:{13:{name:"\uc9c4\ub3d9\ubaa8\ud130", type:"output", pos:{x:0, y:0}}, tilt:{name:"\uae30\uc6b8\uae30\uc13c\uc11c", type:"input", pos:{x:0, y:0}}}, ports:{7:{name:"\ube68\uac04\uc0c9", type:"output", pos:{x:238, y:108}}, 8:{name:"\ud30c\ub780\uc0c9", type:"output", pos:{x:265, y:126}}, 9:{name:"3\uc0c9 \ube68\uac04\uc0c9", type:"output", pos:{x:292, y:34}}, 10:{name:"3\uc0c9 \ub179\uc0c9", type:"output", pos:{x:292, y:34}}, 
+11:{name:"3\uc0c9 \ud30c\ub780\uc0c9", type:"output", pos:{x:292, y:34}}, 12:{name:"\ubc84\ud2bc", type:"input", pos:{x:248, y:142}}, a0:{name:"\uc67c\ucabd \ubcbd\uac10\uc9c0", type:"input", pos:{x:24, y:231}}, a2:{name:"\ub9c8\uc774\ud06c", type:"input", pos:{x:225, y:67}}, a3:{name:"\ubd80\uc800", type:"output", pos:{x:283, y:105}}, a4:{name:"\uc67c\ucabd \ub77c\uc778\uac10\uc9c0", type:"input", pos:{x:37, y:353}}, a5:{name:"\uc624\ub978\ucabd \ub77c\uc778\uac10\uc9c0", type:"input", pos:{x:50, 
+y:368}}, a6:{name:"\uc870\ub3c4\uc13c\uc11c", type:"input", pos:{x:273, y:22}}, a7:{name:"\uc624\ub978\ucabd \ubcbd\uac10\uc9c0", type:"input", pos:{x:103, y:381}}, temperature:{name:"\uc628\ub3c4\uc13c\uc11c", type:"input", pos:{x:311, y:238}}, sonar:{name:"\ucd08\uc74c\ud30c\uc13c\uc11c", type:"input", pos:{x:7, y:277}}, leftwheel:{name:"\uc67c\ucabd \ubc14\ud034", type:"output", pos:{x:177, y:370}}, rightwheel:{name:"\uc624\ub978\ucabd \ubc14\ud034", type:"output", pos:{x:83, y:218}}}, mode:"both"}};
 Entry.DaduBlock = {name:"dadublock", setZero:function() {
   Entry.hw.sendQueue.SET ? Object.keys(Entry.hw.sendQueue.SET).forEach(function(c) {
     Entry.hw.sendQueue.SET[c].data = 0;
@@ -3437,6 +5073,22 @@ Entry.Hamster = {PORT_MAP:{motion:0, leftWheel:0, rightWheel:0, buzzer:0, output
 type:"input", pos:{x:0, y:0}}, accelerationZ:{name:Lang.Blocks.HAMSTER_sensor_acceleration_z, type:"input", pos:{x:0, y:0}}, buzzer:{name:Lang.Hw.buzzer, type:"output", pos:{x:0, y:0}}, note:{name:Lang.Hw.note, type:"output", pos:{x:0, y:0}}, outputA:{name:Lang.Hw.output + "A", type:"output", pos:{x:0, y:0}}, outputB:{name:Lang.Hw.output + "B", type:"output", pos:{x:0, y:0}}}, ports:{leftProximity:{name:Lang.Blocks.HAMSTER_sensor_left_proximity, type:"input", pos:{x:122, y:156}}, rightProximity:{name:Lang.Blocks.HAMSTER_sensor_right_proximity, 
 type:"input", pos:{x:10, y:108}}, leftFloor:{name:Lang.Blocks.HAMSTER_sensor_left_floor, type:"input", pos:{x:100, y:234}}, rightFloor:{name:Lang.Blocks.HAMSTER_sensor_right_floor, type:"input", pos:{x:13, y:180}}, light:{name:Lang.Blocks.HAMSTER_sensor_light, type:"input", pos:{x:56, y:189}}, leftWheel:{name:Lang.Hw.leftWheel, type:"output", pos:{x:209, y:115}}, rightWheel:{name:Lang.Hw.rightWheel, type:"output", pos:{x:98, y:30}}, leftLed:{name:Lang.Hw.left + " " + Lang.Hw.led_en, type:"output", 
 pos:{x:87, y:210}}, rightLed:{name:Lang.Hw.right + " " + Lang.Hw.led_en, type:"output", pos:{x:24, y:168}}}, mode:"both"}};
+Entry.iboard = {name:"iboard", setZero:function() {
+  Entry.hw.sendQueue.SET ? Object.keys(Entry.hw.sendQueue.SET).forEach(function(c) {
+    Entry.hw.sendQueue.SET[c].data = 0;
+    Entry.hw.sendQueue.SET[c].time = (new Date).getTime();
+  }) : Entry.hw.sendQueue = {GET:{}, SET:{}};
+  Entry.hw.update();
+}, sensorTypes:{ALIVE:0, DIGITAL:1, ANALOG:2, PWM:3, SERVO_PIN:4, TONE:5, PULSEIN:6, ULTRASONIC:7, TIMER:8}, toneTable:{0:0, C:1, CS:2, D:3, DS:4, E:5, F:6, FS:7, G:8, GS:9, A:10, AS:11, B:12}, toneMap:{1:[33, 65, 131, 262, 523, 1046, 2093, 4186], 2:[35, 69, 139, 277, 554, 1109, 2217, 4435], 3:[37, 73, 147, 294, 587, 1175, 2349, 4699], 4:[39, 78, 156, 311, 622, 1245, 2849, 4978], 5:[41, 82, 165, 330, 659, 1319, 2637, 5274], 6:[44, 87, 175, 349, 698, 1397, 2794, 5588], 7:[46, 92, 185, 370, 740, 1480, 
+2960, 5920], 8:[49, 98, 196, 392, 784, 1568, 3136, 6272], 9:[52, 104, 208, 415, 831, 1661, 3322, 6645], 10:[55, 110, 220, 440, 880, 1760, 3520, 7040], 11:[58, 117, 233, 466, 932, 1865, 3729, 7459], 12:[62, 123, 247, 494, 988, 1976, 3951, 7902]}, highList:["high", "1", "on"], lowList:["low", "0", "off"], BlockState:{}};
+Entry.Mechatronics_4D = {name:"mechatronics_4d", setZero:function() {
+  Entry.hw.sendQueue.SET ? Object.keys(Entry.hw.sendQueue.SET).forEach(function(c) {
+    Entry.hw.sendQueue.SET[c].data = 0;
+    Entry.hw.sendQueue.SET[c].time = (new Date).getTime();
+  }) : Entry.hw.sendQueue = {GET:{}, SET:{}};
+  Entry.hw.update();
+}, sensorTypes:{ALIVE:0, DIGITAL:1, ANALOG:2, PWM:3, SERVO_PIN:4, TONE:5, PULSEIN:6, ULTRASONIC:7, TIMER:8}, toneTable:{0:0, C:1, CS:2, D:3, DS:4, E:5, F:6, FS:7, G:8, GS:9, A:10, AS:11, B:12}, toneMap:{1:[33, 65, 131, 262, 523, 1046, 2093, 4186], 2:[35, 69, 139, 277, 554, 1109, 2217, 4435], 3:[37, 73, 147, 294, 587, 1175, 2349, 4699], 4:[39, 78, 156, 311, 622, 1245, 2849, 4978], 5:[41, 82, 165, 330, 659, 1319, 2637, 5274], 6:[44, 87, 175, 349, 698, 1397, 2794, 5588], 7:[46, 92, 185, 370, 740, 1480, 
+2960, 5920], 8:[49, 98, 196, 392, 784, 1568, 3136, 6272], 9:[52, 104, 208, 415, 831, 1661, 3322, 6645], 10:[55, 110, 220, 440, 880, 1760, 3520, 7040], 11:[58, 117, 233, 466, 932, 1865, 3729, 7459], 12:[62, 123, 247, 494, 988, 1976, 3951, 7902]}, highList:["high", "1", "on"], lowList:["low", "0", "off"], BlockState:{}};
 Entry.MODI = {name:"modi", setZero:function() {
   Entry.hw.sendQueue.moduleValue = {led:[], motor:[], speaker:[], display:[]};
   Entry.hw.sendQueue.getProperty = {};
@@ -5577,7 +7229,19 @@ Entry.getElementsByClassName = function(c) {
   return b;
 };
 Entry.parseNumber = function(c) {
-  return "string" == typeof c && Entry.Utils.isNumber(c) ? Number(c) : "number" == typeof c && Entry.Utils.isNumber(c) ? c : !1;
+  if ("string" == typeof c) {
+    if (Entry.Utils.isNumber(c) && "0" === c[0] || "0" === c[0] && "x" === c[1].toLowerCase()) {
+      return c;
+    }
+    if (Entry.Utils.isNumber(c)) {
+      return Number(c);
+    }
+  } else {
+    if ("number" == typeof c && Entry.Utils.isNumber(c)) {
+      return c;
+    }
+  }
+  return !1;
 };
 Entry.countStringLength = function(c) {
   var b, d = 0;
@@ -5771,6 +7435,9 @@ Entry.setCloneBrush = function(c, b) {
 };
 Entry.isFloat = function(c) {
   return /\d+\.{1}\d+$/.test(c);
+};
+Entry.isInteger = function(c) {
+  return isFinite(c) && Math.floor(c) == c;
 };
 Entry.getStringIndex = function(c) {
   if (!c) {
@@ -7752,8 +9419,8 @@ Entry.Dialog.prototype.update = function() {
     this._isNoContentTried = !0;
   }
   var b = "";
-  -135 < c.y - this.height - 20 - this.border ? (this.object.y = c.y - this.height / 2 - 20 - this.padding, b += "n") : (this.object.y = c.y + c.height + this.height / 2 + 20 + this.padding, b += "s");
-  240 > c.x + c.width + this.width ? (this.object.x = c.x + c.width + this.width / 2, b += "e") : (this.object.x = c.x - this.width / 2, b += "w");
+  -135 < c.y - 20 - this.border ? (this.object.y = Math.max(c.y - this.height / 2 - 20 - this.padding, -135 + this.height / 2 + this.padding), b += "n") : (this.object.y = Math.min(c.y + c.height + this.height / 2 + 20 + this.padding, 135 - this.height / 2 - this.padding), b += "s");
+  0 > c.x + c.width / 2 ? (this.object.x = Math.min(c.x + c.width + this.width / 2, 240 - this.width / 2 - this.padding), b += "e") : (this.object.x = Math.max(c.x - this.width / 2, -240 + this.width / 2 + this.padding), b += "w");
   this.notch.type != b && (this.object.removeChild(this.notch), this.notch = this.createSpeakNotch(b), this.object.addChild(this.notch));
   this._isNoContentTried && this.parent.setText("");
   Entry.requestUpdate = !0;
@@ -9573,8 +11240,6 @@ Entry.HW = function() {
   this.connectTrial = 0;
   this.isFirstConnect = !0;
   this.requireVerion = "v1.6.1";
-  this.downloadPath = "http://download.play-entry.org/apps/Entry_HW_1.6.12_Setup.exe";
-  this.downloadPathOsx = "http://download.play-entry.org/apps/Entry_HW-1.6.12.dmg";
   this.hwPopupCreate();
   this.initSocket();
   this.connected = !1;
@@ -9585,7 +11250,8 @@ Entry.HW = function() {
   this.socketType = this.hwModule = this.selectedDevice = null;
   Entry.addEventListener("stop", this.setZero);
   this.hwInfo = {"1.1":Entry.Arduino, "1.2":Entry.SensorBoard, "1.3":Entry.CODEino, "1.4":Entry.joystick, "1.5":Entry.dplay, "1.6":Entry.nemoino, "1.7":Entry.Xbot, "1.8":Entry.ardublock, "1.9":Entry.ArduinoExt, "1.10":Entry.ArduinoNano, "1.A":Entry.Cobl, "1.B":Entry.Blacksmith, "2.4":Entry.Hamster, "2.5":Entry.Albert, "2.9":Entry.Turtle, "2.FF":Entry.Roboid, "3.1":Entry.Bitbrick, "4.2":Entry.Arduino, "5.1":Entry.Neobot, "6.1":Entry.mkboard, "7.1":Entry.Robotis_carCont, "7.2":Entry.Robotis_openCM70, 
-  "8.1":Entry.Arduino, "A.1":Entry.SmartBoard, "B.1":Entry.Codestar, "C.1":Entry.DaduBlock, "C.2":Entry.DaduBlock_Car, "D.1":Entry.robotori, "F.1":Entry.byrobot_dronefighter_controller, "F.2":Entry.byrobot_dronefighter_drive, "F.3":Entry.byrobot_dronefighter_flight, "10.1":Entry.Roborobo_Roduino, "10.2":Entry.Roborobo_SchoolKit, "12.1":Entry.EV3, "13.1":Entry.rokoboard, "14.1":Entry.Chocopi, "15.1":Entry.coconut, "16.1":Entry.MODI, "18.1":Entry.Altino};
+  "8.1":Entry.Arduino, "9.1":Entry.iboard, "A.1":Entry.SmartBoard, "B.1":Entry.Codestar, "C.1":Entry.DaduBlock, "C.2":Entry.DaduBlock_Car, "D.1":Entry.robotori, "F.1":Entry.byrobot_dronefighter_controller, "F.2":Entry.byrobot_dronefighter_drive, "F.3":Entry.byrobot_dronefighter_flight, "F.4":Entry.byrobot_petrone_v2_controller, "F.5":Entry.byrobot_petrone_v2_drive, "F.6":Entry.byrobot_petrone_v2_flight, "10.1":Entry.Roborobo_Roduino, "10.2":Entry.Roborobo_SchoolKit, "12.1":Entry.EV3, "13.1":Entry.rokoboard, 
+  "14.1":Entry.Chocopi, "15.1":Entry.coconut, "16.1":Entry.MODI, "18.1":Entry.Altino, "1A.1":Entry.ArduinoNano};
 };
 Entry.HW.TRIAL_LIMIT = 2;
 p = Entry.HW.prototype;
@@ -9991,6 +11657,7 @@ Entry.init = function(c, b) {
   Entry.loadAudio_([Entry.mediaFilePath + "sounds/click.mp3", Entry.mediaFilePath + "sounds/click.wav", Entry.mediaFilePath + "sounds/click.ogg"], "entryMagneting");
   Entry.loadAudio_([Entry.mediaFilePath + "sounds/delete.mp3", Entry.mediaFilePath + "sounds/delete.ogg", Entry.mediaFilePath + "sounds/delete.wav"], "entryDelete");
   createjs.Sound.stop();
+  BigNumber.config({ERRORS:!1});
 };
 Entry.changeContainer = function(c) {
   c.appendChild(this.view_);
@@ -13959,39 +15626,45 @@ Entry.TextCodingUtil = {};
           return Lang.TextCoding[Entry.TextCodingError.ALERT_LIST_EMPTY_TEXT];
         }
       }
-      c = b.functions_ || {};
+      var c = Lang.TextCoding, f = Entry.TextCodingError, g = c[f.ALERT_FUNCTION_NAME_DISORDER], h = c[f.ALERT_FUNCTION_NAME_FIELD_MULTI], f = c[f.ALERT_FUNCTION_NAME_EMPTY_TEXT], c = b.functions_ || {};
       for (e in c) {
-        if (b = c[e].content._data[0]._data[0], "function_create" == b.data.type) {
-          if (2 == b.params.length) {
-            if (b = b.params[0], "function_field_label" == b.data.type) {
-              if (b = b.data.params, 2 == b.length) {
-                if (void 0 == b[1]) {
-                  if (/ /.test(b[0])) {
-                    return Lang.TextCoding[Entry.TextCodingError.ALERT_FUNCTION_NAME_EMPTY_TEXT];
-                  }
-                } else {
-                  if ("function_field_label" == b[1].data.type || this.hasFunctionFieldLabel(b[1])) {
-                    return Lang.TextCoding[Entry.TextCodingError.ALERT_FUNCTION_NAME_FIELD_MULTI];
-                  }
-                }
-              } else {
-                return Lang.TextCoding[Entry.TextCodingError.ALERT_FUNCTION_NAME_DISORDER];
-              }
-            } else {
-              return Lang.TextCoding[Entry.TextCodingError.ALERT_FUNCTION_NAME_DISORDER];
+        if (b = (b = c[e].content.getEventMap("funcDef")[0]) && b.params[0]) {
+          if ("function_field_label" !== b.type) {
+            return g;
+          }
+          b = b.params;
+          if (!b[1]) {
+            if (/ /.test(b[0])) {
+              return f;
             }
           } else {
-            return Lang.TextCoding[Entry.TextCodingError.ALERT_FUNCTION_NAME_DISORDER];
+            if (this.hasFunctionFieldLabel(b[1])) {
+              return h;
+            }
           }
-        } else {
-          return Lang.TextCoding[Entry.TextCodingError.ALERT_FUNCTION_NAME_DISORDER];
         }
       }
       return !1;
     }
   };
   c.isNameIncludeSpace = function(b, c) {
-    return "variable" == c && / /.test(b) ? Lang.TextCoding[Entry.TextCodingError.ALERT_VARIABLE_EMPTY_TEXT_ADD_CHANGE] : "list" == c && / /.test(b) ? Lang.TextCoding[Entry.TextCodingError.ALERT_LIST_EMPTY_TEXT_ADD_CHANGE] : "function" == c && / /.test(b) ? Lang.TextCoding[Entry.TextCodingError.ALERT_FUNCTION_NAME_EMPTY_TEXT_ADD_CHANGE] : !1;
+    return / /.test(b) ? "variable" == c ? Lang.TextCoding[Entry.TextCodingError.ALERT_VARIABLE_EMPTY_TEXT_ADD_CHANGE] : "list" == c ? Lang.TextCoding[Entry.TextCodingError.ALERT_LIST_EMPTY_TEXT_ADD_CHANGE] : "function" == c ? Lang.TextCoding[Entry.TextCodingError.ALERT_FUNCTION_NAME_EMPTY_TEXT_ADD_CHANGE] : !1 : !1;
+  };
+  c.isNameIncludeNotValidChar = function() {
+    var b = Entry.variableContainer;
+    if (b) {
+      for (var c = b.variables_ || [], e = 0; e < c.length; e++) {
+        if (this.checkName(c[e].name_, "v")) {
+          return this.checkName(c[e].name_, "v");
+        }
+      }
+      c = b.lists_ || [];
+      for (e = 0; e < c.length; e++) {
+        if (this.checkName(c[e].name_, "l")) {
+          return this.checkName(c[e].name_, "l");
+        }
+      }
+    }
   };
   c.hasFunctionFieldLabel = function(b) {
     if (b && b.data) {
@@ -14039,6 +15712,14 @@ Entry.TextCodingUtil = {};
     "math." + mathProperty, c = c + "(" + b + ")") : "acos_radian" == e ? (mathProperty = "acos", c = "math." + mathProperty, c = c + "(" + b + ")") : "atan_radian" == e ? (mathProperty = "atan", c = "math." + mathProperty, c = c + "(" + b + ")") : "ln" == e ? (mathProperty = "log", c = "math." + mathProperty, c = c + "(" + b + ")") : "log" == e ? (mathProperty = "log10", c = "math." + mathProperty, c = c + "(" + b + ")") : "floor" == e ? (mathProperty = "floor", c = "math." + mathProperty, c = c + 
     "(" + b + ")") : "ceil" == e ? (mathProperty = "ceil", c = "math." + mathProperty, c = c + "(" + b + ")") : "round" == e ? (mathProperty = "round", c = "math." + mathProperty, c = c + "(" + b + ")") : "factorial" == e ? (mathProperty = "factorial", c = "math." + mathProperty, c = c + "(" + b + ")") : "abs" == e && (mathProperty = "fabs", c = "math." + mathProperty, c = c + "(" + b + ")");
     return c;
+  };
+  c.checkName = function(b, c) {
+    var d = /^[0-9]$/g;
+    if (d.test(b[0])) {
+      return Lang.Menus["textcoding_numberError_" + c];
+    }
+    d = /[\{\}\[\]\/?.,;:|\)*~`!^\-+<>@\#$%&\\\=\(\'\"]/gi;
+    return d.test(b) ? Lang.Menus["textcoding_specialCharError_" + c] : "and assert break class continue def del elif else except exec finally for from global if import in is lambda not or pass print raise return try while with yield".split(" ").includes(b) ? Lang.Menus["textcoding_bookedError_1" + c] + b + Lang.Menus["textcoding_bookedError_2" + c] : !1;
   };
   c.generateVariablesDeclaration = function() {
     var b = "", c = Entry.playground.object, e = Entry.variableContainer;
@@ -14191,6 +15872,14 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
             b.textType = -1;
             Entry.getMainWS().setMode(b);
             break;
+          }
+          if (f = Entry.TextCodingUtil.isNameIncludeNotValidChar()) {
+            entrylms.alert(f);
+            b = {};
+            b.boardType = d.MODE_BOARD;
+            b.textType = -1;
+            Entry.getMainWS().setMode(b);
+            return;
           }
           if (f = Entry.TextCodingUtil.canConvertTextModeForOverlayMode(Entry.Workspace.MODE_VIMBOARD)) {
             entrylms.alert(f);
@@ -16910,7 +18599,7 @@ Entry.BlockToPyParser = function() {
   };
   c.Block = function(b, c) {
     var d;
-    if (!b) {
+    if (!(b && b instanceof Entry.Block)) {
       return "";
     }
     !b._schema && b.loadSchema();
@@ -17157,55 +18846,36 @@ Entry.BlockToPyParser = function() {
     }
   };
   c.getFuncInfo = function(b) {
-    var c, e = {}, f = b.data.type.split("_")[1];
-    if (f) {
-      var g = Entry.variableContainer.functions_[f];
-      if (!g) {
-        return null;
-      }
-    } else {
+    var c = {}, e = b.getFuncId(), f = e && Entry.variableContainer.getFunction(e);
+    if (!f) {
       return null;
     }
-    var f = g.block.template, h = f.search(/(%.)/), f = f.substring(0, h).trim().split(" ").join("__");
+    e = f.block.template.split(/%\d/)[0].trim().split(" ").join("__");
     Entry.TextCodingUtil.initQueue();
-    Entry.TextCodingUtil.gatherFuncDefParam(g.content._data[0]._data[0].data.params[0]);
-    var k = [];
-    if (!this._hasRootFunc) {
-      for (; c = Entry.TextCodingUtil._funcParamQ.dequeue();) {
-        k.push(c);
+    var f = f.content.getEventMap("funcDef")[0].getThread().getBlocks(), g = f.shift();
+    Entry.TextCodingUtil.gatherFuncDefParam(g.getParam(0));
+    var h = this, k = [];
+    if (this._hasRootFunc) {
+      b.params.filter(function(b) {
+        return b instanceof Entry.Block;
+      }).forEach(function(b) {
+        if (b = h.Block(b)) {
+          b = h._funcParamMap.get(b) || b, k.push(b);
+        }
+      });
+    } else {
+      for (b = []; g = Entry.TextCodingUtil._funcParamQ.dequeue();) {
+        b.push(g);
       }
+      b.forEach(function(b, c) {
+        /(string|boolean)Param/.test(b) && (c = "param" + ++c, k.push(c), h._funcParamMap.put(b, c));
+      });
     }
     Entry.TextCodingUtil.clearQueue();
-    var l = [];
-    if (this._hasRootFunc) {
-      var m = b.data.params;
-      for (q in m) {
-        if (c = m[q]) {
-          h = this.Block(c);
-          if (paramType = this._funcParamMap.get(h)) {
-            h = paramType;
-          }
-          l.push(h);
-        }
-      }
-    } else {
-      for (h in k) {
-        b = k[h];
-        var q = b.search("_");
-        q = b.substring(0, q);
-        "stringParam" == q ? m = "param" + (parseInt(h) + 1) : "booleanParam" == q && (m = "param" + (parseInt(h) + 1));
-        m && (l.push(m), this._funcParamMap.put(b, m));
-      }
-    }
-    q = g.content._data[0]._data;
-    g = [];
-    for (m = 1; m < q.length; m++) {
-      g.push(q[m]);
-    }
-    f && (e.name = f);
-    0 != l.length && (e.params = l);
-    0 != g.length && (e.statements = g);
-    return e;
+    e && (c.name = e);
+    0 !== k.length && (c.params = k);
+    0 !== f.length && (c.statements = f);
+    return c;
   };
 })(Entry.BlockToPyParser.prototype);
 Entry.JsToBlockParser = function(c, b) {
@@ -17635,6 +19305,14 @@ Entry.CodeMap = {};
   c.Arduino = {arduino_ext_analog_list:[{a0:"0", a1:"1", a2:"2", a3:"3", a4:"4", a5:"5"}], arduino_get_digital_toggle:[{on:"high", off:"low", high:"on", low:"off"}]};
   c.Hamster = {hamster_play_note_for:[{4:"hamster.note_c", 5:"hamster.note_c_sharp", 6:"hamster.note_d", 7:"hamster.note_e_flat", 8:"hamster.note_e", 9:"hamster.note_f", 10:"hamster.note_f_sharp", 11:"hamster.note_g", 12:"hamster.note_g_sharp", 13:"hamster.note_a", 14:"hamster.note_b_flat", 15:"hamster.note_b", "hamster.note_c":4, "hamster.note_c_sharp":5, "hamster.note_d_flat":5, "hamster.note_d":6, "hamster.note_e_flat":7, "hamster.note_d_sharp":7, "hamster.note_e":8, "hamster.note_f":9, "hamster.note_f_sharp":10, 
   "hamster.note_g_flat":10, "hamster.note_g":11, "hamster.note_g_sharp":12, "hamster.note_a_flat":12, "hamster.note_a":13, "hamster.note_b_flat":14, "hamster.note_a_sharp":14, "hamster.note_b":15}, null, null]};
+  c.Turtle = {touching_colors:{1:"turtle.color_black", 2:"turtle.color_red", 3:"turtle.color_orange", 4:"turtle.color_yellow", 5:"turtle.color_green", 6:"turtle.color_cyan", 7:"turtle.color_blue", 8:"turtle.color_magenta", 9:"turtle.color_white", "turtle.color_black":1, "turtle.color_red":2, "turtle.color_orange":3, "turtle.color_yellow":4, "turtle.color_green":5, "turtle.color_cyan":6, "turtle.color_sky_blue":6, "turtle.color_blue":7, "turtle.color_magenta":8, "turtle.color_purple":8, "turtle.color_white":9}, 
+  pattern_colors:{1:"turtle.color_red", 3:"turtle.color_yellow", 4:"turtle.color_green", 5:"turtle.color_cyan", 6:"turtle.color_blue", 7:"turtle.color_magenta", "turtle.color_red":1, "turtle.color_yellow":3, "turtle.color_green":4, "turtle.color_cyan":5, "turtle.color_sky_blue":5, "turtle.color_blue":6, "turtle.color_magenta":7, "turtle.color_purple":7}, units:{CM:"turtle.unit_cm", DEG:"turtle.unit_deg", SEC:"turtle.unit_sec", PULSE:"turtle.unit_pulse", "turtle.unit_cm":"CM", "turtle.unit_deg":"DEG", 
+  "turtle.unit_sec":"SEC", "turtle.unit_pulse":"PULSE"}, head_tail:{HEAD:"turtle.head", TAIL:"turtle.tail", "turtle.head":"HEAD", "turtle.tail":"TAIL"}, line_colors:{10:"turtle.color_black", 11:"turtle.color_red", 13:"turtle.color_green", 15:"turtle.color_blue", 17:"turtle.color_any", "turtle.color_black":10, "turtle.color_red":11, "turtle.color_green":13, "turtle.color_blue":15, "turtle.color_any":17}, target_colors:{61:"turtle.color_red", 62:"turtle.color_yellow", 63:"turtle.color_green", 64:"turtle.color_cyan", 
+  65:"turtle.color_blue", 66:"turtle.color_magenta", 67:"turtle.color_any", "turtle.color_red":61, "turtle.color_yellow":62, "turtle.color_green":63, "turtle.color_cyan":64, "turtle.color_sky_blue":64, "turtle.color_blue":65, "turtle.color_magenta":66, "turtle.color_purple":66, "turtle.color_any":67}, color_lines:{71:"turtle.color_red", 73:"turtle.color_green", 75:"turtle.color_blue", 77:"turtle.color_any", "turtle.color_red":71, "turtle.color_green":73, "turtle.color_blue":75, "turtle.color_any":77}, 
+  led_colors:{RED:"turtle.color_red", ORANGE:"turtle.color_orange", YELLOW:"turtle.color_yellow", GREEN:"turtle.color_green", CYAN:"turtle.color_cyan", BLUE:"turtle.color_blue", VIOLET:"turtle.color_violet", MAGENTA:"turtle.color_magenta", WHITE:"turtle.color_white", "turtle.color_red":"RED", "turtle.color_orange":"ORANGE", "turtle.color_yellow":"YELLOW", "turtle.color_green":"GREEN", "turtle.color_cyan":"CYAN", "turtle.color_sky_blue":"CYAN", "turtle.color_blue":"BLUE", "turtle.color_violet":"VIOLET", 
+  "turtle.color_magenta":"MAGENTA", "turtle.color_purple":"MAGENTA", "turtle.color_white":"WHITE"}, sounds:{1:"turtle.sound_beep", 2:"turtle.sound_random", 3:"turtle.sound_siren", 4:"turtle.sound_engine", 5:"turtle.sound_robot", 6:"turtle.sound_march", 7:"turtle.sound_birthday", 8:"turtle.sound_dibidibidip", 9:"turtle.sound_good_job", "turtle.sound_beep":1, "turtle.sound_random":2, "turtle.sound_siren":3, "turtle.sound_engine":4, "turtle.sound_robot":5, "turtle.sound_march":6, "turtle.sound_birthday":7, 
+  "turtle.sound_dibidibidip":8, "turtle.sound_good_job":9}, notes:{4:"turtle.note_c", 5:"turtle.note_c_sharp", 6:"turtle.note_d", 7:"turtle.note_e_flat", 8:"turtle.note_e", 9:"turtle.note_f", 10:"turtle.note_f_sharp", 11:"turtle.note_g", 12:"turtle.note_g_sharp", 13:"turtle.note_a", 14:"turtle.note_b_flat", 15:"turtle.note_b", "turtle.note_c":4, "turtle.note_c_sharp":5, "turtle.note_d_flat":5, "turtle.note_d":6, "turtle.note_e_flat":7, "turtle.note_d_sharp":7, "turtle.note_e":8, "turtle.note_f":9, 
+  "turtle.note_f_sharp":10, "turtle.note_g_flat":10, "turtle.note_g":11, "turtle.note_g_sharp":12, "turtle.note_a_flat":12, "turtle.note_a":13, "turtle.note_b_flat":14, "turtle.note_a_sharp":14, "turtle.note_b":15}};
 })(Entry.CodeMap);
 Entry.PyToBlockParser = function(c) {
   this._type = "PyToBlockParser";
@@ -17649,6 +19327,7 @@ Entry.PyToBlockParser = function(c) {
   c.binaryOperator = {"==":"EQUAL", ">":"GREATER", "<":"LESS", ">=":"GREATER_OR_EQUAL", "<=":"LESS_OR_EQUAL"};
   c.arithmeticOperator = {"+":"PLUS", "-":"MINUS", "*":"MULTI", "/":"DIVIDE"};
   c.divideOperator = {"//":"QUOTIENT", "%":"MOD"};
+  c.logicalOperator = {"&&":"AND", "||":"OR"};
   c.Programs = function(b) {
     try {
       return this.processPrograms(b);
@@ -17862,7 +19541,7 @@ Entry.PyToBlockParser = function(c) {
     }
   };
   c.LogicalExpression = function(b) {
-    return {type:this.dic[b.operator], params:[this.Node(b.left), void 0, this.Node(b.right)]};
+    return {type:"boolean_and_or", params:[this.Node(b.left), this.logicalOperator[b.operator], this.Node(b.right)]};
   };
   c.BinaryExpression = function(b) {
     var c = b.operator;
@@ -17955,7 +19634,7 @@ Entry.PyToBlockParser = function(c) {
     if ("Literal" === b.type) {
       var c = b.raw;
       if ("None" !== c) {
-        return b.value.constructor === String ? c = b.raw.substr(1, b.raw.length - 2) : b.value.constructor === Number && (c = b.value), c;
+        return b.value.constructor === String ? c = b.raw.includes('"') || b.raw.includes("'") ? b.raw.substr(1, b.raw.length - 2) : b.raw : b.value.constructor === Number && (c = b.value), c;
       }
     } else {
       return c = this.Node(b), c.params && c.params[0] ? c.params[0] : null;
@@ -18520,12 +20199,7 @@ Entry.Parser = function(c, b, d, e) {
     return d;
   };
   c.entryEventParamConverter = function(b) {
-    var c = b.indexOf("("), d = b.indexOf(")"), g = b.substring(0, c);
-    b = b.substring(c + 1, d);
-    if (b = b.replace(/\"/g, "")) {
-      b = Entry.Utils.isNumber(b) ? "num" + b : Entry.Utils.isNumber(b.charAt(0)) ? "num" + b : b.replace(/ /g, "_space_"), "None" == b && (b = "none");
-    }
-    return g + "(" + b + "):\n";
+    return b;
   };
   c.makeSyntaxErrorDisplay = function(b, c, f, g) {
     return "[" + b + "] " + (c ? "'" + c + "' " : "") + " : " + f + " (line " + g + ")";
@@ -19172,10 +20846,10 @@ Entry.Variable.prototype.updateView = function() {
         var c = this.textView_.text;
         var b = this.object_ ? (b = Entry.container.getObject(this.object_)) ? b.name + ":" + this.getName() : this.getName() : this.getName();
         c !== b && (this.textView_.text = b, this._nameWidth = null);
+        this.isNumber() ? 0 !== this.value_[0] && Entry.isInteger(this.value_) ? this.valueView_.text = "" + this.getValue() : this.valueView_.text = Number(this.getValue()).toFixed(2).replace(".00", "") : this.valueView_.text = this.getValue();
         null === this._nameWidth && (this._nameWidth = this.textView_.getMeasuredWidth());
         this.valueView_.x = this._nameWidth + 14;
         this.valueView_.y = 1;
-        this.isNumber() ? this.valueView_.text = Number(this.getValue()).toFixed(2).replace(".00", "") : this.valueView_.text = this.getValue();
         null === this._valueWidth && (this._valueWidth = this.valueView_.getMeasuredWidth());
         this.rect_.graphics.clear().f("#ffffff").ss(1, 2, 0).s("#A0A1A1").rc(0, -14, this._nameWidth + this._valueWidth + 26, 20, 4, 4, 4, 4);
         this.wrapper_.graphics.clear().f("#1bafea").ss(1, 2, 0).s("#1bafea").rc(this._nameWidth + 7, -11, this._valueWidth + 15, 14, 7, 7, 7, 7);
@@ -19260,9 +20934,9 @@ Entry.Variable.prototype.updateView = function() {
               this.view_.addChild(h);
             }
           } else {
-            "answer" == this.type ? (this.view_.x = this.getX(), this.view_.y = this.getY(), this.textView_.text = this.getName(), this.valueView_.y = 1, this.isNumber() ? (c = Number(this.getValue()), parseInt(this.getValue(), 10) == this.getValue() ? this.valueView_.text = c : this.valueView_.text = c.toFixed(1).replace(".00", "")) : this.valueView_.text = this.getValue(), null === this._nameWidth && (this._nameWidth = this.textView_.getMeasuredWidth()), null === this._valueWidth && (this._valueWidth = 
+            "answer" == this.type ? (this.view_.x = this.getX(), this.view_.y = this.getY(), this.textView_.text = this.getName(), this.valueView_.y = 1, this.isNumber() ? (c = Number(this.getValue()), parseInt(this.getValue(), 10) == this.getValue() ? this.valueView_.text = c : this.valueView_.text = Number(c).toFixed(1).replace(".00", "")) : this.valueView_.text = this.getValue(), null === this._nameWidth && (this._nameWidth = this.textView_.getMeasuredWidth()), null === this._valueWidth && (this._valueWidth = 
             this.valueView_.getMeasuredWidth()), this.valueView_.x = this._nameWidth + 14, this.rect_.graphics.clear().f("#ffffff").ss(1, 2, 0).s("#A0A1A1").rc(0, -14, this._nameWidth + this._valueWidth + 26, 20, 4, 4, 4, 4), this.wrapper_.graphics.clear().f("#E457DC").ss(1, 2, 0).s("#E457DC").rc(this._nameWidth + 7, -11, this._valueWidth + 15, 14, 7, 7, 7, 7)) : (this.view_.x = this.getX(), this.view_.y = this.getY(), this.textView_.text = this.getName(), null === this._nameWidth && (this._nameWidth = 
-            this.textView_.getMeasuredWidth()), this.valueView_.x = this._nameWidth + 14, this.valueView_.y = 1, this.isNumber() ? this.valueView_.text = this.getValue().toFixed(1).replace(".00", "") : this.valueView_.text = this.getValue(), null === this._valueWidth && (this._valueWidth = this.valueView_.getMeasuredWidth()), this.rect_.graphics.clear().f("#ffffff").ss(1, 2, 0).s("#A0A1A1").rc(0, -14, this._nameWidth + this._valueWidth + 26, 20, 4, 4, 4, 4), this.wrapper_.graphics.clear().f("#ffbb14").ss(1, 
+            this.textView_.getMeasuredWidth()), this.valueView_.x = this._nameWidth + 14, this.valueView_.y = 1, this.isNumber() ? this.valueView_.text = Number(this.getValue()).toFixed(1).replace(".00", "") : this.valueView_.text = this.getValue(), null === this._valueWidth && (this._valueWidth = this.valueView_.getMeasuredWidth()), this.rect_.graphics.clear().f("#ffffff").ss(1, 2, 0).s("#A0A1A1").rc(0, -14, this._nameWidth + this._valueWidth + 26, 20, 4, 4, 4, 4), this.wrapper_.graphics.clear().f("#ffbb14").ss(1, 
             2, 0).s("orange").rc(this._nameWidth + 7, -11, this._valueWidth + 15, 14, 7, 7, 7, 7));
           }
         }
@@ -23335,6 +25009,11 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
     this.renderMode = Entry.BlockView.RENDER_MODE_BLOCK;
     this._startContentRender(Entry.BlockView.RENDER_MODE_BLOCK);
   };
+  c.renderByMode = function(b, c) {
+    if (!this.isRenderMode(b) || c) {
+      this.renderMode = b, this._startContentRender(b);
+    }
+  };
   c._updateOpacity = function() {
     this.svgGroup.attr({opacity:!1 === this.visible ? 0 : 1});
     this.visible && this._setPosition();
@@ -23604,13 +25283,17 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
       return {top:b.y + d.top + h.y - e, left:b.x + d.left + h.x - e, width:2 * e, height:2 * e};
     }.bind(this)};
   };
+  c.isRenderMode = function(b) {
+    return this.renderMode === b;
+  };
 })(Entry.BlockView.prototype);
 Entry.Field = function() {
 };
 (function(c) {
   c.TEXT_LIMIT_LENGTH = 20;
   c.destroy = function() {
-    this.svgGroup && $(this.svgGroup).unbind("mouseup touchend");
+    var b = this.svgGroup;
+    b && (b._isBinded = !1, $(b).off(".fieldBindEvent"));
     this.destroyOption(!0);
   };
   c.command = function(b) {
@@ -23702,10 +25385,13 @@ Entry.Field = function() {
     b.getBoard().setSelectedBlock(b);
   };
   c._bindRenderOptions = function() {
-    var b = this;
-    $(this.svgGroup).bind("mouseup touchend", function(c) {
-      b._isEditable() && (b._code = b.getCode(), b.destroyOption(), b._startValue = b.getValue(), b.renderOptions(), b._isEditing = !0);
-    });
+    if (!this.svgGroup._isBinded) {
+      var b = this;
+      this.svgGroup._isBinded = !0;
+      $(this.svgGroup).on("mouseup.fieldBindEvent touchend.fieldBindEvent", function(c) {
+        b._isEditable() && (b._code = b.getCode(), b.destroyOption(), b._startValue = b.getValue(), b.renderOptions(), b._isEditing = !0);
+      });
+    }
   };
   c.pointer = function(b) {
     b = b || [];
@@ -23850,7 +25536,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
       c.constructor !== Entry.Block && (c = new Entry.Block(c, this._block.thread)), c.view || (c.setThread(this), c.createView(b, this.renderMode), this.view.setParent(this));
     }
     this.updateValueBlock(c);
-    f && this._valueBlock.view._startContentRender(this.renderMode);
+    this._valueBlock.view.renderByMode(this.renderMode, f);
     this._blockView.getBoard().constructor !== Entry.Board && this._valueBlock.view.removeControl();
     this.box.observe(this._blockView, "dAlignContent", ["width", "height"], !1);
   };
@@ -25278,7 +26964,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
     this._block.view.dAlignContent();
   };
   c.getTextWidth = function() {
-    return this.textElement ? this.textElement.getBoundingClientRect().width + 8 : 8;
+    return this.textElement ? this.getTextBBox().width + 8 : 8;
   };
   c.getText = function() {
     var b = this.getValue(), c = /&value/gm;
