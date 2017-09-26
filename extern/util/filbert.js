@@ -1,4 +1,4 @@
-// 1Filbert is a Python parser written in JavaScript.
+// Filbert is a Python parser written in JavaScript.
 //
 // Filbert was written by Matt Lott and released under an MIT
 // license. It was adatped from [Acorn](https://github.com/marijnh/acorn.git)
