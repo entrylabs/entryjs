@@ -221,6 +221,7 @@ Entry.BlockToPyParser = function() {
                     var forStmtText = forStmtTokens.join(" ");
                     blockToken = forStmtText;
                 }
+                
                 result += blockToken;
             }
         }
