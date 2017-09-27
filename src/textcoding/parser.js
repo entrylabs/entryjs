@@ -179,6 +179,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
                 break;
             case Entry.Vim.PARSER_TYPE_PY_TO_BLOCK:
                 try {
+                    e.block && Entry.getMainWS() && Entry.getMainWS().board.activateBlock(e.block);
                     this._pyBlockCount = {};
                     this._pyThreadCount = 1;
 
@@ -260,50 +261,57 @@ Entry.Parser = function(mode, type, cm, syntax) {
                 result = textCode;
                 break;
             case Entry.Vim.PARSER_TYPE_BLOCK_TO_PY:
-                Entry.getMainWS().blockMenu.renderText();
-                result = "";
+                try {
+                    Entry.getMainWS().blockMenu.renderText();
+                    result = "";
 
-                if (parseMode === Entry.Parser.PARSE_BLOCK &&
-                   code.type.substr(0, 5) === "func_") {
-                    var funcKeysBackup = Object.keys(this._execParser._funcDefMap);
-                }
-
-                var textCode = this._execParser.Code(code, parseMode);
-                if (!this._pyHinter)
-                    this._pyHinter = new Entry.PyHint(this.syntax);
-
-                if(!this._hasDeclaration)
-                    this.initDeclaration();
-
-                if(parseMode == Entry.Parser.PARSE_GENERAL) {
-                    if(this.py_variableDeclaration)
-                        result += this.py_variableDeclaration;
-
-                    if(this.py_listDeclaration)
-                        result += this.py_listDeclaration;
-
-                    if(this.py_variableDeclaration || this.py_listDeclaration)
-                        result += '\n';
-
-                    var funcDefMap = this._execParser._funcDefMap;
-                    var fd = "";
-
-                    for(var f in funcDefMap) {
-                        var funcDef = funcDefMap[f];
-                        fd += funcDef + '\n\n';
+                    if (parseMode === Entry.Parser.PARSE_BLOCK &&
+                    code.type.substr(0, 5) === "func_") {
+                        var funcKeysBackup = Object.keys(this._execParser._funcDefMap);
                     }
-                    result += fd;
-                } else if (parseMode === Entry.Parser.PARSE_BLOCK) {
-                    if (funcKeysBackup && funcKeysBackup.indexOf(code.type) < 0) {
-                        result += this._execParser._funcDefMap[code.type] + '\n\n';
-                    }
-                }
-                if(textCode)
-                    result += textCode.trim();
 
-                result = result.replace(/\t/g, "    ");
-                if(this._hasDeclaration)
-                    this.removeDeclaration();
+                    var textCode = this._execParser.Code(code, parseMode);
+                    if (!this._pyHinter)
+                        this._pyHinter = new Entry.PyHint(this.syntax);
+
+                    if(!this._hasDeclaration)
+                        this.initDeclaration();
+
+                    if(parseMode == Entry.Parser.PARSE_GENERAL) {
+                        if(this.py_variableDeclaration)
+                            result += this.py_variableDeclaration;
+
+                        if(this.py_listDeclaration)
+                            result += this.py_listDeclaration;
+
+                        if(this.py_variableDeclaration || this.py_listDeclaration)
+                            result += '\n';
+
+                        var funcDefMap = this._execParser._funcDefMap;
+                        var fd = "";
+
+                        for(var f in funcDefMap) {
+                            var funcDef = funcDefMap[f];
+                            fd += funcDef + '\n\n';
+                        }
+                        result += fd;
+                    } else if (parseMode === Entry.Parser.PARSE_BLOCK) {
+                        if (funcKeysBackup && funcKeysBackup.indexOf(code.type) < 0) {
+                            result += this._execParser._funcDefMap[code.type] + '\n\n';
+                        }
+                    }
+                    if(textCode)
+                        result += textCode.trim();
+
+                    result = result.replace(/\t/g, "    ");
+                    if(this._hasDeclaration)
+                        this.removeDeclaration();
+                } catch (e) {
+                    if (e.block) {
+                        Entry.toast.alert(Lang.TextCoding.title_converting, Lang.TextCoding.alert_legacy_no_support);
+                    }
+                    throw e;
+                }
 
                 break;
         }
