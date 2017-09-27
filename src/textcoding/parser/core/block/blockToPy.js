@@ -222,7 +222,7 @@ Entry.BlockToPyParser = function() {
                     blockToken = forStmtText;
                 }
                 
-                if(syntaxObj && syntaxObj.key == "substring" && i == 2) {
+                if(syntaxObj && syntaxObj.key == "substring" && i == 2 && Entry.Utils.isNumber(result)) {
                     result = '"' + result + '"';
                 }
 
