@@ -548,6 +548,17 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     this.divideOperator[operator]
                 ]
             };
+        } else if (operator === "**") {
+            this.assert(component.right.value === 2, component.right.value, component, "DEFAULT", "DEFAULT");
+            return {
+                type: "calc_operation",
+                params: [
+                    undefined,
+                    this.Node(component.left),
+                    undefined,
+                    "square"
+                ]
+            }
         } else {
             throw new Error("Not supported operator " + component.operator);
         }
