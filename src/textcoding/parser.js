@@ -179,7 +179,6 @@ Entry.Parser = function(mode, type, cm, syntax) {
                 break;
             case Entry.Vim.PARSER_TYPE_PY_TO_BLOCK:
                 try {
-                    e.block && Entry.getMainWS() && Entry.getMainWS().board.activateBlock(e.block);
                     this._pyBlockCount = {};
                     this._pyThreadCount = 1;
 

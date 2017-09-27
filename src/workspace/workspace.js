@@ -198,8 +198,6 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                     this.set({selectedBoard:this.vimBoard});
                     blockMenu.banClass('functionInit');
                     this.mode = WORKSPACE.MODE_VIMBOARD;
-                    console.log(e);
-                    Entry.getMainWS() && Entry.getMainWS().board.activateBlock(e.block);
 
                     if (this.oldTextType == VIM.TEXT_TYPE_JS) {
                         mode.boardType = WORKSPACE.MODE_VIMBOARD;
