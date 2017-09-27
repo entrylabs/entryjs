@@ -495,9 +495,22 @@ Entry.PyToBlockParser = function(blockSyntax) {
             case "-":
             case "+":
                 var result = this.Node(component.argument);
-                this.assert(result.type === "number", "Can't convert this operation")
-                result.params = ["-" + result.params[0]];
-                return result;
+                if (result.type === "number") {
+                    result.params = [component.operator + result.params[0]];
+                    return result;
+                } else {
+                    return {
+                        type: "calc_basic",
+                        params: [
+                            {
+                                type: "number",
+                                params: [component.operator + "1"]
+                            },
+                            "MULTI",
+                            result
+                        ]
+                    }
+                }
             default:
                 throw new Error("Unary operator " + component.operator + " is not supported");
         }
