@@ -119,7 +119,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
             this.runType = mode.runType;
             this.textType = mode.textType;
         }
- 
+
         this.mode = Number(this.mode);
         if (this.oldMode === this.mode)
             return;
@@ -468,7 +468,9 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                     break;
                 case 8:
                 case 46:
-                    if (!isBoardReadOnly && blockView && !blockView.isInBlockMenu && blockView.block.isDeletable()) {
+                    if (!isBoardReadOnly && blockView &&
+                        !blockView.isInBlockMenu && blockView.block.isDeletable() &&
+                        !blockView.isFieldEditing()) {
                         Entry.do("destroyBlock", blockView.block);
                         this.board.set({selectedBlockView:null});
                         e.preventDefault();
