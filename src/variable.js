@@ -339,10 +339,10 @@ Entry.Variable.prototype.updateView = function() {
                 this._nameWidth = null;
             }
 
-            if(this.isNumber() && this.value_[0] !==0 ) {
-                this.valueView_.text = '' + this.getValue();
-            } else if (this.isNumber()){
-                this.valueView_.text = Number(this.getValue()).toFixed(2).replace('.00', '');
+            if (this.isNumber()) {
+                if (this.value_[0] !== 0 && Entry.isInteger(this.value_))
+                    this.valueView_.text = '' + this.getValue();
+                else this.valueView_.text = Number(this.getValue()).toFixed(2).replace('.00', '');
             } else {
                 this.valueView_.text = this.getValue();
             }
@@ -354,7 +354,7 @@ Entry.Variable.prototype.updateView = function() {
             this.valueView_.y = 1;
             // INFO: Number체크는 slide 일때만 하도록 처리 기본 문자로 처리함(#4876)
 
-            
+
             if (this._valueWidth === null)
                 this._valueWidth = this.valueView_.getMeasuredWidth();
             this.rect_.graphics.clear().f("#ffffff").ss(1, 2, 0).s("#A0A1A1")

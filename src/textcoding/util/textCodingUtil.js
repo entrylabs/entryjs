@@ -1823,16 +1823,16 @@ Entry.TextCodingUtil = {};
         //inspect variables
         var targets = vc.variables_ || [];
         for (var i=0; i<targets.length; i++) {
-            if (this.checkName(targets[i].name_ , '변수')) {
-                return this.checkName(targets[i].name_ , '변수');
+            if (this.checkName(targets[i].name_ , 'v')) {
+                return this.checkName(targets[i].name_ , 'v');
             }
         }
 
         //inspect lists
         targets = vc.lists_ || [];
         for (i=0; i<targets.length; i++) {
-            if (this.checkName(targets[i].name_ , '리스트')) {
-                return this.checkName(targets[i].name_ , '리스트');
+            if (this.checkName(targets[i].name_ , 'l')) {
+                return this.checkName(targets[i].name_ , 'l');
             }
         }
     }
@@ -2093,18 +2093,18 @@ Entry.TextCodingUtil = {};
         var regExp = /^[0-9]$/g;
         
         if(regExp.test(name[0])){
-            return Lang.Menu.textcoding_numberError_1;
+            return Lang.Menus['textcoding_numberError_' + target];
         }
 
         //특수문자 검사
         var regExp = /[\{\}\[\]\/?.,;:|\)*~`!^\-+<>@\#$%&\\\=\(\'\"]/gi;
         if(regExp.test(name)){
-            return Lang.Menus.textcoding_specialCharError;
+            return Lang.Menus['textcoding_specialCharError_' + target];
         }
 
         //예약어 검사
         if(keywords.includes(name)){
-            return Lang.Menus.textcoding_bookedError_1 + name + Lang.Menus.textcoding_bookedError_2;
+            return Lang.Menus['textcoding_bookedError_1' + target] + name + Lang.Menus['textcoding_bookedError_2' + target];
         }
 
         return false;
