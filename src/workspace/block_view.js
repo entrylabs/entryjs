@@ -17,14 +17,14 @@ Entry.BlockView = function(block, board, mode) {
     this.mouseUpEvent = new Entry.Event(this);
     this.disableMouseEvent = false;
 
-    //this.dAlignContent =
-        //Entry.Utils.debounce(this.alignContent, 30);
     this.dAlignContent = this.alignContent;
     this._board = board;
     this._observers = [];
     this.set(block);
     this.svgGroup = board.svgBlockGroup.elem("g");
     this.svgGroup.blockView = this;
+
+    this._currentFill = this._fillColor;
 
     this._schema = Entry.skinContainer.getSkin(block);
 
@@ -378,12 +378,22 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
                 }, Entry.ANIMATION_DURATION, mina.easeinout);
             }, 0);
         } else {
-            this._path.attr({
-                d: newPath
-            });
+            this._path.attr({ d: newPath });
 
-            this.set({animating: false});
+            if (this.animating) this.set({animating: false});
         }
+        this._resetFilter();
+    };
+
+    p._resetFilter = function() {
+        if (this._currentFill === this._fillColor)
+            return;
+        var board = this.getBoard();
+        if (!board || !board.disablePattern) return;
+        board.disablePattern();
+        this._removeBackgroundPath();
+        this._path.attr({fill:this._fillColor});
+        this._currentFill = this._fillColor;
     };
 
     p._setPosition = function(animate) {
@@ -393,18 +403,14 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
             this.x + "," + this.y + ")";
 
         if (animate && Entry.ANIMATION_DURATION !== 0) {
-            this.svgGroup.attr(
-                "transform", transform
-            );
+            this.svgGroup.attr("transform", transform);
             /*
             this.svgGroup.animate({
                 transform: transform
             }, Entry.ANIMATION_DURATION, mina.easeinout);
             */
         } else {
-            this.svgGroup.attr(
-                "transform", transform
-            );
+            this.svgGroup.attr("transform", transform);
         }
     };
 
@@ -1116,12 +1122,10 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
             fillColor = "url(#blockHoverPattern_" + this.getBoard().suffix +")";
             this._setBackgroundPath();
             board.enablePattern();
-        } else {
-            board.disablePattern();
-            this._removeBackgroundPath();
-        }
+            this._currentFill = fillColor;
+            path.attr({fill:fillColor});
+        } else this._resetFilter();
 
-        path.attr({fill:fillColor});
     };
 
     p.addActivated = function() {
