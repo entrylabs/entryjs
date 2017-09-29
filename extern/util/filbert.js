@@ -872,10 +872,12 @@
     if (tokType === _newline) return readToken_indent();
 
     if(input.split('=').length > 1 && isKeyword(input.split('=')[0].trim())) {
-      if(input.split('=')[1].trim()[0] == '[')
+      tokPos = input.split(/\r|\n/g).length - 1 +3;
+      if(input.split('=')[1].trim()[0] == '['){
         raise(tokPos, "Reserved list word");
-      else
+      } else{
         raise(tokPos, "Reserved variable word");
+      }
     }
 
     var code = input.charCodeAt(tokPos);
@@ -890,7 +892,7 @@
       // character, or something that's entirely disallowed.
       var ch = String.fromCharCode(code);
       if (ch === "\\" || nonASCIIidentifierStart.test(ch)) return readWord();
-      raise(tokPos, "Unexpected character '" + ch + "'");
+      raise(tokPos+3, "Unexpected character '" + ch + "'");
     }
     return tok;
   }
