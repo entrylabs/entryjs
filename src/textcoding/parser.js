@@ -41,6 +41,22 @@ Entry.Parser = function(mode, type, cm, syntax) {
 
     if (Entry.type === "workspace") {
         this._console = new Entry.Console();
+
+        var hwFunc = function() {
+            var _mode = this._mode;
+            if (_mode === null) return;
+            this.setAvailableCode();
+
+            delete this._syntax_cache[_mode];
+            this.syntax = this.mappingSyntax(_mode);
+            this._pyHinter && this._pyHinter.setSyntax(this.syntax);
+        }.bind(this);
+
+        //after hw code generated update syntax for this
+        //and update python hinter syntax
+        Entry.addEventListener('hwCodeGenerated', hwFunc);
+    }
+
 };
 
 (function(p) {
