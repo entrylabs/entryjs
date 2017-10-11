@@ -119,7 +119,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
             this.runType = mode.runType;
             this.textType = mode.textType;
         }
- 
+
         this.mode = Number(this.mode);
         if (this.oldMode === this.mode)
             return;
@@ -296,11 +296,17 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
     p._setSelectedBlockView = function() {
         var view = 'selectedBlockView';
         var blockView = this.board[view] ||
-            this.blockMenu[view] ||
-            (this.overlayBoard ? this.overlayBoard[view] : null);
+                        this.blockMenu[view] ||
+                        (this.overlayBoard ? this.overlayBoard[view] : null);
+
         this._unbindBlockViewMouseUpEvent();
+
+        var oldView = this.selectedBlockView;
+        oldView && oldView.resetFilter();
+
         this.set({selectedBlockView:blockView});
         if (blockView) {
+            blockView.resetFilter();
             var that = this;
             this._blockViewMouseUpEvent =
                 blockView.mouseUpEvent.attach(

@@ -24,8 +24,6 @@ Entry.BlockView = function(block, board, mode) {
     this.svgGroup = board.svgBlockGroup.elem("g");
     this.svgGroup.blockView = this;
 
-    this._currentFill = this._fillColor;
-
     this._schema = Entry.skinContainer.getSkin(block);
 
     if (this._schema === undefined) {
@@ -154,7 +152,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
 
         this._path = this.pathGroup.elem("path");
 
-        //enable mouse pattern only for desktou
+        //enable mouse pattern only for desktop
         if (!Entry.isMobile()) {
             $(this._path).mouseenter(function(e) {
                 if (!that._mouseEnable) return;
@@ -379,21 +377,19 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
             }, 0);
         } else {
             this._path.attr({ d: newPath });
-
-            if (this.animating) this.set({animating: false});
+            this.animating && this.set({animating: false});
         }
-        this._resetFilter();
+
     };
 
-    p._resetFilter = function() {
-        if (this._currentFill === this._fillColor)
-            return;
+    p.resetFilter = function() {
+        if (!this._backgroundPath) return;
+
         var board = this.getBoard();
         if (!board || !board.disablePattern) return;
         board.disablePattern();
         this._removeBackgroundPath();
         this._path.attr({fill:this._fillColor});
-        this._currentFill = this._fillColor;
     };
 
     p._setPosition = function(animate) {
@@ -484,7 +480,6 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
         var longPressTimer = null;
 
         var blockView = this;
-        this._changeFill(false);
         var board = this.getBoard();
         if (Entry.documentMousedown)
             Entry.documentMousedown.notify(e);
@@ -1122,9 +1117,8 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
             fillColor = "url(#blockHoverPattern_" + this.getBoard().suffix +")";
             this._setBackgroundPath();
             board.enablePattern();
-            this._currentFill = fillColor;
             path.attr({fill:fillColor});
-        } else this._resetFilter();
+        } else this.resetFilter();
 
     };
 

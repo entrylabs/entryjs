@@ -67,10 +67,14 @@ Entry.FieldStatement = function(content, blockView, index) {
             this.firstBlock = firstBlock;
         }
 
-        var calcEvent = thread.changeEvent.attach(this, this.calcHeight);
-        var checkTopEvent = thread.changeEvent.attach(this, this.checkTopBlock);
-        this._events.push([thread.changeEvent, calcEvent]);
-        this._events.push([thread.changeEvent, checkTopEvent]);
+        var event = thread.changeEvent;
+
+        var calcEvent = event.attach(this, this.calcHeight);
+        var checkTopEvent = event.attach(this, this.checkTopBlock);
+
+        this._events.push([event, calcEvent]);
+        this._events.push([event, checkTopEvent]);
+
         this.calcHeight();
     };
 
