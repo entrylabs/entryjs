@@ -1138,3 +1138,13 @@ Entry.Container.prototype.adjustClonedValues = function(oldIds, newIds) {
             });
     });
 };
+
+Entry.Container.prototype.getBlockList = function() {
+    var blocks = [];
+
+    this.objects_.forEach(function(o) {
+        blocks = blocks.concat(o.script.getBlockList());
+    });
+
+    return blocks;
+};
