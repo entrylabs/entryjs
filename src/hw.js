@@ -73,6 +73,8 @@ Entry.HW = function() {
         '16.1': Entry.MODI,
         '18.1': Entry.Altino,
         '1A.1': Entry.ArduinoNano,
+        '1B.1': Entry.JDKit,
+        
     };
 };
 

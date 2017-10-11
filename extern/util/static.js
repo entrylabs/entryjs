@@ -1092,6 +1092,21 @@ EntryStatic.getAllBlocks = function() {
                 "altino_light",
                 "altino_dot_display",
                 "altino_dot_display_line",
+                //JDKit Blocks
+                "jdkit_led",
+                "jdkit_tune",
+                "jdkit_motor",
+                "jdkit_joystick",
+                "jdkit_button",
+                "jdkit_gyro", 
+                "jdkit_ultrasonic",
+                "jdkit_connect",
+                "jdkit_ready",
+                "jdkit_throttle",
+                "jdkit_altitude",
+                "jdkit_rollpitch",
+                "jdkit_yaw",
+                "jdkit_emergency",
             ]
         }
     ]
