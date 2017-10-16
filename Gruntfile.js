@@ -56,6 +56,7 @@ module.exports = function(grunt) {
                     'extern/blockly/blockly_compressed.js',
                     'extern/util/static.js',
                     'extern/util/filbert.js',
+                    'extern/util/bignumber.min.js',
                     'node_modules/jquery/jquery.js',
                     'node_modules/createjs-easeljs/lib/easeljs-0.8.2.min.js',
                     'node_modules/createjs-soundjs/lib/soundjs-0.6.2.min.js',

@@ -79,18 +79,30 @@ Entry.Dialog.prototype.update = function() {
     }
     var notchType = '';
 
-    if (bound.y - this.height -20 - this.border> -135) {
-        this.object.y = bound.y - this.height/2 -20 - this.padding;
+    if (bound.y -20 - this.border> -135) {
+        this.object.y = Math.max(
+            bound.y - this.height/2 -20 - this.padding,
+            -135 + this.height/2 + this.padding
+        );
         notchType += 'n';
     } else {
-        this.object.y = bound.y + bound.height + this.height/2 + 20 + this.padding;
+        this.object.y = Math.min(
+            bound.y + bound.height + this.height/2 + 20 + this.padding,
+            135 - this.height/2 - this.padding
+        );
         notchType += 's';
     }
-    if (bound.x + bound.width + this.width < 240) {
-        this.object.x = bound.x + bound.width + this.width/2;
+    if (bound.x + bound.width / 2 < 0) {
+        this.object.x = Math.min(
+            bound.x + bound.width + this.width/2,
+            240 - this.width / 2 - this.padding
+        );
         notchType += 'e';
     } else {
-        this.object.x = bound.x - this.width/2;
+        this.object.x = Math.max(
+            bound.x - this.width/2,
+            -240 + this.width / 2 + this.padding
+        );
         notchType += 'w';
     }
     if (this.notch.type != notchType) {

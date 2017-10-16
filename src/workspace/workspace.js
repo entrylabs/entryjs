@@ -119,7 +119,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
             this.runType = mode.runType;
             this.textType = mode.textType;
         }
-
+ 
         this.mode = Number(this.mode);
         if (this.oldMode === this.mode)
             return;
@@ -141,6 +141,17 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                         Entry.getMainWS().setMode(mode);
                         break;
                     }
+
+                    alert_message = Entry.TextCodingUtil.isNameIncludeNotValidChar();
+                    if(alert_message) {
+                        entrylms.alert(alert_message);
+                        var mode = {};
+                        mode.boardType = WORKSPACE.MODE_BOARD;
+                        mode.textType = -1;
+                        Entry.getMainWS().setMode(mode);
+                        return;
+                    }
+
                     alert_message = Entry.TextCodingUtil.canConvertTextModeForOverlayMode(Entry.Workspace.MODE_VIMBOARD);
                     if(alert_message) {
                         entrylms.alert(alert_message);
