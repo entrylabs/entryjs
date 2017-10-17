@@ -678,7 +678,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
         if (codeMap) {
             results = results.map(function(arg, index) {
                 if (codeMap[index]) {
-                    return codeMap[index][arg] || arg;
+                    return codeMap[index][arg.toLowerCase()] || arg;
                 } else {
                     return arg;
                 }
