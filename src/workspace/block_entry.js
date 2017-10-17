@@ -40726,7 +40726,8 @@ Entry.block = {
             };
             var unitComp = Ntry.entityManager.getComponent(unitId, Ntry.STATIC.UNIT);
             var unitGrid = $.extend({}, Ntry.entityManager.getComponent(unitId, Ntry.STATIC.GRID));
-            if (!Ntry.checkTileByGrid(unitGrid, Ntry.STATIC.MEAT)) {
+            var meatEntity = Ntry.checkTileByGrid(unitGrid, Ntry.STATIC.MEAT);
+            if (!meatEntity || meatEntity.components[Ntry.STATIC.ITEM].isEaten) {
                 Ntry.dispatchEvent("unitAction", Ntry.STATIC.NOT_FOUND_MEAT, callBack);
                 return Entry.STATIC.BREAK;
             }
