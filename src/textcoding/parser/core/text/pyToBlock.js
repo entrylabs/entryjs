@@ -678,13 +678,11 @@ Entry.PyToBlockParser = function(blockSyntax) {
         if (codeMap) {
             results = results.map(function(arg, index) {
                 if (codeMap[index] && arg) {
-                    var key = arg;
-                    if (key.toLowerCase) key = key.toLowerCase();
-                    return codeMap[index][key] || arg;
+                    return codeMap[index][this.toLowerCase(arg)] || arg;
                 } else {
                     return arg;
                 }
-            });
+            }, this);
         }
 
         return results;
@@ -1082,7 +1080,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
             component.arguments
         )
         if (component.arguments.length > 2) {
-            obj.params[0] = Entry.CodeMap.Hamster.hamster_play_note_for[0][obj.params[0].toLowerCase()];
+            obj.params[0] = Entry.CodeMap.Hamster.hamster_play_note_for[0][this.toLowerCase(obj.params[0])];
         }
         return obj;
     };
@@ -1305,6 +1303,13 @@ Entry.PyToBlockParser = function(blockSyntax) {
             }
         }
         return null;
+    };
+    
+    p.toLowerCase = function(data) {
+        if (data && data.toLowerCase)
+            return data.toLowerCase();
+        else
+            return data;
     };
 
 })(Entry.PyToBlockParser.prototype);
