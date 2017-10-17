@@ -885,24 +885,10 @@ Entry.PyToBlockParser = function(blockSyntax) {
     };
 
     p.CodeMap = function(blockType) {
-        var blockSchema = Entry.block[blockType];
-        if (!blockSchema || !blockSchema.syntax || !blockSchema.syntax.py)
-            return;
-
-        var syntax = blockSchema.syntax.py[0].syntax;
-
-        if (!syntax)
-            return;
-
-        var callSyntax = syntax.split("(")[0];
-        var identifiers = callSyntax.split(".")
-
-        if (identifiers.length < 2)
-            return;
-
-        var objName = identifiers[0];
-        if (Entry.CodeMap[objName] && Entry.CodeMap[objName][blockType])
-            return Entry.CodeMap[objName][blockType];
+        for (var objName in Entry.CodeMap) {
+            if (Entry.CodeMap[objName] && Entry.CodeMap[objName][blockType])
+                return Entry.CodeMap[objName][blockType];
+        }
     };
 
     p.Block = function(result, blockInfo) {
