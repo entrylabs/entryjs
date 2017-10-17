@@ -327,7 +327,8 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
         var contents = this._contents;
         for (var i=0; i<contents.length; i++) {
             var content = contents[i];
-            if (!content) continue;
+            if (!content || content.isEditing === undefined)
+                continue;
             if (content.isEditing()) return true;
         }
         return false;

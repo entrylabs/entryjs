@@ -73,6 +73,7 @@ Entry.STATIC = {
         uneditPicture: 402,
         processPicture: 403,
         unprocessPicture: 404,
+        editText: 405,
 
 
         toggleRun: 501,

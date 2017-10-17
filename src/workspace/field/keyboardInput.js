@@ -90,7 +90,9 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
         this._attachDisposeEvent();
 
         var pos = this.getAbsolutePosFromDocument();
-        pos.x -= this.box.width/2;
+
+        pos.x -= 12 + X_PADDING/2;
+        pos.x += this.box.width/2;
         pos.y += this.box.height/2 + 1;
 
         this.optionGroup = Entry.Dom('img', {
@@ -98,20 +100,16 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
             parent: $('body')
         });
 
-        this.optionGroup.on('load', function() {
-            that.optionDomCreated();
-        });
+        this.optionGroup.on('load', that.optionDomCreated.bind(this));
 
         this.optionGroup[0].src =
-            Entry.mediaFilePath + '/media/keyboard_workspace.png';
+            Entry.mediaFilePath + '/media/keyboard_workspace_widget.png';
 
         this.optionGroup.on('mousedown', function(e) {
             e.stopPropagation();
         });
 
-        this.optionGroup.css({
-            left: pos.x, top: pos.y
-        });
+        this.optionGroup.css({ left: pos.x, top: pos.y });
     };
 
     p.destroyOption = function(forceCommand) {
@@ -126,6 +124,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
         }
 
         this._optionVisible = false;
+        this._isEditing = false;
         this.command(forceCommand);
         if (this.keyPressed) {
             Entry.keyPressed.detach(this.keyPressed);
@@ -134,7 +133,8 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
     };
 
     p._keyboardControl = function(event) {
-        event.stopPropagation();
+        event.stopPropagation && event.stopPropagation();
+        event.preventDefault && event.preventDefault();
         if (!this._optionVisible) return;
 
         var value = event.keyCode;

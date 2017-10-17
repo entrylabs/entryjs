@@ -706,13 +706,13 @@ Entry.Engine = function() {
      */
     p.captureKeyEvent = function(e, isForce) {
         var keyCode = e.keyCode;
-        var type = Entry.type;
+        var isWorkspace = Entry.type === 'workspace';
 
         if (Entry.Utils.isInInput(e) && !isForce)
             return;
 
         //mouse shortcuts
-        if (e.ctrlKey && type == 'workspace') {
+        if (keyCode !== 17 && e.ctrlKey && isWorkspace) {
             if (keyCode == 83) {
                 e.preventDefault();
                 Entry.dispatchEvent(e.shiftKey ? 'saveAsWorkspace': 'saveWorkspace');
@@ -724,6 +724,7 @@ Entry.Engine = function() {
                 Entry.dispatchEvent(e.shiftKey ? 'redo' : 'undo');
             }
         } else if (Entry.engine.isState('run')) {
+            e.preventDefault && e.preventDefault();
             Entry.container.mapEntityIncludeCloneOnScene(
                 Entry.engine.raiseKeyEvent,
                 ["keyPress", keyCode]
@@ -731,8 +732,7 @@ Entry.Engine = function() {
         }
 
         if (Entry.engine.isState('stop')) {
-            if (type === 'workspace' &&
-                (keyCode >= 37 && keyCode <= 40)) {
+            if (isWorkspace && (keyCode >= 37 && keyCode <= 40)) {
                 Entry.stage.moveSprite(e);
             }
         }
@@ -798,7 +798,7 @@ Entry.Engine = function() {
         }
 
         Entry.windowResized.notify();
-    }
+    };
 
     p.exitFullScreen = function() {
         if (document.webkitIsFullScreen ||

@@ -624,8 +624,18 @@ Entry.Playground = function() {
         textEditInput.onkeyup = textChangeApply;
         textEditInput.onchange = textChangeApply;
 
+        textEditInput.addEventListener('focusin', function () {
+            textEditInput.prevText = textEditInput.value;
+        });
         textEditInput.onblur = function() {
-            Entry.dispatchEvent('textEdited');
+            if(textEditInput.value !== textEditInput.prevText) {
+                Entry.do(
+                    'editText',
+                    textEditInput.value,
+                    textEditInput.prevText
+                );
+            }
+            // Entry.dispatchEvent('textEdited');
         };
         this.textEditInput = textEditInput;
         wrap.appendChild(textEditInput);
@@ -636,8 +646,18 @@ Entry.Playground = function() {
         textEditArea.onkeyup = textChangeApply;
         textEditArea.onchange = textChangeApply;
 
+        textEditArea.addEventListener('focusin', function () {
+            textEditArea.prevText = textEditArea.value;
+        });
         textEditArea.onblur = function() {
-            Entry.dispatchEvent('textEdited');
+            if(textEditArea.value !== textEditArea.prevText) {
+                Entry.do(
+                    'editText',
+                    textEditArea.value,
+                    textEditArea.prevText
+                );
+            }
+            // Entry.dispatchEvent('textEdited');
         };
         this.textEditArea = textEditArea;
         wrap.appendChild(textEditArea);
