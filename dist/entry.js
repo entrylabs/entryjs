@@ -7278,7 +7278,7 @@ Entry.isPhone = function() {
 };
 Entry.getKeyCodeMap = function() {
   return {65:"a", 66:"b", 67:"c", 68:"d", 69:"e", 70:"f", 71:"g", 72:"h", 73:"i", 74:"j", 75:"k", 76:"l", 77:"m", 78:"n", 79:"o", 80:"p", 81:"q", 82:"r", 83:"s", 84:"t", 85:"u", 86:"v", 87:"w", 88:"x", 89:"y", 90:"z", 32:Lang.Blocks.START_press_some_key_space, 37:Lang.Blocks.START_press_some_key_left, 38:Lang.Blocks.START_press_some_key_up, 39:Lang.Blocks.START_press_some_key_right, 40:Lang.Blocks.START_press_some_key_down, 48:"0", 49:"1", 50:"2", 51:"3", 52:"4", 53:"5", 54:"6", 55:"7", 56:"8", 57:"9", 
-  13:Lang.Blocks.START_press_some_key_enter};
+  13:Lang.Blocks.START_press_some_key_enter, 27:"esc", 17:"ctrl", 18:"alt", 9:"tab", 16:"shift", 8:"backspace"};
 };
 Entry.checkCollisionRect = function(c, b) {
   return !(c.y + c.height < b.y || c.y > b.y + b.height || c.x + c.width < b.x || c.x > b.x + b.width);
@@ -7936,7 +7936,7 @@ Entry.Observer = function(c, b, d, e) {
 })(Entry.Observer.prototype);
 Entry.STATIC = {OBJECT:0, ENTITY:1, SPRITE:2, SOUND:3, VARIABLE:4, FUNCTION:5, SCENE:6, MESSAGE:7, BLOCK_MODEL:8, BLOCK_RENDER_MODEL:9, BOX_MODEL:10, THREAD_MODEL:11, DRAG_INSTANCE:12, BLOCK_STATIC:0, BLOCK_MOVE:1, BLOCK_FOLLOW:2, RETURN:0, CONTINUE:1, BREAK:2, PASS:3, COMMAND_TYPES:{addThread:101, destroyThread:102, destroyBlock:103, recoverBlock:104, insertBlock:105, separateBlock:106, moveBlock:107, cloneBlock:108, uncloneBlock:109, scrollBoard:110, setFieldValue:111, selectBlockMenu:112, destroyBlockBelow:113, 
 destroyThreads:114, addThreads:115, recoverBlockBelow:116, addThreadFromBlockMenu:117, insertBlockFromBlockMenu:118, moveBlockFromBlockMenu:119, separateBlockForDestroy:120, moveBlockForDestroy:121, insertBlockFromBlockMenuFollowSeparate:122, insertBlockFollowSeparate:123, separateBlockByCommand:124, selectObject:201, objectEditButtonClick:202, objectAddPicture:203, objectRemovePicture:204, objectAddSound:205, objectRemoveSound:206, "do":301, undo:302, redo:303, editPicture:401, uneditPicture:402, 
-processPicture:403, unprocessPicture:404, toggleRun:501, toggleStop:502, containerSelectObject:601, playgroundChangeViewMode:701, playgroundClickAddPicture:702, playgroundClickAddSound:703, playgroundClickAddPictureCancel:704, playgroundClickAddSoundCancel:705, variableContainerSelectFilter:801, variableContainerClickVariableAddButton:802, variableContainerAddVariable:803, variableContainerRemoveVariable:804, variableAddSetName:805}, RECORDABLE:{SUPPORT:1, SKIP:2, ABANDON:3}};
+processPicture:403, unprocessPicture:404, editText:405, toggleRun:501, toggleStop:502, containerSelectObject:601, playgroundChangeViewMode:701, playgroundClickAddPicture:702, playgroundClickAddSound:703, playgroundClickAddPictureCancel:704, playgroundClickAddSoundCancel:705, variableContainerSelectFilter:801, variableContainerClickVariableAddButton:802, variableContainerAddVariable:803, variableContainerRemoveVariable:804, variableAddSetName:805}, RECORDABLE:{SUPPORT:1, SKIP:2, ABANDON:3}};
 Entry.Command = {};
 (function(c) {
   c[Entry.STATIC.COMMAND_TYPES.do] = {recordable:Entry.STATIC.RECORDABLE.SKIP, log:function(b) {
@@ -8563,6 +8563,17 @@ Entry.Commander = function(c) {
   }, validate:!1, recordable:Entry.STATIC.RECORDABLE.SUPPORT, undo:"", dom:["playground", "soundAddButton"]};
 })(Entry.Command);
 (function(c) {
+  c[Entry.STATIC.COMMAND_TYPES.editText] = {do:function(b, c) {
+    Entry.playground.object.setText(b);
+    Entry.playground.object.entity.setText(b);
+    Entry.dispatchEvent("textEdited");
+  }, state:function(b, c) {
+    return [c, b];
+  }, log:function() {
+    return [];
+  }, validate:!1, recordable:Entry.STATIC.RECORDABLE.SUPPORT, undo:"editText"};
+})(Entry.Command);
+(function(c) {
   var b = Entry.STATIC.COMMAND_TYPES;
   c[b.variableContainerSelectFilter] = {do:function(b, c) {
     Entry.variableContainer.selectFilter(b);
@@ -8761,8 +8772,9 @@ Entry.Container.prototype.addObject = function(c, b) {
   var d = new Entry.EntryObject(c);
   d.name = Entry.getOrderedName(d.name, this.objects_);
   Entry.stateManager && Entry.stateManager.addCommand("add object", this, this.removeObject, d);
-  d.scene || (d.scene = Entry.scene.selectedScene);
-  "number" == typeof b ? c.sprite.category && "background" == c.sprite.category.main ? (d.setLock(!0), this.objects_.push(d)) : this.objects_.splice(b, 0, d) : c.sprite.category && "background" == c.sprite.category.main ? this.objects_.push(d) : this.objects_.unshift(d);
+  d.scene = d.scene || Entry.scene.selectedScene;
+  c = (c = c.sprite.category) && "background" == c.main;
+  "number" == typeof b ? c ? (d.setLock(!0), this.objects_.push(d)) : this.objects_.splice(b, 0, d) : c ? this.objects_.push(d) : this.objects_.unshift(d);
   d.generateView();
   this.setCurrentObjects();
   this.updateObjectsOrder();
@@ -8784,11 +8796,20 @@ Entry.Container.prototype.removeExtension = function(c) {
   }
 };
 Entry.Container.prototype.addCloneObject = function(c, b) {
-  var d = c.toJSON(!0);
-  Entry.variableContainer.addCloneLocalVariables({objectId:c.id, newObjectId:d.id, json:d});
-  d.scene = b || Entry.scene.selectedScene;
-  this.addObject(d);
-  return this.getObject(d.id);
+  function d(b, c, d) {
+    var e = d.sprite[b], f = d.script;
+    (c[b] || []).forEach(function(b, c) {
+      f = f.replace(new RegExp(b.id, "g"), e[c].id);
+    });
+    return f;
+  }
+  var e = c.toJSON(!0);
+  e.script = d("sounds", c, e);
+  e.script = d("pictures", c, e);
+  Entry.variableContainer.addCloneLocalVariables({objectId:c.id, newObjectId:e.id, json:e});
+  e.scene = b || Entry.scene.selectedScene;
+  this.addObject(e);
+  return this.getObject(e.id);
 };
 Entry.Container.prototype.removeObject = function(c) {
   var b = this.objects_.indexOf(c), d = c.toJSON();
@@ -9798,9 +9819,9 @@ Entry.Engine = function() {
     b === c[0] && b.parent.script.raiseEvent(c[1], b);
   };
   c.captureKeyEvent = function(b, c) {
-    var d = b.keyCode, f = Entry.type;
+    var d = b.keyCode, f = "workspace" === Entry.type;
     if (!Entry.Utils.isInInput(b) || c) {
-      b.ctrlKey && "workspace" == f ? 83 == d ? (b.preventDefault(), Entry.dispatchEvent(b.shiftKey ? "saveAsWorkspace" : "saveWorkspace")) : 82 == d ? (b.preventDefault(), Entry.engine.run()) : 90 == d && (b.preventDefault(), Entry.dispatchEvent(b.shiftKey ? "redo" : "undo")) : Entry.engine.isState("run") && Entry.container.mapEntityIncludeCloneOnScene(Entry.engine.raiseKeyEvent, ["keyPress", d]), Entry.engine.isState("stop") && "workspace" === f && 37 <= d && 40 >= d && Entry.stage.moveSprite(b);
+      17 !== d && b.ctrlKey && f ? 83 == d ? (b.preventDefault(), Entry.dispatchEvent(b.shiftKey ? "saveAsWorkspace" : "saveWorkspace")) : 82 == d ? (b.preventDefault(), Entry.engine.run()) : 90 == d && (b.preventDefault(), Entry.dispatchEvent(b.shiftKey ? "redo" : "undo")) : Entry.engine.isState("run") && (b.preventDefault && b.preventDefault(), Entry.container.mapEntityIncludeCloneOnScene(Entry.engine.raiseKeyEvent, ["keyPress", d])), Entry.engine.isState("stop") && f && 37 <= d && 40 >= d && Entry.stage.moveSprite(b);
     }
   };
   c.raiseKeyEvent = function(b, c) {
@@ -16059,7 +16080,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                   break;
                 case 8:
                 case 46:
-                  !r && n && !n.isInBlockMenu && n.block.isDeletable() && (Entry.do("destroyBlock", n.block), this.board.set({selectedBlockView:null}), b.preventDefault());
+                  r || !n || n.isInBlockMenu || !n.block.isDeletable() || n.isFieldEditing() || (Entry.do("destroyBlock", n.block), this.board.set({selectedBlockView:null}), b.preventDefault());
               }
             }
           }
@@ -16553,8 +16574,11 @@ Entry.Playground = function() {
     };
     r.onkeyup = b;
     r.onchange = b;
+    r.addEventListener("focusin", function() {
+      r.prevText = r.value;
+    });
     r.onblur = function() {
-      Entry.dispatchEvent("textEdited");
+      r.value !== r.prevText && Entry.do("editText", r.value, r.prevText);
     };
     this.textEditInput = r;
     c.appendChild(r);
@@ -16563,8 +16587,11 @@ Entry.Playground = function() {
     t.style.display = "none";
     t.onkeyup = b;
     t.onchange = b;
+    t.addEventListener("focusin", function() {
+      t.prevText = t.value;
+    });
     t.onblur = function() {
-      Entry.dispatchEvent("textEdited");
+      t.value !== t.prevText && Entry.do("editText", t.value, t.prevText);
     };
     this.textEditArea = t;
     c.appendChild(t);
@@ -22116,7 +22143,7 @@ Entry.VariableContainer = function() {
   c.addCloneLocalVariables = function(b) {
     var c = [], e = this;
     this.mapVariable(function(b, d) {
-      b.object_ && b.object_ == d.objectId && (b = b.toJSON(), b.originId = b.id, b.id = Entry.generateHash(), b.object = d.newObjectId, delete b.x, delete b.y, c.push(b), d.json.script = d.json.script.replace(new RegExp(b.originId, "g"), b.id));
+      b.object_ && b.object_ == d.objectId && (b = b.toJSON(), b.originId = b.id, b.id = Entry.generateHash(), b.object = d.newObjectId, b.name = e.checkAllVariableName(b.name, "variables_") ? Entry.getOrderedName(b.name, e.variables_, "name_") : b.name, delete b.x, delete b.y, c.push(b), d.json.script = d.json.script.replace(new RegExp(b.originId, "g"), b.id));
     }, b);
     c.map(function(b) {
       e.addVariable(b);
@@ -24743,7 +24770,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
   c.isFieldEditing = function() {
     for (var b = this._contents, c = 0; c < b.length; c++) {
       var e = b[c];
-      if (e && e.isEditing()) {
+      if (e && void 0 !== e.isEditing && e.isEditing()) {
         return !0;
       }
     }
@@ -27346,31 +27373,30 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
   };
   c.renderOptions = function() {
     Entry.keyPressed && (this.keyPressed = Entry.keyPressed.attach(this, this._keyboardControl));
-    var b = this;
     this._optionVisible = !0;
     this._attachDisposeEvent();
-    var c = this.getAbsolutePosFromDocument();
-    c.x -= this.box.width / 2;
-    c.y += this.box.height / 2 + 1;
+    var b = this.getAbsolutePosFromDocument();
+    b.x -= 17;
+    b.x += this.box.width / 2;
+    b.y += this.box.height / 2 + 1;
     this.optionGroup = Entry.Dom("img", {class:"entry-widget-keyboard-input", parent:$("body")});
-    this.optionGroup.on("load", function() {
-      b.optionDomCreated();
-    });
-    this.optionGroup[0].src = Entry.mediaFilePath + "/media/keyboard_workspace.png";
+    this.optionGroup.on("load", this.optionDomCreated.bind(this));
+    this.optionGroup[0].src = Entry.mediaFilePath + "/media/keyboard_workspace_widget.png";
     this.optionGroup.on("mousedown", function(b) {
       b.stopPropagation();
     });
-    this.optionGroup.css({left:c.x, top:c.y});
+    this.optionGroup.css({left:b.x, top:b.y});
   };
   c.destroyOption = function(b) {
     this.disposeEvent && (Entry.disposeEvent.detach(this.disposeEvent), delete this.disposeEvent);
     this.optionGroup && (this.optionGroup.remove(), delete this.optionGroup);
-    this._optionVisible = !1;
+    this._isEditing = this._optionVisible = !1;
     this.command(b);
     this.keyPressed && (Entry.keyPressed.detach(this.keyPressed), delete this.keyPressed);
   };
   c._keyboardControl = function(b) {
-    b.stopPropagation();
+    b.stopPropagation && b.stopPropagation();
+    b.preventDefault && b.preventDefault();
     if (this._optionVisible) {
       b = b.keyCode;
       var c = Entry.getKeyCodeMap()[b];
@@ -27726,7 +27752,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
     var c = this.getAbsolutePosFromDocument();
     c.y -= this.box.height / 2;
     this.optionGroup.css({height:this._CONTENT_HEIGHT, left:c.x, top:c.y, width:b.box.width});
-    this.optionGroup.focus();
+    this.optionGroup.focus && this.optionGroup.focus();
     c = this.optionGroup[0];
     c.setSelectionRange(0, c.value.length, "backward");
     this.optionDomCreated();
