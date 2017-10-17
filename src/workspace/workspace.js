@@ -23,6 +23,7 @@ Entry.Workspace = function(options) {
     this.widgetUpdateEvent = new Entry.Event(this);
     this._blockViewMouseUpEvent = null;
     this.widgetUpdateEveryTime = false;
+    this._hoverBlockView = null;
 
     var option = options.blockMenu;
     if (option) {
@@ -295,25 +296,22 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
 
     p._setSelectedBlockView = function() {
         var view = 'selectedBlockView';
-        var blockView = this.board[view] ||
-                        this.blockMenu[view] ||
-                        (this.overlayBoard ? this.overlayBoard[view] : null);
+        var blockView = this.board[view] || this.blockMenu[view] ||
+                (this.overlayBoard ? this.overlayBoard[view] : null);
 
         this._unbindBlockViewMouseUpEvent();
 
-        var oldView = this.selectedBlockView;
-        oldView && oldView.resetFilter();
-
         this.set({selectedBlockView:blockView});
-        if (blockView) {
-            blockView.resetFilter();
-            var that = this;
-            this._blockViewMouseUpEvent =
-                blockView.mouseUpEvent.attach(
-                    this, function() {
-                        that.blockViewMouseUpEvent.notify(blockView);
-                    });
-        }
+
+        if (!blockView) return;
+
+        this.setHoverBlockView();
+        var that = this;
+        this._blockViewMouseUpEvent =
+            blockView.mouseUpEvent.attach(
+                this, function() {
+                    that.blockViewMouseUpEvent.notify(blockView);
+                });
     };
 
     p.initOverlayBoard = function() {
@@ -569,5 +567,13 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
 
     p.setWidgetUpdateEveryTime = function(val) {
         this.widgetUpdateEveryTime = !!val;
+    };
+
+    p.setHoverBlockView = function(blockView) {
+        var oldBlockView = this._hoverBlockView;
+        oldBlockView && oldBlockView.resetBackgroundPath();
+
+        this._hoverBlockView = blockView;
+        blockView && blockView.setBackgroundPath();
     };
 })(Entry.Workspace.prototype);
