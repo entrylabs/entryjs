@@ -13882,6 +13882,9 @@ Entry.block = {
             "align": "center"
         }
     ],
+    "def": {
+        "type": "functionAddButton"
+    },
     "events": {
         "mousedown": [
             function() {
@@ -36197,6 +36200,9 @@ Entry.block = {
             "align": "center"
         }
     ],
+    "def": {
+        "type": "variableAddButton"
+    },
     "events": {
         "mousedown": [
             function() {
@@ -36217,6 +36223,9 @@ Entry.block = {
             "align": "center"
         }
     ],
+    "def": {
+        "type": "listAddButton"
+    },
     "events": {
         "mousedown": [
             function() {
