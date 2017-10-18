@@ -820,9 +820,7 @@ Entry.Board.DRAG_RADIUS = 5;
     };
 
     p.disablePattern = function() {
-        this.pattern.attr({
-            style: "display: none"
-        });
+        this.pattern.attr({ style: "display: none" });
     };
 
     p._removeActivated = function() {
