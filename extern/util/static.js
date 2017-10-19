@@ -1092,6 +1092,17 @@ EntryStatic.getAllBlocks = function() {
                 "altino_light",
                 "altino_dot_display",
                 "altino_dot_display_line",
+
+                // memaker Added 2017-10-01
+                "memaker_get_analog_value",
+                "memaker_get_analog_value_map",
+                "memaker_get_ultrasonic_value",
+                "memaker_get_digital",
+                "memaker_toggle_led",
+                "memaker_digital_pwm",
+                "memaker_set_servo",
+                "memaker_set_lcd",
+                // memaker Added 2017-10-01
             ]
         }
     ]
