@@ -701,12 +701,12 @@ Entry.PyToBlockParser = function(blockSyntax) {
         var codeMap = this.CodeMap(blockType);
         if (codeMap) {
             results = results.map(function(arg, index) {
-                if (codeMap[index]) {
-                    return codeMap[index][arg] || arg;
+                if (codeMap[index] && arg) {
+                    return codeMap[index][this.toLowerCase(arg)] || arg;
                 } else {
                     return arg;
                 }
-            });
+            }, this);
         }
 
         return results;
@@ -909,24 +909,10 @@ Entry.PyToBlockParser = function(blockSyntax) {
     };
 
     p.CodeMap = function(blockType) {
-        var blockSchema = Entry.block[blockType];
-        if (!blockSchema || !blockSchema.syntax || !blockSchema.syntax.py)
-            return;
-
-        var syntax = blockSchema.syntax.py[0].syntax;
-
-        if (!syntax)
-            return;
-
-        var callSyntax = syntax.split("(")[0];
-        var identifiers = callSyntax.split(".")
-
-        if (identifiers.length < 2)
-            return;
-
-        var objName = identifiers[0];
-        if (Entry.CodeMap[objName] && Entry.CodeMap[objName][blockType])
-            return Entry.CodeMap[objName][blockType];
+        for (var objName in Entry.CodeMap) {
+            if (Entry.CodeMap[objName] && Entry.CodeMap[objName][blockType])
+                return Entry.CodeMap[objName][blockType];
+        }
     };
 
     p.Block = function(result, blockInfo) {
@@ -1119,7 +1105,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
             component.arguments
         )
         if (component.arguments.length > 2) {
-            obj.params[0] = Entry.CodeMap.Hamster.hamster_play_note_for[0][obj.params[0].toLowerCase()];
+            obj.params[0] = Entry.CodeMap.Hamster.hamster_play_note_for[0][this.toLowerCase(obj.params[0])];
         }
         return obj;
     };
@@ -1342,6 +1328,13 @@ Entry.PyToBlockParser = function(blockSyntax) {
             }
         }
         return null;
+    };
+    
+    p.toLowerCase = function(data) {
+        if (data && data.toLowerCase)
+            return data.toLowerCase();
+        else
+            return data;
     };
 
 })(Entry.PyToBlockParser.prototype);

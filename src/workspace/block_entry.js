@@ -66003,6 +66003,7 @@ chocopi_servo_motor: {
             var f = function() {};
             f.prototype = Entry.block[block.parent];
             var schema = new f();
+            schema.syntax = undefined;
             for (var key in block) {
                 schema[key] = block[key];
             }
