@@ -1036,10 +1036,11 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 var temp = right.arguments.map(this.Node, this);
 
                 temp = temp.map(function(m){
-                    if(m.constructor === Object && 'params' in m)
-                        return {data : m.params[0]};
-                    else
+                    if(m.constructor === Object && 'params' in m) {
+                        return {data : typeof m.params[0] === "string" ? m.params[0].replace(/\\\"/gi, '"') : m.params[0]};
+                    } else {
                         return {data : m};
+                    }
                 });
 
                 obj.array = temp;
