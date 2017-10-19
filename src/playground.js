@@ -1188,7 +1188,7 @@ Entry.Playground = function() {
         var sound = Entry.playground.object.getSound(soundId);
         if (sound.fileurl) {
             if(sound.fileurl.indexOf('bark.mp3') > -1) {
-                window.open('/api/sprite/download/entryjs/' + encodeURIComponent(sound.fileurl) + '/' + encodeURIComponent(sound.name+'.mp3'));    
+                window.open('/api/sprite/download/entryjs/' + encodeURIComponent(sound.fileurl) + '/' + encodeURIComponent(sound.name+'.mp3'));
             } else {
                 window.open(sound.fileurl);
             }
@@ -1807,6 +1807,7 @@ Entry.Playground = function() {
         }
 
         blockMenu.hwCodeOutdated = true;
+        blockMenu._generateHwCode(true);
         blockMenu.reDraw();
     };
 

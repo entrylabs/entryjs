@@ -13882,6 +13882,9 @@ Entry.block = {
             "align": "center"
         }
     ],
+    "def": {
+        "type": "functionAddButton"
+    },
     "events": {
         "mousedown": [
             function() {
@@ -28985,8 +28988,8 @@ Entry.block = {
         "isNotFor": [],
         "func": function (sprite, script) {
             var operator = script.getField("OPERATOR", script);
-            var leftValue = script.getStringValue("LEFTHAND", script);
-            var rightValue = script.getStringValue("RIGHTHAND", script);
+            var leftValue = script.getValue("LEFTHAND", script);
+            var rightValue = script.getValue("RIGHTHAND", script);
 
         switch(operator) {
             case 'EQUAL':
@@ -36197,6 +36200,9 @@ Entry.block = {
             "align": "center"
         }
     ],
+    "def": {
+        "type": "variableAddButton"
+    },
     "events": {
         "mousedown": [
             function() {
@@ -36217,6 +36223,9 @@ Entry.block = {
             "align": "center"
         }
     ],
+    "def": {
+        "type": "listAddButton"
+    },
     "events": {
         "mousedown": [
             function() {
@@ -65994,6 +66003,7 @@ chocopi_servo_motor: {
             var f = function() {};
             f.prototype = Entry.block[block.parent];
             var schema = new f();
+            schema.syntax = undefined;
             for (var key in block) {
                 schema[key] = block[key];
             }

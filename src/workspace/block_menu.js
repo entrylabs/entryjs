@@ -907,9 +907,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
         if (!(this._categoryData && this.shouldGenerateHwCode(threads)))
             return;
 
-        threads.forEach(function(t) {
-            t.destroy();
-        });
+        threads.forEach(function(t) { t.destroy(); });
 
         var data = this._categoryData;
         var blocks;
@@ -959,6 +957,8 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
             delete t[0].x;
         });
         this.hwCodeOutdated = false;
+
+        Entry.dispatchEvent('hwCodeGenerated');
     };
 
     p.setAlign = function(align) {

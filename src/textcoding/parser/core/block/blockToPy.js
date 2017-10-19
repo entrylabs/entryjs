@@ -125,8 +125,11 @@ Entry.BlockToPyParser = function() {
             result += block.data.type;
         }
 
-        if(!syntax || syntax === null)
-            return result;
+        if(!syntax || syntax === null) {
+            var error = new Error();
+            error.block = block;
+            throw error;
+        }
 
 
         var blockReg = /(%.)/mi;
