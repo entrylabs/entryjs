@@ -28988,8 +28988,8 @@ Entry.block = {
         "isNotFor": [],
         "func": function (sprite, script) {
             var operator = script.getField("OPERATOR", script);
-            var leftValue = script.getStringValue("LEFTHAND", script);
-            var rightValue = script.getStringValue("RIGHTHAND", script);
+            var leftValue = script.getValue("LEFTHAND", script);
+            var rightValue = script.getValue("RIGHTHAND", script);
 
         switch(operator) {
             case 'EQUAL':
