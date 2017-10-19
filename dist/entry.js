@@ -24493,6 +24493,9 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
     Entry.hw.sendQueue.digitalPinMode[c] = Entry.Roborobo_SchoolKit.pinMode.PWM;
     Entry.hw.sendQueue[c] = e;
     return b.callReturn();
+  }}, roborobo_diode_input_value:{color:"#FF8D10", skeleton:"basic_string_field", fontColor:"#fff", statements:[], isNotFor:["roborobo_schoolkit"], template:"%1 \ud3ec\ud2b8\uc758 \uac12", params:[{type:"Dropdown", options:[["\uc801\uc678\uc120", "7"], ["\uc18c \ub9ac", "8"], ["\uc811 \ucd09", "9"], ["CDS", "10"]], value:"8", fontsIze:11}], events:{}, def:{params:[null], type:"roborobo_diode_input_value"}, paramsKeyMap:{PORT:0}, class:"roborobo_diode", func:function(c, b) {
+    c = b.getNumberField("PORT");
+    return Entry.hw.portData[c - 7];
   }}, robotis_set_led:{color:"#2AB4D3", skeleton:"basic", fontColor:"#fff", statements:[], isNotFor:["robotis_openCM70"], template:"%1\ubc88 \ud3ec\ud2b8 LED\ub97c %2 %3", params:[{type:"Dropdown", options:[["PORT 3", "3"], ["PORT 4", "4"], ["PORT 5", "5"], ["PORT 6", "6"]], value:"3", fontsIze:11}, {type:"Dropdown", options:[["\ubaa8\ub450 \ub044\uae30", "0"], ["\ub178\ub791\uc0c9 \ucf1c\uae30", "1"], ["\ud30c\ub791\uc0c9 \ucf1c\uae30", "2"], ["\ubaa8\ub450 \ucf1c\uae30", "3"]], value:"0", fontsIze:11}, 
   {type:"Indicator", img:"block_icon/practical_course/light.png", size:12}], events:{}, def:{params:[null], type:"robotis_set_led"}, paramsKeyMap:{PORT:0, COLOR:1}, class:"robotis_led", func:function(c, b) {
     c = b.getStringField("PORT");
@@ -25390,7 +25393,17 @@ Entry.BlockMenu = function(c, b, e, d, f) {
     this.selectMenu(this.firstSelector, !0);
   };
   c.unbanCategory = function(b) {
-    b in this._categoryElems && (b = this._categoryElems[b], b.removeClass("entryRemoveCategory"));
+    var c, d;
+    this._categoryData.some(function(c) {
+      var e = b === c.category;
+      e && (d = c.blocks);
+      return e;
+    });
+    c = d.length;
+    for (var f = 0;f < d.length;f++) {
+      this.checkBanClass(Entry.block[d[f]]) && c--;
+    }
+    b in this._categoryElems && 0 < c && (c = this._categoryElems[b], c.removeClass("entryRemoveCategory"), c.removeClass("entryRemove"));
   };
   c.banClass = function(b, c) {
     0 > this._bannedClass.indexOf(b) && (this._bannedClass.push(b), !0 !== c && this._dAlign());

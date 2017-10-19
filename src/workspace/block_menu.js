@@ -641,9 +641,26 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
 
     p.unbanCategory = function(categoryName) {
         var categoryElem;
-        if(categoryName in this._categoryElems) {
+
+        var threads;
+        this._categoryData.some(function (data) {
+            var isFindCategory = categoryName === data.category;
+            if(isFindCategory) {
+                threads = data.blocks;
+            }
+            return isFindCategory;
+        });
+
+        var count = threads.length;
+        for (var i=0; i<threads.length; i++) {
+            if(this.checkBanClass(Entry.block[threads[i]]))
+                count--;
+        }
+
+        if(categoryName in this._categoryElems && count > 0) {
             categoryElem = this._categoryElems[categoryName];
             categoryElem.removeClass('entryRemoveCategory');
+            categoryElem.removeClass('entryRemove');
         }
     }
 

@@ -795,7 +795,7 @@ EntryStatic.initOptions = {
 
 EntryStatic.hwCategoryList = ['hw_motor', 'hw_melody', 'hw_sensor', 'hw_led'];
 
-EntryStatic.hwMiniSupportList = ['neobot', 'ArduinoExt', 'roborobo_schoolkit', 'robotis_openCM70'];
+EntryStatic.hwMiniSupportList = ['neobot', 'roborobo_schoolkit', 'robotis_openCM70'];
 
 EntryStatic.COMMAND_TYPES = {
     addThread: 101,
