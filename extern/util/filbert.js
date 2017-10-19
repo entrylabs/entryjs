@@ -2161,7 +2161,7 @@
   function parseExprOp(left, minPrec, noIn) {
     var node, exprNode, right, op = tokType, val = tokVal;
     var prec = op === _not ? _in.prec : op.prec;
-    if (op === _exponentiation && prec >= minPrec) {
+    if (false) {
       node = startNodeFrom(left);
       next();
       right = parseExprOp(parseMaybeUnary(noIn), prec, noIn);
