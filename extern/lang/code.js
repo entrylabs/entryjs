@@ -5949,7 +5949,8 @@ Lang.template = {
     "memaker_get_ultrasonic_value": "초음파센서 Trig %1 Echo %2 센서값",
     "memaker_set_servo": "디지털 %1 번 핀의 서보모터를 %2 의 각도로 정하기 %3",
     "memaker_toggle_led": "디지털 %1 번 핀 %2 %3",
-    "memaker_set_lcd": "1602 문자 LCD %1 행 , %2열에 %3 출력하기 %4"
+    "memaker_set_lcd": "1602 문자 LCD %1 행 , %2열에 %3 출력하기 %4",
+    "memaker_lcd_command": "1602 문자 LCD %1 명령실행하기 %2"
 };
 Lang.TextCoding = {
     "block_name": "블록명",

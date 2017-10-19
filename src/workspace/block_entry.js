@@ -45297,30 +45297,160 @@ Entry.block = {
         "COLUMN": 1,
         "STRING": 2,
     },
-    "class": "memakerSet",
+    "class": "memakerLcd",
     "isNotFor": [ "memaker" ],
     "func": function (sprite, script) {
-        // var sq = Entry.hw.sendQueue;
-        var line = script.getNumberValue("LINE");
-        var column = script.getNumberValue("COLUMN");
-        var string = script.getValue("STRING");
+        var sq = Entry.hw.sendQueue;
+
+        // var direction = script.getValue("MOTOR_DIRECTION", script);
+        // var direction = script.getField("DIRECTION", script);
+
+        var line = script.getValue("LINE", script);
+        var column = script.getValue("COLUMN", script);
+        var string = script.getValue("STRING", script);
+        var text = [];
+
+        
+        if(!script.isStart) {
+            if(typeof string === 'string') {
+                for (var i = 0; i < string.length; i++) {
+                    text[i] = Entry.memaker.toByte(string[i]);
+                }
+            }
+            else if (typeof string === 'number') {
+                text[0] = 1;
+                text[1] = string / 1;
+            }
+            else {
+                text[0] = string;
+            }
+
+            if(!Entry.hw.sendQueue['SET']) {
+                Entry.hw.sendQueue['SET'] = {};
+            }
+
+            script.isStart = true;
+            script.timeFlag = 1;
+            var fps = Entry.FPS || 60;
+            timeValue = 60/fps*50;
+
+            Entry.hw.sendQueue['SET'][line] = {
+                type: Entry.memaker.sensorTypes.LCD,
+                data: {
+                    line: line,
+                    column: column,
+                    text0 : text[0],
+                    text1 : text[1],
+                    text2 : text[2],
+                    text3 : text[3],
+                    text4 : text[4],
+                    text5 : text[5],
+                    text6 : text[6],
+                    text7 : text[7],
+                    text8 : text[8],
+                    text9 : text[9],
+                    text10 : text[10],
+                    text11 : text[11],
+                    text12 : text[12],
+                    text13 : text[13],
+                    text14 : text[14],
+                    text15 : text[15]
+                },
+                time: new Date().getTime()
+            };
+
+            setTimeout(function() {
+                script.timeFlag = 0;
+            }, timeValue);
+            return script;
+        }
+        else if(script.timeFlag == 1) {
+            return script;
+        }
+        else {
+            delete script.timeFlag;
+            delete script.isStart;
+            Entry.engine.isContinue = false;
+            return script.callReturn();
+        }
+    },
+    "syntax": {"js": [], "py": ["memaker.memaker_set_lcd(%1, %2, %3)"]}
+},
+
+"memaker_list_lcd_command": {
+    "color": "#00979D",
+    "skeleton": "basic_string_field",
+    "statements": [],
+    "template": "%1",
+    "params": [
+        {
+            "type": "Dropdown",
+            "options": [
+                [ "LCD_CLEAR", "0" ],
+                [ "BACKLIGHT_ON", "1" ],
+                [ "BACKLIGHT_OFF", "2" ]
+            ],
+            "value": "0",
+            "fontSize": 11
+        }
+    ],
+    "events": {},
+    "def": {
+        "params": [ null ]
+    },
+    "paramsKeyMap": {
+        "COMMAND": 0
+    },
+    "func": function (sprite, script) {
+        return script.getField("COMMAND");
+    }
+},
+
+"memaker_lcd_command": {
+    "color": "#00979D",
+    "skeleton": "basic",
+    "template": Lang.template.memaker_lcd_command,
+    //"template": "%1 %2",
+    "statements": [],
+    "params": [
+        {
+            "type": "Block",
+            "accept": "string"
+        },
+        {
+            "type": "Indicator",
+            "img": "block_icon/hardware_03.png",
+            "size": 12
+        }
+    ],
+    "events": {},
+    "def": {
+        "params": [
+            {
+                "type": "memaker_list_lcd_command"
+            },
+            null
+        ],
+        "type": "memaker_lcd_command"
+    },
+    "paramsKeyMap": {
+        "COMMAND": 0,
+    },
+    "class": "memakerLcd",
+    "isNotFor": [ "memaker" ],
+    "func": function (sprite, script) {
+        var cmd = script.getNumberValue("COMMAND");
 
         if(!Entry.hw.sendQueue['SET']) {
             Entry.hw.sendQueue['SET'] = {};
         }
-
-        Entry.hw.sendQueue['SET'][0] = {
-            type: Entry.mkboard.sensorTypes.LCD,
-            data: {
-                line: line,
-                column: column
-             },
+        Entry.hw.sendQueue['SET'][cmd] = {
+            type: Entry.memaker.sensorTypes.LCD_COMMAND,
             time: new Date().getTime()
         };
-
-        return script.callReturn();        
+        return script.callReturn();
     },
-    "syntax": {"js": [], "py": ["memaker.memaker_set_lcd(%1, %2, %3)"]}
+    "syntax": {"js": [], "py": []}
 },
 
 // memaker Added 2017-10-01

@@ -5531,7 +5531,8 @@ Lang.template = {
     "memaker_get_ultrasonic_value": "Read ultrasonic sensor trig pin %1 echo pin %2",
     "memaker_set_servo": "Set servo pin %1 angle as %3",
     "memaker_toggle_led": "Digital %1 Pin %2 %3",
-    "memaker_set_lcd": "1602 LCD Row %1, Column %2 Value %3 %4"       
+    "memaker_set_lcd": "1602 LCD Row %1, Column %2 Value %3 %4",
+    "memaker_lcd_command": "1602 LCD Command %1 execute %2"
 };
 Lang.TextCoding = {
     "block_name": "Block Name",

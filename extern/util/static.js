@@ -1102,6 +1102,7 @@ EntryStatic.getAllBlocks = function() {
                 "memaker_digital_pwm",
                 "memaker_set_servo",
                 "memaker_set_lcd",
+                "memaker_lcd_command"
                 // memaker Added 2017-10-01
             ]
         }
