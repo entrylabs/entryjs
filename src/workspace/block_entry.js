@@ -65984,6 +65984,633 @@ chocopi_servo_motor: {
     }
 },
 
+//Hummingbird parts
+    //범용 센서
+    hummingbird_sensorValue: {
+        "color": "#00979D",
+        "fontColor": "#fff",                    
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "template" : "아날로그 센서 %1 번 의 값",
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    ["1", "adc1"],
+                    ["2", "adc2"],
+                    ["3", "adc3"],
+                    ["4", "adc4"],
+                ],
+                "value": "adc1",
+                "fontSize": 11
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null ],
+            "type": "hummingbird_sensorValue"
+        },
+        "paramsKeyMap": {
+            "DEVICE": 0
+        },
+        "class": "hummingbird_sensor",
+        "isNotFor": [ "hummingbird" ],
+        "func": function (sprite, script) {
+            var pd = Entry.hw.portData;
+            var dev = script.getField('DEVICE');
+            return pd[dev];
+        },
+        "syntax": {"js": [], "py": ["hummingbird.sensorValue(%1)"]}
+    },
+    //온도센서
+    hummingbird_temperatureValue: {
+        "color": "#00979D",
+        "fontColor": "#fff",                    
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "template" : "HB 온도센서 %1 번 값",
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    ["1", "adc1"],
+                    ["2", "adc2"],
+                    ["3", "adc3"],
+                    ["4", "adc4"],
+                ],
+                "value": "adc1",
+                "fontSize": 11
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null ],
+            "type": "hummingbird_temperatureValue"
+        },
+        "paramsKeyMap": {
+            "DEVICE": 0
+        },
+        "class": "hummingbird_sensor",
+        "isNotFor": [ "hummingbird" ],
+        "func": function (sprite, script) {
+            var pd = Entry.hw.portData;
+            var dev = script.getField('DEVICE');
+            return pd[dev];
+        },
+        "syntax": {"js": [], "py": ["hummingbird.sensorValue(%1)"]}
+    },
+    // 빛 블럭
+    hummingbird_lightValue: {
+        "color": "#00979D",
+        "fontColor": "#fff",        
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "template" : "HB 빛센서 %1 번 값",
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    ["1", "adc1"],
+                    ["2", "adc2"],
+                    ["3", "adc3"],
+                    ["4", "adc4"],
+                ],
+                "value": "adc1",
+                "fontSize": 11
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null ],
+            "type": "hummingbird_lightValue"
+        },
+        "paramsKeyMap": {
+            "DEVICE": 0
+        },
+        "class": "hummingbird_sensor",
+        "isNotFor": [ "hummingbird" ],
+        "func": function (sprite, script) {
+            var pd = Entry.hw.portData;
+            var dev = script.getField('DEVICE');
+            var light_value = Math.round(((pd[dev]*100/1024)-30)*2.4);
+            return light_value;
+        },
+        "syntax": {"js": [], "py": ["hummingbird.sensorValue(%1)"]}
+    },
+
+    // 거리센서 블럭
+    hummingbird_distanceValue: {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "template" : "HB 거리센서 %1 번 값",
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    ["1", "adc1"],
+                    ["2", "adc2"],
+                    ["3", "adc3"],
+                    ["4", "adc4"],
+                ],
+                "value": "adc1",
+                    "fontSize": 11
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null ],
+            "type": "hummingbird_distanceValue"
+        },
+        "paramsKeyMap": {
+            "DEVICE": 0
+        },
+        "class": "hummingbird_sensor",
+        "isNotFor": [ "hummingbird" ],
+        "func": function (sprite, script) {
+            var pd = Entry.hw.portData;
+            var dev = script.getField('DEVICE');
+            
+            //0914 수정시작
+            //수정내용 거리센서 값 맵핑
+            /*
+            cm      10-bit 역위
+            5          820 180
+            9          720 280
+            11         600 400
+            14         500 500
+            17         420 580
+            19         380 620
+            23         340 660
+            27         300 700
+            33         260 740
+            41         220 780
+            56         180 820
+            77         140 860
+            Infinity   120 880
+            */
+            // 수식 거리 =  (역위 - 역위 최소값) * 역위급간 / 출력급간 + 출력최소값
+            var distance_value = 0;
+            var flipped = 1000 - pd[dev];
+            if (flipped < 180)  distance_value = 0;
+            else if (flipped >= 180 && flipped < 280 ) distance_value = (flipped - 180) * 4 / 100 + 5;
+            else if (flipped >= 280 && flipped < 400 ) distance_value = (flipped - 280) * 3 / 120 + 9;
+            else if (flipped >= 400 && flipped < 500 ) distance_value = (flipped - 400) * 3 / 100 + 11;
+            else if (flipped >= 500 && flipped < 580 ) distance_value = (flipped - 500) * 3 / 80 + 14;
+            else if (flipped >= 580 && flipped < 620 ) distance_value = (flipped - 580) * 2 / 40 + 17;
+            else if (flipped >= 620 && flipped < 660 ) distance_value = (flipped - 620) * 4 / 40 + 19;
+            else if (flipped >= 660 && flipped < 700 ) distance_value = (flipped - 660) * 4 / 40 + 23;
+            else if (flipped >= 700 && flipped < 740 ) distance_value = (flipped - 700) * 6 / 40 + 27;
+            else if (flipped >= 740 && flipped < 780 ) distance_value = (flipped - 740) * 7 / 40 + 33;
+            else if (flipped >= 780 && flipped < 820 ) distance_value = (flipped - 780) * 15 / 40 + 41;
+            else if (flipped >= 820 && flipped < 860 ) distance_value = (flipped - 820) * 11 / 40 + 56; 
+            else distance_value = 100;
+            return distance_value.toFixed(0);
+        },
+        "syntax": {"js": [], "py": ["hummingbird.sensorValue(%1)"]}
+    },
+
+// 소음 센서 블럭
+    hummingbird_soundValue: {
+        "color": "#00979D",
+        "fontColor": "#fff",        
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "template" : "HB 소음센서 %1 번의 값",
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    ["1", "adc1"],
+                    ["2", "adc2"],
+                    ["3", "adc3"],
+                    ["4", "adc4"],
+                ],
+                "value": "adc1",
+                "fontSize": 11
+            }
+        ],
+        "events": {},
+           "def": {
+            "params": [ null ],
+            "type": "hummingbird_soundValue"
+        },
+        "paramsKeyMap": {
+            "DEVICE": 0
+        },
+        "class": "hummingbird_sensor",
+        "isNotFor": [ "hummingbird" ],
+        "func": function (sprite, script) {
+            var pd = Entry.hw.portData;
+            var dev = script.getField('DEVICE');
+            var distance_value = Math.round(pd[dev]*100/1024);
+            return distance_value;
+        },
+        "syntax": {"js": [], "py": ["hummingbird.sensorValue(%1)"]}
+    },
+    // 회전센서
+    hummingbird_rotaryValue: {
+        "color": "#00979D",        
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "template" : "HB 로터리센서 %1 번의 값",
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    ["1", "adc1"],
+                    ["2", "adc2"],
+                    ["3", "adc3"],
+                    ["4", "adc4"],
+                ],
+                "value": "adc1",
+                "fontSize": 11
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null ],
+            "type": "hummingbird_rotaryValue"
+        },
+        "paramsKeyMap": {
+            "DEVICE": 0
+        },
+        "class": "hummingbird_sensor",
+        "isNotFor": [ "hummingbird" ],
+        "func": function (sprite, script) {
+            var pd = Entry.hw.portData;
+            var dev = script.getField('DEVICE');
+            var rotary_value = Math.round((pd[dev])*100/1024);
+			if (rotary_value == 0) rotary_value = 1;
+            return rotary_value;
+        },
+        "syntax": {"js": [], "py": ["hummingbird.sensorValue(%1)"]}
+    },
+    //진동모터
+    hummingbird_vibeMotor: {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "template" : "HB 진동 %1 의 세기: %2 ",        
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    ["1", "vibeMotor1"],
+                    ["2", "vibeMotor2"],
+                ],
+                "value": "vibeMotor1",
+                "fontSize": 11
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                null,
+                {
+                    "type": "text",
+                    "params": [ "0" ]
+                },
+                null
+            ],
+            "type": "hummingbird_vibeMotor"
+        },
+        "paramsKeyMap": {
+            "DEVICE": 0,
+            "VALUE": 1
+        },
+        "class": "hummingbird_motor",
+        "isNotFor": [ "hummingbird" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var dev = script.getStringField("DEVICE", script);
+            var value = script.getNumberValue("VALUE", script);
+            if(value==0) value = 256;
+            else if(value>100) value = 255;
+            else if(value<0) value = 256;
+            else value = Math.round(value * 2.55);
+            
+            if (dev == 'vibeMotor1')
+            {
+                sq.vibrat1 = value;
+            }
+            else if(dev == 'vibeMotor2')
+            {
+                sq.vibrat2 = value;
+            }   
+            return script.callReturn();
+        },
+        "syntax": {"js": [], "py": ["hummingbird.vibeMotor(%1, %2)"]}
+    },
+    //서보모터	
+    hummingbird_servo: {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "template" : "HB 서보모터 %1번 의 각도: %2 ",        
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    ["1", "servo1"],
+                    ["2", "servo2"],
+                    ["3", "servo3"],
+                    ["4", "servo4"],
+                ],
+                "value": "servo1",
+                "fontSize": 11
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                null,
+                {
+                    "type": "text",
+                    "params": [ "0" ]
+                },
+                null
+            ],
+            "type": "hummingbird_servo"
+        },
+        "paramsKeyMap": {
+            "DEVICE": 0,
+            "VALUE": 1
+        },
+        "class": "hummingbird_motor",
+        "isNotFor": [ "hummingbird" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var mtype = script.getStringField("DEVICE", script);
+            var angle = script.getNumberValue("VALUE", script);
+        
+            if(mtype == 'servo1')    sq.servo1 = angle;
+            else if(mtype == 'servo2')  sq.servo2 = angle;
+            else if(mtype == 'servo3')  sq.servo3 = angle;
+            else if(mtype == 'servo4')  sq.servo4 = angle;
+            return script.callReturn();
+        },
+        "syntax": {"js": [], "py": ["hummingbird.vibeMotor(%1, %2)"]}
+    },   
+    
+    hummingbird_dcMotor: {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "template" : "HB 기어모터 %1번 의 속도: %2 ",        
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    ["1", "dcMotor1"],
+                    ["2", "dcMotor2"]
+                ],
+                "value": "dcMotor1",
+                "fontSize": 11,
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                null,
+                {
+                    "type": "text",
+                    "params": [ "0" ]
+                },
+                null
+            ],
+            "type": "hummingbird_dcMotor"
+        },
+        "paramsKeyMap": {
+            "DEVICE": 0,
+            "VALUE": 1
+        },
+        "class": "hummingbird_motor",
+        "isNotFor": [ "hummingbird" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var dir = script.getStringField("DEVICE", script);
+            var speed =script.getNumberValue('VALUE', script);
+
+            if(speed==0) speed = 256;
+            else if(speed>=100) speed = 255;
+            else if(speed<=-100) speed = -255;
+            else if (speed<0 && speed > -100) speed = Math.round((speed - 40) * 1.82);
+            else if (speed>0 && speed <100) speed = Math.round((speed + 40) * 1.82);         
+
+            if (dir == 'dcMotor1')
+
+                sq.dcMotor1 = speed;    
+            else if (dir == 'dcMotor2')
+                sq.dcMotor2 = speed;
+            return script.callReturn();
+        },
+        "syntax": {"js": [], "py": ["hummingbird.dcMotor(%1, %2)"]}
+    },
+    hummingbird_led: {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "template" : "HB 단색LED %1번 의 밝기: %2 ",        
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    ["1", "led1"],
+                    ["2", "led2"],
+                    ["3", "led3"],
+                    ["4", "led4"]
+                    
+                ],
+                "value": "led1",
+                "fontSize": 11,
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                null,
+                {
+                    "type": "text",
+                    "params": [ "0" ]
+                },
+                null
+            ],
+            "type": "hummingbird_led"
+        },
+        "paramsKeyMap": {
+            "DEVICE": 0,
+            "VALUE": 1
+        },
+        "class": "hummingbird_led",
+        "isNotFor": [ "hummingbird" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var ledtype = script.getStringField("DEVICE", script);
+            var value = script.getNumberValue("VALUE", script);
+            if(value==0) value = 256;
+            else if (value > 100) value = 255 ;
+            else if (value < 0 ) value = 256;
+            else value = Math.floor(value * 2.5);
+            
+            if(ledtype == 'led1')
+            {
+                sq.led1 = value;
+            }
+            else if(ledtype == 'led2')
+            {
+                sq.led2 = value;
+            }
+            else if(ledtype == 'led3')
+            {
+                sq.led3 = value;
+            }
+            else if(ledtype == 'led4')
+            {
+                sq.led4 = value;
+            }
+            return script.callReturn();
+        },
+        "syntax": {"js": [], "py": ["hummingbird.dcMotor(%1, %2)"]}
+    },
+
+    //0914 수정됨
+    hummingbird_triLED: {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "template" : "HB 삼색LED %1번 의 빨강%2 초록%3 파랑%4 ",        
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    ["1", "triLED1"],
+                    ["2", "triLED2"],
+                ],
+                "value": "triLED1",
+                "fontSize": 11,
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                null,
+                {
+                    "type": "text",
+                    "params": [ "0" ]
+                },
+                {
+                    "type": "text",
+                    "params": [ "0" ]
+                },
+                {
+                    "type": "text",
+                    "params": [ "0" ]
+                },
+                {
+                    "type": "text",
+                    "params": [ "0" ]
+                },
+                null
+            ],
+            "type": "hummingbird_triLED"
+        },
+        "paramsKeyMap": {
+            "DEVICE": 0,
+            "cRED": 1,
+            "cGREEN": 2,
+            "cBLUE": 3,
+        },
+        "class": "hummingbird_led",
+        "isNotFor": [ "hummingbird" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var ledtype = script.getStringField("DEVICE", script);
+            var colorRed = script.getNumberValue("cRED", script);
+            var colorGreen = script.getNumberValue("cGREEN", script);
+            var colorBlue = script.getNumberValue("cBLUE", script);
+            if(colorRed==0) colorRed = 256;
+            else if (colorRed > 100) colorRed = 255 ;
+            else if (colorRed < 0 ) colorRed = 256;
+            else colorRed = colorRed * 2.5;
+
+            if(colorGreen==0) colorGreen = 256;
+            else if (colorGreen > 100) colorRed = 255 ;
+            else if (colorGreen < 0 ) colorRed = 256;
+            else colorGreen = colorGreen * 2.5;
+
+            if(colorBlue==0) colorBlue = 256;
+            else if (colorBlue > 100) colorRed = 255 ;
+            else if (colorBlue < 0 ) colorRed = 256;
+            else colorBlue = colorBlue * 2.5;
+
+            colorRed = Math.floor(colorRed);
+            colorGreen = Math.floor(colorGreen);
+            colorBlue = Math.floor(colorBlue);
+ 
+            if(ledtype == 'triLED1')
+            {
+                sq.triLEDR1 = colorRed;
+                sq.triLEDG1 = colorGreen;
+                sq.triLEDB1 = colorBlue;
+                }
+            else if(ledtype == 'triLED2')
+            {
+                sq.triLEDR2 = colorRed;
+                sq.triLEDG2 = colorGreen;
+                sq.triLEDB2 = colorBlue;
+                }
+            return script.callReturn();
+        },
+        "syntax": {"js": [], "py": ["hummingbird.dcMotor(%1, %2)"]}
+    },
+    //허밍버드 끝
+
 };
 
 (function() {
