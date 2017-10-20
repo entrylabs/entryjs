@@ -169,8 +169,13 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
 
         var fillColor = this._schema.color;
         if (this.block.deletable === Entry.Block.DELETABLE_FALSE_LIGHTEN ||
-           this.block.emphasized) {
-            fillColor = Entry.Utils.getEmphasizeColor(fillColor);
+            this.block.emphasized) {
+            var emphasizedColor = this._schema.emphasizedColor;
+            if(!emphasizedColor) {
+                fillColor = Entry.Utils.getEmphasizeColor(fillColor);
+            } else {
+                fillColor = emphasizedColor;
+            }
         }
 
         this._fillColor = fillColor;
@@ -1082,8 +1087,13 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
     p._updateColor = function() {
         var fillColor = this._schema.color;
         if (this.block.deletable === Entry.Block.DELETABLE_FALSE_LIGHTEN ||
-           this.block.emphasized) {
-            fillColor = Entry.Utils.getEmphasizeColor(fillColor);
+            this.block.emphasized) {
+            var emphasizedColor = this._schema.emphasizedColor;
+            if(!emphasizedColor) {
+                fillColor = Entry.Utils.getEmphasizeColor(fillColor);
+            } else {
+                fillColor = emphasizedColor;
+            }
         }
         this._fillColor = fillColor;
         this._path.attr({fill:fillColor});

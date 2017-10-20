@@ -93,8 +93,14 @@ Entry.Stage.prototype.initStage = function(canvas) {
         Entry.stage.updateBoundRect();
     });
 
+    var razyScroll = _.debounce(function () {
+        Entry.windowResized.notify();
+    }, 200);
+    
     $(window).scroll(function() {
-        Entry.stage.updateBoundRect();
+        window.requestAnimationFrame(function () {
+            razyScroll();
+        });
     });
 
     var moveFunc = function(e){

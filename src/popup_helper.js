@@ -12,6 +12,7 @@ Entry.popupHelper = function(reset) {
     this.nextPopupList = [];
     this.nowContent;
     if(reset) {
+        $('.entryPopup.popupHelper').remove();
         window.popupHelper = null;
     }
     Entry.assert(!window.popupHelper, 'Popup exist');
