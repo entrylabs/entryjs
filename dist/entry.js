@@ -7063,12 +7063,34 @@ Entry.Utils.hslToHex = function(c) {
   e *= 255;
   return "#" + [d(Math.round(255 * f).toString(16)), d(Math.round(c).toString(16)), d(Math.round(e).toString(16))].join("");
 };
+Entry.Utils.setSVGDom = function(c) {
+  Entry.Utils.SVGDom = c;
+};
+Entry.Utils.bindIOSDeviceWatch = function() {
+  if (Entry.Utils.mobileAgentParser().apple.device) {
+    console.log("APPLE! MOBILE DEVICE");
+    var c = window.innerHeight || document.documentElement.clientHeight, b = 0;
+    Entry.Utils.SVGDom && (b = Entry.Utils.SVGDom.height());
+    setInterval(function() {
+      var d = window.innerHeight || document.documentElement.clientHeight, e = !1;
+      if (Entry.Utils.SVGDom) {
+        var f = Entry.Utils.SVGDom.height(), e = b != f;
+        b = f;
+      }
+      (c != d || e) && Entry.windowResized.notify();
+      c = d;
+    }, 1000);
+    $(window).on("orientationchange", function(b) {
+      Entry.windowResized.notify();
+    });
+  }
+};
 Entry.Utils.bindGlobalEvent = function(c) {
   var b = $(document);
   void 0 === c && (c = "resize mousedown mousemove keydown keyup dispose".split(" "));
   -1 < c.indexOf("resize") && (Entry.windowReszied && ($(window).off("resize"), Entry.windowReszied.clear()), Entry.windowResized = new Entry.Event(window), $(window).on("resize", function(b) {
     Entry.windowResized.notify(b);
-  }));
+  }), Entry.Utils.bindIOSDeviceWatch());
   -1 < c.indexOf("mousedown") && (Entry.documentMousedown && (b.off("mousedown"), Entry.documentMousedown.clear()), Entry.documentMousedown = new Entry.Event(window), b.on("mousedown", function(b) {
     Entry.documentMousedown.notify(b);
   }));
@@ -7654,6 +7676,24 @@ Entry.isMobile = function() {
   Entry.device = "desktop";
   return !1;
 };
+Entry.Utils.mobileAgentParser = function(c) {
+  var b = /iPhone/i, d = /iPod/i, e = /iPad/i, f = /(?=.*\bAndroid\b)(?=.*\bMobile\b)/i, g = /Android/i, h = /(?=.*\bAndroid\b)(?=.*\bSD4930UR\b)/i, k = /(?=.*\bAndroid\b)(?=.*\b(?:KFOT|KFTT|KFJWI|KFJWA|KFSOWI|KFTHWI|KFTHWA|KFAPWI|KFAPWA|KFARWI|KFASWI|KFSAWI|KFSAWA)\b)/i, l = /Windows Phone/i, m = /(?=.*\bWindows\b)(?=.*\bARM\b)/i, q = /BlackBerry/i, n = /BB10/i, r = /Opera Mini/i, t = /(CriOS|Chrome)(?=.*\bMobile\b)/i, u = /(?=.*\bFirefox\b)(?=.*\bMobile\b)/i;
+  c = c || navigator.userAgent;
+  var x = c.split("[FBAN");
+  "undefined" !== typeof x[1] && (c = x[0]);
+  x = c.split("Twitter");
+  "undefined" !== typeof x[1] && (c = x[0]);
+  this.apple = {phone:b.test(c), ipod:d.test(c), tablet:!b.test(c) && e.test(c), device:b.test(c) || d.test(c) || e.test(c)};
+  this.amazon = {phone:h.test(c), tablet:!h.test(c) && k.test(c), device:h.test(c) || k.test(c)};
+  this.android = {phone:h.test(c) || f.test(c), tablet:!h.test(c) && !f.test(c) && (k.test(c) || g.test(c)), device:h.test(c) || k.test(c) || f.test(c) || g.test(c)};
+  this.windows = {phone:l.test(c), tablet:m.test(c), device:l.test(c) || m.test(c)};
+  this.other = {blackberry:q.test(c), blackberry10:n.test(c), opera:r.test(c), firefox:u.test(c), chrome:t.test(c), device:q.test(c) || n.test(c) || r.test(c) || u.test(c) || t.test(c)};
+  this.seven_inch = /(?:Nexus 7|BNTV250|Kindle Fire|Silk|GT-P1000)/i.test(c);
+  this.any = this.apple.device || this.android.device || this.windows.device || this.other.device || this.seven_inch;
+  this.phone = this.apple.phone || this.android.phone || this.windows.phone;
+  this.tablet = this.apple.tablet || this.android.tablet || this.windows.tablet;
+  return this;
+};
 Entry.Utils.convertMouseEvent = function(c) {
   return c.originalEvent && c.originalEvent.touches ? c.originalEvent.touches[0] : c.changedTouches ? c.changedTouches[0] : c;
 };
@@ -8076,7 +8116,7 @@ Entry.Commander = function(c) {
   }, validate:!1, undo:"addThread"};
   c[d.destroyBlock] = {do:function(b) {
     b = this.editor.board.findBlock(b);
-    b.destroy(!0);
+    b.doDestroy();
   }, state:function(b) {
     var c = !1;
     b = this.editor.board.findBlock(b);
@@ -17244,7 +17284,7 @@ Entry.popupHelper = function(c) {
   this.popupList = {};
   this.nextPopupList = [];
   this.nowContent;
-  c && (window.popupHelper = null);
+  c && ($(".entryPopup.popupHelper").remove(), window.popupHelper = null);
   Entry.assert(!window.popupHelper, "Popup exist");
   var b = ["confirm", "spinner"], d = ["entryPopupHelperTopSpan", "entryPopupHelperBottomSpan", "entryPopupHelperLeftSpan", "entryPopupHelperRightSpan"];
   this.body_ = Entry.Dom("div", {classes:["entryPopup", "hiddenPopup", "popupHelper"]});
@@ -17803,8 +17843,13 @@ Entry.Stage.prototype.initStage = function(c) {
   Entry.windowResized.attach(this, function() {
     Entry.stage.updateBoundRect();
   });
+  var d = _.debounce(function() {
+    Entry.windowResized.notify();
+  }, 200);
   $(window).scroll(function() {
-    Entry.stage.updateBoundRect();
+    window.requestAnimationFrame(function() {
+      d();
+    });
   });
   b = function(b) {
     b.preventDefault();
@@ -17818,14 +17863,14 @@ Entry.Stage.prototype.initStage = function(c) {
   c.onmouseout = function(b) {
     Entry.dispatchEvent("stageMouseOut");
   };
-  Entry.addEventListener("updateObject", d);
+  Entry.addEventListener("updateObject", e);
   Entry.addEventListener("run", function(b) {
-    Entry.removeEventListener("updateObject", d);
+    Entry.removeEventListener("updateObject", e);
   });
   Entry.addEventListener("stop", function(b) {
-    Entry.addEventListener("updateObject", d);
+    Entry.addEventListener("updateObject", e);
   });
-  var d = function(b) {
+  var e = function(b) {
     Entry.engine.isState("stop") && Entry.stage.updateObject();
   };
   Entry.addEventListener("canvasInputComplete", function(b) {
@@ -17837,7 +17882,7 @@ Entry.Stage.prototype.initStage = function(c) {
         d.setInputValue(c);
         d.inputValue.complete = !0;
       }
-    } catch (h) {
+    } catch (k) {
     }
   });
   this.initWall();
@@ -24665,7 +24710,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
     }));
     var h = this._schema.color;
     if (this.block.deletable === Entry.Block.DELETABLE_FALSE_LIGHTEN || this.block.emphasized) {
-      h = Entry.Utils.getEmphasizeColor(h);
+      var k = this._schema.emphasizedColor, h = k ? k : Entry.Utils.getEmphasizeColor(h);
     }
     this._fillColor = h;
     f = {d:f, fill:h, class:"blockPath"};
@@ -25075,7 +25120,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
   c._updateColor = function() {
     var b = this._schema.color;
     if (this.block.deletable === Entry.Block.DELETABLE_FALSE_LIGHTEN || this.block.emphasized) {
-      b = Entry.Utils.getEmphasizeColor(b);
+      var c = this._schema.emphasizedColor, b = c ? c : Entry.Utils.getEmphasizeColor(b);
     }
     this._fillColor = b;
     this._path.attr({fill:b});
@@ -25807,6 +25852,7 @@ Entry.Board = function(c) {
   this._addControl();
   this._bindEvent();
   Entry.addEventListener("fontLoaded", this.reDraw.bind(this));
+  Entry.Utils.setSVGDom(this.svgDom);
 };
 Entry.Board.OPTION_PASTE = 0;
 Entry.Board.OPTION_ALIGN = 1;
@@ -27257,7 +27303,7 @@ Entry.FieldImage = function(c, b, d) {
   this._blockView = b;
   this._content = c;
   this.box = new Entry.BoxModel;
-  this._size = c.size;
+  Entry.Utils.isNumber(c.size) ? this._height = this._width = c.size : (b = c.size || {}, this._width = b.width || 0, this._height = b.height || 0);
   this._highlightColor = c.highlightColor ? c.highlightColor : "#F59900";
   this._position = c.position;
   this._imgElement = this._path = this.svgGroup = null;
@@ -27271,8 +27317,8 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldImage);
     this.svgGroup && this.svgGroup.remove();
     this._imgUrl = this._block.deletable === Entry.Block.DELETABLE_FALSE_LIGHTEN ? this._content.img.replace(".png", "_un.png") : this._content.img;
     this.svgGroup = this._blockView.contentSvgGroup.elem("g");
-    this._imgElement = this.svgGroup.elem("image", {href:this._imgUrl, x:0, y:-0.5 * this._size, width:this._size, height:this._size});
-    this.box.set({x:this._size, y:0, width:this._size, height:this._size});
+    this._imgElement = this.svgGroup.elem("image", {href:this._imgUrl, x:0, y:-0.5 * this._height, width:this._width, height:this._height});
+    this.box.set({x:this._width, y:0, width:this._width, height:this._height});
   };
 })(Entry.FieldImage.prototype);
 Entry.FieldIndicator = function(c, b, d) {
