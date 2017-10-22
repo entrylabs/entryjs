@@ -66354,6 +66354,7 @@ chocopi_servo_motor: {
             var mtype = script.getStringField("DEVICE", script);
             var angle = script.getNumberValue("VALUE", script);
         
+            if(angle == 0) angle = 1;
             if(mtype == 'servo1')    sq.servo1 = angle;
             else if(mtype == 'servo2')  sq.servo2 = angle;
             else if(mtype == 'servo3')  sq.servo3 = angle;
