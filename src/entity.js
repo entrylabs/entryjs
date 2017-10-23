@@ -230,6 +230,7 @@ Entry.EntityObject.prototype.getDirection = function(toFixedValue) {
  */
 Entry.EntityObject.prototype.setDirection = function(direction, flippable) {
     if (!direction) direction = 0;
+    direction = direction % 360;
 
     if (this.parent.getRotateMethod() == 'vertical' && !flippable) {
         var previousIsRight = this.direction >= 0 && this.direction < 180;
