@@ -568,7 +568,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
 
     p.detachKeyboardCapture = function() {
         if (Entry.keyPressed && this._keyboardEvent) {
-            Entry.keyPressed.detach(this._keyboardEvent);
+            this._keyboardEvent.destroy();
             delete this._keyboardEvent;
         }
     };
@@ -576,7 +576,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
     p._unbindBlockViewMouseUpEvent = function() {
         if (this._blockViewMouseUpEvent) {
             var oldOne = this.selectedBlockView;
-            oldOne.mouseUpEvent.detach(this._blockViewMouseUpEvent);
+            this._blockViewMouseUpEvent.destroy();
             this._blockViewMouseUpEvent = null;
         }
     };

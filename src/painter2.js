@@ -11,18 +11,22 @@ Entry.Painter2 = function(view) {
         mode: 'new' // new or edit
     };
 
-    Entry.addEventListener('pictureImport', function(picture) {
-        this.addPicture(picture)
-    }.bind(this));
+    this._keyboardEvents = [];
+
+    Entry.addEventListener('pictureImport',
+        this.addPicture.bind(this));
+    Entry.addEventListener('run',
+        this.detachKeyboardEvents.bind(this));
+    Entry.addEventListener('stop',
+        this.attachKeyboardEvents.bind(this));
 
     this.clipboard = null;
 };
 
 (function(p) {
-
 p.initialize = function() {
-    if (this.lc)
-        return;
+    if (this.lc) return;
+
     var imgURL = this.baseUrl;
     var bgImage = new Image();
     bgImage.src = imgURL + '/transparent-pattern.png';
@@ -46,7 +50,7 @@ p.initialize = function() {
     //this.lc.respondToSizeChange();
 
     bgImage.onload = function() {
-        this.lc.repaintLayer("background")
+        this.lc.repaintLayer("background");
     }.bind(this);
 
     var watchFunc = function(e) {
@@ -74,10 +78,7 @@ p.initialize = function() {
     this.initTopBar();
     this.updateEditMenu();
 
-    if (Entry.keyPressed)
-        Entry.keyPressed.attach(this, this._keyboardPressControl);
-    if (Entry.keyUpped)
-        Entry.keyUpped.attach(this, this._keyboardUpControl);
+    this.attachKeyboardEvents();
 };
 
 p.show = function() {
@@ -96,7 +97,7 @@ p.changePicture = function(picture) {
         return;
     if (this.file.modified) {
         entrylms.confirm(Lang.Menus.save_modified_shape).then(function(result){
-            if (result === true){
+            if (result === true) {
                 this.file_save(true);
             }
             this.afterModified(picture);
@@ -190,8 +191,10 @@ p.file_save = function(taskParam) {
     this.lc.trigger("dispose");
     var dataURL = this.lc.getImage().toDataURL();
     this.file_ = JSON.parse(JSON.stringify(this.file));
-    Entry.dispatchEvent('saveCanvasImage',
-                        {file: this.file_, image: dataURL, task: taskParam});
+    Entry.dispatchEvent(
+        'saveCanvasImage',
+        {file: this.file_, image: dataURL, task: taskParam}
+    );
 
     this.file.modified = false;
 };
@@ -215,29 +218,28 @@ p.newPicture = function() {
 
 p._keyboardPressControl = function(e) {
     if (!this.isShow || Entry.Utils.isInInput(e)) return;
+
     var keyCode = e.keyCode || e.which,
         ctrlKey = e.ctrlKey;
 
     if (keyCode == 8 || keyCode == 46) { //destroy
-        this.cut()
+        this.cut();
         e.preventDefault();
     } else if (ctrlKey) {
         if (keyCode == 67) //copy
-            this.copy()
+            this.copy();
         else if (keyCode == 88) { //cut
-            this.cut()
+            this.cut();
         }
     }
 
     if (ctrlKey && keyCode == 86) { //paste
-        this.paste()
+        this.paste();
     }
     this.lc.trigger("keyDown", e);
 };
 
-p._keyboardUpControl = function(e) {
-    this.lc.trigger("keyUp", e);
-};
+p._keyboardUpControl = function(e) { this.lc.trigger("keyUp", e); };
 
 p.initTopBar = function() {
     var painter = this;
@@ -375,11 +377,33 @@ p.initTopBar = function() {
     painterTop.appendChild(painterTopStageXY);
 
     Entry.addEventListener('pictureSelected', this.changePicture.bind(this));
-}
+};
 
 p.stagemousemove = function(event) {
-    this.painterTopStageXY.textContent = 'x:'+ event.x.toFixed(1) +
-        ', y:'+event.y.toFixed(1);
+    this.painterTopStageXY.textContent =
+        'x:' + event.x.toFixed(1) + ', y:' + event.y.toFixed(1);
+};
+
+p.attachKeyboardEvents = function() {
+    this.detachKeyboardEvents();
+
+    var events = this._keyboardEvents;
+
+    var evt = Entry.keyPressed;
+    evt && events.push(evt.attach(this, this._keyboardPressControl));
+
+    evt = Entry.keyUpped;
+    evt && events.push(evt.attach(this, this._keyboardUpControl));
+};
+
+p.detachKeyboardEvents = function() {
+    var events = this._keyboardEvents;
+    if (!events || !events.length) return;
+
+    while (events.length) {
+        var evt = events.pop();
+        evt.destroy && evt.destroy();
+    }
 };
 
 }(Entry.Painter2.prototype));

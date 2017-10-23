@@ -72,8 +72,8 @@ Entry.FieldStatement = function(content, blockView, index) {
         var calcEvent = event.attach(this, this.calcHeight);
         var checkTopEvent = event.attach(this, this.checkTopBlock);
 
-        this._events.push([event, calcEvent]);
-        this._events.push([event, checkTopEvent]);
+        this._events.push(calcEvent);
+        this._events.push(checkTopEvent);
 
         this.calcHeight();
     };
@@ -120,27 +120,24 @@ Entry.FieldStatement = function(content, blockView, index) {
         return pos;
     };
 
-    p.dominate = function() {
-        this._blockView.dominate();
-    };
+    p.dominate = function() { this._blockView.dominate(); };
 
     p.destroy = function() {
-        while (this._events.length) {
-            var evt = this._events.pop();
-            evt[0].detach(evt[1]);
-        }
+        while (this._events.length) this._events.pop().destroy();
     };
 
     p._updateBG = function() {
-        if (!this._board.dragBlock || !this._board.dragBlock.dragInstance)
+        var dragBlock = this._board.dragBlock;
+        if (!dragBlock || !dragBlock.dragInstance)
             return;
+
         var blockView = this;
         var magneting = blockView.magneting;
         var block = blockView.block;
         var svgGroup = blockView.svgGroup;
 
         if (magneting) {
-            var shadow = this._board.dragBlock.getShadow();
+            var shadow = dragBlock.getShadow();
             var pos = this.requestAbsoluteCoordinate();
             var transform  = 'translate(' + pos.x + ',' + pos.y + ')';
             $(shadow).attr({
@@ -155,7 +152,7 @@ Entry.FieldStatement = function(content, blockView, index) {
                 delete blockView.background;
                 delete blockView.nextBackground;
             }
-            var height = this._board.dragBlock.getBelowHeight();
+            var height = dragBlock.getBelowHeight();
 
             this.statementSvgGroup.attr({
                 transform: 'translate(0,' + height + ')'
@@ -192,16 +189,11 @@ Entry.FieldStatement = function(content, blockView, index) {
 
         var block = this.firstBlock;
         this.firstBlock = newBlock;
-        if (newBlock) {
-            newBlock.doInsert(this._thread);
-
-        }
+        if (newBlock) newBlock.doInsert(this._thread);
         return block;
     };
 
-    p.getNextBlock = function () {
-        return this.firstBlock;
-    };
+    p.getNextBlock = function () { return this.firstBlock; };
 
     p.checkTopBlock = function() {
         var firstBlock = this._thread.getFirstBlock();
@@ -220,8 +212,6 @@ Entry.FieldStatement = function(content, blockView, index) {
         return this.block.pointer(pointer);
     };
 
-    p.isParamBlockType = function() {
-        return false;
-    };
+    p.isParamBlockType = function() { return false; };
 
 })(Entry.FieldStatement.prototype);

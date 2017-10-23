@@ -174,7 +174,7 @@ Entry.PropertyPanel = function() {
             var listener = container.resizeEvent;
             if (listener) {
                 container.splitterEnable = false;
-                Entry.documentMousemove.detach(listener);
+                listener.destroy();
                 delete container.resizeEvent;
             }
             if (that._cover._isVisible) {
