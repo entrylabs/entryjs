@@ -106,13 +106,13 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
 
     p.getMode = function() {return this.mode;};
 
-    p.setMode = function(mode, message) {
-        var playground = Entry.playground;
-        var object = playground && playground.object;
-        if (!checkObjectAndAlert(object))
-            return false; // change mode fail
-
+    p.setMode = function(mode, message, isForce) {
         Entry.disposeEvent.notify();
+
+        var playground = Entry.playground;
+
+        if (!isForce && !checkObjectAndAlert(playground && playground.object))
+            return false; // change mode fail
 
         if (Entry.Utils.isNumber(mode)) this.mode = mode;
         else {
@@ -122,18 +122,18 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
         }
 
         this.mode = Number(this.mode);
-        if (this.oldMode === this.mode)
-            return;
+        if (this.oldMode === this.mode) return;
 
         var VIM = Entry.Vim,
             WORKSPACE = Entry.Workspace,
-            blockMenu = this.blockMenu;
+            blockMenu = this.blockMenu,
+            Util = Entry.TextCodingUtil;
 
         var alert_message;
 
         switch (this.mode) {
             case WORKSPACE.MODE_VIMBOARD:
-                var alert_message = Entry.TextCodingUtil.isNamesIncludeSpace();
+                var alert_message = Util.isNamesIncludeSpace();
                 if(alert_message) {
                     entrylms.alert(alert_message);
                     var mode = {};
@@ -143,7 +143,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                     break;
                 }
 
-                alert_message = Entry.TextCodingUtil.isNameIncludeNotValidChar();
+                alert_message = Util.isNameIncludeNotValidChar();
                 if(alert_message) {
                     entrylms.alert(alert_message);
                     var mode = {};
@@ -153,11 +153,13 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                     return;
                 }
 
-                alert_message = Entry.TextCodingUtil.canConvertTextModeForOverlayMode(Entry.Workspace.MODE_VIMBOARD);
-                if(alert_message) {
+                alert_message = 
+                    Util.canConvertTextModeForOverlayMode(Entry.Workspace.MODE_VIMBOARD);
+                if (alert_message) {
                     entrylms.alert(alert_message);
                     return;
                 }
+
                 try {
                     this.board && this.board.hide();
                     this.overlayBoard && this.overlayBoard.hide();
@@ -239,8 +241,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
 
         function checkObjectAndAlert(object, message) {
             if (Entry.type === "workspace" && !object) {
-                message = message || "오브젝트가 존재하지 않습니다. 오브젝트를 추가한 후 시도해주세요.";
-                entrylms.alert(message);
+                entrylms.alert(message || Lang.Workspace.object_not_exist_error);
                 return false;
             }
             return true;
@@ -277,6 +278,8 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
 
         var board = this.board;
         var code = board.code;
+        if (!code) return;
+
         code.load(changedCode);
         this.changeBoardCode(code);
         setTimeout(function() {

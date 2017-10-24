@@ -80,7 +80,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
     if (this.code && Entry.keyPressed)
         Entry.keyPressed.attach(this, this._captureKeyEvent);
     if (Entry.windowResized) {
-        var dUpdateOffset = _.debounce(this.updateOffset, 200);
+        var dUpdateOffset = Entry.Utils.debounce(this.updateOffset, 200);
         Entry.windowResized.attach(this, dUpdateOffset);
     }
 
