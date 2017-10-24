@@ -66158,7 +66158,7 @@ chocopi_servo_motor: {
         "fontColor": "#fff",        
         "skeleton": "basic_string_field",
         "statements": [],
-        "template" : "HB 소음센서 %1 번의 값",
+        "template" : "HB 소리센서 %1 번의 값",
         "params": [
             {
                 "type": "Dropdown",
@@ -66185,8 +66185,9 @@ chocopi_servo_motor: {
         "func": function (sprite, script) {
             var pd = Entry.hw.portData;
             var dev = script.getField('DEVICE');
-            var distance_value = Math.round(pd[dev]*100/1024);
-            return distance_value;
+            var sound_value = Math.round(pd[dev]*330/1024);
+            if (sound_value>100) sound_value = 100;
+            return sound_value;
         },
         "syntax": {"js": [], "py": ["hummingbird.sensorValue(%1)"]}
     },
