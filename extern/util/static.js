@@ -279,6 +279,7 @@ EntryStatic.getAllBlocks = function() {
             blocks: [
                 //hummingbirdduo
                 "hummingbird_sensorValue",
+                "hummingbird_temperatureValue",                
                 "hummingbird_lightValue",
                 "hummingbird_distanceValue",
                 "hummingbird_rotaryValue",
