@@ -66092,7 +66092,7 @@ chocopi_servo_motor: {
         "func": function (sprite, script) {
             var pd = Entry.hw.portData;
             var dev = script.getField('DEVICE');
-            var light_value = Math.round(((pd[dev]*100/1024)-30)*2.4);
+            var light_value = Math.round(pd[dev]*100/1024);
             return light_value;
         },
         "syntax": {"js": [], "py": ["hummingbird.sensorValue(%1)"]}
@@ -66132,25 +66132,6 @@ chocopi_servo_motor: {
             var pd = Entry.hw.portData;
             var dev = script.getField('DEVICE');
             
-            //0914 수정시작
-            //수정내용 거리센서 값 맵핑
-            /*
-            cm      10-bit 역위
-            5          820 180
-            9          720 280
-            11         600 400
-            14         500 500
-            17         420 580
-            19         380 620
-            23         340 660
-            27         300 700
-            33         260 740
-            41         220 780
-            56         180 820
-            77         140 860
-            Infinity   120 880
-            */
-            // 수식 거리 =  (역위 - 역위 최소값) * 역위급간 / 출력급간 + 출력최소값
             var distance_value = 0;
             var flipped = 1000 - pd[dev];
             if (flipped < 180)  distance_value = 0;
@@ -66243,7 +66224,7 @@ chocopi_servo_motor: {
             var pd = Entry.hw.portData;
             var dev = script.getField('DEVICE');
             var rotary_value = Math.round((pd[dev])*100/1024);
-			if (rotary_value == 0) rotary_value = 1;
+			//if (rotary_value == 0) rotary_value = 1;
             return rotary_value;
         },
         "syntax": {"js": [], "py": ["hummingbird.sensorValue(%1)"]}
