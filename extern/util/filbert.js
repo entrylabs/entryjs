@@ -480,7 +480,7 @@
   // Keywords
   // TODO: dict isn't a keyword, it's a builtin
 
-  var isKeyword = makePredicate("dict False None True and as assert break class continue def del elif else except finally for from global if import in is lambda nonlocal not or pass raise return try while with yield");
+  var isKeyword = makePredicate("dict False None True and as assert break class continue def del elif else except finally for from global if import in is lambda nonlocal not or pass raise return try while with yield exec");
 
   // ## Character categories
 
@@ -871,6 +871,15 @@
     if (tokPos >= inputLen) return finishToken(_eof);
     if (tokType === _newline) return readToken_indent();
 
+    if(input.split('=').length > 1 && isKeyword(input.split('=')[0].trim())) {
+      tokPos = input.split(/\r|\n/g).length - 1 +3;
+      if(input.split('=')[1].trim()[0] == '['){
+        raise(tokPos, "Reserved list word");
+      } else{
+        raise(tokPos, "Reserved variable word");
+      }
+    }
+
     var code = input.charCodeAt(tokPos);
     // Identifier or keyword. '\uXXXX' sequences are allowed in
     // identifiers, so '\' also dispatches to that.
@@ -883,7 +892,7 @@
       // character, or something that's entirely disallowed.
       var ch = String.fromCharCode(code);
       if (ch === "\\" || nonASCIIidentifierStart.test(ch)) return readWord();
-      raise(tokPos, "Unexpected character '" + ch + "'");
+      raise(tokPos+3, "Unexpected character '" + ch + "'");
     }
     return tok;
   }
