@@ -202,9 +202,7 @@ Entry.PARAM = -1;
         return this._data.indexOf(thread);
     };
 
-    p.getThreadCount = function() {
-        return this._data.length;
-    };
+    p.getThreadCount = function() { return this._data.length; };
 
     p.cloneThread = function(thread, mode) {
         var newThread = thread.clone(this, mode);

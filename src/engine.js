@@ -933,7 +933,7 @@ Entry.Engine = function() {
 
     p.detachKeyboardCapture = function() {
         if (Entry.keyPressed && this._keyboardEvent) {
-            Entry.keyPressed.detach(this._keyboardEvent);
+            this._keyboardEvent.destroy();
             delete this._keyboardEvent;
         }
     };

@@ -12,8 +12,7 @@ Entry.FieldAngle = function(content, blockView, index) {
     this._block = blockView.block;
     this._blockView = blockView;
 
-    var box = new Entry.BoxModel();
-    this.box = box;
+    this.box = new Entry.BoxModel();
 
     this.svgGroup = null;
 
@@ -162,6 +161,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
 
         $(this.angleOptionGroup).bind('mouseup touchend',
             this.destroyOption.bind(this));
+
         this.updateGraph();
         this.optionGroup.focus();
         this.optionGroup.select();
@@ -268,7 +268,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
 
     p.destroyOption = function(skipCommand, forceCommand) {
         if (this.disposeEvent) {
-            Entry.disposeEvent.detach(this.disposeEvent);
+            this.disposeEvent.destroy();
             delete this.documentDownEvent;
         }
 
@@ -281,14 +281,14 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
             this.angleOptionGroup.remove();
             delete this.angleOptionGroup;
         }
+
         this._setTextValue();
         skipCommand !== true && this.command(forceCommand);
     };
 
     p._setTextValue = function() {
-        var value = this._convert(this.getText(), this.getValue());
-
-        this.textElement.textContent = value;
+        this.textElement.textContent =
+            this._convert(this.getText(), this.getValue());
     };
 
 })(Entry.FieldAngle.prototype);

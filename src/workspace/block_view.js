@@ -1067,10 +1067,8 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
 
     p._destroyObservers = function() {
         var observers = this._observers;
-        while(observers.length) {
-            var o = observers.pop();
-            o.destroy();
-        }
+        while(observers.length)
+            observers.pop().destroy();
     };
 
     p.addActivated = function() {
@@ -1110,7 +1108,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
         var svgData = '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 %W %H">(svgGroup)(defs)</svg>';
         var bBox = this.svgGroup.getBoundingClientRect();
         var svgGroup = notClone ? this.svgGroup : this.svgGroup.cloneNode(true);
-        var box = this._skeleton.box(this)
+        var box = this._skeleton.box(this);
         var scale = notPng ? 1 : 1.5;
         var fontWeight = isWindow7() ? 0.9 : 0.95;
         if (this.type.indexOf('func_') > -1)

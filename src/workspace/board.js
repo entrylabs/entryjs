@@ -110,7 +110,7 @@ Entry.Board.DRAG_RADIUS = 5;
 
     p.changeCode = function(code, shouldNotCreateView, cb) {
         if (this.code && this.codeListener)
-            this.code.changeEvent.detach(this.codeListener);
+            this.codeListener.destroy();
 
         this.set({code: code});
 

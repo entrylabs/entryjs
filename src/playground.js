@@ -1418,7 +1418,7 @@ Entry.Playground = function() {
             var listener = Entry.playground.resizeEvent
             if (listener) {
                 Entry.playground.resizing = false;
-                Entry.documentMousemove.detach(listener);
+                listener.destroy();
                 delete Entry.playground.resizeEvent;
             }
         });
