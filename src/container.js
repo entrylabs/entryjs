@@ -92,9 +92,7 @@ Entry.Container.prototype.generateView = function(containerView, option) {
             return;
         }
 
-        var mouseDownCoordinate = {
-            x: e.clientX, y: e.clientY
-        };
+        var mouseDownCoordinate = { x: e.clientX, y: e.clientY };
 
         if (eventType === 'touchstart' && !handled) {
             e.stopPropagation();
@@ -187,9 +185,7 @@ Entry.Container.prototype.updateListView = function() {
 
     var objs = this.getCurrentObjects().slice();
 
-    var ret = objs.filter(function(o) {
-        return o.index !== undefined;
-    });
+    var ret = objs.filter(function(o) { return o.index !== undefined; });
 
     if (ret.length === objs.length)
         objs = objs.sort(function(a, b) {
@@ -372,7 +368,9 @@ Entry.Container.prototype.addCloneObject = function(object, scene) {
  * @return {Entry.State}
  */
 Entry.Container.prototype.removeObject = function(object) {
-    var index = this.objects_.indexOf(object);
+    var objects = this.objects_;
+
+    var index = objects.indexOf(object);
     var objectJSON = object.toJSON();
     if (Entry.stateManager) {
         Entry.stateManager.addCommand(
@@ -386,20 +384,21 @@ Entry.Container.prototype.removeObject = function(object) {
     var state = new Entry.State(this.addObject, objectJSON, index);
 
     object.destroy();
-    this.objects_.splice(index, 1);
+    objects.splice(index, 1);
     this.setCurrentObjects();
     Entry.stage.sortZorder();
     var currentObjects = this.getCurrentObjects();
 
-    if (currentObjects.length)
-        this.selectObject(currentObjects[0].id);
+    if (currentObjects.length) this.selectObject(currentObjects[0].id);
     else {
         this.selectObject();
         Entry.playground.flushPlayground();
     }
 
-    Entry.toast.success(Lang.Workspace.remove_object,
-                       object.name + ' ' + Lang.Workspace.remove_object_msg);
+    Entry.toast.success(
+        Lang.Workspace.remove_object,
+        object.name + ' ' + Lang.Workspace.remove_object_msg
+    );
 
     Entry.variableContainer.removeLocalVariables(object.id);
     Entry.playground.reloadPlayground();
@@ -417,7 +416,7 @@ Entry.Container.prototype.selectObject = function(objectId, changeScene) {
     if (changeScene && object)
         Entry.scene.selectScene(object.scene);
 
-    var className = 'selectedObject'
+    var className = 'selectedObject';
     this.mapObjectOnScene(function(o) {
         !o.view_ && o.generateView && o.generateView();
         var selected = o === object;
@@ -940,7 +939,7 @@ Entry.Container.prototype.setCopiedObject = function(object) {
 
 Entry.Container.prototype.updateObjectsOrder = function() {
     var scenes = Entry.scene.getScenes();
-
+    
     var objs = [];
 
     for (var i=0; i<scenes.length; i++) {
@@ -1079,10 +1078,10 @@ Entry.Container.prototype.removeFuncBlocks = function(functionType) {
 };
 
 Entry.Container.prototype.clear = function() {
-    this.objects_.map(function(o) {o.destroy()});
+    this.objects_.map(function(o) {o.destroy();});
     this.objects_ = [];
     // INFO : clear 시도할때 _extensionObjects 초기화
-    this._extensionObjects.map(function(o) {o.destroy()});
+    this._extensionObjects.map(function(o) {o.destroy();});
     this._extensionObjects = [];
     // TODO: clear 때 this._extensionListView 도 비워 줘야 하는지 확인 필요.
     Entry.playground.flushPlayground();
@@ -1128,7 +1127,7 @@ Entry.Container.prototype.getDom = function(query) {
 Entry.Container.prototype.isSceneObjectsExist = function() {
     var objects = this.getSceneObjects();
     return !!(objects && objects.length);
-}
+};
 
 Entry.Container.prototype.adjustClonedValues = function(oldIds, newIds) {
     if (!(oldIds && newIds)) return;

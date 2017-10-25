@@ -103,7 +103,7 @@ Entry.EntryObject = function(model) {
                         Entry.Loader.removeQueue();
                         this.onerror = null;
                     }
-                }
+                };
 
                 image.src = getImageSrc(picture);
             })(this.pictures[i]);
@@ -1106,7 +1106,7 @@ Entry.EntryObject = function(model) {
         for (var i = 0; i < len; i++) {
             var picture = pictures[i];
             if (picture.id == pictureId)
-                return pictures[i == 0 ? len-1 : i-1];
+                return pictures[i === 0 ? len-1 : i-1];
         }
     };
 
@@ -1417,7 +1417,7 @@ Entry.EntryObject = function(model) {
             this.coordinateView_.sizeInput_
         ];
         if (isLocked){
-            if(inputs[0].getAttribute("readonly") != true){
+            if(inputs[0].getAttribute("readonly") !== true){
                 for (var i=0; i<inputs.length; i++) {
                     inputs[i].removeClass('selectedEditingObject');
                     inputs[i].setAttribute('readonly', false);
