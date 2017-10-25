@@ -529,6 +529,9 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
         var board = this.board;
         var code = board.code;
         if (code) code.load(changedCode);
+
+        var event = Entry.creationChangedEvent;
+        event && event.notify(true);
     };
 
     p.addVimBoard = function(dom) {
@@ -585,6 +588,14 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
         this.widgetUpdateEveryTime = !!val;
     };
 
+    p.syncCode = function() {
+        switch (this.mode) {
+            case Entry.Workspace.MODE_VIMBOARD:
+                this._syncTextCode();
+            break;
+        }
+    };
+  
     p.setHoverBlockView = function(blockView) {
         var oldBlockView = this._hoverBlockView;
         oldBlockView && oldBlockView.resetBackgroundPath();
@@ -592,4 +603,5 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
         this._hoverBlockView = blockView;
         blockView && blockView.setBackgroundPath();
     };
+
 })(Entry.Workspace.prototype);
