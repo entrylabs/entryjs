@@ -965,7 +965,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
                 var block = threads[i].getFirstBlock();
 
                 if (!block) continue;
-
+                var type = block.type;                
                 var index = this._dynamicThreads.indexOf(type);
                 if (index > -1)
                     visibles[index] = block
