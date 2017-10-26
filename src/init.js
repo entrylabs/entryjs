@@ -90,6 +90,7 @@ Entry.init = function(container, options) {
         Entry.mediaFilePath + 'sounds/delete.wav'], 'entryDelete');
 
     createjs.Sound.stop();
+    BigNumber.config({ ERRORS: false });
 };
 
 Entry.changeContainer = function(container) {

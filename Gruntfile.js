@@ -50,15 +50,23 @@ module.exports = function(grunt) {
             options: {
                 frameworks: ['mocha', 'chai'],
                 files: [
+                    'http://ajax.aspnetcdn.com/ajax/jshint/r07/jshint.js',
                     'test_util/*.js',
-                    'extern/jquery/jquery.js',
+                    'extern/lang/ko.js',
                     'extern/blockly/blockly_compressed.js',
-                    'dist/entry.js'
+                    'extern/util/static.js',
+                    'extern/util/filbert.js',
+                    'extern/util/bignumber.min.js',
+                    'node_modules/jquery/jquery.js',
+                    'node_modules/createjs-easeljs/lib/easeljs-0.8.2.min.js',
+                    'node_modules/createjs-soundjs/lib/soundjs-0.6.2.min.js',
+                    'node_modules/createjs-preloadjs/lib/preloadjs-0.6.2.min.js',
+                    'dist/entry.js',
+                    'src/workspace/block_entry.js'
                 ]
             },
             unit: {
                 configFile: 'karma.conf.js',
-                logLevel: 'ERROR',
                 files: [
                     { src : ['test/**/*.js'] }
                 ]
@@ -119,6 +127,10 @@ module.exports = function(grunt) {
         'closureCompiler:targetName',
         'karma',
         'concurrent'
+    ]);
+
+    grunt.registerTask('test', [
+        'karma',
     ]);
 
     grunt.registerTask('closure', ['closureCompiler']);

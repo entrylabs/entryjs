@@ -14,7 +14,11 @@ Entry.Field = function() {};
     p.TEXT_LIMIT_LENGTH = 20;
 
     p.destroy = function() {
-        this.svgGroup && $(this.svgGroup).unbind('mouseup touchend');
+        var svgGroup = this.svgGroup;
+        if (svgGroup) {
+            svgGroup._isBinded = false;
+            $(svgGroup).off('.fieldBindEvent');
+        }
         this.destroyOption(true);
     };
 
@@ -199,16 +203,20 @@ Entry.Field = function() {};
     };
 
     p._bindRenderOptions = function() {
+        if (this.svgGroup._isBinded) return;
+
         var that = this;
 
-        $(this.svgGroup).bind('mouseup touchend', function(e){
-            if (that._isEditable()) {
-                that._code = that.getCode();
-                that.destroyOption();
-                that._startValue = that.getValue();
-                that.renderOptions();
-                that._isEditing = true;
-            }
+        this.svgGroup._isBinded = true;
+        $(this.svgGroup)
+            .on('mouseup.fieldBindEvent touchend.fieldBindEvent', function(e){
+                if (that._isEditable()) {
+                    that._code = that.getCode();
+                    that.destroyOption();
+                    that._startValue = that.getValue();
+                    that.renderOptions();
+                    that._isEditing = true;
+                }
         });
     };
 

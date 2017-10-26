@@ -13,7 +13,6 @@ Entry.TextCodingUtil = {};
     this._funcParams;
     this._funcParamQ;
     this._currentObject;
-
     /*tu.init = function() {
         this._funcParams = [];
     };*/
@@ -59,52 +58,6 @@ Entry.TextCodingUtil = {};
         return false;
     };
 
-    tu.binaryOperatorConvert = function(operator) {
-        var result;
-        switch(operator) {
-            case '==': {
-                result = "EQUAL";
-                break;
-            }
-            case '>': {
-                result = "GREATER";
-                break;
-            }
-            case '<': {
-                result = "LESS";
-                break;
-            }
-            case '>=': {
-                result = "GREATER_OR_EQUAL";
-                break;
-            }
-            case '<=': {
-                result = "LESS_OR_EQUAL";
-                break;
-            }
-            case '+': {
-                result = "PLUS";
-                break;
-            }
-            case '-': {
-                result = "MINUS";
-                break;
-            }
-            case '*': {
-                result = "MULTIFLY";
-                break;
-            }
-            case '/': {
-                result = "DIVIDE";
-                break;
-            }
-            default: {
-                result = operator;
-            }
-        }
-        return result;
-    };
-
     tu.logicalExpressionConvert = function(operator) {
         var result;
         switch(operator) {
@@ -125,10 +78,7 @@ Entry.TextCodingUtil = {};
 
     tu.dropdownDynamicNameToIdConvertor = function(name, menuName, currentObject) {
         var result = name;
-        if(Entry.getMainWS() && Entry.getMainWS().vimBoard) {
-            var VIM = Entry.getMainWS().vimBoard;
-            if(VIM) var currentScene = VIM._currentScene;
-        }
+        var currentScene = Entry.scene.selectedScene;
 
         if(menuName == "scenes") {
             var scenes = Entry.scene.getScenes();
@@ -190,7 +140,7 @@ Entry.TextCodingUtil = {};
             }
         }
         else if(menuName == "pictures") {
-            currentObject = VIM._currentObject;
+            currentObject = Entry.playground.object;
             var pictures = currentObject.pictures;
             for(var p in pictures) {
                 var picture = pictures[p];
@@ -200,7 +150,7 @@ Entry.TextCodingUtil = {};
             }
         }
         else if(menuName == "sounds") {
-            currentObject = VIM._currentObject;
+            currentObject = Entry.playground.object;
             var sounds = currentObject.sounds;
             for(var p in sounds) {
                 var sound = sounds[p];
@@ -217,82 +167,95 @@ Entry.TextCodingUtil = {};
         //var found = false;
         var result;
 
-        if(menuName == "variables") {
-            var entryVariables = Entry.variableContainer.variables_;
-            for(var e in entryVariables) {
-                var entryVariable = entryVariables[e];
-                if(entryVariable.id_ == id) {
-                    if(entryVariable.object_)
-                        result = "self." + entryVariable.name_;
-                    else
-                        result = entryVariable.name_;
-                    break;
-                }
+        switch (menuName) {
+            case "variables":
+                var entryVariables = Entry.variableContainer.variables_;
+                for(var e in entryVariables) {
+                    var entryVariable = entryVariables[e];
+                    if(entryVariable.id_ == id) {
+                        if(entryVariable.object_)
+                            result = "self." + entryVariable.name_;
+                        else
+                            result = entryVariable.name_;
+                        break;
+                    }
 
-            }
-        }
-        else if(menuName == "lists") {
-            var entryLists = Entry.variableContainer.lists_;
-            for(var e in entryLists) {
-                var entryList = entryLists[e];
-                if(entryList.id_ == id) {
-                    if(entryList.object_)
-                        result = "self." + entryList.name_;
-                    else
-                        result = entryList.name_;
-                    break;
                 }
+                break;
+            case "lists":
+                var entryLists = Entry.variableContainer.lists_;
+                for(var e in entryLists) {
+                    var entryList = entryLists[e];
+                    if(entryList.id_ == id) {
+                        if(entryList.object_)
+                            result = "self." + entryList.name_;
+                        else
+                            result = entryList.name_;
+                        break;
+                    }
 
-            }
-        }
-        else if(menuName == "messages") {
-            var entryMessages = Entry.variableContainer.messages_;
-            for(var e in entryMessages) {
-                var entryList = entryMessages[e];
-                if(entryList.id == id) {
-                    result = entryList.name;
-                    break;
                 }
+                break;
+            case "messages":
+                var entryMessages = Entry.variableContainer.messages_;
+                for(var e in entryMessages) {
+                    var entryList = entryMessages[e];
+                    if(entryList.id == id) {
+                        result = entryList.name;
+                        break;
+                    }
 
-            }
-        }
-        else if(menuName == "pictures") {
-            var objects = Entry.container.getAllObjects();
-            for(var o in objects) {
-                var object = objects[o];
-                var pictures = object.pictures;
-                for(var p in pictures) {
-                    var picture = pictures[p];
-                    if(picture.id == id) {
-                        result = picture.name;
-                        return result;
+                }
+                break;
+            case "pictures":
+                var objects = Entry.container.getAllObjects();
+                for(var o in objects) {
+                    var object = objects[o];
+                    var pictures = object.pictures;
+                    for(var p in pictures) {
+                        var picture = pictures[p];
+                        if(picture.id == id) {
+                            result = picture.name;
+                            return result;
+                        }
                     }
                 }
-            }
-        }
-        else if(menuName == "sounds") {
-            var objects = Entry.container.getAllObjects();
-            for(var o in objects) {
-                var object = objects[o];
-                var sounds = object.sounds;
-                for(var p in sounds) {
-                    var sound = sounds[p];
-                    if(sound.id == id) {
-                        result = sound.name;
-                        return result;
+                break;
+            case "sounds":
+                var objects = Entry.container.getAllObjects();
+                for(var o in objects) {
+                    var object = objects[o];
+                    var sounds = object.sounds;
+                    for(var p in sounds) {
+                        var sound = sounds[p];
+                        if(sound.id == id) {
+                            result = sound.name;
+                            return result;
+                        }
                     }
                 }
-            }
-        }
-        else if(menuName == "scenes") {
-            var scenes = Entry.scene.getScenes();
-            for(var s in scenes) {
-                var scene = scenes[s];
-                if(scene.id == id) {
-                    result = scene.name;
-                    break;
+                break;
+            case "scenes":
+                var scenes = Entry.scene.getScenes();
+                for(var s in scenes) {
+                    var scene = scenes[s];
+                    if(scene.id == id) {
+                        result = scene.name;
+                        break;
+                    }
                 }
-            }
+                break;
+            case "clone":
+                if(id == 'self') {
+                    result = id;
+                } else {
+                    var objects = Entry.container.objects_.filter(function(obj){
+                        return obj.id === id;
+                    });
+
+                    result = objects[0] ? objects[0].name : null;
+                }
+                break;
         }
 
 
@@ -1778,8 +1741,8 @@ Entry.TextCodingUtil = {};
 
     tu.isNamesIncludeSpace = function() {
         var vc = Entry.variableContainer;
-        if(!vc)
-            return;
+        if(!vc) return;
+
         //inspect variables
         var targets = vc.variables_ || [];
         for (var i=0; i<targets.length; i++) {
@@ -1804,69 +1767,81 @@ Entry.TextCodingUtil = {};
         }*/
 
         //inspect functions
-        targets = vc.functions_ || {};
-        for (i in targets) {
-            var target = targets[i];
 
-            var funcThread = target.content._data[0];
-            var funcBlock = funcThread._data[0];
-            if(funcBlock.data.type == "function_create") {
-                if(funcBlock.params.length == 2) {
-                    var paramBlock = funcBlock.params[0];
-                    if(paramBlock.data.type == "function_field_label") {
-                        var paramBlockParams = paramBlock.data.params;
-                        if(paramBlockParams.length == 2) {
-                            if(paramBlockParams[1] == undefined) {
-                                var name = paramBlockParams[0];
-                                if (test(name))
-                                    return Lang.TextCoding[Entry.TextCodingError.ALERT_FUNCTION_NAME_EMPTY_TEXT];
-                            }
-                            else
-                                if(paramBlockParams[1].data.type == "function_field_label")
-                                    return Lang.TextCoding[Entry.TextCodingError.ALERT_FUNCTION_NAME_FIELD_MULTI];
-                                else
-                                    if(this.hasFunctionFieldLabel(paramBlockParams[1]))
-                                        return Lang.TextCoding[Entry.TextCodingError.ALERT_FUNCTION_NAME_FIELD_MULTI];
-                        }
-                        else
-                            return Lang.TextCoding[Entry.TextCodingError.ALERT_FUNCTION_NAME_DISORDER];
-                    }
-                    else
-                        return Lang.TextCoding[Entry.TextCodingError.ALERT_FUNCTION_NAME_DISORDER];
-                } else
-                    return Lang.TextCoding[Entry.TextCodingError.ALERT_FUNCTION_NAME_DISORDER];
-            } else
-                return Lang.TextCoding[Entry.TextCodingError.ALERT_FUNCTION_NAME_DISORDER];
+        var ERROR_LANG = Lang.TextCoding;
+        var ERROR = Entry.TextCodingError;
+        var DISORDER = ERROR_LANG[ERROR.ALERT_FUNCTION_NAME_DISORDER];
+        var FIELD_MULTI = ERROR_LANG[ERROR.ALERT_FUNCTION_NAME_FIELD_MULTI];
+        var EMPTY_TEXT = ERROR_LANG[ERROR.ALERT_FUNCTION_NAME_EMPTY_TEXT];
+
+        targets = vc.functions_ || {};
+
+        for (i in targets) {
+            var paramBlock = targets[i].content.getEventMap("funcDef")[0];
+            paramBlock = paramBlock && paramBlock.params[0];
+
+            if (!paramBlock) continue;
+
+            if (paramBlock.type !== "function_field_label")
+                return DISORDER;
+
+            var params = paramBlock.params;
+
+            if (!params[1]) {
+                if (test(params[0]))
+                    return EMPTY_TEXT;
+            } else if (this.hasFunctionFieldLabel(params[1])) {
+                return FIELD_MULTI;
+            }
         }
 
         return false;
+
         function test(name) {
             return / /.test(name);
         }
     };
 
     tu.isNameIncludeSpace = function(name, type) {
-        if (type == "variable" && test(name)) {
+        if (!/ /.test(name)) return false;
+
+        if (type == "variable") {
             return Lang.TextCoding[Entry.TextCodingError.ALERT_VARIABLE_EMPTY_TEXT_ADD_CHANGE];
-        }
-        else if (type == "list" && test(name)) {
+        } else if (type == "list") {
             return Lang.TextCoding[Entry.TextCodingError.ALERT_LIST_EMPTY_TEXT_ADD_CHANGE];
-        }
-        else if (type == "function" && test(name)) {
+        } else if (type == "function") {
             return Lang.TextCoding[Entry.TextCodingError.ALERT_FUNCTION_NAME_EMPTY_TEXT_ADD_CHANGE];
         }
 
         return false;
-
-        function test(name) {
-            return / /.test(name);
-        }
     };
+
+    tu.isNameIncludeNotValidChar = function() {
+        var vc = Entry.variableContainer;
+        if(!vc)
+            return;
+        //inspect variables
+        var targets = vc.variables_ || [];
+        for (var i=0; i<targets.length; i++) {
+            if (this.checkName(targets[i].name_ , 'v')) {
+                return this.checkName(targets[i].name_ , 'v');
+            }
+        }
+
+        //inspect lists
+        targets = vc.lists_ || [];
+        for (i=0; i<targets.length; i++) {
+            if (this.checkName(targets[i].name_ , 'l')) {
+                return this.checkName(targets[i].name_ , 'l');
+            }
+        }
+    }
 
     tu.hasFunctionFieldLabel = function(fBlock) {
         if(!fBlock || !fBlock.data) return;
         if(fBlock.data.type == "function_field_label")
             return true;
+
         var params = fBlock.data.params;
         if(params[0]) {
             var type = params[0].data.type;
@@ -1887,7 +1862,6 @@ Entry.TextCodingUtil = {};
         }
 
         return false;
-
     };
 
     /*tu.addFuncParam = function(param) {
@@ -2111,6 +2085,31 @@ Entry.TextCodingUtil = {};
         return result;
     };
 
+    tu.checkName = function(name , target) {
+        var keywords = [
+            'and', 'assert', 'break', 'class', 'continue', 'def', 'del', 'elif', 'else', 'except', 'exec', 'finally', 'for', 'from', 'global', 'if', 'import', 'in', 'is', 'lambda', 'not', 'or', 'pass', 'print', 'raise', 'return', 'try', 'while', 'with', 'yield'
+        ];
+        //숫자 검사
+        var regExp = /^[0-9]$/g;
+        
+        if(regExp.test(name[0])){
+            return Lang.Menus['textcoding_numberError_' + target];
+        }
+
+        //특수문자 검사
+        var regExp = /[\{\}\[\]\/?.,;:|\)*~`!^\-+<>@\#$%&\\\=\(\'\"]/gi;
+        if(regExp.test(name)){
+            return Lang.Menus['textcoding_specialCharError_' + target];
+        }
+
+        //예약어 검사
+        if(keywords.includes(name)){
+            return Lang.Menus['textcoding_bookedError_1' + target] + name + Lang.Menus['textcoding_bookedError_2' + target];
+        }
+
+        return false;
+    }
+
     tu.generateVariablesDeclaration = function() {
         var result = "";
         var currentObject = Entry.playground.object;
@@ -2120,7 +2119,7 @@ Entry.TextCodingUtil = {};
         var targets = vc.variables_ || [];
 
         for (var i=targets.length-1; i>=0; i--) {
-            var v = targets[i];
+            var v = targets[i];           
             var name = v.name_;
             var value = v.value_;
 
@@ -2136,7 +2135,7 @@ Entry.TextCodingUtil = {};
 
             result += name + " = " + value + "\n";
         }
-
+        
         return result;
     };
 
@@ -2173,9 +2172,13 @@ Entry.TextCodingUtil = {};
 
                 }*/
 
-                if(isNaN(data))
-                    data = "\"" + data + "\"";
-                value += data;
+                if(isNaN(data) || (data.length > 1 && String(data)[0] === '0')) {
+                    data = "\"" + data.replace(/"/gi, '\\\"') + "\"";
+                }
+
+                if(typeof data === "number" || data.trim().length > 0)
+                    value += data;
+
                 if(va != lArray.length-1)
                     value += ", ";
             }

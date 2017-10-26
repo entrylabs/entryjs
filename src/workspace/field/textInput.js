@@ -122,12 +122,12 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
         pos.y -= this.box.height/2;
         this.optionGroup.css({
             height: this._CONTENT_HEIGHT,
-            left:pos.x,
-            top:pos.y,
+            left: pos.x,
+            top: pos.y,
             width: that.box.width
         });
 
-        this.optionGroup.focus();
+        this.optionGroup.focus && this.optionGroup.focus();
         var optionGroup = this.optionGroup[0];
         optionGroup.setSelectionRange(0, optionGroup.value.length, "backward");
 

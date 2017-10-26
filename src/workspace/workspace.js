@@ -23,6 +23,7 @@ Entry.Workspace = function(options) {
     this.widgetUpdateEvent = new Entry.Event(this);
     this._blockViewMouseUpEvent = null;
     this.widgetUpdateEveryTime = false;
+    this._hoverBlockView = null;
 
     var option = options.blockMenu;
     if (option) {
@@ -132,28 +133,54 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
 
         switch (this.mode) {
             case WORKSPACE.MODE_VIMBOARD:
-                    var alert_message = Entry.TextCodingUtil.isNamesIncludeSpace();
-                    if(alert_message) {
-                        entrylms.alert(alert_message);
-                        var mode = {};
-                        mode.boardType = WORKSPACE.MODE_BOARD;
-                        mode.textType = -1;
-                        Entry.getMainWS().setMode(mode);
-                        break;
-                    }
-                    alert_message = Entry.TextCodingUtil.canConvertTextModeForOverlayMode(Entry.Workspace.MODE_VIMBOARD);
-                    if(alert_message) {
-                        entrylms.alert(alert_message);
-                        return;
-                    }
+                var alert_message = Entry.TextCodingUtil.isNamesIncludeSpace();
+                if(alert_message) {
+                    entrylms.alert(alert_message);
+                    var mode = {};
+                    mode.boardType = WORKSPACE.MODE_BOARD;
+                    mode.textType = -1;
+                    Entry.getMainWS().setMode(mode);
+                    break;
+                }
+
+                alert_message = Entry.TextCodingUtil.isNameIncludeNotValidChar();
+                if(alert_message) {
+                    entrylms.alert(alert_message);
+                    var mode = {};
+                    mode.boardType = WORKSPACE.MODE_BOARD;
+                    mode.textType = -1;
+                    Entry.getMainWS().setMode(mode);
+                    return;
+                }
+
+                alert_message = Entry.TextCodingUtil.canConvertTextModeForOverlayMode(Entry.Workspace.MODE_VIMBOARD);
+                if(alert_message) {
+                    entrylms.alert(alert_message);
+                    return;
+                }
+                try {
                     this.board && this.board.hide();
                     this.overlayBoard && this.overlayBoard.hide();
                     this.set({selectedBoard:this.vimBoard});
                     this.vimBoard.show();
                     blockMenu.banClass('functionInit', true);
                     this.codeToText(this.board.code, mode);
-                    this.board.clear();
                     this.oldTextType = this.textType;
+                    this.board.clear();
+                } catch(e) {
+                    this.vimBoard.hide();
+                    this.board.show();
+                    blockMenu.unbanClass('functionInit');
+                    this.set({selectedBoard:this.board});
+                    this.mode = WORKSPACE.MODE_BOARD;
+                    mode.boardType = WORKSPACE.MODE_BOARD;
+                    if (this.oldTextType == VIM.TEXT_TYPE_JS) {
+                        mode.runType = VIM.MAZE_MODE;
+                    } else if (this.oldTextType == VIM.TEXT_TYPE_PY) {
+                        mode.runType = VIM.WORKSPACE_MODE;
+                    }
+                    e.block && Entry.getMainWS() && Entry.getMainWS().board.activateBlock(e.block);
+                }
                 break;
             case WORKSPACE.MODE_BOARD:
                 try {
@@ -184,7 +211,6 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                         mode.runType = VIM.WORKSPACE_MODE;
                         this.oldTextType = VIM.TEXT_TYPE_PY;
                     }
-                    Entry.getMainWS().setMode(mode);
                 }
                 Entry.commander.setCurrentEditor("board", this.board);
                 break;
@@ -212,7 +238,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
         Entry.dispatchEvent('cancelBlockMenuDynamic');
 
         function checkObjectAndAlert(object, message) {
-            if (playground && !object) {
+            if (Entry.type === "workspace" && !object) {
                 message = message || "오브젝트가 존재하지 않습니다. 오브젝트를 추가한 후 시도해주세요.";
                 entrylms.alert(message);
                 return false;
@@ -284,19 +310,22 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
 
     p._setSelectedBlockView = function() {
         var view = 'selectedBlockView';
-        var blockView = this.board[view] ||
-            this.blockMenu[view] ||
-            (this.overlayBoard ? this.overlayBoard[view] : null);
+        var blockView = this.board[view] || this.blockMenu[view] ||
+                (this.overlayBoard ? this.overlayBoard[view] : null);
+
         this._unbindBlockViewMouseUpEvent();
+
         this.set({selectedBlockView:blockView});
-        if (blockView) {
-            var that = this;
-            this._blockViewMouseUpEvent =
-                blockView.mouseUpEvent.attach(
-                    this, function() {
-                        that.blockViewMouseUpEvent.notify(blockView);
-                    });
-        }
+
+        if (!blockView) return;
+
+        this.setHoverBlockView();
+        var that = this;
+        this._blockViewMouseUpEvent =
+            blockView.mouseUpEvent.attach(
+                this, function() {
+                    that.blockViewMouseUpEvent.notify(blockView);
+                });
     };
 
     p.initOverlayBoard = function() {
@@ -457,7 +486,9 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                     break;
                 case 8:
                 case 46:
-                    if (!isBoardReadOnly && blockView && !blockView.isInBlockMenu && blockView.block.isDeletable()) {
+                    if (!isBoardReadOnly && blockView &&
+                        !blockView.isInBlockMenu && blockView.block.isDeletable() &&
+                        !blockView.isFieldEditing()) {
                         Entry.do("destroyBlock", blockView.block);
                         this.board.set({selectedBlockView:null});
                         e.preventDefault();
@@ -552,5 +583,13 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
 
     p.setWidgetUpdateEveryTime = function(val) {
         this.widgetUpdateEveryTime = !!val;
+    };
+
+    p.setHoverBlockView = function(blockView) {
+        var oldBlockView = this._hoverBlockView;
+        oldBlockView && oldBlockView.resetBackgroundPath();
+
+        this._hoverBlockView = blockView;
+        blockView && blockView.setBackgroundPath();
     };
 })(Entry.Workspace.prototype);

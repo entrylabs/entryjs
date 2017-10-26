@@ -90,6 +90,7 @@ Entry.EntryObject = function(model) {
 
                 image.onerror = function(err) {
                     if (!this.triedCnt) {
+                        if (Entry.type !== "invisible")
                         console.log('err=', picture.name, 'load failed');
                         this.triedCnt = 1;
                         this.src = getImageSrc(picture);
@@ -1065,7 +1066,7 @@ Entry.EntryObject = function(model) {
         //3. index
         if (!value)
             return this.selectedPicture;
-        value = value.trim();
+        value = (value + "").trim();
         var pictures = this.pictures,
             len = pictures.length;
         for (var i=0; i<len; i++) {
@@ -1080,7 +1081,7 @@ Entry.EntryObject = function(model) {
         if (!(checker === false && typeof checker == 'boolean') && len >= checker && checker > 0) {
             return pictures[checker-1];
         }
-        throw new Error('No picture found');
+        return null;
     };
 
     p.setPicture = function(picture) {
@@ -1357,7 +1358,7 @@ Entry.EntryObject = function(model) {
         //1. soundId
         //2. soundName
         //3. index
-        value = value.trim();
+        value = (value + "").trim();
         var sounds = this.sounds,
             len = sounds.length;
         for (var i=0; i<len; i++)
@@ -1371,7 +1372,7 @@ Entry.EntryObject = function(model) {
             len >= checker && checker > 0) {
             return sounds[checker-1];
         }
-        throw new Error('No Sound');
+        return null;
     };
 
     p.addCloneVariables = function(object, entity, variables, lists) {

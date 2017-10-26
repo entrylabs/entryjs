@@ -61,6 +61,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
         var CONTENT_HEIGHT = this._CONTENT_HEIGHT;
         var y = this.position && this.position.y ? this.position.y : 0;
         y -= CONTENT_HEIGHT/2;
+
         this._header = this.svgGroup.elem('rect', {
                 x: 0,
                 y: y,
@@ -247,7 +248,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
 
     p.getTextWidth = function() {
         if (!this.textElement) return X_PADDING;
-        return this.textElement.getBoundingClientRect().width + X_PADDING;
+        return this.getTextBBox().width + X_PADDING;
     };
 
     p.getText = function() {
