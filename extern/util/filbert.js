@@ -2127,7 +2127,7 @@
       node.operator = tokVal;
       node.left = left;
       next();
-      node.right = parseMaybeTuple(noIn);
+      node.right = parseMaybeNode(parseMaybeTuple(noIn), noIn);
       checkLVal(left);
 
       if (left.type === "Identifier" && !scope.exists(left.name)) {
@@ -2139,6 +2139,19 @@
       return finishNode(node, "AssignmentExpression");
     }
     return left;
+  }
+
+  function parseMaybeNode(item, noIn) {
+    if(tokType.isAssign) {
+      var childNode = startNodeFrom(item);
+      childNode.operator = tokVal;
+      childNode.left = item;
+      next();
+      var childItem = parseMaybeTuple(noIn);
+      childNode.right = parseMaybeNode(childItem, noIn);
+      return finishNode(childNode, "AssignmentExpression");
+    }
+    return item;
   }
 
   // Parse a tuple
