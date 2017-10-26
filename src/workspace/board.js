@@ -876,7 +876,7 @@ Entry.Board.DRAG_RADIUS = 5;
             if (!prevBlock && block.thread instanceof Entry.Thread &&
                block.thread.parent instanceof Entry.Code) {
                 nextBlock = block.thread.getBlock(
-                    block.thread.indexOf(block) + count)
+                    block.thread.indexOf(block) + count);
 
                 if (nextBlock)
                     backupPos = nextBlock.view.getAbsoluteCoordinate();
@@ -1038,7 +1038,7 @@ Entry.Board.DRAG_RADIUS = 5;
         }
         if (Entry.windowResized) {
             Entry.windowResized
-                .attach(this, _.debounce(this.updateOffset, 200));
+                .attach(this, Entry.Utils.debounce(this.updateOffset, 200));
         }
     };
 

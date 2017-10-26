@@ -224,6 +224,11 @@ Entry.BlockToPyParser = function() {
                     var forStmtText = forStmtTokens.join(" ");
                     blockToken = forStmtText;
                 }
+                
+                if(syntaxObj && syntaxObj.key == "substring" && i == 2 && Entry.Utils.isNumber(result)) {
+                    result = '"' + result + '"';
+                }
+
                 result += blockToken;
             }
         }

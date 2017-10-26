@@ -719,6 +719,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
             if (value === "None"){
                 return;
+            } else if (!component.value) {
+                value = 0;
             } else if(component.value.constructor === String){
                 if(component.raw.includes('"') || component.raw.includes("'"))
                     value = component.raw.substr(1, component.raw.length-2);
