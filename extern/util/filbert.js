@@ -2108,27 +2108,46 @@
 
   function parseMaybeAssign(noIn) {
     var left = parseMaybeTuple(noIn);
-    if (tokType.isAssign) {
-      var tupleArgs = getTupleArgs(left);
-      if (tupleArgs) {
-        next();
-        var right = parseMaybeTuple(noIn);
-        var blockNode = startNodeFrom(left);
-        blockNode.body = unpackTuple(tupleArgs, right);
-        return finishNode(blockNode, "BlockStatement");
-      }
+    if (!tokType.isAssign)
+      return left;
+    var node;
+    while (tokType.isAssign) {
+      if (!node) {
+        var tupleArgs = getTupleArgs(left);
+        if (tupleArgs) {
+          next();
+          var right = parseMaybeTuple(noIn);
+          var blockNode = startNodeFrom(left);
+          blockNode.body = unpackTuple(tupleArgs, right);
+          return finishNode(blockNode, "BlockStatement");
+        }
 
-      if (scope.isClass()) {
-        var thisExpr = nc.createNodeFrom(left, "ThisExpression");
-        left = nc.createNodeFrom(left, "MemberExpression", { object: thisExpr, property: left });
-      }
+        if (scope.isClass()) {
+          var thisExpr = nc.createNodeFrom(left, "ThisExpression");
+          left = nc.createNodeFrom(left, "MemberExpression", { object: thisExpr, property: left });
+        }
 
-      var node = startNodeFrom(left);
-      node.operator = tokVal;
-      node.left = left;
+        node = startNodeFrom(left);
+        node.operator = tokVal;
+        checkLVal(left);
+        node.left = left;
+      }
+      
+      if (node.right) {
+        if (!node.left.length)
+          node.left = [node.left];
+        node.left.push(node.right);
+        var right = node.right;
+        if (right.type === "Identifier" && !scope.exists(right.name)) {
+          if (!node.operator || node.length > 1) unexpected();
+          scope.addVar(right.name);
+          // return nc.createVarDeclFromId(node.left, node.left, node.right);
+          // customized variable must be assign
+        }
+      }
+      
       next();
       node.right = parseMaybeTuple(noIn);
-      checkLVal(left);
 
       if (left.type === "Identifier" && !scope.exists(left.name)) {
         if (!node.operator || node.length > 1) unexpected();
@@ -2136,9 +2155,8 @@
         // return nc.createVarDeclFromId(node.left, node.left, node.right);
         // customized variable must be assign
       }
-      return finishNode(node, "AssignmentExpression");
     }
-    return left;
+    return finishNode(node, "AssignmentExpression");
   }
 
   // Parse a tuple
