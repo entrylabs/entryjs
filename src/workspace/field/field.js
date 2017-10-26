@@ -41,12 +41,12 @@ Entry.Field = function() {};
         this.isEditing() && Entry.Utils.blur();
 
         if (this.documentDownEvent) {
-            Entry.documentMousedown.detach(this.documentDownEvent);
+            this.documentDownEvent.destroy();
             delete this.documentDownEvent;
         }
 
         if (this.disposeEvent) {
-            Entry.disposeEvent.detach(this.disposeEvent);
+            this.disposeEvent.destroy();
             delete this.documentDownEvent;
         }
 
@@ -66,18 +66,15 @@ Entry.Field = function() {};
         func = func || function(skipCommand) {
             that.destroyOption(skipCommand);
         };
-        that.disposeEvent =
-            Entry.disposeEvent.attach(that, func);
+        that.disposeEvent = Entry.disposeEvent.attach(that, func);
     };
 
     p.align = function(x, y, animate) {
         animate = animate === undefined ? true : animate;
         var svgGroup = this.svgGroup;
         if (this._position) {
-            if (this._position.x)
-                x = this._position.x;
-            if (this._position.y)
-                y = this._position.y;
+            if (this._position.x) x = this._position.x;
+            if (this._position.y) y = this._position.y;
         }
 
         var transform = "translate(" + x + "," + y + ")";
@@ -91,10 +88,7 @@ Entry.Field = function() {};
                 transform: transform
             });
 
-        this.box.set({
-            x: x,
-            y: y
-        });
+        this.box.set({ x: x, y: y });
     };
 
     //get absolute position of field from parent board
@@ -157,9 +151,7 @@ Entry.Field = function() {};
             if (!data)
                 return data;
             return data.getDataByPointer(reference);
-        }
-        else
-            return data;
+        } else return data;
     };
 
     p.setValue = function(value, reDraw) {
@@ -174,8 +166,8 @@ Entry.Field = function() {};
             if (ref.length)
                 targetBlock = targetBlock.getDataByPointer(ref);
             targetBlock.params[index] = value;
-        } else
-            this._block.params[this._index] = value;
+        } else this._block.params[this._index] = value;
+
         if (reDraw) this._blockView.reDraw();
     };
 
@@ -285,7 +277,6 @@ Entry.Field = function() {};
             var key = query.shift();
             if (key === "option")
                 return this.optionGroup;
-
         }
 
         return this.svgGroup;

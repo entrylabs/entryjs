@@ -624,8 +624,18 @@ Entry.Playground = function() {
         textEditInput.onkeyup = textChangeApply;
         textEditInput.onchange = textChangeApply;
 
+        textEditInput.addEventListener('focusin', function () {
+            textEditInput.prevText = textEditInput.value;
+        });
         textEditInput.onblur = function() {
-            Entry.dispatchEvent('textEdited');
+            if(textEditInput.value !== textEditInput.prevText) {
+                Entry.do(
+                    'editText',
+                    textEditInput.value,
+                    textEditInput.prevText
+                );
+            }
+            // Entry.dispatchEvent('textEdited');
         };
         this.textEditInput = textEditInput;
         wrap.appendChild(textEditInput);
@@ -636,8 +646,18 @@ Entry.Playground = function() {
         textEditArea.onkeyup = textChangeApply;
         textEditArea.onchange = textChangeApply;
 
+        textEditArea.addEventListener('focusin', function () {
+            textEditArea.prevText = textEditArea.value;
+        });
         textEditArea.onblur = function() {
-            Entry.dispatchEvent('textEdited');
+            if(textEditArea.value !== textEditArea.prevText) {
+                Entry.do(
+                    'editText',
+                    textEditArea.value,
+                    textEditArea.prevText
+                );
+            }
+            // Entry.dispatchEvent('textEdited');
         };
         this.textEditArea = textEditArea;
         wrap.appendChild(textEditArea);
@@ -1168,7 +1188,7 @@ Entry.Playground = function() {
         var sound = Entry.playground.object.getSound(soundId);
         if (sound.fileurl) {
             if(sound.fileurl.indexOf('bark.mp3') > -1) {
-                window.open('/api/sprite/download/entryjs/' + encodeURIComponent(sound.fileurl) + '/' + encodeURIComponent(sound.name+'.mp3'));    
+                window.open('/api/sprite/download/entryjs/' + encodeURIComponent(sound.fileurl) + '/' + encodeURIComponent(sound.name+'.mp3'));
             } else {
                 window.open(sound.fileurl);
             }
@@ -1398,7 +1418,7 @@ Entry.Playground = function() {
             var listener = Entry.playground.resizeEvent
             if (listener) {
                 Entry.playground.resizing = false;
-                Entry.documentMousemove.detach(listener);
+                listener.destroy();
                 delete Entry.playground.resizeEvent;
             }
         });
@@ -1787,6 +1807,7 @@ Entry.Playground = function() {
         }
 
         blockMenu.hwCodeOutdated = true;
+        blockMenu._generateHwCode(true);
         blockMenu.reDraw();
     };
 

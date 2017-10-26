@@ -495,9 +495,22 @@ Entry.PyToBlockParser = function(blockSyntax) {
             case "-":
             case "+":
                 var result = this.Node(component.argument);
-                this.assert(result.type === "number", "Can't convert this operation")
-                result.params = ["-" + result.params[0]];
-                return result;
+                if (result.type === "number") {
+                    result.params = [component.operator + result.params[0]];
+                    return result;
+                } else {
+                    return {
+                        type: "calc_basic",
+                        params: [
+                            {
+                                type: "number",
+                                params: [component.operator + "1"]
+                            },
+                            "MULTI",
+                            result
+                        ]
+                    }
+                }
             default:
                 throw new Error("Unary operator " + component.operator + " is not supported");
         }
@@ -535,6 +548,17 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     this.divideOperator[operator]
                 ]
             };
+        } else if (operator === "**") {
+            this.assert(component.right.value === 2, component.right.value, component, "DEFAULT", "DEFAULT");
+            return {
+                type: "calc_operation",
+                params: [
+                    undefined,
+                    this.Node(component.left),
+                    undefined,
+                    "square"
+                ]
+            }
         } else {
             throw new Error("Not supported operator " + component.operator);
         }
@@ -677,12 +701,12 @@ Entry.PyToBlockParser = function(blockSyntax) {
         var codeMap = this.CodeMap(blockType);
         if (codeMap) {
             results = results.map(function(arg, index) {
-                if (codeMap[index]) {
-                    return codeMap[index][arg] || arg;
+                if (codeMap[index] && arg) {
+                    return codeMap[index][this.toLowerCase(arg)] || arg;
                 } else {
                     return arg;
                 }
-            });
+            }, this);
         }
 
         return results;
@@ -695,6 +719,8 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
             if (value === "None"){
                 return;
+            } else if (!component.value) {
+                value = 0;
             } else if(component.value.constructor === String){
                 if(component.raw.includes('"') || component.raw.includes("'"))
                     value = component.raw.substr(1, component.raw.length-2);
@@ -885,24 +911,10 @@ Entry.PyToBlockParser = function(blockSyntax) {
     };
 
     p.CodeMap = function(blockType) {
-        var blockSchema = Entry.block[blockType];
-        if (!blockSchema || !blockSchema.syntax || !blockSchema.syntax.py)
-            return;
-
-        var syntax = blockSchema.syntax.py[0].syntax;
-
-        if (!syntax)
-            return;
-
-        var callSyntax = syntax.split("(")[0];
-        var identifiers = callSyntax.split(".")
-
-        if (identifiers.length < 2)
-            return;
-
-        var objName = identifiers[0];
-        if (Entry.CodeMap[objName] && Entry.CodeMap[objName][blockType])
-            return Entry.CodeMap[objName][blockType];
+        for (var objName in Entry.CodeMap) {
+            if (Entry.CodeMap[objName] && Entry.CodeMap[objName][blockType])
+                return Entry.CodeMap[objName][blockType];
+        }
     };
 
     p.Block = function(result, blockInfo) {
@@ -1012,10 +1024,11 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 var temp = right.arguments.map(this.Node, this);
 
                 temp = temp.map(function(m){
-                    if(m.constructor === Object && 'params' in m)
-                        return {data : m.params[0]};
-                    else
+                    if(m.constructor === Object && 'params' in m) {
+                        return {data : typeof m.params[0] === "string" ? m.params[0].replace(/\\\"/gi, '"') : m.params[0]};
+                    } else {
                         return {data : m};
+                    }
                 });
 
                 obj.array = temp;
@@ -1094,7 +1107,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
             component.arguments
         )
         if (component.arguments.length > 2) {
-            obj.params[0] = Entry.CodeMap.Hamster.hamster_play_note_for[0][obj.params[0].toLowerCase()];
+            obj.params[0] = Entry.CodeMap.Hamster.hamster_play_note_for[0][this.toLowerCase(obj.params[0])];
         }
         return obj;
     };
@@ -1317,6 +1330,13 @@ Entry.PyToBlockParser = function(blockSyntax) {
             }
         }
         return null;
+    };
+    
+    p.toLowerCase = function(data) {
+        if (data && data.toLowerCase)
+            return data.toLowerCase();
+        else
+            return data;
     };
 
 })(Entry.PyToBlockParser.prototype);

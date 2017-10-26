@@ -5258,7 +5258,7 @@ Entry.block = {
         return script.getField("VALUE", script);
     }
 },
-    
+
 "iboard_tmp": {
     "color": "#00979D",
     "fontColor": "#fff",
@@ -13882,6 +13882,9 @@ Entry.block = {
             "align": "center"
         }
     ],
+    "def": {
+        "type": "functionAddButton"
+    },
     "events": {
         "mousedown": [
             function() {
@@ -28532,6 +28535,20 @@ Entry.block = {
                 type: "boolean_and_or"
             }
         ],
+        "pyHelpDef": {
+            "params": [
+                {
+                    "type": "boolean_shell",
+                    params: ["A"]
+                },
+                "AND",
+                {
+                    "type": "boolean_shell",
+                    params: ["B"]
+                },
+            ],
+            "type": "boolean_and_or"
+        },
         "paramsKeyMap": {
             "LEFTHAND": 0,
             "OPERATOR": 1,
@@ -28971,8 +28988,8 @@ Entry.block = {
         "isNotFor": [],
         "func": function (sprite, script) {
             var operator = script.getField("OPERATOR", script);
-            var leftValue = script.getStringValue("LEFTHAND", script);
-            var rightValue = script.getStringValue("RIGHTHAND", script);
+            var leftValue = script.getValue("LEFTHAND", script);
+            var rightValue = script.getValue("RIGHTHAND", script);
 
         switch(operator) {
             case 'EQUAL':
@@ -36183,6 +36200,9 @@ Entry.block = {
             "align": "center"
         }
     ],
+    "def": {
+        "type": "variableAddButton"
+    },
     "events": {
         "mousedown": [
             function() {
@@ -36203,6 +36223,9 @@ Entry.block = {
             "align": "center"
         }
     ],
+    "def": {
+        "type": "listAddButton"
+    },
     "events": {
         "mousedown": [
             function() {
@@ -54322,7 +54345,7 @@ codestar_tilt: {
         },
 },
 // */
-/* BYROBOT DroneFighter Flight End */    
+/* BYROBOT DroneFighter Flight End */
 /* BYROBOT PetroneV2 Controller Start */
 //*
 "byrobot_petrone_v2_controller_controller_value_button":
@@ -58859,7 +58882,7 @@ codestar_tilt: {
     "func": function (sprite, script) {
         var wheel = parseInt(script.getNumberValue("WHEEL", script));
         var accel = parseInt(script.getNumberValue("ACCEL", script));
-        
+
         return Entry.byrobot_petrone_v2_drive.sendControlDouble(script, wheel, accel, 0, false);
     },
 },
@@ -65980,6 +66003,7 @@ chocopi_servo_motor: {
             var f = function() {};
             f.prototype = Entry.block[block.parent];
             var schema = new f();
+            schema.syntax = undefined;
             for (var key in block) {
                 schema[key] = block[key];
             }

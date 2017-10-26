@@ -15,7 +15,8 @@ Entry.TextCodingError = {};
     tce.MESSAGE_SYNTAX_UNEXPECTED_TOKEN = "message_syntax_unexpected_token";
     tce.MESSAGE_SYNTAX_UNEXPECTED_CHARACTER = "message_syntax_unexpected_character";
     tce.MESSAGE_SYNTAX_UNEXPECTED_INDENT = "message_syntax_unexpected_indent";
-
+    tce.MESSAGE_SYNTAX_RESERVED_TOKEN = "message_syntax_reserved_token";
+    tce.MESSAGE_SYNTAX_RESERVED_TOKEN_LIST = "message_syntax_reserved_token_list";
 
     tce.MESSAGE_CONV_DEFAULT = "message_conv_default";
     tce.MESSAGE_CONV_NO_SUPPORT = "message_conv_no_support";

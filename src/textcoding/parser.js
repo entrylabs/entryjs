@@ -39,8 +39,24 @@ Entry.Parser = function(mode, type, cm, syntax) {
     this._onError = false;
     this._onRunError = false;
 
-    if (Entry.type === "workspace")
+    if (Entry.type === "workspace") {
         this._console = new Entry.Console();
+
+        var hwFunc = function() {
+            var _mode = this._mode;
+            if (_mode === null) return;
+            this.setAvailableCode();
+
+            delete this._syntax_cache[_mode];
+            this.syntax = this.mappingSyntax(_mode);
+            this._pyHinter && this._pyHinter.setSyntax(this.syntax);
+        }.bind(this);
+
+        //after hw code generated update syntax for this
+        //and update python hinter syntax
+        Entry.addEventListener('hwCodeGenerated', hwFunc);
+    }
+
 };
 
 (function(p) {
@@ -260,50 +276,57 @@ Entry.Parser = function(mode, type, cm, syntax) {
                 result = textCode;
                 break;
             case Entry.Vim.PARSER_TYPE_BLOCK_TO_PY:
-                Entry.getMainWS().blockMenu.renderText();
-                result = "";
+                try {
+                    Entry.getMainWS().blockMenu.renderText();
+                    result = "";
 
-                if (parseMode === Entry.Parser.PARSE_BLOCK &&
-                   code.type.substr(0, 5) === "func_") {
-                    var funcKeysBackup = Object.keys(this._execParser._funcDefMap);
-                }
-
-                var textCode = this._execParser.Code(code, parseMode);
-                if (!this._pyHinter)
-                    this._pyHinter = new Entry.PyHint(this.syntax);
-
-                if(!this._hasDeclaration)
-                    this.initDeclaration();
-
-                if(parseMode == Entry.Parser.PARSE_GENERAL) {
-                    if(this.py_variableDeclaration)
-                        result += this.py_variableDeclaration;
-
-                    if(this.py_listDeclaration)
-                        result += this.py_listDeclaration;
-
-                    if(this.py_variableDeclaration || this.py_listDeclaration)
-                        result += '\n';
-
-                    var funcDefMap = this._execParser._funcDefMap;
-                    var fd = "";
-
-                    for(var f in funcDefMap) {
-                        var funcDef = funcDefMap[f];
-                        fd += funcDef + '\n\n';
+                    if (parseMode === Entry.Parser.PARSE_BLOCK &&
+                    code.type.substr(0, 5) === "func_") {
+                        var funcKeysBackup = Object.keys(this._execParser._funcDefMap);
                     }
-                    result += fd;
-                } else if (parseMode === Entry.Parser.PARSE_BLOCK) {
-                    if (funcKeysBackup && funcKeysBackup.indexOf(code.type) < 0) {
-                        result += this._execParser._funcDefMap[code.type] + '\n\n';
-                    }
-                }
-                if(textCode)
-                    result += textCode.trim();
 
-                result = result.replace(/\t/g, "    ");
-                if(this._hasDeclaration)
-                    this.removeDeclaration();
+                    var textCode = this._execParser.Code(code, parseMode);
+                    if (!this._pyHinter)
+                        this._pyHinter = new Entry.PyHint(this.syntax);
+
+                    if(!this._hasDeclaration)
+                        this.initDeclaration();
+
+                    if(parseMode == Entry.Parser.PARSE_GENERAL) {
+                        if(this.py_variableDeclaration)
+                            result += this.py_variableDeclaration;
+
+                        if(this.py_listDeclaration)
+                            result += this.py_listDeclaration;
+
+                        if(this.py_variableDeclaration || this.py_listDeclaration)
+                            result += '\n';
+
+                        var funcDefMap = this._execParser._funcDefMap;
+                        var fd = "";
+
+                        for(var f in funcDefMap) {
+                            var funcDef = funcDefMap[f];
+                            fd += funcDef + '\n\n';
+                        }
+                        result += fd;
+                    } else if (parseMode === Entry.Parser.PARSE_BLOCK) {
+                        if (funcKeysBackup && funcKeysBackup.indexOf(code.type) < 0) {
+                            result += this._execParser._funcDefMap[code.type] + '\n\n';
+                        }
+                    }
+                    if(textCode)
+                        result += textCode.trim();
+
+                    result = result.replace(/\t/g, "    ");
+                    if(this._hasDeclaration)
+                        this.removeDeclaration();
+                } catch (e) {
+                    if (e.block) {
+                        Entry.toast.alert(Lang.TextCoding.title_converting, Lang.TextCoding.alert_legacy_no_support);
+                    }
+                    throw e;
+                }
 
                 break;
         }
@@ -334,6 +357,8 @@ Entry.Parser = function(mode, type, cm, syntax) {
         if (this._syntax_cache[mode])
             return this._syntax_cache[mode];
 
+        var availables = this.setAvailableCode();
+
         var types = Object.keys(Entry.block);
         var syntax = {};
         if(mode === Entry.Vim.WORKSPACE_MODE)
@@ -341,142 +366,127 @@ Entry.Parser = function(mode, type, cm, syntax) {
 
         for (var i = 0; i < types.length; i++) {
             var type = types[i];
+            if (Entry.type !== 'invisible' && availables.indexOf(type) < 0)
+                continue;
+
             var block = Entry.block[type];
 
-            if(mode === Entry.Vim.MAZE_MODE) {
-                if(this.availableCode.indexOf(type) > -1) {
-                    var syntaxArray = block.syntax;
-                    if (!syntaxArray)
-                        continue;
+            if (mode === Entry.Vim.MAZE_MODE) {
+                var syntaxArray = block.syntax;
+                if (!syntaxArray)
+                    continue;
 
-                    if(block.syntax.py)
-                        continue;
+                if(block.syntax.py)
+                    continue;
 
-                    var syntaxTemp = syntax;
+                var syntaxTemp = syntax;
 
-                    for (var j = 0; j < syntaxArray.length; j++) {
-                        var key = syntaxArray[j];
-                        if (j === syntaxArray.length - 2 &&
-                            typeof syntaxArray[j + 1] === "function") {
-                            syntaxTemp[key] = syntaxArray[j + 1];
-                            break;
-                        }
-                        if (!syntaxTemp[key]) {
-                            syntaxTemp[key] = {};
-                        }
-                        if (j === syntaxArray.length - 1) {
-                            syntaxTemp[key] = type;
-                        } else {
-                            syntaxTemp = syntaxTemp[key];
-                        }
+                for (var j = 0; j < syntaxArray.length; j++) {
+                    var key = syntaxArray[j];
+                    if (j === syntaxArray.length - 2 &&
+                        typeof syntaxArray[j + 1] === "function") {
+                        syntaxTemp[key] = syntaxArray[j + 1];
+                        break;
+                    }
+                    if (!syntaxTemp[key]) {
+                        syntaxTemp[key] = {};
+                    }
+                    if (j === syntaxArray.length - 1) {
+                        syntaxTemp[key] = type;
+                    } else {
+                        syntaxTemp = syntaxTemp[key];
                     }
                 }
-            } else {
-                if(mode === Entry.Vim.WORKSPACE_MODE) {
-                    var key = type;
-                    var pySyntax = null;
+            } else if (mode === Entry.Vim.WORKSPACE_MODE) {
+                var key = type;
+                var pySyntax = block.syntax && block.syntax.py;
 
-                    if(block.syntax && block.syntax.py)
-                        pySyntax = block.syntax.py;
+                if (!pySyntax) continue;
 
-                    if (!pySyntax)
-                        continue;
+                pySyntax.map(function(s) {
+                    var result, tokens;
 
-                    pySyntax.map(function(s) {
-                        var result, tokens;
-                        if (typeof s === "string") {
-                            result = {};
-                            tokens = s;
-                            result.key = key;
-                            result.syntax = s;
-                            result.template = s;
-                        } else {
-                            result = s;
-                            tokens = s.syntax;
-                            s.key = key;
-                            if(!s.template)
-                                result.template = s.syntax;
-                            if (s.dic)
-                                syntax["#dic"][s.dic] = key;
+                    if (typeof s === "string") {
+                        result = {};
+                        tokens = s;
+                        result.key = key;
+                        result.syntax = s;
+                        result.template = s;
+                    } else {
+                        result = s;
+                        tokens = s.syntax;
+                        s.key = key;
+                        if (!s.template) result.template = s.syntax;
+                        if (s.dic) syntax["#dic"][s.dic] = key;
+                    }
+
+                    tokens = tokens.split('(');
+
+                    if (/%/.test(tokens[1])) {
+                        if (tokens[0].length) tokens = tokens[0];
+                        else tokens = tokens.join('(');
+                    } else tokens = tokens.join('(');
+
+                    tokens = tokens.replace(/\(\):?/, "");
+
+                    if (s.keyOption) tokens += "#" + s.keyOption;
+
+                    tokens = tokens.split(".");
+
+                    var newTokens = [];
+                    newTokens.push(tokens.shift());
+                    var restToken = tokens.join('.');
+                    if (restToken !== '') newTokens.push(restToken);
+                    tokens = newTokens;
+
+                    var syntaxPointer = syntax;
+                    for (var i = 0; i < tokens.length; i++) {
+                        var syntaxKey = tokens[i];
+                        if (i === tokens.length - 1) {
+                            syntaxPointer[syntaxKey] = result;
+                            var anotherKey = that._getAnotherSyntaxKey(syntaxKey);
+                            if (anotherKey)
+                                syntaxPointer[anotherKey] = result;
+                            break;
                         }
-
-                        tokens = tokens.split('(');
-
-                        if(tokens[1] && tokens[1].indexOf('%') > -1) {
-                            if(tokens[0].length !== 0)
-                                tokens = tokens[0];
-                            else
-                                tokens = tokens.join('(');
-                        } else {
-                            tokens = tokens.join('(');
-                        }
-
-                        tokens = tokens.replace("():", "");
-                        tokens = tokens.replace("()", "");
-
-                        if(s.keyOption)
-                            tokens += "#" + s.keyOption;
-
-                        tokens = tokens.split(".");
-
-                        var newTokens = [];
-                        newTokens.push(tokens.shift());
-                        var restToken = tokens.join('.');
-                        if(restToken !== '')
-                            newTokens.push(restToken);
-                        tokens = newTokens;
-
-                        var syntaxPointer = syntax;
-                        for (var i = 0; i < tokens.length; i++) {
-                            var syntaxKey = tokens[i];
-                            if (i === tokens.length - 1) {
-                                syntaxPointer[syntaxKey] = result;
-                                var anotherKey = that._getAnotherSyntaxKey(syntaxKey);
-                                if (anotherKey)
-                                    syntaxPointer[anotherKey] = result;
-                                break;
-                            }
-                            if (!syntaxPointer[syntaxKey]) syntaxPointer[syntaxKey] = {};
-                            syntaxPointer = syntaxPointer[syntaxKey];
-                        }
-                    });
-                }
+                        if (!syntaxPointer[syntaxKey]) syntaxPointer[syntaxKey] = {};
+                        syntaxPointer = syntaxPointer[syntaxKey];
+                    }
+                });
             }
         }
         this._syntax_cache[mode] = syntax;
         return syntax;
     };
 
-    p.setAvailableCode = function (configCode, playerCode) {
-        var availableList = [];
-        var blocks;
-        if (configCode instanceof Entry.Code)
-            blocks = configCode.getBlockList();
-        else {
-            configCode.forEach(function (items, i) {
-                blocks.concat(items);
-            });
+    p.setAvailableCode = function () {
+        var WS = Entry.getMainWS();
+        if (!WS) return;
+
+        var blockMenu = WS.blockMenu;
+        var board = WS.board;
+        var container = Entry.conatainer;
+
+        var blocks = [];
+
+        if (blockMenu && blockMenu.code) {
+            blocks = blocks.concat(blockMenu.code.getBlockList());
         }
 
-        blocks.forEach(function (item) {
-            availableList.push(item.type);
-        });
-
-        blocks = [];
-        if (playerCode instanceof Entry.Code)
-            blocks = playerCode.getBlockList();
-        else {
-            playerCode.forEach(function (items, i) {
-                blocks.concat(items);
-            });
+        if (container) {
+            blocks = blocks.concat(container.getBlockList());
+        } else if (!container && board && board.code) {
+            blocks = blocks.concat(board.code.getBlockList());
         }
 
-        blocks.forEach(function(item) {
-            if(availableList.indexOf(item.type) === -1)
-                availableList.push(item.type);
+        blocks = blocks.map(function(b) { return b.type });
+        blocks = blocks.filter(function(b, index) {
+            return blocks.indexOf(b) === index;
         });
 
-        this.availableCode = this.availableCode.concat(availableList);
+        this.availableCode = blocks;
+
+        return blocks;
     };
 
     p.findSyntaxError = function(error, threadCount) {

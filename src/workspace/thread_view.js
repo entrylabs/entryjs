@@ -97,10 +97,10 @@ Entry.ThreadView = function(thread, board) {
                     left: coord.x + boardOffset.left - halfWidth,
                     width: 2 * halfWidth,
                     height: 2 * halfWidth
-                }
+                };
             }.bind(this)
-        }
-    }
+        };
+    };
 
     p.dominate = function() {
         !this._hasGuide && this.parent.dominate(this.thread);
