@@ -642,7 +642,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
             var syntax = this.PySyntax(blockSchema, defaultParams);
             var indexes = syntax.match( /%\d+/g, '');
             if (!indexes)
-                return []
+                return defaultParams || []; 
             sortedArgs = defaultParams || new Array();
 
             for(var i=0; i < indexes.length; i++) {
