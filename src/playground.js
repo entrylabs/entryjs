@@ -31,7 +31,6 @@ Entry.Playground = function() {
 (function(p) {
     p.setMode = function(mode) {
         console.log("playground setMode", mode);
-
         this.mainWorkspace.setMode(mode);
     };
 
@@ -1432,12 +1431,7 @@ Entry.Playground = function() {
 
         if (engine && engine.isState('run')) return;
 
-        (function(workspace) {
-            if (workspace) {
-                workspace.getBoard().reDraw();
-                workspace.getBlockMenu().reDraw();
-            }
-        })(this.mainWorkspace);
+        this.mainWorkspace && this.mainWorkspace.dReDraw();
     };
 
     /**
