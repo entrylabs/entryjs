@@ -66057,7 +66057,7 @@ chocopi_servo_motor: {
             var dev = script.getField('DEVICE');
             return pd[dev];
         },
-        "syntax": {"js": [], "py": ["hummingbird.sensorValue(%1)"]}
+        "syntax": {"js": [], "py": ["hummingbird.temperatureValue(%1)"]}
     },
     // 빛 블럭
     hummingbird_lightValue: {
@@ -66095,7 +66095,7 @@ chocopi_servo_motor: {
             var light_value = Math.round(pd[dev]*100/1024);
             return light_value;
         },
-        "syntax": {"js": [], "py": ["hummingbird.sensorValue(%1)"]}
+        "syntax": {"js": [], "py": ["hummingbird.lightValue(%1)"]}
     },
 
     // 거리센서 블럭
@@ -66149,7 +66149,7 @@ chocopi_servo_motor: {
             else distance_value = 100;
             return distance_value.toFixed(0);
         },
-        "syntax": {"js": [], "py": ["hummingbird.sensorValue(%1)"]}
+        "syntax": {"js": [], "py": ["hummingbird.distanceValue(%1)"]}
     },
 
 // 소음 센서 블럭
@@ -66189,7 +66189,7 @@ chocopi_servo_motor: {
             if (sound_value>100) sound_value = 100;
             return sound_value;
         },
-        "syntax": {"js": [], "py": ["hummingbird.sensorValue(%1)"]}
+        "syntax": {"js": [], "py": ["hummingbird.soundValue(%1)"]}
     },
     // 회전센서
     hummingbird_rotaryValue: {
@@ -66228,7 +66228,7 @@ chocopi_servo_motor: {
 			//if (rotary_value == 0) rotary_value = 1;
             return rotary_value;
         },
-        "syntax": {"js": [], "py": ["hummingbird.sensorValue(%1)"]}
+        "syntax": {"js": [], "py": ["hummingbird.rotaryValue(%1)"]}
     },
     //진동모터
     hummingbird_vibeMotor: {
@@ -66273,19 +66273,13 @@ chocopi_servo_motor: {
             var sq = Entry.hw.sendQueue;
             var dev = script.getStringField("DEVICE", script);
             var value = script.getNumberValue("VALUE", script);
-            if(value==0) value = 256;
-            else if(value>100) value = 255;
-            else if(value<0) value = 256;
-            else value = Math.round(value * 2.55);
+
+            if (value>100) value = 127;
+            else if(value<0) value = 0;
+            else value = Math.floor(value*1.27);  // 0 ~ 127
             
-            if (dev == 'vibeMotor1')
-            {
-                sq.vibrat1 = value;
-            }
-            else if(dev == 'vibeMotor2')
-            {
-                sq.vibrat2 = value;
-            }   
+            if (dev == 'vibeMotor1') sq.vibrat1 = value;
+            else if (dev == 'vibeMotor2') sq.vibrat2 = value;
             return script.callReturn();
         },
         "syntax": {"js": [], "py": ["hummingbird.vibeMotor(%1, %2)"]}
@@ -66336,14 +66330,16 @@ chocopi_servo_motor: {
             var mtype = script.getStringField("DEVICE", script);
             var angle = script.getNumberValue("VALUE", script);
         
-            if(angle == 0) angle = 1;
-            if(mtype == 'servo1')    sq.servo1 = angle;
+            if (angle < 0) angle = 0;
+            else if (angle > 180) angle = 180;
+
+            if (mtype == 'servo1')    sq.servo1 = angle;
             else if(mtype == 'servo2')  sq.servo2 = angle;
             else if(mtype == 'servo3')  sq.servo3 = angle;
             else if(mtype == 'servo4')  sq.servo4 = angle;
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["hummingbird.vibeMotor(%1, %2)"]}
+        "syntax": {"js": [], "py": ["hummingbird.servo(%1, %2)"]}
     },   
     
     hummingbird_dcMotor: {
@@ -66394,17 +66390,13 @@ chocopi_servo_motor: {
             var dir = script.getStringField("DEVICE", script);
             var speed =script.getNumberValue('VALUE', script);
 
-            if(speed==0) speed = 256;
-            else if(speed>=100) speed = 255;
-            else if(speed<=-100) speed = -255;
-            else if (speed<0 && speed > -100) speed = Math.round((speed - 40) * 1.82);
-            else if (speed>0 && speed <100) speed = Math.round((speed + 40) * 1.82);         
+            if (speed==0) speed = 256;
+            else if(speed>100) speed = 127;
+            else if(speed<-100) speed = -127;
+            else speed = Math.floor(speed*1.27); // range : -127~127
 
-            if (dir == 'dcMotor1')
-
-                sq.dcMotor1 = speed;    
-            else if (dir == 'dcMotor2')
-                sq.dcMotor2 = speed;
+            if (dir == 'dcMotor1') sq.dcMotor1 = speed;    
+            else if (dir == 'dcMotor2') sq.dcMotor2 = speed;
             return script.callReturn();
         },
         "syntax": {"js": [], "py": ["hummingbird.dcMotor(%1, %2)"]}
@@ -66459,30 +66451,17 @@ chocopi_servo_motor: {
             var sq = Entry.hw.sendQueue;
             var ledtype = script.getStringField("DEVICE", script);
             var value = script.getNumberValue("VALUE", script);
-            if(value==0) value = 256;
-            else if (value > 100) value = 255 ;
-            else if (value < 0 ) value = 256;
-            else value = Math.floor(value * 2.5);
-            
-            if(ledtype == 'led1')
-            {
-                sq.led1 = value;
-            }
-            else if(ledtype == 'led2')
-            {
-                sq.led2 = value;
-            }
-            else if(ledtype == 'led3')
-            {
-                sq.led3 = value;
-            }
-            else if(ledtype == 'led4')
-            {
-                sq.led4 = value;
-            }
+            if (value > 100) value = 100;
+            if (value < 0) value = 0;
+            value = Math.floor(value * 2.55);
+
+            if(ledtype == 'led1') sq.led1 = value;
+            else if(ledtype == 'led2') sq.led2 = value;
+            else if(ledtype == 'led3') sq.led3 = value;
+            else if(ledtype == 'led4') sq.led4 = value;
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["hummingbird.dcMotor(%1, %2)"]}
+        "syntax": {"js": [], "py": ["hummingbird.led(%1, %2)"]}
     },
 
     //0914 수정됨
@@ -66557,40 +66536,31 @@ chocopi_servo_motor: {
             var colorRed = script.getNumberValue("cRED", script);
             var colorGreen = script.getNumberValue("cGREEN", script);
             var colorBlue = script.getNumberValue("cBLUE", script);
-            if(colorRed==0) colorRed = 256;
-            else if (colorRed > 100) colorRed = 255 ;
-            else if (colorRed < 0 ) colorRed = 256;
-            else colorRed = colorRed * 2.5;
 
-            if(colorGreen==0) colorGreen = 256;
-            else if (colorGreen > 100) colorRed = 255 ;
-            else if (colorGreen < 0 ) colorRed = 256;
-            else colorGreen = colorGreen * 2.5;
+            if (colorRed > 100) colorRed = 100;
+            if (colorGreen > 100) colorGreen = 100;
+            if (colorBlue > 100) colorBlue = 100;
+            if (colorRed < 0) colorRed = 0;
+            if (colorGreen < 0) colorGreen = 0;
+            if (colorBlue < 0) colorBlue = 0;
+            
+            colorRed = Math.floor(colorRed*2.55);
+            colorGreen = Math.floor(colorGreen*2.55);
+            colorBlue = Math.floor(colorBlue*2.55);
 
-            if(colorBlue==0) colorBlue = 256;
-            else if (colorBlue > 100) colorRed = 255 ;
-            else if (colorBlue < 0 ) colorRed = 256;
-            else colorBlue = colorBlue * 2.5;
-
-            colorRed = Math.floor(colorRed);
-            colorGreen = Math.floor(colorGreen);
-            colorBlue = Math.floor(colorBlue);
- 
-            if(ledtype == 'triLED1')
-            {
+            if(ledtype == 'triLED1') {
                 sq.triLEDR1 = colorRed;
                 sq.triLEDG1 = colorGreen;
                 sq.triLEDB1 = colorBlue;
-                }
-            else if(ledtype == 'triLED2')
-            {
+            }
+            else if(ledtype == 'triLED2') {
                 sq.triLEDR2 = colorRed;
                 sq.triLEDG2 = colorGreen;
                 sq.triLEDB2 = colorBlue;
-                }
+            }
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["hummingbird.dcMotor(%1, %2)"]}
+        "syntax": {"js": [], "py": ["hummingbird.triLED(%1, %2)"]}
     },
     //허밍버드 끝
 
