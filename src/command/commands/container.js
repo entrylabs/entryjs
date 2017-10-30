@@ -25,6 +25,20 @@ goog.require("Entry.STATIC");
                 ['objectIndex', Entry.container.getObjectIndex(objectId)],
             ];
         },
+        restrict: function(data, domQuery, callback, restrictor) {
+            Entry.container.scrollToObject(data.content[1][1]);
+            
+            return new Entry.Tooltip([{
+                title: data.tooltip.title,
+                content: data.tooltip.content,
+                target: domQuery
+            }], {
+                dimmed: true,
+                restrict: true,
+                callBack: function(isFromInit) {
+                }
+            });
+        },
         undo: "containerSelectObject",
         recordable: Entry.STATIC.RECORDABLE.SUPPORT,
         dom: ['container', 'objectIndex', '&1']
