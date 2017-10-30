@@ -1159,3 +1159,9 @@ Entry.Container.prototype.getBlockList = function() {
 
     return blocks;
 };
+
+Entry.Container.prototype.scrollToObject = function(ObjectId) {
+    var object = this.getObject(ObjectId);
+    
+    object.view_ && object.view_.scrollIntoView();
+};
