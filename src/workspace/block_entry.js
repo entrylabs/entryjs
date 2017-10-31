@@ -44774,6 +44774,710 @@ Entry.block = {
 */
 
 // mkboard Added 2017-07-04
+
+
+// memaker Added 2017-10-01
+"memaker_analog_list": {
+    "color": "#00979D",
+    "skeleton": "basic_string_field",
+    "statements": [],
+    "template": "%1",
+    "params": [
+        {
+            "type": "Dropdown",
+            "options": [
+                [ "A0", "0" ],
+                [ "A1", "1" ],
+                [ "A2", "2" ],
+                [ "A3", "3" ],
+                [ "A4", "4" ],
+                [ "A5", "5" ],
+                [ "A6", "6" ],
+                [ "A7", "7" ]
+            ],
+            "value": "0",
+            "fontSize": 11
+        }
+    ],
+    "events": {},
+    "def": {
+        "params": [ null ]
+    },
+    "paramsKeyMap": {
+        "PORT": 0
+    },
+    "func": function (sprite, script) {
+        return script.getField("PORT");
+    },
+    "syntax": {"js": [], "py": []}
+},
+"memaker_get_analog_value": {
+    "color": "#00979D",
+    "fontColor": "#fff",
+    "skeleton": "basic_string_field",
+    "statements": [],
+    "params": [
+        {
+            "type": "Block",
+            "accept": "string"
+        }
+    ],
+    "events": {},
+    "def": {
+        "params": [
+            {
+                "type": "memaker_analog_list"
+            }
+        ],
+        "type": "memaker_get_analog_value"
+    },
+    "paramsKeyMap": {
+        "PORT": 0
+    },
+    "class": "memakerGet",
+    "isNotFor": [ "memaker" ],
+    "func": function (sprite, script) {
+        var port = script.getValue("PORT", script);
+        var ANALOG = Entry.hw.portData.ANALOG;
+        if (port[0] === "A")
+            port = port.substring(1)
+        return ANALOG ? ANALOG[port] || 0 : 0;
+    },
+    "syntax": {"js": [], "py": []}
+},
+"memaker_get_analog_value_map": {
+    "color": "#00979D",
+    "fontColor": "#fff",
+    "skeleton": "basic_string_field",
+    "statements": [],
+    "params": [
+        {
+            "type": "Block",
+            "accept": "string"
+        },
+        {
+            "type": "Block",
+            "accept": "string"
+        },
+        {
+            "type": "Block",
+            "accept": "string"
+        },
+        {
+            "type": "Block",
+            "accept": "string"
+        },
+        {
+            "type": "Block",
+            "accept": "string"
+        }
+    ],
+    "events": {},
+    "def": {
+        "params": [
+            {
+                "type": "memaker_get_analog_value",
+                "params": [
+                    {
+                        "type": "memaker_analog_list"
+                    }
+                ]
+            },
+            {
+                "type": "number",
+                "params": [ "0" ]
+            },
+            {
+                "type": "number",
+                "params": [ "1023" ]
+            },
+            {
+                "type": "number",
+                "params": [ "0" ]
+            },
+            {
+                "type": "number",
+                "params": [ "100" ]
+            }
+        ],
+        "type": "memaker_get_analog_value_map"
+    },
+    "paramsKeyMap": {
+        "PORT": 0,
+        "VALUE2": 1,
+        "VALUE3": 2,
+        "VALUE4": 3,
+        "VALUE5": 4
+    },
+    "class": "memakerGet",
+    "isNotFor": [ "memaker" ],
+    "func": function (sprite, script) {
+        var result = script.getValue("PORT", script);
+        var ANALOG = Entry.hw.portData.ANALOG;
+        var value2 = script.getNumberValue("VALUE2", script);
+        var value3 = script.getNumberValue("VALUE3", script);
+        var value4 = script.getNumberValue("VALUE4", script);
+        var value5 = script.getNumberValue("VALUE5", script);
+
+        if (value2 > value3) {
+            var swap = value2;
+            value2 = value3;
+            value3 = swap;
+        }
+        if (value4 > value5) {
+            var swap = value4;
+            value4 = value5;
+            value5 = swap;
+        }
+        result -= value2;
+        result = result * ((value5 - value4) / (value3 - value2));
+        result += value4;
+        result = Math.min(value5, result);
+        result = Math.max(value4, result);
+
+        return result
+    },
+    "syntax": {"js": [], "py": []}
+},
+"memaker_get_ultrasonic_value": {
+    "color": "#00979D",
+    "fontColor": "#fff",
+    "skeleton": "basic_string_field",
+    "statements": [],
+    "params": [
+        {
+            "type": "Block",
+            "accept": "string"
+        },
+        {
+            "type": "Block",
+            "accept": "string"
+        }
+    ],
+    "events": {},
+    "def": {
+        "params": [{
+            type: 'arduino_get_port_number',
+            params: [ '7' ],
+        }, {
+            type: 'arduino_get_port_number',
+            params: [ '8' ],
+        }],
+        "type": "memaker_get_ultrasonic_value"
+    },
+    "paramsKeyMap": {
+        "PORT1": 0,
+        "PORT2": 1,
+    },
+    "class": "memakerGet",
+    "isNotFor": [ "memaker" ],
+    "func": function (sprite, script) {
+        var port1 = script.getNumberValue("PORT1", script);
+        var port2 = script.getNumberValue("PORT2", script);
+
+        if(!Entry.hw.sendQueue['SET']) {
+            Entry.hw.sendQueue['SET'] = {};
+        }
+        delete Entry.hw.sendQueue['SET'][port1];
+        delete Entry.hw.sendQueue['SET'][port2];
+
+        if(!Entry.hw.sendQueue['GET']) {
+            Entry.hw.sendQueue['GET'] = {};
+        }
+        Entry.hw.sendQueue['GET'][Entry.memaker.sensorTypes.ULTRASONIC] = {
+            port: [port1, port2],
+            time: new Date().getTime()
+        };
+        return Entry.hw.portData.ULTRASONIC || 0;
+    },
+    "syntax": {"js": [], "py": []}
+},
+"memaker_get_digital": {
+    "color": "#00979D",
+    "fontColor": "#fff",
+    "skeleton": "basic_boolean_field",
+    "params": [{
+        "type": "Block",
+        "accept": "string"
+    }],
+    "events": {},
+    "def": {
+        "params": [
+            {
+                "type": "arduino_get_port_number"
+            }
+        ],
+        "type": "memaker_get_digital"
+    },
+    "paramsKeyMap": {
+        "PORT": 0
+    },
+    "class": "memakerGet",
+    "isNotFor": [ "memaker" ],
+    "func": function (sprite, script) {
+        var port = script.getNumberValue("PORT", script);
+        var DIGITAL = Entry.hw.portData.DIGITAL;
+        if(!Entry.hw.sendQueue['GET']) {
+            Entry.hw.sendQueue['GET'] = {};
+        }
+        Entry.hw.sendQueue['GET'][Entry.memaker.sensorTypes.DIGITAL] = {
+            port: port,
+            time: new Date().getTime()
+        };
+        return (DIGITAL) ? DIGITAL[port] || 0 : 0;
+    },
+    "syntax": {"js": [], "py": []}
+},
+"memaker_toggle_led": {
+    "color": "#00979D",
+    "skeleton": "basic",
+    "statements": [],
+    "params": [
+        {
+            "type": "Block",
+            "accept": "string"
+        },
+        {
+            "type": "Block",
+            "accept": "string"
+        },
+        {
+            "type": "Indicator",
+            "img": "block_icon/hardware_03.png",
+            "size": 12
+        }
+    ],
+    "events": {},
+    "def": {
+        "params": [
+            {
+                "type": "arduino_get_port_number"
+            },
+            {
+                "type": "arduino_get_digital_toggle",
+                "params": [ "on" ],
+            },
+            null
+        ],
+        "type": "memaker_toggle_led"
+    },
+    "paramsKeyMap": {
+        "PORT": 0,
+        "VALUE": 1
+    },
+    "class": "memaker",
+    "isNotFor": [ "memaker" ],
+    "func": function (sprite, script) {
+        var port = script.getNumberValue("PORT");
+        var value = script.getValue("VALUE");
+
+        if(typeof value === 'string') {
+            value = value.toLowerCase();
+        }
+        if(Entry.memaker.highList.indexOf(value) > -1) {
+            value = 255;
+        } else if(Entry.memaker.lowList.indexOf(value) > -1) {
+            value = 0;
+        } else {
+            throw new Error();
+        }
+        if(!Entry.hw.sendQueue['SET']) {
+            Entry.hw.sendQueue['SET'] = {};
+        }
+        Entry.hw.sendQueue['SET'][port] = {
+            type: Entry.memaker.sensorTypes.DIGITAL,
+            data: value,
+            time: new Date().getTime()
+        };
+        return script.callReturn();
+    },
+    "syntax": {"js": [], "py": []}
+},
+"memaker_digital_pwm": {
+    "color": "#00979D",
+    "skeleton": "basic",
+    "statements": [],
+    "params": [
+        {
+            "type": "Block",
+            "accept": "string"
+        },
+        {
+            "type": "Block",
+            "accept": "string"
+        },
+        {
+            "type": "Indicator",
+            "img": "block_icon/hardware_03.png",
+            "size": 12
+        }
+    ],
+    "events": {},
+    "def": {
+        "params": [
+            {
+                "type": "arduino_get_pwm_port_number"
+            },
+            {
+                "type": "text",
+                "params": [ "255" ]
+            },
+            null
+        ],
+        "type": "memaker_digital_pwm"
+    },
+    "paramsKeyMap": {
+        "PORT": 0,
+        "VALUE": 1
+    },
+    "class": "memaker",
+    "isNotFor": [ "memaker" ],
+    "func": function (sprite, script) {
+        var port = script.getNumberValue("PORT");
+        var value = script.getNumberValue("VALUE");
+        value = Math.round(value);
+        value = Math.max(value, 0);
+        value = Math.min(value, 255);
+        if(!Entry.hw.sendQueue['SET']) {
+            Entry.hw.sendQueue['SET'] = {};
+        }
+        Entry.hw.sendQueue['SET'][port] = {
+            type: Entry.memaker.sensorTypes.PWM,
+            data: value,
+            time: new Date().getTime()
+        };
+        return script.callReturn();
+    },
+    "syntax": {"js": [], "py": []}
+},
+"memaker_set_servo": {
+    "color": "#00979D",
+    "skeleton": "basic",
+    "statements": [],
+    "params": [{
+        "type": "Block",
+        "accept": "string"
+    }, {
+        "type": "Block",
+        "accept": "string"
+    }, {
+        "type": "Indicator",
+        "img": "block_icon/hardware_03.png",
+        "size": 12
+    }],
+    "events": {},
+    "def": {
+        "params": [{
+                "type": "arduino_get_port_number",
+                "params": [ "10" ]
+            },
+            null
+        ],
+        "type": "memaker_set_servo"
+    },
+    "paramsKeyMap": {
+        "PORT": 0,
+        "VALUE": 1
+    },
+    "class": "memaker",
+    "isNotFor": [ "memaker" ],
+    "func": function (sprite, script) {
+        var sq = Entry.hw.sendQueue;
+        var port = script.getNumberValue("PORT", script);
+        var value = script.getNumberValue("VALUE", script);
+        value = Math.min(180, value);
+        value = Math.max(0, value);
+
+        if(!sq['SET']) {
+            sq['SET'] = {};
+        }
+        sq['SET'][port] = {
+            type: Entry.memaker.sensorTypes.SERVO_PIN,
+            data: value,
+            time: new Date().getTime()
+        };
+
+        return script.callReturn();
+    },
+    "syntax": {"js": [], "py": []}
+},
+
+
+"memaker_list_digital_lcd_line": {
+    "color": "#00979D",
+    "skeleton": "basic_string_field",
+    "statements": [],
+    "template": "%1",
+    "params": [
+        {
+            "type": "Dropdown",
+            "options": [
+                [ "LINE1", "0" ],
+                [ "LINE2", "1" ]
+            ],
+            "value": "0",
+            "fontSize": 11
+        }
+    ],
+    "events": {},
+    "def": {
+        "params": [ null ]
+    },
+    "paramsKeyMap": {
+        "LINE": 0
+    },
+    "func": function (sprite, script) {
+        return script.getField("LINE");
+    }
+},
+
+"memaker_list_digital_lcd_column": {
+    "color": "#00979D",
+    "skeleton": "basic_string_field",
+    "statements": [],
+    "template": "%1",
+    "params": [
+        {
+            "type": "Dropdown",
+            "options": [
+                [ "COL1", "0" ],
+                [ "COL2", "1" ],
+                [ "COL3", "2" ],
+                [ "COL4", "3" ],
+                [ "COL5", "4" ],
+                [ "COL6", "5" ],
+                [ "COL7", "6" ],
+                [ "COL8", "7" ],
+                [ "COL9", "8" ],
+                [ "COL10", "9" ],
+                [ "COL11", "10" ],
+                [ "COL12", "11" ],
+                [ "COL13", "12" ],
+                [ "COL14", "13" ],
+                [ "COL15", "14" ],
+                [ "COL16", "15" ],
+            ],
+            "value": "0",
+            "fontSize": 11
+        }
+    ],
+    "events": {},
+    "def": {
+        "params": [ null ]
+    },
+    "paramsKeyMap": {
+        "COLUMN": 0
+    },
+    "func": function (sprite, script) {
+        return script.getField("COLUMN");
+    }
+},
+
+"memaker_set_lcd": {
+    "color": "#00979D",
+    "fontColor": "#fff",
+    "skeleton": "basic",
+    "template": Lang.template.memaker_set_lcd,
+    "statements": [],
+    "params": [
+        {
+            "type": "Block",
+            "accept": "string"
+        },
+        {
+            "type": "Block",
+            "accept": "string"
+        },
+        {
+            "type": "Block",
+            "accept": "string"
+        },        
+        {
+            "type": "Indicator",
+            "img": "block_icon/hardware_03.png",
+            "size": 12
+        }
+    ],
+    "events": {},
+    "def": {
+        "params": [
+            {
+                "type": "memaker_list_digital_lcd_line"
+            },
+            {
+                "type": "memaker_list_digital_lcd_column"
+            },            
+            {
+                "type": "text",
+                "params": [ "Type text !!" ]
+            },
+            null
+        ],
+        "type": "memaker_set_lcd"
+    },
+    "paramsKeyMap": {
+        "LINE": 0,
+        "COLUMN": 1,
+        "STRING": 2,
+    },
+    "class": "memakerLcd",
+    "isNotFor": [ "memaker" ],
+    "func": function (sprite, script) {
+        var sq = Entry.hw.sendQueue;
+
+        // var direction = script.getValue("MOTOR_DIRECTION", script);
+        // var direction = script.getField("DIRECTION", script);
+
+        var line = script.getValue("LINE", script);
+        var column = script.getValue("COLUMN", script);
+        var string = script.getValue("STRING", script);
+        var text = [];
+
+        
+        if(!script.isStart) {
+            if(typeof string === 'string') {
+                for (var i = 0; i < string.length; i++) {
+                    text[i] = Entry.memaker.toByte(string[i]);
+                }
+            }
+            else if (typeof string === 'number') {
+                text[0] = 1;
+                text[1] = string / 1;
+            }
+            else {
+                text[0] = string;
+            }
+
+            if(!Entry.hw.sendQueue['SET']) {
+                Entry.hw.sendQueue['SET'] = {};
+            }
+
+            script.isStart = true;
+            script.timeFlag = 1;
+            var fps = Entry.FPS || 60;
+            timeValue = 60/fps*50;
+
+            Entry.hw.sendQueue['SET'][line] = {
+                type: Entry.memaker.sensorTypes.LCD,
+                data: {
+                    line: line,
+                    column: column,
+                    text0 : text[0],
+                    text1 : text[1],
+                    text2 : text[2],
+                    text3 : text[3],
+                    text4 : text[4],
+                    text5 : text[5],
+                    text6 : text[6],
+                    text7 : text[7],
+                    text8 : text[8],
+                    text9 : text[9],
+                    text10 : text[10],
+                    text11 : text[11],
+                    text12 : text[12],
+                    text13 : text[13],
+                    text14 : text[14],
+                    text15 : text[15]
+                },
+                time: new Date().getTime()
+            };
+
+            setTimeout(function() {
+                script.timeFlag = 0;
+            }, timeValue);
+            return script;
+        }
+        else if(script.timeFlag == 1) {
+            return script;
+        }
+        else {
+            delete script.timeFlag;
+            delete script.isStart;
+            Entry.engine.isContinue = false;
+            return script.callReturn();
+        }
+    },
+    "syntax": {"js": [], "py": ["memaker.memaker_set_lcd(%1, %2, %3)"]}
+},
+
+"memaker_list_lcd_command": {
+    "color": "#00979D",
+    "skeleton": "basic_string_field",
+    "statements": [],
+    "template": "%1",
+    "params": [
+        {
+            "type": "Dropdown",
+            "options": [
+                [ "LCD_CLEAR", "0" ],
+                [ "BACKLIGHT_ON", "1" ],
+                [ "BACKLIGHT_OFF", "2" ]
+            ],
+            "value": "0",
+            "fontSize": 11
+        }
+    ],
+    "events": {},
+    "def": {
+        "params": [ null ]
+    },
+    "paramsKeyMap": {
+        "COMMAND": 0
+    },
+    "func": function (sprite, script) {
+        return script.getField("COMMAND");
+    }
+},
+
+"memaker_lcd_command": {
+    "color": "#00979D",
+    "skeleton": "basic",
+    "template": Lang.template.memaker_lcd_command,
+    //"template": "%1 %2",
+    "statements": [],
+    "params": [
+        {
+            "type": "Block",
+            "accept": "string"
+        },
+        {
+            "type": "Indicator",
+            "img": "block_icon/hardware_03.png",
+            "size": 12
+        }
+    ],
+    "events": {},
+    "def": {
+        "params": [
+            {
+                "type": "memaker_list_lcd_command"
+            },
+            null
+        ],
+        "type": "memaker_lcd_command"
+    },
+    "paramsKeyMap": {
+        "COMMAND": 0,
+    },
+    "class": "memakerLcd",
+    "isNotFor": [ "memaker" ],
+    "func": function (sprite, script) {
+        var cmd = script.getNumberValue("COMMAND");
+
+        if(!Entry.hw.sendQueue['SET']) {
+            Entry.hw.sendQueue['SET'] = {};
+        }
+        Entry.hw.sendQueue['SET'][cmd] = {
+            type: Entry.memaker.sensorTypes.LCD_COMMAND,
+            time: new Date().getTime()
+        };
+        return script.callReturn();
+    },
+    "syntax": {"js": [], "py": []}
+},
+
+// memaker Added 2017-10-01
+
 "joystick_get_number_sensor_value": {
     "parent": "arduino_get_number_sensor_value",
     "isNotFor": [

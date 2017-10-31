@@ -1634,7 +1634,7 @@ Lang.Buttons = {
     "yes": "예",
     "button_no": "아니오",
     "quiz_retry": "다시 풀어보기",
-    "discuss_upload": "불러오기"
+    "discuss_upload": "불러오기"  
 };
 Lang.ko = "한국어";
 Lang.vn = "tiếng Việt";
@@ -2279,6 +2279,7 @@ Lang.Menus = {
     "joystick": "오렌지보드(조이스틱)",
     "ardublock": "아두블럭",
     "mkboard": "몽키보드",
+    "memaker": "미케이커",
     "codingtoolbox": "코딩툴박스",
     "materials_etc_all": "기타 교육자료 모음",
     "materials_teaching": "교원 연수 자료",
@@ -5940,7 +5941,16 @@ Lang.template = {
     "altino_light": "%1 등을 %2  %3",
     "altino_rear_wheel": "뒷바퀴 오른쪽 %1 왼쪽 %2 로 정하기 %3",
     "altino_sound": "%1 옥타브 %2 음을 연주하기  %3",
-    "altino_steering": "방향을 %1 로 정하기 %2"
+    "altino_steering": "방향을 %1 로 정하기 %2",
+    "memaker_digital_pwm": "디지털 %1 번 핀을 %2 (으)로 정하기 %3",
+    "memaker_get_analog_value": "아날로그 %1 번 센서값",
+    "memaker_get_analog_value_map": "%1 의 범위를 %2 ~ %3 에서 %4 ~ %5 로 바꾼값",
+    "memaker_get_digital": "디지털 %1 번 센서값",
+    "memaker_get_ultrasonic_value": "초음파센서 Trig %1 Echo %2 센서값",
+    "memaker_set_servo": "디지털 %1 번 핀의 서보모터를 %2 의 각도로 정하기 %3",
+    "memaker_toggle_led": "디지털 %1 번 핀 %2 %3",
+    "memaker_set_lcd": "1602 문자 LCD %1 행 , %2열에 %3 출력하기 %4",
+    "memaker_lcd_command": "1602 문자 LCD %1 명령실행하기 %2"
 };
 Lang.TextCoding = {
     "block_name": "블록명",
