@@ -45,7 +45,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
         var hwFunc = function() {
             var _mode = this._mode;
             if (_mode === null) return;
-            this.setAvailableCode();
+            //this.setAvailableCode();
 
             delete this._syntax_cache[_mode];
             this.syntax = this.mappingSyntax(_mode);
@@ -357,8 +357,6 @@ Entry.Parser = function(mode, type, cm, syntax) {
         if (this._syntax_cache[mode])
             return this._syntax_cache[mode];
 
-        var availables = this.setAvailableCode();
-
         var types = Object.keys(Entry.block);
         var syntax = {};
         if(mode === Entry.Vim.WORKSPACE_MODE)
@@ -366,8 +364,8 @@ Entry.Parser = function(mode, type, cm, syntax) {
 
         for (var i = 0; i < types.length; i++) {
             var type = types[i];
-            if (Entry.type !== 'invisible' && (!availables || (availables.indexOf(type) < 0)))
-                continue;
+            //if (Entry.type !== 'invisible' && (availables && (availables.indexOf(type) < 0)))
+                //continue;
 
             var block = Entry.block[type];
 
@@ -460,6 +458,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
     };
 
     p.setAvailableCode = function () {
+        return;
         var WS = Entry.getMainWS();
         if (!WS) return;
 
