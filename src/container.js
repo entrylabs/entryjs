@@ -1164,4 +1164,5 @@ Entry.Container.prototype.scrollToObject = function(ObjectId) {
     var object = this.getObject(ObjectId);
     
     object.view_ && object.view_.scrollIntoView();
+    document.body.scrollIntoView();
 };
