@@ -109,7 +109,7 @@ goog.require("Entry.Utils");
     c[COMMAND_TYPES.destroyBlock] = {
         do: function(block) {
             block = this.editor.board.findBlock(block);
-            block.destroy(true);
+            block.doDestroy();
         },
         state: function(block) {
             var isThread = false;
