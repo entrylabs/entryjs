@@ -66055,7 +66055,8 @@ chocopi_servo_motor: {
         "func": function (sprite, script) {
             var pd = Entry.hw.portData;
             var dev = script.getField('DEVICE');
-            return pd[dev];
+            var temperature_value = Math.round(pd[dev]*100/2048);
+            return temperature_value;
         },
         "syntax": {"js": [], "py": ["hummingbird.temperatureValue(%1)"]}
     },
@@ -66185,7 +66186,9 @@ chocopi_servo_motor: {
         "func": function (sprite, script) {
             var pd = Entry.hw.portData;
             var dev = script.getField('DEVICE');
-            var sound_value = Math.round(pd[dev]*330/1024);
+            var sound_value = pd[dev];
+            if (sound_value <= 35) sound_value = 1;
+            sound_value = Math.round(sound_value*100/330);
             if (sound_value>100) sound_value = 100;
             return sound_value;
         },
