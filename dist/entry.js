@@ -19957,7 +19957,7 @@ Entry.Parser = function(b, c, d, e) {
   this._onRunError = this._onError = !1;
   "workspace" === Entry.type && (this._console = new Entry.Console, b = function() {
     var c = this._mode;
-    null !== c && (delete this._syntax_cache[c], this.syntax = this.mappingSyntax(c), this._pyHinter && this._pyHinter.setSyntax(this.syntax));
+    null !== c && (this.setAvailableCode(), delete this._syntax_cache[c], this.syntax = this.mappingSyntax(c), this._pyHinter && this._pyHinter.setSyntax(this.syntax));
   }.bind(this), Entry.addEventListener("hwCodeGenerated", b));
 };
 (function(b) {
@@ -20096,61 +20096,76 @@ Entry.Parser = function(b, c, d, e) {
     if (this._syntax_cache[c]) {
       return this._syntax_cache[c];
     }
-    var d = Object.keys(Entry.block), g = {};
-    c === Entry.Vim.WORKSPACE_MODE && (g["#dic"] = {});
-    for (var h = 0; h < d.length; h++) {
-      var k = d[h], l = Entry.block[k];
-      if (c === Entry.Vim.MAZE_MODE) {
-        var m = l.syntax;
-        if (m && !l.syntax.py) {
-          for (var l = g, q = 0; q < m.length; q++) {
-            var n = m[q];
-            if (q === m.length - 2 && "function" === typeof m[q + 1]) {
-              l[n] = m[q + 1];
-              break;
+    var d = Object.keys(Entry.block), g = this.setAvailableCode(), h = {};
+    c === Entry.Vim.WORKSPACE_MODE && (h["#dic"] = {});
+    for (var k = 0; k < d.length; k++) {
+      var l = d[k];
+      if (!(c === Entry.Vim.MAZE_MODE && g && 0 > g.indexOf(l))) {
+        var m = Entry.block[l];
+        if (c === Entry.Vim.MAZE_MODE) {
+          var q = m.syntax;
+          if (q && !m.syntax.py) {
+            for (var m = h, n = 0; n < q.length; n++) {
+              var r = q[n];
+              if (n === q.length - 2 && "function" === typeof q[n + 1]) {
+                m[r] = q[n + 1];
+                break;
+              }
+              m[r] || (m[r] = {});
+              n === q.length - 1 ? m[r] = l : m = m[r];
             }
-            l[n] || (l[n] = {});
-            q === m.length - 1 ? l[n] = k : l = l[n];
           }
+        } else {
+          c === Entry.Vim.WORKSPACE_MODE && (r = l, (l = m.syntax && m.syntax.py) && l.map(function(c) {
+            if ("string" === typeof c) {
+              var d = {};
+              var e = c;
+              d.key = r;
+              d.syntax = c;
+              d.template = c;
+            } else {
+              d = c, e = c.syntax, c.key = r, c.template || (d.template = c.syntax), c.dic && (h["#dic"][c.dic] = r);
+            }
+            e = e.split("(");
+            e = /%/.test(e[1]) ? e[0].length ? e[0] : e.join("(") : e.join("(");
+            e = e.replace(/\(\):?/, "");
+            c.keyOption && (e += "#" + c.keyOption);
+            e = e.split(".");
+            c = [];
+            c.push(e.shift());
+            e = e.join(".");
+            "" !== e && c.push(e);
+            e = c;
+            c = h;
+            for (var f = 0; f < e.length; f++) {
+              var g = e[f];
+              if (f === e.length - 1) {
+                c[g] = d;
+                (e = b._getAnotherSyntaxKey(g)) && (c[e] = d);
+                break;
+              }
+              c[g] || (c[g] = {});
+              c = c[g];
+            }
+          }));
         }
-      } else {
-        c === Entry.Vim.WORKSPACE_MODE && (n = k, (k = l.syntax && l.syntax.py) && k.map(function(c) {
-          if ("string" === typeof c) {
-            var d = {};
-            var e = c;
-            d.key = n;
-            d.syntax = c;
-            d.template = c;
-          } else {
-            d = c, e = c.syntax, c.key = n, c.template || (d.template = c.syntax), c.dic && (g["#dic"][c.dic] = n);
-          }
-          e = e.split("(");
-          e = /%/.test(e[1]) ? e[0].length ? e[0] : e.join("(") : e.join("(");
-          e = e.replace(/\(\):?/, "");
-          c.keyOption && (e += "#" + c.keyOption);
-          e = e.split(".");
-          c = [];
-          c.push(e.shift());
-          e = e.join(".");
-          "" !== e && c.push(e);
-          e = c;
-          c = g;
-          for (var f = 0; f < e.length; f++) {
-            var h = e[f];
-            if (f === e.length - 1) {
-              c[h] = d;
-              (e = b._getAnotherSyntaxKey(h)) && (c[e] = d);
-              break;
-            }
-            c[h] || (c[h] = {});
-            c = c[h];
-          }
-        }));
       }
     }
-    return this._syntax_cache[c] = g;
+    return this._syntax_cache[c] = h;
   };
   b.setAvailableCode = function() {
+    var c = Entry.getMainWS();
+    if (c) {
+      var b = c.blockMenu, c = c.board, f = Entry.conatainer, g = [];
+      b && b.code && (g = g.concat(b.code.getBlockList()));
+      f ? g = g.concat(f.getBlockList()) : !f && c && c.code && (g = g.concat(c.code.getBlockList()));
+      g = g.map(function(c) {
+        return c.type;
+      });
+      return this.availableCode = g = g.filter(function(c, b) {
+        return g.indexOf(c) === b;
+      });
+    }
   };
   b.findSyntaxError = function(c, b) {
     b = c.loc;
@@ -27689,27 +27704,27 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
     this.box.set({x:0, y:0, width:c, height:e});
   };
   b.renderOptions = function() {
-    var b = this;
-    this._attachDisposeEvent(function(c) {
-      !0 !== c && b.applyValue();
-      b.destroyOption(c);
+    var c = this;
+    this._attachDisposeEvent(function(b) {
+      !0 !== b && c.applyValue();
+      c.destroyOption(b);
     });
     this.optionGroup = Entry.Dom("input", {class:"entry-widget-input-field", parent:$("body")});
     this.optionGroup.val(this.getValue());
     this.optionGroup.on("mousedown", function(b) {
       b.stopPropagation();
     });
-    this.optionGroup.on("keyup", function(c) {
-      var d = c.keyCode || c.which;
-      b.applyValue(c);
-      -1 < [13, 27].indexOf(d) && b.destroyOption(void 0, !0);
+    this.optionGroup.on("keyup", function(b) {
+      var d = b.keyCode || b.which;
+      c.applyValue(b);
+      -1 < [13, 27].indexOf(d) && c.destroyOption(void 0, !0);
     });
-    var d = this.getAbsolutePosFromDocument();
-    d.y -= this.box.height / 2;
-    this.optionGroup.css({height:this._CONTENT_HEIGHT, left:d.x, top:d.y, width:b.box.width});
+    var b = this.getAbsolutePosFromDocument();
+    b.y -= this.box.height / 2;
+    this.optionGroup.css({height:this._CONTENT_HEIGHT, left:b.x, top:b.y, width:c.box.width});
     this.optionGroup.focus && this.optionGroup.focus();
-    d = this.optionGroup[0];
-    d.setSelectionRange(0, d.value.length, "backward");
+    b = this.optionGroup[0];
+    b.setSelectionRange(0, b.value.length, "backward");
     this.optionDomCreated();
   };
   b.applyValue = function(b) {
