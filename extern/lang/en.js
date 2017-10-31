@@ -2279,6 +2279,7 @@ Lang.Menus = {
     "joystick": "orangeBoard(joystick)",
     "ardublock": "ardublock",
     "mkboard": "monkeyboard",
+    "memaker": "memaker",
     "codingtoolbox": "codingtoolbox",
     "materials_etc_all": "Other Educational Materials",
     "materials_teaching": "For Teacher Education",
@@ -5940,7 +5941,16 @@ Lang.template = {
     "altino_light": "%1 light %2  %3",
     "altino_rear_wheel": "rear motor right %1 left %2 setting %3",
     "altino_sound": "%1 octave %2 play  %3",
-    "altino_steering": "direction %1 setting %2"
+    "altino_steering": "direction %1 setting %2",
+    "memaker_digital_pwm": "Digital %1 Pin %2 %3",
+    "memaker_get_analog_value": "Analog %1 Sensor value",
+    "memaker_get_analog_value_map": "Map Value %1 %2 ~ %3 to %4 ~ %5",
+    "memaker_get_digital": "Digital %1 Sensor value",
+    "memaker_get_ultrasonic_value": "Read ultrasonic sensor trig pin %1 echo pin %2",
+    "memaker_set_servo": "Set servo pin %1 angle as %3",
+    "memaker_toggle_led": "Digital %1 Pin %2 %3",
+    "memaker_set_lcd": "1602 LCD Row %1, Column %2 Value %3 %4",
+    "memaker_lcd_command": "1602 LCD Command %1 execute %2"
 };
 Lang.TextCoding = {
     "block_name": "Block Name",
