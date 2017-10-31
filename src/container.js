@@ -47,6 +47,9 @@ Entry.Container = function() {
             });
         }
     }.bind(this));
+
+    Entry.addEventListener('run', this.disableSort.bind(this));
+    Entry.addEventListener('stop', this.enableSort.bind(this));
 };
 
 /**
@@ -145,36 +148,35 @@ Entry.Container.prototype.generateView = function(containerView, option) {
  * enable sort.
  */
 Entry.Container.prototype.enableSort = function() {
-    if ($)
-        $(this.listView_).sortable({
-            start: function(event, ui) {
-                ui.item.data('start_pos', ui.item.index());
-            },
-            stop: function(event, ui){
-                var start = ui.item.data('start_pos');
-                var end = ui.item.index();
-                Entry.container.moveElement(start, end);
-            },
-            axis: 'y',
-            cancel: 'input.selectedEditingObject'
-        });
+    var view = this.listView_;
+    $(view).sortable({
+        start: function(event, ui) {
+            ui.item.data('start_pos', ui.item.index());
+        },
+        stop: function(event, ui){
+            Entry.container.moveElement(
+                ui.item.data('start_pos'),
+                ui.item.index()
+            );
+        },
+        axis: 'y',
+        cancel: 'input.selectedEditingObject'
+    });
 };
 
 /**
  * disable sort.
  */
 Entry.Container.prototype.disableSort = function() {
-    if ($) {
-        $(this.listView_).sortable('destroy');
-    }
+    var view = this.listView_;
+    $(view).sortable('destroy');
 };
 
 /**
  * update list view to sort item.
  */
 Entry.Container.prototype.updateListView = function() {
-    if (!this.listView_)
-        return;
+    if (!this.listView_) return;
 
     var view = this.listView_;
 
@@ -340,16 +342,15 @@ Entry.Container.prototype.removeExtension = function(obj) {
  * @param {!Entry.EntryObject} object
  */
 Entry.Container.prototype.addCloneObject = function(object, scene) {
-    var json = object.toJSON();
-    var newObjectId = Entry.generateHash();
+    var json = object.toJSON(true);
     Entry.variableContainer.addCloneLocalVariables({
-        objectId: json.id,
-        newObjectId: newObjectId,
+        objectId: object.id,
+        newObjectId: json.id,
         json: json
     });
-    json.id = newObjectId;
     json.scene = scene || Entry.scene.selectedScene;
     this.addObject(json);
+    return this.getObject(json.id);
 };
 
 /**
@@ -380,7 +381,6 @@ Entry.Container.prototype.removeObject = function(object) {
 
     if (currentObjects.length)
         this.selectObject(currentObjects[0].id);
-
     else {
         this.selectObject();
         Entry.playground.flushPlayground();
@@ -402,31 +402,33 @@ Entry.Container.prototype.selectObject = function(objectId, changeScene) {
     var object = this.getObject(objectId);
     var workspace = Entry.getMainWS();
 
-    if (changeScene && object) {
+    if (changeScene && object)
         Entry.scene.selectScene(object.scene);
-    }
 
-    this.mapObjectOnScene(function(object) {
-        !object.view_ && object.generateView && object.generateView();
-        object.view_ && object.view_.removeClass('selectedObject');
-        object.isSelected_ = false;
+    var className = 'selectedObject'
+    this.mapObjectOnScene(function(o) {
+        !o.view_ && o.generateView && o.generateView();
+        var selected = o === object;
+        var view = o.view_;
+        if (selected) view && view.addClass(className);
+        else view && view.removeClass(className);
+
+        o.isSelected_ = selected;
     });
 
     if (object) {
-        object.view_ && object.view_.addClass('selectedObject');
-        object.isSelected_ = true;
-
         if(workspace && workspace.vimBoard && Entry.isTextMode) {
             var sObject = workspace.vimBoard._currentObject;
             var parser = workspace.vimBoard._parser;
-            if(parser && parser._onError) {
+            if (sObject && !this.getObject(sObject.id)) {
+            } else if(parser && parser._onError) {
                 if(sObject && (object.id != sObject.id)) {
                     if(!Entry.scene.isSceneCloning) {
                         try { workspace._syncTextCode(); }
                         catch(e) {}
                         if(parser && !parser._onError) {
                             Entry.container.selectObject(object.id, true);
-                            return
+                            return;
                         }
                         else {
                             Entry.container.selectObject(sObject.id, true);
@@ -437,8 +439,7 @@ Entry.Container.prototype.selectObject = function(objectId, changeScene) {
                         return;
                     }
                 }
-            }
-            else {
+            } else {
                 if (sObject && (object.id != sObject.id)) {
                     if(!Entry.scene.isSceneCloning) {
                         try { workspace._syncTextCode(); } catch(e) {}
@@ -726,6 +727,7 @@ Entry.Container.prototype.mapObjectOnScene = function(mapFunction, param) {
     var objects = this.getCurrentObjects();
     var length = objects.length;
     var output = [];
+
     for (var i = 0; i<this._extensionObjects.length; i++) {
         var object = this._extensionObjects[i];
         output.push(mapFunction(object, param));
@@ -800,13 +802,11 @@ Entry.Container.prototype.mapEntityIncludeCloneOnScene = function(mapFunction, p
     }
     for (var i = 0; i<length; i++) {
         var object = objects[i];
-        var lenx = object.clonedEntities.length;
         output.push(mapFunction(object.entity, param));
-        for (var j = 0; j<lenx; j++) {
-            var entity = object.clonedEntities[j];
-            if (entity && !entity.isStamp)
-                output.push(mapFunction(entity, param));
-        }
+
+        object.getClonedEntities().forEach(function(entity) {
+            output.push(mapFunction(entity, param));
+        });
     }
     return output;
 };
@@ -827,6 +827,23 @@ Entry.Container.prototype.getCachedPicture = function(pictureId) {
  */
 Entry.Container.prototype.cachePicture = function(pictureId, image) {
     this.cachedPicture[pictureId] = image;
+};
+
+Entry.Container.prototype.unCachePictures = function(entity, pictures, isClone) {
+    if (!entity || !pictures) return;
+    var entityId;
+
+    if (pictures.constructor !== Array)
+        pictures = [pictures];
+
+    if (entity.constructor === Entry.EntityObject)
+        entityId = entity.id;
+    else entityId = entity;
+
+    pictures.forEach(function(p) {
+        var id = p.id + (isClone ? '' : entityId);
+        delete this.cachedPicture[id];
+    }.bind(this));
 };
 
 /**
@@ -861,7 +878,7 @@ Entry.Container.prototype.loadSequenceSnapshot = function() {
     var arr = new Array(length);
     for (var i = 0; i<length; i++) {
         var object = this.objects_[i];
-        var _index = object.index || i;
+        var _index = object.index !== undefined ? object.index : i;
         arr[_index] = object;
         delete object.index;
     }
@@ -898,16 +915,11 @@ Entry.Container.prototype.setInputValue = function(inputValue) {
 };
 
 Entry.Container.prototype.resetSceneDuringRun = function() {
-    this.mapEntityOnScene(function(entity){
-        entity.loadSnapshot();
-        entity.object.filters = [];
-        entity.resetFilter();
-        if (entity.dialog)
-            entity.dialog.remove();
-        if (entity.shape)
-            entity.removeBrush();
-    });
+    if (!Entry.engine.isState('run')) return;
+
+    this.mapEntityOnScene(function(entity){ entity.reset(); });
     this.clearRunningStateOnScene();
+    Entry.stage.hideInputField();
 };
 
 Entry.Container.prototype.setCopiedObject = function(object) {
@@ -1099,4 +1111,30 @@ Entry.Container.prototype.getDom = function(query) {
         }
     } else {
     }
+};
+
+Entry.Container.prototype.isSceneObjectsExist = function() {
+    var objects = this.getSceneObjects();
+    return !!(objects && objects.length);
+}
+
+Entry.Container.prototype.adjustClonedValues = function(oldIds, newIds) {
+    if (!(oldIds && newIds)) return;
+    var that = this;
+    newIds.forEach(function(newId) {
+        that.getObject(newId)
+            .script.getBlockList()
+            .forEach(function(b) {
+                if (!b || !b.params) return;
+                var changed = false;
+                var ret = b.params.map(function(p) {
+                    if (typeof p !== 'string') return p;
+                    var index = oldIds.indexOf(p);
+                    if (index < 0) return p;
+                    changed = true;
+                    return newIds[index];
+                });
+                changed && b.set({params: ret});
+            });
+    });
 };

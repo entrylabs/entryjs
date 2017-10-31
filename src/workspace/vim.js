@@ -1,7 +1,7 @@
 'use strict';
 
-goog.provide("Entry.Vim");   
-  
+goog.provide("Entry.Vim");
+
 goog.require("Entry.TextCodingUtil");
 
 Entry.Vim = function(dom, textType) {
@@ -195,6 +195,10 @@ Entry.Vim.PYTHON_IMPORT_HW = "";
         }
 
         var textCode = this.codeMirror.getValue();
+        var cursor = this.doc.getCursor();
+        textCode = textCode.replace(/\t/gm, "    ");
+        this.codeMirror.setValue(textCode);
+        this.doc.setCursor(cursor);
         var code = this._parser.parse(textCode);
         return code;
     };
@@ -226,7 +230,7 @@ Entry.Vim.PYTHON_IMPORT_HW = "";
 
         if (textType == Entry.Vim.TEXT_TYPE_PY) {
             if(this._currentObject) {
-                codeDescription = "# " + this._currentObject.name + " 오브젝트의 파이선 코드";
+                codeDescription = "# " + this._currentObject.name + Lang.TextCoding.python_code;
                 var textCode = this._parser.parse(code, Entry.Parser.PARSE_GENERAL);
 
                 if (textType === Entry.Vim.TEXT_TYPE_PY) {

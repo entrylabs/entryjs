@@ -52,12 +52,12 @@ p.initialize = function() {
     var watchFunc = function(e) {
         if (e && ((e.shape && !e.opts && e.shape.isPass) ||
             e.opts && e.opts.isPass)) {
-            Entry.do("processPicture", e, this.lc)
+            Entry.do("processPicture", e, this.lc);
         } else {
-            Entry.do("editPicture", e, this.lc)
+            Entry.do("editPicture", e, this.lc);
         }
         this.file.modified = true;
-    }.bind(this)
+    }.bind(this);
 
     this.lc.on("clear", watchFunc);
     this.lc.on("remove", watchFunc);
@@ -94,22 +94,26 @@ p.changePicture = function(picture) {
     //painter.selectToolbox('cursor');
     if (this.file && this.file.id === picture.id)
         return;
-
     if (this.file.modified) {
-        var save = confirm('수정된 내용을 저장하시겠습니까?');
-        if (save) {
-            this.file_save(true);
-        }
+        entrylms.confirm(Lang.Menus.save_modified_shape).then(function(result){
+            if (result === true){
+                this.file_save(true);
+            }
+            this.afterModified(picture);
+        }.bind(this));
+        return;
     }
+    this.afterModified(picture);
+};
+
+p.afterModified = function(picture) {
     this.file.modified = false;
     this.lc.clear(false);
 
-    if (picture.id)
-        this.file.id = picture.id;
-    else
-        this.file.id = Entry.generateHash();
+    this.file.id = picture.id || Entry.generateHash();
     this.file.name = picture.name;
     this.file.mode = 'edit';
+    this.file.objectId = picture.objectId;
 
     this.addPicture(picture, true);
     // INFO: picture 변경시마다 undoStack 리셋
@@ -127,7 +131,7 @@ p.addPicture = function(picture, isOriginal) {
         image.src = Entry.defaultPath + '/uploads/' + picture.filename.substring(0,2)+'/' + picture.filename.substring(2,4)+'/image/'+picture.filename+'.png';
     }
 
-    var dimension = picture.dimension; 
+    var dimension = picture.dimension;
     var shape = LC.createShape('Image',{
         x: 480,
         y: 270,
@@ -182,12 +186,12 @@ p.updateEditMenu = function() {
     this._pasteButton.style.display = this.clipboard ? "block" : "none";
 };
 
-p.file_save = function() {
-    this.lc.trigger("dispose")
+p.file_save = function(taskParam) {
+    this.lc.trigger("dispose");
     var dataURL = this.lc.getImage().toDataURL();
     this.file_ = JSON.parse(JSON.stringify(this.file));
     Entry.dispatchEvent('saveCanvasImage',
-                        {file: this.file_, image: dataURL});
+                        {file: this.file_, image: dataURL, task: taskParam});
 
     this.file.modified = false;
 };
@@ -204,6 +208,8 @@ p.newPicture = function() {
     };
 
     newPicture.id = Entry.generateHash();
+    if (this.file && this.file.objectId)
+        newPicture.objectId = this.file.objectId;
     Entry.playground.addPicture(newPicture, true);
 };
 

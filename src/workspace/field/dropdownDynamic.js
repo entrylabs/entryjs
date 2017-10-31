@@ -35,7 +35,7 @@ Entry.FieldDropdownDynamic = function(content, blockView, index) {
 
     this._CONTENT_HEIGHT = this.getContentHeight(content.dropdownHeight);
 
-    this._FONT_SIZE = this.getFontSize(content.fontSize);
+    this._font_size = this.getFontSize(content.fontSize);
 
     this._ROUND = content.roundValue || 3;
     this.renderStart(blockView);

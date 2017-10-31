@@ -111,10 +111,7 @@ Entry.Scene.prototype.generateElement = function(scene) {
     var viewTemplate = Entry.createElement('li', scene.id);
     var fragment = document.createDocumentFragment('div');
     fragment.appendChild(viewTemplate);
-    var className = '';
-    className += 'entrySceneElementWorkspace';
-    className += ' entrySceneButtonWorkspace';
-    className += ' minValue';
+    var className = 'entrySceneElementWorkspace  entrySceneButtonWorkspace minValue';
     viewTemplate.addClass(className);
     $(viewTemplate).on('mousedown', function(e){
         if (Entry.engine.isState('run')) {
@@ -162,6 +159,7 @@ Entry.Scene.prototype.generateElement = function(scene) {
         that.resize();
     };
     divide.appendChild(nameField);
+    viewTemplate.nameField = nameField;
     var removeButtonCover = Entry.createElement('span');
     removeButtonCover.addClass('entrySceneRemoveButtonCoverWorkspace');
     viewTemplate.appendChild(removeButtonCover);
@@ -173,10 +171,15 @@ Entry.Scene.prototype.generateElement = function(scene) {
             e.stopPropagation();
             if (Entry.engine.isState('run'))
                 return;
-            var a = confirm(Lang.Workspace.will_you_delete_scene);
-            if (a)
-                Entry.scene.removeScene(this.scene);
-            return;
+            entrylms.confirm(Lang.Workspace.will_you_delete_scene).then(function(result){
+                if (result === true)
+                    Entry.scene.removeScene(this.scene);
+            }.bind(this));
+
+            // var a = entrylms.confirm(Lang.Workspace.will_you_delete_scene);
+            // if (a)
+            //     Entry.scene.removeScene(this.scene);
+            // return;
         });
         removeButtonCover.appendChild(removeButton);
     }
@@ -293,62 +296,65 @@ Entry.Scene.prototype.removeScene = function(scene) {
  */
 Entry.Scene.prototype.selectScene = function(scene) {
     scene = scene || this.getScenes()[0];
+    var container = Entry.container;
+
+    container.resetSceneDuringRun();
+
     if (this.selectedScene && (this.selectedScene.id == scene.id))
         return;
-
-    if (Entry.engine.isState('run'))
-        Entry.container.resetSceneDuringRun();
 
     var prevSelected = this.selectedScene;
     if (prevSelected) {
         var prevSelectedView = prevSelected.view;
         prevSelectedView.removeClass('selectedScene');
         var elem = document.activeElement;
-
-        if ($(elem).hasClass('entrySceneFieldWorkspace'))
-            elem.blur();
+        elem === prevSelectedView.nameField  && elem.blur();
     }
 
     this.selectedScene = scene;
     scene.view.addClass('selectedScene');
-    Entry.container.setCurrentObjects();
-    if (Entry.stage.objectContainers &&
-        Entry.stage.objectContainers.length !== 0)
-        Entry.stage.selectObjectContainer(scene);
 
-    var targetObject = Entry.container.getCurrentObjects()[0];
-    if (targetObject && Entry.type != 'minimize') {
-        Entry.container.selectObject(targetObject.id);
-        Entry.playground.refreshPlayground();
-    }
-    else {
-        if(Entry.isTextMode) {
+    var stage = Entry.stage;
+    var playground = Entry.playground;
+
+    container.setCurrentObjects();
+
+    stage.selectObjectContainer(scene);
+
+    var targetObject = container.getCurrentObjects()[0];
+
+    if (targetObject && Entry.type !== 'minimize') {
+        container.selectObject(targetObject.id);
+        playground.refreshPlayground();
+    } else {
+        if (Entry.isTextMode) {
             var workspace = Entry.getMainWS();
-            if(workspace && workspace.vimBoard) {
-                var sObject = workspace.vimBoard._currentObject;
-                var sScene = workspace.vimBoard._currentScene;
-                var parser = workspace.vimBoard._parser;
+            var vimBoard = workspace && workspace.vimBoard;
+            if (vimBoard) {
+                var sObject = vimBoard._currentObject;
+                var sScene = vimBoard._currentScene;
+                var parser = vimBoard._parser;
                 try {
-                    if(scene.id != sScene.id)
+                    if (scene.id != sScene.id)
                         workspace._syncTextCode();
-                }
-                catch(e) {}
-                if(parser._onError) {
-                    Entry.container.selectObject(sObject.id, true);
+                } catch(e) {}
+
+                if (parser._onError) {
+                    container.selectObject(sObject.id, true);
                     return;
                 }
             }
-            workspace && workspace.vimBoard && workspace.vimBoard.clearText();
+            vimBoard && vimBoard.clearText();
         }
 
-        Entry.stage.selectObject(null);
-        Entry.playground.flushPlayground();
+        stage.selectObject(null);
+        playground.flushPlayground();
         Entry.variableContainer.updateList();
     }
 
-    if (!Entry.container.listView_)
-        Entry.stage.sortZorder();
-    Entry.container.updateListView();
+    !container.listView_ && stage.sortZorder();
+
+    container.updateListView();
     this.updateView();
     Entry.requestUpdate = true;
 };
@@ -432,8 +438,13 @@ Entry.Scene.prototype.loadStartSceneSnapshot = function() {
  * @return {scene modal} scene
  */
 Entry.Scene.prototype.createScene = function() {
+    var regex = /[0-9]/;
+    var name = Entry.getOrderedName(Lang.Blocks.SCENE + ' ', this.scenes_, "name");
+    if (!regex.test(name)) {
+        name += '1';
+    }
     var scene = {
-        name: Lang.Blocks.SCENE + ' ' + (this.getScenes().length + 1),
+        name: name,
         id: Entry.generateHash()
     };
 
@@ -464,15 +475,25 @@ Entry.Scene.prototype.cloneScene = function(scene) {
     this.generateElement(clonedScene);
     this.addScene(clonedScene);
 
-    var objects = Entry.container.getSceneObjects(scene);
+    var container = Entry.container;
+    var objects = container.getSceneObjects(scene);
 
     try {
+        var oldIds = [];
+        var newIds = [];
         this.isSceneCloning = true;
-        for (var i=objects.length-1; i>=0; i--)
-            Entry.container.addCloneObject(objects[i], clonedScene.id);
+        for (var i=objects.length-1; i>=0; i--) {
+            var obj = objects[i];
+            var ret = container.addCloneObject(obj, clonedScene.id);
+            oldIds.push(obj.id);
+            newIds.push(ret.id);
+        }
+        container.adjustClonedValues(oldIds, newIds);
+        var WS = Entry.getMainWS();
+        WS && WS.board && WS.board.reDraw();
         this._focusSceneNameField(clonedScene);
         this.isSceneCloning = false;
-    } catch(e) {}
+    } catch (e) { console.log('error', e); }
 };
 
 /**
@@ -486,6 +507,7 @@ Entry.Scene.prototype.resize = function() {
     var firstScene = scenes[0];
 
     if (scenes.length === 0 || !firstScene) return;
+
     var startPos = $(firstScene.view).offset().left;
     var marginLeft = parseFloat($(selectedScene.view).css('margin-left'));
     var totalWidth = Math.floor($(this.view_).width() - startPos - 5);
@@ -493,10 +515,13 @@ Entry.Scene.prototype.resize = function() {
 
     var normWidth = startPos + 15;
     var diff = 0;
+    var isSelectedView = false;
+    var selectedViewWidth = 0;
     for (var i in scenes) {
         var scene = scenes[i];
         var view = scene.view;
         view.addClass('minValue');
+        isSelectedView = view === this.selectedScene.view;
         view = $(view);
 
         var width = parseFloat(Entry.computeInputWidth(scene.name));
@@ -504,7 +529,9 @@ Entry.Scene.prototype.resize = function() {
         if (scene === this.selectedScene)
             diff = adjusted - width;
         $(scene.inputWrapper).width(adjusted + 'px');
-        normWidth += view.width() + LEFT_MARGIN;
+        var viewWidth = view.width();
+        if (isSelectedView) selectedViewWidth = viewWidth;
+        normWidth += viewWidth + LEFT_MARGIN;
     }
 
     if (normWidth > totalWidth) align();
@@ -512,8 +539,10 @@ Entry.Scene.prototype.resize = function() {
     function align() {
         var dummyWidth = 30.5;
         var len = scenes.length - 1;
-        totalWidth = totalWidth - Math.round($(selectedScene.view).width())
-                        - dummyWidth*len - diff;
+        totalWidth = totalWidth -
+            Math.round(selectedViewWidth || $(selectedScene.view).width()) -
+            dummyWidth*len - diff;
+
         var fieldWidth = Math.floor(totalWidth/len);
         for (i in scenes) {
             scene = scenes[i];
@@ -535,9 +564,9 @@ Entry.Scene.prototype.isMax = function() {
 };
 
 Entry.Scene.prototype.clear = function() {
-    this.scenes_.map(function(s) {
+    this.scenes_.forEach(function(s) {
         Entry.stage.removeObjectContainer(s);
-    })
+    });
     $(this.listView_).html("");
     this.scenes_ = [];
     this.selectedScene = null;
@@ -545,6 +574,6 @@ Entry.Scene.prototype.clear = function() {
 
 
 Entry.Scene.prototype._focusSceneNameField = function(scene) {
-    var input = $(scene.view).find('input');
+    var input = scene.view && scene.view.nameField;
     input && input.focus && input.focus();
 };

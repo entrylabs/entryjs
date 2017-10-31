@@ -106,14 +106,20 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
     p.getMode = function() {return this.mode;};
 
     p.setMode = function(mode, message) {
+        var playground = Entry.playground;
+        var object = playground && playground.object;
+        if (!checkObjectAndAlert(object))
+            return false; // change mode fail
+
         Entry.disposeEvent.notify();
+
         if (Entry.Utils.isNumber(mode)) this.mode = mode;
         else {
             this.mode = mode.boardType;
             this.runType = mode.runType;
             this.textType = mode.textType;
         }
-
+ 
         this.mode = Number(this.mode);
         if (this.oldMode === this.mode)
             return;
@@ -123,16 +129,33 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
             blockMenu = this.blockMenu;
 
         var alert_message;
+
         switch (this.mode) {
             case WORKSPACE.MODE_VIMBOARD:
-                    alert_message = Entry.TextCodingUtil.isNamesIncludeSpace();
+                    var alert_message = Entry.TextCodingUtil.isNamesIncludeSpace();
                     if(alert_message) {
-                        alert(alert_message);
+                        entrylms.alert(alert_message);
                         var mode = {};
                         mode.boardType = WORKSPACE.MODE_BOARD;
                         mode.textType = -1;
                         Entry.getMainWS().setMode(mode);
                         break;
+                    }
+
+                    alert_message = Entry.TextCodingUtil.isNameIncludeNotValidChar();
+                    if(alert_message) {
+                        entrylms.alert(alert_message);
+                        var mode = {};
+                        mode.boardType = WORKSPACE.MODE_BOARD;
+                        mode.textType = -1;
+                        Entry.getMainWS().setMode(mode);
+                        return;
+                    }
+
+                    alert_message = Entry.TextCodingUtil.canConvertTextModeForOverlayMode(Entry.Workspace.MODE_VIMBOARD);
+                    if(alert_message) {
+                        entrylms.alert(alert_message);
+                        return;
                     }
                     this.board && this.board.hide();
                     this.overlayBoard && this.overlayBoard.hide();
@@ -198,6 +221,15 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
         Entry.dispatchEvent('workspaceChangeMode');
         this.changeEvent.notify(message);
         Entry.dispatchEvent('cancelBlockMenuDynamic');
+
+        function checkObjectAndAlert(object, message) {
+            if (Entry.type === "workspace" && !object) {
+                message = message || "오브젝트가 존재하지 않습니다. 오브젝트를 추가한 후 시도해주세요.";
+                entrylms.alert(message);
+                return false;
+            }
+            return true;
+        }
     };
 
     p.changeBoardCode = function(code, cb) {
@@ -331,7 +363,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
 
                     var message = Entry.TextCodingUtil.isNamesIncludeSpace();
                     if(message) {
-                        alert(message);
+                        entrylms.alert(message);
                         return;
                     }
 
@@ -345,13 +377,13 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                     var message;
                     message = Entry.TextCodingUtil.canConvertTextModeForOverlayMode(Entry.Workspace.MODE_VIMBOARD);
                     if(message) {
-                        alert(message);
+                        entrylms.alert(message);
                         return;
                     }
 
                     var message = Entry.TextCodingUtil.isNamesIncludeSpace();
                     if (message) {
-                        alert(message);
+                        entrylms.alert(message);
                         return;
                     }
 
@@ -453,7 +485,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
         function checkObjectAndAlert(object, message) {
             if (!object) {
                 message = message || "오브젝트가 존재하지 않습니다. 오브젝트를 추가한 후 시도해주세요.";
-                alert(message);
+                entrylms.alert(message);
                 return false;
             }
             return true;

@@ -36,6 +36,8 @@ Entry.Board = function(option) {
 
     this._addControl();
     this._bindEvent();
+    Entry.addEventListener('fontLoaded', this.reDraw.bind(this));
+    Entry.Utils.setSVGDom(this.svgDom);
 };
 
 Entry.Board.OPTION_PASTE = 0;
@@ -340,6 +342,14 @@ Entry.Board.DRAG_RADIUS = 5;
             top: offset.top - scrollTop,
             left: offset.left - scrollLeft
         };
+
+        var svgDom = this.svgDom;
+        if (svgDom) {
+            this._svgDomRect = {
+                width: svgDom.width(),
+                height: svgDom.height()
+            };
+        }
 
         if (this.btnWrapper) {
             this.btnWrapper.attr({
@@ -830,8 +840,9 @@ Entry.Board.DRAG_RADIUS = 5;
         var blockX = pos.x,
             blockY = pos.y;
 
-        var dx = svgDom.width()/2 - blockX;
-        var dy = svgDom.height()/2 - blockY - 100;
+        var rect = this.getSvgDomRect();
+        var dx = rect.width/2 - blockX;
+        var dy = rect.height/2 - blockY - 100;
         this.scroller.scroll(
             dx, dy
         );
@@ -848,25 +859,39 @@ Entry.Board.DRAG_RADIUS = 5;
     p.separate = function(block, count, index) {
         if (typeof block === "string")
             block = this.findById(block);
-        var nextBlock, backupPos;
         if (block.view)
             block.view._toGlobalCoordinate();
-        var prevBlock = block.getPrevBlock();
-        if (!prevBlock && block.thread instanceof Entry.Thread &&
-           block.thread.parent instanceof Entry.Code) {
-            nextBlock = block.thread.getBlock(
-                block.thread.indexOf(block) + count)
+        if (block.getBlockType() === "output") {
+            if (!count) return;
+            var prevOutputBlock = block.getPrevOutputBlock();
+            var nextOutputBlock = block;
+            for (var i = 0; i < count; i++)
+                nextOutputBlock = nextOutputBlock.getOutputBlock();
 
-            if (nextBlock)
-                backupPos = nextBlock.view.getAbsoluteCoordinate();
-        }
-        var prevThread = block.thread;
-        block.separate(count, index);
-        if (prevBlock && prevBlock.getNextBlock())
-            prevBlock.getNextBlock().view.bindPrev();
-        else if (nextBlock) {
-            nextBlock.view._toGlobalCoordinate();
-            nextBlock.moveTo(backupPos.x, backupPos.y);
+            block.separate(count, index);
+            if (prevOutputBlock && nextOutputBlock) {
+                nextOutputBlock.separate();
+                nextOutputBlock.doInsert(prevOutputBlock.view._contents[1]);
+            }
+        } else {
+            var nextBlock, backupPos;
+            var prevBlock = block.getPrevBlock();
+            if (!prevBlock && block.thread instanceof Entry.Thread &&
+               block.thread.parent instanceof Entry.Code) {
+                nextBlock = block.thread.getBlock(
+                    block.thread.indexOf(block) + count)
+
+                if (nextBlock)
+                    backupPos = nextBlock.view.getAbsoluteCoordinate();
+            }
+            var prevThread = block.thread;
+            block.separate(count, index);
+            if (prevBlock && prevBlock.getNextBlock())
+                prevBlock.getNextBlock().view.bindPrev();
+            else if (nextBlock) {
+                nextBlock.view._toGlobalCoordinate();
+                nextBlock.moveTo(backupPos.x, backupPos.y);
+            }
         }
     };
 
@@ -1121,5 +1146,13 @@ Entry.Board.DRAG_RADIUS = 5;
         this.scroller.scroll(newX, newY, true);
         return [newX, newY];
     };
+
+    p.getSvgDomRect = function() {
+        if (!this._svgDomRect)
+            this.updateOffset();
+        return this._svgDomRect;
+    };
+
+
 
 })(Entry.Board.prototype);

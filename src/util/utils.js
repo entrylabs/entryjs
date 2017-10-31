@@ -273,6 +273,39 @@ Entry.Utils.hslToHex = function(color) {
     return '#' + hex.join('');
 };
 
+Entry.Utils.setSVGDom = function (SVGDom) {
+    Entry.Utils.SVGDom = SVGDom;
+}
+
+Entry.Utils.bindIOSDeviceWatch = function() {
+    var Agent = Entry.Utils.mobileAgentParser();
+    if(Agent.apple.device) {
+        console.log('APPLE! MOBILE DEVICE');
+        var lastHeight = window.innerHeight || document.documentElement.clientHeight;
+        var lastSVGDomHeight = 0;
+        if(Entry.Utils.SVGDom) {
+            lastSVGDomHeight = Entry.Utils.SVGDom.height();
+        }
+
+        setInterval(function () {
+            var nowHeight = window.innerHeight || document.documentElement.clientHeight;
+            var SVGDomCheck = false;
+            if(Entry.Utils.SVGDom) {
+                var nowSVGDomHeight = Entry.Utils.SVGDom.height();
+                SVGDomCheck = lastSVGDomHeight != nowSVGDomHeight;
+                lastSVGDomHeight = nowSVGDomHeight;
+            }
+            if(lastHeight != nowHeight || SVGDomCheck) {
+                Entry.windowResized.notify();
+            };
+            lastHeight = nowHeight;
+        }, 1000);
+
+        $(window).on('orientationchange', (function(e) {
+            Entry.windowResized.notify();
+        }));
+    }
+}
 
 Entry.Utils.bindGlobalEvent = function(options) {
     var doc = $(document);
@@ -295,6 +328,7 @@ Entry.Utils.bindGlobalEvent = function(options) {
         $(window).on('resize', (function(e) {
             Entry.windowResized.notify(e);
         }));
+        Entry.Utils.bindIOSDeviceWatch();
     }
 
     if (options.indexOf('mousedown') > -1) {
@@ -488,14 +522,14 @@ Entry.generateHash = function() {
  * @param {function} fn
  */
 Entry.addEventListener = function(eventName, fn) {
-    if (!this.events_)
-        this.events_ = {};
-     if (!this.events_[eventName]) {
-        this.events_[eventName] = [];
+    if (!this.events_) this.events_ = {};
+
+    if (!this.events_[eventName]) {
+       this.events_[eventName] = [];
     }
-    if (fn instanceof Function) {
+    if (fn instanceof Function)
         this.events_[eventName].push(fn);
-    }
+
     return true;
 };
 
@@ -505,15 +539,20 @@ Entry.addEventListener = function(eventName, fn) {
  * @param {?} params
  */
 Entry.dispatchEvent = function(eventName, params) {
-    if (!this.events_)
+    if (!this.events_) {
         this.events_ = {};
+        return;
+    }
 
     var events = this.events_[eventName];
-    if (!events) return;
+    if (!events || events.length === 0) return;
 
-    for (var index = 0, l = events.length; index < l; index++) {
-        events[index].apply(window, Array.prototype.slice.call(arguments).splice(1));
-    }
+    var args = Array.prototype.slice.call(arguments);
+    args.shift();
+
+    events.forEach(function(func) {
+        func.apply(window, args);
+    });
 };
 
 /**
@@ -677,10 +716,16 @@ Entry.getElementsByClassName = function(cl) {
  * @return {Boolean||Number} arr
  */
 Entry.parseNumber = function(value) {
-    if (typeof value == "string" && Entry.Utils.isNumber(value))
-        return Number(value);
-    else if (typeof value == "number" && Entry.Utils.isNumber(value))
+
+    if (typeof value == "string") {
+        if((Entry.Utils.isNumber(value) && value[0] === '0') || (value[0] === '0' && value[1].toLowerCase() === 'x'))
+            return value;
+        else if (Entry.Utils.isNumber(value))
+            return Number(value);
+    } else if (typeof value == "number" && Entry.Utils.isNumber(value)) {
         return value;
+    }
+
     return false;
 };
 
@@ -810,18 +855,31 @@ Entry.nodeListToArray = function(nl) {
     return arr;
 };
 
-Entry.computeInputWidth = function(value){
-    var elem = document.getElementById('entryInputForComputeWidth');
-    if (!elem) {
-        elem = document.createElement("span");
-        elem.setAttribute('id', 'entryInputForComputeWidth');
-        elem.className = "elem-element";
-        document.body.appendChild(elem);
-    }
+Entry.computeInputWidth = (function() {
+    var elem;
+    var _cache = {};
+    return function(value) {
+        value = value.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 
-    elem.innerHTML = value.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-    return Number(elem.offsetWidth + 10) + 'px';
-};
+        var cached = _cache[value];
+        if (cached) return cached;
+        else {
+            elem = elem || document.getElementById('entryInputForComputeWidth');
+            if (!elem) {
+                elem = document.createElement("span");
+                elem.setAttribute('id', 'entryInputForComputeWidth');
+                elem.className = "elem-element";
+                document.body.appendChild(elem);
+            }
+
+            elem.innerHTML = value;
+            var ret = Number(elem.offsetWidth + 10) + 'px';
+
+            if (window.fontLoaded) _cache[value] = ret;
+            return ret;
+        }
+    };
+})();
 
 Entry.isArrowOrBackspace = function(keyCode){
     var codes = [37,38,39,40, 8];
@@ -883,13 +941,13 @@ Entry.toDegrees = function(radians){
     return radians * 180 / Math.PI;
 };
 
-Entry.getPicturesJSON = function (pictures) {
+Entry.getPicturesJSON = function (pictures, isClone) {
     var json = [];
     for (var i=0, len=pictures.length; i<len; i++) {
         var p = pictures[i];
         var o = {};
         o._id = p._id;
-        o.id = p.id;
+        o.id = isClone ? Entry.generateHash() : p.id;
         o.dimension = p.dimension;
         o.filename = p.filename;
         o.fileurl = p.fileurl;
@@ -900,7 +958,7 @@ Entry.getPicturesJSON = function (pictures) {
     return json;
 };
 
-Entry.getSoundsJSON = function (sounds) {
+Entry.getSoundsJSON = function (sounds, isClone) {
     var json = [];
     for (var i=0, len=sounds.length; i<len; i++) {
         var s = sounds[i];
@@ -908,7 +966,7 @@ Entry.getSoundsJSON = function (sounds) {
         o._id = s._id;
         o.duration = s.duration;
         o.ext = s.ext;
-        o.id = s.id;
+        o.id = isClone ? Entry.generateHash() : s.id;
         o.filename = s.filename;
         o.fileurl = s.fileurl;
         o.name = s.name;
@@ -987,6 +1045,10 @@ Entry.setCloneBrush = function (sprite, parentBrush) {
 
 Entry.isFloat = function (num) {
     return /\d+\.{1}\d+$/.test(num);
+};
+
+Entry.isInteger = function(value) {
+  return isFinite(value) && Math.floor(value) == value;
 };
 
 Entry.getStringIndex = function(str) {
@@ -1235,33 +1297,36 @@ Entry.Utils.xmlToJsonData = function(xml) {
     return result;
 };
 
-Entry.Utils.stopProjectWithToast = function(scope, message, isHide, error) {
+Entry.Utils.stopProjectWithToast = function(scope, message, error) {
     var block = scope.block;
     message = message || '런타임 에러 발생';
 
-    if (Entry.toast && !isHide)
+    var engine = Entry.engine;
+
+    engine && engine.toggleStop();
+
+    if (Entry.type === 'workspace') {
+        if (scope.block && 'funcBlock' in scope.block) {
+            block = scope.block.funcBlock;
+        } else if (scope.funcExecutor){
+            block = scope.funcExecutor.scope.block;
+            Entry.Func.edit(scope.type);
+        }
+
+        if (block) {
+            var id = block.getCode().object && block.getCode().object.id;
+            if (id) Entry.container.selectObject(block.getCode().object.id, true);
+            var view = block.view;
+            view && view.getBoard().activateBlock(block);
+        }
+    }
+
+    if (Entry.toast) {
         Entry.toast.alert(
             Lang.Msgs.warn,
             Lang.Workspace.check_runtime_error,
             true
         );
-
-    if (Entry.engine)
-        Entry.engine.toggleStop();
-
-    if (Entry.type === 'workspace') {
-        if(scope.block && 'funcBlock' in scope.block) {
-            block = scope.block.funcBlock;
-        } else if(scope.funcExecutor){
-            block = scope.funcExecutor.scope.block;
-            var funcName = scope.type.replace('func_', '');
-            Entry.Func.edit(Entry.variableContainer.functions_[funcName]);
-        }
-
-        if(block) {
-            Entry.container.selectObject(block.getCode().object.id, true);
-            block.view.getBoard().activateBlock(block);
-        }
     }
 
     throw new Error(message);
@@ -1365,9 +1430,112 @@ Entry.isMobile = function() {
     }
 }
 
+Entry.Utils.mobileAgentParser = function (userAgent) {
+    var apple_phone         = /iPhone/i,
+        apple_ipod          = /iPod/i,
+        apple_tablet        = /iPad/i,
+        android_phone       = /(?=.*\bAndroid\b)(?=.*\bMobile\b)/i, // Match 'Android' AND 'Mobile'
+        android_tablet      = /Android/i,
+        amazon_phone        = /(?=.*\bAndroid\b)(?=.*\bSD4930UR\b)/i,
+        amazon_tablet       = /(?=.*\bAndroid\b)(?=.*\b(?:KFOT|KFTT|KFJWI|KFJWA|KFSOWI|KFTHWI|KFTHWA|KFAPWI|KFAPWA|KFARWI|KFASWI|KFSAWI|KFSAWA)\b)/i,
+        windows_phone       = /Windows Phone/i,
+        windows_tablet      = /(?=.*\bWindows\b)(?=.*\bARM\b)/i, // Match 'Windows' AND 'ARM'
+        other_blackberry    = /BlackBerry/i,
+        other_blackberry_10 = /BB10/i,
+        other_opera         = /Opera Mini/i,
+        other_chrome        = /(CriOS|Chrome)(?=.*\bMobile\b)/i,
+        other_firefox       = /(?=.*\bFirefox\b)(?=.*\bMobile\b)/i, // Match 'Firefox' AND 'Mobile'
+        seven_inch = new RegExp(
+            '(?:' +         // Non-capturing group
+
+            'Nexus 7' +     // Nexus 7
+
+            '|' +           // OR
+
+            'BNTV250' +     // B&N Nook Tablet 7 inch
+
+            '|' +           // OR
+
+            'Kindle Fire' + // Kindle Fire
+
+            '|' +           // OR
+
+            'Silk' +        // Kindle Fire, Silk Accelerated
+
+            '|' +           // OR
+
+            'GT-P1000' +    // Galaxy Tab 7 inch
+
+            ')',            // End non-capturing group
+
+            'i');           // Case-insensitive matching
+
+    var match = function(regex, userAgent) {
+        return regex.test(userAgent);
+    };
+
+    var ua = userAgent || navigator.userAgent;
+
+    // Facebook mobile app's integrated browser adds a bunch of strings that
+    // match everything. Strip it out if it exists.
+    var tmp = ua.split('[FBAN');
+    if (typeof tmp[1] !== 'undefined') {
+        ua = tmp[0];
+    }
+
+    // Twitter mobile app's integrated browser on iPad adds a "Twitter for
+    // iPhone" string. Same probable happens on other tablet platforms.
+    // This will confuse detection so strip it out if it exists.
+    tmp = ua.split('Twitter');
+    if (typeof tmp[1] !== 'undefined') {
+        ua = tmp[0];
+    }
+
+    this.apple = {
+        phone:  match(apple_phone, ua),
+        ipod:   match(apple_ipod, ua),
+        tablet: !match(apple_phone, ua) && match(apple_tablet, ua),
+        device: match(apple_phone, ua) || match(apple_ipod, ua) || match(apple_tablet, ua)
+    };
+    this.amazon = {
+        phone:  match(amazon_phone, ua),
+        tablet: !match(amazon_phone, ua) && match(amazon_tablet, ua),
+        device: match(amazon_phone, ua) || match(amazon_tablet, ua)
+    };
+    this.android = {
+        phone:  match(amazon_phone, ua) || match(android_phone, ua),
+        tablet: !match(amazon_phone, ua) && !match(android_phone, ua) && (match(amazon_tablet, ua) || match(android_tablet, ua)),
+        device: match(amazon_phone, ua) || match(amazon_tablet, ua) || match(android_phone, ua) || match(android_tablet, ua)
+    };
+    this.windows = {
+        phone:  match(windows_phone, ua),
+        tablet: match(windows_tablet, ua),
+        device: match(windows_phone, ua) || match(windows_tablet, ua)
+    };
+    this.other = {
+        blackberry:   match(other_blackberry, ua),
+        blackberry10: match(other_blackberry_10, ua),
+        opera:        match(other_opera, ua),
+        firefox:      match(other_firefox, ua),
+        chrome:       match(other_chrome, ua),
+        device:       match(other_blackberry, ua) || match(other_blackberry_10, ua) || match(other_opera, ua) || match(other_firefox, ua) || match(other_chrome, ua)
+    };
+    this.seven_inch = match(seven_inch, ua);
+    this.any = this.apple.device || this.android.device || this.windows.device || this.other.device || this.seven_inch;
+
+    // excludes 'other' devices and ipods, targeting touchscreen phones
+    this.phone = this.apple.phone || this.android.phone || this.windows.phone;
+
+    // excludes 7 inch devices, classifying as phone or tablet is left to the user
+    this.tablet = this.apple.tablet || this.android.tablet || this.windows.tablet;
+
+    return this;
+}
+
 Entry.Utils.convertMouseEvent = function(e) {
     if (e.originalEvent && e.originalEvent.touches)
         return e.originalEvent.touches[0];
+    else if (e.changedTouches) return e.changedTouches[0];
     else return e;
 }
 
@@ -1630,4 +1798,38 @@ Entry.Utils.glideBlock = function(svgGroup, x, y, callback) {
         },
         easing: "ease-in-out"
     });
+};
+
+Entry.Utils.getScrollPos = function() {
+    var elem = Entry.getBrowserType().indexOf("IE") > -1 ?
+        document.documentElement : document.body;
+    return {
+        left: elem.scrollLeft,
+        top: elem.scrollTop
+    };
+}
+
+Entry.Utils.copy = function(target) {
+    return JSON.parse(JSON.stringify(target));
+};
+
+//helper function for development and debug
+Entry.Utils.getAllObjectsBlockList = function() {
+    return Entry.container.objects_.reduce(function(prev, o) {
+        return prev.concat(o.script.getBlockList());
+    }, []);
+};
+
+Entry.Utils.toFixed = function (value, len) {
+    len = len || 1;
+    var powValue = Math.pow(10, len);
+
+    value = Math.round(value * powValue) / powValue;
+
+    if (Entry.isFloat(value)) return String(value);
+    else {
+        value += '.';
+        for (var i=0; i<len; i++) value += '0';
+        return value;
+    }
 };

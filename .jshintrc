@@ -28,6 +28,7 @@
         "io": true,
         "LC": true,
         "ActiveXObject": true,
-        "CodeMirror": true
+        "CodeMirror": true,
+        "entrylms": true
     }
 }

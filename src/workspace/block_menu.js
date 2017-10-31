@@ -14,7 +14,6 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
     Entry.Model(this, false);
 
     this.reDraw = Entry.Utils.debounce(this.reDraw, 100);
-    this._dAlign = Entry.Utils.debounce(this.align, 100);
     this._dAlign = this.align;
     this._setDynamic = Entry.Utils.debounce(this._setDynamic, 150);
     this._dSelectMenu = Entry.Utils.debounce(this.selectMenu, 0);
@@ -41,6 +40,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
     this.view = dom;
 
     this.visible = true;
+    this.hwCodeOutdated = false;
     this._svgId = 'blockMenu' + new Date().getTime();
     this._clearCategory();
     this._categoryData = categoryData;
@@ -89,6 +89,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
     }.bind(this));
 
     Entry.addEventListener('cancelBlockMenuDynamic', this._cancelDynamic.bind(this));
+    Entry.addEventListener('fontLoaded', this.reDraw.bind(this));
 };
 
 (function(p) {
@@ -283,7 +284,22 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
 
         if (board && (workspaceMode === WORKSPACE.MODE_BOARD ||
             workspaceMode === WORKSPACE.MODE_OVERLAYBOARD)) {
-            if (!board.code) return;
+            if (!board.code) {
+                if (Entry.toast) {
+                    Entry.toast.alert(
+                        Lang.Workspace.add_object_alert,
+                        Lang.Workspace.add_object_alert_msg
+                    );
+                }
+                if (this.selectedBlockView) {
+                    this.selectedBlockView.removeSelected();
+                    this.set({
+                        selectedBlockView: null,
+                        dragBlock: null
+                    });
+                }
+                return;
+            }
 
             var block = blockView.block;
             var code = this.code;
@@ -430,9 +446,9 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
         this.updateSplitters();
     };
 
-    p.setMenu = function() {
-        if (!this.hasCategory())
-            return;
+    p.setMenu = function(doNotAlign) {
+        if (!this.hasCategory()) return;
+
         this._categoryData.forEach(function(data) {
             var category = data.category;
             var threads = data.blocks;
@@ -452,7 +468,8 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
             if (count === 0) elem.addClass('entryRemove');
             else elem.removeClass('entryRemove');
         }.bind(this));
-        this.selectMenu(0, true);
+
+        this.selectMenu(0, true, doNotAlign);
     };
 
 
@@ -928,10 +945,11 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
     };
 
     p._generateHwCode = function(shouldHide) {
-        if (!this._categoryData)
-            return;
         var code = this.code;
         var threads = code.getThreadsByCategory(HW);
+
+        if (!(this._categoryData && this.shouldGenerateHwCode(threads)))
+            return;
 
         threads.forEach(function(t) {
             t.destroy();
@@ -984,6 +1002,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
             code.createThread(t);
             delete t[0].x;
         });
+        this.hwCodeOutdated = false;
     };
 
     p.setAlign = function(align) {
@@ -1108,6 +1127,10 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
         function isOverFlow() {
             return rect.bottom > $(window).height() - 10;
         }
+    };
+
+    p.shouldGenerateHwCode = function(threads) {
+        return this.hwCodeOutdated || threads.length === 0;
     };
 
 })(Entry.BlockMenu.prototype);

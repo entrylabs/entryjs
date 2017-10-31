@@ -14,8 +14,12 @@ Entry.Field = function() {};
     p.TEXT_LIMIT_LENGTH = 20;
 
     p.destroy = function() {
-        this.svgGroup && $(this.svgGroup).unbind('mouseup touchend');
-        this.destroyOption();
+        var svgGroup = this.svgGroup;
+        if (svgGroup) {
+            svgGroup._isBinded = false;
+            $(svgGroup).off('.fieldBindEvent');
+        }
+        this.destroyOption(true);
     };
 
     p.command = function(forceCommand) {
@@ -24,9 +28,11 @@ Entry.Field = function() {};
             Entry.do(
                 'setFieldValue',
                 this.pointer(),
-                this._nextValue || this.getValue()
+                this._nextValue || this.getValue(),
+                this._code
             );
             delete this._nextValue;
+            delete this._code;
         }
         delete this._startValue;
     };
@@ -60,7 +66,6 @@ Entry.Field = function() {};
         func = func || function(skipCommand) {
             that.destroyOption(skipCommand);
         };
-
         that.disposeEvent =
             Entry.disposeEvent.attach(that, func);
     };
@@ -198,15 +203,20 @@ Entry.Field = function() {};
     };
 
     p._bindRenderOptions = function() {
+        if (this.svgGroup._isBinded) return;
+
         var that = this;
 
-        $(this.svgGroup).bind('mouseup touchend', function(e){
-            if (that._isEditable()) {
-                that.destroyOption();
-                that._startValue = that.getValue();
-                that.renderOptions();
-                that._isEditing = true;
-            }
+        this.svgGroup._isBinded = true;
+        $(this.svgGroup)
+            .on('mouseup.fieldBindEvent touchend.fieldBindEvent', function(e){
+                if (that._isEditable()) {
+                    that._code = that.getCode();
+                    that.destroyOption();
+                    that._startValue = that.getValue();
+                    that.renderOptions();
+                    that._isEditing = true;
+                }
         });
     };
 
@@ -218,9 +228,7 @@ Entry.Field = function() {};
     };
 
     p.getFontSize = function(size) {
-        size =
-            size || this._blockView.getSkeleton().fontSize || 12;
-        return size;
+        return size || this._blockView.getSkeleton().fontSize || 12;
     };
 
     p.getContentHeight = function() {
@@ -319,5 +327,74 @@ Entry.Field = function() {};
                 return value;
         }
     };
+
+    p.getBoard = function() {
+        var view = this._blockView;
+        return view && view.getBoard();
+    };
+
+    p.getCode = function() {
+        var board = this.getBoard();
+        return board && board.code;
+    };
+
+    p.getTextValue = function() {
+        return this.getValue();
+    };
+
+    p.getTextBBox = (function() {
+        var _cache = {};
+        var svg;
+
+        //make invisible svg dom to body
+        //in order to calculate text width
+        function generateDom() {
+            svg = Entry.Dom(
+               $('<svg id="invisibleBoard" class="entryBoard" width="1px" height="1px"' +
+                'version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'),
+               { parent: $('body') }
+            );
+        }
+
+        var clearDoms = Entry.Utils.debounce(function() {
+            if (!svg) return;
+            $(svg).empty();
+        }, 500);
+
+        return function() {
+            if (window.fontLoaded && !svg) generateDom();
+
+            var value = this.getTextValue();
+
+            //empty string check
+            if (!value) return { width: 0, height: 0 };
+
+            var fontSize = this._font_size || '';
+
+            var key = value + '&&' + fontSize;
+            var bBox = _cache[key];
+
+            if (bBox) return bBox;
+
+            var textElement = this.textElement;
+            if (svg) {
+                textElement = textElement.cloneNode(true);
+                svg.append(textElement);
+            }
+
+            bBox = textElement.getBoundingClientRect();
+            clearDoms();
+
+            bBox = {
+                width: Math.round(bBox.width*100)/100,
+                height: Math.round(bBox.height*100)/100,
+            };
+
+            if (fontSize && window.fontLoaded &&
+                bBox.width && bBox.height)
+                _cache[key] = bBox;
+            return bBox;
+        };
+    })();
 
 })(Entry.Field.prototype);
