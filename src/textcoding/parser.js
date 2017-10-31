@@ -366,8 +366,8 @@ Entry.Parser = function(mode, type, cm, syntax) {
 
         for (var i = 0; i < types.length; i++) {
             var type = types[i];
-            if (Entry.type !== 'invisible' && (!availables || (availables.indexOf(type) < 0)))
-                continue;
+            //if (Entry.type !== 'invisible' && (!availables || (availables.indexOf(type) < 0)))
+                //continue;
 
             var block = Entry.block[type];
 
@@ -460,6 +460,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
     };
 
     p.setAvailableCode = function () {
+        return;
         var WS = Entry.getMainWS();
         if (!WS) return;
 
