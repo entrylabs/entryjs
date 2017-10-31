@@ -35,7 +35,8 @@ goog.require("Entry.STATIC");
             }], {
                 dimmed: true,
                 restrict: true,
-                callBack: function(isFromInit) {
+                callBack: function() {
+                    callback();
                 }
             });
         },
