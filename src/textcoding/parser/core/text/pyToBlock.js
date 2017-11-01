@@ -1001,23 +1001,10 @@ Entry.PyToBlockParser = function(blockSyntax) {
             var object = false;
             var type = 'variables_';
             var id = Entry.generateHash();
-            var obj = {
-                variableType : 'variable',
-                name : '',
-                visible : true,
-                object : {},
-                value : ''
-            };
+            var value, array;
+             
             if (n.operator != '=')
                 return;
-
-            if('name' in n.left) {
-                name = left.name;
-            }  else {
-                object = this.object;
-                name = left.property.name;
-                object = object.id;
-            }
 
             if(right.type === "NewExpression" && right.callee.property.name == 'list'){
                 type = 'lists_';
@@ -1031,26 +1018,51 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     }
                 });
 
-                obj.array = temp;
+                array = temp;
             } else {
-                obj.value = this.getValue(right);
+                value = this.getValue(right);
             }
-
+            
             var functionType =  'add'+ type[0].toUpperCase() + type.slice(1, type.length-2);
-            var existVar = this.variableExist(name, type);
+            
+            if (!Array.isArray(left)) left = [left];
 
-            if(existVar) {
-                if(type == 'lists_'){
-                    existVar.array_ = obj.array;
-                    return;
+            for (var key in left) {
+                var l = left[key];
+            
+                var obj = {
+                    variableType : 'variable',
+                    name : '',
+                    visible : true,
+                    object : {},
+                    value : ''
+                };
+                if (array) obj.array = array;
+                if (value) obj.value = value;
+                
+                if('name' in l) {
+                    name = l.name;
+                }  else {
+                    object = this.object;
+                    name = l.property.name;
+                    object = object.id;
                 }
-                existVar.value_ = this.getValue(right);
-                return;
-            } else {
-                obj.variableType = type.slice(0,length-2);
-                obj.name = name;
-                obj.object = object;
-                Entry.variableContainer[functionType](obj);
+
+                var existVar = this.variableExist(name, type);
+
+                if(existVar) {
+                    if(type == 'lists_'){
+                        existVar.array_ = obj.array;
+                        return;
+                    }
+                    existVar.value_ = this.getValue(right);
+                    return;
+                } else {
+                    obj.variableType = type.slice(0,length-2);
+                    obj.name = name;
+                    obj.object = object;
+                    Entry.variableContainer[functionType](obj);
+                }
             }
 
 

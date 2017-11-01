@@ -2137,13 +2137,7 @@
         if (!node.left.length)
           node.left = [node.left];
         node.left.push(node.right);
-        var right = node.right;
-        if (right.type === "Identifier" && !scope.exists(right.name)) {
-          if (!node.operator || node.length > 1) unexpected();
-          scope.addVar(right.name);
-          // return nc.createVarDeclFromId(node.left, node.left, node.right);
-          // customized variable must be assign
-        }
+        left = node.right;
       }
       
       next();
