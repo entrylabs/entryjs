@@ -179,6 +179,10 @@ Entry.popupHelper.prototype.show = function(key, isNext) {
 };
 
 Entry.popupHelper.prototype.hide = function() {
+    var popup = this.nowContent._obj;
+    if (popup && 'closeEvent' in popup) {
+        popup.closeEvent(this);
+    }
     this.nowContent = undefined;
     this.body_.addClass('hiddenPopup');
     this.window_.children().detach();
