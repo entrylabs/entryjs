@@ -184,7 +184,9 @@ Entry.CodeMap = {};
             "on": "high",
             "off": "low",
             "high": "on",
-            "low": "off"
+            "low": "off",
+            "HIGH": "on",
+            "LOW": "off"
         }]
     };
 

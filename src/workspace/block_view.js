@@ -17,8 +17,6 @@ Entry.BlockView = function(block, board, mode) {
     this.mouseUpEvent = new Entry.Event(this);
     this.disableMouseEvent = false;
 
-    //this.dAlignContent =
-        //Entry.Utils.debounce(this.alignContent, 30);
     this.dAlignContent = this.alignContent;
     this._board = board;
     this._observers = [];
@@ -154,18 +152,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
 
         this._path = this.pathGroup.elem("path");
 
-        //enable mouse pattern only for desktou
-        if (!Entry.isMobile()) {
-            $(this._path).mouseenter(function(e) {
-                if (!that._mouseEnable) return;
-                that._changeFill(true);
-            });
-
-            $(this._path).mouseleave(function(e) {
-                if (!that._mouseEnable) return;
-                that._changeFill(false);
-            });
-        }
+        this._bindHoverEvent();
 
         var fillColor = this._schema.color;
         if (this.block.deletable === Entry.Block.DELETABLE_FALSE_LIGHTEN ||
@@ -179,11 +166,9 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
         }
 
         this._fillColor = fillColor;
-        var pathStyle = {
-            d: path,
-            fill: fillColor,
-            class: 'blockPath'
-        };
+
+        var pathStyle = { d: path, fill: fillColor, class: 'blockPath' };
+
         if (this.magnet.next || this._skeleton.nextShadow) {
             var suffix = this.getBoard().suffix;
             this.pathGroup.attr({
@@ -347,7 +332,8 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
         var contents = this._contents;
         for (var i=0; i<contents.length; i++) {
             var content = contents[i];
-            if (!content) continue;
+            if (!content || content.isEditing === undefined)
+                continue;
             if (content.isEditing()) return true;
         }
         return false;
@@ -368,48 +354,39 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
     };
 
     p._renderPath = function() {
-        var oldPath = this._path.getAttribute('d');
         var newPath = this._skeleton.path(this);
 
         //no change occured
-        if (oldPath === newPath) return;
-
-        var that = this;
+        if (this._path.getAttribute('d') === newPath) return;
 
         if (false && Entry.ANIMATION_DURATION !== 0) {
+            var that = this;
             setTimeout(function() {
-                that._path.animate({
-                    d: newPath
-                }, Entry.ANIMATION_DURATION, mina.easeinout);
+                that._path.animate(
+                    { d: newPath },
+                    Entry.ANIMATION_DURATION, mina.easeinout
+                );
             }, 0);
         } else {
-            this._path.attr({
-                d: newPath
-            });
-
-            this.set({animating: false});
+            this._path.attr({ d: newPath });
+            this.animating === true && this.set({animating: false});
         }
     };
 
     p._setPosition = function(animate) {
         animate = animate === undefined ? true : animate;
         //this.svgGroup.stop();
-        var transform = "translate(" +
-            this.x + "," + this.y + ")";
+        var transform = "translate(" + this.x + "," + this.y + ")";
 
         if (animate && Entry.ANIMATION_DURATION !== 0) {
-            this.svgGroup.attr(
-                "transform", transform
-            );
+            this.svgGroup.attr("transform", transform);
             /*
             this.svgGroup.animate({
                 transform: transform
             }, Entry.ANIMATION_DURATION, mina.easeinout);
             */
         } else {
-            this.svgGroup.attr(
-                "transform", transform
-            );
+            this.svgGroup.attr("transform", transform);
         }
     };
 
@@ -483,7 +460,6 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
         var longPressTimer = null;
 
         var blockView = this;
-        this._changeFill(false);
         var board = this.getBoard();
         if (Entry.documentMousedown)
             Entry.documentMousedown.notify(e);
@@ -533,14 +509,11 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
             this._rightClick(e);
 
 
-        if(board.workspace.getMode() === Entry.Workspace.MODE_VIMBOARD) {
-            if(e) {
-                vimBoard = $('.entryVimBoard>.CodeMirror')[0];
-                document.getElementsByClassName('CodeMirror')[0]
-                    .dispatchEvent(Entry.Utils.createMouseEvent('dragStart', event));
-            }
+        if (board.workspace.getMode() === Entry.Workspace.MODE_VIMBOARD && e) {
+            vimBoard = $('.entryVimBoard>.CodeMirror')[0];
+            document.getElementsByClassName('CodeMirror')[0]
+                .dispatchEvent(Entry.Utils.createMouseEvent('dragStart', event));
         }
-
 
         var that = this;
 
@@ -584,9 +557,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
                     if (blockView.dragInstance.height === 0) {
                         var block = blockView.block;
                         var height = - 1 + blockView.height;
-                        blockView.dragInstance.set({
-                            height: height
-                        });
+                        blockView.dragInstance.set({ height: height });
                     }
 
                     var dragInstance = blockView.dragInstance;
@@ -622,7 +593,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
             $(document).unbind('.block', onMouseMove);
             blockView.terminateDrag(e);
             if (board) board.set({dragBlock: null});
-            blockView._changeFill(false);
+            blockView._setHoverBlockView({data: { that: this }});
             Entry.GlobalSvg.remove();
             blockView.mouseUpEvent.notify();
 
@@ -636,10 +607,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
             var dragEvent = Entry.Utils.createMouseEvent(type, event);
 
             if (block) dragEvent.block = block;
-
-            var _vimBoard =
-                $('.entryVimBoard>.CodeMirror')[0];
-            _vimBoard.dispatchEvent(dragEvent);
+            $('.entryVimBoard>.CodeMirror')[0].dispatchEvent(dragEvent);
         }
     };
 
@@ -1109,29 +1077,8 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
 
     p._destroyObservers = function() {
         var observers = this._observers;
-        while(observers.length) {
-            var o = observers.pop();
-            o.destroy();
-        }
-    };
-
-    p._changeFill = function(isPattern) {
-        var board = this.getBoard();
-        if (board.dragBlock) return;
-        var fillColor = this._fillColor;
-        var path = this._path;
-
-        var board = this.getBoard();
-        if (isPattern) {
-            fillColor = "url(#blockHoverPattern_" + this.getBoard().suffix +")";
-            this._setBackgroundPath();
-            board.enablePattern();
-        } else {
-            board.disablePattern();
-            this._removeBackgroundPath();
-        }
-
-        path.attr({fill:fillColor});
+        while(observers.length)
+            observers.pop().destroy();
     };
 
     p.addActivated = function() {
@@ -1171,7 +1118,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
         var svgData = '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 %W %H">(svgGroup)(defs)</svg>';
         var bBox = this.svgGroup.getBoundingClientRect();
         var svgGroup = notClone ? this.svgGroup : this.svgGroup.cloneNode(true);
-        var box = this._skeleton.box(this)
+        var box = this._skeleton.box(this);
         var scale = notPng ? 1 : 1.5;
         var fontWeight = isWindow7() ? 0.9 : 0.95;
         if (this.type.indexOf('func_') > -1)
@@ -1385,26 +1332,37 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
         );
     };
 
-    p.clone = function() {
-        return this.svgGroup.cloneNode(true);
+    p.clone = function() { return this.svgGroup.cloneNode(true); };
+
+    p.setBackgroundPath = function() {
+        var board = this.getBoard();
+        if (board.dragBlock) return;
+
+        this.resetBackgroundPath();
+
+        var originPath = this._path;
+
+        var clonedPath = originPath.cloneNode(true);
+        clonedPath.setAttribute('class', 'blockBackgroundPath');
+        clonedPath.setAttribute('fill', this._fillColor);
+
+        this._backgroundPath = clonedPath;
+        this.pathGroup.insertBefore(clonedPath, originPath);
+
+        board.enablePattern();
+        originPath.attr({ fill:"url(#blockHoverPattern_" + board.suffix +")"});
     };
 
-    p._setBackgroundPath = function() {
-        this._removeBackgroundPath();
+    p.resetBackgroundPath = function() {
+        var board = this.getBoard();
+        if (!this._backgroundPath || !board || !board.disablePattern)
+            return;
 
-        var path = this._path.cloneNode(true);
-        path.setAttribute('class', 'blockBackgroundPath');
-        path.setAttribute('fill', this._fillColor);
-
-        this._backgroundPath = path;
-        this.pathGroup.insertBefore(path, this._path);
-    };
-
-    p._removeBackgroundPath = function() {
+        board.disablePattern();
         this._backgroundPath && $(this._backgroundPath).remove();
         this._backgroundPath = null;
+        this._path.attr({fill:this._fillColor});
     };
-
 
     p._getTemplate = function(renderMode) {
         var schema = this._schema;
@@ -1472,8 +1430,29 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
         };
     };
 
-    p.isRenderMode = function(mode) {
-        return this.renderMode === mode;
+    p.isRenderMode = function(mode) { return this.renderMode === mode; };
+
+    p._bindHoverEvent = function() {
+        //enable mouse pattern only for desktop
+        if (Entry.isMobile()) return;
+
+        var cb = this._setHoverBlockView;
+
+        $(this._path)
+            .on('mouseenter', { that: this, blockView: this }, cb)
+            .on('mouseleave', { that: this }, cb);
+    };
+
+    p._setHoverBlockView = function(event) {
+        if (!event) return;
+
+        var data = event.data;
+        var that = data.that;
+        if (!that._mouseEnable) return;
+
+        var target = that.getBoard();
+        target = target && target.workspace;
+        target && target.setHoverBlockView(data.blockView);
     };
 
 })(Entry.BlockView.prototype);

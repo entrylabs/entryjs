@@ -100,16 +100,7 @@ Entry.exportProject = function(project) {
     if (!Entry.engine.isState('stop'))
         Entry.engine.toggleStop();
 
-    if (Entry.Func &&
-        Entry.Func.workspace &&
-        Entry.Func.workspace.visible ) {
-        Entry.Func.cancelEdit();
-    }
-
-    //Entry.stage.handle.setVisible(false);
-    //Entry.stage.update();
-
-    project.objects = Entry.container.toJSON();
+    var objects = project.objects = Entry.container.toJSON();
     project.scenes = Entry.scene.toJSON();
     project.variables = Entry.variableContainer.getVariableJSON();
     project.messages = Entry.variableContainer.getMessageJSON();
@@ -117,6 +108,9 @@ Entry.exportProject = function(project) {
     project.scenes = Entry.scene.toJSON();
     project.speed = Entry.FPS;
     project.interface = Entry.captureInterfaceState();
+
+    if (!objects || !objects.length) return false;
+
     return project;
 };
 

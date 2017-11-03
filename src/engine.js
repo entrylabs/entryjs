@@ -1,4 +1,4 @@
-/**
+/*u
  * @fileoverview This manage control state and control bar.
  */
 'use strict';
@@ -487,20 +487,14 @@ Entry.Engine = function() {
     p.toggleRun = function(disableAchieve) {
         var variableContainer = Entry.variableContainer;
         var container = Entry.container;
-        var playground = Entry.playground;
+        var WS = Entry.getMainWS();
 
         if (this.state === 'pause')
             return this.togglePause();
 
         Entry.Utils.blur();
 
-        //Text Coding Mode
-        if (playground && playground.mainWorkspace) {
-            var mainWorkspace = playground.mainWorkspace;
-            var boardMode = mainWorkspace.mode;
-            if(boardMode == Entry.Workspace.MODE_VIMBOARD)
-                mainWorkspace._syncTextCode();
-        }
+        WS && WS.syncCode();
 
         Entry.addActivity("run");
 
@@ -706,13 +700,13 @@ Entry.Engine = function() {
      */
     p.captureKeyEvent = function(e, isForce) {
         var keyCode = e.keyCode;
-        var type = Entry.type;
+        var isWorkspace = Entry.type === 'workspace';
 
         if (Entry.Utils.isInInput(e) && !isForce)
             return;
 
         //mouse shortcuts
-        if (e.ctrlKey && type == 'workspace') {
+        if (keyCode !== 17 && e.ctrlKey && isWorkspace) {
             if (keyCode == 83) {
                 e.preventDefault();
                 Entry.dispatchEvent(e.shiftKey ? 'saveAsWorkspace': 'saveWorkspace');
@@ -724,6 +718,7 @@ Entry.Engine = function() {
                 Entry.dispatchEvent(e.shiftKey ? 'redo' : 'undo');
             }
         } else if (Entry.engine.isState('run')) {
+            e.preventDefault && e.preventDefault();
             Entry.container.mapEntityIncludeCloneOnScene(
                 Entry.engine.raiseKeyEvent,
                 ["keyPress", keyCode]
@@ -731,8 +726,7 @@ Entry.Engine = function() {
         }
 
         if (Entry.engine.isState('stop')) {
-            if (type === 'workspace' &&
-                (keyCode >= 37 && keyCode <= 40)) {
+            if (isWorkspace && (keyCode >= 37 && keyCode <= 40)) {
                 Entry.stage.moveSprite(e);
             }
         }
@@ -798,7 +792,7 @@ Entry.Engine = function() {
         }
 
         Entry.windowResized.notify();
-    }
+    };
 
     p.exitFullScreen = function() {
         if (document.webkitIsFullScreen ||
@@ -939,7 +933,7 @@ Entry.Engine = function() {
 
     p.detachKeyboardCapture = function() {
         if (Entry.keyPressed && this._keyboardEvent) {
-            Entry.keyPressed.detach(this._keyboardEvent);
+            this._keyboardEvent.destroy();
             delete this._keyboardEvent;
         }
     };

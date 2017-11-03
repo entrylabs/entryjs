@@ -1151,7 +1151,7 @@ Entry.VariableContainer = function() {
         this.createMessageView(message);
         this.messages_.unshift(message);
         if (Entry.playground && Entry.playground.blockMenu)
-            Entry.playground.blockMenu.deleteRendered('start')
+            Entry.playground.blockMenu.deleteRendered('start');
         Entry.playground.reloadPlayground();
         this.updateList();
         message.listElement.nameField.focus();
@@ -1321,6 +1321,7 @@ Entry.VariableContainer = function() {
             panel.view.addClass('entryRemove');
             this.resetVariableAddPanel('list');
         }
+
         var list = new Entry.Variable(list);
         if (Entry.stateManager)
             Entry.stateManager.addCommand(
@@ -1333,7 +1334,7 @@ Entry.VariableContainer = function() {
         this.createListView(list);
         this.lists_.unshift(list);
         if (Entry.playground && Entry.playground.blockMenu)
-            Entry.playground.blockMenu.deleteRendered('variable')
+            Entry.playground.blockMenu.deleteRendered('variable');
         Entry.playground.reloadPlayground();
 
         this.updateList();
@@ -1855,28 +1856,48 @@ Entry.VariableContainer = function() {
     };
 
     p.addCloneLocalVariables = function (param) {
-        var variables = [];
         var that = this;
+
+        //variables
+        var variables = [];
+        var VARIABLE = 'variables_';
         this.mapVariable(function (variable, param) {
-            if (variable.object_ && (variable.object_ == param.objectId)) {
-                var newVar = variable.toJSON();
-                newVar.originId = newVar.id;
-                newVar.id = Entry.generateHash();
-                newVar.object = param.newObjectId;
-                delete newVar.x;
-                delete newVar.y;
-                variables.push(newVar);
-
-                var reg = new RegExp(newVar.originId, 'g');
-                param.json.script = param.json.script.replace(reg, newVar.id);
-
-                //param.json.script = param.json.script.replace(newVar.originId, newVar.id);
-            }
+            var cloned = clone(variable, param, VARIABLE);
+            cloned && variables.push(cloned);
         }, param);
 
-        variables.map(function (variable) {
-            that.addVariable(variable);
-        });
+        //lists
+        var lists = [];
+        var LISTS = 'lists_';
+        this.mapList(function (variable, param) {
+            var cloned = clone(variable, param, LISTS);
+            cloned && lists.push(cloned);
+        }, param);
+
+        variables.map(this.addVariable.bind(this));
+        lists.map(this.addList.bind(this));
+
+        function clone(variable, param, nameSpace) {
+            //not a local variable
+            var _object = variable.object_;
+            if (!_object || (_object !== param.objectId))
+                return;
+
+            var cloned = variable.toJSON();
+            cloned.originId = cloned.id;
+            cloned.id = Entry.generateHash();
+            cloned.object = param.newObjectId;
+            cloned.name = that.checkAllVariableName(cloned.name, nameSpace) ?
+                          Entry.getOrderedName(cloned.name, that[nameSpace], 'name_') :
+                          cloned.name;
+            delete cloned.x;
+            delete cloned.y;
+
+            var json = param.json;
+            json.script = json.script.replace(
+                new RegExp(cloned.originId, 'g'), cloned.id);
+            return cloned;
+        }
     };
 
     p.generateTimer = function (timer) {

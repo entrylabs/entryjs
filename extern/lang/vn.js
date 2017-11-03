@@ -2323,6 +2323,7 @@ Lang.Menus = {
     "joystick": "orangeBoard(joystick)",
     "ardublock": "ardublock",
     "mkboard": "monkeyboard",
+    "memaker": "memaker",
     "codingtoolbox": "codingtoolbox",
     "materials_etc_all": "Other Educational Materials",
     "materials_teaching": "For Teacher Education",
@@ -2486,7 +2487,7 @@ Lang.Menus = {
     "dplay": "DPLAY",
     "iboard": " iboard",
     "nemoino": "NEMOino",
-    "Xbot": "XBOT EDGE USB",
+    "Xbot": "XBOT(OneTouch Dongle/USB)",
     "XbotBT": "XBOT EPOR and EDGE Bluetooth",
     "robotori": "robotori",
     "rokoboard": "rokoboard",
@@ -4256,9 +4257,12 @@ Lang.Workspace = {
     "select_mode_popup_desc1": "Create projects with<br/>unlimited Entry features",
     "select_mode_popup_desc2": "Create projects using<br/>'Practical Course' features",
     "practical_course_notice": "Notice",
-    "practical_course_desc": "Practical course mode provides only<br />the necessary block when learning textbook.<br />If you want to switch the mode,<br />choose default type through the top menu.",
+    "practical_course_desc": "<span class='practical_cource_title'>교과용 만들기</span>는<br />실과 교과서로 소프트웨어를 배울 때<br />필요한 기능만을 제공합니다.",
+    "practical_course_desc2": "*기본형 작품 만들기를 이용하면 더 많은 기능을<br />이용해 작품을 만들 수 있습니다.",
+    "practical_course_tooltip": "모든 기능을 이용하기 위해서는<br/>기본형을 선택해 주세요.",
     "name_already_exists": "The name already exists.",
-    "enter_the_name": "Please enter the name."
+    "enter_the_name": "Please enter the name.",
+    "object_not_exist_error": "Object does not exist. Please add object and try again."
 };
 Lang.code = "view code";
 Lang.EntryStatic = {
@@ -6067,7 +6071,16 @@ Lang.template = {
     "altino_light": "%1 light %2  %3",
     "altino_rear_wheel": "rear motor right %1 left %2 setting %3",
     "altino_sound": "%1 octave %2 play  %3",
-    "altino_steering": "direction %1 setting %2"
+    "altino_steering": "direction %1 setting %2",
+    "memaker_digital_pwm": "Digital %1 Pin %2 %3",
+    "memaker_get_analog_value": "Analog %1 Sensor value",
+    "memaker_get_analog_value_map": "Map Value %1 %2 ~ %3 to %4 ~ %5",
+    "memaker_get_digital": "Digital %1 Sensor value",
+    "memaker_get_ultrasonic_value": "Read ultrasonic sensor trig pin %1 echo pin %2",
+    "memaker_set_lcd": "1602 LCD Row %1, Column %2 Value %3 %4",
+    "memaker_set_servo": "Set servo pin %1 angle as %3",
+    "memaker_toggle_led": "Digital %1 Pin %2 %3",
+    "memaker_lcd_command": "1602 LCD Command %1 execute %2"
 };
 Lang.TextCoding = {
     "block_name": "Block Name",

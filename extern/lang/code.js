@@ -1674,8 +1674,8 @@ Lang.Menus = {
     "corporateConfirm": "확인",
     "corporateTitle": "안녕하세요. 엔트리교육연구소입니다. <br>“엔트리”를 이용하고 계신 회원 여러분께 깊은 감사의 말씀을 드립니다.<br> 엔트리교육연구소는 그동안 공익 목적으로 운영해오던 “엔트리” 웹사이트의 운영을<br> 네이버가 설립한 비영리 재단인 커넥트재단에 양도하기로 합의하였습니다. <br>앞으로 엔트리는 커넥트재단에서 공익 목적 하에 지속적으로 운영될 수 있도록 <br>할 것이며, 회원 여러분께서는 기존과 동일하게 엔트리를 이용하실 수 있습니다.<br> 웹사이트 제공 주체가 엔트리교육연구소에서 커넥트재단으로 변경됨에 따라 아래와 <br>같이 회원 개인 정보에 대한 이전이 있으며, 본 합의에 의해 실제 개인 정보의 위치가 <br>물리적으로 이동한 것은 아님을 알려드립니다. ",
     "textcoding_numberError_v": "등록된 변수 중에 이름의 첫 글자가 숫자인 변수가 있으면 모드 변환을 할 수 없습니다.",
-    "textcoding_bookedError_1v": "등록된 변수 중에 변수 이름이",
-    "textcoding_bookedError_2v": "인 변수가 있으면 모드 변환을 할 수 없습니다.",
+    "textcoding_bookedError_1v": "등록된 변수 중에 변수 이름이 ",
+    "textcoding_bookedError_2v": " 인 변수가 있으면 모드 변환을 할 수 없습니다.",
     "textcoding_specialCharError_v": "등록된 변수 중 이름에 '_' 를 제외한 특수 문자가 있으면 모드 변환을 할 수 없습니다.",
     "textcoding_numberError_l": "등록된 리스트 중에 이름의 첫 글자가 숫자인 리스트가 있으면 모드 변환을 할 수 없습니다.",
     "textcoding_bookedError_1l": "등록된 리스트 중에 리스트 이름이",
@@ -2323,6 +2323,7 @@ Lang.Menus = {
     "joystick": "오렌지보드(조이스틱)",
     "ardublock": "아두블럭",
     "mkboard": "몽키보드",
+    "memaker": "미메이커",
     "codingtoolbox": "코딩툴박스",
     "materials_etc_all": "기타 교육자료 모음",
     "materials_teaching": "교원 연수 자료",
@@ -2486,7 +2487,7 @@ Lang.Menus = {
     "dplay": "디플레이",
     "iboard": " 아이보드",
     "nemoino": "네모이노",
-    "Xbot": "엑스봇 엣지 USB",
+    "Xbot": "엑스봇(원터치 동글/USB)",
     "XbotBT": "엑스봇 에뽀/엣지 블투투스",
     "robotori": "로보토리",
     "rokoboard": "로코보드",
@@ -4256,9 +4257,12 @@ Lang.Workspace = {
     "select_mode_popup_desc1": "엔트리의 모든 기능을 이용하여<br/>자유롭게 작품을 만듭니다.",
     "select_mode_popup_desc2": "실과 교과서에 등장하는 기능만을<br/>이용하여 작품을 만듭니다.",
     "practical_course_notice": "안내",
-    "practical_course_desc": "교과용 만들기 환경은 실과 교과서를<br />학습할 때 필요한 블록만을 제공하는 환경입니다.<br />기본 만들기 환경으로 전환하기 위해서는<br />상단 메뉴를 통해 기본형을 선택해주세요.",
+    "practical_course_desc": "<span class='practical_cource_title'>교과용 만들기</span>는<br />실과 교과서로 소프트웨어를 배울 때<br />필요한 기능만을 제공합니다.",
+    "practical_course_desc2": "*기본형 작품 만들기를 이용하면 더 많은 기능을<br />이용해 작품을 만들 수 있습니다.",
+    "practical_course_tooltip": "모든 기능을 이용하기 위해서는<br/>기본형을 선택해 주세요.",
     "name_already_exists": "이름이 중복 되었습니다.",
-    "enter_the_name": "이름을 입력하여 주세요."
+    "enter_the_name": "이름을 입력하여 주세요.",
+    "object_not_exist_error": "오브젝트가 존재하지 않습니다. 오브젝트를 추가한 후 시도해주세요."
 };
 Lang.code = "코드보기";
 Lang.EntryStatic = {
@@ -6067,7 +6071,16 @@ Lang.template = {
     "altino_light": "%1 등을 %2  %3",
     "altino_rear_wheel": "뒷바퀴 오른쪽 %1 왼쪽 %2 로 정하기 %3",
     "altino_sound": "%1 옥타브 %2 음을 연주하기  %3",
-    "altino_steering": "방향을 %1 로 정하기 %2"
+    "altino_steering": "방향을 %1 로 정하기 %2",
+    "memaker_digital_pwm": "디지털 %1 번 핀을 %2 (으)로 정하기 %3",
+    "memaker_get_analog_value": "아날로그 %1 번 센서값",
+    "memaker_get_analog_value_map": "%1 의 범위를 %2 ~ %3 에서 %4 ~ %5 로 바꾼값",
+    "memaker_get_digital": "디지털 %1 번 센서값",
+    "memaker_get_ultrasonic_value": "초음파센서 Trig %1 Echo %2 센서값",
+    "memaker_set_lcd": "1602 문자 LCD %1 행 , %2열에 %3 출력하기 %4",
+    "memaker_set_servo": "디지털 %1 번 핀의 서보모터를 %2 의 각도로 정하기 %3",
+    "memaker_toggle_led": "디지털 %1 번 핀 %2 %3",
+    "memaker_lcd_command": "1602 문자 LCD %1 명령실행하기 %2"
 };
 Lang.TextCoding = {
     "block_name": "블록명",
