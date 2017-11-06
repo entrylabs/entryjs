@@ -640,9 +640,11 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
         var categoryElem;
         if(categoryName in this._categoryElems) {
             categoryElem = this._categoryElems[categoryName];
-            categoryElem.addClass('entryRemoveCategory');            
+            categoryElem.addClass('entryRemoveCategory');
+            if (this.lastSelector === categoryName) {
+                this._dSelectMenu(this.firstSelector, true);
+            }
         }
-        this.selectMenu(this.firstSelector, true);
     }
 
     p.unbanCategory = function(categoryName) {
