@@ -135,16 +135,21 @@ Entry.popupHelper.prototype.setPopup = function(popupObject) {
  * Remove this popup
  */
 Entry.popupHelper.prototype.remove = function(key) {
-    if(this.window_.children().length > 0) {
+    if (key) {
+        this.window_.find('> .' + key).remove();
+    } else if(this.window_.children().length > 0) {
         this.window_.children().remove();
     }
     // 지워지면 안되는 요소인데 지워지고 있었음. 이유는? 잠시동안만 유지.
     // this.window_.remove();
     delete this.popupList[key];
-    this.nowContent = undefined;
-    this.body_.addClass('hiddenPopup');
-    if(this.nextPopupList.length > 0) {
-        this.show(this.nextPopupList.shift());
+
+    if (this.nowContent.hasClass(key)) {
+        this.nowContent = undefined;
+        this.body_.addClass('hiddenPopup');
+        if(this.nextPopupList.length > 0) {
+            this.show(this.nextPopupList.shift());
+        }
     }
 };
 
