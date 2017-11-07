@@ -1011,7 +1011,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
                 var block = threads[i].getFirstBlock();
 
                 if (!block) continue;
-                var type = block.type;                
+                var type = block.type;
                 var index = this._dynamicThreads.indexOf(type);
                 if (index > -1)
                     visibles[index] = block
@@ -1063,6 +1063,8 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
     p.deleteRendered = function(name) {
         delete this._renderedCategories[name];
     };
+
+    p.clearRendered = function() { this._renderedCategories = {}; };
 
     p.hasCategory = function() {
         return !!this._categoryData;
