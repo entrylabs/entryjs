@@ -42326,6 +42326,17 @@ Entry.block = {
                 "accept": "string"
             },
             {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.byrobot_petrone_v2_common_light_mode_hold, "0"],               // TeamHold = 0x12
+                    [Lang.Blocks.byrobot_petrone_v2_common_light_mode_flicker, "1"],            // TeamFlicker = 0x13
+                    [Lang.Blocks.byrobot_petrone_v2_common_light_mode_flicker_double, "2"],     // TeamFlickerDouble = 0x14
+                    [Lang.Blocks.byrobot_petrone_v2_common_light_mode_dimming, "3"],            // TeamDimming = 0x15
+                ],
+                "value": "0",
+                "fontSize": 11
+            },
+            {
                 "type": "Indicator",
                 "img": "block_icon/hardware_03.png",
                 "size": 12
@@ -42346,6 +42357,7 @@ Entry.block = {
                     "type": "text",
                     "params": ["255"]
                 },
+                null,
                 null
             ],
             "type": "byrobot_petrone_v2_controller_controller_light_color_rgb_input"
@@ -42353,15 +42365,17 @@ Entry.block = {
         "paramsKeyMap": {
             "RED": 0,
             "GREEN": 1,
-            "BLUE": 2
+            "BLUE": 2,
+            "ADDITION": 3
         },
         "class": "byrobot_petrone_v2_controller_controller_light",
         "isNotFor": ["byrobot_petrone_v2_controller"],
         "func": function (sprite, script) {
+            var mode = 0x12 + parseInt(script.getField('ADDITION'));
             var red = script.getNumberValue('RED');
             var green = script.getNumberValue('GREEN');
             var blue = script.getNumberValue('BLUE');
-            return Entry.byrobot_petrone_v2_controller.setLightColorRgb(script, 0x31, red, green, blue);
+            return Entry.byrobot_petrone_v2_controller.setLightColorRgb(script, 0x31, mode, red, green, blue);
         },
     },
     // */
@@ -42386,6 +42400,17 @@ Entry.block = {
                 "fontSize": 11
             },
             {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.byrobot_petrone_v2_common_light_mode_hold, "0"],               // TeamHold = 0x12
+                    [Lang.Blocks.byrobot_petrone_v2_common_light_mode_flicker, "1"],            // TeamFlicker = 0x13
+                    [Lang.Blocks.byrobot_petrone_v2_common_light_mode_flicker_double, "2"],     // TeamFlickerDouble = 0x14
+                    [Lang.Blocks.byrobot_petrone_v2_common_light_mode_dimming, "3"],            // TeamDimming = 0x15
+                ],
+                "value": "0",
+                "fontSize": 11
+            },
+            {
                 "type": "Indicator",
                 "img": "block_icon/hardware_03.png",
                 "size": 12
@@ -42395,16 +42420,19 @@ Entry.block = {
         "def": {
             "params": [
                 null,
+                null,
                 null
             ],
             "type": "byrobot_petrone_v2_controller_controller_light_color_rgb_select"
         },
         "paramsKeyMap": {
             "SELECT": 0,
+            "ADDITION": 1
         },
         "class": "byrobot_petrone_v2_controller_controller_light",
         "isNotFor": ["byrobot_petrone_v2_controller"],
         "func": function (sprite, script) {
+            var mode   = 0x12 + parseInt(script.getField('ADDITION'));
             var select = script.getField('SELECT');
             var red    = 0;
             var green  = 0;
@@ -42443,7 +42471,7 @@ Entry.block = {
                     break;
             }
 
-            return Entry.byrobot_petrone_v2_controller.setLightColorRgb(script, 0x31, red, green, blue);
+            return Entry.byrobot_petrone_v2_controller.setLightColorRgb(script, 0x31, mode, red, green, blue);
         },
     },
     // */
@@ -44275,6 +44303,17 @@ Entry.block = {
                 "accept": "string"
             },
             {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.byrobot_petrone_v2_common_light_mode_hold, "0"],               // TeamHold = 0x12
+                    [Lang.Blocks.byrobot_petrone_v2_common_light_mode_flicker, "1"],            // TeamFlicker = 0x13
+                    [Lang.Blocks.byrobot_petrone_v2_common_light_mode_flicker_double, "2"],     // TeamFlickerDouble = 0x14
+                    [Lang.Blocks.byrobot_petrone_v2_common_light_mode_dimming, "3"],            // TeamDimming = 0x15
+                ],
+                "value": "0",
+                "fontSize": 11
+            },
+            {
                 "type": "Indicator",
                 "img": "block_icon/hardware_03.png",
                 "size": 12
@@ -44295,6 +44334,7 @@ Entry.block = {
                     "type": "text",
                     "params": ["255"]
                 },
+                null,
                 null
             ],
             "type": "byrobot_petrone_v2_drive_controller_light_color_rgb_input"
@@ -44302,12 +44342,13 @@ Entry.block = {
         "paramsKeyMap": {
             "RED": 0,
             "GREEN": 1,
-            "BLUE": 2
+            "BLUE": 2,
+            "ADDITION": 3
         },
         "class": "byrobot_petrone_v2_drive_controller_light",
         "isNotFor": ["byrobot_petrone_v2_drive"],
         "func": function (sprite, script) {
-            var mode = 0x12;
+            var mode = 0x12 + parseInt(script.getField('ADDITION'));
             var red = script.getNumberValue('RED');
             var green = script.getNumberValue('GREEN');
             var blue = script.getNumberValue('BLUE');
@@ -44336,6 +44377,17 @@ Entry.block = {
                 "fontSize": 11
             },
             {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.byrobot_petrone_v2_common_light_mode_hold, "0"],               // TeamHold = 0x12
+                    [Lang.Blocks.byrobot_petrone_v2_common_light_mode_flicker, "1"],            // TeamFlicker = 0x13
+                    [Lang.Blocks.byrobot_petrone_v2_common_light_mode_flicker_double, "2"],     // TeamFlickerDouble = 0x14
+                    [Lang.Blocks.byrobot_petrone_v2_common_light_mode_dimming, "3"],            // TeamDimming = 0x15
+                ],
+                "value": "0",
+                "fontSize": 11
+            },
+            {
                 "type": "Indicator",
                 "img": "block_icon/hardware_03.png",
                 "size": 12
@@ -44345,17 +44397,19 @@ Entry.block = {
         "def": {
             "params": [
                 null,
+                null,
                 null
             ],
             "type": "byrobot_petrone_v2_drive_controller_light_color_rgb_select"
         },
         "paramsKeyMap": {
             "SELECT": 0,
+            "ADDITION": 1
         },
         "class": "byrobot_petrone_v2_drive_controller_light",
         "isNotFor": ["byrobot_petrone_v2_drive"],
         "func": function (sprite, script) {
-            var mode = 0x12;
+            var mode = 0x12 + parseInt(script.getField('ADDITION'));
             var select = script.getField('SELECT');
             var red = 0;
             var green = 0;
@@ -44566,6 +44620,17 @@ Entry.block = {
                 "accept": "string"
             },
             {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.byrobot_petrone_v2_common_light_mode_hold, "0"],               // EyeHold = 0x12,          // ArmHold = 0x42
+                    [Lang.Blocks.byrobot_petrone_v2_common_light_mode_flicker, "1"],            // EyeFlicker = 0x13,       // ArmFlicker = 0x43
+                    [Lang.Blocks.byrobot_petrone_v2_common_light_mode_flicker_double, "2"],     // EyeFlickerDouble = 0x14, // ArmFlickerDouble = 0x44
+                    [Lang.Blocks.byrobot_petrone_v2_common_light_mode_dimming, "3"],            // EyeDimming = 0x15,       // ArmDimming = 0x45
+                ],
+                "value": "0",
+                "fontSize": 11
+            },
+            {
                 "type": "Indicator",
                 "img": "block_icon/hardware_03.png",
                 "size": 12
@@ -44587,6 +44652,7 @@ Entry.block = {
                     "type": "text",
                     "params": ["255"]
                 },
+                null,
                 null
             ],
             "type": "byrobot_petrone_v2_drive_drone_light_color_rgb_input"
@@ -44595,12 +44661,13 @@ Entry.block = {
             "MODE": 0,
             "RED": 1,
             "GREEN": 2,
-            "BLUE": 3
+            "BLUE": 3,
+            "ADDITION": 4,
         },
         "class": "byrobot_petrone_v2_drive_drone_light",
         "isNotFor": ["byrobot_petrone_v2_drive"],
         "func": function (sprite, script) {
-            var mode = parseInt(script.getField('MODE'));
+            var mode = parseInt(script.getField('MODE')) + parseInt(script.getField('ADDITION'));
             var red = script.getNumberValue('RED');
             var green = script.getNumberValue('GREEN');
             var blue = script.getNumberValue('BLUE');
@@ -44638,6 +44705,17 @@ Entry.block = {
                 "fontSize": 11
             },
             {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.byrobot_petrone_v2_common_light_mode_hold, "0"],               // EyeHold = 0x12,          // ArmHold = 0x42
+                    [Lang.Blocks.byrobot_petrone_v2_common_light_mode_flicker, "1"],            // EyeFlicker = 0x13,       // ArmFlicker = 0x43
+                    [Lang.Blocks.byrobot_petrone_v2_common_light_mode_flicker_double, "2"],     // EyeFlickerDouble = 0x14, // ArmFlickerDouble = 0x44
+                    [Lang.Blocks.byrobot_petrone_v2_common_light_mode_dimming, "3"],            // EyeDimming = 0x15,       // ArmDimming = 0x45
+                ],
+                "value": "0",
+                "fontSize": 11
+            },
+            {
                 "type": "Indicator",
                 "img": "block_icon/hardware_03.png",
                 "size": 12
@@ -44648,6 +44726,7 @@ Entry.block = {
             "params": [
                 null,
                 null,
+                null,
                 null
             ],
             "type": "byrobot_petrone_v2_drive_drone_light_color_rgb_select"
@@ -44655,11 +44734,12 @@ Entry.block = {
         "paramsKeyMap": {
             "MODE": 0,
             "SELECT": 1,
+            "ADDITION": 2,
         },
         "class": "byrobot_petrone_v2_drive_drone_light",
         "isNotFor": ["byrobot_petrone_v2_drive"],
         "func": function (sprite, script) {
-            var mode = parseInt(script.getField('MODE'));
+            var mode = parseInt(script.getField('MODE')) + parseInt(script.getField('ADDITION'));
             var select = script.getField('SELECT');
             var red = 0;
             var green = 0;
@@ -47064,6 +47144,17 @@ Entry.block = {
                 "accept": "string"
             },
             {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.byrobot_petrone_v2_common_light_mode_hold, "0"],               // TeamHold = 0x12
+                    [Lang.Blocks.byrobot_petrone_v2_common_light_mode_flicker, "1"],            // TeamFlicker = 0x13
+                    [Lang.Blocks.byrobot_petrone_v2_common_light_mode_flicker_double, "2"],     // TeamFlickerDouble = 0x14
+                    [Lang.Blocks.byrobot_petrone_v2_common_light_mode_dimming, "3"],            // TeamDimming = 0x15
+                ],
+                "value": "0",
+                "fontSize": 11
+            },
+            {
                 "type": "Indicator",
                 "img": "block_icon/hardware_03.png",
                 "size": 12
@@ -47084,6 +47175,7 @@ Entry.block = {
                     "type": "text",
                     "params": ["255"]
                 },
+                null,
                 null
             ],
             "type": "byrobot_petrone_v2_flight_controller_light_color_rgb_input"
@@ -47091,12 +47183,13 @@ Entry.block = {
         "paramsKeyMap": {
             "RED": 0,
             "GREEN": 1,
-            "BLUE": 2
+            "BLUE": 2,
+            "ADDITION": 3
         },
         "class": "byrobot_petrone_v2_flight_controller_light",
         "isNotFor": ["byrobot_petrone_v2_flight"],
         "func": function (sprite, script) {
-            var mode = 0x12;
+            var mode = 0x12 + parseInt(script.getField('ADDITION'));
             var red = script.getNumberValue('RED');
             var green = script.getNumberValue('GREEN');
             var blue = script.getNumberValue('BLUE');
@@ -47125,6 +47218,17 @@ Entry.block = {
                 "fontSize": 11
             },
             {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.byrobot_petrone_v2_common_light_mode_hold, "0"],               // TeamHold = 0x12
+                    [Lang.Blocks.byrobot_petrone_v2_common_light_mode_flicker, "1"],            // TeamFlicker = 0x13
+                    [Lang.Blocks.byrobot_petrone_v2_common_light_mode_flicker_double, "2"],     // TeamFlickerDouble = 0x14
+                    [Lang.Blocks.byrobot_petrone_v2_common_light_mode_dimming, "3"],            // TeamDimming = 0x15
+                ],
+                "value": "0",
+                "fontSize": 11
+            },
+            {
                 "type": "Indicator",
                 "img": "block_icon/hardware_03.png",
                 "size": 12
@@ -47134,17 +47238,19 @@ Entry.block = {
         "def": {
             "params": [
                 null,
+                null,
                 null
             ],
             "type": "byrobot_petrone_v2_flight_controller_light_color_rgb_select"
         },
         "paramsKeyMap": {
             "SELECT": 0,
+            "ADDITION": 1
         },
         "class": "byrobot_petrone_v2_flight_controller_light",
         "isNotFor": ["byrobot_petrone_v2_flight"],
         "func": function (sprite, script) {
-            var mode = 0x12;
+            var mode = 0x12 + parseInt(script.getField('ADDITION'));
             var select = script.getField('SELECT');
             var red = 0;
             var green = 0;
@@ -47355,6 +47461,17 @@ Entry.block = {
                 "accept": "string"
             },
             {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.byrobot_petrone_v2_common_light_mode_hold, "0"],               // EyeHold = 0x12,          // ArmHold = 0x42
+                    [Lang.Blocks.byrobot_petrone_v2_common_light_mode_flicker, "1"],            // EyeFlicker = 0x13,       // ArmFlicker = 0x43
+                    [Lang.Blocks.byrobot_petrone_v2_common_light_mode_flicker_double, "2"],     // EyeFlickerDouble = 0x14, // ArmFlickerDouble = 0x44
+                    [Lang.Blocks.byrobot_petrone_v2_common_light_mode_dimming, "3"],            // EyeDimming = 0x15,       // ArmDimming = 0x45
+                ],
+                "value": "0",
+                "fontSize": 11
+            },
+            {
                 "type": "Indicator",
                 "img": "block_icon/hardware_03.png",
                 "size": 12
@@ -47376,6 +47493,7 @@ Entry.block = {
                     "type": "text",
                     "params": ["255"]
                 },
+                null,
                 null
             ],
             "type": "byrobot_petrone_v2_flight_drone_light_color_rgb_input"
@@ -47384,12 +47502,13 @@ Entry.block = {
             "MODE": 0,
             "RED": 1,
             "GREEN": 2,
-            "BLUE": 3
+            "BLUE": 3,
+            "ADDITION": 4,
         },
         "class": "byrobot_petrone_v2_flight_drone_light",
         "isNotFor": ["byrobot_petrone_v2_flight"],
         "func": function (sprite, script) {
-            var mode = parseInt(script.getField('MODE'));
+            var mode = parseInt(script.getField('MODE')) + parseInt(script.getField('ADDITION'));
             var red = script.getNumberValue('RED');
             var green = script.getNumberValue('GREEN');
             var blue = script.getNumberValue('BLUE');
@@ -47427,6 +47546,17 @@ Entry.block = {
                 "fontSize": 11
             },
             {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.byrobot_petrone_v2_common_light_mode_hold, "0"],               // EyeHold = 0x12,          // ArmHold = 0x42
+                    [Lang.Blocks.byrobot_petrone_v2_common_light_mode_flicker, "1"],            // EyeFlicker = 0x13,       // ArmFlicker = 0x43
+                    [Lang.Blocks.byrobot_petrone_v2_common_light_mode_flicker_double, "2"],     // EyeFlickerDouble = 0x14, // ArmFlickerDouble = 0x44
+                    [Lang.Blocks.byrobot_petrone_v2_common_light_mode_dimming, "3"],            // EyeDimming = 0x15,       // ArmDimming = 0x45
+                ],
+                "value": "0",
+                "fontSize": 11
+            },
+            {
                 "type": "Indicator",
                 "img": "block_icon/hardware_03.png",
                 "size": 12
@@ -47437,6 +47567,7 @@ Entry.block = {
             "params": [
                 null,
                 null,
+                null,
                 null
             ],
             "type": "byrobot_petrone_v2_flight_drone_light_color_rgb_select"
@@ -47444,11 +47575,12 @@ Entry.block = {
         "paramsKeyMap": {
             "MODE": 0,
             "SELECT": 1,
+            "ADDITION": 2,
         },
         "class": "byrobot_petrone_v2_flight_drone_light",
         "isNotFor": ["byrobot_petrone_v2_flight"],
         "func": function (sprite, script) {
-            var mode = parseInt(script.getField('MODE'));
+            var mode = parseInt(script.getField('MODE')) + parseInt(script.getField('ADDITION'));
             var select = script.getField('SELECT');
             var red = 0;
             var green = 0;
