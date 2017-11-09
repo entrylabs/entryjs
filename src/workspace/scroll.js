@@ -31,7 +31,7 @@ Entry.Scroller = function(board, horizontal, vertical) {
 
     this._bindEvent();
 
-    this._scrollCommand = _.debounce(Entry.do, 200);
+    this._scrollCommand = Entry.Utils.debounce(Entry.do, 200);
 };
 
 Entry.Scroller.RADIUS = 7;
@@ -286,7 +286,7 @@ Entry.Scroller.RADIUS = 7;
     };
 
     p._bindEvent = function() {
-        var dResizeScrollBar = _.debounce(this.resizeScrollBar, 250);
+        var dResizeScrollBar = Entry.Utils.debounce(this.resizeScrollBar, 250);
         this.board.changeEvent.attach(this, dResizeScrollBar);
         if (Entry.windowResized)
             Entry.windowResized.attach(this, dResizeScrollBar);

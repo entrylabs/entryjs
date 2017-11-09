@@ -441,7 +441,7 @@ Entry.Func.generateBlock = function(func) {
                 stringIndex++;
             }
         } else {
-            description += templateChunk
+            description += templateChunk;
         }
     }
 
@@ -597,9 +597,10 @@ Entry.Func.unbindFuncChangeEvent = function() {
 };
 
 Entry.Func.unbindWorkspaceStateChangeEvent = function() {
-    if (!this._workspaceStateEvent)
-        return;
-    this._workspaceStateEvent.destroy();
+    var event = this._workspaceStateEvent;
+    if (!event) return;
+
+    event.destroy();
     delete this._workspaceStateEvent;
 };
 

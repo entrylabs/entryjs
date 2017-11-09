@@ -230,6 +230,7 @@ Entry.EntityObject.prototype.getDirection = function(toFixedValue) {
  */
 Entry.EntityObject.prototype.setDirection = function(direction, flippable) {
     if (!direction) direction = 0;
+    direction = direction % 360;
 
     if (this.parent.getRotateMethod() == 'vertical' && !flippable) {
         var previousIsRight = this.direction >= 0 && this.direction < 180;
@@ -513,7 +514,7 @@ Entry.EntityObject.prototype.getFont = function() {
 Entry.EntityObject.prototype.setFont = function(font) {
     if (this.parent.objectType != 'textBox')
         return;
-    if (this.font === font)
+    if (this.textObject.font === font)
         return;
     if (!font)
         font = "20px Nanum Gothic";
@@ -533,8 +534,7 @@ Entry.EntityObject.prototype.setFont = function(font) {
     this.setFontSize(fontSize);
     this.setFontType(fontArray.join(" "));
 
-    this.font = this.getFont();
-    this.textObject.font = font;
+    this.textObject.font = this.getFont();
     Entry.stage.update();
     this.setWidth(this.textObject.getMeasuredWidth());
     this.updateBG();
@@ -645,7 +645,7 @@ Entry.EntityObject.prototype.toggleFontItalic = function() {
 };
 
 Entry.EntityObject.prototype.setFontName = function(fontName) {
-    var currentFontArray = this.font.split(' ');
+    var currentFontArray = this.textObject.font.split(' ');
     var tempArray = [];
     for (var i=0,len=currentFontArray.length; i<len; i++) {
         if (currentFontArray[i] === 'bold' ||
@@ -660,9 +660,9 @@ Entry.EntityObject.prototype.setFontName = function(fontName) {
 Entry.EntityObject.prototype.getFontName = function() {
     if (this.type != 'textBox')
         return;
-    if (!this.font)
+    if (!this.textObject.font)
         return '';
-    var currentFontArray = this.font.split(' ');
+    var currentFontArray = this.textObject.font.split(' ');
     var tempArray = [];
     for (var i=0,len=currentFontArray.length; i<len; i++) {
         if (currentFontArray[i] !== 'bold' &&

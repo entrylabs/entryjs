@@ -125,8 +125,11 @@ Entry.BlockToPyParser = function() {
             result += block.data.type;
         }
 
-        if(!syntax || syntax === null)
-            return result;
+        if(!syntax || syntax === null) {
+            var error = new Error();
+            error.block = block;
+            throw error;
+        }
 
 
         var blockReg = /(%.)/mi;
@@ -221,6 +224,11 @@ Entry.BlockToPyParser = function() {
                     var forStmtText = forStmtTokens.join(" ");
                     blockToken = forStmtText;
                 }
+                
+                if(syntaxObj && syntaxObj.key == "substring" && i == 2 && Entry.Utils.isNumber(result)) {
+                    result = '"' + result + '"';
+                }
+
                 result += blockToken;
             }
         }

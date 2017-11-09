@@ -102,7 +102,7 @@ goog.provide('Entry.ContextMenu');
             delete this._className;
         }
         if (this._hideEvent) {
-            Entry.documentMousedown.detach(this._hideEvent);
+            this._hideEvent.destroy();
             this._hideEvent = null;
         }
     };

@@ -37,6 +37,7 @@ Entry.Board = function(option) {
     this._addControl();
     this._bindEvent();
     Entry.addEventListener('fontLoaded', this.reDraw.bind(this));
+    Entry.Utils.setSVGDom(this.svgDom);
 };
 
 Entry.Board.OPTION_PASTE = 0;
@@ -110,7 +111,7 @@ Entry.Board.DRAG_RADIUS = 5;
 
     p.changeCode = function(code, shouldNotCreateView, cb) {
         if (this.code && this.codeListener)
-            this.code.changeEvent.detach(this.codeListener);
+            this.codeListener.destroy();
 
         this.set({code: code});
 
@@ -820,9 +821,7 @@ Entry.Board.DRAG_RADIUS = 5;
     };
 
     p.disablePattern = function() {
-        this.pattern.attr({
-            style: "display: none"
-        });
+        this.pattern.attr({ style: "display: none" });
     };
 
     p._removeActivated = function() {
@@ -878,7 +877,7 @@ Entry.Board.DRAG_RADIUS = 5;
             if (!prevBlock && block.thread instanceof Entry.Thread &&
                block.thread.parent instanceof Entry.Code) {
                 nextBlock = block.thread.getBlock(
-                    block.thread.indexOf(block) + count)
+                    block.thread.indexOf(block) + count);
 
                 if (nextBlock)
                     backupPos = nextBlock.view.getAbsoluteCoordinate();
@@ -1040,7 +1039,7 @@ Entry.Board.DRAG_RADIUS = 5;
         }
         if (Entry.windowResized) {
             Entry.windowResized
-                .attach(this, _.debounce(this.updateOffset, 200));
+                .attach(this, Entry.Utils.debounce(this.updateOffset, 200));
         }
     };
 
