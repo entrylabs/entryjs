@@ -73,7 +73,8 @@ Entry.HW = function() {
         '15.1': Entry.coconut,
         '16.1': Entry.MODI,
         '18.1': Entry.Altino,
-        '1A.1': Entry.ArduinoNano        
+        '1A.1': Entry.ArduinoNano,
+        '1C.1': Entry.hummingbird,
     };
 };
 
