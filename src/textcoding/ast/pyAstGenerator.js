@@ -27,15 +27,19 @@ Entry.PyAstGenerator = function() {
             var message, subject;
             if (error.expectedType && error.tokType) {
                 if (error.tokType === "eof" || error.tokType === "newline")
-                    message = this.getTokenLang(error.expectedType) + " 가 필요합니다.";
+                    message = Lang.TextCoding.message_conv_is_expect1 +
+                        this.getTokenLang(error.expectedType) + Lang.TextCoding.message_conv_is_expect2;
                 else
-                    message = this.getTokenLang(error.tokType) + " 대신 " + this.getTokenLang(error.expectedType) + " 가 필요합니다.";
+                    message = Lang.TextCoding.message_conv_instead1 + this.getTokenLang(error.tokType) +
+                        Lang.TextCoding.message_conv_instead2 + this.getTokenLang(error.expectedType) +
+                        Lang.TextCoding.message_conv_instead3;
                 subject = Entry.TextCodingError.SUBJECT_SYNTAX_TOKEN;
             } else if (error.tokType) {
                 if (error.tokType === "eof" || error.tokType === "newline")
                     message = Entry.TextCodingError.MESSAGE_SYNTAX_UNEXPECTED_TOKEN;
                 else
-                    message = this.getTokenLang(error.tokType) + " 는 올 수 없습니다.";
+                    message = Lang.TextCoding.message_conv_is_wrong1 + this.getTokenLang(error.tokType) +
+                        Lang.TextCoding.message_conv_is_wrong1;
                 subject = Entry.TextCodingError.SUBJECT_SYNTAX_TOKEN;
             } else if (msgTokens[0].trim() == "Unexpected token") {
                 message = Entry.TextCodingError.MESSAGE_SYNTAX_UNEXPECTED_TOKEN;
@@ -70,8 +74,11 @@ Entry.PyAstGenerator = function() {
     };
 
     p.getTokenLang = function(token) {
-        if (Array.isArray(token))
-            return token.map(this._getTokenLang).join(", ");
+        if (Array.isArray(token)) {
+            var tokens = token.map(this._getTokenLang);
+            var lastToken = tokens.pop();
+            return tokens.join(", ") + " 나 " + lastToken;
+        }
         else
             return this._getTokenLang(token);
     };
