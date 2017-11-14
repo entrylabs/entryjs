@@ -201,6 +201,7 @@ Entry.block.converters = {};
 }
 
 Entry.block = {
+//region modi 모디
 "modi_microphone_value": {
     "color": "#00979D",
     "fontColor": "#fff",
@@ -406,8 +407,6 @@ Entry.block = {
         if(!Entry.hw.sendQueue["getProperty"]){
             Entry.MODI.initSend();
         }
-
-
         if(!pd.value[property]){
             pd.value[property] = 0;
 
@@ -534,8 +533,6 @@ Entry.block = {
         if(!Entry.hw.sendQueue["getProperty"]){
             Entry.MODI.initSend();
         }
-
-
         if(!pd.value[property]){
             pd.value[property] = 0;
 
@@ -1467,6 +1464,8 @@ Entry.block = {
         return script.callReturn();
     }
 },
+//endregion modi 모디
+//region albert 알버트
 "albert_hand_found": {
     "color": "#00979D",
     "fontColor": "#fff",
@@ -3181,6 +3180,8 @@ Entry.block = {
     },
     "syntax": {"js": [], "py": ["Albert.set_wheels(%1, %2)"]}
 },
+//endregion albert 알버트
+//region arduino 아두이노
 "arduino_text": {
     "color": "#FFD974",
     "skeleton": "basic_string_field",
@@ -3834,6 +3835,8 @@ Entry.block = {
         }
     ]}
 },
+//endregion arduino 아두이노
+//region arduinoExt 아두이노 확장모드
 "arduino_ext_analog_list": {
     "color": "#00979D",
     "skeleton": "basic_string_field",
@@ -4740,6 +4743,8 @@ Entry.block = {
         }
     ]}
 },
+//endregion arduinoExt 아두이노 확장모드
+//region arduinoNano 아두이노 나노
 "arduino_nano_analog_list": {
     "parent": "arduino_ext_analog_list",
     "params": [
@@ -4934,6 +4939,8 @@ Entry.block = {
     },
     "isNotFor": [ "ArduinoNano" ],
 },
+//endregion arduinoNano 아두이노 나노
+//region iboard 아이보드
 "iboard_analog_list": {
     "parent": "arduino_ext_analog_list",
     "params": [
@@ -5014,7 +5021,6 @@ Entry.block = {
         }
     ]}
 },
-
 "iboard_cds_sensor_get_value": {
     "parent": "arduino_ext_analog_list",
     "params": [
@@ -5049,7 +5055,6 @@ Entry.block = {
         }
     ]}
 },
-
 "iboard_mic_get_value": {
     "parent": "arduino_ext_analog_list",
     "params": [
@@ -5084,7 +5089,6 @@ Entry.block = {
         }
     ]}
 },
-
 "iboard_button_list": {
     "color": "#00979D",
     "skeleton": "basic_string_field",
@@ -5114,7 +5118,6 @@ Entry.block = {
         return script.getStringField("PORT");
     }
 },
-
 "iboard_pwm_led_list": {
     "color": "#00979D",
     "skeleton": "basic_string_field",
@@ -5143,7 +5146,6 @@ Entry.block = {
         return script.getStringField("PORT");
     }
 },
-
 "iboard_led_list": {
     "color": "#00979D",
     "skeleton": "basic_string_field",
@@ -5172,7 +5174,6 @@ Entry.block = {
         return script.getStringField("PORT");
     }
 },
-
 "iboard_rgb_led_list": {
     "color": "#00979D",
     "skeleton": "basic_string_field",
@@ -5202,7 +5203,6 @@ Entry.block = {
         return script.getStringField("PORT");
     }
 },
-
 "iboard_motor_list": {
     "color": "#00979D",
     "skeleton": "basic_string_field",
@@ -5227,7 +5227,6 @@ Entry.block = {
         return script.getStringField("PORT");
     }
 },
-
 "iboard_motor_list2": {
     "color": "#00979D",
     "skeleton": "basic_string_field",
@@ -5258,7 +5257,6 @@ Entry.block = {
         return script.getField("VALUE", script);
     }
 },
-
 "iboard_tmp": {
     "color": "#00979D",
     "fontColor": "#fff",
@@ -5299,7 +5297,6 @@ Entry.block = {
         return result;
     },
 },
-
 "iboard_mic": {
     "color": "#00979D",
     "fontColor": "#fff",
@@ -5338,7 +5335,6 @@ Entry.block = {
         return result;
     },
 },
-
 "iboard_var_res": {
     "color": "#00979D",
     "fontColor": "#fff",
@@ -5373,7 +5369,6 @@ Entry.block = {
         return ANALOG ? ANALOG[port] || 0 : 0;
     },
 },
-
 "iboard_cds": {
     "color": "#00979D",
     "fontColor": "#fff",
@@ -5408,7 +5403,6 @@ Entry.block = {
         return ANALOG ? ANALOG[port] || 0 : 0;
     },
 },
-
 "iboard_motor": {
     "template": "모터를 %2 으로 동작하기 %3",
     "parent": "arduino_ext_digital_pwm",
@@ -5427,7 +5421,6 @@ Entry.block = {
     "class": "iboard",
     "isNotFor": [ "iboard" ],
 },
-
 "iboard_button": {
     "template": "%1 버튼을 눌렀는가?",
     "parent": "arduino_ext_get_digital",
@@ -5442,7 +5435,6 @@ Entry.block = {
     "class": "iboard_sensor",
     "isNotFor": [ "iboard" ],
 },
-
 "iboard_led": {
     "template": "LED %1 번을 %2 %3",
     "parent": "arduino_ext_toggle_led",
@@ -5462,7 +5454,6 @@ Entry.block = {
     "class": "iboard",
     "isNotFor": [ "iboard" ],
 },
-
 "iboard_rgb_led": {
     "template": "RGB LED의 %1 LED %2 %3",
     "parent": "arduino_ext_toggle_led",
@@ -5482,7 +5473,6 @@ Entry.block = {
     "class": "iboard",
     "isNotFor": [ "iboard" ],
 },
-
 "iboard_pwm_led": {
     "template": "LED %1 번의 밝기를 %2 (으)로 정하기 %3",
     "parent": "arduino_ext_digital_pwm",
@@ -5502,7 +5492,6 @@ Entry.block = {
     "class": "iboard",
     "isNotFor": [ "iboard" ],
 },
-
 "iboard_set_tone": {
     "template": "버저를 %2 %3 음으로 %4 초 연주하기 %5",
     "parent": "arduino_ext_set_tone",
@@ -5528,7 +5517,6 @@ Entry.block = {
     "class": "iboard",
     "isNotFor": [ "iboard" ],
 },
-
 "iboard_get_digital": {
     "template": "디지털 %1 번 센서값  ",
     "parent": "arduino_ext_get_digital",
@@ -5543,7 +5531,6 @@ Entry.block = {
     "class": "arduino_ori",
     "isNotFor": [ "iboard" ],
 },
-
 "iboard_get_analog_value": {
     "parent": "arduino_ext_get_analog_value",
     "template": "아날로그 %1 번 센서값  ",
@@ -5558,7 +5545,6 @@ Entry.block = {
     "class": "arduino_ori",
     "isNotFor": [ "iboard" ],
 },
-
 "iboard_get_analog_value_map": {
     "parent": "arduino_ext_get_analog_value_map",
     "template": "%1 값의 범위를 %2 ~ %3 에서 %4 ~ %5 (으)로 바꾼값  ",
@@ -5594,7 +5580,6 @@ Entry.block = {
     "class": "arduino_ori",
     "isNotFor": [ "iboard" ],
 },
-
 "iboard_toggle_led": {
     "template": "디지털 %1 번 핀 %2 %3",
     "parent": "arduino_ext_toggle_led",
@@ -5614,7 +5599,6 @@ Entry.block = {
     "class": "arduino_ori",
     "isNotFor": [ "iboard" ],
 },
-
 "iboard_digital_pwm": {
     "template": "디지털 %1 번 핀을 %2 (으)로 정하기 %3",
     "parent": "arduino_ext_digital_pwm",
@@ -5634,6 +5618,8 @@ Entry.block = {
     "class": "arduino_ori",
     "isNotFor": [ "iboard" ],
 },
+//endregion iboard 아이보드
+//region blacksmith 대장장이보드
 "blacksmith_list_analog_basic": {
     "color": "#00979D",
     "skeleton": "basic_string_field",
@@ -6643,6 +6629,8 @@ Entry.block = {
     },
     "syntax": {"js": [], "py": ["blacksmith.set_digital_bluetooth(%1)"]}
 },
+//endregion blacksmith 대장장이보드
+//region sensorBoard e센서보드
 "sensorBoard_get_named_sensor_value": {
     "color": "#00979D",
     "fontColor": "#fff",
@@ -6758,6 +6746,8 @@ Entry.block = {
     },
     "syntax": {"js": [], "py": ["Sensorboard.led(%1, %2)"]}
 },
+//endregion sensorBoard e센서보드
+//region hardware 하드웨어 기본
 "arduino_download_connector": {
     "skeleton": "basic_button",
     "isNotFor": ["arduinoDisconnected"],
@@ -6929,7 +6919,8 @@ Entry.block = {
         ]
     }
 },
-//2016-09-23 added start
+//endregion hardware 하드웨어 기본
+//region codeino 코드이노
 "CODEino_get_sensor_number": {
     "color": "#00979D",
     "skeleton": "basic_string_field",
@@ -8103,8 +8094,6 @@ Entry.block = {
         return script.callReturn();
     }
 },
-//2016-09-23 added finish
-//legacy
 "CODEino_get_number_sensor_value": {
     "parent": "arduino_get_number_sensor_value",
     "isNotFor": [
@@ -8160,6 +8149,8 @@ Entry.block = {
     "class": "arduino_set",
     "syntax": {"js": [], "py": ["CODEino.toggle_pwm(%1, %2)"]}
 },
+//endregion codeino 코드이노
+//region nemoino 네모이노
 "nemoino_get_named_sensor_value": {
     "color": "#00979D",
     "fontColor": "#fff",
@@ -8374,6 +8365,8 @@ Entry.block = {
         return Math.round(result);
     }
 },
+//endregion nemoino 네모이노
+//region bitbrick 비트브릭
 "bitbrick_sensor_value": {
     "color": "#00979D",
     "fontColor": "#fff",
@@ -8936,6 +8929,8 @@ Entry.block = {
     },
     "syntax": {"js": [], "py": ["Bitbrick.convert_scale(%1, %2, %3, %4, %5)"]}
 },
+//endregion bitbrick 비트브릭
+//region cobl 코블
 "cobl_read_ultrason": {
     color: "#00979D",
     fontColor: "#fff",
@@ -9703,8 +9698,6 @@ Entry.block = {
             Entry.hw.setDigitalPortValue("ELED_G", 10);
             Entry.hw.setDigitalPortValue("ELED_B", 10);
         }
-
-
         Entry.hw.update();
 
         delete Entry.hw.sendQueue["ELED_IDX"];
@@ -9850,6 +9843,8 @@ Entry.block = {
         return script.callReturn();
     }
 },
+//endregion cobl 코블
+//region basic 기본블록
 "start_drawing": {
     "color": "#FF9E20",
     "skeleton": "basic",
@@ -14134,6 +14129,8 @@ Entry.block = {
     },
     "syntax": {"js": [], "py": [""]}
 },
+//endregion basic 기본블록
+//region hamster 햄스터
 "hamster_hand_found": {
     "color": "#00979D",
     "fontColor": "#fff",
@@ -17933,7 +17930,8 @@ Entry.block = {
         }
     ]}
 },
-// akaii: add from here -----
+//endregion hamster 햄스터
+//region turtle 터틀
 "turtle_touching_color": {
     "color": "#00979D",
     "fontColor": "#fff",
@@ -21087,6 +21085,8 @@ Entry.block = {
         }
     ]}
 },
+//endregion turtle 터틀
+//region roboid 로보이드
 "roboid_hamster_hand_found": {
     "color": "#00979D",
     "fontColor": "#fff",
@@ -29058,6 +29058,8 @@ Entry.block = {
         }
     ]}
 },
+//endregion roboid 로두이노
+//region basic 기본
 "show": {
     "color": "#EC4466",
     "skeleton": "basic",
@@ -32085,6 +32087,8 @@ Entry.block = {
     "syntax": {"js": [], "py": ["Entry.add_direction_for_sec(%2, %1)"]}
 
 },
+//endregion basic 기본
+//region neobot 네오봇
 "neobot_sensor_value": {
     "color": "#00979D",
     "skeleton": "basic_string_field",
@@ -32790,6 +32794,8 @@ Entry.block = {
     },
     "syntax": {"js": [], "py": ["Neobot.play_note(%1, %2, %3)"]}
 },
+//endregion neobot 네오봇
+//region robotis 로보티즈
 "robotis_openCM70_cm_custom_value": {
     "color": "#00979D",
     "fontColor": "#fff",
@@ -34452,6 +34458,8 @@ Entry.block = {
     },
     "syntax": {"js": [], "py": ["Robotis.carcont_cm_calibration(%1, %2)"]}
 },
+//endregion robotis 로보티즈
+//region basic 기본
 "when_scene_start": {
     "color": "#3BBD70",
     "skeleton": "basic_event",
@@ -37813,6 +37821,8 @@ Entry.block = {
         }
     ]}
 },
+//endregion basic 기본
+//region xbot 엑스봇
 "xbot_digitalInput": {
     "color": "#00979D",
     "skeleton": "basic_boolean_field",
@@ -38352,8 +38362,6 @@ Entry.block = {
                 var note = script.getStringField("NOTE", script);
                 var octave = script.getStringField("OCTAVE", script);
                 var duration = script.getNumberValue("VALUE", script);
-
-
             var noteOctave = note + octave; // 'C'+ 2 = "C2"
             //console.log('xbot_buzzer noteOctave' + note + ' ' + octave + ' ' + duration);
 
@@ -38490,6 +38498,8 @@ Entry.block = {
     },
     "syntax": {"js": [], "py": ["Xbot.lcd(%1, %2)"]}
 },
+//endregion xbot 엑스봇
+//region basic 기본
 "run": {
     "skeleton": "basic",
     "color": "#3BBD70",
@@ -42379,6 +42389,8 @@ Entry.block = {
         }
     ]
 },
+//endregion basic 기본
+//region dplay 디플레이
 "dplay_get_number_sensor_value": {
     "parent": "arduino_get_number_sensor_value",
     "isNotFor": [
@@ -43542,6 +43554,8 @@ Entry.block = {
     },
     "syntax": {"js": [], "py": ["Dplay.robot_stop()"]}
 },
+//endregion dplay 디플레이
+//region nemoino 네모이노
 "nemoino_get_number_sensor_value": {
     "parent": "arduino_get_number_sensor_value",
     "isNotFor": [
@@ -43650,6 +43664,8 @@ Entry.block = {
     "class": "arduino",
     "syntax": {"js": [], "py": ["Nemoino.convert_scale(%1, %2, %3, %4, %5)"]}
 },
+//endregion nemoino 네모이노
+//region sensorBoard e센서보드
 "sensorBoard_get_number_sensor_value": {
     "parent": "arduino_get_number_sensor_value",
     "isNotFor": [
@@ -43759,7 +43775,8 @@ Entry.block = {
     "class": "arduino",
     "syntax": {"js": [], "py": ["SensorBoard.convert_scale(%1, %2, %3, %4, %5)"]}
 },
-// ardublock Added 2016-06-01
+//endregion sensorBoard e센서보드
+//region ardublock 아두블록
 "ardublock_analog_list": {
     "color": "#00979D",
     "skeleton": "basic_string_field",
@@ -44464,8 +44481,6 @@ Entry.block = {
         } else if (speed > 254) {
             speed = 254;
         }
-
-
         if (!Entry.hw.sendQueue['SET']) {
             Entry.hw.sendQueue['SET'] = {};
         }
@@ -44782,8 +44797,8 @@ Entry.block = {
     },
     "syntax": { "js": [], "py": [] }
 },
-// ardublock Added 2016-06-01
-// mkboard Added 2017-07-04
+//endregion ardublock 아두블록
+//region mkboard 몽키보드
 "mkboard_analog_list": {
     "color": "#00979D",
     "skeleton": "basic_string_field",
@@ -45517,8 +45532,6 @@ Entry.block = {
         } else if(speed > 254) {
             speed = 254;
         }
-
-
         if(!Entry.hw.sendQueue['SET']) {
             Entry.hw.sendQueue['SET'] = {};
         }
@@ -45851,146 +45864,8 @@ Entry.block = {
     },
     "syntax": {"js": [], "py": []}
 },
-
-/*
-"mkboard_list_digital_lcd": {
-    "color": "#00979D",
-    "skeleton": "basic_string_field",
-    "statements": [],
-    "template": "%1",
-    "params": [
-        {
-            "type": "Dropdown",
-            "options": [
-                [ Lang.Blocks.mkboard_lcd_first_line, "0" ],
-                [ Lang.Blocks.mkboard_lcd_seconds_line, "1" ]
-            ],
-            "value": "0",
-            "fontSize": 11
-        }
-    ],
-    "events": {},
-    "def": {
-        "params": [ null ]
-    },
-    "paramsKeyMap": {
-        "LINE": 0
-    },
-    "func": function (sprite, script) {
-        return script.getField("LINE");
-    }
-},
-
-"mkboard_set_digital_lcd": {
-    "color": "#00979D",
-    "fontColor": "#fff",
-    "skeleton": "basic",
-    "template": Lang.template.mkboard_set_digital_lcd,
-    "statements": [],
-    "params": [
-        {
-            "type": "Block",
-            "accept": "string"
-        },
-        {
-            "type": "Block",
-            "accept": "string"
-        },
-        {
-            "type": "Indicator",
-            "img": "block_icon/hardware_03.png",
-            "size": 12
-        }
-    ],
-    "events": {},
-    "def": {
-        "params": [
-            {
-                "type": "mkboard_list_digital_lcd"
-            },
-            {
-                "type": "text",
-                "params": [ "Type text !!" ]
-            },
-            null
-        ],
-        "type": "mkboard_set_digital_lcd"
-    },
-    "paramsKeyMap": {
-        "LINE": 0,
-        "STRING": 1,
-    },
-    "class": "mkboardSet",
-    "isNotFor": [ "mkboard" ],
-    "func": function (sprite, script) {
-        var line = script.getNumberValue("LINE");
-        var string = script.getValue("STRING");
-        var text = [];
-
-        if(!script.isStart) {
-            if(typeof string === 'string') {
-                for (var i = 0; i < string.length; i++) {
-                    text[i] = Entry.mkboard.toByte(string[i]);
-                }
-            }
-            else {
-                text[0] = string;
-            }
-            if(!Entry.hw.sendQueue['SET']) {
-                Entry.hw.sendQueue['SET'] = {};
-            }
-
-            script.isStart = true;
-            script.timeFlag = 1;
-            var fps = Entry.FPS || 60;
-            timeValue = 60/fps*50;
-
-            Entry.hw.sendQueue['SET'][line] = {
-                type: Entry.mkboard.sensorTypes.LCD,
-                data: {
-                    text0 : text[0],
-                    text1 : text[1],
-                    text2 : text[2],
-                    text3 : text[3],
-                    text4 : text[4],
-                    text5 : text[5],
-                    text6 : text[6],
-                    text7 : text[7],
-                    text8 : text[8],
-                    text9 : text[9],
-                    text10 : text[10],
-                    text11 : text[11],
-                    text12 : text[12],
-                    text13 : text[13],
-                    text14 : text[14],
-                    text15 : text[15]
-                },
-                time: new Date().getTime()
-            };
-
-            setTimeout(function() {
-                script.timeFlag = 0;
-            }, timeValue);
-            return script;
-        }
-        else if(script.timeFlag == 1) {
-            return script;
-        }
-        else {
-            delete script.timeFlag;
-            delete script.isStart;
-            Entry.engine.isContinue = false;
-            return script.callReturn();
-        }
-    },
-    "syntax": {"js": [], "py": ["mkboard.set_digital_lcd(%1, %2)"]}
-},
-*/
-
-// mkboard Added 2017-07-04
-
-
-// memaker Added 2017-10-01
+//endregion mkboard 몽키보드
+//region memaker 미메이커
 "memaker_analog_list": {
     "color": "#00979D",
     "skeleton": "basic_string_field",
@@ -46415,8 +46290,6 @@ Entry.block = {
     },
     "syntax": {"js": [], "py": []}
 },
-
-
 "memaker_list_digital_lcd_line": {
     "color": "#00979D",
     "skeleton": "basic_string_field",
@@ -46444,7 +46317,6 @@ Entry.block = {
         return script.getField("LINE");
     }
 },
-
 "memaker_list_digital_lcd_column": {
     "color": "#00979D",
     "skeleton": "basic_string_field",
@@ -46486,7 +46358,6 @@ Entry.block = {
         return script.getField("COLUMN");
     }
 },
-
 "memaker_set_lcd": {
     "color": "#00979D",
     "fontColor": "#fff",
@@ -46613,7 +46484,6 @@ Entry.block = {
     },
     "syntax": {"js": [], "py": ["memaker.memaker_set_lcd(%1, %2, %3)"]}
 },
-
 "memaker_list_lcd_command": {
     "color": "#00979D",
     "skeleton": "basic_string_field",
@@ -46642,7 +46512,6 @@ Entry.block = {
         return script.getField("COMMAND");
     }
 },
-
 "memaker_lcd_command": {
     "color": "#00979D",
     "skeleton": "basic",
@@ -46689,9 +46558,8 @@ Entry.block = {
     },
     "syntax": {"js": [], "py": []}
 },
-
-// memaker Added 2017-10-01
-
+//endregion memaker 미메이커
+//region joystick 조이스틱
 "joystick_get_number_sensor_value": {
     "parent": "arduino_get_number_sensor_value",
     "isNotFor": [
@@ -46796,6 +46664,8 @@ Entry.block = {
     },
     "class": "arduino"
 },
+//endregion joystick 조이스틱
+//region basic 기본
 "ebs_if": {
     "parent": "_if",
     "def": {
@@ -47371,6 +47241,8 @@ Entry.block = {
         "true"
     ]
 },
+//endregion basic 기본
+//region ev3 이브이3
 "ev3_color_sensor": {
     "color": "#00979D",
     "fontColor": "#fff",
@@ -47700,6 +47572,8 @@ Entry.block = {
         return result;
     }
 },
+//endregion ev3 이브이3
+//region roduino 로두이노
 "roduino_on_block": {
     "color": "#00979D",
     "fontColor": "#fff",
@@ -48131,6 +48005,8 @@ Entry.block = {
         return script.callReturn();
     }
 },
+//endregion roduino 로두이노
+//region schoolkit 스쿨키트
 "schoolkit_on_block": {
     "color": "#00979D",
     "fontColor": "#fff",
@@ -48472,6 +48348,8 @@ Entry.block = {
         return script.callReturn();
     }
 },
+//endregion schoolkit 스쿨키트
+//region codestar 코드스타
 codestar_color_single: {
     color: '#00979D',
     skeleton: 'basic',
@@ -48997,6 +48875,8 @@ codestar_tilt: {
         return Entry.hw.portData.tilt;
     }
 },
+//endregion codestar 코드스타
+//region smartBoard 스마트보드
 "smartBoard_get_named_sensor_value": {
     "color": "#00979D",
     "fontColor": "#fff",
@@ -49503,7 +49383,8 @@ codestar_tilt: {
         return script.callReturn();
     }
 },
-//robotori Add 20161129 begin
+//endregion smartBoard 스마트보드
+//region robotori 로보토리
 "robotori_digitalInput": {
     "color": "#00979D",
     "skeleton": "basic_boolean_field",
@@ -49825,7 +49706,8 @@ codestar_tilt: {
         return script.callReturn();
     }
 },
-//robotori add 20161129 end
+//endregion robotori 로보토리
+//region dadublock 다두블록
 "dadublock_get_analog_value": {
     "color": "#00979D",
     "fontColor": "#fff",
@@ -50029,7 +49911,6 @@ codestar_tilt: {
         return Entry.hw.portData.ULTRASONIC || 0;
     },
 },
-
 "dadublock_get_digital": {
     "color": "#00979D",
     "fontColor": "#fff",
@@ -50623,7 +50504,6 @@ codestar_tilt: {
         return Entry.hw.portData.ULTRASONIC || 0;
     },
 },
-
 "dadublock_car_get_digital": {
     "color": "#00979D",
     "fontColor": "#fff",
@@ -51093,8 +50973,6 @@ codestar_tilt: {
             };
             return script.callReturn();
         }
-
-
     },
 },
 "dadublock_car_motor": {
@@ -51250,8 +51128,6 @@ codestar_tilt: {
             }
 
         }
-
-
     },
 },
 "dadublock_car_get_irsensor": {
@@ -51303,6 +51179,8 @@ codestar_tilt: {
         return (DIGITAL) ? DIGITAL[port] || 0 : 0;
     },
 },
+//endregion dadublock 다두블록
+//region basic 기본
 "hidden": {
     "color": "#7C7C7C",
     "skeleton": "basic",
@@ -51945,10 +51823,10 @@ codestar_tilt: {
     "isNotFor": [],
     "func": function (sprite, script) {}
 },
-/* BYROBOT DroneFighter Controller Start */
-//*
-"byrobot_dronefighter_controller_controller_value_button":
-{
+//endregion basic 기본
+//region byrobot 바이로봇
+    /* BYROBOT DroneFighter Controller Start */
+"byrobot_dronefighter_controller_controller_value_button": {
     "color": "#00979D",
     "skeleton": "basic_string_field",
     "statements": [],
@@ -51980,10 +51858,7 @@ codestar_tilt: {
             return read[device];
         },
 },
-// */
-//*
-"byrobot_dronefighter_controller_controller_value_joystick":
-{
+"byrobot_dronefighter_controller_controller_value_joystick": {
     "color": "#00979D",
     "skeleton": "basic_string_field",
     "statements": [],
@@ -52023,10 +51898,7 @@ codestar_tilt: {
             return read[device];
         },
 },
-// */
-//*
-"byrobot_dronefighter_controller_controller_if_button_press":
-{
+"byrobot_dronefighter_controller_controller_if_button_press": {
     "color": "#00979D",
     "skeleton": "basic_boolean_field",
     "statements": [],
@@ -52072,10 +51944,7 @@ codestar_tilt: {
                 return false;
         },
 },
-// */
-//*
-"byrobot_dronefighter_controller_controller_if_joystick_direction":
-{
+"byrobot_dronefighter_controller_controller_if_joystick_direction": {
     "color": "#00979D",
     "skeleton": "basic_boolean_field",
     "statements": [],
@@ -52131,10 +52000,7 @@ codestar_tilt: {
                 return false;
         },
 },
-// */
-//*
-"byrobot_dronefighter_controller_controller_light_manual_single_off":
-{
+"byrobot_dronefighter_controller_controller_light_manual_single_off": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -52161,10 +52027,7 @@ codestar_tilt: {
             return Entry.byrobot_dronefighter_controller.setLightManual(script, 0x11, 0xff, 0);
         },
 },
-// */
-//*
-"byrobot_dronefighter_controller_controller_light_manual_single":
-{
+"byrobot_dronefighter_controller_controller_light_manual_single": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -52226,10 +52089,7 @@ codestar_tilt: {
             return Entry.byrobot_dronefighter_controller.setLightManual(script, 0x11, flags, brightness);
         },
 },
-// */
-//*
-"byrobot_dronefighter_controller_controller_light_manual_single_input":
-{
+"byrobot_dronefighter_controller_controller_light_manual_single_input": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -52276,10 +52136,7 @@ codestar_tilt: {
             return Entry.byrobot_dronefighter_controller.setLightManual(script, 0x11, flags, brightness);
         },
 },
-// */
-//*
-"byrobot_dronefighter_controller_controller_buzzer_off":
-{
+"byrobot_dronefighter_controller_controller_buzzer_off": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -52306,10 +52163,7 @@ codestar_tilt: {
             return Entry.byrobot_dronefighter_controller.setBuzzerStop(script);
         },
 },
-// */
-//*
-"byrobot_dronefighter_controller_controller_buzzer_scale":
-{
+"byrobot_dronefighter_controller_controller_buzzer_scale": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -52378,10 +52232,7 @@ codestar_tilt: {
                 return Entry.byrobot_dronefighter_controller.setBuzzerScale(script, octave, scale, 60000, false, true);
         },
 },
-// */
-//*
-"byrobot_dronefighter_controller_controller_buzzer_scale_delay":
-{
+"byrobot_dronefighter_controller_controller_buzzer_scale_delay": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -52460,10 +52311,7 @@ codestar_tilt: {
                 return Entry.byrobot_dronefighter_controller.setBuzzerScale(script, octave, scale, time, true, true);
         },
 },
-// */
-//*
-"byrobot_dronefighter_controller_controller_buzzer_scale_reserve":
-{
+"byrobot_dronefighter_controller_controller_buzzer_scale_reserve": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -52542,10 +52390,7 @@ codestar_tilt: {
                 return Entry.byrobot_dronefighter_controller.setBuzzerScale(script, octave, scale, time, false, false);
         },
 },
-// */
-//*
-"byrobot_dronefighter_controller_controller_buzzer_hz":
-{
+"byrobot_dronefighter_controller_controller_buzzer_hz": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -52582,10 +52427,7 @@ codestar_tilt: {
             return Entry.byrobot_dronefighter_controller.setBuzzerHz(script, hz, 60000, false, true);
         },
 },
-// */
-//*
-"byrobot_dronefighter_controller_controller_buzzer_hz_delay":
-{
+"byrobot_dronefighter_controller_controller_buzzer_hz_delay": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -52632,10 +52474,7 @@ codestar_tilt: {
             return Entry.byrobot_dronefighter_controller.setBuzzerHz(script, hz, time, true, true);
         },
 },
-// */
-//*
-"byrobot_dronefighter_controller_controller_buzzer_hz_reserve":
-{
+"byrobot_dronefighter_controller_controller_buzzer_hz_reserve": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -52682,10 +52521,7 @@ codestar_tilt: {
             return Entry.byrobot_dronefighter_controller.setBuzzerHz(script, hz, time, false, false);
         },
 },
-// */
-    //*
-"byrobot_dronefighter_controller_controller_vibrator_off":
-{
+"byrobot_dronefighter_controller_controller_vibrator_off": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -52712,10 +52548,7 @@ codestar_tilt: {
             return Entry.byrobot_dronefighter_controller.setVibratorStop(script);
         },
 },
-// */
-//*
-"byrobot_dronefighter_controller_controller_vibrator_on_delay":
-{
+"byrobot_dronefighter_controller_controller_vibrator_on_delay": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -52752,10 +52585,7 @@ codestar_tilt: {
             return Entry.byrobot_dronefighter_controller.setVibrator(script, timeOn, 0, timeOn, true, true);
         },
 },
-// */
-//*
-"byrobot_dronefighter_controller_controller_vibrator_on_reserve":
-{
+"byrobot_dronefighter_controller_controller_vibrator_on_reserve": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -52792,10 +52622,7 @@ codestar_tilt: {
             return Entry.byrobot_dronefighter_controller.setVibrator(script, timeOn, 0, timeOn, false, false);
         },
 },
-// */
-//*
-"byrobot_dronefighter_controller_controller_vibrator_delay":
-{
+"byrobot_dronefighter_controller_controller_vibrator_delay": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -52852,10 +52679,7 @@ codestar_tilt: {
             return Entry.byrobot_dronefighter_controller.setVibrator(script, timeOn, timeOff, timeRun, true, true);
         },
 },
-// */
-//*
-"byrobot_dronefighter_controller_controller_vibrator_reserve":
-{
+"byrobot_dronefighter_controller_controller_vibrator_reserve": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -52912,10 +52736,7 @@ codestar_tilt: {
             return Entry.byrobot_dronefighter_controller.setVibrator(script, timeOn, timeOff, timeRun, false, false);
         },
 },
-// */
-//*
-"byrobot_dronefighter_controller_controller_userinterface_preset":
-{
+"byrobot_dronefighter_controller_controller_userinterface_preset": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -52955,10 +52776,7 @@ codestar_tilt: {
             return Entry.byrobot_dronefighter_controller.sendCommand(script, 0x11, 0x80, preset);
         },
 },
-// */
-//*
-"byrobot_dronefighter_controller_controller_userinterface":
-{
+"byrobot_dronefighter_controller_controller_userinterface": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -53036,12 +52854,9 @@ codestar_tilt: {
             return Entry.byrobot_dronefighter_controller.setUserInterface(script, uicommand, uifunction);
         },
 },
-// */
-/* BYROBOT DroneFighter Controller End */
-/* BYROBOT DroneFighter Drive Start */
-//*
-"byrobot_dronefighter_drive_drone_value_attitude":
-{
+    /* BYROBOT DroneFighter Controller End */
+    /* BYROBOT DroneFighter Drive Start */
+"byrobot_dronefighter_drive_drone_value_attitude": {
     "color": "#00979D",
     "skeleton": "basic_string_field",
     "statements": [],
@@ -53074,10 +52889,7 @@ codestar_tilt: {
             return read[device];
         },
 },
-// */
-//*
-"byrobot_dronefighter_drive_drone_value_etc":
-{
+"byrobot_dronefighter_drive_drone_value_etc": {
     "color": "#00979D",
     "skeleton": "basic_string_field",
     "statements": [],
@@ -53111,10 +52923,7 @@ codestar_tilt: {
             return read[device];
         },
 },
-// */
-//*
-"byrobot_dronefighter_drive_controller_value_button":
-{
+"byrobot_dronefighter_drive_controller_value_button": {
     "color": "#00979D",
     "skeleton": "basic_string_field",
     "statements": [],
@@ -53146,10 +52955,7 @@ codestar_tilt: {
             return read[device];
         },
 },
-// */
-//*
-"byrobot_dronefighter_drive_controller_value_joystick":
-{
+"byrobot_dronefighter_drive_controller_value_joystick": {
     "color": "#00979D",
     "skeleton": "basic_string_field",
     "statements": [],
@@ -53189,10 +52995,7 @@ codestar_tilt: {
             return read[device];
         },
 },
-// */
-//*
-"byrobot_dronefighter_drive_controller_if_button_press":
-{
+"byrobot_dronefighter_drive_controller_if_button_press": {
     "color": "#00979D",
     "skeleton": "basic_boolean_field",
     "statements": [],
@@ -53239,10 +53042,7 @@ codestar_tilt: {
         },
     "syntax": {"js": [], "py": []}
 },
-// */
-//*
-"byrobot_dronefighter_drive_controller_if_joystick_direction":
-{
+"byrobot_dronefighter_drive_controller_if_joystick_direction": {
     "color": "#00979D",
     "skeleton": "basic_boolean_field",
     "statements": [],
@@ -53298,10 +53098,7 @@ codestar_tilt: {
                 return false;
         },
 },
-// */
-//*
-"byrobot_dronefighter_drive_drone_control_car_stop":
-{
+"byrobot_dronefighter_drive_drone_control_car_stop": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -53328,10 +53125,7 @@ codestar_tilt: {
             return Entry.byrobot_dronefighter_drive.sendStop(script);
         },
 },
-// */
-//*
-"byrobot_dronefighter_drive_drone_control_double_one":
-{
+"byrobot_dronefighter_drive_drone_control_double_one": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -53381,10 +53175,7 @@ codestar_tilt: {
             return Entry.byrobot_dronefighter_drive.sendControlDoubleSingle(script, controlTarget, value, 0, false);
         },
 },
-// */
-//*
-"byrobot_dronefighter_drive_drone_control_double_one_delay":
-{
+"byrobot_dronefighter_drive_drone_control_double_one_delay": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -53444,10 +53235,7 @@ codestar_tilt: {
             return Entry.byrobot_dronefighter_drive.sendControlDoubleSingle(script, controlTarget, value, time, true);
         },
 },
-// */
-//*
-"byrobot_dronefighter_drive_drone_control_double":
-{
+"byrobot_dronefighter_drive_drone_control_double": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -53494,10 +53282,7 @@ codestar_tilt: {
             return Entry.byrobot_dronefighter_drive.sendControlDouble(script, wheel, accel, 0, false);
         },
 },
-// */
-//*
-"byrobot_dronefighter_drive_drone_motor_stop":
-{
+"byrobot_dronefighter_drive_drone_motor_stop": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -53524,10 +53309,7 @@ codestar_tilt: {
             return Entry.byrobot_dronefighter_drive.sendStop(script);
         },
 },
-// */
-//*
-"byrobot_dronefighter_drive_drone_motorsingle":
-{
+"byrobot_dronefighter_drive_drone_motorsingle": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -53580,10 +53362,7 @@ codestar_tilt: {
             return Entry.byrobot_dronefighter_drive.setMotorSingle(script, motorIndex, motorDirection, motorSpeed);
         },
 },
-// */
-//*
-"byrobot_dronefighter_drive_drone_motorsingle_input":
-{
+"byrobot_dronefighter_drive_drone_motorsingle_input": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -53632,10 +53411,7 @@ codestar_tilt: {
             return Entry.byrobot_dronefighter_drive.setMotorSingle(script, motorIndex, motorDirection, motorSpeed);
         },
 },
-// */
-//*
-"byrobot_dronefighter_drive_drone_irmessage":
-{
+"byrobot_dronefighter_drive_drone_irmessage": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -53672,10 +53448,7 @@ codestar_tilt: {
             return Entry.byrobot_dronefighter_drive.sendIrMessage(script, irmessage);
         },
 },
-// */
-//*
-"byrobot_dronefighter_drive_controller_light_manual_single_off":
-{
+"byrobot_dronefighter_drive_controller_light_manual_single_off": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -53702,10 +53475,7 @@ codestar_tilt: {
             return Entry.byrobot_dronefighter_drive.setLightManual(script, 0x11, 0xff, 0);
         },
 },
-// */
-//*
-"byrobot_dronefighter_drive_controller_light_manual_single":
-{
+"byrobot_dronefighter_drive_controller_light_manual_single": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -53767,10 +53537,7 @@ codestar_tilt: {
             return Entry.byrobot_dronefighter_drive.setLightManual(script, 0x11, flags, brightness);
         },
 },
-// */
-//*
-"byrobot_dronefighter_drive_controller_light_manual_single_input":
-{
+"byrobot_dronefighter_drive_controller_light_manual_single_input": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -53817,10 +53584,7 @@ codestar_tilt: {
             return Entry.byrobot_dronefighter_drive.setLightManual(script, 0x11, flags, brightness);
         },
 },
-// */
-//*
-"byrobot_dronefighter_drive_drone_light_manual_single_off":
-{
+"byrobot_dronefighter_drive_drone_light_manual_single_off": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -53847,10 +53611,7 @@ codestar_tilt: {
             return Entry.byrobot_dronefighter_drive.setLightManual(script, 0x10, 0xff, 0);
         },
 },
-// */
-//*
-"byrobot_dronefighter_drive_drone_light_manual_single":
-{
+"byrobot_dronefighter_drive_drone_light_manual_single": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -53910,10 +53671,7 @@ codestar_tilt: {
             return Entry.byrobot_dronefighter_drive.setLightManual(script, 0x10, flags, brightness);
         },
 },
-// */
-//*
-"byrobot_dronefighter_drive_drone_light_manual_single_input":
-{
+"byrobot_dronefighter_drive_drone_light_manual_single_input": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -53960,10 +53718,7 @@ codestar_tilt: {
             return Entry.byrobot_dronefighter_drive.setLightManual(script, 0x10, flags, brightness);
         },
 },
-// */
-//*
-"byrobot_dronefighter_drive_controller_buzzer_off":
-{
+"byrobot_dronefighter_drive_controller_buzzer_off": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -53990,10 +53745,7 @@ codestar_tilt: {
             return Entry.byrobot_dronefighter_drive.setBuzzerStop(script);
         },
 },
-// */
-//*
-"byrobot_dronefighter_drive_controller_buzzer_scale":
-{
+"byrobot_dronefighter_drive_controller_buzzer_scale": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -54062,10 +53814,7 @@ codestar_tilt: {
                 return Entry.byrobot_dronefighter_drive.setBuzzerScale(script, octave, scale, 60000, false, true);
         },
 },
-// */
-//*
-"byrobot_dronefighter_drive_controller_buzzer_scale_delay":
-{
+"byrobot_dronefighter_drive_controller_buzzer_scale_delay": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -54144,10 +53893,7 @@ codestar_tilt: {
                 return Entry.byrobot_dronefighter_drive.setBuzzerScale(script, octave, scale, time, true, true);
         },
 },
-// */
-//*
-"byrobot_dronefighter_drive_controller_buzzer_scale_reserve":
-{
+"byrobot_dronefighter_drive_controller_buzzer_scale_reserve": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -54226,10 +53972,7 @@ codestar_tilt: {
                 return Entry.byrobot_dronefighter_drive.setBuzzerScale(script, octave, scale, time, false, false);
         },
 },
-// */
-//*
-"byrobot_dronefighter_drive_controller_buzzer_hz":
-{
+"byrobot_dronefighter_drive_controller_buzzer_hz": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -54266,10 +54009,7 @@ codestar_tilt: {
             return Entry.byrobot_dronefighter_drive.setBuzzerHz(script, hz, 60000, false, true);
         },
 },
-// */
-//*
-"byrobot_dronefighter_drive_controller_buzzer_hz_delay":
-{
+"byrobot_dronefighter_drive_controller_buzzer_hz_delay": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -54316,10 +54056,7 @@ codestar_tilt: {
             return Entry.byrobot_dronefighter_drive.setBuzzerHz(script, hz, time, true, true);
         },
 },
-// */
-//*
-"byrobot_dronefighter_drive_controller_buzzer_hz_reserve":
-{
+"byrobot_dronefighter_drive_controller_buzzer_hz_reserve": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -54366,10 +54103,7 @@ codestar_tilt: {
             return Entry.byrobot_dronefighter_drive.setBuzzerHz(script, hz, time, false, false);
         },
 },
-// */
-    //*
-"byrobot_dronefighter_drive_controller_vibrator_off":
-{
+"byrobot_dronefighter_drive_controller_vibrator_off": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -54396,10 +54130,7 @@ codestar_tilt: {
             return Entry.byrobot_dronefighter_drive.setVibratorStop(script);
         },
 },
-// */
-//*
-"byrobot_dronefighter_drive_controller_vibrator_on_delay":
-{
+"byrobot_dronefighter_drive_controller_vibrator_on_delay": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -54436,10 +54167,7 @@ codestar_tilt: {
             return Entry.byrobot_dronefighter_drive.setVibrator(script, timeOn, 0, timeOn, true, true);
         },
 },
-// */
-//*
-"byrobot_dronefighter_drive_controller_vibrator_on_reserve":
-{
+"byrobot_dronefighter_drive_controller_vibrator_on_reserve": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -54476,10 +54204,7 @@ codestar_tilt: {
             return Entry.byrobot_dronefighter_drive.setVibrator(script, timeOn, 0, timeOn, false, false);
         },
 },
-// */
-//*
-"byrobot_dronefighter_drive_controller_vibrator_delay":
-{
+"byrobot_dronefighter_drive_controller_vibrator_delay": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -54536,10 +54261,7 @@ codestar_tilt: {
             return Entry.byrobot_dronefighter_drive.setVibrator(script, timeOn, timeOff, timeRun, true, true);
         },
 },
-// */
-//*
-"byrobot_dronefighter_drive_controller_vibrator_reserve":
-{
+"byrobot_dronefighter_drive_controller_vibrator_reserve": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -54596,12 +54318,9 @@ codestar_tilt: {
             return Entry.byrobot_dronefighter_drive.setVibrator(script, timeOn, timeOff, timeRun, false, false);
         },
 },
-// */
-/* BYROBOT DroneFighter Drive End */
-/* BYROBOT DroneFighter Flight Start */
-//*
-"byrobot_dronefighter_flight_drone_value_attitude":
-{
+    /* BYROBOT DroneFighter Drive End */
+    /* BYROBOT DroneFighter Flight Start */
+"byrobot_dronefighter_flight_drone_value_attitude": {
     "color": "#00979D",
     "skeleton": "basic_string_field",
     "statements": [],
@@ -54632,10 +54351,7 @@ codestar_tilt: {
             return Entry.hw.portData[script.getField('DEVICE')];
         },
 },
-// */
-//*
-"byrobot_dronefighter_flight_drone_value_etc":
-{
+"byrobot_dronefighter_flight_drone_value_etc": {
     "color": "#00979D",
     "skeleton": "basic_string_field",
     "statements": [],
@@ -54668,10 +54384,7 @@ codestar_tilt: {
             return Entry.hw.portData[script.getField('DEVICE')];
         },
 },
-// */
-//*
-"byrobot_dronefighter_flight_controller_value_button":
-{
+"byrobot_dronefighter_flight_controller_value_button": {
     "color": "#00979D",
     "skeleton": "basic_string_field",
     "statements": [],
@@ -54701,10 +54414,7 @@ codestar_tilt: {
             return Entry.hw.portData[script.getField('DEVICE')];
         },
 },
-// */
-//*
-"byrobot_dronefighter_flight_controller_value_joystick":
-{
+"byrobot_dronefighter_flight_controller_value_joystick": {
     "color": "#00979D",
     "skeleton": "basic_string_field",
     "statements": [],
@@ -54742,10 +54452,7 @@ codestar_tilt: {
             return Entry.hw.portData[script.getField('DEVICE')];
         },
 },
-// */
-//*
-"byrobot_dronefighter_flight_controller_if_button_press":
-{
+"byrobot_dronefighter_flight_controller_if_button_press": {
     "color": "#00979D",
     "skeleton": "basic_boolean_field",
     "statements": [],
@@ -54792,10 +54499,7 @@ codestar_tilt: {
         },
     "syntax": {"js": [], "py": []}
 },
-// */
-//*
-"byrobot_dronefighter_flight_controller_if_joystick_direction":
-{
+"byrobot_dronefighter_flight_controller_if_joystick_direction": {
     "color": "#00979D",
     "skeleton": "basic_boolean_field",
     "statements": [],
@@ -54851,10 +54555,7 @@ codestar_tilt: {
                 return false;
         },
 },
-// */
-//*
-"byrobot_dronefighter_flight_controller_light_manual_single_off":
-{
+"byrobot_dronefighter_flight_controller_light_manual_single_off": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -54881,10 +54582,7 @@ codestar_tilt: {
             return Entry.byrobot_dronefighter_flight.setLightManual(script, 0x11, 0xff, 0);
         },
 },
-// */
-//*
-"byrobot_dronefighter_flight_controller_light_manual_single":
-{
+"byrobot_dronefighter_flight_controller_light_manual_single": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -54946,10 +54644,7 @@ codestar_tilt: {
             return Entry.byrobot_dronefighter_flight.setLightManual(script, 0x11, flags, brightness);
         },
 },
-// */
-//*
-"byrobot_dronefighter_flight_controller_light_manual_single_input":
-{
+"byrobot_dronefighter_flight_controller_light_manual_single_input": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -54996,10 +54691,7 @@ codestar_tilt: {
             return Entry.byrobot_dronefighter_flight.setLightManual(script, 0x11, flags, brightness);
         },
 },
-// */
-//*
-"byrobot_dronefighter_flight_drone_light_manual_single_off":
-{
+"byrobot_dronefighter_flight_drone_light_manual_single_off": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -55026,10 +54718,7 @@ codestar_tilt: {
             return Entry.byrobot_dronefighter_flight.setLightManual(script, 0x10, 0xff, 0);
         },
 },
-// */
-//*
-"byrobot_dronefighter_flight_drone_light_manual_single":
-{
+"byrobot_dronefighter_flight_drone_light_manual_single": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -55089,10 +54778,7 @@ codestar_tilt: {
             return Entry.byrobot_dronefighter_flight.setLightManual(script, 0x10, flags, brightness);
         },
 },
-// */
-//*
-"byrobot_dronefighter_flight_drone_light_manual_single_input":
-{
+"byrobot_dronefighter_flight_drone_light_manual_single_input": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -55139,10 +54825,7 @@ codestar_tilt: {
             return Entry.byrobot_dronefighter_flight.setLightManual(script, 0x10, flags, brightness);
         },
 },
-// */
-//*
-"byrobot_dronefighter_flight_controller_buzzer_off":
-{
+"byrobot_dronefighter_flight_controller_buzzer_off": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -55169,10 +54852,7 @@ codestar_tilt: {
             return Entry.byrobot_dronefighter_flight.setBuzzerStop(script);
         },
 },
-// */
-//*
-"byrobot_dronefighter_flight_controller_buzzer_scale":
-{
+"byrobot_dronefighter_flight_controller_buzzer_scale": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -55241,10 +54921,7 @@ codestar_tilt: {
                 return Entry.byrobot_dronefighter_flight.setBuzzerScale(script, octave, scale, 60000, false, true);
         },
 },
-// */
-//*
-"byrobot_dronefighter_flight_controller_buzzer_scale_delay":
-{
+"byrobot_dronefighter_flight_controller_buzzer_scale_delay": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -55323,10 +55000,7 @@ codestar_tilt: {
                 return Entry.byrobot_dronefighter_flight.setBuzzerScale(script, octave, scale, time, true, true);
         },
 },
-// */
-//*
-"byrobot_dronefighter_flight_controller_buzzer_scale_reserve":
-{
+"byrobot_dronefighter_flight_controller_buzzer_scale_reserve": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -55405,10 +55079,7 @@ codestar_tilt: {
                 return Entry.byrobot_dronefighter_flight.setBuzzerScale(script, octave, scale, time, false, false);
         },
 },
-// */
-//*
-"byrobot_dronefighter_flight_controller_buzzer_hz":
-{
+"byrobot_dronefighter_flight_controller_buzzer_hz": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -55445,10 +55116,7 @@ codestar_tilt: {
             return Entry.byrobot_dronefighter_flight.setBuzzerHz(script, hz, 60000, false, true);
         },
 },
-// */
-//*
-"byrobot_dronefighter_flight_controller_buzzer_hz_delay":
-{
+"byrobot_dronefighter_flight_controller_buzzer_hz_delay": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -55495,10 +55163,7 @@ codestar_tilt: {
             return Entry.byrobot_dronefighter_flight.setBuzzerHz(script, hz, time, true, true);
         },
 },
-// */
-//*
-"byrobot_dronefighter_flight_controller_buzzer_hz_reserve":
-{
+"byrobot_dronefighter_flight_controller_buzzer_hz_reserve": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -55545,10 +55210,7 @@ codestar_tilt: {
             return Entry.byrobot_dronefighter_flight.setBuzzerHz(script, hz, time, false, false);
         },
 },
-// */
-    //*
-"byrobot_dronefighter_flight_controller_vibrator_off":
-{
+"byrobot_dronefighter_flight_controller_vibrator_off": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -55575,10 +55237,7 @@ codestar_tilt: {
             return Entry.byrobot_dronefighter_flight.setVibratorStop(script);
         },
 },
-// */
-//*
-"byrobot_dronefighter_flight_controller_vibrator_on_delay":
-{
+"byrobot_dronefighter_flight_controller_vibrator_on_delay": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -55615,10 +55274,7 @@ codestar_tilt: {
             return Entry.byrobot_dronefighter_flight.setVibrator(script, timeOn, 0, timeOn, true, true);
         },
 },
-// */
-//*
-"byrobot_dronefighter_flight_controller_vibrator_on_reserve":
-{
+"byrobot_dronefighter_flight_controller_vibrator_on_reserve": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -55655,10 +55311,7 @@ codestar_tilt: {
             return Entry.byrobot_dronefighter_flight.setVibrator(script, timeOn, 0, timeOn, false, false);
         },
 },
-// */
-//*
-"byrobot_dronefighter_flight_controller_vibrator_delay":
-{
+"byrobot_dronefighter_flight_controller_vibrator_delay": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -55715,10 +55368,7 @@ codestar_tilt: {
             return Entry.byrobot_dronefighter_flight.setVibrator(script, timeOn, timeOff, timeRun, true, true);
         },
 },
-// */
-//*
-"byrobot_dronefighter_flight_controller_vibrator_reserve":
-{
+"byrobot_dronefighter_flight_controller_vibrator_reserve": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -55775,10 +55425,7 @@ codestar_tilt: {
             return Entry.byrobot_dronefighter_flight.setVibrator(script, timeOn, timeOff, timeRun, false, false);
         },
 },
-// */
-//*
-"byrobot_dronefighter_flight_drone_irmessage":
-{
+"byrobot_dronefighter_flight_drone_irmessage": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -55815,10 +55462,7 @@ codestar_tilt: {
             return Entry.byrobot_dronefighter_flight.sendIrMessage(script, irmessage);
         },
 },
-// */
-//*
-"byrobot_dronefighter_flight_drone_motor_stop":
-{
+"byrobot_dronefighter_flight_drone_motor_stop": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -55845,10 +55489,7 @@ codestar_tilt: {
             return Entry.byrobot_dronefighter_flight.sendStop(script);
         },
 },
-// */
-//*
-"byrobot_dronefighter_flight_drone_motorsingle":
-{
+"byrobot_dronefighter_flight_drone_motorsingle": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -55901,10 +55542,7 @@ codestar_tilt: {
             return Entry.byrobot_dronefighter_flight.setMotorSingle(script, motorIndex, motorDirection, motorSpeed);
         },
 },
-// */
-//*
-"byrobot_dronefighter_flight_drone_motorsingle_input":
-{
+"byrobot_dronefighter_flight_drone_motorsingle_input": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -55953,10 +55591,7 @@ codestar_tilt: {
             return Entry.byrobot_dronefighter_flight.setMotorSingle(script, motorIndex, motorDirection, motorSpeed);
         },
 },
-// */
-//*     삭제된 블럭(?)
-"byrobot_dronefighter_flight_drone_command_mode_vehicle_drone":
-{
+"byrobot_dronefighter_flight_drone_command_mode_vehicle_drone": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -55983,10 +55618,7 @@ codestar_tilt: {
             return Entry.byrobot_dronefighter_flight.setModeVehicle(script, 0x10);      // 0x10 : Mode::Vehicle::Flight
         },
 },
-// */
-//*     삭제된 블럭(?)
-"byrobot_dronefighter_flight_drone_control_drone_takeoff":
-{
+"byrobot_dronefighter_flight_drone_control_drone_takeoff": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -56013,10 +55645,7 @@ codestar_tilt: {
             return Entry.byrobot_dronefighter_flight.setEventFlight(script, 0x11, 200); // 0x11 : FlightEvent::TakeOff
         },
 },
-// */
-//*     삭제된 블럭(?)
-"byrobot_dronefighter_flight_drone_control_drone_landing":
-{
+"byrobot_dronefighter_flight_drone_control_drone_landing": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -56043,10 +55672,7 @@ codestar_tilt: {
             return Entry.byrobot_dronefighter_flight.setEventFlight(script, 0x12, 200); // 0x12 : FlightEvent::Landing
         },
 },
-// */
-//*
-"byrobot_dronefighter_flight_drone_control_drone_stop":
-{
+"byrobot_dronefighter_flight_drone_control_drone_stop": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -56073,10 +55699,7 @@ codestar_tilt: {
             return Entry.byrobot_dronefighter_flight.sendStop(script);
         },
 },
-// */
-//*
-"byrobot_dronefighter_flight_drone_control_coordinate":
-{
+"byrobot_dronefighter_flight_drone_control_coordinate": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -56115,10 +55738,7 @@ codestar_tilt: {
             return Entry.byrobot_dronefighter_flight.sendCommand(script, 0x10, 0x20, coordinate);
         },
 },
-// */
-//*
-"byrobot_dronefighter_flight_drone_control_drone_reset_heading":
-{
+"byrobot_dronefighter_flight_drone_control_drone_reset_heading": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -56145,10 +55765,7 @@ codestar_tilt: {
             return Entry.byrobot_dronefighter_flight.sendCommand(script, 0x10, 0x22, 0xA0); // 0x22 : CommandType::FlightEvent  // 0xA0 : FlightEvent::ResetHeading
         },
 },
-// */
-//*
-"byrobot_dronefighter_flight_drone_control_quad_one":
-{
+"byrobot_dronefighter_flight_drone_control_quad_one": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -56200,10 +55817,7 @@ codestar_tilt: {
             return Entry.byrobot_dronefighter_flight.sendControlQuadSingle(script, controlTarget, value, 0, false);
         },
 },
-// */
-//*
-"byrobot_dronefighter_flight_drone_control_quad_one_delay":
-{
+"byrobot_dronefighter_flight_drone_control_quad_one_delay": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -56265,10 +55879,7 @@ codestar_tilt: {
             return Entry.byrobot_dronefighter_flight.sendControlQuadSingle(script, controlTarget, value, time, true);
         },
 },
-// */
-//*
-"byrobot_dronefighter_flight_drone_control_quad":
-{
+"byrobot_dronefighter_flight_drone_control_quad": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -56336,12 +55947,9 @@ codestar_tilt: {
             return Entry.byrobot_dronefighter_flight.sendControlQuad(script, roll, pitch, yaw, throttle, 0, false);
         },
 },
-// */
-/* BYROBOT DroneFighter Flight End */
-/* BYROBOT PetroneV2 Controller Start */
-//*
-"byrobot_petrone_v2_controller_controller_value_button":
-{
+    /* BYROBOT DroneFighter Flight End */
+    /* BYROBOT PetroneV2 Controller Start */
+"byrobot_petrone_v2_controller_controller_value_button": {
     "color": "#00979D",
     "skeleton": "basic_string_field",
     "statements": [],
@@ -56372,10 +55980,7 @@ codestar_tilt: {
         return read[device];
     },
 },
-// */
-//*
-"byrobot_petrone_v2_controller_controller_value_joystick":
-{
+"byrobot_petrone_v2_controller_controller_value_joystick": {
     "color": "#00979D",
     "skeleton": "basic_string_field",
     "statements": [],
@@ -56412,10 +56017,7 @@ codestar_tilt: {
         return read[device];
     },
 },
-// */
-//*
-"byrobot_petrone_v2_controller_controller_if_button_press":
-{
+"byrobot_petrone_v2_controller_controller_if_button_press": {
     "color": "#00979D",
     "skeleton": "basic_boolean_field",
     "statements": [],
@@ -56461,10 +56063,7 @@ codestar_tilt: {
             return false;
     },
 },
-// */
-//*
-"byrobot_petrone_v2_controller_controller_if_joystick_direction":
-{
+"byrobot_petrone_v2_controller_controller_if_joystick_direction": {
     "color": "#00979D",
     "skeleton": "basic_boolean_field",
     "statements": [],
@@ -56520,10 +56119,7 @@ codestar_tilt: {
             return false;
     },
 },
-// */
-//*
-"byrobot_petrone_v2_controller_controller_light_manual_single_off":
-{
+"byrobot_petrone_v2_controller_controller_light_manual_single_off": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -56549,10 +56145,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_controller.setLightManual(script, 0x31, 0xff, 0);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_controller_controller_light_manual_single":
-{
+"byrobot_petrone_v2_controller_controller_light_manual_single": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -56611,10 +56204,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_controller.setLightManual(script, 0x31, flags, brightness);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_controller_controller_light_manual_single_input":
-{
+"byrobot_petrone_v2_controller_controller_light_manual_single_input": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -56660,10 +56250,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_controller.setLightManual(script, 0x31, flags, brightness);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_controller_controller_light_color_rgb_input":
-{
+"byrobot_petrone_v2_controller_controller_light_color_rgb_input": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -56733,10 +56320,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_controller.setLightColorRgb(script, 0x31, mode, red, green, blue);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_controller_controller_light_color_rgb_select":
-{
+"byrobot_petrone_v2_controller_controller_light_color_rgb_select": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -56829,10 +56413,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_controller.setLightColorRgb(script, 0x31, mode, red, green, blue);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_controller_controller_display_clear_all":
-{
+"byrobot_petrone_v2_controller_controller_display_clear_all": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -56870,10 +56451,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_controller.setDisplayClear(script, 0x31, pixel, true, 0, 0, 0, 0);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_controller_controller_display_clear":
-{
+"byrobot_petrone_v2_controller_controller_display_clear": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -56951,10 +56529,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_controller.setDisplayClear(script, 0x31, pixel, false, x, y, width, height);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_controller_controller_display_invert":
-{
+"byrobot_petrone_v2_controller_controller_display_invert": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -57021,10 +56596,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_controller.setDisplayInvert(script, 0x31, x, y, width, height);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_controller_controller_display_draw_point":
-{
+"byrobot_petrone_v2_controller_controller_display_draw_point": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -57082,10 +56654,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_controller.setDisplayDrawPoint(script, 0x31, x, y, pixel);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_controller_controller_display_draw_line":
-{
+"byrobot_petrone_v2_controller_controller_display_draw_line": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -57176,10 +56745,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_controller.setDisplayDrawLine(script, 0x31, x1, y1, x2, y2, pixel, line);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_controller_controller_display_draw_rect":
-{
+"byrobot_petrone_v2_controller_controller_display_draw_rect": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -57282,10 +56848,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_controller.setDisplayDrawRect(script, 0x31, x, y, width, height, pixel, flagFill, line);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_controller_controller_display_draw_circle":
-{
+"byrobot_petrone_v2_controller_controller_display_draw_circle": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -57365,10 +56928,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_controller.setDisplayDrawCircle(script, 0x31, x, y, radius, pixel, flagFill);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_controller_controller_display_draw_string":
-{
+"byrobot_petrone_v2_controller_controller_display_draw_string": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -57448,10 +57008,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_controller.setDisplayDrawString(script, 0x31, x, y, font, pixel, string);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_controller_controller_display_draw_string_align":
-{
+"byrobot_petrone_v2_controller_controller_display_draw_string_align": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -57554,10 +57111,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_controller.setDisplayDrawStringAlign(script, 0x31, xStart, xEnd, y, align, font, pixel, string);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_controller_controller_buzzer_off":
-{
+"byrobot_petrone_v2_controller_controller_buzzer_off": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -57583,10 +57137,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_controller.setBuzzerStop(script);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_controller_controller_buzzer_scale":
-{
+"byrobot_petrone_v2_controller_controller_buzzer_scale": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -57654,10 +57205,7 @@ codestar_tilt: {
             return Entry.byrobot_petrone_v2_controller.setBuzzerScale(script, octave, scale, 60000, false, true);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_controller_controller_buzzer_scale_delay":
-{
+"byrobot_petrone_v2_controller_controller_buzzer_scale_delay": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -57735,10 +57283,7 @@ codestar_tilt: {
             return Entry.byrobot_petrone_v2_controller.setBuzzerScale(script, octave, scale, time, true, true);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_controller_controller_buzzer_scale_reserve":
-{
+"byrobot_petrone_v2_controller_controller_buzzer_scale_reserve": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -57816,10 +57361,7 @@ codestar_tilt: {
             return Entry.byrobot_petrone_v2_controller.setBuzzerScale(script, octave, scale, time, false, false);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_controller_controller_buzzer_hz":
-{
+"byrobot_petrone_v2_controller_controller_buzzer_hz": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -57855,10 +57397,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_controller.setBuzzerHz(script, hz, 60000, false, true);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_controller_controller_buzzer_hz_delay":
-{
+"byrobot_petrone_v2_controller_controller_buzzer_hz_delay": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -57904,10 +57443,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_controller.setBuzzerHz(script, hz, time, true, true);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_controller_controller_buzzer_hz_reserve":
-{
+"byrobot_petrone_v2_controller_controller_buzzer_hz_reserve": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -57953,10 +57489,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_controller.setBuzzerHz(script, hz, time, false, false);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_controller_controller_vibrator_off":
-{
+"byrobot_petrone_v2_controller_controller_vibrator_off": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -57982,10 +57515,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_controller.setVibratorStop(script);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_controller_controller_vibrator_on_delay":
-{
+"byrobot_petrone_v2_controller_controller_vibrator_on_delay": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -58021,10 +57551,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_controller.setVibrator(script, timeOn, 0, timeOn, true, true);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_controller_controller_vibrator_on_reserve":
-{
+"byrobot_petrone_v2_controller_controller_vibrator_on_reserve": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -58060,10 +57587,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_controller.setVibrator(script, timeOn, 0, timeOn, false, false);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_controller_controller_vibrator_delay":
-{
+"byrobot_petrone_v2_controller_controller_vibrator_delay": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -58119,10 +57643,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_controller.setVibrator(script, timeOn, timeOff, timeRun, true, true);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_controller_controller_vibrator_reserve":
-{
+"byrobot_petrone_v2_controller_controller_vibrator_reserve": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -58178,12 +57699,9 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_controller.setVibrator(script, timeOn, timeOff, timeRun, false, false);
     },
 },
-// */
-/* BYROBOT PetroneV2 Controller End */
-/* BYROBOT PetroneV2 Drive Start */
-//*
-"byrobot_petrone_v2_drive_drone_value_attitude":
-{
+    /* BYROBOT PetroneV2 Controller End */
+    /* BYROBOT PetroneV2 Drive Start */
+"byrobot_petrone_v2_drive_drone_value_attitude": {
     "color": "#00979D",
     "skeleton": "basic_string_field",
     "statements": [],
@@ -58213,10 +57731,7 @@ codestar_tilt: {
         return Entry.hw.portData[script.getField('DEVICE')];
     },
 },
-// */
-//*
-"byrobot_petrone_v2_drive_drone_value_imu":
-{
+"byrobot_petrone_v2_drive_drone_value_imu": {
     "color": "#00979D",
     "skeleton": "basic_string_field",
     "statements": [],
@@ -58249,10 +57764,7 @@ codestar_tilt: {
         return Entry.hw.portData[script.getField('DEVICE')];
     },
 },
-// */
-//*
-"byrobot_petrone_v2_drive_drone_value_sensor":
-{
+"byrobot_petrone_v2_drive_drone_value_sensor": {
     "color": "#00979D",
     "skeleton": "basic_string_field",
     "statements": [],
@@ -58284,10 +57796,7 @@ codestar_tilt: {
         return Entry.hw.portData[script.getField('DEVICE')];
     },
 },
-// */
-//*
-"byrobot_petrone_v2_drive_drone_value_etc":
-{
+"byrobot_petrone_v2_drive_drone_value_etc": {
     "color": "#00979D",
     "skeleton": "basic_string_field",
     "statements": [],
@@ -58318,10 +57827,7 @@ codestar_tilt: {
         return Entry.hw.portData[script.getField('DEVICE')];
     },
 },
-// */
-//*
-"byrobot_petrone_v2_drive_controller_value_button":
-{
+"byrobot_petrone_v2_drive_controller_value_button": {
     "color": "#00979D",
     "skeleton": "basic_string_field",
     "statements": [],
@@ -58350,10 +57856,7 @@ codestar_tilt: {
         return Entry.hw.portData[script.getField('DEVICE')];
     },
 },
-// */
-//*
-"byrobot_petrone_v2_drive_controller_value_joystick":
-{
+"byrobot_petrone_v2_drive_controller_value_joystick": {
     "color": "#00979D",
     "skeleton": "basic_string_field",
     "statements": [],
@@ -58388,10 +57891,7 @@ codestar_tilt: {
         return Entry.hw.portData[script.getField('DEVICE')];
     },
 },
-// */
-//*
-"byrobot_petrone_v2_drive_controller_if_button_press":
-{
+"byrobot_petrone_v2_drive_controller_if_button_press": {
     "color": "#00979D",
     "skeleton": "basic_boolean_field",
     "statements": [],
@@ -58438,10 +57938,7 @@ codestar_tilt: {
     },
     "syntax": { "js": [], "py": [] }
 },
-// */
-//*
-"byrobot_petrone_v2_drive_controller_if_joystick_direction":
-{
+"byrobot_petrone_v2_drive_controller_if_joystick_direction": {
     "color": "#00979D",
     "skeleton": "basic_boolean_field",
     "statements": [],
@@ -58497,10 +57994,7 @@ codestar_tilt: {
             return false;
     },
 },
-// */
-//*
-"byrobot_petrone_v2_drive_controller_light_manual_single_off":
-{
+"byrobot_petrone_v2_drive_controller_light_manual_single_off": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -58526,10 +58020,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_drive.setLightManual(script, 0x31, 0xff, 0);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_drive_controller_light_manual_single":
-{
+"byrobot_petrone_v2_drive_controller_light_manual_single": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -58588,10 +58079,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_drive.setLightManual(script, 0x31, flags, brightness);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_drive_controller_light_manual_single_input":
-{
+"byrobot_petrone_v2_drive_controller_light_manual_single_input": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -58637,10 +58125,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_drive.setLightManual(script, 0x31, flags, brightness);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_drive_controller_light_color_rgb_input":
-{
+"byrobot_petrone_v2_drive_controller_light_color_rgb_input": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -58710,10 +58195,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_drive.setLightColorRgb(script, 0x31, mode, red, green, blue);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_drive_controller_light_color_rgb_select":
-{
+"byrobot_petrone_v2_drive_controller_light_color_rgb_select": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -58806,10 +58288,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_drive.setLightColorRgb(script, 0x31, mode, red, green, blue);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_drive_drone_light_manual_single_off":
-{
+"byrobot_petrone_v2_drive_drone_light_manual_single_off": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -58835,10 +58314,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_drive.setLightManual(script, 0x30, 0xff, 0);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_drive_drone_light_manual_single":
-{
+"byrobot_petrone_v2_drive_drone_light_manual_single": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -58896,10 +58372,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_drive.setLightManual(script, 0x30, flags, brightness);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_drive_drone_light_manual_single_input":
-{
+"byrobot_petrone_v2_drive_drone_light_manual_single_input": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -58945,10 +58418,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_drive.setLightManual(script, 0x30, flags, brightness);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_drive_drone_light_color_rgb_input":
-{
+"byrobot_petrone_v2_drive_drone_light_color_rgb_input": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -59029,10 +58499,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_drive.setLightColorRgb(script, 0x30, mode, red, green, blue);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_drive_drone_light_color_rgb_select":
-{
+"byrobot_petrone_v2_drive_drone_light_color_rgb_select": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -59136,10 +58603,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_drive.setLightColorRgb(script, 0x30, mode, red, green, blue);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_drive_controller_display_clear_all":
-{
+"byrobot_petrone_v2_drive_controller_display_clear_all": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -59177,10 +58641,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_drive.setDisplayClear(script, 0x31, pixel, true, 0, 0, 0, 0);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_drive_controller_display_clear":
-{
+"byrobot_petrone_v2_drive_controller_display_clear": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -59258,10 +58719,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_drive.setDisplayClear(script, 0x31, pixel, false, x, y, width, height);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_drive_controller_display_invert":
-{
+"byrobot_petrone_v2_drive_controller_display_invert": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -59328,10 +58786,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_drive.setDisplayInvert(script, 0x31, x, y, width, height);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_drive_controller_display_draw_point":
-{
+"byrobot_petrone_v2_drive_controller_display_draw_point": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -59389,10 +58844,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_drive.setDisplayDrawPoint(script, 0x31, x, y, pixel);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_drive_controller_display_draw_line":
-{
+"byrobot_petrone_v2_drive_controller_display_draw_line": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -59483,10 +58935,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_drive.setDisplayDrawLine(script, 0x31, x1, y1, x2, y2, pixel, line);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_drive_controller_display_draw_rect":
-{
+"byrobot_petrone_v2_drive_controller_display_draw_rect": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -59589,10 +59038,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_drive.setDisplayDrawRect(script, 0x31, x, y, width, height, pixel, flagFill, line);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_drive_controller_display_draw_circle":
-{
+"byrobot_petrone_v2_drive_controller_display_draw_circle": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -59672,10 +59118,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_drive.setDisplayDrawCircle(script, 0x31, x, y, radius, pixel, flagFill);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_drive_controller_display_draw_string":
-{
+"byrobot_petrone_v2_drive_controller_display_draw_string": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -59755,10 +59198,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_drive.setDisplayDrawString(script, 0x31, x, y, font, pixel, string);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_drive_controller_display_draw_string_align":
-{
+"byrobot_petrone_v2_drive_controller_display_draw_string_align": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -59861,10 +59301,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_drive.setDisplayDrawStringAlign(script, 0x31, xStart, xEnd, y, align, font, pixel, string);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_drive_controller_buzzer_off":
-{
+"byrobot_petrone_v2_drive_controller_buzzer_off": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -59890,10 +59327,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_drive.setBuzzerStop(script);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_drive_controller_buzzer_scale":
-{
+"byrobot_petrone_v2_drive_controller_buzzer_scale": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -59961,10 +59395,7 @@ codestar_tilt: {
             return Entry.byrobot_petrone_v2_drive.setBuzzerScale(script, octave, scale, 60000, false, true);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_drive_controller_buzzer_scale_delay":
-{
+"byrobot_petrone_v2_drive_controller_buzzer_scale_delay": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -60042,10 +59473,7 @@ codestar_tilt: {
             return Entry.byrobot_petrone_v2_drive.setBuzzerScale(script, octave, scale, time, true, true);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_drive_controller_buzzer_scale_reserve":
-{
+"byrobot_petrone_v2_drive_controller_buzzer_scale_reserve": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -60123,10 +59551,7 @@ codestar_tilt: {
             return Entry.byrobot_petrone_v2_drive.setBuzzerScale(script, octave, scale, time, false, false);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_drive_controller_buzzer_hz":
-{
+"byrobot_petrone_v2_drive_controller_buzzer_hz": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -60162,10 +59587,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_drive.setBuzzerHz(script, hz, 60000, false, true);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_drive_controller_buzzer_hz_delay":
-{
+"byrobot_petrone_v2_drive_controller_buzzer_hz_delay": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -60211,10 +59633,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_drive.setBuzzerHz(script, hz, time, true, true);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_drive_controller_buzzer_hz_reserve":
-{
+"byrobot_petrone_v2_drive_controller_buzzer_hz_reserve": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -60260,10 +59679,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_drive.setBuzzerHz(script, hz, time, false, false);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_drive_controller_vibrator_off":
-{
+"byrobot_petrone_v2_drive_controller_vibrator_off": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -60289,10 +59705,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_drive.setVibratorStop(script);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_drive_controller_vibrator_on_delay":
-{
+"byrobot_petrone_v2_drive_controller_vibrator_on_delay": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -60328,10 +59741,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_drive.setVibrator(script, timeOn, 0, timeOn, true, true);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_drive_controller_vibrator_on_reserve":
-{
+"byrobot_petrone_v2_drive_controller_vibrator_on_reserve": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -60367,10 +59777,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_drive.setVibrator(script, timeOn, 0, timeOn, false, false);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_drive_controller_vibrator_delay":
-{
+"byrobot_petrone_v2_drive_controller_vibrator_delay": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -60426,10 +59833,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_drive.setVibrator(script, timeOn, timeOff, timeRun, true, true);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_drive_controller_vibrator_reserve":
-{
+"byrobot_petrone_v2_drive_controller_vibrator_reserve": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -60485,10 +59889,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_drive.setVibrator(script, timeOn, timeOff, timeRun, false, false);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_drive_drone_irmessage":
-{
+"byrobot_petrone_v2_drive_drone_irmessage": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -60525,10 +59926,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_drive.sendIrMessage(script, irdirection, irmessage);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_drive_drone_motor_stop":
-{
+"byrobot_petrone_v2_drive_drone_motor_stop": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -60554,10 +59952,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_drive.sendStop(script);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_drive_drone_motorsingle":
-{
+"byrobot_petrone_v2_drive_drone_motorsingle": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -60609,10 +60004,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_drive.setMotorSingle(script, motorIndex, motorRotation, motorSpeed);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_drive_drone_motorsingle_input":
-{
+"byrobot_petrone_v2_drive_drone_motorsingle_input": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -60660,10 +60052,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_drive.setMotorSingle(script, motorIndex, motorRotation, motorSpeed);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_drive_drone_motorsingle_rotation":
-{
+"byrobot_petrone_v2_drive_drone_motorsingle_rotation": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -60724,10 +60113,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_drive.setMotorSingle(script, motorIndex, motorRotation, motorSpeed);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_drive_drone_command_mode_vehicle_car":
-{
+"byrobot_petrone_v2_drive_drone_command_mode_vehicle_car": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -60765,10 +60151,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_drive.setModeVehicle(script, vehicle);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_drive_drone_control_car_stop":
-{
+"byrobot_petrone_v2_drive_drone_control_car_stop": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -60794,10 +60177,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_drive.sendStop(script);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_drive_drone_control_double_one":
-{
+"byrobot_petrone_v2_drive_drone_control_double_one": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -60846,10 +60226,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_drive.sendControlDoubleSingle(script, controlTarget, value, 0, false);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_drive_drone_control_double_one_delay":
-{
+"byrobot_petrone_v2_drive_drone_control_double_one_delay": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -60908,10 +60285,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_drive.sendControlDoubleSingle(script, controlTarget, value, time, true);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_drive_drone_control_double":
-{
+"byrobot_petrone_v2_drive_drone_control_double": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -60958,10 +60332,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_drive.sendControlDouble(script, wheel, accel, 0, false);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_drive_drone_control_double_delay":
-{
+"byrobot_petrone_v2_drive_drone_control_double_delay": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -61018,12 +60389,9 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_drive.sendControlDouble(script, wheel, accel, time, true);
     },
 },
-// */
-/* BYROBOT PetroneV2 Drive End */
-/* BYROBOT PetroneV2 Flight Start */
-//*
-"byrobot_petrone_v2_flight_drone_value_attitude":
-{
+    /* BYROBOT PetroneV2 Drive End */
+    /* BYROBOT PetroneV2 Flight Start */
+"byrobot_petrone_v2_flight_drone_value_attitude": {
     "color": "#00979D",
     "skeleton": "basic_string_field",
     "statements": [],
@@ -61053,10 +60421,7 @@ codestar_tilt: {
         return Entry.hw.portData[script.getField('DEVICE')];
     },
 },
-// */
-//*
-"byrobot_petrone_v2_flight_drone_value_imu":
-{
+"byrobot_petrone_v2_flight_drone_value_imu": {
     "color": "#00979D",
     "skeleton": "basic_string_field",
     "statements": [],
@@ -61089,10 +60454,7 @@ codestar_tilt: {
         return Entry.hw.portData[script.getField('DEVICE')];
     },
 },
-// */
-//*
-"byrobot_petrone_v2_flight_drone_value_sensor":
-{
+"byrobot_petrone_v2_flight_drone_value_sensor": {
     "color": "#00979D",
     "skeleton": "basic_string_field",
     "statements": [],
@@ -61124,10 +60486,7 @@ codestar_tilt: {
         return Entry.hw.portData[script.getField('DEVICE')];
     },
 },
-// */
-//*
-"byrobot_petrone_v2_flight_drone_value_etc":
-{
+"byrobot_petrone_v2_flight_drone_value_etc": {
     "color": "#00979D",
     "skeleton": "basic_string_field",
     "statements": [],
@@ -61159,10 +60518,7 @@ codestar_tilt: {
         return Entry.hw.portData[script.getField('DEVICE')];
     },
 },
-// */
-//*
-"byrobot_petrone_v2_flight_controller_value_button":
-{
+"byrobot_petrone_v2_flight_controller_value_button": {
     "color": "#00979D",
     "skeleton": "basic_string_field",
     "statements": [],
@@ -61191,10 +60547,7 @@ codestar_tilt: {
         return Entry.hw.portData[script.getField('DEVICE')];
     },
 },
-// */
-//*
-"byrobot_petrone_v2_flight_controller_value_joystick":
-{
+"byrobot_petrone_v2_flight_controller_value_joystick": {
     "color": "#00979D",
     "skeleton": "basic_string_field",
     "statements": [],
@@ -61229,10 +60582,7 @@ codestar_tilt: {
         return Entry.hw.portData[script.getField('DEVICE')];
     },
 },
-// */
-//*
-"byrobot_petrone_v2_flight_controller_if_button_press":
-{
+"byrobot_petrone_v2_flight_controller_if_button_press": {
     "color": "#00979D",
     "skeleton": "basic_boolean_field",
     "statements": [],
@@ -61279,10 +60629,7 @@ codestar_tilt: {
     },
     "syntax": { "js": [], "py": [] }
 },
-// */
-//*
-"byrobot_petrone_v2_flight_controller_if_joystick_direction":
-{
+"byrobot_petrone_v2_flight_controller_if_joystick_direction": {
     "color": "#00979D",
     "skeleton": "basic_boolean_field",
     "statements": [],
@@ -61338,10 +60685,7 @@ codestar_tilt: {
             return false;
     },
 },
-// */
-//*
-"byrobot_petrone_v2_flight_controller_light_manual_single_off":
-{
+"byrobot_petrone_v2_flight_controller_light_manual_single_off": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -61367,10 +60711,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_flight.setLightManual(script, 0x31, 0xff, 0);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_flight_controller_light_manual_single":
-{
+"byrobot_petrone_v2_flight_controller_light_manual_single": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -61429,10 +60770,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_flight.setLightManual(script, 0x31, flags, brightness);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_flight_controller_light_manual_single_input":
-{
+"byrobot_petrone_v2_flight_controller_light_manual_single_input": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -61478,10 +60816,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_flight.setLightManual(script, 0x31, flags, brightness);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_flight_controller_light_color_rgb_input":
-{
+"byrobot_petrone_v2_flight_controller_light_color_rgb_input": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -61551,10 +60886,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_flight.setLightColorRgb(script, 0x31, mode, red, green, blue);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_flight_controller_light_color_rgb_select":
-{
+"byrobot_petrone_v2_flight_controller_light_color_rgb_select": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -61647,10 +60979,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_flight.setLightColorRgb(script, 0x31, mode, red, green, blue);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_flight_drone_light_manual_single_off":
-{
+"byrobot_petrone_v2_flight_drone_light_manual_single_off": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -61676,10 +61005,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_flight.setLightManual(script, 0x30, 0xff, 0);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_flight_drone_light_manual_single":
-{
+"byrobot_petrone_v2_flight_drone_light_manual_single": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -61737,10 +61063,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_flight.setLightManual(script, 0x30, flags, brightness);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_flight_drone_light_manual_single_input":
-{
+"byrobot_petrone_v2_flight_drone_light_manual_single_input": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -61786,10 +61109,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_flight.setLightManual(script, 0x30, flags, brightness);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_flight_drone_light_color_rgb_input":
-{
+"byrobot_petrone_v2_flight_drone_light_color_rgb_input": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -61870,10 +61190,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_flight.setLightColorRgb(script, 0x30, mode, red, green, blue);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_flight_drone_light_color_rgb_select":
-{
+"byrobot_petrone_v2_flight_drone_light_color_rgb_select": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -61977,10 +61294,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_flight.setLightColorRgb(script, 0x30, mode, red, green, blue);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_flight_controller_display_clear_all":
-{
+"byrobot_petrone_v2_flight_controller_display_clear_all": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -62018,10 +61332,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_flight.setDisplayClear(script, 0x31, pixel, true, 0, 0, 0, 0);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_flight_controller_display_clear":
-{
+"byrobot_petrone_v2_flight_controller_display_clear": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -62099,10 +61410,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_flight.setDisplayClear(script, 0x31, pixel, false, x, y, width, height);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_flight_controller_display_invert":
-{
+"byrobot_petrone_v2_flight_controller_display_invert": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -62169,10 +61477,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_flight.setDisplayInvert(script, 0x31, x, y, width, height);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_flight_controller_display_draw_point":
-{
+"byrobot_petrone_v2_flight_controller_display_draw_point": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -62230,10 +61535,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_flight.setDisplayDrawPoint(script, 0x31, x, y, pixel);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_flight_controller_display_draw_line":
-{
+"byrobot_petrone_v2_flight_controller_display_draw_line": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -62324,10 +61626,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_flight.setDisplayDrawLine(script, 0x31, x1, y1, x2, y2, pixel, line);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_flight_controller_display_draw_rect":
-{
+"byrobot_petrone_v2_flight_controller_display_draw_rect": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -62430,10 +61729,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_flight.setDisplayDrawRect(script, 0x31, x, y, width, height, pixel, flagFill, line);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_flight_controller_display_draw_circle":
-{
+"byrobot_petrone_v2_flight_controller_display_draw_circle": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -62513,10 +61809,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_flight.setDisplayDrawCircle(script, 0x31, x, y, radius, pixel, flagFill);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_flight_controller_display_draw_string":
-{
+"byrobot_petrone_v2_flight_controller_display_draw_string": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -62596,10 +61889,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_flight.setDisplayDrawString(script, 0x31, x, y, font, pixel, string);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_flight_controller_display_draw_string_align":
-{
+"byrobot_petrone_v2_flight_controller_display_draw_string_align": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -62702,10 +61992,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_flight.setDisplayDrawStringAlign(script, 0x31, xStart, xEnd, y, align, font, pixel, string);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_flight_controller_buzzer_off":
-{
+"byrobot_petrone_v2_flight_controller_buzzer_off": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -62731,10 +62018,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_flight.setBuzzerStop(script);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_flight_controller_buzzer_scale":
-{
+"byrobot_petrone_v2_flight_controller_buzzer_scale": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -62802,10 +62086,7 @@ codestar_tilt: {
             return Entry.byrobot_petrone_v2_flight.setBuzzerScale(script, octave, scale, 60000, false, true);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_flight_controller_buzzer_scale_delay":
-{
+"byrobot_petrone_v2_flight_controller_buzzer_scale_delay": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -62883,10 +62164,7 @@ codestar_tilt: {
             return Entry.byrobot_petrone_v2_flight.setBuzzerScale(script, octave, scale, time, true, true);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_flight_controller_buzzer_scale_reserve":
-{
+"byrobot_petrone_v2_flight_controller_buzzer_scale_reserve": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -62964,10 +62242,7 @@ codestar_tilt: {
             return Entry.byrobot_petrone_v2_flight.setBuzzerScale(script, octave, scale, time, false, false);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_flight_controller_buzzer_hz":
-{
+"byrobot_petrone_v2_flight_controller_buzzer_hz": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -63003,10 +62278,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_flight.setBuzzerHz(script, hz, 60000, false, true);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_flight_controller_buzzer_hz_delay":
-{
+"byrobot_petrone_v2_flight_controller_buzzer_hz_delay": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -63052,10 +62324,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_flight.setBuzzerHz(script, hz, time, true, true);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_flight_controller_buzzer_hz_reserve":
-{
+"byrobot_petrone_v2_flight_controller_buzzer_hz_reserve": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -63101,10 +62370,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_flight.setBuzzerHz(script, hz, time, false, false);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_flight_controller_vibrator_off":
-{
+"byrobot_petrone_v2_flight_controller_vibrator_off": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -63130,10 +62396,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_flight.setVibratorStop(script);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_flight_controller_vibrator_on_delay":
-{
+"byrobot_petrone_v2_flight_controller_vibrator_on_delay": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -63169,10 +62432,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_flight.setVibrator(script, timeOn, 0, timeOn, true, true);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_flight_controller_vibrator_on_reserve":
-{
+"byrobot_petrone_v2_flight_controller_vibrator_on_reserve": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -63208,10 +62468,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_flight.setVibrator(script, timeOn, 0, timeOn, false, false);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_flight_controller_vibrator_delay":
-{
+"byrobot_petrone_v2_flight_controller_vibrator_delay": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -63267,10 +62524,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_flight.setVibrator(script, timeOn, timeOff, timeRun, true, true);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_flight_controller_vibrator_reserve":
-{
+"byrobot_petrone_v2_flight_controller_vibrator_reserve": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -63326,10 +62580,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_flight.setVibrator(script, timeOn, timeOff, timeRun, false, false);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_flight_drone_irmessage":
-{
+"byrobot_petrone_v2_flight_drone_irmessage": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -63366,10 +62617,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_flight.sendIrMessage(script, irdirection, irmessage);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_flight_drone_motor_stop":
-{
+"byrobot_petrone_v2_flight_drone_motor_stop": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -63395,10 +62643,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_flight.sendStop(script);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_flight_drone_motorsingle":
-{
+"byrobot_petrone_v2_flight_drone_motorsingle": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -63450,10 +62695,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_flight.setMotorSingle(script, motorIndex, motorRotation, motorSpeed);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_flight_drone_motorsingle_input":
-{
+"byrobot_petrone_v2_flight_drone_motorsingle_input": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -63501,10 +62743,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_flight.setMotorSingle(script, motorIndex, motorRotation, motorSpeed);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_flight_drone_motorsingle_rotation":
-{
+"byrobot_petrone_v2_flight_drone_motorsingle_rotation": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -63565,10 +62804,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_flight.setMotorSingle(script, motorIndex, motorRotation, motorSpeed);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_flight_drone_command_mode_vehicle_drone":
-{
+"byrobot_petrone_v2_flight_drone_command_mode_vehicle_drone": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -63607,10 +62843,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_flight.setModeVehicle(script, vehicle);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_flight_drone_control_drone_takeoff":
-{
+"byrobot_petrone_v2_flight_drone_control_drone_takeoff": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -63636,10 +62869,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_flight.setEventFlight(script, 0x11, 200); // 0x11 : FlightEvent::TakeOff
     },
 },
-// */
-//*
-"byrobot_petrone_v2_flight_drone_control_drone_landing":
-{
+"byrobot_petrone_v2_flight_drone_control_drone_landing": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -63665,10 +62895,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_flight.setEventFlight(script, 0x12, 200); // 0x12 : FlightEvent::Landing
     },
 },
-// */
-//*
-"byrobot_petrone_v2_flight_drone_control_drone_stop":
-{
+"byrobot_petrone_v2_flight_drone_control_drone_stop": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -63694,10 +62921,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_flight.sendStop(script);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_flight_drone_control_coordinate":
-{
+"byrobot_petrone_v2_flight_drone_control_coordinate": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -63735,10 +62959,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_flight.sendCommand(script, 0x30, 0x20, coordinate);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_flight_drone_control_drone_reset_heading":
-{
+"byrobot_petrone_v2_flight_drone_control_drone_reset_heading": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -63764,10 +62985,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_flight.sendCommand(script, 0x30, 0x22, 0xA0); // 0x22 : CommandType::FlightEvent  // 0xA0 : FlightEvent::ResetHeading
     },
 },
-// */
-//*
-"byrobot_petrone_v2_flight_drone_control_quad_one":
-{
+"byrobot_petrone_v2_flight_drone_control_quad_one": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -63818,10 +63036,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_flight.sendControlQuadSingle(script, controlTarget, value, 0, false);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_flight_drone_control_quad_one_delay":
-{
+"byrobot_petrone_v2_flight_drone_control_quad_one_delay": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -63882,10 +63097,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_flight.sendControlQuadSingle(script, controlTarget, value, time, true);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_flight_drone_control_quad":
-{
+"byrobot_petrone_v2_flight_drone_control_quad": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -63952,10 +63164,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_flight.sendControlQuad(script, roll, pitch, yaw, throttle, 0, false);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_flight_drone_control_quad_delay":
-{
+"byrobot_petrone_v2_flight_drone_control_quad_delay": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -64032,8 +63241,9 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_flight.sendControlQuad(script, roll, pitch, yaw, throttle, time, true);
     },
 },
-// */
-/* BYROBOT PetroneV2 Flight End */
+    /* BYROBOT PetroneV2 Flight End */
+//endregion byrobot 바이로봇
+//region basic 기본
 "boolean_shell": {
     "color": "#AEB8FF",
     "skeleton": "basic_boolean_field",
@@ -64048,6 +63258,8 @@ codestar_tilt: {
     ],
     "func": function (sprite, script) {},
 },
+//endregion basic 기본
+//region coconut 코코넛
 "coconut_move_motor": {
    "color": "#00979D",
     "skeleton": "basic",
@@ -66892,7 +66104,6 @@ codestar_tilt: {
     },
     "syntax": {"js": [], "py": ["coconut.turn_for_secs(%1, %2)"]}
 },
-
 "coconut_servomotor_angle": {
     "color": "#00979D",
     "skeleton": "basic",
@@ -66974,6 +66185,8 @@ codestar_tilt: {
     },
     "syntax": {"js": [], "py": ["coconut.turn_for_secs(%1, %2)"]}
 },
+//endregion coconut 코코넛
+//region chocopi 초코파이
 chocopi_sensor: {
     color: '#00979D',
     fontColor: '#fff',
@@ -67469,6 +66682,8 @@ chocopi_servo_motor: {
     },
     syntax: { "js": [], "py": ["Chocopi.servo(%1, %2, %3)"] }
 },
+//endregion coconut 코코넛
+//region rokoboard 로코보드
 // rokoboard Implementation
 "rokoboard_get_sensor_value_by_name": {
     "color": "#00979D",
@@ -67536,7 +66751,8 @@ chocopi_servo_motor: {
         return (ANALOG) ? (ANALOG[port] < 1) : false ;
     }
 },
-//Altino start
+//endregion rokoboard 로코보드
+//region Altino 알티노
 "altino_analogValue": {
     "color": "#00979D",
     "fontColor": "#fff",
@@ -67648,8 +66864,6 @@ chocopi_servo_motor: {
         } else if (direction == "Right20") {
             sq.steering = 127;
         }
-
-
         return script.callReturn();
     },
     "syntax": { "js": [], "py": ["Altino.steering(%1,%2)"] }
@@ -68076,7 +67290,8 @@ chocopi_servo_motor: {
         return script.callReturn();
     }
 },
-//Altino end
+//endregion Altino 알티노
+//region basic 기본
 "register_score": {
     "color": "#7C7C7C",
     "skeleton": "basic",
@@ -68116,8 +67331,9 @@ chocopi_servo_motor: {
         return script.callReturn();
     }
 },
-
-//Hummingbird parts
+//endregion basic 기본
+//region hummingbird 허밍버드
+    //Hummingbird parts
     //범용 센서
     hummingbird_sensorValue: {
         "color": "#00979D",
@@ -68698,8 +67914,623 @@ chocopi_servo_motor: {
         },
         "syntax": {"js": [], "py": ["hummingbird.triLED(%1, %2)"]}
     },
-    //허밍버드 끝
+//endregion hummingbird 허밍버드
+//region TrueTrueRobot 뚜루뚜루로봇
+    "truetrue_get_linesensor": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    ["Left_Out", "L2"],
+                    ["Left_In", "L1"],
+                    ["Right_In", "R1"],
+                    ["Right_Out", "R2"]
+                ],
+                "value": "Left_Out",
+                "fontSize": 11
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                'L2'
+            ],
+            "type": "truetrue_get_linesensor"
+        },
+        "paramsKeyMap": {
+            "position": 0
+        },
+        "class": "trueRobot_sensor",
+        "isNotFor": ["trueRobot"],
+        "func": function (sprite, script) {
+            var pd = Entry.hw.portData;
+            var dev = script.getField('position');
+            return pd[dev];
+        },
+        "syntax": { "js": [], "py": [] }
+    },
+    "truetrue_get_proxisensor": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    ["Left", "ProxiLeft"],
+                    ["Right", "ProxiRight"]
+                ],
+                "value": "Left",
+                "fontSize": 11
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                'ProxiLeft'
+            ],
+            "type": "truetrue_get_proxisensor"
+        },
+        "paramsKeyMap": {
+            "position": 0
+        },
+        "class": "trueRobot_sensor",
+        "isNotFor": ["trueRobot"],
+        "func": function (sprite, script) {
+            var pd = Entry.hw.portData;
+            var dev = script.getField('position');
+            return pd[dev];
+        },
+        "syntax": { "js": [], "py": [] }
+    },
+    "truetrue_get_accsensor": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    ["X-axis", "AccX"],
+                    ["Y-axis", "AccY"],
+                    ["Z-axis", "AccZ"],
+                    ["Tilt", "AccStatus"]
+                ],
+                "value": "X-axis",
+                "fontSize": 11
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                'AccX'
+            ],
+            "type": "truetrue_get_accsensor"
+        },
+        "paramsKeyMap": {
+            "position": 0
+        },
+        "class": "trueRobot_sensor",
+        "isNotFor": ["trueRobot"],
+        "func": function (sprite, script) {
+            var pd = Entry.hw.portData;
+            var dev = script.getField('position');
+            return pd[dev];
+        },
+        "syntax": { "js": [], "py": [] }
+    },
+    "truetrue_get_bottomcolorsensor": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    ["Red", "BColorRed"],
+                    ["Green", "BColorGreen"],
+                    ["Blue", "BColorBlue"],
+                    ["ColorKey", "BColorKey"]
+                ],
+                "value": "Red",
+                "fontSize": 11
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                'BColorRed'
+            ],
+            "type": "truetrue_get_bottomcolorsensor"
+        },
+        "paramsKeyMap": {
+            "position": 0
+        },
+        "class": "trueRobot_sensor",
+        "isNotFor": ["trueRobot"],
+        "func": function (sprite, script) {
+            var pd = Entry.hw.portData;
+            var dev = script.getField('position');
+            return pd[dev];
+        },
+        "syntax": { "js": [], "py": [] }
+    },
+    "truetrue_get_frontcolorsensor": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    ["Left", "FColorLeftKey"],
+                    ["Right", "FColorRightKey"]
+                ],
+                "value": "Left",
+                "fontSize": 11
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                'FColorLeftKey'
+            ],
+            "type": "truetrue_get_frontcolorsensor"
+        },
+        "paramsKeyMap": {
+            "position": 0
+        },
+        "class": "trueRobot_sensor",
+        "isNotFor": ["trueRobot"],
+        "func": function (sprite, script) {
+            var pd = Entry.hw.portData;
+            var dev = script.getField('position');
+            return pd[dev];
+        },
+        "syntax": { "js": [], "py": [] }
+    },
+    "truetrue_set_singlemotor": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    ["Left", "9"],
+                    ["Right", "10"]
+                ],
+                "value": "Left",
+                "fontSize": 11
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                "9", "0", null
+            ],
+            "type": "truetrue_set_singlemotor"
+        },
+        "paramsKeyMap": {
+            "PORT": 0,
+            "VALUE": 1
+        },
+        "class": "trueRobot_control",
+        "isNotFor": ["trueRobot"],
+        "func": function (sprite, script) {
+            var device = Entry.trueRobot.PORT_MAP.singlemotor;
+            var value = script.getNumberValue('VALUE');
+            value = Math.round(value);
+            value = Math.max(value, -100);
+            value = Math.min(value, 100);
+            //set two bytes.
+            var speed = 0;
+            var direction = 0;
+            if (value < 0) { speed = -1 * value; direction = 1; }
+            else { speed = value; direction = 0; }
+            if (!Entry.hw.sendQueue['SET']) {
+                Entry.hw.sendQueue['SET'] = {};
+            }
 
+            Entry.hw.sendQueue['SET'][device] = {
+                port: script.getNumberField('PORT'),
+                dataA: speed,
+                dataB: direction,
+                dataC: 0x07
+            };
+
+            return script.callReturn();
+        },
+        "syntax": { "js": [], "py": [] }
+    },
+    "truetrue_set_dualmotor": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                '0',
+                '0',
+                '0',
+                null
+            ],
+            "type": "truetrue_set_dualmotor"
+        },
+        "paramsKeyMap": {
+            "leftValue": 0,
+            "rightValue": 1,
+            "delayValue": 2
+        },
+        "class": "trueRobot_control",
+        "isNotFor": ["trueRobot"],
+        "func": function (sprite, script) {
+            var device = Entry.trueRobot.PORT_MAP.dualmotor;
+
+            var leftValue = script.getNumberValue("leftValue");
+            leftValue = Math.round(leftValue);
+            leftValue = Math.max(leftValue, -100);
+            leftValue = Math.min(leftValue, 100);
+
+            var rightValue = script.getNumberValue("rightValue");
+            rightValue = Math.round(rightValue);
+            rightValue = Math.max(rightValue, -100);
+            rightValue = Math.min(rightValue, 100);
+
+            var delayValue = script.getNumberValue("delayValue");
+            delayValue = Math.round(delayValue);
+            delayValue = Math.max(delayValue, -100);
+            delayValue = Math.min(delayValue, 100);
+
+            if (!Entry.hw.sendQueue['SET']) {
+                Entry.hw.sendQueue['SET'] = {};
+            }
+            Entry.hw.sendQueue['SET'][device] = {
+                port: Entry.trueRobot.PORT_MAP.dualPort,
+                dataA: leftValue,
+                dataB: rightValue,
+                dataC: delayValue
+            };
+            return script.callReturn();
+        },
+        "syntax": { "js": [], "py": [] }
+    },
+    "truetrue_set_colorled": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                '0',
+                '0',
+                '0',
+                null
+            ],
+            "type": "truetrue_set_colorled"
+        },
+        "paramsKeyMap": {
+            "redColor": 0,
+            "greenColor": 1,
+            "blueColor": 2
+        },
+        "class": "trueRobot_control",
+        "isNotFor": ["trueRobot"],
+        "func": function (sprite, script) {
+            var device = Entry.trueRobot.PORT_MAP.colorled;
+
+            var redColor = script.getNumberValue("redColor");
+            redColor = Math.round(redColor);
+            redColor = Math.max(redColor, 0);
+            redColor = Math.min(redColor, 255);
+
+            var greenColor = script.getNumberValue("greenColor");
+            greenColor = Math.round(greenColor);
+            greenColor = Math.max(greenColor, 0);
+            greenColor = Math.min(greenColor, 255);
+
+            var blueColor = script.getNumberValue("blueColor");
+            blueColor = Math.round(blueColor);
+            blueColor = Math.max(blueColor, 0);
+            blueColor = Math.min(blueColor, 255);
+
+            if (!Entry.hw.sendQueue['SET']) {
+                Entry.hw.sendQueue['SET'] = {};
+            }
+            Entry.hw.sendQueue['SET'][device] = {
+                port: Entry.trueRobot.PORT_MAP.colorled,
+                dataA: redColor,
+                dataB: greenColor,
+                dataC: blueColor
+            };
+            return script.callReturn();
+        },
+        "syntax": { "js": [], "py": [] }
+    },
+    "truetrue_set_led_proxi": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    ["근접센서왼쪽", 9],
+                    ["근접센서오른쪽", 10]
+                ],
+                "value": "근접센서왼쪽",
+                "fontSize": 11
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    ["켜기", "on"],
+                    ["끄기", "off"]
+                ],
+                "value": "켜기",
+                "fontSize": 11
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                9,
+                'on',
+                null
+            ],
+            "type": "truetrue_set_led_proxi"
+        },
+        "paramsKeyMap": {
+            "PORT": 0,
+            "ONOFF": 1
+        },
+        "class": "trueRobot_control",
+        "isNotFor": ["trueRobot"],
+        "func": function (sprite, script) {
+            var device = Entry.trueRobot.PORT_MAP.leds;
+
+            var onoff = script.getField('ONOFF');
+            var value = onoff == 'on' ? 1 : 0;
+
+            if (!Entry.hw.sendQueue['SET']) {
+                Entry.hw.sendQueue['SET'] = {};
+            }
+            Entry.hw.sendQueue['SET'][device] = {
+                port: script.getNumberField("PORT"),
+                dataA: value,
+                dataB: 0x07,
+                dataC: 0x07
+            };
+            return script.callReturn();
+        },
+        "syntax": { "js": [], "py": [] }
+    },
+    "truetrue_set_led_colorsensor": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    ["전면컬러센서", 3],
+                    ["바닥컬러센서", 4]
+                ],
+                "value": "전면컬러센서",
+                "fontSize": 11
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    ["켜기", "on"],
+                    ["끄기", "off"]
+                ],
+                "value": "켜기",
+                "fontSize": 11
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                3,
+                "on",
+                null
+            ],
+            "type": "truetrue_set_led_colorsensor"
+        },
+        "paramsKeyMap": {
+            "PORT": 0,
+            "ONOFF": 1
+        },
+        "class": "trueRobot_control",
+        "isNotFor": ["trueRobot"],
+        "func": function (sprite, script) {
+            var device = Entry.trueRobot.PORT_MAP.leds;
+
+            var onoff = script.getField('ONOFF');
+            var value = onoff == 'on' ? 1 : 0;
+
+            if (!Entry.hw.sendQueue['SET']) {
+                Entry.hw.sendQueue['SET'] = {};
+            }
+            Entry.hw.sendQueue['SET'][device] = {
+                port: script.getNumberField("PORT"),
+                dataA: value,
+                dataB: 0x07,
+                dataC: 0x07
+            };
+            return script.callReturn();
+        },
+        "syntax": { "js": [], "py": [] }
+    },
+    "truetrue_set_led_linesensor": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    ["켜기", "on"],
+                    ["끄기", "off"]
+                ],
+                "value": "켜기",
+                "fontSize": 11
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                "on", null
+            ],
+            "type": "truetrue_set_led_linesensor"
+        },
+        "paramsKeyMap": {
+            "ONOFF": 0
+        },
+        "class": "trueRobot_control",
+        "isNotFor": ["trueRobot"],
+        "func": function (sprite, script) {
+            var device = Entry.trueRobot.PORT_MAP.leds;
+
+            var onoff = script.getField('ONOFF');
+            var value = onoff == 'on' ? 1 : 0;
+
+            if (!Entry.hw.sendQueue['SET']) {
+                Entry.hw.sendQueue['SET'] = {};
+            }
+            Entry.hw.sendQueue['SET'][device] = {
+                port: Entry.trueRobot.PORT_MAP.led_line,
+                dataA: value,
+                dataB: 0x07,
+                dataC: 0x07
+            };
+            return script.callReturn();
+        },
+        "syntax": { "js": [], "py": [] }
+    },
+    "truetrue_set_linetracer": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    ["켜기", "on"],
+                    ["끄기", "off"]
+                ],
+                "value": "켜기",
+                "fontSize": 11
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                "on", null
+            ],
+            "type": "truetrue_set_linetracer"
+        },
+        "paramsKeyMap": {
+            "ONOFF": 0
+        },
+        "class": "trueRobot_control",
+        "isNotFor": ["trueRobot"],
+        "func": function (sprite, script) {
+            var device = Entry.trueRobot.PORT_MAP.linetracer;
+
+            var onoff = script.getField('ONOFF');
+            var value = onoff == 'on' ? 1 : 0;
+
+            if (!Entry.hw.sendQueue['SET']) {
+                Entry.hw.sendQueue['SET'] = {};
+            }
+            Entry.hw.sendQueue['SET'][device] = {
+                port: Entry.trueRobot.PORT_MAP.led_line,
+                dataA: value,
+                dataB: 0x07,
+                dataC: 0x07
+            };
+            return script.callReturn();
+        },
+        "syntax": { "js": [], "py": [] }
+    },
+//endregion TrueTrueRobot 뚜루뚜루로봇
 };
 
 (function() {
