@@ -636,6 +636,42 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
         code.changeEvent.notify();
     };
 
+    p.banCategory = function(categoryName) {
+        var categoryElem;
+        if(categoryName in this._categoryElems) {
+            categoryElem = this._categoryElems[categoryName];
+            categoryElem.addClass('entryRemoveCategory');
+            if (this.lastSelector === categoryName) {
+                this._dSelectMenu(this.firstSelector, true);
+            }
+        }
+    }
+
+    p.unbanCategory = function(categoryName) {
+        var categoryElem;
+
+        var threads;
+        this._categoryData.some(function (data) {
+            var isFindCategory = categoryName === data.category;
+            if(isFindCategory) {
+                threads = data.blocks;
+            }
+            return isFindCategory;
+        });
+
+        var count = threads.length;
+        for (var i=0; i<threads.length; i++) {
+            if(this.checkBanClass(Entry.block[threads[i]]))
+                count--;
+        }
+
+        if(categoryName in this._categoryElems && count > 0) {
+            categoryElem = this._categoryElems[categoryName];
+            categoryElem.removeClass('entryRemoveCategory');
+            categoryElem.removeClass('entryRemove');
+        }
+    }
+
     p.banClass = function(className, doNotAlign) {
         var index = this._bannedClass.indexOf(className);
         if (index < 0) {
@@ -847,17 +883,27 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
         });
         this.view.prepend(this._categoryCol);
 
-        for (var i=0; i<data.length; i++)
-            this._generateCategoryElement(data[i].category);
+        for (var i=0; i < data.length; i++) {
+            if(i === 0) {
+                this.firstSelector = data[i].category;
+            }
+            var visible = data[i].visible;
+            this._generateCategoryElement(data[i].category, visible);
+        }
     };
 
-    p._generateCategoryElement = function(name) {
+    p._generateCategoryElement = function(name, visible) {
         var that = this;
         var element = Entry.Dom('li', {
             id: 'entryCategory' + name,
-            class: 'entryCategoryElementWorkspace entryRemove',
+            classes: ['entryCategoryElementWorkspace', 'entryRemove'],
+            // classes: ['entryCategoryElementWorkspace'],
             parent: this._categoryCol
         });
+
+        if(visible === false) {
+            element.addClass('entryRemoveCategory');
+        }
 
         (function(elem, name){
             elem.text(Lang.Blocks[name.toUpperCase()]);
@@ -1017,6 +1063,8 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
     p.deleteRendered = function(name) {
         delete this._renderedCategories[name];
     };
+
+    p.clearRendered = function() { this._renderedCategories = {}; };
 
     p.hasCategory = function() {
         return !!this._categoryData;
