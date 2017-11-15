@@ -1171,7 +1171,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
                     var href = img.getAttribute('href');
                     loadImage(href, img.getAttribute('width'), img.getAttribute('height'))
                         .then(function(src) {
-                            img.setAttribute('href', src)
+                            img.setAttribute('href', src);
                             if (++counts == images.length) return processSvg();
                         });
                 })(img);

@@ -39,8 +39,8 @@ Entry.FieldDropdownDynamic = function(content, blockView, index) {
 
     this._ROUND = content.roundValue || 3;
     this.renderStart(blockView);
-    if (blockView && blockView.getBoard() && blockView.getBoard().workspace
-        && blockView.getBoard().workspace.changeEvent) {
+    if (blockView && blockView.getBoard() && blockView.getBoard().workspace &&
+        blockView.getBoard().workspace.changeEvent) {
         blockView.getBoard().workspace.changeEvent.attach(
             this, this._updateValue);
     }

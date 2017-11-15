@@ -14024,8 +14024,9 @@ Entry.block = {
             "accept": "param",
             "value": {
                 "type": "function_field_label",
-                "params": [Lang.Blocks.FUNC]
-            }
+                "params": [Lang.Blocks.FUNC],
+                "copyable": false
+            },
         },
         {
             "type": "Indicator",
@@ -46484,7 +46485,7 @@ Entry.block = {
         {
             "type": "Block",
             "accept": "string"
-        },        
+        },
         {
             "type": "Indicator",
             "img": "block_icon/hardware_03.png",
@@ -46499,7 +46500,7 @@ Entry.block = {
             },
             {
                 "type": "memaker_list_digital_lcd_column"
-            },            
+            },
             {
                 "type": "text",
                 "params": [ "Type text !!" ]
@@ -46526,7 +46527,7 @@ Entry.block = {
         var string = script.getValue("STRING", script);
         var text = [];
 
-        
+
         if(!script.isStart) {
             if(typeof string === 'string') {
                 for (var i = 0; i < string.length; i++) {
