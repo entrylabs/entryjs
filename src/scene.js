@@ -185,18 +185,20 @@ Entry.Scene.prototype.generateElement = function(scene) {
     }
 
     Entry.Utils.disableContextmenu(viewTemplate);
-    Entry.ContextMenu.onContextmenu($(viewTemplate), function (coordinate) {
-        var options = [
-            {
-                text: Lang.Workspace.duplicate_scene,
-                enable: Entry.engine.isState('stop') && !this.isMax(),
-                callback: function(){
-                    Entry.scene.cloneScene(scene);
+    if (Entry.sceneEditable) {
+        Entry.ContextMenu.onContextmenu($(viewTemplate), function (coordinate) {
+            var options = [
+                {
+                    text: Lang.Workspace.duplicate_scene,
+                    enable: Entry.engine.isState('stop') && !this.isMax(),
+                    callback: function(){
+                        Entry.scene.cloneScene(scene);
+                    }
                 }
-            }
-        ];
-        Entry.ContextMenu.show(options, 'workspace-contextmenu', coordinate);
-    }.bind(this));
+            ];
+            Entry.ContextMenu.show(options, 'workspace-contextmenu', coordinate);
+        }.bind(this));
+    }
 
     scene.view = viewTemplate;
 

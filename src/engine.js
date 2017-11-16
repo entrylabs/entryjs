@@ -1,4 +1,4 @@
-/**
+/*u
  * @fileoverview This manage control state and control bar.
  */
 'use strict';
@@ -487,20 +487,14 @@ Entry.Engine = function() {
     p.toggleRun = function(disableAchieve) {
         var variableContainer = Entry.variableContainer;
         var container = Entry.container;
-        var playground = Entry.playground;
+        var WS = Entry.getMainWS();
 
         if (this.state === 'pause')
             return this.togglePause();
 
         Entry.Utils.blur();
 
-        //Text Coding Mode
-        if (playground && playground.mainWorkspace) {
-            var mainWorkspace = playground.mainWorkspace;
-            var boardMode = mainWorkspace.mode;
-            if(boardMode == Entry.Workspace.MODE_VIMBOARD)
-                mainWorkspace._syncTextCode();
-        }
+        WS && WS.syncCode();
 
         Entry.addActivity("run");
 
@@ -939,7 +933,7 @@ Entry.Engine = function() {
 
     p.detachKeyboardCapture = function() {
         if (Entry.keyPressed && this._keyboardEvent) {
-            Entry.keyPressed.detach(this._keyboardEvent);
+            this._keyboardEvent.destroy();
             delete this._keyboardEvent;
         }
     };

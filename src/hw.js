@@ -49,6 +49,7 @@ Entry.HW = function() {
         '4.2': Entry.Arduino,
         '5.1': Entry.Neobot,
         '6.1': Entry.mkboard,
+        '6.2': Entry.memaker,
         '7.1': Entry.Robotis_carCont,
         '7.2': Entry.Robotis_openCM70,
         '8.1': Entry.Arduino,
@@ -74,7 +75,6 @@ Entry.HW = function() {
         '18.1': Entry.Altino,
         '1A.1': Entry.ArduinoNano,
         '1B.1': Entry.JDKit,
-        
     };
 };
 

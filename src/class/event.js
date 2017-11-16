@@ -13,16 +13,14 @@ Entry.Event = function(sender) {
         var listener = {
             obj: obj,
             fn: fn,
-            destroy: function() {
-                that.detach(this);
-            }
+            destroy: function() { that.detach(this); }
         };
         this._listeners.push(listener);
         return listener;
     };
 
     p.detach = function (listener) {
-        var listeners = this._listeners;
+        var listeners = this._listeners || [];
         var index = listeners.indexOf(listener);
         if (index > -1)
             return listeners.splice(index, 1);
@@ -30,20 +28,17 @@ Entry.Event = function(sender) {
 
     p.clear = function () {
         var listeners = this._listeners;
-        while(listeners.length) listeners.pop();
+        while (listeners.length)
+            listeners.pop().destroy();
     };
 
     p.notify = function () {
         var args = arguments;
-        this._listeners.slice().forEach(function(listener){
-            listener.fn.apply(
-                listener.obj,
-                args
-            );
+        this._listeners.slice().forEach(function(listener) {
+            listener.fn.apply(listener.obj, args);
         });
     };
 
-    p.hasListeners = function () {
-        return !!this._listeners.length;
-    };
+    p.hasListeners = function () { return !!this._listeners.length; };
+
 })(Entry.Event.prototype);

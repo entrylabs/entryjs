@@ -21,7 +21,8 @@ Entry.FieldDropdown = function(content, blockView, index) {
     this._noArrow = content.noArrow;
 
     var arrowColor = content.arrowColor;
-    if (this._block.deletable === Entry.Block.DELETABLE_FALSE_LIGHTEN || this._block.emphasized) {
+    if (this._block.deletable === Entry.Block.DELETABLE_FALSE_LIGHTEN ||
+        this._block.emphasized) {
         arrowColor = blockView._fillColor;
     }
 
@@ -124,8 +125,8 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
         if (!this._noArrow) {
             var arrowInfo = this.getArrow();
             this._arrow.attr({
-                transform: "translate("+ (width - arrowInfo.width - 5) + ","
-                    + (-arrowInfo.height/2) +")"
+                transform: "translate("+ (width - arrowInfo.width - 5) + "," +
+                (-arrowInfo.height/2) +")"
             });
         } else width -= X_PADDING_SUBT;
 
@@ -217,7 +218,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
                 pos.x += this.box.width/2 - optionGroupWidth/2;
 
                 domHeight -= relPos.y + 30;
-                this.optionGroup.height(domHeight)
+                this.optionGroup.height(domHeight);
             } else {
                 pos.x += this.box.width + 1;
 
@@ -225,11 +226,10 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
 
                 if (domHeight - 30 < optionGroupHeight) {
                     domHeight -= domHeight % 30;
-                    this.optionGroup.height(domHeight)
+                    this.optionGroup.height(domHeight);
                 }
 
                 pos.y -= this.optionGroup.height();
-
             }
         } else pos.x += this.box.width/2 - optionGroupWidth/2;
 
@@ -238,8 +238,8 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
             left: pos.x, top: pos.y,
             width: optionGroupWidth
         });
-        var rights = this.optionGroup.find('.right');
-        rights.width(optionGroupWidth-20);
+
+        this.optionGroup.find('.right').width(optionGroupWidth-20);
     };
 
     p.applyValue = function(value) {

@@ -1,7 +1,7 @@
 /*
  *
- */ 
-"use strict";     
+ */
+"use strict";
 
 goog.provide("Entry.PyHint");
 
@@ -9,27 +9,10 @@ goog.provide("Entry.PyHint");
 // Distributed under an MIT license: http://codemirror.net/LICENSE
 //
 Entry.PyHint = function(syntax) {
-    this.syntax = syntax;
-    this.scope = {};
+    this.setSyntax(syntax);
     this.lastHW = null;
 
-    this.scope._global = [];
-    this.scope._list = [];
-    for (var key in syntax) {
-        if (syntax[key].syntax && key.indexOf("%") < 0
-            && syntax[key].key.indexOf("function_field") < 0)
-            this.scope._global.push(key)
-        else if (key.substr(0, 2) === "if")
-            this.scope._global.push(key)
-        else if (key.substr(0, 5) === "while")
-            this.scope._global.push(key)
-    }
-    this.addScope("Entry");
-    this.addScope("random");
-    this.addScope("math");
-    this.addScope("%2", "_list");
-
-    this._blockMenu = Entry.playground.mainWorkspace.blockMenu;
+    this._blockMenu = Entry.getMainWS().blockMenu;
 
     CodeMirror.registerHelper("hint", "python", this.pythonHint.bind(this));
 
@@ -45,9 +28,10 @@ Entry.PyHint = function(syntax) {
             this.lastHW = null;
         }
     }.bind(this);
+
     Entry.addEventListener('hwChanged', hwFunc);
-    if (Entry.hw.hwModule)
-        hwFunc();
+
+    if (Entry.hw.hwModule) hwFunc();
 };
 
 (function(p) {
@@ -107,8 +91,8 @@ Entry.PyHint = function(syntax) {
                         hint: hintFunc,
                         syntax: localSyntax[key],
                         localKey: localKey
-                    }
-                })
+                    };
+                });
                 break;
             case "property":
                 var variableToken = tokens[tokens.length - 2];
@@ -132,7 +116,7 @@ Entry.PyHint = function(syntax) {
                         hint: hintFunc,
                         syntax: syntax[variableToken.string][key]
                     };
-                })
+                });
                 var scope = this.syntax[variableToken.string];
                 menuResult = searchResult.map(function(key) {
                     return scope[key].key;
@@ -143,32 +127,34 @@ Entry.PyHint = function(syntax) {
         }
 
         if (menuResult.length)
-            this._blockMenu._setDynamic(menuResult)
+            this._blockMenu._setDynamic(menuResult);
         else
-            this._blockMenu._cancelDynamic()
-        return {list: result, // for optimize
+            this._blockMenu._cancelDynamic();
+        return {
+            list: result, // for optimize
             from: CodeMirror.Pos(cur.line, start),
-            to: CodeMirror.Pos(cur.line, lastToken.end)};
-    }
+            to: CodeMirror.Pos(cur.line, lastToken.end)
+        };
+    };
 
     p.addScope = function(name) {
         if (this.syntax[name] && !this.scope[name]) {
-            var syntax = this.syntax[name]
+            var syntax = this.syntax[name];
             var keys = Object.keys(syntax);
-            keys = keys.filter(function(k){return k.indexOf("#") < 0 && !Entry.block[syntax[k].key].deprecated})
+            keys = keys.filter(function(k){return k.indexOf("#") < 0 && !Entry.block[syntax[k].key].deprecated;});
             this.scope[name] = keys;
             this.scope._global.unshift(name);
-            keys = keys.map(function(k) {return name + "." + k});
-            this.scope._global = this.scope._global.concat(keys)
+            keys = keys.map(function(k) {return name + "." + k;});
+            this.scope._global = this.scope._global.concat(keys);
         }
     };
 
     p.removeScope = function(name) {
         if (this.scope[name]) {
-            var syntax = this.syntax[name]
+            var syntax = this.syntax[name];
             var keys = Object.keys(syntax);
-            keys = keys.filter(function(k){return k.indexOf("#") < 0 && !Entry.block[syntax[k].key].deprecated})
-            keys = keys.map(function(k) {return name + "." + k});
+            keys = keys.filter(function(k){return k.indexOf("#") < 0 && !Entry.block[syntax[k].key].deprecated;});
+            keys = keys.map(function(k) {return name + "." + k;});
 
             this.scope._global.splice(this.scope._global.indexOf(name), 1);
             while (keys.length) {
@@ -188,7 +174,7 @@ Entry.PyHint = function(syntax) {
         options = options || {};
         options.escapeLetter = "#";
         var result = Entry.Utils.fuzzy.filter(start, arr, options).slice(0,20);
-        result = result.map(function(o){return o.original});
+        result = result.map(function(o){return o.original;});
         return result;
     };
 
@@ -217,7 +203,7 @@ Entry.PyHint = function(syntax) {
             text = text.replace(/\$\d+/gi, "");
         }
         if (text.indexOf("\n") > -1) {
-            text = text.split("\n").join("\n" + "\t".repeat(self.from.ch))
+            text = text.split("\n").join("\n" + "\t".repeat(self.from.ch));
         }
         if (text.indexOf(":") > -1) {
             var cur = cm.getCursor(), tokens = cm.getLineTokens(cur.line);
@@ -234,6 +220,29 @@ Entry.PyHint = function(syntax) {
         cm.replaceRange(text, self.from, self.to);
         cm.setCursor({line: self.from.line, ch: ch});
         Entry.helper.renderBlock(data.syntax.key);
+    };
+
+    p.setSyntax = function(syntax) {
+        this.syntax = syntax;
+        this.scope = {};
+        this.scope._global = [];
+        this.scope._list = [];
+        for (var key in syntax) {
+            if (syntax[key].syntax && key.indexOf("%") < 0 &&
+                syntax[key].key.indexOf("function_field") < 0)
+                this.scope._global.push(key);
+            else if (key.substr(0, 2) === "if")
+                this.scope._global.push(key);
+            else if (key.substr(0, 5) === "while")
+                this.scope._global.push(key);
+        }
+        this.addScope("Entry");
+        this.addScope("random");
+        this.addScope("math");
+        this.addScope("%2", "_list");
+
+        if (this.lastHW)
+            this.addScope(this.lastHW);
     };
 
 })(Entry.PyHint.prototype);

@@ -1107,6 +1107,17 @@ EntryStatic.getAllBlocks = function() {
                 "jdkit_rollpitch",
                 "jdkit_yaw",
                 "jdkit_emergency",
+                // memaker Added 2017-10-01
+                "memaker_get_analog_value",
+                "memaker_get_analog_value_map",
+                "memaker_get_ultrasonic_value",
+                "memaker_get_digital",
+                "memaker_toggle_led",
+                "memaker_digital_pwm",
+                "memaker_set_servo",
+                "memaker_set_lcd",
+                "memaker_lcd_command"
+                // memaker Added 2017-10-01
             ]
         }
     ]

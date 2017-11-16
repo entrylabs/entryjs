@@ -114,7 +114,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
 
     p.destroyOption = function(forceCommand) {
         if (this.disposeEvent) {
-            Entry.disposeEvent.detach(this.disposeEvent);
+            this.disposeEvent.destroy();
             delete this.disposeEvent;
         }
 
@@ -127,7 +127,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
         this._isEditing = false;
         this.command(forceCommand);
         if (this.keyPressed) {
-            Entry.keyPressed.detach(this.keyPressed);
+            this.keyPressed.destroy();
             delete this.keyPressed;
         }
     };
@@ -167,7 +167,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
         this.destroyOption();
 
         if (Entry.keyPressed && this.keyPressed)
-           Entry.keyPressed.detach(this.keyPressed);
+           this.keyPressed.destroy();
     };
 
     p._setTextValue = function() {
