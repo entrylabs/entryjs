@@ -357,16 +357,19 @@ Entry.Parser = function(mode, type, cm, syntax) {
         if (this._syntax_cache[mode])
             return this._syntax_cache[mode];
 
-        var availables = this.setAvailableCode();
-
         var types = Object.keys(Entry.block);
+        var availables = this.setAvailableCode();
         var syntax = {};
         if(mode === Entry.Vim.WORKSPACE_MODE)
             syntax["#dic"] = {};
 
         for (var i = 0; i < types.length; i++) {
             var type = types[i];
-            if (Entry.type !== 'invisible' && (!availables || (availables.indexOf(type) < 0)))
+            //if (Entry.type !== 'invisible' && (availables && (availables.indexOf(type) < 0)))
+                //continue;
+
+            if (mode === Entry.Vim.MAZE_MODE &&
+                (availables && (availables.indexOf(type) < 0)))
                 continue;
 
             var block = Entry.block[type];

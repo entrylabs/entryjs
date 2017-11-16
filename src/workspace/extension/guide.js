@@ -5,7 +5,7 @@ goog.provide("Entry.ExtGuide");
 Entry.ExtGuide = function(content, blockView, mode) {
     this.blockView = blockView;
     this.block = blockView.block;
-    this.model = content.model ? content.model : []
+    this.model = content.model ? content.model : [];
 
     this.render();
 };

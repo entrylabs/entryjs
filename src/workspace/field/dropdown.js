@@ -125,8 +125,8 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
         if (!this._noArrow) {
             var arrowInfo = this.getArrow();
             this._arrow.attr({
-                transform: "translate("+ (width - arrowInfo.width - 5) + ","
-                    + (-arrowInfo.height/2) +")"
+                transform: "translate("+ (width - arrowInfo.width - 5) + "," +
+                (-arrowInfo.height/2) +")"
             });
         } else width -= X_PADDING_SUBT;
 

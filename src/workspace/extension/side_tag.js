@@ -34,7 +34,7 @@ Entry.ExtSideTag = function(content, blockView, mode) {
             stroke: this.color,
             fill: "transparent",
             "stroke-width": "3"
-        })
+        });
         this.textElement = this.svgGroup.elem("text").attr({
             'style': 'white-space: pre;',
             'font-size': '10px',
@@ -50,8 +50,8 @@ Entry.ExtSideTag = function(content, blockView, mode) {
                 "class": 'extension sideTagTspan'
             });
             tspan.textContent = t;
-            return tspan
-        }.bind(this))
+            return tspan;
+        }.bind(this));
     };
 
     p.updatePos = function() {
@@ -66,9 +66,7 @@ Entry.ExtSideTag = function(content, blockView, mode) {
         var bBox = this.textElement.getBoundingClientRect();
 
         this.tspans.map(function(tspan) {
-            tspan.attr({
-                x: - bBox.width - 14
-            })
+            tspan.attr({ x: - bBox.width - 14 });
         });
     };
 })(Entry.ExtSideTag.prototype);
