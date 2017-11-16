@@ -210,10 +210,11 @@
   // of the error message, and then raises a `SyntaxError` with that
   // message.
 
-  function raise(pos, message) {
+  function raise(pos, message, readType, expectedType) {
     var loc = getLineInfo(input, pos);
     var err = new SyntaxError(message);
     err.pos = pos; err.loc = loc; err.raisedAt = tokPos; err.tokLen = tokEnd - tokStart + 1;
+    err.tokType = readType; err.expectedType = expectedType;
     throw err;
   }
 
@@ -1789,16 +1790,23 @@
 
   function expect(type) {
     if (tokType === type) next();
-    else unexpected();
+    else {
+      var args = Array.prototype.slice.call(arguments);
+      if (args.length > 1)
+        unexpected({type: args.map(function(t) { return t.type; })});
+      else
+        unexpected(type);
+    }
   }
 
   // Raise an unexpected token error.
 
-  function unexpected() {
-    raise(tokStart, "Unexpected token");
+  function unexpected(expectedType) {
+    raise(tokStart, "Unexpected token",
+      tokType && tokType.type, expectedType && expectedType.type);
   }
 
-  // Verify that a node is an lval - something that can be assigned
+  // Verify that a node is an lval - somethin g that can be assigned
   // to.
 
   function checkLVal(expr) {
@@ -2682,7 +2690,7 @@
     var elts = [], first = true;
     while (!eat(close)) {
       if (!first) {
-        expect(_comma);
+        expect(_comma, close);
         if (allowTrailingComma && options.allowTrailingCommas && eat(close)) break;
       } else first = false;
 
