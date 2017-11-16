@@ -78,7 +78,7 @@ Entry.PyAstGenerator = function() {
         if (Array.isArray(token)) {
             var tokens = token.map(this._getTokenLang);
             var lastToken = tokens.pop();
-            return tokens.join(", ") + " 나 " + lastToken;
+            return tokens.join(", ") + Lang.TextCoding.message_conv_or + lastToken;
         }
         else
             return this._getTokenLang(token);
