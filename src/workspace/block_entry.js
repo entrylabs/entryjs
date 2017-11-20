@@ -68023,6 +68023,7 @@ chocopi_servo_motor: {
         },
         "syntax": {"js": [], "py": ["hummingbird.sensorValue(%1)"]}
     },
+
     //온도센서
     hummingbird_temperatureValue: {
         "color": "#00979D",
@@ -68154,7 +68155,7 @@ chocopi_servo_motor: {
         "syntax": {"js": [], "py": ["hummingbird.distanceValue(%1)"]}
     },
 
-// 소음 센서 블럭
+    // 소음 센서 블럭
     hummingbird_soundValue: {
         "color": "#00979D",
         "fontColor": "#fff",        
@@ -68195,6 +68196,7 @@ chocopi_servo_motor: {
         },
         "syntax": {"js": [], "py": ["hummingbird.soundValue(%1)"]}
     },
+
     // 회전센서
     hummingbird_rotaryValue: {
         "color": "#00979D",        
@@ -68234,6 +68236,7 @@ chocopi_servo_motor: {
         },
         "syntax": {"js": [], "py": ["hummingbird.rotaryValue(%1)"]}
     },
+
     //진동모터
     hummingbird_vibeMotor: {
         "color": "#00979D",
@@ -68254,6 +68257,11 @@ chocopi_servo_motor: {
                 "type": "Block",
                 "accept": "string"
             },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
         ],
         "events": {},
         "def": {
@@ -68288,6 +68296,7 @@ chocopi_servo_motor: {
         },
         "syntax": {"js": [], "py": ["hummingbird.vibeMotor(%1, %2)"]}
     },
+
     //서보모터	
     hummingbird_servo: {
         "color": "#00979D",
@@ -68310,6 +68319,11 @@ chocopi_servo_motor: {
                 "type": "Block",
                 "accept": "string"
             },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }            
         ],
         "events": {},
         "def": {
@@ -68346,6 +68360,7 @@ chocopi_servo_motor: {
         "syntax": {"js": [], "py": ["hummingbird.servo(%1, %2)"]}
     },   
     
+    //기어모터
     hummingbird_dcMotor: {
         "color": "#00979D",
         "skeleton": "basic",
@@ -68405,6 +68420,8 @@ chocopi_servo_motor: {
         },
         "syntax": {"js": [], "py": ["hummingbird.dcMotor(%1, %2)"]}
     },
+
+    // 단색LED
     hummingbird_led: {
         "color": "#00979D",
         "skeleton": "basic",
@@ -68468,7 +68485,7 @@ chocopi_servo_motor: {
         "syntax": {"js": [], "py": ["hummingbird.led(%1, %2)"]}
     },
 
-    //0914 수정됨
+    // 삼색LED
     hummingbird_triLED: {
         "color": "#00979D",
         "skeleton": "basic",
