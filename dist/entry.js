@@ -18334,7 +18334,7 @@ Entry.BlockToPyParser = function() {
     } else {
       this.isFuncStmtParam(b) && (c += b.data.type);
     }
-    if (!f || null === f) {
+    if (!f && !this.isFuncStmtParam(b)) {
       var g = Error();
       g.block = b;
       throw g;
