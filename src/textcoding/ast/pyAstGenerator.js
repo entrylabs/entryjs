@@ -30,10 +30,11 @@ Entry.PyAstGenerator = function() {
                     message = Lang.TextCoding.message_conv_is_expect1 +
                         this.getTokenLang(error.expectedType) + Lang.TextCoding.message_conv_is_expect2;
                 else
-                    message = Lang.TextCoding.message_conv_instead1 + this.getTokenLang(error.tokType) +
-                        Lang.TextCoding.message_conv_instead2 + this.getTokenLang(error.expectedType) +
-                        Lang.TextCoding.message_conv_instead3;
-                subject = Entry.TextCodingError.SUBJECT_SYNTAX_TOKEN;
+                    message = Lang.TextCoding.message_conv_instead.replace(
+                        "%1", this.getTokenLang(error.tokType)
+                    ).replace(
+                        "%2", this.getTokenLang(error.expectedType));
+                    subject = Entry.TextCodingError.SUBJECT_SYNTAX_TOKEN;
             } else if (error.tokType) {
                 if (error.tokType === "eof" || error.tokType === "newline")
                     message = Entry.TextCodingError.MESSAGE_SYNTAX_UNEXPECTED_TOKEN;
@@ -77,7 +78,7 @@ Entry.PyAstGenerator = function() {
         if (Array.isArray(token)) {
             var tokens = token.map(this._getTokenLang);
             var lastToken = tokens.pop();
-            return tokens.join(", ") + " 나 " + lastToken;
+            return tokens.join(", ") + Lang.TextCoding.message_conv_or + lastToken;
         }
         else
             return this._getTokenLang(token);
