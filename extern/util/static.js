@@ -277,18 +277,6 @@ EntryStatic.getAllBlocks = function() {
         {
             category: "arduino",
             blocks: [
-                //hummingbirdduo
-                "hummingbird_sensorValue",
-                "hummingbird_temperatureValue",                
-                "hummingbird_lightValue",
-                "hummingbird_distanceValue",
-                "hummingbird_rotaryValue",
-                "hummingbird_soundValue",
-                "hummingbird_vibeMotor",
-                "hummingbird_servo",                
-                "hummingbird_dcMotor",
-                "hummingbird_triLED",
-                "hummingbird_led",
 
                 "arduino_download_connector",
                 "download_guide",
@@ -1117,6 +1105,19 @@ EntryStatic.getAllBlocks = function() {
                 "memaker_set_lcd",
                 "memaker_lcd_command"
                 // memaker Added 2017-10-01
+                
+                //hummingbirdduo
+                "hummingbird_sensorValue",
+                "hummingbird_temperatureValue",                
+                "hummingbird_lightValue",
+                "hummingbird_distanceValue",
+                "hummingbird_rotaryValue",
+                "hummingbird_soundValue",
+                "hummingbird_vibeMotor",
+                "hummingbird_servo",                
+                "hummingbird_dcMotor",
+                "hummingbird_triLED",
+                "hummingbird_led",
             ]
         }
     ]
