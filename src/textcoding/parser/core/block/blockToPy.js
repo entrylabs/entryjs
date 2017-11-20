@@ -125,7 +125,7 @@ Entry.BlockToPyParser = function() {
             result += block.data.type;
         }
 
-        if(!syntax || syntax === null) {
+        if(!syntax && !this.isFuncStmtParam(block)) {
             var error = new Error();
             error.block = block;
             throw error;
