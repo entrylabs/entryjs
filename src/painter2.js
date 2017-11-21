@@ -236,10 +236,12 @@ p._keyboardPressControl = function(e) {
     if (ctrlKey && keyCode == 86) { //paste
         this.paste();
     }
-    this.lc.trigger("keyDown", e);
+    this.lc && this.lc.trigger("keyDown", e);
 };
 
-p._keyboardUpControl = function(e) { this.lc.trigger("keyUp", e); };
+p._keyboardUpControl = function(e) {
+    this.lc && this.lc.trigger("keyUp", e);
+};
 
 p.initTopBar = function() {
     var painter = this;
