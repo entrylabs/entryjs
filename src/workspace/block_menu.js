@@ -31,6 +31,10 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
     this.categoryRendered = false;
     this.readOnly = readOnly === undefined ? true : readOnly;
 
+    this._threadsMap = {};
+    this._basicThreads = [];
+    this._addedThreads = [];
+
     if (typeof dom === "string") dom = $('#' + dom);
     else dom = $(dom);
 
@@ -205,7 +209,8 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
         var visibles = blocks[0];
 
         inVisibles.forEach(function(block) {
-            var blockView = block.view;
+            var blockView = block && block.view;
+            if (!blockView) return;
             blockView.set({display:false});
             blockView.detach();
         });
@@ -590,23 +595,17 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
             return obj.category == key;
         })[0];
 
-        if (!datum)
-            return;
+        if (!datum) return;
+
         var category = key;
         var blocks = datum.blocks;
         blocks.forEach(function(b){
             var block = Entry.block[b];
-            block.category = datum.category;
             if (!block || !block.def) {
-                codes.push([{
-                    type:b,
-                    category: category
-                }]);
+                codes.push([{ type:b, category: category }]);
             } else {
                 if (block.defs) {
-                    block.defs.forEach(function(d) {
-                        d.category = category;
-                    });
+                    block.defs.forEach(function(d) { d.category = category; });
                     for (var i =0; i <block.defs.length; i++) {
                         codes.push([ block.defs[i] ]);
                     }
@@ -628,10 +627,11 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
         codes.forEach(function(t) {
             if (!t || !t[0]) return;
             t[0].x = -99999;
-            code.createThread(t, index, true);
+            var thread = code.createThread(t, index, true);
             if (index !== undefined) index++;
             delete t[0].x;
-        });
+            this._registerThreadsMap(t[0].type, thread);
+        }.bind(this));
 
         code.changeEvent.notify();
     };
@@ -645,7 +645,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
                 this._dSelectMenu(this.firstSelector, true);
             }
         }
-    }
+    };
 
     p.unbanCategory = function(categoryName) {
         var categoryElem;
@@ -714,10 +714,8 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
         var category = 'category_' + this.lastSelector;
         var isFor = blockInfo.isFor;
 
-        if (this.lastSelector && isFor) {
-            if (isFor.indexOf(category) < 0)
-                return true;
-        }
+        if (isFor && isFor.indexOf(category) < 0)
+            return true;
     };
 
     p._addControl = function(dom) {
@@ -843,6 +841,9 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
         }
         this._selectedCategoryView = null;
         this._categories = [];
+        this._threadsMap = {};
+        this._basicThreads = [];
+        this._addedThreads = [];
 
         var categories = this._categoryElems;
         for (var key in categories)
@@ -936,7 +937,10 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
         if (!(this._categoryData && this.shouldGenerateHwCode(threads)))
             return;
 
-        threads.forEach(function(t) { t.destroy(); });
+        threads.forEach(function(t) {
+            this._deleteThreadsMap(t);
+            t.destroy();
+        }.bind(this));
 
         var data = this._categoryData;
         var blocks;
@@ -982,9 +986,10 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
         threads.forEach(function(t) {
             if (shouldHide)
                 t[0].x = -99999;
-            code.createThread(t);
+            var thread = code.createThread(t);
             delete t[0].x;
-        });
+            this._registerThreadsMap(t[0].type, thread);
+        }.bind(this));
         this.hwCodeOutdated = false;
 
         Entry.dispatchEvent('hwCodeGenerated');
@@ -995,45 +1000,34 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
     };
 
     p._isNotVisible = function(blockInfo) {
-        return this.checkCategory(blockInfo) ||
-            this.checkBanClass(blockInfo);
+        return this.checkCategory(blockInfo) || this.checkBanClass(blockInfo);
     };
 
     p._getSortedBlocks = function() {
-        var visibles = [];
-        var inVisibles = [];
-
-        var threads = this.code.getThreads();
-
+        var visibles;
         if (this._selectDynamic) {
-            visibles = new Array(this._dynamicThreads.length)
-            for (var i=0; i<threads.length; i++) {
-                var block = threads[i].getFirstBlock();
-
-                if (!block) continue;
-                var type = block.type;
-                var index = this._dynamicThreads.indexOf(type);
-                if (index > -1)
-                    visibles[index] = block
-                else inVisibles.push(block);
-            }
-            visibles = visibles.filter(function(b) {
+            visibles = this._dynamicThreads.map(function(type) {
+                var thread = this._threadsMap[type];
+                return thread && thread.getFirstBlock();
+            }.bind(this))
+            .filter(function(b) {
                 return b instanceof Entry.Block;
             });
         } else {
-            for (var i=0; i<threads.length; i++) {
-                var block = threads[i].getFirstBlock();
+            visibles = [];
+            this._getThreads().forEach(function(thread) {
+                var block = thread.getFirstBlock();
 
-                if (!block) continue;
-
-                var blockInfo = Entry.block[block.type];
-                if (this._isNotVisible(blockInfo))
-                    inVisibles.push(block);
-                else visibles.push(block);
-            }
+                if (block && !this._isNotVisible(Entry.block[block.type]))
+                    visibles.push(block);
+            }.bind(this));
         }
 
-        return [visibles, inVisibles];
+        var inVisibles = this._getThreads(true).map(function(thread) {
+            return thread && thread.getFirstBlock();
+        });
+
+        return [ visibles, inVisibles ];
     };
 
     p._setDynamic = function(blocks) {
@@ -1116,6 +1110,41 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
 
     p.shouldGenerateHwCode = function(threads) {
         return this.hwCodeOutdated || threads.length === 0;
+    };
+
+    p._registerThreadsMap = function(type, thread) {
+        if (!(type && thread && thread.getFirstBlock())) return;
+
+        this._threadsMap[type] = thread;
+        !!(Entry.block[type]) ? this._basicThreads.push(thread) :
+                  this._addedThreads.push(thread);
+    };
+
+    p._deleteThreadsMap = function(thread) {
+        var block = thread && thread.getFirstBlock();
+        if (!block) return;
+        var type = block.type;
+        delete this._threadsMap[type];
+
+        var target = !!(Entry.block[block.type]) ?
+                        this._basicThreads : this._addedThreads;
+        var idx = target.indexOf(thread);
+        if (idx > -1) target.splice(idx, 1);
+    };
+
+    p.getThreadByBlockType = function(type) {
+        return this._threadsMap[type];
+    };
+
+    p._getThreads = function(isForAll) {
+        var threads;
+
+        if (!this._selectDynamic && !isForAll && this._categoryData &&
+            this._basicThreads && this._basicThreads.length) {
+            threads = this._basicThreads;
+        } else threads = this.code.getThreads();
+
+        return threads;
     };
 
 })(Entry.BlockMenu.prototype);
