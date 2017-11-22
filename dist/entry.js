@@ -15538,65 +15538,67 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
     return this.mode;
   };
   c.setMode = function(b, c, e) {
-    Entry.disposeEvent.notify();
-    var d = Entry.playground;
-    if (e = !e) {
-      "workspace" !== Entry.type || d && d.object ? d = !0 : (entrylms.alert(Lang.Workspace.object_not_exist_error), d = !1), e = !d;
-    }
-    if (e) {
-      return !1;
-    }
-    Entry.Utils.isNumber(b) ? this.mode = b : (this.mode = b.boardType, this.runType = b.runType, this.textType = b.textType);
-    this.mode = Number(this.mode);
-    if (this.oldMode !== this.mode) {
-      e = Entry.Vim;
-      var g = Entry.Workspace, h = this.blockMenu, k = Entry.TextCodingUtil;
-      switch(this.mode) {
-        case g.MODE_VIMBOARD:
-          if (d = k.isNamesIncludeSpace()) {
-            entrylms.alert(d);
-            b = {};
-            b.boardType = g.MODE_BOARD;
-            b.textType = -1;
-            Entry.getMainWS().setMode(b);
-            break;
-          }
-          if (d = k.isNameIncludeNotValidChar()) {
-            entrylms.alert(d);
-            b = {};
-            b.boardType = g.MODE_BOARD;
-            b.textType = -1;
-            Entry.getMainWS().setMode(b);
-            return;
-          }
-          if (d = k.canConvertTextModeForOverlayMode(Entry.Workspace.MODE_VIMBOARD)) {
-            entrylms.alert(d);
-            return;
-          }
-          try {
-            this.board && this.board.hide(), this.overlayBoard && this.overlayBoard.hide(), this.set({selectedBoard:this.vimBoard}), this.vimBoard.show(), h.banClass("functionInit", !0), this.codeToText(this.board.code, b), this.oldTextType = this.textType, this.board.clear();
-          } catch (l) {
-            this.vimBoard.hide(), this.board.show(), h.unbanClass("functionInit"), this.set({selectedBoard:this.board}), this.mode = g.MODE_BOARD, b.boardType = g.MODE_BOARD, this.oldTextType == e.TEXT_TYPE_JS ? b.runType = e.MAZE_MODE : this.oldTextType == e.TEXT_TYPE_PY && (b.runType = e.WORKSPACE_MODE), l.block && Entry.getMainWS() && Entry.getMainWS().board.activateBlock(l.block);
-          }
-          break;
-        case g.MODE_BOARD:
-          try {
-            this.board.show(), h.unbanClass("functionInit", !0), this.set({selectedBoard:this.board}), this.textToCode(this.oldMode, this.oldTextType), this.overlayBoard && this.overlayBoard.hide(), this.oldTextType = this.textType, this.vimBoard && this.vimBoard.hide();
-          } catch (l) {
-            this.board && this.board.code && this.board.code.clear(), this.board && this.board.hide(), this.set({selectedBoard:this.vimBoard}), h.banClass("functionInit"), this.mode = g.MODE_VIMBOARD, this.oldTextType == e.TEXT_TYPE_JS ? (b.boardType = g.MODE_VIMBOARD, b.textType = e.TEXT_TYPE_JS, b.runType = e.MAZE_MODE, this.oldTextType = e.TEXT_TYPE_JS) : this.oldTextType == e.TEXT_TYPE_PY && (b.boardType = g.MODE_VIMBOARD, b.textType = e.TEXT_TYPE_PY, b.runType = e.WORKSPACE_MODE, this.oldTextType = 
-            e.TEXT_TYPE_PY);
-          }
-          Entry.commander.setCurrentEditor("board", this.board);
-          break;
-        case g.MODE_OVERLAYBOARD:
-          this.oldMode == g.MODE_VIMBOARD ? this.overlayModefrom = g.MODE_VIMBOARD : this.oldMode == g.MODE_BOARD && (this.overlayModefrom = g.MODE_BOARD), this.overlayBoard || this.initOverlayBoard(), this.overlayBoard.show(), this.set({selectedBoard:this.overlayBoard}), Entry.commander.setCurrentEditor("board", this.overlayBoard);
+    if (Entry.options.textCodingEnable || Entry.Workspace.MODE_VIMBOARD !== b.boardType) {
+      Entry.disposeEvent.notify();
+      var d = Entry.playground;
+      if (e = !e) {
+        "workspace" !== Entry.type || d && d.object ? d = !0 : (entrylms.alert(Lang.Workspace.object_not_exist_error), d = !1), e = !d;
       }
-      this.oldMode = this.mode;
-      Entry.isTextMode = this.mode == g.MODE_VIMBOARD;
-      h.align();
-      Entry.dispatchEvent("workspaceChangeMode");
-      this.changeEvent.notify(c);
-      Entry.dispatchEvent("cancelBlockMenuDynamic");
+      if (e) {
+        return !1;
+      }
+      Entry.Utils.isNumber(b) ? this.mode = b : (this.mode = b.boardType, this.runType = b.runType, this.textType = b.textType);
+      this.mode = Number(this.mode);
+      if (this.oldMode !== this.mode) {
+        e = Entry.Vim;
+        var g = Entry.Workspace, h = this.blockMenu, k = Entry.TextCodingUtil;
+        switch(this.mode) {
+          case g.MODE_VIMBOARD:
+            if (d = k.isNamesIncludeSpace()) {
+              entrylms.alert(d);
+              b = {};
+              b.boardType = g.MODE_BOARD;
+              b.textType = -1;
+              Entry.getMainWS().setMode(b);
+              break;
+            }
+            if (d = k.isNameIncludeNotValidChar()) {
+              entrylms.alert(d);
+              b = {};
+              b.boardType = g.MODE_BOARD;
+              b.textType = -1;
+              Entry.getMainWS().setMode(b);
+              return;
+            }
+            if (d = k.canConvertTextModeForOverlayMode(Entry.Workspace.MODE_VIMBOARD)) {
+              entrylms.alert(d);
+              return;
+            }
+            try {
+              this.board && this.board.hide(), this.overlayBoard && this.overlayBoard.hide(), this.set({selectedBoard:this.vimBoard}), this.vimBoard.show(), h.banClass("functionInit", !0), this.codeToText(this.board.code, b), this.oldTextType = this.textType, this.board.clear();
+            } catch (l) {
+              this.vimBoard.hide(), this.board.show(), h.unbanClass("functionInit"), this.set({selectedBoard:this.board}), this.mode = g.MODE_BOARD, b.boardType = g.MODE_BOARD, this.oldTextType == e.TEXT_TYPE_JS ? b.runType = e.MAZE_MODE : this.oldTextType == e.TEXT_TYPE_PY && (b.runType = e.WORKSPACE_MODE), l.block && Entry.getMainWS() && Entry.getMainWS().board.activateBlock(l.block);
+            }
+            break;
+          case g.MODE_BOARD:
+            try {
+              this.board.show(), h.unbanClass("functionInit", !0), this.set({selectedBoard:this.board}), this.textToCode(this.oldMode, this.oldTextType), this.overlayBoard && this.overlayBoard.hide(), this.oldTextType = this.textType, this.vimBoard && this.vimBoard.hide();
+            } catch (l) {
+              this.board && this.board.code && this.board.code.clear(), this.board && this.board.hide(), this.set({selectedBoard:this.vimBoard}), h.banClass("functionInit"), this.mode = g.MODE_VIMBOARD, this.oldTextType == e.TEXT_TYPE_JS ? (b.boardType = g.MODE_VIMBOARD, b.textType = e.TEXT_TYPE_JS, b.runType = e.MAZE_MODE, this.oldTextType = e.TEXT_TYPE_JS) : this.oldTextType == e.TEXT_TYPE_PY && (b.boardType = g.MODE_VIMBOARD, b.textType = e.TEXT_TYPE_PY, b.runType = e.WORKSPACE_MODE, this.oldTextType = 
+              e.TEXT_TYPE_PY);
+            }
+            Entry.commander.setCurrentEditor("board", this.board);
+            break;
+          case g.MODE_OVERLAYBOARD:
+            this.oldMode == g.MODE_VIMBOARD ? this.overlayModefrom = g.MODE_VIMBOARD : this.oldMode == g.MODE_BOARD && (this.overlayModefrom = g.MODE_BOARD), this.overlayBoard || this.initOverlayBoard(), this.overlayBoard.show(), this.set({selectedBoard:this.overlayBoard}), Entry.commander.setCurrentEditor("board", this.overlayBoard);
+        }
+        this.oldMode = this.mode;
+        Entry.isTextMode = this.mode == g.MODE_VIMBOARD;
+        h.align();
+        Entry.dispatchEvent("workspaceChangeMode");
+        this.changeEvent.notify(c);
+        Entry.dispatchEvent("cancelBlockMenuDynamic");
+      }
     }
   };
   c.changeBoardCode = function(b, c) {
@@ -15668,7 +15670,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
               !r && c && c instanceof Entry.Board && Entry.clipboard && Entry.do("addThread", Entry.clipboard).value.getFirstBlock().copyToClipboard();
               break;
             case 219:
-              if (Entry.getMainWS().oldMode == Entry.Workspace.MODE_OVERLAYBOARD) {
+              if (!Entry.options.textCodingEnable || Entry.getMainWS().oldMode == Entry.Workspace.MODE_OVERLAYBOARD) {
                 return;
               }
               if (f = Entry.TextCodingUtil.isNamesIncludeSpace()) {
@@ -15679,6 +15681,9 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
               b.preventDefault();
               break;
             case 221:
+              if (!Entry.options.textCodingEnable) {
+                return;
+              }
               if (f = Entry.TextCodingUtil.canConvertTextModeForOverlayMode(Entry.Workspace.MODE_VIMBOARD)) {
                 entrylms.alert(f);
                 return;
@@ -17910,23 +17915,39 @@ Entry.PyAstGenerator = function() {
 };
 (function(c) {
   c.generate = function(b) {
-    var c;
-    var e = filbert.parse;
-    var f = {locations:!0, ranges:!0};
+    var c, e = filbert.parse, f = {locations:!0, ranges:!0};
     try {
       return e(b, f);
     } catch (h) {
-      var f = h.message.split("'"), g = Entry.TextCodingError.TITLE_SYNTAX;
-      console.log("msgTokens", f);
-      "Unexpected token" == f[0].trim() ? (e = Entry.TextCodingError.MESSAGE_SYNTAX_UNEXPECTED_TOKEN, b = Entry.TextCodingError.SUBJECT_SYNTAX_TOKEN) : "Unexpected character" == f[0].trim() ? (e = Entry.TextCodingError.MESSAGE_SYNTAX_UNEXPECTED_CHARACTER, b = Entry.TextCodingError.SUBJECT_SYNTAX_CHARACTER) : "Reserved variable word" == f[0].trim() ? (e = Entry.TextCodingError.MESSAGE_SYNTAX_RESERVED_TOKEN, b = Entry.TextCodingError.SUBJECT_CONV_VARIABLE) : "Reserved list word" == f[0].trim() ? (e = 
-      Entry.TextCodingError.MESSAGE_SYNTAX_RESERVED_TOKEN_LIST, b = Entry.TextCodingError.SUBJECT_CONV_LIST) : "Unexpected indent" == f[0].trim() ? (e = Entry.TextCodingError.MESSAGE_SYNTAX_UNEXPECTED_CHARACTER, b = Entry.TextCodingError.SUBJECT_SYNTAX_INDENT) : (e = Entry.TextCodingError.MESSAGE_SYNTAX_DEFAULT, b = Entry.TextCodingError.SUBJECT_SYNTAX_DEFAULT);
-      f[1] && (c = f[1]);
-      h.title = Lang.TextCoding[g];
-      h.message = Lang.TextCoding[e];
-      h.keyword = c ? c : "";
-      h.subject = Lang.TextCoding[b];
+      b = h.message.split("'");
+      e = Entry.TextCodingError.TITLE_SYNTAX;
+      console.log("msgTokens", b);
+      if (h.expectedType && h.tokType) {
+        f = "eof" === h.tokType || "newline" === h.tokType ? Lang.TextCoding.message_conv_is_expect1 + this.getTokenLang(h.expectedType) + Lang.TextCoding.message_conv_is_expect2 : Lang.TextCoding.message_conv_instead.replace("%1", this.getTokenLang(h.tokType)).replace("%2", this.getTokenLang(h.expectedType));
+        var g = Entry.TextCodingError.SUBJECT_SYNTAX_TOKEN;
+      } else {
+        h.tokType ? (f = "eof" === h.tokType || "newline" === h.tokType ? Entry.TextCodingError.MESSAGE_SYNTAX_UNEXPECTED_TOKEN : Lang.TextCoding.message_conv_is_wrong1 + this.getTokenLang(h.tokType) + Lang.TextCoding.message_conv_is_wrong1, g = Entry.TextCodingError.SUBJECT_SYNTAX_TOKEN) : "Unexpected token" == b[0].trim() ? (f = Entry.TextCodingError.MESSAGE_SYNTAX_UNEXPECTED_TOKEN, g = Entry.TextCodingError.SUBJECT_SYNTAX_TOKEN) : "Unexpected character" == b[0].trim() ? (f = Entry.TextCodingError.MESSAGE_SYNTAX_UNEXPECTED_CHARACTER, 
+        g = Entry.TextCodingError.SUBJECT_SYNTAX_CHARACTER) : "Reserved variable word" == b[0].trim() ? (f = Entry.TextCodingError.MESSAGE_SYNTAX_RESERVED_TOKEN, g = Entry.TextCodingError.SUBJECT_CONV_VARIABLE) : "Reserved list word" == b[0].trim() ? (f = Entry.TextCodingError.MESSAGE_SYNTAX_RESERVED_TOKEN_LIST, g = Entry.TextCodingError.SUBJECT_CONV_LIST) : "Unexpected indent" == b[0].trim() ? (f = Entry.TextCodingError.MESSAGE_SYNTAX_UNEXPECTED_CHARACTER, g = Entry.TextCodingError.SUBJECT_SYNTAX_INDENT) : 
+        (f = Entry.TextCodingError.MESSAGE_SYNTAX_DEFAULT, g = Entry.TextCodingError.SUBJECT_SYNTAX_DEFAULT);
+      }
+      b[1] && (c = b[1]);
+      h.title = Lang.TextCoding[e] || e;
+      h.message = Lang.TextCoding[f] || f;
+      h.keyword = c || "";
+      h.subject = Lang.TextCoding[g] || g;
       throw h;
     }
+  };
+  c.getTokenLang = function(b) {
+    if (Array.isArray(b)) {
+      b = b.map(this._getTokenLang);
+      var c = b.pop();
+      return b.join(", ") + Lang.TextCoding.message_conv_or + c;
+    }
+    return this._getTokenLang(b);
+  };
+  c._getTokenLang = function(b) {
+    return Lang.TextCoding[b] || '"' + b + '"';
   };
 })(Entry.PyAstGenerator.prototype);
 Entry.Map = function() {
@@ -19122,44 +19143,47 @@ Entry.PyToBlockParser = function(c) {
     return b.init && b.init.arguments ? b.init.arguments.map(this.Node, this) : [];
   };
   c.AssignmentExpression = function(b) {
-    var c = {params:[]};
-    switch(b.left.type) {
-      case "MemberExpression":
-        c.type = "change_value_list_index";
-        var e = b.left.object.name;
-        if ("self" === e) {
-          c.type = "set_variable";
-          var f = Entry.variableContainer.getVariableByName(b.left.property.name, !0, this.object.id);
-          f || (Entry.variableContainer.addVariable({variableType:"variable", name:b.left.property.name, visible:!0, object:this.object.id, value:0}), f = Entry.variableContainer.getVariableByName(b.left.property.name, !0, this.object.id));
-          c.params.push(f.id_);
-        } else {
-          f = Entry.variableContainer.getListByName(e), this.assert(f, e, b.left.object, "NO_LIST", "LIST"), c.params.push(f.id_), c.params.push(this.ListIndex(this.Node(b.left.property.arguments[1])));
-        }
-        break;
-      case "Identifier":
-        c.type = "set_variable";
-        f = Entry.variableContainer.getVariableByName(b.left.name, !1);
-        f || (Entry.variableContainer.addVariable({variableType:"variable", name:b.left.name, visible:!0, value:0}), f = Entry.variableContainer.getVariableByName(b.left.name, !1));
-        c.params.push(f.id_);
-        break;
-      default:
-        this.assert(!1, "error", b.left, "NO_SUPPORT", "GENERAL");
-    }
-    e = this.Node(b.right);
-    switch(b.operator) {
-      case "=":
-        break;
-      case "+=":
-        if ("set_variable" === c.type) {
-          c.type = "change_variable";
+    var c = Array.isArray(b.left) ? b.left : [b.left], e = [], f;
+    for (f in c) {
+      var g = {params:[]}, h = c[f];
+      switch(h.type) {
+        case "MemberExpression":
+          g.type = "change_value_list_index";
+          var k = h.object.name;
+          if ("self" === k) {
+            g.type = "set_variable";
+            var l = Entry.variableContainer.getVariableByName(h.property.name, !0, this.object.id);
+            l || (Entry.variableContainer.addVariable({variableType:"variable", name:h.property.name, visible:!0, object:this.object.id, value:0}), l = Entry.variableContainer.getVariableByName(h.property.name, !0, this.object.id));
+            g.params.push(l.id_);
+          } else {
+            l = Entry.variableContainer.getListByName(k), this.assert(l, k, h.object, "NO_LIST", "LIST"), g.params.push(l.id_), g.params.push(this.ListIndex(this.Node(h.property.arguments[1])));
+          }
           break;
-        }
-      default:
-        var g = this.arithmeticOperator[b.operator[0]];
-        g && (e = {type:"calc_basic", params:["set_variable" === c.type ? {type:"get_variable", params:[f.id_]} : {type:"value_of_index_from_list", params:[void 0, f.id_, void 0, this.ListIndex(this.Node(b.left.property.arguments[1]))]}, g, e]});
+        case "Identifier":
+          g.type = "set_variable";
+          l = Entry.variableContainer.getVariableByName(h.name, !1);
+          l || (Entry.variableContainer.addVariable({variableType:"variable", name:h.name, visible:!0, value:0}), l = Entry.variableContainer.getVariableByName(h.name, !1));
+          g.params.push(l.id_);
+          break;
+        default:
+          this.assert(!1, "error", h, "NO_SUPPORT", "GENERAL");
+      }
+      h = this.Node(b.right);
+      switch(b.operator) {
+        case "=":
+          break;
+        case "+=":
+          if ("set_variable" === g.type) {
+            g.type = "change_variable";
+            break;
+          }
+        default:
+          (k = this.arithmeticOperator[b.operator[0]]) && (h = {type:"calc_basic", params:["set_variable" === g.type ? {type:"get_variable", params:[l.id_]} : {type:"value_of_index_from_list", params:[void 0, l.id_, void 0, this.ListIndex(this.Node(b.left.property.arguments[1]))]}, k, h]});
+      }
+      g.params.push(h);
+      e.push(g);
     }
-    c.params.push(e);
-    return c;
+    return e;
   };
   c.Literal = function(b, c, e) {
     var d = b.value;
@@ -19479,27 +19503,50 @@ Entry.PyToBlockParser = function(c) {
       this.assert("object" === typeof c, "", b, "NO_SUPPORT", "GENERAL");
       return c;
     }, this) : [];
-    for (var c = 0; c < b.length; c++) {
-      var e = b[c];
-      e.constructor == Array && e[0].length ? 0 < e.length ? (e[e.length - 1][0].params = e[0][0][0].params, b[c] = e[e.length - 1][0]) : b[c] = e[0][0] : e.constructor == Array && e[0].constructor == Object && (b[c] = e[0]);
+    for (var c = [], e = 0; e < b.length; e++) {
+      var f = b[e];
+      Array.isArray(f) ? c = c.concat(f) : c.push(f);
     }
-    return b.filter(function(b) {
+    return c.filter(function(b) {
       return b.constructor === Object;
     });
   };
   c.getVariables = function(b) {
     b.body.map(function(b) {
       b = b.expression;
-      var c = b.left, d = b.right, g = !1, h = "variables_";
+      var c = b.left, d = b.right, g = "variables_";
       Entry.generateHash();
-      var k = {variableType:"variable", name:"", visible:!0, object:{}, value:""};
       if ("=" == b.operator) {
-        "name" in b.left ? b = c.name : (g = this.object, b = c.property.name, g = g.id);
-        "NewExpression" === d.type && "list" == d.callee.property.name ? (h = "lists_", c = d.arguments.map(this.Node, this), c = c.map(function(b) {
-          return b.constructor === Object && "params" in b ? {data:"string" === typeof b.params[0] ? b.params[0].replace(/\\\"/gi, '"') : b.params[0]} : {data:b};
-        }), k.array = c) : k.value = this.getValue(d);
-        var c = "add" + h[0].toUpperCase() + h.slice(1, h.length - 2), l = this.variableExist(b, h);
-        l ? "lists_" == h ? l.array_ = k.array : l.value_ = this.getValue(d) : (k.variableType = h.slice(0, length - 2), k.name = b, k.object = g, Entry.variableContainer[c](k));
+        if ("NewExpression" === d.type && "list" == d.callee.property.name) {
+          g = "lists_";
+          var h = d.arguments.map(this.Node, this);
+          h = h.map(function(b) {
+            return b.constructor === Object && "params" in b ? {data:"string" === typeof b.params[0] ? b.params[0].replace(/\\\"/gi, '"') : b.params[0]} : {data:b};
+          });
+        } else {
+          var k = this.getValue(d);
+        }
+        b = "add" + g[0].toUpperCase() + g.slice(1, g.length - 2);
+        Array.isArray(c) || (c = [c]);
+        for (var l in c) {
+          var m = !1;
+          var q = c[l];
+          var n = {variableType:"variable", name:"", visible:!0, object:{}, value:""};
+          h && (n.array = h);
+          k && (n.value = k);
+          "name" in q ? q = q.name : (m = this.object, q = q.property.name, m = m.id);
+          var r = this.variableExist(q, g);
+          if (r) {
+            if ("lists_" == g) {
+              r.array_ = n.array;
+              break;
+            }
+            r.value_ = this.getValue(d);
+            break;
+          } else {
+            n.variableType = g.slice(0, length - 2), n.name = q, n.object = m, Entry.variableContainer[b](n);
+          }
+        }
       }
     }, this);
     return [];
@@ -23345,47 +23392,50 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
   };
   c.destroy = function(b, c, e) {
     if (!e || this.isDeletable()) {
-      if ("output" === this.getBlockType() && !c) {
-        e = this.getPrevOutputBlock();
-        var d = this.getOutputBlock();
-        this.separate(1);
-        d && (d.separate(), d.doInsert(e.view._contents[1]));
+      e = this.getBlockType();
+      if ("output" === e && !c) {
+        var d = this.getPrevOutputBlock(), g = this.getOutputBlock();
+        d ? (this.separate(1), g && (g.separate(), g.doInsert(d.view._contents[1]))) : g && ((d = g.view) && d._toGlobalCoordinate(), g.doInsert(this.getThread()));
       }
-      var g = this;
-      if (d = this.params) {
-        for (e = 0; e < d.length; e++) {
-          var h = d[e];
-          h instanceof Entry.Block && (h.doNotSplice = !(h.thread instanceof Entry.FieldOutput), h.destroy(b));
-        }
+      for (var h = this, d = this.params || [], g = 0; g < d.length; g++) {
+        var k = d[g];
+        k instanceof Entry.Block && (k.doNotSplice = !(k.thread instanceof Entry.FieldOutput), k.destroy(b));
       }
-      if (d = this.statements) {
-        for (e = 0; e < d.length; e++) {
-          d[e].destroy(b);
-        }
+      d = this.statements || [];
+      for (g = 0; g < d.length; g++) {
+        d[g].destroy(b);
       }
-      e = this.getCode();
-      e.unregisterBlock(this);
+      g = this.getCode();
+      g.unregisterBlock(this);
       d = this.getThread();
       this._schema && this._schema.event && d.unregisterEvent(this, this._schema.event);
-      if ("basic" === this.getBlockType()) {
-        var k = this.getPrevBlock();
-        if (h = this.getNextBlock()) {
-          c ? h.destroy(b, c) : k ? h.view && h.view.bindPrev(k, !0) : d.view && (c = d.view.getParent(), c.constructor === Entry.FieldStatement ? (h.view && h.view.bindPrev(c), c.insertTopBlock(h)) : c.constructor === Entry.FieldStatement ? h.replace(c._valueBlock) : h.view && h.view._toGlobalCoordinate());
+      if ("basic" === e && (k = this.getPrevBlock(), e = this.getNextBlock())) {
+        if (c) {
+          e.destroy(b, c);
+        } else {
+          if (c = e.view, k) {
+            c && c.bindPrev(k, !0);
+          } else {
+            if (d.view) {
+              var k = d.view.getParent(), l = k.constructor;
+              l === Entry.FieldStatement ? (c && c.bindPrev(k), k.insertTopBlock(e)) : l === Entry.FieldStatement ? e.replace(k._valueBlock) : c && c._toGlobalCoordinate();
+            }
+          }
         }
       }
-      var l = this.doNotSplice;
+      var m = this.doNotSplice;
       !this.doNotSplice && d.spliceBlock ? d.spliceBlock(this) : delete this.doNotSplice;
       this.view && this.view.destroy(b);
       this._schemaChangeEvent && this._schemaChangeEvent.destroy();
       this._paramsBackupEvent && this._paramsBackupEvent.destroy();
       this._destroyParamsBackupEvent && this._destroyParamsBackupEvent.destroy();
-      (b = this.events.dataDestroy) && e.object && b.forEach(function(b) {
-        Entry.Utils.isFunction(b) && b.apply(g, [g, l]);
+      (b = this.events.dataDestroy) && g.object && b.forEach(function(b) {
+        Entry.Utils.isFunction(b) && b.apply(h, [h, m]);
       });
       b = this.events.viewDestroy;
       c = this.getCode().board;
       b && Entry.getMainWS() && Entry.isTextMode && (!c || c && c.constructor !== Entry.BlockMenu) && b.forEach(function(b) {
-        Entry.Utils.isFunction(b) && b.apply(g, [g, l]);
+        Entry.Utils.isFunction(b) && b.apply(h, [h, m]);
       });
     }
   };
@@ -25444,7 +25494,7 @@ Entry.BlockView = function(c, b, d) {
     this.dragMode = Entry.DRAG_MODE_NONE;
     Entry.Utils.disableContextmenu(this.svgGroup.node);
     b = c.events.viewAdd;
-    "workspace" == Entry.type && b && !this.isInBlockMenu && b.forEach(function(b) {
+    "workspace" == Entry.type && b && this._board instanceof Entry.Board && b.forEach(function(b) {
       Entry.Utils.isFunction(b) && b(c);
     });
   }
@@ -26466,12 +26516,12 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
   };
   c._createBlockByType = function(b) {
     this._block.getThread();
-    var c = this._blockView.getBoard();
-    if (c.workspace) {
-      var e = c.workspace.selectedBlockView;
-      e = !(!e || !e.dragInstance);
+    var c = this._blockView.getBoard(), e = c.workspace;
+    if (e) {
+      e = e.selectedBlockView;
+      var f = !(!e || !e.dragInstance);
     }
-    b = new Entry.Block({type:b, params:[e ? void 0 : this._oldPrimitiveValue]}, this);
+    b = new Entry.Block({type:b, params:[f ? void 0 : this._oldPrimitiveValue], copyable:"function_field_label" !== b}, this);
     b.createView(c, this.renderMode);
     delete this._oldPrimitiveValue;
     return b;
@@ -28258,7 +28308,6 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldOutput);
     this.svgGroup || (this.svgGroup = this._blockView.contentSvgGroup.elem("g"));
     this.view = this;
     this._nextGroup = this.svgGroup;
-    this.box.set({x:0, y:0, width:0, height:20});
     var d = this.getValue();
     d && !d.view && (d.setThread(this), d.createView(b, c));
     this._updateValueBlock(d);
@@ -28275,8 +28324,8 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldOutput);
     this.box.set({x:b, y:c});
   };
   c.calcWH = function() {
-    var b = this._valueBlock;
-    b && b.view ? (b = b.view, this.box.set({width:b.width, height:b.height})) : this.box.set({width:0, height:20});
+    var b = this._valueBlock, c = b && b.view;
+    b && c ? this.box.set({width:c.width, height:c.height}) : this.box.set({width:0, height:20});
   };
   c.calcHeight = c.calcWH;
   c.destroy = function() {
