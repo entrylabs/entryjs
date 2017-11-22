@@ -1132,8 +1132,8 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
         if (idx > -1) target.splice(idx, 1);
     };
 
-    p.getThreadByBlockType = function(type) {
-        return this._threadsMap[type];
+    p.getThreadByBlockKey = function(key) {
+        return this._threadsMap[key];
     };
 
     p._getThreads = function(isForAll) {
