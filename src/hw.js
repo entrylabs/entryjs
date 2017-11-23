@@ -76,6 +76,7 @@ Entry.HW = function() {
         '19.1': Entry.trueRobot,
         '1A.1': Entry.ArduinoNano,
         '1C.1': Entry.hummingbird,
+        '1B.1': Entry.JDKit,
     };
 };
 

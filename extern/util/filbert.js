@@ -210,10 +210,11 @@
   // of the error message, and then raises a `SyntaxError` with that
   // message.
 
-  function raise(pos, message) {
+  function raise(pos, message, readType, expectedType) {
     var loc = getLineInfo(input, pos);
     var err = new SyntaxError(message);
     err.pos = pos; err.loc = loc; err.raisedAt = tokPos; err.tokLen = tokEnd - tokStart + 1;
+    err.tokType = readType; err.expectedType = expectedType;
     throw err;
   }
 
@@ -1789,16 +1790,23 @@
 
   function expect(type) {
     if (tokType === type) next();
-    else unexpected();
+    else {
+      var args = Array.prototype.slice.call(arguments);
+      if (args.length > 1)
+        unexpected({type: args.map(function(t) { return t.type; })});
+      else
+        unexpected(type);
+    }
   }
 
   // Raise an unexpected token error.
 
-  function unexpected() {
-    raise(tokStart, "Unexpected token");
+  function unexpected(expectedType) {
+    raise(tokStart, "Unexpected token",
+      tokType && tokType.type, expectedType && expectedType.type);
   }
 
-  // Verify that a node is an lval - something that can be assigned
+  // Verify that a node is an lval - somethin g that can be assigned
   // to.
 
   function checkLVal(expr) {
@@ -2108,27 +2116,40 @@
 
   function parseMaybeAssign(noIn) {
     var left = parseMaybeTuple(noIn);
-    if (tokType.isAssign) {
-      var tupleArgs = getTupleArgs(left);
-      if (tupleArgs) {
-        next();
-        var right = parseMaybeTuple(noIn);
-        var blockNode = startNodeFrom(left);
-        blockNode.body = unpackTuple(tupleArgs, right);
-        return finishNode(blockNode, "BlockStatement");
-      }
+    if (!tokType.isAssign)
+      return left;
+    var node;
+    while (tokType.isAssign) {
+      if (!node) {
+        var tupleArgs = getTupleArgs(left);
+        if (tupleArgs) {
+          next();
+          var right = parseMaybeTuple(noIn);
+          var blockNode = startNodeFrom(left);
+          blockNode.body = unpackTuple(tupleArgs, right);
+          return finishNode(blockNode, "BlockStatement");
+        }
 
-      if (scope.isClass()) {
-        var thisExpr = nc.createNodeFrom(left, "ThisExpression");
-        left = nc.createNodeFrom(left, "MemberExpression", { object: thisExpr, property: left });
-      }
+        if (scope.isClass()) {
+          var thisExpr = nc.createNodeFrom(left, "ThisExpression");
+          left = nc.createNodeFrom(left, "MemberExpression", { object: thisExpr, property: left });
+        }
 
-      var node = startNodeFrom(left);
-      node.operator = tokVal;
-      node.left = left;
+        node = startNodeFrom(left);
+        node.operator = tokVal;
+        checkLVal(left);
+        node.left = left;
+      }
+      
+      if (node.right) {
+        if (!node.left.length)
+          node.left = [node.left];
+        node.left.push(node.right);
+        left = node.right;
+      }
+      
       next();
       node.right = parseMaybeTuple(noIn);
-      checkLVal(left);
 
       if (left.type === "Identifier" && !scope.exists(left.name)) {
         if (!node.operator || node.length > 1) unexpected();
@@ -2136,9 +2157,8 @@
         // return nc.createVarDeclFromId(node.left, node.left, node.right);
         // customized variable must be assign
       }
-      return finishNode(node, "AssignmentExpression");
     }
-    return left;
+    return finishNode(node, "AssignmentExpression");
   }
 
   // Parse a tuple
@@ -2682,7 +2702,7 @@
     var elts = [], first = true;
     while (!eat(close)) {
       if (!first) {
-        expect(_comma);
+        expect(_comma, close);
         if (allowTrailingComma && options.allowTrailingCommas && eat(close)) break;
       } else first = false;
 

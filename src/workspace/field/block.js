@@ -45,8 +45,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
 
     p.renderStart = function(board, mode, renderMode, isReDraw) {
         if (!this.svgGroup)
-            this.svgGroup =
-                this._blockView.contentSvgGroup.elem("g");
+            this.svgGroup = this._blockView.contentSvgGroup.elem("g");
 
         this.renderMode = mode !== undefined ?
             mode : this._blockView.renderMode;
@@ -186,7 +185,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
         return this._valueBlock;
     };
 
-    p.getValueBlock = function() {return this._valueBlock;};
+    p.getValueBlock = function() { return this._valueBlock; };
 
     p.updateValueBlock = function(block) {
         if (!(block instanceof Entry.Block))
@@ -295,18 +294,17 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
     p._createBlockByType = function(blockType) {
         var thread = this._block.getThread();
         var board = this._blockView.getBoard();
+        var workspace = board.workspace;
         var isFromUserAction;
-        if (board.workspace) {
-            var selectedBlockView = board.workspace.selectedBlockView;
+        if (workspace) {
+            var selectedBlockView = workspace.selectedBlockView;
             isFromUserAction = !!(selectedBlockView && selectedBlockView.dragInstance);
         }
 
-        var value = isFromUserAction ?
-            undefined : this._oldPrimitiveValue;
-
         var block = new Entry.Block({
             type: blockType,
-            params: [ value ]
+            params: [ isFromUserAction ? undefined : this._oldPrimitiveValue ],
+            copyable: blockType !== 'function_field_label'
         }, this);
 
         block.createView(board, this.renderMode);
@@ -315,9 +313,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
         return block;
     };
 
-    p.spliceBlock = function() {
-        this.updateValueBlock();
-    };
+    p.spliceBlock = function() { this.updateValueBlock(); };
 
     p._updateBG = function() {
         if (this.magneting) {

@@ -15,9 +15,7 @@ Entry.FieldOutput = function(content, blockView, index, mode, contentIndex) {
     this._block = blockView.block;
     this._valueBlock = null;
 
-    var box = new Entry.BoxModel();
-    this.box = box;
-
+    this.box = new Entry.BoxModel();
     this.changeEvent = new Entry.Event(this);
 
     this._index = index;
@@ -41,23 +39,15 @@ Entry.FieldOutput = function(content, blockView, index, mode, contentIndex) {
 Entry.Utils.inherit(Entry.Field, Entry.FieldOutput);
 
 (function(p) {
-    p.schema = {
-        magneting: false
-    };
+    p.schema = { magneting: false };
 
     p.renderStart = function(board, mode) {
         if (!this.svgGroup)
-            this.svgGroup =
-                this._blockView.contentSvgGroup.elem("g");
+            this.svgGroup = this._blockView.contentSvgGroup.elem("g");
 
         this.view = this;
         this._nextGroup = this.svgGroup;
-        this.box.set({
-            x: 0,
-            y: 0,
-            width: 0,
-            height: 20
-        });
+
         var block = this.getValue();
         if (block && !block.view) {
             block.setThread(this);
@@ -76,10 +66,8 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldOutput);
         animate = animate === undefined ? true : animate;
         var svgGroup = this.svgGroup;
         if (this._position) {
-            if (this._position.x)
-                x = this._position.x;
-            if (this._position.y)
-                y = this._position.y;
+            if (this._position.x) x = this._position.x;
+            if (this._position.y) y = this._position.y;
         }
 
         var block = this._valueBlock;
@@ -98,17 +86,14 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldOutput);
                 transform: transform
             });
 
-        this.box.set({
-            x: x,
-            y: y
-        });
+        this.box.set({ x: x, y: y });
     };
 
     p.calcWH = function() {
         var block = this._valueBlock;
+        var blockView = block && block.view;
 
-        if (block && block.view) {
-            var blockView = block.view;
+        if (block && blockView) {
             this.box.set({
                 width: blockView.width,
                 height: blockView.height
@@ -127,8 +112,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldOutput);
         this._valueBlock && this._valueBlock.destroyView();
     };
 
-    p._inspectBlock = function() {
-    };
+    p._inspectBlock = function() {};
 
     p._setValueBlock = function(block) {
         if (block != this._valueBlock || !this._valueBlock) {
@@ -136,16 +120,12 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldOutput);
             this._valueBlock = block;
             this.setValue(block);
 
-            if (block)
-                block.setThread(this);
-
+            block && block.setThread(this);
             return this._valueBlock;
         }
     };
 
-    p.spliceBlock = function() {
-        this._updateValueBlock();
-    };
+    p.spliceBlock = function() { this._updateValueBlock(); };
 
     p._updateValueBlock = function(block) {
         if (!(block instanceof Entry.Block))
@@ -156,8 +136,8 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldOutput);
             return;
         }
 
-        if (this._sizeObserver) this._sizeObserver.destroy();
-        if (this._posObserver) this._posObserver.destroy();
+        this._sizeObserver && this._sizeObserver.destroy();
+        this._posObserver && this._posObserver.destroy();
 
         block = this._setValueBlock(block);
         if (block) {
@@ -165,9 +145,8 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldOutput);
             view.bindPrev();
             this._posObserver = view.observe(this, "_updateValueBlock", ["x", "y"], false);
             this._sizeObserver = view.observe(this, "calcWH", ["width", "height"]);
-        } else {
-            this.calcWH();
-        }
+        } else { this.calcWH(); }
+
         this._blockView.dAlignContent();
     };
 
@@ -189,13 +168,9 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldOutput);
         return pos;
     };
 
-    p.dominate = function() {
-        this._blockView.dominate();
-    };
+    p.dominate = function() { this._blockView.dominate(); };
 
-    p.isGlobal = function() {
-        return false;
-    };
+    p.isGlobal = function() { return false; };
 
     p.separate = function(block) {
         this.getCode().createThread([block]);
@@ -211,8 +186,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldOutput);
         if (this._valueBlock === block) {
             delete this._valueBlock;
             return [block];
-        }
-        else return null;
+        } else return null;
     };
 
     p._updateBG = function() {
@@ -236,28 +210,21 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldOutput);
         var valueBlock = this._valueBlock;
         if (valueBlock) {
             valueBlock.view._toGlobalCoordinate();
-            block.getTerminateOutputBlock().view._contents[1].replace(
-                valueBlock
-            );
+            block.getTerminateOutputBlock().view.
+                _contents[1].replace(valueBlock);
         }
         this._updateValueBlock(block);
         block.view._toLocalCoordinate(this.svgGroup);
         this.calcWH();
     };
 
-    p.setParent = function(parent) {
-        this._parent = parent;
-    };
+    p.setParent = function(parent) { this._parent = parent; };
 
-    p.getParent = function() {
-        return this._parent;
-    };
+    p.getParent = function() { return this._parent; };
 
-    p.getThread = function() {
-        return this;
-    };
+    p.getThread = function() { return this; };
 
-    p.getValueBlock = function() {return this._valueBlock;};
+    p.getValueBlock = function() { return this._valueBlock; };
 
     p.pointer = function(pointer) {
         pointer = pointer || [];
