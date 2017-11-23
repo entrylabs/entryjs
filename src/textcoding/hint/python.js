@@ -126,8 +126,6 @@ Entry.PyHint = function(syntax) {
                 break;
         }
 
-
-        console.log(menuResult)
         if (menuResult.length)
             this._blockMenu._setDynamic(menuResult);
         else
@@ -246,7 +244,7 @@ Entry.PyHint = function(syntax) {
         if (this.lastHW)
             this.addScope(this.lastHW);
     };
-    
+
     p.getMenuElement = function(blockSyntax) {
         var blockType = blockSyntax.key;
         if (blockSyntax.isDefault &&
