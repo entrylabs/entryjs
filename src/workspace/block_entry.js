@@ -50210,8 +50210,7 @@ codestar_tilt: {
             time: new Date().getTime()
         };
         return script.callReturn();
-    },
-    "syntax": {"js": [], "py": ["Arduino.analogWrite(%1, %2)"]}
+    }
 },
 "dadublock_set_servo": {
     "color": "#00979D",
@@ -50273,8 +50272,7 @@ codestar_tilt: {
         };
 
         return script.callReturn();
-    },
-    "syntax": {"js": [], "py": ["Arduino.servomotorWrite(%1, %2)"]}
+    }
 },
 "dadublock_set_tone": {
     "color": "#00979D",
@@ -50804,8 +50802,7 @@ codestar_tilt: {
             time: new Date().getTime()
         };
         return script.callReturn();
-    },
-    "syntax": {"js": [], "py": ["Arduino.analogWrite(%1, %2)"]}
+    }
 },
 "dadublock_car_set_servo": {
     "color": "#00979D",
@@ -50867,8 +50864,7 @@ codestar_tilt: {
         };
 
         return script.callReturn();
-    },
-    "syntax": {"js": [], "py": ["Arduino.servomotorWrite(%1, %2)"]}
+    }
 },
 "dadublock_car_set_tone": {
     "color": "#00979D",
