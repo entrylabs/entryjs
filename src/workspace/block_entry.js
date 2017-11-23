@@ -67590,7 +67590,7 @@ chocopi_servo_motor: {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template" : "HB 진동 %1 의 세기: %2 ",        
+        "template" : "HB 진동 %1 의 세기: %2 %3",        
         "params": [
             {
                 "type": "Dropdown",
@@ -67650,7 +67650,7 @@ chocopi_servo_motor: {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template" : "HB 서보모터 %1번 의 각도: %2 ",        
+        "template" : "HB 서보모터 %1번 의 각도: %2 %3",        
         "params": [
             {
                 "type": "Dropdown",
@@ -67713,7 +67713,7 @@ chocopi_servo_motor: {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template" : "HB 기어모터 %1번 의 속도: %2 ",        
+        "template" : "HB 기어모터 %1번 의 속도: %2 %3",        
         "params": [
             {
                 "type": "Dropdown",
@@ -67774,7 +67774,7 @@ chocopi_servo_motor: {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template" : "HB 단색LED %1번 의 밝기: %2 ",        
+        "template" : "HB 단색LED %1번 의 밝기: %2 %3",
         "params": [
             {
                 "type": "Dropdown",
@@ -67838,7 +67838,7 @@ chocopi_servo_motor: {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template" : "HB 삼색LED %1번 의 빨강%2 초록%3 파랑%4 ",        
+        "template" : "HB 삼색LED %1번 의 빨강%2 초록%3 파랑%4 %5",        
         "params": [
             {
                 "type": "Dropdown",
@@ -68170,7 +68170,7 @@ chocopi_servo_motor: {
                 port: script.getNumberField('PORT'),
                 dataA: speed,
                 dataB: direction,
-                dataC: 0x07
+                dataC: 0
             };
 
             return script.callReturn();
@@ -68220,31 +68220,62 @@ chocopi_servo_motor: {
         "func": function (sprite, script) {
             var device = Entry.trueRobot.PORT_MAP.dualmotor;
 
-            var leftValue = script.getNumberValue("leftValue");
-            leftValue = Math.round(leftValue);
-            leftValue = Math.max(leftValue, -100);
-            leftValue = Math.min(leftValue, 100);
-
-            var rightValue = script.getNumberValue("rightValue");
-            rightValue = Math.round(rightValue);
-            rightValue = Math.max(rightValue, -100);
-            rightValue = Math.min(rightValue, 100);
-
-            var delayValue = script.getNumberValue("delayValue");
-            delayValue = Math.round(delayValue);
-            delayValue = Math.max(delayValue, -100);
-            delayValue = Math.min(delayValue, 100);
-
             if (!Entry.hw.sendQueue['SET']) {
                 Entry.hw.sendQueue['SET'] = {};
             }
-            Entry.hw.sendQueue['SET'][device] = {
-                port: Entry.trueRobot.PORT_MAP.dualPort,
-                dataA: leftValue,
-                dataB: rightValue,
-                dataC: delayValue
-            };
-            return script.callReturn();
+
+            if (!script.isStart) {
+                script.isStart = true;
+                script.timeFlag = 1;
+
+                var leftValue = script.getNumberValue("leftValue");
+                leftValue = Math.round(leftValue);
+                leftValue = Math.max(leftValue, -100);
+                leftValue = Math.min(leftValue, 100);
+
+                var rightValue = script.getNumberValue("rightValue");
+                rightValue = Math.round(rightValue);
+                rightValue = Math.max(rightValue, -100);
+                rightValue = Math.min(rightValue, 100);
+
+                var delayValue = script.getNumberValue("delayValue");
+                delayValue = Math.round(delayValue);
+                delayValue = Math.max(delayValue, -100);
+                delayValue = Math.min(delayValue, 100);
+
+                Entry.hw.sendQueue['SET'][device] = {
+                    port: Entry.trueRobot.PORT_MAP.dualPort,
+                    dataA: leftValue,
+                    dataB: rightValue,
+                    dataC: delayValue
+                };
+
+                var timeValue = script.getNumberValue("delayValue");
+                timeValue = Math.round(timeValue);
+                timeValue = Math.max(timeValue, -100);
+                timeValue = Math.min(timeValue, 100);
+                var fps = Entry.FPS || 60;
+                timeValue = 60 / fps * timeValue * 1000;
+                setTimeout(function () {
+                    script.timeFlag = 0;
+                }, timeValue);
+                return script;
+            } else if (script.timeFlag == 1) {
+                return script;
+            } else {
+                delete script.timeFlag;
+                delete script.isStart;
+                Entry.engine.isContinue = false;
+
+                Entry.hw.sendQueue['SET'][device] = {
+                    port: Entry.trueRobot.PORT_MAP.dualPort,
+                    dataA: 0,
+                    dataB: 0,
+                    dataC: 0
+                };
+
+                return script.callReturn();
+            }
         },
         "syntax": { "js": [], "py": [] }
     },
