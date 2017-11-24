@@ -939,7 +939,7 @@ Entry.Container.prototype.setCopiedObject = function(object) {
 
 Entry.Container.prototype.updateObjectsOrder = function() {
     var scenes = Entry.scene.getScenes();
-    
+
     var objs = [];
 
     for (var i=0; i<scenes.length; i++) {
@@ -1162,7 +1162,7 @@ Entry.Container.prototype.getBlockList = function() {
 
 Entry.Container.prototype.scrollToObject = function(ObjectId) {
     var object = this.getObject(ObjectId);
-    
+
     object.view_ && object.view_.scrollIntoView();
     document.body.scrollIntoView();
 };
