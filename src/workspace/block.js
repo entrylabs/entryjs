@@ -27,8 +27,8 @@ Entry.Block = function(block, thread) {
     var category = block.category;
     if (category) {
         this.category = category;
-        if (Entry.block[this.type])
-            Entry.block[this.type].isFor = ['category_' + category];
+        var entryBlock = Entry.block[this.type];
+        if (entryBlock) entryBlock.isFor = ['category_' + category];
     }
 
     var code = this.getCode();

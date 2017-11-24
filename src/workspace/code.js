@@ -231,7 +231,7 @@ Entry.PARAM = -1;
     };
 
     p.getThreads = function() {
-        return this._data.map(function(t){return t;});
+        return this._data.map(function(t) { return t; });
     };
 
     p.getThreadsByCategory = function(category) {

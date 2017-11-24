@@ -85,14 +85,14 @@ Entry.PyHint = function(syntax) {
                         key = key.join(".");
                     }
                     if (localSyntax[key].key)
-                        menuResult.push(localSyntax[key].key);
+                        menuResult.push(this.getMenuElement(localSyntax[key]))
                     return {
                         displayText: displayText,
                         hint: hintFunc,
                         syntax: localSyntax[key],
                         localKey: localKey
                     };
-                });
+                }, this);
                 break;
             case "property":
                 var variableToken = tokens[tokens.length - 2];
@@ -119,8 +119,8 @@ Entry.PyHint = function(syntax) {
                 });
                 var scope = this.syntax[variableToken.string];
                 menuResult = searchResult.map(function(key) {
-                    return scope[key].key;
-                });
+                    return this.getMenuElement(scope[key]);
+                }, this);
                 break;
             default:
                 break;
@@ -243,6 +243,25 @@ Entry.PyHint = function(syntax) {
 
         if (this.lastHW)
             this.addScope(this.lastHW);
+    };
+
+    p.getMenuElement = function(blockSyntax) {
+        var blockType = blockSyntax.key;
+        if (blockSyntax.isDefault &&
+            Entry.playground.mainWorkspace.blockMenu.getThreadByBlockKey(blockType)) {
+            return blockType;
+        } else {
+            var params = [];
+            if (blockSyntax.params)
+                params = params.concat(blockSyntax.params)
+            return [
+                blockSyntax.syntax,
+                {
+                    type: blockType,
+                    params: params
+                }
+            ];
+        }
     };
 
 })(Entry.PyHint.prototype);

@@ -3239,8 +3239,7 @@ Entry.block = {
         xmlHttp.send(String(signal));
         Entry.assert(xmlHttp.status == 200, "arduino is not connected");
         return script.callReturn();
-    },
-    "syntax": {"js": [], "py": ["Arduino.send(%1)"]}
+    }
 },
 "arduino_get_number": {
     "color": "#00979D",
@@ -3267,8 +3266,7 @@ Entry.block = {
         Entry.assert(xmlHttp.status == 200, "arduino is not connected");
         var data = xmlHttp.responseText;
         return Number(data);
-    },
-    "syntax": {"js": [], "py": ["Arduino.number(%1)"]}
+    }
 },
 "arduino_get_string": {
     "color": "#00979D",
@@ -3295,8 +3293,7 @@ Entry.block = {
         Entry.assert(xmlHttp.status == 200, "arduino is not connected");
         var data = xmlHttp.responseText;
         return data;
-    },
-    "syntax": {"js": [], "py": ["Arduino.string(%1)"]}
+    }
 },
 "arduino_get_sensor_number": {
     "color": "#00979D",

@@ -108,7 +108,8 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
     p.getMode = function() {return this.mode;};
 
     p.setMode = function(mode, message, isForce) {
-        if (!Entry.options.textCodingEnable && Entry.Workspace.MODE_VIMBOARD === mode.boardType) {
+        if (Entry.options && !Entry.options.textCodingEnable &&
+            Entry.Workspace.MODE_VIMBOARD === mode.boardType) {
             return;
         }
 

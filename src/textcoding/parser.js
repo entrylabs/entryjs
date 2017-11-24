@@ -406,7 +406,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
 
                 if (!pySyntax) continue;
 
-                pySyntax.map(function(s) {
+                pySyntax.map(function(s, i) {
                     var result, tokens;
 
                     if (typeof s === "string") {
@@ -422,6 +422,8 @@ Entry.Parser = function(mode, type, cm, syntax) {
                         if (!s.template) result.template = s.syntax;
                         if (s.dic) syntax["#dic"][s.dic] = key;
                     }
+                    if (i === 0)
+                        result.isDefault = true;
 
                     tokens = tokens.split('(');
 
