@@ -1047,15 +1047,20 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
         var threads = code.getThreads();
 
         for (var i=0; i<threads.length; i++) {
-            var block = threads[i].getFirstBlock();
-            if (block.type === type)
-                return block.view.svgGroup;
+            var block = threads[i] && threads[i].getFirstBlock();
+            if (!block) continue;
+            if (block.type === type) return block.view.svgGroup;
         }
     };
 
     p.scrollToType = function(type) {
         if (!type) return;
-        var blockView = this.code.getBlockList(false, type)[0].view;
+
+        var block = this.code.getBlockList(false, type)[0];
+        var blockView = block.view;
+
+        this.hasCategory() && this.selectMenu(block.category, true);
+
         var dom = this.getSvgDomByType(type);
         var rect = dom.getBoundingClientRect();
         if (isOverFlow()) {
