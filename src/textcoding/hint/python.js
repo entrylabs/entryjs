@@ -20,8 +20,10 @@ Entry.PyHint = function(syntax) {
         if (Entry.hw.hwModule) {
             var name = Entry.hw.hwModule.name;
             name = name[0].toUpperCase() + name.slice(1);
-            if (name === "ArduinoExt") name = "Arduino";
-            this.addScope(name);
+            if (name === "ArduinoExt")
+                this.addScope("Arduino", "Ext");
+            else
+                this.addScope(name);
             this.lastHW = name;
         } else {
             this.removeScope(this.lastHW);
@@ -137,11 +139,27 @@ Entry.PyHint = function(syntax) {
         };
     };
 
-    p.addScope = function(name) {
+    p.addScope = function(name, extName) {
         if (this.syntax[name] && !this.scope[name]) {
-            var syntax = this.syntax[name];
+            var syntax = this.syntax;
+            if (name === "Chocopi") {
+                for (var key in this.syntax) {
+                    if (syntax[key].syntax && key.indexOf("%") < 0 &&
+                        syntax[key].key.indexOf("function_field") < 0) {
+                        if (key.substr(0, 6) === "def on")
+                            this.scope._global.push(key);
+                    }
+                }
+            }
+            syntax = this.syntax[name];
             var keys = Object.keys(syntax);
-            keys = keys.filter(function(k){return k.indexOf("#") < 0 && !Entry.block[syntax[k].key].deprecated;});
+            keys = keys.filter(function(k){
+                var blockSyntax = Entry.block[syntax[k].key];
+                console.log(blockSyntax.class, name, extName)
+                if (name === "Arduino" && ((extName === "Ext") !== (blockSyntax.class && blockSyntax.class.indexOf("Ext") > 0))) 
+                    return false;
+                return k.indexOf("#") < 0 && !blockSyntax.deprecated;
+            });
             this.scope[name] = keys;
             this.scope._global.unshift(name);
             keys = keys.map(function(k) {return name + "." + k;});
@@ -229,9 +247,12 @@ Entry.PyHint = function(syntax) {
         this.scope._list = [];
         for (var key in syntax) {
             if (syntax[key].syntax && key.indexOf("%") < 0 &&
-                syntax[key].key.indexOf("function_field") < 0)
+                syntax[key].key.indexOf("function_field") < 0) {
+
+                if (key.substr(0, 6) === "def on")
+                    continue;
                 this.scope._global.push(key);
-            else if (key.substr(0, 2) === "if")
+            } else if (key.substr(0, 2) === "if")
                 this.scope._global.push(key);
             else if (key.substr(0, 5) === "while")
                 this.scope._global.push(key);

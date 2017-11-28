@@ -40,7 +40,7 @@ Entry.PyAstGenerator = function() {
                     message = Entry.TextCodingError.MESSAGE_SYNTAX_UNEXPECTED_TOKEN;
                 else
                     message = Lang.TextCoding.message_conv_is_wrong1 + this.getTokenLang(error.tokType) +
-                        Lang.TextCoding.message_conv_is_wrong1;
+                        Lang.TextCoding.message_conv_is_wrong2;
                 subject = Entry.TextCodingError.SUBJECT_SYNTAX_TOKEN;
             } else if (msgTokens[0].trim() == "Unexpected token") {
                 message = Entry.TextCodingError.MESSAGE_SYNTAX_UNEXPECTED_TOKEN;
