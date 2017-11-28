@@ -32246,6 +32246,7 @@ Entry.block = {
     "neobot_equal_with_sensor": {//MinjuneL
         "color": "#00979D",
         "skeleton": "basic_boolean_field",
+        "fontColor": "#fff"
         "template" : "%1 의 센서값이 %2",
         "statements": [],
         "params": [
