@@ -155,7 +155,6 @@ Entry.PyHint = function(syntax) {
             var keys = Object.keys(syntax);
             keys = keys.filter(function(k){
                 var blockSyntax = Entry.block[syntax[k].key];
-                console.log(blockSyntax.class, name, extName)
                 if (name === "Arduino" && ((extName === "Ext") !== (blockSyntax.class && blockSyntax.class.indexOf("Ext") > 0))) 
                     return false;
                 return k.indexOf("#") < 0 && !blockSyntax.deprecated;
