@@ -797,15 +797,9 @@
     case 58: ++tokPos; return finishToken(_colon);
     case 63: ++tokPos; return finishToken(_question);
 
-      // '0x' is a hexadecimal number.
-    case 48: // '0'
-      var next = input.charCodeAt(tokPos + 1);
-      if(next === 120 || next === 88 || next === 48 || next === 49)
-        return readZero();
-      
       // Anything else beginning with a digit is an integer, octal
       // number, or float.
-    case 49: case 50: case 51: case 52: case 53: case 54: case 55: case 56: case 57: // 1-9
+    case 48: case 49: case 50: case 51: case 52: case 53: case 54: case 55: case 56: case 57: // 1-9
       return readNumber(false);
 
       // Quotes produce strings.
@@ -988,7 +982,7 @@
     if (isFloat) val = parseFloat(str);
     else if (!octal || str.length === 1) val = parseInt(str, 10);
     else if (/[89]/.test(str) || strict) raise(start, "Invalid number");
-    else val = parseInt(str, 8);
+    else val = str;
     return finishToken(_num, val);
   }
 
