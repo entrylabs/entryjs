@@ -364,7 +364,7 @@ EntryStatic.getAllBlocks = function() {
 				"iboard_get_analog_value_map",
 				"iboard_get_digital",
 				"iboard_toggle_led",
-                "iboard_digital_pwm",	
+                "iboard_digital_pwm",
                 //nemoino
                 "nemoino_get_named_sensor_value",
                 "nemoino_get_sound_status",
@@ -1112,7 +1112,7 @@ EntryStatic.getAllBlocks = function() {
                 "jdkit_motor",
                 "jdkit_joystick",
                 "jdkit_button",
-                "jdkit_gyro", 
+                "jdkit_gyro",
                 "jdkit_ultrasonic",
                 "jdkit_connect",
                 "jdkit_ready",
@@ -1135,16 +1135,27 @@ EntryStatic.getAllBlocks = function() {
 
                 //hummingbirdduo
                 "hummingbird_sensorValue",
-                "hummingbird_temperatureValue",                
+                "hummingbird_temperatureValue",
                 "hummingbird_lightValue",
                 "hummingbird_distanceValue",
                 "hummingbird_rotaryValue",
                 "hummingbird_soundValue",
                 "hummingbird_vibeMotor",
-                "hummingbird_servo",                
+                "hummingbird_servo",
                 "hummingbird_dcMotor",
                 "hummingbird_triLED",
                 "hummingbird_led",
+
+                // EduMaker Added 2017-11-30
+                "edumaker_get_analog_value",
+                "edumaker_get_analog_value_map",
+                "edumaker_get_ultrasonic_value",
+                "edumaker_toggle_led",
+                "edumaker_digital_pwm",
+                "edumaker_set_tone",
+                "edumaker_set_servo",
+                "edumaker_get_digital",
+                // EduMaker Added 2017-11-30
             ]
         }
     ]
