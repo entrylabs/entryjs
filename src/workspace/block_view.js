@@ -90,7 +90,7 @@ Entry.BlockView = function(block, board, mode) {
     this.dragMode = Entry.DRAG_MODE_NONE;
     Entry.Utils.disableContextmenu(this.svgGroup.node);
     var events = block.events.viewAdd;
-    if (Entry.type == 'workspace' && events && !this.isInBlockMenu) {
+    if (Entry.type == 'workspace' && events && this._board instanceof Entry.Board) {
         events.forEach(function(fn) {
             if (Entry.Utils.isFunction(fn)) fn(block);
         });
@@ -1171,7 +1171,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
                     var href = img.getAttribute('href');
                     loadImage(href, img.getAttribute('width'), img.getAttribute('height'))
                         .then(function(src) {
-                            img.setAttribute('href', src)
+                            img.setAttribute('href', src);
                             if (++counts == images.length) return processSvg();
                         });
                 })(img);

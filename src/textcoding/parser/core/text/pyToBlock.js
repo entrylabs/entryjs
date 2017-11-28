@@ -201,100 +201,108 @@ Entry.PyToBlockParser = function(blockSyntax) {
     };
 
     p.AssignmentExpression = function(component) {
-        var result = { params: [] };
-        var leftVar;
-        switch(component.left.type) {
-            case "MemberExpression":
-                result.type = 'change_value_list_index';
-                var leftName = component.left.object.name;
-                if (leftName === "self") {
+        var lefts = Array.isArray(component.left) ? component.left : [component.left];
+        var results = [];
+
+        for (var i in lefts) {
+            var result = { params: [] };
+            var left = lefts[i];
+            var leftVar;
+            switch(left.type) {
+                case "MemberExpression":
+                    result.type = 'change_value_list_index';
+                    var leftName = left.object.name;
+                    if (leftName === "self") {
+                        result.type = 'set_variable';
+                        leftVar = Entry.variableContainer.getVariableByName(left.property.name, true, this.object.id)
+                        if(!leftVar) {
+                            Entry.variableContainer.addVariable({
+                                                variableType : 'variable',
+                                                name : left.property.name,
+                                                visible : true,
+                                                object : this.object.id,
+                                                value : 0
+                                            });
+
+                            leftVar = Entry.variableContainer.getVariableByName(left.property.name, true, this.object.id);
+                        }
+
+                        result.params.push(leftVar.id_);
+
+                    } else {
+                        leftVar = Entry.variableContainer.getListByName(leftName);
+                        this.assert(leftVar, leftName, left.object, "NO_LIST", "LIST");
+                        result.params.push(leftVar.id_);
+                        result.params.push(
+                            this.ListIndex(this.Node(left.property.arguments[1]))
+                        );
+                    }
+                    break;
+                case "Identifier":
                     result.type = 'set_variable';
-                    leftVar = Entry.variableContainer.getVariableByName(component.left.property.name, true, this.object.id)
+                    leftVar = Entry.variableContainer.getVariableByName(left.name, false)
                     if(!leftVar) {
                         Entry.variableContainer.addVariable({
                                             variableType : 'variable',
-                                            name : component.left.property.name,
+                                            name : left.name,
                                             visible : true,
-                                            object : this.object.id,
                                             value : 0
                                         });
-
-                        leftVar = Entry.variableContainer.getVariableByName(component.left.property.name, true, this.object.id);
+                        leftVar = Entry.variableContainer.getVariableByName(left.name, false);
                     }
-
                     result.params.push(leftVar.id_);
-
-                } else {
-                    leftVar = Entry.variableContainer.getListByName(leftName)
-                    this.assert(leftVar, leftName, component.left.object, "NO_LIST", "LIST");
-                    result.params.push(leftVar.id_);
-                    result.params.push(
-                        this.ListIndex(this.Node(component.left.property.arguments[1]))
-                    );
-                }
-                break;
-            case "Identifier":
-                result.type = 'set_variable';
-                leftVar = Entry.variableContainer.getVariableByName(component.left.name, false)
-                if(!leftVar) {
-                    Entry.variableContainer.addVariable({
-                                        variableType : 'variable',
-                                        name : component.left.name,
-                                        visible : true,
-                                        value : 0
-                                    });
-                    leftVar = Entry.variableContainer.getVariableByName(component.left.name, false);
-                }
-                result.params.push(leftVar.id_);
-                break;
-            default:
-                this.assert(false, "error", component.left, "NO_SUPPORT", "GENERAL")
-        }
-
-        var rightHand = this.Node(component.right);
-
-        switch (component.operator) {
-            case "=":
-                break;
-            case "+=":
-                if (result.type === 'set_variable') {
-                    result.type = 'change_variable';
                     break;
-                }
-            case "-=":
-            case "/=":
-            case "*=":
-            default:
-                var operator = this.arithmeticOperator[component.operator[0]]
-                if (operator) {
-                    var getBlock;
-                    if (result.type === "set_variable")
-                        getBlock = {
-                            type: "get_variable",
-                            params: [ leftVar.id_ ]
-                        }
-                    else
-                        getBlock = {
-                            type: "value_of_index_from_list",
+                default:
+                    this.assert(false, "error", left, "NO_SUPPORT", "GENERAL")
+            }
+            
+            var rightHand = this.Node(component.right);
+            
+            switch (component.operator) {
+                case "=":
+                    break;
+                case "+=":
+                    if (result.type === 'set_variable') {
+                        result.type = 'change_variable';
+                        break;
+                    }
+                case "-=":
+                case "/=":
+                case "*=":
+                default:
+                    var operator = this.arithmeticOperator[component.operator[0]]
+                    if (operator) {
+                        var getBlock;
+                        if (result.type === "set_variable")
+                            getBlock = {
+                                type: "get_variable",
+                                params: [ leftVar.id_ ]
+                            };
+                        else
+                            getBlock = {
+                                type: "value_of_index_from_list",
+                                params: [
+                                    undefined,
+                                    leftVar.id_,
+                                    undefined,
+                                    this.ListIndex(this.Node(component.left.property.arguments[1])) // do not change this
+                                ]
+                            };
+                        rightHand = {
+                            type: "calc_basic",
                             params: [
-                                undefined,
-                                leftVar.id_,
-                                undefined,
-                                this.ListIndex(this.Node(component.left.property.arguments[1])) // do not change this
+                                getBlock,
+                                operator,
+                                rightHand
                             ]
                         }
-                    rightHand = {
-                        type: "calc_basic",
-                        params: [
-                            getBlock,
-                            operator,
-                            rightHand
-                        ]
                     }
-                }
+            }
+            result.params.push(rightHand);
+            results.push(result);
         }
-        result.params.push(rightHand);
-        return result;
+
+        return results;
     };
 
     p.Literal = function(component, paramSchema, paramDef) {
@@ -972,22 +980,17 @@ Entry.PyToBlockParser = function(blockSyntax) {
             return result;
         }, this) : [];
 
+        var results = [];
         for(var i=0; i<definedBlocks.length; i++){
             var db = definedBlocks[i];
 
-            if(db.constructor == Array && db[0].length) {
-                if(db.length > 0){
-                    db[db.length-1][0].params = db[0][0][0].params;
-                    definedBlocks[i] = db[db.length-1][0];
-                } else {
-                    definedBlocks[i] = db[0][0];
-                }
-            } else if(db.constructor == Array && db[0].constructor == Object){
-                definedBlocks[i] = db[0];
-            }
+            if(Array.isArray(db))
+                results = results.concat(db);
+            else
+                results.push(db);
         }
 
-        return definedBlocks.filter(function(b){return b.constructor === Object});
+        return results.filter(function(b){return b.constructor === Object});
     }
 
     p.getVariables = function(program) {
@@ -998,26 +1001,12 @@ Entry.PyToBlockParser = function(blockSyntax) {
             var left = n.left;
             var right = n.right;
             var name;
-            var object = false;
             var type = 'variables_';
             var id = Entry.generateHash();
-            var obj = {
-                variableType : 'variable',
-                name : '',
-                visible : true,
-                object : {},
-                value : ''
-            };
+            var value, array;
+             
             if (n.operator != '=')
                 return;
-
-            if('name' in n.left) {
-                name = left.name;
-            }  else {
-                object = this.object;
-                name = left.property.name;
-                object = object.id;
-            }
 
             if(right.type === "NewExpression" && right.callee.property.name == 'list'){
                 type = 'lists_';
@@ -1031,26 +1020,52 @@ Entry.PyToBlockParser = function(blockSyntax) {
                     }
                 });
 
-                obj.array = temp;
+                array = temp;
             } else {
-                obj.value = this.getValue(right);
+                value = this.getValue(right);
             }
-
+            
             var functionType =  'add'+ type[0].toUpperCase() + type.slice(1, type.length-2);
-            var existVar = this.variableExist(name, type);
+            
+            if (!Array.isArray(left)) left = [left];
 
-            if(existVar) {
-                if(type == 'lists_'){
-                    existVar.array_ = obj.array;
-                    return;
+            for (var key in left) {
+                var object = false;
+                var l = left[key];
+            
+                var obj = {
+                    variableType : 'variable',
+                    name : '',
+                    visible : true,
+                    object : {},
+                    value : ''
+                };
+                if (array) obj.array = array;
+                if (value) obj.value = value;
+                
+                if('name' in l) {
+                    name = l.name;
+                }  else {
+                    object = this.object;
+                    name = l.property.name;
+                    object = object.id;
                 }
-                existVar.value_ = this.getValue(right);
-                return;
-            } else {
-                obj.variableType = type.slice(0,length-2);
-                obj.name = name;
-                obj.object = object;
-                Entry.variableContainer[functionType](obj);
+
+                var existVar = this.variableExist(name, type);
+
+                if(existVar) {
+                    if(type == 'lists_'){
+                        existVar.array_ = obj.array;
+                        return;
+                    }
+                    existVar.value_ = this.getValue(right);
+                    return;
+                } else {
+                    obj.variableType = type.slice(0,length-2);
+                    obj.name = name;
+                    obj.object = object;
+                    Entry.variableContainer[functionType](obj);
+                }
             }
 
 

@@ -21,12 +21,12 @@ Entry.skinContainer = {
 
     p.addSkin = function(skin) {
         var blockSkin = function () {};
-        var blockPrototype = Entry.block[skin.type]
+        var blockPrototype = Entry.block[skin.type];
         blockSkin.prototype = blockPrototype;
         blockSkin = new blockSkin();
 
         for (var key in skin)
-            blockSkin[key] = skin[key]
+            blockSkin[key] = skin[key];
 
         if (!this._skins[skin.type])
             this._skins[skin.type] = [];
@@ -54,4 +54,4 @@ Entry.skinContainer = {
         return Entry.block[block.type];
     };
 
-})(Entry.skinContainer)
+})(Entry.skinContainer);
