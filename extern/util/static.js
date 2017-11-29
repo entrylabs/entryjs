@@ -1150,11 +1150,11 @@ EntryStatic.getAllBlocks = function() {
                 "edumaker_get_analog_value",
                 "edumaker_get_analog_value_map",
                 "edumaker_get_ultrasonic_value",
+                "edumaker_get_digital",
                 "edumaker_toggle_led",
                 "edumaker_digital_pwm",
                 "edumaker_set_tone",
                 "edumaker_set_servo",
-                "edumaker_get_digital",
                 // EduMaker Added 2017-11-30
             ]
         }

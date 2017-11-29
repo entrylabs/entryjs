@@ -46591,30 +46591,7 @@ Entry.block = {
     "func": function (sprite, script) {
         return script.getField("PORT");
     },
-    "syntax": {"js": [], "py": [
-        {
-            syntax: "%1",
-            blockType: "param",
-            textParams: [
-                {
-                    "type": "Dropdown",
-                    "options": [
-                        [ "A0", "0" ],
-                        [ "A1", "1" ],
-                        [ "A2", "2" ],
-                        [ "A3", "3" ],
-                        [ "A4", "4" ],
-                        [ "A5", "5" ]
-                    ],
-                    "value": "0",
-                    "fontSize": 11,
-                    converter: Entry.block.converters.returnStringKey,
-                    codeMap:"Entry.CodeMap.Arduino.arduino_ext_analog_list[0]"
-                }
-            ],
-            keyOption: "edumaker_analog_list"
-        }
-    ]}
+    "syntax": {"js": [], "py": []}
 },
 "edumaker_get_analog_value": {
     "color": "#00979D",
@@ -46648,18 +46625,7 @@ Entry.block = {
             port = port.substring(1)
         return ANALOG ? ANALOG[port] || 0 : 0;
     },
-    "syntax": {"js": [], "py": [
-        {
-            syntax: "Arduino.analogRead(%1)",
-            blockType: "param",
-            textParams: [
-                {
-                    "type": "Block",
-                    "accept": "string"
-                }
-            ]
-        }
-    ]}
+    "syntax": {"js": [], "py": []}
 },
 "edumaker_get_analog_value_map": {
     "color": "#00979D",
@@ -46725,8 +46691,8 @@ Entry.block = {
         "VALUE4": 3,
         "VALUE5": 4
     },
-    "class": "ArduinoExtGet",
-    "isNotFor": [ "ArduinoExt" ],
+    "class": "EduMakerGet",
+    "isNotFor": [ "EduMaker" ],
     "func": function (sprite, script) {
         var result = script.getValue("PORT", script);
         var ANALOG = Entry.hw.portData.ANALOG;
@@ -46766,34 +46732,7 @@ Entry.block = {
 
         return result
     },
-    "syntax": {"js": [], "py": [
-        {
-            syntax: "Arduino.map(%1, %2, %3, %4, %5)",
-            blockType: "param",
-            textParams: [
-                {
-                    "type": "Block",
-                    "accept": "string"
-                },
-                {
-                    "type": "Block",
-                    "accept": "string"
-                },
-                {
-                    "type": "Block",
-                    "accept": "string"
-                },
-                {
-                    "type": "Block",
-                    "accept": "string"
-                },
-                {
-                    "type": "Block",
-                    "accept": "string"
-                }
-            ]
-        }
-    ]}
+    "syntax": {"js": [], "py": []}
 },
 "edumaker_get_ultrasonic_value": {
     "color": "#00979D",
@@ -46846,23 +46785,7 @@ Entry.block = {
         };
         return Entry.hw.portData.ULTRASONIC || 0;
     },
-    "syntax": {"js": [], "py": [
-        {
-            syntax: "Arduino.ultrasonicRead(%1, %2)",
-            blockType: "param",
-            textParams: [
-                {
-                    "type": "Block",
-                    "accept": "string",
-                },
-                {
-                    "type": "Block",
-                    "accept": "string",
-                }
-            ]
-        }
-
-    ]}
+    "syntax": {"js": [], "py": []}
 },
 "edumaker_get_digital": {
     "color": "#00979D",
@@ -46899,19 +46822,7 @@ Entry.block = {
         };
         return (DIGITAL) ? DIGITAL[port] || 0 : 0;
     },
-    "syntax": {"js": [], "py": [
-        {
-            syntax: "Arduino.digitalRead(%1)",
-            keyOption: "ext",
-            blockType: "param",
-            textParams: [
-                {
-                    "type": "Block",
-                    "accept": "string"
-                }
-            ]
-        }
-    ]}
+    "syntax": {"js": [], "py": []}
 },
 "edumaker_digital_toggle": {
     "color": "#00979D",
@@ -46939,26 +46850,7 @@ Entry.block = {
     "func": function (sprite, script) {
         return script.getStringField("OPERATOR");
     },
-    "syntax": {"js": [], "py": [
-        {
-            syntax: "%1",
-            textParams: [
-                {
-                    "type": "Dropdown",
-                    "options": [
-                        [Lang.Blocks.ARDUINO_on,"on"],
-                        [Lang.Blocks.ARDUINO_off,"off"]
-                    ],
-                    "value": "on",
-                    "fontSize": 11,
-                    'arrowColor': EntryStatic.ARROW_COLOR_HW,
-                    converter: Entry.block.converters.returnStringValueUpperCase,
-                    codeMap: "Entry.CodeMap.Arduino.arduino_get_digital_toggle[0]"
-                }
-            ],
-            keyOption: "arduino_get_digital_toggle"
-        }
-    ]}
+    "syntax": {"js": [], "py": []}
 },
 "edumaker_toggle_led": {
     "color": "#00979D",
@@ -46992,7 +46884,7 @@ Entry.block = {
             },
             null
         ],
-        "type": "toggle_led"
+        "type": "edumaker_toggle_led"
     },
     "paramsKeyMap": {
         "PORT": 0,
@@ -47024,22 +46916,7 @@ Entry.block = {
         };
         return script.callReturn();
     },
-    "syntax": {"js": [], "py": [
-        {
-            syntax: "Arduino.digitalWrite(%1, %2)",
-            textParams: [
-                {
-                    "type": "Block",
-                    "accept": "string"
-                },
-                {
-                    "type": "Block",
-                    "accept": "string"
-                }
-            ]
-        }
-    ]}
-
+    "syntax": {"js": [], "py": []}
 },
 "edumaker_digital_pwm": {
     "color": "#00979D",
@@ -47096,21 +46973,7 @@ Entry.block = {
         };
         return script.callReturn();
     },
-    "syntax": {"js": [], "py": [
-        {
-            syntax: "Arduino.analogWrite(%1, %2)",
-            textParams: [
-                {
-                    "type": "Block",
-                    "accept": "string"
-                },
-                {
-                    "type": "Block",
-                    "accept": "string"
-                }
-            ]
-        }
-    ]}
+    "syntax": {"js": [], "py": []}
 },
 "edumaker_tone_list": {
     "color": "#00979D",
@@ -47149,35 +47012,7 @@ Entry.block = {
     "func": function (sprite, script) {
         return script.getField("NOTE");
     },
-    "syntax": {"js": [], "py": [
-        {
-            syntax: "%1",
-            textParams: [
-                {
-                    "type": "Dropdown",
-                    "options": [
-                        [Lang.Blocks.silent, "0"],
-                        [Lang.Blocks.do_name, "C"],
-                        [Lang.Blocks.do_sharp_name, "CS"],
-                        [Lang.Blocks.re_name, "D"],
-                        [Lang.Blocks.re_sharp_name, "DS"],
-                        [Lang.Blocks.mi_name, "E"],
-                        [Lang.Blocks.fa_name, "F"],
-                        [Lang.Blocks.fa_sharp_name, "FS"],
-                        [Lang.Blocks.sol_name, "G"],
-                        [Lang.Blocks.sol_sharp_name, "GS"],
-                        [Lang.Blocks.la_name, "A"],
-                        [Lang.Blocks.la_sharp_name, "AS"],
-                        [Lang.Blocks.si_name, "B"]
-                    ],
-                    "value": "C",
-                    "fontSize": 11,
-                    converter: Entry.block.converters.returnStringValueUpperCase
-                }
-            ],
-            keyOption: "edumaker_tone_list"
-        }
-    ]}
+    "syntax": {"js": [], "py": []}
 },
 "edumaker_tone_value": {
     "color": "#00979D",
@@ -47205,12 +47040,7 @@ Entry.block = {
     "func": function (sprite, script) {
         return script.getNumberValue("NOTE");
     },
-    "syntax": {"js": [], "py": [
-        {
-            syntax: "%1",
-            keyOption: "edumaker_tone_value"
-        }
-    ]}
+    "syntax": {"js": [], "py": []}
 },
 "edumaker_octave_list": {
     "color": "#00979D",
@@ -47242,12 +47072,7 @@ Entry.block = {
     "func": function (sprite, script) {
         return script.getField("OCTAVE");
     },
-    "syntax": {"js": [], "py": [
-        {
-            syntax: "%1",
-            keyOption: "edumaker_octave_list"
-        }
-    ]}
+    "syntax": {"js": [], "py": []}
 },
 "edumaker_set_tone": {
     "color": "#00979D",
@@ -47376,29 +47201,7 @@ Entry.block = {
             return script.callReturn();
         }
     },
-    "syntax": {"js": [], "py": [
-        {
-            syntax: "Arduino.tone(%1, %2, %3, %4)",
-            textParams: [
-                {
-                    "type": "Block",
-                    "accept": "string"
-                },
-                {
-                    "type": "Block",
-                    "accept": "string"
-                },
-                {
-                    "type": "Block",
-                    "accept": "string"
-                },
-                {
-                    "type": "Block",
-                    "accept": "string"
-                }
-            ]
-        }
-    ]}
+    "syntax": {"js": [], "py": []}
 },
 "edumaker_set_servo": {
     "color": "#00979D",
@@ -47451,21 +47254,7 @@ Entry.block = {
 
         return script.callReturn();
     },
-    "syntax": {"js": [], "py": [
-        {
-            syntax: "Arduino.servomotorWrite(%1, %2)",
-            textParams: [
-                {
-                    "type": "Block",
-                    "accept": "string"
-                },
-                {
-                    "type": "Block",
-                    "accept": "string"
-                }
-            ]
-        }
-    ]}
+    "syntax": {"js": [], "py": []}
 },
 //endregion edumaker 에듀메이커
 //region joystick 조이스틱
@@ -68278,7 +68067,7 @@ chocopi_servo_motor: {
             var dev = script.getField('DEVICE');
             return pd[dev];
         },
-        "syntax": {"js": [], "py": ["hummingbird.sensorValue(%1)"]}
+        "syntax": {"js": [], "py": []}
     },
 
     //온도센서
@@ -68317,7 +68106,7 @@ chocopi_servo_motor: {
             var temperature_value = Math.round(pd[dev]*100/2048);
             return temperature_value;
         },
-        "syntax": {"js": [], "py": ["hummingbird.temperatureValue(%1)"]}
+        "syntax": {"js": [], "py": []}
     },
     // 빛 블럭
     hummingbird_lightValue: {
@@ -68355,7 +68144,7 @@ chocopi_servo_motor: {
             var light_value = Math.round(pd[dev]*100/1024);
             return light_value;
         },
-        "syntax": {"js": [], "py": ["hummingbird.lightValue(%1)"]}
+        "syntax": {"js": [], "py": []}
     },
 
     // 거리센서 블럭
@@ -68409,7 +68198,7 @@ chocopi_servo_motor: {
             else distance_value = 100;
             return distance_value.toFixed(0);
         },
-        "syntax": {"js": [], "py": ["hummingbird.distanceValue(%1)"]}
+        "syntax": {"js": [], "py": []}
     },
 
     // 소음 센서 블럭
@@ -68451,7 +68240,7 @@ chocopi_servo_motor: {
             if (sound_value>100) sound_value = 100;
             return sound_value;
         },
-        "syntax": {"js": [], "py": ["hummingbird.soundValue(%1)"]}
+        "syntax": {"js": [], "py": []}
     },
 
     // 회전센서
@@ -68491,7 +68280,7 @@ chocopi_servo_motor: {
 			//if (rotary_value == 0) rotary_value = 1;
             return rotary_value;
         },
-        "syntax": {"js": [], "py": ["hummingbird.rotaryValue(%1)"]}
+        "syntax": {"js": [], "py": []}
     },
 
     //진동모터
@@ -68551,7 +68340,7 @@ chocopi_servo_motor: {
             else if (dev == 'vibeMotor2') sq.vibrat2 = value;
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["hummingbird.vibeMotor(%1, %2)"]}
+        "syntax": {"js": [], "py": []}
     },
 
     //서보모터
@@ -68614,7 +68403,7 @@ chocopi_servo_motor: {
             else if(mtype == 'servo4')  sq.servo4 = angle;
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["hummingbird.servo(%1, %2)"]}
+        "syntax": {"js": [], "py": []}
     },
 
     //기어모터
@@ -68675,7 +68464,7 @@ chocopi_servo_motor: {
             else if (dir == 'dcMotor2') sq.dcMotor2 = speed;
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["hummingbird.dcMotor(%1, %2)"]}
+        "syntax": {"js": [], "py": []}
     },
 
     // 단색LED
@@ -68739,7 +68528,7 @@ chocopi_servo_motor: {
             else if(ledtype == 'led4') sq.led4 = value;
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["hummingbird.led(%1, %2)"]}
+        "syntax": {"js": [], "py": []}
     },
 
     // 삼색LED
@@ -68838,7 +68627,7 @@ chocopi_servo_motor: {
             }
             return script.callReturn();
         },
-        "syntax": {"js": [], "py": ["hummingbird.triLED(%1, %2)"]}
+        "syntax": {"js": [], "py": []}
     },
 //endregion hummingbird 허밍버드
 //region TrueTrueRobot 뚜루뚜루로봇
@@ -69488,7 +69277,6 @@ chocopi_servo_motor: {
         "syntax": { "js": [], "py": [] }
     },
 //endregion TrueTrueRobot 뚜루뚜루로봇
-
 //region JDKit
     "jdkit_joystick": {
         "color": "#00979D",
