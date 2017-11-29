@@ -9,9 +9,14 @@ goog.require('Entry.Dom');
     this._doms = null;
     this._targetDom = null;
 
-    this._createDom = function() {
+    this.init = function(isCloseable) {
+        this._createDom(isCloseable);
+    };
+
+    this._createDom = function(isCloseable) {
+        var $body = $('body');
         var option = {
-            parent: $('body'),
+            parent: $body,
             class: 'entryCurtainElem entryRemove'
         };
 
@@ -21,6 +26,18 @@ goog.require('Entry.Dom');
             bottom: Entry.Dom('div', option),
             left: Entry.Dom('div', option)
         };
+
+        if (isCloseable) {
+            this._closeBtn = Entry.Dom('button', {
+                parent: $body,
+                class: 'entryCurtainCloseBtn entryRemove'
+            });
+
+            this._closeBtn.on('click', function() {
+                this._closeBtn.off('click');
+                entrylms.emit('ExitStudy');
+            }.bind(this));
+        }
 
         for (var key in this._doms) {
             var dom = this._doms[key];
@@ -44,6 +61,7 @@ goog.require('Entry.Dom');
 
         for (var key in this._doms)
             this._doms[key].removeClass('entryRemove');
+        this._closeBtn && this._closeBtn.removeClass('entryRemove');
         this._visible = true;
     };
 
@@ -100,6 +118,7 @@ goog.require('Entry.Dom');
 
         for (var key in this._doms)
             this._doms[key].addClass('entryRemove');
+        this._closeBtn && this._closeBtn.addClass('entryRemove');
         this._visible = false;
         this._targetDom = null;
     };

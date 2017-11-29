@@ -144,7 +144,8 @@ Entry.popupHelper.prototype.remove = function(key) {
     // this.window_.remove();
     delete this.popupList[key];
 
-    if (this.nowContent.hasClass(key)) {
+
+    if (this.nowContent && this.nowContent.hasClass(key)) {
         this.nowContent = undefined;
         this.body_.addClass('hiddenPopup');
         if(this.nextPopupList.length > 0) {
@@ -184,14 +185,14 @@ Entry.popupHelper.prototype.show = function(key, isNext) {
 };
 
 Entry.popupHelper.prototype.hide = function() {
-    var popup = this.nowContent._obj;
+    var popup = this.nowContent && this.nowContent._obj;
     if (popup && 'closeEvent' in popup) {
         popup.closeEvent(this);
     }
     this.nowContent = undefined;
     this.body_.addClass('hiddenPopup');
     this.window_.children().detach();
-    if(this.nextPopupList.length > 0) {
+    if (this.nextPopupList.length > 0) {
         this.show(this.nextPopupList.shift());
     }
 };

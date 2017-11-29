@@ -322,7 +322,7 @@ Entry.Utils.bindGlobalEvent = function(options) {
     if (options.indexOf('resize') > -1) {
         if (Entry.windowReszied) {
             $(window).off('resize');
-            Entry.windowReszied.clear()
+            Entry.windowReszied.clear();
         }
         Entry.windowResized = new Entry.Event(window);
         $(window).on('resize', (function(e) {

@@ -9,6 +9,8 @@ Entry.Restrictor = function(controller) {
     this.startEvent = new Entry.Event(this);
     this.endEvent = new Entry.Event(this);
 
+    Entry.Curtain.init(controller && controller.isRestrictorCloseable);
+
     this.currentTooltip = null;
 };
 
@@ -22,7 +24,6 @@ Entry.Restrictor = function(controller) {
         var log = data.content.concat();
         var commandType = log.shift();
         var command = Entry.Command[commandType];
-
 
         var domQuery = command.dom;
         this.startEvent.notify();
@@ -52,10 +53,8 @@ Entry.Restrictor = function(controller) {
             window.setTimeout(this.align.bind(this));
         }
 
-        if (data.skip) {
-            return this.end();
-        }
 
+        if (data.skip) { return this.end(); }
     };
 
     p.end = function() {
@@ -80,10 +79,8 @@ Entry.Restrictor = function(controller) {
         log.shift();
         if (domQuery instanceof Array) {
             domQuery = domQuery.map(function(q) {
-                if (q[0] === "&")
-                    return log[Number(q.substr(1))][1];
-                else
-                    return q;
+                if (q[0] === "&") return log[Number(q.substr(1))][1];
+                else return q;
             });
         }
         return domQuery;
@@ -92,7 +89,7 @@ Entry.Restrictor = function(controller) {
     p.renderTooltip = function() {
         if (this.currentTooltip)
             this.currentTooltip.render();
-    }
+    };
 
     p.fadeOutTooltip = function() {
         if (this.currentTooltip)
