@@ -2502,6 +2502,7 @@ Lang.Menus = {
     "e-sensorBT": "E-센서보드(무선연결)",
     "mechatronics_4d": "4D 메카트로닉스",
     "hamster": "햄스터",
+    "hummingbirdduo": "허밍버드 듀오",
     "roboid": "로보이드",
     "turtle": "거북이",
     "littlebits": "리틀비츠",
@@ -6136,16 +6137,14 @@ Lang.template = {
     "memaker_set_servo": "디지털 %1 번 핀의 서보모터를 %2 의 각도로 정하기 %3",
     "memaker_toggle_led": "디지털 %1 번 핀 %2 %3",
     "memaker_lcd_command": "1602 문자 LCD %1 명령실행하기 %2",
-    "memaker_lcd_command": "1602 문자 LCD %1 명령실행하기 %2",
+    "edumaker_digital_pwm": "디지털 %1 번 핀을 %2 (으)로 정하기 %3",
     "edumaker_get_analog_value": "아날로그 %1 번 센서값",
     "edumaker_get_analog_value_map": "%1 의 범위를 %2 ~ %3 에서 %4 ~ %5 로 바꾼값",
-    "edumaker_get_ultrasonic_value": "울트라소닉 Trig %1 Echo %2 센서값",
-    "edumaker_toggle_led": "디지털 %1 번 핀 %2 %3",
-    "edumaker_digital_pwm": "디지털 %1 번 핀을 %2 (으)로 정하기 %3",
-    "edumaker_set_tone": "디지털 %1 번 핀의 버저를 %2 %3 음으로 %4 초 연주하기 %5",
-    "edumaker_set_servo": "디지털 %1 번 핀의 서보모터를 %2 의 각도로 정하기 %3",
     "edumaker_get_digital": "디지털 %1 번 센서값",
-
+    "edumaker_get_ultrasonic_value": "울트라소닉 Trig %1 Echo %2 센서값",
+    "edumaker_set_servo": "디지털 %1 번 핀의 서보모터를 %2 의 각도로 정하기 %3",
+    "edumaker_set_tone": "디지털 %1 번 핀의 버저를 %2 %3 음으로 %4 초 연주하기 %5",
+    "edumaker_toggle_led": "디지털 %1 번 핀 %2 %3"
 };
 Lang.TextCoding = {
     "block_name": "블록명",

@@ -2502,6 +2502,7 @@ Lang.Menus = {
     "e-sensorBT": "E-Sensor board(Bluetooth)",
     "mechatronics_4d": "4D Mechatronics",
     "hamster": "Hamster",
+    "hummingbirdduo": "Hummingbird Duo",
     "roboid": "Roboid",
     "turtle": "Turtle",
     "littlebits": "Littlebits",
@@ -6135,7 +6136,15 @@ Lang.template = {
     "memaker_set_lcd": "1602 LCD Row %1, Column %2 Value %3 %4",
     "memaker_set_servo": "Set servo pin %1 angle as %3",
     "memaker_toggle_led": "Digital %1 Pin %2 %3",
-    "memaker_lcd_command": "1602 LCD Command %1 execute %2"
+    "memaker_lcd_command": "1602 LCD Command %1 execute %2",
+    "edumaker_digital_pwm": "디지털 %1 번 핀을 %2 (으)로 정하기 %3",
+    "edumaker_get_analog_value": "아날로그 %1 번 센서값",
+    "edumaker_get_analog_value_map": "%1 의 범위를 %2 ~ %3 에서 %4 ~ %5 로 바꾼값",
+    "edumaker_get_digital": "디지털 %1 번 센서값",
+    "edumaker_get_ultrasonic_value": "울트라소닉 Trig %1 Echo %2 센서값",
+    "edumaker_set_servo": "디지털 %1 번 핀의 서보모터를 %2 의 각도로 정하기 %3",
+    "edumaker_set_tone": "디지털 %1 번 핀의 버저를 %2 %3 음으로 %4 초 연주하기 %5",
+    "edumaker_toggle_led": "디지털 %1 번 핀 %2 %3"
 };
 Lang.TextCoding = {
     "block_name": "Block Name",

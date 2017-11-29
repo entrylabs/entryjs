@@ -46560,7 +46560,7 @@ Entry.block = {
     "syntax": {"js": [], "py": []}
 },
 //endregion memaker 미메이커
-// edumaker Added 2017-11-30
+//region edumaker 에듀메이커
 "edumaker_analog_list": {
     "color": "#00979D",
     "skeleton": "basic_string_field",
@@ -47467,7 +47467,7 @@ Entry.block = {
         }
     ]}
 },
-// edumaker Added 2017-11-30
+//endregion edumaker 에듀메이커
 //region joystick 조이스틱
 "joystick_get_number_sensor_value": {
     "parent": "arduino_get_number_sensor_value",
