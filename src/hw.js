@@ -75,6 +75,7 @@ Entry.HW = function() {
         '18.1': Entry.Altino,
         '19.1': Entry.trueRobot,
         '1A.1': Entry.ArduinoNano,
+        '1B.1': Entry.EduMaker,
         '1C.1': Entry.hummingbird,
         '1D.1': Entry.JDKit,
     };

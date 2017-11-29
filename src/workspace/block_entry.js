@@ -46560,6 +46560,914 @@ Entry.block = {
     "syntax": {"js": [], "py": []}
 },
 //endregion memaker 미메이커
+// edumaker Added 2017-11-30
+"edumaker_analog_list": {
+    "color": "#00979D",
+    "skeleton": "basic_string_field",
+    "statements": [],
+    "template": "%1",
+    "params": [
+        {
+            "type": "Dropdown",
+            "options": [
+                [ "A0", "0" ],
+                [ "A1", "1" ],
+                [ "A2", "2" ],
+                [ "A3", "3" ],
+                [ "A4", "4" ],
+                [ "A5", "5" ]
+            ],
+            "value": "0",
+            "fontSize": 11
+        }
+    ],
+    "events": {},
+    "def": {
+        "params": [ null ]
+    },
+    "paramsKeyMap": {
+        "PORT": 0
+    },
+    "func": function (sprite, script) {
+        return script.getField("PORT");
+    },
+    "syntax": {"js": [], "py": [
+        {
+            syntax: "%1",
+            blockType: "param",
+            textParams: [
+                {
+                    "type": "Dropdown",
+                    "options": [
+                        [ "A0", "0" ],
+                        [ "A1", "1" ],
+                        [ "A2", "2" ],
+                        [ "A3", "3" ],
+                        [ "A4", "4" ],
+                        [ "A5", "5" ]
+                    ],
+                    "value": "0",
+                    "fontSize": 11,
+                    converter: Entry.block.converters.returnStringKey,
+                    codeMap:"Entry.CodeMap.Arduino.arduino_ext_analog_list[0]"
+                }
+            ],
+            keyOption: "edumaker_analog_list"
+        }
+    ]}
+},
+"edumaker_get_analog_value": {
+    "color": "#00979D",
+    "fontColor": "#fff",
+    "skeleton": "basic_string_field",
+    "statements": [],
+    "params": [
+        {
+            "type": "Block",
+            "accept": "string"
+        }
+    ],
+    "events": {},
+    "def": {
+        "params": [
+            {
+                "type": "edumaker_analog_list"
+            }
+        ],
+        "type": "edumaker_get_analog_value"
+    },
+    "paramsKeyMap": {
+        "PORT": 0
+    },
+    "class": "EduMakerGet",
+    "isNotFor": [ "EduMaker" ],
+    "func": function (sprite, script) {
+        var port = script.getValue("PORT", script);
+        var ANALOG = Entry.hw.portData.ANALOG;
+        if (port[0] === "A")
+            port = port.substring(1)
+        return ANALOG ? ANALOG[port] || 0 : 0;
+    },
+    "syntax": {"js": [], "py": [
+        {
+            syntax: "Arduino.analogRead(%1)",
+            blockType: "param",
+            textParams: [
+                {
+                    "type": "Block",
+                    "accept": "string"
+                }
+            ]
+        }
+    ]}
+},
+"edumaker_get_analog_value_map": {
+    "color": "#00979D",
+    "fontColor": "#fff",
+    "skeleton": "basic_string_field",
+    "statements": [],
+    "params": [
+        {
+            "type": "Block",
+            "accept": "string"
+        },
+        {
+            "type": "Block",
+            "accept": "string"
+        },
+        {
+            "type": "Block",
+            "accept": "string"
+        },
+        {
+            "type": "Block",
+            "accept": "string"
+        },
+        {
+            "type": "Block",
+            "accept": "string"
+        }
+    ],
+    "events": {},
+    "def": {
+        "params": [
+            {
+                "type": "edumaker_get_analog_value",
+                "params": [
+                    {
+                        "type": "edumaker_analog_list"
+                    }
+                ]
+            },
+            {
+                "type": "number",
+                "params": [ "0" ]
+            },
+            {
+                "type": "number",
+                "params": [ "1023" ]
+            },
+            {
+                "type": "number",
+                "params": [ "0" ]
+            },
+            {
+                "type": "number",
+                "params": [ "100" ]
+            }
+        ],
+        "type": "edumaker_get_analog_value_map"
+    },
+    "paramsKeyMap": {
+        "PORT": 0,
+        "VALUE2": 1,
+        "VALUE3": 2,
+        "VALUE4": 3,
+        "VALUE5": 4
+    },
+    "class": "ArduinoExtGet",
+    "isNotFor": [ "ArduinoExt" ],
+    "func": function (sprite, script) {
+        var result = script.getValue("PORT", script);
+        var ANALOG = Entry.hw.portData.ANALOG;
+        var value2 = script.getNumberValue("VALUE2", script);
+        var value3 = script.getNumberValue("VALUE3", script);
+        var value4 = script.getNumberValue("VALUE4", script);
+        var value5 = script.getNumberValue("VALUE5", script);
+        var stringValue4 = script.getValue("VALUE4", script);
+        var stringValue5 = script.getValue("VALUE5", script);
+        var isFloat = false;
+
+        if((Entry.Utils.isNumber(stringValue4) && stringValue4.indexOf('.') > -1) || (Entry.Utils.isNumber(stringValue5) && stringValue5.indexOf('.') > -1)) {
+            isFloat = true;
+        }
+
+        if (value2 > value3) {
+            var swap = value2;
+            value2 = value3;
+            value3 = swap;
+        }
+        if (value4 > value5) {
+            var swap = value4;
+            value4 = value5;
+            value5 = swap;
+        }
+        result -= value2;
+        result = result * ((value5 - value4) / (value3 - value2));
+        result += value4;
+        result = Math.min(value5, result);
+        result = Math.max(value4, result);
+
+        if(isFloat) {
+            result = Math.round(result * 100) / 100;
+        } else {
+            result = Math.round(result);
+        }
+
+        return result
+    },
+    "syntax": {"js": [], "py": [
+        {
+            syntax: "Arduino.map(%1, %2, %3, %4, %5)",
+            blockType: "param",
+            textParams: [
+                {
+                    "type": "Block",
+                    "accept": "string"
+                },
+                {
+                    "type": "Block",
+                    "accept": "string"
+                },
+                {
+                    "type": "Block",
+                    "accept": "string"
+                },
+                {
+                    "type": "Block",
+                    "accept": "string"
+                },
+                {
+                    "type": "Block",
+                    "accept": "string"
+                }
+            ]
+        }
+    ]}
+},
+"edumaker_get_ultrasonic_value": {
+    "color": "#00979D",
+    "fontColor": "#fff",
+    "skeleton": "basic_string_field",
+    "statements": [],
+    "params": [
+        {
+            "type": "Block",
+            "accept": "string"
+        },
+        {
+            "type": "Block",
+            "accept": "string"
+        }
+    ],
+    "events": {},
+    "def": {
+        "params": [{
+            type: 'arduino_get_port_number',
+            params: [ '2' ],
+        }, {
+            type: 'arduino_get_port_number',
+            params: [ '4' ],
+        }],
+        "type": "edumaker_get_ultrasonic_value"
+    },
+    "paramsKeyMap": {
+        "PORT1": 0,
+        "PORT2": 1,
+    },
+    "class": "EduMakerGet",
+    "isNotFor": [ "EduMaker" ],
+    "func": function (sprite, script) {
+        var port1 = script.getNumberValue("PORT1", script);
+        var port2 = script.getNumberValue("PORT2", script);
+
+        if(!Entry.hw.sendQueue['SET']) {
+            Entry.hw.sendQueue['SET'] = {};
+        }
+        delete Entry.hw.sendQueue['SET'][port1];
+        delete Entry.hw.sendQueue['SET'][port2];
+
+        if(!Entry.hw.sendQueue['GET']) {
+            Entry.hw.sendQueue['GET'] = {};
+        }
+        Entry.hw.sendQueue['GET'][Entry.ArduinoExt.sensorTypes.ULTRASONIC] = {
+            port: [port1, port2],
+            time: new Date().getTime()
+        };
+        return Entry.hw.portData.ULTRASONIC || 0;
+    },
+    "syntax": {"js": [], "py": [
+        {
+            syntax: "Arduino.ultrasonicRead(%1, %2)",
+            blockType: "param",
+            textParams: [
+                {
+                    "type": "Block",
+                    "accept": "string",
+                },
+                {
+                    "type": "Block",
+                    "accept": "string",
+                }
+            ]
+        }
+
+    ]}
+},
+"edumaker_get_digital": {
+    "color": "#00979D",
+    "fontColor": "#fff",
+    "skeleton": "basic_boolean_field",
+    "params": [{
+        "type": "Block",
+        "accept": "string"
+    }],
+    "events": {},
+    "def": {
+        "params": [
+            {
+                "type": "arduino_get_port_number",
+                "params": [2]
+            }
+        ],
+        "type": "edumaker_get_digital"
+    },
+    "paramsKeyMap": {
+        "PORT": 0
+    },
+    "class": "EduMakerGet",
+    "isNotFor": [ "EduMaker" ],
+    "func": function (sprite, script) {
+        var port = script.getNumberValue("PORT", script);
+        var DIGITAL = Entry.hw.portData.DIGITAL;
+        if(!Entry.hw.sendQueue['GET']) {
+            Entry.hw.sendQueue['GET'] = {};
+        }
+        Entry.hw.sendQueue['GET'][Entry.ArduinoExt.sensorTypes.DIGITAL] = {
+            port: port,
+            time: new Date().getTime()
+        };
+        return (DIGITAL) ? DIGITAL[port] || 0 : 0;
+    },
+    "syntax": {"js": [], "py": [
+        {
+            syntax: "Arduino.digitalRead(%1)",
+            keyOption: "ext",
+            blockType: "param",
+            textParams: [
+                {
+                    "type": "Block",
+                    "accept": "string"
+                }
+            ]
+        }
+    ]}
+},
+"edumaker_digital_toggle": {
+    "color": "#00979D",
+    "skeleton": "basic_string_field",
+    "statements": [],
+    "params": [
+        {
+            "type": "Dropdown",
+            "options": [
+                [Lang.Blocks.ARDUINO_on,"on"],
+                [Lang.Blocks.ARDUINO_off,"off"]
+            ],
+            "value": "on",
+            "fontSize": 11,
+            'arrowColor': EntryStatic.ARROW_COLOR_HW
+        }
+    ],
+    "events": {},
+    "def": {
+        "params": [ null ]
+    },
+    "paramsKeyMap": {
+        "OPERATOR": 0
+    },
+    "func": function (sprite, script) {
+        return script.getStringField("OPERATOR");
+    },
+    "syntax": {"js": [], "py": [
+        {
+            syntax: "%1",
+            textParams: [
+                {
+                    "type": "Dropdown",
+                    "options": [
+                        [Lang.Blocks.ARDUINO_on,"on"],
+                        [Lang.Blocks.ARDUINO_off,"off"]
+                    ],
+                    "value": "on",
+                    "fontSize": 11,
+                    'arrowColor': EntryStatic.ARROW_COLOR_HW,
+                    converter: Entry.block.converters.returnStringValueUpperCase,
+                    codeMap: "Entry.CodeMap.Arduino.arduino_get_digital_toggle[0]"
+                }
+            ],
+            keyOption: "arduino_get_digital_toggle"
+        }
+    ]}
+},
+"edumaker_toggle_led": {
+    "color": "#00979D",
+    "skeleton": "basic",
+    "statements": [],
+    "params": [
+        {
+            "type": "Block",
+            "accept": "string"
+        },
+        {
+            "type": "Block",
+            "accept": "string"
+        },
+        {
+            "type": "Indicator",
+            "img": "block_icon/hardware_03.png",
+            "size": 12
+        }
+    ],
+    "events": {},
+    "def": {
+        "params": [
+            {
+                "type": "arduino_get_port_number",
+                "params": [ 3 ],
+            },
+            {
+                "type": "arduino_get_digital_toggle",
+                "params": [ "on" ],
+            },
+            null
+        ],
+        "type": "toggle_led"
+    },
+    "paramsKeyMap": {
+        "PORT": 0,
+        "VALUE": 1
+    },
+    "class": "EduMaker",
+    "isNotFor": [ "EduMaker" ],
+    "func": function (sprite, script) {
+        var port = script.getNumberValue("PORT");
+        var value = script.getValue("VALUE");
+
+        if(typeof value === 'string') {
+            value = value.toLowerCase();
+        }
+        if(Entry.ArduinoExt.highList.indexOf(value) > -1) {
+            value = 255;
+        } else if(Entry.ArduinoExt.lowList.indexOf(value) > -1) {
+            value = 0;
+        } else {
+            throw new Error();
+        }
+        if(!Entry.hw.sendQueue['SET']) {
+            Entry.hw.sendQueue['SET'] = {};
+        }
+        Entry.hw.sendQueue['SET'][port] = {
+            type: Entry.ArduinoExt.sensorTypes.DIGITAL,
+            data: value,
+            time: new Date().getTime()
+        };
+        return script.callReturn();
+    },
+    "syntax": {"js": [], "py": [
+        {
+            syntax: "Arduino.digitalWrite(%1, %2)",
+            textParams: [
+                {
+                    "type": "Block",
+                    "accept": "string"
+                },
+                {
+                    "type": "Block",
+                    "accept": "string"
+                }
+            ]
+        }
+    ]}
+
+},
+"edumaker_digital_pwm": {
+    "color": "#00979D",
+    "skeleton": "basic",
+    "statements": [],
+    "params": [
+        {
+            "type": "Block",
+            "accept": "string"
+        },
+        {
+            "type": "Block",
+            "accept": "string"
+        },
+        {
+            "type": "Indicator",
+            "img": "block_icon/hardware_03.png",
+            "size": 12
+        }
+    ],
+    "events": {},
+    "def": {
+        "params": [
+            {
+                "type": "arduino_get_pwm_port_number"
+            },
+            {
+                "type": "text",
+                "params": [ "255" ]
+            },
+            null
+        ],
+        "type": "edumaker_digital_pwm"
+    },
+    "paramsKeyMap": {
+        "PORT": 0,
+        "VALUE": 1
+    },
+    "class": "EduMaker",
+    "isNotFor": [ "EduMaker" ],
+    "func": function (sprite, script) {
+        var port = script.getNumberValue("PORT");
+        var value = script.getNumberValue("VALUE");
+        value = Math.round(value);
+        value = Math.max(value, 0);
+        value = Math.min(value, 255);
+        if(!Entry.hw.sendQueue['SET']) {
+            Entry.hw.sendQueue['SET'] = {};
+        }
+        Entry.hw.sendQueue['SET'][port] = {
+            type: Entry.ArduinoExt.sensorTypes.PWM,
+            data: value,
+            time: new Date().getTime()
+        };
+        return script.callReturn();
+    },
+    "syntax": {"js": [], "py": [
+        {
+            syntax: "Arduino.analogWrite(%1, %2)",
+            textParams: [
+                {
+                    "type": "Block",
+                    "accept": "string"
+                },
+                {
+                    "type": "Block",
+                    "accept": "string"
+                }
+            ]
+        }
+    ]}
+},
+"edumaker_tone_list": {
+    "color": "#00979D",
+    "skeleton": "basic_string_field",
+    "statements": [],
+    "template": "%1",
+    "params": [
+        {
+            "type": "Dropdown",
+            "options": [
+                [Lang.Blocks.silent, "0"],
+                [Lang.Blocks.do_name, "C"],
+                [Lang.Blocks.do_sharp_name, "CS"],
+                [Lang.Blocks.re_name, "D"],
+                [Lang.Blocks.re_sharp_name, "DS"],
+                [Lang.Blocks.mi_name, "E"],
+                [Lang.Blocks.fa_name, "F"],
+                [Lang.Blocks.fa_sharp_name, "FS"],
+                [Lang.Blocks.sol_name, "G"],
+                [Lang.Blocks.sol_sharp_name, "GS"],
+                [Lang.Blocks.la_name, "A"],
+                [Lang.Blocks.la_sharp_name, "AS"],
+                [Lang.Blocks.si_name, "B"]
+            ],
+            "value": "C",
+            "fontSize": 11
+        }
+    ],
+    "events": {},
+    "def": {
+        "params": [ null ]
+    },
+    "paramsKeyMap": {
+        "NOTE": 0
+    },
+    "func": function (sprite, script) {
+        return script.getField("NOTE");
+    },
+    "syntax": {"js": [], "py": [
+        {
+            syntax: "%1",
+            textParams: [
+                {
+                    "type": "Dropdown",
+                    "options": [
+                        [Lang.Blocks.silent, "0"],
+                        [Lang.Blocks.do_name, "C"],
+                        [Lang.Blocks.do_sharp_name, "CS"],
+                        [Lang.Blocks.re_name, "D"],
+                        [Lang.Blocks.re_sharp_name, "DS"],
+                        [Lang.Blocks.mi_name, "E"],
+                        [Lang.Blocks.fa_name, "F"],
+                        [Lang.Blocks.fa_sharp_name, "FS"],
+                        [Lang.Blocks.sol_name, "G"],
+                        [Lang.Blocks.sol_sharp_name, "GS"],
+                        [Lang.Blocks.la_name, "A"],
+                        [Lang.Blocks.la_sharp_name, "AS"],
+                        [Lang.Blocks.si_name, "B"]
+                    ],
+                    "value": "C",
+                    "fontSize": 11,
+                    converter: Entry.block.converters.returnStringValueUpperCase
+                }
+            ],
+            keyOption: "edumaker_tone_list"
+        }
+    ]}
+},
+"edumaker_tone_value": {
+    "color": "#00979D",
+    "skeleton": "basic_string_field",
+    "statements": [],
+    "template": "%1",
+    "params": [
+        {
+            "type": "Block",
+            "accept": "string"
+        }
+    ],
+    "events": {},
+    "def": {
+        "params": [
+            {
+                "type": "edumaker_tone_list"
+            }
+        ],
+        "type": "edumkaer_tone_value"
+    },
+    "paramsKeyMap": {
+        "NOTE": 0
+    },
+    "func": function (sprite, script) {
+        return script.getNumberValue("NOTE");
+    },
+    "syntax": {"js": [], "py": [
+        {
+            syntax: "%1",
+            keyOption: "edumaker_tone_value"
+        }
+    ]}
+},
+"edumaker_octave_list": {
+    "color": "#00979D",
+    "skeleton": "basic_string_field",
+    "statements": [],
+    "template": "%1",
+    "params": [
+        {
+            "type": "Dropdown",
+            "options": [
+                ["1", "1"],
+                ["2", "2"],
+                ["3", "3"],
+                ["4", "4"],
+                ["5", "5"],
+                ["6", "6"]
+            ],
+            "value": "4",
+            "fontSize": 11
+        }
+    ],
+    "events": {},
+    "def": {
+        "params": [ null ]
+    },
+    "paramsKeyMap": {
+        "OCTAVE": 0
+    },
+    "func": function (sprite, script) {
+        return script.getField("OCTAVE");
+    },
+    "syntax": {"js": [], "py": [
+        {
+            syntax: "%1",
+            keyOption: "edumaker_octave_list"
+        }
+    ]}
+},
+"edumaker_set_tone": {
+    "color": "#00979D",
+    "skeleton": "basic",
+    "statements": [],
+    "params": [{
+        "type": "Block",
+        "accept": "string"
+    }, {
+        "type": "Block",
+        "accept": "string"
+    }, {
+        "type": "Block",
+        "accept": "string"
+    }, {
+        "type": "Block",
+        "accept": "string"
+    }, {
+        "type": "Indicator",
+        "img": "block_icon/hardware_03.png",
+        "size": 12
+    }],
+    "events": {},
+    "def": {
+        "params": [{
+                "type": "arduino_get_port_number",
+                "params": [ 3 ]
+            },
+            {
+                "type": "arduino_ext_tone_list"
+            },
+            {
+                "type": "arduino_ext_octave_list"
+            },
+            {
+                "type": "text",
+                "params": [ "1" ]
+            },
+            null
+        ],
+        "type": "edumaker_set_tone"
+    },
+    "paramsKeyMap": {
+        "PORT": 0,
+        "NOTE": 1,
+        "OCTAVE": 2,
+        "DURATION": 3
+    },
+    "class": "EduMaker",
+    "isNotFor": [ "EduMaker" ],
+    "func": function (sprite, script) {
+        var sq = Entry.hw.sendQueue;
+        var port = script.getNumberValue("PORT", script);
+
+        if (!script.isStart) {
+            var note = script.getValue("NOTE", script);
+            if(!Entry.Utils.isNumber(note))
+                note = Entry.ArduinoExt.toneTable[note];
+
+            if(note < 0) {
+                note = 0;
+            } else if(note > 12) {
+                note = 12;
+            }
+
+            var duration = script.getNumberValue("DURATION", script);
+
+            if(duration < 0) {
+                duration = 0;
+            }
+
+            if(!sq['SET']) {
+                sq['SET'] = {};
+            }
+
+            if(duration === 0) {
+                sq['SET'][port] = {
+                    type: Entry.ArduinoExt.sensorTypes.TONE,
+                    data: 0,
+                    time: new Date().getTime()
+                };
+                return script.callReturn();
+            }
+
+            var octave = script.getNumberValue("OCTAVE", script) - 1;
+            if(octave < 0) {
+                octave = 0;
+            } else if(octave > 5) {
+                octave = 5;
+            }
+
+            var value = 0;
+
+            if(note != 0) {
+                value = Entry.ArduinoExt.toneMap[note][octave];
+            }
+
+            duration = duration * 1000;
+            script.isStart = true;
+            script.timeFlag = 1;
+
+            sq['SET'][port] = {
+                type: Entry.ArduinoExt.sensorTypes.TONE,
+                data: {
+                    value: value,
+                    duration: duration
+                },
+                time: new Date().getTime()
+            };
+
+            setTimeout(function() {
+                script.timeFlag = 0;
+            }, duration + 32);
+            return script;
+        } else if (script.timeFlag == 1) {
+            return script;
+        } else {
+            delete script.timeFlag;
+            delete script.isStart;
+            sq['SET'][port] = {
+                type: Entry.ArduinoExt.sensorTypes.TONE,
+                data: 0,
+                time: new Date().getTime()
+            };
+            Entry.engine.isContinue = false;
+            return script.callReturn();
+        }
+    },
+    "syntax": {"js": [], "py": [
+        {
+            syntax: "Arduino.tone(%1, %2, %3, %4)",
+            textParams: [
+                {
+                    "type": "Block",
+                    "accept": "string"
+                },
+                {
+                    "type": "Block",
+                    "accept": "string"
+                },
+                {
+                    "type": "Block",
+                    "accept": "string"
+                },
+                {
+                    "type": "Block",
+                    "accept": "string"
+                }
+            ]
+        }
+    ]}
+},
+"edumaker_set_servo": {
+    "color": "#00979D",
+    "skeleton": "basic",
+    "statements": [],
+    "params": [{
+        "type": "Block",
+        "accept": "string"
+    }, {
+        "type": "Block",
+        "accept": "string"
+    }, {
+        "type": "Indicator",
+        "img": "block_icon/hardware_03.png",
+        "size": 12
+    }],
+    "events": {},
+    "def": {
+        "params": [{
+                "type": "arduino_get_port_number",
+                "params": [
+                    "3"
+                ]
+            },
+            null
+        ],
+        "type": "edumaker_set_servo"
+    },
+    "paramsKeyMap": {
+        "PORT": 0,
+        "VALUE": 1
+    },
+    "class": "EduMaker",
+    "isNotFor": [ "EduMaker" ],
+    "func": function (sprite, script) {
+        var sq = Entry.hw.sendQueue;
+        var port = script.getNumberValue("PORT", script);
+        var value = script.getNumberValue("VALUE", script);
+        value = Math.min(180, value);
+        value = Math.max(0, value);
+
+        if(!sq['SET']) {
+            sq['SET'] = {};
+        }
+        sq['SET'][port] = {
+            type: Entry.ArduinoExt.sensorTypes.SERVO_PIN,
+            data: value,
+            time: new Date().getTime()
+        };
+
+        return script.callReturn();
+    },
+    "syntax": {"js": [], "py": [
+        {
+            syntax: "Arduino.servomotorWrite(%1, %2)",
+            textParams: [
+                {
+                    "type": "Block",
+                    "accept": "string"
+                },
+                {
+                    "type": "Block",
+                    "accept": "string"
+                }
+            ]
+        }
+    ]}
+},
+// edumaker Added 2017-11-30
 //region joystick 조이스틱
 "joystick_get_number_sensor_value": {
     "parent": "arduino_get_number_sensor_value",
@@ -67338,7 +68246,7 @@ chocopi_servo_motor: {
     //범용 센서
     hummingbird_sensorValue: {
         "color": "#00979D",
-        "fontColor": "#fff",                    
+        "fontColor": "#fff",
         "skeleton": "basic_string_field",
         "statements": [],
         "template" : "아날로그 센서 %1 번 의 값",
@@ -67376,7 +68284,7 @@ chocopi_servo_motor: {
     //온도센서
     hummingbird_temperatureValue: {
         "color": "#00979D",
-        "fontColor": "#fff",                    
+        "fontColor": "#fff",
         "skeleton": "basic_string_field",
         "statements": [],
         "template" : "HB 온도센서 %1 번 값",
@@ -67414,7 +68322,7 @@ chocopi_servo_motor: {
     // 빛 블럭
     hummingbird_lightValue: {
         "color": "#00979D",
-        "fontColor": "#fff",        
+        "fontColor": "#fff",
         "skeleton": "basic_string_field",
         "statements": [],
         "template" : "HB 빛센서 %1 번 값",
@@ -67483,7 +68391,7 @@ chocopi_servo_motor: {
         "func": function (sprite, script) {
             var pd = Entry.hw.portData;
             var dev = script.getField('DEVICE');
-            
+
             var distance_value = 0;
             var flipped = 1000 - pd[dev];
             if (flipped < 180)  distance_value = 0;
@@ -67497,7 +68405,7 @@ chocopi_servo_motor: {
             else if (flipped >= 700 && flipped < 740 ) distance_value = (flipped - 700) * 6 / 40 + 27;
             else if (flipped >= 740 && flipped < 780 ) distance_value = (flipped - 740) * 7 / 40 + 33;
             else if (flipped >= 780 && flipped < 820 ) distance_value = (flipped - 780) * 15 / 40 + 41;
-            else if (flipped >= 820 && flipped < 860 ) distance_value = (flipped - 820) * 11 / 40 + 56; 
+            else if (flipped >= 820 && flipped < 860 ) distance_value = (flipped - 820) * 11 / 40 + 56;
             else distance_value = 100;
             return distance_value.toFixed(0);
         },
@@ -67507,7 +68415,7 @@ chocopi_servo_motor: {
     // 소음 센서 블럭
     hummingbird_soundValue: {
         "color": "#00979D",
-        "fontColor": "#fff",        
+        "fontColor": "#fff",
         "skeleton": "basic_string_field",
         "statements": [],
         "template" : "HB 소리센서 %1 번의 값",
@@ -67548,7 +68456,7 @@ chocopi_servo_motor: {
 
     // 회전센서
     hummingbird_rotaryValue: {
-        "color": "#00979D",        
+        "color": "#00979D",
         "fontColor": "#fff",
         "skeleton": "basic_string_field",
         "statements": [],
@@ -67591,7 +68499,7 @@ chocopi_servo_motor: {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template" : "HB 진동 %1 의 세기: %2 %3",        
+        "template" : "HB 진동 %1 의 세기: %2 %3",
         "params": [
             {
                 "type": "Dropdown",
@@ -67638,7 +68546,7 @@ chocopi_servo_motor: {
             if (value>100) value = 127;
             else if(value<0) value = 0;
             else value = Math.floor(value*1.27);  // 0 ~ 127
-            
+
             if (dev == 'vibeMotor1') sq.vibrat1 = value;
             else if (dev == 'vibeMotor2') sq.vibrat2 = value;
             return script.callReturn();
@@ -67646,12 +68554,12 @@ chocopi_servo_motor: {
         "syntax": {"js": [], "py": ["hummingbird.vibeMotor(%1, %2)"]}
     },
 
-    //서보모터	
+    //서보모터
     hummingbird_servo: {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template" : "HB 서보모터 %1번 의 각도: %2 %3",        
+        "template" : "HB 서보모터 %1번 의 각도: %2 %3",
         "params": [
             {
                 "type": "Dropdown",
@@ -67672,7 +68580,7 @@ chocopi_servo_motor: {
                 "type": "Indicator",
                 "img": "block_icon/hardware_03.png",
                 "size": 12
-            }            
+            }
         ],
         "events": {},
         "def": {
@@ -67696,7 +68604,7 @@ chocopi_servo_motor: {
             var sq = Entry.hw.sendQueue;
             var mtype = script.getStringField("DEVICE", script);
             var angle = script.getNumberValue("VALUE", script);
-        
+
             if (angle < 0) angle = 0;
             else if (angle > 180) angle = 180;
 
@@ -67707,14 +68615,14 @@ chocopi_servo_motor: {
             return script.callReturn();
         },
         "syntax": {"js": [], "py": ["hummingbird.servo(%1, %2)"]}
-    },   
-    
+    },
+
     //기어모터
     hummingbird_dcMotor: {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template" : "HB 기어모터 %1번 의 속도: %2 %3",        
+        "template" : "HB 기어모터 %1번 의 속도: %2 %3",
         "params": [
             {
                 "type": "Dropdown",
@@ -67763,7 +68671,7 @@ chocopi_servo_motor: {
             else if(speed<-100) speed = -127;
             else speed = Math.floor(speed*1.27); // range : -127~127
 
-            if (dir == 'dcMotor1') sq.dcMotor1 = speed;    
+            if (dir == 'dcMotor1') sq.dcMotor1 = speed;
             else if (dir == 'dcMotor2') sq.dcMotor2 = speed;
             return script.callReturn();
         },
@@ -67784,7 +68692,7 @@ chocopi_servo_motor: {
                     ["2", "led2"],
                     ["3", "led3"],
                     ["4", "led4"]
-                    
+
                 ],
                 "value": "led1",
                 "fontSize": 11,
@@ -67839,7 +68747,7 @@ chocopi_servo_motor: {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template" : "HB 삼색LED %1번 의 빨강%2 초록%3 파랑%4 %5",        
+        "template" : "HB 삼색LED %1번 의 빨강%2 초록%3 파랑%4 %5",
         "params": [
             {
                 "type": "Dropdown",
@@ -67913,7 +68821,7 @@ chocopi_servo_motor: {
             if (colorRed < 0) colorRed = 0;
             if (colorGreen < 0) colorGreen = 0;
             if (colorBlue < 0) colorBlue = 0;
-            
+
             colorRed = Math.floor(colorRed*2.55);
             colorGreen = Math.floor(colorGreen*2.55);
             colorBlue = Math.floor(colorBlue*2.55);
@@ -68613,7 +69521,7 @@ chocopi_servo_motor: {
         "func": function (sprite, script) {
             var sensorData = Entry.hw.portData.CMD;
             var joystick = script.getField("JOYSTICK");
-            
+
             if(joystick == 1)
                 return sensorData[Entry.JDKit.Sensor.JOYSTICK_LTB];
             else if(joystick == 2)
@@ -68804,7 +69712,7 @@ chocopi_servo_motor: {
         "class": "JDKit_Command",
         "isNotFor": [ "JDKit" ],
 
-        "func": function (sprite, script) {	
+        "func": function (sprite, script) {
                 if(typeof Entry.hw.sendQueue.CMD == "undefined")
                         Entry.hw.sendQueue.CMD = [0xF0, 0, 0, 0, 100, 100, 100, 0, 0, 0, 0, 0, 0];
                 var cmd = Entry.hw.sendQueue.CMD;
@@ -68812,7 +69720,7 @@ chocopi_servo_motor: {
             var act = script.getField("ACTION", script);
             if(color==1)
                     cmd[Entry.JDKit.Cmd.LED] = (act==3)? cmd[1]|0x01 : cmd[1]&0x02;
-            else 
+            else
                     cmd[Entry.JDKit.Cmd.LED] = (act==3)? cmd[1]|0x02 : cmd[1]&0x01;
             return script.callReturn();
         },
@@ -68871,7 +69779,7 @@ chocopi_servo_motor: {
         "class": "JDKit_Command",
         "isNotFor": [ "JDKit" ],
 
-        "func": function (sprite, script) {	
+        "func": function (sprite, script) {
                 if(typeof Entry.hw.sendQueue.CMD == "undefined")
                         Entry.hw.sendQueue.CMD = [0xF0, 0, 0, 0, 100, 100, 100, 0, 0, 0, 0, 0, 0];
                 var cmd = Entry.hw.sendQueue.CMD;
@@ -68927,13 +69835,13 @@ chocopi_servo_motor: {
         "class": "JDKit_Command",
         "isNotFor": [ "JDKit" ],
 
-        "func": function (sprite, script) {	
+        "func": function (sprite, script) {
                 if(typeof Entry.hw.sendQueue.CMD == "undefined")
                         Entry.hw.sendQueue.CMD = [0xF0, 0, 0, 0, 100, 100, 100, 0, 0, 0, 0, 0, 0];
                 var cmd = Entry.hw.sendQueue.CMD;
             var motor = script.getField("MOTOR", script);
             var power = script.getNumberValue("POWER", script);
-            
+
             cmd[Entry.JDKit.Cmd.MOTOR0 + motor] = (power>100)? 100 : (power<0)? 0 : power;
             return script.callReturn();
         },
@@ -68968,12 +69876,12 @@ chocopi_servo_motor: {
         "class": "JDKit_Command",
         "isNotFor": [ "JDKit" ],
 
-        "func": function (sprite, script) {	
+        "func": function (sprite, script) {
                 if(typeof Entry.hw.sendQueue.CMD == "undefined")
                         Entry.hw.sendQueue.CMD = [0xF0, 0, 0, 0, 100, 100, 100, 0, 0, 0, 0, 0, 0];
                 var cmd = Entry.hw.sendQueue.CMD;
             var throttle = script.getNumberValue("THROTTLE", script);
-            
+
             cmd[Entry.JDKit.Cmd.THROTTLE] = (throttle>200)? 200 : (throttle<0)? 0 : throttle;
             cmd[Entry.JDKit.Cmd.OPTION] = 0x01;
             return script.callReturn();
@@ -69008,12 +69916,12 @@ chocopi_servo_motor: {
         "class": "JDKit_Command",
         "isNotFor": [ "JDKit" ],
 
-        "func": function (sprite, script) {	
+        "func": function (sprite, script) {
                 if(typeof Entry.hw.sendQueue.CMD == "undefined")
                         Entry.hw.sendQueue.CMD = [0xF0, 0, 0, 0, 100, 100, 100, 0, 0, 0, 0, 0, 0];
                 var cmd = Entry.hw.sendQueue.CMD;
             var alt = script.getNumberValue("ALTITUDE", script);
-            
+
             cmd[Entry.JDKit.Cmd.THROTTLE] = (alt>200)? 200 : (alt<0)? 0 : alt;
             cmd[Entry.JDKit.Cmd.OPTION] = 0x05;
             return script.callReturn();
@@ -69058,7 +69966,7 @@ chocopi_servo_motor: {
         "class": "JDKit_Command",
         "isNotFor": [ "JDKit" ],
 
-        "func": function (sprite, script) {	
+        "func": function (sprite, script) {
                 if(typeof Entry.hw.sendQueue.CMD == "undefined")
                         Entry.hw.sendQueue.CMD = [0xF0, 0, 0, 0, 100, 100, 100, 0, 0, 0, 0, 0, 0];
                 var cmd = Entry.hw.sendQueue.CMD;
@@ -69100,12 +70008,12 @@ chocopi_servo_motor: {
         "class": "JDKit_Command",
         "isNotFor": [ "JDKit" ],
 
-        "func": function (sprite, script) {	
+        "func": function (sprite, script) {
                 if(typeof Entry.hw.sendQueue.CMD == "undefined")
                         Entry.hw.sendQueue.CMD = [0xF0, 0, 0, 0, 100, 100, 100, 0, 0, 0, 0, 0, 0];
                 var cmd = Entry.hw.sendQueue.CMD;
             var yaw = script.getNumberValue("YAW", script);
-            
+
             cmd[Entry.JDKit.Cmd.YAW] = (yaw>25)? 101 : (yaw<-25)? 99 : 100;
             return script.callReturn();
         },
@@ -69132,11 +70040,11 @@ chocopi_servo_motor: {
         "class": "JDKit_Command",
         "isNotFor": [ "JDKit" ],
 
-        "func": function (sprite, script) {	
+        "func": function (sprite, script) {
                 if(typeof Entry.hw.sendQueue.CMD == "undefined")
                         Entry.hw.sendQueue.CMD = [0xF0, 0, 0, 0, 100, 100, 100, 0, 0, 0, 0, 0, 0];
                 var cmd = Entry.hw.sendQueue.CMD;
-            
+
             cmd[Entry.JDKit.Cmd.OPTION] = 0x81;
             Entry.hw.update();
             return script.callReturn();
