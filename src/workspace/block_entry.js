@@ -32091,710 +32091,1230 @@ Entry.block = {
 //endregion basic 기본
 //region neobot 네오봇
 "neobot_sensor_value": {
-    "color": "#00979D",
-    "skeleton": "basic_string_field",
-    "fontColor": "#fff",
-    "statements": [],
-    "template": "%1  값",
-    "params": [{
-        "type": "Dropdown",
-        "options": [
-            ["1번 포트", "IN1"],
-            ["2번 포트", "IN2"],
-            ["3번 포트", "IN3"],
-            ["리모컨", "IR"],
-            ["배터리", "BAT"]
-        ],
-        "value": "IN1",
-        "fontSize": 11
-    }],
-    "events": {},
-    "def": {
-        "params": [null],
-        "type": "neobot_sensor_value"
-    },
-    "paramsKeyMap": {
-        "PORT": 0
-    },
-    "class": "neobot_value",
-    "isNotFor": ["neobot"],
-    "func": function (sprite, script) {
-        var port = script.getStringField('PORT');
-        return Entry.hw.portData[port];
-    },
-    "syntax": {"js": [], "py": ["Neobot.sensor_value(%1)"]}
-},
-"neobot_sensor_convert_scale": {
-    "color": "#00979D",
-    "skeleton": "basic_string_field",
-    "fontColor": "#fff",
-    "statements": [],
-    "template": "%1 값의 범위를 %2 ~ %3 에서 %4 ~ %5 (으)로 변환",
-    "params": [{
-        "type": "Dropdown",
-        "options": [
-            ["1번 포트", "IN1"],
-            ["2번 포트", "IN2"],
-            ["3번 포트", "IN3"],
-            ["리모컨", "IR"],
-            ["배터리", "BAT"]
-        ],
-        "value": "IN1",
-        "fontSize": 11
-    }, {
-        "type": "Block",
-        "accept": "string"
-    }, {
-        "type": "Block",
-        "accept": "string"
-    }, {
-        "type": "Block",
-        "accept": "string"
-    }, {
-        "type": "Block",
-        "accept": "string"
-    }],
-    "events": {},
-    "def": {
-        "params": [null, {
-            "type": "number",
-            "params": [ "0" ]
-        }, {
-            "type": "number",
-            "params": [ "255" ]
-        }, {
-            "type": "number",
-            "params": [ "0" ]
-        }, {
-            "type": "number",
-            "params": [ "100" ]
+        "color": "#00979D",
+        "skeleton": "basic_string_field",
+        "fontColor": "#fff",
+        "statements": [],
+        "template": "%1  값",
+        "params": [{
+            "type": "Dropdown",
+            "options": [
+                ["1번 포트", "IN1"],
+                ["2번 포트", "IN2"],
+                ["3번 포트", "IN3"],
+                ["리모컨", "IR"],
+                ["배터리", "BAT"]
+            ],
+            "value": "IN1",
+            "fontSize": 11
         }],
-        "type": "neobot_sensor_convert_scale"
+        "events": {},
+        "def": {
+            "params": [null],
+            "type": "neobot_sensor_value"
+        },
+        "paramsKeyMap": {
+            "PORT": 0
+        },
+        "class": "neobot_value",
+        "isNotFor": ["neobot"],
+        "func": function (sprite, script) {
+            var port = script.getStringField('PORT');
+            return Entry.hw.portData[port];
+        },
+        "syntax": {"js": [], "py": ["Neobot.sensor_value(%1)"]}
     },
-    "paramsKeyMap": {
-        "PORT": 0,
-        "OMIN": 1,
-        "OMAX": 2,
-        "MIN": 3,
-        "MAX": 4
-    },
-    "class": "neobot_value",
-    "isNotFor": ["neobot"],
-    "func": function (sprite, script) {
-        var port = script.getStringField('PORT');
-        var value = Entry.hw.portData[port];
-        var omin = script.getNumberValue("OMIN", script);
-        var omax = script.getNumberValue("OMAX", script);
-        var min = script.getNumberValue("MIN", script);
-        var max = script.getNumberValue("MAX", script);
-
-        if (omin > omax) {
-            var temp = omin;
-            omin = omax;
-            omax = temp;
-        }
-
-        if(min > max) {
-            var temp = min;
-            min = max;
-            max = temp;
-        }
-
-        value -= omin;
-        value = value * ((max - min) / (omax - omin));
-        value += min;
-        value = Math.min(max, value);
-        value = Math.max(min, value);
-
-        return Math.round(value);
-    }
-},
-"neobot_left_motor": {
-    "color": "#00979D",
-    "skeleton": "basic",
-    "statements": [],
-    "template": "왼쪽 모터를 %1 %2 의 속도로 회전 %3",
-    "params": [{
-        "type": "Dropdown",
-        "options": [
-            ["앞으로", "16"],
-            ["뒤로", "32"]
-        ],
-        "value": "16",
-        "fontSize": 11,
-        'arrowColor': EntryStatic.ARROW_COLOR_HW
-    }, {
-        "type": "Dropdown",
-        "options": [
-            ["0", "0"],
-            ["1", "1"],
-            ["2", "2"],
-            ["3", "3"],
-            ["4", "4"],
-            ["5", "5"],
-            ["6", "6"],
-            ["7", "7"],
-            ["8", "8"],
-            ["9", "9"],
-            ["10", "10"],
-            ["11", "11"],
-            ["12", "12"],
-            ["13", "13"],
-            ["14", "14"],
-            ["15", "15"]
-        ],
-        "value": "0",
-        "fontSize": 11,
-        'arrowColor': EntryStatic.ARROW_COLOR_HW
-    }, {
-        "type": "Indicator",
-        "img": "block_icon/hardware_03.png",
-        "size": 12
-    }],
-    "events": {},
-    "def": {
-        "params": [null, "15", null],
-        "type": "neobot_left_motor"
-    },
-    "paramsKeyMap": {
-        "DIRECTION": 0,
-        "SPEED": 1
-    },
-    "class": "neobot_motor",
-    "isNotFor": ["neobot"],
-    "func": function (sprite, script) {
-        var speed = script.getNumberField('SPEED');
-        var direction = script.getNumberField('DIRECTION');
-        Entry.hw.sendQueue['DCL'] = speed + direction;
-        return script.callReturn();
-    },
-    "syntax": {"js": [], "py": ["Neobot.turn_left(%1, %2)"]}
-},
-"neobot_stop_left_motor": {
-    "color": "#00979D",
-    "skeleton": "basic",
-    "statements": [],
-    "template": "왼쪽 모터를 정지 %1",
-    "params": [{
-        "type": "Indicator",
-        "img": "block_icon/hardware_03.png",
-        "size": 12
-    }],
-    "events": {},
-    "def": {
-        "params": [null],
-        "type": "neobot_stop_left_motor"
-    },
-    "class": "neobot_motor",
-    "isNotFor": ["neobot"],
-    "func": function (sprite, script) {
-        Entry.hw.sendQueue['DCL'] = 0;
-        return script.callReturn();
-    },
-    "syntax": {"js": [], "py": ["Neobot.stop_left()"]}
-},
-"neobot_right_motor": {
-    "color": "#00979D",
-    "skeleton": "basic",
-    "statements": [],
-    "template": "오른쪽 모터를 %1 %2 의 속도로 회전 %3",
-    "params": [{
-        "type": "Dropdown",
-        "options": [
-            ["앞으로", "16"],
-            ["뒤로", "32"]
-        ],
-        "value": "16",
-        "fontSize": 11,
-        'arrowColor': EntryStatic.ARROW_COLOR_HW
-    }, {
-        "type": "Dropdown",
-        "options": [
-            ["0", "0"],
-            ["1", "1"],
-            ["2", "2"],
-            ["3", "3"],
-            ["4", "4"],
-            ["5", "5"],
-            ["6", "6"],
-            ["7", "7"],
-            ["8", "8"],
-            ["9", "9"],
-            ["10", "10"],
-            ["11", "11"],
-            ["12", "12"],
-            ["13", "13"],
-            ["14", "14"],
-            ["15", "15"]
-        ],
-        "value": "0",
-        "fontSize": 11,
-        'arrowColor': EntryStatic.ARROW_COLOR_HW
-    }, {
-        "type": "Indicator",
-        "img": "block_icon/hardware_03.png",
-        "size": 12
-    }],
-    "events": {},
-    "def": {
-        "params": [null, "15", null],
-        "type": "neobot_right_motor"
-    },
-    "paramsKeyMap": {
-        "DIRECTION": 0,
-        "SPEED": 1
-    },
-    "class": "neobot_motor",
-    "isNotFor": ["neobot"],
-    "func": function (sprite, script) {
-        var speed = script.getNumberField('SPEED');
-        var direction = script.getNumberField('DIRECTION');
-        Entry.hw.sendQueue['DCR'] = speed + direction;
-        return script.callReturn();
-    },
-    "syntax": {"js": [], "py": ["Neobot.turn_right(%1, %2)"]}
-},
-"neobot_stop_right_motor": {
-    "color": "#00979D",
-    "skeleton": "basic",
-    "statements": [],
-    "template": "오른쪽 모터를 정지 %1",
-    "params": [{
-        "type": "Indicator",
-        "img": "block_icon/hardware_03.png",
-        "size": 12
-    }],
-    "events": {},
-    "def": {
-        "params": [null],
-        "type": "neobot_stop_right_motor"
-    },
-    "class": "neobot_motor",
-    "isNotFor": ["neobot"],
-    "func": function (sprite, script) {
-        Entry.hw.sendQueue['DCR'] = 0;
-        return script.callReturn();
-    },
-    "syntax": {"js": [], "py": ["Neobot.stop_right()"]}
-},
-"neobot_all_motor": {
-    "color": "#00979D",
-    "skeleton": "basic",
-    "statements": [],
-    "template": "양쪽 모터를 %1 %2의 속도로 %3초 동안 회전 %4",
-    "params": [
-        {
+    "neobot_sensor_convert_scale": {
+        "color": "#00979D",
+        "skeleton": "basic_string_field",
+        "fontColor": "#fff",
+        "statements": [],
+        "template": "%1 값의 범위를 %2 ~ %3 에서 %4 ~ %5 (으)로 변환",
+        "params": [{
             "type": "Dropdown",
             "options": [
-                [ "앞으로", "1" ],
-                [ "뒤로", "2" ],
-                [ "제자리에서 왼쪽 돌기", "3" ],
-                [ "제자리에서 오른쪽 돌기", "4" ],
-                [ "왼쪽으로 돌기", "5" ],
-                [ "오른쪽으로 돌기", "6" ]
+                ["1번 포트", "IN1"],
+                ["2번 포트", "IN2"],
+                ["3번 포트", "IN3"],
+                ["리모컨", "IR"],
+                ["배터리", "BAT"]
             ],
-            "value": "1",
-            "fontSize": 11,
-            'arrowColor': EntryStatic.ARROW_COLOR_HW
-        },
-        {
-            "type": "Dropdown",
-            "options": [
-                [ "0", "0" ],
-                [ "1", "1" ],
-                [ "2", "2" ],
-                [ "3", "3" ],
-                [ "4", "4" ],
-                [ "5", "5" ],
-                [ "6", "6" ],
-                [ "7", "7" ],
-                [ "8", "8" ],
-                [ "9", "9" ],
-                [ "10", "10" ],
-                [ "11", "11" ],
-                [ "12", "12" ],
-                [ "13", "13" ],
-                [ "14", "14" ],
-                [ "15", "15" ]
-            ],
-            "value": "1",
-            "fontSize": 11,
-            'arrowColor': EntryStatic.ARROW_COLOR_HW
-        },
-        {
+            "value": "IN1",
+            "fontSize": 11
+        }, {
             "type": "Block",
             "accept": "string"
+        }, {
+            "type": "Block",
+            "accept": "string"
+        }, {
+            "type": "Block",
+            "accept": "string"
+        }, {
+            "type": "Block",
+            "accept": "string"
+        }],
+        "events": {},
+        "def": {
+            "params": [null, {
+                "type": "number",
+                "params": [ "0" ]
+            }, {
+                "type": "number",
+                "params": [ "255" ]
+            }, {
+                "type": "number",
+                "params": [ "0" ]
+            }, {
+                "type": "number",
+                "params": [ "100" ]
+            }],
+            "type": "neobot_sensor_convert_scale"
         },
-        {
+        "paramsKeyMap": {
+            "PORT": 0,
+            "OMIN": 1,
+            "OMAX": 2,
+            "MIN": 3,
+            "MAX": 4
+        },
+        "class": "neobot_value",
+        "isNotFor": ["neobot"],
+        "func": function (sprite, script) {
+            var port = script.getStringField('PORT');
+            var value = Entry.hw.portData[port];
+            var omin = script.getNumberValue("OMIN", script);
+            var omax = script.getNumberValue("OMAX", script);
+            var min = script.getNumberValue("MIN", script);
+            var max = script.getNumberValue("MAX", script);
+
+            if (omin > omax) {
+                var temp = omin;
+                omin = omax;
+                omax = temp;
+            }
+
+            if(min > max) {
+                var temp = min;
+                min = max;
+                max = temp;
+            }
+
+            value -= omin;
+            value = value * ((max - min) / (omax - omin));
+            value += min;
+            value = Math.min(max, value);
+            value = Math.max(min, value);
+
+            return Math.round(value);
+        }
+    },
+    "neobot_sensor_color": {
+        "color": "#00979D",
+        "skeleton": "basic_string_field",
+        "fontColor": "#fff",
+        "statements": [],
+        "template": "%1",
+        "params": [{
+            "type": "Dropdown",
+            "options": [
+                ["흰색", 0],
+                ["빨간색", 1],
+                ["노란색", 2],
+                ["녹색(연두)", 3],
+                ["파란색", 4]
+            ],
+            "value": "WHITE",
+            "fontSize": 11
+        }],
+        "events": {},
+        "def": {
+            "params": [null],
+            "type": "neobot_sensor_color"
+        },
+        "paramsKeyMap": {
+            "COLOR": 0
+        },
+        "class": "neobot_value",
+        "isNotFor": ["neobot"],
+        "func": function (sprite, script) {
+            var value = script.getNumberField('COLOR');
+            return value;
+        },
+        "syntax": {"js": [], "py": ["Neobot.sensor_color(%1)"]}
+    },
+    "neobot_equal_with_sensor": {//MinjuneL
+        "color": "#00979D",
+        "skeleton": "basic_boolean_field",
+        "fontColor": "#fff"
+        "template" : "%1 의 센서값이 %2",
+        "statements": [],
+        "params": [
+            {
+            "type": "Dropdown",
+            "options": [
+                ["1번 포트", "IN1"],
+                ["2번 포트", "IN2"],
+                ["3번 포트", "IN3"],
+                ["리모컨", "IR"],
+                ["배터리", "BAT"]
+            ],
+            "value": "IN1",
+            "fontSize": 11
+        },
+            {
+            "type": "Dropdown",
+            "options": [
+                ["흰색", 0],
+                ["빨간색", 1],
+                ["노란색", 2],
+                ["녹색(연두)", 3],
+                ["파란색", 4]
+            ],
+            "value": "0",
+            "fontSize": 11
+        }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                null,
+                null
+                ],
+            "type": "neobot_equal_with_sensor"
+        },
+        "paramsKeyMap": {
+            "SENSOR": 0,
+            "COLOR" : 1
+        },
+        "class": "neobot_value",
+        "isNotFor": ["neobot"],
+        "func": function (sprite, script) {
+
+            var sensorTemp = script.getStringField("SENSOR");
+            var sensor = Entry.hw.portData[sensorTemp];
+            var color = script.getNumberField("COLOR");
+            
+            if(sensor >= 10 && sensor<=50){
+                if(color == 0)
+                    return true;
+                else
+                    return false;
+            }else if(sensor >= 51 && sensor<=90){
+                if(color == 1)
+                    return true;
+                else
+                    return false;
+            }else if(sensor >= 91 && sensor<=130){
+                if(color ==2)
+                    return true;
+                else
+                    return false;
+            }else if(sensor >= 131 && sensor<=170){
+                if(color ==3)
+                    return true;
+                else
+                    return false;
+            }else if(sensor >= 171 && sensor<=210){
+                if(color == 4)
+                    return true;
+                else
+                    return false;
+            }
+            return false;
+        },
+        "syntax": {"js": [], "py": ["Entry.neobot_equal_check()"]}
+    },
+    "get_motor_speed": {
+        "color": "#00979D",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "template":"%1",
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    ["0", "0"],
+                    ["1", "1"],
+                    ["2", "2"],
+                    ["3", "3"],
+                    ["4", "4"],
+                    ["5", "5"],
+                    ["6", "6"],
+                    ["7", "7"],
+                    ["8", "8"],
+                    ["9", "9"],
+                    ["10", "10"],
+                    ["11", "11"],
+                    ["12", "12"],
+                    ["13", "13"],
+                    ["14", "14"],
+                    ["15", "15"]
+            ],
+            "value": "15",
+            "fontSize": 11,
+            'arrowColor': EntryStatic.ARROW_COLOR_HW
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null ]
+        },
+        "paramsKeyMap": {
+            "VALUE": 0
+        },
+        "func": function (sprite, script) {
+            return script.getStringField("VALUE");
+        },
+        "syntax": {"js": [], "py": ["%1get_motor_speed#"]}
+    },
+    "neobot_left_motor": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "template": "왼쪽 모터를 %1 %2 의 속도로 회전 %3",
+        "params": [{
+            "type": "Dropdown",
+            "options": [
+                ["앞으로", "16"],
+                ["뒤로", "32"]
+            ],
+            "value": "16",
+            "fontSize": 11,
+            'arrowColor': EntryStatic.ARROW_COLOR_HW
+        }, {
+            "type": "Block",
+            "accept": "string"
+        }, {
             "type": "Indicator",
             "img": "block_icon/hardware_03.png",
             "size": 12
-        }
-    ],
-    "events": {},
-    "def": {
-        "params": ["1", "15", {
-            "type": "number",
-            "params": ["0"]
         }],
-        "type": "neobot_all_motor"
-    },
-    "paramsKeyMap": {
-        "DIRECTION": 0,
-        "SPEED": 1,
-        "DURATION": 2
-    },
-    "class": "neobot_motor",
-    "isNotFor": ["neobot"],
-    "func": function (sprite, script) {
-        var sq = Entry.hw.sendQueue;
-
-        if (!script.isStart) {
-            var speed = script.getNumberField('SPEED');
+        "events": {},
+        "def": {
+            "params": [null, {
+                    "type": "get_motor_speed",
+                    "id": "m111"
+                }, null],
+            "type": "neobot_left_motor"
+        },
+        "paramsKeyMap": {
+            "DIRECTION": 0,
+            "SPEED": 1
+        },
+        "class": "neobot_motor",
+        "isNotFor": ["neobot"],
+        "func": function (sprite, script) {
+            var speed = Entry.parseNumber(script.getStringValue('SPEED'));
             var direction = script.getNumberField('DIRECTION');
-            var duration = script.getNumberValue('DURATION');
-
-            if(duration < 0) {
-                duration = 0;
+            Entry.hw.sendQueue['DCL'] = speed + direction;
+            return script.callReturn();
+        },
+        "syntax": {"js": [], "py": ["Neobot.turn_left(%1, %2)"]}
+    },
+    "neobot_stop_left_motor": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "template": "왼쪽 모터를 정지 %1",
+        "params": [{
+            "type": "Indicator",
+            "img": "block_icon/hardware_03.png",
+            "size": 12
+        }],
+        "events": {},
+        "def": {
+            "params": [null],
+            "type": "neobot_stop_left_motor"
+        },
+        "class": "neobot_motor",
+        "isNotFor": ["neobot"],
+        "func": function (sprite, script) {
+            Entry.hw.sendQueue['DCL'] = 0;
+            return script.callReturn();
+        },
+        "syntax": {"js": [], "py": ["Neobot.stop_left()"]}
+    },
+    "neobot_right_motor": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "template": "오른쪽 모터를 %1 %2 의 속도로 회전 %3",
+        "params": [{
+            "type": "Dropdown",
+            "options": [
+                ["앞으로", "16"],
+                ["뒤로", "32"]
+            ],
+            "value": "16",
+            "fontSize": 11,
+            'arrowColor': EntryStatic.ARROW_COLOR_HW
+        }, {
+            "type": "Block",
+            "accept": "string"
+        }, {
+            "type": "Indicator",
+            "img": "block_icon/hardware_03.png",
+            "size": 12
+        }],
+        "events": {},
+        "def": {
+            "params": [null, {
+                    "type": "get_motor_speed",
+                    "id": "m112"
+                }, null],
+            "type": "neobot_right_motor"
+        },
+        "paramsKeyMap": {
+            "DIRECTION": 0,
+            "SPEED": 1
+        },
+        "class": "neobot_motor",
+        "isNotFor": ["neobot"],
+        "func": function (sprite, script) {
+            var speed = Entry.parseNumber(script.getStringValue('SPEED'));
+            var direction = script.getNumberField('DIRECTION');
+            Entry.hw.sendQueue['DCR'] = speed + direction;
+            return script.callReturn();
+        },
+        "syntax": {"js": [], "py": ["Neobot.turn_right(%1, %2)"]}
+    },
+    "neobot_stop_right_motor": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "template": "오른쪽 모터를 정지 %1",
+        "params": [{
+            "type": "Indicator",
+            "img": "block_icon/hardware_03.png",
+            "size": 12
+        }],
+        "events": {},
+        "def": {
+            "params": [null],
+            "type": "neobot_stop_right_motor"
+        },
+        "class": "neobot_motor",
+        "isNotFor": ["neobot"],
+        "func": function (sprite, script) {
+            Entry.hw.sendQueue['DCR'] = 0;
+            return script.callReturn();
+        },
+        "syntax": {"js": [], "py": ["Neobot.stop_right()"]}
+    },
+    "neobot_all_motor": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "template": "양쪽 모터를 %1 %2의 속도로 %3초 동안 회전 %4",
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [ "앞으로", "1" ],
+                    [ "뒤로", "2" ],
+                    [ "제자리에서 왼쪽 돌기", "3" ],
+                    [ "제자리에서 오른쪽 돌기", "4" ],
+                    [ "왼쪽으로 돌기", "5" ],
+                    [ "오른쪽으로 돌기", "6" ]
+                ],
+                "value": "1",
+                "fontSize": 11,
+                'arrowColor': EntryStatic.ARROW_COLOR_HW
+            },
+             {
+            "type": "Block",
+            "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
             }
+        ],
+        "events": {},
+        "def": {
+            "params": ["1", {
+                    "type": "get_motor_speed",
+                    "id": "m113"
+                }, {
+                "type": "number",
+                "params": ["0"]
+            }],
+            "type": "neobot_all_motor"
+        },
+        "paramsKeyMap": {
+            "DIRECTION": 0,
+            "SPEED": 1,
+            "DURATION": 2
+        },
+        "class": "neobot_motor",
+        "isNotFor": ["neobot"],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
 
-            switch (direction) {
-                case 1:
-                Entry.hw.sendQueue['DCL'] = 0x10 + speed;
-                Entry.hw.sendQueue['DCR'] = 0x10 + speed;
-                break;
-                case 2:
-                Entry.hw.sendQueue['DCL'] = 0x20 + speed;
-                Entry.hw.sendQueue['DCR'] = 0x20 + speed;
-                break;
-                case 3:
-                Entry.hw.sendQueue['DCL'] = 0x20 + speed;
-                Entry.hw.sendQueue['DCR'] = 0x10 + speed;
-                break;
-                case 4:
-                Entry.hw.sendQueue['DCL'] = 0x10 + speed;
-                Entry.hw.sendQueue['DCR'] = 0x20 + speed;
-                break;
-                case 5:
-                Entry.hw.sendQueue['DCL'] = 0;
-                Entry.hw.sendQueue['DCR'] = 0x10 + speed;
-                break;
-                case 6:
-                Entry.hw.sendQueue['DCL'] = 0x10 + speed;
-                Entry.hw.sendQueue['DCR'] = 0;
-                break;
-            }
+            if (!script.isStart) {
+                var speed = Entry.parseNumber(script.getStringValue('SPEED'));
+                var direction = script.getNumberField('DIRECTION');
+                var duration = script.getNumberValue('DURATION');
 
-            if(duration === 0) {
-                return script.callReturn();
-            } else {
-                script.isStart = true;
-                script.timeFlag = 1;
-                setTimeout(function() {
-                    script.timeFlag = 0;
-                }, duration * 1000);
+                if(duration < 0) {
+                    duration = 0;
+                }
+
+                switch (direction) {
+                    case 1:
+                    Entry.hw.sendQueue['DCL'] = 0x10 + speed;
+                    Entry.hw.sendQueue['DCR'] = 0x10 + speed;
+                    break;
+                    case 2:
+                    Entry.hw.sendQueue['DCL'] = 0x20 + speed;
+                    Entry.hw.sendQueue['DCR'] = 0x20 + speed;
+                    break;
+                    case 3:
+                    Entry.hw.sendQueue['DCL'] = 0x20 + speed;
+                    Entry.hw.sendQueue['DCR'] = 0x10 + speed;
+                    break;
+                    case 4:
+                    Entry.hw.sendQueue['DCL'] = 0x10 + speed;
+                    Entry.hw.sendQueue['DCR'] = 0x20 + speed;
+                    break;
+                    case 5:
+                    Entry.hw.sendQueue['DCL'] = 0;
+                    Entry.hw.sendQueue['DCR'] = 0x10 + speed;
+                    break;
+                    case 6:
+                    Entry.hw.sendQueue['DCL'] = 0x10 + speed;
+                    Entry.hw.sendQueue['DCR'] = 0;
+                    break;
+                }
+
+                if(duration === 0) {
+                    return script.callReturn();
+                } else {
+                    script.isStart = true;
+                    script.timeFlag = 1;
+                    setTimeout(function() {
+                        script.timeFlag = 0;
+                    }, duration * 1000);
+                    return script;
+                }
+            } else if (script.timeFlag == 1) {
                 return script;
+            } else {
+                delete script.timeFlag;
+                delete script.isStart;
+                Entry.hw.sendQueue['DCL'] = 0;
+                Entry.hw.sendQueue['DCR'] = 0;
+                Entry.engine.isContinue = false;
+                return script.callReturn();
             }
-        } else if (script.timeFlag == 1) {
-            return script;
-        } else {
-            delete script.timeFlag;
-            delete script.isStart;
+        }
+    },
+    "neobot_all_motor_iternally": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "template": "양쪽 모터를 %1 %2의 속도로 계속 회전 %3",
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [ "앞으로", "1" ],
+                    [ "뒤로", "2" ],
+                    [ "제자리에서 왼쪽 돌기", "3" ],
+                    [ "제자리에서 오른쪽 돌기", "4" ],
+                    [ "왼쪽으로 돌기", "5" ],
+                    [ "오른쪽으로 돌기", "6" ]
+                ],
+                "value": "1",
+                "fontSize": 11,
+                'arrowColor': EntryStatic.ARROW_COLOR_HW
+            },
+             {
+            "type": "Block",
+            "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": ["1",
+                        {
+                            "type": "get_motor_speed",
+                            "id": "m114"
+                        }],
+            "type": "neobot_all_motor_iternally"
+        },
+        "paramsKeyMap": {
+            "DIRECTION": 0,
+            "SPEED": 1
+        },
+        "class": "neobot_motor",
+        "isNotFor": ["neobot"],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+
+            if (!script.isStart) {
+                var speed = Entry.parseNumber(script.getStringValue('SPEED'));
+                var direction = script.getNumberField('DIRECTION');
+                var duration = 0;
+
+                if(duration < 0) {
+                    duration = 0;
+                }
+
+                switch (direction) {
+                    case 1:
+                    Entry.hw.sendQueue['DCL'] = 0x10 + speed;
+                    Entry.hw.sendQueue['DCR'] = 0x10 + speed;
+                    break;
+                    case 2:
+                    Entry.hw.sendQueue['DCL'] = 0x20 + speed;
+                    Entry.hw.sendQueue['DCR'] = 0x20 + speed;
+                    break;
+                    case 3:
+                    Entry.hw.sendQueue['DCL'] = 0x20 + speed;
+                    Entry.hw.sendQueue['DCR'] = 0x10 + speed;
+                    break;
+                    case 4:
+                    Entry.hw.sendQueue['DCL'] = 0x10 + speed;
+                    Entry.hw.sendQueue['DCR'] = 0x20 + speed;
+                    break;
+                    case 5:
+                    Entry.hw.sendQueue['DCL'] = 0;
+                    Entry.hw.sendQueue['DCR'] = 0x10 + speed;
+                    break;
+                    case 6:
+                    Entry.hw.sendQueue['DCL'] = 0x10 + speed;
+                    Entry.hw.sendQueue['DCR'] = 0;
+                    break;
+                }
+
+                if(duration === 0) {
+                    return script.callReturn();
+                } else {
+                    script.isStart = true;
+                    script.timeFlag = 1;
+                    setTimeout(function() {
+                        script.timeFlag = 0;
+                    }, duration * 1000);
+                    return script;
+                }
+            } else if (script.timeFlag == 1) {
+                return script;
+            } else {
+                delete script.timeFlag;
+                delete script.isStart;
+                Entry.hw.sendQueue['DCL'] = 0;
+                Entry.hw.sendQueue['DCR'] = 0;
+                Entry.engine.isContinue = false;
+                return script.callReturn();
+            }
+        }
+    },
+    "neobot_stop_all_motor": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "template": "양쪽 모터를 정지 %1",
+        "params": [{
+            "type": "Indicator",
+            "img": "block_icon/hardware_03.png",
+            "size": 12
+        }],
+        "events": {},
+        "def": {
+            "params": [null],
+            "type": "neobot_stop_all_motor",
+        },
+        "class": "neobot_motor",
+        "isNotFor": ["neobot"],
+        "func": function (sprite, script) {
             Entry.hw.sendQueue['DCL'] = 0;
             Entry.hw.sendQueue['DCR'] = 0;
-            Entry.engine.isContinue = false;
             return script.callReturn();
-        }
-    }
-},
-"neobot_stop_all_motor": {
-    "color": "#00979D",
-    "skeleton": "basic",
-    "statements": [],
-    "template": "양쪽 모터를 정지 %1",
-    "params": [{
-        "type": "Indicator",
-        "img": "block_icon/hardware_03.png",
-        "size": 12
-    }],
-    "events": {},
-    "def": {
-        "params": [null],
-        "type": "neobot_stop_all_motor",
+        },
+        "syntax": {"js": [], "py": ["Neobot.run_motor(%1, %2, %3, %4)"]}
     },
-    "class": "neobot_motor",
-    "isNotFor": ["neobot"],
-    "func": function (sprite, script) {
-        Entry.hw.sendQueue['DCL'] = 0;
-        Entry.hw.sendQueue['DCR'] = 0;
-        return script.callReturn();
-    },
-    "syntax": {"js": [], "py": ["Neobot.run_motor(%1, %2, %3, %4)"]}
-},
-"neobot_set_servo": {
-    "color": "#00979D",
-    "skeleton": "basic",
-    "statements": [],
-    "template": "%1 포트의 서보모터를 %2 도 이동 %3",
-    "params": [{
-        "type": "Dropdown",
-        "options": [
-            ["OUT1", "1"],
-            ["OUT2", "2"],
-            ["OUT3", "3"]
-        ],
-        "value": "1",
-        "fontSize": 11,
-        'arrowColor': EntryStatic.ARROW_COLOR_HW
-    }, {
-        "type": "Block",
-        "accept": "string"
-    }, {
-        "type": "Indicator",
-        "img": "block_icon/hardware_03.png",
-        "size": 12
-    }],
-    "events": {},
-    "def": {
-        "params": [null, null, null],
-        "type": "neobot_set_servo"
-    },
-    "paramsKeyMap": {
-        "PORT": 0,
-        "DEGREE": 1
-    },
-    "class": "neobot_output",
-    "isNotFor": ["neobot"],
-    "func": function (sprite, script) {
-        var port = script.getNumberField('PORT');
-        var degree = script.getNumberValue('DEGREE');
-        if(degree < 0) {
-            degree = 0;
-        } else if(degree > 180){
-            degree = 180;
-        }
-        Entry.hw.sendQueue['OUT' + port] = degree;
-        var option = port;
-        if(option === 3) {
-            option = 4;
-        }
-        Entry.hw.sendQueue['OPT'] = Entry.hw.sendQueue['OPT'] | option;
-        return script.callReturn();
-    },
-    "syntax": {"js": [], "py": ["Neobot.servo_1(%1, %2)"]}
-},
-"neobot_set_output": {
-    "color": "#00979D",
-    "skeleton": "basic",
-    "statements": [],
-    "template": "%1 번 포트의 값을 %2 만큼 출력 %3",
-    "params": [{
-        "type": "Dropdown",
-        "options": [
-            ["OUT1", "1"],
-            ["OUT2", "2"],
-            ["OUT3", "3"]
-        ],
-        "value": "1",
-        "fontSize": 11,
-        'arrowColor': EntryStatic.ARROW_COLOR_HW
-    }, {
-        "type": "Block",
-        "accept": "string"
-    }, {
-        "type": "Indicator",
-        "img": "block_icon/hardware_03.png",
-        "size": 12
-    }],
-    "events": {},
-    "def": {
-        "params": [null, {
-            "type": "number",
-            "params": ["255"]
-        }, null],
-        "type": "neobot_set_output",
-    },
-    "paramsKeyMap": {
-        "PORT": 0,
-        "VALUE": 1
-    },
-    "class": "neobot_output",
-    "isNotFor": ["neobot"],
-    "func": function (sprite, script) {
-        var port = script.getStringField('PORT', script);
-        var value = script.getNumberValue('VALUE', script);
-        var option = port;
-        if(value < 0) {
-            value = 0;
-        } else if (value > 255) {
-            value = 255;
-        }
-        if(option === 3) {
-            option = 4;
-        }
-        Entry.hw.sendQueue['OUT' + port] = value;
-        Entry.hw.sendQueue['OPT'] = Entry.hw.sendQueue['OPT'] & (~option);
-        return script.callReturn();
-    },
-    "syntax": {"js": [], "py": ["Neobot.servo_2(%1, %2)"]}
-},
-"neobot_set_fnd": {
-    "color": "#00979D",
-    "skeleton": "basic",
-    "statements": [],
-    "template": "FND에 %1 출력 %2",
-    "params": [{
-        "type": "Block",
-        "accept": "string"
-    }, {
-        "type": "Indicator",
-        "img": "block_icon/hardware_03.png",
-        "size": 12
-    }],
-    "events": {},
-    "def": {
-        "params": [ {
-            "type": "number",
-            "params": [ "0" ]
-        }, null],
-        "type": "neobot_set_fnd"
-    },
-    "paramsKeyMap": {
-        "VALUE": 0
-    },
-    "class": "neobot_output",
-    "isNotFor": ["neobot"],
-    "func": function (sprite, script) {
-        var value = script.getNumberValue('VALUE', script);
-        if(value > 99) {
-            value = 99;
-        }
-        Entry.hw.sendQueue['FND'] = parseInt('0x' + value);
-        Entry.hw.sendQueue['OPT'] = Entry.hw.sendQueue['OPT'] | 8;
-        return script.callReturn();
-    }
-},
-"neobot_set_fnd_off": {
-    "color": "#00979D",
-    "skeleton": "basic",
-    "statements": [],
-    "template": "FND 출력 끄기 %1",
-    "params": [{
-        "type": "Indicator",
-        "img": "block_icon/hardware_03.png",
-        "size": 12
-    }],
-    "events": {},
-    "def": {
-        "params": [null],
-        "type": "neobot_set_fnd_off"
-    },
-    "paramsKeyMap": {
-        "VALUE": 0
-    },
-    "class": "neobot_output",
-    "isNotFor": ["neobot"],
-    "func": function (sprite, script) {
-        Entry.hw.sendQueue['FND'] = parseInt('0x00');
-        Entry.hw.sendQueue['OPT'] = Entry.hw.sendQueue['OPT'] & (~8);
-        return script.callReturn();
-    }
-},
-"neobot_play_note_for": {
-    "color": "#00979D",
-    "skeleton": "basic",
-    "statements": [],
-    "template": "멜로디 %1 을(를) %2 옥타브로 %3 길이만큼 소리내기 %4",
-    "params": [{
-        "type": "Dropdown",
-        "options": [
-            ["무음", "0"],
-            ["도", "1"],
-            ["도#", "2"],
-            ["레", "3"],
-            ["레#", "4"],
-            ["미", "5"],
-            ["파", "6"],
-            ["파#", "7"],
-            ["솔", "8"],
-            ["솔#", "9"],
-            ["라", "10"],
-            ["라#", "11"],
-            ["시", "12"]
-        ],
-        "value": "0",
-        "fontSize": 11
-    }, {
-        "type": "Dropdown",
-        "options": [
-            ["1", "0"],
-            ["2", "1"],
-            ["3", "2"],
-            ["4", "3"],
-            ["5", "4"],
-            ["6", "5"]
-        ],
-        "value": "0",
-        "fontSize": 11
-    }, {
-        "type": "Dropdown",
-        "options": [
-            ["2분음표", "2"],
-            ["4분음표", "4"],
-            ["8분음표", "8"],
-            ["16분음표", "16"]
-        ],
-        "value": "2",
-        "fontSize": 11
-    }, {
-        "type": "Indicator",
-        "img": "block_icon/hardware_03.png",
-        "size": 12
-    }],
-    "events": {},
-    "def": {
-        "params": ["1", "2", "4", null],
-        "type": "neobot_play_note_for"
-    },
-    "paramsKeyMap": {
-        "NOTE": 0,
-        "OCTAVE": 1,
-        "DURATION": 2
-    },
-    "class": "neobot_note",
-    "isNotFor": ["neobot"],
-    "func": function (sprite, script) {
-        var sq = Entry.hw.sendQueue;
-
-        if (!script.isStart) {
-            var note = script.getNumberField("NOTE", script);
-            var octave = script.getNumberField("OCTAVE", script);
-            var duration = script.getNumberField("DURATION", script);
-            var value = (note > 0) ? note + (12 * octave) : 0;
-
-            script.isStart = true;
-            script.timeFlag = 1;
-            if(value > 65) {
-                value = 65;
+    "neobot_set_servo": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "template": "%1 포트의 서보모터를 %2 도 이동 %3",
+        "params": [{
+            "type": "Dropdown",
+            "options": [
+                ["OUT1", "1"],
+                ["OUT2", "2"],
+                ["OUT3", "3"]
+            ],
+            "value": "1",
+            "fontSize": 11,
+            'arrowColor': EntryStatic.ARROW_COLOR_HW
+        }, {
+            "type": "Block",
+            "accept": "string"
+        }, {
+            "type": "Indicator",
+            "img": "block_icon/hardware_03.png",
+            "size": 12
+        }],
+        "events": {},
+        "def": {
+            "params": [null, null, null],
+            "type": "neobot_set_servo"
+        },
+        "paramsKeyMap": {
+            "PORT": 0,
+            "DEGREE": 1
+        },
+        "class": "neobot_output",
+        "isNotFor": ["neobot"],
+        "func": function (sprite, script) {
+            var port = script.getNumberField('PORT');
+            var degree = script.getNumberValue('DEGREE');
+            if(degree < 0) {
+                degree = 0;
+            } else if(degree > 180){
+                degree = 180;
             }
-            sq.SND = value;
-            setTimeout(function() {
-                script.timeFlag = 0;
-            }, 1 / duration * 2000);
-            return script;
-        } else if (script.timeFlag == 1) {
-            return script;
-        } else {
-            delete script.timeFlag;
-            delete script.isStart;
-            Entry.hw.sendQueue['SND'] = 0;
-            Entry.engine.isContinue = false;
+            Entry.hw.sendQueue['OUT' + port] = degree;
+            var option = port;
+            if(option === 3) {
+                option = 4;
+            }
+            Entry.hw.sendQueue['OPT'] = Entry.hw.sendQueue['OPT'] | option;
+            return script.callReturn();
+        },
+        "syntax": {"js": [], "py": ["Neobot.servo_1(%1, %2)"]}
+    },
+    "neobot_set_output": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "template": "%1 번 포트의 값을 %2 만큼 출력 %3",
+        "params": [{
+            "type": "Dropdown",
+            "options": [
+                ["OUT1", "1"],
+                ["OUT2", "2"],
+                ["OUT3", "3"]
+            ],
+            "value": "1",
+            "fontSize": 11,
+            'arrowColor': EntryStatic.ARROW_COLOR_HW
+        }, {
+            "type": "Block",
+            "accept": "string"
+        }, {
+            "type": "Indicator",
+            "img": "block_icon/hardware_03.png",
+            "size": 12
+        }],
+        "events": {},
+        "def": {
+            "params": [null, {
+                "type": "number",
+                "params": ["255"]
+            }, null],
+            "type": "neobot_set_output",
+        },
+        "paramsKeyMap": {
+            "PORT": 0,
+            "VALUE": 1
+        },
+        "class": "neobot_output",
+        "isNotFor": ["neobot"],
+        "func": function (sprite, script) {
+            var port = script.getStringField('PORT', script);
+            var value = script.getNumberValue('VALUE', script);
+            var option = port;
+            if(value < 0) {
+                value = 0;
+            } else if (value > 255) {
+                value = 255;
+            }
+            if(option === 3) {
+                option = 4;
+            }
+            Entry.hw.sendQueue['OUT' + port] = value;
+            Entry.hw.sendQueue['OPT'] = Entry.hw.sendQueue['OPT'] & (~option);
+            return script.callReturn();
+        },
+        "syntax": {"js": [], "py": ["Neobot.servo_2(%1, %2)"]}
+    },
+    "neobot_set_fnd": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "template": "FND에 %1 출력 %2",
+        "params": [{
+            "type": "Block",
+            "accept": "string"
+        }, {
+            "type": "Indicator",
+            "img": "block_icon/hardware_03.png",
+            "size": 12
+        }],
+        "events": {},
+        "def": {
+            "params": [ {
+                "type": "number",
+                "params": [ "0" ]
+            }, null],
+            "type": "neobot_set_fnd"
+        },
+        "paramsKeyMap": {
+            "VALUE": 0
+        },
+        "class": "neobot_output",
+        "isNotFor": ["neobot"],
+        "func": function (sprite, script) {
+            var value = script.getNumberValue('VALUE', script);
+            if(value > 99) {
+                value = 99;
+            }
+            Entry.hw.sendQueue['FND'] = parseInt('0x' + value);
+            Entry.hw.sendQueue['OPT'] = Entry.hw.sendQueue['OPT'] | 8;
             return script.callReturn();
         }
-
     },
-    "syntax": {"js": [], "py": ["Neobot.play_note(%1, %2, %3)"]}
-},
+    "neobot_set_fnd_off": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "template": "FND 출력 끄기 %1",
+        "params": [{
+            "type": "Indicator",
+            "img": "block_icon/hardware_03.png",
+            "size": 12
+        }],
+        "events": {},
+        "def": {
+            "params": [null],
+            "type": "neobot_set_fnd_off"
+        },
+        "paramsKeyMap": {
+            "VALUE": 0
+        },
+        "class": "neobot_output",
+        "isNotFor": ["neobot"],
+        "func": function (sprite, script) {
+            Entry.hw.sendQueue['FND'] = parseInt('0x00');
+            Entry.hw.sendQueue['OPT'] = Entry.hw.sendQueue['OPT'] & (~8);
+            return script.callReturn();
+        }
+    },
+    "neobot_play_note_for": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "template": "멜로디 %1 을(를) %2 옥타브로 %3 길이만큼 소리내기 %4",
+        "params": [{
+            "type": "Dropdown",
+            "options": [
+                ["무음", "0"],
+                ["도", "1"],
+                ["도#", "2"],
+                ["레", "3"],
+                ["레#", "4"],
+                ["미", "5"],
+                ["파", "6"],
+                ["파#", "7"],
+                ["솔", "8"],
+                ["솔#", "9"],
+                ["라", "10"],
+                ["라#", "11"],
+                ["시", "12"]
+            ],
+            "value": "0",
+            "fontSize": 11
+        }, {
+            "type": "Dropdown",
+            "options": [
+                ["1", "0"],
+                ["2", "1"],
+                ["3", "2"],
+                ["4", "3"],
+                ["5", "4"],
+                ["6", "5"]
+            ],
+            "value": "0",
+            "fontSize": 11
+        }, {
+            "type": "Dropdown",
+            "options": [
+                ["2분음표", "2"],
+                ["4분음표", "4"],
+                ["8분음표", "8"],
+                ["16분음표", "16"]
+            ],
+            "value": "2",
+            "fontSize": 11
+        }, {
+            "type": "Indicator",
+            "img": "block_icon/hardware_03.png",
+            "size": 12
+        }],
+        "events": {},
+        "def": {
+            "params": ["1", "2", "4", null],
+            "type": "neobot_play_note_for"
+        },
+        "paramsKeyMap": {
+            "NOTE": 0,
+            "OCTAVE": 1,
+            "DURATION": 2
+        },
+        "class": "neobot_note",
+        "isNotFor": ["neobot"],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+
+            if (!script.isStart) {
+                var note = script.getNumberField("NOTE", script);
+                var octave = script.getNumberField("OCTAVE", script);
+                var duration = script.getNumberField("DURATION", script);
+                var value = (note > 0) ? note + (12 * octave) : 0;
+
+                script.isStart = true;
+                script.timeFlag = 1;
+                if(value > 65) {
+                    value = 65; //이게 원래 코드 이민준
+                }
+                sq.SND = value;
+                setTimeout(function() {
+                    script.timeFlag = 0;
+                }, 1 / duration * 2000);
+                return script;
+            } else if (script.timeFlag == 1) {
+                return script;
+            } else {
+                delete script.timeFlag;
+                delete script.isStart;
+                Entry.hw.sendQueue['SND'] = 0;
+                Entry.engine.isContinue = false;
+                return script.callReturn();
+            }
+
+        },
+        "syntax": {"js": [], "py": ["Neobot.play_note(%1, %2, %3)"]}
+    },
+    "neobot_play_note_with_sensor": {//MinjuneL
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "template": "컨트롤러에서 %1 센서의 %2 ~ %3 값으로 멜로디 연주하기 %4",
+        "params": [{
+            "type": "Dropdown",
+            "options": [
+                ["1번 포트", "IN1"],
+                ["2번 포트", "IN2"],
+                ["3번 포트", "IN3"],
+                ["리모컨", "IR"],
+                ["배터리", "BAT"]
+            ],
+            "value": "IN1",
+            "fontSize": 11
+                },{
+            "type": "Block",
+            "accept": "string"
+            }, {
+            "type": "Block",
+            "accept": "string"
+        }, {
+            "type": "Indicator",
+            "img": "block_icon/hardware_03.png",
+            "size": 12
+        }],
+        "events": {},
+        "def": {
+            "params": [null, 
+                {
+                "type": "number",
+                "params": ["0"]
+                }, 
+                {"type": "number",
+                "params": ["255"]},
+                    null],
+            "type": "neobot_play_note_with_sensor"
+        },
+        "paramsKeyMap": {
+            "PORT": 0,
+            "MIN_VALUE": 1,
+            "MAX_VALUE":2,
+            "VALUE":3
+        },
+        "class": "neobot_note",
+        "isNotFor": ["neobot"],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            
+            //Value Translate
+            var port = script.getStringField('PORT', script);
+            var value = Entry.hw.portData[port];
+            var omin = script.getNumberValue("MIN_VALUE", script);
+            var omax = script.getNumberValue("MAX_VALUE", script);
+            var min = 0;
+            var max = 72; //밑에가 65면 얘도 65로
+
+            if (omin > omax) {
+                var temp = omin;
+                omin = omax;
+                omax = temp;
+            }
+
+            if(min > max) {
+                var temp = min;
+                min = max;
+                max = temp;
+            }
+
+            value -= omin;
+            value = value * ((max - min) / (omax - omin));
+            value += min;
+            value = Math.min(max, value);
+            value = Math.max(min, value);
+
+            value = Math.round(value);
+
+            if (!script.isStart) {
+
+                script.isStart = true;
+                script.timeFlag = 1;
+                if(value > 72) {
+                    value = 72;//72 이민준 새거
+                }
+                sq.SND = value;
+                setTimeout(function() {
+                    script.timeFlag = 0;
+                }, 1 / 4 * 2000);
+                return script;
+            } else if (script.timeFlag == 1) {
+                return script;
+            } else {
+                delete script.timeFlag;
+                delete script.isStart;
+                Entry.hw.sendQueue['SND'] = 0;
+                Entry.engine.isContinue = false;
+                return script.callReturn();
+            }
+
+        },
+        "syntax": {"js": [], "py": ["Neobot.play_note_with_sensor(%1, %2, %3)"]}
+    },
+    "neobot_change_color_with_color_picker": { //MinjuneL
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "template": "%1 LED의 색깔을 %2(으)로 정하기 %3",
+        "params": [{
+            "type": "Dropdown",
+            "options": [
+                ["OUT1", "1"],
+                ["OUT2", "2"],
+                ["OUT3", "3"]
+            ],
+            "value": "1",
+            "fontSize": 11,
+            'arrowColor': EntryStatic.ARROW_COLOR_HW
+                },{
+                    "type": "Color"
+                },
+                {
+                    "type": "Indicator",
+            "img": "block_icon/hardware_03.png",
+            "size": 12
+        }],
+        "events": {},
+        "def": {
+            "params": [null, null, null],
+            "type": "neobot_change_color_with_color_picker"
+        },
+        "paramsKeyMap": {
+            "PORT" : 0,
+            "COLOR" : 1,
+            "VALUE": 2
+        },
+        "class": "neobot_output",
+        "isNotFor": ["neobot"],
+        "func": function (sprite, script) {
+            var port = script.getStringField('PORT', script);
+            var colour = script.getField("COLOR", script);
+            
+            var velue = 0;
+            if(colour.indexOf("#FFFFFF") > -1 )
+                value = 5;
+            else if(colour.indexOf("#CCCCCC") > -1 )
+                value = 10;
+            else if(colour.indexOf("#C0C0C0") > -1 )
+                value = 15;
+            else if(colour.indexOf("#999999") > -1 )
+                value = 20;
+            else if(colour.indexOf("#666666") > -1 )
+                value = 25;
+            else if(colour.indexOf("#FFCCCC") > -1 )
+                value = 30;
+            else if(colour.indexOf("#FF6666") > -1 )
+                value = 35;
+            else if(colour.indexOf("#FF0000") > -1 )
+                value = 40;
+            else if(colour.indexOf("#CC0000") > -1 )
+                value = 45;
+            else if(colour.indexOf("#990000") > -1 )
+                value = 50;
+            else if(colour.indexOf("#FFCC99") > -1 )
+                value = 55;
+            else if(colour.indexOf("#FF9966") > -1 )
+                value = 60;
+            else if(colour.indexOf("#FF9900") > -1 )
+                value = 65;
+            else if(colour.indexOf("#FF6600") > -1 )
+                value = 70;
+            else if(colour.indexOf("#CC6600") > -1 )
+                value = 75;
+            else if(colour.indexOf("#FFFF99")> -1)
+                value = 80;
+            else if(colour.indexOf("#FFFF66") > -1 )
+                value = 85;
+            else if(colour.indexOf("#FFCC66") > -1 )
+                value = 90;
+            else if(colour.indexOf("#FFCC33") > -1 )
+                value = 95;
+            else if(colour.indexOf("#CC9933") > -1 )
+                value = 100;
+            else if(colour.indexOf("#FFFFCC") > -1 )
+                value = 105;
+            else if(colour.indexOf("#FFFF33") > -1 )
+                value = 110;
+            else if(colour.indexOf("#FFFF00") > -1 )
+                value = 115;
+            else if(colour.indexOf("#FFCC00") > -1 )
+                value = 120;
+            else if(colour.indexOf("#999900") > -1 )
+                value = 125;
+            else if(colour.indexOf("#99FF99") > -1 )
+                value = 130;
+            else if(colour.indexOf("#66FF99") > -1 )
+                value = 135;
+            else if(colour.indexOf("#33FF33") > -1 )
+                value = 140;
+            else if(colour.indexOf("#33CC00") > -1 )
+                value = 145;
+            else if(colour.indexOf("#009900") > -1 )
+                value = 150;
+            else if(colour.indexOf("#99FFFF") > -1 )
+                value = 155;
+            else if(colour.indexOf("#33FFFF") > -1 )
+                value = 160;
+            else if(colour.indexOf("#66CCCC") > -1 )
+                value = 165;
+            else if(colour.indexOf("#00CCCC") > -1 )
+                value = 170;
+            else if(colour.indexOf("#339999") > -1 )
+                value = 175;
+            else if(colour.indexOf("#CCFFFF") > -1 )
+                value = 180;
+            else if(colour.indexOf("#66FFFF") > -1 )
+                value = 185;
+            else if(colour.indexOf("#33CCFF") > -1 )
+                value = 190;
+            else if(colour.indexOf("#3366FF") > -1 )
+                value = 195;
+            else if(colour.indexOf("#3333FF") > -1 )
+                value = 200;
+            else if(colour.indexOf("#CCCCFF") > -1 )
+                value = 205;
+            else if(colour.indexOf("#9999FF") > -1 )
+                value = 210;
+            else if(colour.indexOf("#6666CC") > -1 )
+                value = 215;
+            else if(colour.indexOf("#6633FF") > -1 )
+                value = 220;
+            else if(colour.indexOf("#6609CC") > -1 )
+                value = 225;
+            else if(colour.indexOf("#FFCCFF") > -1 )
+                value = 230;
+            else if(colour.indexOf("#FF99FF") > -1 )
+                value = 235;
+            else if(colour.indexOf("#CC66CC") > -1 )
+                value = 240;
+            else if(colour.indexOf("#CC33CC") > -1 )
+                value = 245;
+            else if(colour.indexOf("#993399") > -1 )
+                value = 250;
+            else
+                value = 0;
+
+
+            Entry.hw.sendQueue['OUT' + port] = value;
+            return script.callReturn();
+        }
+    },
+    "neobot_change_color_with_sensor_value": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "template": "%1 LED의 색깔을 %2 센서 값으로 바꾸기 %3",
+        "params": [{
+            "type": "Dropdown",
+            "options": [
+                ["OUT1", "1"],
+                ["OUT2", "2"],
+                ["OUT3", "3"]
+            ],
+            "value": "1",
+            "fontSize": 11,
+            'arrowColor': EntryStatic.ARROW_COLOR_HW
+                },
+                {
+            "type": "Dropdown",
+            "options": [
+                ["1번 포트", "IN1"],
+                ["2번 포트", "IN2"],
+                ["3번 포트", "IN3"],
+                ["리모컨", "IR"],
+                ["배터리", "BAT"]
+            ],
+            "value": "IN1",
+            "fontSize": 11
+                },
+                {
+            "type": "Indicator",
+            "img": "block_icon/hardware_03.png",
+            "size": 12
+        }],
+        "events": {},
+        "def": {
+            "params": [null, null],
+            "type": "neobot_change_color_with_sensor_value"
+        },
+        "paramsKeyMap": {
+            "PORT_OUT" : 0,
+            "PORT_IN" : 1,
+            "VALUE": 2
+        },
+        "class": "neobot_output",
+        "isNotFor": ["neobot"],
+        "func": function (sprite, script) {
+            var port = script.getStringField('PORT_IN');
+            var inputPortValue = Entry.hw.portData[port];
+
+            var portOut = script.getStringField('PORT_OUT', script);
+            Entry.hw.sendQueue['OUT' + portOut] = inputPortValue;
+
+            return script.callReturn();
+        }
+    },
 //endregion neobot 네오봇
 //region robotis 로보티즈
 "robotis_openCM70_cm_custom_value": {
