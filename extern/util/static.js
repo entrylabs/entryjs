@@ -94,6 +94,11 @@ EntryStatic.categoryProjectOption = [
        'value': '애니메이션'
    },
    {
+       'key':'search_genre_media',
+       'lang':'search_미디어아트',
+       'value': '미디어아트'
+   },
+   {
        'key':'search_genre_physical',
        'lang':'search_피지컬',
        'value': '피지컬'
