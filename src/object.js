@@ -20,9 +20,7 @@ Entry.EntryObject = function(model) {
         this.text = model.text || this.name;
 
         /** @type {string} */
-        this.objectType = model.objectType;
-        if (!this.objectType)
-            this.objectType = 'sprite';
+        this.objectType = model.objectType || 'sprite';
 
         var script = model.script ? model.script : [];
         this.script = new Entry.Code(script, this);
@@ -269,7 +267,7 @@ Entry.EntryObject = function(model) {
             nameView.setAttribute("readonly", true);
 
             var self = this;
-            this.nameView_.onblur = function(bool) {
+            this.nameView_.onblur = function(e) {
                 this.entryObject.name = this.value;
                 Entry.playground.reloadPlayground();
             };
@@ -291,15 +289,14 @@ Entry.EntryObject = function(model) {
             $(editView).mousedown(function(e) {
                 e.stopPropagation();
                 Entry.documentMousedown.notify(e);
-                Entry.do(
-                    'objectEditButtonClick',
-                    object.id
-                );
+                Entry.do('objectEditButtonClick', object.id);
             });
 
-            editView.blur = function(e){
-                object.editObjectComplete();
-            };
+            $(editView).mouseup(function(e) {
+                this.isEditing && this.nameView_.select();
+            }.bind(this));
+
+            editView.blur = function(e){ object.editObjectComplete(); };
 
             if (Entry.objectEditable && Entry.objectDeletable) {
                 var deleteView = Entry.createElement('div');
@@ -308,9 +305,8 @@ Entry.EntryObject = function(model) {
                 this.deleteView_ = deleteView;
                 this.view_.appendChild(deleteView);
                 deleteView.bindOnClick(function (e) {
-                    if (Entry.engine.isState('run')) {
-                        return;
-                    }
+                    if (Entry.engine.isState('run')) return;
+
                     Entry.container.removeObject(this.object);
                 });
             }
@@ -869,7 +865,7 @@ Entry.EntryObject = function(model) {
      * @return {!xml script} script
      */
     p.getScriptText = function() {
-        return JSON.stringify(this.script.toJSON());
+        return this.script.stringify();
     };
 
     /**
@@ -1210,18 +1206,18 @@ Entry.EntryObject = function(model) {
     };
 
     p.updateRotateMethodView = function() {
-        var rotateMethod = this.rotateMethod;
-        if (!this.rotateModeAView_)
-            return;
+        if (!this.rotateModeAView_) return;
+
         this.rotateModeAView_.removeClass('selected');
         this.rotateModeBView_.removeClass('selected');
         this.rotateModeCView_.removeClass('selected');
+
+        var rotateMethod = this.rotateMethod;
         if (rotateMethod == 'free')
             this.rotateModeAView_.addClass('selected');
         else if (rotateMethod == 'vertical')
             this.rotateModeBView_.addClass('selected');
-        else
-            this.rotateModeCView_.addClass('selected');
+        else this.rotateModeCView_.addClass('selected');
         this.updateRotationView();
     };
 
@@ -1233,12 +1229,9 @@ Entry.EntryObject = function(model) {
         this.setRotateMethod(this.getRotateMethod());
         if (isToggle === undefined)
             isToggle = this.isInformationToggle = !this.isInformationToggle;
-        if (isToggle) {
-            this.view_.addClass('informationToggle');
-        } else {
-            this.view_.removeClass('informationToggle');
 
-        }
+        if (isToggle) { this.view_.addClass('informationToggle'); }
+        else { this.view_.removeClass('informationToggle'); }
     };
 
     /**
@@ -1311,9 +1304,7 @@ Entry.EntryObject = function(model) {
      * return true when object is selected
      * @return {Boolean}
      */
-    p.isSelected = function() {
-        return this.isSelected_;
-    };
+    p.isSelected = function() { return this.isSelected_; };
 
     /**
      * convert this object's data to JSON.
@@ -1398,9 +1389,7 @@ Entry.EntryObject = function(model) {
             entity.lists.push(lists[i].clone());
     };
 
-    p.getLock = function() {
-        return this.lock;
-    };
+    p.getLock = function() { return this.lock; };
 
     p.setLock = function(bool) {
         this.lock = bool;
@@ -1427,29 +1416,29 @@ Entry.EntryObject = function(model) {
         }
     };
 
-
     p.editObjectValues = function(click) {
         var inputs;
-        if(this.getLock()) {
+        if (this.getLock()) {
             inputs = [this.nameView_];
         } else {
             inputs = [
                 this.coordinateView_.xInput_,
-                this.coordinateView_.yInput_, this.rotateInput_,
-                this.directionInput_, this.coordinateView_.sizeInput_
+                this.coordinateView_.yInput_,
+                this.rotateInput_,
+                this.directionInput_,
+                this.coordinateView_.sizeInput_
             ];
         }
 
-        if (click) {
-            var nameView_ = this.nameView_;
+        var nameView_ = this.nameView_;
+        if (click && !this.isEditing) {
+            var $nameView_ = $(nameView_);
 
             $(inputs).removeClass('selectedNotEditingObject');
-            $(nameView_).removeClass('selectedNotEditingObject');
+            $nameView_.removeClass('selectedNotEditingObject');
 
-            window.setTimeout(function() {
-                $(nameView_).removeAttr('readonly');
-                nameView_.addClass("selectedEditingObject");
-            });
+            $nameView_.removeAttr('readonly');
+            nameView_.addClass("selectedEditingObject");
             for(var i=0; i<inputs.length; i++){
                 $(inputs[i]).removeAttr('readonly');
                 inputs[i].addClass("selectedEditingObject");
@@ -1459,7 +1448,7 @@ Entry.EntryObject = function(model) {
             for(var i=0; i<inputs.length; i++)
                 inputs[i].blur(true);
 
-            this.nameView_.blur(true);
+            nameView_.blur(true);
 
             this.blurAllInput();
             this.isEditing = false;
@@ -1467,20 +1456,21 @@ Entry.EntryObject = function(model) {
     };
 
     p.blurAllInput = function() {
-        var inputs = document.getElementsByClassName('');
         $('.selectedEditingObject').removeClass('selectedEditingObject');
 
-        inputs = [
-            this.nameView_, this.coordinateView_.xInput_,
-            this.coordinateView_.yInput_, this.rotateInput_,
-            this.directionInput_, this.coordinateView_.sizeInput_
-        ];
+        var coorView = this.coordinateView_;
 
-        for(var i=0; i<inputs.length; i++) {
-            var input = inputs[i];
+        [
+            this.nameView_,
+            coorView.xInput_,
+            coorView.yInput_,
+            this.rotateInput_,
+            this.directionInput_,
+            coorView.sizeInput_
+        ].forEach(function(input) {
             input.addClass('selectedNotEditingObject');
             input.setAttribute('readonly', true);
-        }
+        });
     };
 
     /**
@@ -1596,37 +1586,18 @@ Entry.EntryObject = function(model) {
     };
 
     p.toggleEditObject = function() {
-        var current = this.isEditing;
-        if(Entry.engine.isState('run')) return;
+        if (this.isEditing || Entry.engine.isState('run')) return;
 
-        if (current === false) {
-            this.editObjectValues(!current);
-            if (Entry.playground.object !== this)
-                Entry.container.selectObject(this.id);
-            this.nameView_.select();
-            return;
-        }
-    };
-
-    p.toggleEditObject = function() {
-        var current = this.isEditing;
-        if(Entry.engine.isState('run')) return;
-
-        if (current === false) {
-            this.editObjectValues(!current);
-            if (Entry.playground.object !== this)
-                Entry.container.selectObject(this.id);
-            this.nameView_.select();
-            return;
-        }
+        this.editObjectValues(true);
+        if (Entry.playground.object !== this)
+            Entry.container.selectObject(this.id);
     };
 
     p.getDom = function(query) {
-        if (!query || query.length === 0)
-            return this.view_;
+        if (!query || query.length === 0) return this.view_;
 
         if (query.length >= 1) {
-            switch(query.shift()) {
+            switch (query.shift()) {
                 case "editButton":
                     return this.editView_;
             }

@@ -96,7 +96,7 @@ Entry.Stage.prototype.initStage = function(canvas) {
     var razyScroll = _.debounce(function () {
         Entry.windowResized.notify();
     }, 200);
-    
+
     $(window).scroll(function() {
         window.requestAnimationFrame(function () {
             razyScroll();
@@ -269,7 +269,7 @@ Entry.Stage.prototype.unloadDialog = function(dialog) {
  * sort Z index of objects
  */
 Entry.Stage.prototype.sortZorder = function() {
-    var objects = Entry.container.getCurrentObjects(),
+    var objects = Entry.container.getCurrentObjects().slice(),
         length = objects.length,
         container = this.selectedObjectContainer,
         index = 0;
@@ -278,8 +278,15 @@ Entry.Stage.prototype.sortZorder = function() {
         var object = objects[i];
 
         object.clonedEntities.forEach(function(ce) {
-            ce.shape && container.setChildIndex(ce.shape, index++);
-            container.setChildIndex(ce.object, index++);
+            if (ce._index === undefined) {
+                ce.shape && container.setChildIndex(ce.shape, index++);
+
+                ce._index = index;
+                container.setChildIndex(ce.object, index++);
+            } else {
+                index++;
+                ce.shape && index++;
+            }
         });
 
         var entity = object.entity;
