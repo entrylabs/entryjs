@@ -3239,8 +3239,7 @@ Entry.block = {
         xmlHttp.send(String(signal));
         Entry.assert(xmlHttp.status == 200, "arduino is not connected");
         return script.callReturn();
-    },
-    "syntax": {"js": [], "py": ["Arduino.send(%1)"]}
+    }
 },
 "arduino_get_number": {
     "color": "#00979D",
@@ -3267,8 +3266,7 @@ Entry.block = {
         Entry.assert(xmlHttp.status == 200, "arduino is not connected");
         var data = xmlHttp.responseText;
         return Number(data);
-    },
-    "syntax": {"js": [], "py": ["Arduino.number(%1)"]}
+    }
 },
 "arduino_get_string": {
     "color": "#00979D",
@@ -3295,8 +3293,7 @@ Entry.block = {
         Entry.assert(xmlHttp.status == 200, "arduino is not connected");
         var data = xmlHttp.responseText;
         return data;
-    },
-    "syntax": {"js": [], "py": ["Arduino.string(%1)"]}
+    }
 },
 "arduino_get_sensor_number": {
     "color": "#00979D",
@@ -14045,8 +14042,9 @@ Entry.block = {
             "accept": "param",
             "value": {
                 "type": "function_field_label",
-                "params": [Lang.Blocks.FUNC]
-            }
+                "params": [Lang.Blocks.FUNC],
+                "copyable": false
+            },
         },
         {
             "type": "Indicator",
@@ -46505,7 +46503,7 @@ Entry.block = {
         {
             "type": "Block",
             "accept": "string"
-        },        
+        },
         {
             "type": "Indicator",
             "img": "block_icon/hardware_03.png",
@@ -46520,7 +46518,7 @@ Entry.block = {
             },
             {
                 "type": "memaker_list_digital_lcd_column"
-            },            
+            },
             {
                 "type": "text",
                 "params": [ "Type text !!" ]
@@ -46547,7 +46545,7 @@ Entry.block = {
         var string = script.getValue("STRING", script);
         var text = [];
 
-        
+
         if(!script.isStart) {
             if(typeof string === 'string') {
                 for (var i = 0; i < string.length; i++) {
@@ -50209,8 +50207,7 @@ codestar_tilt: {
             time: new Date().getTime()
         };
         return script.callReturn();
-    },
-    "syntax": {"js": [], "py": ["Arduino.analogWrite(%1, %2)"]}
+    }
 },
 "dadublock_set_servo": {
     "color": "#00979D",
@@ -50272,8 +50269,7 @@ codestar_tilt: {
         };
 
         return script.callReturn();
-    },
-    "syntax": {"js": [], "py": ["Arduino.servomotorWrite(%1, %2)"]}
+    }
 },
 "dadublock_set_tone": {
     "color": "#00979D",
@@ -50803,8 +50799,7 @@ codestar_tilt: {
             time: new Date().getTime()
         };
         return script.callReturn();
-    },
-    "syntax": {"js": [], "py": ["Arduino.analogWrite(%1, %2)"]}
+    }
 },
 "dadublock_car_set_servo": {
     "color": "#00979D",
@@ -50866,8 +50861,7 @@ codestar_tilt: {
         };
 
         return script.callReturn();
-    },
-    "syntax": {"js": [], "py": ["Arduino.servomotorWrite(%1, %2)"]}
+    }
 },
 "dadublock_car_set_tone": {
     "color": "#00979D",

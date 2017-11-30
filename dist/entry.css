@@ -6419,6 +6419,18 @@ input.entryObjectNameWorkspace:-moz-read-only {
 .hideTooltip > .entryCurtainElem {
   opacity: 0;
 }
+.entryCurtainCloseBtn {
+  width: 22px;
+  height: 22px;
+  position: fixed;
+  z-index: 10001;
+  right: 22px;
+  top: 22px;
+  background-image: url("../images/curtain_close.png");
+  background-repeat: no-repeat;
+  background-color: transparent;
+  border: none;
+}
 #entryConsole {
   height: 100%;
 }
@@ -6500,6 +6512,12 @@ input.entryObjectNameWorkspace:-moz-read-only {
 .targetCheckerPopup .entryEngine_w {
   height: auto !important;
   bottom: 91px;
+}
+.blueWS .entryTargetStatus .statusIndicator {
+  background-image: url("../images/status_dialog_blue.png");
+}
+.purpleWS .entryTargetStatus .statusIndicator {
+  background-image: url("../images/status_dialog_purple.png");
 }
 #textCodingExampleView {
   position: absolute;

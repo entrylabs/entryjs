@@ -11711,8 +11711,7 @@ Entry.EntryObject = function(c) {
     this.id = c.id;
     this.name = c.name || c.sprite.name;
     this.text = c.text || this.name;
-    this.objectType = c.objectType;
-    this.objectType || (this.objectType = "sprite");
+    this.objectType = c.objectType || "sprite";
     this.script = new Entry.Code(c.script ? c.script : [], this);
     this.pictures = Entry.Utils.copy(c.sprite.pictures || []);
     this.sounds = Entry.Utils.copy(c.sprite.sounds || []);
@@ -11840,6 +11839,9 @@ Entry.EntryObject = function(c) {
         Entry.documentMousedown.notify(b);
         Entry.do("objectEditButtonClick", c.id);
       });
+      $(h).mouseup(function(b) {
+        this.isEditing && this.nameView_.select();
+      }.bind(this));
       h.blur = function(b) {
         c.editObjectComplete();
       };
@@ -12086,7 +12088,7 @@ Entry.EntryObject = function(c) {
     this.script = b;
   };
   c.getScriptText = function() {
-    return JSON.stringify(this.script.toJSON());
+    return this.script.stringify();
   };
   c.initEntity = function(b) {
     var c = {};
@@ -12231,8 +12233,14 @@ Entry.EntryObject = function(c) {
     this.rotateMethod != b && (b = this.entity, b.rotation = 0.0, b.direction = 90.0, b.flip = !1);
   };
   c.updateRotateMethodView = function() {
-    var b = this.rotateMethod;
-    this.rotateModeAView_ && (this.rotateModeAView_.removeClass("selected"), this.rotateModeBView_.removeClass("selected"), this.rotateModeCView_.removeClass("selected"), "free" == b ? this.rotateModeAView_.addClass("selected") : "vertical" == b ? this.rotateModeBView_.addClass("selected") : this.rotateModeCView_.addClass("selected"), this.updateRotationView());
+    if (this.rotateModeAView_) {
+      this.rotateModeAView_.removeClass("selected");
+      this.rotateModeBView_.removeClass("selected");
+      this.rotateModeCView_.removeClass("selected");
+      var b = this.rotateMethod;
+      "free" == b ? this.rotateModeAView_.addClass("selected") : "vertical" == b ? this.rotateModeBView_.addClass("selected") : this.rotateModeCView_.addClass("selected");
+      this.updateRotationView();
+    }
   };
   c.toggleInformation = function(b) {
     this.setRotateMethod(this.getRotateMethod());
@@ -12324,14 +12332,13 @@ Entry.EntryObject = function(c) {
   };
   c.editObjectValues = function(b) {
     var c = this.getLock() ? [this.nameView_] : [this.coordinateView_.xInput_, this.coordinateView_.yInput_, this.rotateInput_, this.directionInput_, this.coordinateView_.sizeInput_];
-    if (b) {
-      var e = this.nameView_;
+    var e = this.nameView_;
+    if (b && !this.isEditing) {
+      b = $(e);
       $(c).removeClass("selectedNotEditingObject");
-      $(e).removeClass("selectedNotEditingObject");
-      window.setTimeout(function() {
-        $(e).removeAttr("readonly");
-        e.addClass("selectedEditingObject");
-      });
+      b.removeClass("selectedNotEditingObject");
+      b.removeAttr("readonly");
+      e.addClass("selectedEditingObject");
       for (b = 0; b < c.length; b++) {
         $(c[b]).removeAttr("readonly"), c[b].addClass("selectedEditingObject");
       }
@@ -12340,20 +12347,18 @@ Entry.EntryObject = function(c) {
       for (b = 0; b < c.length; b++) {
         c[b].blur(!0);
       }
-      this.nameView_.blur(!0);
+      e.blur(!0);
       this.blurAllInput();
       this.isEditing = !1;
     }
   };
   c.blurAllInput = function() {
-    document.getElementsByClassName("");
     $(".selectedEditingObject").removeClass("selectedEditingObject");
-    var b = [this.nameView_, this.coordinateView_.xInput_, this.coordinateView_.yInput_, this.rotateInput_, this.directionInput_, this.coordinateView_.sizeInput_];
-    for (var c = 0; c < b.length; c++) {
-      var e = b[c];
-      e.addClass("selectedNotEditingObject");
-      e.setAttribute("readonly", !0);
-    }
+    var b = this.coordinateView_;
+    [this.nameView_, b.xInput_, b.yInput_, this.rotateInput_, this.directionInput_, b.sizeInput_].forEach(function(b) {
+      b.addClass("selectedNotEditingObject");
+      b.setAttribute("readonly", !0);
+    });
   };
   c.addStampEntity = function(b) {
     b = new Entry.StampEntity(this, b);
@@ -12408,12 +12413,7 @@ Entry.EntryObject = function(c) {
     return this._isContextMenuEnabled && Entry.objectEditable;
   };
   c.toggleEditObject = function() {
-    var b = this.isEditing;
-    Entry.engine.isState("run") || !1 !== b || (this.editObjectValues(!b), Entry.playground.object !== this && Entry.container.selectObject(this.id), this.nameView_.select());
-  };
-  c.toggleEditObject = function() {
-    var b = this.isEditing;
-    Entry.engine.isState("run") || !1 !== b || (this.editObjectValues(!b), Entry.playground.object !== this && Entry.container.selectObject(this.id), this.nameView_.select());
+    this.isEditing || Entry.engine.isState("run") || (this.editObjectValues(!0), Entry.playground.object !== this && Entry.container.selectObject(this.id));
   };
   c.getDom = function(b) {
     if (!b || 0 === b.length) {
@@ -13824,11 +13824,11 @@ Entry.Painter2 = function(c) {
       var c = b.keyCode || b.which, e = b.ctrlKey;
       8 == c || 46 == c ? (this.cut(), b.preventDefault()) : e && (67 == c ? this.copy() : 88 == c && this.cut());
       e && 86 == c && this.paste();
-      this.lc.trigger("keyDown", b);
+      this.lc && this.lc.trigger("keyDown", b);
     }
   };
   c._keyboardUpControl = function(b) {
-    this.lc.trigger("keyUp", b);
+    this.lc && this.lc.trigger("keyUp", b);
   };
   c.initTopBar = function() {
     var b = this, c = Entry.createElement(document.getElementById("canvas-top-menu"));
@@ -15538,65 +15538,67 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
     return this.mode;
   };
   c.setMode = function(b, c, e) {
-    Entry.disposeEvent.notify();
-    var d = Entry.playground;
-    if (e = !e) {
-      "workspace" !== Entry.type || d && d.object ? d = !0 : (entrylms.alert(Lang.Workspace.object_not_exist_error), d = !1), e = !d;
-    }
-    if (e) {
-      return !1;
-    }
-    Entry.Utils.isNumber(b) ? this.mode = b : (this.mode = b.boardType, this.runType = b.runType, this.textType = b.textType);
-    this.mode = Number(this.mode);
-    if (this.oldMode !== this.mode) {
-      e = Entry.Vim;
-      var g = Entry.Workspace, h = this.blockMenu, k = Entry.TextCodingUtil;
-      switch(this.mode) {
-        case g.MODE_VIMBOARD:
-          if (d = k.isNamesIncludeSpace()) {
-            entrylms.alert(d);
-            b = {};
-            b.boardType = g.MODE_BOARD;
-            b.textType = -1;
-            Entry.getMainWS().setMode(b);
-            break;
-          }
-          if (d = k.isNameIncludeNotValidChar()) {
-            entrylms.alert(d);
-            b = {};
-            b.boardType = g.MODE_BOARD;
-            b.textType = -1;
-            Entry.getMainWS().setMode(b);
-            return;
-          }
-          if (d = k.canConvertTextModeForOverlayMode(Entry.Workspace.MODE_VIMBOARD)) {
-            entrylms.alert(d);
-            return;
-          }
-          try {
-            this.board && this.board.hide(), this.overlayBoard && this.overlayBoard.hide(), this.set({selectedBoard:this.vimBoard}), this.vimBoard.show(), h.banClass("functionInit", !0), this.codeToText(this.board.code, b), this.oldTextType = this.textType, this.board.clear();
-          } catch (l) {
-            this.vimBoard.hide(), this.board.show(), h.unbanClass("functionInit"), this.set({selectedBoard:this.board}), this.mode = g.MODE_BOARD, b.boardType = g.MODE_BOARD, this.oldTextType == e.TEXT_TYPE_JS ? b.runType = e.MAZE_MODE : this.oldTextType == e.TEXT_TYPE_PY && (b.runType = e.WORKSPACE_MODE), l.block && Entry.getMainWS() && Entry.getMainWS().board.activateBlock(l.block);
-          }
-          break;
-        case g.MODE_BOARD:
-          try {
-            this.board.show(), h.unbanClass("functionInit", !0), this.set({selectedBoard:this.board}), this.textToCode(this.oldMode, this.oldTextType), this.overlayBoard && this.overlayBoard.hide(), this.oldTextType = this.textType, this.vimBoard && this.vimBoard.hide();
-          } catch (l) {
-            this.board && this.board.code && this.board.code.clear(), this.board && this.board.hide(), this.set({selectedBoard:this.vimBoard}), h.banClass("functionInit"), this.mode = g.MODE_VIMBOARD, this.oldTextType == e.TEXT_TYPE_JS ? (b.boardType = g.MODE_VIMBOARD, b.textType = e.TEXT_TYPE_JS, b.runType = e.MAZE_MODE, this.oldTextType = e.TEXT_TYPE_JS) : this.oldTextType == e.TEXT_TYPE_PY && (b.boardType = g.MODE_VIMBOARD, b.textType = e.TEXT_TYPE_PY, b.runType = e.WORKSPACE_MODE, this.oldTextType = 
-            e.TEXT_TYPE_PY);
-          }
-          Entry.commander.setCurrentEditor("board", this.board);
-          break;
-        case g.MODE_OVERLAYBOARD:
-          this.oldMode == g.MODE_VIMBOARD ? this.overlayModefrom = g.MODE_VIMBOARD : this.oldMode == g.MODE_BOARD && (this.overlayModefrom = g.MODE_BOARD), this.overlayBoard || this.initOverlayBoard(), this.overlayBoard.show(), this.set({selectedBoard:this.overlayBoard}), Entry.commander.setCurrentEditor("board", this.overlayBoard);
+    if (!Entry.options || Entry.options.textCodingEnable || Entry.Workspace.MODE_VIMBOARD !== b.boardType) {
+      Entry.disposeEvent.notify();
+      var d = Entry.playground;
+      if (e = !e) {
+        "workspace" !== Entry.type || d && d.object ? d = !0 : (entrylms.alert(Lang.Workspace.object_not_exist_error), d = !1), e = !d;
       }
-      this.oldMode = this.mode;
-      Entry.isTextMode = this.mode == g.MODE_VIMBOARD;
-      h.align();
-      Entry.dispatchEvent("workspaceChangeMode");
-      this.changeEvent.notify(c);
-      Entry.dispatchEvent("cancelBlockMenuDynamic");
+      if (e) {
+        return !1;
+      }
+      Entry.Utils.isNumber(b) ? this.mode = b : (this.mode = b.boardType, this.runType = b.runType, this.textType = b.textType);
+      this.mode = Number(this.mode);
+      if (this.oldMode !== this.mode) {
+        e = Entry.Vim;
+        var g = Entry.Workspace, h = this.blockMenu, k = Entry.TextCodingUtil;
+        switch(this.mode) {
+          case g.MODE_VIMBOARD:
+            if (d = k.isNamesIncludeSpace()) {
+              entrylms.alert(d);
+              b = {};
+              b.boardType = g.MODE_BOARD;
+              b.textType = -1;
+              Entry.getMainWS().setMode(b);
+              break;
+            }
+            if (d = k.isNameIncludeNotValidChar()) {
+              entrylms.alert(d);
+              b = {};
+              b.boardType = g.MODE_BOARD;
+              b.textType = -1;
+              Entry.getMainWS().setMode(b);
+              return;
+            }
+            if (d = k.canConvertTextModeForOverlayMode(Entry.Workspace.MODE_VIMBOARD)) {
+              entrylms.alert(d);
+              return;
+            }
+            try {
+              this.board && this.board.hide(), this.overlayBoard && this.overlayBoard.hide(), this.set({selectedBoard:this.vimBoard}), this.vimBoard.show(), h.banClass("functionInit", !0), this.codeToText(this.board.code, b), this.oldTextType = this.textType, this.board.clear();
+            } catch (l) {
+              this.vimBoard.hide(), this.board.show(), h.unbanClass("functionInit"), this.set({selectedBoard:this.board}), this.mode = g.MODE_BOARD, b.boardType = g.MODE_BOARD, this.oldTextType == e.TEXT_TYPE_JS ? b.runType = e.MAZE_MODE : this.oldTextType == e.TEXT_TYPE_PY && (b.runType = e.WORKSPACE_MODE), l.block && Entry.getMainWS() && Entry.getMainWS().board.activateBlock(l.block);
+            }
+            break;
+          case g.MODE_BOARD:
+            try {
+              this.board.show(), h.unbanClass("functionInit", !0), this.set({selectedBoard:this.board}), this.textToCode(this.oldMode, this.oldTextType), this.overlayBoard && this.overlayBoard.hide(), this.oldTextType = this.textType, this.vimBoard && this.vimBoard.hide();
+            } catch (l) {
+              this.board && this.board.code && this.board.code.clear(), this.board && this.board.hide(), this.set({selectedBoard:this.vimBoard}), h.banClass("functionInit"), this.mode = g.MODE_VIMBOARD, this.oldTextType == e.TEXT_TYPE_JS ? (b.boardType = g.MODE_VIMBOARD, b.textType = e.TEXT_TYPE_JS, b.runType = e.MAZE_MODE, this.oldTextType = e.TEXT_TYPE_JS) : this.oldTextType == e.TEXT_TYPE_PY && (b.boardType = g.MODE_VIMBOARD, b.textType = e.TEXT_TYPE_PY, b.runType = e.WORKSPACE_MODE, this.oldTextType = 
+              e.TEXT_TYPE_PY);
+            }
+            Entry.commander.setCurrentEditor("board", this.board);
+            break;
+          case g.MODE_OVERLAYBOARD:
+            this.oldMode == g.MODE_VIMBOARD ? this.overlayModefrom = g.MODE_VIMBOARD : this.oldMode == g.MODE_BOARD && (this.overlayModefrom = g.MODE_BOARD), this.overlayBoard || this.initOverlayBoard(), this.overlayBoard.show(), this.set({selectedBoard:this.overlayBoard}), Entry.commander.setCurrentEditor("board", this.overlayBoard);
+        }
+        this.oldMode = this.mode;
+        Entry.isTextMode = this.mode == g.MODE_VIMBOARD;
+        h.align();
+        Entry.dispatchEvent("workspaceChangeMode");
+        this.changeEvent.notify(c);
+        Entry.dispatchEvent("cancelBlockMenuDynamic");
+      }
     }
   };
   c.changeBoardCode = function(b, c) {
@@ -15668,7 +15670,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
               !r && c && c instanceof Entry.Board && Entry.clipboard && Entry.do("addThread", Entry.clipboard).value.getFirstBlock().copyToClipboard();
               break;
             case 219:
-              if (Entry.getMainWS().oldMode == Entry.Workspace.MODE_OVERLAYBOARD) {
+              if (!Entry.options.textCodingEnable || Entry.getMainWS().oldMode == Entry.Workspace.MODE_OVERLAYBOARD) {
                 return;
               }
               if (f = Entry.TextCodingUtil.isNamesIncludeSpace()) {
@@ -15679,6 +15681,9 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
               b.preventDefault();
               break;
             case 221:
+              if (!Entry.options.textCodingEnable) {
+                return;
+              }
               if (f = Entry.TextCodingUtil.canConvertTextModeForOverlayMode(Entry.Workspace.MODE_VIMBOARD)) {
                 entrylms.alert(f);
                 return;
@@ -17004,7 +17009,7 @@ Entry.popupHelper.prototype.setPopup = function(c) {
 Entry.popupHelper.prototype.remove = function(c) {
   c ? this.window_.find("> ." + c).remove() : 0 < this.window_.children().length && this.window_.children().remove();
   delete this.popupList[c];
-  this.nowContent.hasClass(c) && (this.nowContent = void 0, this.body_.addClass("hiddenPopup"), 0 < this.nextPopupList.length && this.show(this.nextPopupList.shift()));
+  this.nowContent && this.nowContent.hasClass(c) && (this.nowContent = void 0, this.body_.addClass("hiddenPopup"), 0 < this.nextPopupList.length && this.show(this.nextPopupList.shift()));
 };
 Entry.popupHelper.prototype.resize = function(c) {
 };
@@ -17021,7 +17026,7 @@ Entry.popupHelper.prototype.show = function(c, b) {
   }
 };
 Entry.popupHelper.prototype.hide = function() {
-  var c = this.nowContent._obj;
+  var c = this.nowContent && this.nowContent._obj;
   c && "closeEvent" in c && c.closeEvent(this);
   this.nowContent = void 0;
   this.body_.addClass("hiddenPopup");
@@ -17606,11 +17611,10 @@ Entry.Stage.prototype.unloadDialog = function(c) {
   this.dialogContainer.removeChild(c.object);
 };
 Entry.Stage.prototype.sortZorder = function() {
-  for (var c = Entry.container.getCurrentObjects(), b = this.selectedObjectContainer, d = 0, e = c.length - 1; 0 <= e; e--) {
+  for (var c = Entry.container.getCurrentObjects().slice(), b = this.selectedObjectContainer, d = 0, e = c.length - 1; 0 <= e; e--) {
     var f = c[e];
     f.clonedEntities.forEach(function(c) {
-      c.shape && b.setChildIndex(c.shape, d++);
-      b.setChildIndex(c.object, d++);
+      void 0 === c._index ? (c.shape && b.setChildIndex(c.shape, d++), c._index = d, b.setChildIndex(c.object, d++)) : (d++, c.shape && d++);
     });
     f = f.entity;
     f.shape && b.setChildIndex(f.shape, d++);
@@ -17910,23 +17914,39 @@ Entry.PyAstGenerator = function() {
 };
 (function(c) {
   c.generate = function(b) {
-    var c;
-    var e = filbert.parse;
-    var f = {locations:!0, ranges:!0};
+    var c, e = filbert.parse, f = {locations:!0, ranges:!0};
     try {
       return e(b, f);
     } catch (h) {
-      var f = h.message.split("'"), g = Entry.TextCodingError.TITLE_SYNTAX;
-      console.log("msgTokens", f);
-      "Unexpected token" == f[0].trim() ? (e = Entry.TextCodingError.MESSAGE_SYNTAX_UNEXPECTED_TOKEN, b = Entry.TextCodingError.SUBJECT_SYNTAX_TOKEN) : "Unexpected character" == f[0].trim() ? (e = Entry.TextCodingError.MESSAGE_SYNTAX_UNEXPECTED_CHARACTER, b = Entry.TextCodingError.SUBJECT_SYNTAX_CHARACTER) : "Reserved variable word" == f[0].trim() ? (e = Entry.TextCodingError.MESSAGE_SYNTAX_RESERVED_TOKEN, b = Entry.TextCodingError.SUBJECT_CONV_VARIABLE) : "Reserved list word" == f[0].trim() ? (e = 
-      Entry.TextCodingError.MESSAGE_SYNTAX_RESERVED_TOKEN_LIST, b = Entry.TextCodingError.SUBJECT_CONV_LIST) : "Unexpected indent" == f[0].trim() ? (e = Entry.TextCodingError.MESSAGE_SYNTAX_UNEXPECTED_CHARACTER, b = Entry.TextCodingError.SUBJECT_SYNTAX_INDENT) : (e = Entry.TextCodingError.MESSAGE_SYNTAX_DEFAULT, b = Entry.TextCodingError.SUBJECT_SYNTAX_DEFAULT);
-      f[1] && (c = f[1]);
-      h.title = Lang.TextCoding[g];
-      h.message = Lang.TextCoding[e];
-      h.keyword = c ? c : "";
-      h.subject = Lang.TextCoding[b];
+      b = h.message.split("'");
+      e = Entry.TextCodingError.TITLE_SYNTAX;
+      console.log("msgTokens", b);
+      if (h.expectedType && h.tokType) {
+        f = "eof" === h.tokType || "newline" === h.tokType ? Lang.TextCoding.message_conv_is_expect1 + this.getTokenLang(h.expectedType) + Lang.TextCoding.message_conv_is_expect2 : Lang.TextCoding.message_conv_instead.replace("%1", this.getTokenLang(h.tokType)).replace("%2", this.getTokenLang(h.expectedType));
+        var g = Entry.TextCodingError.SUBJECT_SYNTAX_TOKEN;
+      } else {
+        h.tokType ? (f = "eof" === h.tokType || "newline" === h.tokType ? Entry.TextCodingError.MESSAGE_SYNTAX_UNEXPECTED_TOKEN : Lang.TextCoding.message_conv_is_wrong1 + this.getTokenLang(h.tokType) + Lang.TextCoding.message_conv_is_wrong2, g = Entry.TextCodingError.SUBJECT_SYNTAX_TOKEN) : "Unexpected token" == b[0].trim() ? (f = Entry.TextCodingError.MESSAGE_SYNTAX_UNEXPECTED_TOKEN, g = Entry.TextCodingError.SUBJECT_SYNTAX_TOKEN) : "Unexpected character" == b[0].trim() ? (f = Entry.TextCodingError.MESSAGE_SYNTAX_UNEXPECTED_CHARACTER, 
+        g = Entry.TextCodingError.SUBJECT_SYNTAX_CHARACTER) : "Reserved variable word" == b[0].trim() ? (f = Entry.TextCodingError.MESSAGE_SYNTAX_RESERVED_TOKEN, g = Entry.TextCodingError.SUBJECT_CONV_VARIABLE) : "Reserved list word" == b[0].trim() ? (f = Entry.TextCodingError.MESSAGE_SYNTAX_RESERVED_TOKEN_LIST, g = Entry.TextCodingError.SUBJECT_CONV_LIST) : "Unexpected indent" == b[0].trim() ? (f = Entry.TextCodingError.MESSAGE_SYNTAX_UNEXPECTED_CHARACTER, g = Entry.TextCodingError.SUBJECT_SYNTAX_INDENT) : 
+        (f = Entry.TextCodingError.MESSAGE_SYNTAX_DEFAULT, g = Entry.TextCodingError.SUBJECT_SYNTAX_DEFAULT);
+      }
+      b[1] && (c = b[1]);
+      h.title = Lang.TextCoding[e] || e;
+      h.message = Lang.TextCoding[f] || f;
+      h.keyword = c || "";
+      h.subject = Lang.TextCoding[g] || g;
       throw h;
     }
+  };
+  c.getTokenLang = function(b) {
+    if (Array.isArray(b)) {
+      b = b.map(this._getTokenLang);
+      var c = b.pop();
+      return b.join(", ") + Lang.TextCoding.message_conv_or + c;
+    }
+    return this._getTokenLang(b);
+  };
+  c._getTokenLang = function(b) {
+    return Lang.TextCoding[b] || '"' + b + '"';
   };
 })(Entry.PyAstGenerator.prototype);
 Entry.Map = function() {
@@ -18026,7 +18046,7 @@ Entry.PyHint = function(c) {
   this._blockMenu = Entry.getMainWS().blockMenu;
   CodeMirror.registerHelper("hint", "python", this.pythonHint.bind(this));
   c = function(b) {
-    Entry.hw.hwModule ? (b = Entry.hw.hwModule.name, b = b[0].toUpperCase() + b.slice(1), "ArduinoExt" === b && (b = "Arduino"), this.addScope(b), this.lastHW = b) : (this.removeScope(this.lastHW), this.lastHW = null);
+    Entry.hw.hwModule ? (b = Entry.hw.hwModule.name, b = b[0].toUpperCase() + b.slice(1), "ArduinoExt" === b ? this.addScope("Arduino", "Ext") : this.addScope(b), this.lastHW = b) : (this.removeScope(this.lastHW), this.lastHW = null);
   }.bind(this);
   Entry.addEventListener("hwChanged", c);
   Entry.hw.hwModule && c();
@@ -18060,9 +18080,9 @@ Entry.PyHint = function(c) {
             var e = b.shift();
             b = b.join(".");
           }
-          c[b].key && g.push(c[b].key);
+          c[b].key && g.push(this.getMenuElement(c[b]));
           return {displayText:d, hint:k, syntax:c[b], localKey:e};
-        });
+        }, this);
         break;
       case "property":
         var q = e[e.length - 2];
@@ -18073,24 +18093,33 @@ Entry.PyHint = function(c) {
             var c = b.split("#")[0], c = c.split("\n")[0];
             return {displayText:c, hint:k, syntax:l[q.string][b]};
           }), n = this.syntax[q.string], g = m.map(function(b) {
-            return n[b].key;
-          });
+            return this.getMenuElement(n[b]);
+          }, this);
         }
     }
     g.length ? this._blockMenu._setDynamic(g) : this._blockMenu._cancelDynamic();
     return {list:f, from:CodeMirror.Pos(c.line, h), to:CodeMirror.Pos(c.line, b.end)};
   };
-  c.addScope = function(b) {
+  c.addScope = function(b, c) {
     if (this.syntax[b] && !this.scope[b]) {
-      var c = this.syntax[b], e = Object.keys(c), e = e.filter(function(b) {
-        return 0 > b.indexOf("#") && !Entry.block[c[b].key].deprecated;
+      var d = this.syntax;
+      if ("Chocopi" === b) {
+        for (var f in this.syntax) {
+          d[f].syntax && 0 > f.indexOf("%") && 0 > d[f].key.indexOf("function_field") && "def on" === f.substr(0, 6) && this.scope._global.push(f);
+        }
+      }
+      d = this.syntax[b];
+      f = Object.keys(d);
+      f = f.filter(function(e) {
+        var f = Entry.block[d[e].key];
+        return "Arduino" === b && "Ext" === c !== (f.class && 0 < f.class.indexOf("Ext")) ? !1 : 0 > e.indexOf("#") && !f.deprecated;
       });
-      this.scope[b] = e;
+      this.scope[b] = f;
       this.scope._global.unshift(b);
-      e = e.map(function(c) {
+      f = f.map(function(c) {
         return b + "." + c;
       });
-      this.scope._global = this.scope._global.concat(e);
+      this.scope._global = this.scope._global.concat(f);
     }
   };
   c.removeScope = function(b) {
@@ -18140,13 +18169,22 @@ Entry.PyHint = function(c) {
     this.scope._global = [];
     this.scope._list = [];
     for (var c in b) {
-      b[c].syntax && 0 > c.indexOf("%") && 0 > b[c].key.indexOf("function_field") ? this.scope._global.push(c) : "if" === c.substr(0, 2) ? this.scope._global.push(c) : "while" === c.substr(0, 5) && this.scope._global.push(c);
+      b[c].syntax && 0 > c.indexOf("%") && 0 > b[c].key.indexOf("function_field") ? "def on" !== c.substr(0, 6) && this.scope._global.push(c) : "if" === c.substr(0, 2) ? this.scope._global.push(c) : "while" === c.substr(0, 5) && this.scope._global.push(c);
     }
     this.addScope("Entry");
     this.addScope("random");
     this.addScope("math");
     this.addScope("%2", "_list");
     this.lastHW && this.addScope(this.lastHW);
+  };
+  c.getMenuElement = function(b) {
+    var c = b.key;
+    if (b.isDefault && Entry.playground.mainWorkspace.blockMenu.getThreadByBlockKey(c)) {
+      return c;
+    }
+    var e = [];
+    b.params && (e = e.concat(b.params));
+    return [b.syntax, {type:c, params:e}];
   };
 })(Entry.PyHint.prototype);
 Entry.BlockToJsParser = function(c, b) {
@@ -19122,44 +19160,47 @@ Entry.PyToBlockParser = function(c) {
     return b.init && b.init.arguments ? b.init.arguments.map(this.Node, this) : [];
   };
   c.AssignmentExpression = function(b) {
-    var c = {params:[]};
-    switch(b.left.type) {
-      case "MemberExpression":
-        c.type = "change_value_list_index";
-        var e = b.left.object.name;
-        if ("self" === e) {
-          c.type = "set_variable";
-          var f = Entry.variableContainer.getVariableByName(b.left.property.name, !0, this.object.id);
-          f || (Entry.variableContainer.addVariable({variableType:"variable", name:b.left.property.name, visible:!0, object:this.object.id, value:0}), f = Entry.variableContainer.getVariableByName(b.left.property.name, !0, this.object.id));
-          c.params.push(f.id_);
-        } else {
-          f = Entry.variableContainer.getListByName(e), this.assert(f, e, b.left.object, "NO_LIST", "LIST"), c.params.push(f.id_), c.params.push(this.ListIndex(this.Node(b.left.property.arguments[1])));
-        }
-        break;
-      case "Identifier":
-        c.type = "set_variable";
-        f = Entry.variableContainer.getVariableByName(b.left.name, !1);
-        f || (Entry.variableContainer.addVariable({variableType:"variable", name:b.left.name, visible:!0, value:0}), f = Entry.variableContainer.getVariableByName(b.left.name, !1));
-        c.params.push(f.id_);
-        break;
-      default:
-        this.assert(!1, "error", b.left, "NO_SUPPORT", "GENERAL");
-    }
-    e = this.Node(b.right);
-    switch(b.operator) {
-      case "=":
-        break;
-      case "+=":
-        if ("set_variable" === c.type) {
-          c.type = "change_variable";
+    var c = Array.isArray(b.left) ? b.left : [b.left], e = [], f;
+    for (f in c) {
+      var g = {params:[]}, h = c[f];
+      switch(h.type) {
+        case "MemberExpression":
+          g.type = "change_value_list_index";
+          var k = h.object.name;
+          if ("self" === k) {
+            g.type = "set_variable";
+            var l = Entry.variableContainer.getVariableByName(h.property.name, !0, this.object.id);
+            l || (Entry.variableContainer.addVariable({variableType:"variable", name:h.property.name, visible:!0, object:this.object.id, value:0}), l = Entry.variableContainer.getVariableByName(h.property.name, !0, this.object.id));
+            g.params.push(l.id_);
+          } else {
+            l = Entry.variableContainer.getListByName(k), this.assert(l, k, h.object, "NO_LIST", "LIST"), g.params.push(l.id_), g.params.push(this.ListIndex(this.Node(h.property.arguments[1])));
+          }
           break;
-        }
-      default:
-        var g = this.arithmeticOperator[b.operator[0]];
-        g && (e = {type:"calc_basic", params:["set_variable" === c.type ? {type:"get_variable", params:[f.id_]} : {type:"value_of_index_from_list", params:[void 0, f.id_, void 0, this.ListIndex(this.Node(b.left.property.arguments[1]))]}, g, e]});
+        case "Identifier":
+          g.type = "set_variable";
+          l = Entry.variableContainer.getVariableByName(h.name, !1);
+          l || (Entry.variableContainer.addVariable({variableType:"variable", name:h.name, visible:!0, value:0}), l = Entry.variableContainer.getVariableByName(h.name, !1));
+          g.params.push(l.id_);
+          break;
+        default:
+          this.assert(!1, "error", h, "NO_SUPPORT", "GENERAL");
+      }
+      h = this.Node(b.right);
+      switch(b.operator) {
+        case "=":
+          break;
+        case "+=":
+          if ("set_variable" === g.type) {
+            g.type = "change_variable";
+            break;
+          }
+        default:
+          (k = this.arithmeticOperator[b.operator[0]]) && (h = {type:"calc_basic", params:["set_variable" === g.type ? {type:"get_variable", params:[l.id_]} : {type:"value_of_index_from_list", params:[void 0, l.id_, void 0, this.ListIndex(this.Node(b.left.property.arguments[1]))]}, k, h]});
+      }
+      g.params.push(h);
+      e.push(g);
     }
-    c.params.push(e);
-    return c;
+    return e;
   };
   c.Literal = function(b, c, e) {
     var d = b.value;
@@ -19479,27 +19520,50 @@ Entry.PyToBlockParser = function(c) {
       this.assert("object" === typeof c, "", b, "NO_SUPPORT", "GENERAL");
       return c;
     }, this) : [];
-    for (var c = 0; c < b.length; c++) {
-      var e = b[c];
-      e.constructor == Array && e[0].length ? 0 < e.length ? (e[e.length - 1][0].params = e[0][0][0].params, b[c] = e[e.length - 1][0]) : b[c] = e[0][0] : e.constructor == Array && e[0].constructor == Object && (b[c] = e[0]);
+    for (var c = [], e = 0; e < b.length; e++) {
+      var f = b[e];
+      Array.isArray(f) ? c = c.concat(f) : c.push(f);
     }
-    return b.filter(function(b) {
+    return c.filter(function(b) {
       return b.constructor === Object;
     });
   };
   c.getVariables = function(b) {
     b.body.map(function(b) {
       b = b.expression;
-      var c = b.left, d = b.right, g = !1, h = "variables_";
+      var c = b.left, d = b.right, g = "variables_";
       Entry.generateHash();
-      var k = {variableType:"variable", name:"", visible:!0, object:{}, value:""};
       if ("=" == b.operator) {
-        "name" in b.left ? b = c.name : (g = this.object, b = c.property.name, g = g.id);
-        "NewExpression" === d.type && "list" == d.callee.property.name ? (h = "lists_", c = d.arguments.map(this.Node, this), c = c.map(function(b) {
-          return b.constructor === Object && "params" in b ? {data:"string" === typeof b.params[0] ? b.params[0].replace(/\\\"/gi, '"') : b.params[0]} : {data:b};
-        }), k.array = c) : k.value = this.getValue(d);
-        var c = "add" + h[0].toUpperCase() + h.slice(1, h.length - 2), l = this.variableExist(b, h);
-        l ? "lists_" == h ? l.array_ = k.array : l.value_ = this.getValue(d) : (k.variableType = h.slice(0, length - 2), k.name = b, k.object = g, Entry.variableContainer[c](k));
+        if ("NewExpression" === d.type && "list" == d.callee.property.name) {
+          g = "lists_";
+          var h = d.arguments.map(this.Node, this);
+          h = h.map(function(b) {
+            return b.constructor === Object && "params" in b ? {data:"string" === typeof b.params[0] ? b.params[0].replace(/\\\"/gi, '"') : b.params[0]} : {data:b};
+          });
+        } else {
+          var k = this.getValue(d);
+        }
+        b = "add" + g[0].toUpperCase() + g.slice(1, g.length - 2);
+        Array.isArray(c) || (c = [c]);
+        for (var l in c) {
+          var m = !1;
+          var q = c[l];
+          var n = {variableType:"variable", name:"", visible:!0, object:{}, value:""};
+          h && (n.array = h);
+          k && (n.value = k);
+          "name" in q ? q = q.name : (m = this.object, q = q.property.name, m = m.id);
+          var r = this.variableExist(q, g);
+          if (r) {
+            if ("lists_" == g) {
+              r.array_ = n.array;
+              break;
+            }
+            r.value_ = this.getValue(d);
+            break;
+          } else {
+            n.variableType = g.slice(0, length - 2), n.name = q, n.object = m, Entry.variableContainer[b](n);
+          }
+        }
       }
     }, this);
     return [];
@@ -19862,32 +19926,33 @@ Entry.Parser = function(c, b, d, e) {
             }
           }
         } else {
-          b === Entry.Vim.WORKSPACE_MODE && (r = l, (l = m.syntax && m.syntax.py) && l.map(function(b) {
+          b === Entry.Vim.WORKSPACE_MODE && (r = l, (l = m.syntax && m.syntax.py) && l.map(function(b, d) {
             if ("string" === typeof b) {
-              var d = {};
-              var e = b;
-              d.key = r;
-              d.syntax = b;
-              d.template = b;
+              var e = {};
+              var f = b;
+              e.key = r;
+              e.syntax = b;
+              e.template = b;
             } else {
-              d = b, e = b.syntax, b.key = r, b.template || (d.template = b.syntax), b.dic && (h["#dic"][b.dic] = r);
+              e = b, f = b.syntax, b.key = r, b.template || (e.template = b.syntax), b.dic && (h["#dic"][b.dic] = r);
             }
-            e = e.split("(");
-            e = /%/.test(e[1]) ? e[0].length ? e[0] : e.join("(") : e.join("(");
-            e = e.replace(/\(\):?/, "");
-            b.keyOption && (e += "#" + b.keyOption);
-            e = e.split(".");
-            b = [];
-            b.push(e.shift());
-            e = e.join(".");
-            "" !== e && b.push(e);
-            e = b;
+            0 === d && (e.isDefault = !0);
+            f = f.split("(");
+            f = /%/.test(f[1]) ? f[0].length ? f[0] : f.join("(") : f.join("(");
+            f = f.replace(/\(\):?/, "");
+            b.keyOption && (f += "#" + b.keyOption);
+            f = f.split(".");
+            d = [];
+            d.push(f.shift());
+            f = f.join(".");
+            "" !== f && d.push(f);
+            f = d;
             b = h;
-            for (var f = 0; f < e.length; f++) {
-              var g = e[f];
-              if (f === e.length - 1) {
-                b[g] = d;
-                (e = c._getAnotherSyntaxKey(g)) && (b[e] = d);
+            for (d = 0; d < f.length; d++) {
+              var g = f[d];
+              if (d === f.length - 1) {
+                b[g] = e;
+                (f = c._getAnotherSyntaxKey(g)) && (b[f] = e);
                 break;
               }
               b[g] || (b[g] = {});
@@ -20150,11 +20215,18 @@ Entry.Curtain = {};
 (function() {
   this._visible = !1;
   this._targetDom = this._doms = null;
-  this._createDom = function() {
-    var c = {parent:$("body"), class:"entryCurtainElem entryRemove"};
-    this._doms = {top:Entry.Dom("div", c), right:Entry.Dom("div", c), bottom:Entry.Dom("div", c), left:Entry.Dom("div", c)};
-    for (var b in this._doms) {
-      c = this._doms[b], c.addClass(b), c.bind("mousedown", function(b) {
+  this.init = function(c) {
+    this._createDom(c);
+  };
+  this._createDom = function(c) {
+    var b = $("body"), d = {parent:b, class:"entryCurtainElem entryRemove"};
+    this._doms = {top:Entry.Dom("div", d), right:Entry.Dom("div", d), bottom:Entry.Dom("div", d), left:Entry.Dom("div", d)};
+    c && (this._closeBtn = Entry.Dom("button", {parent:b, class:"entryCurtainCloseBtn entryRemove"}), this._closeBtn.on("click", function() {
+      this._closeBtn.off("click");
+      entrylms.emit("ExitStudy");
+    }.bind(this)));
+    for (var e in this._doms) {
+      c = this._doms[e], c.addClass(e), c.bind("mousedown", function(b) {
         b.stopPropagation();
       });
     }
@@ -20167,6 +20239,7 @@ Entry.Curtain = {};
     for (var b in this._doms) {
       this._doms[b].removeClass("entryRemove");
     }
+    this._closeBtn && this._closeBtn.removeClass("entryRemove");
     this._visible = !0;
   };
   this.align = function() {
@@ -20192,6 +20265,7 @@ Entry.Curtain = {};
       for (var c in this._doms) {
         this._doms[c].addClass("entryRemove");
       }
+      this._closeBtn && this._closeBtn.addClass("entryRemove");
       this._visible = !1;
       this._targetDom = null;
     }
@@ -20267,6 +20341,7 @@ Entry.Restrictor = function(c) {
   this._controller = c;
   this.startEvent = new Entry.Event(this);
   this.endEvent = new Entry.Event(this);
+  Entry.Curtain.init(c && c.isRestrictorCloseable);
   this.currentTooltip = null;
 };
 (function(c) {
@@ -23184,7 +23259,9 @@ Entry.Block = function(c, b) {
   this.setThread(b);
   this.load(c);
   if (b = c.category) {
-    this.category = b, Entry.block[this.type] && (Entry.block[this.type].isFor = ["category_" + b]);
+    this.category = b;
+    var e = Entry.block[this.type];
+    e && (e.isFor = ["category_" + b]);
   }
   b = this.getCode();
   void 0 !== c.display && (this.display = c.display);
@@ -23345,47 +23422,50 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
   };
   c.destroy = function(b, c, e) {
     if (!e || this.isDeletable()) {
-      if ("output" === this.getBlockType() && !c) {
-        e = this.getPrevOutputBlock();
-        var d = this.getOutputBlock();
-        this.separate(1);
-        d && (d.separate(), d.doInsert(e.view._contents[1]));
+      e = this.getBlockType();
+      if ("output" === e && !c) {
+        var d = this.getPrevOutputBlock(), g = this.getOutputBlock();
+        d ? (this.separate(1), g && (g.separate(), g.doInsert(d.view._contents[1]))) : g && ((d = g.view) && d._toGlobalCoordinate(), g.doInsert(this.getThread()));
       }
-      var g = this;
-      if (d = this.params) {
-        for (e = 0; e < d.length; e++) {
-          var h = d[e];
-          h instanceof Entry.Block && (h.doNotSplice = !(h.thread instanceof Entry.FieldOutput), h.destroy(b));
-        }
+      for (var h = this, d = this.params || [], g = 0; g < d.length; g++) {
+        var k = d[g];
+        k instanceof Entry.Block && (k.doNotSplice = !(k.thread instanceof Entry.FieldOutput), k.destroy(b));
       }
-      if (d = this.statements) {
-        for (e = 0; e < d.length; e++) {
-          d[e].destroy(b);
-        }
+      d = this.statements || [];
+      for (g = 0; g < d.length; g++) {
+        d[g].destroy(b);
       }
-      e = this.getCode();
-      e.unregisterBlock(this);
+      g = this.getCode();
+      g.unregisterBlock(this);
       d = this.getThread();
       this._schema && this._schema.event && d.unregisterEvent(this, this._schema.event);
-      if ("basic" === this.getBlockType()) {
-        var k = this.getPrevBlock();
-        if (h = this.getNextBlock()) {
-          c ? h.destroy(b, c) : k ? h.view && h.view.bindPrev(k, !0) : d.view && (c = d.view.getParent(), c.constructor === Entry.FieldStatement ? (h.view && h.view.bindPrev(c), c.insertTopBlock(h)) : c.constructor === Entry.FieldStatement ? h.replace(c._valueBlock) : h.view && h.view._toGlobalCoordinate());
+      if ("basic" === e && (k = this.getPrevBlock(), e = this.getNextBlock())) {
+        if (c) {
+          e.destroy(b, c);
+        } else {
+          if (c = e.view, k) {
+            c && c.bindPrev(k, !0);
+          } else {
+            if (d.view) {
+              var k = d.view.getParent(), l = k.constructor;
+              l === Entry.FieldStatement ? (c && c.bindPrev(k), k.insertTopBlock(e)) : l === Entry.FieldStatement ? e.replace(k._valueBlock) : c && c._toGlobalCoordinate();
+            }
+          }
         }
       }
-      var l = this.doNotSplice;
+      var m = this.doNotSplice;
       !this.doNotSplice && d.spliceBlock ? d.spliceBlock(this) : delete this.doNotSplice;
       this.view && this.view.destroy(b);
       this._schemaChangeEvent && this._schemaChangeEvent.destroy();
       this._paramsBackupEvent && this._paramsBackupEvent.destroy();
       this._destroyParamsBackupEvent && this._destroyParamsBackupEvent.destroy();
-      (b = this.events.dataDestroy) && e.object && b.forEach(function(b) {
-        Entry.Utils.isFunction(b) && b.apply(g, [g, l]);
+      (b = this.events.dataDestroy) && g.object && b.forEach(function(b) {
+        Entry.Utils.isFunction(b) && b.apply(h, [h, m]);
       });
       b = this.events.viewDestroy;
       c = this.getCode().board;
       b && Entry.getMainWS() && Entry.isTextMode && (!c || c && c.constructor !== Entry.BlockMenu) && b.forEach(function(b) {
-        Entry.Utils.isFunction(b) && b.apply(g, [g, l]);
+        Entry.Utils.isFunction(b) && b.apply(h, [h, m]);
       });
     }
   };
@@ -24670,6 +24750,7 @@ Entry.BlockMenu = function(c, b, d, e, f) {
   this._renderedCategories = {};
   this.categoryRendered = !1;
   this.readOnly = void 0 === f ? !0 : f;
+  this._threadsMap = {};
   c = "string" === typeof c ? $("#" + c) : $(c);
   if ("DIV" !== c.prop("tagName")) {
     return console.error("Dom is not div element");
@@ -24758,26 +24839,16 @@ Entry.BlockMenu = function(c, b, d, e, f) {
     var b = this.code;
     if (this._isOn() && b) {
       this._clearSplitters();
-      var c = 10, e = "LEFT" == this._align ? 10 : this.svgDom.width() / 2, f, b = this._getSortedBlocks(), g = b[0];
-      b[1].forEach(function(b) {
-        b = b.view;
-        b.set({display:!1});
-        b.detach();
+      var c = 10, e = "LEFT" == this._align ? 10 : this.svgDom.width() / 2, f, b = this._getSortedBlocks(), g = b[0] || [];
+      (b[1] || []).forEach(function(b) {
+        if (b = b && b.view) {
+          b.set({display:!1}), b.detach();
+        }
       });
       var h = !this._renderedCategories[this.lastSelector];
       g.forEach(function(b) {
-        var d = b.view;
-        d.attach();
-        d.set({display:!0});
-        h && d.reDraw();
-        b = Entry.block[b.type].class;
-        f && f !== b && (this._createSplitter(c), c += 15);
-        f = b;
-        b = e - d.offsetX;
-        "CENTER" == this._align && (b -= d.width / 2);
-        c -= d.offsetY;
-        d._moveTo(b, c, !1);
-        c += d.height + 15;
+        var d = b && b.view;
+        d && (d.attach(), d.set({display:!0}), h && d.reDraw(), b = Entry.block[b.type].class, f && f !== b && (this._createSplitter(c), c += 15), f = b, b = e - d.offsetX, "CENTER" == this._align && (b -= d.width / 2), c -= d.offsetY, d._moveTo(b, c, !1), c += d.height + 15);
       }.bind(this));
       this.updateSplitters();
       if (this.workspace) {
@@ -24844,17 +24915,17 @@ Entry.BlockMenu = function(c, b, d, e, f) {
   };
   c.renderBlock = function(b) {
     if (this._isOn()) {
+      var c = this;
       b = b || this._getSortedBlocks();
-      var c = Entry.BlockView.RENDER_MODE_BLOCK;
+      var e = Entry.BlockView.RENDER_MODE_BLOCK;
       b[0].forEach(function(b) {
-        c !== b.view.renderMode && (b = b.getThread(), b.view ? b.view.renderBlock() : b.createView(this, Entry.BlockView.RENDER_MODE_BLOCK));
-      }.bind(this));
+        e !== b.view.renderMode && (b = b.getThread(), b.view ? b.view.renderBlock() : b.createView(c, Entry.BlockView.RENDER_MODE_BLOCK));
+      });
       return b;
     }
   };
   c._createSplitter = function(b) {
-    b = this.svgBlockGroup.elem("line", {x1:20, y1:b, x2:this._svgWidth - 20, y2:b, stroke:"#b5b5b5"});
-    this._splitters.push(b);
+    this._splitters.push(this.svgBlockGroup.elem("line", {x1:20, y1:b, x2:this._svgWidth - 20, y2:b, stroke:"#b5b5b5"}));
   };
   c.updateSplitters = function(b) {
     b = void 0 === b ? 0 : b;
@@ -24953,7 +25024,6 @@ Entry.BlockMenu = function(c, b, d, e, f) {
       if (f) {
         f.blocks.forEach(function(c) {
           var d = Entry.block[c];
-          d.category = f.category;
           if (d && d.def) {
             if (d.defs) {
               for (d.defs.forEach(function(c) {
@@ -24970,13 +25040,10 @@ Entry.BlockMenu = function(c, b, d, e, f) {
         });
         this._categories.push(b);
         var g;
-        if ("func" == b) {
-          var h = this.code.getThreadsByCategory("func");
-          h.length && (g = this.code.getThreadIndex(h[0]));
-        }
+        "func" == b && (f = this.code.getThreadsByCategory("func"), f.length && (g = this.code.getThreadIndex(f[0])));
         e.forEach(function(b) {
-          b && b[0] && (b[0].x = -99999, c.createThread(b, g, !0), void 0 !== g && g++, delete b[0].x);
-        });
+          b && b[0] && (b[0].x = -99999, this._createThread(b, g), void 0 !== g && g++, delete b[0].x);
+        }.bind(this));
         c.changeEvent.notify();
       }
     }
@@ -25024,14 +25091,7 @@ Entry.BlockMenu = function(c, b, d, e, f) {
   };
   c.checkCategory = function(b) {
     if (this.hasCategory() && b) {
-      if (!this.lastSelector || this._selectDynamic) {
-        return !0;
-      }
-      var c = "category_" + this.lastSelector;
-      b = b.isFor;
-      if (this.lastSelector && b && 0 > b.indexOf(c)) {
-        return !0;
-      }
+      return !this.lastSelector || this._selectDynamic ? !0 : (b = b.isFor) && 0 > b.indexOf("category_" + this.lastSelector);
     }
   };
   c._addControl = function(b) {
@@ -25114,6 +25174,7 @@ Entry.BlockMenu = function(c, b, d, e, f) {
     this._generateCodesTimer && (clearTimeout(this._generateCodesTimer), this._generateCodesTimer = null);
     this._selectedCategoryView = null;
     this._categories = [];
+    this._threadsMap = {};
     var b = this._categoryElems, c;
     for (c in b) {
       b[c].remove();
@@ -25166,46 +25227,48 @@ Entry.BlockMenu = function(c, b, d, e, f) {
     this._offset = this.svgDom.offset();
   };
   c.offset = function() {
-    (!this._offset || 0 === this._offset.top && 0 === this._offset.left) && this.updateOffset();
+    var b = this._offset;
+    (!b || 0 === b.top && 0 === b.left) && this.updateOffset();
     return this._offset;
   };
   c._generateHwCode = function(b) {
-    var c = this.code, e = c.getThreadsByCategory("arduino");
-    if (this._categoryData && this.shouldGenerateHwCode(e)) {
-      e.forEach(function(b) {
+    var c = this.code.getThreadsByCategory("arduino");
+    if (this._categoryData && this.shouldGenerateHwCode(c)) {
+      c.forEach(function(b) {
+        this._deleteThreadsMap(b);
         b.destroy();
-      });
-      for (var e = this._categoryData, f, g = e.length - 1; 0 <= g; g--) {
-        if ("arduino" === e[g].category) {
-          f = e[g].blocks;
+      }.bind(this));
+      for (var c = this._categoryData, e, f = c.length - 1; 0 <= f; f--) {
+        if ("arduino" === c[f].category) {
+          e = c[f].blocks;
           break;
         }
       }
-      if (f) {
-        e = [];
-        for (g = 0; g < f.length; g++) {
-          var h = f[g], k = Entry.block[h];
-          if (!this.checkBanClass(k)) {
-            if (k && k.def) {
-              if (k.defs) {
-                for (k.defs.forEach(function(b) {
+      if (e) {
+        c = [];
+        for (f = 0; f < e.length; f++) {
+          var g = e[f], h = Entry.block[g];
+          if (!this.checkBanClass(h)) {
+            if (h && h.def) {
+              if (h.defs) {
+                for (h.defs.forEach(function(b) {
                   b.category = "arduino";
-                }), g = 0; g < k.defs.length; g++) {
-                  e.push([k.defs[g]]);
+                }), f = 0; f < h.defs.length; f++) {
+                  c.push([h.defs[f]]);
                 }
               } else {
-                k.def.category = "arduino", e.push([k.def]);
+                h.def.category = "arduino", c.push([h.def]);
               }
             } else {
-              e.push([{type:h, category:"arduino"}]);
+              c.push([{type:g, category:"arduino"}]);
             }
           }
         }
-        e.forEach(function(d) {
-          b && (d[0].x = -99999);
-          c.createThread(d);
-          delete d[0].x;
-        });
+        c.forEach(function(c) {
+          b && (c[0].x = -99999);
+          this._createThread(c);
+          delete c[0].x;
+        }.bind(this));
         this.hwCodeOutdated = !1;
         Entry.dispatchEvent("hwCodeGenerated");
       }
@@ -25218,26 +25281,42 @@ Entry.BlockMenu = function(c, b, d, e, f) {
     return this.checkCategory(b) || this.checkBanClass(b);
   };
   c._getSortedBlocks = function() {
-    var b, c = [], e = [], f = this.code.getThreads();
-    if (this._selectDynamic) {
-      for (var c = Array(this._dynamicThreads.length), g = 0; g < f.length; g++) {
-        if (b = f[g].getFirstBlock()) {
-          var h = this._dynamicThreads.indexOf(b.type);
-          -1 < h ? c[h] = b : e.push(b);
-        }
-      }
-      c = c.filter(function(b) {
-        return b instanceof Entry.Block;
+    var b = this, c = [], e, f = b._getThreads().map(function(b) {
+      return b && b.getFirstBlock();
+    }).filter(function(b) {
+      return !!b;
+    });
+    if (b._selectDynamic) {
+      var g = b._threadsMap;
+      b._dynamicThreads.forEach(function(b) {
+        (e = (b = g[b]) && b.getFirstBlock()) && c.push(e);
       });
+      var h = f;
     } else {
-      for (g = 0; g < f.length; g++) {
-        (b = f[g].getFirstBlock()) && (this._isNotVisible(Entry.block[b.type]) ? e.push(b) : c.push(b));
-      }
+      h = [], f.forEach(function(d) {
+        b._isNotVisible(Entry.block[d.type]) ? h.push(d) : c.push(d);
+      });
     }
-    return [c, e];
+    return [c, h];
   };
   c._setDynamic = function(b) {
-    this._isOn() && (this._selectDynamic = !0, this._dynamicThreads = b, this.selectMenu(void 0, !0));
+    if (this._isOn()) {
+      var c = this, e;
+      this._dynamicThreads = b.map(function(b) {
+        if ("string" === typeof b) {
+          return b;
+        }
+        if (b.constructor === Array) {
+          var d = b[0];
+          c.getThreadByBlockKey(d) || (e = b[1], e.category = "extra", c._createThread([e], void 0, d));
+          return d;
+        }
+      }).filter(function(b) {
+        return !!b;
+      });
+      this._selectDynamic = !0;
+      this.selectMenu(void 0, !0);
+    }
   };
   c._cancelDynamic = function(b, c) {
     this._setDynamicTimer && (clearTimeout(this._setDynamicTimer), this._setDynamicTimer = null);
@@ -25272,20 +25351,40 @@ Entry.BlockMenu = function(c, b, d, e, f) {
   };
   c.getSvgDomByType = function(b) {
     for (var c = this.code.getThreads(), e = 0; e < c.length; e++) {
-      var f = c[e].getFirstBlock();
-      if (f.type === b) {
+      var f = c[e] && c[e].getFirstBlock();
+      if (f && f.type === b) {
         return f.view.svgGroup;
       }
     }
   };
   c.scrollToType = function(b) {
     if (b) {
-      var c = this.code.getBlockList(!1, b)[0].view;
-      this.getSvgDomByType(b).getBoundingClientRect().bottom > $(window).height() - 10 && this._scroller.scrollByPx(c.y - 20);
+      var c = this.code.getBlockList(!1, b)[0], e = c.view;
+      this.hasCategory() && this.selectMenu(c.category, !0);
+      this.getSvgDomByType(b).getBoundingClientRect().bottom > $(window).height() - 10 && this._scroller.scrollByPx(e.y - 20);
     }
   };
   c.shouldGenerateHwCode = function(b) {
     return this.hwCodeOutdated || 0 === b.length;
+  };
+  c._registerThreadsMap = function(b, c) {
+    b && c && c.getFirstBlock() && (this._threadsMap[b] = c);
+  };
+  c._deleteThreadsMap = function(b) {
+    (b = b && b.getFirstBlock()) && delete this._threadsMap[b.type];
+  };
+  c.getThreadByBlockKey = function(b) {
+    return this._threadsMap[b];
+  };
+  c._getThreads = function() {
+    return this.code.getThreads();
+  };
+  c._createThread = function(b, c, e) {
+    "string" !== typeof e && (e = void 0);
+    e = e || b[0].type;
+    b = this.code.createThread(b, c);
+    this._registerThreadsMap(e, b);
+    return b;
   };
 })(Entry.BlockMenu.prototype);
 Entry.BlockMenuScroller = function(c) {
@@ -25444,7 +25543,7 @@ Entry.BlockView = function(c, b, d) {
     this.dragMode = Entry.DRAG_MODE_NONE;
     Entry.Utils.disableContextmenu(this.svgGroup.node);
     b = c.events.viewAdd;
-    "workspace" == Entry.type && b && !this.isInBlockMenu && b.forEach(function(b) {
+    "workspace" == Entry.type && b && this._board instanceof Entry.Board && b.forEach(function(b) {
       Entry.Utils.isFunction(b) && b(c);
     });
   }
@@ -26466,12 +26565,12 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
   };
   c._createBlockByType = function(b) {
     this._block.getThread();
-    var c = this._blockView.getBoard();
-    if (c.workspace) {
-      var e = c.workspace.selectedBlockView;
-      e = !(!e || !e.dragInstance);
+    var c = this._blockView.getBoard(), e = c.workspace;
+    if (e) {
+      e = e.selectedBlockView;
+      var f = !(!e || !e.dragInstance);
     }
-    b = new Entry.Block({type:b, params:[e ? void 0 : this._oldPrimitiveValue]}, this);
+    b = new Entry.Block({type:b, params:[f ? void 0 : this._oldPrimitiveValue], copyable:"function_field_label" !== b}, this);
     b.createView(c, this.renderMode);
     delete this._oldPrimitiveValue;
     return b;
@@ -28258,7 +28357,6 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldOutput);
     this.svgGroup || (this.svgGroup = this._blockView.contentSvgGroup.elem("g"));
     this.view = this;
     this._nextGroup = this.svgGroup;
-    this.box.set({x:0, y:0, width:0, height:20});
     var d = this.getValue();
     d && !d.view && (d.setThread(this), d.createView(b, c));
     this._updateValueBlock(d);
@@ -28275,8 +28373,8 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldOutput);
     this.box.set({x:b, y:c});
   };
   c.calcWH = function() {
-    var b = this._valueBlock;
-    b && b.view ? (b = b.view, this.box.set({width:b.width, height:b.height})) : this.box.set({width:0, height:20});
+    var b = this._valueBlock, c = b && b.view;
+    b && c ? this.box.set({width:c.width, height:c.height}) : this.box.set({width:0, height:20});
   };
   c.calcHeight = c.calcWH;
   c.destroy = function() {
