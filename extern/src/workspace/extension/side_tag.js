@@ -1,0 +1,74 @@
+/*
+ *
+ */
+"use strict";
+
+goog.provide("Entry.ExtSideTag");
+
+/*
+ *
+ */
+Entry.ExtSideTag = function(content, blockView, mode) {
+    this.blockView = blockView;
+    this.color = content.color ? content.color : "#EBC576";
+    this.text = content.text ? content.text : "";
+    this.height = content.height ? Number(content.height) :
+        Number(content.count) * 31;
+
+    this.render();
+    this.updatePos();
+};
+
+(function(p) {
+    p.render = function() {
+        this.svgGroup = this.blockView.svgGroup.elem("g");
+        $(this.svgGroup).bind(
+            'mousedown touchstart',
+            function(e) {
+                if (e.stopPropagation) e.stopPropagation();
+                if (e.preventDefault) e.preventDefault();
+            }
+        );
+        this.path = this.svgGroup.elem("path").attr({
+            d: "m0,2 h-9 v" + (this.height - 4) +" h9",
+            stroke: this.color,
+            fill: "transparent",
+            "stroke-width": "3"
+        })
+        this.textElement = this.svgGroup.elem("text").attr({
+            'style': 'white-space: pre;',
+            'font-size': '10px',
+            'font-family': 'nanumBarunRegular',
+            "class": "dragNone",
+            "fill": "#000000"
+        });
+        var textArray = this.text.split("\n");
+        this.tspans = textArray.map(function(t) {
+            var tspan = this.textElement.elem("tspan").attr({
+                "dy": "1.2em",
+                "x" : "0",
+                "class": 'extension sideTagTspan'
+            });
+            tspan.textContent = t;
+            return tspan
+        }.bind(this))
+    };
+
+    p.updatePos = function() {
+        var pointer = this.blockView.block.pointer();
+        this.positionX = - (pointer.length - 2) * 8;
+        this.svgGroup.attr(
+            "transform", "translate(" + this.positionX + ",0)"
+        );
+        this.textElement.attr({
+            "y": this.height / 2 - 12 * (this.tspans.length - 1) - 2
+        });
+        var bBox = this.textElement.getBoundingClientRect();
+
+        this.tspans.map(function(tspan) {
+            tspan.attr({
+                x: - bBox.width - 14
+            })
+        });
+    };
+})(Entry.ExtSideTag.prototype);
