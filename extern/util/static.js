@@ -77,6 +77,39 @@ EntryStatic.searchProjectOption = [
    }
 ]
 
+EntryStatic.categoryProjectOption = [
+   {
+       'key':'search_genre_all',
+       'lang':'search_전체',
+       'value': '전체'
+   },
+   {
+       'key':'search_genre_game',
+       'lang':'search_게임',
+       'value': '게임'
+   },
+   {
+       'key':'search_genre_animation',
+       'lang':'search_애니메이션',
+       'value': '애니메이션'
+   },
+   {
+       'key':'search_genre_media',
+       'lang':'search_미디어아트',
+       'value': '미디어아트'
+   },
+   {
+       'key':'search_genre_physical',
+       'lang':'search_피지컬',
+       'value': '피지컬'
+   },
+   {
+       'key':'search_genre_etc',
+       'lang':'search_기타',
+       'value': '기타'
+   }
+]
+
 EntryStatic.getAllBlocks = function() {
     return [
         {
