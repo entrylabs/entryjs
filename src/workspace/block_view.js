@@ -90,7 +90,7 @@ Entry.BlockView = function(block, board, mode) {
     this.dragMode = Entry.DRAG_MODE_NONE;
     Entry.Utils.disableContextmenu(this.svgGroup.node);
     var events = block.events.viewAdd;
-    if (Entry.type == 'workspace' && events && !this.isInBlockMenu) {
+    if (Entry.type == 'workspace' && events && this._board instanceof Entry.Board) {
         events.forEach(function(fn) {
             if (Entry.Utils.isFunction(fn)) fn(block);
         });
@@ -156,8 +156,13 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
 
         var fillColor = this._schema.color;
         if (this.block.deletable === Entry.Block.DELETABLE_FALSE_LIGHTEN ||
-           this.block.emphasized) {
-            fillColor = Entry.Utils.getEmphasizeColor(fillColor);
+            this.block.emphasized) {
+            var emphasizedColor = this._schema.emphasizedColor;
+            if(!emphasizedColor) {
+                fillColor = Entry.Utils.getEmphasizeColor(fillColor);
+            } else {
+                fillColor = emphasizedColor;
+            }
         }
 
         this._fillColor = fillColor;
@@ -1050,8 +1055,13 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
     p._updateColor = function() {
         var fillColor = this._schema.color;
         if (this.block.deletable === Entry.Block.DELETABLE_FALSE_LIGHTEN ||
-           this.block.emphasized) {
-            fillColor = Entry.Utils.getEmphasizeColor(fillColor);
+            this.block.emphasized) {
+            var emphasizedColor = this._schema.emphasizedColor;
+            if(!emphasizedColor) {
+                fillColor = Entry.Utils.getEmphasizeColor(fillColor);
+            } else {
+                fillColor = emphasizedColor;
+            }
         }
         this._fillColor = fillColor;
         this._path.attr({fill:fillColor});
@@ -1161,7 +1171,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
                     var href = img.getAttribute('href');
                     loadImage(href, img.getAttribute('width'), img.getAttribute('height'))
                         .then(function(src) {
-                            img.setAttribute('href', src)
+                            img.setAttribute('href', src);
                             if (++counts == images.length) return processSvg();
                         });
                 })(img);

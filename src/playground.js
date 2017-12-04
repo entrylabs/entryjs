@@ -31,7 +31,6 @@ Entry.Playground = function() {
 (function(p) {
     p.setMode = function(mode) {
         console.log("playground setMode", mode);
-
         this.mainWorkspace.setMode(mode);
     };
 
@@ -368,7 +367,7 @@ Entry.Playground = function() {
             painterView.addClass('entryPlaygroundPainter');
             PictureView.appendChild(painterView);
 
-            this.painter = new Entry.Painter2(painterView);
+            this.painter = new Entry.Painter(painterView);
         } else if (Entry.type == 'phone') {
             var pictureAdd = Entry.createElement('div', 'entryAddPicture');
             pictureAdd.addClass('entryPlaygroundAddPicturePhone');
@@ -870,23 +869,26 @@ Entry.Playground = function() {
         }
         if (object === this.object) return;
 
-        if (this.object) {
-            this.object.toggleInformation(false);
-        }
+        if (this.object) this.object.toggleInformation(false);
+
         this.object = object;
-        this.setMenu(object.objectType);
+
+        var objectType = object.objectType;
+        this.setMenu(objectType);
 
         this.injectCode();
-        if (object.objectType == 'sprite' && Entry.pictureEditable) {
-            if (this.tabViewElements.text)
-                this.tabViewElements.text.addClass("entryRemove");
-            if (this.tabViewElements.picture)
-                this.tabViewElements.picture.removeClass("entryRemove");
-        } else if (object.objectType == 'textBox') {
-            if (this.tabViewElements.picture)
-                this.tabViewElements.picture.addClass("entryRemove");
-            if (this.tabViewElements.text)
-                this.tabViewElements.text.removeClass("entryRemove");
+
+        var tabViewElements = this.tabViewElements;
+        if (objectType == 'sprite' && Entry.pictureEditable) {
+            if (tabViewElements.text)
+                tabViewElements.text.addClass("entryRemove");
+            if (tabViewElements.picture)
+                tabViewElements.picture.removeClass("entryRemove");
+        } else if (objectType == 'textBox') {
+            if (tabViewElements.picture)
+                tabViewElements.picture.addClass("entryRemove");
+            if (tabViewElements.text)
+                tabViewElements.text.removeClass("entryRemove");
         }
 
         var viewMode = this.viewMode_;
@@ -894,13 +896,14 @@ Entry.Playground = function() {
             this.changeViewMode('code');
         else if (viewMode == 'variable')
             this.changeViewMode('variable');
-        else if ((viewMode == 'picture' || viewMode == 'text' ) && object.objectType == 'textBox')
+        else if ((viewMode == 'picture' || viewMode == 'text' ) && objectType == 'textBox')
             this.changeViewMode('text');
-        else if ((viewMode == 'text' || viewMode == 'picture') && object.objectType == 'sprite')
+        else if ((viewMode == 'text' || viewMode == 'picture') && objectType == 'sprite')
             this.changeViewMode('picture');
         else if (viewMode == 'sound')
             this.changeViewMode('sound');
 
+        this.blockMenu && this.blockMenu.clearRendered();
         this.reloadPlayground();
     };
 
@@ -1432,12 +1435,7 @@ Entry.Playground = function() {
 
         if (engine && engine.isState('run')) return;
 
-        (function(workspace) {
-            if (workspace) {
-                workspace.getBoard().reDraw();
-                workspace.getBlockMenu().reDraw();
-            }
-        })(this.mainWorkspace);
+        this.mainWorkspace && this.mainWorkspace.dReDraw();
     };
 
     /**

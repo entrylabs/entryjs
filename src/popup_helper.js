@@ -12,6 +12,7 @@ Entry.popupHelper = function(reset) {
     this.nextPopupList = [];
     this.nowContent;
     if(reset) {
+        $('.entryPopup.popupHelper').remove();
         window.popupHelper = null;
     }
     Entry.assert(!window.popupHelper, 'Popup exist');
@@ -134,16 +135,22 @@ Entry.popupHelper.prototype.setPopup = function(popupObject) {
  * Remove this popup
  */
 Entry.popupHelper.prototype.remove = function(key) {
-    if(this.window_.children().length > 0) {
+    if (key) {
+        this.window_.find('> .' + key).remove();
+    } else if(this.window_.children().length > 0) {
         this.window_.children().remove();
     }
     // 지워지면 안되는 요소인데 지워지고 있었음. 이유는? 잠시동안만 유지.
     // this.window_.remove();
     delete this.popupList[key];
-    this.nowContent = undefined;
-    this.body_.addClass('hiddenPopup');
-    if(this.nextPopupList.length > 0) {
-        this.show(this.nextPopupList.shift());
+
+
+    if (this.nowContent && this.nowContent.hasClass(key)) {
+        this.nowContent = undefined;
+        this.body_.addClass('hiddenPopup');
+        if(this.nextPopupList.length > 0) {
+            this.show(this.nextPopupList.shift());
+        }
     }
 };
 
@@ -178,10 +185,14 @@ Entry.popupHelper.prototype.show = function(key, isNext) {
 };
 
 Entry.popupHelper.prototype.hide = function() {
+    var popup = this.nowContent && this.nowContent._obj;
+    if (popup && 'closeEvent' in popup) {
+        popup.closeEvent(this);
+    }
     this.nowContent = undefined;
     this.body_.addClass('hiddenPopup');
     this.window_.children().detach();
-    if(this.nextPopupList.length > 0) {
+    if (this.nextPopupList.length > 0) {
         this.show(this.nextPopupList.shift());
     }
 };

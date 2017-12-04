@@ -357,16 +357,19 @@ Entry.Parser = function(mode, type, cm, syntax) {
         if (this._syntax_cache[mode])
             return this._syntax_cache[mode];
 
-        var availables = this.setAvailableCode();
-
         var types = Object.keys(Entry.block);
+        var availables = this.setAvailableCode();
         var syntax = {};
         if(mode === Entry.Vim.WORKSPACE_MODE)
             syntax["#dic"] = {};
 
         for (var i = 0; i < types.length; i++) {
             var type = types[i];
-            if (Entry.type !== 'invisible' && availables.indexOf(type) < 0)
+            //if (Entry.type !== 'invisible' && (availables && (availables.indexOf(type) < 0)))
+                //continue;
+
+            if (mode === Entry.Vim.MAZE_MODE &&
+                (availables && (availables.indexOf(type) < 0)))
                 continue;
 
             var block = Entry.block[type];
@@ -403,7 +406,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
 
                 if (!pySyntax) continue;
 
-                pySyntax.map(function(s) {
+                pySyntax.map(function(s, i) {
                     var result, tokens;
 
                     if (typeof s === "string") {
@@ -419,6 +422,8 @@ Entry.Parser = function(mode, type, cm, syntax) {
                         if (!s.template) result.template = s.syntax;
                         if (s.dic) syntax["#dic"][s.dic] = key;
                     }
+                    if (i === 0)
+                        result.isDefault = true;
 
                     tokens = tokens.split('(');
 

@@ -27,9 +27,8 @@ Entry.Block = function(block, thread) {
     var category = block.category;
     if (category) {
         this.category = category;
-        if (Entry.block[this.type])
-            Entry.block[this.type].isFor =
-                ['category_' + category];
+        var entryBlock = Entry.block[this.type];
+        if (entryBlock) entryBlock.isFor = ['category_' + category];
     }
 
     var code = this.getCode();
@@ -327,63 +326,70 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
     };
 
     p.destroy = function(animate, next, isNotForce) {
-        if (isNotForce && !this.isDeletable())
-            return;
+        if (isNotForce && !this.isDeletable()) return;
 
-        if (this.getBlockType() === "output" && !next) {
-            var prevOutputBlock = this.getPrevOutputBlock();
-            var nextOutputBlock = this.getOutputBlock();
-            this.separate(1);
-            if (nextOutputBlock) {
-                nextOutputBlock.separate();
-                nextOutputBlock.doInsert(prevOutputBlock.view._contents[1]);
-            }
-        }
-        var that = this;
-        var params = this.params;
-        if (params) {
-            for (var i=0; i<params.length; i++) {
-                var param = params[i];
-                if (param instanceof Entry.Block) {
-                    param.doNotSplice =
-                        !(param.thread instanceof Entry.FieldOutput);
-                    param.destroy(animate);
+        var blockType = this.getBlockType();
+
+        if (blockType === "output" && !next) {
+            var prevOutput = this.getPrevOutputBlock();
+            var nextOutput = this.getOutputBlock();
+
+            if (prevOutput) {
+                this.separate(1);
+
+                if (nextOutput) {
+                    nextOutput.separate();
+                    nextOutput.doInsert(prevOutput.view._contents[1]);
                 }
+            } else if (nextOutput) {
+                var nextOutputView = nextOutput.view;
+                nextOutputView && nextOutputView._toGlobalCoordinate();
+                nextOutput.doInsert(this.getThread());
             }
         }
 
-        var statements = this.statements;
-        if (statements) {
-            for (var i=0; i<statements.length; i++) {
-                var statement = statements[i];
-                statement.destroy(animate);
+        var that = this;
+        var params = this.params || [];
+        for (var i=0; i<params.length; i++) {
+            var param = params[i];
+            if (param instanceof Entry.Block) {
+                param.doNotSplice =
+                    !(param.thread instanceof Entry.FieldOutput);
+                param.destroy(animate);
             }
         }
+
+        var statements = this.statements || [];
+        for (var i=0; i<statements.length; i++)
+            statements[i].destroy(animate);
 
         var code = this.getCode();
 
         code.unregisterBlock(this);
+
         var thread = this.getThread();
         if (this._schema && this._schema.event)
             thread.unregisterEvent(this, this._schema.event);
 
-        if (this.getBlockType() === "basic") {
+        if (blockType === "basic") {
             var prevBlock = this.getPrevBlock();
             var nextBlock = this.getNextBlock();
             if (nextBlock) {
                 if (next) nextBlock.destroy(animate, next);
                 else {
+                    var nextBlockView = nextBlock.view;
                     if (!prevBlock) {
                         if (thread.view) {
                             var parent = thread.view.getParent();
-                            if (parent.constructor === Entry.FieldStatement) {
-                                nextBlock.view && nextBlock.view.bindPrev(parent);
+                            var pConstructor = parent.constructor;
+                            if (pConstructor === Entry.FieldStatement) {
+                                nextBlockView && nextBlockView.bindPrev(parent);
                                 parent.insertTopBlock(nextBlock);
-                            } else if (parent.constructor === Entry.FieldStatement) {
+                            } else if (pConstructor === Entry.FieldStatement) {
                                 nextBlock.replace(parent._valueBlock);
-                            } else nextBlock.view && nextBlock.view._toGlobalCoordinate();
+                            } else nextBlockView && nextBlockView._toGlobalCoordinate();
                         }
-                    } else nextBlock.view && nextBlock.view.bindPrev(prevBlock, true);
+                    } else nextBlockView && nextBlockView.bindPrev(prevBlock, true);
                 }
             }
         }
@@ -393,13 +399,11 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
             thread.spliceBlock(this);
         else delete this.doNotSplice;
 
-        if (this.view) this.view.destroy(animate);
-        if (this._schemaChangeEvent)
-            this._schemaChangeEvent.destroy();
-        if (this._paramsBackupEvent)
-            this._paramsBackupEvent.destroy();
-        if (this._destroyParamsBackupEvent)
-            this._destroyParamsBackupEvent.destroy();
+
+        this.view && this.view.destroy(animate);
+        this._schemaChangeEvent && this._schemaChangeEvent.destroy();
+        this._paramsBackupEvent && this._paramsBackupEvent.destroy();
+        this._destroyParamsBackupEvent && this._destroyParamsBackupEvent.destroy();
 
         var events = this.events.dataDestroy;
         if (events && code.object) {
@@ -420,7 +424,7 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
         }
     };
 
-    p.getView = function() {return this.view;};
+    p.getView = function() { return this.view; };
 
     p.setMovable = function(movable) {
         if (this.movable == movable) return;
@@ -432,9 +436,9 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
         this.set({copyable: copyable});
     };
 
-    p.isMovable = function() {return this.movable;};
+    p.isMovable = function() { return this.movable; };
 
-    p.isCopyable = function() {return this.copyable;};
+    p.isCopyable = function() { return this.copyable; };
 
     p.setDeletable = function(deletable) {
         if (this.deletable == deletable) return;
@@ -446,22 +450,16 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
             this.deletable === true;
     };
 
-    p.isReadOnly = function() {return this.readOnly;};
+    p.isReadOnly = function() { return this.readOnly; };
 
-    p.getCode = function() {return this.thread.getCode();};
-
+    p.getCode = function() { return this.thread.getCode(); };
 
     // command func
     p.doAdd = function() {
-        var id = this.id;
         this.getCode().changeEvent.notify();
     };
 
     p.doMove = function() {
-        var id = this.id;
-        var moveX = this.view.x - this.x;
-        var moveY = this.view.y - this.y;
-
         this._updatePos();
         this.getCode().changeEvent.notify();
     };
@@ -503,7 +501,7 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
         return cloned;
     };
 
-    p.copyToClipboard = function() {Entry.clipboard = this.copy();};
+    p.copyToClipboard = function() { Entry.clipboard = this.copy(); };
 
     p.separate = function(count, index) {
         this.thread.separate(this, count, index);
@@ -597,7 +595,6 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
 
     p.indexOfStatements = function(statement) {
         return this.statements.indexOf(statement);
-
     };
 
     p.pointer = function(pointer) {
@@ -723,7 +720,8 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
     };
 
     p.isParamBlockType = function() {
-        return this._schema.skeleton === 'basic_string_field' || this._schema.skeleton === 'basic_boolean_field';
+        return this._schema.skeleton === 'basic_string_field' ||
+            this._schema.skeleton === 'basic_boolean_field';
     };
 
     p.getFuncId = function() {

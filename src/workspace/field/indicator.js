@@ -22,7 +22,7 @@ Entry.FieldIndicator = function(content, blockView, index) {
             this._imgUrl = content.img.replace('.png', '_un.png');
         else this._imgUrl = content.img;
     } else if (content.color) {
-        this._color = content.color
+        this._color = content.color;
     }
     this._boxMultiplier = content.boxMultiplier || 2;
     this._highlightColor =

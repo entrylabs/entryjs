@@ -13,6 +13,7 @@ Entry.Workspace = function(options) {
     Entry.Model(this, false);
 
     this.dSetMode = Entry.Utils.debounce(this.setMode, 200);
+    this.dReDraw = Entry.Utils.debounce(this.reDraw, 150);
 
     this.observe(this, "_handleChangeBoard", ["selectedBoard"], false);
     this.trashcan = new Entry.FieldTrashcan();
@@ -107,6 +108,11 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
     p.getMode = function() {return this.mode;};
 
     p.setMode = function(mode, message, isForce) {
+        if (Entry.options && !Entry.options.textCodingEnable &&
+            Entry.Workspace.MODE_VIMBOARD === mode.boardType) {
+            return;
+        }
+
         Entry.disposeEvent.notify();
 
         var playground = Entry.playground;
@@ -153,7 +159,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                     return;
                 }
 
-                alert_message = 
+                alert_message =
                     Util.canConvertTextModeForOverlayMode(Entry.Workspace.MODE_VIMBOARD);
                 if (alert_message) {
                     entrylms.alert(alert_message);
@@ -378,6 +384,9 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                     }
                     break;
                 case 219: //setMode(block) for textcoding
+                    if (!Entry.options.textCodingEnable) {
+                        return;
+                    }
                     var oldMode = Entry.getMainWS().oldMode;
                     if(oldMode == Entry.Workspace.MODE_OVERLAYBOARD)
                         return;
@@ -395,6 +404,9 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                     e.preventDefault();
                     break;
                 case 221: //setMode(python) for textcoding
+                    if (!Entry.options.textCodingEnable) {
+                        return;
+                    }
                     var message;
                     message = Entry.TextCodingUtil.canConvertTextModeForOverlayMode(Entry.Workspace.MODE_VIMBOARD);
                     if(message) {
@@ -598,13 +610,21 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
             break;
         }
     };
-  
+
     p.setHoverBlockView = function(blockView) {
         var oldBlockView = this._hoverBlockView;
         oldBlockView && oldBlockView.resetBackgroundPath();
 
         this._hoverBlockView = blockView;
         blockView && blockView.setBackgroundPath();
+    };
+
+    p.reDraw = function() {
+        var blockMenu = this.blockMenu;
+        var board = this.board;
+
+        blockMenu && blockMenu.reDraw();
+        board && board.reDraw();
     };
 
 })(Entry.Workspace.prototype);

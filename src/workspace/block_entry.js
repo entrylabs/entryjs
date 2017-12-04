@@ -3239,8 +3239,7 @@ Entry.block = {
         xmlHttp.send(String(signal));
         Entry.assert(xmlHttp.status == 200, "arduino is not connected");
         return script.callReturn();
-    },
-    "syntax": {"js": [], "py": ["Arduino.send(%1)"]}
+    }
 },
 "arduino_get_number": {
     "color": "#00979D",
@@ -3267,8 +3266,7 @@ Entry.block = {
         Entry.assert(xmlHttp.status == 200, "arduino is not connected");
         var data = xmlHttp.responseText;
         return Number(data);
-    },
-    "syntax": {"js": [], "py": ["Arduino.number(%1)"]}
+    }
 },
 "arduino_get_string": {
     "color": "#00979D",
@@ -3295,8 +3293,7 @@ Entry.block = {
         Entry.assert(xmlHttp.status == 200, "arduino is not connected");
         var data = xmlHttp.responseText;
         return data;
-    },
-    "syntax": {"js": [], "py": ["Arduino.string(%1)"]}
+    }
 },
 "arduino_get_sensor_number": {
     "color": "#00979D",
@@ -6854,6 +6851,27 @@ Entry.block = {
         {
             "type": "Text",
             "text": Lang.Blocks.ARDUINO_reconnect,
+            "color": "#333",
+            "align": "center"
+        }
+    ],
+    "events": {
+        "mousedown": [
+            function() {
+                Entry.hw.retryConnect();
+            }
+        ]
+    }
+},
+"robot_reconnect": {
+    "skeleton": "basic_button",
+    "color": "#eee",
+    "isNotFor": ["arduinoDisconnected"],
+    "template": '%1',
+    "params": [
+        {
+            "type": "Text",
+            "text": Lang.Blocks.ROBOT_reconnect,
             "color": "#333",
             "align": "center"
         }
@@ -14024,8 +14042,9 @@ Entry.block = {
             "accept": "param",
             "value": {
                 "type": "function_field_label",
-                "params": [Lang.Blocks.FUNC]
-            }
+                "params": [Lang.Blocks.FUNC],
+                "copyable": false
+            },
         },
         {
             "type": "Indicator",
@@ -31204,7 +31223,6 @@ Entry.block = {
                     sprite.collision = Entry.Utils.COLLISION.DOWN;
                     //sprite.setY(-135 + bound.height/2 + 1);
                 }
-
             }
         } else if (angle < 270 && angle >= 90) {
             skip = (sprite.collision == Entry.Utils.COLLISION.DOWN);
@@ -39221,6 +39239,7 @@ Entry.block = {
 
         Ntry.unitComp = Ntry.entityManager.getComponent(
         this._unit.id, Ntry.STATIC.UNIT);
+        Ntry.unit = this._unit;
     }
 },
 "maze_step_jump": {
@@ -39284,6 +39303,41 @@ Entry.block = {
             if(isCollisionPossible) {
                 Ntry.dispatchEvent("unitAction", Ntry.STATIC.FAIL_JUMP, callBack);
                 Ntry.dispatchEvent("complete", false, Ntry.STATIC.CONTACT_IRON);
+                return;
+            }
+            Ntry.dispatchEvent("unitAction", Ntry.STATIC.JUMP, callBack);
+            return Entry.STATIC.BREAK;
+        } else if (this.isAction) {
+            return Entry.STATIC.BREAK;
+        } else {
+            delete this.isAction;
+            delete this.isContinue;
+        }
+    }
+},
+"maze_step_jump_pinkbean": {
+    "parent": "maze_step_jump",
+    "template": Lang.template.maze_step_jump,
+    func: function() {
+        if (!this.isContinue) {
+            this.isContinue = true;
+            this.isAction = true;
+            var self = this;
+            var callBack = function() {
+                self.isAction = false;
+            };
+            var unit = Ntry.getUnit();
+            var components = unit.components || {};
+            var unitComp = components[Ntry.STATIC.UNIT] || {};
+            var unitGrid = $.extend({}, components[Ntry.STATIC.GRID]);
+            var checkGrid = {
+                x: unitGrid.x,
+                y: unitGrid.y,
+            }
+            var isCollisionPossible = Ntry.checkCollisionTile(unitGrid, unitComp.direction, [Ntry.STATIC.OBSTACLE_MUSHROOM], 1);
+            if(isCollisionPossible) {
+                Ntry.dispatchEvent("unitAction", Ntry.STATIC.FAIL_JUMP, callBack);
+                Ntry.dispatchEvent("complete", false, Ntry.STATIC.HIT_UNIT_BY_MUSHROOM);
                 return;
             }
 
@@ -39939,6 +39993,783 @@ Entry.block = {
         }
     }
 },
+"maze_turn_right": {
+    "skeleton": "basic",
+    "mode": "maze",
+    "color": "#A751E3",
+    "syntax": [
+        "Scope",
+        "turn_right"
+    ],
+    "params": [
+        {
+            "type": "Indicator",
+            "img": "../../../img/assets/week/blocks/right_ic.png",
+            "size": 12
+        }
+    ],
+    func: function() {
+        if (this.isDead) {
+            return Entry.STATIC.BREAK;
+        } else if (this.executor.register.isTurned) {
+            Ntry.dispatchEvent("startEnemyWalk", false, function() {});
+            this.isDead = true;
+            return Entry.STATIC.BREAK;
+        } else {
+            Ntry.unit.components[Ntry.STATIC.UNIT].direction = Ntry.STATIC.EAST;
+            this.executor.register.isTurned = true;
+        }
+    }
+},
+"maze_turn_left": {
+    "skeleton": "basic",
+    "mode": "maze",
+    "color": "#A751E3",
+    "syntax": [
+        "Scope",
+        "turn_left"
+    ],
+    "params": [
+        {
+            "type": "Indicator",
+            "img": "../../../img/assets/week/blocks/left_ic.png",
+            "size": 12
+        }
+    ],
+    func: function() {
+        if (this.isDead) {
+            return Entry.STATIC.BREAK;
+        } else if (this.executor.register.isTurned) {
+            Ntry.dispatchEvent("startEnemyWalk", false, function() {});
+            this.isDead = true;
+            return Entry.STATIC.BREAK;
+        } else {
+            Ntry.unit.components[Ntry.STATIC.UNIT].direction = Ntry.STATIC.WEST;
+            this.executor.register.isTurned = true;
+        }
+    }
+},
+"maze_step_if_left_monster": {
+    "skeleton": "basic_double_loop",
+    "mode": "maze",
+    "color": "#498DEB",
+    "syntax": [
+        "BasicIf",
+        "left == monster"
+    ],
+    "params": [
+        {
+            "type": "Indicator",
+            "img": "../../../img/assets/week/blocks/if.png",
+            "size": 12
+        },
+        {
+            "type": "LineBreak"
+        }
+    ],
+    "statements": [
+        {
+            "accept": "basic"
+        },
+        {
+            "accept": "basic"
+        }
+    ],
+    "statementsKeyMap": {
+        "STACK_IF": 0,
+        "STACK_ELSE": 1
+    },
+    func: function(sprite, script) {
+        if (this.isContinue) return;
+        var unitComp = Ntry.entityManager.getComponent(Ntry.unit.id, Ntry.STATIC.UNIT);
+        var gridComp = Ntry.entityManager.getComponent(Ntry.unit.id, Ntry.STATIC.GRID);
+        var grid = {x: gridComp.x - 1, y: gridComp.y};
+        var fitEntities = Ntry.entityManager.find(
+            {
+                type: Ntry.STATIC.GRID,
+                x: grid.x,
+                y: grid.y
+            }
+        ).filter(function(e) {return e.components[Ntry.STATIC.ENEMY]});
+        this.isContinue = true;
+        if (fitEntities.length === 0) {
+            return script.getStatement("STACK_ELSE", script);
+        } else {
+            return script.getStatement("STACK_IF", script);
+        }
+    }
+},
+"maze_step_if_right_monster": {
+    "skeleton": "basic_double_loop",
+    "mode": "maze",
+    "color": "#498DEB",
+    "syntax": [
+        "BasicIf",
+        "right == monster"
+    ],
+    "params": [
+        {
+            "type": "Indicator",
+            "img": "../../../img/assets/week/blocks/if.png",
+            "size": 12
+        },
+        {
+            "type": "LineBreak"
+        }
+    ],
+    "statements": [
+        {
+            "accept": "basic"
+        },
+        {
+            "accept": "basic"
+        }
+    ],
+    "statementsKeyMap": {
+        "STACK_IF": 0,
+        "STACK_ELSE": 1
+    },
+    func: function(sprite, script) {
+        if (this.isContinue) return;
+        var unitComp = Ntry.entityManager.getComponent(Ntry.unit.id, Ntry.STATIC.UNIT);
+        var gridComp = Ntry.entityManager.getComponent(Ntry.unit.id, Ntry.STATIC.GRID);
+        var grid = {x: gridComp.x + 1, y: gridComp.y};
+        var fitEntities = Ntry.entityManager.find(
+            {
+                type: Ntry.STATIC.GRID,
+                x: grid.x,
+                y: grid.y
+            }
+        ).filter(function(e) {return e.components[Ntry.STATIC.ENEMY]});
+        this.isContinue = true;
+        if (fitEntities.length === 0) {
+            return script.getStatement("STACK_ELSE", script);
+        } else {
+            return script.getStatement("STACK_IF", script);
+        }
+    }
+},
+"maze_step_if_yeti": {
+    "skeleton": "basic_double_loop",
+    "mode": "maze",
+    "color": "#498DEB",
+    "syntax": [
+        "BasicIf",
+        "front == yeti"
+    ],
+    "params": [
+        {
+            "type": "Image",
+            "img": "/img/assets/week/blocks/yeti.png",
+            "size": 24
+        },
+        {
+            "type": "Indicator",
+            "img": "../../../img/assets/week/blocks/if.png",
+            "size": 12
+        },
+        {
+            "type": "LineBreak"
+        }
+    ],
+    "statements": [
+        {
+            "accept": "basic"
+        },
+        {
+            "accept": "basic"
+        }
+    ],
+    "statementsKeyMap": {
+        "STACK_IF": 0,
+        "STACK_ELSE": 1
+    },
+    func: function(sprite, script) {
+        if (this.isContinue) return;
+        var unitComp = Ntry.entityManager.getComponent(Ntry.unit.id, Ntry.STATIC.UNIT);
+        var gridComp = Ntry.entityManager.getComponent(Ntry.unit.id, Ntry.STATIC.GRID);
+        var grid = {x: gridComp.x, y: gridComp.y};
+        Ntry.addVectorByDirection(grid, unitComp.direction, 1);
+        var fitEntities = Ntry.entityManager.find(
+            {
+                type: Ntry.STATIC.GRID,
+                x: grid.x,
+                y: grid.y
+            },
+            {
+                type: Ntry.STATIC.TILE,
+                tileType: Ntry.STATIC.OBSTACLE_YETI
+            }
+        );
+        this.isContinue = true;
+        if (fitEntities.length === 0) {
+            return script.getStatement("STACK_ELSE", script);
+        } else {
+            return script.getStatement("STACK_IF", script);
+        }
+    }
+},
+"maze_repeat_until_beat_monster": {
+    "parent": "repeat_inf",
+    "params": [
+        {
+            "type": "Indicator",
+            "img": "../../../img/assets/week/blocks/for.png",
+            "size": 12
+        }
+    ],
+},
+"maze_ladder_climb": {
+    "skeleton": "basic",
+    "mode": "maze",
+    "color": "#71C11B",
+    "emphasizedColor": "#9BDB40",
+    "syntax": [
+        "Scope",
+        "climb"
+    ],
+    "params": [
+        {
+            "type": "Image",
+            "img": "/img/assets/week/blocks/ladder.png",
+            "size": 24
+        }
+    ],
+    func: function(sprite, script) {
+        if (!script.isContinue) {
+            script.isContinue = true;
+            script.isAction = true;
+            var entities = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT);
+            var unitId;
+            $.each(entities, function (id, entity) {
+                unitId = id;
+                components = entity.components;
+            });
+            var unitComp = Ntry.entityManager.getComponent(unitId, Ntry.STATIC.UNIT);
+            var unitGrid = $.extend({}, Ntry.entityManager.getComponent(unitId, Ntry.STATIC.GRID));
+            script.direction = unitComp.direction;
+            var callBack = function() {
+                unitComp.direction = script.direction;
+                script.isAction = false;
+            };
+            var isCollisionPossible = false;
+            if(unitGrid.y > 3) {
+                unitComp.direction = Ntry.STATIC.NORTH;
+                isCollisionPossible = Ntry.checkCollisionTile(unitGrid, unitComp.direction, [Ntry.STATIC.LADDER], 2);
+            } else {
+                unitComp.direction = Ntry.STATIC.SOUTH;
+                var tile = Ntry.getTileByGrid(unitGrid);
+                if(tile.tileType === Ntry.STATIC.LADDER) {
+                    isCollisionPossible = true;
+                }
+            }
+            if(isCollisionPossible) {
+                Ntry.dispatchEvent("unitAction", Ntry.STATIC.CLIMB, callBack);
+            } else {
+                Ntry.dispatchEvent("unitAction", Ntry.STATIC.NOT_FOUND_LADDER, callBack);
+            }
+            return Entry.STATIC.BREAK;
+        } else if (script.isAction) {
+            return Entry.STATIC.BREAK;
+        } else {
+            delete script.isAction;
+            delete script.isContinue;
+        }
+    }
+},
+"maze_attack_lupin": {
+    "skeleton": "basic",
+    "mode": "maze",
+    "color": "#ef6d6a",
+    "emphasizedColor": "#f29999",
+    "syntax": [
+        "Scope",
+        "yoyo"
+    ],
+    "params": [
+        {
+            "type": "Image",
+            "img": "/img/assets/week/blocks/lupin.png",
+            "size": 24
+        },
+        {
+            "type": "Image",
+            "img": "/img/assets/week/blocks/pinkbean_ic.png",
+            "size": 24
+        }
+    ],
+    func: function(sprite, script) {
+        if (!script.isContinue) {
+            var entities = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT);
+            var unitId;
+            $.each(entities, function (id, entity) {
+                unitId = id;
+                components = entity.components;
+            });
+            var unitComp = Ntry.entityManager.getComponent(unitId, Ntry.STATIC.UNIT);
+            script.isContinue = true;
+            script.isAction = true;
+            var isFoundMushroom = false;
+            var grid = $.extend({}, Ntry.entityManager.getComponent(unitId, Ntry.STATIC.GRID));
+            for(var i = 0; i < 2; i++) {
+                Ntry.addVectorByDirection(grid, unitComp.direction, 1);
+                var findTile = Ntry.entityManager.find(
+                    {
+                        type: Ntry.STATIC.GRID,
+                        x: grid.x,
+                        y: grid.y
+                    },
+                    {
+                        type: Ntry.STATIC.TILE,
+                        tileType: Ntry.STATIC.OBSTACLE_MUSHROOM
+                    }
+                );
+                if(findTile && findTile.length) {
+                    isFoundMushroom = true;
+                }
+            }
+            if(isFoundMushroom) {
+                Ntry.dispatchEvent("unitAction", Ntry.STATIC.WRONG_ATTACK_OBSTACLE, function () {
+                    script.isAction = false;
+                });
+                return Entry.STATIC.BREAK;
+            }
+            var unitGrid = $.extend({}, Ntry.entityManager.getComponent(unitId, Ntry.STATIC.GRID));
+            var isCollisionPossible = Ntry.checkCollisionTile(unitGrid, unitComp.direction, [Ntry.STATIC.OBSTACLE_LUPIN], 2);
+            if(!isCollisionPossible) {
+                Ntry.dispatchEvent("unitAction", Ntry.STATIC.NOT_FOUND_DESTORY_OBJECT, function () {
+                    script.isAction = false;
+                });
+                return Entry.STATIC.BREAK;
+            }
+            var callBack = function() {
+                Ntry.dispatchEvent('playSound', 'dieLupin');
+                Ntry.dispatchEvent('destroyObstacle', 2, function (state) {
+                    script.isAction = false;
+                });
+            };
+            Ntry.dispatchEvent("unitAction", Ntry.STATIC.ATTACK_LUPIN, callBack);
+            return Entry.STATIC.BREAK;
+        } else if (script.isAction) {
+            return Entry.STATIC.BREAK;
+        } else {
+            delete script.isAction;
+            delete script.isContinue;
+        }
+    }
+},
+ "maze_attack_both_side": {
+    "skeleton": "basic",
+    "mode": "maze",
+    "color": "#ef6d6a",
+    "emphasizedColor": "#f29999",
+    "syntax": [
+        "Scope",
+        "both_side"
+    ],
+    "params": [
+        {
+            "type": "Image",
+            "img": "/img/assets/week/blocks/pinkbean_ic.png",
+            "size": 24
+        }
+    ],
+    func: function(sprite, script) {
+        if (!script.isContinue) {
+            Ntry.dispatchEvent("stopEnemyWalk");
+            this.executor.register.isTurned = false;
+            script.isContinue = true;
+            script.isAction = true;
+            var grid = $.extend({type: Ntry.STATIC.GRID}, Ntry.entityManager.getComponent(Ntry.unit.id, Ntry.STATIC.GRID));
+            var backGrid = $.extend({type: Ntry.STATIC.GRID}, Ntry.entityManager.getComponent(Ntry.unit.id, Ntry.STATIC.GRID));
+            Ntry.addVectorByDirection(grid, Ntry.unitComp.direction, 1);
+            Ntry.addVectorByDirection(backGrid, Ntry.unitComp.direction, -1);
+            var frontExist = !!Ntry.entityManager.find(
+                grid
+            ).filter(function(e) {return e.components[Ntry.STATIC.ENEMY]}).length;
+            var backExist = !!Ntry.entityManager.find(
+                backGrid
+            ).filter(function(e) {return e.components[Ntry.STATIC.ENEMY]}).length;
+            if (!frontExist || !backExist) {
+                Ntry.dispatchEvent("unitAction", Ntry.STATIC.BOTH_SIDE_FAIL, function () {
+                    script.isAction = false;
+                });
+                return Entry.STATIC.BREAK;
+            }
+            Ntry.dispatchEvent("destroyObstacle", 1, function(state) {
+            });
+            Ntry.dispatchEvent("destroyObstacle", -1, function(state) {
+            });
+            var callBack = function() {
+                Ntry.dispatchEvent("startEnemyWalk", true, function() {
+                    script.isAction = false;
+                });
+            };
+            Ntry.dispatchEvent("unitAction", Ntry.STATIC.BOTH_SIDE, callBack);
+            return Entry.STATIC.BREAK;
+        } else if (script.isAction) {
+            return Entry.STATIC.BREAK;
+        } else {
+            delete script.isAction;
+            delete script.isContinue;
+        }
+    }
+},
+"maze_attack_pepe": {
+    "skeleton": "basic",
+    "mode": "maze",
+    "color": "#ef6d6a",
+    "emphasizedColor": "#f29999",
+    "params": [
+        {
+            "type": "Image",
+            "img": "/img/assets/week/blocks/pepe.png",
+            "size": 24
+        },
+        {
+            "type": "Image",
+            "img": "/img/assets/week/blocks/pinkbean_ic.png",
+            "size": 24
+        }
+    ],
+    func: function(sprite, script) {
+        if (!script.isContinue) {
+            Ntry.dispatchEvent("stopEnemyWalk");
+            this.executor.register.isTurned = false;
+            script.isContinue = true;
+            script.isAction = true;
+            var grid = $.extend({type: Ntry.STATIC.GRID}, Ntry.entityManager.getComponent(Ntry.unit.id, Ntry.STATIC.GRID));
+            var backGrid = $.extend({type: Ntry.STATIC.GRID}, Ntry.entityManager.getComponent(Ntry.unit.id, Ntry.STATIC.GRID));
+            Ntry.addVectorByDirection(grid, Ntry.unitComp.direction, 1);
+            var findTile = Ntry.entityManager.find(
+                grid,
+                {
+                    type: Ntry.STATIC.TILE,
+                    tileType: Ntry.STATIC.OBSTACLE_PEPE
+                }
+            );
+            Ntry.addVectorByDirection(backGrid, Ntry.unitComp.direction, -1);
+            var findBackTile = Ntry.entityManager.find(
+                backGrid
+            ).filter(function(e) {return e.components[Ntry.STATIC.ENEMY]});
+            var frontEnemyExist = !!Ntry.entityManager.find(
+                grid
+            ).filter(function(e) {return e.components[Ntry.STATIC.ENEMY]}).length;
+            var frontEnemyValid = !!findTile.length;
+            var backEnemyExist = !!findBackTile.length;
+            if(frontEnemyValid && !backEnemyExist) {
+                // success
+                var callBack = function() {
+                    Ntry.dispatchEvent("destroyObstacle", 1, function(state) {
+                    });
+                    Ntry.dispatchEvent("startEnemyWalk", true, function() {
+                        console.log('???');
+                        script.isAction = false;
+                    });
+                };
+                Ntry.dispatchEvent("unitAction", Ntry.STATIC.PEPE, callBack);
+            } else if (frontEnemyValid && backEnemyExist) {
+                // attack and dead
+                var callBack = function() {
+                    Ntry.dispatchEvent("destroyObstacle", 1, function(state) {
+                    });
+                    Ntry.dispatchEvent("startEnemyWalk", false, function() {
+                    });
+                };
+                Ntry.dispatchEvent("unitAction", Ntry.STATIC.PEPE, callBack);
+            } else if (backEnemyExist) { // dead
+                if (frontEnemyExist)
+                    Ntry.dispatchEvent("unitAction", Ntry.STATIC.PEPE_FAIL, function () {
+                        script.isAction = false;
+                    });
+                else
+                    Ntry.dispatchEvent("startEnemyWalk", false, function() {
+                    });
+            } else { // music time
+                Ntry.dispatchEvent("unitAction", Ntry.STATIC.PEPE_FAIL, function () {
+                    script.isAction = false;
+                });
+            }
+            return Entry.STATIC.BREAK;
+        } else if (script.isAction) {
+            return Entry.STATIC.BREAK;
+        } else {
+            delete script.isAction;
+            delete script.isContinue;
+        }
+    }
+},
+"maze_attack_yeti": {
+    "skeleton": "basic",
+    "mode": "maze",
+    "color": "#ef6d6a",
+    "emphasizedColor": "#f29999",
+    "params": [
+        {
+            "type": "Image",
+            "img": "/img/assets/week/blocks/yeti.png",
+            "size": 24
+        },
+        {
+            "type": "Image",
+            "img": "/img/assets/week/blocks/pinkbean_ic.png",
+            "size": 24
+        }
+    ],
+    func: function(sprite, script) {
+        if (!script.isContinue) {
+            Ntry.dispatchEvent("stopEnemyWalk");
+            this.executor.register.isTurned = false;
+            script.isContinue = true;
+            script.isAction = true;
+            var grid = $.extend({type: Ntry.STATIC.GRID}, Ntry.entityManager.getComponent(Ntry.unit.id, Ntry.STATIC.GRID));
+            var backGrid = $.extend({type: Ntry.STATIC.GRID}, Ntry.entityManager.getComponent(Ntry.unit.id, Ntry.STATIC.GRID));
+            Ntry.addVectorByDirection(grid, Ntry.unitComp.direction, 1);
+            var findTile = Ntry.entityManager.find(
+                grid,
+                {
+                    type: Ntry.STATIC.TILE,
+                    tileType: Ntry.STATIC.OBSTACLE_YETI
+                }
+            );
+            Ntry.addVectorByDirection(backGrid, Ntry.unitComp.direction, -1);
+            var findBackTile = Ntry.entityManager.find(
+                backGrid
+            ).filter(function(e) {return e.components[Ntry.STATIC.ENEMY]});
+            var frontEnemyExist = !!Ntry.entityManager.find(
+                grid
+            ).filter(function(e) {return e.components[Ntry.STATIC.ENEMY]}).length;
+            var frontEnemyValid = !!findTile.length;
+            var backEnemyExist = !!findBackTile.length;
+            if(frontEnemyValid && !backEnemyExist) {
+                // success
+                var callBack = function() {
+                    Ntry.dispatchEvent("destroyObstacle", 1, function(state) {
+                    });
+                    Ntry.dispatchEvent("startEnemyWalk", true, function() {
+                        script.isAction = false;
+                    });
+                };
+                Ntry.dispatchEvent("unitAction", Ntry.STATIC.PEPE, callBack);
+            } else if (frontEnemyValid && backEnemyExist) {
+                // attack and dead
+                var callBack = function() {
+                    Ntry.dispatchEvent("destroyObstacle", 1, function(state) {
+                    });
+                    Ntry.dispatchEvent("startEnemyWalk", false, function() {
+                    });
+                };
+                Ntry.dispatchEvent("unitAction", Ntry.STATIC.PEPE, callBack);
+            } else if (backEnemyExist) { // dead
+                if (frontEnemyExist)
+                    Ntry.dispatchEvent("unitAction", Ntry.STATIC.YETI_FAIL, function () {
+                        script.isAction = false;
+                    });
+                else
+                    Ntry.dispatchEvent("startEnemyWalk", false, function() {
+                    });
+            } else { // music time
+                Ntry.dispatchEvent("unitAction", Ntry.STATIC.YETI_FAIL, function () {
+                    script.isAction = false;
+                });
+            }
+            return Entry.STATIC.BREAK;
+        } else if (script.isAction) {
+            return Entry.STATIC.BREAK;
+        } else {
+            delete script.isAction;
+            delete script.isContinue;
+        }
+    }
+},
+"maze_attack_mushroom": {
+    "skeleton": "basic",
+    "mode": "maze",
+    "color": "#ef6d6a",
+    "emphasizedColor": "#f29999",
+    "syntax": [
+        "Scope",
+        "both_side"
+    ],
+    "params": [
+        {
+            "type": "Image",
+            "img": "/img/assets/week/blocks/mushroom.png",
+            "size": 24
+        },
+        {
+            "type": "Image",
+            "img": "/img/assets/week/blocks/pinkbean_ic.png",
+            "size": 24
+        }
+    ],
+    func: function(sprite, script) {
+        if (!script.isContinue) {
+            var entities = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT);
+            var unitId;
+            $.each(entities, function (id, entity) {
+                unitId = id;
+            });
+            var unitComp = Ntry.entityManager.getComponent(unitId, Ntry.STATIC.UNIT);
+            var unitGrid = $.extend({}, Ntry.entityManager.getComponent(unitId, Ntry.STATIC.GRID));
+            var isCollisionPossible = Ntry.checkCollisionTile(unitGrid, unitComp.direction, [Ntry.STATIC.OBSTACLE_MUSHROOM], 1);
+            script.isContinue = true;
+            script.isAction = true;
+            if(!isCollisionPossible) {
+                Ntry.dispatchEvent("unitAction", Ntry.STATIC.NOT_FOUND_DESTORY_OBJECT, function () {
+                    script.isAction = false;
+                });
+                // Ntry.dispatchEvent("unitAction", Ntry.STATIC.NOT_FOUND_MEAT, callBack);
+                return Entry.STATIC.BREAK;
+            }
+            var callBack = function() {
+                Ntry.dispatchEvent('destroyObstacle', 1, function (state) {
+                    script.isAction = false;
+                });
+            };
+            Ntry.dispatchEvent("unitAction", Ntry.STATIC.ATTACK_MUSHROOM, callBack);
+            return Entry.STATIC.BREAK;
+        } else if (script.isAction) {
+            return Entry.STATIC.BREAK;
+        } else {
+            delete script.isAction;
+            delete script.isContinue;
+        }
+    }
+},
+"maze_attack_peti": {
+    "skeleton": "basic",
+    "mode": "maze",
+    "color": "#ef6d6a",
+    "emphasizedColor": "#f29999",
+    "syntax": [
+        "Scope",
+        "both_side"
+    ],
+    "params": [
+        {
+            "type": "Image",
+            "img": "/img/assets/week/blocks/bigYeti.png",
+            "size": 24
+        },
+        {
+            "type": "Image",
+            "img": "/img/assets/week/blocks/pinkbean_ic.png",
+            "size": 24
+        }
+    ],
+    func: function(sprite, script) {
+        if (!script.isContinue) {
+            Ntry.dispatchEvent("stopEnemyWalk");
+            this.executor.register.isTurned = false;
+            script.isContinue = true;
+            script.isAction = true;
+            var grid = $.extend({type: Ntry.STATIC.GRID}, Ntry.entityManager.getComponent(Ntry.unit.id, Ntry.STATIC.GRID));
+            var backGrid = $.extend({type: Ntry.STATIC.GRID}, Ntry.entityManager.getComponent(Ntry.unit.id, Ntry.STATIC.GRID));
+            Ntry.addVectorByDirection(grid, Ntry.unitComp.direction, 1);
+            var findTile = Ntry.entityManager.find(
+                grid,
+                {
+                    type: Ntry.STATIC.TILE,
+                    tileType: Ntry.STATIC.OBSTACLE_PETI
+                }
+            );
+            Ntry.addVectorByDirection(backGrid, Ntry.unitComp.direction, -1);
+            var findBackTile = Ntry.entityManager.find(
+                backGrid
+            ).filter(function(e) {return e.components[Ntry.STATIC.ENEMY]});
+            var frontEnemyExist = !!Ntry.entityManager.find(
+                grid
+            ).filter(function(e) {return e.components[Ntry.STATIC.ENEMY]}).length;
+            var frontEnemyValid = !!findTile.length;
+            var backEnemyExist = !!findBackTile.length;
+            if(frontEnemyValid && !backEnemyExist) {
+                // success
+                Ntry.dispatchEvent("destroyObstacle", 1, function(state) {
+                });
+                var callBack = function() {
+                    Ntry.dispatchEvent("startEnemyWalk", true, function() {
+                        script.isAction = false;
+                    });
+                };
+                Ntry.dispatchEvent("unitAction", Ntry.STATIC.PETI, callBack);
+            } else if (frontEnemyValid && backEnemyExist) {
+                // attack and dead
+                Ntry.dispatchEvent("destroyObstacle", 1, function(state) {
+                });
+                var callBack = function() {
+                    Ntry.dispatchEvent("startEnemyWalk", false, function() {
+                    });
+                };
+                Ntry.dispatchEvent("unitAction", Ntry.STATIC.PETI, callBack);
+            } else if (backEnemyExist) { // dead
+                if (frontEnemyExist)
+                    Ntry.dispatchEvent("unitAction", Ntry.STATIC.PETI_FAIL, function () {
+                        script.isAction = false;
+                    });
+                else
+                    Ntry.dispatchEvent("startEnemyWalk", false, function() {
+                    });
+            } else { // music time
+                Ntry.dispatchEvent("unitAction", Ntry.STATIC.PETI_FAIL, function () {
+                    script.isAction = false;
+                });
+            }
+            return Entry.STATIC.BREAK;
+        } else if (script.isAction) {
+            return Entry.STATIC.BREAK;
+        } else {
+            delete script.isAction;
+            delete script.isContinue;
+        }
+    }
+},
+"maze_eat_item": {
+    "skeleton": "basic",
+    "mode": "maze",
+    "color": "#b2521d",
+    "emphasizedColor": "#9BDB40",
+    "syntax": [
+        "Scope",
+        "item"
+    ],
+    "params": [
+        {
+            "type": "Image",
+            "img": "/img/assets/week/blocks/eat.png",
+            "size": 24
+        }
+    ],
+    func: function(sprite, script) {
+        if (!script.isContinue) {
+            script.isContinue = true;
+            script.isAction = true;
+            var entities = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT);
+            var unitId;
+            $.each(entities, function (id, entity) {
+                unitId = id;
+            });
+            var callBack = function() {
+                script.isAction = false;
+            };
+            var unitComp = Ntry.entityManager.getComponent(unitId, Ntry.STATIC.UNIT);
+            var unitGrid = $.extend({}, Ntry.entityManager.getComponent(unitId, Ntry.STATIC.GRID));
+            var meatEntity = Ntry.checkTileByGrid(unitGrid, Ntry.STATIC.MEAT);
+            if (!meatEntity || meatEntity.components[Ntry.STATIC.ITEM].isEaten) {
+                Ntry.dispatchEvent("unitAction", Ntry.STATIC.NOT_FOUND_MEAT, callBack);
+                return Entry.STATIC.BREAK;
+            }
+            Ntry.dispatchEvent("unlockItem");
+            Ntry.dispatchEvent("unitAction", Ntry.STATIC.EAT, callBack);
+            return Entry.STATIC.BREAK;
+        } else if (script.isAction) {
+            return Entry.STATIC.BREAK;
+        } else {
+            delete script.isAction;
+            delete script.isContinue;
+        }
+    }
+},
 "maze_rotate_left": {
     "skeleton": "basic",
     "mode": "maze",
@@ -40036,7 +40867,6 @@ Entry.block = {
             var unitId;
             $.each(entities, function (id, entity) {
                 unitId = id;
-                components = entity.components;
             });
             var unitComp = Ntry.entityManager.getComponent(unitId, Ntry.STATIC.UNIT);
             var unitGrid = $.extend({}, Ntry.entityManager.getComponent(unitId, Ntry.STATIC.GRID));
@@ -40637,7 +41467,7 @@ Entry.block = {
                 var tile = Ntry.entityManager.getComponent(entity.id, Ntry.STATIC.TILE);
                 var item = Ntry.entityManager.getComponent(entity.id, Ntry.STATIC.ITEM);
 
-                if(tile && item && tile.tileType === Ntry.STATIC.GOAL && item.itemType === Ntry.STATIC.GOAL_ITEM) {
+                if(tile && item && tile.tileType === Ntry.STATIC.GOAL && Ntry.STATIC.GOAL_ITEM_LIST.indexOf(item.itemType) > -1) {
                     isGoal = true;
                     break;
                 }
@@ -40832,6 +41662,16 @@ Entry.block = {
             "img": "/img/assets/maze/bitmap/ws/tile_goal_04.png",
             "size": 18
         },
+        {
+            "type": "Image",
+            "img": "/img/assets/week/blocks/for.png",
+            "size": 24
+        }
+    ],
+},
+"maze_repeat_until_goal": {
+    "parent": "maze_repeat_until_3",
+    "params": [
         {
             "type": "Image",
             "img": "/img/assets/week/blocks/for.png",
@@ -41111,6 +41951,378 @@ Entry.block = {
     "parent": "_if",
     "class": "",
     "syntax": {"js": [], "py": []}
+},
+"maze_step_if_mushroom": {
+    "skeleton": "basic_loop",
+    "mode": "maze",
+    "color": "#498DEB",
+    "syntax": [
+        "BasicIf",
+        "front == mushroom"
+    ],
+    "params": [
+        {
+            "type": "Image",
+            "img": "/img/assets/week/blocks/mushroom.png",
+            "size": 24
+        },
+        {
+            "type": "Image",
+            "img": "/img/assets/week/blocks/if.png",
+            "size": 24
+        }
+    ],
+    "statements": [
+        {
+            "accept": "basic"
+        }
+    ],
+    func: function() {
+        if (this.isContinue) return;
+        var entities = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT);
+        var entity;
+        for (var key in entities) {
+            entity = entities[key];
+        }
+        var unitComp = Ntry.entityManager.getComponent(entity.id, Ntry.STATIC.UNIT);
+        var gridComp = Ntry.entityManager.getComponent(entity.id, Ntry.STATIC.GRID);
+        var grid = {x: gridComp.x, y: gridComp.y};
+        Ntry.addVectorByDirection(grid, unitComp.direction, 1);
+        var fitEntities = Ntry.entityManager.find(
+            {
+                type: Ntry.STATIC.GRID,
+                x: grid.x,
+                y: grid.y
+            },
+            {
+                type: Ntry.STATIC.TILE,
+                tileType: Ntry.STATIC.OBSTACLE_MUSHROOM
+            }
+        );
+        this.isContinue = true;
+        var statement = this.block.statements[0];
+        if (fitEntities.length === 0) {
+            return;
+        } else if (statement.getBlocks().length === 0)
+            return;
+        else {
+            this.executor.stepInto(statement);
+            return Entry.STATIC.BREAK;
+        }
+    }
+},
+"maze_step_if_lupin": {
+    "skeleton": "basic_loop",
+    "mode": "maze",
+    "color": "#498DEB",
+    "syntax": [
+        "BasicIf",
+        "front == lupin"
+    ],
+    "params": [
+        {
+            "type": "Image",
+            "img": "/img/assets/week/blocks/lupin.png",
+            "size": 24
+        },
+        {
+            "type": "Image",
+            "img": "/img/assets/week/blocks/if.png",
+            "size": 24
+        }
+    ],
+    "statements": [
+        {
+            "accept": "basic"
+        }
+    ],
+    func: function() {
+        if (this.isContinue) return;
+        var entities = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT);
+        var entity;
+        for (var key in entities) {
+            entity = entities[key];
+        }
+        var unitComp = Ntry.entityManager.getComponent(entity.id, Ntry.STATIC.UNIT);
+        var gridComp = Ntry.entityManager.getComponent(entity.id, Ntry.STATIC.GRID);
+        var grid = {x: gridComp.x, y: gridComp.y};
+        Ntry.addVectorByDirection(grid, unitComp.direction, 2);
+        var fitEntities = Ntry.entityManager.find(
+            {
+                type: Ntry.STATIC.GRID,
+                x: grid.x,
+                y: grid.y
+            },
+            {
+                type: Ntry.STATIC.TILE,
+                tileType: Ntry.STATIC.OBSTACLE_LUPIN
+            }
+        );
+        this.isContinue = true;
+        var statement = this.block.statements[0];
+        if (fitEntities.length === 0) {
+            return;
+        } else if (statement.getBlocks().length === 0)
+            return;
+        else {
+            this.executor.stepInto(statement);
+            return Entry.STATIC.BREAK;
+        }
+    }
+},
+"maze_step_if_else_road": {
+    "skeleton": "basic_double_loop",
+    "mode": "maze",
+    "color": "#498DEB",
+    "params": [
+        {
+            "type": "Image",
+            "img": "/img/assets/week/blocks/if.png",
+            "size": 24
+        },
+        {
+            "type": "LineBreak"
+        }
+    ],
+    "statements": [
+        {
+            "accept": "basic"
+        },
+        {
+            "accept": "basic"
+        }
+    ],
+    "statementsKeyMap": {
+        "STACK_IF": 0,
+        "STACK_ELSE": 1
+    },
+    func: function(sprite, script) {
+        if (script.isCondition) {
+            delete script.isCondition;
+            return script.callReturn();
+        }
+        var entities = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT);
+        var entity;
+        for (var key in entities) {
+            entity = entities[key];
+        }
+        var unitComp = Ntry.entityManager.getComponent(entity.id, Ntry.STATIC.UNIT);
+        var gridComp = Ntry.entityManager.getComponent(entity.id, Ntry.STATIC.GRID);
+        var grid = {x: gridComp.x, y: gridComp.y};
+        Ntry.addVectorByDirection(grid, unitComp.direction, 1);
+        var fitEntities = Ntry.entityManager.find(
+            {
+                type: Ntry.STATIC.GRID,
+                x: grid.x,
+                y: grid.y
+            },
+            {
+                type: Ntry.STATIC.TILE,
+                tileType: Ntry.STATIC.ROAD
+            }
+        );
+        script.isCondition = true;
+        if(fitEntities.length) {
+            return script.getStatement("STACK_IF", script);
+        } else {
+            return script.getStatement("STACK_ELSE", script);
+        }
+    }
+},
+"maze_step_if_else_mushroom": {
+    "skeleton": "basic_double_loop",
+    "mode": "maze",
+    "color": "#498DEB",
+    "params": [
+        {
+            "type": "Image",
+            "img": "/img/assets/week/blocks/mushroom.png",
+            "size": 24
+        },
+        {
+            "type": "Image",
+            "img": "/img/assets/week/blocks/if.png",
+            "size": 24
+        },
+        {
+            "type": "LineBreak"
+        }
+    ],
+    "statements": [
+        {
+            "accept": "basic"
+        },
+        {
+            "accept": "basic"
+        }
+    ],
+    "statementsKeyMap": {
+        "STACK_IF": 0,
+        "STACK_ELSE": 1
+    },
+    func: function(sprite, script) {
+        if (script.isCondition) {
+            delete script.isCondition;
+            return script.callReturn();
+        }
+        var entities = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT);
+        var entity;
+        for (var key in entities) {
+            entity = entities[key];
+        }
+        var unitComp = Ntry.entityManager.getComponent(entity.id, Ntry.STATIC.UNIT);
+        var gridComp = Ntry.entityManager.getComponent(entity.id, Ntry.STATIC.GRID);
+        var grid = {x: gridComp.x, y: gridComp.y};
+        Ntry.addVectorByDirection(grid, unitComp.direction, 1);
+        var fitEntities = Ntry.entityManager.find(
+            {
+                type: Ntry.STATIC.GRID,
+                x: grid.x,
+                y: grid.y
+            },
+            {
+                type: Ntry.STATIC.TILE,
+                tileType: Ntry.STATIC.OBSTACLE_MUSHROOM
+            }
+        );
+        script.isCondition = true;
+        if(fitEntities.length) {
+            return script.getStatement("STACK_IF", script);
+        } else {
+            return script.getStatement("STACK_ELSE", script);
+        }
+    }
+},
+"maze_step_if_else_lupin": {
+    "skeleton": "basic_double_loop",
+    "mode": "maze",
+    "color": "#498DEB",
+    "params": [
+        {
+            "type": "Image",
+            "img": "/img/assets/week/blocks/lupin.png",
+            "size": 24
+        },
+        {
+            "type": "Image",
+            "img": "/img/assets/week/blocks/if.png",
+            "size": 24
+        },
+        {
+            "type": "LineBreak"
+        }
+    ],
+    "statements": [
+        {
+            "accept": "basic"
+        },
+        {
+            "accept": "basic"
+        }
+    ],
+    "statementsKeyMap": {
+        "STACK_IF": 0,
+        "STACK_ELSE": 1
+    },
+    func: function(sprite, script) {
+        if (script.isCondition) {
+            delete script.isCondition;
+            return script.callReturn();
+        }
+        var entities = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT);
+        var entity;
+        for (var key in entities) {
+            entity = entities[key];
+        }
+        var unitComp = Ntry.entityManager.getComponent(entity.id, Ntry.STATIC.UNIT);
+        var gridComp = Ntry.entityManager.getComponent(entity.id, Ntry.STATIC.GRID);
+        var grid = {x: gridComp.x, y: gridComp.y};
+        Ntry.addVectorByDirection(grid, unitComp.direction, 2);
+        var fitEntities = Ntry.entityManager.find(
+            {
+                type: Ntry.STATIC.GRID,
+                x: grid.x,
+                y: grid.y
+            },
+            {
+                type: Ntry.STATIC.TILE,
+                tileType: Ntry.STATIC.OBSTACLE_LUPIN
+            }
+        );
+        script.isCondition = true;
+        if(fitEntities.length) {
+            return script.getStatement("STACK_IF", script);
+        } else {
+            return script.getStatement("STACK_ELSE", script);
+        }
+    }
+},
+"maze_step_if_else_ladder": {
+    "skeleton": "basic_double_loop",
+    "mode": "maze",
+    "color": "#498DEB",
+    "params": [
+        {
+            "type": "Image",
+            "img": "/img/assets/week/blocks/ic_ladder.png",
+            "size": 24
+        },
+        {
+            "type": "Image",
+            "img": "/img/assets/week/blocks/if.png",
+            "size": 24
+        },
+        {
+            "type": "LineBreak"
+        }
+    ],
+    "statements": [
+        {
+            "accept": "basic"
+        },
+        {
+            "accept": "basic"
+        }
+    ],
+    "statementsKeyMap": {
+        "STACK_IF": 0,
+        "STACK_ELSE": 1
+    },
+    func: function(sprite, script) {
+        if (script.isCondition) {
+            delete script.isCondition;
+            return script.callReturn();
+        }
+        var entities = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT);
+        var entity;
+        for (var key in entities) {
+            entity = entities[key];
+        }
+        var unitComp = Ntry.entityManager.getComponent(entity.id, Ntry.STATIC.UNIT);
+        var gridComp = Ntry.entityManager.getComponent(entity.id, Ntry.STATIC.GRID);
+        var grid = {x: gridComp.x, y: gridComp.y};
+        if(grid.y > 3) {
+            grid.y = 2;
+        }
+        Ntry.addVectorByDirection(grid, unitComp.direction, 1);
+        var fitEntities = Ntry.entityManager.find(
+            {
+                type: Ntry.STATIC.GRID,
+                x: grid.x,
+                y: grid.y
+            },
+            {
+                type: Ntry.STATIC.TILE,
+                tileType: Ntry.STATIC.LADDER
+            }
+        );
+        script.isCondition = true;
+        if(fitEntities.length) {
+            return script.getStatement("STACK_IF", script);
+        } else {
+            return script.getStatement("STACK_ELSE", script);
+        }
+    }
 },
 "maze_step_if_else": {
     "parent": "if_else",
@@ -44774,6 +45986,710 @@ Entry.block = {
 */
 
 // mkboard Added 2017-07-04
+
+
+// memaker Added 2017-10-01
+"memaker_analog_list": {
+    "color": "#00979D",
+    "skeleton": "basic_string_field",
+    "statements": [],
+    "template": "%1",
+    "params": [
+        {
+            "type": "Dropdown",
+            "options": [
+                [ "A0", "0" ],
+                [ "A1", "1" ],
+                [ "A2", "2" ],
+                [ "A3", "3" ],
+                [ "A4", "4" ],
+                [ "A5", "5" ],
+                [ "A6", "6" ],
+                [ "A7", "7" ]
+            ],
+            "value": "0",
+            "fontSize": 11
+        }
+    ],
+    "events": {},
+    "def": {
+        "params": [ null ]
+    },
+    "paramsKeyMap": {
+        "PORT": 0
+    },
+    "func": function (sprite, script) {
+        return script.getField("PORT");
+    },
+    "syntax": {"js": [], "py": []}
+},
+"memaker_get_analog_value": {
+    "color": "#00979D",
+    "fontColor": "#fff",
+    "skeleton": "basic_string_field",
+    "statements": [],
+    "params": [
+        {
+            "type": "Block",
+            "accept": "string"
+        }
+    ],
+    "events": {},
+    "def": {
+        "params": [
+            {
+                "type": "memaker_analog_list"
+            }
+        ],
+        "type": "memaker_get_analog_value"
+    },
+    "paramsKeyMap": {
+        "PORT": 0
+    },
+    "class": "memakerGet",
+    "isNotFor": [ "memaker" ],
+    "func": function (sprite, script) {
+        var port = script.getValue("PORT", script);
+        var ANALOG = Entry.hw.portData.ANALOG;
+        if (port[0] === "A")
+            port = port.substring(1)
+        return ANALOG ? ANALOG[port] || 0 : 0;
+    },
+    "syntax": {"js": [], "py": []}
+},
+"memaker_get_analog_value_map": {
+    "color": "#00979D",
+    "fontColor": "#fff",
+    "skeleton": "basic_string_field",
+    "statements": [],
+    "params": [
+        {
+            "type": "Block",
+            "accept": "string"
+        },
+        {
+            "type": "Block",
+            "accept": "string"
+        },
+        {
+            "type": "Block",
+            "accept": "string"
+        },
+        {
+            "type": "Block",
+            "accept": "string"
+        },
+        {
+            "type": "Block",
+            "accept": "string"
+        }
+    ],
+    "events": {},
+    "def": {
+        "params": [
+            {
+                "type": "memaker_get_analog_value",
+                "params": [
+                    {
+                        "type": "memaker_analog_list"
+                    }
+                ]
+            },
+            {
+                "type": "number",
+                "params": [ "0" ]
+            },
+            {
+                "type": "number",
+                "params": [ "1023" ]
+            },
+            {
+                "type": "number",
+                "params": [ "0" ]
+            },
+            {
+                "type": "number",
+                "params": [ "100" ]
+            }
+        ],
+        "type": "memaker_get_analog_value_map"
+    },
+    "paramsKeyMap": {
+        "PORT": 0,
+        "VALUE2": 1,
+        "VALUE3": 2,
+        "VALUE4": 3,
+        "VALUE5": 4
+    },
+    "class": "memakerGet",
+    "isNotFor": [ "memaker" ],
+    "func": function (sprite, script) {
+        var result = script.getValue("PORT", script);
+        var ANALOG = Entry.hw.portData.ANALOG;
+        var value2 = script.getNumberValue("VALUE2", script);
+        var value3 = script.getNumberValue("VALUE3", script);
+        var value4 = script.getNumberValue("VALUE4", script);
+        var value5 = script.getNumberValue("VALUE5", script);
+
+        if (value2 > value3) {
+            var swap = value2;
+            value2 = value3;
+            value3 = swap;
+        }
+        if (value4 > value5) {
+            var swap = value4;
+            value4 = value5;
+            value5 = swap;
+        }
+        result -= value2;
+        result = result * ((value5 - value4) / (value3 - value2));
+        result += value4;
+        result = Math.min(value5, result);
+        result = Math.max(value4, result);
+
+        return result
+    },
+    "syntax": {"js": [], "py": []}
+},
+"memaker_get_ultrasonic_value": {
+    "color": "#00979D",
+    "fontColor": "#fff",
+    "skeleton": "basic_string_field",
+    "statements": [],
+    "params": [
+        {
+            "type": "Block",
+            "accept": "string"
+        },
+        {
+            "type": "Block",
+            "accept": "string"
+        }
+    ],
+    "events": {},
+    "def": {
+        "params": [{
+            type: 'arduino_get_port_number',
+            params: [ '7' ],
+        }, {
+            type: 'arduino_get_port_number',
+            params: [ '8' ],
+        }],
+        "type": "memaker_get_ultrasonic_value"
+    },
+    "paramsKeyMap": {
+        "PORT1": 0,
+        "PORT2": 1,
+    },
+    "class": "memakerGet",
+    "isNotFor": [ "memaker" ],
+    "func": function (sprite, script) {
+        var port1 = script.getNumberValue("PORT1", script);
+        var port2 = script.getNumberValue("PORT2", script);
+
+        if(!Entry.hw.sendQueue['SET']) {
+            Entry.hw.sendQueue['SET'] = {};
+        }
+        delete Entry.hw.sendQueue['SET'][port1];
+        delete Entry.hw.sendQueue['SET'][port2];
+
+        if(!Entry.hw.sendQueue['GET']) {
+            Entry.hw.sendQueue['GET'] = {};
+        }
+        Entry.hw.sendQueue['GET'][Entry.memaker.sensorTypes.ULTRASONIC] = {
+            port: [port1, port2],
+            time: new Date().getTime()
+        };
+        return Entry.hw.portData.ULTRASONIC || 0;
+    },
+    "syntax": {"js": [], "py": []}
+},
+"memaker_get_digital": {
+    "color": "#00979D",
+    "fontColor": "#fff",
+    "skeleton": "basic_boolean_field",
+    "params": [{
+        "type": "Block",
+        "accept": "string"
+    }],
+    "events": {},
+    "def": {
+        "params": [
+            {
+                "type": "arduino_get_port_number"
+            }
+        ],
+        "type": "memaker_get_digital"
+    },
+    "paramsKeyMap": {
+        "PORT": 0
+    },
+    "class": "memakerGet",
+    "isNotFor": [ "memaker" ],
+    "func": function (sprite, script) {
+        var port = script.getNumberValue("PORT", script);
+        var DIGITAL = Entry.hw.portData.DIGITAL;
+        if(!Entry.hw.sendQueue['GET']) {
+            Entry.hw.sendQueue['GET'] = {};
+        }
+        Entry.hw.sendQueue['GET'][Entry.memaker.sensorTypes.DIGITAL] = {
+            port: port,
+            time: new Date().getTime()
+        };
+        return (DIGITAL) ? DIGITAL[port] || 0 : 0;
+    },
+    "syntax": {"js": [], "py": []}
+},
+"memaker_toggle_led": {
+    "color": "#00979D",
+    "skeleton": "basic",
+    "statements": [],
+    "params": [
+        {
+            "type": "Block",
+            "accept": "string"
+        },
+        {
+            "type": "Block",
+            "accept": "string"
+        },
+        {
+            "type": "Indicator",
+            "img": "block_icon/hardware_03.png",
+            "size": 12
+        }
+    ],
+    "events": {},
+    "def": {
+        "params": [
+            {
+                "type": "arduino_get_port_number"
+            },
+            {
+                "type": "arduino_get_digital_toggle",
+                "params": [ "on" ],
+            },
+            null
+        ],
+        "type": "memaker_toggle_led"
+    },
+    "paramsKeyMap": {
+        "PORT": 0,
+        "VALUE": 1
+    },
+    "class": "memaker",
+    "isNotFor": [ "memaker" ],
+    "func": function (sprite, script) {
+        var port = script.getNumberValue("PORT");
+        var value = script.getValue("VALUE");
+
+        if(typeof value === 'string') {
+            value = value.toLowerCase();
+        }
+        if(Entry.memaker.highList.indexOf(value) > -1) {
+            value = 255;
+        } else if(Entry.memaker.lowList.indexOf(value) > -1) {
+            value = 0;
+        } else {
+            throw new Error();
+        }
+        if(!Entry.hw.sendQueue['SET']) {
+            Entry.hw.sendQueue['SET'] = {};
+        }
+        Entry.hw.sendQueue['SET'][port] = {
+            type: Entry.memaker.sensorTypes.DIGITAL,
+            data: value,
+            time: new Date().getTime()
+        };
+        return script.callReturn();
+    },
+    "syntax": {"js": [], "py": []}
+},
+"memaker_digital_pwm": {
+    "color": "#00979D",
+    "skeleton": "basic",
+    "statements": [],
+    "params": [
+        {
+            "type": "Block",
+            "accept": "string"
+        },
+        {
+            "type": "Block",
+            "accept": "string"
+        },
+        {
+            "type": "Indicator",
+            "img": "block_icon/hardware_03.png",
+            "size": 12
+        }
+    ],
+    "events": {},
+    "def": {
+        "params": [
+            {
+                "type": "arduino_get_pwm_port_number"
+            },
+            {
+                "type": "text",
+                "params": [ "255" ]
+            },
+            null
+        ],
+        "type": "memaker_digital_pwm"
+    },
+    "paramsKeyMap": {
+        "PORT": 0,
+        "VALUE": 1
+    },
+    "class": "memaker",
+    "isNotFor": [ "memaker" ],
+    "func": function (sprite, script) {
+        var port = script.getNumberValue("PORT");
+        var value = script.getNumberValue("VALUE");
+        value = Math.round(value);
+        value = Math.max(value, 0);
+        value = Math.min(value, 255);
+        if(!Entry.hw.sendQueue['SET']) {
+            Entry.hw.sendQueue['SET'] = {};
+        }
+        Entry.hw.sendQueue['SET'][port] = {
+            type: Entry.memaker.sensorTypes.PWM,
+            data: value,
+            time: new Date().getTime()
+        };
+        return script.callReturn();
+    },
+    "syntax": {"js": [], "py": []}
+},
+"memaker_set_servo": {
+    "color": "#00979D",
+    "skeleton": "basic",
+    "statements": [],
+    "params": [{
+        "type": "Block",
+        "accept": "string"
+    }, {
+        "type": "Block",
+        "accept": "string"
+    }, {
+        "type": "Indicator",
+        "img": "block_icon/hardware_03.png",
+        "size": 12
+    }],
+    "events": {},
+    "def": {
+        "params": [{
+                "type": "arduino_get_port_number",
+                "params": [ "10" ]
+            },
+            null
+        ],
+        "type": "memaker_set_servo"
+    },
+    "paramsKeyMap": {
+        "PORT": 0,
+        "VALUE": 1
+    },
+    "class": "memaker",
+    "isNotFor": [ "memaker" ],
+    "func": function (sprite, script) {
+        var sq = Entry.hw.sendQueue;
+        var port = script.getNumberValue("PORT", script);
+        var value = script.getNumberValue("VALUE", script);
+        value = Math.min(180, value);
+        value = Math.max(0, value);
+
+        if(!sq['SET']) {
+            sq['SET'] = {};
+        }
+        sq['SET'][port] = {
+            type: Entry.memaker.sensorTypes.SERVO_PIN,
+            data: value,
+            time: new Date().getTime()
+        };
+
+        return script.callReturn();
+    },
+    "syntax": {"js": [], "py": []}
+},
+
+
+"memaker_list_digital_lcd_line": {
+    "color": "#00979D",
+    "skeleton": "basic_string_field",
+    "statements": [],
+    "template": "%1",
+    "params": [
+        {
+            "type": "Dropdown",
+            "options": [
+                [ "LINE1", "0" ],
+                [ "LINE2", "1" ]
+            ],
+            "value": "0",
+            "fontSize": 11
+        }
+    ],
+    "events": {},
+    "def": {
+        "params": [ null ]
+    },
+    "paramsKeyMap": {
+        "LINE": 0
+    },
+    "func": function (sprite, script) {
+        return script.getField("LINE");
+    }
+},
+
+"memaker_list_digital_lcd_column": {
+    "color": "#00979D",
+    "skeleton": "basic_string_field",
+    "statements": [],
+    "template": "%1",
+    "params": [
+        {
+            "type": "Dropdown",
+            "options": [
+                [ "COL1", "0" ],
+                [ "COL2", "1" ],
+                [ "COL3", "2" ],
+                [ "COL4", "3" ],
+                [ "COL5", "4" ],
+                [ "COL6", "5" ],
+                [ "COL7", "6" ],
+                [ "COL8", "7" ],
+                [ "COL9", "8" ],
+                [ "COL10", "9" ],
+                [ "COL11", "10" ],
+                [ "COL12", "11" ],
+                [ "COL13", "12" ],
+                [ "COL14", "13" ],
+                [ "COL15", "14" ],
+                [ "COL16", "15" ],
+            ],
+            "value": "0",
+            "fontSize": 11
+        }
+    ],
+    "events": {},
+    "def": {
+        "params": [ null ]
+    },
+    "paramsKeyMap": {
+        "COLUMN": 0
+    },
+    "func": function (sprite, script) {
+        return script.getField("COLUMN");
+    }
+},
+
+"memaker_set_lcd": {
+    "color": "#00979D",
+    "fontColor": "#fff",
+    "skeleton": "basic",
+    "template": Lang.template.memaker_set_lcd,
+    "statements": [],
+    "params": [
+        {
+            "type": "Block",
+            "accept": "string"
+        },
+        {
+            "type": "Block",
+            "accept": "string"
+        },
+        {
+            "type": "Block",
+            "accept": "string"
+        },
+        {
+            "type": "Indicator",
+            "img": "block_icon/hardware_03.png",
+            "size": 12
+        }
+    ],
+    "events": {},
+    "def": {
+        "params": [
+            {
+                "type": "memaker_list_digital_lcd_line"
+            },
+            {
+                "type": "memaker_list_digital_lcd_column"
+            },
+            {
+                "type": "text",
+                "params": [ "Type text !!" ]
+            },
+            null
+        ],
+        "type": "memaker_set_lcd"
+    },
+    "paramsKeyMap": {
+        "LINE": 0,
+        "COLUMN": 1,
+        "STRING": 2,
+    },
+    "class": "memakerLcd",
+    "isNotFor": [ "memaker" ],
+    "func": function (sprite, script) {
+        var sq = Entry.hw.sendQueue;
+
+        // var direction = script.getValue("MOTOR_DIRECTION", script);
+        // var direction = script.getField("DIRECTION", script);
+
+        var line = script.getValue("LINE", script);
+        var column = script.getValue("COLUMN", script);
+        var string = script.getValue("STRING", script);
+        var text = [];
+
+
+        if(!script.isStart) {
+            if(typeof string === 'string') {
+                for (var i = 0; i < string.length; i++) {
+                    text[i] = Entry.memaker.toByte(string[i]);
+                }
+            }
+            else if (typeof string === 'number') {
+                text[0] = 1;
+                text[1] = string / 1;
+            }
+            else {
+                text[0] = string;
+            }
+
+            if(!Entry.hw.sendQueue['SET']) {
+                Entry.hw.sendQueue['SET'] = {};
+            }
+
+            script.isStart = true;
+            script.timeFlag = 1;
+            var fps = Entry.FPS || 60;
+            timeValue = 60/fps*50;
+
+            Entry.hw.sendQueue['SET'][line] = {
+                type: Entry.memaker.sensorTypes.LCD,
+                data: {
+                    line: line,
+                    column: column,
+                    text0 : text[0],
+                    text1 : text[1],
+                    text2 : text[2],
+                    text3 : text[3],
+                    text4 : text[4],
+                    text5 : text[5],
+                    text6 : text[6],
+                    text7 : text[7],
+                    text8 : text[8],
+                    text9 : text[9],
+                    text10 : text[10],
+                    text11 : text[11],
+                    text12 : text[12],
+                    text13 : text[13],
+                    text14 : text[14],
+                    text15 : text[15]
+                },
+                time: new Date().getTime()
+            };
+
+            setTimeout(function() {
+                script.timeFlag = 0;
+            }, timeValue);
+            return script;
+        }
+        else if(script.timeFlag == 1) {
+            return script;
+        }
+        else {
+            delete script.timeFlag;
+            delete script.isStart;
+            Entry.engine.isContinue = false;
+            return script.callReturn();
+        }
+    },
+    "syntax": {"js": [], "py": ["memaker.memaker_set_lcd(%1, %2, %3)"]}
+},
+
+"memaker_list_lcd_command": {
+    "color": "#00979D",
+    "skeleton": "basic_string_field",
+    "statements": [],
+    "template": "%1",
+    "params": [
+        {
+            "type": "Dropdown",
+            "options": [
+                [ "LCD_CLEAR", "0" ],
+                [ "BACKLIGHT_ON", "1" ],
+                [ "BACKLIGHT_OFF", "2" ]
+            ],
+            "value": "0",
+            "fontSize": 11
+        }
+    ],
+    "events": {},
+    "def": {
+        "params": [ null ]
+    },
+    "paramsKeyMap": {
+        "COMMAND": 0
+    },
+    "func": function (sprite, script) {
+        return script.getField("COMMAND");
+    }
+},
+
+"memaker_lcd_command": {
+    "color": "#00979D",
+    "skeleton": "basic",
+    "template": Lang.template.memaker_lcd_command,
+    //"template": "%1 %2",
+    "statements": [],
+    "params": [
+        {
+            "type": "Block",
+            "accept": "string"
+        },
+        {
+            "type": "Indicator",
+            "img": "block_icon/hardware_03.png",
+            "size": 12
+        }
+    ],
+    "events": {},
+    "def": {
+        "params": [
+            {
+                "type": "memaker_list_lcd_command"
+            },
+            null
+        ],
+        "type": "memaker_lcd_command"
+    },
+    "paramsKeyMap": {
+        "COMMAND": 0,
+    },
+    "class": "memakerLcd",
+    "isNotFor": [ "memaker" ],
+    "func": function (sprite, script) {
+        var cmd = script.getNumberValue("COMMAND");
+
+        if(!Entry.hw.sendQueue['SET']) {
+            Entry.hw.sendQueue['SET'] = {};
+        }
+        Entry.hw.sendQueue['SET'][cmd] = {
+            type: Entry.memaker.sensorTypes.LCD_COMMAND,
+            time: new Date().getTime()
+        };
+        return script.callReturn();
+    },
+    "syntax": {"js": [], "py": []}
+},
+
+// memaker Added 2017-10-01
+
 "joystick_get_number_sensor_value": {
     "parent": "arduino_get_number_sensor_value",
     "isNotFor": [
@@ -48291,8 +50207,7 @@ codestar_tilt: {
             time: new Date().getTime()
         };
         return script.callReturn();
-    },
-    "syntax": {"js": [], "py": ["Arduino.analogWrite(%1, %2)"]}
+    }
 },
 "dadublock_set_servo": {
     "color": "#00979D",
@@ -48354,8 +50269,7 @@ codestar_tilt: {
         };
 
         return script.callReturn();
-    },
-    "syntax": {"js": [], "py": ["Arduino.servomotorWrite(%1, %2)"]}
+    }
 },
 "dadublock_set_tone": {
     "color": "#00979D",
@@ -48885,8 +50799,7 @@ codestar_tilt: {
             time: new Date().getTime()
         };
         return script.callReturn();
-    },
-    "syntax": {"js": [], "py": ["Arduino.analogWrite(%1, %2)"]}
+    }
 },
 "dadublock_car_set_servo": {
     "color": "#00979D",
@@ -48948,8 +50861,7 @@ codestar_tilt: {
         };
 
         return script.callReturn();
-    },
-    "syntax": {"js": [], "py": ["Arduino.servomotorWrite(%1, %2)"]}
+    }
 },
 "dadublock_car_set_tone": {
     "color": "#00979D",
@@ -49444,6 +51356,80 @@ codestar_tilt: {
     },
     "paramsKeyMap": {
         "VALUE": 0
+    },
+    "class": "etc",
+    "isNotFor": [],
+    "func": function (sprite, script) {}
+},
+"hidden_loop": {
+    "color": "#7C7C7C",
+    "skeleton": "basic_loop",
+    "template": "%1 번 반복하기 %2",
+    "statements": [
+        {
+            "accept": "basic"
+        }
+    ],
+    "params": [
+        {
+            "type": "Image",
+            "img": "/img/assets/maze/icon/group.png",
+            "size": {
+                width: 47,
+                height: 20,
+            }
+        },
+        {
+            "type": "Indicator",
+            "color": "#6B6B6B",
+            "size": 12
+        }
+    ],
+    "events": {},
+    "def": {
+        "params": [
+            null
+        ],
+        "type": "hidden_if"
+    },
+    "class": "etc",
+    "isNotFor": [],
+    "func": function (sprite, script) {}
+},
+"hidden_if_else": {
+    "color": "#7C7C7C",
+    "skeleton": "basic_double_loop",
+    "template": "         %1       %2%3",
+    "statements": [
+        {
+            "accept": "basic"
+        },
+        {
+            "accept": "basic"
+        }
+    ],
+    "params": [
+        {
+            "type": "TextInput",
+            "value": "?",
+            "clearBG": true,
+            "color": "white"
+        },
+        {
+            "type": "Indicator",
+            "color": "#6B6B6B",
+            "size": 12
+        },
+        {
+            "type": "LineBreak"
+        }
+    ],
+    "events": {},
+    "def": {
+        "params": [
+            null
+        ],
+        "type": "hidden_if"
     },
     "class": "etc",
     "isNotFor": [],
