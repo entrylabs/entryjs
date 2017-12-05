@@ -4172,7 +4172,6 @@ Entry.block = {
     "syntax": {"js": [], "py": [
         {
             syntax: "Arduino.digitalRead(%1)",
-            keyOption: "ext",
             blockType: "param",
             textParams: [
                 {
