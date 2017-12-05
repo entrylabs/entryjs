@@ -19272,8 +19272,12 @@ Entry.PyToBlockParser = function(c) {
       c = b.alternate.body.map(this.Node, this), b.consequent.body[0].body.body.shift(), b = b.consequent.body[0].body.body, c[0].statements.push(this.setParams(b));
     } else {
       if ("alternate" in b && b.alternate) {
-        c = b.consequent ? b.consequent.body.map(this.Node, this) : [];
-        var e = b.alternate ? b.alternate.body.map(this.Node, this) : [];
+        c = b.consequent ? b.consequent.body.map(this.Node, this).map(function(b) {
+          return Array.isArray(b) ? b[0] : b;
+        }) : [];
+        var e = b.alternate ? b.alternate.body.map(this.Node, this).map(function(b) {
+          return Array.isArray(b) ? b[0] : b;
+        }) : [];
         c = {type:"if_else", statements:[c, e], params:[this.Node(b.test)]};
       } else {
         c = {type:"_if", statements:[this.setParams(b.consequent.body)], params:[this.Node(b.test)]};
