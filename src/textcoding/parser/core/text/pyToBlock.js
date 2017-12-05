@@ -451,10 +451,12 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 params : [this.Node(component.test)]
             };
         } else {
-
-
-            var consequents = component.consequent ? component.consequent.body.map(this.Node, this) : [];
-            var alternates = component.alternate ? component.alternate.body.map(this.Node, this) : [];
+            var consequents = component.consequent ?
+                component.consequent.body.map(this.Node, this).map(function(b) { return Array.isArray(b) ? b[0] : b; }) :
+                [];
+            var alternates = component.alternate ?
+                component.alternate.body.map(this.Node, this).map(function(b) { return Array.isArray(b) ? b[0] : b; }) :
+                [];
             alternate = {
                 type : 'if_else',
                 statements : [ consequents, alternates ],
