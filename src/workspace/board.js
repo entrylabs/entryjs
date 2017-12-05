@@ -57,10 +57,8 @@ Entry.Board.DRAG_RADIUS = 5;
 
     p.createView = function(option) {
         var dom = option.dom;
-        if (typeof dom === "string")
-            dom = $('#' + dom);
-        else
-            dom = $(dom);
+        if (typeof dom === "string") dom = $('#' + dom);
+        else dom = $(dom);
 
         if (dom.prop("tagName") !== "DIV")
             return console.error("Dom is not div element");
@@ -84,14 +82,10 @@ Entry.Board.DRAG_RADIUS = 5;
         );
 
         this.visible = true;
-        var that = this;
         this.svg = Entry.SVG(this._svgId);
-        $(window).scroll(function() {
-            that.updateOffset();
-        });
+        $(window).scroll(this.updateOffset.bind(this));
 
         this.svgGroup = this.svg.elem("g");
-
         this.svgThreadGroup = this.svgGroup.elem("g");
         this.svgThreadGroup.board = this;
 
@@ -105,8 +99,8 @@ Entry.Board.DRAG_RADIUS = 5;
         } else this.suffix = 'board';
 
         Entry.Utils.addFilters(this.svg, this.suffix);
-        var returnVal = Entry.Utils.addBlockPattern(this.svg, this.suffix);
-        this.pattern = returnVal.pattern;
+        this.pattern = Entry.Utils.addBlockPattern(this.svg, this.suffix)
+                        .pattern;
     };
 
     p.changeCode = function(code, shouldNotCreateView, cb) {
@@ -140,8 +134,7 @@ Entry.Board.DRAG_RADIUS = 5;
     };
 
     p.setMagnetedBlock = function(block, magnetType) {
-        if (this.magnetedBlockView === block)
-            return;
+        if (this.magnetedBlockView === block) return;
 
         this.magnetedBlockView && this.magnetedBlockView.set({magneting: false});
         this.set({magnetedBlockView: block});
@@ -158,26 +151,18 @@ Entry.Board.DRAG_RADIUS = 5;
     p._addControl = function() {
         var dom = this.svgDom;
         var that = this;
-        dom.mousedown(function() {
-            that.onMouseDown.apply(that, arguments);
-        });
-        dom.bind('touchstart', function() {
-            that.onMouseDown.apply(that, arguments);
-        });
-        dom.on('wheel', function(){
-            that.mouseWheel.apply(that, arguments);
-        });
+        dom.mousedown(function() { that.onMouseDown.apply(that, arguments); });
+        dom.bind('touchstart', function() { that.onMouseDown.apply(that, arguments); });
+        dom.on('wheel', function(){ that.mouseWheel.apply(that, arguments); });
 
         var scroller = that.scroller;
         if (scroller) {
-            dom.mouseenter(function(e) {scroller.setOpacity(1);});
-            dom.mouseleave(function(e) {scroller.setOpacity(0);});
+            dom.mouseenter(function(e) { scroller.setOpacity(1); });
+            dom.mouseleave(function(e) { scroller.setOpacity(0); });
         }
     };
 
-    p.removeControl = function(eventType) {
-        this.svgDom.off(eventType);
-    };
+    p.removeControl = function(eventType) { this.svgDom.off(eventType); };
 
     p.onMouseDown = function(e) {
         if (this.workspace.getMode() == Entry.Workspace.MODE_VIMBOARD)
@@ -196,7 +181,8 @@ Entry.Board.DRAG_RADIUS = 5;
             var doc = $(document);
 
             this.mouseDownCoordinate = {
-                x: mouseEvent.pageX, y: mouseEvent.pageY
+                x: mouseEvent.pageX,
+                y: mouseEvent.pageY
             };
 
             doc.bind('mousemove.entryBoard', onMouseMove);
@@ -228,24 +214,23 @@ Entry.Board.DRAG_RADIUS = 5;
             var mouseEvent = Entry.Utils.convertMouseEvent(e);
 
             var mouseDownCoordinate = board.mouseDownCoordinate;
-            var diff = Math.sqrt(Math.pow(mouseEvent.pageX - mouseDownCoordinate.x, 2) +
-                            Math.pow(mouseEvent.pageY - mouseDownCoordinate.y, 2));
+            var pageX = mouseEvent.pageX;
+            var pageY = mouseEvent.pageY;
+            var diff = Math.sqrt(Math.pow(pageX - mouseDownCoordinate.x, 2) +
+                            Math.pow(pageY - mouseDownCoordinate.y, 2));
             if (diff < Entry.Board.DRAG_RADIUS) return;
+
             if (longPressTimer) {
                 clearTimeout(longPressTimer);
                 longPressTimer = null;
             }
 
-
             var dragInstance = board.dragInstance;
             board.scroller.scroll(
-                mouseEvent.pageX - dragInstance.offsetX,
-                mouseEvent.pageY - dragInstance.offsetY
+                pageX - dragInstance.offsetX,
+                pageY - dragInstance.offsetY
             );
-            dragInstance.set({
-                offsetX: mouseEvent.pageX,
-                offsetY: mouseEvent.pageY
-            });
+            dragInstance.set({ offsetX: pageX, offsetY: pageY });
         }
 
         function onMouseUp(e) {
@@ -295,8 +280,10 @@ Entry.Board.DRAG_RADIUS = 5;
     };
 
     p.alignThreads = function(reDraw) {
-        var domHeight = this.svgDom.height();
         var threads = this.code.getThreads();
+        if (!threads.length) return;
+
+        var domHeight = this.svgDom.height();
 
         var verticalGap = 15;
         var acculmulatedTop = 15;
@@ -361,44 +348,44 @@ Entry.Board.DRAG_RADIUS = 5;
     };
 
     p.generateButtons = function() {
-        var that = this;
-        var btnWrapper = this.svgGroup.elem("g");
-        this.btnWrapper = btnWrapper;
+        var btnWrapper = this.btnWrapper = this.svgGroup.elem("g");
+
+        var TEXT_CLASS = 'entryFunctionButtonText';
+        var BUTTON_CLASS = 'entryFunctionButton';
 
         var saveText = btnWrapper.elem('text', {
-            x: 27, y: 33, class: 'entryFunctionButtonText'
+            x: 102.5, y: 33, class: TEXT_CLASS
         });
         saveText.textContent = Lang.Buttons.save;
 
         var cancelText = btnWrapper.elem('text', {
-            x: 102.5, y: 33, class: 'entryFunctionButtonText'
+            x: 27, y: 33, class: TEXT_CLASS
         });
         cancelText.textContent = Lang.Buttons.cancel;
 
         var saveButton = btnWrapper.elem('circle', {
-            cx: 27.5, cy: 27.5, r: 27.5, class: 'entryFunctionButton'
+            cx: 102.5, cy: 27.5, r: 27.5, class: BUTTON_CLASS
         });
 
         var cancelButton = btnWrapper.elem('circle', {
-            cx: 102.5, cy: 27.5, r: 27.5, class: 'entryFunctionButton'
+            cx: 27.5, cy: 27.5, r: 27.5, class: BUTTON_CLASS
         });
 
-        $(saveButton).bind('mousedown touchstart', function() {that.save();});
-        $(saveText).bind('mousedown touchstart', function() {that.save();});
-        $(cancelButton).bind('mousedown touchstart', function() {that.cancelEdit();});
-        $(cancelText).bind('mousedown touchstart', function() {that.cancelEdit();});
+        var saveFunc = this.save.bind(this);
+        var cancelFunc = this.cancelEdit.bind(this);
+
+        $(saveButton).bind('mousedown touchstart', saveFunc);
+        $(saveText).bind('mousedown touchstart', saveFunc);
+        $(cancelButton).bind('mousedown touchstart', cancelFunc);
+        $(cancelText).bind('mousedown touchstart', cancelFunc);
     };
 
     p.cancelEdit = function() {
-        var mode = {};
-        mode.boardType = Entry.Workspace.MODE_BOARD;
         this.workspace.setMode(Entry.Workspace.MODE_BOARD, "cancelEdit");
     };
 
     p.save = function() {
-        var mode = {};
-        mode.boardType = Entry.Workspace.MODE_BOARD;
-        this.workspace.setMode(mode, "save");
+        this.workspace.setMode(Entry.Workspace.MODE_BOARD, "save");
     };
 
     p.generateCodeMagnetMap = function() {
@@ -418,10 +405,8 @@ Entry.Board.DRAG_RADIUS = 5;
             var metaData = this._getCodeBlocks(code, targetType);
             metaData.sort(function(a, b) {return a.point - b.point;});
 
-            metaData.unshift({
-                point: - Number.MAX_VALUE,
-                blocks: []
-            });
+            metaData.unshift({ point: - Number.MAX_VALUE, blocks: [] });
+
             for (var i = 1; i < metaData.length; i++) {
                 var pointData = metaData[i];
                 var includeData = pointData;
@@ -486,9 +471,8 @@ Entry.Board.DRAG_RADIUS = 5;
             var block = blocks[i];
             var blockView = block.view;
             blockView.zIndex = zIndex;
-            if (blockView.dragInstance) {
-                break;
-            }
+            if (blockView.dragInstance) { break; }
+
             cursorY += blockView.y;
             cursorX += blockView.x;
             var endPoint = cursorY + 1;
@@ -942,7 +926,7 @@ Entry.Board.DRAG_RADIUS = 5;
         var threads = code.getThreads();
         if (!threads || threads.length === 0) return;
 
-        threads = threads.sort(function(a,b) {
+        threads = threads.sort(function(a, b) {
             return a.getFirstBlock().view.x - b.getFirstBlock().view.x;
         });
 
@@ -1033,14 +1017,14 @@ Entry.Board.DRAG_RADIUS = 5;
     };
 
     p._bindEvent = function() {
-        if (Entry.documentMousedown) {
-            Entry.documentMousedown.attach(this, this.setSelectedBlock);
-            Entry.documentMousedown.attach(this, this._removeActivated);
+        var evt = Entry.documentMousedown;
+        if (evt) {
+            evt.attach(this, this.setSelectedBlock);
+            evt.attach(this, this._removeActivated);
         }
-        if (Entry.windowResized) {
-            Entry.windowResized
-                .attach(this, Entry.Utils.debounce(this.updateOffset, 200));
-        }
+
+        evt = Entry.windowResized;
+        if (evt) evt.attach(this, Entry.Utils.debounce(this.updateOffset, 200));
     };
 
     p.offset = function() {
@@ -1146,11 +1130,9 @@ Entry.Board.DRAG_RADIUS = 5;
     };
 
     p.getSvgDomRect = function() {
-        if (!this._svgDomRect)
-            this.updateOffset();
+        if (!this._svgDomRect) this.updateOffset();
         return this._svgDomRect;
     };
-
 
 
 })(Entry.Board.prototype);
