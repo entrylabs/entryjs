@@ -53115,6 +53115,7 @@ codestar_tilt: {
 },
 "byrobot_dronefighter_controller_controller_if_button_press": {
     "color": "#00979D",
+    "fontColor": "#fff",
     "skeleton": "basic_boolean_field",
     "statements": [],
     "params": [
@@ -53161,6 +53162,7 @@ codestar_tilt: {
 },
 "byrobot_dronefighter_controller_controller_if_joystick_direction": {
     "color": "#00979D",
+    "fontColor": "#fff",
     "skeleton": "basic_boolean_field",
     "statements": [],
     "params": [
@@ -54212,6 +54214,7 @@ codestar_tilt: {
 },
 "byrobot_dronefighter_drive_controller_if_button_press": {
     "color": "#00979D",
+    "fontColor": "#fff",
     "skeleton": "basic_boolean_field",
     "statements": [],
     "params": [
@@ -54259,6 +54262,7 @@ codestar_tilt: {
 },
 "byrobot_dronefighter_drive_controller_if_joystick_direction": {
     "color": "#00979D",
+    "fontColor": "#fff",
     "skeleton": "basic_boolean_field",
     "statements": [],
     "params": [
@@ -55669,6 +55673,7 @@ codestar_tilt: {
 },
 "byrobot_dronefighter_flight_controller_if_button_press": {
     "color": "#00979D",
+    "fontColor": "#fff",
     "skeleton": "basic_boolean_field",
     "statements": [],
     "params": [
@@ -55716,6 +55721,7 @@ codestar_tilt: {
 },
 "byrobot_dronefighter_flight_controller_if_joystick_direction": {
     "color": "#00979D",
+    "fontColor": "#fff",
     "skeleton": "basic_boolean_field",
     "statements": [],
     "params": [
@@ -57234,6 +57240,7 @@ codestar_tilt: {
 },
 "byrobot_petrone_v2_controller_controller_if_button_press": {
     "color": "#00979D",
+    "fontColor": "#fff",
     "skeleton": "basic_boolean_field",
     "statements": [],
     "params": [
@@ -57280,6 +57287,7 @@ codestar_tilt: {
 },
 "byrobot_petrone_v2_controller_controller_if_joystick_direction": {
     "color": "#00979D",
+    "fontColor": "#fff",
     "skeleton": "basic_boolean_field",
     "statements": [],
     "params": [
@@ -59108,6 +59116,7 @@ codestar_tilt: {
 },
 "byrobot_petrone_v2_drive_controller_if_button_press": {
     "color": "#00979D",
+    "fontColor": "#fff",
     "skeleton": "basic_boolean_field",
     "statements": [],
     "params": [
@@ -59155,6 +59164,7 @@ codestar_tilt: {
 },
 "byrobot_petrone_v2_drive_controller_if_joystick_direction": {
     "color": "#00979D",
+    "fontColor": "#fff",
     "skeleton": "basic_boolean_field",
     "statements": [],
     "params": [
@@ -61799,6 +61809,7 @@ codestar_tilt: {
 },
 "byrobot_petrone_v2_flight_controller_if_button_press": {
     "color": "#00979D",
+    "fontColor": "#fff",
     "skeleton": "basic_boolean_field",
     "statements": [],
     "params": [
@@ -61846,6 +61857,7 @@ codestar_tilt: {
 },
 "byrobot_petrone_v2_flight_controller_if_joystick_direction": {
     "color": "#00979D",
+    "fontColor": "#fff",
     "skeleton": "basic_boolean_field",
     "statements": [],
     "params": [
