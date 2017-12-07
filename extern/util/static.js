@@ -310,6 +310,7 @@ EntryStatic.getAllBlocks = function() {
         {
             category: "arduino",
             blocks: [
+
                 "arduino_download_connector",
                 "download_guide",
                 "arduino_download_source",
@@ -411,17 +412,23 @@ EntryStatic.getAllBlocks = function() {
                 //neobot
                 "neobot_sensor_value",
                 "neobot_sensor_convert_scale",
+                "neobot_equal_with_sensor",
+                "neobot_boolean_equal",
                 "neobot_left_motor",
                 "neobot_stop_left_motor",
                 "neobot_right_motor",
                 "neobot_stop_right_motor",
                 "neobot_all_motor",
+                "neobot_all_motor_iternally",
                 "neobot_stop_all_motor",
                 "neobot_set_servo",
                 "neobot_set_output",
                 "neobot_set_fnd",
                 "neobot_set_fnd_off",
                 "neobot_play_note_for",
+                "neobot_play_note_with_sensor",
+                "neobot_change_color_with_color_picker",
+                "neobot_change_color_with_sensor_value",
                 "bitbrick_sensor_value",
                 "bitbrick_convert_scale",
                 "bitbrick_is_touch_pressed",
@@ -614,6 +621,19 @@ EntryStatic.getAllBlocks = function() {
                 "sensorBoard_toggle_led",
                 "sensorBoard_toggle_pwm",
                 "sensorBoard_convert_scale",
+                //truetrue
+                "truetrue_get_linesensor",
+                "truetrue_get_proxisensor",
+                "truetrue_get_accsensor",
+                "truetrue_get_bottomcolorsensor",
+                "truetrue_get_frontcolorsensor",
+                "truetrue_set_singlemotor",
+                "truetrue_set_dualmotor",
+                "truetrue_set_colorled",
+                "truetrue_set_led_proxi",
+                "truetrue_set_led_colorsensor",
+                "truetrue_set_led_linesensor",
+                "truetrue_set_linetracer",
                 //CODEino
                 "CODEino_get_named_sensor_value",
                 "CODEino_get_sound_status",
@@ -1125,7 +1145,21 @@ EntryStatic.getAllBlocks = function() {
                 "altino_light",
                 "altino_dot_display",
                 "altino_dot_display_line",
-
+                //JDKit Blocks
+                "jdkit_led",
+                "jdkit_tune",
+                "jdkit_motor",
+                "jdkit_joystick",
+                "jdkit_button",
+                "jdkit_gyro",
+                "jdkit_ultrasonic",
+                "jdkit_connect",
+                "jdkit_ready",
+                "jdkit_throttle",
+                "jdkit_altitude",
+                "jdkit_rollpitch",
+                "jdkit_yaw",
+                "jdkit_emergency",
                 // memaker Added 2017-10-01
                 "memaker_get_analog_value",
                 "memaker_get_analog_value_map",
@@ -1135,8 +1169,32 @@ EntryStatic.getAllBlocks = function() {
                 "memaker_digital_pwm",
                 "memaker_set_servo",
                 "memaker_set_lcd",
-                "memaker_lcd_command"
+                "memaker_lcd_command",
                 // memaker Added 2017-10-01
+
+                //hummingbirdduo
+                "hummingbird_sensorValue",
+                "hummingbird_temperatureValue",
+                "hummingbird_lightValue",
+                "hummingbird_distanceValue",
+                "hummingbird_rotaryValue",
+                "hummingbird_soundValue",
+                "hummingbird_vibeMotor",
+                "hummingbird_servo",
+                "hummingbird_dcMotor",
+                "hummingbird_triLED",
+                "hummingbird_led",
+
+                // EduMaker Added 2017-11-30
+                "edumaker_get_analog_value",
+                "edumaker_get_analog_value_map",
+                "edumaker_get_ultrasonic_value",
+                "edumaker_get_digital",
+                "edumaker_toggle_led",
+                "edumaker_digital_pwm",
+                "edumaker_set_tone",
+                "edumaker_set_servo",
+                // EduMaker Added 2017-11-30
             ]
         }
     ]

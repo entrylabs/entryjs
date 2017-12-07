@@ -2559,9 +2559,9 @@ Entry.byrobot_petrone_v2_controller = {name:"byrobot_petrone_v2_controller", set
   for (var c = 0; 1 > c; c++) {
     this.transferVibrator(0, 0, 0, 0), this.transferbuzzer(0, 0, 0), this.transferLightManual(49, 255, 0), this.transferCommand(49, 128, 0);
   }
-}, monitorTemplate:{imgPath:"hw/byrobot_petrone_v2_controller.png", width:500, height:500, listPorts:{joystick_left_x:{name:Lang.Blocks.byrobot_petrone_v2_controller_joystick_left_x, type:"input", pos:{x:0, y:0}}, joystick_left_y:{name:Lang.Blocks.byrobot_petrone_v2_controller_joystick_left_y, type:"input", pos:{x:0, y:0}}, joystick_left_direction:{name:Lang.Blocks.byrobot_petrone_v2_controller_joystick_left_direction, type:"input", pos:{x:0, y:0}}, joystick_left_event:{name:Lang.Blocks.byrobot_petrone_v2_controller_joystick_left_event, 
-type:"input", pos:{x:0, y:0}}, joystick_right_x:{name:Lang.Blocks.byrobot_petrone_v2_controller_joystick_right_x, type:"input", pos:{x:0, y:0}}, joystick_right_y:{name:Lang.Blocks.byrobot_petrone_v2_controller_joystick_right_y, type:"input", pos:{x:0, y:0}}, joystick_right_direction:{name:Lang.Blocks.byrobot_petrone_v2_controller_joystick_right_direction, type:"input", pos:{x:0, y:0}}, joystick_right_event:{name:Lang.Blocks.byrobot_petrone_v2_controller_joystick_right_event, type:"input", pos:{x:0, 
-y:0}}, button_button:{name:Lang.Blocks.byrobot_petrone_v2_controller_button_button, type:"input", pos:{x:0, y:0}}, button_event:{name:Lang.Blocks.byrobot_petrone_v2_controller_button_event, type:"input", pos:{x:0, y:0}}, entryhw_countTransferReserved:{name:Lang.Blocks.byrobot_petrone_v2_entryhw_count_transfer_reserved, type:"output", pos:{x:0, y:0}}}, ports:{}, mode:"both"}, checkFinish:function(c, b) {
+}, monitorTemplate:{listPorts:{joystick_left_x:{name:Lang.Blocks.byrobot_petrone_v2_controller_joystick_left_x, type:"input", pos:{x:0, y:0}}, joystick_left_y:{name:Lang.Blocks.byrobot_petrone_v2_controller_joystick_left_y, type:"input", pos:{x:0, y:0}}, joystick_left_direction:{name:Lang.Blocks.byrobot_petrone_v2_controller_joystick_left_direction, type:"input", pos:{x:0, y:0}}, joystick_left_event:{name:Lang.Blocks.byrobot_petrone_v2_controller_joystick_left_event, type:"input", pos:{x:0, y:0}}, 
+joystick_right_x:{name:Lang.Blocks.byrobot_petrone_v2_controller_joystick_right_x, type:"input", pos:{x:0, y:0}}, joystick_right_y:{name:Lang.Blocks.byrobot_petrone_v2_controller_joystick_right_y, type:"input", pos:{x:0, y:0}}, joystick_right_direction:{name:Lang.Blocks.byrobot_petrone_v2_controller_joystick_right_direction, type:"input", pos:{x:0, y:0}}, joystick_right_event:{name:Lang.Blocks.byrobot_petrone_v2_controller_joystick_right_event, type:"input", pos:{x:0, y:0}}, button_button:{name:Lang.Blocks.byrobot_petrone_v2_controller_button_button, 
+type:"input", pos:{x:0, y:0}}, button_event:{name:Lang.Blocks.byrobot_petrone_v2_controller_button_event, type:"input", pos:{x:0, y:0}}, entryhw_countTransferReserved:{name:Lang.Blocks.byrobot_petrone_v2_entryhw_count_transfer_reserved, type:"output", pos:{x:0, y:0}}}, ports:{}, mode:"both"}, checkFinish:function(c, b) {
   if (c.isStart) {
     if (1 == c.timeFlag) {
       return "Running";
@@ -2591,7 +2591,7 @@ y:0}}, button_button:{name:Lang.Blocks.byrobot_petrone_v2_controller_button_butt
   delete Entry.hw.sendQueue.target;
   delete Entry.hw.sendQueue.light_manual_flags;
   delete Entry.hw.sendQueue.light_manual_brightness;
-}, transferLightColorRgb:function(c, b, d, e) {
+}, transferLightColorRgb:function(c, b, d, e, f) {
   c = Math.max(c, 0);
   c = Math.min(c, 255);
   b = Math.max(b, 0);
@@ -2600,12 +2600,16 @@ y:0}}, button_button:{name:Lang.Blocks.byrobot_petrone_v2_controller_button_butt
   d = Math.min(d, 255);
   e = Math.max(e, 0);
   e = Math.min(e, 255);
+  f = Math.max(f, 0);
+  f = Math.min(f, 255);
   Entry.hw.setDigitalPortValue("target", c);
-  Entry.hw.setDigitalPortValue("light_color_r", b);
-  Entry.hw.setDigitalPortValue("light_color_g", d);
-  Entry.hw.setDigitalPortValue("light_color_b", e);
+  Entry.hw.setDigitalPortValue("light_mode_mode", b);
+  Entry.hw.setDigitalPortValue("light_color_r", d);
+  Entry.hw.setDigitalPortValue("light_color_g", e);
+  Entry.hw.setDigitalPortValue("light_color_b", f);
   Entry.hw.update();
   delete Entry.hw.sendQueue.target;
+  delete Entry.hw.sendQueue.light_mode_mode;
   delete Entry.hw.sendQueue.light_color_r;
   delete Entry.hw.sendQueue.light_color_g;
   delete Entry.hw.sendQueue.light_color_b;
@@ -2805,10 +2809,10 @@ y:0}}, button_button:{name:Lang.Blocks.byrobot_petrone_v2_controller_button_butt
     default:
       return c.callReturn();
   }
-}, setLightColorRgb:function(c, b, d, e, f) {
+}, setLightColorRgb:function(c, b, d, e, f, g) {
   switch(this.checkFinish(c, 40)) {
     case "Start":
-      return this.transferLightColorRgb(b, d, e, f), c;
+      return this.transferLightColorRgb(b, d, e, f, g), c;
     case "Running":
       return c;
     case "Finish":
@@ -3001,11 +3005,11 @@ y:0}}, button_button:{name:Lang.Blocks.byrobot_petrone_v2_controller_button_butt
 Entry.byrobot_petrone_v2_drive = {name:"byrobot_petrone_v2_drive", setZero:function() {
   this.transferBufferClear();
   for (var c = 0; 1 > c; c++) {
-    this.transferCommand(48, 36, 0), this.transferVibrator(0, 0, 0, 0), this.transferbuzzer(0, 0, 0), this.transferLightManual(48, 255, 0), this.transferLightManual(49, 255, 0), this.transferLightMode(48, 67, 2000), this.transferMotorSingle(0, 1, 0), this.transferMotorSingle(1, 2, 0);
+    this.transferCommand(48, 36, 0), this.transferVibrator(0, 0, 0, 0), this.transferbuzzer(0, 0, 0), this.transferLightManual(48, 255, 0), this.transferLightManual(49, 255, 0), this.transferLightManual(48, 128, 200), this.transferLightManual(48, 16, 200), this.transferMotorSingle(0, 1, 0), this.transferMotorSingle(1, 2, 0);
   }
-}, monitorTemplate:{imgPath:"hw/byrobot_petrone_v2_drive.png", width:256, height:256, listPorts:{state_modeVehicle:{name:Lang.Blocks.byrobot_petrone_v2_drone_state_mode_vehicle, type:"input", pos:{x:0, y:0}}, state_modeDrive:{name:Lang.Blocks.byrobot_petrone_v2_drone_state_mode_drive, type:"input", pos:{x:0, y:0}}, state_battery:{name:Lang.Blocks.byrobot_petrone_v2_drone_state_battery, type:"input", pos:{x:0, y:0}}, imu_angleRoll:{name:Lang.Blocks.byrobot_petrone_v2_drone_attitude_roll, type:"input", 
-pos:{x:0, y:0}}, imu_anglePitch:{name:Lang.Blocks.byrobot_petrone_v2_drone_attitude_pitch, type:"input", pos:{x:0, y:0}}, imu_angleYaw:{name:Lang.Blocks.byrobot_petrone_v2_drone_attitude_yaw, type:"input", pos:{x:0, y:0}}, imu_accX:{name:Lang.Blocks.byrobot_petrone_v2_drone_accel_x, type:"input", pos:{x:0, y:0}}, imu_accY:{name:Lang.Blocks.byrobot_petrone_v2_drone_accel_y, type:"input", pos:{x:0, y:0}}, imu_accZ:{name:Lang.Blocks.byrobot_petrone_v2_drone_accel_z, type:"input", pos:{x:0, y:0}}, imu_gyroRoll:{name:Lang.Blocks.byrobot_petrone_v2_drone_gyro_roll, 
-type:"input", pos:{x:0, y:0}}, imu_gyroPitch:{name:Lang.Blocks.byrobot_petrone_v2_drone_gyro_pitch, type:"input", pos:{x:0, y:0}}, imu_gyroYaw:{name:Lang.Blocks.byrobot_petrone_v2_drone_gyro_yaw, type:"input", pos:{x:0, y:0}}, pressure_temperature:{name:Lang.Blocks.byrobot_petrone_v2_drone_pressure_temperature, type:"input", pos:{x:0, y:0}}, pressure_pressure:{name:Lang.Blocks.byrobot_petrone_v2_drone_pressure_pressure, type:"input", pos:{x:0, y:0}}, imageflow_positionX:{name:Lang.Blocks.byrobot_petrone_v2_drone_imageflow_positionX, 
+}, monitorTemplate:{listPorts:{state_modeVehicle:{name:Lang.Blocks.byrobot_petrone_v2_drone_state_mode_vehicle, type:"input", pos:{x:0, y:0}}, state_modeDrive:{name:Lang.Blocks.byrobot_petrone_v2_drone_state_mode_drive, type:"input", pos:{x:0, y:0}}, state_battery:{name:Lang.Blocks.byrobot_petrone_v2_drone_state_battery, type:"input", pos:{x:0, y:0}}, imu_angleRoll:{name:Lang.Blocks.byrobot_petrone_v2_drone_attitude_roll, type:"input", pos:{x:0, y:0}}, imu_anglePitch:{name:Lang.Blocks.byrobot_petrone_v2_drone_attitude_pitch, 
+type:"input", pos:{x:0, y:0}}, imu_angleYaw:{name:Lang.Blocks.byrobot_petrone_v2_drone_attitude_yaw, type:"input", pos:{x:0, y:0}}, imu_accX:{name:Lang.Blocks.byrobot_petrone_v2_drone_accel_x, type:"input", pos:{x:0, y:0}}, imu_accY:{name:Lang.Blocks.byrobot_petrone_v2_drone_accel_y, type:"input", pos:{x:0, y:0}}, imu_accZ:{name:Lang.Blocks.byrobot_petrone_v2_drone_accel_z, type:"input", pos:{x:0, y:0}}, imu_gyroRoll:{name:Lang.Blocks.byrobot_petrone_v2_drone_gyro_roll, type:"input", pos:{x:0, y:0}}, 
+imu_gyroPitch:{name:Lang.Blocks.byrobot_petrone_v2_drone_gyro_pitch, type:"input", pos:{x:0, y:0}}, imu_gyroYaw:{name:Lang.Blocks.byrobot_petrone_v2_drone_gyro_yaw, type:"input", pos:{x:0, y:0}}, pressure_temperature:{name:Lang.Blocks.byrobot_petrone_v2_drone_pressure_temperature, type:"input", pos:{x:0, y:0}}, pressure_pressure:{name:Lang.Blocks.byrobot_petrone_v2_drone_pressure_pressure, type:"input", pos:{x:0, y:0}}, imageflow_positionX:{name:Lang.Blocks.byrobot_petrone_v2_drone_imageflow_positionX, 
 type:"input", pos:{x:0, y:0}}, imageflow_positionY:{name:Lang.Blocks.byrobot_petrone_v2_drone_imageflow_positionY, type:"input", pos:{x:0, y:0}}, range_bottom:{name:Lang.Blocks.byrobot_petrone_v2_drone_range_bottom, type:"input", pos:{x:0, y:0}}, irmessage_direction:{name:Lang.Blocks.byrobot_petrone_v2_drone_irmessage_direction, type:"input", pos:{x:0, y:0}}, irmessage_irdata:{name:Lang.Blocks.byrobot_petrone_v2_drone_irmessage, type:"input", pos:{x:0, y:0}}, joystick_left_x:{name:Lang.Blocks.byrobot_petrone_v2_controller_joystick_left_x, 
 type:"input", pos:{x:0, y:0}}, joystick_left_y:{name:Lang.Blocks.byrobot_petrone_v2_controller_joystick_left_y, type:"input", pos:{x:0, y:0}}, joystick_left_direction:{name:Lang.Blocks.byrobot_petrone_v2_controller_joystick_left_direction, type:"input", pos:{x:0, y:0}}, joystick_left_event:{name:Lang.Blocks.byrobot_petrone_v2_controller_joystick_left_event, type:"input", pos:{x:0, y:0}}, joystick_right_x:{name:Lang.Blocks.byrobot_petrone_v2_controller_joystick_right_x, type:"input", pos:{x:0, y:0}}, 
 joystick_right_y:{name:Lang.Blocks.byrobot_petrone_v2_controller_joystick_right_y, type:"input", pos:{x:0, y:0}}, joystick_right_direction:{name:Lang.Blocks.byrobot_petrone_v2_controller_joystick_right_direction, type:"input", pos:{x:0, y:0}}, joystick_right_event:{name:Lang.Blocks.byrobot_petrone_v2_controller_joystick_right_event, type:"input", pos:{x:0, y:0}}, button_button:{name:Lang.Blocks.byrobot_petrone_v2_controller_button_button, type:"input", pos:{x:0, y:0}}, button_event:{name:Lang.Blocks.byrobot_petrone_v2_controller_button_event, 
@@ -3598,15 +3602,15 @@ type:"input", pos:{x:0, y:0}}, entryhw_countTransferReserved:{name:Lang.Blocks.b
 Entry.byrobot_petrone_v2_flight = {name:"byrobot_petrone_v2_flight", setZero:function() {
   this.transferBufferClear();
   for (var c = 0; 1 > c; c++) {
-    this.transferCommand(48, 36, 0), this.transferVibrator(0, 0, 0, 0), this.transferbuzzer(0, 0, 0), this.transferLightManual(48, 255, 0), this.transferLightManual(49, 255, 0), this.transferLightMode(48, 67, 2000), this.transferMotorSingle(0, 1, 0), this.transferMotorSingle(1, 2, 0);
+    this.transferCommand(48, 36, 0), this.transferVibrator(0, 0, 0, 0), this.transferbuzzer(0, 0, 0), this.transferLightManual(48, 255, 0), this.transferLightManual(49, 255, 0), this.transferLightManual(48, 128, 200), this.transferLightManual(48, 16, 200), this.transferMotorSingle(0, 1, 0), this.transferMotorSingle(1, 2, 0);
   }
-}, monitorTemplate:{imgPath:"hw/byrobot_petrone_v2_flight.png", width:256, height:256, listPorts:{state_modeVehicle:{name:Lang.Blocks.byrobot_petrone_v2_drone_state_mode_vehicle, type:"input", pos:{x:0, y:0}}, state_modeFlight:{name:Lang.Blocks.byrobot_petrone_v2_drone_state_mode_flight, type:"input", pos:{x:0, y:0}}, state_coordinate:{name:Lang.Blocks.byrobot_petrone_v2_drone_state_mode_coordinate, type:"input", pos:{x:0, y:0}}, state_battery:{name:Lang.Blocks.byrobot_petrone_v2_drone_state_battery, 
-type:"input", pos:{x:0, y:0}}, imu_angleRoll:{name:Lang.Blocks.byrobot_petrone_v2_drone_attitude_roll, type:"input", pos:{x:0, y:0}}, imu_anglePitch:{name:Lang.Blocks.byrobot_petrone_v2_drone_attitude_pitch, type:"input", pos:{x:0, y:0}}, imu_angleYaw:{name:Lang.Blocks.byrobot_petrone_v2_drone_attitude_yaw, type:"input", pos:{x:0, y:0}}, imu_accX:{name:Lang.Blocks.byrobot_petrone_v2_drone_accel_x, type:"input", pos:{x:0, y:0}}, imu_accY:{name:Lang.Blocks.byrobot_petrone_v2_drone_accel_y, type:"input", 
-pos:{x:0, y:0}}, imu_accZ:{name:Lang.Blocks.byrobot_petrone_v2_drone_accel_z, type:"input", pos:{x:0, y:0}}, imu_gyroRoll:{name:Lang.Blocks.byrobot_petrone_v2_drone_gyro_roll, type:"input", pos:{x:0, y:0}}, imu_gyroPitch:{name:Lang.Blocks.byrobot_petrone_v2_drone_gyro_pitch, type:"input", pos:{x:0, y:0}}, imu_gyroYaw:{name:Lang.Blocks.byrobot_petrone_v2_drone_gyro_yaw, type:"input", pos:{x:0, y:0}}, pressure_temperature:{name:Lang.Blocks.byrobot_petrone_v2_drone_pressure_temperature, type:"input", 
-pos:{x:0, y:0}}, pressure_pressure:{name:Lang.Blocks.byrobot_petrone_v2_drone_pressure_pressure, type:"input", pos:{x:0, y:0}}, imageflow_positionX:{name:Lang.Blocks.byrobot_petrone_v2_drone_imageflow_positionX, type:"input", pos:{x:0, y:0}}, imageflow_positionY:{name:Lang.Blocks.byrobot_petrone_v2_drone_imageflow_positionY, type:"input", pos:{x:0, y:0}}, range_bottom:{name:Lang.Blocks.byrobot_petrone_v2_drone_range_bottom, type:"input", pos:{x:0, y:0}}, irmessage_direction:{name:Lang.Blocks.byrobot_petrone_v2_drone_irmessage_direction, 
-type:"input", pos:{x:0, y:0}}, irmessage_irdata:{name:Lang.Blocks.byrobot_petrone_v2_drone_irmessage, type:"input", pos:{x:0, y:0}}, joystick_left_x:{name:Lang.Blocks.byrobot_petrone_v2_controller_joystick_left_x, type:"input", pos:{x:0, y:0}}, joystick_left_y:{name:Lang.Blocks.byrobot_petrone_v2_controller_joystick_left_y, type:"input", pos:{x:0, y:0}}, joystick_left_direction:{name:Lang.Blocks.byrobot_petrone_v2_controller_joystick_left_direction, type:"input", pos:{x:0, y:0}}, joystick_left_event:{name:Lang.Blocks.byrobot_petrone_v2_controller_joystick_left_event, 
-type:"input", pos:{x:0, y:0}}, joystick_right_x:{name:Lang.Blocks.byrobot_petrone_v2_controller_joystick_right_x, type:"input", pos:{x:0, y:0}}, joystick_right_y:{name:Lang.Blocks.byrobot_petrone_v2_controller_joystick_right_y, type:"input", pos:{x:0, y:0}}, joystick_right_direction:{name:Lang.Blocks.byrobot_petrone_v2_controller_joystick_right_direction, type:"input", pos:{x:0, y:0}}, joystick_right_event:{name:Lang.Blocks.byrobot_petrone_v2_controller_joystick_right_event, type:"input", pos:{x:0, 
-y:0}}, button_button:{name:Lang.Blocks.byrobot_petrone_v2_controller_button_button, type:"input", pos:{x:0, y:0}}, button_event:{name:Lang.Blocks.byrobot_petrone_v2_controller_button_event, type:"input", pos:{x:0, y:0}}, entryhw_countTransferReserved:{name:Lang.Blocks.byrobot_petrone_v2_entryhw_count_transfer_reserved, type:"output", pos:{x:0, y:0}}}, ports:{}, mode:"both"}, checkFinish:function(c, b) {
+}, monitorTemplate:{listPorts:{state_modeVehicle:{name:Lang.Blocks.byrobot_petrone_v2_drone_state_mode_vehicle, type:"input", pos:{x:0, y:0}}, state_modeFlight:{name:Lang.Blocks.byrobot_petrone_v2_drone_state_mode_flight, type:"input", pos:{x:0, y:0}}, state_coordinate:{name:Lang.Blocks.byrobot_petrone_v2_drone_state_mode_coordinate, type:"input", pos:{x:0, y:0}}, state_battery:{name:Lang.Blocks.byrobot_petrone_v2_drone_state_battery, type:"input", pos:{x:0, y:0}}, imu_angleRoll:{name:Lang.Blocks.byrobot_petrone_v2_drone_attitude_roll, 
+type:"input", pos:{x:0, y:0}}, imu_anglePitch:{name:Lang.Blocks.byrobot_petrone_v2_drone_attitude_pitch, type:"input", pos:{x:0, y:0}}, imu_angleYaw:{name:Lang.Blocks.byrobot_petrone_v2_drone_attitude_yaw, type:"input", pos:{x:0, y:0}}, imu_accX:{name:Lang.Blocks.byrobot_petrone_v2_drone_accel_x, type:"input", pos:{x:0, y:0}}, imu_accY:{name:Lang.Blocks.byrobot_petrone_v2_drone_accel_y, type:"input", pos:{x:0, y:0}}, imu_accZ:{name:Lang.Blocks.byrobot_petrone_v2_drone_accel_z, type:"input", pos:{x:0, 
+y:0}}, imu_gyroRoll:{name:Lang.Blocks.byrobot_petrone_v2_drone_gyro_roll, type:"input", pos:{x:0, y:0}}, imu_gyroPitch:{name:Lang.Blocks.byrobot_petrone_v2_drone_gyro_pitch, type:"input", pos:{x:0, y:0}}, imu_gyroYaw:{name:Lang.Blocks.byrobot_petrone_v2_drone_gyro_yaw, type:"input", pos:{x:0, y:0}}, pressure_temperature:{name:Lang.Blocks.byrobot_petrone_v2_drone_pressure_temperature, type:"input", pos:{x:0, y:0}}, pressure_pressure:{name:Lang.Blocks.byrobot_petrone_v2_drone_pressure_pressure, type:"input", 
+pos:{x:0, y:0}}, imageflow_positionX:{name:Lang.Blocks.byrobot_petrone_v2_drone_imageflow_positionX, type:"input", pos:{x:0, y:0}}, imageflow_positionY:{name:Lang.Blocks.byrobot_petrone_v2_drone_imageflow_positionY, type:"input", pos:{x:0, y:0}}, range_bottom:{name:Lang.Blocks.byrobot_petrone_v2_drone_range_bottom, type:"input", pos:{x:0, y:0}}, irmessage_direction:{name:Lang.Blocks.byrobot_petrone_v2_drone_irmessage_direction, type:"input", pos:{x:0, y:0}}, irmessage_irdata:{name:Lang.Blocks.byrobot_petrone_v2_drone_irmessage, 
+type:"input", pos:{x:0, y:0}}, joystick_left_x:{name:Lang.Blocks.byrobot_petrone_v2_controller_joystick_left_x, type:"input", pos:{x:0, y:0}}, joystick_left_y:{name:Lang.Blocks.byrobot_petrone_v2_controller_joystick_left_y, type:"input", pos:{x:0, y:0}}, joystick_left_direction:{name:Lang.Blocks.byrobot_petrone_v2_controller_joystick_left_direction, type:"input", pos:{x:0, y:0}}, joystick_left_event:{name:Lang.Blocks.byrobot_petrone_v2_controller_joystick_left_event, type:"input", pos:{x:0, y:0}}, 
+joystick_right_x:{name:Lang.Blocks.byrobot_petrone_v2_controller_joystick_right_x, type:"input", pos:{x:0, y:0}}, joystick_right_y:{name:Lang.Blocks.byrobot_petrone_v2_controller_joystick_right_y, type:"input", pos:{x:0, y:0}}, joystick_right_direction:{name:Lang.Blocks.byrobot_petrone_v2_controller_joystick_right_direction, type:"input", pos:{x:0, y:0}}, joystick_right_event:{name:Lang.Blocks.byrobot_petrone_v2_controller_joystick_right_event, type:"input", pos:{x:0, y:0}}, button_button:{name:Lang.Blocks.byrobot_petrone_v2_controller_button_button, 
+type:"input", pos:{x:0, y:0}}, button_event:{name:Lang.Blocks.byrobot_petrone_v2_controller_button_event, type:"input", pos:{x:0, y:0}}, entryhw_countTransferReserved:{name:Lang.Blocks.byrobot_petrone_v2_entryhw_count_transfer_reserved, type:"output", pos:{x:0, y:0}}}, ports:{}, mode:"both"}, checkFinish:function(c, b) {
   if (c.isStart) {
     if (1 == c.timeFlag) {
       return "Running";
@@ -4744,6 +4748,7 @@ Entry.DaduBlock_Car = {name:"dadublock_car", setZero:function() {
   Entry.hw.update();
 }, sensorTypes:{ALIVE:0, DIGITAL:1, ANALOG:2, PWM:3, SERVO_PIN:4, TONE:5, PULSEIN:6, ULTRASONIC:7, TIMER:8}, toneMap:{1:[33, 65, 131, 262, 523, 1046, 2093, 4186], 2:[35, 69, 139, 277, 554, 1109, 2217, 4435], 3:[37, 73, 147, 294, 587, 1175, 2349, 4699], 4:[39, 78, 156, 311, 622, 1245, 2849, 4978], 5:[41, 82, 165, 330, 659, 1319, 2637, 5274], 6:[44, 87, 175, 349, 698, 1397, 2794, 5588], 7:[46, 92, 185, 370, 740, 1480, 2960, 5920], 8:[49, 98, 196, 392, 784, 1568, 3136, 6272], 9:[52, 104, 208, 415, 831, 
 1661, 3322, 6645], 10:[55, 110, 220, 440, 880, 1760, 3520, 7040], 11:[58, 117, 233, 466, 932, 1865, 3729, 7459], 12:[62, 123, 247, 494, 988, 1976, 3951, 7902]}, BlockState:{}};
+Entry.EduMaker = $.extend(!0, {}, Entry.ArduinoExt, {name:"EduMaker"});
 Entry.EV3 = {PORT_MAP:{A:0, B:0, C:0, D:0, 1:void 0, 2:void 0, 3:void 0, 4:void 0}, motorMovementTypes:{Degrees:0, Power:1}, deviceTypes:{NxtTouch:1, NxtLight:2, NxtSound:3, NxtColor:4, NxtUltrasonic:5, NxtTemperature:6, LMotor:7, MMotor:8, Touch:16, Color:29, Ultrasonic:30, Gyroscope:32, Infrared:33, Initializing:125, Empty:126, WrongPort:127, Unknown:255}, colorSensorValue:" 000000 0000FF 00FF00 FFFF00 FF0000 FFFFFF A52A2A".split(" "), timeouts:[], removeTimeout:function(c) {
   clearTimeout(c);
   var b = this.timeouts;
@@ -4921,6 +4926,124 @@ Entry.Hamster = {PORT_MAP:{motion:0, leftWheel:0, rightWheel:0, buzzer:0, output
 type:"input", pos:{x:0, y:0}}, accelerationZ:{name:Lang.Blocks.HAMSTER_sensor_acceleration_z, type:"input", pos:{x:0, y:0}}, buzzer:{name:Lang.Hw.buzzer, type:"output", pos:{x:0, y:0}}, note:{name:Lang.Hw.note, type:"output", pos:{x:0, y:0}}, outputA:{name:Lang.Hw.output + "A", type:"output", pos:{x:0, y:0}}, outputB:{name:Lang.Hw.output + "B", type:"output", pos:{x:0, y:0}}}, ports:{leftProximity:{name:Lang.Blocks.HAMSTER_sensor_left_proximity, type:"input", pos:{x:122, y:156}}, rightProximity:{name:Lang.Blocks.HAMSTER_sensor_right_proximity, 
 type:"input", pos:{x:10, y:108}}, leftFloor:{name:Lang.Blocks.HAMSTER_sensor_left_floor, type:"input", pos:{x:100, y:234}}, rightFloor:{name:Lang.Blocks.HAMSTER_sensor_right_floor, type:"input", pos:{x:13, y:180}}, light:{name:Lang.Blocks.HAMSTER_sensor_light, type:"input", pos:{x:56, y:189}}, leftWheel:{name:Lang.Hw.leftWheel, type:"output", pos:{x:209, y:115}}, rightWheel:{name:Lang.Hw.rightWheel, type:"output", pos:{x:98, y:30}}, leftLed:{name:Lang.Hw.left + " " + Lang.Hw.led_en, type:"output", 
 pos:{x:87, y:210}}, rightLed:{name:Lang.Hw.right + " " + Lang.Hw.led_en, type:"output", pos:{x:24, y:168}}}, mode:"both"}};
+Entry.hummingbird = {PORT_MAP:{triLEDR1:256, triLEDG1:256, triLEDB1:256, triLEDR2:256, triLEDG2:256, triLEDB2:256, led1:256, led2:256, led3:256, led4:256, vibrat1:256, vibrat2:256, dcMotor1:256, dcMotor2:256}, setZero:function() {
+  var c = Entry.hummingbird.PORT_MAP, b = Entry.hw.sendQueue, d;
+  for (d in c) {
+    b[d] = c[d];
+  }
+  Entry.hw.update();
+  Entry.hummingbird.removeAllTimeouts();
+}, timeouts:[], removeTimeout:function(c) {
+  clearTimeout(c);
+  var b = this.timeouts;
+  c = b.indexOf(c);
+  0 <= c && b.splice(c, 1);
+}, removeAllTimeouts:function() {
+  var c = this.timeouts, b;
+  for (b in c) {
+    clearTimeout(c[b]);
+  }
+  this.timeouts = [];
+}, name:"hummingbird"};
+Blockly.Blocks.hummingbird_sensorValue = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("").appendField(new Blockly.FieldDropdown([["1", "adc1"], ["2", "adc2"], ["3", "adc3"], ["4", "adc4"]]), "DEVICE");
+  this.setInputsInline(!0);
+  this.setOutput(!0, "Number");
+}};
+Entry.block.hummingbird_sensorValue = function(c, b) {
+  c = Entry.hw.portData;
+  b = b.getField("DEVICE");
+  return c[b];
+};
+Blockly.Blocks.hummingbird_viveMotor = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField(Lang.Blocks.hummingbird_analog).appendField(new Blockly.FieldDropdown([["1", "viveMotor1"], ["2", "viveMotor2"]]), "DEVICE").appendField(Lang.Blocks.hummingbird_pin_Output_Value);
+  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.hummingbird_viveMotor = function(c, b) {
+  c = Entry.hw.sendQueue;
+  var d = b.getStringField("DEVICE", b), e = b.getNumberValue("VALUE", b);
+  "viveMotor1" == d ? c.vibrat1 = e : "viveMotor2" == d && (c.vibrat2 = e);
+  return b.callReturn();
+};
+Blockly.Blocks.hummingbird_servo = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("\uc11c\ubcf4\ubaa8\ud130").appendField(new Blockly.FieldDropdown([["1\ubc88\uc11c\ubcf4", servo1], ["2\ubc88\uc11c\ubcf4", servo2], ["3\ubc88\uc11c\ubcf4", servo3], ["4\ubc88\uc11c\ubcf4", servo4]]), "DEVICE").appendField("\uac01\ub3c4");
+  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.hummingbird_servo = function(c, b) {
+  c = Entry.hw.sendQueue;
+  var d = b.getStringField("DEVICE", b), e = b.getNumberValue("VALUE", b);
+  "servo1" == d ? c.servo1 = e : "servo2" == d ? c.servo2 = e : "servo3" == d ? c.servo3 = e : "servo4" == d && (c.servo4 = e);
+  return b.callReturn();
+};
+Blockly.Blocks.hummingbird_dcMotor = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("DC\ubaa8\ud130").appendField(new Blockly.FieldDropdown([["1\ubc88 DC\ubaa8\ud130", "dcMotor1"], ["2\ubc88 DC\ubaa8\ud130", "dcMotor2"]]), "DEVICE").appendField(Lang.Blocks.hummingbird_speed);
+  this.appendValueInput("VALUE").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.hummingbird_dcMotor = function(c, b) {
+  c = Entry.hw.sendQueue;
+  var d = b.getStringField("DEVICE", b), e = b.getNumberValue("VALUE", b);
+  "dcMotor1" == d ? c.dcMotor1 = e : "dcMotor2" == d && (c.dcMotor2 = e);
+  return b.callReturn();
+};
+Blockly.Blocks.hummingbird_triLED = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("TriLED").appendField(new Blockly.FieldDropdown([["1\ubc88", "triLED1"], ["2\ubc88", "triLED2"]]), "DEVICE");
+  this.appendValueInput("red").appendField("cRED").setCheck(["Number", "String"]);
+  this.appendValueInput("green").appendField("cGREEN").setCheck(["Number", "String"]);
+  this.appendValueInput("blue").appendField("cBLUE").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.hummingbird_triLED = function(c, b) {
+  c = Entry.hw.sendQueue;
+  var d = b.getStringField("DEVICE", b), e = b.getNumberValue("cRED", b), f = b.getNumberValue("cGREEN", b), g = b.getNumberValue("cBLUE", b);
+  "triLED1" == d ? (c.triLEDR1 = e, c.triLEDG1 = f, c.triLEDB1 = g) : "triLED2" == d && (c.triLEDR2 = e, c.triLEDG2 = f, c.triLEDB2 = g);
+  return b.callReturn();
+};
+Blockly.Blocks.hummingbird_triLED = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("TriLED").appendField(new Blockly.FieldDropdown([["1\ubc88", "triLED1"], ["2\ubc88", "triLED2"]]), "DEVICE");
+  this.appendValueInput("red").appendField("cRED").setCheck(["Number", "String"]);
+  this.appendValueInput("green").appendField("cGREEN").setCheck(["Number", "String"]);
+  this.appendValueInput("blue").appendField("cBLUE").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Blockly.Blocks.hummingbird_led = {init:function() {
+  this.setColour("#00979D");
+  this.appendDummyInput().appendField("LED").appendField(new Blockly.FieldDropdown([["1\ubc88", "led1"], ["2\ubc88", "led2"], ["3\ubc88", "led3"], ["4\ubc88", "led4"]]), "DEVICE");
+  this.appendValueInput("\uac12").appendField("ledValue").setCheck(["Number", "String"]);
+  this.appendDummyInput().appendField(new Blockly.FieldIcon(Entry.mediaFilePath + "block_icon/hardware_03.png", "*"));
+  this.setInputsInline(!0);
+  this.setPreviousStatement(!0);
+  this.setNextStatement(!0);
+}};
+Entry.block.hummingbird_led = function(c, b) {
+  c = Entry.hw.sendQueue;
+  var d = b.getStringField("DEVICE", b), e = b.getNumberValue("ledValue", b);
+  "led1" == d ? c.led1 = e : "led2" == d ? c.led2 = e : "led3" == d ? c.led3 = e : "led4" == d && (c.led4 = e);
+  return b.callReturn();
+};
 Entry.iboard = {name:"iboard", setZero:function() {
   Entry.hw.sendQueue.SET ? Object.keys(Entry.hw.sendQueue.SET).forEach(function(c) {
     Entry.hw.sendQueue.SET[c].data = 0;
@@ -4929,6 +5052,11 @@ Entry.iboard = {name:"iboard", setZero:function() {
   Entry.hw.update();
 }, sensorTypes:{ALIVE:0, DIGITAL:1, ANALOG:2, PWM:3, SERVO_PIN:4, TONE:5, PULSEIN:6, ULTRASONIC:7, TIMER:8}, toneTable:{0:0, C:1, CS:2, D:3, DS:4, E:5, F:6, FS:7, G:8, GS:9, A:10, AS:11, B:12}, toneMap:{1:[33, 65, 131, 262, 523, 1046, 2093, 4186], 2:[35, 69, 139, 277, 554, 1109, 2217, 4435], 3:[37, 73, 147, 294, 587, 1175, 2349, 4699], 4:[39, 78, 156, 311, 622, 1245, 2849, 4978], 5:[41, 82, 165, 330, 659, 1319, 2637, 5274], 6:[44, 87, 175, 349, 698, 1397, 2794, 5588], 7:[46, 92, 185, 370, 740, 1480, 
 2960, 5920], 8:[49, 98, 196, 392, 784, 1568, 3136, 6272], 9:[52, 104, 208, 415, 831, 1661, 3322, 6645], 10:[55, 110, 220, 440, 880, 1760, 3520, 7040], 11:[58, 117, 233, 466, 932, 1865, 3729, 7459], 12:[62, 123, 247, 494, 988, 1976, 3951, 7902]}, highList:["high", "1", "on"], lowList:["low", "0", "off"], BlockState:{}};
+Entry.JDKit = {Cmd:{LED:1, TUNE:2, TUNEDUR:3, ROLL:4, PITCH:5, YAW:6, THROTTLE:7, OPTION:8, MOTOR0:9, MOTOR1:10, MOTOR2:11, MOTOR3:12}, Sensor:{JOYSTICK_LLR:1, JOYSTICK_LTB:2, JOYSTICK_RLR:3, JOYSTICK_RTB:4, BUTTON:5, DRONECONNECT:6, ULTRASONIC:7, GYRO_X:8, GYRO_Y:9, DRONEREADY:10}, setZero:function() {
+  Entry.hw.sendQueue.CMD = [240, 0, 0, 0, 100, 100, 100, 0, 0, 0, 0, 0, 0];
+  Entry.hw.update();
+}, name:"JDKit", monitorTemplate:{imgPath:"hw/coconut.png", width:256, height:256, listPorts:{"CMD[1]":{name:Lang.Blocks.coconut_sensor_temperature, type:"input", pos:{x:0, y:0}}, accelerationX:{name:Lang.Blocks.coconut_sensor_acceleration_x, type:"input", pos:{x:0, y:0}}, accelerationY:{name:Lang.Blocks.coconut_sensor_acceleration_y, type:"input", pos:{x:0, y:0}}, accelerationZ:{name:Lang.Blocks.coconut_sensor_acceleration_z, type:"input", pos:{x:0, y:0}}}, ports:{leftProximityValue:{name:Lang.Blocks.coconut_sensor_left_proximity, 
+type:"input", pos:{x:122, y:156}}, rightProximityValue:{name:Lang.Blocks.coconut_sensor_right_proximity, type:"input", pos:{x:10, y:108}}, leftFloorValue:{name:Lang.Blocks.coconut_sensor_left_floor, type:"input", pos:{x:100, y:234}}, rightFloorValue:{name:Lang.Blocks.coconut_sensor_right_floor, type:"input", pos:{x:13, y:180}}, light:{name:Lang.Blocks.coconut_sensor_light, type:"input", pos:{x:56, y:189}}}, mode:"both"}};
 Entry.Mechatronics_4D = {name:"mechatronics_4d", setZero:function() {
   Entry.hw.sendQueue.SET ? Object.keys(Entry.hw.sendQueue.SET).forEach(function(c) {
     Entry.hw.sendQueue.SET[c].data = 0;
@@ -5238,7 +5366,7 @@ Entry.Neobot = {name:"neobot", LOCAL_MAP:["IN1", "IN2", "IN3", "IR", "BAT"], REM
     Entry.hw.sendQueue[Entry.Neobot.REMOTE_MAP[c]] = 0;
   }
   Entry.hw.update();
-}, monitorTemplate:{imgPath:"hw/neobot.png", width:700, height:700, listPorts:{IR:{name:"\ub9ac\ubaa8\ucee8", type:"input", pos:{x:0, y:0}}, BAT:{name:"\ubca0\ud130\ub9ac", type:"input", pos:{x:0, y:0}}, SND:{name:Lang.Hw.buzzer, type:"output", pos:{x:0, y:0}}, FND:{name:"FND", type:"output", pos:{x:0, y:0}}}, ports:{IN1:{name:"IN1", type:"input", pos:{x:270, y:200}}, IN2:{name:"IN2", type:"input", pos:{x:325, y:200}}, IN3:{name:"IN3", type:"input", pos:{x:325, y:500}}, DCL:{name:"L-Motor", type:"output", 
+}, monitorTemplate:{imgPath:"hw/neobot.png", width:700, height:700, listPorts:{IR:{name:"\ub9ac\ubaa8\ucee8", type:"input", pos:{x:0, y:0}}, BAT:{name:"\ubc30\ud130\ub9ac", type:"input", pos:{x:0, y:0}}, SND:{name:Lang.Hw.buzzer, type:"output", pos:{x:0, y:0}}, FND:{name:"FND", type:"output", pos:{x:0, y:0}}}, ports:{IN1:{name:"IN1", type:"input", pos:{x:270, y:200}}, IN2:{name:"IN2", type:"input", pos:{x:325, y:200}}, IN3:{name:"IN3", type:"input", pos:{x:325, y:500}}, DCL:{name:"L-Motor", type:"output", 
 pos:{x:270, y:500}}, DCR:{name:"R-Motor", type:"output", pos:{x:435, y:500}}, OUT1:{name:"OUT1", type:"output", pos:{x:380, y:200}}, OUT2:{name:"OUT2", type:"output", pos:{x:435, y:200}}, OUT3:{name:"OUT3", type:"output", pos:{x:380, y:500}}}, mode:"both"}};
 Blockly.Blocks.neobot_sensor_value = {init:function() {
   this.setColour("#00979D");
@@ -5980,6 +6108,13 @@ Entry.block.robotori_dc_direction = function(c, b) {
   "LEFT_MOTOR" == d && ("STOP" == e ? c.LEFT_MOTOR = 255 : "CW" == e ? c.LEFT_MOTOR = 0 : "CCW" == e && (c.LEFT_MOTOR = 180));
   return b.callReturn();
 };
+Entry.trueRobot = {name:"trueRobot", PORT_MAP:{singlemotor:10, dualmotor:10, colorled:8, leds:70, linetracer:76, led_line:5, leftWheel:9, rightWheel:10, allWheel:11, colorRed:0, colorGreen:0, colorBlue:0, ledPort:0, dualPort:11}, setZero:function() {
+  var c = Entry.trueRobot.PORT_MAP, b = Entry.hw.sendQueue, d;
+  for (d in c) {
+    b[d] = c[d];
+  }
+  Entry.hw.update();
+}};
 Entry.Turtle = {PORT_MAP:{module:"turtle", leftWheel:0, rightWheel:0, ledRed:0, ledGreen:0, ledBlue:0, buzzer:0, pulse:0, pulseId:0, note:0, sound:0, soundRepeat:1, soundId:0, lineTracerMode:0, lineTracerModeId:0, lineTracerGain:5, lineTracerSpeed:5, motionId:0, motionType:0, motionUnit:0, motionSpeed:0, motionValue:0, motionRadius:0}, setZero:function() {
   var c = Entry.Turtle.PORT_MAP, b = Entry.hw.sendQueue, d;
   for (d in c) {
@@ -10920,7 +11055,7 @@ Entry.HW = function() {
   Entry.addEventListener("stop", this.setZero);
   this.hwInfo = {"1.1":Entry.Arduino, "1.2":Entry.SensorBoard, "1.3":Entry.CODEino, "1.4":Entry.joystick, "1.5":Entry.dplay, "1.6":Entry.nemoino, "1.7":Entry.Xbot, "1.8":Entry.ardublock, "1.9":Entry.ArduinoExt, "1.10":Entry.ArduinoNano, "1.A":Entry.Cobl, "1.B":Entry.Blacksmith, "2.4":Entry.Hamster, "2.5":Entry.Albert, "2.9":Entry.Turtle, "2.FF":Entry.Roboid, "3.1":Entry.Bitbrick, "4.2":Entry.Arduino, "5.1":Entry.Neobot, "6.1":Entry.mkboard, "6.2":Entry.memaker, "7.1":Entry.Robotis_carCont, "7.2":Entry.Robotis_openCM70, 
   "8.1":Entry.Arduino, "9.1":Entry.iboard, "A.1":Entry.SmartBoard, "B.1":Entry.Codestar, "C.1":Entry.DaduBlock, "C.2":Entry.DaduBlock_Car, "D.1":Entry.robotori, "F.1":Entry.byrobot_dronefighter_controller, "F.2":Entry.byrobot_dronefighter_drive, "F.3":Entry.byrobot_dronefighter_flight, "F.4":Entry.byrobot_petrone_v2_controller, "F.5":Entry.byrobot_petrone_v2_drive, "F.6":Entry.byrobot_petrone_v2_flight, "10.1":Entry.Roborobo_Roduino, "10.2":Entry.Roborobo_SchoolKit, "12.1":Entry.EV3, "13.1":Entry.rokoboard, 
-  "14.1":Entry.Chocopi, "15.1":Entry.coconut, "16.1":Entry.MODI, "18.1":Entry.Altino, "1A.1":Entry.ArduinoNano};
+  "14.1":Entry.Chocopi, "15.1":Entry.coconut, "16.1":Entry.MODI, "18.1":Entry.Altino, "19.1":Entry.trueRobot, "1A.1":Entry.ArduinoNano, "1B.1":Entry.EduMaker, "1C.1":Entry.hummingbird, "1D.1":Entry.JDKit};
 };
 Entry.HW.TRIAL_LIMIT = 2;
 p = Entry.HW.prototype;
