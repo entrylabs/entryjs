@@ -29,7 +29,7 @@ Entry.Neobot = {
         height: 700,
         listPorts: {
             'IR':{name: '리모컨', type: 'input', pos: {x: 0, y: 0}},
-            'BAT':{name: '베터리', type: 'input', pos: {x: 0, y: 0}},
+            'BAT':{name: '배터리', type: 'input', pos: {x: 0, y: 0}},
             'SND':{name: Lang.Hw.buzzer , type: 'output', pos: {x: 0, y: 0}},
             'FND':{name: 'FND', type: 'output', pos: {x: 0, y: 0}}
         },

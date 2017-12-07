@@ -37,9 +37,11 @@ Entry.byrobot_petrone_v2_controller =
     // listPorts와 ports 두 곳 동시에 동일한 속성을 표시할 수는 없음
     monitorTemplate:
     {
+        /* 센서창 가림 현상을 해결하기 위해서 주석 처리함(2017.11.06)
         imgPath: "hw/byrobot_petrone_v2_controller.png",      // 배경 이미지
         width: 500,     // 이미지의 폭
         height: 500,    // 이미지의 높이
+        */
         
         // 모니터 화면 상단에 차례대로 나열하는 값
         listPorts:
@@ -122,11 +124,13 @@ Entry.byrobot_petrone_v2_controller =
         delete Entry.hw.sendQueue["light_manual_brightness"];
     },
 
-    transferLightColorRgb: function(target, red, green, blue) 
+    transferLightColorRgb: function(target, mode, red, green, blue) 
     {
         // 범위 조정
         target = Math.max(target, 0);
         target = Math.min(target, 255);
+        mode = Math.max(mode, 0);
+        mode = Math.min(mode, 255);
         red = Math.max(red, 0);
         red = Math.min(red, 255);
         green = Math.max(green, 0);
@@ -136,6 +140,7 @@ Entry.byrobot_petrone_v2_controller =
 
         // 전송
         Entry.hw.setDigitalPortValue("target", target);
+        Entry.hw.setDigitalPortValue("light_mode_mode", mode);
         Entry.hw.setDigitalPortValue("light_color_r", red);
         Entry.hw.setDigitalPortValue("light_color_g", green);
         Entry.hw.setDigitalPortValue("light_color_b", blue);
@@ -143,6 +148,7 @@ Entry.byrobot_petrone_v2_controller =
         Entry.hw.update();
 
         delete Entry.hw.sendQueue["target"];
+        delete Entry.hw.sendQueue["light_mode_mode"];
         delete Entry.hw.sendQueue["light_color_r"];
         delete Entry.hw.sendQueue["light_color_g"];
         delete Entry.hw.sendQueue["light_color_b"];
@@ -479,13 +485,13 @@ Entry.byrobot_petrone_v2_controller =
     },
 
     // LED 수동 설정 - RGB 값 직접 지정
-    setLightColorRgb: function(script, target, red, green, blue)
+    setLightColorRgb: function(script, target, mode, red, green, blue)
     {
         switch( this.checkFinish(script, 40) )
         {
         case "Start":
             {
-                this.transferLightColorRgb(target, red, green, blue);
+                this.transferLightColorRgb(target, mode, red, green, blue);
             }
             return script;
 

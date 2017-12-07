@@ -201,6 +201,7 @@ Entry.block.converters = {};
 }
 
 Entry.block = {
+//region modi 모디
 "modi_microphone_value": {
     "color": "#00979D",
     "fontColor": "#fff",
@@ -406,8 +407,6 @@ Entry.block = {
         if(!Entry.hw.sendQueue["getProperty"]){
             Entry.MODI.initSend();
         }
-
-
         if(!pd.value[property]){
             pd.value[property] = 0;
 
@@ -534,8 +533,6 @@ Entry.block = {
         if(!Entry.hw.sendQueue["getProperty"]){
             Entry.MODI.initSend();
         }
-
-
         if(!pd.value[property]){
             pd.value[property] = 0;
 
@@ -1467,6 +1464,8 @@ Entry.block = {
         return script.callReturn();
     }
 },
+//endregion modi 모디
+//region albert 알버트
 "albert_hand_found": {
     "color": "#00979D",
     "fontColor": "#fff",
@@ -3181,6 +3180,8 @@ Entry.block = {
     },
     "syntax": {"js": [], "py": ["Albert.set_wheels(%1, %2)"]}
 },
+//endregion albert 알버트
+//region arduino 아두이노
 "arduino_text": {
     "color": "#FFD974",
     "skeleton": "basic_string_field",
@@ -3831,6 +3832,8 @@ Entry.block = {
         }
     ]}
 },
+//endregion arduino 아두이노
+//region arduinoExt 아두이노 확장모드
 "arduino_ext_analog_list": {
     "color": "#00979D",
     "skeleton": "basic_string_field",
@@ -4737,6 +4740,8 @@ Entry.block = {
         }
     ]}
 },
+//endregion arduinoExt 아두이노 확장모드
+//region arduinoNano 아두이노 나노
 "arduino_nano_analog_list": {
     "parent": "arduino_ext_analog_list",
     "params": [
@@ -4931,6 +4936,8 @@ Entry.block = {
     },
     "isNotFor": [ "ArduinoNano" ],
 },
+//endregion arduinoNano 아두이노 나노
+//region iboard 아이보드
 "iboard_analog_list": {
     "parent": "arduino_ext_analog_list",
     "params": [
@@ -5011,7 +5018,6 @@ Entry.block = {
         }
     ]}
 },
-
 "iboard_cds_sensor_get_value": {
     "parent": "arduino_ext_analog_list",
     "params": [
@@ -5046,7 +5052,6 @@ Entry.block = {
         }
     ]}
 },
-
 "iboard_mic_get_value": {
     "parent": "arduino_ext_analog_list",
     "params": [
@@ -5081,7 +5086,6 @@ Entry.block = {
         }
     ]}
 },
-
 "iboard_button_list": {
     "color": "#00979D",
     "skeleton": "basic_string_field",
@@ -5111,7 +5115,6 @@ Entry.block = {
         return script.getStringField("PORT");
     }
 },
-
 "iboard_pwm_led_list": {
     "color": "#00979D",
     "skeleton": "basic_string_field",
@@ -5140,7 +5143,6 @@ Entry.block = {
         return script.getStringField("PORT");
     }
 },
-
 "iboard_led_list": {
     "color": "#00979D",
     "skeleton": "basic_string_field",
@@ -5169,7 +5171,6 @@ Entry.block = {
         return script.getStringField("PORT");
     }
 },
-
 "iboard_rgb_led_list": {
     "color": "#00979D",
     "skeleton": "basic_string_field",
@@ -5199,7 +5200,6 @@ Entry.block = {
         return script.getStringField("PORT");
     }
 },
-
 "iboard_motor_list": {
     "color": "#00979D",
     "skeleton": "basic_string_field",
@@ -5224,7 +5224,6 @@ Entry.block = {
         return script.getStringField("PORT");
     }
 },
-
 "iboard_motor_list2": {
     "color": "#00979D",
     "skeleton": "basic_string_field",
@@ -5255,7 +5254,6 @@ Entry.block = {
         return script.getField("VALUE", script);
     }
 },
-
 "iboard_tmp": {
     "color": "#00979D",
     "fontColor": "#fff",
@@ -5296,7 +5294,6 @@ Entry.block = {
         return result;
     },
 },
-
 "iboard_mic": {
     "color": "#00979D",
     "fontColor": "#fff",
@@ -5335,7 +5332,6 @@ Entry.block = {
         return result;
     },
 },
-
 "iboard_var_res": {
     "color": "#00979D",
     "fontColor": "#fff",
@@ -5370,7 +5366,6 @@ Entry.block = {
         return ANALOG ? ANALOG[port] || 0 : 0;
     },
 },
-
 "iboard_cds": {
     "color": "#00979D",
     "fontColor": "#fff",
@@ -5405,7 +5400,6 @@ Entry.block = {
         return ANALOG ? ANALOG[port] || 0 : 0;
     },
 },
-
 "iboard_motor": {
     "template": "모터를 %2 으로 동작하기 %3",
     "parent": "arduino_ext_digital_pwm",
@@ -5424,7 +5418,6 @@ Entry.block = {
     "class": "iboard",
     "isNotFor": [ "iboard" ],
 },
-
 "iboard_button": {
     "template": "%1 버튼을 눌렀는가?",
     "parent": "arduino_ext_get_digital",
@@ -5439,7 +5432,6 @@ Entry.block = {
     "class": "iboard_sensor",
     "isNotFor": [ "iboard" ],
 },
-
 "iboard_led": {
     "template": "LED %1 번을 %2 %3",
     "parent": "arduino_ext_toggle_led",
@@ -5459,7 +5451,6 @@ Entry.block = {
     "class": "iboard",
     "isNotFor": [ "iboard" ],
 },
-
 "iboard_rgb_led": {
     "template": "RGB LED의 %1 LED %2 %3",
     "parent": "arduino_ext_toggle_led",
@@ -5479,7 +5470,6 @@ Entry.block = {
     "class": "iboard",
     "isNotFor": [ "iboard" ],
 },
-
 "iboard_pwm_led": {
     "template": "LED %1 번의 밝기를 %2 (으)로 정하기 %3",
     "parent": "arduino_ext_digital_pwm",
@@ -5499,7 +5489,6 @@ Entry.block = {
     "class": "iboard",
     "isNotFor": [ "iboard" ],
 },
-
 "iboard_set_tone": {
     "template": "버저를 %2 %3 음으로 %4 초 연주하기 %5",
     "parent": "arduino_ext_set_tone",
@@ -5525,7 +5514,6 @@ Entry.block = {
     "class": "iboard",
     "isNotFor": [ "iboard" ],
 },
-
 "iboard_get_digital": {
     "template": "디지털 %1 번 센서값  ",
     "parent": "arduino_ext_get_digital",
@@ -5540,7 +5528,6 @@ Entry.block = {
     "class": "arduino_ori",
     "isNotFor": [ "iboard" ],
 },
-
 "iboard_get_analog_value": {
     "parent": "arduino_ext_get_analog_value",
     "template": "아날로그 %1 번 센서값  ",
@@ -5555,7 +5542,6 @@ Entry.block = {
     "class": "arduino_ori",
     "isNotFor": [ "iboard" ],
 },
-
 "iboard_get_analog_value_map": {
     "parent": "arduino_ext_get_analog_value_map",
     "template": "%1 값의 범위를 %2 ~ %3 에서 %4 ~ %5 (으)로 바꾼값  ",
@@ -5591,7 +5577,6 @@ Entry.block = {
     "class": "arduino_ori",
     "isNotFor": [ "iboard" ],
 },
-
 "iboard_toggle_led": {
     "template": "디지털 %1 번 핀 %2 %3",
     "parent": "arduino_ext_toggle_led",
@@ -5611,7 +5596,6 @@ Entry.block = {
     "class": "arduino_ori",
     "isNotFor": [ "iboard" ],
 },
-
 "iboard_digital_pwm": {
     "template": "디지털 %1 번 핀을 %2 (으)로 정하기 %3",
     "parent": "arduino_ext_digital_pwm",
@@ -5631,6 +5615,8 @@ Entry.block = {
     "class": "arduino_ori",
     "isNotFor": [ "iboard" ],
 },
+//endregion iboard 아이보드
+//region blacksmith 대장장이보드
 "blacksmith_list_analog_basic": {
     "color": "#00979D",
     "skeleton": "basic_string_field",
@@ -6640,6 +6626,8 @@ Entry.block = {
     },
     "syntax": {"js": [], "py": ["blacksmith.set_digital_bluetooth(%1)"]}
 },
+//endregion blacksmith 대장장이보드
+//region sensorBoard e센서보드
 "sensorBoard_get_named_sensor_value": {
     "color": "#00979D",
     "fontColor": "#fff",
@@ -6755,6 +6743,8 @@ Entry.block = {
     },
     "syntax": {"js": [], "py": ["Sensorboard.led(%1, %2)"]}
 },
+//endregion sensorBoard e센서보드
+//region hardware 하드웨어 기본
 "arduino_download_connector": {
     "skeleton": "basic_button",
     "isNotFor": ["arduinoDisconnected"],
@@ -6926,7 +6916,8 @@ Entry.block = {
         ]
     }
 },
-//2016-09-23 added start
+//endregion hardware 하드웨어 기본
+//region codeino 코드이노
 "CODEino_get_sensor_number": {
     "color": "#00979D",
     "skeleton": "basic_string_field",
@@ -8100,8 +8091,6 @@ Entry.block = {
         return script.callReturn();
     }
 },
-//2016-09-23 added finish
-//legacy
 "CODEino_get_number_sensor_value": {
     "parent": "arduino_get_number_sensor_value",
     "isNotFor": [
@@ -8157,6 +8146,8 @@ Entry.block = {
     "class": "arduino_set",
     "syntax": {"js": [], "py": ["CODEino.toggle_pwm(%1, %2)"]}
 },
+//endregion codeino 코드이노
+//region nemoino 네모이노
 "nemoino_get_named_sensor_value": {
     "color": "#00979D",
     "fontColor": "#fff",
@@ -8371,6 +8362,8 @@ Entry.block = {
         return Math.round(result);
     }
 },
+//endregion nemoino 네모이노
+//region bitbrick 비트브릭
 "bitbrick_sensor_value": {
     "color": "#00979D",
     "fontColor": "#fff",
@@ -8933,6 +8926,8 @@ Entry.block = {
     },
     "syntax": {"js": [], "py": ["Bitbrick.convert_scale(%1, %2, %3, %4, %5)"]}
 },
+//endregion bitbrick 비트브릭
+//region cobl 코블
 "cobl_read_ultrason": {
     color: "#00979D",
     fontColor: "#fff",
@@ -9700,8 +9695,6 @@ Entry.block = {
             Entry.hw.setDigitalPortValue("ELED_G", 10);
             Entry.hw.setDigitalPortValue("ELED_B", 10);
         }
-
-
         Entry.hw.update();
 
         delete Entry.hw.sendQueue["ELED_IDX"];
@@ -9847,6 +9840,8 @@ Entry.block = {
         return script.callReturn();
     }
 },
+//endregion cobl 코블
+//region basic 기본블록
 "start_drawing": {
     "color": "#FF9E20",
     "skeleton": "basic",
@@ -14132,6 +14127,8 @@ Entry.block = {
     },
     "syntax": {"js": [], "py": [""]}
 },
+//endregion basic 기본블록
+//region hamster 햄스터
 "hamster_hand_found": {
     "color": "#00979D",
     "fontColor": "#fff",
@@ -17931,7 +17928,8 @@ Entry.block = {
         }
     ]}
 },
-// akaii: add from here -----
+//endregion hamster 햄스터
+//region turtle 터틀
 "turtle_touching_color": {
     "color": "#00979D",
     "fontColor": "#fff",
@@ -21085,6 +21083,8 @@ Entry.block = {
         }
     ]}
 },
+//endregion turtle 터틀
+//region roboid 로보이드
 "roboid_hamster_hand_found": {
     "color": "#00979D",
     "fontColor": "#fff",
@@ -29056,6 +29056,8 @@ Entry.block = {
         }
     ]}
 },
+//endregion roboid 로두이노
+//region basic 기본
 "show": {
     "color": "#EC4466",
     "skeleton": "basic",
@@ -32083,711 +32085,1235 @@ Entry.block = {
     "syntax": {"js": [], "py": ["Entry.add_direction_for_sec(%2, %1)"]}
 
 },
+//endregion basic 기본
+//region neobot 네오봇
 "neobot_sensor_value": {
-    "color": "#00979D",
-    "skeleton": "basic_string_field",
-    "fontColor": "#fff",
-    "statements": [],
-    "template": "%1  값",
-    "params": [{
-        "type": "Dropdown",
-        "options": [
-            ["1번 포트", "IN1"],
-            ["2번 포트", "IN2"],
-            ["3번 포트", "IN3"],
-            ["리모컨", "IR"],
-            ["배터리", "BAT"]
-        ],
-        "value": "IN1",
-        "fontSize": 11
-    }],
-    "events": {},
-    "def": {
-        "params": [null],
-        "type": "neobot_sensor_value"
-    },
-    "paramsKeyMap": {
-        "PORT": 0
-    },
-    "class": "neobot_value",
-    "isNotFor": ["neobot"],
-    "func": function (sprite, script) {
-        var port = script.getStringField('PORT');
-        return Entry.hw.portData[port];
-    },
-    "syntax": {"js": [], "py": ["Neobot.sensor_value(%1)"]}
-},
-"neobot_sensor_convert_scale": {
-    "color": "#00979D",
-    "skeleton": "basic_string_field",
-    "fontColor": "#fff",
-    "statements": [],
-    "template": "%1 값의 범위를 %2 ~ %3 에서 %4 ~ %5 (으)로 변환",
-    "params": [{
-        "type": "Dropdown",
-        "options": [
-            ["1번 포트", "IN1"],
-            ["2번 포트", "IN2"],
-            ["3번 포트", "IN3"],
-            ["리모컨", "IR"],
-            ["배터리", "BAT"]
-        ],
-        "value": "IN1",
-        "fontSize": 11
-    }, {
-        "type": "Block",
-        "accept": "string"
-    }, {
-        "type": "Block",
-        "accept": "string"
-    }, {
-        "type": "Block",
-        "accept": "string"
-    }, {
-        "type": "Block",
-        "accept": "string"
-    }],
-    "events": {},
-    "def": {
-        "params": [null, {
-            "type": "number",
-            "params": [ "0" ]
-        }, {
-            "type": "number",
-            "params": [ "255" ]
-        }, {
-            "type": "number",
-            "params": [ "0" ]
-        }, {
-            "type": "number",
-            "params": [ "100" ]
+        "color": "#00979D",
+        "skeleton": "basic_string_field",
+        "fontColor": "#fff",
+        "statements": [],
+        "template": "%1  값",
+        "params": [{
+            "type": "Dropdown",
+            "options": [
+                ["1번 포트", "IN1"],
+                ["2번 포트", "IN2"],
+                ["3번 포트", "IN3"],
+                ["리모컨", "IR"],
+                ["배터리", "BAT"]
+            ],
+            "value": "IN1",
+            "fontSize": 11
         }],
-        "type": "neobot_sensor_convert_scale"
+        "events": {},
+        "def": {
+            "params": [null],
+            "type": "neobot_sensor_value"
+        },
+        "paramsKeyMap": {
+            "PORT": 0
+        },
+        "class": "neobot_value",
+        "isNotFor": ["neobot"],
+        "func": function (sprite, script) {
+            var port = script.getStringField('PORT');
+            return Entry.hw.portData[port];
+        },
+        "syntax": {"js": [], "py": ["Neobot.sensor_value(%1)"]}
     },
-    "paramsKeyMap": {
-        "PORT": 0,
-        "OMIN": 1,
-        "OMAX": 2,
-        "MIN": 3,
-        "MAX": 4
-    },
-    "class": "neobot_value",
-    "isNotFor": ["neobot"],
-    "func": function (sprite, script) {
-        var port = script.getStringField('PORT');
-        var value = Entry.hw.portData[port];
-        var omin = script.getNumberValue("OMIN", script);
-        var omax = script.getNumberValue("OMAX", script);
-        var min = script.getNumberValue("MIN", script);
-        var max = script.getNumberValue("MAX", script);
-
-        if (omin > omax) {
-            var temp = omin;
-            omin = omax;
-            omax = temp;
-        }
-
-        if(min > max) {
-            var temp = min;
-            min = max;
-            max = temp;
-        }
-
-        value -= omin;
-        value = value * ((max - min) / (omax - omin));
-        value += min;
-        value = Math.min(max, value);
-        value = Math.max(min, value);
-
-        return Math.round(value);
-    }
-},
-"neobot_left_motor": {
-    "color": "#00979D",
-    "skeleton": "basic",
-    "statements": [],
-    "template": "왼쪽 모터를 %1 %2 의 속도로 회전 %3",
-    "params": [{
-        "type": "Dropdown",
-        "options": [
-            ["앞으로", "16"],
-            ["뒤로", "32"]
-        ],
-        "value": "16",
-        "fontSize": 11,
-        'arrowColor': EntryStatic.ARROW_COLOR_HW
-    }, {
-        "type": "Dropdown",
-        "options": [
-            ["0", "0"],
-            ["1", "1"],
-            ["2", "2"],
-            ["3", "3"],
-            ["4", "4"],
-            ["5", "5"],
-            ["6", "6"],
-            ["7", "7"],
-            ["8", "8"],
-            ["9", "9"],
-            ["10", "10"],
-            ["11", "11"],
-            ["12", "12"],
-            ["13", "13"],
-            ["14", "14"],
-            ["15", "15"]
-        ],
-        "value": "0",
-        "fontSize": 11,
-        'arrowColor': EntryStatic.ARROW_COLOR_HW
-    }, {
-        "type": "Indicator",
-        "img": "block_icon/hardware_03.png",
-        "size": 12
-    }],
-    "events": {},
-    "def": {
-        "params": [null, "15", null],
-        "type": "neobot_left_motor"
-    },
-    "paramsKeyMap": {
-        "DIRECTION": 0,
-        "SPEED": 1
-    },
-    "class": "neobot_motor",
-    "isNotFor": ["neobot"],
-    "func": function (sprite, script) {
-        var speed = script.getNumberField('SPEED');
-        var direction = script.getNumberField('DIRECTION');
-        Entry.hw.sendQueue['DCL'] = speed + direction;
-        return script.callReturn();
-    },
-    "syntax": {"js": [], "py": ["Neobot.turn_left(%1, %2)"]}
-},
-"neobot_stop_left_motor": {
-    "color": "#00979D",
-    "skeleton": "basic",
-    "statements": [],
-    "template": "왼쪽 모터를 정지 %1",
-    "params": [{
-        "type": "Indicator",
-        "img": "block_icon/hardware_03.png",
-        "size": 12
-    }],
-    "events": {},
-    "def": {
-        "params": [null],
-        "type": "neobot_stop_left_motor"
-    },
-    "class": "neobot_motor",
-    "isNotFor": ["neobot"],
-    "func": function (sprite, script) {
-        Entry.hw.sendQueue['DCL'] = 0;
-        return script.callReturn();
-    },
-    "syntax": {"js": [], "py": ["Neobot.stop_left()"]}
-},
-"neobot_right_motor": {
-    "color": "#00979D",
-    "skeleton": "basic",
-    "statements": [],
-    "template": "오른쪽 모터를 %1 %2 의 속도로 회전 %3",
-    "params": [{
-        "type": "Dropdown",
-        "options": [
-            ["앞으로", "16"],
-            ["뒤로", "32"]
-        ],
-        "value": "16",
-        "fontSize": 11,
-        'arrowColor': EntryStatic.ARROW_COLOR_HW
-    }, {
-        "type": "Dropdown",
-        "options": [
-            ["0", "0"],
-            ["1", "1"],
-            ["2", "2"],
-            ["3", "3"],
-            ["4", "4"],
-            ["5", "5"],
-            ["6", "6"],
-            ["7", "7"],
-            ["8", "8"],
-            ["9", "9"],
-            ["10", "10"],
-            ["11", "11"],
-            ["12", "12"],
-            ["13", "13"],
-            ["14", "14"],
-            ["15", "15"]
-        ],
-        "value": "0",
-        "fontSize": 11,
-        'arrowColor': EntryStatic.ARROW_COLOR_HW
-    }, {
-        "type": "Indicator",
-        "img": "block_icon/hardware_03.png",
-        "size": 12
-    }],
-    "events": {},
-    "def": {
-        "params": [null, "15", null],
-        "type": "neobot_right_motor"
-    },
-    "paramsKeyMap": {
-        "DIRECTION": 0,
-        "SPEED": 1
-    },
-    "class": "neobot_motor",
-    "isNotFor": ["neobot"],
-    "func": function (sprite, script) {
-        var speed = script.getNumberField('SPEED');
-        var direction = script.getNumberField('DIRECTION');
-        Entry.hw.sendQueue['DCR'] = speed + direction;
-        return script.callReturn();
-    },
-    "syntax": {"js": [], "py": ["Neobot.turn_right(%1, %2)"]}
-},
-"neobot_stop_right_motor": {
-    "color": "#00979D",
-    "skeleton": "basic",
-    "statements": [],
-    "template": "오른쪽 모터를 정지 %1",
-    "params": [{
-        "type": "Indicator",
-        "img": "block_icon/hardware_03.png",
-        "size": 12
-    }],
-    "events": {},
-    "def": {
-        "params": [null],
-        "type": "neobot_stop_right_motor"
-    },
-    "class": "neobot_motor",
-    "isNotFor": ["neobot"],
-    "func": function (sprite, script) {
-        Entry.hw.sendQueue['DCR'] = 0;
-        return script.callReturn();
-    },
-    "syntax": {"js": [], "py": ["Neobot.stop_right()"]}
-},
-"neobot_all_motor": {
-    "color": "#00979D",
-    "skeleton": "basic",
-    "statements": [],
-    "template": "양쪽 모터를 %1 %2의 속도로 %3초 동안 회전 %4",
-    "params": [
-        {
+    "neobot_sensor_convert_scale": {
+        "color": "#00979D",
+        "skeleton": "basic_string_field",
+        "fontColor": "#fff",
+        "statements": [],
+        "template": "%1 값의 범위를 %2 ~ %3 에서 %4 ~ %5 (으)로 변환",
+        "params": [{
             "type": "Dropdown",
             "options": [
-                [ "앞으로", "1" ],
-                [ "뒤로", "2" ],
-                [ "제자리에서 왼쪽 돌기", "3" ],
-                [ "제자리에서 오른쪽 돌기", "4" ],
-                [ "왼쪽으로 돌기", "5" ],
-                [ "오른쪽으로 돌기", "6" ]
+                ["1번 포트", "IN1"],
+                ["2번 포트", "IN2"],
+                ["3번 포트", "IN3"],
+                ["리모컨", "IR"],
+                ["배터리", "BAT"]
             ],
-            "value": "1",
-            "fontSize": 11,
-            'arrowColor': EntryStatic.ARROW_COLOR_HW
-        },
-        {
-            "type": "Dropdown",
-            "options": [
-                [ "0", "0" ],
-                [ "1", "1" ],
-                [ "2", "2" ],
-                [ "3", "3" ],
-                [ "4", "4" ],
-                [ "5", "5" ],
-                [ "6", "6" ],
-                [ "7", "7" ],
-                [ "8", "8" ],
-                [ "9", "9" ],
-                [ "10", "10" ],
-                [ "11", "11" ],
-                [ "12", "12" ],
-                [ "13", "13" ],
-                [ "14", "14" ],
-                [ "15", "15" ]
-            ],
-            "value": "1",
-            "fontSize": 11,
-            'arrowColor': EntryStatic.ARROW_COLOR_HW
-        },
-        {
+            "value": "IN1",
+            "fontSize": 11
+        }, {
             "type": "Block",
             "accept": "string"
+        }, {
+            "type": "Block",
+            "accept": "string"
+        }, {
+            "type": "Block",
+            "accept": "string"
+        }, {
+            "type": "Block",
+            "accept": "string"
+        }],
+        "events": {},
+        "def": {
+            "params": [null, {
+                "type": "number",
+                "params": [ "0" ]
+            }, {
+                "type": "number",
+                "params": [ "255" ]
+            }, {
+                "type": "number",
+                "params": [ "0" ]
+            }, {
+                "type": "number",
+                "params": [ "100" ]
+            }],
+            "type": "neobot_sensor_convert_scale"
         },
-        {
+        "paramsKeyMap": {
+            "PORT": 0,
+            "OMIN": 1,
+            "OMAX": 2,
+            "MIN": 3,
+            "MAX": 4
+        },
+        "class": "neobot_value",
+        "isNotFor": ["neobot"],
+        "func": function (sprite, script) {
+            var port = script.getStringField('PORT');
+            var value = Entry.hw.portData[port];
+            var omin = script.getNumberValue("OMIN", script);
+            var omax = script.getNumberValue("OMAX", script);
+            var min = script.getNumberValue("MIN", script);
+            var max = script.getNumberValue("MAX", script);
+
+            if (omin > omax) {
+                var temp = omin;
+                omin = omax;
+                omax = temp;
+            }
+
+            if(min > max) {
+                var temp = min;
+                min = max;
+                max = temp;
+            }
+
+            value -= omin;
+            value = value * ((max - min) / (omax - omin));
+            value += min;
+            value = Math.min(max, value);
+            value = Math.max(min, value);
+
+            return Math.round(value);
+        }
+    },
+    "neobot_sensor_color": {
+        "color": "#00979D",
+        "skeleton": "basic_string_field",
+        "fontColor": "#fff",
+        "statements": [],
+        "template": "%1",
+        "params": [{
+            "type": "Dropdown",
+            "options": [
+                ["흰색", 0],
+                ["빨간색", 1],
+                ["노란색", 2],
+                ["녹색(연두)", 3],
+                ["파란색", 4]
+            ],
+            "value": "WHITE",
+            "fontSize": 11
+        }],
+        "events": {},
+        "def": {
+            "params": [null],
+            "type": "neobot_sensor_color"
+        },
+        "paramsKeyMap": {
+            "COLOR": 0
+        },
+        "class": "neobot_value",
+        "isNotFor": ["neobot"],
+        "func": function (sprite, script) {
+            var value = script.getNumberField('COLOR');
+            return value;
+        },
+        "syntax": {"js": [], "py": ["Neobot.sensor_color(%1)"]}
+    },
+    "neobot_equal_with_sensor": {//MinjuneL
+        "color": "#00979D",
+        "skeleton": "basic_boolean_field",
+        "fontColor": "#fff",
+        "template" : "%1 의 센서값이 %2",
+        "statements": [],
+        "params": [
+            {
+            "type": "Dropdown",
+            "options": [
+                ["1번 포트", "IN1"],
+                ["2번 포트", "IN2"],
+                ["3번 포트", "IN3"],
+                ["리모컨", "IR"],
+                ["배터리", "BAT"]
+            ],
+            "value": "IN1",
+            "fontSize": 11
+        },
+            {
+            "type": "Dropdown",
+            "options": [
+                ["흰색", 0],
+                ["빨간색", 1],
+                ["노란색", 2],
+                ["녹색(연두)", 3],
+                ["파란색", 4]
+            ],
+            "value": "0",
+            "fontSize": 11
+        }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                null,
+                null
+                ],
+            "type": "neobot_equal_with_sensor"
+        },
+        "paramsKeyMap": {
+            "SENSOR": 0,
+            "COLOR" : 1
+        },
+        "class": "neobot_value",
+        "isNotFor": ["neobot"],
+        "func": function (sprite, script) {
+
+            var sensorTemp = script.getStringField("SENSOR");
+            var sensor = Entry.hw.portData[sensorTemp];
+            var color = script.getNumberField("COLOR");
+            
+            if(sensor >= 10 && sensor<=50){
+                if(color == 0)
+                    return true;
+                else
+                    return false;
+            }else if(sensor >= 51 && sensor<=90){
+                if(color == 1)
+                    return true;
+                else
+                    return false;
+            }else if(sensor >= 91 && sensor<=130){
+                if(color ==2)
+                    return true;
+                else
+                    return false;
+            }else if(sensor >= 131 && sensor<=170){
+                if(color ==3)
+                    return true;
+                else
+                    return false;
+            }else if(sensor >= 171 && sensor<=210){
+                if(color == 4)
+                    return true;
+                else
+                    return false;
+            }
+            return false;
+        },
+        "syntax": {"js": [], "py": ["Entry.neobot_equal_check()"]}
+    },
+    "get_motor_speed": {
+        "color": "#00979D",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "template":"%1",
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    ["0", "0"],
+                    ["1", "1"],
+                    ["2", "2"],
+                    ["3", "3"],
+                    ["4", "4"],
+                    ["5", "5"],
+                    ["6", "6"],
+                    ["7", "7"],
+                    ["8", "8"],
+                    ["9", "9"],
+                    ["10", "10"],
+                    ["11", "11"],
+                    ["12", "12"],
+                    ["13", "13"],
+                    ["14", "14"],
+                    ["15", "15"]
+            ],
+            "value": "15",
+            "fontSize": 11,
+            'arrowColor': EntryStatic.ARROW_COLOR_HW
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null ]
+        },
+        "paramsKeyMap": {
+            "VALUE": 0
+        },
+        "func": function (sprite, script) {
+            return script.getStringField("VALUE");
+        },
+        "syntax": {"js": [], "py": ["%1get_motor_speed#"]}
+    },
+    "neobot_left_motor": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "template": "왼쪽 모터를 %1 %2 의 속도로 회전 %3",
+        "params": [{
+            "type": "Dropdown",
+            "options": [
+                ["앞으로", "16"],
+                ["뒤로", "32"]
+            ],
+            "value": "16",
+            "fontSize": 11,
+            'arrowColor': EntryStatic.ARROW_COLOR_HW
+        }, {
+            "type": "Block",
+            "accept": "string"
+        }, {
             "type": "Indicator",
             "img": "block_icon/hardware_03.png",
             "size": 12
-        }
-    ],
-    "events": {},
-    "def": {
-        "params": ["1", "15", {
-            "type": "number",
-            "params": ["0"]
         }],
-        "type": "neobot_all_motor"
-    },
-    "paramsKeyMap": {
-        "DIRECTION": 0,
-        "SPEED": 1,
-        "DURATION": 2
-    },
-    "class": "neobot_motor",
-    "isNotFor": ["neobot"],
-    "func": function (sprite, script) {
-        var sq = Entry.hw.sendQueue;
-
-        if (!script.isStart) {
-            var speed = script.getNumberField('SPEED');
+        "events": {},
+        "def": {
+            "params": [null, {
+                    "type": "get_motor_speed",
+                    "id": "m111"
+                }, null],
+            "type": "neobot_left_motor"
+        },
+        "paramsKeyMap": {
+            "DIRECTION": 0,
+            "SPEED": 1
+        },
+        "class": "neobot_motor",
+        "isNotFor": ["neobot"],
+        "func": function (sprite, script) {
+            var speed = Entry.parseNumber(script.getStringValue('SPEED'));
             var direction = script.getNumberField('DIRECTION');
-            var duration = script.getNumberValue('DURATION');
-
-            if(duration < 0) {
-                duration = 0;
+            Entry.hw.sendQueue['DCL'] = speed + direction;
+            return script.callReturn();
+        },
+        "syntax": {"js": [], "py": ["Neobot.turn_left(%1, %2)"]}
+    },
+    "neobot_stop_left_motor": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "template": "왼쪽 모터를 정지 %1",
+        "params": [{
+            "type": "Indicator",
+            "img": "block_icon/hardware_03.png",
+            "size": 12
+        }],
+        "events": {},
+        "def": {
+            "params": [null],
+            "type": "neobot_stop_left_motor"
+        },
+        "class": "neobot_motor",
+        "isNotFor": ["neobot"],
+        "func": function (sprite, script) {
+            Entry.hw.sendQueue['DCL'] = 0;
+            return script.callReturn();
+        },
+        "syntax": {"js": [], "py": ["Neobot.stop_left()"]}
+    },
+    "neobot_right_motor": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "template": "오른쪽 모터를 %1 %2 의 속도로 회전 %3",
+        "params": [{
+            "type": "Dropdown",
+            "options": [
+                ["앞으로", "16"],
+                ["뒤로", "32"]
+            ],
+            "value": "16",
+            "fontSize": 11,
+            'arrowColor': EntryStatic.ARROW_COLOR_HW
+        }, {
+            "type": "Block",
+            "accept": "string"
+        }, {
+            "type": "Indicator",
+            "img": "block_icon/hardware_03.png",
+            "size": 12
+        }],
+        "events": {},
+        "def": {
+            "params": [null, {
+                    "type": "get_motor_speed",
+                    "id": "m112"
+                }, null],
+            "type": "neobot_right_motor"
+        },
+        "paramsKeyMap": {
+            "DIRECTION": 0,
+            "SPEED": 1
+        },
+        "class": "neobot_motor",
+        "isNotFor": ["neobot"],
+        "func": function (sprite, script) {
+            var speed = Entry.parseNumber(script.getStringValue('SPEED'));
+            var direction = script.getNumberField('DIRECTION');
+            Entry.hw.sendQueue['DCR'] = speed + direction;
+            return script.callReturn();
+        },
+        "syntax": {"js": [], "py": ["Neobot.turn_right(%1, %2)"]}
+    },
+    "neobot_stop_right_motor": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "template": "오른쪽 모터를 정지 %1",
+        "params": [{
+            "type": "Indicator",
+            "img": "block_icon/hardware_03.png",
+            "size": 12
+        }],
+        "events": {},
+        "def": {
+            "params": [null],
+            "type": "neobot_stop_right_motor"
+        },
+        "class": "neobot_motor",
+        "isNotFor": ["neobot"],
+        "func": function (sprite, script) {
+            Entry.hw.sendQueue['DCR'] = 0;
+            return script.callReturn();
+        },
+        "syntax": {"js": [], "py": ["Neobot.stop_right()"]}
+    },
+    "neobot_all_motor": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "template": "양쪽 모터를 %1 %2의 속도로 %3초 동안 회전 %4",
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [ "앞으로", "1" ],
+                    [ "뒤로", "2" ],
+                    [ "제자리에서 왼쪽 돌기", "3" ],
+                    [ "제자리에서 오른쪽 돌기", "4" ],
+                    [ "왼쪽으로 돌기", "5" ],
+                    [ "오른쪽으로 돌기", "6" ]
+                ],
+                "value": "1",
+                "fontSize": 11,
+                'arrowColor': EntryStatic.ARROW_COLOR_HW
+            },
+             {
+            "type": "Block",
+            "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
             }
+        ],
+        "events": {},
+        "def": {
+            "params": ["1", {
+                    "type": "get_motor_speed",
+                    "id": "m113"
+                }, {
+                "type": "number",
+                "params": ["0"]
+            }],
+            "type": "neobot_all_motor"
+        },
+        "paramsKeyMap": {
+            "DIRECTION": 0,
+            "SPEED": 1,
+            "DURATION": 2
+        },
+        "class": "neobot_motor",
+        "isNotFor": ["neobot"],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
 
-            switch (direction) {
-                case 1:
-                Entry.hw.sendQueue['DCL'] = 0x10 + speed;
-                Entry.hw.sendQueue['DCR'] = 0x10 + speed;
-                break;
-                case 2:
-                Entry.hw.sendQueue['DCL'] = 0x20 + speed;
-                Entry.hw.sendQueue['DCR'] = 0x20 + speed;
-                break;
-                case 3:
-                Entry.hw.sendQueue['DCL'] = 0x20 + speed;
-                Entry.hw.sendQueue['DCR'] = 0x10 + speed;
-                break;
-                case 4:
-                Entry.hw.sendQueue['DCL'] = 0x10 + speed;
-                Entry.hw.sendQueue['DCR'] = 0x20 + speed;
-                break;
-                case 5:
-                Entry.hw.sendQueue['DCL'] = 0;
-                Entry.hw.sendQueue['DCR'] = 0x10 + speed;
-                break;
-                case 6:
-                Entry.hw.sendQueue['DCL'] = 0x10 + speed;
-                Entry.hw.sendQueue['DCR'] = 0;
-                break;
-            }
+            if (!script.isStart) {
+                var speed = Entry.parseNumber(script.getStringValue('SPEED'));
+                var direction = script.getNumberField('DIRECTION');
+                var duration = script.getNumberValue('DURATION');
 
-            if(duration === 0) {
-                return script.callReturn();
-            } else {
-                script.isStart = true;
-                script.timeFlag = 1;
-                setTimeout(function() {
-                    script.timeFlag = 0;
-                }, duration * 1000);
+                if(duration < 0) {
+                    duration = 0;
+                }
+
+                switch (direction) {
+                    case 1:
+                    Entry.hw.sendQueue['DCL'] = 0x10 + speed;
+                    Entry.hw.sendQueue['DCR'] = 0x10 + speed;
+                    break;
+                    case 2:
+                    Entry.hw.sendQueue['DCL'] = 0x20 + speed;
+                    Entry.hw.sendQueue['DCR'] = 0x20 + speed;
+                    break;
+                    case 3:
+                    Entry.hw.sendQueue['DCL'] = 0x20 + speed;
+                    Entry.hw.sendQueue['DCR'] = 0x10 + speed;
+                    break;
+                    case 4:
+                    Entry.hw.sendQueue['DCL'] = 0x10 + speed;
+                    Entry.hw.sendQueue['DCR'] = 0x20 + speed;
+                    break;
+                    case 5:
+                    Entry.hw.sendQueue['DCL'] = 0;
+                    Entry.hw.sendQueue['DCR'] = 0x10 + speed;
+                    break;
+                    case 6:
+                    Entry.hw.sendQueue['DCL'] = 0x10 + speed;
+                    Entry.hw.sendQueue['DCR'] = 0;
+                    break;
+                }
+
+                if(duration === 0) {
+                    return script.callReturn();
+                } else {
+                    script.isStart = true;
+                    script.timeFlag = 1;
+                    setTimeout(function() {
+                        script.timeFlag = 0;
+                    }, duration * 1000);
+                    return script;
+                }
+            } else if (script.timeFlag == 1) {
                 return script;
+            } else {
+                delete script.timeFlag;
+                delete script.isStart;
+                Entry.hw.sendQueue['DCL'] = 0;
+                Entry.hw.sendQueue['DCR'] = 0;
+                Entry.engine.isContinue = false;
+                return script.callReturn();
             }
-        } else if (script.timeFlag == 1) {
-            return script;
-        } else {
-            delete script.timeFlag;
-            delete script.isStart;
+        }
+    },
+    "neobot_all_motor_iternally": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "template": "양쪽 모터를 %1 %2의 속도로 계속 회전 %3",
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [ "앞으로", "1" ],
+                    [ "뒤로", "2" ],
+                    [ "제자리에서 왼쪽 돌기", "3" ],
+                    [ "제자리에서 오른쪽 돌기", "4" ],
+                    [ "왼쪽으로 돌기", "5" ],
+                    [ "오른쪽으로 돌기", "6" ]
+                ],
+                "value": "1",
+                "fontSize": 11,
+                'arrowColor': EntryStatic.ARROW_COLOR_HW
+            },
+             {
+            "type": "Block",
+            "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": ["1",
+                        {
+                            "type": "get_motor_speed",
+                            "id": "m114"
+                        }],
+            "type": "neobot_all_motor_iternally"
+        },
+        "paramsKeyMap": {
+            "DIRECTION": 0,
+            "SPEED": 1
+        },
+        "class": "neobot_motor",
+        "isNotFor": ["neobot"],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+
+            if (!script.isStart) {
+                var speed = Entry.parseNumber(script.getStringValue('SPEED'));
+                var direction = script.getNumberField('DIRECTION');
+                var duration = 0;
+
+                if(duration < 0) {
+                    duration = 0;
+                }
+
+                switch (direction) {
+                    case 1:
+                    Entry.hw.sendQueue['DCL'] = 0x10 + speed;
+                    Entry.hw.sendQueue['DCR'] = 0x10 + speed;
+                    break;
+                    case 2:
+                    Entry.hw.sendQueue['DCL'] = 0x20 + speed;
+                    Entry.hw.sendQueue['DCR'] = 0x20 + speed;
+                    break;
+                    case 3:
+                    Entry.hw.sendQueue['DCL'] = 0x20 + speed;
+                    Entry.hw.sendQueue['DCR'] = 0x10 + speed;
+                    break;
+                    case 4:
+                    Entry.hw.sendQueue['DCL'] = 0x10 + speed;
+                    Entry.hw.sendQueue['DCR'] = 0x20 + speed;
+                    break;
+                    case 5:
+                    Entry.hw.sendQueue['DCL'] = 0;
+                    Entry.hw.sendQueue['DCR'] = 0x10 + speed;
+                    break;
+                    case 6:
+                    Entry.hw.sendQueue['DCL'] = 0x10 + speed;
+                    Entry.hw.sendQueue['DCR'] = 0;
+                    break;
+                }
+
+                if(duration === 0) {
+                    return script.callReturn();
+                } else {
+                    script.isStart = true;
+                    script.timeFlag = 1;
+                    setTimeout(function() {
+                        script.timeFlag = 0;
+                    }, duration * 1000);
+                    return script;
+                }
+            } else if (script.timeFlag == 1) {
+                return script;
+            } else {
+                delete script.timeFlag;
+                delete script.isStart;
+                Entry.hw.sendQueue['DCL'] = 0;
+                Entry.hw.sendQueue['DCR'] = 0;
+                Entry.engine.isContinue = false;
+                return script.callReturn();
+            }
+        }
+    },
+    "neobot_stop_all_motor": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "template": "양쪽 모터를 정지 %1",
+        "params": [{
+            "type": "Indicator",
+            "img": "block_icon/hardware_03.png",
+            "size": 12
+        }],
+        "events": {},
+        "def": {
+            "params": [null],
+            "type": "neobot_stop_all_motor",
+        },
+        "class": "neobot_motor",
+        "isNotFor": ["neobot"],
+        "func": function (sprite, script) {
             Entry.hw.sendQueue['DCL'] = 0;
             Entry.hw.sendQueue['DCR'] = 0;
-            Entry.engine.isContinue = false;
             return script.callReturn();
-        }
-    }
-},
-"neobot_stop_all_motor": {
-    "color": "#00979D",
-    "skeleton": "basic",
-    "statements": [],
-    "template": "양쪽 모터를 정지 %1",
-    "params": [{
-        "type": "Indicator",
-        "img": "block_icon/hardware_03.png",
-        "size": 12
-    }],
-    "events": {},
-    "def": {
-        "params": [null],
-        "type": "neobot_stop_all_motor",
+        },
+        "syntax": {"js": [], "py": ["Neobot.run_motor(%1, %2, %3, %4)"]}
     },
-    "class": "neobot_motor",
-    "isNotFor": ["neobot"],
-    "func": function (sprite, script) {
-        Entry.hw.sendQueue['DCL'] = 0;
-        Entry.hw.sendQueue['DCR'] = 0;
-        return script.callReturn();
-    },
-    "syntax": {"js": [], "py": ["Neobot.run_motor(%1, %2, %3, %4)"]}
-},
-"neobot_set_servo": {
-    "color": "#00979D",
-    "skeleton": "basic",
-    "statements": [],
-    "template": "%1 포트의 서보모터를 %2 도 이동 %3",
-    "params": [{
-        "type": "Dropdown",
-        "options": [
-            ["OUT1", "1"],
-            ["OUT2", "2"],
-            ["OUT3", "3"]
-        ],
-        "value": "1",
-        "fontSize": 11,
-        'arrowColor': EntryStatic.ARROW_COLOR_HW
-    }, {
-        "type": "Block",
-        "accept": "string"
-    }, {
-        "type": "Indicator",
-        "img": "block_icon/hardware_03.png",
-        "size": 12
-    }],
-    "events": {},
-    "def": {
-        "params": [null, null, null],
-        "type": "neobot_set_servo"
-    },
-    "paramsKeyMap": {
-        "PORT": 0,
-        "DEGREE": 1
-    },
-    "class": "neobot_output",
-    "isNotFor": ["neobot"],
-    "func": function (sprite, script) {
-        var port = script.getNumberField('PORT');
-        var degree = script.getNumberValue('DEGREE');
-        if(degree < 0) {
-            degree = 0;
-        } else if(degree > 180){
-            degree = 180;
-        }
-        Entry.hw.sendQueue['OUT' + port] = degree;
-        var option = port;
-        if(option === 3) {
-            option = 4;
-        }
-        Entry.hw.sendQueue['OPT'] = Entry.hw.sendQueue['OPT'] | option;
-        return script.callReturn();
-    },
-    "syntax": {"js": [], "py": ["Neobot.servo_1(%1, %2)"]}
-},
-"neobot_set_output": {
-    "color": "#00979D",
-    "skeleton": "basic",
-    "statements": [],
-    "template": "%1 번 포트의 값을 %2 만큼 출력 %3",
-    "params": [{
-        "type": "Dropdown",
-        "options": [
-            ["OUT1", "1"],
-            ["OUT2", "2"],
-            ["OUT3", "3"]
-        ],
-        "value": "1",
-        "fontSize": 11,
-        'arrowColor': EntryStatic.ARROW_COLOR_HW
-    }, {
-        "type": "Block",
-        "accept": "string"
-    }, {
-        "type": "Indicator",
-        "img": "block_icon/hardware_03.png",
-        "size": 12
-    }],
-    "events": {},
-    "def": {
-        "params": [null, {
-            "type": "number",
-            "params": ["255"]
-        }, null],
-        "type": "neobot_set_output",
-    },
-    "paramsKeyMap": {
-        "PORT": 0,
-        "VALUE": 1
-    },
-    "class": "neobot_output",
-    "isNotFor": ["neobot"],
-    "func": function (sprite, script) {
-        var port = script.getStringField('PORT', script);
-        var value = script.getNumberValue('VALUE', script);
-        var option = port;
-        if(value < 0) {
-            value = 0;
-        } else if (value > 255) {
-            value = 255;
-        }
-        if(option === 3) {
-            option = 4;
-        }
-        Entry.hw.sendQueue['OUT' + port] = value;
-        Entry.hw.sendQueue['OPT'] = Entry.hw.sendQueue['OPT'] & (~option);
-        return script.callReturn();
-    },
-    "syntax": {"js": [], "py": ["Neobot.servo_2(%1, %2)"]}
-},
-"neobot_set_fnd": {
-    "color": "#00979D",
-    "skeleton": "basic",
-    "statements": [],
-    "template": "FND에 %1 출력 %2",
-    "params": [{
-        "type": "Block",
-        "accept": "string"
-    }, {
-        "type": "Indicator",
-        "img": "block_icon/hardware_03.png",
-        "size": 12
-    }],
-    "events": {},
-    "def": {
-        "params": [ {
-            "type": "number",
-            "params": [ "0" ]
-        }, null],
-        "type": "neobot_set_fnd"
-    },
-    "paramsKeyMap": {
-        "VALUE": 0
-    },
-    "class": "neobot_output",
-    "isNotFor": ["neobot"],
-    "func": function (sprite, script) {
-        var value = script.getNumberValue('VALUE', script);
-        if(value > 99) {
-            value = 99;
-        }
-        Entry.hw.sendQueue['FND'] = parseInt('0x' + value);
-        Entry.hw.sendQueue['OPT'] = Entry.hw.sendQueue['OPT'] | 8;
-        return script.callReturn();
-    }
-},
-"neobot_set_fnd_off": {
-    "color": "#00979D",
-    "skeleton": "basic",
-    "statements": [],
-    "template": "FND 출력 끄기 %1",
-    "params": [{
-        "type": "Indicator",
-        "img": "block_icon/hardware_03.png",
-        "size": 12
-    }],
-    "events": {},
-    "def": {
-        "params": [null],
-        "type": "neobot_set_fnd_off"
-    },
-    "paramsKeyMap": {
-        "VALUE": 0
-    },
-    "class": "neobot_output",
-    "isNotFor": ["neobot"],
-    "func": function (sprite, script) {
-        Entry.hw.sendQueue['FND'] = parseInt('0x00');
-        Entry.hw.sendQueue['OPT'] = Entry.hw.sendQueue['OPT'] & (~8);
-        return script.callReturn();
-    }
-},
-"neobot_play_note_for": {
-    "color": "#00979D",
-    "skeleton": "basic",
-    "statements": [],
-    "template": "멜로디 %1 을(를) %2 옥타브로 %3 길이만큼 소리내기 %4",
-    "params": [{
-        "type": "Dropdown",
-        "options": [
-            ["무음", "0"],
-            ["도", "1"],
-            ["도#", "2"],
-            ["레", "3"],
-            ["레#", "4"],
-            ["미", "5"],
-            ["파", "6"],
-            ["파#", "7"],
-            ["솔", "8"],
-            ["솔#", "9"],
-            ["라", "10"],
-            ["라#", "11"],
-            ["시", "12"]
-        ],
-        "value": "0",
-        "fontSize": 11
-    }, {
-        "type": "Dropdown",
-        "options": [
-            ["1", "0"],
-            ["2", "1"],
-            ["3", "2"],
-            ["4", "3"],
-            ["5", "4"],
-            ["6", "5"]
-        ],
-        "value": "0",
-        "fontSize": 11
-    }, {
-        "type": "Dropdown",
-        "options": [
-            ["2분음표", "2"],
-            ["4분음표", "4"],
-            ["8분음표", "8"],
-            ["16분음표", "16"]
-        ],
-        "value": "2",
-        "fontSize": 11
-    }, {
-        "type": "Indicator",
-        "img": "block_icon/hardware_03.png",
-        "size": 12
-    }],
-    "events": {},
-    "def": {
-        "params": ["1", "2", "4", null],
-        "type": "neobot_play_note_for"
-    },
-    "paramsKeyMap": {
-        "NOTE": 0,
-        "OCTAVE": 1,
-        "DURATION": 2
-    },
-    "class": "neobot_note",
-    "isNotFor": ["neobot"],
-    "func": function (sprite, script) {
-        var sq = Entry.hw.sendQueue;
-
-        if (!script.isStart) {
-            var note = script.getNumberField("NOTE", script);
-            var octave = script.getNumberField("OCTAVE", script);
-            var duration = script.getNumberField("DURATION", script);
-            var value = (note > 0) ? note + (12 * octave) : 0;
-
-            script.isStart = true;
-            script.timeFlag = 1;
-            if(value > 65) {
-                value = 65;
+    "neobot_set_servo": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "template": "%1 포트의 서보모터를 %2 도 이동 %3",
+        "params": [{
+            "type": "Dropdown",
+            "options": [
+                ["OUT1", "1"],
+                ["OUT2", "2"],
+                ["OUT3", "3"]
+            ],
+            "value": "1",
+            "fontSize": 11,
+            'arrowColor': EntryStatic.ARROW_COLOR_HW
+        }, {
+            "type": "Block",
+            "accept": "string"
+        }, {
+            "type": "Indicator",
+            "img": "block_icon/hardware_03.png",
+            "size": 12
+        }],
+        "events": {},
+        "def": {
+            "params": [null, null, null],
+            "type": "neobot_set_servo"
+        },
+        "paramsKeyMap": {
+            "PORT": 0,
+            "DEGREE": 1
+        },
+        "class": "neobot_output",
+        "isNotFor": ["neobot"],
+        "func": function (sprite, script) {
+            var port = script.getNumberField('PORT');
+            var degree = script.getNumberValue('DEGREE');
+            if(degree < 0) {
+                degree = 0;
+            } else if(degree > 180){
+                degree = 180;
             }
-            sq.SND = value;
-            setTimeout(function() {
-                script.timeFlag = 0;
-            }, 1 / duration * 2000);
-            return script;
-        } else if (script.timeFlag == 1) {
-            return script;
-        } else {
-            delete script.timeFlag;
-            delete script.isStart;
-            Entry.hw.sendQueue['SND'] = 0;
-            Entry.engine.isContinue = false;
+            Entry.hw.sendQueue['OUT' + port] = degree;
+            var option = port;
+            if(option === 3) {
+                option = 4;
+            }
+            Entry.hw.sendQueue['OPT'] = Entry.hw.sendQueue['OPT'] | option;
+            return script.callReturn();
+        },
+        "syntax": {"js": [], "py": ["Neobot.servo_1(%1, %2)"]}
+    },
+    "neobot_set_output": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "template": "%1 번 포트의 값을 %2 만큼 출력 %3",
+        "params": [{
+            "type": "Dropdown",
+            "options": [
+                ["OUT1", "1"],
+                ["OUT2", "2"],
+                ["OUT3", "3"]
+            ],
+            "value": "1",
+            "fontSize": 11,
+            'arrowColor': EntryStatic.ARROW_COLOR_HW
+        }, {
+            "type": "Block",
+            "accept": "string"
+        }, {
+            "type": "Indicator",
+            "img": "block_icon/hardware_03.png",
+            "size": 12
+        }],
+        "events": {},
+        "def": {
+            "params": [null, {
+                "type": "number",
+                "params": ["255"]
+            }, null],
+            "type": "neobot_set_output",
+        },
+        "paramsKeyMap": {
+            "PORT": 0,
+            "VALUE": 1
+        },
+        "class": "neobot_output",
+        "isNotFor": ["neobot"],
+        "func": function (sprite, script) {
+            var port = script.getStringField('PORT', script);
+            var value = script.getNumberValue('VALUE', script);
+            var option = port;
+            if(value < 0) {
+                value = 0;
+            } else if (value > 255) {
+                value = 255;
+            }
+            if(option === 3) {
+                option = 4;
+            }
+            Entry.hw.sendQueue['OUT' + port] = value;
+            Entry.hw.sendQueue['OPT'] = Entry.hw.sendQueue['OPT'] & (~option);
+            return script.callReturn();
+        },
+        "syntax": {"js": [], "py": ["Neobot.servo_2(%1, %2)"]}
+    },
+    "neobot_set_fnd": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "template": "FND에 %1 출력 %2",
+        "params": [{
+            "type": "Block",
+            "accept": "string"
+        }, {
+            "type": "Indicator",
+            "img": "block_icon/hardware_03.png",
+            "size": 12
+        }],
+        "events": {},
+        "def": {
+            "params": [ {
+                "type": "number",
+                "params": [ "0" ]
+            }, null],
+            "type": "neobot_set_fnd"
+        },
+        "paramsKeyMap": {
+            "VALUE": 0
+        },
+        "class": "neobot_output",
+        "isNotFor": ["neobot"],
+        "func": function (sprite, script) {
+            var value = script.getNumberValue('VALUE', script);
+            if(value > 99) {
+                value = 99;
+            }
+            Entry.hw.sendQueue['FND'] = parseInt('0x' + value);
+            Entry.hw.sendQueue['OPT'] = Entry.hw.sendQueue['OPT'] | 8;
             return script.callReturn();
         }
-
     },
-    "syntax": {"js": [], "py": ["Neobot.play_note(%1, %2, %3)"]}
-},
+    "neobot_set_fnd_off": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "template": "FND 출력 끄기 %1",
+        "params": [{
+            "type": "Indicator",
+            "img": "block_icon/hardware_03.png",
+            "size": 12
+        }],
+        "events": {},
+        "def": {
+            "params": [null],
+            "type": "neobot_set_fnd_off"
+        },
+        "paramsKeyMap": {
+            "VALUE": 0
+        },
+        "class": "neobot_output",
+        "isNotFor": ["neobot"],
+        "func": function (sprite, script) {
+            Entry.hw.sendQueue['FND'] = parseInt('0x00');
+            Entry.hw.sendQueue['OPT'] = Entry.hw.sendQueue['OPT'] & (~8);
+            return script.callReturn();
+        }
+    },
+    "neobot_play_note_for": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "template": "멜로디 %1 을(를) %2 옥타브로 %3 길이만큼 소리내기 %4",
+        "params": [{
+            "type": "Dropdown",
+            "options": [
+                ["무음", "0"],
+                ["도", "1"],
+                ["도#", "2"],
+                ["레", "3"],
+                ["레#", "4"],
+                ["미", "5"],
+                ["파", "6"],
+                ["파#", "7"],
+                ["솔", "8"],
+                ["솔#", "9"],
+                ["라", "10"],
+                ["라#", "11"],
+                ["시", "12"]
+            ],
+            "value": "0",
+            "fontSize": 11
+        }, {
+            "type": "Dropdown",
+            "options": [
+                ["1", "0"],
+                ["2", "1"],
+                ["3", "2"],
+                ["4", "3"],
+                ["5", "4"],
+                ["6", "5"]
+            ],
+            "value": "0",
+            "fontSize": 11
+        }, {
+            "type": "Dropdown",
+            "options": [
+                ["2분음표", "2"],
+                ["4분음표", "4"],
+                ["8분음표", "8"],
+                ["16분음표", "16"]
+            ],
+            "value": "2",
+            "fontSize": 11
+        }, {
+            "type": "Indicator",
+            "img": "block_icon/hardware_03.png",
+            "size": 12
+        }],
+        "events": {},
+        "def": {
+            "params": ["1", "2", "4", null],
+            "type": "neobot_play_note_for"
+        },
+        "paramsKeyMap": {
+            "NOTE": 0,
+            "OCTAVE": 1,
+            "DURATION": 2
+        },
+        "class": "neobot_note",
+        "isNotFor": ["neobot"],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+
+            if (!script.isStart) {
+                var note = script.getNumberField("NOTE", script);
+                var octave = script.getNumberField("OCTAVE", script);
+                var duration = script.getNumberField("DURATION", script);
+                var value = (note > 0) ? note + (12 * octave) : 0;
+
+                script.isStart = true;
+                script.timeFlag = 1;
+                if(value > 65) {
+                    value = 65; //이게 원래 코드 이민준
+                }
+                sq.SND = value;
+                setTimeout(function() {
+                    script.timeFlag = 0;
+                }, 1 / duration * 2000);
+                return script;
+            } else if (script.timeFlag == 1) {
+                return script;
+            } else {
+                delete script.timeFlag;
+                delete script.isStart;
+                Entry.hw.sendQueue['SND'] = 0;
+                Entry.engine.isContinue = false;
+                return script.callReturn();
+            }
+
+        },
+        "syntax": {"js": [], "py": ["Neobot.play_note(%1, %2, %3)"]}
+    },
+    "neobot_play_note_with_sensor": {//MinjuneL
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "template": "컨트롤러에서 %1 센서의 %2 ~ %3 값으로 멜로디 연주하기 %4",
+        "params": [{
+            "type": "Dropdown",
+            "options": [
+                ["1번 포트", "IN1"],
+                ["2번 포트", "IN2"],
+                ["3번 포트", "IN3"],
+                ["리모컨", "IR"],
+                ["배터리", "BAT"]
+            ],
+            "value": "IN1",
+            "fontSize": 11
+                },{
+            "type": "Block",
+            "accept": "string"
+            }, {
+            "type": "Block",
+            "accept": "string"
+        }, {
+            "type": "Indicator",
+            "img": "block_icon/hardware_03.png",
+            "size": 12
+        }],
+        "events": {},
+        "def": {
+            "params": [null, 
+                {
+                "type": "number",
+                "params": ["0"]
+                }, 
+                {"type": "number",
+                "params": ["255"]},
+                    null],
+            "type": "neobot_play_note_with_sensor"
+        },
+        "paramsKeyMap": {
+            "PORT": 0,
+            "MIN_VALUE": 1,
+            "MAX_VALUE":2,
+            "VALUE":3
+        },
+        "class": "neobot_note",
+        "isNotFor": ["neobot"],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            
+            //Value Translate
+            var port = script.getStringField('PORT', script);
+            var value = Entry.hw.portData[port];
+            var omin = script.getNumberValue("MIN_VALUE", script);
+            var omax = script.getNumberValue("MAX_VALUE", script);
+            var min = 0;
+            var max = 72; //밑에가 65면 얘도 65로
+
+            if (omin > omax) {
+                var temp = omin;
+                omin = omax;
+                omax = temp;
+            }
+
+            if(min > max) {
+                var temp = min;
+                min = max;
+                max = temp;
+            }
+
+            value -= omin;
+            value = value * ((max - min) / (omax - omin));
+            value += min;
+            value = Math.min(max, value);
+            value = Math.max(min, value);
+
+            value = Math.round(value);
+
+            if (!script.isStart) {
+
+                script.isStart = true;
+                script.timeFlag = 1;
+                if(value > 72) {
+                    value = 72;//72 이민준 새거
+                }
+                sq.SND = value;
+                setTimeout(function() {
+                    script.timeFlag = 0;
+                }, 1 / 4 * 2000);
+                return script;
+            } else if (script.timeFlag == 1) {
+                return script;
+            } else {
+                delete script.timeFlag;
+                delete script.isStart;
+                Entry.hw.sendQueue['SND'] = 0;
+                Entry.engine.isContinue = false;
+                return script.callReturn();
+            }
+
+        },
+        "syntax": {"js": [], "py": ["Neobot.play_note_with_sensor(%1, %2, %3)"]}
+    },
+    "neobot_change_color_with_color_picker": { //MinjuneL
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "template": "%1 LED의 색깔을 %2(으)로 정하기 %3",
+        "params": [{
+            "type": "Dropdown",
+            "options": [
+                ["OUT1", "1"],
+                ["OUT2", "2"],
+                ["OUT3", "3"]
+            ],
+            "value": "1",
+            "fontSize": 11,
+            'arrowColor': EntryStatic.ARROW_COLOR_HW
+                },{
+                    "type": "Color"
+                },
+                {
+                    "type": "Indicator",
+            "img": "block_icon/hardware_03.png",
+            "size": 12
+        }],
+        "events": {},
+        "def": {
+            "params": [null, null, null],
+            "type": "neobot_change_color_with_color_picker"
+        },
+        "paramsKeyMap": {
+            "PORT" : 0,
+            "COLOR" : 1,
+            "VALUE": 2
+        },
+        "class": "neobot_output",
+        "isNotFor": ["neobot"],
+        "func": function (sprite, script) {
+            var port = script.getStringField('PORT', script);
+            var colour = script.getField("COLOR", script);
+            
+            var velue = 0;
+            if(colour.indexOf("#FFFFFF") > -1 )
+                value = 5;
+            else if(colour.indexOf("#CCCCCC") > -1 )
+                value = 10;
+            else if(colour.indexOf("#C0C0C0") > -1 )
+                value = 15;
+            else if(colour.indexOf("#999999") > -1 )
+                value = 20;
+            else if(colour.indexOf("#666666") > -1 )
+                value = 25;
+            else if(colour.indexOf("#FFCCCC") > -1 )
+                value = 30;
+            else if(colour.indexOf("#FF6666") > -1 )
+                value = 35;
+            else if(colour.indexOf("#FF0000") > -1 )
+                value = 40;
+            else if(colour.indexOf("#CC0000") > -1 )
+                value = 45;
+            else if(colour.indexOf("#990000") > -1 )
+                value = 50;
+            else if(colour.indexOf("#FFCC99") > -1 )
+                value = 55;
+            else if(colour.indexOf("#FF9966") > -1 )
+                value = 60;
+            else if(colour.indexOf("#FF9900") > -1 )
+                value = 65;
+            else if(colour.indexOf("#FF6600") > -1 )
+                value = 70;
+            else if(colour.indexOf("#CC6600") > -1 )
+                value = 75;
+            else if(colour.indexOf("#FFFF99")> -1)
+                value = 80;
+            else if(colour.indexOf("#FFFF66") > -1 )
+                value = 85;
+            else if(colour.indexOf("#FFCC66") > -1 )
+                value = 90;
+            else if(colour.indexOf("#FFCC33") > -1 )
+                value = 95;
+            else if(colour.indexOf("#CC9933") > -1 )
+                value = 100;
+            else if(colour.indexOf("#FFFFCC") > -1 )
+                value = 105;
+            else if(colour.indexOf("#FFFF33") > -1 )
+                value = 110;
+            else if(colour.indexOf("#FFFF00") > -1 )
+                value = 115;
+            else if(colour.indexOf("#FFCC00") > -1 )
+                value = 120;
+            else if(colour.indexOf("#999900") > -1 )
+                value = 125;
+            else if(colour.indexOf("#99FF99") > -1 )
+                value = 130;
+            else if(colour.indexOf("#66FF99") > -1 )
+                value = 135;
+            else if(colour.indexOf("#33FF33") > -1 )
+                value = 140;
+            else if(colour.indexOf("#33CC00") > -1 )
+                value = 145;
+            else if(colour.indexOf("#009900") > -1 )
+                value = 150;
+            else if(colour.indexOf("#99FFFF") > -1 )
+                value = 155;
+            else if(colour.indexOf("#33FFFF") > -1 )
+                value = 160;
+            else if(colour.indexOf("#66CCCC") > -1 )
+                value = 165;
+            else if(colour.indexOf("#00CCCC") > -1 )
+                value = 170;
+            else if(colour.indexOf("#339999") > -1 )
+                value = 175;
+            else if(colour.indexOf("#CCFFFF") > -1 )
+                value = 180;
+            else if(colour.indexOf("#66FFFF") > -1 )
+                value = 185;
+            else if(colour.indexOf("#33CCFF") > -1 )
+                value = 190;
+            else if(colour.indexOf("#3366FF") > -1 )
+                value = 195;
+            else if(colour.indexOf("#3333FF") > -1 )
+                value = 200;
+            else if(colour.indexOf("#CCCCFF") > -1 )
+                value = 205;
+            else if(colour.indexOf("#9999FF") > -1 )
+                value = 210;
+            else if(colour.indexOf("#6666CC") > -1 )
+                value = 215;
+            else if(colour.indexOf("#6633FF") > -1 )
+                value = 220;
+            else if(colour.indexOf("#6609CC") > -1 )
+                value = 225;
+            else if(colour.indexOf("#FFCCFF") > -1 )
+                value = 230;
+            else if(colour.indexOf("#FF99FF") > -1 )
+                value = 235;
+            else if(colour.indexOf("#CC66CC") > -1 )
+                value = 240;
+            else if(colour.indexOf("#CC33CC") > -1 )
+                value = 245;
+            else if(colour.indexOf("#993399") > -1 )
+                value = 250;
+            else
+                value = 0;
+
+
+            Entry.hw.sendQueue['OUT' + port] = value;
+            return script.callReturn();
+        }
+    },
+    "neobot_change_color_with_sensor_value": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "template": "%1 LED의 색깔을 %2 센서 값으로 바꾸기 %3",
+        "params": [{
+            "type": "Dropdown",
+            "options": [
+                ["OUT1", "1"],
+                ["OUT2", "2"],
+                ["OUT3", "3"]
+            ],
+            "value": "1",
+            "fontSize": 11,
+            'arrowColor': EntryStatic.ARROW_COLOR_HW
+                },
+                {
+            "type": "Dropdown",
+            "options": [
+                ["1번 포트", "IN1"],
+                ["2번 포트", "IN2"],
+                ["3번 포트", "IN3"],
+                ["리모컨", "IR"],
+                ["배터리", "BAT"]
+            ],
+            "value": "IN1",
+            "fontSize": 11
+                },
+                {
+            "type": "Indicator",
+            "img": "block_icon/hardware_03.png",
+            "size": 12
+        }],
+        "events": {},
+        "def": {
+            "params": [null, null],
+            "type": "neobot_change_color_with_sensor_value"
+        },
+        "paramsKeyMap": {
+            "PORT_OUT" : 0,
+            "PORT_IN" : 1,
+            "VALUE": 2
+        },
+        "class": "neobot_output",
+        "isNotFor": ["neobot"],
+        "func": function (sprite, script) {
+            var port = script.getStringField('PORT_IN');
+            var inputPortValue = Entry.hw.portData[port];
+
+            var portOut = script.getStringField('PORT_OUT', script);
+            Entry.hw.sendQueue['OUT' + portOut] = inputPortValue;
+
+            return script.callReturn();
+        }
+    },
+//endregion neobot 네오봇
+//region robotis 로보티즈
 "robotis_openCM70_cm_custom_value": {
     "color": "#00979D",
     "fontColor": "#fff",
@@ -34450,6 +34976,8 @@ Entry.block = {
     },
     "syntax": {"js": [], "py": ["Robotis.carcont_cm_calibration(%1, %2)"]}
 },
+//endregion robotis 로보티즈
+//region basic 기본
 "when_scene_start": {
     "color": "#3BBD70",
     "skeleton": "basic_event",
@@ -37811,6 +38339,8 @@ Entry.block = {
         }
     ]}
 },
+//endregion basic 기본
+//region xbot 엑스봇
 "xbot_digitalInput": {
     "color": "#00979D",
     "skeleton": "basic_boolean_field",
@@ -38350,8 +38880,6 @@ Entry.block = {
                 var note = script.getStringField("NOTE", script);
                 var octave = script.getStringField("OCTAVE", script);
                 var duration = script.getNumberValue("VALUE", script);
-
-
             var noteOctave = note + octave; // 'C'+ 2 = "C2"
             //console.log('xbot_buzzer noteOctave' + note + ' ' + octave + ' ' + duration);
 
@@ -38488,6 +39016,8 @@ Entry.block = {
     },
     "syntax": {"js": [], "py": ["Xbot.lcd(%1, %2)"]}
 },
+//endregion xbot 엑스봇
+//region basic 기본
 "run": {
     "skeleton": "basic",
     "color": "#3BBD70",
@@ -42377,6 +42907,8 @@ Entry.block = {
         }
     ]
 },
+//endregion basic 기본
+//region dplay 디플레이
 "dplay_get_number_sensor_value": {
     "parent": "arduino_get_number_sensor_value",
     "isNotFor": [
@@ -43540,6 +44072,8 @@ Entry.block = {
     },
     "syntax": {"js": [], "py": ["Dplay.robot_stop()"]}
 },
+//endregion dplay 디플레이
+//region nemoino 네모이노
 "nemoino_get_number_sensor_value": {
     "parent": "arduino_get_number_sensor_value",
     "isNotFor": [
@@ -43648,6 +44182,8 @@ Entry.block = {
     "class": "arduino",
     "syntax": {"js": [], "py": ["Nemoino.convert_scale(%1, %2, %3, %4, %5)"]}
 },
+//endregion nemoino 네모이노
+//region sensorBoard e센서보드
 "sensorBoard_get_number_sensor_value": {
     "parent": "arduino_get_number_sensor_value",
     "isNotFor": [
@@ -43757,7 +44293,8 @@ Entry.block = {
     "class": "arduino",
     "syntax": {"js": [], "py": ["SensorBoard.convert_scale(%1, %2, %3, %4, %5)"]}
 },
-// ardublock Added 2016-06-01
+//endregion sensorBoard e센서보드
+//region ardublock 아두블록
 "ardublock_analog_list": {
     "color": "#00979D",
     "skeleton": "basic_string_field",
@@ -44462,8 +44999,6 @@ Entry.block = {
         } else if (speed > 254) {
             speed = 254;
         }
-
-
         if (!Entry.hw.sendQueue['SET']) {
             Entry.hw.sendQueue['SET'] = {};
         }
@@ -44780,8 +45315,8 @@ Entry.block = {
     },
     "syntax": { "js": [], "py": [] }
 },
-// ardublock Added 2016-06-01
-// mkboard Added 2017-07-04
+//endregion ardublock 아두블록
+//region mkboard 몽키보드
 "mkboard_analog_list": {
     "color": "#00979D",
     "skeleton": "basic_string_field",
@@ -45515,8 +46050,6 @@ Entry.block = {
         } else if(speed > 254) {
             speed = 254;
         }
-
-
         if(!Entry.hw.sendQueue['SET']) {
             Entry.hw.sendQueue['SET'] = {};
         }
@@ -45849,146 +46382,8 @@ Entry.block = {
     },
     "syntax": {"js": [], "py": []}
 },
-
-/*
-"mkboard_list_digital_lcd": {
-    "color": "#00979D",
-    "skeleton": "basic_string_field",
-    "statements": [],
-    "template": "%1",
-    "params": [
-        {
-            "type": "Dropdown",
-            "options": [
-                [ Lang.Blocks.mkboard_lcd_first_line, "0" ],
-                [ Lang.Blocks.mkboard_lcd_seconds_line, "1" ]
-            ],
-            "value": "0",
-            "fontSize": 11
-        }
-    ],
-    "events": {},
-    "def": {
-        "params": [ null ]
-    },
-    "paramsKeyMap": {
-        "LINE": 0
-    },
-    "func": function (sprite, script) {
-        return script.getField("LINE");
-    }
-},
-
-"mkboard_set_digital_lcd": {
-    "color": "#00979D",
-    "fontColor": "#fff",
-    "skeleton": "basic",
-    "template": Lang.template.mkboard_set_digital_lcd,
-    "statements": [],
-    "params": [
-        {
-            "type": "Block",
-            "accept": "string"
-        },
-        {
-            "type": "Block",
-            "accept": "string"
-        },
-        {
-            "type": "Indicator",
-            "img": "block_icon/hardware_03.png",
-            "size": 12
-        }
-    ],
-    "events": {},
-    "def": {
-        "params": [
-            {
-                "type": "mkboard_list_digital_lcd"
-            },
-            {
-                "type": "text",
-                "params": [ "Type text !!" ]
-            },
-            null
-        ],
-        "type": "mkboard_set_digital_lcd"
-    },
-    "paramsKeyMap": {
-        "LINE": 0,
-        "STRING": 1,
-    },
-    "class": "mkboardSet",
-    "isNotFor": [ "mkboard" ],
-    "func": function (sprite, script) {
-        var line = script.getNumberValue("LINE");
-        var string = script.getValue("STRING");
-        var text = [];
-
-        if(!script.isStart) {
-            if(typeof string === 'string') {
-                for (var i = 0; i < string.length; i++) {
-                    text[i] = Entry.mkboard.toByte(string[i]);
-                }
-            }
-            else {
-                text[0] = string;
-            }
-            if(!Entry.hw.sendQueue['SET']) {
-                Entry.hw.sendQueue['SET'] = {};
-            }
-
-            script.isStart = true;
-            script.timeFlag = 1;
-            var fps = Entry.FPS || 60;
-            timeValue = 60/fps*50;
-
-            Entry.hw.sendQueue['SET'][line] = {
-                type: Entry.mkboard.sensorTypes.LCD,
-                data: {
-                    text0 : text[0],
-                    text1 : text[1],
-                    text2 : text[2],
-                    text3 : text[3],
-                    text4 : text[4],
-                    text5 : text[5],
-                    text6 : text[6],
-                    text7 : text[7],
-                    text8 : text[8],
-                    text9 : text[9],
-                    text10 : text[10],
-                    text11 : text[11],
-                    text12 : text[12],
-                    text13 : text[13],
-                    text14 : text[14],
-                    text15 : text[15]
-                },
-                time: new Date().getTime()
-            };
-
-            setTimeout(function() {
-                script.timeFlag = 0;
-            }, timeValue);
-            return script;
-        }
-        else if(script.timeFlag == 1) {
-            return script;
-        }
-        else {
-            delete script.timeFlag;
-            delete script.isStart;
-            Entry.engine.isContinue = false;
-            return script.callReturn();
-        }
-    },
-    "syntax": {"js": [], "py": ["mkboard.set_digital_lcd(%1, %2)"]}
-},
-*/
-
-// mkboard Added 2017-07-04
-
-
-// memaker Added 2017-10-01
+//endregion mkboard 몽키보드
+//region memaker 미메이커
 "memaker_analog_list": {
     "color": "#00979D",
     "skeleton": "basic_string_field",
@@ -46413,8 +46808,6 @@ Entry.block = {
     },
     "syntax": {"js": [], "py": []}
 },
-
-
 "memaker_list_digital_lcd_line": {
     "color": "#00979D",
     "skeleton": "basic_string_field",
@@ -46442,7 +46835,6 @@ Entry.block = {
         return script.getField("LINE");
     }
 },
-
 "memaker_list_digital_lcd_column": {
     "color": "#00979D",
     "skeleton": "basic_string_field",
@@ -46484,7 +46876,6 @@ Entry.block = {
         return script.getField("COLUMN");
     }
 },
-
 "memaker_set_lcd": {
     "color": "#00979D",
     "fontColor": "#fff",
@@ -46611,7 +47002,6 @@ Entry.block = {
     },
     "syntax": {"js": [], "py": ["memaker.memaker_set_lcd(%1, %2, %3)"]}
 },
-
 "memaker_list_lcd_command": {
     "color": "#00979D",
     "skeleton": "basic_string_field",
@@ -46640,7 +47030,6 @@ Entry.block = {
         return script.getField("COMMAND");
     }
 },
-
 "memaker_lcd_command": {
     "color": "#00979D",
     "skeleton": "basic",
@@ -46687,9 +47076,705 @@ Entry.block = {
     },
     "syntax": {"js": [], "py": []}
 },
+//endregion memaker 미메이커
+//region edumaker 에듀메이커
+"edumaker_analog_list": {
+    "color": "#00979D",
+    "skeleton": "basic_string_field",
+    "statements": [],
+    "template": "%1",
+    "params": [
+        {
+            "type": "Dropdown",
+            "options": [
+                [ "A0", "0" ],
+                [ "A1", "1" ],
+                [ "A2", "2" ],
+                [ "A3", "3" ],
+                [ "A4", "4" ],
+                [ "A5", "5" ]
+            ],
+            "value": "0",
+            "fontSize": 11
+        }
+    ],
+    "events": {},
+    "def": {
+        "params": [ null ]
+    },
+    "paramsKeyMap": {
+        "PORT": 0
+    },
+    "func": function (sprite, script) {
+        return script.getField("PORT");
+    },
+    "syntax": {"js": [], "py": []}
+},
+"edumaker_get_analog_value": {
+    "color": "#00979D",
+    "fontColor": "#fff",
+    "skeleton": "basic_string_field",
+    "statements": [],
+    "params": [
+        {
+            "type": "Block",
+            "accept": "string"
+        }
+    ],
+    "events": {},
+    "def": {
+        "params": [
+            {
+                "type": "edumaker_analog_list"
+            }
+        ],
+        "type": "edumaker_get_analog_value"
+    },
+    "paramsKeyMap": {
+        "PORT": 0
+    },
+    "class": "EduMakerGet",
+    "isNotFor": [ "EduMaker" ],
+    "func": function (sprite, script) {
+        var port = script.getValue("PORT", script);
+        var ANALOG = Entry.hw.portData.ANALOG;
+        if (port[0] === "A")
+            port = port.substring(1)
+        return ANALOG ? ANALOG[port] || 0 : 0;
+    },
+    "syntax": {"js": [], "py": []}
+},
+"edumaker_get_analog_value_map": {
+    "color": "#00979D",
+    "fontColor": "#fff",
+    "skeleton": "basic_string_field",
+    "statements": [],
+    "params": [
+        {
+            "type": "Block",
+            "accept": "string"
+        },
+        {
+            "type": "Block",
+            "accept": "string"
+        },
+        {
+            "type": "Block",
+            "accept": "string"
+        },
+        {
+            "type": "Block",
+            "accept": "string"
+        },
+        {
+            "type": "Block",
+            "accept": "string"
+        }
+    ],
+    "events": {},
+    "def": {
+        "params": [
+            {
+                "type": "edumaker_get_analog_value",
+                "params": [
+                    {
+                        "type": "edumaker_analog_list"
+                    }
+                ]
+            },
+            {
+                "type": "number",
+                "params": [ "0" ]
+            },
+            {
+                "type": "number",
+                "params": [ "1023" ]
+            },
+            {
+                "type": "number",
+                "params": [ "0" ]
+            },
+            {
+                "type": "number",
+                "params": [ "100" ]
+            }
+        ],
+        "type": "edumaker_get_analog_value_map"
+    },
+    "paramsKeyMap": {
+        "PORT": 0,
+        "VALUE2": 1,
+        "VALUE3": 2,
+        "VALUE4": 3,
+        "VALUE5": 4
+    },
+    "class": "EduMakerGet",
+    "isNotFor": [ "EduMaker" ],
+    "func": function (sprite, script) {
+        var result = script.getValue("PORT", script);
+        var ANALOG = Entry.hw.portData.ANALOG;
+        var value2 = script.getNumberValue("VALUE2", script);
+        var value3 = script.getNumberValue("VALUE3", script);
+        var value4 = script.getNumberValue("VALUE4", script);
+        var value5 = script.getNumberValue("VALUE5", script);
+        var stringValue4 = script.getValue("VALUE4", script);
+        var stringValue5 = script.getValue("VALUE5", script);
+        var isFloat = false;
 
-// memaker Added 2017-10-01
+        if((Entry.Utils.isNumber(stringValue4) && stringValue4.indexOf('.') > -1) || (Entry.Utils.isNumber(stringValue5) && stringValue5.indexOf('.') > -1)) {
+            isFloat = true;
+        }
 
+        if (value2 > value3) {
+            var swap = value2;
+            value2 = value3;
+            value3 = swap;
+        }
+        if (value4 > value5) {
+            var swap = value4;
+            value4 = value5;
+            value5 = swap;
+        }
+        result -= value2;
+        result = result * ((value5 - value4) / (value3 - value2));
+        result += value4;
+        result = Math.min(value5, result);
+        result = Math.max(value4, result);
+
+        if(isFloat) {
+            result = Math.round(result * 100) / 100;
+        } else {
+            result = Math.round(result);
+        }
+
+        return result
+    },
+    "syntax": {"js": [], "py": []}
+},
+"edumaker_get_ultrasonic_value": {
+    "color": "#00979D",
+    "fontColor": "#fff",
+    "skeleton": "basic_string_field",
+    "statements": [],
+    "params": [
+        {
+            "type": "Block",
+            "accept": "string"
+        },
+        {
+            "type": "Block",
+            "accept": "string"
+        }
+    ],
+    "events": {},
+    "def": {
+        "params": [{
+            type: 'arduino_get_port_number',
+            params: [ '2' ],
+        }, {
+            type: 'arduino_get_port_number',
+            params: [ '4' ],
+        }],
+        "type": "edumaker_get_ultrasonic_value"
+    },
+    "paramsKeyMap": {
+        "PORT1": 0,
+        "PORT2": 1,
+    },
+    "class": "EduMakerGet",
+    "isNotFor": [ "EduMaker" ],
+    "func": function (sprite, script) {
+        var port1 = script.getNumberValue("PORT1", script);
+        var port2 = script.getNumberValue("PORT2", script);
+
+        if(!Entry.hw.sendQueue['SET']) {
+            Entry.hw.sendQueue['SET'] = {};
+        }
+        delete Entry.hw.sendQueue['SET'][port1];
+        delete Entry.hw.sendQueue['SET'][port2];
+
+        if(!Entry.hw.sendQueue['GET']) {
+            Entry.hw.sendQueue['GET'] = {};
+        }
+        Entry.hw.sendQueue['GET'][Entry.ArduinoExt.sensorTypes.ULTRASONIC] = {
+            port: [port1, port2],
+            time: new Date().getTime()
+        };
+        return Entry.hw.portData.ULTRASONIC || 0;
+    },
+    "syntax": {"js": [], "py": []}
+},
+"edumaker_get_digital": {
+    "color": "#00979D",
+    "fontColor": "#fff",
+    "skeleton": "basic_boolean_field",
+    "params": [{
+        "type": "Block",
+        "accept": "string"
+    }],
+    "events": {},
+    "def": {
+        "params": [
+            {
+                "type": "arduino_get_port_number",
+                "params": [2]
+            }
+        ],
+        "type": "edumaker_get_digital"
+    },
+    "paramsKeyMap": {
+        "PORT": 0
+    },
+    "class": "EduMakerGet",
+    "isNotFor": [ "EduMaker" ],
+    "func": function (sprite, script) {
+        var port = script.getNumberValue("PORT", script);
+        var DIGITAL = Entry.hw.portData.DIGITAL;
+        if(!Entry.hw.sendQueue['GET']) {
+            Entry.hw.sendQueue['GET'] = {};
+        }
+        Entry.hw.sendQueue['GET'][Entry.ArduinoExt.sensorTypes.DIGITAL] = {
+            port: port,
+            time: new Date().getTime()
+        };
+        return (DIGITAL) ? DIGITAL[port] || 0 : 0;
+    },
+    "syntax": {"js": [], "py": []}
+},
+"edumaker_digital_toggle": {
+    "color": "#00979D",
+    "skeleton": "basic_string_field",
+    "statements": [],
+    "params": [
+        {
+            "type": "Dropdown",
+            "options": [
+                [Lang.Blocks.ARDUINO_on,"on"],
+                [Lang.Blocks.ARDUINO_off,"off"]
+            ],
+            "value": "on",
+            "fontSize": 11,
+            'arrowColor': EntryStatic.ARROW_COLOR_HW
+        }
+    ],
+    "events": {},
+    "def": {
+        "params": [ null ]
+    },
+    "paramsKeyMap": {
+        "OPERATOR": 0
+    },
+    "func": function (sprite, script) {
+        return script.getStringField("OPERATOR");
+    },
+    "syntax": {"js": [], "py": []}
+},
+"edumaker_toggle_led": {
+    "color": "#00979D",
+    "skeleton": "basic",
+    "statements": [],
+    "params": [
+        {
+            "type": "Block",
+            "accept": "string"
+        },
+        {
+            "type": "Block",
+            "accept": "string"
+        },
+        {
+            "type": "Indicator",
+            "img": "block_icon/hardware_03.png",
+            "size": 12
+        }
+    ],
+    "events": {},
+    "def": {
+        "params": [
+            {
+                "type": "arduino_get_port_number",
+                "params": [ 3 ],
+            },
+            {
+                "type": "arduino_get_digital_toggle",
+                "params": [ "on" ],
+            },
+            null
+        ],
+        "type": "edumaker_toggle_led"
+    },
+    "paramsKeyMap": {
+        "PORT": 0,
+        "VALUE": 1
+    },
+    "class": "EduMaker",
+    "isNotFor": [ "EduMaker" ],
+    "func": function (sprite, script) {
+        var port = script.getNumberValue("PORT");
+        var value = script.getValue("VALUE");
+
+        if(typeof value === 'string') {
+            value = value.toLowerCase();
+        }
+        if(Entry.ArduinoExt.highList.indexOf(value) > -1) {
+            value = 255;
+        } else if(Entry.ArduinoExt.lowList.indexOf(value) > -1) {
+            value = 0;
+        } else {
+            throw new Error();
+        }
+        if(!Entry.hw.sendQueue['SET']) {
+            Entry.hw.sendQueue['SET'] = {};
+        }
+        Entry.hw.sendQueue['SET'][port] = {
+            type: Entry.ArduinoExt.sensorTypes.DIGITAL,
+            data: value,
+            time: new Date().getTime()
+        };
+        return script.callReturn();
+    },
+    "syntax": {"js": [], "py": []}
+},
+"edumaker_digital_pwm": {
+    "color": "#00979D",
+    "skeleton": "basic",
+    "statements": [],
+    "params": [
+        {
+            "type": "Block",
+            "accept": "string"
+        },
+        {
+            "type": "Block",
+            "accept": "string"
+        },
+        {
+            "type": "Indicator",
+            "img": "block_icon/hardware_03.png",
+            "size": 12
+        }
+    ],
+    "events": {},
+    "def": {
+        "params": [
+            {
+                "type": "arduino_get_pwm_port_number"
+            },
+            {
+                "type": "text",
+                "params": [ "255" ]
+            },
+            null
+        ],
+        "type": "edumaker_digital_pwm"
+    },
+    "paramsKeyMap": {
+        "PORT": 0,
+        "VALUE": 1
+    },
+    "class": "EduMaker",
+    "isNotFor": [ "EduMaker" ],
+    "func": function (sprite, script) {
+        var port = script.getNumberValue("PORT");
+        var value = script.getNumberValue("VALUE");
+        value = Math.round(value);
+        value = Math.max(value, 0);
+        value = Math.min(value, 255);
+        if(!Entry.hw.sendQueue['SET']) {
+            Entry.hw.sendQueue['SET'] = {};
+        }
+        Entry.hw.sendQueue['SET'][port] = {
+            type: Entry.ArduinoExt.sensorTypes.PWM,
+            data: value,
+            time: new Date().getTime()
+        };
+        return script.callReturn();
+    },
+    "syntax": {"js": [], "py": []}
+},
+"edumaker_tone_list": {
+    "color": "#00979D",
+    "skeleton": "basic_string_field",
+    "statements": [],
+    "template": "%1",
+    "params": [
+        {
+            "type": "Dropdown",
+            "options": [
+                [Lang.Blocks.silent, "0"],
+                [Lang.Blocks.do_name, "C"],
+                [Lang.Blocks.do_sharp_name, "CS"],
+                [Lang.Blocks.re_name, "D"],
+                [Lang.Blocks.re_sharp_name, "DS"],
+                [Lang.Blocks.mi_name, "E"],
+                [Lang.Blocks.fa_name, "F"],
+                [Lang.Blocks.fa_sharp_name, "FS"],
+                [Lang.Blocks.sol_name, "G"],
+                [Lang.Blocks.sol_sharp_name, "GS"],
+                [Lang.Blocks.la_name, "A"],
+                [Lang.Blocks.la_sharp_name, "AS"],
+                [Lang.Blocks.si_name, "B"]
+            ],
+            "value": "C",
+            "fontSize": 11
+        }
+    ],
+    "events": {},
+    "def": {
+        "params": [ null ]
+    },
+    "paramsKeyMap": {
+        "NOTE": 0
+    },
+    "func": function (sprite, script) {
+        return script.getField("NOTE");
+    },
+    "syntax": {"js": [], "py": []}
+},
+"edumaker_tone_value": {
+    "color": "#00979D",
+    "skeleton": "basic_string_field",
+    "statements": [],
+    "template": "%1",
+    "params": [
+        {
+            "type": "Block",
+            "accept": "string"
+        }
+    ],
+    "events": {},
+    "def": {
+        "params": [
+            {
+                "type": "edumaker_tone_list"
+            }
+        ],
+        "type": "edumkaer_tone_value"
+    },
+    "paramsKeyMap": {
+        "NOTE": 0
+    },
+    "func": function (sprite, script) {
+        return script.getNumberValue("NOTE");
+    },
+    "syntax": {"js": [], "py": []}
+},
+"edumaker_octave_list": {
+    "color": "#00979D",
+    "skeleton": "basic_string_field",
+    "statements": [],
+    "template": "%1",
+    "params": [
+        {
+            "type": "Dropdown",
+            "options": [
+                ["1", "1"],
+                ["2", "2"],
+                ["3", "3"],
+                ["4", "4"],
+                ["5", "5"],
+                ["6", "6"]
+            ],
+            "value": "4",
+            "fontSize": 11
+        }
+    ],
+    "events": {},
+    "def": {
+        "params": [ null ]
+    },
+    "paramsKeyMap": {
+        "OCTAVE": 0
+    },
+    "func": function (sprite, script) {
+        return script.getField("OCTAVE");
+    },
+    "syntax": {"js": [], "py": []}
+},
+"edumaker_set_tone": {
+    "color": "#00979D",
+    "skeleton": "basic",
+    "statements": [],
+    "params": [{
+        "type": "Block",
+        "accept": "string"
+    }, {
+        "type": "Block",
+        "accept": "string"
+    }, {
+        "type": "Block",
+        "accept": "string"
+    }, {
+        "type": "Block",
+        "accept": "string"
+    }, {
+        "type": "Indicator",
+        "img": "block_icon/hardware_03.png",
+        "size": 12
+    }],
+    "events": {},
+    "def": {
+        "params": [{
+                "type": "arduino_get_port_number",
+                "params": [ 3 ]
+            },
+            {
+                "type": "arduino_ext_tone_list"
+            },
+            {
+                "type": "arduino_ext_octave_list"
+            },
+            {
+                "type": "text",
+                "params": [ "1" ]
+            },
+            null
+        ],
+        "type": "edumaker_set_tone"
+    },
+    "paramsKeyMap": {
+        "PORT": 0,
+        "NOTE": 1,
+        "OCTAVE": 2,
+        "DURATION": 3
+    },
+    "class": "EduMaker",
+    "isNotFor": [ "EduMaker" ],
+    "func": function (sprite, script) {
+        var sq = Entry.hw.sendQueue;
+        var port = script.getNumberValue("PORT", script);
+
+        if (!script.isStart) {
+            var note = script.getValue("NOTE", script);
+            if(!Entry.Utils.isNumber(note))
+                note = Entry.ArduinoExt.toneTable[note];
+
+            if(note < 0) {
+                note = 0;
+            } else if(note > 12) {
+                note = 12;
+            }
+
+            var duration = script.getNumberValue("DURATION", script);
+
+            if(duration < 0) {
+                duration = 0;
+            }
+
+            if(!sq['SET']) {
+                sq['SET'] = {};
+            }
+
+            if(duration === 0) {
+                sq['SET'][port] = {
+                    type: Entry.ArduinoExt.sensorTypes.TONE,
+                    data: 0,
+                    time: new Date().getTime()
+                };
+                return script.callReturn();
+            }
+
+            var octave = script.getNumberValue("OCTAVE", script) - 1;
+            if(octave < 0) {
+                octave = 0;
+            } else if(octave > 5) {
+                octave = 5;
+            }
+
+            var value = 0;
+
+            if(note != 0) {
+                value = Entry.ArduinoExt.toneMap[note][octave];
+            }
+
+            duration = duration * 1000;
+            script.isStart = true;
+            script.timeFlag = 1;
+
+            sq['SET'][port] = {
+                type: Entry.ArduinoExt.sensorTypes.TONE,
+                data: {
+                    value: value,
+                    duration: duration
+                },
+                time: new Date().getTime()
+            };
+
+            setTimeout(function() {
+                script.timeFlag = 0;
+            }, duration + 32);
+            return script;
+        } else if (script.timeFlag == 1) {
+            return script;
+        } else {
+            delete script.timeFlag;
+            delete script.isStart;
+            sq['SET'][port] = {
+                type: Entry.ArduinoExt.sensorTypes.TONE,
+                data: 0,
+                time: new Date().getTime()
+            };
+            Entry.engine.isContinue = false;
+            return script.callReturn();
+        }
+    },
+    "syntax": {"js": [], "py": []}
+},
+"edumaker_set_servo": {
+    "color": "#00979D",
+    "skeleton": "basic",
+    "statements": [],
+    "params": [{
+        "type": "Block",
+        "accept": "string"
+    }, {
+        "type": "Block",
+        "accept": "string"
+    }, {
+        "type": "Indicator",
+        "img": "block_icon/hardware_03.png",
+        "size": 12
+    }],
+    "events": {},
+    "def": {
+        "params": [{
+                "type": "arduino_get_port_number",
+                "params": [
+                    "3"
+                ]
+            },
+            null
+        ],
+        "type": "edumaker_set_servo"
+    },
+    "paramsKeyMap": {
+        "PORT": 0,
+        "VALUE": 1
+    },
+    "class": "EduMaker",
+    "isNotFor": [ "EduMaker" ],
+    "func": function (sprite, script) {
+        var sq = Entry.hw.sendQueue;
+        var port = script.getNumberValue("PORT", script);
+        var value = script.getNumberValue("VALUE", script);
+        value = Math.min(180, value);
+        value = Math.max(0, value);
+
+        if(!sq['SET']) {
+            sq['SET'] = {};
+        }
+        sq['SET'][port] = {
+            type: Entry.ArduinoExt.sensorTypes.SERVO_PIN,
+            data: value,
+            time: new Date().getTime()
+        };
+
+        return script.callReturn();
+    },
+    "syntax": {"js": [], "py": []}
+},
+//endregion edumaker 에듀메이커
+//region joystick 조이스틱
 "joystick_get_number_sensor_value": {
     "parent": "arduino_get_number_sensor_value",
     "isNotFor": [
@@ -46794,6 +47879,8 @@ Entry.block = {
     },
     "class": "arduino"
 },
+//endregion joystick 조이스틱
+//region basic 기본
 "ebs_if": {
     "parent": "_if",
     "def": {
@@ -47369,6 +48456,8 @@ Entry.block = {
         "true"
     ]
 },
+//endregion basic 기본
+//region ev3 이브이3
 "ev3_color_sensor": {
     "color": "#00979D",
     "fontColor": "#fff",
@@ -47698,6 +48787,8 @@ Entry.block = {
         return result;
     }
 },
+//endregion ev3 이브이3
+//region roduino 로두이노
 "roduino_on_block": {
     "color": "#00979D",
     "fontColor": "#fff",
@@ -48129,6 +49220,8 @@ Entry.block = {
         return script.callReturn();
     }
 },
+//endregion roduino 로두이노
+//region schoolkit 스쿨키트
 "schoolkit_on_block": {
     "color": "#00979D",
     "fontColor": "#fff",
@@ -48470,6 +49563,8 @@ Entry.block = {
         return script.callReturn();
     }
 },
+//endregion schoolkit 스쿨키트
+//region codestar 코드스타
 codestar_color_single: {
     color: '#00979D',
     skeleton: 'basic',
@@ -48995,6 +50090,8 @@ codestar_tilt: {
         return Entry.hw.portData.tilt;
     }
 },
+//endregion codestar 코드스타
+//region smartBoard 스마트보드
 "smartBoard_get_named_sensor_value": {
     "color": "#00979D",
     "fontColor": "#fff",
@@ -49501,7 +50598,8 @@ codestar_tilt: {
         return script.callReturn();
     }
 },
-//robotori Add 20161129 begin
+//endregion smartBoard 스마트보드
+//region robotori 로보토리
 "robotori_digitalInput": {
     "color": "#00979D",
     "skeleton": "basic_boolean_field",
@@ -49823,7 +50921,8 @@ codestar_tilt: {
         return script.callReturn();
     }
 },
-//robotori add 20161129 end
+//endregion robotori 로보토리
+//region dadublock 다두블록
 "dadublock_get_analog_value": {
     "color": "#00979D",
     "fontColor": "#fff",
@@ -50027,7 +51126,6 @@ codestar_tilt: {
         return Entry.hw.portData.ULTRASONIC || 0;
     },
 },
-
 "dadublock_get_digital": {
     "color": "#00979D",
     "fontColor": "#fff",
@@ -50207,7 +51305,8 @@ codestar_tilt: {
             time: new Date().getTime()
         };
         return script.callReturn();
-    }
+    },
+    "syntax": {"js": [], "py": ["Arduino.analogWrite(%1, %2)"]}
 },
 "dadublock_set_servo": {
     "color": "#00979D",
@@ -50269,7 +51368,8 @@ codestar_tilt: {
         };
 
         return script.callReturn();
-    }
+    },
+    "syntax": {"js": [], "py": ["Arduino.servomotorWrite(%1, %2)"]}
 },
 "dadublock_set_tone": {
     "color": "#00979D",
@@ -50619,7 +51719,6 @@ codestar_tilt: {
         return Entry.hw.portData.ULTRASONIC || 0;
     },
 },
-
 "dadublock_car_get_digital": {
     "color": "#00979D",
     "fontColor": "#fff",
@@ -50799,7 +51898,8 @@ codestar_tilt: {
             time: new Date().getTime()
         };
         return script.callReturn();
-    }
+    },
+    "syntax": {"js": [], "py": ["Arduino.analogWrite(%1, %2)"]}
 },
 "dadublock_car_set_servo": {
     "color": "#00979D",
@@ -50861,7 +51961,8 @@ codestar_tilt: {
         };
 
         return script.callReturn();
-    }
+    },
+    "syntax": {"js": [], "py": ["Arduino.servomotorWrite(%1, %2)"]}
 },
 "dadublock_car_set_tone": {
     "color": "#00979D",
@@ -51087,8 +52188,6 @@ codestar_tilt: {
             };
             return script.callReturn();
         }
-
-
     },
 },
 "dadublock_car_motor": {
@@ -51244,8 +52343,6 @@ codestar_tilt: {
             }
 
         }
-
-
     },
 },
 "dadublock_car_get_irsensor": {
@@ -51297,6 +52394,8 @@ codestar_tilt: {
         return (DIGITAL) ? DIGITAL[port] || 0 : 0;
     },
 },
+//endregion dadublock 다두블록
+//region basic 기본
 "hidden": {
     "color": "#7C7C7C",
     "skeleton": "basic",
@@ -51939,10 +53038,10 @@ codestar_tilt: {
     "isNotFor": [],
     "func": function (sprite, script) {}
 },
-/* BYROBOT DroneFighter Controller Start */
-//*
-"byrobot_dronefighter_controller_controller_value_button":
-{
+//endregion basic 기본
+//region byrobot 바이로봇
+    /* BYROBOT DroneFighter Controller Start */
+"byrobot_dronefighter_controller_controller_value_button": {
     "color": "#00979D",
     "skeleton": "basic_string_field",
     "statements": [],
@@ -51974,10 +53073,7 @@ codestar_tilt: {
             return read[device];
         },
 },
-// */
-//*
-"byrobot_dronefighter_controller_controller_value_joystick":
-{
+"byrobot_dronefighter_controller_controller_value_joystick": {
     "color": "#00979D",
     "skeleton": "basic_string_field",
     "statements": [],
@@ -52017,11 +53113,9 @@ codestar_tilt: {
             return read[device];
         },
 },
-// */
-//*
-"byrobot_dronefighter_controller_controller_if_button_press":
-{
+"byrobot_dronefighter_controller_controller_if_button_press": {
     "color": "#00979D",
+    "fontColor": "#fff",
     "skeleton": "basic_boolean_field",
     "statements": [],
     "params": [
@@ -52066,11 +53160,9 @@ codestar_tilt: {
                 return false;
         },
 },
-// */
-//*
-"byrobot_dronefighter_controller_controller_if_joystick_direction":
-{
+"byrobot_dronefighter_controller_controller_if_joystick_direction": {
     "color": "#00979D",
+    "fontColor": "#fff",
     "skeleton": "basic_boolean_field",
     "statements": [],
     "params": [
@@ -52125,10 +53217,7 @@ codestar_tilt: {
                 return false;
         },
 },
-// */
-//*
-"byrobot_dronefighter_controller_controller_light_manual_single_off":
-{
+"byrobot_dronefighter_controller_controller_light_manual_single_off": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -52155,10 +53244,7 @@ codestar_tilt: {
             return Entry.byrobot_dronefighter_controller.setLightManual(script, 0x11, 0xff, 0);
         },
 },
-// */
-//*
-"byrobot_dronefighter_controller_controller_light_manual_single":
-{
+"byrobot_dronefighter_controller_controller_light_manual_single": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -52220,10 +53306,7 @@ codestar_tilt: {
             return Entry.byrobot_dronefighter_controller.setLightManual(script, 0x11, flags, brightness);
         },
 },
-// */
-//*
-"byrobot_dronefighter_controller_controller_light_manual_single_input":
-{
+"byrobot_dronefighter_controller_controller_light_manual_single_input": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -52270,10 +53353,7 @@ codestar_tilt: {
             return Entry.byrobot_dronefighter_controller.setLightManual(script, 0x11, flags, brightness);
         },
 },
-// */
-//*
-"byrobot_dronefighter_controller_controller_buzzer_off":
-{
+"byrobot_dronefighter_controller_controller_buzzer_off": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -52300,10 +53380,7 @@ codestar_tilt: {
             return Entry.byrobot_dronefighter_controller.setBuzzerStop(script);
         },
 },
-// */
-//*
-"byrobot_dronefighter_controller_controller_buzzer_scale":
-{
+"byrobot_dronefighter_controller_controller_buzzer_scale": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -52372,10 +53449,7 @@ codestar_tilt: {
                 return Entry.byrobot_dronefighter_controller.setBuzzerScale(script, octave, scale, 60000, false, true);
         },
 },
-// */
-//*
-"byrobot_dronefighter_controller_controller_buzzer_scale_delay":
-{
+"byrobot_dronefighter_controller_controller_buzzer_scale_delay": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -52454,10 +53528,7 @@ codestar_tilt: {
                 return Entry.byrobot_dronefighter_controller.setBuzzerScale(script, octave, scale, time, true, true);
         },
 },
-// */
-//*
-"byrobot_dronefighter_controller_controller_buzzer_scale_reserve":
-{
+"byrobot_dronefighter_controller_controller_buzzer_scale_reserve": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -52536,10 +53607,7 @@ codestar_tilt: {
                 return Entry.byrobot_dronefighter_controller.setBuzzerScale(script, octave, scale, time, false, false);
         },
 },
-// */
-//*
-"byrobot_dronefighter_controller_controller_buzzer_hz":
-{
+"byrobot_dronefighter_controller_controller_buzzer_hz": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -52576,10 +53644,7 @@ codestar_tilt: {
             return Entry.byrobot_dronefighter_controller.setBuzzerHz(script, hz, 60000, false, true);
         },
 },
-// */
-//*
-"byrobot_dronefighter_controller_controller_buzzer_hz_delay":
-{
+"byrobot_dronefighter_controller_controller_buzzer_hz_delay": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -52626,10 +53691,7 @@ codestar_tilt: {
             return Entry.byrobot_dronefighter_controller.setBuzzerHz(script, hz, time, true, true);
         },
 },
-// */
-//*
-"byrobot_dronefighter_controller_controller_buzzer_hz_reserve":
-{
+"byrobot_dronefighter_controller_controller_buzzer_hz_reserve": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -52676,10 +53738,7 @@ codestar_tilt: {
             return Entry.byrobot_dronefighter_controller.setBuzzerHz(script, hz, time, false, false);
         },
 },
-// */
-    //*
-"byrobot_dronefighter_controller_controller_vibrator_off":
-{
+"byrobot_dronefighter_controller_controller_vibrator_off": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -52706,10 +53765,7 @@ codestar_tilt: {
             return Entry.byrobot_dronefighter_controller.setVibratorStop(script);
         },
 },
-// */
-//*
-"byrobot_dronefighter_controller_controller_vibrator_on_delay":
-{
+"byrobot_dronefighter_controller_controller_vibrator_on_delay": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -52746,10 +53802,7 @@ codestar_tilt: {
             return Entry.byrobot_dronefighter_controller.setVibrator(script, timeOn, 0, timeOn, true, true);
         },
 },
-// */
-//*
-"byrobot_dronefighter_controller_controller_vibrator_on_reserve":
-{
+"byrobot_dronefighter_controller_controller_vibrator_on_reserve": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -52786,10 +53839,7 @@ codestar_tilt: {
             return Entry.byrobot_dronefighter_controller.setVibrator(script, timeOn, 0, timeOn, false, false);
         },
 },
-// */
-//*
-"byrobot_dronefighter_controller_controller_vibrator_delay":
-{
+"byrobot_dronefighter_controller_controller_vibrator_delay": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -52846,10 +53896,7 @@ codestar_tilt: {
             return Entry.byrobot_dronefighter_controller.setVibrator(script, timeOn, timeOff, timeRun, true, true);
         },
 },
-// */
-//*
-"byrobot_dronefighter_controller_controller_vibrator_reserve":
-{
+"byrobot_dronefighter_controller_controller_vibrator_reserve": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -52906,10 +53953,7 @@ codestar_tilt: {
             return Entry.byrobot_dronefighter_controller.setVibrator(script, timeOn, timeOff, timeRun, false, false);
         },
 },
-// */
-//*
-"byrobot_dronefighter_controller_controller_userinterface_preset":
-{
+"byrobot_dronefighter_controller_controller_userinterface_preset": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -52949,10 +53993,7 @@ codestar_tilt: {
             return Entry.byrobot_dronefighter_controller.sendCommand(script, 0x11, 0x80, preset);
         },
 },
-// */
-//*
-"byrobot_dronefighter_controller_controller_userinterface":
-{
+"byrobot_dronefighter_controller_controller_userinterface": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -53030,12 +54071,9 @@ codestar_tilt: {
             return Entry.byrobot_dronefighter_controller.setUserInterface(script, uicommand, uifunction);
         },
 },
-// */
-/* BYROBOT DroneFighter Controller End */
-/* BYROBOT DroneFighter Drive Start */
-//*
-"byrobot_dronefighter_drive_drone_value_attitude":
-{
+    /* BYROBOT DroneFighter Controller End */
+    /* BYROBOT DroneFighter Drive Start */
+"byrobot_dronefighter_drive_drone_value_attitude": {
     "color": "#00979D",
     "skeleton": "basic_string_field",
     "statements": [],
@@ -53068,10 +54106,7 @@ codestar_tilt: {
             return read[device];
         },
 },
-// */
-//*
-"byrobot_dronefighter_drive_drone_value_etc":
-{
+"byrobot_dronefighter_drive_drone_value_etc": {
     "color": "#00979D",
     "skeleton": "basic_string_field",
     "statements": [],
@@ -53105,10 +54140,7 @@ codestar_tilt: {
             return read[device];
         },
 },
-// */
-//*
-"byrobot_dronefighter_drive_controller_value_button":
-{
+"byrobot_dronefighter_drive_controller_value_button": {
     "color": "#00979D",
     "skeleton": "basic_string_field",
     "statements": [],
@@ -53140,10 +54172,7 @@ codestar_tilt: {
             return read[device];
         },
 },
-// */
-//*
-"byrobot_dronefighter_drive_controller_value_joystick":
-{
+"byrobot_dronefighter_drive_controller_value_joystick": {
     "color": "#00979D",
     "skeleton": "basic_string_field",
     "statements": [],
@@ -53183,11 +54212,9 @@ codestar_tilt: {
             return read[device];
         },
 },
-// */
-//*
-"byrobot_dronefighter_drive_controller_if_button_press":
-{
+"byrobot_dronefighter_drive_controller_if_button_press": {
     "color": "#00979D",
+    "fontColor": "#fff",
     "skeleton": "basic_boolean_field",
     "statements": [],
     "params": [
@@ -53233,11 +54260,9 @@ codestar_tilt: {
         },
     "syntax": {"js": [], "py": []}
 },
-// */
-//*
-"byrobot_dronefighter_drive_controller_if_joystick_direction":
-{
+"byrobot_dronefighter_drive_controller_if_joystick_direction": {
     "color": "#00979D",
+    "fontColor": "#fff",
     "skeleton": "basic_boolean_field",
     "statements": [],
     "params": [
@@ -53292,10 +54317,7 @@ codestar_tilt: {
                 return false;
         },
 },
-// */
-//*
-"byrobot_dronefighter_drive_drone_control_car_stop":
-{
+"byrobot_dronefighter_drive_drone_control_car_stop": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -53322,10 +54344,7 @@ codestar_tilt: {
             return Entry.byrobot_dronefighter_drive.sendStop(script);
         },
 },
-// */
-//*
-"byrobot_dronefighter_drive_drone_control_double_one":
-{
+"byrobot_dronefighter_drive_drone_control_double_one": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -53375,10 +54394,7 @@ codestar_tilt: {
             return Entry.byrobot_dronefighter_drive.sendControlDoubleSingle(script, controlTarget, value, 0, false);
         },
 },
-// */
-//*
-"byrobot_dronefighter_drive_drone_control_double_one_delay":
-{
+"byrobot_dronefighter_drive_drone_control_double_one_delay": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -53438,10 +54454,7 @@ codestar_tilt: {
             return Entry.byrobot_dronefighter_drive.sendControlDoubleSingle(script, controlTarget, value, time, true);
         },
 },
-// */
-//*
-"byrobot_dronefighter_drive_drone_control_double":
-{
+"byrobot_dronefighter_drive_drone_control_double": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -53488,10 +54501,7 @@ codestar_tilt: {
             return Entry.byrobot_dronefighter_drive.sendControlDouble(script, wheel, accel, 0, false);
         },
 },
-// */
-//*
-"byrobot_dronefighter_drive_drone_motor_stop":
-{
+"byrobot_dronefighter_drive_drone_motor_stop": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -53518,10 +54528,7 @@ codestar_tilt: {
             return Entry.byrobot_dronefighter_drive.sendStop(script);
         },
 },
-// */
-//*
-"byrobot_dronefighter_drive_drone_motorsingle":
-{
+"byrobot_dronefighter_drive_drone_motorsingle": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -53574,10 +54581,7 @@ codestar_tilt: {
             return Entry.byrobot_dronefighter_drive.setMotorSingle(script, motorIndex, motorDirection, motorSpeed);
         },
 },
-// */
-//*
-"byrobot_dronefighter_drive_drone_motorsingle_input":
-{
+"byrobot_dronefighter_drive_drone_motorsingle_input": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -53626,10 +54630,7 @@ codestar_tilt: {
             return Entry.byrobot_dronefighter_drive.setMotorSingle(script, motorIndex, motorDirection, motorSpeed);
         },
 },
-// */
-//*
-"byrobot_dronefighter_drive_drone_irmessage":
-{
+"byrobot_dronefighter_drive_drone_irmessage": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -53666,10 +54667,7 @@ codestar_tilt: {
             return Entry.byrobot_dronefighter_drive.sendIrMessage(script, irmessage);
         },
 },
-// */
-//*
-"byrobot_dronefighter_drive_controller_light_manual_single_off":
-{
+"byrobot_dronefighter_drive_controller_light_manual_single_off": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -53696,10 +54694,7 @@ codestar_tilt: {
             return Entry.byrobot_dronefighter_drive.setLightManual(script, 0x11, 0xff, 0);
         },
 },
-// */
-//*
-"byrobot_dronefighter_drive_controller_light_manual_single":
-{
+"byrobot_dronefighter_drive_controller_light_manual_single": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -53761,10 +54756,7 @@ codestar_tilt: {
             return Entry.byrobot_dronefighter_drive.setLightManual(script, 0x11, flags, brightness);
         },
 },
-// */
-//*
-"byrobot_dronefighter_drive_controller_light_manual_single_input":
-{
+"byrobot_dronefighter_drive_controller_light_manual_single_input": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -53811,10 +54803,7 @@ codestar_tilt: {
             return Entry.byrobot_dronefighter_drive.setLightManual(script, 0x11, flags, brightness);
         },
 },
-// */
-//*
-"byrobot_dronefighter_drive_drone_light_manual_single_off":
-{
+"byrobot_dronefighter_drive_drone_light_manual_single_off": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -53841,10 +54830,7 @@ codestar_tilt: {
             return Entry.byrobot_dronefighter_drive.setLightManual(script, 0x10, 0xff, 0);
         },
 },
-// */
-//*
-"byrobot_dronefighter_drive_drone_light_manual_single":
-{
+"byrobot_dronefighter_drive_drone_light_manual_single": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -53904,10 +54890,7 @@ codestar_tilt: {
             return Entry.byrobot_dronefighter_drive.setLightManual(script, 0x10, flags, brightness);
         },
 },
-// */
-//*
-"byrobot_dronefighter_drive_drone_light_manual_single_input":
-{
+"byrobot_dronefighter_drive_drone_light_manual_single_input": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -53954,10 +54937,7 @@ codestar_tilt: {
             return Entry.byrobot_dronefighter_drive.setLightManual(script, 0x10, flags, brightness);
         },
 },
-// */
-//*
-"byrobot_dronefighter_drive_controller_buzzer_off":
-{
+"byrobot_dronefighter_drive_controller_buzzer_off": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -53984,10 +54964,7 @@ codestar_tilt: {
             return Entry.byrobot_dronefighter_drive.setBuzzerStop(script);
         },
 },
-// */
-//*
-"byrobot_dronefighter_drive_controller_buzzer_scale":
-{
+"byrobot_dronefighter_drive_controller_buzzer_scale": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -54056,10 +55033,7 @@ codestar_tilt: {
                 return Entry.byrobot_dronefighter_drive.setBuzzerScale(script, octave, scale, 60000, false, true);
         },
 },
-// */
-//*
-"byrobot_dronefighter_drive_controller_buzzer_scale_delay":
-{
+"byrobot_dronefighter_drive_controller_buzzer_scale_delay": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -54138,10 +55112,7 @@ codestar_tilt: {
                 return Entry.byrobot_dronefighter_drive.setBuzzerScale(script, octave, scale, time, true, true);
         },
 },
-// */
-//*
-"byrobot_dronefighter_drive_controller_buzzer_scale_reserve":
-{
+"byrobot_dronefighter_drive_controller_buzzer_scale_reserve": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -54220,10 +55191,7 @@ codestar_tilt: {
                 return Entry.byrobot_dronefighter_drive.setBuzzerScale(script, octave, scale, time, false, false);
         },
 },
-// */
-//*
-"byrobot_dronefighter_drive_controller_buzzer_hz":
-{
+"byrobot_dronefighter_drive_controller_buzzer_hz": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -54260,10 +55228,7 @@ codestar_tilt: {
             return Entry.byrobot_dronefighter_drive.setBuzzerHz(script, hz, 60000, false, true);
         },
 },
-// */
-//*
-"byrobot_dronefighter_drive_controller_buzzer_hz_delay":
-{
+"byrobot_dronefighter_drive_controller_buzzer_hz_delay": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -54310,10 +55275,7 @@ codestar_tilt: {
             return Entry.byrobot_dronefighter_drive.setBuzzerHz(script, hz, time, true, true);
         },
 },
-// */
-//*
-"byrobot_dronefighter_drive_controller_buzzer_hz_reserve":
-{
+"byrobot_dronefighter_drive_controller_buzzer_hz_reserve": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -54360,10 +55322,7 @@ codestar_tilt: {
             return Entry.byrobot_dronefighter_drive.setBuzzerHz(script, hz, time, false, false);
         },
 },
-// */
-    //*
-"byrobot_dronefighter_drive_controller_vibrator_off":
-{
+"byrobot_dronefighter_drive_controller_vibrator_off": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -54390,10 +55349,7 @@ codestar_tilt: {
             return Entry.byrobot_dronefighter_drive.setVibratorStop(script);
         },
 },
-// */
-//*
-"byrobot_dronefighter_drive_controller_vibrator_on_delay":
-{
+"byrobot_dronefighter_drive_controller_vibrator_on_delay": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -54430,10 +55386,7 @@ codestar_tilt: {
             return Entry.byrobot_dronefighter_drive.setVibrator(script, timeOn, 0, timeOn, true, true);
         },
 },
-// */
-//*
-"byrobot_dronefighter_drive_controller_vibrator_on_reserve":
-{
+"byrobot_dronefighter_drive_controller_vibrator_on_reserve": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -54470,10 +55423,7 @@ codestar_tilt: {
             return Entry.byrobot_dronefighter_drive.setVibrator(script, timeOn, 0, timeOn, false, false);
         },
 },
-// */
-//*
-"byrobot_dronefighter_drive_controller_vibrator_delay":
-{
+"byrobot_dronefighter_drive_controller_vibrator_delay": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -54530,10 +55480,7 @@ codestar_tilt: {
             return Entry.byrobot_dronefighter_drive.setVibrator(script, timeOn, timeOff, timeRun, true, true);
         },
 },
-// */
-//*
-"byrobot_dronefighter_drive_controller_vibrator_reserve":
-{
+"byrobot_dronefighter_drive_controller_vibrator_reserve": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -54590,12 +55537,9 @@ codestar_tilt: {
             return Entry.byrobot_dronefighter_drive.setVibrator(script, timeOn, timeOff, timeRun, false, false);
         },
 },
-// */
-/* BYROBOT DroneFighter Drive End */
-/* BYROBOT DroneFighter Flight Start */
-//*
-"byrobot_dronefighter_flight_drone_value_attitude":
-{
+    /* BYROBOT DroneFighter Drive End */
+    /* BYROBOT DroneFighter Flight Start */
+"byrobot_dronefighter_flight_drone_value_attitude": {
     "color": "#00979D",
     "skeleton": "basic_string_field",
     "statements": [],
@@ -54626,10 +55570,7 @@ codestar_tilt: {
             return Entry.hw.portData[script.getField('DEVICE')];
         },
 },
-// */
-//*
-"byrobot_dronefighter_flight_drone_value_etc":
-{
+"byrobot_dronefighter_flight_drone_value_etc": {
     "color": "#00979D",
     "skeleton": "basic_string_field",
     "statements": [],
@@ -54662,10 +55603,7 @@ codestar_tilt: {
             return Entry.hw.portData[script.getField('DEVICE')];
         },
 },
-// */
-//*
-"byrobot_dronefighter_flight_controller_value_button":
-{
+"byrobot_dronefighter_flight_controller_value_button": {
     "color": "#00979D",
     "skeleton": "basic_string_field",
     "statements": [],
@@ -54695,10 +55633,7 @@ codestar_tilt: {
             return Entry.hw.portData[script.getField('DEVICE')];
         },
 },
-// */
-//*
-"byrobot_dronefighter_flight_controller_value_joystick":
-{
+"byrobot_dronefighter_flight_controller_value_joystick": {
     "color": "#00979D",
     "skeleton": "basic_string_field",
     "statements": [],
@@ -54736,11 +55671,9 @@ codestar_tilt: {
             return Entry.hw.portData[script.getField('DEVICE')];
         },
 },
-// */
-//*
-"byrobot_dronefighter_flight_controller_if_button_press":
-{
+"byrobot_dronefighter_flight_controller_if_button_press": {
     "color": "#00979D",
+    "fontColor": "#fff",
     "skeleton": "basic_boolean_field",
     "statements": [],
     "params": [
@@ -54786,11 +55719,9 @@ codestar_tilt: {
         },
     "syntax": {"js": [], "py": []}
 },
-// */
-//*
-"byrobot_dronefighter_flight_controller_if_joystick_direction":
-{
+"byrobot_dronefighter_flight_controller_if_joystick_direction": {
     "color": "#00979D",
+    "fontColor": "#fff",
     "skeleton": "basic_boolean_field",
     "statements": [],
     "params": [
@@ -54845,10 +55776,7 @@ codestar_tilt: {
                 return false;
         },
 },
-// */
-//*
-"byrobot_dronefighter_flight_controller_light_manual_single_off":
-{
+"byrobot_dronefighter_flight_controller_light_manual_single_off": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -54875,10 +55803,7 @@ codestar_tilt: {
             return Entry.byrobot_dronefighter_flight.setLightManual(script, 0x11, 0xff, 0);
         },
 },
-// */
-//*
-"byrobot_dronefighter_flight_controller_light_manual_single":
-{
+"byrobot_dronefighter_flight_controller_light_manual_single": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -54940,10 +55865,7 @@ codestar_tilt: {
             return Entry.byrobot_dronefighter_flight.setLightManual(script, 0x11, flags, brightness);
         },
 },
-// */
-//*
-"byrobot_dronefighter_flight_controller_light_manual_single_input":
-{
+"byrobot_dronefighter_flight_controller_light_manual_single_input": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -54990,10 +55912,7 @@ codestar_tilt: {
             return Entry.byrobot_dronefighter_flight.setLightManual(script, 0x11, flags, brightness);
         },
 },
-// */
-//*
-"byrobot_dronefighter_flight_drone_light_manual_single_off":
-{
+"byrobot_dronefighter_flight_drone_light_manual_single_off": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -55020,10 +55939,7 @@ codestar_tilt: {
             return Entry.byrobot_dronefighter_flight.setLightManual(script, 0x10, 0xff, 0);
         },
 },
-// */
-//*
-"byrobot_dronefighter_flight_drone_light_manual_single":
-{
+"byrobot_dronefighter_flight_drone_light_manual_single": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -55083,10 +55999,7 @@ codestar_tilt: {
             return Entry.byrobot_dronefighter_flight.setLightManual(script, 0x10, flags, brightness);
         },
 },
-// */
-//*
-"byrobot_dronefighter_flight_drone_light_manual_single_input":
-{
+"byrobot_dronefighter_flight_drone_light_manual_single_input": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -55133,10 +56046,7 @@ codestar_tilt: {
             return Entry.byrobot_dronefighter_flight.setLightManual(script, 0x10, flags, brightness);
         },
 },
-// */
-//*
-"byrobot_dronefighter_flight_controller_buzzer_off":
-{
+"byrobot_dronefighter_flight_controller_buzzer_off": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -55163,10 +56073,7 @@ codestar_tilt: {
             return Entry.byrobot_dronefighter_flight.setBuzzerStop(script);
         },
 },
-// */
-//*
-"byrobot_dronefighter_flight_controller_buzzer_scale":
-{
+"byrobot_dronefighter_flight_controller_buzzer_scale": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -55235,10 +56142,7 @@ codestar_tilt: {
                 return Entry.byrobot_dronefighter_flight.setBuzzerScale(script, octave, scale, 60000, false, true);
         },
 },
-// */
-//*
-"byrobot_dronefighter_flight_controller_buzzer_scale_delay":
-{
+"byrobot_dronefighter_flight_controller_buzzer_scale_delay": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -55317,10 +56221,7 @@ codestar_tilt: {
                 return Entry.byrobot_dronefighter_flight.setBuzzerScale(script, octave, scale, time, true, true);
         },
 },
-// */
-//*
-"byrobot_dronefighter_flight_controller_buzzer_scale_reserve":
-{
+"byrobot_dronefighter_flight_controller_buzzer_scale_reserve": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -55399,10 +56300,7 @@ codestar_tilt: {
                 return Entry.byrobot_dronefighter_flight.setBuzzerScale(script, octave, scale, time, false, false);
         },
 },
-// */
-//*
-"byrobot_dronefighter_flight_controller_buzzer_hz":
-{
+"byrobot_dronefighter_flight_controller_buzzer_hz": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -55439,10 +56337,7 @@ codestar_tilt: {
             return Entry.byrobot_dronefighter_flight.setBuzzerHz(script, hz, 60000, false, true);
         },
 },
-// */
-//*
-"byrobot_dronefighter_flight_controller_buzzer_hz_delay":
-{
+"byrobot_dronefighter_flight_controller_buzzer_hz_delay": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -55489,10 +56384,7 @@ codestar_tilt: {
             return Entry.byrobot_dronefighter_flight.setBuzzerHz(script, hz, time, true, true);
         },
 },
-// */
-//*
-"byrobot_dronefighter_flight_controller_buzzer_hz_reserve":
-{
+"byrobot_dronefighter_flight_controller_buzzer_hz_reserve": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -55539,10 +56431,7 @@ codestar_tilt: {
             return Entry.byrobot_dronefighter_flight.setBuzzerHz(script, hz, time, false, false);
         },
 },
-// */
-    //*
-"byrobot_dronefighter_flight_controller_vibrator_off":
-{
+"byrobot_dronefighter_flight_controller_vibrator_off": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -55569,10 +56458,7 @@ codestar_tilt: {
             return Entry.byrobot_dronefighter_flight.setVibratorStop(script);
         },
 },
-// */
-//*
-"byrobot_dronefighter_flight_controller_vibrator_on_delay":
-{
+"byrobot_dronefighter_flight_controller_vibrator_on_delay": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -55609,10 +56495,7 @@ codestar_tilt: {
             return Entry.byrobot_dronefighter_flight.setVibrator(script, timeOn, 0, timeOn, true, true);
         },
 },
-// */
-//*
-"byrobot_dronefighter_flight_controller_vibrator_on_reserve":
-{
+"byrobot_dronefighter_flight_controller_vibrator_on_reserve": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -55649,10 +56532,7 @@ codestar_tilt: {
             return Entry.byrobot_dronefighter_flight.setVibrator(script, timeOn, 0, timeOn, false, false);
         },
 },
-// */
-//*
-"byrobot_dronefighter_flight_controller_vibrator_delay":
-{
+"byrobot_dronefighter_flight_controller_vibrator_delay": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -55709,10 +56589,7 @@ codestar_tilt: {
             return Entry.byrobot_dronefighter_flight.setVibrator(script, timeOn, timeOff, timeRun, true, true);
         },
 },
-// */
-//*
-"byrobot_dronefighter_flight_controller_vibrator_reserve":
-{
+"byrobot_dronefighter_flight_controller_vibrator_reserve": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -55769,10 +56646,7 @@ codestar_tilt: {
             return Entry.byrobot_dronefighter_flight.setVibrator(script, timeOn, timeOff, timeRun, false, false);
         },
 },
-// */
-//*
-"byrobot_dronefighter_flight_drone_irmessage":
-{
+"byrobot_dronefighter_flight_drone_irmessage": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -55809,10 +56683,7 @@ codestar_tilt: {
             return Entry.byrobot_dronefighter_flight.sendIrMessage(script, irmessage);
         },
 },
-// */
-//*
-"byrobot_dronefighter_flight_drone_motor_stop":
-{
+"byrobot_dronefighter_flight_drone_motor_stop": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -55839,10 +56710,7 @@ codestar_tilt: {
             return Entry.byrobot_dronefighter_flight.sendStop(script);
         },
 },
-// */
-//*
-"byrobot_dronefighter_flight_drone_motorsingle":
-{
+"byrobot_dronefighter_flight_drone_motorsingle": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -55895,10 +56763,7 @@ codestar_tilt: {
             return Entry.byrobot_dronefighter_flight.setMotorSingle(script, motorIndex, motorDirection, motorSpeed);
         },
 },
-// */
-//*
-"byrobot_dronefighter_flight_drone_motorsingle_input":
-{
+"byrobot_dronefighter_flight_drone_motorsingle_input": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -55947,10 +56812,7 @@ codestar_tilt: {
             return Entry.byrobot_dronefighter_flight.setMotorSingle(script, motorIndex, motorDirection, motorSpeed);
         },
 },
-// */
-//*     삭제된 블럭(?)
-"byrobot_dronefighter_flight_drone_command_mode_vehicle_drone":
-{
+"byrobot_dronefighter_flight_drone_command_mode_vehicle_drone": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -55977,10 +56839,7 @@ codestar_tilt: {
             return Entry.byrobot_dronefighter_flight.setModeVehicle(script, 0x10);      // 0x10 : Mode::Vehicle::Flight
         },
 },
-// */
-//*     삭제된 블럭(?)
-"byrobot_dronefighter_flight_drone_control_drone_takeoff":
-{
+"byrobot_dronefighter_flight_drone_control_drone_takeoff": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -56007,10 +56866,7 @@ codestar_tilt: {
             return Entry.byrobot_dronefighter_flight.setEventFlight(script, 0x11, 200); // 0x11 : FlightEvent::TakeOff
         },
 },
-// */
-//*     삭제된 블럭(?)
-"byrobot_dronefighter_flight_drone_control_drone_landing":
-{
+"byrobot_dronefighter_flight_drone_control_drone_landing": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -56037,10 +56893,7 @@ codestar_tilt: {
             return Entry.byrobot_dronefighter_flight.setEventFlight(script, 0x12, 200); // 0x12 : FlightEvent::Landing
         },
 },
-// */
-//*
-"byrobot_dronefighter_flight_drone_control_drone_stop":
-{
+"byrobot_dronefighter_flight_drone_control_drone_stop": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -56067,10 +56920,7 @@ codestar_tilt: {
             return Entry.byrobot_dronefighter_flight.sendStop(script);
         },
 },
-// */
-//*
-"byrobot_dronefighter_flight_drone_control_coordinate":
-{
+"byrobot_dronefighter_flight_drone_control_coordinate": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -56109,10 +56959,7 @@ codestar_tilt: {
             return Entry.byrobot_dronefighter_flight.sendCommand(script, 0x10, 0x20, coordinate);
         },
 },
-// */
-//*
-"byrobot_dronefighter_flight_drone_control_drone_reset_heading":
-{
+"byrobot_dronefighter_flight_drone_control_drone_reset_heading": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -56139,10 +56986,7 @@ codestar_tilt: {
             return Entry.byrobot_dronefighter_flight.sendCommand(script, 0x10, 0x22, 0xA0); // 0x22 : CommandType::FlightEvent  // 0xA0 : FlightEvent::ResetHeading
         },
 },
-// */
-//*
-"byrobot_dronefighter_flight_drone_control_quad_one":
-{
+"byrobot_dronefighter_flight_drone_control_quad_one": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -56194,10 +57038,7 @@ codestar_tilt: {
             return Entry.byrobot_dronefighter_flight.sendControlQuadSingle(script, controlTarget, value, 0, false);
         },
 },
-// */
-//*
-"byrobot_dronefighter_flight_drone_control_quad_one_delay":
-{
+"byrobot_dronefighter_flight_drone_control_quad_one_delay": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -56259,10 +57100,7 @@ codestar_tilt: {
             return Entry.byrobot_dronefighter_flight.sendControlQuadSingle(script, controlTarget, value, time, true);
         },
 },
-// */
-//*
-"byrobot_dronefighter_flight_drone_control_quad":
-{
+"byrobot_dronefighter_flight_drone_control_quad": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -56330,12 +57168,9 @@ codestar_tilt: {
             return Entry.byrobot_dronefighter_flight.sendControlQuad(script, roll, pitch, yaw, throttle, 0, false);
         },
 },
-// */
-/* BYROBOT DroneFighter Flight End */
-/* BYROBOT PetroneV2 Controller Start */
-//*
-"byrobot_petrone_v2_controller_controller_value_button":
-{
+    /* BYROBOT DroneFighter Flight End */
+    /* BYROBOT PetroneV2 Controller Start */
+"byrobot_petrone_v2_controller_controller_value_button": {
     "color": "#00979D",
     "skeleton": "basic_string_field",
     "statements": [],
@@ -56366,10 +57201,7 @@ codestar_tilt: {
         return read[device];
     },
 },
-// */
-//*
-"byrobot_petrone_v2_controller_controller_value_joystick":
-{
+"byrobot_petrone_v2_controller_controller_value_joystick": {
     "color": "#00979D",
     "skeleton": "basic_string_field",
     "statements": [],
@@ -56406,11 +57238,9 @@ codestar_tilt: {
         return read[device];
     },
 },
-// */
-//*
-"byrobot_petrone_v2_controller_controller_if_button_press":
-{
+"byrobot_petrone_v2_controller_controller_if_button_press": {
     "color": "#00979D",
+    "fontColor": "#fff",
     "skeleton": "basic_boolean_field",
     "statements": [],
     "params": [
@@ -56455,11 +57285,9 @@ codestar_tilt: {
             return false;
     },
 },
-// */
-//*
-"byrobot_petrone_v2_controller_controller_if_joystick_direction":
-{
+"byrobot_petrone_v2_controller_controller_if_joystick_direction": {
     "color": "#00979D",
+    "fontColor": "#fff",
     "skeleton": "basic_boolean_field",
     "statements": [],
     "params": [
@@ -56514,10 +57342,7 @@ codestar_tilt: {
             return false;
     },
 },
-// */
-//*
-"byrobot_petrone_v2_controller_controller_light_manual_single_off":
-{
+"byrobot_petrone_v2_controller_controller_light_manual_single_off": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -56543,10 +57368,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_controller.setLightManual(script, 0x31, 0xff, 0);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_controller_controller_light_manual_single":
-{
+"byrobot_petrone_v2_controller_controller_light_manual_single": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -56605,10 +57427,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_controller.setLightManual(script, 0x31, flags, brightness);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_controller_controller_light_manual_single_input":
-{
+"byrobot_petrone_v2_controller_controller_light_manual_single_input": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -56654,10 +57473,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_controller.setLightManual(script, 0x31, flags, brightness);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_controller_controller_light_color_rgb_input":
-{
+"byrobot_petrone_v2_controller_controller_light_color_rgb_input": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -56673,6 +57489,17 @@ codestar_tilt: {
         {
             "type": "Block",
             "accept": "string"
+        },
+        {
+            "type": "Dropdown",
+            "options": [
+                [Lang.Blocks.byrobot_petrone_v2_common_light_mode_hold, "0"],               // TeamHold = 0x12
+                [Lang.Blocks.byrobot_petrone_v2_common_light_mode_flicker, "1"],            // TeamFlicker = 0x13
+                [Lang.Blocks.byrobot_petrone_v2_common_light_mode_flicker_double, "2"],     // TeamFlickerDouble = 0x14
+                [Lang.Blocks.byrobot_petrone_v2_common_light_mode_dimming, "3"],            // TeamDimming = 0x15
+            ],
+            "value": "0",
+            "fontSize": 11
         },
         {
             "type": "Indicator",
@@ -56695,6 +57522,7 @@ codestar_tilt: {
                 "type": "text",
                 "params": ["255"]
             },
+            null,
             null
         ],
         "type": "byrobot_petrone_v2_controller_controller_light_color_rgb_input"
@@ -56702,21 +57530,20 @@ codestar_tilt: {
     "paramsKeyMap": {
         "RED": 0,
         "GREEN": 1,
-        "BLUE": 2
+        "BLUE": 2,
+        "ADDITION": 3
     },
     "class": "byrobot_petrone_v2_controller_controller_light",
     "isNotFor": ["byrobot_petrone_v2_controller"],
     "func": function (sprite, script) {
+        var mode = 0x12 + parseInt(script.getField('ADDITION'));
         var red = script.getNumberValue('RED');
         var green = script.getNumberValue('GREEN');
         var blue = script.getNumberValue('BLUE');
-        return Entry.byrobot_petrone_v2_controller.setLightColorRgb(script, 0x31, red, green, blue);
+        return Entry.byrobot_petrone_v2_controller.setLightColorRgb(script, 0x31, mode, red, green, blue);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_controller_controller_light_color_rgb_select":
-{
+"byrobot_petrone_v2_controller_controller_light_color_rgb_select": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -56735,6 +57562,17 @@ codestar_tilt: {
             "fontSize": 11
         },
         {
+            "type": "Dropdown",
+            "options": [
+                [Lang.Blocks.byrobot_petrone_v2_common_light_mode_hold, "0"],               // TeamHold = 0x12
+                [Lang.Blocks.byrobot_petrone_v2_common_light_mode_flicker, "1"],            // TeamFlicker = 0x13
+                [Lang.Blocks.byrobot_petrone_v2_common_light_mode_flicker_double, "2"],     // TeamFlickerDouble = 0x14
+                [Lang.Blocks.byrobot_petrone_v2_common_light_mode_dimming, "3"],            // TeamDimming = 0x15
+            ],
+            "value": "0",
+            "fontSize": 11
+        },
+        {
             "type": "Indicator",
             "img": "block_icon/hardware_03.png",
             "size": 12
@@ -56744,16 +57582,19 @@ codestar_tilt: {
     "def": {
         "params": [
             null,
+            null,
             null
         ],
         "type": "byrobot_petrone_v2_controller_controller_light_color_rgb_select"
     },
     "paramsKeyMap": {
         "SELECT": 0,
+            "ADDITION": 1
     },
     "class": "byrobot_petrone_v2_controller_controller_light",
     "isNotFor": ["byrobot_petrone_v2_controller"],
     "func": function (sprite, script) {
+        var mode   = 0x12 + parseInt(script.getField('ADDITION'));
         var select = script.getField('SELECT');
         var red    = 0;
         var green  = 0;
@@ -56792,13 +57633,10 @@ codestar_tilt: {
                 break;
         }
 
-        return Entry.byrobot_petrone_v2_controller.setLightColorRgb(script, 0x31, red, green, blue);
+        return Entry.byrobot_petrone_v2_controller.setLightColorRgb(script, 0x31, mode, red, green, blue);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_controller_controller_display_clear_all":
-{
+"byrobot_petrone_v2_controller_controller_display_clear_all": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -56836,10 +57674,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_controller.setDisplayClear(script, 0x31, pixel, true, 0, 0, 0, 0);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_controller_controller_display_clear":
-{
+"byrobot_petrone_v2_controller_controller_display_clear": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -56917,10 +57752,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_controller.setDisplayClear(script, 0x31, pixel, false, x, y, width, height);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_controller_controller_display_invert":
-{
+"byrobot_petrone_v2_controller_controller_display_invert": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -56987,10 +57819,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_controller.setDisplayInvert(script, 0x31, x, y, width, height);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_controller_controller_display_draw_point":
-{
+"byrobot_petrone_v2_controller_controller_display_draw_point": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -57048,10 +57877,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_controller.setDisplayDrawPoint(script, 0x31, x, y, pixel);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_controller_controller_display_draw_line":
-{
+"byrobot_petrone_v2_controller_controller_display_draw_line": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -57142,10 +57968,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_controller.setDisplayDrawLine(script, 0x31, x1, y1, x2, y2, pixel, line);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_controller_controller_display_draw_rect":
-{
+"byrobot_petrone_v2_controller_controller_display_draw_rect": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -57248,10 +58071,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_controller.setDisplayDrawRect(script, 0x31, x, y, width, height, pixel, flagFill, line);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_controller_controller_display_draw_circle":
-{
+"byrobot_petrone_v2_controller_controller_display_draw_circle": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -57331,10 +58151,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_controller.setDisplayDrawCircle(script, 0x31, x, y, radius, pixel, flagFill);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_controller_controller_display_draw_string":
-{
+"byrobot_petrone_v2_controller_controller_display_draw_string": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -57414,10 +58231,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_controller.setDisplayDrawString(script, 0x31, x, y, font, pixel, string);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_controller_controller_display_draw_string_align":
-{
+"byrobot_petrone_v2_controller_controller_display_draw_string_align": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -57520,10 +58334,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_controller.setDisplayDrawStringAlign(script, 0x31, xStart, xEnd, y, align, font, pixel, string);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_controller_controller_buzzer_off":
-{
+"byrobot_petrone_v2_controller_controller_buzzer_off": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -57549,10 +58360,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_controller.setBuzzerStop(script);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_controller_controller_buzzer_scale":
-{
+"byrobot_petrone_v2_controller_controller_buzzer_scale": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -57620,10 +58428,7 @@ codestar_tilt: {
             return Entry.byrobot_petrone_v2_controller.setBuzzerScale(script, octave, scale, 60000, false, true);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_controller_controller_buzzer_scale_delay":
-{
+"byrobot_petrone_v2_controller_controller_buzzer_scale_delay": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -57701,10 +58506,7 @@ codestar_tilt: {
             return Entry.byrobot_petrone_v2_controller.setBuzzerScale(script, octave, scale, time, true, true);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_controller_controller_buzzer_scale_reserve":
-{
+"byrobot_petrone_v2_controller_controller_buzzer_scale_reserve": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -57782,10 +58584,7 @@ codestar_tilt: {
             return Entry.byrobot_petrone_v2_controller.setBuzzerScale(script, octave, scale, time, false, false);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_controller_controller_buzzer_hz":
-{
+"byrobot_petrone_v2_controller_controller_buzzer_hz": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -57821,10 +58620,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_controller.setBuzzerHz(script, hz, 60000, false, true);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_controller_controller_buzzer_hz_delay":
-{
+"byrobot_petrone_v2_controller_controller_buzzer_hz_delay": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -57870,10 +58666,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_controller.setBuzzerHz(script, hz, time, true, true);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_controller_controller_buzzer_hz_reserve":
-{
+"byrobot_petrone_v2_controller_controller_buzzer_hz_reserve": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -57919,10 +58712,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_controller.setBuzzerHz(script, hz, time, false, false);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_controller_controller_vibrator_off":
-{
+"byrobot_petrone_v2_controller_controller_vibrator_off": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -57948,10 +58738,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_controller.setVibratorStop(script);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_controller_controller_vibrator_on_delay":
-{
+"byrobot_petrone_v2_controller_controller_vibrator_on_delay": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -57987,10 +58774,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_controller.setVibrator(script, timeOn, 0, timeOn, true, true);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_controller_controller_vibrator_on_reserve":
-{
+"byrobot_petrone_v2_controller_controller_vibrator_on_reserve": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -58026,10 +58810,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_controller.setVibrator(script, timeOn, 0, timeOn, false, false);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_controller_controller_vibrator_delay":
-{
+"byrobot_petrone_v2_controller_controller_vibrator_delay": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -58085,10 +58866,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_controller.setVibrator(script, timeOn, timeOff, timeRun, true, true);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_controller_controller_vibrator_reserve":
-{
+"byrobot_petrone_v2_controller_controller_vibrator_reserve": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -58144,12 +58922,9 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_controller.setVibrator(script, timeOn, timeOff, timeRun, false, false);
     },
 },
-// */
-/* BYROBOT PetroneV2 Controller End */
-/* BYROBOT PetroneV2 Drive Start */
-//*
-"byrobot_petrone_v2_drive_drone_value_attitude":
-{
+    /* BYROBOT PetroneV2 Controller End */
+    /* BYROBOT PetroneV2 Drive Start */
+"byrobot_petrone_v2_drive_drone_value_attitude": {
     "color": "#00979D",
     "skeleton": "basic_string_field",
     "statements": [],
@@ -58179,10 +58954,7 @@ codestar_tilt: {
         return Entry.hw.portData[script.getField('DEVICE')];
     },
 },
-// */
-//*
-"byrobot_petrone_v2_drive_drone_value_imu":
-{
+"byrobot_petrone_v2_drive_drone_value_imu": {
     "color": "#00979D",
     "skeleton": "basic_string_field",
     "statements": [],
@@ -58215,10 +58987,7 @@ codestar_tilt: {
         return Entry.hw.portData[script.getField('DEVICE')];
     },
 },
-// */
-//*
-"byrobot_petrone_v2_drive_drone_value_sensor":
-{
+"byrobot_petrone_v2_drive_drone_value_sensor": {
     "color": "#00979D",
     "skeleton": "basic_string_field",
     "statements": [],
@@ -58250,10 +59019,7 @@ codestar_tilt: {
         return Entry.hw.portData[script.getField('DEVICE')];
     },
 },
-// */
-//*
-"byrobot_petrone_v2_drive_drone_value_etc":
-{
+"byrobot_petrone_v2_drive_drone_value_etc": {
     "color": "#00979D",
     "skeleton": "basic_string_field",
     "statements": [],
@@ -58284,10 +59050,7 @@ codestar_tilt: {
         return Entry.hw.portData[script.getField('DEVICE')];
     },
 },
-// */
-//*
-"byrobot_petrone_v2_drive_controller_value_button":
-{
+"byrobot_petrone_v2_drive_controller_value_button": {
     "color": "#00979D",
     "skeleton": "basic_string_field",
     "statements": [],
@@ -58316,10 +59079,7 @@ codestar_tilt: {
         return Entry.hw.portData[script.getField('DEVICE')];
     },
 },
-// */
-//*
-"byrobot_petrone_v2_drive_controller_value_joystick":
-{
+"byrobot_petrone_v2_drive_controller_value_joystick": {
     "color": "#00979D",
     "skeleton": "basic_string_field",
     "statements": [],
@@ -58354,11 +59114,9 @@ codestar_tilt: {
         return Entry.hw.portData[script.getField('DEVICE')];
     },
 },
-// */
-//*
-"byrobot_petrone_v2_drive_controller_if_button_press":
-{
+"byrobot_petrone_v2_drive_controller_if_button_press": {
     "color": "#00979D",
+    "fontColor": "#fff",
     "skeleton": "basic_boolean_field",
     "statements": [],
     "params": [
@@ -58404,11 +59162,9 @@ codestar_tilt: {
     },
     "syntax": { "js": [], "py": [] }
 },
-// */
-//*
-"byrobot_petrone_v2_drive_controller_if_joystick_direction":
-{
+"byrobot_petrone_v2_drive_controller_if_joystick_direction": {
     "color": "#00979D",
+    "fontColor": "#fff",
     "skeleton": "basic_boolean_field",
     "statements": [],
     "params": [
@@ -58463,10 +59219,7 @@ codestar_tilt: {
             return false;
     },
 },
-// */
-//*
-"byrobot_petrone_v2_drive_controller_light_manual_single_off":
-{
+"byrobot_petrone_v2_drive_controller_light_manual_single_off": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -58492,10 +59245,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_drive.setLightManual(script, 0x31, 0xff, 0);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_drive_controller_light_manual_single":
-{
+"byrobot_petrone_v2_drive_controller_light_manual_single": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -58554,10 +59304,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_drive.setLightManual(script, 0x31, flags, brightness);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_drive_controller_light_manual_single_input":
-{
+"byrobot_petrone_v2_drive_controller_light_manual_single_input": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -58603,10 +59350,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_drive.setLightManual(script, 0x31, flags, brightness);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_drive_controller_light_color_rgb_input":
-{
+"byrobot_petrone_v2_drive_controller_light_color_rgb_input": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -58622,6 +59366,17 @@ codestar_tilt: {
         {
             "type": "Block",
             "accept": "string"
+        },
+        {
+            "type": "Dropdown",
+            "options": [
+                [Lang.Blocks.byrobot_petrone_v2_common_light_mode_hold, "0"],               // TeamHold = 0x12
+                [Lang.Blocks.byrobot_petrone_v2_common_light_mode_flicker, "1"],            // TeamFlicker = 0x13
+                [Lang.Blocks.byrobot_petrone_v2_common_light_mode_flicker_double, "2"],     // TeamFlickerDouble = 0x14
+                [Lang.Blocks.byrobot_petrone_v2_common_light_mode_dimming, "3"],            // TeamDimming = 0x15
+            ],
+            "value": "0",
+            "fontSize": 11
         },
         {
             "type": "Indicator",
@@ -58644,6 +59399,7 @@ codestar_tilt: {
                 "type": "text",
                 "params": ["255"]
             },
+            null,
             null
         ],
         "type": "byrobot_petrone_v2_drive_controller_light_color_rgb_input"
@@ -58651,22 +59407,20 @@ codestar_tilt: {
     "paramsKeyMap": {
         "RED": 0,
         "GREEN": 1,
-        "BLUE": 2
+        "BLUE": 2,
+        "ADDITION": 3
     },
     "class": "byrobot_petrone_v2_drive_controller_light",
     "isNotFor": ["byrobot_petrone_v2_drive"],
     "func": function (sprite, script) {
-        var mode = 0x12;
+        var mode = 0x12 + parseInt(script.getField('ADDITION'));
         var red = script.getNumberValue('RED');
         var green = script.getNumberValue('GREEN');
         var blue = script.getNumberValue('BLUE');
         return Entry.byrobot_petrone_v2_drive.setLightColorRgb(script, 0x31, mode, red, green, blue);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_drive_controller_light_color_rgb_select":
-{
+"byrobot_petrone_v2_drive_controller_light_color_rgb_select": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -58685,6 +59439,17 @@ codestar_tilt: {
             "fontSize": 11
         },
         {
+            "type": "Dropdown",
+            "options": [
+                [Lang.Blocks.byrobot_petrone_v2_common_light_mode_hold, "0"],               // TeamHold = 0x12
+                [Lang.Blocks.byrobot_petrone_v2_common_light_mode_flicker, "1"],            // TeamFlicker = 0x13
+                [Lang.Blocks.byrobot_petrone_v2_common_light_mode_flicker_double, "2"],     // TeamFlickerDouble = 0x14
+                [Lang.Blocks.byrobot_petrone_v2_common_light_mode_dimming, "3"],            // TeamDimming = 0x15
+            ],
+            "value": "0",
+            "fontSize": 11
+        },
+        {
             "type": "Indicator",
             "img": "block_icon/hardware_03.png",
             "size": 12
@@ -58694,17 +59459,19 @@ codestar_tilt: {
     "def": {
         "params": [
             null,
+            null,
             null
         ],
         "type": "byrobot_petrone_v2_drive_controller_light_color_rgb_select"
     },
     "paramsKeyMap": {
         "SELECT": 0,
+        "ADDITION": 1
     },
     "class": "byrobot_petrone_v2_drive_controller_light",
     "isNotFor": ["byrobot_petrone_v2_drive"],
     "func": function (sprite, script) {
-        var mode = 0x12;
+        var mode = 0x12 + parseInt(script.getField('ADDITION'));
         var select = script.getField('SELECT');
         var red = 0;
         var green = 0;
@@ -58746,10 +59513,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_drive.setLightColorRgb(script, 0x31, mode, red, green, blue);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_drive_drone_light_manual_single_off":
-{
+"byrobot_petrone_v2_drive_drone_light_manual_single_off": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -58775,10 +59539,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_drive.setLightManual(script, 0x30, 0xff, 0);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_drive_drone_light_manual_single":
-{
+"byrobot_petrone_v2_drive_drone_light_manual_single": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -58836,10 +59597,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_drive.setLightManual(script, 0x30, flags, brightness);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_drive_drone_light_manual_single_input":
-{
+"byrobot_petrone_v2_drive_drone_light_manual_single_input": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -58885,10 +59643,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_drive.setLightManual(script, 0x30, flags, brightness);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_drive_drone_light_color_rgb_input":
-{
+"byrobot_petrone_v2_drive_drone_light_color_rgb_input": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -58915,6 +59670,17 @@ codestar_tilt: {
             "accept": "string"
         },
         {
+            "type": "Dropdown",
+            "options": [
+                [Lang.Blocks.byrobot_petrone_v2_common_light_mode_hold, "0"],               // EyeHold = 0x12,          // ArmHold = 0x42
+                [Lang.Blocks.byrobot_petrone_v2_common_light_mode_flicker, "1"],            // EyeFlicker = 0x13,       // ArmFlicker = 0x43
+                [Lang.Blocks.byrobot_petrone_v2_common_light_mode_flicker_double, "2"],     // EyeFlickerDouble = 0x14, // ArmFlickerDouble = 0x44
+                [Lang.Blocks.byrobot_petrone_v2_common_light_mode_dimming, "3"],            // EyeDimming = 0x15,       // ArmDimming = 0x45
+            ],
+            "value": "0",
+            "fontSize": 11
+        },
+        {
             "type": "Indicator",
             "img": "block_icon/hardware_03.png",
             "size": 12
@@ -58936,6 +59702,7 @@ codestar_tilt: {
                 "type": "text",
                 "params": ["255"]
             },
+            null,
             null
         ],
         "type": "byrobot_petrone_v2_drive_drone_light_color_rgb_input"
@@ -58944,22 +59711,20 @@ codestar_tilt: {
         "MODE": 0,
         "RED": 1,
         "GREEN": 2,
-        "BLUE": 3
+        "BLUE": 3,
+        "ADDITION": 4,
     },
     "class": "byrobot_petrone_v2_drive_drone_light",
     "isNotFor": ["byrobot_petrone_v2_drive"],
     "func": function (sprite, script) {
-        var mode = parseInt(script.getField('MODE'));
+        var mode = parseInt(script.getField('MODE')) + parseInt(script.getField('ADDITION'));
         var red = script.getNumberValue('RED');
         var green = script.getNumberValue('GREEN');
         var blue = script.getNumberValue('BLUE');
         return Entry.byrobot_petrone_v2_drive.setLightColorRgb(script, 0x30, mode, red, green, blue);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_drive_drone_light_color_rgb_select":
-{
+"byrobot_petrone_v2_drive_drone_light_color_rgb_select": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -58987,6 +59752,17 @@ codestar_tilt: {
             "fontSize": 11
         },
         {
+            "type": "Dropdown",
+            "options": [
+                [Lang.Blocks.byrobot_petrone_v2_common_light_mode_hold, "0"],               // EyeHold = 0x12,          // ArmHold = 0x42
+                [Lang.Blocks.byrobot_petrone_v2_common_light_mode_flicker, "1"],            // EyeFlicker = 0x13,       // ArmFlicker = 0x43
+                [Lang.Blocks.byrobot_petrone_v2_common_light_mode_flicker_double, "2"],     // EyeFlickerDouble = 0x14, // ArmFlickerDouble = 0x44
+                [Lang.Blocks.byrobot_petrone_v2_common_light_mode_dimming, "3"],            // EyeDimming = 0x15,       // ArmDimming = 0x45
+            ],
+            "value": "0",
+            "fontSize": 11
+        },
+        {
             "type": "Indicator",
             "img": "block_icon/hardware_03.png",
             "size": 12
@@ -58997,6 +59773,7 @@ codestar_tilt: {
         "params": [
             null,
             null,
+            null,
             null
         ],
         "type": "byrobot_petrone_v2_drive_drone_light_color_rgb_select"
@@ -59004,11 +59781,12 @@ codestar_tilt: {
     "paramsKeyMap": {
         "MODE": 0,
         "SELECT": 1,
+        "ADDITION": 2,
     },
     "class": "byrobot_petrone_v2_drive_drone_light",
     "isNotFor": ["byrobot_petrone_v2_drive"],
     "func": function (sprite, script) {
-        var mode = parseInt(script.getField('MODE'));
+        var mode = parseInt(script.getField('MODE')) + parseInt(script.getField('ADDITION'));
         var select = script.getField('SELECT');
         var red = 0;
         var green = 0;
@@ -59050,10 +59828,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_drive.setLightColorRgb(script, 0x30, mode, red, green, blue);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_drive_controller_display_clear_all":
-{
+"byrobot_petrone_v2_drive_controller_display_clear_all": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -59091,10 +59866,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_drive.setDisplayClear(script, 0x31, pixel, true, 0, 0, 0, 0);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_drive_controller_display_clear":
-{
+"byrobot_petrone_v2_drive_controller_display_clear": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -59172,10 +59944,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_drive.setDisplayClear(script, 0x31, pixel, false, x, y, width, height);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_drive_controller_display_invert":
-{
+"byrobot_petrone_v2_drive_controller_display_invert": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -59242,10 +60011,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_drive.setDisplayInvert(script, 0x31, x, y, width, height);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_drive_controller_display_draw_point":
-{
+"byrobot_petrone_v2_drive_controller_display_draw_point": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -59303,10 +60069,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_drive.setDisplayDrawPoint(script, 0x31, x, y, pixel);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_drive_controller_display_draw_line":
-{
+"byrobot_petrone_v2_drive_controller_display_draw_line": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -59397,10 +60160,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_drive.setDisplayDrawLine(script, 0x31, x1, y1, x2, y2, pixel, line);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_drive_controller_display_draw_rect":
-{
+"byrobot_petrone_v2_drive_controller_display_draw_rect": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -59503,10 +60263,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_drive.setDisplayDrawRect(script, 0x31, x, y, width, height, pixel, flagFill, line);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_drive_controller_display_draw_circle":
-{
+"byrobot_petrone_v2_drive_controller_display_draw_circle": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -59586,10 +60343,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_drive.setDisplayDrawCircle(script, 0x31, x, y, radius, pixel, flagFill);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_drive_controller_display_draw_string":
-{
+"byrobot_petrone_v2_drive_controller_display_draw_string": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -59669,10 +60423,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_drive.setDisplayDrawString(script, 0x31, x, y, font, pixel, string);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_drive_controller_display_draw_string_align":
-{
+"byrobot_petrone_v2_drive_controller_display_draw_string_align": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -59775,10 +60526,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_drive.setDisplayDrawStringAlign(script, 0x31, xStart, xEnd, y, align, font, pixel, string);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_drive_controller_buzzer_off":
-{
+"byrobot_petrone_v2_drive_controller_buzzer_off": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -59804,10 +60552,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_drive.setBuzzerStop(script);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_drive_controller_buzzer_scale":
-{
+"byrobot_petrone_v2_drive_controller_buzzer_scale": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -59875,10 +60620,7 @@ codestar_tilt: {
             return Entry.byrobot_petrone_v2_drive.setBuzzerScale(script, octave, scale, 60000, false, true);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_drive_controller_buzzer_scale_delay":
-{
+"byrobot_petrone_v2_drive_controller_buzzer_scale_delay": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -59956,10 +60698,7 @@ codestar_tilt: {
             return Entry.byrobot_petrone_v2_drive.setBuzzerScale(script, octave, scale, time, true, true);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_drive_controller_buzzer_scale_reserve":
-{
+"byrobot_petrone_v2_drive_controller_buzzer_scale_reserve": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -60037,10 +60776,7 @@ codestar_tilt: {
             return Entry.byrobot_petrone_v2_drive.setBuzzerScale(script, octave, scale, time, false, false);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_drive_controller_buzzer_hz":
-{
+"byrobot_petrone_v2_drive_controller_buzzer_hz": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -60076,10 +60812,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_drive.setBuzzerHz(script, hz, 60000, false, true);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_drive_controller_buzzer_hz_delay":
-{
+"byrobot_petrone_v2_drive_controller_buzzer_hz_delay": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -60125,10 +60858,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_drive.setBuzzerHz(script, hz, time, true, true);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_drive_controller_buzzer_hz_reserve":
-{
+"byrobot_petrone_v2_drive_controller_buzzer_hz_reserve": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -60174,10 +60904,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_drive.setBuzzerHz(script, hz, time, false, false);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_drive_controller_vibrator_off":
-{
+"byrobot_petrone_v2_drive_controller_vibrator_off": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -60203,10 +60930,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_drive.setVibratorStop(script);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_drive_controller_vibrator_on_delay":
-{
+"byrobot_petrone_v2_drive_controller_vibrator_on_delay": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -60242,10 +60966,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_drive.setVibrator(script, timeOn, 0, timeOn, true, true);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_drive_controller_vibrator_on_reserve":
-{
+"byrobot_petrone_v2_drive_controller_vibrator_on_reserve": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -60281,10 +61002,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_drive.setVibrator(script, timeOn, 0, timeOn, false, false);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_drive_controller_vibrator_delay":
-{
+"byrobot_petrone_v2_drive_controller_vibrator_delay": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -60340,10 +61058,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_drive.setVibrator(script, timeOn, timeOff, timeRun, true, true);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_drive_controller_vibrator_reserve":
-{
+"byrobot_petrone_v2_drive_controller_vibrator_reserve": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -60399,10 +61114,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_drive.setVibrator(script, timeOn, timeOff, timeRun, false, false);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_drive_drone_irmessage":
-{
+"byrobot_petrone_v2_drive_drone_irmessage": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -60439,10 +61151,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_drive.sendIrMessage(script, irdirection, irmessage);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_drive_drone_motor_stop":
-{
+"byrobot_petrone_v2_drive_drone_motor_stop": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -60468,10 +61177,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_drive.sendStop(script);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_drive_drone_motorsingle":
-{
+"byrobot_petrone_v2_drive_drone_motorsingle": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -60523,10 +61229,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_drive.setMotorSingle(script, motorIndex, motorRotation, motorSpeed);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_drive_drone_motorsingle_input":
-{
+"byrobot_petrone_v2_drive_drone_motorsingle_input": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -60574,10 +61277,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_drive.setMotorSingle(script, motorIndex, motorRotation, motorSpeed);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_drive_drone_motorsingle_rotation":
-{
+"byrobot_petrone_v2_drive_drone_motorsingle_rotation": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -60638,10 +61338,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_drive.setMotorSingle(script, motorIndex, motorRotation, motorSpeed);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_drive_drone_command_mode_vehicle_car":
-{
+"byrobot_petrone_v2_drive_drone_command_mode_vehicle_car": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -60679,10 +61376,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_drive.setModeVehicle(script, vehicle);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_drive_drone_control_car_stop":
-{
+"byrobot_petrone_v2_drive_drone_control_car_stop": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -60708,10 +61402,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_drive.sendStop(script);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_drive_drone_control_double_one":
-{
+"byrobot_petrone_v2_drive_drone_control_double_one": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -60760,10 +61451,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_drive.sendControlDoubleSingle(script, controlTarget, value, 0, false);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_drive_drone_control_double_one_delay":
-{
+"byrobot_petrone_v2_drive_drone_control_double_one_delay": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -60822,10 +61510,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_drive.sendControlDoubleSingle(script, controlTarget, value, time, true);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_drive_drone_control_double":
-{
+"byrobot_petrone_v2_drive_drone_control_double": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -60872,10 +61557,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_drive.sendControlDouble(script, wheel, accel, 0, false);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_drive_drone_control_double_delay":
-{
+"byrobot_petrone_v2_drive_drone_control_double_delay": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -60932,12 +61614,9 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_drive.sendControlDouble(script, wheel, accel, time, true);
     },
 },
-// */
-/* BYROBOT PetroneV2 Drive End */
-/* BYROBOT PetroneV2 Flight Start */
-//*
-"byrobot_petrone_v2_flight_drone_value_attitude":
-{
+    /* BYROBOT PetroneV2 Drive End */
+    /* BYROBOT PetroneV2 Flight Start */
+"byrobot_petrone_v2_flight_drone_value_attitude": {
     "color": "#00979D",
     "skeleton": "basic_string_field",
     "statements": [],
@@ -60967,10 +61646,7 @@ codestar_tilt: {
         return Entry.hw.portData[script.getField('DEVICE')];
     },
 },
-// */
-//*
-"byrobot_petrone_v2_flight_drone_value_imu":
-{
+"byrobot_petrone_v2_flight_drone_value_imu": {
     "color": "#00979D",
     "skeleton": "basic_string_field",
     "statements": [],
@@ -61003,10 +61679,7 @@ codestar_tilt: {
         return Entry.hw.portData[script.getField('DEVICE')];
     },
 },
-// */
-//*
-"byrobot_petrone_v2_flight_drone_value_sensor":
-{
+"byrobot_petrone_v2_flight_drone_value_sensor": {
     "color": "#00979D",
     "skeleton": "basic_string_field",
     "statements": [],
@@ -61038,10 +61711,7 @@ codestar_tilt: {
         return Entry.hw.portData[script.getField('DEVICE')];
     },
 },
-// */
-//*
-"byrobot_petrone_v2_flight_drone_value_etc":
-{
+"byrobot_petrone_v2_flight_drone_value_etc": {
     "color": "#00979D",
     "skeleton": "basic_string_field",
     "statements": [],
@@ -61073,10 +61743,7 @@ codestar_tilt: {
         return Entry.hw.portData[script.getField('DEVICE')];
     },
 },
-// */
-//*
-"byrobot_petrone_v2_flight_controller_value_button":
-{
+"byrobot_petrone_v2_flight_controller_value_button": {
     "color": "#00979D",
     "skeleton": "basic_string_field",
     "statements": [],
@@ -61105,10 +61772,7 @@ codestar_tilt: {
         return Entry.hw.portData[script.getField('DEVICE')];
     },
 },
-// */
-//*
-"byrobot_petrone_v2_flight_controller_value_joystick":
-{
+"byrobot_petrone_v2_flight_controller_value_joystick": {
     "color": "#00979D",
     "skeleton": "basic_string_field",
     "statements": [],
@@ -61143,11 +61807,9 @@ codestar_tilt: {
         return Entry.hw.portData[script.getField('DEVICE')];
     },
 },
-// */
-//*
-"byrobot_petrone_v2_flight_controller_if_button_press":
-{
+"byrobot_petrone_v2_flight_controller_if_button_press": {
     "color": "#00979D",
+    "fontColor": "#fff",
     "skeleton": "basic_boolean_field",
     "statements": [],
     "params": [
@@ -61193,11 +61855,9 @@ codestar_tilt: {
     },
     "syntax": { "js": [], "py": [] }
 },
-// */
-//*
-"byrobot_petrone_v2_flight_controller_if_joystick_direction":
-{
+"byrobot_petrone_v2_flight_controller_if_joystick_direction": {
     "color": "#00979D",
+    "fontColor": "#fff",
     "skeleton": "basic_boolean_field",
     "statements": [],
     "params": [
@@ -61252,10 +61912,7 @@ codestar_tilt: {
             return false;
     },
 },
-// */
-//*
-"byrobot_petrone_v2_flight_controller_light_manual_single_off":
-{
+"byrobot_petrone_v2_flight_controller_light_manual_single_off": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -61281,10 +61938,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_flight.setLightManual(script, 0x31, 0xff, 0);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_flight_controller_light_manual_single":
-{
+"byrobot_petrone_v2_flight_controller_light_manual_single": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -61343,10 +61997,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_flight.setLightManual(script, 0x31, flags, brightness);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_flight_controller_light_manual_single_input":
-{
+"byrobot_petrone_v2_flight_controller_light_manual_single_input": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -61392,10 +62043,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_flight.setLightManual(script, 0x31, flags, brightness);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_flight_controller_light_color_rgb_input":
-{
+"byrobot_petrone_v2_flight_controller_light_color_rgb_input": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -61411,6 +62059,17 @@ codestar_tilt: {
         {
             "type": "Block",
             "accept": "string"
+        },
+        {
+            "type": "Dropdown",
+            "options": [
+                [Lang.Blocks.byrobot_petrone_v2_common_light_mode_hold, "0"],               // TeamHold = 0x12
+                [Lang.Blocks.byrobot_petrone_v2_common_light_mode_flicker, "1"],            // TeamFlicker = 0x13
+                [Lang.Blocks.byrobot_petrone_v2_common_light_mode_flicker_double, "2"],     // TeamFlickerDouble = 0x14
+                [Lang.Blocks.byrobot_petrone_v2_common_light_mode_dimming, "3"],            // TeamDimming = 0x15
+            ],
+            "value": "0",
+            "fontSize": 11
         },
         {
             "type": "Indicator",
@@ -61433,6 +62092,7 @@ codestar_tilt: {
                 "type": "text",
                 "params": ["255"]
             },
+            null,
             null
         ],
         "type": "byrobot_petrone_v2_flight_controller_light_color_rgb_input"
@@ -61440,22 +62100,20 @@ codestar_tilt: {
     "paramsKeyMap": {
         "RED": 0,
         "GREEN": 1,
-        "BLUE": 2
+        "BLUE": 2,
+        "ADDITION": 3
     },
     "class": "byrobot_petrone_v2_flight_controller_light",
     "isNotFor": ["byrobot_petrone_v2_flight"],
     "func": function (sprite, script) {
-        var mode = 0x12;
+        var mode = 0x12 + parseInt(script.getField('ADDITION'));
         var red = script.getNumberValue('RED');
         var green = script.getNumberValue('GREEN');
         var blue = script.getNumberValue('BLUE');
         return Entry.byrobot_petrone_v2_flight.setLightColorRgb(script, 0x31, mode, red, green, blue);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_flight_controller_light_color_rgb_select":
-{
+"byrobot_petrone_v2_flight_controller_light_color_rgb_select": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -61474,6 +62132,17 @@ codestar_tilt: {
             "fontSize": 11
         },
         {
+            "type": "Dropdown",
+            "options": [
+                [Lang.Blocks.byrobot_petrone_v2_common_light_mode_hold, "0"],               // TeamHold = 0x12
+                [Lang.Blocks.byrobot_petrone_v2_common_light_mode_flicker, "1"],            // TeamFlicker = 0x13
+                [Lang.Blocks.byrobot_petrone_v2_common_light_mode_flicker_double, "2"],     // TeamFlickerDouble = 0x14
+                [Lang.Blocks.byrobot_petrone_v2_common_light_mode_dimming, "3"],            // TeamDimming = 0x15
+            ],
+            "value": "0",
+            "fontSize": 11
+        },
+        {
             "type": "Indicator",
             "img": "block_icon/hardware_03.png",
             "size": 12
@@ -61483,17 +62152,19 @@ codestar_tilt: {
     "def": {
         "params": [
             null,
+            null,
             null
         ],
         "type": "byrobot_petrone_v2_flight_controller_light_color_rgb_select"
     },
     "paramsKeyMap": {
         "SELECT": 0,
+        "ADDITION": 1
     },
     "class": "byrobot_petrone_v2_flight_controller_light",
     "isNotFor": ["byrobot_petrone_v2_flight"],
     "func": function (sprite, script) {
-        var mode = 0x12;
+        var mode = 0x12 + parseInt(script.getField('ADDITION'));
         var select = script.getField('SELECT');
         var red = 0;
         var green = 0;
@@ -61535,10 +62206,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_flight.setLightColorRgb(script, 0x31, mode, red, green, blue);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_flight_drone_light_manual_single_off":
-{
+"byrobot_petrone_v2_flight_drone_light_manual_single_off": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -61564,10 +62232,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_flight.setLightManual(script, 0x30, 0xff, 0);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_flight_drone_light_manual_single":
-{
+"byrobot_petrone_v2_flight_drone_light_manual_single": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -61625,10 +62290,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_flight.setLightManual(script, 0x30, flags, brightness);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_flight_drone_light_manual_single_input":
-{
+"byrobot_petrone_v2_flight_drone_light_manual_single_input": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -61674,10 +62336,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_flight.setLightManual(script, 0x30, flags, brightness);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_flight_drone_light_color_rgb_input":
-{
+"byrobot_petrone_v2_flight_drone_light_color_rgb_input": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -61704,6 +62363,17 @@ codestar_tilt: {
             "accept": "string"
         },
         {
+            "type": "Dropdown",
+            "options": [
+                [Lang.Blocks.byrobot_petrone_v2_common_light_mode_hold, "0"],               // EyeHold = 0x12,          // ArmHold = 0x42
+                [Lang.Blocks.byrobot_petrone_v2_common_light_mode_flicker, "1"],            // EyeFlicker = 0x13,       // ArmFlicker = 0x43
+                [Lang.Blocks.byrobot_petrone_v2_common_light_mode_flicker_double, "2"],     // EyeFlickerDouble = 0x14, // ArmFlickerDouble = 0x44
+                [Lang.Blocks.byrobot_petrone_v2_common_light_mode_dimming, "3"],            // EyeDimming = 0x15,       // ArmDimming = 0x45
+            ],
+            "value": "0",
+            "fontSize": 11
+        },
+        {
             "type": "Indicator",
             "img": "block_icon/hardware_03.png",
             "size": 12
@@ -61725,6 +62395,7 @@ codestar_tilt: {
                 "type": "text",
                 "params": ["255"]
             },
+            null,
             null
         ],
         "type": "byrobot_petrone_v2_flight_drone_light_color_rgb_input"
@@ -61733,22 +62404,20 @@ codestar_tilt: {
         "MODE": 0,
         "RED": 1,
         "GREEN": 2,
-        "BLUE": 3
+        "BLUE": 3,
+        "ADDITION": 4,
     },
     "class": "byrobot_petrone_v2_flight_drone_light",
     "isNotFor": ["byrobot_petrone_v2_flight"],
     "func": function (sprite, script) {
-        var mode = parseInt(script.getField('MODE'));
+        var mode = parseInt(script.getField('MODE')) + parseInt(script.getField('ADDITION'));
         var red = script.getNumberValue('RED');
         var green = script.getNumberValue('GREEN');
         var blue = script.getNumberValue('BLUE');
         return Entry.byrobot_petrone_v2_flight.setLightColorRgb(script, 0x30, mode, red, green, blue);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_flight_drone_light_color_rgb_select":
-{
+"byrobot_petrone_v2_flight_drone_light_color_rgb_select": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -61776,6 +62445,17 @@ codestar_tilt: {
             "fontSize": 11
         },
         {
+            "type": "Dropdown",
+            "options": [
+                [Lang.Blocks.byrobot_petrone_v2_common_light_mode_hold, "0"],               // EyeHold = 0x12,          // ArmHold = 0x42
+                [Lang.Blocks.byrobot_petrone_v2_common_light_mode_flicker, "1"],            // EyeFlicker = 0x13,       // ArmFlicker = 0x43
+                [Lang.Blocks.byrobot_petrone_v2_common_light_mode_flicker_double, "2"],     // EyeFlickerDouble = 0x14, // ArmFlickerDouble = 0x44
+                [Lang.Blocks.byrobot_petrone_v2_common_light_mode_dimming, "3"],            // EyeDimming = 0x15,       // ArmDimming = 0x45
+            ],
+            "value": "0",
+            "fontSize": 11
+        },
+        {
             "type": "Indicator",
             "img": "block_icon/hardware_03.png",
             "size": 12
@@ -61786,6 +62466,7 @@ codestar_tilt: {
         "params": [
             null,
             null,
+            null,
             null
         ],
         "type": "byrobot_petrone_v2_flight_drone_light_color_rgb_select"
@@ -61793,11 +62474,12 @@ codestar_tilt: {
     "paramsKeyMap": {
         "MODE": 0,
         "SELECT": 1,
+        "ADDITION": 2,
     },
     "class": "byrobot_petrone_v2_flight_drone_light",
     "isNotFor": ["byrobot_petrone_v2_flight"],
     "func": function (sprite, script) {
-        var mode = parseInt(script.getField('MODE'));
+        var mode = parseInt(script.getField('MODE')) + parseInt(script.getField('ADDITION'));
         var select = script.getField('SELECT');
         var red = 0;
         var green = 0;
@@ -61839,10 +62521,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_flight.setLightColorRgb(script, 0x30, mode, red, green, blue);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_flight_controller_display_clear_all":
-{
+"byrobot_petrone_v2_flight_controller_display_clear_all": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -61880,10 +62559,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_flight.setDisplayClear(script, 0x31, pixel, true, 0, 0, 0, 0);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_flight_controller_display_clear":
-{
+"byrobot_petrone_v2_flight_controller_display_clear": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -61961,10 +62637,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_flight.setDisplayClear(script, 0x31, pixel, false, x, y, width, height);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_flight_controller_display_invert":
-{
+"byrobot_petrone_v2_flight_controller_display_invert": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -62031,10 +62704,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_flight.setDisplayInvert(script, 0x31, x, y, width, height);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_flight_controller_display_draw_point":
-{
+"byrobot_petrone_v2_flight_controller_display_draw_point": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -62092,10 +62762,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_flight.setDisplayDrawPoint(script, 0x31, x, y, pixel);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_flight_controller_display_draw_line":
-{
+"byrobot_petrone_v2_flight_controller_display_draw_line": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -62186,10 +62853,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_flight.setDisplayDrawLine(script, 0x31, x1, y1, x2, y2, pixel, line);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_flight_controller_display_draw_rect":
-{
+"byrobot_petrone_v2_flight_controller_display_draw_rect": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -62292,10 +62956,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_flight.setDisplayDrawRect(script, 0x31, x, y, width, height, pixel, flagFill, line);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_flight_controller_display_draw_circle":
-{
+"byrobot_petrone_v2_flight_controller_display_draw_circle": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -62375,10 +63036,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_flight.setDisplayDrawCircle(script, 0x31, x, y, radius, pixel, flagFill);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_flight_controller_display_draw_string":
-{
+"byrobot_petrone_v2_flight_controller_display_draw_string": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -62458,10 +63116,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_flight.setDisplayDrawString(script, 0x31, x, y, font, pixel, string);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_flight_controller_display_draw_string_align":
-{
+"byrobot_petrone_v2_flight_controller_display_draw_string_align": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -62564,10 +63219,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_flight.setDisplayDrawStringAlign(script, 0x31, xStart, xEnd, y, align, font, pixel, string);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_flight_controller_buzzer_off":
-{
+"byrobot_petrone_v2_flight_controller_buzzer_off": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -62593,10 +63245,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_flight.setBuzzerStop(script);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_flight_controller_buzzer_scale":
-{
+"byrobot_petrone_v2_flight_controller_buzzer_scale": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -62664,10 +63313,7 @@ codestar_tilt: {
             return Entry.byrobot_petrone_v2_flight.setBuzzerScale(script, octave, scale, 60000, false, true);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_flight_controller_buzzer_scale_delay":
-{
+"byrobot_petrone_v2_flight_controller_buzzer_scale_delay": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -62745,10 +63391,7 @@ codestar_tilt: {
             return Entry.byrobot_petrone_v2_flight.setBuzzerScale(script, octave, scale, time, true, true);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_flight_controller_buzzer_scale_reserve":
-{
+"byrobot_petrone_v2_flight_controller_buzzer_scale_reserve": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -62826,10 +63469,7 @@ codestar_tilt: {
             return Entry.byrobot_petrone_v2_flight.setBuzzerScale(script, octave, scale, time, false, false);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_flight_controller_buzzer_hz":
-{
+"byrobot_petrone_v2_flight_controller_buzzer_hz": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -62865,10 +63505,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_flight.setBuzzerHz(script, hz, 60000, false, true);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_flight_controller_buzzer_hz_delay":
-{
+"byrobot_petrone_v2_flight_controller_buzzer_hz_delay": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -62914,10 +63551,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_flight.setBuzzerHz(script, hz, time, true, true);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_flight_controller_buzzer_hz_reserve":
-{
+"byrobot_petrone_v2_flight_controller_buzzer_hz_reserve": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -62963,10 +63597,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_flight.setBuzzerHz(script, hz, time, false, false);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_flight_controller_vibrator_off":
-{
+"byrobot_petrone_v2_flight_controller_vibrator_off": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -62992,10 +63623,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_flight.setVibratorStop(script);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_flight_controller_vibrator_on_delay":
-{
+"byrobot_petrone_v2_flight_controller_vibrator_on_delay": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -63031,10 +63659,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_flight.setVibrator(script, timeOn, 0, timeOn, true, true);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_flight_controller_vibrator_on_reserve":
-{
+"byrobot_petrone_v2_flight_controller_vibrator_on_reserve": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -63070,10 +63695,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_flight.setVibrator(script, timeOn, 0, timeOn, false, false);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_flight_controller_vibrator_delay":
-{
+"byrobot_petrone_v2_flight_controller_vibrator_delay": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -63129,10 +63751,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_flight.setVibrator(script, timeOn, timeOff, timeRun, true, true);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_flight_controller_vibrator_reserve":
-{
+"byrobot_petrone_v2_flight_controller_vibrator_reserve": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -63188,10 +63807,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_flight.setVibrator(script, timeOn, timeOff, timeRun, false, false);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_flight_drone_irmessage":
-{
+"byrobot_petrone_v2_flight_drone_irmessage": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -63228,10 +63844,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_flight.sendIrMessage(script, irdirection, irmessage);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_flight_drone_motor_stop":
-{
+"byrobot_petrone_v2_flight_drone_motor_stop": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -63257,10 +63870,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_flight.sendStop(script);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_flight_drone_motorsingle":
-{
+"byrobot_petrone_v2_flight_drone_motorsingle": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -63312,10 +63922,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_flight.setMotorSingle(script, motorIndex, motorRotation, motorSpeed);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_flight_drone_motorsingle_input":
-{
+"byrobot_petrone_v2_flight_drone_motorsingle_input": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -63363,10 +63970,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_flight.setMotorSingle(script, motorIndex, motorRotation, motorSpeed);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_flight_drone_motorsingle_rotation":
-{
+"byrobot_petrone_v2_flight_drone_motorsingle_rotation": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -63427,10 +64031,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_flight.setMotorSingle(script, motorIndex, motorRotation, motorSpeed);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_flight_drone_command_mode_vehicle_drone":
-{
+"byrobot_petrone_v2_flight_drone_command_mode_vehicle_drone": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -63469,10 +64070,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_flight.setModeVehicle(script, vehicle);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_flight_drone_control_drone_takeoff":
-{
+"byrobot_petrone_v2_flight_drone_control_drone_takeoff": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -63498,10 +64096,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_flight.setEventFlight(script, 0x11, 200); // 0x11 : FlightEvent::TakeOff
     },
 },
-// */
-//*
-"byrobot_petrone_v2_flight_drone_control_drone_landing":
-{
+"byrobot_petrone_v2_flight_drone_control_drone_landing": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -63527,10 +64122,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_flight.setEventFlight(script, 0x12, 200); // 0x12 : FlightEvent::Landing
     },
 },
-// */
-//*
-"byrobot_petrone_v2_flight_drone_control_drone_stop":
-{
+"byrobot_petrone_v2_flight_drone_control_drone_stop": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -63556,10 +64148,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_flight.sendStop(script);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_flight_drone_control_coordinate":
-{
+"byrobot_petrone_v2_flight_drone_control_coordinate": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -63597,10 +64186,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_flight.sendCommand(script, 0x30, 0x20, coordinate);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_flight_drone_control_drone_reset_heading":
-{
+"byrobot_petrone_v2_flight_drone_control_drone_reset_heading": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -63626,10 +64212,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_flight.sendCommand(script, 0x30, 0x22, 0xA0); // 0x22 : CommandType::FlightEvent  // 0xA0 : FlightEvent::ResetHeading
     },
 },
-// */
-//*
-"byrobot_petrone_v2_flight_drone_control_quad_one":
-{
+"byrobot_petrone_v2_flight_drone_control_quad_one": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -63680,10 +64263,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_flight.sendControlQuadSingle(script, controlTarget, value, 0, false);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_flight_drone_control_quad_one_delay":
-{
+"byrobot_petrone_v2_flight_drone_control_quad_one_delay": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -63744,10 +64324,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_flight.sendControlQuadSingle(script, controlTarget, value, time, true);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_flight_drone_control_quad":
-{
+"byrobot_petrone_v2_flight_drone_control_quad": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -63814,10 +64391,7 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_flight.sendControlQuad(script, roll, pitch, yaw, throttle, 0, false);
     },
 },
-// */
-//*
-"byrobot_petrone_v2_flight_drone_control_quad_delay":
-{
+"byrobot_petrone_v2_flight_drone_control_quad_delay": {
     "color": "#00979D",
     "skeleton": "basic",
     "statements": [],
@@ -63894,8 +64468,9 @@ codestar_tilt: {
         return Entry.byrobot_petrone_v2_flight.sendControlQuad(script, roll, pitch, yaw, throttle, time, true);
     },
 },
-// */
-/* BYROBOT PetroneV2 Flight End */
+    /* BYROBOT PetroneV2 Flight End */
+//endregion byrobot 바이로봇
+//region basic 기본
 "boolean_shell": {
     "color": "#AEB8FF",
     "skeleton": "basic_boolean_field",
@@ -63910,6 +64485,8 @@ codestar_tilt: {
     ],
     "func": function (sprite, script) {},
 },
+//endregion basic 기본
+//region coconut 코코넛
 "coconut_move_motor": {
    "color": "#00979D",
     "skeleton": "basic",
@@ -66754,7 +67331,6 @@ codestar_tilt: {
     },
     "syntax": {"js": [], "py": ["coconut.turn_for_secs(%1, %2)"]}
 },
-
 "coconut_servomotor_angle": {
     "color": "#00979D",
     "skeleton": "basic",
@@ -66836,6 +67412,8 @@ codestar_tilt: {
     },
     "syntax": {"js": [], "py": ["coconut.turn_for_secs(%1, %2)"]}
 },
+//endregion coconut 코코넛
+//region chocopi 초코파이
 chocopi_sensor: {
     color: '#00979D',
     fontColor: '#fff',
@@ -67331,6 +67909,8 @@ chocopi_servo_motor: {
     },
     syntax: { "js": [], "py": ["Chocopi.servo(%1, %2, %3)"] }
 },
+//endregion coconut 코코넛
+//region rokoboard 로코보드
 // rokoboard Implementation
 "rokoboard_get_sensor_value_by_name": {
     "color": "#00979D",
@@ -67398,7 +67978,8 @@ chocopi_servo_motor: {
         return (ANALOG) ? (ANALOG[port] < 1) : false ;
     }
 },
-//Altino start
+//endregion rokoboard 로코보드
+//region Altino 알티노
 "altino_analogValue": {
     "color": "#00979D",
     "fontColor": "#fff",
@@ -67510,8 +68091,6 @@ chocopi_servo_motor: {
         } else if (direction == "Right20") {
             sq.steering = 127;
         }
-
-
         return script.callReturn();
     },
     "syntax": { "js": [], "py": ["Altino.steering(%1,%2)"] }
@@ -67938,7 +68517,8 @@ chocopi_servo_motor: {
         return script.callReturn();
     }
 },
-//Altino end
+//endregion Altino 알티노
+//region basic 기본
 "register_score": {
     "color": "#7C7C7C",
     "skeleton": "basic",
@@ -67978,7 +68558,1817 @@ chocopi_servo_motor: {
         return script.callReturn();
     }
 },
+//endregion basic 기본
+//region hummingbird 허밍버드
+    //Hummingbird parts
+    //범용 센서
+    hummingbird_sensorValue: {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "template" : "아날로그 센서 %1 번 의 값",
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    ["1", "adc1"],
+                    ["2", "adc2"],
+                    ["3", "adc3"],
+                    ["4", "adc4"],
+                ],
+                "value": "adc1",
+                "fontSize": 11
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null ],
+            "type": "hummingbird_sensorValue"
+        },
+        "paramsKeyMap": {
+            "DEVICE": 0
+        },
+        "class": "hummingbird_sensor",
+        "isNotFor": [ "hummingbird" ],
+        "func": function (sprite, script) {
+            var pd = Entry.hw.portData;
+            var dev = script.getField('DEVICE');
+            return pd[dev];
+        },
+        "syntax": {"js": [], "py": []}
+    },
 
+    //온도센서
+    hummingbird_temperatureValue: {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "template" : "HB 온도센서 %1 번 값",
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    ["1", "adc1"],
+                    ["2", "adc2"],
+                    ["3", "adc3"],
+                    ["4", "adc4"],
+                ],
+                "value": "adc1",
+                "fontSize": 11
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null ],
+            "type": "hummingbird_temperatureValue"
+        },
+        "paramsKeyMap": {
+            "DEVICE": 0
+        },
+        "class": "hummingbird_sensor",
+        "isNotFor": [ "hummingbird" ],
+        "func": function (sprite, script) {
+            var pd = Entry.hw.portData;
+            var dev = script.getField('DEVICE');
+            var temperature_value = Math.round(pd[dev]*100/2048);
+            return temperature_value;
+        },
+        "syntax": {"js": [], "py": []}
+    },
+    // 빛 블럭
+    hummingbird_lightValue: {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "template" : "HB 빛센서 %1 번 값",
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    ["1", "adc1"],
+                    ["2", "adc2"],
+                    ["3", "adc3"],
+                    ["4", "adc4"],
+                ],
+                "value": "adc1",
+                "fontSize": 11
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null ],
+            "type": "hummingbird_lightValue"
+        },
+        "paramsKeyMap": {
+            "DEVICE": 0
+        },
+        "class": "hummingbird_sensor",
+        "isNotFor": [ "hummingbird" ],
+        "func": function (sprite, script) {
+            var pd = Entry.hw.portData;
+            var dev = script.getField('DEVICE');
+            var light_value = Math.round(pd[dev]*100/1024);
+            return light_value;
+        },
+        "syntax": {"js": [], "py": []}
+    },
+
+    // 거리센서 블럭
+    hummingbird_distanceValue: {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "template" : "HB 거리센서 %1 번 값",
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    ["1", "adc1"],
+                    ["2", "adc2"],
+                    ["3", "adc3"],
+                    ["4", "adc4"],
+                ],
+                "value": "adc1",
+                    "fontSize": 11
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null ],
+            "type": "hummingbird_distanceValue"
+        },
+        "paramsKeyMap": {
+            "DEVICE": 0
+        },
+        "class": "hummingbird_sensor",
+        "isNotFor": [ "hummingbird" ],
+        "func": function (sprite, script) {
+            var pd = Entry.hw.portData;
+            var dev = script.getField('DEVICE');
+
+            var distance_value = 0;
+            var flipped = 1000 - pd[dev];
+            if (flipped < 180)  distance_value = 0;
+            else if (flipped >= 180 && flipped < 280 ) distance_value = (flipped - 180) * 4 / 100 + 5;
+            else if (flipped >= 280 && flipped < 400 ) distance_value = (flipped - 280) * 3 / 120 + 9;
+            else if (flipped >= 400 && flipped < 500 ) distance_value = (flipped - 400) * 3 / 100 + 11;
+            else if (flipped >= 500 && flipped < 580 ) distance_value = (flipped - 500) * 3 / 80 + 14;
+            else if (flipped >= 580 && flipped < 620 ) distance_value = (flipped - 580) * 2 / 40 + 17;
+            else if (flipped >= 620 && flipped < 660 ) distance_value = (flipped - 620) * 4 / 40 + 19;
+            else if (flipped >= 660 && flipped < 700 ) distance_value = (flipped - 660) * 4 / 40 + 23;
+            else if (flipped >= 700 && flipped < 740 ) distance_value = (flipped - 700) * 6 / 40 + 27;
+            else if (flipped >= 740 && flipped < 780 ) distance_value = (flipped - 740) * 7 / 40 + 33;
+            else if (flipped >= 780 && flipped < 820 ) distance_value = (flipped - 780) * 15 / 40 + 41;
+            else if (flipped >= 820 && flipped < 860 ) distance_value = (flipped - 820) * 11 / 40 + 56;
+            else distance_value = 100;
+            return distance_value.toFixed(0);
+        },
+        "syntax": {"js": [], "py": []}
+    },
+
+    // 소음 센서 블럭
+    hummingbird_soundValue: {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "template" : "HB 소리센서 %1 번의 값",
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    ["1", "adc1"],
+                    ["2", "adc2"],
+                    ["3", "adc3"],
+                    ["4", "adc4"],
+                ],
+                "value": "adc1",
+                "fontSize": 11
+            }
+        ],
+        "events": {},
+           "def": {
+            "params": [ null ],
+            "type": "hummingbird_soundValue"
+        },
+        "paramsKeyMap": {
+            "DEVICE": 0
+        },
+        "class": "hummingbird_sensor",
+        "isNotFor": [ "hummingbird" ],
+        "func": function (sprite, script) {
+            var pd = Entry.hw.portData;
+            var dev = script.getField('DEVICE');
+            var sound_value = pd[dev];
+            if (sound_value <= 35) sound_value = 1;
+            sound_value = Math.round(sound_value*100/330);
+            if (sound_value>100) sound_value = 100;
+            return sound_value;
+        },
+        "syntax": {"js": [], "py": []}
+    },
+
+    // 회전센서
+    hummingbird_rotaryValue: {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "template" : "HB 로터리센서 %1 번의 값",
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    ["1", "adc1"],
+                    ["2", "adc2"],
+                    ["3", "adc3"],
+                    ["4", "adc4"],
+                ],
+                "value": "adc1",
+                "fontSize": 11
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null ],
+            "type": "hummingbird_rotaryValue"
+        },
+        "paramsKeyMap": {
+            "DEVICE": 0
+        },
+        "class": "hummingbird_sensor",
+        "isNotFor": [ "hummingbird" ],
+        "func": function (sprite, script) {
+            var pd = Entry.hw.portData;
+            var dev = script.getField('DEVICE');
+            var rotary_value = Math.round((pd[dev])*100/1024);
+			//if (rotary_value == 0) rotary_value = 1;
+            return rotary_value;
+        },
+        "syntax": {"js": [], "py": []}
+    },
+
+    //진동모터
+    hummingbird_vibeMotor: {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "template" : "HB 진동 %1 의 세기: %2 %3",
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    ["1", "vibeMotor1"],
+                    ["2", "vibeMotor2"],
+                ],
+                "value": "vibeMotor1",
+                "fontSize": 11
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                null,
+                {
+                    "type": "text",
+                    "params": [ "0" ]
+                },
+                null
+            ],
+            "type": "hummingbird_vibeMotor"
+        },
+        "paramsKeyMap": {
+            "DEVICE": 0,
+            "VALUE": 1
+        },
+        "class": "hummingbird_motor",
+        "isNotFor": [ "hummingbird" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var dev = script.getStringField("DEVICE", script);
+            var value = script.getNumberValue("VALUE", script);
+
+            if (value>100) value = 127;
+            else if(value<0) value = 0;
+            else value = Math.floor(value*1.27);  // 0 ~ 127
+
+            if (dev == 'vibeMotor1') sq.vibrat1 = value;
+            else if (dev == 'vibeMotor2') sq.vibrat2 = value;
+            return script.callReturn();
+        },
+        "syntax": {"js": [], "py": []}
+    },
+
+    //서보모터
+    hummingbird_servo: {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "template" : "HB 서보모터 %1번 의 각도: %2 %3",
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    ["1", "servo1"],
+                    ["2", "servo2"],
+                    ["3", "servo3"],
+                    ["4", "servo4"],
+                ],
+                "value": "servo1",
+                "fontSize": 11
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                null,
+                {
+                    "type": "text",
+                    "params": [ "0" ]
+                },
+                null
+            ],
+            "type": "hummingbird_servo"
+        },
+        "paramsKeyMap": {
+            "DEVICE": 0,
+            "VALUE": 1
+        },
+        "class": "hummingbird_motor",
+        "isNotFor": [ "hummingbird" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var mtype = script.getStringField("DEVICE", script);
+            var angle = script.getNumberValue("VALUE", script);
+
+            if (angle < 0) angle = 0;
+            else if (angle > 180) angle = 180;
+
+            if (mtype == 'servo1')    sq.servo1 = angle;
+            else if(mtype == 'servo2')  sq.servo2 = angle;
+            else if(mtype == 'servo3')  sq.servo3 = angle;
+            else if(mtype == 'servo4')  sq.servo4 = angle;
+            return script.callReturn();
+        },
+        "syntax": {"js": [], "py": []}
+    },
+
+    //기어모터
+    hummingbird_dcMotor: {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "template" : "HB 기어모터 %1번 의 속도: %2 %3",
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    ["1", "dcMotor1"],
+                    ["2", "dcMotor2"]
+                ],
+                "value": "dcMotor1",
+                "fontSize": 11,
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                null,
+                {
+                    "type": "text",
+                    "params": [ "0" ]
+                },
+                null
+            ],
+            "type": "hummingbird_dcMotor"
+        },
+        "paramsKeyMap": {
+            "DEVICE": 0,
+            "VALUE": 1
+        },
+        "class": "hummingbird_motor",
+        "isNotFor": [ "hummingbird" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var dir = script.getStringField("DEVICE", script);
+            var speed =script.getNumberValue('VALUE', script);
+
+            if (speed==0) speed = 256;
+            else if(speed>100) speed = 127;
+            else if(speed<-100) speed = -127;
+            else speed = Math.floor(speed*1.27); // range : -127~127
+
+            if (dir == 'dcMotor1') sq.dcMotor1 = speed;
+            else if (dir == 'dcMotor2') sq.dcMotor2 = speed;
+            return script.callReturn();
+        },
+        "syntax": {"js": [], "py": []}
+    },
+
+    // 단색LED
+    hummingbird_led: {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "template" : "HB 단색LED %1번 의 밝기: %2 %3",
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    ["1", "led1"],
+                    ["2", "led2"],
+                    ["3", "led3"],
+                    ["4", "led4"]
+
+                ],
+                "value": "led1",
+                "fontSize": 11,
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                null,
+                {
+                    "type": "text",
+                    "params": [ "0" ]
+                },
+                null
+            ],
+            "type": "hummingbird_led"
+        },
+        "paramsKeyMap": {
+            "DEVICE": 0,
+            "VALUE": 1
+        },
+        "class": "hummingbird_led",
+        "isNotFor": [ "hummingbird" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var ledtype = script.getStringField("DEVICE", script);
+            var value = script.getNumberValue("VALUE", script);
+            if (value > 100) value = 100;
+            if (value < 0) value = 0;
+            value = Math.floor(value * 2.55);
+
+            if(ledtype == 'led1') sq.led1 = value;
+            else if(ledtype == 'led2') sq.led2 = value;
+            else if(ledtype == 'led3') sq.led3 = value;
+            else if(ledtype == 'led4') sq.led4 = value;
+            return script.callReturn();
+        },
+        "syntax": {"js": [], "py": []}
+    },
+
+    // 삼색LED
+    hummingbird_triLED: {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "template" : "HB 삼색LED %1번 의 빨강%2 초록%3 파랑%4 %5",
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    ["1", "triLED1"],
+                    ["2", "triLED2"],
+                ],
+                "value": "triLED1",
+                "fontSize": 11,
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                null,
+                {
+                    "type": "text",
+                    "params": [ "0" ]
+                },
+                {
+                    "type": "text",
+                    "params": [ "0" ]
+                },
+                {
+                    "type": "text",
+                    "params": [ "0" ]
+                },
+                {
+                    "type": "text",
+                    "params": [ "0" ]
+                },
+                null
+            ],
+            "type": "hummingbird_triLED"
+        },
+        "paramsKeyMap": {
+            "DEVICE": 0,
+            "cRED": 1,
+            "cGREEN": 2,
+            "cBLUE": 3,
+        },
+        "class": "hummingbird_led",
+        "isNotFor": [ "hummingbird" ],
+        "func": function (sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var ledtype = script.getStringField("DEVICE", script);
+            var colorRed = script.getNumberValue("cRED", script);
+            var colorGreen = script.getNumberValue("cGREEN", script);
+            var colorBlue = script.getNumberValue("cBLUE", script);
+
+            if (colorRed > 100) colorRed = 100;
+            if (colorGreen > 100) colorGreen = 100;
+            if (colorBlue > 100) colorBlue = 100;
+            if (colorRed < 0) colorRed = 0;
+            if (colorGreen < 0) colorGreen = 0;
+            if (colorBlue < 0) colorBlue = 0;
+
+            colorRed = Math.floor(colorRed*2.55);
+            colorGreen = Math.floor(colorGreen*2.55);
+            colorBlue = Math.floor(colorBlue*2.55);
+
+            if(ledtype == 'triLED1') {
+                sq.triLEDR1 = colorRed;
+                sq.triLEDG1 = colorGreen;
+                sq.triLEDB1 = colorBlue;
+            }
+            else if(ledtype == 'triLED2') {
+                sq.triLEDR2 = colorRed;
+                sq.triLEDG2 = colorGreen;
+                sq.triLEDB2 = colorBlue;
+            }
+            return script.callReturn();
+        },
+        "syntax": {"js": [], "py": []}
+    },
+//endregion hummingbird 허밍버드
+//region TrueTrueRobot 뚜루뚜루로봇
+    "truetrue_get_linesensor": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    ["Left_Out", "L2"],
+                    ["Left_In", "L1"],
+                    ["Right_In", "R1"],
+                    ["Right_Out", "R2"]
+                ],
+                "value": "Left_Out",
+                "fontSize": 11
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                'L2'
+            ],
+            "type": "truetrue_get_linesensor"
+        },
+        "paramsKeyMap": {
+            "position": 0
+        },
+        "class": "trueRobot_sensor",
+        "isNotFor": ["trueRobot"],
+        "func": function (sprite, script) {
+            var pd = Entry.hw.portData;
+            var dev = script.getField('position');
+            return pd[dev];
+        },
+        "syntax": { "js": [], "py": [] }
+    },
+    "truetrue_get_proxisensor": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    ["Left", "ProxiLeft"],
+                    ["Right", "ProxiRight"]
+                ],
+                "value": "Left",
+                "fontSize": 11
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                'ProxiLeft'
+            ],
+            "type": "truetrue_get_proxisensor"
+        },
+        "paramsKeyMap": {
+            "position": 0
+        },
+        "class": "trueRobot_sensor",
+        "isNotFor": ["trueRobot"],
+        "func": function (sprite, script) {
+            var pd = Entry.hw.portData;
+            var dev = script.getField('position');
+            return pd[dev];
+        },
+        "syntax": { "js": [], "py": [] }
+    },
+    "truetrue_get_accsensor": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    ["X-axis", "AccX"],
+                    ["Y-axis", "AccY"],
+                    ["Z-axis", "AccZ"],
+                    ["Tilt", "AccStatus"]
+                ],
+                "value": "X-axis",
+                "fontSize": 11
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                'AccX'
+            ],
+            "type": "truetrue_get_accsensor"
+        },
+        "paramsKeyMap": {
+            "position": 0
+        },
+        "class": "trueRobot_sensor",
+        "isNotFor": ["trueRobot"],
+        "func": function (sprite, script) {
+            var pd = Entry.hw.portData;
+            var dev = script.getField('position');
+            return pd[dev];
+        },
+        "syntax": { "js": [], "py": [] }
+    },
+    "truetrue_get_bottomcolorsensor": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    ["Red", "BColorRed"],
+                    ["Green", "BColorGreen"],
+                    ["Blue", "BColorBlue"],
+                    ["ColorKey", "BColorKey"]
+                ],
+                "value": "Red",
+                "fontSize": 11
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                'BColorRed'
+            ],
+            "type": "truetrue_get_bottomcolorsensor"
+        },
+        "paramsKeyMap": {
+            "position": 0
+        },
+        "class": "trueRobot_sensor",
+        "isNotFor": ["trueRobot"],
+        "func": function (sprite, script) {
+            var pd = Entry.hw.portData;
+            var dev = script.getField('position');
+            return pd[dev];
+        },
+        "syntax": { "js": [], "py": [] }
+    },
+    "truetrue_get_frontcolorsensor": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    ["Left", "FColorLeftKey"],
+                    ["Right", "FColorRightKey"]
+                ],
+                "value": "Left",
+                "fontSize": 11
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                'FColorLeftKey'
+            ],
+            "type": "truetrue_get_frontcolorsensor"
+        },
+        "paramsKeyMap": {
+            "position": 0
+        },
+        "class": "trueRobot_sensor",
+        "isNotFor": ["trueRobot"],
+        "func": function (sprite, script) {
+            var pd = Entry.hw.portData;
+            var dev = script.getField('position');
+            return pd[dev];
+        },
+        "syntax": { "js": [], "py": [] }
+    },
+    "truetrue_set_singlemotor": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    ["Left", "9"],
+                    ["Right", "10"]
+                ],
+                "value": "Left",
+                "fontSize": 11
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                "9", "0", null
+            ],
+            "type": "truetrue_set_singlemotor"
+        },
+        "paramsKeyMap": {
+            "PORT": 0,
+            "VALUE": 1
+        },
+        "class": "trueRobot_control",
+        "isNotFor": ["trueRobot"],
+        "func": function (sprite, script) {
+            var device = Entry.trueRobot.PORT_MAP.singlemotor;
+            var value = script.getNumberValue('VALUE');
+            value = Math.round(value);
+            value = Math.max(value, -100);
+            value = Math.min(value, 100);
+            //set two bytes.
+            var speed = 0;
+            var direction = 0;
+            if (value < 0) { speed = -1 * value; direction = 1; }
+            else { speed = value; direction = 0; }
+            if (!Entry.hw.sendQueue['SET']) {
+                Entry.hw.sendQueue['SET'] = {};
+            }
+
+            Entry.hw.sendQueue['SET'][device] = {
+                port: script.getNumberField('PORT'),
+                dataA: speed,
+                dataB: direction,
+                dataC: 0
+            };
+
+            return script.callReturn();
+        },
+        "syntax": { "js": [], "py": [] }
+    },
+    "truetrue_set_dualmotor": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                '0',
+                '0',
+                '0',
+                null
+            ],
+            "type": "truetrue_set_dualmotor"
+        },
+        "paramsKeyMap": {
+            "leftValue": 0,
+            "rightValue": 1,
+            "delayValue": 2
+        },
+        "class": "trueRobot_control",
+        "isNotFor": ["trueRobot"],
+        "func": function (sprite, script) {
+            var device = Entry.trueRobot.PORT_MAP.dualmotor;
+
+            if (!Entry.hw.sendQueue['SET']) {
+                Entry.hw.sendQueue['SET'] = {};
+            }
+
+            if (!script.isStart) {
+                script.isStart = true;
+                script.timeFlag = 1;
+
+                var leftValue = script.getNumberValue("leftValue");
+                leftValue = Math.round(leftValue);
+                leftValue = Math.max(leftValue, -100);
+                leftValue = Math.min(leftValue, 100);
+
+                var rightValue = script.getNumberValue("rightValue");
+                rightValue = Math.round(rightValue);
+                rightValue = Math.max(rightValue, -100);
+                rightValue = Math.min(rightValue, 100);
+
+                var delayValue = script.getNumberValue("delayValue");
+                delayValue = Math.round(delayValue);
+                delayValue = Math.max(delayValue, -100);
+                delayValue = Math.min(delayValue, 100);
+
+                Entry.hw.sendQueue['SET'][device] = {
+                    port: Entry.trueRobot.PORT_MAP.dualPort,
+                    dataA: leftValue,
+                    dataB: rightValue,
+                    dataC: delayValue
+                };
+
+                var timeValue = script.getNumberValue("delayValue");
+                timeValue = Math.round(timeValue);
+                timeValue = Math.max(timeValue, -100);
+                timeValue = Math.min(timeValue, 100);
+                var fps = Entry.FPS || 60;
+                timeValue = 60 / fps * timeValue * 1000;
+                setTimeout(function () {
+                    script.timeFlag = 0;
+                }, timeValue);
+                return script;
+            } else if (script.timeFlag == 1) {
+                return script;
+            } else {
+                delete script.timeFlag;
+                delete script.isStart;
+                Entry.engine.isContinue = false;
+
+                Entry.hw.sendQueue['SET'][device] = {
+                    port: Entry.trueRobot.PORT_MAP.dualPort,
+                    dataA: 0,
+                    dataB: 0,
+                    dataC: 0
+                };
+
+                return script.callReturn();
+            }
+        },
+        "syntax": { "js": [], "py": [] }
+    },
+    "truetrue_set_colorled": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                '0',
+                '0',
+                '0',
+                null
+            ],
+            "type": "truetrue_set_colorled"
+        },
+        "paramsKeyMap": {
+            "redColor": 0,
+            "greenColor": 1,
+            "blueColor": 2
+        },
+        "class": "trueRobot_control",
+        "isNotFor": ["trueRobot"],
+        "func": function (sprite, script) {
+            var device = Entry.trueRobot.PORT_MAP.colorled;
+
+            var redColor = script.getNumberValue("redColor");
+            redColor = Math.round(redColor);
+            redColor = Math.max(redColor, 0);
+            redColor = Math.min(redColor, 255);
+
+            var greenColor = script.getNumberValue("greenColor");
+            greenColor = Math.round(greenColor);
+            greenColor = Math.max(greenColor, 0);
+            greenColor = Math.min(greenColor, 255);
+
+            var blueColor = script.getNumberValue("blueColor");
+            blueColor = Math.round(blueColor);
+            blueColor = Math.max(blueColor, 0);
+            blueColor = Math.min(blueColor, 255);
+
+            if (!Entry.hw.sendQueue['SET']) {
+                Entry.hw.sendQueue['SET'] = {};
+            }
+            Entry.hw.sendQueue['SET'][device] = {
+                port: Entry.trueRobot.PORT_MAP.colorled,
+                dataA: redColor,
+                dataB: greenColor,
+                dataC: blueColor
+            };
+            return script.callReturn();
+        },
+        "syntax": { "js": [], "py": [] }
+    },
+    "truetrue_set_led_proxi": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    ["근접센서왼쪽", 9],
+                    ["근접센서오른쪽", 10]
+                ],
+                "value": "근접센서왼쪽",
+                "fontSize": 11
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    ["켜기", "on"],
+                    ["끄기", "off"]
+                ],
+                "value": "켜기",
+                "fontSize": 11
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                9,
+                'on',
+                null
+            ],
+            "type": "truetrue_set_led_proxi"
+        },
+        "paramsKeyMap": {
+            "PORT": 0,
+            "ONOFF": 1
+        },
+        "class": "trueRobot_control",
+        "isNotFor": ["trueRobot"],
+        "func": function (sprite, script) {
+            var device = Entry.trueRobot.PORT_MAP.leds;
+
+            var onoff = script.getField('ONOFF');
+            var value = onoff == 'on' ? 1 : 0;
+
+            if (!Entry.hw.sendQueue['SET']) {
+                Entry.hw.sendQueue['SET'] = {};
+            }
+            Entry.hw.sendQueue['SET'][device] = {
+                port: script.getNumberField("PORT"),
+                dataA: value,
+                dataB: 0x07,
+                dataC: 0x07
+            };
+            return script.callReturn();
+        },
+        "syntax": { "js": [], "py": [] }
+    },
+    "truetrue_set_led_colorsensor": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    ["전면컬러센서", 3],
+                    ["바닥컬러센서", 4]
+                ],
+                "value": "전면컬러센서",
+                "fontSize": 11
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    ["켜기", "on"],
+                    ["끄기", "off"]
+                ],
+                "value": "켜기",
+                "fontSize": 11
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                3,
+                "on",
+                null
+            ],
+            "type": "truetrue_set_led_colorsensor"
+        },
+        "paramsKeyMap": {
+            "PORT": 0,
+            "ONOFF": 1
+        },
+        "class": "trueRobot_control",
+        "isNotFor": ["trueRobot"],
+        "func": function (sprite, script) {
+            var device = Entry.trueRobot.PORT_MAP.leds;
+
+            var onoff = script.getField('ONOFF');
+            var value = onoff == 'on' ? 1 : 0;
+
+            if (!Entry.hw.sendQueue['SET']) {
+                Entry.hw.sendQueue['SET'] = {};
+            }
+            Entry.hw.sendQueue['SET'][device] = {
+                port: script.getNumberField("PORT"),
+                dataA: value,
+                dataB: 0x07,
+                dataC: 0x07
+            };
+            return script.callReturn();
+        },
+        "syntax": { "js": [], "py": [] }
+    },
+    "truetrue_set_led_linesensor": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    ["켜기", "on"],
+                    ["끄기", "off"]
+                ],
+                "value": "켜기",
+                "fontSize": 11
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                "on", null
+            ],
+            "type": "truetrue_set_led_linesensor"
+        },
+        "paramsKeyMap": {
+            "ONOFF": 0
+        },
+        "class": "trueRobot_control",
+        "isNotFor": ["trueRobot"],
+        "func": function (sprite, script) {
+            var device = Entry.trueRobot.PORT_MAP.leds;
+
+            var onoff = script.getField('ONOFF');
+            var value = onoff == 'on' ? 1 : 0;
+
+            if (!Entry.hw.sendQueue['SET']) {
+                Entry.hw.sendQueue['SET'] = {};
+            }
+            Entry.hw.sendQueue['SET'][device] = {
+                port: Entry.trueRobot.PORT_MAP.led_line,
+                dataA: value,
+                dataB: 0x07,
+                dataC: 0x07
+            };
+            return script.callReturn();
+        },
+        "syntax": { "js": [], "py": [] }
+    },
+    "truetrue_set_linetracer": {
+        "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    ["켜기", "on"],
+                    ["끄기", "off"]
+                ],
+                "value": "켜기",
+                "fontSize": 11
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                "on", null
+            ],
+            "type": "truetrue_set_linetracer"
+        },
+        "paramsKeyMap": {
+            "ONOFF": 0
+        },
+        "class": "trueRobot_control",
+        "isNotFor": ["trueRobot"],
+        "func": function (sprite, script) {
+            var device = Entry.trueRobot.PORT_MAP.linetracer;
+
+            var onoff = script.getField('ONOFF');
+            var value = onoff == 'on' ? 1 : 0;
+
+            if (!Entry.hw.sendQueue['SET']) {
+                Entry.hw.sendQueue['SET'] = {};
+            }
+            Entry.hw.sendQueue['SET'][device] = {
+                port: Entry.trueRobot.PORT_MAP.led_line,
+                dataA: value,
+                dataB: 0x07,
+                dataC: 0x07
+            };
+            return script.callReturn();
+        },
+        "syntax": { "js": [], "py": [] }
+    },
+//endregion TrueTrueRobot 뚜루뚜루로봇
+//region JDKit
+    "jdkit_joystick": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.jdkit_joystick_lefttopbottom, 1],
+                    [Lang.Blocks.jdkit_joystick_leftleftright, 2],
+                    [Lang.Blocks.jdkit_joystick_righttopbottom, 3],
+                    [Lang.Blocks.jdkit_joystick_rightleftright, 4]
+                ],
+                "value": 1,
+                "fontSize": 11
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null ],
+            "type": "jdkit_joystick"
+        },
+        "paramsKeyMap": {
+            "JOYSTICK": 0
+        },
+        "class": "JDKit_Sensor",
+        "isNotFor": [ "JDKit" ],
+        "func": function (sprite, script) {
+            var sensorData = Entry.hw.portData.CMD;
+            var joystick = script.getField("JOYSTICK");
+
+            if(joystick == 1)
+                return sensorData[Entry.JDKit.Sensor.JOYSTICK_LTB];
+            else if(joystick == 2)
+                return 100-sensorData[Entry.JDKit.Sensor.JOYSTICK_LLR];
+            else if(joystick == 3)
+                return sensorData[Entry.JDKit.Sensor.JOYSTICK_RTB]-100;
+            else
+                return 100-sensorData[Entry.JDKit.Sensor.JOYSTICK_RLR];
+        },
+        "syntax": {"js": [], "py": []}
+    },
+    "jdkit_button": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    ["1", 0],
+                    ["2", 1],
+                    ["3", 2],
+                    ["4", 3],
+                    ["5", 4],
+                    ["6", 5],
+                    ["7", 6],
+                    ["8", 7],
+                ],
+                "value": 0,
+                "fontSize": 11
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null ],
+            "type": "jdkit_button"
+        },
+        "paramsKeyMap": {
+            "BUTTON": 0
+        },
+        "class": "JDKit_Sensor",
+        "isNotFor": [ "JDKit" ],
+        "func": function (sprite, script) {
+            var sensorData = Entry.hw.portData.CMD;
+            var button = script.getField("BUTTON");
+            return (sensorData[Entry.JDKit.Sensor.BUTTON]&(0x01<<button))? 0 : 1;
+        },
+        "syntax": {"js": [], "py": []}
+    },
+    "jdkit_gyro": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.jdkit_gyro_frontrear, 1],
+                    [Lang.Blocks.jdkit_gyro_leftright, 2],
+                ],
+                "value": 1,
+                "fontSize": 11
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null ],
+            "type": "jdkit_gyro"
+        },
+        "paramsKeyMap": {
+            "GYRO": 0
+        },
+        "class": "JDKit_Sensor",
+        "isNotFor": [ "JDKit" ],
+        "func": function (sprite, script) {
+            var sensorData = Entry.hw.portData.CMD;
+            var gyro = script.getField("GYRO");
+            var gyro_x = sensorData[Entry.JDKit.Sensor.GYRO_X];
+            var gyro_y = sensorData[Entry.JDKit.Sensor.GYRO_Y];
+            if(gyro==1)
+                    return (gyro_y>127)? (gyro_y^0xFF)+1 : -1*gyro_y;
+            else
+                    return (gyro_x>127)? (gyro_x^0xFF)+1 : -1*gyro_x;
+        },
+        "syntax": {"js": [], "py": []}
+    },
+    "jdkit_ultrasonic": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "params": [
+        ],
+        "events": {},
+        "def": {
+            "params": [ null ],
+            "type": "jdkit_ultrasonic"
+        },
+        "class": "JDKit_Sensor",
+        "isNotFor": [ "JDKit" ],
+        "func": function (sprite, script) {
+            var sensorData = Entry.hw.portData.CMD;
+            return sensorData[Entry.JDKit.Sensor.ULTRASONIC];
+        },
+        "syntax": {"js": [], "py": []}
+    },
+    "jdkit_connect": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "params": [
+        ],
+        "events": {},
+        "def": {
+            "params": [ null ],
+            "type": "jdkit_connect"
+        },
+        "class": "JDKit_Sensor",
+        "isNotFor": [ "JDKit" ],
+        "func": function (sprite, script) {
+            var sensorData = Entry.hw.portData.CMD;
+            return sensorData[Entry.JDKit.Sensor.DRONECONNECT];
+        },
+        "syntax": {"js": [], "py": []}
+    },
+    "jdkit_ready": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "params": [
+        ],
+        "events": {},
+        "def": {
+            "params": [ null ],
+            "type": "jdkit_ready"
+        },
+        "class": "JDKit_Sensor",
+        "isNotFor": [ "JDKit" ],
+        "func": function (sprite, script) {
+            var sensorData = Entry.hw.portData.CMD;
+            return sensorData[Entry.JDKit.Sensor.DRONEREADY];
+        },
+        "syntax": {"js": [], "py": []}
+    },
+
+    "jdkit_led": {
+    "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.jdkit_led_color_green, 1],
+                    [Lang.Blocks.jdkit_led_color_orange,2]
+                ],
+                "value": 1,
+                "fontSize": 11
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.jdkit_led_turnon,3],
+                    [Lang.Blocks.jdkit_led_turnoff,4]
+                ],
+                "value": 3,
+                "fontSize": 11
+            },
+            {
+                type: "Indicator",
+                img: "block_icon/hardware_03.png",
+                size: 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null ],
+            "type": "jdkit_led"
+        },
+        "paramsKeyMap": {
+            "COLOR": 0,
+            "ACTION": 1
+        },
+        "class": "JDKit_Command",
+        "isNotFor": [ "JDKit" ],
+
+        "func": function (sprite, script) {
+                if(typeof Entry.hw.sendQueue.CMD == "undefined")
+                        Entry.hw.sendQueue.CMD = [0xF0, 0, 0, 0, 100, 100, 100, 0, 0, 0, 0, 0, 0];
+                var cmd = Entry.hw.sendQueue.CMD;
+            var color = script.getField("COLOR", script);
+            var act = script.getField("ACTION", script);
+            if(color==1)
+                    cmd[Entry.JDKit.Cmd.LED] = (act==3)? cmd[1]|0x01 : cmd[1]&0x02;
+            else
+                    cmd[Entry.JDKit.Cmd.LED] = (act==3)? cmd[1]|0x02 : cmd[1]&0x01;
+            return script.callReturn();
+        },
+        "syntax": {"js": [], "py": []}
+    },
+    "jdkit_tune": {
+    "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.jdkit_tune_do, 1],
+                    [Lang.Blocks.jdkit_tune_re, 2],
+                    [Lang.Blocks.jdkit_tune_mi, 3],
+                    [Lang.Blocks.jdkit_tune_fa, 4],
+                    [Lang.Blocks.jdkit_tune_sol, 5],
+                    [Lang.Blocks.jdkit_tune_la, 6],
+                    [Lang.Blocks.jdkit_tune_si, 7]
+                ],
+                "value": 1,
+                "fontSize": 11
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    ["0.2", 2],
+                    ["0.4", 4],
+                    ["0.6", 6],
+                    ["0.8", 8],
+                    ["1", 10],
+                    ["2", 20],
+                    ["3", 30],
+                    ["4", 40],
+                    ["5", 50]
+                ],
+                "value": 10,
+                "fontSize": 11
+            },
+            {
+                type: "Indicator",
+                img: "block_icon/hardware_03.png",
+                size: 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null ],
+            "type": "jdkit_tune"
+        },
+        "paramsKeyMap": {
+            "NOTE": 0,
+            "DURATION": 1
+        },
+        "class": "JDKit_Command",
+        "isNotFor": [ "JDKit" ],
+
+        "func": function (sprite, script) {
+                if(typeof Entry.hw.sendQueue.CMD == "undefined")
+                        Entry.hw.sendQueue.CMD = [0xF0, 0, 0, 0, 100, 100, 100, 0, 0, 0, 0, 0, 0];
+                var cmd = Entry.hw.sendQueue.CMD;
+
+            var note = script.getField("NOTE", script);
+            var duration = script.getField("DURATION", script);
+            var noteCount = Entry.hw.sendQueue.noteCount;
+            Entry.hw.sendQueue.noteCount = (typeof noteCount == "undefined")? 1 : noteCount+1;
+            cmd[Entry.JDKit.Cmd.TUNE] = note;
+            cmd[Entry.JDKit.Cmd.TUNEDUR] = duration;
+            return script.callReturn();
+        },
+        "syntax": {"js": [], "py": []}
+    },
+
+    "jdkit_motor": {
+    "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.jdkit_motor_lefttop, 1],
+                    [Lang.Blocks.jdkit_motor_leftbottom, 0],
+                    [Lang.Blocks.jdkit_motor_righttop, 2],
+                    [Lang.Blocks.jdkit_motor_rightbottom, 3]
+                ],
+                "value": 1,
+                "fontSize": 11
+            },
+            {
+                    "type": "Block",
+                "accept": "string",
+                "value": "15",
+                "fontSize": 11
+            },
+            {
+                type: "Indicator",
+                img: "block_icon/hardware_03.png",
+                size: 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null ],
+            "type": "jdkit_motor"
+        },
+        "paramsKeyMap": {
+            "MOTOR": 0,
+            "POWER": 1
+        },
+        "class": "JDKit_Command",
+        "isNotFor": [ "JDKit" ],
+
+        "func": function (sprite, script) {
+                if(typeof Entry.hw.sendQueue.CMD == "undefined")
+                        Entry.hw.sendQueue.CMD = [0xF0, 0, 0, 0, 100, 100, 100, 0, 0, 0, 0, 0, 0];
+                var cmd = Entry.hw.sendQueue.CMD;
+            var motor = script.getField("MOTOR", script);
+            var power = script.getNumberValue("POWER", script);
+
+            cmd[Entry.JDKit.Cmd.MOTOR0 + motor] = (power>100)? 100 : (power<0)? 0 : power;
+            return script.callReturn();
+        },
+        "syntax": {"js": [], "py": []}
+    },
+
+    "jdkit_throttle": {
+    "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                    "type": "Block",
+                "accept": "string",
+                "value": "0",
+                "fontSize": 11
+            },
+            {
+                type: "Indicator",
+                img: "block_icon/hardware_03.png",
+                size: 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null ],
+            "type": "jdkit_throttle"
+        },
+        "paramsKeyMap": {
+            "THROTTLE": 0
+        },
+        "class": "JDKit_Command",
+        "isNotFor": [ "JDKit" ],
+
+        "func": function (sprite, script) {
+                if(typeof Entry.hw.sendQueue.CMD == "undefined")
+                        Entry.hw.sendQueue.CMD = [0xF0, 0, 0, 0, 100, 100, 100, 0, 0, 0, 0, 0, 0];
+                var cmd = Entry.hw.sendQueue.CMD;
+            var throttle = script.getNumberValue("THROTTLE", script);
+
+            cmd[Entry.JDKit.Cmd.THROTTLE] = (throttle>200)? 200 : (throttle<0)? 0 : throttle;
+            cmd[Entry.JDKit.Cmd.OPTION] = 0x01;
+            return script.callReturn();
+        },
+        "syntax": {"js": [], "py": []}
+    },
+    "jdkit_altitude": {
+    "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                    "type": "Block",
+                "accept": "string",
+                "value": "0",
+                "fontSize": 11
+            },
+            {
+                type: "Indicator",
+                img: "block_icon/hardware_03.png",
+                size: 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null ],
+            "type": "jdkit_altitude"
+        },
+        "paramsKeyMap": {
+            "ALTITUDE": 0
+        },
+        "class": "JDKit_Command",
+        "isNotFor": [ "JDKit" ],
+
+        "func": function (sprite, script) {
+                if(typeof Entry.hw.sendQueue.CMD == "undefined")
+                        Entry.hw.sendQueue.CMD = [0xF0, 0, 0, 0, 100, 100, 100, 0, 0, 0, 0, 0, 0];
+                var cmd = Entry.hw.sendQueue.CMD;
+            var alt = script.getNumberValue("ALTITUDE", script);
+
+            cmd[Entry.JDKit.Cmd.THROTTLE] = (alt>200)? 200 : (alt<0)? 0 : alt;
+            cmd[Entry.JDKit.Cmd.OPTION] = 0x05;
+            return script.callReturn();
+        },
+        "syntax": {"js": [], "py": []}
+    },
+    "jdkit_rollpitch": {
+    "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                    "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.jdkit_gyro_frontrear, 1],
+                    [Lang.Blocks.jdkit_gyro_leftright, 2]
+                ],
+                "value": 1,
+                "fontSize": 11
+            },
+            {
+                    "type": "Block",
+                "accept": "string",
+                "value": "0",
+                "fontSize": 11
+            },
+            {
+                type: "Indicator",
+                img: "block_icon/hardware_03.png",
+                size: 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null ],
+            "type": "jdkit_rollpitch"
+        },
+        "paramsKeyMap": {
+            "DIR": 0,
+            "POWER": 1
+        },
+        "class": "JDKit_Command",
+        "isNotFor": [ "JDKit" ],
+
+        "func": function (sprite, script) {
+                if(typeof Entry.hw.sendQueue.CMD == "undefined")
+                        Entry.hw.sendQueue.CMD = [0xF0, 0, 0, 0, 100, 100, 100, 0, 0, 0, 0, 0, 0];
+                var cmd = Entry.hw.sendQueue.CMD;
+            var dir = script.getField("DIR", script);
+            var power = script.getNumberValue("POWER", script);
+            if(dir==1)
+                    cmd[Entry.JDKit.Cmd.PITCH] = (power>100)? 200 : (power<-100)? 0 : power+100;
+            else
+                    cmd[Entry.JDKit.Cmd.ROLL] = (power>100)? 200 : (power<-100)? 0 : power+100;
+            return script.callReturn();
+        },
+        "syntax": {"js": [], "py": []}
+    },
+    "jdkit_yaw": {
+    "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                    "type": "Block",
+                "accept": "string",
+                "value": "0",
+                "fontSize": 11
+            },
+            {
+                type: "Indicator",
+                img: "block_icon/hardware_03.png",
+                size: 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null ],
+            "type": "jdkit_yaw"
+        },
+        "paramsKeyMap": {
+            "YAW": 0,
+        },
+        "class": "JDKit_Command",
+        "isNotFor": [ "JDKit" ],
+
+        "func": function (sprite, script) {
+                if(typeof Entry.hw.sendQueue.CMD == "undefined")
+                        Entry.hw.sendQueue.CMD = [0xF0, 0, 0, 0, 100, 100, 100, 0, 0, 0, 0, 0, 0];
+                var cmd = Entry.hw.sendQueue.CMD;
+            var yaw = script.getNumberValue("YAW", script);
+
+            cmd[Entry.JDKit.Cmd.YAW] = (yaw>25)? 101 : (yaw<-25)? 99 : 100;
+            return script.callReturn();
+        },
+        "syntax": {"js": [], "py": []}
+    },
+    "jdkit_emergency": {
+    "color": "#00979D",
+        "skeleton": "basic",
+        "statements": [],
+        "params": [
+            {
+                type: "Indicator",
+                img: "block_icon/hardware_03.png",
+                size: 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [ null ],
+            "type": "jdkit_emergency"
+        },
+        "paramsKeyMap": {
+        },
+        "class": "JDKit_Command",
+        "isNotFor": [ "JDKit" ],
+
+        "func": function (sprite, script) {
+                if(typeof Entry.hw.sendQueue.CMD == "undefined")
+                        Entry.hw.sendQueue.CMD = [0xF0, 0, 0, 0, 100, 100, 100, 0, 0, 0, 0, 0, 0];
+                var cmd = Entry.hw.sendQueue.CMD;
+
+            cmd[Entry.JDKit.Cmd.OPTION] = 0x81;
+            Entry.hw.update();
+            return script.callReturn();
+        },
+        "syntax": {"js": [], "py": []}
+    },
+//endregion JDKit
 };
 
 (function() {
