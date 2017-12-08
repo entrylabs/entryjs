@@ -31669,6 +31669,7 @@ Entry.block = {
     "params": [
         {
             "type": "Block",
+            "defaultType": "angle",
             "accept": "string"
         },
         {
@@ -31765,6 +31766,7 @@ Entry.block = {
     "params": [
         {
             "type": "Block",
+            "defaultType": "angle",
             "accept": "string"
         },
         {
@@ -31861,6 +31863,7 @@ Entry.block = {
     "params": [
         {
             "type": "Block",
+            "defaultType": "angle",
             "accept": "string"
         },
         {
@@ -31931,6 +31934,7 @@ Entry.block = {
         },
         {
             "type": "Block",
+            "defaultType": "angle",
             "accept": "string"
         },
         {
@@ -32012,6 +32016,7 @@ Entry.block = {
         },
         {
             "type": "Block",
+            "defaultType": "angle",
             "accept": "string"
         },
         {
