@@ -154,6 +154,8 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
         if (this._originBlock) {
             blockType = this._originBlock.type;
             delete this._originBlock;
+        } else if (this._content.defaultType) {
+            blockType = this._content.defaultType;
         } else {
             switch (this.acceptType.toLowerCase()) {
                 case "boolean":
