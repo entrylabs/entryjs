@@ -13,7 +13,6 @@ Entry.Roborobo_Roduino = {
     },
     setZero: function() {        
         Entry.hw.sendQueue.colorPin = 0;
-        Entry.hw.sendQueue.analogEnable = [ 0, 0, 0, 0, 0, 0 ];
         for (var port = 0; port < 14; port++) {
             Entry.hw.sendQueue[port] = 0;
         }
