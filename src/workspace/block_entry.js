@@ -31815,6 +31815,7 @@ Entry.block = {
     "params": [
         {
             "type": "Block",
+            "defaultType": "angle",
             "accept": "string"
         },
         {
