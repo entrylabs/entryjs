@@ -122,680 +122,10 @@ Entry.EntryObject = function(model) {
      * @return {!Element}
      */
     p.generateView = function() {
-        if (Entry.type == "workspace") {
-            var that = this;
-            var objectView = Entry.createElement('li', this.id);
-            var fragment = document.createDocumentFragment('div');
-            fragment.appendChild(objectView);
-            objectView.addClass('entryContainerListElementWorkspace');
-            objectView.object = this;
-            // generate context menu
-            Entry.Utils.disableContextmenu(objectView);
-            var object = this;
-            var longPressTimer = null;
+        var type = Entry.type;
 
-            $(objectView).bind('mousedown touchstart', function(e){
-                if (Entry.container.getObject(this.id)) {
-                    Entry.do('containerSelectObject', this.id);
-                }
-                var doc = $(document);
-                var eventType = e.type;
-                var handled = false;
-
-                if (Entry.Utils.isRightButton(e)) {
-                    e.stopPropagation();
-                    Entry.documentMousedown.notify(e);
-                    handled = true;
-                    object._rightClick(e);
-                    return;
-                }
-
-                var mouseDownCoordinate = { x: e.clientX, y: e.clientY };
-
-                if (eventType === 'touchstart' && !handled) {
-                    e.stopPropagation();
-                    Entry.documentMousedown.notify(e);
-
-                    longPressTimer = setTimeout(function() {
-                        if (longPressTimer) {
-                            longPressTimer = null;
-                            object._rightClick(e);
-                        }
-                    }, 1000);
-
-                    doc.bind('mousemove.object touchmove.object', onMouseMove);
-                    doc.bind('mouseup.object touchend.object', onMouseUp);
-                }
-
-
-                function onMouseMove(e) {
-                    e.stopPropagation();
-                    if (!mouseDownCoordinate) return;
-                    var diff = Math.sqrt(Math.pow(e.pageX - mouseDownCoordinate.x, 2) +
-                                    Math.pow(e.pageY - mouseDownCoordinate.y, 2));
-                    if (diff > 5 && longPressTimer) {
-                        clearTimeout(longPressTimer);
-                        longPressTimer = null;
-                    }
-                }
-
-                function onMouseUp(e) {
-                    e.stopPropagation();
-                    doc.unbind('.object');
-                    if (longPressTimer) {
-                        clearTimeout(longPressTimer);
-                        longPressTimer = null;
-                    }
-                }
-            });
-
-            /** @type {!Element} */
-            this.view_ = objectView;
-
-            var objectInfoView = Entry.createElement('ul');
-            objectInfoView.addClass('objectInfoView');
-            if (!Entry.objectEditable) { objectInfoView.addClass('entryHide'); }
-
-            var objectInfo_visible = Entry.createElement('li');
-            objectInfo_visible.addClass('objectInfo_visible');
-            if (!this.entity.getVisible())
-                objectInfo_visible.addClass('objectInfo_unvisible');
-            objectInfo_visible.bindOnClick(function (e) {
-                if (Entry.engine.isState('run')) return;
-
-                var entity = that.entity;
-                var visible = entity.setVisible(!entity.getVisible());
-                if (visible) this.removeClass('objectInfo_unvisible');
-                else this.addClass('objectInfo_unvisible');
-            });
-
-            var objectInfo_lock = Entry.createElement('li');
-            objectInfo_lock.addClass('objectInfo_unlock');
-            if (this.getLock()) objectInfo_lock.addClass('objectInfo_lock');
-
-            objectInfo_lock.bindOnClick(function (e) {
-                if (Entry.engine.isState('run')) return;
-
-                var object = that;
-                var isLocked = object.setLock(!object.getLock());
-
-                if (isLocked) this.addClass('objectInfo_lock');
-                else this.removeClass('objectInfo_lock');
-
-                object.updateInputViews(object.getLock());
-            });
-            objectInfoView.appendChild(objectInfo_visible);
-            objectInfoView.appendChild(objectInfo_lock);
-            this.view_.appendChild(objectInfoView);
-
-            var thumbnailView = Entry.createElement('div');
-            thumbnailView.addClass('entryObjectThumbnailWorkspace');
-            this.view_.appendChild(thumbnailView);
-            this.thumbnailView_ = thumbnailView;
-
-            var wrapperView = Entry.createElement('div');
-            wrapperView.addClass('entryObjectWrapperWorkspace');
-            this.view_.appendChild(wrapperView);
-
-            var nameView = Entry.createElement('input');
-            nameView.bindOnClick(function (e) {
-                e.preventDefault();
-                if (!this.readOnly) {
-                    this.focus();
-                    this.select();
-                }
-            });
-            nameView.addClass('entryObjectNameWorkspace');
-
-            wrapperView.appendChild(nameView);
-            this.nameView_ = nameView;
-            this.nameView_.entryObject = this;
-            nameView.setAttribute("readonly", true);
-
-            var self = this;
-            this.nameView_.onblur = function(e) {
-                this.entryObject.name = this.value;
-                Entry.playground.reloadPlayground();
-            };
-
-            this.nameView_.onkeypress = function(e) {
-                if (e.keyCode == 13) { self.editObjectValues(false); }
-            };
-
-            this.nameView_.value = this.name;
-
-            var editView = Entry.createElement('div');
-            editView.addClass('entryObjectEditWorkspace');
-            editView.object = this;
-            this.editView_ = editView;
-            this.view_.appendChild(editView);
-
-            $(editView).mousedown(function(e) {
-                e.stopPropagation();
-                Entry.documentMousedown.notify(e);
-                Entry.do('objectEditButtonClick', object.id);
-            });
-
-            $(editView).mouseup(function(e) {
-                this.isEditing && this.nameView_.select();
-            }.bind(this));
-
-            editView.blur = function(e){ object.editObjectComplete(); };
-
-            if (Entry.objectEditable && Entry.objectDeletable) {
-                var deleteView = Entry.createElement('div');
-                deleteView.addClass('entryObjectDeleteWorkspace');
-                this.deleteView_ = deleteView;
-                this.view_.appendChild(deleteView);
-                deleteView.bindOnClick(function (e) {
-                    if (Entry.engine.isState('run')) return;
-                    Entry.container.removeObject(that);
-                });
-            }
-
-            var informationView = Entry.createElement('div');
-            informationView.addClass('entryObjectInformationWorkspace');
-            informationView.object = this;
-            this.isInformationToggle = false;
-            wrapperView.appendChild(informationView);
-            this.informationView_ = informationView;
-
-            var rotationWrapperView = Entry.createElement('div');
-            rotationWrapperView.addClass('entryObjectRotationWrapperWorkspace');
-            rotationWrapperView.object = this;
-            this.view_.appendChild(rotationWrapperView);
-
-            var coordinateView = Entry.createElement('span');
-            coordinateView.addClass('entryObjectCoordinateWorkspace');
-            rotationWrapperView.appendChild(coordinateView);
-            var xCoordi = Entry.createElement('span');
-            xCoordi.addClass('entryObjectCoordinateSpanWorkspace');
-            xCoordi.innerHTML = 'X:';
-            var xInput = Entry.createElement('input');
-            xInput.addClass('entryObjectCoordinateInputWorkspace');
-            xInput.setAttribute("readonly", true);
-            xInput.bindOnClick(function (e) {
-                e.stopPropagation();
-                this.select();
-            });
-
-            var yCoordi = Entry.createElement('span');
-            yCoordi.addClass('entryObjectCoordinateSpanWorkspace');
-            yCoordi.innerHTML = 'Y:';
-            var yInput = Entry.createElement('input');
-            yInput.addClass('entryObjectCoordinateInputWorkspace entryObjectCoordinateInputWorkspace_right');
-            yInput.bindOnClick(function (e) {
-                e.stopPropagation();
-                this.select();
-            });
-            yInput.setAttribute("readonly", true);
-            var sizeSpan = Entry.createElement('span');
-            sizeSpan.addClass('entryObjectCoordinateSizeWorkspace');
-            sizeSpan.innerHTML = Lang.Workspace.Size + ' : ';
-            var sizeInput = Entry.createElement('input');
-            sizeInput.addClass(
-                'entryObjectCoordinateInputWorkspace',
-                'entryObjectCoordinateInputWorkspace_size'
-            );
-            sizeInput.bindOnClick(function (e) {
-                e.stopPropagation();
-                this.select();
-            });
-            sizeInput.setAttribute("readonly", true);
-            coordinateView.appendChild(xCoordi);
-            coordinateView.appendChild(xInput);
-            coordinateView.appendChild(yCoordi);
-            coordinateView.appendChild(yInput);
-            coordinateView.appendChild(sizeSpan);
-            coordinateView.appendChild(sizeInput);
-            coordinateView.xInput_ = xInput;
-            coordinateView.yInput_ = yInput;
-            coordinateView.sizeInput_ = sizeInput;
-            this.coordinateView_ = coordinateView;
-
-            xInput.onkeypress = function (e) {
-                if (e.keyCode == 13) { that.editObjectValues(false); }
-            };
-
-            xInput.onblur = function (bool) {
-                if (Entry.Utils.isNumber(xInput.value)) {
-                    that.entity.setX(Number(xInput.value));
-                }
-                that.updateCoordinateView();
-                Entry.stage.updateObject();
-
-            };
-
-            yInput.onkeypress = function (e) {
-                if (e.keyCode == 13) { that.editObjectValues(false); }
-            };
-
-            yInput.onblur =  function(bool){
-                if (Entry.Utils.isNumber(yInput.value)) {
-                    that.entity.setY(Number(yInput.value));
-                }
-                that.updateCoordinateView();
-                Entry.stage.updateObject();
-            };
-
-            sizeInput.onkeypress = function (e) {
-                if (e.keyCode == 13) { that.editObjectValues(false); }
-            };
-
-            sizeInput.onblur = function (bool) {
-                if (Entry.Utils.isNumber(sizeInput.value)) {
-                    that.entity.setSize(Number(sizeInput.value));
-                }
-                that.updateCoordinateView();
-                Entry.stage.updateObject();
-            };
-
-            var rotateLabelWrapperView = Entry.createElement('div');
-            rotateLabelWrapperView.addClass('entryObjectRotateLabelWrapperWorkspace');
-            this.view_.appendChild(rotateLabelWrapperView);
-            this.rotateLabelWrapperView_ = rotateLabelWrapperView;
-
-            var rotateSpan = Entry.createElement('span');
-            rotateSpan.addClass('entryObjectRotateSpanWorkspace');
-            rotateSpan.innerHTML = Lang.Workspace.rotation + ' : ';
-            var rotateInput = Entry.createElement('input');
-            rotateInput.addClass('entryObjectRotateInputWorkspace');
-            rotateInput.setAttribute("readonly", true);
-            rotateInput.bindOnClick(function (e) {
-                e.stopPropagation();
-                this.select();
-            });
-            this.rotateSpan_ = rotateSpan;
-            this.rotateInput_ = rotateInput;
-
-            var directionSpan = Entry.createElement('span');
-            directionSpan.addClass('entryObjectDirectionSpanWorkspace');
-            directionSpan.innerHTML = Lang.Workspace.direction + ' : ';
-            var directionInput = Entry.createElement('input');
-            directionInput.addClass('entryObjectDirectionInputWorkspace');
-            directionInput.setAttribute("readonly", true);
-            directionInput.bindOnClick(function (e) {
-                e.stopPropagation();
-                this.select();
-            });
-            this.directionInput_ = directionInput;
-
-            rotateLabelWrapperView.appendChild(rotateSpan);
-            rotateLabelWrapperView.appendChild(rotateInput);
-            rotateLabelWrapperView.appendChild(directionSpan);
-            rotateLabelWrapperView.appendChild(directionInput);
-            rotateLabelWrapperView.rotateInput_ = rotateInput;
-            rotateLabelWrapperView.directionInput_ = directionInput;
-            rotateInput.onkeypress = function (e) {
-                if (e.keyCode == 13) { that.editObjectValues(false); }
-            };
-            rotateInput.onblur = function (bool) {
-                var value = rotateInput.value;
-                if (value.indexOf('˚') != -1)
-                    value = value.substring(0, value.indexOf('˚'));
-                if (Entry.Utils.isNumber(value)) {
-                    that.entity.setRotation(Number(value));
-                }
-                that.updateRotationView();
-                Entry.stage.updateObject();
-            };
-
-            directionInput.onkeypress = function (e) {
-                if (e.keyCode == 13) { that.editObjectValues(false); }
-            };
-
-            directionInput.onblur = function (bool) {
-                var value = directionInput.value;
-                if (value.indexOf('˚') != -1)
-                    value = value.substring(0,value.indexOf('˚'));
-                if (Entry.Utils.isNumber(value))
-                    that.entity.setDirection(Number(value));
-                that.updateRotationView();
-                Entry.stage.updateObject();
-            };
-
-            var rotationMethodWrapper = Entry.createElement('div');
-            rotationMethodWrapper.addClass('rotationMethodWrapper');
-            rotationWrapperView.appendChild(rotationMethodWrapper);
-            this.rotationMethodWrapper_ = rotationMethodWrapper;
-
-            var rotateMethodLabelView = Entry.createElement('span');
-            rotateMethodLabelView.addClass('entryObjectRotateMethodLabelWorkspace');
-            rotationMethodWrapper.appendChild(rotateMethodLabelView);
-            rotateMethodLabelView.innerHTML = Lang.Workspace.rotate_method + ' : ';
-
-            var rotateModeAView = Entry.createElement('div');
-            rotateModeAView.addClass('entryObjectRotateModeWorkspace entryObjectRotateModeAWorkspace');
-            this.rotateModeAView_ = rotateModeAView;
-            rotationMethodWrapper.appendChild(rotateModeAView);
-            rotateModeAView.bindOnClick(function(e){
-                if (Entry.engine.isState('run') || that.getLock()) { return; }
-
-                that.initRotateValue('free');
-                that.setRotateMethod('free');
-            });
-
-            var rotateModeBView = Entry.createElement('div');
-            rotateModeBView.addClass('entryObjectRotateModeWorkspace entryObjectRotateModeBWorkspace');
-            this.rotateModeBView_ = rotateModeBView;
-            rotationMethodWrapper.appendChild(rotateModeBView);
-            rotateModeBView.bindOnClick(function(e){
-                if (Entry.engine.isState('run') || that.getLock()) { return; }
-
-                that.initRotateValue('vertical');
-                that.setRotateMethod('vertical');
-            });
-
-            var rotateModeCView = Entry.createElement('div');
-            rotateModeCView.addClass('entryObjectRotateModeWorkspace entryObjectRotateModeCWorkspace');
-            this.rotateModeCView_ = rotateModeCView;
-            rotationMethodWrapper.appendChild(rotateModeCView);
-            rotateModeCView.bindOnClick(function(e){
-                if (Entry.engine.isState('run') || that.getLock()) return;
-
-                that.initRotateValue('none');
-                that.setRotateMethod('none');
-            });
-
-            this.updateThumbnailView();
-            this.updateCoordinateView();
-            this.updateRotateMethodView();
-            this.updateInputViews();
-
-            this.updateCoordinateView(true);
-            this.updateRotationView(true);
-
-            return this.view_;
-        } else if (Entry.type == "phone") {
-            var objectView = Entry.createElement('li', this.id);
-            objectView.addClass('entryContainerListElementWorkspace');
-            objectView.object = this;
-            objectView.bindOnClick(function(e) {
-                if (Entry.container.getObject(this.id))
-                    Entry.container.selectObject(this.id);
-            });
-
-            // generate context menu
-            if ($) {
-                var object = this;
-                context.attach('#' + this.id, [
-                    {
-                        text: Lang.Workspace.context_rename,
-                        href: '/',
-                        action: function(e){
-                            e.preventDefault();
-                        }
-                    },
-                    {
-                        text: Lang.Workspace.context_duplicate,
-                        href: '/',
-                        action: function(e){
-                            e.preventDefault();
-                            Entry.container.addCloneObject(object);
-                        }
-                    },
-                    {
-                        text: Lang.Workspace.context_remove,
-                        href: '/',
-                        action: function(e){
-                            e.preventDefault();
-                            Entry.container.removeObject(object);
-                        }
-                    }
-                ]);
-            }
-            /** @type {!Element} */
-            this.view_ = objectView;
-
-
-            var objectInfoView = Entry.createElement('ul');
-            objectInfoView.addClass('objectInfoView');
-            var objectInfo_visible = Entry.createElement('li');
-            objectInfo_visible.addClass('objectInfo_visible');
-            var objectInfo_lock = Entry.createElement('li');
-            objectInfo_lock.addClass('objectInfo_lock');
-            objectInfoView.appendChild(objectInfo_visible);
-            objectInfoView.appendChild(objectInfo_lock);
-            this.view_.appendChild(objectInfoView);
-
-
-            var thumbnailView = Entry.createElement('div');
-            thumbnailView.addClass('entryObjectThumbnailWorkspace');
-            this.view_.appendChild(thumbnailView);
-            this.thumbnailView_ = thumbnailView;
-
-            var wrapperView = Entry.createElement('div');
-            wrapperView.addClass('entryObjectWrapperWorkspace');
-            this.view_.appendChild(wrapperView);
-
-            var nameView = Entry.createElement('input');
-            nameView.addClass('entryObjectNameWorkspace');
-            wrapperView.appendChild(nameView);
-            this.nameView_ = nameView;
-            this.nameView_.entryObject = this;
-            this.nameView_.onblur = function() {
-                this.entryObject.name = this.value;
-                Entry.playground.reloadPlayground();
-            };
-            this.nameView_.onkeypress = function(e) {
-                if (e.keyCode == 13) thisPointer.editObjectValues(false);
-            };
-            this.nameView_.value = this.name;
-
-            if (Entry.objectEditable && Entry.objectDeletable) {
-                var deleteView = Entry.createElement('div');
-                deleteView.addClass('entryObjectDeletePhone');
-                deleteView.object = this;
-                this.deleteView_ = deleteView;
-                this.view_.appendChild(deleteView);
-                deleteView.bindOnClick(function (e) {
-                    if (Entry.engine.isState('run')) { return; }
-
-                    Entry.container.removeObject(this.object);
-                });
-            }
-
-            var editBtn = Entry.createElement('button');
-            editBtn.addClass('entryObjectEditPhone');
-            editBtn.object = this;
-            editBtn.bindOnClick(function(e) {
-                var object = Entry.container.getObject(this.id);
-                if (object) {
-                    Entry.container.selectObject(object.id);
-                    Entry.playground.injectObject(object);
-                }
-            });
-            this.view_.appendChild(editBtn);
-
-
-            var informationView = Entry.createElement('div');
-            informationView.addClass('entryObjectInformationWorkspace');
-            informationView.object = this;
-            this.isInformationToggle = false;
-            wrapperView.appendChild(informationView);
-            this.informationView_ = informationView;
-
-
-
-
-            var rotateLabelWrapperView = Entry.createElement('div');
-            rotateLabelWrapperView.addClass('entryObjectRotateLabelWrapperWorkspace');
-            this.view_.appendChild(rotateLabelWrapperView);
-            this.rotateLabelWrapperView_ = rotateLabelWrapperView;
-
-            var rotateSpan = Entry.createElement('span');
-            rotateSpan.addClass('entryObjectRotateSpanWorkspace');
-            rotateSpan.innerHTML = Lang.Workspace.rotation + ' : ';
-            var rotateInput = Entry.createElement('input');
-            rotateInput.addClass('entryObjectRotateInputWorkspace');
-            this.rotateSpan_ = rotateSpan;
-            this.rotateInput_ = rotateInput;
-
-            var directionSpan = Entry.createElement('span');
-            directionSpan.addClass('entryObjectDirectionSpanWorkspace');
-            directionSpan.innerHTML = Lang.Workspace.direction + ' : ';
-            var directionInput = Entry.createElement('input');
-            directionInput.addClass('entryObjectDirectionInputWorkspace');
-            this.directionInput_ = directionInput;
-
-            rotateLabelWrapperView.appendChild(rotateSpan);
-            rotateLabelWrapperView.appendChild(rotateInput);
-            rotateLabelWrapperView.appendChild(directionSpan);
-            rotateLabelWrapperView.appendChild(directionInput);
-            rotateLabelWrapperView.rotateInput_ = rotateInput;
-            rotateLabelWrapperView.directionInput_ = directionInput;
-            var thisPointer = this;
-            rotateInput.onkeypress = function (e) {
-                if (e.keyCode == 13) {
-                    var value = rotateInput.value;
-                    if (value.indexOf('˚') != -1)
-                        value = value.substring(0, value.indexOf('˚'));
-                    if (Entry.Utils.isNumber(value)) {
-                        thisPointer.entity.setRotation(Number(value));
-                    }
-                    thisPointer.updateRotationView();
-                    rotateInput.blur();
-                }
-            };
-            rotateInput.onblur = function (e) {
-                thisPointer.entity.setRotation(thisPointer.entity.getRotation());
-                Entry.stage.updateObject();
-            };
-            directionInput.onkeypress = function (e) {
-                if (e.keyCode == 13) {
-                    var value = directionInput.value;
-                    if (value.indexOf('˚') != -1)
-                        value = value.substring(0,value.indexOf('˚'));
-                    if (Entry.Utils.isNumber(value)) {
-                        thisPointer.entity.setDirection(Number(value));
-                    }
-                    thisPointer.updateRotationView();
-                    directionInput.blur();
-                }
-            };
-            directionInput.onblur = function (e) {
-                thisPointer.entity.setDirection(thisPointer.entity.getDirection());
-                Entry.stage.updateObject();
-            };
-
-            var rotationWrapperView = Entry.createElement('div');
-            rotationWrapperView.addClass('entryObjectRotationWrapperWorkspace');
-            rotationWrapperView.object = this;
-            this.view_.appendChild(rotationWrapperView);
-
-            var coordinateView = Entry.createElement('span');
-            coordinateView.addClass('entryObjectCoordinateWorkspace');
-            rotationWrapperView.appendChild(coordinateView);
-            var xCoordi = Entry.createElement('span');
-            xCoordi.addClass('entryObjectCoordinateSpanWorkspace');
-            xCoordi.innerHTML = 'X:';
-            var xInput = Entry.createElement('input');
-            xInput.addClass('entryObjectCoordinateInputWorkspace');
-            var yCoordi = Entry.createElement('span');
-            yCoordi.addClass('entryObjectCoordinateSpanWorkspace');
-            yCoordi.innerHTML = 'Y:';
-            var yInput = Entry.createElement('input');
-            yInput.addClass('entryObjectCoordinateInputWorkspace entryObjectCoordinateInputWorkspace_right');
-            var sizeTitle = Entry.createElement('span');
-            sizeTitle.addClass('entryObjectCoordinateSpanWorkspace');
-            sizeTitle.innerHTML = Lang.Workspace.Size;
-            var sizeInput = Entry.createElement('input');
-            sizeInput.addClass('entryObjectCoordinateInputWorkspace',
-                               'entryObjectCoordinateInputWorkspace_size');
-            coordinateView.appendChild(xCoordi);
-            coordinateView.appendChild(xInput);
-            coordinateView.appendChild(yCoordi);
-            coordinateView.appendChild(yInput);
-            coordinateView.appendChild(sizeTitle);
-            coordinateView.appendChild(sizeInput);
-            coordinateView.xInput_ = xInput;
-            coordinateView.yInput_ = yInput;
-            coordinateView.sizeInput_ = sizeInput;
-            this.coordinateView_ = coordinateView;
-            var thisPointer = this;
-            xInput.onkeypress = function (e) {
-                if (e.keyCode == 13) {
-                    if (Entry.Utils.isNumber(xInput.value)) {
-                        thisPointer.entity.setX(Number(xInput.value));
-                    }
-                    thisPointer.updateCoordinateView();
-                    thisPointer.blur();
-                }
-            };
-            xInput.onblur = function (e) {
-                thisPointer.entity.setX(thisPointer.entity.getX());
-                Entry.stage.updateObject();
-            };
-
-            yInput.onkeypress = function (e) {
-                if (e.keyCode == 13) {
-                    if (Entry.Utils.isNumber(yInput.value)) {
-                        thisPointer.entity.setY(Number(yInput.value));
-                    }
-                    thisPointer.updateCoordinateView();
-                    thisPointer.blur();
-                }
-            };
-            yInput.onblur = function (e) {
-                thisPointer.entity.setY(thisPointer.entity.getY());
-                Entry.stage.updateObject();
-            };
-
-            var rotationMethodWrapper = Entry.createElement('div');
-            rotationMethodWrapper.addClass('rotationMethodWrapper');
-            rotationWrapperView.appendChild(rotationMethodWrapper);
-            this.rotationMethodWrapper_ = rotationMethodWrapper;
-
-            var rotateMethodLabelView = Entry.createElement('span');
-            rotateMethodLabelView.addClass('entryObjectRotateMethodLabelWorkspace');
-            rotationMethodWrapper.appendChild(rotateMethodLabelView);
-            rotateMethodLabelView.innerHTML = Lang.Workspace.rotate_method + ' : ';
-
-            var rotateModeAView = Entry.createElement('div');
-            rotateModeAView.addClass('entryObjectRotateModeWorkspace');
-            rotateModeAView.addClass('entryObjectRotateModeAWorkspace');
-            rotateModeAView.object = this;
-            this.rotateModeAView_ = rotateModeAView;
-            rotationMethodWrapper.appendChild(rotateModeAView);
-            rotateModeAView.bindOnClick(function(e){
-                if (Entry.engine.isState('run')) {
-                    return;
-                }
-                this.object.setRotateMethod('free');
-            });
-
-            var rotateModeBView = Entry.createElement('div');
-            rotateModeBView.addClass('entryObjectRotateModeWorkspace');
-            rotateModeBView.addClass('entryObjectRotateModeBWorkspace');
-            rotateModeBView.object = this;
-            this.rotateModeBView_ = rotateModeBView;
-            rotationMethodWrapper.appendChild(rotateModeBView);
-            rotateModeBView.bindOnClick(function(e){
-                if (Entry.engine.isState('run')) {
-                    return;
-                }
-                this.object.setRotateMethod('vertical');
-            });
-
-            var rotateModeCView = Entry.createElement('div');
-            rotateModeCView.addClass('entryObjectRotateModeWorkspace');
-            rotateModeCView.addClass('entryObjectRotateModeCWorkspace');
-            rotateModeCView.object = this;
-            this.rotateModeCView_ = rotateModeCView;
-            rotationMethodWrapper.appendChild(rotateModeCView);
-            rotateModeCView.bindOnClick(function(e){
-                if (Entry.engine.isState('run'))
-                    return;
-                this.object.setRotateMethod('none');
-            });
-
-            this.updateThumbnailView();
-            this.updateCoordinateView();
-            this.updateRotateMethodView();
-
-            this.updateInputViews();
-            return this.view_;
-        }
+        if (type === 'workspace') return generateWorkspaceView.call(this);
+        else if (type === 'phone') return generatePhoneView.call(this);
     };
 
     /**
@@ -804,9 +134,12 @@ Entry.EntryObject = function(model) {
      */
     p.setName = function(name) {
         Entry.assert(typeof name == "string", 'object name must be string');
+
         this.name = name;
-        this.nameView_.value = name;
+        this.nameView_ && this.nameView_.value = name;
     };
+
+    p.getName = function() { return this.name; };
 
     /**
      * Object text setter
@@ -1552,8 +885,679 @@ Entry.EntryObject = function(model) {
                 case "editButton":
                     return this.editView_;
             }
-        } else {
-        }
+        } else { }
     };
+
+    function generateWorkspaceView() {
+        var that = this;
+        var objectId = this.id;
+
+        var objectView = Entry.createElement('li', objectId);
+        var fragment = document.createDocumentFragment('div');
+        fragment.appendChild(objectView);
+        objectView.addClass('entryContainerListElementWorkspace');
+        // generate context menu
+        Entry.Utils.disableContextmenu(objectView);
+        var longPressTimer = null;
+
+        $(objectView).bind('mousedown touchstart', function(e){
+            if (Entry.container.getObject(objectId)) {
+                Entry.do('containerSelectObject', objectId);
+            }
+            var doc = $(document);
+            var eventType = e.type;
+            var handled = false;
+
+            if (Entry.Utils.isRightButton(e)) {
+                e.stopPropagation();
+                Entry.documentMousedown.notify(e);
+                handled = true;
+                that._rightClick(e);
+                return;
+            }
+
+            var mouseDownCoordinate = { x: e.clientX, y: e.clientY };
+
+            if (eventType === 'touchstart' && !handled) {
+                e.stopPropagation();
+                Entry.documentMousedown.notify(e);
+
+                longPressTimer = setTimeout(function() {
+                    if (longPressTimer) {
+                        longPressTimer = null;
+                        that._rightClick(e);
+                    }
+                }, 1000);
+
+                doc.bind('mousemove.object touchmove.object', onMouseMove);
+                doc.bind('mouseup.object touchend.object', onMouseUp);
+            }
+
+            function onMouseMove(e) {
+                e.stopPropagation();
+                if (!mouseDownCoordinate) return;
+                var diff = Math.sqrt(Math.pow(e.pageX - mouseDownCoordinate.x, 2) +
+                                Math.pow(e.pageY - mouseDownCoordinate.y, 2));
+                if (diff > 5 && longPressTimer) {
+                    clearTimeout(longPressTimer);
+                    longPressTimer = null;
+                }
+            }
+
+            function onMouseUp(e) {
+                e.stopPropagation();
+                doc.unbind('.object');
+                if (longPressTimer) {
+                    clearTimeout(longPressTimer);
+                    longPressTimer = null;
+                }
+            }
+        });
+
+        /** @type {!Element} */
+        this.view_ = objectView;
+
+        var objectInfoView = Entry.createElement('ul');
+        objectInfoView.addClass('objectInfoView');
+        if (!Entry.objectEditable) { objectInfoView.addClass('entryHide'); }
+
+        var objectInfo_visible = Entry.createElement('li');
+        objectInfo_visible.addClass('objectInfo_visible');
+        if (!this.entity.getVisible())
+            objectInfo_visible.addClass('objectInfo_unvisible');
+
+        objectInfo_visible.bindOnClick(function (e) {
+            if (Entry.engine.isState('run')) return;
+
+            var entity = that.entity;
+            var visible = entity.setVisible(!entity.getVisible());
+            if (visible) this.removeClass('objectInfo_unvisible');
+            else this.addClass('objectInfo_unvisible');
+        });
+
+        var objectInfo_lock = Entry.createElement('li');
+        objectInfo_lock.addClass('objectInfo_unlock');
+        if (this.getLock()) objectInfo_lock.addClass('objectInfo_lock');
+
+        objectInfo_lock.bindOnClick(function (e) {
+            if (Entry.engine.isState('run')) return;
+            var isLocked = that.setLock(!that.getLock());
+
+            if (isLocked) this.addClass('objectInfo_lock');
+            else this.removeClass('objectInfo_lock');
+
+            that.updateInputViews(that.getLock());
+        });
+        objectInfoView.appendChild(objectInfo_visible);
+        objectInfoView.appendChild(objectInfo_lock);
+        this.view_.appendChild(objectInfoView);
+
+        var thumbnailView = Entry.createElement('div');
+        thumbnailView.addClass('entryObjectThumbnailWorkspace');
+        this.view_.appendChild(thumbnailView);
+        this.thumbnailView_ = thumbnailView;
+
+        var wrapperView = Entry.createElement('div');
+        wrapperView.addClass('entryObjectWrapperWorkspace');
+        this.view_.appendChild(wrapperView);
+
+        var nameView = Entry.createElement('input');
+        nameView.bindOnClick(function (e) {
+            e.preventDefault();
+            if (this.readOnly) return;
+            this.focus();
+            this.select();
+        });
+        nameView.addClass('entryObjectNameWorkspace');
+
+        wrapperView.appendChild(nameView);
+        this.nameView_ = nameView;
+        nameView.setAttribute("readonly", true);
+
+        this.nameView_.onblur = function(e) {
+            var newValue = this.value;
+
+            if (that.getName() === newValue) return;
+
+            Entry.do('objectNameEdit', that.id, newValue);
+            Entry.playground.reloadPlayground();
+        };
+
+        this.nameView_.onkeypress = function(e) {
+            if (e.keyCode == 13) { that.editObjectValues(false); }
+        };
+
+        this.nameView_.value = this.name;
+
+        var editView = Entry.createElement('div');
+        editView.addClass('entryObjectEditWorkspace');
+        this.editView_ = editView;
+        this.view_.appendChild(editView);
+
+        $(editView).mousedown(function(e) {
+            e.stopPropagation();
+            Entry.documentMousedown.notify(e);
+            Entry.do('objectEditButtonClick', that.id);
+        });
+
+        $(editView).mouseup(function(e) {
+            that.isEditing && that.nameView_.select();
+        });
+
+        editView.blur = function(e){ object.editObjectComplete(); };
+
+        if (Entry.objectEditable && Entry.objectDeletable) {
+            var deleteView = Entry.createElement('div');
+            deleteView.addClass('entryObjectDeleteWorkspace');
+            this.deleteView_ = deleteView;
+            this.view_.appendChild(deleteView);
+            deleteView.bindOnClick(function (e) {
+                if (Entry.engine.isState('run')) return;
+                Entry.container.removeObject(that);
+            });
+        }
+
+        var informationView = Entry.createElement('div');
+        informationView.addClass('entryObjectInformationWorkspace');
+        this.isInformationToggle = false;
+        wrapperView.appendChild(informationView);
+        this.informationView_ = informationView;
+
+        var rotationWrapperView = Entry.createElement('div');
+        rotationWrapperView.addClass('entryObjectRotationWrapperWorkspace');
+        this.view_.appendChild(rotationWrapperView);
+
+        var coordinateView = Entry.createElement('span');
+        coordinateView.addClass('entryObjectCoordinateWorkspace');
+        rotationWrapperView.appendChild(coordinateView);
+        var xCoordi = Entry.createElement('span');
+        xCoordi.addClass('entryObjectCoordinateSpanWorkspace');
+        xCoordi.innerHTML = 'X:';
+        var xInput = Entry.createElement('input');
+        xInput.addClass('entryObjectCoordinateInputWorkspace');
+        xInput.setAttribute("readonly", true);
+        xInput.bindOnClick(function (e) {
+            e.stopPropagation();
+            this.select();
+        });
+
+        var yCoordi = Entry.createElement('span');
+        yCoordi.addClass('entryObjectCoordinateSpanWorkspace');
+        yCoordi.innerHTML = 'Y:';
+        var yInput = Entry.createElement('input');
+        yInput.addClass('entryObjectCoordinateInputWorkspace entryObjectCoordinateInputWorkspace_right');
+        yInput.bindOnClick(function (e) {
+            e.stopPropagation();
+            this.select();
+        });
+        yInput.setAttribute("readonly", true);
+        var sizeSpan = Entry.createElement('span');
+        sizeSpan.addClass('entryObjectCoordinateSizeWorkspace');
+        sizeSpan.innerHTML = Lang.Workspace.Size + ' : ';
+        var sizeInput = Entry.createElement('input');
+        sizeInput.addClass(
+            'entryObjectCoordinateInputWorkspace',
+            'entryObjectCoordinateInputWorkspace_size'
+        );
+        sizeInput.bindOnClick(function (e) {
+            e.stopPropagation();
+            this.select();
+        });
+        sizeInput.setAttribute("readonly", true);
+        coordinateView.appendChild(xCoordi);
+        coordinateView.appendChild(xInput);
+        coordinateView.appendChild(yCoordi);
+        coordinateView.appendChild(yInput);
+        coordinateView.appendChild(sizeSpan);
+        coordinateView.appendChild(sizeInput);
+        coordinateView.xInput_ = xInput;
+        coordinateView.yInput_ = yInput;
+        coordinateView.sizeInput_ = sizeInput;
+        this.coordinateView_ = coordinateView;
+
+        xInput.onkeypress = function (e) {
+            if (e.keyCode == 13) { that.editObjectValues(false); }
+        };
+
+        xInput.onblur = function (bool) {
+            if (Entry.Utils.isNumber(xInput.value)) {
+                that.entity.setX(Number(xInput.value));
+            }
+            that.updateCoordinateView();
+            Entry.stage.updateObject();
+
+        };
+
+        yInput.onkeypress = function (e) {
+            if (e.keyCode == 13) { that.editObjectValues(false); }
+        };
+
+        yInput.onblur =  function(bool){
+            if (Entry.Utils.isNumber(yInput.value)) {
+                that.entity.setY(Number(yInput.value));
+            }
+            that.updateCoordinateView();
+            Entry.stage.updateObject();
+        };
+
+        sizeInput.onkeypress = function (e) {
+            if (e.keyCode == 13) { that.editObjectValues(false); }
+        };
+
+        sizeInput.onblur = function (bool) {
+            if (Entry.Utils.isNumber(sizeInput.value)) {
+                that.entity.setSize(Number(sizeInput.value));
+            }
+            that.updateCoordinateView();
+            Entry.stage.updateObject();
+        };
+
+        var rotateLabelWrapperView = Entry.createElement('div');
+        rotateLabelWrapperView.addClass('entryObjectRotateLabelWrapperWorkspace');
+        this.view_.appendChild(rotateLabelWrapperView);
+        this.rotateLabelWrapperView_ = rotateLabelWrapperView;
+
+        var rotateSpan = Entry.createElement('span');
+        rotateSpan.addClass('entryObjectRotateSpanWorkspace');
+        rotateSpan.innerHTML = Lang.Workspace.rotation + ' : ';
+        var rotateInput = Entry.createElement('input');
+        rotateInput.addClass('entryObjectRotateInputWorkspace');
+        rotateInput.setAttribute("readonly", true);
+        rotateInput.bindOnClick(function (e) {
+            e.stopPropagation();
+            this.select();
+        });
+        this.rotateSpan_ = rotateSpan;
+        this.rotateInput_ = rotateInput;
+
+        var directionSpan = Entry.createElement('span');
+        directionSpan.addClass('entryObjectDirectionSpanWorkspace');
+        directionSpan.innerHTML = Lang.Workspace.direction + ' : ';
+        var directionInput = Entry.createElement('input');
+        directionInput.addClass('entryObjectDirectionInputWorkspace');
+        directionInput.setAttribute("readonly", true);
+        directionInput.bindOnClick(function (e) {
+            e.stopPropagation();
+            this.select();
+        });
+        this.directionInput_ = directionInput;
+
+        rotateLabelWrapperView.appendChild(rotateSpan);
+        rotateLabelWrapperView.appendChild(rotateInput);
+        rotateLabelWrapperView.appendChild(directionSpan);
+        rotateLabelWrapperView.appendChild(directionInput);
+        rotateLabelWrapperView.rotateInput_ = rotateInput;
+        rotateLabelWrapperView.directionInput_ = directionInput;
+        rotateInput.onkeypress = function (e) {
+            if (e.keyCode == 13) { that.editObjectValues(false); }
+        };
+        rotateInput.onblur = function (bool) {
+            var value = rotateInput.value;
+            if (value.indexOf('˚') != -1)
+                value = value.substring(0, value.indexOf('˚'));
+            if (Entry.Utils.isNumber(value)) {
+                that.entity.setRotation(Number(value));
+            }
+            that.updateRotationView();
+            Entry.stage.updateObject();
+        };
+
+        directionInput.onkeypress = function (e) {
+            if (e.keyCode == 13) { that.editObjectValues(false); }
+        };
+
+        directionInput.onblur = function (bool) {
+            var value = directionInput.value;
+            if (value.indexOf('˚') != -1)
+                value = value.substring(0,value.indexOf('˚'));
+            if (Entry.Utils.isNumber(value))
+                that.entity.setDirection(Number(value));
+            that.updateRotationView();
+            Entry.stage.updateObject();
+        };
+
+        var rotationMethodWrapper = Entry.createElement('div');
+        rotationMethodWrapper.addClass('rotationMethodWrapper');
+        rotationWrapperView.appendChild(rotationMethodWrapper);
+        this.rotationMethodWrapper_ = rotationMethodWrapper;
+
+        var rotateMethodLabelView = Entry.createElement('span');
+        rotateMethodLabelView.addClass('entryObjectRotateMethodLabelWorkspace');
+        rotationMethodWrapper.appendChild(rotateMethodLabelView);
+        rotateMethodLabelView.innerHTML = Lang.Workspace.rotate_method + ' : ';
+
+        var rotateModeAView = Entry.createElement('div');
+        rotateModeAView.addClass('entryObjectRotateModeWorkspace entryObjectRotateModeAWorkspace');
+        this.rotateModeAView_ = rotateModeAView;
+        rotationMethodWrapper.appendChild(rotateModeAView);
+        rotateModeAView.bindOnClick(function(e){
+            if (Entry.engine.isState('run') || that.getLock()) { return; }
+
+            that.initRotateValue('free');
+            that.setRotateMethod('free');
+        });
+
+        var rotateModeBView = Entry.createElement('div');
+        rotateModeBView.addClass('entryObjectRotateModeWorkspace entryObjectRotateModeBWorkspace');
+        this.rotateModeBView_ = rotateModeBView;
+        rotationMethodWrapper.appendChild(rotateModeBView);
+        rotateModeBView.bindOnClick(function(e){
+            if (Entry.engine.isState('run') || that.getLock()) { return; }
+
+            that.initRotateValue('vertical');
+            that.setRotateMethod('vertical');
+        });
+
+        var rotateModeCView = Entry.createElement('div');
+        rotateModeCView.addClass('entryObjectRotateModeWorkspace entryObjectRotateModeCWorkspace');
+        this.rotateModeCView_ = rotateModeCView;
+        rotationMethodWrapper.appendChild(rotateModeCView);
+        rotateModeCView.bindOnClick(function(e){
+            if (Entry.engine.isState('run') || that.getLock()) return;
+
+            that.initRotateValue('none');
+            that.setRotateMethod('none');
+        });
+
+        this.updateThumbnailView();
+        this.updateRotateMethodView();
+        this.updateInputViews();
+
+        this.updateCoordinateView(true);
+        this.updateRotationView(true);
+
+        return this.view_;
+    }
+
+    function generatePhoneView() {
+        var objectView = Entry.createElement('li', this.id);
+        objectView.addClass('entryContainerListElementWorkspace');
+        objectView.object = this;
+        objectView.bindOnClick(function(e) {
+            if (Entry.container.getObject(this.id))
+                Entry.container.selectObject(this.id);
+        });
+
+        // generate context menu
+        if ($) {
+            var object = this;
+            context.attach('#' + this.id, [
+                {
+                    text: Lang.Workspace.context_rename,
+                    href: '/',
+                    action: function(e){
+                        e.preventDefault();
+                    }
+                },
+                {
+                    text: Lang.Workspace.context_duplicate,
+                    href: '/',
+                    action: function(e){
+                        e.preventDefault();
+                        Entry.container.addCloneObject(object);
+                    }
+                },
+                {
+                    text: Lang.Workspace.context_remove,
+                    href: '/',
+                    action: function(e){
+                        e.preventDefault();
+                        Entry.container.removeObject(object);
+                    }
+                }
+            ]);
+        }
+        /** @type {!Element} */
+        this.view_ = objectView;
+
+
+        var objectInfoView = Entry.createElement('ul');
+        objectInfoView.addClass('objectInfoView');
+        var objectInfo_visible = Entry.createElement('li');
+        objectInfo_visible.addClass('objectInfo_visible');
+        var objectInfo_lock = Entry.createElement('li');
+        objectInfo_lock.addClass('objectInfo_lock');
+        objectInfoView.appendChild(objectInfo_visible);
+        objectInfoView.appendChild(objectInfo_lock);
+        this.view_.appendChild(objectInfoView);
+
+
+        var thumbnailView = Entry.createElement('div');
+        thumbnailView.addClass('entryObjectThumbnailWorkspace');
+        this.view_.appendChild(thumbnailView);
+        this.thumbnailView_ = thumbnailView;
+
+        var wrapperView = Entry.createElement('div');
+        wrapperView.addClass('entryObjectWrapperWorkspace');
+        this.view_.appendChild(wrapperView);
+
+        var nameView = Entry.createElement('input');
+        nameView.addClass('entryObjectNameWorkspace');
+        wrapperView.appendChild(nameView);
+        this.nameView_ = nameView;
+        this.nameView_.entryObject = this;
+        this.nameView_.onblur = function() {
+            this.entryObject.name = this.value;
+            Entry.playground.reloadPlayground();
+        };
+        this.nameView_.onkeypress = function(e) {
+            if (e.keyCode == 13) thisPointer.editObjectValues(false);
+        };
+        this.nameView_.value = this.name;
+
+        if (Entry.objectEditable && Entry.objectDeletable) {
+            var deleteView = Entry.createElement('div');
+            deleteView.addClass('entryObjectDeletePhone');
+            deleteView.object = this;
+            this.deleteView_ = deleteView;
+            this.view_.appendChild(deleteView);
+            deleteView.bindOnClick(function (e) {
+                if (Entry.engine.isState('run')) { return; }
+
+                Entry.container.removeObject(this.object);
+            });
+        }
+
+        var editBtn = Entry.createElement('button');
+        editBtn.addClass('entryObjectEditPhone');
+        editBtn.object = this;
+        editBtn.bindOnClick(function(e) {
+            var object = Entry.container.getObject(this.id);
+            if (object) {
+                Entry.container.selectObject(object.id);
+                Entry.playground.injectObject(object);
+            }
+        });
+        this.view_.appendChild(editBtn);
+
+
+        var informationView = Entry.createElement('div');
+        informationView.addClass('entryObjectInformationWorkspace');
+        informationView.object = this;
+        this.isInformationToggle = false;
+        wrapperView.appendChild(informationView);
+        this.informationView_ = informationView;
+
+
+
+
+        var rotateLabelWrapperView = Entry.createElement('div');
+        rotateLabelWrapperView.addClass('entryObjectRotateLabelWrapperWorkspace');
+        this.view_.appendChild(rotateLabelWrapperView);
+        this.rotateLabelWrapperView_ = rotateLabelWrapperView;
+
+        var rotateSpan = Entry.createElement('span');
+        rotateSpan.addClass('entryObjectRotateSpanWorkspace');
+        rotateSpan.innerHTML = Lang.Workspace.rotation + ' : ';
+        var rotateInput = Entry.createElement('input');
+        rotateInput.addClass('entryObjectRotateInputWorkspace');
+        this.rotateSpan_ = rotateSpan;
+        this.rotateInput_ = rotateInput;
+
+        var directionSpan = Entry.createElement('span');
+        directionSpan.addClass('entryObjectDirectionSpanWorkspace');
+        directionSpan.innerHTML = Lang.Workspace.direction + ' : ';
+        var directionInput = Entry.createElement('input');
+        directionInput.addClass('entryObjectDirectionInputWorkspace');
+        this.directionInput_ = directionInput;
+
+        rotateLabelWrapperView.appendChild(rotateSpan);
+        rotateLabelWrapperView.appendChild(rotateInput);
+        rotateLabelWrapperView.appendChild(directionSpan);
+        rotateLabelWrapperView.appendChild(directionInput);
+        rotateLabelWrapperView.rotateInput_ = rotateInput;
+        rotateLabelWrapperView.directionInput_ = directionInput;
+        var thisPointer = this;
+        rotateInput.onkeypress = function (e) {
+            if (e.keyCode == 13) {
+                var value = rotateInput.value;
+                if (value.indexOf('˚') != -1)
+                    value = value.substring(0, value.indexOf('˚'));
+                if (Entry.Utils.isNumber(value)) {
+                    thisPointer.entity.setRotation(Number(value));
+                }
+                thisPointer.updateRotationView();
+                rotateInput.blur();
+            }
+        };
+        rotateInput.onblur = function (e) {
+            thisPointer.entity.setRotation(thisPointer.entity.getRotation());
+            Entry.stage.updateObject();
+        };
+        directionInput.onkeypress = function (e) {
+            if (e.keyCode == 13) {
+                var value = directionInput.value;
+                if (value.indexOf('˚') != -1)
+                    value = value.substring(0,value.indexOf('˚'));
+                if (Entry.Utils.isNumber(value)) {
+                    thisPointer.entity.setDirection(Number(value));
+                }
+                thisPointer.updateRotationView();
+                directionInput.blur();
+            }
+        };
+        directionInput.onblur = function (e) {
+            thisPointer.entity.setDirection(thisPointer.entity.getDirection());
+            Entry.stage.updateObject();
+        };
+
+        var rotationWrapperView = Entry.createElement('div');
+        rotationWrapperView.addClass('entryObjectRotationWrapperWorkspace');
+        rotationWrapperView.object = this;
+        this.view_.appendChild(rotationWrapperView);
+
+        var coordinateView = Entry.createElement('span');
+        coordinateView.addClass('entryObjectCoordinateWorkspace');
+        rotationWrapperView.appendChild(coordinateView);
+        var xCoordi = Entry.createElement('span');
+        xCoordi.addClass('entryObjectCoordinateSpanWorkspace');
+        xCoordi.innerHTML = 'X:';
+        var xInput = Entry.createElement('input');
+        xInput.addClass('entryObjectCoordinateInputWorkspace');
+        var yCoordi = Entry.createElement('span');
+        yCoordi.addClass('entryObjectCoordinateSpanWorkspace');
+        yCoordi.innerHTML = 'Y:';
+        var yInput = Entry.createElement('input');
+        yInput.addClass('entryObjectCoordinateInputWorkspace entryObjectCoordinateInputWorkspace_right');
+        var sizeTitle = Entry.createElement('span');
+        sizeTitle.addClass('entryObjectCoordinateSpanWorkspace');
+        sizeTitle.innerHTML = Lang.Workspace.Size;
+        var sizeInput = Entry.createElement('input');
+        sizeInput.addClass('entryObjectCoordinateInputWorkspace',
+                            'entryObjectCoordinateInputWorkspace_size');
+        coordinateView.appendChild(xCoordi);
+        coordinateView.appendChild(xInput);
+        coordinateView.appendChild(yCoordi);
+        coordinateView.appendChild(yInput);
+        coordinateView.appendChild(sizeTitle);
+        coordinateView.appendChild(sizeInput);
+        coordinateView.xInput_ = xInput;
+        coordinateView.yInput_ = yInput;
+        coordinateView.sizeInput_ = sizeInput;
+        this.coordinateView_ = coordinateView;
+        var thisPointer = this;
+        xInput.onkeypress = function (e) {
+            if (e.keyCode == 13) {
+                if (Entry.Utils.isNumber(xInput.value)) {
+                    thisPointer.entity.setX(Number(xInput.value));
+                }
+                thisPointer.updateCoordinateView();
+                thisPointer.blur();
+            }
+        };
+        xInput.onblur = function (e) {
+            thisPointer.entity.setX(thisPointer.entity.getX());
+            Entry.stage.updateObject();
+        };
+
+        yInput.onkeypress = function (e) {
+            if (e.keyCode == 13) {
+                if (Entry.Utils.isNumber(yInput.value)) {
+                    thisPointer.entity.setY(Number(yInput.value));
+                }
+                thisPointer.updateCoordinateView();
+                thisPointer.blur();
+            }
+        };
+        yInput.onblur = function (e) {
+            thisPointer.entity.setY(thisPointer.entity.getY());
+            Entry.stage.updateObject();
+        };
+
+        var rotationMethodWrapper = Entry.createElement('div');
+        rotationMethodWrapper.addClass('rotationMethodWrapper');
+        rotationWrapperView.appendChild(rotationMethodWrapper);
+        this.rotationMethodWrapper_ = rotationMethodWrapper;
+
+        var rotateMethodLabelView = Entry.createElement('span');
+        rotateMethodLabelView.addClass('entryObjectRotateMethodLabelWorkspace');
+        rotationMethodWrapper.appendChild(rotateMethodLabelView);
+        rotateMethodLabelView.innerHTML = Lang.Workspace.rotate_method + ' : ';
+
+        var rotateModeAView = Entry.createElement('div');
+        rotateModeAView.addClass('entryObjectRotateModeWorkspace');
+        rotateModeAView.addClass('entryObjectRotateModeAWorkspace');
+        rotateModeAView.object = this;
+        this.rotateModeAView_ = rotateModeAView;
+        rotationMethodWrapper.appendChild(rotateModeAView);
+        rotateModeAView.bindOnClick(function(e){
+            if (Entry.engine.isState('run')) {
+                return;
+            }
+            this.object.setRotateMethod('free');
+        });
+
+        var rotateModeBView = Entry.createElement('div');
+        rotateModeBView.addClass('entryObjectRotateModeWorkspace');
+        rotateModeBView.addClass('entryObjectRotateModeBWorkspace');
+        rotateModeBView.object = this;
+        this.rotateModeBView_ = rotateModeBView;
+        rotationMethodWrapper.appendChild(rotateModeBView);
+        rotateModeBView.bindOnClick(function(e){
+            if (Entry.engine.isState('run')) {
+                return;
+            }
+            this.object.setRotateMethod('vertical');
+        });
+
+        var rotateModeCView = Entry.createElement('div');
+        rotateModeCView.addClass('entryObjectRotateModeWorkspace');
+        rotateModeCView.addClass('entryObjectRotateModeCWorkspace');
+        rotateModeCView.object = this;
+        this.rotateModeCView_ = rotateModeCView;
+        rotationMethodWrapper.appendChild(rotateModeCView);
+        rotateModeCView.bindOnClick(function(e){
+            if (Entry.engine.isState('run'))
+                return;
+            this.object.setRotateMethod('none');
+        });
+
+        this.updateThumbnailView();
+        this.updateCoordinateView();
+        this.updateRotateMethodView();
+
+        this.updateInputViews();
+        return this.view_;
+    }
 
 })(Entry.EntryObject.prototype);
