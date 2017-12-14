@@ -53,6 +53,8 @@ Entry.BlockMenuScroller.RADIUS = 7;
     };
 
     p.resizeScrollBar = function() {
+        if (!this._visible) return;
+
         this._updateRatio();
 
         var dom = this.board.blockMenuContainer;
@@ -61,7 +63,8 @@ Entry.BlockMenuScroller.RADIUS = 7;
             this._domHeight = newHeight;
             return this.board.align();
         }
-        if (!this._visible || this.vRatio === 0) return;
+
+        if (this.vRatio === 0) return;
         var that = this;
 
         this.vScrollbar.attr({

@@ -62,6 +62,7 @@ Entry.STATIC = {
         objectRemovePicture: 204,
         objectAddSound: 205,
         objectRemoveSound: 206,
+        objectNameEdit: 207,
 
 
         'do': 301,
