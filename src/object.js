@@ -136,7 +136,7 @@ Entry.EntryObject = function(model) {
         Entry.assert(typeof name == "string", 'object name must be string');
 
         this.name = name;
-        this.nameView_ && this.nameView_.value = name;
+        if (this.nameView_) this.nameView_.value = name;
     };
 
     p.getName = function() { return this.name; };
@@ -154,17 +154,13 @@ Entry.EntryObject = function(model) {
      * Object script setter
      * @param {!xml script} script
      */
-    p.setScript = function(script) {
-        this.script = script;
-    };
+    p.setScript = function(script) { this.script = script; };
 
     /**
      * Object script getter
      * @return {!xml script} script
      */
-    p.getScriptText = function() {
-        return this.script.stringify();
-    };
+    p.getScriptText = function() { return this.script.stringify(); };
 
     /**
      * Initialize entity model if not exist

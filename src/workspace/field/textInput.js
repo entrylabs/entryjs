@@ -109,8 +109,8 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
             e.stopPropagation();
         });
 
+        var exitKeys = [13, 27];
         this.optionGroup.on('keyup', function(e){
-            var exitKeys = [13, 27];
             var keyCode = e.keyCode || e.which;
             that.applyValue(e);
 
@@ -128,10 +128,17 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
         });
 
         this.optionGroup.focus && this.optionGroup.focus();
+
         var optionGroup = this.optionGroup[0];
         optionGroup.setSelectionRange(0, optionGroup.value.length, "backward");
 
         this.optionDomCreated();
+
+        //normally option group is done editing and destroyed
+        //before blur called
+        this.optionGroup.one('blur', function() {
+            that.isEditing() && that.destroyOption(undefined, true);
+        });
     };
 
     p.applyValue = function(event) {
