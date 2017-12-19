@@ -1010,7 +1010,12 @@ Entry.setBasicBrush = function (sprite) {
     brush.beginStroke("rgba(255,0,0,1)");
 
     var shape = new createjs.Shape(brush);
-    Entry.stage.selectedObjectContainer.addChild(shape);
+    var selectedObjectContainer = Entry.stage.selectedObjectContainer;
+    selectedObjectContainer.addChild(shape);
+    selectedObjectContainer.setChildIndex(
+        shape,
+        selectedObjectContainer.getChildIndex(sprite.object)
+    );
 
     if (sprite.brush)
         sprite.brush = null;

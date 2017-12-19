@@ -564,7 +564,10 @@ Entry.EntryObject = function(model) {
         );
 
         this.clonedEntities.push(clonedEntity);
-        Entry.stage.loadEntity(clonedEntity);
+        var targetIndex = Entry.stage.selectedObjectContainer.getChildIndex(entity.object);
+        if (entity.shape)
+            targetIndex--;
+        Entry.stage.loadEntity(clonedEntity, targetIndex);
     };
 
     /**
@@ -771,9 +774,12 @@ Entry.EntryObject = function(model) {
     p.addStampEntity = function(entity) {
         var stampEntity = new Entry.StampEntity(this, entity);
         var stage = Entry.stage;
-        stage.loadEntity(stampEntity);
+        var selectedObjectContainer = stage.selectedObjectContainer;
+        var targetIndex = selectedObjectContainer.getChildIndex(entity.object);
+        if (entity.shape)
+            targetIndex--;
+        stage.loadEntity(stampEntity, targetIndex);
         this.clonedEntities.push(stampEntity);
-        Entry.stage.sortZorder();
     };
 
     /**
