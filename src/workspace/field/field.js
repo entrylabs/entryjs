@@ -38,8 +38,6 @@ Entry.Field = function() {};
     };
 
     p.destroyOption = function(skipCommand, forceCommand) {
-        this.isEditing() && Entry.Utils.blur();
-
         if (this.documentDownEvent) {
             this.documentDownEvent.destroy();
             delete this.documentDownEvent;
@@ -55,6 +53,7 @@ Entry.Field = function() {};
             delete this.optionGroup;
         }
 
+        this.isEditing() && Entry.Utils.blur();
         this._isEditing = false;
 
         skipCommand !== true && this.command(forceCommand);
@@ -119,8 +118,7 @@ Entry.Field = function() {};
 
     //get relative position of field from blockView origin
     p.getRelativePos = function() {
-        var blockView = this._block.view;
-        var contentPos = blockView.getContentPos();
+        var contentPos = this._block.view.getContentPos();
         var box = this.box;
 
         return {
@@ -148,8 +146,8 @@ Entry.Field = function() {};
             var reference = this._contents.reference.concat();
             if (reference[0][0] === "%")
                 data = this._block.params[parseInt(reference.shift().substr(1)) - 1];
-            if (!data)
-                return data;
+            if (!data) return data;
+
             return data.getDataByPointer(reference);
         } else return data;
     };

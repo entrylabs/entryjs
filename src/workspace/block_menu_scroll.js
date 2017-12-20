@@ -62,6 +62,8 @@ Entry.BlockMenuScroller.RADIUS = 7;
             return this.board.align();
         }
         if (!this._visible || this.vRatio === 0) return;
+
+        if (this.vRatio === 0) return;
         var that = this;
 
         this.vScrollbar.attr({

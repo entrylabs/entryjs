@@ -4175,7 +4175,6 @@ Entry.block = {
     "syntax": {"js": [], "py": [
         {
             syntax: "Arduino.digitalRead(%1)",
-            keyOption: "ext",
             blockType: "param",
             textParams: [
                 {
@@ -10457,6 +10456,7 @@ Entry.block = {
     "func": function (sprite, script) {
         return script.getNumberField("ANGLE");
     },
+    "isPrimitive": true,
     "syntax": {"js": [], "py": [
         {
             syntax: "%1",
@@ -31671,6 +31671,7 @@ Entry.block = {
     "params": [
         {
             "type": "Block",
+            "defaultType": "angle",
             "accept": "string"
         },
         {
@@ -31719,7 +31720,8 @@ Entry.block = {
     "params": [
         {
             "type": "Block",
-            "accept": "string"
+            "accept": "string",
+            "defaultType": "angle"
         },
         {
             "type": "Indicator",
@@ -31766,6 +31768,7 @@ Entry.block = {
     "params": [
         {
             "type": "Block",
+            "defaultType": "angle",
             "accept": "string"
         },
         {
@@ -31814,6 +31817,7 @@ Entry.block = {
     "params": [
         {
             "type": "Block",
+            "defaultType": "angle",
             "accept": "string"
         },
         {
@@ -31862,6 +31866,7 @@ Entry.block = {
     "params": [
         {
             "type": "Block",
+            "defaultType": "angle",
             "accept": "string"
         },
         {
@@ -31932,6 +31937,7 @@ Entry.block = {
         },
         {
             "type": "Block",
+            "defaultType": "angle",
             "accept": "string"
         },
         {
@@ -32013,6 +32019,7 @@ Entry.block = {
         },
         {
             "type": "Block",
+            "defaultType": "angle",
             "accept": "string"
         },
         {

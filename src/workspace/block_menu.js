@@ -140,7 +140,8 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
         });
 
         this.svgDom.mouseleave(function(e) {
-            if (!Entry.playground || Entry.playground.resizing) return;
+            var playground = Entry.playground;
+            if (!playground || playground.resizing) return;
 
             if (that._scroller) that._scroller.setOpacity(0);
 
@@ -149,10 +150,10 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
                 $(this).stop().animate({ width: widthBackup }, 200);
             }
             delete this.widthBackup;
-            delete Entry.playground.focusBlockMenu;
+            delete playground.focusBlockMenu;
         });
 
-        $(window).scroll(function() { that.updateOffset(); });
+        $(window).scroll(this.updateOffset.bind(this));
     };
 
     p.changeCode = function(code, isImmediate) {
@@ -207,7 +208,8 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
             blockView.detach();
         });
 
-        var shouldReDraw = !this._renderedCategories[this.lastSelector];
+        var lastSelector = this.lastSelector;
+        var shouldReDraw = !this._renderedCategories[lastSelector];
         visibles.forEach(function(block) {
             var blockView = block && block.view;
             if (!blockView) return;
@@ -247,8 +249,8 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
             }
         }
 
-        if (this.lastSelector !== 'func')
-            this._renderedCategories[this.lastSelector] = true;
+        if (lastSelector !== 'func')
+            this._renderedCategories[lastSelector] = true;
         this.changeEvent.notify();
     };
 
@@ -766,6 +768,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
 
     p.reDraw = function() {
         if (!this._isOn()) return;
+
         var selector = this.lastSelector;
         if (this._selectDynamic) selector = undefined;
 
