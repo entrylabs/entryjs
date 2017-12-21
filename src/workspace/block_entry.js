@@ -48933,10 +48933,7 @@ Entry.block = {
     "class": "roduino_value",
     "isNotFor": [ "roborobo_roduino" ],
     "func": function (sprite, script) {
-        var signal = parseInt(script.getValue("VALUE", script));
-        Entry.hw.sendQueue[0] = Entry.Roborobo_Roduino.INSTRUCTION.ANALOG_READ;
-        Entry.hw.sendQueue.analogEnable[signal] = 1;
-        Entry.hw.update();
+        var signal = script.getValue("VALUE", script);
         return Entry.hw.getAnalogPortValue(signal);
     }
 },
@@ -49084,8 +49081,8 @@ Entry.block = {
         var operator = script.getField("OPERATOR");
         var value = operator == "on" ? 1 : 0;
 
-        Entry.hw.sendQueue[0] = Entry.Roborobo_Roduino.INSTRUCTION.DIGITAL_WRITE;
-        Entry.hw.sendQueue[1] = pin;
+        // Entry.hw.sendQueue[0] = Entry.Roborobo_Roduino.INSTRUCTION.DIGITAL_WRITE;
+        // Entry.hw.sendQueue[1] = pin;
         Entry.hw.setDigitalPortValue(pin, value);
         return script.callReturn();
     }
@@ -49558,7 +49555,15 @@ Entry.block = {
         var pin = script.getNumberValue("PIN", script);
         var value = script.getNumberValue("VALUE");
 
-        Entry.hw.sendQueue.digitalPinMode[pin] = Entry.Roborobo_SchoolKit.pinMode.PWM;
+        if(!Entry.hw.sendQueue.digitalPinMode) {
+            Entry.hw.sendQueue.digitalPinMode = {};
+        }
+        
+        if(!Entry.hw.sendQueue.servo) {
+            Entry.hw.sendQueue.servo = {};
+        }
+
+        Entry.hw.sendQueue.digitalPinMode[pin] = Entry.Roborobo_SchoolKit.pinMode.SERVO;
 
         if(value < 0) {
             value = 0;
