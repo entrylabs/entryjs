@@ -319,6 +319,13 @@ Entry.Stage.prototype.sortZorder = function() {
 };
 
 /**
+ * sort Z index of objects while running
+ */
+Entry.Stage.prototype.sortZorderRun = function() {
+    Entry.requestUpdate = true;
+};
+
+/**
  * Initialize coordinate on canvas. It is toggle by Engine.
  */
 Entry.Stage.prototype.initCoordinator = function() {

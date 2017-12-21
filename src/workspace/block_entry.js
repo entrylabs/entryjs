@@ -10247,11 +10247,7 @@ Entry.block = {
     "func": function (sprite, script) {
         sprite.eraseBrush && sprite.eraseBrush();
 
-        var stampEntities = sprite.parent.getStampEntities();
-        stampEntities.map(function (entity) {
-            entity.removeClone();
-        });
-        stampEntities = null;
+        sprite.removeStamps();
 
         return script.callReturn();
     },
@@ -10276,7 +10272,7 @@ Entry.block = {
     "class": "stamp",
     "isNotFor": [ "textBox" ],
     "func": function (sprite, script) {
-        sprite.parent.addStampEntity(sprite);
+        sprite.addStamp();
 
         return script.callReturn();
     },

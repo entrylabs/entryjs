@@ -17,6 +17,7 @@ Entry.EntityObject = function(object) {
     this.collision = Entry.Utils.COLLISION.NONE;
     this.id = Entry.generateHash();
     this.removed = false;
+    this.stamps = [];
 
     if (this.type == 'sprite') {
         this.object = new createjs.Bitmap();
@@ -1186,6 +1187,24 @@ Entry.EntityObject.prototype.syncDialogVisible = function() {
     if (this.dialog) this.dialog.object.visible = this.visible;
 };
 
+Entry.EntityObject.prototype.addStamp = function() {
+    var stampEntity = new Entry.StampEntity(this.parent, this);
+    var stage = Entry.stage;
+    stage.loadEntity(stampEntity);
+    this.stamps.push(stampEntity);
+    
+    Entry.requestUpdate = true;
+};
+
+Entry.EntityObject.prototype.removeStamps = function() {
+    this.stamps.map(function(s) {
+        s.destroy();
+    });
+
+    this.stamps = [];
+    Entry.requestUpdate = true;
+};
+
 Entry.EntityObject.prototype.destroy = function(isClone) {
     if (this.removed) return;
 
@@ -1198,6 +1217,8 @@ Entry.EntityObject.prototype.destroy = function(isClone) {
         delete object.image;
         delete object.entity;
     }
+    if (this.stamps)
+        this.removeStamps();
 
     this.dialog && this.dialog.remove();
     this.brush && this.removeBrush();

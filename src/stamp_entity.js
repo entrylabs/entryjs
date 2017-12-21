@@ -35,7 +35,6 @@ Entry.StampEntity = function(object, entity) {
 (function(p, origin) {
     [
         'applyFilter',
-        'removeClone',
         'getWidth',
         'getHeight',
         'getInitialEffectValue',
