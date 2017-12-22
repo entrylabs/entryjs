@@ -30294,28 +30294,32 @@ Entry.block = {
     "class": "z-index",
     "isNotFor": [],
     "func": function (sprite, script) {
-        var targetIndex;
         var location = script.getField("LOCATION", script);
         var selectedObjectContainer = Entry.stage.selectedObjectContainer;
         var currentIndex = selectedObjectContainer.getChildIndex(sprite.object);
         var max = selectedObjectContainer.children.length - 1;
+        var targetIndex = currentIndex;
 
         switch (location) {
             case 'FRONT':
                 targetIndex = max;
                 break;
             case 'FORWARD':
-                targetIndex = Math.min(max, currentIndex + 1);
-                var frontEntity = selectedObjectContainer.getChildAt(targetIndex)
-                if (frontEntity && frontEntity !== sprite.object && frontEntity instanceof createjs.Shape)
-                    targetIndex++;
+                if (currentIndex === max)
+                    break;
+                    
+                var frontEntity = selectedObjectContainer.getChildAt(currentIndex + 1).entity;
+                targetIndex += (frontEntity.shape ? 2 : 1) + frontEntity.stamps.length;
                 break;
             case 'BACKWARD':
-                targetIndex = sprite.shape ? currentIndex - 2 : currentIndex - 1;
-                targetIndex = Math.max(0, targetIndex);
-                var backEntity = selectedObjectContainer.getChildAt(targetIndex - 1)
-                if (backEntity && backEntity instanceof createjs.Shape)
-                    targetIndex--;
+                targetIndex -= (sprite.shape ? 2 : 1) + sprite.stamps.length;
+                var backEntity = selectedObjectContainer.getChildAt(targetIndex);
+                if (!backEntity) {
+                    targetIndex = 0;
+                    break;
+                }
+                backEntity = backEntity.entity;
+                targetIndex -= (backEntity.shape ? 1 : 0) + backEntity.stamps.length;
                 break;
             case 'BACK':
                 targetIndex = 0;

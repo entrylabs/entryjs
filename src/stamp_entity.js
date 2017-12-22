@@ -28,7 +28,7 @@ Entry.StampEntity = function(object, entity) {
         }
     } else if (this.type == 'textBox') {}
 
-    this.object.entity = this;
+    this.object.entity = entity;
 };
 
 

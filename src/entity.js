@@ -1190,7 +1190,10 @@ Entry.EntityObject.prototype.syncDialogVisible = function() {
 Entry.EntityObject.prototype.addStamp = function() {
     var stampEntity = new Entry.StampEntity(this.parent, this);
     var stage = Entry.stage;
-    stage.loadEntity(stampEntity);
+    var selectedObjectContainer = Entry.stage.selectedObjectContainer;
+    var index = selectedObjectContainer.getChildIndex(this.object);
+    if (this.shape) index--;
+    stage.loadEntity(stampEntity, index);
     this.stamps.push(stampEntity);
     
     Entry.requestUpdate = true;

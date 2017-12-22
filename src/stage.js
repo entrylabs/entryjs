@@ -278,7 +278,13 @@ Entry.Stage.prototype.setEntityIndex = function(entity, index) {
         selectedObjectContainer.setChildIndex(entity.object, index);
         if (entity.shape)
             selectedObjectContainer.setChildIndex(entity.shape, index);
+        entity.stamps.concat().reverse().map(function(s) {
+            selectedObjectContainer.setChildIndex(s.object, index);
+        });
     } else {
+        entity.stamps.map(function(s) {
+            selectedObjectContainer.setChildIndex(s.object, index);
+        });
         if (entity.shape)
             selectedObjectContainer.setChildIndex(entity.shape, index);
         selectedObjectContainer.setChildIndex(entity.object, index);

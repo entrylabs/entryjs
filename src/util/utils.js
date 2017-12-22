@@ -1008,11 +1008,12 @@ Entry.setBasicBrush = function (sprite) {
     brush.opacity = 100;
     brush.setStrokeStyle(1);
     brush.beginStroke("rgba(255,0,0,1)");
+    brush.entity = sprite;
 
     var shape = new createjs.Shape(brush);
+    shape.entity = sprite;
     var selectedObjectContainer = Entry.stage.selectedObjectContainer;
-    selectedObjectContainer.addChild(shape);
-    selectedObjectContainer.setChildIndex(
+    selectedObjectContainer.addChildAt(
         shape,
         selectedObjectContainer.getChildIndex(sprite.object)
     );
@@ -1036,7 +1037,12 @@ Entry.setCloneBrush = function (sprite, parentBrush) {
     brush.beginStroke("rgba("+brush.rgb.r+","+brush.rgb.g+","+brush.rgb.b+","+(brush.opacity/100)+")");
 
     var shape = new createjs.Shape(brush);
-    Entry.stage.selectedObjectContainer.addChild(shape);
+    shape.entity = sprite;
+    var selectedObjectContainer = Entry.stage.selectedObjectContainer;
+    selectedObjectContainer.addChildAt(
+        shape,
+        selectedObjectContainer.getChildIndex(sprite.object)
+    );
 
     brush.stop = parentBrush.stop;
 

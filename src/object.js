@@ -549,8 +549,6 @@ Entry.EntryObject = function(model) {
             clonedEntity.applyFilter();
         }
 
-        if (entity.brush) Entry.setCloneBrush(clonedEntity, entity.brush);
-
         Entry.engine.raiseEventOnEntity(
             clonedEntity,
             [clonedEntity, 'when_clone_start']
@@ -568,6 +566,8 @@ Entry.EntryObject = function(model) {
         if (entity.shape)
             targetIndex--;
         Entry.stage.loadEntity(clonedEntity, targetIndex);
+        
+        if (entity.brush) Entry.setCloneBrush(clonedEntity, entity.brush);
     };
 
     /**
