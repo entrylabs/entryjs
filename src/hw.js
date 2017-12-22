@@ -141,8 +141,11 @@ p.initSocket = function() {
         var protocol = '';
         this.connected = false;
 
-        if(this.tlsSocketIo) {
-            this.tlsSocketIo.removeAllListeners();
+        if(this.tlsSocketIo1) {
+            this.tlsSocketIo1.removeAllListeners();
+        }
+        if(this.tlsSocketIo2) {
+            this.tlsSocketIo2.removeAllListeners();
         }
         if(this.socketIo) {
             this.socketIo.removeAllListeners();
@@ -152,18 +155,21 @@ p.initSocket = function() {
             this.checkOldClient();
         }
         if(location.protocol.indexOf('https') > -1) {
-            this.tlsSocketIo = this.connectWebSocket('https://hardware.play-entry.org:23518', { query:{ 'client': true, 'roomId' : this.sessionRoomId } });
-        }
-        // 일단 보류(?)
-        /*else if(Entry.isOffline){
-            this.tlsSocketIo = this.connectWebSocket('http://127.0.0.1:23518', { query:{'client': true, 'roomId' : this.sessionRoomId } });
-        }*/
-        else {
+            try {
+                this.tlsSocketIo1 = this.connectWebSocket('https://hardware.playentry.org:23518', { query:{ 'client': true, 'roomId' : this.sessionRoomId } });
+            } catch(e) { }
+            try {
+                this.tlsSocketIo2 = this.connectWebSocket('https://hardware.play-entry.org:23518', { query:{ 'client': true, 'roomId' : this.sessionRoomId } });
+            } catch(e) { }
+        } else {
             try {
                 this.socketIo = this.connectWebSocket('http://127.0.0.1:23518', { query:{'client': true, 'roomId' : this.sessionRoomId } });
             } catch(e) { }
             try {
-                this.tlsSocketIo = this.connectWebSocket('https://hardware.play-entry.org:23518', { query:{'client': true, 'roomId' : this.sessionRoomId } });
+                this.tlsSocketIo1 = this.connectWebSocket('https://hardware.playentry.org:23518', { query:{'client': true, 'roomId' : this.sessionRoomId } });
+            } catch(e) { }
+            try {
+                this.tlsSocketIo2 = this.connectWebSocket('https://hardware.play-entry.org:23518', { query:{'client': true, 'roomId' : this.sessionRoomId } });
             } catch(e) { }
         }
 
@@ -219,10 +225,9 @@ p.disconnectHardware = function() {
 };
 
 p.disconnectedSocket = function() {
-    this.tlsSocketIo.close();
-    if(this.socketIo) {
-        this.socketIo.close();
-    }
+    this.tlsSocketIo1 && this.tlsSocketIo1.close();
+    this.tlsSocketIo2 && this.tlsSocketIo2.close();
+    this.socketIo && this.socketIo.close();
 
     Entry.propertyPanel && Entry.propertyPanel.removeMode("hw");
     this.socket = undefined;
