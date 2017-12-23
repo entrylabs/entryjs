@@ -67992,7 +67992,7 @@ chocopi_servo_motor: {
         "fontColor": "#fff",                    
         "skeleton": "basic_string_field",
         "statements": [],
-        "template" : "아날로그 센서 %1 번 의 값",
+        "template" : "아날로그센서 %1번 값",
         "params": [
             {
                 "type": "Dropdown",
@@ -68030,7 +68030,7 @@ chocopi_servo_motor: {
         "fontColor": "#fff",                    
         "skeleton": "basic_string_field",
         "statements": [],
-        "template" : "HB 온도센서 %1 번 값",
+        "template" : "HB 온도센서 %1번 값",
         "params": [
             {
                 "type": "Dropdown",
@@ -68068,7 +68068,7 @@ chocopi_servo_motor: {
         "fontColor": "#fff",        
         "skeleton": "basic_string_field",
         "statements": [],
-        "template" : "HB 빛센서 %1 번 값",
+        "template" : "HB 빛센서 %1번 값",
         "params": [
             {
                 "type": "Dropdown",
@@ -68107,7 +68107,7 @@ chocopi_servo_motor: {
         "fontColor": "#fff",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template" : "HB 거리센서 %1 번 값",
+        "template" : "HB 거리센서 %1번 값",
         "params": [
             {
                 "type": "Dropdown",
@@ -68161,7 +68161,7 @@ chocopi_servo_motor: {
         "fontColor": "#fff",        
         "skeleton": "basic_string_field",
         "statements": [],
-        "template" : "HB 소리센서 %1 번의 값",
+        "template" : "HB 소리센서 %1번 값",
         "params": [
             {
                 "type": "Dropdown",
@@ -68203,7 +68203,7 @@ chocopi_servo_motor: {
         "fontColor": "#fff",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template" : "HB 로터리센서 %1 번의 값",
+        "template" : "HB 로터리센서 %1번 값",
         "params": [
             {
                 "type": "Dropdown",
@@ -68242,7 +68242,7 @@ chocopi_servo_motor: {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template" : "HB 진동 %1 의 세기: %2 ",        
+        "template" : "HB 진동모터 %1번 세기: %2 ",        
         "params": [
             {
                 "type": "Dropdown",
@@ -68302,7 +68302,7 @@ chocopi_servo_motor: {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template" : "HB 서보모터 %1번 의 각도: %2 ",        
+        "template" : "HB 서보모터 %1번 각도: %2 ",        
         "params": [
             {
                 "type": "Dropdown",
@@ -68365,7 +68365,7 @@ chocopi_servo_motor: {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template" : "HB 기어모터 %1번 의 속도: %2 ",        
+        "template" : "HB 기어모터 %1번 속도: %2 ",        
         "params": [
             {
                 "type": "Dropdown",
@@ -68426,7 +68426,7 @@ chocopi_servo_motor: {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template" : "HB 단색LED %1번 의 밝기: %2 ",        
+        "template" : "HB 단색LED %1번 밝기: %2 ",        
         "params": [
             {
                 "type": "Dropdown",
@@ -68490,7 +68490,7 @@ chocopi_servo_motor: {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template" : "HB 삼색LED %1번 의 빨강%2 초록%3 파랑%4 ",        
+        "template" : "HB 삼색LED %1번 빨강%2 초록%3 파랑%4 ",        
         "params": [
             {
                 "type": "Dropdown",
