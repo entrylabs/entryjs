@@ -30,11 +30,12 @@ Entry.byrobot_petrone_v2_flight =
             this.transferCommand(0x30, 0x24, 0);        // 드론, command = 0x24 (Stop)
             this.transferVibrator(0, 0, 0, 0);
             this.transferbuzzer(0, 0, 0);
-            this.transferLightManual(0x30, 0xFF, 0);
-            this.transferLightManual(0x31, 0xFF, 0);
-            this.transferLightMode(0x30, 0x43, 2000);
-            this.transferMotorSingle(0, 1, 0);
-            this.transferMotorSingle(1, 2, 0);
+            this.transferLightManual(0x30, 0xFF, 0);    // LED 초기화(모두 꺼짐)
+            this.transferLightManual(0x31, 0xFF, 0);    // LED 초기화(모두 꺼짐)
+            this.transferLightManual(0x30, 0x80, 200);  // LED 초기화(눈 빨강)
+            this.transferLightManual(0x30, 0x10, 200);  // LED 초기화(팔 빨강)
+            this.transferMotorSingle(0, 1, 0);          // 1번 모터방향 초기화(시계방향)
+            this.transferMotorSingle(1, 2, 0);          // 2번 모터방향 초기화(반시계방향)
         }
     },
     
@@ -42,9 +43,11 @@ Entry.byrobot_petrone_v2_flight =
     // listPorts와 ports 두 곳 동시에 동일한 속성을 표시할 수는 없음
     monitorTemplate:
     {
+        /* 센서창 가림 현상을 해결하기 위해서 주석 처리함(2017.11.06)
         imgPath: "hw/byrobot_petrone_v2_flight.png",      // 배경 이미지
         width: 256,     // 이미지의 폭
         height: 256,    // 이미지의 높이
+        */
         
         // 모니터 화면 상단에 차례대로 나열하는 값
         listPorts:

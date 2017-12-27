@@ -73,7 +73,11 @@ Entry.HW = function() {
         '15.1': Entry.coconut,
         '16.1': Entry.MODI,
         '18.1': Entry.Altino,
-        '1A.1': Entry.ArduinoNano        
+        '19.1': Entry.trueRobot,
+        '1A.1': Entry.ArduinoNano,
+        '1B.1': Entry.EduMaker,
+        '1C.1': Entry.hummingbird,
+        '1D.1': Entry.JDKit,
     };
 };
 
