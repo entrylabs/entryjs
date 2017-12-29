@@ -352,8 +352,6 @@ Entry.Scene.prototype.selectScene = function(scene) {
         Entry.variableContainer.updateList();
     }
 
-    !container.listView_ && stage.sortZorder();
-
     container.updateListView();
     this.updateView();
     Entry.requestUpdate = true;

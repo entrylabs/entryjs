@@ -1072,7 +1072,6 @@ Entry.Playground = function() {
         this.object.pictures.splice(
             end, 0, this.object.pictures.splice(start, 1)[0]);
         this.injectPicture();
-        Entry.stage.sortZorder();
     };
 
     /**
@@ -1159,7 +1158,6 @@ Entry.Playground = function() {
         this.object.sounds.splice(
             end, 0, this.object.sounds.splice(start, 1)[0]);
         this.updateListViewOrder('sound');
-        Entry.stage.sortZorder();
     };
 
     /**

@@ -549,8 +549,6 @@ Entry.EntryObject = function(model) {
             clonedEntity.applyFilter();
         }
 
-        if (entity.brush) Entry.setCloneBrush(clonedEntity, entity.brush);
-
         Entry.engine.raiseEventOnEntity(
             clonedEntity,
             [clonedEntity, 'when_clone_start']
@@ -564,7 +562,12 @@ Entry.EntryObject = function(model) {
         );
 
         this.clonedEntities.push(clonedEntity);
-        Entry.stage.loadEntity(clonedEntity);
+        var targetIndex = Entry.stage.selectedObjectContainer.getChildIndex(entity.object);
+        if (entity.shape)
+            targetIndex--;
+        Entry.stage.loadEntity(clonedEntity, targetIndex);
+        
+        if (entity.brush) Entry.setCloneBrush(clonedEntity, entity.brush);
     };
 
     /**
@@ -761,43 +764,21 @@ Entry.EntryObject = function(model) {
     };
 
     /**
-     * Add stamp entity for brush_stamp block
-     * If parameter given, this clone the parameter entity itself.
-     * Otherwise, this clone this object's entity.
-     * @param {?Entry.EntryObject} object
-     * @param {?Entry.EntityObject} entity
-     * @param {?xml block} script
-     */
-    p.addStampEntity = function(entity) {
-        var stampEntity = new Entry.StampEntity(this, entity);
-        var stage = Entry.stage;
-        stage.loadEntity(stampEntity);
-        this.clonedEntities.push(stampEntity);
-        Entry.stage.sortZorder();
-    };
-
-    /**
      *  get only clonedEntities among clonedEntities except for stamp entity
      *  @return {Array<clone Entity> } entities
      */
     p.getClonedEntities = function() {
-        return this.clonedEntities.filter(function (e) { return !e.isStamp; });
-    };
-
-    /**
-     *  get only stamp entities among clonedEntities
-     *  @return {Array<stampEntity> } entities
-     */
-    p.getStampEntities = function() {
-        return this.clonedEntities.filter(function (e) { return e.isStamp; });
+        return this.clonedEntities.concat();
     };
 
     p.clearExecutor = function() {
         this.script.clearExecutors();
 
         var clonedEntities = this.clonedEntities;
-        for (var j = clonedEntities.length-1; j>=0; j--)
+        for (var j = clonedEntities.length-1; j>=0; j--) {
             clonedEntities[j].removeClone(true);
+        }
+        this.entity.removeStamps();
     };
 
     p._rightClick = function(e) {
