@@ -30328,7 +30328,6 @@ Entry.block = {
                 break;
 
         }
-        console.log(targetIndex, currentIndex)
         Entry.stage.setEntityIndex(sprite, targetIndex)
 
         return script.callReturn();
