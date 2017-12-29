@@ -49304,6 +49304,34 @@ Entry.block = {
         return script.getNumberField("PORT");
     }
 },
+"schoolkit_get_servo_port_number": {
+    "color": "#00979D",
+    "skeleton": "basic_string_field",
+    "statements": [],
+    "params": [
+        {
+            "type": "Dropdown",
+            "options": [
+                [ "OUT1", 2 ],
+                [ "OUT2", 3 ],
+                [ "OUT3", 4 ]
+            ],
+            "value": 2,
+            "fontSize": 11,
+            'arrowColor': EntryStatic.ARROW_COLOR_HW
+        }
+    ],
+    "events": {},
+    "def": {
+        "params": [ null ]
+    },
+    "paramsKeyMap": {
+        "PORT": 0
+    },
+    "func": function (sprite, script) {
+        return script.getNumberField("PORT");
+    }
+},
 "schoolkit_get_in_port_number": {
     "color": "#00979D",
     "skeleton": "basic_string_field",
@@ -49535,7 +49563,7 @@ Entry.block = {
     "def": {
         "params": [
             {
-                "type": "schoolkit_get_out_port_number"
+                "type": "schoolkit_get_servo_port_number"
             },
             {
                 "type": "number",
