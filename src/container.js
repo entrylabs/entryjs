@@ -212,8 +212,7 @@ Entry.Container.prototype.setObjects = function(objectModels) {
         this.objects_.push(object);
     }
     this.updateObjectsOrder();
-    var isStageSorted = this.updateListView();
-    !isStageSorted && Entry.stage.sortZorder();
+    this.updateListView();
     Entry.variableContainer.updateViews();
     var type = Entry.type;
     if (type == 'workspace' || type == 'phone') {
@@ -558,19 +557,6 @@ Entry.Container.prototype.moveElement = function(start, end, isCallFromState) {
     return new Entry.State(Entry.container,
                            Entry.container.moveElement,
                            endIndex, startIndex, true);
-};
-
-/**
- * Move object in objects_
- * this method is for movement by block
- * @param {!number} currentindex
- * @param {!number} targetindex
- */
-Entry.Container.prototype.moveElementByBlock = function(currentIndex, targetIndex) {
-    var object = this.getCurrentObjects().splice(currentIndex, 1)[0];
-    this.getCurrentObjects().splice(targetIndex, 0, object);
-    Entry.stage.sortZorder();
-    this.updateListView();
 };
 
 /**

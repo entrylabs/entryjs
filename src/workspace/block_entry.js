@@ -9866,7 +9866,6 @@ Entry.block = {
         else
             Entry.setBasicBrush(sprite);
 
-        Entry.stage.sortZorder();
         sprite.brush.moveTo(sprite.getX(), sprite.getY()*-1);
 
         return script.callReturn();
@@ -10243,11 +10242,7 @@ Entry.block = {
     "func": function (sprite, script) {
         sprite.eraseBrush && sprite.eraseBrush();
 
-        var stampEntities = sprite.parent.getStampEntities();
-        stampEntities.map(function (entity) {
-            entity.removeClone();
-        });
-        stampEntities = null;
+        sprite.removeStamps();
 
         return script.callReturn();
     },
@@ -10272,7 +10267,7 @@ Entry.block = {
     "class": "stamp",
     "isNotFor": [ "textBox" ],
     "func": function (sprite, script) {
-        sprite.parent.addStampEntity(sprite);
+        sprite.addStamp();
 
         return script.callReturn();
     },
@@ -29846,7 +29841,6 @@ Entry.block = {
         var currentIndex = Entry.container.getCurrentObjects().indexOf(sprite.parent);
 
         if (currentIndex > -1) {
-            Entry.container.moveElementByBlock(currentIndex, targetIndex);
             return script.callReturn();
         } else
             throw new Error('object is not available');
@@ -30302,32 +30296,40 @@ Entry.block = {
     "class": "z-index",
     "isNotFor": [],
     "func": function (sprite, script) {
-        var targetIndex;
         var location = script.getField("LOCATION", script);
-        var objects = Entry.container.getCurrentObjects();
-        var currentIndex = objects.indexOf(sprite.parent);
-        var max = objects.length-1
-
-        if (currentIndex < 0)
-            throw new Error('object is not available for current scene');
+        var selectedObjectContainer = Entry.stage.selectedObjectContainer;
+        var currentIndex = selectedObjectContainer.getChildIndex(sprite.object);
+        var max = selectedObjectContainer.children.length - 1;
+        var targetIndex = currentIndex;
 
         switch (location) {
             case 'FRONT':
-                targetIndex = 0;
+                targetIndex = max;
                 break;
             case 'FORWARD':
-                targetIndex = Math.max(0, currentIndex-1);
+                if (currentIndex === max)
+                    break;
+                    
+                var frontEntity = selectedObjectContainer.getChildAt(currentIndex + 1).entity;
+                targetIndex += (frontEntity.shape ? 2 : 1) + frontEntity.stamps.length;
                 break;
             case 'BACKWARD':
-                targetIndex = Math.min(max, currentIndex+1);
+                targetIndex -= (sprite.shape ? 2 : 1) + sprite.stamps.length;
+                var backEntity = selectedObjectContainer.getChildAt(targetIndex);
+                if (!backEntity) {
+                    targetIndex = 0;
+                    break;
+                }
+                backEntity = backEntity.entity;
+                targetIndex -= (backEntity.shape ? 1 : 0) + backEntity.stamps.length;
                 break;
             case 'BACK':
-                targetIndex = max;
+                targetIndex = 0;
                 break;
 
         }
+        Entry.stage.setEntityIndex(sprite, targetIndex)
 
-        Entry.container.moveElementByBlock(currentIndex, targetIndex);
         return script.callReturn();
     },
     "syntax": {"js": [], "py": [
