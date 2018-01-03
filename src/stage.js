@@ -276,11 +276,7 @@ Entry.Stage.prototype.setEntityIndex = function(entity, index) {
         return;
     } else if (currentIndex > index) {
         selectedObjectContainer.setChildIndex(entity.object, index);
-        if (entity.shape)
-            selectedObjectContainer.setChildIndex(entity.shape, index);
     } else {
-        if (entity.shape)
-            selectedObjectContainer.setChildIndex(entity.shape, index);
         selectedObjectContainer.setChildIndex(entity.object, index);
     }
     Entry.requestUpdate = true;
