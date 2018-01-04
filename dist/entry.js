@@ -16274,6 +16274,7 @@ Entry.Scene.prototype.selectScene = function(c) {
       e.flushPlayground();
       Entry.variableContainer.updateList();
     }
+    !b.listView_ && d.sortZorder();
     b.updateListView();
     this.updateView();
     Entry.requestUpdate = !0;
