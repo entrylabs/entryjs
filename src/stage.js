@@ -88,6 +88,10 @@ Entry.Stage.prototype.initStage = function(canvas) {
 //          Entry.container.selectObject();
         Entry.stage.isObjectClick = false;
     });
+    
+    Entry.addEventListener("loadComplete", function() {
+        this.sortZorder();
+    }.bind(this));
 
     Entry.windowResized.attach(this, function() {
         Entry.stage.updateBoundRect();
