@@ -16540,6 +16540,9 @@ Entry.Stage.prototype.initStage = function(c) {
   Entry.addEventListener("canvasClick", function(b) {
     Entry.stage.isObjectClick = !1;
   });
+  Entry.addEventListener("loadComplete", function() {
+    this.sortZorder();
+  }.bind(this));
   Entry.windowResized.attach(this, function() {
     Entry.stage.updateBoundRect();
   });
