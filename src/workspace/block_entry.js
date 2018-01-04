@@ -4175,7 +4175,6 @@ Entry.block = {
     "syntax": {"js": [], "py": [
         {
             syntax: "Arduino.digitalRead(%1)",
-            keyOption: "ext",
             blockType: "param",
             textParams: [
                 {
@@ -9867,7 +9866,6 @@ Entry.block = {
         else
             Entry.setBasicBrush(sprite);
 
-        Entry.stage.sortZorder();
         sprite.brush.moveTo(sprite.getX(), sprite.getY()*-1);
 
         return script.callReturn();
@@ -10244,11 +10242,7 @@ Entry.block = {
     "func": function (sprite, script) {
         sprite.eraseBrush && sprite.eraseBrush();
 
-        var stampEntities = sprite.parent.getStampEntities();
-        stampEntities.map(function (entity) {
-            entity.removeClone();
-        });
-        stampEntities = null;
+        sprite.removeStamps();
 
         return script.callReturn();
     },
@@ -10273,7 +10267,7 @@ Entry.block = {
     "class": "stamp",
     "isNotFor": [ "textBox" ],
     "func": function (sprite, script) {
-        sprite.parent.addStampEntity(sprite);
+        sprite.addStamp();
 
         return script.callReturn();
     },
@@ -10457,6 +10451,7 @@ Entry.block = {
     "func": function (sprite, script) {
         return script.getNumberField("ANGLE");
     },
+    "isPrimitive": true,
     "syntax": {"js": [], "py": [
         {
             syntax: "%1",
@@ -29846,7 +29841,6 @@ Entry.block = {
         var currentIndex = Entry.container.getCurrentObjects().indexOf(sprite.parent);
 
         if (currentIndex > -1) {
-            Entry.container.moveElementByBlock(currentIndex, targetIndex);
             return script.callReturn();
         } else
             throw new Error('object is not available');
@@ -30302,32 +30296,40 @@ Entry.block = {
     "class": "z-index",
     "isNotFor": [],
     "func": function (sprite, script) {
-        var targetIndex;
         var location = script.getField("LOCATION", script);
-        var objects = Entry.container.getCurrentObjects();
-        var currentIndex = objects.indexOf(sprite.parent);
-        var max = objects.length-1
-
-        if (currentIndex < 0)
-            throw new Error('object is not available for current scene');
+        var selectedObjectContainer = Entry.stage.selectedObjectContainer;
+        var currentIndex = selectedObjectContainer.getChildIndex(sprite.object);
+        var max = selectedObjectContainer.children.length - 1;
+        var targetIndex = currentIndex;
 
         switch (location) {
             case 'FRONT':
-                targetIndex = 0;
+                targetIndex = max;
                 break;
             case 'FORWARD':
-                targetIndex = Math.max(0, currentIndex-1);
+                if (currentIndex === max)
+                    break;
+                    
+                var frontEntity = selectedObjectContainer.getChildAt(currentIndex + 1).entity;
+                targetIndex += (frontEntity.shape ? 2 : 1) + frontEntity.stamps.length;
                 break;
             case 'BACKWARD':
-                targetIndex = Math.min(max, currentIndex+1);
+                targetIndex -= (sprite.shape ? 2 : 1) + sprite.stamps.length;
+                var backEntity = selectedObjectContainer.getChildAt(targetIndex);
+                if (!backEntity) {
+                    targetIndex = 0;
+                    break;
+                }
+                backEntity = backEntity.entity;
+                targetIndex -= (backEntity.shape ? 1 : 0) + backEntity.stamps.length;
                 break;
             case 'BACK':
-                targetIndex = max;
+                targetIndex = 0;
                 break;
 
         }
+        Entry.stage.setEntityIndex(sprite, targetIndex)
 
-        Entry.container.moveElementByBlock(currentIndex, targetIndex);
         return script.callReturn();
     },
     "syntax": {"js": [], "py": [
@@ -31671,6 +31673,7 @@ Entry.block = {
     "params": [
         {
             "type": "Block",
+            "defaultType": "angle",
             "accept": "string"
         },
         {
@@ -31719,7 +31722,8 @@ Entry.block = {
     "params": [
         {
             "type": "Block",
-            "accept": "string"
+            "accept": "string",
+            "defaultType": "angle"
         },
         {
             "type": "Indicator",
@@ -31766,6 +31770,7 @@ Entry.block = {
     "params": [
         {
             "type": "Block",
+            "defaultType": "angle",
             "accept": "string"
         },
         {
@@ -31814,6 +31819,7 @@ Entry.block = {
     "params": [
         {
             "type": "Block",
+            "defaultType": "angle",
             "accept": "string"
         },
         {
@@ -31862,6 +31868,7 @@ Entry.block = {
     "params": [
         {
             "type": "Block",
+            "defaultType": "angle",
             "accept": "string"
         },
         {
@@ -31932,6 +31939,7 @@ Entry.block = {
         },
         {
             "type": "Block",
+            "defaultType": "angle",
             "accept": "string"
         },
         {
@@ -32013,6 +32021,7 @@ Entry.block = {
         },
         {
             "type": "Block",
+            "defaultType": "angle",
             "accept": "string"
         },
         {
@@ -48926,10 +48935,7 @@ Entry.block = {
     "class": "roduino_value",
     "isNotFor": [ "roborobo_roduino" ],
     "func": function (sprite, script) {
-        var signal = parseInt(script.getValue("VALUE", script));
-        Entry.hw.sendQueue[0] = Entry.Roborobo_Roduino.INSTRUCTION.ANALOG_READ;
-        Entry.hw.sendQueue.analogEnable[signal] = 1;
-        Entry.hw.update();
+        var signal = script.getValue("VALUE", script);
         return Entry.hw.getAnalogPortValue(signal);
     }
 },
@@ -49077,8 +49083,8 @@ Entry.block = {
         var operator = script.getField("OPERATOR");
         var value = operator == "on" ? 1 : 0;
 
-        Entry.hw.sendQueue[0] = Entry.Roborobo_Roduino.INSTRUCTION.DIGITAL_WRITE;
-        Entry.hw.sendQueue[1] = pin;
+        // Entry.hw.sendQueue[0] = Entry.Roborobo_Roduino.INSTRUCTION.DIGITAL_WRITE;
+        // Entry.hw.sendQueue[1] = pin;
         Entry.hw.setDigitalPortValue(pin, value);
         return script.callReturn();
     }
@@ -49283,6 +49289,34 @@ Entry.block = {
                 [ "OUT3", 4 ],
                 [ "OUT4", 5 ],
                 [ "OUT5", 6 ]
+            ],
+            "value": 2,
+            "fontSize": 11,
+            'arrowColor': EntryStatic.ARROW_COLOR_HW
+        }
+    ],
+    "events": {},
+    "def": {
+        "params": [ null ]
+    },
+    "paramsKeyMap": {
+        "PORT": 0
+    },
+    "func": function (sprite, script) {
+        return script.getNumberField("PORT");
+    }
+},
+"schoolkit_get_servo_port_number": {
+    "color": "#00979D",
+    "skeleton": "basic_string_field",
+    "statements": [],
+    "params": [
+        {
+            "type": "Dropdown",
+            "options": [
+                [ "OUT1", 2 ],
+                [ "OUT2", 3 ],
+                [ "OUT3", 4 ]
             ],
             "value": 2,
             "fontSize": 11,
@@ -49531,7 +49565,7 @@ Entry.block = {
     "def": {
         "params": [
             {
-                "type": "schoolkit_get_out_port_number"
+                "type": "schoolkit_get_servo_port_number"
             },
             {
                 "type": "number",
@@ -49551,7 +49585,15 @@ Entry.block = {
         var pin = script.getNumberValue("PIN", script);
         var value = script.getNumberValue("VALUE");
 
-        Entry.hw.sendQueue.digitalPinMode[pin] = Entry.Roborobo_SchoolKit.pinMode.PWM;
+        if(!Entry.hw.sendQueue.digitalPinMode) {
+            Entry.hw.sendQueue.digitalPinMode = {};
+        }
+        
+        if(!Entry.hw.sendQueue.servo) {
+            Entry.hw.sendQueue.servo = {};
+        }
+
+        Entry.hw.sendQueue.digitalPinMode[pin] = Entry.Roborobo_SchoolKit.pinMode.SERVO;
 
         if(value < 0) {
             value = 0;
@@ -68567,7 +68609,7 @@ chocopi_servo_motor: {
         "fontColor": "#fff",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template" : "아날로그 센서 %1 번 의 값",
+        "template" : "아날로그센서 %1번 값",
         "params": [
             {
                 "type": "Dropdown",
@@ -68605,7 +68647,7 @@ chocopi_servo_motor: {
         "fontColor": "#fff",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template" : "HB 온도센서 %1 번 값",
+        "template" : "HB 온도센서 %1번 값",
         "params": [
             {
                 "type": "Dropdown",
@@ -68643,7 +68685,7 @@ chocopi_servo_motor: {
         "fontColor": "#fff",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template" : "HB 빛센서 %1 번 값",
+        "template" : "HB 빛센서 %1번 값",
         "params": [
             {
                 "type": "Dropdown",
@@ -68682,7 +68724,7 @@ chocopi_servo_motor: {
         "fontColor": "#fff",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template" : "HB 거리센서 %1 번 값",
+        "template" : "HB 거리센서 %1번 값",
         "params": [
             {
                 "type": "Dropdown",
@@ -68736,7 +68778,7 @@ chocopi_servo_motor: {
         "fontColor": "#fff",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template" : "HB 소리센서 %1 번의 값",
+        "template" : "HB 소리센서 %1번 값",
         "params": [
             {
                 "type": "Dropdown",
@@ -68778,7 +68820,7 @@ chocopi_servo_motor: {
         "fontColor": "#fff",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template" : "HB 로터리센서 %1 번의 값",
+        "template" : "HB 로터리센서 %1번 값",
         "params": [
             {
                 "type": "Dropdown",
@@ -68817,7 +68859,7 @@ chocopi_servo_motor: {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template" : "HB 진동 %1 의 세기: %2 %3",
+        "template" : "HB 진동모터 %1번 세기: %2 %3",
         "params": [
             {
                 "type": "Dropdown",
@@ -68877,7 +68919,7 @@ chocopi_servo_motor: {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template" : "HB 서보모터 %1번 의 각도: %2 %3",
+        "template" : "HB 서보모터 %1번 각도: %2 %3",
         "params": [
             {
                 "type": "Dropdown",
@@ -68940,7 +68982,7 @@ chocopi_servo_motor: {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template" : "HB 기어모터 %1번 의 속도: %2 %3",
+        "template" : "HB 기어모터 %1번 속도: %2 %3",
         "params": [
             {
                 "type": "Dropdown",
@@ -69001,7 +69043,7 @@ chocopi_servo_motor: {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template" : "HB 단색LED %1번 의 밝기: %2 %3",
+        "template" : "HB 단색LED %1번 밝기: %2 %3",
         "params": [
             {
                 "type": "Dropdown",
@@ -69065,7 +69107,7 @@ chocopi_servo_motor: {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template" : "HB 삼색LED %1번 의 빨강%2 초록%3 파랑%4 %5",
+        "template" : "HB 삼색LED %1번 빨강%2 초록%3 파랑%4 %5",
         "params": [
             {
                 "type": "Dropdown",
