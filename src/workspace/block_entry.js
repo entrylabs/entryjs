@@ -48935,10 +48935,7 @@ Entry.block = {
     "class": "roduino_value",
     "isNotFor": [ "roborobo_roduino" ],
     "func": function (sprite, script) {
-        var signal = parseInt(script.getValue("VALUE", script));
-        Entry.hw.sendQueue[0] = Entry.Roborobo_Roduino.INSTRUCTION.ANALOG_READ;
-        Entry.hw.sendQueue.analogEnable[signal] = 1;
-        Entry.hw.update();
+        var signal = script.getValue("VALUE", script);
         return Entry.hw.getAnalogPortValue(signal);
     }
 },
@@ -49086,8 +49083,8 @@ Entry.block = {
         var operator = script.getField("OPERATOR");
         var value = operator == "on" ? 1 : 0;
 
-        Entry.hw.sendQueue[0] = Entry.Roborobo_Roduino.INSTRUCTION.DIGITAL_WRITE;
-        Entry.hw.sendQueue[1] = pin;
+        // Entry.hw.sendQueue[0] = Entry.Roborobo_Roduino.INSTRUCTION.DIGITAL_WRITE;
+        // Entry.hw.sendQueue[1] = pin;
         Entry.hw.setDigitalPortValue(pin, value);
         return script.callReturn();
     }
@@ -49292,6 +49289,34 @@ Entry.block = {
                 [ "OUT3", 4 ],
                 [ "OUT4", 5 ],
                 [ "OUT5", 6 ]
+            ],
+            "value": 2,
+            "fontSize": 11,
+            'arrowColor': EntryStatic.ARROW_COLOR_HW
+        }
+    ],
+    "events": {},
+    "def": {
+        "params": [ null ]
+    },
+    "paramsKeyMap": {
+        "PORT": 0
+    },
+    "func": function (sprite, script) {
+        return script.getNumberField("PORT");
+    }
+},
+"schoolkit_get_servo_port_number": {
+    "color": "#00979D",
+    "skeleton": "basic_string_field",
+    "statements": [],
+    "params": [
+        {
+            "type": "Dropdown",
+            "options": [
+                [ "OUT1", 2 ],
+                [ "OUT2", 3 ],
+                [ "OUT3", 4 ]
             ],
             "value": 2,
             "fontSize": 11,
@@ -49540,7 +49565,7 @@ Entry.block = {
     "def": {
         "params": [
             {
-                "type": "schoolkit_get_out_port_number"
+                "type": "schoolkit_get_servo_port_number"
             },
             {
                 "type": "number",
@@ -49560,7 +49585,15 @@ Entry.block = {
         var pin = script.getNumberValue("PIN", script);
         var value = script.getNumberValue("VALUE");
 
-        Entry.hw.sendQueue.digitalPinMode[pin] = Entry.Roborobo_SchoolKit.pinMode.PWM;
+        if(!Entry.hw.sendQueue.digitalPinMode) {
+            Entry.hw.sendQueue.digitalPinMode = {};
+        }
+        
+        if(!Entry.hw.sendQueue.servo) {
+            Entry.hw.sendQueue.servo = {};
+        }
+
+        Entry.hw.sendQueue.digitalPinMode[pin] = Entry.Roborobo_SchoolKit.pinMode.SERVO;
 
         if(value < 0) {
             value = 0;
@@ -68576,7 +68609,7 @@ chocopi_servo_motor: {
         "fontColor": "#fff",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template" : "아날로그 센서 %1 번 의 값",
+        "template" : "아날로그센서 %1번 값",
         "params": [
             {
                 "type": "Dropdown",
@@ -68614,7 +68647,7 @@ chocopi_servo_motor: {
         "fontColor": "#fff",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template" : "HB 온도센서 %1 번 값",
+        "template" : "HB 온도센서 %1번 값",
         "params": [
             {
                 "type": "Dropdown",
@@ -68652,7 +68685,7 @@ chocopi_servo_motor: {
         "fontColor": "#fff",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template" : "HB 빛센서 %1 번 값",
+        "template" : "HB 빛센서 %1번 값",
         "params": [
             {
                 "type": "Dropdown",
@@ -68691,7 +68724,7 @@ chocopi_servo_motor: {
         "fontColor": "#fff",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template" : "HB 거리센서 %1 번 값",
+        "template" : "HB 거리센서 %1번 값",
         "params": [
             {
                 "type": "Dropdown",
@@ -68745,7 +68778,7 @@ chocopi_servo_motor: {
         "fontColor": "#fff",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template" : "HB 소리센서 %1 번의 값",
+        "template" : "HB 소리센서 %1번 값",
         "params": [
             {
                 "type": "Dropdown",
@@ -68787,7 +68820,7 @@ chocopi_servo_motor: {
         "fontColor": "#fff",
         "skeleton": "basic_string_field",
         "statements": [],
-        "template" : "HB 로터리센서 %1 번의 값",
+        "template" : "HB 로터리센서 %1번 값",
         "params": [
             {
                 "type": "Dropdown",
@@ -68826,7 +68859,7 @@ chocopi_servo_motor: {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template" : "HB 진동 %1 의 세기: %2 %3",
+        "template" : "HB 진동모터 %1번 세기: %2 %3",
         "params": [
             {
                 "type": "Dropdown",
@@ -68886,7 +68919,7 @@ chocopi_servo_motor: {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template" : "HB 서보모터 %1번 의 각도: %2 %3",
+        "template" : "HB 서보모터 %1번 각도: %2 %3",
         "params": [
             {
                 "type": "Dropdown",
@@ -68949,7 +68982,7 @@ chocopi_servo_motor: {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template" : "HB 기어모터 %1번 의 속도: %2 %3",
+        "template" : "HB 기어모터 %1번 속도: %2 %3",
         "params": [
             {
                 "type": "Dropdown",
@@ -69010,7 +69043,7 @@ chocopi_servo_motor: {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template" : "HB 단색LED %1번 의 밝기: %2 %3",
+        "template" : "HB 단색LED %1번 밝기: %2 %3",
         "params": [
             {
                 "type": "Dropdown",
@@ -69074,7 +69107,7 @@ chocopi_servo_motor: {
         "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
-        "template" : "HB 삼색LED %1번 의 빨강%2 초록%3 파랑%4 %5",
+        "template" : "HB 삼색LED %1번 빨강%2 초록%3 파랑%4 %5",
         "params": [
             {
                 "type": "Dropdown",
