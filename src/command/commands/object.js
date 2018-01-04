@@ -207,4 +207,32 @@ goog.require("Entry.STATIC");
         undo: "objectAddSound"
     };
 
+    c[COMMAND_TYPES.objectNameEdit] = {
+        do: function(objectId, newName) {
+            return Entry.container
+                .getObject(objectId)
+                .setName(newName);
+        },
+        state: function(objectId, newName) {
+            var object = Entry.container.getObject(objectId)
+            return [
+                objectId, 
+                object.getName(),
+                newName
+            ];
+        },
+        log: function(objectId, newName) {
+            var object = Entry.container.getObject(objectId)
+            return [
+                [ 'objectId', objectId ],
+                [ 'newName', newName ],
+                [ 'oldName', object.getName() ],
+            ];
+        },
+        dom: [],
+        recordable: Entry.STATIC.RECORDABLE.SKIP,
+        validate: false,
+        undo: "objectNameEdit"
+    };
+
 })(Entry.Command);

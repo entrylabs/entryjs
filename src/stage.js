@@ -211,11 +211,14 @@ Entry.Stage.prototype.loadObject = function(object) {
  * This is use for cloned entity
  * @param {Entry.EntityObject} entity
  */
-Entry.Stage.prototype.loadEntity = function(entity) {
+Entry.Stage.prototype.loadEntity = function(entity, index) {
     var scene = entity.parent.scene;
     var objContainer = Entry.stage.getObjectContainerByScene(scene);
-    objContainer.addChild(entity.object);
-    this.sortZorder();
+    if (index > -1)
+        objContainer.addChildAt(entity.object, index);
+    else
+        objContainer.addChild(entity.object);
+    Entry.requestUpdate = true;
 };
 
 /**
@@ -265,6 +268,20 @@ Entry.Stage.prototype.unloadDialog = function(dialog) {
     this.dialogContainer.removeChild(dialog.object);
 };
 
+Entry.Stage.prototype.setEntityIndex = function(entity, index) {
+    var selectedObjectContainer = Entry.stage.selectedObjectContainer;
+    var currentIndex = selectedObjectContainer.getChildIndex(entity.object);
+    
+    if (currentIndex === index) {
+        return;
+    } else if (currentIndex > index) {
+        selectedObjectContainer.setChildIndex(entity.object, index);
+    } else {
+        selectedObjectContainer.setChildIndex(entity.object, index);
+    }
+    Entry.requestUpdate = true;
+};
+
 /**
  * sort Z index of objects
  */
@@ -294,6 +311,13 @@ Entry.Stage.prototype.sortZorder = function() {
         container.setChildIndex(entity.object, index++);
     }
 
+    Entry.requestUpdate = true;
+};
+
+/**
+ * sort Z index of objects while running
+ */
+Entry.Stage.prototype.sortZorderRun = function() {
     Entry.requestUpdate = true;
 };
 

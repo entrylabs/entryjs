@@ -5850,6 +5850,7 @@ Lang.template = {
     "roduino_off_block": " Off ",
     "schoolkit_get_in_port_number": "%1  ",
     "schoolkit_get_out_port_number": "%1  ",
+    "schoolkit_get_servo_port_number": "%1  ",
     "schoolkit_get_input_value": "디지털 %1 번 센서값  ",
     "schoolkit_set_output": "디지털 %1 번 핀 %2 %3",
     "schoolkit_motor": "%1 속도 %2(으)로 %3 %4",
