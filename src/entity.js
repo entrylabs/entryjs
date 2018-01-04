@@ -1192,7 +1192,6 @@ Entry.EntityObject.prototype.addStamp = function() {
     var stage = Entry.stage;
     var selectedObjectContainer = Entry.stage.selectedObjectContainer;
     var index = selectedObjectContainer.getChildIndex(this.object);
-    if (this.shape) index--;
     stage.loadEntity(stampEntity, index);
     this.stamps.push(stampEntity);
     
