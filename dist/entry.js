@@ -10234,7 +10234,6 @@ Entry.EntityObject.prototype.syncDialogVisible = function() {
 };
 Entry.EntityObject.prototype.addStamp = function() {
   var c = new Entry.StampEntity(this.parent, this), b = Entry.stage, d = Entry.stage.selectedObjectContainer.getChildIndex(this.object);
-  this.shape && d--;
   b.loadEntity(c, d);
   this.stamps.push(c);
   Entry.requestUpdate = !0;
