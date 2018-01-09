@@ -57,7 +57,6 @@ Entry.Painter = function (view) {
         //that.lc.respondToSizeChange();
 
         bgImage.onload = function () {
-            console.log('background');
             that.lc.repaintLayer("background");
         };
 
