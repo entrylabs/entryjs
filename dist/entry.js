@@ -12864,18 +12864,19 @@ Entry.Painter = function(c) {
     g.on("mouseenter", ".painterTopHeader", function() {
       $(this).addClass("active");
     });
-    g.on("mouseleave", ".painterTopHeader", function() {
+    g.on("mouseleave", ".painterTopHeader", function(b) {
       $(this).removeClass("active");
     });
     g = c("ul");
     f.appendChild(g);
-    var h = c("li");
+    f = c("li");
+    f.addClass("painterTopHeader");
+    g.appendChild(f);
+    var h = c("a", "entryPainterTopMenuFileNew");
+    h.bindOnClick(b.newPicture.bind(this));
+    h.addClass("entryPlaygroundPainterTopMenuFileNew");
+    h.innerHTML = Lang.Workspace.new_picture;
     f.appendChild(h);
-    f = c("a", "entryPainterTopMenuFileNew");
-    f.bindOnClick(b.newPicture.bind(this));
-    f.addClass("entryPlaygroundPainterTopMenuFileNew");
-    f.innerHTML = Lang.Workspace.new_picture;
-    h.appendChild(f);
     h = c("li", "entryPainterTopMenuFile");
     h.addClass("entryPlaygroundPainterTopMenuFile painterTopHeader");
     h.innerHTML = Lang.Workspace.painter_file;

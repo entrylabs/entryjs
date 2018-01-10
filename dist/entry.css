@@ -3518,62 +3518,44 @@ input.entryObjectNameWorkspace:-moz-read-only {
 .entryPlaygroundPainterTop {
   position: absolute;
   display: block;
-  left: 55px;
+  left: 60px;
   background-color: #634cd9;
   height: 29px;
 }
 .entryPlaygroundPainterTopMenu ul ul {
   display: none;
-  margin-top: -2px;
   margin-left: -8px;
 }
 .entryPlaygroundPainterTopMenu ul ul li a {
   height: 100%;
   color: black;
 }
-.entryPlaygroundPainterTopMenu ul ul li a:hover {
-  background: white;
-  color: black;
-}
-.entryPlaygroundPainterTopMenu li a:hover {
-  background: #4b545f;
-  color: white;
-}
 .entryPlaygroundPainterTopMenu ul li.active > ul {
   display: block;
-}
-.entryPlaygroundPainterTopMenu ul li a:hover {
-  background-color: #3b329e;
 }
 .entryPlaygroundPainterTopMenu ul {
   padding: 0;
   border-radius: 0;
   list-style: none;
   position: relative;
-  display: inline-table;
-  z-index: 100;
 }
 .entryPlaygroundPainterTopMenu ul:after {
   content: "";
   clear: both;
   display: block;
 }
-.entryPlaygroundPainterTopMenuEdit:hover {
-  background-color: #3b329e;
-}
 .entryPlaygroundPainterTopMenu ul li a {
   display: block;
-  padding: 5px 10px;
   color: white;
   text-decoration: none;
 }
 #entryPainterTopMenu {
   height: 100%;
+  padding-left: 20px;
 }
 #entryPainterTopMenu > ul {
   margin-bottom: 0;
   height: 100%;
-  line-height: 31px;
 }
 #entryPainterTopMenuEdit > ul > li {
   border-bottom: solid 1px #643cd9;
@@ -3586,41 +3568,53 @@ input.entryObjectNameWorkspace:-moz-read-only {
   background-color: white;
   border-bottom: solid 1px #643cd9;
 }
-#entryPainterTopMenuEdit > ul > li > :hover {
+.painterTopHeader > ul > li a {
+  padding: 5px 10px;
+}
+.painterTopHeader > ul > li > :hover {
+  background-color: #643cd9;
+  color: white;
+}
+.painterTopHeader > ul > li > :hover {
   background-color: #643cd9;
   color: white;
 }
 #entryPainterTopMenuEdit {
   color: white;
   width: auto;
-  position: relative;
+  padding-left: 8px;
+  position: absolute;
   vertical-align: top;
-  margin-top: -28px;
-  margin-left: 16px;
   height: 100%;
 }
-#entryPainterTopMenuFile > ul > li {
+.painterTopHeader > ul > li {
   border-bottom: solid 1px #643cd9;
   border-left: solid 1px #643cd9;
   border-right: solid 1px #643cd9;
   background-color: white;
   font-family: nanumBarunRegular !important;
 }
-#entryPainterTopMenuFile > ul > li {
-  background-color: white;
-  border-bottom: solid 1px #643cd9;
-  height: 41px;
-}
-#entryPainterTopMenuFile > ul > li > :hover {
-  background-color: #643cd9;
-  color: white;
-}
 #entryPainterTopMenuFile {
   color: white;
-  position: relative;
   width: auto;
   vertical-align: top;
-  margin-left: 5px;
+  padding-left: 8px;
+}
+.entryPlaygroundPainterTopMenu > ul > li {
+  display: inline-block;
+  height: 100%;
+  line-height: 28px;
+}
+.painterTopHeader > ul {
+  z-index: 100;
+}
+.painterTopHeader > ul > li {
+  height: 41px;
+  line-height: 31px;
+}
+.painterTopHeader > ul > li:hover {
+  background-color: #643cd9;
+  color: white;
 }
 .entryPlaygroundPainterTopStageXY {
   position: absolute;
@@ -3941,12 +3935,8 @@ input.entryObjectNameWorkspace:-moz-read-only {
   height: 10px;
 }
 .entryPlaygroundPainterTopMenuFileNew {
-  position: absolute;
   color: white;
-  left: 20px;
-  top: 0px;
-  padding: 4px;
-  height: 28px;
+  height: 100%;
   cursor: pointer;
   list-style: none;
   z-index: 101;
@@ -3955,7 +3945,6 @@ input.entryObjectNameWorkspace:-moz-read-only {
 .entryPlaygroundPainterTopMenuFileSave {
   position: absolute;
   color: white;
-  padding-left: 8px;
   left: 95px;
   top: 0px;
   padding-top: 4px;
@@ -3964,7 +3953,7 @@ input.entryObjectNameWorkspace:-moz-read-only {
   cursor: pointer;
   font-family: nanumBarunBold !important;
 }
-.entryPlaygroundPainterTopMenuFileSave:hover,
+.entryPlaygroundPainterTopMenuEdit:hover,
 .entryPlaygroundPainterTopMenuFileNew:hover {
   background-color: #3b329e !important;
 }
@@ -3972,20 +3961,17 @@ input.entryObjectNameWorkspace:-moz-read-only {
 .entryPlaygroundPainterTopMenuFile {
   position: absolute;
   color: white;
-  padding-left: 8px;
-  left: 158px;
+  left: 148px;
   height: 28px;
   width: 55px;
   cursor: pointer;
-  margin-top: -4px;
-  padding-top: 3px;
   font-family: nanumBarunBold !important;
 }
 .entryPlaygroundPainterTopMenuEdit > li {
   list-style-type: none;
 }
 .entryPlaygroundPainterTopMenuFile {
-  left: 100px;
+  left: 77px;
 }
 .entryPlaygroundPainterTopMenuFile > li {
   list-style-type: none;
