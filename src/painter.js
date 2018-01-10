@@ -273,7 +273,7 @@ Entry.Painter = function (view) {
             $(this).addClass('active');
         });
 
-        $painterTopMenu.on('mouseleave', '.painterTopHeader', function() {
+        $painterTopMenu.on('mouseleave', '.painterTopHeader', function(e) {
             $(this).removeClass('active');
         });
 
@@ -281,7 +281,8 @@ Entry.Painter = function (view) {
         painterTopMenu.appendChild(painterTopMenuContainer);
 
         var painterTopMenuFileNew = ce('li');
-        painterTopMenu.appendChild(painterTopMenuFileNew);
+        painterTopMenuFileNew.addClass('painterTopHeader');
+        painterTopMenuContainer.appendChild(painterTopMenuFileNew);
 
         var painterTopMenuFileNewLink = ce('a', 'entryPainterTopMenuFileNew');
         painterTopMenuFileNewLink.bindOnClick(painter.newPicture.bind(this));
