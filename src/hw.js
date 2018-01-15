@@ -48,6 +48,7 @@ Entry.HW = function() {
         '3.1': Entry.Bitbrick,
         '4.2': Entry.Arduino,
         '5.1': Entry.Neobot,
+        '5.2': Entry.NeobotTheme,
         '6.1': Entry.mkboard,
         '6.2': Entry.memaker,
         '7.1': Entry.Robotis_carCont,
