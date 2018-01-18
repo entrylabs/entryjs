@@ -34,8 +34,8 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
 (function(p) {
     var X_PADDING = 8,
         TEXT_Y_PADDING = 4,
-        RADIUS = 49,
-        FILL_PATH = 'M 0,0 v -49 A 49,49 0 %LARGE 1 %X,%Y z';
+        RADIUS = 47.5,
+        FILL_PATH = 'M 0,0 v -47.5 A 47.5,47.5 0 %LARGE 1 %X,%Y z';
 
     p.renderStart = function(board, mode) {
         if (this.svgGroup) $(this.svgGroup).remove();
@@ -128,20 +128,16 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
         //svg option dom
         this.angleOptionGroup = this.appendSvgOptionGroup();
         var circle = this.angleOptionGroup.elem('circle', {
-            x:0, y:0, r:RADIUS,
+            x:0, y:0, r:RADIUS + 2.5,
             class:'entry-field-angle-circle'
         });
 
-        $(this.angleOptionGroup).on('mousedown touchstart', function(e) {
-            e.stopPropagation();
-            that._updateByCoord(e);
-        });
+        var dividerGroup = this.angleOptionGroup.elem('g');
 
-        this._dividerGroup = this.angleOptionGroup.elem('g');
         for (var a = 0; a < 360; a += 15) {
-            this._dividerGroup.elem('line', {
+            dividerGroup.elem('line', {
                 x1:RADIUS, y1:0,
-                x2:RADIUS - (a % 45 === 0 ? 10 : 5), y2:0,
+                x2:RADIUS - (a % 45 === 0 ? 8.3 : 6), y2:0,
                 transform: 'rotate(' + a + ', ' +  (0) + ', ' + (0) + ')',
                 class: 'entry-angle-divider'
             });
@@ -149,18 +145,46 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
 
         var pos = this.getAbsolutePosFromBoard();
         pos.x = pos.x + this.box.width/2;
-        pos.y = pos.y + this.box.height/2 + RADIUS + 1;
+        pos.y = pos.y + this.box.height/2 + RADIUS + 5;
 
         this.angleOptionGroup.attr({
             class: 'entry-field-angle',
             transform: "translate(" + pos.x + "," + pos.y + ")"
         });
+        
+        var $angleOptionGroup = $(this.angleOptionGroup);
 
-        $(this.angleOptionGroup).bind('mousemove touchmove',
-            this._updateByCoord.bind(this));
+        $angleOptionGroup.bind('mousedown touchstart', function(e) {
+            e.stopPropagation();
+            $angleOptionGroup.bind('mousemove.fieldAngle touchmove.fieldAngle', function(e) {
+                that._updateByCoord(e);
+            });
+            $angleOptionGroup.bind('mouseup touchend', function() {
+                $angleOptionGroup.unbind('.fieldAngle');
+            });
+        });
 
-        $(this.angleOptionGroup).bind('mouseup touchend',
-            this.destroyOption.bind(this));
+        this._fillPath = this.angleOptionGroup.elem('path', {
+            d: FILL_PATH.
+                replace('%X', 0).
+                replace('%Y', 0).
+                replace('%LARGE', 1),
+            class: 'entry-angle-fill-area'
+        });
+
+        this.angleOptionGroup.elem('circle', { 
+            cx: 0, cy: 0, r: '1.5px', fill: '#333333'
+        });
+
+        this._indicator = this.angleOptionGroup.elem('line', {
+                x1: 0, y1: 0, x2: 0, y2: 0,
+                class: 'entry-angle-indicator'
+            });
+
+        this._indicatorCap =
+            this.angleOptionGroup.elem('circle', { 
+                cx: 0, cy: 0, r: '6px', fill: '#397dc6'
+            });
 
         this.updateGraph();
         this.optionGroup.focus();
@@ -180,8 +204,9 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
             absolutePos.y + that.box.height/2 + 1
         ];
 
-        that.optionGroup.val(that.modValue(
-            compute(zeroPos, mousePos)));
+        that.optionGroup.val(
+            that.modValue(compute(zeroPos, mousePos))
+        );
         function compute(zeroPos, mousePos) {
             var dx = mousePos[0] - zeroPos[0];
             var dy = mousePos[1] - zeroPos[1] - RADIUS - 1;
@@ -196,32 +221,25 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
     };
 
     p.updateGraph = function() {
-        if (this._fillPath) this._fillPath.remove();
-
         var angleRadians = Entry.toRadian(this.getValue());
-        var x = Math.sin(angleRadians) * RADIUS;
-        var y = Math.cos(angleRadians) * -RADIUS;
+        var sinVal = Math.sin(angleRadians);
+        var cosVal = Math.cos(angleRadians);
+        var x = sinVal * RADIUS;
+        var y = cosVal * -RADIUS;
         var largeFlag = (angleRadians > Math.PI) ? 1 : 0;
 
-
-        this._fillPath = this.angleOptionGroup.elem('path', {
+        this._fillPath.attr({
             d: FILL_PATH.
                 replace('%X', x).
                 replace('%Y', y).
-                replace('%LARGE', largeFlag),
-            class: 'entry-angle-fill-area'
-        });
-
-        this.angleOptionGroup.appendChild(this._dividerGroup);
-
-        if (this._indicator) this._indicator.remove();
-
-        this._indicator =
-            this.angleOptionGroup.elem('line', {
-                x1: 0, y1: 0, x2: x, y2: y
+                replace('%LARGE', largeFlag)
             });
 
-        this._indicator.attr({class:'entry-angle-indicator'});
+        this._indicator.attr({ x1: 0, y1: 0, x2: x, y2: y });
+
+        x = sinVal * (RADIUS-6);
+        y = cosVal * -(RADIUS-6);
+        this._indicatorCap.attr({ cx: x, cy: y });
     };
 
     p.applyValue = function() {
