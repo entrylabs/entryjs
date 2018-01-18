@@ -98,9 +98,8 @@ Entry.EntityObject.prototype.injectModel = function(pictureModel, entityModel) {
     }
 
     //entity
-    if (entityModel) {
-        this.syncModel_(entityModel);
-    } else {}
+    if (entityModel) { this.syncModel_(entityModel); }
+    else {}
 };
 
 /**
