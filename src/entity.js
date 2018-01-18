@@ -92,14 +92,13 @@ Entry.EntityObject.prototype.injectModel = function(pictureModel, entityModel) {
         this.setFont(entityModel.font);
         this.setBGColour(entityModel.bgColor);
         this.setColour(entityModel.colour);
-        this.setUnderLine(entityModel.underLine);
+        this.setUnderLine(entityModel.underline);
         this.setStrike(entityModel.strike);
         this.setText(entityModel.text);
     }
 
     //entity
     if (entityModel) { this.syncModel_(entityModel); }
-    else {}
 };
 
 /**
