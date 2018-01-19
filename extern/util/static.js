@@ -42,6 +42,29 @@ EntryStatic.categoryList = [
     'category_physical', 'category_etc'
 ];
 
+EntryStatic.variableBlockList = [
+    "get_variable",
+    "change_variable",
+    "set_variable",
+    "show_variable",
+    "hide_variable",
+    "value_of_index_from_list",
+    "add_value_to_list",
+    "remove_value_from_list",
+    "insert_value_to_list",
+    "change_value_list_index",
+    "length_of_list",
+    "is_included_in_list",
+    "show_list",
+    "hide_list",
+];
+
+EntryStatic.messageBlockList = [
+    "when_message_cast",
+    "message_cast",
+    "message_cast_wait",
+];
+
 EntryStatic.requiredTimes = [1,2,3,4,5];
 
 EntryStatic.searchProjectOption = [

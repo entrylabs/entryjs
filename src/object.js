@@ -827,6 +827,15 @@ Entry.EntryObject = function(model) {
                         );
                     }
                 }
+            },
+            {
+                divider: true,
+            },
+            {
+                text: Lang.Blocks.export_object,
+                callback: function(){
+                    Entry.dispatchEvent('exportObject', object);
+                }
             }
         ];
 
@@ -908,7 +917,7 @@ Entry.EntryObject = function(model) {
                 doc.bind('mousemove.object touchmove.object', onMouseMove);
                 doc.bind('mouseup.object touchend.object', onMouseUp);
             }
-
+ 
             function onMouseMove(e) {
                 e.stopPropagation();
                 if (!mouseDownCoordinate) return;
