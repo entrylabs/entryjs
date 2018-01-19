@@ -13739,7 +13739,7 @@ Entry.block = {
                 [ Lang.Blocks.FLOW_stop_object_this_object, "thisOnly" ],
                 [ Lang.Blocks.FLOW_stop_object_this_thread, "thisThread" ],
                 [ Lang.Blocks.FLOW_stop_object_other_thread, "otherThread" ],
-                [ Lang.Blocks.FLOW_stop_object_other_objects, "otherObjects" ]
+                [ Lang.Blocks.FLOW_stop_object_other_objects, "other_objects" ]
             ],
             "value": "all",
             "fontSize": 11,
@@ -13781,8 +13781,8 @@ Entry.block = {
                 return this.die();
             case 'thisObject':
                 object.script.clearExecutors();
-            return this.die();
-        case 'thisThread':
+                return this.die();
+            case 'thisThread':
                 return this.die();
             case 'otherThread':
                 var executor = this.executor;
@@ -13800,7 +13800,7 @@ Entry.block = {
                     }
                 }
                 return script.callReturn();
-            case 'otherObjects':
+            case 'other_objects':
                 Entry.container.mapObject(function(obj) {
                     if(!obj.objectType || obj === object) { return; }
 
@@ -13820,7 +13820,7 @@ Entry.block = {
                         [ Lang.Blocks.FLOW_stop_object_this_object, "thisOnly" ],
                         [ Lang.Blocks.FLOW_stop_object_this_thread, "thisThread" ],
                         [ Lang.Blocks.FLOW_stop_object_other_thread, "otherThread" ],
-                        [ Lang.Blocks.FLOW_stop_object_other_objects, "otherObjects" ]
+                        [ Lang.Blocks.FLOW_stop_object_other_objects, "other_objects" ]
                     ],
                     "value": "all",
                     "fontSize": 11,
