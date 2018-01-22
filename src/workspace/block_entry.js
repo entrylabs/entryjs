@@ -32118,7 +32118,7 @@ Entry.block = {
             "PORT": 0
         },
         "class": "neobot_value",
-        "isNotFor": ["neobot", "neobot_theme"],
+        "isNotFor": ["neobot", "neobot_sensor_theme"],
         "func": function (sprite, script) {
             var port = script.getStringField('PORT');
             return Entry.hw.portData[port];
@@ -32181,7 +32181,7 @@ Entry.block = {
             "MAX": 4
         },
         "class": "neobot_value",
-        "isNotFor": ["neobot", "neobot_theme"],
+        "isNotFor": ["neobot", "neobot_sensor_theme"],
         "func": function (sprite, script) {
             var port = script.getStringField('PORT');
             var value = Entry.hw.portData[port];
@@ -32238,7 +32238,7 @@ Entry.block = {
             "COLOR": 0
         },
         "class": "neobot_value",
-        "isNotFor": ["neobot", "neobot_theme"],
+        "isNotFor": ["neobot", "neobot_sensor_theme"],
         "func": function (sprite, script) {
             var value = script.getNumberField('COLOR');
             return value;
@@ -32290,7 +32290,7 @@ Entry.block = {
             "COLOR" : 1
         },
         "class": "neobot_value",
-        "isNotFor": ["neobot", "neobot_theme"],
+        "isNotFor": ["neobot", "neobot_sensor_theme"],
         "func": function (sprite, script) {
 
             var sensorTemp = script.getStringField("SENSOR");
@@ -32405,7 +32405,7 @@ Entry.block = {
             "SPEED": 1
         },
         "class": "neobot_motor",
-        "isNotFor": ["neobot", "neobot_theme"],
+        "isNotFor": ["neobot"],
         "func": function (sprite, script) {
             var speed = Entry.parseNumber(script.getStringValue('SPEED'));
             var direction = script.getNumberField('DIRECTION');
@@ -32430,7 +32430,7 @@ Entry.block = {
             "type": "neobot_stop_left_motor"
         },
         "class": "neobot_motor",
-        "isNotFor": ["neobot", "neobot_theme"],
+        "isNotFor": ["neobot"],
         "func": function (sprite, script) {
             Entry.hw.sendQueue['DCL'] = 0;
             return script.callReturn();
@@ -32472,7 +32472,7 @@ Entry.block = {
             "SPEED": 1
         },
         "class": "neobot_motor",
-        "isNotFor": ["neobot", "neobot_theme"],
+        "isNotFor": ["neobot"],
         "func": function (sprite, script) {
             var speed = Entry.parseNumber(script.getStringValue('SPEED'));
             var direction = script.getNumberField('DIRECTION');
@@ -32497,7 +32497,7 @@ Entry.block = {
             "type": "neobot_stop_right_motor"
         },
         "class": "neobot_motor",
-        "isNotFor": ["neobot", "neobot_theme"],
+        "isNotFor": ["neobot"],
         "func": function (sprite, script) {
             Entry.hw.sendQueue['DCR'] = 0;
             return script.callReturn();
@@ -32555,7 +32555,7 @@ Entry.block = {
             "DURATION": 2
         },
         "class": "neobot_motor",
-        "isNotFor": ["neobot", "neobot_theme"],
+        "isNotFor": ["neobot"],
         "func": function (sprite, script) {
             var sq = Entry.hw.sendQueue;
 
@@ -32633,7 +32633,7 @@ Entry.block = {
             "type": "neobot_stop_all_motor",
         },
         "class": "neobot_motor",
-        "isNotFor": ["neobot", "neobot_theme"],
+        "isNotFor": ["neobot"],
         "func": function (sprite, script) {
             Entry.hw.sendQueue['DCL'] = 0;
             Entry.hw.sendQueue['DCR'] = 0;
@@ -32674,7 +32674,7 @@ Entry.block = {
             "DEGREE": 1
         },
         "class": "neobot_output",
-        "isNotFor": ["neobot", "neobot_theme"],
+        "isNotFor": ["neobot"],
         "func": function (sprite, script) {
             var port = script.getStringField('PORT', script);
             var degree = script.getNumberValue('DEGREE');
@@ -32730,7 +32730,7 @@ Entry.block = {
             "VALUE": 1
         },
         "class": "neobot_output",
-        "isNotFor": ["neobot", "neobot_theme"],
+        "isNotFor": ["neobot", "neobot_sensor_theme"],
         "func": function (sprite, script) {
             var port = script.getStringField('PORT', script);
             var value = script.getNumberValue('VALUE', script);
@@ -32774,7 +32774,7 @@ Entry.block = {
             "VALUE": 0
         },
         "class": "neobot_output",
-        "isNotFor": ["neobot", "neobot_theme"],
+        "isNotFor": ["neobot"],
         "func": function (sprite, script) {
             var value = script.getNumberValue('VALUE', script);
             if(value > 99) {
@@ -32804,7 +32804,7 @@ Entry.block = {
             "VALUE": 0
         },
         "class": "neobot_output",
-        "isNotFor": ["neobot", "neobot_theme"],
+        "isNotFor": ["neobot"],
         "func": function (sprite, script) {
             Entry.hw.sendQueue['FND'] = parseInt('0x00');
             Entry.hw.sendQueue['OPT'] = Entry.hw.sendQueue['OPT'] & (~8);
@@ -32873,7 +32873,7 @@ Entry.block = {
             "DURATION": 2
         },
         "class": "neobot_note",
-        "isNotFor": ["neobot", "neobot_theme"],
+        "isNotFor": ["neobot"],
         "func": function (sprite, script) {
             var sq = Entry.hw.sendQueue;
 
@@ -32952,7 +32952,7 @@ Entry.block = {
             "VALUE":3
         },
         "class": "neobot_note",
-        "isNotFor": ["neobot", "neobot_theme"],
+        "isNotFor": ["neobot"],
         "func": function (sprite, script) {
             var sq = Entry.hw.sendQueue;
             
@@ -33044,7 +33044,7 @@ Entry.block = {
             "VALUE": 2
         },
         "class": "neobot_output",
-        "isNotFor": ["neobot", "neobot_theme"],
+        "isNotFor": ["neobot", "neobot_sensor_theme"],
         "func": function (sprite, script) {
             var port = script.getStringField('PORT', script);
             var colour = script.getField("COLOR", script);
@@ -33099,7 +33099,7 @@ Entry.block = {
             "VALUE": 2
         },
         "class": "neobot_output",
-        "isNotFor": ["neobot", "neobot_theme"],
+        "isNotFor": ["neobot", "neobot_sensor_theme"],
         "func": function (sprite, script) {
             var port = script.getStringField('PORT_IN');
             var inputPortValue = Entry.hw.portData[port];
