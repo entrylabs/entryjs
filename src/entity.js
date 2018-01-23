@@ -92,15 +92,13 @@ Entry.EntityObject.prototype.injectModel = function(pictureModel, entityModel) {
         this.setFont(entityModel.font);
         this.setBGColour(entityModel.bgColor);
         this.setColour(entityModel.colour);
-        this.setUnderLine(entityModel.underLine);
+        this.setUnderLine(entityModel.underline);
         this.setStrike(entityModel.strike);
         this.setText(entityModel.text);
     }
 
     //entity
-    if (entityModel) {
-        this.syncModel_(entityModel);
-    } else {}
+    if (entityModel) { this.syncModel_(entityModel); }
 };
 
 /**
@@ -1192,7 +1190,6 @@ Entry.EntityObject.prototype.addStamp = function() {
     var stage = Entry.stage;
     var selectedObjectContainer = Entry.stage.selectedObjectContainer;
     var index = selectedObjectContainer.getChildIndex(this.object);
-    if (this.shape) index--;
     stage.loadEntity(stampEntity, index);
     this.stamps.push(stampEntity);
     

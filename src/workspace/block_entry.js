@@ -13822,7 +13822,8 @@ Entry.block = {
                 [ Lang.Blocks.FLOW_stop_object_all, "all" ],
                 [ Lang.Blocks.FLOW_stop_object_this_object, "thisOnly" ],
                 [ Lang.Blocks.FLOW_stop_object_this_thread, "thisThread" ],
-                [ Lang.Blocks.FLOW_stop_object_other_thread, "otherThread" ]
+                [ Lang.Blocks.FLOW_stop_object_other_thread, "otherThread" ],
+                [ Lang.Blocks.FLOW_stop_object_other_objects, "otherObjects" ]
             ],
             "value": "all",
             "fontSize": 11,
@@ -13854,10 +13855,10 @@ Entry.block = {
         switch(script.getField("TARGET", script)) {
             case 'all':
                 Entry.container.mapObject(function(obj) {
-                    if(!obj.objectType)
-                        return;
+                    if(!obj.objectType) return;
+
                     obj.script.clearExecutors();
-                }, null);
+                });
                 return this.die();
             case 'thisOnly':
                 object.script.clearExecutorsByEntity(sprite);
@@ -13865,7 +13866,7 @@ Entry.block = {
             case 'thisObject':
                 object.script.clearExecutors();
             return this.die();
-            case 'thisThread':
+        case 'thisThread':
                 return this.die();
             case 'otherThread':
                 var executor = this.executor;
@@ -13883,6 +13884,13 @@ Entry.block = {
                     }
                 }
                 return script.callReturn();
+            case 'otherObjects':
+                Entry.container.mapObject(function(obj) {
+                    if(!obj.objectType || obj === object) { return; }
+
+                    obj.script.clearExecutors();
+                });
+                return script.callReturn();
         }
     },
     "syntax": {"js": [], "py": [
@@ -13895,7 +13903,8 @@ Entry.block = {
                         [ Lang.Blocks.FLOW_stop_object_all, "all" ],
                         [ Lang.Blocks.FLOW_stop_object_this_object, "thisOnly" ],
                         [ Lang.Blocks.FLOW_stop_object_this_thread, "thisThread" ],
-                        [ Lang.Blocks.FLOW_stop_object_other_thread, "otherThread" ]
+                        [ Lang.Blocks.FLOW_stop_object_other_thread, "otherThread" ],
+                        [ Lang.Blocks.FLOW_stop_object_other_objects, "otherObjects" ]
                     ],
                     "value": "all",
                     "fontSize": 11,

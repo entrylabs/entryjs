@@ -200,7 +200,7 @@ Entry.EntryObject = function(model) {
                 if (options.bold) fontStyle += 'bold ';
                 if (options.italic) fontStyle += 'italic ';
 
-                json.underline = options.underline;
+                json.underLine = options.underLine;
                 json.strike = options.strike;
                 json.font = fontStyle + "20px " + options.font.family;
                 json.colour = options.colour;
@@ -213,7 +213,7 @@ Entry.EntryObject = function(model) {
                     json.regY = json.height / 2;
                 }
             } else {
-                json.underline = false;
+                json.underLine = false;
                 json.strike = false;
                 json.font = '20px Nanum Gothic';
                 json.colour = '#000000';
