@@ -298,20 +298,7 @@ Entry.Stage.prototype.sortZorder = function() {
     for (var i=length-1; i>=0; i--) {
         var object = objects[i];
 
-        object.clonedEntities.forEach(function(ce) {
-            if (ce._index === undefined) {
-                ce.shape && container.setChildIndex(ce.shape, index++);
-
-                ce._index = index;
-                container.setChildIndex(ce.object, index++);
-            } else {
-                index++;
-                ce.shape && index++;
-            }
-        });
-
         var entity = object.entity;
-        entity.shape && container.setChildIndex(entity.shape, index++);
         container.setChildIndex(entity.object, index++);
     }
 

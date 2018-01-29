@@ -9861,10 +9861,7 @@ Entry.block = {
     "isNotFor": [ "textBox" ],
     "func": function (sprite, script) {
 
-        if (sprite.brush)
-            sprite.brush.stop = false;
-        else
-            Entry.setBasicBrush(sprite);
+        Entry.setBasicBrush(sprite);
 
         sprite.brush.moveTo(sprite.getX(), sprite.getY()*-1);
 
@@ -9891,7 +9888,7 @@ Entry.block = {
     "class": "brush_control",
     "isNotFor": [ "textBox" ],
     "func": function (sprite, script) {
-        if (sprite.brush && sprite.shape)
+        if (sprite.brush && sprite.shapes.length)
             sprite.brush.stop = true;
 
         return script.callReturn();
@@ -9929,7 +9926,7 @@ Entry.block = {
     "func": function (sprite, script) {
         var colour = script.getField("VALUE", script);
 
-        if (!sprite.brush) {
+        if (!sprite.brush || !sprite.shapes.length) {
             Entry.setBasicBrush(sprite);
             sprite.brush.stop = true;
         }
@@ -9977,7 +9974,7 @@ Entry.block = {
     "class": "brush_color",
     "isNotFor": [ "textBox" ],
     "func": function (sprite, script) {
-        if (!sprite.brush) {
+        if (!sprite.brush || !sprite.shapes.length) {
             Entry.setBasicBrush(sprite);
             sprite.brush.stop = true;
         }
@@ -10038,7 +10035,7 @@ Entry.block = {
     "func": function (sprite, script) {
         var thickness = script.getNumberValue("VALUE", script);
 
-        if (!sprite.brush) {
+        if (!sprite.brush || !sprite.shapes.length) {
             Entry.setBasicBrush(sprite);
             sprite.brush.stop = true;
         }
@@ -10101,7 +10098,7 @@ Entry.block = {
     "func": function (sprite, script) {
         var thickness = script.getNumberValue("VALUE", script);
 
-        if (!sprite.brush) {
+        if (!sprite.brush || !sprite.shapes.length) {
             Entry.setBasicBrush(sprite);
             sprite.brush.stop = true;
         }
@@ -10151,7 +10148,7 @@ Entry.block = {
     "func": function (sprite, script) {
         var opacity = script.getNumberValue("VALUE", script);
 
-        if (!sprite.brush) {
+        if (!sprite.brush || !sprite.shapes.length) {
             Entry.setBasicBrush(sprite);
             sprite.brush.stop = true;
         }
@@ -10203,7 +10200,7 @@ Entry.block = {
     "func": function (sprite, script) {
         var opacity = script.getNumberValue("VALUE", script);
 
-        if (!sprite.brush) {
+        if (!sprite.brush || !sprite.shapes.length) {
             Entry.setBasicBrush(sprite);
             sprite.brush.stop = true;
         }
@@ -10317,7 +10314,7 @@ Entry.block = {
     "func": function (sprite, script) {
         var opacity = script.getNumberValue("VALUE", script);
 
-        if (!sprite.brush) {
+        if (!sprite.brush || !sprite.shapes.length) {
             Entry.setBasicBrush(sprite);
             sprite.brush.stop = true;
         }
@@ -10379,7 +10376,7 @@ Entry.block = {
     "func": function (sprite, script) {
         var opacity = script.getNumberValue("VALUE", script);
 
-        if (!sprite.brush) {
+        if (!sprite.brush || !sprite.shapes.length) {
             Entry.setBasicBrush(sprite);
             sprite.brush.stop = true;
         }
@@ -30320,17 +30317,17 @@ Entry.block = {
                     break;
                     
                 var frontEntity = selectedObjectContainer.getChildAt(currentIndex + 1).entity;
-                targetIndex += (frontEntity.shape ? 2 : 1) + frontEntity.stamps.length;
+                targetIndex += (frontEntity.shapes.length ? 2 : 1) + frontEntity.stamps.length;
                 break;
             case 'BACKWARD':
-                targetIndex -= (sprite.shape ? 2 : 1) + sprite.stamps.length;
+                targetIndex -= (sprite.shapes.length ? 2 : 1) + sprite.stamps.length;
                 var backEntity = selectedObjectContainer.getChildAt(targetIndex);
                 if (!backEntity) {
                     targetIndex = 0;
                     break;
                 }
                 backEntity = backEntity.entity;
-                targetIndex -= (backEntity.shape ? 1 : 0) + backEntity.stamps.length;
+                targetIndex -= (backEntity.shapes.length ? 1 : 0) + backEntity.stamps.length;
                 break;
             case 'BACK':
                 targetIndex = 0;

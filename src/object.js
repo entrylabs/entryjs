@@ -563,7 +563,7 @@ Entry.EntryObject = function(model) {
 
         this.clonedEntities.push(clonedEntity);
         var targetIndex = Entry.stage.selectedObjectContainer.getChildIndex(entity.object);
-        targetIndex -= (entity.shape ? 1 : 0) + entity.stamps.length;
+        targetIndex -= (entity.shapes.length ? 1 : 0) + entity.stamps.length;
         Entry.stage.loadEntity(clonedEntity, targetIndex);
         
         if (entity.brush) Entry.setCloneBrush(clonedEntity, entity.brush);
