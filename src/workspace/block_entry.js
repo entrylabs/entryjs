@@ -52513,7 +52513,6 @@ codestar_tilt: {
 "hidden_loop": {
     "color": "#7C7C7C",
     "skeleton": "basic_loop",
-    "template": "%1 번 반복하기 %2",
     "statements": [
         {
             "accept": "basic"
