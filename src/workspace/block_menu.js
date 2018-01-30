@@ -305,12 +305,25 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
                 var datum = currentThread.toJSON(true);
                 datum[0].x = datum[0].x - svgWidth + (dx || 0);
                 datum[0].y = datum[0].y + distance + (dy || 0);
-                var newBlockView =
-                    this._boardBlockView =
-                    Entry.do("addThreadFromBlockMenu", datum)
-                        .value.getFirstBlock().view;
+
+                var newBlock = Entry.do("addThreadFromBlockMenu", datum)
+                    .value.getFirstBlock();
+                var newBlockView = newBlock && newBlock.view;
+
+                //if some error occured 
+                //blockView is not exist
+                if (!newBlockView) {
+                    newBlock && newBlock.destroy();
+                    return;
+                }
+
+                this._boardBlockView = newBlockView;
+
                 newBlockView.onMouseDown.call(newBlockView, e);
-                newBlockView.dragInstance.set({isNew:true});
+                newBlockView.dragInstance.set({
+                    isNew: true
+                });
+
                 GS.setView(newBlockView, workspaceMode);
             }
         } else {

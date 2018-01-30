@@ -136,7 +136,6 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
 
         this.loadSchema();
         this.view && this.view.changeType();
-
     };
 
     p.getSchema = function() { // for lazy loading
@@ -145,11 +144,12 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
         return this._schema;
     };
 
-    p.loadSchema = function() {
+    p.loadSchema = function () {
         var that = this;
         this._schema = Entry.block[this.type];
-
-        if (!this._schema) return;
+        if (!this._schema) {
+            return;
+        }
 
         if (!this._schemaChangeEvent && this._schema.changeEvent)
             this._schemaChangeEvent = this._schema.changeEvent.attach(
@@ -170,11 +170,12 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
             for (var key in events) {
                 if (!this.events[key]) this.events[key] = [];
                 var funcs = events[key];
-                for (var i=0; i<funcs.length; i++) {
+                for (var i = 0; i < funcs.length; i++) {
                     var func = funcs[i];
                     if (!func) continue;
-                    var index = this.events[key].indexOf(func);
-                    if (index < 0) this.events[key].push(func);
+                    if (this.events[key].indexOf(func) < 0) {
+                        this.events[key].push(func);
+                    }
                 }
             }
         }
@@ -188,11 +189,14 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
             var value = (thisParams[i] === undefined || thisParams[i] === null) ?
                 params[i].value : thisParams[i];
 
-            var paramInjected = thisParams[i] || i<thisParams.length;
+            var paramInjected = thisParams[i] || i < thisParams.length;
 
             if (value && (params[i].type === 'Output' || params[i].type === 'Block')) {
                 if (typeof value !== "object")
-                    value = {type: "number", params: [value]};
+                    value = {
+                        type: "number",
+                        params: [value]
+                    };
                 value = new Entry.Block(value, this.thread);
             }
 

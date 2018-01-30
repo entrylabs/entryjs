@@ -52,13 +52,19 @@ Entry.ThreadView = function(thread, board) {
             blocks[i].view.renderBlock();
     };
 
-    p.requestAbsoluteCoordinate = function(blockView) {
+    p.requestAbsoluteCoordinate = function (blockView) {
         var blocks = this.thread.getBlocks();
         var block = blocks.shift();
-        var pos = {x: 0, y: 0};
-        if (!(this.parent instanceof Entry.Board ||
-              this.parent instanceof Entry.BlockMenu))
-            pos = this.parent.requestAbsoluteCoordinate();
+        var pos = {
+            x: 0,
+            y: 0
+        };
+        var parent = this.parent;
+        if (!(parent instanceof Entry.Board ||
+            parent instanceof Entry.BlockMenu) &&
+            parent.requestAbsoluteCoordinate) {
+            pos = parent.requestAbsoluteCoordinate();
+        }
 
         while (block && block.view !== blockView && block.view) {
             var prevBlockView = block.view;
