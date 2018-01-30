@@ -29176,12 +29176,17 @@ Entry.block = {
     "func": function (sprite, script) {
         if (!script.isStart) {
             var timeValue = script.getNumberValue("SECOND", script);
-            var message = script.getStringValue("VALUE", script);
+            var message = script.getValue("VALUE", script);
             var mode = script.getField("OPTION", script);
             script.isStart = true;
             script.timeFlag = 1;
-            if (!message && typeof message != 'number')
+            if (message === "") {
                 message = '    ';
+            } else if (typeof message === "boolean") {
+                message = message ? "True" : "False";
+            } else {
+                message = message + "";
+            }
             message = Entry.convertToRoundedDecimals(message, 3);
             new Entry.Dialog(sprite, message, mode);
             sprite.syncDialogVisible(sprite.getVisible());
@@ -29286,9 +29291,13 @@ Entry.block = {
     "class": "say",
     "isNotFor": [ "textBox" ],
     "func": function (sprite, script) {
-        var message = script.getStringValue("VALUE", script);
-        if (!message && typeof message != 'number') {
+        var message = script.getValue("VALUE", script);
+        if (message === "") {
             message = '    ';
+        } else if (typeof message === "boolean") {
+            message = message ? "True" : "False";
+        } else {
+            message = message + "";
         }
         var mode = script.getField("OPTION", script);
         message = Entry.convertToRoundedDecimals(message, 3);
