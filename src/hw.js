@@ -1,4 +1,4 @@
-/**
+﻿/**
  * @fileoverview HW object class for connect arduino.
  */
 'use strict';
@@ -78,6 +78,7 @@ Entry.HW = function() {
         '1B.1': Entry.EduMaker,
         '1C.1': Entry.hummingbird,
         '1D.1': Entry.JDKit,
+		'1E.1': Entry.playcode,
     };
 };
 
