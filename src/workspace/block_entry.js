@@ -39870,7 +39870,6 @@ Entry.block = {
 },
 "maze_step_jump_pinkbean": {
     "parent": "maze_step_jump",
-    "template": Lang.template.maze_step_jump,
     func: function() {
         if (!this.isContinue) {
             this.isContinue = true;
