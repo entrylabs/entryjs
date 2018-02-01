@@ -1003,11 +1003,22 @@ Entry.getBrowserType = function() {
 
 Entry.setBasicBrush = function (sprite) {
     var brush = new createjs.Graphics();
-    brush.thickness = 1;
-    brush.rgb = Entry.hex2rgb("#ff0000");
-    brush.opacity = 100;
-    brush.setStrokeStyle(1);
-    brush.beginStroke("rgba(255,0,0,1)");
+    if (sprite.brush) {
+        var parentBrush = sprite.brush;
+        brush.thickness = parentBrush.thickness;
+        brush.rgb = parentBrush.rgb;
+
+        brush.opacity = parentBrush.opacity;
+        brush.setStrokeStyle(brush.thickness);
+        brush.beginStroke("rgba("+brush.rgb.r+","+brush.rgb.g+","+brush.rgb.b+","+(brush.opacity/100)+")");
+    } else {
+        brush.thickness = 1;
+        brush.rgb = Entry.hex2rgb("#ff0000");
+        brush.opacity = 100;
+        brush.setStrokeStyle(1);
+        brush.beginStroke("rgba(255,0,0,1)");
+    }
+
     brush.entity = sprite;
 
     var shape = new createjs.Shape(brush);
@@ -1022,9 +1033,7 @@ Entry.setBasicBrush = function (sprite) {
         sprite.brush = null;
     sprite.brush = brush;
 
-    if (sprite.shape)
-        sprite.shape = null;
-    sprite.shape = shape;
+    sprite.shapes.push(shape);
 };
 
 Entry.setCloneBrush = function (sprite, parentBrush) {
@@ -1050,9 +1059,7 @@ Entry.setCloneBrush = function (sprite, parentBrush) {
         sprite.brush = null;
     sprite.brush = brush;
 
-    if (sprite.shape)
-        sprite.shape = null;
-    sprite.shape = shape;
+    sprite.shapes.push(shape);
 
 };
 

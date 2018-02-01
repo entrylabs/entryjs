@@ -545,7 +545,7 @@ Entry.Playground = function() {
         foregroundButton.bindOnClick(function() {
             Entry.playground.toggleColourChooser('foreground');
         });
-        var foregroundImage = Entry.createElement("img");
+        var foregroundImage = Entry.createElement("img", 'playgroundTextColorButtonImg');
         foregroundButton.appendChild(foregroundImage);
         foregroundImage.src = Entry.mediaFilePath + 'text_button_color_false.png';
 
@@ -556,9 +556,10 @@ Entry.Playground = function() {
         backgroundButton.bindOnClick(function() {
             Entry.playground.toggleColourChooser('background');
         });
-        var backgroundImage = Entry.createElement("img");
+        var backgroundImage = Entry.createElement("img", 'playgroundTextBgButtonImg');
         backgroundButton.appendChild(backgroundImage);
         backgroundImage.src = Entry.mediaFilePath + 'text_button_background_false.png';
+
 
         var fgColorDiv = Entry.createElement("div");
         fgColorDiv.addClass("entryPlayground_fgColorDiv");
@@ -932,26 +933,29 @@ Entry.Playground = function() {
     /**
      * Inject picture
      */
-    p.injectPicture = function() {
+    p.injectPicture = function () {
         var view = this.pictureListView_;
         if (!view) return;
 
         while (view.hasChildNodes())
             view.removeChild(view.lastChild);
 
-        if (this.object) {
-            var pictures = this.object.pictures;
-            for (var i=0, len=pictures.length; i<len; i++) {
-                var picture = pictures[i];
-                !picture.view && Entry.playground.generatePictureElement(picture);
-                var element = pictures[i].view;
-                element.orderHolder.innerHTML = i+1;
-                view.appendChild(element);
-            }
-            this.selectPicture(this.object.selectedPicture);
-        } else {
+        if (!this.object) {
             Entry.dispatchEvent('pictureClear');
+            return;
         }
+
+        var fragment = document.createDocumentFragment();
+
+        var pictures = this.object.pictures || [];
+        pictures.forEach(function (picture, i) {
+            !picture.view && Entry.playground.generatePictureElement(picture);
+            var element = picture.view;
+            element.orderHolder.innerHTML = i + 1;
+            fragment.appendChild(element);
+        });
+        view.appendChild(fragment);
+        this.selectPicture(this.object.selectedPicture);
     };
 
     /**
@@ -1077,75 +1081,77 @@ Entry.Playground = function() {
     /**
      * Inject text
      */
-    p.injectText = function() {
-        //if statement for handle event call
-        if (Entry.playground.object) {
-            Entry.playground.textEditInput.value =
-                Entry.playground.object.entity.getText();
-            Entry.playground.textEditArea.value =
-                Entry.playground.object.entity.getText();
+    p.injectText = function () {
+        var object = this.object;
 
-            $("#entryPainterAttrFontName").val(
-                Entry.playground.object.entity.getFontName());
+        if (!object) return;
 
-            if (Entry.playground.object.entity.font) {
-                var isBold = Entry.playground.object.entity.font.indexOf("bold") > -1 || false;
-                $("#entryPlaygroundText_boldImage").attr('src', Entry.mediaFilePath + 'text_button_bold_'+isBold+'.png');
+        var entity = object.entity;
 
-                var isItalic = Entry.playground.object.entity.font.indexOf("italic") > -1 || false;
-                $("#entryPlaygroundText_italicImage").attr('src', Entry.mediaFilePath + 'text_button_italic_'+isItalic+'.png');
-            }
+        var text = entity.getText();
+        this.textEditInput.value = text;
+        this.textEditArea.value = text;
 
-            var isUnderLine = Entry.playground.object.entity.getUnderLine() || false;
-            $("#entryPlaygroundText_underlineImage").attr('src', Entry.mediaFilePath + 'text_button_underline_'+isUnderLine+'.png');
+        $("#entryPainterAttrFontName").val(entity.getFontName());
 
-            var isStrike = Entry.playground.object.entity.getStrike() || false;
-            $("#entryPlaygroundText_strikeImage").attr('src', Entry.mediaFilePath + 'text_button_strike_'+isStrike+'.png');
 
-            $('.entryPlayground_fgColorDiv').css('backgroundColor', Entry.playground.object.entity.colour);
-            $('.entryPlayground_bgColorDiv').css('backgroundColor', Entry.playground.object.entity.bgColour);
+        var isBold = entity.fontBold || false;
+        $("#entryPlaygroundText_boldImage").attr('src', Entry.mediaFilePath + 'text_button_bold_' + isBold + '.png');
 
-            Entry.playground.toggleLineBreak(
-                Entry.playground.object.entity.getLineBreak());
+        var isItalic = entity.fontItalic || false;
+        $("#entryPlaygroundText_italicImage").attr('src', Entry.mediaFilePath + 'text_button_italic_' + isItalic + '.png');
 
-            if (Entry.playground.object.entity.getLineBreak()) {
-                $(".entryPlaygroundLinebreakDescription > p").html(Lang.Menus.linebreak_on_desc_1);
-                $(".entryPlaygroundLinebreakDescription > ul > li").eq(0).html(Lang.Menus.linebreak_on_desc_2);
-                $(".entryPlaygroundLinebreakDescription > ul > li").eq(1).html(Lang.Menus.linebreak_on_desc_3);
-            }
+        var isUnderLine = entity.getUnderLine() || false;
+        $("#entryPlaygroundText_underlineImage").attr('src', Entry.mediaFilePath + 'text_button_underline_' + isUnderLine + '.png');
 
-            Entry.playground.setFontAlign(
-                Entry.playground.object.entity.getTextAlign());
+        var isStrike = entity.getStrike() || false;
+        $("#entryPlaygroundText_strikeImage").attr('src', Entry.mediaFilePath + 'text_button_strike_' + isStrike + '.png');
 
-            var fontSize = Entry.playground.object.entity.getFontSize();
-            Entry.playground.fontSizeIndiciator.style.width = fontSize + '%';
-            Entry.playground.fontSizeKnob.style.left = (fontSize * 0.88) + 'px';
+        if (entity.colour) this.setTextColour(entity.colour, true);
+        if (entity.bgColor) this.setBackgroundColour(entity.bgColor, true);
 
+        this.toggleLineBreak(entity.getLineBreak());
+
+        if (entity.getLineBreak()) {
+            var LANG = Lang.Menus;
+            $(".entryPlaygroundLinebreakDescription > p").html(LANG.linebreak_on_desc_1);
+            var pDoms = $(".entryPlaygroundLinebreakDescription > ul > li");
+            pDoms.eq(0).text(LANG.linebreak_on_desc_2);
+            pDoms.eq(1).text(LANG.linebreak_on_desc_3);
+            this._setFontFontUI();
         }
+
+        this.setFontAlign(entity.getTextAlign());
+    };
+
+    p._setFontFontUI = function() {
+        var fontSize = this.object.entity.getFontSize();
+        this.fontSizeIndiciator.style.width = fontSize + '%';
+        this.fontSizeKnob.style.left = (fontSize * 0.88) + 'px';
     };
 
     /**
      * Inject sound
      */
-    p.injectSound = function() {
+    p.injectSound = function () {
         var view = this.soundListView_;
-        if (!view)
-            return;
+        if (!view) return;
 
-        while (view.hasChildNodes()) {
+        while (view.hasChildNodes())
             view.removeChild(view.lastChild);
-        }
 
-        if (this.object) {
-            var sounds = this.object.sounds;
-            for (var i=0, len=sounds.length; i<len; i++) {
-                var sound = sounds[i];
-                !sound.view && Entry.playground.generateSoundElement(sound);
-                var element = sound.view;
-                element.orderHolder.innerHTML = i+1;
-                view.appendChild(element);
-            }
-        }
+        if (!this.object) return;
+
+        var fragment = document.createDocumentFragment();
+
+        var sounds = this.object.sounds || [];
+        sounds.forEach(function (sound, i) {
+            !sound.view && Entry.playground.generateSoundElement(sound);
+            var element = sound.view;
+            element.orderHolder.innerHTML = i + 1;
+            fragment.appendChild(element);
+        });
+        view.appendChild(fragment);
     };
 
     /**
@@ -1738,16 +1744,18 @@ Entry.Playground = function() {
         }
     };
 
-    p.setTextColour = function(colour) {
-        Entry.playground.object.entity.setColour(colour);
-        Entry.playground.toggleColourChooser('foreground');
+    p.setTextColour = function(colour, doNotToggle) {
+        this.object.entity.setColour(colour);
+        if (doNotToggle !== true) this.toggleColourChooser('foreground');
         $('.entryPlayground_fgColorDiv').css('backgroundColor', colour);
+        $('#playgroundTextColorButtonImg').attr('src', Entry.mediaFilePath + 'text_button_color_true.png');
     };
 
-    p.setBackgroundColour = function(colour) {
-        Entry.playground.object.entity.setBGColour(colour);
-        Entry.playground.toggleColourChooser('background');
+    p.setBackgroundColour = function(colour, doNotToggle) {
+        this.object.entity.setBGColour(colour);
+        if (doNotToggle !== true) this.toggleColourChooser('background');
         $('.entryPlayground_bgColorDiv').css('backgroundColor', colour);
+        $('#playgroundTextBgButtonImg').attr('src', Entry.mediaFilePath + 'text_button_background_true.png');
     };
 
     p.isTextBGMode = function () {
@@ -1755,16 +1763,15 @@ Entry.Playground = function() {
     };
 
     p.checkVariables = function () {
-        if (Entry.forEBS)
-            return;
+        if (Entry.forEBS) return;
+
         if (Entry.variableContainer.lists_.length)
             this.blockMenu.unbanClass("listNotExist");
-        else
-            this.blockMenu.banClass("listNotExist");
+        else this.blockMenu.banClass("listNotExist");
+
         if (Entry.variableContainer.variables_.length)
             this.blockMenu.unbanClass("variableNotExist");
-        else
-            this.blockMenu.banClass("variableNotExist");
+        else this.blockMenu.banClass("variableNotExist");
     };
 
 
@@ -1808,17 +1815,21 @@ Entry.Playground = function() {
     };
 
     p.toggleLineBreak = function(isLineBreak) {
-        if (!this.object || this.object.objectType != "textBox")
+        var object = this.object;
+        if (!object || object.objectType != "textBox")
             return;
+
+        var entity = object.entity;
         if (isLineBreak) {
-            Entry.playground.object.entity.setLineBreak(true);
+            entity.setLineBreak(true);
             $('.entryPlayground_textArea').css('display', 'block');
             $('.entryPlayground_textBox').css('display', 'none');
             this.linebreakOffImage.src = Entry.mediaFilePath + 'text-linebreak-off-false.png';
             this.linebreakOnImage.src = Entry.mediaFilePath + 'text-linebreak-on-true.png';
             this.fontSizeWrapper.removeClass("entryHide");
+            this._setFontFontUI();
         } else {
-            Entry.playground.object.entity.setLineBreak(false);
+            entity.setLineBreak(false);
             $('.entryPlayground_textArea').css('display', 'none');
             $('.entryPlayground_textBox').css('display', 'block');
             this.linebreakOffImage.src = Entry.mediaFilePath + 'text-linebreak-off-true.png';

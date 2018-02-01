@@ -404,7 +404,7 @@
             fontColor: '#fff',
             statements: [],
             isNotFor: ['neobot'],
-            template: '왼쪽 모터를 %1 %2의 속도로, 왼쪽 모터를 %3 %4의 속도로 계속 회전 %5',
+            template: '왼쪽 모터를 %1 %2의 속도로, 오른쪽 모터를 %3 %4의 속도로 계속 회전 %5',
             params: [{
                 type: 'Dropdown',
                 options: [

@@ -33,7 +33,7 @@ Entry.FieldBlock = function(content, blockView, index, mode, contentIndex) {
 
     this.observe(this, "_updateBG", ["magneting"], false);
 
-    this.renderStart(blockView.getBoard(), mode);
+    this.renderStart(this.getBoard(), mode);
 };
 
 Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
@@ -43,7 +43,12 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
         magneting: false
     };
 
-    p.renderStart = function(board, mode, renderMode, isReDraw) {
+    p.getBoard = function() {
+        var view = this._blockView;
+        return view && view.getBoard();
+    };
+
+    p.renderStart = function (board, mode, renderMode, isReDraw) {
         if (!this.svgGroup)
             this.svgGroup = this._blockView.contentSvgGroup.elem("g");
 
@@ -53,31 +58,18 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
         this.view = this;
         this._nextGroup = this.svgGroup;
 
-        var block = this.getValue();
-        if (block) {
-            if (block.constructor !== Entry.Block)
-                block = new Entry.Block(block, this._block.thread);
+        this.updateValueBlock(this.getValue());
 
-            var blockView = block.view;
+        var valueBlockView = this._valueBlock.view;
+        valueBlockView.renderByMode(this.renderMode, isReDraw);
 
-            if (!blockView) {
-                block.setThread(this);
-                block.createView(board, this.renderMode);
-                this.view.setParent(this);
-            }
+        if (this.getBoard().constructor !== Entry.Board) {
+            valueBlockView.removeControl();
         }
-
-        this.updateValueBlock(block);
-
-        this._valueBlock.view.renderByMode(this.renderMode, isReDraw);
-
-        if (this._blockView.getBoard().constructor !== Entry.Board)
-            this._valueBlock.view.removeControl();
 
         this.box.observe(
             this._blockView,
-            "dAlignContent",
-            ["width", "height"],
+            "dAlignContent", ["width", "height"],
             false
         );
     };
@@ -114,11 +106,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
         var box = this.box;
         if (box.x === x && box.y === y) return;
 
-        var oldX = box.x;
-        var oldY = box.y;
-
-        if (oldX !== x || oldY !== y)
-            box.set({ x: x, y: y });
+        box.set({ x: x, y: y });
     };
 
     p.calcWH = function() {
@@ -169,6 +157,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
                     break;
             }
         }
+
         return this._createBlockByType(blockType);
     };
 
@@ -192,6 +181,8 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
     p.updateValueBlock = function(block) {
         if (!(block instanceof Entry.Block))
             block = undefined;
+
+        block = this._ensureBlock(block);
 
         if (block && block === this._valueBlock) {
             this.calcWH();
@@ -317,7 +308,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
 
     p.spliceBlock = function() { this.updateValueBlock(); };
 
-    p._updateBG = function() {
+    p._updateBG = function () {
         if (this.magneting) {
             this._bg = this.svgGroup.elem("path", {
                 d: "m 8,12 l -4,0 -2,-2 0,-3 3,0 1,-1 0,-12 -1,-1 -3,0 0,-3 2,-2 l 4,0 z",
@@ -334,7 +325,9 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
         }
     };
 
-    p.getThread = function() {return this;};
+    p.getThread = function () {
+        return this;
+    };
 
     p.pointer = function(pointer) {
         pointer = pointer || [];
@@ -343,8 +336,34 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
         return this._block.pointer(pointer);
     };
 
-    p.isParamBlockType = function() {
+    p.isParamBlockType = function () {
         return true;
     };
+
+    //check block schema and view
+    p._ensureBlock = function (block) {
+        if (!block) return;
+
+        if (block.constructor !== Entry.Block) {
+            block = new Entry.Block(block, this._block.thread);
+        }
+
+        //if block schema is not present
+        //and can't load schema, then destroy and return undefined
+        if (!block.getSchema()) {
+            this._destroyObservers();
+            block.destroy();
+            return;
+        }
+
+        if (!block.view) {
+            block.setThread(this);
+            block.createView(this.getBoard(), this.renderMode);
+            this.view.setParent(this);
+        }
+
+        return block;
+    };
+
 
 })(Entry.FieldBlock.prototype);

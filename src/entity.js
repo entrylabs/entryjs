@@ -18,6 +18,7 @@ Entry.EntityObject = function(object) {
     this.id = Entry.generateHash();
     this.removed = false;
     this.stamps = [];
+    this.shapes = [];
 
     if (this.type == 'sprite') {
         this.object = new createjs.Bitmap();
@@ -98,9 +99,7 @@ Entry.EntityObject.prototype.injectModel = function(pictureModel, entityModel) {
     }
 
     //entity
-    if (entityModel) {
-        this.syncModel_(entityModel);
-    } else {}
+    if (entityModel) { this.syncModel_(entityModel); }
 };
 
 /**
@@ -1109,23 +1108,18 @@ Entry.EntityObject.prototype.getInitialEffectValue = function () {
  * remove brush
  */
 Entry.EntityObject.prototype.removeBrush = function () {
-    Entry.stage.selectedObjectContainer.removeChild(this.shape);
+    this.shapes.map(Entry.stage.selectedObjectContainer.removeChild, Entry.stage.selectedObjectContainer);
     this.brush = null;
-    this.shape = null;
+    this.shapes = [];
 };
 
 /*
  * erase brush
  */
 Entry.EntityObject.prototype.eraseBrush = function () {
-    var brush = this.brush;
-    if (brush) {
-        var stroke = brush._stroke.style;
-        var style = brush._strokeStyle.width;
-        brush.clear().setStrokeStyle(style).beginStroke(stroke);
-        brush.moveTo(this.getX(), this.getY()*-1);
-        Entry.requestUpdate = true;
-    }
+    this.shapes.map(Entry.stage.selectedObjectContainer.removeChild, Entry.stage.selectedObjectContainer);
+    this.shapes = [];
+    Entry.requestUpdate = true;
 };
 
 Entry.EntityObject.prototype.updateBG = function () {
@@ -1243,5 +1237,5 @@ Entry.EntityObject.prototype.reset = function() {
     this.loadSnapshot();
     this.resetFilter();
     this.dialog && this.dialog.remove();
-    this.shape && this.removeBrush();
+    this.shapes.length && this.removeBrush();
 };
