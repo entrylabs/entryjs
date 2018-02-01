@@ -4714,15 +4714,16 @@ Entry.CODEino = {name:"CODEino", getSensorKey:function() {
   }).toUpperCase();
 }, getSensorTime:function(c) {
   return (new Date).getTime() + c;
-}, monitorTemplate:Entry.Arduino.monitorTemplate, setZero:function() {
+}, setZero:function() {
   Entry.hw.sendQueue.SET ? Object.keys(Entry.hw.sendQueue.SET).forEach(function(c) {
     Entry.hw.sendQueue.SET[c].data = 0;
-    Entry.hw.sendQueue.TIME = Entry.CODEino.getSensorTime(Entry.hw.sendQueue.SET[c].type);
-    Entry.hw.sendQueue.KEY = Entry.CODEino.getSensorKey();
-  }) : Entry.hw.sendQueue = {SET:{0:{type:Entry.CODEino.sensorTypes.DIGITAL, data:0}, 1:{type:Entry.CODEino.sensorTypes.DIGITAL, data:0}, 2:{type:Entry.CODEino.sensorTypes.DIGITAL, data:0}, 3:{type:Entry.CODEino.sensorTypes.DIGITAL, data:0}, 4:{type:Entry.CODEino.sensorTypes.DIGITAL, data:0}, 5:{type:Entry.CODEino.sensorTypes.DIGITAL, data:0}, 6:{type:Entry.CODEino.sensorTypes.DIGITAL, data:0}, 7:{type:Entry.CODEino.sensorTypes.DIGITAL, data:0}, 8:{type:Entry.CODEino.sensorTypes.DIGITAL, data:0}, 
-  9:{type:Entry.CODEino.sensorTypes.DIGITAL, data:0}, 10:{type:Entry.CODEino.sensorTypes.DIGITAL, data:0}, 11:{type:Entry.CODEino.sensorTypes.DIGITAL, data:0}, 12:{type:Entry.CODEino.sensorTypes.DIGITAL, data:0}, 13:{type:Entry.CODEino.sensorTypes.DIGITAL, data:0}}, TIME:Entry.CODEino.getSensorTime(Entry.CODEino.sensorTypes.DIGITAL), KEY:Entry.CODEino.getSensorKey()};
+    Entry.hw.sendQueue.SET[c].time = (new Date).getTime();
+  }) : Entry.hw.sendQueue = {GET:{}, SET:{}};
   Entry.hw.update();
-}, sensorTypes:{ALIVE:0, DIGITAL:1, ANALOG:2, PWM:3, RGBLED_PIN:4, TONE:5, PULSEIN:6, ULTRASONIC:7, TIMER:8, ADDCOLOR:9}, BlockState:{}};
+}, monitorTemplate:{imgPath:"hw/codeino.png", width:431, height:354, listPorts:{2:{name:Lang.Hw.port_en + " 2 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 3:{name:Lang.Hw.port_en + " 3 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 4:{name:Lang.Hw.port_en + " 4 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 5:{name:Lang.Hw.port_en + " 5 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 6:{name:Lang.Hw.port_en + " 6 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 7:{name:Lang.Hw.port_en + 
+" 7 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 8:{name:Lang.Hw.port_en + " 8 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 9:{name:Lang.Hw.port_en + " 9 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 10:{name:Lang.Hw.port_en + " 10 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 11:{name:Lang.Hw.port_en + " 11 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 12:{name:Lang.Hw.port_en + " 12 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, 13:{name:Lang.Hw.port_en + " 13 " + 
+Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, a0:{name:Lang.Hw.port_en + " A0 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, a1:{name:Lang.Hw.port_en + " A1 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, a2:{name:Lang.Hw.port_en + " A2 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, a3:{name:Lang.Hw.port_en + " A3 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, a4:{name:Lang.Hw.port_en + " A4 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, a5:{name:Lang.Hw.port_en + " A5 " + 
+Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}, a6:{name:Lang.Hw.port_en + " A6 " + Lang.Hw.port_ko, type:"input", pos:{x:0, y:0}}}, mode:"both"}, sensorTypes:{ALIVE:0, DIGITAL:1, ANALOG:2, PWM:3, RGBLED_PIN:4, TONE:5, PULSEIN:6, ULTRASONIC:7, TIMER:8, ADDCOLOR:9}, BlockState:{}, LED_RED_VALUE:0, LED_GREEN_VALUE:0, LED_BLUE_VALUE:0};
 Entry.Codestar = {name:"codestar", setZero:function() {
   Entry.hw.sendQueue.readablePorts = [];
   for (var c = 0; 20 > c; c++) {
@@ -5546,6 +5547,12 @@ Entry.block.neobot_play_note_for = function(c, b) {
   }, 1 / f * 2000);
   return b;
 };
+Entry.NeobotSensorTheme = {name:"neobot_sensor_theme", LOCAL_MAP:["IN1", "IN2", "IN3", "IR", "BAT"], REMOTE_MAP:"OUT1 OUT2 OUT3 DCR DCL SND FND OPT".split(" "), setZero:function() {
+  for (var c in Entry.Neobot.REMOTE_MAP) {
+    Entry.hw.sendQueue[Entry.Neobot.REMOTE_MAP[c]] = 0;
+  }
+  Entry.hw.update();
+}, monitorTemplate:{imgPath:"hw/neobot_sensor_theme.png", width:800, height:800, listPorts:{}, ports:{IN1:{name:"PORT1", type:"input", pos:{x:145, y:429}}, IN2:{name:"PORT2", type:"input", pos:{x:314, y:429}}, IN3:{name:"PORT3", type:"input", pos:{x:484, y:429}}, BAT:{name:"PORT4", type:"input", pos:{x:653, y:429}}}, mode:"both"}};
 Entry.Roborobo_Roduino = {name:"roborobo_roduino", INSTRUCTION:{DIGITAL_READ:1, DIGITAL_SET_MODE:2, DIGITAL_WRITE:3, ANALOG_WRITE:4, ANALOG_READ:5, MOTOR:6, COLOR:7}, setZero:function() {
   for (var c = Entry.hw.sendQueue.colorPin = 0; 14 > c; c++) {
     Entry.hw.sendQueue[c] = 0;
@@ -7150,20 +7157,24 @@ Entry.getBrowserType = function() {
 };
 Entry.setBasicBrush = function(c) {
   var b = new createjs.Graphics;
-  b.thickness = 1;
-  b.rgb = Entry.hex2rgb("#ff0000");
-  b.opacity = 100;
-  b.setStrokeStyle(1);
-  b.beginStroke("rgba(255,0,0,1)");
+  if (c.brush) {
+    var d = c.brush;
+    b.thickness = d.thickness;
+    b.rgb = d.rgb;
+    b.opacity = d.opacity;
+    b.setStrokeStyle(b.thickness);
+    b.beginStroke("rgba(" + b.rgb.r + "," + b.rgb.g + "," + b.rgb.b + "," + b.opacity / 100 + ")");
+  } else {
+    b.thickness = 1, b.rgb = Entry.hex2rgb("#ff0000"), b.opacity = 100, b.setStrokeStyle(1), b.beginStroke("rgba(255,0,0,1)");
+  }
   b.entity = c;
-  var d = new createjs.Shape(b);
+  d = new createjs.Shape(b);
   d.entity = c;
   var e = Entry.stage.selectedObjectContainer;
   e.addChildAt(d, e.getChildIndex(c.object));
   c.brush && (c.brush = null);
   c.brush = b;
-  c.shape && (c.shape = null);
-  c.shape = d;
+  c.shapes.push(d);
 };
 Entry.setCloneBrush = function(c, b) {
   var d = new createjs.Graphics;
@@ -7179,8 +7190,7 @@ Entry.setCloneBrush = function(c, b) {
   d.stop = b.stop;
   c.brush && (c.brush = null);
   c.brush = d;
-  c.shape && (c.shape = null);
-  c.shape = e;
+  c.shapes.push(e);
 };
 Entry.isFloat = function(c) {
   return /\d+\.{1}\d+$/.test(c);
@@ -9721,6 +9731,7 @@ Entry.EntityObject = function(c) {
   this.id = Entry.generateHash();
   this.removed = !1;
   this.stamps = [];
+  this.shapes = [];
   "sprite" == this.type ? (this.object = new createjs.Bitmap, this.setInitialEffectValue()) : "textBox" == this.type && (this.object = new createjs.Container, this.textObject = new createjs.Text, this.textObject.font = "20px Nanum Gothic", this.textObject.textBaseline = "middle", this.textObject.textAlign = "center", this.bgObject = new createjs.Shape, this.bgObject.graphics.setStrokeStyle(1).beginStroke("#f00").drawRect(0, 0, 100, 100), this.object.addChild(this.bgObject), this.object.addChild(this.textObject), 
   this.fontType = "Nanum Gothic", this.fontSize = 20, this.strike = this.underLine = this.fontItalic = this.fontBold = !1);
   this.object.entity = this;
@@ -10173,17 +10184,14 @@ Entry.EntityObject.prototype.getInitialEffectValue = function() {
   return {blur:0, hue:0, hsv:0, brightness:0, contrast:0, saturation:0, alpha:1};
 };
 Entry.EntityObject.prototype.removeBrush = function() {
-  Entry.stage.selectedObjectContainer.removeChild(this.shape);
-  this.shape = this.brush = null;
+  this.shapes.map(Entry.stage.selectedObjectContainer.removeChild, Entry.stage.selectedObjectContainer);
+  this.brush = null;
+  this.shapes = [];
 };
 Entry.EntityObject.prototype.eraseBrush = function() {
-  var c = this.brush;
-  if (c) {
-    var b = c._stroke.style, d = c._strokeStyle.width;
-    c.clear().setStrokeStyle(d).beginStroke(b);
-    c.moveTo(this.getX(), -1 * this.getY());
-    Entry.requestUpdate = !0;
-  }
+  this.shapes.map(Entry.stage.selectedObjectContainer.removeChild, Entry.stage.selectedObjectContainer);
+  this.shapes = [];
+  Entry.requestUpdate = !0;
 };
 Entry.EntityObject.prototype.updateBG = function() {
   if (this.bgObject) {
@@ -10265,7 +10273,7 @@ Entry.EntityObject.prototype.reset = function() {
   this.loadSnapshot();
   this.resetFilter();
   this.dialog && this.dialog.remove();
-  this.shape && this.removeBrush();
+  this.shapes.length && this.removeBrush();
 };
 Entry.Extension = function() {
 };
@@ -11075,9 +11083,9 @@ Entry.HW = function() {
   this.settingQueue = {};
   this.socketType = this.hwModule = this.selectedDevice = null;
   Entry.addEventListener("stop", this.setZero);
-  this.hwInfo = {"1.1":Entry.Arduino, "1.2":Entry.SensorBoard, "1.3":Entry.CODEino, "1.4":Entry.joystick, "1.5":Entry.dplay, "1.6":Entry.nemoino, "1.7":Entry.Xbot, "1.8":Entry.ardublock, "1.9":Entry.ArduinoExt, "1.10":Entry.ArduinoNano, "1.A":Entry.Cobl, "1.B":Entry.Blacksmith, "2.4":Entry.Hamster, "2.5":Entry.Albert, "2.9":Entry.Turtle, "2.FF":Entry.Roboid, "3.1":Entry.Bitbrick, "4.2":Entry.Arduino, "5.1":Entry.Neobot, "6.1":Entry.mkboard, "6.2":Entry.memaker, "7.1":Entry.Robotis_carCont, "7.2":Entry.Robotis_openCM70, 
-  "8.1":Entry.Arduino, "9.1":Entry.iboard, "A.1":Entry.SmartBoard, "B.1":Entry.Codestar, "C.1":Entry.DaduBlock, "C.2":Entry.DaduBlock_Car, "D.1":Entry.robotori, "F.1":Entry.byrobot_dronefighter_controller, "F.2":Entry.byrobot_dronefighter_drive, "F.3":Entry.byrobot_dronefighter_flight, "F.4":Entry.byrobot_petrone_v2_controller, "F.5":Entry.byrobot_petrone_v2_drive, "F.6":Entry.byrobot_petrone_v2_flight, "10.1":Entry.Roborobo_Roduino, "10.2":Entry.Roborobo_SchoolKit, "12.1":Entry.EV3, "13.1":Entry.rokoboard, 
-  "14.1":Entry.Chocopi, "15.1":Entry.coconut, "16.1":Entry.MODI, "18.1":Entry.Altino, "19.1":Entry.trueRobot, "1A.1":Entry.ArduinoNano, "1B.1":Entry.EduMaker, "1C.1":Entry.hummingbird, "1D.1":Entry.JDKit};
+  this.hwInfo = {"1.1":Entry.Arduino, "1.2":Entry.SensorBoard, "1.3":Entry.CODEino, "1.4":Entry.joystick, "1.5":Entry.dplay, "1.6":Entry.nemoino, "1.7":Entry.Xbot, "1.8":Entry.ardublock, "1.9":Entry.ArduinoExt, "1.10":Entry.ArduinoNano, "1.A":Entry.Cobl, "1.B":Entry.Blacksmith, "2.4":Entry.Hamster, "2.5":Entry.Albert, "2.9":Entry.Turtle, "2.FF":Entry.Roboid, "3.1":Entry.Bitbrick, "4.2":Entry.Arduino, "5.1":Entry.Neobot, "5.2":Entry.NeobotSensorTheme, "6.1":Entry.mkboard, "6.2":Entry.memaker, "7.1":Entry.Robotis_carCont, 
+  "7.2":Entry.Robotis_openCM70, "8.1":Entry.Arduino, "9.1":Entry.iboard, "A.1":Entry.SmartBoard, "B.1":Entry.Codestar, "C.1":Entry.DaduBlock, "C.2":Entry.DaduBlock_Car, "D.1":Entry.robotori, "F.1":Entry.byrobot_dronefighter_controller, "F.2":Entry.byrobot_dronefighter_drive, "F.3":Entry.byrobot_dronefighter_flight, "F.4":Entry.byrobot_petrone_v2_controller, "F.5":Entry.byrobot_petrone_v2_drive, "F.6":Entry.byrobot_petrone_v2_flight, "10.1":Entry.Roborobo_Roduino, "10.2":Entry.Roborobo_SchoolKit, 
+  "12.1":Entry.EV3, "13.1":Entry.rokoboard, "14.1":Entry.Chocopi, "15.1":Entry.coconut, "16.1":Entry.MODI, "18.1":Entry.Altino, "19.1":Entry.trueRobot, "1A.1":Entry.ArduinoNano, "1B.1":Entry.EduMaker, "1C.1":Entry.hummingbird, "1D.1":Entry.JDKit};
 };
 Entry.HW.TRIAL_LIMIT = 2;
 p = Entry.HW.prototype;
@@ -12402,11 +12410,11 @@ Entry.EntryObject = function(c) {
     } else {
       if ("textBox" == this.objectType) {
         if (c.regX = 25, c.regY = 12, c.scaleX = c.scaleY = 1.5, c.width = 50, c.height = 24, c.text = b.text, b.options) {
-          if (d = b.options, b = "", d.bold && (b += "bold "), d.italic && (b += "italic "), c.underline = d.underline, c.strike = d.strike, c.font = b + "20px " + d.font.family, c.colour = d.colour, c.bgColor = d.background, c.lineBreak = d.lineBreak) {
+          if (d = b.options, b = "", d.bold && (b += "bold "), d.italic && (b += "italic "), c.underLine = d.underLine, c.strike = d.strike, c.font = b + "20px " + d.font.family, c.colour = d.colour, c.bgColor = d.background, c.lineBreak = d.lineBreak) {
             c.width = 256, c.height = 0.5625 * c.width, c.regX = c.width / 2, c.regY = c.height / 2;
           }
         } else {
-          c.underline = !1, c.strike = !1, c.font = "20px Nanum Gothic", c.colour = "#000000", c.bgColor = "#ffffff";
+          c.underLine = !1, c.strike = !1, c.font = "20px Nanum Gothic", c.colour = "#000000", c.bgColor = "#ffffff";
         }
       }
     }
@@ -12554,7 +12562,7 @@ Entry.EntryObject = function(c) {
   };
   c.addCloneEntity = function(b, c, d) {
     this.clonedEntities.length > Entry.maxCloneLimit || (b = new Entry.EntityObject(this), b.isClone = !0, c = c || this.entity, b.injectModel(c.picture || null, c.toJSON()), b.snapshot_ = c.snapshot_, c.effect && (b.effect = Entry.cloneSimpleObject(c.effect), b.applyFilter()), Entry.engine.raiseEventOnEntity(b, [b, "when_clone_start"]), b.isStarted = !0, this.addCloneVariables(this, b, c ? c.variables : null, c ? c.lists : null), this.clonedEntities.push(b), d = Entry.stage.selectedObjectContainer.getChildIndex(c.object), 
-    d -= (c.shape ? 1 : 0) + c.stamps.length, Entry.stage.loadEntity(b, d), c.brush && Entry.setCloneBrush(b, c.brush));
+    d -= (c.shapes.length ? 1 : 0) + c.stamps.length, Entry.stage.loadEntity(b, d), c.brush && Entry.setCloneBrush(b, c.brush));
   };
   c.initializeSplitter = function(b) {
     var c = Entry.container;
@@ -15238,7 +15246,7 @@ Entry.Playground = function() {
     g.bindOnClick(function() {
       Entry.playground.toggleColourChooser("foreground");
     });
-    e = Entry.createElement("img");
+    e = Entry.createElement("img", "playgroundTextColorButtonImg");
     g.appendChild(e);
     e.src = Entry.mediaFilePath + "text_button_color_false.png";
     e = Entry.createElement("li");
@@ -15248,7 +15256,7 @@ Entry.Playground = function() {
     b.bindOnClick(function() {
       Entry.playground.toggleColourChooser("background");
     });
-    e = Entry.createElement("img");
+    e = Entry.createElement("img", "playgroundTextBgButtonImg");
     b.appendChild(e);
     e.src = Entry.mediaFilePath + "text_button_background_false.png";
     e = Entry.createElement("div");
@@ -15464,13 +15472,14 @@ Entry.Playground = function() {
         b.removeChild(b.lastChild);
       }
       if (this.object) {
-        for (var c = this.object.pictures, e = 0, f = c.length; e < f; e++) {
-          var g = c[e];
-          !g.view && Entry.playground.generatePictureElement(g);
-          g = c[e].view;
-          g.orderHolder.innerHTML = e + 1;
-          b.appendChild(g);
-        }
+        var c = document.createDocumentFragment();
+        (this.object.pictures || []).forEach(function(b, d) {
+          !b.view && Entry.playground.generatePictureElement(b);
+          b = b.view;
+          b.orderHolder.innerHTML = d + 1;
+          c.appendChild(b);
+        });
+        b.appendChild(c);
         this.selectPicture(this.object.selectedPicture);
       } else {
         Entry.dispatchEvent("pictureClear");
@@ -15527,29 +15536,38 @@ Entry.Playground = function() {
     this.injectPicture();
   };
   c.injectText = function() {
-    if (Entry.playground.object) {
-      Entry.playground.textEditInput.value = Entry.playground.object.entity.getText();
-      Entry.playground.textEditArea.value = Entry.playground.object.entity.getText();
-      $("#entryPainterAttrFontName").val(Entry.playground.object.entity.getFontName());
-      if (Entry.playground.object.entity.font) {
-        var b = -1 < Entry.playground.object.entity.font.indexOf("bold") || !1;
-        $("#entryPlaygroundText_boldImage").attr("src", Entry.mediaFilePath + "text_button_bold_" + b + ".png");
-        b = -1 < Entry.playground.object.entity.font.indexOf("italic") || !1;
-        $("#entryPlaygroundText_italicImage").attr("src", Entry.mediaFilePath + "text_button_italic_" + b + ".png");
+    var b = this.object;
+    if (b) {
+      var b = b.entity, c = b.getText();
+      this.textEditInput.value = c;
+      this.textEditArea.value = c;
+      $("#entryPainterAttrFontName").val(b.getFontName());
+      c = b.fontBold || !1;
+      $("#entryPlaygroundText_boldImage").attr("src", Entry.mediaFilePath + "text_button_bold_" + c + ".png");
+      c = b.fontItalic || !1;
+      $("#entryPlaygroundText_italicImage").attr("src", Entry.mediaFilePath + "text_button_italic_" + c + ".png");
+      c = b.getUnderLine() || !1;
+      $("#entryPlaygroundText_underlineImage").attr("src", Entry.mediaFilePath + "text_button_underline_" + c + ".png");
+      c = b.getStrike() || !1;
+      $("#entryPlaygroundText_strikeImage").attr("src", Entry.mediaFilePath + "text_button_strike_" + c + ".png");
+      b.colour && this.setTextColour(b.colour, !0);
+      b.bgColor && this.setBackgroundColour(b.bgColor, !0);
+      this.toggleLineBreak(b.getLineBreak());
+      if (b.getLineBreak()) {
+        c = Lang.Menus;
+        $(".entryPlaygroundLinebreakDescription > p").html(c.linebreak_on_desc_1);
+        var e = $(".entryPlaygroundLinebreakDescription > ul > li");
+        e.eq(0).text(c.linebreak_on_desc_2);
+        e.eq(1).text(c.linebreak_on_desc_3);
+        this._setFontFontUI();
       }
-      b = Entry.playground.object.entity.getUnderLine() || !1;
-      $("#entryPlaygroundText_underlineImage").attr("src", Entry.mediaFilePath + "text_button_underline_" + b + ".png");
-      b = Entry.playground.object.entity.getStrike() || !1;
-      $("#entryPlaygroundText_strikeImage").attr("src", Entry.mediaFilePath + "text_button_strike_" + b + ".png");
-      $(".entryPlayground_fgColorDiv").css("backgroundColor", Entry.playground.object.entity.colour);
-      $(".entryPlayground_bgColorDiv").css("backgroundColor", Entry.playground.object.entity.bgColour);
-      Entry.playground.toggleLineBreak(Entry.playground.object.entity.getLineBreak());
-      Entry.playground.object.entity.getLineBreak() && ($(".entryPlaygroundLinebreakDescription > p").html(Lang.Menus.linebreak_on_desc_1), $(".entryPlaygroundLinebreakDescription > ul > li").eq(0).html(Lang.Menus.linebreak_on_desc_2), $(".entryPlaygroundLinebreakDescription > ul > li").eq(1).html(Lang.Menus.linebreak_on_desc_3));
-      Entry.playground.setFontAlign(Entry.playground.object.entity.getTextAlign());
-      b = Entry.playground.object.entity.getFontSize();
-      Entry.playground.fontSizeIndiciator.style.width = b + "%";
-      Entry.playground.fontSizeKnob.style.left = 0.88 * b + "px";
+      this.setFontAlign(b.getTextAlign());
     }
+  };
+  c._setFontFontUI = function() {
+    var b = this.object.entity.getFontSize();
+    this.fontSizeIndiciator.style.width = b + "%";
+    this.fontSizeKnob.style.left = 0.88 * b + "px";
   };
   c.injectSound = function() {
     var b = this.soundListView_;
@@ -15558,13 +15576,14 @@ Entry.Playground = function() {
         b.removeChild(b.lastChild);
       }
       if (this.object) {
-        for (var c = this.object.sounds, e = 0, f = c.length; e < f; e++) {
-          var g = c[e];
-          !g.view && Entry.playground.generateSoundElement(g);
-          g = g.view;
-          g.orderHolder.innerHTML = e + 1;
-          b.appendChild(g);
-        }
+        var c = document.createDocumentFragment();
+        (this.object.sounds || []).forEach(function(b, d) {
+          !b.view && Entry.playground.generateSoundElement(b);
+          b = b.view;
+          b.orderHolder.innerHTML = d + 1;
+          c.appendChild(b);
+        });
+        b.appendChild(c);
       }
     }
   };
@@ -15852,15 +15871,17 @@ Entry.Playground = function() {
   c.toggleColourChooser = function(b) {
     "foreground" === b ? "none" === this.coloursWrapper.style.display ? (this.coloursWrapper.style.display = "block", this.backgroundsWrapper.style.display = "none") : this.coloursWrapper.style.display = "none" : "background" === b && ("none" === this.backgroundsWrapper.style.display ? (this.backgroundsWrapper.style.display = "block", this.coloursWrapper.style.display = "none") : this.backgroundsWrapper.style.display = "none");
   };
-  c.setTextColour = function(b) {
-    Entry.playground.object.entity.setColour(b);
-    Entry.playground.toggleColourChooser("foreground");
+  c.setTextColour = function(b, c) {
+    this.object.entity.setColour(b);
+    !0 !== c && this.toggleColourChooser("foreground");
     $(".entryPlayground_fgColorDiv").css("backgroundColor", b);
+    $("#playgroundTextColorButtonImg").attr("src", Entry.mediaFilePath + "text_button_color_true.png");
   };
-  c.setBackgroundColour = function(b) {
-    Entry.playground.object.entity.setBGColour(b);
-    Entry.playground.toggleColourChooser("background");
+  c.setBackgroundColour = function(b, c) {
+    this.object.entity.setBGColour(b);
+    !0 !== c && this.toggleColourChooser("background");
     $(".entryPlayground_bgColorDiv").css("backgroundColor", b);
+    $("#playgroundTextBgButtonImg").attr("src", Entry.mediaFilePath + "text_button_background_true.png");
   };
   c.isTextBGMode = function() {
     return this.isTextBGMode_;
@@ -15882,8 +15903,9 @@ Entry.Playground = function() {
     }
   };
   c.toggleLineBreak = function(b) {
-    this.object && "textBox" == this.object.objectType && (b ? (Entry.playground.object.entity.setLineBreak(!0), $(".entryPlayground_textArea").css("display", "block"), $(".entryPlayground_textBox").css("display", "none"), this.linebreakOffImage.src = Entry.mediaFilePath + "text-linebreak-off-false.png", this.linebreakOnImage.src = Entry.mediaFilePath + "text-linebreak-on-true.png", this.fontSizeWrapper.removeClass("entryHide")) : (Entry.playground.object.entity.setLineBreak(!1), $(".entryPlayground_textArea").css("display", 
-    "none"), $(".entryPlayground_textBox").css("display", "block"), this.linebreakOffImage.src = Entry.mediaFilePath + "text-linebreak-off-true.png", this.linebreakOnImage.src = Entry.mediaFilePath + "text-linebreak-on-false.png", this.fontSizeWrapper.addClass("entryHide")));
+    var c = this.object;
+    c && "textBox" == c.objectType && (c = c.entity, b ? (c.setLineBreak(!0), $(".entryPlayground_textArea").css("display", "block"), $(".entryPlayground_textBox").css("display", "none"), this.linebreakOffImage.src = Entry.mediaFilePath + "text-linebreak-off-false.png", this.linebreakOnImage.src = Entry.mediaFilePath + "text-linebreak-on-true.png", this.fontSizeWrapper.removeClass("entryHide"), this._setFontFontUI()) : (c.setLineBreak(!1), $(".entryPlayground_textArea").css("display", "none"), $(".entryPlayground_textBox").css("display", 
+    "block"), this.linebreakOffImage.src = Entry.mediaFilePath + "text-linebreak-off-true.png", this.linebreakOnImage.src = Entry.mediaFilePath + "text-linebreak-on-false.png", this.fontSizeWrapper.addClass("entryHide")));
   };
   c.setFontAlign = function(b) {
     if ("textBox" == this.object.objectType) {
@@ -16647,13 +16669,7 @@ Entry.Stage.prototype.setEntityIndex = function(c, b) {
 };
 Entry.Stage.prototype.sortZorder = function() {
   for (var c = Entry.container.getCurrentObjects().slice(), b = this.selectedObjectContainer, d = 0, e = c.length - 1; 0 <= e; e--) {
-    var f = c[e];
-    f.clonedEntities.forEach(function(c) {
-      void 0 === c._index ? (c.shape && b.setChildIndex(c.shape, d++), c._index = d, b.setChildIndex(c.object, d++)) : (d++, c.shape && d++);
-    });
-    f = f.entity;
-    f.shape && b.setChildIndex(f.shape, d++);
-    b.setChildIndex(f.object, d++);
+    b.setChildIndex(c[e].entity.object, d++);
   }
   Entry.requestUpdate = !0;
 };
@@ -22822,8 +22838,8 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
         Entry.hw.sendQueue.DCL = d;
     }
     return b.callReturn();
-  }}, practical_course_move_for2:{color:"#00B200", skeleton:"basic", fontColor:"#fff", statements:[], isNotFor:["neobot"], template:"\uc67c\ucabd \ubaa8\ud130\ub97c %1 %2\uc758 \uc18d\ub3c4\ub85c, \uc67c\ucabd \ubaa8\ud130\ub97c %3 %4\uc758 \uc18d\ub3c4\ub85c \uacc4\uc18d \ud68c\uc804 %5", params:[{type:"Dropdown", options:[["\uc55e\uc73c\ub85c", "16"], ["\ub4a4\ub85c", "32"]], value:"16", fontsIze:11}, {type:"Block", accept:"string"}, {type:"Dropdown", options:[["\uc55e\uc73c\ub85c", "16"], ["\ub4a4\ub85c", 
-  "32"]], value:"16", fontsIze:11}, {type:"Block", accept:"string"}, {type:"Indicator", img:"block_icon/practical_course/dcmotor.png", size:12}], events:{}, def:{params:[null, {type:"practical_course_motor_speed"}, null, {type:"practical_course_motor_speed"}, null], type:"practical_course_move_for2"}, paramsKeyMap:{DIRECTION1:0, SPEED1:1, DIRECTION2:2, SPEED2:3}, class:"practical_course_motor", func:function(c, b) {
+  }}, practical_course_move_for2:{color:"#00B200", skeleton:"basic", fontColor:"#fff", statements:[], isNotFor:["neobot"], template:"\uc67c\ucabd \ubaa8\ud130\ub97c %1 %2\uc758 \uc18d\ub3c4\ub85c, \uc624\ub978\ucabd \ubaa8\ud130\ub97c %3 %4\uc758 \uc18d\ub3c4\ub85c \uacc4\uc18d \ud68c\uc804 %5", params:[{type:"Dropdown", options:[["\uc55e\uc73c\ub85c", "16"], ["\ub4a4\ub85c", "32"]], value:"16", fontsIze:11}, {type:"Block", accept:"string"}, {type:"Dropdown", options:[["\uc55e\uc73c\ub85c", "16"], 
+  ["\ub4a4\ub85c", "32"]], value:"16", fontsIze:11}, {type:"Block", accept:"string"}, {type:"Indicator", img:"block_icon/practical_course/dcmotor.png", size:12}], events:{}, def:{params:[null, {type:"practical_course_motor_speed"}, null, {type:"practical_course_motor_speed"}, null], type:"practical_course_move_for2"}, paramsKeyMap:{DIRECTION1:0, SPEED1:1, DIRECTION2:2, SPEED2:3}, class:"practical_course_motor", func:function(c, b) {
     c = b.getNumberValue("SPEED1");
     var d = b.getNumberField("DIRECTION1"), e = b.getNumberValue("SPEED2"), f = b.getNumberField("DIRECTION2");
     Entry.hw.sendQueue.DCL = c + d;
@@ -23919,8 +23935,8 @@ Entry.BlockMenu = function(c, b, d, e, f) {
     if (!this._boardBlockView && null !== c) {
       var e = Entry.GlobalSvg, f = this.workspace, g = f.getMode(), h = Entry.Workspace, k = this._svgWidth, l = f.selectedBoard, m = c.mouseDownCoordinate, q = f = 0;
       m && (f = b.pageX - m.x, q = b.pageY - m.y);
-      !l || g !== h.MODE_BOARD && g !== h.MODE_OVERLAYBOARD ? e.setView(c, g) && (e.adjust(f, q), e.addControl(b)) : l.code ? (h = c.block, c = h.getThread(), h && c && (l = this.offset().top - l.offset().top - $(window).scrollTop(), c = c.toJSON(!0), c[0].x = c[0].x - k + (f || 0), c[0].y = c[0].y + l + (q || 0), k = this._boardBlockView = Entry.do("addThreadFromBlockMenu", c).value.getFirstBlock().view, k.onMouseDown.call(k, b), k.dragInstance.set({isNew:!0}), e.setView(k, g))) : (Entry.toast && 
-      Entry.toast.alert(Lang.Workspace.add_object_alert, Lang.Workspace.add_object_alert_msg), this.selectedBlockView && (this.selectedBlockView.removeSelected(), this.set({selectedBlockView:null, dragBlock:null})));
+      !l || g !== h.MODE_BOARD && g !== h.MODE_OVERLAYBOARD ? e.setView(c, g) && (e.adjust(f, q), e.addControl(b)) : l.code ? (h = c.block, c = h.getThread(), h && c && (l = this.offset().top - l.offset().top - $(window).scrollTop(), c = c.toJSON(!0), c[0].x = c[0].x - k + (f || 0), c[0].y = c[0].y + l + (q || 0), (f = (k = Entry.do("addThreadFromBlockMenu", c).value.getFirstBlock()) && k.view) ? (this._boardBlockView = f, f.onMouseDown.call(f, b), f.dragInstance.set({isNew:!0}), e.setView(f, g)) : 
+      k && k.destroy())) : (Entry.toast && Entry.toast.alert(Lang.Workspace.add_object_alert, Lang.Workspace.add_object_alert_msg), this.selectedBlockView && (this.selectedBlockView.removeSelected(), this.set({selectedBlockView:null, dragBlock:null})));
     }
   };
   c.terminateDrag = function() {
@@ -25483,22 +25499,24 @@ Entry.FieldBlock = function(c, b, d, e, f) {
   this.svgGroup = null;
   this._position = c.position;
   this.observe(this, "_updateBG", ["magneting"], !1);
-  this.renderStart(b.getBoard(), e);
+  this.renderStart(this.getBoard(), e);
 };
 Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
 (function(c) {
   c.schema = {magneting:!1};
+  c.getBoard = function() {
+    var b = this._blockView;
+    return b && b.getBoard();
+  };
   c.renderStart = function(b, c, e, f) {
     this.svgGroup || (this.svgGroup = this._blockView.contentSvgGroup.elem("g"));
     this.renderMode = void 0 !== c ? c : this._blockView.renderMode;
     this.view = this;
     this._nextGroup = this.svgGroup;
-    if (c = this.getValue()) {
-      c.constructor !== Entry.Block && (c = new Entry.Block(c, this._block.thread)), c.view || (c.setThread(this), c.createView(b, this.renderMode), this.view.setParent(this));
-    }
-    this.updateValueBlock(c);
-    this._valueBlock.view.renderByMode(this.renderMode, f);
-    this._blockView.getBoard().constructor !== Entry.Board && this._valueBlock.view.removeControl();
+    this.updateValueBlock(this.getValue());
+    b = this._valueBlock.view;
+    b.renderByMode(this.renderMode, f);
+    this.getBoard().constructor !== Entry.Board && b.removeControl();
     this.box.observe(this._blockView, "dAlignContent", ["width", "height"], !1);
   };
   c.align = function(b, c, e) {
@@ -25511,9 +25529,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
     b = Math.round(100 * b) / 100;
     c = Math.round(100 * c) / 100;
     e = this.box;
-    if (e.x !== b || e.y !== c) {
-      d = e.y, e.x === b && d === c || e.set({x:b, y:c});
-    }
+    e.x === b && e.y === c || e.set({x:b, y:c});
   };
   c.calcWH = function() {
     var b = this._valueBlock, c = this.box, e = c.width, f = c.height, g;
@@ -25561,7 +25577,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
   };
   c.updateValueBlock = function(b) {
     b instanceof Entry.Block || (b = void 0);
-    b && b === this._valueBlock ? this.calcWH() : (this._destroyObservers(), b = this._setValueBlock(b).view, b.bindPrev(this), this._blockView.alignContent(), this._posObserver = b.observe(this, "updateValueBlock", ["x", "y"], !1), this._sizeObserver = b.observe(this, "calcWH", ["width", "height"]));
+    (b = this._ensureBlock(b)) && b === this._valueBlock ? this.calcWH() : (this._destroyObservers(), b = this._setValueBlock(b).view, b.bindPrev(this), this._blockView.alignContent(), this._posObserver = b.observe(this, "updateValueBlock", ["x", "y"], !1), this._sizeObserver = b.observe(this, "calcWH", ["width", "height"]));
   };
   c._destroyObservers = function() {
     this._sizeObserver && this._sizeObserver.destroy();
@@ -25642,6 +25658,16 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
   };
   c.isParamBlockType = function() {
     return !0;
+  };
+  c._ensureBlock = function(b) {
+    if (b) {
+      b.constructor !== Entry.Block && (b = new Entry.Block(b, this._block.thread));
+      if (b.getSchema()) {
+        return b.view || (b.setThread(this), b.createView(this.getBoard(), this.renderMode), this.view.setParent(this)), b;
+      }
+      this._destroyObservers();
+      b.destroy();
+    }
   };
 })(Entry.FieldBlock.prototype);
 Entry.Scroller = function(c, b, d) {
@@ -26864,21 +26890,28 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
     c.y -= this.box.height / 2;
     this.optionGroup.css({height:this._CONTENT_HEIGHT, left:c.x, top:c.y, width:b.box.width});
     this.angleOptionGroup = this.appendSvgOptionGroup();
-    this.angleOptionGroup.elem("circle", {x:0, y:0, r:49, class:"entry-field-angle-circle"});
-    $(this.angleOptionGroup).on("mousedown touchstart", function(c) {
-      c.stopPropagation();
-      b._updateByCoord(c);
-    });
-    this._dividerGroup = this.angleOptionGroup.elem("g");
-    for (c = 0; 360 > c; c += 15) {
-      this._dividerGroup.elem("line", {x1:49, y1:0, x2:49 - (0 === c % 45 ? 10 : 5), y2:0, transform:"rotate(" + c + ", 0, 0)", class:"entry-angle-divider"});
+    this.angleOptionGroup.elem("circle", {x:0, y:0, r:50, class:"entry-field-angle-circle"});
+    for (var c = this.angleOptionGroup.elem("g"), e = 0; 360 > e; e += 15) {
+      c.elem("line", {x1:47.5, y1:0, x2:47.5 - (0 === e % 45 ? 8.3 : 6), y2:0, transform:"rotate(" + e + ", 0, 0)", class:"entry-angle-divider"});
     }
     c = this.getAbsolutePosFromBoard();
     c.x += this.box.width / 2;
-    c.y = c.y + this.box.height / 2 + 49 + 1;
+    c.y = c.y + this.box.height / 2 + 47.5 + 5;
     this.angleOptionGroup.attr({class:"entry-field-angle", transform:"translate(" + c.x + "," + c.y + ")"});
-    $(this.angleOptionGroup).bind("mousemove touchmove", this._updateByCoord.bind(this));
-    $(this.angleOptionGroup).bind("mouseup touchend", this.destroyOption.bind(this));
+    var f = $(this.angleOptionGroup);
+    f.bind("mousedown touchstart", function(c) {
+      c.stopPropagation();
+      f.bind("mousemove.fieldAngle touchmove.fieldAngle", function(c) {
+        b._updateByCoord(c);
+      });
+      f.bind("mouseup touchend", function() {
+        f.unbind(".fieldAngle");
+      });
+    });
+    this._fillPath = this.angleOptionGroup.elem("path", {d:"M 0,0 v -47.5 A 47.5,47.5 0 %LARGE 1 %X,%Y z".replace("%X", 0).replace("%Y", 0).replace("%LARGE", 1), class:"entry-angle-fill-area"});
+    this.angleOptionGroup.elem("circle", {cx:0, cy:0, r:"1.5px", fill:"#333333"});
+    this._indicator = this.angleOptionGroup.elem("line", {x1:0, y1:0, x2:0, y2:0, class:"entry-angle-indicator"});
+    this._indicatorCap = this.angleOptionGroup.elem("circle", {cx:0, cy:0, r:"6px", fill:"#397dc6"});
     this.updateGraph();
     this.optionGroup.focus();
     this.optionGroup.select();
@@ -26890,7 +26923,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
     var c = this.getAbsolutePosFromDocument();
     this.optionGroup.val(this.modValue(function(b, c) {
       var d = c[0] - b[0];
-      b = c[1] - b[1] - 49 - 1;
+      b = c[1] - b[1] - 47.5 - 1;
       c = Math.atan(-b / d);
       c = Entry.toDegrees(c);
       c = 90 - c;
@@ -26900,13 +26933,10 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
     this.applyValue();
   };
   c.updateGraph = function() {
-    this._fillPath && this._fillPath.remove();
-    var b = Entry.toRadian(this.getValue()), c = 49 * Math.sin(b), e = -49 * Math.cos(b), b = b > Math.PI ? 1 : 0;
-    this._fillPath = this.angleOptionGroup.elem("path", {d:"M 0,0 v -49 A 49,49 0 %LARGE 1 %X,%Y z".replace("%X", c).replace("%Y", e).replace("%LARGE", b), class:"entry-angle-fill-area"});
-    this.angleOptionGroup.appendChild(this._dividerGroup);
-    this._indicator && this._indicator.remove();
-    this._indicator = this.angleOptionGroup.elem("line", {x1:0, y1:0, x2:c, y2:e});
-    this._indicator.attr({class:"entry-angle-indicator"});
+    var b = Entry.toRadian(this.getValue()), c = Math.sin(b), e = Math.cos(b), f = 47.5 * c, g = -47.5 * e, b = b > Math.PI ? 1 : 0;
+    this._fillPath.attr({d:"M 0,0 v -47.5 A 47.5,47.5 0 %LARGE 1 %X,%Y z".replace("%X", f).replace("%Y", g).replace("%LARGE", b)});
+    this._indicator.attr({x1:0, y1:0, x2:f, y2:g});
+    this._indicatorCap.attr({cx:41.5 * c, cy:-41.5 * e});
   };
   c.applyValue = function() {
     var b = this.optionGroup.val();
@@ -28000,8 +28030,8 @@ Entry.ThreadView = function(c, b) {
     }
   };
   c.requestAbsoluteCoordinate = function(b) {
-    var c = this.thread.getBlocks(), e = c.shift(), f = {x:0, y:0};
-    for (this.parent instanceof Entry.Board || this.parent instanceof Entry.BlockMenu || (f = this.parent.requestAbsoluteCoordinate()); e && e.view !== b && e.view;) {
+    var c = this.thread.getBlocks(), e = c.shift(), f = {x:0, y:0}, g = this.parent;
+    for (g instanceof Entry.Board || g instanceof Entry.BlockMenu || !g.requestAbsoluteCoordinate || (f = g.requestAbsoluteCoordinate()); e && e.view !== b && e.view;) {
       e = e.view, f.x += e.x + e.magnet.next.x, f.y += e.y + e.magnet.next.y, e = c.shift();
     }
     return f;

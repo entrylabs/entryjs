@@ -637,23 +637,23 @@ svg .svgBlockGroup text {
   cursor: default;
 }
 .entry-field-angle-circle {
-  stroke: #444;
+  stroke: #dbdbdb;
   stroke-width: 1;
-  fill: #ddd;
+  fill: #FBFBFB;
   fill-opacity: 0.8;
 }
 .entry-angle-divider {
-  stroke: #444;
+  stroke: #bababa;
   stroke-width: 1;
 }
 .entry-angle-indicator {
-  stroke: #f00;
-  stroke-width: 2;
+  stroke: #333333;
+  stroke-width: 1;
   stroke-linecap: round;
 }
 .entry-angle-fill-area {
-  fill: #f88;
-  fill-opacity: 0.8;
+  fill: #5096f5;
+  fill-opacity: 0.3;
 }
 .entryWorkspaceFilters {
   position: absolute;
