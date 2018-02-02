@@ -11450,7 +11450,7 @@ Entry.block = {
                 returnVal = Entry.toDegrees(Math[operator](value));
                 break;
             case "unnatural":
-                returnVal = value - Math.floor(value);
+                returnVal = new BigNumber(value).minus(Math.floor(value)).toNumber();
                 if (value < 0)
                     returnVal = 1 - returnVal;
                 break;
