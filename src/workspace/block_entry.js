@@ -70657,6 +70657,253 @@ chocopi_servo_motor: {
         }
     },
 //endregion playcode
+
+//region creamo 
+    creamo_get_number_sensor_value: {
+        parent: 'arduino_get_number_sensor_value',
+        isNotFor: ['creamo'],
+        def: {
+            params: [
+                {
+                    type: 'arduino_get_sensor_number',
+                },
+            ],
+            type: 'creamo_get_number_sensor_value',
+        },
+        class: 'arduino_value',
+        syntax: { js: [], py: ['creamo.get_number_sensor_value(%1)'] },
+    },
+    creamo_get_port_number: {
+        color: '#00979D',
+        skeleton: 'basic_string_field',
+        statements: [],
+        params: [
+            {
+                type: 'Dropdown',
+                options: [['7', '7'], ['8', '8'], ['12', '12']],
+                value: '7',
+                fontSize: 11,
+                arrowColor: EntryStatic.ARROW_COLOR_HW,
+            },
+        ],
+        events: {},
+        def: {
+            params: [null],
+        },
+        paramsKeyMap: {
+            PORT: 0,
+        },
+        func: function(sprite, script) {
+            return script.getStringField('PORT');
+        },
+        syntax: {
+            js: [],
+            py: [
+                {
+                    syntax: '%1',
+                    textParams: [
+                        {
+                            type: 'Dropdown',
+                            options: [['7', '7'], ['8', '8'], ['12', '12']],
+                            value: '7',
+                            fontSize: 11,
+                            arrowColor: EntryStatic.ARROW_COLOR_HW,
+                        },
+                    ],
+                    keyOption: 'arduino_get_port_number',
+                },
+            ],
+        },
+    },
+    //LED
+    creamo_toggle_led: {
+        parent: 'arduino_toggle_led',
+        isNotFor: ['creamo'],
+        def: {
+            params: [
+                {
+                    type: 'creamo_get_port_number',
+                },
+                null,
+                null,
+            ],
+            type: 'creamo_toggle_led',
+        },
+        class: 'arduino_set',
+        syntax: { js: [], py: ['creamo.toggle_led(%1)'] },
+    },
+    //모터
+    creamo_toggle_motor: {
+        parent: 'arduino_toggle_led',
+        isNotFor: ['creamo'],
+        def: {
+            params: [
+                {
+                    type: 'creamo_motor_port_number',
+                },
+                null,
+                null,
+            ],
+            type: 'creamo_toggle_motor',
+        },
+        class: 'arduino_set',
+        syntax: { js: [], py: ['creamo.toggle_led(%1)'] },
+    },
+    creamo_motor_port_number: {
+        color: '#00979D',
+        skeleton: 'basic_string_field',
+        statements: [],
+        params: [
+            {
+                type: 'Dropdown',
+                options: [['6', '6'], ['9', '9']],
+                value: '6',
+                fontSize: 11,
+                arrowColor: EntryStatic.ARROW_COLOR_HW,
+            },
+        ],
+        events: {},
+        def: {
+            params: [null],
+        },
+        paramsKeyMap: {
+            PORT: 0,
+        },
+        func: function(sprite, script) {
+            return script.getStringField('PORT');
+        },
+        syntax: {
+            js: [],
+            py: [
+                {
+                    syntax: '%1',
+                    textParams: [
+                        {
+                            type: 'Dropdown',
+                            options: [['6', '6'], ['9', '9']],
+                            value: '6',
+                            fontSize: 11,
+                            arrowColor: EntryStatic.ARROW_COLOR_HW,
+                        },
+                    ],
+                    keyOption: 'arduino_get_port_number',
+                },
+            ],
+        },
+    },
+    creamo_toggle_pwm: {
+        color: '#00979D',
+        skeleton: 'basic',
+        statements: [],
+        params: [
+            {
+                type: 'Block',
+                accept: 'string',
+            },
+            {
+                type: 'Block',
+                accept: 'string',
+            },
+            {
+                type: 'Indicator',
+                img: 'block_icon/hardware_03.png',
+                size: 12,
+            },
+        ],
+        events: {},
+        def: {
+            params: [
+                {
+                    type: 'creamo_get_pwm_port_number',
+                },
+                {
+                    type: 'arduino_text',
+                    params: ['255'],
+                },
+                null,
+            ],
+            type: 'creamo_toggle_pwm',
+        },
+        paramsKeyMap: {
+            PORT: 0,
+            VALUE: 1,
+        },
+        class: 'arduino_set',
+        isNotFor: ['creamo'],
+        func: function(sprite, script) {
+            var port = script.getNumberValue('PORT');
+            var value = script.getNumberValue('VALUE');
+            value = Math.round(value);
+            value = Math.max(value, 0);
+            value = Math.min(value, 255);
+            Entry.hw.setDigitalPortValue(port, value);
+            return script.callReturn();
+        },
+        syntax: {
+            js: [],
+            py: [
+                {
+                    syntax: 'creamo.set_pin_digital(%1, %2)',
+                    textParams: [
+                        {
+                            type: 'Block',
+                            accept: 'string',
+                        },
+                        {
+                            type: 'Block',
+                            accept: 'string',
+                        },
+                    ],
+                },
+            ],
+        },
+    },
+    creamo_get_pwm_port_number: {
+        color: '#00979D',
+        skeleton: 'basic_string_field',
+        statements: [],
+        params: [
+            {
+                type: 'Dropdown',
+                options: [['5', '5'], ['6', '6'], ['9', '9']],
+                value: '5',
+                fontSize: 11,
+                arrowColor: EntryStatic.ARROW_COLOR_HW,
+            },
+        ],
+        events: {},
+        def: {
+            params: [null],
+        },
+        paramsKeyMap: {
+            PORT: 0,
+        },
+        func: function(sprite, script) {
+            return script.getStringField('PORT');
+        },
+        syntax: {
+            js: [],
+            py: [
+                {
+                    syntax: '%1',
+                    textParams: [
+                        {
+                            type: 'Dropdown',
+                            options: [['5', '5'], ['6', '6'], ['9', '9']],
+                            value: '3',
+                            fontSize: 11,
+                            arrowColor: EntryStatic.ARROW_COLOR_HW,
+                            converter:
+                                Entry.block.converters
+                                    .returnStringOrNumberByValue,
+                        },
+                    ],
+                    keyOption: 'arduino_get_pwm_port_number',
+                },
+            ],
+        },
+    },
+//endregion creamo
 };
 
 (function() {

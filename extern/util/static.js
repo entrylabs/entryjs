@@ -1203,6 +1203,13 @@ EntryStatic.getAllBlocks = function() {
                 "playcode_servo",
                 "playcode_speed",
                 // playcode Added 2018-01-02 
+
+                //creamo
+                "creamo_toggle_led",
+                "creamo_get_number_sensor_value",
+                "creamo_toggle_pwm",
+                "creamo_toggle_motor",
+                //creamo
             ]
         }
     ]
