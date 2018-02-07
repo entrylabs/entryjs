@@ -1196,14 +1196,13 @@ EntryStatic.getAllBlocks = function() {
                 "edumaker_set_servo",
                 // EduMaker Added 2017-11-30
 
-
-		// playcode Added 2018-01-02   [[[[
+		        // playcode Added 2018-01-02
                 "playcode_get_light_value",
                 "playcode_get_mic_value",
                 "playcode_gpio",
                 "playcode_servo",
                 "playcode_speed",
-                // playcode Added 2018-01-02  ]]]]]
+                // playcode Added 2018-01-02 
             ]
         }
     ]

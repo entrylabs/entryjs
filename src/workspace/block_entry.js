@@ -68740,7 +68740,7 @@ chocopi_servo_motor: {
             var pd = Entry.hw.portData;
             var dev = script.getField('DEVICE');
             var rotary_value = Math.round((pd[dev])*100/1024);
-			//if (rotary_value == 0) rotary_value = 1;
+            //if (rotary_value == 0) rotary_value = 1;
             return rotary_value;
         },
         "syntax": {"js": [], "py": []}
@@ -70304,238 +70304,236 @@ chocopi_servo_motor: {
     },
 //endregion JDKit
 
-// [[[[[ playcode ---------------------------
-
-    
-"playcode_port_list": {
-    "color": "#00979D",
-    "skeleton": "basic_string_field",
-    "statements": [],
-    "template": "%1",
-    "params": [
-        {
-            "type": "Dropdown",
-            "options": [
-                [ "1", "1" ],
-                [ "2", "2" ],
-                [ "3", "3" ],
-                [ "4", "4" ],
-                [ "5", "5" ],
-                [ "6", "6" ],
-                [ "7", "7" ],
-                [ "8", "8" ],
-            ],
-            "value": "1",
-            "fontSize": 11
-        }
-    ],
-    "events": {},
-    "def": {
-        "params": [ null ]
-    },
-    "paramsKeyMap": {
-        "PORT": 0
-    },
-    "func": function (sprite, script) {
-        return script.getField("PORT");
-    }
-},
-    
-"playcode_first_port_list": {
-    "color": "#00979D",
-    "skeleton": "basic_string_field",
-    "statements": [],
-    "template": "%1",
-    "params": [
-        {
-            "type": "Dropdown",
-            "options": [
-                [ "1", "1" ],
-                [ "2", "2" ],
-                [ "3", "3" ],
-                [ "4", "4" ]
-            ],
-            "value": "1",
-            "fontSize": 11
-        }
-    ],
-    "events": {},
-    "def": {
-        "params": [ null ]
-    },
-    "paramsKeyMap": {
-        "PORT": 0
-    },
-    "func": function (sprite, script) {
-        return script.getField("PORT");
-    }
-},
-    
-    
-"playcode_get_light_value": {
-    "color": "#00979D",
-    "fontColor": "#fff",
-    "skeleton": "basic_string_field",
-    "template": "빛센서 : %1 포트 값",
-    "statements": [],
-    "params": [
-        {
-            "type": "Block",
-            "accept": "string"
-        }
-    ],
-    "events": {},
-    "def": {
+//region playcode
+    "playcode_port_list": {
+        "color": "#00979D",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "template": "%1",
         "params": [
             {
-                "type": "playcode_first_port_list"
+                "type": "Dropdown",
+                "options": [
+                    ["1", "1"],
+                    ["2", "2"],
+                    ["3", "3"],
+                    ["4", "4"],
+                    ["5", "5"],
+                    ["6", "6"],
+                    ["7", "7"],
+                    ["8", "8"],
+                ],
+                "value": "1",
+                "fontSize": 11
             }
         ],
-        "type": "playcode_get_light_value"
-    },
-    "paramsKeyMap": {
-        "PORT": 0
-    },
-    "class": "playcode_get",
-    "isNotFor": [ "playcode" ],
-    "func": function (sprite, script) {
-        var port = script.getValue("PORT", script);
-        var ANALOG = Entry.hw.portData.LIGHT;
-
-        if (port[0] === "A")
-            port = port.substring(1)
-        
-        if(!Entry.hw.sendQueue['GET']) {
-            Entry.hw.sendQueue['GET'] = {};
+        "events": {},
+        "def": {
+            "params": [null]
+        },
+        "paramsKeyMap": {
+            "PORT": 0
+        },
+        "func": function (sprite, script) {
+            return script.getField("PORT");
         }
-        
-        Entry.hw.sendQueue['GET'][Entry.playcode.sensorTypes.LIGHT] = {
-            port: [port],
-            data: 1,
-            time: new Date().getTime()
-        };
-
-        return ANALOG;
     },
-    "syntax": {"js": [], "py": ["playcode.get_analog_value(%1)"]}
-},
-"playcode_get_mic_value": {
-    "color": "#00979D",
-    "fontColor": "#fff",
-    "skeleton": "basic_string_field",
-    "template": "마이크센서 : %1 포트 값",
-    "statements": [],
-    "params": [
-        {
-            "type": "Block",
-            "accept": "string"
-        }
-    ],
-    "events": {},
-    "def": {
+
+    "playcode_first_port_list": {
+        "color": "#00979D",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "template": "%1",
         "params": [
             {
-                "type": "playcode_first_port_list"
+                "type": "Dropdown",
+                "options": [
+                    ["1", "1"],
+                    ["2", "2"],
+                    ["3", "3"],
+                    ["4", "4"]
+                ],
+                "value": "1",
+                "fontSize": 11
             }
         ],
-        "type": "playcode_get_mic_value"
-    },
-    "paramsKeyMap": {
-        "PORT": 0
-    },
-    "class": "playcode_get",
-    "isNotFor": [ "playcode" ],
-    "func": function (sprite, script) {
-        var port = script.getValue("PORT", script);
-        var ANALOG = Entry.hw.portData.MIC;
-
-        if (port[0] === "A")
-            port = port.substring(1)
-        
-        if(!Entry.hw.sendQueue['GET']) {
-            Entry.hw.sendQueue['GET'] = {};
-        }
-        
-        Entry.hw.sendQueue['GET'][Entry.playcode.sensorTypes.MICROPHONE] = {
-            port: [port],
-            data: 1,
-            time: new Date().getTime()
-        };
-
-        return ANALOG;
-    },
-    "syntax": {"js": [], "py": ["playcode.get_analog_value(%1)"]}
-},
-
-"playcode_gpio": {
-    "color": "#00979D",
-    "fontColor": "#fff",
-    "skeleton": "basic",
-    "template": "GPIO : %1포트에 %2 보내기 %3",
-    "statements": [],
-    "params": [
-        {
-            "type": "Block",
-            "accept": "string"
+        "events": {},
+        "def": {
+            "params": [null]
         },
-        {
-            "type": "Dropdown",
-            "options": [
-                [Lang.Blocks.ARDUINO_on,"on"],
-                [Lang.Blocks.ARDUINO_off,"off"]
-            ],
-            "value": "on",
-            "fontSize": 11,
-            'arrowColor': EntryStatic.ARROW_COLOR_HW
+        "paramsKeyMap": {
+            "PORT": 0
         },
-        {
-            "type": "Indicator",
-            "img": "block_icon/hardware_03.png",
-            "size": 12
+        "func": function (sprite, script) {
+            return script.getField("PORT");
         }
-    ],
-    "events": {},
-    "def": {
+    },
+
+
+    "playcode_get_light_value": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "template": "빛센서 : %1 포트 값",
+        "statements": [],
         "params": [
             {
-                "type": "playcode_port_list"
+                "type": "Block",
+                "accept": "string"
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "playcode_first_port_list"
+                }
+            ],
+            "type": "playcode_get_light_value"
+        },
+        "paramsKeyMap": {
+            "PORT": 0
+        },
+        "class": "playcode_get",
+        "isNotFor": ["playcode"],
+        "func": function (sprite, script) {
+            var port = script.getValue("PORT", script);
+            var ANALOG = Entry.hw.portData.LIGHT;
+
+            if (port[0] === "A")
+                port = port.substring(1)
+
+            if (!Entry.hw.sendQueue['GET']) {
+                Entry.hw.sendQueue['GET'] = {};
+            }
+
+            Entry.hw.sendQueue['GET'][Entry.playcode.sensorTypes.LIGHT] = {
+                port: [port],
+                data: 1,
+                time: new Date().getTime()
+            };
+
+            return ANALOG;
+        },
+        "syntax": { "js": [], "py": ["playcode.get_analog_value(%1)"] }
+    },
+    "playcode_get_mic_value": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "template": "마이크센서 : %1 포트 값",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "playcode_first_port_list"
+                }
+            ],
+            "type": "playcode_get_mic_value"
+        },
+        "paramsKeyMap": {
+            "PORT": 0
+        },
+        "class": "playcode_get",
+        "isNotFor": ["playcode"],
+        "func": function (sprite, script) {
+            var port = script.getValue("PORT", script);
+            var ANALOG = Entry.hw.portData.MIC;
+
+            if (port[0] === "A")
+                port = port.substring(1)
+
+            if (!Entry.hw.sendQueue['GET']) {
+                Entry.hw.sendQueue['GET'] = {};
+            }
+
+            Entry.hw.sendQueue['GET'][Entry.playcode.sensorTypes.MICROPHONE] = {
+                port: [port],
+                data: 1,
+                time: new Date().getTime()
+            };
+
+            return ANALOG;
+        },
+        "syntax": { "js": [], "py": ["playcode.get_analog_value(%1)"] }
+    },
+
+    "playcode_gpio": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic",
+        "template": "GPIO : %1포트에 %2 보내기 %3",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
             },
-            null,
-            null,
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.ARDUINO_on, "on"],
+                    [Lang.Blocks.ARDUINO_off, "off"]
+                ],
+                "value": "on",
+                "fontSize": 11,
+                'arrowColor': EntryStatic.ARROW_COLOR_HW
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
         ],
-        "type": "playcode_gpio"
-    },
-    "paramsKeyMap": {
-        PORT: 0,
-        OPERATOR: 1
-    },
-    "class": "playcode_set",
-    "isNotFor": [ "playcode" ],
-    "func": function (sprite, script) {
-        var port = script.getNumberValue("PORT");
-        var operator = script.getField("OPERATOR");
-        var value = operator == "on" ? 1 : 0;
-        
-        var sq = Entry.hw.sendQueue;
-        
-        if(!sq['SET']) {
-            sq['SET'] = {};
-        }
-        sq['SET'][port] = {
-            type: Entry.playcode.sensorTypes.DIGITAL,
-            data: value,
-            time: new Date().getTime()
-        };
-        
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "playcode_port_list"
+                },
+                null,
+                null,
+            ],
+            "type": "playcode_gpio"
+        },
+        "paramsKeyMap": {
+            PORT: 0,
+            OPERATOR: 1
+        },
+        "class": "playcode_set",
+        "isNotFor": ["playcode"],
+        "func": function (sprite, script) {
+            var port = script.getNumberValue("PORT");
+            var operator = script.getField("OPERATOR");
+            var value = operator == "on" ? 1 : 0;
 
-        Entry.hw.setDigitalPortValue(port, value);
-        return script.callReturn();
+            var sq = Entry.hw.sendQueue;
+
+            if (!sq['SET']) {
+                sq['SET'] = {};
+            }
+            sq['SET'][port] = {
+                type: Entry.playcode.sensorTypes.DIGITAL,
+                data: value,
+                time: new Date().getTime()
+            };
+
+
+            Entry.hw.setDigitalPortValue(port, value);
+            return script.callReturn();
+        },
+        "syntax": { "js": [], "py": ["playcode.playcode_gpio(%1)"] }
     },
-    "syntax": {"js": [], "py": ["playcode.playcode_gpio(%1)"]}
-},
-    
-"playcode_servo": {
-		color: "#00979D",
+
+    "playcode_servo": {
+        color: "#00979D",
         skeleton: "basic",
         template: "Servo : %1포트에 %2 보내기 %3",
         "params": [
@@ -70558,11 +70556,11 @@ chocopi_servo_motor: {
             "params": [
                 {
                     "type": "playcode_first_port_list",
-                    "params": [ 1 ],
+                    "params": [1],
                 },
                 {
                     "type": "number",
-                    "params": [ "0" ],
+                    "params": ["0"],
                 },
                 null
             ],
@@ -70573,8 +70571,8 @@ chocopi_servo_motor: {
             "VALUE": 1
         },
         class: "playcode_set",
-		"isNotFor": [ "playcode" ],
-        
+        "isNotFor": ["playcode"],
+
         func: function (sprite, script) {
             var port = script.getNumberValue("PORT");
             var value = script.getNumberValue("VALUE");
@@ -70582,23 +70580,23 @@ chocopi_servo_motor: {
             value = Math.round(value);
             value = Math.min(value, 180);
             value = Math.max(value, 0);
-            
-            if(!Entry.hw.sendQueue['SET']) {
+
+            if (!Entry.hw.sendQueue['SET']) {
                 Entry.hw.sendQueue['SET'] = {};
             }
-            
+
             Entry.hw.sendQueue['SET'][port] = {
                 type: Entry.playcode.sensorTypes.SERVO_PIN,
                 data: value,
                 time: new Date().getTime()
             };
-            
+
             return script.callReturn();
         }
-},
-    
-"playcode_speed": {
-		color: "#00979D",
+    },
+
+    "playcode_speed": {
+        color: "#00979D",
         skeleton: "basic",
         template: "Speed : %1포트에 %2 보내기 %3",
         "params": [
@@ -70621,11 +70619,11 @@ chocopi_servo_motor: {
             "params": [
                 {
                     "type": "playcode_first_port_list",
-                    "params": [ 1 ],
+                    "params": [1],
                 },
                 {
                     "type": "number",
-                    "params": [ "0" ],
+                    "params": ["0"],
                 },
                 null
             ],
@@ -70636,8 +70634,7 @@ chocopi_servo_motor: {
             "VALUE": 1
         },
         class: "playcode_set",
-		"isNotFor": [ "playcode" ],
-        
+        "isNotFor": ["playcode"],
         func: function (sprite, script) {
             var port = script.getNumberValue("PORT");
             var value = script.getNumberValue("VALUE");
@@ -70645,22 +70642,21 @@ chocopi_servo_motor: {
             value = Math.round(value);
             value = Math.min(value, 255);
             value = Math.max(value, 0);
-            
-            if(!Entry.hw.sendQueue['SET']) {
+
+            if (!Entry.hw.sendQueue['SET']) {
                 Entry.hw.sendQueue['SET'] = {};
             }
-            
+
             Entry.hw.sendQueue['SET'][port] = {
                 type: Entry.playcode.sensorTypes.PWM,
                 data: value,
                 time: new Date().getTime()
             };
-            
+
             return script.callReturn();
         }
-},
-    
-// ]]]] playcode ---------------------------
+    },
+//endregion playcode
 };
 
 (function() {
