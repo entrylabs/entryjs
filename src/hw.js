@@ -14,10 +14,7 @@ Entry.HW = function() {
 
     this.connectTrial = 0;
     this.isFirstConnect = true;
-    //this.requireVerion = 'v1.6.1';
     this.requireVerion = 'v1.6.1';
-    this.downloadPath = "http://download.play-entry.org/apps/Entry_HW_1.6.9_Setup.exe";
-    this.downloadPathOsx = "http://download.play-entry.org/apps/Entry_HW-1.6.9.dmg";
     this.hwPopupCreate();
     this.initSocket();
     this.connected = false;
@@ -41,15 +38,22 @@ Entry.HW = function() {
         '1.7': Entry.Xbot,
         '1.8': Entry.ardublock,
         '1.9': Entry.ArduinoExt,
+        '1.10': Entry.ArduinoNano,
         '1.A': Entry.Cobl,
+        '1.B': Entry.Blacksmith,
         '2.4': Entry.Hamster,
         '2.5': Entry.Albert,
+        '2.9': Entry.Turtle,
+        '2.FF': Entry.Roboid,
         '3.1': Entry.Bitbrick,
         '4.2': Entry.Arduino,
         '5.1': Entry.Neobot,
+        '6.1': Entry.mkboard,
+        '6.2': Entry.memaker,
         '7.1': Entry.Robotis_carCont,
         '7.2': Entry.Robotis_openCM70,
         '8.1': Entry.Arduino,
+        '9.1': Entry.iboard,
         'A.1': Entry.SmartBoard,
         'B.1': Entry.Codestar,
         'C.1': Entry.DaduBlock,
@@ -58,6 +62,9 @@ Entry.HW = function() {
         'F.1': Entry.byrobot_dronefighter_controller,
         'F.2': Entry.byrobot_dronefighter_drive,
         'F.3': Entry.byrobot_dronefighter_flight,
+        'F.4': Entry.byrobot_petrone_v2_controller,
+        'F.5': Entry.byrobot_petrone_v2_drive,
+        'F.6': Entry.byrobot_petrone_v2_flight,
         '10.1': Entry.Roborobo_Roduino,
         '10.2': Entry.Roborobo_SchoolKit,
         '12.1': Entry.EV3,
@@ -66,6 +73,8 @@ Entry.HW = function() {
         '15.1': Entry.coconut,
         '16.1': Entry.MODI,
         '18.1': Entry.Altino,
+        '1A.1': Entry.ArduinoNano,
+        '1F.1': Entry.mechatro,
     };
 };
 
@@ -309,28 +318,20 @@ p.closeConnection = function() {
 };
 
 p.downloadConnector = function() {
-    var path;
-    var platform = navigator.platform;
-
-    if(platform === 'MacIntel') {
-        path = this.downloadPathOsx;
-    } else {
-        path = this.downloadPath;
-    }
-
-    var win = window.open(path, '_blank');
-    win.focus();
+    Entry.dispatchEvent("hwDownload", "hardware");
 };
 
 p.downloadGuide = function() {
-    var url = "http://download.play-entry.org/data/hardware_manual.zip";
-    window.open(url, 'download');
+    Entry.dispatchEvent("hwDownload", "manual");
+    // var url = "http://download.play-entry.org/data/hardware_manual.zip";
+    // window.open(url, 'download');
 };
 
 p.downloadSource = function() {
-    var url = "http://play-entry.com/down/board.ino";
-    var win = window.open(url, '_blank');
-    win.focus();
+    Entry.dispatchEvent("hwDownload", "ino");
+    // var url = "http://play-entry.com/down/board.ino";
+    // var win = window.open(url, '_blank');
+    // win.focus();
 };
 
 p.setZero = function() {
