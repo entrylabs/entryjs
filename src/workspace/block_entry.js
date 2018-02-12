@@ -36321,7 +36321,11 @@ Entry.block = {
         if (value == 'null' || !isExist)
             throw new Error('value can not be null or undefined');
 
-        Entry.engine.raiseMessage(value);
+        setTimeout(
+            function() {
+                Entry.engine.raiseMessage(value);
+            }
+        )
     },
     "syntax": {"js": [], "py": [
         {
