@@ -79,6 +79,7 @@ Entry.HW = function() {
         '1B.1': Entry.EduMaker,
         '1C.1': Entry.hummingbird,
         '1D.1': Entry.JDKit,
+        '1F.1': Entry.mechatro,
     };
 };
 

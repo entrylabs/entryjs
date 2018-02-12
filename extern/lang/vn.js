@@ -2529,6 +2529,7 @@ Lang.Menus = {
     "robotori": "robotori",
     "rokoboard": "rokoboard",
     "Neobot": "Neo Bot",
+    "mechatro" : "mechatro",
     "about": "About",
     "articles": "Articles",
     "gallery": "Gallery",
@@ -5089,7 +5090,8 @@ Lang.Device = {
     "smartBoard": "smartBoard",
     "chocopi": "ChocoPi",
     "rokoboard": "rokoboard",
-    "altino": "알티노"
+    "altino": "알티노",
+    "mechatro" : "mechatro"
 };
 Lang.General = {
     "turn_on": "Bật",
@@ -6171,7 +6173,20 @@ Lang.template = {
     "edumaker_get_ultrasonic_value": "울트라소닉 Trig %1 Echo %2 센서값",
     "edumaker_set_servo": "디지털 %1 번 핀의 서보모터를 %2 의 각도로 정하기 %3",
     "edumaker_set_tone": "디지털 %1 번 핀의 버저를 %2 %3 음으로 %4 초 연주하기 %5",
-    "edumaker_toggle_led": "디지털 %1 번 핀 %2 %3"
+    "edumaker_toggle_led": "디지털 %1 번 핀 %2 %3",
+    "mechatro_get_digital": "%1",
+    "mechatro_set_threshold": "Set %1 threshold : %2%3",
+    "mechatro_get_sensor_value" : "Analog %1 Sensor value",
+    "mechatro_get_dc_motor_current" : "Get 1%motor current",
+    "mechatro_get_ultrasonic_value" : "Read ultrasonic sensor trig pin %1 echo pin %2",
+    "mechatro_set_digital" : "Digital %1 Pin %2 %3",
+    "mechatro_set_pwm" : "Digital %1 Pin %2 %3",
+    "mechatro_set_tone_time" : "Play tone pin %1 on note %2 octave %3 beat %4 %5",
+    "mechatro_set_tone": "Play tone pin %1 on note %2 octave %3 %4",
+    "mechatro_set_dc_motor" :"Set %1 motor speed to %2 %3",
+    "mechatro_set_servo_position": "Set servo pin %1 angle as %2 %3",
+    "mechatro_set_servo_speed" : "Set servo pin %1 speed %2 degree per second %3",
+    "mechatro_set_blue_pw" : "Change PW of Bluetooth to %1%2%3%4 %5"
 };
 Lang.TextCoding = {
     "block_name": "Block Name",
