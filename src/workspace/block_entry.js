@@ -44200,6 +44200,8 @@ Entry.block = {
     },
     "syntax": {"js": [], "py": []}
 },
+
+/*
 "mkboard_dc_motor_direction_list": {
     "color": "#00979D",
     "skeleton": "basic_string_field",
@@ -44614,9 +44616,9 @@ Entry.block = {
     },
     "syntax": {"js": [], "py": []}
 },
+*/
 
-/*
-"mkboard_list_digital_lcd": {
+"mkboard_list_digital_lcd_line": {
     "color": "#00979D",
     "skeleton": "basic_string_field",
     "statements": [],
@@ -44625,8 +44627,8 @@ Entry.block = {
         {
             "type": "Dropdown",
             "options": [
-                [ Lang.Blocks.mkboard_lcd_first_line, "0" ],
-                [ Lang.Blocks.mkboard_lcd_seconds_line, "1" ]
+                [ "LINE1", "0" ],
+                [ "LINE2", "1" ]
             ],
             "value": "0",
             "fontSize": 11
@@ -44644,11 +44646,53 @@ Entry.block = {
     }
 },
 
-"mkboard_set_digital_lcd": {
+"mkboard_list_digital_lcd_column": {
+    "color": "#00979D",
+    "skeleton": "basic_string_field",
+    "statements": [],
+    "template": "%1",
+    "params": [
+        {
+            "type": "Dropdown",
+            "options": [
+                [ "COL1", "0" ],
+                [ "COL2", "1" ],
+                [ "COL3", "2" ],
+                [ "COL4", "3" ],
+                [ "COL5", "4" ],
+                [ "COL6", "5" ],
+                [ "COL7", "6" ],
+                [ "COL8", "7" ],
+                [ "COL9", "8" ],
+                [ "COL10", "9" ],
+                [ "COL11", "10" ],
+                [ "COL12", "11" ],
+                [ "COL13", "12" ],
+                [ "COL14", "13" ],
+                [ "COL15", "14" ],
+                [ "COL16", "15" ],
+            ],
+            "value": "0",
+            "fontSize": 11
+        }
+    ],
+    "events": {},
+    "def": {
+        "params": [ null ]
+    },
+    "paramsKeyMap": {
+        "COLUMN": 0
+    },
+    "func": function (sprite, script) {
+        return script.getField("COLUMN");
+    }
+},
+
+"mkboard_set_lcd": {
     "color": "#00979D",
     "fontColor": "#fff",
     "skeleton": "basic",
-    "template": Lang.template.mkboard_set_digital_lcd,
+    "template": Lang.template.mkboard_set_lcd,
     "statements": [],
     "params": [
         {
@@ -44660,6 +44704,10 @@ Entry.block = {
             "accept": "string"
         },
         {
+            "type": "Block",
+            "accept": "string"
+        },        
+        {
             "type": "Indicator",
             "img": "block_icon/hardware_03.png",
             "size": 12
@@ -44669,36 +44717,59 @@ Entry.block = {
     "def": {
         "params": [
             {
-                "type": "mkboard_list_digital_lcd"
+                "type": "mkboard_list_digital_lcd_line"
             },
+            {
+                "type": "mkboard_list_digital_lcd_column"
+            },            
             {
                 "type": "text",
                 "params": [ "Type text !!" ]
             },
             null
         ],
-        "type": "mkboard_set_digital_lcd"
+        "type": "mkboard_set_lcd"
     },
     "paramsKeyMap": {
         "LINE": 0,
-        "STRING": 1,
+        "COLUMN": 1,
+        "STRING": 2,
     },
-    "class": "mkboardSet",
+    "class": "mkboardLcd",
     "isNotFor": [ "mkboard" ],
     "func": function (sprite, script) {
-        var line = script.getNumberValue("LINE");
-        var string = script.getValue("STRING");
+        var sq = Entry.hw.sendQueue;
+
+        var line = script.getValue("LINE", script);
+        var column = script.getValue("COLUMN", script);
+        var string = script.getValue("STRING", script);
         var text = [];
 
+        
         if(!script.isStart) {
             if(typeof string === 'string') {
                 for (var i = 0; i < string.length; i++) {
                     text[i] = Entry.mkboard.toByte(string[i]);
                 }
+            }            
+            else if (typeof string === 'number') 
+            {
+                //console.log("string");
+                //console.log(string);
+                var num_to_string = string.toString();
+                for (var i = 0; i < num_to_string.length; i++) {
+                    text[i] = Entry.mkboard.toByte(num_to_string[i]);
+                }                
+                //console.log("num_to_string");
+                //console.log(num_to_string);                
+                //text[0] = 1;
+                //text[1] = string / 1;
             }
             else {
                 text[0] = string;
             }
+            
+
             if(!Entry.hw.sendQueue['SET']) {
                 Entry.hw.sendQueue['SET'] = {};
             }
@@ -44711,6 +44782,8 @@ Entry.block = {
             Entry.hw.sendQueue['SET'][line] = {
                 type: Entry.mkboard.sensorTypes.LCD,
                 data: {
+                    line: line,
+                    column: column,
                     text0 : text[0],
                     text1 : text[1],
                     text2 : text[2],
@@ -44742,13 +44815,99 @@ Entry.block = {
         else {
             delete script.timeFlag;
             delete script.isStart;
-            Entry.engine.isContinue = false;
+            Entry.engine.isContinue = true;
             return script.callReturn();
         }
     },
-    "syntax": {"js": [], "py": ["mkboard.set_digital_lcd(%1, %2)"]}
+    "syntax": {"js": [], "py": ["mkboard.mkboard_set_lcd(%1, %2, %3)"]}
 },
-*/
+
+"mkboard_list_lcd_command": {
+    "color": "#00979D",
+    "skeleton": "basic_string_field",
+    "statements": [],
+    "template": "%1",
+    "params": [
+        {
+            "type": "Dropdown",
+            "options": [
+                [ "LCD_BLUE", "0" ],
+                [ "LCD_GREEN", "1" ],
+                [ "LCD_CLEAR", "2" ]
+                /*,
+                [ "BACKLIGHT_ON", "3" ],
+                [ "BACKLIGHT_OFF", "4" ]
+                */
+            ],
+            "value": "0",
+            "fontSize": 11
+        }
+    ],
+    "events": {},
+    "def": {
+        "params": [ null ]
+    },
+    "paramsKeyMap": {
+        "COMMAND": 0
+    },
+    "func": function (sprite, script) {
+        return script.getField("COMMAND");
+    }
+},
+
+"mkboard_lcd_command": {
+    "color": "#00979D",
+    "skeleton": "basic",
+    "template": Lang.template.mkboard_lcd_command,
+    //"template": "%1 %2",
+    "statements": [],
+    "params": [
+        {
+            "type": "Block",
+            "accept": "string"
+        },
+        {
+            "type": "Indicator",
+            "img": "block_icon/hardware_03.png",
+            "size": 12
+        }
+    ],
+    "events": {},
+    "def": {
+        "params": [
+            {
+                "type": "mkboard_list_lcd_command"
+            },
+            null
+        ],
+        "type": "mkboard_lcd_command"
+    },
+    "paramsKeyMap": {
+        "COMMAND": 0,
+    },
+    "class": "mkboardLcd",
+    "isNotFor": [ "mkboard" ],
+    "func": function (sprite, script) {
+        var sq = Entry.hw.sendQueue;
+        var value = script.getNumberValue("COMMAND", script);
+        var command = script.getNumberValue("COMMAND", script);
+
+        if(!sq['SET']) {
+            sq['SET'] = {};
+        }
+        sq['SET'][0] = {
+            type: Entry.mkboard.sensorTypes.LCD_COMMAND,
+                data : {
+                    value: value,
+                    command: command
+                },
+                time: new Date().getTime()
+        };
+
+        return script.callReturn();
+    },
+    "syntax": {"js": [], "py": []}
+},
 
 // mkboard Added 2017-07-04
 
@@ -45316,14 +45475,24 @@ Entry.block = {
                 for (var i = 0; i < string.length; i++) {
                     text[i] = Entry.memaker.toByte(string[i]);
                 }
-            }
-            else if (typeof string === 'number') {
-                text[0] = 1;
-                text[1] = string / 1;
+            }            
+            else if (typeof string === 'number') 
+            {
+                //console.log("string");
+                //console.log(string);
+                var num_to_string = string.toString();
+                for (var i = 0; i < num_to_string.length; i++) {
+                    text[i] = Entry.memaker.toByte(num_to_string[i]);
+                }                
+                //console.log("num_to_string");
+                //console.log(num_to_string);                
+                //text[0] = 1;
+                //text[1] = string / 1;
             }
             else {
                 text[0] = string;
             }
+            
 
             if(!Entry.hw.sendQueue['SET']) {
                 Entry.hw.sendQueue['SET'] = {};
@@ -45370,7 +45539,7 @@ Entry.block = {
         else {
             delete script.timeFlag;
             delete script.isStart;
-            Entry.engine.isContinue = false;
+            Entry.engine.isContinue = true;
             return script.callReturn();
         }
     },
@@ -45386,9 +45555,13 @@ Entry.block = {
         {
             "type": "Dropdown",
             "options": [
-                [ "LCD_CLEAR", "0" ],
-                [ "BACKLIGHT_ON", "1" ],
-                [ "BACKLIGHT_OFF", "2" ]
+                [ "LCD_BLUE", "0" ],
+                [ "LCD_GREEN", "1" ],
+                [ "LCD_CLEAR", "2" ]
+                /*,
+                [ "BACKLIGHT_ON", "3" ],
+                [ "BACKLIGHT_OFF", "4" ]
+                */
             ],
             "value": "0",
             "fontSize": 11
@@ -45439,16 +45612,52 @@ Entry.block = {
     "class": "memakerLcd",
     "isNotFor": [ "memaker" ],
     "func": function (sprite, script) {
-        var cmd = script.getNumberValue("COMMAND");
+
+
+        var sq = Entry.hw.sendQueue;
+        var value = script.getNumberValue("COMMAND", script);
+        var command = script.getNumberValue("COMMAND", script);
+
+        if(!sq['SET']) {
+            sq['SET'] = {};
+        }
+        sq['SET'][0] = {
+            type: Entry.memaker.sensorTypes.LCD_COMMAND,
+                data : {
+                    value: value,
+                    command: command
+                },
+                time: new Date().getTime()
+        };
+
+        /*
+        if( value === 0 || value === 1)
+        {
+            setTimeout(function() {
+                script.timeFlag = 0;
+            }, 800);
+        }
+        */
+        return script.callReturn();
+
+        /*
+
+        //var cmd = script.getNumberValue("COMMAND");
+        var cmd = script.getNumberValue("COMMAND", script);
 
         if(!Entry.hw.sendQueue['SET']) {
             Entry.hw.sendQueue['SET'] = {};
         }
+
         Entry.hw.sendQueue['SET'][cmd] = {
             type: Entry.memaker.sensorTypes.LCD_COMMAND,
+            data: cmd,
             time: new Date().getTime()
         };
+
         return script.callReturn();
+        */
+        
     },
     "syntax": {"js": [], "py": []}
 },
