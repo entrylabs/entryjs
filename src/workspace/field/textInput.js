@@ -24,6 +24,7 @@ Entry.FieldTextInput = function(content, blockView, index) {
     this.value = this.getValue()  || '';
     this._CONTENT_HEIGHT = this.getContentHeight();
     this._font_size = 12;
+    this._neighborFields = null;
 
     this.renderStart();
 };
@@ -33,6 +34,26 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
 (function(p) {
     var X_PADDING = 6,
         TEXT_Y_PADDING = 4;
+
+    p._focusNeighbor = function(direction) {
+        var fields = this.getNeighborFields();
+
+        var idx = fields.indexOf(this);
+        if (direction === 'prev') {
+            idx--;
+        } else {
+            idx++;
+        }
+        var field = fields[idx];
+
+        //no field to focus
+        if (!field) {
+            return;
+        }
+
+        this.destroyOption(undefined, true);
+        field.renderOptions(fields);
+    };
 
     p.renderStart = function() {
         var blockView = this._blockView;
@@ -86,7 +107,11 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
         });
     };
 
-    p.renderOptions = function() {
+    p.renderOptions = function(neighborFields) {
+        if (neighborFields) {
+            this._neighborFields = neighborFields;
+        }
+
         var that = this;
 
         var blockView = this._blockView;
@@ -116,6 +141,15 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
 
             if (exitKeys.indexOf(keyCode) > -1)
                 that.destroyOption(undefined, true);
+        });
+
+        this.optionGroup.on('keydown', function(e){
+            var keyCode = e.keyCode || e.which;
+
+            if (keyCode === 9) {
+                e.preventDefault();
+                that._focusNeighbor(e.shiftKey ? 'prev': 'next');
+            }
         });
 
         var pos = this.getAbsolutePosFromDocument();
@@ -166,6 +200,19 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
         var newValue = this._convert(this.getValue(), this.getValue());
         if (this.textElement.textContent !== newValue)
             this.textElement.textContent = newValue;
+    };
+
+    p.getNeighborFields = function() {
+        if (!this._neighborFields) {
+            var FIELD_TEXT_INPUT = Entry.FieldTextInput;
+            this._neighborFields = this._block.getRootBlock().
+                                    getThread().view.getFields().
+                                    filter(function (f) {
+                                        return f instanceof FIELD_TEXT_INPUT;
+                                    });
+        } 
+
+        return this._neighborFields;
     };
 
 })(Entry.FieldTextInput.prototype);

@@ -42,21 +42,27 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldImage);
 
 (function(p) {
     p.renderStart = function() {
-        if (this.svgGroup) this.svgGroup.remove();
-
         var block = this._block;
-        if(this._block.deletable === Entry.Block.DELETABLE_FALSE_LIGHTEN)
+        if (this._block.deletable === Entry.Block.DELETABLE_FALSE_LIGHTEN) {
             this._imgUrl = this._content.img.replace('.png', '_un.png');
-        else this._imgUrl = this._content.img;
+        } else {
+            this._imgUrl = this._content.img;
+        }
 
-        this.svgGroup = this._blockView.contentSvgGroup.elem("g");
-        this._imgElement = this.svgGroup.elem("image", {
+        var options = {
             href: this._imgUrl,
             x: 0,
             y: this._height * -0.5,
             width: this._width,
             height: this._height
-        });
+        };
+
+        if (!this._imgElement) {
+            this.svgGroup = this._imgElement =
+                this.svgGroup.elem("image", options);
+        } else {
+            this._imgElement.attr(options);
+        }
 
         this.box.set({
             x: this._width,

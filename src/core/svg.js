@@ -100,7 +100,7 @@ Entry.SVG.removeClass = function(className) {
         }
     }
 
-    this.setAttribute('class', classAttr);
+    this.setAttribute('class', classAttr.replace(/\s+/g, " "));
     return this;
 };
 

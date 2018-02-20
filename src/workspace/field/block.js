@@ -89,16 +89,21 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
         if (block && block.view)
             y = block.view.height * -0.5;
 
-        var transform = "translate(" + x + "," + y + ")";
 
-        if (animate)
-            svgGroup.animate({
-                transform: transform
-            }, 300, mina.easeinout);
-        else
-            svgGroup.attr({
-                transform: transform
-            });
+        if (!(x || y)) {
+            svgGroup.removeAttr('transform');
+        } else {
+            var transform = "translate(" + x + "," + y + ")";
+            if (animate) {
+                svgGroup.animate({
+                    transform: transform
+                }, 300, mina.easeinout);
+            } else {
+                svgGroup.attr({
+                    transform: transform
+                });
+            }
+        }
 
         x = Math.round(x*100)/100;
         y = Math.round(y*100)/100;
@@ -124,11 +129,13 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
             newHeight = 20;
         }
 
-        if (newWidth !== oldWidth)
+        if (newWidth !== oldWidth) {
             box.set({ width: newWidth });
+        }
 
-        if (newHeight !== oldHeight)
+        if (newHeight !== oldHeight) {
             box.set({ height: newHeight });
+        }
     };
 
     p.calcHeight = p.calcWH;

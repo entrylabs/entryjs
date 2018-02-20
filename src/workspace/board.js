@@ -792,12 +792,30 @@ Entry.Board.DRAG_RADIUS = 5;
     };
 
     p.dominate = function(thread) {
-        if (!thread) return;
+        if (!thread) {
+            return;
+        }
+
+        var code = this.code;
+        // currently top of dom
+        // no need to dominate again
+        // if (!_shouldDominate(thread.view.zIndex, code.getMaxZIndex())) {
+        //     return;
+        // }
+
         var block = thread.getFirstBlock();
         if (!block) return;
-        this.svgBlockGroup
-            .appendChild(block.view.svgGroup);
-        this.code.dominate(block.thread);
+
+        //udpate zIndex data first
+        code.dominate(thread);
+        //udpate visual things next frame
+        requestAnimationFrame(function () {
+            this.svgBlockGroup.appendChild(block.view.svgGroup);
+        }.bind(this));
+
+        function _shouldDominate(zIndex, max) {
+            return zIndex + 1 < max || !zIndex || !max;
+        }
     };
 
     p.enablePattern = function() {

@@ -94,9 +94,9 @@ Entry.ThreadView = function(thread, board) {
 
     p.getMagnet = function(selector) {
         return {
-            getBoundingClientRect: function() {
+            getBoundingClientRect: function () {
                 var halfWidth = 20,
-                    coord =this.parent.requestAbsoluteCoordinate(),
+                    coord = this.parent.requestAbsoluteCoordinate(),
                     boardOffset = this.board.relativeOffset;
                 return {
                     top: coord.y + boardOffset.top - halfWidth,
@@ -116,10 +116,10 @@ Entry.ThreadView = function(thread, board) {
         return this.parent instanceof Entry.Board;
     };
 
-    p.reDraw = function() {
+    p.reDraw = function () {
         var blocks = this.thread._data;
 
-        for (var i=blocks.length-1; i>=0; i--) {
+        for (var i = blocks.length - 1; i >= 0; i--) {
             var b = blocks[i];
             if (b.view) b.view.reDraw();
             else b.createView(this.thread._code.view.board);
@@ -133,5 +133,18 @@ Entry.ThreadView = function(thread, board) {
     p.setHasGuide = function(bool) {
         this._hasGuide = bool;
     };
+
+    p.getFields = function() {
+        var BLOCK = Entry.Block;
+
+        return this.thread.getBlocks().reduce(function (fields, block) {
+            if (!(block instanceof BLOCK)) {
+                return fields;
+            }
+
+            return fields.concat(block.view.getFields());
+        }, []);
+    };
+
 
 })(Entry.ThreadView.prototype);
