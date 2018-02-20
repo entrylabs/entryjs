@@ -2577,6 +2577,7 @@ Lang.Menus = {
     "robotori": "robotori",
     "rokoboard": "rokoboard",
     "Neobot": "Neo Bot",
+    "mechatro": "mechatro",
     "about": "About",
     "articles": "Articles",
     "gallery": "Gallery",
@@ -5183,7 +5184,8 @@ Lang.Device = {
     "smartBoard": "smartBoard",
     "chocopi": "ChocoPi",
     "rokoboard": "rokoboard",
-    "altino": "알티노"
+    "altino": "알티노",
+    "mechatro": "mechatro"
 };
 Lang.General = {
     "turn_on": "Bật",
@@ -6278,7 +6280,20 @@ Lang.template = {
     "creamo_motor_port_number": "%1",
     "creamo_toggle_led": "LED_Block %1 Pin %2 %3",
     "creamo_toggle_motor": "Motor_Block %1 pin %2 %3",
-    "creamo_toggle_pwm": "Digital %1 Pin %2 %3"
+    "creamo_toggle_pwm": "Digital %1 Pin %2 %3",
+    "mechatro_get_dc_motor_current": "Get 1%motor current",
+    "mechatro_get_digital": "%1",
+    "mechatro_get_sensor_value": "Analog %1 Sensor value",
+    "mechatro_get_ultrasonic_value": "Read ultrasonic sensor trig pin %1 echo pin %2",
+    "mechatro_set_blue_pw": "Change PW of Bluetooth to %1%2%3%4 %5",
+    "mechatro_set_dc_motor": "Set %1 motor speed to %2 %3",
+    "mechatro_set_digital": "Digital %1 Pin %2 %3",
+    "mechatro_set_pwm": "Digital %1 Pin %2 %3",
+    "mechatro_set_servo_position": "Set servo pin %1 angle as %2 %3",
+    "mechatro_set_servo_speed": "Set servo pin %1 speed %2 degree per second %3",
+    "mechatro_set_threshold": "Set %1 threshold : %2%3",
+    "mechatro_set_tone": "Play tone pin %1 on note %2 octave %3 %4",
+    "mechatro_set_tone_time": "Play tone pin %1 on note %2 octave %3 beat %4 %5"
 };
 Lang.TextCoding = {
     "block_name": "Block Name",
