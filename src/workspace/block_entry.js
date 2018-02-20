@@ -11974,6 +11974,29 @@ Entry.block = {
         }
     ]}
 },
+"get_user_name": {
+    "color": "#FFD974",
+    "skeleton": "basic_string_field",
+    "statements": [],
+    "params": [
+    ],
+    "events": {},
+    "def": {
+        "params": [ ],
+        "type": "get_user_name"
+    },
+    "class": "calc_user",
+    "isNotFor": [],
+    "func": function (sprite, script) {
+        return user ? user.username : " ";
+    },
+    "syntax": {"js": [], "py": [
+        {
+            syntax: "Entry.value_of_username()",
+            blockType: "param"
+        }
+    ]}
+},
 "reset_project_timer": {
     "color": "#FFD974",
     "skeleton": "basic",
