@@ -69819,9 +69819,8 @@ chocopi_servo_motor: {
         },
         "syntax": {"js": [], "py": []}
     },
-
     "jdkit_led": {
-    "color": "#00979D",
+        "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
         "params": [
@@ -69876,7 +69875,7 @@ chocopi_servo_motor: {
         "syntax": {"js": [], "py": []}
     },
     "jdkit_tune": {
-    "color": "#00979D",
+        "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
         "params": [
@@ -69943,9 +69942,8 @@ chocopi_servo_motor: {
         },
         "syntax": {"js": [], "py": []}
     },
-
     "jdkit_motor": {
-    "color": "#00979D",
+        "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
         "params": [
@@ -69996,9 +69994,8 @@ chocopi_servo_motor: {
         },
         "syntax": {"js": [], "py": []}
     },
-
     "jdkit_throttle": {
-    "color": "#00979D",
+        "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
         "params": [
@@ -70038,7 +70035,7 @@ chocopi_servo_motor: {
         "syntax": {"js": [], "py": []}
     },
     "jdkit_altitude": {
-    "color": "#00979D",
+        "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
         "params": [
@@ -70078,7 +70075,7 @@ chocopi_servo_motor: {
         "syntax": {"js": [], "py": []}
     },
     "jdkit_rollpitch": {
-    "color": "#00979D",
+        "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
         "params": [
@@ -70130,7 +70127,7 @@ chocopi_servo_motor: {
         "syntax": {"js": [], "py": []}
     },
     "jdkit_yaw": {
-    "color": "#00979D",
+        "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
         "params": [
@@ -70169,7 +70166,7 @@ chocopi_servo_motor: {
         "syntax": {"js": [], "py": []}
     },
     "jdkit_emergency": {
-    "color": "#00979D",
+        "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
         "params": [
@@ -70188,11 +70185,11 @@ chocopi_servo_motor: {
         },
         "class": "JDKit_Command",
         "isNotFor": [ "JDKit" ],
-
         "func": function (sprite, script) {
-                if(typeof Entry.hw.sendQueue.CMD == "undefined")
-                        Entry.hw.sendQueue.CMD = [0xF0, 0, 0, 0, 100, 100, 100, 0, 0, 0, 0, 0, 0];
-                var cmd = Entry.hw.sendQueue.CMD;
+            if(typeof Entry.hw.sendQueue.CMD == "undefined") {
+                Entry.hw.sendQueue.CMD = [0xF0, 0, 0, 0, 100, 100, 100, 0, 0, 0, 0, 0, 0];
+            }
+            var cmd = Entry.hw.sendQueue.CMD;
 
             cmd[Entry.JDKit.Cmd.OPTION] = 0x81;
             Entry.hw.update();
@@ -70236,7 +70233,6 @@ chocopi_servo_motor: {
             return script.getField("PORT");
         }
     },
-
     "playcode_first_port_list": {
         "color": "#00979D",
         "skeleton": "basic_string_field",
@@ -70266,8 +70262,6 @@ chocopi_servo_motor: {
             return script.getField("PORT");
         }
     },
-
-
     "playcode_get_light_value": {
         "color": "#00979D",
         "fontColor": "#fff",
@@ -70362,7 +70356,6 @@ chocopi_servo_motor: {
         },
         "syntax": { "js": [], "py": ["playcode.get_analog_value(%1)"] }
     },
-
     "playcode_gpio": {
         "color": "#00979D",
         "fontColor": "#fff",
@@ -70429,7 +70422,6 @@ chocopi_servo_motor: {
         },
         "syntax": { "js": [], "py": ["playcode.playcode_gpio(%1)"] }
     },
-
     "playcode_servo": {
         color: "#00979D",
         skeleton: "basic",
@@ -70492,7 +70484,6 @@ chocopi_servo_motor: {
             return script.callReturn();
         }
     },
-
     "playcode_speed": {
         color: "#00979D",
         skeleton: "basic",
