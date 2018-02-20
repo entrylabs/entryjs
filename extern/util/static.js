@@ -694,12 +694,6 @@ EntryStatic.getAllBlocks = function() {
                 "xbot_lcd",
                 //end of XBOT Blocks added
                 // ardublock Added 2016-06-01
-                //"ardublock_get_number_sensor_value",
-                //"ardublock_get_digital_value",
-                //"ardublock_toggle_led",
-                //"ardublock_toggle_pwm",
-                //"ardublock_convert_scale",
-                //"ardublock_get_ultrasonic_value",
                 "ardublock_get_analog_value",
                 "ardublock_get_analog_value_map",
                 "ardublock_get_ultrasonic_value",
@@ -726,13 +720,8 @@ EntryStatic.getAllBlocks = function() {
                 "mkboard_digital_pwm",
                 "mkboard_set_servo",
                 "mkboard_set_tone",
-                // "mkboard_set_left_dc_motor",
-                // "mkboard_set_right_dc_motor",
-                "mkboard_get_left_cds_analog_value",
-                "mkboard_get_right_cds_analog_value",
-                "mkboard_toggle_left_led",
-                "mkboard_toggle_right_led",
-                "mkboard_get_sound_analog_value",
+                "mkboard_set_lcd",
+                "mkboard_lcd_command",                
                 // mkboard Added 2017-07-04
 
                 "ev3_get_sensor_value",
