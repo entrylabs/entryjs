@@ -80,6 +80,7 @@ Entry.HW = function() {
         '1C.1': Entry.hummingbird,
         '1D.1': Entry.JDKit,
         '1E.1': Entry.playcode,
+        '1F.1': Entry.mechatro,
         '20.1': Entry.Creamo,
     };
 };

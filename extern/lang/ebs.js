@@ -2577,6 +2577,7 @@ Lang.Menus = {
     "robotori": "로보토리",
     "rokoboard": "로코보드",
     "Neobot": "네오봇",
+    "mechatro": "메카트로",
     "about": "알아보기",
     "articles": "토론하기",
     "gallery": "구경하기",
@@ -5183,7 +5184,8 @@ Lang.Device = {
     "smartBoard": "스마트보드",
     "chocopi": "초코파이보드",
     "rokoboard": "로코보드",
-    "altino": "알티노"
+    "altino": "알티노",
+    "mechatro": "메카트로"
 };
 Lang.General = {
     "turn_on": "켜기",
@@ -6278,7 +6280,20 @@ Lang.template = {
     "creamo_motor_port_number": "%1",
     "creamo_toggle_led": "LED_블록 %1 번 핀 %2 %3",
     "creamo_toggle_motor": "Motor_블록 %1 번 핀 %2 %3",
-    "creamo_toggle_pwm": "디지털 %1 번 핀을 %2 (으)로 정하기 %3"
+    "creamo_toggle_pwm": "디지털 %1 번 핀을 %2 (으)로 정하기 %3",
+    "mechatro_get_dc_motor_current": "%1모터 사용전류값",
+    "mechatro_get_digital": "%1 디지털 값",
+    "mechatro_get_sensor_value": "%1 센서값",
+    "mechatro_get_ultrasonic_value": "초음파센서 Trig %1 Echo %2 의 거리값 [cm]",
+    "mechatro_set_blue_pw": "블루투스 비밀번호 : %1%2%3%4로 정하기%5",
+    "mechatro_set_dc_motor": "%1모터 속도 %2로 정하기%3",
+    "mechatro_set_digital": "%1번 %2 %3",
+    "mechatro_set_pwm": "%1PWM을 %2%로 정하기 %3",
+    "mechatro_set_servo_position": "%1서보모터 위치 :%2도로 옮기기 %3",
+    "mechatro_set_servo_speed": "%1서보모터 속도 : 1초당 %2도로 정하기 %3",
+    "mechatro_set_threshold": "%1 센서 감도 : %2로 정하기%3",
+    "mechatro_set_tone": "%1버저 %2 %3 음으로 연주 %4",
+    "mechatro_set_tone_time": "%1버저 %2 %3 음으로 %4 초 연주 %5"
 };
 Lang.TextCoding = {
     "block_name": "블록명",
