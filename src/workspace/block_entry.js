@@ -11974,6 +11974,29 @@ Entry.block = {
         }
     ]}
 },
+"get_user_name": {
+    "color": "#FFD974",
+    "skeleton": "basic_string_field",
+    "statements": [],
+    "params": [
+    ],
+    "events": {},
+    "def": {
+        "params": [ ],
+        "type": "get_user_name"
+    },
+    "class": "calc_user",
+    "isNotFor": [],
+    "func": function (sprite, script) {
+        return user ? user.username : " ";
+    },
+    "syntax": {"js": [], "py": [
+        {
+            syntax: "Entry.value_of_username()",
+            blockType: "param"
+        }
+    ]}
+},
 "reset_project_timer": {
     "color": "#FFD974",
     "skeleton": "basic",
@@ -35135,8 +35158,8 @@ Entry.block = {
         var sounds = sprite.parent.sounds;
         var isExist = Entry.isExist(soundId, 'id', sounds);
         if (isExist) {
-            //var instance = createjs.Sound.play(soundId, {startTime: 0, duration: timeValue * 1000});
             var instance = createjs.Sound.play(soundId);
+            Entry.Utils.addSoundInstances(instance);
             setTimeout(function() {
                 instance.stop();
             }, timeValue * 1000);
@@ -35182,6 +35205,7 @@ Entry.block = {
             var isExist = Entry.isExist(soundId, 'id', sounds);
             if (isExist) {
                 var instance = createjs.Sound.play(soundId);
+                Entry.Utils.addSoundInstances(instance);
                 setTimeout(function() {
                     script.playState = 0;
                 }, sound.duration * 1000)
@@ -35246,6 +35270,7 @@ Entry.block = {
             if (isExist) {
                 var instance = createjs.Sound.play(soundId);
                 var timeValue = script.getNumberValue("SECOND", script);
+                Entry.Utils.addSoundInstances(instance);
                 setTimeout(function() {
                     instance.stop();
                     script.playState = 0;
@@ -35478,12 +35503,11 @@ Entry.block = {
         var soundId = script.getStringValue("VALUE", script);
         var sound = sprite.parent.getSound(soundId);
 
-        if (sound) createjs.Sound.play(sound.id);
-        //else
-            //Entry.engine.stopProjectWithToast(
-                //this.block,
-                //'소리를 찾지 못했습니다.'
-            //);
+        if (sound) {
+            Entry.Utils.addSoundInstances(
+                createjs.Sound.play(sound.id)
+            );
+        }
 
         return script.callReturn();
     },
@@ -35552,13 +35576,9 @@ Entry.block = {
         var sound = sprite.parent.getSound(soundId);
 
         if (sound) {
-            var instance = createjs.Sound.play(sound.id, {startTime: 0, duration: timeValue * 1000});
-            /*
-               var instance = createjs.Sound.play(sound.id);
-               setTimeout(function() {
-               instance.stop();
-               }, timeValue * 1000);
-               */
+            Entry.Utils.addSoundInstances(
+                createjs.Sound.play(sound.id, {startTime: 0, duration: timeValue * 1000})
+            );
         }
         return script.callReturn();
     },
@@ -35615,6 +35635,7 @@ Entry.block = {
             var sound = sprite.parent.getSound(soundId);
             if (sound) {
                 var instance = createjs.Sound.play(sound.id);
+                Entry.Utils.addSoundInstances(instance);
                 setTimeout(function() {
                     script.playState = 0;
                 }, sound.duration * 1000)
@@ -36323,7 +36344,11 @@ Entry.block = {
         if (value == 'null' || !isExist)
             throw new Error('value can not be null or undefined');
 
-        Entry.engine.raiseMessage(value);
+        setTimeout(
+            function() {
+                Entry.engine.raiseMessage(value);
+            }
+        )
     },
     "syntax": {"js": [], "py": [
         {

@@ -268,6 +268,7 @@ EntryStatic.getAllBlocks = function() {
                 "get_date",
                 "distance_something",
                 "get_sound_duration",
+                "get_user_name",
                 "length_of_string",
                 "combine_something",
                 "char_at",
