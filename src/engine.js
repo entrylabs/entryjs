@@ -588,6 +588,7 @@ Entry.Engine = function() {
         Entry.Func.clearThreads();
         createjs.Sound.setVolume(1);
         createjs.Sound.stop();
+        Entry.soundInstances = [];
 
         this.view_.removeClass('entryEngineBlueWorkspace');
         if (this.runButton) {
@@ -625,6 +626,7 @@ Entry.Engine = function() {
                 timer.pauseStart = (new Date()).getTime()
             else delete timer.pauseStart;
             this.state = 'run';
+            Entry.Utils.recoverSoundInstances();
             if (this.runButton) {
                 if (this.pauseButton)
                     this.pauseButton.innerHTML = Lang.Workspace.pause;
@@ -642,6 +644,7 @@ Entry.Engine = function() {
                 timer.pausedTime += (new Date()).getTime() - timer.pauseStart;
                 timer.pauseStart = (new Date()).getTime();
             }
+            Entry.Utils.pauseSoundInstances();
             if (this.runButton) {
                 if (this.pauseButton)
                     this.pauseButton.innerHTML = Lang.Workspace.restart;

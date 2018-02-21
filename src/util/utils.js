@@ -1892,3 +1892,24 @@ Entry.Utils.toFixed = function (value, len) {
         return value;
     }
 };
+
+Entry.Utils.addSoundInstances = function(instance) {
+    Entry.soundInstances.push(instance);
+    instance.on("complete", function() {
+        var index = Entry.soundInstances.indexOf(instance);
+        if (index > -1)
+            Entry.soundInstances.splice(index, 1);
+    })
+};
+
+Entry.Utils.pauseSoundInstances = function() {
+    Entry.soundInstances.map(function(instance) {
+        instance.paused = true;
+    });
+};
+
+Entry.Utils.recoverSoundInstances = function() {
+    Entry.soundInstances.map(function(instance) {
+        instance.paused = false;
+    });
+};
