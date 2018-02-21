@@ -45897,6 +45897,7 @@ Entry.block = {
     },
     "syntax": {"js": [], "py": []}
 },
+
 "mkboard_list_digital_lcd_line": {
     "color": "#00979D",
     "skeleton": "basic_string_field",
@@ -45924,6 +45925,7 @@ Entry.block = {
         return script.getField("LINE");
     }
 },
+
 "mkboard_list_digital_lcd_column": {
     "color": "#00979D",
     "skeleton": "basic_string_field",
@@ -45965,6 +45967,7 @@ Entry.block = {
         return script.getField("COLUMN");
     }
 },
+
 "mkboard_set_lcd": {
     "color": "#00979D",
     "fontColor": "#fff",
@@ -46098,6 +46101,7 @@ Entry.block = {
     },
     "syntax": {"js": [], "py": ["mkboard.mkboard_set_lcd(%1, %2, %3)"]}
 },
+
 "mkboard_list_lcd_command": {
     "color": "#00979D",
     "skeleton": "basic_string_field",
@@ -46130,6 +46134,7 @@ Entry.block = {
         return script.getField("COMMAND");
     }
 },
+
 "mkboard_lcd_command": {
     "color": "#00979D",
     "skeleton": "basic",
@@ -46609,6 +46614,8 @@ Entry.block = {
     },
     "syntax": {"js": [], "py": []}
 },
+
+
 "memaker_list_digital_lcd_line": {
     "color": "#00979D",
     "skeleton": "basic_string_field",
@@ -46636,6 +46643,7 @@ Entry.block = {
         return script.getField("LINE");
     }
 },
+
 "memaker_list_digital_lcd_column": {
     "color": "#00979D",
     "skeleton": "basic_string_field",
@@ -46677,6 +46685,7 @@ Entry.block = {
         return script.getField("COLUMN");
     }
 },
+
 "memaker_set_lcd": {
     "color": "#00979D",
     "fontColor": "#fff",
@@ -46732,20 +46741,25 @@ Entry.block = {
         var column = script.getValue("COLUMN", script);
         var string = script.getValue("STRING", script);
         var text = [];
+
         
         if(!script.isStart) {
             if(typeof string === 'string') {
                 for (var i = 0; i < string.length; i++) {
                     text[i] = Entry.memaker.toByte(string[i]);
                 }
-            } else if (typeof string === 'number') {
+            }            
+            else if (typeof string === 'number') 
+            {
                 var num_to_string = string.toString();
                 for (var i = 0; i < num_to_string.length; i++) {
                     text[i] = Entry.memaker.toByte(num_to_string[i]);
-                }
-            } else {
+                }                
+            }
+            else {
                 text[0] = string;
-            }            
+            }
+            
 
             if(!Entry.hw.sendQueue['SET']) {
                 Entry.hw.sendQueue['SET'] = {};
@@ -46785,9 +46799,11 @@ Entry.block = {
                 script.timeFlag = 0;
             }, timeValue);
             return script;
-        } else if(script.timeFlag == 1) {
+        }
+        else if(script.timeFlag == 1) {
             return script;
-        } else {
+        }
+        else {
             delete script.timeFlag;
             delete script.isStart;
             Entry.engine.isContinue = true;
@@ -46796,6 +46812,7 @@ Entry.block = {
     },
     "syntax": {"js": [], "py": ["memaker.memaker_set_lcd(%1, %2, %3)"]}
 },
+
 "memaker_list_lcd_command": {
     "color": "#00979D",
     "skeleton": "basic_string_field",
@@ -46808,6 +46825,10 @@ Entry.block = {
                 [ "LCD_BLUE", "0" ],
                 [ "LCD_GREEN", "1" ],
                 [ "LCD_CLEAR", "2" ]
+                /*,
+                [ "BACKLIGHT_ON", "3" ],
+                [ "BACKLIGHT_OFF", "4" ]
+                */
             ],
             "value": "0",
             "fontSize": 11
@@ -46857,6 +46878,8 @@ Entry.block = {
     "class": "memakerLcd",
     "isNotFor": [ "memaker" ],
     "func": function (sprite, script) {
+
+
         var sq = Entry.hw.sendQueue;
         var value = script.getNumberValue("COMMAND", script);
         var command = script.getNumberValue("COMMAND", script);
@@ -46872,7 +46895,9 @@ Entry.block = {
                 },
                 time: new Date().getTime()
         };
-        return script.callReturn();        
+
+        return script.callReturn();
+        
     },
     "syntax": {"js": [], "py": []}
 },
