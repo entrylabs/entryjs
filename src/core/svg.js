@@ -86,7 +86,7 @@ Entry.SVG.addClass = function(className) {
             classAttr += " " + className;
     }
 
-    this.setAttribute('class', classAttr);
+    this.setAttribute('class', classAttr.replace(/\s+/g, " "));
     return this;
 };
 
@@ -95,8 +95,8 @@ Entry.SVG.removeClass = function(className) {
     for (var i = 0; i < arguments.length; i++) {
         var className = arguments[i];
         if (this.hasClass(className)) {
-            var reg = new RegExp('(\\s|^)'+className+'(\\s|$)');
-            classAttr = classAttr.replace(reg,' ');
+            classAttr = classAttr.replace(
+                new RegExp('(\\s|^)'+className+'(\\s|$)'),' ');
         }
     }
 

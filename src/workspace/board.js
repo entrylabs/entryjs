@@ -799,9 +799,9 @@ Entry.Board.DRAG_RADIUS = 5;
         var code = this.code;
         // currently top of dom
         // no need to dominate again
-        // if (!_shouldDominate(thread.view.zIndex, code.getMaxZIndex())) {
-        //     return;
-        // }
+        if (!_shouldDominate(thread.view.zIndex, code.getMaxZIndex())) {
+            return;
+        }
 
         var block = thread.getFirstBlock();
         if (!block) return;
@@ -810,7 +810,9 @@ Entry.Board.DRAG_RADIUS = 5;
         code.dominate(thread);
         //udpate visual things next frame
         requestAnimationFrame(function () {
-            this.svgBlockGroup.appendChild(block.view.svgGroup);
+            var blockView = block && block.view;
+            if (this.svgBlockGroup && blockView)
+            this.svgBlockGroup.appendChild(blockView.svgGroup);
         }.bind(this));
 
         function _shouldDominate(zIndex, max) {

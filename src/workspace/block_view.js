@@ -134,19 +134,16 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
 
         var svgGroup = this.svgGroup;
 
+
+        if (this._schema.css) {
+            attr.style = this._schema.css;
+        }
+
         svgGroup.attr(attr);
 
-        if (this._schema.css)
-            svgGroup.attr({
-                style: this._schema.css
-            });
-
-        var classes = skeleton.classes;
-        if (classes && classes.length !== 0) {
-            classes.forEach(function (c) {
-                svgGroup.addClass(c);
-            });
-        }
+        (skeleton.classes || []).forEach(function (c) {
+            svgGroup.addClass(c);
+        });
 
         var path = skeleton.path(this);
 
@@ -208,7 +205,8 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
         this._contents = [];
 
         var schema = this._schema;
-        if (schema.statements && schema.statements.length) {
+        var statements = this._schema.statements;
+        if (statements && statements.length) {
             this.statementSvgGroup = this.svgGroup.elem("g");
         }
 
@@ -247,7 +245,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
             }
         }
 
-        var statements = schema.statements || [];
+        statements = schema.statements || [];
         for (i=0; i<statements.length; i++)
             this._statements.push(new Entry.FieldStatement(statements[i], this, i));
 
@@ -308,10 +306,11 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
             }
         }
 
-        if (secondLineHeight)
+        if (secondLineHeight) {
             this.set({
                 contentHeight: cursor.height + secondLineHeight
             });
+        }
 
         if (this._statements.length != statementIndex)
             this._alignStatement(animate, statementIndex);
@@ -879,7 +878,9 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
             }
 
             var $shadow = $(shadow);
-            $shadow.attr({ transform: transform });
+            $shadow.attr({
+                transform: transform
+            });
             $shadow.removeAttr('display');
 
             this._clonedShadow = shadow;
@@ -901,7 +902,9 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
             }
         } else {
             if (this._clonedShadow) {
-                this._clonedShadow.attr({display: 'none'});
+                this._clonedShadow.attr({
+                    display: 'none'
+                });
                 delete this._clonedShadow;
             }
 

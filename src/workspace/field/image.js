@@ -25,8 +25,7 @@ Entry.FieldImage = function(content, blockView, index) {
         this._height = sizeSet.height || 0;
     }
 
-    this._highlightColor =
-        content.highlightColor? content.highlightColor : "#F59900";
+    this._highlightColor = content.highlightColor || "#F59900";
     this._position = content.position;
 
     this.svgGroup = null;
