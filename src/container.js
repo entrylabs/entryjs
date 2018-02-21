@@ -174,25 +174,31 @@ Entry.Container.prototype.disableSort = function() {
  * update list view to sort item.
  */
 Entry.Container.prototype.updateListView = function() {
-    if (!this.listView_) return;
+    if (!this.listView_) {
+        return;
+    }
 
     var view = this.listView_;
 
-    while (view.hasChildNodes())
+    while (view.hasChildNodes()) {
         view.removeChild(view.lastChild);
+    }
 
-    var fragment = document.createDocumentFragment('div');
+    var fragment = document.createDocumentFragment();
 
     var objs = this.getCurrentObjects().slice();
 
-    var ret = objs.filter(function(o) { return o.index !== undefined; });
+    var ret = objs.filter(function (o) {
+        return o.index !== undefined;
+    });
 
-    if (ret.length === objs.length)
-        objs = objs.sort(function(a, b) {
+    if (ret.length === objs.length) {
+        objs = objs.sort(function (a, b) {
             return a.index - b.index;
         });
+    }
 
-    objs.forEach(function(obj) {
+    objs.forEach(function (obj) {
         !obj.view_ && obj.generateView();
         fragment.appendChild(obj.view_);
     });

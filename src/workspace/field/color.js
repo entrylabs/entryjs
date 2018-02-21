@@ -44,6 +44,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldColor);
             class: 'entry-field-color'
         });
 
+        var x, y, WIDTH, HEIGHT;
 
         if (this._blockView.renderMode === Entry.BlockView.RENDER_MODE_TEXT) {
             var rect = this.svgGroup.elem('rect', {
@@ -63,8 +64,8 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldColor);
 
             this.textElement.textContent = this._convert(this.getValue(), this.getValue());
             var bBox = this.textElement.getBoundingClientRect();
-            var WIDTH = bBox.width + 12;
-            var HEIGHT = bBox.height;
+            WIDTH = bBox.width + 12;
+            HEIGHT = bBox.height;
             rect.attr({
                 y:-HEIGHT/2,
                 width: WIDTH,
@@ -76,10 +77,9 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldColor);
             });
 
         } else {
-            var HEIGHT = this._CONTENT_HEIGHT;
-            var WIDTH = this._CONTENT_WIDTH;
+            HEIGHT = this._CONTENT_HEIGHT;
+            WIDTH = this._CONTENT_WIDTH;
             var position = this._position;
-            var x,y;
             if (position) {
                 x = position.x || 0;
                 y = position.y || 0;
@@ -89,9 +89,12 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldColor);
             }
 
             this._header = this.svgGroup.elem('rect', {
-                x:x, y:y, width: WIDTH, height: HEIGHT,
+                x: x,
+                y: y,
+                width: WIDTH,
+                height: HEIGHT,
                 fill: this.getValue()
-                });
+            });
         }
 
         this._bindRenderOptions();
@@ -113,27 +116,37 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldColor);
 
         var colors = Entry.FieldColor.getWidgetColorList();
         this.optionGroup = Entry.Dom('table', {
-            class:'entry-widget-color-table',
+            class: 'entry-widget-color-table',
             parent: $('body')
         });
-        for (var i=0; i<colors.length; i++) {
+
+        this.optionGroup.bind('mousedown touchstart', function(e) {
+            e.stopPropagation();
+        });
+
+        var fragment = document.createDocumentFragment();
+        for (var i = 0; i < colors.length; i++) {
             var tr = Entry.Dom('tr', {
-                class : 'entry-widget-color-row',
-                parent : this.optionGroup
+                class: 'entry-widget-color-row',
             });
 
-            for (var j=0; j<colors[i].length; j++) {
+            fragment.appendChild(tr[0]);
+
+            for (var j = 0; j < colors[i].length; j++) {
                 var td = Entry.Dom('td', {
-                    class : 'entry-widget-color-cell',
-                    parent : tr
+                    class: 'entry-widget-color-cell',
+                    parent: tr
                 });
                 var color = colors[i][j];
-                td.css({'background-color': color});
-                td.attr({'data-color-value': color});
+                td.css({
+                    'background-color': color
+                });
+                td.attr({
+                    'data-color-value': color
+                });
 
-                (function(elem, value) {
-                    elem.mousedown(function(e){e.stopPropagation();});
-                    elem.mouseup(function(e){
+                (function (elem, value) {
+                    elem.mouseup(function (e) {
                         that.applyValue(value);
                         that.destroyOption();
                         that._selectBlockView();
@@ -141,15 +154,17 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldColor);
                 })(td, color);
             }
         }
+
+        this.optionGroup[0].appendChild(fragment);
         var pos = this.getAbsolutePosFromDocument();
-        pos.y += this.box.height/2 + 1;
+        pos.y += this.box.height / 2 + 1;
 
         this.optionGroup.css({
-            left:pos.x,
-            top:pos.y
+            left: pos.x,
+            top: pos.y
         });
-        this.optionDomCreated();
 
+        this.optionDomCreated();
     };
 
     p.applyValue = function(value) {
