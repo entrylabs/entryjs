@@ -728,11 +728,13 @@ EntryStatic.getAllBlocks = function() {
                 "mkboard_set_tone",
                 // "mkboard_set_left_dc_motor",
                 // "mkboard_set_right_dc_motor",
-                "mkboard_get_left_cds_analog_value",
-                "mkboard_get_right_cds_analog_value",
-                "mkboard_toggle_left_led",
-                "mkboard_toggle_right_led",
-                "mkboard_get_sound_analog_value",
+                //"mkboard_get_left_cds_analog_value",
+                //"mkboard_get_right_cds_analog_value",
+                //"mkboard_toggle_left_led",
+                //"mkboard_toggle_right_led",
+                //"mkboard_get_sound_analog_value",
+                "mkboard_set_lcd",
+                "mkboard_lcd_command",                
                 // mkboard Added 2017-07-04
 
                 "ev3_get_sensor_value",
