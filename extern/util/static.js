@@ -721,7 +721,7 @@ EntryStatic.getAllBlocks = function() {
                 "mkboard_set_servo",
                 "mkboard_set_tone",
                 "mkboard_set_lcd",
-                "mkboard_lcd_command",                
+                "mkboard_lcd_command",            
                 // mkboard Added 2017-07-04
 
                 "ev3_get_sensor_value",
