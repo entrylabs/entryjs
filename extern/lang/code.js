@@ -1617,8 +1617,6 @@ Lang.Blocks = {
     "ALTINO_set": "로 정하기",
     "ardublock_motor_forward": "앞",
     "ardublock_motor_backward": "뒤",
-    "mkboard_dc_motor_forward": "앞",
-    "mkboard_dc_motor_backward": "뒤",
     "jdkit_clockwise": "시계방향",
     "jdkit_counterclockwise": "반시계방향",
     "jdkit_gyro_frontrear": "앞뒤",
