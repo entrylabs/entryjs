@@ -129,7 +129,7 @@ Entry.Utils.inherit(Entry.FieldDropdown, Entry.FieldDropdownDynamic);
 
             fragment.appendChild(element[0]);
         }
-        this.optionGroup[0].append(fragment);
+        this.optionGroup[0].appendChild(fragment);
         this._position();
 
         this.optionDomCreated();
