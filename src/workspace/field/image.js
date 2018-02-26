@@ -42,11 +42,10 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldImage);
 (function(p) {
     p.renderStart = function() {
         var block = this._block;
-        if (this._block.deletable === Entry.Block.DELETABLE_FALSE_LIGHTEN) {
-            this._imgUrl = this._content.img.replace('.png', '_un.png');
-        } else {
-            this._imgUrl = this._content.img;
-        }
+        var img = this._content.img;
+
+        this._imgUrl = this._block.deletable === Entry.Block.DELETABLE_FALSE_LIGHTEN ?
+            img.replace('.png', '_un.png') : img;
 
         var options = {
             href: this._imgUrl,
@@ -58,7 +57,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldImage);
 
         if (!this._imgElement) {
             this.svgGroup = this._imgElement =
-                this.svgGroup.elem("image", options);
+                this._blockView.contentSvgGroup.elem("image", options);
         } else {
             this._imgElement.attr(options);
         }
