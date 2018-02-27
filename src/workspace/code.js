@@ -283,6 +283,10 @@ Entry.PARAM = -1;
         thread.view.setZIndex(this._maxZIndex++);
     };
 
+    p.getMaxZIndex = function() {
+        return this._maxZIndex;
+    };
+
     p.indexOf = function(thread) {
         return this._data.indexOf(thread);
     };

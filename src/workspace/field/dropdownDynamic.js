@@ -96,13 +96,14 @@ Entry.Utils.inherit(Entry.FieldDropdown, Entry.FieldDropdownDynamic);
 
         var CONTENT_HEIGHT = this._CONTENT_HEIGHT + 4;
 
+        var fragment = document.createDocumentFragment();
+
         for (var i=0; i<options.length; i++) {
             var option = options[i];
             var text = option[0] = this._convert(option[0], option[1]);
             var value = option[1];
             var element = Entry.Dom('li', {
-                class: 'rect',
-                parent: this.optionGroup
+                class: 'rect'
             });
             var left = Entry.Dom('span', {
                 class: 'left',
@@ -118,11 +119,6 @@ Entry.Utils.inherit(Entry.FieldDropdown, Entry.FieldDropdownDynamic);
 
 
             (function(elem, value) {
-                //prevent propagation to document
-                elem.mousedown(function(e) {
-                    e.stopPropagation();
-                });
-
                 elem.mouseup(function(e){
                     e.stopPropagation();
                     that.applyValue(value);
@@ -130,7 +126,10 @@ Entry.Utils.inherit(Entry.FieldDropdown, Entry.FieldDropdownDynamic);
                     that._selectBlockView();
                 });
             })(element, value);
+
+            fragment.appendChild(element[0]);
         }
+        this.optionGroup[0].appendChild(fragment);
         this._position();
 
         this.optionDomCreated();

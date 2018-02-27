@@ -57,7 +57,7 @@ Entry.BlockView = function(block, board, mode) {
 
     if (skeleton.magnets && skeleton.magnets(this).next) {
         this.svgGroup.nextMagnet = this.block;
-        this._nextGroup = this.svgGroup.elem("g", {class: 'entryBlockNextGroup'});
+        this._nextGroup = this.svgGroup.elem("g");
         this._observers.push(this.observe(this, "_updateMagnet", ["contentHeight"]));
     }
 
@@ -134,16 +134,16 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
 
         var svgGroup = this.svgGroup;
 
+
+        if (this._schema.css) {
+            attr.style = this._schema.css;
+        }
+
         svgGroup.attr(attr);
 
-        if (this._schema.css)
-            svgGroup.attr({
-                style: this._schema.css
-            });
-
-        var classes = skeleton.classes;
-        if (classes && classes.length !== 0)
-            classes.forEach(function(c){svgGroup.addClass(c);});
+        (skeleton.classes || []).forEach(function (c) {
+            svgGroup.addClass(c);
+        });
 
         var path = skeleton.path(this);
 
@@ -170,9 +170,9 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
         var pathStyle = { d: path, fill: fillColor, class: 'blockPath' };
 
         if (this.magnet.next || this._skeleton.nextShadow) {
-            var suffix = this.getBoard().suffix;
             this.pathGroup.attr({
-                filter: 'url(#entryBlockShadowFilter_' + suffix + ')'
+                filter: 'url(#entryBlockShadowFilter_' +
+                    this.getBoard().suffix + ')'
             });
         } else if (this.magnet.string || this.magnet.boolean)
             pathStyle.stroke = skeleton.outerLine;
@@ -196,19 +196,18 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
     };
 
     p._startContentRender = function(mode) {
-        mode = mode === undefined ?
-            this.renderMode : mode;
+        mode = mode === undefined ? this.renderMode : mode;
 
         this.contentSvgGroup && this.contentSvgGroup.remove();
         this.statementSvgGroup && this.statementSvgGroup.remove();
 
-        this.contentSvgGroup = this.svgGroup.elem("g", {class:'contentsGroup'});
+        this.contentSvgGroup = this.svgGroup.elem("g");
         this._contents = [];
 
         var schema = this._schema;
-        if (schema.statements && schema.statements.length) {
-            this.statementSvgGroup =
-                this.svgGroup.elem("g", { class: 'statementGroup' });
+        var statements = this._schema.statements;
+        if (statements && statements.length) {
+            this.statementSvgGroup = this.svgGroup.elem("g");
         }
 
         var reg = /(%\d+)/mi;
@@ -246,7 +245,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
             }
         }
 
-        var statements = schema.statements || [];
+        statements = schema.statements || [];
         for (i=0; i<statements.length; i++)
             this._statements.push(new Entry.FieldStatement(statements[i], this, i));
 
@@ -307,17 +306,18 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
             }
         }
 
-        if (secondLineHeight)
+        if (secondLineHeight) {
             this.set({
                 contentHeight: cursor.height + secondLineHeight
             });
+        }
 
         if (this._statements.length != statementIndex)
             this._alignStatement(animate, statementIndex);
 
         var contentPos = this.getContentPos();
-        this.contentSvgGroup.attr("transform",
-            "translate(" + contentPos.x + "," + contentPos.y + ")"
+        this.contentSvgGroup.attr(
+            "transform", "translate(" + contentPos.x + "," + contentPos.y + ")"
         );
         this.contentPos = contentPos;
         this._render();
@@ -375,18 +375,23 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
 
     p._setPosition = function(animate) {
         animate = animate === undefined ? true : animate;
-        //this.svgGroup.stop();
-        var transform = "translate(" + this.x + "," + this.y + ")";
 
-        if (animate && Entry.ANIMATION_DURATION !== 0) {
-            this.svgGroup.attr("transform", transform);
-            /*
-            this.svgGroup.animate({
-                transform: transform
-            }, Entry.ANIMATION_DURATION, mina.easeinout);
-            */
+        //this.svgGroup.stop();
+        if (!(this.x || this.y)) {
+            this.svgGroup.removeAttr('transform');
         } else {
-            this.svgGroup.attr("transform", transform);
+            var transform = "translate(" + this.x + "," + this.y + ")";
+
+            if (animate && Entry.ANIMATION_DURATION !== 0) {
+                this.svgGroup.attr("transform", transform);
+                /*
+                this.svgGroup.animate({
+                    transform: transform
+                }, Entry.ANIMATION_DURATION, mina.easeinout);
+                */
+            } else {
+                this.svgGroup.attr("transform", transform);
+            }
         }
     };
 
@@ -546,8 +551,6 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
                         blockView.dragMode = Entry.DRAG_MODE_DRAG;
                         blockView.block.getThread().changeEvent.notify();
                         Entry.GlobalSvg.setView(blockView, workspaceMode);
-                        // Move가 발생하면 dominate 실행
-                        that.dominate();
                         isFirst = true;
                     }
 
@@ -646,9 +649,10 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
                                 Entry.do("separateBlock" + suffix, block);
                             } else {
                                 Entry.do("moveBlock" + suffix, block);
+                                this.dominate();
                             }
                         } else {
-                            suffix = fromBlockMenu ? "FromBlockMenu": "";
+                            suffix = fromBlockMenu ? "FromBlockMenu" : "";
                             if (closeBlock) {
                                 if (closeBlock.view.magneting === "next") {
                                     var lastBlock = block.getLastBlock();
@@ -658,6 +662,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
                                     Entry.do(
                                         "insertBlock" + suffix, block, targetPointer)
                                         .isPass(fromBlockMenu);
+
                                     Entry.ConnectionRipple
                                         .setView(closeBlock.view)
                                         .dispose();
@@ -680,6 +685,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
                             } else {
                                 Entry.do("moveBlock" + suffix, block)
                                     .isPass(fromBlockMenu);
+                                this.dominate();
                             }
                         }
                         break;
@@ -705,6 +711,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
                                 } else {
                                     var originPos = this.originPos;
                                     this._moveTo(originPos.x, originPos.y, false);
+                                    this.dominate();
                                 }
                             }
                         }
@@ -757,8 +764,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
     };
 
     p.dominate = function() {
-        var threadView = this.block.getThread().view;
-        threadView.dominate();
+        this.block.getThread().view.dominate();
     };
 
     p.getSvgRoot = function() {
@@ -838,8 +844,10 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
     };
 
     p._updateBG = function() {
-        if (!this._board.dragBlock || !this._board.dragBlock.dragInstance)
+        var dragBlock = this._board.dragBlock;
+        if (!dragBlock || !dragBlock.dragInstance)
             return;
+
         var blockView = this;
         var svgGroup = blockView.svgGroup;
         if (!(this.magnet.next || this.magnet.previous)) {// field block
@@ -857,7 +865,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
         var magneting = blockView.magneting;
         var block = blockView.block;
         if (magneting) {
-            var shadow = this._board.dragBlock.getShadow();
+            var shadow = dragBlock.getShadow();
             var pos = this.getAbsoluteCoordinate();
             var magnet, transform;
             if (magneting === "previous") {
@@ -865,13 +873,15 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
                 transform  = 'translate(' + (pos.x + magnet.x) + ',' + (pos.y + magnet.y) + ')';
             } else if (magneting === "next") {
                 magnet = this.magnet.previous;
-                var dragHeight = this._board.dragBlock.getBelowHeight();
+                var dragHeight = dragBlock.getBelowHeight();
                 transform  = 'translate(' + (pos.x + magnet.x) + ',' + (pos.y + magnet.y - dragHeight) + ')';
             }
-            $(shadow).attr({
-                transform: transform,
-                display: 'block'
+
+            var $shadow = $(shadow);
+            $shadow.attr({
+                transform: transform
             });
+            $shadow.removeAttr('display');
 
             this._clonedShadow = shadow;
 
@@ -883,7 +893,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
             }
 
             if (magneting === "previous") {
-                var height = this._board.dragBlock.getBelowHeight() + this.offsetY;
+                var height = dragBlock.getBelowHeight() + this.offsetY;
 
                 blockView.originalHeight = blockView.offsetY;
                 blockView.set({
@@ -892,7 +902,9 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
             }
         } else {
             if (this._clonedShadow) {
-                this._clonedShadow.attr({display: 'none'});
+                this._clonedShadow.attr({
+                    display: 'none'
+                });
                 delete this._clonedShadow;
             }
 
@@ -954,11 +966,12 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
     };
 
     p._updateOpacity = function() {
-        this.svgGroup.attr({
-            opacity:this.visible === false ? 0 : 1
-        });
-
-        if (this.visible) this._setPosition();
+        if (this.visible === false) {
+            this.svgGroup.attr({ opacity: 0 });
+        } else {
+            this.svgGroup.removeAttr('opacity');
+            this._setPosition();
+        }
     };
 
     p._updateShadow = function() {
@@ -1030,8 +1043,12 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
 
     p.getAbsoluteCoordinate = function(dragMode) {
         dragMode = dragMode !== undefined ? dragMode : this.dragMode;
-        if (dragMode === Entry.DRAG_MODE_DRAG)
-            return {x: this.x, y: this.y};
+        if (dragMode === Entry.DRAG_MODE_DRAG) {
+            return {
+                x: this.x,
+                y: this.y
+            };
+        }
         var threadView = this.block.getThread().view;
         var pos = threadView.requestAbsoluteCoordinate(this);
         pos.x += this.x;
@@ -1040,16 +1057,18 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
     };
 
     p.getBelowHeight = function() {
-        var threadView = this.block.getThread().view;
-        return threadView.requestPartHeight(this);
+        return this.block.getThread().view.requestPartHeight(this);
     };
 
     p._updateDisplay = function() {
-        this.svgGroup.attr({
-            display:this.display === false ? 'none' : 'block'
-        });
-
-        if (this.display) this._setPosition();
+        if (this.display) {
+            $(this.svgGroup).removeAttr('display');
+            this._setPosition();
+        } else {
+            this.svgGroup.attr({
+                display: 'none'
+            });
+        }
     };
 
     p._updateColor = function() {
@@ -1077,7 +1096,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
 
     p._destroyObservers = function() {
         var observers = this._observers;
-        while(observers.length)
+        while (observers.length)
             observers.pop().destroy();
     };
 
@@ -1439,8 +1458,8 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
         var cb = this._setHoverBlockView;
 
         $(this._path)
-            .on('mouseenter', { that: this, blockView: this }, cb)
-            .on('mouseleave', { that: this }, cb);
+        .on('mouseenter', { that: this, blockView: this }, cb)
+        .on('mouseleave', { that: this }, cb);
     };
 
     p._setHoverBlockView = function(event) {
@@ -1454,5 +1473,41 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
         target = target && target.workspace;
         target && target.setHoverBlockView(data.blockView);
     };
+
+    p.getFields = function() {
+        if (!this._schema) {
+            return [];
+        }
+
+        var THREAD = Entry.Thread,
+            FIELD_BLOCK = Entry.FieldBlock,
+            FIELD_OUTPUT = Entry.FieldOutput;
+
+        return (this._statements || []).reduce(function (fields, statement) {
+            statement = statement && statement._thread;
+            if (!(statement instanceof THREAD)) {
+                return fields;
+            }
+
+            return fields.concat(statement.view.getFields());
+        }, (this._contents || []).reduce(function (fields, c) {
+            if (!c) return fields;
+
+            fields.push(c);
+
+            if (c instanceof FIELD_BLOCK || c instanceof FIELD_OUTPUT) {
+                //some output block doesn't have value block
+                var valueBlock = c.getValueBlock && c.getValueBlock();
+                if (!valueBlock) {
+                    return fields;
+                }
+                fields = fields.concat(valueBlock.view.getFields());
+            }
+
+            return fields;
+        }, []));
+    };
+
+
 
 })(Entry.BlockView.prototype);

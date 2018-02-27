@@ -79,6 +79,7 @@ Entry.init = function(container, options) {
 
     Entry.soundQueue = new createjs.LoadQueue();
     Entry.soundQueue.installPlugin(createjs.Sound);
+    Entry.soundInstances = [];
 
     Entry.loadAudio_(
         [Entry.mediaFilePath + 'sounds/click.mp3',

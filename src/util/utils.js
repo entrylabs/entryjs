@@ -1224,25 +1224,64 @@ Entry.Utils.addFilters = function (boardSvgDom, suffix) {
     var defs = boardSvgDom.elem('defs');
 
     //trashcan filter
-    var trashCanFilter = defs.elem('filter', {'id': 'entryTrashcanFilter_' + suffix});
-    trashCanFilter.elem('feGaussianBlur', {'in': 'SourceAlpha', 'stdDeviation': 2, 'result': 'blur'});
-    trashCanFilter.elem('feOffset', {'in': 'blur', 'dx': 1, 'dy': 1, 'result': 'offsetBlur'});
-    var feMerge = trashCanFilter.elem('feMerge');
-    feMerge.elem('feMergeNode', {'in': 'offsetBlur'});
-    feMerge.elem('feMergeNode', {'in': 'SourceGraphic'}, feMerge);
-
-
-    var blockFilter = defs.elem('filter', {'id': 'entryBlockShadowFilter_' + suffix, 'height': '200%'});
-    blockFilter.elem('feOffset', {result: 'offOut', in: 'SourceGraphic', dx: 0, dy:1});
-    blockFilter.elem('feColorMatrix', {
-        result: 'matrixOut', in: 'offOut', type: 'matrix', values: '0.7 0 0 0 0 0 0.7 0 0 0 0 0 0.7 0 0 0 0 0 1 0'
+    var trashCanFilter = defs.elem('filter', {
+        'id': 'entryTrashcanFilter_' + suffix
     });
-    blockFilter.elem('feBlend', {in: 'SourceGraphic', in1:'offOut', mode: 'normal'});
+    trashCanFilter.elem('feGaussianBlur', {
+        'in': 'SourceAlpha',
+        'stdDeviation': 2,
+        'result': 'blur'
+    });
+    trashCanFilter.elem('feOffset', {
+        'in': 'blur',
+        'dx': 1,
+        'dy': 1,
+        'result': 'offsetBlur'
+    });
+    var feMerge = trashCanFilter.elem('feMerge');
+    feMerge.elem('feMergeNode', {
+        'in': 'offsetBlur'
+    });
+    feMerge.elem('feMergeNode', {
+        'in': 'SourceGraphic'
+    }, feMerge);
 
-    var blockHighlightFilter = defs.elem('filter', {'id': 'entryBlockHighlightFilter_' + suffix});
-    blockHighlightFilter.elem('feOffset', {result: 'offOut', in:"SourceGraphic", dx:0, dy:0});
+
+    var blockFilter = defs.elem('filter', {
+        'id': 'entryBlockShadowFilter_' + suffix,
+    });
+    blockFilter.elem('feOffset', {
+        result: 'offOut',
+        in: 'SourceGraphic',
+        dx: 0,
+        dy: 1
+    });
+    blockFilter.elem('feColorMatrix', {
+        result: 'matrixOut',
+        in: 'offOut',
+        type: 'matrix',
+        values: '0.7 0 0 0 0 0 0.7 0 0 0 0 0 0.7 0 0 0 0 0 1 0'
+    });
+    blockFilter.elem('feBlend', { 
+        in: 'SourceGraphic',
+        in1: 'offOut',
+        mode: 'normal'
+    });
+
+    var blockHighlightFilter = defs.elem('filter', {
+        'id': 'entryBlockHighlightFilter_' + suffix
+    });
+    blockHighlightFilter.elem('feOffset', {
+        result: 'offOut',
+        in: "SourceGraphic",
+        dx: 0,
+        dy: 0
+    });
     blockHighlightFilter.elem('feColorMatrix', {
-        result: 'matrixOut', in:"offOut", type: 'matrix', values: '1.3 0 0 0 0 0 1.3 0 0 0 0 0 1.3 0 0 0 0 0 1 0'
+        result: 'matrixOut',
+        in: "offOut",
+        type: 'matrix',
+        values: '1.3 0 0 0 0 0 1.3 0 0 0 0 0 1.3 0 0 0 0 0 1 0'
     });
 };
 
@@ -1852,4 +1891,25 @@ Entry.Utils.toFixed = function (value, len) {
         for (var i=0; i<len; i++) value += '0';
         return value;
     }
+};
+
+Entry.Utils.addSoundInstances = function(instance) {
+    Entry.soundInstances.push(instance);
+    instance.on("complete", function() {
+        var index = Entry.soundInstances.indexOf(instance);
+        if (index > -1)
+            Entry.soundInstances.splice(index, 1);
+    })
+};
+
+Entry.Utils.pauseSoundInstances = function() {
+    Entry.soundInstances.map(function(instance) {
+        instance.paused = true;
+    });
+};
+
+Entry.Utils.recoverSoundInstances = function() {
+    Entry.soundInstances.map(function(instance) {
+        instance.paused = false;
+    });
 };

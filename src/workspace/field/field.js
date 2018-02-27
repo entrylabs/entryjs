@@ -53,6 +53,8 @@ Entry.Field = function() {};
             delete this.optionGroup;
         }
 
+        delete this._neighborFields;
+
         this.isEditing() && Entry.Utils.blur();
         this._isEditing = false;
 
@@ -329,6 +331,10 @@ Entry.Field = function() {};
 
     p.getTextValue = function() {
         return this.getValue();
+    };
+
+    p.getIndex = function() {
+        return this._index;
     };
 
     p.getTextBBox = (function() {

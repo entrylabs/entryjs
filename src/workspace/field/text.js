@@ -35,29 +35,31 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldText);
     p.renderStart = function() {
         var that = this;
         var blockView = this._blockView;
-        if (!this.svgGroup)
-            this.svgGroup = blockView.contentSvgGroup.elem("g");
-        if (!this.textElement)
-            this.textElement = this.svgGroup.elem("text").attr({
-                'style': 'white-space: pre;',
-                'font-size': that._font_size + 'px',
-                'font-family': 'nanumBarunRegular',
-                "class": "dragNone",
-                "fill": that._color
-            });
 
+        if (!this.textElement) {
+            this.svgGroup = this.textElement =
+                blockView.contentSvgGroup.elem("text").attr({
+                    'style': 'white-space: pre;',
+                    'font-size': that._font_size + 'px',
+                    'font-family': 'nanumBarunRegular',
+                    "class": "dragNone",
+                    "fill": that._color
+                });
+        }
 
         var old = this.textElement.textContent;
-        this._text = this._text.replace(/(\r\n|\n|\r)/gm," ");
-        if (old !== this._text)
+        this._text = this._text.replace(/(\r\n|\n|\r)/gm, " ");
+        if (old !== this._text) {
             this.textElement.textContent = this._text;
+        }
 
         var x = 0;
         var bBox = this.getTextBBox();
-        if (this._align == 'center') x = -bBox.width/2;
+        if (this._align == 'center') x = -bBox.width / 2;
 
         this.textElement.attr({
-            x: x, y: bBox.height * 0.25
+            x: x,
+            y: bBox.height * 0.25
         });
 
         this.box.set({
@@ -71,6 +73,5 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldText);
     p.getTextValue = function() {
         return this._text;
     };
-
 
 })(Entry.FieldText.prototype);

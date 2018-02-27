@@ -160,13 +160,14 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
 
         var CONTENT_HEIGHT = this._CONTENT_HEIGHT + 4;
 
+        var fragment = document.createDocumentFragment();
+
         for (var i=0, len=options.length; i<len; i++) {
             var option = options[i];
             var text = option[0] = this._convert(option[0], option[1]);
             var value = option[1];
             var element = Entry.Dom('li', {
-                class: 'rect',
-                parent: this.optionGroup
+                class: 'rect'
             });
 
             var left = Entry.Dom('span', {
@@ -182,11 +183,6 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
             if (this.getValue() == value) left.text('\u2713');
 
             (function(elem, value) {
-                //prevent propagation to document
-                elem.bind('mousedown touchstart', function(e) {
-                    e.stopPropagation();
-                });
-
                 elem.bind('mouseup touchend', function(e){
                     e.stopPropagation();
                     that.applyValue(value);
@@ -194,7 +190,11 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
                     that._selectBlockView();
                 });
             })(element, value);
+
+            fragment.appendChild(element[0]);
         }
+
+        this.optionGroup[0].appendChild(fragment);
         this._position();
 
         this.optionDomCreated();
@@ -222,7 +222,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
             } else {
                 pos.x += this.box.width + 1;
 
-                domHeight -=  domHeight - relPos.y;
+                domHeight -= domHeight - relPos.y;
 
                 if (domHeight - 30 < optionGroupHeight) {
                     domHeight -= domHeight % 30;

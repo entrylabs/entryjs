@@ -24,14 +24,13 @@ Entry.FieldIndicator = function(content, blockView, index) {
     } else if (content.color) {
         this._color = content.color;
     }
+
     this._boxMultiplier = content.boxMultiplier || 2;
-    this._highlightColor =
-        content.highlightColor? content.highlightColor : "#F59900";
+    this._highlightColor = content.highlightColor || "#F59900";
     this._position = content.position;
 
     this._index = index;
     this.svgGroup = null;
-    this._path = null;
     this._imgElement = null;
     this.setValue(null);
 
@@ -42,10 +41,11 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldIndicator);
 
 (function(p) {
     p.renderStart = function() {
-        if (!this.svgGroup)
-            this.svgGroup = this._blockView.contentSvgGroup.elem("g");
-
         var options;
+        if (!this._imgElement) {
+            this.svgGroup = this._imgElement =
+                this._blockView.contentSvgGroup.elem("image");
+        }
 
         if (this._imgUrl) {
             options = {
@@ -55,9 +55,6 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldIndicator);
                 width: this._size * 2,
                 height: this._size * 2,
             };
-            if (!this._imgElement)
-                this._imgElement = this.svgGroup.elem("image");
-
             this._imgElement.attr(options);
 
             if (this._block.emphasized && this._imgUrl.lastIndexOf('_un.png') === -1) {
@@ -65,30 +62,15 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldIndicator);
             }
         }
 
-        var path = "m %s,-%s a %s,%s 0 1,1 -0.1,0 z"
-            .replace(/%s/gi, this._size);
-
-        options = {
-            d: path,
-            x: this._position ? this._size * -1 : 0,
-            y: this._size * -1,
-            stroke: "none",
-            fill: this._color ? this._color : "none"
-        };
-
-        if (!this._path)
-            this._path = this.svgGroup.elem("path");
-
-        this._path.attr(options);
-
         this.box.set({
             width: this._size * this._boxMultiplier +
-                (this._position ? - this._size : 0),
+                (this._position ? -this._size : 0),
             height: this._size * this._boxMultiplier
         });
     };
 
     p.enableHighlight = function() {
+        return;
         var pathLen = this._path.getTotalLength();
         var path = this._path;
         this._path.attr({

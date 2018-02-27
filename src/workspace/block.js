@@ -733,4 +733,26 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
         if (!ret) return;
         return ret[1];
     };
+
+    p.getRootBlock = function() {
+        var block = this;
+
+        while (block) {
+            var thread = block.getThread();
+            var parent = thread.parent;
+
+            if (!parent) { //field block
+                block = thread._block;
+            } else if (parent instanceof Entry.Code) { //thread
+                block = thread.getFirstBlock();
+                break;
+            } else if (parent instanceof Entry.Block) { //statement
+                block = thread.parent;
+            } else {
+                block = undefined;
+            }
+        }
+
+        return block;
+    };
 })(Entry.Block.prototype);
