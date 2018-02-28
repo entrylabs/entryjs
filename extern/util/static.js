@@ -1215,6 +1215,33 @@ EntryStatic.getAllBlocks = function() {
                 "mechatro_set_servo_speed",
                 "mechatro_set_blue_pw",
                 // mechatro Added 2018-02-12
+                
+                //FunBoard
+                "funboard_list_pushbutton_basic",
+                "funboard_list_touchbutton_basic",
+                "funboard_list_analogsensor_basic",
+                "funboard_list_2_state_basic",
+                "funboard_list_ledcolor_basic",
+                "funboard_list_onoff_basic",
+                "funboard_what_button_pressed",
+                "funboard_what_touch_button_pressed",
+                "funboard_get_analog_sensor_2state",                
+                "funboard_get_digital_button_value",
+                "funboard_get_touch_button_value",
+                "funboard_get_number_sensor_value",
+                "funboard_convert_scale",
+                "funboard_set_digital_buzzer",
+                "funboard_buzzer_onoff",
+                "funboard_color_led_onoff",
+                "funboard_color_led_on_pwm",
+                "funboard_dotmatrix_intensity",
+                "funboard_dotmatrix_onoff",
+                "funboard_dotmatrix_symbol",
+                "funboard_dotmatrix_char_display",
+                "funboard_dotmatrix_string_display_scroll",
+                "funboard_dotmatrix_set",
+                "funboard_dotmatrix_1row",
+                "funboard_dotmatrix_1column"
             ]
         }
     ]

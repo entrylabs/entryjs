@@ -82,6 +82,7 @@ Entry.HW = function() {
         '1E.1': Entry.playcode,
         '1F.1': Entry.mechatro,
         '20.1': Entry.Creamo,
+        '21.1': Entry.FunBoard,
     };
 };
 
