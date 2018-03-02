@@ -20,9 +20,13 @@
   "bugs": {
     "url": "https://github.com/boolgom/entryjs/issues"
   },
+  "scripts": {
+    "dev": "webpack -w --mode development ./src/entry.js --output ./dist/entry.js"
+  },
   "license": "MIT",
   "dependencies": {
-    "grunt-karma": "^2.0.0"
+    "grunt-karma": "^2.0.0",
+    "webpack": "^4.0.1"
   },
   "devDependencies": {
     "chai": "^3.2.0",
@@ -46,6 +50,7 @@
     "karma-mocha": "^0.2.0",
     "karma-phantomjs-launcher": "^0.2.0",
     "mocha": "^2.5.3",
-    "phantomjs": "^1.9.17"
+    "phantomjs": "^1.9.17",
+    "webpack-cli": "^2.0.10"
   }
 }
