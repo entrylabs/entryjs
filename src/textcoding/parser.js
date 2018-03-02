@@ -3,21 +3,7 @@
  */
 "use strict";
 
-goog.provide("Entry.Parser");
-
-goog.require("Entry.JsAstGenerator");
-goog.require("Entry.PyAstGenerator");
-
-goog.require("Entry.BlockToJsParser");
-goog.require("Entry.BlockToPyParser");
-goog.require("Entry.JsToBlockParser");
-goog.require("Entry.PyToBlockParser");
-
-goog.require("Entry.TextCodingUtil");
-goog.require("Entry.TextCodingError");
-goog.require("Entry.PyHint");
-goog.require("Entry.Console");
-
+require("./util/console")
 
 Entry.Parser = function(mode, type, cm, syntax) {
     this._mode = mode; // maze ai workspace

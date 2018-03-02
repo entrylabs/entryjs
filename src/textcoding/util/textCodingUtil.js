@@ -10,9 +10,6 @@ goog.require("Entry.Queue");
 Entry.TextCodingUtil = {};
 
 (function(tu) {
-    this._funcParams;
-    this._funcParamQ;
-    this._currentObject;
     /*tu.init = function() {
         this._funcParams = [];
     };*/
@@ -1904,12 +1901,12 @@ Entry.TextCodingUtil = {};
         callee.type = "Identifier";
         expression.callee = callee;
 
-        var arguments = [];
+        var args = [];
         var argument = {};
         argument.type = "Literal";
         argument.value = arg;
-        arguments.push(argument);
-        expression.arguments = arguments;
+        args.push(argument);
+        expression.arguments = args;
 
         expressionStatement.expression = expression;
         expressionStatement.type = type;
