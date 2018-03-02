@@ -213,6 +213,8 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
                 );
             }
         }
+        
+        return true;
     };
 
     p.changeType = function(type) {
@@ -634,11 +636,13 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
         var blocks = [];
         var currentType = type || this.type;
 
-        if (!this._schema)
+        if (!this._schema && !this.loadSchema()) {
             return [];
+        }
 
-        if (excludePrimitive && this._schema.isPrimitive)
+        if (excludePrimitive && this._schema.isPrimitive) {
             return blocks;
+        }
 
         currentType === this.type && blocks.push(this);
 

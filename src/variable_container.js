@@ -2424,6 +2424,100 @@ Entry.VariableContainer = function() {
         return datum;
     };
 
+    // p.getObjectVariables = function (object) {
+    //     var blockList = object.script.getBlockList();
+
+    //     var a = this.getFunctionJSONByBlockList(blockList);
+
+    //     return a;
+    // }
+
+    p.getObjectVariables = function (blockList, keys) {
+        var findFuncKeys = keys || {};
+        var functions = [];
+        var jsonData = this.getVariableJSONByBlockList(blockList);
+        var variables = jsonData.variables;
+        var messages = jsonData.messages;
+
+        blockList.forEach(function (block) {
+            var type = block.type;
+            if (type && type.indexOf('func_') === 0) {
+                var id = type.substr(5);
+                if(!findFuncKeys[id]) {
+                    var func = this.functions_[id];
+                    findFuncKeys[id] = true;
+                    functions.push({
+                        id: id,
+                        content: JSON.stringify(func.content.toJSON())
+                    });
+
+                    blockList = func.content.getBlockList();
+                    var jsonData = this.getObjectVariables(blockList, findFuncKeys);
+                    functions = functions.concat(jsonData.functions);
+                    variables = variables.concat(jsonData.variables);
+                    messages = messages.concat(jsonData.messages);
+                }
+            }
+        }.bind(this));
+
+        return {
+            functions: functions,
+            variables: variables,
+            messages: messages,
+        };
+    }
+
+    p.getVariableJSONByBlockList = function (blockList) {
+        var variableSet = {};
+        var variables = [];
+        var messages = [];
+
+        this.variables_.forEach(function (variable) {
+            variableSet[variable.id_] = variable;
+        });
+
+        this.lists_.forEach(function (list) {
+            variableSet[list.id_] = list;
+        });
+
+        this.messages_.forEach(function (message) {
+            variableSet[message.id] = message;
+        });
+
+        blockList.forEach(function (block) {
+            var data = block.data || {};
+            var type = data.type;
+            var isMessage;
+            var isVariable;
+            if(type) {
+                isMessage = EntryStatic.messageBlockList.indexOf(type) > -1;
+                isVariable = EntryStatic.variableBlockList.indexOf(type) > -1;
+            }
+
+            if (type && (isMessage || isVariable)) {
+                block.data.params.forEach(function (param) {
+                    if(typeof param === 'string' && !!variableSet[param]) {
+                        var item = variableSet[param];
+                        if(isVariable) {
+                            variables.push(item.toJSON());
+                        } else {
+                            messages.push({
+                                id: item.id,
+                                name: item.name
+                            });
+                        }
+                        variableSet[param] = undefined;
+                    }
+                });
+            }
+        });
+
+        return {
+            variables: variables,
+            messages: messages,
+        };
+    }
+
     p.removeRef = function(type, block) {
         if (!Entry.playground.mainWorkspace) return;
         var wsMode = Entry.getMainWS().getMode();
