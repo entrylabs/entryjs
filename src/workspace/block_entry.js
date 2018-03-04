@@ -72526,7 +72526,6 @@ chocopi_servo_motor: {
         func: function(sprite, script) {
             var index = script.getValue('PORT', script);
             var state = script.getValue('STATE', script);
-
             var vmin = 0,
                 vmax = 1023,
                 vlimit;
@@ -73155,6 +73154,7 @@ chocopi_servo_motor: {
                         portY = 255;
                         portG = 255;
                         portB = 255;
+
                         if (color_index === 1) portR = 0;
                         else if (color_index === 2) portY = 0;
                         else if (color_index === 3) portG = 0;
@@ -73701,7 +73701,7 @@ chocopi_servo_motor: {
                 script.isStart = true;
                 script.timeFlag = 1;
                 var fps = Entry.FPS || 60;
-                var timeValue = char_tot * Entry.FunBoard.Static.DELAY_SECOND;
+                var timeValue = (char_tot+0.5) * Entry.FunBoard.Static.DELAY_SECOND;
                 timeValue = 60 / fps * timeValue * 1000;
 
                 Entry.hw.sendQueue['SET'][port] = {
