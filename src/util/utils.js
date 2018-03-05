@@ -270,9 +270,9 @@ Entry.generateFunctionSchema = function(functionId) {
 Entry.getMainWS = function() {
     var ret;
     if (Entry.mainWorkspace)
-        ret = Entry.mainWorkspace
+        ret = Entry.mainWorkspace;
     else if (Entry.playground && Entry.playground.mainWorkspace)
-        ret = Entry.playground.mainWorkspace
+        ret = Entry.playground.mainWorkspace;
     return ret;
 };
 

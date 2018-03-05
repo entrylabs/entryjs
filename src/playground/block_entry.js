@@ -4,11 +4,12 @@ if (typeof global.Entry !== "object")
     global.Entry = {};
 
 if (typeof exports == "object") {
-var Lang = require('../../extern/lang/ko.js').Lang;
-Entry.Bitbrick = {};
-Entry.MODI = {};
-if (typeof EntryStatic !== "object")
-    EntryStatic = {};
+    var Lang = require('../../extern/lang/ko.js').Lang;
+    Entry.Bitbrick = {};
+    Entry.MODI = {};
+    if (typeof EntryStatic !== "object") {
+        global.EntryStatic = {};
+    }
 }
 if (!Entry.block)
 Entry.block = {};
