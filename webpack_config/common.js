@@ -35,12 +35,6 @@ module.exports = {
                 name: '[hash].[ext]',
                 limit: 10000,
             },
-        }, {
-            test: /\.less$/,
-            use: ExtractTextPlugin.extract({
-                fallback: 'style-loader',
-                use: ['css-loader', 'less-loader']
-            }),
         }]
     },
     plugins: [

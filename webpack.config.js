@@ -7,8 +7,6 @@ switch (process.env.NODE_ENV) {
         conf = require('./webpack_config/prod');
         break;
     case 'development': 
-        conf = require('./webpack_config/dev');
-        break;
     default: 
         conf = require('./webpack_config/dev');
         break;
