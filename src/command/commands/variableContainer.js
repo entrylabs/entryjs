@@ -1,10 +1,7 @@
 /*
  *
  */
-"use strict";
-
-goog.require("Entry.Command");
-goog.require("Entry.STATIC");
+'use strict';
 
 (function(c) {
     var COMMAND_TYPES = Entry.STATIC.COMMAND_TYPES;
@@ -17,14 +14,11 @@ goog.require("Entry.STATIC");
         },
         log: function(newType, oldType) {
             oldType = oldType || 'all';
-            return [
-                ['newType', newType],
-                ['oldType', oldType],
-            ];
+            return [['newType', newType], ['oldType', oldType]];
         },
         recordable: Entry.STATIC.RECORDABLE.SUPPORT,
-        undo: "variableContainerSelectFilter",
-        dom: ['variableContainer', 'filter', '&0']
+        undo: 'variableContainerSelectFilter',
+        dom: ['variableContainer', 'filter', '&0'],
     };
 
     c[COMMAND_TYPES.variableContainerClickVariableAddButton] = {
@@ -38,8 +32,8 @@ goog.require("Entry.STATIC");
             return [];
         },
         recordable: Entry.STATIC.RECORDABLE.SUPPORT,
-        undo: "variableContainerClickVariableAddButton",
-        dom: ['variableContainer', 'variableAddButton']
+        undo: 'variableContainerClickVariableAddButton',
+        dom: ['variableContainer', 'variableAddButton'],
     };
 
     c[COMMAND_TYPES.variableContainerAddVariable] = {
@@ -63,13 +57,11 @@ goog.require("Entry.STATIC");
         log: function(variable) {
             if (variable instanceof Entry.Variable)
                 variable = variable.toJSON();
-            return [
-                [ 'variable', variable ]
-            ];
+            return [['variable', variable]];
         },
         recordable: Entry.STATIC.RECORDABLE.SUPPORT,
         validate: false,
-        undo: "variableContainerRemoveVariable",
+        undo: 'variableContainerRemoveVariable',
         restrict: function(data, domQuery, callback) {
             Entry.variableContainer.clickVariableAddButton(true, true);
             var dom = $('.entryVariableAddSpaceInputWorkspace');
@@ -77,19 +69,24 @@ goog.require("Entry.STATIC");
 
             this.hashId = data.content[1][1].id;
 
-            var tooltip = new Entry.Tooltip([{
-                title: data.tooltip.title,
-                content: data.tooltip.content,
-                target: domQuery
-            }], {
-                restrict: true,
-                dimmed: true,
-                callBack: callback
-            });
+            var tooltip = new Entry.Tooltip(
+                [
+                    {
+                        title: data.tooltip.title,
+                        content: data.tooltip.content,
+                        target: domQuery,
+                    },
+                ],
+                {
+                    restrict: true,
+                    dimmed: true,
+                    callBack: callback,
+                }
+            );
             callback();
             return tooltip;
         },
-        dom: ['variableContainer', 'variableAddConfirmButton']
+        dom: ['variableContainer', 'variableAddConfirmButton'],
     };
 
     c[COMMAND_TYPES.variableAddSetName] = {
@@ -103,16 +100,14 @@ goog.require("Entry.STATIC");
             delete that._nextValue;
         },
         state: function(value) {
-            return [
-                ''
-            ];
+            return [''];
         },
         log: function(value) {
             return [
                 [
                     'value',
-                    c[COMMAND_TYPES.variableAddSetName]._nextValue || value
-                ]
+                    c[COMMAND_TYPES.variableAddSetName]._nextValue || value,
+                ],
             ];
         },
         restrict: function(data, domQuery, callback) {
@@ -120,22 +115,27 @@ goog.require("Entry.STATIC");
             this._nextValue = data.content[1][1];
             var dom = $('.entryVariableAddSpaceInputWorkspace');
             dom[0].enterKeyDisabled = true;
-            var tooltip = new Entry.Tooltip([{
-                title: data.tooltip.title,
-                content: data.tooltip.content,
-                target: domQuery
-            }], {
-                restrict: true,
-                noDispose: true,
-                dimmed: true,
-                callBack: callback
-            });
+            var tooltip = new Entry.Tooltip(
+                [
+                    {
+                        title: data.tooltip.title,
+                        content: data.tooltip.content,
+                        target: domQuery,
+                    },
+                ],
+                {
+                    restrict: true,
+                    noDispose: true,
+                    dimmed: true,
+                    callBack: callback,
+                }
+            );
             return tooltip;
         },
         validate: false,
         recordable: Entry.STATIC.RECORDABLE.SUPPORT,
-        undo: "variableAddSetName",
-        dom: ['variableContainer', 'variableAddInput']
+        undo: 'variableAddSetName',
+        dom: ['variableContainer', 'variableAddInput'],
     };
 
     c[COMMAND_TYPES.variableContainerRemoveVariable] = {
@@ -150,14 +150,11 @@ goog.require("Entry.STATIC");
         log: function(variable) {
             if (variable instanceof Entry.Variable)
                 variable = variable.toJSON();
-            return [
-                [ 'variable', variable ]
-            ];
+            return [['variable', variable]];
         },
         recordable: Entry.STATIC.RECORDABLE.SUPPORT,
         validate: false,
-        undo: "variableContainerAddVariable",
-        dom: ['variableContainer', 'variableAddConfirmButton']
+        undo: 'variableContainerAddVariable',
+        dom: ['variableContainer', 'variableAddConfirmButton'],
     };
 })(Entry.Command);
-

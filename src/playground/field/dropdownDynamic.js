@@ -1,10 +1,7 @@
 /*
  */
-"use strict";
+'use strict';
 
-goog.provide("Entry.FieldDropdownDynamic");
-
-goog.require("Entry.FieldDropdown");
 /*
  *
  */
@@ -21,7 +18,10 @@ Entry.FieldDropdownDynamic = function(content, blockView, index) {
     this._index = index;
 
     var arrowColor = content.arrowColor;
-    if (this._block.deletable === Entry.Block.DELETABLE_FALSE_LIGHTEN || this._block.emphasized) {
+    if (
+        this._block.deletable === Entry.Block.DELETABLE_FALSE_LIGHTEN ||
+        this._block.emphasized
+    ) {
         arrowColor = blockView._fillColor;
     }
 
@@ -29,8 +29,7 @@ Entry.FieldDropdownDynamic = function(content, blockView, index) {
 
     var menuName = this._contents.menuName;
 
-    if (Entry.Utils.isFunction(menuName))
-        this._menuGenerator = menuName;
+    if (Entry.Utils.isFunction(menuName)) this._menuGenerator = menuName;
     else this._menuName = menuName;
 
     this._CONTENT_HEIGHT = this.getContentHeight(content.dropdownHeight);
@@ -39,10 +38,15 @@ Entry.FieldDropdownDynamic = function(content, blockView, index) {
 
     this._ROUND = content.roundValue || 3;
     this.renderStart(blockView);
-    if (blockView && blockView.getBoard() && blockView.getBoard().workspace &&
-        blockView.getBoard().workspace.changeEvent) {
-        blockView.getBoard().workspace.changeEvent.attach(
-            this, this._updateValue);
+    if (
+        blockView &&
+        blockView.getBoard() &&
+        blockView.getBoard().workspace &&
+        blockView.getBoard().workspace.changeEvent
+    ) {
+        blockView
+            .getBoard()
+            .workspace.changeEvent.attach(this, this._updateValue);
     }
 };
 
@@ -56,14 +60,17 @@ Entry.Utils.inherit(Entry.FieldDropdown, Entry.FieldDropdownDynamic);
         var options = [];
         if (Entry.container) {
             if (this._menuName)
-                options = Entry.container.getDropdownList(this._menuName, object);
+                options = Entry.container.getDropdownList(
+                    this._menuName,
+                    object
+                );
             else options = this._menuGenerator();
         }
 
         this._contents.options = options;
         var value = this.getValue();
         if (this._blockView.isInBlockMenu || !value || value == 'null')
-            value = (options.length !== 0 ? options[0][1] : null);
+            value = options.length !== 0 ? options[0][1] : null;
 
         this._updateOptions();
         this.setValue(value);
@@ -77,8 +84,8 @@ Entry.Utils.inherit(Entry.FieldDropdown, Entry.FieldDropdownDynamic);
         this._attachDisposeEvent();
 
         this.optionGroup = Entry.Dom('ul', {
-            class:'entry-widget-dropdown',
-            parent: $('body')
+            class: 'entry-widget-dropdown',
+            parent: $('body'),
         });
 
         this.optionGroup.bind('mousedown touchstart', function(e) {
@@ -98,28 +105,27 @@ Entry.Utils.inherit(Entry.FieldDropdown, Entry.FieldDropdownDynamic);
 
         var fragment = document.createDocumentFragment();
 
-        for (var i=0; i<options.length; i++) {
+        for (var i = 0; i < options.length; i++) {
             var option = options[i];
-            var text = option[0] = this._convert(option[0], option[1]);
+            var text = (option[0] = this._convert(option[0], option[1]));
             var value = option[1];
             var element = Entry.Dom('li', {
-                class: 'rect'
+                class: 'rect',
             });
             var left = Entry.Dom('span', {
                 class: 'left',
-                parent: element
+                parent: element,
             });
 
             Entry.Dom('span', {
                 class: 'right',
-                parent: element
+                parent: element,
             }).text(text);
 
             if (this.getValue() == value) left.text('\u2713');
 
-
             (function(elem, value) {
-                elem.mouseup(function(e){
+                elem.mouseup(function(e) {
                     e.stopPropagation();
                     that.applyValue(value);
                     that.destroyOption(undefined, true);
@@ -134,5 +140,4 @@ Entry.Utils.inherit(Entry.FieldDropdown, Entry.FieldDropdownDynamic);
 
         this.optionDomCreated();
     };
-
 })(Entry.FieldDropdownDynamic.prototype);

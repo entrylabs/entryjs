@@ -1,9 +1,7 @@
 /*
  *
  */
-"use strict";
-
-goog.provide("Entry.BlockMenuScroller");
+'use strict';
 
 /*
  *
@@ -44,11 +42,13 @@ Entry.BlockMenuScroller.RADIUS = 7;
         var r = Entry.Scroller.RADIUS;
         var that = this;
 
-        this.svgGroup =
-            this.board.svgGroup.elem('g',{class: "boardScrollbar"});
+        this.svgGroup = this.board.svgGroup.elem('g', {
+            class: 'boardScrollbar',
+        });
 
         this.vScrollbar = this.svgGroup.elem('rect', {
-            rx: 4, ry:4
+            rx: 4,
+            ry: 4,
         });
     };
 
@@ -69,13 +69,13 @@ Entry.BlockMenuScroller.RADIUS = 7;
         this.vScrollbar.attr({
             width: 9,
             height: dom.height() / that.vRatio,
-            x: dom.width() - 9
+            x: dom.width() - 9,
         });
     };
 
     p.updateScrollBar = function(dy) {
         this.vY += dy;
-        this.vScrollbar.attr({y: this.vY});
+        this.vScrollbar.attr({ y: this.vY });
     };
 
     p.scroll = function(dy) {
@@ -90,15 +90,14 @@ Entry.BlockMenuScroller.RADIUS = 7;
     };
 
     p.scrollByPx = function(px) {
-        if (!this.vRatio)
-            this._updateRatio();
-        this.scroll(px/this.vRatio);
+        if (!this.vRatio) this._updateRatio();
+        this.scroll(px / this.vRatio);
     };
 
     //adjust value by dy for min/max value
     p._adjustValue = function(dy) {
         var domHeight = this.board.svgDom.height();
-        var limitBottom = domHeight - domHeight/this.vRatio;
+        var limitBottom = domHeight - domHeight / this.vRatio;
         var newY = this.vY + dy;
 
         newY = Math.max(0, newY);
@@ -111,19 +110,21 @@ Entry.BlockMenuScroller.RADIUS = 7;
         if (visible == this.isVisible()) return;
         this._visible = visible;
         this.svgGroup.attr({
-            display: visible === true ? 'block' : 'none'
+            display: visible === true ? 'block' : 'none',
         });
     };
 
     p.setOpacity = function(value) {
         if (this._opacity == value) return;
         this.vScrollbar.attr({
-            opacity: value
+            opacity: value,
         });
         this._opacity = value;
     };
 
-    p.isVisible = function() {return this._visible;};
+    p.isVisible = function() {
+        return this._visible;
+    };
 
     p._updateRatio = function() {
         var board = this.board,
@@ -131,22 +132,19 @@ Entry.BlockMenuScroller.RADIUS = 7;
             svgDom = board.svgDom,
             realHeight = board.blockMenuContainer.height();
 
-        var vRatio = (bRect.height + 20)/realHeight;
+        var vRatio = (bRect.height + 20) / realHeight;
         this.vRatio = vRatio;
-        if (vRatio <= 1)
-            this.setVisible(false);
-        else
-            this.setVisible(true);
+        if (vRatio <= 1) this.setVisible(false);
+        else this.setVisible(true);
     };
 
     p._reset = function() {
         this.vY = 0;
         this.vScrollbar.attr({
-            y: this.vY
+            y: this.vY,
         });
         this._dResizeScrollBar();
     };
-
 
     p.onMouseDown = function(e) {
         var that = this;
@@ -154,14 +152,12 @@ Entry.BlockMenuScroller.RADIUS = 7;
         if (e.preventDefault) e.preventDefault();
 
         if (e.button === 0 || (e.originalEvent && e.originalEvent.touches)) {
-            if (Entry.documentMousedown)
-                Entry.documentMousedown.notify(e);
+            if (Entry.documentMousedown) Entry.documentMousedown.notify(e);
 
             var mouseEvent;
             if (e.originalEvent && e.originalEvent.touches) {
                 mouseEvent = e.originalEvent.touches[0];
             } else mouseEvent = e;
-
 
             var doc = $(document);
             doc.bind('mousemove.scroll', onMouseMove);
@@ -170,7 +166,7 @@ Entry.BlockMenuScroller.RADIUS = 7;
             doc.bind('touchend.scroll', onMouseUp);
             that.dragInstance = new Entry.DragInstance({
                 startY: mouseEvent.pageY,
-                offsetY: mouseEvent.pageY
+                offsetY: mouseEvent.pageY,
             });
         }
 
@@ -187,7 +183,7 @@ Entry.BlockMenuScroller.RADIUS = 7;
             that.scroll(mouseEvent.pageY - dragInstance.offsetY);
 
             dragInstance.set({
-                offsetY: mouseEvent.pageY
+                offsetY: mouseEvent.pageY,
             });
         }
 
@@ -200,12 +196,6 @@ Entry.BlockMenuScroller.RADIUS = 7;
 
     p._addControl = function() {
         var that = this;
-        $(this.vScrollbar).bind(
-            'mousedown touchstart',
-            that.mouseHandler
-        );
+        $(this.vScrollbar).bind('mousedown touchstart', that.mouseHandler);
     };
-
-
-
 })(Entry.BlockMenuScroller.prototype);

@@ -1,18 +1,13 @@
-"use strict";
-
-goog.provide("Entry.RenderView");
-
-goog.require("Entry.Dom");
-goog.require("Entry.Utils");
+'use strict';
 
 Entry.RenderView = function(dom, align, scale, parserType) {
-    this._align = align || "CENTER";
+    this._align = align || 'CENTER';
 
-    if (typeof dom === "string") dom = $('#' + dom);
+    if (typeof dom === 'string') dom = $('#' + dom);
     else dom = $(dom);
 
-    if (dom.prop("tagName") !== "DIV")
-        return console.error("Dom is not div element");
+    if (dom.prop('tagName') !== 'DIV')
+        return console.error('Dom is not div element');
 
     this.view = dom;
     this.viewOnly = true;
@@ -30,16 +25,16 @@ Entry.RenderView = function(dom, align, scale, parserType) {
     this._minBlockOffsetX = 0;
     this._setSize();
 
-    this.svg = Entry.SVG(this._svgId , this.svgDom[0]);
+    this.svg = Entry.SVG(this._svgId, this.svgDom[0]);
     Entry.Utils.addFilters(this.svg, this.suffix);
 
     if (this.svg) {
-        this.svgGroup = this.svg.elem("g");
+        this.svgGroup = this.svg.elem('g');
 
-        this.svgThreadGroup = this.svgGroup.elem("g");
+        this.svgThreadGroup = this.svgGroup.elem('g');
         this.svgThreadGroup.board = this;
 
-        this.svgBlockGroup = this.svgGroup.elem("g");
+        this.svgBlockGroup = this.svgGroup.elem('g');
         this.svgBlockGroup.board = this;
     }
 };
@@ -49,7 +44,7 @@ Entry.RenderView = function(dom, align, scale, parserType) {
         code: null,
         dragBlock: null,
         closeBlock: null,
-        selectedBlockView: null
+        selectedBlockView: null,
     };
 
     p._generateView = function() {
@@ -57,30 +52,34 @@ Entry.RenderView = function(dom, align, scale, parserType) {
         var that = this;
 
         this.renderViewContainer = Entry.Dom('div', {
-            'class':'renderViewContainer',
-            'parent':parent
+            class: 'renderViewContainer',
+            parent: parent,
         });
 
         this.svgDom = Entry.Dom(
-            $('<svg id="' + this._svgId +'" class="renderView" version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'),
+            $(
+                '<svg id="' +
+                    this._svgId +
+                    '" class="renderView" version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'
+            ),
             { parent: this.renderViewContainer }
         );
     };
 
     p.changeCode = function(code, resizeImmediately) {
         if (!(code instanceof Entry.Code))
-            return console.error("You must inject code instance");
+            return console.error('You must inject code instance');
         var that = this;
         this.code = code;
 
         if (!this.svg) {
-            this.svg = Entry.SVG(this._svgId , this.svgDom[0]);
-            this.svgGroup = this.svg.elem("g");
+            this.svg = Entry.SVG(this._svgId, this.svgDom[0]);
+            this.svgGroup = this.svg.elem('g');
 
-            this.svgThreadGroup = this.svgGroup.elem("g");
+            this.svgThreadGroup = this.svgGroup.elem('g');
             this.svgThreadGroup.board = this;
 
-            this.svgBlockGroup = this.svgGroup.elem("g");
+            this.svgBlockGroup = this.svgGroup.elem('g');
             this.svgBlockGroup.board = this;
         }
 
@@ -97,7 +96,7 @@ Entry.RenderView = function(dom, align, scale, parserType) {
             marginFromTop = 0,
             hPadding = this._getHorizontalPadding();
 
-        for (var i=0,len=threads.length; i<len; i++) {
+        for (var i = 0, len = threads.length; i < len; i++) {
             var thread = threads[i];
             var block = thread.getFirstBlock();
             var blockView = block.view;
@@ -107,13 +106,16 @@ Entry.RenderView = function(dom, align, scale, parserType) {
             var xPos = 0;
             var extensions = $(blockView.svgGroup).find('.extension');
             if (extensions) {
-                for (var j=0; j<extensions.length; j++) {
+                for (var j = 0; j < extensions.length; j++) {
                     var ext = extensions[j];
                     var currentXpos = parseFloat(ext.getAttribute('x'));
                     xPos = Math.min(xPos, currentXpos);
                 }
             }
-            this._minBlockOffsetX = Math.min(this._minBlockOffsetX, blockView.offsetX);
+            this._minBlockOffsetX = Math.min(
+                this._minBlockOffsetX,
+                blockView.offsetX
+            );
             blockView._moveTo(
                 hPadding - xPos - blockView.offsetX,
                 marginFromTop - blockView.offsetY,
@@ -124,17 +126,20 @@ Entry.RenderView = function(dom, align, scale, parserType) {
         this._setSize();
     };
 
-    p.hide = function() {this.view.addClass('entryRemove');};
+    p.hide = function() {
+        this.view.addClass('entryRemove');
+    };
 
-    p.show = function() {this.view.removeClass('entryRemove');};
+    p.show = function() {
+        this.view.removeClass('entryRemove');
+    };
 
     p._setSize = function() {
         if (this.svgDom) {
             this._svgWidth = this.svgDom.width();
             this.offset = this.svgDom.offset();
         }
-        if (this.svgGroup)
-            this._bBox = this.svgGroup.getBBox();
+        if (this.svgGroup) this._bBox = this.svgGroup.getBBox();
     };
 
     p.bindCodeView = function(codeView) {
@@ -152,9 +157,12 @@ Entry.RenderView = function(dom, align, scale, parserType) {
         if (isImmediate) {
             run.call(this);
         } else {
-            setTimeout(function() {
-                run.call(this);
-            }.bind(this), 0);
+            setTimeout(
+                function() {
+                    run.call(this);
+                }.bind(this),
+                0
+            );
         }
 
         function run() {
@@ -162,21 +170,28 @@ Entry.RenderView = function(dom, align, scale, parserType) {
             var width = Math.round(this._bBox.width);
             var height = Math.round(this._bBox.height);
             //svg is not on the screen
-            if (width === 0 || height === 0)
-                return;
+            if (width === 0 || height === 0) return;
 
             $(this.svg).css({
-                'width': width + this._getHorizontalPadding() - this._minBlockOffsetX,
-                'height': height + 5
+                width:
+                    width +
+                    this._getHorizontalPadding() -
+                    this._minBlockOffsetX,
+                height: height + 5,
             });
 
             //double check
-            setTimeout(function() {
-                var bBox = this.svgGroup.getBBox();
-                if (Math.round(bBox.width) !== width ||
-                    Math.round(bBox.height) !== height)
-                    this.resize();
-            }.bind(this), 1000);
+            setTimeout(
+                function() {
+                    var bBox = this.svgGroup.getBBox();
+                    if (
+                        Math.round(bBox.width) !== width ||
+                        Math.round(bBox.height) !== height
+                    )
+                        this.resize();
+                }.bind(this),
+                1000
+            );
         }
     };
 
@@ -187,29 +202,34 @@ Entry.RenderView = function(dom, align, scale, parserType) {
         this.align();
         this.resize(isImmediate);
         if (this._scale !== 1) {
-            window.setTimeout(function() {
-                this.svgBlockGroup.attr('transform', 'scale(%scale)'.replace('%scale', this._scale));
-                this.align();
-                this.resize();
-            }.bind(this), 0);
+            window.setTimeout(
+                function() {
+                    this.svgBlockGroup.attr(
+                        'transform',
+                        'scale(%scale)'.replace('%scale', this._scale)
+                    );
+                    this.align();
+                    this.resize();
+                }.bind(this),
+                0
+            );
         }
     };
 
     p._getHorizontalPadding = function() {
         var marginMap = {
-            'LEFT': 20,
-            'LEFT_MOST': 0
+            LEFT: 20,
+            LEFT_MOST: 0,
         };
         var ret = marginMap[this._align];
 
-        return ret !== undefined ? ret : this.svgDom.width()/2;
+        return ret !== undefined ? ret : this.svgDom.width() / 2;
     };
 
     p.getBlockSyntax = function(block, renderMode) {
         var syntax = null;
         if (renderMode === 2) {
-            if (!this._parser)
-                this._parser = new Entry.Parser(null, null);
+            if (!this._parser) this._parser = new Entry.Parser(null, null);
             this._parser.setParser(1, this._parserType);
             if (this._parser._execParser)
                 syntax = this._parser._execParser.searchSyntax(block);
@@ -221,6 +241,4 @@ Entry.RenderView = function(dom, align, scale, parserType) {
     p.setParserType = function(parserType) {
         this._parserType = parserType;
     };
-
-
 })(Entry.RenderView.prototype);

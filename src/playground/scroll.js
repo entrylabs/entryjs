@@ -1,9 +1,7 @@
 /*
  *
  */
-"use strict";
-
-goog.provide("Entry.Scroller");
+'use strict';
 
 /*
  *
@@ -41,19 +39,16 @@ Entry.Scroller.RADIUS = 7;
         var r = Entry.Scroller.RADIUS;
         var scroller = this;
 
-        this.svgGroup = this.board.svg.elem("g")
-                            .attr({class: "boardScrollbar"});
-
+        this.svgGroup = this.board.svg
+            .elem('g')
+            .attr({ class: 'boardScrollbar' });
 
         if (this._horizontal) {
-            this.hScrollbar = this.svgGroup.elem(
-                "rect",
-                {
-                    height: 2 * r,
-                    rx: r,
-                    ry: r
-                }
-            );
+            this.hScrollbar = this.svgGroup.elem('rect', {
+                height: 2 * r,
+                rx: r,
+                ry: r,
+            });
             this.hScrollbar.mousedown = function(e) {
                 if (e.button === 0 || e instanceof Touch) {
                     if (Entry.documentMousedown)
@@ -67,7 +62,7 @@ Entry.Scroller.RADIUS = 7;
                         startX: e.pageX,
                         startY: e.pageY,
                         offsetX: e.pageX,
-                        offsetY: e.pageY
+                        offsetY: e.pageY,
                     });
                 }
 
@@ -85,7 +80,7 @@ Entry.Scroller.RADIUS = 7;
                     );
                     dragInstance.set({
                         offsetX: e.pageX,
-                        offsetY: e.pageY
+                        offsetY: e.pageY,
                     });
                 }
 
@@ -98,14 +93,11 @@ Entry.Scroller.RADIUS = 7;
         }
 
         if (this._vertical) {
-            this.vScrollbar = this.svgGroup.elem(
-                "rect",
-                {
-                    width: 2 * r,
-                    rx: r,
-                    ry: r
-                }
-            );
+            this.vScrollbar = this.svgGroup.elem('rect', {
+                width: 2 * r,
+                rx: r,
+                ry: r,
+            });
             this.vScrollbar.mousedown = function(e) {
                 if (e.button === 0 || e instanceof Touch) {
                     if (Entry.documentMousedown)
@@ -119,7 +111,7 @@ Entry.Scroller.RADIUS = 7;
                         startX: e.pageX,
                         startY: e.pageY,
                         offsetX: e.pageX,
-                        offsetY: e.pageY
+                        offsetY: e.pageY,
                     });
                 }
 
@@ -137,7 +129,7 @@ Entry.Scroller.RADIUS = 7;
                     );
                     dragInstance.set({
                         offsetX: e.pageX,
-                        offsetY: e.pageY
+                        offsetY: e.pageY,
                     });
                 }
 
@@ -154,17 +146,16 @@ Entry.Scroller.RADIUS = 7;
         if (this._horizontal) {
             this.hX += dx * this.hRatio;
             this.hScrollbar.attr({
-                x: this.hX
+                x: this.hX,
             });
         }
 
         if (this._vertical) {
             this.vY += dy * this.vRatio;
             this.vScrollbar.attr({
-                y: this.vY
+                y: this.vY,
             });
         }
-
     };
 
     p.scroll = function(x, y, skipCommand) {
@@ -177,19 +168,15 @@ Entry.Scroller.RADIUS = 7;
                 x: clientRect.left - this.board.offset().left,
                 y: clientRect.top - this.board.offset().top,
                 width: clientRect.width,
-                height: clientRect.height
+                height: clientRect.height,
             };
         x = Math.max(-bBox.width + Entry.BOARD_PADDING - bBox.x, x);
         y = Math.max(-bBox.height + Entry.BOARD_PADDING - bBox.y, y);
-        y = Math.min(
-            svgRect.height - Entry.BOARD_PADDING - bBox.y,
-            y
-        );
+        y = Math.min(svgRect.height - Entry.BOARD_PADDING - bBox.y, y);
 
-        this._scroll(x,y);
+        this._scroll(x, y);
         if (skipCommand !== true) {
-            if (!this._diffs)
-                this._diffs = [0,0];
+            if (!this._diffs) this._diffs = [0, 0];
 
             this._diffs[0] += x;
             this._diffs[1] += y;
@@ -212,9 +199,8 @@ Entry.Scroller.RADIUS = 7;
         if (visible == this.isVisible()) return;
         this._visible = visible;
         this.svgGroup.attr({
-            display: visible === true ? 'block' : 'none'
+            display: visible === true ? 'block' : 'none',
         });
-
     };
 
     p.isVisible = function() {
@@ -244,44 +230,56 @@ Entry.Scroller.RADIUS = 7;
                 x: bRect.left - offset.left,
                 y: bRect.top - offset.top,
                 width: bRect.width,
-                height: bRect.height
+                height: bRect.height,
             };
 
         // hScroll
         if (this._horizontal) {
-            var hLimitA = - bBox.width + Entry.BOARD_PADDING,
+            var hLimitA = -bBox.width + Entry.BOARD_PADDING,
                 hLimitB = bWidth - Entry.BOARD_PADDING;
 
-            var hWidth = (bWidth + 2 * Entry.Scroller.RADIUS) * bBox.width /
+            var hWidth =
+                (bWidth + 2 * Entry.Scroller.RADIUS) *
+                bBox.width /
                 (hLimitB - hLimitA + bBox.width);
             if (!Entry.Utils.isNumber(hWidth)) hWidth = 0;
-            this.hX = (bBox.x - hLimitA) / (hLimitB - hLimitA) *
+            this.hX =
+                (bBox.x - hLimitA) /
+                (hLimitB - hLimitA) *
                 (bWidth - hWidth - 2 * Entry.Scroller.RADIUS);
             this.hScrollbar.attr({
                 width: hWidth,
                 x: this.hX,
-                y: bHeight - 2 * Entry.Scroller.RADIUS
+                y: bHeight - 2 * Entry.Scroller.RADIUS,
             });
 
-            this.hRatio = (bWidth - hWidth - 2 * Entry.Scroller.RADIUS)/ (hLimitB - hLimitA);
+            this.hRatio =
+                (bWidth - hWidth - 2 * Entry.Scroller.RADIUS) /
+                (hLimitB - hLimitA);
         }
 
         // vScroll
         if (this._vertical) {
-            var vLimitA = - bBox.height + Entry.BOARD_PADDING,
+            var vLimitA = -bBox.height + Entry.BOARD_PADDING,
                 vLimitB = bHeight - Entry.BOARD_PADDING;
 
-            var vWidth = (bHeight + 2 * Entry.Scroller.RADIUS) * bBox.height /
+            var vWidth =
+                (bHeight + 2 * Entry.Scroller.RADIUS) *
+                bBox.height /
                 (vLimitB - vLimitA + bBox.height);
-            this.vY = (bBox.y - vLimitA) / (vLimitB - vLimitA) *
+            this.vY =
+                (bBox.y - vLimitA) /
+                (vLimitB - vLimitA) *
                 (bHeight - vWidth - 2 * Entry.Scroller.RADIUS);
             this.vScrollbar.attr({
                 height: vWidth,
                 y: this.vY,
-                x: bWidth - 2 * Entry.Scroller.RADIUS
+                x: bWidth - 2 * Entry.Scroller.RADIUS,
             });
 
-            this.vRatio = (bHeight - vWidth - 2 * Entry.Scroller.RADIUS)/ (vLimitB - vLimitA);
+            this.vRatio =
+                (bHeight - vWidth - 2 * Entry.Scroller.RADIUS) /
+                (vLimitB - vLimitA);
         }
     };
 
