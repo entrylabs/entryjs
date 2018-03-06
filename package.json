@@ -21,8 +21,8 @@
     "url": "https://github.com/boolgom/entryjs/issues"
   },
   "scripts": {
-    "dev": "webpack -w --mode development --config ./webpack_config/webpack.dev.js",
-    "dist": "webpack --mode production --config ./webpack_config/webpack.prod.js"
+    "dev": "webpack -w --mode development",
+    "dist": "webpack --mode production"
   },
   "license": "MIT",
   "dependencies": {
