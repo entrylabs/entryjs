@@ -1,6 +1,7 @@
 "use strict";
 
 var path = require('path');
+var ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 module.exports = {
     entry: {
@@ -27,7 +28,24 @@ module.exports = {
                     loader: "babel-loader"
                 }
             ]
+        }, {
+            test: /\.(ico|png|jpg|jpeg|gif|svg|woff|woff2|ttf|eot|cur)(\?v=[0-9]\.[0-9]\.[0-9])?$/,
+            loader: 'url-loader',
+            options: {
+                name: '[hash].[ext]',
+                limit: 10000,
+            },
+        }, {
+            test: /\.less$/,
+            use: ExtractTextPlugin.extract({
+                fallback: 'style-loader',
+                use: ['css-loader', 'less-loader']
+            }),
         }]
     },
-    plugins: []
+    plugins: [
+        new ExtractTextPlugin({
+            filename: 'entry.css',
+        })
+    ]
 };

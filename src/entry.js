@@ -5,6 +5,7 @@ var Entry = {};
 module.exports = Entry;
 global.Entry = Entry;
 
+require("./css/entry.less");
 require("./class/container");
 require("./class/dialog");
 require("./class/doneProject");
