@@ -1,6 +1,6 @@
 "use strict";
 
-goog.provide("Entry.STATIC");
+var Entry = require("../entry")
 
 Entry.STATIC = {
     /* data type */
