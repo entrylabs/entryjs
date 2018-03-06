@@ -333,47 +333,46 @@ Entry.resizeElement = function(interfaceModel) {
 
         var addButton = Entry.engine.view_.getElementsByClassName('entryAddButtonWorkspace_w')[0];
         if (addButton) {
+            var addButtonStyle = addButton.style;
             if (Entry.objectAddable) {
-                addButton.style.top = (canvasHeight + 25) + 'px';
-                addButton.style.width = (canvasSize * 0.7) + 'px';
+                addButtonStyle.top = (canvasHeight + 25) + 'px';
+                addButtonStyle.width = (canvasSize * 0.7) + 'px';
             }
         }
         var pauseButton = Entry.engine.view_.getElementsByClassName('entryPauseButtonWorkspace_w')[0];
         if (pauseButton) {
+            var pauseButtonStyle = pauseButton.style;
             if (Entry.objectAddable) {
-                pauseButton.style.top = (canvasHeight + 25) + 'px';
-                pauseButton.style.width = (canvasSize * 0.7) + 'px';
+                pauseButtonStyle.top = (canvasHeight + 25) + 'px';
+                pauseButtonStyle.width = (canvasSize * 0.7) + 'px';
             }
         }
 
         var runButton = Entry.engine.view_.getElementsByClassName('entryRunButtonWorkspace_w')[0];
         if (runButton) {
+            var runButtonStyle = runButton.style;
             if (Entry.objectAddable) {
-                /*runButton.style.top = (canvasHeight + 24 + 40 + 4) + 'px';*/
-                runButton.style.top = (canvasHeight + 25) + 'px';
-                runButton.style.left = (canvasSize * 0.7) + 'px';
-                runButton.style.width = (canvasSize * 0.3) + 'px';
+                runButtonStyle.top = (canvasHeight + 25) + 'px';
+                runButtonStyle.left = (canvasSize * 0.7) + 'px';
+                runButtonStyle.width = (canvasSize * 0.3) + 'px';
             } else {
-                runButton.style.left = '2px';
-                /*runButton.style.top = (canvasHeight + 24 + 40 + 4) + 'px';*/
-                runButton.style.top = (canvasHeight + 25) + 'px';
-                runButton.style.width = (canvasSize - 4) + 'px';
+                runButtonStyle.left = '2px';
+                runButtonStyle.top = (canvasHeight + 25) + 'px';
+                runButtonStyle.width = (canvasSize - 4) + 'px';
             }
         }
 
         var stopButton = Entry.engine.view_.getElementsByClassName('entryStopButtonWorkspace_w')[0];
         if (stopButton) {
+            var stopButtonStyle = stopButton.style;
             if (Entry.objectAddable) {
-                /*stopButton.style.top = (canvasHeight + 24 + 40 + 4) + 'px';*/
-                stopButton.style.top = (canvasHeight + 25) + 'px';
-                stopButton.style.left = (canvasSize * 0.7) + 'px';
-                stopButton.style.width = (canvasSize * 0.3) + 'px';
-                //console.log('runButton top,left = ' + runButton.style.top + ',' + runButton.style.left);
+                stopButtonStyle.top = (canvasHeight + 25) + 'px';
+                stopButtonStyle.left = (canvasSize * 0.7) + 'px';
+                stopButtonStyle.width = (canvasSize * 0.3) + 'px';
             } else {
-                stopButton.style.left = '2px';
-                /*stopButton.style.top = (canvasHeight + 24 + 40 + 4) + 'px';*/
-                stopButton.style.top = (canvasHeight + 25) + 'px';
-                stopButton.style.width = (canvasSize) + 'px';
+                stopButtonStyle.left = '2px';
+                stopButtonStyle.top = (canvasHeight + 25) + 'px';
+                stopButtonStyle.width = (canvasSize) + 'px';
             }
         }
 
@@ -406,8 +405,8 @@ Entry.resizeElement = function(interfaceModel) {
  */
 Entry.overridePrototype = function() {
     /** modulo include negative number */
-    Number.prototype.mod = function(n) {
-            return ((this%n)+n)%n;
+    Number.prototype.mod = function (n) {
+        return ((this % n) + n) % n;
     };
 
     //polyfill
@@ -1277,8 +1276,7 @@ Entry.computeInputWidth = (function() {
 })();
 
 Entry.isArrowOrBackspace = function(keyCode){
-    var codes = [37,38,39,40, 8];
-    return codes.indexOf(keyCode) > -1;
+    return !!~[37,38,39,40, 8].indexOf(keyCode);
 };
 
 Entry.hexStringToBin = function(hexString) {

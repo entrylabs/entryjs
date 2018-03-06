@@ -21,12 +21,13 @@
     "url": "https://github.com/boolgom/entryjs/issues"
   },
   "scripts": {
-    "dev": "webpack -w --mode development ./src/entry.js --output ./dist/entry.js --module-bind js=babel-loader",
-    "dist": "webpack --mode production ./src/entry.js --output ./dist/entry.min.js --module-bind js=babel-loader"
+    "dev": "webpack -w --mode development --config ./webpack_config/webpack.dev.js",
+    "dist": "webpack --mode production --config ./webpack_config/webpack.prod.js"
   },
   "license": "MIT",
   "dependencies": {
     "grunt-karma": "^2.0.0",
+    "uglifyjs-webpack-plugin": "^1.2.2",
     "webpack": "^4.0.1"
   },
   "devDependencies": {
@@ -39,8 +40,12 @@
     "karma-chrome-launcher": "^0.2.0",
     "karma-mocha": "^0.2.0",
     "karma-phantomjs-launcher": "^0.2.0",
+    "less": "^3.0.1",
+    "less-loader": "^4.0.6",
     "mocha": "^2.5.3",
     "phantomjs": "^1.9.17",
-    "webpack-cli": "^2.0.10"
+    "webpack-cli": "^2.0.10",
+    "webpack-merge": "^4.1.2",
+    "webpack-strip-block": "^0.2.0"
   }
 }

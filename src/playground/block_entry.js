@@ -4,7 +4,9 @@ if (typeof global.Entry !== "object")
     global.Entry = {};
 
 if (typeof exports == "object") {
+    /* IGNORE_WEBPACK:START */
     var Lang = require('../../extern/lang/ko.js').Lang;
+    /* IGNORE_WEBPACK:END */
     Entry.Bitbrick = {};
     Entry.MODI = {};
     if (typeof EntryStatic !== "object") {
