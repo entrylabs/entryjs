@@ -31,6 +31,9 @@
         "LC": true,
         "ActiveXObject": true,
         "CodeMirror": true,
-        "entrylms": true
+        "entrylms": true,
+        "require": true,
+        "module": true,
+        "process": true
     }
 }
