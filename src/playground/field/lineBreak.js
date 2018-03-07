@@ -1,11 +1,7 @@
 /*
  *
  */
-"use strict";
-
-goog.provide("Entry.FieldLineBreak");
-
-goog.require("Entry.Field");
+'use strict';
 
 /*
  *
@@ -35,11 +31,9 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldLineBreak);
         if (blockView._statements.length === 0) return;
 
         this.box.set({
-            y: (blockView._statements[targetStatementIndex].height || 20) +
-                Math.max(blockView.contentHeight%1000, 30)
+            y:
+                (blockView._statements[targetStatementIndex].height || 20) +
+                Math.max(blockView.contentHeight % 1000, 30),
         });
     };
-
-
-
 })(Entry.FieldLineBreak.prototype);

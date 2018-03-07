@@ -1,6 +1,4 @@
-"use strict";
-
-goog.provide("Entry.Observer");
+'use strict';
 
 /*
  * Entry Observer object Constructor
@@ -14,13 +12,11 @@ Entry.Observer = function(parent, object, funcName, attrs) {
     parent.push(this);
 };
 
-(function (p) {
+(function(p) {
     p.destroy = function() {
         var parent = this.parent;
         var index = parent.indexOf(this);
-        if (index > -1)
-            parent.splice(index, 1);
+        if (index > -1) parent.splice(index, 1);
         return this;
     };
 })(Entry.Observer.prototype);
-

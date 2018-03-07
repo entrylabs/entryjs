@@ -1,10 +1,5 @@
 'use strict';
 
-goog.provide('Entry.ThreadModel');
-
-goog.require('Entry.Model');
-goog.require('Entry.STATIC');
-
 Entry.ThreadModel = function() {
     Entry.Model(this);
 };

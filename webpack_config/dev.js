@@ -23,7 +23,7 @@ module.exports = merge(common, {
                         {
                             loader: 'less-loader',
                             options: {
-                                sourceMap: true,
+                                sourceMap: false,
                             },
                         },
                     ],

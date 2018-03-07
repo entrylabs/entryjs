@@ -1,15 +1,12 @@
 /*
  *
  */
-"use strict";
-
-goog.provide("Entry.Mutator");
+'use strict';
 
 /*
  *
  */
-Entry.Mutator = function() {
-};
+Entry.Mutator = function() {};
 
 (function(m) {
     m.mutate = function(blockType, schemaDiff, changeData) {
@@ -25,11 +22,8 @@ Entry.Mutator = function() {
         blockSchema.template = schemaDiff.template;
         blockSchema.params = schemaDiff.params;
 
-        blockSchema
-            .changeEvent
-            .notify(1, changeData);
+        blockSchema.changeEvent.notify(1, changeData);
     };
 })(Entry.Mutator);
 
-(function(p) {
-})(Entry.Mutator.prototype);
+(function(p) {})(Entry.Mutator.prototype);

@@ -1,10 +1,7 @@
 /*
  */
-"use strict";
+'use strict';
 
-goog.provide("Entry.Keyboard");
-
-goog.require("Entry.Field");
 /*
  *
  */
@@ -40,16 +37,15 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
         var that = this;
         var contents = this._contents;
 
-        this.svgGroup = blockView.contentSvgGroup.elem("g", {
-            class: 'entry-input-field'
+        this.svgGroup = blockView.contentSvgGroup.elem('g', {
+            class: 'entry-input-field',
         });
 
-        this.textElement =
-            this.svgGroup.elem('text').attr({
-                x: X_PADDING/2,
-                y: TEXT_Y_PADDING,
-                'font-size' : '11px'
-            });
+        this.textElement = this.svgGroup.elem('text').attr({
+            x: X_PADDING / 2,
+            y: TEXT_Y_PADDING,
+            'font-size': '11px',
+        });
 
         this._setTextValue();
 
@@ -57,15 +53,17 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
 
         var CONTENT_HEIGHT = this._CONTENT_HEIGHT;
         var y = this.position && this.position.y ? this.position.y : 0;
-        y -= CONTENT_HEIGHT/2;
+        y -= CONTENT_HEIGHT / 2;
         this._header = this.svgGroup.elem('rect', {
-                x: 0, y: y,
-                width: width,
-                height: CONTENT_HEIGHT,
-                rx: 3, ry: 3,
-                fill: "#fff",
-                'fill-opacity': 0.4
-            });
+            x: 0,
+            y: y,
+            width: width,
+            height: CONTENT_HEIGHT,
+            rx: 3,
+            ry: 3,
+            fill: '#fff',
+            'fill-opacity': 0.4,
+        });
 
         this.svgGroup.appendChild(this.textElement);
 
@@ -75,14 +73,16 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
             x: 0,
             y: 0,
             width: width,
-            height: CONTENT_HEIGHT
+            height: CONTENT_HEIGHT,
         });
     };
 
     p.renderOptions = function() {
         if (Entry.keyPressed)
-            this.keyPressed =
-                Entry.keyPressed.attach(this, this._keyboardControl);
+            this.keyPressed = Entry.keyPressed.attach(
+                this,
+                this._keyboardControl
+            );
         var that = this;
         this._optionVisible = true;
 
@@ -91,13 +91,13 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
 
         var pos = this.getAbsolutePosFromDocument();
 
-        pos.x -= 12 + X_PADDING/2;
-        pos.x += this.box.width/2;
-        pos.y += this.box.height/2 + 1;
+        pos.x -= 12 + X_PADDING / 2;
+        pos.x += this.box.width / 2;
+        pos.y += this.box.height / 2 + 1;
 
         this.optionGroup = Entry.Dom('img', {
-            class:'entry-widget-keyboard-input',
-            parent: $('body')
+            class: 'entry-widget-keyboard-input',
+            parent: $('body'),
         });
 
         this.optionGroup.on('load', that.optionDomCreated.bind(this));
@@ -139,8 +139,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
 
         var value = event.keyCode;
         var text = Entry.getKeyCodeMap()[value];
-        if (text !== undefined)
-            this.applyValue(text, value, true);
+        if (text !== undefined) this.applyValue(text, value, true);
     };
 
     p.applyValue = function(text, value, forceCommand) {
@@ -153,9 +152,9 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
     p.resize = function() {
         var width = this.getTextWidth() + 1;
 
-        this._header.attr({width: width});
+        this._header.attr({ width: width });
 
-        this.box.set({width: width});
+        this.box.set({ width: width });
         this._blockView.dAlignContent();
     };
 
@@ -166,8 +165,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
     p.destroy = function() {
         this.destroyOption();
 
-        if (Entry.keyPressed && this.keyPressed)
-           this.keyPressed.destroy();
+        if (Entry.keyPressed && this.keyPressed) this.keyPressed.destroy();
     };
 
     p._setTextValue = function() {
@@ -176,5 +174,4 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
         this.textElement.textContent =
             value === undefined ? Lang.Blocks.no_target : value;
     };
-
 })(Entry.FieldKeyboard.prototype);

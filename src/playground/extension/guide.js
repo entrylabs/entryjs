@@ -1,6 +1,4 @@
-"use strict";
-
-goog.provide("Entry.ExtGuide");
+'use strict';
 
 Entry.ExtGuide = function(content, blockView, mode) {
     this.blockView = blockView;
@@ -11,22 +9,19 @@ Entry.ExtGuide = function(content, blockView, mode) {
 };
 
 (function(p) {
-    var TRANSFORM = "transform";
+    var TRANSFORM = 'transform';
     p.render = function() {
         if (!this.model) return;
 
-        var board =  this.blockView.getBoard();
-        this.svgGroup = this.blockView.svgGroup.elem("g", {
-            class: 'extension guideGroup'
+        var board = this.blockView.getBoard();
+        this.svgGroup = this.blockView.svgGroup.elem('g', {
+            class: 'extension guideGroup',
         });
         this.blockView.guideSvgGroup = this.svgGroup;
-        $(this.svgGroup).bind(
-            'mousedown touchstart',
-            function(e) {
-                e.stopPropagation && e.stopPropagation();
-                e.preventDefault && e.preventDefault();
-            }
-        );
+        $(this.svgGroup).bind('mousedown touchstart', function(e) {
+            e.stopPropagation && e.stopPropagation();
+            e.preventDefault && e.preventDefault();
+        });
 
         var block = this.block;
         var code = block.getCode();
@@ -51,7 +46,6 @@ Entry.ExtGuide = function(content, blockView, mode) {
     };
 
     p._getTransform = function() {
-        return 'translate(0,%y)'.replace('%y',
-            this.blockView.magnet.next.y);
+        return 'translate(0,%y)'.replace('%y', this.blockView.magnet.next.y);
     };
 })(Entry.ExtGuide.prototype);

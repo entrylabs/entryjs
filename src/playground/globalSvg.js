@@ -1,6 +1,6 @@
 'use strict';
 
-goog.provide('Entry.GlobalSvg');
+Entry.GlobalSvg = {};
 
 (function(gs) {
     gs.DONE = 0;
@@ -11,7 +11,6 @@ goog.provide('Entry.GlobalSvg');
     gs.createDom = function() {
         if (this.inited) return;
 
-
         //document attached element not removed by angular
         $('#globalSvgSurface').remove();
         $('#globalSvg').remove();
@@ -20,12 +19,14 @@ goog.provide('Entry.GlobalSvg');
         this._container = Entry.Dom('div', {
             classes: ['globalSvgSurface', 'entryRemove'],
             id: 'globalSvgSurface',
-            parent: body
+            parent: body,
         });
 
         this.svgDom = Entry.Dom(
-            $('<svg id="globalSvg" width="10" height="10"' +
-              'version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'),
+            $(
+                '<svg id="globalSvg" width="10" height="10"' +
+                    'version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'
+            ),
             { parent: this._container }
         );
 
@@ -42,7 +43,7 @@ goog.provide('Entry.GlobalSvg');
         this._view = view;
         this._mode = mode;
         if (mode !== Entry.Workspace.MODE_VIMBOARD)
-            view.set({visible:false});
+            view.set({ visible: false });
 
         this.draw();
         this.show();
@@ -60,13 +61,12 @@ goog.provide('Entry.GlobalSvg');
 
         this.svgDom.attr({
             width: Math.round(bBox.width + 4) + 'px',
-            height: Math.round(bBox.height + 4) + 'px'
+            height: Math.round(bBox.height + 4) + 'px',
         });
-
 
         this.svgGroup = Entry.SVG.createElement(
             blockView.svgGroup.cloneNode(true),
-            {'opacity':1}
+            { opacity: 1 }
         );
 
         this.svg.appendChild(this.svgGroup);
@@ -74,19 +74,25 @@ goog.provide('Entry.GlobalSvg');
         if (isVimMode) {
             var svg = $(this.svgGroup);
 
-            svg.find('g').css({filter: 'none'});
+            svg.find('g').css({ filter: 'none' });
 
-            svg.find('path, rect, polygon').velocity({
-                opacity: 0
-            }, {
-                duration: 500
-            });
+            svg.find('path, rect, polygon').velocity(
+                {
+                    opacity: 0,
+                },
+                {
+                    duration: 500,
+                }
+            );
 
-            svg.find('text').velocity({
-                fill: '#000000'
-            }, {
-                duration: 530
-            });
+            svg.find('text').velocity(
+                {
+                    fill: '#000000',
+                },
+                {
+                    duration: 530,
+                }
+            );
         }
     };
 
@@ -111,8 +117,8 @@ goog.provide('Entry.GlobalSvg');
         offsetY += 1;
         this._offsetX = offsetX;
         this._offsetY = offsetY;
-        var transform = "translate(" + offsetX + "," + offsetY + ')';
-        this.svgGroup.attr({transform: transform});
+        var transform = 'translate(' + offsetX + ',' + offsetY + ')';
+        this.svgGroup.attr({ transform: transform });
     };
 
     gs.show = function() {
@@ -138,8 +144,7 @@ goog.provide('Entry.GlobalSvg');
     gs.adjust = function(adjustX, adjustY) {
         var left = this.left + (adjustX || 0);
         var top = this.top + (adjustY || 0);
-        if (left === this.left && top === this.top)
-            return;
+        if (left === this.left && top === this.top) return;
 
         this.left = left;
         this.top = top;
@@ -148,18 +153,18 @@ goog.provide('Entry.GlobalSvg');
 
     gs._applyDomPos = function(left, top) {
         this.svgDom.css({
-            transform: 'translate3d('+ left + 'px,' + top +'px, 0px)'
+            transform: 'translate3d(' + left + 'px,' + top + 'px, 0px)',
         });
     };
 
     gs.terminateDrag = function(blockView) {
         var mousePos = Entry.mouseCoordinate;
         var board = blockView.getBoard();
-        var blockMenu =board.workspace.blockMenu;
+        var blockMenu = board.workspace.blockMenu;
         var bLeft = blockMenu.offset().left;
         var bTop = blockMenu.offset().top;
         var bWidth = blockMenu.visible ? blockMenu.svgDom.width() : 0;
-        if (mousePos.y > (board.offset().top - 20) && mousePos.x > bLeft + bWidth)
+        if (mousePos.y > board.offset().top - 20 && mousePos.x > bLeft + bWidth)
             return this.DONE;
         else if (mousePos.y > bTop && mousePos.x > bLeft && blockMenu.visible) {
             if (!blockView.block.isDeletable()) return this.RETURN;
@@ -202,5 +207,4 @@ goog.provide('Entry.GlobalSvg');
             $(document).unbind('.block');
         }
     };
-
 })(Entry.GlobalSvg);

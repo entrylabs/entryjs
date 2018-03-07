@@ -1,16 +1,13 @@
-"use strict";
-
-goog.provide("Entry.Loader");
+'use strict';
 
 Entry.Loader = {
     queueCount: 0,
     totalCount: 0,
-    loaded: false
+    loaded: false,
 };
 
 Entry.Loader.addQueue = function(type) {
-    if (!this.queueCount)
-        Entry.dispatchEvent("loadStart");
+    if (!this.queueCount) Entry.dispatchEvent('loadStart');
     this.queueCount++;
     this.totalCount++;
 };
@@ -35,5 +32,5 @@ Entry.Loader.isLoaded = function() {
 Entry.Loader.handleLoad = function() {
     if (this.loaded) return;
     this.loaded = true;
-    Entry.dispatchEvent("loadComplete");
+    Entry.dispatchEvent('loadComplete');
 };

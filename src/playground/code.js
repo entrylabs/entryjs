@@ -1,12 +1,7 @@
 /*
  *
  */
-"use strict";
-
-goog.provide("Entry.Code");
-
-goog.require("Entry.Collection");
-goog.require('Entry.STATIC');
+'use strict';
 
 /*
  *
@@ -39,15 +34,13 @@ Entry.PARAM = -1;
 (function(p) {
     p.schema = {
         view: null,
-        board: null
+        board: null,
     };
 
     p.load = function(code) {
-        if (Entry.engine && Entry.engine.isState('run'))
-            return;
+        if (Entry.engine && Entry.engine.isState('run')) return;
 
-        if (!(code instanceof Array))
-            code = JSON.parse(code);
+        if (!(code instanceof Array)) code = JSON.parse(code);
 
         this.clear();
 
@@ -69,34 +62,31 @@ Entry.PARAM = -1;
         if (this.view === null) {
             this.set({
                 view: new Entry.CodeView(this, board),
-                board: board
+                board: board,
             });
         } else {
-            this.set({board : board});
+            this.set({ board: board });
             board.bindCodeView(this.view);
         }
     };
 
     p.destroyView = function() {
-        if (!this.view)
-            return;
+        if (!this.view) return;
         this.view.destroy();
-        this.set({view:null});
+        this.set({ view: null });
     };
 
     p.recreateView = function() {
-        if (!this.view)
-            return;
+        if (!this.view) return;
         this.destroyView();
         this.set({
             view: new Entry.CodeView(this, this.board),
-            board: this.board
+            board: this.board,
         });
     };
 
     p.registerEvent = function(block, eventType) {
-        if (!this._eventMap[eventType])
-            this._eventMap[eventType] = [];
+        if (!this._eventMap[eventType]) this._eventMap[eventType] = [];
 
         this._eventMap[eventType].push(block);
     };
@@ -107,7 +97,7 @@ Entry.PARAM = -1;
 
         var index = blocks.indexOf(block);
         if (index < 0) return;
-        blocks.splice(index,1);
+        blocks.splice(index, 1);
     };
 
     p.raiseEvent = function(eventType, entity, value) {
@@ -117,14 +107,12 @@ Entry.PARAM = -1;
         for (var i = 0; i < blocks.length; i++) {
             var block = blocks[i];
             var pointer = block.pointer();
-            if (pointer[3] !== 0 || pointer.length !== 4)
-                continue;
-            if (value === undefined ||
-                block.params.indexOf(value) > -1) {
-                    var executor = new Entry.Executor(blocks[i], entity);
-                    this.executors.push(executor);
-                    executors.push(executor);
-                }
+            if (pointer[3] !== 0 || pointer.length !== 4) continue;
+            if (value === undefined || block.params.indexOf(value) > -1) {
+                var executor = new Entry.Executor(blocks[i], entity);
+                this.executors.push(executor);
+                executors.push(executor);
+            }
         }
         return executors;
     };
@@ -152,8 +140,7 @@ Entry.PARAM = -1;
                     executedBlocks = executedBlocks.concat(ret);
             } else {
                 executors.splice(i--, 1);
-                if (executors.length === 0)
-                    this.executeEndEvent.notify();
+                if (executors.length === 0) this.executeEndEvent.notify();
             }
         }
         shouldNotifyWatch && watchEvent.notify(executedBlocks);
@@ -161,8 +148,7 @@ Entry.PARAM = -1;
 
     p.removeExecutor = function(executor) {
         var index = this.executors.indexOf(executor);
-        if (index > -1)
-            this.executors.splice(index, 1);
+        if (index > -1) this.executors.splice(index, 1);
     };
 
     p.clearExecutors = function() {
@@ -188,7 +174,7 @@ Entry.PARAM = -1;
 
     p.createThread = function(blocks, index) {
         if (!(blocks instanceof Array))
-            return console.error("blocks must be array");
+            return console.error('blocks must be array');
 
         var thread = new Entry.Thread(blocks, this);
         if (index === undefined || index === null) this._data.push(thread);
@@ -202,7 +188,9 @@ Entry.PARAM = -1;
         return this._data.indexOf(thread);
     };
 
-    p.getThreadCount = function() { return this._data.length; };
+    p.getThreadCount = function() {
+        return this._data.length;
+    };
 
     p.cloneThread = function(thread, mode) {
         var newThread = thread.clone(this, mode);
@@ -231,17 +219,18 @@ Entry.PARAM = -1;
     };
 
     p.getThreads = function() {
-        return this._data.map(function(t) { return t; });
+        return this._data.map(function(t) {
+            return t;
+        });
     };
 
     p.getThreadsByCategory = function(category) {
         var arr = [];
 
-        for (var i=0; i<this._data.length; i++) {
+        for (var i = 0; i < this._data.length; i++) {
             var thread = this._data[i];
             var b = thread.getFirstBlock();
-            if (b && b.category === category)
-                arr.push(thread);
+            if (b && b.category === category) arr.push(thread);
         }
         return arr;
     };
@@ -249,7 +238,7 @@ Entry.PARAM = -1;
     p.toJSON = function(excludeData, option) {
         var threads = this.getThreads();
         var json = [];
-        for (var i=0, len=threads.length; i<len; i++)
+        for (var i = 0, len = threads.length; i < len; i++)
             json.push(threads[i].toJSON(false, undefined, excludeData, option));
         return json;
     };
@@ -264,15 +253,14 @@ Entry.PARAM = -1;
 
     p.moveBy = function(x, y) {
         var threads = this.getThreads();
-        for (var i=0, len=threads.length; i<len; i++) {
+        for (var i = 0, len = threads.length; i < len; i++) {
             var firstBlock = threads[i].getFirstBlock();
             if (firstBlock && firstBlock.view && firstBlock.view.display)
                 firstBlock.view._moveBy(x, y, false);
         }
 
         var board = this.board;
-        if (board instanceof Entry.BlockMenu)
-            board.updateSplitters(y);
+        if (board instanceof Entry.BlockMenu) board.updateSplitters(y);
     };
 
     p.stringify = function(excludeData) {
@@ -292,8 +280,11 @@ Entry.PARAM = -1;
     };
 
     p._handleChange = function() {
-        if (Entry.creationChangedEvent &&
-            this.view && this.view.board.constructor !== Entry.BlockMenu) {
+        if (
+            Entry.creationChangedEvent &&
+            this.view &&
+            this.view.board.constructor !== Entry.BlockMenu
+        ) {
             Entry.creationChangedEvent.notify();
         }
     };
@@ -301,7 +292,7 @@ Entry.PARAM = -1;
     p.hasBlockType = function(type) {
         var threads = this.getThreads();
 
-        for (var i = 0; i < threads.length; i ++)
+        for (var i = 0; i < threads.length; i++)
             if (threads[i].hasBlockType(type)) return true;
 
         return false;
@@ -321,20 +312,17 @@ Entry.PARAM = -1;
 
     p.getByPointer = function(pointer) {
         pointer = pointer.concat();
-        pointer.splice(0,2);
+        pointer.splice(0, 2);
         var thread = this._data[pointer.shift()];
         var block = thread.getBlock(pointer.shift());
         while (pointer.length) {
-            if (!(block instanceof Entry.Block))
-                block = block.getValueBlock();
+            if (!(block instanceof Entry.Block)) block = block.getValueBlock();
             var type = pointer.shift();
             var index = pointer.shift();
             if (type > -1) {
                 var statement = block.statements[type];
-                if (index === undefined)
-                    return statement;
-                else
-                    block = statement.getBlock(index);
+                if (index === undefined) return statement;
+                else block = statement.getBlock(index);
             } else if (type === -1) {
                 block = block.view.getParam(index);
             }
@@ -344,7 +332,7 @@ Entry.PARAM = -1;
 
     p.getTargetByPointer = function(pointer) {
         pointer = pointer.concat();
-        pointer.splice(0,2);
+        pointer.splice(0, 2);
 
         var thread = this._data[pointer.shift()];
         var block;
@@ -361,17 +349,12 @@ Entry.PARAM = -1;
                 if (type > -1) {
                     var statement = block.statements[type];
                     if (!pointer.length) {
-                        if (index === 0)
-                            block = statement.view.getParent();
-                        else if (index === undefined)
-                            block = statement;
-                        else
-                            block = statement.getBlock(index - 1);
+                        if (index === 0) block = statement.view.getParent();
+                        else if (index === undefined) block = statement;
+                        else block = statement.getBlock(index - 1);
                     } else {
-                        if (index < 0)
-                            block = statement;
-                        else
-                            block = statement.getBlock(index);
+                        if (index < 0) block = statement;
+                        else block = statement.getBlock(index);
                     }
                 } else if (type === -1) {
                     block = block.view.getParam(index);
@@ -387,21 +370,22 @@ Entry.PARAM = -1;
 
         for (var i = 0; i < threads.length; i++)
             blocks = blocks.concat(
-                threads[i].getBlockList(excludePrimitive, type));
+                threads[i].getBlockList(excludePrimitive, type)
+            );
 
         return blocks;
     };
 
     p.removeBlocksByType = function(type) {
-        this.getBlockList(false, type)
-            .forEach(function(b) { b.doDestroy(); });
+        this.getBlockList(false, type).forEach(function(b) {
+            b.doDestroy();
+        });
     };
 
     p.isAllThreadsInOrigin = function() {
         var threads = this.getThreads();
-        for (var i=threads.length-1; i>=0; i--) {
-            if (!threads[i].isInOrigin())
-                return false;
+        for (var i = threads.length - 1; i >= 0; i--) {
+            if (!threads[i].isInOrigin()) return false;
         }
         return true;
     };

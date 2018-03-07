@@ -1,14 +1,7 @@
 /*
  *
  */
-"use strict";
-
-goog.provide("Entry.Block");
-
-goog.require('Entry.Thread');
-goog.require('Entry.Utils');
-goog.require('Entry.Model');
-goog.require("Entry.skeleton");
+'use strict';
 
 /*
  *
@@ -18,8 +11,7 @@ Entry.Block = function(block, thread) {
     Entry.Model(this, false);
     this._schema = null;
 
-    if (block._backupParams)
-        this._backupParams = block._backupParams;
+    if (block._backupParams) this._backupParams = block._backupParams;
 
     this.setThread(thread);
     this.load(block);
@@ -33,8 +25,7 @@ Entry.Block = function(block, thread) {
 
     var code = this.getCode();
 
-    if (block.display !== undefined)
-        this.display = block.display;
+    if (block.display !== undefined) this.display = block.display;
 
     code.registerBlock(this);
     var events = this.events.dataAdd;
@@ -46,11 +37,13 @@ Entry.Block = function(block, thread) {
 
     events = this.events.viewAdd;
     var board = code.board;
-    if (events && (Entry.getMainWS() && Entry.isTextMode) &&
-        (!board || (board && board.constructor !== Entry.BlockMenu))) {
+    if (
+        events &&
+        (Entry.getMainWS() && Entry.isTextMode) &&
+        (!board || (board && board.constructor !== Entry.BlockMenu))
+    ) {
         events.forEach(function(fn) {
-            if (Entry.Utils.isFunction(fn))
-                fn.apply(that, [that]);
+            if (Entry.Utils.isFunction(fn)) fn.apply(that, [that]);
         });
     }
 };
@@ -78,12 +71,11 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
         readOnly: null,
         copyable: true,
         events: {},
-        extensions: []
+        extensions: [],
     };
 
     p.load = function(block) {
-        if (!block.id)
-            block.id = Entry.Utils.generateId();
+        if (!block.id) block.id = Entry.Utils.generateId();
 
         this.set(block);
         this.loadSchema();
@@ -99,7 +91,7 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
             } else {
                 var changeType = changeData.type;
 
-                switch (changeData.type){
+                switch (changeData.type) {
                     case 'noChange':
                         params = this.params;
                         break;
@@ -114,12 +106,12 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
                         var schemaParams = Entry.block[this.type].params;
                         params = new Array(schemaParams.length);
 
-                        for (var i=0; i<startPos; i++)
+                        for (var i = 0; i < startPos; i++)
                             params[i] = this.params[i];
 
                         var adjust = endPos - startPos + 1;
-                        for (i=endPos+1; i<schemaParams.length; i++)
-                            params[i] = this.params[i-adjust];
+                        for (i = endPos + 1; i < schemaParams.length; i++)
+                            params[i] = this.params[i - adjust];
                         break;
                 }
             }
@@ -131,20 +123,19 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
             }
         });
 
-
-        this.set({params: params});
+        this.set({ params: params });
 
         this.loadSchema();
         this.view && this.view.changeType();
     };
 
-    p.getSchema = function() { // for lazy loading
-        if (!this._schema)
-            this.loadSchema();
+    p.getSchema = function() {
+        // for lazy loading
+        if (!this._schema) this.loadSchema();
         return this._schema;
     };
 
-    p.loadSchema = function () {
+    p.loadSchema = function() {
         var that = this;
         this._schema = Entry.block[this.type];
         if (!this._schema) {
@@ -153,17 +144,25 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
 
         if (!this._schemaChangeEvent && this._schema.changeEvent)
             this._schemaChangeEvent = this._schema.changeEvent.attach(
-                this, this.changeSchema);
+                this,
+                this.changeSchema
+            );
 
         if (!this._paramsBackupEvent && this._schema.paramsBackupEvent) {
             this._paramsBackupEvent = this._schema.paramsBackupEvent.attach(
-                this, this.paramsBackup);
-
+                this,
+                this.paramsBackup
+            );
         }
 
-        if (!this._destroyParamsBackupEvent && this._schema.destroyParamsBackupEvent)
+        if (
+            !this._destroyParamsBackupEvent &&
+            this._schema.destroyParamsBackupEvent
+        )
             this._destroyParamsBackupEvent = this._schema.destroyParamsBackupEvent.attach(
-                this, this.destroyParamsBackup);
+                this,
+                this.destroyParamsBackup
+            );
 
         var events = this._schema.events;
         if (events) {
@@ -186,16 +185,21 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
 
         var params = this._schema.params;
         for (var i = 0; params && i < params.length; i++) {
-            var value = (thisParams[i] === undefined || thisParams[i] === null) ?
-                params[i].value : thisParams[i];
+            var value =
+                thisParams[i] === undefined || thisParams[i] === null
+                    ? params[i].value
+                    : thisParams[i];
 
             var paramInjected = thisParams[i] || i < thisParams.length;
 
-            if (value && (params[i].type === 'Output' || params[i].type === 'Block')) {
-                if (typeof value !== "object")
+            if (
+                value &&
+                (params[i].type === 'Output' || params[i].type === 'Block')
+            ) {
+                if (typeof value !== 'object')
                     value = {
-                        type: "number",
-                        params: [value]
+                        type: 'number',
+                        params: [value],
                     };
                 value = new Entry.Block(value, this.thread);
             }
@@ -208,30 +212,28 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
         if (statements) {
             for (var i = 0; i < statements.length; i++) {
                 this.statements.splice(
-                    i, 1,
+                    i,
+                    1,
                     new Entry.Thread(this.statements[i], that.getCode(), this)
                 );
             }
         }
-        
+
         return true;
     };
 
     p.changeType = function(type) {
-        if (this._schemaChangeEvent)
-            this._schemaChangeEvent.destroy();
-        if (this._backupEvent)
-            this._backupEvent.destroy();
-        if (this._destroyBackupEvent)
-            this._destroyBackupEvent.destroy();
+        if (this._schemaChangeEvent) this._schemaChangeEvent.destroy();
+        if (this._backupEvent) this._backupEvent.destroy();
+        if (this._destroyBackupEvent) this._destroyBackupEvent.destroy();
 
-        this.set({type: type});
+        this.set({ type: type });
         this.loadSchema();
         if (this.view) this.view.changeType(type);
     };
 
     p.setThread = function(thread) {
-        this.set({thread: thread});
+        this.set({ thread: thread });
     };
 
     p.getThread = function() {
@@ -246,13 +248,12 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
         if (this.view)
             this.set({
                 x: this.view.x,
-                y: this.view.y
+                y: this.view.y,
             });
     };
 
     p.moveTo = function(x, y) {
-        if (this.view)
-            this.view._moveTo(x, y);
+        if (this.view) this.view._moveTo(x, y);
         this._updatePos();
         this.getCode().changeEvent.notify();
     };
@@ -260,10 +261,8 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
     p.createView = function(board, mode) {
         board = board || this.getCode().view.board;
         if (!this.view) {
-            this.set({view: new Entry.BlockView(
-                this,
-                board,
-                mode)
+            this.set({
+                view: new Entry.BlockView(this, board, mode),
             });
             this._updatePos();
         }
@@ -274,10 +273,7 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
     };
 
     p.clone = function(thread) {
-        return new Entry.Block(
-            this.toJSON(true),
-            thread
-        );
+        return new Entry.Block(this.toJSON(true), thread);
     };
 
     p.toJSON = function(isNew, excludeData, option) {
@@ -296,8 +292,10 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
             var p = json.params[i];
             if (p instanceof Entry.Block)
                 p = p.toJSON(isNew, excludeData, option);
-            else if (option.captureDynamic &&
-                    this.view.getParam(i) instanceof Entry.FieldDropdownDynamic) {
+            else if (
+                option.captureDynamic &&
+                this.view.getParam(i) instanceof Entry.FieldDropdownDynamic
+            ) {
                 p = this.view.getParam(i).getTextValue();
             }
             _params.push(p);
@@ -305,9 +303,9 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
 
         json.params = _params;
 
-        json.statements = json.statements.map(
-            function(s) {return s.toJSON(isNew, undefined, excludeData, option);}
-        );
+        json.statements = json.statements.map(function(s) {
+            return s.toJSON(isNew, undefined, excludeData, option);
+        });
 
         json.x = this.x;
         json.y = this.y;
@@ -318,14 +316,15 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
         json.readOnly = this.readOnly;
         if (this._backupParams) {
             json._backupParams = this._backupParams.map(function(p) {
-                if (p instanceof Entry.Block)
-                    return p.toJSON();
+                if (p instanceof Entry.Block) return p.toJSON();
                 else return p;
             });
         }
 
         if (excludeData && excludeData instanceof Array) {
-            excludeData.forEach(function(i) { delete json[i]; });
+            excludeData.forEach(function(i) {
+                delete json[i];
+            });
         }
 
         return json;
@@ -336,7 +335,7 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
 
         var blockType = this.getBlockType();
 
-        if (blockType === "output" && !next) {
+        if (blockType === 'output' && !next) {
             var prevOutput = this.getPrevOutputBlock();
             var nextOutput = this.getOutputBlock();
 
@@ -356,17 +355,18 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
 
         var that = this;
         var params = this.params || [];
-        for (var i=0; i<params.length; i++) {
+        for (var i = 0; i < params.length; i++) {
             var param = params[i];
             if (param instanceof Entry.Block) {
-                param.doNotSplice =
-                    !(param.thread instanceof Entry.FieldOutput);
+                param.doNotSplice = !(
+                    param.thread instanceof Entry.FieldOutput
+                );
                 param.destroy(animate);
             }
         }
 
         var statements = this.statements || [];
-        for (var i=0; i<statements.length; i++)
+        for (var i = 0; i < statements.length; i++)
             statements[i].destroy(animate);
 
         var code = this.getCode();
@@ -377,7 +377,7 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
         if (this._schema && this._schema.event)
             thread.unregisterEvent(this, this._schema.event);
 
-        if (blockType === "basic") {
+        if (blockType === 'basic') {
             var prevBlock = this.getPrevBlock();
             var nextBlock = this.getNextBlock();
             if (nextBlock) {
@@ -393,23 +393,26 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
                                 parent.insertTopBlock(nextBlock);
                             } else if (pConstructor === Entry.FieldStatement) {
                                 nextBlock.replace(parent._valueBlock);
-                            } else nextBlockView && nextBlockView._toGlobalCoordinate();
+                            } else
+                                nextBlockView &&
+                                    nextBlockView._toGlobalCoordinate();
                         }
-                    } else nextBlockView && nextBlockView.bindPrev(prevBlock, true);
+                    } else
+                        nextBlockView &&
+                            nextBlockView.bindPrev(prevBlock, true);
                 }
             }
         }
 
         var notSpliced = this.doNotSplice;
-        if (!this.doNotSplice && thread.spliceBlock)
-            thread.spliceBlock(this);
+        if (!this.doNotSplice && thread.spliceBlock) thread.spliceBlock(this);
         else delete this.doNotSplice;
-
 
         this.view && this.view.destroy(animate);
         this._schemaChangeEvent && this._schemaChangeEvent.destroy();
         this._paramsBackupEvent && this._paramsBackupEvent.destroy();
-        this._destroyParamsBackupEvent && this._destroyParamsBackupEvent.destroy();
+        this._destroyParamsBackupEvent &&
+            this._destroyParamsBackupEvent.destroy();
 
         var events = this.events.dataDestroy;
         if (events && code.object) {
@@ -421,8 +424,11 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
 
         events = this.events.viewDestroy;
         var board = this.getCode().board;
-        if (events && (Entry.getMainWS() && Entry.isTextMode) &&
-            (!board || (board && board.constructor !== Entry.BlockMenu))) {
+        if (
+            events &&
+            (Entry.getMainWS() && Entry.isTextMode) &&
+            (!board || (board && board.constructor !== Entry.BlockMenu))
+        ) {
             events.forEach(function(fn) {
                 if (Entry.Utils.isFunction(fn))
                     fn.apply(that, [that, notSpliced]);
@@ -430,35 +436,47 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
         }
     };
 
-    p.getView = function() { return this.view; };
+    p.getView = function() {
+        return this.view;
+    };
 
     p.setMovable = function(movable) {
         if (this.movable == movable) return;
-        this.set({movable: movable});
+        this.set({ movable: movable });
     };
 
     p.setCopyable = function(copyable) {
         if (this.copyable == copyable) return;
-        this.set({copyable: copyable});
+        this.set({ copyable: copyable });
     };
 
-    p.isMovable = function() { return this.movable; };
+    p.isMovable = function() {
+        return this.movable;
+    };
 
-    p.isCopyable = function() { return this.copyable; };
+    p.isCopyable = function() {
+        return this.copyable;
+    };
 
     p.setDeletable = function(deletable) {
         if (this.deletable == deletable) return;
-        this.set({deletable: deletable});
+        this.set({ deletable: deletable });
     };
 
     p.isDeletable = function() {
-        return this.deletable === Entry.Block.DELETABLE_TRUE ||
-            this.deletable === true;
+        return (
+            this.deletable === Entry.Block.DELETABLE_TRUE ||
+            this.deletable === true
+        );
     };
 
-    p.isReadOnly = function() { return this.readOnly; };
+    p.isReadOnly = function() {
+        return this.readOnly;
+    };
 
-    p.getCode = function() { return this.thread.getCode(); };
+    p.getCode = function() {
+        return this.thread.getCode();
+    };
 
     // command func
     p.doAdd = function() {
@@ -471,10 +489,8 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
     };
 
     p.doInsert = function(targetBlock) {
-        if (this.getBlockType() === "basic")
-            this.insert(targetBlock);
-        else
-            this.replace(targetBlock);
+        if (this.getBlockType() === 'basic') this.insert(targetBlock);
+        else this.replace(targetBlock);
     };
 
     p.doDestroy = function(animate) {
@@ -495,7 +511,7 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
         if (thread instanceof Entry.Thread) {
             var index = thread.getBlocks().indexOf(this);
             var json = thread.toJSON(true, index);
-            for (var i=0; i<json.length; i++) cloned.push(json[i]);
+            for (var i = 0; i < json.length; i++) cloned.push(json[i]);
         } else cloned.push(this.toJSON(true));
 
         var pos = this.view.getAbsoluteCoordinate();
@@ -507,7 +523,9 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
         return cloned;
     };
 
-    p.copyToClipboard = function() { Entry.clipboard = this.copy(); };
+    p.copyToClipboard = function() {
+        Entry.clipboard = this.copy();
+    };
 
     p.separate = function(count, index) {
         this.thread.separate(this, count, index);
@@ -547,8 +565,7 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
     };
 
     p.getPrevOutputBlock = function() {
-        if (this.thread instanceof Entry.FieldOutput)
-            return this.thread._block;
+        if (this.thread instanceof Entry.FieldOutput) return this.thread._block;
         return null;
     };
 
@@ -556,8 +573,7 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
         var params = this._schema.params;
         for (var i = 0; params && i < params.length; i++) {
             var paramDef = params[i];
-            if (paramDef.type === "Output")
-                return this.params[i];
+            if (paramDef.type === 'Output') return this.params[i];
         }
         return null;
     };
@@ -566,8 +582,7 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
         var block = this;
         while (true) {
             var outputBlock = block.getOutputBlock();
-            if (!outputBlock)
-                return block;
+            if (!outputBlock) return block;
             block = outputBlock;
         }
     };
@@ -575,28 +590,21 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
     p.getOutputBlockCount = function(count) {
         count = count || 0;
         var outputBlock = this.getOutputBlock();
-        if (outputBlock)
-            return outputBlock.getOutputBlockCount(count + 1);
-        else
-            return count;
+        if (outputBlock) return outputBlock.getOutputBlockCount(count + 1);
+        else return count;
     };
 
     p.getBlockType = function() {
-        if (!this.view)
-            return null;
+        if (!this.view) return null;
         var skeleton = Entry.skeleton[this._schema.skeleton];
 
         if (!skeleton.magnets) return null;
 
         var magnet = skeleton.magnets(this.view);
-        if (magnet.next || magnet.previous)
-            return "basic";
-        else if (magnet.boolean || magnet.string)
-            return "field";
-        else if (magnet.output || magnet.param)
-            return "output";
-        else
-            return null;
+        if (magnet.next || magnet.previous) return 'basic';
+        else if (magnet.boolean || magnet.string) return 'field';
+        else if (magnet.output || magnet.param) return 'output';
+        else return null;
     };
 
     p.indexOfStatements = function(statement) {
@@ -608,14 +616,12 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
     };
 
     p.targetPointer = function() {
-        var pointer =  this.thread.pointer([], this);
+        var pointer = this.thread.pointer([], this);
         if (pointer.length === 4 && pointer[3] === 0) {
             pointer.pop();
-        } else if (pointer[pointer.length - 2] > -1){
-            if (pointer[pointer.length - 1] === 0)
-                pointer.pop();
-            else
-                pointer[pointer.length - 1] = pointer[pointer.length - 1] - 1;
+        } else if (pointer[pointer.length - 2] > -1) {
+            if (pointer[pointer.length - 1] === 0) pointer.pop();
+            else pointer[pointer.length - 1] = pointer[pointer.length - 1] - 1;
         }
         return pointer;
     };
@@ -624,12 +630,9 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
         pointer = pointer.concat();
         var data = this.params[pointer.shift()];
         if (pointer.length)
-            if (data.getDataByPointer)
-                return data.getDataByPointer(pointer);
-            else
-                return null;
-        else
-            return data;
+            if (data.getDataByPointer) return data.getDataByPointer(pointer);
+            else return null;
+        else return data;
     };
 
     p.getBlockList = function(excludePrimitive, type) {
@@ -650,7 +653,9 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
         for (var k = 0; k < params.length; k++) {
             var param = params[k];
             if (param && param.constructor == Entry.Block) {
-                blocks = blocks.concat(param.getBlockList(excludePrimitive, type));
+                blocks = blocks.concat(
+                    param.getBlockList(excludePrimitive, type)
+                );
             }
         }
 
@@ -658,9 +663,10 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
         if (statements) {
             for (var j = 0; j < statements.length; j++) {
                 var statement = statements[j];
-                if (statement.constructor !== Entry.Thread)
-                    continue;
-                blocks = blocks.concat(statement.getBlockList(excludePrimitive, type));
+                if (statement.constructor !== Entry.Thread) continue;
+                blocks = blocks.concat(
+                    statement.getBlockList(excludePrimitive, type)
+                );
             }
         }
         return blocks;
@@ -675,28 +681,30 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
     };
 
     p.isSameParamWith = function(target) {
-        if (target.type.substr(0,8) === "wildcard" ||
-            this.type.substr(0,8) === "wildcard")
+        if (
+            target.type.substr(0, 8) === 'wildcard' ||
+            this.type.substr(0, 8) === 'wildcard'
+        )
             return true;
 
         var targetType = target.type;
         var thisType = this.type;
 
-        if (((targetType === "angle") && (thisType === "text")) ||
-            ((targetType === "text") && (thisType === "angle"))) {
-        } else if (targetType !== thisType)
-            return false;
+        if (
+            (targetType === 'angle' && thisType === 'text') ||
+            (targetType === 'text' && thisType === 'angle')
+        ) {
+        } else if (targetType !== thisType) return false;
         for (var i = 0; i < this.params.length; i++) {
             var param = this.params[i];
             if (param instanceof Entry.Block) {
-                if (!param.isSameParamWith(target.params[i]))
-                    return false;
+                if (!param.isSameParamWith(target.params[i])) return false;
             } else {
-                var l = this.params[i], r = target.params[i];
-                l = typeof l === "number" ? l + "" : l;
-                r = typeof r === "number" ? r + "" : r;
-                if (l !== r)
-                    return false;
+                var l = this.params[i],
+                    r = target.params[i];
+                l = typeof l === 'number' ? l + '' : l;
+                r = typeof r === 'number' ? r + '' : r;
+                if (l !== r) return false;
             }
         }
         return true;
@@ -704,8 +712,7 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
 
     p.paramsBackup = function() {
         //do not backup params for blockMenu block
-        if (this.view && this.view.isInBlockMenu)
-            return;
+        if (this.view && this.view.isInBlockMenu) return;
 
         this._backupParams = this.params.slice();
     };
@@ -717,8 +724,7 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
     p.getDom = function(query) {
         if (query.length > 0) {
             var key = query.shift();
-            if (key === "magnet")
-                return this.view.getMagnet(query);
+            if (key === 'magnet') return this.view.getMagnet(query);
         }
         return this.view.svgGroup;
     };
@@ -728,8 +734,10 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
     };
 
     p.isParamBlockType = function() {
-        return this._schema.skeleton === 'basic_string_field' ||
-            this._schema.skeleton === 'basic_boolean_field';
+        return (
+            this._schema.skeleton === 'basic_string_field' ||
+            this._schema.skeleton === 'basic_boolean_field'
+        );
     };
 
     p.getFuncId = function() {
@@ -745,12 +753,15 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
             var thread = block.getThread();
             var parent = thread.parent;
 
-            if (!parent) { //field block
+            if (!parent) {
+                //field block
                 block = thread._block;
-            } else if (parent instanceof Entry.Code) { //thread
+            } else if (parent instanceof Entry.Code) {
+                //thread
                 block = thread.getFirstBlock();
                 break;
-            } else if (parent instanceof Entry.Block) { //statement
+            } else if (parent instanceof Entry.Block) {
+                //statement
                 block = thread.parent;
             } else {
                 block = undefined;

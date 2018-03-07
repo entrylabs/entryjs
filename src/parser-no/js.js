@@ -1,9 +1,7 @@
 /*
  *
  */
-"use strict";
-
-goog.provide("Entry.JSParser");
+'use strict';
 
 Entry.JSParser = function(syntax) {
     this.syntax = syntax;
@@ -12,7 +10,7 @@ Entry.JSParser = function(syntax) {
     this.scope = null;
 };
 
-(function(p){
+(function(p) {
     p.Program = function(node) {
         var code = [];
         var block = [];
@@ -21,7 +19,7 @@ Entry.JSParser = function(syntax) {
         //block statement
 
         block.push({
-            type: this.syntax.Program
+            type: this.syntax.Program,
         });
 
         var separatedBlocks = this.initScope(node);
@@ -36,10 +34,8 @@ Entry.JSParser = function(syntax) {
     };
 
     p.Identifier = function(node, scope) {
-        if (scope)
-            return scope[node.name];
-        else
-            return this.scope[node.name];
+        if (scope) return scope[node.name];
+        else return this.scope[node.name];
     };
 
     // Statement
@@ -54,7 +50,7 @@ Entry.JSParser = function(syntax) {
             update = node.update,
             body = node.body;
 
-        var contents = "";
+        var contents = '';
 
         var blockType = this.syntax.ForStatement;
 
@@ -68,7 +64,7 @@ Entry.JSParser = function(syntax) {
             var updateOp = update.operator;
 
             var res = 0;
-            if(!(updateOp == '++')){
+            if (!(updateOp == '++')) {
                 var temp = startVal;
                 var startVal = endVal;
                 var endVal = temp;
@@ -77,26 +73,26 @@ Entry.JSParser = function(syntax) {
             switch (op) {
                 case '<':
                     res = endVal - startVal;
-                break;
+                    break;
 
                 case '<=':
-                    res = ((endVal+1) - startVal);
-                break;
+                    res = endVal + 1 - startVal;
+                    break;
 
                 case '>':
-                    res =  startVal - endVal;
-                break;
+                    res = startVal - endVal;
+                    break;
 
                 case '>=':
-                    res = ((startVal+ 1) - endVal);
-                break;
+                    res = startVal + 1 - endVal;
+                    break;
             }
 
             return this.BasicIteration(node, res, body);
         } else {
             throw {
-                message : '지원하지 않는 표현식 입니다.',
-                node : node
+                message: '지원하지 않는 표현식 입니다.',
+                node: node,
             };
         }
     };
@@ -109,17 +105,14 @@ Entry.JSParser = function(syntax) {
             var childNode = body[i];
 
             var block = this[childNode.type](childNode);
-            if(!block) {
+            if (!block) {
                 continue;
-            }
-            else if(block.type === undefined) {
+            } else if (block.type === undefined) {
                 throw {
-                    message : '해당하는 블록이 없습니다.',
-                    node : childNode
+                    message: '해당하는 블록이 없습니다.',
+                    node: childNode,
                 };
-            }
-            else if (block)
-                blocks.push(block);
+            } else if (block) blocks.push(block);
         }
 
         return blocks;
@@ -127,15 +120,15 @@ Entry.JSParser = function(syntax) {
 
     p.EmptyStatement = function(node) {
         throw {
-            message : 'empty는 지원하지 않는 표현식 입니다.',
-            node : node
+            message: 'empty는 지원하지 않는 표현식 입니다.',
+            node: node,
         };
     };
 
     p.DebuggerStatement = function(node) {
         throw {
-            message : 'debugger는 지원하지 않는 표현식 입니다.',
-            node : node
+            message: 'debugger는 지원하지 않는 표현식 입니다.',
+            node: node,
         };
     };
 
@@ -144,8 +137,8 @@ Entry.JSParser = function(syntax) {
             body = node.body;
 
         throw {
-            message : 'with는 지원하지 않는 표현식 입니다.',
-            node : node
+            message: 'with는 지원하지 않는 표현식 입니다.',
+            node: node,
         };
     };
 
@@ -154,8 +147,8 @@ Entry.JSParser = function(syntax) {
         var args = node.arguments;
 
         throw {
-            message : 'return은 지원하지 않는 표현식 입니다.',
-            node : node
+            message: 'return은 지원하지 않는 표현식 입니다.',
+            node: node,
         };
     };
 
@@ -164,8 +157,8 @@ Entry.JSParser = function(syntax) {
             body = node.body;
 
         throw {
-            message : 'label은 지원하지 않는 표현식 입니다.',
-            node : node
+            message: 'label은 지원하지 않는 표현식 입니다.',
+            node: node,
         };
     };
 
@@ -173,8 +166,8 @@ Entry.JSParser = function(syntax) {
         var label = node.label;
 
         throw {
-            message : 'break는 지원하지 않는 표현식 입니다.',
-            node : node
+            message: 'break는 지원하지 않는 표현식 입니다.',
+            node: node,
         };
     };
 
@@ -182,26 +175,25 @@ Entry.JSParser = function(syntax) {
         var label = node.label;
 
         throw {
-            message : 'continue는 지원하지 않는 표현식 입니다.',
-            node : node
+            message: 'continue는 지원하지 않는 표현식 입니다.',
+            node: node,
         };
     };
 
     p.IfStatement = function(node) {
         var test = node.test,
             consequent = node.consequent,
-            alternate  = node.alternate;
+            alternate = node.alternate;
 
         var blockType = this.syntax.IfStatement;
         if (!blockType) {
             return this.BasicIf(node);
         } else {
             throw {
-                message : 'if는 지원하지 않는 표현식 입니다.',
-                node : node
+                message: 'if는 지원하지 않는 표현식 입니다.',
+                node: node,
             };
         }
-
     };
 
     p.SwitchStatement = function(node) {
@@ -209,8 +201,8 @@ Entry.JSParser = function(syntax) {
             cases = node.cases;
 
         throw {
-            message : 'switch는 지원하지 않는 표현식 입니다.',
-            node : node
+            message: 'switch는 지원하지 않는 표현식 입니다.',
+            node: node,
         };
     };
 
@@ -219,8 +211,8 @@ Entry.JSParser = function(syntax) {
             consequent = node.consequent;
 
         throw {
-            message : 'switch ~ case는 지원하지 않는 표현식 입니다.',
-            node : node
+            message: 'switch ~ case는 지원하지 않는 표현식 입니다.',
+            node: node,
         };
     };
 
@@ -230,8 +222,8 @@ Entry.JSParser = function(syntax) {
         var args = node.arguments;
 
         throw {
-            message : 'throw는 지원하지 않는 표현식 입니다.',
-            node : node
+            message: 'throw는 지원하지 않는 표현식 입니다.',
+            node: node,
         };
     };
 
@@ -241,8 +233,8 @@ Entry.JSParser = function(syntax) {
             finalizer = node.finalizer;
 
         throw {
-            message : 'try는 지원하지 않는 표현식 입니다.',
-            node : node
+            message: 'try는 지원하지 않는 표현식 입니다.',
+            node: node,
         };
     };
 
@@ -251,8 +243,8 @@ Entry.JSParser = function(syntax) {
             body = node.body;
 
         throw {
-            message : 'catch는 지원하지 않는 표현식 입니다.',
-            node : node
+            message: 'catch는 지원하지 않는 표현식 입니다.',
+            node: node,
         };
     };
 
@@ -265,10 +257,9 @@ Entry.JSParser = function(syntax) {
         if (!blockType) {
             return this.BasicWhile(node, body);
         } else {
-
             throw {
-                message : 'while은 지원하지 않는 표현식 입니다.',
-                node : node
+                message: 'while은 지원하지 않는 표현식 입니다.',
+                node: node,
             };
         }
     };
@@ -278,11 +269,10 @@ Entry.JSParser = function(syntax) {
             test = node.test;
 
         throw {
-            message : 'do ~ while은 지원하지 않는 표현식 입니다.',
-            node : node
+            message: 'do ~ while은 지원하지 않는 표현식 입니다.',
+            node: node,
         };
     };
-
 
     p.ForInStatement = function(node) {
         var left = node.left,
@@ -290,8 +280,8 @@ Entry.JSParser = function(syntax) {
             body = node.body;
 
         throw {
-            message : 'for ~ in은 지원하지 않는 표현식 입니다.',
-            node : node
+            message: 'for ~ in은 지원하지 않는 표현식 입니다.',
+            node: node,
         };
     };
 
@@ -306,8 +296,8 @@ Entry.JSParser = function(syntax) {
             return null;
         } else {
             throw {
-                message : 'function은 지원하지 않는 표현식 입니다.',
-                node : node
+                message: 'function은 지원하지 않는 표현식 입니다.',
+                node: node,
             };
         }
     };
@@ -317,8 +307,8 @@ Entry.JSParser = function(syntax) {
             kind = node.kind;
 
         throw {
-            message : 'var은 지원하지 않는 표현식 입니다.',
-            node : node
+            message: 'var은 지원하지 않는 표현식 입니다.',
+            node: node,
         };
     };
 
@@ -331,8 +321,8 @@ Entry.JSParser = function(syntax) {
         var elements = node.elements;
 
         throw {
-            message : 'array는 지원하지 않는 표현식 입니다.',
-            node : node
+            message: 'array는 지원하지 않는 표현식 입니다.',
+            node: node,
         };
     };
 
@@ -340,8 +330,8 @@ Entry.JSParser = function(syntax) {
         var property = node.property;
 
         throw {
-            message : 'object는 지원하지 않는 표현식 입니다.',
-            node : node
+            message: 'object는 지원하지 않는 표현식 입니다.',
+            node: node,
         };
     };
 
@@ -351,16 +341,15 @@ Entry.JSParser = function(syntax) {
             kind = node.kind;
 
         throw {
-            message : 'init, get, set은 지원하지 않는 표현식 입니다.',
-            node : node
+            message: 'init, get, set은 지원하지 않는 표현식 입니다.',
+            node: node,
         };
     };
 
     p.FunctionExpression = function(node) {
-
         throw {
-            message : 'function은 지원하지 않는 표현식 입니다.',
-            node : node
+            message: 'function은 지원하지 않는 표현식 입니다.',
+            node: node,
         };
     };
     // unary expression
@@ -368,31 +357,46 @@ Entry.JSParser = function(syntax) {
     p.UnaryExpression = function(node) {
         var operator = node.operator,
             prefix = node.prefix,
-            args  = node.argument;
+            args = node.argument;
 
         throw {
-            message : operator + '은(는) 지원하지 않는 명령어 입니다.',
-            node : node
+            message: operator + '은(는) 지원하지 않는 명령어 입니다.',
+            node: node,
         };
     };
 
-    p.UnaryOperator = function(){
-        return  ["-" , "+" , "!" , "~" , "typeof" , "void" , "delete"];
+    p.UnaryOperator = function() {
+        return ['-', '+', '!', '~', 'typeof', 'void', 'delete'];
     };
 
     p.updateOperator = function() {
-        return ["++" , "--"];
+        return ['++', '--'];
     };
 
     //Binary expression
     p.BinaryOperator = function() {
         return [
-            "==" , "!=" , "===" , "!==",
-            "<" , "<=" , ">" , ">=",
-            "<<" , ">>" , ">>>",
-            "+" , "-" , "*" , "/" , "%",
-            "," , "^" , "&" , "in",
-            "instanceof"
+            '==',
+            '!=',
+            '===',
+            '!==',
+            '<',
+            '<=',
+            '>',
+            '>=',
+            '<<',
+            '>>',
+            '>>>',
+            '+',
+            '-',
+            '*',
+            '/',
+            '%',
+            ',',
+            '^',
+            '&',
+            'in',
+            'instanceof',
         ];
     };
 
@@ -402,16 +406,25 @@ Entry.JSParser = function(syntax) {
             right = node.right;
 
         throw {
-            message : operator + '은(는) 지원하지 않는 명령어 입니다.',
-            node : node
+            message: operator + '은(는) 지원하지 않는 명령어 입니다.',
+            node: node,
         };
     };
 
     p.AssignmentOperator = function() {
         return [
-            "=" , "+=" , "-=" , "*=" , "/=" , "%=",
-            "<<=" , ">>=" , ">>>=",
-            ",=" , "^=" , "&="
+            '=',
+            '+=',
+            '-=',
+            '*=',
+            '/=',
+            '%=',
+            '<<=',
+            '>>=',
+            '>>>=',
+            ',=',
+            '^=',
+            '&=',
         ];
     };
 
@@ -420,13 +433,13 @@ Entry.JSParser = function(syntax) {
             left = node.left,
             right = node.right;
         throw {
-            message : operator + '은(는) 지원하지 않는 명령어 입니다.',
-            node : node
+            message: operator + '은(는) 지원하지 않는 명령어 입니다.',
+            node: node,
         };
     };
 
     p.LogicalOperator = function() {
-        return ["||" , "&&"];
+        return ['||', '&&'];
     };
 
     p.MemberExpression = function(node) {
@@ -434,24 +447,29 @@ Entry.JSParser = function(syntax) {
             property = node.property,
             computed = node.computed;
 
-        console.log(object.type)
+        console.log(object.type);
         object = this[object.type](object);
         console.log(object);
 
         property = this[property.type](property, object);
 
-        if(!(Object(object) === object && Object.getPrototypeOf(object) === Object.prototype)) {
+        if (
+            !(
+                Object(object) === object &&
+                Object.getPrototypeOf(object) === Object.prototype
+            )
+        ) {
             throw {
-                message : object + '은(는) 잘못된 멤버 변수입니다.',
-                node : node
+                message: object + '은(는) 잘못된 멤버 변수입니다.',
+                node: node,
             };
         }
 
         var blockType = property;
-        if(!blockType) {
+        if (!blockType) {
             throw {
-                message : property + '이(가) 존재하지 않습니다.',
-                node : node
+                message: property + '이(가) 존재하지 않습니다.',
+                node: node,
             };
         }
         return blockType;
@@ -463,8 +481,8 @@ Entry.JSParser = function(syntax) {
             consequent = node.consequent;
 
         throw {
-            message : '지원하지 않는 표현식 입니다.',
-            node : node
+            message: '지원하지 않는 표현식 입니다.',
+            node: node,
         };
     };
 
@@ -474,8 +492,8 @@ Entry.JSParser = function(syntax) {
             prefix = node.prefix;
 
         throw {
-            message : operator + '은(는) 지원하지 않는 명렁어 입니다.',
-            node : node
+            message: operator + '은(는) 지원하지 않는 명렁어 입니다.',
+            node: node,
         };
     };
 
@@ -484,14 +502,14 @@ Entry.JSParser = function(syntax) {
             args = node.arguments;
         var blockType = this[callee.type](callee);
         return {
-            type: blockType
+            type: blockType,
         };
     };
 
     p.NewExpression = function(node) {
         throw {
-            message : 'new는 지원하지 않는 표현식 입니다.',
-            node : node
+            message: 'new는 지원하지 않는 표현식 입니다.',
+            node: node,
         };
     };
 
@@ -499,8 +517,8 @@ Entry.JSParser = function(syntax) {
         var expressions = node.expressions;
 
         throw {
-            message : '지원하지 않는 표현식 입니다.',
-            node : node
+            message: '지원하지 않는 표현식 입니다.',
+            node: node,
         };
     };
 
@@ -523,8 +541,7 @@ Entry.JSParser = function(syntax) {
         this.scopeChain.pop();
         if (this.scopeChain.length)
             this.scope = this.scopeChain[this.scopeChain.length - 1];
-        else
-            this.scope = null;
+        else this.scope = null;
     };
 
     p.scanDefinition = function(node) {
@@ -532,14 +549,16 @@ Entry.JSParser = function(syntax) {
         var separatedBlocks = [];
         for (var i = 0; i < body.length; i++) {
             var childNode = body[i];
-            if (childNode.type === "FunctionDeclaration") {
+            if (childNode.type === 'FunctionDeclaration') {
                 this.scope[childNode.id.name] = this.scope.promise;
                 if (this.syntax.BasicFunction) {
                     var childBody = childNode.body;
-                    separatedBlocks.push([{
-                        type: this.syntax.BasicFunction,
-                        statements: [this[childBody.type](childBody)]
-                    }]);
+                    separatedBlocks.push([
+                        {
+                            type: this.syntax.BasicFunction,
+                            statements: [this[childBody.type](childBody)],
+                        },
+                    ]);
                 }
             }
         }
@@ -547,7 +566,6 @@ Entry.JSParser = function(syntax) {
     };
 
     p.BasicFunction = function(node, body) {
-
         return null;
     };
 
@@ -556,13 +574,13 @@ Entry.JSParser = function(syntax) {
         var blockType = this.syntax.BasicIteration;
         if (!blockType)
             throw {
-                message : '지원하지 않는 표현식 입니다.',
-                node : node
+                message: '지원하지 않는 표현식 입니다.',
+                node: node,
             };
         return {
             params: [iterCount],
             type: blockType,
-            statements: [body]
+            statements: [body],
         };
     };
 
@@ -571,12 +589,12 @@ Entry.JSParser = function(syntax) {
         if (this.syntax.BasicWhile[raw]) {
             return {
                 type: this.syntax.BasicWhile[raw],
-                statements: [body]
-            }
+                statements: [body],
+            };
         } else {
             throw {
-                message : '지원하지 않는 표현식 입니다.',
-                node : node.test
+                message: '지원하지 않는 표현식 입니다.',
+                node: node.test,
             };
         }
     };
@@ -584,38 +602,53 @@ Entry.JSParser = function(syntax) {
     p.BasicIf = function(node) {
         var consequent = node.consequent;
         consequent = this[consequent.type](consequent);
-        try{
+        try {
             var test = '';
-            var operator = (node.test.operator === '===') ? '==' : node.test.operator;
+            var operator =
+                node.test.operator === '===' ? '==' : node.test.operator;
 
-            if(node.test.left.type === 'Identifier' && node.test.right.type === 'Literal') {
-                test = node.test.left.name + " " +
-                operator + " " +
-                node.test.right.raw;
-            } else if(node.test.left.type === 'Literal' && node.test.right.type === 'Identifier') {
-                test = node.test.right.name + " " +
-                operator + " " +
-                node.test.left.raw;
+            if (
+                node.test.left.type === 'Identifier' &&
+                node.test.right.type === 'Literal'
+            ) {
+                test =
+                    node.test.left.name +
+                    ' ' +
+                    operator +
+                    ' ' +
+                    node.test.right.raw;
+            } else if (
+                node.test.left.type === 'Literal' &&
+                node.test.right.type === 'Identifier'
+            ) {
+                test =
+                    node.test.right.name +
+                    ' ' +
+                    operator +
+                    ' ' +
+                    node.test.left.raw;
             } else {
                 throw new Error();
             }
 
             if (this.syntax.BasicIf[test]) {
-                if(!Array.isArray(consequent) && typeof consequent === 'object') 
+                if (
+                    !Array.isArray(consequent) &&
+                    typeof consequent === 'object'
+                )
                     consequent = [consequent];
                 return {
                     type: this.syntax.BasicIf[test],
-                    statements: [consequent]
-                }
+                    statements: [consequent],
+                };
             } else {
                 throw new Error();
             }
         } catch (e) {
             throw {
-                message : '지원하지 않는 표현식 입니다.',
-                node : node.test
+                message: '지원하지 않는 표현식 입니다.',
+                node: node.test,
             };
         }
     };
-
 })(Entry.JSParser.prototype);

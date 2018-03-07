@@ -1,18 +1,16 @@
 /*
  *
  */
-"use strict";
-
-goog.provide("Entry.skinContainer");
+'use strict';
 
 Entry.skinContainer = {
-    _skins: {}
+    _skins: {},
 };
 
 (function(p) {
     p.skinSchema = {
-        type: "",
-        condition: []
+        type: '',
+        condition: [],
     };
 
     p.loadSkins = function(skins) {
@@ -20,16 +18,14 @@ Entry.skinContainer = {
     };
 
     p.addSkin = function(skin) {
-        var blockSkin = function () {};
+        var blockSkin = function() {};
         var blockPrototype = Entry.block[skin.type];
         blockSkin.prototype = blockPrototype;
         blockSkin = new blockSkin();
 
-        for (var key in skin)
-            blockSkin[key] = skin[key];
+        for (var key in skin) blockSkin[key] = skin[key];
 
-        if (!this._skins[skin.type])
-            this._skins[skin.type] = [];
+        if (!this._skins[skin.type]) this._skins[skin.type] = [];
 
         this._skins[skin.type].push(blockSkin);
     };
@@ -43,15 +39,17 @@ Entry.skinContainer = {
                     return candidate;
                 for (var j = 0; j < candidate.conditions.length; j++) {
                     var condition = candidate.conditions[j];
-                    if (block.getDataByPointer(condition.pointer) !== condition.value) // here
+                    if (
+                        block.getDataByPointer(condition.pointer) !==
+                        condition.value
+                    )
+                        // here
                         break;
-                    if (j === candidate.conditions.length - 1)
-                        return candidate;
+                    if (j === candidate.conditions.length - 1) return candidate;
                 }
             }
         }
 
         return Entry.block[block.type];
     };
-
 })(Entry.skinContainer);

@@ -1,10 +1,6 @@
 /*
  */
-"use strict";
-
-goog.provide("Entry.FieldOutput");
-
-goog.require("Entry.Field");
+'use strict';
 /*
  *
  */
@@ -30,8 +26,8 @@ Entry.FieldOutput = function(content, blockView, index, mode, contentIndex) {
 
     this._position = content.position;
 
-    this.box.observe(blockView, "dAlignContent", ["width", "height"]);
-    this.observe(this, "_updateBG", ["magneting"], false);
+    this.box.observe(blockView, 'dAlignContent', ['width', 'height']);
+    this.observe(this, '_updateBG', ['magneting'], false);
 
     this.renderStart(blockView.getBoard(), mode);
 };
@@ -43,7 +39,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldOutput);
 
     p.renderStart = function(board, mode) {
         if (!this.svgGroup)
-            this.svgGroup = this._blockView.contentSvgGroup.elem("g");
+            this.svgGroup = this._blockView.contentSvgGroup.elem('g');
 
         this.view = this;
         this._nextGroup = this.svgGroup;
@@ -55,10 +51,13 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldOutput);
         }
 
         this._updateValueBlock(block);
-        this._valueBlock && this._valueBlock.view._startContentRender(this.renderMode);
+        this._valueBlock &&
+            this._valueBlock.view._startContentRender(this.renderMode);
 
-        if (this._blockView.getBoard().constructor == Entry.BlockMenu &&
-            this._valueBlock)
+        if (
+            this._blockView.getBoard().constructor == Entry.BlockMenu &&
+            this._valueBlock
+        )
             this._valueBlock.view.removeControl();
     };
 
@@ -72,18 +71,21 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldOutput);
 
         var block = this._valueBlock;
 
-        if (block && block.view)
-            y = block.view.height * -0.5;
+        if (block && block.view) y = block.view.height * -0.5;
 
-        var transform = "translate(" + x + "," + y + ")";
+        var transform = 'translate(' + x + ',' + y + ')';
 
         if (animate)
-            svgGroup.animate({
-                transform: transform
-            }, 300, mina.easeinout);
+            svgGroup.animate(
+                {
+                    transform: transform,
+                },
+                300,
+                mina.easeinout
+            );
         else
             svgGroup.attr({
-                transform: transform
+                transform: transform,
             });
 
         this.box.set({ x: x, y: y });
@@ -96,12 +98,12 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldOutput);
         if (block && blockView) {
             this.box.set({
                 width: blockView.width,
-                height: blockView.height
+                height: blockView.height,
             });
         } else {
             this.box.set({
                 width: 0,
-                height: 20
+                height: 20,
             });
         }
     };
@@ -116,7 +118,6 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldOutput);
 
     p._setValueBlock = function(block) {
         if (block != this._valueBlock || !this._valueBlock) {
-
             this._valueBlock = block;
             this.setValue(block);
 
@@ -125,11 +126,12 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldOutput);
         }
     };
 
-    p.spliceBlock = function() { this._updateValueBlock(); };
+    p.spliceBlock = function() {
+        this._updateValueBlock();
+    };
 
     p._updateValueBlock = function(block) {
-        if (!(block instanceof Entry.Block))
-            block = undefined;
+        if (!(block instanceof Entry.Block)) block = undefined;
 
         if (block && block === this._valueBlock) {
             this.calcWH();
@@ -143,9 +145,19 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldOutput);
         if (block) {
             var view = block.view;
             view.bindPrev();
-            this._posObserver = view.observe(this, "_updateValueBlock", ["x", "y"], false);
-            this._sizeObserver = view.observe(this, "calcWH", ["width", "height"]);
-        } else { this.calcWH(); }
+            this._posObserver = view.observe(
+                this,
+                '_updateValueBlock',
+                ['x', 'y'],
+                false
+            );
+            this._sizeObserver = view.observe(this, 'calcWH', [
+                'width',
+                'height',
+            ]);
+        } else {
+            this.calcWH();
+        }
 
         this._blockView.dAlignContent();
     };
@@ -168,9 +180,13 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldOutput);
         return pos;
     };
 
-    p.dominate = function() { this._blockView.dominate(); };
+    p.dominate = function() {
+        this._blockView.dominate();
+    };
 
-    p.isGlobal = function() { return false; };
+    p.isGlobal = function() {
+        return false;
+    };
 
     p.separate = function(block) {
         this.getCode().createThread([block]);
@@ -191,12 +207,13 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldOutput);
 
     p._updateBG = function() {
         if (this.magneting) {
-            this._bg = this.svgGroup.elem("path", {
-                d: "m -4,-12 h 3 l 2,2 0,3 3,0 1,1 0,12 -1,1 -3,0 0,3 -2,2 h -3 ",
-                fill: "#fff",
-                stroke: "#fff",
+            this._bg = this.svgGroup.elem('path', {
+                d:
+                    'm -4,-12 h 3 l 2,2 0,3 3,0 1,1 0,12 -1,1 -3,0 0,3 -2,2 h -3 ',
+                fill: '#fff',
+                stroke: '#fff',
                 'fill-opacity': 0.7,
-                transform: "translate(0," + (this._valueBlock ? 12 : 0) + ")"
+                transform: 'translate(0,' + (this._valueBlock ? 12 : 0) + ')',
             });
         } else {
             if (this._bg) {
@@ -210,21 +227,30 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldOutput);
         var valueBlock = this._valueBlock;
         if (valueBlock) {
             valueBlock.view._toGlobalCoordinate();
-            block.getTerminateOutputBlock().view.
-                _contents[1].replace(valueBlock);
+            block
+                .getTerminateOutputBlock()
+                .view._contents[1].replace(valueBlock);
         }
         this._updateValueBlock(block);
         block.view._toLocalCoordinate(this.svgGroup);
         this.calcWH();
     };
 
-    p.setParent = function(parent) { this._parent = parent; };
+    p.setParent = function(parent) {
+        this._parent = parent;
+    };
 
-    p.getParent = function() { return this._parent; };
+    p.getParent = function() {
+        return this._parent;
+    };
 
-    p.getThread = function() { return this; };
+    p.getThread = function() {
+        return this;
+    };
 
-    p.getValueBlock = function() { return this._valueBlock; };
+    p.getValueBlock = function() {
+        return this._valueBlock;
+    };
 
     p.pointer = function(pointer) {
         pointer = pointer || [];
@@ -232,5 +258,4 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldOutput);
         pointer.unshift(Entry.PARAM);
         return this._block.pointer(pointer);
     };
-
 })(Entry.FieldOutput.prototype);
