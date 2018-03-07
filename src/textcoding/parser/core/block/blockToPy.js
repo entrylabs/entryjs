@@ -3,13 +3,6 @@
  */
 "use strict";
 
-goog.provide("Entry.BlockToPyParser");
-
-goog.require("Entry.KeyboardCode");
-goog.require("Entry.TextCodingUtil");
-goog.require("Entry.Map");
-goog.require("Entry.Queue");
-
 Entry.BlockToPyParser = function() {
     this._type ="BlockToPyParser";
 

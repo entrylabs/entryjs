@@ -4,6 +4,7 @@
 "use strict";
 
 require("./util/console")
+require("./parser/core/block/blockToPy")
 
 Entry.Parser = function(mode, type, cm, syntax) {
     this._mode = mode; // maze ai workspace

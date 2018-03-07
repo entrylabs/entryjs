@@ -3,10 +3,6 @@
  */
 "use strict";
 
-goog.provide("Entry.TextCodingUtil");
-
-goog.require("Entry.Queue");
-
 Entry.TextCodingUtil = {};
 
 (function(tu) {
@@ -2144,7 +2140,7 @@ Entry.TextCodingUtil = {};
             return;
 
         //inspect lists
-        targets = vc.lists_ || [];
+        var targets = vc.lists_ || [];
 
         for (var i=targets.length-1; i>=0; i--) {
             var l = targets[i];
