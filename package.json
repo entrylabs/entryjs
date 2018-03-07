@@ -21,8 +21,8 @@
     "url": "https://github.com/boolgom/entryjs/issues"
   },
   "scripts": {
-    "dev": "cross-env NODE_ENV=development webpack -w",
-    "dist": "cross-env NODE_ENV=production webpack"
+    "dev": "cross-env NODE_ENV=development webpack -w --mode development",
+    "dist": "cross-env NODE_ENV=production webpack --mode production"
   },
   "license": "MIT",
   "dependencies": {
