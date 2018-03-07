@@ -838,6 +838,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
             });
         }
 
+        var object;
         if (objects && objects.length > 0) object = objects[0].id;
         else {
             object = name;
