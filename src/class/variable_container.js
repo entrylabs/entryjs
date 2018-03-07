@@ -595,8 +595,16 @@ Entry.VariableContainer = function() {
     p.setMessages = function(messages) {
         for (var i in messages) {
             var message = messages[i];
-            if (!message.id)
+            if (!message.id) {
                 message.id = Entry.generateHash();
+            } else {
+                if(this.messages_.some((item)=> {
+                    return item.id === message.id;
+                })) {
+                    console.log('있네?');
+                    return;
+                }
+            }
             this.messages_.push(message);
         }
         Entry.playground.reloadPlayground();
