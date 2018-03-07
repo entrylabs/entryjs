@@ -607,7 +607,7 @@ Entry.VariableContainer = function () {
     p.setMessages = function (messages) {
         for (var i in messages) {
             var message = messages[i];
-            if (!message.id)
+            if (!message.id) {
                 message.id = Entry.generateHash();
             }
             this.messages_.push(message);
