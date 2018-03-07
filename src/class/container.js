@@ -39,14 +39,17 @@ Entry.Container = function() {
      */
     this.currentObjects_ = null;
     this._extensionObjects = [];
-    Entry.addEventListener('workspaceChangeMode', function() {
-        var ws = Entry.getMainWS();
-        if (ws && ws.getMode() === Entry.Workspace.MODE_VIMBOARD) {
-            this.objects_.forEach(function(o) {
-                o.script && o.script.destroyView();
-            });
-        }
-    }.bind(this));
+    Entry.addEventListener(
+        'workspaceChangeMode',
+        function() {
+            var ws = Entry.getMainWS();
+            if (ws && ws.getMode() === Entry.Workspace.MODE_VIMBOARD) {
+                this.objects_.forEach(function(o) {
+                    o.script && o.script.destroyView();
+                });
+            }
+        }.bind(this)
+    );
 
     Entry.addEventListener('run', this.disableSort.bind(this));
     Entry.addEventListener('stop', this.enableSort.bind(this));
@@ -63,12 +66,12 @@ Entry.Container.prototype.generateView = function(containerView, option) {
     this._view = containerView;
     this._view.addClass('entryContainer');
     this._view.addClass('entryContainerWorkspace');
-    this._view.setAttribute('id' , 'entryContainerWorkspaceId');
+    this._view.setAttribute('id', 'entryContainerWorkspaceId');
 
     var addButton = Entry.createElement('div');
     addButton.addClass('entryAddObjectWorkspace');
     addButton.innerHTML = Lang.Workspace.add_object;
-    addButton.bindOnClick(function(e){
+    addButton.bindOnClick(function(e) {
         Entry.dispatchEvent('openSpriteManager');
     });
     //this._view.appendChild(addButton);
@@ -80,7 +83,7 @@ Entry.Container.prototype.generateView = function(containerView, option) {
 
     Entry.Utils.disableContextmenu(ulWrapper);
 
-    $(ulWrapper).bind('mousedown touchstart', function(e){
+    $(ulWrapper).bind('mousedown touchstart', function(e) {
         var longPressTimer = null;
         var doc = $(document);
         var eventType = e.type;
@@ -109,8 +112,10 @@ Entry.Container.prototype.generateView = function(containerView, option) {
 
         function onMouseMove(e) {
             if (!mouseDownCoordinate) return;
-            var diff = Math.sqrt(Math.pow(e.pageX - mouseDownCoordinate.x, 2) +
-                            Math.pow(e.pageY - mouseDownCoordinate.y, 2));
+            var diff = Math.sqrt(
+                Math.pow(e.pageX - mouseDownCoordinate.x, 2) +
+                    Math.pow(e.pageY - mouseDownCoordinate.y, 2)
+            );
             if (diff > 5 && longPressTimer) {
                 clearTimeout(longPressTimer);
                 longPressTimer = null;
@@ -132,7 +137,7 @@ Entry.Container.prototype.generateView = function(containerView, option) {
     var extensionListView = Entry.createElement('ul');
     ulWrapper.appendChild(extensionListView);
     this._extensionListView = Entry.Dom(extensionListView, {
-        class: "entryContainerExtensions"
+        class: 'entryContainerExtensions',
     });
 
     var listView = Entry.createElement('ul');
@@ -151,14 +156,14 @@ Entry.Container.prototype.enableSort = function() {
         start: function(event, ui) {
             ui.item.data('start_pos', ui.item.index());
         },
-        stop: function(event, ui){
+        stop: function(event, ui) {
             Entry.container.moveElement(
                 ui.item.data('start_pos'),
                 ui.item.index()
             );
         },
         axis: 'y',
-        cancel: 'input.selectedEditingObject'
+        cancel: 'input.selectedEditingObject',
     });
 };
 
@@ -188,17 +193,17 @@ Entry.Container.prototype.updateListView = function() {
 
     var objs = this.getCurrentObjects().slice();
 
-    var ret = objs.filter(function (o) {
+    var ret = objs.filter(function(o) {
         return o.index !== undefined;
     });
 
     if (ret.length === objs.length) {
-        objs = objs.sort(function (a, b) {
+        objs = objs.sort(function(a, b) {
             return a.index - b.index;
         });
     }
 
-    objs.forEach(function (obj) {
+    objs.forEach(function(obj) {
         !obj.view_ && obj.generateView();
         fragment.appendChild(obj.view_);
     });
@@ -287,10 +292,10 @@ Entry.Container.prototype.addObject = function(objectModel, index) {
 
     if (Entry.stateManager) {
         Entry.stateManager.addCommand(
-            "add object",
-              this,
-              this.removeObject,
-              object
+            'add object',
+            this,
+            this.removeObject,
+            object
         );
     }
 
@@ -314,11 +319,7 @@ Entry.Container.prototype.addObject = function(objectModel, index) {
 
     this.selectObject(object.id);
     Entry.variableContainer.updateViews();
-    return new Entry.State(
-                    this,
-                    this.removeObject,
-                    object
-                );
+    return new Entry.State(this, this.removeObject, object);
 };
 
 Entry.Container.prototype.addExtension = function(obj) {
@@ -333,8 +334,7 @@ Entry.Container.prototype.removeExtension = function(obj) {
 
     var extensions = this._extensionObjects;
     var index = extensions.indexOf(obj);
-    if (index > -1)
-        extensions.splice(index, 1);
+    if (index > -1) extensions.splice(index, 1);
 
     obj.destroy && obj.destroy();
 };
@@ -350,7 +350,9 @@ Entry.Container.prototype.addCloneObject = function(object, scene) {
     json.script = change('pictures', object, json);
 
     Entry.variableContainer.addCloneLocalVariables({
-        objectId: object.id, newObjectId: json.id, json: json
+        objectId: object.id,
+        newObjectId: json.id,
+        json: json,
     });
     json.scene = scene || Entry.scene.selectedScene;
     this.addObject(json);
@@ -361,7 +363,10 @@ Entry.Container.prototype.addCloneObject = function(object, scene) {
         var target = jsonData.sprite[keyName];
         var script = jsonData.script;
         (object[keyName] || []).forEach(function(value, index) {
-            script = script.replace(new RegExp(value.id, "g"), target[index].id);
+            script = script.replace(
+                new RegExp(value.id, 'g'),
+                target[index].id
+            );
         });
         return script;
     }
@@ -379,7 +384,7 @@ Entry.Container.prototype.removeObject = function(object) {
     var objectJSON = object.toJSON();
     if (Entry.stateManager) {
         Entry.stateManager.addCommand(
-            "remove object",
+            'remove object',
             this,
             this.addObject,
             objectJSON,
@@ -418,8 +423,7 @@ Entry.Container.prototype.selectObject = function(objectId, changeScene) {
     var object = this.getObject(objectId);
     var workspace = Entry.getMainWS();
 
-    if (changeScene && object)
-        Entry.scene.selectScene(object.scene);
+    if (changeScene && object) Entry.scene.selectScene(object.scene);
 
     var className = 'selectedObject';
     this.mapObjectOnScene(function(o) {
@@ -433,20 +437,20 @@ Entry.Container.prototype.selectObject = function(objectId, changeScene) {
     });
 
     if (object) {
-        if(workspace && workspace.vimBoard && Entry.isTextMode) {
+        if (workspace && workspace.vimBoard && Entry.isTextMode) {
             var sObject = workspace.vimBoard._currentObject;
             var parser = workspace.vimBoard._parser;
             if (sObject && !this.getObject(sObject.id)) {
-            } else if(parser && parser._onError) {
-                if(sObject && (object.id != sObject.id)) {
-                    if(!Entry.scene.isSceneCloning) {
-                        try { workspace._syncTextCode(); }
-                        catch(e) {}
-                        if(parser && !parser._onError) {
+            } else if (parser && parser._onError) {
+                if (sObject && object.id != sObject.id) {
+                    if (!Entry.scene.isSceneCloning) {
+                        try {
+                            workspace._syncTextCode();
+                        } catch (e) {}
+                        if (parser && !parser._onError) {
                             Entry.container.selectObject(object.id, true);
                             return;
-                        }
-                        else {
+                        } else {
                             Entry.container.selectObject(sObject.id, true);
                             return;
                         }
@@ -456,10 +460,12 @@ Entry.Container.prototype.selectObject = function(objectId, changeScene) {
                     }
                 }
             } else {
-                if (sObject && (object.id != sObject.id)) {
-                    if(!Entry.scene.isSceneCloning) {
-                        try { workspace._syncTextCode(); } catch(e) {}
-                        if(parser && parser._onError) {
+                if (sObject && object.id != sObject.id) {
+                    if (!Entry.scene.isSceneCloning) {
+                        try {
+                            workspace._syncTextCode();
+                        } catch (e) {}
+                        if (parser && parser._onError) {
                             Entry.container.selectObject(sObject.id, true);
                             return;
                         }
@@ -474,9 +480,8 @@ Entry.Container.prototype.selectObject = function(objectId, changeScene) {
         workspace && workspace.vimBoard && workspace.vimBoard.clearText();
     }
 
-    if (Entry.playground)
-        Entry.playground.injectObject(object);
-    if (Entry.type != "minimize" && Entry.engine.isState('stop'))
+    if (Entry.playground) Entry.playground.injectObject(object);
+    if (Entry.type != 'minimize' && Entry.engine.isState('stop'))
         Entry.stage.selectObject(object);
 };
 
@@ -496,10 +501,9 @@ Entry.Container.prototype.getObject = function(objectId) {
     if (!objectId && Entry.playground && Entry.playground.object)
         objectId = Entry.playground.object.id;
     var length = this.objects_.length;
-    for (var i = 0; i<length; i++) {
+    for (var i = 0; i < length; i++) {
         var object = this.objects_[i];
-        if (object.id == objectId)
-            return object;
+        if (object.id == objectId) return object;
     }
 };
 
@@ -526,12 +530,10 @@ Entry.Container.prototype.getEntity = function(objectId) {
  * @return {Entry.Variable}
  */
 Entry.Container.prototype.getVariable = function(variableId) {
-    for (var i = 0; i<this.variables_.length; i++) {
+    for (var i = 0; i < this.variables_.length; i++) {
         var variable = this.variables_[i];
-        if (variable.getId() == variableId)
-            return variable;
-        if (variable.getName() == variableId)
-            return variable;
+        if (variable.getId() == variableId) return variable;
+        if (variable.getName() == variableId) return variable;
     }
 };
 
@@ -550,19 +552,25 @@ Entry.Container.prototype.moveElement = function(start, end, isCallFromState) {
     endIndex = this.getAllObjects().indexOf(objs[end]);
     if (!isCallFromState && Entry.stateManager)
         Entry.stateManager.addCommand(
-            "reorder object",
+            'reorder object',
             Entry.container,
             Entry.container.moveElement,
-            endIndex, startIndex, true
+            endIndex,
+            startIndex,
+            true
         );
 
     this.objects_.splice(endIndex, 0, this.objects_.splice(startIndex, 1)[0]);
     this.setCurrentObjects();
     Entry.container.updateListView();
     Entry.requestUpdate = true;
-    return new Entry.State(Entry.container,
-                           Entry.container.moveElement,
-                           endIndex, startIndex, true);
+    return new Entry.State(
+        Entry.container,
+        Entry.container.moveElement,
+        endIndex,
+        startIndex,
+        true
+    );
 };
 
 /**
@@ -575,7 +583,7 @@ Entry.Container.prototype.getDropdownList = function(menuName, object) {
         case 'sprites':
             var objs = this.getCurrentObjects();
             var length = objs.length;
-            for (var i = 0; i<length; i++) {
+            for (var i = 0; i < length; i++) {
                 var object = objs[i];
                 result.push([object.name, object.id]);
             }
@@ -583,7 +591,7 @@ Entry.Container.prototype.getDropdownList = function(menuName, object) {
         case 'spritesWithMouse':
             var objs = this.getCurrentObjects();
             var length = objs.length;
-            for (var i = 0; i<length; i++) {
+            for (var i = 0; i < length; i++) {
                 var object = objs[i];
                 result.push([object.name, object.id]);
             }
@@ -592,7 +600,7 @@ Entry.Container.prototype.getDropdownList = function(menuName, object) {
         case 'spritesWithSelf':
             var objs = this.getCurrentObjects();
             var length = objs.length;
-            for (var i = 0; i<length; i++) {
+            for (var i = 0; i < length; i++) {
                 var object = objs[i];
                 result.push([object.name, object.id]);
             }
@@ -602,7 +610,7 @@ Entry.Container.prototype.getDropdownList = function(menuName, object) {
             result.push([Lang.Blocks.mouse_pointer, 'mouse']);
             var objs = this.getCurrentObjects();
             var length = objs.length;
-            for (var i = 0; i<length; i++) {
+            for (var i = 0; i < length; i++) {
                 var object = objs[i];
                 result.push([object.name, object.id]);
             }
@@ -616,25 +624,28 @@ Entry.Container.prototype.getDropdownList = function(menuName, object) {
             var object = Entry.playground.object || object;
             if (!object) break;
             var pictures = object.pictures || [];
-            for (var i = 0; i<pictures.length; i++) {
+            for (var i = 0; i < pictures.length; i++) {
                 var picture = pictures[i];
                 result.push([picture.name, picture.id]);
             }
             break;
         case 'messages':
             var messages = Entry.variableContainer.messages_;
-            for (var i = 0; i<messages.length; i++) {
+            for (var i = 0; i < messages.length; i++) {
                 var message = messages[i];
                 result.push([message.name, message.id]);
             }
             break;
         case 'variables':
             var variables = Entry.variableContainer.variables_;
-            for (var i = 0; i<variables.length; i++) {
+            for (var i = 0; i < variables.length; i++) {
                 var variable = variables[i];
 
-                if (variable.object_ && Entry.playground.object &&
-                    variable.object_ != Entry.playground.object.id)
+                if (
+                    variable.object_ &&
+                    Entry.playground.object &&
+                    variable.object_ != Entry.playground.object.id
+                )
                     continue;
                 result.push([variable.getName(), variable.getId()]);
             }
@@ -644,10 +655,9 @@ Entry.Container.prototype.getDropdownList = function(menuName, object) {
         case 'lists':
             var object = Entry.playground.object || object;
             var lists = Entry.variableContainer.lists_;
-            for (var i = 0; i<lists.length; i++) {
+            for (var i = 0; i < lists.length; i++) {
                 var list = lists[i];
-                if (list.object_ && object &&
-                    list.object_ != object.id)
+                if (list.object_ && object && list.object_ != object.id)
                     continue;
                 result.push([list.getName(), list.getId()]);
             }
@@ -656,7 +666,7 @@ Entry.Container.prototype.getDropdownList = function(menuName, object) {
             break;
         case 'scenes':
             var scenes = Entry.scene.scenes_;
-            for (var i = 0; i<scenes.length; i++) {
+            for (var i = 0; i < scenes.length; i++) {
                 var scene = scenes[i];
                 result.push([scene.name, scene.id]);
             }
@@ -665,7 +675,7 @@ Entry.Container.prototype.getDropdownList = function(menuName, object) {
             var object = Entry.playground.object || object;
             if (!object) break;
             var sounds = object.sounds || [];
-            for (var i = 0; i<sounds.length; i++) {
+            for (var i = 0; i < sounds.length; i++) {
                 var sound = sounds[i];
                 result.push([sound.name, sound.id]);
             }
@@ -678,8 +688,8 @@ Entry.Container.prototype.getDropdownList = function(menuName, object) {
             break;
         case 'objectSequence':
             var length = this.getCurrentObjects().length;
-            for (var i = 0; i<length; i++) {
-                result.push([(i+1).toString(), (i).toString()]);
+            for (var i = 0; i < length; i++) {
+                result.push([(i + 1).toString(), i.toString()]);
             }
             break;
     }
@@ -714,28 +724,27 @@ Entry.Container.prototype.clearRunningStateOnScene = function() {
 Entry.Container.prototype.mapObject = function(mapFunction, param) {
     var length = this.objects_.length;
     var output = [];
-    for (var i = 0; i<this._extensionObjects.length; i++) {
+    for (var i = 0; i < this._extensionObjects.length; i++) {
         var object = this._extensionObjects[i];
         output.push(mapFunction(object, param));
     }
-    for (var i = 0; i<length; i++) {
+    for (var i = 0; i < length; i++) {
         var object = this.objects_[i];
         output.push(mapFunction(object, param));
     }
     return output;
 };
 
-
 Entry.Container.prototype.mapObjectOnScene = function(mapFunction, param) {
     var objects = this.getCurrentObjects();
     var length = objects.length;
     var output = [];
 
-    for (var i = 0; i<this._extensionObjects.length; i++) {
+    for (var i = 0; i < this._extensionObjects.length; i++) {
         var object = this._extensionObjects[i];
         output.push(mapFunction(object, param));
     }
-    for (var i = 0; i<length; i++) {
+    for (var i = 0; i < length; i++) {
         var object = objects[i];
         output.push(mapFunction(object, param));
     }
@@ -752,7 +761,7 @@ Entry.Container.prototype.mapObjectOnScene = function(mapFunction, param) {
 Entry.Container.prototype.mapEntity = function(mapFunction, param) {
     var length = this.objects_.length;
     var output = [];
-    for (var i = 0; i<length; i++) {
+    for (var i = 0; i < length; i++) {
         var entity = this.objects_[i].entity;
         output.push(mapFunction(entity, param));
     }
@@ -763,7 +772,7 @@ Entry.Container.prototype.mapEntityOnScene = function(mapFunction, param) {
     var objects = this.getCurrentObjects();
     var length = objects.length;
     var output = [];
-    for (var i = 0; i<length; i++) {
+    for (var i = 0; i < length; i++) {
         var entity = objects[i].entity;
         output.push(mapFunction(entity, param));
     }
@@ -782,11 +791,11 @@ Entry.Container.prototype.mapEntityIncludeClone = function(mapFunction, param) {
     var objects = this.objects_;
     var length = objects.length;
     var output = [];
-    for (var i = 0; i<length; i++) {
+    for (var i = 0; i < length; i++) {
         var object = objects[i];
         var lenx = object.clonedEntities.length;
         output.push(mapFunction(object.entity, param));
-        for (var j = 0; j<lenx; j++) {
+        for (var j = 0; j < lenx; j++) {
             var entity = object.clonedEntities[j];
             if (entity && !entity.isStamp)
                 output.push(mapFunction(entity, param));
@@ -795,15 +804,18 @@ Entry.Container.prototype.mapEntityIncludeClone = function(mapFunction, param) {
     return output;
 };
 
-Entry.Container.prototype.mapEntityIncludeCloneOnScene = function(mapFunction, param) {
+Entry.Container.prototype.mapEntityIncludeCloneOnScene = function(
+    mapFunction,
+    param
+) {
     var objects = this.getCurrentObjects();
     var length = objects.length;
     var output = [];
-    for (var i = 0; i<this._extensionObjects.length; i++) {
+    for (var i = 0; i < this._extensionObjects.length; i++) {
         var object = this._extensionObjects[i];
         output.push(mapFunction(object.entity, param));
     }
-    for (var i = 0; i<length; i++) {
+    for (var i = 0; i < length; i++) {
         var object = objects[i];
         output.push(mapFunction(object.entity, param));
 
@@ -820,7 +832,7 @@ Entry.Container.prototype.mapEntityIncludeCloneOnScene = function(mapFunction, p
  * @return {?createjs.Image}
  */
 Entry.Container.prototype.getCachedPicture = function(pictureId) {
-    Entry.assert(typeof(pictureId) == 'string', 'pictureId must be string');
+    Entry.assert(typeof pictureId == 'string', 'pictureId must be string');
     return this.cachedPicture[pictureId];
 };
 
@@ -832,21 +844,25 @@ Entry.Container.prototype.cachePicture = function(pictureId, image) {
     this.cachedPicture[pictureId] = image;
 };
 
-Entry.Container.prototype.unCachePictures = function(entity, pictures, isClone) {
+Entry.Container.prototype.unCachePictures = function(
+    entity,
+    pictures,
+    isClone
+) {
     if (!entity || !pictures) return;
     var entityId;
 
-    if (pictures.constructor !== Array)
-        pictures = [pictures];
+    if (pictures.constructor !== Array) pictures = [pictures];
 
-    if (entity.constructor === Entry.EntityObject)
-        entityId = entity.id;
+    if (entity.constructor === Entry.EntityObject) entityId = entity.id;
     else entityId = entity;
 
-    pictures.forEach(function(p) {
-        var id = p.id + (isClone ? '' : entityId);
-        delete this.cachedPicture[id];
-    }.bind(this));
+    pictures.forEach(
+        function(p) {
+            var id = p.id + (isClone ? '' : entityId);
+            delete this.cachedPicture[id];
+        }.bind(this)
+    );
 };
 
 /**
@@ -856,7 +872,7 @@ Entry.Container.prototype.unCachePictures = function(entity, pictures, isClone) 
 Entry.Container.prototype.toJSON = function() {
     var json = [];
     var length = this.objects_.length;
-    for (var i = 0; i<length; i++) {
+    for (var i = 0; i < length; i++) {
         var object = this.objects_[i];
         json.push(object.toJSON());
     }
@@ -869,8 +885,7 @@ Entry.Container.prototype.toJSON = function() {
 Entry.Container.prototype.takeSequenceSnapshot = function() {
     var length = this.objects_.length;
     var objects = this.objects_;
-    for (var i = 0; i<length; i++)
-        objects[i].index = i;
+    for (var i = 0; i < length; i++) objects[i].index = i;
 };
 
 /**
@@ -879,7 +894,7 @@ Entry.Container.prototype.takeSequenceSnapshot = function() {
 Entry.Container.prototype.loadSequenceSnapshot = function() {
     var length = this.objects_.length;
     var arr = new Array(length);
-    for (var i = 0; i<length; i++) {
+    for (var i = 0; i < length; i++) {
         var object = this.objects_[i];
         var _index = object.index !== undefined ? object.index : i;
         arr[_index] = object;
@@ -904,23 +919,21 @@ Entry.Container.prototype.getInputValue = function() {
  * @param {String} inputValue from canvas
  */
 Entry.Container.prototype.setInputValue = function(inputValue) {
-    if (this.inputValue.complete)
-        return;
-    if (!inputValue)
-        this.inputValue.setValue(0);
-    else
-        this.inputValue.setValue(inputValue);
+    if (this.inputValue.complete) return;
+    if (!inputValue) this.inputValue.setValue(0);
+    else this.inputValue.setValue(inputValue);
     Entry.stage.hideInputField();
-    Entry.dispatchEvent("answerSubmitted");
-    if (Entry.console)
-        Entry.console.stopInput(inputValue);
+    Entry.dispatchEvent('answerSubmitted');
+    if (Entry.console) Entry.console.stopInput(inputValue);
     this.inputValue.complete = true;
 };
 
 Entry.Container.prototype.resetSceneDuringRun = function() {
     if (!Entry.engine.isState('run')) return;
 
-    this.mapEntityOnScene(function(entity){ entity.reset(); });
+    this.mapEntityOnScene(function(entity) {
+        entity.reset();
+    });
     this.clearRunningStateOnScene();
     Entry.stage.hideInputField();
 };
@@ -934,10 +947,9 @@ Entry.Container.prototype.updateObjectsOrder = function() {
 
     var objs = [];
 
-    for (var i=0; i<scenes.length; i++) {
+    for (var i = 0; i < scenes.length; i++) {
         var tempObjs = this.getSceneObjects(scenes[i]);
-        for (var j=0; j<tempObjs.length; j++)
-            objs.push(tempObjs[j]);
+        for (var j = 0; j < tempObjs.length; j++) objs.push(tempObjs[j]);
     }
     this.objects_ = objs;
 };
@@ -951,7 +963,7 @@ Entry.Container.prototype.getSceneObjects = function(scene) {
     scene = scene || Entry.scene.selectedScene;
     var objects = [],
         containerObjects = this.getAllObjects();
-    for (var i=0; i<containerObjects.length; i++) {
+    for (var i = 0; i < containerObjects.length; i++) {
         if (scene.id == containerObjects[i].scene.id)
             objects.push(containerObjects[i]);
     }
@@ -970,8 +982,7 @@ Entry.Container.prototype.setCurrentObjects = function() {
  */
 Entry.Container.prototype.getCurrentObjects = function() {
     var objs = this.currentObjects_;
-    if (!objs || objs.length === 0)
-        this.setCurrentObjects();
+    if (!objs || objs.length === 0) this.setCurrentObjects();
     return this.currentObjects_ || [];
 };
 
@@ -990,10 +1001,9 @@ Entry.Container.prototype.getProjectWithJSON = function(project) {
 
 Entry.Container.prototype.blurAllInputs = function() {
     var objects = this.getSceneObjects();
-    objects.map(function (obj) {
+    objects.map(function(obj) {
         var inputs = obj.view_.getElementsByTagName('input');
-        for (var i=0, len=inputs.length; i<len; i++)
-            inputs[i].blur();
+        for (var i = 0, len = inputs.length; i < len; i++) inputs[i].blur();
     });
 };
 
@@ -1003,8 +1013,10 @@ Entry.Container.prototype.showProjectAnswer = function() {
     answer.setVisible(true);
 };
 
-
-Entry.Container.prototype.hideProjectAnswer = function(removeBlock, notIncludeSelf) {
+Entry.Container.prototype.hideProjectAnswer = function(
+    removeBlock,
+    notIncludeSelf
+) {
     var answer = this.inputValue;
     if (!answer || !answer.isVisible() || Entry.engine.isState('run')) return;
 
@@ -1012,7 +1024,7 @@ Entry.Container.prototype.hideProjectAnswer = function(removeBlock, notIncludeSe
     var answerTypes = [
         'ask_and_wait',
         'get_canvas_input_value',
-        'set_visible_answer'
+        'set_visible_answer',
     ];
 
     for (var i = 0, len = objects.length; i < len; i++) {
@@ -1042,25 +1054,30 @@ Entry.Container.prototype.resize = function() {
 };
 
 Entry.Container.prototype._rightClick = function(e) {
-    if (e.stopPropagation)
-        e.stopPropagation();
+    if (e.stopPropagation) e.stopPropagation();
     var options = [
         {
             text: Lang.Blocks.Paste_blocks,
-            enable: !Entry.engine.isState('run') && !!Entry.container.copiedObject,
-            callback: function(){
+            enable:
+                !Entry.engine.isState('run') && !!Entry.container.copiedObject,
+            callback: function() {
                 if (Entry.container.copiedObject)
-                    Entry.container.addCloneObject(Entry.container.copiedObject);
+                    Entry.container.addCloneObject(
+                        Entry.container.copiedObject
+                    );
                 else
-                    Entry.toast.alert(Lang.Workspace.add_object_alert, Lang.Workspace.object_not_found_for_paste);
-            }
-         }
+                    Entry.toast.alert(
+                        Lang.Workspace.add_object_alert,
+                        Lang.Workspace.object_not_found_for_paste
+                    );
+            },
+        },
     ];
 
-    Entry.ContextMenu.show(
-        options, 'workspace-contextmenu',
-        { x: e.clientX, y: e.clientY }
-    );
+    Entry.ContextMenu.show(options, 'workspace-contextmenu', {
+        x: e.clientX,
+        y: e.clientY,
+    });
 };
 
 Entry.Container.prototype.removeFuncBlocks = function(functionType) {
@@ -1070,10 +1087,14 @@ Entry.Container.prototype.removeFuncBlocks = function(functionType) {
 };
 
 Entry.Container.prototype.clear = function() {
-    this.objects_.map(function(o) {o.destroy();});
+    this.objects_.map(function(o) {
+        o.destroy();
+    });
     this.objects_ = [];
     // INFO : clear 시도할때 _extensionObjects 초기화
-    this._extensionObjects.map(function(o) {o.destroy();});
+    this._extensionObjects.map(function(o) {
+        o.destroy();
+    });
     this._extensionObjects = [];
     // TODO: clear 때 this._extensionListView 도 비워 줘야 하는지 확인 필요.
     Entry.playground.flushPlayground();
@@ -1081,15 +1102,13 @@ Entry.Container.prototype.clear = function() {
 
 Entry.Container.prototype.selectNeighborObject = function(option) {
     var objects = this.getCurrentObjects();
-    if(!objects || objects.length === 0)
-        return;
+    if (!objects || objects.length === 0) return;
 
     var currentIndex = objects.indexOf(Entry.playground.object);
     var maxLen = objects.length;
     switch (option) {
         case 'prev':
-            if (--currentIndex < 0)
-                currentIndex = objects.length - 1;
+            if (--currentIndex < 0) currentIndex = objects.length - 1;
             break;
         case 'next':
             currentIndex = ++currentIndex % maxLen;
@@ -1097,7 +1116,7 @@ Entry.Container.prototype.selectNeighborObject = function(option) {
     }
 
     var object = objects[currentIndex];
-    if(!object) return;
+    if (!object) return;
 
     Entry.container.selectObject(object.id);
 };
@@ -1108,8 +1127,8 @@ Entry.Container.prototype.getObjectIndex = function(objectId) {
 
 Entry.Container.prototype.getDom = function(query) {
     if (query.length >= 1) {
-        switch(query.shift()) {
-            case "objectIndex":
+        switch (query.shift()) {
+            case 'objectIndex':
                 return this.objects_[query.shift()].getDom(query);
         }
     } else {
@@ -1125,7 +1144,8 @@ Entry.Container.prototype.adjustClonedValues = function(oldIds, newIds) {
     if (!(oldIds && newIds)) return;
     var that = this;
     newIds.forEach(function(newId) {
-        that.getObject(newId)
+        that
+            .getObject(newId)
             .script.getBlockList()
             .forEach(function(b) {
                 if (!b || !b.params) return;
@@ -1137,7 +1157,7 @@ Entry.Container.prototype.adjustClonedValues = function(oldIds, newIds) {
                     changed = true;
                     return newIds[index];
                 });
-                changed && b.set({params: ret});
+                changed && b.set({ params: ret });
             });
     });
 };

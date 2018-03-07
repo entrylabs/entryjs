@@ -1,11 +1,7 @@
 /*
  */
-"use strict";
+'use strict';
 
-goog.provide("Entry.FieldIndicator");
-
-goog.require("Entry.Field");
-goog.require("Entry.SVG");
 /*
  *
  */
@@ -18,7 +14,7 @@ Entry.FieldIndicator = function(content, blockView, index) {
 
     this._size = content.size;
     if (content.img) {
-        if(this._block.deletable === Entry.Block.DELETABLE_FALSE_LIGHTEN)
+        if (this._block.deletable === Entry.Block.DELETABLE_FALSE_LIGHTEN)
             this._imgUrl = content.img.replace('.png', '_un.png');
         else this._imgUrl = content.img;
     } else if (content.color) {
@@ -26,7 +22,7 @@ Entry.FieldIndicator = function(content, blockView, index) {
     }
 
     this._boxMultiplier = content.boxMultiplier || 2;
-    this._highlightColor = content.highlightColor || "#F59900";
+    this._highlightColor = content.highlightColor || '#F59900';
     this._position = content.position;
 
     this._index = index;
@@ -43,8 +39,9 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldIndicator);
     p.renderStart = function() {
         var options;
         if (!this._imgElement) {
-            this.svgGroup = this._imgElement =
-                this._blockView.contentSvgGroup.elem("image");
+            this.svgGroup = this._imgElement = this._blockView.contentSvgGroup.elem(
+                'image'
+            );
         }
 
         if (this._imgUrl) {
@@ -57,15 +54,19 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldIndicator);
             };
             this._imgElement.attr(options);
 
-            if (this._block.emphasized && this._imgUrl.lastIndexOf('_un.png') === -1) {
+            if (
+                this._block.emphasized &&
+                this._imgUrl.lastIndexOf('_un.png') === -1
+            ) {
                 this._imgUrl = this._imgUrl.replace('.png', '_un.png');
             }
         }
 
         this.box.set({
-            width: this._size * this._boxMultiplier +
+            width:
+                this._size * this._boxMultiplier +
                 (this._position ? -this._size : 0),
-            height: this._size * this._boxMultiplier
+            height: this._size * this._boxMultiplier,
         });
     };
 
@@ -76,19 +77,27 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldIndicator);
         this._path.attr({
             stroke: this._highlightColor,
             strokeWidth: 2,
-            "stroke-linecap": "round",
-            "stroke-dasharray": pathLen + " " + pathLen,
-            "stroke-dashoffset": pathLen
+            'stroke-linecap': 'round',
+            'stroke-dasharray': pathLen + ' ' + pathLen,
+            'stroke-dashoffset': pathLen,
         });
-        setInterval(function() {
-            path.attr({"stroke-dashoffset": pathLen})
-            .animate({"stroke-dashoffset": 0}, 300);
-        }, 1400, mina.easeout);
+        setInterval(
+            function() {
+                path
+                    .attr({ 'stroke-dashoffset': pathLen })
+                    .animate({ 'stroke-dashoffset': 0 }, 300);
+            },
+            1400,
+            mina.easeout
+        );
         setTimeout(function() {
-            setInterval(function() {
-                path.animate({"stroke-dashoffset": - pathLen}, 300);
-            }, 1400, mina.easeout);
+            setInterval(
+                function() {
+                    path.animate({ 'stroke-dashoffset': -pathLen }, 300);
+                },
+                1400,
+                mina.easeout
+            );
         }, 500);
     };
-
 })(Entry.FieldIndicator.prototype);

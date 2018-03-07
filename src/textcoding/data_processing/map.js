@@ -1,9 +1,7 @@
 /*
  *
  */
-"use strict";
-
-goog.provide("Entry.Map");
+'use strict';
 
 Entry.Map = function() {
     var map = {};
@@ -11,46 +9,45 @@ Entry.Map = function() {
     this._map = map;
 };
 
-(function(p){
-	p.getKey = function(id) {
-		return id;
-	};
+(function(p) {
+    p.getKey = function(id) {
+        return id;
+    };
 
-	p.put = function(id, value) {
-		var key = this.getKey(id);
-		this._map.repo[key] = value;
-	};
+    p.put = function(id, value) {
+        var key = this.getKey(id);
+        this._map.repo[key] = value;
+    };
 
-	p.contains = function(id) {
-		var key = this.getKey(id);
-		if(this._map.repo[key]) {
-		 	return true;
-		} else {
-			return false;
-		}
-	};
+    p.contains = function(id) {
+        var key = this.getKey(id);
+        if (this._map.repo[key]) {
+            return true;
+        } else {
+            return false;
+        }
+    };
 
-	p.get = function(id) {
-		var key = this.getKey(id);
-		if(this._map.repo[key]) {
-			return this._map.repo[key];
-		}
-		return null;
-	};
+    p.get = function(id) {
+        var key = this.getKey(id);
+        if (this._map.repo[key]) {
+            return this._map.repo[key];
+        }
+        return null;
+    };
 
-	p.remove = function(id) {
-		var key = this.getKey(id);
-		if(this.contains(id)){
-		  this._map.repo[key] = undefined;
-		}
-	};
+    p.remove = function(id) {
+        var key = this.getKey(id);
+        if (this.contains(id)) {
+            this._map.repo[key] = undefined;
+        }
+    };
 
-	p.clear = function() {
-		this._map.repo = {};
-	}
+    p.clear = function() {
+        this._map.repo = {};
+    };
 
-	p.toString = function() {
-		return this._map.repo;
-	}
-
+    p.toString = function() {
+        return this._map.repo;
+    };
 })(Entry.Map.prototype);

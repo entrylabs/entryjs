@@ -1,11 +1,4 @@
-"use strict";
-
-goog.provide("Entry.BlockMenu");
-
-goog.require("Entry.Dom");
-goog.require("Entry.Model");
-goog.require("Entry.Utils");
-
+'use strict';
 /*
  *
  * @param {object} dom which to inject playground
@@ -18,7 +11,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
     this._setDynamic = Entry.Utils.debounce(this._setDynamic, 150);
     this._dSelectMenu = Entry.Utils.debounce(this.selectMenu, 0);
 
-    this._align = align || "CENTER";
+    this._align = align || 'CENTER';
     this.setAlign(this._align);
     this._scroll = scroll !== undefined ? scroll : false;
     this._bannedClass = [];
@@ -33,11 +26,11 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
 
     this._threadsMap = {};
 
-    if (typeof dom === "string") dom = $('#' + dom);
+    if (typeof dom === 'string') dom = $('#' + dom);
     else dom = $(dom);
 
-    if (dom.prop("tagName") !== "DIV")
-        return console.error("Dom is not div element");
+    if (dom.prop('tagName') !== 'DIV')
+        return console.error('Dom is not div element');
 
     this.view = dom;
 
@@ -56,18 +49,18 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
     var returnVal = Entry.Utils.addBlockPattern(this.svg, this.suffix);
     this.pattern = returnVal.pattern;
 
-    this.svgGroup = this.svg.elem("g");
+    this.svgGroup = this.svg.elem('g');
 
-    this.svgThreadGroup = this.svgGroup.elem("g");
+    this.svgThreadGroup = this.svgGroup.elem('g');
     this.svgThreadGroup.board = this;
 
-    this.svgBlockGroup = this.svgGroup.elem("g");
+    this.svgBlockGroup = this.svgGroup.elem('g');
     this.svgBlockGroup.board = this;
 
     this.changeEvent = new Entry.Event(this);
     this.categoryDoneEvent = new Entry.Event(this);
 
-    this.observe(this, "_handleDragBlock", ["dragBlock"]);
+    this.observe(this, '_handleDragBlock', ['dragBlock']);
 
     this.changeCode(new Entry.Code([]));
     categoryData && this._generateCategoryCodes();
@@ -86,11 +79,17 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
         Entry.windowResized.attach(this, dUpdateOffset);
     }
 
-    Entry.addEventListener('setBlockMenuDynamic', function() {
-        this._setDynamicTimer = this._setDynamic.apply(this, arguments);
-    }.bind(this));
+    Entry.addEventListener(
+        'setBlockMenuDynamic',
+        function() {
+            this._setDynamicTimer = this._setDynamic.apply(this, arguments);
+        }.bind(this)
+    );
 
-    Entry.addEventListener('cancelBlockMenuDynamic', this._cancelDynamic.bind(this));
+    Entry.addEventListener(
+        'cancelBlockMenuDynamic',
+        this._cancelDynamic.bind(this)
+    );
     Entry.addEventListener('fontLoaded', this.reDraw.bind(this));
 };
 
@@ -104,7 +103,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
         code: null,
         dragBlock: null,
         closeBlock: null,
-        selectedBlockView: null
+        selectedBlockView: null,
     };
 
     p._generateView = function(categoryData) {
@@ -114,12 +113,16 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
         categoryData && this._generateCategoryView(categoryData);
 
         this.blockMenuContainer = Entry.Dom('div', {
-            'class':'blockMenuContainer',
-            'parent':parent
+            class: 'blockMenuContainer',
+            parent: parent,
         });
 
         this.svgDom = Entry.Dom(
-            $('<svg id="' + this._svgId +'" class="blockMenu" version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'),
+            $(
+                '<svg id="' +
+                    this._svgId +
+                    '" class="blockMenu" version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'
+            ),
             { parent: this.blockMenuContainer }
         );
 
@@ -127,15 +130,22 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
             that._scroller && that._scroller.setOpacity(1);
 
             var selectedBlockView = that.workspace.selectedBlockView;
-            if (!Entry.playground || Entry.playground.resizing ||
-                (selectedBlockView && selectedBlockView.dragMode === Entry.DRAG_MODE_DRAG)) return;
+            if (
+                !Entry.playground ||
+                Entry.playground.resizing ||
+                (selectedBlockView &&
+                    selectedBlockView.dragMode === Entry.DRAG_MODE_DRAG)
+            )
+                return;
             Entry.playground.focusBlockMenu = true;
             var bBox = that.svgGroup.getBBox();
             var adjust = that.hasCategory() ? 64 : 0;
             var expandWidth = bBox.width + bBox.x + adjust;
             if (expandWidth > Entry.interfaceState.menuWidth) {
                 this.widthBackup = Entry.interfaceState.menuWidth - adjust;
-                $(this).stop().animate({ width: expandWidth - adjust }, 200);
+                $(this)
+                    .stop()
+                    .animate({ width: expandWidth - adjust }, 200);
             }
         });
 
@@ -147,7 +157,9 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
 
             var widthBackup = this.widthBackup;
             if (widthBackup) {
-                $(this).stop().animate({ width: widthBackup }, 200);
+                $(this)
+                    .stop()
+                    .animate({ width: widthBackup }, 200);
             }
             delete this.widthBackup;
             delete playground.focusBlockMenu;
@@ -157,19 +169,18 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
     };
 
     p.changeCode = function(code, isImmediate) {
-        if (code instanceof Array)
-            code = new Entry.Code(code);
+        if (code instanceof Array) code = new Entry.Code(code);
 
         if (!(code instanceof Entry.Code))
-            return console.error("You must inject code instance");
+            return console.error('You must inject code instance');
 
         if (this.codeListener) this.codeListener.destroy();
 
         var that = this;
-        this.set({code:code});
-        this.codeListener = this.code.changeEvent.attach(
-            this, function() {that.changeEvent.notify();}
-        );
+        this.set({ code: code });
+        this.codeListener = this.code.changeEvent.attach(this, function() {
+            that.changeEvent.notify();
+        });
         code.createView(this);
 
         if (isImmediate) this.align();
@@ -183,8 +194,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
         this.svgThreadGroup = codeView.svgThreadGroup;
         this.svgGroup.appendChild(this.svgThreadGroup);
         this.svgGroup.appendChild(this.svgBlockGroup);
-        if (this._scroller)
-            this.svgGroup.appendChild(this._scroller.svgGroup);
+        if (this._scroller) this.svgGroup.appendChild(this._scroller.svgGroup);
     };
 
     p.align = function() {
@@ -194,7 +204,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
 
         var vPadding = 15,
             marginFromTop = 10,
-            hPadding = this._align == 'LEFT' ? 10 : this.svgDom.width()/2;
+            hPadding = this._align == 'LEFT' ? 10 : this.svgDom.width() / 2;
 
         var pastClass;
         var blocks = this._getSortedBlocks();
@@ -204,33 +214,35 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
         inVisibles.forEach(function(block) {
             var blockView = block && block.view;
             if (!blockView) return;
-            blockView.set({display:false});
+            blockView.set({ display: false });
             blockView.detach();
         });
 
         var lastSelector = this.lastSelector;
         var shouldReDraw = !this._renderedCategories[lastSelector];
-        visibles.forEach(function(block) {
-            var blockView = block && block.view;
-            if (!blockView) return;
-            blockView.attach();
-            blockView.set({display:true});
-            shouldReDraw && blockView.reDraw();
+        visibles.forEach(
+            function(block) {
+                var blockView = block && block.view;
+                if (!blockView) return;
+                blockView.attach();
+                blockView.set({ display: true });
+                shouldReDraw && blockView.reDraw();
 
-            var className = Entry.block[block.type].class;
-            if (pastClass && pastClass !== className) {
-                this._createSplitter(marginFromTop);
-                marginFromTop += vPadding;
-            }
-            pastClass = className;
+                var className = Entry.block[block.type].class;
+                if (pastClass && pastClass !== className) {
+                    this._createSplitter(marginFromTop);
+                    marginFromTop += vPadding;
+                }
+                pastClass = className;
 
-            var left = hPadding - blockView.offsetX;
-            if (this._align == 'CENTER') left -= blockView.width/2;
+                var left = hPadding - blockView.offsetX;
+                if (this._align == 'CENTER') left -= blockView.width / 2;
 
-            marginFromTop -= blockView.offsetY;
-            blockView._moveTo(left, marginFromTop, false);
-            marginFromTop += blockView.height + vPadding;
-        }.bind(this));
+                marginFromTop -= blockView.offsetY;
+                blockView._moveTo(left, marginFromTop, false);
+                marginFromTop += blockView.height + vPadding;
+            }.bind(this)
+        );
 
         this.updateSplitters();
 
@@ -267,15 +279,19 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
 
         var board = workspace.selectedBoard;
         var mouseDownCoordinate = blockView.mouseDownCoordinate;
-        var dx = 0, dy = 0;
+        var dx = 0,
+            dy = 0;
 
         if (mouseDownCoordinate) {
             dx = e.pageX - mouseDownCoordinate.x;
             dy = e.pageY - mouseDownCoordinate.y;
         }
 
-        if (board && (workspaceMode === WORKSPACE.MODE_BOARD ||
-            workspaceMode === WORKSPACE.MODE_OVERLAYBOARD)) {
+        if (
+            board &&
+            (workspaceMode === WORKSPACE.MODE_BOARD ||
+                workspaceMode === WORKSPACE.MODE_OVERLAYBOARD)
+        ) {
             if (!board.code) {
                 if (Entry.toast) {
                     Entry.toast.alert(
@@ -287,7 +303,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
                     this.selectedBlockView.removeSelected();
                     this.set({
                         selectedBlockView: null,
-                        dragBlock: null
+                        dragBlock: null,
                     });
                 }
                 return;
@@ -306,11 +322,13 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
                 datum[0].x = datum[0].x - svgWidth + (dx || 0);
                 datum[0].y = datum[0].y + distance + (dy || 0);
 
-                var newBlock = Entry.do("addThreadFromBlockMenu", datum)
-                    .value.getFirstBlock();
+                var newBlock = Entry.do(
+                    'addThreadFromBlockMenu',
+                    datum
+                ).value.getFirstBlock();
                 var newBlockView = newBlock && newBlock.view;
 
-                //if some error occured 
+                //if some error occured
                 //blockView is not exist
                 if (!newBlockView) {
                     newBlock && newBlock.destroy();
@@ -321,7 +339,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
 
                 newBlockView.onMouseDown.call(newBlockView, e);
                 newBlockView.dragInstance.set({
-                    isNew: true
+                    isNew: true,
                 });
 
                 GS.setView(newBlockView, workspaceMode);
@@ -347,12 +365,14 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
 
         //board block should be removed below the amount of range
         var blockLeft = Entry.GlobalSvg.left;
-        var width = Entry.GlobalSvg.width/2;
+        var width = Entry.GlobalSvg.width / 2;
         var boardLeft = boardBlockView.getBoard().offset().left;
         return blockLeft < boardLeft - width;
     };
 
-    p.getCode = function(thread) { return this.code; };
+    p.getCode = function(thread) {
+        return this.code;
+    };
 
     p.setSelectedBlock = function(blockView) {
         var old = this.selectedBlockView;
@@ -363,12 +383,16 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
             blockView.addSelected();
         } else blockView = null;
 
-        this.set({selectedBlockView:blockView});
+        this.set({ selectedBlockView: blockView });
     };
 
-    p.hide = function() {this.view.addClass('entryRemove');};
+    p.hide = function() {
+        this.view.addClass('entryRemove');
+    };
 
-    p.show = function() {this.view.removeClass('entryRemove');};
+    p.show = function() {
+        this.view.removeClass('entryRemove');
+    };
 
     p.renderText = function(blocks) {
         if (!this._isOn()) return;
@@ -376,15 +400,16 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
         var blocks = blocks || this._getSortedBlocks();
         var targetMode = Entry.BlockView.RENDER_MODE_TEXT;
 
-        blocks[0].forEach(function(block) {
-            if (targetMode === block.view.renderMode)
-                return;
-            var thread = block.getThread();
-            if (thread.view) {
-                thread.view.renderText();
-            } else
-                thread.createView(this, Entry.BlockView.RENDER_MODE_TEXT);
-        }.bind(this));
+        blocks[0].forEach(
+            function(block) {
+                if (targetMode === block.view.renderMode) return;
+                var thread = block.getThread();
+                if (thread.view) {
+                    thread.view.renderText();
+                } else
+                    thread.createView(this, Entry.BlockView.RENDER_MODE_TEXT);
+            }.bind(this)
+        );
         return blocks;
     };
 
@@ -393,29 +418,29 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
 
         var that = this;
 
-        blocks = blocks ||this._getSortedBlocks();
+        blocks = blocks || this._getSortedBlocks();
         var targetMode = Entry.BlockView.RENDER_MODE_BLOCK;
 
         blocks[0].forEach(function(block) {
-            if (targetMode === block.view.renderMode)
-                return;
+            if (targetMode === block.view.renderMode) return;
             var thread = block.getThread();
             if (thread.view) {
                 thread.view.renderBlock();
-            } else
-                thread.createView(that, Entry.BlockView.RENDER_MODE_BLOCK);
+            } else thread.createView(that, Entry.BlockView.RENDER_MODE_BLOCK);
         });
         return blocks;
     };
 
     p._createSplitter = function(topPos) {
-        this._splitters.push(this.svgBlockGroup.elem("line", {
-            x1: splitterHPadding,
-            y1: topPos,
-            x2: this._svgWidth - splitterHPadding,
-            y2: topPos,
-            stroke : '#b5b5b5'
-        }));
+        this._splitters.push(
+            this.svgBlockGroup.elem('line', {
+                x1: splitterHPadding,
+                y1: topPos,
+                x2: this._svgWidth - splitterHPadding,
+                y2: topPos,
+                stroke: '#b5b5b5',
+            })
+        );
     };
 
     p.updateSplitters = function(y) {
@@ -427,7 +452,9 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
         splitters.forEach(function(line) {
             yDest = parseFloat(line.getAttribute('y1')) + y;
             line.attr({
-                x2: xDest, y1:yDest, y2:yDest
+                x2: xDest,
+                y1: yDest,
+                y2: yDest,
             });
         });
     };
@@ -447,41 +474,45 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
 
         var sorted = [[], []];
 
-        this._categoryData.forEach(function(data) {
-            var category = data.category;
-            var threads = data.blocks;
+        this._categoryData.forEach(
+            function(data) {
+                var category = data.category;
+                var threads = data.blocks;
 
-            if (category === 'func') {
-                var funcThreads = this.code.getThreadsByCategory('func')
-                            .map(function(t) {
-                                return t.getFirstBlock().type;
-                            });
-                threads = funcThreads.length ? funcThreads : threads;
-            }
+                if (category === 'func') {
+                    var funcThreads = this.code
+                        .getThreadsByCategory('func')
+                        .map(function(t) {
+                            return t.getFirstBlock().type;
+                        });
+                    threads = funcThreads.length ? funcThreads : threads;
+                }
 
-            var count = threads.length;
-            for (var i=0; i<threads.length; i++) {
-                if (this.checkBanClass(Entry.block[threads[i]])) count--;
-            }
-            var elem = this._categoryElems[category];
+                var count = threads.length;
+                for (var i = 0; i < threads.length; i++) {
+                    if (this.checkBanClass(Entry.block[threads[i]])) count--;
+                }
+                var elem = this._categoryElems[category];
 
-            if (count === 0) sorted[1].push(elem);
-            else sorted[0].push(elem);
-        }.bind(this));
+                if (count === 0) sorted[1].push(elem);
+                else sorted[0].push(elem);
+            }.bind(this)
+        );
 
-        requestAnimationFrame(function () {
-            //visible
-            sorted[0].forEach(function (elem) {
-                elem.removeClass('entryRemove');
-            });
-            //invisible
-            sorted[1].forEach(function (elem) {
-                elem.addClass('entryRemove');
-            });
-            this.selectMenu(0, true, doNotAlign);
-        }.bind(this));
+        requestAnimationFrame(
+            function() {
+                //visible
+                sorted[0].forEach(function(elem) {
+                    elem.removeClass('entryRemove');
+                });
+                //invisible
+                sorted[1].forEach(function(elem) {
+                    elem.addClass('entryRemove');
+                });
+                this.selectMenu(0, true, doNotAlign);
+            }.bind(this)
+        );
     };
-
 
     p.getCategoryCodes = function(selector) {
         //TODO if needed
@@ -496,8 +527,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
         for (var i = 0; i < categories.length; i++) {
             var key = categories[i];
             var visible = !elems[key].hasClass('entryRemove');
-            if (visible)
-                if (selector-- === 0) return key;
+            if (visible) if (selector-- === 0) return key;
         }
     };
 
@@ -550,11 +580,10 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
             }
             boardView.removeClass('folding');
             this.visible = true;
-        } else if (!name)
-            this._selectedCategoryView = null;
+        } else if (!name) this._selectedCategoryView = null;
 
         if (animate) {
-            Entry.bindAnimationCallbackOnce(boardView, function(){
+            Entry.bindAnimationCallbackOnce(boardView, function() {
                 board.scroller.resizeScrollBar.call(board.scroller);
                 boardView.removeClass('foldOut');
                 Entry.windowResized.notify();
@@ -581,13 +610,15 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
             var key = elems.shift();
             if (key !== HW) {
                 this._generateCategoryCode(key);
-            }  else this._generateHwCode(true);
+            } else this._generateHwCode(true);
 
             if (elems.length) {
-                this._generateCodesTimer =
-                    setTimeout(function() {
+                this._generateCodesTimer = setTimeout(
+                    function() {
                         this._generateCategoryCodes(elems);
-                }.bind(this), 0);
+                    }.bind(this),
+                    0
+                );
             } else {
                 this._generateCodesTimer = null;
                 this.view.removeClass('init');
@@ -611,19 +642,21 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
 
         var category = key;
         var blocks = datum.blocks;
-        blocks.forEach(function(b){
+        blocks.forEach(function(b) {
             var block = Entry.block[b];
             if (!block || !block.def) {
-                codes.push([{ type:b, category: category }]);
+                codes.push([{ type: b, category: category }]);
             } else {
                 if (block.defs) {
-                    block.defs.forEach(function(d) { d.category = category; });
-                    for (var i =0; i <block.defs.length; i++) {
-                        codes.push([ block.defs[i] ]);
+                    block.defs.forEach(function(d) {
+                        d.category = category;
+                    });
+                    for (var i = 0; i < block.defs.length; i++) {
+                        codes.push([block.defs[i]]);
                     }
                 } else {
                     block.def.category = category;
-                    codes.push([ block.def ]);
+                    codes.push([block.def]);
                 }
             }
         });
@@ -636,20 +669,22 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
             if (threads.length) index = this.code.getThreadIndex(threads[0]);
         }
 
-        codes.forEach(function(t) {
-            if (!t || !t[0]) return;
-            t[0].x = -99999;
-            this._createThread(t, index);
-            if (index !== undefined) index++;
-            delete t[0].x;
-        }.bind(this));
+        codes.forEach(
+            function(t) {
+                if (!t || !t[0]) return;
+                t[0].x = -99999;
+                this._createThread(t, index);
+                if (index !== undefined) index++;
+                delete t[0].x;
+            }.bind(this)
+        );
 
         code.changeEvent.notify();
     };
 
     p.banCategory = function(categoryName) {
         var categoryElem;
-        if(categoryName in this._categoryElems) {
+        if (categoryName in this._categoryElems) {
             categoryElem = this._categoryElems[categoryName];
             categoryElem.addClass('entryRemoveCategory');
             if (this.lastSelector === categoryName) {
@@ -662,25 +697,25 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
         var categoryElem;
 
         var threads;
-        this._categoryData.some(function (data) {
+        this._categoryData.some(function(data) {
             var isFindCategory = categoryName === data.category;
-            if(isFindCategory) {
+            if (isFindCategory) {
                 threads = data.blocks;
             }
             return isFindCategory;
         });
 
         var count = threads.length;
-        for (var i=0; i<threads.length; i++) {
+        for (var i = 0; i < threads.length; i++) {
             if (this.checkBanClass(Entry.block[threads[i]])) count--;
         }
 
-        if(categoryName in this._categoryElems && count > 0) {
+        if (categoryName in this._categoryElems && count > 0) {
             categoryElem = this._categoryElems[categoryName];
             categoryElem.removeClass('entryRemoveCategory');
             categoryElem.removeClass('entryRemove');
         }
-    }
+    };
 
     p.banClass = function(className, doNotAlign) {
         var index = this._bannedClass.indexOf(className);
@@ -705,7 +740,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
 
         var current;
         var banned = this._bannedClass;
-        for (var i=0; i<isNotFor.length; i++) {
+        for (var i = 0; i < isNotFor.length; i++) {
             current = isNotFor[i];
             if (current && banned.indexOf(current) === -1) {
                 return false;
@@ -728,7 +763,9 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
         var that = this;
         var svgDom = this.svgDom;
 
-        dom.on('wheel', function(){ that._mouseWheel.apply(that, arguments); });
+        dom.on('wheel', function() {
+            that._mouseWheel.apply(that, arguments);
+        });
 
         if (that._scroller) {
             $(this.svg).bind('mousedown touchstart', function(e) {
@@ -737,7 +774,9 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
         }
     };
 
-    p.removeControl = function(eventType) { this.svgDom.off(eventType); };
+    p.removeControl = function(eventType) {
+        this.svgDom.off(eventType);
+    };
 
     p.onMouseDown = function(e) {
         if (e.stopPropagation) e.stopPropagation();
@@ -757,7 +796,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
             doc.bind('touchend.blockMenu', onMouseUp);
             this.dragInstance = new Entry.DragInstance({
                 startY: mouseEvent.pageY,
-                offsetY: mouseEvent.pageY
+                offsetY: mouseEvent.pageY,
             });
         }
 
@@ -800,14 +839,15 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
 
         this.selectMenu(selector, true);
         this._getSortedBlocks()
-            .shift().forEach(function (block) {
+            .shift()
+            .forEach(function(block) {
                 block.view.reDraw();
             });
     };
 
     p._handleDragBlock = function() {
         this._boardBlockView = null;
-        if (this._scroller)  {
+        if (this._scroller) {
             this._scroller.setOpacity(0);
         }
     };
@@ -818,18 +858,23 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
         if (e.ctrlKey && Entry.type == 'workspace') {
             if (keyCode > 48 && keyCode < 58) {
                 e.preventDefault();
-                setTimeout(function() {
-                    this._cancelDynamic(true);
-                    this._dSelectMenu(keyCode - 49, true);
-                }.bind(this), 200);
+                setTimeout(
+                    function() {
+                        this._cancelDynamic(true);
+                        this._dSelectMenu(keyCode - 49, true);
+                    }.bind(this),
+                    200
+                );
             }
         }
     };
 
-    p.enablePattern = function() { this.pattern.removeAttribute('style'); };
+    p.enablePattern = function() {
+        this.pattern.removeAttribute('style');
+    };
 
     p.disablePattern = function() {
-        this.pattern.attr({ style: "display: none" });
+        this.pattern.attr({ style: 'display: none' });
     };
 
     p._clearCategory = function() {
@@ -843,13 +888,11 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
         this._threadsMap = {};
 
         var categories = this._categoryElems;
-        for (var key in categories)
-            categories[key].remove();
+        for (var key in categories) categories[key].remove();
 
         this._categoryElems = {};
 
-        if (this.code && this.code.constructor == Entry.Code)
-            this.code.clear();
+        if (this.code && this.code.constructor == Entry.Code) this.code.clear();
 
         this._categoryCol && this._categoryCol.remove();
         this._categoryData = null;
@@ -876,21 +919,27 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
     p._generateCategoryView = function(data) {
         if (!data) return;
 
-        this._categoryCol && this._categoryCol.remove && this._categoryCol.remove();
+        this._categoryCol &&
+            this._categoryCol.remove &&
+            this._categoryCol.remove();
 
         this._categoryCol = Entry.Dom('ul', {
-            class: 'entryCategoryListWorkspace'
+            class: 'entryCategoryListWorkspace',
         });
         this.view.prepend(this._categoryCol);
 
         var fragment = document.createDocumentFragment();
 
-        data.forEach(function(datum, i) {
-            var cName = datum.category;
-            if (i === 0) { this.firstSelector = cName; }
-            var elem = this._generateCategoryElement(cName, datum.visible);
-            fragment.appendChild(elem[0]);
-        }.bind(this));
+        data.forEach(
+            function(datum, i) {
+                var cName = datum.category;
+                if (i === 0) {
+                    this.firstSelector = cName;
+                }
+                var elem = this._generateCategoryElement(cName, datum.visible);
+                fragment.appendChild(elem[0]);
+            }.bind(this)
+        );
 
         this._categoryCol[0].appendChild(fragment);
     };
@@ -899,11 +948,13 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
         var that = this;
         var element = Entry.Dom('li', {
             id: 'entryCategory' + name,
-            classes: ['entryCategoryElementWorkspace', 'entryRemove']
+            classes: ['entryCategoryElementWorkspace', 'entryRemove'],
         });
-        if (visible === false) { element.addClass('entryRemoveCategory'); }
+        if (visible === false) {
+            element.addClass('entryRemoveCategory');
+        }
 
-        (function(elem, name){
+        (function(elem, name) {
             elem.text(Lang.Blocks[name.toUpperCase()]);
             that._categoryElems[name] = elem;
             elem.bindOnClick(function(e) {
@@ -917,12 +968,13 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
         return element;
     };
 
-    p.updateOffset = function () { this._offset = this.svgDom.offset(); };
-
+    p.updateOffset = function() {
+        this._offset = this.svgDom.offset();
+    };
 
     p.offset = function() {
         var offset = this._offset;
-        if (!offset || (offset.top === 0 && offset.left === 0))  {
+        if (!offset || (offset.top === 0 && offset.left === 0)) {
             this.updateOffset();
         }
         return this._offset;
@@ -932,17 +984,18 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
         var code = this.code;
         var threads = code.getThreadsByCategory(HW);
 
-        if (!(this._categoryData && this.shouldGenerateHwCode(threads)))
-            return;
+        if (!(this._categoryData && this.shouldGenerateHwCode(threads))) return;
 
-        threads.forEach(function(t) {
-            this._deleteThreadsMap(t);
-            t.destroy();
-        }.bind(this));
+        threads.forEach(
+            function(t) {
+                this._deleteThreadsMap(t);
+                t.destroy();
+            }.bind(this)
+        );
 
         var data = this._categoryData;
         var blocks;
-        for (var i = data.length-1; i >= 0; i--) {
+        for (var i = data.length - 1; i >= 0; i--) {
             var category = data[i].category;
             if (category === HW) {
                 blocks = data[i].blocks;
@@ -953,37 +1006,41 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
         if (!blocks) return;
         var threads = [];
 
-        for (i =0; i<blocks.length; i++) {
+        for (i = 0; i < blocks.length; i++) {
             var type = blocks[i];
             var block = Entry.block[type];
-            if(!this.checkBanClass(block)) {
+            if (!this.checkBanClass(block)) {
                 if (!block || !block.def) {
-                    threads.push([{ type:type, category: HW }]);
+                    threads.push([{ type: type, category: HW }]);
                 } else {
                     if (block.defs) {
-                        block.defs.forEach(function(d) { d.category = HW; });
-                        for (var i =0; i <block.defs.length; i++)
-                            threads.push([ block.defs[i] ]);
+                        block.defs.forEach(function(d) {
+                            d.category = HW;
+                        });
+                        for (var i = 0; i < block.defs.length; i++)
+                            threads.push([block.defs[i]]);
                     } else {
                         block.def.category = HW;
-                        threads.push([ block.def ]);
+                        threads.push([block.def]);
                     }
                 }
             }
         }
 
-        threads.forEach(function(t) {
-            if (shouldHide) t[0].x = -99999;
-            this._createThread(t);
-            delete t[0].x;
-        }.bind(this));
+        threads.forEach(
+            function(t) {
+                if (shouldHide) t[0].x = -99999;
+                this._createThread(t);
+                delete t[0].x;
+            }.bind(this)
+        );
         this.hwCodeOutdated = false;
 
         Entry.dispatchEvent('hwCodeGenerated');
     };
 
     p.setAlign = function(align) {
-        this._align = align || "CENTER";
+        this._align = align || 'CENTER';
     };
 
     p._isNotVisible = function(blockInfo) {
@@ -995,9 +1052,14 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
         var visibles = [];
         var inVisibles;
         var block;
-        var allBlocks = that._getThreads().map(function(thread) {
+        var allBlocks = that
+            ._getThreads()
+            .map(function(thread) {
                 return thread && thread.getFirstBlock();
-            }).filter(function(block) { return !!block; });
+            })
+            .filter(function(block) {
+                return !!block;
+            });
 
         if (that._selectDynamic) {
             var threadsMap = that._threadsMap;
@@ -1018,7 +1080,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
             });
         }
 
-        return [ visibles, inVisibles ];
+        return [visibles, inVisibles];
     };
 
     p._setDynamic = function(blocks) {
@@ -1026,18 +1088,23 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
         var that = this;
         var data;
 
-        this._dynamicThreads = blocks.map(function(b) {
-            if (typeof b === 'string') { return b; }
-            else if (b.constructor === Array){
-                var keyName = b[0];
-                if (!that.getThreadByBlockKey(keyName)) {
-                    data = b[1];
-                    data.category = 'extra';
-                    that._createThread([data], undefined, keyName);
+        this._dynamicThreads = blocks
+            .map(function(b) {
+                if (typeof b === 'string') {
+                    return b;
+                } else if (b.constructor === Array) {
+                    var keyName = b[0];
+                    if (!that.getThreadByBlockKey(keyName)) {
+                        data = b[1];
+                        data.category = 'extra';
+                        that._createThread([data], undefined, keyName);
+                    }
+                    return keyName;
                 }
-                return keyName;
-            }
-        }).filter(function(type) { return !!type; });
+            })
+            .filter(function(type) {
+                return !!type;
+            });
 
         this._selectDynamic = true;
         this.selectMenu(undefined, true);
@@ -1050,23 +1117,29 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
         }
         this._selectDynamic = false;
         this._dynamicThreads = [];
-        if (fromElement !== true)
-            this.selectMenu(this.lastSelector, true);
+        if (fromElement !== true) this.selectMenu(this.lastSelector, true);
         cb && cb();
     };
 
-    p._isOn = function() { return this.view.css('display') !== 'none'; };
+    p._isOn = function() {
+        return this.view.css('display') !== 'none';
+    };
 
-    p.deleteRendered = function(name) { delete this._renderedCategories[name]; };
+    p.deleteRendered = function(name) {
+        delete this._renderedCategories[name];
+    };
 
-    p.clearRendered = function() { this._renderedCategories = {}; };
+    p.clearRendered = function() {
+        this._renderedCategories = {};
+    };
 
-    p.hasCategory = function() { return !!this._categoryData; };
+    p.hasCategory = function() {
+        return !!this._categoryData;
+    };
 
     p.getDom = function(query) {
         if (query.length >= 1) {
-            if (query[0] === 'category')
-                return this._categoryElems[query[1]];
+            if (query[0] === 'category') return this._categoryElems[query[1]];
             else {
                 var type = query[0][0].type;
                 var dom = this.getSvgDomByType(type);
@@ -1083,7 +1156,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
 
         var threads = code.getThreads();
 
-        for (var i=0; i<threads.length; i++) {
+        for (var i = 0; i < threads.length; i++) {
             var block = threads[i] && threads[i].getFirstBlock();
             if (!block) continue;
             if (block.type === type) return block.view.svgGroup;
@@ -1127,9 +1200,13 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
         delete this._threadsMap[block.type];
     };
 
-    p.getThreadByBlockKey = function(key) { return this._threadsMap[key]; };
+    p.getThreadByBlockKey = function(key) {
+        return this._threadsMap[key];
+    };
 
-    p._getThreads = function() { return this.code.getThreads(); };
+    p._getThreads = function() {
+        return this.code.getThreads();
+    };
 
     p._createThread = function(data, index, keyName) {
         if (typeof keyName !== 'string') keyName = undefined;
@@ -1139,5 +1216,4 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
         this._registerThreadsMap(keyName, thread);
         return thread;
     };
-
 })(Entry.BlockMenu.prototype);

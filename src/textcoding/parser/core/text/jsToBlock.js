@@ -3,9 +3,6 @@
  */
 "use strict";
 
-goog.provide("Entry.JsToBlockParser");
-goog.require("Entry.TextCodingUtil");
-
 Entry.JsToBlockParser = function(syntax, parentParser) {
     this._type ="JsToBlockParser";
     this.syntax = syntax;

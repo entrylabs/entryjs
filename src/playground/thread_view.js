@@ -1,9 +1,7 @@
 /*
  *
  */
-"use strict";
-
-goog.provide("Entry.ThreadView");
+'use strict';
 
 /*
  *
@@ -13,7 +11,7 @@ Entry.ThreadView = function(thread, board) {
 
     this.thread = thread;
 
-    this.svgGroup = board.svgThreadGroup.elem("g");
+    this.svgGroup = board.svgThreadGroup.elem('g');
 
     this.board = board;
 
@@ -25,7 +23,7 @@ Entry.ThreadView = function(thread, board) {
 (function(p) {
     p.schema = {
         height: 0,
-        zIndex: 0
+        zIndex: 0,
     };
 
     p.destroy = function() {
@@ -42,27 +40,29 @@ Entry.ThreadView = function(thread, board) {
 
     p.renderText = function() {
         var blocks = this.thread.getBlocks();
-        for (var i=0; i<blocks.length; i++)
-            blocks[i].view.renderText();
+        for (var i = 0; i < blocks.length; i++) blocks[i].view.renderText();
     };
 
     p.renderBlock = function() {
         var blocks = this.thread.getBlocks();
-        for (var i=0; i<blocks.length; i++)
-            blocks[i].view.renderBlock();
+        for (var i = 0; i < blocks.length; i++) blocks[i].view.renderBlock();
     };
 
-    p.requestAbsoluteCoordinate = function (blockView) {
+    p.requestAbsoluteCoordinate = function(blockView) {
         var blocks = this.thread.getBlocks();
         var block = blocks.shift();
         var pos = {
             x: 0,
-            y: 0
+            y: 0,
         };
         var parent = this.parent;
-        if (!(parent instanceof Entry.Board ||
-            parent instanceof Entry.BlockMenu) &&
-            parent.requestAbsoluteCoordinate) {
+        if (
+            !(
+                parent instanceof Entry.Board ||
+                parent instanceof Entry.BlockMenu
+            ) &&
+            parent.requestAbsoluteCoordinate
+        ) {
             pos = parent.requestAbsoluteCoordinate();
         }
 
@@ -78,15 +78,15 @@ Entry.ThreadView = function(thread, board) {
     p.requestPartHeight = function(blockView, forAll) {
         var blocks = this.thread.getBlocks();
         var block = blocks.pop();
-        var height = blockView ? blockView.magnet.next ? blockView.magnet.next.y : blockView.height : 0;
+        var height = blockView
+            ? blockView.magnet.next ? blockView.magnet.next.y : blockView.height
+            : 0;
         while (block && block.view !== blockView && block.view) {
             var prevBlockView = block.view;
             if (prevBlockView.magnet.next)
                 height += prevBlockView.magnet.next.y;
-            else
-                height += prevBlockView.height;
-            if (prevBlockView.dragMode === Entry.DRAG_MODE_DRAG)
-                height = 0;
+            else height += prevBlockView.height;
+            if (prevBlockView.dragMode === Entry.DRAG_MODE_DRAG) height = 0;
             block = blocks.pop();
         }
         return height;
@@ -94,7 +94,7 @@ Entry.ThreadView = function(thread, board) {
 
     p.getMagnet = function(selector) {
         return {
-            getBoundingClientRect: function () {
+            getBoundingClientRect: function() {
                 var halfWidth = 20,
                     coord = this.parent.requestAbsoluteCoordinate(),
                     boardOffset = this.board.relativeOffset;
@@ -102,9 +102,9 @@ Entry.ThreadView = function(thread, board) {
                     top: coord.y + boardOffset.top - halfWidth,
                     left: coord.x + boardOffset.left - halfWidth,
                     width: 2 * halfWidth,
-                    height: 2 * halfWidth
+                    height: 2 * halfWidth,
                 };
-            }.bind(this)
+            }.bind(this),
         };
     };
 
@@ -116,7 +116,7 @@ Entry.ThreadView = function(thread, board) {
         return this.parent instanceof Entry.Board;
     };
 
-    p.reDraw = function () {
+    p.reDraw = function() {
         var blocks = this.thread._data;
 
         for (var i = blocks.length - 1; i >= 0; i--) {
@@ -127,7 +127,7 @@ Entry.ThreadView = function(thread, board) {
     };
 
     p.setZIndex = function(zIndex) {
-        this.set({zIndex: zIndex});
+        this.set({ zIndex: zIndex });
     };
 
     p.setHasGuide = function(bool) {
@@ -137,7 +137,7 @@ Entry.ThreadView = function(thread, board) {
     p.getFields = function() {
         var BLOCK = Entry.Block;
 
-        return this.thread.getBlocks().reduce(function (fields, block) {
+        return this.thread.getBlocks().reduce(function(fields, block) {
             if (!(block instanceof BLOCK)) {
                 return fields;
             }
@@ -145,6 +145,4 @@ Entry.ThreadView = function(thread, board) {
             return fields.concat(block.view.getFields());
         }, []);
     };
-
-
 })(Entry.ThreadView.prototype);

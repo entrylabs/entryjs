@@ -1,10 +1,7 @@
 /*
  */
-"use strict";
+'use strict';
 
-goog.provide("Entry.FieldTextInput");
-
-goog.require("Entry.Field");
 /*
  *
  */
@@ -21,7 +18,7 @@ Entry.FieldTextInput = function(content, blockView, index) {
     this._contents = content;
     this._isClearBG = content.clearBG || false;
     this._index = index;
-    this.value = this.getValue()  || '';
+    this.value = this.getValue() || '';
     this._CONTENT_HEIGHT = this.getContentHeight();
     this._font_size = 12;
     this._neighborFields = null;
@@ -57,14 +54,13 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
 
     p.renderStart = function() {
         var blockView = this._blockView;
-        if (!this.svgGroup)
-            this.svgGroup = blockView.contentSvgGroup.elem("g");
+        if (!this.svgGroup) this.svgGroup = blockView.contentSvgGroup.elem('g');
         if (!this.textElement)
-            this.textElement = this.svgGroup.elem("text", {
-                x: X_PADDING/2,
+            this.textElement = this.svgGroup.elem('text', {
+                x: X_PADDING / 2,
                 y: TEXT_Y_PADDING,
-                fill: this._contents.color || "black",
-                'font-size' : this._font_size + 'px'
+                fill: this._contents.color || 'black',
+                'font-size': this._font_size + 'px',
             });
 
         var that = this;
@@ -78,22 +74,22 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
 
         var y = this.position && this.position.y ? this.position.y : 0;
         var CONTENT_HEIGHT = this._CONTENT_HEIGHT;
-        y -= CONTENT_HEIGHT/2;
+        y -= CONTENT_HEIGHT / 2;
         if (!this._header)
-            this._header = this.svgGroup.elem("rect", {
+            this._header = this.svgGroup.elem('rect', {
                 width: width,
                 height: CONTENT_HEIGHT,
                 y: y,
-                rx: 3, ry: 3,
-                fill: "#fff",
-                'fill-opacity': this._isClearBG ? 0 : 0.4
+                rx: 3,
+                ry: 3,
+                fill: '#fff',
+                'fill-opacity': this._isClearBG ? 0 : 0.4,
             });
         else {
             this._header.setAttribute('width', width);
         }
 
-        if (this._isClearBG)
-            $(this._header).css({ stroke: "none" });
+        if (this._isClearBG) $(this._header).css({ stroke: 'none' });
 
         this.svgGroup.appendChild(this.textElement);
 
@@ -103,7 +99,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
             x: 0,
             y: 0,
             width: width,
-            height: CONTENT_HEIGHT
+            height: CONTENT_HEIGHT,
         });
     };
 
@@ -124,8 +120,8 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
         this._attachDisposeEvent(func);
 
         this.optionGroup = Entry.Dom('input', {
-            class:'entry-widget-input-field',
-            parent: $('body')
+            class: 'entry-widget-input-field',
+            parent: $('body'),
         });
 
         this.optionGroup.val(this.getValue());
@@ -135,7 +131,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
         });
 
         var exitKeys = [13, 27];
-        this.optionGroup.on('keyup', function(e){
+        this.optionGroup.on('keyup', function(e) {
             var keyCode = e.keyCode || e.which;
             that.applyValue(e);
 
@@ -143,28 +139,28 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
                 that.destroyOption(undefined, true);
         });
 
-        this.optionGroup.on('keydown', function(e){
+        this.optionGroup.on('keydown', function(e) {
             var keyCode = e.keyCode || e.which;
 
             if (keyCode === 9) {
                 e.preventDefault();
-                that._focusNeighbor(e.shiftKey ? 'prev': 'next');
+                that._focusNeighbor(e.shiftKey ? 'prev' : 'next');
             }
         });
 
         var pos = this.getAbsolutePosFromDocument();
-        pos.y -= this.box.height/2;
+        pos.y -= this.box.height / 2;
         this.optionGroup.css({
             height: this._CONTENT_HEIGHT,
             left: pos.x,
             top: pos.y,
-            width: that.box.width
+            width: that.box.width,
         });
 
         this.optionGroup.focus && this.optionGroup.focus();
 
         var optionGroup = this.optionGroup[0];
-        optionGroup.setSelectionRange(0, optionGroup.value.length, "backward");
+        optionGroup.setSelectionRange(0, optionGroup.value.length, 'backward');
 
         this.optionDomCreated();
 
@@ -185,10 +181,10 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
     p.resize = function() {
         var width = this.getTextWidth();
 
-        this._header.attr({width: width});
-        this.optionGroup.css({width: width});
+        this._header.attr({ width: width });
+        this.optionGroup.css({ width: width });
 
-        this.box.set({width: width});
+        this.box.set({ width: width });
         this._blockView.dAlignContent();
     };
 
@@ -205,14 +201,15 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
     p.getNeighborFields = function() {
         if (!this._neighborFields) {
             var FIELD_TEXT_INPUT = Entry.FieldTextInput;
-            this._neighborFields = this._block.getRootBlock().
-                                    getThread().view.getFields().
-                                    filter(function (f) {
-                                        return f instanceof FIELD_TEXT_INPUT;
-                                    });
-        } 
+            this._neighborFields = this._block
+                .getRootBlock()
+                .getThread()
+                .view.getFields()
+                .filter(function(f) {
+                    return f instanceof FIELD_TEXT_INPUT;
+                });
+        }
 
         return this._neighborFields;
     };
-
 })(Entry.FieldTextInput.prototype);

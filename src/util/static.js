@@ -1,6 +1,6 @@
-"use strict";
+'use strict';
 
-var Entry = require("../entry")
+var Entry = require('../entry');
 
 Entry.STATIC = {
     /* data type */
@@ -55,7 +55,6 @@ Entry.STATIC = {
         insertBlockFollowSeparate: 123,
         separateBlockByCommand: 124,
 
-
         selectObject: 201,
         objectEditButtonClick: 202,
         objectAddPicture: 203,
@@ -64,11 +63,9 @@ Entry.STATIC = {
         objectRemoveSound: 206,
         objectNameEdit: 207,
 
-
-        'do': 301,
-        'undo': 302,
-        'redo': 303,
-
+        do: 301,
+        undo: 302,
+        redo: 303,
 
         editPicture: 401,
         uneditPicture: 402,
@@ -76,20 +73,16 @@ Entry.STATIC = {
         unprocessPicture: 404,
         editText: 405,
 
-
         toggleRun: 501,
         toggleStop: 502,
 
-
         containerSelectObject: 601,
-
 
         playgroundChangeViewMode: 701,
         playgroundClickAddPicture: 702,
         playgroundClickAddSound: 703,
         playgroundClickAddPictureCancel: 704,
         playgroundClickAddSoundCancel: 705,
-
 
         variableContainerSelectFilter: 801,
         variableContainerClickVariableAddButton: 802,
@@ -101,6 +94,6 @@ Entry.STATIC = {
     RECORDABLE: {
         SUPPORT: 1,
         SKIP: 2,
-        ABANDON: 3
+        ABANDON: 3,
     },
 };

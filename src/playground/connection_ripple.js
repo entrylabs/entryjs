@@ -1,16 +1,18 @@
-"use strict";
+'use strict';
 
-goog.provide("Entry.ConnectionRipple");
+Entry.ConnectionRipple = {};
 
 (function(cr) {
     cr.createDom = function(blockView) {
         if (this.svgDom) return;
 
         var svgGroup = blockView.getBoard().svgGroup;
-        this._ripple = svgGroup.elem("circle", {
-            "cx": 0, "cy": 0, "r": 0,
-            'stroke': '#888',
-            'stroke-width': 10
+        this._ripple = svgGroup.elem('circle', {
+            cx: 0,
+            cy: 0,
+            r: 0,
+            stroke: '#888',
+            'stroke-width': 10,
         });
     };
 
@@ -21,7 +23,7 @@ goog.provide("Entry.ConnectionRipple");
         ripple.remove();
 
         var pos = blockView.getAbsoluteCoordinate();
-        ripple.attr({cx:pos.x, cy:pos.y});
+        ripple.attr({ cx: pos.x, cy: pos.y });
 
         svgGroup.appendChild(ripple);
         ripple._startTime = new Date();
@@ -31,15 +33,15 @@ goog.provide("Entry.ConnectionRipple");
     cr.dispose = function() {
         var that = this;
         var ripple = this._ripple;
-        var ms = (new Date()) - ripple._startTime;
+        var ms = new Date() - ripple._startTime;
         var percent = ms / 150;
         if (percent > 1) ripple.remove();
         else {
             ripple.attr({
-                'r': percent * 25,
-                'opacity': 1 - percent
+                r: percent * 25,
+                opacity: 1 - percent,
             });
-            window.setTimeout(function(){
+            window.setTimeout(function() {
                 that.dispose();
             }, 10);
         }

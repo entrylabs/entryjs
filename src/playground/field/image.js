@@ -1,10 +1,6 @@
 /*
  */
-"use strict";
-
-goog.provide("Entry.FieldImage");
-
-goog.require("Entry.Field");
+'use strict';
 /*
  *
  */
@@ -16,7 +12,7 @@ Entry.FieldImage = function(content, blockView, index) {
     var box = new Entry.BoxModel();
     this.box = box;
 
-    if(Entry.Utils.isNumber(content.size)) {
+    if (Entry.Utils.isNumber(content.size)) {
         this._width = content.size;
         this._height = content.size;
     } else {
@@ -25,7 +21,7 @@ Entry.FieldImage = function(content, blockView, index) {
         this._height = sizeSet.height || 0;
     }
 
-    this._highlightColor = content.highlightColor || "#F59900";
+    this._highlightColor = content.highlightColor || '#F59900';
     this._position = content.position;
 
     this.svgGroup = null;
@@ -44,20 +40,24 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldImage);
         var block = this._block;
         var img = this._content.img;
 
-        this._imgUrl = this._block.deletable === Entry.Block.DELETABLE_FALSE_LIGHTEN ?
-            img.replace('.png', '_un.png') : img;
+        this._imgUrl =
+            this._block.deletable === Entry.Block.DELETABLE_FALSE_LIGHTEN
+                ? img.replace('.png', '_un.png')
+                : img;
 
         var options = {
             href: this._imgUrl,
             x: 0,
             y: this._height * -0.5,
             width: this._width,
-            height: this._height
+            height: this._height,
         };
 
         if (!this._imgElement) {
-            this.svgGroup = this._imgElement =
-                this._blockView.contentSvgGroup.elem("image", options);
+            this.svgGroup = this._imgElement = this._blockView.contentSvgGroup.elem(
+                'image',
+                options
+            );
         } else {
             this._imgElement.attr(options);
         }
@@ -66,8 +66,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldImage);
             x: this._width,
             y: 0,
             width: this._width,
-            height: this._height
+            height: this._height,
         });
     };
-
 })(Entry.FieldImage.prototype);

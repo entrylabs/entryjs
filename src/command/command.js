@@ -1,10 +1,7 @@
 /*
  *
  */
-"use strict";
-
-goog.provide("Entry.Command");
-goog.require("Entry.STATIC");
+'use strict';
 
 Entry.Command = {};
 
@@ -14,7 +11,7 @@ Entry.Command = {};
         log: function(objectId) {
             return [];
         },
-        skipUndoStack: true
+        skipUndoStack: true,
     };
 
     c[Entry.STATIC.COMMAND_TYPES.undo] = {
@@ -22,7 +19,7 @@ Entry.Command = {};
         log: function(objectId) {
             return [];
         },
-        skipUndoStack: true
+        skipUndoStack: true,
     };
 
     c[Entry.STATIC.COMMAND_TYPES.redo] = {
@@ -30,7 +27,6 @@ Entry.Command = {};
         log: function(objectId) {
             return [];
         },
-        skipUndoStack: true
+        skipUndoStack: true,
     };
-
 })(Entry.Command);

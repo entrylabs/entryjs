@@ -1,12 +1,7 @@
 /*
  *
  */
-"use strict";
-
-goog.provide("Entry.Thread");
-
-goog.require('Entry.Model');
-goog.require("Entry.Collection");
+'use strict';
 
 /*
  *
@@ -24,10 +19,9 @@ Entry.Thread = function(thread, code, parent) {
 
 (function(p) {
     p.load = function(thread, mode) {
-        if (thread === undefined || thread === null)
-            thread = [];
+        if (thread === undefined || thread === null) thread = [];
         if (!(thread instanceof Array)) {
-            return console.error("thread must be array");
+            return console.error('thread must be array');
         }
 
         for (var i = 0; i < thread.length; i++) {
@@ -52,8 +46,7 @@ Entry.Thread = function(thread, code, parent) {
     };
 
     p.createView = function(board, mode) {
-        if (!this.view)
-            this.view = new Entry.ThreadView(this, board);
+        if (!this.view) this.view = new Entry.ThreadView(this, board);
         this._data.getAll().forEach(function(b) {
             b.createView(board, mode);
         });
@@ -86,19 +79,13 @@ Entry.Thread = function(thread, code, parent) {
         for (var i = 0; i < newBlocks.length; i++) {
             newBlocks[i].setThread(this);
         }
-        this._data.splice.apply(
-            this._data,
-            [index + 1, 0].concat(newBlocks)
-        );
+        this._data.splice.apply(this._data, [index + 1, 0].concat(newBlocks));
         this.changeEvent.notify();
     };
 
     p.insertToTop = function(newBlock) {
         newBlock.setThread(this);
-        this._data.unshift.apply(
-            this._data,
-            [newBlock]
-        );
+        this._data.unshift.apply(this._data, [newBlock]);
         this.changeEvent.notify();
     };
 
@@ -107,7 +94,7 @@ Entry.Thread = function(thread, code, parent) {
         var newThread = new Entry.Thread([], code);
         var data = this._data;
         var cloned = [];
-        for (var i=0, len=data.length; i<len; i++) {
+        for (var i = 0, len = data.length; i < len; i++) {
             var block = data[i];
             cloned.push(data[i].clone(newThread));
         }
@@ -119,8 +106,7 @@ Entry.Thread = function(thread, code, parent) {
         var array = [];
 
         if (index === undefined) index = 0;
-        else if (index instanceof Entry.Block)
-            index = this.indexOf(index);
+        else if (index instanceof Entry.Block) index = this.indexOf(index);
 
         var data = this._data;
         for (index; index < data.length; index++) {
@@ -136,7 +122,7 @@ Entry.Thread = function(thread, code, parent) {
 
         var blocks = this._data;
 
-        for (var i=blocks.length-1; i>=0; i--)
+        for (var i = blocks.length - 1; i >= 0; i--)
             blocks[i].destroy(animate, null, isNotForce);
 
         !blocks.length && this._code.destroyThread(this, false);
@@ -147,15 +133,16 @@ Entry.Thread = function(thread, code, parent) {
     };
 
     p.getBlocks = function() {
-        return this._data.map(function(b){return b;});
+        return this._data.map(function(b) {
+            return b;
+        });
     };
 
     p.countBlock = function() {
         var count = 0;
         for (var i = 0; i < this._data.length; i++) {
             var block = this._data[i];
-            if (!block.type)
-                continue;
+            if (!block.type) continue;
             count++;
 
             var statements = block.statements;
@@ -226,8 +213,7 @@ Entry.Thread = function(thread, code, parent) {
             var statements = block.statements;
             if (statements) {
                 for (var j = 0; j < statements.length; j++) {
-                    if (statements[j].hasBlockType(type))
-                        return true;
+                    if (statements[j].hasBlockType(type)) return true;
                 }
             }
             return false;
@@ -236,8 +222,7 @@ Entry.Thread = function(thread, code, parent) {
 
     p.getCount = function(startBlock) {
         var result = this._data.length;
-        if (startBlock)
-            result -= this._data.indexOf(startBlock);
+        if (startBlock) result -= this._data.indexOf(startBlock);
         return result;
     };
 
@@ -247,8 +232,7 @@ Entry.Thread = function(thread, code, parent) {
 
     p.pointer = function(pointer, block) {
         pointer = pointer || [];
-        if (block)
-            pointer.unshift(this.indexOf(block));
+        if (block) pointer.unshift(this.indexOf(block));
 
         var parent = this.parent;
 
@@ -269,8 +253,7 @@ Entry.Thread = function(thread, code, parent) {
         var blocks = [];
         for (var i = 0; i < this._data.length; i++) {
             var block = this._data[i];
-            if (block.constructor !== Entry.Block)
-                continue;
+            if (block.constructor !== Entry.Block) continue;
             blocks = blocks.concat(block.getBlockList(excludePrimitive, type));
         }
 
@@ -289,8 +272,7 @@ Entry.Thread = function(thread, code, parent) {
     p.getDom = function(query) {
         if (query.length > 0) {
             var key = query.shift();
-            if (key === "magnet")
-                return this.view.getMagnet("next");
+            if (key === 'magnet') return this.view.getMagnet('next');
         } else {
             return this.view.svgGroup;
         }
@@ -301,7 +283,6 @@ Entry.Thread = function(thread, code, parent) {
     };
 
     p.isGlobal = function() {
-         return this._code === this.parent;
+        return this._code === this.parent;
     };
-
 })(Entry.Thread.prototype);

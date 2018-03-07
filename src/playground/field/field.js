@@ -1,9 +1,7 @@
 /*
  *
  */
-"use strict";
-
-goog.provide("Entry.Field");
+'use strict';
 
 /*
  *
@@ -23,8 +21,11 @@ Entry.Field = function() {};
     };
 
     p.command = function(forceCommand) {
-        if (!this._blockView.isInBlockMenu && this._startValue !== undefined &&
-            (forceCommand || this._startValue !== this.getValue())) {
+        if (
+            !this._blockView.isInBlockMenu &&
+            this._startValue !== undefined &&
+            (forceCommand || this._startValue !== this.getValue())
+        ) {
             Entry.do(
                 'setFieldValue',
                 this.pointer(),
@@ -64,9 +65,11 @@ Entry.Field = function() {};
     p._attachDisposeEvent = function(func) {
         var that = this;
 
-        func = func || function(skipCommand) {
-            that.destroyOption(skipCommand);
-        };
+        func =
+            func ||
+            function(skipCommand) {
+                that.destroyOption(skipCommand);
+            };
         that.disposeEvent = Entry.disposeEvent.attach(that, func);
     };
 
@@ -78,15 +81,19 @@ Entry.Field = function() {};
             if (this._position.y) y = this._position.y;
         }
 
-        var transform = "translate(" + x + "," + y + ")";
+        var transform = 'translate(' + x + ',' + y + ')';
 
         if (animate)
-            svgGroup.animate({
-                transform: transform
-            }, 300, mina.easeinout);
+            svgGroup.animate(
+                {
+                    transform: transform,
+                },
+                300,
+                mina.easeinout
+            );
         else
             svgGroup.attr({
-                transform: transform
+                transform: transform,
             });
 
         this.box.set({ x: x, y: y });
@@ -100,7 +107,7 @@ Entry.Field = function() {};
 
         return {
             x: absPos.x + this.box.x + contentPos.x,
-            y: absPos.y + this.box.y + contentPos.y
+            y: absPos.y + this.box.y + contentPos.y,
         };
     };
 
@@ -113,8 +120,12 @@ Entry.Field = function() {};
 
         return {
             x: absPos.x + this.box.x + contentPos.x + offset.left,
-            y: absPos.y + this.box.y + contentPos.y +
-                offset.top - $(window).scrollTop()
+            y:
+                absPos.y +
+                this.box.y +
+                contentPos.y +
+                offset.top -
+                $(window).scrollTop(),
         };
     };
 
@@ -125,7 +136,7 @@ Entry.Field = function() {};
 
         return {
             x: box.x + contentPos.x,
-            y: box.y + contentPos.y
+            y: box.y + contentPos.y,
         };
     };
 
@@ -133,8 +144,7 @@ Entry.Field = function() {};
         var value = String(this._convert(this.getValue()));
         var limit = this.TEXT_LIMIT_LENGTH;
         var ret = value.substring(0, limit);
-        if (value.length > limit)
-            ret += '...';
+        if (value.length > limit) ret += '...';
         return ret;
     };
 
@@ -144,10 +154,16 @@ Entry.Field = function() {};
 
     p.getValue = function() {
         var data = this._block.params[this._index];
-        if (this._contents && this._contents.reference && this._contents.reference.length) {
+        if (
+            this._contents &&
+            this._contents.reference &&
+            this._contents.reference.length
+        ) {
             var reference = this._contents.reference.concat();
-            if (reference[0][0] === "%")
-                data = this._block.params[parseInt(reference.shift().substr(1)) - 1];
+            if (reference[0][0] === '%')
+                data = this._block.params[
+                    parseInt(reference.shift().substr(1)) - 1
+                ];
             if (!data) return data;
 
             return data.getDataByPointer(reference);
@@ -157,14 +173,19 @@ Entry.Field = function() {};
     p.setValue = function(value, reDraw) {
         if (this.value == value) return;
         this.value = value;
-        if (this._contents && this._contents.reference && this._contents.reference.length) {
+        if (
+            this._contents &&
+            this._contents.reference &&
+            this._contents.reference.length
+        ) {
             var ref = this._contents.reference.concat();
             var index = ref.pop();
             var targetBlock = this._block.params[this._index];
-            if (ref.length && ref[0][0] === "%")
-                targetBlock = this._block.params[parseInt(ref.shift().substr(1)) - 1];
-            if (ref.length)
-                targetBlock = targetBlock.getDataByPointer(ref);
+            if (ref.length && ref[0][0] === '%')
+                targetBlock = this._block.params[
+                    parseInt(ref.shift().substr(1)) - 1
+                ];
+            if (ref.length) targetBlock = targetBlock.getDataByPointer(ref);
             targetBlock.params[index] = value;
         } else this._block.params[this._index] = value;
 
@@ -172,7 +193,8 @@ Entry.Field = function() {};
     };
 
     p._isEditable = function() {
-        if (Entry.ContextMenu.visible || this._blockView.getBoard().readOnly) return false;
+        if (Entry.ContextMenu.visible || this._blockView.getBoard().readOnly)
+            return false;
         var dragMode = this._block.view.dragMode;
         if (dragMode == Entry.DRAG_MODE_DRAG) return false;
         var blockView = this._block.view;
@@ -181,12 +203,15 @@ Entry.Field = function() {};
 
         var selectedBlockView = board.workspace.selectedBlockView;
 
-        if (!selectedBlockView || board != selectedBlockView.getBoard()) return false;
+        if (!selectedBlockView || board != selectedBlockView.getBoard())
+            return false;
 
         var root = blockView.getSvgRoot();
 
-        return root == selectedBlockView.svgGroup ||
-                $(root).has($(blockView.svgGroup));
+        return (
+            root == selectedBlockView.svgGroup ||
+            $(root).has($(blockView.svgGroup))
+        );
     };
 
     p._selectBlockView = function() {
@@ -200,8 +225,9 @@ Entry.Field = function() {};
         var that = this;
 
         this.svgGroup._isBinded = true;
-        $(this.svgGroup)
-            .on('mouseup.fieldBindEvent touchend.fieldBindEvent', function(e){
+        $(this.svgGroup).on(
+            'mouseup.fieldBindEvent touchend.fieldBindEvent',
+            function(e) {
                 if (that._isEditable()) {
                     that._code = that.getCode();
                     that.destroyOption();
@@ -209,7 +235,8 @@ Entry.Field = function() {};
                     that.renderOptions();
                     that._isEditing = true;
                 }
-        });
+            }
+        );
     };
 
     p.pointer = function(pointer) {
@@ -229,15 +256,13 @@ Entry.Field = function() {};
 
     p._getRenderMode = function() {
         var mode = this._blockView.renderMode;
-        return mode !== undefined ?
-            mode : Entry.BlockView.RENDER_MODE_BLOCK;
+        return mode !== undefined ? mode : Entry.BlockView.RENDER_MODE_BLOCK;
     };
 
     p._convert = function(key, value) {
         value = value !== undefined ? value : this.getValue();
         var reg = /&value/gm;
-        if (reg.test(value))
-            return value.replace(reg, '');
+        if (reg.test(value)) return value.replace(reg, '');
         else if (this._contents.converter) {
             return this._contents.converter(key, value);
         } else return key;
@@ -255,8 +280,7 @@ Entry.Field = function() {};
             if (syntax.length === 0) continue;
 
             var textParams = syntax[0].textParams;
-            if (!textParams)
-                continue;
+            if (!textParams) continue;
 
             textParams[this._index].options = this._contents.options;
         }
@@ -264,8 +288,7 @@ Entry.Field = function() {};
 
     p._shouldReturnValue = function(value) {
         var obj = this._block.getCode().object;
-        return value === '?' ||
-            !obj || obj.constructor !== Entry.EntryObject;
+        return value === '?' || !obj || obj.constructor !== Entry.EntryObject;
     };
 
     p.isEditing = function(value) {
@@ -275,8 +298,7 @@ Entry.Field = function() {};
     p.getDom = function(query) {
         if (query.length) {
             var key = query.shift();
-            if (key === "option")
-                return this.optionGroup;
+            if (key === 'option') return this.optionGroup;
         }
 
         return this.svgGroup;
@@ -291,14 +313,11 @@ Entry.Field = function() {};
     };
 
     p.getFieldRawType = function() {
-        if (this instanceof Entry.FieldTextInput)
-            return 'textInput';
-        else if (this instanceof Entry.FieldDropdown)
-            return 'dropdown';
+        if (this instanceof Entry.FieldTextInput) return 'textInput';
+        else if (this instanceof Entry.FieldDropdown) return 'dropdown';
         else if (this instanceof Entry.FieldDropdownDynamic)
             return 'dropdownDynamic';
-        else if (this instanceof Entry.FieldKeyboard)
-            return 'keyboard';
+        else if (this instanceof Entry.FieldKeyboard) return 'keyboard';
     };
 
     p.getTextValueByValue = function(value) {
@@ -308,10 +327,9 @@ Entry.Field = function() {};
             case 'dropdown':
             case 'dropdownDynamic':
                 var options = this._contents.options;
-                for (var i=0; i<options.length; i++) {
+                for (var i = 0; i < options.length; i++) {
                     var o = options[i];
-                    if (o[1] === value)
-                        return o[0];
+                    if (o[1] === value) return o[0];
                 }
                 break;
             case 'textInput':
@@ -345,9 +363,11 @@ Entry.Field = function() {};
         //in order to calculate text width
         function generateDom() {
             svg = Entry.Dom(
-               $('<svg id="invisibleBoard" class="entryBoard" width="1px" height="1px"' +
-                'version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'),
-               { parent: $('body') }
+                $(
+                    '<svg id="invisibleBoard" class="entryBoard" width="1px" height="1px"' +
+                        'version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'
+                ),
+                { parent: $('body') }
             );
         }
 
@@ -381,15 +401,13 @@ Entry.Field = function() {};
             clearDoms();
 
             bBox = {
-                width: Math.round(bBox.width*100)/100,
-                height: Math.round(bBox.height*100)/100,
+                width: Math.round(bBox.width * 100) / 100,
+                height: Math.round(bBox.height * 100) / 100,
             };
 
-            if (fontSize && window.fontLoaded &&
-                bBox.width && bBox.height)
+            if (fontSize && window.fontLoaded && bBox.width && bBox.height)
                 _cache[key] = bBox;
             return bBox;
         };
     })();
-
 })(Entry.Field.prototype);

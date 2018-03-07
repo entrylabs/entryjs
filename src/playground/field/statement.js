@@ -1,10 +1,6 @@
 /*
  */
-"use strict";
-
-goog.provide("Entry.FieldStatement");
-
-goog.require("Entry.BlockView");
+'use strict';
 
 /*
  *
@@ -29,8 +25,8 @@ Entry.FieldStatement = function(content, blockView, index) {
 
     this._events = [];
 
-    this.observe(blockView, "alignContent", ["height"], false);
-    this.observe(this, "_updateBG", ["magneting"], false);
+    this.observe(blockView, 'alignContent', ['height'], false);
+    this.observe(this, '_updateBG', ['magneting'], false);
 
     this.renderStart(blockView.getBoard());
 };
@@ -41,16 +37,14 @@ Entry.FieldStatement = function(content, blockView, index) {
         y: 0,
         width: 100,
         height: 31,
-        magneting: false
+        magneting: false,
     };
 
-    p.magnet = { next: {x: 0, y: 0} };
+    p.magnet = { next: { x: 0, y: 0 } };
 
     p.renderStart = function(board) {
-        this.svgGroup =
-            this._blockView.statementSvgGroup.elem('g');
-        this.statementSvgGroup =
-            this.svgGroup.elem('g');
+        this.svgGroup = this._blockView.statementSvgGroup.elem('g');
+        this.statementSvgGroup = this.svgGroup.elem('g');
         this._nextGroup = this.statementSvgGroup;
         this._initThread(board);
         this._board = board;
@@ -82,31 +76,32 @@ Entry.FieldStatement = function(content, blockView, index) {
         animate = animate === undefined ? true : animate;
         var svgGroup = this.svgGroup;
         if (this._position) {
-            if (this._position.x)
-                x = this._position.x;
-            if (this._position.y)
-                y = this._position.y;
+            if (this._position.x) x = this._position.x;
+            if (this._position.y) y = this._position.y;
         }
 
-        var transform = "translate(" + x + "," + y + ")";
+        var transform = 'translate(' + x + ',' + y + ')';
 
-        if (this.x !== x || this.y !== y)
-            this.set({x: x, y: y});
+        if (this.x !== x || this.y !== y) this.set({ x: x, y: y });
 
         if (animate)
-            svgGroup.animate({
-                transform: transform
-            }, 300, mina.easeinout);
+            svgGroup.animate(
+                {
+                    transform: transform,
+                },
+                300,
+                mina.easeinout
+            );
         else
             svgGroup.attr({
-                transform: transform
+                transform: transform,
             });
     };
 
     p.calcHeight = function() {
         var height = this._thread.view.requestPartHeight(null);
         if (this.height === height) return;
-        this.set({height: height});
+        this.set({ height: height });
     };
 
     p.getValue = function() {
@@ -120,7 +115,9 @@ Entry.FieldStatement = function(content, blockView, index) {
         return pos;
     };
 
-    p.dominate = function() { this._blockView.dominate(); };
+    p.dominate = function() {
+        this._blockView.dominate();
+    };
 
     p.destroy = function() {
         while (this._events.length) this._events.pop().destroy();
@@ -128,8 +125,7 @@ Entry.FieldStatement = function(content, blockView, index) {
 
     p._updateBG = function() {
         var dragBlock = this._board.dragBlock;
-        if (!dragBlock || !dragBlock.dragInstance)
-            return;
+        if (!dragBlock || !dragBlock.dragInstance) return;
 
         var blockView = this;
         var magneting = blockView.magneting;
@@ -139,10 +135,10 @@ Entry.FieldStatement = function(content, blockView, index) {
         if (magneting) {
             var shadow = dragBlock.getShadow();
             var pos = this.requestAbsoluteCoordinate();
-            var transform  = 'translate(' + pos.x + ',' + pos.y + ')';
+            var transform = 'translate(' + pos.x + ',' + pos.y + ')';
             $(shadow).attr({
                 transform: transform,
-                display: 'block'
+                display: 'block',
             });
             this._clonedShadow = shadow;
 
@@ -155,13 +151,13 @@ Entry.FieldStatement = function(content, blockView, index) {
             var height = dragBlock.getBelowHeight();
 
             this.statementSvgGroup.attr({
-                transform: 'translate(0,' + height + ')'
+                transform: 'translate(0,' + height + ')',
             });
 
-            this.set({height: this.height + height});
+            this.set({ height: this.height + height });
         } else {
             if (this._clonedShadow) {
-                this._clonedShadow.attr({display: 'none'});
+                this._clonedShadow.attr({ display: 'none' });
                 delete this._clonedShadow;
             }
 
@@ -176,7 +172,7 @@ Entry.FieldStatement = function(content, blockView, index) {
                 delete blockView.originalHeight;
             }
             this.statementSvgGroup.attr({
-                transform: 'translate(0,0)'
+                transform: 'translate(0,0)',
             });
             this.calcHeight();
         }
@@ -193,7 +189,9 @@ Entry.FieldStatement = function(content, blockView, index) {
         return block;
     };
 
-    p.getNextBlock = function () { return this.firstBlock; };
+    p.getNextBlock = function() {
+        return this.firstBlock;
+    };
 
     p.checkTopBlock = function() {
         var firstBlock = this._thread.getFirstBlock();
@@ -201,7 +199,7 @@ Entry.FieldStatement = function(content, blockView, index) {
             this.firstBlock = firstBlock;
             firstBlock.view.bindPrev(this);
             firstBlock._updatePos();
-        } else if (!firstBlock){
+        } else if (!firstBlock) {
             this.firstBlock = null;
         }
     };
@@ -212,6 +210,7 @@ Entry.FieldStatement = function(content, blockView, index) {
         return this.block.pointer(pointer);
     };
 
-    p.isParamBlockType = function() { return false; };
-
+    p.isParamBlockType = function() {
+        return false;
+    };
 })(Entry.FieldStatement.prototype);

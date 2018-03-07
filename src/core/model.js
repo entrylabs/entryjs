@@ -1,8 +1,4 @@
-"use strict";
-
-goog.provide("Entry.Model");
-
-goog.require("Entry.Utils");
+'use strict';
 
 /*
  * Entry Model object generator.
@@ -13,17 +9,15 @@ Entry.Model = function(obj, isSeal) {
     model.generateSchema(obj);
     model.generateSetter(obj);
     model.generateObserve(obj);
-    if (isSeal === undefined || isSeal)
-        Object.seal(obj);
+    if (isSeal === undefined || isSeal) Object.seal(obj);
 
     return obj;
 };
 
-(function (m) {
+(function(m) {
     m.generateSchema = function(obj) {
         var schema = obj.schema;
-        if (schema === undefined)
-            return;
+        if (schema === undefined) return;
         schema = JSON.parse(JSON.stringify(schema));
         obj.data = {};
         for (var key in schema) {
@@ -32,7 +26,7 @@ Entry.Model = function(obj, isSeal) {
                 Object.defineProperty(obj, localKey, {
                     get: function() {
                         return obj.data[localKey];
-                    }
+                    },
                 });
             })(key);
         }
@@ -54,13 +48,11 @@ Entry.Model = function(obj, isSeal) {
                     oldValue[key] = this.data[key];
                     if (data[key] instanceof Array)
                         this.data[key] = data[key].concat();
-                    else
-                        this.data[key] = data[key];
+                    else this.data[key] = data[key];
                 }
             }
         }
-        if (!isSilent)
-            this.notify(keys, oldValue);
+        if (!isSilent) this.notify(keys, oldValue);
     };
 
     m.generateObserve = function(obj) {
@@ -77,14 +69,13 @@ Entry.Model = function(obj, isSeal) {
      * @param {boolean} isNotify
      */
     m.observe = function(object, funcName, attrs, isNotify) {
-         var observer = new Entry.Observer(
+        var observer = new Entry.Observer(
             this.observers,
             object,
             funcName,
             attrs
         );
-        if (isNotify !== false)
-            object[funcName]([]);
+        if (isNotify !== false) object[funcName]([]);
         return observer;
     };
 
@@ -106,7 +97,7 @@ Entry.Model = function(obj, isSeal) {
 
         var intersect = Entry.Utils.intersectArray;
 
-        observers.forEach(function (observeData) {
+        observers.forEach(function(observeData) {
             var attrs = keys;
             if (observeData.attrs !== undefined)
                 attrs = intersect(observeData.attrs, keys);
@@ -114,11 +105,11 @@ Entry.Model = function(obj, isSeal) {
             if (!attrs.length) return;
 
             observeData.object[observeData.funcName](
-                attrs.forEach(function(key){
+                attrs.forEach(function(key) {
                     return {
                         name: key,
                         object: that,
-                        oldValue: oldValue[key]
+                        oldValue: oldValue[key],
                     };
                 })
             );
@@ -130,6 +121,4 @@ Entry.Model = function(obj, isSeal) {
         for (var key in this.data) json[key] = this.data[key];
         return json;
     };
-
 })(Entry.Model);
-
