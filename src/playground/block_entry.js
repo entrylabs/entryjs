@@ -1,16 +1,20 @@
 'use strict';
-require('./blocks');
 
-if (typeof global.Entry !== 'object') global.Entry = {};
+if (typeof global.Entry !== 'object') {
+    global.Entry = {};
+}
+
 
 if (typeof exports == 'object') {
     /* IGNORE_WEBPACK:START */
     var Lang = require('../../extern/lang/ko.js').Lang;
+    global.Lang = Lang;
     /* IGNORE_WEBPACK:END */
     if (typeof EntryStatic !== 'object') {
         global.EntryStatic = {};
     }
 }
+
 if (!Entry.block) {
     Entry.block = {};
 }
@@ -18,6 +22,8 @@ if (!Entry.block) {
 if (!Entry.block.converters) {
     Entry.block.converters = {};
 }
+
+require('./blocks');
 
 if (Entry && Entry.block) {
     (function(c) {
@@ -17258,23 +17264,25 @@ const block = {
     //endregion basic 기본
 };
 
-_.extend(Entry.block, block);
-
+Object.assign(Entry.block, block);
 
 (function() {
     // console.log('hw', Entry.HW, Entry.Arduino);
     for(let id in Entry.HARDWARE_LIST) {
         const hw = Entry.HARDWARE_LIST[id];
+        if(!hw) {
+            return;
+        }
         if('setLanguage' in hw) {
             var hwLang = hw.setLanguage();
             var data = hwLang[global.Lang.type];
             for(let key in data) {
-                _.extend(Lang[key], data[key]);
+                Object.assign(Lang[key], data[key]);
             }
         }
         if('getBlocks' in hw) {
             var block = hw.getBlocks();
-            _.extend(Entry.block, block);
+            Object.assign(Entry.block, block);
         }
     };
 

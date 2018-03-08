@@ -45,6 +45,10 @@ require('./block_robotori');
 require('./block_truerobot');
 require('./block_turtle');
 require('./block_xbot');
+require('./block_playcode');
+require('./block_mechatro');
+require('./block_creamo');
+require('./block_funboard');
 
 Entry.HARDWARE_LIST = {
     '1.1': Entry.Arduino,
