@@ -1,4 +1,4 @@
-if (typeof Entry !== "object")
+﻿if (typeof Entry !== "object")
 var Entry = {};
 
 if (typeof exports == "object") {
@@ -45897,7 +45897,7 @@ Entry.block = {
     },
     "syntax": {"js": [], "py": []}
 },
-"mkboard_dc_motor_direction_list": {
+"mkboard_list_digital_lcd_line": {
     "color": "#00979D",
     "skeleton": "basic_string_field",
     "statements": [],
@@ -45906,8 +45906,8 @@ Entry.block = {
         {
             "type": "Dropdown",
             "options": [
-                [Lang.Blocks.mkboard_dc_motor_forward, "0"],
-                [Lang.Blocks.mkboard_dc_motor_backward, "1"]
+                [ "LINE1", "0" ],
+                [ "LINE2", "1" ]
             ],
             "value": "0",
             "fontSize": 11
@@ -45918,239 +45918,225 @@ Entry.block = {
         "params": [ null ]
     },
     "paramsKeyMap": {
-        "DC_MOTOR_DIRECTION": 0
+        "LINE": 0
     },
     "func": function (sprite, script) {
-        return script.getField("DC_MOTOR_DIRECTION");
-    },
-    "syntax": {"js": [], "py": []}
+        return script.getField("LINE");
+    }
 },
-"mkboard_set_left_dc_motor": {
+"mkboard_list_digital_lcd_column": {
     "color": "#00979D",
-    "skeleton": "basic",
-    "statements": [],
-    "params": [{
-        "type": "Block",
-        "accept": "string"
-    }, {
-        "type": "Block",
-        "accept": "string"
-    }, {
-        "type": "Indicator",
-        "img": "block_icon/hardware_03.png",
-        "size": 12
-    }],
-    "events": {},
-    "def": {
-        "params": [{
-                "type": "mkboard_dc_motor_direction_list"
-            },
-            {
-                "type": "text",
-                "params": [ "100" ]
-            },
-            null
-        ],
-        "type": "mkboard_set_left_dc_motor"
-    },
-    "paramsKeyMap": {
-        "DC_MOTOR_DIRECTION": 0,
-        "DC_MOTOR_SPEED": 1
-    },
-    "class": "mkboard",
-    "isNotFor": [ "mkboard" ],
-    "func": function (sprite, script) {
-        // var sq = Entry.hw.sendQueue;
-        var direction = script.getValue("DC_MOTOR_DIRECTION", script);
-        if(!Entry.Utils.isNumber(direction))
-            direction = Entry.mkboard.directionTable[direction];
-
-        if(direction < 0) {
-            direction = 0;
-        } else if(direction > 1) {
-            direction = 1;
-        }
-
-        var speed = script.getNumberValue("DC_MOTOR_SPEED", script) - 1;
-        if(speed < 0) {
-            speed = 0;
-        } else if(speed > 254) {
-            speed = 254;
-        }
-        if(!Entry.hw.sendQueue['SET']) {
-            Entry.hw.sendQueue['SET'] = {};
-        }
-
-        Entry.hw.sendQueue['SET'][0] = {
-            type: Entry.mkboard.sensorTypes.DC_MOTOR_LEFT,
-            data: {
-                direction: direction,
-                speed: speed
-             },
-            time: new Date().getTime()
-        };
-
-        setTimeout(function() {
-            script.timeFlag = 0;
-        }, 10);
-
-        return script.callReturn();
-    },
-    "syntax": {"js": [], "py": []}
-},
-"mkboard_set_right_dc_motor": {
-    "color": "#00979D",
-    "skeleton": "basic",
-    "statements": [],
-    "params": [{
-        "type": "Block",
-        "accept": "string"
-    }, {
-        "type": "Block",
-        "accept": "string"
-    }, {
-        "type": "Indicator",
-        "img": "block_icon/hardware_03.png",
-        "size": 12
-    }],
-    "events": {},
-    "def": {
-        "params": [{
-                "type": "mkboard_dc_motor_direction_list"
-            },
-            {
-                "type": "text",
-                "params": [ "100" ]
-            },
-            null
-        ],
-        "type": "mkboard_set_right_dc_motor"
-    },
-    "paramsKeyMap": {
-        "DC_MOTOR_DIRECTION": 0,
-        "DC_MOTOR_SPEED": 1
-    },
-    "class": "mkboard",
-    "isNotFor": [ "mkboard" ],
-    "func": function (sprite, script) {
-        // var sq = Entry.hw.sendQueue;
-        var direction = script.getValue("DC_MOTOR_DIRECTION", script);
-        if(!Entry.Utils.isNumber(direction))
-            direction = Entry.mkboard.directionTable[direction];
-
-        if(direction < 0) {
-            direction = 0;
-        } else if(direction > 1) {
-            direction = 1;
-        }
-
-        var speed = script.getNumberValue("DC_MOTOR_SPEED", script) - 1;
-        if(speed < 0) {
-            speed = 0;
-        } else if(speed > 254) {
-            speed = 254;
-        }
-
-        if(!Entry.hw.sendQueue['SET']) {
-            Entry.hw.sendQueue['SET'] = {};
-        }
-
-        Entry.hw.sendQueue['SET'][1] = {
-            type: Entry.mkboard.sensorTypes.DC_MOTOR_RIGHT,
-            data: {
-                direction: direction,
-                speed: speed
-             },
-            time: new Date().getTime()
-        };
-
-        setTimeout(function() {
-            script.timeFlag = 0;
-        }, 10);
-
-        return script.callReturn();
-    },
-    "syntax": {"js": [], "py": []}
-},
-"mkboard_get_left_cds_analog_value": {
-    "color": "#00979D",
-    "fontColor": "#fff",
     "skeleton": "basic_string_field",
     "statements": [],
+    "template": "%1",
     "params": [
         {
-            "type": "Block",
-            "accept": "string"
+            "type": "Dropdown",
+            "options": [
+                [ "COL1", "0" ],
+                [ "COL2", "1" ],
+                [ "COL3", "2" ],
+                [ "COL4", "3" ],
+                [ "COL5", "4" ],
+                [ "COL6", "5" ],
+                [ "COL7", "6" ],
+                [ "COL8", "7" ],
+                [ "COL9", "8" ],
+                [ "COL10", "9" ],
+                [ "COL11", "10" ],
+                [ "COL12", "11" ],
+                [ "COL13", "12" ],
+                [ "COL14", "13" ],
+                [ "COL15", "14" ],
+                [ "COL16", "15" ],
+            ],
+            "value": "0",
+            "fontSize": 11
         }
     ],
     "events": {},
     "def": {
-        "params": [
-            {
-                "type": "mkboard_analog_list",
-                "params": [ "0" ]
-            }
-        ],
-        "type": "mkboard_get_left_cds_analog_value"
+        "params": [ null ]
     },
     "paramsKeyMap": {
-        "PORT": 0
+        "COLUMN": 0
     },
-    "class": "mkboardGet",
-    "isNotFor": [ "mkboard" ],
     "func": function (sprite, script) {
-        var port = script.getValue("PORT", script);
-        var ANALOG = Entry.hw.portData.ANALOG;
-        if (port[0] === "A")
-            port = port.substring(1)
-        return ANALOG ? ANALOG[port] || 0 : 0;
-    },
-    "syntax": {"js": [], "py": []}
+        return script.getField("COLUMN");
+    }
 },
-"mkboard_get_right_cds_analog_value": {
+"mkboard_set_lcd": {
     "color": "#00979D",
     "fontColor": "#fff",
-    "skeleton": "basic_string_field",
-    "statements": [],
-    "params": [
-        {
-            "type": "Block",
-            "accept": "string"
-        }
-    ],
-    "events": {},
-    "def": {
-        "params": [
-            {
-                "type": "mkboard_analog_list",
-                "params": [ "1" ]
-            }
-        ],
-        "type": "mkboard_get_right_cds_analog_value"
-    },
-    "paramsKeyMap": {
-        "PORT": 0
-    },
-    "class": "mkboardGet",
-    "isNotFor": [ "mkboard" ],
-    "func": function (sprite, script) {
-        var port = script.getValue("PORT", script);
-        var ANALOG = Entry.hw.portData.ANALOG;
-        if (port[0] === "A")
-            port = port.substring(1)
-        return ANALOG ? ANALOG[port] || 0 : 0;
-    },
-    "syntax": {"js": [], "py": []}
-},
-"mkboard_toggle_left_led": {
-    "color": "#00979D",
     "skeleton": "basic",
+    "template": Lang.template.mkboard_set_lcd,
     "statements": [],
     "params": [
         {
             "type": "Block",
             "accept": "string"
         },
+        {
+            "type": "Block",
+            "accept": "string"
+        },
+        {
+            "type": "Block",
+            "accept": "string"
+        },        
+        {
+            "type": "Indicator",
+            "img": "block_icon/hardware_03.png",
+            "size": 12
+        }
+    ],
+    "events": {},
+    "def": {
+        "params": [
+            {
+                "type": "mkboard_list_digital_lcd_line"
+            },
+            {
+                "type": "mkboard_list_digital_lcd_column"
+            },            
+            {
+                "type": "text",
+                "params": [ "Type text !!" ]
+            },
+            null
+        ],
+        "type": "mkboard_set_lcd"
+    },
+    "paramsKeyMap": {
+        "LINE": 0,
+        "COLUMN": 1,
+        "STRING": 2,
+    },
+    "class": "mkboardLcd",
+    "isNotFor": [ "mkboard" ],
+    "func": function (sprite, script) {
+        var sq = Entry.hw.sendQueue;
+
+        var line = script.getValue("LINE", script);
+        var column = script.getValue("COLUMN", script);
+        var string = script.getValue("STRING", script);
+        var text = [];
+
+        
+        if(!script.isStart) {
+            if(typeof string === 'string') {
+                for (var i = 0; i < string.length; i++) {
+                    text[i] = Entry.mkboard.toByte(string[i]);
+                }
+            }            
+            else if (typeof string === 'number') 
+            {
+                //console.log("string");
+                //console.log(string);
+                var num_to_string = string.toString();
+                for (var i = 0; i < num_to_string.length; i++) {
+                    text[i] = Entry.mkboard.toByte(num_to_string[i]);
+                }                
+                //console.log("num_to_string");
+                //console.log(num_to_string);                
+                //text[0] = 1;
+                //text[1] = string / 1;
+            }
+            else {
+                text[0] = string;
+            }
+            
+
+            if(!Entry.hw.sendQueue['SET']) {
+                Entry.hw.sendQueue['SET'] = {};
+            }
+
+            script.isStart = true;
+            script.timeFlag = 1;
+            var fps = Entry.FPS || 60;
+            timeValue = 60/fps*50;
+
+            Entry.hw.sendQueue['SET'][line] = {
+                type: Entry.mkboard.sensorTypes.LCD,
+                data: {
+                    line: line,
+                    column: column,
+                    text0 : text[0],
+                    text1 : text[1],
+                    text2 : text[2],
+                    text3 : text[3],
+                    text4 : text[4],
+                    text5 : text[5],
+                    text6 : text[6],
+                    text7 : text[7],
+                    text8 : text[8],
+                    text9 : text[9],
+                    text10 : text[10],
+                    text11 : text[11],
+                    text12 : text[12],
+                    text13 : text[13],
+                    text14 : text[14],
+                    text15 : text[15]
+                },
+                time: new Date().getTime()
+            };
+
+            setTimeout(function() {
+                script.timeFlag = 0;
+            }, timeValue);
+            return script;
+        }
+        else if(script.timeFlag == 1) {
+            return script;
+        }
+        else {
+            delete script.timeFlag;
+            delete script.isStart;
+            Entry.engine.isContinue = true;
+            return script.callReturn();
+        }
+    },
+    "syntax": {"js": [], "py": ["mkboard.mkboard_set_lcd(%1, %2, %3)"]}
+},
+"mkboard_list_lcd_command": {
+    "color": "#00979D",
+    "skeleton": "basic_string_field",
+    "statements": [],
+    "template": "%1",
+    "params": [
+        {
+            "type": "Dropdown",
+            "options": [
+                [ "LCD_BLUE", "0" ],
+                [ "LCD_GREEN", "1" ],
+                [ "LCD_CLEAR", "2" ]
+                /*,
+                [ "BACKLIGHT_ON", "3" ],
+                [ "BACKLIGHT_OFF", "4" ]
+                */
+            ],
+            "value": "0",
+            "fontSize": 11
+        }
+    ],
+    "events": {},
+    "def": {
+        "params": [ null ]
+    },
+    "paramsKeyMap": {
+        "COMMAND": 0
+    },
+    "func": function (sprite, script) {
+        return script.getField("COMMAND");
+    }
+},
+"mkboard_lcd_command": {
+    "color": "#00979D",
+    "skeleton": "basic",
+    "template": Lang.template.mkboard_lcd_command,
+    //"template": "%1 %2",
+    "statements": [],
+    "params": [
         {
             "type": "Block",
             "accept": "string"
@@ -46165,147 +46151,35 @@ Entry.block = {
     "def": {
         "params": [
             {
-                "type": "arduino_get_port_number",
-                "params": [ "3" ]
-            },
-            {
-                "type": "arduino_get_digital_toggle",
-                "params": [ "on" ],
+                "type": "mkboard_list_lcd_command"
             },
             null
         ],
-        "type": "mkboard_toggle_left_led"
+        "type": "mkboard_lcd_command"
     },
     "paramsKeyMap": {
-        "PORT": 0,
-        "VALUE": 1
+        "COMMAND": 0,
     },
-    "class": "mkboard",
+    "class": "mkboardLcd",
     "isNotFor": [ "mkboard" ],
     "func": function (sprite, script) {
-        var port = script.getNumberValue("PORT");
-        var value = script.getValue("VALUE");
+        var sq = Entry.hw.sendQueue;
+        var value = script.getNumberValue("COMMAND", script);
+        var command = script.getNumberValue("COMMAND", script);
 
-        if(typeof value === 'string') {
-            value = value.toLowerCase();
+        if(!sq['SET']) {
+            sq['SET'] = {};
         }
-        if(Entry.mkboard.highList.indexOf(value) > -1) {
-            value = 255;
-        } else if(Entry.mkboard.lowList.indexOf(value) > -1) {
-            value = 0;
-        } else {
-            throw new Error();
-        }
-        if(!Entry.hw.sendQueue['SET']) {
-            Entry.hw.sendQueue['SET'] = {};
-        }
-        Entry.hw.sendQueue['SET'][port] = {
-            type: Entry.mkboard.sensorTypes.DIGITAL,
-            data: value,
-            time: new Date().getTime()
+        sq['SET'][0] = {
+            type: Entry.mkboard.sensorTypes.LCD_COMMAND,
+                data : {
+                    value: value,
+                    command: command
+                },
+                time: new Date().getTime()
         };
-        return script.callReturn();
-    },
-    "syntax": {"js": [], "py": []}
-},
-"mkboard_toggle_right_led": {
-    "color": "#00979D",
-    "skeleton": "basic",
-    "statements": [],
-    "params": [
-        {
-            "type": "Block",
-            "accept": "string"
-        },
-        {
-            "type": "Block",
-            "accept": "string"
-        },
-        {
-            "type": "Indicator",
-            "img": "block_icon/hardware_03.png",
-            "size": 12
-        }
-    ],
-    "events": {},
-    "def": {
-        "params": [
-            {
-                "type": "arduino_get_port_number",
-                "params": [ "9" ]
-            },
-            {
-                "type": "arduino_get_digital_toggle",
-                "params": [ "on" ],
-            },
-            null
-        ],
-        "type": "mkboard_toggle_right_led"
-    },
-    "paramsKeyMap": {
-        "PORT": 0,
-        "VALUE": 1
-    },
-    "class": "mkboard",
-    "isNotFor": [ "mkboard" ],
-    "func": function (sprite, script) {
-        var port = script.getNumberValue("PORT");
-        var value = script.getValue("VALUE");
 
-        if(typeof value === 'string') {
-            value = value.toLowerCase();
-        }
-        if(Entry.mkboard.highList.indexOf(value) > -1) {
-            value = 255;
-        } else if(Entry.mkboard.lowList.indexOf(value) > -1) {
-            value = 0;
-        } else {
-            throw new Error();
-        }
-        if(!Entry.hw.sendQueue['SET']) {
-            Entry.hw.sendQueue['SET'] = {};
-        }
-        Entry.hw.sendQueue['SET'][port] = {
-            type: Entry.mkboard.sensorTypes.DIGITAL,
-            data: value,
-            time: new Date().getTime()
-        };
         return script.callReturn();
-    },
-    "syntax": {"js": [], "py": []}
-},
-"mkboard_get_sound_analog_value": {
-    "color": "#00979D",
-    "fontColor": "#fff",
-    "skeleton": "basic_string_field",
-    "statements": [],
-    "params": [
-        {
-            "type": "Block",
-            "accept": "string"
-        }
-    ],
-    "events": {},
-    "def": {
-        "params": [
-            {
-                "type": "mkboard_analog_list",
-                "params": [ "2" ]
-            }
-        ],
-        "type": "mkboard_get_sound_analog_value"
-    },
-    "paramsKeyMap": {
-        "PORT": 0
-    },
-    "class": "mkboardGet",
-    "isNotFor": [ "mkboard" ],
-    "func": function (sprite, script) {
-        var port = script.getValue("PORT", script);
-        var ANALOG = Entry.hw.portData.ANALOG;
-        if (port[0] === "A")
-            port = port.substring(1)
-        return ANALOG ? ANALOG[port] || 0 : 0;
     },
     "syntax": {"js": [], "py": []}
 },
@@ -46821,7 +46695,7 @@ Entry.block = {
         {
             "type": "Block",
             "accept": "string"
-        },
+        },        
         {
             "type": "Indicator",
             "img": "block_icon/hardware_03.png",
@@ -46836,7 +46710,7 @@ Entry.block = {
             },
             {
                 "type": "memaker_list_digital_lcd_column"
-            },
+            },            
             {
                 "type": "text",
                 "params": [ "Type text !!" ]
@@ -46854,29 +46728,24 @@ Entry.block = {
     "isNotFor": [ "memaker" ],
     "func": function (sprite, script) {
         var sq = Entry.hw.sendQueue;
-
-        // var direction = script.getValue("MOTOR_DIRECTION", script);
-        // var direction = script.getField("DIRECTION", script);
-
         var line = script.getValue("LINE", script);
         var column = script.getValue("COLUMN", script);
         var string = script.getValue("STRING", script);
         var text = [];
-
-
+        
         if(!script.isStart) {
             if(typeof string === 'string') {
                 for (var i = 0; i < string.length; i++) {
                     text[i] = Entry.memaker.toByte(string[i]);
                 }
-            }
-            else if (typeof string === 'number') {
-                text[0] = 1;
-                text[1] = string / 1;
-            }
-            else {
+            } else if (typeof string === 'number') {
+                var num_to_string = string.toString();
+                for (var i = 0; i < num_to_string.length; i++) {
+                    text[i] = Entry.memaker.toByte(num_to_string[i]);
+                }
+            } else {
                 text[0] = string;
-            }
+            }            
 
             if(!Entry.hw.sendQueue['SET']) {
                 Entry.hw.sendQueue['SET'] = {};
@@ -46916,14 +46785,12 @@ Entry.block = {
                 script.timeFlag = 0;
             }, timeValue);
             return script;
-        }
-        else if(script.timeFlag == 1) {
+        } else if(script.timeFlag == 1) {
             return script;
-        }
-        else {
+        } else {
             delete script.timeFlag;
             delete script.isStart;
-            Entry.engine.isContinue = false;
+            Entry.engine.isContinue = true;
             return script.callReturn();
         }
     },
@@ -46938,9 +46805,9 @@ Entry.block = {
         {
             "type": "Dropdown",
             "options": [
-                [ "LCD_CLEAR", "0" ],
-                [ "BACKLIGHT_ON", "1" ],
-                [ "BACKLIGHT_OFF", "2" ]
+                [ "LCD_BLUE", "0" ],
+                [ "LCD_GREEN", "1" ],
+                [ "LCD_CLEAR", "2" ]
             ],
             "value": "0",
             "fontSize": 11
@@ -46957,11 +46824,11 @@ Entry.block = {
         return script.getField("COMMAND");
     }
 },
+
 "memaker_lcd_command": {
     "color": "#00979D",
     "skeleton": "basic",
     "template": Lang.template.memaker_lcd_command,
-    //"template": "%1 %2",
     "statements": [],
     "params": [
         {
@@ -46990,16 +46857,22 @@ Entry.block = {
     "class": "memakerLcd",
     "isNotFor": [ "memaker" ],
     "func": function (sprite, script) {
-        var cmd = script.getNumberValue("COMMAND");
+        var sq = Entry.hw.sendQueue;
+        var value = script.getNumberValue("COMMAND", script);
+        var command = script.getNumberValue("COMMAND", script);
 
-        if(!Entry.hw.sendQueue['SET']) {
-            Entry.hw.sendQueue['SET'] = {};
+        if(!sq['SET']) {
+            sq['SET'] = {};
         }
-        Entry.hw.sendQueue['SET'][cmd] = {
+        sq['SET'][0] = {
             type: Entry.memaker.sensorTypes.LCD_COMMAND,
-            time: new Date().getTime()
+                data : {
+                    value: value,
+                    command: command
+                },
+                time: new Date().getTime()
         };
-        return script.callReturn();
+        return script.callReturn();        
     },
     "syntax": {"js": [], "py": []}
 },
@@ -68765,7 +68638,7 @@ chocopi_servo_motor: {
             var pd = Entry.hw.portData;
             var dev = script.getField('DEVICE');
             var rotary_value = Math.round((pd[dev])*100/1024);
-			//if (rotary_value == 0) rotary_value = 1;
+            //if (rotary_value == 0) rotary_value = 1;
             return rotary_value;
         },
         "syntax": {"js": [], "py": []}
@@ -69946,9 +69819,8 @@ chocopi_servo_motor: {
         },
         "syntax": {"js": [], "py": []}
     },
-
     "jdkit_led": {
-    "color": "#00979D",
+        "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
         "params": [
@@ -70003,7 +69875,7 @@ chocopi_servo_motor: {
         "syntax": {"js": [], "py": []}
     },
     "jdkit_tune": {
-    "color": "#00979D",
+        "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
         "params": [
@@ -70070,9 +69942,8 @@ chocopi_servo_motor: {
         },
         "syntax": {"js": [], "py": []}
     },
-
     "jdkit_motor": {
-    "color": "#00979D",
+        "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
         "params": [
@@ -70123,9 +69994,8 @@ chocopi_servo_motor: {
         },
         "syntax": {"js": [], "py": []}
     },
-
     "jdkit_throttle": {
-    "color": "#00979D",
+        "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
         "params": [
@@ -70165,7 +70035,7 @@ chocopi_servo_motor: {
         "syntax": {"js": [], "py": []}
     },
     "jdkit_altitude": {
-    "color": "#00979D",
+        "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
         "params": [
@@ -70205,7 +70075,7 @@ chocopi_servo_motor: {
         "syntax": {"js": [], "py": []}
     },
     "jdkit_rollpitch": {
-    "color": "#00979D",
+        "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
         "params": [
@@ -70257,7 +70127,7 @@ chocopi_servo_motor: {
         "syntax": {"js": [], "py": []}
     },
     "jdkit_yaw": {
-    "color": "#00979D",
+        "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
         "params": [
@@ -70296,7 +70166,7 @@ chocopi_servo_motor: {
         "syntax": {"js": [], "py": []}
     },
     "jdkit_emergency": {
-    "color": "#00979D",
+        "color": "#00979D",
         "skeleton": "basic",
         "statements": [],
         "params": [
@@ -70315,11 +70185,11 @@ chocopi_servo_motor: {
         },
         "class": "JDKit_Command",
         "isNotFor": [ "JDKit" ],
-
         "func": function (sprite, script) {
-                if(typeof Entry.hw.sendQueue.CMD == "undefined")
-                        Entry.hw.sendQueue.CMD = [0xF0, 0, 0, 0, 100, 100, 100, 0, 0, 0, 0, 0, 0];
-                var cmd = Entry.hw.sendQueue.CMD;
+            if(typeof Entry.hw.sendQueue.CMD == "undefined") {
+                Entry.hw.sendQueue.CMD = [0xF0, 0, 0, 0, 100, 100, 100, 0, 0, 0, 0, 0, 0];
+            }
+            var cmd = Entry.hw.sendQueue.CMD;
 
             cmd[Entry.JDKit.Cmd.OPTION] = 0x81;
             Entry.hw.update();
@@ -70328,6 +70198,4846 @@ chocopi_servo_motor: {
         "syntax": {"js": [], "py": []}
     },
 //endregion JDKit
+
+//region playcode
+    "playcode_port_list": {
+        "color": "#00979D",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "template": "%1",
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    ["1", "1"],
+                    ["2", "2"],
+                    ["3", "3"],
+                    ["4", "4"],
+                    ["5", "5"],
+                    ["6", "6"],
+                    ["7", "7"],
+                    ["8", "8"],
+                ],
+                "value": "1",
+                "fontSize": 11
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [null]
+        },
+        "paramsKeyMap": {
+            "PORT": 0
+        },
+        "func": function (sprite, script) {
+            return script.getField("PORT");
+        }
+    },
+    "playcode_first_port_list": {
+        "color": "#00979D",
+        "skeleton": "basic_string_field",
+        "statements": [],
+        "template": "%1",
+        "params": [
+            {
+                "type": "Dropdown",
+                "options": [
+                    ["1", "1"],
+                    ["2", "2"],
+                    ["3", "3"],
+                    ["4", "4"]
+                ],
+                "value": "1",
+                "fontSize": 11
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [null]
+        },
+        "paramsKeyMap": {
+            "PORT": 0
+        },
+        "func": function (sprite, script) {
+            return script.getField("PORT");
+        }
+    },
+    "playcode_get_light_value": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "template": "빛센서 : %1 포트 값",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "playcode_first_port_list"
+                }
+            ],
+            "type": "playcode_get_light_value"
+        },
+        "paramsKeyMap": {
+            "PORT": 0
+        },
+        "class": "playcode_get",
+        "isNotFor": ["playcode"],
+        "func": function (sprite, script) {
+            var port = script.getValue("PORT", script);
+            var ANALOG = Entry.hw.portData.LIGHT;
+
+            if (port[0] === "A")
+                port = port.substring(1)
+
+            if (!Entry.hw.sendQueue['GET']) {
+                Entry.hw.sendQueue['GET'] = {};
+            }
+
+            Entry.hw.sendQueue['GET'][Entry.playcode.sensorTypes.LIGHT] = {
+                port: [port],
+                data: 1,
+                time: new Date().getTime()
+            };
+
+            return ANALOG;
+        },
+        "syntax": { "js": [], "py": ["playcode.get_analog_value(%1)"] }
+    },
+    "playcode_get_mic_value": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic_string_field",
+        "template": "마이크센서 : %1 포트 값",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "playcode_first_port_list"
+                }
+            ],
+            "type": "playcode_get_mic_value"
+        },
+        "paramsKeyMap": {
+            "PORT": 0
+        },
+        "class": "playcode_get",
+        "isNotFor": ["playcode"],
+        "func": function (sprite, script) {
+            var port = script.getValue("PORT", script);
+            var ANALOG = Entry.hw.portData.MIC;
+
+            if (port[0] === "A")
+                port = port.substring(1)
+
+            if (!Entry.hw.sendQueue['GET']) {
+                Entry.hw.sendQueue['GET'] = {};
+            }
+
+            Entry.hw.sendQueue['GET'][Entry.playcode.sensorTypes.MICROPHONE] = {
+                port: [port],
+                data: 1,
+                time: new Date().getTime()
+            };
+
+            return ANALOG;
+        },
+        "syntax": { "js": [], "py": ["playcode.get_analog_value(%1)"] }
+    },
+    "playcode_gpio": {
+        "color": "#00979D",
+        "fontColor": "#fff",
+        "skeleton": "basic",
+        "template": "GPIO : %1포트에 %2 보내기 %3",
+        "statements": [],
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Dropdown",
+                "options": [
+                    [Lang.Blocks.ARDUINO_on, "on"],
+                    [Lang.Blocks.ARDUINO_off, "off"]
+                ],
+                "value": "on",
+                "fontSize": 11,
+                'arrowColor': EntryStatic.ARROW_COLOR_HW
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "playcode_port_list"
+                },
+                null,
+                null,
+            ],
+            "type": "playcode_gpio"
+        },
+        "paramsKeyMap": {
+            PORT: 0,
+            OPERATOR: 1
+        },
+        "class": "playcode_set",
+        "isNotFor": ["playcode"],
+        "func": function (sprite, script) {
+            var port = script.getNumberValue("PORT");
+            var operator = script.getField("OPERATOR");
+            var value = operator == "on" ? 1 : 0;
+
+            var sq = Entry.hw.sendQueue;
+
+            if (!sq['SET']) {
+                sq['SET'] = {};
+            }
+            sq['SET'][port] = {
+                type: Entry.playcode.sensorTypes.DIGITAL,
+                data: value,
+                time: new Date().getTime()
+            };
+
+
+            Entry.hw.setDigitalPortValue(port, value);
+            return script.callReturn();
+        },
+        "syntax": { "js": [], "py": ["playcode.playcode_gpio(%1)"] }
+    },
+    "playcode_servo": {
+        color: "#00979D",
+        skeleton: "basic",
+        template: "Servo : %1포트에 %2 보내기 %3",
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "playcode_first_port_list",
+                    "params": [1],
+                },
+                {
+                    "type": "number",
+                    "params": ["0"],
+                },
+                null
+            ],
+            "type": "playcode_servo"
+        },
+        "paramsKeyMap": {
+            "PORT": 0,
+            "VALUE": 1
+        },
+        class: "playcode_set",
+        "isNotFor": ["playcode"],
+
+        func: function (sprite, script) {
+            var port = script.getNumberValue("PORT");
+            var value = script.getNumberValue("VALUE");
+
+            value = Math.round(value);
+            value = Math.min(value, 180);
+            value = Math.max(value, 0);
+
+            if (!Entry.hw.sendQueue['SET']) {
+                Entry.hw.sendQueue['SET'] = {};
+            }
+
+            Entry.hw.sendQueue['SET'][port] = {
+                type: Entry.playcode.sensorTypes.SERVO_PIN,
+                data: value,
+                time: new Date().getTime()
+            };
+
+            return script.callReturn();
+        }
+    },
+    "playcode_speed": {
+        color: "#00979D",
+        skeleton: "basic",
+        template: "Speed : %1포트에 %2 보내기 %3",
+        "params": [
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Block",
+                "accept": "string"
+            },
+            {
+                "type": "Indicator",
+                "img": "block_icon/hardware_03.png",
+                "size": 12
+            }
+        ],
+        "events": {},
+        "def": {
+            "params": [
+                {
+                    "type": "playcode_first_port_list",
+                    "params": [1],
+                },
+                {
+                    "type": "number",
+                    "params": ["0"],
+                },
+                null
+            ],
+            "type": "playcode_speed"
+        },
+        "paramsKeyMap": {
+            "PORT": 0,
+            "VALUE": 1
+        },
+        class: "playcode_set",
+        "isNotFor": ["playcode"],
+        func: function (sprite, script) {
+            var port = script.getNumberValue("PORT");
+            var value = script.getNumberValue("VALUE");
+
+            value = Math.round(value);
+            value = Math.min(value, 255);
+            value = Math.max(value, 0);
+
+            if (!Entry.hw.sendQueue['SET']) {
+                Entry.hw.sendQueue['SET'] = {};
+            }
+
+            Entry.hw.sendQueue['SET'][port] = {
+                type: Entry.playcode.sensorTypes.PWM,
+                data: value,
+                time: new Date().getTime()
+            };
+
+            return script.callReturn();
+        }
+    },
+//endregion playcode
+
+//region creamo 
+    creamo_get_number_sensor_value: {
+        parent: 'arduino_get_number_sensor_value',
+        isNotFor: ['creamo'],
+        def: {
+            params: [
+                {
+                    type: 'arduino_get_sensor_number',
+                },
+            ],
+            type: 'creamo_get_number_sensor_value',
+        },
+        class: 'arduino_value',
+        syntax: { js: [], py: ['creamo.get_number_sensor_value(%1)'] },
+    },
+    creamo_get_port_number: {
+        color: '#00979D',
+        skeleton: 'basic_string_field',
+        statements: [],
+        params: [
+            {
+                type: 'Dropdown',
+                options: [['7', '7'], ['8', '8'], ['12', '12']],
+                value: '7',
+                fontSize: 11,
+                arrowColor: EntryStatic.ARROW_COLOR_HW,
+            },
+        ],
+        events: {},
+        def: {
+            params: [null],
+        },
+        paramsKeyMap: {
+            PORT: 0,
+        },
+        func: function(sprite, script) {
+            return script.getStringField('PORT');
+        },
+        syntax: {
+            js: [],
+            py: [
+                {
+                    syntax: '%1',
+                    textParams: [
+                        {
+                            type: 'Dropdown',
+                            options: [['7', '7'], ['8', '8'], ['12', '12']],
+                            value: '7',
+                            fontSize: 11,
+                            arrowColor: EntryStatic.ARROW_COLOR_HW,
+                        },
+                    ],
+                    keyOption: 'arduino_get_port_number',
+                },
+            ],
+        },
+    },
+    //LED
+    creamo_toggle_led: {
+        parent: 'arduino_toggle_led',
+        isNotFor: ['creamo'],
+        def: {
+            params: [
+                {
+                    type: 'creamo_get_port_number',
+                },
+                null,
+                null,
+            ],
+            type: 'creamo_toggle_led',
+        },
+        class: 'arduino_set',
+        syntax: { js: [], py: ['creamo.toggle_led(%1)'] },
+    },
+    //모터
+    creamo_toggle_motor: {
+        parent: 'arduino_toggle_led',
+        isNotFor: ['creamo'],
+        def: {
+            params: [
+                {
+                    type: 'creamo_motor_port_number',
+                },
+                null,
+                null,
+            ],
+            type: 'creamo_toggle_motor',
+        },
+        class: 'arduino_set',
+        syntax: { js: [], py: ['creamo.toggle_led(%1)'] },
+    },
+    creamo_motor_port_number: {
+        color: '#00979D',
+        skeleton: 'basic_string_field',
+        statements: [],
+        params: [
+            {
+                type: 'Dropdown',
+                options: [['6', '6'], ['9', '9']],
+                value: '6',
+                fontSize: 11,
+                arrowColor: EntryStatic.ARROW_COLOR_HW,
+            },
+        ],
+        events: {},
+        def: {
+            params: [null],
+        },
+        paramsKeyMap: {
+            PORT: 0,
+        },
+        func: function(sprite, script) {
+            return script.getStringField('PORT');
+        },
+        syntax: {
+            js: [],
+            py: [
+                {
+                    syntax: '%1',
+                    textParams: [
+                        {
+                            type: 'Dropdown',
+                            options: [['6', '6'], ['9', '9']],
+                            value: '6',
+                            fontSize: 11,
+                            arrowColor: EntryStatic.ARROW_COLOR_HW,
+                        },
+                    ],
+                    keyOption: 'arduino_get_port_number',
+                },
+            ],
+        },
+    },
+    creamo_toggle_pwm: {
+        color: '#00979D',
+        skeleton: 'basic',
+        statements: [],
+        params: [
+            {
+                type: 'Block',
+                accept: 'string',
+            },
+            {
+                type: 'Block',
+                accept: 'string',
+            },
+            {
+                type: 'Indicator',
+                img: 'block_icon/hardware_03.png',
+                size: 12,
+            },
+        ],
+        events: {},
+        def: {
+            params: [
+                {
+                    type: 'creamo_get_pwm_port_number',
+                },
+                {
+                    type: 'arduino_text',
+                    params: ['255'],
+                },
+                null,
+            ],
+            type: 'creamo_toggle_pwm',
+        },
+        paramsKeyMap: {
+            PORT: 0,
+            VALUE: 1,
+        },
+        class: 'arduino_set',
+        isNotFor: ['creamo'],
+        func: function(sprite, script) {
+            var port = script.getNumberValue('PORT');
+            var value = script.getNumberValue('VALUE');
+            value = Math.round(value);
+            value = Math.max(value, 0);
+            value = Math.min(value, 255);
+            Entry.hw.setDigitalPortValue(port, value);
+            return script.callReturn();
+        },
+        syntax: {
+            js: [],
+            py: [
+                {
+                    syntax: 'creamo.set_pin_digital(%1, %2)',
+                    textParams: [
+                        {
+                            type: 'Block',
+                            accept: 'string',
+                        },
+                        {
+                            type: 'Block',
+                            accept: 'string',
+                        },
+                    ],
+                },
+            ],
+        },
+    },
+    creamo_get_pwm_port_number: {
+        color: '#00979D',
+        skeleton: 'basic_string_field',
+        statements: [],
+        params: [
+            {
+                type: 'Dropdown',
+                options: [['5', '5'], ['6', '6'], ['9', '9']],
+                value: '5',
+                fontSize: 11,
+                arrowColor: EntryStatic.ARROW_COLOR_HW,
+            },
+        ],
+        events: {},
+        def: {
+            params: [null],
+        },
+        paramsKeyMap: {
+            PORT: 0,
+        },
+        func: function(sprite, script) {
+            return script.getStringField('PORT');
+        },
+        syntax: {
+            js: [],
+            py: [
+                {
+                    syntax: '%1',
+                    textParams: [
+                        {
+                            type: 'Dropdown',
+                            options: [['5', '5'], ['6', '6'], ['9', '9']],
+                            value: '3',
+                            fontSize: 11,
+                            arrowColor: EntryStatic.ARROW_COLOR_HW,
+                            converter:
+                                Entry.block.converters
+                                    .returnStringOrNumberByValue,
+                        },
+                    ],
+                    keyOption: 'arduino_get_pwm_port_number',
+                },
+            ],
+        },
+    },
+//endregion creamo
+//region mechatro    
+    mechatro_get_digital: {
+        color: '#00979D',
+        fontColor: '#fff',
+        skeleton: 'basic_boolean_field',
+        statements: [],
+        params: [
+            {
+                type: 'Dropdown',
+                options: [
+                    ['D2', '2'],
+                    ['D4', '4'],
+                    ['D5', '5'],
+                    ['D6', '6'],
+                    ['D7', '7'],
+                    ['D10', '10'],
+                    ['A2', '16'],
+                    ['A3', '17'],
+                    ['A4', '18'],
+                    ['A5', '19'],
+                    ['A6', '20'],
+                    ['A7', '21'],
+                ],
+                value: '2',
+                fontSize: 11,
+            },
+        ],
+        events: {},
+        def: {
+            params: [null],
+            type: 'mechatro_get_digital',
+        },
+        paramsKeyMap: {
+            PORT: 0,
+        },
+        class: 'MechatroGet',
+        isNotFor: ['mechatro'],
+        func: function(sprite, script) {
+            if (!Entry.hw.connected) {
+                return 0;
+            }
+
+            var portNo = script.getNumberField('PORT', script);
+            var mPortNo = 'm' + portNo;
+            var mode;
+            var value;
+
+            if (portNo > 14) {
+                mode = Entry.mechatro.portMode.SET_ANALOG_IN;
+            } else {
+                mode = Entry.mechatro.portMode.SET_DIGITAL_IN;
+            }
+
+            if (Entry.hw.portData[mPortNo] !== mode) {
+                Entry.hw.sendQueue[mPortNo] = mode;
+                Entry.hw.update();
+                delete Entry.hw.sendQueue[mPortNo];
+            }
+
+            if (Entry.hw.portData[portNo] !== undefined) {
+                value = Entry.hw.portData[portNo];
+                if (portNo > 14) {
+                    value =
+                        value > Entry.mechatro.state.THRESHOLD[portNo] ? 1 : 0;
+                }
+                return value;
+            } else {
+                return 0;
+            }
+        },
+        syntax: { js: [], py: ['mechatro.get_digital(%1)'] },
+    },
+    mechatro_get_sensor_value: {
+        color: '#00979D',
+        fontColor: '#fff',
+        skeleton: 'basic_string_field',
+        statements: [],
+        params: [
+            {
+                type: 'Dropdown',
+                options: [
+                    ['A2', '16'],
+                    ['A3', '17'],
+                    ['A4', '18'],
+                    ['A5', '19'],
+                    ['A6', '20'],
+                    ['A7', '21'],
+                ],
+                value: '16',
+                fontSize: 11,
+            },
+        ],
+        events: {},
+        def: {
+            params: [null],
+            type: 'mechatro_get_sensor_value',
+        },
+        paramsKeyMap: {
+            PORT: 0,
+        },
+        class: 'MechatroGet',
+        isNotFor: ['mechatro'],
+        func: function(sprite, script) {
+            var portNo = script.getNumberField('PORT', script);
+            var mPortNo = 'm' + portNo;
+            var mode = Entry.mechatro.portMode.SET_ANALOG_IN;
+
+            if (Entry.hw.portData[mPortNo] !== mode) {
+                Entry.hw.sendQueue[mPortNo] = mode;
+                Entry.hw.update();
+                delete Entry.hw.sendQueue[mPortNo];
+            }
+            if (Entry.hw.portData[portNo] !== undefined) {
+                return Entry.hw.portData[portNo];
+            } else {
+                return 0;
+            }
+        },
+        syntax: { js: [], py: ['mechatro.sensor_value(%1)'] },
+    },
+    mechatro_set_threshold: {
+        color: '#00979D',
+        skeleton: 'basic',
+        statements: [],
+        params: [
+            {
+                type: 'Dropdown',
+                options: [
+                    ['A2', '16'],
+                    ['A3', '17'],
+                    ['A4', '18'],
+                    ['A5', '19'],
+                    ['A6', '20'],
+                    ['A7', '21'],
+                ],
+                value: '16',
+                fontSize: 11,
+            },
+            {
+                type: 'Block',
+                accept: 'string',
+            },
+            {
+                type: 'Indicator',
+                img: 'block_icon/hardware_03.png',
+                size: 12,
+            },
+        ],
+        events: {},
+        def: {
+            params: [
+                null,
+                {
+                    type: 'number',
+                    params: ['10~90'],
+                },
+                null,
+            ],
+            type: 'mechatro_set_threshold',
+        },
+        paramsKeyMap: {
+            PORT: 0,
+            VALUE: 1,
+        },
+        class: 'MechatroGet',
+        isNotFor: ['mechatro'],
+        func: function(sprite, script) {
+            var portNo = script.getNumberField('PORT', script);
+            var value = script.getValue('VALUE');
+
+            if (!Entry.Utils.isNumber(value)) value = 0;
+            value = Math.max(value, 10);
+            value = Math.min(value, 90);
+
+            Entry.mechatro.state.THRESHOLD[portNo] = value;
+
+            return script.callReturn();
+        },
+        syntax: { js: [], py: ['mechatro.set_threshold(%1, %2)'] },
+    },
+    mechatro_get_ultrasonic_value: {
+        color: '#00979D',
+        fontColor: '#fff',
+        skeleton: 'basic_string_field',
+        statements: [],
+        params: [
+            {
+                type: 'Dropdown',
+                options: [
+                    ['D2', '2'],
+                    ['D4', '4'],
+                    ['D5', '5'],
+                    ['D6', '6'],
+                    ['D7', '7'],
+                    ['D10', '10'],
+                ],
+                value: '2',
+                fontSize: 11,
+            },
+            {
+                type: 'Dropdown',
+                options: [
+                    ['D2', '2'],
+                    ['D4', '4'],
+                    ['D5', '5'],
+                    ['D6', '6'],
+                    ['D7', '7'],
+                    ['D10', '10'],
+                ],
+                value: '4',
+                fontSize: 11,
+            },
+        ],
+        events: {},
+        def: {
+            params: [null, null],
+            type: 'mechatro_get_ultrasonic_value',
+        },
+        paramsKeyMap: {
+            TIRG: 0,
+            ECHO: 1,
+        },
+        class: 'MechatroGet',
+        isNotFor: ['mechatro'],
+        func: function(sprite, script) {
+            if (!Entry.hw.connected) {
+                return 0;
+            }
+
+            var trig = script.getNumberField('TIRG', script);
+            var echo = script.getNumberField('ECHO', script);
+            var mode = Entry.mechatro.portMode.SET_ULTRASONIC;
+            Entry.mechatro.transferModeValue(trig, mode, echo);
+
+            if (Entry.hw.portData[trig] !== undefined) {
+                return Entry.hw.portData[trig];
+            } else {
+                return 0;
+            }
+        },
+        syntax: {
+            js: [],
+            py: [
+                {
+                    syntax: 'Arduino.ultrasonicRead(%1, %2)',
+                    blockType: 'param',
+                    textParams: [
+                        {
+                            type: 'Block',
+                            accept: 'string',
+                        },
+                        {
+                            type: 'Block',
+                            accept: 'string',
+                        },
+                    ],
+                },
+            ],
+        },
+    },
+    mechatro_set_digital: {
+        color: '#00979D',
+        skeleton: 'basic',
+        statements: [],
+        params: [
+            {
+                type: 'Dropdown',
+                options: [
+                    ['D2', '2'],
+                    ['D4', '4'],
+                    ['D5', '5'],
+                    ['D6', '6'],
+                    ['D7', '7'],
+                    ['D10', '10'],
+                ],
+                value: '2',
+                fontSize: 11,
+            },
+            {
+                type: 'Dropdown',
+                options: [['켜기', '1'], ['끄기', '0']],
+                value: '1',
+                fontSize: 11,
+            },
+            {
+                type: 'Indicator',
+                img: 'block_icon/hardware_03.png',
+                size: 12,
+            },
+        ],
+        events: {},
+        def: {
+            params: [null, null, null],
+            type: 'mechatro_set_digital',
+        },
+        paramsKeyMap: {
+            PORT: 0,
+            OPERATOR: 1,
+        },
+        class: 'Mechatro_d_out',
+        isNotFor: ['mechatro'],
+        func: function(sprite, script) {
+            var portNo = script.getNumberField('PORT', script);
+            var mode = Entry.mechatro.portMode.SET_DIGITAL_OUT;
+            var value = script.getNumberField('OPERATOR');
+
+            Entry.mechatro.transferModeValue(portNo, mode, value);
+
+            return script.callReturn();
+        },
+        syntax: { js: [], py: ['mechatro.set_digital(%1, %2)'] },
+    },
+    mechatro_set_pwm: {
+        color: '#00979D',
+        skeleton: 'basic',
+        statements: [],
+        params: [
+            {
+                type: 'Dropdown',
+                options: [['D5', '5'], ['D6', '6']],
+                value: '5',
+                fontSize: 11,
+            },
+            {
+                type: 'Block',
+                accept: 'string',
+            },
+            {
+                type: 'Indicator',
+                img: 'block_icon/hardware_03.png',
+                size: 12,
+            },
+        ],
+        events: {},
+        def: {
+            params: [
+                null,
+                {
+                    type: 'number',
+                    params: ['0~100'],
+                },
+                null,
+            ],
+            type: 'mechatro_set_pwm',
+        },
+        paramsKeyMap: {
+            PORT: 0,
+            VALUE: 1,
+        },
+        class: 'Mechatro_d_out',
+        isNotFor: ['mechatro'],
+        func: function(sprite, script) {
+            var portNo = script.getNumberField('PORT', script);
+            var mode = Entry.mechatro.portMode.SET_PWM;
+            var value = script.getValue('VALUE');
+
+            if (!Entry.Utils.isNumber(value)) value = 0;
+            value = Math.max(value, 0);
+            value = Math.min(value, 100);
+
+            Entry.mechatro.transferModeValue(portNo, mode, value);
+
+            return script.callReturn();
+        },
+        syntax: { js: [], py: ['mechatro.mechatro_set_pwm(%1, %2)'] },
+    },
+    mechatro_set_tone_time: {
+        color: '#00979D',
+        skeleton: 'basic',
+        statements: [],
+        params: [
+            {
+                type: 'Dropdown',
+                options: [
+                    ['D2', '2'],
+                    ['D4', '4'],
+                    ['D5', '5'],
+                    ['D6', '6'],
+                    ['D7', '7'],
+                    ['D10', '10'],
+                ],
+                value: '2',
+                fontSize: 11,
+            },
+            {
+                type: 'Dropdown',
+                options: [
+                    ['무음', '0'],
+                    ['도', '1'],
+                    ['도#(레♭)', '2'],
+                    ['레', '3'],
+                    ['레#(미♭)', '4'],
+                    ['미', '5'],
+                    ['파', '6'],
+                    ['파#(솔♭)', '7'],
+                    ['솔', '8'],
+                    ['솔#(라♭)', '9'],
+                    ['라', '10'],
+                    ['라#(시♭)', '11'],
+                    ['시', '12'],
+                ],
+                value: '1',
+                fontSize: 11,
+            },
+            {
+                type: 'Dropdown',
+                options: [
+                    ['1', '0'],
+                    ['2', '1'],
+                    ['3', '2'],
+                    ['4', '3'],
+                    ['5', '4'],
+                    ['6', '5'],
+                ],
+                value: '3',
+                fontSize: 11,
+            },
+            {
+                type: 'Block',
+                accept: 'string',
+            },
+            {
+                type: 'Indicator',
+                img: 'block_icon/hardware_03.png',
+                size: 12,
+            },
+        ],
+        events: {},
+        def: {
+            params: [
+                null,
+                null,
+                null,
+                {
+                    type: 'text',
+                    params: ['1'],
+                },
+                null,
+            ],
+            type: 'mechatro_set_tone_time',
+        },
+        paramsKeyMap: {
+            PORT: 0,
+            NOTE: 1,
+            OCTAVE: 2,
+            DURATION: 3,
+        },
+        class: 'Mechatro_d_out',
+        isNotFor: ['mechatro'],
+        func: function(sprite, script) {
+            var portNo = script.getNumberField('PORT', script);
+            var mPortNo = 'm' + portNo;
+
+            if (!script.isStart) {
+                var duration = script.getNumberValue('DURATION', script);
+                if (duration < 0) {
+                    duration = 0;
+                }
+
+                var note = script.getNumberField('NOTE', script);
+
+                if (duration === 0 || note === 0) {
+                    Entry.hw.sendQueue[mPortNo] =
+                        Entry.mechatro.portMode.COM_NO_TONE;
+                    Entry.hw.update();
+                    delete Entry.hw.sendQueue[mPortNo];
+                    return script.callReturn();
+                }
+
+                var octave = script.getNumberField('OCTAVE', script);
+                var note = script.getNumberField('NOTE', script);
+                duration = duration * 1000;
+                script.isStart = true;
+                script.timeFlag = 1;
+
+                Entry.hw.sendQueue[mPortNo] = Entry.mechatro.portMode.SET_TONE;
+                Entry.hw.sendQueue[portNo] = (octave << 4) | (note - 1);
+                Entry.hw.update();
+                delete Entry.hw.sendQueue[mPortNo];
+                delete Entry.hw.sendQueue[portNo];
+
+                setTimeout(function() {
+                    script.timeFlag = 0;
+                }, duration + 32);
+                return script;
+            } else if (script.timeFlag == 1) {
+                return script;
+            } else {
+                Entry.hw.sendQueue[mPortNo] =
+                    Entry.mechatro.portMode.COM_NO_TONE;
+                delete Entry.hw.sendQueue[portNo];
+                Entry.hw.update();
+                delete Entry.hw.sendQueue[mPortNo];
+
+                delete script.timeFlag;
+                delete script.isStart;
+                Entry.engine.isContinue = false;
+
+                return script.callReturn();
+            }
+        },
+        syntax: {
+            js: [],
+            py: [
+                {
+                    syntax: 'mechatro.tone_time(%1, %2, %3, %4)',
+                    textParams: [
+                        {
+                            type: 'Block',
+                            accept: 'string',
+                        },
+                        {
+                            type: 'Block',
+                            accept: 'string',
+                        },
+                        {
+                            type: 'Block',
+                            accept: 'string',
+                        },
+                        {
+                            type: 'Block',
+                            accept: 'string',
+                        },
+                    ],
+                },
+            ],
+        },
+    },
+    mechatro_set_tone: {
+        color: '#00979D',
+        skeleton: 'basic',
+        statements: [],
+        params: [
+            {
+                type: 'Dropdown',
+                options: [
+                    ['D2', '2'],
+                    ['D4', '4'],
+                    ['D5', '5'],
+                    ['D6', '6'],
+                    ['D7', '7'],
+                    ['D10', '10'],
+                ],
+                value: '2',
+                fontSize: 11,
+            },
+            {
+                type: 'Dropdown',
+                options: [
+                    ['무음', '0'],
+                    ['도', '1'],
+                    ['도#(레♭)', '2'],
+                    ['레', '3'],
+                    ['레#(미♭)', '4'],
+                    ['미', '5'],
+                    ['파', '6'],
+                    ['파#(솔♭)', '7'],
+                    ['솔', '8'],
+                    ['솔#(라♭)', '9'],
+                    ['라', '10'],
+                    ['라#(시♭)', '11'],
+                    ['시', '12'],
+                ],
+                value: '1',
+                fontSize: 11,
+            },
+            {
+                type: 'Dropdown',
+                options: [
+                    ['1', '0'],
+                    ['2', '1'],
+                    ['3', '2'],
+                    ['4', '3'],
+                    ['5', '4'],
+                    ['6', '5'],
+                ],
+                value: '3',
+                fontSize: 11,
+            },
+            {
+                type: 'Indicator',
+                img: 'block_icon/hardware_03.png',
+                size: 12,
+            },
+        ],
+        events: {},
+        def: {
+            params: [null, null, null, null],
+            type: 'mechatro_set_tone',
+        },
+        paramsKeyMap: {
+            PORT: 0,
+            NOTE: 1,
+            OCTAVE: 2,
+        },
+        class: 'Mechatro_d_out',
+        isNotFor: ['mechatro'],
+        func: function(sprite, script) {
+            var portNo = script.getNumberField('PORT', script);
+            var note = script.getNumberField('NOTE', script);
+            var octave = script.getNumberField('OCTAVE', script);
+            var note = script.getNumberField('NOTE', script);
+            var mode;
+            var value = (octave << 4) | (note - 1);
+
+            if (note === 0) {
+                mode = Entry.mechatro.portMode.COM_NO_TONE;
+                Entry.mechatro.transferMode(portNo, mode);
+            } else {
+                mode = Entry.mechatro.portMode.SET_TONE;
+                Entry.mechatro.transferModeValue(portNo, mode, value);
+            }
+            return script.callReturn();
+        },
+        syntax: {
+            js: [],
+            py: [
+                {
+                    syntax: 'mechatro.tone(%1, %2, %3)',
+                    textParams: [
+                        {
+                            type: 'Block',
+                            accept: 'string',
+                        },
+                        {
+                            type: 'Block',
+                            accept: 'string',
+                        },
+                        {
+                            type: 'Block',
+                            accept: 'string',
+                        },
+                    ],
+                },
+            ],
+        },
+    },
+    mechatro_set_dc_motor: {
+        color: '#00979D',
+        skeleton: 'basic',
+        statements: [],
+        params: [
+            {
+                type: 'Dropdown',
+                options: [['MA', '3'], ['MB', '11']],
+                value: '3',
+                fontSize: 11,
+            },
+            {
+                type: 'Block',
+                accept: 'string',
+            },
+            {
+                type: 'Indicator',
+                img: 'block_icon/hardware_03.png',
+                size: 12,
+            },
+        ],
+        events: {},
+        def: {
+            params: [
+                null,
+                {
+                    type: 'number',
+                    params: ['-100 ~ 100 사이값'],
+                },
+                null,
+            ],
+            type: 'mechatro_set_dc_motor',
+        },
+        paramsKeyMap: {
+            PORT: 0,
+            SPEED: 1,
+        },
+        class: 'set_motor',
+        isNotFor: ['mechatro'],
+        func: function(sprite, script) {
+            var portNo = script.getField('PORT', script);
+            var value = script.getValue('SPEED');
+
+            if (!Entry.Utils.isNumber(value)) value = 0;
+
+            value = Math.round(value);
+            value = value + 100;
+            value = Math.max(value, 0);
+            value = Math.min(value, 200);
+
+            Entry.mechatro.transferValue(portNo, value);
+            return script.callReturn();
+        },
+    },
+    mechatro_get_dc_motor_current: {
+        color: '#00979D',
+        fontColor: '#fff',
+        skeleton: 'basic_string_field',
+        statements: [],
+        params: [
+            {
+                type: 'Dropdown',
+                options: [['MA', '14'], ['MB', '15']],
+                value: '14',
+                fontSize: 11,
+            },
+        ],
+        events: {},
+        def: {
+            params: [null],
+            type: 'mechatro_get_dc_motor_current',
+        },
+        paramsKeyMap: {
+            PORT: 0,
+        },
+        class: 'MechatroGet',
+        isNotFor: ['mechatro'],
+        func: function(sprite, script) {
+            var portNo = script.getNumberField('PORT', script);
+            var mPortNo = 'm' + portNo;
+            var mode = Entry.mechatro.portMode.SET_MOTOR_CURRENT;
+
+            if (Entry.hw.portData[mPortNo] !== mode) {
+                Entry.hw.sendQueue[mPortNo] = mode;
+                Entry.hw.update();
+                delete Entry.hw.sendQueue[mPortNo];
+            }
+            if (Entry.hw.portData[portNo] !== undefined) {
+                return Entry.hw.portData[portNo];
+            } else {
+                return 0;
+            }
+        },
+        syntax: { js: [], py: ['mechatro.mechatro_get_dc_motor_current(%1)'] },
+    },
+    mechatro_set_servo_position: {
+        color: '#00979D',
+        skeleton: 'basic',
+        statements: [],
+        params: [
+            {
+                type: 'Dropdown',
+                options: [['D2', '2'], ['D5', '5'], ['D6', '6'], ['D10', '10']],
+                value: '2',
+                fontSize: 11,
+            },
+            {
+                type: 'Block',
+                accept: 'string',
+            },
+            {
+                type: 'Indicator',
+                img: 'block_icon/hardware_03.png',
+                size: 12,
+            },
+        ],
+        events: {},
+        def: {
+            params: [
+                null,
+                {
+                    type: 'number',
+                    params: ['0~180'],
+                },
+                null,
+            ],
+            type: 'mechatro_set_servo_position',
+        },
+        paramsKeyMap: {
+            PORT: 0,
+            DEGREE: 1,
+        },
+        class: 'set_motor',
+        isNotFor: ['mechatro'],
+        func: function(sprite, script) {
+            var portNo = script.getNumberField('PORT', script);
+            var mode = Entry.mechatro.portMode.SET_SERVO_POSITION;
+            var value = script.getValue('DEGREE');
+
+            if (!Entry.Utils.isNumber(value)) value = 90;
+            value = Math.max(value, 0);
+            value = Math.min(value, 180);
+
+            Entry.mechatro.transferModeValue(portNo, mode, value);
+
+            return script.callReturn();
+        },
+        syntax: {
+            js: [],
+            py: ['mechatro.mechatro_set_servo_position(%1, %2)'],
+        },
+    },
+    mechatro_set_servo_speed: {
+        color: '#00979D',
+        skeleton: 'basic',
+        statements: [],
+        params: [
+            {
+                type: 'Dropdown',
+                options: [
+                    ['D2', '22'],
+                    ['D5', '23'],
+                    ['D6', '24'],
+                    ['D10', '25'],
+                ],
+                value: '22',
+                fontSize: 11,
+            },
+            {
+                type: 'Block',
+                accept: 'string',
+            },
+            {
+                type: 'Indicator',
+                img: 'block_icon/hardware_03.png',
+                size: 12,
+            },
+        ],
+        events: {},
+        def: {
+            params: [
+                null,
+                {
+                    type: 'number',
+                    params: ['1~255'],
+                },
+                null,
+            ],
+            type: 'mechatro_set_servo_speed',
+        },
+        paramsKeyMap: {
+            PORT: 0,
+            SPEED: 1,
+        },
+        class: 'set_motor',
+        isNotFor: ['mechatro'],
+        func: function(sprite, script) {
+            var portNo = script.getNumberField('PORT', script);
+            var mode = Entry.mechatro.portMode.SET_SERVO_SPEED;
+            var value = script.getValue('SPEED');
+
+            if (!Entry.Utils.isNumber(value)) value = 255;
+            value = Math.max(value, 0);
+            value = Math.min(value, 255);
+
+            Entry.mechatro.transferModeValue(portNo, mode, value);
+
+            return script.callReturn();
+        },
+        syntax: { js: [], py: ['mechatro.mechatro_set_servo_speed(%1, %2)'] },
+    },
+    mechatro_set_blue_pw: {
+        color: '#00979D',
+        skeleton: 'basic',
+        statements: [],
+        params: [
+            {
+                type: 'Block',
+                accept: 'string',
+            },
+            {
+                type: 'Block',
+                accept: 'string',
+            },
+            {
+                type: 'Block',
+                accept: 'string',
+            },
+            {
+                type: 'Block',
+                accept: 'string',
+            },
+            {
+                type: 'Indicator',
+                img: 'block_icon/hardware_03.png',
+                size: 12,
+            },
+        ],
+        events: {},
+        def: {
+            params: [
+                {
+                    type: 'number',
+                    params: ['1'],
+                },
+                {
+                    type: 'number',
+                    params: ['2'],
+                },
+                {
+                    type: 'number',
+                    params: ['3'],
+                },
+                {
+                    type: 'number',
+                    params: ['4'],
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_03.png',
+                    size: 12,
+                },
+            ],
+            type: 'mechatro_set_blue_pw',
+        },
+        paramsKeyMap: {
+            PW1: 0,
+            PW2: 1,
+            PW3: 2,
+            PW4: 3,
+        },
+        class: 'Mechatro_blue',
+        isNotFor: ['mechatro'],
+        func: function(sprite, script) {
+            var mode = Entry.mechatro.portMode.COM_SET_BLUE_PW;
+
+            var value =
+                script.getNumberValue('PW1') * 1000 +
+                script.getNumberValue('PW2') * 100 +
+                script.getNumberValue('PW3') * 10 +
+                script.getNumberValue('PW4');
+
+            Entry.mechatro.transferModeValue(2, mode, value);
+
+            return script.callReturn();
+        },
+        syntax: { js: [], py: ['mechatro.mechatro_set_pwm(%1, %2)'] },
+    },
+//endregion mechatro
+//region FunBoard
+    funboard_list_pushbutton_basic: {
+        color: '#00979D',
+        skeleton: 'basic_string_field',
+        statements: [],
+        template: '%1',
+        params: [
+            {
+                type: 'Dropdown',
+                options: [
+                    [Lang.Blocks.FUNBOARD_bt_up, '1'],
+                    [Lang.Blocks.FUNBOARD_bt_down, '2'],
+                    [Lang.Blocks.FUNBOARD_bt_left, '3'],
+                    [Lang.Blocks.FUNBOARD_bt_right, '4'],
+                ],
+                value: '1',
+                fontSize: 11,
+            },
+        ],
+        events: {},
+        def: {
+            params: [null],
+        },
+        paramsKeyMap: {
+            PORT: 0,
+        },
+        func: function(sprite, script) {
+            return script.getField('PORT');
+        },
+    },
+    funboard_list_touchbutton_basic: {
+        color: '#00979D',
+        skeleton: 'basic_string_field',
+        statements: [],
+        template: '%1',
+        params: [
+            {
+                type: 'Dropdown',
+                options: [
+                    [Lang.Blocks.FUNBOARD_touchbt_up, '1'],
+                    [Lang.Blocks.FUNBOARD_touchbt_down, '2'],
+                    [Lang.Blocks.FUNBOARD_touchbt_left, '3'],
+                    [Lang.Blocks.FUNBOARD_touchbt_right, '4'],
+                    [Lang.Blocks.FUNBOARD_touchbt_space, '5'],
+                    [Lang.Blocks.FUNBOARD_touchbt_enter, '6'],
+                    [Lang.Blocks.FUNBOARD_touchbt_escape, '7'],
+                ],
+                value: '1',
+                fontSize: 11,
+            },
+        ],
+        events: {},
+        def: {
+            params: [null],
+        },
+        paramsKeyMap: {
+            PORT: 0,
+        },
+        func: function(sprite, script) {
+            return script.getField('PORT');
+        },
+    },
+    funboard_list_analogsensor_basic: {
+        color: '#00979D',
+        skeleton: 'basic_string_field',
+        statements: [],
+        template: '%1',
+        params: [
+            {
+                type: 'Dropdown',
+                options: [
+                    [Lang.Blocks.FUNBOARD_sensor_slide, '1'],
+                    [Lang.Blocks.FUNBOARD_sensor_cds, '2'],
+                    [Lang.Blocks.FUNBOARD_sensor_mic, '3'],
+                ],
+                value: '1',
+                fontSize: 11,
+            },
+        ],
+        events: {},
+        def: {
+            params: [null],
+        },
+        paramsKeyMap: {
+            PORT: 0,
+        },
+        func: function(sprite, script) {
+            return script.getField('PORT');
+        },
+    },
+    funboard_list_2_state_basic: {
+        color: '#00979D',
+        skeleton: 'basic_string_field',
+        statements: [],
+        template: '%1',
+        params: [
+            {
+                type: 'Dropdown',
+                options: [
+                    [Lang.Blocks.FUNBOARD_sensor_state_1, '1'],
+                    [Lang.Blocks.FUNBOARD_sensor_state_2, '2'],
+                ],
+                value: '1',
+                fontSize: 11,
+            },
+        ],
+        events: {},
+        def: {
+            params: [null],
+        },
+        paramsKeyMap: {
+            PORT: 0,
+        },
+        func: function(sprite, script) {
+            return script.getField('PORT');
+        },
+    },
+    funboard_list_ledcolor_basic: {
+        color: '#00979D',
+        skeleton: 'basic_string_field',
+        statements: [],
+        template: '%1',
+        params: [
+            {
+                type: 'Dropdown',
+                options: [
+                    [Lang.Blocks.FUNBOARD_led_color_red, '1'],
+                    [Lang.Blocks.FUNBOARD_led_color_yellow, '2'],
+                    [Lang.Blocks.FUNBOARD_led_color_green, '3'],
+                    [Lang.Blocks.FUNBOARD_led_color_blue, '4'],
+                    [Lang.Blocks.FUNBOARD_led_color_all, '5'],
+                ],
+                value: '1',
+                fontSize: 11,
+            },
+        ],
+        events: {},
+        def: {
+            params: [null],
+        },
+        paramsKeyMap: {
+            PORT: 0,
+        },
+        func: function(sprite, script) {
+            return script.getField('PORT');
+        },
+    },
+    funboard_list_ledcolor_pwm_basic: {
+        color: '#00979D',
+        skeleton: 'basic_string_field',
+        statements: [],
+        template: '%1',
+        params: [
+            {
+                type: 'Dropdown',
+                options: [
+                    [Lang.Blocks.FUNBOARD_led_color_red, '1'],
+                    [Lang.Blocks.FUNBOARD_led_color_yellow, '2'],
+                ],
+                value: '1',
+                fontSize: 11,
+            },
+        ],
+        events: {},
+        def: {
+            params: [null],
+        },
+        paramsKeyMap: {
+            PORT: 0,
+        },
+        func: function(sprite, script) {
+            return script.getField('PORT');
+        },
+    },
+    funboard_list_onoff_basic: {
+        color: '#00979D',
+        skeleton: 'basic_string_field',
+        statements: [],
+        template: '%1',
+        params: [
+            {
+                type: 'Dropdown',
+                options: [
+                    [Lang.Blocks.FUNBOARD_do_on, '1'],
+                    [Lang.Blocks.FUNBOARD_do_off, '0'],
+                ],
+                value: '1',
+                fontSize: 11,
+            },
+        ],
+        events: {},
+        def: {
+            params: [null],
+        },
+        paramsKeyMap: {
+            PORT: 0,
+        },
+        func: function(sprite, script) {
+            return script.getField('PORT');
+        },
+    },
+    funboard_list_digital_octave: {
+        color: '#00979D',
+        skeleton: 'basic_string_field',
+        statements: [],
+        template: '%1',
+        params: [
+            {
+                type: 'Dropdown',
+                options: [
+                    ['1', '1'],
+                    ['2', '2'],
+                    ['3', '3'],
+                    ['4', '4'],
+                    ['5', '5'],
+                    ['6', '6'],
+                    ['7', '7'],
+                    ['8', '8'],
+                ],
+                value: '3',
+                fontSize: 11,
+            },
+        ],
+        events: {},
+        def: {
+            params: [null],
+        },
+        paramsKeyMap: {
+            OCTAVE: 0,
+        },
+        func: function(sprite, script) {
+            return script.getField('OCTAVE');
+        },
+    },
+    funboard_list_digital_tone: {
+        color: '#00979D',
+        skeleton: 'basic_string_field',
+        statements: [],
+        template: '%1',
+        params: [
+            {
+                type: 'Dropdown',
+                options: [
+                    [Lang.Blocks.silent, '0'],
+                    [Lang.Blocks.do_name, 'C'],
+                    [Lang.Blocks.do_sharp_name, 'CS'],
+                    [Lang.Blocks.re_name, 'D'],
+                    [Lang.Blocks.re_sharp_name, 'DS'],
+                    [Lang.Blocks.mi_name, 'E'],
+                    [Lang.Blocks.fa_name, 'F'],
+                    [Lang.Blocks.fa_sharp_name, 'FS'],
+                    [Lang.Blocks.sol_name, 'G'],
+                    [Lang.Blocks.sol_sharp_name, 'GS'],
+                    [Lang.Blocks.la_name, 'A'],
+                    [Lang.Blocks.la_sharp_name, 'AS'],
+                    [Lang.Blocks.si_name, 'B'],
+                ],
+                value: 'C',
+                fontSize: 11,
+            },
+        ],
+        events: {},
+        def: {
+            params: [null],
+        },
+        paramsKeyMap: {
+            NOTE: 0,
+        },
+        func: function(sprite, script) {
+            return script.getField('NOTE');
+        },
+    },
+    funboard_list_matrix_rows: {
+        color: '#00979D',
+        skeleton: 'basic_string_field',
+        statements: [],
+        template: '%1',
+        params: [
+            {
+                type: 'Dropdown',
+                options: [
+                    ['1', '1'],
+                    ['2', '2'],
+                    ['3', '3'],
+                    ['4', '4'],
+                    ['5', '5'],
+                    ['6', '6'],
+                    ['7', '7'],
+                    ['8', '8'],
+                ],
+                value: '1',
+                fontSize: 11,
+            },
+        ],
+        events: {},
+        def: {
+            params: [null],
+        },
+        paramsKeyMap: {
+            ROW: 0,
+        },
+        func: function(sprite, script) {
+            return script.getField('ROW');
+        },
+    },
+    funboard_list_matrix_row_or_column: {
+        color: '#00979D',
+        skeleton: 'basic_string_field',
+        statements: [],
+        template: '%1',
+        params: [
+            {
+                type: 'Dropdown',
+                options: [
+                    [Lang.Blocks.FUNBOARD_row_tag, '1'],
+                    [Lang.Blocks.FUNBOARD_column_tag, '2'],
+                ],
+                value: '1',
+                fontSize: 11,
+            },
+        ],
+        events: {},
+        def: {
+            params: [null],
+        },
+        paramsKeyMap: {
+            WHAT: 0,
+        },
+        func: function(sprite, script) {
+            return script.getField('WHAT');
+        },
+    },
+    funboard_list_matrix_scroll_option: {
+        color: '#00979D',
+        skeleton: 'basic_string_field',
+        statements: [],
+        template: '%1',
+        params: [
+            {
+                type: 'Dropdown',
+                options: [
+                    [Lang.Blocks.FUNBOARD_scroll_no, '1'],
+                    [Lang.Blocks.FUNBOARD_scroll_left, '2'],
+                    [Lang.Blocks.FUNBOARD_scroll_right, '4'],
+                    [Lang.Blocks.FUNBOARD_scroll_up, '3'],
+                    [Lang.Blocks.FUNBOARD_scroll_down, '5'],
+                ],
+                value: '1',
+                fontSize: 11,
+            },
+        ],
+        events: {},
+        def: {
+            params: [null],
+        },
+        paramsKeyMap: {
+            RET: 0,
+        },
+        func: function(sprite, script) {
+            return script.getField('RET');
+        },
+    },
+    funboard_list_matrix_char: {
+        color: '#00979D',
+        skeleton: 'basic_string_field',
+        statements: [],
+        template: '%1',
+        params: [
+            {
+                type: 'Dropdown',
+                options: [
+                    ['0', '0'],
+                    ['1', '1'],
+                    ['2', '2'],
+                    ['3', '3'],
+                    ['4', '4'],
+                    ['5', '5'],
+                    ['6', '6'],
+                    ['7', '7'],
+                    ['8', '8'],
+                    ['9', '9'],
+                    ['A', 'A'],
+                    ['B', 'B'],
+                    ['C', 'C'],
+                    ['D', 'D'],
+                    ['E', 'E'],
+                    ['F', 'F'],
+                    ['G', 'G'],
+                    ['H', 'H'],
+                    ['I', 'I'],
+                    ['J', 'J'],
+                    ['K', 'K'],
+                    ['L', 'L'],
+                    ['M', 'M'],
+                    ['N', 'N'],
+                    ['O', 'O'],
+                    ['P', 'P'],
+                    ['Q', 'Q'],
+                    ['R', 'R'],
+                    ['S', 'S'],
+                    ['T', 'T'],
+                    ['U', 'U'],
+                    ['V', 'V'],
+                    ['W', 'W'],
+                    ['X', 'X'],
+                    ['Y', 'Y'],
+                    ['Z', 'Z'],
+                    ['a', 'a'],
+                    ['b', 'b'],
+                    ['c', 'c'],
+                    ['d', 'd'],
+                    ['e', 'e'],
+                    ['f', 'f'],
+                    ['g', 'g'],
+                    ['h', 'h'],
+                    ['i', 'i'],
+                    ['j', 'j'],
+                    ['k', 'k'],
+                    ['l', 'l'],
+                    ['m', 'm'],
+                    ['n', 'n'],
+                    ['o', 'o'],
+                    ['p', 'p'],
+                    ['q', 'q'],
+                    ['r', 'r'],
+                    ['s', 's'],
+                    ['t', 't'],
+                    ['u', 'u'],
+                    ['v', 'v'],
+                    ['w', 'w'],
+                    ['x', 'x'],
+                    ['y', 'y'],
+                    ['z', 'z'],
+                    [' ', ' '],
+                    ['!', '!'],
+                    ['?', '?'],
+                    ['#', '#'],
+                    ['$', '$'],
+                    ['%', '%'],
+                    ['&', '&'],
+                    ['*', '*'],
+                    ['+', '+'],
+                    ['-', '-'],
+                    ['/', '/'],
+                    ['~', '~'],
+                    ['^', '^'],
+                    ['_', '_'],
+                    ['@', '@'],
+                    ['<', '<'],
+                    ['>', '>'],
+                    ['=', '='],
+                    ['(', '('],
+                    [')', ')'],
+                    ['[', '['],
+                    [']', ']'],
+                    ['{', '{'],
+                    ['}', '}'],
+                    [',', ','],
+                    ['.', '.'],
+                    [':', ':'],
+                    [';', ';'],
+                    ["'", "'"],
+                    ['`', '`'],
+                    ['\\', '\\'],
+                    ['|', '|'],
+                ],
+                value: 'A',
+                fontSize: 11,
+            },
+        ],
+        events: {},
+        def: {
+            params: [null],
+        },
+        paramsKeyMap: {
+            RET: 0,
+        },
+        func: function(sprite, script) {
+            return script.getField('RET');
+        },
+    },
+    funboard_what_button_pressed: {
+        color: '#00979D',
+        fontColor: '#fff',
+        skeleton: 'basic_boolean_field',
+        statements: [],
+        params: [
+            {
+                type: 'Block',
+                accept: 'string',
+            },
+        ],
+        events: {},
+        def: {
+            params: [
+                {
+                    type: 'funboard_list_pushbutton_basic',
+                },
+            ],
+            type: 'funboard_what_button_pressed',
+        },
+        paramsKeyMap: {
+            PORT: 0,
+        },
+        class: 'funboardget',
+        isNotFor: ['funboard'],
+        func: function(sprite, script) {
+            var port = 0;
+            var bt_index = script.getNumberValue('PORT');
+            if (bt_index == 1) port = Entry.FunBoard.PORT_MAP['up_bt'];
+            else if (bt_index == 2) port = Entry.FunBoard.PORT_MAP['down_bt'];
+            else if (bt_index == 3) port = Entry.FunBoard.PORT_MAP['left_bt'];
+            else if (bt_index == 4) port = Entry.FunBoard.PORT_MAP['right_bt'];
+
+            var DIGITAL = Entry.hw.portData.DIGITAL;
+            var value = 0;
+            var bt_pressed = 0;
+            value = DIGITAL ? DIGITAL[port] || 0 : 0;
+
+            if (Entry.FunBoard.Static.BUTTON_PRESS_VALUE == 0) {
+                bt_pressed = value > 0 ? 0 : 1;
+            } else {
+                bt_pressed = value > 0 ? 1 : 0;
+            }
+            /*
+            if(!Entry.hw.sendQueue['GET']) {
+                Entry.hw.sendQueue['GET'] = {};
+            }
+            Entry.hw.sendQueue['GET'][Entry.FunBoard.sensorTypes.DIGITAL] = {
+                port: port,
+                time: new Date().getTime()
+            };
+            */
+
+            return bt_pressed;
+        },
+        syntax: { js: [], py: [] },
+    },
+    funboard_what_touch_button_pressed: {
+        color: '#00979D',
+        fontColor: '#fff',
+        skeleton: 'basic_boolean_field',
+        statements: [],
+        params: [
+            {
+                type: 'Block',
+                accept: 'string',
+            },
+        ],
+        events: {},
+        def: {
+            params: [
+                {
+                    type: 'funboard_list_touchbutton_basic',
+                },
+            ],
+            type: 'funboard_what_touch_button_pressed',
+        },
+        paramsKeyMap: {
+            PORT: 0,
+        },
+        class: 'funboardget',
+        isNotFor: ['funboard'],
+        func: function(sprite, script) {
+            var port = 0;
+            var bt_index = script.getNumberValue('PORT');
+            if (bt_index == 1) port = Entry.FunBoard.PORT_MAP['up_bt'];
+            else if (bt_index == 2) port = Entry.FunBoard.PORT_MAP['down_bt'];
+            else if (bt_index == 3) port = Entry.FunBoard.PORT_MAP['left_bt'];
+            else if (bt_index == 4) port = Entry.FunBoard.PORT_MAP['right_bt'];
+            else if (bt_index == 5)
+                port = Entry.FunBoard.PORT_MAP['space_touchbt'];
+            else if (bt_index == 6)
+                port = Entry.FunBoard.PORT_MAP['enter_touchbt'];
+            else if (bt_index == 7)
+                port = Entry.FunBoard.PORT_MAP['escape_touchbt'];
+
+            var value = 0;
+            var bt_pressed = 0;
+
+            if (bt_index >= 5) {
+                var ANALOG = Entry.hw.portData.ANALOG;
+                value = ANALOG ? ANALOG[port] || 0 : 0;
+            } else {
+                var DIGITAL = Entry.hw.portData.DIGITAL;
+                value = DIGITAL ? DIGITAL[port] || 0 : 0;
+                /*                
+                if(!Entry.hw.sendQueue['GET']) {
+                    Entry.hw.sendQueue['GET'] = {};
+                }
+                Entry.hw.sendQueue['GET'][Entry.FunBoard.sensorTypes.DIGITAL] = {
+                    port: port,
+                    time: new Date().getTime()
+                };
+                */
+            }
+            if (Entry.FunBoard.Static.BUTTON_PRESS_VALUE == 0) {
+                bt_pressed = value > 0 ? 0 : 1;
+            } else {
+                bt_pressed = value > 0 ? 1 : 0;
+            }
+            return bt_pressed;
+        },
+        syntax: { js: [], py: [] },
+    },
+    funboard_get_digital_button_value: {
+        color: '#00979D',
+        fontColor: '#fff',
+        skeleton: 'basic_string_field',
+        statements: [],
+        params: [
+            {
+                type: 'Block',
+                accept: 'string',
+            },
+        ],
+        events: {},
+        def: {
+            params: [
+                {
+                    type: 'funboard_list_pushbutton_basic',
+                },
+            ],
+            type: 'funboard_get_digital_button_value',
+        },
+        paramsKeyMap: {
+            PORT: 0,
+        },
+        class: 'funboardget',
+        isNotFor: ['funboard'],
+        func: function(sprite, script) {
+            var port = 0;
+            var bt_index = script.getNumberValue('PORT');
+            if (bt_index == 1) port = Entry.FunBoard.PORT_MAP['up_bt'];
+            else if (bt_index == 2) port = Entry.FunBoard.PORT_MAP['down_bt'];
+            else if (bt_index == 3) port = Entry.FunBoard.PORT_MAP['left_bt'];
+            else if (bt_index == 4) port = Entry.FunBoard.PORT_MAP['right_bt'];
+
+            var DIGITAL = Entry.hw.portData.DIGITAL;
+            var value = 0;
+            /*
+            if(!Entry.hw.sendQueue['GET']) {
+                Entry.hw.sendQueue['GET'] = {};
+            }
+            Entry.hw.sendQueue['GET'][Entry.FunBoard.sensorTypes.DIGITAL] = {
+                port: port,
+                time: new Date().getTime()
+            };
+            */
+
+            // 버튼 눌림 값 그대로...
+            value = DIGITAL ? DIGITAL[port] || 0 : 0;
+            //누른 경우 1, 아니면 0 으로 알려 준다.
+            if (Entry.FunBoard.Static.BUTTON_PRESS_VALUE == 0) {
+                value = value ? 0 : 1;
+            }
+            return value;
+        },
+        syntax: { js: [], py: [] },
+    },
+    funboard_get_touch_button_value: {
+        color: '#00979D',
+        fontColor: '#fff',
+        skeleton: 'basic_string_field',
+        statements: [],
+        params: [
+            {
+                type: 'Block',
+                accept: 'string',
+            },
+        ],
+        events: {},
+        def: {
+            params: [
+                {
+                    type: 'funboard_list_touchbutton_basic',
+                },
+            ],
+            type: 'funboard_get_touch_button_value',
+        },
+        paramsKeyMap: {
+            PORT: 0,
+        },
+        class: 'funboardget',
+        isNotFor: ['funboard'],
+        func: function(sprite, script) {
+            var port = 0;
+            var bt_index = script.getNumberValue('PORT');
+            if (bt_index == 1) port = Entry.FunBoard.PORT_MAP['up_bt'];
+            else if (bt_index == 2) port = Entry.FunBoard.PORT_MAP['down_bt'];
+            else if (bt_index == 3) port = Entry.FunBoard.PORT_MAP['left_bt'];
+            else if (bt_index == 4) port = Entry.FunBoard.PORT_MAP['right_bt'];
+            else if (bt_index == 5)
+                port = Entry.FunBoard.PORT_MAP['space_touchbt'];
+            else if (bt_index == 6)
+                port = Entry.FunBoard.PORT_MAP['enter_touchbt'];
+            else if (bt_index == 7)
+                port = Entry.FunBoard.PORT_MAP['escape_touchbt'];
+
+            var value = 0;
+            if (bt_index >= 5) {
+                var ANALOG = Entry.hw.portData.ANALOG;
+                value = ANALOG ? ANALOG[port] || 0 : 0;
+
+                // 버튼 눌림 값 그대로...
+                value = ANALOG ? ANALOG[port] || 0 : 0;
+                //누른 경우 1, 아니면 0 으로 알려 준다.
+                if (Entry.FunBoard.Static.BUTTON_PRESS_VALUE == 0) {
+                    value = value ? 0 : 1;
+                }
+            } else {
+                var DIGITAL = Entry.hw.portData.DIGITAL;
+                /*                
+                if(!Entry.hw.sendQueue['GET']) {
+                    Entry.hw.sendQueue['GET'] = {};
+                }
+                Entry.hw.sendQueue['GET'][Entry.FunBoard.sensorTypes.DIGITAL] = {
+                    port: port,
+                    time: new Date().getTime()
+                };
+                */
+
+                // 버튼 눌림 값 그대로...
+                value = DIGITAL ? DIGITAL[port] || 0 : 0;
+                //누른 경우 1, 아니면 0 으로 알려 준다.
+                if (Entry.FunBoard.Static.BUTTON_PRESS_VALUE == 0) {
+                    value = value ? 0 : 1;
+                }
+            }
+            return value;
+        },
+        syntax: { js: [], py: [] },
+    },
+    funboard_get_number_sensor_value: {
+        color: '#00979D',
+        fontColor: '#fff',
+        skeleton: 'basic_string_field',
+        statements: [],
+        params: [
+            {
+                type: 'Block',
+                accept: 'string',
+            },
+        ],
+        events: {},
+        def: {
+            params: [
+                {
+                    type: 'funboard_list_analogsensor_basic',
+                },
+            ],
+            type: 'funboard_get_number_sensor_value',
+        },
+        paramsKeyMap: {
+            PORT: 0,
+        },
+        class: 'funboardget',
+        isNotFor: ['funboard'],
+        func: function(sprite, script) {
+            var port = 0;
+            var index = script.getValue('PORT', script);
+            if (index == 1) port = Entry.FunBoard.PORT_MAP['slide'];
+            else if (index == 2) port = Entry.FunBoard.PORT_MAP['cds'];
+            else if (index == 3) port = Entry.FunBoard.PORT_MAP['mic'];
+
+            var ANALOG = Entry.hw.portData.ANALOG;
+            var value = ANALOG ? ANALOG[port] || 0 : 0;
+            return value;
+        },
+        syntax: { js: [], py: [] },
+    },
+    funboard_get_analog_sensor_2state: {
+        color: '#00979D',
+        fontColor: '#fff',
+        skeleton: 'basic_boolean_field',
+        statements: [],
+        params: [
+            {
+                type: 'Block',
+                accept: 'string',
+            },
+            {
+                type: 'Block',
+                accept: 'string',
+            },
+        ],
+        events: {},
+        def: {
+            params: [
+                {
+                    type: 'funboard_list_analogsensor_basic',
+                },
+                {
+                    type: 'funboard_list_2_state_basic',
+                },
+            ],
+            type: 'funboard_get_analog_sensor_2state',
+        },
+        paramsKeyMap: {
+            PORT: 0,
+            STATE: 1,
+        },
+        class: 'funboardget',
+        isNotFor: ['funboard'],
+        func: function(sprite, script) {
+            var index = script.getValue('PORT', script);
+            var state = script.getValue('STATE', script);
+            var vmin = 0,
+                vmax = 1023,
+                vlimit;
+            var port = 0;
+            var mode = 1;
+            if (index == 1) port = Entry.FunBoard.PORT_MAP['slide'];
+            else if (index == 2) port = Entry.FunBoard.PORT_MAP['cds'];
+            else if (index == 3) port = Entry.FunBoard.PORT_MAP['mic'];
+
+            var ANALOG = Entry.hw.portData.ANALOG;
+            var value = ANALOG ? ANALOG[port] || 0 : 0;
+
+            vlimit =
+                vmin +
+                Math.max(
+                    0,
+                    Math.abs(vmax - vmin) * Entry.FunBoard.Static.ANALOG_STATE_PERCENT
+                );
+
+            var ret = 0;
+            //작다
+            if (state == 1) {
+                if (value < vlimit) ret = 1;
+            } else {
+                //크다
+                //if(state == 2)
+                if (value > vlimit) ret = 1;
+            }
+            return ret;
+        },
+        syntax: { js: [], py: [] },
+    },
+    funboard_convert_scale: {
+        color: '#00979D',
+        fontColor: '#fff',
+        skeleton: 'basic_string_field',
+        statements: [],
+        params: [
+            {
+                type: 'Block',
+                accept: 'string',
+            },
+            {
+                type: 'Block',
+                accept: 'string',
+            },
+            {
+                type: 'Block',
+                accept: 'string',
+            },
+            {
+                type: 'Block',
+                accept: 'string',
+            },
+            {
+                type: 'Block',
+                accept: 'string',
+            },
+        ],
+        events: {},
+        def: {
+            params: [
+                {
+                    type: 'funboard_list_analogsensor_basic',
+                },
+                {
+                    type: 'number',
+                    params: ['0'],
+                },
+                {
+                    type: 'number',
+                    params: ['1023'],
+                },
+                {
+                    type: 'number',
+                    params: ['0'],
+                },
+                {
+                    type: 'number',
+                    params: ['100'],
+                },
+            ],
+            type: 'funboard_convert_scale',
+        },
+        paramsKeyMap: {
+            PORT: 0,
+            VALUE2: 1,
+            VALUE3: 2,
+            VALUE4: 3,
+            VALUE5: 4,
+        },
+        class: 'funboardget',
+        isNotFor: ['funboard'],
+        func: function(sprite, script) {
+            var index = script.getValue('PORT', script);
+            var port = 0;
+            if (index == 1) port = Entry.FunBoard.PORT_MAP['slide'];
+            else if (index == 2) port = Entry.FunBoard.PORT_MAP['cds'];
+            else if (index == 3) port = Entry.FunBoard.PORT_MAP['mic'];
+
+            var value2 = script.getNumberValue('VALUE2', script);
+            var value3 = script.getNumberValue('VALUE3', script);
+            var value4 = script.getNumberValue('VALUE4', script);
+            var value5 = script.getNumberValue('VALUE5', script);
+
+            var stringValue4 = script.getValue('VALUE4', script);
+            var stringValue5 = script.getValue('VALUE5', script);
+            var isFloat = false;
+            if (
+                (Entry.Utils.isNumber(stringValue4) &&
+                    stringValue4.indexOf('.') > -1) ||
+                (Entry.Utils.isNumber(stringValue5) &&
+                    stringValue5.indexOf('.') > -1)
+            ) {
+                isFloat = true;
+            }
+
+            var ANALOG = Entry.hw.portData.ANALOG;
+            var value1 = ANALOG ? ANALOG[port] || 0 : 0;
+            var result = value1;
+
+            if (value2 > value3) {
+                var swap = value2;
+                value2 = value3;
+                value3 = swap;
+            }
+            if (value4 > value5) {
+                var swap = value4;
+                value4 = value5;
+                value5 = swap;
+            }
+
+            result -= value2;
+            result = result * ((value5 - value4) / (value3 - value2));
+            result += value4;
+            result = Math.min(value5, result);
+            result = Math.max(value4, result);
+            //return Math.round(result);
+
+            if (isFloat) {
+                result = Math.round(result * 100) / 100;
+            } else {
+                result = Math.round(result);
+            }
+            return result;
+        },
+        syntax: { js: [], py: [] },
+    },
+    funboard_set_digital_buzzer: {
+        color: '#00979D',
+        fontColor: '#fff',
+        skeleton: 'basic',
+        statements: [],
+        params: [
+            {
+                type: 'Block',
+                accept: 'string',
+            },
+            {
+                type: 'Block',
+                accept: 'string',
+            },
+            {
+                type: 'Block',
+                accept: 'string',
+            },
+            {
+                type: 'Indicator',
+                img: 'block_icon/hardware_bzr.png',
+                size: 12,
+            },
+        ],
+        events: {},
+        def: {
+            params: [
+                {
+                    type: 'funboard_list_digital_octave',
+                },
+                {
+                    type: 'funboard_list_digital_tone',
+                },
+                {
+                    type: 'text',
+                    params: ['1'],
+                },
+                null,
+            ],
+            type: 'funboard_set_digital_buzzer',
+        },
+        paramsKeyMap: {
+            OCTAVE: 0,
+            NOTE: 1,
+            DURATION: 2,
+        },
+        class: 'funboardset',
+        isNotFor: ['funboard'],
+        func: function(sprite, script) {
+            var port = Entry.FunBoard.PORT_MAP['buzzer'];
+            var duration = script.getNumberValue('DURATION');
+            var octave = script.getNumberValue('OCTAVE') - 1;
+            var value = 0;
+
+            if (!script.isStart) {
+                var note = script.getValue('NOTE');
+                if (!Entry.Utils.isNumber(note)) {
+                    note = Entry.FunBoard.toneTable[note];
+                }
+                if (note < 0) {
+                    note = 0;
+                } else if (note > 12) {
+                    note = 12;
+                }
+                if (duration < 0) {
+                    duration = 0;
+                }
+                if (!Entry.hw.sendQueue['SET']) {
+                    Entry.hw.sendQueue['SET'] = {};
+                }
+                if (duration === 0) {
+                    Entry.hw.sendQueue['SET'][port] = {
+                        type: Entry.FunBoard.sensorTypes.TONE,
+                        data: 0,
+                        time: new Date().getTime(),
+                    };
+                    return script.callReturn();
+                }
+                if (octave < 0) {
+                    octave = 0;
+                } else if (octave > 8) {
+                    octave = 8;
+                }
+                if (note != 0) {
+                    value = Entry.FunBoard.toneMap[note][octave];
+                }
+
+                duration = duration * 1000;
+                script.isStart = true;
+                script.timeFlag = 1;
+
+                Entry.hw.sendQueue['SET'][port] = {
+                    type: Entry.FunBoard.sensorTypes.TONE,
+                    data: {
+                        value: value,
+                        duration: duration,
+                    },
+                    time: new Date().getTime(),
+                };
+
+                setTimeout(function() {
+                    script.timeFlag = 0;
+                }, duration + 32);
+                return script;
+            } else if (script.timeFlag == 1) {
+                return script;
+            } else {
+                delete script.timeFlag;
+                delete script.isStart;
+                Entry.hw.sendQueue['SET'][port] = {
+                    type: Entry.FunBoard.sensorTypes.TONE,
+                    data: 0,
+                    time: new Date().getTime(),
+                };
+                Entry.engine.isContinue = false;
+
+                return script.callReturn();
+            }
+        },
+        syntax: { js: [], py: [] },
+    },
+    funboard_buzzer_second: {
+        color: '#00979D',
+        skeleton: 'basic',
+        statements: [],
+        params: [
+            {
+                type: 'Block',
+                accept: 'string',
+            },
+            {
+                type: 'Block',
+                accept: 'string',
+            },
+            {
+                type: 'Indicator',
+                img: 'block_icon/hardware_bzr.png',
+                size: 12,
+            },
+        ],
+        events: {},
+        def: {
+            params: [
+                {
+                    type: 'funboard_list_onoff_basic',
+                },
+                {
+                    type: 'text',
+                    params: ['1'],
+                },
+                null,
+            ],
+            type: 'funboard_buzzer_second',
+        },
+        paramsKeyMap: {
+            ONOFF: 0,
+            DURATION: 1,
+        },
+        class: 'funboardset',
+        isNotFor: ['funboard'],
+        func: function(sprite, script) {
+            var onoff = script.getNumberValue('ONOFF');
+            var duration = script.getNumberValue('DURATION');
+            var li_duration = Math.ceil(duration);
+            if (li_duration < 1) return script.callReturn();
+
+            if (!script.isStart) {
+                {
+                    var port = 0;
+                    if (onoff == '1')
+                        port = Entry.FunBoard.EventTypes.BUZZER_ON;
+                    else port = Entry.FunBoard.EventTypes.BUZZER_OFF;
+
+                    if (!Entry.hw.sendQueue['SET']) {
+                        Entry.hw.sendQueue['SET'] = {};
+                    }
+                    Entry.hw.sendQueue['SET'][port] = {
+                        type: Entry.FunBoard.sensorTypes.ETC,
+                        data: li_duration,
+                        time: new Date().getTime(),
+                    };
+                }
+
+                script.isStart = true;
+                script.timeFlag = 1;
+                var timeValue = li_duration; // * Entry.FunBoard.Static.DELAY_SECOND;
+                var fps = Entry.FPS || 60;
+                timeValue = 60 / fps * timeValue * 1000;
+                setTimeout(function() {
+                    script.timeFlag = 0;
+                }, timeValue);
+                return script;
+            } else if (script.timeFlag == 1) {
+                return script;
+            } else {
+                delete script.timeFlag;
+                delete script.isStart;
+                Entry.engine.isContinue = false;
+                return script.callReturn();
+            }
+        },
+        syntax: { js: [], py: [] },
+    },
+    funboard_buzzer_tone_simple: {
+        color: '#00979D',
+        skeleton: 'basic',
+        statements: [],
+        params: [
+            {
+                type: 'Dropdown',
+                options: [
+                    [Lang.Blocks.XBOT_c, 'C'],
+                    [Lang.Blocks.XBOT_d, 'D'],
+                    [Lang.Blocks.XBOT_e, 'E'],
+                    [Lang.Blocks.XBOT_f, 'F'],
+                    [Lang.Blocks.XBOT_g, 'G'],
+                    [Lang.Blocks.XBOT_a, 'A'],
+                    [Lang.Blocks.XBOT_b, 'B'],
+                ],
+                value: 'C',
+                fontSize: 11,
+            },
+            {
+                type: 'Dropdown',
+                options: [
+                    ['2', '2'],
+                    ['3', '3'],
+                    ['4', '4'],
+                    ['5', '5'],
+                    ['6', '6'],
+                    ['7', '7'],
+                ],
+                value: '2',
+                fontSize: 11,
+            },
+            {
+                type: 'Block',
+                accept: 'string',
+            },
+            {
+                type: 'Indicator',
+                img: 'block_icon/hardware_bzr.png',
+                size: 12,
+            },
+        ],
+        events: {},
+        def: {
+            params: [
+                null,
+                '4',
+                {
+                    type: 'text',
+                    params: ['0.5'],
+                },
+                null,
+            ],
+            type: 'funboard_buzzer_tone_simple',
+        },
+        paramsKeyMap: {
+            NOTE: 0,
+            OCTAVE: 1,
+            VALUE: 2,
+        },
+        class: 'funboardset',
+        isNotFor: ['funboard'],
+        func: function(sprite, script) {
+            var sq = Entry.hw.sendQueue;
+            var note = script.getStringField('NOTE', script);
+            var octave = script.getStringField('OCTAVE', script);
+            var duration = script.getNumberValue('VALUE', script);
+
+            var value = 255;
+            if (note == 'C') value = 39;
+            else if (note == 'D') value = 75;
+            else if (note == 'E') value = 111;
+            else if (note == 'F') value = 147;
+            else if (note == 'G') value = 183;
+            else if (note == 'A') value = 219;
+            else if (note == 'B') value = 255;
+            var port = Entry.FunBoard.PORT_MAP['buzzer'];
+            Entry.hw.sendQueue[port] = value;
+
+            return script.callReturn();
+        },
+        syntax: { js: [], py: [] },
+    },
+    funboard_buzzer_onoff: {
+        color: '#00979D',
+        skeleton: 'basic',
+        statements: [],
+        params: [
+            {
+                type: 'Block',
+                accept: 'string',
+            },
+            {
+                type: 'Indicator',
+                img: 'block_icon/hardware_bzr.png',
+                size: 11,
+            },
+        ],
+        events: {},
+        def: {
+            params: [
+                {
+                    type: 'funboard_list_onoff_basic',
+                },
+                null,
+            ],
+            type: 'funboard_buzzer_onoff',
+        },
+        paramsKeyMap: {
+            ONOFF: 0,
+        },
+        class: 'funboardset',
+        isNotFor: ['funboard'],
+        func: function(sprite, script) {
+            var onoff = script.getNumberValue('ONOFF');
+
+            if (!script.isStart) {
+                {
+                    //1 based value
+                    var eff_value = Math.floor(Math.random() * (123 - 1)) + 1;
+
+                    var port = 0;
+                    if (onoff == '1')
+                        port = Entry.FunBoard.EventTypes.BUZZER_ON;
+                    else port = Entry.FunBoard.EventTypes.BUZZER_OFF;
+
+                    if (!Entry.hw.sendQueue['SET']) {
+                        Entry.hw.sendQueue['SET'] = {};
+                    }
+                    Entry.hw.sendQueue['SET'][port] = {
+                        type: Entry.FunBoard.sensorTypes.ETC,
+                        data: eff_value,
+                        time: new Date().getTime(),
+                    };
+                }
+
+                script.isStart = true;
+                script.timeFlag = 1;
+                var fps = Entry.FPS || 60;
+                var timeValue = Math.max(1, 3 * Entry.FunBoard.Static.DELAY_SECOND);
+                timeValue = Entry.FunBoard.Static.DELAY_SECOND;
+                timeValue = 60 / fps * timeValue * 1000;
+                setTimeout(function() {
+                    script.timeFlag = 0;
+                }, timeValue);
+                return script;
+            } else if (script.timeFlag == 1) {
+                return script;
+            } else {
+                delete script.timeFlag;
+                delete script.isStart;
+                Entry.engine.isContinue = false;
+                return script.callReturn();
+            }
+        },
+        syntax: { js: [], py: [] },
+    },
+    funboard_color_led_onoff: {
+        color: '#00979D',
+        skeleton: 'basic',
+        statements: [],
+        params: [
+            {
+                type: 'Block',
+                accept: 'string',
+            },
+            {
+                type: 'Block',
+                accept: 'string',
+            },
+            {
+                type: 'Indicator',
+                img: 'block_icon/hardware_led.png',
+                size: 12,
+            },
+        ],
+        events: {},
+        def: {
+            params: [
+                {
+                    type: 'funboard_list_ledcolor_basic',
+                },
+                {
+                    type: 'funboard_list_onoff_basic',
+                },
+                null,
+            ],
+            type: 'funboard_color_led_onoff',
+        },
+        paramsKeyMap: {
+            VALUE: 0,
+            ONOFF: 1,
+        },
+        class: 'funboardset',
+        isNotFor: ['funboard'],
+        func: function(sprite, script) {
+            var color_index = script.getNumberValue('VALUE');
+            var onoff = script.getValue('ONOFF');
+
+            if (!script.isStart) {
+                {
+                    var portR = 0;
+                    var portY = 0;
+                    var portG = 0;
+                    var portB = 0;
+
+                    //on
+                    if (onoff == '1') {
+                        portR = 0;
+                        portY = 0;
+                        portG = 0;
+                        portB = 0;
+                        if (color_index === 1) portR = 255;
+                        else if (color_index === 2) portY = 255;
+                        else if (color_index === 3) portG = 255;
+                        else if (color_index === 4) portB = 255;
+                        else if (color_index === 5) {
+                            portR = 255;
+                            portY = 255;
+                            portG = 255;
+                            portB = 255;
+                        }
+
+                        if (portR > 0) {
+                            if (!Entry.hw.sendQueue['SET']) {
+                                Entry.hw.sendQueue['SET'] = {};
+                            }
+                            Entry.hw.sendQueue['SET'][
+                                Entry.FunBoard.PORT_MAP['led_red']
+                            ] = {
+                                type: Entry.FunBoard.sensorTypes.DIGITAL,
+                                data: portR,
+                                time: new Date().getTime(),
+                            };
+                        }
+                        if (portY > 0) {
+                            if (!Entry.hw.sendQueue['SET']) {
+                                Entry.hw.sendQueue['SET'] = {};
+                            }
+                            Entry.hw.sendQueue['SET'][
+                                Entry.FunBoard.PORT_MAP['led_yellow']
+                            ] = {
+                                type: Entry.FunBoard.sensorTypes.DIGITAL,
+                                data: portY,
+                                time: new Date().getTime(),
+                            };
+                        }
+                        if (portG > 0) {
+                            if (!Entry.hw.sendQueue['SET']) {
+                                Entry.hw.sendQueue['SET'] = {};
+                            }
+                            Entry.hw.sendQueue['SET'][
+                                Entry.FunBoard.PORT_MAP['led_green']
+                            ] = {
+                                type: Entry.FunBoard.sensorTypes.DIGITAL,
+                                data: portG,
+                                time: new Date().getTime(),
+                            };
+                        }
+                        if (portB > 0) {
+                            if (!Entry.hw.sendQueue['SET']) {
+                                Entry.hw.sendQueue['SET'] = {};
+                            }
+                            Entry.hw.sendQueue['SET'][
+                                Entry.FunBoard.PORT_MAP['led_blue']
+                            ] = {
+                                type: Entry.FunBoard.sensorTypes.DIGITAL,
+                                data: portB,
+                                time: new Date().getTime(),
+                            };
+                        }
+                    } else {
+                        //off
+                        portR = 255;
+                        portY = 255;
+                        portG = 255;
+                        portB = 255;
+
+                        if (color_index === 1) portR = 0;
+                        else if (color_index === 2) portY = 0;
+                        else if (color_index === 3) portG = 0;
+                        else if (color_index === 4) portB = 0;
+                        else if (color_index === 5) {
+                            portR = 0;
+                            portY = 0;
+                            portG = 0;
+                            portB = 0;
+                        }
+
+                        if (portR < 1) {
+                            if (!Entry.hw.sendQueue['SET']) {
+                                Entry.hw.sendQueue['SET'] = {};
+                            }
+                            Entry.hw.sendQueue['SET'][
+                                Entry.FunBoard.PORT_MAP['led_red']
+                            ] = {
+                                type: Entry.FunBoard.sensorTypes.DIGITAL,
+                                data: portR,
+                                time: new Date().getTime(),
+                            };
+                        }
+                        if (portY < 1) {
+                            if (!Entry.hw.sendQueue['SET']) {
+                                Entry.hw.sendQueue['SET'] = {};
+                            }
+                            Entry.hw.sendQueue['SET'][
+                                Entry.FunBoard.PORT_MAP['led_yellow']
+                            ] = {
+                                type: Entry.FunBoard.sensorTypes.DIGITAL,
+                                data: portY,
+                                time: new Date().getTime(),
+                            };
+                        }
+                        if (portG < 1) {
+                            if (!Entry.hw.sendQueue['SET']) {
+                                Entry.hw.sendQueue['SET'] = {};
+                            }
+                            Entry.hw.sendQueue['SET'][
+                                Entry.FunBoard.PORT_MAP['led_green']
+                            ] = {
+                                type: Entry.FunBoard.sensorTypes.DIGITAL,
+                                data: portG,
+                                time: new Date().getTime(),
+                            };
+                        }
+                        if (portB < 1) {
+                            if (!Entry.hw.sendQueue['SET']) {
+                                Entry.hw.sendQueue['SET'] = {};
+                            }
+                            Entry.hw.sendQueue['SET'][
+                                Entry.FunBoard.PORT_MAP['led_blue']
+                            ] = {
+                                type: Entry.FunBoard.sensorTypes.DIGITAL,
+                                data: portB,
+                                time: new Date().getTime(),
+                            };
+                        }
+                    }
+                }
+
+                script.isStart = true;
+                script.timeFlag = 1;
+                var fps = Entry.FPS || 60;
+                var timeValue = Entry.FunBoard.Static.DELAY_SECOND;
+                timeValue = 60 / fps * timeValue * 1000;
+                setTimeout(function() {
+                    script.timeFlag = 0;
+                }, timeValue);
+                return script;
+            } else if (script.timeFlag == 1) {
+                return script;
+            } else {
+                delete script.timeFlag;
+                delete script.isStart;
+                Entry.engine.isContinue = false;
+                return script.callReturn();
+            }
+        },
+        syntax: { js: [], py: [] },
+    },
+    funboard_color_led_on_pwm: {
+        color: '#00979D',
+        skeleton: 'basic',
+        statements: [],
+        params: [
+            {
+                type: 'Block',
+                accept: 'string',
+            },
+            {
+                type: 'Block',
+                accept: 'string',
+            },
+            {
+                type: 'Indicator',
+                img: 'block_icon/hardware_led.png',
+                size: 12,
+            },
+        ],
+        events: {},
+        def: {
+            params: [
+                {
+                    type: 'funboard_list_ledcolor_pwm_basic',
+                },
+                {
+                    type: 'text',
+                    params: ['100'],
+                },
+                null,
+            ],
+            type: 'funboard_color_led_on_pwm',
+        },
+        pyHelpDef: {
+            params: [
+                null,
+                {
+                    type: 'number',
+                    params: ['A&value'],
+                },
+                null,
+            ],
+            type: 'funboard_color_led_on_pwm',
+        },
+        paramsKeyMap: {
+            VALUE: 0,
+            PERCENT: 1,
+        },
+        class: 'funboardset',
+        isNotFor: ['funboard'],
+        func: function(sprite, script) {
+            var color_index = script.getNumberValue('VALUE');
+            var li_percent = script.getNumberValue('PERCENT');
+            li_percent = Entry.FunBoard.MinMax(li_percent, 0, 100);
+            var pwm_value = Math.round(
+                Entry.FunBoard.Static.FUNBOARD_LED_ON * (li_percent / 100)
+            );
+
+            if (!script.isStart) {
+                {
+                    var portR = 0;
+                    var portY = 0;
+                    if (color_index === 1) portR = pwm_value;
+                    else if (color_index === 2) portY = pwm_value;
+
+                    if (portR > 0) {
+                        if (!Entry.hw.sendQueue['SET']) {
+                            Entry.hw.sendQueue['SET'] = {};
+                        }
+                        Entry.hw.sendQueue['SET'][
+                            Entry.FunBoard.PORT_MAP['led_red']
+                        ] = {
+                            type: Entry.FunBoard.sensorTypes.PWM,
+                            data: portR,
+                            time: new Date().getTime(),
+                        };
+                    }
+                    if (portY > 0) {
+                        if (!Entry.hw.sendQueue['SET']) {
+                            Entry.hw.sendQueue['SET'] = {};
+                        }
+                        Entry.hw.sendQueue['SET'][
+                            Entry.FunBoard.PORT_MAP['led_yellow']
+                        ] = {
+                            type: Entry.FunBoard.sensorTypes.PWM,
+                            data: portY,
+                            time: new Date().getTime(),
+                        };
+                    }
+                }
+
+                script.isStart = true;
+                script.timeFlag = 1;
+                var fps = Entry.FPS || 60;
+                var timeValue = Entry.FunBoard.Static.DELAY_SECOND;
+                timeValue = 60 / fps * timeValue * 1000;
+                setTimeout(function() {
+                    script.timeFlag = 0;
+                }, timeValue);
+                return script;
+            } else if (script.timeFlag == 1) {
+                return script;
+            } else {
+                delete script.timeFlag;
+                delete script.isStart;
+                Entry.engine.isContinue = false;
+                return script.callReturn();
+            }
+        },
+        syntax: { js: [], py: [] },
+    },
+    funboard_dotmatrix_intensity: {
+        color: '#00979D',
+        skeleton: 'basic',
+        statements: [],
+        params: [
+            {
+                type: 'Block',
+                accept: 'string',
+            },
+            {
+                type: 'Indicator',
+                img: 'block_icon/hardware_ledx.png',
+                size: 12,
+            },
+        ],
+        events: {},
+        def: {
+            params: [
+                {
+                    type: 'text',
+                    params: ['100'],
+                },
+                null,
+            ],
+            type: 'funboard_dotmatrix_intensity',
+        },
+        pyHelpDef: {
+            params: [
+                {
+                    type: 'number',
+                    params: ['A&value'],
+                },
+                null,
+            ],
+            type: 'funboard_color_led_on_pwm',
+        },
+        paramsKeyMap: {
+            PERCENT: 0,
+        },
+        class: 'funboardsetmatrix',
+        isNotFor: ['funboard'],
+        func: function(sprite, script) {
+            var li_percent = script.getNumberValue('PERCENT');
+            //1-based value (setZero와 구별)
+            li_percent = Entry.FunBoard.MinMax(li_percent, 0, 100);
+            li_percent = li_percent + 1;
+
+            if (!script.isStart) {
+                {
+                    var port = Entry.FunBoard.EventTypes.MATRIX_INTENSITY;
+
+                    if (!Entry.hw.sendQueue['SET']) {
+                        Entry.hw.sendQueue['SET'] = {};
+                    }
+                    Entry.hw.sendQueue['SET'][port] = {
+                        type: Entry.FunBoard.sensorTypes.ETC,
+                        data: li_percent,
+                        time: new Date().getTime(),
+                    };
+                }
+
+                script.isStart = true;
+                script.timeFlag = 1;
+                var fps = Entry.FPS || 60;
+                var timeValue = 1 * Entry.FunBoard.Static.DELAY_SECOND;
+                timeValue = 60 / fps * timeValue * 1000;
+                setTimeout(function() {
+                    script.timeFlag = 0;
+                }, timeValue);
+                return script;
+            } else if (script.timeFlag == 1) {
+                return script;
+            } else {
+                delete script.timeFlag;
+                delete script.isStart;
+                Entry.engine.isContinue = false;
+                return script.callReturn();
+            }
+        },
+        syntax: { js: [], py: [] },
+    },
+    funboard_dotmatrix_scroll_option: {
+        color: '#00979D',
+        skeleton: 'basic',
+        statements: [],
+        params: [
+            {
+                type: 'Block',
+                accept: 'string',
+            },
+            {
+                type: 'Indicator',
+                img: 'block_icon/hardware_ledx.png',
+                size: 11,
+            },
+        ],
+        events: {},
+        def: {
+            params: [
+                {
+                    type: 'funboard_list_matrix_scroll_option',
+                },
+                null,
+            ],
+            type: 'funboard_dotmatrix_scroll_option',
+        },
+        paramsKeyMap: {
+            OPTION: 0,
+        },
+        class: 'funboardsetmatrix',
+        isNotFor: ['funboard'],
+        func: function(sprite, script) {
+            var value = script.getValue('OPTION', script);
+            if (value.length < 1) return script.callReturn();
+
+            if (!script.isStart) {
+                var port = Entry.FunBoard.EventTypes.MATRIX_SCROLL_DIR;
+                if (!Entry.hw.sendQueue['SET']) {
+                    Entry.hw.sendQueue['SET'] = {};
+                }
+                script.isStart = true;
+                script.timeFlag = 1;
+                var fps = Entry.FPS || 60;
+                var timeValue = Entry.FunBoard.Static.DELAY_SECOND;
+                timeValue = 60 / fps * timeValue * 1000;
+                Entry.hw.sendQueue['SET'][port] = {
+                    type: Entry.FunBoard.sensorTypes.ETC,
+                    data: value,
+                    time: new Date().getTime(),
+                };
+
+                setTimeout(function() {
+                    script.timeFlag = 0;
+                }, timeValue);
+                return script;
+            } else if (script.timeFlag == 1) {
+                return script;
+            } else {
+                delete script.timeFlag;
+                delete script.isStart;
+                Entry.engine.isContinue = false;
+                return script.callReturn();
+            }
+        },
+        syntax: { js: [], py: [] },
+    },
+    funboard_dotmatrix_scroll_rapid: {
+        color: '#00979D',
+        skeleton: 'basic',
+        statements: [],
+        params: [
+            {
+                type: 'Block',
+                accept: 'string',
+            },
+            {
+                type: 'Indicator',
+                img: 'block_icon/hardware_ledx.png',
+                size: 12,
+            },
+        ],
+        events: {},
+        def: {
+            params: [
+                {
+                    type: 'text',
+                    params: ['100'],
+                },
+                null,
+            ],
+            type: 'funboard_dotmatrix_scroll_rapid',
+        },
+        pyHelpDef: {
+            params: [
+                {
+                    type: 'number',
+                    params: ['A&value'],
+                },
+                null,
+            ],
+            type: 'funboard_color_led_on_pwm',
+        },
+        paramsKeyMap: {
+            PERCENT: 0,
+        },
+        class: 'funboardsetmatrix',
+        isNotFor: ['funboard'],
+        func: function(sprite, script) {
+            var li_percent = script.getNumberValue('PERCENT');
+            //1-based value로 (setZero와 구별)
+            li_percent = Entry.FunBoard.MinMax(li_percent, 0, 100);
+            li_percent = li_percent + 1;
+
+            if (!script.isStart) {
+                {
+                    var port = Entry.FunBoard.EventTypes.MATRIX_SCROLL_RAPID;
+                    if (!Entry.hw.sendQueue['SET']) {
+                        Entry.hw.sendQueue['SET'] = {};
+                    }
+                    Entry.hw.sendQueue['SET'][port] = {
+                        type: Entry.FunBoard.sensorTypes.ETC,
+                        data: li_percent,
+                        time: new Date().getTime(),
+                    };
+                }
+
+                script.isStart = true;
+                script.timeFlag = 1;
+                var fps = Entry.FPS || 60;
+                var timeValue = Entry.FunBoard.Static.DELAY_SECOND;
+                timeValue = 60 / fps * timeValue * 1000;
+                setTimeout(function() {
+                    script.timeFlag = 0;
+                }, timeValue);
+                return script;
+            } else if (script.timeFlag == 1) {
+                return script;
+            } else {
+                delete script.timeFlag;
+                delete script.isStart;
+                Entry.engine.isContinue = false;
+                return script.callReturn();
+            }
+        },
+        syntax: { js: [], py: [] },
+    },
+    funboard_dotmatrix_onoff: {
+        color: '#00979D',
+        skeleton: 'basic',
+        statements: [],
+        params: [
+            {
+                type: 'Block',
+                accept: 'string',
+            },
+            {
+                type: 'Indicator',
+                img: 'block_icon/hardware_ledx.png',
+                size: 11,
+            },
+        ],
+        events: {},
+        def: {
+            params: [
+                {
+                    type: 'funboard_list_onoff_basic',
+                },
+                null,
+            ],
+            type: 'funboard_dotmatrix_onoff',
+        },
+        paramsKeyMap: {
+            ONOFF: 0,
+        },
+        class: 'funboardsetmatrix',
+        isNotFor: ['funboard'],
+        func: function(sprite, script) {
+            var onoff = script.getValue('ONOFF', script);
+            var eff_value = Math.floor(Math.random() * (123 - 1)) + 1;
+
+            if (!script.isStart) {
+                var port = Entry.FunBoard.EventTypes.MATRIX_OFF_ALL;
+                if (onoff == '1')
+                    port = Entry.FunBoard.EventTypes.MATRIX_ON_ALL;
+
+                if (!Entry.hw.sendQueue['SET']) {
+                    Entry.hw.sendQueue['SET'] = {};
+                }
+
+                script.isStart = true;
+                script.timeFlag = 1;
+                var fps = Entry.FPS || 60;
+                var timeValue = 1 * Entry.FunBoard.Static.DELAY_SECOND;
+                timeValue = 60 / fps * timeValue * 1000;
+
+                Entry.hw.sendQueue['SET'][port] = {
+                    type: Entry.FunBoard.sensorTypes.ETC,
+                    data: eff_value,
+                    time: new Date().getTime(),
+                };
+                setTimeout(function() {
+                    script.timeFlag = 0;
+                }, timeValue);
+                return script;
+            } else if (script.timeFlag == 1) {
+                return script;
+            } else {
+                delete script.timeFlag;
+                delete script.isStart;
+                Entry.engine.isContinue = false;
+                return script.callReturn();
+            }
+        },
+        syntax: { js: [], py: [] },
+    },
+    funboard_dotmatrix_char_display: {
+        color: '#00979D',
+        skeleton: 'basic',
+        statements: [],
+        params: [
+            {
+                type: 'Block',
+                accept: 'string',
+            },
+            {
+                type: 'Indicator',
+                img: 'block_icon/hardware_ledx.png',
+                size: 11,
+            },
+        ],
+        events: {},
+        def: {
+            params: [
+                {
+                    type: 'funboard_list_matrix_char',
+                },
+                null,
+            ],
+            type: 'funboard_dotmatrix_char_display',
+        },
+        paramsKeyMap: {
+            VALUE: 0,
+        },
+        class: 'funboardsetmatrix',
+        isNotFor: ['funboard'],
+        func: function(sprite, script) {
+            var string = script.getValue('VALUE', script);
+            if (string.length < 1) {
+                return script.callReturn();
+            }
+
+            //1개 문자만 허용
+            var char_tot = 1;
+
+            if (!script.isStart) {
+                var port = Entry.FunBoard.EventTypes.CHAR_OUT;
+
+                var text = [];
+                if (typeof string === 'string') {
+                    for (var i = 0; i < char_tot; i++) {
+                        text[i] = Entry.FunBoard.toByte(string[i]);
+                    }
+                } else {
+                    text[0] = string[0];
+                }
+
+                if (!Entry.hw.sendQueue['SET']) {
+                    Entry.hw.sendQueue['SET'] = {};
+                }
+
+                script.isStart = true;
+                script.timeFlag = 1;
+                var fps = Entry.FPS || 60;
+                var timeValue = (char_tot+0.5) * Entry.FunBoard.Static.DELAY_SECOND;
+                timeValue = 60 / fps * timeValue * 1000;
+
+                Entry.hw.sendQueue['SET'][port] = {
+                    type: Entry.FunBoard.sensorTypes.MATRIX,
+                    data: {
+                        text0: text[0],
+                        text1: text[1],
+                        text2: text[2],
+                        text3: text[3],
+                        text4: text[4],
+                        text5: text[5],
+                        text6: text[6],
+                        text7: text[7],
+                        text8: text[8],
+                        text9: text[9],
+                        text10: text[10],
+                        text11: text[11],
+                        text12: text[12],
+                        text13: text[13],
+                        text14: text[14],
+                        text15: text[15],
+                    },
+                    time: new Date().getTime(),
+                };
+
+                setTimeout(function() {
+                    script.timeFlag = 0;
+                }, timeValue);
+                return script;
+            } else if (script.timeFlag == 1) {
+                return script;
+            } else {
+                delete script.timeFlag;
+                delete script.isStart;
+                Entry.engine.isContinue = false;
+                return script.callReturn();
+            }
+        },
+        syntax: { js: [], py: [] },
+    },
+    funboard_dotmatrix_string_display: {
+        color: '#00979D',
+        skeleton: 'basic',
+        statements: [],
+        params: [
+            {
+                type: 'Block',
+                accept: 'string',
+            },
+            {
+                type: 'Indicator',
+                img: 'block_icon/hardware_ledx.png',
+                size: 11,
+            },
+        ],
+        events: {},
+        def: {
+            params: [
+                {
+                    type: 'text',
+                    params: ['A'],
+                },
+                null,
+            ],
+            type: 'funboard_dotmatrix_string_display',
+        },
+        pyHelpDef: {
+            params: [
+                {
+                    type: 'text',
+                    params: ['A&value'],
+                },
+                null,
+            ],
+            type: 'funboard_dotmatrix_string_display',
+        },
+        paramsKeyMap: {
+            VALUE: 0,
+        },
+        class: 'funboardsetmatrix',
+        isNotFor: ['funboard'],
+        func: function(sprite, script) {
+            var string = script.getValue('VALUE', script);
+            if (string.length < 1) {
+                return script.callReturn();
+            }
+            var char_tot = Math.min(
+                string.length,
+                Entry.FunBoard.Static.FUNBOARD_MATRIX_STRING_MAX
+            );
+
+            if (!script.isStart) {
+                var port = Entry.FunBoard.EventTypes.STR_OUT_DEFAULT;
+
+                var text = [];
+                if (typeof string === 'string') {
+                    for (var i = 0; i < char_tot; i++) {
+                        text[i] = Entry.FunBoard.toByte(string[i]);
+                    }
+                } else {
+                    text[0] = string[0];
+                }
+
+                if (!Entry.hw.sendQueue['SET']) {
+                    Entry.hw.sendQueue['SET'] = {};
+                }
+
+                script.isStart = true;
+                script.timeFlag = 1;
+                var fps = Entry.FPS || 60;
+                var timeValue = char_tot * Entry.FunBoard.Static.DELAY_SECOND;
+                //scroll//var timeValue = (char_tot*3)*Entry.FunBoard.Static.DELAY_SECOND;
+                timeValue = 60 / fps * timeValue * 1000;
+
+                Entry.hw.sendQueue['SET'][port] = {
+                    type: Entry.FunBoard.sensorTypes.MATRIX,
+                    data: {
+                        text0: text[0],
+                        text1: text[1],
+                        text2: text[2],
+                        text3: text[3],
+                        text4: text[4],
+                        text5: text[5],
+                        text6: text[6],
+                        text7: text[7],
+                        text8: text[8],
+                        text9: text[9],
+                        text10: text[10],
+                        text11: text[11],
+                        text12: text[12],
+                        text13: text[13],
+                        text14: text[14],
+                        text15: text[15],
+                    },
+                    time: new Date().getTime(),
+                };
+
+                setTimeout(function() {
+                    script.timeFlag = 0;
+                }, timeValue);
+                return script;
+            } else if (script.timeFlag == 1) {
+                return script;
+            } else {
+                delete script.timeFlag;
+                delete script.isStart;
+                Entry.engine.isContinue = false;
+                return script.callReturn();
+            }
+        },
+        syntax: { js: [], py: [] },
+    },
+    funboard_dotmatrix_string_display_scroll: {
+        color: '#00979D',
+        skeleton: 'basic',
+        statements: [],
+        params: [
+            {
+                type: 'Block',
+                accept: 'string',
+            },
+            {
+                type: 'Block',
+                accept: 'string',
+            },
+            {
+                type: 'Indicator',
+                img: 'block_icon/hardware_ledx.png',
+                size: 11,
+            },
+        ],
+        events: {},
+        def: {
+            params: [
+                {
+                    type: 'text',
+                    params: ['A'],
+                },
+                {
+                    type: 'funboard_list_matrix_scroll_option',
+                },
+                null,
+            ],
+            type: 'funboard_dotmatrix_string_display_scroll',
+        },
+        pyHelpDef: {
+            params: [
+                {
+                    type: 'text',
+                    params: ['A&value'],
+                },
+                {
+                    type: 'text',
+                    params: ['A&value'],
+                },
+                null,
+            ],
+            type: 'funboard_dotmatrix_string_display_scroll',
+        },
+        paramsKeyMap: {
+            VALUE: 0,
+            SCROLL: 1,
+        },
+        class: 'funboardsetmatrix',
+        isNotFor: ['funboard'],
+        func: function(sprite, script) {
+            var string = script.getValue('VALUE', script);
+            var scroll_opt = script.getValue('SCROLL', script);
+            if (string.length < 1) return script.callReturn();
+
+            var char_tot = Math.min(
+                string.length,
+                Entry.FunBoard.Static.FUNBOARD_MATRIX_STRING_MAX
+            );
+
+            if (!script.isStart) {
+                var port = Entry.FunBoard.EventTypes.STR_OUT_NO_SCROLL;
+                if (scroll_opt == '1')
+                    port = Entry.FunBoard.EventTypes.STR_OUT_NO_SCROLL;
+                else if (scroll_opt == '2')
+                    port = Entry.FunBoard.EventTypes.STR_OUT_LEFT;
+                else if (scroll_opt == '3')
+                    port = Entry.FunBoard.EventTypes.STR_OUT_UP;
+                else if (scroll_opt == '4')
+                    port = Entry.FunBoard.EventTypes.STR_OUT_RIGHT;
+                else if (scroll_opt == '5')
+                    port = Entry.FunBoard.EventTypes.STR_OUT_DOWN;
+
+                var text = [];
+                if (typeof string === 'string') {
+                    for (var i = 0; i < char_tot; i++) {
+                        text[i] = Entry.FunBoard.toByte(string[i]);
+                    }
+                } else {
+                    text[0] = string[0];
+                }
+
+                if (!Entry.hw.sendQueue['SET']) {
+                    Entry.hw.sendQueue['SET'] = {};
+                }
+
+                Entry.hw.sendQueue['SET'][port] = {
+                    type: Entry.FunBoard.sensorTypes.MATRIX,
+                    data: {
+                        text0: text[0],
+                        text1: text[1],
+                        text2: text[2],
+                        text3: text[3],
+                        text4: text[4],
+                        text5: text[5],
+                        text6: text[6],
+                        text7: text[7],
+                        text8: text[8],
+                        text9: text[9],
+                        text10: text[10],
+                        text11: text[11],
+                        text12: text[12],
+                        text13: text[13],
+                        text14: text[14],
+                        text15: text[15],
+                    },
+                    time: new Date().getTime(),
+                };
+
+                script.isStart = true;
+                script.timeFlag = 1;
+                var fps = Entry.FPS || 60;
+                //var timeValue = char_tot*Entry.FunBoard.Static.DELAY_SECOND;
+                var timeValue = char_tot;
+                //var timeValue = Math.ceil(char_tot*0.6);
+                //var timeValue = (char_tot*0.8);
+                timeValue = 60 / fps * timeValue * 1000;
+                setTimeout(function() {
+                    script.timeFlag = 0;
+                }, timeValue);
+                return script;
+            } else if (script.timeFlag == 1) {
+                return script;
+            } else {
+                delete script.timeFlag;
+                delete script.isStart;
+                Entry.engine.isContinue = false;
+                return script.callReturn();
+            }
+        },
+        syntax: {
+            js: [],
+            py: [],
+        },
+    },
+    funboard_dotmatrix_symbol: {
+        color: '#00979D',
+        skeleton: 'basic',
+        statements: [],
+        params: [
+            {
+                type: 'Dropdown',
+                options: [
+                    ['♥', '1'],
+                    ['♡', '2'],
+                    ['↑', '3'],
+                    ['↓', '4'],
+                    ['←', '5'],
+                    ['→', '6'],
+                    ['■', '7'],
+                    ['◆', '8'],
+                    ['●', '9'],
+                    ['※', '10'],
+                ],
+                value: '1',
+                fontSize: 11,
+            },
+            {
+                type: 'Indicator',
+                img: 'block_icon/hardware_ledx.png',
+                size: 11,
+            },
+        ],
+        events: {},
+        def: {
+            params: [null, null],
+            type: 'funboard_dotmatrix_symbol',
+        },
+        paramsKeyMap: {
+            VALUE: 0,
+        },
+        class: 'funboardsetmatrix',
+        isNotFor: ['funboard'],
+        func: function(sprite, script) {
+            var string = script.getField('VALUE');
+            //1 based value (setZero 구별)
+            var value = parseInt(string);
+            if (
+                value < 1 ||
+                value > Entry.FunBoard.Static.MATRIX_REGISTED_SYMBOL_TOTAL
+            ) {
+                return script.callReturn();
+            }
+
+            if (!script.isStart) {
+                var port = Entry.FunBoard.EventTypes.MATRIX_SYMBOL_OUT;
+
+                if (!Entry.hw.sendQueue['SET']) {
+                    Entry.hw.sendQueue['SET'] = {};
+                }
+                Entry.hw.sendQueue['SET'][port] = {
+                    type: Entry.FunBoard.sensorTypes.ETC,
+                    data: value,
+                    time: new Date().getTime(),
+                };
+
+                script.isStart = true;
+                script.timeFlag = 1;
+                var fps = Entry.FPS || 60;
+                var timeValue = 1 * Entry.FunBoard.Static.DELAY_SECOND;
+                timeValue = 60 / fps * timeValue * 1000;
+                setTimeout(function() {
+                    script.timeFlag = 0;
+                }, timeValue);
+                return script;
+            } else if (script.timeFlag == 1) {
+                return script;
+            } else {
+                delete script.timeFlag;
+                delete script.isStart;
+                Entry.engine.isContinue = false;
+                return script.callReturn();
+            }
+        },
+        syntax: { js: [], py: [] },
+    },
+    funboard_dotmatrix_num: {
+        color: '#00979D',
+        skeleton: 'basic',
+        statements: [],
+        params: [
+            {
+                type: 'Dropdown',
+                options: [
+                    ['0', '0'],
+                    ['1', '1'],
+                    ['2', '2'],
+                    ['3', '3'],
+                    ['4', '4'],
+                    ['5', '5'],
+                    ['6', '6'],
+                    ['7', '7'],
+                    ['8', '8'],
+                    ['9', '9'],
+                ],
+                value: '1',
+                fontSize: 11,
+            },
+            {
+                type: 'Indicator',
+                img: 'block_icon/hardware_ledx.png',
+                size: 11,
+            },
+        ],
+        events: {},
+        def: {
+            params: [null, null],
+            type: 'funboard_dotmatrix_num',
+        },
+        paramsKeyMap: {
+            VALUE: 0,
+        },
+        class: 'funboardsetmatrix',
+        isNotFor: ['funboard'],
+        func: function(sprite, script) {
+            var string = script.getField('VALUE');
+            var char_index = parseInt(string);
+            if (char_index < 0 || string.length < 1) {
+                return script.callReturn();
+            }
+            var char_tot = Math.min(
+                string.length,
+                Entry.FunBoard.Static.FUNBOARD_MATRIX_STRING_MAX
+            );
+
+            if (!script.isStart) {
+                var port = Entry.FunBoard.EventTypes.STR_OUT_NO_SCROLL;
+
+                var text = [];
+                if (typeof string === 'string') {
+                    for (var i = 0; i < char_tot; i++) {
+                        text[i] = Entry.FunBoard.toByte(string[i]);
+                    }
+                } else {
+                    text[0] = string[0];
+                }
+
+                if (!Entry.hw.sendQueue['SET']) {
+                    Entry.hw.sendQueue['SET'] = {};
+                }
+
+                script.isStart = true;
+                script.timeFlag = 1;
+                var fps = Entry.FPS || 60;
+                var timeValue = char_tot * Entry.FunBoard.Static.DELAY_SECOND;
+                timeValue = 60 / fps * timeValue * 1000;
+
+                Entry.hw.sendQueue['SET'][port] = {
+                    type: Entry.FunBoard.sensorTypes.MATRIX,
+                    data: {
+                        text0: text[0],
+                        text1: text[1],
+                        text2: text[2],
+                        text3: text[3],
+                        text4: text[4],
+                        text5: text[5],
+                        text6: text[6],
+                        text7: text[7],
+                        text8: text[8],
+                        text9: text[9],
+                        text10: text[10],
+                        text11: text[11],
+                        text12: text[12],
+                        text13: text[13],
+                        text14: text[14],
+                        text15: text[15],
+                    },
+                    time: new Date().getTime(),
+                };
+
+                setTimeout(function() {
+                    script.timeFlag = 0;
+                }, timeValue);
+                return script;
+            } else if (script.timeFlag == 1) {
+                return script;
+            } else {
+                delete script.timeFlag;
+                delete script.isStart;
+                Entry.engine.isContinue = false;
+                return script.callReturn();
+            }
+        },
+        syntax: { js: [], py: [] },
+    },
+    funboard_dotmatrix_big_eng: {
+        color: '#00979D',
+        skeleton: 'basic',
+        statements: [],
+        params: [
+            {
+                type: 'Dropdown',
+                options: [
+                    ['A', 'A'],
+                    ['B', 'B'],
+                    ['C', 'C'],
+                    ['D', 'D'],
+                    ['E', 'E'],
+                    ['F', 'F'],
+                    ['G', 'G'],
+                    ['H', 'H'],
+                    ['I', 'I'],
+                    ['J', 'J'],
+                    ['K', 'K'],
+                    ['L', 'L'],
+                    ['M', 'M'],
+                    ['N', 'N'],
+                    ['O', 'O'],
+                    ['P', 'P'],
+                    ['Q', 'Q'],
+                    ['R', 'R'],
+                    ['S', 'S'],
+                    ['T', 'T'],
+                    ['U', 'U'],
+                    ['V', 'V'],
+                    ['W', 'W'],
+                    ['X', 'X'],
+                    ['Y', 'Y'],
+                    ['Z', 'Z'],
+                ],
+                value: 'A',
+                fontSize: 11,
+            },
+            {
+                type: 'Indicator',
+                img: 'block_icon/hardware_ledx.png',
+                size: 11,
+            },
+        ],
+        events: {},
+        def: {
+            params: [null, null],
+            type: 'funboard_dotmatrix_big_eng',
+        },
+        paramsKeyMap: {
+            VALUE: 0,
+        },
+        class: 'funboardsetmatrix',
+        isNotFor: ['funboard'],
+        func: function(sprite, script) {
+            var string = script.getField('VALUE');
+            if (string.length < 1) {
+                return script.callReturn();
+            }
+            var char_tot = Math.min(
+                string.length,
+                Entry.FunBoard.Static.FUNBOARD_MATRIX_STRING_MAX
+            );
+
+            if (!script.isStart) {
+                var port = Entry.FunBoard.EventTypes.STR_OUT_NO_SCROLL;
+
+                var text = [];
+                if (typeof string === 'string') {
+                    for (var i = 0; i < char_tot; i++) {
+                        text[i] = Entry.FunBoard.toByte(string[i]);
+                    }
+                } else {
+                    text[0] = string;
+                }
+
+                if (!Entry.hw.sendQueue['SET']) {
+                    Entry.hw.sendQueue['SET'] = {};
+                }
+
+                script.isStart = true;
+                script.timeFlag = 1;
+                var fps = Entry.FPS || 60;
+                var timeValue = char_tot * Entry.FunBoard.Static.DELAY_SECOND;
+                timeValue = 60 / fps * timeValue * 1000;
+
+                Entry.hw.sendQueue['SET'][port] = {
+                    type: Entry.FunBoard.sensorTypes.MATRIX,
+                    data: {
+                        text0: text[0],
+                        text1: text[1],
+                        text2: text[2],
+                        text3: text[3],
+                        text4: text[4],
+                        text5: text[5],
+                        text6: text[6],
+                        text7: text[7],
+                        text8: text[8],
+                        text9: text[9],
+                        text10: text[10],
+                        text11: text[11],
+                        text12: text[12],
+                        text13: text[13],
+                        text14: text[14],
+                        text15: text[15],
+                    },
+                    time: new Date().getTime(),
+                };
+
+                setTimeout(function() {
+                    script.timeFlag = 0;
+                }, timeValue);
+                return script;
+            } else if (script.timeFlag == 1) {
+                return script;
+            } else {
+                delete script.timeFlag;
+                delete script.isStart;
+                Entry.engine.isContinue = false;
+                return script.callReturn();
+            }
+        },
+        syntax: { js: [], py: [] },
+    },
+    funboard_dotmatrix_small_eng: {
+        color: '#00979D',
+        skeleton: 'basic',
+        statements: [],
+        params: [
+            {
+                type: 'Dropdown',
+                options: [
+                    ['a', 'a'],
+                    ['b', 'b'],
+                    ['c', 'c'],
+                    ['d', 'd'],
+                    ['e', 'e'],
+                    ['f', 'f'],
+                    ['g', 'g'],
+                    ['h', 'h'],
+                    ['i', 'i'],
+                    ['j', 'j'],
+                    ['k', 'k'],
+                    ['l', 'l'],
+                    ['m', 'm'],
+                    ['n', 'n'],
+                    ['o', 'o'],
+                    ['p', 'p'],
+                    ['q', 'q'],
+                    ['r', 'r'],
+                    ['s', 's'],
+                    ['t', 't'],
+                    ['u', 'u'],
+                    ['v', 'v'],
+                    ['w', 'w'],
+                    ['x', 'x'],
+                    ['y', 'y'],
+                    ['z', 'z'],
+                ],
+                value: 'a',
+                fontSize: 11,
+            },
+            {
+                type: 'Indicator',
+                img: 'block_icon/hardware_ledx.png',
+                size: 11,
+            },
+        ],
+        events: {},
+        def: {
+            params: [null, null],
+            type: 'funboard_dotmatrix_small_eng',
+        },
+        paramsKeyMap: {
+            VALUE: 0,
+        },
+        class: 'funboardsetmatrix',
+        isNotFor: ['funboard'],
+        func: function(sprite, script) {
+            var string = script.getField('VALUE');
+            if (string.length < 1) {
+                return script.callReturn();
+            }
+            var char_tot = Math.min(
+                string.length,
+                Entry.FunBoard.Static.FUNBOARD_MATRIX_STRING_MAX
+            );
+
+            if (!script.isStart) {
+                var port = Entry.FunBoard.EventTypes.STR_OUT_NO_SCROLL;
+
+                var text = [];
+                if (typeof string === 'string') {
+                    for (var i = 0; i < char_tot; i++) {
+                        text[i] = Entry.FunBoard.toByte(string[i]);
+                    }
+                } else {
+                    text[0] = string[0];
+                }
+
+                if (!Entry.hw.sendQueue['SET']) {
+                    Entry.hw.sendQueue['SET'] = {};
+                }
+
+                script.isStart = true;
+                script.timeFlag = 1;
+                var fps = Entry.FPS || 60;
+                var timeValue = char_tot * Entry.FunBoard.Static.DELAY_SECOND;
+                timeValue = 60 / fps * timeValue * 1000;
+
+                Entry.hw.sendQueue['SET'][port] = {
+                    type: Entry.FunBoard.sensorTypes.MATRIX,
+                    data: {
+                        text0: text[0],
+                        text1: text[1],
+                        text2: text[2],
+                        text3: text[3],
+                        text4: text[4],
+                        text5: text[5],
+                        text6: text[6],
+                        text7: text[7],
+                        text8: text[8],
+                        text9: text[9],
+                        text10: text[10],
+                        text11: text[11],
+                        text12: text[12],
+                        text13: text[13],
+                        text14: text[14],
+                        text15: text[15],
+                    },
+                    time: new Date().getTime(),
+                };
+
+                setTimeout(function() {
+                    script.timeFlag = 0;
+                }, timeValue);
+                return script;
+            } else if (script.timeFlag == 1) {
+                return script;
+            } else {
+                delete script.timeFlag;
+                delete script.isStart;
+                Entry.engine.isContinue = false;
+                return script.callReturn();
+            }
+        },
+        syntax: { js: [], py: [] },
+    },
+    funboard_dotmatrix_extra_char: {
+        color: '#00979D',
+        skeleton: 'basic',
+        statements: [],
+        params: [
+            {
+                type: 'Dropdown',
+                options: [
+                    ['!', '!'],
+                    ['?', '?'],
+                    ['#', '#'],
+                    ['$', '$'],
+                    ['%', '%'],
+                    ['&', '&'],
+                    ['*', '*'],
+                    ['+', '+'],
+                    ['-', '-'],
+                    ['/', '/'],
+                    ['~', '~'],
+                    ['^', '^'],
+                    ['_', '_'],
+                    ['@', '@'],
+                    ['<', '<'],
+                    ['>', '>'],
+                    [
+                        '=',
+                        '=',
+                    ] /*,
+                    ["(","("],
+                    [")",")"],
+                    ["[","["],
+                    ["]","]"],
+                    ["{","{"],
+                    ["}","}"],
+                    [",",","],
+                    [".","."],
+                    [":",":"],
+                    [";",";"],
+                    ["'","'"],
+                    ["`","`"],
+                    ["\\","\\"],
+                    ["|","|"]
+                    */,
+                ],
+                value: '!',
+                fontSize: 11,
+            },
+            {
+                type: 'Indicator',
+                img: 'block_icon/hardware_ledx.png',
+                size: 11,
+            },
+        ],
+        events: {},
+        def: {
+            params: [null, null],
+            type: 'funboard_dotmatrix_extra_char',
+        },
+        paramsKeyMap: {
+            VALUE: 0,
+        },
+        class: 'funboardsetmatrix',
+        isNotFor: ['funboard'],
+        func: function(sprite, script) {
+            var string = script.getField('VALUE');
+            if (string.length < 1) {
+                return script.callReturn();
+            }
+            var char_tot = Math.min(
+                string.length,
+                Entry.FunBoard.Static.FUNBOARD_MATRIX_STRING_MAX
+            );
+
+            if (!script.isStart) {
+                var port = Entry.FunBoard.EventTypes.STR_OUT_NO_SCROLL;
+
+                var text = [];
+                if (typeof string === 'string') {
+                    for (var i = 0; i < char_tot; i++) {
+                        text[i] = Entry.FunBoard.toByte(string[i]);
+                    }
+                } else {
+                    text[0] = string[0];
+                }
+                if (!Entry.hw.sendQueue['SET']) {
+                    Entry.hw.sendQueue['SET'] = {};
+                }
+
+                script.isStart = true;
+                script.timeFlag = 1;
+                var fps = Entry.FPS || 60;
+                var timeValue = char_tot * Entry.FunBoard.Static.DELAY_SECOND;
+                timeValue = 60 / fps * timeValue * 1000;
+
+                Entry.hw.sendQueue['SET'][port] = {
+                    type: Entry.FunBoard.sensorTypes.MATRIX,
+                    data: {
+                        text0: text[0],
+                        text1: text[1],
+                        text2: text[2],
+                        text3: text[3],
+                        text4: text[4],
+                        text5: text[5],
+                        text6: text[6],
+                        text7: text[7],
+                        text8: text[8],
+                        text9: text[9],
+                        text10: text[10],
+                        text11: text[11],
+                        text12: text[12],
+                        text13: text[13],
+                        text14: text[14],
+                        text15: text[15],
+                    },
+                    time: new Date().getTime(),
+                };
+
+                setTimeout(function() {
+                    script.timeFlag = 0;
+                }, timeValue);
+                return script;
+            } else if (script.timeFlag == 1) {
+                return script;
+            } else {
+                delete script.timeFlag;
+                delete script.isStart;
+                Entry.engine.isContinue = false;
+                return script.callReturn();
+            }
+        },
+        syntax: { js: [], py: [] },
+    },
+    funboard_dotmatrix_1row: {
+        color: '#00979D',
+        skeleton: 'basic',
+        statements: [],
+        params: [
+            {
+                type: 'Block',
+                accept: 'string',
+            },
+            {
+                type: 'Block',
+                accept: 'string',
+            },
+            {
+                type: 'Indicator',
+                img: 'block_icon/hardware_ledx.png',
+                size: 11,
+            },
+        ],
+        events: {},
+        def: {
+            params: [
+                {
+                    type: 'funboard_list_matrix_rows',
+                },
+                {
+                    type: 'text',
+                    params: ['00000000'],
+                },
+                null,
+            ],
+            type: 'funboard_dotmatrix_1row',
+        },
+        paramsKeyMap: {
+            WHAT: 0,
+            BIT8: 1,
+        },
+        class: 'funboardsetmatrix',
+        isNotFor: ['funboard'],
+        func: function(sprite, script) {
+            var str = script.getNumberValue('WHAT');
+            var str_bit8 = script.getStringValue('BIT8', script);
+
+            var charset = '1#*';
+            var pos = -1;
+            var str3 = '';
+            //8개 column 값
+            for (var i = 0; i < 8; i++) {
+                pos = -1;
+                if (i < str_bit8.length) pos = charset.indexOf(str_bit8[i]);
+                if (pos < 0) str3 = str3.concat('0');
+                else str3 = str3.concat('1');
+            }
+
+            if (!script.isStart) {
+                var port = Entry.FunBoard.EventTypes.SET_ROW1;
+                var text = [];
+                text[0] = str;
+                text[1] = Entry.FunBoard.toByte(str3[0]);
+                text[2] = Entry.FunBoard.toByte(str3[1]);
+                text[3] = Entry.FunBoard.toByte(str3[2]);
+                text[4] = Entry.FunBoard.toByte(str3[3]);
+                text[5] = Entry.FunBoard.toByte(str3[4]);
+                text[6] = Entry.FunBoard.toByte(str3[5]);
+                text[7] = Entry.FunBoard.toByte(str3[6]);
+                text[8] = Entry.FunBoard.toByte(str3[7]);
+
+                if (!Entry.hw.sendQueue['SET']) {
+                    Entry.hw.sendQueue['SET'] = {};
+                }
+
+                script.isStart = true;
+                script.timeFlag = 1;
+                var fps = Entry.FPS || 60;
+                var timeValue = Entry.FunBoard.Static.DELAY_SECOND;
+                //timeValue = 60/fps*timeValue*1000;
+                timeValue = 60 / fps * 50;
+
+                Entry.hw.sendQueue['SET'][port] = {
+                    type: Entry.FunBoard.sensorTypes.MATRIX,
+                    data: {
+                        text0: text[0],
+                        text1: text[1],
+                        text2: text[2],
+                        text3: text[3],
+                        text4: text[4],
+                        text5: text[5],
+                        text6: text[6],
+                        text7: text[7],
+                        text8: text[8],
+                        text9: text[9],
+                        text10: text[10],
+                        text11: text[11],
+                        text12: text[12],
+                        text13: text[13],
+                        text14: text[14],
+                        text15: text[15],
+                    },
+                    value: 0,
+                    time: new Date().getTime(),
+                };
+
+                setTimeout(function() {
+                    script.timeFlag = 0;
+                }, timeValue);
+                return script;
+            } else if (script.timeFlag == 1) {
+                return script;
+            } else {
+                delete script.timeFlag;
+                delete script.isStart;
+                Entry.engine.isContinue = false;
+                return script.callReturn();
+            }
+        },
+        syntax: { js: [], py: [] },
+    },
+    funboard_dotmatrix_1column: {
+        color: '#00979D',
+        skeleton: 'basic',
+        statements: [],
+        params: [
+            {
+                type: 'Block',
+                accept: 'string',
+            },
+            {
+                type: 'Block',
+                accept: 'string',
+            },
+            {
+                type: 'Indicator',
+                img: 'block_icon/hardware_ledx.png',
+                size: 11,
+            },
+        ],
+        events: {},
+        def: {
+            params: [
+                {
+                    type: 'funboard_list_matrix_rows',
+                },
+                {
+                    type: 'text',
+                    params: ['00000000'],
+                },
+                null,
+            ],
+            type: 'funboard_dotmatrix_1column',
+        },
+        paramsKeyMap: {
+            WHAT: 0,
+            BIT8: 1,
+        },
+        class: 'funboardsetmatrix',
+        isNotFor: ['funboard'],
+        func: function(sprite, script) {
+            var str = script.getNumberValue('WHAT');
+            var str_bit8 = script.getStringValue('BIT8', script);
+
+            var charset = '1#*';
+            var pos = -1;
+            var str3 = '';
+            //8개 row 값
+            for (var i = 0; i < 8; i++) {
+                pos = -1;
+                if (i < str_bit8.length) pos = charset.indexOf(str_bit8[i]);
+                if (pos < 0) str3 = str3.concat('0');
+                else str3 = str3.concat('1');
+            }
+
+            var port = Entry.FunBoard.EventTypes.SET_COL1;
+
+            if (!script.isStart) {
+                var text = [];
+                text[0] = str;
+                text[1] = Entry.FunBoard.toByte(str3[0]);
+                text[2] = Entry.FunBoard.toByte(str3[1]);
+                text[3] = Entry.FunBoard.toByte(str3[2]);
+                text[4] = Entry.FunBoard.toByte(str3[3]);
+                text[5] = Entry.FunBoard.toByte(str3[4]);
+                text[6] = Entry.FunBoard.toByte(str3[5]);
+                text[7] = Entry.FunBoard.toByte(str3[6]);
+                text[8] = Entry.FunBoard.toByte(str3[7]);
+
+                if (!Entry.hw.sendQueue['SET']) {
+                    Entry.hw.sendQueue['SET'] = {};
+                }
+
+                script.isStart = true;
+                script.timeFlag = 1;
+                var fps = Entry.FPS || 60;
+                var timeValue = Entry.FunBoard.Static.DELAY_SECOND;
+                //timeValue = 60/fps*timeValue*1000;
+                timeValue = 60 / fps * 50;
+
+                Entry.hw.sendQueue['SET'][port] = {
+                    type: Entry.FunBoard.sensorTypes.MATRIX,
+                    data: {
+                        text0: text[0],
+                        text1: text[1],
+                        text2: text[2],
+                        text3: text[3],
+                        text4: text[4],
+                        text5: text[5],
+                        text6: text[6],
+                        text7: text[7],
+                        text8: text[8],
+                        text9: text[9],
+                        text10: text[10],
+                        text11: text[11],
+                        text12: text[12],
+                        text13: text[13],
+                        text14: text[14],
+                        text15: text[15],
+                    },
+                    value: 0,
+                    time: new Date().getTime(),
+                };
+
+                setTimeout(function() {
+                    script.timeFlag = 0;
+                }, timeValue);
+                return script;
+            } else if (script.timeFlag == 1) {
+                return script;
+            } else {
+                delete script.timeFlag;
+                delete script.isStart;
+                Entry.engine.isContinue = false;
+                return script.callReturn();
+            }
+        },
+        syntax: { js: [], py: [] },
+    },
+    funboard_dotmatrix_1row_1column: {
+        color: '#00979D',
+        skeleton: 'basic',
+        statements: [],
+        params: [
+            {
+                type: 'Block',
+                accept: 'string',
+            },
+            {
+                type: 'Block',
+                accept: 'string',
+            },
+            {
+                type: 'Block',
+                accept: 'string',
+            },
+            {
+                type: 'Indicator',
+                img: 'block_icon/hardware_ledx.png',
+                size: 11,
+            },
+        ],
+        events: {},
+        def: {
+            params: [
+                {
+                    type: 'funboard_list_matrix_rows',
+                },
+                {
+                    type: 'funboard_list_matrix_row_or_column',
+                },
+                {
+                    type: 'text',
+                    params: ['00000000'],
+                },
+                null,
+            ],
+            type: 'funboard_dotmatrix_1row_1column',
+        },
+        paramsKeyMap: {
+            WHAT: 0,
+            HOW: 1,
+            BIT8: 2,
+        },
+        class: 'funboardsetmatrix',
+        isNotFor: ['funboard'],
+        func: function(sprite, script) {
+            var str = script.getNumberValue('WHAT');
+            var how = script.getNumberValue('HOW');
+            var str_bit8 = script.getStringValue('BIT8', script);
+
+            var charset = '1#*';
+            var pos = -1;
+            var str3 = '';
+            //8개 값
+            for (var i = 0; i < 8; i++) {
+                pos = -1;
+                if (i < str_bit8.length) pos = charset.indexOf(str_bit8[i]);
+                if (pos < 0) str3 = str3.concat('0');
+                else str3 = str3.concat('1');
+            }
+
+            var port = Entry.FunBoard.EventTypes.SET_ROW1;
+            if (how == '2') port = Entry.FunBoard.EventTypes.SET_COL1;
+
+            if (!script.isStart) {
+                var text = [];
+                text[0] = str;
+                text[1] = Entry.FunBoard.toByte(str3[0]);
+                text[2] = Entry.FunBoard.toByte(str3[1]);
+                text[3] = Entry.FunBoard.toByte(str3[2]);
+                text[4] = Entry.FunBoard.toByte(str3[3]);
+                text[5] = Entry.FunBoard.toByte(str3[4]);
+                text[6] = Entry.FunBoard.toByte(str3[5]);
+                text[7] = Entry.FunBoard.toByte(str3[6]);
+                text[8] = Entry.FunBoard.toByte(str3[7]);
+
+                if (!Entry.hw.sendQueue['SET']) {
+                    Entry.hw.sendQueue['SET'] = {};
+                }
+
+                script.isStart = true;
+                script.timeFlag = 1;
+                var fps = Entry.FPS || 60;
+                var timeValue = Entry.FunBoard.Static.DELAY_SECOND;
+                //timeValue = 60/fps*timeValue*1000;
+                timeValue = 60 / fps * 50;
+
+                Entry.hw.sendQueue['SET'][port] = {
+                    type: Entry.FunBoard.sensorTypes.MATRIX,
+                    data: {
+                        text0: text[0],
+                        text1: text[1],
+                        text2: text[2],
+                        text3: text[3],
+                        text4: text[4],
+                        text5: text[5],
+                        text6: text[6],
+                        text7: text[7],
+                        text8: text[8],
+                        text9: text[9],
+                        text10: text[10],
+                        text11: text[11],
+                        text12: text[12],
+                        text13: text[13],
+                        text14: text[14],
+                        text15: text[15],
+                    },
+                    value: 0,
+                    time: new Date().getTime(),
+                };
+
+                setTimeout(function() {
+                    script.timeFlag = 0;
+                }, timeValue);
+                return script;
+            } else if (script.timeFlag == 1) {
+                return script;
+            } else {
+                delete script.timeFlag;
+                delete script.isStart;
+                Entry.engine.isContinue = false;
+                return script.callReturn();
+            }
+        },
+        syntax: {
+            js: [],
+            py: [],
+        },
+    },
+    funboard_dotmatrix_set: {
+        color: '#00979D',
+        skeleton: 'basic',
+        statements: [],
+        params: [
+            {
+                type: 'Block',
+                accept: 'string',
+            },
+            {
+                type: 'Block',
+                accept: 'string',
+            },
+            {
+                type: 'Block',
+                accept: 'string',
+            },
+            {
+                type: 'Indicator',
+                img: 'block_icon/hardware_ledx.png',
+                size: 11,
+            },
+        ],
+        events: {},
+        def: {
+            params: [
+                {
+                    type: 'funboard_list_matrix_rows',
+                },
+                {
+                    type: 'funboard_list_matrix_rows',
+                },
+                {
+                    type: 'funboard_list_onoff_basic',
+                },
+                null,
+            ],
+            type: 'funboard_dotmatrix_set',
+        },
+        paramsKeyMap: {
+            ROW: 0,
+            COL: 1,
+            ONOFF: 2,
+        },
+        class: 'funboardsetmatrix',
+        isNotFor: ['funboard'],
+        func: function(sprite, script) {
+            var str_row = script.getNumberValue('ROW');
+            var str_col = script.getNumberValue('COL');
+            var str_onoff = script.getValue('ONOFF');
+
+            var port = Entry.FunBoard.EventTypes.SET_ROW_COL;
+
+            if (!script.isStart) {
+                var text = [];
+                text[0] = str_row;
+                text[1] = str_col;
+                text[2] = str_onoff;
+
+                if (!Entry.hw.sendQueue['SET']) {
+                    Entry.hw.sendQueue['SET'] = {};
+                }
+
+                script.isStart = true;
+                script.timeFlag = 1;
+                var fps = Entry.FPS || 60;
+                var timeValue = Entry.FunBoard.Static.DELAY_SECOND;
+                //timeValue = 60/fps*timeValue*1000;
+                timeValue = 60 / fps * 50;
+
+                Entry.hw.sendQueue['SET'][port] = {
+                    type: Entry.FunBoard.sensorTypes.MATRIX,
+                    data: {
+                        text0: text[0],
+                        text1: text[1],
+                        text2: text[2],
+                        text3: text[3],
+                        text4: text[4],
+                        text5: text[5],
+                        text6: text[6],
+                        text7: text[7],
+                        text8: text[8],
+                        text9: text[9],
+                        text10: text[10],
+                        text11: text[11],
+                        text12: text[12],
+                        text13: text[13],
+                        text14: text[14],
+                        text15: text[15],
+                    },
+                    value: 0,
+                    time: new Date().getTime(),
+                };
+
+                setTimeout(function() {
+                    script.timeFlag = 0;
+                }, timeValue);
+                return script;
+            } else if (script.timeFlag == 1) {
+                return script;
+            } else {
+                delete script.timeFlag;
+                delete script.isStart;
+                Entry.engine.isContinue = false;
+                return script.callReturn();
+            }
+        },
+        syntax: { js: [], py: [] },
+    },
+//endregion FunBoard
 };
 
 (function() {
