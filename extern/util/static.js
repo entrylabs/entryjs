@@ -694,12 +694,6 @@ EntryStatic.getAllBlocks = function() {
                 "xbot_lcd",
                 //end of XBOT Blocks added
                 // ardublock Added 2016-06-01
-                //"ardublock_get_number_sensor_value",
-                //"ardublock_get_digital_value",
-                //"ardublock_toggle_led",
-                //"ardublock_toggle_pwm",
-                //"ardublock_convert_scale",
-                //"ardublock_get_ultrasonic_value",
                 "ardublock_get_analog_value",
                 "ardublock_get_analog_value_map",
                 "ardublock_get_ultrasonic_value",
@@ -726,13 +720,8 @@ EntryStatic.getAllBlocks = function() {
                 "mkboard_digital_pwm",
                 "mkboard_set_servo",
                 "mkboard_set_tone",
-                // "mkboard_set_left_dc_motor",
-                // "mkboard_set_right_dc_motor",
-                "mkboard_get_left_cds_analog_value",
-                "mkboard_get_right_cds_analog_value",
-                "mkboard_toggle_left_led",
-                "mkboard_toggle_right_led",
-                "mkboard_get_sound_analog_value",
+                "mkboard_set_lcd",
+                "mkboard_lcd_command",                
                 // mkboard Added 2017-07-04
 
                 "ev3_get_sensor_value",
@@ -1196,6 +1185,63 @@ EntryStatic.getAllBlocks = function() {
                 "edumaker_set_tone",
                 "edumaker_set_servo",
                 // EduMaker Added 2017-11-30
+
+		        // playcode Added 2018-01-02
+                "playcode_get_light_value",
+                "playcode_get_mic_value",
+                "playcode_gpio",
+                "playcode_servo",
+                "playcode_speed",
+                // playcode Added 2018-01-02 
+
+                //creamo
+                "creamo_toggle_led",
+                "creamo_get_number_sensor_value",
+                "creamo_toggle_pwm",
+                "creamo_toggle_motor",
+                //creamo
+                // mechatro Added 2018-02-12
+                "mechatro_set_threshold",
+                "mechatro_get_digital",
+                "mechatro_get_sensor_value",
+                "mechatro_get_dc_motor_current",
+                "mechatro_get_ultrasonic_value",
+                "mechatro_set_digital",
+                "mechatro_set_pwm",
+                "mechatro_set_tone",
+                "mechatro_set_tone_time",
+                "mechatro_set_dc_motor",
+                "mechatro_set_servo_position",
+                "mechatro_set_servo_speed",
+                "mechatro_set_blue_pw",
+                // mechatro Added 2018-02-12
+                
+                //FunBoard
+                "funboard_list_pushbutton_basic",
+                "funboard_list_touchbutton_basic",
+                "funboard_list_analogsensor_basic",
+                "funboard_list_2_state_basic",
+                "funboard_list_ledcolor_basic",
+                "funboard_list_onoff_basic",
+                "funboard_what_button_pressed",
+                "funboard_what_touch_button_pressed",
+                "funboard_get_analog_sensor_2state",                
+                "funboard_get_digital_button_value",
+                "funboard_get_touch_button_value",
+                "funboard_get_number_sensor_value",
+                "funboard_convert_scale",
+                "funboard_set_digital_buzzer",
+                "funboard_buzzer_onoff",
+                "funboard_color_led_onoff",
+                "funboard_color_led_on_pwm",
+                "funboard_dotmatrix_intensity",
+                "funboard_dotmatrix_onoff",
+                "funboard_dotmatrix_symbol",
+                "funboard_dotmatrix_char_display",
+                "funboard_dotmatrix_string_display_scroll",
+                "funboard_dotmatrix_set",
+                "funboard_dotmatrix_1row",
+                "funboard_dotmatrix_1column"
             ]
         }
     ]

@@ -47,5 +47,8 @@
     "karma-phantomjs-launcher": "^0.2.0",
     "mocha": "^2.5.3",
     "phantomjs": "^1.9.17"
+  },
+  "scripts": {
+    "build": "grunt build"
   }
 }
