@@ -17271,7 +17271,7 @@ Object.assign(Entry.block, block);
     for(let id in Entry.HARDWARE_LIST) {
         const hw = Entry.HARDWARE_LIST[id];
         if(!hw) {
-            return;
+            continue;
         }
         if('setLanguage' in hw) {
             var hwLang = hw.setLanguage();
