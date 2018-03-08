@@ -1,7 +1,7 @@
 'use strict';
 
-Entry.EduMaker = {
-    name: 'EduMaker',
+Entry.mkboard = {
+    name: 'mkboard',
     setZero: function() {
         if (!Entry.hw.sendQueue.SET) {
             Entry.hw.sendQueue = {
@@ -27,6 +27,8 @@ Entry.EduMaker = {
         PULSEIN: 6,
         ULTRASONIC: 7,
         TIMER: 8,
+        DC_MOTOR_LEFT: 9,
+        DC_MOTOR_RIGHT: 10,
     },
     toneTable: {
         '0': 0,
@@ -57,15 +59,19 @@ Entry.EduMaker = {
         '11': [58, 117, 233, 466, 932, 1865, 3729, 7459],
         '12': [62, 123, 247, 494, 988, 1976, 3951, 7902],
     },
+    directionTable: {
+        Forward: 0,
+        Backward: 1,
+    },
     highList: ['high', '1', 'on'],
     lowList: ['low', '0', 'off'],
     BlockState: {},
 };
 
-Entry.EduMaker.getBlocks = function() {
+Entry.mkboard.getBlocks = function() {
     return {
-        //region edumaker 에듀메이커
-        edumaker_analog_list: {
+        //region mkboard 몽키보드
+        mkboard_analog_list: {
             color: '#00979D',
             skeleton: 'basic_string_field',
             statements: [],
@@ -80,6 +86,8 @@ Entry.EduMaker.getBlocks = function() {
                         ['A3', '3'],
                         ['A4', '4'],
                         ['A5', '5'],
+                        ['A6', '6'],
+                        ['A7', '7'],
                     ],
                     value: '0',
                     fontSize: 11,
@@ -97,7 +105,7 @@ Entry.EduMaker.getBlocks = function() {
             },
             syntax: { js: [], py: [] },
         },
-        edumaker_get_analog_value: {
+        mkboard_get_analog_value: {
             color: '#00979D',
             fontColor: '#fff',
             skeleton: 'basic_string_field',
@@ -112,16 +120,16 @@ Entry.EduMaker.getBlocks = function() {
             def: {
                 params: [
                     {
-                        type: 'edumaker_analog_list',
+                        type: 'mkboard_analog_list',
                     },
                 ],
-                type: 'edumaker_get_analog_value',
+                type: 'mkboard_get_analog_value',
             },
             paramsKeyMap: {
                 PORT: 0,
             },
-            class: 'EduMakerGet',
-            isNotFor: ['EduMaker'],
+            class: 'mkboardGet',
+            isNotFor: ['mkboard'],
             func: function(sprite, script) {
                 var port = script.getValue('PORT', script);
                 var ANALOG = Entry.hw.portData.ANALOG;
@@ -130,7 +138,7 @@ Entry.EduMaker.getBlocks = function() {
             },
             syntax: { js: [], py: [] },
         },
-        edumaker_get_analog_value_map: {
+        mkboard_get_analog_value_map: {
             color: '#00979D',
             fontColor: '#fff',
             skeleton: 'basic_string_field',
@@ -161,10 +169,10 @@ Entry.EduMaker.getBlocks = function() {
             def: {
                 params: [
                     {
-                        type: 'edumaker_get_analog_value',
+                        type: 'mkboard_get_analog_value',
                         params: [
                             {
-                                type: 'edumaker_analog_list',
+                                type: 'mkboard_analog_list',
                             },
                         ],
                     },
@@ -185,7 +193,7 @@ Entry.EduMaker.getBlocks = function() {
                         params: ['100'],
                     },
                 ],
-                type: 'edumaker_get_analog_value_map',
+                type: 'mkboard_get_analog_value_map',
             },
             paramsKeyMap: {
                 PORT: 0,
@@ -194,8 +202,8 @@ Entry.EduMaker.getBlocks = function() {
                 VALUE4: 3,
                 VALUE5: 4,
             },
-            class: 'EduMakerGet',
-            isNotFor: ['EduMaker'],
+            class: 'mkboardGet',
+            isNotFor: ['mkboard'],
             func: function(sprite, script) {
                 var result = script.getValue('PORT', script);
                 var ANALOG = Entry.hw.portData.ANALOG;
@@ -203,18 +211,6 @@ Entry.EduMaker.getBlocks = function() {
                 var value3 = script.getNumberValue('VALUE3', script);
                 var value4 = script.getNumberValue('VALUE4', script);
                 var value5 = script.getNumberValue('VALUE5', script);
-                var stringValue4 = script.getValue('VALUE4', script);
-                var stringValue5 = script.getValue('VALUE5', script);
-                var isFloat = false;
-
-                if (
-                    (Entry.Utils.isNumber(stringValue4) &&
-                        stringValue4.indexOf('.') > -1) ||
-                    (Entry.Utils.isNumber(stringValue5) &&
-                        stringValue5.indexOf('.') > -1)
-                ) {
-                    isFloat = true;
-                }
 
                 if (value2 > value3) {
                     var swap = value2;
@@ -232,17 +228,11 @@ Entry.EduMaker.getBlocks = function() {
                 result = Math.min(value5, result);
                 result = Math.max(value4, result);
 
-                if (isFloat) {
-                    result = Math.round(result * 100) / 100;
-                } else {
-                    result = Math.round(result);
-                }
-
                 return result;
             },
             syntax: { js: [], py: [] },
         },
-        edumaker_get_ultrasonic_value: {
+        mkboard_get_ultrasonic_value: {
             color: '#00979D',
             fontColor: '#fff',
             skeleton: 'basic_string_field',
@@ -262,21 +252,21 @@ Entry.EduMaker.getBlocks = function() {
                 params: [
                     {
                         type: 'arduino_get_port_number',
-                        params: ['2'],
+                        params: ['13'],
                     },
                     {
                         type: 'arduino_get_port_number',
-                        params: ['4'],
+                        params: ['12'],
                     },
                 ],
-                type: 'edumaker_get_ultrasonic_value',
+                type: 'mkboard_get_ultrasonic_value',
             },
             paramsKeyMap: {
                 PORT1: 0,
                 PORT2: 1,
             },
-            class: 'EduMakerGet',
-            isNotFor: ['EduMaker'],
+            class: 'mkboardGet',
+            isNotFor: ['mkboard'],
             func: function(sprite, script) {
                 var port1 = script.getNumberValue('PORT1', script);
                 var port2 = script.getNumberValue('PORT2', script);
@@ -291,7 +281,7 @@ Entry.EduMaker.getBlocks = function() {
                     Entry.hw.sendQueue['GET'] = {};
                 }
                 Entry.hw.sendQueue['GET'][
-                    Entry.ArduinoExt.sensorTypes.ULTRASONIC
+                    Entry.mkboard.sensorTypes.ULTRASONIC
                 ] = {
                     port: [port1, port2],
                     time: new Date().getTime(),
@@ -300,7 +290,7 @@ Entry.EduMaker.getBlocks = function() {
             },
             syntax: { js: [], py: [] },
         },
-        edumaker_get_digital: {
+        mkboard_get_digital: {
             color: '#00979D',
             fontColor: '#fff',
             skeleton: 'basic_boolean_field',
@@ -315,25 +305,22 @@ Entry.EduMaker.getBlocks = function() {
                 params: [
                     {
                         type: 'arduino_get_port_number',
-                        params: [2],
                     },
                 ],
-                type: 'edumaker_get_digital',
+                type: 'mkboard_get_digital',
             },
             paramsKeyMap: {
                 PORT: 0,
             },
-            class: 'EduMakerGet',
-            isNotFor: ['EduMaker'],
+            class: 'mkboardGet',
+            isNotFor: ['mkboard'],
             func: function(sprite, script) {
                 var port = script.getNumberValue('PORT', script);
                 var DIGITAL = Entry.hw.portData.DIGITAL;
                 if (!Entry.hw.sendQueue['GET']) {
                     Entry.hw.sendQueue['GET'] = {};
                 }
-                Entry.hw.sendQueue['GET'][
-                    Entry.ArduinoExt.sensorTypes.DIGITAL
-                ] = {
+                Entry.hw.sendQueue['GET'][Entry.mkboard.sensorTypes.DIGITAL] = {
                     port: port,
                     time: new Date().getTime(),
                 };
@@ -341,35 +328,7 @@ Entry.EduMaker.getBlocks = function() {
             },
             syntax: { js: [], py: [] },
         },
-        edumaker_digital_toggle: {
-            color: '#00979D',
-            skeleton: 'basic_string_field',
-            statements: [],
-            params: [
-                {
-                    type: 'Dropdown',
-                    options: [
-                        [Lang.Blocks.ARDUINO_on, 'on'],
-                        [Lang.Blocks.ARDUINO_off, 'off'],
-                    ],
-                    value: 'on',
-                    fontSize: 11,
-                    arrowColor: EntryStatic.ARROW_COLOR_HW,
-                },
-            ],
-            events: {},
-            def: {
-                params: [null],
-            },
-            paramsKeyMap: {
-                OPERATOR: 0,
-            },
-            func: function(sprite, script) {
-                return script.getStringField('OPERATOR');
-            },
-            syntax: { js: [], py: [] },
-        },
-        edumaker_toggle_led: {
+        mkboard_toggle_led: {
             color: '#00979D',
             skeleton: 'basic',
             statements: [],
@@ -393,7 +352,6 @@ Entry.EduMaker.getBlocks = function() {
                 params: [
                     {
                         type: 'arduino_get_port_number',
-                        params: [3],
                     },
                     {
                         type: 'arduino_get_digital_toggle',
@@ -401,14 +359,14 @@ Entry.EduMaker.getBlocks = function() {
                     },
                     null,
                 ],
-                type: 'edumaker_toggle_led',
+                type: 'mkboard_toggle_led',
             },
             paramsKeyMap: {
                 PORT: 0,
                 VALUE: 1,
             },
-            class: 'EduMaker',
-            isNotFor: ['EduMaker'],
+            class: 'mkboard',
+            isNotFor: ['mkboard'],
             func: function(sprite, script) {
                 var port = script.getNumberValue('PORT');
                 var value = script.getValue('VALUE');
@@ -416,9 +374,9 @@ Entry.EduMaker.getBlocks = function() {
                 if (typeof value === 'string') {
                     value = value.toLowerCase();
                 }
-                if (Entry.ArduinoExt.highList.indexOf(value) > -1) {
+                if (Entry.mkboard.highList.indexOf(value) > -1) {
                     value = 255;
-                } else if (Entry.ArduinoExt.lowList.indexOf(value) > -1) {
+                } else if (Entry.mkboard.lowList.indexOf(value) > -1) {
                     value = 0;
                 } else {
                     throw new Error();
@@ -427,7 +385,7 @@ Entry.EduMaker.getBlocks = function() {
                     Entry.hw.sendQueue['SET'] = {};
                 }
                 Entry.hw.sendQueue['SET'][port] = {
-                    type: Entry.ArduinoExt.sensorTypes.DIGITAL,
+                    type: Entry.mkboard.sensorTypes.DIGITAL,
                     data: value,
                     time: new Date().getTime(),
                 };
@@ -435,7 +393,7 @@ Entry.EduMaker.getBlocks = function() {
             },
             syntax: { js: [], py: [] },
         },
-        edumaker_digital_pwm: {
+        mkboard_digital_pwm: {
             color: '#00979D',
             skeleton: 'basic',
             statements: [],
@@ -466,14 +424,14 @@ Entry.EduMaker.getBlocks = function() {
                     },
                     null,
                 ],
-                type: 'edumaker_digital_pwm',
+                type: 'mkboard_digital_pwm',
             },
             paramsKeyMap: {
                 PORT: 0,
                 VALUE: 1,
             },
-            class: 'EduMaker',
-            isNotFor: ['EduMaker'],
+            class: 'mkboard',
+            isNotFor: ['mkboard'],
             func: function(sprite, script) {
                 var port = script.getNumberValue('PORT');
                 var value = script.getNumberValue('VALUE');
@@ -484,7 +442,7 @@ Entry.EduMaker.getBlocks = function() {
                     Entry.hw.sendQueue['SET'] = {};
                 }
                 Entry.hw.sendQueue['SET'][port] = {
-                    type: Entry.ArduinoExt.sensorTypes.PWM,
+                    type: Entry.mkboard.sensorTypes.PWM,
                     data: value,
                     time: new Date().getTime(),
                 };
@@ -492,7 +450,7 @@ Entry.EduMaker.getBlocks = function() {
             },
             syntax: { js: [], py: [] },
         },
-        edumaker_tone_list: {
+        mkboard_tone_list: {
             color: '#00979D',
             skeleton: 'basic_string_field',
             statements: [],
@@ -531,7 +489,7 @@ Entry.EduMaker.getBlocks = function() {
             },
             syntax: { js: [], py: [] },
         },
-        edumaker_tone_value: {
+        mkboard_tone_value: {
             color: '#00979D',
             skeleton: 'basic_string_field',
             statements: [],
@@ -546,10 +504,10 @@ Entry.EduMaker.getBlocks = function() {
             def: {
                 params: [
                     {
-                        type: 'edumaker_tone_list',
+                        type: 'mkboard_tone_list',
                     },
                 ],
-                type: 'edumkaer_tone_value',
+                type: 'mkboard_tone_value',
             },
             paramsKeyMap: {
                 NOTE: 0,
@@ -559,7 +517,7 @@ Entry.EduMaker.getBlocks = function() {
             },
             syntax: { js: [], py: [] },
         },
-        edumaker_octave_list: {
+        mkboard_octave_list: {
             color: '#00979D',
             skeleton: 'basic_string_field',
             statements: [],
@@ -575,7 +533,7 @@ Entry.EduMaker.getBlocks = function() {
                         ['5', '5'],
                         ['6', '6'],
                     ],
-                    value: '4',
+                    value: '3',
                     fontSize: 11,
                 },
             ],
@@ -591,7 +549,7 @@ Entry.EduMaker.getBlocks = function() {
             },
             syntax: { js: [], py: [] },
         },
-        edumaker_set_tone: {
+        mkboard_set_tone: {
             color: '#00979D',
             skeleton: 'basic',
             statements: [],
@@ -623,13 +581,14 @@ Entry.EduMaker.getBlocks = function() {
                 params: [
                     {
                         type: 'arduino_get_port_number',
-                        params: [3],
+                        value: 4,
+                        params: ['11'],
                     },
                     {
-                        type: 'arduino_ext_tone_list',
+                        type: 'mkboard_tone_list',
                     },
                     {
-                        type: 'arduino_ext_octave_list',
+                        type: 'mkboard_octave_list',
                     },
                     {
                         type: 'text',
@@ -637,7 +596,7 @@ Entry.EduMaker.getBlocks = function() {
                     },
                     null,
                 ],
-                type: 'edumaker_set_tone',
+                type: 'mkboard_set_tone',
             },
             paramsKeyMap: {
                 PORT: 0,
@@ -645,8 +604,8 @@ Entry.EduMaker.getBlocks = function() {
                 OCTAVE: 2,
                 DURATION: 3,
             },
-            class: 'EduMaker',
-            isNotFor: ['EduMaker'],
+            class: 'mkboard',
+            isNotFor: ['mkboard'],
             func: function(sprite, script) {
                 var sq = Entry.hw.sendQueue;
                 var port = script.getNumberValue('PORT', script);
@@ -654,7 +613,7 @@ Entry.EduMaker.getBlocks = function() {
                 if (!script.isStart) {
                     var note = script.getValue('NOTE', script);
                     if (!Entry.Utils.isNumber(note))
-                        note = Entry.ArduinoExt.toneTable[note];
+                        note = Entry.mkboard.toneTable[note];
 
                     if (note < 0) {
                         note = 0;
@@ -674,7 +633,7 @@ Entry.EduMaker.getBlocks = function() {
 
                     if (duration === 0) {
                         sq['SET'][port] = {
-                            type: Entry.ArduinoExt.sensorTypes.TONE,
+                            type: Entry.mkboard.sensorTypes.TONE,
                             data: 0,
                             time: new Date().getTime(),
                         };
@@ -691,7 +650,7 @@ Entry.EduMaker.getBlocks = function() {
                     var value = 0;
 
                     if (note != 0) {
-                        value = Entry.ArduinoExt.toneMap[note][octave];
+                        value = Entry.mkboard.toneMap[note][octave];
                     }
 
                     duration = duration * 1000;
@@ -699,7 +658,7 @@ Entry.EduMaker.getBlocks = function() {
                     script.timeFlag = 1;
 
                     sq['SET'][port] = {
-                        type: Entry.ArduinoExt.sensorTypes.TONE,
+                        type: Entry.mkboard.sensorTypes.TONE,
                         data: {
                             value: value,
                             duration: duration,
@@ -717,7 +676,7 @@ Entry.EduMaker.getBlocks = function() {
                     delete script.timeFlag;
                     delete script.isStart;
                     sq['SET'][port] = {
-                        type: Entry.ArduinoExt.sensorTypes.TONE,
+                        type: Entry.mkboard.sensorTypes.TONE,
                         data: 0,
                         time: new Date().getTime(),
                     };
@@ -727,7 +686,316 @@ Entry.EduMaker.getBlocks = function() {
             },
             syntax: { js: [], py: [] },
         },
-        edumaker_set_servo: {
+        mkboard_set_servo: {
+            color: '#00979D',
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_03.png',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'arduino_get_port_number',
+                        params: ['10'],
+                    },
+                    null,
+                ],
+                type: 'mkboard_set_servo',
+            },
+            paramsKeyMap: {
+                PORT: 0,
+                VALUE: 1,
+            },
+            class: 'mkboard',
+            isNotFor: ['mkboard'],
+            func: function(sprite, script) {
+                var sq = Entry.hw.sendQueue;
+                var port = script.getNumberValue('PORT', script);
+                var value = script.getNumberValue('VALUE', script);
+                value = Math.min(180, value);
+                value = Math.max(0, value);
+
+                if (!sq['SET']) {
+                    sq['SET'] = {};
+                }
+                sq['SET'][port] = {
+                    type: Entry.mkboard.sensorTypes.SERVO_PIN,
+                    data: value,
+                    time: new Date().getTime(),
+                };
+
+                return script.callReturn();
+            },
+            syntax: { js: [], py: [] },
+        },
+        mkboard_dc_motor_direction_list: {
+            color: '#00979D',
+            skeleton: 'basic_string_field',
+            statements: [],
+            template: '%1',
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.mkboard_dc_motor_forward, '0'],
+                        [Lang.Blocks.mkboard_dc_motor_backward, '1'],
+                    ],
+                    value: '0',
+                    fontSize: 11,
+                },
+            ],
+            events: {},
+            def: {
+                params: [null],
+            },
+            paramsKeyMap: {
+                DC_MOTOR_DIRECTION: 0,
+            },
+            func: function(sprite, script) {
+                return script.getField('DC_MOTOR_DIRECTION');
+            },
+            syntax: { js: [], py: [] },
+        },
+        mkboard_set_left_dc_motor: {
+            color: '#00979D',
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_03.png',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'mkboard_dc_motor_direction_list',
+                    },
+                    {
+                        type: 'text',
+                        params: ['100'],
+                    },
+                    null,
+                ],
+                type: 'mkboard_set_left_dc_motor',
+            },
+            paramsKeyMap: {
+                DC_MOTOR_DIRECTION: 0,
+                DC_MOTOR_SPEED: 1,
+            },
+            class: 'mkboard',
+            isNotFor: ['mkboard'],
+            func: function(sprite, script) {
+                // var sq = Entry.hw.sendQueue;
+                var direction = script.getValue('DC_MOTOR_DIRECTION', script);
+                if (!Entry.Utils.isNumber(direction))
+                    direction = Entry.mkboard.directionTable[direction];
+
+                if (direction < 0) {
+                    direction = 0;
+                } else if (direction > 1) {
+                    direction = 1;
+                }
+
+                var speed = script.getNumberValue('DC_MOTOR_SPEED', script) - 1;
+                if (speed < 0) {
+                    speed = 0;
+                } else if (speed > 254) {
+                    speed = 254;
+                }
+                if (!Entry.hw.sendQueue['SET']) {
+                    Entry.hw.sendQueue['SET'] = {};
+                }
+
+                Entry.hw.sendQueue['SET'][0] = {
+                    type: Entry.mkboard.sensorTypes.DC_MOTOR_LEFT,
+                    data: {
+                        direction: direction,
+                        speed: speed,
+                    },
+                    time: new Date().getTime(),
+                };
+
+                setTimeout(function() {
+                    script.timeFlag = 0;
+                }, 10);
+
+                return script.callReturn();
+            },
+            syntax: { js: [], py: [] },
+        },
+        mkboard_set_right_dc_motor: {
+            color: '#00979D',
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_03.png',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'mkboard_dc_motor_direction_list',
+                    },
+                    {
+                        type: 'text',
+                        params: ['100'],
+                    },
+                    null,
+                ],
+                type: 'mkboard_set_right_dc_motor',
+            },
+            paramsKeyMap: {
+                DC_MOTOR_DIRECTION: 0,
+                DC_MOTOR_SPEED: 1,
+            },
+            class: 'mkboard',
+            isNotFor: ['mkboard'],
+            func: function(sprite, script) {
+                // var sq = Entry.hw.sendQueue;
+                var direction = script.getValue('DC_MOTOR_DIRECTION', script);
+                if (!Entry.Utils.isNumber(direction))
+                    direction = Entry.mkboard.directionTable[direction];
+
+                if (direction < 0) {
+                    direction = 0;
+                } else if (direction > 1) {
+                    direction = 1;
+                }
+
+                var speed = script.getNumberValue('DC_MOTOR_SPEED', script) - 1;
+                if (speed < 0) {
+                    speed = 0;
+                } else if (speed > 254) {
+                    speed = 254;
+                }
+
+                if (!Entry.hw.sendQueue['SET']) {
+                    Entry.hw.sendQueue['SET'] = {};
+                }
+
+                Entry.hw.sendQueue['SET'][1] = {
+                    type: Entry.mkboard.sensorTypes.DC_MOTOR_RIGHT,
+                    data: {
+                        direction: direction,
+                        speed: speed,
+                    },
+                    time: new Date().getTime(),
+                };
+
+                setTimeout(function() {
+                    script.timeFlag = 0;
+                }, 10);
+
+                return script.callReturn();
+            },
+            syntax: { js: [], py: [] },
+        },
+        mkboard_get_left_cds_analog_value: {
+            color: '#00979D',
+            fontColor: '#fff',
+            skeleton: 'basic_string_field',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'mkboard_analog_list',
+                        params: ['0'],
+                    },
+                ],
+                type: 'mkboard_get_left_cds_analog_value',
+            },
+            paramsKeyMap: {
+                PORT: 0,
+            },
+            class: 'mkboardGet',
+            isNotFor: ['mkboard'],
+            func: function(sprite, script) {
+                var port = script.getValue('PORT', script);
+                var ANALOG = Entry.hw.portData.ANALOG;
+                if (port[0] === 'A') port = port.substring(1);
+                return ANALOG ? ANALOG[port] || 0 : 0;
+            },
+            syntax: { js: [], py: [] },
+        },
+        mkboard_get_right_cds_analog_value: {
+            color: '#00979D',
+            fontColor: '#fff',
+            skeleton: 'basic_string_field',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'mkboard_analog_list',
+                        params: ['1'],
+                    },
+                ],
+                type: 'mkboard_get_right_cds_analog_value',
+            },
+            paramsKeyMap: {
+                PORT: 0,
+            },
+            class: 'mkboardGet',
+            isNotFor: ['mkboard'],
+            func: function(sprite, script) {
+                var port = script.getValue('PORT', script);
+                var ANALOG = Entry.hw.portData.ANALOG;
+                if (port[0] === 'A') port = port.substring(1);
+                return ANALOG ? ANALOG[port] || 0 : 0;
+            },
+            syntax: { js: [], py: [] },
+        },
+        mkboard_toggle_left_led: {
             color: '#00979D',
             skeleton: 'basic',
             statements: [],
@@ -753,36 +1021,146 @@ Entry.EduMaker.getBlocks = function() {
                         type: 'arduino_get_port_number',
                         params: ['3'],
                     },
+                    {
+                        type: 'arduino_get_digital_toggle',
+                        params: ['on'],
+                    },
                     null,
                 ],
-                type: 'edumaker_set_servo',
+                type: 'mkboard_toggle_left_led',
             },
             paramsKeyMap: {
                 PORT: 0,
                 VALUE: 1,
             },
-            class: 'EduMaker',
-            isNotFor: ['EduMaker'],
+            class: 'mkboard',
+            isNotFor: ['mkboard'],
             func: function(sprite, script) {
-                var sq = Entry.hw.sendQueue;
-                var port = script.getNumberValue('PORT', script);
-                var value = script.getNumberValue('VALUE', script);
-                value = Math.min(180, value);
-                value = Math.max(0, value);
+                var port = script.getNumberValue('PORT');
+                var value = script.getValue('VALUE');
 
-                if (!sq['SET']) {
-                    sq['SET'] = {};
+                if (typeof value === 'string') {
+                    value = value.toLowerCase();
                 }
-                sq['SET'][port] = {
-                    type: Entry.ArduinoExt.sensorTypes.SERVO_PIN,
+                if (Entry.mkboard.highList.indexOf(value) > -1) {
+                    value = 255;
+                } else if (Entry.mkboard.lowList.indexOf(value) > -1) {
+                    value = 0;
+                } else {
+                    throw new Error();
+                }
+                if (!Entry.hw.sendQueue['SET']) {
+                    Entry.hw.sendQueue['SET'] = {};
+                }
+                Entry.hw.sendQueue['SET'][port] = {
+                    type: Entry.mkboard.sensorTypes.DIGITAL,
                     data: value,
                     time: new Date().getTime(),
                 };
-
                 return script.callReturn();
             },
             syntax: { js: [], py: [] },
         },
-        //endregion edumaker 에듀메이커
+        mkboard_toggle_right_led: {
+            color: '#00979D',
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_03.png',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'arduino_get_port_number',
+                        params: ['9'],
+                    },
+                    {
+                        type: 'arduino_get_digital_toggle',
+                        params: ['on'],
+                    },
+                    null,
+                ],
+                type: 'mkboard_toggle_right_led',
+            },
+            paramsKeyMap: {
+                PORT: 0,
+                VALUE: 1,
+            },
+            class: 'mkboard',
+            isNotFor: ['mkboard'],
+            func: function(sprite, script) {
+                var port = script.getNumberValue('PORT');
+                var value = script.getValue('VALUE');
+
+                if (typeof value === 'string') {
+                    value = value.toLowerCase();
+                }
+                if (Entry.mkboard.highList.indexOf(value) > -1) {
+                    value = 255;
+                } else if (Entry.mkboard.lowList.indexOf(value) > -1) {
+                    value = 0;
+                } else {
+                    throw new Error();
+                }
+                if (!Entry.hw.sendQueue['SET']) {
+                    Entry.hw.sendQueue['SET'] = {};
+                }
+                Entry.hw.sendQueue['SET'][port] = {
+                    type: Entry.mkboard.sensorTypes.DIGITAL,
+                    data: value,
+                    time: new Date().getTime(),
+                };
+                return script.callReturn();
+            },
+            syntax: { js: [], py: [] },
+        },
+        mkboard_get_sound_analog_value: {
+            color: '#00979D',
+            fontColor: '#fff',
+            skeleton: 'basic_string_field',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'mkboard_analog_list',
+                        params: ['2'],
+                    },
+                ],
+                type: 'mkboard_get_sound_analog_value',
+            },
+            paramsKeyMap: {
+                PORT: 0,
+            },
+            class: 'mkboardGet',
+            isNotFor: ['mkboard'],
+            func: function(sprite, script) {
+                var port = script.getValue('PORT', script);
+                var ANALOG = Entry.hw.portData.ANALOG;
+                if (port[0] === 'A') port = port.substring(1);
+                return ANALOG ? ANALOG[port] || 0 : 0;
+            },
+            syntax: { js: [], py: [] },
+        },
+        //endregion mkboard 몽키보드
     };
 };

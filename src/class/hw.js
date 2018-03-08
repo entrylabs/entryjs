@@ -80,6 +80,21 @@ Entry.HW = function() {
         '1C.1': Entry.hummingbird,
         '1D.1': Entry.JDKit,
     };
+
+    for(let key in this.hwInfo) {
+        var hw = this.hwInfo[key];
+        if('setLanguage' in hw) {
+            var hwLang = hw.setLanguage();
+            var data = hwLang[global.Lang.type];
+            for(let key in data) {
+                _.extend(Lang[key], data[key]);
+            }
+        }
+        if('getBlocks' in hw) {
+            var block = hw.getBlocks();
+            _.extend(Entry.block, block);
+        }
+    }
 };
 
 Entry.HW.TRIAL_LIMIT = 2;

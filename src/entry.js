@@ -105,6 +105,7 @@ require('./command/commands/variableContainer');
 require('./playground/blocks/block_albert');
 require('./playground/blocks/block_altino');
 require('./playground/blocks/block_arduino');
+require('./playground/blocks/block_arduino_ext');
 require('./playground/blocks/block_bitbrick');
 require('./playground/blocks/block_blacksmith');
 require('./playground/blocks/block_byrobot_dronefighter_controller');
