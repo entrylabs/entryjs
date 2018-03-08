@@ -1,4 +1,4 @@
-/**
+﻿/**
  * @fileoverview HW object class for connect arduino.
  */
 'use strict';

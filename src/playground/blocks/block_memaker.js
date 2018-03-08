@@ -913,10 +913,6 @@ Entry.memaker.getBlocks = function() {
             isNotFor: ['memaker'],
             func: function(sprite, script) {
                 var sq = Entry.hw.sendQueue;
-
-                // var direction = script.getValue("MOTOR_DIRECTION", script);
-                // var direction = script.getField("DIRECTION", script);
-
                 var line = script.getValue('LINE', script);
                 var column = script.getValue('COLUMN', script);
                 var string = script.getValue('STRING', script);
@@ -928,8 +924,10 @@ Entry.memaker.getBlocks = function() {
                             text[i] = Entry.memaker.toByte(string[i]);
                         }
                     } else if (typeof string === 'number') {
-                        text[0] = 1;
-                        text[1] = string / 1;
+                        var num_to_string = string.toString();
+                        for (var i = 0; i < num_to_string.length; i++) {
+                            text[i] = Entry.memaker.toByte(num_to_string[i]);
+                        }
                     } else {
                         text[0] = string;
                     }
@@ -977,7 +975,7 @@ Entry.memaker.getBlocks = function() {
                 } else {
                     delete script.timeFlag;
                     delete script.isStart;
-                    Entry.engine.isContinue = false;
+                    Entry.engine.isContinue = true;
                     return script.callReturn();
                 }
             },
@@ -992,9 +990,9 @@ Entry.memaker.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        ['LCD_CLEAR', '0'],
-                        ['BACKLIGHT_ON', '1'],
-                        ['BACKLIGHT_OFF', '2'],
+                        ['LCD_BLUE', '0'],
+                        ['LCD_GREEN', '1'],
+                        ['LCD_CLEAR', '2'],
                     ],
                     value: '0',
                     fontSize: 11,
@@ -1011,11 +1009,11 @@ Entry.memaker.getBlocks = function() {
                 return script.getField('COMMAND');
             },
         },
+
         memaker_lcd_command: {
             color: '#00979D',
             skeleton: 'basic',
             template: Lang.template.memaker_lcd_command,
-            //"template": "%1 %2",
             statements: [],
             params: [
                 {
@@ -1044,13 +1042,19 @@ Entry.memaker.getBlocks = function() {
             class: 'memakerLcd',
             isNotFor: ['memaker'],
             func: function(sprite, script) {
-                var cmd = script.getNumberValue('COMMAND');
+                var sq = Entry.hw.sendQueue;
+                var value = script.getNumberValue('COMMAND', script);
+                var command = script.getNumberValue('COMMAND', script);
 
-                if (!Entry.hw.sendQueue['SET']) {
-                    Entry.hw.sendQueue['SET'] = {};
+                if (!sq['SET']) {
+                    sq['SET'] = {};
                 }
-                Entry.hw.sendQueue['SET'][cmd] = {
+                sq['SET'][0] = {
                     type: Entry.memaker.sensorTypes.LCD_COMMAND,
+                    data: {
+                        value: value,
+                        command: command,
+                    },
                     time: new Date().getTime(),
                 };
                 return script.callReturn();

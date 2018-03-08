@@ -17,6 +17,297 @@ Entry.mkboard = {
         }
         Entry.hw.update();
     },
+    toByte: function(data) {
+        switch (data) {
+            case ' ':
+                data = 32;
+                break;
+            case '!':
+                data = 33;
+                break;
+            case '"':
+                data = 34;
+                break;
+            case '#':
+                data = 35;
+                break;
+            case '$':
+                data = 36;
+                break;
+            case '%':
+                data = 37;
+                break;
+            case '&':
+                data = 38;
+                break;
+            case "'":
+                data = 39;
+                break;
+            case '(':
+                data = 40;
+                break;
+            case ')':
+                data = 41;
+                break;
+            case '*':
+                data = 42;
+                break;
+            case '+':
+                data = 43;
+                break;
+            case ',':
+                data = 44;
+                break;
+            case '-':
+                data = 45;
+                break;
+            case '.':
+                data = 46;
+                break;
+            case '/':
+                data = 47;
+                break;
+            case '0':
+                data = 48;
+                break;
+            case '1':
+                data = 49;
+                break;
+            case '2':
+                data = 50;
+                break;
+            case '3':
+                data = 51;
+                break;
+            case '4':
+                data = 52;
+                break;
+            case '5':
+                data = 53;
+                break;
+            case '6':
+                data = 54;
+                break;
+            case '7':
+                data = 55;
+                break;
+            case '8':
+                data = 56;
+                break;
+            case '9':
+                data = 57;
+                break;
+            case ':':
+                data = 58;
+                break;
+            case ';':
+                data = 59;
+                break;
+            case '<':
+                data = 60;
+                break;
+            case '=':
+                data = 61;
+                break;
+            case '>':
+                data = 62;
+                break;
+            case '?':
+                data = 63;
+                break;
+            case '@':
+                data = 64;
+                break;
+            case 'A':
+                data = 65;
+                break;
+            case 'B':
+                data = 66;
+                break;
+            case 'C':
+                data = 67;
+                break;
+            case 'D':
+                data = 68;
+                break;
+            case 'E':
+                data = 69;
+                break;
+            case 'F':
+                data = 70;
+                break;
+            case 'G':
+                data = 71;
+                break;
+            case 'H':
+                data = 72;
+                break;
+            case 'I':
+                data = 73;
+                break;
+            case 'J':
+                data = 74;
+                break;
+            case 'K':
+                data = 75;
+                break;
+            case 'L':
+                data = 76;
+                break;
+            case 'M':
+                data = 77;
+                break;
+            case 'N':
+                data = 78;
+                break;
+            case 'O':
+                data = 79;
+                break;
+            case 'P':
+                data = 80;
+                break;
+            case 'Q':
+                data = 81;
+                break;
+            case 'R':
+                data = 82;
+                break;
+            case 'S':
+                data = 83;
+                break;
+            case 'T':
+                data = 84;
+                break;
+            case 'U':
+                data = 85;
+                break;
+            case 'V':
+                data = 86;
+                break;
+            case 'W':
+                data = 87;
+                break;
+            case 'X':
+                data = 88;
+                break;
+            case 'Y':
+                data = 89;
+                break;
+            case 'Z':
+                data = 90;
+                break;
+            case '[':
+                data = 91;
+                break;
+            case '\\':
+                data = 92;
+                break;
+            case ']':
+                data = 93;
+                break;
+            case '^':
+                data = 94;
+                break;
+            case '_':
+                data = 95;
+                break;
+            case '`':
+                data = 96;
+                break;
+            case 'a':
+                data = 97;
+                break;
+            case 'b':
+                data = 98;
+                break;
+            case 'c':
+                data = 99;
+                break;
+            case 'd':
+                data = 100;
+                break;
+            case 'e':
+                data = 101;
+                break;
+            case 'f':
+                data = 102;
+                break;
+            case 'g':
+                data = 103;
+                break;
+            case 'h':
+                data = 104;
+                break;
+            case 'i':
+                data = 105;
+                break;
+            case 'j':
+                data = 106;
+                break;
+            case 'k':
+                data = 107;
+                break;
+            case 'l':
+                data = 108;
+                break;
+            case 'm':
+                data = 109;
+                break;
+            case 'n':
+                data = 110;
+                break;
+            case 'o':
+                data = 111;
+                break;
+            case 'p':
+                data = 112;
+                break;
+            case 'q':
+                data = 113;
+                break;
+            case 'r':
+                data = 114;
+                break;
+            case 's':
+                data = 115;
+                break;
+            case 't':
+                data = 116;
+                break;
+            case 'u':
+                data = 117;
+                break;
+            case 'v':
+                data = 118;
+                break;
+            case 'w':
+                data = 119;
+                break;
+            case 'x':
+                data = 120;
+                break;
+            case 'y':
+                data = 121;
+                break;
+            case 'z':
+                data = 122;
+                break;
+            case '{':
+                data = 123;
+                break;
+            case '|':
+                data = 124;
+                break;
+            case '}':
+                data = 125;
+                break;
+            case '~':
+                data = 126;
+                break;
+        }
+
+        return data;
+    },
     sensorTypes: {
         ALIVE: 0,
         DIGITAL: 1,
@@ -27,8 +318,8 @@ Entry.mkboard = {
         PULSEIN: 6,
         ULTRASONIC: 7,
         TIMER: 8,
-        DC_MOTOR_LEFT: 9,
-        DC_MOTOR_RIGHT: 10,
+        LCD: 9,
+        LCD_COMMAND: 10,
     },
     toneTable: {
         '0': 0,
@@ -742,7 +1033,31 @@ Entry.mkboard.getBlocks = function() {
             },
             syntax: { js: [], py: [] },
         },
-        mkboard_dc_motor_direction_list: {
+        mkboard_list_digital_lcd_line: {
+            color: '#00979D',
+            skeleton: 'basic_string_field',
+            statements: [],
+            template: '%1',
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [['LINE1', '0'], ['LINE2', '1']],
+                    value: '0',
+                    fontSize: 11,
+                },
+            ],
+            events: {},
+            def: {
+                params: [null],
+            },
+            paramsKeyMap: {
+                LINE: 0,
+            },
+            func: function(sprite, script) {
+                return script.getField('LINE');
+            },
+        },
+        mkboard_list_digital_lcd_column: {
             color: '#00979D',
             skeleton: 'basic_string_field',
             statements: [],
@@ -751,8 +1066,22 @@ Entry.mkboard.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [Lang.Blocks.mkboard_dc_motor_forward, '0'],
-                        [Lang.Blocks.mkboard_dc_motor_backward, '1'],
+                        ['COL1', '0'],
+                        ['COL2', '1'],
+                        ['COL3', '2'],
+                        ['COL4', '3'],
+                        ['COL5', '4'],
+                        ['COL6', '5'],
+                        ['COL7', '6'],
+                        ['COL8', '7'],
+                        ['COL9', '8'],
+                        ['COL10', '9'],
+                        ['COL11', '10'],
+                        ['COL12', '11'],
+                        ['COL13', '12'],
+                        ['COL14', '13'],
+                        ['COL15', '14'],
+                        ['COL16', '15'],
                     ],
                     value: '0',
                     fontSize: 11,
@@ -763,18 +1092,23 @@ Entry.mkboard.getBlocks = function() {
                 params: [null],
             },
             paramsKeyMap: {
-                DC_MOTOR_DIRECTION: 0,
+                COLUMN: 0,
             },
             func: function(sprite, script) {
-                return script.getField('DC_MOTOR_DIRECTION');
+                return script.getField('COLUMN');
             },
-            syntax: { js: [], py: [] },
         },
-        mkboard_set_left_dc_motor: {
+        mkboard_set_lcd: {
             color: '#00979D',
+            fontColor: '#fff',
             skeleton: 'basic',
+            template: Lang.template.mkboard_set_lcd,
             statements: [],
             params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
                 {
                     type: 'Block',
                     accept: 'string',
@@ -793,283 +1127,142 @@ Entry.mkboard.getBlocks = function() {
             def: {
                 params: [
                     {
-                        type: 'mkboard_dc_motor_direction_list',
+                        type: 'mkboard_list_digital_lcd_line',
+                    },
+                    {
+                        type: 'mkboard_list_digital_lcd_column',
                     },
                     {
                         type: 'text',
-                        params: ['100'],
+                        params: ['Type text !!'],
                     },
                     null,
                 ],
-                type: 'mkboard_set_left_dc_motor',
+                type: 'mkboard_set_lcd',
             },
             paramsKeyMap: {
-                DC_MOTOR_DIRECTION: 0,
-                DC_MOTOR_SPEED: 1,
+                LINE: 0,
+                COLUMN: 1,
+                STRING: 2,
             },
-            class: 'mkboard',
+            class: 'mkboardLcd',
             isNotFor: ['mkboard'],
             func: function(sprite, script) {
-                // var sq = Entry.hw.sendQueue;
-                var direction = script.getValue('DC_MOTOR_DIRECTION', script);
-                if (!Entry.Utils.isNumber(direction))
-                    direction = Entry.mkboard.directionTable[direction];
+                var sq = Entry.hw.sendQueue;
 
-                if (direction < 0) {
-                    direction = 0;
-                } else if (direction > 1) {
-                    direction = 1;
-                }
+                var line = script.getValue('LINE', script);
+                var column = script.getValue('COLUMN', script);
+                var string = script.getValue('STRING', script);
+                var text = [];
 
-                var speed = script.getNumberValue('DC_MOTOR_SPEED', script) - 1;
-                if (speed < 0) {
-                    speed = 0;
-                } else if (speed > 254) {
-                    speed = 254;
-                }
-                if (!Entry.hw.sendQueue['SET']) {
-                    Entry.hw.sendQueue['SET'] = {};
-                }
+                if (!script.isStart) {
+                    if (typeof string === 'string') {
+                        for (var i = 0; i < string.length; i++) {
+                            text[i] = Entry.mkboard.toByte(string[i]);
+                        }
+                    } else if (typeof string === 'number') {
+                        //console.log("string");
+                        //console.log(string);
+                        var num_to_string = string.toString();
+                        for (var i = 0; i < num_to_string.length; i++) {
+                            text[i] = Entry.mkboard.toByte(num_to_string[i]);
+                        }
+                        //console.log("num_to_string");
+                        //console.log(num_to_string);
+                        //text[0] = 1;
+                        //text[1] = string / 1;
+                    } else {
+                        text[0] = string;
+                    }
 
-                Entry.hw.sendQueue['SET'][0] = {
-                    type: Entry.mkboard.sensorTypes.DC_MOTOR_LEFT,
-                    data: {
-                        direction: direction,
-                        speed: speed,
-                    },
-                    time: new Date().getTime(),
-                };
+                    if (!Entry.hw.sendQueue['SET']) {
+                        Entry.hw.sendQueue['SET'] = {};
+                    }
 
-                setTimeout(function() {
-                    script.timeFlag = 0;
-                }, 10);
+                    script.isStart = true;
+                    script.timeFlag = 1;
+                    var fps = Entry.FPS || 60;
+                    timeValue = 60 / fps * 50;
 
-                return script.callReturn();
-            },
-            syntax: { js: [], py: [] },
-        },
-        mkboard_set_right_dc_motor: {
-            color: '#00979D',
-            skeleton: 'basic',
-            statements: [],
-            params: [
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
-                    size: 12,
-                },
-            ],
-            events: {},
-            def: {
-                params: [
-                    {
-                        type: 'mkboard_dc_motor_direction_list',
-                    },
-                    {
-                        type: 'text',
-                        params: ['100'],
-                    },
-                    null,
-                ],
-                type: 'mkboard_set_right_dc_motor',
-            },
-            paramsKeyMap: {
-                DC_MOTOR_DIRECTION: 0,
-                DC_MOTOR_SPEED: 1,
-            },
-            class: 'mkboard',
-            isNotFor: ['mkboard'],
-            func: function(sprite, script) {
-                // var sq = Entry.hw.sendQueue;
-                var direction = script.getValue('DC_MOTOR_DIRECTION', script);
-                if (!Entry.Utils.isNumber(direction))
-                    direction = Entry.mkboard.directionTable[direction];
+                    Entry.hw.sendQueue['SET'][line] = {
+                        type: Entry.mkboard.sensorTypes.LCD,
+                        data: {
+                            line: line,
+                            column: column,
+                            text0: text[0],
+                            text1: text[1],
+                            text2: text[2],
+                            text3: text[3],
+                            text4: text[4],
+                            text5: text[5],
+                            text6: text[6],
+                            text7: text[7],
+                            text8: text[8],
+                            text9: text[9],
+                            text10: text[10],
+                            text11: text[11],
+                            text12: text[12],
+                            text13: text[13],
+                            text14: text[14],
+                            text15: text[15],
+                        },
+                        time: new Date().getTime(),
+                    };
 
-                if (direction < 0) {
-                    direction = 0;
-                } else if (direction > 1) {
-                    direction = 1;
-                }
-
-                var speed = script.getNumberValue('DC_MOTOR_SPEED', script) - 1;
-                if (speed < 0) {
-                    speed = 0;
-                } else if (speed > 254) {
-                    speed = 254;
-                }
-
-                if (!Entry.hw.sendQueue['SET']) {
-                    Entry.hw.sendQueue['SET'] = {};
-                }
-
-                Entry.hw.sendQueue['SET'][1] = {
-                    type: Entry.mkboard.sensorTypes.DC_MOTOR_RIGHT,
-                    data: {
-                        direction: direction,
-                        speed: speed,
-                    },
-                    time: new Date().getTime(),
-                };
-
-                setTimeout(function() {
-                    script.timeFlag = 0;
-                }, 10);
-
-                return script.callReturn();
-            },
-            syntax: { js: [], py: [] },
-        },
-        mkboard_get_left_cds_analog_value: {
-            color: '#00979D',
-            fontColor: '#fff',
-            skeleton: 'basic_string_field',
-            statements: [],
-            params: [
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-            ],
-            events: {},
-            def: {
-                params: [
-                    {
-                        type: 'mkboard_analog_list',
-                        params: ['0'],
-                    },
-                ],
-                type: 'mkboard_get_left_cds_analog_value',
-            },
-            paramsKeyMap: {
-                PORT: 0,
-            },
-            class: 'mkboardGet',
-            isNotFor: ['mkboard'],
-            func: function(sprite, script) {
-                var port = script.getValue('PORT', script);
-                var ANALOG = Entry.hw.portData.ANALOG;
-                if (port[0] === 'A') port = port.substring(1);
-                return ANALOG ? ANALOG[port] || 0 : 0;
-            },
-            syntax: { js: [], py: [] },
-        },
-        mkboard_get_right_cds_analog_value: {
-            color: '#00979D',
-            fontColor: '#fff',
-            skeleton: 'basic_string_field',
-            statements: [],
-            params: [
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-            ],
-            events: {},
-            def: {
-                params: [
-                    {
-                        type: 'mkboard_analog_list',
-                        params: ['1'],
-                    },
-                ],
-                type: 'mkboard_get_right_cds_analog_value',
-            },
-            paramsKeyMap: {
-                PORT: 0,
-            },
-            class: 'mkboardGet',
-            isNotFor: ['mkboard'],
-            func: function(sprite, script) {
-                var port = script.getValue('PORT', script);
-                var ANALOG = Entry.hw.portData.ANALOG;
-                if (port[0] === 'A') port = port.substring(1);
-                return ANALOG ? ANALOG[port] || 0 : 0;
-            },
-            syntax: { js: [], py: [] },
-        },
-        mkboard_toggle_left_led: {
-            color: '#00979D',
-            skeleton: 'basic',
-            statements: [],
-            params: [
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
-                    size: 12,
-                },
-            ],
-            events: {},
-            def: {
-                params: [
-                    {
-                        type: 'arduino_get_port_number',
-                        params: ['3'],
-                    },
-                    {
-                        type: 'arduino_get_digital_toggle',
-                        params: ['on'],
-                    },
-                    null,
-                ],
-                type: 'mkboard_toggle_left_led',
-            },
-            paramsKeyMap: {
-                PORT: 0,
-                VALUE: 1,
-            },
-            class: 'mkboard',
-            isNotFor: ['mkboard'],
-            func: function(sprite, script) {
-                var port = script.getNumberValue('PORT');
-                var value = script.getValue('VALUE');
-
-                if (typeof value === 'string') {
-                    value = value.toLowerCase();
-                }
-                if (Entry.mkboard.highList.indexOf(value) > -1) {
-                    value = 255;
-                } else if (Entry.mkboard.lowList.indexOf(value) > -1) {
-                    value = 0;
+                    setTimeout(function() {
+                        script.timeFlag = 0;
+                    }, timeValue);
+                    return script;
+                } else if (script.timeFlag == 1) {
+                    return script;
                 } else {
-                    throw new Error();
+                    delete script.timeFlag;
+                    delete script.isStart;
+                    Entry.engine.isContinue = true;
+                    return script.callReturn();
                 }
-                if (!Entry.hw.sendQueue['SET']) {
-                    Entry.hw.sendQueue['SET'] = {};
-                }
-                Entry.hw.sendQueue['SET'][port] = {
-                    type: Entry.mkboard.sensorTypes.DIGITAL,
-                    data: value,
-                    time: new Date().getTime(),
-                };
-                return script.callReturn();
             },
-            syntax: { js: [], py: [] },
+            syntax: { js: [], py: ['mkboard.mkboard_set_lcd(%1, %2, %3)'] },
         },
-        mkboard_toggle_right_led: {
+        mkboard_list_lcd_command: {
             color: '#00979D',
-            skeleton: 'basic',
+            skeleton: 'basic_string_field',
             statements: [],
+            template: '%1',
             params: [
                 {
-                    type: 'Block',
-                    accept: 'string',
+                    type: 'Dropdown',
+                    options: [
+                        ['LCD_BLUE', '0'],
+                        ['LCD_GREEN', '1'],
+                        ['LCD_CLEAR', '2'],
+                        /*,
+                        [ "BACKLIGHT_ON", "3" ],
+                        [ "BACKLIGHT_OFF", "4" ]
+                        */
+                    ],
+                    value: '0',
+                    fontSize: 11,
                 },
+            ],
+            events: {},
+            def: {
+                params: [null],
+            },
+            paramsKeyMap: {
+                COMMAND: 0,
+            },
+            func: function(sprite, script) {
+                return script.getField('COMMAND');
+            },
+        },
+        mkboard_lcd_command: {
+            color: '#00979D',
+            skeleton: 'basic',
+            template: Lang.template.mkboard_lcd_command,
+            //"template": "%1 %2",
+            statements: [],
+            params: [
                 {
                     type: 'Block',
                     accept: 'string',
@@ -1084,80 +1277,35 @@ Entry.mkboard.getBlocks = function() {
             def: {
                 params: [
                     {
-                        type: 'arduino_get_port_number',
-                        params: ['9'],
-                    },
-                    {
-                        type: 'arduino_get_digital_toggle',
-                        params: ['on'],
+                        type: 'mkboard_list_lcd_command',
                     },
                     null,
                 ],
-                type: 'mkboard_toggle_right_led',
+                type: 'mkboard_lcd_command',
             },
             paramsKeyMap: {
-                PORT: 0,
-                VALUE: 1,
+                COMMAND: 0,
             },
-            class: 'mkboard',
+            class: 'mkboardLcd',
             isNotFor: ['mkboard'],
             func: function(sprite, script) {
-                var port = script.getNumberValue('PORT');
-                var value = script.getValue('VALUE');
+                var sq = Entry.hw.sendQueue;
+                var value = script.getNumberValue('COMMAND', script);
+                var command = script.getNumberValue('COMMAND', script);
 
-                if (typeof value === 'string') {
-                    value = value.toLowerCase();
+                if (!sq['SET']) {
+                    sq['SET'] = {};
                 }
-                if (Entry.mkboard.highList.indexOf(value) > -1) {
-                    value = 255;
-                } else if (Entry.mkboard.lowList.indexOf(value) > -1) {
-                    value = 0;
-                } else {
-                    throw new Error();
-                }
-                if (!Entry.hw.sendQueue['SET']) {
-                    Entry.hw.sendQueue['SET'] = {};
-                }
-                Entry.hw.sendQueue['SET'][port] = {
-                    type: Entry.mkboard.sensorTypes.DIGITAL,
-                    data: value,
+                sq['SET'][0] = {
+                    type: Entry.mkboard.sensorTypes.LCD_COMMAND,
+                    data: {
+                        value: value,
+                        command: command,
+                    },
                     time: new Date().getTime(),
                 };
+
                 return script.callReturn();
-            },
-            syntax: { js: [], py: [] },
-        },
-        mkboard_get_sound_analog_value: {
-            color: '#00979D',
-            fontColor: '#fff',
-            skeleton: 'basic_string_field',
-            statements: [],
-            params: [
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-            ],
-            events: {},
-            def: {
-                params: [
-                    {
-                        type: 'mkboard_analog_list',
-                        params: ['2'],
-                    },
-                ],
-                type: 'mkboard_get_sound_analog_value',
-            },
-            paramsKeyMap: {
-                PORT: 0,
-            },
-            class: 'mkboardGet',
-            isNotFor: ['mkboard'],
-            func: function(sprite, script) {
-                var port = script.getValue('PORT', script);
-                var ANALOG = Entry.hw.portData.ANALOG;
-                if (port[0] === 'A') port = port.substring(1);
-                return ANALOG ? ANALOG[port] || 0 : 0;
             },
             syntax: { js: [], py: [] },
         },
