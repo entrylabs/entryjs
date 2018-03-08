@@ -478,7 +478,7 @@ Entry.Roborobo_Roduino.getBlocks = function() {
     };
 };
 
-Entry.Roborobo_SchoolKitgetBlocks = function() {
+Entry.Roborobo_SchoolKit.getBlocks = function() {
     return {
         //region schoolkit 스쿨키트
         schoolkit_on_block: {

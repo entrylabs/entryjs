@@ -1,4 +1,5 @@
 'use strict';
+require('./blocks');
 
 if (typeof global.Entry !== 'object') global.Entry = {};
 
@@ -6,8 +7,6 @@ if (typeof exports == 'object') {
     /* IGNORE_WEBPACK:START */
     var Lang = require('../../extern/lang/ko.js').Lang;
     /* IGNORE_WEBPACK:END */
-    Entry.Bitbrick = {};
-    Entry.MODI = {};
     if (typeof EntryStatic !== 'object') {
         global.EntryStatic = {};
     }
@@ -17260,7 +17259,25 @@ const block = {
 };
 
 _.extend(Entry.block, block);
+
+
 (function() {
+    // console.log('hw', Entry.HW, Entry.Arduino);
+    for(let id in Entry.HARDWARE_LIST) {
+        const hw = Entry.HARDWARE_LIST[id];
+        if('setLanguage' in hw) {
+            var hwLang = hw.setLanguage();
+            var data = hwLang[global.Lang.type];
+            for(let key in data) {
+                _.extend(Lang[key], data[key]);
+            }
+        }
+        if('getBlocks' in hw) {
+            var block = hw.getBlocks();
+            _.extend(Entry.block, block);
+        }
+    };
+
     for (var type in Entry.block) {
         var block = Entry.block[type];
         if (!block.isNotFor) block.isNotFor = [];

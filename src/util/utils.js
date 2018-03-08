@@ -2187,8 +2187,11 @@ Entry.Utils.debounce = function(func, wait, immediate) {
     };
 };
 
-Entry.Utils.isNewVersion = function(old_version, new_version) {
+Entry.Utils.isNewVersion = function(old_version = '', new_version = '') {
     try {
+        if(old_version === '') {
+            return false;
+        }
         old_version = old_version.replace('v', '');
         new_version = new_version.replace('v', '');
         var arrOld = old_version.split('.');

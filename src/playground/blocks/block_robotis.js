@@ -827,7 +827,7 @@ Entry.Robotis_carCont.getBlocks = function() {
     };
 };
 
-Entry.Robotis_carCont.getBlocks = function() {
+Entry.Robotis_openCM70.getBlocks = function() {
     return {
         //region robotis 로보티즈 openCM70
         robotis_openCM70_cm_custom_value: {

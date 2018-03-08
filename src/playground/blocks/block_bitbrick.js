@@ -1,4 +1,5 @@
 'use strict';
+
 Entry.Bitbrick = {
     SENSOR_MAP: {
         1: 'light',
