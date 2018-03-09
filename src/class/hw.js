@@ -364,6 +364,9 @@ p.checkDevice = function(data, version) {
 
     this.selectedDevice = key;
     this.hwModule = this.hwInfo[key];
+    if(!this.hwModule) {
+        return;
+    }
     Entry.dispatchEvent("hwChanged");
 
     var descMsg = '';
@@ -398,8 +401,11 @@ p.checkDevice = function(data, version) {
 };
 
 p.banHW = function() {
-    var hwOptions = this.hwInfo;
-    for (var i in hwOptions) {
+    for (var i in this.hwInfo) {
+        const hwModule = this.hwInfo[i];
+        if(!hwModule) {
+            continue;
+        }
         Entry.playground.mainWorkspace.blockMenu.banClass(hwOptions[i].name, true);
     }
 };
