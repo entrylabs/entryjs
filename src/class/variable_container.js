@@ -98,11 +98,13 @@ Entry.VariableContainer = function () {
         messageAddButton.addClass('entryVariableAddWorkspace entryVariableListElementWorkspace');
         messageAddButton.innerHTML = '+ ' + Lang.Workspace.message_create;
         this.messageAddButton_ = messageAddButton;
-        messageAddButton.bindOnClick(function (e) {
-            that.addMessage({
-                name: Lang.Workspace.message + ' ' +
-                    (that.messages_.length + 1)
-            });
+        messageAddButton.bindOnClick((e) => {
+            Entry.do(
+                "variableContainerAddMessage", {
+                    id: Entry.generateHash(),
+                    name: `${Lang.Workspace.message} ${this.messages_.length + 1}`
+                }
+            );
         });
 
         var listAddButton = Entry.createElement('li');
@@ -128,7 +130,6 @@ Entry.VariableContainer = function () {
         var functionAddButton = Entry.createElement('li');
         functionAddButton.addClass('entryVariableAddWorkspace entryVariableListElementWorkspace');
         functionAddButton.innerHTML = '+ ' + Lang.Workspace.function_add;
-        //functionAddButton.innerHTML = '+ ' + Lang.Msgs.to_be_continue;
         this.functionAddButton_ = functionAddButton;
         functionAddButton.bindOnClick(function (e) {
             var playground = Entry.playground;
@@ -1141,79 +1142,89 @@ Entry.VariableContainer = function () {
      * @param {message model} message
      * @return {boolean} return true when success
      */
-    p.addMessage = function (message) {
-        if (!message.id)
+    p.addMessage = function (message = {}) {
+        var messages = this.messages_;
+        if (!message.name) {
+            message.name = `${Lang.Workspace.message} ${messages.length + 1}`;
+        }
+        if (!message.id) {
             message.id = Entry.generateHash();
-        if (Entry.stateManager)
-            Entry.stateManager.addCommand(
-                "add message",
-                this,
-                this.removeMessage,
-                message
-            );
+        }
         this.createMessageView(message);
-        this.messages_.unshift(message);
-        if (Entry.playground && Entry.playground.blockMenu)
-            Entry.playground.blockMenu.deleteRendered('start');
-        Entry.playground.reloadPlayground();
+        messages.unshift(message);
+
+        var { playground } = Entry;
+
+        if (playground) {
+            var { blockMenu } = playground;
+            if (blockMenu) {
+                blockMenu.deleteRendered('start');
+            }
+            playground.reloadPlayground();
+        }
         this.updateList();
-        message.listElement.nameField.focus();
-        return new Entry.State(this,
-            this.removeMessage,
-            message);
+        var nameField = message.listElement.nameField;
+
+        //flag for first time blur command
+        //focus first and value not changed
+        //command will be skipped
+        nameField._isFirst = true;
+        nameField.focus();
     };
 
     /**
      * Add event
      * @param {message model} message
      */
-    p.removeMessage = function (message) {
-        if (this.selected == message)
+    p.removeMessage = function ({id}) {
+        var message = this.getMessage(id);
+        if (this.selected == message) {
             this.select(null);
-        if (Entry.stateManager)
-            Entry.stateManager.addCommand(
-                "remove message",
-                this,
-                this.addMessage,
-                message
-            );
-        var index = this.messages_.indexOf(message);
-        this.messages_.splice(index, 1);
+        }
+        this.messages_.splice(this.messages_.indexOf(message), 1);
         this.updateList();
         Entry.playground.reloadPlayground();
-        return new Entry.State(this,
-            this.addMessage,
-            message);
     };
 
     /**
      * @param {object} message
      * @param {String} name
      */
-    p.changeMessageName = function (message, name) {
-        if (message.name == name)
-            return;
-
-        var messages = this.messages_;
-        var exist = Entry.isExist(name, 'name', messages);
-
-        if (exist) {
-            message.listElement.nameField.value = message.name;
-            Entry.toast.alert(Lang.Workspace.message_rename_failed,
-                Lang.Workspace.message_dup);
-            return;
-        } else if (name.length > 10) {
-            message.listElement.nameField.value = message.name;
-            Entry.toast.alert(Lang.Workspace.message_rename_failed,
-                Lang.Workspace.message_too_long);
+    
+    p.changeMessageName = function ({id}, name) {
+        var message = this.getMessage(id);
+        if (message.name == name) {
             return;
         }
+        var { toast, playground } = Entry;
+
+        var { listElement: { nameField } } = message;
+
+        if (nameExist(this.messages_, name)) {
+            nameField.value = message.name;
+            return toast.alert(Lang.Workspace.message_rename_failed, Lang.Workspace.message_dup);
+        } else if (name.length > 10) {
+            nameField.value = message.name;
+            return toast.alert(Lang.Workspace.message_rename_failed, Lang.Workspace.message_too_long);
+        }
+
         message.name = name;
-        if (Entry.playground && Entry.playground.blockMenu)
-            Entry.playground.blockMenu.deleteRendered('start')
-        Entry.playground.reloadPlayground();
-        Entry.toast.success(Lang.Workspace.message_rename,
-            Lang.Workspace.message_rename_ok);
+        nameField.value = name;
+
+        if (playground) {
+            var { blockMenu } = playground;
+
+            blockMenu && blockMenu.deleteRendered('start');
+            playground.reloadPlayground();
+        }
+
+        toast.success(Lang.Workspace.message_rename, Lang.Workspace.message_rename_ok);
+
+        function nameExist(messages, name) {
+            return messages.some(({ name: messageName }) => {
+                return messageName === name;
+            });
+        }
     };
 
     /**
@@ -1231,7 +1242,7 @@ Entry.VariableContainer = function () {
         removeButton.addClass('entryVariableListElementDeleteWorkspace');
         removeButton.bindOnClick(function (e) {
             e.stopPropagation();
-            that.removeMessage(message);
+            Entry.do('variableContainerRemoveMessage', message);
         });
 
         var editButton = Entry.createElement('button');
@@ -1259,23 +1270,33 @@ Entry.VariableContainer = function () {
         nameField.bindOnClick(function (e) {
             e.stopPropagation();
         });
-        nameField.onblur = function (e) {
+
+        nameField.onfocus = function(e) {
+            this.blurred = false;
+        };
+
+        nameField.onblur = function(e) {
             var value = this.value.trim();
-            if (!value || value.length === 0) {
-                Entry.toast.alert(Lang.Msgs.warn,
-                    Lang.Msgs.sign_can_not_space);
+            if (!value) {
+                Entry.toast.alert(Lang.Msgs.warn, Lang.Msgs.sign_can_not_space);
                 this.value = message.name;
-                return;
+                return this.focus();
             }
-            that.changeMessageName(message, this.value);
+
+            if (!(this._isFirst && value === message.name)) {
+                Entry.do('messageSetName', message, value);
+            }
+            delete this._isFirst;
             editButton.removeClass('entryRemove');
             editSaveButton.addClass('entryRemove');
             nameField.setAttribute('disabled', 'disabled');
+            this.blurred = true;
         };
-        nameField.onkeydown = function (e) {
-            if (e.keyCode == 13)
-                this.blur();
+
+        nameField.onkeydown = function(e) {
+            if (e.keyCode == 13) this.blur();
         };
+
         view.nameField = nameField;
         view.appendChild(nameField);
         view.appendChild(editButton);
@@ -1830,32 +1851,6 @@ Entry.VariableContainer = function () {
             this.selectFilter(type);
         }
         this.updateVariableAddView(type);
-    };
-
-    p.getMenuXml = function (xmlList) {
-        var blocks = [];
-        var hasVariable = this.variables_.length !== 0;
-        var hasList = this.lists_.length !== 0;
-        var category;
-        for (var i = 0, xml; xml = xmlList[i]; i++) {
-            var tagName = xml.tagName;
-            if (tagName && tagName.toUpperCase() == 'BLOCK') {
-                category = xml.getAttribute('bCategory');
-                if (!hasVariable && category == 'variable')
-                    continue;
-                if (!hasList && category == 'list')
-                    continue;
-                blocks.push(xml);
-            } else if (tagName && (tagName.toUpperCase() == 'SPLITTER' ||
-                tagName.toUpperCase() == 'BTN')) {
-                if (!hasVariable && category == 'variable')
-                    continue;
-                if (!hasList && category == 'list')
-                    continue;
-                blocks.push(xml);
-            }
-        }
-        return blocks;
     };
 
     p.addCloneLocalVariables = function (param) {
@@ -2631,6 +2626,8 @@ Entry.VariableContainer = function () {
                     return this.variableAddConfirmButton;
                 case "variableAddInput":
                     return this.variableAddPanel.view.name;
+                case "messageAddButton":
+                    return this.messageAddButton_;
             }
         } else {
         }

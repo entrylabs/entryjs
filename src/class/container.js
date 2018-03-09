@@ -574,7 +574,7 @@ Entry.Container.prototype.moveElement = function(start, end, isCallFromState) {
 };
 
 /**
- * generate list for blockly dropdown dynamic
+ * generate list for dropdown dynamic
  * @param {string} menuName
  */
 Entry.Container.prototype.getDropdownList = function(menuName, object) {

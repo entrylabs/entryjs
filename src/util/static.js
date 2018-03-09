@@ -29,6 +29,9 @@ Entry.STATIC = {
     BREAK: 2,
     PASS: 3,
 
+    //if command type number > 500
+    //undo redo not working for usual workspace
+    //but recorded and validated in guide
     COMMAND_TYPES: {
         addThread: 101,
         destroyThread: 102,
@@ -72,6 +75,8 @@ Entry.STATIC = {
         processPicture: 403,
         unprocessPicture: 404,
         editText: 405,
+        variableContainerAddMessage: 406,
+        variableContainerRemoveMessage: 407,
 
         toggleRun: 501,
         toggleStop: 502,
@@ -89,6 +94,7 @@ Entry.STATIC = {
         variableContainerAddVariable: 803,
         variableContainerRemoveVariable: 804,
         variableAddSetName: 805,
+        messageSetName: 806,
     },
 
     RECORDABLE: {
