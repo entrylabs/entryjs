@@ -406,7 +406,7 @@ p.banHW = function() {
         if(!hwModule) {
             continue;
         }
-        Entry.playground.mainWorkspace.blockMenu.banClass(hwOptions[i].name, true);
+        Entry.playground.mainWorkspace.blockMenu.banClass(hwModule.name, true);
     }
 };
 
