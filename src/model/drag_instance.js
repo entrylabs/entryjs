@@ -1,10 +1,5 @@
 'use strict';
 
-goog.provide('Entry.DragInstance');
-
-goog.require('Entry.Model');
-goog.require('Entry.STATIC');
-
 Entry.DragInstance = function(model) {
     Entry.Model(this);
 
@@ -22,5 +17,5 @@ Entry.DragInstance.prototype.schema = {
     prev: null,
     height: 0,
     mode: 0,
-    isNew: false
+    isNew: false,
 };

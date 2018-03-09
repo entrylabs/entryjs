@@ -3,9 +3,7 @@
  * @author Kyumin Sim
  * @version 0.2
  */
-"use strict";
-
-goog.provide('Entry.SVG');
+'use strict';
 
 /**
  * Function for construct html dom element.
@@ -13,7 +11,7 @@ goog.provide('Entry.SVG');
  * @param {string} tag or html to construct dom element.
  * @param {?object} options include id, classes, parent etc.
  */
-Entry.SVG = function (id , svgDom) {
+Entry.SVG = function(id, svgDom) {
     var element = svgDom ? svgDom : document.getElementById(id);
     return Entry.SVG.createElement(element);
 };
@@ -21,13 +19,11 @@ Entry.SVG = function (id , svgDom) {
 Entry.SVG.NS = 'http://www.w3.org/2000/svg';
 Entry.SVG.NS_XLINK = 'http://www.w3.org/1999/xlink';
 
-
-Entry.SVG.createElement = function (tag, options) {
+Entry.SVG.createElement = function(tag, options) {
     var el;
-    if (typeof tag === "string")
-        el= document.createElementNS(Entry.SVG.NS, tag);
-    else
-        el = tag;
+    if (typeof tag === 'string')
+        el = document.createElementNS(Entry.SVG.NS, tag);
+    else el = tag;
 
     if (options) {
         if (options.href) {
@@ -35,7 +31,7 @@ Entry.SVG.createElement = function (tag, options) {
             delete options.href;
         }
 
-        for (var key in options)  {
+        for (var key in options) {
             el.setAttribute(key, options[key]);
         }
     }
@@ -49,17 +45,20 @@ Entry.SVG.createElement = function (tag, options) {
     el.remove = Entry.SVG.remove;
     el.removeAttr = Entry.SVG.removeAttr;
 
-    if (tag === "text")
-       el.setAttributeNS("http://www.w3.org/XML/1998/namespace", "xml:space","preserve");
+    if (tag === 'text')
+        el.setAttributeNS(
+            'http://www.w3.org/XML/1998/namespace',
+            'xml:space',
+            'preserve'
+        );
 
-    if (this instanceof SVGElement)
-        this.appendChild(el);
+    if (this instanceof SVGElement) this.appendChild(el);
 
     return el;
 };
 
 Entry.SVG.attr = function(options, property) {
-    if (typeof options === "string") {
+    if (typeof options === 'string') {
         var o = {};
         o[options] = property;
         options = o;
@@ -82,11 +81,10 @@ Entry.SVG.addClass = function(className) {
     var classAttr = this.getAttribute('class');
     for (var i = 0; i < arguments.length; i++) {
         var className = arguments[i];
-        if (!this.hasClass(className))
-            classAttr += " " + className;
+        if (!this.hasClass(className)) classAttr += ' ' + className;
     }
 
-    this.setAttribute('class', classAttr);
+    this.setAttribute('class', classAttr.replace(/\s+/g, ' '));
     return this;
 };
 
@@ -95,21 +93,21 @@ Entry.SVG.removeClass = function(className) {
     for (var i = 0; i < arguments.length; i++) {
         var className = arguments[i];
         if (this.hasClass(className)) {
-            var reg = new RegExp('(\\s|^)'+className+'(\\s|$)');
-            classAttr = classAttr.replace(reg,' ');
+            classAttr = classAttr.replace(
+                new RegExp('(\\s|^)' + className + '(\\s|$)'),
+                ' '
+            );
         }
     }
 
-    this.setAttribute('class', classAttr);
+    this.setAttribute('class', classAttr.replace(/\s+/g, ' '));
     return this;
 };
 
 Entry.SVG.hasClass = function(className) {
-    var attr = this.getAttribute("class");
-    if(!attr)
-        return false;
-    else
-        return attr.match(new RegExp('(\\s|^)'+className+'(\\s|$)'));
+    var attr = this.getAttribute('class');
+    if (!attr) return false;
+    else return attr.match(new RegExp('(\\s|^)' + className + '(\\s|$)'));
 };
 
 Entry.SVG.remove = function() {
