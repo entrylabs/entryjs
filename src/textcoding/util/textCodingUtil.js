@@ -2214,7 +2214,7 @@ Entry.TextCodingUtil = {};
         if (!vc) return;
 
         //inspect lists
-        targets = vc.lists_ || [];
+        var targets = vc.lists_ || [];
 
         for (var i = targets.length - 1; i >= 0; i--) {
             var l = targets[i];
