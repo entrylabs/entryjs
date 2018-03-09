@@ -7,7 +7,7 @@ require("./util/console")
 require("./parser/core/text/pyToBlock")
 require("./parser/core/text/jsToBlock")
 require("./parser/core/block/blockToPy")
-require("./parser/core/block/blockToJS")
+require("./parser/core/block/blockToJs")
 
 Entry.Parser = function(mode, type, cm, syntax) {
     this._mode = mode; // maze ai workspace
