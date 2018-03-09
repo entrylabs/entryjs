@@ -719,14 +719,15 @@ Entry.VariableContainer = function () {
      */
     p.appendFunctions = function(functions) {
         for (var i in functions) {
-            var func = new Entry.Func(functions[i]);
+            var func = functions[i];
             if (!func.id) {
                 func.id = Entry.generateHash();
             } else if (`${func.id}` in this.functions_) {
                 continue;
             }
-            func.generateBlock();
-            this.functions_[func.id] = func;
+            var parseFunc = new Entry.Func(func);
+            parseFunc.generateBlock();
+            this.functions_[parseFunc.id] = parseFunc;
         }
     };
 
