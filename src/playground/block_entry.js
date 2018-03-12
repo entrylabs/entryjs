@@ -39752,7 +39752,6 @@ Entry.block = {
             var unitId;
             $.each(entities, function (id, entity) {
                 unitId = id;
-                components = entity.components;
             });
 
             var unitComp = Ntry.entityManager.getComponent(unitId, Ntry.STATIC.UNIT);
@@ -40704,7 +40703,6 @@ Entry.block = {
             var unitId;
             $.each(entities, function (id, entity) {
                 unitId = id;
-                components = entity.components;
             });
             var unitComp = Ntry.entityManager.getComponent(unitId, Ntry.STATIC.UNIT);
             var unitGrid = $.extend({}, Ntry.entityManager.getComponent(unitId, Ntry.STATIC.GRID));
@@ -40765,7 +40763,6 @@ Entry.block = {
             var unitId;
             $.each(entities, function (id, entity) {
                 unitId = id;
-                components = entity.components;
             });
             var unitComp = Ntry.entityManager.getComponent(unitId, Ntry.STATIC.UNIT);
             script.isContinue = true;
@@ -41385,7 +41382,7 @@ Entry.block = {
             this.isAction = true;
 
             var entities = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT);
-            var unitId;
+            var unitId, components;
             $.each(entities, function (id, entity) {
                 unitId = id;
                 components = entity.components;
@@ -41461,7 +41458,7 @@ Entry.block = {
 
             var entities = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT);
 
-            var unitId;
+            var unitId, components;
             $.each(entities, function (id, entity) {
                 unitId = id;
                 components = entity.components;
@@ -41542,7 +41539,7 @@ Entry.block = {
 
             var entities = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT);
 
-            var unitId;
+            var unitId, components;
             $.each(entities, function (id, entity) {
                 unitId = id;
                 components = entity.components;
@@ -41623,7 +41620,7 @@ Entry.block = {
 
             var entities = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT);
 
-            var unitId;
+            var unitId, components;
             $.each(entities, function (id, entity) {
                 unitId = id;
                 components = entity.components;
@@ -41843,7 +41840,6 @@ Entry.block = {
             var unitId;
             $.each(entities, function (id, entity) {
                 unitId = id;
-                components = entity.components;
             });
             var unitComp = Ntry.entityManager.getComponent(unitId, Ntry.STATIC.UNIT);
             var unitGrid = $.extend({}, Ntry.entityManager.getComponent(unitId, Ntry.STATIC.GRID));
