@@ -793,7 +793,8 @@ Entry.VariableContainer = function () {
         if (ws && (ws.overlayModefrom == Entry.Workspace.MODE_VIMBOARD)) {
             if (func && func.description) {
                 var funcName = func.description.substring(1, func.description.length - 1);
-                if (alert_msg = Entry.TextCodingUtil.isNameIncludeSpace(funcName, 'function')) {
+                var alert_msg = Entry.TextCodingUtil.isNameIncludeSpace(funcName, 'function');
+                if (alert_msg) {
                     entrylms.alert(alert_msg);
                     Entry.Func.cancelEdit();
                     return;
@@ -884,7 +885,8 @@ Entry.VariableContainer = function () {
         if (Entry.isTextMode) {
             var panel = this.variableAddPanel;
             var variableName = panel.view.name.value;
-            if (alert_msg = Entry.TextCodingUtil.isNameIncludeSpace(variableName, 'variable')) {
+            var alert_msg = Entry.TextCodingUtil.isNameIncludeSpace(variableName, 'variable');
+            if (alert_msg) {
                 entrylms.alert(alert_msg);
                 this.variableAddPanel.view.addClass('entryRemove');
                 this.resetVariableAddPanel('variable');
@@ -960,7 +962,8 @@ Entry.VariableContainer = function () {
             return;
 
         if (Entry.isTextMode) {
-            if (alert_msg = Entry.TextCodingUtil.isNameIncludeSpace(name, 'variable')) {
+            var alert_msg = Entry.TextCodingUtil.isNameIncludeSpace(name, 'variable');
+            if (alert_msg) {
                 entrylms.alert(alert_msg);
                 variable.listElement.nameField.value = variable.name_;
                 return;
@@ -996,7 +999,8 @@ Entry.VariableContainer = function () {
             return;
 
         if (Entry.isTextMode) {
-            if (alert_msg = Entry.TextCodingUtil.isNameIncludeSpace(name, 'list')) {
+            var alert_msg = Entry.TextCodingUtil.isNameIncludeSpace(name, 'list');
+            if (alert_msg) {
                 entrylms.alert(alert_msg);
                 list.listElement.nameField.value = list.name_;
                 return;
@@ -1293,7 +1297,8 @@ Entry.VariableContainer = function () {
         if (Entry.isTextMode) {
             var panel = this.listAddPanel;
             var listName = panel.view.name.value;
-            if (alert_msg = Entry.TextCodingUtil.isNameIncludeSpace(listName, 'list')) {
+            var alert_msg = Entry.TextCodingUtil.isNameIncludeSpace(listName, 'list');
+            if (alert_msg) {
                 entrylms.alert(alert_msg);
                 this.listAddPanel.view.addClass('entryRemove');
                 this.resetVariableAddPanel('list');
@@ -1748,7 +1753,7 @@ Entry.VariableContainer = function () {
         addListLocalCheck.addClass('entryVariableAddSpaceCheckWorkspace');
         this.listAddPanel.view.localCheck = addListLocalCheck;
         if (this.variableAddPanel.info.object)
-            addVariableLocalCheck.addClass('entryVariableAddChecked');
+            addListLocalCheck.addClass('entryVariableAddChecked');
         addSpaceLocalWrapper.appendChild(addListLocalCheck);
 
 

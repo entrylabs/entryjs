@@ -1105,7 +1105,7 @@
                 var nMax = 255;
                 var x = Entry.hw.portData['IN' + inputPort];
                 var percent = (x - oMin) / (oMax - oMin);
-                result = percent * (nMax - nMin) + nMin;
+                var result = percent * (nMax - nMin) + nMin;
                 if (result > nMax)
                     result = nMax;
                 if (result < nMin)
@@ -2208,7 +2208,7 @@
                 var nMax = 255;
                 var x = Entry.hw.portData[inputPort - 7] / 4;
                 var percent = (x - oMin) / (oMax - oMin);
-                result = percent * (nMax - nMin) + nMin;
+                var result = percent * (nMax - nMin) + nMin;
                 if (result > nMax)
                     result = nMax;
                 if (result < nMin)
@@ -2617,6 +2617,7 @@
                 var rightValue = script.getNumberValue('RIGHTVALUE', script);
                 var leftValue = 0;
                 var isCheck = false;
+                var data_address = 0;
 
                 switch (port) {
                     case '3':
