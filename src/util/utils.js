@@ -1643,21 +1643,24 @@ Entry.getStringIndex = function(str) {
 Entry.getOrderedName = function(str, objects, field) {
     if (!str) return 'untitled';
     if (!objects || objects.length === 0) return str;
-
     if (!field) field = 'name';
 
-    var maxNumber = 0;
-    var source = Entry.getStringIndex(str);
+    const maxNumber = Entry.getOrderedNameNumber(str, objects, field);
+    const source = Entry.getStringIndex(str);
+    if (maxNumber > 0) return source.string + maxNumber;
+    return str;
+};
+
+Entry.getOrderedNameNumber = function(str, objects, field) {
+    const source = Entry.getStringIndex(str);
+    let maxNumber = 0;
     for (var i = 0, len = objects.length; i < len; i++) {
         var target = Entry.getStringIndex(objects[i][field]);
         if (source.string === target.string && target.index > maxNumber) {
             maxNumber = target.index;
         }
     }
-
-    if (maxNumber > 0) return source.string + maxNumber;
-
-    return str;
+    return maxNumber;
 };
 
 Entry.changeXmlHashId = function(xmlBlock) {

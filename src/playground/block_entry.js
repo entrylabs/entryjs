@@ -12481,7 +12481,6 @@ const block = {
                 var unitId;
                 $.each(entities, function(id, entity) {
                     unitId = id;
-                    components = entity.components;
                 });
 
                 var unitComp = Ntry.entityManager.getComponent(
@@ -13446,7 +13445,6 @@ const block = {
                 var unitId;
                 $.each(entities, function(id, entity) {
                     unitId = id;
-                    components = entity.components;
                 });
                 var unitComp = Ntry.entityManager.getComponent(
                     unitId,
@@ -13525,7 +13523,6 @@ const block = {
                 var unitId;
                 $.each(entities, function(id, entity) {
                     unitId = id;
-                    components = entity.components;
                 });
                 var unitComp = Ntry.entityManager.getComponent(
                     unitId,
@@ -14369,7 +14366,7 @@ const block = {
                 var entities = Ntry.entityManager.getEntitiesByComponent(
                     Ntry.STATIC.UNIT
                 );
-                var unitId;
+                var unitId, components;
                 $.each(entities, function(id, entity) {
                     unitId = id;
                     components = entity.components;
@@ -14472,7 +14469,7 @@ const block = {
                     Ntry.STATIC.UNIT
                 );
 
-                var unitId;
+                var unitId, components;
                 $.each(entities, function(id, entity) {
                     unitId = id;
                     components = entity.components;
@@ -14587,7 +14584,7 @@ const block = {
                     Ntry.STATIC.UNIT
                 );
 
-                var unitId;
+                var unitId, components;
                 $.each(entities, function(id, entity) {
                     unitId = id;
                     components = entity.components;
@@ -14703,7 +14700,7 @@ const block = {
                     Ntry.STATIC.UNIT
                 );
 
-                var unitId;
+                var unitId, components;
                 $.each(entities, function(id, entity) {
                     unitId = id;
                     components = entity.components;
@@ -14986,7 +14983,6 @@ const block = {
                 var unitId;
                 $.each(entities, function(id, entity) {
                     unitId = id;
-                    components = entity.components;
                 });
                 var unitComp = Ntry.entityManager.getComponent(
                     unitId,
