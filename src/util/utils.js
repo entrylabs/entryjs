@@ -1941,9 +1941,11 @@ Entry.Utils.stopProjectWithToast = function(scope, message, error) {
         );
     }
 
-    if(error) {
+    if (error) {
         error.message = message + ': ' + error.message;
-      
+        throw error;
+    }
+
     throw new Error(message);
 };
 
@@ -2195,7 +2197,7 @@ Entry.Utils.debounce = function(func, wait, immediate) {
 
 Entry.Utils.isNewVersion = function(old_version = '', new_version = '') {
     try {
-        if(old_version === '') {
+        if (old_version === '') {
             return false;
         }
         old_version = old_version.replace('v', '');
