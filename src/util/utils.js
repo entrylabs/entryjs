@@ -1643,21 +1643,24 @@ Entry.getStringIndex = function(str) {
 Entry.getOrderedName = function(str, objects, field) {
     if (!str) return 'untitled';
     if (!objects || objects.length === 0) return str;
-
     if (!field) field = 'name';
 
-    var maxNumber = 0;
-    var source = Entry.getStringIndex(str);
+    const maxNumber = Entry.getOrderedNameNumber(str, objects, field);
+    const source = Entry.getStringIndex(str);
+    if (maxNumber > 0) return source.string + maxNumber;
+    return str;
+};
+
+Entry.getOrderedNameNumber = function(str, objects, field) {
+    const source = Entry.getStringIndex(str);
+    let maxNumber = 0;
     for (var i = 0, len = objects.length; i < len; i++) {
         var target = Entry.getStringIndex(objects[i][field]);
         if (source.string === target.string && target.index > maxNumber) {
             maxNumber = target.index;
         }
     }
-
-    if (maxNumber > 0) return source.string + maxNumber;
-
-    return str;
+    return maxNumber;
 };
 
 Entry.changeXmlHashId = function(xmlBlock) {
@@ -1938,6 +1941,11 @@ Entry.Utils.stopProjectWithToast = function(scope, message, error) {
         );
     }
 
+    if (error) {
+        error.message = message + ': ' + error.message;
+        throw error;
+    }
+
     throw new Error(message);
 };
 
@@ -2187,8 +2195,11 @@ Entry.Utils.debounce = function(func, wait, immediate) {
     };
 };
 
-Entry.Utils.isNewVersion = function(old_version, new_version) {
+Entry.Utils.isNewVersion = function(old_version = '', new_version = '') {
     try {
+        if (old_version === '') {
+            return false;
+        }
         old_version = old_version.replace('v', '');
         new_version = new_version.replace('v', '');
         var arrOld = old_version.split('.');

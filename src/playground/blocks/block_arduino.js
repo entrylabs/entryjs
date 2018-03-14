@@ -1,4 +1,4 @@
-﻿"use strict";
+'use strict';
 
 Entry.Arduino = {
     name: 'arduino',
@@ -11,506 +11,795 @@ Entry.Arduino = {
         Entry.hw.update();
     },
     monitorTemplate: {
-        imgPath: "hw/arduino.png",
+        imgPath: 'hw/arduino.png',
         width: 605,
         height: 434,
         listPorts: {
-            "2":{name: Lang.Hw.port_en + " 2 " + Lang.Hw.port_ko, type: "input", pos: {x : 0, y: 0}},
-            "3":{name: Lang.Hw.port_en + " 3 " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}},
-            "4":{name: Lang.Hw.port_en + " 4 " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}},
-            "5":{name: Lang.Hw.port_en + " 5 " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}},
-            "6":{name: Lang.Hw.port_en + " 6 " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}},
-            "7":{name: Lang.Hw.port_en + " 7 " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}},
-            "8":{name: Lang.Hw.port_en + " 8 " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}},
-            "9":{name: Lang.Hw.port_en + " 9 " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}},
-            "10":{name: Lang.Hw.port_en + " 10 " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}},
-            "11":{name: Lang.Hw.port_en + " 11 " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}},
-            "12":{name: Lang.Hw.port_en + " 12 " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}},
-            "13":{name: Lang.Hw.port_en + " 13 " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}},
-            "a0":{name: Lang.Hw.port_en + " A0 " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}},
-            "a1":{name: Lang.Hw.port_en + " A1 " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}},
-            "a2":{name: Lang.Hw.port_en + " A2 " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}},
-            "a3":{name: Lang.Hw.port_en + " A3 " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}},
-            "a4":{name: Lang.Hw.port_en + " A4 " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}},
-            "a5":{name: Lang.Hw.port_en + " A5 " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}}
+            '2': {
+                name: Lang.Hw.port_en + ' 2 ' + Lang.Hw.port_ko,
+                type: 'input',
+                pos: { x: 0, y: 0 },
+            },
+            '3': {
+                name: Lang.Hw.port_en + ' 3 ' + Lang.Hw.port_ko,
+                type: 'input',
+                pos: { x: 0, y: 0 },
+            },
+            '4': {
+                name: Lang.Hw.port_en + ' 4 ' + Lang.Hw.port_ko,
+                type: 'input',
+                pos: { x: 0, y: 0 },
+            },
+            '5': {
+                name: Lang.Hw.port_en + ' 5 ' + Lang.Hw.port_ko,
+                type: 'input',
+                pos: { x: 0, y: 0 },
+            },
+            '6': {
+                name: Lang.Hw.port_en + ' 6 ' + Lang.Hw.port_ko,
+                type: 'input',
+                pos: { x: 0, y: 0 },
+            },
+            '7': {
+                name: Lang.Hw.port_en + ' 7 ' + Lang.Hw.port_ko,
+                type: 'input',
+                pos: { x: 0, y: 0 },
+            },
+            '8': {
+                name: Lang.Hw.port_en + ' 8 ' + Lang.Hw.port_ko,
+                type: 'input',
+                pos: { x: 0, y: 0 },
+            },
+            '9': {
+                name: Lang.Hw.port_en + ' 9 ' + Lang.Hw.port_ko,
+                type: 'input',
+                pos: { x: 0, y: 0 },
+            },
+            '10': {
+                name: Lang.Hw.port_en + ' 10 ' + Lang.Hw.port_ko,
+                type: 'input',
+                pos: { x: 0, y: 0 },
+            },
+            '11': {
+                name: Lang.Hw.port_en + ' 11 ' + Lang.Hw.port_ko,
+                type: 'input',
+                pos: { x: 0, y: 0 },
+            },
+            '12': {
+                name: Lang.Hw.port_en + ' 12 ' + Lang.Hw.port_ko,
+                type: 'input',
+                pos: { x: 0, y: 0 },
+            },
+            '13': {
+                name: Lang.Hw.port_en + ' 13 ' + Lang.Hw.port_ko,
+                type: 'input',
+                pos: { x: 0, y: 0 },
+            },
+            a0: {
+                name: Lang.Hw.port_en + ' A0 ' + Lang.Hw.port_ko,
+                type: 'input',
+                pos: { x: 0, y: 0 },
+            },
+            a1: {
+                name: Lang.Hw.port_en + ' A1 ' + Lang.Hw.port_ko,
+                type: 'input',
+                pos: { x: 0, y: 0 },
+            },
+            a2: {
+                name: Lang.Hw.port_en + ' A2 ' + Lang.Hw.port_ko,
+                type: 'input',
+                pos: { x: 0, y: 0 },
+            },
+            a3: {
+                name: Lang.Hw.port_en + ' A3 ' + Lang.Hw.port_ko,
+                type: 'input',
+                pos: { x: 0, y: 0 },
+            },
+            a4: {
+                name: Lang.Hw.port_en + ' A4 ' + Lang.Hw.port_ko,
+                type: 'input',
+                pos: { x: 0, y: 0 },
+            },
+            a5: {
+                name: Lang.Hw.port_en + ' A5 ' + Lang.Hw.port_ko,
+                type: 'input',
+                pos: { x: 0, y: 0 },
+            },
         },
-        mode : 'both'
-
-    }
+        mode: 'both',
+    },
 };
 
-Entry.ArduinoExt = {
-    name: 'ArduinoExt',
-    setZero: function () {
-        if(!Entry.hw.sendQueue.SET) {
-            Entry.hw.sendQueue = {
-                GET: {},
-                SET: {},
-            }
-        } else {
-            var keySet = Object.keys(Entry.hw.sendQueue.SET);
-            keySet.forEach(function (key) {
-                Entry.hw.sendQueue.SET[key].data = 0;
-                Entry.hw.sendQueue.SET[key].time = new Date().getTime();
-            });
-        }
-        Entry.hw.update();
-    },
-    sensorTypes: {
-        ALIVE: 0,
-        DIGITAL: 1,
-        ANALOG: 2,
-        PWM: 3,
-        SERVO_PIN: 4,
-        TONE: 5,
-        PULSEIN: 6,
-        ULTRASONIC: 7,
-        TIMER: 8
-    },
-    toneTable: {
-        "0": 0,
-        "C": 1,
-        "CS": 2,
-        "D": 3,
-        "DS": 4,
-        "E": 5,
-        "F": 6,
-        "FS": 7,
-        "G": 8,
-        "GS": 9,
-        "A": 10,
-        "AS": 11,
-        "B": 12,
-    },
-    toneMap: {
-        "1": [33, 65, 131, 262, 523, 1046, 2093, 4186],
-        "2": [35, 69, 139, 277, 554, 1109, 2217, 4435],
-        "3": [37, 73, 147, 294, 587, 1175, 2349, 4699],
-        "4": [39, 78, 156, 311, 622, 1245, 2849, 4978],
-        "5": [41, 82, 165, 330, 659, 1319, 2637, 5274],
-        "6": [44, 87, 175, 349, 698, 1397, 2794, 5588],
-        "7": [46, 92, 185, 370, 740, 1480, 2960, 5920],
-        "8": [49, 98, 196, 392, 784, 1568, 3136, 6272],
-        "9": [52, 104, 208, 415, 831, 1661, 3322, 6645],
-        "10": [55, 110, 220, 440, 880, 1760, 3520, 7040],
-        "11": [58, 117, 233, 466, 932, 1865, 3729, 7459],
-        "12": [62, 123, 247, 494, 988, 1976, 3951, 7902]
-    },
-    highList: [
-        'high', '1', 'on'
-    ],
-    lowList: [
-        'low', '0', 'off'
-    ],
-    BlockState: {
-    }
-}
-
-Entry.ArduinoNano = $.extend(true, {}, Entry.ArduinoExt, {
-    name: 'ArduinoNano',
-});
-
-
-Entry.SmartBoard = {
-    name: 'smartBoard',
-    setZero: function() {
-        Entry.hw.sendQueue.readablePorts = [];
-        for (var port = 2; port < 9; port++) {
-            Entry.hw.sendQueue[port] = 0;
-            Entry.hw.sendQueue.readablePorts.push(port);
-        }
-        Entry.hw.update();
-    },
-    monitorTemplate: {
-        listPorts: {
-            "2":{name: Lang.Hw.port_en + " GS2 ", type: "output", pos: {x: 0, y: 0}},
-            "3":{name: Lang.Hw.port_en + " GS1 ", type: "output", pos: {x : 0, y: 0}},
-            "4":{name: Lang.Hw.port_en + " MT1 회전 방향 ", type: "output", pos: {x: 0, y: 0}},
-            "5":{name: Lang.Hw.port_en + " MT1 PWM ", type: "output", pos: {x: 0, y: 0}},
-            "6":{name: Lang.Hw.port_en + " MT2 PWM ", type: "output", pos: {x: 0, y: 0}},
-            "7":{name: Lang.Hw.port_en + " MT2 회전 방향 ", type: "output", pos: {x: 0, y: 0}},
-            "8":{name: Lang.Hw.port_en + " RELAY ", type: "output", pos: {x: 0, y: 0}},
-            "9":{name: Lang.Hw.port_en + " SM3 각도 ", type: "output", pos: {x: 0, y: 0}},
-            "10":{name: Lang.Hw.port_en + " SM2 각도 ", type: "output", pos: {x: 0, y: 0}},
-            "11":{name: Lang.Hw.port_en + "SM1 각도 ", type: "output", pos: {x: 0, y: 0}},
-            "12":{name: Lang.Hw.port_en + " 빨간 " + Lang.Hw.button, type: "input", pos: {x: 0, y: 0}},
-            "13":{name: Lang.Hw.port_en + " 노란 " + Lang.Hw.button, type: "input", pos: {x: 0, y: 0}},
-            "14":{name: Lang.Hw.port_en + " 초록 " + Lang.Hw.button, type: "input", pos: {x: 0, y: 0}},
-            "15":{name: Lang.Hw.port_en + " 파란 " + Lang.Hw.button, type: "input", pos: {x: 0, y: 0}},
-            "a2":{name: Lang.Hw.port_en + " 1번 " + Lang.Hw.sensor, type: "input", pos: {x: 0, y: 0}},
-            "a3":{name: Lang.Hw.port_en + " 2번 " + Lang.Hw.sensor, type: "input", pos: {x: 0, y: 0}},
-            "a4":{name: Lang.Hw.port_en + " 3번 " + Lang.Hw.sensor, type: "input", pos: {x: 0, y: 0}},
-            "a5":{name: Lang.Hw.port_en + " 4번 " + Lang.Hw.sensor, type: "input", pos: {x: 0, y: 0}}
+Entry.Arduino.getBlocks = function() {
+    return {
+        //region arduino 아두이노
+        arduino_text: {
+            color: '#FFD974',
+            skeleton: 'basic_string_field',
+            statements: [],
+            params: [
+                {
+                    type: 'TextInput',
+                    value: 10,
+                },
+            ],
+            events: {},
+            def: {
+                params: [],
+            },
+            paramsKeyMap: {
+                NAME: 0,
+            },
+            func: function(sprite, script) {
+                return script.getStringField('NAME');
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: '%1',
+                        textParams: [
+                            {
+                                type: 'TextInput',
+                                value: 10,
+                                converter:
+                                    Entry.block.converters
+                                        .returnStringOrNumberByValue,
+                            },
+                        ],
+                        keyOption: 'arduino_text',
+                    },
+                ],
+            },
         },
-        mode : 'both'
-    }
-};
-
-Entry.SensorBoard = {
-    name: 'sensorBoard',
-    setZero: Entry.Arduino.setZero
-};
-
-
-Entry.ardublock = {
-    name: 'ardublock',
-    setZero: function () {
-        if(!Entry.hw.sendQueue.SET) {
-            Entry.hw.sendQueue = {
-                GET: {},
-                SET: {},
-            }
-        } else {
-            var keySet = Object.keys(Entry.hw.sendQueue.SET);
-            keySet.forEach(function (key) {
-                Entry.hw.sendQueue.SET[key].data = 0;
-                Entry.hw.sendQueue.SET[key].time = new Date().getTime();
-            });
-        }
-        Entry.hw.update();
-    },
-    sensorTypes: {
-        ALIVE: 0,
-        DIGITAL: 1,
-        ANALOG: 2,
-        PWM: 3,
-        SERVO_PIN: 4,
-        TONE: 5,
-        PULSEIN: 6,
-        ULTRASONIC: 7,
-        TIMER: 8,
-        MOTOR_LEFT: 9,
-        MOTOR_RIGHT: 10
-    },
-    toneTable: {
-        "0": 0,
-        "C": 1,
-        "CS": 2,
-        "D": 3,
-        "DS": 4,
-        "E": 5,
-        "F": 6,
-        "FS": 7,
-        "G": 8,
-        "GS": 9,
-        "A": 10,
-        "AS": 11,
-        "B": 12,
-    },
-    toneMap: {
-        "1": [33, 65, 131, 262, 523, 1046, 2093, 4186],
-        "2": [35, 69, 139, 277, 554, 1109, 2217, 4435],
-        "3": [37, 73, 147, 294, 587, 1175, 2349, 4699],
-        "4": [39, 78, 156, 311, 622, 1245, 2849, 4978],
-        "5": [41, 82, 165, 330, 659, 1319, 2637, 5274],
-        "6": [44, 87, 175, 349, 698, 1397, 2794, 5588],
-        "7": [46, 92, 185, 370, 740, 1480, 2960, 5920],
-        "8": [49, 98, 196, 392, 784, 1568, 3136, 6272],
-        "9": [52, 104, 208, 415, 831, 1661, 3322, 6645],
-        "10": [55, 110, 220, 440, 880, 1760, 3520, 7040],
-        "11": [58, 117, 233, 466, 932, 1865, 3729, 7459],
-        "12": [62, 123, 247, 494, 988, 1976, 3951, 7902]
-    },
-    directionTable: {
-        "Forward": 0,
-        "Backward": 1
-    },    
-    highList: [
-        'high', '1', 'on'
-    ],
-    lowList: [
-        'low', '0', 'off'
-    ],
-    BlockState: {
-    }
-}
-
-Entry.mkboard = {
-    name: 'mkboard',
-    setZero: function () {
-        if(!Entry.hw.sendQueue.SET) {
-            Entry.hw.sendQueue = {
-                GET: {},
-                SET: {},
-            }
-        } else {
-            var keySet = Object.keys(Entry.hw.sendQueue.SET);
-            keySet.forEach(function (key) {
-                Entry.hw.sendQueue.SET[key].data = 0;
-                Entry.hw.sendQueue.SET[key].time = new Date().getTime();
-            });
-        }
-        Entry.hw.update();
-    },
-    toByte: function(data) {
-        switch(data) {
-            case ' ' : data = 32; break; case '!' : data = 33; break; case '"' : data = 34; break;
-            case '#' : data = 35; break; case '$' : data = 36; break; case '%' : data = 37; break;
-            case '&' : data = 38; break; case '\'' : data = 39; break; case '(' : data = 40; break;
-            case ')' : data = 41; break; case '*' : data = 42; break; case '+' : data = 43; break;           
-            case ',' : data = 44; break; case '-' : data = 45; break; case '.' : data = 46; break;
-            case '/' : data = 47; break; case '0' : data = 48; break; case '1' : data = 49; break;
-            case '2' : data = 50; break; case '3' : data = 51; break; case '4' : data = 52; break;
-            case '5' : data = 53; break; case '6' : data = 54; break; case '7' : data = 55; break;
-            case '8' : data = 56; break; case '9' : data = 57; break; case ':' : data = 58; break;
-            case ';' : data = 59; break; case '<' : data = 60; break; case '=' : data = 61; break;
-            case '>' : data = 62; break; case '?' : data = 63; break; case '@' : data = 64; break;
-            case 'A' : data = 65; break; case 'B' : data = 66; break; case 'C' : data = 67; break; 
-            case 'D' : data = 68; break; case 'E' : data = 69; break; case 'F' : data = 70; break;
-            case 'G' : data = 71; break; case 'H' : data = 72; break; case 'I' : data = 73; break;
-            case 'J' : data = 74; break; case 'K' : data = 75; break; case 'L' : data = 76; break;
-            case 'M' : data = 77; break; case 'N' : data = 78; break; case 'O' : data = 79; break;
-            case 'P' : data = 80; break; case 'Q' : data = 81; break; case 'R' : data = 82; break;
-            case 'S' : data = 83; break; case 'T' : data = 84; break; case 'U' : data = 85; break;
-            case 'V' : data = 86; break; case 'W' : data = 87; break; case 'X' : data = 88; break;
-            case 'Y' : data = 89; break; case 'Z' : data = 90; break; case '[' : data = 91; break;
-            case '\\' : data = 92; break; case ']' : data = 93; break; case '^' : data = 94; break;
-            case '_' : data = 95; break; case '`' : data = 96; break; case 'a' : data = 97; break;
-            case 'b' : data = 98; break; case 'c' : data = 99; break; case 'd' : data = 100; break;
-            case 'e' : data = 101; break; case 'f' : data = 102; break; case 'g' : data = 103; break;
-            case 'h' : data = 104; break; case 'i' : data = 105; break; case 'j' : data = 106; break;
-            case 'k' : data = 107; break; case 'l' : data = 108; break; case 'm' : data = 109; break;
-            case 'n' : data = 110; break; case 'o' : data = 111; break; case 'p' : data = 112; break;
-            case 'q' : data = 113; break; case 'r' : data = 114; break; case 's' : data = 115; break;
-            case 't' : data = 116; break; case 'u' : data = 117; break; case 'v' : data = 118; break;
-            case 'w' : data = 119; break; case 'x' : data = 120; break; case 'y' : data = 121; break;
-            case 'z' : data = 122; break; case '{' : data = 123; break; case '|' : data = 124; break;
-            case '}' : data = 125; break; case '~' : data = 126; break; 
-        }
-
-        return data;
-    },        
-    sensorTypes: {
-        ALIVE: 0,
-        DIGITAL: 1,
-        ANALOG: 2,
-        PWM: 3,
-        SERVO_PIN: 4,
-        TONE: 5,
-        PULSEIN: 6,
-        ULTRASONIC: 7,
-        TIMER: 8,
-        LCD: 9,
-        LCD_COMMAND: 10
-    },
-    toneTable: {
-        "0": 0,
-        "C": 1,
-        "CS": 2,
-        "D": 3,
-        "DS": 4,
-        "E": 5,
-        "F": 6,
-        "FS": 7,
-        "G": 8,
-        "GS": 9,
-        "A": 10,
-        "AS": 11,
-        "B": 12,
-    },
-    toneMap: {
-        "1": [33, 65, 131, 262, 523, 1046, 2093, 4186],
-        "2": [35, 69, 139, 277, 554, 1109, 2217, 4435],
-        "3": [37, 73, 147, 294, 587, 1175, 2349, 4699],
-        "4": [39, 78, 156, 311, 622, 1245, 2849, 4978],
-        "5": [41, 82, 165, 330, 659, 1319, 2637, 5274],
-        "6": [44, 87, 175, 349, 698, 1397, 2794, 5588],
-        "7": [46, 92, 185, 370, 740, 1480, 2960, 5920],
-        "8": [49, 98, 196, 392, 784, 1568, 3136, 6272],
-        "9": [52, 104, 208, 415, 831, 1661, 3322, 6645],
-        "10": [55, 110, 220, 440, 880, 1760, 3520, 7040],
-        "11": [58, 117, 233, 466, 932, 1865, 3729, 7459],
-        "12": [62, 123, 247, 494, 988, 1976, 3951, 7902]
-    },
-    directionTable: {
-        "Forward": 0,
-        "Backward": 1
-    },    
-    highList: [
-        'high', '1', 'on'
-    ],
-    lowList: [
-        'low', '0', 'off'
-    ],
-    BlockState: {
-    }
-}
-
-Entry.memaker = {
-    name: 'memaker',
-    setZero: function () {
-        if(!Entry.hw.sendQueue.SET) {
-            Entry.hw.sendQueue = {
-                GET: {},
-                SET: {},
-            }
-        } else {
-            var keySet = Object.keys(Entry.hw.sendQueue.SET);
-            keySet.forEach(function (key) {
-                Entry.hw.sendQueue.SET[key].data = 0;
-                Entry.hw.sendQueue.SET[key].time = new Date().getTime();
-            });
-        }
-        Entry.hw.update();
-    },
-    toByte: function(data) {
-        switch(data) {
-            case ' ' : data = 32; break; case '!' : data = 33; break; case '"' : data = 34; break;
-            case '#' : data = 35; break; case '$' : data = 36; break; case '%' : data = 37; break;
-            case '&' : data = 38; break; case '\'' : data = 39; break; case '(' : data = 40; break;
-            case ')' : data = 41; break; case '*' : data = 42; break; case '+' : data = 43; break;           
-            case ',' : data = 44; break; case '-' : data = 45; break; case '.' : data = 46; break;
-            case '/' : data = 47; break; case '0' : data = 48; break; case '1' : data = 49; break;
-            case '2' : data = 50; break; case '3' : data = 51; break; case '4' : data = 52; break;
-            case '5' : data = 53; break; case '6' : data = 54; break; case '7' : data = 55; break;
-            case '8' : data = 56; break; case '9' : data = 57; break; case ':' : data = 58; break;
-            case ';' : data = 59; break; case '<' : data = 60; break; case '=' : data = 61; break;
-            case '>' : data = 62; break; case '?' : data = 63; break; case '@' : data = 64; break;
-            case 'A' : data = 65; break; case 'B' : data = 66; break; case 'C' : data = 67; break; 
-            case 'D' : data = 68; break; case 'E' : data = 69; break; case 'F' : data = 70; break;
-            case 'G' : data = 71; break; case 'H' : data = 72; break; case 'I' : data = 73; break;
-            case 'J' : data = 74; break; case 'K' : data = 75; break; case 'L' : data = 76; break;
-            case 'M' : data = 77; break; case 'N' : data = 78; break; case 'O' : data = 79; break;
-            case 'P' : data = 80; break; case 'Q' : data = 81; break; case 'R' : data = 82; break;
-            case 'S' : data = 83; break; case 'T' : data = 84; break; case 'U' : data = 85; break;
-            case 'V' : data = 86; break; case 'W' : data = 87; break; case 'X' : data = 88; break;
-            case 'Y' : data = 89; break; case 'Z' : data = 90; break; case '[' : data = 91; break;
-            case '\\' : data = 92; break; case ']' : data = 93; break; case '^' : data = 94; break;
-            case '_' : data = 95; break; case '`' : data = 96; break; case 'a' : data = 97; break;
-            case 'b' : data = 98; break; case 'c' : data = 99; break; case 'd' : data = 100; break;
-            case 'e' : data = 101; break; case 'f' : data = 102; break; case 'g' : data = 103; break;
-            case 'h' : data = 104; break; case 'i' : data = 105; break; case 'j' : data = 106; break;
-            case 'k' : data = 107; break; case 'l' : data = 108; break; case 'm' : data = 109; break;
-            case 'n' : data = 110; break; case 'o' : data = 111; break; case 'p' : data = 112; break;
-            case 'q' : data = 113; break; case 'r' : data = 114; break; case 's' : data = 115; break;
-            case 't' : data = 116; break; case 'u' : data = 117; break; case 'v' : data = 118; break;
-            case 'w' : data = 119; break; case 'x' : data = 120; break; case 'y' : data = 121; break;
-            case 'z' : data = 122; break; case '{' : data = 123; break; case '|' : data = 124; break;
-            case '}' : data = 125; break; case '~' : data = 126; break; 
-        }
-
-        return data;
-    },    
-    sensorTypes: {
-        ALIVE: 0,
-        DIGITAL: 1,
-        ANALOG: 2,
-        PWM: 3,
-        SERVO_PIN: 4,
-        TONE: 5,
-        PULSEIN: 6,
-        ULTRASONIC: 7,
-        TIMER: 8,
-        LCD: 9,
-        LCD_COMMAND: 10
-    },
-    toneTable: {
-        "0": 0,
-        "C": 1,
-        "CS": 2,
-        "D": 3,
-        "DS": 4,
-        "E": 5,
-        "F": 6,
-        "FS": 7,
-        "G": 8,
-        "GS": 9,
-        "A": 10,
-        "AS": 11,
-        "B": 12,
-    },
-    toneMap: {
-        "1": [33, 65, 131, 262, 523, 1046, 2093, 4186],
-        "2": [35, 69, 139, 277, 554, 1109, 2217, 4435],
-        "3": [37, 73, 147, 294, 587, 1175, 2349, 4699],
-        "4": [39, 78, 156, 311, 622, 1245, 2849, 4978],
-        "5": [41, 82, 165, 330, 659, 1319, 2637, 5274],
-        "6": [44, 87, 175, 349, 698, 1397, 2794, 5588],
-        "7": [46, 92, 185, 370, 740, 1480, 2960, 5920],
-        "8": [49, 98, 196, 392, 784, 1568, 3136, 6272],
-        "9": [52, 104, 208, 415, 831, 1661, 3322, 6645],
-        "10": [55, 110, 220, 440, 880, 1760, 3520, 7040],
-        "11": [58, 117, 233, 466, 932, 1865, 3729, 7459],
-        "12": [62, 123, 247, 494, 988, 1976, 3951, 7902]
-    },
-    directionTable: {
-        "Forward": 0,
-        "Backward": 1
-    },    
-    highList: [
-        'high', '1', 'on'
-    ],
-    lowList: [
-        'low', '0', 'off'
-    ],
-    BlockState: {
-    }
-};
-
-Entry.dplay = {
-    name: 'dplay',
-    vel_value : 255,
-    Left_value : 255,
-    Right_value : 255,
-    setZero: Entry.Arduino.setZero,
-    timeouts: [],
-    removeTimeout: function(id) {
-        clearTimeout(id);
-        var timeouts = this.timeouts;
-        var index = timeouts.indexOf(id);
-        if(index >= 0) {
-        timeouts.splice(index, 1);
-        }
-    },
-    removeAllTimeouts: function() {
-        var timeouts = this.timeouts;
-        for(var i in timeouts) {
-            clearTimeout(timeouts[i]);
-        }
-        this.timeouts = [];
-    },
-    monitorTemplate: {
-        imgPath: "hw/dplay.png",
-        width: 500,
-        height: 600,
-        listPorts: {
-            "2":{name: Lang.Hw.port_en + " 2 " + Lang.Hw.port_ko, type: "input", pos: {x : 0, y: 0}},
-            "3":{name: Lang.Hw.port_en + " 3 " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}},
-            "4":{name: Lang.Hw.port_en + " 4 " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}},
-            "5":{name: Lang.Hw.port_en + " 5 " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}},
-            "6":{name: Lang.Hw.port_en + " 6 " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}},
-            "7":{name: Lang.Hw.port_en + " 7 " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}},
-            "8":{name: Lang.Hw.port_en + " 8 " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}},
-            "9":{name: Lang.Hw.port_en + " 9 " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}},
-            "10":{name: Lang.Hw.port_en + " 10 " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}},
-            "11":{name: Lang.Hw.port_en + " 11 " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}},
-            "12":{name: Lang.Hw.port_en + " 12 " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}},
-            "13":{name: Lang.Hw.port_en + " 13 " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}},
-            "a0":{name: Lang.Hw.port_en + " A0 " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}},
-            "a1":{name: Lang.Hw.port_en + " A1 " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}},
-            "a2":{name: Lang.Hw.port_en + " A2 " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}},
-            "a3":{name: Lang.Hw.port_en + " A3 " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}},
-            "a4":{name: Lang.Hw.port_en + " A4 " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}},
-            "a5":{name: Lang.Hw.port_en + " A5 " + Lang.Hw.port_ko, type: "input", pos: {x: 0, y: 0}}
+        arduino_send: {
+            color: '#00979D',
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+            ],
+            events: {},
+            def: {
+                params: [],
+            },
+            paramsKeyMap: {
+                VALUE: 0,
+            },
+            func: function(sprite, script) {
+                var signal = script.getValue('VALUE', script);
+                var xmlHttp = new XMLHttpRequest();
+                xmlHttp.open('POST', 'http://localhost:23518/arduino/', false);
+                xmlHttp.send(String(signal));
+                Entry.assert(xmlHttp.status == 200, 'arduino is not connected');
+                return script.callReturn();
+            },
         },
-        mode : 'both'
+        arduino_get_number: {
+            color: '#00979D',
+            skeleton: 'basic_string_field',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+            ],
+            events: {},
+            def: {
+                params: [],
+            },
+            paramsKeyMap: {
+                VALUE: 0,
+            },
+            func: function(sprite, script) {
+                var signal = script.getValue('VALUE', script);
+                var xmlHttp = new XMLHttpRequest();
+                xmlHttp.open('POST', 'http://localhost:23518/arduino/', false);
+                xmlHttp.send(String(signal));
+                Entry.assert(xmlHttp.status == 200, 'arduino is not connected');
+                var data = xmlHttp.responseText;
+                return Number(data);
+            },
+        },
+        arduino_get_string: {
+            color: '#00979D',
+            skeleton: 'basic_string_field',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+            ],
+            events: {},
+            def: {
+                params: [],
+            },
+            paramsKeyMap: {
+                VALUE: 0,
+            },
+            func: function(sprite, script) {
+                var signal = script.getValue('VALUE', script);
+                var xmlHttp = new XMLHttpRequest();
+                xmlHttp.open('POST', 'http://localhost:23518/arduino/', false);
+                xmlHttp.send(String(signal));
+                Entry.assert(xmlHttp.status == 200, 'arduino is not connected');
+                var data = xmlHttp.responseText;
+                return data;
+            },
+        },
+        arduino_get_sensor_number: {
+            color: '#00979D',
+            skeleton: 'basic_string_field',
+            statements: [],
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['0', 'A0'],
+                        ['1', 'A1'],
+                        ['2', 'A2'],
+                        ['3', 'A3'],
+                        ['4', 'A4'],
+                        ['5', 'A5'],
+                    ],
+                    value: 'A0',
+                    fontSize: 11,
+                    arrowColor: EntryStatic.ARROW_COLOR_HW,
+                },
+            ],
+            events: {},
+            def: {
+                params: [null],
+            },
+            paramsKeyMap: {
+                PORT: 0,
+            },
+            func: function(sprite, script) {
+                return script.getStringField('PORT');
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: '%1',
+                        blockType: 'param',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    ['0', 'A0'],
+                                    ['1', 'A1'],
+                                    ['2', 'A2'],
+                                    ['3', 'A3'],
+                                    ['4', 'A4'],
+                                    ['5', 'A5'],
+                                ],
+                                value: 'A0',
+                                fontSize: 11,
+                                arrowColor: EntryStatic.ARROW_COLOR_HW,
+                                converter:
+                                    Entry.block.converters.returnStringValue,
+                            },
+                        ],
+                        keyOption: 'arduino_get_sensor_number',
+                    },
+                ],
+            },
+        },
+        arduino_get_port_number: {
+            color: '#00979D',
+            skeleton: 'basic_string_field',
+            statements: [],
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['0', '0'],
+                        ['1', '1'],
+                        ['2', '2'],
+                        ['3', '3'],
+                        ['4', '4'],
+                        ['5', '5'],
+                        ['6', '6'],
+                        ['7', '7'],
+                        ['8', '8'],
+                        ['9', '9'],
+                        ['10', '10'],
+                        ['11', '11'],
+                        ['12', '12'],
+                        ['13', '13'],
+                    ],
+                    value: '0',
+                    fontSize: 11,
+                    arrowColor: EntryStatic.ARROW_COLOR_HW,
+                },
+            ],
+            events: {},
+            def: {
+                params: [null],
+            },
+            paramsKeyMap: {
+                PORT: 0,
+            },
+            func: function(sprite, script) {
+                return script.getStringField('PORT');
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: '%1',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    ['0', '0'],
+                                    ['1', '1'],
+                                    ['2', '2'],
+                                    ['3', '3'],
+                                    ['4', '4'],
+                                    ['5', '5'],
+                                    ['6', '6'],
+                                    ['7', '7'],
+                                    ['8', '8'],
+                                    ['9', '9'],
+                                    ['10', '10'],
+                                    ['11', '11'],
+                                    ['12', '12'],
+                                    ['13', '13'],
+                                ],
+                                value: '0',
+                                fontSize: 11,
+                                arrowColor: EntryStatic.ARROW_COLOR_HW,
+                            },
+                        ],
+                        keyOption: 'arduino_get_port_number',
+                    },
+                ],
+            },
+        },
+        arduino_get_pwm_port_number: {
+            color: '#00979D',
+            skeleton: 'basic_string_field',
+            statements: [],
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['3', '3'],
+                        ['5', '5'],
+                        ['6', '6'],
+                        ['9', '9'],
+                        ['10', '10'],
+                        ['11', '11'],
+                    ],
+                    value: '3',
+                    fontSize: 11,
+                    arrowColor: EntryStatic.ARROW_COLOR_HW,
+                },
+            ],
+            events: {},
+            def: {
+                params: [null],
+            },
+            paramsKeyMap: {
+                PORT: 0,
+            },
+            func: function(sprite, script) {
+                return script.getStringField('PORT');
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: '%1',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    ['3', '3'],
+                                    ['5', '5'],
+                                    ['6', '6'],
+                                    ['9', '9'],
+                                    ['10', '10'],
+                                    ['11', '11'],
+                                ],
+                                value: '3',
+                                fontSize: 11,
+                                arrowColor: EntryStatic.ARROW_COLOR_HW,
+                                converter:
+                                    Entry.block.converters
+                                        .returnStringOrNumberByValue,
+                            },
+                        ],
+                        keyOption: 'arduino_get_pwm_port_number',
+                    },
+                ],
+            },
+        },
+        arduino_get_number_sensor_value: {
+            color: '#00979D',
+            fontColor: '#fff',
+            skeleton: 'basic_string_field',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'arduino_get_sensor_number',
+                    },
+                ],
+                type: 'arduino_get_number_sensor_value',
+            },
+            paramsKeyMap: {
+                VALUE: 0,
+            },
+            class: 'arduino_value',
+            isNotFor: ['arduino'],
+            func: function(sprite, script) {
+                var signal = script.getValue('VALUE', script);
+                return Entry.hw.getAnalogPortValue(signal[1]);
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Arduino.sensor_value(%1)',
+                        blockType: 'param',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+        arduino_get_digital_value: {
+            color: '#00979D',
+            fontColor: '#fff',
+            skeleton: 'basic_boolean_field',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'arduino_get_port_number',
+                    },
+                ],
+                type: 'arduino_get_digital_value',
+            },
+            paramsKeyMap: {
+                VALUE: 0,
+            },
+            class: 'arduino_value',
+            isNotFor: ['arduino'],
+            func: function(sprite, script) {
+                var signal = script.getNumberValue('VALUE', script);
+                return Entry.hw.getDigitalPortValue(signal);
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Arduino.digitalRead(%1)',
+                        blockType: 'param',
+                        replaceBlockType: 'arduino_ext_get_digital',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+        arduino_toggle_led: {
+            color: '#00979D',
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.ARDUINO_on, 'on'],
+                        [Lang.Blocks.ARDUINO_off, 'off'],
+                    ],
+                    value: 'on',
+                    fontSize: 11,
+                    arrowColor: EntryStatic.ARROW_COLOR_HW,
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_03.png',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'arduino_get_port_number',
+                    },
+                    null,
+                    null,
+                ],
+                type: 'arduino_toggle_led',
+            },
+            paramsKeyMap: {
+                VALUE: 0,
+                OPERATOR: 1,
+            },
+            class: 'arduino_set',
+            isNotFor: ['arduino'],
+            func: function(sprite, script) {
+                var port = script.getNumberValue('VALUE');
+                var operator = script.getField('OPERATOR');
+                var value = operator == 'on' ? 255 : 0;
+                Entry.hw.setDigitalPortValue(port, value);
+                return script.callReturn();
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Arduino.pin_digital(%1, %2)',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.ARDUINO_on, 'on'],
+                                    [Lang.Blocks.ARDUINO_off, 'off'],
+                                ],
+                                value: 'on',
+                                fontSize: 11,
+                                arrowColor: EntryStatic.ARROW_COLOR_HW,
+                                converter:
+                                    Entry.block.converters.returnStringValue,
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+        arduino_toggle_pwm: {
+            color: '#00979D',
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_03.png',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'arduino_get_pwm_port_number',
+                    },
+                    {
+                        type: 'arduino_text',
+                        params: ['255'],
+                    },
+                    null,
+                ],
+                type: 'arduino_toggle_pwm',
+            },
+            paramsKeyMap: {
+                PORT: 0,
+                VALUE: 1,
+            },
+            class: 'arduino_set',
+            isNotFor: ['arduino'],
+            func: function(sprite, script) {
+                var port = script.getNumberValue('PORT');
+                var value = script.getNumberValue('VALUE');
+                value = Math.round(value);
+                value = Math.max(value, 0);
+                value = Math.min(value, 255);
+                Entry.hw.setDigitalPortValue(port, value);
+                return script.callReturn();
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Arduino.set_pin_digital(%1, %2)',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+        arduino_convert_scale: {
+            color: '#00979D',
+            fontColor: '#fff',
+            skeleton: 'basic_string_field',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'arduino_get_number_sensor_value',
+                        params: [
+                            {
+                                type: 'arduino_get_sensor_number',
+                                id: 'bl5e',
+                            },
+                        ],
+                    },
+                    {
+                        type: 'number',
+                        params: ['0'],
+                    },
+                    {
+                        type: 'number',
+                        params: ['1023'],
+                    },
+                    {
+                        type: 'number',
+                        params: ['0'],
+                    },
+                    {
+                        type: 'number',
+                        params: ['100'],
+                    },
+                ],
+                type: 'arduino_convert_scale',
+            },
+            paramsKeyMap: {
+                VALUE1: 0,
+                VALUE2: 1,
+                VALUE3: 2,
+                VALUE4: 3,
+                VALUE5: 4,
+            },
+            class: 'arduino',
+            isNotFor: ['arduino'],
+            func: function(sprite, script) {
+                var value1 = script.getNumberValue('VALUE1', script);
+                var value2 = script.getNumberValue('VALUE2', script);
+                var value3 = script.getNumberValue('VALUE3', script);
+                var value4 = script.getNumberValue('VALUE4', script);
+                var value5 = script.getNumberValue('VALUE5', script);
 
-    } 
-};
+                var stringValue4 = script.getValue('VALUE4', script);
+                var stringValue5 = script.getValue('VALUE5', script);
+                var isFloat = false;
 
-Entry.nemoino = {
-    name: 'nemoino',
-    setZero: Entry.Arduino.setZero
-};
+                if (
+                    (Entry.Utils.isNumber(stringValue4) &&
+                        stringValue4.indexOf('.') > -1) ||
+                    (Entry.Utils.isNumber(stringValue5) &&
+                        stringValue5.indexOf('.') > -1)
+                ) {
+                    isFloat = true;
+                }
 
-Entry.joystick = {
-    name: 'joystick',
-    setZero: Entry.Arduino.setZero
-};
+                var result = value1;
+                if (value2 > value3) {
+                    var swap = value2;
+                    value2 = value3;
+                    value3 = swap;
+                }
+                if (value4 > value5) {
+                    var swap = value4;
+                    value4 = value5;
+                    value5 = swap;
+                }
+                result -= value2;
+                result = result * ((value5 - value4) / (value3 - value2));
+                result += value4;
+                result = Math.min(value5, result);
+                result = Math.max(value4, result);
 
-//rokoboard start
-Entry.rokoboard = {
-    name: 'rokoboard',
-    setZero: Entry.Arduino.setZero,
-    monitorTemplate: Entry.Arduino.monitorTemplate
+                if (isFloat) {
+                    result = Math.round(result * 100) / 100;
+                } else {
+                    result = Math.round(result);
+                }
+
+                return result;
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Arduino.convert_scale(%1, %2, %3, %4, %5)',
+                        blockType: 'param',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                        ],
+                    },
+                ],
+            },
+        },
+        //endregion arduino 아두이노
+    };
 };
