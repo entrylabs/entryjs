@@ -1941,6 +1941,9 @@ Entry.Utils.stopProjectWithToast = function(scope, message, error) {
         );
     }
 
+    if(error) {
+        error.message = message + ': ' + error.message;
+      
     throw new Error(message);
 };
 
