@@ -52,9 +52,10 @@ Entry.coconut = {
     },
 
     move: function(direction) {
-        if (typeof direction == 'string') direction = directions[direction];
+        if (typeof direction == 'string')
+            direction = this.directions[direction];
         // seq, direction, speed, degree, time
-        return runPackage(devices['Motor'], 0, direction, speed);
+        return this.runPackage(this.devices['Motor'], 0, direction, this.speed);
     },
     /* Scratch coconut Extension import */
     speed: 60,
@@ -511,7 +512,7 @@ Entry.coconut = {
 
         // note ascii 코드로 변환하여 전송
         return this.runPackage(
-            devices['Buzzer'],
+            this.devices['Buzzer'],
             2,
             note.charCodeAt(0),
             octave,
@@ -886,18 +887,18 @@ Entry.coconut = {
     }, //function
 
     readShort: function(arr, position) {
-        var s = [arr[postion], arr[postion + 1]];
-        return parseShort(s);
+        var s = [arr[position], arr[position + 1]];
+        return parseFloat(s);
     }, //furnction
 
     readDouble: function(arr, position) {
-        return readFloat(arr, position);
+        return this.readFloat(arr, position);
     }, //function
 
     readString: function(arr, position, len) {
         var value = '';
         for (var ii = 0; ii < len; ii++) {
-            value += String.fromCharCode(_rxBuf[ii + position]);
+            // value += String.fromCharCode(_rxBuf[ii + position]);
         } //for
 
         return value;

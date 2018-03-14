@@ -1,0 +1,33 @@
+{
+    "globals": {
+        "_": true,
+        "arcon": true,
+        "goog": true,
+        "acorn": true,
+        "createjs": true,
+        "Entry": true,
+        "filbert": true,
+        "Blockly": true,
+        "BigNumber": true,
+        "Lang": true,
+        "context": true,
+        "popup": true,
+        "WebFont": true,
+        "CanvasInput": true,
+        "EntryStatic": true,
+        "EaselHandle": true,
+        "ndgmr": true,
+        "Ntry": true,
+        "Snap": true,
+        "mina": true,
+        "Touch": true,
+        "io": true,
+        "LC": true,
+        "ActiveXObject": true,
+        "CodeMirror": true,
+        "entrylms": true,
+        "require": true,
+        "module": true,
+        "process": true
+    }
+}

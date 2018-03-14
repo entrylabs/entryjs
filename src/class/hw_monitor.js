@@ -405,13 +405,7 @@ Entry.HWMonitor = function(hwModule) {
         this._alignNS(ports, this._template.height * (this.scale / 3) + 5, 27);
 
         ports = this._portMap.n.concat();
-        this._alignNS(ports, -this._template.height * this.scale / 3 - 32, -27);
-
-        ports = this._portMap.e.concat();
-        this._alignEW(ports, -this._template.width * this.scale / 3 - 5, -27);
-
-        ports = this._portMap.w.concat();
-        this._alignEW(ports, this._template.width * this.scale / 3 - 32, -27);
+        this._alignNS(ports, - this._template.height * this.scale / 3 - 32, - 27);
     };
 
     p.alignList = function() {
@@ -438,60 +432,6 @@ Entry.HWMonitor = function(hwModule) {
             -this._template.width * this.scale / 2 - 32,
             -27
         );
-    };
-
-    p._alignEW = function(ports, xCursor, gap) {
-        var length = ports.length;
-        var mid = (length - 1) / 2;
-        var standardsize = this._rect.height - 50;
-        var tP = -standardsize / 2;
-        var bP = standardsize / 2;
-        var height = this._rect.height;
-        var wholeHeight = 0;
-        var listVLine = 0;
-        var mode = this._hwModule.monitorTemplate;
-
-        for (var i = 0; i < length; i++) {
-            wholeHeight += ports[i].height + 5;
-        }
-
-        if (wholeHeight < bP - tP) {
-            bP = wholeHeight / 2 + 3;
-            tP = -wholeHeight / 2 - 3;
-        }
-
-        while (length > 1) {
-            var tPort = ports.shift(),
-                bPort = ports.pop(),
-                prevTP = tP,
-                prevBP = bP,
-                gapTemp = gap;
-            if (wholeWidth <= bP - tP) {
-                tP += tPort.width + 5;
-                bP -= bPort.width + 5;
-                gapTemp = 0;
-            } else if (ports.length === 0) {
-                tP = (tP + bP) / 2 - 3;
-                bP = tP + 6;
-            } else {
-                tP = Math.max(tP, -width / 2 + tPort.width) + 15;
-                bP = Math.min(bP, width / 2 - bPort.width) - 15;
-            }
-
-            wholeWidth -= tPort.width + bPort.width + 10;
-            xCursor += gapTemp;
-        }
-
-        if (ports.length) {
-            ports[0].group.attr({
-                transform: 'translate(' + xCursor + ',' + 60 + ')',
-            });
-        }
-
-        if (tPort && rPort) {
-            this._movePort(tPort, xCursor, tP, prevTP);
-            this._movePort(rPort, xCursor, bP, prevBP);
-        }
     };
 
     p._alignNS = function(ports, yCursor, gap) {
@@ -546,12 +486,12 @@ Entry.HWMonitor = function(hwModule) {
         }
     };
 
-    p._alignNSList = function(ports, yCursor) {
+     p._alignNSList = function(ports, yCursor) {
         var length = ports.length;
         var width = this._rect.width;
         var height = this._rect.height;
-        var initX = -this._rect.width / 2 + 10;
-        var initY = -this._rect.height / 2 + 10;
+        var initX = - this._rect.width / 2 + 10;
+        var initY = - this._rect.height/ 2 + 10;
         var wholeWidth = 0;
         var listLine = 0;
 

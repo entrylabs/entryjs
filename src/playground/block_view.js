@@ -544,7 +544,6 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
         } else if (Entry.Utils.isRightButton(e)) this._rightClick(e);
 
         if (board.workspace.getMode() === Entry.Workspace.MODE_VIMBOARD && e) {
-            vimBoard = $('.entryVimBoard>.CodeMirror')[0];
             document
                 .getElementsByClassName('CodeMirror')[0]
                 .dispatchEvent(

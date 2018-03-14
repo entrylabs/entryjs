@@ -603,7 +603,7 @@ Entry.TextCodingUtil = {};
         for (var i in entryLists) {
             var entryList = entryLists[i];
             if (entryList.object_ === null && entryList.name_ == name) {
-                list = {
+                var list = {
                     x: entryList.x_,
                     y: entryList.y_,
                     id: entryList.id_,
@@ -2087,6 +2087,7 @@ Entry.TextCodingUtil = {};
         var paramsTokens = paramsParts.split(',');
         var mathValue = paramsTokens[0];
         var mathOption = paramsTokens[1];
+        var mathProperty;
 
         mathOption = mathOption.substring(2, mathOption.length - 2).trim();
 
