@@ -1,15 +1,12 @@
-"use strict";
+'use strict';
 
-goog.provide("Entry.BlockDriver");
-
-Entry.BlockDriver = function() {
-};
+Entry.BlockDriver = function() {};
 
 (function(p) {
     p.convert = function() {
         var time = new Date();
         for (var blockType in Entry.block) {
-            if (typeof Entry.block[blockType] === "function") {
+            if (typeof Entry.block[blockType] === 'function') {
                 this._convertBlock(blockType);
             }
         }
@@ -23,7 +20,6 @@ Entry.BlockDriver = function() {
         if (blockInfo) {
             className = blockInfo.class;
             isNotFor = blockInfo.isNotFor;
-
 
             //add block definition by xml to json
             var xml = blockInfo.xml;
@@ -40,29 +36,35 @@ Entry.BlockDriver = function() {
         blockObject.isNotFor = isNotFor;
 
         if (_.isEmpty(blockObject.paramsKeyMap))
-            delete blockObject.paramsKeyMap
+            delete blockObject.paramsKeyMap;
         if (_.isEmpty(blockObject.statementsKeyMap))
-            delete blockObject.statementsKeyMap
+            delete blockObject.statementsKeyMap;
 
         blockObject.func = Entry.block[blockType];
 
-        var PRIMITIVES = ['NUMBER', 'TRUE', 'FALSE',
-            'TEXT', 'FUNCTION_PARAM_BOOLEAN', 'FUNCTION_PARAM_STRING', 'TRUE_UN'];
+        var PRIMITIVES = [
+            'NUMBER',
+            'TRUE',
+            'FALSE',
+            'TEXT',
+            'FUNCTION_PARAM_BOOLEAN',
+            'FUNCTION_PARAM_STRING',
+            'TRUE_UN',
+        ];
 
         if (PRIMITIVES.indexOf(blockType.toUpperCase()) > -1)
             blockObject.isPrimitive = true;
         Entry.block[blockType] = blockObject;
 
-
         function generateBlockDef(block) {
             var def = {
                 type: block.getAttribute('type'),
-                index: {}
+                index: {},
             };
 
             var children = $(block).children();
             if (!children) return def;
-            for (var i =0; i<children.length; i++) {
+            for (var i = 0; i < children.length; i++) {
                 var child = children[i];
                 var tagName = child.tagName;
                 var subChild = $(child).children()[0];
@@ -71,26 +73,24 @@ Entry.BlockDriver = function() {
                     if (subChild.nodeName == 'block') {
                         if (!def.params) def.params = [];
                         def.params.push(generateBlockDef(subChild));
-                        def.index[key] = def.params.length-1;
+                        def.index[key] = def.params.length - 1;
                     }
                 } else if (tagName === 'field') {
                     if (!def.params) def.params = [];
                     def.params.push(child.textContent);
-                    def.index[key] = def.params.length-1;
+                    def.index[key] = def.params.length - 1;
                 }
             }
             return def;
         }
     };
-
-
 })(Entry.BlockDriver.prototype);
 
 Entry.BlockMockup = function(blocklyInfo, def, blockType) {
     this.templates = [];
     this.params = [];
     this.statements = [];
-    this.color = "";
+    this.color = '';
     this.isPrev = false;
     this.isNext = false;
     this.output = false;
@@ -101,7 +101,7 @@ Entry.BlockMockup = function(blocklyInfo, def, blockType) {
     this.statementsKeyMap = {};
     this.definition = {
         params: [],
-        type: this.def.type
+        type: this.def.type,
     };
 
     this.simulate(blocklyInfo);
@@ -110,14 +110,11 @@ Entry.BlockMockup = function(blocklyInfo, def, blockType) {
 
 (function(p) {
     p.simulate = function(blocklyInfo) {
-        if (blocklyInfo.sensorList)
-            this.sensorList = blocklyInfo.sensorList;
-        if (blocklyInfo.portList)
-            this.portList = blocklyInfo.portList;
+        if (blocklyInfo.sensorList) this.sensorList = blocklyInfo.sensorList;
+        if (blocklyInfo.portList) this.portList = blocklyInfo.portList;
         blocklyInfo.init.call(this);
         if (blocklyInfo.whenAdd) {
-            if (!this.events.blockViewAdd)
-                this.events.blockViewAdd = [];
+            if (!this.events.blockViewAdd) this.events.blockViewAdd = [];
             this.events.blockViewAdd.push(blocklyInfo.whenAdd);
         }
 
@@ -129,32 +126,24 @@ Entry.BlockMockup = function(blocklyInfo, def, blockType) {
     };
 
     p.toJSON = function() {
-        var skeleton = "";
+        var skeleton = '';
         if (this.output)
-            if (this.output === "Boolean")
-                skeleton = "basic_boolean_field";
-            else
-                skeleton = "basic_string_field";
-        else if (!this.isPrev && this.isNext)
-            skeleton = "basic_event";
-        else if (this.statements.length == 1)
-            skeleton = "basic_loop";
-        else if (this.statements.length == 2)
-            skeleton = "basic_double_loop";
-        else if (this.isPrev && this.isNext)
-            skeleton = "basic";
-        else if (this.isPrev && !this.isNext)
-            skeleton = "basic_without_next";
+            if (this.output === 'Boolean') skeleton = 'basic_boolean_field';
+            else skeleton = 'basic_string_field';
+        else if (!this.isPrev && this.isNext) skeleton = 'basic_event';
+        else if (this.statements.length == 1) skeleton = 'basic_loop';
+        else if (this.statements.length == 2) skeleton = 'basic_double_loop';
+        else if (this.isPrev && this.isNext) skeleton = 'basic';
+        else if (this.isPrev && !this.isNext) skeleton = 'basic_without_next';
 
-
-        var def = this.def
-        removeIndex(def)
+        var def = this.def;
+        removeIndex(def);
 
         function removeIndex(def) {
             if (!def) return;
             var params = def.params;
             if (!params) return;
-            for (var i=0; i<params.length; i++) {
+            for (var i = 0; i < params.length; i++) {
                 var param = params[i];
                 if (!param) continue;
                 delete param.index;
@@ -162,23 +151,27 @@ Entry.BlockMockup = function(blocklyInfo, def, blockType) {
             }
         }
 
-        var reg = /dummy_/mi;
+        var reg = /dummy_/im;
         for (var key in this.paramsKeyMap)
-            if (reg.test(key)) delete this.paramsKeyMap[key]
+            if (reg.test(key)) delete this.paramsKeyMap[key];
 
         for (key in this.statementsKeyMap)
-            if (reg.test(key)) delete this.statementsKeyMap[key]
+            if (reg.test(key)) delete this.statementsKeyMap[key];
 
         return {
             color: this.color,
             skeleton: skeleton,
             statements: this.statements,
-            template: this.templates.filter(function(p) {return typeof p === "string";}).join(" "),
+            template: this.templates
+                .filter(function(p) {
+                    return typeof p === 'string';
+                })
+                .join(' '),
             params: this.params,
             events: this.events,
             def: this.def,
             paramsKeyMap: this.paramsKeyMap,
-            statementsKeyMap: this.statementsKeyMap
+            statementsKeyMap: this.statementsKeyMap,
         };
     };
 
@@ -190,13 +183,14 @@ Entry.BlockMockup = function(blocklyInfo, def, blockType) {
         // field block
         if (this.def && this.def.index) {
             if (this.def.index[key] !== undefined) {
-                this.definition.params.push(this.def.params[this.def.index[key]])
-            } else
-                this.definition.params.push(null)
+                this.definition.params.push(
+                    this.def.params[this.def.index[key]]
+                );
+            } else this.definition.params.push(null);
         }
         this.params.push({
-            type: "Block",
-            accept: "string"
+            type: 'Block',
+            accept: 'string',
         });
 
         this._addToParamsKeyMap(key);
@@ -206,7 +200,7 @@ Entry.BlockMockup = function(blocklyInfo, def, blockType) {
 
     p.appendStatementInput = function(key) {
         var statement = {
-            accept: "basic"
+            accept: 'basic',
         };
         this._addToStatementsKeyMap(key);
         this.statements.push(statement);
@@ -215,109 +209,128 @@ Entry.BlockMockup = function(blocklyInfo, def, blockType) {
     p.setCheck = function(accept) {
         //add value
         var params = this.params;
-        if (accept === "Boolean")
-            params[params.length - 1].accept =
-                "boolean";
+        if (accept === 'Boolean') params[params.length - 1].accept = 'boolean';
     };
 
     p.appendField = function(field, opt) {
         if (!field) return this;
-        if (typeof field === "string" && field.length > 0) {
+        if (typeof field === 'string' && field.length > 0) {
             if (opt) {
                 field = {
                     type: 'Text',
                     text: field,
-                    color: opt
+                    color: opt,
                 };
                 this.params.push(field);
                 this._addToParamsKeyMap();
                 this.templates.push(this.getFieldCount());
-                if (this.def && this.def.index && this.def.index[opt] !== undefined) {
-                    this.definition.params.push(this.def.params[this.def.index[opt]])
-                } else
-                    this.definition.params.push(undefined);
+                if (
+                    this.def &&
+                    this.def.index &&
+                    this.def.index[opt] !== undefined
+                ) {
+                    this.definition.params.push(
+                        this.def.params[this.def.index[opt]]
+                    );
+                } else this.definition.params.push(undefined);
             } else {
                 this.templates.push(field);
             }
         } else {
             if (field.constructor == Blockly.FieldIcon) {
-                if (field.type === "start")
+                if (field.type === 'start')
                     this.params.push({
-                        type: "Indicator",
+                        type: 'Indicator',
                         img: field.src_,
                         size: 17,
                         position: {
-                            x: 0, y: -2
-                        }
+                            x: 0,
+                            y: -2,
+                        },
                     });
                 else
                     this.params.push({
-                        type: "Indicator",
+                        type: 'Indicator',
                         img: field.src_,
                         size: 12,
                     });
                 this._addToParamsKeyMap();
                 this.templates.push(this.getFieldCount());
-                if (this.definition)
-                    this.definition.params.push(null);
+                if (this.definition) this.definition.params.push(null);
             } else if (field.constructor == Blockly.FieldDropdown) {
                 this.params.push({
-                    type: "Dropdown",
+                    type: 'Dropdown',
                     options: field.menuGenerator_,
                     value: field.menuGenerator_[0][1],
-                    fontSize: 11
+                    fontSize: 11,
                 });
                 this._addToParamsKeyMap(opt);
 
                 this.templates.push(this.getFieldCount());
-                if (this.def && this.def.index && this.def.index[opt] !== undefined) {
-                    this.definition.params.push(this.def.params[this.def.index[opt]])
-                } else
-                    this.definition.params.push(undefined);
+                if (
+                    this.def &&
+                    this.def.index &&
+                    this.def.index[opt] !== undefined
+                ) {
+                    this.definition.params.push(
+                        this.def.params[this.def.index[opt]]
+                    );
+                } else this.definition.params.push(undefined);
             } else if (field.constructor == Blockly.FieldDropdownDynamic) {
                 this.params.push({
-                    type: "DropdownDynamic",
+                    type: 'DropdownDynamic',
                     value: null,
                     menuName: field.menuName_,
-                    fontSize: 11
+                    fontSize: 11,
                 });
                 this.templates.push(this.getFieldCount());
-                if (this.def && this.def.index && this.def.index[opt] !== undefined) {
-                    this.definition.params.push(this.def.params[this.def.index[opt]])
-                } else
-                    this.definition.params.push(undefined);
+                if (
+                    this.def &&
+                    this.def.index &&
+                    this.def.index[opt] !== undefined
+                ) {
+                    this.definition.params.push(
+                        this.def.params[this.def.index[opt]]
+                    );
+                } else this.definition.params.push(undefined);
                 this._addToParamsKeyMap(opt);
             } else if (field.constructor == Blockly.FieldTextInput) {
                 this.params.push({
-                    type: "TextInput",
-                    value: 10
+                    type: 'TextInput',
+                    value: 10,
                 });
                 this.templates.push(this.getFieldCount());
                 this._addToParamsKeyMap(opt);
             } else if (field.constructor == Blockly.FieldAngle) {
                 this.params.push({
-                    type: "Angle"
+                    type: 'Angle',
                 });
                 this.templates.push(this.getFieldCount());
-                if (this.def && this.def.index && this.def.index[opt] !== undefined) {
-                    this.definition.params.push(this.def.params[this.def.index[opt]])
-                } else
-                    this.definition.params.push(null);
+                if (
+                    this.def &&
+                    this.def.index &&
+                    this.def.index[opt] !== undefined
+                ) {
+                    this.definition.params.push(
+                        this.def.params[this.def.index[opt]]
+                    );
+                } else this.definition.params.push(null);
                 this._addToParamsKeyMap(opt);
             } else if (field.constructor == Blockly.FieldKeydownInput) {
                 this.params.push({
-                    type: "Keyboard",
-                    value: 81
+                    type: 'Keyboard',
+                    value: 81,
                 });
                 this.templates.push(this.getFieldCount());
                 if (this.def.index[opt] !== undefined) {
-                    this.definition.params.push(this.def.params[this.def.index[opt]])
-                } else
-                    this.definition.params.push(undefined);
+                    this.definition.params.push(
+                        this.def.params[this.def.index[opt]]
+                    );
+                } else this.definition.params.push(undefined);
                 this._addToParamsKeyMap(opt);
             } else if (field.constructor == Blockly.FieldColour) {
                 this.params.push({
-                    type: "Color"
+                    type: 'Color',
                 });
                 this.templates.push(this.getFieldCount());
                 this._addToParamsKeyMap(opt);
@@ -333,12 +346,10 @@ Entry.BlockMockup = function(blocklyInfo, def, blockType) {
         this.color = color;
     };
 
-    p.setInputsInline = function() {
-    };
+    p.setInputsInline = function() {};
 
     p.setOutput = function(bool, type) {
-        if (!bool)
-            return;
+        if (!bool) return;
         this.output = type;
     };
 
@@ -351,25 +362,23 @@ Entry.BlockMockup = function(blocklyInfo, def, blockType) {
     };
 
     p.setEditable = function(bool) {
-         // Not implemented
+        // Not implemented
     };
 
     p.getFieldCount = function() {
         this.fieldCount++;
-        return "%" + this.fieldCount;
+        return '%' + this.fieldCount;
     };
 
     p._addToParamsKeyMap = function(key) {
-        key = key ? key : 'dummy_'+ Entry.Utils.generateId();
+        key = key ? key : 'dummy_' + Entry.Utils.generateId();
         var map = this.paramsKeyMap;
         map[key] = Object.keys(map).length;
     };
 
     p._addToStatementsKeyMap = function(key) {
-        key = key ? key : 'dummy_'+ Entry.Utils.generateId();
+        key = key ? key : 'dummy_' + Entry.Utils.generateId();
         var map = this.statementsKeyMap;
         map[key] = Object.keys(map).length;
     };
-
-
 })(Entry.BlockMockup.prototype);

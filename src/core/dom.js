@@ -3,9 +3,7 @@
  * @author Kyumin Sim
  * @version 0.2
  */
-"use strict";
-
-goog.provide('Entry.Dom');
+'use strict';
 
 /**
  * Function for construct html dom element.
@@ -13,7 +11,7 @@ goog.provide('Entry.Dom');
  * @param {string} tag or html to construct dom element.
  * @param {?object} options include id, classes, parent etc.
  */
-Entry.Dom = function (tag, options) {
+Entry.Dom = function(tag, options) {
     var tagRegex = /<(\w+)>/,
         dom;
 
@@ -25,7 +23,10 @@ Entry.Dom = function (tag, options) {
     if (options === undefined) return dom;
     if (options.id) dom.attr('id', options.id);
     if (options.class) dom.addClass(options.class);
-    if (options.classes) options.classes.map(function (className) {dom.addClass(className);});
+    if (options.classes)
+        options.classes.map(function(className) {
+            dom.addClass(className);
+        });
     if (options.src) dom.attr('src', options.src);
     if (options.parent) options.parent.append(dom);
 
@@ -34,21 +35,23 @@ Entry.Dom = function (tag, options) {
         var child;
         var func;
 
-        var handler = function (e) {
+        var handler = function(e) {
             e.stopImmediatePropagation();
             if (e.handled) return;
             e.handled = true;
             func.call(this, e);
-        }
+        };
 
-        if(arguments.length > 1 ) {
-            func = (arguments[1] instanceof Function) ? arguments[1] : function () {};
-            child = (typeof arguments[0] === 'string') ? arguments[0] : '';
+        if (arguments.length > 1) {
+            func =
+                arguments[1] instanceof Function ? arguments[1] : function() {};
+            child = typeof arguments[0] === 'string' ? arguments[0] : '';
         } else {
-            func = (arguments[0] instanceof Function) ? arguments[0] : function () {};
+            func =
+                arguments[0] instanceof Function ? arguments[0] : function() {};
         }
 
-        if(child) {
+        if (child) {
             $(this).on('click tab', child, handler);
         } else {
             $(this).on('click tab', handler);
@@ -57,4 +60,3 @@ Entry.Dom = function (tag, options) {
 
     return dom;
 };
-

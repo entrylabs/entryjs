@@ -3,10 +3,9 @@
  */
 'use strict';
 
-goog.provide("Entry.TargetChecker");
 
-goog.require("Entry.Utils");
-goog.require("Entry.Extension");
+require("../util/utils")
+require("../extensions/extension")
 
 /**
  * @constructor

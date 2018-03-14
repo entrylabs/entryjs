@@ -3,9 +3,6 @@
  */
 "use strict";
 
-goog.require("Entry.Command");
-goog.require("Entry.STATIC");
-
 (function(c) {
     var COMMAND_TYPES = Entry.STATIC.COMMAND_TYPES;
 

@@ -1,16 +1,15 @@
 'use strict';
 
-goog.provide('Entry.ContextMenu');
+Entry.ContextMenu = {};
 
 (function(ctx) {
     ctx.visible = false;
     ctx._hideEvent = null;
 
     ctx.createDom = function() {
-
         this.dom = Entry.Dom('ul', {
             id: 'entry-contextmenu',
-            parent: $('body')
+            parent: $('body'),
         });
 
         this.dom.bind('mousedown touchstart', function(e) {
@@ -21,9 +20,9 @@ goog.provide('Entry.ContextMenu');
     };
 
     ctx.show = function(options, className, coordinate) {
-        this._hideEvent = Entry.documentMousedown.attach(
-            this, function(){this.hide();}
-        );
+        this._hideEvent = Entry.documentMousedown.attach(this, function() {
+            this.hide();
+        });
         if (!this.dom) this.createDom();
         if (options.length === 0) return;
         var that = this;
@@ -36,7 +35,7 @@ goog.provide('Entry.ContextMenu');
 
         parent.empty();
 
-        for (var i=0, len=options.length; i<len; i++) {
+        for (var i = 0, len = options.length; i < len; i++) {
             var option = options[i];
             var text = option.text;
             var enable = option.enable !== false;
@@ -52,7 +51,7 @@ goog.provide('Entry.ContextMenu');
 
                 if (enable && option.callback) {
                     (function(elem, cb) {
-                        elem.mousedown(function(e){
+                        elem.mousedown(function(e) {
                             e.preventDefault();
                             that.hide();
                             cb(e);
@@ -72,7 +71,7 @@ goog.provide('Entry.ContextMenu');
         var dom = this.dom;
         dom.css({
             left: 0,
-            top: 0
+            top: 0,
         });
         var width = dom.width();
         var height = dom.height();
@@ -81,16 +80,13 @@ goog.provide('Entry.ContextMenu');
         var winWidth = win.width();
         var winHeight = win.height();
 
-        if (pos.x + width > winWidth)
-            pos.x -= width + 3;
-        if (pos.y + height > winHeight)
-            pos.y -= height;
+        if (pos.x + width > winWidth) pos.x -= width + 3;
+        if (pos.y + height > winHeight) pos.y -= height;
 
         dom.css({
             left: pos.x,
-            top: pos.y
+            top: pos.y,
         });
-
     };
 
     ctx.hide = function() {
@@ -102,30 +98,35 @@ goog.provide('Entry.ContextMenu');
             delete this._className;
         }
         if (this._hideEvent) {
-            Entry.documentMousedown.detach(this._hideEvent);
+            this._hideEvent.destroy();
             this._hideEvent = null;
         }
     };
 
     ctx.onContextmenu = function(target, callback) {
-        target.on('touchstart mousemove mouseup contextmenu', function (e) {
-            switch(e.type) {
+        target.on('touchstart mousemove mouseup contextmenu', function(e) {
+            switch (e.type) {
                 case 'touchstart':
                     var startEvent = Entry.Utils.convertMouseEvent(e);
                     this.coordi = {
                         x: startEvent.clientX,
                         y: startEvent.clientY,
-                    }
+                    };
 
-                    this.longTouchEvent = setTimeout((function() {
-                        callback(this.coordi);
-                        this.longTouchEvent = undefined;
-                    }).bind(this), 900);
+                    this.longTouchEvent = setTimeout(
+                        function() {
+                            callback(this.coordi);
+                            this.longTouchEvent = undefined;
+                        }.bind(this),
+                        900
+                    );
                     break;
                 case 'mousemove':
-                    if(!this.coordi) return;
-                    var diff = Math.sqrt(Math.pow(e.pageX - this.coordi.x, 2) +
-                            Math.pow(e.pageY - this.coordi.y, 2));
+                    if (!this.coordi) return;
+                    var diff = Math.sqrt(
+                        Math.pow(e.pageX - this.coordi.x, 2) +
+                            Math.pow(e.pageY - this.coordi.y, 2)
+                    );
                     if (diff > 5 && this.longTouchEvent) {
                         clearTimeout(this.longTouchEvent);
                         this.longTouchEvent = undefined;
@@ -141,7 +142,7 @@ goog.provide('Entry.ContextMenu');
                 case 'contextmenu':
                     clearTimeout(this.longTouchEvent);
                     this.longTouchEvent = undefined;
-                    if(e.type === 'contextmenu') {
+                    if (e.type === 'contextmenu') {
                         // e.stopPropagation();
                         // e.preventDefault();
                         callback(this.coordi);
@@ -149,7 +150,5 @@ goog.provide('Entry.ContextMenu');
                     break;
             }
         });
-    }
-
-
+    };
 })(Entry.ContextMenu);

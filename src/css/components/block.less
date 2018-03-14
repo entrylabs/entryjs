@@ -17,12 +17,14 @@
 }
 
 .block {
-    cursor: url('@{image_url}handopen.cur') 8 5, auto;
+    cursor: url('/media/handopen.cur'),
+            auto;
     -ms-touch-action: none;
 }
 
 .block.dragging {
-    cursor: url('@{image_url}handclosed.cur') 8 5, auto;
+    cursor: url('/media/handclosed.cur'),
+            auto;
 }
 
 .block.selected > path {
@@ -33,19 +35,6 @@
 .block.activated > g > path {
     stroke-width: 3px;
     stroke: red;
-
-    /*stroke-dasharray: 20;*/
-    /*stroke-dashoffset: 1000;*/
-    /*-webkit-animation: activationDash 15s forwards linear;*/
-    /*-webkit-animation-iteration-count: infinite;*/
-    /*-moz-animation: activationDash 15s forwards linear;*/
-    /*-moz-animation-iteration-count: infinite;*/
-    /*animation: activationDash 15s forwards linear;*/
-    /*animation-iteration-count: infinite;*/
-    /*-o-animation: activationDash 15s forwards linear;*/
-    /*-o-animation-iteration-count: infinite;*/
-    /*-ms-animation: activationDash 15s forwards linear;*/
-    /*-ms-animation-iteration-count: infinite;*/
 }
 
 @keyframes activationDash {
@@ -100,35 +89,36 @@ svg .svgBlockGroup text {
     z-index: 301;
  }
 
-.entry-widget-input-field::-ms-clear, .entry-widget-input-field::-ms-reveal {
+.entry-widget-input-field::-ms-clear, 
+.entry-widget-input-field::-ms-reveal {
     display: none;
 }
 
  .entry-field-angle {
-     cursor: default;
+    cursor: default;
  }
 
 .entry-field-angle-circle {
-    stroke: #444;
+    stroke: #dbdbdb;
     stroke-width: 1;
-    fill: #ddd;
+    fill: #FBFBFB;
     fill-opacity: 0.8;
 }
 
 .entry-angle-divider {
-    stroke: #444;
+    stroke: #bababa;
     stroke-width: 1;
 }
 
 .entry-angle-indicator {
-    stroke: #f00;
-    stroke-width: 2;
+    stroke: #333333;
+    stroke-width: 1;
     stroke-linecap: round;
 }
 
 .entry-angle-fill-area {
-    fill: #f88;
-    fill-opacity: 0.8;
+    fill: #5096f5;
+    fill-opacity: 0.3;
 }
 
 .entryWorkspaceFilters {
@@ -138,7 +128,7 @@ svg .svgBlockGroup text {
 }
 
 .entry-widget-keyboard-input {
-     position: fixed;
+    position: fixed;
 }
 
 .entry-widget-dropdown {
@@ -262,8 +252,8 @@ svg .svgBlockGroup text {
     to {opacity:0.2}
 }
 
-.entry-field-dropdown {
-     cursor: default;
+g.entry-field-dropdown {
+    cursor: default;
 }
 
 .guideGroup {
