@@ -3,15 +3,10 @@
  */
 'use strict';
 
-(function (c) {
-    var {
-        COMMAND_TYPES,
-        RECORDABLE,
-    } = Entry.STATIC;
+var { createTooltip, returnEmptyArr } = require('../command_util');
 
-    function returnEmptyArr() {
-        return [];
-    }
+(function(c) {
+    var { COMMAND_TYPES, RECORDABLE } = Entry.STATIC;
 
     var {
         variableContainerSelectFilter,
@@ -21,17 +16,17 @@
         variableContainerRemoveVariable,
         variableContainerAddMessage,
         variableContainerRemoveMessage,
-        messageSetName
+        messageSetName,
     } = COMMAND_TYPES;
 
     c[variableContainerSelectFilter] = {
-        do: function (newType, oldType) {
+        do: function(newType, oldType) {
             Entry.variableContainer.selectFilter(newType);
         },
-        state: function (newType, oldType) {
+        state: function(newType, oldType) {
             return [oldType, newType];
         },
-        log: function (newType, oldType) {
+        log: function(newType, oldType) {
             oldType = oldType || 'all';
             return [['newType', newType], ['oldType', oldType]];
         },
@@ -41,7 +36,7 @@
     };
 
     c[variableContainerClickVariableAddButton] = {
-        do: function () {
+        do: function() {
             Entry.variableContainer.clickVariableAddButton();
         },
         state: returnEmptyArr,
@@ -52,7 +47,7 @@
     };
 
     c[variableContainerAddVariable] = {
-        do: function (variable) {
+        do: function(variable) {
             var that = c[variableContainerAddVariable];
             var hashId = that.hashId;
             if (hashId) {
@@ -61,7 +56,7 @@
             }
             Entry.variableContainer.addVariable(variable);
         },
-        state: function (variable) {
+        state: function(variable) {
             if (variable instanceof Entry.Variable)
                 variable = variable.toJSON();
             var that = c[variableContainerAddVariable];
@@ -69,7 +64,7 @@
             if (hashId) variable.id = hashId;
             return [variable];
         },
-        log: function (variable) {
+        log: function(variable) {
             if (variable instanceof Entry.Variable)
                 variable = variable.toJSON();
             return [['variable', variable]];
@@ -77,35 +72,22 @@
         recordable: RECORDABLE.SUPPORT,
         validate: false,
         undo: 'variableContainerRemoveVariable',
-        restrict: function (data, domQuery, callback) {
+        restrict: function(data, domQuery, callback) {
             Entry.variableContainer.clickVariableAddButton(true, true);
             var dom = $('.entryVariableAddSpaceInputWorkspace');
             dom.val(data.content[1][1].name);
 
             this.hashId = data.content[1][1].id;
 
-            var tooltip = new Entry.Tooltip(
-                [
-                    {
-                        title: data.tooltip.title,
-                        content: data.tooltip.content,
-                        target: domQuery,
-                    },
-                ],
-                {
-                    restrict: true,
-                    dimmed: true,
-                    callBack: callback,
-                }
-            );
+            var { title, content } = data.tooltip;
             callback();
-            return tooltip;
+            return createTooltip(title, content, domQuery, callback);
         },
         dom: ['variableContainer', 'variableAddConfirmButton'],
     };
 
     c[variableAddSetName] = {
-        do: function (value) {
+        do: function(value) {
             var that = c[variableAddSetName];
             var dom = $('.entryVariableAddSpaceInputWorkspace');
             dom[0].blurred = true;
@@ -114,38 +96,21 @@
             dom.val(value);
             delete that._nextValue;
         },
-        state: function (value) {
+        state: function(value) {
             return [''];
         },
-        log: function (value) {
-            return [
-                [
-                    'value',
-                    c[variableAddSetName]._nextValue || value,
-                ],
-            ];
+        log: function(value) {
+            return [['value', c[variableAddSetName]._nextValue || value]];
         },
-        restrict: function (data, domQuery, callback) {
+        restrict: function(data, domQuery, callback) {
             Entry.variableContainer.clickVariableAddButton(true);
             this._nextValue = data.content[1][1];
             var dom = $('.entryVariableAddSpaceInputWorkspace');
             dom[0].enterKeyDisabled = true;
-            var tooltip = new Entry.Tooltip(
-                [
-                    {
-                        title: data.tooltip.title,
-                        content: data.tooltip.content,
-                        target: domQuery,
-                    },
-                ],
-                {
-                    restrict: true,
-                    noDispose: true,
-                    dimmed: true,
-                    callBack: callback,
-                }
-            );
-            return tooltip;
+            var { title, content } = data.tooltip;
+            return createTooltip(title, content, domQuery, callback, {
+                noDispose: true,
+            });
         },
         validate: false,
         recordable: RECORDABLE.SUPPORT,
@@ -154,15 +119,15 @@
     };
 
     c[variableContainerRemoveVariable] = {
-        do: function (variable) {
+        do: function(variable) {
             Entry.variableContainer.removeVariable(variable);
         },
-        state: function (variable) {
+        state: function(variable) {
             if (variable instanceof Entry.Variable)
                 variable = variable.toJSON();
             return [variable];
         },
-        log: function (variable) {
+        log: function(variable) {
             if (variable instanceof Entry.Variable)
                 variable = variable.toJSON();
             return [['variable', variable]];
@@ -174,43 +139,30 @@
     };
 
     c[variableContainerAddMessage] = {
-        do: function (message) {
+        do: function(message) {
             var that = c[variableContainerAddMessage];
             var { hashId } = that;
             if (hashId) {
                 message.id = hashId;
                 delete that.hashId;
             }
+
             Entry.variableContainer.addMessage(message);
         },
-        state: function (message) {
+        state: function(message) {
             var { hashId } = c[variableContainerAddMessage];
             if (hashId) message.id = hashId;
             return [message];
         },
-        log: function ({name, id}) {
-            return [['message', {name, id}]];
+        log: function({ name, id }) {
+            return [['message', { name, id }]];
         },
         restrict(data, domQuery, callback) {
             var { content: contentData, tooltip: { title, content } } = data;
 
             this.hashId = contentData[1][1].id;
-            var tooltip = new Entry.Tooltip(
-                [
-                    {
-                        title,
-                        content,
-                        target: domQuery,
-                    },
-                ],
-                {
-                    restrict: true,
-                    dimmed: true,
-                    callBack: callback,
-                }
-            );
             callback();
-            return tooltip;
+            return createTooltip(title, content, domQuery, callback);
         },
         validate: false,
         recordable: RECORDABLE.SUPPORT,
@@ -223,11 +175,11 @@
             var { variableContainer } = Entry;
             variableContainer.removeMessage(variableContainer.getMessage(id));
         },
-        state({id, name}) {
+        state({ id, name }) {
             return [{ id, name }];
         },
-        log({id, name}) {
-            return [['message', {name, id}]];
+        log({ id, name }) {
+            return [['message', { name, id }]];
         },
         validate: false,
         recordable: RECORDABLE.SUPPORT,
@@ -236,20 +188,33 @@
     };
 
     c[messageSetName] = {
-        do(message, newName) {
-            Entry.variableContainer.changeMessageName(message, newName);
-        },
-        state(message, newName) {
-            return [message, message.name];
-        },
-        log({id, name}) {
-            return [];
+        do(id, newName) {
+            var { variableContainer } = Entry;
+            var message = variableContainer.getMessage(id);
+            var nameField = message.listElement.nameField;
 
+            nameField.blurred = true;
+            variableContainer.changeMessageName(message, newName);
+        },
+        state(id) {
+            var { name } = Entry.variableContainer.getMessage(id);
+            return [id, name];
+        },
+        log(id, newName) {
+            return [['id', id], ['newName', newName]];
+        },
+        restrict(data, domQuery, callback) {
+            var { content: contentData, tooltip: { title, content } } = data;
+
+            callback();
+            var { variableContainer } = Entry;
+            var message = variableContainer.getMessage(domQuery[2]);
+            delete message.listElement.nameField.isFirst;
+            variableContainer.activateMessageEditView(message);
+            return createTooltip(title, content, domQuery, callback);
         },
         recordable: RECORDABLE.SUPPORT,
         undo: 'messageSetName',
-        dom: ['variableContainer', 'messageAddButton'],
+        dom: ['variableContainer', 'messageList', '&0'],
     };
-
-
 })(Entry.Command);

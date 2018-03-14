@@ -35,20 +35,18 @@ Entry.Commander = function (injectType) {
         if (typeof commandType === 'string')
             commandType = Entry.STATIC.COMMAND_TYPES[commandType];
         var that = this;
-        // var argumentArray = Array.prototype.slice.call(arguments);
-        // argumentArray.shift();
 
         //intentionally delay reporting
         that.report(Entry.STATIC.COMMAND_TYPES.do);
         that.report(commandType, argumentArray);
 
         var command = Entry.Command[commandType];
-        //console.log('commandType', commandType);
+        console.log('commandType', commandType);
         var state;
         var isSkip =
             command.skipUndoStack === true ||
-            //(!this.doCommandAll && commandType > 500);
-            (!this.doCommandAll && commandType > 1500);
+            // (!this.doCommandAll && commandType > 500);
+            (!this.doCommandAll && commandType > 1500); //for development
 
         if (Entry.stateManager && !isSkip) {
             state = Entry.stateManager.addCommand.apply(

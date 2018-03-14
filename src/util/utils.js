@@ -112,35 +112,6 @@ Entry.exportProject = function(project) {
  * inject blocks to Entry menu.
  * Available block is different by object type.
  * @param {!string} objectType
- * @param {!string} blockText
- */
-Entry.setBlockByText = function(objectType, blockText) {
-    var blockJSON = [];
-    var xml = jQuery.parseXML(blockText);
-    var categories = xml.getElementsByTagName('category');
-    for (var i = 0; i < categories.length; i++) {
-        var category = categories[i];
-        var json = { category: category.getAttribute('id'), blocks: [] };
-        var blocks = category.childNodes;
-        for (var j = 0; j < blocks.length; j++) {
-            var b = blocks[j];
-            if (
-                b.tagName &&
-                (b.tagName.toUpperCase() == 'BLOCK' ||
-                    b.tagName.toUpperCase() == 'BTN')
-            ) {
-                json.blocks.push(b.getAttribute('type'));
-            }
-        }
-        blockJSON.push(json);
-    }
-    Entry.playground.setBlockMenu(blockJSON);
-};
-
-/**
- * inject blocks to Entry menu.
- * Available block is different by object type.
- * @param {!string} objectType
  * @param {!xml} XML
  */
 Entry.setBlock = function(objectType, XML) {
@@ -1426,15 +1397,10 @@ Entry.findObjsByKey = function(arr, keyName, key) {
     return result;
 };
 
-Entry.factorials = [];
-
-Entry.factorial = function(n) {
+Entry.factorial = _.memoize(function(n) {
     if (n === 0 || n == 1) return 1;
-    if (Entry.factorials[n] > 0) return Entry.factorials[n];
-
-    var ret = (Entry.factorials[n] = Entry.factorial(n - 1) * n);
-    return ret;
-};
+    return Entry.factorial(n - 1) * n;
+});
 
 Entry.getListRealIndex = function(index, list) {
     if (!Entry.Utils.isNumber(index)) {
@@ -1698,15 +1664,7 @@ Entry.deAttachEventListener = function(elem, eventType, func) {
     elem.removeEventListener(eventType, func);
 };
 
-Entry.isEmpty = function(obj) {
-    if (!obj) return true;
-
-    for (var prop in obj) {
-        if (obj.hasOwnProperty(prop)) return false;
-    }
-
-    return true;
-};
+Entry.isEmpty = _.isEmpty;
 
 Entry.Utils.disableContextmenu = function(node) {
     if (!node) return;
@@ -2011,6 +1969,7 @@ Entry.Utils.waitForWebfonts = function(fonts, callback) {
         return true;
     }
 };
+
 window.requestAnimFrame = (function() {
     return (
         window.requestAnimationFrame ||
@@ -2170,22 +2129,7 @@ Entry.Utils.hasSpecialCharacter = function(str) {
     return reg.test(str);
 };
 
-Entry.Utils.debounce = function(func, wait, immediate) {
-    var timeout;
-    return function() {
-        var context = this,
-            args = arguments;
-        var later = function() {
-            timeout = null;
-            if (!immediate) func.apply(context, args);
-        };
-        var callNow = immediate && !timeout;
-        clearTimeout(timeout);
-        timeout = setTimeout(later, wait);
-        if (callNow) func.apply(context, args);
-        return timeout;
-    };
-};
+Entry.Utils.debounce = _.debounce;
 
 Entry.Utils.isNewVersion = function(old_version, new_version) {
     try {

@@ -274,7 +274,7 @@ Entry.Playground = function() {
     };
 
     /**
-     * Inject Blockly and generate code view
+     * Inject and generate code view
      * @param {!Element} codeView
      * @return {Element}
      */
@@ -936,23 +936,23 @@ Entry.Playground = function() {
         var view = this.pictureListView_;
         if (!view) return;
 
-        while (view.hasChildNodes())
+        while (view.hasChildNodes()) {
             view.removeChild(view.lastChild);
+        }
 
         if (!this.object) {
-            Entry.dispatchEvent('pictureClear');
-            return;
+            return Entry.dispatchEvent('pictureClear');
         }
 
         var fragment = document.createDocumentFragment();
 
-        var pictures = this.object.pictures || [];
-        pictures.forEach(function (picture, i) {
+        (this.object.pictures || []).forEach((picture, i) => {
             !picture.view && Entry.playground.generatePictureElement(picture);
             var element = picture.view;
             element.orderHolder.innerHTML = i + 1;
             fragment.appendChild(element);
         });
+
         view.appendChild(fragment);
         this.selectPicture(this.object.selectedPicture);
     };
@@ -1072,8 +1072,7 @@ Entry.Playground = function() {
      * @param {!number} end
      */
     p.movePicture = function(start, end) {
-        this.object.pictures.splice(
-            end, 0, this.object.pictures.splice(start, 1)[0]);
+        this.object.pictures.splice(end, 0, this.object.pictures.splice(start, 1)[0]);
         this.injectPicture();
     };
 
@@ -1144,7 +1143,7 @@ Entry.Playground = function() {
         var fragment = document.createDocumentFragment();
 
         var sounds = this.object.sounds || [];
-        sounds.forEach(function (sound, i) {
+        sounds.forEach((sound, i) => {
             !sound.view && Entry.playground.generateSoundElement(sound);
             var element = sound.view;
             element.orderHolder.innerHTML = i + 1;
@@ -1160,8 +1159,7 @@ Entry.Playground = function() {
      * @param {!number} end
      */
     p.moveSound = function(start, end) {
-        this.object.sounds.splice(
-            end, 0, this.object.sounds.splice(start, 1)[0]);
+        this.object.sounds.splice(end, 0, this.object.sounds.splice(start, 1)[0]);
         this.updateListViewOrder('sound');
     };
 
@@ -1201,7 +1199,7 @@ Entry.Playground = function() {
         } else {
             window.open('/api/sprite/download/sound/' + encodeURIComponent(sound.filename) + '/' + encodeURIComponent(sound.name));
         }
-    }
+    };
 
 
     /**
@@ -1310,55 +1308,6 @@ Entry.Playground = function() {
         this.variableView_.addClass('entryRemove');
     };
 
-
-    /**
-     */
-    p.editBlock = function() {
-        var playground = Entry.playground;
-        if (!Entry.stateManager) return;
-        Entry.stateManager.addCommand("edit block",
-                                      playground,
-                                      playground.restoreBlock,
-                                      playground.object,
-                                      playground.object.getScriptText()
-                                     );
-    };
-
-    p.mouseupBlock = function() {
-        if (!Entry.reporter) return;
-        var playground = Entry.playground;
-        var object = playground.object;
-        Entry.reporter.report(
-            new Entry.State(
-                "edit block mouseup",
-                playground,
-                playground.restoreBlock,
-                object,
-                object.getScriptText()
-            )
-        );
-    };
-
-    /**
-     * @param {!Entry.EntryObject} targetObject
-     * @param {!string} blockString
-     */
-    p.restoreBlock = function(targetObject, blockString) {
-        var playground = Entry.playground;
-        Entry.container.selectObject(targetObject.id);
-        if (Entry.stateManager) {
-            Entry.stateManager.addCommand(
-                "restore block",
-                this,
-                this.restoreBlock,
-                this.object,
-                this.object.getScriptText()
-            );
-        }
-        var script = Blockly.Xml.textToDom(blockString);
-        //TODO: restore block
-    };
-
     /**
      * Generate category menu with object type.
      * @param {!string} objectType
@@ -1374,10 +1323,7 @@ Entry.Playground = function() {
     };
 
     p.hideTabs = function() {
-        var items = ['picture', 'text', 'sound', 'variable'];
-        for (var i in items) {
-            this.hideTab([items[i]]);
-        }
+        ['picture', 'text', 'sound', 'variable'].forEach(this.hideTab.bind(this));
     };
 
     p.hideTab = function(item) {
@@ -1388,10 +1334,7 @@ Entry.Playground = function() {
     };
 
     p.showTabs = function() {
-        var items = ['picture', 'text', 'sound', 'variable'];
-        for (var i in items) {
-            this.showTab(items[i]);
-        }
+        ['picture', 'text', 'sound', 'variable'].forEach(this.showTab.bind(this));
     };
 
     p.showTab = function(item) {
@@ -1466,12 +1409,15 @@ Entry.Playground = function() {
 
     p.updateListViewOrder = function (type) {
         var list;
-        if (type == 'picture')
+        if (type == 'picture') {
             list = this.pictureListView_.childNodes;
-        else
+        } else {
             list = this.soundListView_.childNodes;
-        for (var i=0, len=list.length; i<len; i++)
-            list[i].orderHolder.innerHTML = i+1;
+        }
+
+        list.forEach(({orderHolder}, index) => {
+            orderHolder.innerHTML = index+1;
+        });
     };
 
     p.generatePictureElement = function(picture) {

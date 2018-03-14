@@ -81,13 +81,6 @@ Entry.Func.clearThreads = function() {
     this.threads = {};
 };
 
-Entry.Func.prototype.init = function(model) {
-    this.id = model.id;
-    this.content = Blockly.Xml.textToDom(model.content);
-    var xmlText = '<xml>' + model.block + '</xml>';
-    this.block = Blockly.Xml.textToDom(xmlText).childNodes[0];
-};
-
 Entry.Func.prototype.destroy = function() {
     this.blockMenuBlock && this.blockMenuBlock.destroy();
 };
@@ -181,50 +174,6 @@ Entry.Func.save = function() {
     }
 };
 
-Entry.Func.syncFuncName = function(dstFName) {
-    var index = 0;
-    var dstFNameTokens = [];
-    dstFNameTokens = dstFName.split(' ');
-    var name ="";
-    var blocks = [];
-    blocks =  Blockly.mainWorkspace.getAllBlocks();
-    for(var i = 0; i < blocks.length; i++) {
-        var block = blocks[i];
-        if(block.type === "function_general") {
-            var iList = [];
-            iList = block.inputList;
-            for(var j=0; j < iList.length; j++) {
-                var input = iList[j];
-                if(input.fieldRow.length > 0 && (input.fieldRow[0] instanceof Blockly.FieldLabel) && (input.fieldRow[0].text_ != undefined)) {
-                    name += input.fieldRow[0].text_;
-                    name += " ";
-                }
-            }
-            name = name.trim();
-            if(name === this.srcFName && (this.srcFName.split(' ').length == dstFNameTokens.length)) {
-                for(var k=0; k < iList.length; k++) {
-                    var input = iList[k];
-                    if(input.fieldRow.length > 0 && (input.fieldRow[0] instanceof Blockly.FieldLabel) && (input.fieldRow[0].text_ != undefined)) {
-                        if(dstFNameTokens[index] === undefined) {
-                            iList.splice(k,1);
-                            break;
-                        } else {
-                           input.fieldRow[0].text_ = dstFNameTokens[index];
-                        }
-                        index++;
-                    }
-                }
-            }
-            name = '';
-            index = 0;
-        }
-    }
-
-    var updatedDom = Blockly.Xml.workspaceToDom(Blockly.mainWorkspace)
-    Blockly.mainWorkspace.clear();
-    Blockly.Xml.domToWorkspace(Blockly.mainWorkspace, updatedDom);
-};
-
 Entry.Func.cancelEdit = function() {
     if (!this.targetFunc) return;
 
@@ -249,46 +198,6 @@ Entry.Func.cancelEdit = function() {
         mode.runType = Entry.Vim.WORKSPACE_MODE;
         Entry.getMainWS().setMode(mode);
         Entry.variableContainer.functionAddButton_.addClass('disable');
-    }
-};
-
-Entry.Func.getMenuXml = function() {
-    var blocks = [];
-    if (!this.targetFunc)
-        blocks = blocks.concat(this.createBtn);
-    if (this.targetFunc) {
-        var fieldXml = this.FIELD_BLOCK;
-        fieldXml = fieldXml.replace('#1', Entry.generateHash());
-        fieldXml = fieldXml.replace('#2', Entry.generateHash());
-        var xml = Blockly.Xml.textToDom(fieldXml).childNodes;
-        blocks = blocks.concat(Entry.nodeListToArray(xml));
-    }
-    for (var i in Entry.variableContainer.functions_) {
-        var func = Entry.variableContainer.functions_[i];
-        if (func === this.targetFunc) {
-            var block = Entry.Func.generateBlock(
-                this.targetFunc,
-                Blockly.Xml.workspaceToDom(Entry.Func.workspace),
-                func.id).block;
-            blocks.push(block);
-        } else
-            blocks.push(func.block);
-    }
-    return blocks;
-};
-
-Entry.Func.syncFunc = function() {
-    var func = Entry.Func;
-    if (!func.targetFunc)
-        return;
-    var fieldText = func.workspace.topBlocks_[0].toString();
-    var workspaceLength = func.workspace.topBlocks_.length;
-    if ((func.fieldText != fieldText ||
-        func.workspaceLength != workspaceLength) &&
-            Blockly.Block.dragMode_ < 1) {
-        func.updateMenu();
-        func.fieldText = fieldText;
-        func.workspaceLength = workspaceLength;
     }
 };
 
