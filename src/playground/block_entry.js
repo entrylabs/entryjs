@@ -2555,7 +2555,7 @@ const block = {
         class: 'calc_user',
         isNotFor: [],
         func: function(sprite, script) {
-            return user ? user.username : ' ';
+            return window.user ? window.user.username : ' ';
         },
         syntax: {
             js: [],
@@ -16391,7 +16391,7 @@ const block = {
                 entity.id,
                 Ntry.STATIC.RADAR
             );
-
+            var radarValue = {};
             switch (this.block.params[0]) {
                 case 'UP':
                     radarValue = radar.left;

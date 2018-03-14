@@ -1182,7 +1182,7 @@ Entry.mkboard.getBlocks = function() {
                     script.isStart = true;
                     script.timeFlag = 1;
                     var fps = Entry.FPS || 60;
-                    timeValue = 60 / fps * 50;
+                    var timeValue = 60 / fps * 50;
 
                     Entry.hw.sendQueue['SET'][line] = {
                         type: Entry.mkboard.sensorTypes.LCD,

@@ -604,6 +604,7 @@ Entry.Codestar.getBlocks = function() {
             class: 'codestar_input_sensor',
             isNotFor: ['codestar'],
             func: function(sprite, script) {
+                var axis = script.getField('AXIS');
                 return Entry.hw.getAnalogPortValue('gyro_' + axis);
             },
         },

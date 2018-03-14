@@ -384,8 +384,10 @@ Entry.Roborobo_Roduino.getBlocks = function() {
             class: 'roduino_set',
             isNotFor: ['roborobo_roduino'],
             func: function(sprite, script) {
-                var pin1 = (pin2 = 0);
-                var value1 = (value2 = 0);
+                var pin1 = 0
+                var pin2 = 0;
+                var value1 = 0
+                var value2 = 0;
                 var mode = script.getField('MODE');
                 var operator = script.getField('OPERATOR');
 

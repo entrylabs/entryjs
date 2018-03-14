@@ -838,7 +838,7 @@ Entry.MODI.getBlocks = function() {
                 var upper = value * 10 + pd.value[uValue] * 10,
                     bottom = pd.value[bValue] * 10;
 
-                if (upper > 1000 || (upper < 0 && property == MOTOR_ANGLE))
+                if (upper > 1000 || (upper < 0 && property == 'MOTOR_ANGLE'))
                     upper = 1000;
 
                 sq['motor'][key] = JSON.stringify({
@@ -946,7 +946,7 @@ Entry.MODI.getBlocks = function() {
                 var upper = pd.value[uValue] * 10,
                     bottom = value * 10 + pd.value[bValue] * 10;
 
-                if (bottom > 1000 || (bottom < 0 && property == MOTOR_ANGLE))
+                if (bottom > 1000 || (bottom < 0 && property == 'MOTOR_ANGLE'))
                     bottom = 1000;
 
                 sq['motor'][key] = JSON.stringify({
@@ -1066,6 +1066,7 @@ Entry.MODI.getBlocks = function() {
                     Entry.MODI.initSend();
                 }
                 var key = script.getStringField('name');
+                var red, green, blue;
                 (red = script.getNumberValue('rValue')),
                     (green = script.getNumberValue('gValue')),
                     (blue = script.getNumberValue('bValue'));
@@ -1119,7 +1120,7 @@ Entry.MODI.getBlocks = function() {
                     Entry.MODI.initSend();
                 }
                 var key = script.getStringField('name');
-                color = script.getStringField('color');
+                var color = script.getStringField('color');
 
                 color = color.substring(1, 7);
                 var bigint = parseInt(color, 16);

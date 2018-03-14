@@ -1237,7 +1237,7 @@ Entry.Blacksmith.getBlocks = function() {
                     script.isStart = true;
                     script.timeFlag = 1;
                     var fps = Entry.FPS || 60;
-                    timeValue = 60 / fps * 50;
+                    var timeValue = 60 / fps * 50;
 
                     Entry.hw.sendQueue['SET'][line] = {
                         type: Entry.Blacksmith.sensorTypes.LCD,
@@ -1330,7 +1330,7 @@ Entry.Blacksmith.getBlocks = function() {
                     script.isStart = true;
                     script.timeFlag = 1;
                     var fps = Entry.FPS || 60;
-                    timeValue = 60 / fps * 50;
+                    var timeValue = 60 / fps * 50;
 
                     Entry.hw.sendQueue['SET'][port] = {
                         type: Entry.Blacksmith.sensorTypes.txBLUETOOTH,
