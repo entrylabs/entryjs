@@ -1,7 +1,7 @@
 'use strict';
 
-Entry.EduMaker = {
-    name: 'EduMaker',
+Entry.ArduinoExt = {
+    name: 'ArduinoExt',
     setZero: function() {
         if (!Entry.hw.sendQueue.SET) {
             Entry.hw.sendQueue = {
@@ -62,10 +62,46 @@ Entry.EduMaker = {
     BlockState: {},
 };
 
-Entry.EduMaker.getBlocks = function() {
+Entry.ArduinoExt.setLanguage = function() {
     return {
-        //region edumaker 에듀메이커
-        edumaker_analog_list: {
+        ko: {
+            template: {
+                arduino_ext_get_analog_value: '아날로그 %1 번 센서값',
+                arduino_ext_get_analog_value_map:
+                    '%1 의 범위를 %2 ~ %3 에서 %4 ~ %5 로 바꾼값',
+                arduino_ext_get_ultrasonic_value:
+                    '울트라소닉 Trig %1 Echo %2 센서값',
+                arduino_ext_toggle_led: '디지털 %1 번 핀 %2 %3',
+                arduino_ext_digital_pwm: '디지털 %1 번 핀을 %2 (으)로 정하기 %3',
+                arduino_ext_set_tone:
+                    '디지털 %1 번 핀의 버저를 %2 %3 음으로 %4 초 연주하기 %5',
+                arduino_ext_set_servo:
+                    '디지털 %1 번 핀의 서보모터를 %2 의 각도로 정하기 %3',
+                arduino_ext_get_digital: '디지털 %1 번 센서값',
+            }
+        },
+        en: {
+            template: {
+                arduino_ext_get_analog_value: 'Analog %1 Sensor value',
+                arduino_ext_get_analog_value_map:
+                    'Map Value %1 %2 ~ %3 to %4 ~ %5',
+                arduino_ext_get_ultrasonic_value:
+                    'Read ultrasonic sensor trig pin %1 echo pin %2',
+                arduino_ext_toggle_led: 'Digital %1 Pin %2 %3',
+                arduino_ext_digital_pwm: 'Digital %1 Pin %2 %3',
+                arduino_ext_set_tone:
+                    'Play tone pin %1 on note %2 octave %3 beat %4 %5',
+                arduino_ext_set_servo: 'Set servo pin %1 angle as %2 %3',
+                arduino_ext_get_digital: 'Digital %1 Sensor value',
+            }
+        },
+    };  
+};
+
+//region arduinoExt 아두이노 확장모드
+Entry.ArduinoExt.getBlocks = function() {
+    return {
+        arduino_ext_analog_list: {
             color: '#00979D',
             skeleton: 'basic_string_field',
             statements: [],
@@ -95,9 +131,37 @@ Entry.EduMaker.getBlocks = function() {
             func: function(sprite, script) {
                 return script.getField('PORT');
             },
-            syntax: { js: [], py: [] },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: '%1',
+                        blockType: 'param',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    ['A0', '0'],
+                                    ['A1', '1'],
+                                    ['A2', '2'],
+                                    ['A3', '3'],
+                                    ['A4', '4'],
+                                    ['A5', '5'],
+                                ],
+                                value: '0',
+                                fontSize: 11,
+                                converter:
+                                    Entry.block.converters.returnStringKey,
+                                codeMap:
+                                    'Entry.CodeMap.Arduino.arduino_ext_analog_list[0]',
+                            },
+                        ],
+                        keyOption: 'arduino_ext_analog_list',
+                    },
+                ],
+            },
         },
-        edumaker_get_analog_value: {
+        arduino_ext_get_analog_value: {
             color: '#00979D',
             fontColor: '#fff',
             skeleton: 'basic_string_field',
@@ -112,25 +176,39 @@ Entry.EduMaker.getBlocks = function() {
             def: {
                 params: [
                     {
-                        type: 'edumaker_analog_list',
+                        type: 'arduino_ext_analog_list',
                     },
                 ],
-                type: 'edumaker_get_analog_value',
+                type: 'arduino_ext_get_analog_value',
             },
             paramsKeyMap: {
                 PORT: 0,
             },
-            class: 'EduMakerGet',
-            isNotFor: ['EduMaker'],
+            class: 'ArduinoExtGet',
+            isNotFor: ['ArduinoExt'],
             func: function(sprite, script) {
                 var port = script.getValue('PORT', script);
                 var ANALOG = Entry.hw.portData.ANALOG;
                 if (port[0] === 'A') port = port.substring(1);
                 return ANALOG ? ANALOG[port] || 0 : 0;
             },
-            syntax: { js: [], py: [] },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Arduino.analogRead(%1)',
+                        blockType: 'param',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                        ],
+                    },
+                ],
+            },
         },
-        edumaker_get_analog_value_map: {
+        arduino_ext_get_analog_value_map: {
             color: '#00979D',
             fontColor: '#fff',
             skeleton: 'basic_string_field',
@@ -161,10 +239,10 @@ Entry.EduMaker.getBlocks = function() {
             def: {
                 params: [
                     {
-                        type: 'edumaker_get_analog_value',
+                        type: 'arduino_ext_get_analog_value',
                         params: [
                             {
-                                type: 'edumaker_analog_list',
+                                type: 'arduino_ext_analog_list',
                             },
                         ],
                     },
@@ -185,7 +263,7 @@ Entry.EduMaker.getBlocks = function() {
                         params: ['100'],
                     },
                 ],
-                type: 'edumaker_get_analog_value_map',
+                type: 'arduino_ext_get_analog_value_map',
             },
             paramsKeyMap: {
                 PORT: 0,
@@ -194,8 +272,8 @@ Entry.EduMaker.getBlocks = function() {
                 VALUE4: 3,
                 VALUE5: 4,
             },
-            class: 'EduMakerGet',
-            isNotFor: ['EduMaker'],
+            class: 'ArduinoExtGet',
+            isNotFor: ['ArduinoExt'],
             func: function(sprite, script) {
                 var result = script.getValue('PORT', script);
                 var ANALOG = Entry.hw.portData.ANALOG;
@@ -240,9 +318,39 @@ Entry.EduMaker.getBlocks = function() {
 
                 return result;
             },
-            syntax: { js: [], py: [] },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Arduino.map(%1, %2, %3, %4, %5)',
+                        blockType: 'param',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                        ],
+                    },
+                ],
+            },
         },
-        edumaker_get_ultrasonic_value: {
+        arduino_ext_get_ultrasonic_value: {
             color: '#00979D',
             fontColor: '#fff',
             skeleton: 'basic_string_field',
@@ -269,14 +377,14 @@ Entry.EduMaker.getBlocks = function() {
                         params: ['4'],
                     },
                 ],
-                type: 'edumaker_get_ultrasonic_value',
+                type: 'arduino_ext_get_ultrasonic_value',
             },
             paramsKeyMap: {
                 PORT1: 0,
                 PORT2: 1,
             },
-            class: 'EduMakerGet',
-            isNotFor: ['EduMaker'],
+            class: 'ArduinoExtGet',
+            isNotFor: ['ArduinoExt'],
             func: function(sprite, script) {
                 var port1 = script.getNumberValue('PORT1', script);
                 var port2 = script.getNumberValue('PORT2', script);
@@ -298,9 +406,27 @@ Entry.EduMaker.getBlocks = function() {
                 };
                 return Entry.hw.portData.ULTRASONIC || 0;
             },
-            syntax: { js: [], py: [] },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Arduino.ultrasonicRead(%1, %2)',
+                        blockType: 'param',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                        ],
+                    },
+                ],
+            },
         },
-        edumaker_get_digital: {
+        arduino_ext_get_digital: {
             color: '#00979D',
             fontColor: '#fff',
             skeleton: 'basic_boolean_field',
@@ -318,13 +444,13 @@ Entry.EduMaker.getBlocks = function() {
                         params: [2],
                     },
                 ],
-                type: 'edumaker_get_digital',
+                type: 'arduino_ext_get_digital',
             },
             paramsKeyMap: {
                 PORT: 0,
             },
-            class: 'EduMakerGet',
-            isNotFor: ['EduMaker'],
+            class: 'ArduinoExtGet',
+            isNotFor: ['ArduinoExt'],
             func: function(sprite, script) {
                 var port = script.getNumberValue('PORT', script);
                 var DIGITAL = Entry.hw.portData.DIGITAL;
@@ -339,9 +465,23 @@ Entry.EduMaker.getBlocks = function() {
                 };
                 return DIGITAL ? DIGITAL[port] || 0 : 0;
             },
-            syntax: { js: [], py: [] },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Arduino.digitalRead(%1)',
+                        blockType: 'param',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                        ],
+                    },
+                ],
+            },
         },
-        edumaker_digital_toggle: {
+        arduino_get_digital_toggle: {
             color: '#00979D',
             skeleton: 'basic_string_field',
             statements: [],
@@ -367,9 +507,34 @@ Entry.EduMaker.getBlocks = function() {
             func: function(sprite, script) {
                 return script.getStringField('OPERATOR');
             },
-            syntax: { js: [], py: [] },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: '%1',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.ARDUINO_on, 'on'],
+                                    [Lang.Blocks.ARDUINO_off, 'off'],
+                                ],
+                                value: 'on',
+                                fontSize: 11,
+                                arrowColor: EntryStatic.ARROW_COLOR_HW,
+                                converter:
+                                    Entry.block.converters
+                                        .returnStringValueUpperCase,
+                                codeMap:
+                                    'Entry.CodeMap.Arduino.arduino_get_digital_toggle[0]',
+                            },
+                        ],
+                        keyOption: 'arduino_get_digital_toggle',
+                    },
+                ],
+            },
         },
-        edumaker_toggle_led: {
+        arduino_ext_toggle_led: {
             color: '#00979D',
             skeleton: 'basic',
             statements: [],
@@ -401,14 +566,14 @@ Entry.EduMaker.getBlocks = function() {
                     },
                     null,
                 ],
-                type: 'edumaker_toggle_led',
+                type: 'arduino_ext_toggle_led',
             },
             paramsKeyMap: {
                 PORT: 0,
                 VALUE: 1,
             },
-            class: 'EduMaker',
-            isNotFor: ['EduMaker'],
+            class: 'ArduinoExt',
+            isNotFor: ['ArduinoExt'],
             func: function(sprite, script) {
                 var port = script.getNumberValue('PORT');
                 var value = script.getValue('VALUE');
@@ -433,9 +598,26 @@ Entry.EduMaker.getBlocks = function() {
                 };
                 return script.callReturn();
             },
-            syntax: { js: [], py: [] },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Arduino.digitalWrite(%1, %2)',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                        ],
+                    },
+                ],
+            },
         },
-        edumaker_digital_pwm: {
+        arduino_ext_digital_pwm: {
             color: '#00979D',
             skeleton: 'basic',
             statements: [],
@@ -466,14 +648,14 @@ Entry.EduMaker.getBlocks = function() {
                     },
                     null,
                 ],
-                type: 'edumaker_digital_pwm',
+                type: 'arduino_ext_digital_pwm',
             },
             paramsKeyMap: {
                 PORT: 0,
                 VALUE: 1,
             },
-            class: 'EduMaker',
-            isNotFor: ['EduMaker'],
+            class: 'ArduinoExt',
+            isNotFor: ['ArduinoExt'],
             func: function(sprite, script) {
                 var port = script.getNumberValue('PORT');
                 var value = script.getNumberValue('VALUE');
@@ -490,9 +672,26 @@ Entry.EduMaker.getBlocks = function() {
                 };
                 return script.callReturn();
             },
-            syntax: { js: [], py: [] },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Arduino.analogWrite(%1, %2)',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                        ],
+                    },
+                ],
+            },
         },
-        edumaker_tone_list: {
+        arduino_ext_tone_list: {
             color: '#00979D',
             skeleton: 'basic_string_field',
             statements: [],
@@ -529,9 +728,42 @@ Entry.EduMaker.getBlocks = function() {
             func: function(sprite, script) {
                 return script.getField('NOTE');
             },
-            syntax: { js: [], py: [] },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: '%1',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.silent, '0'],
+                                    [Lang.Blocks.do_name, 'C'],
+                                    [Lang.Blocks.do_sharp_name, 'CS'],
+                                    [Lang.Blocks.re_name, 'D'],
+                                    [Lang.Blocks.re_sharp_name, 'DS'],
+                                    [Lang.Blocks.mi_name, 'E'],
+                                    [Lang.Blocks.fa_name, 'F'],
+                                    [Lang.Blocks.fa_sharp_name, 'FS'],
+                                    [Lang.Blocks.sol_name, 'G'],
+                                    [Lang.Blocks.sol_sharp_name, 'GS'],
+                                    [Lang.Blocks.la_name, 'A'],
+                                    [Lang.Blocks.la_sharp_name, 'AS'],
+                                    [Lang.Blocks.si_name, 'B'],
+                                ],
+                                value: 'C',
+                                fontSize: 11,
+                                converter:
+                                    Entry.block.converters
+                                        .returnStringValueUpperCase,
+                            },
+                        ],
+                        keyOption: 'arduino_ext_tone_list',
+                    },
+                ],
+            },
         },
-        edumaker_tone_value: {
+        arduino_ext_tone_value: {
             color: '#00979D',
             skeleton: 'basic_string_field',
             statements: [],
@@ -546,10 +778,10 @@ Entry.EduMaker.getBlocks = function() {
             def: {
                 params: [
                     {
-                        type: 'edumaker_tone_list',
+                        type: 'arduino_ext_tone_list',
                     },
                 ],
-                type: 'edumkaer_tone_value',
+                type: 'arduino_ext_tone_value',
             },
             paramsKeyMap: {
                 NOTE: 0,
@@ -557,9 +789,17 @@ Entry.EduMaker.getBlocks = function() {
             func: function(sprite, script) {
                 return script.getNumberValue('NOTE');
             },
-            syntax: { js: [], py: [] },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: '%1',
+                        keyOption: 'arduino_ext_tone_value',
+                    },
+                ],
+            },
         },
-        edumaker_octave_list: {
+        arduino_ext_octave_list: {
             color: '#00979D',
             skeleton: 'basic_string_field',
             statements: [],
@@ -589,9 +829,17 @@ Entry.EduMaker.getBlocks = function() {
             func: function(sprite, script) {
                 return script.getField('OCTAVE');
             },
-            syntax: { js: [], py: [] },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: '%1',
+                        keyOption: 'arduino_ext_octave_list',
+                    },
+                ],
+            },
         },
-        edumaker_set_tone: {
+        arduino_ext_set_tone: {
             color: '#00979D',
             skeleton: 'basic',
             statements: [],
@@ -637,7 +885,7 @@ Entry.EduMaker.getBlocks = function() {
                     },
                     null,
                 ],
-                type: 'edumaker_set_tone',
+                type: 'arduino_ext_set_tone',
             },
             paramsKeyMap: {
                 PORT: 0,
@@ -645,8 +893,8 @@ Entry.EduMaker.getBlocks = function() {
                 OCTAVE: 2,
                 DURATION: 3,
             },
-            class: 'EduMaker',
-            isNotFor: ['EduMaker'],
+            class: 'ArduinoExt',
+            isNotFor: ['ArduinoExt'],
             func: function(sprite, script) {
                 var sq = Entry.hw.sendQueue;
                 var port = script.getNumberValue('PORT', script);
@@ -725,9 +973,34 @@ Entry.EduMaker.getBlocks = function() {
                     return script.callReturn();
                 }
             },
-            syntax: { js: [], py: [] },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Arduino.tone(%1, %2, %3, %4)',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                        ],
+                    },
+                ],
+            },
         },
-        edumaker_set_servo: {
+        arduino_ext_set_servo: {
             color: '#00979D',
             skeleton: 'basic',
             statements: [],
@@ -755,14 +1028,14 @@ Entry.EduMaker.getBlocks = function() {
                     },
                     null,
                 ],
-                type: 'edumaker_set_servo',
+                type: 'arduino_ext_set_servo',
             },
             paramsKeyMap: {
                 PORT: 0,
                 VALUE: 1,
             },
-            class: 'EduMaker',
-            isNotFor: ['EduMaker'],
+            class: 'ArduinoExt',
+            isNotFor: ['ArduinoExt'],
             func: function(sprite, script) {
                 var sq = Entry.hw.sendQueue;
                 var port = script.getNumberValue('PORT', script);
@@ -781,8 +1054,25 @@ Entry.EduMaker.getBlocks = function() {
 
                 return script.callReturn();
             },
-            syntax: { js: [], py: [] },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Arduino.servomotorWrite(%1, %2)',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                        ],
+                    },
+                ],
+            },
         },
-        //endregion edumaker 에듀메이커
     };
 };
+//endregion arduinoExt 아두이노 확장모드

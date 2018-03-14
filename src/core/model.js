@@ -18,7 +18,12 @@ Entry.Model = function(obj, isSeal) {
     m.generateSchema = function(obj) {
         var schema = obj.schema;
         if (schema === undefined) return;
-        schema = JSON.parse(JSON.stringify(schema));
+        try{
+            schema = JSON.parse(JSON.stringify(schema));
+        } catch(e) {
+            console.log(schema);
+            console.error(e);
+        }
         obj.data = {};
         for (var key in schema) {
             (function(localKey) {
