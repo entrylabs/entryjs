@@ -45,8 +45,7 @@ Entry.Commander = function (injectType) {
         var state;
         var isSkip =
             command.skipUndoStack === true ||
-            // (!this.doCommandAll && commandType > 500);
-            (!this.doCommandAll && commandType > 1500); //for development
+            (!this.doCommandAll && commandType > 500);
 
         if (Entry.stateManager && !isSkip) {
             state = Entry.stateManager.addCommand.apply(
