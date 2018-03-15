@@ -17294,7 +17294,6 @@ Object.assign(Entry.block, block);
                 schema[key] = block[key];
             }
             Entry.block[type] = schema;
-            console.log('b');
         }
     }
 })();
