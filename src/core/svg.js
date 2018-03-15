@@ -77,30 +77,26 @@ Entry.SVG.attr = function(options, property) {
     return this;
 };
 
-Entry.SVG.addClass = function(className) {
-    var classAttr = this.getAttribute('class');
-    for (var i = 0; i < arguments.length; i++) {
-        var className = arguments[i];
-        if (!this.hasClass(className)) classAttr += ' ' + className;
-    }
-
-    this.setAttribute('class', classAttr.replace(/\s+/g, ' '));
+Entry.SVG.addClass = function(...classes) {
+    var className = classes.reduce((acc, className) => {
+        if (!this.hasClass(className)) acc += ' ' + className;
+        return acc;
+    }, this.getAttribute('class'));
+    this.setAttribute('class', className.replace(/\s+/g, ' '));
     return this;
 };
 
-Entry.SVG.removeClass = function(className) {
-    var classAttr = this.getAttribute('class');
-    for (var i = 0; i < arguments.length; i++) {
-        var className = arguments[i];
+Entry.SVG.removeClass = function(...classes) {
+    var className = classes.reduce((acc, className) => {
         if (this.hasClass(className)) {
-            classAttr = classAttr.replace(
+            acc = acc.replace(
                 new RegExp('(\\s|^)' + className + '(\\s|$)'),
                 ' '
             );
         }
-    }
-
-    this.setAttribute('class', classAttr.replace(/\s+/g, ' '));
+        return acc;
+    }, this.getAttribute('class'));
+    this.setAttribute('class', className.replace(/\s+/g, ' '));
     return this;
 };
 

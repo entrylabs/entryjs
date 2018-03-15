@@ -838,45 +838,10 @@ Entry.parseTexttoXML = function(xmlText) {
  * @return {!Element}
  */
 Entry.createElement = function(type, elementId) {
-    var element;
-    if (type instanceof HTMLElement) element = type;
-    else var element = document.createElement(type);
+    var element =
+        type instanceof HTMLElement ? type : document.createElement(type);
     if (elementId) element.id = elementId;
 
-    element.hasClass = function(className) {
-        return this.className.match(
-            new RegExp('(\\s|^)' + className + '(\\s|$)')
-        );
-    };
-    element.addClass = function(className) {
-        var current = this.className;
-        for (var i = 0; i < arguments.length; i++) {
-            var className = arguments[i];
-            if (!this.hasClass(className)) current += ' ' + className;
-        }
-        this.className = current;
-    };
-    element.removeClass = function(className) {
-        var current = this.className;
-        for (var i = 0; i < arguments.length; i++) {
-            var className = arguments[i];
-            if (this.hasClass(className)) {
-                var reg = new RegExp('(\\s|^)' + className + '(\\s|$)');
-                current = current.replace(reg, ' ');
-            }
-        }
-        this.className = current;
-    };
-    element.bindOnClick = function(func) {
-        $(this).on('click tab', function(e) {
-            if (element.disabled) return;
-            e.stopImmediatePropagation();
-            func.call(this, e);
-        });
-    };
-    element.unBindOnClick = function(func) {
-        $(this).off('click tab');
-    };
     return element;
 };
 
@@ -1609,21 +1574,24 @@ Entry.getStringIndex = function(str) {
 Entry.getOrderedName = function(str, objects, field) {
     if (!str) return 'untitled';
     if (!objects || objects.length === 0) return str;
-
     if (!field) field = 'name';
 
-    var maxNumber = 0;
-    var source = Entry.getStringIndex(str);
+    const maxNumber = Entry.getOrderedNameNumber(str, objects, field);
+    const source = Entry.getStringIndex(str);
+    if (maxNumber > 0) return source.string + maxNumber;
+    return str;
+};
+
+Entry.getOrderedNameNumber = function(str, objects, field) {
+    const source = Entry.getStringIndex(str);
+    let maxNumber = 0;
     for (var i = 0, len = objects.length; i < len; i++) {
         var target = Entry.getStringIndex(objects[i][field]);
         if (source.string === target.string && target.index > maxNumber) {
             maxNumber = target.index;
         }
     }
-
-    if (maxNumber > 0) return source.string + maxNumber;
-
-    return str;
+    return maxNumber;
 };
 
 Entry.changeXmlHashId = function(xmlBlock) {
@@ -1896,6 +1864,11 @@ Entry.Utils.stopProjectWithToast = function(scope, message, error) {
         );
     }
 
+    if (error) {
+        error.message = message + ': ' + error.message;
+        throw error;
+    }
+
     throw new Error(message);
 };
 
@@ -2131,8 +2104,11 @@ Entry.Utils.hasSpecialCharacter = function(str) {
 
 Entry.Utils.debounce = _.debounce;
 
-Entry.Utils.isNewVersion = function(old_version, new_version) {
+Entry.Utils.isNewVersion = function(old_version = '', new_version = '') {
     try {
+        if (old_version === '') {
+            return false;
+        }
         old_version = old_version.replace('v', '');
         new_version = new_version.replace('v', '');
         var arrOld = old_version.split('.');
@@ -2434,3 +2410,45 @@ Entry.Utils.recoverSoundInstances = function() {
         instance.paused = false;
     });
 };
+
+//add methods to HTMLElement prototype
+((p) => {
+    p.hasClass = function(className) {
+        return this.className.match(
+            new RegExp('(\\s|^)' + className + '(\\s|$)')
+        );
+    };
+
+    p.addClass = function(...classes) {
+        this.className = classes.reduce((acc, className) => {
+            if (!this.hasClass(className)) acc += ' ' + className;
+            return acc;
+        }, this.className);
+        return this;
+    };
+
+    p.removeClass = function(...classes) {
+        this.className = classes.reduce((acc, className) => {
+            if (this.hasClass(className)) {
+                acc = acc.replace(
+                    new RegExp('(\\s|^)' + className + '(\\s|$)'),
+                    ' '
+                );
+            }
+            return acc;
+        }, this.className);
+        return this;
+    };
+
+    p.bindOnClick = function(func) {
+        $(this).on('click tab', function(e) {
+            if (this.disabled) return;
+            e.stopImmediatePropagation();
+            func.call(this, e);
+        });
+    };
+
+    p.unBindOnClick = function(func) {
+        $(this).off('click tab');
+    };
+})(HTMLElement.prototype);

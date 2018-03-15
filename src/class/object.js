@@ -1031,8 +1031,6 @@ Entry.EntryObject = function(model) {
             that.isEditing && that.nameView_.select();
         });
 
-        editView.blur = function(e){ object.editObjectComplete(); };
-
         if (Entry.objectEditable && Entry.objectDeletable) {
             var deleteView = Entry.createElement('div');
             deleteView.addClass('entryObjectDeleteWorkspace');

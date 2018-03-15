@@ -10,6 +10,39 @@ Entry.TextCodingUtil = {};
         this._funcParams = [];
     };*/
 
+    tu.canUsePythonVariables = function (variables) {
+        return variables.every((variable)=> {
+            const target = variable.variableType === 'variable' ? 'v' : 'l';
+            return !Entry.TextCodingUtil.checkName(variable.name, target);
+        });
+    }
+
+    tu.canUsePythonFunctions = function (functions) {
+        return functions.every(({content}) => {
+            var code = new Entry.Code(content);
+            var paramBlock = code.getEventMap('funcDef')[0];
+            paramBlock = paramBlock && paramBlock.params[0];
+        
+            if (!paramBlock) return true;
+        
+            if (paramBlock.type !== 'function_field_label') return false;
+        
+            var params = paramBlock.params;
+        
+            if (!params[1]) {
+                if (test(params[0])) return false;
+            } else if (this.hasFunctionFieldLabel(params[1])) {
+                return false;
+            }
+
+            return true;
+        });
+
+        function test(name) {
+            return / /.test(name);
+        }
+    }
+
     tu.initQueue = function() {
         var queue = new Entry.Queue();
         this._funcParamQ = queue;
@@ -570,7 +603,7 @@ Entry.TextCodingUtil = {};
         for (var i in entryLists) {
             var entryList = entryLists[i];
             if (entryList.object_ === null && entryList.name_ == name) {
-                list = {
+                var list = {
                     x: entryList.x_,
                     y: entryList.y_,
                     id: entryList.id_,
@@ -2054,6 +2087,7 @@ Entry.TextCodingUtil = {};
         var paramsTokens = paramsParts.split(',');
         var mathValue = paramsTokens[0];
         var mathOption = paramsTokens[1];
+        var mathProperty;
 
         mathOption = mathOption.substring(2, mathOption.length - 2).trim();
 
