@@ -95,6 +95,12 @@ Entry.STATIC = {
         variableContainerRemoveVariable: 804,
         variableAddSetName: 805,
         messageSetName: 806,
+        
+        sceneAdd: 91,
+        sceneEdit: 92,
+        sceneChange: 93,
+        sceneRemove: 94,
+        sceneSort: 95,
     },
 
     RECORDABLE: {
