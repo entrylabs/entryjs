@@ -96,7 +96,7 @@ Entry.Scene.prototype.generateView = function(sceneView, option) {
             addButton.bindOnClick(function (e) {
                 if (Entry.engine.isState('run'))
                     return;
-                Entry.scene.addScene();
+                Entry.do('sceneAdd', Entry.generateHash());
             });
             this.view_.appendChild(addButton);
             this.addButton_ = addButton;
@@ -246,8 +246,8 @@ Entry.Scene.prototype.addScenes = function(scenes) {
  * @param {scene model} scene
  */
 Entry.Scene.prototype.addScene = function(scene, index) {
-    if (scene === undefined)
-        scene = this.createScene();
+    if (scene === undefined || typeof scene === "string")
+        scene = this.createScene(scene);
 
     if (!scene.view)
         this.generateElement(scene);
@@ -438,7 +438,7 @@ Entry.Scene.prototype.loadStartSceneSnapshot = function() {
  * create scene
  * @return {scene modal} scene
  */
-Entry.Scene.prototype.createScene = function() {
+Entry.Scene.prototype.createScene = function(sceneId) {
     var regex = /[0-9]/;
     var name = Entry.getOrderedName(Lang.Blocks.SCENE + ' ', this.scenes_, "name");
     if (!regex.test(name)) {
@@ -446,7 +446,7 @@ Entry.Scene.prototype.createScene = function() {
     }
     var scene = {
         name: name,
-        id: Entry.generateHash()
+        id: sceneId || Entry.generateHash()
     };
 
     this.generateElement(scene);
