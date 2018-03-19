@@ -3,6 +3,8 @@
 Entry.ContextMenu = {};
 
 (function(ctx) {
+    const ATTR_KEY = 'data-option-index';
+
     ctx.visible = false;
     ctx._hideEvent = null;
 
@@ -12,20 +14,20 @@ Entry.ContextMenu = {};
             parent: $('body'),
         });
 
-        this.dom.bind('mousedown touchstart', function(e) {
-            e.stopPropagation();
-        });
-
-        Entry.Utils.disableContextmenu(this.dom);
+        _bindEvent.call(this);
     };
 
     ctx.show = function(options, className, coordinate) {
-        this._hideEvent = Entry.documentMousedown.attach(this, function() {
-            this.hide();
-        });
+        this._options = options;
+
         if (!this.dom) this.createDom();
-        if (options.length === 0) return;
-        var that = this;
+        if (!options.length) return;
+
+        if (this._hideEvent) {
+            this._hideEvent.destroy();
+        }
+
+        this._hideEvent = Entry.documentMousedown.attach(this, this.hide);
         if (className !== undefined) {
             this._className = className;
             this.dom.addClass(className);
@@ -35,33 +37,28 @@ Entry.ContextMenu = {};
 
         parent.empty();
 
-        for (var i = 0, len = options.length; i < len; i++) {
-            var option = options[i];
-            var text = option.text;
-            var enable = option.enable !== false;
+        var fragment = document.createDocumentFragment();
 
-            var elem = Entry.Dom('li', { parent: parent });
+        options.forEach((option, idx) => {
+            var { text, enable, divider } = option;
+            enable = option.enable !== false;
+            //set value for later use
+            option.enable = enable;
 
-            if (option.divider) className = 'divider';
-            else {
+            var elem = Entry.Dom('li').attr(ATTR_KEY, idx);
+            fragment.appendChild(elem.get(0));
+
+            if (divider) {
+                className = 'divider';
+            } else {
                 className = enable ? 'menuAble' : 'menuDisable';
-                var span = Entry.Dom('span', { parent: elem });
-
-                span.text(text);
-
-                if (enable && option.callback) {
-                    (function(elem, cb) {
-                        elem.mousedown(function(e) {
-                            e.preventDefault();
-                            that.hide();
-                            cb(e);
-                        });
-                    })(elem, option.callback);
-                }
+                Entry.Dom('span', { parent: elem }).text(text);
             }
-            elem.addClass(className);
-        }
 
+            elem.addClass(className);
+        });
+
+        parent.get(0).appendChild(fragment);
         parent.removeClass('entryRemove');
         this.visible = true;
         this.position(coordinate || Entry.mouseCoordinate);
@@ -91,10 +88,12 @@ Entry.ContextMenu = {};
 
     ctx.hide = function() {
         this.visible = false;
-        this.dom.empty();
-        this.dom.addClass('entryRemove');
+        var dom = this.dom;
+        
+        dom.empty().addClass('entryRemove');
+
         if (this._className) {
-            this.dom.removeClass(this._className);
+            dom.removeClass(this._className);
             delete this._className;
         }
         if (this._hideEvent) {
@@ -151,4 +150,31 @@ Entry.ContextMenu = {};
             }
         });
     };
+
+    function _bindEvent() {
+        var that = this;
+        this.dom.on('mousedown touchstart', (e) => {
+            e.stopPropagation();
+        });
+
+        //event delegation
+        this.dom.on('mousedown touchstart', 'li', function(e) {
+            e.stopPropagation();
+            var options = that._options;
+
+            if (_.isEmpty(options)) {
+                return that.hide();
+            }
+
+            var { enable, callback } = options[this.getAttribute(ATTR_KEY)];
+
+            if (enable && callback) {
+                e.preventDefault();
+                that.hide();
+                callback(e);
+            }
+        });
+
+        Entry.Utils.disableContextmenu(this.dom);
+    }
 })(Entry.ContextMenu);
