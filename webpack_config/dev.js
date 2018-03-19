@@ -32,5 +32,5 @@ module.exports = merge(common, {
             },
         ],
     },
-    devtool: 'inline-source-map',
+    devtool: 'source-map',
 });

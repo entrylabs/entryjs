@@ -8,12 +8,10 @@
     
     c[COMMAND_TYPES.sceneAdd] = {
         do: function(sceneId) {
-            console.log(sceneId);
             Entry.scene.addScene();
         },
         state: function(sceneId) {
             var sceneId = sceneId; 
-            console.log(sceneId);
             return [sceneId];
         },
         log: function() {
@@ -25,7 +23,6 @@
 
     c[COMMAND_TYPES.sceneRemove] = {
         do: function(text) {
-            console.log(text)
         },
         state: function(text) {
         },
