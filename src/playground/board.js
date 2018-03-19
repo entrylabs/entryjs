@@ -169,6 +169,8 @@ Entry.Board.DRAG_RADIUS = 5;
                 scroller.setOpacity(0);
             });
         }
+
+        Entry.Utils.bindBlockViewHoverEvent(this, dom);
     };
 
     p.removeControl = function(eventType) {
