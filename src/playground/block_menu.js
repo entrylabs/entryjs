@@ -141,8 +141,11 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
             var bBox = that.svgGroup.getBBox();
             var adjust = that.hasCategory() ? 64 : 0;
             var expandWidth = bBox.width + bBox.x + adjust;
-            if (expandWidth > Entry.interfaceState.menuWidth) {
-                this.widthBackup = Entry.interfaceState.menuWidth - adjust;
+            var {
+                menuWidth
+            } = Entry.interfaceState;
+            if (expandWidth > menuWidth) {
+                this.widthBackup = menuWidth - adjust;
                 $(this)
                     .stop()
                     .animate({ width: expandWidth - adjust }, 200);
@@ -165,6 +168,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
             delete playground.focusBlockMenu;
         });
 
+        Entry.Utils.bindBlockViewHoverEvent(this, this.svgDom);
         $(window).scroll(this.updateOffset.bind(this));
     };
 
@@ -208,8 +212,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
 
         var pastClass;
         var blocks = this._getSortedBlocks();
-        var inVisibles = blocks[1] || [];
-        var visibles = blocks[0] || [];
+        var [visibles = [], inVisibles =[]] = blocks;
 
         inVisibles.forEach(function(block) {
             var blockView = block && block.view;

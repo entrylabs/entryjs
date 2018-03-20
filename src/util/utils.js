@@ -2501,3 +2501,29 @@ Entry.Utils.recoverSoundInstances = function() {
         instance.paused = false;
     });
 };
+
+Entry.Utils.bindBlockViewHoverEvent = function(board, dom) {
+    if (Entry.isMobile()) {
+        return;
+    }
+
+    dom.on('mouseenter mouseleave', 'path', function(e) {
+        if (this.getAttribute('class') !== 'blockPath') {
+            return;
+        }
+        var block = board.code.findById(this.getAttribute('blockId'));
+        if (!block) {
+            return;
+        }
+        var blockView = block.view;
+
+        if (!blockView._mouseEnable) {
+            return;
+        }
+
+        blockView.setHoverBlockView({
+            that: blockView,
+            blockView: e.type === 'mouseenter' ? blockView : undefined,
+        });
+    });
+};

@@ -159,8 +159,6 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
 
         this._path = this.pathGroup.elem('path');
 
-        this._bindHoverEvent();
-
         var fillColor = this._schema.color;
         if (
             this.block.deletable === Entry.Block.DELETABLE_FALSE_LIGHTEN ||
@@ -176,7 +174,12 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
 
         this._fillColor = fillColor;
 
-        var pathStyle = { d: path, fill: fillColor, class: 'blockPath' };
+        var pathStyle = {
+            d: path,
+            fill: fillColor,
+            class: 'blockPath',
+            blockId: this.id,
+        };
 
         if (this.magnet.next || this._skeleton.nextShadow) {
             this.pathGroup.attr({
@@ -632,7 +635,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
             $(document).unbind('.block', onMouseMove);
             blockView.terminateDrag(e);
             if (board) board.set({ dragBlock: null });
-            blockView._setHoverBlockView({ data: { that: this } });
+            blockView._setHoverBlockView({ that: blockView });
             Entry.GlobalSvg.remove();
             blockView.mouseUpEvent.notify();
 
@@ -1251,45 +1254,44 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
         var boldTypes = ['≥', '≤'];
         var notResizeTypes = ['≥', '≤', '-', '>', '<', '=', '+', '-', 'x', '/'];
 
-        for (var i = 0; i < texts.length; i++) {
-            (function(text) {
-                text.setAttribute('font-family', fontFamily);
-                var size = parseInt(text.getAttribute('font-size'));
-                var content = $(text).text();
-                if (boldTypes.indexOf(content) > -1) {
-                    text.setAttribute('font-weight', '500');
-                }
+        _.toArray(texts).forEach((text) => {
+            text.setAttribute('font-family', fontFamily);
+            var size = parseInt(text.getAttribute('font-size'));
+            var content = $(text).text();
+            if (_.contains(boldTypes, content)) {
+                text.setAttribute('font-weight', '500');
+            }
 
-                if (content == 'q') {
-                    var y = parseInt(text.getAttribute('y'));
-                    text.setAttribute('y', y - 1);
-                }
+            if (content == 'q') {
+                var y = parseInt(text.getAttribute('y'));
+                text.setAttribute('y', y - 1);
+            }
 
-                if (notResizeTypes.indexOf(content) > -1)
-                    text.setAttribute('font-size', size + 'px');
-                else text.setAttribute('font-size', size * fontWeight + 'px');
-                text.setAttribute('alignment-baseline', 'baseline');
-            })(texts[i]);
-        }
+            if (_.contains(notResizeTypes, content)) {
+                text.setAttribute('font-size', size + 'px');
+            } else {
+                text.setAttribute('font-size', size * fontWeight + 'px');
+            }
+            text.setAttribute('alignment-baseline', 'baseline');
+        });
 
         var counts = 0;
-        if (images.length === 0) processSvg();
-        else {
-            for (var i = 0; i < images.length; i++) {
-                var img = images[i];
-                (function(img) {
-                    var href = img.getAttribute('href');
-                    loadImage(
-                        href,
-                        img.getAttribute('width'),
-                        img.getAttribute('height')
-                    ).then(function(src) {
-                        img.setAttribute('href', src);
-                        if (++counts == images.length) return processSvg();
-                    });
-                })(img);
-            }
+        if (!images.length) {
+            processSvg();
+        } else {
+            _.toArray(images).forEach((img) => {
+                var href = img.getAttribute('href');
+                loadImage(
+                    href,
+                    img.getAttribute('width'),
+                    img.getAttribute('height')
+                ).then(function(src) {
+                    img.setAttribute('href', src);
+                    if (++counts == images.length) return processSvg();
+                });
+            });
         }
+
         return deferred.promise();
 
         function processSvg() {
@@ -1335,38 +1337,38 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
             src = null;
         }
 
-        function loadImage(src, width, height, multiplier) {
-            var deferred = $.Deferred();
-            if (!multiplier) multiplier = 1;
-            if (Entry.BlockView.pngMap[src] !== undefined)
-                deferred.resolve(Entry.BlockView.pngMap[src]);
+        function loadImage(src, width, height, multiplier = 1) {
+            return new Promise((resolve, reject) => {
+                if (Entry.BlockView.pngMap[src] !== undefined) {
+                    return resolve(Entry.BlockView.pngMap[src]);
+                }
 
-            width *= multiplier;
-            height *= multiplier;
-            //float point cropped
-            width = Math.ceil(width);
-            height = Math.ceil(height);
+                width *= multiplier;
+                height *= multiplier;
+                //float point cropped
+                width = Math.ceil(width);
+                height = Math.ceil(height);
 
-            var img = document.createElement('img');
-            img.crossOrigin = 'Anonymous';
-            var canvas = document.createElement('canvas');
+                var img = document.createElement('img');
+                img.crossOrigin = 'Anonymous';
+                var canvas = document.createElement('canvas');
 
-            canvas.width = width;
-            canvas.height = height;
-            var ctx = canvas.getContext('2d');
+                canvas.width = width;
+                canvas.height = height;
+                var ctx = canvas.getContext('2d');
 
-            img.onload = function() {
-                ctx.drawImage(img, 0, 0, width, height);
-                var data = canvas.toDataURL('image/png');
-                if (/\.png$/.test(src)) Entry.BlockView.pngMap[src] = data;
-                deferred.resolve(data);
-            };
+                img.onload = function() {
+                    ctx.drawImage(img, 0, 0, width, height);
+                    var data = canvas.toDataURL('image/png');
+                    if (/\.png$/.test(src)) Entry.BlockView.pngMap[src] = data;
+                    return resolve(data);
+                };
 
-            img.onerror = function() {
-                deferred.reject('error occured');
-            };
-            img.src = src;
-            return deferred.promise();
+                img.onerror = function() {
+                    return reject('error occured');
+                };
+                img.src = src;
+            });
         }
 
         function isWindow7() {
@@ -1383,12 +1385,12 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
     };
 
     p.downloadAsImage = function(i) {
-        this.getDataUrl().then(function(data) {
+        this.getDataUrl().then((data) => {
             var download = document.createElement('a');
             download.href = data.src;
             var name = '엔트리 블록';
             if (i) name += i;
-            download.download = name + '.png';
+            download.download = `${name}.png`;
             download.click();
         });
     };
@@ -1397,66 +1399,85 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
         var disposeEvent = Entry.disposeEvent;
         if (disposeEvent) disposeEvent.notify(e);
 
-        var that = this;
-        var block = that.block;
+        var block = this.block;
 
-        if (this.isInBlockMenu) {
-            //if long pressed block is function_general block
-            //edit function
-            if (eventSource === 'longPress' && block.getFuncId())
-                this._schema.events.dblclick[0](this);
-            return;
+        //if long pressed block is function_general block
+        //edit function
+        if (
+            this.isInBlockMenu &&
+            eventSource === 'longPress' &&
+            block.getFuncId()
+        ) {
+            return this._schema.events.dblclick[0](this);
         }
 
-        var options = [];
-        var isBoardReadOnly = this._board.readOnly;
+        var { clientX: x, clientY: y } = Entry.Utils.convertMouseEvent(e);
 
-        var copyAndPaste = {
-            text: Lang.Blocks.Duplication_option,
-            enable: this.copyable && !isBoardReadOnly,
-            callback: function() {
-                Entry.do('cloneBlock', block.copy());
-            },
-        };
+        return Entry.ContextMenu.show(_getOptions(this), null, { x, y });
 
-        var copy = {
-            text: Lang.Blocks.CONTEXT_COPY_option,
-            enable: this.copyable && !isBoardReadOnly,
-            callback: function() {
-                that.block.copyToClipboard();
-            },
-        };
+        //helper functon get get context options
+        function _getOptions(blockView) {
+            var isBoardReadOnly = blockView._board.readOnly,
+                { block, isInBlockMenu, copyable } = blockView,
+                {
+                    Blocks: {
+                        Duplication_option,
+                        CONTEXT_COPY_option,
+                        Delete_Blocks,
+                    },
+                    Menus: { save_as_image },
+                } = Lang;
 
-        var remove = {
-            text: Lang.Blocks.Delete_Blocks,
-            enable: block.isDeletable() && !isBoardReadOnly,
-            callback: function() {
-                Entry.do('destroyBlock', that.block);
-            },
-        };
+            var copyAndPaste = {
+                text: Duplication_option,
+                enable: copyable && !isBoardReadOnly,
+                callback: function() {
+                    Entry.do('cloneBlock', block.copy());
+                },
+            };
 
-        var download = {
-            text: Lang.Menus.save_as_image,
-            callback: function() {
-                that.downloadAsImage();
-            },
-        };
+            var copy = {
+                text: CONTEXT_COPY_option,
+                enable: copyable && !isBoardReadOnly,
+                callback: function() {
+                    block.copyToClipboard();
+                },
+            };
 
-        options.push(copyAndPaste);
-        options.push(copy);
-        options.push(remove);
+            var remove = {
+                text: Delete_Blocks,
+                enable: block.isDeletable() && !isBoardReadOnly,
+                callback: function() {
+                    Entry.do('destroyBlock', block);
+                },
+            };
 
-        if (
-            Entry.Utils.isChrome() &&
-            Entry.type == 'workspace' &&
-            !Entry.isMobile()
-        )
-            options.push(download);
+            var download = {
+                text: save_as_image,
+                callback: function() {
+                    blockView.downloadAsImage();
+                },
+            };
 
-        if (e.originalEvent && e.originalEvent.touches)
-            e = e.originalEvent.touches[0];
+            var options = [];
+            if (_isDownloadable()) {
+                options.push(download);
+            }
 
-        Entry.ContextMenu.show(options, null, { x: e.clientX, y: e.clientY });
+            if (!isInBlockMenu) {
+                options = [copyAndPaste, copy, remove, ...options];
+            }
+
+            return options;
+
+            function _isDownloadable() {
+                return (
+                    Entry.Utils.isChrome() &&
+                    Entry.type == 'workspace' &&
+                    !Entry.isMobile()
+                );
+            }
+        }
     };
 
     p.clone = function() {
@@ -1480,7 +1501,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
 
         board.enablePattern();
         originPath.attr({
-            fill: 'url(#blockHoverPattern_' + board.suffix + ')',
+            fill: `url(#blockHoverPattern_${board.suffix})`,
         });
     };
 
@@ -1565,28 +1586,17 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
         return this.renderMode === mode;
     };
 
-    p._bindHoverEvent = function() {
-        //enable mouse pattern only for desktop
-        if (Entry.isMobile()) return;
+    p._setHoverBlockView = function(data) {
+        if (!data) return;
 
-        var cb = this._setHoverBlockView;
-
-        $(this._path)
-            .on('mouseenter', { that: this, blockView: this }, cb)
-            .on('mouseleave', { that: this }, cb);
-    };
-
-    p._setHoverBlockView = function(event) {
-        if (!event) return;
-
-        var data = event.data;
-        var that = data.that;
-        if (!that._mouseEnable) return;
+        var { that, blockView } = data;
 
         var target = that.getBoard();
         target = target && target.workspace;
-        target && target.setHoverBlockView(data.blockView);
+        target && target.setHoverBlockView(blockView);
     };
+
+    p.setHoverBlockView = p._setHoverBlockView;
 
     p.getFields = function() {
         if (!this._schema) {
