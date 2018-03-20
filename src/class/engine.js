@@ -127,7 +127,7 @@ Entry.Engine = function() {
             this.addButton.addClass('entryAddButtonWorkspace_w');
             this.addButton.innerHTML = Lang.Workspace.add_object;
             this.addButton.bindOnClick(function(e) {
-                Entry.dispatchEvent('openSpriteManager');
+                Entry.do('addObjectButtonClick');
                 this.blur();
             });
             if (!Entry.objectAddable)
@@ -923,6 +923,8 @@ Entry.Engine = function() {
                     return this.runButton;
                 case "stopButton":
                     return this.stopButton;
+                case "objectAddButton":
+                    return this.addButton;
             }
         } else {
         }

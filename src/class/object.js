@@ -808,7 +808,10 @@ Entry.EntryObject = function(model) {
                 text: Lang.Workspace.context_remove,
                 callback: function(){
                     Entry.dispatchEvent('removeObject', object);
-                    container.removeObject(object);
+                    var {
+                        id
+                    } = object;
+                    Entry.do('removeObject', id, Entry.container.getObjectIndex(id));
                 }
             },
             {
@@ -871,6 +874,9 @@ Entry.EntryObject = function(model) {
             switch (query.shift()) {
                 case "editButton":
                     return this.editView_;
+                case "removeButton":
+                console.log('removeButton');
+                    return this.deleteView_;
             }
         } else { }
     };
@@ -1038,7 +1044,11 @@ Entry.EntryObject = function(model) {
             this.view_.appendChild(deleteView);
             deleteView.bindOnClick(function (e) {
                 if (Entry.engine.isState('run')) return;
-                Entry.container.removeObject(that);
+                var {
+                    id 
+                } = that;
+
+                Entry.do('removeObject', id, Entry.container.getObjectIndex(id));
             });
         }
 

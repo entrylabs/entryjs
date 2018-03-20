@@ -32,7 +32,14 @@ Entry.STATIC = {
     //if command type number > 500
     //undo redo not working for usual workspace
     //but recorded and validated in guide
-    COMMAND_TYPES: {
+
+    COMMAND_TYPES_ALWAYS: {
+        sceneAdd: 91,
+        sceneEdit: 92,
+        sceneChange: 93,
+        sceneRemove: 94,
+        sceneSort: 95,
+
         addThread: 101,
         destroyThread: 102,
         destroyBlock: 103,
@@ -65,6 +72,8 @@ Entry.STATIC = {
         objectAddSound: 205,
         objectRemoveSound: 206,
         objectNameEdit: 207,
+        addObject: 208,
+        removeObject: 209,
 
         do: 301,
         undo: 302,
@@ -75,8 +84,13 @@ Entry.STATIC = {
         processPicture: 403,
         unprocessPicture: 404,
         editText: 405,
-        variableContainerAddMessage: 406,
-        variableContainerRemoveMessage: 407,
+
+        variableContainerAddMessage: 807,
+        variableContainerRemoveMessage: 808,
+    },
+
+    COMMAND_TYPES_NOT_ALWAYS: {
+        addObjectButtonClick: 210,
 
         toggleRun: 501,
         toggleStop: 502,
@@ -95,17 +109,22 @@ Entry.STATIC = {
         variableContainerRemoveVariable: 804,
         variableAddSetName: 805,
         messageSetName: 806,
-        
-        sceneAdd: 91,
-        sceneEdit: 92,
-        sceneChange: 93,
-        sceneRemove: 94,
-        sceneSort: 95,
+
+        //utility commands
+        dismissModal: 900,
     },
 
     RECORDABLE: {
         SUPPORT: 1,
         SKIP: 2,
         ABANDON: 3,
+    },
+
+    get COMMAND_TYPES() {
+        return Object.assign(
+            {},
+            Entry.STATIC.COMMAND_TYPES_ALWAYS,
+            Entry.STATIC.COMMAND_TYPES_NOT_ALWAYS
+        );
     },
 };

@@ -3,7 +3,9 @@
  */
 'use strict';
 
-Entry.Commander = function (injectType) {
+var UTIL = require('./command_util');
+
+Entry.Commander = function(injectType) {
     if (injectType == 'workspace' || injectType == 'phone') {
         /**
          * Initialize stateManager for redo and undo.
@@ -30,8 +32,8 @@ Entry.Commander = function (injectType) {
     this.doCommandAll = Entry.doCommandAll;
 };
 
-(function (p) {
-    p.do = function (commandType, ...argumentArray) {
+(function(p) {
+    p.do = function(commandType, ...argumentArray) {
         if (typeof commandType === 'string')
             commandType = Entry.STATIC.COMMAND_TYPES[commandType];
         var that = this;
@@ -43,11 +45,8 @@ Entry.Commander = function (injectType) {
         var command = Entry.Command[commandType];
         console.log('commandType', commandType);
         var state;
-        var isSkip =
-            command.skipUndoStack === true ||
-            (!this.doCommandAll && commandType > 500);
 
-        if (Entry.stateManager && !isSkip) {
+        if (Entry.stateManager && !UTIL.checkIsSkip(commandType)) {
             state = Entry.stateManager.addCommand.apply(
                 Entry.stateManager,
                 [commandType, this, this.do, command.undo].concat(
@@ -61,13 +60,13 @@ Entry.Commander = function (injectType) {
 
         return {
             value: value,
-            isPass: function (isPass, skipCount) {
+            isPass: function(isPass, skipCount) {
                 this.isPassById(id, isPass, skipCount);
             }.bind(this),
         };
     };
 
-    p.undo = function (commandType, ...argumentArray) {
+    p.undo = function(commandType, ...argumentArray) {
         var commandFunc = Entry.Command[commandType];
 
         this.report(Entry.STATIC.COMMAND_TYPES.undo);
@@ -85,13 +84,13 @@ Entry.Commander = function (injectType) {
         }
         return {
             value: Entry.Command[commandType].do.apply(this, argumentArray),
-            isPass: function (isPass) {
+            isPass: function(isPass) {
                 this.isPassById(state.id, isPass);
             }.bind(this),
         };
     };
 
-    p.redo = function (commandType, ...argumentArray) {
+    p.redo = function(commandType, ...argumentArray) {
         var commandFunc = Entry.Command[commandType];
 
         this.report(Entry.STATIC.COMMAND_TYPES.redo);
@@ -109,11 +108,11 @@ Entry.Commander = function (injectType) {
         commandFunc.undo.apply(this, argumentArray);
     };
 
-    p.setCurrentEditor = function (key, object) {
+    p.setCurrentEditor = function(key, object) {
         this.editor[key] = object;
     };
 
-    p.isPass = function (isPass) {
+    p.isPass = function(isPass) {
         if (!Entry.stateManager) return;
 
         isPass = isPass === undefined ? true : isPass;
@@ -121,7 +120,7 @@ Entry.Commander = function (injectType) {
         if (lastCommand) lastCommand.isPass = isPass;
     };
 
-    p.isPassById = function (id, isPass, skipCount) {
+    p.isPassById = function(id, isPass, skipCount) {
         if (!id || !Entry.stateManager) return;
 
         isPass = isPass === undefined ? true : isPass;
@@ -132,20 +131,20 @@ Entry.Commander = function (injectType) {
         }
     };
 
-    p.addReporter = function (reporter) {
+    p.addReporter = function(reporter) {
         reporter.logEventListener = this.logEvent.attach(
             reporter,
             reporter.add
         );
     };
 
-    p.removeReporter = function (reporter) {
+    p.removeReporter = function(reporter) {
         if (reporter.logEventListener)
             this.logEvent.detatch(reporter.logEventListener);
         delete reporter.logEventListener;
     };
 
-    p.report = function (commandType, argumentsArray) {
+    p.report = function(commandType, argumentsArray) {
         var data;
 
         if (
@@ -159,7 +158,7 @@ Entry.Commander = function (injectType) {
         this.logEvent.notify(data);
     };
 
-    p.applyOption = function () {
+    p.applyOption = function() {
         this.doCommandAll = Entry.doCommandAll;
     };
 })(Entry.Commander.prototype);
