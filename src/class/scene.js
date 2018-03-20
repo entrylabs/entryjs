@@ -173,17 +173,11 @@ Entry.Scene.prototype.generateElement = function(scene) {
             e.stopPropagation();
             if (Entry.engine.isState('run'))
                 return;
-            entrylms.confirm(Lang.Workspace.will_you_delete_scene).then(function(result){
-                if (result === true)
-                    Entry.scene.removeScene(this.scene);
-            }.bind(this));
-
-            // var a = entrylms.confirm(Lang.Workspace.will_you_delete_scene);
-            // if (a)
-            //     Entry.scene.removeScene(this.scene);
-            // return;
+                
+            Entry.do("sceneRemove", this.scene.id)
         });
         removeButtonCover.appendChild(removeButton);
+        scene.removeButton = removeButton;
     }
 
     Entry.Utils.disableContextmenu(viewTemplate);
@@ -279,8 +273,12 @@ Entry.Scene.prototype.removeScene = function(scene) {
         );
         return;
     }
+    
+    scene = this.getSceneById(
+        typeof scene === "string" ? scene : scene.id
+    );
 
-    var index = this.getScenes().indexOf(this.getSceneById(scene.id));
+    var index = this.getScenes().indexOf(scene);
 
     this.getScenes().splice(index, 1);
     var objects = Entry.container.getSceneObjects(scene);
@@ -369,13 +367,10 @@ Entry.Scene.prototype.toJSON = function() {
     var length = this.getScenes().length;
     for (var i = 0; i<length; i++) {
         var scene = this.getScenes()[i];
-        var view = scene.view;
-        var inputWrapper = scene.inputWrapper;
-        delete scene.view;
-        delete scene.inputWrapper;
-        json.push(JSON.parse(JSON.stringify(scene)));
-        scene.view = view;
-        scene.inputWrapper = inputWrapper;
+        json.push({
+            id: scene.id,
+            name: scene.name
+        });
     }
     return json;
 };
@@ -577,4 +572,19 @@ Entry.Scene.prototype.clear = function() {
 Entry.Scene.prototype._focusSceneNameField = function(scene) {
     var input = scene.view && scene.view.nameField;
     input && input.focus && input.focus();
+};
+
+Entry.Scene.prototype.getDom = function(query) {
+    var scene;
+    if (query.length > 1)
+        scene = this.getSceneById(query[1]);
+
+    switch(query[0]) {
+        case "addButton":
+            return this.addButton_;
+        case "removeButton":
+            return scene.removeButton;
+        default: 
+            return;
+    }
 };
