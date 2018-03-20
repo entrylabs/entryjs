@@ -4,6 +4,10 @@ Entry.trueRobot = {
     name: 'trueRobot',
     url: 'http://www.sigongmedia.co.kr',
     imageName: 'truetrue.png',
+    title: {
+        "en": "TrueTrueRobot",
+        "ko": "뚜루뚜루"
+    },
     PORT_MAP: {
         singlemotor: 0x0a,
         dualmotor: 0x0a,

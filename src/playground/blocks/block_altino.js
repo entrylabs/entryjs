@@ -47,6 +47,10 @@ Entry.Altino = {
     name: 'altino',
     url: 'http://saeon.co.kr/',
     imageName: 'altino.png',
+    title: {
+        "en": "Altino",
+        "ko": "알티노",
+    },
 };
 
 Entry.Altino.getBlocks = function() {

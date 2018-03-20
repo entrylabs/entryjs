@@ -150,6 +150,10 @@ Entry.Turtle = {
     name: 'turtle',
     url: 'http://turtle.school',
     imageName: 'turtle.png',
+    title: {
+        "en": "Turtle",
+        "ko": "거북이"
+    },
     monitorTemplate: {
         imgPath: 'hw/turtle.png',
         width: 480,

@@ -17,6 +17,10 @@ Entry.byrobot_dronefighter_flight = {
     name: 'byrobot_dronefighter_flight',
     url: 'http://www.byrobot.co.kr/',
     imageName: 'byrobot_dronefighter_flight.png',
+    title: {
+        "ko": "바이로봇 드론파이터 드론",
+        "en": "BYROBOT Drone Fighter flight"
+    },
 
     // 초기화
     setZero: function() {

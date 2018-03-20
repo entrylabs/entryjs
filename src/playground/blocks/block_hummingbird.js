@@ -52,6 +52,10 @@ Entry.hummingbird = {
     name: 'hummingbird',
     url: 'http://www.creartbot.com/hummingbird',
     imageName: 'hummingbirdduo.png',
+    title: {
+        "en": "Hummingbird Duo",
+        "ko": "허밍버드 듀오"
+    },
 };
 
 Entry.hummingbird.getBlocks = function() {

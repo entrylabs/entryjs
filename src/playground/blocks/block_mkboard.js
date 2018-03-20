@@ -4,6 +4,10 @@ Entry.mkboard = {
     name: 'mkboard',
     url: 'http://www.jkelec.co.kr',
     imageName: 'mkboard.png',
+    title: {
+        "en": "digital monkeyboard",
+        "ko": "디지털 몽키보드"
+    },
     setZero: function() {
         if (!Entry.hw.sendQueue.SET) {
             Entry.hw.sendQueue = {

@@ -48,6 +48,10 @@ Entry.JDKit = {
     name: 'JDKit',
     url: 'http://www.junilab.co.kr',
     imageName: 'jdkit.png',
+    title: {
+        "en": "JDKit",
+        "ko": "제이디키트"
+    },
     monitorTemplate: {
         imgPath: 'hw/coconut.png',
         width: 256,

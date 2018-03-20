@@ -2,6 +2,10 @@ Entry.NeobotSensorTheme = {
     name: 'neobot_sensor_theme',
     url: 'http://www.neobot.co.kr',
     imageName: 'neobot_sensor_theme.png',
+    title: {
+        "en": "NEOBOT Senosor Theme",
+        "ko": "네오봇 센서 테마"
+    },
     LOCAL_MAP: [
         'IN1',
         'IN2',

@@ -17,6 +17,10 @@ Entry.byrobot_petrone_v2_flight = {
     name: 'byrobot_petrone_v2_flight',
     url: 'http://www.byrobot.co.kr/',
     imageName: 'byrobot_petrone_v2_flight.png',
+    title: {
+        "en": "BYROBOT Petrone V2 flight",
+        "ko": "바이로봇 페트론V2 드론"
+    },
 
     // 초기화
     setZero: function() {

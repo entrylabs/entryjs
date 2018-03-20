@@ -4,6 +4,10 @@ Entry.dplay = {
     name: 'dplay',
     url: 'http://dplay.cc',
     imageName: 'dplay.png',
+    title: {
+        "ko": "디플레이",
+        "en": "DPLAY"
+    },
     vel_value: 255,
     Left_value: 255,
     Right_value: 255,

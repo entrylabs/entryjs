@@ -17,6 +17,10 @@ Entry.byrobot_petrone_v2_controller = {
     name: 'byrobot_petrone_v2_controller',
     url: 'http://www.byrobot.co.kr/',
     imageName: 'byrobot_petrone_v2_controller.png',
+    title: {
+        "en": "BYROBOT Petrone V2 controller",
+        "ko": "바이로봇 페트론V2 조종기"
+    },
 
     // 초기화
     setZero: function() {

@@ -38,6 +38,10 @@ Entry.robotori = {
     name: 'robotori',
     url: 'http://www.robotori.com/',
     imageName: 'robotori.png',
+    title: {
+        "ko": "로보토리",
+        "en": "robotori"
+    },
     monitorTemplate: {
         imgPath: 'hw/robotori.png',
         width: 395,

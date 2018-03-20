@@ -4,6 +4,10 @@ Entry.playcode = {
     name: 'playcode',
     url: 'http://www.playcode.kr/product',
     imageName: 'playcode.png',
+    title: {
+        "en": "playcode",
+        "ko": "플레이코드"
+    },
     setZero: function() {
         if (!Entry.hw.sendQueue.SET) {
             Entry.hw.sendQueue = {

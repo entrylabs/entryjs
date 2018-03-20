@@ -327,6 +327,10 @@ Entry.Albert = {
     name: 'albert',
     url: 'http://albert.school/',
     imageName: 'albertschool.png',
+    title: {
+        ko: '알버트',
+        en: 'albert',
+    },
 };
 
 Entry.Albert.getBlocks = function() {

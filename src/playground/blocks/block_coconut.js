@@ -938,6 +938,10 @@ Entry.coconut = {
     name: 'coconut',
     url: 'http://coco-nut.kr',
     imageName: 'coconut.png',
+    title: {
+        "ko": "코코넛",
+        "en": "coconut"
+    },
     monitorTemplate: {
         imgPath: 'hw/coconut.png',
         width: 256,

@@ -4,6 +4,10 @@ Entry.Codestar = {
     name: 'codestar',
     url: 'http://codestar.co.kr',
     imageName: 'codestar.png',
+    title: {
+        "ko": "코드스타",
+        "en": "Codestar"
+    },
     setZero: function() {
         Entry.hw.sendQueue.readablePorts = [];
         for (var port = 0; port < 20; port++) {

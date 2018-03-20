@@ -3,6 +3,10 @@ Entry.MODI = {
     name: 'modi',
     url: 'http://www.luxrobo.com/',
     imageName: 'modi.png',
+    title: {
+        "ko": "모디",
+        "en": "MODI"
+    },
     setZero: function() {
         Entry.hw.sendQueue.moduleValue = {
             led: [],

@@ -3,6 +3,10 @@
 Entry.nemoino = {
     name: 'nemoino',
     imageName: 'nemoino.png',
+    title: {
+        "ko": "네모이노",
+        "en": "NEMOino"
+    },
     setZero: function() {
         Entry.hw.sendQueue.readablePorts = [];
         for (var port = 0; port < 20; port++) {
