@@ -46,6 +46,8 @@ Entry.JDKit = {
         Entry.hw.update();
     },
     name: 'JDKit',
+    url: 'http://www.junilab.co.kr',
+    imageName: 'jdkit.png',
     monitorTemplate: {
         imgPath: 'hw/coconut.png',
         width: 256,

@@ -2,6 +2,8 @@
 
 Entry.Arduino = {
     name: 'arduino',
+    url: 'http://www.arduino.cc/',
+    imageName: 'arduino.png',
     setZero: function() {
         Entry.hw.sendQueue.readablePorts = [];
         for (var port = 0; port < 20; port++) {

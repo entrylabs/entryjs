@@ -37,6 +37,8 @@ Entry.Robotis_carCont = {
         this.update();
     },
     name: 'robotis_carCont',
+    url: 'http://www.robotis.com/index/product.php?cate_code=111310',
+    imageName: 'robotis_carCont.png',
     delay: 40,
     postCallReturn: function(script, data, ms) {
         if (ms <= 0) {
@@ -205,6 +207,8 @@ Entry.Robotis_openCM70 = {
         //Entry.Robotis_carCont.update();
     },
     name: 'robotis_openCM70',
+    url: 'http://www.robotis.com/index/product.php?cate_code=111310',
+    imageName: 'robotis_openCM70.png',
     delay: 15,
 };
 

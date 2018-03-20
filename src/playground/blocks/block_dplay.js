@@ -2,6 +2,8 @@
 
 Entry.dplay = {
     name: 'dplay',
+    url: 'http://dplay.cc',
+    imageName: 'dplay.png',
     vel_value: 255,
     Left_value: 255,
     Right_value: 255,

@@ -2,6 +2,8 @@
 
 Entry.trueRobot = {
     name: 'trueRobot',
+    url: 'http://www.sigongmedia.co.kr',
+    imageName: 'truetrue.png',
     PORT_MAP: {
         singlemotor: 0x0a,
         dualmotor: 0x0a,

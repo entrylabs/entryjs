@@ -2,6 +2,8 @@
 
 Entry.ArduinoExt = {
     name: 'ArduinoExt',
+    url: 'http://www.arduino.cc/',
+    imageName: 'arduinoExt.png',
     setZero: function() {
         if (!Entry.hw.sendQueue.SET) {
             Entry.hw.sendQueue = {

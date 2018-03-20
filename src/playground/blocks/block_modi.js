@@ -1,6 +1,8 @@
 'use strict';
 Entry.MODI = {
     name: 'modi',
+    url: 'http://www.luxrobo.com/',
+    imageName: 'modi.png',
     setZero: function() {
         Entry.hw.sendQueue.moduleValue = {
             led: [],

@@ -2,6 +2,8 @@
 
 Entry.rokoboard = {
     name: 'rokoboard',
+    url: 'http://www.r-steam.com/',
+    imageName: 'rokoboard.png',
     setZero: function() {
         Entry.hw.sendQueue.readablePorts = [];
         for (var port = 0; port < 20; port++) {

@@ -2,6 +2,8 @@
 
 Entry.Creamo = {
     name: 'creamo',
+    url: 'http://www.creamo.co.kr',
+    imageName: 'creamo.png',
     setZero: function() {
         Entry.hw.sendQueue.readablePorts = [];
         for (var port = 0; port < 20; port++) {

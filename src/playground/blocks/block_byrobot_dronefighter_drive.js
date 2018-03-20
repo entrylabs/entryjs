@@ -15,6 +15,8 @@
 
 Entry.byrobot_dronefighter_drive = {
     name: 'byrobot_dronefighter_drive',
+    url: 'http://www.byrobot.co.kr/',
+    imageName: 'byrobot_dronefighter_drive.png',
 
     // 초기화
     setZero: function() {

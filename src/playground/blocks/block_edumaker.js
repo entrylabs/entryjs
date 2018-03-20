@@ -2,6 +2,7 @@
 
 Entry.EduMaker = {
     name: 'EduMaker',
+    imageName: 'edumaker.png',
     setZero: function() {
         if (!Entry.hw.sendQueue.SET) {
             Entry.hw.sendQueue = {

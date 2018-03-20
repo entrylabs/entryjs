@@ -2,6 +2,8 @@
 
 Entry.Mechatronics_4D = {
     name: 'mechatronics_4d',
+    url: 'http://4dblock.com/',
+    imageName: 'mechatronics_4d.png',
     setZero: function () {
         if(!Entry.hw.sendQueue.SET) {
             Entry.hw.sendQueue = {

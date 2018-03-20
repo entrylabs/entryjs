@@ -325,6 +325,8 @@ Entry.Albert = {
         },
     },
     name: 'albert',
+    url: 'http://albert.school/',
+    imageName: 'albertschool.png',
 };
 
 Entry.Albert.getBlocks = function() {

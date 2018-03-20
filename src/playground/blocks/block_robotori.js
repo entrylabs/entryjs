@@ -36,6 +36,8 @@ Entry.robotori = {
         var Robotori = Entry.robotori;
     },
     name: 'robotori',
+    url: 'http://www.robotori.com/',
+    imageName: 'robotori.png',
     monitorTemplate: {
         imgPath: 'hw/robotori.png',
         width: 395,

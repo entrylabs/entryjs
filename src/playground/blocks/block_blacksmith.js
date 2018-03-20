@@ -2,6 +2,8 @@
 
 Entry.Blacksmith = {
     name: 'blacksmith',
+    url: 'http://www.hanibot.com',
+    imageName: 'blacksmith.png',
     setZero: function() {
         if (!Entry.hw.sendQueue.SET) {
             Entry.hw.sendQueue = {

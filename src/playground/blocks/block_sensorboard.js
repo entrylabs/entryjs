@@ -2,6 +2,8 @@
 
 Entry.SensorBoard = {
     name: 'sensorBoard',
+    url: 'http://www.neweducation.co.kr/',
+    imageName: 'entrybt.png',
     setZero: function() {
         Entry.hw.sendQueue.readablePorts = [];
         for (var port = 0; port < 20; port++) {

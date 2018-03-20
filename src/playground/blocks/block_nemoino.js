@@ -2,6 +2,7 @@
 
 Entry.nemoino = {
     name: 'nemoino',
+    imageName: 'nemoino.png',
     setZero: function() {
         Entry.hw.sendQueue.readablePorts = [];
         for (var port = 0; port < 20; port++) {

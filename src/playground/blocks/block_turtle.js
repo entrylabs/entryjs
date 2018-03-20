@@ -148,6 +148,8 @@ Entry.Turtle = {
         }
     },
     name: 'turtle',
+    url: 'http://turtle.school',
+    imageName: 'turtle.png',
     monitorTemplate: {
         imgPath: 'hw/turtle.png',
         width: 480,

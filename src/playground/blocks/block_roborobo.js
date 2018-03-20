@@ -2,6 +2,8 @@
 
 Entry.Roborobo_Roduino = {
     name: 'roborobo_roduino',
+    url: 'http://www.roborobo.co.kr',
+    imageName: 'roborobo_roduino.png',
     INSTRUCTION: {
         DIGITAL_READ: 1,
         DIGITAL_SET_MODE: 2,
@@ -24,6 +26,8 @@ Entry.Roborobo_Roduino = {
 
 Entry.Roborobo_SchoolKit = {
     name: 'roborobo_schoolkit',
+    url: 'http://www.roborobo.co.kr',
+    imageName: 'roborobo_schoolkit.png',
     pinMode: {
         INPUT: 0,
         OUTPUT: 1,

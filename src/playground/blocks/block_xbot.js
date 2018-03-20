@@ -48,6 +48,8 @@ Entry.Xbot = {
         this.timeouts = [];
     },
     name: 'xbot_epor_edge',
+    url: 'http://xbot.co.kr/',
+    imageName: 'xbot.png',
 };
 
 Entry.Xbot.getBlocks = function() {

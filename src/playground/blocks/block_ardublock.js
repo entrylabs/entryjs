@@ -2,6 +2,8 @@
 
 Entry.ardublock = {
     name: 'ardublock',
+    url: 'http://www.jkelec.co.kr/',
+    imageName: 'ardublock.png',
     setZero: function() {
         if (!Entry.hw.sendQueue.SET) {
             Entry.hw.sendQueue = {

@@ -2,6 +2,8 @@
 
 Entry.CODEino = {
     name: 'CODEino',
+    url: 'http://www.kcsi.co.kr/ko/bbs/content.php?co_id=CODEino1',
+    imageName: 'codeino.png',
     getSensorKey: function() {
         return 'xxxxxxxx'
             .replace(/[xy]/g, function(f) {

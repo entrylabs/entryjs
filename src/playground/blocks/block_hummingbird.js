@@ -50,6 +50,8 @@ Entry.hummingbird = {
 
     //장치이름, 부사장님과 상의가 필요 일단 허밍버드로
     name: 'hummingbird',
+    url: 'http://www.creartbot.com/hummingbird',
+    imageName: 'hummingbirdduo.png',
 };
 
 Entry.hummingbird.getBlocks = function() {

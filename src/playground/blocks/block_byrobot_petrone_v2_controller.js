@@ -15,6 +15,8 @@
 
 Entry.byrobot_petrone_v2_controller = {
     name: 'byrobot_petrone_v2_controller',
+    url: 'http://www.byrobot.co.kr/',
+    imageName: 'byrobot_petrone_v2_controller.png',
 
     // 초기화
     setZero: function() {

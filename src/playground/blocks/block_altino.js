@@ -45,6 +45,8 @@ Entry.Altino = {
         this.timeouts = [];
     },
     name: 'altino',
+    url: 'http://saeon.co.kr/',
+    imageName: 'altino.png',
 };
 
 Entry.Altino.getBlocks = function() {

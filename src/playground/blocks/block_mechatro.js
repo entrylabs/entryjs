@@ -10,6 +10,8 @@
 
 Entry.mechatro = {
     name: 'mechatro',
+    url: 'http://cafe.naver.com/easybread',
+    imageName: 'mechatro_nano.png',
     setZero: function() {
         Entry.hw.sendQueue = {};
         Entry.hw.sendQueue['entryStop'] = 0;

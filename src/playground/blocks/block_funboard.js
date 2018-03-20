@@ -3,6 +3,8 @@
 Entry.FunBoard = {
     // isNotFor": [ "funboard" ] 값
     name: 'funboard',
+    url: 'http://www.thinkfunedu.com',
+    imageName: 'funboard.png',
     Static: {
         FUNBOARD_BLOCK_COLOR: '#00979D', // gray(#848484)
         FUNBOARD_ARROW_COLOR_HW: '#00979D',

@@ -2,6 +2,8 @@
 
 Entry.mkboard = {
     name: 'mkboard',
+    url: 'http://www.jkelec.co.kr',
+    imageName: 'mkboard.png',
     setZero: function() {
         if (!Entry.hw.sendQueue.SET) {
             Entry.hw.sendQueue = {

@@ -2,6 +2,8 @@
 
 Entry.SmartBoard = {
     name: 'smartBoard',
+    url: 'http://www.sciencebox.co.kr',
+    imageName: 'smartboard.png',
     setZero: function() {
         Entry.hw.sendQueue.readablePorts = [];
         for (var port = 2; port < 9; port++) {

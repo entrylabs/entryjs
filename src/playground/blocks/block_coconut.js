@@ -936,6 +936,8 @@ Entry.coconut = {
     /* Scratch coconut Extension import */
 
     name: 'coconut',
+    url: 'http://coco-nut.kr',
+    imageName: 'coconut.png',
     monitorTemplate: {
         imgPath: 'hw/coconut.png',
         width: 256,

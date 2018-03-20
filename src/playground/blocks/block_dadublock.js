@@ -2,6 +2,8 @@
 
 Entry.DaduBlock = {
     name: 'dadublock',
+    url: 'http://www.dadublock.com/',
+    imageName: 'dadublock.png',
     setZero: function() {
         if (!Entry.hw.sendQueue.SET) {
             Entry.hw.sendQueue = {
@@ -47,6 +49,8 @@ Entry.DaduBlock = {
 
 Entry.DaduBlock_Car = {
     name: 'dadublock_car',
+    url: 'http://www.dadublock.com/',
+    imageName: 'dadublock_car.png',
     setZero: function() {
         if (!Entry.hw.sendQueue.SET) {
             Entry.hw.sendQueue = {
