@@ -488,13 +488,19 @@ Entry.Arduino.getBlocks = function() {
                 type: 'arduino_get_digital_value',
             },
             paramsKeyMap: {
-                VALUE: 0,
+                PORT: 0,
             },
             class: 'arduino_value',
             isNotFor: ['arduino'],
             func: function(sprite, script) {
-                var signal = script.getNumberValue('VALUE', script);
-                return Entry.hw.getDigitalPortValue(signal);
+                const { hwModule = {} } = Entry.hw;
+                const { name } = hwModule;
+                if(name === 'ArduinoExt') {                    
+                    return Entry.block.arduino_ext_get_digital.func(sprite, script);
+                } else {
+                    var signal = script.getNumberValue('PORT', script);
+                    return Entry.hw.getDigitalPortValue(signal);
+                }
             },
             syntax: {
                 js: [],
