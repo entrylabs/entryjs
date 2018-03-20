@@ -5,8 +5,8 @@ Entry.ArduinoNano = {
     url: 'http://www.arduino.cc/',
     imageName: 'arduinoNano.png',
     title: {
-        "ko": "아두이노 Uno 확장모드",
-        "en": "ArduinoExt Uno"
+        "ko": "아두이노 Nano",
+        "en": "Arduino Nano"
     },
     setZero: function() {
         if (!Entry.hw.sendQueue.SET) {
