@@ -334,7 +334,6 @@ EntryStatic.getAllBlocks = function() {
         {
             category: "arduino",
             blocks: [
-
                 "arduino_download_connector",
                 "download_guide",
                 "arduino_download_source",
@@ -1264,7 +1263,12 @@ EntryStatic.getAllBlocks = function() {
                 "funboard_dotmatrix_string_display_scroll",
                 "funboard_dotmatrix_set",
                 "funboard_dotmatrix_1row",
-                "funboard_dotmatrix_1column"
+                "funboard_dotmatrix_1column",
+
+                //region microbit
+                "microbit_led_toggle",
+                "microbit_led_toggle2",
+                //endregion microbit
             ]
         }
     ]

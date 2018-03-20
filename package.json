@@ -28,6 +28,8 @@
   "license": "MIT",
   "dependencies": {
     "grunt-karma": "^2.0.0",
+    "lodash": "^4.17.5",
+    "lodash-webpack-plugin": "^0.11.4",
     "uglifyjs-webpack-plugin": "^1.2.2",
     "webpack": "^4.0.1"
   },

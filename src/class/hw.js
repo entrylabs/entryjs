@@ -265,6 +265,9 @@ p.updatePortData = function(data) {
     if (this.hwMonitor && Entry.propertyPanel && Entry.propertyPanel.selected == 'hw') {
         this.hwMonitor.update();
     }
+    if (this.hwModule && this.hwModule.update) {
+        this.hwModule.update(this.portData);
+    }
 };
 
 p.closeConnection = function() {
