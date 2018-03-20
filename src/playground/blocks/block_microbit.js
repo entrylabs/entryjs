@@ -1,7 +1,7 @@
 'use strict';
 
-import _set from 'lodash/set';
-import _merge from 'lodash/merge';
+const _set = ('lodash/set');
+const _merge = ('lodash/merge');
 
 Entry.Microbit = {
     name: 'microbit',
