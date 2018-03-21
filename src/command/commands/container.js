@@ -47,15 +47,21 @@ var { createTooltip, returnEmptyArr } = require('../command_util');
     };
 
     c[COMMAND_TYPES.removeObject] = {
-        do: function(objectId, index) {
-            Entry.container.removeObject(objectId, index);
+        do: function(objectId) {
+            var object = Entry.container.getObject(objectId);
+            Entry.container.removeObject(objectId);
+
+            Entry.toast.success(
+                Lang.Workspace.remove_object,
+                object.name + ' ' + Lang.Workspace.remove_object_msg
+            );
         },
-        state: function(objectId, index) {
+        state: function(objectId) {
             var objectModel = Entry.container.getObject(objectId);
-            return [objectModel.toJSON(), index];
+            return [objectModel.toJSON(), Entry.container.getObjectIndex(objectId)];
         },
-        log: function(objectId, index) {
-            return [['objectId', objectId], ['objectIndex', index]];
+        log: function(objectId) {
+            return [['objectId', objectId]];
         },
         undo: 'addObject',
         recordable: Entry.STATIC.RECORDABLE.SUPPORT,

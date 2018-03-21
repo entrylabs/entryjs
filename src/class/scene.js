@@ -204,8 +204,7 @@ Entry.Scene.prototype.generateElement = function(scene) {
 Entry.Scene.prototype.updateView = function() {
     if (!Entry.type || Entry.type == 'workspace') {
         var view = this.listView_;
-        var renderedCount = $(view).children().length;
-        for (var i = renderedCount; i < this.getScenes().length; i++)
+        for (var i = 0; i < this.getScenes().length; i++)
             view.appendChild(this.getScenes()[i].view);
 
         if (this.addButton_) {
@@ -253,7 +252,6 @@ Entry.Scene.prototype.addScene = function(scene, index) {
 
     Entry.stage.objectContainers.push(Entry.stage.createObjectContainer(scene));
     this.selectScene(scene);
-    this.updateView();
 
     if (Entry.creationChangedEvent)
         Entry.creationChangedEvent.notify();

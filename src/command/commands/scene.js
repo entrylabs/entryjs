@@ -9,10 +9,17 @@ var { createTooltip } = require('../command_util');
     var COMMAND_TYPES = Entry.STATIC.COMMAND_TYPES;
     
     c[COMMAND_TYPES.sceneAdd] = {
+        /**
+         * @param {!object|string} sceneId can be sceneId or scene object
+         * @param {?number} sceneIndex 
+         * @param {?Array} objects will be add to new scene, for undo function
+         */
         do: function(sceneId, sceneIndex, objects) {
             if (Entry.expectedAction)
                 sceneId = Entry.expectedAction[1][1];
             Entry.scene.addScene(sceneId, sceneIndex);
+            if (objects)
+                console.log(objects)
         },
         state: function(sceneId, sceneIndex) {
             if (!sceneIndex)
@@ -38,7 +45,17 @@ var { createTooltip } = require('../command_util');
             Entry.scene.removeScene(sceneId);
         },
         state: function(sceneId) {
-            //return [sceneJSON, sceneIndex, objects]
+            var scene = Entry.scene.getSceneById(sceneId);
+            var sceneJSON = {
+                id: scene.id,
+                name: scene.name
+            }
+            var sceneIndex = Entry.scene.getScenes().indexOf(scene);
+            var objects = Entry.container.getSceneObjects(scene).map(function(o) {
+                return o.toJSON();
+            });
+            console.log(sceneJSON, sceneIndex, objects)
+            return [sceneJSON, sceneIndex, objects]
         },
         log: function(sceneId) {
             return [['sceneId', sceneId]];

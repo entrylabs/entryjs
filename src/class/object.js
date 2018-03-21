@@ -811,7 +811,7 @@ Entry.EntryObject = function(model) {
                     var {
                         id
                     } = object;
-                    Entry.do('removeObject', id, Entry.container.getObjectIndex(id));
+                    Entry.do('removeObject', id);
                 }
             },
             {

@@ -374,10 +374,11 @@ Entry.Container.prototype.addCloneObject = function(object, scene) {
  * @param {!Entry.EntryObject} object
  * @return {Entry.State}
  */
-Entry.Container.prototype.removeObject = function(id, index) {
+Entry.Container.prototype.removeObject = function(id) {
     var objects = this.objects_;
 
     var object = this.getObject(id);
+    var index = objects.indexOf(object);
     var objectJSON = object.toJSON();
 
     object.destroy();
@@ -392,11 +393,6 @@ Entry.Container.prototype.removeObject = function(id, index) {
         this.selectObject();
         Entry.playground.flushPlayground();
     }
-
-    Entry.toast.success(
-        Lang.Workspace.remove_object,
-        object.name + ' ' + Lang.Workspace.remove_object_msg
-    );
 
     Entry.variableContainer.removeLocalVariables(object.id);
     Entry.playground.reloadPlayground();
@@ -487,6 +483,8 @@ Entry.Container.prototype.getAllObjects = function() {
 Entry.Container.prototype.getObject = function(objectId) {
     if (!objectId && Entry.playground && Entry.playground.object)
         objectId = Entry.playground.object.id;
+    else if (objectId instanceof Entry.EntryObject)
+        return objectId;
     var length = this.objects_.length;
     for (var i = 0; i < length; i++) {
         var object = this.objects_[i];
