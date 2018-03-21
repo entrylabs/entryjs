@@ -34,11 +34,11 @@ Entry.STATIC = {
     //but recorded and validated in guide
 
     COMMAND_TYPES_ALWAYS: {
-        sceneAdd: 91,
-        sceneEdit: 92,
-        sceneChange: 93,
-        sceneRemove: 94,
-        sceneSort: 95,
+        sceneAdd: 1,
+        sceneRemove: 2,
+        sceneRename: 3,
+        sceneSort: 4,
+        sceneSelect: 5,
 
         addThread: 101,
         destroyThread: 102,

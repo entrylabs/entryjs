@@ -59,9 +59,30 @@ var { createTooltip } = require('../command_util');
         log: function(sceneId) {
             return [['sceneId', sceneId]];
         },
-        validate: false,
         recordable: Entry.STATIC.RECORDABLE.SUPPORT,
         dom: ['scene', 'removeButton', '&0'],
         undo: 'sceneAdd',
     };
+    
+    c[COMMAND_TYPES.sceneRename] = {
+        do: function(sceneId, newName) {
+            var scene = Entry.scene.getSceneById(sceneId);
+            scene.name = newName; 
+            scene.view.nameField.value = newName;
+            setTimeout(function() {
+                Entry.scene.resize();
+            }, 0);
+        },
+        state: function(sceneId) {
+            var scene = Entry.scene.getSceneById(sceneId);
+            return [sceneId, scene.name];
+        },
+        log: function(sceneId, newName) {
+            return [['sceneId', sceneId], ['newName', newName]];
+        },
+        recordable: Entry.STATIC.RECORDABLE.SUPPORT,
+        dom: ['scene', 'removeButton', '&0'],
+        undo: 'sceneRename',
+    };
+    
 })(Entry.Command);

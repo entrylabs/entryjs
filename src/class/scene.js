@@ -142,13 +142,13 @@ Entry.Scene.prototype.generateElement = function(scene) {
         var code = e.keyCode;
         if (Entry.isArrowOrBackspace(code))
             return;
-
-        scene.name = this.value;
-        if (code == 13)
+            
+        if (code == 13) {
+            Entry.do("sceneRename", scene.id, this.value);
             this.blur();
-        if (this.value.length > 10) {
+        } else if (this.value.length > 10) {
             this.value = this.value.substring(0,10);
-            scene.name = this.value;
+            Entry.do("sceneRename", scene.id, this.value);
             this.blur();
         }
         setTimeout(function() {
@@ -156,9 +156,7 @@ Entry.Scene.prototype.generateElement = function(scene) {
         }, 0);
     };
     nameField.onblur = function (e) {
-        nameField.value = this.value;
-        scene.name = this.value;
-        that.resize();
+        Entry.do("sceneRename", scene.id, this.value);
     };
     divide.appendChild(nameField);
     viewTemplate.nameField = nameField;
