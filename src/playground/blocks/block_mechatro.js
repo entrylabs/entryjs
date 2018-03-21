@@ -11,10 +11,10 @@
 Entry.mechatro = {
     name: 'mechatro',
     url: 'http://cafe.naver.com/easybread',
-    imageName: 'mechatro_nano.png',
+    imageName: 'mechatronics_4d.png',
     title: {
-        "ko": "메카트로",
-        "en": "mechatro"
+        "en": "4D Mechatronics",
+        "ko": "4D 메카트로닉스"
     },
     setZero: function() {
         Entry.hw.sendQueue = {};

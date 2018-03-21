@@ -5,8 +5,8 @@ Entry.Arduino = {
     url: 'http://www.arduino.cc/',
     imageName: 'arduino.png',
     title: {
-        "ko": "아두이노 연결 프로그램",
-        "en": "Program for connect to Arduino"
+        "ko": "아두이노",
+        "en": "Arduino"
     },
     setZero: function() {
         Entry.hw.sendQueue.readablePorts = [];

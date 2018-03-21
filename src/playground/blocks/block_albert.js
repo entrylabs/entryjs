@@ -328,8 +328,8 @@ Entry.Albert = {
     url: 'http://albert.school/',
     imageName: 'albertschool.png',
     title: {
-        ko: '알버트',
-        en: 'albert',
+        ko: '알버트 스쿨버전',
+        en: 'Albert School',
     },
 };
 

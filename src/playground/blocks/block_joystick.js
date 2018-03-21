@@ -5,8 +5,8 @@ Entry.joystick = {
     url: 'http://www.kocoafab.cc/',
     imageName: 'joystick.png',
     title: {
-        "en": "joystick",
-        "ko": "조이스틱"
+        "ko": "조이스틱 센서 쉴드",
+        "en": "Joystick Sensor Shield"
     },
     setZero: function() {
         Entry.hw.sendQueue.readablePorts = [];
