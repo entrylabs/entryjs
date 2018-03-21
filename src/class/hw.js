@@ -257,7 +257,12 @@ p.update = function() {
     if(this.socket.disconnected) {
         return;
     }
-    this.socket.emit('message', { data:JSON.stringify(this.sendQueue), mode: this.socket.mode, type:'utf8' });
+    this.socket.emit('message', { data:JSON.stringify(this.sendQueue), mode: this.socket.mode, type:'utf8' }, (data)=> {
+        console.log('ack::', data);
+    });
+    if(this.hwModule && this.hwModule.afterSend) {
+        this.hwModule.afterSend(this.sendQueue);
+    }
 };
 
 p.updatePortData = function(data) {
@@ -265,8 +270,8 @@ p.updatePortData = function(data) {
     if (this.hwMonitor && Entry.propertyPanel && Entry.propertyPanel.selected == 'hw') {
         this.hwMonitor.update();
     }
-    if (this.hwModule && this.hwModule.update) {
-        this.hwModule.update(this.portData);
+    if (this.hwModule && this.hwModule.afterReceive) {
+        this.hwModule.afterReceive(this.portData);
     }
 };
 

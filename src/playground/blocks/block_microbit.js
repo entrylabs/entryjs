@@ -1,7 +1,7 @@
 'use strict';
 
-const _set = ('lodash/set');
-const _merge = ('lodash/merge');
+const _set = require('lodash/set');
+const _merge = require('lodash/merge');
 
 Entry.Microbit = {
     name: 'microbit',
@@ -15,8 +15,13 @@ Entry.Microbit = {
         });
         Entry.hw.update();
     },
-    update: function(data) {
-        console.log(data);
+    afterSend: function(data) {
+        // Object.assign(data, {
+        //     OUTPUT: {},
+        // });
+    },
+    afterReceive: function(data) {
+        // console.log('afterReceive', data);
     },
 };
 
