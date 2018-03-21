@@ -19,7 +19,7 @@ var { createTooltip } = require('../command_util');
                 sceneId = Entry.expectedAction[1][1];
             Entry.scene.addScene(sceneId, sceneIndex);
             if (objects)
-                console.log(objects)
+                Entry.container.setObjects(objects);
         },
         state: function(sceneId, sceneIndex) {
             if (!sceneIndex)
@@ -54,7 +54,6 @@ var { createTooltip } = require('../command_util');
             var objects = Entry.container.getSceneObjects(scene).map(function(o) {
                 return o.toJSON();
             });
-            console.log(sceneJSON, sceneIndex, objects)
             return [sceneJSON, sceneIndex, objects]
         },
         log: function(sceneId) {
