@@ -1038,15 +1038,10 @@ Entry.MODI.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [Lang.Blocks.modi_speaker_F_DO_5, 'F_DO_5'],
-                        [Lang.Blocks.modi_speaker_F_RE_5, 'F_RE_5'],
-                        [Lang.Blocks.modi_speaker_F_MI_5, 'F_MI_5'],
                         [Lang.Blocks.modi_speaker_F_PA_5, 'F_PA_5'],
                         [Lang.Blocks.modi_speaker_F_SOL_5, 'F_SOL_5'],
                         [Lang.Blocks.modi_speaker_F_RA_5, 'F_RA_5'],
                         [Lang.Blocks.modi_speaker_F_SO_5, 'F_SO_5'],
-                        [Lang.Blocks.modi_speaker_F_DO_S_5, 'F_DO_S_5'],
-                        [Lang.Blocks.modi_speaker_F_RE_S_5, 'F_RE_S_5'],
                         [Lang.Blocks.modi_speaker_F_PA_S_5, 'F_PA_S_5'],
                         [Lang.Blocks.modi_speaker_F_SOL_S_5, 'F_SOL_S_5'],
                         [Lang.Blocks.modi_speaker_F_RA_S_5, 'F_RA_S_5'],
@@ -1065,15 +1060,8 @@ Entry.MODI.getBlocks = function() {
                         [Lang.Blocks.modi_speaker_F_DO_7, 'F_DO_7'],
                         [Lang.Blocks.modi_speaker_F_RE_7, 'F_RE_7'],
                         [Lang.Blocks.modi_speaker_F_MI_7, 'F_MI_7'],
-                        [Lang.Blocks.modi_speaker_F_PA_7, 'F_PA_7'],
-                        [Lang.Blocks.modi_speaker_F_SOL_7, 'F_SOL_7'],
-                        [Lang.Blocks.modi_speaker_F_RA_7, 'F_RA_7'],
-                        [Lang.Blocks.modi_speaker_F_SO_7, 'F_SO_7'],
                         [Lang.Blocks.modi_speaker_F_DO_S_7, 'F_DO_S_7'],
-                        [Lang.Blocks.modi_speaker_F_RE_S_7, 'F_RE_S_7'],
-                        [Lang.Blocks.modi_speaker_F_PA_S_7, 'F_PA_S_7'],
-                        [Lang.Blocks.modi_speaker_F_SOL_S_7, 'F_SOL_S_7'],
-                        [Lang.Blocks.modi_speaker_F_RA_S_7, 'F_RA_S_7'],
+                        [Lang.Blocks.modi_speaker_F_RE_S_7, 'F_RE_S_7']
                     ],
                     fontSize: 11,
                 },
@@ -1091,7 +1079,7 @@ Entry.MODI.getBlocks = function() {
             def: {
                 params: [
                     null,
-                    'F_DO_5',
+                    'F_DO_6',
                     {
                         type: 'number',
                         params: ['100'],
