@@ -727,8 +727,8 @@ Entry.MODI.getBlocks = function() {
                 }
                 var key = script.getStringField('name'),
                     property = script.getStringField('property'),
-                    upper = script.getNumberValue('upper') * 10,
-                    bottom = script.getNumberValue('bottom') * 10;
+                    upper = script.getNumberValue('upper'),
+                    bottom = script.getNumberValue('bottom');
                 var moduleID = JSON.parse(
                     Entry.hw.portData.module['motor'][key]
                 ).id;
@@ -802,44 +802,18 @@ Entry.MODI.getBlocks = function() {
                     property = script.getStringField('property');
 
                 var pd = JSON.parse(Entry.hw.portData.module['motor'][key]);
-                var uValue = 0,
-                    bValue = 0;
                 var moduleID = pd.id;
 
-                switch (property) {
-                    case 'MOTOR_ANGLE':
-                        uValue = 4;
-                        bValue = 12;
-                        break;
-                    case 'MOTOR_SPEED':
-                        uValue = 3;
-                        bValue = 11;
-                        break;
-                    case 'MOTOR_TORQUE':
-                        uValue = 2;
-                        bValue = 10;
-                        break;
-                }
-
-                if (!pd.value[uValue]) {
-                    pd.value[uValue] = 0;
-
-                    // send GETPROPERTY
-                    /*if(Entry.MODI.getModule.id != moduleID || Object.keys(Entry.hw.sendQueue["getProperty"]).length == 0){
-                Entry.hw.sendQueue["getProperty"][moduleID] = JSON.stringify({module: property, id: moduleID});
-                Entry.MODI.getModule.id = moduleID;
-            }*/
-                }
-                if (!pd.value[bValue]) {
-                    pd.value[bValue] = 0;
-                }
-
                 var sq = Entry.hw.sendQueue.moduleValue;
-                var upper = value * 10 + pd.value[uValue] * 10,
-                    bottom = pd.value[bValue] * 10;
+                var upper = value,
+                    bottom = 0;
 
-                if (upper > 1000 || (upper < 0 && property == 'MOTOR_ANGLE'))
-                    upper = 1000;
+                if (upper > 100)
+                    upper = 100;
+                else if (upper < 0 && property == 'MOTOR_ANGLE')
+                    upper = 0;
+                else if (upper < -100 && property != 'MOTOR_ANGLE')
+                    upper = -100;
 
                 sq['motor'][key] = JSON.stringify({
                     module: property,
@@ -910,44 +884,18 @@ Entry.MODI.getBlocks = function() {
                     property = script.getStringField('property');
 
                 var pd = JSON.parse(Entry.hw.portData.module['motor'][key]);
-                var uValue = 0,
-                    bValue = 0;
                 var moduleID = pd.id;
 
-                if (!pd.value[uValue]) {
-                    pd.value[uValue] = 0;
-
-                    // send GETPROPERTY
-                    /*if(Entry.MODI.getModule.id != moduleID || Object.keys(Entry.hw.sendQueue["getProperty"]).length == 0){
-                Entry.hw.sendQueue["getProperty"][moduleID] = JSON.stringify({module: property, id: moduleID});
-                Entry.MODI.getModule.id = moduleID;
-            }*/
-                }
-                if (!pd.value[bValue]) {
-                    pd.value[bValue] = 0;
-                }
-
-                switch (property) {
-                    case 'MOTOR_ANGLE':
-                        uValue = 4;
-                        bValue = 12;
-                        break;
-                    case 'MOTOR_SPEED':
-                        uValue = 3;
-                        bValue = 11;
-                        break;
-                    case 'MOTOR_TORQUE':
-                        uValue = 2;
-                        bValue = 10;
-                        break;
-                }
-
                 var sq = Entry.hw.sendQueue.moduleValue;
-                var upper = pd.value[uValue] * 10,
-                    bottom = value * 10 + pd.value[bValue] * 10;
+                var upper = 0,
+                    bottom = value;
 
-                if (bottom > 1000 || (bottom < 0 && property == 'MOTOR_ANGLE'))
-                    bottom = 1000;
+                if (bottom > 100)
+                    bottom = 100;
+                else if (bottom < 0 && property == 'MOTOR_ANGLE')
+                    bottom = 0;
+                else if (bottom < -100 && property != 'MOTOR_ANGLE')
+                    bottom = -100;
 
                 sq['motor'][key] = JSON.stringify({
                     module: property,
