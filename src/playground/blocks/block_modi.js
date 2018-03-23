@@ -1112,7 +1112,7 @@ Entry.MODI.getBlocks = function() {
                 }
                 var key = script.getStringField('name'),
                     frequence = script.getStringField('frequence'),
-                    volume = script.getNumberValue('volume', script) * 10;
+                    volume = script.getNumberValue('volume', script);
                 var moduleID = JSON.parse(
                     Entry.hw.portData.module['speaker'][key]
                 ).id;
@@ -1179,8 +1179,8 @@ Entry.MODI.getBlocks = function() {
                     Entry.MODI.initSend();
                 }
                 var key = script.getStringField('name'),
-                    frequence = script.getNumberValue('frequence') * 10,
-                    volume = script.getNumberValue('volume', script) * 10;
+                    frequence = script.getNumberValue('frequence'),
+                    volume = script.getNumberValue('volume', script);
                 var moduleID = JSON.parse(
                     Entry.hw.portData.module['speaker'][key]
                 ).id;
