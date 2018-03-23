@@ -1223,7 +1223,7 @@ Entry.MODI.getBlocks = function() {
                     null,
                     {
                         type: 'text',
-                        params: ['100'],
+                        params: ['text'],
                     },
                 ],
                 type: 'modi_print_display_by_value',
