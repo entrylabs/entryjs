@@ -285,8 +285,9 @@ Entry.Scene.prototype.removeScene = function(scene) {
     this.getScenes().splice(index, 1);
     var objects = Entry.container.getSceneObjects(scene);
 
-    for (var i=0; i<objects.length; i++)
-        Entry.container.removeObject(objects[i]);
+    for (var i=0; i<objects.length; i++) {
+        Entry.container.removeObject(objects[i], true);
+    }
     Entry.stage.removeObjectContainer(scene);
     $(scene.view).remove();
     this.selectScene();
@@ -485,7 +486,7 @@ Entry.Scene.prototype.cloneScene = function(scene) {
         this.isSceneCloning = true;
         for (var i=objects.length-1; i>=0; i--) {
             var obj = objects[i];
-            var ret = container.addCloneObject(obj, clonedScene.id);
+            var ret = container.addCloneObject(obj, clonedScene.id, true);
             oldIds.push(obj.id);
             newIds.push(ret.id);
         }
@@ -494,6 +495,11 @@ Entry.Scene.prototype.cloneScene = function(scene) {
         WS && WS.board && WS.board.reDraw();
         this._focusSceneNameField(clonedScene);
         this.isSceneCloning = false;
+        container.setCurrentObjects();
+        container.updateObjectsOrder();
+        container.updateListView();
+        container.selectObject(newIds[newIds.length - 1]);
+        Entry.variableContainer.updateViews();
     } catch (e) { console.log('error', e); }
 };
 
