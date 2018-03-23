@@ -1014,12 +1014,11 @@ Entry.MODI.getBlocks = function() {
                     Entry.MODI.initSend();
                 }
                 var key = script.getStringField('name');
-                var red, green, blue;
-                (red = script.getNumberValue('rValue')),
-                    (green = script.getNumberValue('gValue')),
-                    (blue = script.getNumberValue('bValue'));
-                var moduleID = JSON.parse(Entry.hw.portData.module['led'][key])
-                    .id;
+                var red = Math.round(script.getNumberValue('rValue') / 255 * 100);
+                var green = Math.round(script.getNumberValue('gValue') / 255 * 100);
+                var blue = Math.round(script.getNumberValue('bValue') / 255 * 100);
+                
+                var moduleID = JSON.parse(Entry.hw.portData.module['led'][key]).id;
 
                 var sq = Entry.hw.sendQueue.moduleValue;
                 sq['led'][key] = JSON.stringify({
@@ -1072,11 +1071,10 @@ Entry.MODI.getBlocks = function() {
 
                 color = color.substring(1, 7);
                 var bigint = parseInt(color, 16);
-                var red = (bigint >> 16) & 255,
-                    green = (bigint >> 8) & 255,
-                    blue = bigint & 255;
-                var moduleID = JSON.parse(Entry.hw.portData.module['led'][key])
-                    .id;
+                var red = Math.round(((bigint >> 16) & 255) / 255 * 100);
+                var green = Math.round(((bigint >> 8) & 255) / 255 * 100);
+                var blue = Math.round((bigint & 255) / 255 * 100);
+                var moduleID = JSON.parse(Entry.hw.portData.module['led'][key]).id;
 
                 var sq = Entry.hw.sendQueue.moduleValue;
                 sq['led'][key] = JSON.stringify({
