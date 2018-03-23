@@ -3,8 +3,6 @@
  */
 "use strict";
 
-goog.provide("Entry.BlockExtension");
-
 /*
  *
  */

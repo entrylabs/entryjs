@@ -2,6 +2,12 @@
 
 Entry.SensorBoard = {
     name: 'sensorBoard',
+    url: 'http://www.neweducation.co.kr/',
+    imageName: 'entrybt.png',
+    title: {
+        "ko": "E-센서보드",
+        "en": "E-Sensorboard"
+    },
     setZero: function() {
         Entry.hw.sendQueue.readablePorts = [];
         for (var port = 0; port < 20; port++) {

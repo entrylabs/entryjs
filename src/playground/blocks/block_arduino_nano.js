@@ -2,6 +2,12 @@
 
 Entry.ArduinoNano = {
     name: 'ArduinoNano',
+    url: 'http://www.arduino.cc/',
+    imageName: 'arduinoNano.png',
+    title: {
+        "ko": "아두이노 Nano",
+        "en": "Arduino Nano"
+    },
     setZero: function() {
         if (!Entry.hw.sendQueue.SET) {
             Entry.hw.sendQueue = {

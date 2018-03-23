@@ -198,6 +198,12 @@ Entry.Roboid = {
         this.timeouts = [];
     },
     name: 'roboid',
+    url: 'http://robomation.net/',
+    imageName: 'block_roboid.png',
+    title: {
+        "en": "Roboid",
+        "ko": "로보이드"
+    },
     monitorTemplate: {
         imgPath: 'hw/transparent.png',
         width: 2,
