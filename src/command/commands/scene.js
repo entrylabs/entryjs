@@ -80,7 +80,13 @@ var { createTooltip } = require('../command_util');
         log: function(sceneId, newName) {
             return [['sceneId', sceneId], ['newName', newName]];
         },
-        restrict: function(data, domQuery, callback, restrictor) {
+        restrict(data, domQuery, callback) {
+            var { content: contentData, tooltip: { title, content } } = data;
+
+            callback();
+            var scene = Entry.scene.getSceneById(contentData[1][1]);
+            scene.view.nameField.focus();
+            return createTooltip(title, content, domQuery, callback);
         },
         recordable: Entry.STATIC.RECORDABLE.SUPPORT,
         dom: ['scene', 'nameField', '&0'],
