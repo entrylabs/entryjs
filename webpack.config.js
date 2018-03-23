@@ -9,6 +9,9 @@ switch (process.env.NODE_ENV) {
     case 'lint':
         conf = require('./webpack_config/lint');
         break;
+    case 'serve':
+        conf = require('./webpack_config/serve');
+        break;
     case 'development':
     default:
         conf = require('./webpack_config/dev');
