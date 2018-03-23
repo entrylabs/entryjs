@@ -37,11 +37,9 @@ module.exports = merge(common, {
         port: 8080,
         historyApiFallback: {
             index: '/example/example.html',
-            open: true,
             rewrites: [
                 { from: /^\/$/, to: '/example/example.html' },
                 { from: /^\/lib\/entryjs/, to: '/' },
-                { from: /./, to: '/views/404.html' },
             ],
         },
         proxy: {
