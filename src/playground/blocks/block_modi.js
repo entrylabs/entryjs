@@ -924,15 +924,15 @@ Entry.MODI.getBlocks = function() {
                     null,
                     {
                         type: 'number',
-                        params: ['255'],
+                        params: ['100'],
                     },
                     {
                         type: 'number',
-                        params: ['255'],
+                        params: ['100'],
                     },
                     {
                         type: 'number',
-                        params: ['255'],
+                        params: ['100'],
                     },
                 ],
                 type: 'modi_set_led_rgb',
@@ -950,9 +950,9 @@ Entry.MODI.getBlocks = function() {
                     Entry.MODI.initSend();
                 }
                 var key = script.getStringField('name');
-                var red = Math.round(script.getNumberValue('rValue') / 255 * 100);
-                var green = Math.round(script.getNumberValue('gValue') / 255 * 100);
-                var blue = Math.round(script.getNumberValue('bValue') / 255 * 100);
+                var red = script.getNumberValue('rValue');
+                var green = script.getNumberValue('gValue');
+                var blue = script.getNumberValue('bValue');
                 
                 var moduleID = JSON.parse(Entry.hw.portData.module['led'][key]).id;
 
