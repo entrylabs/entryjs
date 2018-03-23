@@ -1099,8 +1099,6 @@ EntryStatic.getAllBlocks = function() {
                 "modi_set_led_color",
                 "modi_set_basic_speaker",
                 "modi_set_custom_speaker",
-                "modi_change_speaker_frequence",
-                "modi_change_speaker_volume",
                 "modi_print_display_by_value",
 
                 // COCONUT
