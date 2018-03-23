@@ -1087,7 +1087,6 @@ EntryStatic.getAllBlocks = function() {
                 "modi_dial_value",
                 "modi_gyroscope_value",
                 "modi_button_value",
-                "modi_is_button_touch",
                 "modi_button_true",
                 "modi_button_false",
                 "modi_infrared_value",
