@@ -120,7 +120,8 @@ Entry.Scene.prototype.generateElement = function(scene) {
             e.preventDefault();
             return;
         }
-        Entry.scene.selectScene(scene);
+        if (Entry.scene.selectedScene !== scene)
+            Entry.do("sceneSelect", scene.id);
     });
     var nameField = Entry.createElement('input');
     nameField.addClass('entrySceneFieldWorkspace');
@@ -144,19 +145,19 @@ Entry.Scene.prototype.generateElement = function(scene) {
             return;
             
         if (code == 13) {
-            Entry.do("sceneRename", scene.id, this.value);
+            if (this.value !== scene.name)
+                Entry.do("sceneRename", scene.id, this.value);
             this.blur();
         } else if (this.value.length > 10) {
             this.value = this.value.substring(0,10);
-            Entry.do("sceneRename", scene.id, this.value);
+            if (this.value !== scene.name)
+                Entry.do("sceneRename", scene.id, this.value);
             this.blur();
         }
-        setTimeout(function() {
-            that.resize();
-        }, 0);
     };
     nameField.onblur = function (e) {
-        Entry.do("sceneRename", scene.id, this.value);
+        if (this.value !== scene.name)
+            Entry.do("sceneRename", scene.id, this.value);
     };
     divide.appendChild(nameField);
     viewTemplate.nameField = nameField;
@@ -580,6 +581,10 @@ Entry.Scene.prototype.getDom = function(query) {
             return this.addButton_;
         case "removeButton":
             return scene.removeButton;
+        case "nameField":
+            return scene.view.nameField;
+        case "view":
+            return scene.view;
         default: 
             return;
     }

@@ -80,9 +80,26 @@ var { createTooltip } = require('../command_util');
         log: function(sceneId, newName) {
             return [['sceneId', sceneId], ['newName', newName]];
         },
+        restrict: function(data, domQuery, callback, restrictor) {
+        },
         recordable: Entry.STATIC.RECORDABLE.SUPPORT,
-        dom: ['scene', 'removeButton', '&0'],
+        dom: ['scene', 'nameField', '&0'],
         undo: 'sceneRename',
     };
     
+    c[COMMAND_TYPES.sceneSelect] = {
+        do: function(sceneId) {
+            var scene = Entry.scene.getSceneById(sceneId);
+            Entry.scene.selectScene(scene);
+        },
+        state: function(sceneId) {
+            return [Entry.scene.selectedScene.id];
+        },
+        log: function(sceneId) {
+            return [['sceneId', sceneId]];
+        },
+        recordable: Entry.STATIC.RECORDABLE.SUPPORT,
+        dom: ['scene', 'view', '&0'],
+        undo: 'sceneSelect',
+    };
 })(Entry.Command);

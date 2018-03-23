@@ -38,7 +38,6 @@ Entry.STATIC = {
         sceneRemove: 2,
         sceneRename: 3,
         sceneSort: 4,
-        sceneSelect: 5,
 
         addThread: 101,
         destroyThread: 102,
@@ -90,6 +89,8 @@ Entry.STATIC = {
     },
 
     COMMAND_TYPES_NOT_ALWAYS: {
+        sceneSelect: 5,
+        
         addObjectButtonClick: 210,
 
         toggleRun: 501,
