@@ -1503,7 +1503,6 @@ Entry.VariableContainer = function() {
         };
 
         nameField.onblur = _.debounce(function(e) {
-            console.log('blur');
             if (this.blurred) {
                 return;
             }

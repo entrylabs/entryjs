@@ -1,7 +1,7 @@
 /*
  *
  */
-('use strict');
+'use strict';
 
 var { createTooltip, returnEmptyArr } = require('../command_util');
 
@@ -70,11 +70,20 @@ var { createTooltip, returnEmptyArr } = require('../command_util');
 
     c[COMMAND_TYPES.addObject] = {
         do: function(objectModel, index) {
+            var that = c[COMMAND_TYPES.addObject];
+            var { hashId } = that;
+            if (hashId) {
+                objectModel.id = hashId;
+                delete that.hashId;
+            }
             Entry.container.addObjectFunc(objectModel, index);
             Entry.dispatchEvent('dismissModal');
         },
         state: function(objectModel, index) {
-            console.log('state');
+            var { hashId } = c[COMMAND_TYPES.addObject];
+            if (hashId) {
+                objectModel.id = hashId;
+            }
             return [objectModel.id, index];
         },
         log: function(objectModel, index) {
@@ -89,6 +98,7 @@ var { createTooltip, returnEmptyArr } = require('../command_util');
         dom: ['.btn_confirm_modal'],
         restrict: function(data, domQuery, callback) {
             Entry.dispatchEvent('dismissModal');
+
             this.hashId = data.content[1][1].id;
             var { tooltip: { title, content } } = data;
 
@@ -112,8 +122,8 @@ var { createTooltip, returnEmptyArr } = require('../command_util');
             return tooltip;
         },
         undo: 'removeObject',
-        recordable: Entry.STATIC.RECORDABLE.SUPPORT,
         validate: false,
+        recordable: Entry.STATIC.RECORDABLE.SUPPORT,
     };
 
     c[COMMAND_TYPES.addObjectButtonClick] = {

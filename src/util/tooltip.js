@@ -104,6 +104,9 @@ Entry.Tooltip = function(data, opts) {
         tooltipDom.bind('mousedown', (e) => {
             e.stopPropagation();
         });
+        tooltipDom.bind('mouseup', (e) => {
+            e.stopPropagation();
+        });
 
         tooltipDom.html(data.content);
         this._tooltips.push(tooltipWrapper);

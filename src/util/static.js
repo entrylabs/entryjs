@@ -134,4 +134,11 @@ Entry.STATIC = {
             Entry.STATIC.COMMAND_TYPES_NOT_ALWAYS
         );
     },
+
+    getCommandName(commandType) {
+        return _.findKey(
+            Entry.STATIC.COMMAND_TYPES,
+            _.partial(_.isEqual, commandType)
+        );
+    },
 };

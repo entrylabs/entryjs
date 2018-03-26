@@ -2243,12 +2243,10 @@ Entry.Utils.getWindow = function(hashId) {
     }
 };
 
-Entry.Utils.restrictAction = function(exceptions, callback, noDispose) {
+Entry.Utils.restrictAction = function(exceptions = [], callback, noDispose) {
     var that = this;
-    exceptions = exceptions || [];
-    exceptions = exceptions.map(function(e) {
-        return e[0];
-    });
+    exceptions = exceptions.map(_.head);
+
     var handler = function(e) {
         e = e || window.event;
         var target = e.target || e.srcElement;

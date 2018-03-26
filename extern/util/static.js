@@ -1475,27 +1475,6 @@ EntryStatic.fonts = [
 }
 ];
 
-EntryStatic.getName = function(str, type) {
-    var dict = SpriteNames;
-    if (type == 'picture')
-        dict = PictureNames;
-    else if (type == 'sound')
-        dict = SoundNames;
-
-    var lang = navigator.language ? navigator.language : 'ko';
-    if (window.lang)
-        lang = window.lang;
-
-    if (window.user && window.user.language)
-        lang = window.user.language;
-
-    if (!dict || (lang && lang.indexOf('ko') != -1)) {
-        return str;
-    } else {
-        return dict[str] ? dict[str] : str;
-    }
-};
-
 EntryStatic.ARROW_COLOR_START = '#2f975a';
 EntryStatic.ARROW_COLOR_FLOW = '#3a71bc';
 EntryStatic.ARROW_COLOR_MOVING = '#8641b6';
