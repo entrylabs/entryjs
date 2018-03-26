@@ -141,12 +141,7 @@ Entry.VariableContainer = function() {
         functionAddButton.innerHTML = '+ ' + Lang.Workspace.function_add;
         this.functionAddButton_ = functionAddButton;
         functionAddButton.bindOnClick(function(e) {
-            Entry.playground.changeViewMode('code');
-            var blockMenu = that._getBlockMenu();
-            if (blockMenu.lastSelector != 'func') {
-                blockMenu.selectMenu('func');
-            }
-            that.createFunction();
+            Entry.do("funcEditStart")
         });
 
         return view;
@@ -2862,6 +2857,8 @@ Entry.VariableContainer = function() {
             switch (query.shift()) {
                 case 'filter':
                     return this.filterElements[query.shift()];
+                case 'functionAddButton':
+                    return this.functionAddButton_;
                 case 'variableAddButton':
                     return this.variableAddButton_;
                 case 'variableAddConfirmButton':

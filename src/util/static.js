@@ -86,11 +86,14 @@ Entry.STATIC = {
 
         variableContainerAddMessage: 807,
         variableContainerRemoveMessage: 808,
+        
+        funcCreate: 1003,
+        funcUpdate: 1004,
     },
 
     COMMAND_TYPES_NOT_ALWAYS: {
         sceneSelect: 5,
-        
+            
         addObjectButtonClick: 210,
 
         toggleRun: 501,
@@ -113,6 +116,9 @@ Entry.STATIC = {
 
         //utility commands
         dismissModal: 900,
+        
+        funcEditStart: 1001,
+        funcEditCancel: 1002,
     },
 
     RECORDABLE: {

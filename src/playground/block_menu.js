@@ -1170,6 +1170,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
         if (!type) return;
 
         var block = this.code.getBlockList(false, type)[0];
+        if (!block) return;
         var blockView = block.view;
 
         this.hasCategory() && this.selectMenu(block.category, true);

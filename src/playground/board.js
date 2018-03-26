@@ -399,6 +399,7 @@ Entry.Board.DRAG_RADIUS = 5;
 
         var saveFunc = this.save.bind(this);
         var cancelFunc = this.cancelEdit.bind(this);
+        this.cancelButton = cancelButton;
 
         $(saveButton).bind('mousedown touchstart', saveFunc);
         $(saveText).bind('mousedown touchstart', saveFunc);
@@ -407,7 +408,7 @@ Entry.Board.DRAG_RADIUS = 5;
     };
 
     p.cancelEdit = function() {
-        this.workspace.setMode(Entry.Workspace.MODE_BOARD, 'cancelEdit');
+        Entry.do("funcEditCancel");
     };
 
     p.save = function() {
@@ -1178,6 +1179,9 @@ Entry.Board.DRAG_RADIUS = 5;
                     };
                 }.bind(this),
             };
+        else if (key === 'cancelEditButton') {
+            return this.cancelButton;
+        }
         else if (key instanceof Array) {
             var targetObj = this.code.getByPointer(key);
             if (targetObj.getDom) {

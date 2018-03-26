@@ -1820,6 +1820,8 @@ Entry.Playground = function() {
                     return this.blockMenu.getDom(query);
                 case "board":
                     return this.board.getDom(query);
+                case "overlayBoard":
+                    return this.mainWorkspace.overlayBoard.getDom(query);
                 case "pictureAddButton":
                     return this._pictureAddButton;
                 case "soundAddButton":
