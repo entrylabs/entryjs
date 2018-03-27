@@ -254,14 +254,17 @@ p.update = function() {
     if (!this.socket) {
         return;
     }
-    if(this.socket.disconnected) {
+    if (this.socket.disconnected) {
         return;
     }
-    this.socket.emit('message', { data:JSON.stringify(this.sendQueue), mode: this.socket.mode, type:'utf8' }, (data)=> {
-        console.log('ack::', data);
-    });
-    if(this.hwModule && this.hwModule.afterSend) {
-        this.hwModule.afterSend(this.sendQueue);
+    if (this.hwModule && this.hwModule.sendMessage) {
+        this.hwModule.sendMessage(this);
+    } else {
+        this.socket.emit('message', {
+            data: JSON.stringify(this.sendQueue),
+            mode: this.socket.mode,
+            type: 'utf8',
+        });
     }
 };
 

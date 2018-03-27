@@ -3,27 +3,50 @@
 const _set = require('lodash/set');
 const _merge = require('lodash/merge');
 
-Entry.Microbit = {
-    name: 'microbit',
-    setZero: function() {
-        _merge(Entry.hw.sendQueue, {
-            OUTPUT: {
-                [Entry.generateHash()]: {
-                    type: 'RST',
-                },
+Entry.Microbit = new class Microbit {
+    constructor() {
+        this.name = 'microbit';
+    }
+    setZero() {
+        Entry.hw.sendQueue = {
+            [Entry.generateHash()]: {
+                type: 'RST',
             },
-        });
+        };
+        // _set(Entry.hw.sendQueue, `OUTPUT.${Entry.generateHash()}`, {
+        //     type: 'RST',
+        // });
         Entry.hw.update();
-    },
-    afterSend: function(data) {
+    }
+
+    sendMessage({socket, sendQueue = {}}) {
+        if(!_.isEmpty(sendQueue)) {
+            console.log(sendQueue);
+            const keys = Object.keys(sendQueue);
+            const uniqueKey = Entry.generateHash();
+            socket.emit('message', {
+                data: JSON.stringify(sendQueue),
+                mode: socket.mode,
+                type: 'utf8',
+                key: uniqueKey,
+            }, (data)=> {
+                if(data === uniqueKey) {
+                    keys.forEach((key)=> {
+                        delete sendQueue[key];
+                    });
+                }
+            });
+        }
+    }
+    afterSend(data) {
         // Object.assign(data, {
         //     OUTPUT: {},
         // });
-    },
-    afterReceive: function(data) {
+    }
+    afterReceive(data) {
         // console.log('afterReceive', data);
-    },
-};
+    }
+}();
 
 Entry.Microbit.getBlocks = function() {
     return {
@@ -83,14 +106,12 @@ Entry.Microbit.getBlocks = function() {
                 let y = script.getNumberValue('Y');
                 let value = script.getField('VALUE');
                 _merge(Entry.hw.sendQueue, {
-                    OUTPUT: {
-                        [Entry.generateHash()]: {
-                            type: 'LED',
-                            data: {
-                                x,
-                                y,
-                                value,
-                            },
+                    [Entry.generateHash()]: {
+                        type: 'LED',
+                        data: {
+                            x,
+                            y,
+                            value,
                         },
                     },
                 });
@@ -149,7 +170,7 @@ Entry.Microbit.getBlocks = function() {
                 let x = script.getNumberValue('X');
                 let y = script.getNumberValue('Y');
                 let value = script.getField('VALUE');
-                _set(Entry.hw.sendQueue, 'OUTPUT.STR', {
+                _set(Entry.hw.sendQueue, 'STR', {
                     id: Entry.generateHash(),
                     data: 'A',
                 });
