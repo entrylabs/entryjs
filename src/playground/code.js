@@ -173,8 +173,9 @@ Entry.PARAM = -1;
     };
 
     p.createThread = function(blocks, index) {
-        if (!(blocks instanceof Array))
+        if (!(blocks instanceof Array)) {
             return console.error('blocks must be array');
+        }
 
         var thread = new Entry.Thread(blocks, this);
         if (index === undefined || index === null) this._data.push(thread);
@@ -202,16 +203,18 @@ Entry.PARAM = -1;
         var data = this._data;
         var index = data.indexOf(thread);
         // case of statement thread
-        if (index < 0) return;
-        data.splice(index, 1);
+        if (~index) {
+            data.splice(index, 1);
+        }
     };
 
     p.doDestroyThread = function(thread, animate) {
         var data = this._data;
         var index = data.indexOf(thread);
         // case of statement thread
-        if (index < 0) return;
-        data.splice(index, 1);
+        if (~index) {
+            data.splice(index, 1);
+        }
     };
 
     p.getThread = function(index) {
@@ -219,9 +222,7 @@ Entry.PARAM = -1;
     };
 
     p.getThreads = function() {
-        return this._data.map(function(t) {
-            return t;
-        });
+        return this._data.slice();
     };
 
     p.getThreadsByCategory = function(category) {

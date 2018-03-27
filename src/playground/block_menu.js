@@ -141,9 +141,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
             var bBox = that.svgGroup.getBBox();
             var adjust = that.hasCategory() ? 64 : 0;
             var expandWidth = bBox.width + bBox.x + adjust;
-            var {
-                menuWidth
-            } = Entry.interfaceState;
+            var { menuWidth } = Entry.interfaceState;
             if (expandWidth > menuWidth) {
                 this.widthBackup = menuWidth - adjust;
                 $(this)
@@ -212,7 +210,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
 
         var pastClass;
         var blocks = this._getSortedBlocks();
-        var [visibles = [], inVisibles =[]] = blocks;
+        var [visibles = [], inVisibles = []] = blocks;
 
         inVisibles.forEach(function(block) {
             var blockView = block && block.view;
@@ -1142,9 +1140,10 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
 
     p.getDom = function(query) {
         if (query.length >= 1) {
-            if (query[0] === 'category') return this._categoryElems[query[1]];
-            else {
-                var type = query[0][0].type;
+            if (query[0] === 'category') {
+                return this._categoryElems[query[1]];
+            } else {
+                var { type } = query[0][0];
                 var dom = this.getSvgDomByType(type);
                 this.align();
                 this.scrollToType(type);
@@ -1154,16 +1153,18 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
         }
     };
 
-    p.getSvgDomByType = function(type) {
-        var code = this.code;
+    p.getSvgDomByType = function(blockType) {
+        var thread = _.find(this.code.getThreads(), (thread) => {
+            if (!thread) {
+                return;
+            }
+            var { type } = thread.getFirstBlock() || {};
+            return type === blockType;
+        });
 
-        var threads = code.getThreads();
+        if (!thread) return;
 
-        for (var i = 0; i < threads.length; i++) {
-            var block = threads[i] && threads[i].getFirstBlock();
-            if (!block) continue;
-            if (block.type === type) return block.view.svgGroup;
-        }
+        return thread.getFirstBlock().view.svgGroup;
     };
 
     p.scrollToType = function(type) {

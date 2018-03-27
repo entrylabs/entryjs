@@ -28,6 +28,7 @@ Entry.Commander = function(injectType) {
     this.logEvent = new Entry.Event(this);
 
     this.doCommandAll = Entry.doCommandAll;
+    this._storage = null;
 };
 
 (function(p) {
@@ -63,6 +64,8 @@ Entry.Commander = function(injectType) {
         var value = command.do.apply(this, args);
         this.doEvent.notify(commandType, args);
         var id = state ? state.id : null;
+
+        this.clearStorage();
 
         return {
             value: value,
@@ -160,5 +163,17 @@ Entry.Commander = function(injectType) {
 
     p.applyOption = function() {
         this.doCommandAll = Entry.doCommandAll;
+    };
+
+    p.setStorage = function(data) {
+        this._storage = data;
+    };
+
+    p.clearStorage = function() {
+        this._storage = null;
+    };
+
+    p.getStorage = function() {
+        return this._storage;
     };
 })(Entry.Commander.prototype);

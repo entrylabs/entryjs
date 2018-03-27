@@ -665,4 +665,23 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
         blockMenu && blockMenu.reDraw();
         board && board.reDraw();
     };
+
+    p.getCurrentBoard = function() {
+        const {
+            MODE_BOARD,
+            MODE_VIMBOARD,
+            MODE_OVERLAYBOARD,
+        } = Entry.Workspace;
+        console.log(this.mode);
+
+        switch (this.mode) {
+            case MODE_BOARD:
+                return this.getBoard();
+            case MODE_VIMBOARD:
+                return this.getVimBoard();
+            case MODE_OVERLAYBOARD:
+                console.log('overlay;');
+                return this.overlayBoard;
+        }
+    };
 })(Entry.Workspace.prototype);

@@ -389,6 +389,7 @@ Entry.Board.DRAG_RADIUS = 5;
             r: 27.5,
             class: BUTTON_CLASS,
         });
+        this.saveButton = saveButton;
 
         var cancelButton = btnWrapper.elem('circle', {
             cx: 27.5,
@@ -408,11 +409,11 @@ Entry.Board.DRAG_RADIUS = 5;
     };
 
     p.cancelEdit = function() {
-        Entry.do("funcEditCancel");
+        Entry.do('funcEditCancel');
     };
 
     p.save = function() {
-        this.workspace.setMode(Entry.Workspace.MODE_BOARD, 'save');
+        Entry.do('funcCreate');
     };
 
     p.generateCodeMagnetMap = function() {
@@ -1142,31 +1143,33 @@ Entry.Board.DRAG_RADIUS = 5;
         var disposeEvent = Entry.disposeEvent;
         disposeEvent && disposeEvent.notify(e);
         if (!this.visible) return;
-        var that = this;
 
-        var options = [];
         var contextOptions = this._contextOptions;
-
         contextOptions[
             Entry.Board.OPTION_PASTE
         ].option.enable = !!Entry.clipboard;
         contextOptions[Entry.Board.OPTION_DOWNLOAD].option.enable =
             this.code.getThreads().length !== 0;
 
-        for (var i = 0; i < this._contextOptions.length; i++) {
-            if (contextOptions[i].activated)
-                options.push(contextOptions[i].option);
-        }
-
-        e = Entry.Utils.convertMouseEvent(e);
-        Entry.ContextMenu.show(options, null, { x: e.clientX, y: e.clientY });
+        var { clientX: x, clientY: y } = Entry.Utils.convertMouseEvent(e);
+        Entry.ContextMenu.show(
+            contextOptions.reduce((options, { activated, option }) => {
+                if (activated) {
+                    options.push(option);
+                }
+                return options;
+            }, []),
+            null,
+            { x, y }
+        );
     };
 
     p.getDom = function(query) {
         query = query.concat();
         var key = query.shift();
-        if (key === 'trashcan') return this.workspace.trashcan.svgGroup;
-        else if (key === 'coord')
+        if (key === 'trashcan') {
+            return this.workspace.trashcan.svgGroup;
+        } else if (key === 'coord') {
             return {
                 getBoundingClientRect: function() {
                     var halfWidth = 20,
@@ -1179,10 +1182,11 @@ Entry.Board.DRAG_RADIUS = 5;
                     };
                 }.bind(this),
             };
-        else if (key === 'cancelEditButton') {
+        } else if (key === 'cancelEditButton') {
             return this.cancelButton;
-        }
-        else if (key instanceof Array) {
+        } else if (key === 'saveButton') {
+            return this.saveButton;
+        } else if (key instanceof Array) {
             var targetObj = this.code.getByPointer(key);
             if (targetObj.getDom) {
                 return targetObj.getDom(query);

@@ -42,22 +42,18 @@
         var targetDom = Entry.getDom(
             restrictor.processDomQuery(targetDomQuery, nextCmd)
         );
-        var targetRect = targetDom.getBoundingClientRect();
+        var { left, top } = targetDom.getBoundingClientRect();
 
-        Entry.Utils.glideBlock(
-            svgGroup,
-            targetRect.left,
-            targetRect.top,
-            function() {
-                restrictor.fadeInTooltip();
-            }
-        );
+        Entry.Utils.glideBlock(svgGroup, left, top, function() {
+            restrictor.fadeInTooltip();
+        });
     };
     obj.followCmd = true;
     obj.restrict = function(data, domQuery, callback, restrictor) {
         var nextCmd = restrictor.requestNextData().content;
         if (nextCmd[0] === Entry.STATIC.COMMAND_TYPES.insertBlockFromBlockMenu)
             Entry.Command.editor.board.scrollToPointer(nextCmd[2][1]);
+
         var isDone = false;
         var tooltip = new Entry.Tooltip(
             [
