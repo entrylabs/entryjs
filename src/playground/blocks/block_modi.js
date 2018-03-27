@@ -1230,7 +1230,7 @@ Entry.MODI.getBlocks = function() {
                 var key = script.getStringField('name'),
                     text = script.getStringValue('text');
 
-                if (text.length > 8) {
+                if (text.length > 27) {
                     return script.callReturn();
                 }
 
