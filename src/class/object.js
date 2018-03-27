@@ -3,8 +3,6 @@
  */
 'use strict';
 
-
-
 /**
  * Class for entry object.
  * @param {?object model} model for object
@@ -33,7 +31,9 @@ Entry.EntryObject = function(model) {
         this.sounds = Entry.Utils.copy(model.sprite.sounds || []);
 
         this.sounds.forEach(function(s) {
-            if (!s.id) { s.id = Entry.generateHash(); }
+            if (!s.id) {
+                s.id = Entry.generateHash();
+            }
             Entry.initSound(s);
         });
 
@@ -42,13 +42,14 @@ Entry.EntryObject = function(model) {
 
         this.isEditing = false;
 
-        if (this.objectType == "sprite") {
-            this.selectedPicture = !model.selectedPictureId ?
-                this.pictures[0] : this.getPicture(model.selectedPictureId);
+        if (this.objectType == 'sprite') {
+            this.selectedPicture = !model.selectedPictureId
+                ? this.pictures[0]
+                : this.getPicture(model.selectedPictureId);
         }
 
-        this.scene = Entry.scene.getSceneById(model.scene) ||
-                        Entry.scene.selectedScene;
+        this.scene =
+            Entry.scene.getSceneById(model.scene) || Entry.scene.selectedScene;
 
         this.setRotateMethod(model.rotateMethod);
 
@@ -70,8 +71,7 @@ Entry.EntryObject = function(model) {
         for (var i in pictures) {
             ((picture) => {
                 picture.objectId = this.id;
-                if (!picture.id)
-                    picture.id = Entry.generateHash();
+                if (!picture.id) picture.id = Entry.generateHash();
 
                 var image = new Image();
                 Entry.Loader.addQueue();
@@ -85,8 +85,8 @@ Entry.EntryObject = function(model) {
 
                 image.onerror = function(err) {
                     if (!this.triedCnt) {
-                        if (Entry.type !== "invisible")
-                        console.log('err=', picture.name, 'load failed');
+                        if (Entry.type !== 'invisible')
+                            console.log('err=', picture.name, 'load failed');
                         this.triedCnt = 1;
                         this.src = getImageSrc(picture);
                     } else if (this.triedCnt < 3) {
@@ -102,7 +102,6 @@ Entry.EntryObject = function(model) {
 
                 image.src = getImageSrc(picture);
             })(this.pictures[i]);
-
         }
         Entry.requestUpdate = true;
     }
@@ -113,8 +112,16 @@ Entry.EntryObject = function(model) {
         if (picture.fileurl) return picture.fileurl;
 
         var fileName = picture.filename;
-        return Entry.defaultPath + '/uploads/' + fileName.substring(0, 2) + '/' +
-            fileName.substring(2, 4) + '/image/' + fileName + '.png';
+        return (
+            Entry.defaultPath +
+            '/uploads/' +
+            fileName.substring(0, 2) +
+            '/' +
+            fileName.substring(2, 4) +
+            '/image/' +
+            fileName +
+            '.png'
+        );
     }
 };
 
@@ -135,20 +142,22 @@ Entry.EntryObject = function(model) {
      * @param {!string} name
      */
     p.setName = function(name) {
-        Entry.assert(typeof name == "string", 'object name must be string');
+        Entry.assert(typeof name == 'string', 'object name must be string');
 
         this.name = name;
         if (this.nameView_) this.nameView_.value = name;
     };
 
-    p.getName = function() { return this.name; };
+    p.getName = function() {
+        return this.name;
+    };
 
     /**
      * Object text setter
      * @param {!string} name
      */
     p.setText = function(text) {
-        Entry.assert(typeof text == "string", 'object text must be string');
+        Entry.assert(typeof text == 'string', 'object text must be string');
         this.text = text;
     };
 
@@ -156,13 +165,17 @@ Entry.EntryObject = function(model) {
      * Object script setter
      * @param {!xml script} script
      */
-    p.setScript = function(script) { this.script = script; };
+    p.setScript = function(script) {
+        this.script = script;
+    };
 
     /**
      * Object script getter
      * @return {!xml script} script
      */
-    p.getScriptText = function() { return this.script.stringify(); };
+    p.getScriptText = function() {
+        return this.script.stringify();
+    };
 
     /**
      * Initialize entity model if not exist
@@ -177,13 +190,13 @@ Entry.EntryObject = function(model) {
 
         if (this.objectType == 'sprite') {
             var dimension = model.sprite.pictures[0].dimension;
-            json.regX = dimension.width/2;
-            json.regY = dimension.height/2;
+            json.regX = dimension.width / 2;
+            json.regY = dimension.height / 2;
             var scale;
             var mainCategory = model.sprite.category.main;
-            if (mainCategory == "background" || mainCategory == "new")
-                scale = Math.max(270/dimension.height, 480/dimension.width);
-            else if (mainCategory == "new") scale = 1;
+            if (mainCategory == 'background' || mainCategory == 'new')
+                scale = Math.max(270 / dimension.height, 480 / dimension.width);
+            else if (mainCategory == 'new') scale = 1;
             else scale = 200 / (dimension.width + dimension.height);
 
             json.scaleX = json.scaleY = scale;
@@ -204,7 +217,7 @@ Entry.EntryObject = function(model) {
 
                 json.underLine = options.underLine;
                 json.strike = options.strike;
-                json.font = fontStyle + "20px " + options.font.family;
+                json.font = fontStyle + '20px ' + options.font.family;
                 json.colour = options.colour;
                 json.bgColor = options.background;
                 json.lineBreak = options.lineBreak;
@@ -240,12 +253,19 @@ Entry.EntryObject = function(model) {
             } else {
                 var fileName = picture.filename;
                 thumb.style.backgroundImage =
-                    'url("' + Entry.defaultPath + '/uploads/' + fileName.substring(0, 2) + '/' +
-                    fileName.substring(2, 4) + '/thumb/' + fileName + '.png")';
+                    'url("' +
+                    Entry.defaultPath +
+                    '/uploads/' +
+                    fileName.substring(0, 2) +
+                    '/' +
+                    fileName.substring(2, 4) +
+                    '/thumb/' +
+                    fileName +
+                    '.png")';
             }
         } else if (objectType == 'textBox') {
             var textIconPath = Entry.mediaFilePath + '/text_icon.png';
-            thumb.style.backgroundImage = "url(" + textIconPath + ")";
+            thumb.style.backgroundImage = 'url(' + textIconPath + ')';
         }
     };
 
@@ -253,8 +273,7 @@ Entry.EntryObject = function(model) {
      * Update coordinate view;
      */
     p.updateCoordinateView = function(isForced) {
-        if (!this.isSelected() && !isForced)
-            return;
+        if (!this.isSelected() && !isForced) return;
 
         var view = this.coordinateView_;
         if (view && view.xInput_ && view.yInput_) {
@@ -276,8 +295,7 @@ Entry.EntryObject = function(model) {
      * Update rotation view;
      */
     p.updateRotationView = function(isForced) {
-        if ((!this.isSelected() || !this.view_) && !isForced)
-            return;
+        if ((!this.isSelected() || !this.view_) && !isForced) return;
         var rotateMethod = this.getRotateMethod();
         var entity = this.entity;
         var className = 'entryRemove';
@@ -298,7 +316,9 @@ Entry.EntryObject = function(model) {
     /**
      * Select this object on view
      */
-    p.select = function(pictureId) { console.log(this); };
+    p.select = function(pictureId) {
+        console.log(this);
+    };
 
     /**
      * Add picture object by picture model.
@@ -308,7 +328,9 @@ Entry.EntryObject = function(model) {
         picture.objectId = this.id;
 
         if (typeof index === 'undefined') this.pictures.push(picture);
-        else { this.pictures.splice(index, 0, picture); }
+        else {
+            this.pictures.splice(index, 0, picture);
+        }
 
         Entry.playground.injectPicture(this);
     };
@@ -348,26 +370,26 @@ Entry.EntryObject = function(model) {
         //1. pictureId
         //2. pictureName
         //3. index
-        if (!value)
-            return this.selectedPicture;
-        value = (value + "").trim();
+        if (!value) return this.selectedPicture;
+        value = (value + '').trim();
         var pictures = this.pictures,
             len = pictures.length;
 
-        for (var i=0; i<len; i++) {
-            if (pictures[i].id == value)
-                return pictures[i];
+        for (var i = 0; i < len; i++) {
+            if (pictures[i].id == value) return pictures[i];
         }
 
-        for (i=0; i<len; i++) {
-            if (pictures[i].name == value)
-                return pictures[i];
+        for (i = 0; i < len; i++) {
+            if (pictures[i].name == value) return pictures[i];
         }
 
         var checker = Entry.parseNumber(value);
-        if (!(checker === false && typeof checker == 'boolean') &&
-            len >= checker && checker > 0) {
-            return pictures[checker-1];
+        if (
+            !(checker === false && typeof checker == 'boolean') &&
+            len >= checker &&
+            checker > 0
+        ) {
+            return pictures[checker - 1];
         }
         return null;
     };
@@ -408,7 +430,7 @@ Entry.EntryObject = function(model) {
         var pictures = this.pictures;
         var len = pictures.length;
         var idx = this.getPictureIndex(pictureId);
-        return pictures[idx == len-1 ? 0 : ++idx];
+        return pictures[idx == len - 1 ? 0 : ++idx];
     };
 
     /**
@@ -436,7 +458,9 @@ Entry.EntryObject = function(model) {
         Entry.initSound(sound, index);
 
         if (typeof index === 'undefined') this.sounds.push(sound);
-        else { this.sounds.splice(index, 0, sound); }
+        else {
+            this.sounds.splice(index, 0, sound);
+        }
         Entry.playground.injectSound(this);
     };
 
@@ -504,8 +528,7 @@ Entry.EntryObject = function(model) {
         this.rotateModeCView_.removeClass(SELECTED);
 
         var rotateMethod = this.rotateMethod;
-        if (rotateMethod == 'free')
-            this.rotateModeAView_.addClass(SELECTED);
+        if (rotateMethod == 'free') this.rotateModeAView_.addClass(SELECTED);
         else if (rotateMethod == 'vertical')
             this.rotateModeBView_.addClass(SELECTED);
         else this.rotateModeCView_.addClass(SELECTED);
@@ -522,8 +545,11 @@ Entry.EntryObject = function(model) {
         if (isToggle === undefined)
             isToggle = this.isInformationToggle = !this.isInformationToggle;
 
-        if (isToggle) { this.view_.addClass('informationToggle'); }
-        else { this.view_.removeClass('informationToggle'); }
+        if (isToggle) {
+            this.view_.addClass('informationToggle');
+        } else {
+            this.view_.removeClass('informationToggle');
+        }
     };
 
     /**
@@ -535,8 +561,7 @@ Entry.EntryObject = function(model) {
      * @param {?xml block} script
      */
     p.addCloneEntity = function(object, entity, script) {
-        if (this.clonedEntities.length > Entry.maxCloneLimit)
-            return;
+        if (this.clonedEntities.length > Entry.maxCloneLimit) return;
 
         var clonedEntity = new Entry.EntityObject(this);
         clonedEntity.isClone = true;
@@ -551,23 +576,26 @@ Entry.EntryObject = function(model) {
             clonedEntity.applyFilter();
         }
 
-        Entry.engine.raiseEventOnEntity(
+        Entry.engine.raiseEventOnEntity(clonedEntity, [
             clonedEntity,
-            [clonedEntity, 'when_clone_start']
-        );
+            'when_clone_start',
+        ]);
 
         clonedEntity.isStarted = true;
         this.addCloneVariables(
-            this, clonedEntity,
+            this,
+            clonedEntity,
             entity ? entity.variables : null,
             entity ? entity.lists : null
         );
 
         this.clonedEntities.push(clonedEntity);
-        var targetIndex = Entry.stage.selectedObjectContainer.getChildIndex(entity.object);
+        var targetIndex = Entry.stage.selectedObjectContainer.getChildIndex(
+            entity.object
+        );
         targetIndex -= (entity.shapes.length ? 1 : 0) + entity.stamps.length;
         Entry.stage.loadEntity(clonedEntity, targetIndex);
-        
+
         if (entity.brush) Entry.setCloneBrush(clonedEntity, entity.brush);
     };
 
@@ -584,7 +612,7 @@ Entry.EntryObject = function(model) {
         };
         document.addEventListener('mousemove', function(e) {
             if (container.splitterEnable) {
-                Entry.resizeElement({canvasWidth: e.x || e.clientX});
+                Entry.resizeElement({ canvasWidth: e.x || e.clientX });
             }
         });
         document.addEventListener('mouseup', function(e) {
@@ -597,7 +625,9 @@ Entry.EntryObject = function(model) {
      * return true when object is selected
      * @return {Boolean}
      */
-    p.isSelected = function() { return this.isSelected_; };
+    p.isSelected = function() {
+        return this.isSelected_;
+    };
 
     /**
      * convert this object's data to JSON.
@@ -614,10 +644,13 @@ Entry.EntryObject = function(model) {
         json.scene = this.scene.id;
         json.sprite = {
             pictures: Entry.getPicturesJSON(this.pictures, isClone),
-            sounds: Entry.getSoundsJSON(this.sounds, isClone)
+            sounds: Entry.getSoundsJSON(this.sounds, isClone),
         };
         if (this.objectType == 'sprite')
-            json.selectedPictureId = json.sprite.pictures[this.pictures.indexOf(this.selectedPicture)].id;
+            json.selectedPictureId =
+                json.sprite.pictures[
+                    this.pictures.indexOf(this.selectedPicture)
+                ].id;
         json.lock = this.lock;
         json.entity = this.entity.toJSON();
         return json;
@@ -645,14 +678,18 @@ Entry.EntryObject = function(model) {
         var sounds = this.sounds,
             len = sounds.length;
 
-        for (var i=0; i<len; i++) if (sounds[i].id == value) return sounds[i];
+        for (var i = 0; i < len; i++)
+            if (sounds[i].id == value) return sounds[i];
 
-        for (i=0; i<len; i++) if (sounds[i].name == value ) return sounds[i];
+        for (i = 0; i < len; i++) if (sounds[i].name == value) return sounds[i];
 
         var checker = Entry.parseNumber(value);
-        if (!(checker === false && typeof checker == 'boolean') &&
-            len >= checker && checker > 0) {
-            return sounds[checker-1];
+        if (
+            !(checker === false && typeof checker == 'boolean') &&
+            len >= checker &&
+            checker > 0
+        ) {
+            return sounds[checker - 1];
         }
 
         return null;
@@ -675,13 +712,15 @@ Entry.EntryObject = function(model) {
                 object.id
             );
 
-        for (var i=0; i<variables.length; i++)
+        for (var i = 0; i < variables.length; i++)
             entity.variables.push(variables[i].clone());
-        for (var i=0; i<lists.length; i++)
+        for (var i = 0; i < lists.length; i++)
             entity.lists.push(lists[i].clone());
     };
 
-    p.getLock = function() { return this.lock; };
+    p.getLock = function() {
+        return this.lock;
+    };
 
     p.setLock = function(bool) {
         this.lock = bool;
@@ -692,13 +731,15 @@ Entry.EntryObject = function(model) {
     p.updateInputViews = function(isLocked) {
         isLocked = isLocked || this.getLock();
         var inputs = [
-            this.nameView_, this.coordinateView_.xInput_,
-            this.coordinateView_.yInput_, this.rotateInput_,
+            this.nameView_,
+            this.coordinateView_.xInput_,
+            this.coordinateView_.yInput_,
+            this.rotateInput_,
             this.directionInput_,
-            this.coordinateView_.sizeInput_
+            this.coordinateView_.sizeInput_,
         ];
 
-        if (!isLocked && inputs[0].getAttribute("readonly") === true) return;
+        if (!isLocked && inputs[0].getAttribute('readonly') === true) return;
 
         inputs.forEach(function(input) {
             input.removeClass('selectedEditingObject');
@@ -718,7 +759,7 @@ Entry.EntryObject = function(model) {
                 this.coordinateView_.yInput_,
                 this.rotateInput_,
                 this.directionInput_,
-                this.coordinateView_.sizeInput_
+                this.coordinateView_.sizeInput_,
             ];
         }
 
@@ -730,14 +771,16 @@ Entry.EntryObject = function(model) {
             $nameView_.removeClass('selectedNotEditingObject');
 
             $nameView_.removeAttr('readonly');
-            nameView_.addClass("selectedEditingObject");
-            for(var i=0; i<inputs.length; i++){
+            nameView_.addClass('selectedEditingObject');
+            for (var i = 0; i < inputs.length; i++) {
                 $(inputs[i]).removeAttr('readonly');
-                inputs[i].addClass("selectedEditingObject");
+                inputs[i].addClass('selectedEditingObject');
             }
             this.isEditing = true;
         } else {
-            inputs.forEach(function(input) { input.blur(true); });
+            inputs.forEach(function(input) {
+                input.blur(true);
+            });
 
             nameView_.blur(true);
 
@@ -757,7 +800,7 @@ Entry.EntryObject = function(model) {
             coorView.yInput_,
             this.rotateInput_,
             this.directionInput_,
-            coorView.sizeInput_
+            coorView.sizeInput_,
         ].forEach(function(input) {
             input.addClass('selectedNotEditingObject');
             input.setAttribute('readonly', true);
@@ -776,7 +819,7 @@ Entry.EntryObject = function(model) {
         this.script.clearExecutors();
 
         var clonedEntities = this.clonedEntities;
-        for (var j = clonedEntities.length-1; j>=0; j--) {
+        for (var j = clonedEntities.length - 1; j >= 0; j--) {
             clonedEntities[j].removeClone(true);
         }
         this.entity.removeStamps();
@@ -790,38 +833,41 @@ Entry.EntryObject = function(model) {
         var options = [
             {
                 text: Lang.Workspace.context_rename,
-                callback: function(e){
+                callback: function(e) {
                     e.stopPropagation();
-                    (function (o){
+                    (function(o) {
                         o.setLock(false);
                         o.editObjectValues(true);
                         o.nameView_.select();
                     })(object);
-                }
+                },
             },
             {
                 text: Lang.Workspace.context_duplicate,
                 enable: !Entry.engine.isState('run'),
-                callback: function(){ container.addCloneObject(object); }
+                callback: function() {
+                    container.addCloneObject(object);
+                },
             },
             {
                 text: Lang.Workspace.context_remove,
-                callback: function(){
+                callback: function() {
                     Entry.dispatchEvent('removeObject', object);
-                    var {
-                        id
-                    } = object;
+                    var { id } = object;
                     Entry.do('removeObject', id);
-                }
+                },
             },
             {
                 text: Lang.Workspace.copy_file,
-                callback: function(){ container.setCopiedObject(object); }
+                callback: function() {
+                    container.setCopiedObject(object);
+                },
             },
             {
                 text: Lang.Blocks.Paste_blocks,
-                enable: !Entry.engine.isState('run') && !!container.copiedObject,
-                callback: function(){
+                enable:
+                    !Entry.engine.isState('run') && !!container.copiedObject,
+                callback: function() {
                     var container = Entry.container;
                     if (container.copiedObject) {
                         container.addCloneObject(container.copiedObject);
@@ -831,29 +877,33 @@ Entry.EntryObject = function(model) {
                             Lang.Workspace.object_not_found_for_paste
                         );
                     }
-                }
+                },
             },
             {
                 divider: true,
             },
             {
                 text: Lang.Blocks.export_object,
-                callback: function(){
+                callback: function() {
                     Entry.dispatchEvent('exportObject', object);
-                }
-            }
+                },
+            },
         ];
 
         e = Entry.Utils.convertMouseEvent(e);
-        Entry.ContextMenu.show(
-            options, 'workspace-contextmenu',
-            { x: e.clientX, y: e.clientY }
-        );
+        Entry.ContextMenu.show(options, 'workspace-contextmenu', {
+            x: e.clientX,
+            y: e.clientY,
+        });
     };
 
-    p.enableContextMenu = function() { this._isContextMenuEnabled = true; };
+    p.enableContextMenu = function() {
+        this._isContextMenuEnabled = true;
+    };
 
-    p.disableContextMenu = function() { this._isContextMenuEnabled = false; };
+    p.disableContextMenu = function() {
+        this._isContextMenuEnabled = false;
+    };
 
     p.isContextMenuEnabled = function() {
         return this._isContextMenuEnabled && Entry.objectEditable;
@@ -872,13 +922,14 @@ Entry.EntryObject = function(model) {
 
         if (query.length >= 1) {
             switch (query.shift()) {
-                case "editButton":
+                case 'editButton':
                     return this.editView_;
-                case "removeButton":
-                console.log('removeButton');
+                case 'removeButton':
+                    console.log('removeButton');
                     return this.deleteView_;
             }
-        } else { }
+        } else {
+        }
     };
 
     function generateWorkspaceView() {
@@ -893,7 +944,7 @@ Entry.EntryObject = function(model) {
         Entry.Utils.disableContextmenu(objectView);
         var longPressTimer = null;
 
-        $(objectView).bind('mousedown touchstart', function(e){
+        $(objectView).bind('mousedown touchstart', function(e) {
             if (Entry.container.getObject(objectId)) {
                 Entry.do('containerSelectObject', objectId);
             }
@@ -925,12 +976,14 @@ Entry.EntryObject = function(model) {
                 doc.bind('mousemove.object touchmove.object', onMouseMove);
                 doc.bind('mouseup.object touchend.object', onMouseUp);
             }
- 
+
             function onMouseMove(e) {
                 e.stopPropagation();
                 if (!mouseDownCoordinate) return;
-                var diff = Math.sqrt(Math.pow(e.pageX - mouseDownCoordinate.x, 2) +
-                                Math.pow(e.pageY - mouseDownCoordinate.y, 2));
+                var diff = Math.sqrt(
+                    Math.pow(e.pageX - mouseDownCoordinate.x, 2) +
+                        Math.pow(e.pageY - mouseDownCoordinate.y, 2)
+                );
                 if (diff > 5 && longPressTimer) {
                     clearTimeout(longPressTimer);
                     longPressTimer = null;
@@ -952,14 +1005,16 @@ Entry.EntryObject = function(model) {
 
         var objectInfoView = Entry.createElement('ul');
         objectInfoView.addClass('objectInfoView');
-        if (!Entry.objectEditable) { objectInfoView.addClass('entryHide'); }
+        if (!Entry.objectEditable) {
+            objectInfoView.addClass('entryHide');
+        }
 
         var objectInfo_visible = Entry.createElement('li');
         objectInfo_visible.addClass('objectInfo_visible');
         if (!this.entity.getVisible())
             objectInfo_visible.addClass('objectInfo_unvisible');
 
-        objectInfo_visible.bindOnClick(function (e) {
+        objectInfo_visible.bindOnClick(function(e) {
             if (Entry.engine.isState('run')) return;
 
             var entity = that.entity;
@@ -972,7 +1027,7 @@ Entry.EntryObject = function(model) {
         objectInfo_lock.addClass('objectInfo_unlock');
         if (this.getLock()) objectInfo_lock.addClass('objectInfo_lock');
 
-        objectInfo_lock.bindOnClick(function (e) {
+        objectInfo_lock.bindOnClick(function(e) {
             if (Entry.engine.isState('run')) return;
             var isLocked = that.setLock(!that.getLock());
 
@@ -995,7 +1050,7 @@ Entry.EntryObject = function(model) {
         this.view_.appendChild(wrapperView);
 
         var nameView = Entry.createElement('input');
-        nameView.bindOnClick(function (e) {
+        nameView.bindOnClick(function(e) {
             e.preventDefault();
             if (this.readOnly) return;
             this.focus();
@@ -1005,7 +1060,7 @@ Entry.EntryObject = function(model) {
 
         wrapperView.appendChild(nameView);
         this.nameView_ = nameView;
-        nameView.setAttribute("readonly", true);
+        nameView.setAttribute('readonly', true);
 
         this.nameView_.onblur = function(e) {
             var newValue = this.value;
@@ -1017,7 +1072,9 @@ Entry.EntryObject = function(model) {
         };
 
         this.nameView_.onkeypress = function(e) {
-            if (e.keyCode == 13) { that.editObjectValues(false); }
+            if (e.keyCode == 13) {
+                that.editObjectValues(false);
+            }
         };
 
         this.nameView_.value = this.name;
@@ -1042,13 +1099,15 @@ Entry.EntryObject = function(model) {
             deleteView.addClass('entryObjectDeleteWorkspace');
             this.deleteView_ = deleteView;
             this.view_.appendChild(deleteView);
-            deleteView.bindOnClick(function (e) {
+            deleteView.bindOnClick(function(e) {
                 if (Entry.engine.isState('run')) return;
-                var {
-                    id 
-                } = that;
+                var { id } = that;
 
-                Entry.do('removeObject', id, Entry.container.getObjectIndex(id));
+                Entry.do(
+                    'removeObject',
+                    id,
+                    Entry.container.getObjectIndex(id)
+                );
             });
         }
 
@@ -1070,8 +1129,8 @@ Entry.EntryObject = function(model) {
         xCoordi.innerHTML = 'X:';
         var xInput = Entry.createElement('input');
         xInput.addClass('entryObjectCoordinateInputWorkspace');
-        xInput.setAttribute("readonly", true);
-        xInput.bindOnClick(function (e) {
+        xInput.setAttribute('readonly', true);
+        xInput.bindOnClick(function(e) {
             e.stopPropagation();
             this.select();
         });
@@ -1080,12 +1139,14 @@ Entry.EntryObject = function(model) {
         yCoordi.addClass('entryObjectCoordinateSpanWorkspace');
         yCoordi.innerHTML = 'Y:';
         var yInput = Entry.createElement('input');
-        yInput.addClass('entryObjectCoordinateInputWorkspace entryObjectCoordinateInputWorkspace_right');
-        yInput.bindOnClick(function (e) {
+        yInput.addClass(
+            'entryObjectCoordinateInputWorkspace entryObjectCoordinateInputWorkspace_right'
+        );
+        yInput.bindOnClick(function(e) {
             e.stopPropagation();
             this.select();
         });
-        yInput.setAttribute("readonly", true);
+        yInput.setAttribute('readonly', true);
         var sizeSpan = Entry.createElement('span');
         sizeSpan.addClass('entryObjectCoordinateSizeWorkspace');
         sizeSpan.innerHTML = Lang.Workspace.Size + ' : ';
@@ -1094,11 +1155,11 @@ Entry.EntryObject = function(model) {
             'entryObjectCoordinateInputWorkspace',
             'entryObjectCoordinateInputWorkspace_size'
         );
-        sizeInput.bindOnClick(function (e) {
+        sizeInput.bindOnClick(function(e) {
             e.stopPropagation();
             this.select();
         });
-        sizeInput.setAttribute("readonly", true);
+        sizeInput.setAttribute('readonly', true);
         coordinateView.appendChild(xCoordi);
         coordinateView.appendChild(xInput);
         coordinateView.appendChild(yCoordi);
@@ -1110,24 +1171,27 @@ Entry.EntryObject = function(model) {
         coordinateView.sizeInput_ = sizeInput;
         this.coordinateView_ = coordinateView;
 
-        xInput.onkeypress = function (e) {
-            if (e.keyCode == 13) { that.editObjectValues(false); }
+        xInput.onkeypress = function(e) {
+            if (e.keyCode == 13) {
+                that.editObjectValues(false);
+            }
         };
 
-        xInput.onblur = function (bool) {
+        xInput.onblur = function(bool) {
             if (Entry.Utils.isNumber(xInput.value)) {
                 that.entity.setX(Number(xInput.value));
             }
             that.updateCoordinateView();
             Entry.stage.updateObject();
-
         };
 
-        yInput.onkeypress = function (e) {
-            if (e.keyCode == 13) { that.editObjectValues(false); }
+        yInput.onkeypress = function(e) {
+            if (e.keyCode == 13) {
+                that.editObjectValues(false);
+            }
         };
 
-        yInput.onblur =  function(bool){
+        yInput.onblur = function(bool) {
             if (Entry.Utils.isNumber(yInput.value)) {
                 that.entity.setY(Number(yInput.value));
             }
@@ -1135,11 +1199,13 @@ Entry.EntryObject = function(model) {
             Entry.stage.updateObject();
         };
 
-        sizeInput.onkeypress = function (e) {
-            if (e.keyCode == 13) { that.editObjectValues(false); }
+        sizeInput.onkeypress = function(e) {
+            if (e.keyCode == 13) {
+                that.editObjectValues(false);
+            }
         };
 
-        sizeInput.onblur = function (bool) {
+        sizeInput.onblur = function(bool) {
             if (Entry.Utils.isNumber(sizeInput.value)) {
                 that.entity.setSize(Number(sizeInput.value));
             }
@@ -1148,7 +1214,9 @@ Entry.EntryObject = function(model) {
         };
 
         var rotateLabelWrapperView = Entry.createElement('div');
-        rotateLabelWrapperView.addClass('entryObjectRotateLabelWrapperWorkspace');
+        rotateLabelWrapperView.addClass(
+            'entryObjectRotateLabelWrapperWorkspace'
+        );
         this.view_.appendChild(rotateLabelWrapperView);
         this.rotateLabelWrapperView_ = rotateLabelWrapperView;
 
@@ -1157,8 +1225,8 @@ Entry.EntryObject = function(model) {
         rotateSpan.innerHTML = Lang.Workspace.rotation + ' : ';
         var rotateInput = Entry.createElement('input');
         rotateInput.addClass('entryObjectRotateInputWorkspace');
-        rotateInput.setAttribute("readonly", true);
-        rotateInput.bindOnClick(function (e) {
+        rotateInput.setAttribute('readonly', true);
+        rotateInput.bindOnClick(function(e) {
             e.stopPropagation();
             this.select();
         });
@@ -1170,8 +1238,8 @@ Entry.EntryObject = function(model) {
         directionSpan.innerHTML = Lang.Workspace.direction + ' : ';
         var directionInput = Entry.createElement('input');
         directionInput.addClass('entryObjectDirectionInputWorkspace');
-        directionInput.setAttribute("readonly", true);
-        directionInput.bindOnClick(function (e) {
+        directionInput.setAttribute('readonly', true);
+        directionInput.bindOnClick(function(e) {
             e.stopPropagation();
             this.select();
         });
@@ -1183,10 +1251,12 @@ Entry.EntryObject = function(model) {
         rotateLabelWrapperView.appendChild(directionInput);
         rotateLabelWrapperView.rotateInput_ = rotateInput;
         rotateLabelWrapperView.directionInput_ = directionInput;
-        rotateInput.onkeypress = function (e) {
-            if (e.keyCode == 13) { that.editObjectValues(false); }
+        rotateInput.onkeypress = function(e) {
+            if (e.keyCode == 13) {
+                that.editObjectValues(false);
+            }
         };
-        rotateInput.onblur = function (bool) {
+        rotateInput.onblur = function(bool) {
             var value = rotateInput.value;
             if (value.indexOf('˚') != -1)
                 value = value.substring(0, value.indexOf('˚'));
@@ -1197,14 +1267,16 @@ Entry.EntryObject = function(model) {
             Entry.stage.updateObject();
         };
 
-        directionInput.onkeypress = function (e) {
-            if (e.keyCode == 13) { that.editObjectValues(false); }
+        directionInput.onkeypress = function(e) {
+            if (e.keyCode == 13) {
+                that.editObjectValues(false);
+            }
         };
 
-        directionInput.onblur = function (bool) {
+        directionInput.onblur = function(bool) {
             var value = directionInput.value;
             if (value.indexOf('˚') != -1)
-                value = value.substring(0,value.indexOf('˚'));
+                value = value.substring(0, value.indexOf('˚'));
             if (Entry.Utils.isNumber(value))
                 that.entity.setDirection(Number(value));
             that.updateRotationView();
@@ -1222,32 +1294,42 @@ Entry.EntryObject = function(model) {
         rotateMethodLabelView.innerHTML = Lang.Workspace.rotate_method + ' : ';
 
         var rotateModeAView = Entry.createElement('div');
-        rotateModeAView.addClass('entryObjectRotateModeWorkspace entryObjectRotateModeAWorkspace');
+        rotateModeAView.addClass(
+            'entryObjectRotateModeWorkspace entryObjectRotateModeAWorkspace'
+        );
         this.rotateModeAView_ = rotateModeAView;
         rotationMethodWrapper.appendChild(rotateModeAView);
-        rotateModeAView.bindOnClick(function(e){
-            if (Entry.engine.isState('run') || that.getLock()) { return; }
+        rotateModeAView.bindOnClick(function(e) {
+            if (Entry.engine.isState('run') || that.getLock()) {
+                return;
+            }
 
             that.initRotateValue('free');
             that.setRotateMethod('free');
         });
 
         var rotateModeBView = Entry.createElement('div');
-        rotateModeBView.addClass('entryObjectRotateModeWorkspace entryObjectRotateModeBWorkspace');
+        rotateModeBView.addClass(
+            'entryObjectRotateModeWorkspace entryObjectRotateModeBWorkspace'
+        );
         this.rotateModeBView_ = rotateModeBView;
         rotationMethodWrapper.appendChild(rotateModeBView);
-        rotateModeBView.bindOnClick(function(e){
-            if (Entry.engine.isState('run') || that.getLock()) { return; }
+        rotateModeBView.bindOnClick(function(e) {
+            if (Entry.engine.isState('run') || that.getLock()) {
+                return;
+            }
 
             that.initRotateValue('vertical');
             that.setRotateMethod('vertical');
         });
 
         var rotateModeCView = Entry.createElement('div');
-        rotateModeCView.addClass('entryObjectRotateModeWorkspace entryObjectRotateModeCWorkspace');
+        rotateModeCView.addClass(
+            'entryObjectRotateModeWorkspace entryObjectRotateModeCWorkspace'
+        );
         this.rotateModeCView_ = rotateModeCView;
         rotationMethodWrapper.appendChild(rotateModeCView);
-        rotateModeCView.bindOnClick(function(e){
+        rotateModeCView.bindOnClick(function(e) {
             if (Entry.engine.isState('run') || that.getLock()) return;
 
             that.initRotateValue('none');
@@ -1280,31 +1362,30 @@ Entry.EntryObject = function(model) {
                 {
                     text: Lang.Workspace.context_rename,
                     href: '/',
-                    action: function(e){
+                    action: function(e) {
                         e.preventDefault();
-                    }
+                    },
                 },
                 {
                     text: Lang.Workspace.context_duplicate,
                     href: '/',
-                    action: function(e){
+                    action: function(e) {
                         e.preventDefault();
                         Entry.container.addCloneObject(object);
-                    }
+                    },
                 },
                 {
                     text: Lang.Workspace.context_remove,
                     href: '/',
-                    action: function(e){
+                    action: function(e) {
                         e.preventDefault();
                         Entry.container.removeObject(object);
-                    }
-                }
+                    },
+                },
             ]);
         }
         /** @type {!Element} */
         this.view_ = objectView;
-
 
         var objectInfoView = Entry.createElement('ul');
         objectInfoView.addClass('objectInfoView');
@@ -1315,7 +1396,6 @@ Entry.EntryObject = function(model) {
         objectInfoView.appendChild(objectInfo_visible);
         objectInfoView.appendChild(objectInfo_lock);
         this.view_.appendChild(objectInfoView);
-
 
         var thumbnailView = Entry.createElement('div');
         thumbnailView.addClass('entryObjectThumbnailWorkspace');
@@ -1346,8 +1426,10 @@ Entry.EntryObject = function(model) {
             deleteView.object = this;
             this.deleteView_ = deleteView;
             this.view_.appendChild(deleteView);
-            deleteView.bindOnClick(function (e) {
-                if (Entry.engine.isState('run')) { return; }
+            deleteView.bindOnClick(function(e) {
+                if (Entry.engine.isState('run')) {
+                    return;
+                }
 
                 Entry.container.removeObject(this.object);
             });
@@ -1365,7 +1447,6 @@ Entry.EntryObject = function(model) {
         });
         this.view_.appendChild(editBtn);
 
-
         var informationView = Entry.createElement('div');
         informationView.addClass('entryObjectInformationWorkspace');
         informationView.object = this;
@@ -1373,11 +1454,10 @@ Entry.EntryObject = function(model) {
         wrapperView.appendChild(informationView);
         this.informationView_ = informationView;
 
-
-
-
         var rotateLabelWrapperView = Entry.createElement('div');
-        rotateLabelWrapperView.addClass('entryObjectRotateLabelWrapperWorkspace');
+        rotateLabelWrapperView.addClass(
+            'entryObjectRotateLabelWrapperWorkspace'
+        );
         this.view_.appendChild(rotateLabelWrapperView);
         this.rotateLabelWrapperView_ = rotateLabelWrapperView;
 
@@ -1403,7 +1483,7 @@ Entry.EntryObject = function(model) {
         rotateLabelWrapperView.rotateInput_ = rotateInput;
         rotateLabelWrapperView.directionInput_ = directionInput;
         var thisPointer = this;
-        rotateInput.onkeypress = function (e) {
+        rotateInput.onkeypress = function(e) {
             if (e.keyCode == 13) {
                 var value = rotateInput.value;
                 if (value.indexOf('˚') != -1)
@@ -1415,15 +1495,15 @@ Entry.EntryObject = function(model) {
                 rotateInput.blur();
             }
         };
-        rotateInput.onblur = function (e) {
+        rotateInput.onblur = function(e) {
             thisPointer.entity.setRotation(thisPointer.entity.getRotation());
             Entry.stage.updateObject();
         };
-        directionInput.onkeypress = function (e) {
+        directionInput.onkeypress = function(e) {
             if (e.keyCode == 13) {
                 var value = directionInput.value;
                 if (value.indexOf('˚') != -1)
-                    value = value.substring(0,value.indexOf('˚'));
+                    value = value.substring(0, value.indexOf('˚'));
                 if (Entry.Utils.isNumber(value)) {
                     thisPointer.entity.setDirection(Number(value));
                 }
@@ -1431,7 +1511,7 @@ Entry.EntryObject = function(model) {
                 directionInput.blur();
             }
         };
-        directionInput.onblur = function (e) {
+        directionInput.onblur = function(e) {
             thisPointer.entity.setDirection(thisPointer.entity.getDirection());
             Entry.stage.updateObject();
         };
@@ -1453,13 +1533,17 @@ Entry.EntryObject = function(model) {
         yCoordi.addClass('entryObjectCoordinateSpanWorkspace');
         yCoordi.innerHTML = 'Y:';
         var yInput = Entry.createElement('input');
-        yInput.addClass('entryObjectCoordinateInputWorkspace entryObjectCoordinateInputWorkspace_right');
+        yInput.addClass(
+            'entryObjectCoordinateInputWorkspace entryObjectCoordinateInputWorkspace_right'
+        );
         var sizeTitle = Entry.createElement('span');
         sizeTitle.addClass('entryObjectCoordinateSpanWorkspace');
         sizeTitle.innerHTML = Lang.Workspace.Size;
         var sizeInput = Entry.createElement('input');
-        sizeInput.addClass('entryObjectCoordinateInputWorkspace',
-                            'entryObjectCoordinateInputWorkspace_size');
+        sizeInput.addClass(
+            'entryObjectCoordinateInputWorkspace',
+            'entryObjectCoordinateInputWorkspace_size'
+        );
         coordinateView.appendChild(xCoordi);
         coordinateView.appendChild(xInput);
         coordinateView.appendChild(yCoordi);
@@ -1471,7 +1555,7 @@ Entry.EntryObject = function(model) {
         coordinateView.sizeInput_ = sizeInput;
         this.coordinateView_ = coordinateView;
         var thisPointer = this;
-        xInput.onkeypress = function (e) {
+        xInput.onkeypress = function(e) {
             if (e.keyCode == 13) {
                 if (Entry.Utils.isNumber(xInput.value)) {
                     thisPointer.entity.setX(Number(xInput.value));
@@ -1480,12 +1564,12 @@ Entry.EntryObject = function(model) {
                 thisPointer.blur();
             }
         };
-        xInput.onblur = function (e) {
+        xInput.onblur = function(e) {
             thisPointer.entity.setX(thisPointer.entity.getX());
             Entry.stage.updateObject();
         };
 
-        yInput.onkeypress = function (e) {
+        yInput.onkeypress = function(e) {
             if (e.keyCode == 13) {
                 if (Entry.Utils.isNumber(yInput.value)) {
                     thisPointer.entity.setY(Number(yInput.value));
@@ -1494,7 +1578,7 @@ Entry.EntryObject = function(model) {
                 thisPointer.blur();
             }
         };
-        yInput.onblur = function (e) {
+        yInput.onblur = function(e) {
             thisPointer.entity.setY(thisPointer.entity.getY());
             Entry.stage.updateObject();
         };
@@ -1515,7 +1599,7 @@ Entry.EntryObject = function(model) {
         rotateModeAView.object = this;
         this.rotateModeAView_ = rotateModeAView;
         rotationMethodWrapper.appendChild(rotateModeAView);
-        rotateModeAView.bindOnClick(function(e){
+        rotateModeAView.bindOnClick(function(e) {
             if (Entry.engine.isState('run')) {
                 return;
             }
@@ -1528,7 +1612,7 @@ Entry.EntryObject = function(model) {
         rotateModeBView.object = this;
         this.rotateModeBView_ = rotateModeBView;
         rotationMethodWrapper.appendChild(rotateModeBView);
-        rotateModeBView.bindOnClick(function(e){
+        rotateModeBView.bindOnClick(function(e) {
             if (Entry.engine.isState('run')) {
                 return;
             }
@@ -1541,9 +1625,8 @@ Entry.EntryObject = function(model) {
         rotateModeCView.object = this;
         this.rotateModeCView_ = rotateModeCView;
         rotationMethodWrapper.appendChild(rotateModeCView);
-        rotateModeCView.bindOnClick(function(e){
-            if (Entry.engine.isState('run'))
-                return;
+        rotateModeCView.bindOnClick(function(e) {
+            if (Entry.engine.isState('run')) return;
             this.object.setRotateMethod('none');
         });
 
@@ -1554,5 +1637,4 @@ Entry.EntryObject = function(model) {
         this.updateInputViews();
         return this.view_;
     }
-
 })(Entry.EntryObject.prototype);

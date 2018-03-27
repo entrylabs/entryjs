@@ -1959,7 +1959,7 @@ Entry.Playground = function() {
     };
 
     p.getDom = function(query) {
-        if (query.length >= 1) {
+        if (query.length) {
             switch (query.shift()) {
                 case 'tabViewElements':
                     return this.tabViewElements[query.shift()];
