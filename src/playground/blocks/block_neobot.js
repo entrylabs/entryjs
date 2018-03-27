@@ -2,6 +2,12 @@
 
 Entry.Neobot = {
     name: 'neobot',
+    url: 'http://www.neobot.co.kr',
+    imageName: 'neobot.png',
+    title: {
+        "ko": "네오봇",
+        "en": "Neo Bot"
+    },
     LOCAL_MAP: ['IN1', 'IN2', 'IN3', 'IR', 'BAT'],
     REMOTE_MAP: ['OUT1', 'OUT2', 'OUT3', 'DCR', 'DCL', 'SND', 'FND', 'OPT'],
     setZero: function() {

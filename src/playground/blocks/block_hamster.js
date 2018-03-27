@@ -60,6 +60,12 @@ Entry.Hamster = {
         sq.lineTracerModeId = this.lineTracerModeId;
     },
     name: 'hamster',
+    url: 'http://www.robomation.net',
+    imageName: 'hamster.png',
+    title: {
+        "ko": "햄스터",
+        "en": "Hamster"
+    },
     monitorTemplate: {
         imgPath: 'hw/hamster.png',
         width: 256,

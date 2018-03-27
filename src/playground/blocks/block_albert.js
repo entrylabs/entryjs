@@ -325,6 +325,12 @@ Entry.Albert = {
         },
     },
     name: 'albert',
+    url: 'http://albert.school/',
+    imageName: 'albertschool.png',
+    title: {
+        ko: '알버트 스쿨버전',
+        en: 'Albert School',
+    },
 };
 
 Entry.Albert.getBlocks = function() {

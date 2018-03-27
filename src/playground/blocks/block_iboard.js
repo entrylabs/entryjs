@@ -2,6 +2,12 @@
 
 Entry.iboard = {
     name: 'iboard',
+    url: 'http://www.io-tech.co.kr',
+    imageName: 'iboard.png',
+    title: {
+        "en": "iboard",
+        "ko": "아이보드"
+    },
     setZero: function() {
         if (!Entry.hw.sendQueue.SET) {
             Entry.hw.sendQueue = {

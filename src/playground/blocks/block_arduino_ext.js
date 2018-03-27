@@ -2,6 +2,12 @@
 
 Entry.ArduinoExt = {
     name: 'ArduinoExt',
+    url: 'http://www.arduino.cc/',
+    imageName: 'arduinoExt.png',
+    title: {
+        "ko": "아두이노 Uno 확장모드",
+        "en": "ArduinoExt Uno"
+    },
     setZero: function() {
         if (!Entry.hw.sendQueue.SET) {
             Entry.hw.sendQueue = {
@@ -451,19 +457,25 @@ Entry.ArduinoExt.getBlocks = function() {
             },
             class: 'ArduinoExtGet',
             isNotFor: ['ArduinoExt'],
-            func: function(sprite, script) {
-                var port = script.getNumberValue('PORT', script);
-                var DIGITAL = Entry.hw.portData.DIGITAL;
-                if (!Entry.hw.sendQueue['GET']) {
-                    Entry.hw.sendQueue['GET'] = {};
+            func: function(sprite, script) {                
+                const { hwModule = {} } = Entry.hw;
+                const { name } = hwModule;
+                if(name === 'ArduinoExt') {
+                    var port = script.getNumberValue('PORT', script);
+                    var DIGITAL = Entry.hw.portData.DIGITAL;
+                    if (!Entry.hw.sendQueue['GET']) {
+                        Entry.hw.sendQueue['GET'] = {};
+                    }
+                    Entry.hw.sendQueue['GET'][
+                        Entry.ArduinoExt.sensorTypes.DIGITAL
+                    ] = {
+                        port: port,
+                        time: new Date().getTime(),
+                    };
+                    return DIGITAL ? DIGITAL[port] || 0 : 0;
+                } else {
+                    return Entry.block.arduino_get_digital_value.func(sprite, script);
                 }
-                Entry.hw.sendQueue['GET'][
-                    Entry.ArduinoExt.sensorTypes.DIGITAL
-                ] = {
-                    port: port,
-                    time: new Date().getTime(),
-                };
-                return DIGITAL ? DIGITAL[port] || 0 : 0;
             },
             syntax: {
                 js: [],

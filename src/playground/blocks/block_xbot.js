@@ -48,6 +48,12 @@ Entry.Xbot = {
         this.timeouts = [];
     },
     name: 'xbot_epor_edge',
+    url: 'http://xbot.co.kr/',
+    imageName: 'xbot.png',
+    title: {
+        "ko": "엑스봇(원터치 동글/USB)",
+        "en": "XBOT(OneTouch Dongle/USB)"
+    },
 };
 
 Entry.Xbot.getBlocks = function() {

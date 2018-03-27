@@ -2,6 +2,12 @@
 
 Entry.DaduBlock = {
     name: 'dadublock',
+    url: 'http://www.dadublock.com/',
+    imageName: 'dadublock.png',
+    title: {
+        "ko": "다두블럭",
+        "en": "DaduBlock"
+    },
     setZero: function() {
         if (!Entry.hw.sendQueue.SET) {
             Entry.hw.sendQueue = {
@@ -47,6 +53,12 @@ Entry.DaduBlock = {
 
 Entry.DaduBlock_Car = {
     name: 'dadublock_car',
+    url: 'http://www.dadublock.com/',
+    imageName: 'dadublock_car.png',
+    title: {
+        "ko": "다두블럭 자동차",
+        "en": "DaduBlock Car"
+    },
     setZero: function() {
         if (!Entry.hw.sendQueue.SET) {
             Entry.hw.sendQueue = {

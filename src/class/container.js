@@ -286,14 +286,16 @@ Entry.Container.prototype.selectPicture = function(pictureId, objectId) {
  * @param {?number} index exist when user add object
  * @return {Entry.EntryObject}
  */
-Entry.Container.prototype.addObject = function(...rest) {
-    return Entry.do('addObject', ...rest);
-};
-
-Entry.Container.prototype.addObjectFunc = function(objectModel, index) {
+Entry.Container.prototype.addObject = function(objectModel, ...rest) {
+    var name = objectModel.sprite.name;
+    objectModel.sprite.name = Entry.getOrderedName(name, this.objects_);
     if (!objectModel.id) {
         objectModel.id = Entry.generateHash();
     }
+    return Entry.do('addObject', objectModel, ...rest);
+};
+
+Entry.Container.prototype.addObjectFunc = function(objectModel, index, isNotRender) {
     var object = new Entry.EntryObject(objectModel);
 
     object.scene = object.scene || Entry.scene.selectedScene;
@@ -309,11 +311,21 @@ Entry.Container.prototype.addObjectFunc = function(objectModel, index) {
     } else if (isBackground) this.objects_.push(object);
     else this.objects_.unshift(object);
 
+    if(!isNotRender) {
+        object.generateView();
+        this.setCurrentObjects();
+        this.selectObject(object.id);
+        this.updateObjectsOrder();
+        this.updateListView();
+        Entry.variableContainer.updateViews();
+    }
+    
+    return new Entry.State(this, this.removeObject, object);
+};
+
+Entry.Container.prototype.renderObject = function (object) {
     object.generateView();
     this.setCurrentObjects();
-    this.updateObjectsOrder();
-    this.updateListView();
-
     this.selectObject(object.id);
     Entry.variableContainer.updateViews();
 };
@@ -340,7 +352,7 @@ Entry.Container.prototype.removeExtension = function(obj) {
  * Add Clone object
  * @param {!Entry.EntryObject} object
  */
-Entry.Container.prototype.addCloneObject = function(object, scene) {
+Entry.Container.prototype.addCloneObject = function(object, scene, isNotRender) {
     var json = object.toJSON(true);
 
     json.script = change('sounds', object, json);
@@ -352,7 +364,7 @@ Entry.Container.prototype.addCloneObject = function(object, scene) {
         json: json,
     });
     json.scene = scene || Entry.scene.selectedScene;
-    this.addObject(json);
+    this.addObject(json, null, isNotRender);
 
     return this.getObject(json.id);
 
@@ -374,7 +386,7 @@ Entry.Container.prototype.addCloneObject = function(object, scene) {
  * @param {!Entry.EntryObject} object
  * @return {Entry.State}
  */
-Entry.Container.prototype.removeObject = function(id) {
+Entry.Container.prototype.removeObject = function(id, isPass) {
     var objects = this.objects_;
 
     var object = this.getObject(id);
@@ -382,11 +394,16 @@ Entry.Container.prototype.removeObject = function(id) {
     var objectJSON = object.toJSON();
 
     object.destroy();
-    objects.splice(index, 1);
+    objects.splice(index, 1);    
+    Entry.variableContainer.removeLocalVariables(object.id);
+
+    if(isPass === true) {
+        return;
+    }
+
     this.setCurrentObjects();
     Entry.stage.sortZorder();
     var currentObjects = this.getCurrentObjects();
-
     if (currentObjects.length) {
         this.selectObject(currentObjects[0].id);
     } else {
@@ -394,7 +411,6 @@ Entry.Container.prototype.removeObject = function(id) {
         Entry.playground.flushPlayground();
     }
 
-    Entry.variableContainer.removeLocalVariables(object.id);
     Entry.playground.reloadPlayground();
 };
 

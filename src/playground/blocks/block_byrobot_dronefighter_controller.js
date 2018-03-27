@@ -15,6 +15,12 @@
 
 Entry.byrobot_dronefighter_controller = {
     name: 'byrobot_dronefighter_controller',
+    url: 'http://www.byrobot.co.kr/',
+    imageName: 'byrobot_dronefighter_controller.png',
+    title: {
+        "ko": "바이로봇 드론파이터 조종기",
+        "en": "BYROBOT Drone Fighter controller"
+    },
 
     // 초기화
     setZero: function() {

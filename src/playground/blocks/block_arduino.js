@@ -2,6 +2,12 @@
 
 Entry.Arduino = {
     name: 'arduino',
+    url: 'http://www.arduino.cc/',
+    imageName: 'arduino.png',
+    title: {
+        "ko": "아두이노",
+        "en": "Arduino"
+    },
     setZero: function() {
         Entry.hw.sendQueue.readablePorts = [];
         for (var port = 0; port < 20; port++) {
@@ -488,13 +494,19 @@ Entry.Arduino.getBlocks = function() {
                 type: 'arduino_get_digital_value',
             },
             paramsKeyMap: {
-                VALUE: 0,
+                PORT: 0,
             },
             class: 'arduino_value',
             isNotFor: ['arduino'],
             func: function(sprite, script) {
-                var signal = script.getNumberValue('VALUE', script);
-                return Entry.hw.getDigitalPortValue(signal);
+                const { hwModule = {} } = Entry.hw;
+                const { name } = hwModule;
+                if(name === 'ArduinoExt') {                    
+                    return Entry.block.arduino_ext_get_digital.func(sprite, script);
+                } else {
+                    var signal = script.getNumberValue('PORT', script);
+                    return Entry.hw.getDigitalPortValue(signal);
+                }
             },
             syntax: {
                 js: [],

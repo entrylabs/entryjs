@@ -3,8 +3,6 @@
  */
 "use strict";
 
-goog.provide("Entry.Executor");
-
 Entry.Executor = function(block, entity) {
     this.scope = new Entry.Scope(block, this);
     this.entity = entity;

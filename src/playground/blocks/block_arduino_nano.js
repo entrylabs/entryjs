@@ -2,6 +2,12 @@
 
 Entry.ArduinoNano = {
     name: 'ArduinoNano',
+    url: 'http://www.arduino.cc/',
+    imageName: 'arduinoNano.png',
+    title: {
+        "ko": "아두이노 Nano",
+        "en": "Arduino Nano"
+    },
     setZero: function() {
         if (!Entry.hw.sendQueue.SET) {
             Entry.hw.sendQueue = {
@@ -121,37 +127,7 @@ Entry.ArduinoNano.getBlocks = function() {
                     fontSize: 11,
                 },
             ],
-            syntax: {
-                js: [],
-                py: [
-                    {
-                        syntax: '%1',
-                        blockType: 'param',
-                        textParams: [
-                            {
-                                type: 'Dropdown',
-                                options: [
-                                    ['A0', '0'],
-                                    ['A1', '1'],
-                                    ['A2', '2'],
-                                    ['A3', '3'],
-                                    ['A4', '4'],
-                                    ['A5', '5'],
-                                    ['A6', '6'],
-                                    ['A7', '7'],
-                                ],
-                                value: '0',
-                                fontSize: 11,
-                                converter:
-                                    Entry.block.converters.returnStringKey,
-                                codeMap:
-                                    'Entry.CodeMap.Arduino.arduino_nano_analog_list[0]',
-                            },
-                        ],
-                        keyOption: 'arduino_nano_analog_list',
-                    },
-                ],
-            },
+            syntax: undefined,
         },
         arduino_nano_get_analog_value: {
             parent: 'arduino_ext_get_analog_value',
@@ -165,6 +141,7 @@ Entry.ArduinoNano.getBlocks = function() {
                 type: 'arduino_nano_get_analog_value',
             },
             isNotFor: ['ArduinoNano'],
+            syntax: undefined,
         },
         arduino_nano_get_analog_value_map: {
             parent: 'arduino_ext_get_analog_value_map',
@@ -199,6 +176,7 @@ Entry.ArduinoNano.getBlocks = function() {
                 type: 'arduino_nano_get_analog_value_map',
             },
             isNotFor: ['ArduinoNano'],
+            syntax: undefined,
         },
         arduino_nano_get_ultrasonic_value: {
             template: Lang.template.arduino_ext_get_ultrasonic_value,
@@ -217,6 +195,7 @@ Entry.ArduinoNano.getBlocks = function() {
                 type: 'arduino_nano_get_ultrasonic_value',
             },
             isNotFor: ['ArduinoNano'],
+            syntax: undefined,
         },
         arduino_nano_get_digital: {
             template: Lang.template.arduino_ext_get_digital,
@@ -230,6 +209,7 @@ Entry.ArduinoNano.getBlocks = function() {
                 type: 'arduino_nano_get_digital',
             },
             isNotFor: ['ArduinoNano'],
+            syntax: undefined,
         },
         arduino_nano_toggle_led: {
             template: Lang.template.arduino_ext_toggle_led,
@@ -248,6 +228,7 @@ Entry.ArduinoNano.getBlocks = function() {
                 type: 'arduino_nano_toggle_led',
             },
             isNotFor: ['ArduinoNano'],
+            syntax: undefined,
         },
         arduino_nano_digital_pwm: {
             template: Lang.template.arduino_ext_digital_pwm,
@@ -266,6 +247,7 @@ Entry.ArduinoNano.getBlocks = function() {
                 type: 'arduino_nano_digital_pwm',
             },
             isNotFor: ['ArduinoNano'],
+            syntax: undefined,
         },
         arduino_nano_set_tone: {
             template: Lang.template.arduino_ext_set_tone,
@@ -291,6 +273,7 @@ Entry.ArduinoNano.getBlocks = function() {
                 type: 'arduino_nano_set_tone',
             },
             isNotFor: ['ArduinoNano'],
+            syntax: undefined,
         },
         arduino_nano_set_servo: {
             template: Lang.template.arduino_ext_set_servo,
@@ -305,6 +288,7 @@ Entry.ArduinoNano.getBlocks = function() {
                 type: 'arduino_nano_set_servo',
             },
             isNotFor: ['ArduinoNano'],
+            syntax: undefined,
         },
         //endregion arduinoNano 아두이노 나노
     };

@@ -89,8 +89,12 @@ Entry.BlockToPyParser = function() {
         var syntaxObj, syntax, textParams;
 
         syntaxObj = this.searchSyntax(block);
-        if (syntaxObj) syntax = syntaxObj.syntax;
-        if (syntaxObj.textParams) textParams = syntaxObj.textParams;
+        if (syntaxObj) {
+            syntax = syntaxObj.syntax;
+            if(syntaxObj.textParams) {
+                textParams = syntaxObj.textParams;
+            }
+        }
 
         // User Function
         if (this.isFunc(block)) {
