@@ -10,5 +10,6 @@ cp -r extern build/
 cp -r images build/
 rsync -R src/playground/block_entry.js build
 rsync -R src/playground/block_entry_mini.js build
+rsync -R src/playground/blocks build/blocks
 ls -al
 ls -al build

@@ -32,7 +32,7 @@ Entry.block.jr_start = {
     params: [
         {
             type: "Indicator",
-            img: "/img/assets/ntry/bitmap/jr/block_play_image.png",
+            img: "../../../img/assets/ntry/bitmap/jr/block_play_image.png",
             highlightColor: "#3BBD70",
             position: {x: 0, y: 0},
             size: 22
@@ -108,7 +108,7 @@ Entry.block.jr_item = {
     params: [
         {
             type: "Indicator",
-            img: "/img/assets/ntry/bitmap/jr/block_item_image.png",
+            img: "../../../img/assets/ntry/bitmap/jr/block_item_image.png",
             highlightColor: "#FFF",
             position: {x: 83, y: 0},
             size: 22
@@ -146,7 +146,7 @@ Entry.block.cparty_jr_item = {
         },
         {
             type: "Indicator",
-            img: "/img/assets/ntry/bitmap/cpartyjr/pen.png",
+            img: "../../../img/assets/ntry/bitmap/cpartyjr/pen.png",
             highlightColor: "#FFF",
             position: {x: 83, y: 0},
             size: 22
@@ -185,7 +185,7 @@ Entry.block.jr_north = {
         },
         {
             type: "Indicator",
-            img: "/img/assets/ntry/bitmap/jr/block_up_image.png",
+            img: "../../../img/assets/ntry/bitmap/jr/block_up_image.png",
             position: {x: 83, y: 0},
             size: 22
         }
@@ -242,7 +242,7 @@ Entry.block.jr_east = {
         },
         {
             type: "Indicator",
-            img: "/img/assets/ntry/bitmap/jr/block_right_image.png",
+            img: "../../../img/assets/ntry/bitmap/jr/block_right_image.png",
             position: {x: 83, y: 0},
             size: 22
         }
@@ -303,7 +303,7 @@ Entry.block.jr_south = {
         },
         {
             type: "Indicator",
-            img: "/img/assets/ntry/bitmap/jr/block_down_image.png",
+            img: "../../../img/assets/ntry/bitmap/jr/block_down_image.png",
             position: {x: 83, y: 0},
             size: 22
         }
@@ -364,7 +364,7 @@ Entry.block.jr_west = {
         },
         {
             type: "Indicator",
-            img: "/img/assets/ntry/bitmap/jr/block_left_image.png",
+            img: "../../../img/assets/ntry/bitmap/jr/block_left_image.png",
             position: {x: 83, y: 0},
             size: 22
         }
@@ -423,7 +423,7 @@ Entry.block.jr_start_basic = {
         {
             type: "Indicator",
             boxMultiplier: 2,
-            img: "/img/assets/block_icon/start_icon_play.png",
+            img: "../../../img/assets/block_icon/start_icon_play.png",
             highlightColor: "#3BBD70",
             size: 17,
             position: {
@@ -452,7 +452,7 @@ Entry.block.jr_go_straight = {
         Lang.Menus.go_forward,
         {
             type: "Image",
-            img: "/img/assets/ntry/bitmap/jr/cparty_go_straight.png",
+            img: "../../../img/assets/ntry/bitmap/jr/cparty_go_straight.png",
             size: 24
         }
     ],
@@ -486,7 +486,7 @@ Entry.block.jr_turn_left = {
         Lang.Menus.jr_turn_left,
         {
             type: "Image",
-            img: "/img/assets/ntry/bitmap/jr/cparty_rotate_l.png",
+            img: "../../../img/assets/ntry/bitmap/jr/cparty_rotate_l.png",
             size: 24
         }
     ],
@@ -521,7 +521,7 @@ Entry.block.jr_turn_right = {
         Lang.Menus.jr_turn_right,
         {
             type: "Image",
-            img: "/img/assets/ntry/bitmap/jr/cparty_rotate_r.png",
+            img: "../../../img/assets/ntry/bitmap/jr/cparty_rotate_r.png",
             size: 24
         }
     ],
@@ -556,7 +556,7 @@ Entry.block.jr_go_slow = {
         Lang.Menus.go_slow,
         {
             type: "Image",
-            img: "/img/assets/ntry/bitmap/jr/cparty_go_slow.png",
+            img: "../../../img/assets/ntry/bitmap/jr/cparty_go_slow.png",
             size: 24
         }
     ],
@@ -592,13 +592,13 @@ Entry.block.jr_repeat_until_dest = {
         Lang.Menus.repeat_until_reach_2,
         {
             type: "Image",
-            img: "/img/assets/ntry/bitmap/jr/jr_goal_image.png",
+            img: "../../../img/assets/ntry/bitmap/jr/jr_goal_image.png",
             size: 18
         },
         Lang.Menus.repeat_until_reach_1,
         {
             type: "Image",
-            img: "/img/assets/week/blocks/for.png",
+            img: "../../../img/assets/week/blocks/for.png",
             size: 24
         }
     ],
@@ -625,13 +625,13 @@ Entry.block.jr_if_construction = {
         Lang.Menus.jr_if_1,
         {
             type: "Image",
-            img: "/img/assets/ntry/bitmap/jr/jr_construction_image.png",
+            img: "../../../img/assets/ntry/bitmap/jr/jr_construction_image.png",
             size: 18
         },
         Lang.Menus.jr_if_2,
         {
             type: "Image",
-            img: "/img/assets/week/blocks/for.png",
+            img: "../../../img/assets/week/blocks/for.png",
             size: 24
         }
     ],
@@ -689,12 +689,12 @@ Entry.block.jr_if_speed = {
     params: [
         {
             type: "Image",
-            img: "/img/assets/ntry/bitmap/jr/jr_speed_image.png",
+            img: "../../../img/assets/ntry/bitmap/jr/jr_speed_image.png",
             size: 18
         },
         {
             type: "Image",
-            img: "/img/assets/week/blocks/for.png",
+            img: "../../../img/assets/week/blocks/for.png",
             size: 24
         }
     ],
@@ -760,7 +760,7 @@ Entry.block.maze_step_start = {
         {
             type: "Indicator",
             boxMultiplier: 2,
-            img: "/img/assets/block_icon/start_icon_play.png",
+            img: "../../../img/assets/block_icon/start_icon_play.png",
             highlightColor: "#3BBD70",
             size: 17,
             position: {
@@ -788,7 +788,7 @@ Entry.block.maze_step_jump = {
     params: [
         {
             type: "Image",
-            img: "/img/assets/week/blocks/jump.png",
+            img: "../../../img/assets/week/blocks/jump.png",
             size: 24
         }
     ],
@@ -843,7 +843,7 @@ Entry.block.maze_step_for = {
         },
         {
             type: "Image",
-            img: "/img/assets/week/blocks/for.png",
+            img: "../../../img/assets/week/blocks/for.png",
             size: 24
         }
     ],
@@ -910,12 +910,12 @@ Entry.block.maze_repeat_until_1 = {
     params: [
         {
             type: "Image",
-            img: "/img/assets/ntry/block_inner/repeat_goal_1.png",
+            img: "../../../img/assets/ntry/block_inner/repeat_goal_1.png",
             size: 18
         },
         {
             type: "Image",
-            img: "/img/assets/week/blocks/for.png",
+            img: "../../../img/assets/week/blocks/for.png",
             size: 24
         }
     ],
@@ -943,12 +943,12 @@ Entry.block.maze_repeat_until_2 = {
     params: [
         {
             type: "Image",
-            img: "/img/assets/ntry/block_inner/repeat_goal_1.png",
+            img: "../../../img/assets/ntry/block_inner/repeat_goal_1.png",
             size: 18
         },
         {
             type: "Image",
-            img: "/img/assets/week/blocks/for.png",
+            img: "../../../img/assets/week/blocks/for.png",
             size: 24
         }
     ],
@@ -977,12 +977,12 @@ Entry.block.maze_step_if_1 = {
     params: [
         {
             type: "Image",
-            img: "/img/assets/ntry/block_inner/if_target_1.png",
+            img: "../../../img/assets/ntry/block_inner/if_target_1.png",
             size: 18
         },
         {
             type: "Image",
-            img: "/img/assets/week/blocks/if.png",
+            img: "../../../img/assets/week/blocks/if.png",
             size: 24
         }
     ],
@@ -1057,12 +1057,12 @@ Entry.block.maze_step_if_2 = {
     params: [
         {
             type: "Image",
-            img: "/img/assets/ntry/bitmap/maze2/obstacle_01.png",
+            img: "../../../img/assets/ntry/bitmap/maze2/obstacle_01.png",
             size: 18
         },
         {
             type: "Image",
-            img: "/img/assets/week/blocks/if.png",
+            img: "../../../img/assets/week/blocks/if.png",
             size: 24
         }
     ],
@@ -1124,7 +1124,7 @@ Entry.block.maze_call_function = {
     params: [
         {
             type: "Image",
-            img: "/img/assets/week/blocks/function.png",
+            img: "../../../img/assets/week/blocks/function.png",
             size: 24
         }
     ],
@@ -1159,7 +1159,7 @@ Entry.block.maze_define_function = {
     params: [
         {
             type: "Image",
-            img: "/img/assets/week/blocks/function.png",
+            img: "../../../img/assets/week/blocks/function.png",
             size: 24
         }
     ],
@@ -1189,12 +1189,12 @@ Entry.block.maze_step_if_3 = {
     params: [
         {
             type: "Image",
-            img: "/img/assets/ntry/block_inner/if_target_3.png",
+            img: "../../../img/assets/ntry/block_inner/if_target_3.png",
             size: 18
         },
         {
             type: "Image",
-            img: "/img/assets/week/blocks/if.png",
+            img: "../../../img/assets/week/blocks/if.png",
             size: 24
         }
     ],
@@ -1256,12 +1256,12 @@ Entry.block.maze_step_if_4 = {
     params: [
         {
             type: "Image",
-            img: "/img/assets/ntry/block_inner/if_target_2.png",
+            img: "../../../img/assets/ntry/block_inner/if_target_2.png",
             size: 18
         },
         {
             type: "Image",
-            img: "/img/assets/week/blocks/if.png",
+            img: "../../../img/assets/week/blocks/if.png",
             size: 24
         }
     ],
@@ -1323,7 +1323,7 @@ Entry.block.maze_step_move_step = {
     params: [
         {
             type: "Image",
-            img: "/img/assets/week/blocks/moveStep.png",
+            img: "../../../img/assets/week/blocks/moveStep.png",
             size: 24
         }
     ],
@@ -1358,7 +1358,7 @@ Entry.block.maze_step_rotate_left= {
     params: [
         {
             type: "Image",
-            img: "/img/assets/week/blocks/turnL.png",
+            img: "../../../img/assets/week/blocks/turnL.png",
             size: 24
         }
     ],
@@ -1394,7 +1394,7 @@ Entry.block.maze_step_rotate_right = {
     params: [
         {
             type: "Image",
-            img: "/img/assets/week/blocks/turnR.png",
+            img: "../../../img/assets/week/blocks/turnR.png",
             size: 24
         }
     ],
