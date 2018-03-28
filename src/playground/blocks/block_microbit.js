@@ -7,6 +7,7 @@ Entry.Microbit = new class Microbit {
     constructor() {
         this.name = 'microbit';
         this.blockIds = {};
+        this.isExecBlock = false;
     }
     setZero() {
         Entry.hw.sendQueue = {
@@ -19,6 +20,7 @@ Entry.Microbit = new class Microbit {
         // });
         Entry.hw.update();
         this.blockIds = {};
+        this.isExecBlock = false;
     }
 
     sendMessage({socket, sendQueue = {}}) {
@@ -42,6 +44,11 @@ Entry.Microbit = new class Microbit {
 
     postCallReturn(script, data) {
         if (!script.isStart) {
+            if(this.isExecBlock) {
+                console.log('blocking!!');
+                return script;
+            }
+            this.isExecBlock = true;
             const blockId = Entry.generateHash();
             console.log(blockId);
             script.isStart = true;
@@ -66,6 +73,7 @@ Entry.Microbit = new class Microbit {
             delete script.timeFlag;
             delete script.isStart;
             Entry.engine.isContinue = false;
+            this.isExecBlock = false;
             return script.callReturn();
         }
     }
