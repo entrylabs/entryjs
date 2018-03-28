@@ -8,7 +8,7 @@ npm run dist
 cp -r dist build/
 cp -r extern build/
 cp -r images build/
-# rsync -R src/workspace/block_entry.js build
-# rsync -R src/workspace/block_entry_mini.js build
+rsync -R src/playground/block_entry.js build
+rsync -R src/playground/block_entry_mini.js build
 ls -al
 ls -al build
