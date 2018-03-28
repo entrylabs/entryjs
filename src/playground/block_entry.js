@@ -12656,7 +12656,7 @@ const block = {
         params: [
             {
                 type: 'Image',
-                img: '/img/assets/ntry/block_inner/repeat_goal_1.png',
+                img: '../../../img/assets/ntry/block_inner/repeat_goal_1.png',
                 size: 18,
             },
             {
@@ -12686,7 +12686,7 @@ const block = {
         params: [
             {
                 type: 'Image',
-                img: '/img/assets/ntry/block_inner/repeat_goal_1.png',
+                img: '../../../img/assets/ntry/block_inner/repeat_goal_1.png',
                 size: 18,
             },
             {
@@ -12716,7 +12716,7 @@ const block = {
         params: [
             {
                 type: 'Image',
-                img: '/img/assets/ntry/block_inner/if_target_1.png',
+                img: '../../../img/assets/ntry/block_inner/if_target_1.png',
                 size: 18,
             },
             {
@@ -12921,7 +12921,7 @@ const block = {
         params: [
             {
                 type: 'Image',
-                img: '/img/assets/ntry/block_inner/if_target_3.png',
+                img: '../../../img/assets/ntry/block_inner/if_target_3.png',
                 size: 18,
             },
             {
@@ -12989,7 +12989,7 @@ const block = {
         params: [
             {
                 type: 'Image',
-                img: '/img/assets/ntry/block_inner/if_target_2.png',
+                img: '../../../img/assets/ntry/block_inner/if_target_2.png',
                 size: 18,
             },
             {
@@ -16259,7 +16259,7 @@ const block = {
         params: [
             {
                 type: 'Image',
-                img: '/img/assets/ntry/bitmap/ai/obstacle_1.png',
+                img: '../../../img/assets/ntry/bitmap/ai/obstacle_1.png',
                 size: 24,
             },
             {
