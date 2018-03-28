@@ -61,20 +61,26 @@ p.connectWebSocket = function(url, option) {
         socket.mode = mode;
     });
 
-    socket.on('message', function(msg) {
-        if(msg.data && typeof msg.data === 'string') {
-             switch(msg.data) {
-                case 'disconnectHardware': {
-                    hw.disconnectHardware();
-                    break;
+    socket.on('message', function({ data, version }) {
+        if (data) {
+            let portData = {};
+            if (typeof data === 'string') {
+                switch (data) {
+                    case 'disconnectHardware': {
+                        hw.disconnectHardware();
+                        return;
+                        break;
+                    }
+                    default: {
+                        portData = JSON.parse(data);
+                        break;
+                    }
                 }
-                default: {
-                    var data = JSON.parse(msg.data);
-                    hw.checkDevice(data, msg.version);
-                    hw.updatePortData(data);
-                    break;
-                }
+            } else if (_.isObject(data)) {
+                portData = data;
             }
+            hw.checkDevice(portData, version);
+            hw.updatePortData(portData);
         }
     });
 

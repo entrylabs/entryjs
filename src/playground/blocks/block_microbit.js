@@ -6,6 +6,7 @@ const _merge = require('lodash/merge');
 Entry.Microbit = new class Microbit {
     constructor() {
         this.name = 'microbit';
+        this.blockIds = {};
     }
     setZero() {
         Entry.hw.sendQueue = {
@@ -17,11 +18,11 @@ Entry.Microbit = new class Microbit {
         //     type: 'RST',
         // });
         Entry.hw.update();
+        this.blockIds = {};
     }
 
     sendMessage({socket, sendQueue = {}}) {
         if(!_.isEmpty(sendQueue)) {
-            console.log(sendQueue);
             const keys = Object.keys(sendQueue);
             const uniqueKey = Entry.generateHash();
             socket.emit('message', {
@@ -38,13 +39,47 @@ Entry.Microbit = new class Microbit {
             });
         }
     }
+
+    postCallReturn(script, data) {
+        if (!script.isStart) {
+            const blockId = Entry.generateHash();
+            console.log(blockId);
+            script.isStart = true;
+            script.timeFlag = 1;
+            script.blockId = blockId;     
+            this.blockIds[blockId] = false;
+            _merge(Entry.hw.sendQueue, {
+                [blockId]: data,
+            });
+            // setTimeout(function() {
+            //     script.timeFlag = 0;
+            // }, 32);
+            return script;
+        } else if (script.timeFlag == 1) {
+            if(this.blockIds[script.blockId]) {
+                console.log('delete', script.blockId);
+                delete this.blockIds[script.blockId];
+                script.timeFlag = 0;
+            }
+            return script;
+        } else {
+            delete script.timeFlag;
+            delete script.isStart;
+            Entry.engine.isContinue = false;
+            return script.callReturn();
+        }
+    }
+
     afterSend(data) {
         // Object.assign(data, {
         //     OUTPUT: {},
         // });
     }
-    afterReceive(data) {
-        // console.log('afterReceive', data);
+    afterReceive({ blockId = '' }) {
+        if(blockId in this.blockIds) {
+            console.log(this.blockIds, blockId);
+            this.blockIds[blockId] = true;
+        }
     }
 }();
 
@@ -102,21 +137,18 @@ Entry.Microbit.getBlocks = function() {
                 VALUE: 2,
             },
             func: function(sprite, script) {
-                let x = script.getNumberValue('X');
-                let y = script.getNumberValue('Y');
-                let value = script.getField('VALUE');
-                _merge(Entry.hw.sendQueue, {
-                    [Entry.generateHash()]: {
-                        type: 'LED',
-                        data: {
-                            x,
-                            y,
-                            value,
-                        },
+                const x = script.getNumberValue('X');
+                const y = script.getNumberValue('Y');
+                const value = script.getField('VALUE');
+                const data = {
+                    type: 'LED',
+                    data: {
+                        x,
+                        y,
+                        value,
                     },
-                });
-
-                return script.callReturn();
+                };
+                return Entry.Microbit.postCallReturn(script, data);
             },
         },
         microbit_led_toggle2: {
