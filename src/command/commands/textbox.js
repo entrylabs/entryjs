@@ -1,10 +1,7 @@
 /*
  *
  */
-"use strict";
-
-goog.require("Entry.Command");
-goog.require("Entry.STATIC");
+'use strict';
 
 (function(c) {
     var COMMAND_TYPES = Entry.STATIC.COMMAND_TYPES;
@@ -23,8 +20,6 @@ goog.require("Entry.STATIC");
         },
         validate: false,
         recordable: Entry.STATIC.RECORDABLE.SUPPORT,
-        undo: "editText",
+        undo: 'editText',
     };
-
 })(Entry.Command);
-

@@ -1,422 +1,167 @@
-"use strict";
+'use strict';
 
-goog.provide("Entry");
+var Entry = {};
 
-Entry = {};
+module.exports = Entry;
+global.Entry = Entry;
 
-Entry.block = {};
+require('./css/entry.less');
+require('./class/container');
+require('./class/dialog');
+require('./class/doneProject');
+require('./class/engine');
+require('./class/entity');
+require('./class/function');
+require('./class/helper');
+require('./class/hw');
+require('./class/hw_monitor');
+require('./class/object');
+require('./class/painter');
+require('./class/pdf');
+require('./class/playground');
+require('./class/popup');
+require('./class/popup_helper');
+require('./class/popup_list');
+require('./class/project');
+require('./class/property_panel');
+require('./class/reporter');
+require('./class/scene');
+require('./class/script');
+require('./class/stage');
+require('./class/stamp_entity');
+require('./class/toast');
+require('./class/variable');
+require('./class/variable_container');
+require('./command/command');
+require('./command/commander');
+require('./core/collection');
+require('./core/db');
+require('./core/dom');
+require('./core/event');
+require('./core/model');
+require('./core/observer');
+require('./core/svg');
+require('./extensions/extension');
+require('./extensions/target_checker');
+require('./log/activity');
+require('./log/activityReporter');
+require('./log/recorder');
+require('./log/state');
+require('./log/state_manager');
+require('./model/block_model');
+require('./model/block_render_model');
+require('./model/box_model');
+require('./model/drag_instance');
+require('./model/thread_model');
+require('./parser-no/block');
+require('./parser-no/js');
+require('./parser-no/parser');
+require('./playground/block');
+require('./playground/block_entry');
+require('./playground/basic_block');
+require('./playground/block_entry_mini');
+require('./playground/block_menu');
+require('./playground/block_menu_scroll');
+require('./playground/block_view');
+require('./playground/board');
+require('./playground/code');
+require('./playground/code_view');
+require('./playground/connection_ripple');
+require('./playground/executors');
+require('./playground/globalSvg');
+require('./playground/mutator');
+require('./playground/renderView');
+require('./playground/scroll');
+require('./playground/skeleton');
+require('./playground/skinner');
+require('./playground/thread');
+require('./playground/thread_view');
+require('./playground/trashcan');
+require('./playground/vim');
+require('./playground/workspace');
+require('./textcoding/parser');
+require('./util/block_driver');
+require('./util/contextmenu');
+require('./util/curtain');
+require('./util/fuzzy');
+require('./util/init');
+require('./util/loader');
+require('./util/popup');
+require('./util/restrictor');
+require('./util/static');
+require('./util/toast');
+require('./util/tooltip');
+require('./util/tvCast');
+require('./util/utils');
+require('./util/youtube');
+require('./command/commands/block');
+require('./command/commands/container');
+require('./command/commands/engine');
+require('./command/commands/object');
+require('./command/commands/painter');
+require('./command/commands/playground');
+require('./command/commands/textbox');
+require('./command/commands/variableContainer');
+require('./command/commands/scene');
+require('./playground/blocks/block_albert');
+require('./playground/blocks/block_altino');
+require('./playground/blocks/block_arduino');
+require('./playground/blocks/block_bitbrick');
+require('./playground/blocks/block_blacksmith');
+require('./playground/blocks/block_byrobot_dronefighter_controller');
+require('./playground/blocks/block_byrobot_dronefighter_drive');
+require('./playground/blocks/block_byrobot_dronefighter_flight');
+require('./playground/blocks/block_byrobot_petrone_v2_controller');
+require('./playground/blocks/block_byrobot_petrone_v2_drive');
+require('./playground/blocks/block_byrobot_petrone_v2_flight');
+require('./playground/blocks/block_chocopi');
+require('./playground/blocks/block_cobl');
+require('./playground/blocks/block_coconut');
+require('./playground/blocks/block_codeino');
+require('./playground/blocks/block_codestar');
+require('./playground/blocks/block_dadublock');
+require('./playground/blocks/block_edumaker');
+require('./playground/blocks/block_ev3');
+require('./playground/blocks/block_hamster');
+require('./playground/blocks/block_hummingbird');
+require('./playground/blocks/block_iboard');
+require('./playground/blocks/block_jdkit');
+require('./playground/blocks/block_mechatronics_4d');
+require('./playground/blocks/block_modi');
+require('./playground/blocks/block_neobot');
+require('./playground/blocks/block_neobot_sensor_theme');
+require('./playground/blocks/block_roborobo');
+require('./playground/blocks/block_robotis');
+require('./playground/blocks/block_robotori');
+require('./playground/blocks/block_truerobot');
+require('./playground/blocks/block_turtle');
+require('./playground/blocks/block_xbot');
+require('./playground/extension/extension');
+require('./playground/extension/guide');
+require('./playground/extension/side_tag');
+require('./playground/field/angle');
+require('./playground/field/block');
+require('./playground/field/color');
+require('./playground/field/dropdown');
+require('./playground/field/dropdownDynamic');
+require('./playground/field/field');
+require('./playground/field/image');
+require('./playground/field/indicator');
+require('./playground/field/keyboardInput');
+require('./playground/field/lineBreak');
+require('./playground/field/output');
+require('./playground/field/statement');
+require('./playground/field/text');
+require('./playground/field/textInput');
+require('./textcoding/ast/jsAstGenerator');
+require('./textcoding/ast/pyAstGenerator');
+require('./textcoding/data_processing/map');
+require('./textcoding/data_processing/queue');
+require('./textcoding/error/textCodingError');
+require('./textcoding/hint/python');
+require('./textcoding/static/codeMap');
+require('./textcoding/static/keyboardCode');
+require('./textcoding/util/console');
+require('./textcoding/util/textCodingUtil');
 
-Entry.TEXT_ALIGN_CENTER = 0;
-
-Entry.TEXT_ALIGN_LEFT = 1;
-
-Entry.TEXT_ALIGN_RIGHT = 2;
-
-Entry.TEXT_ALIGNS = ["center", "left", "right"];
-
-Entry.clipboard = null;
-
-/**
- * Load project
- * @param {?Project} project
- */
-Entry.loadProject = function(project) {
-    if (!project) {
-        project = Entry.getStartProject(Entry.mediaFilePath);
-    }
-
-    if (this.type == 'workspace')
-        Entry.stateManager.startIgnore();
-    Entry.projectId = project._id;
-    Entry.variableContainer.setVariables(project.variables);
-    Entry.variableContainer.setMessages(project.messages);
-    Entry.scene.addScenes(project.scenes);
-    Entry.stage.initObjectContainers();
-    Entry.variableContainer.setFunctions(project.functions);
-    Entry.container.setObjects(project.objects);
-    Entry.FPS = project.speed ? project.speed : 60;
-    createjs.Ticker.setFPS(Entry.FPS);
-
-    if (!Entry.engine.projectTimer)
-        Entry.variableContainer.generateTimer();
-
-    if (Object.keys(Entry.container.inputValue).length === 0)
-        Entry.variableContainer.generateAnswer();
-    Entry.start();
-    if (this.options.programmingMode) {
-
-        var mode = this.options.programmingMode;
-        if (Entry.Utils.isNumber(mode)) {
-            var pMode = mode;
-            mode = {};
-
-            this.mode = mode;
-            if (pMode == 0) {
-                mode.boardType = Entry.Workspace.MODE_BOARD;
-                mode.textType = -1;
-            } else if (pMode == 1) { // Python in Text Coding
-                mode.boardType = Entry.Workspace.MODE_VIMBOARD;
-                mode.textType = Entry.Vim.TEXT_TYPE_PY;
-                mode.runType = Entry.Vim.WORKSPACE_MODE;
-            } else if (pMode == 2) { // Javascript in Text Coding
-                mode.boardType = Entry.Workspace.MODE_VIMBOARD;
-                mode.textType = Entry.Vim.TEXT_TYPE_JS;
-                mode.runType = Entry.Vim.MAZE_MODE;
-            }
-            Entry.getMainWS().setMode(mode);
-        }
-    }
-
-    Entry.Loader.isLoaded() && Entry.Loader.handleLoad();
-
-
-    if (this.type == 'workspace')
-        Entry.stateManager.endIgnore();
-
-    if (project.interface && Entry.options.loadInterface)
-        Entry.loadInterfaceState(project.interface);
-
-    if (window.parent && window.parent.childIframeLoaded)
-        window.parent.childIframeLoaded();
-    return project;
-};
-
-Entry.clearProject = function() {
-    Entry.stop();
-    Entry.projectId = null;
-    Entry.type !== 'invisible' && Entry.playground && Entry.playground.changeViewMode('code');
-    Entry.variableContainer.clear();
-    Entry.container.clear();
-    Entry.scene.clear();
-};
-
-/**
- * Export project
- * @param {?Project} project
- */
-Entry.exportProject = function(project) {
-    if (!project) project = {};
-
-    if (!Entry.engine.isState('stop'))
-        Entry.engine.toggleStop();
-
-    var objects = project.objects = Entry.container.toJSON();
-    project.scenes = Entry.scene.toJSON();
-    project.variables = Entry.variableContainer.getVariableJSON();
-    project.messages = Entry.variableContainer.getMessageJSON();
-    project.functions = Entry.variableContainer.getFunctionJSON();
-    project.scenes = Entry.scene.toJSON();
-    project.speed = Entry.FPS;
-    project.interface = Entry.captureInterfaceState();
-
-    if (!objects || !objects.length) return false;
-
-    return project;
-};
-
-/**
- * inject blocks to Entry menu.
- * Available block is different by object type.
- * @param {!string} objectType
- * @param {!string} blockText
- */
-Entry.setBlockByText = function(objectType, blockText) {
-    var blockJSON = [];
-    var xml = jQuery.parseXML(blockText);
-    var categories = xml.getElementsByTagName('category');
-    for (var i = 0; i < categories.length; i++) {
-        var category = categories[i];
-        var json = {category: category.getAttribute("id"), blocks: []};
-        var blocks = category.childNodes;
-        for (var j = 0; j < blocks.length; j++) {
-            var b = blocks[j];
-            if (b.tagName &&
-                (b.tagName.toUpperCase() == 'BLOCK' ||
-                 b.tagName.toUpperCase() == 'BTN')) {
-                json.blocks.push(b.getAttribute('type'));
-            }
-        }
-        blockJSON.push(json);
-    }
-    Entry.playground.setBlockMenu(blockJSON);
-};
-
-/**
- * inject blocks to Entry menu.
- * Available block is different by object type.
- * @param {!string} objectType
- * @param {!xml} XML
- */
-Entry.setBlock = function(objectType, XML) {
-    Entry.playground.setMenuBlock(objectType, XML);
-};
-
-Entry.enableArduino = function() {
-    return;
-};
-
-/**
- * initialize sound
- * @param {sound object} sound
- */
-Entry.initSound = function(sound) {
-    if (!sound || !sound.duration || sound.duration == 0) return;
-    sound.path = sound.fileurl ||
-        Entry.defaultPath + '/uploads/' + sound.filename.substring(0,2) + '/' +
-        sound.filename.substring(2,4) + '/' + sound.filename + sound.ext;
-
-    Entry.soundQueue.loadFile({
-        id: sound.id,
-        src: sound.path,
-        type: createjs.LoadQueue.SOUND
-    });
-};
-
-/**
- * This method is called when window closed;
- * @param {event} e
- */
-Entry.beforeUnload = function(e) {
-    Entry.hw.closeConnection();
-    Entry.variableContainer.updateCloudVariables();
-    if (Entry.type == 'workspace') {
-        if (localStorage && Entry.interfaceState) {
-            localStorage.setItem('workspace-interface',
-                                 JSON.stringify(Entry.captureInterfaceState()));
-        }
-        if (!Entry.stateManager.isSaved())
-            return Lang.Workspace.project_changed;
-    }
-};
-
-
-Entry.captureInterfaceState = function() {
-    var interfaceState = JSON.parse(JSON.stringify(Entry.interfaceState))
-    var playground = Entry.playground;
-    if (Entry.type == 'workspace' &&
-        playground && playground.object) {
-        interfaceState.object = playground.object.id;
-    }
-
-    return interfaceState;
-};
-
-/**
- * load interface state by localstorage
- */
-Entry.loadInterfaceState = function(interfaceState) {
-    if (Entry.type == 'workspace') {
-        if (interfaceState) {
-            Entry.container.selectObject(interfaceState.object, true);
-        } else if (localStorage &&
-            localStorage.getItem('workspace-interface')) {
-            var interfaceModel = localStorage.getItem('workspace-interface');
-            interfaceState = JSON.parse(interfaceModel);
-        } else {
-            interfaceState = {
-                menuWidth: 280,
-                canvasWidth: 480
-            };
-        }
-        this.resizeElement(interfaceState);
-    }
-};
-
-/**
- * Resize element's size.
- * @param {!json} interfaceModel
- */
-Entry.resizeElement = function(interfaceModel) {
-    var mainWorkspace = Entry.getMainWS();
-    if (!mainWorkspace)
-        return;
-
-    if (!interfaceModel)
-        interfaceModel = this.interfaceState;
-
-    if (Entry.type == 'workspace') {
-        var interfaceState = this.interfaceState;
-        if (!interfaceModel.canvasWidth && interfaceState.canvasWidth)
-            interfaceModel.canvasWidth = interfaceState.canvasWidth;
-        if (!interfaceModel.menuWidth &&
-            this.interfaceState.menuWidth)
-            interfaceModel.menuWidth = interfaceState.menuWidth;
-
-        if (Entry.engine.speedPanelOn)
-            Entry.engine.toggleSpeedPanel();
-
-        var canvasSize = interfaceModel.canvasWidth;
-        if (!canvasSize)            canvasSize = 400;
-        else if (canvasSize < 325)  canvasSize = 325;
-        else if (canvasSize > 720)  canvasSize = 720;
-        interfaceModel.canvasWidth = canvasSize;
-
-        var canvasHeight = canvasSize*9/16;
-
-        Entry.engine.view_.style.width = canvasSize + 'px';
-        Entry.engine.view_.style.height = canvasHeight + 'px';
-        Entry.engine.view_.style.top = '40px';
-        Entry.stage.canvas.canvas.style.width = canvasSize + 'px';
-        if (canvasSize >= 400) {
-            Entry.engine.view_.removeClass("collapsed");
-        } else {
-            Entry.engine.view_.addClass("collapsed");
-        }
-        Entry.playground.view_.style.left = (canvasSize + 0.5) + 'px';
-
-        Entry.propertyPanel.resize(canvasSize);
-
-        var addButton = Entry.engine.view_.getElementsByClassName('entryAddButtonWorkspace_w')[0];
-        if (addButton) {
-            if (Entry.objectAddable) {
-                addButton.style.top = (canvasHeight + 25) + 'px';
-                addButton.style.width = (canvasSize * 0.7) + 'px';
-            }
-        }
-        var pauseButton = Entry.engine.view_.getElementsByClassName('entryPauseButtonWorkspace_w')[0];
-        if (pauseButton) {
-            if (Entry.objectAddable) {
-                pauseButton.style.top = (canvasHeight + 25) + 'px';
-                pauseButton.style.width = (canvasSize * 0.7) + 'px';
-            }
-        }
-
-        var runButton = Entry.engine.view_.getElementsByClassName('entryRunButtonWorkspace_w')[0];
-        if (runButton) {
-            if (Entry.objectAddable) {
-                /*runButton.style.top = (canvasHeight + 24 + 40 + 4) + 'px';*/
-                runButton.style.top = (canvasHeight + 25) + 'px';
-                runButton.style.left = (canvasSize * 0.7) + 'px';
-                runButton.style.width = (canvasSize * 0.3) + 'px';
-            } else {
-                runButton.style.left = '2px';
-                /*runButton.style.top = (canvasHeight + 24 + 40 + 4) + 'px';*/
-                runButton.style.top = (canvasHeight + 25) + 'px';
-                runButton.style.width = (canvasSize - 4) + 'px';
-            }
-        }
-
-        var stopButton = Entry.engine.view_.getElementsByClassName('entryStopButtonWorkspace_w')[0];
-        if (stopButton) {
-            if (Entry.objectAddable) {
-                /*stopButton.style.top = (canvasHeight + 24 + 40 + 4) + 'px';*/
-                stopButton.style.top = (canvasHeight + 25) + 'px';
-                stopButton.style.left = (canvasSize * 0.7) + 'px';
-                stopButton.style.width = (canvasSize * 0.3) + 'px';
-                //console.log('runButton top,left = ' + runButton.style.top + ',' + runButton.style.left);
-            } else {
-                stopButton.style.left = '2px';
-                /*stopButton.style.top = (canvasHeight + 24 + 40 + 4) + 'px';*/
-                stopButton.style.top = (canvasHeight + 25) + 'px';
-                stopButton.style.width = (canvasSize) + 'px';
-            }
-        }
-
-        var menuWidth = interfaceModel.menuWidth;
-        if (!menuWidth) menuWidth = 264;
-        else if (menuWidth < 244)
-            menuWidth = 244;
-        else if (menuWidth > 400)
-            menuWidth = 400;
-        interfaceModel.menuWidth = menuWidth;
-
-        var blockMenu = mainWorkspace.blockMenu;
-        var adjust = blockMenu.hasCategory() ? -64 : 0;
-
-        $('.blockMenuContainer').css({width: (menuWidth + adjust) + 'px'});
-        $('.blockMenuContainer>svg').css({width: (menuWidth + adjust) + 'px'});
-        blockMenu.setWidth();
-        $('.entryWorkspaceBoard').css({left: (menuWidth) + 'px'});
-        Entry.playground.resizeHandle_.style.left = (menuWidth) + 'px';
-        Entry.playground.variableViewWrapper_.style.width = menuWidth + 'px';
-
-        this.interfaceState = interfaceModel;
-    }
-
-    Entry.windowResized.notify();
-};
-
-/**
- * @return {Number} return up time time stamp
- */
-Entry.getUpTime = function() {
-    return new Date().getTime() - this.startTime;
-};
-
-/**
- * @param {String} activityType
- */
-Entry.addActivity = function(activityType) {
-    if (Entry.stateManager)
-        Entry.stateManager.addActivity(activityType);
-};
-
-Entry.startActivityLogging = function() {
-    if (Entry.reporter)
-        Entry.reporter.start(
-            Entry.projectId,
-            window.user ? window.user._id : null,
-            Entry.startTime);
-};
-
-/**
- * return activity log
- * @return {object}
- */
-Entry.getActivityLog = function() {
-    var log = {};
-    if (Entry.stateManager)
-        log.activityLog = Entry.stateManager.activityLog_;
-    return log;
-};
-//block drag mode for Entry.BlockView
-Entry.DRAG_MODE_NONE = 0;
-Entry.DRAG_MODE_MOUSEDOWN = 1;
-Entry.DRAG_MODE_DRAG = 2;
-
-Entry.cancelObjectEdit = function(e) {
-    var object = Entry.playground.object;
-    if (!object) return;
-    var objectView = object.view_;
-    var target = e.target;
-    var isCurrent = $(objectView).find(target).length !== 0;
-    var tagName = target.tagName.toUpperCase();
-    var type = e.type
-    if (!object.isEditing || (tagName === 'INPUT' && isCurrent || type === 'touchstart'))
-        return;
-    object.editObjectValues(false);
-};
-
-Entry.generateFunctionSchema = function(functionId) {
-    functionId = 'func_' + functionId;
-    if (Entry.block[functionId]) return;
-    var blockSchema = function () {};
-    var blockPrototype = Entry.block.function_general;
-    blockSchema.prototype = blockPrototype;
-    blockSchema = new blockSchema();
-    blockSchema.changeEvent = new Entry.Event();
-    blockSchema.template = Lang.template.function_general;
-
-    Entry.block[functionId] = blockSchema;
-};
-
-Entry.getMainWS = function() {
-    var ret;
-    if (Entry.mainWorkspace)
-        ret = Entry.mainWorkspace
-    else if (Entry.playground && Entry.playground.mainWorkspace)
-        ret = Entry.playground.mainWorkspace
-    return ret;
-};
-
-Entry.getDom = function(query) {
-    if (!query) return this.view_;
-
-    query = JSON.parse(JSON.stringify(query));
-    if (query.length > 1) {
-        var key = query.shift();
-        return this[key].getDom(query);
-    } else {
-    }
-};
 window.Entry = Entry;

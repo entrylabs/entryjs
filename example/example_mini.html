@@ -47,6 +47,9 @@ body {
 <!--language-->
 <script src="../extern/lang/ko.js"></script>
 
+<!--bignumber-->
+<script src="http://play-entry.com/lib/entryjs/extern/util/bignumber.min.js"></script>
+
 <!--socket.io-->
 <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
 
@@ -54,8 +57,6 @@ body {
 <script src="http://play-entry.com/lib/components-webfontloader/webfont.js"></script>
 <script src="../extern/util/static_mini.js"></script>
 <script src="../dist/entry.js"></script>
-<script src="../src/workspace/block_entry.js"></script>
-<script src="../src/workspace/block_entry_mini.js"></script>
 
 <!--main script-->
 <script>
@@ -65,7 +66,6 @@ body {
         var hwCategoryList = EntryStatic.hwCategoryList;
         var initOption = {
             type: 'workspace',
-            libDir: '../../'
         }
         initOption = $.extend(initOption, EntryStatic.initOptions);
         Entry.init(

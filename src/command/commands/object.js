@@ -1,10 +1,7 @@
 /*
  *
  */
-"use strict";
-
-goog.require("Entry.Command");
-goog.require("Entry.STATIC");
+'use strict';
 
 (function(c) {
     var COMMAND_TYPES = Entry.STATIC.COMMAND_TYPES;
@@ -15,13 +12,12 @@ goog.require("Entry.STATIC");
         },
         state: function(objectId) {
             var playground = Entry.playground;
-            if (playground && playground.object)
-                return [playground.object.id];
+            if (playground && playground.object) return [playground.object.id];
         },
         log: function(objectId) {
             return [objectId];
         },
-        undo: "selectObject"
+        undo: 'selectObject',
     };
 
     c[COMMAND_TYPES.objectEditButtonClick] = {
@@ -40,7 +36,7 @@ goog.require("Entry.STATIC");
         skipUndoStack: true,
         recordable: Entry.STATIC.RECORDABLE.SUPPORT,
         dom: ['container', 'objectIndex', '&1', 'editButton'],
-        undo: "selectObject"
+        undo: 'selectObject',
     };
 
     c[COMMAND_TYPES.objectAddPicture] = {
@@ -50,9 +46,7 @@ goog.require("Entry.STATIC");
                 picture.id = hashId;
                 delete c[COMMAND_TYPES.objectAddPicture].hashId;
             }
-            Entry.container
-                .getObject(objectId)
-                .addPicture(picture);
+            Entry.container.getObject(objectId).addPicture(picture);
             Entry.playground.injectPicture();
             Entry.playground.selectPicture(picture);
             Entry.dispatchEvent('dismissModal');
@@ -69,25 +63,27 @@ goog.require("Entry.STATIC");
             o.fileurl = picture.fileurl;
             o.name = picture.name;
             o.scale = picture.scale;
-            return [
-                ['objectId', objectId],
-                ['picture', o],
-            ];
+            return [['objectId', objectId], ['picture', o]];
         },
         dom: ['.btn_confirm_modal'],
         restrict: function(data, domQuery, callback) {
             this.hashId = data.content[2][1].id;
 
-            var tooltip = new Entry.Tooltip([{
-                title: data.tooltip.title,
-                content: data.tooltip.content,
-                target: '.btn_confirm_modal',
-            }], {
-                restrict: true,
-                dimmed: true,
-                render: false,
-                callBack: callback,
-            });
+            var tooltip = new Entry.Tooltip(
+                [
+                    {
+                        title: data.tooltip.title,
+                        content: data.tooltip.content,
+                        target: '.btn_confirm_modal',
+                    },
+                ],
+                {
+                    restrict: true,
+                    dimmed: true,
+                    render: false,
+                    callBack: callback,
+                }
+            );
 
             var event = Entry.getMainWS().widgetUpdateEvent;
 
@@ -103,27 +99,22 @@ goog.require("Entry.STATIC");
         },
         recordable: Entry.STATIC.RECORDABLE.SUPPORT,
         validate: false,
-        undo: "objectRemovePicture"
+        undo: 'objectRemovePicture',
     };
 
     c[COMMAND_TYPES.objectRemovePicture] = {
         do: function(objectId, picture) {
-            Entry.container
-                .getObject(objectId)
-                .removePicture(picture.id);
+            Entry.container.getObject(objectId).removePicture(picture.id);
         },
         state: function(objectId, picture) {
             return [objectId, picture];
         },
         log: function(objectId, picture) {
-            return [
-                ['objectId', objectId],
-                ['pictureId', picture._id],
-            ];
+            return [['objectId', objectId], ['pictureId', picture._id]];
         },
         recordable: Entry.STATIC.RECORDABLE.SUPPORT,
         validate: false,
-        undo: "objectAddPicture"
+        undo: 'objectAddPicture',
     };
 
     c[COMMAND_TYPES.objectAddSound] = {
@@ -133,9 +124,7 @@ goog.require("Entry.STATIC");
                 sound.id = hashId;
                 delete c[COMMAND_TYPES.objectAddSound].hashId;
             }
-            Entry.container
-                .getObject(objectId)
-                .addSound(sound);
+            Entry.container.getObject(objectId).addSound(sound);
             Entry.dispatchEvent('dismissModal');
         },
         state: function(objectId, sound) {
@@ -150,25 +139,27 @@ goog.require("Entry.STATIC");
             o.filename = sound.filename;
             o.fileurl = sound.fileurl;
             o.name = sound.name;
-            return [
-                ['objectId', objectId],
-                ['sound', o],
-            ];
+            return [['objectId', objectId], ['sound', o]];
         },
         dom: ['.btn_confirm_modal'],
         restrict: function(data, domQuery, callback) {
             this.hashId = data.content[2][1].id;
 
-            var tooltip = new Entry.Tooltip([{
-                title: data.tooltip.title,
-                content: data.tooltip.content,
-                target: '.btn_confirm_modal'
-            }], {
-                callBack: callback,
-                dimmed: true,
-                restrict: true,
-                render: false
-            });
+            var tooltip = new Entry.Tooltip(
+                [
+                    {
+                        title: data.tooltip.title,
+                        content: data.tooltip.content,
+                        target: '.btn_confirm_modal',
+                    },
+                ],
+                {
+                    callBack: callback,
+                    dimmed: true,
+                    restrict: true,
+                    render: false,
+                }
+            );
 
             var event = Entry.getMainWS().widgetUpdateEvent;
 
@@ -183,56 +174,44 @@ goog.require("Entry.STATIC");
         },
         recordable: Entry.STATIC.RECORDABLE.SUPPORT,
         validate: false,
-        undo: "objectRemoveSound"
+        undo: 'objectRemoveSound',
     };
 
     c[COMMAND_TYPES.objectRemoveSound] = {
         do: function(objectId, sound) {
-            return Entry.container
-                .getObject(objectId)
-                .removeSound(sound.id);
+            return Entry.container.getObject(objectId).removeSound(sound.id);
         },
         state: function(objectId, sound) {
             return [objectId, sound];
         },
         log: function(objectId, sound) {
-            return [
-                ['objectId', objectId],
-                ['soundId', sound._id],
-            ];
+            return [['objectId', objectId], ['soundId', sound._id]];
         },
         dom: ['.btn_confirm_modal'],
         recordable: Entry.STATIC.RECORDABLE.SUPPORT,
         validate: false,
-        undo: "objectAddSound"
+        undo: 'objectAddSound',
     };
 
     c[COMMAND_TYPES.objectNameEdit] = {
         do: function(objectId, newName) {
-            return Entry.container
-                .getObject(objectId)
-                .setName(newName);
+            return Entry.container.getObject(objectId).setName(newName);
         },
         state: function(objectId, newName) {
-            var object = Entry.container.getObject(objectId)
-            return [
-                objectId, 
-                object.getName(),
-                newName
-            ];
+            var object = Entry.container.getObject(objectId);
+            return [objectId, object.getName(), newName];
         },
         log: function(objectId, newName) {
-            var object = Entry.container.getObject(objectId)
+            var object = Entry.container.getObject(objectId);
             return [
-                [ 'objectId', objectId ],
-                [ 'newName', newName ],
-                [ 'oldName', object.getName() ],
+                ['objectId', objectId],
+                ['newName', newName],
+                ['oldName', object.getName()],
             ];
         },
         dom: [],
         recordable: Entry.STATIC.RECORDABLE.SKIP,
         validate: false,
-        undo: "objectNameEdit"
+        undo: 'objectNameEdit',
     };
-
 })(Entry.Command);

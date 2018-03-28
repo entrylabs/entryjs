@@ -7,6 +7,7 @@
     "globalstrict": true,
     "loopfunc": true,
     "validthis": true,
+    "esversion": 6,
     "expr": true,
     "globals": {
         "goog": true,
@@ -30,6 +31,9 @@
         "LC": true,
         "ActiveXObject": true,
         "CodeMirror": true,
-        "entrylms": true
+        "entrylms": true,
+        "require": true,
+        "module": true,
+        "process": true
     }
 }
