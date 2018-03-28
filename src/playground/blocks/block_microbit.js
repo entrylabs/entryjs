@@ -15,9 +15,6 @@ Entry.Microbit = new class Microbit {
                 type: 'RST',
             },
         };
-        // _set(Entry.hw.sendQueue, `OUTPUT.${Entry.generateHash()}`, {
-        //     type: 'RST',
-        // });
         Entry.hw.update();
         this.blockIds = {};
         this.isExecBlock = false;
@@ -83,6 +80,7 @@ Entry.Microbit = new class Microbit {
         //     OUTPUT: {},
         // });
     }
+    
     afterReceive({ blockId = '' }) {
         if(blockId in this.blockIds) {
             console.log(this.blockIds, blockId);
