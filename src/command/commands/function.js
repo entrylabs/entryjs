@@ -8,7 +8,7 @@ var { createTooltip, returnEmptyArr } = require('../command_util');
 (function(c) {
     var COMMAND_TYPES = Entry.STATIC.COMMAND_TYPES;
 
-    c[COMMAND_TYPES.funcEditStart] = {
+    c[COMMAND_TYPES.funcCreateStart] = {
         do: function(funcId) {
             var commander = Entry.commander;
             if (commander) {
@@ -48,6 +48,8 @@ var { createTooltip, returnEmptyArr } = require('../command_util');
             Entry.commander.setStorage({
                 functionId: data.content[1][1],
             });
+            Entry.playground.changeViewMode("variable");
+            Entry.variableContainer.selectFilter("func");
 
             var { content: contentData, tooltip: { title, content } } = data;
             return createTooltip(title, content, domQuery, callback);
@@ -58,18 +60,47 @@ var { createTooltip, returnEmptyArr } = require('../command_util');
         undo: 'funcEditCancel',
     };
 
+    c[COMMAND_TYPES.funcEditStart] = {
+        do: function(funcId) {
+            Entry.Func.edit(funcId);
+        },
+        state: returnEmptyArr,
+        log: function(funcId) {
+            return [['funcId', funcId]];
+        },
+        validate: false,
+        recordable: Entry.STATIC.RECORDABLE.SUPPORT,
+        dom: ['variableContainer', 'functionAddButton'],
+        undo: 'funcEditCancel',
+    };
+
     c[COMMAND_TYPES.funcEditCancel] = {
         do: function() {
-            Entry.getMainWS().setMode(Entry.Workspace.MODE_BOARD, 'cancelEdit');
+            var WS = Entry.getMainWS();
+            WS.setMode(Entry.Workspace.MODE_BOARD, 'cancelEdit');
         },
         state: returnEmptyArr,
         log: returnEmptyArr,
         recordable: Entry.STATIC.RECORDABLE.SUPPORT,
         dom: ['playground', 'overlayBoard', 'cancelEditButton'],
-        undo: 'funcEditStart',
+        undo: 'funcCreateStart',
     };
 
     c[COMMAND_TYPES.funcCreate] = {
+        do: function() {
+            var WS = Entry.getMainWS();
+            WS.setMode(Entry.Workspace.MODE_BOARD, 'save');
+        },
+        state: function() {
+            return [Entry.Func.targetFunc.id];
+        },
+        log: returnEmptyArr,
+        recordable: Entry.STATIC.RECORDABLE.SUPPORT,
+        dom: ['playground', 'overlayBoard', 'saveButton'],
+        undo: 'funcEditStart',
+    };
+    
+    c[COMMAND_TYPES.funcEdit] = {
         do: function() {
             var WS = Entry.getMainWS();
             WS.setMode(Entry.Workspace.MODE_BOARD, 'save');

@@ -87,8 +87,8 @@ Entry.STATIC = {
         variableContainerAddMessage: 807,
         variableContainerRemoveMessage: 808,
         
-        funcCreate: 1003,
-        funcUpdate: 1004,
+        funcCreate: 1004,
+        funcUpdate: 1005,
     },
 
     COMMAND_TYPES_NOT_ALWAYS: {
@@ -117,8 +117,9 @@ Entry.STATIC = {
         //utility commands
         dismissModal: 900,
         
-        funcEditStart: 1001,
-        funcEditCancel: 1002,
+        funcCreateStart: 1001,
+        funcEditStart: 1002,
+        funcEditCancel: 1003,
     },
 
     RECORDABLE: {
