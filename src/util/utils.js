@@ -211,14 +211,12 @@ Entry.DRAG_MODE_NONE = 0;
 Entry.DRAG_MODE_MOUSEDOWN = 1;
 Entry.DRAG_MODE_DRAG = 2;
 
-Entry.cancelObjectEdit = function(e) {
+Entry.cancelObjectEdit = function({ target, type }) {
     var object = Entry.playground.object;
     if (!object) return;
     var objectView = object.view_;
-    var target = e.target;
     var isCurrent = $(objectView).find(target).length !== 0;
     var tagName = target.tagName.toUpperCase();
-    var type = e.type;
     if (
         !object.isEditing ||
         ((tagName === 'INPUT' && isCurrent) || type === 'touchstart')
@@ -1119,7 +1117,9 @@ Entry.getColourCodes = function() {
  * @return {boolean} return true when target element remove or not
  */
 Entry.removeElement = function(element) {
-    if (element && element.parentNode) element.parentNode.removeChild(element);
+    if (element && element.parentNode) {
+        element.parentNode.removeChild(element);
+    }
 };
 
 /*
@@ -1354,6 +1354,7 @@ Entry.hexStringToBin = function(hexString) {
     return str;
 };
 
+//maybe deprecated
 Entry.findObjsByKey = function(arr, keyName, key) {
     var result = [];
     for (var i = 0; i < arr.length; i++) {
@@ -1806,31 +1807,6 @@ Entry.Utils.createMouseEvent = function(type, event) {
     return e;
 };
 
-Entry.Utils.xmlToJsonData = function(xml) {
-    xml = $.parseXML(xml);
-    var result = [];
-    var categories = xml.childNodes[0].childNodes;
-    for (var i in categories) {
-        var category = categories[i];
-        if (!category.tagName) continue;
-        var data = {
-            category: category.getAttribute('id'),
-            blocks: [],
-        };
-        var blocks = category.childNodes;
-        for (var i in blocks) {
-            var block = blocks[i];
-            if (!block.tagName) continue;
-
-            var type = block.getAttribute('type');
-            if (!type) continue;
-            data.blocks.push(type);
-        }
-        result.push(data);
-    }
-    return result;
-};
-
 Entry.Utils.stopProjectWithToast = function(scope, message, error) {
     var block = scope.block;
     message = message || '런타임 에러 발생';
@@ -2158,35 +2134,25 @@ Entry.Utils.getBlockCategory = (function() {
 })();
 
 Entry.Utils.getUniqObjectsBlocks = function(objects) {
-    objects = objects || Entry.container.objects_;
-    var ret = [];
-
-    objects.forEach(function(o) {
-        var script = o.script;
-        if (!(script instanceof Entry.Code)) script = new Entry.Code(script);
-        var blocks = script.getBlockList();
-        blocks.forEach(function(b) {
-            if (ret.indexOf(b.type) < 0) ret.push(b.type);
-        });
-    });
-
-    return ret;
+    var _typePicker = _.partial(_.result, _, 'type');
+    return _.uniq(
+        (objects || Entry.container.objects_).reduce((acc, { script }) => {
+            if (!(script instanceof Entry.Code)) {
+                script = new Entry.Code(script);
+            }
+            return [...acc, ...script.getBlockList().map(_typePicker)];
+        }, [])
+    );
 };
 
 Entry.Utils.getObjectsBlocks = function(objects) {
-    objects = objects || Entry.container.objects_;
-    var ret = [];
-
-    objects.forEach(function(o) {
-        var script = o.script;
-        if (!(script instanceof Entry.Code)) script = new Entry.Code(script);
-        var blocks = script.getBlockList(true);
-        blocks.forEach(function(b) {
-            ret.push(b.type);
-        });
-    });
-
-    return ret;
+    var _typePicker = _.partial(_.result, _, 'type');
+    return (objects || Entry.container.objects_).reduce((acc, { script }) => {
+        if (!(script instanceof Entry.Code)) {
+            script = new Entry.Code(script);
+        }
+        return [...acc, ...script.getBlockList(true).map(_typePicker)];
+    }, []);
 };
 
 Entry.Utils.makeCategoryDataByBlocks = function(blockArr) {
@@ -2370,8 +2336,8 @@ Entry.Utils.copy = function(target) {
 
 //helper function for development and debug
 Entry.Utils.getAllObjectsBlockList = function() {
-    return Entry.container.objects_.reduce(function(prev, o) {
-        return prev.concat(o.script.getBlockList());
+    return Entry.container.objects_.reduce(function(prev, {script}) {
+        return prev.concat(script.getBlockList());
     }, []);
 };
 
@@ -2475,4 +2441,52 @@ Entry.Utils.bindBlockViewHoverEvent = function(board, dom) {
             blockView: e.type === 'mouseenter' ? blockView : undefined,
         });
     });
+};
+
+Entry.Utils.isDomActive = function(dom) {
+    if (!dom) {
+        return false;
+    }
+
+    return document.activeElement === dom;
+};
+
+Entry.Utils.when = function(predicate, fn) {
+    return function(...args) {
+        if (predicate.apply(this, args)) {
+            return fn.apply(this, args);
+        }
+    };
+};
+
+Entry.Utils.whenWithTimeout = function(predicate, fn, time = 200) {
+    return function(...args) {
+        if (this._timer) {
+            clearTimeout(this._timer);
+            delete this._timer;
+        }
+        this._timer = setTimeout(() => {
+            if (predicate.apply(this, args)) {
+                return fn.apply(this, args);
+            }
+        }, time);
+    };
+};
+
+Entry.Utils.setBlurredTimer = function(func) {
+    return Entry.Utils.whenWithTimeout(function() {
+        if (this._focused) {
+            this._focused = false;
+            return true;
+        }
+        return false;
+    }, func);
+};
+
+Entry.Utils.setFocused = function() {
+    if (this._timer) {
+        clearTimeout(this._timer);
+        delete this._timer;
+    }
+    this._focused = true;
 };

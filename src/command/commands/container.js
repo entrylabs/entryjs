@@ -48,24 +48,27 @@ var { createTooltip, returnEmptyArr } = require('../command_util');
 
     c[COMMAND_TYPES.removeObject] = {
         do: function(objectId) {
-            var object = Entry.container.getObject(objectId);
+            var { name } = Entry.container.getObject(objectId);
             Entry.container.removeObject(objectId);
 
             Entry.toast.success(
                 Lang.Workspace.remove_object,
-                object.name + ' ' + Lang.Workspace.remove_object_msg
+                name + ' ' + Lang.Workspace.remove_object_msg
             );
         },
         state: function(objectId) {
-            var objectModel = Entry.container.getObject(objectId);
-            return [objectModel.toJSON(), Entry.container.getObjectIndex(objectId)];
+            var object = Entry.container.getObject(objectId);
+            return [
+                object.toJSON(),
+                object.getIndex(),
+            ];
         },
         log: function(objectId) {
             return [['objectId', objectId]];
         },
         undo: 'addObject',
         recordable: Entry.STATIC.RECORDABLE.SUPPORT,
-        dom: ['container', 'removeButton', '&0', 'removeButton'],
+        dom: ['container', 'objectId', '&0', 'removeButton'],
     };
 
     c[COMMAND_TYPES.addObject] = {
@@ -87,8 +90,10 @@ var { createTooltip, returnEmptyArr } = require('../command_util');
             return [objectModel.id, index];
         },
         log: function(objectModel, index) {
-            var spriteId = objectModel.sprite._id;
-            objectModel = new Entry.EntryObject(objectModel).toJSON();
+            var sprite = objectModel.sprite;
+            var spriteId = sprite._id;
+            //$$hashKey can't saved for db
+            objectModel.sprite = _.omit(sprite, '$$hashKey');
             return [
                 ['objectModel', objectModel],
                 ['objectIndex', index],

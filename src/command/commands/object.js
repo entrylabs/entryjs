@@ -3,6 +3,8 @@
  */
 'use strict';
 
+const { returnEmptyArr, createTooltip } = require('../command_util');
+
 (function(c) {
     var COMMAND_TYPES = Entry.STATIC.COMMAND_TYPES;
 
@@ -195,23 +197,198 @@
 
     c[COMMAND_TYPES.objectNameEdit] = {
         do: function(objectId, newName) {
-            return Entry.container.getObject(objectId).setName(newName);
+            var object = Entry.container.getObject(objectId);
+            object.setName(newName);
+            object.setInputBlurred('nameInput');
+            Entry.playground.reloadPlayground();
         },
         state: function(objectId, newName) {
             var object = Entry.container.getObject(objectId);
-            return [objectId, object.getName(), newName];
+            return [objectId, object.getName()];
         },
         log: function(objectId, newName) {
             var object = Entry.container.getObject(objectId);
             return [
                 ['objectId', objectId],
                 ['newName', newName],
-                ['oldName', object.getName()],
             ];
         },
-        dom: [],
-        recordable: Entry.STATIC.RECORDABLE.SKIP,
-        validate: false,
+        dom: ['container', 'objectId', '&0', 'nameInput'],
+        restrict: _inputRestrictor,
+        recordable: Entry.STATIC.RECORDABLE.SUPPORT,
         undo: 'objectNameEdit',
     };
+
+    c[COMMAND_TYPES.objectUpdatePosX] = {
+        do: function(objectId, newX = 0) {
+            var object = Entry.container.getObject(objectId);
+            object.entity.setX(Number(newX));
+            object.updateCoordinateView();
+            object.setInputBlurred('xInput');
+            Entry.stage.updateObject();
+        },
+        state: function(objectId, newX) {
+            var { entity } = Entry.container.getObject(objectId);
+            return [objectId, entity.getX()];
+        },
+        log: function(objectId, newX) {
+            var { entity } = Entry.container.getObject(objectId);
+            return [
+                ['objectId', objectId],
+                ['newX', newX],
+            ];
+        },
+        dom: ['container', 'objectId', '&0', 'xInput'],
+        recordable: Entry.STATIC.RECORDABLE.SUPPORT,
+        restrict: _inputRestrictor,
+        undo: 'objectUpdatePosX',
+    };
+
+    c[COMMAND_TYPES.objectUpdatePosY] = {
+        do: function(objectId, newY = 0) {
+            var object = Entry.container.getObject(objectId);
+            object.entity.setY(Number(newY));
+            object.updateCoordinateView();
+            object.setInputBlurred('yInput');
+            Entry.stage.updateObject();
+        },
+        state: function(objectId, newY) {
+            var { entity } = Entry.container.getObject(objectId);
+            return [objectId, entity.getY()];
+        },
+        log: function(objectId, newY) {
+            var { entity } = Entry.container.getObject(objectId);
+            return [
+                ['objectId', objectId],
+                ['newY', newY],
+            ];
+        },
+        dom: ['container', 'objectId', '&0', 'yInput'],
+        recordable: Entry.STATIC.RECORDABLE.SUPPORT,
+        restrict: _inputRestrictor,
+        undo: 'objectUpdatePosY',
+    };
+
+    c[COMMAND_TYPES.objectUpdateSize] = {
+        do: function(objectId, newSize = 0) {
+            var object = Entry.container.getObject(objectId);
+            object.entity.setSize(Number(newSize));
+            object.updateCoordinateView();
+            object.setInputBlurred('sizeInput');
+            Entry.stage.updateObject();
+        },
+        state: function(objectId, newSize) {
+            var { entity } = Entry.container.getObject(objectId);
+            return [objectId, entity.getSize()];
+        },
+        log: function(objectId, newSize) {
+            var { entity } = Entry.container.getObject(objectId);
+            return [
+                ['objectId', objectId],
+                ['newSize', newSize],
+            ];
+        },
+        dom: ['container', 'objectId', '&0', 'sizeInput'],
+        restrict: _inputRestrictor,
+        recordable: Entry.STATIC.RECORDABLE.SUPPORT,
+        undo: 'objectUpdateSize',
+    };
+
+    c[COMMAND_TYPES.objectUpdateRotationValue] = {
+        do: function(objectId, newValue = 0) {
+            var object = Entry.container.getObject(objectId);
+            object.entity.setRotation(Number(newValue));
+            object.updateCoordinateView();
+            object.setInputBlurred('rotationInput');
+            Entry.stage.updateObject();
+        },
+        state: function(objectId, newValue) {
+            var { entity } = Entry.container.getObject(objectId);
+            return [objectId, entity.getRotation()];
+        },
+        log: function(objectId, newValue) {
+            var { entity } = Entry.container.getObject(objectId);
+            return [
+                ['objectId', objectId],
+                ['newRotationValue', newValue],
+            ];
+        },
+        dom: ['container', 'objectId', '&0', 'rotationInput'],
+        restrict: _inputRestrictor,
+        recordable: Entry.STATIC.RECORDABLE.SUPPORT,
+        undo: 'objectUpdateRotationValue',
+    };
+
+    c[COMMAND_TYPES.objectUpdateDirectionValue] = {
+        do: function(objectId, newValue = 0) {
+            var object = Entry.container.getObject(objectId);
+            object.entity.setDirection(Number(newValue));
+            object.updateCoordinateView();
+            object.setInputBlurred('directionInput');
+            Entry.stage.updateObject();
+        },
+        state: function(objectId, newValue) {
+            var { entity } = Entry.container.getObject(objectId);
+            return [objectId, entity.getDirection()];
+        },
+        log: function(objectId, newValue) {
+            var { entity } = Entry.container.getObject(objectId);
+            return [
+                ['objectId', objectId],
+                ['newDirectionValue', newValue],
+            ];
+        },
+        dom: ['container', 'objectId', '&0', 'directionInput'],
+        recordable: Entry.STATIC.RECORDABLE.SUPPORT,
+        restrict: _inputRestrictor,
+        undo: 'objectUpdateDirectionValue',
+    };
+
+    c[COMMAND_TYPES.objectUpdateRotateMethod] = {
+        do: function(objectId, newMethod, rotation) {
+            var object = Entry.container.getObject(objectId);
+            object.initRotateValue(newMethod);
+            object.setRotateMethod(newMethod);
+            if (rotation !== undefined) {
+                object.entity.setRotation(rotation);
+            }
+            Entry.stage.updateObject();
+        },
+        state: function(objectId, newMethod) {
+            var { entity, rotateMethod } = Entry.container.getObject(objectId);
+            return [objectId, rotateMethod, entity.getRotation()];
+        },
+        log: function(objectId, newValue) {
+            var { entity } = Entry.container.getObject(objectId);
+            return [
+                ['objectId', objectId],
+                ['newDirectionValue', newValue],
+            ];
+        },
+        dom: ['container', 'objectId', '&0', 'rotationMethod', '&1'],
+        recordable: Entry.STATIC.RECORDABLE.SUPPORT,
+        undo: 'objectUpdateRotateMethod',
+    };
+
+    function _inputRestrictor({ tooltip, content }, domQuery, callback) {
+        var { title: tooltipTitle, content: tooltipContent } = tooltip;
+        _activateEdit(content[1][1], domQuery, callback);
+        return createTooltip(tooltipTitle, tooltipContent, domQuery, callback);
+    }
+
+    function _activateEdit(objectId, domQuery, callback) {
+        var object = Entry.container.getObject(objectId);
+
+        if (!object.isEditing) {
+            object.editObjectValues(true);
+        }
+
+        if (!_.isEmpty(domQuery)) {
+            domQuery = Entry.getDom(domQuery);
+            if (domQuery && !Entry.Utils.isDomActive(domQuery)) {
+                domQuery.focus();
+                callback();
+            }
+        }
+    }
 })(Entry.Command);

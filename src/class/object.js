@@ -347,9 +347,8 @@ Entry.EntryObject = function(model) {
         var playground = Entry.playground;
 
         var picture = this.getPicture(pictureId);
-        var index = pictures.indexOf(picture);
 
-        pictures.splice(index, 1);
+        pictures.splice(pictures.indexOf(picture), 1);
         if (picture === this.selectedPicture)
             playground.selectPicture(pictures[0]);
 
@@ -371,6 +370,7 @@ Entry.EntryObject = function(model) {
         //2. pictureName
         //3. index
         if (!value) return this.selectedPicture;
+
         value = (value + '').trim();
         var pictures = this.pictures,
             len = pictures.length;
@@ -395,8 +395,7 @@ Entry.EntryObject = function(model) {
     };
 
     p.getPictureIndex = function(value) {
-        var picture = this.getPicture(value);
-        return this.pictures.indexOf(picture);
+        return this.pictures.indexOf(this.getPicture(value));
     };
 
     p.setPicture = function(picture) {
@@ -492,10 +491,8 @@ Entry.EntryObject = function(model) {
      * rotate method setter
      * @param {string} rotateMethod
      */
-    p.setRotateMethod = function(rotateMethod) {
+    p.setRotateMethod = function(rotateMethod = 'free') {
         /** @type {string} */
-        rotateMethod = rotateMethod || 'free';
-
         this.rotateMethod = rotateMethod;
         this.updateRotateMethodView();
 
@@ -509,7 +506,9 @@ Entry.EntryObject = function(model) {
     };
 
     p.initRotateValue = function(rotateMethod) {
-        if (this.rotateMethod === rotateMethod) return;
+        if (this.rotateMethod === rotateMethod) {
+            return;
+        }
 
         var entity = this.entity;
         var direction = entity.direction;
@@ -519,7 +518,9 @@ Entry.EntryObject = function(model) {
     };
 
     p.updateRotateMethodView = function() {
-        if (!this.rotateModeAView_) return;
+        if (!this.rotateModeAView_) {
+            return;
+        }
 
         var SELECTED = 'selected';
 
@@ -600,28 +601,6 @@ Entry.EntryObject = function(model) {
     };
 
     /**
-     * Splitter is resizing playground handle.
-     * This add mouse move and mouse up event to document.
-     * @param {!Element} splitter
-     */
-    p.initializeSplitter = function(splitter) {
-        var container = Entry.container;
-        splitter.onmousedown = function(e) {
-            container.disableSort();
-            container.splitterEnable = true;
-        };
-        document.addEventListener('mousemove', function(e) {
-            if (container.splitterEnable) {
-                Entry.resizeElement({ canvasWidth: e.x || e.clientX });
-            }
-        });
-        document.addEventListener('mouseup', function(e) {
-            container.splitterEnable = false;
-            container.enableSort();
-        });
-    };
-
-    /**
      * return true when object is selected
      * @return {Boolean}
      */
@@ -661,7 +640,7 @@ Entry.EntryObject = function(model) {
      */
     p.destroy = function() {
         this.entity && this.entity.destroy();
-        this.view_ && Entry.removeElement(this.view_);
+        Entry.removeElement(this.view_);
     };
 
     /**
@@ -695,27 +674,16 @@ Entry.EntryObject = function(model) {
         return null;
     };
 
-    p.addCloneVariables = function(object, entity, variables, lists) {
-        entity.variables = [];
-        entity.lists = [];
-        var keyName = 'object_';
-        if (!variables)
-            variables = Entry.findObjsByKey(
-                Entry.variableContainer.variables_,
-                keyName,
-                object.id
-            );
-        if (!lists)
-            lists = Entry.findObjsByKey(
-                Entry.variableContainer.lists_,
-                keyName,
-                object.id
-            );
+    p.addCloneVariables = function({ id }, entity, variables, lists) {
+        var _whereFunc = _.partial(_.where, _, { object_: id });
+        var _cloneFunc = (v) => v.clone();
+        var { variables_, lists_ } = Entry.variableContainer;
 
-        for (var i = 0; i < variables.length; i++)
-            entity.variables.push(variables[i].clone());
-        for (var i = 0; i < lists.length; i++)
-            entity.lists.push(lists[i].clone());
+        entity.variables = (variables || _whereFunc(variables_)).map(
+            _cloneFunc
+        );
+
+        entity.lists = (lists || _whereFunc(lists_)).map(_cloneFunc);
     };
 
     p.getLock = function() {
@@ -749,7 +717,7 @@ Entry.EntryObject = function(model) {
         this.isEditing = false;
     };
 
-    p.editObjectValues = function(click) {
+    p.editObjectValues = function(activate) {
         var inputs;
         if (this.getLock()) {
             inputs = [this.nameView_];
@@ -764,7 +732,7 @@ Entry.EntryObject = function(model) {
         }
 
         var nameView_ = this.nameView_;
-        if (click && !this.isEditing) {
+        if (activate && !this.isEditing) {
             var $nameView_ = $(nameView_);
 
             $(inputs).removeClass('selectedNotEditingObject');
@@ -778,6 +746,7 @@ Entry.EntryObject = function(model) {
             }
             this.isEditing = true;
         } else {
+            // debugger;
             inputs.forEach(function(input) {
                 input.blur(true);
             });
@@ -792,15 +761,15 @@ Entry.EntryObject = function(model) {
     p.blurAllInput = function() {
         $('.selectedEditingObject').removeClass('selectedEditingObject');
 
-        var coorView = this.coordinateView_;
+        var { xInput_, yInput_, sizeInput_ } = this.coordinateView_;
 
         [
             this.nameView_,
-            coorView.xInput_,
-            coorView.yInput_,
+            xInput_,
+            yInput_,
             this.rotateInput_,
             this.directionInput_,
-            coorView.sizeInput_,
+            sizeInput_,
         ].forEach(function(input) {
             input.addClass('selectedNotEditingObject');
             input.setAttribute('readonly', true);
@@ -890,10 +859,10 @@ Entry.EntryObject = function(model) {
             },
         ];
 
-        e = Entry.Utils.convertMouseEvent(e);
+        const { clientX: x, clientY: y } = Entry.Utils.convertMouseEvent(e);
         Entry.ContextMenu.show(options, 'workspace-contextmenu', {
-            x: e.clientX,
-            y: e.clientY,
+            x,
+            y,
         });
     };
 
@@ -918,34 +887,71 @@ Entry.EntryObject = function(model) {
     };
 
     p.getDom = function(query) {
-        if (!query || query.length === 0) return this.view_;
+        if (_.isEmpty(query)) {
+            return this.view_;
+        }
 
-        if (query.length >= 1) {
-            switch (query.shift()) {
-                case 'editButton':
-                    return this.editView_;
-                case 'removeButton':
-                    console.log('removeButton');
-                    return this.deleteView_;
-            }
-        } else {
+        switch (query.shift()) {
+            case 'editButton':
+                return this.editView_;
+            case 'nameInput':
+                return this.nameView_;
+            case 'removeButton':
+                return this.deleteView_;
+            case 'xInput':
+                return this.coordinateView_.xInput_;
+            case 'yInput':
+                return this.coordinateView_.yInput_;
+            case 'sizeInput':
+                return this.coordinateView_.sizeInput_;
+            case 'directionInput':
+                return this.directionInput_;
+            case 'rotationInput':
+                return this.rotateInput_;
+            case 'rotationMethod':
+                return this._getRotateView(query.shift());
         }
     };
 
+    p.setInputBlurred = function(...target) {
+        target = this.getDom(target);
+        if (!target) {
+            return;
+        }
+            target._focused = false;
+    };
+
     function generateWorkspaceView() {
+        //utilities
+        var _whenEnter = Entry.Utils.when(
+            function(event = {}) {
+                return event.keyCode === 13;
+            },
+            () => {
+                this.editObjectValues(false);
+            }
+        );
+
+        var _setFocused = Entry.Utils.setFocused;
+        var _setBlurredTimer = Entry.Utils.setBlurredTimer;
+
         var that = this;
         var objectId = this.id;
-
-        var objectView = Entry.createElement('li', objectId);
+        var objectView = Entry.createElement('li', objectId).addClass(
+            'entryContainerListElementWorkspace'
+        );
         var fragment = document.createDocumentFragment('div');
         fragment.appendChild(objectView);
-        objectView.addClass('entryContainerListElementWorkspace');
         // generate context menu
         Entry.Utils.disableContextmenu(objectView);
         var longPressTimer = null;
 
         $(objectView).bind('mousedown touchstart', function(e) {
             if (Entry.container.getObject(objectId)) {
+                var currentObject = Entry.playground.object || {};
+                if (currentObject === that && currentObject.isEditing) {
+                    return;
+                }
                 Entry.do('containerSelectObject', objectId);
             }
             var doc = $(document);
@@ -1003,14 +1009,16 @@ Entry.EntryObject = function(model) {
         /** @type {!Element} */
         this.view_ = objectView;
 
-        var objectInfoView = Entry.createElement('ul');
-        objectInfoView.addClass('objectInfoView');
+        var objectInfoView = Entry.createElement('ul').addClass(
+            'objectInfoView'
+        );
         if (!Entry.objectEditable) {
             objectInfoView.addClass('entryHide');
         }
 
-        var objectInfo_visible = Entry.createElement('li');
-        objectInfo_visible.addClass('objectInfo_visible');
+        var objectInfo_visible = Entry.createElement('li').addClass(
+            'objectInfo_visible'
+        );
         if (!this.entity.getVisible())
             objectInfo_visible.addClass('objectInfo_unvisible');
 
@@ -1023,16 +1031,19 @@ Entry.EntryObject = function(model) {
             else this.addClass('objectInfo_unvisible');
         });
 
-        var objectInfo_lock = Entry.createElement('li');
-        objectInfo_lock.addClass('objectInfo_unlock');
-        if (this.getLock()) objectInfo_lock.addClass('objectInfo_lock');
+        var objectInfo_lock = Entry.createElement('li').addClass(
+            'objectInfo_unlock'
+        );
+        if (this.getLock()) {
+            objectInfo_lock.addClass('objectInfo_lock');
+        }
 
         objectInfo_lock.bindOnClick(function(e) {
             if (Entry.engine.isState('run')) return;
-            var isLocked = that.setLock(!that.getLock());
 
-            if (isLocked) this.addClass('objectInfo_lock');
-            else this.removeClass('objectInfo_lock');
+            if (that.setLock(!that.getLock())) {
+                this.addClass('objectInfo_lock');
+            } else this.removeClass('objectInfo_lock');
 
             that.updateInputViews(that.getLock());
         });
@@ -1040,47 +1051,42 @@ Entry.EntryObject = function(model) {
         objectInfoView.appendChild(objectInfo_lock);
         this.view_.appendChild(objectInfoView);
 
-        var thumbnailView = Entry.createElement('div');
-        thumbnailView.addClass('entryObjectThumbnailWorkspace');
+        var thumbnailView = Entry.createElement('div').addClass(
+            'entryObjectThumbnailWorkspace'
+        );
         this.view_.appendChild(thumbnailView);
         this.thumbnailView_ = thumbnailView;
 
-        var wrapperView = Entry.createElement('div');
-        wrapperView.addClass('entryObjectWrapperWorkspace');
+        var wrapperView = Entry.createElement('div').addClass(
+            'entryObjectWrapperWorkspace'
+        );
         this.view_.appendChild(wrapperView);
 
-        var nameView = Entry.createElement('input');
+        var nameView = Entry.createElement('input').addClass(
+            'entryObjectNameWorkspace'
+        );
         nameView.bindOnClick(function(e) {
             e.preventDefault();
             if (this.readOnly) return;
             this.focus();
             this.select();
         });
-        nameView.addClass('entryObjectNameWorkspace');
 
         wrapperView.appendChild(nameView);
         this.nameView_ = nameView;
         nameView.setAttribute('readonly', true);
 
-        this.nameView_.onblur = function(e) {
-            var newValue = this.value;
-
-            if (that.getName() === newValue) return;
-
-            Entry.do('objectNameEdit', that.id, newValue);
-            Entry.playground.reloadPlayground();
-        };
-
-        this.nameView_.onkeypress = function(e) {
-            if (e.keyCode == 13) {
-                that.editObjectValues(false);
-            }
-        };
+        this.nameView_.onkeypress = _whenEnter;
+        this.nameView_.onfocus = _setFocused;
+        this.nameView_.onblur = _setBlurredTimer(function() {
+            Entry.do('objectNameEdit', that.id, this.value);
+        });
 
         this.nameView_.value = this.name;
 
-        var editView = Entry.createElement('div');
-        editView.addClass('entryObjectEditWorkspace');
+        var editView = Entry.createElement('div').addClass(
+            'entryObjectEditWorkspace'
+        );
         this.editView_ = editView;
         this.view_.appendChild(editView);
 
@@ -1095,51 +1101,52 @@ Entry.EntryObject = function(model) {
         });
 
         if (Entry.objectEditable && Entry.objectDeletable) {
-            var deleteView = Entry.createElement('div');
-            deleteView.addClass('entryObjectDeleteWorkspace');
+            var deleteView = Entry.createElement('div').addClass(
+                'entryObjectDeleteWorkspace'
+            );
             this.deleteView_ = deleteView;
             this.view_.appendChild(deleteView);
             deleteView.bindOnClick(function(e) {
                 if (Entry.engine.isState('run')) return;
                 var { id } = that;
-
-                Entry.do(
-                    'removeObject',
-                    id,
-                    Entry.container.getObjectIndex(id)
-                );
+                Entry.do('removeObject', id);
             });
         }
 
-        var informationView = Entry.createElement('div');
-        informationView.addClass('entryObjectInformationWorkspace');
+        var informationView = Entry.createElement('div').addClass(
+            'entryObjectInformationWorkspace'
+        );
         this.isInformationToggle = false;
         wrapperView.appendChild(informationView);
         this.informationView_ = informationView;
 
-        var rotationWrapperView = Entry.createElement('div');
-        rotationWrapperView.addClass('entryObjectRotationWrapperWorkspace');
+        var rotationWrapperView = Entry.createElement('div').addClass(
+            'entryObjectRotationWrapperWorkspace'
+        );
         this.view_.appendChild(rotationWrapperView);
 
-        var coordinateView = Entry.createElement('span');
-        coordinateView.addClass('entryObjectCoordinateWorkspace');
+        var coordinateView = Entry.createElement('span').addClass(
+            'entryObjectCoordinateWorkspace'
+        );
         rotationWrapperView.appendChild(coordinateView);
-        var xCoordi = Entry.createElement('span');
-        xCoordi.addClass('entryObjectCoordinateSpanWorkspace');
+        var xCoordi = Entry.createElement('span').addClass(
+            'entryObjectCoordinateSpanWorkspace'
+        );
         xCoordi.innerHTML = 'X:';
-        var xInput = Entry.createElement('input');
-        xInput.addClass('entryObjectCoordinateInputWorkspace');
+        var xInput = Entry.createElement('input').addClass(
+            'entryObjectCoordinateInputWorkspace'
+        );
         xInput.setAttribute('readonly', true);
         xInput.bindOnClick(function(e) {
             e.stopPropagation();
             this.select();
         });
 
-        var yCoordi = Entry.createElement('span');
-        yCoordi.addClass('entryObjectCoordinateSpanWorkspace');
+        var yCoordi = Entry.createElement('span').addClass(
+            'entryObjectCoordinateSpanWorkspace'
+        );
         yCoordi.innerHTML = 'Y:';
-        var yInput = Entry.createElement('input');
-        yInput.addClass(
+        var yInput = Entry.createElement('input').addClass(
             'entryObjectCoordinateInputWorkspace entryObjectCoordinateInputWorkspace_right'
         );
         yInput.bindOnClick(function(e) {
@@ -1147,11 +1154,11 @@ Entry.EntryObject = function(model) {
             this.select();
         });
         yInput.setAttribute('readonly', true);
-        var sizeSpan = Entry.createElement('span');
-        sizeSpan.addClass('entryObjectCoordinateSizeWorkspace');
+        var sizeSpan = Entry.createElement('span').addClass(
+            'entryObjectCoordinateSizeWorkspace'
+        );
         sizeSpan.innerHTML = Lang.Workspace.Size + ' : ';
-        var sizeInput = Entry.createElement('input');
-        sizeInput.addClass(
+        var sizeInput = Entry.createElement('input').addClass(
             'entryObjectCoordinateInputWorkspace',
             'entryObjectCoordinateInputWorkspace_size'
         );
@@ -1171,50 +1178,42 @@ Entry.EntryObject = function(model) {
         coordinateView.sizeInput_ = sizeInput;
         this.coordinateView_ = coordinateView;
 
-        xInput.onkeypress = function(e) {
-            if (e.keyCode == 13) {
-                that.editObjectValues(false);
-            }
-        };
+        xInput.onkeypress = _whenEnter;
 
-        xInput.onblur = function(bool) {
-            if (Entry.Utils.isNumber(xInput.value)) {
-                that.entity.setX(Number(xInput.value));
-            }
-            that.updateCoordinateView();
-            Entry.stage.updateObject();
-        };
+        xInput.onfocus = _setFocused;
 
-        yInput.onkeypress = function(e) {
-            if (e.keyCode == 13) {
-                that.editObjectValues(false);
-            }
-        };
+        xInput.onblur = _setBlurredTimer(function() {
+            var value = this.value;
+            Entry.do(
+                'objectUpdatePosX',
+                that.id,
+                Entry.Utils.isNumber(value) ? value : that.entity.getX()
+            );
+        });
 
-        yInput.onblur = function(bool) {
-            if (Entry.Utils.isNumber(yInput.value)) {
-                that.entity.setY(Number(yInput.value));
-            }
-            that.updateCoordinateView();
-            Entry.stage.updateObject();
-        };
+        yInput.onkeypress = _whenEnter;
+        yInput.onfocus = _setFocused;
+        yInput.onblur = _setBlurredTimer(function() {
+            var value = this.value;
+            Entry.do(
+                'objectUpdatePosY',
+                that.id,
+                Entry.Utils.isNumber(value) ? value : that.entity.getY()
+            );
+        });
 
-        sizeInput.onkeypress = function(e) {
-            if (e.keyCode == 13) {
-                that.editObjectValues(false);
-            }
-        };
+        sizeInput.onkeypress = _whenEnter;
+        sizeInput.onfocus = _setFocused;
+        sizeInput.onblur = _setBlurredTimer(function() {
+            var value = this.value;
+            Entry.do(
+                'objectUpdateSize',
+                that.id,
+                Entry.Utils.isNumber(value) ? value : that.entity.getSize()
+            );
+        });
 
-        sizeInput.onblur = function(bool) {
-            if (Entry.Utils.isNumber(sizeInput.value)) {
-                that.entity.setSize(Number(sizeInput.value));
-            }
-            that.updateCoordinateView();
-            Entry.stage.updateObject();
-        };
-
-        var rotateLabelWrapperView = Entry.createElement('div');
-        rotateLabelWrapperView.addClass(
+        var rotateLabelWrapperView = Entry.createElement('div').addClass(
             'entryObjectRotateLabelWrapperWorkspace'
         );
         this.view_.appendChild(rotateLabelWrapperView);
@@ -1251,90 +1250,84 @@ Entry.EntryObject = function(model) {
         rotateLabelWrapperView.appendChild(directionInput);
         rotateLabelWrapperView.rotateInput_ = rotateInput;
         rotateLabelWrapperView.directionInput_ = directionInput;
-        rotateInput.onkeypress = function(e) {
-            if (e.keyCode == 13) {
-                that.editObjectValues(false);
-            }
-        };
-        rotateInput.onblur = function(bool) {
-            var value = rotateInput.value;
-            if (value.indexOf('˚') != -1)
-                value = value.substring(0, value.indexOf('˚'));
-            if (Entry.Utils.isNumber(value)) {
-                that.entity.setRotation(Number(value));
-            }
-            that.updateRotationView();
-            Entry.stage.updateObject();
-        };
 
-        directionInput.onkeypress = function(e) {
-            if (e.keyCode == 13) {
-                that.editObjectValues(false);
+        rotateInput.onkeypress = _whenEnter;
+        rotateInput.onfocus = _setFocused;
+        rotateInput.onblur = _setBlurredTimer(function() {
+            var value = this.value;
+            var idx = value.indexOf('˚');
+            if (~idx) {
+                value = value.substring(0, idx);
             }
-        };
 
-        directionInput.onblur = function(bool) {
-            var value = directionInput.value;
-            if (value.indexOf('˚') != -1)
-                value = value.substring(0, value.indexOf('˚'));
-            if (Entry.Utils.isNumber(value))
-                that.entity.setDirection(Number(value));
-            that.updateRotationView();
-            Entry.stage.updateObject();
-        };
+            Entry.do(
+                'objectUpdateRotationValue',
+                that.id,
+                Entry.Utils.isNumber(value) ? value : that.entity.getRotation()
+            );
+        });
 
-        var rotationMethodWrapper = Entry.createElement('div');
-        rotationMethodWrapper.addClass('rotationMethodWrapper');
+        directionInput.onkeypress = _whenEnter;
+        directionInput.onfocus = _setFocused;
+        directionInput.onblur = _setBlurredTimer(function() {
+            var value = this.value;
+            var idx = value.indexOf('˚');
+            if (~idx) {
+                value = value.substring(0, idx);
+            }
+
+            Entry.do(
+                'objectUpdateDirectionValue',
+                that.id,
+                Entry.Utils.isNumber(value) ? value : that.entity.getDirection()
+            );
+        });
+
+        var rotationMethodWrapper = Entry.createElement('div').addClass(
+            'rotationMethodWrapper'
+        );
         rotationWrapperView.appendChild(rotationMethodWrapper);
         this.rotationMethodWrapper_ = rotationMethodWrapper;
 
-        var rotateMethodLabelView = Entry.createElement('span');
-        rotateMethodLabelView.addClass('entryObjectRotateMethodLabelWorkspace');
+        var rotateMethodLabelView = Entry.createElement('span').addClass(
+            'entryObjectRotateMethodLabelWorkspace'
+        );
         rotationMethodWrapper.appendChild(rotateMethodLabelView);
         rotateMethodLabelView.innerHTML = Lang.Workspace.rotate_method + ' : ';
 
-        var rotateModeAView = Entry.createElement('div');
-        rotateModeAView.addClass(
+        var rotateModeAView = Entry.createElement('div').addClass(
             'entryObjectRotateModeWorkspace entryObjectRotateModeAWorkspace'
         );
         this.rotateModeAView_ = rotateModeAView;
         rotationMethodWrapper.appendChild(rotateModeAView);
-        rotateModeAView.bindOnClick(function(e) {
-            if (Entry.engine.isState('run') || that.getLock()) {
-                return;
-            }
+        rotationMethodWrapper.appendChild(rotateModeAView);
+        rotateModeAView.bindOnClick(
+            _whenRotateEditable(function() {
+                Entry.do('objectUpdateRotateMethod', that.id, 'free');
+            }, this)
+        );
 
-            that.initRotateValue('free');
-            that.setRotateMethod('free');
-        });
-
-        var rotateModeBView = Entry.createElement('div');
-        rotateModeBView.addClass(
+        var rotateModeBView = Entry.createElement('div').addClass(
             'entryObjectRotateModeWorkspace entryObjectRotateModeBWorkspace'
         );
         this.rotateModeBView_ = rotateModeBView;
         rotationMethodWrapper.appendChild(rotateModeBView);
-        rotateModeBView.bindOnClick(function(e) {
-            if (Entry.engine.isState('run') || that.getLock()) {
-                return;
-            }
+        rotateModeBView.bindOnClick(
+            _whenRotateEditable(function() {
+                Entry.do('objectUpdateRotateMethod', that.id, 'vertical');
+            }, this)
+        );
 
-            that.initRotateValue('vertical');
-            that.setRotateMethod('vertical');
-        });
-
-        var rotateModeCView = Entry.createElement('div');
-        rotateModeCView.addClass(
+        var rotateModeCView = Entry.createElement('div').addClass(
             'entryObjectRotateModeWorkspace entryObjectRotateModeCWorkspace'
         );
         this.rotateModeCView_ = rotateModeCView;
         rotationMethodWrapper.appendChild(rotateModeCView);
-        rotateModeCView.bindOnClick(function(e) {
-            if (Entry.engine.isState('run') || that.getLock()) return;
-
-            that.initRotateValue('none');
-            that.setRotateMethod('none');
-        });
+        rotateModeCView.bindOnClick(
+            _whenRotateEditable(function() {
+                Entry.do('objectUpdateRotateMethod', that.id, 'none');
+            }, this)
+        );
 
         this.updateThumbnailView();
         this.updateRotateMethodView();
@@ -1636,5 +1629,26 @@ Entry.EntryObject = function(model) {
 
         this.updateInputViews();
         return this.view_;
+    }
+
+    p._getRotateView = function(type = 'free') {
+        if (type === 'free') {
+            return this.rotateModeAView_;
+        } else if (type === 'none') {
+            return this.rotateModeCView_;
+        } else {
+            return this.rotateModeBView_;
+        }
+    };
+
+    p.getIndex = function() {
+        return Entry.container.getObjectIndex(this.id);
+    };
+
+    function _whenRotateEditable(func, obj) {
+        return Entry.Utils.when(function() {
+            if (Entry.engine.isState('run') || obj.getLock()) return false;
+            return true;
+        }, func);
     }
 })(Entry.EntryObject.prototype);

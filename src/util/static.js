@@ -73,6 +73,12 @@ Entry.STATIC = {
         objectNameEdit: 207,
         addObject: 208,
         removeObject: 209,
+        objectUpdatePosX: 211,
+        objectUpdatePosY: 212,
+        objectUpdateSize: 213,
+        objectUpdateRotationValue: 214,
+        objectUpdateDirectionValue: 215,
+        objectUpdateRotateMethod: 216,
 
         do: 301,
         undo: 302,
@@ -86,14 +92,14 @@ Entry.STATIC = {
 
         variableContainerAddMessage: 807,
         variableContainerRemoveMessage: 808,
-        
+
         funcCreate: 1003,
         funcUpdate: 1004,
     },
 
     COMMAND_TYPES_NOT_ALWAYS: {
         sceneSelect: 5,
-            
+
         addObjectButtonClick: 210,
 
         toggleRun: 501,
@@ -116,7 +122,7 @@ Entry.STATIC = {
 
         //utility commands
         dismissModal: 900,
-        
+
         funcEditStart: 1001,
         funcEditCancel: 1002,
     },

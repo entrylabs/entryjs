@@ -1515,8 +1515,7 @@ Entry.VariableContainer = function() {
                 return this.focus();
             }
 
-            //message
-            //so check message exist currently
+            //check message exist currently
             message = Entry.variableContainer.getMessage(message.id);
             if (message && !(this.isFirst && value === message.name)) {
                 Entry.do('messageSetName', message.id, value);

@@ -3,8 +3,6 @@
  */
 'use strict';
 
-
-
 /**
  * Construct entity class
  * @param {!Entry.EntryObject} object
@@ -28,16 +26,18 @@ Entry.EntityObject = function(object) {
     } else if (this.type == 'textBox') {
         this.object = new createjs.Container();
         this.textObject = new createjs.Text();
-        this.textObject.font = "20px Nanum Gothic";
-        this.textObject.textBaseline = "middle";
-        this.textObject.textAlign = "center";
+        this.textObject.font = '20px Nanum Gothic';
+        this.textObject.textBaseline = 'middle';
+        this.textObject.textAlign = 'center';
         this.bgObject = new createjs.Shape();
-        this.bgObject.graphics.setStrokeStyle(1)
-            .beginStroke("#f00").drawRect(0,0,100,100);
+        this.bgObject.graphics
+            .setStrokeStyle(1)
+            .beginStroke('#f00')
+            .drawRect(0, 0, 100, 100);
         this.object.addChild(this.bgObject);
         this.object.addChild(this.textObject);
 
-        this.fontType = "Nanum Gothic";
+        this.fontType = 'Nanum Gothic';
         this.fontSize = 20;
         this.fontBold = false;
         this.fontItalic = false;
@@ -46,7 +46,7 @@ Entry.EntityObject = function(object) {
     }
 
     this.object.entity = this;
-    this.object.cursor = "pointer";
+    this.object.cursor = 'pointer';
 
     this.object.on('mousedown', function(evt) {
         var id = this.entity.parent.id;
@@ -54,27 +54,34 @@ Entry.EntityObject = function(object) {
         Entry.stage.isObjectClick = true;
 
         if (Entry.type != 'minimize' && Entry.stage.isEntitySelectable()) {
-            this.offset = {x:-this.parent.x+this.entity.getX()-(evt.stageX*0.75 -240),
-                y:-this.parent.y-this.entity.getY()-(evt.stageY*0.75 -135)};
-            this.cursor = "move";
+            this.offset = {
+                x:
+                    -this.parent.x +
+                    this.entity.getX() -
+                    (evt.stageX * 0.75 - 240),
+                y:
+                    -this.parent.y -
+                    this.entity.getY() -
+                    (evt.stageY * 0.75 - 135),
+            };
+            this.cursor = 'move';
             this.entity.initCommand();
             Entry.container.selectObject(id);
         }
     });
 
-    this.object.on("pressup", function(evt) {
+    this.object.on('pressup', function(evt) {
         Entry.dispatchEvent('entityClickCanceled', this.entity);
-        this.cursor = "pointer";
+        this.cursor = 'pointer';
         this.entity.checkCommand();
     });
 
-    this.object.on("pressmove", function(evt) {
+    this.object.on('pressmove', function(evt) {
         if (Entry.type != 'minimize' && Entry.stage.isEntitySelectable()) {
-            if (this.entity.parent.getLock())
-                return;
+            if (this.entity.parent.getLock()) return;
             this.entity.doCommand();
-            this.entity.setX((evt.stageX*0.75 -240) + this.offset.x);
-            this.entity.setY(-(evt.stageY*0.75 -135) - this.offset.y);
+            this.entity.setX(evt.stageX * 0.75 - 240 + this.offset.x);
+            this.entity.setY(-(evt.stageY * 0.75 - 135) - this.offset.y);
             Entry.stage.updateObject();
         }
     });
@@ -87,9 +94,10 @@ Entry.EntityObject = function(object) {
  * @constructor
  */
 Entry.EntityObject.prototype.injectModel = function(pictureModel, entityModel) {
-    if (this.type == 'sprite') {
+    var type = this.type;
+    if (type == 'sprite') {
         this.setImage(pictureModel);
-    } else if (this.type == 'textBox') {
+    } else if (type == 'textBox') {
         var parent = this.parent;
         entityModel.text = entityModel.text || parent.text || parent.name;
         this.setFont(entityModel.font);
@@ -101,7 +109,9 @@ Entry.EntityObject.prototype.injectModel = function(pictureModel, entityModel) {
     }
 
     //entity
-    if (entityModel) { this.syncModel_(entityModel); }
+    if (entityModel) {
+        this.syncModel_(entityModel);
+    }
 };
 
 /**
@@ -109,31 +119,46 @@ Entry.EntityObject.prototype.injectModel = function(pictureModel, entityModel) {
  * @param {!entity model} entityModel
  * @private
  */
-Entry.EntityObject.prototype.syncModel_ = function(entityModel) {
-    this.setX(entityModel.x);
-    this.setY(entityModel.y);
-    this.setRegX(entityModel.regX);
-    this.setRegY(entityModel.regY);
-    this.setScaleX(entityModel.scaleX);
-    this.setScaleY(entityModel.scaleY);
-    this.setRotation(entityModel.rotation);
-    this.setDirection(entityModel.direction, true);
-    this.setLineBreak(entityModel.lineBreak);
-    this.setWidth(entityModel.width);
-    this.setHeight(entityModel.height);
-    this.setText(entityModel.text);
-    this.setTextAlign(entityModel.textAlign);
-    this.setFontSize(entityModel.fontSize || this.getFontSize());
-    this.setVisible(entityModel.visible);
+Entry.EntityObject.prototype.syncModel_ = function({
+    x,
+    y,
+    regX,
+    regY,
+    scaleX,
+    scaleY,
+    rotation,
+    direction,
+    lineBreak,
+    width,
+    height,
+    text,
+    textAlign,
+    fontSize,
+    visible,
+}) {
+    this.setX(x);
+    this.setY(y);
+    this.setRegX(regX);
+    this.setRegY(regY);
+    this.setScaleX(scaleX);
+    this.setScaleY(scaleY);
+    this.setRotation(rotation);
+    this.setDirection(direction, true);
+    this.setLineBreak(lineBreak);
+    this.setWidth(width);
+    this.setHeight(height);
+    this.setText(text);
+    this.setTextAlign(textAlign);
+    this.setFontSize(fontSize || this.getFontSize());
+    this.setVisible(visible);
 };
 
 Entry.EntityObject.prototype.initCommand = function() {
-    if (!Entry.engine.isState('stop'))
-        return;
+    if (!Entry.engine.isState('stop')) return;
     this.isCommandValid = false;
     if (Entry.stateManager)
         Entry.stateManager.addCommand(
-            "edit entity",
+            'edit entity',
             this,
             this.restoreEntity,
             this.toJSON()
@@ -160,7 +185,7 @@ Entry.EntityObject.prototype.restoreEntity = function(entityModel) {
     Entry.dispatchEvent('updateObject');
     if (Entry.stateManager)
         Entry.stateManager.addCommand(
-            "restore object",
+            'restore object',
             this,
             this.restoreEntity,
             currentModel
@@ -215,7 +240,6 @@ Entry.EntityObject.prototype.getY = function(toFixedValue) {
     else return this.y;
 };
 
-
 /**
  * direction getter
  * @return {number}
@@ -257,8 +281,7 @@ Entry.EntityObject.prototype.setDirection = function(direction, flippable) {
  * */
 Entry.EntityObject.prototype.setRotation = function(rotation) {
     /** @type {number} */
-    if (this.parent.getRotateMethod() !== 'free')
-        rotation = 0;
+    if (this.parent.getRotateMethod() !== 'free') rotation = 0;
 
     this.rotation = rotation.mod(360);
     this.object.rotation = this.rotation;
@@ -282,8 +305,7 @@ Entry.EntityObject.prototype.getRotation = function(toFixedValue) {
  * @param {number} regX
  */
 Entry.EntityObject.prototype.setRegX = function(regX) {
-    if (this.type == 'textBox')
-        regX = 0;
+    if (this.type == 'textBox') regX = 0;
     /** @type {number} */
     this.regX = regX;
     this.object.regX = this.regX;
@@ -303,8 +325,7 @@ Entry.EntityObject.prototype.getRegX = function() {
  * @param {number} regY
  */
 Entry.EntityObject.prototype.setRegY = function(regY) {
-    if (this.type == 'textBox')
-        regY = 0;
+    if (this.type == 'textBox') regY = 0;
     /** @type {number} */
     this.regY = regY;
     this.object.regY = this.regY;
@@ -366,8 +387,7 @@ Entry.EntityObject.prototype.getScaleY = function() {
  * @param {number} size
  */
 Entry.EntityObject.prototype.setSize = function(size) {
-    if(size < 1)
-        size = 1;
+    if (size < 1) size = 1;
     var scale = size / this.getSize();
     this.setScaleX(this.getScaleX() * scale);
     this.setScaleY(this.getScaleY() * scale);
@@ -380,7 +400,10 @@ Entry.EntityObject.prototype.setSize = function(size) {
  * @return {number}
  */
 Entry.EntityObject.prototype.getSize = function(toFixedValue) {
-    var value = (this.getWidth() * Math.abs(this.getScaleX()) + this.getHeight() * Math.abs(this.getScaleY())) / 2;
+    var value =
+        (this.getWidth() * Math.abs(this.getScaleX()) +
+            this.getHeight() * Math.abs(this.getScaleY())) /
+        2;
     if (toFixedValue) return Entry.Utils.toFixed(value, toFixedValue);
     return value;
 };
@@ -439,8 +462,7 @@ Entry.EntityObject.prototype.getHeight = function() {
 Entry.EntityObject.prototype.setColour = function(colour) {
     /** @type {string} */
     this.colour = colour || '#000000';
-    if (this.textObject)
-        this.textObject.color = this.colour;
+    if (this.textObject) this.textObject.color = this.colour;
     Entry.requestUpdate = true;
 };
 
@@ -473,8 +495,7 @@ Entry.EntityObject.prototype.getBGColour = function() {
 };
 
 Entry.EntityObject.prototype.setUnderLine = function(underLine) {
-    if (underLine === undefined)
-        underLine = false;
+    if (underLine === undefined) underLine = false;
     this.underLine = underLine;
     this.textObject.underLine = underLine;
     Entry.requestUpdate = true;
@@ -485,8 +506,7 @@ Entry.EntityObject.prototype.getUnderLine = function() {
 };
 
 Entry.EntityObject.prototype.setStrike = function(strike) {
-    if (strike === undefined)
-        strike = false;
+    if (strike === undefined) strike = false;
     this.strike = strike;
     this.textObject.strike = strike;
     Entry.requestUpdate = true;
@@ -501,40 +521,35 @@ Entry.EntityObject.prototype.getStrike = function() {
  */
 Entry.EntityObject.prototype.getFont = function() {
     var fontArray = [];
-    if (this.fontBold)
-        fontArray.push("bold");
-    if (this.fontItalic)
-        fontArray.push("italic");
+    if (this.fontBold) fontArray.push('bold');
+    if (this.fontItalic) fontArray.push('italic');
     fontArray.push(this.getFontSize() + 'px');
     fontArray.push(this.fontType);
-    return fontArray.join(" ");
+    return fontArray.join(' ');
 };
 
 /**
  * font setter
  */
 Entry.EntityObject.prototype.setFont = function(font) {
-    if (this.parent.objectType != 'textBox')
-        return;
-    if (this.textObject.font === font)
-        return;
-    if (!font)
-        font = "20px Nanum Gothic";
+    if (this.parent.objectType != 'textBox') return;
+    if (this.textObject.font === font) return;
+    if (!font) font = '20px Nanum Gothic';
 
-    var fontArray = font.split(" ");
+    var fontArray = font.split(' ');
     var i = 0;
 
-    if (i = fontArray.indexOf("bold") > -1) {
+    if ((i = fontArray.indexOf('bold') > -1)) {
         fontArray.splice(i - 1, 1);
         this.setFontBold(true);
     }
-    if (i = fontArray.indexOf("italic") > -1) {
+    if ((i = fontArray.indexOf('italic') > -1)) {
         fontArray.splice(i - 1, 1);
         this.setFontItalic(true);
     }
     var fontSize = parseInt(fontArray.shift());
     this.setFontSize(fontSize);
-    this.setFontType(fontArray.join(" "));
+    this.setFontType(fontArray.join(' '));
 
     this.textObject.font = this.getFont();
     Entry.stage.update();
@@ -544,8 +559,8 @@ Entry.EntityObject.prototype.setFont = function(font) {
 };
 
 Entry.EntityObject.prototype.setLineHeight = function() {
-    switch(this.getFontType()) {
-        case "Nanum Gothic Coding": {
+    switch (this.getFontType()) {
+        case 'Nanum Gothic Coding': {
             this.textObject.lineHeight = this.fontSize;
             break;
         }
@@ -561,11 +576,11 @@ Entry.EntityObject.prototype.syncFont = function() {
     this.setLineHeight();
     Entry.stage.update();
     if (this.getLineBreak()) {
-        if (this.fontType == "Nanum Gothic Coding") {
+        if (this.fontType == 'Nanum Gothic Coding') {
             var textObjectHeight = this.textObject.getMeasuredLineHeight();
-            this.textObject.y = (textObjectHeight / 2 - this.getHeight() / 2) + 10;
+            this.textObject.y =
+                textObjectHeight / 2 - this.getHeight() / 2 + 10;
         }
-
     } else {
         this.setWidth(this.textObject.getMeasuredWidth());
         this.setHeight(this.textObject.getMeasuredHeight());
@@ -585,9 +600,8 @@ Entry.EntityObject.prototype.getFontType = function() {
  * font type setter
  */
 Entry.EntityObject.prototype.setFontType = function(fontType) {
-    if (this.parent.objectType != 'textBox')
-        return;
-    fontType = fontType ? fontType : "Nanum Gothic";
+    if (this.parent.objectType != 'textBox') return;
+    fontType = fontType ? fontType : 'Nanum Gothic';
     this.fontType = fontType;
     this.syncFont();
 };
@@ -603,10 +617,8 @@ Entry.EntityObject.prototype.getFontSize = function(fontSize) {
  * font size setter
  */
 Entry.EntityObject.prototype.setFontSize = function(fontSize) {
-    if (this.parent.objectType != 'textBox')
-        return;
-    if (this.fontSize == fontSize)
-        return;
+    if (this.parent.objectType != 'textBox') return;
+    if (this.fontSize == fontSize) return;
     this.fontSize = fontSize ? fontSize : 20;
     this.syncFont();
     this.alignTextBox();
@@ -646,46 +658,33 @@ Entry.EntityObject.prototype.toggleFontItalic = function() {
     return this.fontItalic;
 };
 
-Entry.EntityObject.prototype.setFontName = function(fontName) {
-    var currentFontArray = this.textObject.font.split(' ');
-    var tempArray = [];
-    for (var i=0,len=currentFontArray.length; i<len; i++) {
-        if (currentFontArray[i] === 'bold' ||
-           currentFontArray[i] === 'italic' ||
-           currentFontArray[i].indexOf('px') > -1) {
-            tempArray.push(currentFontArray[i]);
-        }
-    }
-    this.setFont(tempArray.join(' ') + ' ' + fontName);
-};
-
 Entry.EntityObject.prototype.getFontName = function() {
-    if (this.type != 'textBox')
-        return;
-    if (!this.textObject.font)
-        return '';
-    var currentFontArray = this.textObject.font.split(' ');
-    var tempArray = [];
-    for (var i=0,len=currentFontArray.length; i<len; i++) {
-        if (currentFontArray[i] !== 'bold' &&
-           currentFontArray[i] !== 'italic' &&
-           currentFontArray[i].indexOf('px') === -1) {
-            tempArray.push(currentFontArray[i]);
-        }
+    if (this.type != 'textBox') return;
+    if (!this.textObject.font) return '';
+
+    return this.textObject.font
+        .split(' ')
+        .reduce((fonts, font) => {
+            if (_inspect(font)) {
+                fonts.push(font);
+            }
+            return fonts;
+        }, [])
+        .join(' ')
+        .trim();
+
+    function _inspect(font) {
+        return font !== 'bold' && font !== 'italic' && !~font.indexOf('px');
     }
-    return tempArray.join(' ').trim();
 };
 
 /**
  * text setter
  * @param {string} text
  */
-Entry.EntityObject.prototype.setText = function(text) {
-    if (this.parent.objectType != 'textBox')
-        return;
+Entry.EntityObject.prototype.setText = function(text = '') {
+    if (this.parent.objectType != 'textBox') return;
     /** @type {string} */
-    if (text === undefined)
-        text = '';
     this.text = text;
     this.textObject.text = this.text;
     if (!this.lineBreak) {
@@ -709,10 +708,8 @@ Entry.EntityObject.prototype.getText = function() {
  * @param {number} textAlign
  */
 Entry.EntityObject.prototype.setTextAlign = function(textAlign) {
-    if (this.parent.objectType != 'textBox')
-        return;
-    if (textAlign === undefined)
-        textAlign = Entry.TEXT_ALIGN_CENTER;
+    if (this.parent.objectType != 'textBox') return;
+    if (textAlign === undefined) textAlign = Entry.TEXT_ALIGN_CENTER;
     this.textAlign = textAlign;
 
     this.textObject.textAlign = Entry.TEXT_ALIGNS[this.textAlign];
@@ -737,10 +734,8 @@ Entry.EntityObject.prototype.getTextAlign = function() {
  * lineBreak setter
  * @param {boolean} lineBreak
  */
-Entry.EntityObject.prototype.setLineBreak = function(lineBreak) {
+Entry.EntityObject.prototype.setLineBreak = function(lineBreak = false) {
     if (this.parent.objectType != 'textBox') return;
-
-    if (lineBreak === undefined) lineBreak = false;
 
     var previousState = this.lineBreak;
     this.lineBreak = lineBreak;
@@ -757,9 +752,10 @@ Entry.EntityObject.prototype.setLineBreak = function(lineBreak) {
         this.setScaleY(1);
         this.textObject.lineWidth = this.getWidth();
         this.alignTextBox();
-        if (this.fontType == "Nanum Gothic Coding") {
+        if (this.fontType == 'Nanum Gothic Coding') {
             var textObjectHeight = this.textObject.getMeasuredLineHeight();
-            this.textObject.y = (textObjectHeight / 2 - this.getHeight() / 2) + 10;
+            this.textObject.y =
+                textObjectHeight / 2 - this.getHeight() / 2 + 10;
         }
     }
 
@@ -778,14 +774,11 @@ Entry.EntityObject.prototype.getLineBreak = function() {
  * visible setter
  * @param {boolean} visible
  */
-Entry.EntityObject.prototype.setVisible = function(visible) {
+Entry.EntityObject.prototype.setVisible = function(visible = true) {
     /** @type {string} */
-    if(visible === undefined)
-        visible = true;
     this.visible = visible;
     this.object.visible = this.visible;
-    if (this.dialog)
-        this.syncDialogVisible();
+    if (this.dialog) this.syncDialogVisible();
     Entry.requestUpdate = true;
     return this.visible;
 };
@@ -806,17 +799,16 @@ Entry.EntityObject.prototype.setImage = function(pictureModel) {
     var that = this;
     delete pictureModel._id;
 
-    Entry.assert(this.type == 'sprite', "Set image is only for sprite object");
-    if (!pictureModel.id)
-        pictureModel.id = Entry.generateHash();
+    Entry.assert(this.type == 'sprite', 'Set image is only for sprite object');
+    if (!pictureModel.id) pictureModel.id = Entry.generateHash();
 
     this.picture = pictureModel;
     var dimension = this.picture.dimension;
     var entityWidth = this.getWidth();
     var entityHeight = this.getHeight();
 
-    var absoluteRegX = this.getRegX() - entityWidth/2;
-    var absoluteRegY = this.getRegY() - entityHeight/2;
+    var absoluteRegX = this.getRegX() - entityWidth / 2;
+    var absoluteRegY = this.getRegY() - entityHeight / 2;
     this.setWidth(dimension.width);
     this.setHeight(dimension.height);
     if (!dimension.scaleX) {
@@ -826,13 +818,12 @@ Entry.EntityObject.prototype.setImage = function(pictureModel) {
 
     this.setScaleX(this.scaleX);
     this.setScaleY(this.scaleY);
-    this.setRegX(this.width/2 + absoluteRegX);
-    this.setRegY(this.height/2 + absoluteRegY);
+    this.setRegX(this.width / 2 + absoluteRegX);
+    this.setRegY(this.height / 2 + absoluteRegY);
 
     //pictureId can be duplicated by copy/paste
     //add entityId in order to differentiate copied pictures
-    var cacheId = !this.isClone ?
-        pictureModel.id + this.id : pictureModel.id;
+    var cacheId = !this.isClone ? pictureModel.id + this.id : pictureModel.id;
 
     var image = Entry.container.getCachedPicture(cacheId);
 
@@ -840,8 +831,7 @@ Entry.EntityObject.prototype.setImage = function(pictureModel) {
         image = new Image();
 
         image.onload = function(e) {
-            if (!that.removed)
-                Entry.container.cachePicture(cacheId, this);
+            if (!that.removed) Entry.container.cachePicture(cacheId, this);
 
             this.onload = null;
             setImage(this);
@@ -852,26 +842,26 @@ Entry.EntityObject.prototype.setImage = function(pictureModel) {
         else {
             var fileName = pictureModel.filename;
             image.src =
-                Entry.defaultPath + '/uploads/' +
-                fileName.substring(0, 2) + '/' +
-                fileName.substring(2, 4) + '/image/' +
-                fileName + '.png';
+                Entry.defaultPath +
+                '/uploads/' +
+                fileName.substring(0, 2) +
+                '/' +
+                fileName.substring(2, 4) +
+                '/image/' +
+                fileName +
+                '.png';
         }
 
         that.object.image = image;
-        if (that.object.filters && that.object.filters.length)
-            that.cache();
-        else
-            that.object.uncache();
+        if (that.object.filters && that.object.filters.length) that.cache();
+        else that.object.uncache();
     } else setImage(image);
 
     function setImage(datum) {
         Entry.image = datum;
         that.object.image = datum;
-        if (that.object.filters && that.object.filters.length)
-            that.cache();
-        else
-            that.object.uncache();
+        if (that.object.filters && that.object.filters.length) that.cache();
+        else that.object.uncache();
         Entry.requestUpdate = true;
     }
 
@@ -886,8 +876,7 @@ Entry.EntityObject.prototype.applyFilter = function(isForce, forceEffects) {
     var object = this.object;
 
     var diffEffects = isEqualEffects(effects, this.getInitialEffectValue());
-    if (!isForce && diffEffects.length === 0)
-        return;
+    if (!isForce && diffEffects.length === 0) return;
 
     if (Array.isArray(forceEffects)) {
         diffEffects = diffEffects.concat(forceEffects);
@@ -897,7 +886,7 @@ Entry.EntityObject.prototype.applyFilter = function(isForce, forceEffects) {
         var f = [];
         var adjust = Entry.adjustValueWithMaxMin;
 
-        if(diffEffects.indexOf('brightness') > -1) {
+        if (~diffEffects.indexOf('brightness')) {
             e.brightness = e.brightness;
             var cmBrightness = new createjs.ColorMatrix();
             cmBrightness.adjustColor(adjust(e.brightness, -100, 100), 0, 0, 0);
@@ -905,7 +894,7 @@ Entry.EntityObject.prototype.applyFilter = function(isForce, forceEffects) {
             f.push(brightnessFilter);
         }
 
-        if(diffEffects.indexOf('hue') > -1) {
+        if (~diffEffects.indexOf('hue')) {
             e.hue = e.hue.mod(360);
             var cmHue = new createjs.ColorMatrix();
             cmHue.adjustColor(0, 0, 0, e.hue);
@@ -913,48 +902,128 @@ Entry.EntityObject.prototype.applyFilter = function(isForce, forceEffects) {
             f.push(hueFilter);
         }
 
-        if(diffEffects.indexOf('hsv') > -1) {
+        if (~diffEffects.indexOf('hsv')) {
             var matrixValue = [
-                1, 0, 0, 0, 0,
-                0, 1, 0, 0, 0,
-                0, 0, 1, 0, 0,
-                0, 0, 0, 1, 0,
-                0, 0, 0, 0, 1
+                1,
+                0,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                0,
+                1,
+                0,
+                0,
+                0,
+                0,
+                0,
+                1,
             ];
 
-            var degrees = e.hsv*3.6;
-            var r = (degrees*3) * Math.PI / 180;
+            var degrees = e.hsv * 3.6;
+            var r = degrees * 3 * Math.PI / 180;
             var cosVal = Math.cos(r);
             var sinVal = Math.sin(r);
 
-            var v = Math.abs(e.hsv/100);
-            if (v>1) {
-                v = v-Math.floor(v);
+            var v = Math.abs(e.hsv / 100);
+            if (v > 1) {
+                v = v - Math.floor(v);
             }
 
             if (v > 0 && v <= 0.33) {
                 var matrixValue = [
-                    1, 0, 0, 0, 0,
-                    0, cosVal, sinVal, 0, 0,
-                    0, -1*sinVal, cosVal, 0, 0,
-                    0, 0, 0, 1, 0,
-                    0, 0, 0, 0, 1
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    cosVal,
+                    sinVal,
+                    0,
+                    0,
+                    0,
+                    -1 * sinVal,
+                    cosVal,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
                 ];
             } else if (v <= 0.66) {
                 var matrixValue = [
-                    cosVal, 0, sinVal, 0, 0,
-                    0, 1, 0, 0, 0,
-                    sinVal, 0, cosVal, 0, 0,
-                    0, 0, 0, 1, 0,
-                    0, 0, 0, 0, 1
+                    cosVal,
+                    0,
+                    sinVal,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    sinVal,
+                    0,
+                    cosVal,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
                 ];
             } else if (v <= 0.99) {
                 var matrixValue = [
-                    cosVal, sinVal, 0, 0, 0,
-                    -1*sinVal, cosVal, 0, 0, 0,
-                    0, 0, 1, 0, 0,
-                    0, 0, 0, 1, 0,
-                    0, 0, 0, 0, 1
+                    cosVal,
+                    sinVal,
+                    0,
+                    0,
+                    0,
+                    -1 * sinVal,
+                    cosVal,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
+                    0,
+                    0,
+                    0,
+                    0,
+                    0,
+                    1,
                 ];
             }
 
@@ -963,12 +1032,11 @@ Entry.EntityObject.prototype.applyFilter = function(isForce, forceEffects) {
             f.push(colorFilter);
         }
 
-        if (diffEffects.indexOf('alpha') > -1) {
+        if (~diffEffects.indexOf('alpha')) {
             obj.alpha = e.alpha = adjust(e.alpha, 0, 1);
         }
 
         obj.filters = f;
-
     })(effects, object);
 
     this.cache();
@@ -1018,8 +1086,7 @@ Entry.EntityObject.prototype.takeSnapshot = function() {
  * load snapshot to current entity
  */
 Entry.EntityObject.prototype.loadSnapshot = function() {
-    if (this.snapshot_)
-        this.syncModel_(this.snapshot_);
+    if (this.snapshot_) this.syncModel_(this.snapshot_);
     if (this.parent.objectType === 'sprite')
         this.setImage(this.parent.getPicture());
 
@@ -1039,8 +1106,7 @@ Entry.EntityObject.prototype.removeClone = function(isLast) {
         if (index > -1) clonedEntities.splice(index, 1);
     } else clonedEntities.pop();
 
-    if (Entry.Utils.isFunction(this.clearExecutor))
-        this.clearExecutor();
+    if (Entry.Utils.isFunction(this.clearExecutor)) this.clearExecutor();
 
     this.destroy(true);
 };
@@ -1085,7 +1151,7 @@ Entry.EntityObject.prototype.toJSON = function() {
  * Return initial effect value
  * @return {effect}
  */
-Entry.EntityObject.prototype.setInitialEffectValue = function () {
+Entry.EntityObject.prototype.setInitialEffectValue = function() {
     this.effect = this.getInitialEffectValue();
     Entry.requestUpdate = true;
 };
@@ -1094,23 +1160,26 @@ Entry.EntityObject.prototype.setInitialEffectValue = function () {
  * Return initial effect value
  * @return {effect}
  */
-Entry.EntityObject.prototype.getInitialEffectValue = function () {
-    return  {
-        'blur': 0,
-        'hue': 0,
-        'hsv': 0,
-        'brightness': 0,
-        'contrast': 0,
-        'saturation': 0,
-        'alpha': 1
+Entry.EntityObject.prototype.getInitialEffectValue = function() {
+    return {
+        blur: 0,
+        hue: 0,
+        hsv: 0,
+        brightness: 0,
+        contrast: 0,
+        saturation: 0,
+        alpha: 1,
     };
 };
 
 /*
  * remove brush
  */
-Entry.EntityObject.prototype.removeBrush = function () {
-    this.shapes.map(Entry.stage.selectedObjectContainer.removeChild, Entry.stage.selectedObjectContainer);
+Entry.EntityObject.prototype.removeBrush = function() {
+    this.shapes.map(
+        Entry.stage.selectedObjectContainer.removeChild,
+        Entry.stage.selectedObjectContainer
+    );
     this.brush = null;
     this.shapes = [];
 };
@@ -1118,55 +1187,58 @@ Entry.EntityObject.prototype.removeBrush = function () {
 /*
  * erase brush
  */
-Entry.EntityObject.prototype.eraseBrush = function () {
-    this.shapes.map(Entry.stage.selectedObjectContainer.removeChild, Entry.stage.selectedObjectContainer);
+Entry.EntityObject.prototype.eraseBrush = function() {
+    this.shapes.map(
+        Entry.stage.selectedObjectContainer.removeChild,
+        Entry.stage.selectedObjectContainer
+    );
     this.shapes = [];
     Entry.requestUpdate = true;
 };
 
-Entry.EntityObject.prototype.updateBG = function () {
-    if (!this.bgObject)
-        return;
+Entry.EntityObject.prototype.updateBG = function() {
+    if (!this.bgObject) return;
     this.bgObject.graphics.clear();
     var width = this.getWidth();
     var height = this.getHeight();
-    this.bgObject.graphics.setStrokeStyle(1).beginStroke()
-                 .beginFill(this.getBGColour())
-                 .drawRect(-width/2,-height/2,width,height);
+    this.bgObject.graphics
+        .setStrokeStyle(1)
+        .beginStroke()
+        .beginFill(this.getBGColour())
+        .drawRect(-width / 2, -height / 2, width, height);
     if (this.getLineBreak()) {
         this.bgObject.x = 0;
     } else {
         var fontAlign = this.getTextAlign();
         switch (fontAlign) {
             case Entry.TEXT_ALIGN_LEFT:
-                this.bgObject.x = width/2;
+                this.bgObject.x = width / 2;
                 break;
             case Entry.TEXT_ALIGN_CENTER:
                 this.bgObject.x = 0;
                 break;
             case Entry.TEXT_ALIGN_RIGHT:
-                this.bgObject.x = - width/2;
+                this.bgObject.x = -width / 2;
                 break;
         }
     }
 };
 
-Entry.EntityObject.prototype.alignTextBox = function () {
-    if (this.type != 'textBox')
-        return;
+Entry.EntityObject.prototype.alignTextBox = function() {
+    if (this.type != 'textBox') return;
     var textObject = this.textObject;
     if (this.lineBreak) {
         var textObjectHeight = textObject.getMeasuredLineHeight();
         textObject.y = textObjectHeight / 2 - this.getHeight() / 2;
-        if (this.fontType == "Nanum Gothic Coding") {
-            textObject.y = (textObjectHeight / 2 - this.getHeight() / 2) + 10;
+        if (this.fontType == 'Nanum Gothic Coding') {
+            textObject.y = textObjectHeight / 2 - this.getHeight() / 2 + 10;
         }
         switch (this.textAlign) {
             case Entry.TEXT_ALIGN_CENTER:
                 textObject.x = 0;
                 break;
             case Entry.TEXT_ALIGN_LEFT:
-                textObject.x = - this.getWidth() / 2;
+                textObject.x = -this.getWidth() / 2;
                 break;
             case Entry.TEXT_ALIGN_RIGHT:
                 textObject.x = this.getWidth() / 2;
@@ -1190,7 +1262,7 @@ Entry.EntityObject.prototype.addStamp = function() {
     var index = selectedObjectContainer.getChildIndex(this.object);
     stage.loadEntity(stampEntity, index);
     this.stamps.push(stampEntity);
-    
+
     Entry.requestUpdate = true;
 };
 
@@ -1215,8 +1287,8 @@ Entry.EntityObject.prototype.destroy = function(isClone) {
         delete object.image;
         delete object.entity;
     }
-    if (this.stamps)
-        this.removeStamps();
+
+    if (this.stamps) this.removeStamps();
 
     this.dialog && this.dialog.remove();
     this.brush && this.removeBrush();
@@ -1224,10 +1296,7 @@ Entry.EntityObject.prototype.destroy = function(isClone) {
 
     var container = Entry.container;
     if (container)
-        container.unCachePictures(
-            this, this.parent.pictures, isClone
-        );
-
+        container.unCachePictures(this, this.parent.pictures, isClone);
 };
 
 Entry.EntityObject.prototype.cache = function() {
