@@ -58,7 +58,6 @@ require('./parser-no/js');
 require('./parser-no/parser');
 require('./playground/block');
 require('./playground/block_entry');
-require('./playground/basic_block');
 require('./playground/block_entry_mini');
 require('./playground/block_menu');
 require('./playground/block_menu_scroll');
