@@ -141,7 +141,7 @@ Entry.VariableContainer = function() {
         functionAddButton.innerHTML = '+ ' + Lang.Workspace.function_add;
         this.functionAddButton_ = functionAddButton;
         functionAddButton.bindOnClick(function(e) {
-            Entry.do("funcEditStart", Entry.generateHash());
+            Entry.do("funcCreateStart", Entry.generateHash());
         });
 
         return view;
