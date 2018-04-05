@@ -573,7 +573,7 @@ Entry.EntryObject = function(model) {
         clonedEntity.snapshot_ = entity.snapshot_;
 
         if (entity.effect) {
-            clonedEntity.effect = Entry.cloneSimpleObject(entity.effect);
+            clonedEntity.effect = _.clone(entity.effect);
             clonedEntity.applyFilter();
         }
 
@@ -918,14 +918,14 @@ Entry.EntryObject = function(model) {
         if (!target) {
             return;
         }
-            target._focused = false;
+        target._focused = false;
     };
 
     function generateWorkspaceView() {
         //utilities
         var _whenEnter = Entry.Utils.when(
-            function(event = {}) {
-                return event.keyCode === 13;
+            function({ keyCode } = {}) {
+                return keyCode === 13;
             },
             () => {
                 this.editObjectValues(false);
@@ -934,10 +934,13 @@ Entry.EntryObject = function(model) {
 
         var _setFocused = Entry.Utils.setFocused;
         var _setBlurredTimer = Entry.Utils.setBlurredTimer;
+        var CE = Entry.createElement; //alias
+
+        //end of utilities
 
         var that = this;
         var objectId = this.id;
-        var objectView = Entry.createElement('li', objectId).addClass(
+        var objectView = CE('li', objectId).addClass(
             'entryContainerListElementWorkspace'
         );
         var fragment = document.createDocumentFragment('div');
@@ -1009,16 +1012,12 @@ Entry.EntryObject = function(model) {
         /** @type {!Element} */
         this.view_ = objectView;
 
-        var objectInfoView = Entry.createElement('ul').addClass(
-            'objectInfoView'
-        );
+        var objectInfoView = CE('ul').addClass('objectInfoView');
         if (!Entry.objectEditable) {
             objectInfoView.addClass('entryHide');
         }
 
-        var objectInfo_visible = Entry.createElement('li').addClass(
-            'objectInfo_visible'
-        );
+        var objectInfo_visible = CE('li').addClass('objectInfo_visible');
         if (!this.entity.getVisible())
             objectInfo_visible.addClass('objectInfo_unvisible');
 
@@ -1031,9 +1030,7 @@ Entry.EntryObject = function(model) {
             else this.addClass('objectInfo_unvisible');
         });
 
-        var objectInfo_lock = Entry.createElement('li').addClass(
-            'objectInfo_unlock'
-        );
+        var objectInfo_lock = CE('li').addClass('objectInfo_unlock');
         if (this.getLock()) {
             objectInfo_lock.addClass('objectInfo_lock');
         }
@@ -1051,20 +1048,14 @@ Entry.EntryObject = function(model) {
         objectInfoView.appendChild(objectInfo_lock);
         this.view_.appendChild(objectInfoView);
 
-        var thumbnailView = Entry.createElement('div').addClass(
-            'entryObjectThumbnailWorkspace'
-        );
+        var thumbnailView = CE('div').addClass('entryObjectThumbnailWorkspace');
         this.view_.appendChild(thumbnailView);
         this.thumbnailView_ = thumbnailView;
 
-        var wrapperView = Entry.createElement('div').addClass(
-            'entryObjectWrapperWorkspace'
-        );
+        var wrapperView = CE('div').addClass('entryObjectWrapperWorkspace');
         this.view_.appendChild(wrapperView);
 
-        var nameView = Entry.createElement('input').addClass(
-            'entryObjectNameWorkspace'
-        );
+        var nameView = CE('input').addClass('entryObjectNameWorkspace');
         nameView.bindOnClick(function(e) {
             e.preventDefault();
             if (this.readOnly) return;
@@ -1084,9 +1075,7 @@ Entry.EntryObject = function(model) {
 
         this.nameView_.value = this.name;
 
-        var editView = Entry.createElement('div').addClass(
-            'entryObjectEditWorkspace'
-        );
+        var editView = CE('div').addClass('entryObjectEditWorkspace');
         this.editView_ = editView;
         this.view_.appendChild(editView);
 
@@ -1101,39 +1090,34 @@ Entry.EntryObject = function(model) {
         });
 
         if (Entry.objectEditable && Entry.objectDeletable) {
-            var deleteView = Entry.createElement('div').addClass(
-                'entryObjectDeleteWorkspace'
-            );
+            var deleteView = CE('div').addClass('entryObjectDeleteWorkspace');
             this.deleteView_ = deleteView;
             this.view_.appendChild(deleteView);
             deleteView.bindOnClick(function(e) {
                 if (Entry.engine.isState('run')) return;
-                var { id } = that;
-                Entry.do('removeObject', id);
+                Entry.do('removeObject', that.id);
             });
         }
 
-        var informationView = Entry.createElement('div').addClass(
+        var informationView = CE('div').addClass(
             'entryObjectInformationWorkspace'
         );
         this.isInformationToggle = false;
         wrapperView.appendChild(informationView);
         this.informationView_ = informationView;
 
-        var rotationWrapperView = Entry.createElement('div').addClass(
+        var rotationWrapperView = CE('div').addClass(
             'entryObjectRotationWrapperWorkspace'
         );
         this.view_.appendChild(rotationWrapperView);
 
-        var coordinateView = Entry.createElement('span').addClass(
+        var coordinateView = CE('span').addClass(
             'entryObjectCoordinateWorkspace'
         );
         rotationWrapperView.appendChild(coordinateView);
-        var xCoordi = Entry.createElement('span').addClass(
-            'entryObjectCoordinateSpanWorkspace'
-        );
+        var xCoordi = CE('span').addClass('entryObjectCoordinateSpanWorkspace');
         xCoordi.innerHTML = 'X:';
-        var xInput = Entry.createElement('input').addClass(
+        var xInput = CE('input').addClass(
             'entryObjectCoordinateInputWorkspace'
         );
         xInput.setAttribute('readonly', true);
@@ -1142,11 +1126,9 @@ Entry.EntryObject = function(model) {
             this.select();
         });
 
-        var yCoordi = Entry.createElement('span').addClass(
-            'entryObjectCoordinateSpanWorkspace'
-        );
+        var yCoordi = CE('span').addClass('entryObjectCoordinateSpanWorkspace');
         yCoordi.innerHTML = 'Y:';
-        var yInput = Entry.createElement('input').addClass(
+        var yInput = CE('input').addClass(
             'entryObjectCoordinateInputWorkspace entryObjectCoordinateInputWorkspace_right'
         );
         yInput.bindOnClick(function(e) {
@@ -1154,11 +1136,11 @@ Entry.EntryObject = function(model) {
             this.select();
         });
         yInput.setAttribute('readonly', true);
-        var sizeSpan = Entry.createElement('span').addClass(
+        var sizeSpan = CE('span').addClass(
             'entryObjectCoordinateSizeWorkspace'
         );
         sizeSpan.innerHTML = Lang.Workspace.Size + ' : ';
-        var sizeInput = Entry.createElement('input').addClass(
+        var sizeInput = CE('input').addClass(
             'entryObjectCoordinateInputWorkspace',
             'entryObjectCoordinateInputWorkspace_size'
         );
@@ -1179,9 +1161,7 @@ Entry.EntryObject = function(model) {
         this.coordinateView_ = coordinateView;
 
         xInput.onkeypress = _whenEnter;
-
         xInput.onfocus = _setFocused;
-
         xInput.onblur = _setBlurredTimer(function() {
             var value = this.value;
             Entry.do(
@@ -1213,17 +1193,17 @@ Entry.EntryObject = function(model) {
             );
         });
 
-        var rotateLabelWrapperView = Entry.createElement('div').addClass(
+        var rotateLabelWrapperView = CE('div').addClass(
             'entryObjectRotateLabelWrapperWorkspace'
         );
         this.view_.appendChild(rotateLabelWrapperView);
         this.rotateLabelWrapperView_ = rotateLabelWrapperView;
 
-        var rotateSpan = Entry.createElement('span');
-        rotateSpan.addClass('entryObjectRotateSpanWorkspace');
+        var rotateSpan = CE('span').addClass('entryObjectRotateSpanWorkspace');
         rotateSpan.innerHTML = Lang.Workspace.rotation + ' : ';
-        var rotateInput = Entry.createElement('input');
-        rotateInput.addClass('entryObjectRotateInputWorkspace');
+        var rotateInput = CE('input').addClass(
+            'entryObjectRotateInputWorkspace'
+        );
         rotateInput.setAttribute('readonly', true);
         rotateInput.bindOnClick(function(e) {
             e.stopPropagation();
@@ -1232,11 +1212,9 @@ Entry.EntryObject = function(model) {
         this.rotateSpan_ = rotateSpan;
         this.rotateInput_ = rotateInput;
 
-        var directionSpan = Entry.createElement('span');
-        directionSpan.addClass('entryObjectDirectionSpanWorkspace');
+        var directionSpan = CE('span').addClass('entryObjectDirectionSpanWorkspace');
         directionSpan.innerHTML = Lang.Workspace.direction + ' : ';
-        var directionInput = Entry.createElement('input');
-        directionInput.addClass('entryObjectDirectionInputWorkspace');
+        var directionInput = CE('input').addClass('entryObjectDirectionInputWorkspace');
         directionInput.setAttribute('readonly', true);
         directionInput.bindOnClick(function(e) {
             e.stopPropagation();
@@ -1283,19 +1261,17 @@ Entry.EntryObject = function(model) {
             );
         });
 
-        var rotationMethodWrapper = Entry.createElement('div').addClass(
-            'rotationMethodWrapper'
-        );
+        var rotationMethodWrapper = CE('div').addClass('rotationMethodWrapper');
         rotationWrapperView.appendChild(rotationMethodWrapper);
         this.rotationMethodWrapper_ = rotationMethodWrapper;
 
-        var rotateMethodLabelView = Entry.createElement('span').addClass(
+        var rotateMethodLabelView = CE('span').addClass(
             'entryObjectRotateMethodLabelWorkspace'
         );
         rotationMethodWrapper.appendChild(rotateMethodLabelView);
         rotateMethodLabelView.innerHTML = Lang.Workspace.rotate_method + ' : ';
 
-        var rotateModeAView = Entry.createElement('div').addClass(
+        var rotateModeAView = CE('div').addClass(
             'entryObjectRotateModeWorkspace entryObjectRotateModeAWorkspace'
         );
         this.rotateModeAView_ = rotateModeAView;
@@ -1307,7 +1283,7 @@ Entry.EntryObject = function(model) {
             }, this)
         );
 
-        var rotateModeBView = Entry.createElement('div').addClass(
+        var rotateModeBView = CE('div').addClass(
             'entryObjectRotateModeWorkspace entryObjectRotateModeBWorkspace'
         );
         this.rotateModeBView_ = rotateModeBView;
@@ -1318,7 +1294,7 @@ Entry.EntryObject = function(model) {
             }, this)
         );
 
-        var rotateModeCView = Entry.createElement('div').addClass(
+        var rotateModeCView = CE('div').addClass(
             'entryObjectRotateModeWorkspace entryObjectRotateModeCWorkspace'
         );
         this.rotateModeCView_ = rotateModeCView;

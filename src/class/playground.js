@@ -22,7 +22,6 @@ Entry.Playground = function() {
      * @type {string}
      */
     this.viewMode_ = 'default';
-    var that = this;
     Entry.addEventListener('textEdited', this.injectText);
     Entry.addEventListener('hwChanged', this.updateHW);
 };
@@ -38,67 +37,75 @@ Entry.Playground = function() {
      * @param {!Element} playgroundView playgroundView from Entry.
      * @param {?string} option for choose type of view.
      */
-    p.generateView = function(playgroundView, option) {
+    p.generateView = function(playgroundView, option = 'workspace') {
         /** @type {!Element} */
         this.view_ = playgroundView;
         this.view_.addClass('entryPlayground');
-        if (!option || option == 'workspace') {
+        if (option == 'workspace') {
             this.view_.addClass('entryPlaygroundWorkspace');
 
-            var tabView = Entry.createElement('div', 'entryCategoryTab');
-            tabView.addClass('entryPlaygroundTabWorkspace');
+            var tabView = Entry.createElement(
+                'div',
+                'entryCategoryTab'
+            ).addClass('entryPlaygroundTabWorkspace');
             this.view_.appendChild(tabView);
             this.generateTabView(tabView);
             this.tabView_ = tabView;
 
-            var curtainView = Entry.createElement('div', 'entryCurtain');
-            curtainView.addClass('entryPlaygroundCurtainWorkspace');
-            curtainView.addClass('entryRemove');
-            var ment = Lang.Workspace.cannot_edit_click_to_stop.split('.');
-            curtainView.innerHTML = ment[0] + '.<br/>' + ment[1];
+            var curtainView = Entry.createElement(
+                'div',
+                'entryCurtain'
+            ).addClass('entryPlaygroundCurtainWorkspace entryRemove');
+            var [
+                mentHead,
+                mentTail,
+            ] = Lang.Workspace.cannot_edit_click_to_stop.split('.');
+            curtainView.innerHTML = mentHead + '.<br/>' + mentTail;
             curtainView.addEventListener('click', function() {
                 Entry.engine.toggleStop();
             });
             this.view_.appendChild(curtainView);
             this.curtainView_ = curtainView;
 
-            var pictureView = Entry.createElement('div', 'entryPicture');
-            pictureView.addClass('entryPlaygroundPictureWorkspace');
-            pictureView.addClass('entryRemove');
+            var pictureView = Entry.createElement(
+                'div',
+                'entryPicture'
+            ).addClass('entryPlaygroundPictureWorkspace entryRemove');
             this.view_.appendChild(pictureView);
             this.generatePictureView(pictureView);
             this.pictureView_ = pictureView;
 
-            var textView = Entry.createElement('div', 'entryText');
-            textView.addClass('entryPlaygroundTextWorkspace');
-            textView.addClass('entryRemove');
+            var textView = Entry.createElement('div', 'entryText').addClass(
+                'entryPlaygroundTextWorkspace entryRemove'
+            );
             this.view_.appendChild(textView);
             this.generateTextView(textView);
             this.textView_ = textView;
 
-            var soundView = Entry.createElement('div', 'entrySound');
-            soundView.addClass('entryPlaygroundSoundWorkspace');
-            soundView.addClass('entryRemove');
+            var soundView = Entry.createElement('div', 'entrySound').addClass(
+                'entryPlaygroundSoundWorkspace entryRemove'
+            );
             this.view_.appendChild(soundView);
             this.generateSoundView(soundView);
             this.soundView_ = soundView;
 
-            var defaultView = Entry.createElement('div', 'entryDefault');
-            defaultView.addClass('entryPlaygroundDefaultWorkspace');
+            var defaultView = Entry.createElement(
+                'div',
+                'entryDefault'
+            ).addClass('entryPlaygroundDefaultWorkspace');
             this.view_.appendChild(defaultView);
             this.generateDefaultView(defaultView);
             this.defaultView_ = defaultView;
 
             //Code view must be append at last.
-            var codeView = Entry.createElement('div', 'entryCode');
-            codeView.addClass('entryPlaygroundCodeWorkspace');
-            codeView.addClass('entryRemove');
+            var codeView = Entry.createElement('div', 'entryCode').addClass(
+                'entryPlaygroundCodeWorkspace entryRemove'
+            );
             this.view_.appendChild(codeView);
             this.generateCodeView(codeView);
             this.codeView_ = codeView;
 
-            var resizeHandle = Entry.createElement('div');
-            resizeHandle.addClass(
+            var resizeHandle = Entry.createElement('div').addClass(
                 'entryPlaygroundResizeWorkspace',
                 'entryRemove'
             );
@@ -202,15 +209,17 @@ Entry.Playground = function() {
      */
     p.generateTabView = function(tabView) {
         var that = this;
-        var tabList = Entry.createElement('ul');
-        tabList.addClass('entryTabListWorkspace');
+        var tabList = Entry.createElement('ul').addClass(
+            'entryTabListWorkspace'
+        );
         this.tabList_ = tabList;
         tabView.appendChild(tabList);
 
         this.tabViewElements = {};
-        var codeTab = Entry.createElement('li', 'entryCodeTab');
+        var codeTab = Entry.createElement('li', 'entryCodeTab').addClass(
+            'entryTabListItemWorkspace entryTabSelected'
+        );
         codeTab.innerHTML = Lang.Workspace.tab_code;
-        codeTab.addClass('entryTabListItemWorkspace entryTabSelected');
         tabList.appendChild(codeTab);
         codeTab.bindOnClick(function(e) {
             Entry.do('playgroundChangeViewMode', 'code', that.selectedViewMode);
@@ -218,9 +227,10 @@ Entry.Playground = function() {
         this.tabViewElements.code = codeTab;
         this._codeTab = codeTab;
 
-        var pictureTab = Entry.createElement('li', 'entryPictureTab');
+        var pictureTab = Entry.createElement('li', 'entryPictureTab').addClass(
+            'entryTabListItemWorkspace'
+        );
         pictureTab.innerHTML = Lang.Workspace.tab_picture;
-        pictureTab.addClass('entryTabListItemWorkspace');
         tabList.appendChild(pictureTab);
         pictureTab.bindOnClick(function(e) {
             Entry.do(
@@ -232,20 +242,21 @@ Entry.Playground = function() {
         this.tabViewElements.picture = pictureTab;
         this.pictureTab = pictureTab;
 
-        var textboxTab = Entry.createElement('li', 'entryTextboxTab');
+        var textboxTab = Entry.createElement('li', 'entryTextboxTab').addClass(
+            'entryTabListItemWorkspace entryRemove'
+        );
         textboxTab.innerHTML = Lang.Workspace.tab_text;
-        textboxTab.addClass('entryTabListItemWorkspace');
         tabList.appendChild(textboxTab);
         textboxTab.bindOnClick(function(e) {
             Entry.do('playgroundChangeViewMode', 'text', that.selectedViewMode);
         });
         this.tabViewElements.text = textboxTab;
-        textboxTab.addClass('entryRemove');
         this.textboxTab = textboxTab;
 
-        var soundTab = Entry.createElement('li', 'entrySoundTab');
+        var soundTab = Entry.createElement('li', 'entrySoundTab').addClass(
+            'entryTabListItemWorkspace'
+        );
         soundTab.innerHTML = Lang.Workspace.tab_sound;
-        soundTab.addClass('entryTabListItemWorkspace');
         tabList.appendChild(soundTab);
         soundTab.bindOnClick(function(e) {
             Entry.do(
@@ -257,11 +268,11 @@ Entry.Playground = function() {
         this.tabViewElements.sound = soundTab;
         this.soundTab = soundTab;
 
-        var variableTab = Entry.createElement('li', 'entryVariableTab');
+        var variableTab = Entry.createElement(
+            'li',
+            'entryVariableTab'
+        ).addClass('entryTabListItemWorkspace entryVariableTabWorkspace');
         variableTab.innerHTML = Lang.Workspace.tab_attribute;
-        variableTab.addClass(
-            'entryTabListItemWorkspace entryVariableTabWorkspace'
-        );
         tabList.appendChild(variableTab);
         variableTab.bindOnClick(function(e) {
             Entry.do(
@@ -327,8 +338,10 @@ Entry.Playground = function() {
      */
     p.generatePictureView = function(PictureView) {
         if (Entry.type == 'workspace') {
-            var pictureAdd = Entry.createElement('div', 'entryAddPicture');
-            pictureAdd.addClass('entryPlaygroundAddPicture');
+            var pictureAdd = Entry.createElement(
+                'div',
+                'entryAddPicture'
+            ).addClass('entryPlaygroundAddPicture');
             pictureAdd.bindOnClick(function(e) {
                 if (!Entry.container || Entry.container.isSceneObjectsExist())
                     Entry.do('playgroundClickAddPicture');
@@ -342,31 +355,34 @@ Entry.Playground = function() {
             var innerPictureAdd = Entry.createElement(
                 'div',
                 'entryAddPictureInner'
-            );
-            innerPictureAdd.addClass('entryPlaygroundAddPictureInner');
+            ).addClass('entryPlaygroundAddPictureInner');
             innerPictureAdd.innerHTML = Lang.Workspace.picture_add;
             pictureAdd.appendChild(innerPictureAdd);
             PictureView.appendChild(pictureAdd);
             this._pictureAddButton = innerPictureAdd;
-            var pictureList = Entry.createElement('ul', 'entryPictureList');
-            pictureList.addClass('entryPlaygroundPictureList');
-            if ($)
-                $(pictureList).sortable({
-                    start: function(event, ui) {
-                        ui.item.data('start_pos', ui.item.index());
-                    },
-                    stop: function(event, ui) {
-                        var start = ui.item.data('start_pos');
-                        var end = ui.item.index();
-                        Entry.playground.movePicture(start, end);
-                    },
-                    axis: 'y',
-                });
+            var pictureList = Entry.createElement(
+                'ul',
+                'entryPictureList'
+            ).addClass('entryPlaygroundPictureList');
+
+            $(pictureList).sortable({
+                start: function(event, ui) {
+                    ui.item.data('start_pos', ui.item.index());
+                },
+                stop: function(event, ui) {
+                    var start = ui.item.data('start_pos');
+                    var end = ui.item.index();
+                    Entry.playground.movePicture(start, end);
+                },
+                axis: 'y',
+            });
             PictureView.appendChild(pictureList);
             this.pictureListView_ = pictureList;
 
-            var painterView = Entry.createElement('div', 'entryPainter');
-            painterView.addClass('entryPlaygroundPainter');
+            var painterView = Entry.createElement(
+                'div',
+                'entryPainter'
+            ).addClass('entryPlaygroundPainter');
             PictureView.appendChild(painterView);
 
             this.painter = new Entry.Painter(painterView);
@@ -409,29 +425,31 @@ Entry.Playground = function() {
      * @return {Element}
      */
     p.generateTextView = function(textView) {
+        var that = this;
         var wrap = Entry.createElement('div');
         textView.appendChild(wrap);
-        var textProperties = Entry.createElement('div');
-        textProperties.addClass('textProperties');
+        var textProperties = Entry.createElement('div').addClass(
+            'textProperties'
+        );
         wrap.appendChild(textProperties);
-        var fontWrapper = Entry.createElement('div');
-        fontWrapper.addClass('entryTextFontSelect');
+        var fontWrapper = Entry.createElement('div').addClass(
+            'entryTextFontSelect'
+        );
         textProperties.appendChild(fontWrapper);
 
         var fontName = Entry.createElement(
             'select',
             'entryPainterAttrFontName'
-        );
-        fontName.addClass(
+        ).addClass(
             'entryPlaygroundPainterAttrFontName',
             'entryTextFontSelecter'
         );
         fontName.size = '1';
-        fontName.onchange = function(evt) {
-            var font = evt.target.value;
+        fontName.onchange = function({ target }) {
+            var font = target.value;
             if (font == 'Nanum Pen Script' || font == 'Jeju Hallasan') {
                 var textValue = textEditInput.value;
-                if (Entry.playground.object.entity.getLineBreak())
+                if (that.object.entity.getLineBreak())
                     textValue = textEditArea.value;
 
                 if (/[\u4E00-\u9FFF]/.exec(textValue) != null) {
@@ -440,41 +458,46 @@ Entry.Playground = function() {
                     entrylms.alert(Lang.Menus.not_supported_text);
                 }
             }
-            Entry.playground.object.entity.setFontType(font);
+            that.object.entity.setFontType(font);
         };
-        for (var i = 0; i < Entry.fonts.length; i++) {
-            var font = Entry.fonts[i];
+
+        Entry.fonts.forEach((font) => {
             var element = Entry.createElement('option');
             element.value = font.family;
             element.innerHTML = font.name;
 
             fontName.appendChild(element);
-        }
+        });
+
         this.fontName_ = fontName;
         fontWrapper.appendChild(fontName);
 
-        var textButtons = Entry.createElement('ul');
-        textButtons.addClass('entryPlayground_text_buttons');
+        var textButtons = Entry.createElement('ul').addClass(
+            'entryPlayground_text_buttons'
+        );
         textProperties.appendChild(textButtons);
 
-        var alignLeftBtn = Entry.createElement('li');
-        alignLeftBtn.addClass('entryPlaygroundTextAlignLeft');
+        var alignLeftBtn = Entry.createElement('li').addClass(
+            'entryPlaygroundTextAlignLeft'
+        );
         alignLeftBtn.bindOnClick(function(e) {
             Entry.playground.setFontAlign(Entry.TEXT_ALIGN_LEFT);
         });
         textButtons.appendChild(alignLeftBtn);
         this.alignLeftBtn = alignLeftBtn;
 
-        var alignCenterBtn = Entry.createElement('li');
-        alignCenterBtn.addClass('entryPlaygroundTextAlignCenter');
+        var alignCenterBtn = Entry.createElement('li').addClass(
+            'entryPlaygroundTextAlignCenter'
+        );
         alignCenterBtn.bindOnClick(function(e) {
             Entry.playground.setFontAlign(Entry.TEXT_ALIGN_CENTER);
         });
         textButtons.appendChild(alignCenterBtn);
         this.alignCenterBtn = alignCenterBtn;
 
-        var alignRightBtn = Entry.createElement('li');
-        alignRightBtn.addClass('entryPlaygroundTextAlignRight');
+        var alignRightBtn = Entry.createElement('li').addClass(
+            'entryPlaygroundTextAlignRight'
+        );
         alignRightBtn.bindOnClick(function(e) {
             Entry.playground.setFontAlign(Entry.TEXT_ALIGN_RIGHT);
         });
@@ -533,13 +556,9 @@ Entry.Playground = function() {
         italicButton.bindOnClick(function() {
             //toggle
             var isItalic = Entry.playground.object.entity.toggleFontItalic();
-            if (isItalic) {
-                italicImage.src =
-                    Entry.mediaFilePath + 'text_button_italic_true.png';
-            } else {
-                italicImage.src =
-                    Entry.mediaFilePath + '/text_button_italic_false.png';
-            }
+            italicImage.src = `${
+                Entry.mediaFilePath
+            }text_button_italic_${isItalic.toString()}.png`;
         });
 
         var italicImage = Entry.createElement(
@@ -558,11 +577,9 @@ Entry.Playground = function() {
             var strikeState =
                 !Entry.playground.object.entity.getStrike() || false;
             Entry.playground.object.entity.setStrike(strikeState);
-            strikeImage.src =
-                Entry.mediaFilePath +
-                'text_button_strike_' +
-                strikeState +
-                '.png';
+            strikeImage.src = `${
+                Entry.mediaFilePath
+            }text_button_strike_${strikeState.toString()}.png`;
         });
         var strikeImage = Entry.createElement(
             'img',
@@ -575,23 +592,32 @@ Entry.Playground = function() {
         textButtons.appendChild(foregroundWrap);
         var foregroundButton = Entry.createElement('a');
         foregroundWrap.appendChild(foregroundButton);
-        foregroundButton.bindOnClick(function() {
-            Entry.playground.toggleColourChooser('foreground');
+        foregroundButton.bindOnClick(function({ target }) {
+            if ($(target).hasClass('fontColorCell')) {
+                Entry.playground.setTextColour(target.getAttribute('colour'));
+            } else {
+                Entry.playground.toggleColourChooser('foreground');
+            }
         });
         var foregroundImage = Entry.createElement(
             'img',
             'playgroundTextColorButtonImg'
         );
         foregroundButton.appendChild(foregroundImage);
-        foregroundImage.src =
-            Entry.mediaFilePath + 'text_button_color_false.png';
+        foregroundImage.src = `${
+            Entry.mediaFilePath
+        }text_button_color_false.png`;
 
         var backgroundWrap = Entry.createElement('li');
         textButtons.appendChild(backgroundWrap);
         var backgroundButton = Entry.createElement('a');
         backgroundWrap.appendChild(backgroundButton);
-        backgroundButton.bindOnClick(function() {
-            Entry.playground.toggleColourChooser('background');
+        backgroundButton.bindOnClick(function({ target }) {
+            if ($(target).hasClass('fontColorCell')) {
+                that.setBackgroundColour(target.getAttribute('colour'));
+            } else {
+                that.toggleColourChooser('background');
+            }
         });
         var backgroundImage = Entry.createElement(
             'img',
@@ -601,57 +627,54 @@ Entry.Playground = function() {
         backgroundImage.src =
             Entry.mediaFilePath + 'text_button_background_false.png';
 
-        var fgColorDiv = Entry.createElement('div');
-        fgColorDiv.addClass('entryPlayground_fgColorDiv');
-        var bgColorDiv = Entry.createElement('div');
-        bgColorDiv.addClass('entryPlayground_bgColorDiv');
+        var fgColorDiv = Entry.createElement('div').addClass(
+            'entryPlayground_fgColorDiv'
+        );
+        var bgColorDiv = Entry.createElement('div').addClass(
+            'entryPlayground_bgColorDiv'
+        );
 
         foregroundButton.appendChild(fgColorDiv);
         backgroundButton.appendChild(bgColorDiv);
 
-        var coloursWrapper = Entry.createElement('div');
-        coloursWrapper.addClass('entryPlaygroundTextColoursWrapper');
+        var coloursWrapper = Entry.createElement('div').addClass(
+            'entryPlaygroundTextColoursWrapper'
+        );
         this.coloursWrapper = coloursWrapper;
         foregroundButton.appendChild(coloursWrapper);
         var colours = Entry.getColourCodes();
-        for (var i = 0; i < colours.length; i++) {
-            var cell = Entry.createElement('div');
-            cell.addClass('modal_colour');
-            cell.setAttribute('colour', colours[i]);
-            cell.style.backgroundColor = colours[i];
-            if (i === 0) cell.addClass('modalColourTrans');
-            cell.bindOnClick(function(e) {
-                Entry.playground.setTextColour(e.target.getAttribute('colour'));
-            });
-            coloursWrapper.appendChild(cell);
-        }
+
+        var foregroundFragment = document.createDocumentFragment();
+        colours.forEach((color, idx) => {
+            var cell = Entry.createElement('div').addClass(
+                'modal_colour fontColorCell'
+            );
+            cell.setAttribute('colour', color);
+            cell.style.backgroundColor = color;
+            if (idx === 0) cell.addClass('modalColourTrans');
+            foregroundFragment.appendChild(cell);
+        });
+        var backgroundFragment = foregroundFragment.cloneNode(true);
+        coloursWrapper.appendChild(foregroundFragment);
         coloursWrapper.style.display = 'none';
 
-        var backgroundsWrapper = Entry.createElement('div');
-        backgroundsWrapper.addClass('entryPlaygroundTextBackgroundsWrapper');
+        var backgroundsWrapper = Entry.createElement('div').addClass(
+            'entryPlaygroundTextBackgroundsWrapper'
+        );
         this.backgroundsWrapper = backgroundsWrapper;
         backgroundButton.appendChild(backgroundsWrapper);
-        for (var i = 0; i < colours.length; i++) {
-            var cell = Entry.createElement('div');
-            cell.addClass('modal_colour');
-            cell.setAttribute('colour', colours[i]);
-            cell.style.backgroundColor = colours[i];
-            if (i === 0) cell.addClass('modalColourTrans');
-            cell.bindOnClick(function(e) {
-                Entry.playground.setBackgroundColour(
-                    e.target.getAttribute('colour')
-                );
-            });
-            backgroundsWrapper.appendChild(cell);
-        }
+
+        backgroundsWrapper.appendChild(backgroundFragment);
         backgroundsWrapper.style.display = 'none';
 
-        var textEditInput = Entry.createElement('input');
-        textEditInput.addClass('entryPlayground_textBox');
+        var textEditInput = Entry.createElement('input').addClass(
+            'entryPlayground_textBox'
+        );
         var textChangeApply = function() {
-            var fontName = Entry.getElementsByClassName(
-                'entryPlaygroundPainterAttrFontName'
-            )[0];
+            var object = Entry.playground.object;
+            var entity = object.entity;
+            var fontName = _.first($('.entryPlaygroundPainterAttrFontName'));
+
             if (
                 fontName.value == 'Nanum Pen Script' ||
                 fontName.value == 'Jeju Hallasan'
@@ -659,12 +682,12 @@ Entry.Playground = function() {
                 if (/[\u4E00-\u9FFF]/.exec(this.value) != null) {
                     var font = 'KoPub Batang';
                     fontName.value = font;
-                    Entry.playground.object.entity.setFontType(font);
+                    entity.setFontType(font);
                     entrylms.alert(Lang.Menus.not_supported_text);
                 }
             }
-            Entry.playground.object.setText(this.value);
-            Entry.playground.object.entity.setText(this.value);
+            object.setText(this.value);
+            entity.setText(this.value);
         };
         textEditInput.onkeyup = textChangeApply;
         textEditInput.onchange = textChangeApply;
@@ -698,90 +721,77 @@ Entry.Playground = function() {
             if (textEditArea.value !== textEditArea.prevText) {
                 Entry.do('editText', textEditArea.value, textEditArea.prevText);
             }
-            // Entry.dispatchEvent('textEdited');
         };
         this.textEditArea = textEditArea;
         wrap.appendChild(textEditArea);
 
-        var fontSizeWrapper = Entry.createElement('div');
-        fontSizeWrapper.addClass('entryPlaygroundFontSizeWrapper');
+        var fontSizeWrapper = Entry.createElement('div').addClass(
+            'entryPlaygroundFontSizeWrapper'
+        );
         wrap.appendChild(fontSizeWrapper);
         this.fontSizeWrapper = fontSizeWrapper;
 
-        var fontSizeSlider = Entry.createElement('div');
-        fontSizeSlider.addClass('entryPlaygroundFontSizeSlider');
+        var fontSizeSlider = Entry.createElement('div').addClass(
+            'entryPlaygroundFontSizeSlider'
+        );
         fontSizeWrapper.appendChild(fontSizeSlider);
 
-        var fontSizeIndiciator = Entry.createElement('div');
-        fontSizeIndiciator.addClass('entryPlaygroundFontSizeIndicator');
+        var fontSizeIndiciator = Entry.createElement('div').addClass(
+            'entryPlaygroundFontSizeIndicator'
+        );
         fontSizeSlider.appendChild(fontSizeIndiciator);
         this.fontSizeIndiciator = fontSizeIndiciator;
 
-        var fontSizeKnob = Entry.createElement('div');
-        fontSizeKnob.addClass('entryPlaygroundFontSizeKnob');
+        var fontSizeKnob = Entry.createElement('div').addClass(
+            'entryPlaygroundFontSizeKnob'
+        );
         fontSizeSlider.appendChild(fontSizeKnob);
         this.fontSizeKnob = fontSizeKnob;
 
-        var fontSizeLabel = Entry.createElement('div');
-        fontSizeLabel.addClass('entryPlaygroundFontSizeLabel');
+        var fontSizeLabel = Entry.createElement('div').addClass(
+            'entryPlaygroundFontSizeLabel'
+        );
         fontSizeLabel.innerHTML = Lang.General.font_size;
         fontSizeWrapper.appendChild(fontSizeLabel);
 
-        var isFontSizing = false;
-        var resizeOffset = 0;
-        fontSizeKnob.onmousedown = function(e) {
-            isFontSizing = true;
-            resizeOffset = $(fontSizeSlider).offset().left;
-            //resizeOffset = e.offsetX;
-        };
+        $(fontSizeKnob).bind(
+            'mousedown.fontKnob touchstart.fontKnob',
+            function() {
+                var resizeOffset = $(fontSizeSlider).offset().left;
 
-        fontSizeKnob.addEventListener('touchstart', function(e) {
-            isFontSizing = true;
-            resizeOffset = $(fontSizeSlider).offset().left;
-        });
+                var doc = $(document);
+                doc.bind('mousemove.fontKnob touchmove.fontKnob', onMouseMove);
+                doc.bind('mouseup.fontKnob touchend.fontKnob', onMouseUp);
 
-        document.addEventListener('mousemove', function(e) {
-            if (isFontSizing) {
-                var left = e.pageX - resizeOffset;
-                left = Math.max(left, 5);
-                left = Math.min(left, 88);
-                fontSizeKnob.style.left = left + 'px';
-                left /= 0.88;
-                fontSizeIndiciator.style.width = left + '%';
-                Entry.playground.object.entity.setFontSize(left);
+                function onMouseMove(e) {
+                    var left = e.pageX - resizeOffset;
+                    left = Math.max(left, 5);
+                    left = Math.min(left, 88);
+                    fontSizeKnob.style.left = left + 'px';
+                    left /= 0.88;
+                    fontSizeIndiciator.style.width = left + '%';
+                    Entry.playground.object.entity.setFontSize(left);
+                }
+
+                function onMouseUp(e) {
+                    $(document).unbind('.fontKnob');
+                }
             }
-        });
+        );
 
-        document.addEventListener('touchmove', function(e) {
-            if (isFontSizing) {
-                var left = e.touches[0].pageX - resizeOffset;
-                left = Math.max(left, 5);
-                left = Math.min(left, 88);
-                fontSizeKnob.style.left = left + 'px';
-                left /= 0.88;
-                fontSizeIndiciator.style.width = left + '%';
-                Entry.playground.object.entity.setFontSize(left);
-            }
-        });
-
-        document.addEventListener('mouseup', function(e) {
-            isFontSizing = false;
-        });
-
-        document.addEventListener('touchend', function(e) {
-            isFontSizing = false;
-        });
-
-        var linebreakWrapper = Entry.createElement('div');
-        linebreakWrapper.addClass('entryPlaygroundLinebreakWrapper');
+        var linebreakWrapper = Entry.createElement('div').addClass(
+            'entryPlaygroundLinebreakWrapper'
+        );
         wrap.appendChild(linebreakWrapper);
 
-        var linebreakHorizontal = Entry.createElement('hr');
-        linebreakHorizontal.addClass('entryPlaygroundLinebreakHorizontal');
+        var linebreakHorizontal = Entry.createElement('hr').addClass(
+            'entryPlaygroundLinebreakHorizontal'
+        );
         linebreakWrapper.appendChild(linebreakHorizontal);
 
-        var linebreakButtons = Entry.createElement('div');
-        linebreakButtons.addClass('entryPlaygroundLinebreakButtons');
+        var linebreakButtons = Entry.createElement('div').addClass(
+            'entryPlaygroundLinebreakButtons'
+        );
         linebreakWrapper.appendChild(linebreakButtons);
 
         var linebreakOffImage = Entry.createElement('img');
@@ -810,8 +820,9 @@ Entry.Playground = function() {
         linebreakButtons.appendChild(linebreakOnImage);
         this.linebreakOnImage = linebreakOnImage;
 
-        var linebreakDescription = Entry.createElement('div');
-        linebreakDescription.addClass('entryPlaygroundLinebreakDescription');
+        var linebreakDescription = Entry.createElement('div').addClass(
+            'entryPlaygroundLinebreakDescription'
+        );
         linebreakWrapper.appendChild(linebreakDescription);
 
         var linebreakDescTitle = Entry.createElement('p');
@@ -851,25 +862,25 @@ Entry.Playground = function() {
             var innerSoundAdd = Entry.createElement(
                 'div',
                 'entryAddSoundInner'
-            );
-            innerSoundAdd.addClass('entryPlaygroundAddSoundInner');
+            ).addClass('entryPlaygroundAddSoundInner');
             innerSoundAdd.innerHTML = Lang.Workspace.sound_add;
             soundAdd.appendChild(innerSoundAdd);
             SoundView.appendChild(soundAdd);
-            var soundList = Entry.createElement('ul', 'entrySoundList');
-            soundList.addClass('entryPlaygroundSoundList');
-            if ($)
-                $(soundList).sortable({
-                    start: function(event, ui) {
-                        ui.item.data('start_pos', ui.item.index());
-                    },
-                    stop: function(event, ui) {
-                        var start = ui.item.data('start_pos');
-                        var end = ui.item.index();
-                        Entry.playground.moveSound(start, end);
-                    },
-                    axis: 'y',
-                });
+            var soundList = Entry.createElement(
+                'ul',
+                'entrySoundList'
+            ).addClass('entryPlaygroundSoundList');
+            $(soundList).sortable({
+                start: function(event, ui) {
+                    ui.item.data('start_pos', ui.item.index());
+                },
+                stop: function(event, ui) {
+                    var start = ui.item.data('start_pos');
+                    var end = ui.item.index();
+                    Entry.playground.moveSound(start, end);
+                },
+                axis: 'y',
+            });
             SoundView.appendChild(soundList);
             this.soundListView_ = soundList;
             this._soundAddButton = innerSoundAdd;
@@ -1017,7 +1028,7 @@ Entry.Playground = function() {
      * @param {picture model} picture
      */
     p.addPicture = function(picture, isNew) {
-        var tempPicture = Entry.cloneSimpleObject(picture);
+        var tempPicture = _.clone(picture);
 
         if (isNew === true) delete tempPicture.id;
         delete tempPicture.view;
@@ -1266,7 +1277,7 @@ Entry.Playground = function() {
      * @param {boolean} NotForView if this is true, add element into object also.
      */
     p.addSound = function(sound, NotForView, isNew) {
-        var tempSound = Entry.cloneSimpleObject(sound);
+        var tempSound = _.clone(sound);
         delete tempSound.view;
         if (isNew === true) delete tempSound.id;
 
@@ -1282,7 +1293,7 @@ Entry.Playground = function() {
     p.downloadSound = function(soundId) {
         var sound = Entry.playground.object.getSound(soundId);
         if (sound.fileurl) {
-            if (sound.fileurl.indexOf('bark.mp3') > -1) {
+            if (~sound.fileurl.indexOf('bark.mp3')) {
                 window.open(
                     '/api/sprite/download/entryjs/' +
                         encodeURIComponent(sound.fileurl) +
@@ -1467,30 +1478,29 @@ Entry.Playground = function() {
      * @param {!Element} handle
      */
     p.initializeResizeHandle = function(handle) {
+        var listener;
+        var that = this;
         $(handle).bind('mousedown touchstart', function(e) {
-            Entry.playground.resizing = true;
+            that.resizing = true;
             if (Entry.documentMousemove) {
-                Entry.playground.resizeEvent = Entry.documentMousemove.attach(
-                    this,
-                    function(e) {
-                        if (Entry.playground.resizing) {
-                            Entry.resizeElement({
-                                menuWidth:
-                                    e.clientX -
-                                    Entry.interfaceState.canvasWidth,
-                            });
-                        }
+                listener = Entry.documentMousemove.attach(this, function({
+                    clientX,
+                }) {
+                    if (that.resizing) {
+                        Entry.resizeElement({
+                            menuWidth:
+                                clientX - Entry.interfaceState.canvasWidth,
+                        });
                     }
-                );
+                });
             }
         });
 
         $(document).bind('mouseup touchend', function(e) {
-            var listener = Entry.playground.resizeEvent;
             if (listener) {
-                Entry.playground.resizing = false;
+                that.resizing = false;
                 listener.destroy();
-                delete Entry.playground.resizeEvent;
+                listener = undefined;
             }
         });
     };
@@ -1669,17 +1679,19 @@ Entry.Playground = function() {
         };
 
         element.appendChild(nameView);
-        var sizeView = Entry.createElement('div', 's_' + picture.id);
-        sizeView.addClass('entryPlaygroundPictureSize');
+        var sizeView = Entry.createElement('div', 's_' + picture.id).addClass(
+            'entryPlaygroundPictureSize'
+        );
         sizeView.innerHTML =
             picture.dimension.width + ' X ' + picture.dimension.height;
         element.appendChild(sizeView);
     };
 
     p.generateSoundElement = function(sound) {
-        var element = Entry.createElement('sound', sound.id);
+        var element = Entry.createElement('sound', sound.id).addClass(
+            'entryPlaygroundSoundElement'
+        );
         sound.view = element;
-        element.addClass('entryPlaygroundSoundElement');
         element.sound = sound;
 
         Entry.Utils.disableContextmenu(sound.view);
@@ -1734,14 +1746,15 @@ Entry.Playground = function() {
             Entry.ContextMenu.show(options, 'workspace-contextmenu');
         });
 
-        var orderHolder = Entry.createElement('div');
-        orderHolder.addClass('entryPlaygroundSoundOrder');
+        var orderHolder = Entry.createElement('div').addClass(
+            'entryPlaygroundSoundOrder'
+        );
         element.orderHolder = orderHolder;
         element.appendChild(orderHolder);
 
-        var thumbnailView = Entry.createElement('div');
-        thumbnailView.addClass('entryPlaygroundSoundThumbnail');
-        thumbnailView.addClass('entryPlaygroundSoundPlay');
+        var thumbnailView = Entry.createElement('div').addClass(
+            'entryPlaygroundSoundThumbnail entryPlaygroundSoundPlay'
+        );
         var isPlaying = false;
         var soundInstance;
         thumbnailView.addEventListener('click', function() {
@@ -1768,8 +1781,9 @@ Entry.Playground = function() {
         });
 
         element.appendChild(thumbnailView);
-        var nameView = Entry.createElement('input');
-        nameView.addClass('entryPlaygroundSoundName');
+        var nameView = Entry.createElement('input').addClass(
+            'entryPlaygroundSoundName'
+        );
         nameView.sound = sound;
         nameView.value = sound.name;
         Entry.attachEventListener(nameView, 'blur', nameViewBlur);
@@ -1805,8 +1819,9 @@ Entry.Playground = function() {
             if (e.keyCode == 13) this.blur();
         };
         element.appendChild(nameView);
-        var lengthView = Entry.createElement('div');
-        lengthView.addClass('entryPlaygroundSoundLength');
+        var lengthView = Entry.createElement('div').addClass(
+            'entryPlaygroundSoundLength'
+        );
         lengthView.innerHTML = sound.duration + ' ' + Lang.General.second;
         element.appendChild(lengthView);
     };

@@ -444,7 +444,7 @@ Entry.Utils.isNumber = function(num) {
     }
 };
 
-Entry.Utils.generateId = function() {
+Entry.Utils.generateId = function(object) {
     return (
         '0000' + ((Math.random() * Math.pow(36, 4)) << 0).toString(36)
     ).substr(-4);
@@ -528,8 +528,7 @@ Entry.Utils._EmphasizeColorMap = {
 };
 
 Entry.Utils.getEmphasizeColor = function(color) {
-    var colorKey = color.toUpperCase();
-    return Entry.Utils._EmphasizeColorMap[colorKey] || color;
+    return Entry.Utils._EmphasizeColorMap[color.toUpperCase()] || color;
 };
 
 // Take input from [0, n] and return it as [0, 1]
@@ -892,17 +891,14 @@ Entry.addEventListener = function(eventName, fn) {
  * @param {!string} eventName
  * @param {?} params
  */
-Entry.dispatchEvent = function(eventName, params) {
+Entry.dispatchEvent = function(eventName, ...args) {
     if (!this.events_) {
         this.events_ = {};
         return;
     }
 
     var events = this.events_[eventName];
-    if (!events || events.length === 0) return;
-
-    var args = Array.prototype.slice.call(arguments);
-    args.shift();
+    if (_.isEmpty(events)) return;
 
     events.forEach(function(func) {
         func.apply(window, args);
@@ -914,14 +910,13 @@ Entry.dispatchEvent = function(eventName, params) {
  * @param {!string} eventName
  */
 Entry.removeEventListener = function(eventName, fn) {
-    if (this.events_[eventName]) {
-        for (var i = 0, l = this.events_[eventName].length; i < l; i++) {
-            if (this.events_[eventName][i] === fn) {
-                this.events_[eventName].splice(i, 1);
-                break;
-            }
-        }
+    var events = this.events_[eventName];
+    if (_.isEmpty(events)) {
+        return;
     }
+    this.events_[eventName] = events.filter((a) => {
+        return fn !== a;
+    });
 };
 
 /**
@@ -1019,11 +1014,7 @@ Entry.adjustValueWithMaxMin = function(input, min, max) {
  * @return {boolean} return true when target value exists already
  */
 Entry.isExist = function(targetValue, identifier, arr) {
-    for (var i = 0; i < arr.length; i++) {
-        if (arr[i][identifier] == targetValue) return arr[i];
-    }
-
-    return false;
+    return !!_.findWhere(arr, { [identifier]: targetValue });
 };
 
 Entry.getColourCodes = function() {
@@ -1120,21 +1111,6 @@ Entry.removeElement = function(element) {
     if (element && element.parentNode) {
         element.parentNode.removeChild(element);
     }
-};
-
-/*
- * Replacement for elements.getElementsByClassName(className)
- * @param {String} class name
- * @return {Array} arr
- */
-Entry.getElementsByClassName = function(cl) {
-    var retnode = [];
-    var elem = document.getElementsByTagName('*');
-    for (var i = 0; i < elem.length; i++) {
-        if ((' ' + elem[i].className + ' ').indexOf(' ' + cl + ' ') > -1)
-            retnode.push(elem[i]);
-    }
-    return retnode;
 };
 
 /*
@@ -1298,15 +1274,7 @@ Entry.bindAnimationCallback = function(element, func) {
 };
 
 Entry.cloneSimpleObject = function(object) {
-    var clone = {};
-    for (var i in object) clone[i] = object[i];
-    return clone;
-};
-
-Entry.nodeListToArray = function(nl) {
-    var arr = new Array(nl.length);
-    for (var i = -1, l = nl.length; ++i !== l; arr[i] = nl[i]);
-    return arr;
+    return _.clone(object);
 };
 
 Entry.computeInputWidth = (function() {
@@ -2320,13 +2288,13 @@ Entry.Utils.glideBlock = function(svgGroup, x, y, callback) {
 };
 
 Entry.Utils.getScrollPos = function() {
-    var elem =
+    var { scrollLeft, scrollTop } =
         Entry.getBrowserType().indexOf('IE') > -1
             ? document.documentElement
             : document.body;
     return {
-        left: elem.scrollLeft,
-        top: elem.scrollTop,
+        left: scrollLeft,
+        top: scrollTop,
     };
 };
 
@@ -2336,7 +2304,7 @@ Entry.Utils.copy = function(target) {
 
 //helper function for development and debug
 Entry.Utils.getAllObjectsBlockList = function() {
-    return Entry.container.objects_.reduce(function(prev, {script}) {
+    return Entry.container.objects_.reduce(function(prev, { script }) {
         return prev.concat(script.getBlockList());
     }, []);
 };
