@@ -105,9 +105,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
         this.optionGroup[0].src =
             Entry.mediaFilePath + '/media/keyboard_workspace_widget.png';
 
-        this.optionGroup.on('mousedown', function(e) {
-            e.stopPropagation();
-        });
+        this.optionGroup.on('mousedown', (e) => e.stopPropagation());
 
         this.optionGroup.css({ left: pos.x, top: pos.y });
     };
@@ -151,10 +149,8 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
 
     p.resize = function() {
         var width = this.getTextWidth() + 1;
-
-        this._header.attr({ width: width });
-
-        this.box.set({ width: width });
+        this._header.attr({ width });
+        this.box.set({ width });
         this._blockView.dAlignContent();
     };
 

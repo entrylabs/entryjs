@@ -145,17 +145,11 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
     p.renderOptions = function() {
         var that = this;
 
-        var blockView = this._block.view;
-
         this._attachDisposeEvent();
 
         this.optionGroup = Entry.Dom('ul', {
             class: 'entry-widget-dropdown',
             parent: $('body'),
-        });
-
-        this.optionGroup.bind('mousedown touchstart', function(e) {
-            e.stopPropagation();
         });
 
         var OPTION_X_PADDING = 30;
@@ -164,15 +158,27 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
 
         var CONTENT_HEIGHT = this._CONTENT_HEIGHT + 4;
 
+        this.optionGroup.bind('mousedown touchstart', (e) =>
+            e.stopPropagation()
+        );
+
+        this.optionGroup.on('mouseup', '.rect', function(e) {
+            e.stopPropagation();
+            that.applyValue(this._value);
+            that.destroyOption(undefined, true);
+            that._selectBlockView();
+        });
+
         var fragment = document.createDocumentFragment();
 
-        for (var i = 0, len = options.length; i < len; i++) {
-            var option = options[i];
+        options.forEach((option) => {
             var text = (option[0] = this._convert(option[0], option[1]));
             var value = option[1];
             var element = Entry.Dom('li', {
                 class: 'rect',
             });
+            var elem = element[0];
+            elem._value = value;
 
             var left = Entry.Dom('span', {
                 class: 'left',
@@ -185,18 +191,8 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
             }).text(text);
 
             if (this.getValue() == value) left.text('\u2713');
-
-            (function(elem, value) {
-                elem.bind('mouseup touchend', function(e) {
-                    e.stopPropagation();
-                    that.applyValue(value);
-                    that.destroyOption(undefined, true);
-                    that._selectBlockView();
-                });
-            })(element, value);
-
-            fragment.appendChild(element[0]);
-        }
+            fragment.appendChild(elem);
+        });
 
         this.optionGroup[0].appendChild(fragment);
         this._position();
@@ -260,11 +256,14 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
         if ((!value && typeof value !== 'number') || value === 'null')
             return Lang.Blocks.no_target;
 
-        var options = this._contents.options;
-        for (var i = 0, len = options.length; i < len; i++) {
-            var option = options[i];
-            if (option[1] == value) return option[0];
+        var matched = _.find(this._contents.options, ([, cValue]) => {
+            return cValue === value;
+        });
+
+        if (matched) {
+            return matched[0];
         }
+
         //no match found
         //check should return value as it is
         if (this._shouldReturnValue(value)) return value;
@@ -281,15 +280,11 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
 
     p.getArrow = function() {
         var isBig = Entry.isMobile();
-        var color = this._arrowColor || this._blockView._schema.color;
-        var points = isBig ? '0,0 19,0 9.5,13' : '0,0 6.4,0 3.2,4.2';
-        var height = isBig ? 13 : 4.2;
-        var width = isBig ? 19 : 6.4;
         return {
-            color: color,
-            points: points,
-            height: height,
-            width: width,
+            color: this._arrowColor || this._blockView._schema.color,
+            points: isBig ? '0,0 19,0 9.5,13' : '0,0 6.4,0 3.2,4.2',
+            height: isBig ? 13 : 4.2,
+            width: isBig ? 19 : 6.4,
         };
     };
 

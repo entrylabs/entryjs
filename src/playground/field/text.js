@@ -6,7 +6,7 @@
 /*
  *
  */
-Entry.FieldText = function(content, blockView, index) {
+Entry.FieldText = function({fontSize, align, text, color}, blockView, index) {
     this._block = blockView.block;
     this._blockView = blockView;
     this._index = index;
@@ -14,14 +14,14 @@ Entry.FieldText = function(content, blockView, index) {
     this.box = new Entry.BoxModel();
 
     this._font_size =
-        content.fontSize || blockView.getSkeleton().fontSize || 12;
+        fontSize || blockView.getSkeleton().fontSize || 12;
     this._color =
-        content.color ||
+        color ||
         this._block.getSchema().fontColor ||
         blockView.getSkeleton().color ||
         'white';
-    this._align = content.align || 'left';
-    this._text = this.getValue() || content.text;
+    this._align = align || 'left';
+    this._text = this.getValue() || text;
     this.setValue(null);
 
     this.textElement = null;
@@ -34,10 +34,10 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldText);
 (function(p) {
     p.renderStart = function() {
         var that = this;
-        var blockView = this._blockView;
+        var { contentSvgGroup } = this._blockView;
 
         if (!this.textElement) {
-            this.svgGroup = this.textElement = blockView.contentSvgGroup
+            this.svgGroup = this.textElement = contentSvgGroup
                 .elem('text')
                 .attr({
                     style: 'white-space: pre;',
@@ -55,19 +55,19 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldText);
         }
 
         var x = 0;
-        var bBox = this.getTextBBox();
-        if (this._align == 'center') x = -bBox.width / 2;
+        var { width, height } = this.getTextBBox();
+        if (this._align == 'center') x = -width / 2;
 
         this.textElement.attr({
             x: x,
-            y: bBox.height * 0.25,
+            y: height * 0.25,
         });
 
         this.box.set({
             x: 0,
             y: 0,
-            width: bBox.width,
-            height: bBox.height,
+            width,
+            height,
         });
     };
 

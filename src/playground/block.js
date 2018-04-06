@@ -31,7 +31,7 @@ Entry.Block = function(block, thread) {
     var events = this.events.dataAdd;
     if (events && code.object) {
         events.forEach(function(fn) {
-            if (Entry.Utils.isFunction(fn)) fn(that);
+            if (_.isFunction(fn)) fn(that);
         });
     }
 
@@ -43,7 +43,7 @@ Entry.Block = function(block, thread) {
         (!board || (board && board.constructor !== Entry.BlockMenu))
     ) {
         events.forEach(function(fn) {
-            if (Entry.Utils.isFunction(fn)) fn.apply(that, [that]);
+            if (_.isFunction(fn)) fn.apply(that, [that]);
         });
     }
 };
@@ -587,8 +587,7 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
         }
     };
 
-    p.getOutputBlockCount = function(count) {
-        count = count || 0;
+    p.getOutputBlockCount = function(count = 0) {
         var outputBlock = this.getOutputBlock();
         if (outputBlock) return outputBlock.getOutputBlockCount(count + 1);
         else return count;
@@ -611,8 +610,8 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
         return this.statements.indexOf(statement);
     };
 
-    p.pointer = function(pointer) {
-        return this.thread.pointer(pointer || [], this);
+    p.pointer = function(pointer = []) {
+        return this.thread.pointer(pointer, this);
     };
 
     p.targetPointer = function() {
@@ -640,7 +639,7 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
         var currentType = type || this.type;
 
         if (!this._schema && !this.loadSchema()) {
-            return [];
+            return blocks;
         }
 
         if (excludePrimitive && this._schema.isPrimitive) {
@@ -649,27 +648,14 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
 
         currentType === this.type && blocks.push(this);
 
-        var params = this.params;
-        for (var k = 0; k < params.length; k++) {
-            var param = params[k];
-            if (param && param.constructor == Entry.Block) {
-                blocks = blocks.concat(
-                    param.getBlockList(excludePrimitive, type)
-                );
+        return [...this.params, ...this.statements].reduce((blocks, value) => {
+            var constructor = value && value.constructor;
+            if (constructor !== Entry.Block && constructor !== Entry.Thread) {
+                return blocks;
             }
-        }
 
-        var statements = this.statements;
-        if (statements) {
-            for (var j = 0; j < statements.length; j++) {
-                var statement = statements[j];
-                if (statement.constructor !== Entry.Thread) continue;
-                blocks = blocks.concat(
-                    statement.getBlockList(excludePrimitive, type)
-                );
-            }
-        }
-        return blocks;
+            return blocks.concat(value.getBlockList(excludePrimitive, type));
+        }, blocks);
     };
 
     p.stringify = function(excludeData) {
@@ -734,9 +720,8 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
     };
 
     p.isParamBlockType = function() {
-        return (
-            this._schema.skeleton === 'basic_string_field' ||
-            this._schema.skeleton === 'basic_boolean_field'
+        return /^(basic_string_field|basic_boolean_field)$/.test(
+            this._schema.skeleton
         );
     };
 

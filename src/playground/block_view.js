@@ -102,7 +102,7 @@ Entry.BlockView = function(block, board, mode) {
         this._board instanceof Entry.Board
     ) {
         events.forEach(function(fn) {
-            if (Entry.Utils.isFunction(fn)) fn(block);
+            if (_.isFunction(fn)) fn(block);
         });
     }
 };
@@ -870,7 +870,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
         var events = block.events.viewDestroy;
         if (Entry.type == 'workspace' && events && !this.isInBlockMenu)
             events.forEach(function(fn) {
-                if (Entry.Utils.isFunction(fn)) fn(block);
+                if (_.isFunction(fn)) fn(block);
             });
     };
 

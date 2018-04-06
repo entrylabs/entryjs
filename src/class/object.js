@@ -923,16 +923,10 @@ Entry.EntryObject = function(model) {
 
     function generateWorkspaceView() {
         //utilities
-        var _whenEnter = Entry.Utils.when(
-            function({ keyCode } = {}) {
-                return keyCode === 13;
-            },
-            () => {
-                this.editObjectValues(false);
-            }
-        );
-
         var _setFocused = Entry.Utils.setFocused;
+        var _whenEnter = Entry.Utils.whenEnter(() => {
+            this.editObjectValues(false);
+        });
         var _setBlurredTimer = Entry.Utils.setBlurredTimer;
         var CE = Entry.createElement; //alias
 

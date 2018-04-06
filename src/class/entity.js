@@ -1106,7 +1106,7 @@ Entry.EntityObject.prototype.removeClone = function(isLast) {
         if (index > -1) clonedEntities.splice(index, 1);
     } else clonedEntities.pop();
 
-    if (Entry.Utils.isFunction(this.clearExecutor)) this.clearExecutor();
+    if (_.isFunction(this.clearExecutor)) this.clearExecutor();
 
     this.destroy(true);
 };

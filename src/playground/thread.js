@@ -241,23 +241,23 @@ Entry.Thread = function(thread, code, parent) {
 
         if (this._code === parent) {
             pointer.unshift(this._code.indexOf(this));
-            var topBlock = this._data[0];
-            pointer.unshift(topBlock.y);
-            pointer.unshift(topBlock.x);
+            var { x, y } = this._data[0];
+            pointer.unshift(y);
+            pointer.unshift(x);
             return pointer;
         }
         return parent.pointer(pointer);
     };
 
     p.getBlockList = function(excludePrimitive, type) {
-        var blocks = [];
-        for (var i = 0; i < this._data.length; i++) {
-            var block = this._data[i];
-            if (block.constructor !== Entry.Block) continue;
-            blocks = blocks.concat(block.getBlockList(excludePrimitive, type));
-        }
-
-        return blocks;
+        return _.chain(this._data)
+            .map((block) => {
+                if (block.constructor !== Entry.Block) return;
+                return block.getBlockList(excludePrimitive, type);
+            })
+            .flatten()
+            .compact()
+            .value();
     };
 
     p.stringify = function(excludeData) {

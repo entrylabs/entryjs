@@ -92,7 +92,7 @@ Entry.STATIC = {
 
         variableContainerAddMessage: 807,
         variableContainerRemoveMessage: 808,
-        
+
         funcCreate: 1004,
         funcUpdate: 1005,
     },
@@ -119,6 +119,8 @@ Entry.STATIC = {
         variableContainerRemoveVariable: 804,
         variableAddSetName: 805,
         messageSetName: 806,
+        variableAddSetScope: 809,
+        variableAddSetCloud: 810,
 
         //utility commands
         dismissModal: 900,

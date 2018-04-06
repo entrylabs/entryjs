@@ -17,6 +17,8 @@ var { createTooltip, returnEmptyArr } = require('../command_util');
         variableContainerAddMessage,
         variableContainerRemoveMessage,
         messageSetName,
+        variableAddSetScope,
+        variableAddSetCloud,
     } = COMMAND_TYPES;
 
     c[variableContainerSelectFilter] = {
@@ -105,8 +107,11 @@ var { createTooltip, returnEmptyArr } = require('../command_util');
         restrict: function(data, domQuery, callback) {
             Entry.variableContainer.clickVariableAddButton(true);
             this._nextValue = data.content[1][1];
-            var dom = $('.entryVariableAddSpaceInputWorkspace');
-            dom[0].enterKeyDisabled = true;
+            var dom = _.head($('.entryVariableAddSpaceInputWorkspace'));
+            dom.enterKeyDisabled = true;
+            if (!Entry.Utils.isDomActive(dom)) {
+                dom.focus();
+            }
             var { title, content } = data.tooltip;
             return createTooltip(title, content, domQuery, callback, {
                 noDispose: true,
@@ -216,5 +221,56 @@ var { createTooltip, returnEmptyArr } = require('../command_util');
         recordable: RECORDABLE.SUPPORT,
         undo: 'messageSetName',
         dom: ['variableContainer', 'messageList', '&0'],
+    };
+
+    c[variableAddSetScope] = {
+        do(type = 'global', isCloud = false) {
+            var VC = Entry.variableContainer;
+            var info = VC.variableAddPanel.info;
+            if (type === 'global') {
+                info.object = null;
+                info.isCloud = isCloud;
+            } else if (type === 'local') {
+                var { object } = Entry.playground;
+                if (!object) return;
+                info.object = object.id;
+                info.isCloud = false;
+            }
+            VC.updateVariableAddView('variable');
+        },
+        state() {
+            var {
+                variableAddPanel: { object, isCloud },
+            } = Entry.variableContainer;
+            return [object ? 'local' : 'global', isCloud];
+        },
+        log(type) {
+            return [['type', type]];
+        },
+        validate: false,
+        recordable: RECORDABLE.SUPPORT,
+        undo: 'variableAddSetScope',
+        dom: ['variableContainer', 'variableScope', '&0'],
+    };
+
+    c[variableAddSetCloud] = {
+        do(value) {
+            var VC = Entry.variableContainer;
+            VC.variableAddPanel.info.isCloud = value;
+            VC.updateVariableAddView('variable');
+        },
+        state() {
+            var {
+                variableAddPanel: { info: { isCloud } },
+            } = Entry.variableContainer;
+            return [isCloud];
+        },
+        log(value) {
+            return [['value', value]];
+        },
+        validate: false,
+        recordable: RECORDABLE.SUPPORT,
+        undo: 'variableAddSetCloud',
+        dom: ['variableContainer', 'variableCloud'],
     };
 })(Entry.Command);

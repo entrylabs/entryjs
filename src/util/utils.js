@@ -1644,10 +1644,6 @@ Entry.Utils.isInInput = function(e) {
     return e.target.type == 'textarea' || e.target.type == 'text';
 };
 
-Entry.Utils.isFunction = function(fn) {
-    return typeof fn === 'function';
-};
-
 Entry.Utils.addFilters = function(boardSvgDom, suffix) {
     var defs = boardSvgDom.elem('defs');
 
@@ -2103,24 +2099,31 @@ Entry.Utils.getBlockCategory = (function() {
 
 Entry.Utils.getUniqObjectsBlocks = function(objects) {
     var _typePicker = _.partial(_.result, _, 'type');
-    return _.uniq(
-        (objects || Entry.container.objects_).reduce((acc, { script }) => {
+
+    return _.chain(objects || Entry.container.objects_)
+        .map(({ script }) => {
             if (!(script instanceof Entry.Code)) {
                 script = new Entry.Code(script);
             }
-            return [...acc, ...script.getBlockList().map(_typePicker)];
-        }, [])
-    );
+            return script.getBlockList().map(_typePicker);
+        })
+        .flatten()
+        .uniq()
+        .value();
 };
 
 Entry.Utils.getObjectsBlocks = function(objects) {
     var _typePicker = _.partial(_.result, _, 'type');
-    return (objects || Entry.container.objects_).reduce((acc, { script }) => {
-        if (!(script instanceof Entry.Code)) {
-            script = new Entry.Code(script);
-        }
-        return [...acc, ...script.getBlockList(true).map(_typePicker)];
-    }, []);
+
+    return _.chain(objects || Entry.container.objects_)
+        .map(({ script }) => {
+            if (!(script instanceof Entry.Code)) {
+                script = new Entry.Code(script);
+            }
+            return script.getBlockList(true).map(_typePicker);
+        })
+        .flatten()
+        .value();
 };
 
 Entry.Utils.makeCategoryDataByBlocks = function(blockArr) {
@@ -2288,10 +2291,10 @@ Entry.Utils.glideBlock = function(svgGroup, x, y, callback) {
 };
 
 Entry.Utils.getScrollPos = function() {
-    var { scrollLeft, scrollTop } =
-        Entry.getBrowserType().indexOf('IE') > -1
-            ? document.documentElement
-            : document.body;
+    var { documentElement, body } = document;
+    var { scrollLeft, scrollTop } = ~Entry.getBrowserType().indexOf('IE')
+        ? documentElement
+        : body;
     return {
         left: scrollLeft,
         top: scrollTop,
@@ -2346,30 +2349,15 @@ Entry.Utils.recoverSoundInstances = function() {
 //add methods to HTMLElement prototype
 ((p) => {
     p.hasClass = function(className) {
-        return this.className.match(
-            new RegExp('(\\s|^)' + className + '(\\s|$)')
-        );
+        return $(this).hasClass(className);
     };
 
     p.addClass = function(...classes) {
-        this.className = classes.reduce((acc, className) => {
-            if (!this.hasClass(className)) acc += ' ' + className;
-            return acc;
-        }, this.className);
-        return this;
+        return _.head($(this).addClass(classes.join(' ')));
     };
 
     p.removeClass = function(...classes) {
-        this.className = classes.reduce((acc, className) => {
-            if (this.hasClass(className)) {
-                acc = acc.replace(
-                    new RegExp('(\\s|^)' + className + '(\\s|$)'),
-                    ' '
-                );
-            }
-            return acc;
-        }, this.className);
-        return this;
+        return _.head($(this).removeClass(classes.join(' ')));
     };
 
     p.bindOnClick = function(func) {
@@ -2378,10 +2366,12 @@ Entry.Utils.recoverSoundInstances = function() {
             e.stopImmediatePropagation();
             func.call(this, e);
         });
+        return this;
     };
 
     p.unBindOnClick = function(func) {
         $(this).off('click tab');
+        return this;
     };
 })(HTMLElement.prototype);
 
@@ -2390,7 +2380,7 @@ Entry.Utils.bindBlockViewHoverEvent = function(board, dom) {
         return;
     }
 
-    dom.on('mouseenter mouseleave', 'path', function(e) {
+    dom.on('mouseenter mouseleave', 'path', function({ type }) {
         if (this.getAttribute('class') !== 'blockPath') {
             return;
         }
@@ -2406,25 +2396,25 @@ Entry.Utils.bindBlockViewHoverEvent = function(board, dom) {
 
         blockView.setHoverBlockView({
             that: blockView,
-            blockView: e.type === 'mouseenter' ? blockView : undefined,
+            blockView: type === 'mouseenter' ? blockView : undefined,
         });
     });
 };
 
 Entry.Utils.isDomActive = function(dom) {
-    if (!dom) {
-        return false;
-    }
-
-    return document.activeElement === dom;
+    return !!(dom && document.activeElement === dom);
 };
 
 Entry.Utils.when = function(predicate, fn) {
     return function(...args) {
         if (predicate.apply(this, args)) {
-            return fn.apply(this, args);
+            return fn && fn.apply(this, args);
         }
     };
+};
+
+Entry.Utils.whenEnter = function(fn) {
+    return Entry.Utils.when(({ keyCode } = {}) => keyCode === 13, fn);
 };
 
 Entry.Utils.whenWithTimeout = function(predicate, fn, time = 200) {

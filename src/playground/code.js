@@ -44,8 +44,9 @@ Entry.PARAM = -1;
 
         this.clear();
 
-        for (var i = 0; i < code.length; i++)
-            this._data.push(new Entry.Thread(code[i], this));
+        code.forEach((t) => {
+            this._data.push(new Entry.Thread(t, this));
+        });
 
         return this;
     };
@@ -93,7 +94,7 @@ Entry.PARAM = -1;
 
     p.unregisterEvent = function(block, eventType) {
         var blocks = this._eventMap[eventType];
-        if (!blocks || blocks.length === 0) return;
+        if (_.isEmpty(blocks)) return;
 
         var index = blocks.indexOf(block);
         if (index < 0) return;
@@ -152,9 +153,7 @@ Entry.PARAM = -1;
     };
 
     p.clearExecutors = function() {
-        this.executors.forEach(function(e) {
-            e.end();
-        });
+        this.executors.forEach((e) => e.end());
         this.executors = [];
     };
 
@@ -238,12 +237,8 @@ Entry.PARAM = -1;
     };
 
     p.toJSON = function(excludeData, option) {
-        return this.getThreads().reduce(
-            (json, thread) => [
-                ...json,
-                thread.toJSON(false, undefined, excludeData, option),
-            ],
-            []
+        return this.getThreads().map((thread) =>
+            thread.toJSON(false, undefined, excludeData, option)
         );
     };
 
@@ -255,14 +250,11 @@ Entry.PARAM = -1;
     };
 
     p.moveBy = function(x, y) {
-        var threads = this.getThreads();
-        for (var i = 0, len = threads.length; i < len; i++) {
-            var firstBlock = threads[i].getFirstBlock();
-            if (firstBlock && firstBlock.view && firstBlock.view.display)
-                firstBlock.view._moveBy(x, y, false);
-        }
-
-        var board = this.board;
+        this.getThreads().forEach((thread) => {
+            var { view } = thread.getFirstBlock() || {};
+            if (view && view.display) view._moveBy(x, y, false);
+        });
+        var { board } = this;
         if (board instanceof Entry.BlockMenu) board.updateSplitters(y);
     };
 
@@ -283,12 +275,10 @@ Entry.PARAM = -1;
     };
 
     p._handleChange = function() {
-        if (
-            Entry.creationChangedEvent &&
-            this.view &&
-            this.view.board.constructor !== Entry.BlockMenu
-        ) {
-            Entry.creationChangedEvent.notify();
+        var { view = {} } = this;
+        var event = Entry.creationChangedEvent;
+        if (event && view.board.constructor !== Entry.BlockMenu) {
+            event.notify();
         }
     };
 
@@ -304,8 +294,8 @@ Entry.PARAM = -1;
         this._blockMap[block.id] = block;
     };
 
-    p.unregisterBlock = function(block) {
-        delete this._blockMap[block.id];
+    p.unregisterBlock = function({ id }) {
+        delete this._blockMap[id];
     };
 
     p.getByPointer = function([, , ...pointer]) {
@@ -358,10 +348,11 @@ Entry.PARAM = -1;
     };
 
     p.getBlockList = function(excludePrimitive, type) {
-        return this.getThreads().reduce(
-            (blocks, thread) =>
-                blocks.concat(thread.getBlockList(excludePrimitive, type)),
-            []
+        return _.flatten(
+            this.getThreads().map((t) =>
+                t.getBlockList(excludePrimitive, type)
+            ),
+            true
         );
     };
 
