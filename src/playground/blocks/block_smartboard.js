@@ -9,9 +9,7 @@ Entry.SmartBoard = {
         "en": "Sciencebox Codingboard"
     },
     setZero: function() {
-        Entry.hw.sendQueue.readablePorts = [];
         for (var port = 2; port < 9; port++) {
-            Entry.hw.sendQueue[port] = 0;
             Entry.hw.sendQueue.readablePorts.push(port);
         }
         Entry.hw.update();
