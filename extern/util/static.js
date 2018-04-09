@@ -744,7 +744,7 @@ EntryStatic.getAllBlocks = function() {
                 "mkboard_set_servo",
                 "mkboard_set_tone",
                 "mkboard_set_lcd",
-                "mkboard_lcd_command",                
+                "mkboard_lcd_command",
                 // mkboard Added 2017-07-04
 
                 "ev3_get_sensor_value",
@@ -1215,7 +1215,7 @@ EntryStatic.getAllBlocks = function() {
                 "playcode_gpio",
                 "playcode_servo",
                 "playcode_speed",
-                // playcode Added 2018-01-02 
+                // playcode Added 2018-01-02
 
                 //creamo
                 "creamo_toggle_led",
@@ -1238,7 +1238,7 @@ EntryStatic.getAllBlocks = function() {
                 "mechatro_set_servo_speed",
                 "mechatro_set_blue_pw",
                 // mechatro Added 2018-02-12
-                
+
                 //FunBoard
                 "funboard_list_pushbutton_basic",
                 "funboard_list_touchbutton_basic",
@@ -1248,7 +1248,7 @@ EntryStatic.getAllBlocks = function() {
                 "funboard_list_onoff_basic",
                 "funboard_what_button_pressed",
                 "funboard_what_touch_button_pressed",
-                "funboard_get_analog_sensor_2state",                
+                "funboard_get_analog_sensor_2state",
                 "funboard_get_digital_button_value",
                 "funboard_get_touch_button_value",
                 "funboard_get_number_sensor_value",
@@ -1276,7 +1276,8 @@ EntryStatic.discussCategories = [
    'tips',
     'free',
    'report',
-   'notice'
+   'notice',
+   'exhibit'
 ];
 
 EntryStatic.artCategories = [
