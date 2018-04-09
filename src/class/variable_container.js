@@ -156,12 +156,11 @@ Entry.VariableContainer = function() {
      * @param {?Boolean} isEnable
      */
     p.createSelectButton = function(type, isEnable = true) {
-        var view = Entry.createElement('td').addClass(
-            'entryVariableSelectButtonWorkspace',
-            type
-        ).bindOnClick(function(e) {
-            Entry.do('variableContainerSelectFilter', type, this.viewMode_);
-        });
+        var view = Entry.createElement('td')
+            .addClass('entryVariableSelectButtonWorkspace', type)
+            .bindOnClick(function(e) {
+                Entry.do('variableContainerSelectFilter', type, this.viewMode_);
+            });
         view.innerHTML = Lang.Workspace[type];
 
         if (isEnable === false) {
@@ -2157,7 +2156,13 @@ Entry.VariableContainer = function() {
 
     p.generateVariableSettingView = function() {
         var that = this;
-        var element = Entry.createElement('div')
+
+        var _setFocused = Entry.Utils.setFocused;
+        var _setBlurredTimer = Entry.Utils.setBlurredTimer;
+
+        var CE = Entry.createElement; //alias
+
+        var element = CE('div')
             .bindOnClick(function(e) {
                 e.stopPropagation();
             })
@@ -2166,102 +2171,79 @@ Entry.VariableContainer = function() {
         this.variableSettingView = element;
         this.listView_.appendChild(element);
 
-        var visibleWrapper = Entry.createElement('div')
+        var visibleWrapper = CE('div')
             .addClass('entryVariableSettingVisibleWrapperWorkspace')
-            .bindOnClick(function(e) {
-                var v = that.selectedVariable;
-                var view = that.variableSettingView.visibleCheck;
-                v.setVisible(!v.isVisible());
-
-                if (v.isVisible()) view.addClass('entryVariableSettingChecked');
-                else view.removeClass('entryVariableSettingChecked');
+            .bindOnClick(() => {
+                var v = this.selectedVariable;
+                Entry.do('variableSetVisibility', v.id_, !v.isVisible());
             });
         element.appendChild(visibleWrapper);
-        var visibleSpan = Entry.createElement('span');
+        var visibleSpan = CE('span');
         visibleSpan.innerHTML = Lang.Workspace.show_variable;
         visibleWrapper.appendChild(visibleSpan);
-        var visibleCheck = Entry.createElement('span').addClass(
+        var visibleCheck = CE('span').addClass(
             'entryVariableSettingCheckWorkspace'
         );
         element.visibleCheck = visibleCheck;
         visibleWrapper.appendChild(visibleCheck);
 
-        var initValueWrapper = Entry.createElement('div').addClass(
+        var initValueWrapper = CE('div').addClass(
             'entryVariableSettingInitValueWrapperWorkspace'
         );
         element.appendChild(initValueWrapper);
-        var initValueSpan = Entry.createElement('span');
+        var initValueSpan = CE('span');
         initValueSpan.innerHTML = Lang.Workspace.default_value;
         initValueWrapper.appendChild(initValueSpan);
-        var initValueInput = Entry.createElement('input').addClass(
+        var initValueInput = CE('input').addClass(
             'entryVariableSettingInitValueInputWorkspace'
         );
         element.initValueInput = initValueInput;
         initValueInput.value = 0;
-        initValueInput.onkeyup = function(e) {
+        initValueInput.onkeypress = Entry.Utils.whenEnter(function() {
+            this.blur();
+        });
+        initValueInput.onfocus = _setFocused;
+        initValueInput.onblur = _setBlurredTimer(function(e) {
             var v = that.selectedVariable;
-            v.setValue(this.value);
-        };
-        initValueInput.onblur = function(e) {
-            var v = that.selectedVariable;
-            v.setValue(this.value);
-        };
+            Entry.do('variableSetDefaultValue', v.id_, this.value);
+        });
         element.initValueInput = initValueInput;
         initValueWrapper.appendChild(initValueInput);
 
-        var splitter = Entry.createElement('div').addClass(
+        var splitter = CE('div').addClass(
             'entryVariableSettingSplitterWorkspace'
         );
         element.appendChild(splitter);
 
-        var slideWrapper = Entry.createElement('div').addClass(
+        var slideWrapper = CE('div').addClass(
             'entryVariableSettingSlideWrapperWorkspace'
         );
         element.appendChild(slideWrapper);
-        var slideSpan = Entry.createElement('span');
+        var slideSpan = CE('span');
         slideSpan.innerHTML = Lang.Workspace.slide;
         slideWrapper.appendChild(slideSpan);
-        var slideCheck = Entry.createElement('span')
+        var slideCheck = CE('span')
             .addClass('entryVariableSettingCheckWorkspace')
             .bindOnClick(function(e) {
-                var newVariable;
                 var v = that.selectedVariable;
-                var variables = that.variables_;
-                var type = v.getType();
-                var variableJSON = v.toJSON();
-                if (type == 'variable') {
-                    variableJSON.variableType = 'slide';
-                    newVariable = new Entry.Variable(variableJSON);
-                    variables.splice(variables.indexOf(v), 0, newVariable);
-                    if (newVariable.getValue() < 0) newVariable.setValue(0);
-                    if (newVariable.getValue() > 100) newVariable.setValue(100);
-                    minValueInput.removeAttribute('disabled');
-                    maxValueInput.removeAttribute('disabled');
-                } else if (type == 'slide') {
-                    variableJSON.variableType = 'variable';
-                    newVariable = new Entry.Variable(variableJSON);
-                    variables.splice(variables.indexOf(v), 0, newVariable);
-                    minValueInput.setAttribute('disabled', 'disabled');
-                    maxValueInput.setAttribute('disabled', 'disabled');
-                }
-                that.createVariableView(newVariable);
-
-                that.removeVariable(v);
-                that.updateSelectedVariable(newVariable);
-                newVariable.generateView();
+                Entry.do(
+                    'variableSetSlidable',
+                    v.id_,
+                    v.getType() === 'variable' ? 'slide' : 'variable'
+                );
             });
         element.slideCheck = slideCheck;
         slideWrapper.appendChild(slideCheck);
 
-        var minMaxWrapper = Entry.createElement('div').addClass(
+        var minMaxWrapper = CE('div').addClass(
             'entryVariableSettingMinMaxWrapperWorkspace'
         );
         element.minMaxWrapper = minMaxWrapper;
         element.appendChild(minMaxWrapper);
-        var minValueSpan = Entry.createElement('span');
+        var minValueSpan = CE('span');
         minValueSpan.innerHTML = Lang.Workspace.min_value;
         minMaxWrapper.appendChild(minValueSpan);
-        var minValueInput = Entry.createElement('input').addClass(
+        var minValueInput = CE('input').addClass(
             'entryVariableSettingMinValueInputWorkspace'
         );
         var v = that.selectedVariable;
@@ -2270,38 +2252,37 @@ Entry.VariableContainer = function() {
         minValueInput.onkeypress = Entry.Utils.whenEnter(function() {
             this.blur();
         });
-        minValueInput.onblur = function(e) {
+        minValueInput.onfocus = _setFocused;
+        minValueInput.onblur = _setBlurredTimer(function(e) {
+            var v = that.selectedVariable;
             var value = this.value;
-            if (Entry.Utils.isNumber(value)) {
-                var v = that.selectedVariable;
-                v.setMinValue(value);
-                that.updateVariableSettingView(v);
-            }
-        };
+            value = Entry.Utils.isNumber(value) ? value : v.getMinValue();
+            Entry.do('variableSetMinValue', v.id_, value);
+        });
         element.minValueInput = minValueInput;
         minMaxWrapper.appendChild(minValueInput);
 
-        var maxValueSpan = Entry.createElement('span').addClass(
+        var maxValueSpan = CE('span').addClass(
             'entryVariableSettingMaxValueSpanWorkspace'
         );
         maxValueSpan.innerHTML = Lang.Workspace.max_value;
         minMaxWrapper.appendChild(maxValueSpan);
-        var maxValueInput = Entry.createElement('input').addClass(
+        var maxValueInput = CE('input').addClass(
             'entryVariableSettingMaxValueInputWorkspace'
         );
         if (v && v.type == 'slide') maxValueInput.value = v.maxValue_;
         else maxValueInput.value = 100;
+
         maxValueInput.onkeypress = Entry.Utils.whenEnter(function() {
             this.blur();
         });
-        maxValueInput.onblur = function(e) {
+        maxValueInput.onfocus = _setFocused;
+        maxValueInput.onblur = _setBlurredTimer(function(e) {
+            var v = that.selectedVariable;
             var value = this.value;
-            if (Entry.Utils.isNumber(value)) {
-                var v = that.selectedVariable;
-                v.setMaxValue(value);
-                that.updateVariableSettingView(v);
-            }
-        };
+            value = Entry.Utils.isNumber(value) ? value : v.getMaxValue();
+            Entry.do('variableSetMaxValue', v.id_, value);
+        });
         element.maxValueInput = maxValueInput;
         minMaxWrapper.appendChild(maxValueInput);
     };
@@ -2345,8 +2326,7 @@ Entry.VariableContainer = function() {
 
     p.generateListSettingView = function() {
         var that = this;
-        var element = Entry.createElement('div');
-        element.bindOnClick(function(e) {
+        var element = Entry.createElement('div').bindOnClick(function(e) {
             e.stopPropagation();
         });
         this.listSettingView = element
@@ -2458,8 +2438,7 @@ Entry.VariableContainer = function() {
                 : 1;
 
         arr.forEach((item, i) => {
-            var wrapper = Entry.createElement('div');
-            wrapper.addClass('entryListSettingValueWrapperWorkspace');
+            var wrapper = Entry.createElement('div').addClass('entryListSettingValueWrapperWorkspace');
             var numberSpan = Entry.createElement('span').addClass(
                 'entryListSettingValueNumberSpanWorkspace'
             );
@@ -2478,11 +2457,11 @@ Entry.VariableContainer = function() {
             });
             wrapper.appendChild(input);
             var removeButton = Entry.createElement('span')
+                .addClass('entryListSettingValueRemoveWorkspace')
                 .bindOnClick(function() {
                     arr.splice(i, 1);
                     that.updateListSettingView();
-                })
-                .addClass('entryListSettingValueRemoveWorkspace');
+                });
             wrapper.appendChild(removeButton);
             listValues.appendChild(wrapper);
         });
@@ -2495,11 +2474,10 @@ Entry.VariableContainer = function() {
         value = Number(value);
         var arr = this.selectedList.array_;
         if (Entry.Utils.isNumber(value)) {
-            var arrLen = arr.length;
-            if (arrLen < value) {
-                var len = value - arrLen;
-                for (var i = 0; i < len; i++) arr.push({ data: 0 });
-            } else if (arrLen > value) {
+            var times = value - arr.length;
+            if (times > 0) {
+                _.times(times, () => arr.push({ data: 0 }));
+            } else if (times < 0) {
                 arr.length = value;
             }
         }
@@ -2829,6 +2807,16 @@ Entry.VariableContainer = function() {
                     return this.variableAddPanel.view.name;
                 case 'messageAddButton':
                     return this.messageAddButton_;
+                case 'variableSetVisibility':
+                    return this.variableSettingView.visibleCheck;
+                case 'variableSetDefaultValue':
+                    return this.variableSettingView.initValueInput;
+                case 'slideCheck':
+                    return this.variableSettingView.slideCheck;
+                case 'variableMinValue':
+                    return this.variableSettingView.minValueInput;
+                case 'variableMaxValue':
+                    return this.variableSettingView.maxValueInput;
                 case 'messageList':
                     return this.getMessage(query.shift()).listElement.nameField;
                 case 'variableScope':
@@ -2908,5 +2896,36 @@ Entry.VariableContainer = function() {
             }
             view.disabled = !value;
         }
+    };
+
+    p.setVariableSlidable = function(variable, type, value) {
+        var v = variable;
+
+        if (v.getType() === type) {
+            return;
+        }
+
+        var newVariable;
+
+        var variables = this.variables_;
+        var variableJSON = v.toJSON();
+        if (type == 'slide') {
+            variableJSON.variableType = type;
+            newVariable = new Entry.Variable(variableJSON);
+            variables.splice(variables.indexOf(v), 0, newVariable);
+            if (newVariable.getValue() < 0) newVariable.setValue(0);
+            if (newVariable.getValue() > 100) newVariable.setValue(100);
+        } else if (type == 'variable') {
+            variableJSON.variableType = type;
+            if (value !== undefined) {
+                variableJSON.value = value;
+            }
+            newVariable = new Entry.Variable(variableJSON);
+            variables.splice(variables.indexOf(v), 0, newVariable);
+        }
+        this.createVariableView(newVariable);
+        this.removeVariable(v);
+        this.updateSelectedVariable(newVariable);
+        newVariable.generateView();
     };
 })(Entry.VariableContainer.prototype);

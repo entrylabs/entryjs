@@ -93,6 +93,8 @@ Entry.STATIC = {
         variableContainerAddMessage: 807,
         variableContainerRemoveMessage: 808,
 
+        variableSetMaxValue: 815,
+
         funcCreate: 1004,
         funcUpdate: 1005,
     },
@@ -121,6 +123,10 @@ Entry.STATIC = {
         messageSetName: 806,
         variableAddSetScope: 809,
         variableAddSetCloud: 810,
+        variableSetVisibility: 811,
+        variableSetDefaultValue: 812,
+        variableSetSlidable: 813,
+        variableSetMinValue: 814,
 
         //utility commands
         dismissModal: 900,

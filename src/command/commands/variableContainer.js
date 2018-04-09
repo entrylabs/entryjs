@@ -19,11 +19,16 @@ var { createTooltip, returnEmptyArr } = require('../command_util');
         messageSetName,
         variableAddSetScope,
         variableAddSetCloud,
+        variableSetVisibility,
+        variableSetDefaultValue,
+        variableSetSlidable,
+        variableSetMinValue,
+        variableSetMaxValue,
     } = COMMAND_TYPES;
 
     c[variableContainerSelectFilter] = {
         do: function(newType, oldType) {
-            Entry.variableContainer.selectFilter(newType);
+            getVC().selectFilter(newType);
         },
         state: function(newType, oldType) {
             return [oldType, newType];
@@ -39,7 +44,7 @@ var { createTooltip, returnEmptyArr } = require('../command_util');
 
     c[variableContainerClickVariableAddButton] = {
         do: function() {
-            Entry.variableContainer.clickVariableAddButton();
+            getVC().clickVariableAddButton();
         },
         state: returnEmptyArr,
         log: returnEmptyArr,
@@ -56,7 +61,7 @@ var { createTooltip, returnEmptyArr } = require('../command_util');
                 variable.id_ = hashId;
                 delete that.hashId;
             }
-            Entry.variableContainer.addVariable(variable);
+            getVC().addVariable(variable);
         },
         state: function(variable) {
             if (variable instanceof Entry.Variable)
@@ -75,7 +80,7 @@ var { createTooltip, returnEmptyArr } = require('../command_util');
         validate: false,
         undo: 'variableContainerRemoveVariable',
         restrict: function(data, domQuery, callback) {
-            Entry.variableContainer.clickVariableAddButton(true, true);
+            getVC().clickVariableAddButton(true, true);
             var dom = $('.entryVariableAddSpaceInputWorkspace');
             dom.val(data.content[1][1].name);
 
@@ -105,7 +110,7 @@ var { createTooltip, returnEmptyArr } = require('../command_util');
             return [['value', c[variableAddSetName]._nextValue || value]];
         },
         restrict: function(data, domQuery, callback) {
-            Entry.variableContainer.clickVariableAddButton(true);
+            getVC().clickVariableAddButton(true);
             this._nextValue = data.content[1][1];
             var dom = _.head($('.entryVariableAddSpaceInputWorkspace'));
             dom.enterKeyDisabled = true;
@@ -125,7 +130,7 @@ var { createTooltip, returnEmptyArr } = require('../command_util');
 
     c[variableContainerRemoveVariable] = {
         do: function(variable) {
-            Entry.variableContainer.removeVariable(variable);
+            getVC().removeVariable(variable);
         },
         state: function(variable) {
             if (variable instanceof Entry.Variable)
@@ -152,7 +157,7 @@ var { createTooltip, returnEmptyArr } = require('../command_util');
                 delete that.hashId;
             }
 
-            Entry.variableContainer.addMessage(message);
+            getVC().addMessage(message);
         },
         state: function(message) {
             var { hashId } = c[variableContainerAddMessage];
@@ -177,8 +182,8 @@ var { createTooltip, returnEmptyArr } = require('../command_util');
 
     c[variableContainerRemoveMessage] = {
         do({ id }) {
-            var { variableContainer } = Entry;
-            variableContainer.removeMessage(variableContainer.getMessage(id));
+            var VC = getVC();
+            VC.removeMessage(VC.getMessage(id));
         },
         state({ id, name }) {
             return [{ id, name }];
@@ -194,15 +199,15 @@ var { createTooltip, returnEmptyArr } = require('../command_util');
 
     c[messageSetName] = {
         do(id, newName) {
-            var { variableContainer } = Entry;
-            var message = variableContainer.getMessage(id);
+            var VC = getVC();
+            var message = VC.getMessage(id);
             var nameField = message.listElement.nameField;
 
             nameField.blurred = true;
-            variableContainer.changeMessageName(message, newName);
+            VC.changeMessageName(message, newName);
         },
         state(id) {
-            var { name } = Entry.variableContainer.getMessage(id);
+            var { name } = getVC().getMessage(id);
             return [id, name];
         },
         log(id, newName) {
@@ -212,10 +217,10 @@ var { createTooltip, returnEmptyArr } = require('../command_util');
             var { content: contentData, tooltip: { title, content } } = data;
 
             callback();
-            var { variableContainer } = Entry;
-            var message = variableContainer.getMessage(domQuery[2]);
+            var VC = getVC();
+            var message = VC.getMessage(domQuery[2]);
             delete message.listElement.nameField.isFirst;
-            variableContainer.activateMessageEditView(message);
+            VC.activateMessageEditView(message);
             return createTooltip(title, content, domQuery, callback);
         },
         recordable: RECORDABLE.SUPPORT,
@@ -225,7 +230,7 @@ var { createTooltip, returnEmptyArr } = require('../command_util');
 
     c[variableAddSetScope] = {
         do(type = 'global', isCloud = false) {
-            var VC = Entry.variableContainer;
+            var VC = getVC();
             var info = VC.variableAddPanel.info;
             if (type === 'global') {
                 info.object = null;
@@ -239,15 +244,12 @@ var { createTooltip, returnEmptyArr } = require('../command_util');
             VC.updateVariableAddView('variable');
         },
         state() {
-            var {
-                variableAddPanel: { object, isCloud },
-            } = Entry.variableContainer;
+            var { variableAddPanel: { object, isCloud } } = getVC();
             return [object ? 'local' : 'global', isCloud];
         },
         log(type) {
             return [['type', type]];
         },
-        validate: false,
         recordable: RECORDABLE.SUPPORT,
         undo: 'variableAddSetScope',
         dom: ['variableContainer', 'variableScope', '&0'],
@@ -255,22 +257,131 @@ var { createTooltip, returnEmptyArr } = require('../command_util');
 
     c[variableAddSetCloud] = {
         do(value) {
-            var VC = Entry.variableContainer;
+            var VC = getVC();
             VC.variableAddPanel.info.isCloud = value;
             VC.updateVariableAddView('variable');
         },
         state() {
-            var {
-                variableAddPanel: { info: { isCloud } },
-            } = Entry.variableContainer;
+            var { variableAddPanel: { info: { isCloud } } } = getVC();
             return [isCloud];
         },
         log(value) {
             return [['value', value]];
         },
-        validate: false,
         recordable: RECORDABLE.SUPPORT,
         undo: 'variableAddSetCloud',
         dom: ['variableContainer', 'variableCloud'],
     };
+
+    c[variableSetVisibility] = {
+        do(id, value) {
+            var VC = getVC();
+            var variable = VC.getVariable(id);
+            variable.setVisible(value);
+            VC.updateVariableSettingView(variable);
+        },
+        state(id, value) {
+            var VC = getVC();
+            var variable = VC.getVariable(id);
+            return [id, variable.isVisible()];
+        },
+        log(id, value) {
+            return [['id', id], ['value', value]];
+        },
+        recordable: RECORDABLE.SUPPORT,
+        undo: 'variableSetVisibility',
+        dom: ['variableContainer', 'variableSetVisibility'],
+    };
+
+    c[variableSetDefaultValue] = {
+        do(id, value) {
+            var VC = getVC();
+            var variable = VC.getVariable(id);
+            Entry.getDom([
+                'variableContainer',
+                'variableSetDefaultValue',
+            ])._focused = false;
+            variable.setValue(value);
+            VC.updateVariableSettingView(variable);
+        },
+        state(id, value) {
+            var VC = getVC();
+            var variable = VC.getVariable(id);
+            return [id, variable.getValue()];
+        },
+        log(id, value) {
+            return [['id', id], ['value', value]];
+        },
+        recordable: RECORDABLE.SUPPORT,
+        undo: 'variableSetDefaultValue',
+        dom: ['variableContainer', 'variableSetDefaultValue'],
+    };
+
+    c[variableSetSlidable] = {
+        do(id, type, cValue) {
+            var VC = getVC();
+            var variable = VC.getVariable(id);
+            VC.setVariableSlidable(variable, type, cValue);
+        },
+        state(id, value) {
+            var VC = getVC();
+            var variable = VC.getVariable(id);
+            return [id, variable.getType(), variable.getValue()];
+        },
+        log(id, value) {
+            return [['id', id], ['value', value]];
+        },
+        recordable: RECORDABLE.SUPPORT,
+        undo: 'variableSetSlidable',
+        dom: ['variableContainer', 'slideCheck'],
+    };
+
+    c[variableSetMinValue] = {
+        do(id, value) {
+            var VC = getVC();
+            var variable = VC.getVariable(id);
+            variable.setMinValue(value);
+            VC.updateVariableSettingView(variable);
+        },
+        state(id, value) {
+            var VC = getVC();
+            var variable = VC.getVariable(id);
+            return [id, variable.getMinValue()];
+        },
+        log(id, value) {
+            var VC = getVC();
+            var variable = VC.getVariable(id);
+            return [['id', id], ['value', variable.getMinValue()]];
+        },
+        recordable: RECORDABLE.SUPPORT,
+        undo: 'variableSetMinValue',
+        dom: ['variableContainer', 'variableMinValue'],
+    };
+
+    c[variableSetMaxValue] = {
+        do(id, value) {
+            var VC = getVC();
+            var variable = VC.getVariable(id);
+            variable.setMaxValue(value);
+            VC.updateVariableSettingView(variable);
+        },
+        state(id, value) {
+            var VC = getVC();
+            var variable = VC.getVariable(id);
+            return [id, variable.getMaxValue()];
+        },
+        log(id, value) {
+            var VC = getVC();
+            var variable = VC.getVariable(id);
+            return [['id', id], ['value', variable.getMaxValue()]];
+        },
+        recordable: RECORDABLE.SUPPORT,
+        undo: 'variableSetMaxValue',
+        dom: ['variableContainer', 'variableMaxValue'],
+    };
+
+    //utilities
+    function getVC() {
+        return Entry.variableContainer;
+    }
 })(Entry.Command);
