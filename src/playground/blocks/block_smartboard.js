@@ -10,7 +10,7 @@ Entry.SmartBoard = {
     },
     setZero: function() {
         for (var port = 2; port < 9; port++) {
-            Entry.hw.sendQueue.readablePorts.push(port);
+            Entry.hw.sendQueue[port] = 0;
         }
         Entry.hw.update();
     },
