@@ -528,7 +528,7 @@ Entry.SmartBoard.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [['GS1', '3'], ['GS2', '2'], ['RELAY', '8']],
-                    value: '8',
+                    value: '3',
                     fontSize: 11,
                 },
                 {
