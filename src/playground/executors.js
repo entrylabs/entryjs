@@ -158,7 +158,8 @@ Entry.Scope = function(block, executor) {
     };
 
     p.getBooleanValue = function(key, block) {
-        return Number(this.getValue(key, block)) ? true : false;
+        var value = Number(this.getValue(key));
+        return isNaN(value) ? true : value; // handle "0" or "0.00"
     };
 
     p.getField = function(key, block) {

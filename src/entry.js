@@ -26,7 +26,6 @@ require('./class/project');
 require('./class/property_panel');
 require('./class/reporter');
 require('./class/scene');
-require('./class/script');
 require('./class/stage');
 require('./class/stamp_entity');
 require('./class/toast');
