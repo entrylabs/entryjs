@@ -1097,11 +1097,21 @@ Entry.Playground = function() {
     p.downloadPicture = function(pictureId) {
         var picture = Entry.playground.object.getPicture(pictureId);
         if (picture.fileurl) {
-            window.open('/api/sprite/download/entryjs/'+
-                    btoa(picture.fileurl)+'/'+encodeURIComponent(picture.name) + '.png');
+            window.open(
+                '/api/sprite/download/entryjs/' +
+                    btoa(picture.fileurl) +
+                    '/' +
+                    encodeURIComponent(picture.name) +
+                    '.png'
+            );
         } else {
-            window.open('/api/sprite/download/image/'+
-                    btoa(picture.filename)+'/'+encodeURIComponent(picture.name) + '.png');
+            window.open(
+                '/api/sprite/download/image/' +
+                    btoa(picture.filename) +
+                    '/' +
+                    encodeURIComponent(picture.name) +
+                    '.png'
+            );
         }
     };
 
@@ -1283,18 +1293,13 @@ Entry.Playground = function() {
     p.downloadSound = function(soundId) {
         var sound = Entry.playground.object.getSound(soundId);
         if (sound.fileurl) {
-<<<<<<< HEAD
-            if (~sound.fileurl.indexOf('bark.mp3')) {
+            if (sound.fileurl.indexOf('bark.mp3') > -1) {
                 window.open(
                     '/api/sprite/download/entryjs/' +
-                        encodeURIComponent(sound.fileurl) +
+                        btoa(sound.fileurl) +
                         '/' +
                         encodeURIComponent(sound.name + '.mp3')
                 );
-=======
-            if(sound.fileurl.indexOf('bark.mp3') > -1) {
-                window.open('/api/sprite/download/entryjs/' + btoa(sound.fileurl) + '/' + encodeURIComponent(sound.name+'.mp3'));
->>>>>>> develop
             } else {
                 window.open(sound.fileurl);
             }
