@@ -61,20 +61,26 @@ p.connectWebSocket = function(url, option) {
         socket.mode = mode;
     });
 
-    socket.on('message', function(msg) {
-        if(msg.data && typeof msg.data === 'string') {
-             switch(msg.data) {
-                case 'disconnectHardware': {
-                    hw.disconnectHardware();
-                    break;
+    socket.on('message', function({ data, version }) {
+        if (data) {
+            let portData = {};
+            if (typeof data === 'string') {
+                switch (data) {
+                    case 'disconnectHardware': {
+                        hw.disconnectHardware();
+                        return;
+                        break;
+                    }
+                    default: {
+                        portData = JSON.parse(data);
+                        break;
+                    }
                 }
-                default: {
-                    var data = JSON.parse(msg.data);
-                    hw.checkDevice(data, msg.version);
-                    hw.updatePortData(data);
-                    break;
-                }
+            } else if (_.isObject(data)) {
+                portData = data;
             }
+            hw.checkDevice(portData, version);
+            hw.updatePortData(portData);
         }
     });
 
@@ -254,16 +260,27 @@ p.update = function() {
     if (!this.socket) {
         return;
     }
-    if(this.socket.disconnected) {
+    if (this.socket.disconnected) {
         return;
     }
-    this.socket.emit('message', { data:JSON.stringify(this.sendQueue), mode: this.socket.mode, type:'utf8' });
+    if (this.hwModule && this.hwModule.sendMessage) {
+        this.hwModule.sendMessage(this);
+    } else {
+        this.socket.emit('message', {
+            data: JSON.stringify(this.sendQueue),
+            mode: this.socket.mode,
+            type: 'utf8',
+        });
+    }
 };
 
 p.updatePortData = function(data) {
     this.portData = data;
     if (this.hwMonitor && Entry.propertyPanel && Entry.propertyPanel.selected == 'hw') {
         this.hwMonitor.update();
+    }
+    if (this.hwModule && this.hwModule.afterReceive) {
+        this.hwModule.afterReceive(this.portData);
     }
 };
 
