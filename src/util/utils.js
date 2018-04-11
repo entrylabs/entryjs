@@ -2373,6 +2373,13 @@ Entry.Utils.recoverSoundInstances = function() {
         $(this).off('click tab');
         return this;
     };
+
+    p.appendTo = function(parent) {
+        if (parent) {
+            parent.appendChild(this);
+        }
+        return this;
+    };
 })(HTMLElement.prototype);
 
 Entry.Utils.bindBlockViewHoverEvent = function(board, dom) {
@@ -2416,6 +2423,10 @@ Entry.Utils.when = function(predicate, fn) {
 Entry.Utils.whenEnter = function(fn) {
     return Entry.Utils.when(({ keyCode } = {}) => keyCode === 13, fn);
 };
+
+Entry.Utils.blurWhenEnter = Entry.Utils.whenEnter(function() {
+    this.blur();
+});
 
 Entry.Utils.whenWithTimeout = function(predicate, fn, time = 200) {
     return function(...args) {

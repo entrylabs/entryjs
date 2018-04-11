@@ -24,6 +24,12 @@ var { createTooltip, returnEmptyArr } = require('../command_util');
         variableSetSlidable,
         variableSetMinValue,
         variableSetMaxValue,
+        variableContainerClickListAddButton,
+        variableContainerAddList,
+        variableContainerRemoveList,
+        listAddSetName,
+        listAddSetScope,
+        listAddSetCloud,
     } = COMMAND_TYPES;
 
     c[variableContainerSelectFilter] = {
@@ -64,17 +70,14 @@ var { createTooltip, returnEmptyArr } = require('../command_util');
             getVC().addVariable(variable);
         },
         state: function(variable) {
-            if (variable instanceof Entry.Variable)
-                variable = variable.toJSON();
+            variable = _toJSON(variable);
             var that = c[variableContainerAddVariable];
             var hashId = that.hashId;
             if (hashId) variable.id = hashId;
             return [variable];
         },
         log: function(variable) {
-            if (variable instanceof Entry.Variable)
-                variable = variable.toJSON();
-            return [['variable', variable]];
+            return [['variable', _toJSON(variable)]];
         },
         recordable: RECORDABLE.SUPPORT,
         validate: false,
@@ -133,14 +136,10 @@ var { createTooltip, returnEmptyArr } = require('../command_util');
             getVC().removeVariable(variable);
         },
         state: function(variable) {
-            if (variable instanceof Entry.Variable)
-                variable = variable.toJSON();
-            return [variable];
+            return [_toJSON(variable)];
         },
         log: function(variable) {
-            if (variable instanceof Entry.Variable)
-                variable = variable.toJSON();
-            return [['variable', variable]];
+            return [['variable', _toJSON(variable)]];
         },
         recordable: RECORDABLE.SUPPORT,
         validate: false,
@@ -380,7 +379,169 @@ var { createTooltip, returnEmptyArr } = require('../command_util');
         dom: ['variableContainer', 'variableMaxValue'],
     };
 
+    c[variableContainerClickListAddButton] = {
+        do: function() {
+            getVC().clickListAddButton();
+        },
+        state: returnEmptyArr,
+        log: returnEmptyArr,
+        recordable: RECORDABLE.SUPPORT,
+        undo: 'variableContainerClickListAddButton',
+        dom: ['variableContainer', 'listAddButton'],
+    };
+
+    c[variableContainerAddList] = {
+        do(list) {
+            var expected = Entry.expectedAction;
+            if (expected) {
+                if (list.setId) {
+                    list.setId(expected[1][1].id);
+                } else {
+                    list.id = expected[1][1].id;
+                }
+            }
+            getVC().addList(list);
+        },
+        state(list) {
+            list = _toJSON(list);
+            var expected = Entry.expectedAction;
+            if (expected) {
+                list.id = expected[1][1].id;
+            }
+
+            return [list];
+        },
+        log(list) {
+            return [['list', _toJSON(list)]];
+        },
+        recordable: RECORDABLE.SUPPORT,
+        validate: false,
+        undo: 'variableContainerRemoveList',
+        restrict(data, domQuery, callback) {
+            getVC().clickListAddButton(true, true);
+            Entry.getDom(['variableContainer', 'listAddInput']).value =
+                Entry.expectedAction[1][1].name;
+
+            var { title, content } = data.tooltip;
+            callback();
+            return createTooltip(title, content, domQuery, callback);
+        },
+        dom: ['variableContainer', 'listAddConfirmButton'],
+    };
+
+    c[variableContainerRemoveList] = {
+        do(list) {
+            getVC().removeList(list);
+        },
+        state(list) {
+            return [_toJSON(list)];
+        },
+        log(list) {
+            return [['list', _toJSON(list)]];
+        },
+        recordable: RECORDABLE.SUPPORT,
+        validate: false,
+        undo: 'variableContainerAddList',
+        dom: ['variableContainer', 'listAddConfirmButton'],
+    };
+
+    c[listAddSetName] = {
+        do: function(value) {
+            var { dom } = c[listAddSetName];
+
+            dom = Entry.getDom(dom);
+            var $dom = $(dom);
+            dom._focused = false;
+
+            var expected = Entry.expectedAction;
+            if (expected) {
+                value = expected[1][1];
+            }
+
+            $dom.val(value);
+        },
+        state: function(value) {
+            return [''];
+        },
+        log: function(value) {
+            var expected = Entry.expectedAction;
+            if (expected) {
+                value = expected[1][1];
+            }
+            return [['value', value]];
+        },
+        restrict: function(data, domQuery, callback) {
+            getVC().clickListAddButton(true);
+            var dom = Entry.getDom(this.dom);
+            if (!Entry.Utils.isDomActive(dom)) {
+                dom.focus();
+            }
+            dom.enterKeyDisabled = true;
+            var { title, content } = data.tooltip;
+            return createTooltip(title, content, domQuery, callback, {
+                noDispose: true,
+            });
+        },
+        validate: false,
+        recordable: RECORDABLE.SUPPORT,
+        undo: 'listAddSetName',
+        dom: ['variableContainer', 'listAddInput'],
+    };
+
+    c[listAddSetScope] = {
+        do(type = 'global', isCloud = false) {
+            var VC = getVC();
+            var info = VC.listAddPanel.info;
+            if (type === 'global') {
+                info.object = null;
+                info.isCloud = isCloud;
+            } else if (type === 'local') {
+                var { object } = Entry.playground;
+                if (!object) return;
+                info.object = object.id;
+                info.isCloud = false;
+            }
+            VC.updateVariableAddView('list');
+        },
+        state() {
+            var { listAddPanel: { object, isCloud } } = getVC();
+            return [object ? 'local' : 'global', isCloud];
+        },
+        log(type) {
+            return [['type', type]];
+        },
+        recordable: RECORDABLE.SUPPORT,
+        undo: 'listAddSetScope',
+        dom: ['variableContainer', 'listScope', '&0'],
+    };
+
+    c[listAddSetCloud] = {
+        do(value) {
+            var VC = getVC();
+            VC.listAddPanel.info.isCloud = value;
+            VC.updateVariableAddView('list');
+        },
+        state() {
+            var { listAddPanel: { info: { isCloud } } } = getVC();
+            return [isCloud];
+        },
+        log(value) {
+            return [['value', value]];
+        },
+        recordable: RECORDABLE.SUPPORT,
+        undo: 'listAddSetCloud',
+        dom: ['variableContainer', 'listCloud'],
+    };
+
     //utilities
+
+    //if data has toJSON method 
+    //return data.toJSON()
+    //else just return data as is
+    function _toJSON(data) {
+        return data.toJSON ? data.toJSON() : data;
+    }
+
     function getVC() {
         return Entry.variableContainer;
     }

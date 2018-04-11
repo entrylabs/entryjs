@@ -617,6 +617,10 @@ Entry.Variable.prototype.getId = function() {
     return this.id_;
 };
 
+Entry.Variable.prototype.setId = function(id) {
+    this.id_ = id;
+};
+
 /**
  * Variable value getter
  * @return {number}

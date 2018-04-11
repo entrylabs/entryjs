@@ -93,10 +93,10 @@ Entry.STATIC = {
         variableContainerAddMessage: 807,
         variableContainerRemoveMessage: 808,
 
-        variableSetMaxValue: 815,
-
         funcCreate: 1004,
         funcUpdate: 1005,
+
+        //TODO commands development
     },
 
     COMMAND_TYPES_NOT_ALWAYS: {
@@ -127,10 +127,17 @@ Entry.STATIC = {
         variableSetDefaultValue: 812,
         variableSetSlidable: 813,
         variableSetMinValue: 814,
+        variableSetMaxValue: 815,
+        variableContainerClickListAddButton: 816,
+        variableContainerAddList: 817,
+        variableContainerRemoveList: 818,
+        listAddSetName: 819,
+        listAddSetScope: 820,
+        listAddSetCloud: 821,
 
         //utility commands
         dismissModal: 900,
-        
+
         funcCreateStart: 1001,
         funcEditStart: 1002,
         funcEditCancel: 1003,
