@@ -1267,7 +1267,19 @@ EntryStatic.getAllBlocks = function() {
 
                 //region microbit
                 "microbit_led_toggle",
-                "microbit_led_toggle2",
+                "microbit_get_led",
+                "microbit_show_string",
+                "microbit_show_image",
+                "microbit_get_analog",
+                "microbit_get_analog_map",
+                "microbit_get_digital",
+                "microbit_get_button",
+                "microbit_get_sensor",
+                "microbit_get_accelerometer",
+                "microbit_play_note",
+                "microbit_change_bpm",
+                "microbit_set_bpm",
+                // "microbit_radio_receive_event",
                 //endregion microbit
             ]
         }
