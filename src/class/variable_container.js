@@ -1030,14 +1030,18 @@ Entry.VariableContainer = function() {
     };
 
     function _addVariableOrList(type, data) {
+        if (!type) {
+            return;
+        }
         var panel = this._getAddPanel(type);
         var panelView = panel.view;
         var name = panel.view.name.value.trim();
+        panelView.addClass('entryRemove');
+
         if (Entry.isTextMode) {
             var alert_msg = Entry.TextCodingUtil.isNameIncludeSpace(name, type);
             if (alert_msg) {
                 entrylms.alert(alert_msg);
-                panelView.addClass('entryRemove');
                 this.resetVariableAddPanel(type);
                 return;
             }
@@ -1046,20 +1050,10 @@ Entry.VariableContainer = function() {
         var variableContainer = this;
         var target = `${type}s_`;
 
-        if (!data) {
-            name = name || Lang.Workspace[type];
+        data = data || this._makeVariableData(type);
 
-            if (name.length > this._maxNameLength)
-                name = this._truncName(name, type);
-
-            name = this.checkAllVariableName(name, target)
-                ? Entry.getOrderedName(name, this[target], 'name_')
-                : name;
-
-            data = data || this._makeVariableData(type);
-        }
-        panelView.addClass('entryRemove');
         this.resetVariableAddPanel(type);
+
         if (!(data instanceof Entry.Variable)) {
             data = new Entry.Variable(data);
         }
@@ -1082,7 +1076,6 @@ Entry.VariableContainer = function() {
             playground.reloadPlayground();
         }
 
-        panelView.name.value = '';
         this.updateList();
     }
 
@@ -1213,7 +1206,7 @@ Entry.VariableContainer = function() {
             this.select(null);
         }
         list.remove();
-        var lists = this.list_;
+        var lists = this.lists_;
         lists.splice(lists.indexOf(list), 1);
         Entry.playground.reloadPlayground();
         this.updateList();
@@ -1226,7 +1219,8 @@ Entry.VariableContainer = function() {
         var that = this;
         var view = Entry.createElement('li');
         var wrapper = Entry.createElement('div').addClass(
-            'entryVariableListElementWrapperWorkspace variable'
+            'entryVariableListElementWrapperWorkspace',
+            'variable'
         );
         view.appendChild(wrapper);
         var className = 'entryVariableListElementWorkspace';
@@ -1241,7 +1235,7 @@ Entry.VariableContainer = function() {
             .addClass('entryVariableListElementDeleteWorkspace notForTextMode')
             .bindOnClick((e) => {
                 e.stopPropagation();
-                that.removeVariable(variable);
+                Entry.do('variableContainerRemoveVariable', variable);
                 that.selectedVariable = null;
                 that.variableSettingView.addClass('entryRemove');
             });
@@ -1492,9 +1486,7 @@ Entry.VariableContainer = function() {
             nameField.setAttribute('disabled', 'disabled');
         }, 200);
 
-        nameField.onkeydown = Entry.Utils.whenEnter(function() {
-            this.blur();
-        });
+        nameField.onkeydown = Entry.Utils.blurWhenEnter;
 
         view.nameField = nameField;
         view.appendChild(nameField);
@@ -1519,26 +1511,30 @@ Entry.VariableContainer = function() {
     p.createListView = function(list) {
         var CE = Entry.createElement;
         var that = this;
-        var view = CE('li').addClass('entryVariableListElementWorkspace');
-        var wrapper = CE('div').addClass(
-            'entryVariableListElementWrapperWorkspace list'
-        );
-        view.appendChild(wrapper);
+        var view = CE('li')
+            .addClass('entryVariableListElementWorkspace')
+            .bindOnClick(() => that.select(list));
+
+        var wrapper = CE('div')
+            .addClass('entryVariableListElementWrapperWorkspace list')
+            .appendTo(view);
         if (!list.object_) {
             if (list.isCloud_) view.addClass('entryListCloudElementWorkspace');
             else view.addClass('entryListGlobalElementWorkspace');
         } else view.addClass('entryListLocalElementWorkspace');
 
-        view.bindOnClick(() => that.select(list));
-
         var removeButton = CE('button')
-            .addClass('entryVariableListElementDeleteWorkspace notForTextMode')
+            .addClass(
+                'entryVariableListElementDeleteWorkspace',
+                'notForTextMode'
+            )
             .bindOnClick((e) => {
                 e.stopPropagation();
-                that.removeList(list);
+                Entry.do('variableContainerRemoveList', list);
                 that.selectedList = null;
                 that.listSettingView.addClass('entryRemove');
-            });
+            })
+            .appendTo(wrapper);
 
         var editButton = CE('button')
             .addClass('entryVariableListElementEditWorkspace')
@@ -1549,7 +1545,8 @@ Entry.VariableContainer = function() {
                 this.addClass('entryRemove');
                 that.updateSelectedVariable(list);
                 nameField.focus();
-            });
+            })
+            .appendTo(wrapper);
         view.editButton = editButton;
 
         var editSaveButton = CE('button')
@@ -1562,12 +1559,14 @@ Entry.VariableContainer = function() {
                 this.addClass('entryRemove');
                 that.select(list);
                 that.updateSelectedVariable(null, 'list');
-            });
+            })
+            .appendTo(wrapper);
         view.editSaveButton = editSaveButton;
 
         var nameField = CE('input')
             .addClass('entryVariableListElementNameWorkspace')
-            .bindOnClick((e) => e.stopPropagation());
+            .bindOnClick((e) => e.stopPropagation())
+            .appendTo(wrapper);
         nameField.setAttribute('disabled', 'disabled');
         nameField.value = list.name_;
         nameField.onblur = function(e) {
@@ -1579,14 +1578,8 @@ Entry.VariableContainer = function() {
             }
             that.changeListName(list, this.value);
         };
-        nameField.onkeydown = Entry.Utils.whenEnter(function() {
-            this.blur();
-        });
+        nameField.onkeydown = Entry.Utils.blurWhenEnter;
         view.nameField = nameField;
-        wrapper.appendChild(nameField);
-        wrapper.appendChild(editButton);
-        wrapper.appendChild(editSaveButton);
-        wrapper.appendChild(removeButton);
         list.listElement = view;
     };
 
@@ -1859,7 +1852,7 @@ Entry.VariableContainer = function() {
 
         var addSpaceGlobalWrapper = CE('div')
             .addClass('entryVariableAddSpaceGlobalWrapperWorkspace')
-            .bindOnClick((e) => Entry.do('listAddSetScope', 'global'));
+            .bindOnClick(() => Entry.do('listAddSetScope', 'global'));
         listAddSpace.appendChild(addSpaceGlobalWrapper);
 
         var addListGlobalSpan = CE('span');
@@ -1921,9 +1914,9 @@ Entry.VariableContainer = function() {
         var addSpaceCancelButton = CE('span')
             .addClass('entryVariableAddSpaceCancelWorkspace')
             .addClass('entryVariableAddSpaceButtonWorkspace')
-            .bindOnClick(function(e) {
-                that.listAddPanel.view.addClass('entryRemove');
-                that.resetVariableAddPanel('list');
+            .bindOnClick(() => {
+                this.listAddPanel.view.addClass('entryRemove');
+                this.resetVariableAddPanel('list');
             });
         addSpaceCancelButton.innerHTML = Lang.Buttons.cancel;
         addSpaceButtonWrapper.appendChild(addSpaceCancelButton);
@@ -2057,38 +2050,34 @@ Entry.VariableContainer = function() {
         var CE = Entry.createElement; //alias
 
         var element = CE('div')
-            .bindOnClick((e) => e.stopPropagation())
             .addClass('entryVariableSettingWorkspace')
-            .addClass('entryRemove');
+            .addClass('entryRemove')
+            .bindOnClick((e) => e.stopPropagation())
+            .appendTo(this.listView_);
         this.variableSettingView = element;
-        this.listView_.appendChild(element);
 
         var visibleWrapper = CE('div')
             .addClass('entryVariableSettingVisibleWrapperWorkspace')
             .bindOnClick(() => {
                 var v = this.selectedVariable;
                 Entry.do('variableSetVisibility', v.id_, !v.isVisible());
-            });
-        element.appendChild(visibleWrapper);
-        var visibleSpan = CE('span');
+            })
+            .appendTo(element);
+        var visibleSpan = CE('span').appendTo(visibleWrapper);
         visibleSpan.innerHTML = Lang.Workspace.show_variable;
-        visibleWrapper.appendChild(visibleSpan);
-        var visibleCheck = CE('span').addClass(
-            'entryVariableSettingCheckWorkspace'
-        );
+        var visibleCheck = CE('span')
+            .addClass('entryVariableSettingCheckWorkspace')
+            .appendTo(visibleWrapper);
         element.visibleCheck = visibleCheck;
-        visibleWrapper.appendChild(visibleCheck);
 
-        var initValueWrapper = CE('div').addClass(
-            'entryVariableSettingInitValueWrapperWorkspace'
-        );
-        element.appendChild(initValueWrapper);
-        var initValueSpan = CE('span');
+        var initValueWrapper = CE('div')
+            .addClass('entryVariableSettingInitValueWrapperWorkspace')
+            .appendTo(element);
+        var initValueSpan = CE('span').appendTo(initValueWrapper);
         initValueSpan.innerHTML = Lang.Workspace.default_value;
-        initValueWrapper.appendChild(initValueSpan);
-        var initValueInput = CE('input').addClass(
-            'entryVariableSettingInitValueInputWorkspace'
-        );
+        var initValueInput = CE('input')
+            .addClass('entryVariableSettingInitValueInputWorkspace')
+            .appendTo(initValueWrapper);
         element.initValueInput = initValueInput;
         initValueInput.value = 0;
         initValueInput.onkeypress = Entry.Utils.blurWhenEnter;
@@ -2098,20 +2087,16 @@ Entry.VariableContainer = function() {
             Entry.do('variableSetDefaultValue', v.id_, this.value);
         });
         element.initValueInput = initValueInput;
-        initValueWrapper.appendChild(initValueInput);
 
-        var splitter = CE('div').addClass(
-            'entryVariableSettingSplitterWorkspace'
-        );
-        element.appendChild(splitter);
+        var splitter = CE('div')
+            .addClass('entryVariableSettingSplitterWorkspace')
+            .appendTo(element);
 
-        var slideWrapper = CE('div').addClass(
-            'entryVariableSettingSlideWrapperWorkspace'
-        );
-        element.appendChild(slideWrapper);
-        var slideSpan = CE('span');
+        var slideWrapper = CE('div')
+            .addClass('entryVariableSettingSlideWrapperWorkspace')
+            .appendTo(element);
+        var slideSpan = CE('span').appendTo(slideWrapper);
         slideSpan.innerHTML = Lang.Workspace.slide;
-        slideWrapper.appendChild(slideSpan);
         var slideCheck = CE('span')
             .addClass('entryVariableSettingCheckWorkspace')
             .bindOnClick((e) => {
@@ -2121,21 +2106,19 @@ Entry.VariableContainer = function() {
                     v.id_,
                     v.getType() === 'variable' ? 'slide' : 'variable'
                 );
-            });
+            })
+            .appendTo(slideWrapper);
         element.slideCheck = slideCheck;
-        slideWrapper.appendChild(slideCheck);
 
-        var minMaxWrapper = CE('div').addClass(
-            'entryVariableSettingMinMaxWrapperWorkspace'
-        );
+        var minMaxWrapper = CE('div')
+            .addClass('entryVariableSettingMinMaxWrapperWorkspace')
+            .appendTo(element);
         element.minMaxWrapper = minMaxWrapper;
-        element.appendChild(minMaxWrapper);
-        var minValueSpan = CE('span');
+        var minValueSpan = CE('span').appendTo(minMaxWrapper);
         minValueSpan.innerHTML = Lang.Workspace.min_value;
-        minMaxWrapper.appendChild(minValueSpan);
-        var minValueInput = CE('input').addClass(
-            'entryVariableSettingMinValueInputWorkspace'
-        );
+        var minValueInput = CE('input')
+            .addClass('entryVariableSettingMinValueInputWorkspace')
+            .appendTo(minMaxWrapper);
         var v = that.selectedVariable;
         if (v && v.type == 'slide') minValueInput.value = v.minValue_;
         else minValueInput.value = 0;
@@ -2148,16 +2131,14 @@ Entry.VariableContainer = function() {
             Entry.do('variableSetMinValue', v.id_, value);
         });
         element.minValueInput = minValueInput;
-        minMaxWrapper.appendChild(minValueInput);
 
-        var maxValueSpan = CE('span').addClass(
-            'entryVariableSettingMaxValueSpanWorkspace'
-        );
+        var maxValueSpan = CE('span')
+            .addClass('entryVariableSettingMaxValueSpanWorkspace')
+            .appendTo(minMaxWrapper);
         maxValueSpan.innerHTML = Lang.Workspace.max_value;
-        minMaxWrapper.appendChild(maxValueSpan);
-        var maxValueInput = CE('input').addClass(
-            'entryVariableSettingMaxValueInputWorkspace'
-        );
+        var maxValueInput = CE('input')
+            .addClass('entryVariableSettingMaxValueInputWorkspace')
+            .appendTo(minMaxWrapper);
         if (v && v.type == 'slide') maxValueInput.value = v.maxValue_;
         else maxValueInput.value = 100;
 
@@ -2170,7 +2151,6 @@ Entry.VariableContainer = function() {
             Entry.do('variableSetMaxValue', v.id_, value);
         });
         element.maxValueInput = maxValueInput;
-        minMaxWrapper.appendChild(maxValueInput);
     };
 
     /**
@@ -2212,97 +2192,89 @@ Entry.VariableContainer = function() {
 
     p.generateListSettingView = function() {
         var that = this;
-        var element = Entry.createElement('div').bindOnClick((e) =>
-            e.stopPropagation()
-        );
-        this.listSettingView = element
+        var element = Entry.createElement('div')
+            .bindOnClick((e) => e.stopPropagation())
             .addClass('entryListSettingWorkspace')
-            .addClass('entryRemove');
-        this.listView_.appendChild(element);
+            .addClass('entryRemove')
+            .appendTo(this.listView_);
+
+        this.listSettingView = element;
 
         var visibleWrapper = Entry.createElement('div')
             .addClass('entryListSettingVisibleWrapperWorkspace')
             .bindOnClick((e) => {
                 var v = that.selectedList;
-                var view = that.listSettingView.visibleCheck;
-                v.setVisible(!v.isVisible());
+                Entry.do('listSetVisibility', v.id_, !v.isVisible());
+            })
+            .appendTo(element);
 
-                if (v.isVisible())
-                    view.addClass('entryListSettingCheckedWorkspace');
-                else view.removeClass('entryListSettingCheckedWorkspace');
-            });
-        element.appendChild(visibleWrapper);
-        var visibleSpan = Entry.createElement('span');
+        var visibleSpan = Entry.createElement('span').appendTo(visibleWrapper);
         visibleSpan.innerHTML = Lang.Workspace.show_list_workspace;
-        visibleWrapper.appendChild(visibleSpan);
-        var visibleCheck = Entry.createElement('span').addClass(
-            'entryListSettingCheckWorkspace'
-        );
-        element.visibleCheck = visibleCheck;
-        visibleWrapper.appendChild(visibleCheck);
 
-        var lengthWrapper = Entry.createElement('div').addClass(
-            'entryListSettingLengthWrapperWorkspace'
-        );
-        var lengthSpan = Entry.createElement('span').addClass(
-            'entryListSettingLengthSpanWorkspace'
-        );
+        var visibleCheck = Entry.createElement('span')
+            .addClass('entryListSettingCheckWorkspace')
+            .appendTo(visibleWrapper);
+        element.visibleCheck = visibleCheck;
+
+        var lengthWrapper = Entry.createElement('div')
+            .addClass('entryListSettingLengthWrapperWorkspace')
+            .appendTo(element);
+
+        var lengthSpan = Entry.createElement('span')
+            .addClass('entryListSettingLengthSpanWorkspace')
+            .appendTo(lengthWrapper);
         lengthSpan.innerHTML = Lang.Workspace.number_of_list;
-        lengthWrapper.appendChild(lengthSpan);
-        element.appendChild(lengthWrapper);
-        var lengthController = Entry.createElement('div').addClass(
-            'entryListSettingLengthControllerWorkspace'
-        );
-        lengthWrapper.appendChild(lengthController);
+
+        var lengthController = Entry.createElement('div')
+            .addClass('entryListSettingLengthControllerWorkspace')
+            .appendTo(lengthWrapper);
+
         var minus = Entry.createElement('span')
             .addClass('entryListSettingMinusWorkspace')
             .bindOnClick((e) => {
-                var { selectedList: v } = that;
-                v.array_.pop();
-                that.updateListSettingView(v);
-            });
-        lengthController.appendChild(minus);
-        var lengthInput = Entry.createElement('input').addClass(
-            'entryListSettingLengthInputWorkspace'
-        );
-        lengthInput.onblur = function() {
-            that.setListLength(this.value);
-        };
+                var { selectedList: { id_, array_ } } = that;
+                Entry.do('listChangeLength', id_, 'minus');
+            })
+            .appendTo(lengthController);
+        element.minus = minus;
 
+        var lengthInput = Entry.createElement('input')
+            .addClass('entryListSettingLengthInputWorkspace')
+            .appendTo(lengthController);
+        lengthInput.onblur = function() {
+            var v = that.selectedList;
+            var value = this.value;
+            value = Entry.Utils.isNumber(value) ? value : v.array_.length;
+            Entry.do('listChangeLength', v.id_, Number(value));
+        };
         lengthInput.onkeypress = Entry.Utils.blurWhenEnter;
         element.lengthInput = lengthInput;
-        lengthController.appendChild(lengthInput);
+
         var plus = Entry.createElement('span')
             .addClass('entryListSettingPlusWorkspace')
             .bindOnClick((e) => {
-                var { selectedList: v } = that;
-                v.array_.push({ data: 0 });
-                that.updateListSettingView(v);
-            });
-        lengthController.appendChild(plus);
-        var seperator = Entry.createElement('div').addClass(
-            'entryListSettingSeperatorWorkspace'
-        );
-        element.seperator = seperator;
-        element.appendChild(seperator);
+                var { selectedList: { id_, array_ } } = that;
+                Entry.do('listChangeLength', id_, 'plus');
+            })
+            .appendTo(lengthController);
+        element.plus = plus;
 
-        var listValues = Entry.createElement('div').addClass(
-            'entryListSettingListValuesWorkspace'
-        );
+        var seperator = Entry.createElement('div')
+            .addClass('entryListSettingSeperatorWorkspace')
+            .appendTo(element);
+        element.seperator = seperator;
+
+        var listValues = Entry.createElement('div')
+            .addClass('entryListSettingListValuesWorkspace')
+            .appendTo(element);
         element.listValues = listValues;
-        element.appendChild(listValues);
     };
 
     p.updateListSettingView = function(list) {
         list = list || this.selectedList;
         var view = this.listSettingView,
-            listValues = view.listValues,
-            visibleCheck = view.visibleCheck,
-            lengthInput = view.lengthInput,
-            seperator = view.seperator,
-            _whenEnter = Entry.Utils.whenEnter(function() {
-                this.blur();
-            });
+            _whenEnter = Entry.Utils.blurWhenEnter;
+        var { listValues, visibleCheck, lengthInput, seperator } = view;
 
         if (list.isVisible()) {
             visibleCheck.addClass('entryListSettingCheckedWorkspace');
@@ -2310,13 +2282,13 @@ Entry.VariableContainer = function() {
             visibleCheck.removeClass('entryListSettingCheckedWorkspace');
         }
 
-        lengthInput.value = list.array_.length;
+        var arr = list.array_;
+        lengthInput.value = arr.length;
         list.listElement.appendChild(view);
 
         //remove element and event bindings
         $(listValues).empty();
 
-        var arr = list.array_;
         if (arr.length === 0) seperator.addClass('entryRemove');
         else seperator.removeClass('entryRemove');
 
@@ -2324,23 +2296,26 @@ Entry.VariableContainer = function() {
             Entry.getMainWS().mode === Entry.Workspace.MODE_VIMBOARD ? 0 : 1;
 
         var fragment = document.createDocumentFragment();
-        arr.forEach((item, i) => {
+        arr.forEach(({ data }, i) => {
             var wrapper = Entry.createElement('div')
                 .addClass('entryListSettingValueWrapperWorkspace')
                 .appendTo(fragment);
+
             var numberSpan = Entry.createElement('span')
                 .addClass('entryListSettingValueNumberSpanWorkspace')
                 .appendTo(wrapper);
             numberSpan.innerHTML = i + startIndex;
+
             var input = Entry.createElement('input')
                 .addClass('entryListSettingEachInputWorkspace')
                 .appendTo(wrapper);
-            input.value = item.data;
-            input.onblur = function() {
-                item.data = this.value;
-                list.updateView();
-            };
+            input.value = data;
+            input.onfocus = Entry.Utils.setFocused;
+            input.onblur = Entry.Utils.setBlurredTimer(function() {
+                Entry.do('listSetDefaultValue', list.id_, i, this.value);
+            });
             input.onkeypress = Entry.Utils.blurWhenEnter;
+
             Entry.createElement('span')
                 .addClass('entryListSettingValueRemoveWorkspace')
                 .bindOnClick(() => {
@@ -2355,14 +2330,14 @@ Entry.VariableContainer = function() {
         view.removeClass('entryRemove');
     };
 
-    p.setListLength = function(value) {
+    p.setListLength = function(list, value) {
         value = Number(value);
         var arr = this.selectedList.array_;
-        if (Entry.Utils.isNumber(value)) {
-            var times = value - arr.length;
+        var times = value - arr.length;
+        if (times && Entry.Utils.isNumber(value)) {
             if (times > 0) {
                 _.times(times, () => arr.push({ data: 0 }));
-            } else if (times < 0) {
+            } else {
                 arr.length = value;
             }
         }
@@ -2412,6 +2387,7 @@ Entry.VariableContainer = function() {
         var _filterFunc = _.partial(_.result, _, 'isCloud_');
 
         var { variables_, lists_ } = Entry.variableContainer;
+
         var variables = variables_.reduce((acc, v) => {
             if (_filterFunc(v)) return [...acc, v.toJSON()];
             return acc;
@@ -2422,6 +2398,7 @@ Entry.VariableContainer = function() {
             return acc;
         }, []);
 
+        //no variable or list to save
         if (!variables.length && !lists.length) return;
 
         $.ajax({
@@ -2638,13 +2615,19 @@ Entry.VariableContainer = function() {
         return Entry.getMainWS() && Entry.getMainWS().getBlockMenu();
     };
 
-    p._truncName = function(name, type) {
+    p._truncName = function(name, type, maxLen) {
+        maxLen = maxLen || this._maxNameLength;
+
+        if (name.length <= maxLen) {
+            return name;
+        }
+
         Entry.toast.warning(
             Lang.Workspace[type + '_name_auto_edited_title'],
             Lang.Workspace[type + '_name_auto_edited_content']
         );
 
-        return name.substring(0, this._maxNameLength);
+        return name.substring(0, maxLen);
     };
 
     p._maxNameLength = 10;
@@ -2682,58 +2665,61 @@ Entry.VariableContainer = function() {
     };
 
     p.getDom = function(query) {
-        if (query.length) {
-            switch (query.shift()) {
-                case 'filter':
-                    return this.filterElements[query.shift()];
-                case 'functionAddButton':
-                    return this.functionAddButton_;
-                case 'variableAddButton':
-                    return this.variableAddButton_;
-                case 'listAddButton':
-                    return this.listAddButton_;
-                case 'variableAddConfirmButton':
-                    return this.variableAddConfirmButton;
-                case 'listAddConfirmButton':
-                    return this.listAddConfirmButton;
-                case 'variableAddInput':
-                    return this.variableAddPanel.view.name;
-                case 'listAddInput':
-                    return this.listAddPanel.view.name;
-                case 'messageAddButton':
-                    return this.messageAddButton_;
-                case 'variableSetVisibility':
-                    return this.variableSettingView.visibleCheck;
-                case 'variableSetDefaultValue':
-                    return this.variableSettingView.initValueInput;
-                case 'slideCheck':
-                    return this.variableSettingView.slideCheck;
-                case 'variableMinValue':
-                    return this.variableSettingView.minValueInput;
-                case 'variableMaxValue':
-                    return this.variableSettingView.maxValueInput;
-                case 'messageList':
-                    return this.getMessage(query.shift()).listElement.nameField;
-                case 'variableScope':
-                    var { globalCheck, localCheck } = this._getAddPanel(
-                        'variable'
-                    ).view;
-                    return query.shift() === 'global'
-                        ? globalCheck
-                        : localCheck;
-                case 'listScope':
-                    var { globalCheck, localCheck } = this._getAddPanel(
-                        'list'
-                    ).view;
-                    return query.shift() === 'global'
-                        ? globalCheck
-                        : localCheck;
-                case 'variableCloud':
-                    return this._getAddPanel('variable').view.cloudCheck;
-                case 'listCloud':
-                    return this._getAddPanel('list').view.cloudCheck;
-            }
-        } else {
+        if (_.isEmpty(query)) {
+            return;
+        }
+
+        switch (query.shift()) {
+            case 'filter':
+                return this.filterElements[query.shift()];
+            case 'functionAddButton':
+                return this.functionAddButton_;
+            case 'variableAddButton':
+                return this.variableAddButton_;
+            case 'listAddButton':
+                return this.listAddButton_;
+            case 'variableAddConfirmButton':
+                return this.variableAddConfirmButton;
+            case 'listAddConfirmButton':
+                return this.listAddConfirmButton;
+            case 'variableAddInput':
+                return this.variableAddPanel.view.name;
+            case 'listAddInput':
+                return this.listAddPanel.view.name;
+            case 'messageAddButton':
+                return this.messageAddButton_;
+            case 'variableSetVisibility':
+                return this.variableSettingView.visibleCheck;
+            case 'listSetVisibility':
+                return this.listSettingView.visibleCheck;
+            case 'variableSetDefaultValue':
+                return this.variableSettingView.initValueInput;
+            case 'slideCheck':
+                return this.variableSettingView.slideCheck;
+            case 'variableMinValue':
+                return this.variableSettingView.minValueInput;
+            case 'variableMaxValue':
+                return this.variableSettingView.maxValueInput;
+            case 'messageList':
+                return this.getMessage(query.shift()).listElement.nameField;
+            case 'variableScope':
+                var { globalCheck, localCheck } = this._getAddPanel(
+                    'variable'
+                ).view;
+                return query.shift() === 'global' ? globalCheck : localCheck;
+            case 'listScope':
+                var { globalCheck, localCheck } = this._getAddPanel(
+                    'list'
+                ).view;
+                return query.shift() === 'global' ? globalCheck : localCheck;
+            case 'variableCloud':
+                return this._getAddPanel('variable').view.cloudCheck;
+            case 'listCloud':
+                return this._getAddPanel('list').view.cloudCheck;
+            case 'listChangeLength':
+                return this.listSettingView[query.shift()];
+            case 'listDefaultValue':
+                return $('.entryListSettingEachInputWorkspace')[query.shift()];
         }
     };
 
@@ -2787,14 +2773,13 @@ Entry.VariableContainer = function() {
 
     p._makeVariableData = function(type = 'variable') {
         var panel = this._getAddPanel(type);
+
         var name = panel.view.name.value.trim();
         if (_.isEmpty(name)) {
             name = Lang.Workspace[type];
         }
 
-        if (name.length > this._maxNameLength) {
-            name = this._truncName(name, type);
-        }
+        name = this._truncName(name, type, this._maxNameLength);
 
         var target = `${type}s_`;
         name = this.checkAllVariableName(name, target)
@@ -2802,6 +2787,7 @@ Entry.VariableContainer = function() {
             : name;
 
         var { isCloud, object } = panel.info;
+
         return {
             name,
             isCloud,
@@ -2843,8 +2829,12 @@ Entry.VariableContainer = function() {
             variableJSON.variableType = type;
             newVariable = new Entry.Variable(variableJSON);
             variables.splice(variables.indexOf(v), 0, newVariable);
-            if (newVariable.getValue() < 0) newVariable.setValue(0);
-            if (newVariable.getValue() > 100) newVariable.setValue(100);
+
+            if (newVariable.getValue() < 0) {
+                newVariable.setValue(0);
+            } else if (newVariable.getValue() > 100) {
+                newVariable.setValue(100);
+            }
         } else if (type == 'variable') {
             variableJSON.variableType = type;
             if (value !== undefined) {

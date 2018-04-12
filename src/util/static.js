@@ -134,6 +134,9 @@ Entry.STATIC = {
         listAddSetName: 819,
         listAddSetScope: 820,
         listAddSetCloud: 821,
+        listSetVisibility: 822,
+        listChangeLength: 823,
+        listSetDefaultValue: 824,
 
         //utility commands
         dismissModal: 900,

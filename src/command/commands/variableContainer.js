@@ -30,6 +30,9 @@ var { createTooltip, returnEmptyArr } = require('../command_util');
         listAddSetName,
         listAddSetScope,
         listAddSetCloud,
+        listSetVisibility,
+        listChangeLength,
+        listSetDefaultValue,
     } = COMMAND_TYPES;
 
     c[variableContainerSelectFilter] = {
@@ -394,10 +397,11 @@ var { createTooltip, returnEmptyArr } = require('../command_util');
         do(list) {
             var expected = Entry.expectedAction;
             if (expected) {
+                expected = expected[1][1].id;
                 if (list.setId) {
-                    list.setId(expected[1][1].id);
+                    list.setId(expected);
                 } else {
-                    list.id = expected[1][1].id;
+                    list.id = expected;
                 }
             }
             getVC().addList(list);
@@ -533,9 +537,99 @@ var { createTooltip, returnEmptyArr } = require('../command_util');
         dom: ['variableContainer', 'listCloud'],
     };
 
+    c[listSetVisibility] = {
+        do(id, value) {
+            var VC = getVC();
+            var list = VC.getList(id);
+            list.setVisible(value);
+            VC.updateListSettingView(list);
+        },
+        state(id, value) {
+            var VC = getVC();
+            var list = VC.getList(id);
+            return [id, list.isVisible()];
+        },
+        log(id, value) {
+            return [['id', id], ['value', value]];
+        },
+        restrict: _listActiveRestrictor,
+        recordable: RECORDABLE.SUPPORT,
+        undo: 'listSetVisibility',
+        dom: ['variableContainer', 'listSetVisibility'],
+    };
+
+    c[listChangeLength] = {
+        do(id, value) {
+            var VC = getVC();
+            var list = VC.getList(id);
+            var arr = list.array_;
+
+            if (value === 'minus') {
+                value = Math.max(0, arr.length - 1);
+            } else if (value === 'plus') {
+                value = arr.length + 1;
+            } else if (Entry.Utils.isNumber(value)) {
+                value = value;
+            } else {
+                value = arr.length;
+            }
+
+            VC.setListLength(list, value);
+        },
+        state(id, value) {
+            var VC = getVC();
+            var { array_ } = VC.getList(id);
+            return [id, array_.length];
+        },
+        log(id, value) {
+            var dom = value;
+            var dom = Entry.Utils.isNumber(value) ? 'lengthInput' : value;
+            return [['id', id], ['value', value], ['dom', dom]];
+        },
+        recordable: RECORDABLE.SUPPORT,
+        undo: 'listChangeLength',
+        restrict: _listActiveRestrictor,
+        dom: ['variableContainer', 'listChangeLength', '&2'],
+    };
+
+    c[listSetDefaultValue] = {
+        do(id, idx, data) {
+            var VC = getVC();
+            var list = VC.getList(id);
+            var arr = list.array_;
+            arr[idx] = { data };
+
+            VC.updateListSettingView();
+            list.updateView();
+        },
+        state(id, idx, data) {
+            var VC = getVC();
+            var { array_ } = VC.getList(id);
+            return [id, idx, array_[idx].data];
+        },
+        log(id, idx, data) {
+            return [['id', id], ['idx', idx], ['data', data]];
+        },
+        recordable: RECORDABLE.SUPPORT,
+        undo: 'listSetDefaultValue',
+        restrict: function(data, domQuery, callback) {
+            var VC = getVC();
+            _updateSelected(data.content);
+            var dom = Entry.getDom(domQuery);
+            if (dom && !Entry.Utils.isDomActive(dom)) {
+                dom.focus();
+            }
+            var { title, content } = data.tooltip;
+            return createTooltip(title, content, domQuery, callback, {
+                noDispose: true,
+            });
+        },
+        dom: ['variableContainer', 'listDefaultValue', '&1'],
+    };
+
     //utilities
 
-    //if data has toJSON method 
+    //if data has toJSON method
     //return data.toJSON()
     //else just return data as is
     function _toJSON(data) {
@@ -544,5 +638,20 @@ var { createTooltip, returnEmptyArr } = require('../command_util');
 
     function getVC() {
         return Entry.variableContainer;
+    }
+
+    function _updateSelected(content) {
+        var VC = getVC();
+        var vId = content[1][1];
+        var v = getVC().getVariable(vId) || getVC().getList(vId);
+        if (v) {
+            VC.updateSelectedVariable(v);
+        }
+    }
+
+    function _listActiveRestrictor({ tooltip, content }, domQuery, callback) {
+        _updateSelected(content);
+        var { title: tooltipTitle, content: tooltipContent } = tooltip;
+        return createTooltip(tooltipTitle, tooltipContent, domQuery, callback);
     }
 })(Entry.Command);
