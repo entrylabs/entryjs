@@ -107,9 +107,9 @@ Entry.VariableContainer = function() {
         messageAddButton.innerHTML = '+ ' + Lang.Workspace.message_create;
         this.messageAddButton_ = messageAddButton;
         messageAddButton.bindOnClick(function(e) {
+            let name = Entry.getOrderedName(Lang.Workspace.message + ' ', that.messages_, 'name');
             that.addMessage({
-                name:
-                    Lang.Workspace.message + ' ' + (that.messages_.length + 1),
+                name: name,
             });
         });
 
