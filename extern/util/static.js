@@ -1086,7 +1086,6 @@ EntryStatic.getAllBlocks = function() {
                 "modi_dial_value",
                 "modi_gyroscope_value",
                 "modi_button_value",
-                "modi_is_button_touch",
                 "modi_button_true",
                 "modi_button_false",
                 "modi_infrared_value",
@@ -1099,8 +1098,6 @@ EntryStatic.getAllBlocks = function() {
                 "modi_set_led_color",
                 "modi_set_basic_speaker",
                 "modi_set_custom_speaker",
-                "modi_change_speaker_frequence",
-                "modi_change_speaker_volume",
                 "modi_print_display_by_value",
 
                 // COCONUT
