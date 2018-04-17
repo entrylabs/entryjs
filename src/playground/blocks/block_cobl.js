@@ -2,6 +2,12 @@
 
 Entry.Cobl = {
     name: 'cobl',
+    url: 'http://www.cobl.co.kr/',
+    imageName: 'cobl.png',
+    title: {
+        "ko": "코블",
+        "en": "Cobl"
+    },
     setZero: function() {
         for (var port = 0; port < 14; port++) {
             Entry.hw.sendQueue[port] = 0;

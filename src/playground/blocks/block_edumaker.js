@@ -2,6 +2,11 @@
 
 Entry.EduMaker = {
     name: 'EduMaker',
+    imageName: 'edumaker.png',
+    title: {
+        "ko": "에듀메이커 보드",
+        "en": "EduMaker Board"
+    },
     setZero: function() {
         if (!Entry.hw.sendQueue.SET) {
             Entry.hw.sendQueue = {

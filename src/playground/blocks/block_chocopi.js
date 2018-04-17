@@ -2,6 +2,12 @@
 
 Entry.Chocopi = {
     name: 'chocopi',
+    url: 'http://chocopi.org/entry/',
+    imageName: 'chocopi.png',
+    title: {
+        "ko": "초코파이보드",
+        "en": "ChocoPi"
+    },
     p: {},
     ev: {},
     blocks: [],

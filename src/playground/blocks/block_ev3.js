@@ -76,6 +76,12 @@ Entry.EV3 = {
         Entry.hw.update();
     },
     name: 'EV3',
+    url: 'http://www.lego.com/ko-kr/mindstorms/about-ev3',
+    imageName: 'ev3.png',
+    title: {
+        "ko": "EV3",
+        "en": "EV3"
+    },
 };
 
 Entry.EV3.getBlocks = function() {

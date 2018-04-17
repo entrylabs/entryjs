@@ -78,6 +78,12 @@ Entry.Bitbrick = {
         Entry.hw.update();
     },
     name: 'bitbrick',
+    url: 'http://www.bitbrick.cc/',
+    imageName: 'bitbrick.png',
+    title: {
+        "ko": "비트브릭",
+        "en": "bitbrick"
+    },
     servoMaxValue: 181,
     servoMinValue: 1,
     dcMaxValue: 100,

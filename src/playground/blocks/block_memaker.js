@@ -2,6 +2,12 @@
 
 Entry.memaker = {
     name: 'memaker',
+    url: 'http://www.jkelec.co.kr/',
+    imageName: 'memaker.png',
+    title: {
+        "ko": "미메이커",
+        "en": "memaker"
+    },
     setZero: function() {
         if (!Entry.hw.sendQueue.SET) {
             Entry.hw.sendQueue = {

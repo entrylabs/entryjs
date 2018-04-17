@@ -15,6 +15,12 @@
 
 Entry.byrobot_petrone_v2_drive = {
     name: 'byrobot_petrone_v2_drive',
+    url: 'http://www.byrobot.co.kr/',
+    imageName: 'byrobot_petrone_v2_drive.png',
+    title: {
+        "en": "BYROBOT Petrone V2 drive",
+        "ko": "바이로봇 페트론V2 자동차"
+    },
 
     // 초기화
     setZero: function() {

@@ -37,6 +37,12 @@ Entry.Robotis_carCont = {
         this.update();
     },
     name: 'robotis_carCont',
+    url: 'http://www.robotis.com/index/product.php?cate_code=111310',
+    imageName: 'robotis_carCont.png',
+    title: {
+        "ko": "로보티즈 로봇자동차",
+        "en": "Robotis Robot car"
+    },
     delay: 40,
     postCallReturn: function(script, data, ms) {
         if (ms <= 0) {
@@ -205,6 +211,12 @@ Entry.Robotis_openCM70 = {
         //Entry.Robotis_carCont.update();
     },
     name: 'robotis_openCM70',
+    url: 'http://www.robotis.com/index/product.php?cate_code=111310',
+    imageName: 'robotis_openCM70.png',
+    title: {
+        "ko": "로보티즈 IoT",
+        "en": "Robotis Open CM70"
+    },
     delay: 15,
 };
 
