@@ -100,6 +100,12 @@ Entry.CodeMap = {};
                 self: 'self',
             },
         ],
+        text_read: [
+            {
+                자신: 'self',
+                self: 'self',
+            },
+        ],
         locate: [
             {
                 mouse: 'mouse_pointer',

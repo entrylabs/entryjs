@@ -106,3 +106,35 @@ Entry.HARDWARE_LIST = {
     '20.1': Entry.Creamo,
     '21.1': Entry.FunBoard,
 };
+
+import startBlock from './block_start';
+import flowBlock from './block_flow';
+import movingBlock from './block_moving';
+import looksBlock from './block_looks';
+import brushBlock from './block_brush';
+import textBlock from './block_text';
+import soundBlock from './block_sound';
+import judgementBlock from './block_judgement';
+import calcBlock from './block_calc';
+import variableBlock from './block_variable';
+import funcBlock from './block_func';
+
+class Blocks {
+    getBlocks() {
+        return Object.assign(
+            startBlock.getBlocks(),
+            flowBlock.getBlocks(),
+            movingBlock.getBlocks(),
+            looksBlock.getBlocks(),
+            brushBlock.getBlocks(),
+            textBlock.getBlocks(),
+            soundBlock.getBlocks(),
+            judgementBlock.getBlocks(),
+            calcBlock.getBlocks(),
+            variableBlock.getBlocks(),
+            funcBlock.getBlocks(),
+        );
+    }
+}
+
+export default new Blocks();
