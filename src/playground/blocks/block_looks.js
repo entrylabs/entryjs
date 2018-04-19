@@ -1,4 +1,4 @@
-class looksBlocks {
+export default {
     getBlocks() {
         return {
             show: {
@@ -953,5 +953,4 @@ class looksBlocks {
             },
         };
     }
-}
-export default new looksBlocks();
+};

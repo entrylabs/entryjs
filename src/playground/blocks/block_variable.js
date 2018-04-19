@@ -1,4 +1,4 @@
-class variableBlocks {
+export default {
     getBlocks() {
         return {
             variableAddButton: {
@@ -1741,4 +1741,3 @@ class variableBlocks {
         };
     }
 }
-export default new variableBlocks();

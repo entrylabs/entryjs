@@ -1,4 +1,4 @@
-class soundBlocks {
+export default {
     getBlocks() {
         return {
             sound_something_with_block: {
@@ -630,4 +630,3 @@ class soundBlocks {
         };
     }
 }
-export default new soundBlocks();

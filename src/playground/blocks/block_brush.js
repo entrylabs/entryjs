@@ -1,4 +1,4 @@
-class brushBlocks {
+export default {
     getBlocks() {
         return {
             brush_stamp: {
@@ -504,4 +504,3 @@ class brushBlocks {
         };
     }
 }
-export default new brushBlocks();

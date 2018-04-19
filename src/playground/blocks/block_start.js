@@ -1,4 +1,4 @@
-class startBlocks {
+export default {
     getBlocks() {
         return {
             when_run_button_click: {
@@ -1160,5 +1160,3 @@ class startBlocks {
         };
     }
 }
-
-export default new startBlocks();

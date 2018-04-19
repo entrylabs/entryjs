@@ -1,4 +1,4 @@
-class judgementBlocks {
+export default {
     getBlocks() {
         return {
             is_clicked: {
@@ -605,4 +605,3 @@ class judgementBlocks {
         };
     }
 }
-export default new judgementBlocks();

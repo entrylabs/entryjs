@@ -1,4 +1,4 @@
-class flowBlocks {
+export default {
     getBlocks() {
         return {
             wait_second: {
@@ -845,4 +845,3 @@ class flowBlocks {
         };
     }
 }
-export default new flowBlocks();

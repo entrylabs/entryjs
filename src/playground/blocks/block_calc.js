@@ -1,4 +1,4 @@
-class clasBlocks {
+export default {
     getBlocks() {
         return {
             calc_basic: {
@@ -2487,4 +2487,3 @@ class clasBlocks {
         };
     }
 }
-export default new clasBlocks();

@@ -1,4 +1,4 @@
-class movingBlocks {
+export default {
     getBlocks() {
         return {
             move_direction: {
@@ -1576,4 +1576,3 @@ class movingBlocks {
         };
     }
 }
-export default new movingBlocks();

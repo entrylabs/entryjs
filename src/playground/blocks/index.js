@@ -119,22 +119,32 @@ import calcBlock from './block_calc';
 import variableBlock from './block_variable';
 import funcBlock from './block_func';
 
-class Blocks {
-    getBlocks() {
-        return Object.assign(
-            startBlock.getBlocks(),
-            flowBlock.getBlocks(),
-            movingBlock.getBlocks(),
-            looksBlock.getBlocks(),
-            brushBlock.getBlocks(),
-            textBlock.getBlocks(),
-            soundBlock.getBlocks(),
-            judgementBlock.getBlocks(),
-            calcBlock.getBlocks(),
-            variableBlock.getBlocks(),
-            funcBlock.getBlocks(),
-        );
-    }
+function getBlockObject(items) {
+    const blockObject = {};
+    items.forEach((item)=> {
+        if('getBlocks' in item) {
+            Object.assign(blockObject, item.getBlocks());
+        }
+    });
+    return blockObject;
 }
 
-export default new Blocks();
+export default {
+    getBlocks() {
+        const basicBlockList = [
+            startBlock,
+            flowBlock,
+            movingBlock,
+            looksBlock,
+            brushBlock,
+            textBlock,
+            soundBlock,
+            judgementBlock,
+            calcBlock,
+            variableBlock,
+            funcBlock,
+        ];
+        const hardwareList = Object.values(Entry.HARDWARE_LIST);
+        return getBlockObject(basicBlockList.concat(hardwareList));
+    }
+}

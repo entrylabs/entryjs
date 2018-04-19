@@ -1,4 +1,4 @@
-class funcBlocks {
+export default {
     getBlocks() {
         return {
             functionAddButton: {
@@ -27,4 +27,3 @@ class funcBlocks {
         };
     }
 }
-export default new funcBlocks();

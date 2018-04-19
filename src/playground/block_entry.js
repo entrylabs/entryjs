@@ -8050,8 +8050,7 @@ const block = {
     //endregion basic 기본
 };
 
-Object.assign(block, blocks.getBlocks());
-Object.assign(Entry.block, block);
+Object.assign(Entry.block, block, blocks.getBlocks());
 
 (function() {
     // console.log('hw', Entry.HW, Entry.Arduino);
@@ -8066,10 +8065,6 @@ Object.assign(Entry.block, block);
             for(let key in data) {
                 Object.assign(Lang[key], data[key]);
             }
-        }
-        if('getBlocks' in hw) {
-            var block = hw.getBlocks();
-            Object.assign(Entry.block, block);
         }
     };
 

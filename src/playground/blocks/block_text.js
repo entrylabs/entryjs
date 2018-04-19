@@ -1,4 +1,4 @@
-class textBlocks {
+export default {
     getBlocks() {
         return {
             text_read: {
@@ -242,4 +242,3 @@ class textBlocks {
         };
     }
 }
-export default new textBlocks();
