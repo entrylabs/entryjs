@@ -357,6 +357,27 @@ EntryStatic.getAllBlocks = function() {
                 "arduino_ext_digital_pwm",
                 "arduino_ext_set_servo",
                 "arduino_ext_set_tone",
+                //codingBox
+                "cbx_read_line",
+                "cbx_read_mic",
+                "cbx_read_switch",
+                "cbx_read_potentiometer",
+                "cbx_read_ultrasonic",
+                "cbx_write_led",
+                "cbx_write_rgb_led",
+                "cbx_write_tone",
+                "cbx_write_dcm",
+                "cbx_write_servo",
+                "cbx_write_lcd",
+                "cbx_clear_lcd",
+                "cbx_arduino_get_analog_value",
+                "cbx_arduino_get_analog_value_map",
+                "cbx_arudino_read_ultrasonic_value",
+                "cbx_arduino_read_digital",
+                "cbx_arduino_toggle_led",
+                "cbx_arduino_digital_pwm",
+                "cbx_arduino_write_servo",
+                "cbx_arduino_write_tone",
                 //arduinoNano
                 "arduino_nano_get_analog_value",
                 "arduino_nano_get_analog_value_map",
@@ -744,7 +765,7 @@ EntryStatic.getAllBlocks = function() {
                 "mkboard_set_servo",
                 "mkboard_set_tone",
                 "mkboard_set_lcd",
-                "mkboard_lcd_command",                
+                "mkboard_lcd_command",
                 // mkboard Added 2017-07-04
 
                 "ev3_get_sensor_value",
@@ -1215,7 +1236,7 @@ EntryStatic.getAllBlocks = function() {
                 "playcode_gpio",
                 "playcode_servo",
                 "playcode_speed",
-                // playcode Added 2018-01-02 
+                // playcode Added 2018-01-02
 
                 //creamo
                 "creamo_toggle_led",
@@ -1238,7 +1259,7 @@ EntryStatic.getAllBlocks = function() {
                 "mechatro_set_servo_speed",
                 "mechatro_set_blue_pw",
                 // mechatro Added 2018-02-12
-                
+
                 //FunBoard
                 "funboard_list_pushbutton_basic",
                 "funboard_list_touchbutton_basic",
@@ -1248,7 +1269,7 @@ EntryStatic.getAllBlocks = function() {
                 "funboard_list_onoff_basic",
                 "funboard_what_button_pressed",
                 "funboard_what_touch_button_pressed",
-                "funboard_get_analog_sensor_2state",                
+                "funboard_get_analog_sensor_2state",
                 "funboard_get_digital_button_value",
                 "funboard_get_touch_button_value",
                 "funboard_get_number_sensor_value",

@@ -83,6 +83,12 @@ Lang.CommandTooltip = {
     "805": "변수 이름 설정"
 };
 Lang.Blocks = {
+    "CBX_LED_ON": "켜짐",
+    "CBX_LED_OFF": "꺼짐",
+    "CBX_DCM_FORWARD": "정회전",
+    "CBX_DCM_BACKWARD": "역회전",
+    "CBX_DCM_SPEED_MAX": "최대속도",
+    "CBX_DCM_SPEED_STOP": "정지",
     "download_guide": "연결 안내 다운로드",
     "ARDUINO": "하드웨어",
     "ARDUINO_download_connector": "연결 프로그램 다운로드",
