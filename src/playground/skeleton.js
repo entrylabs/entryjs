@@ -11,6 +11,7 @@ Entry.skeleton = function() {
 };
 
 Entry.skeleton.basic = {
+    executable: true,
     path: function(blockView) {
         var width = blockView.contentWidth;
         var height = blockView.contentHeight;
@@ -48,6 +49,7 @@ Entry.skeleton.basic = {
 };
 
 Entry.skeleton.basic_create = {
+    executable: true,
     path: function(blockView) {
         var width = blockView.contentWidth;
         var height = blockView.contentHeight;
@@ -83,6 +85,7 @@ Entry.skeleton.basic_create = {
 };
 
 Entry.skeleton.basic_event = {
+    executable: true,
     path: function(blockView) {
         var width = blockView.contentWidth;
         width = Math.max(0, width);
@@ -113,6 +116,7 @@ Entry.skeleton.basic_event = {
 };
 
 Entry.skeleton.basic_loop = {
+    executable: true,
     path: function(blockView) {
         var width = blockView.contentWidth;
         var height = blockView.contentHeight;
@@ -163,6 +167,7 @@ Entry.skeleton.basic_loop = {
 
 
 Entry.skeleton.basic_define = {
+    executable: true,
     path: function(blockView) {
         var width = blockView.contentWidth;
         var height = blockView.contentHeight;
@@ -204,6 +209,7 @@ Entry.skeleton.basic_define = {
 
 
 Entry.skeleton.pebble_event = {
+    executable: true,
     path: function(blockView) {
         var width = blockView.contentWidth;
         return "m 0,0 a 25,25 0 0,1 9,48.3 a 9,9 0 0,1 -18,0 a 25,25 0 0,1 9,-48.3 z";
@@ -230,6 +236,7 @@ Entry.skeleton.pebble_event = {
 };
 
 Entry.skeleton.pebble_loop = {
+    executable: true,
     fontSize: 16,
     dropdownHeight: 23,
     path: function(blockView) {
@@ -278,6 +285,7 @@ Entry.skeleton.pebble_loop = {
 };
 
 Entry.skeleton.pebble_basic = {
+    executable: true,
     fontSize: 15,
     morph: [
         "prev", "next"
@@ -455,6 +463,7 @@ Entry.skeleton.basic_button = {
 };
 
 Entry.skeleton.basic_without_next = {
+    executable: true,
     box: Entry.skeleton.basic.box,
     contentPos: Entry.skeleton.basic.contentPos,
     path: function(blockView) {
@@ -477,6 +486,7 @@ Entry.skeleton.basic_without_next = {
 };
 
 Entry.skeleton.basic_double_loop = {
+    executable: true,
     path: function(blockView) {
         var width = blockView.contentWidth;
         var height1 = blockView.contentHeight%1000000;

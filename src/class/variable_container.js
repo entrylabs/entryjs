@@ -108,8 +108,11 @@ Entry.VariableContainer = function() {
             .bindOnClick((e) => {
                 Entry.do('variableContainerAddMessage', {
                     id: Entry.generateHash(),
-                    name: `${Lang.Workspace.message} ${this.messages_.length +
-                        1}`,
+                    name: Entry.getOrderedName(
+                        Lang.Workspace.message + ' ',
+                        this.messages_,
+                        'name'
+                    ),
                 });
             });
         messageAddButton.innerHTML = '+ ' + Lang.Workspace.message_create;
@@ -118,9 +121,7 @@ Entry.VariableContainer = function() {
         var listAddButton = Entry.createElement('li')
             .addClass('entryVariableAddWorkspace')
             .addClass('entryVariableListElementWorkspace')
-            .bindOnClick(() => {
-                Entry.do('variableContainerClickListAddButton');
-            });
+            .bindOnClick(() => Entry.do('variableContainerClickListAddButton'));
 
         listAddButton.innerHTML = '+ ' + Lang.Workspace.list_create;
         this.listAddButton_ = listAddButton;
@@ -1468,8 +1469,8 @@ Entry.VariableContainer = function() {
             }
 
             this.blurred = true;
-            var value = this.value.trim();
-            if (!value) {
+            var value = this.value;
+            if (!value.trim()) {
                 Entry.toast.alert(Lang.Msgs.warn, Lang.Msgs.sign_can_not_space);
                 this.value = message.name;
                 return this.focus();

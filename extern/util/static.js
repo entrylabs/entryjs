@@ -244,6 +244,7 @@ EntryStatic.getAllBlocks = function() {
         {
             category: "text",
             blocks: [
+                "text_read",
                 "text_write",
                 "text_append",
                 "text_prepend",
@@ -334,7 +335,6 @@ EntryStatic.getAllBlocks = function() {
         {
             category: "arduino",
             blocks: [
-
                 "arduino_download_connector",
                 "download_guide",
                 "arduino_download_source",
@@ -1479,6 +1479,7 @@ EntryStatic.ARROW_COLOR_START = '#2f975a';
 EntryStatic.ARROW_COLOR_FLOW = '#3a71bc';
 EntryStatic.ARROW_COLOR_MOVING = '#8641b6';
 EntryStatic.ARROW_COLOR_LOOKS = '#d8234e';
+EntryStatic.ARROW_COLOR_TEXT = '#dc9c32';
 EntryStatic.ARROW_COLOR_SOUNDS = '#83a617';
 EntryStatic.ARROW_COLOR_JUDGE = '#89a1f7';
 EntryStatic.ARROW_COLOR_CALC = '#e8b349';

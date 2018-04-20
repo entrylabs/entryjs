@@ -133,15 +133,28 @@ Entry.PARAM = -1;
         var ret;
         var executedBlocks = [];
 
+        executors.forEach((executor) => {});
+
+        var _executeEvent = _.partial(Entry.dispatchEvent, 'blockExecute');
+        var _executeEndEvent = _.partial(
+            Entry.dispatchEvent,
+            'blockExecuteEnd'
+        );
+
         for (var i = 0; i < executors.length; i++) {
             var executor = executors[i];
             if (!executor.isEnd()) {
+                var scope = executor.scope;
+                _executeEvent(scope.block && scope.block.view);
                 ret = executor.execute(true);
                 if (shouldNotifyWatch)
                     executedBlocks = executedBlocks.concat(ret);
             } else {
+                _executeEndEvent(this.board);
                 executors.splice(i--, 1);
-                if (executors.length === 0) this.executeEndEvent.notify();
+                if (executors.length === 0) {
+                    this.executeEndEvent.notify();
+                }
             }
         }
         shouldNotifyWatch && watchEvent.notify(executedBlocks);
@@ -154,6 +167,7 @@ Entry.PARAM = -1;
 
     p.clearExecutors = function() {
         this.executors.forEach((e) => e.end());
+        Entry.dispatchEvent('blockExecuteEnd');
         this.executors = [];
     };
 

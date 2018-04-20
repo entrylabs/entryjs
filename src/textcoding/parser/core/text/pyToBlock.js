@@ -867,6 +867,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
                 break;
             case 'spritesWithSelf':
+            case 'textBoxWithSelf':
                 var object;
 
                 if (!value) {
