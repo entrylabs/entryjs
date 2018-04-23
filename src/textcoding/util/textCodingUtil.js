@@ -270,6 +270,7 @@ Entry.TextCodingUtil = {};
                 }
                 break;
             case 'clone':
+            case 'textBoxWithSelf':
                 if (id == 'self') {
                     result = id;
                 } else {
