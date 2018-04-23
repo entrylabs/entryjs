@@ -65,8 +65,6 @@ Entry.Commander = function(injectType) {
         this.doEvent.notify(commandType, args);
         var id = state ? state.id : null;
 
-        this.clearStorage();
-
         return {
             value: value,
             isPass: function(isPass, skipCount) {
@@ -165,15 +163,4 @@ Entry.Commander = function(injectType) {
         this.doCommandAll = Entry.doCommandAll;
     };
 
-    p.setStorage = function(data) {
-        this._storage = data;
-    };
-
-    p.clearStorage = function() {
-        this._storage = null;
-    };
-
-    p.getStorage = function() {
-        return this._storage;
-    };
 })(Entry.Commander.prototype);

@@ -3,7 +3,11 @@
  */
 'use strict';
 
-var { createTooltip, returnEmptyArr } = require('../command_util');
+var {
+    createTooltip,
+    returnEmptyArr,
+    getExpectedData,
+} = require('../command_util');
 
 (function(c) {
     var { COMMAND_TYPES, RECORDABLE } = Entry.STATIC;
@@ -42,8 +46,7 @@ var { createTooltip, returnEmptyArr } = require('../command_util');
         state: function(newType, oldType) {
             return [oldType, newType];
         },
-        log: function(newType, oldType) {
-            oldType = oldType || 'all';
+        log: function(newType, oldType = 'all') {
             return [['newType', newType], ['oldType', oldType]];
         },
         recordable: RECORDABLE.SUPPORT,
@@ -64,19 +67,17 @@ var { createTooltip, returnEmptyArr } = require('../command_util');
 
     c[variableContainerAddVariable] = {
         do: function(variable) {
-            var that = c[variableContainerAddVariable];
-            var hashId = that.hashId;
-            if (hashId) {
-                variable.id_ = hashId;
-                delete that.hashId;
+            var id = getExpectedData('variable', {}).id;
+            if (id) {
+                variable.id_ = id;
             }
+
             getVC().addVariable(variable);
         },
         state: function(variable) {
             variable = _toJSON(variable);
-            var that = c[variableContainerAddVariable];
-            var hashId = that.hashId;
-            if (hashId) variable.id = hashId;
+            variable.id = getExpectedData('variable', {}).id || variable.id;
+
             return [variable];
         },
         log: function(variable) {
@@ -87,12 +88,12 @@ var { createTooltip, returnEmptyArr } = require('../command_util');
         undo: 'variableContainerRemoveVariable',
         restrict: function(data, domQuery, callback) {
             getVC().clickVariableAddButton(true, true);
-            var dom = $('.entryVariableAddSpaceInputWorkspace');
-            dom.val(data.content[1][1].name);
-
-            this.hashId = data.content[1][1].id;
+            $('.entryVariableAddSpaceInputWorkspace').val(
+                getExpectedData('variable', {}).name || ''
+            );
 
             var { title, content } = data.tooltip;
+
             callback();
             return createTooltip(title, content, domQuery, callback);
         },
@@ -101,23 +102,19 @@ var { createTooltip, returnEmptyArr } = require('../command_util');
 
     c[variableAddSetName] = {
         do: function(value) {
-            var that = c[variableAddSetName];
             var dom = $('.entryVariableAddSpaceInputWorkspace');
             dom[0].blurred = true;
             dom.blur();
-            value = that._nextValue || value;
-            dom.val(value);
-            delete that._nextValue;
+            dom.val(getExpectedData('value', value));
         },
         state: function(value) {
             return [''];
         },
         log: function(value) {
-            return [['value', c[variableAddSetName]._nextValue || value]];
+            return [['value', getExpectedData('value', value)]];
         },
         restrict: function(data, domQuery, callback) {
             getVC().clickVariableAddButton(true);
-            this._nextValue = data.content[1][1];
             var dom = _.head($('.entryVariableAddSpaceInputWorkspace'));
             dom.enterKeyDisabled = true;
             if (!Entry.Utils.isDomActive(dom)) {
@@ -152,29 +149,15 @@ var { createTooltip, returnEmptyArr } = require('../command_util');
 
     c[variableContainerAddMessage] = {
         do: function(message) {
-            var that = c[variableContainerAddMessage];
-            var { hashId } = that;
-            if (hashId) {
-                message.id = hashId;
-                delete that.hashId;
-            }
-
+            message.id = getExpectedData('message', {}).id || message.id;
             getVC().addMessage(message);
         },
         state: function(message) {
-            var { hashId } = c[variableContainerAddMessage];
-            if (hashId) message.id = hashId;
+            message.id = getExpectedData('message', {}).id || message.id;
             return [message];
         },
         log: function({ name, id }) {
             return [['message', { name, id }]];
-        },
-        restrict(data, domQuery, callback) {
-            var { content: contentData, tooltip: { title, content } } = data;
-
-            this.hashId = contentData[1][1].id;
-            callback();
-            return createTooltip(title, content, domQuery, callback);
         },
         validate: false,
         recordable: RECORDABLE.SUPPORT,
@@ -395,28 +378,25 @@ var { createTooltip, returnEmptyArr } = require('../command_util');
 
     c[variableContainerAddList] = {
         do(list) {
-            var expected = Entry.expectedAction;
-            if (expected) {
-                expected = expected[1][1].id;
+            var id = getExpectedData('list', {}).id;
+            if (id) {
                 if (list.setId) {
-                    list.setId(expected);
+                    list.setId(id);
                 } else {
-                    list.id = expected;
+                    list.id = id;
                 }
             }
             getVC().addList(list);
         },
         state(list) {
             list = _toJSON(list);
-            var expected = Entry.expectedAction;
-            if (expected) {
-                list.id = expected[1][1].id;
-            }
-
+            list.id = getExpectedData('list', {}).id || list.id;
             return [list];
         },
         log(list) {
-            return [['list', _toJSON(list)]];
+            list = _toJSON(list);
+            list.id = getExpectedData('list', {}).id || list.id;
+            return [['list', list]];
         },
         recordable: RECORDABLE.SUPPORT,
         validate: false,
@@ -424,7 +404,7 @@ var { createTooltip, returnEmptyArr } = require('../command_util');
         restrict(data, domQuery, callback) {
             getVC().clickListAddButton(true, true);
             Entry.getDom(['variableContainer', 'listAddInput']).value =
-                Entry.expectedAction[1][1].name;
+                getExpectedData('list', {}).name || '';
 
             var { title, content } = data.tooltip;
             callback();
@@ -457,9 +437,10 @@ var { createTooltip, returnEmptyArr } = require('../command_util');
             var $dom = $(dom);
             dom._focused = false;
 
-            var expected = Entry.expectedAction;
-            if (expected) {
-                value = expected[1][1];
+            var expectedValue = getExpectedData('value');
+
+            if (expectedValue !== undefined) {
+                value = expectedValue;
             }
 
             $dom.val(value);
@@ -468,10 +449,12 @@ var { createTooltip, returnEmptyArr } = require('../command_util');
             return [''];
         },
         log: function(value) {
-            var expected = Entry.expectedAction;
-            if (expected) {
-                value = expected[1][1];
+            var expectedValue = getExpectedData('value');
+
+            if (expectedValue !== undefined) {
+                value = expectedValue;
             }
+
             return [['value', value]];
         },
         restrict: function(data, domQuery, callback) {
@@ -562,16 +545,16 @@ var { createTooltip, returnEmptyArr } = require('../command_util');
         do(id, value) {
             var VC = getVC();
             var list = VC.getList(id);
-            var arr = list.array_;
+            var lenth = list.array_.length;
 
             if (value === 'minus') {
-                value = Math.max(0, arr.length - 1);
+                value = Math.max(0, length - 1);
             } else if (value === 'plus') {
-                value = arr.length + 1;
+                value = length + 1;
             } else if (Entry.Utils.isNumber(value)) {
                 value = value;
             } else {
-                value = arr.length;
+                value = length;
             }
 
             VC.setListLength(list, value);
@@ -603,8 +586,7 @@ var { createTooltip, returnEmptyArr } = require('../command_util');
             list.updateView();
         },
         state(id, idx, data) {
-            var VC = getVC();
-            var { array_ } = VC.getList(id);
+            var { array_ } = getVC().getList(id);
             return [id, idx, array_[idx].data];
         },
         log(id, idx, data) {
@@ -613,7 +595,6 @@ var { createTooltip, returnEmptyArr } = require('../command_util');
         recordable: RECORDABLE.SUPPORT,
         undo: 'listSetDefaultValue',
         restrict: function(data, domQuery, callback) {
-            var VC = getVC();
             _updateSelected(data.content);
             var dom = Entry.getDom(domQuery);
             if (dom && !Entry.Utils.isDomActive(dom)) {
@@ -643,7 +624,7 @@ var { createTooltip, returnEmptyArr } = require('../command_util');
     function _updateSelected(content) {
         var VC = getVC();
         var vId = content[1][1];
-        var v = getVC().getVariable(vId) || getVC().getList(vId);
+        var v = VC.getVariable(vId) || VC.getList(vId);
         if (v) {
             VC.updateSelectedVariable(v);
         }

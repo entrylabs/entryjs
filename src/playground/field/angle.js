@@ -87,9 +87,9 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
         var that = this;
 
         var blockView = this._block.view;
-        var func = function(skipCommand) {
+        var func = function(skipCommand, forceCommand) {
             skipCommand !== true && that.applyValue();
-            that.destroyOption(skipCommand);
+            that.destroyOption(skipCommand, forceCommand === true);
         };
 
         this._attachDisposeEvent(func);

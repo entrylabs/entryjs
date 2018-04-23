@@ -101,9 +101,10 @@ Entry.Tooltip = function(data, opts) {
 
         if (this.isIndicator) data.indicator = this.renderIndicator();
 
-        // tooltipDom.bind('mousedown', (e) => {
-        //     e.stopPropagation();
-        // });
+        tooltipDom.bind('mousedown', (e) => {
+            e.stopPropagation();
+            setTimeout(() => Entry.disposeEvent.notify(undefined, true), 150);
+        });
         tooltipDom.bind('mouseup', (e) => {
             e.stopPropagation();
         });

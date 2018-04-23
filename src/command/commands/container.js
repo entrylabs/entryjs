@@ -3,7 +3,11 @@
  */
 'use strict';
 
-var { createTooltip, returnEmptyArr } = require('../command_util');
+var {
+    createTooltip,
+    returnEmptyArr,
+    getExpectedData,
+} = require('../command_util');
 
 (function(c) {
     var COMMAND_TYPES = Entry.STATIC.COMMAND_TYPES;
@@ -58,10 +62,7 @@ var { createTooltip, returnEmptyArr } = require('../command_util');
         },
         state: function(objectId) {
             var object = Entry.container.getObject(objectId);
-            return [
-                object.toJSON(),
-                object.getIndex(),
-            ];
+            return [object.toJSON(), object.getIndex()];
         },
         log: function(objectId) {
             return [['objectId', objectId]];
@@ -73,38 +74,35 @@ var { createTooltip, returnEmptyArr } = require('../command_util');
 
     c[COMMAND_TYPES.addObject] = {
         do: function(objectModel, index) {
-            var that = c[COMMAND_TYPES.addObject];
-            var { hashId } = that;
-            if (hashId) {
-                objectModel.id = hashId;
-                delete that.hashId;
-            }
+            objectModel.id =
+                getExpectedData('objectModel', {}).id || objectModel.id;
             Entry.container.addObjectFunc(objectModel, index);
             Entry.dispatchEvent('dismissModal');
         },
         state: function(objectModel, index) {
-            var { hashId } = c[COMMAND_TYPES.addObject];
-            if (hashId) {
-                objectModel.id = hashId;
-            }
+            objectModel.id =
+                getExpectedData('objectModel', {}).id || objectModel.id;
             return [objectModel.id, index];
         },
         log: function(objectModel, index) {
-            var sprite = objectModel.sprite;
-            var spriteId = sprite._id;
+            var { sprite, options } = objectModel;
+
             //$$hashKey can't saved for db
-            objectModel.sprite = _.omit(sprite, '$$hashKey');
+            var _omitFunc = _.partial(_.omit, _, '$$hashKey');
+
+            objectModel.sprite = _omitFunc(sprite);
+            if (options) {
+                objectModel.options.font = _omitFunc(options.font);
+            }
             return [
                 ['objectModel', objectModel],
                 ['objectIndex', index],
-                ['spriteId', spriteId],
+                ['spriteId', sprite._id],
             ];
         },
         dom: ['.btn_confirm_modal'],
         restrict: function(data, domQuery, callback) {
             Entry.dispatchEvent('dismissModal');
-
-            this.hashId = data.content[1][1].id;
             var { tooltip: { title, content } } = data;
 
             var tooltip = createTooltip(
@@ -120,7 +118,7 @@ var { createTooltip, returnEmptyArr } = require('../command_util');
             if (!data.skip) {
                 Entry.dispatchEvent(
                     'openSpriteManager',
-                    data.content[3][1],
+                    getExpectedData('spriteId'),
                     event.notify.bind(event)
                 );
             }

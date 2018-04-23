@@ -3,20 +3,18 @@
  */
 'use strict';
 
-var { createTooltip, returnEmptyArr } = require('../command_util');
+var {
+    createTooltip,
+    returnEmptyArr,
+    getExpectedData,
+} = require('../command_util');
 
 (function(c) {
     var COMMAND_TYPES = Entry.STATIC.COMMAND_TYPES;
 
     c[COMMAND_TYPES.funcCreateStart] = {
         do: function(funcId) {
-            var commander = Entry.commander;
-            if (commander) {
-                var { functionId } = commander.getStorage() || {};
-                if (functionId) {
-                    funcId = functionId;
-                }
-            }
+            funcId = getExpectedData('funcId') || funcId;
             Entry.playground.changeViewMode('code');
             var blockMenu = Entry.variableContainer._getBlockMenu();
             if (blockMenu.lastSelector != 'func') {
@@ -25,31 +23,14 @@ var { createTooltip, returnEmptyArr } = require('../command_util');
             Entry.variableContainer.createFunction({ id: funcId });
         },
         state: function(funcId) {
-            var commander = Entry.commander;
-            if (commander) {
-                var { functionId } = commander.getStorage() || {};
-                if (functionId) {
-                    funcId = functionId;
-                }
-            }
-            return [funcId];
+            return [getExpectedData('funcId', funcId)];
         },
         log: function(funcId) {
-            var commander = Entry.commander;
-            if (commander) {
-                var { functionId } = commander.getStorage() || {};
-                if (functionId) {
-                    funcId = functionId;
-                }
-            }
-            return [['funcId', funcId]];
+            return [['funcId', getExpectedData('funcId') || funcId]];
         },
         restrict(data, domQuery, callback) {
-            Entry.commander.setStorage({
-                functionId: data.content[1][1],
-            });
-            Entry.playground.changeViewMode("variable");
-            Entry.variableContainer.selectFilter("func");
+            Entry.playground.changeViewMode('variable');
+            Entry.variableContainer.selectFilter('func');
 
             var { content: contentData, tooltip: { title, content } } = data;
             return createTooltip(title, content, domQuery, callback);
@@ -76,8 +57,7 @@ var { createTooltip, returnEmptyArr } = require('../command_util');
 
     c[COMMAND_TYPES.funcEditCancel] = {
         do: function() {
-            var WS = Entry.getMainWS();
-            WS.setMode(Entry.Workspace.MODE_BOARD, 'cancelEdit');
+            Entry.getMainWS().setMode(Entry.Workspace.MODE_BOARD, 'cancelEdit');
         },
         state: returnEmptyArr,
         log: returnEmptyArr,
@@ -88,8 +68,7 @@ var { createTooltip, returnEmptyArr } = require('../command_util');
 
     c[COMMAND_TYPES.funcCreate] = {
         do: function() {
-            var WS = Entry.getMainWS();
-            WS.setMode(Entry.Workspace.MODE_BOARD, 'save');
+            Entry.getMainWS().setMode(Entry.Workspace.MODE_BOARD, 'save');
         },
         state: function() {
             return [Entry.Func.targetFunc.id];
@@ -99,11 +78,10 @@ var { createTooltip, returnEmptyArr } = require('../command_util');
         dom: ['playground', 'overlayBoard', 'saveButton'],
         undo: 'funcEditStart',
     };
-    
+
     c[COMMAND_TYPES.funcEdit] = {
         do: function() {
-            var WS = Entry.getMainWS();
-            WS.setMode(Entry.Workspace.MODE_BOARD, 'save');
+            Entry.getMainWS().setMode(Entry.Workspace.MODE_BOARD, 'save');
         },
         state: returnEmptyArr,
         log: returnEmptyArr,
