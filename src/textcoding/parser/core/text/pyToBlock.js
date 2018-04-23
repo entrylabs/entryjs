@@ -867,7 +867,6 @@ Entry.PyToBlockParser = function(blockSyntax) {
 
                 break;
             case 'spritesWithSelf':
-            case 'textBoxWithSelf':
                 var object;
 
                 if (!value) {
@@ -952,6 +951,7 @@ Entry.PyToBlockParser = function(blockSyntax) {
                 if (value) var sound = this.object.getSound(value);
                 return sound ? sound.id : undefined;
             case 'clone':
+            case 'textBoxWithSelf':
                 var object;
 
                 if (!value) {
