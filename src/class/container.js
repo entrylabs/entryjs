@@ -618,6 +618,16 @@ Entry.Container.prototype.getDropdownList = function(menuName, object) {
             }
             result.push([Lang.Blocks.self, 'self']);
             break;
+        case 'textBoxWithSelf': {
+            const objs = this.getCurrentObjects();
+            objs.forEach((obj) => {
+                if(obj.objectType === 'textBox') {
+                    result.push([obj.name, obj.id]);
+                };
+            });
+            result.push([Lang.Blocks.self, 'self']);
+            break;
+        }
         case 'collision':
             result.push([Lang.Blocks.mouse_pointer, 'mouse']);
             var objs = this.getCurrentObjects();

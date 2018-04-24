@@ -1822,6 +1822,15 @@ Entry.Utils.addFilters = function(boardSvgDom, suffix) {
         type: 'matrix',
         values: '1.3 0 0 0 0 0 1.3 0 0 0 0 0 1.3 0 0 0 0 0 1 0',
     });
+
+    defs
+        .elem('filter', {
+            id: 'entryBlockDarkenFilter_' + suffix,
+        })
+        .elem('feColorMatrix', {
+            type: 'matrix',
+            values: '.45 0 0 0 0 0 .45 0 0 0 0 0 .45 0 0 0 0 0 1 0',
+        });
 };
 
 Entry.Utils.addBlockPattern = function(boardSvgDom, suffix) {
@@ -2527,3 +2536,50 @@ Entry.Utils.bindBlockViewHoverEvent = function(board, dom) {
         });
     });
 };
+
+Entry.Utils.bindBlockExecuteFocusEvents = function() {
+    Entry.addEventListener('blockExecute', (view) => {
+        if (!view) {
+            return;
+        }
+        this.focusBlockView(view.getBoard(), view);
+    });
+
+    Entry.addEventListener('blockExecuteEnd', this.focusBlockView);
+};
+
+Entry.Utils.focusBlockView = (() => {
+    var _last;
+
+    function _getAllElem(elem) {
+        return $(elem).find('*:not(g)');
+    }
+
+    return (board, blockView) => {
+        var { svgGroup, suffix } = board || Entry.getMainWS().board || {};
+
+        if (!svgGroup || !suffix || (_last && _last === blockView)) {
+            return;
+        }
+
+        if (blockView) {
+            //darken all
+            _getAllElem(svgGroup).attr(
+                'filter',
+                `url(#entryBlockDarkenFilter_${suffix})`
+            );
+
+            //brighten only block
+            var { _path, contentSvgGroup } = blockView;
+            $(_path).removeAttr('filter');
+            $(contentSvgGroup)
+                .find('*:not(g)')
+                .removeAttr('filter');
+        } else {
+            //brighten all
+            _getAllElem(svgGroup).removeAttr('filter');
+        }
+
+        _last = blockView;
+    };
+})();

@@ -3,15 +3,16 @@
  */
 'use strict';
 
-
-
 /**
  * Block variable constructor
  * @param {variable model} variable
  * @constructor
  */
 Entry.Variable = function(variable) {
-    Entry.assert(typeof variable.name == 'string', 'Variable name must be given');
+    Entry.assert(
+        typeof variable.name == 'string',
+        'Variable name must be given'
+    );
     /** @type {string} */
     this.name_ = variable.name;
     /** @type {string} */
@@ -27,12 +28,9 @@ Entry.Variable = function(variable) {
 
     /** @type {number||string} */
     var parsedValue = Entry.parseNumber(variable.value);
-    if (typeof parsedValue == 'number')
-        this.value_ = parsedValue;
-    else if (!variable.value)
-        this.value_ = 0;
-    else
-        this.value_ = variable.value;
+    if (typeof parsedValue == 'number') this.value_ = parsedValue;
+    else if (!variable.value) this.value_ = 0;
+    else this.value_ = variable.value;
 
     if (this.type == 'slide') {
         this.setMinValue(variable.minValue);
@@ -42,8 +40,10 @@ Entry.Variable = function(variable) {
 
     if (!variable.isClone) {
         /** @type {boolean} */
-        this.visible_ = (variable.visible || typeof variable.visible == 'boolean') ?
-                        variable.visible : true;
+        this.visible_ =
+            variable.visible || typeof variable.visible == 'boolean'
+                ? variable.visible
+                : true;
         /** @type {number} */
         this.x_ = variable.x ? variable.x : null;
         /** @type {number} */
@@ -55,7 +55,7 @@ Entry.Variable = function(variable) {
         }
 
         this.BORDER = 6;
-        this.FONT = "10pt NanumGothic";
+        this.FONT = '10pt NanumGothic';
     }
 
     Entry.addEventListener('workspaceChangeMode', this.updateView.bind(this));
@@ -74,35 +74,47 @@ Entry.Variable.prototype.generateView = function(variableIndex) {
         this.view_.variable = this;
         this.wrapper_ = new createjs.Shape();
         this.view_.addChild(this.wrapper_);
-        this.textView_ = new createjs.Text('asdf', this.FONT, "#000000");
-        this.textView_.textBaseline = "alphabetic";
+        this.textView_ = new createjs.Text('asdf', this.FONT, '#000000');
+        this.textView_.textBaseline = 'alphabetic';
         this.textView_.x = 4;
         this.textView_.y = 1;
         this.view_.addChild(this.textView_);
-        this.valueView_ = new createjs.Text('asdf', "10pt NanumGothic", "#ffffff");
-        this.valueView_.textBaseline = "alphabetic";
+        this.valueView_ = new createjs.Text(
+            'asdf',
+            '10pt NanumGothic',
+            '#ffffff'
+        );
+        this.valueView_.textBaseline = 'alphabetic';
         var variableLength = Entry.variableContainer.variables_.length;
-        if ( this.getX() && this.getY() ) {
-            this.setX( this.getX() );
-            this.setY( this.getY() );
+        if (this.getX() && this.getY()) {
+            this.setX(this.getX());
+            this.setY(this.getY());
         } else {
-            this.setX( 10 - 240 + Math.floor( variableLength / 11 ) * 80 );
-            this.setY( ( variableIndex ) * 24 + 20 - 135 - Math.floor( variableLength / 11 ) * 264 );
+            //TODO
+            this.setX(10 - 240 + Math.floor((variableLength % 66) / 11) * 80);
+            this.setY(
+                variableIndex * 24 +
+                    20 -
+                    135 -
+                    Math.floor(variableLength / 11) * 264
+            );
         }
         this.view_.visible = this.visible_;
         this.view_.addChild(this.valueView_);
 
-        this.view_.on("mousedown", function(evt) {
-            if(Entry.type != 'workspace') return;
-            this.offset = {x:this.x-(evt.stageX*0.75 -240),
-                y:this.y-(evt.stageY*0.75 -135)};
+        this.view_.on('mousedown', function(evt) {
+            if (Entry.type != 'workspace') return;
+            this.offset = {
+                x: this.x - (evt.stageX * 0.75 - 240),
+                y: this.y - (evt.stageY * 0.75 - 135),
+            };
             this.cursor = 'move';
         });
 
-        this.view_.on("pressmove", function(evt) {
-            if(Entry.type != 'workspace') return;
-            this.variable.setX(evt.stageX*0.75 -240 +this.offset.x);
-            this.variable.setY(evt.stageY*0.75 -135 + this.offset.y);
+        this.view_.on('pressmove', function(evt) {
+            if (Entry.type != 'workspace') return;
+            this.variable.setX(evt.stageX * 0.75 - 240 + this.offset.x);
+            this.variable.setY(evt.stageY * 0.75 - 135 + this.offset.y);
             this.variable.updateView();
         });
     } else if (type == 'slide') {
@@ -113,59 +125,69 @@ Entry.Variable.prototype.generateView = function(variableIndex) {
         this.view_.variable = this;
         this.wrapper_ = new createjs.Shape();
         this.view_.addChild(this.wrapper_);
-        this.textView_ = new createjs.Text('name', this.FONT, "#000000");
-        this.textView_.textBaseline = "alphabetic";
+        this.textView_ = new createjs.Text('name', this.FONT, '#000000');
+        this.textView_.textBaseline = 'alphabetic';
         this.textView_.x = 4;
         this.textView_.y = 1;
         this.view_.addChild(this.textView_);
-        this.valueView_ = new createjs.Text('value', "10pt NanumGothic", "#ffffff");
-        this.valueView_.textBaseline = "alphabetic";
-        this.view_.on("mousedown", function(evt) {
-            if(Entry.type != 'workspace') return;
-            this.offset = {x:this.x-(evt.stageX*0.75 -240),
-                y:this.y-(evt.stageY*0.75 -135)};
+        this.valueView_ = new createjs.Text(
+            'value',
+            '10pt NanumGothic',
+            '#ffffff'
+        );
+        this.valueView_.textBaseline = 'alphabetic';
+        this.view_.on('mousedown', function(evt) {
+            if (Entry.type != 'workspace') return;
+            this.offset = {
+                x: this.x - (evt.stageX * 0.75 - 240),
+                y: this.y - (evt.stageY * 0.75 - 135),
+            };
         });
 
-        this.view_.on("pressmove", function(evt) {
-            if(Entry.type != 'workspace' || slide.isAdjusting) return;
-            this.variable.setX(evt.stageX*0.75 -240 +this.offset.x);
-            this.variable.setY(evt.stageY*0.75 -135 + this.offset.y);
+        this.view_.on('pressmove', function(evt) {
+            if (Entry.type != 'workspace' || slide.isAdjusting) return;
+            this.variable.setX(evt.stageX * 0.75 - 240 + this.offset.x);
+            this.variable.setY(evt.stageY * 0.75 - 135 + this.offset.y);
             this.variable.updateView();
         });
         this.view_.visible = this.visible_;
         this.view_.addChild(this.valueView_);
 
-        var width = this.textView_.getMeasuredWidth() + this.valueView_.getMeasuredWidth() + 26;
+        var width =
+            this.textView_.getMeasuredWidth() +
+            this.valueView_.getMeasuredWidth() +
+            26;
         width = Math.max(width, 90);
-        this.maxWidth = width -20;
+        this.maxWidth = width - 20;
 
         this.slideBar_ = new createjs.Shape();
         this.slideBar_.graphics
-                     .beginFill('#A0A1A1')
-                     .s('#A0A1A1')
-                     .ss(1)
-                     .dr(10, 10, this.maxWidth, 1.5);
+            .beginFill('#A0A1A1')
+            .s('#A0A1A1')
+            .ss(1)
+            .dr(10, 10, this.maxWidth, 1.5);
         this.view_.addChild(this.slideBar_);
 
         var position = this.getSlidePosition(this.maxWidth);
         this.valueSetter_ = new createjs.Shape();
-        this.valueSetter_.graphics.beginFill('#1bafea')
-                     .s('#A0A1A1')
-                     .ss(1)
-                     .dc(position, 10 + 0.5, 3);
+        this.valueSetter_.graphics
+            .beginFill('#1bafea')
+            .s('#A0A1A1')
+            .ss(1)
+            .dc(position, 10 + 0.5, 3);
         this.valueSetter_.cursor = 'pointer';
-        this.valueSetter_.on("mousedown", function(evt) {
+        this.valueSetter_.on('mousedown', function(evt) {
             if (!Entry.engine.isState('run')) return;
 
             slide.isAdjusting = true;
-            this.offsetX = -(this.x - evt.stageX*0.75 +240);
+            this.offsetX = -(this.x - evt.stageX * 0.75 + 240);
         });
 
-        this.valueSetter_.on("pressmove", function(evt) {
+        this.valueSetter_.on('pressmove', function(evt) {
             if (!Entry.engine.isState('run')) return;
 
             var oldOffsetX = this.offsetX;
-            this.offsetX = -(this.x - evt.stageX*0.75 +240);
+            this.offsetX = -(this.x - evt.stageX * 0.75 + 240);
             if (oldOffsetX === this.offsetX) return;
             var slideX = slide.getX();
             var value;
@@ -175,84 +197,95 @@ Entry.Variable.prototype.generateView = function(variableIndex) {
             else value = slide.maxWidth + 10;
             slide.setSlideCommandX(value);
         });
-        this.valueSetter_.on("pressup", function(evt) {
+        this.valueSetter_.on('pressup', function(evt) {
             slide.isAdjusting = false;
         });
         this.view_.addChild(this.valueSetter_);
         var variableLength = Entry.variableContainer.variables_.length;
-        if ( this.getX() && this.getY() ) {
-            this.setX( this.getX() );
-            this.setY( this.getY() );
+        if (this.getX() && this.getY()) {
+            this.setX(this.getX());
+            this.setY(this.getY());
         } else {
-            this.setX( 10 - 240 + Math.floor( variableLength / 11 ) * 80 );
-            this.setY( ( variableIndex ) * 24 + 20 - 135 - Math.floor( variableLength / 11 ) * 264 );
+            this.setX(10 - 240 + Math.floor(variableLength / 11) * 80);
+            this.setY(
+                variableIndex * 24 +
+                    20 -
+                    135 -
+                    Math.floor(variableLength / 11) * 264
+            );
         }
     } else {
         this.view_ = new createjs.Container();
         this.rect_ = new createjs.Shape();
         this.view_.addChild(this.rect_);
         this.view_.variable = this;
-        this.titleView_ = new createjs.Text('asdf', this.FONT, "#000");
-        this.titleView_.textBaseline = "alphabetic";
-        this.titleView_.textAlign = "center";
+        this.titleView_ = new createjs.Text('asdf', this.FONT, '#000');
+        this.titleView_.textBaseline = 'alphabetic';
+        this.titleView_.textAlign = 'center';
         this.titleView_.width = this.width_ - 2 * this.BORDER;
         this.titleView_.y = this.BORDER + 10;
-        this.titleView_.x = this.width_/2;
+        this.titleView_.x = this.width_ / 2;
         this.view_.addChild(this.titleView_);
 
         this.resizeHandle_ = new createjs.Shape();
-        this.resizeHandle_.graphics.f("#1bafea").ss(1,0,0).s("#1bafea")
-            .lt(0,-9).lt(-9,0).lt(0,0);
+        this.resizeHandle_.graphics
+            .f('#1bafea')
+            .ss(1, 0, 0)
+            .s('#1bafea')
+            .lt(0, -9)
+            .lt(-9, 0)
+            .lt(0, 0);
         this.view_.addChild(this.resizeHandle_);
 
         this.resizeHandle_.list = this;
 
-        this.resizeHandle_.on("mouseover", function(evt) {
+        this.resizeHandle_.on('mouseover', function(evt) {
             this.cursor = 'nwse-resize';
         });
 
-        this.resizeHandle_.on("mousedown", function(evt) {
+        this.resizeHandle_.on('mousedown', function(evt) {
             // if(Entry.type != 'workspace') return;
             this.list.isResizing = true;
-            this.offset = {x:evt.stageX*0.75 - this.list.getWidth(),
-                y:evt.stageY*0.75-this.list.getHeight()};
+            this.offset = {
+                x: evt.stageX * 0.75 - this.list.getWidth(),
+                y: evt.stageY * 0.75 - this.list.getHeight(),
+            };
             this.parent.cursor = 'nwse-resize';
         });
-        this.resizeHandle_.on("pressmove", function(evt) {
+        this.resizeHandle_.on('pressmove', function(evt) {
             // if(Entry.type != 'workspace') return;
-            this.list.setWidth(evt.stageX*0.75 - this.offset.x);
-            this.list.setHeight(evt.stageY*0.75 - this.offset.y);
+            this.list.setWidth(evt.stageX * 0.75 - this.offset.x);
+            this.list.setHeight(evt.stageY * 0.75 - this.offset.y);
             this.list.updateView();
         });
 
-        this.view_.on("mouseover", function(evt) {
+        this.view_.on('mouseover', function(evt) {
             this.cursor = 'move';
         });
 
-        this.view_.on("mousedown", function(evt) {
-            if(Entry.type != 'workspace' || this.variable.isResizing)
-                return;
-            this.offset = {x:this.x-(evt.stageX*0.75 -240),
-                y:this.y-(evt.stageY*0.75 -135)};
+        this.view_.on('mousedown', function(evt) {
+            if (Entry.type != 'workspace' || this.variable.isResizing) return;
+            this.offset = {
+                x: this.x - (evt.stageX * 0.75 - 240),
+                y: this.y - (evt.stageY * 0.75 - 135),
+            };
             this.cursor = 'move';
         });
 
-        this.view_.on("pressup", function(evt) {
+        this.view_.on('pressup', function(evt) {
             this.cursor = 'initial';
             this.variable.isResizing = false;
         });
 
-        this.view_.on("pressmove", function(evt) {
-            if(Entry.type != 'workspace' || this.variable.isResizing)
-                return;
-            this.variable.setX(evt.stageX*0.75 -240 + this.offset.x);
-            this.variable.setY(evt.stageY*0.75 -135 + this.offset.y);
+        this.view_.on('pressmove', function(evt) {
+            if (Entry.type != 'workspace' || this.variable.isResizing) return;
+            this.variable.setX(evt.stageX * 0.75 - 240 + this.offset.x);
+            this.variable.setY(evt.stageY * 0.75 - 135 + this.offset.y);
             this.variable.updateView();
         });
 
-
         this.elementView = new createjs.Container();
-        var indexView = new createjs.Text('asdf', this.FONT, "#000");
+        var indexView = new createjs.Text('asdf', this.FONT, '#000');
         indexView.textBaseline = 'middle';
         indexView.y = 5;
         this.elementView.addChild(indexView);
@@ -260,7 +293,7 @@ Entry.Variable.prototype.generateView = function(variableIndex) {
         var valueWrapper = new createjs.Shape();
         this.elementView.addChild(valueWrapper);
         this.elementView.valueWrapper = valueWrapper;
-        var valueView = new createjs.Text('fdsa', this.FONT, "#eee");
+        var valueView = new createjs.Text('fdsa', this.FONT, '#eee');
         valueView.x = 24;
         valueView.y = 6;
         valueView.textBaseline = 'middle';
@@ -269,45 +302,50 @@ Entry.Variable.prototype.generateView = function(variableIndex) {
         this.elementView.x = this.BORDER;
 
         this.scrollButton_ = new createjs.Shape();
-        this.scrollButton_.graphics.f('#aaa')
-            .rr(0,0,7,30,3.5);
+        this.scrollButton_.graphics.f('#aaa').rr(0, 0, 7, 30, 3.5);
         this.view_.addChild(this.scrollButton_);
         this.scrollButton_.y = 23;
 
         this.scrollButton_.list = this;
-        this.scrollButton_.on("mousedown", function(evt) {
+        this.scrollButton_.on('mousedown', function(evt) {
             // if(Entry.type != 'workspace') return;
             this.list.isResizing = true;
             this.cursor = 'pointer';
-            this.offsetY = !Entry.Utils.isNumber(this.offsetY) || (this.offsetY < 0) ? evt.rawY/2 : this.offsetY;
+            this.offsetY =
+                !Entry.Utils.isNumber(this.offsetY) || this.offsetY < 0
+                    ? evt.rawY / 2
+                    : this.offsetY;
         });
-        this.scrollButton_.on("pressmove", function(evt) {
+        this.scrollButton_.on('pressmove', function(evt) {
             // if(Entry.type != 'workspace') return;
-            if(this.moveAmount === undefined) {
+            if (this.moveAmount === undefined) {
                 this.y = evt.target.y;
                 this.moveAmount = true;
             } else {
-                this.y = evt.rawY/2 - this.offsetY + 23 * (this.list.height_/100);
+                this.y =
+                    evt.rawY / 2 -
+                    this.offsetY +
+                    23 * (this.list.height_ / 100);
             }
 
-            if (this.y < 23)
-                this.y = 23;
+            if (this.y < 23) this.y = 23;
             if (this.y > this.list.getHeight() - 40)
                 this.y = this.list.getHeight() - 40;
             this.list.updateView();
-
         });
 
-        this.scrollButton_.on("pressup" , function(evt) {
+        this.scrollButton_.on('pressup', function(evt) {
             this.moveAmount = undefined;
         });
-        if ( this.getX() && this.getY() ) {
-            this.setX( this.getX() );
-            this.setY( this.getY() );
+        if (this.getX() && this.getY()) {
+            this.setX(this.getX());
+            this.setY(this.getY());
         } else {
             var listLength = Entry.variableContainer.lists_.length;
-            this.setX( -Math.floor( listLength / 6 ) * 110 + 120 );
-            this.setY( ( variableIndex ) * 24 + 20 - 135 - Math.floor( listLength / 6 ) * 145 );
+            this.setX(-Math.floor((listLength % 24) / 6) * 110 + 120);
+            this.setY(
+                variableIndex * 24 + 20 - 135 - Math.floor(listLength / 6) * 145
+            );
         }
     }
 
@@ -344,11 +382,13 @@ Entry.Variable.prototype.updateView = function() {
             if (this.isNumber()) {
                 if (this.value_[0] !== 0 && Entry.isInteger(this.value_))
                     this.valueView_.text = '' + this.getValue();
-                else this.valueView_.text = Number(this.getValue()).toFixed(2).replace('.00', '');
+                else
+                    this.valueView_.text = Number(this.getValue())
+                        .toFixed(2)
+                        .replace('.00', '');
             } else {
                 this.valueView_.text = this.getValue();
             }
-
 
             if (this._nameWidth === null)
                 this._nameWidth = this.textView_.getMeasuredWidth();
@@ -356,17 +396,38 @@ Entry.Variable.prototype.updateView = function() {
             this.valueView_.y = 1;
             // INFO: Number체크는 slide 일때만 하도록 처리 기본 문자로 처리함(#4876)
 
-
             if (this._valueWidth === null)
                 this._valueWidth = this.valueView_.getMeasuredWidth();
-            this.rect_.graphics.clear().f("#ffffff").ss(1, 2, 0).s("#A0A1A1")
-                .rc(0, -14,
-                    this._nameWidth + this._valueWidth + 26, 20,
-                    4, 4, 4, 4);
-            this.wrapper_.graphics.clear().f("#1bafea").ss(1, 2, 0).s("#1bafea")
-                .rc(this._nameWidth + 7, -11,
-                    this._valueWidth + 15, 14,
-                    7, 7, 7, 7);
+            this.rect_.graphics
+                .clear()
+                .f('#ffffff')
+                .ss(1, 2, 0)
+                .s('#A0A1A1')
+                .rc(
+                    0,
+                    -14,
+                    this._nameWidth + this._valueWidth + 26,
+                    20,
+                    4,
+                    4,
+                    4,
+                    4
+                );
+            this.wrapper_.graphics
+                .clear()
+                .f('#1bafea')
+                .ss(1, 2, 0)
+                .s('#1bafea')
+                .rc(
+                    this._nameWidth + 7,
+                    -11,
+                    this._valueWidth + 15,
+                    14,
+                    7,
+                    7,
+                    7,
+                    7
+                );
         } else if (this.type == 'slide') {
             this.view_.x = this.getX();
             this.view_.y = this.getY();
@@ -396,8 +457,7 @@ Entry.Variable.prototype.updateView = function() {
                 var ret = reg.exec(value);
                 if (!ret) value += '.00';
                 else {
-                    while (reg.exec(value)[1].length < 2)
-                        value += '0';
+                    while (reg.exec(value)[1].length < 2) value += '0';
                 }
             }
 
@@ -407,26 +467,45 @@ Entry.Variable.prototype.updateView = function() {
                 this._valueWidth = this.valueView_.getMeasuredWidth();
             var width = this._nameWidth + this._valueWidth + 26;
             width = Math.max(width, 90);
-            this.rect_.graphics.clear().f("#ffffff")
-                .ss(1, 2, 0).s("#A0A1A1")
+            this.rect_.graphics
+                .clear()
+                .f('#ffffff')
+                .ss(1, 2, 0)
+                .s('#A0A1A1')
                 .rc(0, -14, width, 33, 4, 4, 4, 4);
-            this.wrapper_.graphics.clear().f("#1bafea")
-                .ss(1, 2, 0).s("#1bafea")
-                .rc(this._nameWidth + 7, -11,
-                    this._valueWidth + 15, 14,
-                    7, 7, 7, 7);
+            this.wrapper_.graphics
+                .clear()
+                .f('#1bafea')
+                .ss(1, 2, 0)
+                .s('#1bafea')
+                .rc(
+                    this._nameWidth + 7,
+                    -11,
+                    this._valueWidth + 15,
+                    14,
+                    7,
+                    7,
+                    7,
+                    7
+                );
 
             var width = this._nameWidth + this._valueWidth + 26;
             width = Math.max(width, 90);
-            this.maxWidth = width -20;
+            this.maxWidth = width - 20;
 
-            this.slideBar_.graphics.clear().beginFill('#A0A1A1')
-                        .s('#A0A1A1').ss(1)
-                        .dr(10, 10, this.maxWidth, 1.5);
+            this.slideBar_.graphics
+                .clear()
+                .beginFill('#A0A1A1')
+                .s('#A0A1A1')
+                .ss(1)
+                .dr(10, 10, this.maxWidth, 1.5);
             var position = this.getSlidePosition(this.maxWidth);
-            this.valueSetter_.graphics.clear().beginFill('#1bafea')
-                        .s('#A0A1A1').ss(1)
-                        .dc(position, 10 + 0.5, 3);
+            this.valueSetter_.graphics
+                .clear()
+                .beginFill('#1bafea')
+                .s('#A0A1A1')
+                .ss(1)
+                .dc(position, 10 + 0.5, 3);
         } else if (this.type == 'list') {
             this.view_.x = this.getX();
             this.view_.y = this.getY();
@@ -442,38 +521,47 @@ Entry.Variable.prototype.updateView = function() {
 
             this.titleView_.text = name;
             if (this.titleView_.getMeasuredWidth() > this.width_) {
-                name = name + "..";
+                name = name + '..';
                 while (this.titleView_.getMeasuredWidth() > this.width_) {
-                    name = name.substr(0, name.length - 3) + "..";
+                    name = name.substr(0, name.length - 3) + '..';
                     this.titleView_.text = name;
                 }
             }
-            this.titleView_.x = this.width_/2;
-            this.rect_.graphics.clear().f("#ffffff").ss(1, 2, 0).s("#A0A1A1")
-                .rect(0,0,this.width_, this.height_);
+            this.titleView_.x = this.width_ / 2;
+            this.rect_.graphics
+                .clear()
+                .f('#ffffff')
+                .ss(1, 2, 0)
+                .s('#A0A1A1')
+                .rect(0, 0, this.width_, this.height_);
 
-            while(this.view_.children[4])
+            while (this.view_.children[4])
                 this.view_.removeChild(this.view_.children[4]);
-            var maxView = Math.floor((this.getHeight()-20) / 20);
+            var maxView = Math.floor((this.getHeight() - 20) / 20);
 
             var isOverFlow = maxView < arr.length;
             var totalWidth = this.getWidth();
-            var wrapperWidth = totalWidth - 2*this.BORDER -
-                (isOverFlow ? 30 : 20);
+            var wrapperWidth =
+                totalWidth - 2 * this.BORDER - (isOverFlow ? 30 : 20);
 
             if (isOverFlow) {
                 if (this.scrollButton_.y > this.getHeight() - 40)
                     this.scrollButton_.y = this.getHeight() - 40;
-                this.elementView.valueWrapper.graphics.clear()
-                    .f("#1bafea").rr(20,-2, wrapperWidth, 17, 2);
+                this.elementView.valueWrapper.graphics
+                    .clear()
+                    .f('#1bafea')
+                    .rr(20, -2, wrapperWidth, 17, 2);
                 this.scrollButton_.x = totalWidth - 12;
-                this.scrollPosition =
-                    Math.floor(((this.scrollButton_.y - 23) /
-                    (this.getHeight() - 23 - 40)) *
-                    (arr.length - maxView));
+                this.scrollPosition = Math.floor(
+                    (this.scrollButton_.y - 23) /
+                        (this.getHeight() - 23 - 40) *
+                        (arr.length - maxView)
+                );
             } else {
-                this.elementView.valueWrapper.graphics.clear()
-                    .f("#1bafea").rr(20,-2, wrapperWidth, 17, 2);
+                this.elementView.valueWrapper.graphics
+                    .clear()
+                    .f('#1bafea')
+                    .rr(20, -2, wrapperWidth, 17, 2);
                 this.scrollPosition = 0;
             }
             this.scrollButton_.visible = isOverFlow;
@@ -485,10 +573,16 @@ Entry.Variable.prototype.updateView = function() {
             var maxLen = 3;
             wrapperWidth -= 6;
 
-            for (var i = this.scrollPosition;
-                i < this.scrollPosition + maxView && i < arr.length; i++) {
-                if (Entry.getMainWS() && Entry.getMainWS().getMode() ===
-                    Entry.Workspace.MODE_VIMBOARD)
+            for (
+                var i = this.scrollPosition;
+                i < this.scrollPosition + maxView && i < arr.length;
+                i++
+            ) {
+                if (
+                    Entry.getMainWS() &&
+                    Entry.getMainWS().getMode() ===
+                        Entry.Workspace.MODE_VIMBOARD
+                )
                     this.elementView.indexView.text = i;
                 else this.elementView.indexView.text = i + 1;
 
@@ -506,8 +600,10 @@ Entry.Variable.prototype.updateView = function() {
                     if (valueView.getMeasuredWidth() > wrapperWidth) {
                         valueView.text = execText;
 
-                        while (valueView.getMeasuredWidth() < wrapperWidth &&
-                            text[charIndex] !== undefined) {
+                        while (
+                            valueView.getMeasuredWidth() < wrapperWidth &&
+                            text[charIndex] !== undefined
+                        ) {
                             execText += text[charIndex++];
                             valueView.text = execText;
                         }
@@ -515,7 +611,8 @@ Entry.Variable.prototype.updateView = function() {
                         var subCnt = 1;
                         while (valueView.getMeasuredWidth() > wrapperWidth) {
                             execText =
-                                execText.substr(0, execText.length - subCnt) + "..";
+                                execText.substr(0, execText.length - subCnt) +
+                                '..';
                             valueView.text = execText;
                             subCnt = 3;
                         }
@@ -526,7 +623,7 @@ Entry.Variable.prototype.updateView = function() {
                 }
 
                 var view = this.elementView.clone(true);
-                view.y = (i - this.scrollPosition)*20 + 23;
+                view.y = (i - this.scrollPosition) * 20 + 23;
                 this.view_.addChild(view);
             }
         } else if (this.type == 'answer') {
@@ -536,10 +633,12 @@ Entry.Variable.prototype.updateView = function() {
             this.valueView_.y = 1;
             if (this.isNumber()) {
                 var v = Number(this.getValue());
-                if (parseInt(this.getValue(),10) == this.getValue())
+                if (parseInt(this.getValue(), 10) == this.getValue())
                     this.valueView_.text = v;
                 else
-                    this.valueView_.text = Number(v).toFixed(1).replace('.00', '');
+                    this.valueView_.text = Number(v)
+                        .toFixed(1)
+                        .replace('.00', '');
             } else {
                 this.valueView_.text = this.getValue();
             }
@@ -549,14 +648,36 @@ Entry.Variable.prototype.updateView = function() {
                 this._valueWidth = this.valueView_.getMeasuredWidth();
 
             this.valueView_.x = this._nameWidth + 14;
-            this.rect_.graphics.clear().f("#ffffff").ss(1, 2, 0).s("#A0A1A1")
-                .rc(0, -14,
-                    this._nameWidth + this._valueWidth + 26, 20,
-                    4, 4, 4, 4);
-            this.wrapper_.graphics.clear().f("#E457DC").ss(1, 2, 0).s("#E457DC")
-                .rc(this._nameWidth + 7, -11,
-                    this._valueWidth + 15, 14,
-                    7, 7, 7, 7);
+            this.rect_.graphics
+                .clear()
+                .f('#ffffff')
+                .ss(1, 2, 0)
+                .s('#A0A1A1')
+                .rc(
+                    0,
+                    -14,
+                    this._nameWidth + this._valueWidth + 26,
+                    20,
+                    4,
+                    4,
+                    4,
+                    4
+                );
+            this.wrapper_.graphics
+                .clear()
+                .f('#E457DC')
+                .ss(1, 2, 0)
+                .s('#E457DC')
+                .rc(
+                    this._nameWidth + 7,
+                    -11,
+                    this._valueWidth + 15,
+                    14,
+                    7,
+                    7,
+                    7,
+                    7
+                );
         } else {
             this.view_.x = this.getX();
             this.view_.y = this.getY();
@@ -568,21 +689,44 @@ Entry.Variable.prototype.updateView = function() {
             this.valueView_.x = this._nameWidth + 14;
             this.valueView_.y = 1;
             if (this.isNumber())
-                this.valueView_.text = Number(this.getValue()).toFixed(1).replace('.00', '');
-            else
-                this.valueView_.text = this.getValue();
+                this.valueView_.text = Number(this.getValue())
+                    .toFixed(1)
+                    .replace('.00', '');
+            else this.valueView_.text = this.getValue();
 
             if (this._valueWidth === null)
                 this._valueWidth = this.valueView_.getMeasuredWidth();
 
-            this.rect_.graphics.clear().f("#ffffff").ss(1, 2, 0).s("#A0A1A1")
-                .rc(0, -14,
-                    this._nameWidth + this._valueWidth + 26, 20,
-                    4, 4, 4, 4);
-            this.wrapper_.graphics.clear().f("#ffbb14").ss(1, 2, 0).s("orange")
-                .rc(this._nameWidth + 7, -11,
-                    this._valueWidth + 15, 14,
-                    7, 7, 7, 7);
+            this.rect_.graphics
+                .clear()
+                .f('#ffffff')
+                .ss(1, 2, 0)
+                .s('#A0A1A1')
+                .rc(
+                    0,
+                    -14,
+                    this._nameWidth + this._valueWidth + 26,
+                    20,
+                    4,
+                    4,
+                    4,
+                    4
+                );
+            this.wrapper_.graphics
+                .clear()
+                .f('#ffbb14')
+                .ss(1, 2, 0)
+                .s('orange')
+                .rc(
+                    this._nameWidth + 7,
+                    -11,
+                    this._valueWidth + 15,
+                    14,
+                    7,
+                    7,
+                    7,
+                    7
+                );
         }
     }
     Entry.requestUpdate = true;
@@ -601,8 +745,10 @@ Entry.Variable.prototype.getName = function() {
  * @param {!string} variableName
  */
 Entry.Variable.prototype.setName = function(variableName) {
-    Entry.assert(typeof variableName == 'string',
-                'Variable name must be string');
+    Entry.assert(
+        typeof variableName == 'string',
+        'Variable name must be string'
+    );
     this.name_ = variableName;
     this._nameWidth = null;
     this.updateView();
@@ -623,10 +769,8 @@ Entry.Variable.prototype.getId = function() {
  */
 Entry.Variable.prototype.getValue = function() {
     // INFO: Number체크는 slide 일때만 하도록 처리 기본 문자로 처리함(#4876)
-    if (this.type === 'slide' && this.isNumber())
-        return Number(this.value_);
-    else
-        return this.value_;
+    if (this.type === 'slide' && this.isNumber()) return Number(this.value_);
+    else return this.value_;
 };
 
 /**
@@ -668,10 +812,11 @@ Entry.Variable.prototype.isVisible = function() {
  * @param {!string} visibleState
  */
 Entry.Variable.prototype.setVisible = function(visibleState) {
-    Entry.assert(typeof visibleState == 'boolean',
-                'Variable visible state must be boolean');
-    if (this.visible === visibleState)
-        return;
+    Entry.assert(
+        typeof visibleState == 'boolean',
+        'Variable visible state must be boolean'
+    );
+    if (this.visible === visibleState) return;
     this.view_.visible = visibleState;
     this.visible_ = visibleState;
     this.updateView();
@@ -732,11 +877,10 @@ Entry.Variable.prototype.getWidth = function() {
     return this.width_;
 };
 
-Entry.Variable.prototype.isInList = function(x,y){
+Entry.Variable.prototype.isInList = function(x, y) {
     var xArea = this.getX() + this.width_;
     var yArea = this.getY() + this.height_;
     // if(Entry.engine.state == 'stop' && this.type== 'list');
-
 };
 
 /**
@@ -757,7 +901,6 @@ Entry.Variable.prototype.setHeight = function(height) {
 Entry.Variable.prototype.getHeight = function() {
     return this.height_;
 };
-
 
 /**
  * save current state data to 'snapshot_'
@@ -852,12 +995,12 @@ Entry.Variable.prototype.getSlidePosition = function(width) {
     var maxValue = this.maxValue_;
     var value = this.value_;
     var ratio = Math.abs(value - minValue) / Math.abs(maxValue - minValue);
-    return (width) * ratio + 10;
+    return width * ratio + 10;
 };
 
 Entry.Variable.prototype.setSlideCommandX = function(value) {
     var command = this.valueSetter_.graphics.command;
-    value = (typeof value == 'undefined') ? 10 : value;
+    value = typeof value == 'undefined' ? 10 : value;
     value = Math.max(value, 10);
     value = Math.min(this.maxWidth + 10, value);
     command.x = value;
@@ -874,8 +1017,9 @@ Entry.Variable.prototype.updateSlideValueByView = function() {
     var minValue = parseFloat(this.minValue_);
     var maxValue = parseFloat(this.maxValue_);
 
-    var value =
-        (minValue + Number((Math.abs(maxValue - minValue) * ratio))).toFixed(2);
+    var value = (
+        minValue + Number(Math.abs(maxValue - minValue) * ratio)
+    ).toFixed(2);
     value = parseFloat(value);
 
     if (value < minValue) value = this.minValue_;
@@ -894,8 +1038,7 @@ Entry.Variable.prototype.setMinValue = function(minValue) {
 
     minValue = minValue || 0;
     this.minValue_ = minValue;
-    if (this.value_ < minValue)
-        this.setValue(minValue);
+    if (this.value_ < minValue) this.setValue(minValue);
     this.isMinFloat = Entry.isFloat(this.minValue_);
     this.updateView();
 };
@@ -909,8 +1052,7 @@ Entry.Variable.prototype.setMaxValue = function(maxValue) {
 
     maxValue = maxValue || 100;
     this.maxValue_ = maxValue;
-    if (this.value_ > maxValue)
-        this.value_ = maxValue;
+    if (this.value_ > maxValue) this.value_ = maxValue;
     this.isMaxFloat = Entry.isFloat(this.maxValue_);
     this.updateView();
 };

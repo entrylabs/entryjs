@@ -1,7 +1,7 @@
 /*
  *
  */
-"use strict";
+'use strict';
 
 Entry.Executor = function(block, entity) {
     this.scope = new Entry.Scope(block, this);
@@ -16,13 +16,11 @@ Entry.Executor.MAXIMUM_CALLSTACK = 100;
 
 (function(p) {
     p.execute = function(isFromOrigin) {
-        if (this.isEnd())
-            return;
+        if (this.isEnd()) return;
 
         var executedBlocks = [];
         var block;
-        if (isFromOrigin)
-            Entry.callStackLength = 0;
+        if (isFromOrigin) Entry.callStackLength = 0;
 
         var entity = this.entity;
 
@@ -32,38 +30,52 @@ Entry.Executor.MAXIMUM_CALLSTACK = 100;
 
             try {
                 var schema = this.scope.block.getSchema();
-                if (schema && Entry.skeleton[schema.skeleton].executable)
-                    returnVal = schema.func.call(this.scope, entity, this.scope);
+                if (schema && Entry.skeleton[schema.skeleton].executable) {
+                    Entry.dispatchEvent(
+                        'blockExecute',
+                        this.scope.block && this.scope.block.view
+                    );
+                    returnVal = schema.func.call(
+                        this.scope,
+                        entity,
+                        this.scope
+                    );
+                }
             } catch (e) {
                 if (e.name === 'AsyncError') {
                     returnVal = Entry.STATIC.BREAK;
-                } else if (this.isFuncExecutor) //function executor
+                } else if (this.isFuncExecutor)
+                    //function executor
                     throw new Error();
                 else {
-                    Entry.Utils.stopProjectWithToast(
-                        this.scope, undefined, e);
+                    Entry.Utils.stopProjectWithToast(this.scope, undefined, e);
                 }
             }
 
             //executor can be ended after block function call
             if (this.isEnd()) return executedBlocks;
 
-            if (returnVal === undefined ||
-                    returnVal === null ||
-                    returnVal === Entry.STATIC.PASS) {
-                this.scope = new Entry.Scope(this.scope.block.getNextBlock(), this);
+            if (
+                returnVal === undefined ||
+                returnVal === null ||
+                returnVal === Entry.STATIC.PASS
+            ) {
+                this.scope = new Entry.Scope(
+                    this.scope.block.getNextBlock(),
+                    this
+                );
                 if (this.scope.block === null) {
                     if (this._callStack.length) {
                         var oldScope = this.scope;
                         this.scope = this._callStack.pop();
-                        if (this.scope.isLooped !== oldScope.isLooped)
-                            break;
-                    }
-                    else
-                        break;
+                        if (this.scope.isLooped !== oldScope.isLooped) break;
+                    } else break;
                 }
             } else if (returnVal === Entry.STATIC.CONTINUE) {
-            } else if (returnVal === Entry.STATIC.BREAK || this.scope === returnVal) {
+            } else if (
+                returnVal === Entry.STATIC.BREAK ||
+                this.scope === returnVal
+            ) {
                 break;
             }
         }
@@ -72,7 +84,7 @@ Entry.Executor.MAXIMUM_CALLSTACK = 100;
 
     p.stepInto = function(thread) {
         if (!(thread instanceof Entry.Thread))
-            console.error("Must step in to thread");
+            console.error('Must step in to thread');
 
         var block = thread.getFirstBlock();
         if (!block) {
@@ -86,24 +98,25 @@ Entry.Executor.MAXIMUM_CALLSTACK = 100;
     };
 
     p.break = function() {
-        if (this._callStack.length)
-            this.scope = this._callStack.pop();
+        if (this._callStack.length) this.scope = this._callStack.pop();
         return Entry.STATIC.PASS;
     };
 
     p.breakLoop = function() {
-        if (this._callStack.length)
-            this.scope = this._callStack.pop();
+        if (this._callStack.length) this.scope = this._callStack.pop();
         while (this._callStack.length) {
             var schema = Entry.block[this.scope.block.type];
-            if (schema.class === "repeat")
-                break;
+            if (schema.class === 'repeat') break;
             this.scope = this._callStack.pop();
         }
         return Entry.STATIC.PASS;
     };
 
     p.end = function() {
+        Entry.dispatchEvent(
+            'blockExecuteEnd',
+            this.scope.block && this.scope.block.view
+        );
         this.scope.block = null;
     };
 
@@ -127,17 +140,25 @@ Entry.Scope = function(block, executor) {
     p.getParam = function(index) {
         var fieldBlock = this.block.params[index];
         var newScope = new Entry.Scope(fieldBlock, this.executor);
-        var result = Entry.block[fieldBlock.type].func.call(newScope, this.entity, newScope);
+        var result = Entry.block[fieldBlock.type].func.call(
+            newScope,
+            this.entity,
+            newScope
+        );
         return result;
     };
 
     p.getParams = function() {
         var that = this;
-        return this.block.params.map(function(param){
+        return this.block.params.map(function(param) {
             if (param instanceof Entry.Block) {
                 var fieldBlock = param;
                 var newScope = new Entry.Scope(fieldBlock, that.executor);
-                return Entry.block[fieldBlock.type].func.call(newScope, that.entity, newScope);
+                return Entry.block[fieldBlock.type].func.call(
+                    newScope,
+                    that.entity,
+                    newScope
+                );
             } else return param;
         });
     };
@@ -145,7 +166,11 @@ Entry.Scope = function(block, executor) {
     p.getValue = function(key, block) {
         var fieldBlock = this.block.params[this._getParamIndex(key, block)];
         var newScope = new Entry.Scope(fieldBlock, this.executor);
-        var result = Entry.block[fieldBlock.type].func.call(newScope, this.entity, newScope);
+        var result = Entry.block[fieldBlock.type].func.call(
+            newScope,
+            this.entity,
+            newScope
+        );
         return result;
     };
 
@@ -175,20 +200,18 @@ Entry.Scope = function(block, executor) {
     };
 
     p.getStatement = function(key, block) {
-        return this.executor.stepInto(this.block.statements[
-            this._getStatementIndex(key, block)
-        ]);
+        return this.executor.stepInto(
+            this.block.statements[this._getStatementIndex(key, block)]
+        );
     };
 
     p._getParamIndex = function(key) {
-        if (!this._schema)
-            this._schema = Entry.block[this.type];
+        if (!this._schema) this._schema = Entry.block[this.type];
         return this._schema.paramsKeyMap[key];
     };
 
     p._getStatementIndex = function(key) {
-        if (!this._schema)
-            this._schema = Entry.block[this.type];
+        if (!this._schema) this._schema = Entry.block[this.type];
         return this._schema.statementsKeyMap[key];
     };
 
