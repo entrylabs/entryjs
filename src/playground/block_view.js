@@ -966,7 +966,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
                 delete blockView.nextBackground;
             }
 
-            if (magneting === 'previous') {
+            if (magneting === 'previous' && dragBlock.block.thread instanceof Entry.Thread) {
                 var height = dragBlock.getBelowHeight() + this.offsetY;
 
                 blockView.originalHeight = blockView.offsetY;

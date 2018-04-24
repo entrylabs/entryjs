@@ -34,8 +34,6 @@ Entry.Executor.MAXIMUM_CALLSTACK = 100;
                 var schema = this.scope.block.getSchema();
                 if (schema && Entry.skeleton[schema.skeleton].executable)
                     returnVal = schema.func.call(this.scope, entity, this.scope);
-                else
-                    this.end();
             } catch (e) {
                 if (e.name === 'AsyncError') {
                     returnVal = Entry.STATIC.BREAK;
