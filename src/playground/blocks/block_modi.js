@@ -483,70 +483,6 @@ Entry.MODI.getBlocks = function() {
                 return pd.value[property];
             },
         },
-        modi_is_button_touch: {
-            color: '#00979D',
-            fontColor: '#fff',
-            skeleton: 'basic_boolean_field',
-            template: '버튼 %1번의 %2 했는가?',
-            params: [
-                {
-                    type: 'DropdownDynamic',
-                    value: null,
-                    fontSize: 11,
-                    menuName: Entry.MODI.buttonList,
-                },
-                {
-                    type: 'Dropdown',
-                    options: [
-                        ['Click', 2],
-                        ['Double Click', 3],
-                        ['Toggle', 5],
-                        ['Press', 4],
-                    ],
-                    fontSize: 11,
-                },
-            ],
-            def: {
-                params: [null, 2],
-                type: 'modi_is_button_touch',
-            },
-            paramsKeyMap: {
-                name: 0,
-                property: 1,
-            },
-            class: 'button',
-            isNotFor: ['modi'],
-            func: function(sprite, script) {
-                var key = script.getStringField('name');
-                var property = script.getNumberField('property');
-
-                var pd = JSON.parse(Entry.hw.portData.module['button'][key]);
-                var moduleID = pd.id;
-
-                if (!Entry.hw.sendQueue['getProperty']) {
-                    Entry.MODI.initSend();
-                }
-                if (!pd.value[property]) {
-                    pd.value[property] = 0;
-
-                    // send GETPROPERTY
-                    /*if(Entry.MODI.getModule.id != moduleID || Entry.MODI.getModule.property != property || Object.keys(Entry.hw.sendQueue["getProperty"]).length == 0){
-                Entry.hw.sendQueue["getProperty"][moduleID] = JSON.stringify({module: property, id: moduleID});
-                Entry.MODI.getModule.id = moduleID;
-                Entry.MODI.getModule.property = property;
-            }*/
-                }
-
-                var doButton = false;
-
-                if (pd.value[property] == 100) {
-                    doButton = true;
-                } else {
-                    doButton = false;
-                }
-                return doButton;
-            },
-        },
         modi_button_true: {
             color: '#00979D',
             fontColor: '#fff',
@@ -733,8 +669,8 @@ Entry.MODI.getBlocks = function() {
                 }
                 var key = script.getStringField('name'),
                     property = script.getStringField('property'),
-                    upper = script.getNumberValue('upper') * 10,
-                    bottom = script.getNumberValue('bottom') * 10;
+                    upper = script.getNumberValue('upper'),
+                    bottom = script.getNumberValue('bottom');
                 var moduleID = JSON.parse(
                     Entry.hw.portData.module['motor'][key]
                 ).id;
@@ -808,44 +744,18 @@ Entry.MODI.getBlocks = function() {
                     property = script.getStringField('property');
 
                 var pd = JSON.parse(Entry.hw.portData.module['motor'][key]);
-                var uValue = 0,
-                    bValue = 0;
                 var moduleID = pd.id;
 
-                switch (property) {
-                    case 'MOTOR_ANGLE':
-                        uValue = 4;
-                        bValue = 12;
-                        break;
-                    case 'MOTOR_SPEED':
-                        uValue = 3;
-                        bValue = 11;
-                        break;
-                    case 'MOTOR_TORQUE':
-                        uValue = 2;
-                        bValue = 10;
-                        break;
-                }
-
-                if (!pd.value[uValue]) {
-                    pd.value[uValue] = 0;
-
-                    // send GETPROPERTY
-                    /*if(Entry.MODI.getModule.id != moduleID || Object.keys(Entry.hw.sendQueue["getProperty"]).length == 0){
-                Entry.hw.sendQueue["getProperty"][moduleID] = JSON.stringify({module: property, id: moduleID});
-                Entry.MODI.getModule.id = moduleID;
-            }*/
-                }
-                if (!pd.value[bValue]) {
-                    pd.value[bValue] = 0;
-                }
-
                 var sq = Entry.hw.sendQueue.moduleValue;
-                var upper = value * 10 + pd.value[uValue] * 10,
-                    bottom = pd.value[bValue] * 10;
+                var upper = value,
+                    bottom = 0;
 
-                if (upper > 1000 || (upper < 0 && property == 'MOTOR_ANGLE'))
-                    upper = 1000;
+                if (upper > 100)
+                    upper = 100;
+                else if (upper < 0 && property == 'MOTOR_ANGLE')
+                    upper = 0;
+                else if (upper < -100 && property != 'MOTOR_ANGLE')
+                    upper = -100;
 
                 sq['motor'][key] = JSON.stringify({
                     module: property,
@@ -916,44 +826,18 @@ Entry.MODI.getBlocks = function() {
                     property = script.getStringField('property');
 
                 var pd = JSON.parse(Entry.hw.portData.module['motor'][key]);
-                var uValue = 0,
-                    bValue = 0;
                 var moduleID = pd.id;
 
-                if (!pd.value[uValue]) {
-                    pd.value[uValue] = 0;
-
-                    // send GETPROPERTY
-                    /*if(Entry.MODI.getModule.id != moduleID || Object.keys(Entry.hw.sendQueue["getProperty"]).length == 0){
-                Entry.hw.sendQueue["getProperty"][moduleID] = JSON.stringify({module: property, id: moduleID});
-                Entry.MODI.getModule.id = moduleID;
-            }*/
-                }
-                if (!pd.value[bValue]) {
-                    pd.value[bValue] = 0;
-                }
-
-                switch (property) {
-                    case 'MOTOR_ANGLE':
-                        uValue = 4;
-                        bValue = 12;
-                        break;
-                    case 'MOTOR_SPEED':
-                        uValue = 3;
-                        bValue = 11;
-                        break;
-                    case 'MOTOR_TORQUE':
-                        uValue = 2;
-                        bValue = 10;
-                        break;
-                }
-
                 var sq = Entry.hw.sendQueue.moduleValue;
-                var upper = pd.value[uValue] * 10,
-                    bottom = value * 10 + pd.value[bValue] * 10;
+                var upper = 0,
+                    bottom = value;
 
-                if (bottom > 1000 || (bottom < 0 && property == 'MOTOR_ANGLE'))
-                    bottom = 1000;
+                if (bottom > 100)
+                    bottom = 100;
+                else if (bottom < 0 && property == 'MOTOR_ANGLE')
+                    bottom = 0;
+                else if (bottom < -100 && property != 'MOTOR_ANGLE')
+                    bottom = -100;
 
                 sq['motor'][key] = JSON.stringify({
                     module: property,
@@ -1046,15 +930,15 @@ Entry.MODI.getBlocks = function() {
                     null,
                     {
                         type: 'number',
-                        params: ['255'],
+                        params: ['100'],
                     },
                     {
                         type: 'number',
-                        params: ['255'],
+                        params: ['100'],
                     },
                     {
                         type: 'number',
-                        params: ['255'],
+                        params: ['100'],
                     },
                 ],
                 type: 'modi_set_led_rgb',
@@ -1072,12 +956,11 @@ Entry.MODI.getBlocks = function() {
                     Entry.MODI.initSend();
                 }
                 var key = script.getStringField('name');
-                var red, green, blue;
-                (red = script.getNumberValue('rValue')),
-                    (green = script.getNumberValue('gValue')),
-                    (blue = script.getNumberValue('bValue'));
-                var moduleID = JSON.parse(Entry.hw.portData.module['led'][key])
-                    .id;
+                var red = script.getNumberValue('rValue');
+                var green = script.getNumberValue('gValue');
+                var blue = script.getNumberValue('bValue');
+                
+                var moduleID = JSON.parse(Entry.hw.portData.module['led'][key]).id;
 
                 var sq = Entry.hw.sendQueue.moduleValue;
                 sq['led'][key] = JSON.stringify({
@@ -1130,11 +1013,10 @@ Entry.MODI.getBlocks = function() {
 
                 color = color.substring(1, 7);
                 var bigint = parseInt(color, 16);
-                var red = (bigint >> 16) & 255,
-                    green = (bigint >> 8) & 255,
-                    blue = bigint & 255;
-                var moduleID = JSON.parse(Entry.hw.portData.module['led'][key])
-                    .id;
+                var red = Math.round(((bigint >> 16) & 255) / 255 * 100);
+                var green = Math.round(((bigint >> 8) & 255) / 255 * 100);
+                var blue = Math.round((bigint & 255) / 255 * 100);
+                var moduleID = JSON.parse(Entry.hw.portData.module['led'][key]).id;
 
                 var sq = Entry.hw.sendQueue.moduleValue;
                 sq['led'][key] = JSON.stringify({
@@ -1162,15 +1044,10 @@ Entry.MODI.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [Lang.Blocks.modi_speaker_F_DO_5, 'F_DO_5'],
-                        [Lang.Blocks.modi_speaker_F_RE_5, 'F_RE_5'],
-                        [Lang.Blocks.modi_speaker_F_MI_5, 'F_MI_5'],
                         [Lang.Blocks.modi_speaker_F_PA_5, 'F_PA_5'],
                         [Lang.Blocks.modi_speaker_F_SOL_5, 'F_SOL_5'],
                         [Lang.Blocks.modi_speaker_F_RA_5, 'F_RA_5'],
                         [Lang.Blocks.modi_speaker_F_SO_5, 'F_SO_5'],
-                        [Lang.Blocks.modi_speaker_F_DO_S_5, 'F_DO_S_5'],
-                        [Lang.Blocks.modi_speaker_F_RE_S_5, 'F_RE_S_5'],
                         [Lang.Blocks.modi_speaker_F_PA_S_5, 'F_PA_S_5'],
                         [Lang.Blocks.modi_speaker_F_SOL_S_5, 'F_SOL_S_5'],
                         [Lang.Blocks.modi_speaker_F_RA_S_5, 'F_RA_S_5'],
@@ -1189,15 +1066,8 @@ Entry.MODI.getBlocks = function() {
                         [Lang.Blocks.modi_speaker_F_DO_7, 'F_DO_7'],
                         [Lang.Blocks.modi_speaker_F_RE_7, 'F_RE_7'],
                         [Lang.Blocks.modi_speaker_F_MI_7, 'F_MI_7'],
-                        [Lang.Blocks.modi_speaker_F_PA_7, 'F_PA_7'],
-                        [Lang.Blocks.modi_speaker_F_SOL_7, 'F_SOL_7'],
-                        [Lang.Blocks.modi_speaker_F_RA_7, 'F_RA_7'],
-                        [Lang.Blocks.modi_speaker_F_SO_7, 'F_SO_7'],
                         [Lang.Blocks.modi_speaker_F_DO_S_7, 'F_DO_S_7'],
-                        [Lang.Blocks.modi_speaker_F_RE_S_7, 'F_RE_S_7'],
-                        [Lang.Blocks.modi_speaker_F_PA_S_7, 'F_PA_S_7'],
-                        [Lang.Blocks.modi_speaker_F_SOL_S_7, 'F_SOL_S_7'],
-                        [Lang.Blocks.modi_speaker_F_RA_S_7, 'F_RA_S_7'],
+                        [Lang.Blocks.modi_speaker_F_RE_S_7, 'F_RE_S_7']
                     ],
                     fontSize: 11,
                 },
@@ -1215,7 +1085,7 @@ Entry.MODI.getBlocks = function() {
             def: {
                 params: [
                     null,
-                    'F_DO_5',
+                    'F_DO_6',
                     {
                         type: 'number',
                         params: ['100'],
@@ -1236,7 +1106,7 @@ Entry.MODI.getBlocks = function() {
                 }
                 var key = script.getStringField('name'),
                     frequence = script.getStringField('frequence'),
-                    volume = script.getNumberValue('volume', script) * 10;
+                    volume = script.getNumberValue('volume', script);
                 var moduleID = JSON.parse(
                     Entry.hw.portData.module['speaker'][key]
                 ).id;
@@ -1303,151 +1173,11 @@ Entry.MODI.getBlocks = function() {
                     Entry.MODI.initSend();
                 }
                 var key = script.getStringField('name'),
-                    frequence = script.getNumberValue('frequence') * 10,
-                    volume = script.getNumberValue('volume', script) * 10;
+                    frequence = script.getNumberValue('frequence'),
+                    volume = script.getNumberValue('volume', script);
                 var moduleID = JSON.parse(
                     Entry.hw.portData.module['speaker'][key]
                 ).id;
-
-                var sq = Entry.hw.sendQueue.moduleValue;
-                sq['speaker'][key] = JSON.stringify({
-                    module: 'SPEAKER_BUZZER',
-                    id: moduleID,
-                    value1: frequence,
-                    value2: volume,
-                });
-
-                return script.callReturn();
-            },
-        },
-        modi_change_speaker_frequence: {
-            color: '#00979D',
-            skeleton: 'basic',
-            template: '스피커 %1번의 진동수를 %2만큼 바꾸기 %3',
-            params: [
-                {
-                    type: 'DropdownDynamic',
-                    value: null,
-                    fontSize: 11,
-                    menuName: Entry.MODI.speakerList,
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
-                    size: 12,
-                },
-            ],
-            def: {
-                params: [
-                    null,
-                    {
-                        type: 'number',
-                        params: ['100'],
-                    },
-                ],
-                type: 'modi_change_speaker_frequence',
-            },
-            paramsKeyMap: {
-                name: 0,
-                value: 1,
-            },
-            class: 'speaker',
-            isNotFor: ['modi'],
-            func: function(sprite, script) {
-                if (!Entry.hw.sendQueue.moduleValue) {
-                    Entry.MODI.initSend();
-                }
-
-                var key = script.getStringField('name'),
-                    value = script.getNumberValue('value');
-
-                var pd = JSON.parse(Entry.hw.portData.module['speaker'][key]);
-                var moduleID = pd.id;
-
-                if (!pd.value[2]) {
-                    pd.value[2] = 0;
-                }
-                if (!pd.value[3]) {
-                    pd.value[3] = 0;
-                }
-
-                var frequence = value * 10 + pd.value[3] * 10,
-                    volume = pd.value[2] * 10;
-                if (frequence > 1000 || frequence < 0) frequence = 1000;
-
-                var sq = Entry.hw.sendQueue.moduleValue;
-                sq['speaker'][key] = JSON.stringify({
-                    module: 'SPEAKER_BUZZER',
-                    id: moduleID,
-                    value1: frequence,
-                    value2: volume,
-                });
-
-                return script.callReturn();
-            },
-        },
-        modi_change_speaker_volume: {
-            color: '#00979D',
-            skeleton: 'basic',
-            template: '스피커 %1번의 크기를 %2만큼 바꾸기 %3',
-            params: [
-                {
-                    type: 'DropdownDynamic',
-                    value: null,
-                    fontSize: 11,
-                    menuName: Entry.MODI.speakerList,
-                },
-                {
-                    type: 'Block',
-                    accept: 'string',
-                },
-                {
-                    type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
-                    size: 12,
-                },
-            ],
-            def: {
-                params: [
-                    null,
-                    {
-                        type: 'number',
-                        params: ['100'],
-                    },
-                ],
-                type: 'modi_change_speaker_volume',
-            },
-            paramsKeyMap: {
-                name: 0,
-                value: 1,
-            },
-            class: 'speaker',
-            isNotFor: ['modi'],
-            func: function(sprite, script) {
-                if (!Entry.hw.sendQueue.moduleValue) {
-                    Entry.MODI.initSend();
-                }
-
-                var key = script.getStringField('name'),
-                    value = script.getNumberValue('value');
-
-                var pd = JSON.parse(Entry.hw.portData.module['speaker'][key]);
-                var moduleID = pd.id;
-
-                if (!pd.value[2]) {
-                    pd.value[2] = 0;
-                }
-                if (!pd.value[3]) {
-                    pd.value[3] = 0;
-                }
-
-                var frequence = pd.value[3] * 10,
-                    volume = value * 10 + pd.value[2] * 10;
-                if (volume > 1000 || volume < 0) frequence = 1000;
 
                 var sq = Entry.hw.sendQueue.moduleValue;
                 sq['speaker'][key] = JSON.stringify({
@@ -1487,7 +1217,7 @@ Entry.MODI.getBlocks = function() {
                     null,
                     {
                         type: 'text',
-                        params: ['100'],
+                        params: ['text'],
                     },
                 ],
                 type: 'modi_print_display_by_value',
@@ -1506,7 +1236,7 @@ Entry.MODI.getBlocks = function() {
                 var key = script.getStringField('name'),
                     text = script.getStringValue('text');
 
-                if (text.length > 8) {
+                if (text.length > 27) {
                     return script.callReturn();
                 }
 
