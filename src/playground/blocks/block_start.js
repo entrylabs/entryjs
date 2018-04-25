@@ -1,0 +1,1162 @@
+export default {
+    getBlocks() {
+        return {
+            when_run_button_click: {
+                color: '#3BBD70',
+                skeleton: 'basic_event',
+                statements: [],
+                params: [
+                    {
+                        type: 'Indicator',
+                        img: 'block_icon/start_icon_play.png',
+                        size: 17,
+                        position: {
+                            x: 0,
+                            y: -2,
+                        },
+                    },
+                ],
+                events: {},
+                def: {
+                    params: [null],
+                    type: 'when_run_button_click',
+                },
+                class: 'event',
+                isNotFor: [],
+                func: function(sprite, script) {
+                    return script.callReturn();
+                },
+                event: 'start',
+                syntax: {
+                    js: [],
+                    py: [
+                        {
+                            syntax: 'def when_start():',
+                            blockType: 'event',
+                        },
+                    ],
+                },
+            },
+            when_some_key_pressed: {
+                color: '#3BBD70',
+                skeleton: 'basic_event',
+                statements: [],
+                params: [
+                    {
+                        type: 'Indicator',
+                        img: 'block_icon/start_icon_keyboard.png',
+                        size: 17,
+                        position: {
+                            x: 0,
+                            y: -2,
+                        },
+                    },
+                    {
+                        type: 'Keyboard',
+                        value: '81',
+                    },
+                ],
+                events: {},
+                def: {
+                    params: [null, '81'],
+                    type: 'when_some_key_pressed',
+                },
+                pyHelpDef: {
+                    params: [null, 'A&value'],
+                    type: 'when_some_key_pressed',
+                },
+                paramsKeyMap: {
+                    VALUE: 1,
+                },
+                class: 'event',
+                isNotFor: [],
+                func: function(sprite, script) {
+                    return script.callReturn();
+                },
+                event: 'keyPress',
+                syntax: {
+                    js: [],
+                    py: [
+                        {
+                            syntax: 'def when_press_key(%2):',
+                            passTest: true,
+                            blockType: 'event',
+                            textParams: [
+                                undefined,
+                                {
+                                    type: 'Keyboard',
+                                    value: '81',
+                                    converter:
+                                        Entry.block.converters.keyboardCode1,
+                                },
+                            ],
+                        },
+                    ],
+                },
+            },
+            mouse_clicked: {
+                color: '#3BBD70',
+                skeleton: 'basic_event',
+                statements: [],
+                params: [
+                    {
+                        type: 'Indicator',
+                        img: 'block_icon/start_icon_mouse.png',
+                        size: 17,
+                        position: {
+                            x: 0,
+                            y: -2,
+                        },
+                    },
+                ],
+                events: {},
+                def: {
+                    params: [null],
+                    type: 'mouse_clicked',
+                },
+                class: 'event',
+                isNotFor: [],
+                func: function(sprite, script) {
+                    return script.callReturn();
+                },
+                event: 'mouse_clicked',
+                syntax: {
+                    js: [],
+                    py: [
+                        {
+                            syntax: 'def when_click_mouse_on():',
+                            blockType: 'event',
+                        },
+                    ],
+                },
+            },
+            mouse_click_cancled: {
+                color: '#3BBD70',
+                skeleton: 'basic_event',
+                statements: [],
+                params: [
+                    {
+                        type: 'Indicator',
+                        img: 'block_icon/start_icon_mouse.png',
+                        size: 17,
+                        position: {
+                            x: 0,
+                            y: -2,
+                        },
+                    },
+                ],
+                events: {},
+                def: {
+                    params: [null],
+                    type: 'mouse_click_cancled',
+                },
+                class: 'event',
+                isNotFor: [],
+                func: function(sprite, script) {
+                    return script.callReturn();
+                },
+                event: 'mouse_click_cancled',
+                syntax: {
+                    js: [],
+                    py: [
+                        {
+                            syntax: 'def when_click_mouse_off():',
+                            blockType: 'event',
+                        },
+                    ],
+                },
+            },
+            when_object_click: {
+                color: '#3BBD70',
+                skeleton: 'basic_event',
+                statements: [],
+                params: [
+                    {
+                        type: 'Indicator',
+                        img: 'block_icon/start_icon_mouse.png',
+                        size: 17,
+                        position: {
+                            x: 0,
+                            y: -2,
+                        },
+                    },
+                ],
+                events: {},
+                def: {
+                    params: [null],
+                    type: 'when_object_click',
+                },
+                class: 'event',
+                isNotFor: [],
+                func: function(sprite, script) {
+                    return script.callReturn();
+                },
+                event: 'when_object_click',
+                syntax: {
+                    js: [],
+                    py: [
+                        {
+                            syntax: 'def when_click_object_on():',
+                            blockType: 'event',
+                        },
+                    ],
+                },
+            },
+            when_object_click_canceled: {
+                color: '#3BBD70',
+                skeleton: 'basic_event',
+                statements: [],
+                params: [
+                    {
+                        type: 'Indicator',
+                        img: 'block_icon/start_icon_mouse.png',
+                        size: 17,
+                        position: {
+                            x: 0,
+                            y: -2,
+                        },
+                    },
+                ],
+                events: {},
+                def: {
+                    params: [null],
+                    type: 'when_object_click_canceled',
+                },
+                class: 'event',
+                isNotFor: [],
+                func: function(sprite, script) {
+                    return script.callReturn();
+                },
+                event: 'when_object_click_canceled',
+                syntax: {
+                    js: [],
+                    py: [
+                        {
+                            syntax: 'def when_click_object_off():',
+                            blockType: 'event',
+                        },
+                    ],
+                },
+            },
+            when_message_cast: {
+                color: '#3BBD70',
+                skeleton: 'basic_event',
+                statements: [],
+                params: [
+                    {
+                        type: 'Indicator',
+                        img: 'block_icon/start_icon_signal.png',
+                        size: 17,
+                        position: {
+                            x: 0,
+                            y: -2,
+                        },
+                    },
+                    {
+                        type: 'DropdownDynamic',
+                        value: null,
+                        menuName: 'messages',
+                        fontSize: 11,
+                        arrowColor: EntryStatic.ARROW_COLOR_START,
+                    },
+                ],
+                events: {
+                    dataAdd: [
+                        function(block) {
+                            var vc = Entry.variableContainer;
+                            if (vc) vc.addRef('_messageRefs', block);
+                        },
+                    ],
+                    viewDestroy: [
+                        function(block) {
+                            var vc = Entry.variableContainer;
+                            if (vc) vc.removeRef('_messageRefs', block);
+                        },
+                    ],
+                },
+                def: {
+                    params: [null, null],
+                    type: 'when_message_cast',
+                },
+                pyHelpDef: {
+                    params: [null, 'A&value'],
+                    type: 'when_message_cast',
+                },
+                paramsKeyMap: {
+                    VALUE: 1,
+                },
+                class: 'message',
+                isNotFor: ['message'],
+                func: function(sprite, script) {
+                    return script.callReturn();
+                },
+                event: 'when_message_cast',
+
+                //"syntax": {"js": [], "py": ["def entry_event_signal():\n\tif signal == %2:"]}
+                syntax: {
+                    js: [],
+                    py: [
+                        {
+                            syntax: 'def when_get_signal(%2):',
+                            blockType: 'event',
+                            passTest: true,
+                            textParams: [
+                                undefined,
+                                {
+                                    type: 'DropdownDynamic',
+                                    value: null,
+                                    menuName: 'messages',
+                                    fontSize: 11,
+                                    arrowColor: EntryStatic.ARROW_COLOR_START,
+                                    converter:
+                                        Entry.block.converters.returnStringKey,
+                                },
+                            ],
+                        },
+                    ],
+                },
+            },
+            message_cast: {
+                color: '#3BBD70',
+                skeleton: 'basic',
+                statements: [],
+                params: [
+                    {
+                        type: 'DropdownDynamic',
+                        value: null,
+                        menuName: 'messages',
+                        fontSize: 11,
+                        arrowColor: EntryStatic.ARROW_COLOR_START,
+                    },
+                    {
+                        type: 'Indicator',
+                        img: 'block_icon/start_03.png',
+                        size: 12,
+                    },
+                ],
+                events: {
+                    dataAdd: [
+                        function(block) {
+                            var vc = Entry.variableContainer;
+                            if (vc) vc.addRef('_messageRefs', block);
+                        },
+                    ],
+                    viewDestroy: [
+                        function(block) {
+                            var vc = Entry.variableContainer;
+                            if (vc) vc.removeRef('_messageRefs', block);
+                        },
+                    ],
+                },
+                def: {
+                    params: [null, null],
+                    type: 'message_cast',
+                },
+                pyHelpDef: {
+                    params: ['A&value', null],
+                    type: 'message_cast',
+                },
+                paramsKeyMap: {
+                    VALUE: 0,
+                },
+                class: 'message',
+                isNotFor: ['message'],
+                func: function(sprite, script) {
+                    var value = script.getField('VALUE', script);
+
+                    var arr = Entry.variableContainer.messages_;
+                    var isExist = Entry.isExist(value, 'id', arr);
+
+                    if (value == 'null' || !isExist)
+                        throw new Error('value can not be null or undefined');
+
+                    setTimeout(function() {
+                        Entry.engine.raiseMessage(value);
+                    });
+                },
+                syntax: {
+                    js: [],
+                    py: [
+                        {
+                            syntax: 'Entry.send_signal(%1)',
+                            textParams: [
+                                {
+                                    type: 'DropdownDynamic',
+                                    value: null,
+                                    menuName: 'messages',
+                                    fontSize: 11,
+                                    arrowColor: EntryStatic.ARROW_COLOR_START,
+                                    converter:
+                                        Entry.block.converters.returnStringKey,
+                                    paramType: 'signal',
+                                },
+                                undefined,
+                            ],
+                        },
+                    ],
+                },
+            },
+            message_cast_wait: {
+                color: '#3BBD70',
+                skeleton: 'basic',
+                statements: [],
+                params: [
+                    {
+                        type: 'DropdownDynamic',
+                        value: null,
+                        menuName: 'messages',
+                        fontSize: 11,
+                        arrowColor: EntryStatic.ARROW_COLOR_START,
+                    },
+                    {
+                        type: 'Indicator',
+                        img: 'block_icon/start_03.png',
+                        size: 12,
+                    },
+                ],
+                events: {
+                    dataAdd: [
+                        function(block) {
+                            var vc = Entry.variableContainer;
+                            if (vc) vc.addRef('_messageRefs', block);
+                        },
+                    ],
+                    dataDestroy: [
+                        function(block) {
+                            var vc = Entry.variableContainer;
+                            if (vc) vc.removeRef('_messageRefs', block);
+                        },
+                    ],
+                },
+                def: {
+                    params: [null, null],
+                    type: 'message_cast_wait',
+                },
+                pyHelpDef: {
+                    params: ['A&value', null],
+                    type: 'message_cast_wait',
+                },
+                paramsKeyMap: {
+                    VALUE: 0,
+                },
+                class: 'message',
+                isNotFor: ['message'],
+                func: function(sprite, script) {
+                    if (script.runningScript) {
+                        var runningScript = script.runningScript;
+                        var length = runningScript.length;
+                        for (var i = 0; i < length; i++) {
+                            var executor = runningScript.shift();
+                            if (executor && !executor.isEnd())
+                                runningScript.push(executor);
+                        }
+                        if (runningScript.length) {
+                            return script;
+                        } else {
+                            return script.callReturn();
+                        }
+                    } else {
+                        var value = script.getField('VALUE', script);
+                        var arr = Entry.variableContainer.messages_;
+                        var isExist = Entry.isExist(value, 'id', arr);
+                        if (value == 'null' || !isExist)
+                            throw new Error(
+                                'value can not be null or undefined'
+                            );
+                        var data = Entry.engine.raiseMessage(value);
+                        var runningScript = [];
+                        while (data.length) {
+                            var executor = data.shift();
+                            if (executor)
+                                runningScript = runningScript.concat(executor);
+                        }
+
+                        script.runningScript = runningScript;
+                        return script;
+                    }
+                },
+                syntax: {
+                    js: [],
+                    py: [
+                        {
+                            syntax: 'Entry.send_signal_wait(%1)',
+                            textParams: [
+                                {
+                                    type: 'DropdownDynamic',
+                                    value: null,
+                                    menuName: 'messages',
+                                    fontSize: 11,
+                                    arrowColor: EntryStatic.ARROW_COLOR_START,
+                                    converter:
+                                        Entry.block.converters.returnStringKey,
+                                },
+                            ],
+                        },
+                    ],
+                },
+            },
+            when_scene_start: {
+                color: '#3BBD70',
+                skeleton: 'basic_event',
+                statements: [],
+                params: [
+                    {
+                        type: 'Indicator',
+                        img: 'block_icon/start_icon_scene_1_2.png',
+                        size: 17,
+                        position: {
+                            x: 0,
+                            y: -2,
+                        },
+                    },
+                ],
+                events: {},
+                def: {
+                    params: [null],
+                    type: 'when_scene_start',
+                },
+                class: 'scene',
+                isNotFor: ['scene'],
+                func: function(sprite, script) {
+                    return script.callReturn();
+                },
+                event: 'when_scene_start',
+                syntax: {
+                    js: [],
+                    py: [
+                        {
+                            syntax: 'def when_start_scene():',
+                            blockType: 'event',
+                        },
+                    ],
+                },
+            },
+            start_scene: {
+                color: '#3BBD70',
+                skeleton: 'basic_without_next',
+                statements: [],
+                params: [
+                    {
+                        type: 'DropdownDynamic',
+                        value: null,
+                        menuName: 'scenes',
+                        fontSize: 11,
+                        arrowColor: EntryStatic.ARROW_COLOR_START,
+                    },
+                    {
+                        type: 'Indicator',
+                        img: 'block_icon/start_03.png',
+                        size: 12,
+                    },
+                ],
+                events: {},
+                def: {
+                    params: [null, null],
+                    type: 'start_scene',
+                },
+                pyHelpDef: {
+                    params: ['A&value', null],
+                    type: 'start_scene',
+                },
+                paramsKeyMap: {
+                    VALUE: 0,
+                },
+                class: 'scene',
+                isNotFor: ['scene'],
+                func: function(sprite, script) {
+                    var value = script.getField('VALUE', script);
+                    var scene = Entry.scene.getSceneById(value);
+                    if (scene) {
+                        Entry.scene.selectScene(scene);
+                        Entry.engine.fireEvent('when_scene_start');
+                    }
+                    return null;
+                },
+                syntax: {
+                    js: [],
+                    py: [
+                        {
+                            syntax: 'Entry.start_scene(%1)',
+                            blockType: 'last',
+                            textParams: [
+                                {
+                                    type: 'DropdownDynamic',
+                                    value: null,
+                                    menuName: 'scenes',
+                                    fontSize: 11,
+                                    arrowColor: EntryStatic.ARROW_COLOR_START,
+                                    converter:
+                                        Entry.block.converters.returnStringKey,
+                                },
+                            ],
+                        },
+                    ],
+                },
+            },
+            start_neighbor_scene: {
+                color: '#3BBD70',
+                skeleton: 'basic_without_next',
+                statements: [],
+                params: [
+                    {
+                        type: 'Dropdown',
+                        options: [
+                            [Lang.Blocks.SCENE_start_scene_next, 'next'],
+                            [Lang.Blocks.SCENE_start_scene_pre, 'pre'],
+                        ],
+                        value: 'next',
+                        fontSize: 11,
+                        arrowColor: EntryStatic.ARROW_COLOR_START,
+                    },
+                    {
+                        type: 'Indicator',
+                        img: 'block_icon/start_03.png',
+                        size: 12,
+                    },
+                ],
+                events: {},
+                def: {
+                    params: [null, null],
+                    type: 'start_neighbor_scene',
+                },
+                pyHelpDef: {
+                    params: ['A&value', null],
+                    type: 'start_neighbor_scene',
+                },
+                paramsKeyMap: {
+                    OPERATOR: 0,
+                },
+                class: 'scene',
+                isNotFor: ['scene'],
+                func: function(sprite, script) {
+                    var currentScene = Entry.scene.selectedScene;
+                    var scenes = Entry.scene.getScenes();
+                    var index = scenes.indexOf(currentScene);
+                    var o = script.getField('OPERATOR', script);
+                    if (o == 'next') {
+                        if (index + 1 < scenes.length) {
+                            var nextScene = Entry.scene.getSceneById(
+                                scenes[index + 1].id
+                            );
+                            if (nextScene) {
+                                Entry.scene.selectScene(nextScene);
+                                Entry.engine.fireEvent('when_scene_start');
+                            }
+                        }
+                    } else {
+                        if (index > 0) {
+                            var nextScene = Entry.scene.getSceneById(
+                                scenes[index - 1].id
+                            );
+                            if (nextScene) {
+                                Entry.scene.selectScene(nextScene);
+                                Entry.engine.fireEvent('when_scene_start');
+                            }
+                        }
+                    }
+                    return null;
+                },
+                syntax: {
+                    js: [],
+                    py: [
+                        {
+                            syntax: 'Entry.start_scene_of(%1)',
+                            blockType: 'last',
+                            textParams: [
+                                {
+                                    type: 'Dropdown',
+                                    options: [
+                                        [
+                                            Lang.Blocks.SCENE_start_scene_next,
+                                            'next',
+                                        ],
+                                        [
+                                            Lang.Blocks.SCENE_start_scene_pre,
+                                            'pre',
+                                        ],
+                                    ],
+                                    value: 'next',
+                                    fontSize: 11,
+                                    arrowColor: EntryStatic.ARROW_COLOR_START,
+                                    converter:
+                                        Entry.block.converters
+                                            .returnStringValue,
+                                    codeMap:
+                                        'Entry.CodeMap.Entry.start_neighbor_scene[0]',
+                                },
+                            ],
+                        },
+                    ],
+                },
+            },
+            check_object_property: {
+                color: '#7C7C7C',
+                skeleton: 'basic',
+                template: '%1 가 %2 %3 %4 %5 %6',
+                statements: [],
+                params: [
+                    {
+                        type: 'DropdownDynamic',
+                        value: null,
+                        menuName: 'sprites',
+                        fontSize: 11,
+                    },
+                    {
+                        type: 'Dropdown',
+                        options: [['언젠가', 0], ['지금', 1]],
+                        value: '0',
+                        fontSize: 11,
+                    },
+                    {
+                        type: 'Dropdown',
+                        options: [
+                            ['x', 'x'],
+                            ['y', 'y'],
+                            ['크기', 'size'],
+                            ['방향', 'rotation'],
+                            ['이동 방향', 'direction'],
+                            ['텍스트', 'text'],
+                        ],
+                        value: 'x',
+                        fontSize: 11,
+                    },
+                    {
+                        type: 'Dropdown',
+                        options: [
+                            ['=', 'EQUAL'],
+                            ['>', 'GREATER'],
+                            ['<', 'LESS'],
+                            ['≥', 'GREATER_OR_EQUAL'],
+                            ['≤', 'LESS_OR_EQUAL'],
+                        ],
+                        value: 'EQUAL',
+                        fontSize: 11,
+                        noArrow: true,
+                    },
+                    {
+                        type: 'Block',
+                        accept: 'string',
+                    },
+                    {
+                        type: 'Indicator',
+                        color: '#6B6B6B',
+                        size: 12,
+                    },
+                ],
+                events: {},
+                def: {
+                    params: [null],
+                    type: 'check_object_property',
+                },
+                paramsKeyMap: {
+                    VALUE: 0,
+                },
+                class: 'checker',
+                isNotFor: ['checker'],
+                func: function(sprite, script) {
+                    var obj = Entry.container.getObject(this.block.params[0]),
+                        flow = this.block.params[1],
+                        propertyKey = this.block.params[2],
+                        rightValue = this.getParam(4);
+                    propertyKey =
+                        propertyKey[0].toUpperCase() + propertyKey.substr(1);
+                    var leftValue = obj.entity['get' + propertyKey].call(
+                            obj.entity
+                        ),
+                        returnVal;
+
+                    switch (this.block.params[3]) {
+                        case 'EQUAL':
+                            returnVal = leftValue == rightValue;
+                            break;
+                        case 'GREATER':
+                            returnVal = Number(leftValue) > Number(rightValue);
+                            break;
+                        case 'LESS':
+                            returnVal = Number(leftValue) < Number(rightValue);
+                            break;
+                        case 'GREATER_OR_EQUAL':
+                            returnVal = Number(leftValue) >= Number(rightValue);
+                            break;
+                        case 'LESS_OR_EQUAL':
+                            returnVal = Number(leftValue) <= Number(rightValue);
+                            break;
+                    }
+                    if (returnVal) return;
+                    else if (flow == 0) return Entry.STATIC.BREAK;
+                    else this.die();
+                },
+            },
+            check_block_execution: {
+                color: '#7C7C7C',
+                skeleton: 'basic_loop',
+                template: '%1 에서 아래 블록이 %2 %3 번 실행되었는가 %4',
+                statements: [
+                    {
+                        accept: 'basic',
+                    },
+                ],
+                params: [
+                    {
+                        type: 'DropdownDynamic',
+                        value: null,
+                        menuName: 'sprites',
+                        fontSize: 11,
+                    },
+                    {
+                        type: 'Dropdown',
+                        options: [['비슷하게', 0], ['똑같이', 1]],
+                        value: '16',
+                        fontSize: 11,
+                    },
+                    {
+                        type: 'TextInput',
+                        value: 1,
+                    },
+                    {
+                        type: 'Indicator',
+                        color: '#6B6B6B',
+                        size: 12,
+                    },
+                ],
+                events: {},
+                def: {
+                    params: [null, 0],
+                    type: 'check_block_execution',
+                },
+                paramsKeyMap: {
+                    VALUE: 0,
+                },
+                class: 'checker',
+                isNotFor: ['checker'],
+                func: function(sprite, script) {
+                    if (this.listener) {
+                        if (this.remainCheck === 0) {
+                            this.listener.destroy();
+                            return;
+                        } else return Entry.STATIC.BREAK;
+                    }
+                    var code = Entry.container.getObject(this.block.params[0])
+                            .script,
+                        accuracy = this.block.params[1],
+                        statements = this.block.statements[0].getBlocks(),
+                        lastBlock = null;
+                    this.remainCheck = Number(this.block.params[2]);
+                    var index = 0;
+                    this.listener = code.watchEvent.attach(this, function(
+                        blocks
+                    ) {
+                        //dangerous
+                        blocks = blocks.concat();
+                        var block,
+                            isFirst = true;
+                        while (blocks.length && index < statements.length) {
+                            block = blocks.shift();
+                            if (isFirst && block === lastBlock) continue;
+                            if (
+                                accuracy === 0 &&
+                                statements[index].type === block.type
+                            ) {
+                                index++;
+                            } else if (
+                                accuracy === 1 &&
+                                statements[index].isSameParamWith(block)
+                            ) {
+                                index++;
+                            } else {
+                                index = 0;
+                            }
+                            isFirst = false;
+                        }
+                        lastBlock = block;
+                        if (index === statements.length) {
+                            this.remainCheck = this.remainCheck - 1;
+                            index = 0;
+                        }
+                    });
+                    return Entry.STATIC.BREAK;
+                },
+            },
+            switch_scope: {
+                color: '#7C7C7C',
+                skeleton: 'basic',
+                template: '%1 오브젝트 기준으로 실행하기 %2',
+                statements: [],
+                params: [
+                    {
+                        type: 'DropdownDynamic',
+                        value: null,
+                        menuName: 'sprites',
+                        fontSize: 11,
+                    },
+                    {
+                        type: 'Indicator',
+                        color: '#6B6B6B',
+                        size: 12,
+                    },
+                ],
+                events: {},
+                def: {
+                    params: [null],
+                    type: 'switch_scope',
+                },
+                paramsKeyMap: {
+                    VALUE: 0,
+                },
+                class: 'checker',
+                isNotFor: ['checker'],
+                func: function(sprite, script) {
+                    var obj = Entry.container.getObject(this.block.params[0]);
+                    this.executor.entity = obj.entity;
+                },
+            },
+            is_answer_submited: {
+                color: '#7C7C7C',
+                skeleton: 'basic',
+                template: '대답을 입력 받을때 까지 기다리기 %1',
+                statements: [],
+                params: [
+                    {
+                        type: 'Indicator',
+                        color: '#6B6B6B',
+                        size: 12,
+                    },
+                ],
+                events: {},
+                def: {
+                    params: [null],
+                    type: 'is_answer_submited',
+                },
+                paramsKeyMap: {
+                    VALUE: 0,
+                },
+                class: 'checker',
+                isNotFor: ['checker'],
+                func: function(sprite, script) {
+                    if (this.isSubmitted) {
+                        Entry.removeEventListener('answerSubmitted', checkFunc);
+                        return;
+                    } else if (this.isSubmitted === false)
+                        return Entry.STATIC.BREAK;
+                    var checkFunc = function() {
+                        that.isSubmitted = true;
+                    };
+                    this.isSubmitted = false;
+                    var that = this;
+                    Entry.addEventListener('answerSubmitted', checkFunc);
+                    return Entry.STATIC.BREAK;
+                },
+            },
+            check_lecture_goal: {
+                color: '#7C7C7C',
+                skeleton: 'basic',
+                template: '목표 %1 %2 ( %3 ) %4',
+                statements: [],
+                params: [
+                    {
+                        type: 'TextInput',
+                        value: 0,
+                    },
+                    {
+                        type: 'Dropdown',
+                        options: [['달성', 1], ['실패', 0]],
+                        fontSize: 11,
+                    },
+                    {
+                        type: 'Dropdown',
+                        options: [['공식', 1], ['비공식', 0]],
+                        value: 1,
+                        fontSize: 11,
+                    },
+                    {
+                        type: 'Indicator',
+                        color: '#6B6B6B',
+                        size: 12,
+                    },
+                ],
+                events: {
+                    dataAdd: [
+                        function(block) {
+                            Entry.registerAchievement(block);
+                        },
+                    ],
+                },
+                def: {
+                    params: [0, 1, 1],
+                    type: 'check_lecture_goal',
+                },
+                paramsKeyMap: {
+                    VALUE: 0,
+                },
+                class: 'checker',
+                isNotFor: ['checker'],
+                func: function(sprite, script) {
+                    Entry.targetChecker.achieveCheck(
+                        this.block.params[1],
+                        this.block.params[0] + ''
+                    );
+                },
+            },
+            check_variable_by_name: {
+                color: '#7C7C7C',
+                skeleton: 'basic_string_field',
+                template: '%1 이름의 변수',
+                statements: [],
+                params: [
+                    {
+                        type: 'TextInput',
+                        value: '?',
+                    },
+                ],
+                events: {},
+                def: {
+                    params: ['변수'],
+                    type: 'check_variable_by_name',
+                },
+                paramsKeyMap: {
+                    VALUE: 0,
+                },
+                class: 'checker',
+                isNotFor: ['checker'],
+                func: function(sprite, script) {
+                    var variableName = this.block.params[0] + '';
+                    var variable = Entry.variableContainer.getVariableByName(
+                        variableName
+                    );
+                    if (variable) return variable.getValue();
+                    else return;
+                },
+            },
+            show_prompt: {
+                color: '#7C7C7C',
+                skeleton: 'basic',
+                template: '%1 안내하기 %2',
+                statements: [],
+                params: [
+                    {
+                        type: 'TextInput',
+                        value: '',
+                    },
+                    {
+                        type: 'Indicator',
+                        color: '#6B6B6B',
+                        size: 12,
+                    },
+                ],
+                events: {},
+                def: {
+                    params: [' '],
+                    type: 'show_prompt',
+                },
+                paramsKeyMap: {
+                    VALUE: 0,
+                },
+                class: 'checker',
+                isNotFor: ['checker'],
+                func: function(sprite, script) {
+                    if (Entry.targetChecker)
+                        Entry.targetChecker.showStatusMessage(
+                            this.block.params[0]
+                        );
+                },
+            },
+            check_goal_success: {
+                color: '#7C7C7C',
+                skeleton: 'basic_boolean_field',
+                template: '목표 %1 이 성공?',
+                statements: [],
+                params: [
+                    {
+                        type: 'TextInput',
+                        value: '',
+                    },
+                ],
+                events: {},
+                def: {
+                    params: ['0'],
+                    type: 'check_goal_success',
+                },
+                paramsKeyMap: {
+                    VALUE: 0,
+                },
+                class: 'checker',
+                isNotFor: ['checker'],
+                func: function(sprite, script) {
+                    var goalName = this.block.params[0] + '';
+                    return Entry.targetChecker.checkGoal(goalName);
+                },
+            },
+            wildcard_string: {
+                color: '#7C7C7C',
+                skeleton: 'basic_string_field',
+                template: '    *    ',
+                fontColor: '#fff',
+                statements: [],
+                params: [],
+                events: {},
+                def: {
+                    params: [],
+                    type: 'wildcard_string',
+                },
+                paramsKeyMap: {
+                    VALUE: 0,
+                },
+                class: 'checker',
+                isNotFor: ['checker'],
+                func: function(sprite, script) {},
+            },
+            wildcard_boolean: {
+                color: '#7C7C7C',
+                skeleton: 'basic_boolean_field',
+                template: '    *    ',
+                fontColor: '#fff',
+                statements: [],
+                params: [],
+                events: {},
+                def: {
+                    params: [],
+                    type: 'wildcard_boolean',
+                },
+                paramsKeyMap: {},
+                class: 'checker',
+                isNotFor: ['checker'],
+                func: function(sprite, script) {},
+            },
+            register_score: {
+                color: '#7C7C7C',
+                skeleton: 'basic',
+                template: '%1를 %2로 정하기 %3',
+                statements: [],
+                params: [
+                    {
+                        type: 'TextInput',
+                        value: 'score',
+                    },
+                    {
+                        type: 'TextInput',
+                        value: '1',
+                    },
+                    {
+                        type: 'Indicator',
+                        color: '#6B6B6B',
+                        size: 12,
+                    },
+                ],
+                events: {},
+                def: {
+                    params: ['score', 1],
+                    type: 'register_score',
+                },
+                class: 'checker',
+                isNotFor: ['checker'],
+                func: function(sprite, script) {
+                    var obj = {};
+                    obj[this.block.params[0]] = this.block.params[1];
+                    if (typeof entrylms !== 'undefined')
+                        entrylms.emit('registerScore', obj);
+                    return script.callReturn();
+                },
+            },
+        };
+    }
+}
