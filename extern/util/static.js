@@ -244,6 +244,7 @@ EntryStatic.getAllBlocks = function() {
         {
             category: "text",
             blocks: [
+                "text_read",
                 "text_write",
                 "text_append",
                 "text_prepend",
@@ -334,7 +335,6 @@ EntryStatic.getAllBlocks = function() {
         {
             category: "arduino",
             blocks: [
-
                 "arduino_download_connector",
                 "download_guide",
                 "arduino_download_source",
@@ -1087,7 +1087,6 @@ EntryStatic.getAllBlocks = function() {
                 "modi_dial_value",
                 "modi_gyroscope_value",
                 "modi_button_value",
-                "modi_is_button_touch",
                 "modi_button_true",
                 "modi_button_false",
                 "modi_infrared_value",
@@ -1100,8 +1099,6 @@ EntryStatic.getAllBlocks = function() {
                 "modi_set_led_color",
                 "modi_set_basic_speaker",
                 "modi_set_custom_speaker",
-                "modi_change_speaker_frequence",
-                "modi_change_speaker_volume",
                 "modi_print_display_by_value",
 
                 // COCONUT
@@ -1264,7 +1261,24 @@ EntryStatic.getAllBlocks = function() {
                 "funboard_dotmatrix_string_display_scroll",
                 "funboard_dotmatrix_set",
                 "funboard_dotmatrix_1row",
-                "funboard_dotmatrix_1column"
+                "funboard_dotmatrix_1column",
+
+                //region microbit
+                "microbit_led_toggle",
+                "microbit_get_led",
+                "microbit_show_string",
+                "microbit_show_image",
+                "microbit_get_analog",
+                "microbit_get_analog_map",
+                "microbit_get_digital",
+                "microbit_get_button",
+                "microbit_get_sensor",
+                "microbit_get_accelerometer",
+                "microbit_play_note",
+                "microbit_change_bpm",
+                "microbit_set_bpm",
+                // "microbit_radio_receive_event",
+                //endregion microbit
             ]
         }
     ]
@@ -1501,6 +1515,7 @@ EntryStatic.ARROW_COLOR_START = '#2f975a';
 EntryStatic.ARROW_COLOR_FLOW = '#3a71bc';
 EntryStatic.ARROW_COLOR_MOVING = '#8641b6';
 EntryStatic.ARROW_COLOR_LOOKS = '#d8234e';
+EntryStatic.ARROW_COLOR_TEXT = '#dc9c32';
 EntryStatic.ARROW_COLOR_SOUNDS = '#83a617';
 EntryStatic.ARROW_COLOR_JUDGE = '#89a1f7';
 EntryStatic.ARROW_COLOR_CALC = '#e8b349';

@@ -9,10 +9,8 @@ Entry.SmartBoard = {
         "en": "Sciencebox Codingboard"
     },
     setZero: function() {
-        Entry.hw.sendQueue.readablePorts = [];
         for (var port = 2; port < 9; port++) {
             Entry.hw.sendQueue[port] = 0;
-            Entry.hw.sendQueue.readablePorts.push(port);
         }
         Entry.hw.update();
     },
@@ -530,7 +528,7 @@ Entry.SmartBoard.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [['GS1', '3'], ['GS2', '2'], ['RELAY', '8']],
-                    value: '8',
+                    value: '3',
                     fontSize: 11,
                 },
                 {
