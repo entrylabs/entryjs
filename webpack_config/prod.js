@@ -4,6 +4,7 @@ const merge = require('webpack-merge');
 const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 const common = require('./common.js');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const LodashModuleReplacementPlugin = require('lodash-webpack-plugin');
 
 module.exports = merge(common, {
     mode: 'production',
@@ -36,5 +37,5 @@ module.exports = merge(common, {
             },
         ],
     },
-    plugins: [new UglifyJSPlugin()],
+    plugins: [new UglifyJSPlugin(), new LodashModuleReplacementPlugin()],
 });

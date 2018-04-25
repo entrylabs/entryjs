@@ -1024,10 +1024,10 @@ Entry.Playground = function() {
         var picture = Entry.playground.object.getPicture(pictureId);
         if (picture.fileurl) {
             window.open('/api/sprite/download/entryjs/'+
-                    encodeURIComponent(picture.fileurl)+'/'+encodeURIComponent(picture.name) + '.png');
+                    btoa(picture.fileurl)+'/'+encodeURIComponent(picture.name) + '.png');
         } else {
             window.open('/api/sprite/download/image/'+
-                    encodeURIComponent(picture.filename)+'/'+encodeURIComponent(picture.name) + '.png');
+                    btoa(picture.filename)+'/'+encodeURIComponent(picture.name) + '.png');
         }
     }
 
@@ -1194,7 +1194,7 @@ Entry.Playground = function() {
         var sound = Entry.playground.object.getSound(soundId);
         if (sound.fileurl) {
             if(sound.fileurl.indexOf('bark.mp3') > -1) {
-                window.open('/api/sprite/download/entryjs/' + encodeURIComponent(sound.fileurl) + '/' + encodeURIComponent(sound.name+'.mp3'));
+                window.open('/api/sprite/download/entryjs/' + btoa(sound.fileurl) + '/' + encodeURIComponent(sound.name+'.mp3'));
             } else {
                 window.open(sound.fileurl);
             }

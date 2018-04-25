@@ -49,6 +49,7 @@ require('./block_playcode');
 require('./block_mechatro');
 require('./block_creamo');
 require('./block_funboard');
+require('./block_microbit');
 
 Entry.HARDWARE_LIST = {
     '1.1': Entry.Arduino,
@@ -105,4 +106,47 @@ Entry.HARDWARE_LIST = {
     '1F.1': Entry.mechatro,
     '20.1': Entry.Creamo,
     '21.1': Entry.FunBoard,
+    '22.1': Entry.Microbit,
 };
+
+import startBlock from './block_start';
+import flowBlock from './block_flow';
+import movingBlock from './block_moving';
+import looksBlock from './block_looks';
+import brushBlock from './block_brush';
+import textBlock from './block_text';
+import soundBlock from './block_sound';
+import judgementBlock from './block_judgement';
+import calcBlock from './block_calc';
+import variableBlock from './block_variable';
+import funcBlock from './block_func';
+
+function getBlockObject(items) {
+    const blockObject = {};
+    items.forEach((item)=> {
+        if('getBlocks' in item) {
+            Object.assign(blockObject, item.getBlocks());
+        }
+    });
+    return blockObject;
+}
+
+export default {
+    getBlocks() {
+        const basicBlockList = [
+            startBlock,
+            flowBlock,
+            movingBlock,
+            looksBlock,
+            brushBlock,
+            textBlock,
+            soundBlock,
+            judgementBlock,
+            calcBlock,
+            variableBlock,
+            funcBlock,
+        ];
+        const hardwareList = Object.values(Entry.HARDWARE_LIST);
+        return getBlockObject(basicBlockList.concat(hardwareList));
+    }
+}
