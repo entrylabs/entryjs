@@ -230,6 +230,17 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
         pos.y += this.box.y + contentPos.y;
         return pos;
     };
+    
+    p.requestPartHeight = function(blockView, forAll) {
+        var height = blockView
+            ? blockView.magnet.next ? blockView.magnet.next.y : blockView.height
+            : 0;
+        return height;
+    };
+    
+    p.getCount = function() {
+        return 0;
+    };
 
     p.dominate = function() {
         this._blockView.dominate();

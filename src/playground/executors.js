@@ -40,7 +40,7 @@ Entry.Executor.MAXIMUM_CALLSTACK = 100;
                         entity,
                         this.scope
                     );
-                } else this.end();
+                }
             } catch (e) {
                 if (e.name === 'AsyncError') {
                     returnVal = Entry.STATIC.BREAK;
