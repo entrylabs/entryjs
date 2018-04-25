@@ -97,6 +97,10 @@ Entry.STATIC = {
         funcUpdate: 1005,
 
         //TODO commands development
+        entitySetModel: 217,
+
+        
+        
     },
 
     COMMAND_TYPES_NOT_ALWAYS: {

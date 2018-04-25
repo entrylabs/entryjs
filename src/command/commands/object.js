@@ -208,10 +208,7 @@ const { returnEmptyArr, createTooltip } = require('../command_util');
         },
         log: function(objectId, newName) {
             var object = Entry.container.getObject(objectId);
-            return [
-                ['objectId', objectId],
-                ['newName', newName],
-            ];
+            return [['objectId', objectId], ['newName', newName]];
         },
         dom: ['container', 'objectId', '&0', 'nameInput'],
         restrict: _inputRestrictor,
@@ -233,10 +230,7 @@ const { returnEmptyArr, createTooltip } = require('../command_util');
         },
         log: function(objectId, newX) {
             var { entity } = Entry.container.getObject(objectId);
-            return [
-                ['objectId', objectId],
-                ['newX', newX],
-            ];
+            return [['objectId', objectId], ['newX', newX]];
         },
         dom: ['container', 'objectId', '&0', 'xInput'],
         recordable: Entry.STATIC.RECORDABLE.SUPPORT,
@@ -258,10 +252,7 @@ const { returnEmptyArr, createTooltip } = require('../command_util');
         },
         log: function(objectId, newY) {
             var { entity } = Entry.container.getObject(objectId);
-            return [
-                ['objectId', objectId],
-                ['newY', newY],
-            ];
+            return [['objectId', objectId], ['newY', newY]];
         },
         dom: ['container', 'objectId', '&0', 'yInput'],
         recordable: Entry.STATIC.RECORDABLE.SUPPORT,
@@ -283,10 +274,7 @@ const { returnEmptyArr, createTooltip } = require('../command_util');
         },
         log: function(objectId, newSize) {
             var { entity } = Entry.container.getObject(objectId);
-            return [
-                ['objectId', objectId],
-                ['newSize', newSize],
-            ];
+            return [['objectId', objectId], ['newSize', newSize]];
         },
         dom: ['container', 'objectId', '&0', 'sizeInput'],
         restrict: _inputRestrictor,
@@ -308,10 +296,7 @@ const { returnEmptyArr, createTooltip } = require('../command_util');
         },
         log: function(objectId, newValue) {
             var { entity } = Entry.container.getObject(objectId);
-            return [
-                ['objectId', objectId],
-                ['newRotationValue', newValue],
-            ];
+            return [['objectId', objectId], ['newRotationValue', newValue]];
         },
         dom: ['container', 'objectId', '&0', 'rotationInput'],
         restrict: _inputRestrictor,
@@ -333,10 +318,7 @@ const { returnEmptyArr, createTooltip } = require('../command_util');
         },
         log: function(objectId, newValue) {
             var { entity } = Entry.container.getObject(objectId);
-            return [
-                ['objectId', objectId],
-                ['newDirectionValue', newValue],
-            ];
+            return [['objectId', objectId], ['newDirectionValue', newValue]];
         },
         dom: ['container', 'objectId', '&0', 'directionInput'],
         recordable: Entry.STATIC.RECORDABLE.SUPPORT,
@@ -360,14 +342,26 @@ const { returnEmptyArr, createTooltip } = require('../command_util');
         },
         log: function(objectId, newValue) {
             var { entity } = Entry.container.getObject(objectId);
-            return [
-                ['objectId', objectId],
-                ['newDirectionValue', newValue],
-            ];
+            return [['objectId', objectId], ['newDirectionValue', newValue]];
         },
         dom: ['container', 'objectId', '&0', 'rotationMethod', '&1'],
         recordable: Entry.STATIC.RECORDABLE.SUPPORT,
         undo: 'objectUpdateRotateMethod',
+    };
+
+    c[COMMAND_TYPES.entitySetModel] = {
+        do(objectId, newModel, oldModel) {
+            var { entity } = Entry.container.getObject(objectId);
+            entity.setModel(newModel);
+        },
+        state(objectId, newModel, oldModel) {
+            return [objectId, oldModel, newModel];
+        },
+        log(objectId, newModel, oldModel) {
+            return [['objectId', objectId], ['newModel', newModel], ['oldModel', oldModel]];
+        },
+        recordable: Entry.STATIC.RECORDABLE.SUPPORT,
+        undo: 'entitySetModel',
     };
 
     function _inputRestrictor({ tooltip, content }, domQuery, callback) {

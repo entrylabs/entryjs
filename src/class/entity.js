@@ -48,21 +48,15 @@ Entry.EntityObject = function(object) {
     this.object.entity = this;
     this.object.cursor = 'pointer';
 
-    this.object.on('mousedown', function(evt) {
+    this.object.on('mousedown', function({ stageX, stageY }) {
         var id = this.entity.parent.id;
         Entry.dispatchEvent('entityClick', this.entity);
         Entry.stage.isObjectClick = true;
 
         if (Entry.type != 'minimize' && Entry.stage.isEntitySelectable()) {
             this.offset = {
-                x:
-                    -this.parent.x +
-                    this.entity.getX() -
-                    (evt.stageX * 0.75 - 240),
-                y:
-                    -this.parent.y -
-                    this.entity.getY() -
-                    (evt.stageY * 0.75 - 135),
+                x: -this.parent.x + this.entity.getX() - (stageX * 0.75 - 240),
+                y: -this.parent.y - this.entity.getY() - (stageY * 0.75 - 135),
             };
             this.cursor = 'move';
             this.entity.initCommand();
@@ -76,15 +70,18 @@ Entry.EntityObject = function(object) {
         this.entity.checkCommand();
     });
 
-    this.object.on('pressmove', function(evt) {
-        if (Entry.type != 'minimize' && Entry.stage.isEntitySelectable()) {
-            if (this.entity.parent.getLock()) return;
-            this.entity.doCommand();
-            this.entity.setX(evt.stageX * 0.75 - 240 + this.offset.x);
-            this.entity.setY(-(evt.stageY * 0.75 - 135) - this.offset.y);
-            Entry.stage.updateObject();
-        }
-    });
+    if (Entry.type !== 'minimize') {
+        this.object.on('pressmove', function({ stageX, stageY }) {
+            if (Entry.stage.isEntitySelectable()) {
+                var entity = this.entity;
+                if (entity.parent.getLock()) return;
+                entity.doCommand();
+                entity.setX(stageX * 0.75 - 240 + this.offset.x);
+                entity.setY(-(stageY * 0.75 - 135) - this.offset.y);
+                Entry.stage.updateObject();
+            }
+        });
+    }
 };
 
 /**
@@ -154,15 +151,12 @@ Entry.EntityObject.prototype.syncModel_ = function({
 };
 
 Entry.EntityObject.prototype.initCommand = function() {
-    if (!Entry.engine.isState('stop')) return;
+    if (!Entry.engine.isState('stop')) {
+        return;
+    }
+
     this.isCommandValid = false;
-    if (Entry.stateManager)
-        Entry.stateManager.addCommand(
-            'edit entity',
-            this,
-            this.restoreEntity,
-            this.toJSON()
-        );
+    this._entityModelBefore = this.toJSON();
 };
 
 Entry.EntityObject.prototype.doCommand = function() {
@@ -170,8 +164,15 @@ Entry.EntityObject.prototype.doCommand = function() {
 };
 
 Entry.EntityObject.prototype.checkCommand = function() {
-    if (Entry.engine.isState('stop') && !this.isCommandValid)
-        Entry.dispatchEvent('cancelLastCommand');
+    var oldModel = this._entityModelBefore;
+
+    delete this._entityModelBefore;
+
+    if (!this.isCommandValid) {
+        return;
+    }
+
+    Entry.do('entitySetModel', this.parent.id, this.toJSON(), oldModel);
 };
 
 /**
@@ -179,17 +180,10 @@ Entry.EntityObject.prototype.checkCommand = function() {
  * @param {!entity model} entityModel
  * @return {Entry.State} capture current state
  */
-Entry.EntityObject.prototype.restoreEntity = function(entityModel) {
-    var currentModel = this.toJSON();
+Entry.EntityObject.prototype.setModel = function(entityModel) {
     this.syncModel_(entityModel);
     Entry.dispatchEvent('updateObject');
-    if (Entry.stateManager)
-        Entry.stateManager.addCommand(
-            'restore object',
-            this,
-            this.restoreEntity,
-            currentModel
-        );
+    Entry.stage.updateObject();
 };
 
 /**
@@ -254,11 +248,11 @@ Entry.EntityObject.prototype.getDirection = function(toFixedValue) {
  * @param {number} direction
  * @param {boolean} flippable
  */
-Entry.EntityObject.prototype.setDirection = function(direction, flippable) {
-    if (!direction) direction = 0;
+Entry.EntityObject.prototype.setDirection = function(direction = 0, flippable) {
     direction = direction % 360;
+    var parent = this.parent;
 
-    if (this.parent.getRotateMethod() == 'vertical' && !flippable) {
+    if (parent.getRotateMethod() == 'vertical' && !flippable) {
         var previousIsRight = this.direction >= 0 && this.direction < 180;
         var afterIsRight = direction >= 0 && direction < 180;
         if (previousIsRight != afterIsRight) {
@@ -270,7 +264,7 @@ Entry.EntityObject.prototype.setDirection = function(direction, flippable) {
     /** @type {number} */
     this.direction = direction.mod(360);
     this.object.direction = this.direction;
-    !this.isClone && this.parent.updateRotationView();
+    !this.isClone && parent.updateRotationView();
     Entry.dispatchEvent('updateObject');
     Entry.requestUpdate = true;
 };
@@ -387,8 +381,7 @@ Entry.EntityObject.prototype.getScaleY = function() {
  * @param {number} size
  */
 Entry.EntityObject.prototype.setSize = function(size) {
-    if (size < 1) size = 1;
-    var scale = size / this.getSize();
+    var scale = Math.max(1, size) / this.getSize();
     this.setScaleX(this.getScaleX() * scale);
     this.setScaleY(this.getScaleY() * scale);
     !this.isClone && this.parent.updateCoordinateView();
@@ -459,9 +452,9 @@ Entry.EntityObject.prototype.getHeight = function() {
  * colour setter
  * @param {?string} colour
  */
-Entry.EntityObject.prototype.setColour = function(colour) {
+Entry.EntityObject.prototype.setColour = function(colour = '#000000') {
     /** @type {string} */
-    this.colour = colour || '#000000';
+    this.colour = colour;
     if (this.textObject) this.textObject.color = this.colour;
     Entry.requestUpdate = true;
 };
@@ -478,9 +471,9 @@ Entry.EntityObject.prototype.getColour = function() {
  * BG colour setter, for textBox object
  * @param {?string} colour
  */
-Entry.EntityObject.prototype.setBGColour = function(colour) {
+Entry.EntityObject.prototype.setBGColour = function(colour = 'transparent') {
     /** @type {string} */
-    this.bgColor = colour || 'transparent';
+    this.bgColor = colour;
     this.updateBG();
     //this.object.color = this.colour;
     Entry.requestUpdate = true;
@@ -494,8 +487,7 @@ Entry.EntityObject.prototype.getBGColour = function() {
     return this.bgColor;
 };
 
-Entry.EntityObject.prototype.setUnderLine = function(underLine) {
-    if (underLine === undefined) underLine = false;
+Entry.EntityObject.prototype.setUnderLine = function(underLine = false) {
     this.underLine = underLine;
     this.textObject.underLine = underLine;
     Entry.requestUpdate = true;
@@ -505,8 +497,7 @@ Entry.EntityObject.prototype.getUnderLine = function() {
     return this.underLine;
 };
 
-Entry.EntityObject.prototype.setStrike = function(strike) {
-    if (strike === undefined) strike = false;
+Entry.EntityObject.prototype.setStrike = function(strike = false) {
     this.strike = strike;
     this.textObject.strike = strike;
     Entry.requestUpdate = true;
@@ -531,10 +522,9 @@ Entry.EntityObject.prototype.getFont = function() {
 /**
  * font setter
  */
-Entry.EntityObject.prototype.setFont = function(font) {
+Entry.EntityObject.prototype.setFont = function(font = '20px Nanum Gothic') {
     if (this.parent.objectType != 'textBox') return;
     if (this.textObject.font === font) return;
-    if (!font) font = '20px Nanum Gothic';
 
     var fontArray = font.split(' ');
     var i = 0;
@@ -547,8 +537,7 @@ Entry.EntityObject.prototype.setFont = function(font) {
         fontArray.splice(i - 1, 1);
         this.setFontItalic(true);
     }
-    var fontSize = parseInt(fontArray.shift());
-    this.setFontSize(fontSize);
+    this.setFontSize(parseInt(fontArray.shift()));
     this.setFontType(fontArray.join(' '));
 
     this.textObject.font = this.getFont();
@@ -572,18 +561,20 @@ Entry.EntityObject.prototype.setLineHeight = function() {
 };
 
 Entry.EntityObject.prototype.syncFont = function() {
-    this.textObject.font = this.getFont();
+    var textObject = this.textObject;
+    textObject.font = this.getFont();
     this.setLineHeight();
     Entry.stage.update();
     if (this.getLineBreak()) {
         if (this.fontType == 'Nanum Gothic Coding') {
-            var textObjectHeight = this.textObject.getMeasuredLineHeight();
-            this.textObject.y =
-                textObjectHeight / 2 - this.getHeight() / 2 + 10;
+            textObject.y =
+                textObject.getMeasuredLineHeight() / 2 -
+                this.getHeight() / 2 +
+                10;
         }
     } else {
-        this.setWidth(this.textObject.getMeasuredWidth());
-        this.setHeight(this.textObject.getMeasuredHeight());
+        this.setWidth(textObject.getMeasuredWidth());
+        this.setHeight(textObject.getMeasuredHeight());
     }
     Entry.stage.updateObject();
     Entry.requestUpdate = true;
@@ -599,9 +590,8 @@ Entry.EntityObject.prototype.getFontType = function() {
 /**
  * font type setter
  */
-Entry.EntityObject.prototype.setFontType = function(fontType) {
+Entry.EntityObject.prototype.setFontType = function(fontType = 'Nanum Gothic') {
     if (this.parent.objectType != 'textBox') return;
-    fontType = fontType ? fontType : 'Nanum Gothic';
     this.fontType = fontType;
     this.syncFont();
 };
@@ -616,10 +606,10 @@ Entry.EntityObject.prototype.getFontSize = function(fontSize) {
 /**
  * font size setter
  */
-Entry.EntityObject.prototype.setFontSize = function(fontSize) {
+Entry.EntityObject.prototype.setFontSize = function(fontSize = 20) {
     if (this.parent.objectType != 'textBox') return;
     if (this.fontSize == fontSize) return;
-    this.fontSize = fontSize ? fontSize : 20;
+    this.fontSize = fontSize;
     this.syncFont();
     this.alignTextBox();
 };
@@ -660,7 +650,7 @@ Entry.EntityObject.prototype.toggleFontItalic = function() {
 
 Entry.EntityObject.prototype.getFontName = function() {
     if (this.type != 'textBox') return;
-    if (!this.textObject.font) return '';
+    if (!this.textObjectfont) return '';
 
     return this.textObject.font
         .split(' ')
@@ -853,14 +843,14 @@ Entry.EntityObject.prototype.setImage = function(pictureModel) {
         }
 
         that.object.image = image;
-        if (that.object.filters && that.object.filters.length) that.cache();
+        if (!_.isEmpty(that.object.filters)) that.cache();
         else that.object.uncache();
     } else setImage(image);
 
     function setImage(datum) {
         Entry.image = datum;
         that.object.image = datum;
-        if (that.object.filters && that.object.filters.length) that.cache();
+        if (!_.isEmpty(that.object.filters)) that.cache();
         else that.object.uncache();
         Entry.requestUpdate = true;
     }
@@ -1106,8 +1096,7 @@ Entry.EntityObject.prototype.removeClone = function(isLast) {
         if (index > -1) clonedEntities.splice(index, 1);
     } else clonedEntities.pop();
 
-    if (_.isFunction(this.clearExecutor)) this.clearExecutor();
-
+    _.result(this, 'clearExecutor');
     this.destroy(true);
 };
 
@@ -1176,24 +1165,22 @@ Entry.EntityObject.prototype.getInitialEffectValue = function() {
  * remove brush
  */
 Entry.EntityObject.prototype.removeBrush = function() {
-    this.shapes.map(
-        Entry.stage.selectedObjectContainer.removeChild,
-        Entry.stage.selectedObjectContainer
-    );
+    this._removeShapes();
     this.brush = null;
-    this.shapes = [];
 };
 
 /*
  * erase brush
  */
 Entry.EntityObject.prototype.eraseBrush = function() {
-    this.shapes.map(
-        Entry.stage.selectedObjectContainer.removeChild,
-        Entry.stage.selectedObjectContainer
-    );
-    this.shapes = [];
+    this._removeShapes();
     Entry.requestUpdate = true;
+};
+
+Entry.EntityObject.prototype._removeShapes = function() {
+    var container = Entry.stage.selectedObjectContainer;
+    this.shapes.map(container.removeChild, container);
+    this.shapes = [];
 };
 
 Entry.EntityObject.prototype.updateBG = function() {
@@ -1227,12 +1214,15 @@ Entry.EntityObject.prototype.updateBG = function() {
 Entry.EntityObject.prototype.alignTextBox = function() {
     if (this.type != 'textBox') return;
     var textObject = this.textObject;
+
     if (this.lineBreak) {
-        var textObjectHeight = textObject.getMeasuredLineHeight();
-        textObject.y = textObjectHeight / 2 - this.getHeight() / 2;
+        textObject.y =
+            textObject.getMeasuredLineHeight() / 2 - this.getHeight() / 2;
+
         if (this.fontType == 'Nanum Gothic Coding') {
-            textObject.y = textObjectHeight / 2 - this.getHeight() / 2 + 10;
+            textObject.y += 10;
         }
+
         switch (this.textAlign) {
             case Entry.TEXT_ALIGN_CENTER:
                 textObject.x = 0;
@@ -1258,19 +1248,17 @@ Entry.EntityObject.prototype.syncDialogVisible = function() {
 Entry.EntityObject.prototype.addStamp = function() {
     var stampEntity = new Entry.StampEntity(this.parent, this);
     var stage = Entry.stage;
-    var selectedObjectContainer = Entry.stage.selectedObjectContainer;
-    var index = selectedObjectContainer.getChildIndex(this.object);
-    stage.loadEntity(stampEntity, index);
+    stage.loadEntity(
+        stampEntity,
+        Entry.stage.selectedObjectContainer.getChildIndex(this.object)
+    );
     this.stamps.push(stampEntity);
 
     Entry.requestUpdate = true;
 };
 
 Entry.EntityObject.prototype.removeStamps = function() {
-    this.stamps.map(function(s) {
-        s.destroy();
-    });
-
+    this.stamps.forEach((s) => s.destroy());
     this.stamps = [];
     Entry.requestUpdate = true;
 };
@@ -1300,8 +1288,11 @@ Entry.EntityObject.prototype.destroy = function(isClone) {
 };
 
 Entry.EntityObject.prototype.cache = function() {
-    this.object && this.object.cache(0, 0, this.getWidth(), this.getHeight());
-    Entry.requestUpdate = true;
+    var { object } = this;
+    if (object) {
+        object.cache(0, 0, this.getWidth(), this.getHeight());
+        Entry.requestUpdate = true;
+    }
 };
 
 Entry.EntityObject.prototype.reset = function() {

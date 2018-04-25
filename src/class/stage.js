@@ -46,6 +46,8 @@ Entry.Stage.prototype.initStage = function(canvas) {
     this.initHandle();
     this.mouseCoordinate = { x: 0, y: 0 };
 
+    var _addEventListener = Entry.addEventListener.bind(Entry);
+
     if (Entry.isPhone()) {
         canvas.ontouchstart = function(e) {
             Entry.dispatchEvent('canvasClick', e);
@@ -72,30 +74,14 @@ Entry.Stage.prototype.initStage = function(canvas) {
         canvas.onmouseup = upFunc;
         canvas.ontouchend = upFunc;
 
-        $(document).click(function(event) {
-            if (event.target.id === 'entryCanvas') Entry.stage.focused = true;
-            else Entry.stage.focused = false;
-        });
+        $(document).click(
+            ({ target: { id } }) => (this.focused = id === 'entryCanvas')
+        );
     }
-    //this.canvas.on('pressup', function(e){
-    //Entry.dispatchEvent('canvasClickCanceled', e);
-    //});
-    Entry.addEventListener('canvasClick', function(e) {
-        //      if (!Entry.stage.isObjectClick && Entry.type == 'workspace')
-        //          Entry.container.selectObject();
-        Entry.stage.isObjectClick = false;
-    });
 
-    Entry.addEventListener(
-        'loadComplete',
-        function() {
-            this.sortZorder();
-        }.bind(this)
-    );
-
-    Entry.windowResized.attach(this, function() {
-        Entry.stage.updateBoundRect();
-    });
+    _addEventListener('canvasClick', () => (Entry.stage.isObjectClick = false));
+    _addEventListener('loadComplete', this.sortZorder.bind(this));
+    Entry.windowResized.attach(this, () => this.updateBoundRect());
 
     var razyScroll = _.debounce(function() {
         Entry.windowResized.notify();
@@ -109,16 +95,15 @@ Entry.Stage.prototype.initStage = function(canvas) {
 
     var moveFunc = function(e) {
         e.preventDefault();
-        e = Entry.Utils.convertMouseEvent(e);
+        var { pageX, pageY } = Entry.Utils.convertMouseEvent(e);
         var roundRect = Entry.stage.getBoundRect();
         var scrollPos = Entry.Utils.getScrollPos();
         var x =
-            ((e.pageX - roundRect.left - scrollPos.left) / roundRect.width -
+            ((pageX - roundRect.left - scrollPos.left) / roundRect.width -
                 0.5) *
             480;
         var y =
-            ((e.pageY - roundRect.top - scrollPos.top) / roundRect.height -
-                0.5) *
+            ((pageY - roundRect.top - scrollPos.top) / roundRect.height - 0.5) *
             -270;
 
         this.mouseCoordinate = {
@@ -131,30 +116,25 @@ Entry.Stage.prototype.initStage = function(canvas) {
     canvas.onmousemove = moveFunc;
     canvas.ontouchmove = moveFunc;
 
-    canvas.onmouseout = function(e) {
-        Entry.dispatchEvent('stageMouseOut');
-    };
+    canvas.onmouseout = () => Entry.dispatchEvent('stageMouseOut');
+    _addEventListener('updateObject', updateObjectFunc);
+    _addEventListener('run', () =>
+        Entry.removeEventListener('updateObject', updateObjectFunc)
+    );
+    _addEventListener('stop', () =>
+        _addEventListener('updateObject', updateObjectFunc)
+    );
 
-    Entry.addEventListener('updateObject', updateObjectFunc);
-
-    Entry.addEventListener('run', function(e) {
-        Entry.removeEventListener('updateObject', updateObjectFunc);
-    });
-
-    Entry.addEventListener('stop', function(e) {
-        Entry.addEventListener('updateObject', updateObjectFunc);
-    });
-
-    var updateObjectFunc = function(e) {
+    var updateObjectFunc = () => {
         if (Entry.engine.isState('stop')) Entry.stage.updateObject();
     };
 
-    Entry.addEventListener('canvasInputComplete', function(e) {
+    _addEventListener('canvasInputComplete', function(e) {
         try {
             var inputValue = Entry.stage.inputField.value();
             Entry.stage.hideInputField();
             if (inputValue) {
-                (function(c) {
+                ((c) => {
                     c.setInputValue(inputValue);
                     c.inputValue.complete = true;
                 })(Entry.container);
@@ -163,15 +143,14 @@ Entry.Stage.prototype.initStage = function(canvas) {
     });
 
     this.initWall();
-
     this.render();
 };
 
 Entry.Stage.prototype.render = function() {
     if (Entry.stage.timer) clearTimeout(Entry.stage.timer);
-    var time = new Date().getTime();
+    var time = _.now();
     Entry.stage.update();
-    time = new Date().getTime() - time;
+    time = _.now() - time;
     Entry.stage.timer = setTimeout(
         Entry.stage.render,
         16 - time % 16 + 16 * Math.floor(time / 16)
@@ -183,6 +162,7 @@ Entry.Stage.prototype.render = function() {
  */
 Entry.Stage.prototype.update = function() {
     if (Entry.type === 'invisible') return;
+
     if (!Entry.requestUpdate) {
         Entry.requestUpdate = false;
         return;
@@ -203,11 +183,8 @@ Entry.Stage.prototype.update = function() {
  * add object entity on canvas
  * @param {Entry.EntryObject} object
  */
-Entry.Stage.prototype.loadObject = function(object) {
-    var entity = object.entity.object;
-    var scenes = Entry.scene.scenes_;
-    var objContainer = this.getObjectContainerByScene(object.scene);
-    objContainer.addChild(entity);
+Entry.Stage.prototype.loadObject = function({ entity: { object }, scene }) {
+    this.getObjectContainerByScene(scene).addChild(object);
     Entry.requestUpdate = true;
 };
 
@@ -216,11 +193,10 @@ Entry.Stage.prototype.loadObject = function(object) {
  * This is use for cloned entity
  * @param {Entry.EntityObject} entity
  */
-Entry.Stage.prototype.loadEntity = function(entity, index) {
-    var scene = entity.parent.scene;
-    var objContainer = Entry.stage.getObjectContainerByScene(scene);
-    if (index > -1) objContainer.addChildAt(entity.object, index);
-    else objContainer.addChild(entity.object);
+Entry.Stage.prototype.loadEntity = function({ parent, object }, index) {
+    var objContainer = Entry.stage.getObjectContainerByScene(parent.scene);
+    if (index > -1) objContainer.addChildAt(object, index);
+    else objContainer.addChild(object);
     Entry.requestUpdate = true;
 };
 
@@ -237,10 +213,9 @@ Entry.Stage.prototype.unloadEntity = function({ parent, object }) {
  * add variable view on canvas
  * @param {Entry.Variable} object
  */
-Entry.Stage.prototype.loadVariable = function(variable) {
-    var variableView = variable.view_;
-    this.variables[variable.id] = variableView;
-    this.variableContainer.addChild(variableView);
+Entry.Stage.prototype.loadVariable = function({ view_, id }) {
+    this.variables[id] = view_;
+    this.variableContainer.addChild(view_);
     Entry.requestUpdate = true;
 };
 
@@ -248,9 +223,8 @@ Entry.Stage.prototype.loadVariable = function(variable) {
  * remove variable view on canvas
  * @param {Entry.Variable} object
  */
-Entry.Stage.prototype.removeVariable = function(variable) {
-    var variableView = variable.view_;
-    this.variableContainer.removeChild(variableView);
+Entry.Stage.prototype.removeVariable = function({ view_ }) {
+    this.variableContainer.removeChild(view_);
     Entry.requestUpdate = true;
 };
 
@@ -258,16 +232,16 @@ Entry.Stage.prototype.removeVariable = function(variable) {
  * add dialog on canvas
  * @param {Entry.Dialog} dialog
  */
-Entry.Stage.prototype.loadDialog = function(dialog) {
-    this.dialogContainer.addChild(dialog.object);
+Entry.Stage.prototype.loadDialog = function({ object }) {
+    this.dialogContainer.addChild(object);
 };
 
 /**
  * Remove entity directly on canvas
  * @param {Entry.Dialog} dialog
  */
-Entry.Stage.prototype.unloadDialog = function(dialog) {
-    this.dialogContainer.removeChild(dialog.object);
+Entry.Stage.prototype.unloadDialog = function({ object }) {
+    this.dialogContainer.removeChild(object);
 };
 
 Entry.Stage.prototype.setEntityIndex = function(entity, index) {
@@ -357,10 +331,12 @@ Entry.Stage.prototype.selectObject = function(object) {
  * Initialize handle. Handle is use for transform object on canvas.
  */
 Entry.Stage.prototype.initHandle = function() {
-    this.handle = new EaselHandle(this.canvas);
-    this.handle.setChangeListener(this, this.updateHandle);
-    this.handle.setEditStartListener(this, this.startEdit);
-    this.handle.setEditEndListener(this, this.endEdit);
+    var handle = new EaselHandle(this.canvas);
+    handle.setChangeListener(this, this.updateHandle);
+    handle.setEditStartListener(this, this.startEdit);
+    handle.setEditEndListener(this, this.endEdit);
+
+    this.handle = handle;
 };
 
 /**
@@ -368,7 +344,9 @@ Entry.Stage.prototype.initHandle = function() {
  * object -> handle
  */
 Entry.Stage.prototype.updateObject = function() {
-    if (Entry.type === 'invisible') return;
+    if (Entry.type === 'invisible') {
+        return;
+    }
     Entry.requestUpdate = true;
     this.handle.setDraggable(true);
     if (this.editEntity) return;
@@ -532,12 +510,13 @@ Entry.Stage.prototype.updateHandle = function() {
 };
 
 Entry.Stage.prototype.startEdit = function() {
-    var obj = this.selectedObject;
-    obj && obj.entity.initCommand();
+    var { entity } = this.selectedObject || {};
+    _.result(entity, 'initCommand');
 };
 
 Entry.Stage.prototype.endEdit = function() {
-    this.selectedObject.entity.checkCommand();
+    var { entity } = this.selectedObject || {};
+    _.result(entity, 'checkCommand');
 };
 
 Entry.Stage.prototype.initWall = function() {
@@ -545,30 +524,35 @@ Entry.Stage.prototype.initWall = function() {
     wall.mouseEnabled = false;
     var bound = new Image();
     bound.src = Entry.mediaFilePath + 'media/bound.png';
+
     wall.up = new createjs.Bitmap();
     wall.up.scaleX = 480 / 30;
     wall.up.y = -135 - 30;
     wall.up.x = -240;
     wall.up.image = bound;
     wall.addChild(wall.up);
+
     wall.down = new createjs.Bitmap();
     wall.down.scaleX = 480 / 30;
     wall.down.y = 135;
     wall.down.x = -240;
     wall.down.image = bound;
     wall.addChild(wall.down);
+
     wall.right = new createjs.Bitmap();
     wall.right.scaleY = 270 / 30;
     wall.right.y = -135;
     wall.right.x = 240;
     wall.right.image = bound;
     wall.addChild(wall.right);
+
     wall.left = new createjs.Bitmap();
     wall.left.scaleY = 270 / 30;
     wall.left.y = -135;
     wall.left.x = -240 - 30;
     wall.left.image = bound;
     wall.addChild(wall.left);
+
     this.canvas.addChild(wall);
     this.wall = wall;
 };
@@ -617,9 +601,9 @@ Entry.Stage.prototype.showInputField = function() {
     button.image = buttonImg;
     inputSubmitButton.addChild(button);
 
-    inputSubmitButton.on('mousedown', function(evt) {
-        Entry.dispatchEvent('canvasInputComplete');
-    });
+    inputSubmitButton.on('mousedown', () =>
+        Entry.dispatchEvent('canvasInputComplete')
+    );
 
     if (!this.inputSubmitButton) {
         this.inputField.value('');
@@ -651,7 +635,7 @@ Entry.Stage.prototype.hideInputField = function() {
  */
 Entry.Stage.prototype.initObjectContainers = function() {
     var scenes = Entry.scene.scenes_;
-    if (scenes && scenes.length !== 0) {
+    if (!_.isEmpty(scenes)) {
         for (var i = 0; i < scenes.length; i++) {
             this.objectContainers[i] = this.createObjectContainer(scenes[i]);
         }
@@ -673,24 +657,24 @@ Entry.Stage.prototype.initObjectContainers = function() {
 Entry.Stage.prototype.selectObjectContainer = function(scene) {
     var containers = this.objectContainers;
     var canvas = this.canvas;
-    if (!canvas || !containers || !containers.length) return;
 
-    containers.forEach(function(c) {
-        canvas.removeChild(c);
-    });
+    if (_.isEmpty(canvas) || _.isEmpty(containers)) {
+        return;
+    }
 
-    this.selectedObjectContainer = this.getObjectContainerByScene(scene);
+    var newContainer = this.getObjectContainerByScene(scene);
 
-    canvas.addChildAt(this.selectedObjectContainer, 2);
+    containers.forEach(canvas.removeChild.bind(canvas));
+
+    this.selectedObjectContainer = newContainer;
+    canvas.addChildAt(newContainer, 2);
 };
 
 /**
  * init object containers
  */
 Entry.Stage.prototype.createObjectContainer = function(scene) {
-    var obj = new createjs.Container();
-    obj.scene = scene;
-    return obj;
+    return Object.assign(new createjs.Container(), { scene });
 };
 
 /**
@@ -700,35 +684,31 @@ Entry.Stage.prototype.createObjectContainer = function(scene) {
 Entry.Stage.prototype.removeObjectContainer = function(scene) {
     var containers = this.objectContainers;
     var objContainer = this.getObjectContainerByScene(scene);
-    this.canvas && this.canvas.removeChild(objContainer);
-    containers.splice(this.objectContainers.indexOf(objContainer), 1);
+    var canvas = this.canvas;
+    if (canvas) {
+        canvas.removeChild(objContainer);
+    }
+    containers.splice(containers.indexOf(objContainer), 1);
 };
 
 /**
  * get object container
  * @param {scene model} scene
  */
-Entry.Stage.prototype.getObjectContainerByScene = function(scene) {
-    var containers = this.objectContainers;
-
-    for (var i = 0; i < containers.length; i++) {
-        if (containers[i].scene.id == scene.id) return containers[i];
-    }
+Entry.Stage.prototype.getObjectContainerByScene = function({ id }) {
+    return _.find(this.objectContainers, ({ scene } = {}) => scene.id === id);
 };
 
-Entry.Stage.prototype.moveSprite = function(e) {
-    if (
-        !this.selectedObject ||
-        !Entry.stage.focused ||
-        this.selectedObject.getLock()
-    )
+Entry.Stage.prototype.moveSprite = function({ shiftKey, keyCode }) {
+    var selectedObject = this.selectedObject;
+    if (!selectedObject || !Entry.stage.focused || selectedObject.getLock()) {
         return;
+    }
 
-    var distance = 5;
-    if (e.shiftKey) distance = 1;
+    var distance = shiftKey ? 1 : 5;
 
-    var entity = this.selectedObject.entity;
-    switch (e.keyCode) {
+    var entity = selectedObject.entity;
+    switch (keyCode) {
         case 38: //up
             entity.setY(entity.getY() + distance);
             break;
