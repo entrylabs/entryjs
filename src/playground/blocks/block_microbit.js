@@ -6,6 +6,12 @@ const _merge = require('lodash/merge');
 
 Entry.Microbit = new class Microbit {
     constructor() {
+        this.url = 'http://microbit.org/ko/';
+        this.imageName = 'microbit.png';
+        this.title = {
+            "en": "Microbit",
+            "ko": "마이크로빗"
+        };
         this.name = 'microbit';
         this.blockIds = {};
         this.isExecBlock = false;
