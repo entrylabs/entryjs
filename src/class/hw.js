@@ -263,7 +263,6 @@ p.update = function() {
     if (this.socket.disconnected) {
         return;
     }
-    this.socket.emit('message', { data:JSON.stringify(this.sendQueue), mode: this.socket.mode, type:'utf8' });
     if (this.hwModule && this.hwModule.sendMessage) {
         this.hwModule.sendMessage(this);
     } else {
