@@ -127,7 +127,7 @@ export default {
                                 ',' +
                                 rgb.b +
                                 ',' +
-                                sprite.brush.opacity / 100 +
+                                (1 - sprite.brush.opacity / 100) +
                                 ')'
                         );
 
@@ -190,7 +190,7 @@ export default {
                                 ',' +
                                 rgb.b +
                                 ',' +
-                                sprite.brush.opacity / 100 +
+                                (1 - sprite.brush.opacity / 100) +
                                 ')'
                         );
 
@@ -372,7 +372,7 @@ export default {
                         sprite.brush.stop = true;
                     }
                     opacity = Entry.adjustValueWithMaxMin(
-                        sprite.brush.opacity - opacity,
+                        sprite.brush.opacity + opacity,
                         0,
                         100
                     );
@@ -389,7 +389,7 @@ export default {
                                 ',' +
                                 rgb.b +
                                 ',' +
-                                sprite.brush.opacity / 100 +
+                                (1 - sprite.brush.opacity / 100) +
                                 ')'
                         );
                         sprite.brush.moveTo(sprite.getX(), sprite.getY() * -1);
