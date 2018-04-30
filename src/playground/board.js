@@ -427,6 +427,7 @@ Entry.Board.DRAG_RADIUS = 5;
         for (var targetType in dragBlock.magnet) {
             if (
                 targetType === 'next' &&
+                dragBlock.thread && // 파이썬 변환 후 basic skeleton 블록이 필드에 있는 경우 제외
                 dragBlock.block.getLastBlock().view.magnet.next === undefined
             ) {
                 continue;

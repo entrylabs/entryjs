@@ -212,20 +212,36 @@ Entry.EntryObject = function(model) {
             if (model.options) {
                 var options = model.options;
                 var fontStyle = '';
+                const {
+                    fontSize = 20,
+                    textAlign = 0,
+                    scaleX = 1.5,
+                    regX,
+                    regY,
+                    width,
+                    height,
+                } = options;
                 if (options.bold) fontStyle += 'bold ';
                 if (options.italic) fontStyle += 'italic ';
 
                 json.underLine = options.underLine;
                 json.strike = options.strike;
-                json.font = fontStyle + '20px ' + options.font.family;
+                if (typeof options.font === 'string') {
+                    json.font = options.font;
+                } else {
+                    json.font =
+                        fontStyle + `${fontSize}px ` + options.font.family;
+                }
                 json.colour = options.colour;
-                json.bgColor = options.background;
+                json.bgColor = options.bgColor || options.background;
                 json.lineBreak = options.lineBreak;
+                json.textAlign = textAlign;
+                json.scaleX = json.scaleY = scaleX;
                 if (options.lineBreak) {
-                    json.width = 256;
-                    json.height = json.width * 0.5625;
-                    json.regX = json.width / 2;
-                    json.regY = json.height / 2;
+                    json.width = width || 256;
+                    json.height = height || json.width * 0.5625;
+                    json.regX = regX || json.width / 2;
+                    json.regY = regY || json.height / 2;
                 }
             } else {
                 json.underLine = false;

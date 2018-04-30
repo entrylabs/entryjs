@@ -29,6 +29,8 @@
   "license": "MIT",
   "dependencies": {
     "grunt-karma": "^2.0.0",
+    "lodash": "^4.17.5",
+    "lodash-webpack-plugin": "^0.11.4",
     "uglifyjs-webpack-plugin": "^1.2.2",
     "webpack": "^4.0.1"
   },
@@ -37,7 +39,9 @@
     "babel-eslint": "^8.2.2",
     "babel-loader": "^7.1.3",
     "babel-plugin-transform-object-assign": "^6.22.0",
+    "babel-plugin-transform-runtime": "^6.23.0",
     "babel-preset-env": "^1.6.1",
+    "babel-preset-es2017": "^6.24.1",
     "chai": "^3.2.0",
     "cross-env": "^5.1.4",
     "css-loader": "^0.28.10",
