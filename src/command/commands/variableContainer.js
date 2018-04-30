@@ -545,7 +545,7 @@ var {
         do(id, value) {
             var VC = getVC();
             var list = VC.getList(id);
-            var lenth = list.array_.length;
+            var length = list.array_.length;
 
             if (value === 'minus') {
                 value = Math.max(0, length - 1);
@@ -560,8 +560,7 @@ var {
             VC.setListLength(list, value);
         },
         state(id, value) {
-            var VC = getVC();
-            var { array_ } = VC.getList(id);
+            var { array_ } = getVC().getList(id);
             return [id, array_.length];
         },
         log(id, value) {

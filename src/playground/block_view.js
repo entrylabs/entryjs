@@ -210,7 +210,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
     };
 
     p._startContentRender = function(mode) {
-        mode = mode === undefined ? this.renderMode : mode;
+        mode = _.isUndefined(mode) ? this.renderMode : mode;
 
         this.contentSvgGroup && this.contentSvgGroup.remove();
         this.statementSvgGroup && this.statementSvgGroup.remove();
@@ -288,9 +288,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
         );
     };
 
-    p._updateSchema = function() {
-        this._startContentRender();
-    };
+    p._updateSchema = p._startContentRender;
 
     p.changeType = function(type) {
         this._schema = Entry.block[type || this.type];
@@ -848,28 +846,21 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
         this._destroyObservers();
         var svgGroup = this.svgGroup;
 
+        var _destroyFunc = _.partial(_.result, _, 'destroy');
+
         if (animate) {
             $(svgGroup).fadeOut(100, function() {
                 svgGroup.remove();
             });
         } else svgGroup.remove();
 
-        if (this._contents) {
-            this._contents.forEach(function(c) {
-                c.destroy();
-            });
-        }
-
-        if (this._statements) {
-            this._statements.forEach(function(s) {
-                s.destroy();
-            });
-        }
+        (this._contents || []).forEach(_destroyFunc);
+        (this._statements || []).forEach(_destroyFunc);
 
         var block = this.block;
         var events = block.events.viewDestroy;
         if (Entry.type == 'workspace' && events && !this.isInBlockMenu)
-            events.forEach(function(fn) {
+            events.forEach((fn) => {
                 if (_.isFunction(fn)) fn(block);
             });
     };
@@ -1025,13 +1016,13 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
     };
 
     p.renderText = function() {
-        this.renderMode = Entry.BlockView.RENDER_MODE_TEXT;
         this._startContentRender(Entry.BlockView.RENDER_MODE_TEXT);
+        this.renderMode = Entry.BlockView.RENDER_MODE_TEXT;
     };
 
     p.renderBlock = function() {
-        this.renderMode = Entry.BlockView.RENDER_MODE_BLOCK;
         this._startContentRender(Entry.BlockView.RENDER_MODE_BLOCK);
+        this.renderMode = Entry.BlockView.RENDER_MODE_BLOCK;
     };
 
     p.renderByMode = function(mode, isReDraw) {

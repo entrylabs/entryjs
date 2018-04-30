@@ -930,8 +930,6 @@ Entry.Playground = function() {
         }
         if (object === this.object) return;
 
-        if (this.object) this.object.toggleInformation(false);
-
         this.object = object;
 
         var objectType = object.objectType;
@@ -939,33 +937,33 @@ Entry.Playground = function() {
 
         this.injectCode();
 
-        var tabViewElements = this.tabViewElements;
+        var { text: textTab, picture: pictureTab } = this.tabViewElements;
         if (objectType == 'sprite' && Entry.pictureEditable) {
-            if (tabViewElements.text)
-                tabViewElements.text.addClass('entryRemove');
-            if (tabViewElements.picture)
-                tabViewElements.picture.removeClass('entryRemove');
+            if (textTab) textTab.addClass('entryRemove');
+            if (pictureTab) pictureTab.removeClass('entryRemove');
         } else if (objectType == 'textBox') {
-            if (tabViewElements.picture)
-                tabViewElements.picture.addClass('entryRemove');
-            if (tabViewElements.text)
-                tabViewElements.text.removeClass('entryRemove');
+            if (pictureTab) pictureTab.addClass('entryRemove');
+            if (textTab) textTab.removeClass('entryRemove');
         }
 
         var viewMode = this.viewMode_;
-        if (viewMode == 'default') this.changeViewMode('code');
-        else if (viewMode == 'variable') this.changeViewMode('variable');
-        else if (
+        if (viewMode == 'default') {
+            this.changeViewMode('code');
+        } else if (viewMode == 'variable') {
+            this.changeViewMode('variable');
+        } else if (
             (viewMode == 'picture' || viewMode == 'text') &&
             objectType == 'textBox'
-        )
+        ) {
             this.changeViewMode('text');
-        else if (
+        } else if (
             (viewMode == 'text' || viewMode == 'picture') &&
             objectType == 'sprite'
-        )
+        ) {
             this.changeViewMode('picture');
-        else if (viewMode == 'sound') this.changeViewMode('sound');
+        } else if (viewMode == 'sound') {
+            this.changeViewMode('sound');
+        }
 
         this.blockMenu && this.blockMenu.clearRendered();
         this.reloadPlayground();

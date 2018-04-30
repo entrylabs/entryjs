@@ -6,34 +6,36 @@
 /*
  *
  */
-Entry.FieldText = function({fontSize, align, text, color}, blockView, index) {
+Entry.FieldText = function(
+    { fontSize, align = 'left', text, color },
+    blockView,
+    index
+) {
     this._block = blockView.block;
     this._blockView = blockView;
     this._index = index;
 
     this.box = new Entry.BoxModel();
 
-    this._font_size =
-        fontSize || blockView.getSkeleton().fontSize || 12;
+    this._font_size = fontSize || blockView.getSkeleton().fontSize || 12;
     this._color =
         color ||
         this._block.getSchema().fontColor ||
         blockView.getSkeleton().color ||
         'white';
-    this._align = align || 'left';
+    this._align = align;
     this._text = this.getValue() || text;
     this.setValue(null);
 
     this.textElement = null;
 
-    this.renderStart(blockView);
+    this.renderStart();
 };
 
 Entry.Utils.inherit(Entry.Field, Entry.FieldText);
 
 (function(p) {
     p.renderStart = function() {
-        var that = this;
         var { contentSvgGroup } = this._blockView;
 
         if (!this.textElement) {
@@ -41,10 +43,10 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldText);
                 .elem('text')
                 .attr({
                     style: 'white-space: pre;',
-                    'font-size': that._font_size + 'px',
+                    'font-size': this._font_size + 'px',
                     'font-family': 'nanumBarunRegular',
                     class: 'dragNone',
-                    fill: that._color,
+                    fill: this._color,
                 });
         }
 
@@ -54,12 +56,9 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldText);
             this.textElement.textContent = this._text;
         }
 
-        var x = 0;
         var { width, height } = this.getTextBBox();
-        if (this._align == 'center') x = -width / 2;
-
         this.textElement.attr({
-            x: x,
+            x: this._align == 'center' ? -width / 2 : 0,
             y: height * 0.25,
         });
 

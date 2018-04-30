@@ -18,7 +18,6 @@ Entry.Code = function(code, object) {
 
     this.executors = [];
     this.watchEvent = new Entry.Event(this);
-
     this.executeEndEvent = new Entry.Event(this);
     this.changeEvent = new Entry.Event(this);
     this.changeEvent.attach(this, this._handleChange);
@@ -38,21 +37,20 @@ Entry.PARAM = -1;
     };
 
     p.load = function(code) {
-        if (Entry.engine && Entry.engine.isState('run')) return;
+        if (Entry.engine && Entry.engine.isState('run')) {
+            return;
+        }
 
-        if (!(code instanceof Array)) code = JSON.parse(code);
+        code = Array.isArray(code) ? code : JSON.parse(code);
 
         this.clear();
 
-        code.forEach((t) => {
-            this._data.push(new Entry.Thread(t, this));
-        });
+        code.forEach((t) => this._data.push(new Entry.Thread(t, this)));
 
         return this;
     };
 
-    p.clear = function(isNotForce) {
-        isNotForce = isNotForce === undefined ? false : isNotForce;
+    p.clear = function(isNotForce = false) {
         for (var i = this._data.length - 1; i >= 0; i--)
             this._data[i].destroy(false, isNotForce);
 
@@ -103,8 +101,10 @@ Entry.PARAM = -1;
 
     p.raiseEvent = function(eventType, entity, value) {
         var blocks = this._eventMap[eventType];
-        var executors = [];
         if (blocks === undefined) return;
+
+        var executors = [];
+
         for (var i = 0; i < blocks.length; i++) {
             var block = blocks[i];
             var pointer = block.pointer();
@@ -144,15 +144,15 @@ Entry.PARAM = -1;
         for (var i = 0; i < executors.length; i++) {
             var executor = executors[i];
             if (!executor.isEnd()) {
-                var scope = executor.scope;
-                _executeEvent(scope.block && scope.block.view);
+                var { view } = executor.scope.block || {};
+                _executeEvent(view);
                 ret = executor.execute(true);
                 if (shouldNotifyWatch)
                     executedBlocks = executedBlocks.concat(ret);
             } else {
                 _executeEndEvent(this.board);
                 executors.splice(i--, 1);
-                if (executors.length === 0) {
+                if (_.isEmpty(executors)) {
                     this.executeEndEvent.notify();
                 }
             }
@@ -186,13 +186,16 @@ Entry.PARAM = -1;
     };
 
     p.createThread = function(blocks, index) {
-        if (!(blocks instanceof Array)) {
+        if (!Array.isArray(blocks)) {
             return console.error('blocks must be array');
         }
 
         var thread = new Entry.Thread(blocks, this);
-        if (index === undefined || index === null) this._data.push(thread);
-        else this._data.insert(thread, index);
+        if (index === undefined || index === null) {
+            this._data.push(thread);
+        } else {
+            this._data.insert(thread, index);
+        }
 
         this.changeEvent.notify();
         return thread;
@@ -221,14 +224,7 @@ Entry.PARAM = -1;
         }
     };
 
-    p.doDestroyThread = function(thread, animate) {
-        var data = this._data;
-        var index = data.indexOf(thread);
-        // case of statement thread
-        if (~index) {
-            data.splice(index, 1);
-        }
-    };
+    p.doDestroyThread = p.destroyThread;
 
     p.getThread = function(index) {
         return this._data[index];
@@ -238,16 +234,13 @@ Entry.PARAM = -1;
         return this._data.slice();
     };
 
-    p.getThreadsByCategory = function(category) {
-        if (!category) return [];
+    p.getThreadsByCategory = function(categoryName) {
+        if (!categoryName) return [];
 
-        return this.getThreads().reduce((threads, thread) => {
-            var b = thread.getFirstBlock() || {};
-            if (b.category === category) {
-                threads.push(thread);
-            }
-            return threads;
-        }, []);
+        return this.getThreads().filter((thread) => {
+            var { category } = thread.getFirstBlock() || {};
+            return category === categoryName;
+        });
     };
 
     p.toJSON = function(excludeData, option) {
@@ -265,11 +258,13 @@ Entry.PARAM = -1;
 
     p.moveBy = function(x, y) {
         this.getThreads().forEach((thread) => {
-            var { view } = thread.getFirstBlock() || {};
-            if (view && view.display) view._moveBy(x, y, false);
+            var { view = {} } = thread.getFirstBlock() || {};
+            if (view.display) view._moveBy(x, y, false);
         });
         var { board } = this;
-        if (board instanceof Entry.BlockMenu) board.updateSplitters(y);
+        if (board instanceof Entry.BlockMenu) {
+            board.updateSplitters(y);
+        }
     };
 
     p.stringify = function(excludeData) {
@@ -362,18 +357,14 @@ Entry.PARAM = -1;
     };
 
     p.getBlockList = function(excludePrimitive, type) {
-        return _.flatten(
-            this.getThreads().map((t) =>
-                t.getBlockList(excludePrimitive, type)
-            ),
-            true
-        );
+        return _.chain(this.getThreads())
+            .map((t) => t.getBlockList(excludePrimitive, type))
+            .flatten(true)
+            .value();
     };
 
     p.removeBlocksByType = function(type) {
-        this.getBlockList(false, type).forEach(function(b) {
-            b.doDestroy();
-        });
+        this.getBlockList(false, type).forEach((b) => b.doDestroy());
     };
 
     p.isAllThreadsInOrigin = function() {

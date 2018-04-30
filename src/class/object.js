@@ -538,22 +538,6 @@ Entry.EntryObject = function(model) {
     };
 
     /**
-     * Toggle information panel
-     * @param {?boolean} isToggle
-     */
-    p.toggleInformation = function(isToggle) {
-        this.setRotateMethod(this.getRotateMethod());
-        if (isToggle === undefined)
-            isToggle = this.isInformationToggle = !this.isInformationToggle;
-
-        if (isToggle) {
-            this.view_.addClass('informationToggle');
-        } else {
-            this.view_.removeClass('informationToggle');
-        }
-    };
-
-    /**
      * Add clone entity for clone block
      * If parameter given, this clone the parameter entity itself.
      * Otherwise, this clone this object's entity.
@@ -616,7 +600,6 @@ Entry.EntryObject = function(model) {
         var json = {};
         json.id = isClone ? Entry.generateHash() : this.id;
         json.name = this.name;
-        if (this.objectType == 'textBox') json.text = this.text;
         json.script = this.getScriptText();
         json.objectType = this.objectType;
         json.rotateMethod = this.getRotateMethod();
@@ -625,11 +608,14 @@ Entry.EntryObject = function(model) {
             pictures: Entry.getPicturesJSON(this.pictures, isClone),
             sounds: Entry.getSoundsJSON(this.sounds, isClone),
         };
-        if (this.objectType == 'sprite')
+        if (this.objectType == 'textBox') {
+            json.text = this.text;
+        } else {
             json.selectedPictureId =
                 json.sprite.pictures[
                     this.pictures.indexOf(this.selectedPicture)
                 ].id;
+        }
         json.lock = this.lock;
         json.entity = this.entity.toJSON();
         return json;
@@ -682,7 +668,6 @@ Entry.EntryObject = function(model) {
         entity.variables = (variables || _whereFunc(variables_)).map(
             _cloneFunc
         );
-
         entity.lists = (lists || _whereFunc(lists_)).map(_cloneFunc);
     };
 
@@ -1096,7 +1081,6 @@ Entry.EntryObject = function(model) {
         var informationView = CE('div').addClass(
             'entryObjectInformationWorkspace'
         );
-        this.isInformationToggle = false;
         wrapperView.appendChild(informationView);
         this.informationView_ = informationView;
 
@@ -1206,9 +1190,13 @@ Entry.EntryObject = function(model) {
         this.rotateSpan_ = rotateSpan;
         this.rotateInput_ = rotateInput;
 
-        var directionSpan = CE('span').addClass('entryObjectDirectionSpanWorkspace');
+        var directionSpan = CE('span').addClass(
+            'entryObjectDirectionSpanWorkspace'
+        );
         directionSpan.innerHTML = Lang.Workspace.direction + ' : ';
-        var directionInput = CE('input').addClass('entryObjectDirectionInputWorkspace');
+        var directionInput = CE('input').addClass(
+            'entryObjectDirectionInputWorkspace'
+        );
         directionInput.setAttribute('readonly', true);
         directionInput.bindOnClick(function(e) {
             e.stopPropagation();
@@ -1413,7 +1401,6 @@ Entry.EntryObject = function(model) {
         var informationView = Entry.createElement('div');
         informationView.addClass('entryObjectInformationWorkspace');
         informationView.object = this;
-        this.isInformationToggle = false;
         wrapperView.appendChild(informationView);
         this.informationView_ = informationView;
 

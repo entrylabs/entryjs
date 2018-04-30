@@ -9,8 +9,7 @@ Entry.FieldDropdown = function(content, blockView, index) {
     this._block = blockView.block;
     this._blockView = blockView;
 
-    var box = new Entry.BoxModel();
-    this.box = box;
+    this.box = new Entry.BoxModel();
 
     this.svgGroup = null;
 
@@ -18,10 +17,9 @@ Entry.FieldDropdown = function(content, blockView, index) {
     this._noArrow = content.noArrow;
 
     var arrowColor = content.arrowColor;
-    if (
-        this._block.deletable === Entry.Block.DELETABLE_FALSE_LIGHTEN ||
-        this._block.emphasized
-    ) {
+    var { deletable, emphasized } = this._block;
+
+    if (deletable === Entry.Block.DELETABLE_FALSE_LIGHTEN || emphasized) {
         arrowColor = blockView._fillColor;
     }
 
@@ -50,12 +48,13 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
         var CONTENT_HEIGHT = this._CONTENT_HEIGHT;
         var arrowInfo = this.getArrow();
 
-        if (!this.svgGroup)
+        if (!this.svgGroup) {
             this.svgGroup = blockView.contentSvgGroup.elem('g', {
                 class: 'entry-field-dropdown',
             });
+        }
 
-        if (!this._header)
+        if (!this._header) {
             this._header = this.svgGroup.elem('rect', {
                 height: CONTENT_HEIGHT,
                 y: -CONTENT_HEIGHT / 2,
@@ -64,22 +63,27 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
                 fill: '#fff',
                 'fill-opacity': 0.4,
             });
+        }
 
-        if (!this.textElement)
+        if (!this.textElement) {
             this.textElement = this.svgGroup.elem('text', {
                 x: 5,
                 style: 'white-space: pre;',
                 'font-size': +that._font_size + 'px',
             });
+        }
 
-        if (!this._noArrow && !this._arrow)
+        if (!this._noArrow && !this._arrow) {
             this._arrow = this.svgGroup.elem('polygon', {
                 points: arrowInfo.points,
                 fill: arrowInfo.color,
                 stroke: arrowInfo.color,
             });
+        }
 
-        if (this instanceof Entry.FieldDropdownDynamic) this._updateValue();
+        if (this instanceof Entry.FieldDropdownDynamic) {
+            this._updateValue();
+        }
 
         this._setTextValue();
 
@@ -261,7 +265,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
         });
 
         if (matched) {
-            return matched[0];
+            return _.head(matched);
         }
 
         //no match found

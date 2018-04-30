@@ -46,11 +46,13 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
     };
 
     p.renderStart = function(board, mode, renderMode, isReDraw) {
-        if (!this.svgGroup)
+        if (!this.svgGroup) {
             this.svgGroup = this._blockView.contentSvgGroup.elem('g');
+        }
 
-        this.renderMode =
-            mode !== undefined ? mode : this._blockView.renderMode;
+        this.renderMode = !_.isUndefined(mode)
+            ? mode
+            : this._blockView.renderMode;
 
         this.view = this;
         this._nextGroup = this.svgGroup;
@@ -72,17 +74,18 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
         );
     };
 
-    p.align = function(x, y, animate) {
-        animate = animate === undefined ? true : animate;
+    p.align = function(x, y, animate = true) {
         var svgGroup = this.svgGroup;
         if (this._position) {
             if (this._position.x) x = this._position.x;
             if (this._position.y) y = this._position.y;
         }
 
-        var block = this._valueBlock;
+        var blockView = _.result(this._valueBlock, 'view');
 
-        if (block && block.view) y = block.view.height * -0.5;
+        if (blockView) {
+            y = blockView.height * -0.5;
+        }
 
         if (!(x || y)) {
             svgGroup.removeAttr('transform');
@@ -167,9 +170,11 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
     };
 
     p._setValueBlock = function(block) {
-        if (this._restoreCurrent) this._originBlock = this._valueBlock;
+        if (this._restoreCurrent) {
+            this._originBlock = this._valueBlock;
+        }
 
-        if (!block) block = this.inspectBlock();
+        block = block || this.inspectBlock();
 
         this._valueBlock = block;
         this.setValue(block);
@@ -185,18 +190,19 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
     };
 
     p.updateValueBlock = function(block) {
-        if (!(block instanceof Entry.Block)) block = undefined;
+        if (!(block instanceof Entry.Block)) {
+            block = undefined;
+        }
 
         block = this._ensureBlock(block);
 
         if (block && block === this._valueBlock) {
-            this.calcWH();
-            return;
+            return this.calcWH();
         }
 
         this._destroyObservers();
 
-        var view = this._setValueBlock(block).view;
+        var { view } = this._setValueBlock(block);
         view.bindPrev(this);
         this._blockView.alignContent();
         this._posObserver = view.observe(
@@ -209,8 +215,9 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
     };
 
     p._destroyObservers = function() {
-        if (this._sizeObserver) this._sizeObserver.destroy();
-        if (this._posObserver) this._posObserver.destroy();
+        var _destroyFunc = _.partial(_.result, _, 'destroy');
+        _destroyFunc(this._sizeObserver);
+        _destroyFunc(this._posObserver);
     };
 
     p.getPrevBlock = function(block) {
@@ -291,15 +298,11 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
     };
 
     p._createBlockByType = function(blockType) {
-        var thread = this._block.getThread();
         var board = this._blockView.getBoard();
-        var workspace = board.workspace;
-        var isFromUserAction;
-        if (workspace) {
-            var selectedBlockView = workspace.selectedBlockView;
-            isFromUserAction = !!(
-                selectedBlockView && selectedBlockView.dragInstance
-            );
+        var selected = _.result(board.workspace, 'selectedBlockView');
+        var isFromUserAction = false;
+        if (selected) {
+            isFromUserAction = !!_.result(selected, 'dragInstance');
         }
 
         var block = new Entry.Block(
@@ -345,11 +348,8 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
         return this;
     };
 
-    p.pointer = function(pointer) {
-        pointer = pointer || [];
-        pointer.unshift(this._index);
-        pointer.unshift(Entry.PARAM);
-        return this._block.pointer(pointer);
+    p.pointer = function(pointer = []) {
+        return this._block.pointer([Entry.PARAM, this._index, ...pointer]);
     };
 
     p.isParamBlockType = function() {

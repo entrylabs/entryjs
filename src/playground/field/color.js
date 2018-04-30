@@ -9,8 +9,7 @@ Entry.FieldColor = function(content, blockView, index) {
     this._block = blockView.block;
     this._blockView = blockView;
 
-    var box = new Entry.BoxModel();
-    this.box = box;
+    this.box = new Entry.BoxModel();
 
     this.svgGroup = null;
 
@@ -28,24 +27,24 @@ Entry.FieldColor = function(content, blockView, index) {
     this._CONTENT_HEIGHT = this.getContentHeight();
     this._CONTENT_WIDTH = this.getContentWidth();
 
-    this.renderStart(blockView);
+    this.renderStart();
 };
 
 Entry.Utils.inherit(Entry.Field, Entry.FieldColor);
 
 (function(p) {
     p.renderStart = function() {
-        if (this.svgGroup) $(this.svgGroup).remove();
-        var blockView = this._blockView;
-        var that = this;
-        var contents = this._contents;
-        this.svgGroup = blockView.contentSvgGroup.elem('g', {
+        if (this.svgGroup) {
+            $(this.svgGroup).remove();
+        }
+        var { contentSvgGroup, renderMode } = this._blockView;
+        this.svgGroup = contentSvgGroup.elem('g', {
             class: 'entry-field-color',
         });
 
         var x, y, WIDTH, HEIGHT;
 
-        if (this._blockView.renderMode === Entry.BlockView.RENDER_MODE_TEXT) {
+        if (renderMode === Entry.BlockView.RENDER_MODE_TEXT) {
             var rect = this.svgGroup.elem('rect', {
                 x: 0,
                 rx: 3,
@@ -56,10 +55,10 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldColor);
 
             this.textElement = this.svgGroup.elem('text').attr({
                 style: 'white-space: pre;',
-                'font-size': that._fontSize + 'px',
+                'font-size': this._fontSize + 'px',
                 'font-family': 'nanumBarunRegular',
                 class: 'dragNone',
-                fill: that._color,
+                fill: this._color,
             });
 
             this.textElement.textContent = this._convert(
@@ -102,8 +101,8 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldColor);
         this._bindRenderOptions();
 
         this.box.set({
-            x: x,
-            y: y,
+            x,
+            y,
             width: WIDTH,
             height: HEIGHT,
         });
@@ -112,72 +111,71 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldColor);
     p.renderOptions = function() {
         var that = this;
 
-        var blockView = this._block.view;
-
         this._attachDisposeEvent();
 
-        var colors = Entry.FieldColor.getWidgetColorList();
         this.optionGroup = Entry.Dom('table', {
             class: 'entry-widget-color-table',
             parent: $('body'),
         });
 
-        this.optionGroup.bind('mousedown touchstart', function(e) {
-            e.stopPropagation();
+        this.optionGroup.bind('mousedown touchstart', (e) =>
+            e.stopPropagation()
+        );
+
+        this.optionGroup.on('mouseup', 'td', function(e) {
+            that.applyValue(this.getAttribute('data-color-value'));
+            that.destroyOption();
+            that._selectBlockView();
         });
 
         var fragment = document.createDocumentFragment();
-        for (var i = 0; i < colors.length; i++) {
+        Entry.FieldColor.getWidgetColorList().forEach((row) => {
             var tr = Entry.Dom('tr', {
                 class: 'entry-widget-color-row',
             });
 
             fragment.appendChild(tr[0]);
 
-            for (var j = 0; j < colors[i].length; j++) {
-                var td = Entry.Dom('td', {
+            row.forEach((color) => {
+                Entry.Dom('td', {
                     class: 'entry-widget-color-cell',
                     parent: tr,
-                });
-                var color = colors[i][j];
-                td.css({
-                    'background-color': color,
-                });
-                td.attr({
-                    'data-color-value': color,
-                });
-
-                (function(elem, value) {
-                    elem.mouseup(function(e) {
-                        that.applyValue(value);
-                        that.destroyOption();
-                        that._selectBlockView();
+                })
+                    .css({
+                        'background-color': color,
+                    })
+                    .attr({
+                        'data-color-value': color,
                     });
-                })(td, color);
-            }
-        }
+            });
+        });
 
         this.optionGroup[0].appendChild(fragment);
-        var pos = this.getAbsolutePosFromDocument();
-        pos.y += this.box.height / 2 + 1;
+
+        var { x, y } = this.getAbsolutePosFromDocument();
+        y += this.box.height / 2 + 1;
 
         this.optionGroup.css({
-            left: pos.x,
-            top: pos.y,
+            left: x,
+            top: y,
         });
 
         this.optionDomCreated();
     };
 
     p.applyValue = function(value) {
-        if (this.value == value) return;
+        if (this.value == value) {
+            return;
+        }
+
         this.setValue(value);
-        if (this._header) this._header.attr({ fill: value });
-        else if (this.textElement)
-            this.textElement.textContent = this._convert(
-                this.getValue(),
-                this.getValue()
-            );
+
+        if (this._header) {
+            this._header.attr({ fill: value });
+        } else if (this.textElement) {
+            value = this.getValue();
+            this.textElement.textContent = this._convert(value, value);
+        }
     };
 
     p.getContentWidth = function() {
