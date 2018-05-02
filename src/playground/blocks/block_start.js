@@ -1,4 +1,4 @@
-export default {
+module.exports = {
     getBlocks() {
         return {
             when_run_button_click: {
