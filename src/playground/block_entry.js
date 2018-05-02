@@ -199,7 +199,7 @@ if (Entry && Entry.block) {
     })(Entry.block.converters);
 }
 
-import blocks from './blocks';
+const blocks = require('./blocks');
 
 const block = {
     //region hardware 하드웨어 기본

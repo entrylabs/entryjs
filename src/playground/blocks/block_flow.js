@@ -1,4 +1,4 @@
-export default {
+module.exports = {
     getBlocks() {
         return {
             wait_second: {
