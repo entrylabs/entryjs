@@ -1,4 +1,4 @@
-export default {
+module.exports = {
     getBlocks() {
         return {
             sound_something_with_block: {
