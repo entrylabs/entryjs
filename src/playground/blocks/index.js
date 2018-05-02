@@ -109,17 +109,17 @@ Entry.HARDWARE_LIST = {
     '22.1': Entry.Microbit,
 };
 
-import startBlock from './block_start';
-import flowBlock from './block_flow';
-import movingBlock from './block_moving';
-import looksBlock from './block_looks';
-import brushBlock from './block_brush';
-import textBlock from './block_text';
-import soundBlock from './block_sound';
-import judgementBlock from './block_judgement';
-import calcBlock from './block_calc';
-import variableBlock from './block_variable';
-import funcBlock from './block_func';
+const startBlock = require('./block_start');
+const flowBlock = require('./block_flow');
+const movingBlock = require('./block_moving');
+const looksBlock = require('./block_looks');
+const brushBlock = require('./block_brush');
+const textBlock = require('./block_text');
+const soundBlock = require('./block_sound');
+const judgementBlock = require('./block_judgement');
+const calcBlock = require('./block_calc');
+const variableBlock = require('./block_variable');
+const funcBlock = require('./block_func');
 
 function getBlockObject(items) {
     const blockObject = {};
@@ -131,7 +131,7 @@ function getBlockObject(items) {
     return blockObject;
 }
 
-export default {
+module.exports = {
     getBlocks() {
         const basicBlockList = [
             startBlock,
