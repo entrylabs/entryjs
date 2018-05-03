@@ -37,6 +37,10 @@ var {
         listSetVisibility,
         listChangeLength,
         listSetDefaultValue,
+        setMessageEditable,
+        setVariableEditable,
+        setListEditable,
+        variableSetName,
     } = COMMAND_TYPES;
 
     c[variableContainerSelectFilter] = {
@@ -117,9 +121,7 @@ var {
             getVC().clickVariableAddButton(true);
             var dom = _.head($('.entryVariableAddSpaceInputWorkspace'));
             dom.enterKeyDisabled = true;
-            if (!Entry.Utils.isDomActive(dom)) {
-                dom.focus();
-            }
+            Entry.Utils.focusIfNotActive(dom);
             var { title, content } = data.tooltip;
             return createTooltip(title, content, domQuery, callback, {
                 noDispose: true,
@@ -188,7 +190,7 @@ var {
             var message = VC.getMessage(id);
             var nameField = message.listElement.nameField;
 
-            nameField.blurred = true;
+            nameField._focused = false;
             VC.changeMessageName(message, newName);
         },
         state(id) {
@@ -434,35 +436,20 @@ var {
             var { dom } = c[listAddSetName];
 
             dom = Entry.getDom(dom);
-            var $dom = $(dom);
             dom._focused = false;
 
-            var expectedValue = getExpectedData('value');
-
-            if (expectedValue !== undefined) {
-                value = expectedValue;
-            }
-
-            $dom.val(value);
+            dom.value = getExpectedData('value', value);
         },
         state: function(value) {
             return [''];
         },
         log: function(value) {
-            var expectedValue = getExpectedData('value');
-
-            if (expectedValue !== undefined) {
-                value = expectedValue;
-            }
-
-            return [['value', value]];
+            return [['value', getExpectedData('value', value)]];
         },
         restrict: function(data, domQuery, callback) {
             getVC().clickListAddButton(true);
             var dom = Entry.getDom(this.dom);
-            if (!Entry.Utils.isDomActive(dom)) {
-                dom.focus();
-            }
+            Entry.Utils.focusIfNotActive(dom);
             dom.enterKeyDisabled = true;
             var { title, content } = data.tooltip;
             return createTooltip(title, content, domQuery, callback, {
@@ -528,9 +515,12 @@ var {
             VC.updateListSettingView(list);
         },
         state(id, value) {
-            var VC = getVC();
-            var list = VC.getList(id);
-            return [id, list.isVisible()];
+            return [
+                id,
+                getVC()
+                    .getList(id)
+                    .isVisible(),
+            ];
         },
         log(id, value) {
             return [['id', id], ['value', value]];
@@ -560,13 +550,14 @@ var {
             VC.setListLength(list, value);
         },
         state(id, value) {
-            var { array_ } = getVC().getList(id);
-            return [id, array_.length];
+            return [id, getVC().getList(id).array_.length];
         },
         log(id, value) {
-            var dom = value;
-            var dom = Entry.Utils.isNumber(value) ? 'lengthInput' : value;
-            return [['id', id], ['value', value], ['dom', dom]];
+            return [
+                ['id', id],
+                ['value', value],
+                ['dom', Entry.Utils.isNumber(value) ? 'lengthInput' : value],
+            ];
         },
         recordable: RECORDABLE.SUPPORT,
         undo: 'listChangeLength',
@@ -578,8 +569,7 @@ var {
         do(id, idx, data) {
             var VC = getVC();
             var list = VC.getList(id);
-            var arr = list.array_;
-            arr[idx] = { data };
+            list.array_[idx] = { data };
 
             VC.updateListSettingView();
             list.updateView();
@@ -595,16 +585,135 @@ var {
         undo: 'listSetDefaultValue',
         restrict: function(data, domQuery, callback) {
             _updateSelected(data.content);
-            var dom = Entry.getDom(domQuery);
-            if (dom && !Entry.Utils.isDomActive(dom)) {
-                dom.focus();
-            }
+            Entry.Utils.focusIfNotActive(Entry.getDom(domQuery));
             var { title, content } = data.tooltip;
             return createTooltip(title, content, domQuery, callback, {
                 noDispose: true,
             });
         },
         dom: ['variableContainer', 'listDefaultValue', '&1'],
+    };
+
+    c[setMessageEditable] = {
+        do(id) {
+            var VC = getVC();
+            var message = VC.getMessage(id);
+            VC.activateMessageEditView(message);
+            message.listElement.removeClass('activeForce');
+        },
+        state(id) {
+            return [id];
+        },
+        log(id) {
+            return [['id', id]];
+        },
+        recordable: RECORDABLE.SUPPORT,
+        undo: 'setMessageEditable',
+        restrict(data, domQuery, callback) {
+            Entry.Utils.blur();
+            getVC()
+                .getMessage(data.content[1][1])
+                .listElement.addClass('activeForce');
+            var { title, content } = data.tooltip;
+            return createTooltip(title, content, domQuery, callback);
+        },
+        dom: ['variableContainer', 'messageEditButton', '&0'],
+    };
+
+    c[setVariableEditable] = {
+        do(id, value = true) {
+            var VC = getVC();
+            var variable = VC.getVariable(id);
+            var { nameField } = variable.listElement;
+
+            if (value) {
+                nameField.removeAttribute('disabled');
+                VC.updateSelectedVariable(variable);
+                Entry.Utils.focusIfNotActive(nameField);
+            } else {
+                nameField.blur();
+                nameField.setAttribute('disabled', 'disabled');
+                VC.updateSelectedVariable(null, 'variable');
+            }
+        },
+        state(id) {
+            return [id];
+        },
+        log(id) {
+            return [['id', id]];
+        },
+        recordable: RECORDABLE.SUPPORT,
+        undo: 'setVariableEditable',
+        restrict(data, domQuery, callback) {
+            Entry.Utils.blur();
+            var VC = getVC();
+            VC.updateSelectedVariable(null, 'variable');
+            VC.getVariable(data.content[1][1]).listElement.addClass(
+                'activeForce'
+            );
+            var { title, content } = data.tooltip;
+            return createTooltip(title, content, domQuery, callback);
+        },
+        dom: ['variableContainer', 'variableEditButton', '&0'],
+    };
+
+    c[setListEditable] = {
+        do(id) {
+            var VC = getVC();
+            var variable = VC.getList(id);
+            var { nameField } = variable.listElement;
+
+            nameField.removeAttribute('disabled');
+            VC.updateSelectedVariable(variable);
+            nameField.focus();
+        },
+        state(id) {
+            return [id];
+        },
+        log(id) {
+            return [['id', id]];
+        },
+        recordable: RECORDABLE.SUPPORT,
+        undo: 'setListEditable',
+        restrict(data, domQuery, callback) {
+            Entry.Utils.blur();
+            getVC()
+                .getList(data.content[1][1])
+                .listElement.addClass('activeForce');
+            var { title, content } = data.tooltip;
+            return createTooltip(title, content, domQuery, callback);
+        },
+        dom: ['variableContainer', 'listEditButton', '&0'],
+    };
+
+    c[variableSetName] = {
+        do(id, value) {
+            var VC = getVC();
+            VC.changeVariableName(VC.getVariable(id), value);
+        },
+        state(id) {
+            return [id, getVC().getVariable(id).name_];
+        },
+        log(id, value) {
+            return [['id', id], ['value', value]];
+        },
+        restrict({ tooltip, content }, domQuery, callback) {
+            _updateSelected(content);
+
+            Entry.Utils.focusIfNotActive(domQuery);
+
+            var { title: tooltipTitle, content: tooltipContent } = tooltip;
+            return createTooltip(
+                tooltipTitle,
+                tooltipContent,
+                domQuery,
+                callback,
+                { noDispose: true }
+            );
+        },
+        recordable: RECORDABLE.SUPPORT,
+        undo: 'variableSetName',
+        dom: ['variableContainer', 'variableName', '&0'],
     };
 
     //utilities

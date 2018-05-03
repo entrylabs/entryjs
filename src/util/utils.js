@@ -2515,3 +2515,15 @@ Entry.Utils.setFocused = function() {
     }
     this._focused = true;
 };
+
+Entry.Utils.focusIfNotActive = function(dom) {
+    if (Array.isArray(dom)) {
+        dom = Entry.getDom(dom);
+    }
+    if (!dom) {
+        return;
+    }
+    if (!Entry.Utils.isDomActive(dom)) {
+        dom.focus && dom.focus();
+    }
+};

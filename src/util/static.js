@@ -79,6 +79,7 @@ Entry.STATIC = {
         objectUpdateRotationValue: 214,
         objectUpdateDirectionValue: 215,
         objectUpdateRotateMethod: 216,
+        entitySetModel: 217,
 
         do: 301,
         undo: 302,
@@ -97,10 +98,6 @@ Entry.STATIC = {
         funcUpdate: 1005,
 
         //TODO commands development
-        entitySetModel: 217,
-
-        
-        
     },
 
     COMMAND_TYPES_NOT_ALWAYS: {
@@ -141,6 +138,10 @@ Entry.STATIC = {
         listSetVisibility: 822,
         listChangeLength: 823,
         listSetDefaultValue: 824,
+        setMessageEditable: 825,
+        setVariableEditable: 826,
+        setListEditable: 827,
+        variableSetName: 828,
 
         //utility commands
         dismissModal: 900,

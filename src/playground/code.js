@@ -41,11 +41,11 @@ Entry.PARAM = -1;
             return;
         }
 
-        code = Array.isArray(code) ? code : JSON.parse(code);
-
         this.clear();
 
-        code.forEach((t) => this._data.push(new Entry.Thread(t, this)));
+        (Array.isArray(code) ? code : JSON.parse(code)).forEach((t) =>
+            this._data.push(new Entry.Thread(t, this))
+        );
 
         return this;
     };
@@ -85,9 +85,12 @@ Entry.PARAM = -1;
     };
 
     p.registerEvent = function(block, eventType) {
-        if (!this._eventMap[eventType]) this._eventMap[eventType] = [];
+        var eventMap = this._eventMap;
+        if (!eventMap[eventType]) {
+            eventMap[eventType] = [];
+        }
 
-        this._eventMap[eventType].push(block);
+        eventMap[eventType].push(block);
     };
 
     p.unregisterEvent = function(block, eventType) {
@@ -133,8 +136,6 @@ Entry.PARAM = -1;
         var ret;
         var executedBlocks = [];
 
-        executors.forEach((executor) => {});
-
         var _executeEvent = _.partial(Entry.dispatchEvent, 'blockExecute');
         var _executeEndEvent = _.partial(
             Entry.dispatchEvent,
@@ -172,13 +173,11 @@ Entry.PARAM = -1;
     };
 
     p.clearExecutorsByEntity = function(entity) {
-        var executors = this.executors;
-        for (var i = 0; i < executors.length; i++) {
-            var executor = executors[i];
+        this.executors.forEach((executor) => {
             if (executor.entity === entity) {
                 executor.end();
             }
-        }
+        });
     };
 
     p.addExecutor = function(executor) {
@@ -237,16 +236,14 @@ Entry.PARAM = -1;
     p.getThreadsByCategory = function(categoryName) {
         if (!categoryName) return [];
 
-        return this.getThreads().filter((thread) => {
-            var { category } = thread.getFirstBlock() || {};
-            return category === categoryName;
-        });
+        return this.getThreads().filter(
+            (t) => _.result(t.getFirstBlock(), 'category') === categoryName
+        );
     };
 
     p.toJSON = function(excludeData, option) {
-        return this.getThreads().map((thread) =>
-            thread.toJSON(false, undefined, excludeData, option)
-        );
+        var params = [false, undefined, excludeData, option];
+        return this.getThreads().map((t) => t.toJSON.apply(t, params));
     };
 
     p.countBlock = function() {
@@ -259,7 +256,7 @@ Entry.PARAM = -1;
     p.moveBy = function(x, y) {
         this.getThreads().forEach((thread) => {
             var { view = {} } = thread.getFirstBlock() || {};
-            if (view.display) view._moveBy(x, y, false);
+            if (view && view.display) view._moveBy(x, y, false);
         });
         var { board } = this;
         if (board instanceof Entry.BlockMenu) {
@@ -284,9 +281,9 @@ Entry.PARAM = -1;
     };
 
     p._handleChange = function() {
-        var { view = {} } = this;
+        var board = _.result(this.view, 'board');
         var event = Entry.creationChangedEvent;
-        if (event && view.board.constructor !== Entry.BlockMenu) {
+        if (board && event && board.constructor !== Entry.BlockMenu) {
             event.notify();
         }
     };

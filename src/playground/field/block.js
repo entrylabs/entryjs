@@ -41,8 +41,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
     };
 
     p.getBoard = function() {
-        var view = this._blockView;
-        return view && view.getBoard();
+        return _.result(this._blockView, 'getBoard');
     };
 
     p.renderStart = function(board, mode, renderMode, isReDraw) {
@@ -237,14 +236,13 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
         pos.y += this.box.y + contentPos.y;
         return pos;
     };
-    
+
     p.requestPartHeight = function(blockView, forAll) {
-        var height = blockView
+        return blockView
             ? blockView.magnet.next ? blockView.magnet.next.y : blockView.height
             : 0;
-        return height;
     };
-    
+
     p.getCount = function() {
         return 0;
     };
@@ -348,10 +346,8 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
                 transform: 'translate(0,12)',
             });
         } else {
-            if (this._bg) {
-                this._bg.remove();
-                delete this._bg;
-            }
+            _.result(this._bg, 'remove');
+            delete this._bg;
         }
     };
 

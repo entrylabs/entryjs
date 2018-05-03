@@ -83,6 +83,23 @@ Entry.VariableContainer = function() {
         var listView = Entry.createElement('ul').addClass(
             'entryVariableListWorkspace'
         );
+
+        $(listView).on(
+            'mouseenter',
+            '.entryVariableListElementWorkspace',
+            function() {
+                this.addClass('active');
+            }
+        );
+
+        $(listView).on(
+            'mouseleave',
+            '.entryVariableListElementWorkspace',
+            function() {
+                this.removeClass('active');
+            }
+        );
+
         this.view_.appendChild(listView);
         this.listView_ = listView;
 
@@ -417,12 +434,10 @@ Entry.VariableContainer = function() {
      * update list view
      */
     p.updateList = function() {
-        var playground = Entry.playground;
+        var listView = this.listView_;
         if (
-            !this.listView_ ||
-            (playground &&
-                (playground.getViewMode() !== 'variable' &&
-                    playground.getViewMode() !== 'code'))
+            !listView ||
+            !/^(variable|code)$/.test(_.result(Entry.playground, 'getViewMode'))
         )
             return;
 
@@ -430,29 +445,19 @@ Entry.VariableContainer = function() {
         this.listSettingView.addClass('entryRemove');
 
         var isPythonMode = this._isPythonMode();
-        if (isPythonMode)
-            this.listView_.addClass('entryVariableContainerTextMode');
-        else this.listView_.removeClass('entryVariableContainerTextMode');
+        if (isPythonMode) listView.addClass('entryVariableContainerTextMode');
+        else listView.removeClass('entryVariableContainerTextMode');
 
-        while (this.listView_.firstChild)
-            this.listView_.removeChild(this.listView_.lastChild);
+        while (listView.firstChild) listView.removeChild(listView.lastChild);
 
         var viewMode = this.viewMode_;
-        var elementList = [];
+
         if (viewMode == 'all' || viewMode == 'message') {
             if (viewMode == 'message') {
-                this.listView_.appendChild(this.messageAddButton_);
+                listView.appendChild(this.messageAddButton_);
             }
-            for (var i in this.messages_) {
-                var message = this.messages_[i];
-                elementList.push(message);
-                !message.listElement && this.createMessageView(message);
-                var view = message.listElement;
 
-                this.listView_.appendChild(view);
-                if (message.callerListElement)
-                    this.listView_.appendChild(message.callerListElement);
-            }
+            _each(this.messages_, this.createMessageView.bind(this));
         }
 
         if (viewMode == 'all' || viewMode == 'variable') {
@@ -460,47 +465,29 @@ Entry.VariableContainer = function() {
                 var info = this.variableAddPanel.info;
                 if (info.object && !Entry.playground.object) info.object = null;
 
-                this.listView_.appendChild(this.variableAddButton_);
-                this.listView_.appendChild(this.variableAddPanel.view);
+                listView.appendChild(this.variableAddButton_);
+                listView.appendChild(this.variableAddPanel.view);
 
                 this.variableSplitters.top.innerHTML =
                     Lang.Workspace.Variable_used_at_all_objects;
-                this.listView_.appendChild(this.variableSplitters.top);
-                for (var i in this.variables_) {
-                    var variable = this.variables_[i];
-                    if (variable.object_) continue;
-                    elementList.push(variable);
-                    !variable.listElement && this.createVariableView(variable);
-                    var view = variable.listElement;
-                    this.listView_.appendChild(view);
-                    if (variable.callerListElement)
-                        this.listView_.appendChild(variable.callerListElement);
-                }
+                listView.appendChild(this.variableSplitters.top);
+
+                var { globalV, localV } = _.groupBy(
+                    this.variables_,
+                    ({ object_ }) => (object_ ? 'localV' : 'globalV')
+                );
+
+                _each(globalV, this.createVariableView.bind(this));
 
                 this.variableSplitters.bottom.innerHTML =
                     Lang.Workspace.Variable_used_at_special_object;
-                this.listView_.appendChild(this.variableSplitters.bottom);
-                for (var i in this.variables_) {
-                    var variable = this.variables_[i];
-                    if (!variable.object_) continue;
-                    elementList.push(variable);
-                    !variable.listElement && this.createVariableView(variable);
-                    var view = variable.listElement;
-                    this.listView_.appendChild(view);
-                    if (variable.callerListElement)
-                        this.listView_.appendChild(variable.callerListElement);
-                }
+                listView.appendChild(this.variableSplitters.bottom);
+
+                _each(localV, this.createVariableView.bind(this));
+
                 this.updateVariableAddView('variable');
             } else {
-                for (var i in this.variables_) {
-                    var variable = this.variables_[i];
-                    elementList.push(variable);
-                    !variable.listElement && this.createVariableView(variable);
-                    var view = variable.listElement;
-                    this.listView_.appendChild(view);
-                    if (variable.callerListElement)
-                        this.listView_.appendChild(variable.callerListElement);
-                }
+                _each(this.variables_, this.createVariableView.bind(this));
             }
         }
 
@@ -508,78 +495,63 @@ Entry.VariableContainer = function() {
             if (viewMode == 'list') {
                 var info = this.listAddPanel.info;
                 if (info.object && !Entry.playground.object) info.object = null;
-                this.listView_.appendChild(this.listAddButton_);
-                this.listView_.appendChild(this.listAddPanel.view);
+                listView.appendChild(this.listAddButton_);
+                listView.appendChild(this.listAddPanel.view);
+
+                var { localV, globalV } = _.groupBy(
+                    this.lists_,
+                    ({ object_ }) => (object_ ? 'localV' : 'globalV')
+                );
                 this.variableSplitters.top.innerHTML =
                     Lang.Workspace.List_used_all_objects;
-                this.listView_.appendChild(this.variableSplitters.top);
+                listView.appendChild(this.variableSplitters.top);
+
+                _each(globalV, this.createListView.bind(this));
 
                 this.updateVariableAddView('list');
-                for (var i in this.lists_) {
-                    var list = this.lists_[i];
-                    if (list.object_) continue;
-                    elementList.push(list);
-                    !list.listElement && this.createListView(list);
-                    var view = list.listElement;
-                    this.listView_.appendChild(view);
-                    if (list.callerListElement)
-                        this.listView_.appendChild(list.callerListElement);
-                }
                 this.variableSplitters.bottom.innerHTML =
                     Lang.Workspace.list_used_specific_objects;
-                this.listView_.appendChild(this.variableSplitters.bottom);
-                for (var i in this.lists_) {
-                    var list = this.lists_[i];
-                    if (!list.object_) continue;
-                    elementList.push(list);
-                    !list.listElement && this.createListView(list);
-                    var view = list.listElement;
-                    this.listView_.appendChild(view);
-                    if (list.callerListElement)
-                        this.listView_.appendChild(list.callerListElement);
-                }
+                listView.appendChild(this.variableSplitters.bottom);
+
+                _each(localV, this.createListView.bind(this));
+
                 this.updateVariableAddView('variable');
             } else {
-                for (var i in this.lists_) {
-                    var list = this.lists_[i];
-                    elementList.push(list);
-                    !list.listElement && this.createListView(list);
-                    var view = list.listElement;
-                    this.listView_.appendChild(view);
-                    if (list.callerListElement)
-                        this.listView_.appendChild(list.callerListElement);
-                }
+                _each(this.lists_, this.createListView.bind(this));
             }
         }
 
         if (viewMode == 'all' || viewMode == 'func') {
             if (viewMode == 'func') {
-                var mode = Entry.Workspace.MODE_BOARD;
-                if (Entry.getMainWS()) mode = Entry.getMainWS().getMode();
+                var mode = _.result(Entry.getMainWS(), 'getMode');
+                mode = _.isUndefined(mode) ? Entry.Workspace.MODE_BOARD : mode;
 
-                if (
-                    mode === Entry.Workspace.MODE_OVERLAYBOARD ||
-                    isPythonMode
-                ) {
+                mode = mode === Entry.Workspace.MODE_OVERLAYBOARD;
+
+                if (mode || isPythonMode) {
                     this.functionAddButton_.addClass('disable');
-                } else this.functionAddButton_.removeClass('disable');
+                } else {
+                    this.functionAddButton_.removeClass('disable');
+                }
 
-                this.listView_.appendChild(this.functionAddButton_);
+                listView.appendChild(this.functionAddButton_);
             }
-            for (var i in this.functions_) {
-                var func = this.functions_[i];
-                elementList.push(func);
-                !func.funcElement && this.createFunctionView(func);
-                var view = func.listElement;
-                this.listView_.appendChild(view);
-                if (func.callerListElement)
-                    this.listView_.appendChild(func.callerListElement);
-            }
+
+            _each(this.functions_, this.createFunctionView.bind(this));
         }
 
-        this.listView_.appendChild(this.variableSettingView);
-        this.listView_.appendChild(this.listSettingView);
-        elementList = null;
+        listView.appendChild(this.variableSettingView);
+        listView.appendChild(this.listSettingView);
+
+        function _each(arr, viewFunc) {
+            return _.each(arr, (data) => {
+                !data.listElement && viewFunc(data);
+
+                listView.appendChild(data.listElement);
+                if (data.callerListElement)
+                    listView.appendChild(data.callerListElement);
+            });
+        }
     };
 
     /**
@@ -1141,6 +1113,7 @@ Entry.VariableContainer = function() {
             return;
         }
         variable.setName(name);
+        variable.listElement.nameField.value = name;
         Entry.playground.reloadPlayground();
         Entry.toast.success(
             Lang.Workspace.variable_rename,
@@ -1219,11 +1192,11 @@ Entry.VariableContainer = function() {
     p.createVariableView = function(variable) {
         var that = this;
         var view = Entry.createElement('li');
-        var wrapper = Entry.createElement('div').addClass(
-            'entryVariableListElementWrapperWorkspace',
-            'variable'
-        );
-        view.appendChild(wrapper);
+
+        var wrapper = Entry.createElement('div')
+            .addClass('entryVariableListElementWrapperWorkspace', 'variable')
+            .appendTo(view);
+
         var className = 'entryVariableListElementWorkspace';
         if (!variable.object_) {
             if (variable.isCloud_)
@@ -1232,47 +1205,37 @@ Entry.VariableContainer = function() {
         } else className += ' entryVariableLocalElementWorkspace';
 
         view.addClass(className).bindOnClick((e) => this.select(variable));
-        var removeButton = Entry.createElement('button')
+
+        this._removeButton = view.removeButton = Entry.createElement('button')
             .addClass('entryVariableListElementDeleteWorkspace notForTextMode')
             .bindOnClick((e) => {
                 e.stopPropagation();
                 Entry.do('variableContainerRemoveVariable', variable);
-                that.selectedVariable = null;
-                that.variableSettingView.addClass('entryRemove');
-            });
-        view.removeButton = removeButton;
-        this._removeButton = removeButton;
+                this.selectedVariable = null;
+                this.variableSettingView.addClass('entryRemove');
+            })
+            .appendTo(wrapper);
 
-        var editButton = Entry.createElement('button')
+        view.editButton = Entry.createElement('button')
             .addClass('entryVariableListElementEditWorkspace')
-            .bindOnClick(function(e) {
+            .bindOnClick((e) => {
                 e.stopPropagation();
-                nameField.removeAttribute('disabled');
-                editSaveButton.removeClass('entryRemove');
-                this.addClass('entryRemove');
-                that.updateSelectedVariable(variable);
-                nameField.focus();
-            });
-        view.editButton = editButton;
-
-        var editSaveButton = Entry.createElement('button')
-            .addClass('entryVariableListElementEditWorkspace entryRemove')
-            .bindOnClick(function(e) {
-                e.stopPropagation();
-                nameField.blur();
-                nameField.setAttribute('disabled', 'disabled');
-                editButton.removeClass('entryRemove');
-                this.addClass('entryRemove');
-                that.updateSelectedVariable(null, 'variable');
-            });
-        view.editSaveButton = editSaveButton;
+                Entry.do(
+                    'setVariableEditable',
+                    variable.id_,
+                    this.selectedVariable !== variable
+                );
+            })
+            .appendTo(wrapper);
 
         var nameField = Entry.createElement('input')
             .addClass('entryVariableListElementNameWorkspace')
-            .bindOnClick((e) => e.stopPropagation());
+            .bindOnClick((e) => e.stopPropagation())
+            .appendTo(wrapper);
         nameField.setAttribute('disabled', 'disabled');
         nameField.value = variable.name_;
-        nameField.onblur = function(e) {
+        nameField.onfocus = Entry.Utils.setFocused;
+        nameField.onblur = Entry.Utils.setBlurredTimer(function() {
             var value = this.value.trim();
             if (!value) {
                 Entry.toast.alert(
@@ -1280,16 +1243,14 @@ Entry.VariableContainer = function() {
                     Lang.Workspace.variable_can_not_space
                 );
                 this.value = variable.getName();
-                return;
+                return this.focus();
             }
-            that.changeVariableName(variable, this.value);
-        };
+
+            variable = that.getVariable(variable.id_);
+            variable && Entry.do('variableSetName', variable.id_, value);
+        });
         nameField.onkeydown = Entry.Utils.blurWhenEnter;
         view.nameField = nameField;
-        wrapper.appendChild(nameField);
-        wrapper.appendChild(editButton);
-        wrapper.appendChild(editSaveButton);
-        wrapper.appendChild(removeButton);
         variable.listElement = view;
     };
 
@@ -1325,8 +1286,7 @@ Entry.VariableContainer = function() {
         //focus first and value not changed
         //command will be skipped
         nameField.isFirst = true;
-        nameField.focus();
-        return new Entry.State(this, this.removeMessage, message);
+        Entry.Utils.focusIfNotActive(nameField);
     };
 
     /**
@@ -1391,84 +1351,44 @@ Entry.VariableContainer = function() {
     };
 
     p.activateMessageEditView = function(message) {
-        var { listElement } = message;
-        var $listElement = $(listElement);
-
-        var $nameField = $listElement.find(
-            '.entryVariableListElementNameWorkspace'
-        );
-        var $editSaveButton = $listElement.find(
-            '.entryVariableListElementEditWorkspace.editSaveButton'
-        );
-        var $editButton = $listElement.find(
-            '.entryVariableListElementEditWorkspace.editButton'
-        );
-
-        $nameField.removeAttr('disabled');
-        $nameField.focus();
-        $editSaveButton.removeClass('entryRemove');
-        $editButton.addClass('entryRemove');
-
-        var { playground } = Entry;
-
-        if (playground) {
-            var { blockMenu } = playground;
-            if (blockMenu) {
-                blockMenu.deleteRendered('start');
-            }
-            playground.reloadPlayground();
-        }
+        $(message.listElement)
+            .find('.entryVariableListElementNameWorkspace')
+            .removeAttr('disabled')
+            .focus();
     };
 
     /**
      * @param {object} message
      */
     p.createMessageView = function(message) {
-        var that = this;
         var view = Entry.createElement('li')
             .addClass('entryVariableListElementWorkspace')
             .addClass('entryMessageElementWorkspace')
-            .bindOnClick(() => that.select(message));
+            .bindOnClick(() => this.select(message));
 
         var removeButton = Entry.createElement('button')
             .addClass('entryVariableListElementDeleteWorkspace')
             .bindOnClick((e) => {
                 e.stopPropagation();
                 Entry.do('variableContainerRemoveMessage', message);
-            });
+            })
+            .appendTo(view);
 
         var editButton = Entry.createElement('button')
             .addClass('entryVariableListElementEditWorkspace editButton')
             .bindOnClick((e) => {
                 e.stopPropagation();
-                this.activateMessageEditView(message);
-            });
-
-        var editSaveButton = Entry.createElement('button')
-            .addClass('entryVariableListElementEditWorkspace')
-            .addClass('entryRemove editSaveButton')
-            .bindOnClick(function(e) {
-                e.stopPropagation();
-                nameField.blur();
-                editButton.removeClass('entryRemove');
-                this.addClass('entryRemove');
-            });
+                Entry.do('setMessageEditable', message.id);
+            })
+            .appendTo(view);
 
         var nameField = Entry.createElement('input')
             .addClass('entryVariableListElementNameWorkspace')
-            .bindOnClick((e) => e.stopPropagation());
+            .bindOnClick((e) => e.stopPropagation())
+            .appendTo(view);
         nameField.value = message.name;
-
-        nameField.onfocus = function(e) {
-            this.blurred = false;
-        };
-
-        nameField.onblur = _.debounce(function(e) {
-            if (this.blurred) {
-                return;
-            }
-
-            this.blurred = true;
+        nameField.onfocus = Entry.Utils.setFocused;
+        nameField.onblur = Entry.Utils.setBlurredTimer(function(e) {
             var value = this.value;
             if (!value.trim()) {
                 Entry.toast.alert(Lang.Msgs.warn, Lang.Msgs.sign_can_not_space);
@@ -1482,18 +1402,11 @@ Entry.VariableContainer = function() {
                 Entry.do('messageSetName', message.id, value);
             }
             delete this.isFirst;
-            editButton.removeClass('entryRemove');
-            editSaveButton.addClass('entryRemove');
             nameField.setAttribute('disabled', 'disabled');
         }, 200);
-
         nameField.onkeydown = Entry.Utils.blurWhenEnter;
 
         view.nameField = nameField;
-        view.appendChild(nameField);
-        view.appendChild(editButton);
-        view.appendChild(editSaveButton);
-        view.appendChild(removeButton);
         message.listElement = view;
     };
 
@@ -1525,10 +1438,7 @@ Entry.VariableContainer = function() {
         } else view.addClass('entryListLocalElementWorkspace');
 
         var removeButton = CE('button')
-            .addClass(
-                'entryVariableListElementDeleteWorkspace',
-                'notForTextMode'
-            )
+            .addClass('entryVariableListElementDeleteWorkspace notForTextMode')
             .bindOnClick((e) => {
                 e.stopPropagation();
                 Entry.do('variableContainerRemoveList', list);
@@ -1541,28 +1451,18 @@ Entry.VariableContainer = function() {
             .addClass('entryVariableListElementEditWorkspace')
             .bindOnClick(function(e) {
                 e.stopPropagation();
-                nameField.removeAttribute('disabled');
-                editSaveButton.removeClass('entryRemove');
-                this.addClass('entryRemove');
-                that.updateSelectedVariable(list);
-                nameField.focus();
+
+                if (that.selectedList === list) {
+                    nameField.blur();
+                    nameField.setAttribute('disabled', 'disabled');
+                    that.select(list);
+                    that.updateSelectedVariable(null, 'list');
+                } else {
+                    Entry.do('setListEditable', list.id_);
+                }
             })
             .appendTo(wrapper);
         view.editButton = editButton;
-
-        var editSaveButton = CE('button')
-            .addClass('entryVariableListElementEditWorkspace entryRemove')
-            .bindOnClick(function(e) {
-                e.stopPropagation();
-                nameField.blur();
-                nameField.setAttribute('disabled', 'disabled');
-                editButton.removeClass('entryRemove');
-                this.addClass('entryRemove');
-                that.select(list);
-                that.updateSelectedVariable(null, 'list');
-            })
-            .appendTo(wrapper);
-        view.editSaveButton = editSaveButton;
 
         var nameField = CE('input')
             .addClass('entryVariableListElementNameWorkspace')
@@ -1796,9 +1696,7 @@ Entry.VariableContainer = function() {
         );
         var [variable] = this.variables_;
         this.updateSelectedVariable(variable);
-        var { editButton, editSaveButton, nameField } = variable.listElement;
-        editButton.addClass('entryRemove');
-        editSaveButton.removeClass('entryRemove');
+        var { editButton, nameField } = variable.listElement;
         nameField.removeAttribute('disabled');
     };
 
@@ -1810,9 +1708,7 @@ Entry.VariableContainer = function() {
         );
         var [list] = this.lists_;
         this.updateSelectedVariable(list);
-        var { editButton, editSaveButton, nameField } = list.listElement;
-        editButton.addClass('entryRemove');
-        editSaveButton.removeClass('entryRemove');
+        var { editButton, nameField } = list.listElement;
         nameField.removeAttribute('disabled');
     };
 
@@ -2003,8 +1899,9 @@ Entry.VariableContainer = function() {
     };
 
     p.generateTimer = function(timer) {
-        if (!timer) {
-            timer = new Entry.Variable({
+        timer =
+            timer ||
+            new Entry.Variable({
                 id: Entry.generateHash(),
                 name: Lang.Workspace.Variable_Timer,
                 value: 0,
@@ -2013,7 +1910,6 @@ Entry.VariableContainer = function() {
                 x: 150,
                 y: -70,
             });
-        }
 
         timer.generateView();
         timer.tick = null;
@@ -2026,8 +1922,9 @@ Entry.VariableContainer = function() {
 
     //generate Answer
     p.generateAnswer = function(answer) {
-        if (!answer) {
-            answer = new Entry.Variable({
+        answer =
+            answer ||
+            new Entry.Variable({
                 id: Entry.generateHash(),
                 name: Lang.Blocks.VARIABLE_get_canvas_input_value,
                 value: 0,
@@ -2036,7 +1933,6 @@ Entry.VariableContainer = function() {
                 x: 150,
                 y: -100,
             });
-        }
 
         answer.generateView();
         Entry.container.inputValue = answer;
@@ -2290,22 +2186,26 @@ Entry.VariableContainer = function() {
         //remove element and event bindings
         $(listValues).empty();
 
-        if (arr.length === 0) seperator.addClass('entryRemove');
-        else seperator.removeClass('entryRemove');
+        if (arr.length === 0) {
+            seperator.addClass('entryRemove');
+        } else {
+            seperator.removeClass('entryRemove');
+        }
 
         var startIndex =
             Entry.getMainWS().mode === Entry.Workspace.MODE_VIMBOARD ? 0 : 1;
 
         var fragment = document.createDocumentFragment();
+
         arr.forEach(({ data }, i) => {
             var wrapper = Entry.createElement('div')
                 .addClass('entryListSettingValueWrapperWorkspace')
                 .appendTo(fragment);
 
-            var numberSpan = Entry.createElement('span')
+            Entry.createElement('span')
                 .addClass('entryListSettingValueNumberSpanWorkspace')
-                .appendTo(wrapper);
-            numberSpan.innerHTML = i + startIndex;
+                .appendTo(wrapper).innerHTML =
+                i + startIndex;
 
             var input = Entry.createElement('input')
                 .addClass('entryListSettingEachInputWorkspace')
@@ -2353,10 +2253,13 @@ Entry.VariableContainer = function() {
 
     p.updateSelectedVariable = function(object, type = 'variable') {
         if (!object) {
-            this.selectedVariable = null;
-            if (type == 'variable')
+            if (type == 'variable') {
                 this.variableSettingView.addClass('entryRemove');
-            else this.listSettingView.addClass('entryRemove');
+                this.selectedVariable = null;
+            } else {
+                this.listSettingView.addClass('entryRemove');
+                this.selectedList = null;
+            }
         } else if (object.type == 'variable') {
             this.selectedVariable = object;
             this.updateVariableSettingView(object);
@@ -2400,7 +2303,9 @@ Entry.VariableContainer = function() {
         }, []);
 
         //no variable or list to save
-        if (!variables.length && !lists.length) return;
+        if (!variables.length && !lists.length) {
+            return;
+        }
 
         $.ajax({
             url: '/api/project/variable/' + Entry.projectId,
@@ -2518,29 +2423,20 @@ Entry.VariableContainer = function() {
         var variables = [];
         var messages = [];
 
-        this.variables_.forEach(function(variable) {
-            variableSet[variable.id_] = variable;
-        });
-
-        this.lists_.forEach(function(list) {
-            variableSet[list.id_] = list;
-        });
-
-        this.messages_.forEach(function(message) {
-            variableSet[message.id] = message;
-        });
+        [...this.variables_, ...this.lists_, ...this.messages_].forEach(
+            (data) => (variableSet[data.id_ || data.id] = data)
+        );
 
         blockList.forEach(function(block) {
             var data = block.data || {};
             var type = data.type;
-            var isMessage;
-            var isVariable;
-            if (type) {
-                isMessage = _.contains(EntryStatic.messageBlockList, type);
-                isVariable = _.contains(EntryStatic.variableBlockList, type);
+            if (!type) {
+                return;
             }
+            var isMessage = _.contains(EntryStatic.messageBlockList, type);
+            var isVariable = _.contains(EntryStatic.variableBlockList, type);
 
-            if (type && (isMessage || isVariable)) {
+            if (isMessage || isVariable) {
                 block.data.params.forEach(function(param) {
                     if (typeof param === 'string' && !!variableSet[param]) {
                         var item = variableSet[param];
@@ -2559,8 +2455,8 @@ Entry.VariableContainer = function() {
         });
 
         return {
-            variables: variables,
-            messages: messages,
+            variables,
+            messages,
         };
     };
 
@@ -2572,8 +2468,7 @@ Entry.VariableContainer = function() {
         var arr = this[type];
 
         for (var i = 0; i < arr.length; i++) {
-            var current = arr[i];
-            if (current.block == block) {
+            if (arr[i].block == block) {
                 arr.splice(i, 1);
                 break;
             }
@@ -2585,29 +2480,18 @@ Entry.VariableContainer = function() {
             if (!func || func.isRemoved) return;
             func.isRemoved = true;
             if (func) {
-                var blocks = func.content.getBlockList();
-                for (var i = 0; i < blocks.length; i++) {
-                    var block = blocks[i];
+                func.content.getBlockList().forEach((block) => {
                     if (block.type.indexOf('func_') > -1) {
-                        var funcId = block.type.substr(5);
-                        if (funcId == id) continue;
+                        if (block.type.substr(5) == id) return;
                     }
 
-                    var events = block.events;
-                    if (events) {
-                        if (events.viewDestroy) {
-                            events.viewDestroy.forEach((fn) => {
-                                if (fn) fn(block);
-                            });
-                        }
-
-                        if (events.dataDestroy) {
-                            events.dataDestroy.forEach((fn) => {
-                                if (fn) fn(block);
-                            });
-                        }
-                    }
-                }
+                    [
+                        ...(_.result(block.events, 'viewDestroy') || []),
+                        ...(_.result(block.events, 'dataDestroy') || []),
+                    ].forEach((fn) => {
+                        if (fn) fn(block);
+                    });
+                });
             }
         }
     };
@@ -2634,41 +2518,35 @@ Entry.VariableContainer = function() {
     p._maxNameLength = 10;
 
     p.clear = function() {
-        [...this.variables_, ...this.lists_].forEach((v) => {
-            v.remove();
-        });
+        var _removeFunc = _.partial(_.result, _, 'remove');
+        var _destroyFunc = _.partial(_.result, _, 'destroy');
 
         var { engine = {}, container = {}, playground } = Entry;
 
-        engine.projectTimer && engine.projectTimer.remove();
-
-        if (container.inputValue) {
-            container.inputValue.remove && container.inputValue.remove();
-        }
+        [...this.variables_, ...this.lists_].forEach(_removeFunc);
+        _removeFunc(engine.projectTimer);
+        _removeFunc(container.inputValue);
+        _.each(this.functions_, _destroyFunc);
 
         this.variables_ = [];
         this.lists_ = [];
         this.messages_ = [];
-
-        for (var key in this.functions_) {
-            var func = this.functions_[key];
-            func.destroy();
-            delete this.functions_[key];
-        }
+        this.functions_ = {};
 
         playground.reloadPlayground();
         this.updateList();
     };
 
     p._isPythonMode = function() {
-        var ws = Entry.getMainWS();
-        return ws && ws.isVimMode();
+        return _.result(Entry.getMainWS(), 'isVimMode');
     };
 
     p.getDom = function(query) {
         if (_.isEmpty(query)) {
             return;
         }
+
+        query = [...query];
 
         switch (query.shift()) {
             case 'filter':
@@ -2721,6 +2599,20 @@ Entry.VariableContainer = function() {
                 return this.listSettingView[query.shift()];
             case 'listDefaultValue':
                 return $('.entryListSettingEachInputWorkspace')[query.shift()];
+            case 'messageEditButton':
+                return $(this.getMessage(query.shift()).listElement).find(
+                    '.editButton'
+                )[0];
+            case 'variableEditButton':
+                return $(this.getVariable(query.shift()).listElement).find(
+                    '.entryVariableListElementEditWorkspace'
+                )[0];
+            case 'listEditButton':
+                return $(this.getList(query.shift()).listElement).find(
+                    '.entryVariableListElementEditWorkspace'
+                )[0];
+            case 'variableName':
+                return this.getVariable(query.shift()).listElement.nameField;
         }
     };
 
@@ -2773,9 +2665,9 @@ Entry.VariableContainer = function() {
     };
 
     p._makeVariableData = function(type = 'variable') {
-        var panel = this._getAddPanel(type);
+        var { view, info: { isCloud, object } } = this._getAddPanel(type);
 
-        var name = panel.view.name.value.trim();
+        var name = view.name.value.trim();
         if (_.isEmpty(name)) {
             name = Lang.Workspace[type];
         }
@@ -2786,8 +2678,6 @@ Entry.VariableContainer = function() {
         name = this.checkAllVariableName(name, target)
             ? Entry.getOrderedName(name, this[target], 'name_')
             : name;
-
-        var { isCloud, object } = panel.info;
 
         return {
             name,
@@ -2826,6 +2716,7 @@ Entry.VariableContainer = function() {
 
         var variables = this.variables_;
         var variableJSON = v.toJSON();
+
         if (type == 'slide') {
             variableJSON.variableType = type;
             newVariable = new Entry.Variable(variableJSON);
