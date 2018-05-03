@@ -7,9 +7,12 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const LodashModuleReplacementPlugin = require('lodash-webpack-plugin');
 
 module.exports = merge(common, {
+    entry: {
+        'entry.min': './src/entry.js',
+    },
     mode: 'production',
     output: {
-        filename: '[name].min.js',
+        filename: '[name].js',
     },
     module: {
         rules: [
@@ -37,5 +40,7 @@ module.exports = merge(common, {
             },
         ],
     },
-    plugins: [new UglifyJSPlugin(), new LodashModuleReplacementPlugin()],
+    plugins: [new UglifyJSPlugin({
+        include: /\.min\.js$/,
+    }), new LodashModuleReplacementPlugin()],
 });
