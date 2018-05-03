@@ -1449,7 +1449,7 @@ Entry.setBasicBrush = function(sprite) {
     } else {
         brush.thickness = 1;
         brush.rgb = Entry.hex2rgb('#ff0000');
-        brush.opacity = 100;
+        brush.opacity = 0;
         brush.setStrokeStyle(1);
         brush.beginStroke('rgba(255,0,0,1)');
     }
