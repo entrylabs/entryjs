@@ -1543,7 +1543,7 @@ Entry.setBasicBrush = function(sprite) {
                 ',' +
                 brush.rgb.b +
                 ',' +
-                brush.opacity / 100 +
+                (1 - brush.opacity / 100) +
                 ')'
         );
     } else {
@@ -1585,7 +1585,7 @@ Entry.setCloneBrush = function(sprite, parentBrush) {
             ',' +
             brush.rgb.b +
             ',' +
-            brush.opacity / 100 +
+            (1 - brush.opacity / 100) +
             ')'
     );
 
