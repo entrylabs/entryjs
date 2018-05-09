@@ -1361,10 +1361,8 @@ Entry.toDegrees = function(radians) {
     return radians * 180 / Math.PI;
 };
 
-Entry.getPicturesJSON = function(pictures, isClone) {
-    var json = [];
-    for (var i = 0, len = pictures.length; i < len; i++) {
-        var p = pictures[i];
+Entry.getPicturesJSON = function(pictures = [], isClone) {
+    return pictures.reduce((acc, p) => {
         var o = {};
         o._id = p._id;
         o.id = isClone ? Entry.generateHash() : p.id;
@@ -1373,15 +1371,13 @@ Entry.getPicturesJSON = function(pictures, isClone) {
         o.fileurl = p.fileurl;
         o.name = p.name;
         o.scale = p.scale;
-        json.push(o);
-    }
-    return json;
+        acc.push(o);
+        return acc;
+    }, []);
 };
 
-Entry.getSoundsJSON = function(sounds, isClone) {
-    var json = [];
-    for (var i = 0, len = sounds.length; i < len; i++) {
-        var s = sounds[i];
+Entry.getSoundsJSON = function(sounds = [], isClone) {
+    return sounds.reduce((acc, s) => {
         var o = {};
         o._id = s._id;
         o.duration = s.duration;
@@ -1390,9 +1386,9 @@ Entry.getSoundsJSON = function(sounds, isClone) {
         o.filename = s.filename;
         o.fileurl = s.fileurl;
         o.name = s.name;
-        json.push(o);
-    }
-    return json;
+        acc.push(o);
+        return acc;
+    }, []);
 };
 
 Entry.cutDecimal = function(number) {
@@ -1625,8 +1621,8 @@ Entry.Utils.isRightButton = function(e) {
     return e.button == 2 || e.ctrlKey;
 };
 
-Entry.Utils.isTouchEvent = function(e) {
-    return e.type.toLowerCase() !== 'mousedown';
+Entry.Utils.isTouchEvent = function({type}) {
+    return type.toLowerCase() !== 'mousedown';
 };
 
 Entry.Utils.inherit = function(parent, child) {
@@ -1640,8 +1636,8 @@ Entry.bindAnimationCallbackOnce = function($elem, func) {
     $elem.one('webkitAnimationEnd animationendo animationend', func);
 };
 
-Entry.Utils.isInInput = function(e) {
-    return e.target.type == 'textarea' || e.target.type == 'text';
+Entry.Utils.isInInput = function({target: {type}}) {
+    return type == 'textarea' || type == 'text';
 };
 
 Entry.Utils.addFilters = function(boardSvgDom, suffix) {

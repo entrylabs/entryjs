@@ -11,7 +11,9 @@ Entry.Block = function(block, thread) {
     Entry.Model(this, false);
     this._schema = null;
 
-    if (block._backupParams) this._backupParams = block._backupParams;
+    if (block._backupParams) {
+        this._backupParams = block._backupParams;
+    }
 
     this.setThread(thread);
     this.load(block);
@@ -28,21 +30,19 @@ Entry.Block = function(block, thread) {
     if (block.display !== undefined) this.display = block.display;
 
     code.registerBlock(this);
-    var events = this.events.dataAdd || [];
     if (code.object) {
-        events.forEach((fn) => {
+        (this.events.dataAdd || []).forEach((fn) => {
             if (_.isFunction(fn)) fn(that);
         });
     }
 
-    events = this.events.viewAdd || [];
     var board = code.board;
     if (
         Entry.getMainWS() &&
         Entry.isTextMode &&
         (!board || (board && board.constructor !== Entry.BlockMenu))
     ) {
-        events.forEach((fn) => {
+        (this.events.viewAdd || []).forEach((fn) => {
             if (_.isFunction(fn)) fn.apply(that, [that]);
         });
     }
@@ -76,7 +76,7 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
 
     p.load = function(block) {
         if (!block.id) {
-        block.id = Entry.Utils.generateId();
+            block.id = Entry.Utils.generateId();
         }
 
         this.set(block);
@@ -233,13 +233,13 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
         _destroyFunc(this._backupEvent);
         _destroyFunc(this._destroyBackupEvent);
 
-        this.set({ type: type });
+        this.set({ type });
         this.loadSchema();
         if (this.view) this.view.changeType(type);
     };
 
     p.setThread = function(thread) {
-        this.set({ thread: thread });
+        this.set({ thread });
     };
 
     p.getThread = function() {
@@ -251,11 +251,13 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
     };
 
     p._updatePos = function() {
-        if (this.view)
-            this.set({
-                x: this.view.x,
-                y: this.view.y,
-            });
+        if (!this.view) {
+            return;
+        }
+        this.set({
+            x: this.view.x,
+            y: this.view.y,
+        });
     };
 
     p.moveTo = function(x, y) {
@@ -287,8 +289,6 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
         var json = this._toJSON();
         var view = this.view;
 
-        var DROPDOWN_DYNAMIC = Entry.FieldDropdownDynamic;
-
         if (isNew) {
             jsonBlackList.push('id');
         }
@@ -298,7 +298,7 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
                 return p.toJSON(isNew, excludeData, option);
             } else if (
                 option.captureDynamic &&
-                view.getParam(i) instanceof DROPDOWN_DYNAMIC
+                view.getParam(i) instanceof Entry.FieldDropdownDynamic
             ) {
                 return view.getParam(i).getTextValue();
             } else {
@@ -346,8 +346,7 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
                     nextOutput.doInsert(prevOutput.view._contents[1]);
                 }
             } else if (nextOutput) {
-                var nextOutputView = nextOutput.view;
-                nextOutputView && nextOutputView._toGlobalCoordinate();
+                _.result(nextOutput.view, '_toGlobalCoordinate');
                 nextOutput.doInsert(this.getThread());
             }
         }
@@ -415,26 +414,25 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
         _destroyFunc(this._paramsBackupEvent);
         _destroyFunc(this._destroyParamsBackupEvent);
 
-        var events = this.events.dataDestroy || [];
+        var events = [];
         if (code.object) {
-            events.forEach(_eventFunc);
+            events = events.concat(this.events.dataDestroy || []);
         }
 
-        events = this.events.viewDestroy || [];
         var board = this.getCode().board;
         if (
             Entry.getMainWS() &&
             Entry.isTextMode &&
             (!board || (board && board.constructor !== Entry.BlockMenu))
         ) {
-            events.forEach(_eventFunc);
+            events = events.concat(this.events.viewDestroy || []);
         }
 
-        function _eventFunc(fn) {
+        events.forEach((fn) => {
             if (_.isFunction(fn)) {
                 fn.apply(that, [that, notSpliced]);
             }
-        }
+        });
     };
 
     p.getView = function() {
@@ -465,10 +463,8 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
     };
 
     p.isDeletable = function() {
-        return (
-            this.deletable === Entry.Block.DELETABLE_TRUE ||
-            this.deletable === true
-        );
+        var deletable = this.deletable;
+        return deletable === Entry.Block.DELETABLE_TRUE || deletable === true;
     };
 
     p.isReadOnly = function() {
@@ -515,10 +511,10 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
             for (var i = 0; i < json.length; i++) cloned.push(json[i]);
         } else cloned.push(this.toJSON(true));
 
-        var pos = this.view.getAbsoluteCoordinate();
+        var { x, y } = this.view.getAbsoluteCoordinate();
         var block = cloned[0];
-        block.x = pos.x + 15;
-        block.y = pos.y + 15;
+        block.x = x + 15;
+        block.y = y + 15;
         block.id = Entry.Utils.generateId();
 
         return cloned;

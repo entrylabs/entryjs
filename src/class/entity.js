@@ -75,7 +75,6 @@ Entry.EntityObject = function(object) {
             if (Entry.stage.isEntitySelectable()) {
                 var entity = this.entity;
                 if (entity.parent.getLock()) return;
-                entity.doCommand();
                 entity.setX(stageX * 0.75 - 240 + this.offset.x);
                 entity.setY(-(stageY * 0.75 - 135) - this.offset.y);
                 Entry.stage.updateObject();
@@ -155,24 +154,19 @@ Entry.EntityObject.prototype.initCommand = function() {
         return;
     }
 
-    this.isCommandValid = false;
     this._entityModelBefore = this.toJSON();
-};
-
-Entry.EntityObject.prototype.doCommand = function() {
-    this.isCommandValid = true;
 };
 
 Entry.EntityObject.prototype.checkCommand = function() {
     var oldModel = this._entityModelBefore;
-
     delete this._entityModelBefore;
+    var json = this.toJSON();
 
-    if (!this.isCommandValid) {
+    if (_.isEqual(json, oldModel)) {
         return;
     }
 
-    Entry.do('entitySetModel', this.parent.id, this.toJSON(), oldModel);
+    Entry.do('entitySetModel', this.parent.id, json, oldModel);
 };
 
 /**
@@ -650,22 +644,14 @@ Entry.EntityObject.prototype.toggleFontItalic = function() {
 
 Entry.EntityObject.prototype.getFontName = function() {
     if (this.type != 'textBox') return;
-    if (!this.textObjectfont) return '';
+    var font = this.textObject.font;
+    if (!font) return '';
 
-    return this.textObject.font
+    return font
         .split(' ')
-        .reduce((fonts, font) => {
-            if (_inspect(font)) {
-                fonts.push(font);
-            }
-            return fonts;
-        }, [])
+        .filter((font) => !/^(bold|italic)$/.test(font) && !~font.indexOf('px'))
         .join(' ')
         .trim();
-
-    function _inspect(font) {
-        return font !== 'bold' && font !== 'italic' && !~font.indexOf('px');
-    }
 };
 
 /**
@@ -848,7 +834,6 @@ Entry.EntityObject.prototype.setImage = function(pictureModel) {
     } else setImage(image);
 
     function setImage(datum) {
-        Entry.image = datum;
         that.object.image = datum;
         if (!_.isEmpty(that.object.filters)) that.cache();
         else that.object.uncache();
@@ -1109,17 +1094,19 @@ Entry.EntityObject.prototype.clearExecutor = function() {
  * @return {JSON}
  */
 Entry.EntityObject.prototype.toJSON = function() {
+    var _cut = Entry.cutDecimal;
+
     var json = {};
-    json.x = Entry.cutDecimal(this.getX());
-    json.y = Entry.cutDecimal(this.getY());
-    json.regX = Entry.cutDecimal(this.getRegX());
-    json.regY = Entry.cutDecimal(this.getRegY());
+    json.x = _cut(this.getX());
+    json.y = _cut(this.getY());
+    json.regX = _cut(this.getRegX());
+    json.regY = _cut(this.getRegY());
     json.scaleX = this.getScaleX();
     json.scaleY = this.getScaleY();
-    json.rotation = Entry.cutDecimal(this.getRotation());
-    json.direction = Entry.cutDecimal(this.getDirection());
-    json.width = Entry.cutDecimal(this.getWidth());
-    json.height = Entry.cutDecimal(this.getHeight());
+    json.rotation = _cut(this.getRotation());
+    json.direction = _cut(this.getDirection());
+    json.width = _cut(this.getWidth());
+    json.height = _cut(this.getHeight());
     json.font = this.getFont();
     json.visible = this.getVisible();
 
@@ -1250,7 +1237,7 @@ Entry.EntityObject.prototype.addStamp = function() {
     var stage = Entry.stage;
     stage.loadEntity(
         stampEntity,
-        Entry.stage.selectedObjectContainer.getChildIndex(this.object)
+        stage.selectedObjectContainer.getChildIndex(this.object)
     );
     this.stamps.push(stampEntity);
 
@@ -1278,13 +1265,14 @@ Entry.EntityObject.prototype.destroy = function(isClone) {
 
     if (this.stamps) this.removeStamps();
 
-    this.dialog && this.dialog.remove();
+    _.result(this.dialog, 'remove');
     this.brush && this.removeBrush();
     Entry.stage.unloadEntity(this);
 
     var container = Entry.container;
-    if (container)
+    if (container) {
         container.unCachePictures(this, this.parent.pictures, isClone);
+    }
 };
 
 Entry.EntityObject.prototype.cache = function() {
@@ -1298,6 +1286,6 @@ Entry.EntityObject.prototype.cache = function() {
 Entry.EntityObject.prototype.reset = function() {
     this.loadSnapshot();
     this.resetFilter();
-    this.dialog && this.dialog.remove();
+    _.result(this.dialog, 'remove');
     this.shapes.length && this.removeBrush();
 };

@@ -433,8 +433,8 @@ Entry.Container.prototype.selectObject = function(objectId, changeScene) {
     if (changeScene && object) Entry.scene.selectScene(object.scene);
 
     var className = 'selectedObject';
-    this.mapObjectOnScene(function(o) {
-        !o.view_ && o.generateView && o.generateView();
+    this.mapObjectOnScene((o) => {
+        !o.view_ && _.result(o, 'generateView');
         var selected = o === object;
         var view = o.view_;
         if (view) {
@@ -616,9 +616,9 @@ Entry.Container.prototype.getDropdownList = function(menuName, object) {
         case 'textBoxWithSelf': {
             const objs = this.getCurrentObjects();
             objs.forEach((obj) => {
-                if(obj.objectType === 'textBox') {
+                if (obj.objectType === 'textBox') {
                     result.push([obj.name, obj.id]);
-                };
+                }
             });
             result.push([Lang.Blocks.self, 'self']);
             break;

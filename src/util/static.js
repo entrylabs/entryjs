@@ -98,6 +98,7 @@ Entry.STATIC = {
         funcUpdate: 1005,
 
         //TODO commands development
+        listSetName: 829,
     },
 
     COMMAND_TYPES_NOT_ALWAYS: {

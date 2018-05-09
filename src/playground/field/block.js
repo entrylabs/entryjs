@@ -141,7 +141,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
     p.calcHeight = p.calcWH;
 
     p.destroy = function() {
-        this._valueBlock && this._valueBlock.destroyView();
+        _.result(this._valueBlock, 'destroyView');
     };
 
     p.inspectBlock = function() {
@@ -239,7 +239,9 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
 
     p.requestPartHeight = function(blockView, forAll) {
         return blockView
-            ? blockView.magnet.next ? blockView.magnet.next.y : blockView.height
+            ? blockView.magnet.next
+                ? blockView.magnet.next.y
+                : blockView.height
             : 0;
     };
 

@@ -17,7 +17,7 @@ Entry.Variable = function(variable) {
     this.name_ = variable.name;
     /** @type {string} */
     this.id_ = variable.id ? variable.id : Entry.generateHash();
-    this.type = variable.variableType ? variable.variableType : 'variable';
+    this.type = variable.variableType || 'variable';
     /** @type {entry object.id} */
     this.object_ = variable.object || null;
     /** @type {boolean} */
@@ -980,10 +980,7 @@ Entry.Variable.prototype.remove = function() {
  * clone self
  */
 Entry.Variable.prototype.clone = function() {
-    var variable = this.toJSON();
-    variable.isClone = true;
-    variable = new Entry.Variable(variable);
-    return variable;
+    return new Entry.Variable(Object.assign(this.toJSON(), { isClone: true }));
 };
 
 Entry.Variable.prototype.getType = function() {

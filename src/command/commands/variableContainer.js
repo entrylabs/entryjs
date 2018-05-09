@@ -41,6 +41,7 @@ var {
         setVariableEditable,
         setListEditable,
         variableSetName,
+        listSetName,
     } = COMMAND_TYPES;
 
     c[variableContainerSelectFilter] = {
@@ -71,7 +72,7 @@ var {
 
     c[variableContainerAddVariable] = {
         do: function(variable) {
-            var id = getExpectedData('variable', {}).id;
+            var id = _.result(getExpectedData('variable'), 'id');
             if (id) {
                 variable.id_ = id;
             }
@@ -80,7 +81,8 @@ var {
         },
         state: function(variable) {
             variable = _toJSON(variable);
-            variable.id = getExpectedData('variable', {}).id || variable.id;
+            variable.id =
+                _.result(getExpectedData('variable'), 'id') || variable.id;
 
             return [variable];
         },
@@ -93,7 +95,7 @@ var {
         restrict: function(data, domQuery, callback) {
             getVC().clickVariableAddButton(true, true);
             $('.entryVariableAddSpaceInputWorkspace').val(
-                getExpectedData('variable', {}).name || ''
+                _.result(getExpectedData('variable'), 'name') || ''
             );
 
             var { title, content } = data.tooltip;
@@ -151,11 +153,13 @@ var {
 
     c[variableContainerAddMessage] = {
         do: function(message) {
-            message.id = getExpectedData('message', {}).id || message.id;
+            message.id =
+                _.result(getExpectedData('message'), 'id') || message.id;
             getVC().addMessage(message);
         },
         state: function(message) {
-            message.id = getExpectedData('message', {}).id || message.id;
+            message.id =
+                _.result(getExpectedData('message'), 'id') || message.id;
             return [message];
         },
         log: function({ name, id }) {
@@ -201,7 +205,10 @@ var {
             return [['id', id], ['newName', newName]];
         },
         restrict(data, domQuery, callback) {
-            var { content: contentData, tooltip: { title, content } } = data;
+            var {
+                content: contentData,
+                tooltip: { title, content },
+            } = data;
 
             callback();
             var VC = getVC();
@@ -231,7 +238,9 @@ var {
             VC.updateVariableAddView('variable');
         },
         state() {
-            var { variableAddPanel: { object, isCloud } } = getVC();
+            var {
+                variableAddPanel: { object, isCloud },
+            } = getVC();
             return [object ? 'local' : 'global', isCloud];
         },
         log(type) {
@@ -249,7 +258,11 @@ var {
             VC.updateVariableAddView('variable');
         },
         state() {
-            var { variableAddPanel: { info: { isCloud } } } = getVC();
+            var {
+                variableAddPanel: {
+                    info: { isCloud },
+                },
+            } = getVC();
             return [isCloud];
         },
         log(value) {
@@ -298,6 +311,16 @@ var {
         },
         log(id, value) {
             return [['id', id], ['value', value]];
+        },
+        restrict({ tooltip, content }, domQuery, callback) {
+            var { title: tooltipTitle, content: tooltipContent } = tooltip;
+            return createTooltip(
+                tooltipTitle,
+                tooltipContent,
+                domQuery,
+                callback,
+                { noDispose: true }
+            );
         },
         recordable: RECORDABLE.SUPPORT,
         undo: 'variableSetDefaultValue',
@@ -380,7 +403,7 @@ var {
 
     c[variableContainerAddList] = {
         do(list) {
-            var id = getExpectedData('list', {}).id;
+            var id = _.result(getExpectedData('list'), 'id');
             if (id) {
                 if (list.setId) {
                     list.setId(id);
@@ -392,12 +415,12 @@ var {
         },
         state(list) {
             list = _toJSON(list);
-            list.id = getExpectedData('list', {}).id || list.id;
+            list.id = _.result(getExpectedData('list'), 'id') || list.id;
             return [list];
         },
         log(list) {
             list = _toJSON(list);
-            list.id = getExpectedData('list', {}).id || list.id;
+            list.id = _.result(getExpectedData('list'), 'id') || list.id;
             return [['list', list]];
         },
         recordable: RECORDABLE.SUPPORT,
@@ -406,7 +429,7 @@ var {
         restrict(data, domQuery, callback) {
             getVC().clickListAddButton(true, true);
             Entry.getDom(['variableContainer', 'listAddInput']).value =
-                getExpectedData('list', {}).name || '';
+                _.result(getExpectedData('list'), 'name') || '';
 
             var { title, content } = data.tooltip;
             callback();
@@ -437,7 +460,6 @@ var {
 
             dom = Entry.getDom(dom);
             dom._focused = false;
-
             dom.value = getExpectedData('value', value);
         },
         state: function(value) {
@@ -478,7 +500,9 @@ var {
             VC.updateVariableAddView('list');
         },
         state() {
-            var { listAddPanel: { object, isCloud } } = getVC();
+            var {
+                listAddPanel: { object, isCloud },
+            } = getVC();
             return [object ? 'local' : 'global', isCloud];
         },
         log(type) {
@@ -496,7 +520,11 @@ var {
             VC.updateVariableAddView('list');
         },
         state() {
-            var { listAddPanel: { info: { isCloud } } } = getVC();
+            var {
+                listAddPanel: {
+                    info: { isCloud },
+                },
+            } = getVC();
             return [isCloud];
         },
         log(value) {
@@ -561,7 +589,17 @@ var {
         },
         recordable: RECORDABLE.SUPPORT,
         undo: 'listChangeLength',
-        restrict: _listActiveRestrictor,
+        restrict({ tooltip, content }, domQuery, callback) {
+            _updateSelected(content);
+            var { title: tooltipTitle, content: tooltipContent } = tooltip;
+            return createTooltip(
+                tooltipTitle,
+                tooltipContent,
+                domQuery,
+                callback,
+                { noDispose: true }
+            );
+        },
         dom: ['variableContainer', 'listChangeLength', '&2'],
     };
 
@@ -583,7 +621,7 @@ var {
         },
         recordable: RECORDABLE.SUPPORT,
         undo: 'listSetDefaultValue',
-        restrict: function(data, domQuery, callback) {
+        restrict(data, domQuery, callback) {
             _updateSelected(data.content);
             Entry.Utils.focusIfNotActive(Entry.getDom(domQuery));
             var { title, content } = data.tooltip;
@@ -692,7 +730,12 @@ var {
             VC.changeVariableName(VC.getVariable(id), value);
         },
         state(id) {
-            return [id, getVC().getVariable(id).name_];
+            return [
+                id,
+                getVC()
+                    .getVariable(id)
+                    .getName(),
+            ];
         },
         log(id, value) {
             return [['id', id], ['value', value]];
@@ -716,13 +759,48 @@ var {
         dom: ['variableContainer', 'variableName', '&0'],
     };
 
+    c[listSetName] = {
+        do(id, value) {
+            var VC = getVC();
+            VC.changeListName(VC.getList(id), value);
+        },
+        state(id) {
+            return [
+                id,
+                getVC()
+                    .getList(id)
+                    .getName(),
+            ];
+        },
+        log(id, value) {
+            return [['id', id], ['value', value]];
+        },
+        restrict({ tooltip, content }, domQuery, callback) {
+            _updateSelected(content);
+
+            Entry.Utils.focusIfNotActive(domQuery);
+
+            var { title: tooltipTitle, content: tooltipContent } = tooltip;
+            return createTooltip(
+                tooltipTitle,
+                tooltipContent,
+                domQuery,
+                callback,
+                { noDispose: true }
+            );
+        },
+        recordable: RECORDABLE.SUPPORT,
+        undo: 'listSetName',
+        dom: ['variableContainer', 'listName', '&0'],
+    };
+
     //utilities
 
     //if data has toJSON method
     //return data.toJSON()
     //else just return data as is
     function _toJSON(data) {
-        return data.toJSON ? data.toJSON() : data;
+        return _.result(data, 'toJSON') || data;
     }
 
     function getVC() {

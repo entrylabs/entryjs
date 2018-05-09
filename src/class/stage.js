@@ -505,7 +505,6 @@ Entry.Stage.prototype.updateHandle = function() {
     }
     entity.setDirection(handle.direction);
     entity.setRotation(handle.rotation);
-    this.selectedObject.entity.doCommand();
     this.editEntity = false;
 };
 
