@@ -74,23 +74,21 @@ Entry.Stage.prototype.initStage = function(canvas) {
         canvas.onmouseup = upFunc;
         canvas.ontouchend = upFunc;
 
-        $(document).click(
-            ({ target: { id } }) => (this.focused = id === 'entryCanvas')
-        );
+        $(document).click(({ target: { id } }) => {
+            this.focused = id === 'entryCanvas';
+        });
     }
 
     _addEventListener('canvasClick', () => (Entry.stage.isObjectClick = false));
     _addEventListener('loadComplete', this.sortZorder.bind(this));
-    Entry.windowResized.attach(this, () => this.updateBoundRect());
+    Entry.windowResized.attach(this, this.updateBoundRect.bind(this));
 
-    var razyScroll = _.debounce(function() {
+    var razyScroll = _.debounce(() => {
         Entry.windowResized.notify();
     }, 200);
 
-    $(window).scroll(function() {
-        window.requestAnimationFrame(function() {
-            razyScroll();
-        });
+    $(window).scroll(() => {
+        window.requestAnimationFrame(razyScroll);
     });
 
     var moveFunc = function(e) {
@@ -98,17 +96,17 @@ Entry.Stage.prototype.initStage = function(canvas) {
         var { pageX, pageY } = Entry.Utils.convertMouseEvent(e);
         var roundRect = Entry.stage.getBoundRect();
         var scrollPos = Entry.Utils.getScrollPos();
-        var x =
-            ((pageX - roundRect.left - scrollPos.left) / roundRect.width -
-                0.5) *
-            480;
-        var y =
-            ((pageY - roundRect.top - scrollPos.top) / roundRect.height - 0.5) *
-            -270;
-
         this.mouseCoordinate = {
-            x: Entry.Utils.toFixed(x),
-            y: Entry.Utils.toFixed(y),
+            x: Entry.Utils.toFixed(
+                ((pageX - roundRect.left - scrollPos.left) / roundRect.width -
+                    0.5) *
+                    480
+            ),
+            y: Entry.Utils.toFixed(
+                ((pageY - roundRect.top - scrollPos.top) / roundRect.height -
+                    0.5) *
+                    -270
+            ),
         };
         Entry.dispatchEvent('stageMouseMove');
     }.bind(this);
@@ -129,10 +127,10 @@ Entry.Stage.prototype.initStage = function(canvas) {
         if (Entry.engine.isState('stop')) Entry.stage.updateObject();
     };
 
-    _addEventListener('canvasInputComplete', function(e) {
+    _addEventListener('canvasInputComplete', () => {
         try {
-            var inputValue = Entry.stage.inputField.value();
-            Entry.stage.hideInputField();
+            var inputValue = this.inputField.value();
+            this.hideInputField();
             if (inputValue) {
                 ((c) => {
                     c.setInputValue(inputValue);
@@ -146,13 +144,13 @@ Entry.Stage.prototype.initStage = function(canvas) {
     this.render();
 };
 
-Entry.Stage.prototype.render = function() {
+Entry.Stage.prototype.render = function stageRender() {
     if (Entry.stage.timer) clearTimeout(Entry.stage.timer);
     var time = _.now();
     Entry.stage.update();
     time = _.now() - time;
     Entry.stage.timer = setTimeout(
-        Entry.stage.render,
+        stageRender,
         16 - time % 16 + 16 * Math.floor(time / 16)
     );
 };
@@ -167,12 +165,12 @@ Entry.Stage.prototype.update = function() {
         Entry.requestUpdate = false;
         return;
     }
+    this.canvas.update();
+
     if (Entry.engine.isState('stop') && this.objectUpdated) {
-        this.canvas.update();
         this.objectUpdated = false;
-    } else {
-        this.canvas.update();
     }
+
     var inputField = this.inputField;
     if (inputField && !inputField._isHidden) inputField.render();
     if (Entry.requestUpdateTwice) Entry.requestUpdateTwice = false;
@@ -244,16 +242,16 @@ Entry.Stage.prototype.unloadDialog = function({ object }) {
     this.dialogContainer.removeChild(object);
 };
 
-Entry.Stage.prototype.setEntityIndex = function(entity, index) {
+Entry.Stage.prototype.setEntityIndex = function({ object }, index) {
     var selectedObjectContainer = Entry.stage.selectedObjectContainer;
-    var currentIndex = selectedObjectContainer.getChildIndex(entity.object);
+    var currentIndex = selectedObjectContainer.getChildIndex(object);
 
     if (currentIndex === index) {
         return;
     } else if (currentIndex > index) {
-        selectedObjectContainer.setChildIndex(entity.object, index);
+        selectedObjectContainer.setChildIndex(object, index);
     } else {
-        selectedObjectContainer.setChildIndex(entity.object, index);
+        selectedObjectContainer.setChildIndex(object, index);
     }
     Entry.requestUpdate = true;
 };
@@ -268,10 +266,10 @@ Entry.Stage.prototype.sortZorder = function() {
         index = 0;
 
     for (var i = length - 1; i >= 0; i--) {
-        var object = objects[i];
-
-        var entity = object.entity;
-        container.setChildIndex(entity.object, index++);
+        var {
+            entity: { object },
+        } = objects[i];
+        container.setChildIndex(object, index++);
     }
 
     Entry.requestUpdate = true;
@@ -288,24 +286,29 @@ Entry.Stage.prototype.sortZorderRun = function() {
  * Initialize coordinate on canvas. It is toggle by Engine.
  */
 Entry.Stage.prototype.initCoordinator = function() {
-    var coordinator = new createjs.Container();
-    var img = new createjs.Bitmap(
-        Entry.mediaFilePath + 'workspace_coordinate.png'
+    var coordinator = (this.coordinator = Object.assign(
+        new createjs.Container(),
+        {
+            mouseEnabled: false,
+            tickEnabled: false,
+            tickChildren: false,
+            visible: false,
+        }
+    ));
+    coordinator.addChild(
+        Object.assign(
+            new createjs.Bitmap(
+                Entry.mediaFilePath + 'workspace_coordinate.png'
+            ),
+            {
+                scaleX: 0.5,
+                scaleY: 0.5,
+                x: -240,
+                y: -135,
+            }
+        )
     );
-    img.scaleX = 0.5;
-    img.scaleY = 0.5;
-    img.x = -240;
-    img.y = -135;
-    coordinator.mouseEnabled = false;
-    coordinator.tickEnabled = false;
-    coordinator.tickChildren = false;
-    coordinator.visible = false;
-    coordinator.addChild(img);
-
     this.canvas.addChild(coordinator);
-
-    /** @type {createjs.Container} */
-    this.coordinator = coordinator;
 };
 
 /**
