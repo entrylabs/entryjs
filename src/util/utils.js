@@ -2358,7 +2358,7 @@ Entry.Utils.recoverSoundInstances = function() {
     };
 
     p.addClass = function(...classes) {
-        return _.head($(this).addClass(classes.join(' ')));
+        return _.head($(this).addClass(classes.filter(_.identity).join(' ')));
     };
 
     p.removeClass = function(...classes) {

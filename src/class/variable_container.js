@@ -533,7 +533,6 @@ Entry.VariableContainer = function() {
             if (viewMode == 'func') {
                 var mode = _.result(Entry.getMainWS(), 'getMode');
                 mode = _.isUndefined(mode) ? Entry.Workspace.MODE_BOARD : mode;
-
                 mode =
                     mode === Entry.Workspace.MODE_OVERLAYBOARD || isPythonMode;
 
@@ -824,13 +823,6 @@ Entry.VariableContainer = function() {
     };
 
     /**
-     * Add variable
-     * @param {Entry.Variable} variable
-     * @return {boolean} return true when success
-     */
-    p.addFunction = function(variable) {};
-
-    /**
      * Remove variable
      * @param {Entry.Variable} variable
      */
@@ -905,12 +897,6 @@ Entry.VariableContainer = function() {
     p.getListByName = function(name, isSelf, currentObjectId) {
         return _getVariableByName(this.lists_, name, isSelf, currentObjectId);
     };
-
-    /**
-     * @param {Entry.Variable} variable
-     * @param {String} name
-     */
-    p.editFunction = function(variable, name) {};
 
     /**
      * Save variable
@@ -1106,23 +1092,18 @@ Entry.VariableContainer = function() {
             }
         }
 
-        var variables = this.variables_;
-        var exist = Entry.isExist(name, 'name_', variables);
-
-        if (exist) {
+        if (Entry.isExist(name, 'name_', this.variables_)) {
             variable.listElement.nameField.value = variable.name_;
-            Entry.toast.alert(
+            return Entry.toast.alert(
                 Lang.Workspace.variable_rename_failed,
                 Lang.Workspace.variable_dup
             );
-            return;
         } else if (name.length > 10) {
             variable.listElement.nameField.value = variable.name_;
-            Entry.toast.alert(
+            return Entry.toast.alert(
                 Lang.Workspace.variable_rename_failed,
                 Lang.Workspace.variable_too_long
             );
-            return;
         }
         variable.setName(name);
         variable.listElement.nameField.value = name;
@@ -1528,11 +1509,11 @@ Entry.VariableContainer = function() {
         return [
             ...this.variables_,
             ...this.lists_,
-            Entry.engine.projectTimer,
-            Entry.container.inputValue,
+            _.result(Entry.engine, 'projectTimer'),
+            _.result(Entry.container, 'inputValue'),
         ]
             .filter(_.identity)
-            .map((v) => v.toJSON());
+            .map((v) => (v.toJSON ? v.toJSON() : v));
     };
 
     /**
@@ -1624,12 +1605,14 @@ Entry.VariableContainer = function() {
         CE('span').appendTo(addSpaceGlobalWrapper).innerHTML =
             Lang.Workspace.Variable_use_all_objects;
 
-        var addVariableGlobalCheck = CE('span')
+        this.variableAddPanel.view.globalCheck = CE('span')
             .addClass('entryVariableAddSpaceCheckWorkspace')
+            .addClass(
+                !this.variableAddPanel.info.object
+                    ? 'entryVariableAddChecked'
+                    : ''
+            )
             .appendTo(addSpaceGlobalWrapper);
-        this.variableAddPanel.view.globalCheck = addVariableGlobalCheck;
-        if (!this.variableAddPanel.info.object)
-            addVariableGlobalCheck.addClass('entryVariableAddChecked');
 
         var addSpaceLocalWrapper = CE('div')
             .addClass('entryVariableAddSpaceLocalWrapperWorkspace')
@@ -1639,12 +1622,14 @@ Entry.VariableContainer = function() {
         CE('span').appendTo(addSpaceLocalWrapper).innerHTML =
             Lang.Workspace.Variable_use_this_object;
 
-        var addVariableLocalCheck = CE('span')
+        this.variableAddPanel.view.localCheck = CE('span')
             .addClass('entryVariableAddSpaceCheckWorkspace')
+            .addClass(
+                this.variableAddPanel.info.object
+                    ? 'entryVariableAddChecked'
+                    : ''
+            )
             .appendTo(addSpaceLocalWrapper);
-        this.variableAddPanel.view.localCheck = addVariableLocalCheck;
-        if (this.variableAddPanel.info.object)
-            addVariableLocalCheck.addClass('entryVariableAddChecked');
 
         var addSpaceCloudWrapper = CE('div')
             .addClass('entryVariableAddSpaceCloudWrapperWorkspace')
@@ -1660,20 +1645,19 @@ Entry.VariableContainer = function() {
             .appendTo(addSpaceCloudWrapper).innerHTML =
             Lang.Workspace.Variable_create_cloud;
 
-        var addVariableCloudCheck = CE('span')
+        this.variableAddPanel.view.cloudCheck = CE('span')
             .addClass(
                 'entryVariableAddSpaceCheckWorkspace',
-                'entryVariableAddSpaceCloudCheckWorkspace'
+                'entryVariableAddSpaceCloudCheckWorkspace',
+                this.variableAddPanel.info.isCloud
+                    ? 'entryVariableAddChecked'
+                    : ''
             )
             .appendTo(addSpaceCloudWrapper);
-        this.variableAddPanel.view.cloudCheck = addVariableCloudCheck;
-        if (this.variableAddPanel.info.isCloud)
-            addVariableCloudCheck.addClass('entryVariableAddChecked');
 
         var addSpaceButtonWrapper = CE('div')
             .addClass('entryVariableAddSpaceButtonWrapperWorkspace')
             .appendTo(variableAddSpace);
-
         CE('span')
             .addClass('entryVariableAddSpaceCancelWorkspace')
             .addClass('entryVariableAddSpaceButtonWorkspace')
@@ -1758,12 +1742,12 @@ Entry.VariableContainer = function() {
         CE('span').appendTo(addSpaceGlobalWrapper).innerHTML =
             Lang.Workspace.use_all_objects;
 
-        var addListGlobalCheck = CE('span')
+        this.listAddPanel.view.globalCheck = CE('span')
             .addClass('entryVariableAddSpaceCheckWorkspace')
+            .addClass(
+                !this.listAddPanel.info.object ? 'entryVariableAddChecked' : ''
+            )
             .appendTo(addSpaceGlobalWrapper);
-        this.listAddPanel.view.globalCheck = addListGlobalCheck;
-        if (!this.listAddPanel.info.object)
-            addListGlobalCheck.addClass('entryVariableAddChecked');
 
         var addSpaceLocalWrapper = CE('div')
             .addClass('entryVariableAddSpaceLocalWrapperWorkspace')
@@ -1773,12 +1757,14 @@ Entry.VariableContainer = function() {
         CE('span').appendTo(addSpaceLocalWrapper).innerHTML =
             Lang.Workspace.Variable_use_this_object;
 
-        var addListLocalCheck = CE('span')
+        this.listAddPanel.view.localCheck = CE('span')
             .addClass('entryVariableAddSpaceCheckWorkspace')
+            .addClass(
+                this.variableAddPanel.info.object
+                    ? 'entryVariableAddChecked'
+                    : ''
+            )
             .appendTo(addSpaceLocalWrapper);
-        this.listAddPanel.view.localCheck = addListLocalCheck;
-        if (this.variableAddPanel.info.object)
-            addListLocalCheck.addClass('entryVariableAddChecked');
 
         var addSpaceCloudWrapper = CE('div')
             .appendTo(listAddSpace)
@@ -1796,10 +1782,11 @@ Entry.VariableContainer = function() {
         var addListCloudCheck = CE('span')
             .addClass('entryVariableAddSpaceCheckWorkspace')
             .addClass('entryVariableAddSpaceCloudCheckWorkspace')
+            .addClass(
+                this.listAddPanel.info.isCloud ? 'entryVariableAddChecked' : ''
+            )
             .appendTo(addSpaceCloudWrapper);
         this.listAddPanel.view.cloudCheck = addListCloudCheck;
-        if (this.listAddPanel.info.isCloud)
-            addListCloudCheck.addClass('entryVariableAddChecked');
 
         var addSpaceButtonWrapper = CE('div')
             .addClass('entryVariableAddSpaceButtonWrapperWorkspace')
@@ -2068,8 +2055,10 @@ Entry.VariableContainer = function() {
             minMaxWrapper,
         } = view;
 
-        visibleCheck.removeClass('entryVariableSettingChecked');
         if (v.isVisible()) visibleCheck.addClass('entryVariableSettingChecked');
+        else {
+            visibleCheck.removeClass('entryVariableSettingChecked');
+        }
 
         slide.removeClass('entryVariableSettingChecked');
         if (v.getType() == 'slide') {

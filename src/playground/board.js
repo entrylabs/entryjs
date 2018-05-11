@@ -433,10 +433,9 @@ Entry.Board.DRAG_RADIUS = 5;
                 continue;
             }
 
-            var metaData = this._getCodeBlocks(code, targetType);
-            metaData.sort(function(a, b) {
-                return a.point - b.point;
-            });
+            var metaData = this._getCodeBlocks(code, targetType).sort(
+                (a, b) => a.point - b.point
+            );
 
             metaData.unshift({ point: -Number.MAX_VALUE, blocks: [] });
 
@@ -464,8 +463,6 @@ Entry.Board.DRAG_RADIUS = 5;
     };
 
     p._getCodeBlocks = function(code, targetType) {
-        var threads = code.getThreads();
-        var blocks = [];
         var func;
         switch (targetType) {
             case 'previous':
@@ -484,13 +481,12 @@ Entry.Board.DRAG_RADIUS = 5;
             default:
                 return [];
         }
-        for (var i = 0; i < threads.length; i++) {
-            var thread = threads[i];
-            blocks = blocks.concat(
+
+        return code.getThreads().reduce((blocks, thread) => {
+            return blocks.concat(
                 func.call(this, thread, thread.view.zIndex, null, targetType)
             );
-        }
-        return blocks;
+        }, []);
     };
 
     p._getNextMagnets = function(thread, zIndex, offset, targetType) {
@@ -888,13 +884,12 @@ Entry.Board.DRAG_RADIUS = 5;
         //udpate zIndex data first
         code.dominate(thread);
         //udpate visual things next frame
-        requestAnimationFrame(
-            function() {
-                var blockView = block && block.view;
-                if (this.svgBlockGroup && blockView)
-                    this.svgBlockGroup.appendChild(blockView.svgGroup);
-            }.bind(this)
-        );
+        requestAnimationFrame(() => {
+            var svgGroup = _.result(block && block.view, 'svgGroup');
+            if (this.svgBlockGroup && svgGroup) {
+                this.svgBlockGroup.appendChild(svgGroup);
+            }
+        });
 
         function _shouldDominate(zIndex, max) {
             return zIndex + 1 < max || !zIndex || !max;
@@ -918,15 +913,10 @@ Entry.Board.DRAG_RADIUS = 5;
 
     p.activateBlock = function(block) {
         var view = block.view;
-        var pos = view.getAbsoluteCoordinate();
-        var svgDom = this.svgDom;
-        var blockX = pos.x,
-            blockY = pos.y;
+        var { x: blockX, y: blockY } = view.getAbsoluteCoordinate();
 
-        var rect = this.getSvgDomRect();
-        var dx = rect.width / 2 - blockX;
-        var dy = rect.height / 2 - blockY - 100;
-        this.scroller.scroll(dx, dy);
+        var { width, height } = this.getSvgDomRect();
+        this.scroller.scroll(width / 2 - blockX, height / 2 - blockY - 100);
 
         view.addActivated();
 
@@ -1154,7 +1144,7 @@ Entry.Board.DRAG_RADIUS = 5;
 
         var { clientX: x, clientY: y } = Entry.Utils.convertMouseEvent(e);
         Entry.ContextMenu.show(
-            contextOptions.reduce((options, { activated, option }) => {
+            contextOptions.filter((options, { activated, option }) => {
                 if (activated) {
                     options.push(option);
                 }

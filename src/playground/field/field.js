@@ -299,6 +299,9 @@ Entry.Field = function() {};
         if (key === 'option') {
             return this.optionGroup;
         }
+
+        //default return value
+        return this.svgGroup;
     };
 
     p.optionDomCreated = function() {
