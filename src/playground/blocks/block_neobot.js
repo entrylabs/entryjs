@@ -40,6 +40,59 @@ Entry.Neobot = {
     },
 };
 
+Entry.Neobot.setLanguage = function () {
+    return {
+        ko: {
+            // ko.js에 작성하던 내용
+            template: {
+                neobot_sensor_value: "%1",
+                neobot_sensor_convert_scale : "%1 값의 범위를 %2 ~ %3 에서 %4 ~ %5 (으)로 변환",
+                neobot_sensor_color : "%1",
+                neobot_equal_with_sensor : "%1 의 센서값이 %2",
+                get_motor_speed : "%1",
+                neobot_left_motor : "왼쪽 모터를 %1 %2 의 속도로 회전 %3",
+                neobot_stop_left_motor : "왼쪽 모터를 정지 %1",
+                neobot_right_motor : "오른쪽 모터를 %1 %2 의 속도로 회전 %3",
+                neobot_stop_right_motor : "오른쪽 모터를 정지 %1",
+                neobot_all_motor : "양쪽 모터를 %1 %2의 속도로 %3초 동안 회전 %4",
+                neobot_stop_all_motor : "양쪽 모터를 정지 %1",
+                neobot_set_servo : "%1 포트의 서보모터를 %2 도 이동 %3",
+                neobot_set_output : "%1 번 포트의 값을 %2 만큼 출력 %3",
+                neobot_set_fnd : "FND에 %1 출력 %2",
+                neobot_set_fnd_off : "FND 출력 끄기 %1",
+                neobot_play_note_for : "멜로디 %1 을(를) %2 옥타브로 %3 길이만큼 소리내기 %4",
+                neobot_play_note_with_sensor : "컨트롤러에서 %1 센서의 %2 ~ %3 값으로 멜로디 연주하기 %4",
+                neobot_change_color_with_color_picker : "%1 LED의 색깔을 %2(으)로 정하기 %3",
+                neobot_change_color_with_sensor_value : "%1 LED의 색깔을 %2 센서 값으로 바꾸기 %3",
+            }
+        },
+        en: {
+            // en.js에 작성하던 내용
+            template: {
+                neobot_sensor_value : "%1 value",
+                neobot_sensor_convert_scale : "Change %1's area from %2 ~ %3 to %4 ~ %5",
+                neobot_sensor_color : "%1",
+                neobot_equal_with_sensor : "%1's sensor value is %2",
+                get_motor_speed : "%1",
+                neobot_left_motor : "Move left motor %1 for speed %2 %3",
+                neobot_stop_left_motor : "Stop left motor",
+                neobot_right_motor : "Move right motor %1 for speed %2 %3",
+                neobot_stop_right_motor : "Stop right motor %1",
+                neobot_all_motor : "Rotate both motors %2 speeds at %1 for %3 seconds %4",
+                neobot_stop_all_motor : "Stop both motors",
+                neobot_set_servo : "%1 port servo motor moves %2 degrees %3",
+                neobot_set_output : "Output the value of the %1 port by %2 %3",
+                neobot_set_fnd : "%1 output to FND %2",
+                neobot_set_fnd_off : "Turn OFF the FND output %1",
+                neobot_play_note_for : "Sound melody %1 at %2 octave for %3 %4",
+                neobot_play_note_with_sensor : "Sound melody for value %2 ~ %3 on a controller's %1 %4",
+                neobot_change_color_with_color_picker : "Select %2 for %1 LED %3",
+                neobot_change_color_with_sensor_value : "Change %1 LED's color to %2 sensor's value %3",
+            }
+        }
+    }
+};
+
 Entry.Neobot.getBlocks = function() {
     return {
         //region neobot 네오봇
@@ -48,7 +101,6 @@ Entry.Neobot.getBlocks = function() {
             skeleton: 'basic_string_field',
             fontColor: '#fff',
             statements: [],
-            template: '%1  값',
             params: [
                 {
                     type: 'Dropdown',
@@ -85,7 +137,6 @@ Entry.Neobot.getBlocks = function() {
             skeleton: 'basic_string_field',
             fontColor: '#fff',
             statements: [],
-            template: '%1 값의 범위를 %2 ~ %3 에서 %4 ~ %5 (으)로 변환',
             params: [
                 {
                     type: 'Dropdown',
@@ -183,7 +234,6 @@ Entry.Neobot.getBlocks = function() {
             skeleton: 'basic_string_field',
             fontColor: '#fff',
             statements: [],
-            template: '%1',
             params: [
                 {
                     type: 'Dropdown',
@@ -219,7 +269,6 @@ Entry.Neobot.getBlocks = function() {
             color: '#00979D',
             fontColor: '#ffffff',
             skeleton: 'basic_boolean_field',
-            template: '%1 의 센서값이 %2',
             statements: [],
             params: [
                 {
@@ -288,7 +337,6 @@ Entry.Neobot.getBlocks = function() {
             color: '#00979D',
             skeleton: 'basic_string_field',
             statements: [],
-            template: '%1',
             params: [
                 {
                     type: 'Dropdown',
@@ -331,7 +379,6 @@ Entry.Neobot.getBlocks = function() {
             color: '#00979D',
             skeleton: 'basic',
             statements: [],
-            template: '왼쪽 모터를 %1 %2 의 속도로 회전 %3',
             params: [
                 {
                     type: 'Dropdown',
@@ -380,7 +427,6 @@ Entry.Neobot.getBlocks = function() {
             color: '#00979D',
             skeleton: 'basic',
             statements: [],
-            template: '왼쪽 모터를 정지 %1',
             params: [
                 {
                     type: 'Indicator',
@@ -405,7 +451,6 @@ Entry.Neobot.getBlocks = function() {
             color: '#00979D',
             skeleton: 'basic',
             statements: [],
-            template: '오른쪽 모터를 %1 %2 의 속도로 회전 %3',
             params: [
                 {
                     type: 'Dropdown',
@@ -454,7 +499,6 @@ Entry.Neobot.getBlocks = function() {
             color: '#00979D',
             skeleton: 'basic',
             statements: [],
-            template: '오른쪽 모터를 정지 %1',
             params: [
                 {
                     type: 'Indicator',
@@ -479,7 +523,6 @@ Entry.Neobot.getBlocks = function() {
             color: '#00979D',
             skeleton: 'basic',
             statements: [],
-            template: '양쪽 모터를 %1 %2의 속도로 %3초 동안 회전 %4',
             params: [
                 {
                     type: 'Dropdown',
@@ -598,7 +641,6 @@ Entry.Neobot.getBlocks = function() {
             color: '#00979D',
             skeleton: 'basic',
             statements: [],
-            template: '양쪽 모터를 정지 %1',
             params: [
                 {
                     type: 'Indicator',
@@ -624,7 +666,6 @@ Entry.Neobot.getBlocks = function() {
             color: '#00979D',
             skeleton: 'basic',
             statements: [],
-            template: '%1 포트의 서보모터를 %2 도 이동 %3',
             params: [
                 {
                     type: 'Dropdown',
@@ -680,7 +721,6 @@ Entry.Neobot.getBlocks = function() {
             color: '#00979D',
             skeleton: 'basic',
             statements: [],
-            template: '%1 번 포트의 값을 %2 만큼 출력 %3',
             params: [
                 {
                     type: 'Dropdown',
@@ -744,7 +784,6 @@ Entry.Neobot.getBlocks = function() {
             color: '#00979D',
             skeleton: 'basic',
             statements: [],
-            template: 'FND에 %1 출력 %2',
             params: [
                 {
                     type: 'Block',
@@ -786,7 +825,6 @@ Entry.Neobot.getBlocks = function() {
             color: '#00979D',
             skeleton: 'basic',
             statements: [],
-            template: 'FND 출력 끄기 %1',
             params: [
                 {
                     type: 'Indicator',
@@ -814,7 +852,6 @@ Entry.Neobot.getBlocks = function() {
             color: '#00979D',
             skeleton: 'basic',
             statements: [],
-            template: '멜로디 %1 을(를) %2 옥타브로 %3 길이만큼 소리내기 %4',
             params: [
                 {
                     type: 'Dropdown',
@@ -914,8 +951,6 @@ Entry.Neobot.getBlocks = function() {
             color: '#00979D',
             skeleton: 'basic',
             statements: [],
-            template:
-                '컨트롤러에서 %1 센서의 %2 ~ %3 값으로 멜로디 연주하기 %4',
             params: [
                 {
                     type: 'Dropdown',
@@ -1029,7 +1064,6 @@ Entry.Neobot.getBlocks = function() {
             color: '#00979D',
             skeleton: 'basic',
             statements: [],
-            template: '%1 LED의 색깔을 %2(으)로 정하기 %3',
             params: [
                 {
                     type: 'Dropdown',
@@ -1076,7 +1110,6 @@ Entry.Neobot.getBlocks = function() {
             color: '#00979D',
             skeleton: 'basic',
             statements: [],
-            template: '%1 LED의 색깔을 %2 센서 값으로 바꾸기 %3',
             params: [
                 {
                     type: 'Dropdown',
