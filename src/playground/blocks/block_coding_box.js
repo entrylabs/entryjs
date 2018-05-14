@@ -14,6 +14,10 @@ Entry.CodingBox = {
         GET: {},
         SET: {}
       };
+      Entry.hw.sendQueue[ 'SET' ][ Entry.CodingBox.sensorTypes.LCD_INIT ] = {
+        port: 0,
+        time: new Date().getTime()
+    }
     } else {
       var keySet = Object.keys(Entry.hw.sendQueue.SET);
       keySet.forEach(function (key) {
@@ -52,7 +56,8 @@ Entry.CodingBox = {
     ULTRASONIC: 7,
     TIMER: 8,
     LCD_PRINT: 9,
-    LCD_CLEAR: 10
+    LCD_CLEAR: 10,
+    LCD_INIT: 11
   },
   toneTable: {
     '0': 0,
@@ -104,12 +109,12 @@ Entry.CodingBox.setLanguage = function () {
         cbx_arduino_write_servo:
           '디지털 %1 번 핀의 서보모터를 %2 의 각도로 정하기 %3',
         cbx_arduino_read_digital: '디지털 %1 번 센서값',
-        cbx_write_servo: '서보모터 각도를 %1 도로 정하기',
+        cbx_write_servo: '서보모터 각도를 %1 도로 정하기 %2',
         cbx_write_tone: '부저를 %1 %2 음으로 %3 초 연주하기 %4',
         cbx_write_led: '%1 을 %2 로 정하기 %3',
         cbx_write_dcm: 'DC모터를 %1 방향, 속도 %2 로 정하기 %3',
         cbx_write_rgb_led: '빨강을 %1 으로, 초록을 %2 으로, 파랑 %3 으로 정하기 %4',
-        cbx_write_lcd: '%1 줄 %2 칸에 %3 을 쓰기 %4',
+        cbx_write_lcd: 'LCD %1 줄 %2 칸에 %3 을 쓰기 %4',
         cbx_clear_lcd: 'LCD 화면 지우기 %1',
         cbx_read_line: '라인센서 값',
         cbx_read_switch: '%1 값',
@@ -134,7 +139,7 @@ Entry.CodingBox.setLanguage = function () {
         cbx_write_led: '%1 set to %2 %3',
         cbx_write_rgb_led: 'set red %1 , green %2 , blue %3 %4',
         cbx_write_tone: 'note %1 octave %2 beat %3 %4',
-        cbx_write_servo: 'set servo angle %1',
+        cbx_write_servo: 'set servo angle %1 %2',
         cbx_write_dcm: 'write DC motor direction %1 , speed %2 %3',
         cbx_write_lcd: 'write on %1 line %2 column %3  %4',
         cbx_clear_lcd: 'clear LCD screen %1',
@@ -1916,7 +1921,7 @@ Entry.CodingBox.getBlocks = function () {
             [ '90', '90' ],
             [ '120', '120' ],
             [ '150', '150' ],
-            [ '180', '180' ],
+            [ '180', '180' ]
           ],
           value: '255',
           fontSize: 11,
@@ -2218,8 +2223,9 @@ Entry.CodingBox.getBlocks = function () {
         params: [
           {
             type: 'cbx_servo_angle_list',
-            params: [180]
-          }
+            params: [ 180 ]
+          },
+          null
         ],
         type: 'cbx_write_servo'
       },
