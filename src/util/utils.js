@@ -450,19 +450,6 @@ Entry.Utils.generateId = function(object) {
     ).substr(-4);
 };
 
-Entry.Utils.intersectArray = function(x, y) {
-    var ret = [];
-    for (var i = 0; i < x.length; i++) {
-        for (var z = 0; z < y.length; z++) {
-            if (x[i] == y[z]) {
-                ret.push(x[i]);
-                break;
-            }
-        }
-    }
-    return ret;
-};
-
 Entry.Utils.isPointInMatrix = function(matrix, point, offset) {
     offset = offset === undefined ? 0 : offset;
     var x = matrix.offsetX ? matrix.x + matrix.offsetX : matrix.x;
@@ -900,9 +887,9 @@ Entry.dispatchEvent = function(eventName, ...args) {
     var events = this.events_[eventName];
     if (_.isEmpty(events)) return;
 
-    events.forEach(function(func) {
-        func.apply(window, args);
-    });
+    events.forEach((func) => 
+        func.apply(window, args)
+    );
 };
 
 /**
@@ -1621,7 +1608,7 @@ Entry.Utils.isRightButton = function(e) {
     return e.button == 2 || e.ctrlKey;
 };
 
-Entry.Utils.isTouchEvent = function({type}) {
+Entry.Utils.isTouchEvent = function({ type }) {
     return type.toLowerCase() !== 'mousedown';
 };
 
@@ -1636,7 +1623,7 @@ Entry.bindAnimationCallbackOnce = function($elem, func) {
     $elem.one('webkitAnimationEnd animationendo animationend', func);
 };
 
-Entry.Utils.isInInput = function({target: {type}}) {
+Entry.Utils.isInInput = function({ target: { type } }) {
     return type == 'textarea' || type == 'text';
 };
 
@@ -2523,3 +2510,4 @@ Entry.Utils.focusIfNotActive = function(dom) {
         dom.focus && dom.focus();
     }
 };
+

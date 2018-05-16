@@ -334,12 +334,10 @@ Entry.Stage.prototype.selectObject = function(object) {
  * Initialize handle. Handle is use for transform object on canvas.
  */
 Entry.Stage.prototype.initHandle = function() {
-    var handle = new EaselHandle(this.canvas);
-    handle.setChangeListener(this, this.updateHandle);
-    handle.setEditStartListener(this, this.startEdit);
-    handle.setEditEndListener(this, this.endEdit);
-
-    this.handle = handle;
+    this.handle = new EaselHandle(this.canvas)
+        .setChangeListener(this, this.updateHandle)
+        .setEditStartListener(this, this.startEdit)
+        .setEditEndListener(this, this.endEdit);
 };
 
 /**

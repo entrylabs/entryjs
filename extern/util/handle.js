@@ -38,10 +38,11 @@ var EaselHandle = function(canvas) {
     this.selectedObject = null;
 };
 
-((p) => {
+(function(p) {
     p.setChangeListener = function(object, func) {
         this.onChangeFunction = func;
         this.callerObject = object;
+        return this;
     };
 
     /**
@@ -50,11 +51,13 @@ var EaselHandle = function(canvas) {
     p.setEditStartListener = function(object, func) {
         this.onEditStartFunction = func;
         this.editStartCallerObject = object;
+        return this;
     };
 
     p.setEditEndListener = function(object, func) {
         this.onEditEndFunction = func;
         this.editEndCallerObject = object;
+        return this;
     };
 
     p.toggleCenter = function(isEnable) {
@@ -387,11 +390,12 @@ var EaselHandle = function(canvas) {
     };
 
     p.renderKnobs = function() {
-        for (var i = 0; i < 8; i++) {
-            var knob = this.knobs[i];
-            knob.x = Math.round(Math.sin(i / 4 * Math.PI)) * this.width / 2;
-            knob.y = Math.round(Math.cos(i / 4 * Math.PI)) * this.height / 2;
-        }
+        var width = this.width/2;
+        var height = this.height/2;
+        this.knobs.forEach(function(knob, i) {
+            knob.x = Math.round(Math.sin(i / 4 * Math.PI)) * width;
+            knob.y = Math.round(Math.cos(i / 4 * Math.PI)) * height;
+        });
     };
 
     p.getEventCoordinate = function(e) {

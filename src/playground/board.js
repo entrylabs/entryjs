@@ -102,7 +102,7 @@ Entry.Board.DRAG_RADIUS = 5;
     p.changeCode = function(code, shouldNotCreateView, cb) {
         if (this.code && this.codeListener) this.codeListener.destroy();
 
-        this.set({ code: code });
+        this.set({ code });
 
         var that = this;
         if (code && !shouldNotCreateView) {
@@ -112,7 +112,9 @@ Entry.Board.DRAG_RADIUS = 5;
             this.svgBlockGroup.remove();
             this.svgThreadGroup.remove();
             code.createView(this);
-            if (code.isAllThreadsInOrigin()) this.alignThreads();
+            if (code.isAllThreadsInOrigin()) {
+                this.alignThreads();
+            }
             cb && cb();
         }
         this.scroller.resizeScrollBar();
@@ -296,21 +298,18 @@ Entry.Board.DRAG_RADIUS = 5;
         var threads = this.code.getThreads();
         if (!threads.length) return;
 
-        var domHeight = this.svgDom.height();
-
         var verticalGap = 15;
         var acculmulatedTop = 15;
         var columWidth = 0;
-        var limitTopPosition = domHeight - 30;
+        var limitTopPosition = this.svgDom.height() - 30;
         var left = 50;
 
-        for (var i = 0; i < threads.length; i++) {
-            var thread = threads[i];
+        threads.forEach((thread) => {
             var block = thread.getFirstBlock();
-            if (!block) continue;
+            if (!block) return;
             reDraw && thread.view.reDraw();
             var blockView = block.view;
-            if (!blockView.movable) continue;
+            if (!blockView.movable) return;
             var bBox = blockView.svgGroup.getBBox();
             var top = acculmulatedTop + verticalGap;
             if (top > limitTopPosition) {
@@ -322,7 +321,7 @@ Entry.Board.DRAG_RADIUS = 5;
             top = acculmulatedTop + verticalGap;
             blockView._moveTo(left - bBox.x, top, false);
             acculmulatedTop = acculmulatedTop + bBox.height + verticalGap;
-        }
+        });
         this.scroller.resizeScrollBar();
     };
 
@@ -1018,16 +1017,15 @@ Entry.Board.DRAG_RADIUS = 5;
         var threads = code.getThreads();
         if (!threads || threads.length === 0) return;
 
-        threads = threads.sort(function(a, b) {
-            return a.getFirstBlock().view.x - b.getFirstBlock().view.x;
-        });
+        threads = threads.sort(
+            (a, b) => a.getFirstBlock().view.x - b.getFirstBlock().view.x
+        );
 
         var block = threads[0].getFirstBlock();
         if (block) {
             block = block.view;
-            var pos = block.getAbsoluteCoordinate();
-
-            this.scroller.scroll(50 - pos.x, 30 - pos.y, true);
+            var { x, y } = block.getAbsoluteCoordinate();
+            this.scroller.scroll(50 - x, 30 - y, true);
         }
     };
 
@@ -1077,12 +1075,12 @@ Entry.Board.DRAG_RADIUS = 5;
                     callback: function() {
                         var threads = that.code.getThreads();
                         var images = [];
-                        threads.forEach(function(t, i) {
+                        threads.forEach((t, i) => {
                             var topBlock = t.getFirstBlock();
                             if (!topBlock) return;
                             console.log('threads.length=', threads.length);
                             if (threads.length > 1 && Entry.isOffline) {
-                                topBlock.view.getDataUrl().then(function(data) {
+                                topBlock.view.getDataUrl().then((data) => {
                                     images.push(data);
                                     if (images.length == threads.length) {
                                         Entry.dispatchEvent('saveBlockImages', {
@@ -1144,7 +1142,7 @@ Entry.Board.DRAG_RADIUS = 5;
 
         var { clientX: x, clientY: y } = Entry.Utils.convertMouseEvent(e);
         Entry.ContextMenu.show(
-            contextOptions.filter((options, { activated, option }) => {
+            contextOptions.reduce((options, { activated, option }) => {
                 if (activated) {
                     options.push(option);
                 }
