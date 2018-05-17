@@ -600,30 +600,33 @@ Entry.VariableContainer = function() {
      * @param {!Array.<variable model>} variables
      */
     p.setVariables = function(variables = []) {
-        var { answer = [], list = [], timer = [], variable = [] } = _.groupBy(
-            variables,
-            _.property('variableType')
-        );
-
-        variable.forEach((v) => {
-            v = new Entry.Variable(v);
-            v.generateView(this.variables_.length);
-            this.variables_.push(v);
+        variables.forEach((variable) => {
+            variable = new Entry.Variable(variable);
+            switch (variable.getType()) {
+                case 'variable':
+                case 'slide':
+                    variable.generateView(this.variables_.length);
+                    this.variables_.push(variable);
+                    break;
+                case 'list':
+                    variable.generateView(this.lists_.length);
+                    this.lists_.push(variable);
+                    break;
+                case 'timer':
+                    this.generateTimer(variable);
+                    break;
+                case 'answer':
+                    this.generateAnswer(variable);
+                    break;
+            }
         });
 
-        list.forEach((v) => {
-            v = new Entry.Variable(v);
-            v.generateView(this.lists_.length);
-            this.lists_.push(v);
-        });
-
-        timer.forEach((v) => this.generateTimer(new Entry.Variable(v)));
-        answer.forEach((v) => this.generateAnswer(new Entry.Variable(v)));
-
-        if (_.isEmpty(Entry.engine.projectTimer))
-            Entry.variableContainer.generateTimer();
-        if (_.isEmpty(Entry.container.inputValue))
-            Entry.variableContainer.generateAnswer();
+        if (_.isEmpty(Entry.engine.projectTimer)) {
+            this.generateTimer();
+        }
+        if (_.isEmpty(Entry.container.inputValue)) {
+            this.generateAnswer();
+        }
 
         Entry.playground.reloadPlayground();
     };
