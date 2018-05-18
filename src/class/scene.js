@@ -3,8 +3,6 @@
  */
 'use strict';
 
-
-
 /**
  * Class for a scene controller.
  * This have view for scenes.
@@ -15,18 +13,21 @@ Entry.Scene = function() {
     this.scenes_ = [];
     this.selectedScene = null;
     this.maxCount = 20;
-    $(window).on('resize', (function(e) {
+    $(window).on('resize', (e) => {
         that.resize();
-    }));
+    });
 
-    that.disposeEvent =
-        Entry.disposeEvent.attach(this, function(e) {
-            var elem = document.activeElement;
-            if (e && elem && elem !== e.target &&
-                $(elem).hasClass('entrySceneFieldWorkspace')) {
-                elem.blur();
-            }
-        });
+    that.disposeEvent = Entry.disposeEvent.attach(this, function(e) {
+        var elem = document.activeElement;
+        if (
+            e &&
+            elem &&
+            elem !== e.target &&
+            $(elem).hasClass('entrySceneFieldWorkspace')
+        ) {
+            elem.blur();
+        }
+    });
 };
 
 /**
@@ -42,26 +43,28 @@ Entry.Scene.prototype.generateView = function(sceneView, option) {
     if (!option || option == 'workspace') {
         this.view_.addClass('entrySceneWorkspace');
 
-        $(this.view_).on('mousedown', function (e) {
+        $(this.view_).on('mousedown', function(e) {
             var offset = $(this).offset();
             var $window = $(window);
             var x = e.pageX - offset.left + $window.scrollLeft();
             var y = e.pageY - offset.top + $window.scrollTop();
             y = 40 - y;
-            var slope = -40/55;
+            var slope = -40 / 55;
             var selectedScene = that.selectedScene;
-            var selectedLeft = $(selectedScene.view).find('.entrySceneRemoveButtonCoverWorkspace').offset().left;
+            var selectedLeft = $(selectedScene.view)
+                .find('.entrySceneRemoveButtonCoverWorkspace')
+                .offset().left;
             if (x < selectedLeft || x > selectedLeft + 55) return;
 
             x -= selectedLeft;
-            var ret = 40 + slope*x;
+            var ret = 40 + slope * x;
 
             if (y > ret) {
                 var nextScene = that.getNextScene();
                 if (nextScene) {
-                   var $sceneView = $(nextScene.view);
-                   $(document).trigger('mouseup');
-                   $sceneView.trigger('mousedown');
+                    var $sceneView = $(nextScene.view);
+                    $(document).trigger('mouseup');
+                    $sceneView.trigger('mousedown');
                 }
             }
         });
@@ -76,13 +79,13 @@ Entry.Scene.prototype.generateView = function(sceneView, option) {
                         ui.item.data('start_pos', ui.item.index());
                         var clone = $(ui.item[0]).clone(true);
                     },
-                    stop: function(event, ui){
+                    stop: function(event, ui) {
                         var start = ui.item.data('start_pos');
                         var end = ui.item.index();
                         Entry.scene.moveScene(start, end);
                     },
                     axis: 'x',
-                    tolerance: "pointer"
+                    tolerance: 'pointer',
                 });
             }
         }
@@ -93,9 +96,8 @@ Entry.Scene.prototype.generateView = function(sceneView, option) {
             var addButton = Entry.createElement('span');
             addButton.addClass('entrySceneElementWorkspace');
             addButton.addClass('entrySceneAddButtonWorkspace');
-            addButton.bindOnClick(function (e) {
-                if (Entry.engine.isState('run'))
-                    return;
+            addButton.bindOnClick(function(e) {
+                if (Entry.engine.isState('run')) return;
                 Entry.do('sceneAdd', Entry.generateHash());
             });
             this.view_.appendChild(addButton);
@@ -113,22 +115,22 @@ Entry.Scene.prototype.generateElement = function(scene) {
     var viewTemplate = Entry.createElement('li', scene.id);
     var fragment = document.createDocumentFragment('div');
     fragment.appendChild(viewTemplate);
-    var className = 'entrySceneElementWorkspace  entrySceneButtonWorkspace minValue';
+    var className =
+        'entrySceneElementWorkspace  entrySceneButtonWorkspace minValue';
     viewTemplate.addClass(className);
-    $(viewTemplate).on('mousedown', function(e){
+    $(viewTemplate).on('mousedown', function(e) {
         if (Entry.engine.isState('run')) {
             e.preventDefault();
             return;
         }
         if (Entry.scene.selectedScene !== scene)
-            Entry.do("sceneSelect", scene.id);
+            Entry.do('sceneSelect', scene.id);
     });
     var nameField = Entry.createElement('input');
     nameField.addClass('entrySceneFieldWorkspace');
     nameField.value = scene.name;
 
-    if (!Entry.sceneEditable)
-        nameField.disabled = 'disabled';
+    if (!Entry.sceneEditable) nameField.disabled = 'disabled';
 
     var sceneLeft = Entry.createElement('span');
     sceneLeft.addClass('entrySceneLeftWorkspace');
@@ -139,25 +141,24 @@ Entry.Scene.prototype.generateElement = function(scene) {
     viewTemplate.appendChild(divide);
     scene.inputWrapper = divide;
 
-    nameField.onkeyup = function (e) {
+    nameField.onkeyup = function(e) {
         var code = e.keyCode;
-        if (Entry.isArrowOrBackspace(code))
-            return;
-            
+        if (Entry.isArrowOrBackspace(code)) return;
+
         if (code == 13) {
             if (this.value !== scene.name)
-                Entry.do("sceneRename", scene.id, this.value);
+                Entry.do('sceneRename', scene.id, this.value);
             this.blur();
         } else if (this.value.length > 10) {
-            this.value = this.value.substring(0,10);
+            this.value = this.value.substring(0, 10);
             if (this.value !== scene.name)
-                Entry.do("sceneRename", scene.id, this.value);
+                Entry.do('sceneRename', scene.id, this.value);
             this.blur();
         }
     };
-    nameField.onblur = function (e) {
+    nameField.onblur = function(e) {
         if (this.value !== scene.name)
-            Entry.do("sceneRename", scene.id, this.value);
+            Entry.do('sceneRename', scene.id, this.value);
     };
     divide.appendChild(nameField);
     viewTemplate.nameField = nameField;
@@ -167,13 +168,11 @@ Entry.Scene.prototype.generateElement = function(scene) {
     if (Entry.sceneEditable) {
         var removeButton = Entry.createElement('button');
         removeButton.addClass('entrySceneRemoveButtonWorkspace');
-        removeButton.scene = scene;
-        removeButton.bindOnClick(function (e) {
+        removeButton.bindOnClick(function(e) {
             e.stopPropagation();
-            if (Entry.engine.isState('run'))
-                return;
-                
-            Entry.do("sceneRemove", this.scene.id)
+            if (Entry.engine.isState('run')) return;
+
+            Entry.do('sceneRemove', scene.id);
         });
         removeButtonCover.appendChild(removeButton);
         scene.removeButton = removeButton;
@@ -181,18 +180,25 @@ Entry.Scene.prototype.generateElement = function(scene) {
 
     Entry.Utils.disableContextmenu(viewTemplate);
     if (Entry.sceneEditable) {
-        Entry.ContextMenu.onContextmenu($(viewTemplate), function (coordinate) {
-            var options = [
-                {
-                    text: Lang.Workspace.duplicate_scene,
-                    enable: Entry.engine.isState('stop') && !this.isMax(),
-                    callback: function(){
-                        Entry.scene.cloneScene(scene);
-                    }
-                }
-            ];
-            Entry.ContextMenu.show(options, 'workspace-contextmenu', coordinate);
-        }.bind(this));
+        Entry.ContextMenu.onContextmenu(
+            $(viewTemplate),
+            function(coordinate) {
+                var options = [
+                    {
+                        text: Lang.Workspace.duplicate_scene,
+                        enable: Entry.engine.isState('stop') && !this.isMax(),
+                        callback: function() {
+                            Entry.scene.cloneScene(scene);
+                        },
+                    },
+                ];
+                Entry.ContextMenu.show(
+                    options,
+                    'workspace-contextmenu',
+                    coordinate
+                );
+            }.bind(this)
+        );
     }
 
     scene.view = viewTemplate;
@@ -202,16 +208,12 @@ Entry.Scene.prototype.generateElement = function(scene) {
 
 Entry.Scene.prototype.updateView = function() {
     if (!Entry.type || Entry.type == 'workspace') {
-        var view = this.listView_;
-        for (var i = 0; i < this.getScenes().length; i++)
-            view.appendChild(this.getScenes()[i].view);
+        var parent = this.listView_;
+        this.getScenes().forEach(({ view }) => parent.appendChild(view));
 
         if (this.addButton_) {
-            var length = this.getScenes().length;
-            if (!this.isMax())
-                this.addButton_.removeClass('entryRemove');
-            else
-                this.addButton_.addClass('entryRemove');
+            if (!this.isMax()) this.addButton_.removeClass('entryRemove');
+            else this.addButton_.addClass('entryRemove');
         }
     }
     this.resize();
@@ -227,7 +229,7 @@ Entry.Scene.prototype.addScenes = function(scenes) {
         this.scenes_ = [];
         this.scenes_.push(this.createScene());
     } else {
-        for (var i=0,len=scenes.length; i<len; i++)
+        for (var i = 0, len = scenes.length; i < len; i++)
             this.generateElement(scenes[i]);
     }
 
@@ -238,22 +240,18 @@ Entry.Scene.prototype.addScenes = function(scenes) {
  * @param {scene model} scene
  */
 Entry.Scene.prototype.addScene = function(scene, index) {
-    if (scene === undefined || typeof scene === "string")
+    if (scene === undefined || typeof scene === 'string')
         scene = this.createScene(scene);
 
-    if (!scene.view)
-        this.generateElement(scene);
+    if (!scene.view) this.generateElement(scene);
 
-    if (!index && typeof index != 'number')
-        this.getScenes().push(scene);
-    else
-        this.getScenes().splice(index, 0, scene);
+    if (!index && typeof index != 'number') this.getScenes().push(scene);
+    else this.getScenes().splice(index, 0, scene);
 
     Entry.stage.objectContainers.push(Entry.stage.createObjectContainer(scene));
     this.selectScene(scene);
 
-    if (Entry.creationChangedEvent)
-        Entry.creationChangedEvent.notify();
+    if (Entry.creationChangedEvent) Entry.creationChangedEvent.notify();
     return scene;
 };
 
@@ -262,7 +260,7 @@ Entry.Scene.prototype.addScene = function(scene, index) {
  * @param {!scene model} scene
  */
 Entry.Scene.prototype.removeScene = function(scene) {
-    if (this.getScenes().length <=1) {
+    if (this.getScenes().length <= 1) {
         Entry.toast.alert(
             Lang.Msgs.runtime_error,
             Lang.Workspace.Scene_delete_error,
@@ -270,17 +268,15 @@ Entry.Scene.prototype.removeScene = function(scene) {
         );
         return;
     }
-    
-    scene = this.getSceneById(
-        typeof scene === "string" ? scene : scene.id
-    );
+
+    scene = this.getSceneById(typeof scene === 'string' ? scene : scene.id);
 
     var index = this.getScenes().indexOf(scene);
 
     this.getScenes().splice(index, 1);
     var objects = Entry.container.getSceneObjects(scene);
 
-    for (var i=0; i<objects.length; i++) {
+    for (var i = 0; i < objects.length; i++) {
         Entry.container.removeObject(objects[i], true);
     }
     Entry.stage.removeObjectContainer(scene);
@@ -298,15 +294,14 @@ Entry.Scene.prototype.selectScene = function(scene) {
 
     container.resetSceneDuringRun();
 
-    if (this.selectedScene && (this.selectedScene.id == scene.id))
-        return;
+    if (this.selectedScene && this.selectedScene.id == scene.id) return;
 
     var prevSelected = this.selectedScene;
     if (prevSelected) {
         var prevSelectedView = prevSelected.view;
         prevSelectedView.removeClass('selectedScene');
         var elem = document.activeElement;
-        elem === prevSelectedView.nameField  && elem.blur();
+        elem === prevSelectedView.nameField && elem.blur();
     }
 
     this.selectedScene = scene;
@@ -333,9 +328,8 @@ Entry.Scene.prototype.selectScene = function(scene) {
                 var sScene = vimBoard._currentScene;
                 var parser = vimBoard._parser;
                 try {
-                    if (scene.id != sScene.id)
-                        workspace._syncTextCode();
-                } catch(e) {}
+                    if (scene.id != sScene.id) workspace._syncTextCode();
+                } catch (e) {}
 
                 if (parser._onError) {
                     container.selectObject(sObject.id, true);
@@ -361,18 +355,8 @@ Entry.Scene.prototype.selectScene = function(scene) {
  * @return {JSON}
  */
 Entry.Scene.prototype.toJSON = function() {
-    var json = [];
-    var length = this.getScenes().length;
-    for (var i = 0; i<length; i++) {
-        var scene = this.getScenes()[i];
-        json.push({
-            id: scene.id,
-            name: scene.name
-        });
-    }
-    return json;
+    return this.getScenes().map((scene) => _.pick(scene, ['id', 'name']));
 };
-
 
 /**
  * Move scene in this.scenes_
@@ -381,8 +365,7 @@ Entry.Scene.prototype.toJSON = function() {
  * @param {!number} end
  */
 Entry.Scene.prototype.moveScene = function(start, end) {
-    this.getScenes().splice(
-        end, 0, this.getScenes().splice(start, 1)[0]);
+    this.getScenes().splice(end, 0, this.getScenes().splice(start, 1)[0]);
     Entry.container.updateObjectsOrder();
     Entry.stage.sortZorder();
     //style properties are not removed sometimes
@@ -394,13 +377,8 @@ Entry.Scene.prototype.moveScene = function(start, end) {
  * @param {!String} sceneId
  * @return {scene modal}
  */
-Entry.Scene.prototype.getSceneById = function(sceneId) {
-    var scenes = this.getScenes();
-    for (var i=0; i<scenes.length; i++) {
-        if (scenes[i].id == sceneId)
-            return scenes[i];
-    }
-    return false;
+Entry.Scene.prototype.getSceneById = function(id) {
+    return _.find(this.getScenes(), { id }) || false;
 };
 
 /**
@@ -409,7 +387,6 @@ Entry.Scene.prototype.getSceneById = function(sceneId) {
 Entry.Scene.prototype.getScenes = function() {
     return this.scenes_;
 };
-
 
 /**
  * remember selectedScene before start
@@ -433,19 +410,22 @@ Entry.Scene.prototype.loadStartSceneSnapshot = function() {
  */
 Entry.Scene.prototype.createScene = function(sceneId) {
     var regex = /[0-9]/;
-    var name = Entry.getOrderedName(Lang.Blocks.SCENE + ' ', this.scenes_, "name");
+    var name = Entry.getOrderedName(
+        Lang.Blocks.SCENE + ' ',
+        this.scenes_,
+        'name'
+    );
     if (!regex.test(name)) {
         name += '1';
     }
     var scene = {
         name: name,
-        id: sceneId || Entry.generateHash()
+        id: sceneId || Entry.generateHash(),
     };
 
     this.generateElement(scene);
     return scene;
 };
-
 
 /**
  * clone scene by context menu
@@ -463,7 +443,7 @@ Entry.Scene.prototype.cloneScene = function(scene) {
 
     var clonedScene = {
         name: (Lang.Workspace.cloned_scene + scene.name).substring(0, 10),
-        id: Entry.generateHash()
+        id: Entry.generateHash(),
     };
 
     this.generateElement(clonedScene);
@@ -476,7 +456,7 @@ Entry.Scene.prototype.cloneScene = function(scene) {
         var oldIds = [];
         var newIds = [];
         this.isSceneCloning = true;
-        for (var i=objects.length-1; i>=0; i--) {
+        for (var i = objects.length - 1; i >= 0; i--) {
             var obj = objects[i];
             var ret = container.addCloneObject(obj, clonedScene.id, true);
             oldIds.push(obj.id);
@@ -492,7 +472,9 @@ Entry.Scene.prototype.cloneScene = function(scene) {
         container.updateListView();
         container.selectObject(newIds[newIds.length - 1]);
         Entry.variableContainer.updateViews();
-    } catch (e) { console.log('error', e); }
+    } catch (e) {
+        console.log('error', e);
+    }
 };
 
 /**
@@ -524,9 +506,8 @@ Entry.Scene.prototype.resize = function() {
         view = $(view);
 
         var width = parseFloat(Entry.computeInputWidth(scene.name));
-        var adjusted =  width*10/9;
-        if (scene === this.selectedScene)
-            diff = adjusted - width;
+        var adjusted = width * 10 / 9;
+        if (scene === this.selectedScene) diff = adjusted - width;
         $(scene.inputWrapper).width(adjusted + 'px');
         var viewWidth = view.width();
         if (isSelectedView) selectedViewWidth = viewWidth;
@@ -538,11 +519,13 @@ Entry.Scene.prototype.resize = function() {
     function align() {
         var dummyWidth = 30.5;
         var len = scenes.length - 1;
-        totalWidth = totalWidth -
+        totalWidth =
+            totalWidth -
             Math.round(selectedViewWidth || $(selectedScene.view).width()) -
-            dummyWidth*len - diff;
+            dummyWidth * len -
+            diff;
 
-        var fieldWidth = Math.floor(totalWidth/len);
+        var fieldWidth = Math.floor(totalWidth / len);
         for (i in scenes) {
             scene = scenes[i];
             if (selectedScene.id != scene.id) {
@@ -563,14 +546,11 @@ Entry.Scene.prototype.isMax = function() {
 };
 
 Entry.Scene.prototype.clear = function() {
-    this.scenes_.forEach(function(s) {
-        Entry.stage.removeObjectContainer(s);
-    });
-    $(this.listView_).html("");
+    this.scenes_.forEach((s) => Entry.stage.removeObjectContainer(s));
+    $(this.listView_).html('');
     this.scenes_ = [];
     this.selectedScene = null;
 };
-
 
 Entry.Scene.prototype._focusSceneNameField = function(scene) {
     var input = scene.view && scene.view.nameField;
@@ -579,19 +559,18 @@ Entry.Scene.prototype._focusSceneNameField = function(scene) {
 
 Entry.Scene.prototype.getDom = function(query) {
     var scene;
-    if (query.length > 1)
-        scene = this.getSceneById(query[1]);
+    if (query.length > 1) scene = this.getSceneById(query[1]);
 
-    switch(query[0]) {
-        case "addButton":
+    switch (query[0]) {
+        case 'addButton':
             return this.addButton_;
-        case "removeButton":
+        case 'removeButton':
             return scene.removeButton;
-        case "nameField":
+        case 'nameField':
             return scene.view.nameField;
-        case "view":
+        case 'view':
             return scene.view;
-        default: 
+        default:
             return;
     }
 };
