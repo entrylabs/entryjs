@@ -42,7 +42,7 @@ Entry.Neobot = {
 
 Entry.Neobot.setLanguage = function () {
     return {
-        en: {
+        ko: {
             // ko.js에 작성하던 내용
             template: {
                 neobot_sensor_value: "%1",
@@ -97,14 +97,14 @@ Entry.Neobot.setLanguage = function () {
                 neobot_sound_so_shop : "솔#",
                 neobot_sound_la : "라",
                 neobot_sound_la_shop:"라#",
-                neobot_sound_si : "시",
+                neobot_sound_ti : "시",
                 neobot_sound_half_note : "2분 음표",
                 neobot_sound_quarter_note : "4분 음표",
                 neobot_sound_eighth_note : "8븐 음표",
                 neobot_sound_sixteenth_note : "16분 음표"
             }   
         },
-        ko: {
+        en: {
             // en.js에 작성하던 내용
             template: {
                 neobot_sensor_value : "%1 value",
@@ -118,14 +118,14 @@ Entry.Neobot.setLanguage = function () {
                 neobot_stop_right_motor : "Stop right motor %1",
                 neobot_all_motor : "Move both motors %2 speeds at %1 for %3 seconds %4",
                 neobot_stop_all_motor : "Stop both motors",
-                neobot_set_servo : "%1 port servo motor moves %2 degrees %3",
+                neobot_set_servo : "%1 port servo motor moves to %2 degrees %3",
                 neobot_set_output : "Output the value of the %1 port by %2 %3",
-                neobot_set_fnd : "%1 output to FND %2",
-                neobot_set_fnd_off : "Turn OFF the FND output %1",
+                neobot_set_fnd : "Display %1 to FND %2",
+                neobot_set_fnd_off : "Turn off the FND %1",
                 neobot_play_note_for : "Sound melody %1 at %2 octave for %3 %4",
-                neobot_play_note_with_sensor : "Sound melody for value %2 ~ %3 on a controller's %1 %4",
+                neobot_play_note_with_sensor : "Sound melody for value %2 ~ %3 on the controller's %1 %4",
                 neobot_change_color_with_color_picker : "Select %2 for %1 LED %3",
-                neobot_change_color_with_sensor_value : "Change %1 LED's color to %2 sensor's value %3",
+                neobot_change_color_with_sensor_value : "Change %1 LED's color according to %2 sensor's value %3",
             },
             Blocks : {
                 //for dropdown
