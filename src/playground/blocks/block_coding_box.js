@@ -3,7 +3,7 @@
 Entry.CodingBox = {
     name: 'CodingBox',
     url: 'http://smartstore.naver.com/domekit',
-    imageName: 'CodingBox.png',
+    imageName: 'codingbox.png',
     title: {
         ko: '코딩박스',
         en: 'CodingBox',
