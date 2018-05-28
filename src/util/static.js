@@ -98,7 +98,6 @@ Entry.STATIC = {
         funcUpdate: 1005,
 
         //TODO commands development
-        listSetName: 829,
     },
 
     COMMAND_TYPES_NOT_ALWAYS: {
@@ -143,6 +142,7 @@ Entry.STATIC = {
         setVariableEditable: 826,
         setListEditable: 827,
         variableSetName: 828,
+        listSetName: 829,
 
         //utility commands
         dismissModal: 900,

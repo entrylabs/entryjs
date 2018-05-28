@@ -930,6 +930,7 @@ Entry.EntryObject = function(model) {
         });
         var _setBlurredTimer = Entry.Utils.setBlurredTimer;
         var CE = Entry.createElement; //alias
+        var exceptionsForMouseDown = [];
 
         //end of utilities
 
@@ -944,8 +945,11 @@ Entry.EntryObject = function(model) {
         Entry.Utils.disableContextmenu(objectView);
         var longPressTimer = null;
 
-        $(objectView).bind('mousedown touchstart', function(e) {
-            if (Entry.container.getObject(objectId)) {
+        $(objectView).bind('mousedown touchstart', (e) => {
+            if (
+                Entry.container.getObject(objectId) &&
+                !_.contains(exceptionsForMouseDown, e.target)
+            ) {
                 var currentObject = Entry.playground.object || {};
                 if (currentObject === that && currentObject.isEditing) {
                     return;
@@ -1065,6 +1069,11 @@ Entry.EntryObject = function(model) {
         this.nameView_.onkeypress = _whenEnter;
         this.nameView_.onfocus = _setFocused;
         this.nameView_.onblur = _setBlurredTimer(function() {
+            var object = Entry.container.getObject(that.id);
+            if (!object) {
+                return;
+            }
+
             Entry.do('objectNameEdit', that.id, this.value);
         });
 
@@ -1086,9 +1095,11 @@ Entry.EntryObject = function(model) {
 
         if (Entry.objectEditable && Entry.objectDeletable) {
             var deleteView = CE('div').addClass('entryObjectDeleteWorkspace');
+            exceptionsForMouseDown.push(deleteView);
             this.deleteView_ = deleteView;
             this.view_.appendChild(deleteView);
-            deleteView.bindOnClick(function(e) {
+            deleteView.bindOnClick((e) => {
+                e.stopPropagation();
                 if (Entry.engine.isState('run')) return;
                 Entry.do('removeObject', that.id);
             });
@@ -1157,6 +1168,11 @@ Entry.EntryObject = function(model) {
         xInput.onkeypress = _whenEnter;
         xInput.onfocus = _setFocused;
         xInput.onblur = _setBlurredTimer(function() {
+            var object = Entry.container.getObject(that.id);
+            if (!object) {
+                return;
+            }
+
             var value = this.value;
             Entry.do(
                 'objectUpdatePosX',
@@ -1168,6 +1184,10 @@ Entry.EntryObject = function(model) {
         yInput.onkeypress = _whenEnter;
         yInput.onfocus = _setFocused;
         yInput.onblur = _setBlurredTimer(function() {
+            var object = Entry.container.getObject(that.id);
+            if (!object) {
+                return;
+            }
             var value = this.value;
             Entry.do(
                 'objectUpdatePosY',
@@ -1179,6 +1199,10 @@ Entry.EntryObject = function(model) {
         sizeInput.onkeypress = _whenEnter;
         sizeInput.onfocus = _setFocused;
         sizeInput.onblur = _setBlurredTimer(function() {
+            var object = Entry.container.getObject(that.id);
+            if (!object) {
+                return;
+            }
             var value = this.value;
             Entry.do(
                 'objectUpdateSize',
@@ -1230,6 +1254,10 @@ Entry.EntryObject = function(model) {
         rotateInput.onkeypress = _whenEnter;
         rotateInput.onfocus = _setFocused;
         rotateInput.onblur = _setBlurredTimer(function() {
+            var object = Entry.container.getObject(that.id);
+            if (!object) {
+                return;
+            }
             var value = this.value;
             var idx = value.indexOf('˚');
             if (~idx) {
@@ -1246,6 +1274,10 @@ Entry.EntryObject = function(model) {
         directionInput.onkeypress = _whenEnter;
         directionInput.onfocus = _setFocused;
         directionInput.onblur = _setBlurredTimer(function() {
+            var object = Entry.container.getObject(that.id);
+            if (!object) {
+                return;
+            }
             var value = this.value;
             var idx = value.indexOf('˚');
             if (~idx) {
