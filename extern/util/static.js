@@ -1291,7 +1291,6 @@ EntryStatic.discussCategories = [
     'free',
    'report',
    'notice',
-   'exhibit'
 ];
 
 EntryStatic.artCategories = [
