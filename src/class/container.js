@@ -245,21 +245,15 @@ Entry.Container.prototype.getPictureElement = function(pictureId, objectId) {
  * @param {!Object picture} picture
  */
 Entry.Container.prototype.setPicture = function(picture) {
-    var object = this.getObject(picture.objectId);
-    for (var j in object.pictures) {
-        if (picture.id === object.pictures[j].id) {
-            var picture_ = {};
-            picture_.dimension = picture.dimension;
-            picture_.id = picture.id;
-            picture_.filename = picture.filename;
-            picture_.fileurl = picture.fileurl;
-            picture_.name = picture.name;
-            picture_.view = object.pictures[j].view;
-            object.pictures[j] = picture_;
-            return;
-        }
+    var pictures = this.getObject(picture.objectId).pictures;
+    var index = _.findIndex(pictures, ({ id }) => id === picture.id);
+    if (!~index) {
+        throw new Error('No picture found');
     }
-    throw new Error('No picture found');
+    pictures[index] = Object.assign(
+        _.pick(picture, ['dimension', 'id', 'filename', 'fileurl', 'name']),
+        { view: pictures[index].view }
+    );
 };
 
 /**

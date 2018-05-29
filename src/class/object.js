@@ -184,8 +184,7 @@ Entry.EntryObject = function(model) {
      */
     p.initEntity = function(model) {
         var json = {};
-        json.x = json.y = 0;
-        json.rotation = 0;
+        json.rotation = json.x = json.y = 0;
         json.direction = 90;
 
         if (this.objectType == 'sprite') {
@@ -412,17 +411,6 @@ Entry.EntryObject = function(model) {
 
     p.getPictureIndex = function(value) {
         return this.pictures.indexOf(this.getPicture(value));
-    };
-
-    p.setPicture = function(picture) {
-        for (var i in this.pictures) {
-            var picture_ = this.pictures[i];
-            if (picture.id === picture_.id) {
-                this.pictures[i] = picture;
-                return;
-            }
-        }
-        throw new Error('No picture found');
     };
 
     /**
