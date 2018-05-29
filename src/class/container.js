@@ -192,14 +192,10 @@ Entry.Container.prototype.updateListView = function() {
 
     var objs = this.getCurrentObjects().slice();
 
-    var ret = objs.filter(function(o) {
-        return o.index !== undefined;
-    });
+    var ret = objs.filter(({ index }) => index !== undefined);
 
     if (ret.length === objs.length) {
-        objs = objs.sort(function(a, b) {
-            return a.index - b.index;
-        });
+        objs = objs.sort((a, b) => a.index - b.index);
     }
 
     objs.forEach(function(obj) {

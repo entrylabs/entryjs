@@ -93,15 +93,14 @@ Entry.Scene.prototype.generateView = function(sceneView, option) {
         this.view_.appendChild(listView);
         this.listView_ = listView;
         if (Entry.sceneEditable) {
-            var addButton = Entry.createElement('span');
-            addButton.addClass('entrySceneElementWorkspace');
-            addButton.addClass('entrySceneAddButtonWorkspace');
-            addButton.bindOnClick(function(e) {
-                if (Entry.engine.isState('run')) return;
-                Entry.do('sceneAdd', Entry.generateHash());
-            });
-            this.view_.appendChild(addButton);
-            this.addButton_ = addButton;
+            this.addButton_ = Entry.createElement('span')
+                .addClass('entrySceneElementWorkspace')
+                .addClass('entrySceneAddButtonWorkspace')
+                .bindOnClick((e) => {
+                    if (Entry.engine.isState('run')) return;
+                    Entry.do('sceneAdd', Entry.generateHash());
+                })
+                .appendTo(this.view_);
         }
     }
 };
@@ -141,8 +140,7 @@ Entry.Scene.prototype.generateElement = function(scene) {
     viewTemplate.appendChild(divide);
     scene.inputWrapper = divide;
 
-    nameField.onkeyup = function(e) {
-        var code = e.keyCode;
+    nameField.onkeyup = function({ keyCode: code }) {
         if (Entry.isArrowOrBackspace(code)) return;
 
         if (code == 13) {
@@ -166,16 +164,15 @@ Entry.Scene.prototype.generateElement = function(scene) {
     removeButtonCover.addClass('entrySceneRemoveButtonCoverWorkspace');
     viewTemplate.appendChild(removeButtonCover);
     if (Entry.sceneEditable) {
-        var removeButton = Entry.createElement('button');
-        removeButton.addClass('entrySceneRemoveButtonWorkspace');
-        removeButton.bindOnClick(function(e) {
-            e.stopPropagation();
-            if (Entry.engine.isState('run')) return;
+        scene.removeButton = Entry.createElement('button')
+            .addClass('entrySceneRemoveButtonWorkspace')
+            .bindOnClick(function(e) {
+                e.stopPropagation();
+                if (Entry.engine.isState('run')) return;
 
-            Entry.do('sceneRemove', scene.id);
-        });
-        removeButtonCover.appendChild(removeButton);
-        scene.removeButton = removeButton;
+                Entry.do('sceneRemove', scene.id);
+            })
+            .appendTo(removeButtonCover);
     }
 
     Entry.Utils.disableContextmenu(viewTemplate);
@@ -271,14 +268,10 @@ Entry.Scene.prototype.removeScene = function(scene) {
 
     scene = this.getSceneById(typeof scene === 'string' ? scene : scene.id);
 
-    var index = this.getScenes().indexOf(scene);
-
-    this.getScenes().splice(index, 1);
-    var objects = Entry.container.getSceneObjects(scene);
-
-    for (var i = 0; i < objects.length; i++) {
-        Entry.container.removeObject(objects[i], true);
-    }
+    this.getScenes().splice(this.getScenes().indexOf(scene), 1);
+    Entry.container
+        .getSceneObjects(scene)
+        .forEach((object) => Entry.container.removeObject(object, true));
     Entry.stage.removeObjectContainer(scene);
     $(scene.view).remove();
     this.selectScene();
