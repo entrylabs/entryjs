@@ -258,4 +258,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldOutput);
         pointer.unshift(Entry.PARAM);
         return this._block.pointer(pointer);
     };
+
+    p.isParamBlockType = _.constant(true);
+
 })(Entry.FieldOutput.prototype);

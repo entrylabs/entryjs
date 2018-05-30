@@ -16,6 +16,7 @@ Entry.Workspace = function(options) {
 
     this.blockViewMouseUpEvent = new Entry.Event(this);
     this.widgetUpdateEvent = new Entry.Event(this);
+    this.reDrawEvent = new Entry.Event(this);
     this._blockViewMouseUpEvent = null;
     this.widgetUpdateEveryTime = false;
     this._hoverBlockView = null;
@@ -632,7 +633,6 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
 
     p._unbindBlockViewMouseUpEvent = function() {
         if (this._blockViewMouseUpEvent) {
-            var oldOne = this.selectedBlockView;
             this._blockViewMouseUpEvent.destroy();
             this._blockViewMouseUpEvent = null;
         }
@@ -664,5 +664,26 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
 
         blockMenu && blockMenu.reDraw();
         board && board.reDraw();
+
+        if (blockMenu || board) {
+            this.reDrawEvent.notify();
+        }
+    };
+
+    p.getCurrentBoard = function() {
+        const {
+            MODE_BOARD,
+            MODE_VIMBOARD,
+            MODE_OVERLAYBOARD,
+        } = Entry.Workspace;
+
+        switch (this.mode) {
+            case MODE_BOARD:
+                return this.getBoard();
+            case MODE_VIMBOARD:
+                return this.getVimBoard();
+            case MODE_OVERLAYBOARD:
+                return this.overlayBoard;
+        }
     };
 })(Entry.Workspace.prototype);

@@ -102,7 +102,7 @@ Entry.Board.DRAG_RADIUS = 5;
     p.changeCode = function(code, shouldNotCreateView, cb) {
         if (this.code && this.codeListener) this.codeListener.destroy();
 
-        this.set({ code: code });
+        this.set({ code });
 
         var that = this;
         if (code && !shouldNotCreateView) {
@@ -112,7 +112,9 @@ Entry.Board.DRAG_RADIUS = 5;
             this.svgBlockGroup.remove();
             this.svgThreadGroup.remove();
             code.createView(this);
-            if (code.isAllThreadsInOrigin()) this.alignThreads();
+            if (code.isAllThreadsInOrigin()) {
+                this.alignThreads();
+            }
             cb && cb();
         }
         this.scroller.resizeScrollBar();
@@ -296,21 +298,18 @@ Entry.Board.DRAG_RADIUS = 5;
         var threads = this.code.getThreads();
         if (!threads.length) return;
 
-        var domHeight = this.svgDom.height();
-
         var verticalGap = 15;
         var acculmulatedTop = 15;
         var columWidth = 0;
-        var limitTopPosition = domHeight - 30;
+        var limitTopPosition = this.svgDom.height() - 30;
         var left = 50;
 
-        for (var i = 0; i < threads.length; i++) {
-            var thread = threads[i];
+        threads.forEach((thread) => {
             var block = thread.getFirstBlock();
-            if (!block) continue;
+            if (!block) return;
             reDraw && thread.view.reDraw();
             var blockView = block.view;
-            if (!blockView.movable) continue;
+            if (!blockView.movable) return;
             var bBox = blockView.svgGroup.getBBox();
             var top = acculmulatedTop + verticalGap;
             if (top > limitTopPosition) {
@@ -322,7 +321,7 @@ Entry.Board.DRAG_RADIUS = 5;
             top = acculmulatedTop + verticalGap;
             blockView._moveTo(left - bBox.x, top, false);
             acculmulatedTop = acculmulatedTop + bBox.height + verticalGap;
-        }
+        });
         this.scroller.resizeScrollBar();
     };
 
@@ -389,6 +388,7 @@ Entry.Board.DRAG_RADIUS = 5;
             r: 27.5,
             class: BUTTON_CLASS,
         });
+        this.saveButton = saveButton;
 
         var cancelButton = btnWrapper.elem('circle', {
             cx: 27.5,
@@ -399,6 +399,7 @@ Entry.Board.DRAG_RADIUS = 5;
 
         var saveFunc = this.save.bind(this);
         var cancelFunc = this.cancelEdit.bind(this);
+        this.cancelButton = cancelButton;
 
         $(saveButton).bind('mousedown touchstart', saveFunc);
         $(saveText).bind('mousedown touchstart', saveFunc);
@@ -407,11 +408,11 @@ Entry.Board.DRAG_RADIUS = 5;
     };
 
     p.cancelEdit = function() {
-        this.workspace.setMode(Entry.Workspace.MODE_BOARD, 'cancelEdit');
+        Entry.do('funcEditCancel');
     };
 
     p.save = function() {
-        this.workspace.setMode(Entry.Workspace.MODE_BOARD, 'save');
+        Entry.do('funcCreate');
     };
 
     p.generateCodeMagnetMap = function() {
@@ -431,10 +432,9 @@ Entry.Board.DRAG_RADIUS = 5;
                 continue;
             }
 
-            var metaData = this._getCodeBlocks(code, targetType);
-            metaData.sort(function(a, b) {
-                return a.point - b.point;
-            });
+            var metaData = this._getCodeBlocks(code, targetType).sort(
+                (a, b) => a.point - b.point
+            );
 
             metaData.unshift({ point: -Number.MAX_VALUE, blocks: [] });
 
@@ -462,8 +462,6 @@ Entry.Board.DRAG_RADIUS = 5;
     };
 
     p._getCodeBlocks = function(code, targetType) {
-        var threads = code.getThreads();
-        var blocks = [];
         var func;
         switch (targetType) {
             case 'previous':
@@ -482,13 +480,12 @@ Entry.Board.DRAG_RADIUS = 5;
             default:
                 return [];
         }
-        for (var i = 0; i < threads.length; i++) {
-            var thread = threads[i];
-            blocks = blocks.concat(
+
+        return code.getThreads().reduce((blocks, thread) => {
+            return blocks.concat(
                 func.call(this, thread, thread.view.zIndex, null, targetType)
             );
-        }
-        return blocks;
+        }, []);
     };
 
     p._getNextMagnets = function(thread, zIndex, offset, targetType) {
@@ -886,13 +883,12 @@ Entry.Board.DRAG_RADIUS = 5;
         //udpate zIndex data first
         code.dominate(thread);
         //udpate visual things next frame
-        requestAnimationFrame(
-            function() {
-                var blockView = block && block.view;
-                if (this.svgBlockGroup && blockView)
-                    this.svgBlockGroup.appendChild(blockView.svgGroup);
-            }.bind(this)
-        );
+        requestAnimationFrame(() => {
+            var svgGroup = _.result(block && block.view, 'svgGroup');
+            if (this.svgBlockGroup && svgGroup) {
+                this.svgBlockGroup.appendChild(svgGroup);
+            }
+        });
 
         function _shouldDominate(zIndex, max) {
             return zIndex + 1 < max || !zIndex || !max;
@@ -916,15 +912,10 @@ Entry.Board.DRAG_RADIUS = 5;
 
     p.activateBlock = function(block) {
         var view = block.view;
-        var pos = view.getAbsoluteCoordinate();
-        var svgDom = this.svgDom;
-        var blockX = pos.x,
-            blockY = pos.y;
+        var { x: blockX, y: blockY } = view.getAbsoluteCoordinate();
 
-        var rect = this.getSvgDomRect();
-        var dx = rect.width / 2 - blockX;
-        var dy = rect.height / 2 - blockY - 100;
-        this.scroller.scroll(dx, dy);
+        var { width, height } = this.getSvgDomRect();
+        this.scroller.scroll(width / 2 - blockX, height / 2 - blockY - 100);
 
         view.addActivated();
 
@@ -1026,16 +1017,15 @@ Entry.Board.DRAG_RADIUS = 5;
         var threads = code.getThreads();
         if (!threads || threads.length === 0) return;
 
-        threads = threads.sort(function(a, b) {
-            return a.getFirstBlock().view.x - b.getFirstBlock().view.x;
-        });
+        threads = threads.sort(
+            (a, b) => a.getFirstBlock().view.x - b.getFirstBlock().view.x
+        );
 
         var block = threads[0].getFirstBlock();
         if (block) {
             block = block.view;
-            var pos = block.getAbsoluteCoordinate();
-
-            this.scroller.scroll(50 - pos.x, 30 - pos.y, true);
+            var { x, y } = block.getAbsoluteCoordinate();
+            this.scroller.scroll(50 - x, 30 - y, true);
         }
     };
 
@@ -1085,12 +1075,12 @@ Entry.Board.DRAG_RADIUS = 5;
                     callback: function() {
                         var threads = that.code.getThreads();
                         var images = [];
-                        threads.forEach(function(t, i) {
+                        threads.forEach((t, i) => {
                             var topBlock = t.getFirstBlock();
                             if (!topBlock) return;
                             console.log('threads.length=', threads.length);
                             if (threads.length > 1 && Entry.isOffline) {
-                                topBlock.view.getDataUrl().then(function(data) {
+                                topBlock.view.getDataUrl().then((data) => {
                                     images.push(data);
                                     if (images.length == threads.length) {
                                         Entry.dispatchEvent('saveBlockImages', {
@@ -1142,31 +1132,33 @@ Entry.Board.DRAG_RADIUS = 5;
         var disposeEvent = Entry.disposeEvent;
         disposeEvent && disposeEvent.notify(e);
         if (!this.visible) return;
-        var that = this;
 
-        var options = [];
         var contextOptions = this._contextOptions;
-
         contextOptions[
             Entry.Board.OPTION_PASTE
         ].option.enable = !!Entry.clipboard;
         contextOptions[Entry.Board.OPTION_DOWNLOAD].option.enable =
             this.code.getThreads().length !== 0;
 
-        for (var i = 0; i < this._contextOptions.length; i++) {
-            if (contextOptions[i].activated)
-                options.push(contextOptions[i].option);
-        }
-
-        e = Entry.Utils.convertMouseEvent(e);
-        Entry.ContextMenu.show(options, null, { x: e.clientX, y: e.clientY });
+        var { clientX: x, clientY: y } = Entry.Utils.convertMouseEvent(e);
+        Entry.ContextMenu.show(
+            contextOptions.reduce((options, { activated, option }) => {
+                if (activated) {
+                    options.push(option);
+                }
+                return options;
+            }, []),
+            null,
+            { x, y }
+        );
     };
 
     p.getDom = function(query) {
         query = query.concat();
         var key = query.shift();
-        if (key === 'trashcan') return this.workspace.trashcan.svgGroup;
-        else if (key === 'coord')
+        if (key === 'trashcan') {
+            return this.workspace.trashcan.svgGroup;
+        } else if (key === 'coord') {
             return {
                 getBoundingClientRect: function() {
                     var halfWidth = 20,
@@ -1179,7 +1171,11 @@ Entry.Board.DRAG_RADIUS = 5;
                     };
                 }.bind(this),
             };
-        else if (key instanceof Array) {
+        } else if (key === 'cancelEditButton') {
+            return this.cancelButton;
+        } else if (key === 'saveButton') {
+            return this.saveButton;
+        } else if (key instanceof Array) {
             var targetObj = this.code.getByPointer(key);
             if (targetObj.getDom) {
                 return targetObj.getDom(query);
