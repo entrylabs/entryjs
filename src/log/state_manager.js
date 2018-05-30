@@ -6,21 +6,25 @@
 /**
  * @constructor
  */
-Entry.StateManager = function() {
+Entry.StateManager = function () {
     this.undoStack_ = [];
     this.redoStack_ = [];
     /** prevent add command when undo and redo */
     this.isRestore = false;
     this._isRedoing = false;
     this.isIgnore = false;
-    Entry.addEventListener('cancelLastCommand', function(e) {
-        Entry.stateManager.cancelLastCommand();});
-    Entry.addEventListener('saveWorkspace', function(e) {
-        Entry.stateManager.addStamp();});
-    Entry.addEventListener('undo', function(e) {
-        Entry.stateManager.undo();});
-    Entry.addEventListener('redo', function(e) {
-        Entry.stateManager.redo();});
+    Entry.addEventListener('cancelLastCommand', function (e) {
+        Entry.stateManager.cancelLastCommand();
+    });
+    Entry.addEventListener('saveWorkspace', function (e) {
+        Entry.stateManager.addStamp();
+    });
+    Entry.addEventListener('undo', function (e) {
+        Entry.stateManager.undo();
+    });
+    Entry.addEventListener('redo', function (e) {
+        Entry.stateManager.redo();
+    });
 };
 
 /**
@@ -37,7 +41,7 @@ Entry.StateManager.prototype.generateView = function (stateManagerView, option) 
  * @param {!func} func function to restore
  * @param {} params function's parameters or state data
  */
-Entry.StateManager.prototype.addCommand = function(type, caller, func, params) {
+Entry.StateManager.prototype.addCommand = function (type, caller, func, params) {
     if (this.isIgnoring())
         return;
     var state = new Entry.State();
@@ -63,7 +67,7 @@ Entry.StateManager.prototype.addCommand = function(type, caller, func, params) {
 /**
  * Cancel last command
  */
-Entry.StateManager.prototype.cancelLastCommand = function() {
+Entry.StateManager.prototype.cancelLastCommand = function () {
     if (!this.canUndo())
         return;
     this.undoStack_.pop();
@@ -72,21 +76,21 @@ Entry.StateManager.prototype.cancelLastCommand = function() {
 };
 
 
-Entry.StateManager.prototype.getLastCommand = function() {
+Entry.StateManager.prototype.getLastCommand = function () {
     return this.undoStack_[this.undoStack_.length - 1];
 };
 
-Entry.StateManager.prototype.getLastCommandById = function(id) {
+Entry.StateManager.prototype.getLastCommandById = function (id) {
     var undoStack = this.undoStack_;
-    var len = undoStack.length-1;
-    for (var i=len; i>=0; i--) {
+    var len = undoStack.length - 1;
+    for (var i = len; i >= 0; i--) {
         var state = undoStack[i];
         if (state.id === id)
             return state;
     }
 };
 
-Entry.StateManager.prototype.getLastRedoCommand = function() {
+Entry.StateManager.prototype.getLastRedoCommand = function () {
     return this.redoStack_[this.redoStack_.length - 1];
 };
 
@@ -102,7 +106,7 @@ Entry.StateManager.prototype.removeAllPictureCommand = function () {
 /**
  * Do undo
  */
-Entry.StateManager.prototype.undo = function(count) {
+Entry.StateManager.prototype.undo = function (count) {
     if (!this.canUndo() || this.isRestoring())
         return;
     this.addActivity("undo");
@@ -134,7 +138,7 @@ Entry.StateManager.prototype.undo = function(count) {
 /**
  * Do redo
  */
-Entry.StateManager.prototype.redo = function() {
+Entry.StateManager.prototype.redo = function () {
     if (!this.canRedo() || this.isRestoring())
         return;
 
@@ -242,7 +246,7 @@ Entry.StateManager.prototype.canRedo = function () {
 Entry.StateManager.prototype.addStamp = function () {
     this.stamp = Entry.generateHash();
     if (this.undoStack_.length)
-        this.undoStack_[this.undoStack_.length-1].stamp = this.stamp;
+        this.undoStack_[this.undoStack_.length - 1].stamp = this.stamp;
 };
 
 /**
@@ -250,8 +254,8 @@ Entry.StateManager.prototype.addStamp = function () {
  */
 Entry.StateManager.prototype.isSaved = function () {
     return this.undoStack_.length === 0 ||
-        (this.undoStack_[this.undoStack_.length-1].stamp == this.stamp &&
-        typeof this.stamp == 'string');
+        (this.undoStack_[this.undoStack_.length - 1].stamp == this.stamp &&
+            typeof this.stamp == 'string');
 };
 
 /**

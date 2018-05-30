@@ -357,6 +357,27 @@ EntryStatic.getAllBlocks = function() {
                 "arduino_ext_digital_pwm",
                 "arduino_ext_set_servo",
                 "arduino_ext_set_tone",
+                //codingBox
+                "cbx_read_line",
+                "cbx_read_mic",
+                "cbx_read_switch",
+                "cbx_read_potentiometer",
+                "cbx_read_ultrasonic",
+                "cbx_write_led",
+                "cbx_write_rgb_led",
+                "cbx_write_tone",
+                "cbx_write_dcm",
+                "cbx_write_servo",
+                "cbx_write_lcd",
+                "cbx_clear_lcd",
+                "cbx_arduino_get_analog_value",
+                "cbx_arduino_get_analog_value_map",
+                "cbx_arudino_read_ultrasonic_value",
+                "cbx_arduino_read_digital",
+                "cbx_arduino_toggle_led",
+                "cbx_arduino_digital_pwm",
+                "cbx_arduino_write_servo",
+                "cbx_arduino_write_tone",
                 //arduinoNano
                 "arduino_nano_get_analog_value",
                 "arduino_nano_get_analog_value_map",
@@ -1291,7 +1312,6 @@ EntryStatic.discussCategories = [
     'free',
    'report',
    'notice',
-   'exhibit'
 ];
 
 EntryStatic.artCategories = [
@@ -1489,27 +1509,6 @@ EntryStatic.fonts = [
     url: '/css/nanumgothiccoding.css'
 }
 ];
-
-EntryStatic.getName = function(str, type) {
-    var dict = SpriteNames;
-    if (type == 'picture')
-        dict = PictureNames;
-    else if (type == 'sound')
-        dict = SoundNames;
-
-    var lang = navigator.language ? navigator.language : 'ko';
-    if (window.lang)
-        lang = window.lang;
-
-    if (window.user && window.user.language)
-        lang = window.user.language;
-
-    if (!dict || (lang && lang.indexOf('ko') != -1)) {
-        return str;
-    } else {
-        return dict[str] ? dict[str] : str;
-    }
-};
 
 EntryStatic.ARROW_COLOR_START = '#2f975a';
 EntryStatic.ARROW_COLOR_FLOW = '#3a71bc';

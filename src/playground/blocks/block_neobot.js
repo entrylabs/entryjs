@@ -40,6 +40,135 @@ Entry.Neobot = {
     },
 };
 
+Entry.Neobot.setLanguage = function () {
+    return {
+        ko: {
+            // ko.js에 작성하던 내용
+            template: {
+                neobot_sensor_value: "%1",
+                neobot_sensor_convert_scale : "%1 값의 범위를 %2 ~ %3 에서 %4 ~ %5 (으)로 변환",
+                neobot_sensor_color : "%1",
+                neobot_equal_with_sensor : "%1 의 센서값이 %2",
+                get_motor_speed : "%1",
+                neobot_left_motor : "왼쪽 모터를 %1 %2 의 속도로 회전 %3",
+                neobot_stop_left_motor : "왼쪽 모터를 정지 %1",
+                neobot_right_motor : "오른쪽 모터를 %1 %2 의 속도로 회전 %3",
+                neobot_stop_right_motor : "오른쪽 모터를 정지 %1",
+                neobot_all_motor : "양쪽 모터를 %1 %2의 속도로 %3초 동안 회전 %4",
+                neobot_stop_all_motor : "양쪽 모터를 정지 %1",
+                neobot_set_servo : "%1 포트의 서보모터를 %2 도 이동 %3",
+                neobot_set_output : "%1 번 포트의 값을 %2 만큼 출력 %3",
+                neobot_set_fnd : "FND에 %1 출력 %2",
+                neobot_set_fnd_off : "FND 출력 끄기 %1",
+                neobot_play_note_for : "멜로디 %1 을(를) %2 옥타브로 %3 길이만큼 소리내기 %4",
+                neobot_play_note_with_sensor : "컨트롤러에서 %1 센서의 %2 ~ %3 값으로 멜로디 연주하기 %4",
+                neobot_change_color_with_color_picker : "%1 LED의 색깔을 %2(으)로 정하기 %3",
+                neobot_change_color_with_sensor_value : "%1 LED의 색깔을 %2 센서 값으로 바꾸기 %3",
+            },
+            Blocks : {
+                 //for dropdown
+                neobot_port_1 : "1번 포트",
+                neobot_port_2 : "2번 포트",
+                neobot_port_3 : "3번 포트",
+                neobot_port_4 : "4번 포트",
+                neobot_port_bat : "배터리",
+                neobot_port_remot : "리모컨",
+                neobot_color_white : "흰색",
+                neobot_color_red : "빨간색",
+                neobot_color_yellow : "노란색",
+                neobot_color_green : "초록색(연두색)",
+                neobot_color_blue : "파란색",
+                neobot_direction_forward : "앞으로",
+                neobot_direction_backward : "뒤로",
+                neobot_direction_stop : "멈추기",
+                neobot_direction_turn_left_p : "제자리에서 왼쪽 돌기",
+                neobot_direction_turn_right_p : "제자리에서 오른쪽 돌기",
+                neobot_direction_turn_left : "왼쪽으로 돌기",
+                neobot_direction_turn_right : "오른쪽으로 돌기",
+                neobot_sound_silent : "무음",
+                neobot_sound_do : "도",
+                neobot_sound_do_shop : "도#",
+                neobot_sound_re : "레",
+                neobot_sound_re_shop : "레#",
+                neobot_sound_mi : "미",
+                neobot_sound_fa : "파",
+                neobot_sound_fa_shop : "파#",
+                neobot_sound_so : "솔",
+                neobot_sound_so_shop : "솔#",
+                neobot_sound_la : "라",
+                neobot_sound_la_shop:"라#",
+                neobot_sound_ti : "시",
+                neobot_sound_half_note : "2분 음표",
+                neobot_sound_quarter_note : "4분 음표",
+                neobot_sound_eighth_note : "8븐 음표",
+                neobot_sound_sixteenth_note : "16분 음표"
+            }   
+        },
+        en: {
+            // en.js에 작성하던 내용
+            template: {
+                neobot_sensor_value : "%1 value",
+                neobot_sensor_convert_scale : "Change %1's area from %2 ~ %3 to %4 ~ %5",
+                neobot_sensor_color : "%1",
+                neobot_equal_with_sensor : "%1's sensor value is %2",
+                get_motor_speed : "%1",
+                neobot_left_motor : "Move left motor %1 for speed %2 %3",
+                neobot_stop_left_motor : "Stop left motor",
+                neobot_right_motor : "Move right motor %1 for speed %2 %3",
+                neobot_stop_right_motor : "Stop right motor %1",
+                neobot_all_motor : "Move both motors %2 speeds at %1 for %3 seconds %4",
+                neobot_stop_all_motor : "Stop both motors",
+                neobot_set_servo : "%1 port servo motor moves to %2 degrees %3",
+                neobot_set_output : "Output the value of the %1 port by %2 %3",
+                neobot_set_fnd : "Display %1 to FND %2",
+                neobot_set_fnd_off : "Turn off the FND %1",
+                neobot_play_note_for : "Sound melody %1 at %2 octave for %3 %4",
+                neobot_play_note_with_sensor : "Sound melody for value %2 ~ %3 on the controller's %1 %4",
+                neobot_change_color_with_color_picker : "Select %2 for %1 LED %3",
+                neobot_change_color_with_sensor_value : "Change %1 LED's color according to %2 sensor's value %3",
+            },
+            Blocks : {
+                //for dropdown
+                neobot_port_1 : "Port 1",
+                neobot_port_2 : "Port 2",
+                neobot_port_3 : "Port 3",
+                neobot_port_4 : "Port 4",
+                neobot_port_bat : "Battery",
+                neobot_port_remot : "Remote",
+                neobot_color_white : "White",
+                neobot_color_red : "Red",
+                neobot_color_yellow : "Yellow",
+                neobot_color_green : "Green",
+                neobot_color_blue : "Blue",
+                neobot_direction_forward : "Forward",
+                neobot_direction_backward : "Backward",
+                neobot_direction_stop : "Stop",
+                neobot_direction_turn_left_p : "Left in place",
+                neobot_direction_turn_right_p : "Right in place",
+                neobot_direction_turn_left : "Left",
+                neobot_direction_turn_right : "Right",
+                neobot_sound_silent : "Silent",
+                neobot_sound_do : "Do",
+                neobot_sound_do_shop : "Do#",
+                neobot_sound_re : "Re",
+                neobot_sound_re_shop : "Re#",
+                neobot_sound_mi : "Mi",
+                neobot_sound_fa : "Fa",
+                neobot_sound_fa_shop : "Fa#",
+                neobot_sound_so : "So",
+                neobot_sound_so_shop : "So#",
+                neobot_sound_la : "La",
+                neobot_sound_la_shop:"La#",
+                neobot_sound_ti : "Ti",
+                neobot_sound_half_note : "Half note",
+                neobot_sound_quarter_note : "Quarter note",
+                neobot_sound_eighth_note : "Eighth note",
+                neobot_sound_sixteenth_note : "Sixteenth note"
+            }
+        }   //
+    }
+};
+
 Entry.Neobot.getBlocks = function() {
     return {
         //region neobot 네오봇
@@ -48,17 +177,16 @@ Entry.Neobot.getBlocks = function() {
             skeleton: 'basic_string_field',
             fontColor: '#fff',
             statements: [],
-            template: '%1  값',
             params: [
                 {
                     type: 'Dropdown',
                     options: [
-                        ['1번 포트', 'IN1'],
-                        ['2번 포트', 'IN2'],
-                        ['3번 포트', 'IN3'],
-                        ['4번 포트', 'BAT'],
-                        ['리모컨', 'IR'],
-                        ['배터리', 'BAT'],
+                        [Lang.Blocks.neobot_port_1, 'IN1'],
+                        [Lang.Blocks.neobot_port_2, 'IN2'],
+                        [Lang.Blocks.neobot_port_3, 'IN3'],
+                        [Lang.Blocks.neobot_port_4, 'BAT'],
+                        [Lang.Blocks.neobot_port_remot, 'IR'],
+                        [Lang.Blocks.neobot_port_bat, 'BAT'],
                     ],
                     value: 'IN1',
                     fontSize: 11,
@@ -85,17 +213,16 @@ Entry.Neobot.getBlocks = function() {
             skeleton: 'basic_string_field',
             fontColor: '#fff',
             statements: [],
-            template: '%1 값의 범위를 %2 ~ %3 에서 %4 ~ %5 (으)로 변환',
             params: [
                 {
                     type: 'Dropdown',
                     options: [
-                        ['1번 포트', 'IN1'],
-                        ['2번 포트', 'IN2'],
-                        ['3번 포트', 'IN3'],
-                        ['4번 포트', 'BAT'],
-                        ['리모컨', 'IR'],
-                        ['배터리', 'BAT'],
+                        [Lang.Blocks.neobot_port_1, 'IN1'],
+                        [Lang.Blocks.neobot_port_2, 'IN2'],
+                        [Lang.Blocks.neobot_port_3, 'IN3'],
+                        [Lang.Blocks.neobot_port_4, 'BAT'],
+                        [Lang.Blocks.neobot_port_remot, 'IR'],
+                        [Lang.Blocks.neobot_port_bat, 'BAT'],
                     ],
                     value: 'IN1',
                     fontSize: 11,
@@ -183,16 +310,15 @@ Entry.Neobot.getBlocks = function() {
             skeleton: 'basic_string_field',
             fontColor: '#fff',
             statements: [],
-            template: '%1',
             params: [
                 {
                     type: 'Dropdown',
                     options: [
-                        ['흰색', 0],
-                        ['빨간색', 1],
-                        ['노란색', 2],
-                        ['녹색(연두)', 3],
-                        ['파란색', 4],
+                        [Lang.Blocks.neobot_color_white, 0],
+                        [Lang.Blocks.neobot_color_red, 1],
+                        [Lang.Blocks.neobot_color_yellow, 2],
+                        [Lang.Blocks.neobot_color_green, 3],
+                        [Lang.Blocks.neobot_color_blue, 4],
                     ],
                     value: 'WHITE',
                     fontSize: 11,
@@ -219,18 +345,17 @@ Entry.Neobot.getBlocks = function() {
             color: '#00979D',
             fontColor: '#ffffff',
             skeleton: 'basic_boolean_field',
-            template: '%1 의 센서값이 %2',
             statements: [],
             params: [
                 {
                     type: 'Dropdown',
                     options: [
-                        ['1번 포트', 'IN1'],
-                        ['2번 포트', 'IN2'],
-                        ['3번 포트', 'IN3'],
-                        ['4번 포트', 'BAT'],
-                        ['리모컨', 'IR'],
-                        ['배터리', 'BAT'],
+                        [Lang.Blocks.neobot_port_1, 'IN1'],
+                        [Lang.Blocks.neobot_port_2, 'IN2'],
+                        [Lang.Blocks.neobot_port_3, 'IN3'],
+                        [Lang.Blocks.neobot_port_4, 'BAT'],
+                        [Lang.Blocks.neobot_port_remot, 'IR'],
+                        [Lang.Blocks.neobot_port_bat, 'BAT'],
                     ],
                     value: 'IN1',
                     fontSize: 11,
@@ -238,11 +363,11 @@ Entry.Neobot.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        ['흰색', 0],
-                        ['빨간색', 1],
-                        ['노란색', 2],
-                        ['녹색(연두)', 3],
-                        ['파란색', 4],
+                        [Lang.Blocks.neobot_color_white, 0],
+                        [Lang.Blocks.neobot_color_red, 1],
+                        [Lang.Blocks.neobot_color_yellow, 2],
+                        [Lang.Blocks.neobot_color_green, 3],
+                        [Lang.Blocks.neobot_color_blue, 4],
                     ],
                     value: '0',
                     fontSize: 11,
@@ -288,7 +413,6 @@ Entry.Neobot.getBlocks = function() {
             color: '#00979D',
             skeleton: 'basic_string_field',
             statements: [],
-            template: '%1',
             params: [
                 {
                     type: 'Dropdown',
@@ -331,11 +455,10 @@ Entry.Neobot.getBlocks = function() {
             color: '#00979D',
             skeleton: 'basic',
             statements: [],
-            template: '왼쪽 모터를 %1 %2 의 속도로 회전 %3',
             params: [
                 {
                     type: 'Dropdown',
-                    options: [['앞으로', '16'], ['뒤로', '32']],
+                    options: [[Lang.Blocks.neobot_direction_forward, '16'], [Lang.Blocks.neobot_direction_backward, '32']],
                     value: '16',
                     fontSize: 11,
                     arrowColor: EntryStatic.ARROW_COLOR_HW,
@@ -380,7 +503,6 @@ Entry.Neobot.getBlocks = function() {
             color: '#00979D',
             skeleton: 'basic',
             statements: [],
-            template: '왼쪽 모터를 정지 %1',
             params: [
                 {
                     type: 'Indicator',
@@ -405,11 +527,10 @@ Entry.Neobot.getBlocks = function() {
             color: '#00979D',
             skeleton: 'basic',
             statements: [],
-            template: '오른쪽 모터를 %1 %2 의 속도로 회전 %3',
             params: [
                 {
                     type: 'Dropdown',
-                    options: [['앞으로', '16'], ['뒤로', '32']],
+                    options: [[Lang.Blocks.neobot_direction_forward, '16'], [Lang.Blocks.neobot_direction_backward, '32']],
                     value: '16',
                     fontSize: 11,
                     arrowColor: EntryStatic.ARROW_COLOR_HW,
@@ -454,7 +575,6 @@ Entry.Neobot.getBlocks = function() {
             color: '#00979D',
             skeleton: 'basic',
             statements: [],
-            template: '오른쪽 모터를 정지 %1',
             params: [
                 {
                     type: 'Indicator',
@@ -479,17 +599,16 @@ Entry.Neobot.getBlocks = function() {
             color: '#00979D',
             skeleton: 'basic',
             statements: [],
-            template: '양쪽 모터를 %1 %2의 속도로 %3초 동안 회전 %4',
             params: [
                 {
                     type: 'Dropdown',
                     options: [
-                        ['앞으로', '1'],
-                        ['뒤로', '2'],
-                        ['제자리에서 왼쪽 돌기', '3'],
-                        ['제자리에서 오른쪽 돌기', '4'],
-                        ['왼쪽으로 돌기', '5'],
-                        ['오른쪽으로 돌기', '6'],
+                        [Lang.Blocks.neobot_direction_forward, '1'],
+                        [Lang.Blocks.neobot_direction_backward, '2'],
+                        [Lang.Blocks.neobot_direction_turn_left_p, '3'],
+                        [Lang.Blocks.neobot_direction_turn_right_p, '4'],
+                        [Lang.Blocks.neobot_direction_turn_left, '5'],
+                        [Lang.Blocks.neobot_direction_turn_right, '6'],
                     ],
                     value: '1',
                     fontSize: 11,
@@ -598,7 +717,6 @@ Entry.Neobot.getBlocks = function() {
             color: '#00979D',
             skeleton: 'basic',
             statements: [],
-            template: '양쪽 모터를 정지 %1',
             params: [
                 {
                     type: 'Indicator',
@@ -624,7 +742,6 @@ Entry.Neobot.getBlocks = function() {
             color: '#00979D',
             skeleton: 'basic',
             statements: [],
-            template: '%1 포트의 서보모터를 %2 도 이동 %3',
             params: [
                 {
                     type: 'Dropdown',
@@ -680,7 +797,6 @@ Entry.Neobot.getBlocks = function() {
             color: '#00979D',
             skeleton: 'basic',
             statements: [],
-            template: '%1 번 포트의 값을 %2 만큼 출력 %3',
             params: [
                 {
                     type: 'Dropdown',
@@ -744,7 +860,6 @@ Entry.Neobot.getBlocks = function() {
             color: '#00979D',
             skeleton: 'basic',
             statements: [],
-            template: 'FND에 %1 출력 %2',
             params: [
                 {
                     type: 'Block',
@@ -786,7 +901,6 @@ Entry.Neobot.getBlocks = function() {
             color: '#00979D',
             skeleton: 'basic',
             statements: [],
-            template: 'FND 출력 끄기 %1',
             params: [
                 {
                     type: 'Indicator',
@@ -814,24 +928,23 @@ Entry.Neobot.getBlocks = function() {
             color: '#00979D',
             skeleton: 'basic',
             statements: [],
-            template: '멜로디 %1 을(를) %2 옥타브로 %3 길이만큼 소리내기 %4',
             params: [
                 {
                     type: 'Dropdown',
                     options: [
-                        ['무음', '0'],
-                        ['도', '1'],
-                        ['도#', '2'],
-                        ['레', '3'],
-                        ['레#', '4'],
-                        ['미', '5'],
-                        ['파', '6'],
-                        ['파#', '7'],
-                        ['솔', '8'],
-                        ['솔#', '9'],
-                        ['라', '10'],
-                        ['라#', '11'],
-                        ['시', '12'],
+                        [Lang.Blocks.neobot_sound_silent, '0'],
+                        [Lang.Blocks.neobot_sound_do, '1'],
+                        [Lang.Blocks.neobot_sound_do_shop, '2'],
+                        [Lang.Blocks.neobot_sound_re, '3'],
+                        [Lang.Blocks.neobot_sound_re_shop, '4'],
+                        [Lang.Blocks.neobot_sound_mi, '5'],
+                        [Lang.Blocks.neobot_sound_fa, '6'],
+                        [Lang.Blocks.neobot_sound_fa_shop, '7'],
+                        [Lang.Blocks.neobot_sound_so, '8'],
+                        [Lang.Blocks.neobot_sound_so_shop, '9'],
+                        [Lang.Blocks.neobot_sound_la, '10'],
+                        [Lang.Blocks.neobot_sound_la_shop, '11'],
+                        [Lang.Blocks.neobot_sound_ti, '12'],
                     ],
                     value: '0',
                     fontSize: 11,
@@ -852,10 +965,10 @@ Entry.Neobot.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        ['2분음표', '2'],
-                        ['4분음표', '4'],
-                        ['8분음표', '8'],
-                        ['16분음표', '16'],
+                        [Lang.Blocks.neobot_sound_half_note, '2'],
+                        [Lang.Blocks.neobot_sound_quarter_note, '4'],
+                        [Lang.Blocks.neobot_sound_eighth_note, '8'],
+                        [Lang.Blocks.neobot_sound_sixteenth_note, '16'],
                     ],
                     value: '2',
                     fontSize: 11,
@@ -914,17 +1027,15 @@ Entry.Neobot.getBlocks = function() {
             color: '#00979D',
             skeleton: 'basic',
             statements: [],
-            template:
-                '컨트롤러에서 %1 센서의 %2 ~ %3 값으로 멜로디 연주하기 %4',
             params: [
                 {
                     type: 'Dropdown',
                     options: [
-                        ['1번 포트', 'IN1'],
-                        ['2번 포트', 'IN2'],
-                        ['3번 포트', 'IN3'],
-                        ['리모컨', 'IR'],
-                        ['배터리', 'BAT'],
+                        [Lang.Blocks.neobot_port_1, 'IN1'],
+                        [Lang.Blocks.neobot_port_2, 'IN2'],
+                        [Lang.Blocks.neobot_port_3, 'IN3'],
+                        [Lang.Blocks.neobot_port_remot, 'IR'],
+                        [Lang.Blocks.neobot_port_bat, 'BAT'],
                     ],
                     value: 'IN1',
                     fontSize: 11,
@@ -1029,7 +1140,6 @@ Entry.Neobot.getBlocks = function() {
             color: '#00979D',
             skeleton: 'basic',
             statements: [],
-            template: '%1 LED의 색깔을 %2(으)로 정하기 %3',
             params: [
                 {
                     type: 'Dropdown',
@@ -1076,7 +1186,6 @@ Entry.Neobot.getBlocks = function() {
             color: '#00979D',
             skeleton: 'basic',
             statements: [],
-            template: '%1 LED의 색깔을 %2 센서 값으로 바꾸기 %3',
             params: [
                 {
                     type: 'Dropdown',
@@ -1093,12 +1202,12 @@ Entry.Neobot.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        ['1번 포트', 'IN1'],
-                        ['2번 포트', 'IN2'],
-                        ['3번 포트', 'IN3'],
-                        ['4번 포트', 'BAT'],
-                        ['리모컨', 'IR'],
-                        ['배터리', 'BAT'],
+                        [Lang.Blocks.neobot_port_1, 'IN1'],
+                        [Lang.Blocks.neobot_port_2, 'IN2'],
+                        [Lang.Blocks.neobot_port_3, 'IN3'],
+                        [Lang.Blocks.neobot_port_4, 'BAT'],
+                        [Lang.Blocks.neobot_port_remot, 'IR'],
+                        [Lang.Blocks.neobot_port_bat, 'BAT'],
                     ],
                     value: 'IN1',
                     fontSize: 11,

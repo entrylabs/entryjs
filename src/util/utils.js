@@ -112,35 +112,6 @@ Entry.exportProject = function(project) {
  * inject blocks to Entry menu.
  * Available block is different by object type.
  * @param {!string} objectType
- * @param {!string} blockText
- */
-Entry.setBlockByText = function(objectType, blockText) {
-    var blockJSON = [];
-    var xml = jQuery.parseXML(blockText);
-    var categories = xml.getElementsByTagName('category');
-    for (var i = 0; i < categories.length; i++) {
-        var category = categories[i];
-        var json = { category: category.getAttribute('id'), blocks: [] };
-        var blocks = category.childNodes;
-        for (var j = 0; j < blocks.length; j++) {
-            var b = blocks[j];
-            if (
-                b.tagName &&
-                (b.tagName.toUpperCase() == 'BLOCK' ||
-                    b.tagName.toUpperCase() == 'BTN')
-            ) {
-                json.blocks.push(b.getAttribute('type'));
-            }
-        }
-        blockJSON.push(json);
-    }
-    Entry.playground.setBlockMenu(blockJSON);
-};
-
-/**
- * inject blocks to Entry menu.
- * Available block is different by object type.
- * @param {!string} objectType
  * @param {!xml} XML
  */
 Entry.setBlock = function(objectType, XML) {
@@ -240,14 +211,12 @@ Entry.DRAG_MODE_NONE = 0;
 Entry.DRAG_MODE_MOUSEDOWN = 1;
 Entry.DRAG_MODE_DRAG = 2;
 
-Entry.cancelObjectEdit = function(e) {
+Entry.cancelObjectEdit = function({ target, type }) {
     var object = Entry.playground.object;
     if (!object) return;
     var objectView = object.view_;
-    var target = e.target;
     var isCurrent = $(objectView).find(target).length !== 0;
     var tagName = target.tagName.toUpperCase();
-    var type = e.type;
     if (
         !object.isEditing ||
         ((tagName === 'INPUT' && isCurrent) || type === 'touchstart')
@@ -475,23 +444,10 @@ Entry.Utils.isNumber = function(num) {
     }
 };
 
-Entry.Utils.generateId = function() {
+Entry.Utils.generateId = function(object) {
     return (
         '0000' + ((Math.random() * Math.pow(36, 4)) << 0).toString(36)
     ).substr(-4);
-};
-
-Entry.Utils.intersectArray = function(x, y) {
-    var ret = [];
-    for (var i = 0; i < x.length; i++) {
-        for (var z = 0; z < y.length; z++) {
-            if (x[i] == y[z]) {
-                ret.push(x[i]);
-                break;
-            }
-        }
-    }
-    return ret;
 };
 
 Entry.Utils.isPointInMatrix = function(matrix, point, offset) {
@@ -559,8 +515,7 @@ Entry.Utils._EmphasizeColorMap = {
 };
 
 Entry.Utils.getEmphasizeColor = function(color) {
-    var colorKey = color.toUpperCase();
-    return Entry.Utils._EmphasizeColorMap[colorKey] || color;
+    return Entry.Utils._EmphasizeColorMap[color.toUpperCase()] || color;
 };
 
 // Take input from [0, n] and return it as [0, 1]
@@ -867,45 +822,10 @@ Entry.parseTexttoXML = function(xmlText) {
  * @return {!Element}
  */
 Entry.createElement = function(type, elementId) {
-    var element;
-    if (type instanceof HTMLElement) element = type;
-    else var element = document.createElement(type);
+    var element =
+        type instanceof HTMLElement ? type : document.createElement(type);
     if (elementId) element.id = elementId;
 
-    element.hasClass = function(className) {
-        return this.className.match(
-            new RegExp('(\\s|^)' + className + '(\\s|$)')
-        );
-    };
-    element.addClass = function(className) {
-        var current = this.className;
-        for (var i = 0; i < arguments.length; i++) {
-            var className = arguments[i];
-            if (!this.hasClass(className)) current += ' ' + className;
-        }
-        this.className = current;
-    };
-    element.removeClass = function(className) {
-        var current = this.className;
-        for (var i = 0; i < arguments.length; i++) {
-            var className = arguments[i];
-            if (this.hasClass(className)) {
-                var reg = new RegExp('(\\s|^)' + className + '(\\s|$)');
-                current = current.replace(reg, ' ');
-            }
-        }
-        this.className = current;
-    };
-    element.bindOnClick = function(func) {
-        $(this).on('click tab', function(e) {
-            if (element.disabled) return;
-            e.stopImmediatePropagation();
-            func.call(this, e);
-        });
-    };
-    element.unBindOnClick = function(func) {
-        $(this).off('click tab');
-    };
     return element;
 };
 
@@ -958,21 +878,18 @@ Entry.addEventListener = function(eventName, fn) {
  * @param {!string} eventName
  * @param {?} params
  */
-Entry.dispatchEvent = function(eventName, params) {
+Entry.dispatchEvent = function(eventName, ...args) {
     if (!this.events_) {
         this.events_ = {};
         return;
     }
 
     var events = this.events_[eventName];
-    if (!events || events.length === 0) return;
+    if (_.isEmpty(events)) return;
 
-    var args = Array.prototype.slice.call(arguments);
-    args.shift();
-
-    events.forEach(function(func) {
-        func.apply(window, args);
-    });
+    events.forEach((func) => 
+        func.apply(window, args)
+    );
 };
 
 /**
@@ -980,14 +897,13 @@ Entry.dispatchEvent = function(eventName, params) {
  * @param {!string} eventName
  */
 Entry.removeEventListener = function(eventName, fn) {
-    if (this.events_[eventName]) {
-        for (var i = 0, l = this.events_[eventName].length; i < l; i++) {
-            if (this.events_[eventName][i] === fn) {
-                this.events_[eventName].splice(i, 1);
-                break;
-            }
-        }
+    var events = this.events_[eventName];
+    if (_.isEmpty(events)) {
+        return;
     }
+    this.events_[eventName] = events.filter((a) => {
+        return fn !== a;
+    });
 };
 
 /**
@@ -1085,11 +1001,7 @@ Entry.adjustValueWithMaxMin = function(input, min, max) {
  * @return {boolean} return true when target value exists already
  */
 Entry.isExist = function(targetValue, identifier, arr) {
-    for (var i = 0; i < arr.length; i++) {
-        if (arr[i][identifier] == targetValue) return arr[i];
-    }
-
-    return false;
+    return !!_.findWhere(arr, { [identifier]: targetValue });
 };
 
 Entry.getColourCodes = function() {
@@ -1183,22 +1095,9 @@ Entry.getColourCodes = function() {
  * @return {boolean} return true when target element remove or not
  */
 Entry.removeElement = function(element) {
-    if (element && element.parentNode) element.parentNode.removeChild(element);
-};
-
-/*
- * Replacement for elements.getElementsByClassName(className)
- * @param {String} class name
- * @return {Array} arr
- */
-Entry.getElementsByClassName = function(cl) {
-    var retnode = [];
-    var elem = document.getElementsByTagName('*');
-    for (var i = 0; i < elem.length; i++) {
-        if ((' ' + elem[i].className + ' ').indexOf(' ' + cl + ' ') > -1)
-            retnode.push(elem[i]);
+    if (element && element.parentNode) {
+        element.parentNode.removeChild(element);
     }
-    return retnode;
 };
 
 /*
@@ -1362,15 +1261,7 @@ Entry.bindAnimationCallback = function(element, func) {
 };
 
 Entry.cloneSimpleObject = function(object) {
-    var clone = {};
-    for (var i in object) clone[i] = object[i];
-    return clone;
-};
-
-Entry.nodeListToArray = function(nl) {
-    var arr = new Array(nl.length);
-    for (var i = -1, l = nl.length; ++i !== l; arr[i] = nl[i]);
-    return arr;
+    return _.clone(object);
 };
 
 Entry.computeInputWidth = (function() {
@@ -1418,6 +1309,7 @@ Entry.hexStringToBin = function(hexString) {
     return str;
 };
 
+//maybe deprecated
 Entry.findObjsByKey = function(arr, keyName, key) {
     var result = [];
     for (var i = 0; i < arr.length; i++) {
@@ -1426,15 +1318,10 @@ Entry.findObjsByKey = function(arr, keyName, key) {
     return result;
 };
 
-Entry.factorials = [];
-
-Entry.factorial = function(n) {
+Entry.factorial = _.memoize(function(n) {
     if (n === 0 || n == 1) return 1;
-    if (Entry.factorials[n] > 0) return Entry.factorials[n];
-
-    var ret = (Entry.factorials[n] = Entry.factorial(n - 1) * n);
-    return ret;
-};
+    return Entry.factorial(n - 1) * n;
+});
 
 Entry.getListRealIndex = function(index, list) {
     if (!Entry.Utils.isNumber(index)) {
@@ -1461,10 +1348,8 @@ Entry.toDegrees = function(radians) {
     return radians * 180 / Math.PI;
 };
 
-Entry.getPicturesJSON = function(pictures, isClone) {
-    var json = [];
-    for (var i = 0, len = pictures.length; i < len; i++) {
-        var p = pictures[i];
+Entry.getPicturesJSON = function(pictures = [], isClone) {
+    return pictures.reduce((acc, p) => {
         var o = {};
         o._id = p._id;
         o.id = isClone ? Entry.generateHash() : p.id;
@@ -1473,15 +1358,13 @@ Entry.getPicturesJSON = function(pictures, isClone) {
         o.fileurl = p.fileurl;
         o.name = p.name;
         o.scale = p.scale;
-        json.push(o);
-    }
-    return json;
+        acc.push(o);
+        return acc;
+    }, []);
 };
 
-Entry.getSoundsJSON = function(sounds, isClone) {
-    var json = [];
-    for (var i = 0, len = sounds.length; i < len; i++) {
-        var s = sounds[i];
+Entry.getSoundsJSON = function(sounds = [], isClone) {
+    return sounds.reduce((acc, s) => {
         var o = {};
         o._id = s._id;
         o.duration = s.duration;
@@ -1490,9 +1373,9 @@ Entry.getSoundsJSON = function(sounds, isClone) {
         o.filename = s.filename;
         o.fileurl = s.fileurl;
         o.name = s.name;
-        json.push(o);
-    }
-    return json;
+        acc.push(o);
+        return acc;
+    }, []);
 };
 
 Entry.cutDecimal = function(number) {
@@ -1701,15 +1584,7 @@ Entry.deAttachEventListener = function(elem, eventType, func) {
     elem.removeEventListener(eventType, func);
 };
 
-Entry.isEmpty = function(obj) {
-    if (!obj) return true;
-
-    for (var prop in obj) {
-        if (obj.hasOwnProperty(prop)) return false;
-    }
-
-    return true;
-};
+Entry.isEmpty = _.isEmpty;
 
 Entry.Utils.disableContextmenu = function(node) {
     if (!node) return;
@@ -1733,8 +1608,8 @@ Entry.Utils.isRightButton = function(e) {
     return e.button == 2 || e.ctrlKey;
 };
 
-Entry.Utils.isTouchEvent = function(e) {
-    return e.type.toLowerCase() !== 'mousedown';
+Entry.Utils.isTouchEvent = function({ type }) {
+    return type.toLowerCase() !== 'mousedown';
 };
 
 Entry.Utils.inherit = function(parent, child) {
@@ -1748,12 +1623,8 @@ Entry.bindAnimationCallbackOnce = function($elem, func) {
     $elem.one('webkitAnimationEnd animationendo animationend', func);
 };
 
-Entry.Utils.isInInput = function(e) {
-    return e.target.type == 'textarea' || e.target.type == 'text';
-};
-
-Entry.Utils.isFunction = function(fn) {
-    return typeof fn === 'function';
+Entry.Utils.isInInput = function({ target: { type } }) {
+    return type == 'textarea' || type == 'text';
 };
 
 Entry.Utils.addFilters = function(boardSvgDom, suffix) {
@@ -1892,31 +1763,6 @@ Entry.Utils.createMouseEvent = function(type, event) {
     return e;
 };
 
-Entry.Utils.xmlToJsonData = function(xml) {
-    xml = $.parseXML(xml);
-    var result = [];
-    var categories = xml.childNodes[0].childNodes;
-    for (var i in categories) {
-        var category = categories[i];
-        if (!category.tagName) continue;
-        var data = {
-            category: category.getAttribute('id'),
-            blocks: [],
-        };
-        var blocks = category.childNodes;
-        for (var i in blocks) {
-            var block = blocks[i];
-            if (!block.tagName) continue;
-
-            var type = block.getAttribute('type');
-            if (!type) continue;
-            data.blocks.push(type);
-        }
-        result.push(data);
-    }
-    return result;
-};
-
 Entry.Utils.stopProjectWithToast = function(scope, message, error) {
     var block = scope.block;
     message = message || '런타임 에러 발생';
@@ -2028,6 +1874,7 @@ Entry.Utils.waitForWebfonts = function(fonts, callback) {
         return true;
     }
 };
+
 window.requestAnimFrame = (function() {
     return (
         window.requestAnimationFrame ||
@@ -2187,22 +2034,7 @@ Entry.Utils.hasSpecialCharacter = function(str) {
     return reg.test(str);
 };
 
-Entry.Utils.debounce = function(func, wait, immediate) {
-    var timeout;
-    return function() {
-        var context = this,
-            args = arguments;
-        var later = function() {
-            timeout = null;
-            if (!immediate) func.apply(context, args);
-        };
-        var callNow = immediate && !timeout;
-        clearTimeout(timeout);
-        timeout = setTimeout(later, wait);
-        if (callNow) func.apply(context, args);
-        return timeout;
-    };
-};
+Entry.Utils.debounce = _.debounce;
 
 Entry.Utils.isNewVersion = function(old_version = '', new_version = '') {
     try {
@@ -2258,35 +2090,32 @@ Entry.Utils.getBlockCategory = (function() {
 })();
 
 Entry.Utils.getUniqObjectsBlocks = function(objects) {
-    objects = objects || Entry.container.objects_;
-    var ret = [];
+    var _typePicker = _.partial(_.result, _, 'type');
 
-    objects.forEach(function(o) {
-        var script = o.script;
-        if (!(script instanceof Entry.Code)) script = new Entry.Code(script);
-        var blocks = script.getBlockList();
-        blocks.forEach(function(b) {
-            if (ret.indexOf(b.type) < 0) ret.push(b.type);
-        });
-    });
-
-    return ret;
+    return _.chain(objects || Entry.container.objects_)
+        .map(({ script }) => {
+            if (!(script instanceof Entry.Code)) {
+                script = new Entry.Code(script);
+            }
+            return script.getBlockList().map(_typePicker);
+        })
+        .flatten()
+        .uniq()
+        .value();
 };
 
 Entry.Utils.getObjectsBlocks = function(objects) {
-    objects = objects || Entry.container.objects_;
-    var ret = [];
+    var _typePicker = _.partial(_.result, _, 'type');
 
-    objects.forEach(function(o) {
-        var script = o.script;
-        if (!(script instanceof Entry.Code)) script = new Entry.Code(script);
-        var blocks = script.getBlockList(true);
-        blocks.forEach(function(b) {
-            ret.push(b.type);
-        });
-    });
-
-    return ret;
+    return _.chain(objects || Entry.container.objects_)
+        .map(({ script }) => {
+            if (!(script instanceof Entry.Code)) {
+                script = new Entry.Code(script);
+            }
+            return script.getBlockList(true).map(_typePicker);
+        })
+        .flatten()
+        .value();
 };
 
 Entry.Utils.makeCategoryDataByBlocks = function(blockArr) {
@@ -2343,12 +2172,10 @@ Entry.Utils.getWindow = function(hashId) {
     }
 };
 
-Entry.Utils.restrictAction = function(exceptions, callback, noDispose) {
+Entry.Utils.restrictAction = function(exceptions = [], callback, noDispose) {
     var that = this;
-    exceptions = exceptions || [];
-    exceptions = exceptions.map(function(e) {
-        return e[0];
-    });
+    exceptions = exceptions.map(_.head);
+
     var handler = function(e) {
         e = e || window.event;
         var target = e.target || e.srcElement;
@@ -2456,13 +2283,13 @@ Entry.Utils.glideBlock = function(svgGroup, x, y, callback) {
 };
 
 Entry.Utils.getScrollPos = function() {
-    var elem =
-        Entry.getBrowserType().indexOf('IE') > -1
-            ? document.documentElement
-            : document.body;
+    var { documentElement, body } = document;
+    var { scrollLeft, scrollTop } = ~Entry.getBrowserType().indexOf('IE')
+        ? documentElement
+        : body;
     return {
-        left: elem.scrollLeft,
-        top: elem.scrollTop,
+        left: scrollLeft,
+        top: scrollTop,
     };
 };
 
@@ -2472,8 +2299,8 @@ Entry.Utils.copy = function(target) {
 
 //helper function for development and debug
 Entry.Utils.getAllObjectsBlockList = function() {
-    return Entry.container.objects_.reduce(function(prev, o) {
-        return prev.concat(o.script.getBlockList());
+    return Entry.container.objects_.reduce(function(prev, { script }) {
+        return prev.concat(script.getBlockList());
     }, []);
 };
 
@@ -2511,12 +2338,48 @@ Entry.Utils.recoverSoundInstances = function() {
     });
 };
 
+//add methods to HTMLElement prototype
+((p) => {
+    p.hasClass = function(className) {
+        return $(this).hasClass(className);
+    };
+
+    p.addClass = function(...classes) {
+        return _.head($(this).addClass(classes.filter(_.identity).join(' ')));
+    };
+
+    p.removeClass = function(...classes) {
+        return _.head($(this).removeClass(classes.join(' ')));
+    };
+
+    p.bindOnClick = function(func) {
+        $(this).on('click tab', function(e) {
+            if (this.disabled) return;
+            e.stopImmediatePropagation();
+            func.call(this, e);
+        });
+        return this;
+    };
+
+    p.unBindOnClick = function(func) {
+        $(this).off('click tab');
+        return this;
+    };
+
+    p.appendTo = function(parent) {
+        if (parent) {
+            parent.appendChild(this);
+        }
+        return this;
+    };
+})(HTMLElement.prototype);
+
 Entry.Utils.bindBlockViewHoverEvent = function(board, dom) {
     if (Entry.isMobile()) {
         return;
     }
 
-    dom.on('mouseenter mouseleave', 'path', function(e) {
+    dom.on('mouseenter mouseleave', 'path', function({ type }) {
         if (this.getAttribute('class') !== 'blockPath') {
             return;
         }
@@ -2532,7 +2395,7 @@ Entry.Utils.bindBlockViewHoverEvent = function(board, dom) {
 
         blockView.setHoverBlockView({
             that: blockView,
-            blockView: e.type === 'mouseenter' ? blockView : undefined,
+            blockView: type === 'mouseenter' ? blockView : undefined,
         });
     });
 };
@@ -2583,3 +2446,68 @@ Entry.Utils.focusBlockView = (() => {
         _last = blockView;
     };
 })();
+
+Entry.Utils.isDomActive = function(dom) {
+    return !!(dom && document.activeElement === dom);
+};
+
+Entry.Utils.when = function(predicate, fn) {
+    return function(...args) {
+        if (predicate.apply(this, args)) {
+            return fn && fn.apply(this, args);
+        }
+    };
+};
+
+Entry.Utils.whenEnter = function(fn) {
+    return Entry.Utils.when(({ keyCode } = {}) => keyCode === 13, fn);
+};
+
+Entry.Utils.blurWhenEnter = Entry.Utils.whenEnter(function() {
+    this.blur();
+});
+
+Entry.Utils.whenWithTimeout = function(predicate, fn, time = 200) {
+    return function(...args) {
+        if (this._timer) {
+            clearTimeout(this._timer);
+            delete this._timer;
+        }
+        this._timer = setTimeout(() => {
+            if (predicate.apply(this, args)) {
+                return fn.apply(this, args);
+            }
+        }, time);
+    };
+};
+
+Entry.Utils.setBlurredTimer = function(func) {
+    return Entry.Utils.whenWithTimeout(function() {
+        if (this._focused) {
+            this._focused = false;
+            return true;
+        }
+        return false;
+    }, func);
+};
+
+Entry.Utils.setFocused = function() {
+    if (this._timer) {
+        clearTimeout(this._timer);
+        delete this._timer;
+    }
+    this._focused = true;
+};
+
+Entry.Utils.focusIfNotActive = function(dom) {
+    if (Array.isArray(dom)) {
+        dom = Entry.getDom(dom);
+    }
+    if (!dom) {
+        return;
+    }
+    if (!Entry.Utils.isDomActive(dom)) {
+        dom.focus && dom.focus();
+    }
+};
+

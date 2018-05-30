@@ -9,8 +9,7 @@ Entry.FieldDropdown = function(content, blockView, index) {
     this._block = blockView.block;
     this._blockView = blockView;
 
-    var box = new Entry.BoxModel();
-    this.box = box;
+    this.box = new Entry.BoxModel();
 
     this.svgGroup = null;
 
@@ -18,10 +17,9 @@ Entry.FieldDropdown = function(content, blockView, index) {
     this._noArrow = content.noArrow;
 
     var arrowColor = content.arrowColor;
-    if (
-        this._block.deletable === Entry.Block.DELETABLE_FALSE_LIGHTEN ||
-        this._block.emphasized
-    ) {
+    var { deletable, emphasized } = this._block;
+
+    if (deletable === Entry.Block.DELETABLE_FALSE_LIGHTEN || emphasized) {
         arrowColor = blockView._fillColor;
     }
 
@@ -50,12 +48,13 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
         var CONTENT_HEIGHT = this._CONTENT_HEIGHT;
         var arrowInfo = this.getArrow();
 
-        if (!this.svgGroup)
+        if (!this.svgGroup) {
             this.svgGroup = blockView.contentSvgGroup.elem('g', {
                 class: 'entry-field-dropdown',
             });
+        }
 
-        if (!this._header)
+        if (!this._header) {
             this._header = this.svgGroup.elem('rect', {
                 height: CONTENT_HEIGHT,
                 y: -CONTENT_HEIGHT / 2,
@@ -64,22 +63,27 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
                 fill: '#fff',
                 'fill-opacity': 0.4,
             });
+        }
 
-        if (!this.textElement)
+        if (!this.textElement) {
             this.textElement = this.svgGroup.elem('text', {
                 x: 5,
                 style: 'white-space: pre;',
                 'font-size': +that._font_size + 'px',
             });
+        }
 
-        if (!this._noArrow && !this._arrow)
+        if (!this._noArrow && !this._arrow) {
             this._arrow = this.svgGroup.elem('polygon', {
                 points: arrowInfo.points,
                 fill: arrowInfo.color,
                 stroke: arrowInfo.color,
             });
+        }
 
-        if (this instanceof Entry.FieldDropdownDynamic) this._updateValue();
+        if (this instanceof Entry.FieldDropdownDynamic) {
+            this._updateValue();
+        }
 
         this._setTextValue();
 
@@ -145,17 +149,11 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
     p.renderOptions = function() {
         var that = this;
 
-        var blockView = this._block.view;
-
         this._attachDisposeEvent();
 
         this.optionGroup = Entry.Dom('ul', {
             class: 'entry-widget-dropdown',
             parent: $('body'),
-        });
-
-        this.optionGroup.bind('mousedown touchstart', function(e) {
-            e.stopPropagation();
         });
 
         var OPTION_X_PADDING = 30;
@@ -164,15 +162,27 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
 
         var CONTENT_HEIGHT = this._CONTENT_HEIGHT + 4;
 
+        this.optionGroup.bind('mousedown touchstart', (e) =>
+            e.stopPropagation()
+        );
+
+        this.optionGroup.on('mouseup', '.rect', function(e) {
+            e.stopPropagation();
+            that.applyValue(this._value);
+            that.destroyOption(undefined, true);
+            that._selectBlockView();
+        });
+
         var fragment = document.createDocumentFragment();
 
-        for (var i = 0, len = options.length; i < len; i++) {
-            var option = options[i];
+        options.forEach((option) => {
             var text = (option[0] = this._convert(option[0], option[1]));
             var value = option[1];
             var element = Entry.Dom('li', {
                 class: 'rect',
             });
+            var elem = element[0];
+            elem._value = value;
 
             var left = Entry.Dom('span', {
                 class: 'left',
@@ -185,18 +195,8 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
             }).text(text);
 
             if (this.getValue() == value) left.text('\u2713');
-
-            (function(elem, value) {
-                elem.bind('mouseup touchend', function(e) {
-                    e.stopPropagation();
-                    that.applyValue(value);
-                    that.destroyOption(undefined, true);
-                    that._selectBlockView();
-                });
-            })(element, value);
-
-            fragment.appendChild(element[0]);
-        }
+            fragment.appendChild(elem);
+        });
 
         this.optionGroup[0].appendChild(fragment);
         this._position();
@@ -260,11 +260,14 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
         if ((!value && typeof value !== 'number') || value === 'null')
             return Lang.Blocks.no_target;
 
-        var options = this._contents.options;
-        for (var i = 0, len = options.length; i < len; i++) {
-            var option = options[i];
-            if (option[1] == value) return option[0];
+        var matched = _.find(this._contents.options, ([, cValue]) => {
+            return cValue === value;
+        });
+
+        if (matched) {
+            return _.head(matched);
         }
+
         //no match found
         //check should return value as it is
         if (this._shouldReturnValue(value)) return value;
@@ -281,15 +284,11 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
 
     p.getArrow = function() {
         var isBig = Entry.isMobile();
-        var color = this._arrowColor || this._blockView._schema.color;
-        var points = isBig ? '0,0 19,0 9.5,13' : '0,0 6.4,0 3.2,4.2';
-        var height = isBig ? 13 : 4.2;
-        var width = isBig ? 19 : 6.4;
         return {
-            color: color,
-            points: points,
-            height: height,
-            width: width,
+            color: this._arrowColor || this._blockView._schema.color,
+            points: isBig ? '0,0 19,0 9.5,13' : '0,0 6.4,0 3.2,4.2',
+            height: isBig ? 13 : 4.2,
+            width: isBig ? 19 : 6.4,
         };
     };
 

@@ -21,10 +21,11 @@ Entry.Field = function() {};
     };
 
     p.command = function(forceCommand) {
+        var startValue = this._startValue;
         if (
             !this._blockView.isInBlockMenu &&
-            this._startValue !== undefined &&
-            (forceCommand || this._startValue !== this.getValue())
+            !_.isUndefined(startValue) &&
+            (forceCommand || startValue !== this.getValue())
         ) {
             Entry.do(
                 'setFieldValue',
@@ -39,20 +40,17 @@ Entry.Field = function() {};
     };
 
     p.destroyOption = function(skipCommand, forceCommand) {
-        if (this.documentDownEvent) {
-            this.documentDownEvent.destroy();
-            delete this.documentDownEvent;
-        }
+        var _destroyFunc = _.partial(_.result, _, 'destroy');
+        var _removeFunc = _.partial(_.result, _, 'remove');
 
-        if (this.disposeEvent) {
-            this.disposeEvent.destroy();
-            delete this.documentDownEvent;
-        }
+        _destroyFunc(this.documentDownEvent);
+        delete this.documentDownEvent;
 
-        if (this.optionGroup) {
-            this.optionGroup.remove();
-            delete this.optionGroup;
-        }
+        _destroyFunc(this.disposeEvent);
+        delete this.documentDownEvent;
+
+        _removeFunc(this.optionGroup);
+        delete this.optionGroup;
 
         delete this._neighborFields;
 
@@ -73,8 +71,7 @@ Entry.Field = function() {};
         that.disposeEvent = Entry.disposeEvent.attach(that, func);
     };
 
-    p.align = function(x, y, animate) {
-        animate = animate === undefined ? true : animate;
+    p.align = function(x, y, animate = true) {
         var svgGroup = this.svgGroup;
         if (this._position) {
             if (this._position.x) x = this._position.x;
@@ -132,11 +129,11 @@ Entry.Field = function() {};
     //get relative position of field from blockView origin
     p.getRelativePos = function() {
         var contentPos = this._block.view.getContentPos();
-        var box = this.box;
+        var { x, y } = this.box;
 
         return {
-            x: box.x + contentPos.x,
-            y: box.y + contentPos.y,
+            x: x + contentPos.x,
+            y: y + contentPos.y,
         };
     };
 
@@ -154,12 +151,11 @@ Entry.Field = function() {};
 
     p.getValue = function() {
         var data = this._block.params[this._index];
-        if (
-            this._contents &&
-            this._contents.reference &&
-            this._contents.reference.length
-        ) {
-            var reference = this._contents.reference.concat();
+
+        var contents = this._contents;
+
+        if (contents && !_.isEmpty(contents.reference)) {
+            var reference = contents.reference.concat();
             if (reference[0][0] === '%')
                 data = this._block.params[
                     parseInt(reference.shift().substr(1)) - 1
@@ -172,13 +168,13 @@ Entry.Field = function() {};
 
     p.setValue = function(value, reDraw) {
         if (this.value == value) return;
+
         this.value = value;
-        if (
-            this._contents &&
-            this._contents.reference &&
-            this._contents.reference.length
-        ) {
-            var ref = this._contents.reference.concat();
+
+        var contents = this._contents;
+
+        if (contents && !_.isEmpty(contents.reference)) {
+            var ref = contents.reference.concat();
             var index = ref.pop();
             var targetBlock = this._block.params[this._index];
             if (ref.length && ref[0][0] === '%')
@@ -239,11 +235,8 @@ Entry.Field = function() {};
         );
     };
 
-    p.pointer = function(pointer) {
-        pointer = pointer || [];
-        pointer.unshift(this._index);
-        pointer.unshift(Entry.PARAM);
-        return this._block.pointer(pointer);
+    p.pointer = function(pointer = []) {
+        return this._block.pointer([Entry.PARAM, this._index, ...pointer]);
     };
 
     p.getFontSize = function(size) {
@@ -296,11 +289,18 @@ Entry.Field = function() {};
     };
 
     p.getDom = function(query) {
-        if (query.length) {
-            var key = query.shift();
-            if (key === 'option') return this.optionGroup;
+        if (_.isEmpty(query)) {
+            return this.svgGroup;
         }
 
+        query = [...query];
+
+        var key = query.shift();
+        if (key === 'option') {
+            return this.optionGroup;
+        }
+
+        //default return value
         return this.svgGroup;
     };
 
@@ -326,25 +326,21 @@ Entry.Field = function() {};
                 return Entry.getKeyCodeMap()[value];
             case 'dropdown':
             case 'dropdownDynamic':
-                var options = this._contents.options;
-                for (var i = 0; i < options.length; i++) {
-                    var o = options[i];
-                    if (o[1] === value) return o[0];
-                }
-                break;
+                return _.chain(this._contents.options)
+                    .find(([, optionValue]) => optionValue === value)
+                    .head()
+                    .value();
             case 'textInput':
                 return value;
         }
     };
 
     p.getBoard = function() {
-        var view = this._blockView;
-        return view && view.getBoard();
+        return _.result(this._blockView, 'getBoard');
     };
 
     p.getCode = function() {
-        var board = this.getBoard();
-        return board && board.code;
+        return _.result(this.getBoard(), 'code');
     };
 
     p.getTextValue = function() {

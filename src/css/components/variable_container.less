@@ -158,8 +158,10 @@
     background-position: center;
 }
 
-.entryVariableListElementWorkspace:hover
-.entryVariableListElementDeleteWorkspace {
+.entryVariableListElementWorkspace.active .entryVariableListElementDeleteWorkspace,
+.entryVariableListElementWorkspace.activeForce .entryVariableListElementDeleteWorkspace ,
+.entryVariableListElementWorkspace.active .entryVariableListElementEditWorkspace,
+.entryVariableListElementWorkspace.activeForce .entryVariableListElementEditWorkspace, {
     opacity: 1;
 }
 
@@ -168,20 +170,15 @@
     float: right;
     border: 0;
     outline: 0;
-    width: 20px;
-    height: 40px;
-    margin-top: 5px;
+    width: 19px;
+    height: 19px;
+    margin-top: 16px;
     margin-right: 25px;
     background-color: transparent;
     .backgroundImage("layers_icon_edit_nor_new_1.png");
     background-repeat: no-repeat;
     background-position: center;
     opacity: 0;
-}
-
-.entryVariableListElementWorkspace:hover
-.entryVariableListElementEditWorkspace {
-    opacity: 1;
 }
 
 .entryVariableListCallerListWorkspace {

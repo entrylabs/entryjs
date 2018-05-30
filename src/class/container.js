@@ -44,8 +44,8 @@ Entry.Container = function() {
         function() {
             var ws = Entry.getMainWS();
             if (ws && ws.getMode() === Entry.Workspace.MODE_VIMBOARD) {
-                this.objects_.forEach(function(o) {
-                    o.script && o.script.destroyView();
+                this.objects_.forEach(function({ script }) {
+                    script && script.destroyView();
                 });
             }
         }.bind(this)
@@ -68,12 +68,12 @@ Entry.Container.prototype.generateView = function(containerView, option) {
     this._view.addClass('entryContainerWorkspace');
     this._view.setAttribute('id', 'entryContainerWorkspaceId');
 
-    var addButton = Entry.createElement('div');
-    addButton.addClass('entryAddObjectWorkspace');
+    var addButton = Entry.createElement('div')
+        .addClass('entryAddObjectWorkspace')
+        .bindOnClick((e) => {
+            Entry.dispatchEvent('openSpriteManager');
+        });
     addButton.innerHTML = Lang.Workspace.add_object;
-    addButton.bindOnClick(function(e) {
-        Entry.dispatchEvent('openSpriteManager');
-    });
     //this._view.appendChild(addButton);
 
     var ulWrapper = Entry.createElement('div');
@@ -140,8 +140,9 @@ Entry.Container.prototype.generateView = function(containerView, option) {
         class: 'entryContainerExtensions',
     });
 
-    var listView = Entry.createElement('ul');
-    listView.addClass('entryContainerListWorkspace');
+    var listView = Entry.createElement('ul').addClass(
+        'entryContainerListWorkspace'
+    );
     ulWrapper.appendChild(listView);
     this.listView_ = listView;
 
@@ -151,8 +152,7 @@ Entry.Container.prototype.generateView = function(containerView, option) {
  * enable sort.
  */
 Entry.Container.prototype.enableSort = function() {
-    var view = this.listView_;
-    $(view).sortable({
+    $(this.listView_).sortable({
         start: function(event, ui) {
             ui.item.data('start_pos', ui.item.index());
         },
@@ -171,19 +171,18 @@ Entry.Container.prototype.enableSort = function() {
  * disable sort.
  */
 Entry.Container.prototype.disableSort = function() {
-    var view = this.listView_;
-    $(view).sortable('destroy');
+    $(this.listView_).sortable('destroy');
 };
 
 /**
  * update list view to sort item.
  */
 Entry.Container.prototype.updateListView = function() {
-    if (!this.listView_) {
+    var view = this.listView_;
+
+    if (!view) {
         return;
     }
-
-    var view = this.listView_;
 
     while (view.hasChildNodes()) {
         view.removeChild(view.lastChild);
@@ -193,14 +192,10 @@ Entry.Container.prototype.updateListView = function() {
 
     var objs = this.getCurrentObjects().slice();
 
-    var ret = objs.filter(function(o) {
-        return o.index !== undefined;
-    });
+    var ret = objs.filter(({ index }) => index !== undefined);
 
     if (ret.length === objs.length) {
-        objs = objs.sort(function(a, b) {
-            return a.index - b.index;
-        });
+        objs = objs.sort((a, b) => a.index - b.index);
     }
 
     objs.forEach(function(obj) {
@@ -219,8 +214,7 @@ Entry.Container.prototype.updateListView = function() {
  */
 Entry.Container.prototype.setObjects = function(objectModels) {
     for (var i in objectModels) {
-        var object = new Entry.EntryObject(objectModels[i]);
-        this.objects_.push(object);
+        this.objects_.push(new Entry.EntryObject(objectModels[i]));
     }
     this.updateObjectsOrder();
     this.updateListView();
@@ -247,21 +241,15 @@ Entry.Container.prototype.getPictureElement = function(pictureId, objectId) {
  * @param {!Object picture} picture
  */
 Entry.Container.prototype.setPicture = function(picture) {
-    var object = this.getObject(picture.objectId);
-    for (var j in object.pictures) {
-        if (picture.id === object.pictures[j].id) {
-            var picture_ = {};
-            picture_.dimension = picture.dimension;
-            picture_.id = picture.id;
-            picture_.filename = picture.filename;
-            picture_.fileurl = picture.fileurl;
-            picture_.name = picture.name;
-            picture_.view = object.pictures[j].view;
-            object.pictures[j] = picture_;
-            return;
-        }
+    var pictures = this.getObject(picture.objectId).pictures;
+    var index = _.findIndex(pictures, ({ id }) => id === picture.id);
+    if (!~index) {
+        throw new Error('No picture found');
     }
-    throw new Error('No picture found');
+    pictures[index] = Object.assign(
+        _.pick(picture, ['dimension', 'id', 'filename', 'fileurl', 'name']),
+        { view: pictures[index].view }
+    );
 };
 
 /**
@@ -286,33 +274,41 @@ Entry.Container.prototype.selectPicture = function(pictureId, objectId) {
  * @param {?number} index exist when user add object
  * @return {Entry.EntryObject}
  */
-Entry.Container.prototype.addObject = function(objectModel, index, isNotRender) {
-    var object = new Entry.EntryObject(objectModel);
-    object.name = Entry.getOrderedName(object.name, this.objects_);
+Entry.Container.prototype.addObject = function(objectModel, ...rest) {
+    objectModel.sprite.name = Entry.getOrderedName(
+        objectModel.sprite.name,
+        this.objects_
+    );
+    objectModel.id = objectModel.id || Entry.generateHash();
+    return Entry.do('addObject', objectModel, ...rest);
+};
 
-    if (Entry.stateManager) {
-        Entry.stateManager.addCommand(
-            'add object',
-            this,
-            this.removeObject,
-            object
-        );
-    }
+Entry.Container.prototype.addObjectFunc = function(
+    objectModel,
+    index,
+    isNotRender
+) {
+    var object = new Entry.EntryObject(objectModel);
 
     object.scene = object.scene || Entry.scene.selectedScene;
 
-    var isBackground = objectModel.sprite.category;
-    isBackground = isBackground && isBackground.main == 'background';
+    var isBackground = objectModel.sprite.category || {};
+    isBackground = isBackground.main == 'background';
 
     if (typeof index == 'number') {
         if (isBackground) {
             object.setLock(true);
             this.objects_.push(object);
-        } else this.objects_.splice(index, 0, object);
-    } else if (isBackground) this.objects_.push(object);
-    else this.objects_.unshift(object);
+        } else {
+            this.objects_.splice(index, 0, object);
+        }
+    } else if (isBackground) {
+        this.objects_.push(object);
+    } else {
+        this.objects_.unshift(object);
+    }
 
-    if(!isNotRender) {
+    if (!isNotRender) {
         object.generateView();
         this.setCurrentObjects();
         this.selectObject(object.id);
@@ -320,15 +316,14 @@ Entry.Container.prototype.addObject = function(objectModel, index, isNotRender) 
         this.updateListView();
         Entry.variableContainer.updateViews();
     }
-    
-    return new Entry.State(this, this.removeObject, object);
 };
 
-Entry.Container.prototype.renderObject = function (object) {
+Entry.Container.prototype.renderObject = function(object) {
     object.generateView();
     this.setCurrentObjects();
     this.selectObject(object.id);
-}
+    Entry.variableContainer.updateViews();
+};
 
 Entry.Container.prototype.addExtension = function(obj) {
     this._extensionObjects.push(obj);
@@ -342,7 +337,7 @@ Entry.Container.prototype.removeExtension = function(obj) {
 
     var extensions = this._extensionObjects;
     var index = extensions.indexOf(obj);
-    if (index > -1) extensions.splice(index, 1);
+    if (~index) extensions.splice(index, 1);
 
     obj.destroy && obj.destroy();
 };
@@ -351,7 +346,11 @@ Entry.Container.prototype.removeExtension = function(obj) {
  * Add Clone object
  * @param {!Entry.EntryObject} object
  */
-Entry.Container.prototype.addCloneObject = function(object, scene, isNotRender) {
+Entry.Container.prototype.addCloneObject = function(
+    object,
+    scene,
+    isNotRender
+) {
     var json = object.toJSON(true);
 
     json.script = change('sounds', object, json);
@@ -370,7 +369,7 @@ Entry.Container.prototype.addCloneObject = function(object, scene, isNotRender) 
     function change(keyName, object, jsonData) {
         var target = jsonData.sprite[keyName];
         var script = jsonData.script;
-        (object[keyName] || []).forEach(function(value, index) {
+        (object[keyName] || []).forEach((value, index) => {
             script = script.replace(
                 new RegExp(value.id, 'g'),
                 target[index].id
@@ -385,46 +384,32 @@ Entry.Container.prototype.addCloneObject = function(object, scene, isNotRender) 
  * @param {!Entry.EntryObject} object
  * @return {Entry.State}
  */
-Entry.Container.prototype.removeObject = function(object, isPass) {
+Entry.Container.prototype.removeObject = function(id, isPass) {
     var objects = this.objects_;
 
+    var object = this.getObject(id);
     var index = objects.indexOf(object);
     var objectJSON = object.toJSON();
-    if (Entry.stateManager) {
-        Entry.stateManager.addCommand(
-            'remove object',
-            this,
-            this.addObject,
-            objectJSON,
-            index
-        );
-    }
-    var state = new Entry.State(this.addObject, objectJSON, index);
 
     object.destroy();
-    objects.splice(index, 1);    
+    objects.splice(index, 1);
     Entry.variableContainer.removeLocalVariables(object.id);
 
-    if(isPass) {
-        return state;
+    if (isPass === true) {
+        return;
     }
 
     this.setCurrentObjects();
     Entry.stage.sortZorder();
-    var currentObjects = this.getCurrentObjects();
-    if (currentObjects.length) this.selectObject(currentObjects[0].id);
-    else {
+    var [first] = this.getCurrentObjects();
+    if (first) {
+        this.selectObject(first.id);
+    } else {
         this.selectObject();
         Entry.playground.flushPlayground();
     }
-    
-    Entry.toast.success(
-        Lang.Workspace.remove_object,
-        object.name + ' ' + Lang.Workspace.remove_object_msg
-    );
-        
+
     Entry.playground.reloadPlayground();
-    return state;
 };
 
 /**
@@ -438,12 +423,14 @@ Entry.Container.prototype.selectObject = function(objectId, changeScene) {
     if (changeScene && object) Entry.scene.selectScene(object.scene);
 
     var className = 'selectedObject';
-    this.mapObjectOnScene(function(o) {
-        !o.view_ && o.generateView && o.generateView();
+    this.mapObjectOnScene((o) => {
+        !o.view_ && _.result(o, 'generateView');
         var selected = o === object;
         var view = o.view_;
-        if (selected) view && view.addClass(className);
-        else view && view.removeClass(className);
+        if (view) {
+            if (selected) view.addClass(className);
+            else view.removeClass(className);
+        }
 
         o.isSelected_ = selected;
     });
@@ -510,13 +497,12 @@ Entry.Container.prototype.getAllObjects = function() {
  * @return {Entry.EntryObject}
  */
 Entry.Container.prototype.getObject = function(objectId) {
-    if (!objectId && Entry.playground && Entry.playground.object)
-        objectId = Entry.playground.object.id;
-    var length = this.objects_.length;
-    for (var i = 0; i < length; i++) {
-        var object = this.objects_[i];
-        if (object.id == objectId) return object;
-    }
+    var playground = Entry.playground;
+    if (!objectId && playground && playground.object)
+        objectId = playground.object.id;
+    else if (objectId instanceof Entry.EntryObject) return objectId;
+
+    return _.findWhere(this.objects_, { id: objectId });
 };
 
 /**
@@ -527,12 +513,11 @@ Entry.Container.prototype.getObject = function(objectId) {
 Entry.Container.prototype.getEntity = function(objectId) {
     var object = this.getObject(objectId);
     if (!object) {
-        Entry.toast.alert(
+        return Entry.toast.alert(
             Lang.Msgs.runtime_error,
             Lang.Workspace.object_not_found,
             true
         );
-        return;
     }
     return object.entity;
 };
@@ -586,131 +571,99 @@ Entry.Container.prototype.moveElement = function(start, end, isCallFromState) {
 };
 
 /**
- * generate list for blockly dropdown dynamic
+ * generate list for dropdown dynamic
  * @param {string} menuName
  */
 Entry.Container.prototype.getDropdownList = function(menuName, object) {
     var result = [];
     switch (menuName) {
         case 'sprites':
-            var objs = this.getCurrentObjects();
-            var length = objs.length;
-            for (var i = 0; i < length; i++) {
-                var object = objs[i];
-                result.push([object.name, object.id]);
-            }
+            result = this.getCurrentObjects().map(({ name, id }) => [name, id]);
             break;
         case 'spritesWithMouse':
-            var objs = this.getCurrentObjects();
-            var length = objs.length;
-            for (var i = 0; i < length; i++) {
-                var object = objs[i];
-                result.push([object.name, object.id]);
-            }
+            result = this.getCurrentObjects().map(({ name, id }) => [name, id]);
             result.push([Lang.Blocks.mouse_pointer, 'mouse']);
             break;
         case 'spritesWithSelf':
-            var objs = this.getCurrentObjects();
-            var length = objs.length;
-            for (var i = 0; i < length; i++) {
-                var object = objs[i];
-                result.push([object.name, object.id]);
-            }
+            result = this.getCurrentObjects().map(({ name, id }) => [name, id]);
             result.push([Lang.Blocks.self, 'self']);
             break;
         case 'textBoxWithSelf': {
-            const objs = this.getCurrentObjects();
-            objs.forEach((obj) => {
-                if(obj.objectType === 'textBox') {
-                    result.push([obj.name, obj.id]);
-                };
-            });
-            result.push([Lang.Blocks.self, 'self']);
+            result = [
+                ...this.getCurrentObjects().reduce(
+                    (acc, { objectType, name, id }) => {
+                        if (objectType === 'textBox') {
+                            acc.push([name, id]);
+                        }
+                        return acc;
+                    },
+                    result
+                ),
+                [Lang.Blocks.self, 'self'],
+            ];
             break;
         }
         case 'collision':
-            result.push([Lang.Blocks.mouse_pointer, 'mouse']);
-            var objs = this.getCurrentObjects();
-            var length = objs.length;
-            for (var i = 0; i < length; i++) {
-                var object = objs[i];
-                result.push([object.name, object.id]);
-            }
-            result.push([Lang.Blocks.wall, 'wall']);
-            result.push([Lang.Blocks.wall_up, 'wall_up']);
-            result.push([Lang.Blocks.wall_down, 'wall_down']);
-            result.push([Lang.Blocks.wall_right, 'wall_right']);
-            result.push([Lang.Blocks.wall_left, 'wall_left']);
+            result = [
+                [Lang.Blocks.mouse_pointer, 'mouse'],
+                ...this.getCurrentObjects().map(({ name, id }) => [name, id]),
+                [Lang.Blocks.wall, 'wall'],
+                [Lang.Blocks.wall_up, 'wall_up'],
+                [Lang.Blocks.wall_down, 'wall_down'],
+                [Lang.Blocks.wall_right, 'wall_right'],
+                [Lang.Blocks.wall_left, 'wall_left'],
+            ];
             break;
         case 'pictures':
             var object = Entry.playground.object || object;
             if (!object) break;
-            var pictures = object.pictures || [];
-            for (var i = 0; i < pictures.length; i++) {
-                var picture = pictures[i];
-                result.push([picture.name, picture.id]);
-            }
+            result = (object.pictures || []).map(({ name, id }) => [name, id]);
             break;
         case 'messages':
-            var messages = Entry.variableContainer.messages_;
-            for (var i = 0; i < messages.length; i++) {
-                var message = messages[i];
-                result.push([message.name, message.id]);
-            }
+            result = Entry.variableContainer.messages_.map(({ name, id }) => [
+                name,
+                id,
+            ]);
             break;
         case 'variables':
-            var variables = Entry.variableContainer.variables_;
-            for (var i = 0; i < variables.length; i++) {
-                var variable = variables[i];
-
+            Entry.variableContainer.variables_.forEach((variable) => {
                 if (
                     variable.object_ &&
                     Entry.playground.object &&
                     variable.object_ != Entry.playground.object.id
                 )
-                    continue;
+                    return;
                 result.push([variable.getName(), variable.getId()]);
-            }
+            });
             if (!result || result.length === 0)
                 result.push([Lang.Blocks.VARIABLE_variable, 'null']);
             break;
         case 'lists':
             var object = Entry.playground.object || object;
-            var lists = Entry.variableContainer.lists_;
-            for (var i = 0; i < lists.length; i++) {
-                var list = lists[i];
-                if (list.object_ && object && list.object_ != object.id)
-                    continue;
+            Entry.variableContainer.lists_.forEach((list) => {
+                if (list.object_ && object && list.object_ != object.id) return;
                 result.push([list.getName(), list.getId()]);
-            }
+            });
+
             if (!result || result.length === 0)
                 result.push([Lang.Blocks.VARIABLE_list, 'null']);
             break;
         case 'scenes':
-            var scenes = Entry.scene.scenes_;
-            for (var i = 0; i < scenes.length; i++) {
-                var scene = scenes[i];
-                result.push([scene.name, scene.id]);
-            }
+            result = Entry.scene.getScenes().map(({ name, id }) => [name, id]);
             break;
         case 'sounds':
             var object = Entry.playground.object || object;
             if (!object) break;
-            var sounds = object.sounds || [];
-            for (var i = 0; i < sounds.length; i++) {
-                var sound = sounds[i];
-                result.push([sound.name, sound.id]);
-            }
+            result = (object.sounds || []).map(({ name, id }) => [name, id]);
             break;
         case 'clone':
-            result.push([Lang.Blocks.oneself, 'self']);
-            this.getCurrentObjects().forEach(function(o) {
-                result.push([o.name, o.id]);
-            });
+            result = [
+                [Lang.Blocks.oneself, 'self'],
+                ...this.getCurrentObjects().map(({ name, id }) => [name, id]),
+            ];
             break;
         case 'objectSequence':
-            var length = this.getCurrentObjects().length;
-            for (var i = 0; i < length; i++) {
+            for (var i = 0; i < this.getCurrentObjects().length; i++) {
                 result.push([(i + 1).toString(), i.toString()]);
             }
             break;
@@ -725,13 +678,13 @@ Entry.Container.prototype.getDropdownList = function(menuName, object) {
  * Initialize entities to state before run
  */
 Entry.Container.prototype.clearRunningState = function() {
-    this.mapObject(function(object) {
+    this.mapObject((object) => {
         object.clearExecutor();
     });
 };
 
 Entry.Container.prototype.clearRunningStateOnScene = function() {
-    this.mapObjectOnScene(function(object) {
+    this.mapObjectOnScene((object) => {
         object.clearExecutor();
     });
 };
@@ -744,33 +697,15 @@ Entry.Container.prototype.clearRunningStateOnScene = function() {
  * @param {} param
  */
 Entry.Container.prototype.mapObject = function(mapFunction, param) {
-    var length = this.objects_.length;
-    var output = [];
-    for (var i = 0; i < this._extensionObjects.length; i++) {
-        var object = this._extensionObjects[i];
-        output.push(mapFunction(object, param));
-    }
-    for (var i = 0; i < length; i++) {
-        var object = this.objects_[i];
-        output.push(mapFunction(object, param));
-    }
-    return output;
+    return [...this._extensionObjects, ...this.objects_].map((object) =>
+        mapFunction(object, param)
+    );
 };
 
 Entry.Container.prototype.mapObjectOnScene = function(mapFunction, param) {
-    var objects = this.getCurrentObjects();
-    var length = objects.length;
-    var output = [];
-
-    for (var i = 0; i < this._extensionObjects.length; i++) {
-        var object = this._extensionObjects[i];
-        output.push(mapFunction(object, param));
-    }
-    for (var i = 0; i < length; i++) {
-        var object = objects[i];
-        output.push(mapFunction(object, param));
-    }
-    return output;
+    return [...this._extensionObjects, ...this.getCurrentObjects()].map(
+        (object) => mapFunction(object, param)
+    );
 };
 
 /**
@@ -781,24 +716,13 @@ Entry.Container.prototype.mapObjectOnScene = function(mapFunction, param) {
  * @param {} param
  */
 Entry.Container.prototype.mapEntity = function(mapFunction, param) {
-    var length = this.objects_.length;
-    var output = [];
-    for (var i = 0; i < length; i++) {
-        var entity = this.objects_[i].entity;
-        output.push(mapFunction(entity, param));
-    }
-    return output;
+    return this.objects_.map(({ entity }) => mapFunction(entity, param));
 };
 
 Entry.Container.prototype.mapEntityOnScene = function(mapFunction, param) {
-    var objects = this.getCurrentObjects();
-    var length = objects.length;
-    var output = [];
-    for (var i = 0; i < length; i++) {
-        var entity = objects[i].entity;
-        output.push(mapFunction(entity, param));
-    }
-    return output;
+    return this.getCurrentObjects().map(({ entity }) =>
+        mapFunction(entity, param)
+    );
 };
 
 /**
@@ -879,12 +803,9 @@ Entry.Container.prototype.unCachePictures = function(
     if (entity.constructor === Entry.EntityObject) entityId = entity.id;
     else entityId = entity;
 
-    pictures.forEach(
-        function(p) {
-            var id = p.id + (isClone ? '' : entityId);
-            delete this.cachedPicture[id];
-        }.bind(this)
-    );
+    pictures.forEach(({ id }) => {
+        delete this.cachedPicture[id + (isClone ? '' : entityId)];
+    });
 };
 
 /**
@@ -892,13 +813,7 @@ Entry.Container.prototype.unCachePictures = function(
  * @return {JSON}
  */
 Entry.Container.prototype.toJSON = function() {
-    var json = [];
-    var length = this.objects_.length;
-    for (var i = 0; i < length; i++) {
-        var object = this.objects_[i];
-        json.push(object.toJSON());
-    }
-    return json;
+    return this.objects_.map((object) => object.toJSON());
 };
 
 /**
@@ -953,7 +868,7 @@ Entry.Container.prototype.setInputValue = function(inputValue) {
 Entry.Container.prototype.resetSceneDuringRun = function() {
     if (!Entry.engine.isState('run')) return;
 
-    this.mapEntityOnScene(function(entity) {
+    this.mapEntityOnScene((entity) => {
         entity.reset();
     });
     this.clearRunningStateOnScene();
@@ -965,15 +880,9 @@ Entry.Container.prototype.setCopiedObject = function(object) {
 };
 
 Entry.Container.prototype.updateObjectsOrder = function() {
-    var scenes = Entry.scene.getScenes();
-
-    var objs = [];
-
-    for (var i = 0; i < scenes.length; i++) {
-        var tempObjs = this.getSceneObjects(scenes[i]);
-        for (var j = 0; j < tempObjs.length; j++) objs.push(tempObjs[j]);
-    }
-    this.objects_ = objs;
+    this.objects_ = Entry.scene
+        .getScenes()
+        .reduce((objs, scene) => [...objs, ...this.getSceneObjects(scene)], []);
 };
 
 /**
@@ -983,13 +892,12 @@ Entry.Container.prototype.updateObjectsOrder = function() {
  */
 Entry.Container.prototype.getSceneObjects = function(scene) {
     scene = scene || Entry.scene.selectedScene;
-    var objects = [],
-        containerObjects = this.getAllObjects();
-    for (var i = 0; i < containerObjects.length; i++) {
-        if (scene.id == containerObjects[i].scene.id)
-            objects.push(containerObjects[i]);
+    if (!scene) {
+        return [];
     }
-    return objects;
+
+    var sceneId = scene.id;
+    return this.getAllObjects().filter(({ scene: { id } }) => id === sceneId);
 };
 
 /**
@@ -1003,8 +911,9 @@ Entry.Container.prototype.setCurrentObjects = function() {
  *  get objects list belonged to current scene
  */
 Entry.Container.prototype.getCurrentObjects = function() {
-    var objs = this.currentObjects_;
-    if (!objs || objs.length === 0) this.setCurrentObjects();
+    if (_.isEmpty(this.currentObjects_)) {
+        this.setCurrentObjects();
+    }
     return this.currentObjects_ || [];
 };
 
@@ -1022,10 +931,10 @@ Entry.Container.prototype.getProjectWithJSON = function(project) {
 };
 
 Entry.Container.prototype.blurAllInputs = function() {
-    var objects = this.getSceneObjects();
-    objects.map(function(obj) {
-        var inputs = obj.view_.getElementsByTagName('input');
-        for (var i = 0, len = inputs.length; i < len; i++) inputs[i].blur();
+    this.getSceneObjects().map(({ view_ }) => {
+        $(view_)
+            .find('input')
+            .blur();
     });
 };
 
@@ -1055,9 +964,9 @@ Entry.Container.prototype.hideProjectAnswer = function(
             var blocks = code.getBlockList(false, answerTypes[j]);
             if (notIncludeSelf) {
                 var index = blocks.indexOf(removeBlock);
-                if (index > -1) blocks.splice(index, 1);
+                if (~index) blocks.splice(index, 1);
             }
-            if (blocks.length > 0) return;
+            if (blocks.length) return;
         }
     }
 
@@ -1103,20 +1012,16 @@ Entry.Container.prototype._rightClick = function(e) {
 };
 
 Entry.Container.prototype.removeFuncBlocks = function(functionType) {
-    this.objects_.forEach(function(object) {
-        object.script.removeBlocksByType(functionType);
+    this.objects_.forEach(({ script }) => {
+        script.removeBlocksByType(functionType);
     });
 };
 
 Entry.Container.prototype.clear = function() {
-    this.objects_.map(function(o) {
-        o.destroy();
-    });
+    [...this.objects_, ...this._extensionObjects].forEach((o) => o.destroy());
+
     this.objects_ = [];
     // INFO : clear 시도할때 _extensionObjects 초기화
-    this._extensionObjects.map(function(o) {
-        o.destroy();
-    });
     this._extensionObjects = [];
     // TODO: clear 때 this._extensionListView 도 비워 줘야 하는지 확인 필요.
     Entry.playground.flushPlayground();
@@ -1152,14 +1057,15 @@ Entry.Container.prototype.getDom = function(query) {
         switch (query.shift()) {
             case 'objectIndex':
                 return this.objects_[query.shift()].getDom(query);
+            case 'objectId':
+                return this.getObject(query.shift()).getDom(query);
         }
     } else {
     }
 };
 
 Entry.Container.prototype.isSceneObjectsExist = function() {
-    var objects = this.getSceneObjects();
-    return !!(objects && objects.length);
+    return !_.isEmpty(this.getSceneObjects());
 };
 
 Entry.Container.prototype.adjustClonedValues = function(oldIds, newIds) {
@@ -1185,18 +1091,12 @@ Entry.Container.prototype.adjustClonedValues = function(oldIds, newIds) {
 };
 
 Entry.Container.prototype.getBlockList = function() {
-    var blocks = [];
-
-    this.objects_.forEach(function(o) {
-        blocks = blocks.concat(o.script.getBlockList());
-    });
-
-    return blocks;
+    return _.flatten(this.objects_.map(({ script }) => script.getBlockList()));
 };
 
 Entry.Container.prototype.scrollToObject = function(ObjectId) {
-    var object = this.getObject(ObjectId);
+    var { view_ } = this.getObject(ObjectId);
 
-    object.view_ && object.view_.scrollIntoView();
+    view_ && view_.scrollIntoView();
     document.body.scrollIntoView();
 };

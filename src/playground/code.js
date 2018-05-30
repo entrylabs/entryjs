@@ -18,7 +18,6 @@ Entry.Code = function(code, object) {
 
     this.executors = [];
     this.watchEvent = new Entry.Event(this);
-
     this.executeEndEvent = new Entry.Event(this);
     this.changeEvent = new Entry.Event(this);
     this.changeEvent.attach(this, this._handleChange);
@@ -38,20 +37,20 @@ Entry.PARAM = -1;
     };
 
     p.load = function(code) {
-        if (Entry.engine && Entry.engine.isState('run')) return;
-
-        if (!(code instanceof Array)) code = JSON.parse(code);
+        if (Entry.engine && Entry.engine.isState('run')) {
+            return;
+        }
 
         this.clear();
 
-        for (var i = 0; i < code.length; i++)
-            this._data.push(new Entry.Thread(code[i], this));
+        (Array.isArray(code) ? code : JSON.parse(code)).forEach((t) =>
+            this._data.push(new Entry.Thread(t, this))
+        );
 
         return this;
     };
 
-    p.clear = function(isNotForce) {
-        isNotForce = isNotForce === undefined ? false : isNotForce;
+    p.clear = function(isNotForce = false) {
         for (var i = this._data.length - 1; i >= 0; i--)
             this._data[i].destroy(false, isNotForce);
 
@@ -86,14 +85,17 @@ Entry.PARAM = -1;
     };
 
     p.registerEvent = function(block, eventType) {
-        if (!this._eventMap[eventType]) this._eventMap[eventType] = [];
+        var eventMap = this._eventMap;
+        if (!eventMap[eventType]) {
+            eventMap[eventType] = [];
+        }
 
-        this._eventMap[eventType].push(block);
+        eventMap[eventType].push(block);
     };
 
     p.unregisterEvent = function(block, eventType) {
         var blocks = this._eventMap[eventType];
-        if (!blocks || blocks.length === 0) return;
+        if (_.isEmpty(blocks)) return;
 
         var index = blocks.indexOf(block);
         if (index < 0) return;
@@ -102,8 +104,10 @@ Entry.PARAM = -1;
 
     p.raiseEvent = function(eventType, entity, value) {
         var blocks = this._eventMap[eventType];
-        var executors = [];
         if (blocks === undefined) return;
+
+        var executors = [];
+
         for (var i = 0; i < blocks.length; i++) {
             var block = blocks[i];
             var pointer = block.pointer();
@@ -132,8 +136,6 @@ Entry.PARAM = -1;
         var ret;
         var executedBlocks = [];
 
-        executors.forEach((executor) => {});
-
         var _executeEvent = _.partial(Entry.dispatchEvent, 'blockExecute');
         var _executeEndEvent = _.partial(
             Entry.dispatchEvent,
@@ -143,15 +145,15 @@ Entry.PARAM = -1;
         for (var i = 0; i < executors.length; i++) {
             var executor = executors[i];
             if (!executor.isEnd()) {
-                var scope = executor.scope;
-                _executeEvent(scope.block && scope.block.view);
+                var { view } = executor.scope.block || {};
+                _executeEvent(view);
                 ret = executor.execute(true);
                 if (shouldNotifyWatch)
                     executedBlocks = executedBlocks.concat(ret);
             } else {
                 _executeEndEvent(this.board);
                 executors.splice(i--, 1);
-                if (executors.length === 0) {
+                if (_.isEmpty(executors)) {
                     this.executeEndEvent.notify();
                 }
             }
@@ -171,13 +173,11 @@ Entry.PARAM = -1;
     };
 
     p.clearExecutorsByEntity = function(entity) {
-        var executors = this.executors;
-        for (var i = 0; i < executors.length; i++) {
-            var executor = executors[i];
+        this.executors.forEach((executor) => {
             if (executor.entity === entity) {
                 executor.end();
             }
-        }
+        });
     };
 
     p.addExecutor = function(executor) {
@@ -185,12 +185,16 @@ Entry.PARAM = -1;
     };
 
     p.createThread = function(blocks, index) {
-        if (!(blocks instanceof Array))
+        if (!Array.isArray(blocks)) {
             return console.error('blocks must be array');
+        }
 
         var thread = new Entry.Thread(blocks, this);
-        if (index === undefined || index === null) this._data.push(thread);
-        else this._data.insert(thread, index);
+        if (index === undefined || index === null) {
+            this._data.push(thread);
+        } else {
+            this._data.insert(thread, index);
+        }
 
         this.changeEvent.notify();
         return thread;
@@ -214,65 +218,50 @@ Entry.PARAM = -1;
         var data = this._data;
         var index = data.indexOf(thread);
         // case of statement thread
-        if (index < 0) return;
-        data.splice(index, 1);
+        if (~index) {
+            data.splice(index, 1);
+        }
     };
 
-    p.doDestroyThread = function(thread, animate) {
-        var data = this._data;
-        var index = data.indexOf(thread);
-        // case of statement thread
-        if (index < 0) return;
-        data.splice(index, 1);
-    };
+    p.doDestroyThread = p.destroyThread;
 
     p.getThread = function(index) {
         return this._data[index];
     };
 
     p.getThreads = function() {
-        return this._data.map(function(t) {
-            return t;
-        });
+        return this._data.slice();
     };
 
-    p.getThreadsByCategory = function(category) {
-        var arr = [];
+    p.getThreadsByCategory = function(categoryName) {
+        if (!categoryName) return [];
 
-        for (var i = 0; i < this._data.length; i++) {
-            var thread = this._data[i];
-            var b = thread.getFirstBlock();
-            if (b && b.category === category) arr.push(thread);
-        }
-        return arr;
+        return this.getThreads().filter(
+            (t) => _.result(t.getFirstBlock(), 'category') === categoryName
+        );
     };
 
     p.toJSON = function(excludeData, option) {
-        var threads = this.getThreads();
-        var json = [];
-        for (var i = 0, len = threads.length; i < len; i++)
-            json.push(threads[i].toJSON(false, undefined, excludeData, option));
-        return json;
+        var params = [false, undefined, excludeData, option];
+        return this.getThreads().map((t) => t.toJSON.apply(t, params));
     };
 
     p.countBlock = function() {
-        var threads = this.getThreads();
-        var count = 0;
-        for (var i = 0; i < threads.length; i++)
-            count += threads[i].countBlock();
-        return count;
+        return this.getThreads().reduce(
+            (cnt, thread) => cnt + thread.countBlock(),
+            0
+        );
     };
 
     p.moveBy = function(x, y) {
-        var threads = this.getThreads();
-        for (var i = 0, len = threads.length; i < len; i++) {
-            var firstBlock = threads[i].getFirstBlock();
-            if (firstBlock && firstBlock.view && firstBlock.view.display)
-                firstBlock.view._moveBy(x, y, false);
+        this.getThreads().forEach((thread) => {
+            var { view = {} } = thread.getFirstBlock() || {};
+            if (view && view.display) view._moveBy(x, y, false);
+        });
+        var { board } = this;
+        if (board instanceof Entry.BlockMenu) {
+            board.updateSplitters(y);
         }
-
-        var board = this.board;
-        if (board instanceof Entry.BlockMenu) board.updateSplitters(y);
     };
 
     p.stringify = function(excludeData) {
@@ -292,22 +281,15 @@ Entry.PARAM = -1;
     };
 
     p._handleChange = function() {
-        if (
-            Entry.creationChangedEvent &&
-            this.view &&
-            this.view.board.constructor !== Entry.BlockMenu
-        ) {
-            Entry.creationChangedEvent.notify();
+        var board = _.result(this.view, 'board');
+        var event = Entry.creationChangedEvent;
+        if (board && event && board.constructor !== Entry.BlockMenu) {
+            event.notify();
         }
     };
 
     p.hasBlockType = function(type) {
-        var threads = this.getThreads();
-
-        for (var i = 0; i < threads.length; i++)
-            if (threads[i].hasBlockType(type)) return true;
-
-        return false;
+        return this.getThreads().some((thread) => thread.hasBlockType(type));
     };
 
     p.findById = function(id) {
@@ -318,13 +300,11 @@ Entry.PARAM = -1;
         this._blockMap[block.id] = block;
     };
 
-    p.unregisterBlock = function(block) {
-        delete this._blockMap[block.id];
+    p.unregisterBlock = function({ id }) {
+        delete this._blockMap[id];
     };
 
-    p.getByPointer = function(pointer) {
-        pointer = pointer.concat();
-        pointer.splice(0, 2);
+    p.getByPointer = function([, , ...pointer]) {
         var thread = this._data[pointer.shift()];
         var block = thread.getBlock(pointer.shift());
         while (pointer.length) {
@@ -342,10 +322,7 @@ Entry.PARAM = -1;
         return block;
     };
 
-    p.getTargetByPointer = function(pointer) {
-        pointer = pointer.concat();
-        pointer.splice(0, 2);
-
+    p.getTargetByPointer = function([, , ...pointer]) {
         var thread = this._data[pointer.shift()];
         var block;
 
@@ -377,29 +354,18 @@ Entry.PARAM = -1;
     };
 
     p.getBlockList = function(excludePrimitive, type) {
-        var threads = this.getThreads();
-        var blocks = [];
-
-        for (var i = 0; i < threads.length; i++)
-            blocks = blocks.concat(
-                threads[i].getBlockList(excludePrimitive, type)
-            );
-
-        return blocks;
+        return _.chain(this.getThreads())
+            .map((t) => t.getBlockList(excludePrimitive, type))
+            .flatten(true)
+            .value();
     };
 
     p.removeBlocksByType = function(type) {
-        this.getBlockList(false, type).forEach(function(b) {
-            b.doDestroy();
-        });
+        this.getBlockList(false, type).forEach((b) => b.doDestroy());
     };
 
     p.isAllThreadsInOrigin = function() {
-        var threads = this.getThreads();
-        for (var i = threads.length - 1; i >= 0; i--) {
-            if (!threads[i].isInOrigin()) return false;
-        }
-        return true;
+        return this.getThreads().every((thread) => thread.isInOrigin());
     };
 
     p.destroy = function() {

@@ -6,45 +6,47 @@
 /*
  *
  */
-Entry.FieldText = function(content, blockView, index) {
+Entry.FieldText = function(
+    { fontSize, align = 'left', text, color },
+    blockView,
+    index
+) {
     this._block = blockView.block;
     this._blockView = blockView;
     this._index = index;
 
     this.box = new Entry.BoxModel();
 
-    this._font_size =
-        content.fontSize || blockView.getSkeleton().fontSize || 12;
+    this._font_size = fontSize || blockView.getSkeleton().fontSize || 12;
     this._color =
-        content.color ||
+        color ||
         this._block.getSchema().fontColor ||
         blockView.getSkeleton().color ||
         'white';
-    this._align = content.align || 'left';
-    this._text = this.getValue() || content.text;
+    this._align = align;
+    this._text = this.getValue() || text;
     this.setValue(null);
 
     this.textElement = null;
 
-    this.renderStart(blockView);
+    this.renderStart();
 };
 
 Entry.Utils.inherit(Entry.Field, Entry.FieldText);
 
 (function(p) {
     p.renderStart = function() {
-        var that = this;
-        var blockView = this._blockView;
+        var { contentSvgGroup } = this._blockView;
 
         if (!this.textElement) {
-            this.svgGroup = this.textElement = blockView.contentSvgGroup
+            this.svgGroup = this.textElement = contentSvgGroup
                 .elem('text')
                 .attr({
                     style: 'white-space: pre;',
-                    'font-size': that._font_size + 'px',
+                    'font-size': this._font_size + 'px',
                     'font-family': 'nanumBarunRegular',
                     class: 'dragNone',
-                    fill: that._color,
+                    fill: this._color,
                 });
         }
 
@@ -54,20 +56,17 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldText);
             this.textElement.textContent = this._text;
         }
 
-        var x = 0;
-        var bBox = this.getTextBBox();
-        if (this._align == 'center') x = -bBox.width / 2;
-
+        var { width, height } = this.getTextBBox();
         this.textElement.attr({
-            x: x,
-            y: bBox.height * 0.25,
+            x: this._align == 'center' ? -width / 2 : 0,
+            y: height * 0.25,
         });
 
         this.box.set({
             x: 0,
             y: 0,
-            width: bBox.width,
-            height: bBox.height,
+            width,
+            height,
         });
     };
 
