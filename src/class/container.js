@@ -661,9 +661,6 @@ Entry.Container.prototype.getDropdownList = function(menuName, object) {
                 [Lang.Blocks.oneself, 'self'],
                 ...this.getCurrentObjects().map(({ name, id }) => [name, id]),
             ];
-            this.getCurrentObjects().forEach(function(o) {
-                result.push([o.name, o.id]);
-            });
             break;
         case 'objectSequence':
             for (var i = 0; i < this.getCurrentObjects().length; i++) {
@@ -681,13 +678,13 @@ Entry.Container.prototype.getDropdownList = function(menuName, object) {
  * Initialize entities to state before run
  */
 Entry.Container.prototype.clearRunningState = function() {
-    this.mapObject(function(object) {
+    this.mapObject((object) => {
         object.clearExecutor();
     });
 };
 
 Entry.Container.prototype.clearRunningStateOnScene = function() {
-    this.mapObjectOnScene(function(object) {
+    this.mapObjectOnScene((object) => {
         object.clearExecutor();
     });
 };

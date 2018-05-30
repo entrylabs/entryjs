@@ -13,11 +13,9 @@ Entry.Scene = function() {
     this.scenes_ = [];
     this.selectedScene = null;
     this.maxCount = 20;
-    $(window).on('resize', (e) => {
-        that.resize();
-    });
+    $(window).on('resize', that.resize.bind(this));
 
-    that.disposeEvent = Entry.disposeEvent.attach(this, function(e) {
+    that.disposeEvent = Entry.disposeEvent.attach(this, (e) => {
         var elem = document.activeElement;
         if (
             e &&
@@ -80,9 +78,10 @@ Entry.Scene.prototype.generateView = function(sceneView, option) {
                         var clone = $(ui.item[0]).clone(true);
                     },
                     stop: function(event, ui) {
-                        var start = ui.item.data('start_pos');
-                        var end = ui.item.index();
-                        Entry.scene.moveScene(start, end);
+                        Entry.scene.moveScene(
+                            ui.item.data('start_pos'),
+                            ui.item.index()
+                        );
                     },
                     axis: 'x',
                     tolerance: 'pointer',
