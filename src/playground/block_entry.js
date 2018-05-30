@@ -8050,23 +8050,11 @@ const block = {
     //endregion basic 기본
 };
 
+setHardwareLanguage();
 Object.assign(Entry.block, block, blocks.getBlocks());
 
 (function() {
     // console.log('hw', Entry.HW, Entry.Arduino);
-    for(let id in Entry.HARDWARE_LIST) {
-        const hw = Entry.HARDWARE_LIST[id];
-        if(!hw) {
-            continue;
-        }
-        if('setLanguage' in hw) {
-            var hwLang = hw.setLanguage();
-            var data = hwLang[global.Lang.type];
-            for(let key in data) {
-                Object.assign(Lang[key], data[key]);
-            }
-        }
-    };
 
     for (var type in Entry.block) {
         var block = Entry.block[type];
@@ -8086,4 +8074,20 @@ Object.assign(Entry.block, block, blocks.getBlocks());
 
 if (typeof exports == 'object') {
     exports.block = Entry.block;
+}
+
+function setHardwareLanguage() {
+    for(let id in Entry.HARDWARE_LIST) {
+        const hw = Entry.HARDWARE_LIST[id];
+        if(!hw) {
+            continue;
+        }
+        if('setLanguage' in hw) {
+            var hwLang = hw.setLanguage();
+            var data = hwLang[global.Lang.type];
+            for(let key in data) {
+                Object.assign(Lang[key], data[key]);
+            }
+        }
+    };
 }

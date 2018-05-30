@@ -15,6 +15,7 @@ require('./block_rokoboard');
 require('./block_albert');
 require('./block_altino');
 require('./block_arduino_ext');
+require('./block_coding_box');
 require('./block_bitbrick');
 require('./block_blacksmith');
 require('./block_byrobot_dronefighter_controller');
@@ -64,6 +65,7 @@ Entry.HARDWARE_LIST = {
     '1.10': Entry.ArduinoNano,
     '1.A': Entry.Cobl,
     '1.B': Entry.Blacksmith,
+    '1.C': Entry.CodingBox,
     '2.4': Entry.Hamster,
     '2.5': Entry.Albert,
     '2.9': Entry.Turtle,
