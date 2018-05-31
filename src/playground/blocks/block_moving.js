@@ -1471,7 +1471,7 @@ module.exports = {
                         value =
                             -Math.atan(deltaY / deltaX) / Math.PI * 180 + 270;
                     }
-                    if (this.entity.getRotateMethod === "free") {
+                    if (this.entity.parent.getRotateMethod() === "free") {
                         var nativeDirection =
                             sprite.getDirection() + sprite.getRotation();
                         sprite.setRotation(
