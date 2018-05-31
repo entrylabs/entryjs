@@ -198,7 +198,11 @@ Entry.BlockToPyParser = function() {
                             textParams[index]
                         );
 
-                        result += param;
+                        // 필드 블록이 아닌 블록에 내재된 파라미터 처리
+                        if (!Entry.Utils.isNumber(param) && block.type.substring(0, 4) === "when")
+                            result += '"' + param + '"';
+                        else
+                            result += param;
                         if (syntaxObj && syntaxObj.key == 'repeat_while_true')
                             result = Entry.TextCodingUtil.assembleRepeatWhileTrueBlock(
                                 currentBlock,
