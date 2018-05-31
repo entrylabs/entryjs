@@ -2738,7 +2738,7 @@
   function parseIdent(liberal, isString) {
     var node = startNode();
     if (liberal) liberal = false;
-    if (tokType === _name || (isString && tokType === _string)) {
+    if (tokType === _name || (isString && ((tokType === _string) || (tokType === _num)))) {
       if (!liberal && strict && input.slice(tokStart, tokEnd).indexOf("\\") == -1)
         raise(tokStart, "The keyword '" + tokVal + "' is reserved");
       node.name = tokVal;
