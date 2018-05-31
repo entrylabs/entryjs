@@ -5741,8 +5741,7 @@ const block = {
                         Ntry.STATIC.OBSTACLE_ENERMY5,
                         Ntry.STATIC.OBSTACLE_ENERMY4,
                     ],
-                    2,
-                    true
+                    2
                 );
                 var particleZIndex = 550;
                 if (unitComp.direction === Ntry.STATIC.NORTH) {
