@@ -21,8 +21,12 @@ Entry.Playground = function() {
      * @type {string}
      */
     this.viewMode_ = 'default';
-    Entry.addEventListener('textEdited', this.injectText);
-    Entry.addEventListener('hwChanged', this.updateHW);
+    Entry.addEventListener('textEdited', () => {
+        this.injectText()
+    });
+    Entry.addEventListener('hwChanged', () => {
+        this.updateHW()
+    });
 };
 
 (function(p) {
