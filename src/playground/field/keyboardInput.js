@@ -9,8 +9,7 @@ Entry.FieldKeyboard = function(content, blockView, index) {
     this._block = blockView.block;
     this._blockView = blockView;
 
-    var box = new Entry.BoxModel();
-    this.box = box;
+    this.box = new Entry.BoxModel();
 
     this.svgGroup = null;
 
@@ -32,12 +31,11 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
         TEXT_Y_PADDING = 4;
 
     p.renderStart = function() {
-        if (this.svgGroup) $(this.svgGroup).remove();
-        var blockView = this._blockView;
-        var that = this;
-        var contents = this._contents;
+        if (this.svgGroup) {
+            $(this.svgGroup).remove();
+        }
 
-        this.svgGroup = blockView.contentSvgGroup.elem('g', {
+        this.svgGroup = this._blockView.contentSvgGroup.elem('g', {
             class: 'entry-input-field',
         });
 
@@ -52,11 +50,9 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
         var width = this.getTextWidth() + 1;
 
         var CONTENT_HEIGHT = this._CONTENT_HEIGHT;
-        var y = this.position && this.position.y ? this.position.y : 0;
-        y -= CONTENT_HEIGHT / 2;
         this._header = this.svgGroup.elem('rect', {
             x: 0,
-            y: y,
+            y: (_.result(this.position, 'y') || 0) - CONTENT_HEIGHT / 2,
             width: width,
             height: CONTENT_HEIGHT,
             rx: 3,
@@ -83,53 +79,48 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
                 this,
                 this._keyboardControl
             );
-        var that = this;
         this._optionVisible = true;
 
-        var blockView = this._blockView;
         this._attachDisposeEvent();
 
-        var pos = this.getAbsolutePosFromDocument();
+        var { x, y } = this.getAbsolutePosFromDocument();
 
-        pos.x -= 12 + X_PADDING / 2;
-        pos.x += this.box.width / 2;
-        pos.y += this.box.height / 2 + 1;
+        x -= 12 + X_PADDING / 2;
+        x += this.box.width / 2;
+
+        y += this.box.height / 2 + 1;
 
         this.optionGroup = Entry.Dom('img', {
             class: 'entry-widget-keyboard-input',
             parent: $('body'),
         });
 
-        this.optionGroup.on('load', that.optionDomCreated.bind(this));
+        this.optionGroup.on('load', this.optionDomCreated.bind(this));
 
-        this.optionGroup[0].src =
-            Entry.mediaFilePath + '/media/keyboard_workspace_widget.png';
+        this.optionGroup[0].src = `${
+            Entry.mediaFilePath
+        }/media/keyboard_workspace_widget.png`;
 
-        this.optionGroup.on('mousedown', function(e) {
-            e.stopPropagation();
-        });
-
-        this.optionGroup.css({ left: pos.x, top: pos.y });
+        this.optionGroup.on('mousedown', (e) => e.stopPropagation());
+        this.optionGroup.css({ left: x, top: y });
     };
 
     p.destroyOption = function(forceCommand) {
-        if (this.disposeEvent) {
-            this.disposeEvent.destroy();
-            delete this.disposeEvent;
-        }
+        var _destroyFunc = _.partial(_.result, _, 'destroy');
+        var _removeFunc = _.partial(_.result, _, 'remove');
 
-        if (this.optionGroup) {
-            this.optionGroup.remove();
-            delete this.optionGroup;
-        }
+        _destroyFunc(this.disposeEvent);
+        delete this.disposeEvent;
+
+        _removeFunc(this.optionGroup);
+        delete this.optionGroup;
 
         this._optionVisible = false;
         this._isEditing = false;
         this.command(forceCommand);
-        if (this.keyPressed) {
-            this.keyPressed.destroy();
-            delete this.keyPressed;
-        }
+
+        _destroyFunc(this.keyPressed);
+        delete this.keyPressed;
     };
 
     p._keyboardControl = function(event) {
@@ -151,10 +142,8 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
 
     p.resize = function() {
         var width = this.getTextWidth() + 1;
-
-        this._header.attr({ width: width });
-
-        this.box.set({ width: width });
+        this._header.attr({ width });
+        this.box.set({ width });
         this._blockView.dAlignContent();
     };
 
@@ -164,14 +153,14 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
 
     p.destroy = function() {
         this.destroyOption();
-
-        if (Entry.keyPressed && this.keyPressed) this.keyPressed.destroy();
+        Entry.keyPressed && _.result(this.keyPressed, 'destroy');
     };
 
     p._setTextValue = function() {
-        var value = Entry.getKeyCodeMap()[this.getValue()];
-        value = this._convert(value, this.getValue());
-        this.textElement.textContent =
-            value === undefined ? Lang.Blocks.no_target : value;
+        var value = this.getValue();
+        value = this._convert(Entry.getKeyCodeMap()[value], value);
+        this.textElement.textContent = _.isUndefined(value)
+            ? Lang.Blocks.no_target
+            : value;
     };
 })(Entry.FieldKeyboard.prototype);

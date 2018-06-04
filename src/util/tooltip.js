@@ -10,7 +10,7 @@ Entry.Tooltip = function(data, opts) {
     p.init = function(data, opts) {
         if (this._rendered) this.dispose();
 
-        this.data = data instanceof Array ? data : [data];
+        this.data = Array.isArray(data) ? data : [data];
         this.opts = opts ||
             this.opts || {
                 dimmed: true,
@@ -27,10 +27,7 @@ Entry.Tooltip = function(data, opts) {
         if (opts.render !== false) this.render();
 
         this._resizeEventFunc = Entry.Utils.debounce(
-            function() {
-                this.alignTooltips();
-            }.bind(this),
-            200
+            this.alignTooltips.bind(this, 200)
         );
 
         Entry.addEventListener('windowResized', this._resizeEventFunc);
@@ -81,7 +78,7 @@ Entry.Tooltip = function(data, opts) {
     };
 
     p.renderTooltips = function() {
-        this.data.map(this._renderTooltip.bind(this));
+        this.data.forEach(this._renderTooltip.bind(this));
     };
 
     p.alignTooltips = function() {
@@ -104,7 +101,11 @@ Entry.Tooltip = function(data, opts) {
 
         if (this.isIndicator) data.indicator = this.renderIndicator();
 
-        tooltipDom.bind('mousedown', function(e) {
+        tooltipDom.bind('mousedown', (e) => {
+            e.stopPropagation();
+            setTimeout(() => Entry.disposeEvent.notify(undefined, true), 150);
+        });
+        tooltipDom.bind('mouseup', (e) => {
             e.stopPropagation();
         });
 
@@ -121,8 +122,9 @@ Entry.Tooltip = function(data, opts) {
             rect = data.targetDom.get(0).getBoundingClientRect();
         else rect = data.targetDom.getBoundingClientRect();
         var tooltipRect = data.dom[0].getBoundingClientRect();
-        var clientWidth = document.body.clientWidth;
-        var clientHeight = document.body.clientHeight;
+
+        var { clientWidth, clientHeight } = document.body;
+
         if (this.isIndicator) {
             data.indicator.css({
                 left: rect.left + rect.width / 2,

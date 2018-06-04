@@ -13,6 +13,7 @@ Entry.Restrictor = function(controller) {
 (function(p) {
     p.restrict = function(data, toolTipRender) {
         this._data = data;
+        Entry.expectedAction = data.content.concat();
         this.toolTipRender = toolTipRender;
 
         this.end();

@@ -1471,11 +1471,17 @@ module.exports = {
                         value =
                             -Math.atan(deltaY / deltaX) / Math.PI * 180 + 270;
                     }
-                    var nativeDirection =
-                        sprite.getDirection() + sprite.getRotation();
-                    sprite.setRotation(
-                        sprite.getRotation() + value - nativeDirection
-                    );
+                    if (this.entity.parent.getRotateMethod() === "free") {
+                        var nativeDirection =
+                            sprite.getDirection() + sprite.getRotation();
+                        sprite.setRotation(
+                            sprite.getRotation() + value - nativeDirection
+                        );
+                    } else {
+                        sprite.setDirection(
+                            value
+                        );
+                    }
                     return script.callReturn();
                 },
                 syntax: {

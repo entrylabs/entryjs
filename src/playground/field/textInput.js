@@ -9,8 +9,7 @@ Entry.FieldTextInput = function(content, blockView, index) {
     this._blockView = blockView;
     this._block = blockView.block;
 
-    var box = new Entry.BoxModel();
-    this.box = box;
+    this.box = new Entry.BoxModel();
 
     this.svgGroup = null;
 
@@ -54,18 +53,21 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
 
     p.renderStart = function() {
         var blockView = this._blockView;
-        if (!this.svgGroup) this.svgGroup = blockView.contentSvgGroup.elem('g');
-        if (!this.textElement)
+
+        if (!this.svgGroup) {
+            this.svgGroup = blockView.contentSvgGroup.elem('g');
+        }
+
+        if (!this.textElement) {
             this.textElement = this.svgGroup.elem('text', {
                 x: X_PADDING / 2,
                 y: TEXT_Y_PADDING,
                 fill: this._contents.color || 'black',
                 'font-size': this._font_size + 'px',
             });
+        }
 
-        var that = this;
         var contents = this._contents;
-
         this.svgGroup.attr({ class: 'entry-input-field' });
 
         this._setTextValue();
@@ -77,9 +79,9 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
         y -= CONTENT_HEIGHT / 2;
         if (!this._header)
             this._header = this.svgGroup.elem('rect', {
-                width: width,
+                width,
+                y,
                 height: CONTENT_HEIGHT,
-                y: y,
                 rx: 3,
                 ry: 3,
                 fill: '#fff',
@@ -89,7 +91,9 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
             this._header.setAttribute('width', width);
         }
 
-        if (this._isClearBG) $(this._header).css({ stroke: 'none' });
+        if (this._isClearBG) {
+            $(this._header).css({ stroke: 'none' });
+        }
 
         this.svgGroup.appendChild(this.textElement);
 
@@ -98,7 +102,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
         this.box.set({
             x: 0,
             y: 0,
-            width: width,
+            width,
             height: CONTENT_HEIGHT,
         });
     };
@@ -112,9 +116,9 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
 
         var blockView = this._blockView;
 
-        var func = function(skipCommand) {
+        var func = function(skipCommand, forceCommand) {
             skipCommand !== true && that.applyValue();
-            that.destroyOption(skipCommand);
+            that.destroyOption(skipCommand, forceCommand === true);
         };
 
         this._attachDisposeEvent(func);
@@ -132,10 +136,9 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
 
         var exitKeys = [13, 27];
         this.optionGroup.on('keyup', function(e) {
-            var keyCode = e.keyCode || e.which;
             that.applyValue(e);
 
-            if (exitKeys.indexOf(keyCode) > -1)
+            if (_.contains(exitKeys, e.keyCode || e.which))
                 that.destroyOption(undefined, true);
         });
 
@@ -148,12 +151,12 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
             }
         });
 
-        var pos = this.getAbsolutePosFromDocument();
-        pos.y -= this.box.height / 2;
+        var { x, y } = this.getAbsolutePosFromDocument();
+        y -= this.box.height / 2;
         this.optionGroup.css({
             height: this._CONTENT_HEIGHT,
-            left: pos.x,
-            top: pos.y,
+            left: x,
+            top: y,
             width: that.box.width,
         });
 
@@ -166,25 +169,23 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
 
         //normally option group is done editing and destroyed
         //before blur called
-        this.optionGroup.one('blur', function() {
-            that.isEditing() && that.destroyOption(undefined, true);
+        this.optionGroup.one('blur', () => {
+            this.isEditing() && this.destroyOption(undefined, true);
         });
     };
 
-    p.applyValue = function(event) {
-        var value = this.optionGroup.val();
-        this.setValue(value);
+    p.applyValue = function() {
+        this.setValue(this.optionGroup.val());
         this._setTextValue();
         this.resize();
     };
 
     p.resize = function() {
-        var width = this.getTextWidth();
+        var obj = { width: this.getTextWidth() };
 
-        this._header.attr({ width: width });
-        this.optionGroup.css({ width: width });
-
-        this.box.set({ width: width });
+        this._header.attr(obj);
+        this.optionGroup.css(obj);
+        this.box.set(obj);
         this._blockView.dAlignContent();
     };
 
@@ -205,9 +206,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
                 .getRootBlock()
                 .getThread()
                 .view.getFields()
-                .filter(function(f) {
-                    return f instanceof FIELD_TEXT_INPUT;
-                });
+                .filter((f) => f instanceof FIELD_TEXT_INPUT);
         }
 
         return this._neighborFields;

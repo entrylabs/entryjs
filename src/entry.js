@@ -95,6 +95,7 @@ require('./util/youtube');
 require('./command/commands/block');
 require('./command/commands/container');
 require('./command/commands/engine');
+require('./command/commands/function');
 require('./command/commands/object');
 require('./command/commands/painter');
 require('./command/commands/playground');

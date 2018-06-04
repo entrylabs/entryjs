@@ -25,7 +25,7 @@ Entry.StampEntity = function(object, entity) {
         this.object.tickEnabled = false;
         this.object.filters = null;
         if (entity.effect) {
-            this.effect = Entry.cloneSimpleObject(entity.effect);
+            this.effect = _.clone(entity.effect);
             this.applyFilter();
         }
     } else if (this.type == 'textBox') {}
