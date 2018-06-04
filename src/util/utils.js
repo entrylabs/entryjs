@@ -2284,13 +2284,9 @@ Entry.Utils.glideBlock = function(svgGroup, x, y, callback) {
 };
 
 Entry.Utils.getScrollPos = function() {
-    var { documentElement, body } = document;
-    var { scrollLeft, scrollTop } = ~Entry.getBrowserType().indexOf('IE')
-        ? documentElement
-        : body;
     return {
-        left: scrollLeft,
-        top: scrollTop,
+        left: window.pageXOffset || document.documentElement.scrollLeft,
+        top: window.pageYOffset || document.documentElement.scrollTop
     };
 };
 
