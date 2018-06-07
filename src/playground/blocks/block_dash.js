@@ -1018,6 +1018,75 @@ Entry.Dash.getBlocks = function() {
 				return script;
 			},
 		},
+		"dash_turn_drive_360": {
+			"color": "#00979D",
+			"skeleton": "basic",
+			"fontColor": "#fff",
+			"statements": [],
+			"template": "%1 으로 한 바퀴 회전하기 %2",
+			"params": [
+				{
+					"type": "Dropdown",
+					"options": [
+						[ "시계 방향", 0x03 ],
+						[ "반 시계 방향", 0x04 ],
+					],
+					"fontSize": 11
+				},
+				{
+					"type": "Indicator",
+					"img": "block_icon/hardware_03.png",
+					"size": 12
+				}
+			],
+			"events": {},
+			"def": {
+				"params": [ "3" ],
+				"type": "dash_turn_drive_360"
+			},
+			"paramsKeyMap": {
+				"ROTATION": 0,
+			},
+			class:"Dash_drive",
+			"isNotFor": [ "Dash" ],
+			"func": function (sprite, script) {
+				var var1 = script.getNumberField("ROTATION", script);
+				var sq = Entry.hw.sendQueue;
+				var pd = Entry.hw.portData;
+				if(!Entry.Dash.isStarted) {
+					sq.category   = 1;
+					sq.action     = var1;
+					sq.param_cnt  = 1;
+					sq.paramA			= 360;
+					sq.modeA      = 3;
+					sq.seq = Entry.Dash.sequance++;
+					Entry.Dash.isStarted = true;
+					Entry.Dash.state = DashState.STATE_READY;
+					return script;
+				}
+				else {
+					switch(Entry.Dash.state) {
+					case DashState.STATE_READY:
+						if(pd.isDriving) {
+							Entry.Dash.state = DashState.STATE_WAIT;
+						}
+						return script;
+						break;
+					case DashState.STATE_WAIT:
+						if(!pd.isDriving) {
+							Entry.Dash.state = DashState.STATE_DONE;
+						}
+						return script;
+						break;
+					case DashState.STATE_DONE:
+						Entry.Dash.isStarted = false
+						return script.callReturn();
+						break;
+					}
+				}
+				return script;
+			},
+		},
 		"dash_drive": {
 			"color": "#00979D",
 			"skeleton": "basic",

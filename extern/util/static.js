@@ -1304,6 +1304,7 @@ EntryStatic.getAllBlocks = function() {
                 //region dash
                 "dash_sensor",
                 "dash_turn_drive",
+                "dash_turn_drive_360",
                 "dash_drive",
                 "dash_wheel_speed",
                 "dash_drive_stop",
