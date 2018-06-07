@@ -765,9 +765,23 @@ Entry.Dash.getBlocks = function() {
 					],
 					"fontSize": 11
 				},
+				// {	// 드롭다운으로 변경
+				// 	"type": "Angle",
+				// 	"accept": "string"
+				// },
 				{
-					"type": "Angle",
-					"accept": "string"
+					"type": "Dropdown",
+					"options": [
+						[ "15도", 15 ],
+						[ "30도", 30 ],
+						[ "45도", 45 ],
+						[ "60도", 60 ],
+						[ "75도", 75 ],
+						[ "90도", 90 ],
+						[ "105도", 105 ],
+						[ "120도", 120 ],
+					],
+					"fontSize": 11
 				},
 				{
 					"type": "Indicator",
