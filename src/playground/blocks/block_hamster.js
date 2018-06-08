@@ -63,8 +63,8 @@ Entry.Hamster = {
     url: 'http://www.robomation.net',
     imageName: 'hamster.png',
     title: {
-        "ko": "햄스터",
-        "en": "Hamster"
+        ko: '햄스터',
+        en: 'Hamster',
     },
     monitorTemplate: {
         imgPath: 'hw/hamster.png',
@@ -167,6 +167,33 @@ Entry.Hamster = {
         },
         mode: 'both',
     },
+};
+
+Entry.Hamster.setLanguage = function() {
+    return {
+        ko: {
+            Helper: {
+                hamster_gripper: '집게를 열거나 닫습니다.',
+                hamster_release_gripper:
+                    '집게의 전원을 끄고 자유롭게 움직일 수 있도록 합니다.',
+            },
+            template: {
+                hamster_gripper: '집게 %1 %2',
+                hamster_release_gripper: '집게 끄기 %1',
+            },
+        },
+        en: {
+            Helper: {
+                hamster_gripper: 'Opens or closes the gripper.',
+                hamster_release_gripper:
+                    'Turns off the gripper so that it can be moved freely.',
+            },
+            template: {
+                hamster_gripper: '%1 gripper %2',
+                hamster_release_gripper: 'release gripper %1',
+            },
+        },
+    };
 };
 
 Entry.Hamster.getBlocks = function() {
@@ -4881,6 +4908,139 @@ Entry.Hamster.getBlocks = function() {
                             },
                         ],
                         params: ['AB'],
+                    },
+                ],
+            },
+        },
+        hamster_gripper: {
+            color: '#00979D',
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.ROBOID_open_gripper, 'OPEN'],
+                        [Lang.Blocks.ROBOID_close_gripper, 'CLOSE'],
+                    ],
+                    value: 'OPEN',
+                    fontSize: 11,
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_03.png',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [null, null],
+                type: 'hamster_gripper',
+            },
+            paramsKeyMap: {
+                ACTION: 0,
+            },
+            class: 'hamster_port',
+            isNotFor: ['hamster'],
+            func: function(sprite, script) {
+                var sq = Entry.hw.sendQueue;
+                Entry.Hamster.setModule(sq);
+                if (!script.isStart) {
+                    script.isStart = true;
+                    script.timeFlag = 1;
+                    sq.ioModeA = 10;
+                    sq.ioModeB = 10;
+                    var action = script.getField('ACTION');
+                    if (action == 'OPEN') {
+                        sq.outputA = 1;
+                        sq.outputB = 0;
+                    } else {
+                        sq.outputA = 0;
+                        sq.outputB = 1;
+                    }
+                    var timer = setTimeout(function() {
+                        script.timeFlag = 0;
+                        Entry.Hamster.removeTimeout(timer);
+                    }, 500);
+                    Entry.Hamster.timeouts.push(timer);
+                    return script;
+                } else if (script.timeFlag == 1) {
+                    return script;
+                } else {
+                    delete script.isStart;
+                    delete script.timeFlag;
+                    Entry.engine.isContinue = false;
+                    return script.callReturn();
+                }
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Hamster.open_gripper()',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.ROBOID_open_gripper, 'OPEN'],
+                                    [Lang.Blocks.ROBOID_close_gripper, 'CLOSE'],
+                                ],
+                                value: 'OPEN',
+                                fontSize: 11,
+                            },
+                        ],
+                        params: ['OPEN'],
+                    },
+                    {
+                        syntax: 'Hamster.close_gripper()',
+                        textParams: [
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.ROBOID_open_gripper, 'OPEN'],
+                                    [Lang.Blocks.ROBOID_close_gripper, 'CLOSE'],
+                                ],
+                                value: 'OPEN',
+                                fontSize: 11,
+                            },
+                        ],
+                        params: ['CLOSE'],
+                    },
+                ],
+            },
+        },
+        hamster_release_gripper: {
+            color: '#00979D',
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_03.png',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [null],
+                type: 'hamster_release_gripper',
+            },
+            class: 'hamster_port',
+            isNotFor: ['hamster'],
+            func: function(sprite, script) {
+                var sq = Entry.hw.sendQueue;
+                Entry.Hamster.setModule(sq);
+                sq.ioModeA = 10;
+                sq.ioModeB = 10;
+                sq.outputA = 0;
+                sq.outputB = 0;
+                return script.callReturn();
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Hamster.release_gripper()',
                     },
                 ],
             },
