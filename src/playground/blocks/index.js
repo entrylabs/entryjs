@@ -110,7 +110,7 @@ Entry.HARDWARE_LIST = {
     '20.1': Entry.Creamo,
     '21.1': Entry.FunBoard,
     '22.1': Entry.Microbit,
-    '2F.1': Entry.Dash,
+    '24.1': Entry.Dash,
 };
 
 const startBlock = require('./block_start');
