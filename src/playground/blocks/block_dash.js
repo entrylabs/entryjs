@@ -1198,24 +1198,43 @@ Entry.Dash.getBlocks = function() {
 			"skeleton": "basic",
 			"fontColor": "#fff",
 			"statements": [],
-			"template": "%1 (으)로 %2 이동하기 %3",
+			"template": "왼쪽바퀴 %1 (으)로 %2, 오른쪽 바퀴 %3 (으)로 %4 움직이기 %5",
 			"params": [
 				{
 					"type": "Dropdown",
 					"options": [
-						[ "앞", 0x01 ],
-						[ "뒤", 0x02 ],
+						["앞", 0x01],
+						["뒤", 0x02],
 					],
 					"fontSize": 11
 				},
 				{
 					"type": "Dropdown",
 					"options": [
-						[ "매우 느리게", 0x01 ],
-						[ "느리게", 0x02 ],
-						[ "보통 속도로", 0x03 ],
-						[ "빠르게", 0x04 ],
-						[ "매우 빠르게", 0x05 ],
+						["매우 느리게", 0x01],
+						["느리게", 0x02],
+						["보통 속도로", 0x03],
+						["빠르게", 0x04],
+						["매우 빠르게", 0x05],
+					],
+					"fontSize": 11
+				},
+				{
+					"type": "Dropdown",
+					"options": [
+						["앞", 0x01],
+						["뒤", 0x02],
+					],
+					"fontSize": 11
+				},
+				{
+					"type": "Dropdown",
+					"options": [
+						["매우 느리게", 0x01],
+						["느리게", 0x02],
+						["보통 속도로", 0x03],
+						["빠르게", 0x04],
+						["매우 빠르게", 0x05],
 					],
 					"fontSize": 11
 				},
@@ -1227,18 +1246,22 @@ Entry.Dash.getBlocks = function() {
 			],
 			"events": {},
 			"def": {
-				"params": [ "1", "3" ],
+				"params": ["1", "3", "1", "3"],
 				"type": "dash_wheel_speed"
 			},
 			"paramsKeyMap": {
-				"DIRECTION": 0,
-				"SPEED": 1,
+				"DIRECTION_L": 0,
+				"SPEED_L": 1,
+				"DIRECTION_R": 2,
+				"SPEED_R": 3,
 			},
 			class:"Dash_drive",
 			"isNotFor": [ "Dash" ],
 			"func": function (sprite, script) {
-				var var1 = script.getNumberField("DIRECTION", script);
-				var var2 = script.getNumberField("SPEED", script);
+				var var1 = script.getNumberField("DIRECTION_L", script);
+				var var2 = script.getNumberField("SPEED_L", script);
+				var var3 = script.getNumberField("DIRECTION_R", script);
+				var var4 = script.getNumberField("SPEED_R", script);
 				var sq = Entry.hw.sendQueue;
 				var pd = Entry.hw.portData;
 				if(!Entry.Dash.isStarted) {
@@ -1247,6 +1270,8 @@ Entry.Dash.getBlocks = function() {
 					sq.param_cnt  = 0x04;
 					sq.paramA		  = var1;
 					sq.paramB		  = var2;
+					sq.paramC		  = var3;
+					sq.paramD		  = var4;
 					sq.modeA      = 3;
 					sq.seq = Entry.Dash.sequance++;
 					Entry.Dash.isStarted = true;
