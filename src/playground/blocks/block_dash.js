@@ -1331,7 +1331,60 @@ Entry.Dash.getBlocks = function() {
 				return script;
 			},
 		},
-		"dash_sensor": {
+		"dash_sensor1": {
+			color: "#AEB8FF",
+			skeleton: "basic_boolean_field",
+			template: "%1",
+			params: [
+				{
+					type: "Dropdown",
+					options: [
+						[ "가운데 버튼", 0x05 ],
+						[ "1번 버튼", 0x06 ],
+						[ "2번 버튼", 0x07 ],
+						[ "3번 버튼", 0x08 ],
+						[ "소리", 0x09 ],
+					],
+					fontSize: 11
+				}
+			],
+			def: {
+				params: [
+					"5"
+				],
+				type: "dash_sensor1"
+			},
+			paramsKeyMap: {
+				VALUE: 0
+			},
+			"isNotFor": [ "Dash" ],
+			class: "Dash_senor",
+			func: function (sprite, script) {
+				var var1 = script.getNumberField("VALUE", script);
+				var pd = Entry.hw.portData;
+				switch(var1) {
+				case 0x05:
+					return pd.button0 ? true : false;
+					break;
+				case 0x06:
+					return pd.button1 ? true : false;
+					break;
+				case 0x07:
+					return pd.button2 ? true : false;
+					break;
+				case 0x08:
+					return pd.button3 ? true : false;
+					break;
+				case 0x09:
+					return pd.clap ? true : false;
+					break;
+				default:
+					break;
+				}
+				return -1;
+			}
+		},
+		"dash_sensor2": {
 			color: "#AEB8FF",
 			skeleton: "basic_boolean_field",
 			template: "%1",
@@ -1344,11 +1397,6 @@ Entry.Dash.getBlocks = function() {
 						[ "오른쪽 장애물", 0x02 ],
 						[ "왼쪽 장애물", 0x03 ],
 						// [ "움직이지 못함", 0x04 ],	// not support.
-						[ "가운데 버튼", 0x05 ],
-						[ "1번 버튼", 0x06 ],
-						[ "2번 버튼", 0x07 ],
-						[ "3번 버튼", 0x08 ],
-						[ "소리", 0x09 ],
 						[ "들림", 0x0A ],
 					],
 					fontSize: 11
@@ -1358,7 +1406,7 @@ Entry.Dash.getBlocks = function() {
 				params: [
 					"0"
 				],
-				type: "dash_sensor"
+				type: "dash_sensor2"
 			},
 			paramsKeyMap: {
 				VALUE: 0
@@ -1383,21 +1431,6 @@ Entry.Dash.getBlocks = function() {
 					break;
 				case 0x04:
 					return pd.barrier_move ? true : false;
-					break;
-				case 0x05:
-					return pd.button0 ? true : false;
-					break;
-				case 0x06:
-					return pd.button1 ? true : false;
-					break;
-				case 0x07:
-					return pd.button2 ? true : false;
-					break;
-				case 0x08:
-					return pd.button3 ? true : false;
-					break;
-				case 0x09:
-					return pd.clap ? true : false;
 					break;
 				case 0x0A:
 					return pd.pickup ? true : false;

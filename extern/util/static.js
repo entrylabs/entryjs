@@ -1302,7 +1302,8 @@ EntryStatic.getAllBlocks = function() {
                 //endregion microbit
 
                 //region dash
-                "dash_sensor",
+                "dash_sensor1",
+                "dash_sensor2",
                 "dash_turn_drive",
                 "dash_turn_drive_360",
                 "dash_drive",
