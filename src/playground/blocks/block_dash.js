@@ -1357,7 +1357,7 @@ Entry.Dash.getBlocks = function() {
 			},
 		},
 		"dash_sensor1": {
-			color: "#AEB8FF",
+			color: "#00979D",
 			skeleton: "basic_boolean_field",
 			template: "%1",
 			params: [
@@ -1410,7 +1410,7 @@ Entry.Dash.getBlocks = function() {
 			}
 		},
 		"dash_sensor2": {
-			color: "#AEB8FF",
+			color: "#00979D",
 			skeleton: "basic_boolean_field",
 			template: "%1",
 			params: [

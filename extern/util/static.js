@@ -1312,7 +1312,6 @@ EntryStatic.getAllBlocks = function() {
                 "dash_v_head",
                 "dash_h_head",
                 "dash_forward_head",
-                "dash_voice_head",
                 "dash_sound_say",
                 "dash_sound_animal",
                 "dash_sound_move",
