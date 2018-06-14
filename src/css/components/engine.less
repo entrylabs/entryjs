@@ -41,7 +41,7 @@
 
 .entryPopupWindow > .entryEngineWorkspace_w > .entryRunButtonWorkspace_w2 {
     display: block;
-    width: 111px;  
+    width: 111px;
     height: 111px;
     background-image: url("@{image_url}play_btn.png");
     background-position: 40px center;
@@ -293,7 +293,7 @@
     margin-top: 5px;
     margin-left: 10px;
     .backgroundImage("speed_edit.png");
-} 
+}
 
 .entryPopupWindow > div > .entrySpeedButtonWorkspace {
     display: none;
@@ -434,6 +434,12 @@
     background-position: 50% 43%;
 }
 
+.collapsed>.entryAddButtonWorkspace_w,
+.collapsed>.entryRestartButtonWorkspace_w {
+    color: transparent;
+    background-position: 50% 43%;
+}
+
 .entryRunButtonWorkspace_w {
     top: 289px;
     left: 272px;
@@ -556,7 +562,15 @@
     .backgroundImage("layers_icon_button_pause_nor.png");
 }
 
-.entryPopupWindow .entryPauseButtonWorkspace_w { 
+.entryRestartButtonWorkspace_w:extend(.entryAddButtonWorkspace_w) {
+    .backgroundImage("layers_icon_button_play_nor.png");
+}
+
+.entryPopupWindow .entryPauseButtonWorkspace_w {
+    display: none;
+}
+
+.entryPopupWindow .entryRestartButtonWorkspace_w {
     display: none;
 }
 
@@ -564,9 +578,28 @@
     display: none;
 }
 
-.entryPopupWindow .entryPauseButtonWorkspace_full { 
-    display: inline-block; 
+.entryRestartButtonWorkspace_full {
+    display: none;
+}
+
+.entryPopupWindow .entryPauseButtonWorkspace_full {
+    display: inline-block;
     background: url("@{image_url}pause_btn.png");
+    background-repeat: no-repeat;
+    color: transparent;
+    padding-left: 20px;
+    left: 103px;
+    color: @bora;
+    background-position: center left;
+    border: none;
+    font-size: 14px;
+    font-family: ng;
+    width: auto;
+}
+
+.entryPopupWindow .entryRestartButtonWorkspace_full {
+    display: inline-block;
+    background: url("@{image_url}play_full_btn.png");
     background-repeat: no-repeat;
     color: transparent;
     padding-left: 20px;
@@ -651,7 +684,7 @@
         bottom: 5px;
         background-image: url("@{image_url}zoom_out_btn_big.png");
     }
-    
+
 }
 
 

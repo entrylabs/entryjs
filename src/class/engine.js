@@ -237,7 +237,7 @@ Entry.Engine = function() {
                 this.runButton = Entry.Dom('div', {
                     class: 'entryRunButtonBigMinimize',
                     parent: $('#entryCanvasWrapper'),
-                }); 
+                });
                 this.runButton.bindOnClick(() => Entry.engine.toggleRun());
             });
         } else if (option == 'phone') {
@@ -633,10 +633,16 @@ Entry.Engine = function() {
             this.state = 'run';
             Entry.Utils.recoverSoundInstances();
             if (this.runButton) {
-                if (this.pauseButton)
+                if (this.pauseButton){
                     this.pauseButton.innerHTML = Lang.Workspace.pause;
-                if (this.pauseButtonFull)
+                    this.pauseButton.addClass('entryPauseButtonWorkspace_w');
+                    this.pauseButton.removeClass('entryRestartButtonWorkspace_w');
+                }
+                if (this.pauseButtonFull){
                     this.pauseButtonFull.innerHTML = Lang.Workspace.pause;
+                    this.pauseButtonFull.addClass('entryPauseButtonWorkspace_full');
+                    this.pauseButtonFull.removeClass('entryRestartButtonWorkspace_full');
+                }
                 this.runButton.addClass('entryRemove');
                 if (this.runButton2) this.runButton2.addClass('entryRemove');
             }
@@ -649,10 +655,16 @@ Entry.Engine = function() {
             }
             Entry.Utils.pauseSoundInstances();
             if (this.runButton) {
-                if (this.pauseButton)
+                if (this.pauseButton) {
                     this.pauseButton.innerHTML = Lang.Workspace.restart;
-                if (this.pauseButtonFull)
+                    this.pauseButton.removeClass('entryPauseButtonWorkspace_w');
+                    this.pauseButton.addClass('entryRestartButtonWorkspace_w');
+                }
+                if (this.pauseButtonFull) {
                     this.pauseButtonFull.innerHTML = Lang.Workspace.restart;
+                    this.pauseButtonFull.removeClass('entryPauseButtonWorkspace_full');
+                    this.pauseButtonFull.addClass('entryRestartButtonWorkspace_full');
+                }
                 this.runButton.removeClass('entryRemove');
                 this.stopButton.removeClass('entryRemove');
                 if (this.runButton2) this.runButton2.removeClass('entryRemove');
