@@ -261,7 +261,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
             return Lang.Blocks.no_target;
 
         var matched = _.find(this._contents.options, ([, cValue]) => {
-            return cValue === value;
+            return cValue == value;
         });
 
         if (matched) {
