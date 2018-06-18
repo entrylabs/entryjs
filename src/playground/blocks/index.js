@@ -52,6 +52,7 @@ require('./block_creamo');
 require('./block_funboard');
 require('./block_microbit');
 require('./block_mrt');
+require('./block_dash');
 
 Entry.HARDWARE_LIST = {
     '1.1': Entry.Arduino,
@@ -111,6 +112,7 @@ Entry.HARDWARE_LIST = {
     '21.1': Entry.FunBoard,
     '22.1': Entry.Microbit,
     '23.1': Entry.MRT,
+    '24.1': Entry.Dash,
 };
 
 const startBlock = require('./block_start');
