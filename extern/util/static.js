@@ -1304,6 +1304,20 @@ EntryStatic.getAllBlocks = function() {
                 "microbit_set_bpm",
                 // "microbit_radio_receive_event",
                 //endregion microbit
+                //region MRT-X Blocks added
+                "mrt_digitalInput",
+                "mrt_digitalOutput",
+                "mrt_analogValue",
+                "mrt_ultra",
+                "mrt_color",
+                "mrt_gyro",
+                "mrt_remotecontrol",
+                "mrt_keyvalue",
+                "mrt_buzzer",
+                "mrt_servo",
+                "mrt_oneWheel",
+                "mrt_lcd",
+                //endregion end of MRT-X Blocks added
             ]
         }
     ]
