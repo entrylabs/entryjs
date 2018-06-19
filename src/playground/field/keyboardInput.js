@@ -81,7 +81,9 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
             );
         this._optionVisible = true;
 
-        this._attachDisposeEvent();
+        this._attachDisposeEvent((skipCommand, forceCommand) => {
+            this.destroyOption(skipCommand, forceCommand === true);
+        });
 
         var { x, y } = this.getAbsolutePosFromDocument();
 
@@ -105,7 +107,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
         this.optionGroup.css({ left: x, top: y });
     };
 
-    p.destroyOption = function(forceCommand) {
+    p.destroyOption = function(skipCommand, forceCommand) {
         var _destroyFunc = _.partial(_.result, _, 'destroy');
         var _removeFunc = _.partial(_.result, _, 'remove');
 
@@ -130,14 +132,16 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldKeyboard);
 
         var value = event.keyCode;
         var text = Entry.getKeyCodeMap()[value];
-        if (text !== undefined) this.applyValue(text, value, true);
+        if (text !== undefined) {
+            this.applyValue(text, value, false, true);
+        }
     };
 
-    p.applyValue = function(text, value, forceCommand) {
+    p.applyValue = function(text, value, skipCommand, forceCommand) {
         this.setValue(String(value));
         this._setTextValue();
         this.resize();
-        this.destroyOption(forceCommand);
+        this.destroyOption(skipCommand, forceCommand);
     };
 
     p.resize = function() {
