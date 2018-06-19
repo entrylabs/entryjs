@@ -98,7 +98,7 @@ Entry.BlockToPyParser = function() {
 
         // User Function
         if (this.isFunc(block)) {
-            if (!this._hasRootFunc) {
+            if (!this._funcDefMap[block.data.type]) {
                 this._rootFuncId = block.data.type;
                 this._funcDefMap[block.data.type] = this.makeFuncDef(
                     block,
