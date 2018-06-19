@@ -528,10 +528,16 @@ Entry.Engine = function() {
             this.view_.addClass('entryEngineBlueWorkspace');
 
         if (this.runButton) {
-            if (this.pauseButton)
+            if (this.pauseButton){
                 this.pauseButton.innerHTML = Lang.Workspace.pause;
-            if (this.pauseButtonFull)
+                this.pauseButton.addClass('entryPauseButtonWorkspace_w');
+                this.pauseButton.removeClass('entryRestartButtonWorkspace_w');
+            }
+            if (this.pauseButtonFull){
                 this.pauseButtonFull.innerHTML = Lang.Workspace.pause;
+                this.pauseButtonFull.addClass('entryPauseButtonWorkspace_full');
+                this.pauseButtonFull.removeClass('entryRestartButtonWorkspace_full');
+            }
             this.runButton.addClass('run');
             this.runButton.addClass('entryRemove');
             this.stopButton.removeClass('entryRemove');
