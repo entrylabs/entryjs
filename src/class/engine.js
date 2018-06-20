@@ -563,6 +563,8 @@ Entry.Engine = function() {
             this.isUpdating = true;
         }
 
+        this.setEnableInputField(true);
+
         Entry.stage.selectObject();
         Entry.dispatchEvent('run');
     };
@@ -618,6 +620,7 @@ Entry.Engine = function() {
         }
 
         this.state = 'stop';
+        this.setEnableInputField(false);
         Entry.dispatchEvent('stop');
         Entry.stage.hideInputField();
         (function(w) {
@@ -627,12 +630,23 @@ Entry.Engine = function() {
         })(Entry.getMainWS());
     };
 
+    p.setEnableInputField = function(on) {
+        var inputField = Entry.stage.inputField;
+        if(inputField) {
+            inputField._readonly = !on;
+            if(!inputField._isHidden) {
+                on ? inputField.focus() : inputField.blur();
+            }
+        }
+    }
+
     /**
      * toggle this engine state pause
      */
     p.togglePause = function() {
         var timer = Entry.engine.projectTimer;
         if (this.state == 'pause') {
+            this.setEnableInputField(true);
             timer.pausedTime += new Date().getTime() - timer.pauseStart;
             if (timer.isPaused) timer.pauseStart = new Date().getTime();
             else delete timer.pauseStart;
@@ -654,6 +668,7 @@ Entry.Engine = function() {
             }
         } else {
             this.state = 'pause';
+            this.setEnableInputField(false);
             if (!timer.isPaused) timer.pauseStart = new Date().getTime();
             else {
                 timer.pausedTime += new Date().getTime() - timer.pauseStart;
