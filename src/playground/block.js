@@ -284,7 +284,8 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
         return new Entry.Block(this.toJSON(true), thread);
     };
 
-    p.toJSON = function(isNew, excludeData = [], option = {}) {
+    p.toJSON = function(isNew, excludeData, option = {}) {
+        excludeData = excludeData || [];
         var jsonBlackList = ['view', 'thread', 'events'];
         var json = this._toJSON();
         var view = this.view;
