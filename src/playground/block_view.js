@@ -620,7 +620,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
             Entry.GlobalSvg.remove();
             blockView.mouseUpEvent.notify();
 
-            delete this.mouseDownCoordinate;
+            delete blockView.mouseDownCoordinate;
             delete blockView.dragInstance;
         }
     };

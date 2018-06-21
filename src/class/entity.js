@@ -158,6 +158,10 @@ Entry.EntityObject.prototype.initCommand = function() {
 };
 
 Entry.EntityObject.prototype.checkCommand = function() {
+    if (!Entry.engine.isState('stop')) {
+        return;
+    }
+
     var oldModel = this._entityModelBefore;
     delete this._entityModelBefore;
     var json = this.toJSON();
