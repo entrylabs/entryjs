@@ -27,6 +27,19 @@ EntryStatic.subjectList = [
     'subject_athletic',  'subject_progmatic'
 ];
 
+EntryStatic.advisoryList = [
+    'bouncy',
+    'jquark',
+    'yong0315',
+    'fhqmftm07256',
+    'bluelatte',
+    'kavin0505',
+    'lyh2315',
+    'roh0107',
+    'underfreddy',
+    'atom10150',
+];
+
 EntryStatic.lectureLevels=[1,2,3];
 
 // EntryStatic.lectureLevels = ['level_high', 'level_mid','level_row'];
