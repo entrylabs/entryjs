@@ -160,10 +160,10 @@
         do: function(block, targetBlock, count) {
             block = this.editor.board.findBlock(block);
             let blockArgument;
-            if (block instanceof Entry.Block) {
-                blockArgument = block;
-            } else if (block instanceof Entry.FieldBlock) {
+            if (block instanceof Entry.FieldBlock) {
                 blockArgument = block.value;
+            } else {
+                blockArgument = block;
             }
             this.editor.board.insert(blockArgument, targetBlock, count);
         },
@@ -347,11 +347,11 @@
             block = this.editor.board.findBlock(block);
             let blockView;
             let blockArgument;
-            if (block instanceof Entry.Block) {
-                blockView = block.view;
-            } else if (block instanceof Entry.FieldBlock) {
+            if (block instanceof Entry.FieldBlock) {
                 blockView = block.value.view;
                 blockArgument = block.value;
+            } else {
+                blockView = block.view;
             }
             if (typeof y === 'number') {
                 blockView._moveTo(dragMode, y);
@@ -366,10 +366,10 @@
         state: function(block) {
             block = this.editor.board.findBlock(block);
             let blockArgument;
-            if (block instanceof Entry.Block) {
-                blockArgument = block;
-            } else if (block instanceof Entry.FieldBlock) {
+            if (block instanceof Entry.FieldBlock) {
                 blockArgument = block.value;
+            } else {
+                blockArgument = block;
             }
             var data = [blockArgument];
             var pointer = block.targetPointer();
