@@ -678,6 +678,8 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
         var thisType = this.type;
 
         if (
+            (targetType === 'number' && thisType === 'positive_number') ||
+            (targetType === 'number' && thisType === 'negative_number') ||
             (targetType === 'angle' && thisType === 'text') ||
             (targetType === 'text' && thisType === 'angle')
         ) {
@@ -691,7 +693,13 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
                     r = target.params[i];
                 l = typeof l === 'number' ? l + '' : l;
                 r = typeof r === 'number' ? r + '' : r;
-                if (l !== r) return false;
+                if (l === 'positive') {
+                    return r > 0;
+                } else if (l === 'negative') {
+                    return r < 0;
+                } else if (l !== r) {
+                    return false;
+                }
             }
         }
         return true;

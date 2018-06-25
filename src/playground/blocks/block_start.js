@@ -1086,6 +1086,48 @@ module.exports = {
                     return Entry.targetChecker.checkGoal(goalName);
                 },
             },
+            positive_number: {
+                color: '#7C7C7C',
+                skeleton: 'basic_string_field',
+                template: '양수',
+                fontColor: '#fff',
+                statements: [],
+                params: ['positive'],
+                events: {},
+                def: {
+                    params: ['positive'],
+                    type: 'positive_number',
+                },
+                paramsKeyMap: {
+                    VALUE: 0,
+                },
+                class: 'checker',
+                isNotFor: ['checker'],
+                func: function(sprite, script) {
+                    return 'positive';
+                },
+            },
+            negative_number: {
+                color: '#7C7C7C',
+                skeleton: 'basic_string_field',
+                template: '음수',
+                fontColor: '#fff',
+                statements: [],
+                params: ['negative'],
+                events: {},
+                def: {
+                    params: ['negative'],
+                    type: 'negative_number',
+                },
+                paramsKeyMap: {
+                    VALUE: 0,
+                },
+                class: 'checker',
+                isNotFor: ['checker'],
+                func: function(sprite, script) {
+                    return 'negative';
+                },
+            },
             wildcard_string: {
                 color: '#7C7C7C',
                 skeleton: 'basic_string_field',
