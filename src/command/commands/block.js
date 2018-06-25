@@ -159,7 +159,13 @@
     c[COMMAND_TYPES.insertBlock] = {
         do: function(block, targetBlock, count) {
             block = this.editor.board.findBlock(block);
-            this.editor.board.insert(block, targetBlock, count);
+            let blockArgument;
+            if (block instanceof Entry.Block) {
+                blockArgument = block;
+            } else if (block instanceof Entry.FieldBlock) {
+                blockArgument = block.value;
+            }
+            this.editor.board.insert(blockArgument, targetBlock, count);
         },
         state: function(block, targetBlock, count) {
             block = this.editor.board.findBlock(block);
@@ -339,24 +345,39 @@
     c[COMMAND_TYPES.separateBlock] = {
         do: function(block, dragMode, y) {
             block = this.editor.board.findBlock(block);
+            let blockView;
+            let blockArgument;
+            if (block instanceof Entry.Block) {
+                blockView = block.view;
+            } else if (block instanceof Entry.FieldBlock) {
+                blockView = block.value.view;
+                blockArgument = block.value;
+            }
             if (typeof y === 'number') {
-                block.view._moveTo(dragMode, y);
+                blockView._moveTo(dragMode, y);
                 dragMode = undefined;
             }
 
             dragMode = dragMode === undefined ? Entry.DRAG_MODE_DRAG : dragMode;
 
-            if (block.view) block.view._toGlobalCoordinate(dragMode);
-            block.doSeparate();
+            if (blockView) blockView._toGlobalCoordinate(dragMode);
+            block.doSeparate(blockArgument);
         },
         state: function(block) {
             block = this.editor.board.findBlock(block);
-            var data = [block];
+            let blockArgument;
+            if (block instanceof Entry.Block) {
+                blockArgument = block;
+            } else if (block instanceof Entry.FieldBlock) {
+                blockArgument = block.value;
+            }
+            var data = [blockArgument];
             var pointer = block.targetPointer();
             data.push(pointer);
 
-            if (block.getBlockType() === 'basic')
+            if (block.getBlockType() === 'basic') {
                 data.push(block.thread.getCount(block));
+            }
             return data;
         },
         recordable: Entry.STATIC.RECORDABLE.SUPPORT,
