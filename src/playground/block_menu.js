@@ -1066,8 +1066,6 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
             const { type, params: threadParams } = thread.getFirstBlock();
             let option = true;
             if(blockType === 'calc_basic') {
-                //console.log(threadParams);
-                //console.log(params);
                 option = type === blockType && threadParams[1] === params[1];
             } 
             return type === blockType && option;
