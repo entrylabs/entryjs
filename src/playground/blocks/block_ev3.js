@@ -433,6 +433,40 @@ Entry.EV3.getBlocks = function() {
                 return result;
             },
         },
+        ev3_button_pressed: {
+            color: '#00979D',
+            fontColor: '#fff',
+            skeleton: 'basic_boolean_field',
+            statements: [],
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [['위', 'UP'], ['아래', 'DOWN'], ['왼쪽', 'LEFT'], ['오른쪽', 'RIGHT'], ['가운데', 'ENTER'], ['뒤로', 'BACK']],
+                    value: 'UP',
+                    fontSize: 11,
+                },
+            ],
+            events: {},
+            def: {
+                params: [null],
+                type: 'ev3_button_pressed',
+            },
+            paramsKeyMap: {
+                BUTTON: 0,
+            },
+            class: 'ev3_sensor',
+            isNotFor: ['EV3'],
+            func: function(sprite, script) {
+                const buttonValue = script.getStringField('BUTTON', script);
+                var buttonData = Entry.hw.getDigitalPortValue(buttonValue);
+                var result = false;
+                if (buttonData.pressed) {
+                    return true;
+                }
+
+                return result;
+            },
+        }
         //endregion ev3 이브이3
     };
 };
