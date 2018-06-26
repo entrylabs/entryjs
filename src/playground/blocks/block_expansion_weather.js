@@ -823,11 +823,11 @@ Entry.Expansion_Weather.getBlocks = function() {
                 events: {},
                 def: {
                     params: ['TODAY', 'SEOUL', 'TMN'],
-                    type: 'value_of_weather_data',
+                    type: 'get_weather_data',
                 },
                 pyHelpDef: {
                     params: ['A&value', 'A&value', 'A&value'],
-                    type: 'value_of_weather_data',
+                    type: 'get_weather_data',
                 },
                 paramsKeyMap: {
                     DATE:0,
