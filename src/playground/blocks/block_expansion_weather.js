@@ -549,7 +549,7 @@ Entry.Expansion_Weather.getBlocks = function() {
                     js: [],
                     py: [
                         {
-                            syntax: 'Weather.finedust_grade_is_good(%1, %2)',
+                            syntax: 'Weather.is_finedust_grade_good(%1, %2)',
                             params: [null, null, '1'],
                             blockType: 'param',
                             textParams: [
@@ -601,7 +601,7 @@ Entry.Expansion_Weather.getBlocks = function() {
                             ]
                         },
                         {
-                            syntax: 'Weather.finedust_grade_is_normal(%1, %2)',
+                            syntax: 'Weather.is_finedust_grade_normal(%1, %2)',
                             params: [null, null, '2'],
                             blockType: 'param',
                             textParams: [
@@ -653,7 +653,7 @@ Entry.Expansion_Weather.getBlocks = function() {
                             ]
                         },
                         {
-                            syntax: 'Weather.finedust_grade_is_bad(%1, %2)',
+                            syntax: 'Weather.is_finedust_grade_bad(%1, %2)',
                             params: [null, null, '3'],
                             blockType: 'param',
                             textParams: [
@@ -705,7 +705,7 @@ Entry.Expansion_Weather.getBlocks = function() {
                             ]
                         },
                         {
-                            syntax: 'Weather.finedust_grade_is_very_bad(%1, %2)',
+                            syntax: 'Weather.is_finedust_grade_very_bad(%1, %2)',
                             params: [null, null, '4'],
                             blockType: 'param',
                             textParams: [
@@ -759,7 +759,7 @@ Entry.Expansion_Weather.getBlocks = function() {
                     ],
                 },
             },
-            value_of_weather_data: {
+            get_weather_data: {
                 color: '#FFD974',
                 skeleton: 'basic_string_field',
                 statements: [],
@@ -848,7 +848,7 @@ Entry.Expansion_Weather.getBlocks = function() {
                     js: [],
                     py: [
                         {
-                            syntax: 'Weather.value_of_lowest_temperature(%1, %2)',
+                            syntax: 'Weather.get_lowest_temperature(%1, %2)',
                             params: [null, null, 'TMN'],
                             blockType: 'param',
                             textParams: [
@@ -900,7 +900,7 @@ Entry.Expansion_Weather.getBlocks = function() {
                             ]
                         },
                         {
-                            syntax: 'Weather.value_of_highest_temperature(%1, %2)',
+                            syntax: 'Weather.get_highest_temperature(%1, %2)',
                             params: [null, null, 'TMX'],
                             blockType: 'param',
                             textParams: [
@@ -952,7 +952,7 @@ Entry.Expansion_Weather.getBlocks = function() {
                             ]
                         },
                         {
-                            syntax: 'Weather.value_of_humidity(%1, %2)',
+                            syntax: 'Weather.get_humidity(%1, %2)',
                             params: [null, null, 'REH'],
                             blockType: 'param',
                             textParams: [
@@ -1004,7 +1004,7 @@ Entry.Expansion_Weather.getBlocks = function() {
                             ]
                         },
                         {
-                            syntax: 'Weather.value_of_precipitation(%1, %2)',
+                            syntax: 'Weather.get_precipitation(%1, %2)',
                             params: [null, null, 'R06'],
                             blockType: 'param',
                             textParams: [
@@ -1056,7 +1056,7 @@ Entry.Expansion_Weather.getBlocks = function() {
                             ]
                         },
                         {
-                            syntax: 'Weather.value_of_precipitation_probability(%1, %2)',
+                            syntax: 'Weather.get_precipitation_probability(%1, %2)',
                             params: [null, null, 'POP'],
                             blockType: 'param',
                             textParams: [
@@ -1108,7 +1108,7 @@ Entry.Expansion_Weather.getBlocks = function() {
                             ]
                         },
                         {
-                            syntax: 'Weather.value_of_wind_speed(%1, %2)',
+                            syntax: 'Weather.get_wind_speed(%1, %2)',
                             params: [null, null, 'WSD'],
                             blockType: 'param',
                             textParams: [
@@ -1162,7 +1162,7 @@ Entry.Expansion_Weather.getBlocks = function() {
                     ],
                 },
             },
-            value_of_current_weather_data: {
+            get_current_weather_data: {
                 color: '#FFD974',
                 skeleton: 'basic_string_field',
                 statements: [],
@@ -1206,11 +1206,11 @@ Entry.Expansion_Weather.getBlocks = function() {
                 events: {},
                 def: {
                     params: ['SEOUL', 'TEMPERATURE'],
-                    type: 'value_of_current_weather_data',
+                    type: 'get_current_weather_data',
                 },
                 pyHelpDef: {
                     params: ['A&value', 'A&value'],
-                    type: 'value_of_current_weather_data',
+                    type: 'get_current_weather_data',
                 },
                 paramsKeyMap: {
                     LOCATION:0,
@@ -1234,7 +1234,7 @@ Entry.Expansion_Weather.getBlocks = function() {
                     js: [],
                     py: [
                         {
-                            syntax: 'Wether.value_of_current_finedust(%1)',
+                            syntax: 'Wether.get_current_finedust(%1)',
                             params: [null, 'FINEDUST'],
                             blockType: 'param',
                             textParams: [
@@ -1268,7 +1268,7 @@ Entry.Expansion_Weather.getBlocks = function() {
                             ]
                         },
                         {
-                            syntax: 'Wether.value_of_current_temperature(%1)',
+                            syntax: 'Wether.get_current_temperature(%1)',
                             params: [null, 'TEMPERATURE'],
                             blockType: 'param',
                             textParams: [
@@ -1304,7 +1304,7 @@ Entry.Expansion_Weather.getBlocks = function() {
                     ],
                 },
             },
-        value_of_today_temperature: {
+            get_today_temperature: {
                 color: '#FFD974',
                 skeleton: 'basic_string_field',
                 statements: [],
@@ -1354,11 +1354,11 @@ Entry.Expansion_Weather.getBlocks = function() {
                 events: {},
                 def: {
                     params: ['SEOUL','00'],
-                    type: 'value_of_today_temperature',
+                    type: 'get_today_temperature',
                 },
                 pyHelpDef: {
                     params: ['A&value','A&value'],
-                    type: 'value_of_today_temperature',
+                    type: 'get_today_temperature',
                 },
                 paramsKeyMap: {
                     LOCATION:0,
@@ -1377,7 +1377,7 @@ Entry.Expansion_Weather.getBlocks = function() {
                     js: [],
                     py: [
                         {
-                            syntax: 'Weather.value_of_today_temperaturet(%1, %2)',
+                            syntax: 'Weather.get_today_temperaturet(%1, %2)',
                             blockType: 'param',
                             textParams: [
                                 {
