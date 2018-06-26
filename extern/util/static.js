@@ -335,6 +335,17 @@ EntryStatic.getAllBlocks = function() {
             ]
         },
         {
+            category: "expansion",
+            blocks: [
+                "expansionBlockAddButton",
+                "check_weather",
+                "check_finedust",
+                "get_weather_data",
+                "get_weather_data_now",
+                "get_temperatures_at"
+            ]
+        },
+        {
             category: "arduino",
             blocks: [
                 "arduino_download_connector",

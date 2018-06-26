@@ -195,6 +195,87 @@ Entry.CodeMap = {};
                 hide: 'HIDE',
             },
         ],
+        choose_city: [
+            {
+                'seoul':'SEOUL',
+                'gangwon':'GANGWON',
+                'gyeonggi':'GYEONGGI',
+                'gyeongsangnam':'GYEONGSANGNAM',
+                'gyeongsangbuk':'GYEONGSANGBUK',
+                'gwangju':'GWANGJU',
+                'daegu':'DAEGU',
+                'daejeon':'DAEJEON',
+                'busan':'BUSAN',
+                'sejong':'SEJONG',
+                'ulsan':'ULSAN',
+                'incheon':'INCHEON',
+                'jeollanam':'JEOLLANAM',
+                'jeollabuk':'JEOLLABUK',
+                'jeju':'JEJU',
+                'chungcheongnam':'CHUNGCHEONGNAM',
+                'chungcheongbuk':'CHUNGCHEONGBUK',
+            },
+        ],
+        choose_weather: [
+            {
+                'sunny': 'SUNNY',
+                'partly_cloudy': 'PARTLY_CLOUDY',
+                'mostly_cloudy': 'MOSTLY_CLOUDY',
+                'cloudy': 'CLOUDY',
+                'rainy': 'RAINY',
+                'sleet': 'SLEET',
+                'snowy': 'SNOWY',
+            },
+        ],
+        get_finedust_grade : [
+            {
+                'good': '1',
+                'normal': '2',
+                'bad': '3',
+                'very_bad': '4',
+            }
+        ],
+        get_date_for_weather: [
+            {
+                'yester_day': 'YESTERDAY',
+                'today': 'TODAY',
+                'tomorrow': 'TOMORROW',
+                'after_2_days': 'AFTER2DAYS',
+                'after_3_days': 'AFTER3DAYS',
+                'after_4_days': 'AFTER4DAYS',
+                'after_5_days': 'AFTER5DAYS',
+                'after_6_days': 'AFTER6DAYS',
+            },
+        ],
+        get_time_for_weahter: [
+            {
+                "00": '00',
+                "03": '03',
+                "06": '06',
+                "09": '09',
+                "12": '12',
+                "15": '15',
+                "18": '18',
+                "21": '21',
+            }
+        ],
+        get_weather_type: [
+            {
+                'lowest_temperature': 'TMN',
+                'highest_temperature': 'TMX',
+                'humidity': 'REH',
+                'precipitation': 'R06',
+                'precipitation_probability': 'POP',
+                'wind_speed': 'WSD',
+            },
+        ],
+        weather_api_type: [
+            {
+                'temperature': 'TEMPERATURE',
+                'finedust': 'FINEDUST',
+            },
+        ],
+
     };
 
     cc.Arduino = {

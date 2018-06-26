@@ -127,6 +127,12 @@ const calcBlock = require('./block_calc');
 const variableBlock = require('./block_variable');
 const funcBlock = require('./block_func');
 
+require('./block_expansion_weather');
+
+Entry.EXPANSION_BLOCK_LIST = {
+    'weather' : Entry.Expansion_Weather
+};
+
 function getBlockObject(items) {
     const blockObject = {};
     items.forEach((item)=> {
@@ -150,9 +156,10 @@ module.exports = {
             judgementBlock,
             calcBlock,
             variableBlock,
-            funcBlock,
+            funcBlock
         ];
+        const expansionBlockList = Object.values(Entry.EXPANSION_BLOCK_LIST);
         const hardwareList = Object.values(Entry.HARDWARE_LIST);
-        return getBlockObject(basicBlockList.concat(hardwareList));
+        return getBlockObject(basicBlockList.concat(hardwareList).concat(expansionBlockList));
     }
 }
