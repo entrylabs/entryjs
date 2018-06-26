@@ -340,9 +340,9 @@ EntryStatic.getAllBlocks = function() {
                 "expansionBlockAddButton",
                 "check_weather",
                 "check_finedust",
-                "value_of_weather_data",
-                "value_of_current_weather_data",
-                "value_of_today_temperature"
+                "get_weather_data",
+                "get_current_weather_data",
+                "get_today_temperature"
             ]
         },
         {
