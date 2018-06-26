@@ -317,6 +317,7 @@ Entry.Playground = function() {
         this.blockMenu = this.mainWorkspace.blockMenu;
         this.board = this.mainWorkspace.board;
         this.blockMenu.banClass('checker');
+        this.banExpansionBlock();
         this.vimBoard = this.mainWorkspace.vimBoard;
 
         if (Entry.hw) this.updateHW();
@@ -1259,6 +1260,17 @@ Entry.Playground = function() {
         this.updateListViewOrder('sound');
     };
 
+    p.addExpansionBlock = function(block, isNew) {
+        var tempBlock = _.clone(block);
+        delete tempBlock.view;
+        if (isNew === true) delete tempBlock.id;
+
+        block = Entry.Utils.copy(tempBlock);
+
+        if (!block.id) block.id = Entry.generateHash();
+
+        Entry.do('objectAddExpansionBlock', block);
+    };
     /**
      * Add sound
      * @param {sound model} sound
@@ -1860,6 +1872,13 @@ Entry.Playground = function() {
     p.getViewMode = function() {
         return this.viewMode_;
     };
+
+    p.banExpansionBlock = function() {
+        var blockMenu = _.result(this.mainWorkspace, 'blockMenu');
+        if (!blockMenu) return;
+
+        Object.values(Entry.EXPANSION_BLOCK_LIST).forEach(block => {blockMenu.banClass(block.name, true);});
+    }
 
     p.updateHW = function() {
         var blockMenu = _.result(this.mainWorkspace, 'blockMenu');

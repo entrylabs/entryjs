@@ -195,6 +195,80 @@ const { returnEmptyArr, createTooltip } = require('../command_util');
         undo: 'objectAddSound',
     };
 
+    c[COMMAND_TYPES.objectAddExpansionBlock] = {
+        do: function(block) {
+            var hashId = c[COMMAND_TYPES.objectAddExpansionBlock].hashId;
+            if (hashId) {
+                block.id = hashId;
+                delete c[COMMAND_TYPES.objectAddExpansionBlock].hashId;
+            }
+            Entry.playground.blockMenu.unbanClass(block.name);
+            Entry.dispatchEvent('dismissModal');
+        },
+        state: function(block) {
+            return [block];
+        },
+        log: function(block) {
+            var o = {};
+            o._id = block._id;
+            o.id = block.id;
+            o.filename = block.filename;
+            o.fileurl = block.fileurl;
+            o.name = block.name;
+            return [['block', o]];
+        },
+        dom: ['.btn_confirm_modal'],
+        restrict: function(data, domQuery, callback) {
+            this.hashId = data.content[2][1].id;
+
+            var tooltip = new Entry.Tooltip(
+                [
+                    {
+                        title: data.tooltip.title,
+                        content: data.tooltip.content,
+                        target: '.btn_confirm_modal',
+                    },
+                ],
+                {
+                    callBack: callback,
+                    dimmed: true,
+                    restrict: true,
+                    render: false,
+                }
+            );
+
+            var event = Entry.getMainWS().widgetUpdateEvent;
+
+            if (!data.skip) {
+                Entry.dispatchEvent(
+                    'openSoundManager',
+                    data.content[2][1]._id,
+                    event.notify.bind(event)
+                );
+            }
+            return tooltip;
+        },
+        recordable: Entry.STATIC.RECORDABLE.SUPPORT,
+        validate: false,
+        undo: 'objectRemoveExpansionBlock',
+    };
+
+    c[COMMAND_TYPES.objectRemoveExpansionBlock] = {
+        do: function(block) {
+            Entry.playground.blockMenu.banClass(block.name);
+        },
+        state: function(block) {
+            return [block];
+        },
+        log: function(block) {
+            return [['blockId', block._id]];
+        },
+        dom: ['.btn_confirm_modal'],
+        recordable: Entry.STATIC.RECORDABLE.SUPPORT,
+        validate: false,
+        undo: 'objectAddExpansionBlock',
+    };
+
     c[COMMAND_TYPES.objectNameEdit] = {
         do: function(objectId, newName) {
             var object = Entry.container.getObject(objectId);
