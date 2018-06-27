@@ -1,7 +1,7 @@
 "use strict";
 
 Entry.Mechatronics_4D = {
-    name: 'mechatronics_4d',
+    name: 'Mechatronics_4D',
     url: 'http://4dblock.com/',
     imageName: 'mechatronics_4d.png',
     title: {
@@ -69,7 +69,7 @@ Entry.Mechatronics_4D = {
     BlockState: {},
 };
 
-Entry.ArduinoNano.setLanguage = function() {
+Entry.Mechatronics_4D.setLanguage = function() {
     return {
         ko: {
             template: {
@@ -106,10 +106,10 @@ Entry.ArduinoNano.setLanguage = function() {
     };
 };
 
-Entry.ArduinoNano.getBlocks = function() {
+Entry.Mechatronics_4D.getBlocks = function() {
     return {
         //region arduinoNano 아두이노 나노
-        arduino_nano_analog_list: {
+       Mechatronics_4D_analog_list: {
             parent: 'arduino_ext_analog_list',
             params: [
                 {
@@ -130,7 +130,7 @@ Entry.ArduinoNano.getBlocks = function() {
             ],
             syntax: undefined,
         },
-        arduino_nano_get_analog_value: {
+        Mechatronics_4D_get_analog_value: {
             parent: 'arduino_ext_get_analog_value',
             template: Lang.template.arduino_ext_get_analog_value,
             def: {
@@ -139,12 +139,12 @@ Entry.ArduinoNano.getBlocks = function() {
                         type: 'arduino_nano_analog_list',
                     },
                 ],
-                type: 'arduino_nano_get_analog_value',
+                type: 'Mechatronics_4D_get_analog_value',
             },
-            isNotFor: ['ArduinoNano'],
+            isNotFor: ['Mechatronics_4D'],
             syntax: undefined,
         },
-        arduino_nano_get_analog_value_map: {
+        Mechatronics_4D_get_analog_value_map: {
             parent: 'arduino_ext_get_analog_value_map',
             template: Lang.template.arduino_ext_get_analog_value_map,
             def: {
@@ -174,12 +174,12 @@ Entry.ArduinoNano.getBlocks = function() {
                         params: ['100'],
                     },
                 ],
-                type: 'arduino_nano_get_analog_value_map',
+                type: 'Mechatronics_4D_get_analog_value_map',
             },
-            isNotFor: ['ArduinoNano'],
+            isNotFor: ['Mechatronics_4D'],
             syntax: undefined,
         },
-        arduino_nano_get_ultrasonic_value: {
+        Mechatronics_4D_get_ultrasonic_value: {
             template: Lang.template.arduino_ext_get_ultrasonic_value,
             parent: 'arduino_ext_get_ultrasonic_value',
             def: {
@@ -193,12 +193,12 @@ Entry.ArduinoNano.getBlocks = function() {
                         params: ['4'],
                     },
                 ],
-                type: 'arduino_nano_get_ultrasonic_value',
+                type: 'Mechatronics_4D_get_ultrasonic_value',
             },
             isNotFor: ['ArduinoNano'],
             syntax: undefined,
         },
-        arduino_nano_get_digital: {
+        Mechatronics_4D_get_digital: {
             template: Lang.template.arduino_ext_get_digital,
             parent: 'arduino_ext_get_digital',
             def: {
@@ -207,12 +207,12 @@ Entry.ArduinoNano.getBlocks = function() {
                         type: 'arduino_get_port_number',
                     },
                 ],
-                type: 'arduino_nano_get_digital',
+                type: 'Mechatronics_4D_get_digital',
             },
-            isNotFor: ['ArduinoNano'],
+            isNotFor: ['Mechatronics_4D'],
             syntax: undefined,
         },
-        arduino_nano_toggle_led: {
+        Mechatronics_4D_toggle_led: {
             template: Lang.template.arduino_ext_toggle_led,
             parent: 'arduino_ext_toggle_led',
             def: {
@@ -226,9 +226,9 @@ Entry.ArduinoNano.getBlocks = function() {
                     },
                     null,
                 ],
-                type: 'arduino_nano_toggle_led',
+                type: 'Mechatronics_4D_toggle_led',
             },
-            isNotFor: ['ArduinoNano'],
+            isNotFor: ['Mechatronics_4D'],
             syntax: undefined,
         },
         arduino_nano_digital_pwm: {
@@ -245,9 +245,9 @@ Entry.ArduinoNano.getBlocks = function() {
                     },
                     null,
                 ],
-                type: 'arduino_nano_digital_pwm',
+                type: 'Mechatronics_4D_digital_pwm',
             },
-            isNotFor: ['ArduinoNano'],
+            isNotFor: ['Mechatronics_4D'],
             syntax: undefined,
         },
         arduino_nano_set_tone: {
@@ -271,9 +271,9 @@ Entry.ArduinoNano.getBlocks = function() {
                     },
                     null,
                 ],
-                type: 'arduino_nano_set_tone',
+                type: 'Mechatronics_4D_set_tone',
             },
-            isNotFor: ['ArduinoNano'],
+            isNotFor: ['Mechatronics_4D'],
             syntax: undefined,
         },
         arduino_nano_set_servo: {
@@ -286,11 +286,11 @@ Entry.ArduinoNano.getBlocks = function() {
                     },
                     null,
                 ],
-                type: 'arduino_nano_set_servo',
+                type: 'Mechatronics_4D_set_servo',
             },
-            isNotFor: ['ArduinoNano'],
+            isNotFor: ['Mechatronics_4D'],
             syntax: undefined,
         },
-        //endregion arduinoNano 아두이노 나노
+        //endregion 4D Mechatronics 4D
     };
 };
