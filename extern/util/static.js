@@ -778,8 +778,6 @@ EntryStatic.getAllBlocks = function() {
                 "ev3_motor_power_on_time",
                 "ev3_motor_degrees",
                 "ev3_status_led",
-                "ev3_status_led_flash",
-                "ev3_status_led_turn_off",
 
                 "roduino_on_block",
                 "roduino_off_block",
