@@ -85,6 +85,35 @@ Entry.EV3 = {
     },
 };
 
+Entry.EV3.setLanguage = function() {
+    return {
+        ko: {
+            template: {
+                ev3_get_sensor_value: '%1 의 값',
+                ev3_touch_sensor: '%1 의 터치센서가 작동되었는가?',
+                ev3_button_pressed: '%1 버튼이 눌려져있는가?',
+                ev3_color_sensor: '%1 의 %2 값',
+                ev3_motor_power: '%1 의 값을 %2 으로 출력 %3',
+                ev3_motor_power_on_time: '%1 의 값을 %2 초 동안 %3 으로 출력 %4',
+                ev3_motor_degrees: '%1 의 값을 %2 으로  %3 도 만큼 회전 %4',
+                ev3_status_led: 'LED 색깔을 %1 (으)로 정하기 %2'
+            }
+        },
+        en: {
+            template: {
+                ev3_get_sensor_value: '%1\'s value',
+                ev3_touch_sensor: '%1\'s touch sensor activated?',
+                ev3_button_pressed: '%1\'s button pressed?',
+                ev3_color_sensor: '%1\'s %2 value',
+                ev3_motor_power: '%1\'s value print as %2 %3',
+                ev3_motor_power_on_time: '%1\'s value for %2seconds %3 printed %4',
+                ev3_motor_degrees: '%1\'s value in %2 direction turn %3 degrees %4',
+                ev3_status_led: 'Set status light to %1 %2'
+            }
+        },
+    };
+};
+
 Entry.EV3.getBlocks = function() {
     return {
         //region ev3 이브이3
