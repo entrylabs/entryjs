@@ -73,6 +73,7 @@ Entry.EV3 = {
                 Entry.hw.sendQueue[port] = portMap[port];
             }
         });
+        Entry.hw.sendQueue.STATUS_COLOR = 'GREEN';
         Entry.hw.update();
     },
     name: 'EV3',
@@ -465,6 +466,94 @@ Entry.EV3.getBlocks = function() {
                 }
 
                 return result;
+            },
+        },
+        ev3_status_led: {
+            color: '#00979D',
+            fontColor: '#fff',
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [['초록', 'GREEN'], ['빨강', 'RED'], ['주황', 'ORANGE']],
+                    value: 'GREEN',
+                    fontSize: 11,
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_03.png',
+                    size: 12,
+                }
+            ],
+            events: {},
+            def: {
+                params: [null],
+                type: 'ev3_status_led',
+            },
+            paramsKeyMap: {
+                COLOR: 0,
+            },
+            class: 'ev3_output',
+            isNotFor: ['EV3'],
+            func: function(sprite, script) {
+                Entry.hw.sendQueue.STATUS_COLOR = script.getStringField('COLOR', script);
+            },
+        },
+        ev3_status_led_flash: {
+            color: '#00979D',
+            fontColor: '#fff',
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [['초록', 'GREEN_FLASHING'], ['빨강', 'RED_FLASHING'], ['주황', 'ORANGE_FLASHING']],
+                    value: 'GREEN_FLASHING',
+                    fontSize: 11,
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_03.png',
+                    size: 12,
+                }
+            ],
+            events: {},
+            def: {
+                params: [null],
+                type: 'ev3_status_led_flash',
+            },
+            paramsKeyMap: {
+                COLOR: 0,
+            },
+            class: 'ev3_output',
+            isNotFor: ['EV3'],
+            func: function(sprite, script) {
+                Entry.hw.sendQueue.STATUS_COLOR = script.getStringField('COLOR', script);
+            },
+        },
+        ev3_status_led_turn_off: {
+            color: '#00979D',
+            fontColor: '#fff',
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_03.png',
+                    size: 12,
+                }
+            ],
+            events: {},
+            def: {
+                params: [null],
+                type: 'ev3_status_led_turn_off',
+            },
+            paramsKeyMap: {},
+            class: 'ev3_output',
+            isNotFor: ['EV3'],
+            func: function(sprite, script) {
+                Entry.hw.sendQueue.STATUS_COLOR = 'OFF';
             },
         }
         //endregion ev3 이브이3
