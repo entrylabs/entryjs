@@ -1,7 +1,12 @@
 'use strict';
 
 Entry.Expansion_Weather = {
-    name: 'weather'
+    name: 'weather',
+    imageName: 'arduino.png',
+    title: {
+        "ko": "날씨",
+        "en": "weather"
+    },
 };
 
 Entry.Expansion_Weather.getBlocks = function() {
