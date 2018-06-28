@@ -537,6 +537,8 @@ EntryStatic.getAllBlocks = function() {
                 "hamster_set_port_to",
                 "hamster_change_output_by",
                 "hamster_set_output_to",
+                "hamster_gripper",
+                "hamster_release_gripper",
                 "turtle_touching_color",
                 "turtle_is_color_pattern",
                 "turtle_button_state",
@@ -598,7 +600,9 @@ EntryStatic.getAllBlocks = function() {
                 "roboid_hamster_set_tempo_to",
                 "roboid_hamster_set_port_to",
                 "roboid_hamster_change_output_by",
-                "roboid_hamster_set_output_to",
+                "roboid_hamster_set_output_to",                
+                "roboid_hamster_gripper",
+                "roboid_hamster_release_gripper",
                 "roboid_turtle_touching_color",
                 "roboid_turtle_is_color_pattern",
                 "roboid_turtle_button_state",
@@ -1302,6 +1306,42 @@ EntryStatic.getAllBlocks = function() {
                 "microbit_set_bpm",
                 // "microbit_radio_receive_event",
                 //endregion microbit
+                //region MRT-X Blocks added
+                "mrt_digitalInput",
+                "mrt_digitalOutput",
+                "mrt_analogValue",
+                "mrt_ultra",
+                "mrt_color",
+                "mrt_gyro",
+                "mrt_remotecontrol",
+                "mrt_keyvalue",
+                "mrt_buzzer",
+                "mrt_servo",
+                "mrt_oneWheel",
+                "mrt_lcd",
+                //endregion end of MRT-X Blocks added
+
+                //region dash
+                "dash_sensor1",
+                "dash_sensor2",
+                "dash_turn_drive",
+                "dash_turn_drive_360",
+                "dash_drive",
+                "dash_wheel_speed",
+                "dash_drive_stop",
+                "dash_v_head",
+                "dash_h_head",
+                "dash_forward_head",
+                "dash_sound_say",
+                "dash_sound_animal",
+                "dash_sound_move",
+                "dash_sound_strange",
+                "dash_my_sound",
+                "dash_light_color",
+                "dash_tail_light_color",
+                "dash_eye",
+                "dash_animation",
+                //endregion dash
             ]
         }
     ]
