@@ -781,9 +781,9 @@ Entry.coconut = {
      *
      * @param message 전송할 문자열
      */
-    sendMessage: function(message) {
-        return this.runPackage(this.devices['IR'], this.string2array(message));
-    },
+    // sendMessage: function(message) {
+    //     return this.runPackage(this.devices['IR'], this.string2array(message));
+    // },
 
     /**
      * @brief 외부 LED on/off
