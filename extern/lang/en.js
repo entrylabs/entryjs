@@ -113,6 +113,8 @@ Lang.Blocks = {
     "BITBRICK_MIC": "MIC",
     "BITBRICK_UserSensor": "UserSensor",
     "BITBRICK_UserInput": "UserInput",
+    "BITBRICK_vibrationSensor": "vibrationSensor",
+    "BITBRICK_ultrasonicSensor": "ultrasonicSensor",
     "BITBRICK_dc_direction_ccw": "CCW",
     "BITBRICK_dc_direction_cw": "CW",
     "byrobot_dronefighter_drone_state_mode_system": "system Mode",
