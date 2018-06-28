@@ -750,6 +750,10 @@
                         );
 
                         if (restrictor.toolTipRender) {
+                            const {
+                                renderData = {},
+                            } = restrictor.toolTipRender;
+                            renderData.isPrev = false;
                             if (!isDefault) {
                                 restrictor.toolTipRender.titleIndex = 1;
                                 restrictor.toolTipRender.contentIndex = 1;
