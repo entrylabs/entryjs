@@ -108,12 +108,12 @@ Entry.Expansion_Weather.getBlocks = function() {
                 class: 'weather',
                 isNotFor: ['weather'],
                 func: function (sprite, script) {
-                    var date = Entry.WeatherForecast.getDate(script.getField('DATE', script));
-                    var location = Entry.WeatherForecast.getLocation(script.getField('LOCATION', script));
+                    var date = Entry.EXPANSION_BLOCK.weather.getDate(script.getField('DATE', script));
+                    var location = script.getField('LOCATION', script);
                     var weather = script.getField('WEATHER', script);
-                    var apiResult = Entry.WeatherForecast.mockData(date, "0600", location.x, location.y);
+                    var apiResult = Entry.EXPANSION_BLOCK.weather.getData(location, "date", date, 0);
 
-                    return Entry.WeatherForecast.checkWeather(apiResult.data.PTY, apiResult.data.SKY);
+                    return Entry.EXPANSION_BLOCK.weather.checkWeather(apiResult.data.PTY, apiResult.data.SKY) == weather;
                 },
                 syntax: {
                     js: [],
@@ -561,12 +561,13 @@ Entry.Expansion_Weather.getBlocks = function() {
                 class: 'weather',
                 isNotFor: ['weather'],
                 func: function (sprite, script) {
-                    var date = Entry.WeatherForecast.getDate(script.getField('DATE', script));
-                    var location = Entry.WeatherForecast.getLocation(script.getField('LOCATION', script));
+                    var date = Entry.EXPANSION_BLOCK.weather.getDate(script.getField('DATE', script));
+                    var location = script.getField('LOCATION', script);
                     var finedust = script.getField('FINEDUST', script);
 
-                    var apiResult = Entry.WeatherForecast.mockData(date, "0600", location.x, location.y);
-                    return apiResult.data["pm10Grade"] == finedust;
+                    var apiResult = Entry.EXPANSION_BLOCK.weather.getData(location, "date", date, "0000");
+
+                    return Math.round(apiResult.data["pm10Grade"]) == finedust;
                 },
                 syntax: {
                     js: [],
@@ -860,10 +861,10 @@ Entry.Expansion_Weather.getBlocks = function() {
                 class: 'weather',
                 isNotFor: ['weather'],
                 func: function (sprite, script) {
-                    var date = Entry.WeatherForecast.getDate(script.getField('DATE', script));
-                    var location = Entry.WeatherForecast.getLocation(script.getField('LOCATION', script));
+                    var date = Entry.EXPANSION_BLOCK.weather.getDate(script.getField('DATE', script));
+                    var location = script.getField('LOCATION', script);
                     var type = script.getField('TYPE', script);
-                    var apiResult = Entry.WeatherForecast.mockData(date, "0600", location.x, location.y);
+                    var apiResult = Entry.EXPANSION_BLOCK.weather.getData(location, "date", date, "0000");
 
                     return apiResult.data[type];
                 },
@@ -1242,11 +1243,13 @@ Entry.Expansion_Weather.getBlocks = function() {
                 class: 'weather',
                 isNotFor: ['weather'],
                 func: function (sprite, script) {
-                    var location = Entry.WeatherForecast.getLocation(script.getField('LOCATION', script));
+                    var now = new Date();
+                    var location = Entry.EXPANSION_BLOCK.weather.getLocation(script.getField('LOCATION', script));
                     var type = script.getField('TYPE', script);
-                    var date = new Date().toISOString().slice(0,10).replace(/-/g,"");
-                    var apiResult = Entry.WeatherForecast.mockData(date, "0600", location.x, location.y);
+                    var date = now.toISOString().slice(0,10).replace(/-/g,"");
+                    var time = d.getHours();
 
+                    var apiResult = Entry.EXPANSION_BLOCK.weather.getData(location, "time", date, time);
                     if(type == "TEMPERATURE") {
                         return apiResult.data["T3H"];
                     }else {
@@ -1390,10 +1393,10 @@ Entry.Expansion_Weather.getBlocks = function() {
                 class: 'weather',
                 isNotFor: ['weather'],
                 func: function (sprite, script) {
-                    var location = Entry.WeatherForecast.getLocation(script.getField('LOCATION', script));
-                    var time = script.getField('TIME', script) + "00";
+                    var location = script.getField('LOCATION', script);
+                    var time = script.getField('TIME', script);
                     var date = new Date().toISOString().slice(0,10).replace(/-/g,"");
-                    var apiResult = Entry.WeatherForecast.mockData(date, time, location.x, location.y);
+                    var apiResult = Entry.EXPANSION_BLOCK.weather.getData(location, "time", date, time);
                     return apiResult.data["T3H"];
                 },
                 syntax: {
