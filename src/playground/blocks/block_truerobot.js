@@ -26,18 +26,43 @@ Entry.trueRobot = {
     },
     setZero: function() {
         var portMap = Entry.trueRobot.PORT_MAP;
+        var portMap2 = Entry.trueRobot.PORT_MAP;
+		if (!Entry.hw.sendQueue['SET']) {
+            Entry.hw.sendQueue['SET'] = {};
+        }
         var sq = Entry.hw.sendQueue;
-        for (var port in portMap) {
+
+		var intoDevice;
+		var intoPort;
+
+		for (var port in portMap) {
             sq[port] = portMap[port];
+			intoPort = portMap[port];
+			for (var device in portMap2) {
+				intoDevice = portMap2[port];
+				Entry.hw.sendQueue['SET'][intoDevice] = {
+						port: intoPort,
+						dataA: 0,
+						dataB: 0,
+						dataC: 0,
+				};
+			  Entry.hw.update();
+			}
+        }
+      
+ 
+		var device2 =Entry.trueRobot.PORT_MAP.colorled;
+		for (var port in portMap) {
+            sq[port] = portMap[port];
+		
+			Entry.hw.sendQueue['SET'][device2] = {
+                    port: portMap[port],
+                    dataA: 0,
+                    dataB: 0,
+                    dataC: 255,
+			};
         }
         Entry.hw.update();
-        /*
-        var trueRobot = Entry.trueRobot.DeviceID;
-        trueRobot.leftWheel = 0;
-        trueRobot.rightWheel = 0;
-        trueRobot.colorRed = 0;
-        trueRobot.colorGreen = 0;
-        trueRobot.colorBlue = 0;
 	*/
     },
 };
