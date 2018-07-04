@@ -44,27 +44,27 @@ Entry.EXPANSION_BLOCK.weather.getData = function (locationStr, type, date, time)
 Entry.EXPANSION_BLOCK.weather.getDate = function (key) {
     var date = new Date();
     switch (key) {
-        case "YESTERDAY":
+        case "yesterday":
             date.setDate(date.getDate() - 1);
             break;
-        case "TODAY":
+        case "today":
             break;
-        case "TOMORROW":
+        case "tomorrow":
             date.setDate(date.getDate() + 1);
             break;
-        case "AFTER2DAYS":
+        case "After_2_days":
             date.setDate(date.getDate() + 2);
             break;
-        case "AFTER3DAYS":
+        case "After_3_days":
             date.setDate(date.getDate() + 3);
             break;
-        case "AFTER4DAYS":
+        case "After_4_days":
             date.setDate(date.getDate() + 4);
             break;
-        case "AFTER5DAYS":
+        case "After_5_days":
             date.setDate(date.getDate() + 5);
             break;
-        case "AFTER6DAYS":
+        case "After_6_days":
             date.setDate(date.getDate() + 6);
             break;
         default:
@@ -73,24 +73,9 @@ Entry.EXPANSION_BLOCK.weather.getDate = function (key) {
     return date.toISOString().slice(0, 10).replace(/-/g, "");
 };
 
-Entry.EXPANSION_BLOCK.weather.checkWeather = function (pty, sky) {
-    const ptyMap = {
-        0: "NONE",
-        1: "RAINY",
-        2: "SLEET",
-        3: "SNOWY"
-    };
-    const skyMap = {
-        1: "SUNNY",
-        2: "PARTLY_CLOUDY",
-        3: "MOSTLY_CLOUDY"
-    };
-
-    if (pty === 0) {
-        return skyMap[sky];
-    } else {
-        return ptyMap[pty];
-    }
+Entry.EXPANSION_BLOCK.weather.checkWeather = function (sky_code) {
+    //sky_code에 따라 날씨 분기
+    return "sunny";
 };
 
 
