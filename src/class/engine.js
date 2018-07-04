@@ -66,6 +66,7 @@ Entry.Engine = function() {
      * @param {?string} option for choose type of view.
      */
     p.generateView = function(controlView, option = 'workspace') {
+        this.option = option;
         if (option == 'workspace') {
             /** @type {!Element} */
             this.view_ = controlView;
@@ -237,7 +238,7 @@ Entry.Engine = function() {
                 this.runButton = Entry.Dom('div', {
                     class: 'entryRunButtonBigMinimize',
                     parent: $('#entryCanvasWrapper'),
-                }); 
+                });
                 this.runButton.bindOnClick(() => Entry.engine.toggleRun());
             });
         } else if (option == 'phone') {
@@ -528,10 +529,7 @@ Entry.Engine = function() {
             this.view_.addClass('entryEngineBlueWorkspace');
 
         if (this.runButton) {
-            if (this.pauseButton)
-                this.pauseButton.innerHTML = Lang.Workspace.pause;
-            if (this.pauseButtonFull)
-                this.pauseButtonFull.innerHTML = Lang.Workspace.pause;
+            this.setPauseButton(this.option);
             this.runButton.addClass('run');
             this.runButton.addClass('entryRemove');
             this.stopButton.removeClass('entryRemove');
@@ -556,6 +554,8 @@ Entry.Engine = function() {
             this.update();
             this.isUpdating = true;
         }
+
+        this.setEnableInputField(true);
 
         Entry.stage.selectObject();
         Entry.dispatchEvent('run');
@@ -596,6 +596,7 @@ Entry.Engine = function() {
         createjs.Sound.setVolume(1);
         createjs.Sound.stop();
         Entry.soundInstances = [];
+        Entry.targetChecker.clearListener();
 
         this.view_.removeClass('entryEngineBlueWorkspace');
         if (this.runButton) {
@@ -612,6 +613,7 @@ Entry.Engine = function() {
         }
 
         this.state = 'stop';
+        this.setEnableInputField(false);
         Entry.dispatchEvent('stop');
         Entry.stage.hideInputField();
         (function(w) {
@@ -621,27 +623,36 @@ Entry.Engine = function() {
         })(Entry.getMainWS());
     };
 
+    p.setEnableInputField = function(on) {
+        var inputField = Entry.stage.inputField;
+        if(inputField) {
+            inputField._readonly = !on;
+            if(!inputField._isHidden) {
+                on ? inputField.focus() : inputField.blur();
+            }
+        }
+    }
+
     /**
      * toggle this engine state pause
      */
     p.togglePause = function() {
         var timer = Entry.engine.projectTimer;
         if (this.state == 'pause') {
+            this.setEnableInputField(true);
             timer.pausedTime += new Date().getTime() - timer.pauseStart;
             if (timer.isPaused) timer.pauseStart = new Date().getTime();
             else delete timer.pauseStart;
             this.state = 'run';
             Entry.Utils.recoverSoundInstances();
             if (this.runButton) {
-                if (this.pauseButton)
-                    this.pauseButton.innerHTML = Lang.Workspace.pause;
-                if (this.pauseButtonFull)
-                    this.pauseButtonFull.innerHTML = Lang.Workspace.pause;
+                this.setPauseButton(this.option);
                 this.runButton.addClass('entryRemove');
                 if (this.runButton2) this.runButton2.addClass('entryRemove');
             }
         } else {
             this.state = 'pause';
+            this.setEnableInputField(false);
             if (!timer.isPaused) timer.pauseStart = new Date().getTime();
             else {
                 timer.pausedTime += new Date().getTime() - timer.pauseStart;
@@ -649,16 +660,47 @@ Entry.Engine = function() {
             }
             Entry.Utils.pauseSoundInstances();
             if (this.runButton) {
-                if (this.pauseButton)
-                    this.pauseButton.innerHTML = Lang.Workspace.restart;
-                if (this.pauseButtonFull)
-                    this.pauseButtonFull.innerHTML = Lang.Workspace.restart;
+                this.setPauseButton(this.option);
                 this.runButton.removeClass('entryRemove');
                 this.stopButton.removeClass('entryRemove');
                 if (this.runButton2) this.runButton2.removeClass('entryRemove');
             }
         }
     };
+
+    p.setPauseButton = function(option) {
+        if (this.state == 'pause') {
+            if (this.pauseButton) {
+                this.pauseButton.innerHTML = Lang.Workspace.restart;
+                if(this.option !== 'minimize') {
+                    this.pauseButton.removeClass('entryPauseButtonWorkspace_w');
+                    this.pauseButton.addClass('entryRestartButtonWorkspace_w');
+                }
+            }
+            if (this.pauseButtonFull) {
+                this.pauseButtonFull.innerHTML = Lang.Workspace.restart;
+                if(this.option !== 'minimize') {
+                    this.pauseButtonFull.removeClass('entryPauseButtonWorkspace_full');
+                    this.pauseButtonFull.addClass('entryRestartButtonWorkspace_full');
+                }
+            }
+        } else {
+            if (this.pauseButton){
+                this.pauseButton.innerHTML = Lang.Workspace.pause;
+                if(this.option !== 'minimize') {
+                    this.pauseButton.addClass('entryPauseButtonWorkspace_w');
+                    this.pauseButton.removeClass('entryRestartButtonWorkspace_w');
+                }
+            }
+            if (this.pauseButtonFull){
+                this.pauseButtonFull.innerHTML = Lang.Workspace.pause;
+                if(this.option !== 'minimize') {
+                    this.pauseButtonFull.addClass('entryPauseButtonWorkspace_full');
+                    this.pauseButtonFull.removeClass('entryRestartButtonWorkspace_full');
+                }
+            }
+        }
+    }
 
     /**
      * @param {string} eventName

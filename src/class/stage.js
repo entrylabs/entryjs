@@ -578,6 +578,7 @@ Entry.Stage.prototype.showInputField = function() {
             innerShadow: '0px 0px 5px rgba(0, 0, 0, 0.5)',
             x: 202 * scale,
             y: 450 * scale,
+            readonly: false,
             topPosition: true,
             onsubmit: function() {
                 Entry.dispatchEvent('canvasInputComplete');
@@ -601,9 +602,11 @@ Entry.Stage.prototype.showInputField = function() {
     button.image = buttonImg;
     inputSubmitButton.addChild(button);
 
-    inputSubmitButton.on('mousedown', () =>
-        Entry.dispatchEvent('canvasInputComplete')
-    );
+    inputSubmitButton.on('mousedown', () => {
+        if(this.inputField._readonly == false) {
+            Entry.dispatchEvent('canvasInputComplete');
+        }
+    });
 
     if (!this.inputSubmitButton) {
         this.inputField.value('');

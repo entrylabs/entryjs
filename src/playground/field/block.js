@@ -25,7 +25,7 @@ Entry.FieldBlock = function(content, blockView, index, mode, contentIndex) {
     this.view = this;
 
     this.svgGroup = null;
-
+  
     this._position = content.position;
 
     this.observe(this, '_updateBG', ['magneting'], false);
@@ -43,6 +43,10 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
     p.getBoard = function() {
         return _.result(this._blockView, 'getBoard');
     };
+
+    p.getBlockType = () => {
+        return 'field';
+    }
 
     p.renderStart = function(board, mode, renderMode, isReDraw) {
         if (!this.svgGroup) {
@@ -263,6 +267,8 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
         this.changeEvent.notify();
     };
 
+    p.doSeparate = p.separate;
+
     p.getCode = function() {
         return this._block.thread.getCode();
     };
@@ -359,6 +365,11 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
 
     p.pointer = function(pointer = []) {
         return this._block.pointer([Entry.PARAM, this._index, ...pointer]);
+    };
+
+    p.targetPointer = function(pointer = []) {
+        var pointer = this._block.pointer([Entry.PARAM, this._index, ...pointer]);
+        return pointer;
     };
 
     p.isParamBlockType = function() {

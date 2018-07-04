@@ -1051,20 +1051,24 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
         if (query[0] === 'category') {
             return this._categoryElems[query[1]];
         } else {
-            var { type } = query[0][0];
+            var { type, params = [] } = query[0][0];
             this.align();
-            this.scrollToType(type);
-            return this.getSvgDomByType(type);
+            this.scrollToType(type, params);
+            return this.getSvgDomByType(type, params);
         }
     };
 
-    p.getSvgDomByType = function(blockType) {
+    p.getSvgDomByType = function(blockType, params) {
         var thread = _.find(this.code.getThreads(), (thread) => {
             if (!thread) {
                 return;
             }
-
-            return _.result(thread.getFirstBlock(), 'type') === blockType;
+            const { type, params: threadParams } = thread.getFirstBlock();
+            let option = true;
+            if(blockType === 'calc_basic') {
+                option = type === blockType && threadParams[1] === params[1];
+            } 
+            return type === blockType && option;
         });
 
         if (!thread) return;
@@ -1072,7 +1076,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
         return thread.getFirstBlock().view.svgGroup;
     };
 
-    p.scrollToType = function(type) {
+    p.scrollToType = function(type, params) {
         if (!type) return;
 
         var block = _.head(this.code.getBlockList(false, type));
@@ -1080,7 +1084,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
 
         this.hasCategory() && this.selectMenu(block.category, true);
 
-        if (isOverFlow(this.getSvgDomByType(type).getBoundingClientRect())) {
+        if (isOverFlow(this.getSvgDomByType(type, params).getBoundingClientRect())) {
             this._scroller.scrollByPx(block.view.y - 20);
         }
 

@@ -800,7 +800,7 @@ module.exports = {
                     {
                         type: 'DropdownDynamic',
                         value: null,
-                        menuName: 'sprites',
+                        menuName: 'allSprites',
                         fontSize: 11,
                     },
                     {
@@ -830,9 +830,13 @@ module.exports = {
                 class: 'checker',
                 isNotFor: ['checker'],
                 func: function(sprite, script) {
-                    if (this.listener) {
+                    const { block = {} } = this;
+                    const { data = {} } = block;
+                    const { id = '' } = data;
+                    if (this.entity.listener[id]) {
                         if (this.remainCheck === 0) {
-                            this.listener.destroy();
+                            this.entity.listener[id].destroy();
+                            delete this.entity.listener[id];
                             return;
                         } else return Entry.STATIC.BREAK;
                     }
@@ -843,37 +847,38 @@ module.exports = {
                         lastBlock = null;
                     this.remainCheck = Number(this.block.params[2]);
                     var index = 0;
-                    this.listener = code.watchEvent.attach(this, function(
-                        blocks
-                    ) {
-                        //dangerous
-                        blocks = blocks.concat();
-                        var block,
-                            isFirst = true;
-                        while (blocks.length && index < statements.length) {
-                            block = blocks.shift();
-                            if (isFirst && block === lastBlock) continue;
-                            if (
-                                accuracy === 0 &&
-                                statements[index].type === block.type
-                            ) {
-                                index++;
-                            } else if (
-                                accuracy === 1 &&
-                                statements[index].isSameParamWith(block)
-                            ) {
-                                index++;
-                            } else {
+                    this.entity.listener[id] = code.watchEvent.attach(
+                        this,
+                        (blocks) => {
+                            //dangerous
+                            blocks = blocks.concat();
+                            var block,
+                                isFirst = true;
+                            while (blocks.length && index < statements.length) {
+                                block = blocks.shift();
+                                if (isFirst && block === lastBlock) continue;
+                                if (
+                                    accuracy === 0 &&
+                                    statements[index].type === block.type
+                                ) {
+                                    index++;
+                                } else if (
+                                    accuracy === 1 &&
+                                    statements[index].isSameParamWith(block)
+                                ) {
+                                    index++;
+                                } else {
+                                    index = 0;
+                                }
+                                isFirst = false;
+                            }
+                            lastBlock = block;
+                            if (index === statements.length) {
+                                this.remainCheck = this.remainCheck - 1;
                                 index = 0;
                             }
-                            isFirst = false;
                         }
-                        lastBlock = block;
-                        if (index === statements.length) {
-                            this.remainCheck = this.remainCheck - 1;
-                            index = 0;
-                        }
-                    });
+                    );
                     return Entry.STATIC.BREAK;
                 },
             },
@@ -1086,6 +1091,48 @@ module.exports = {
                     return Entry.targetChecker.checkGoal(goalName);
                 },
             },
+            positive_number: {
+                color: '#7C7C7C',
+                skeleton: 'basic_string_field',
+                template: '양수',
+                fontColor: '#fff',
+                statements: [],
+                params: ['positive'],
+                events: {},
+                def: {
+                    params: ['positive'],
+                    type: 'positive_number',
+                },
+                paramsKeyMap: {
+                    VALUE: 0,
+                },
+                class: 'checker',
+                isNotFor: ['checker'],
+                func: function(sprite, script) {
+                    return 'positive';
+                },
+            },
+            negative_number: {
+                color: '#7C7C7C',
+                skeleton: 'basic_string_field',
+                template: '음수',
+                fontColor: '#fff',
+                statements: [],
+                params: ['negative'],
+                events: {},
+                def: {
+                    params: ['negative'],
+                    type: 'negative_number',
+                },
+                paramsKeyMap: {
+                    VALUE: 0,
+                },
+                class: 'checker',
+                isNotFor: ['checker'],
+                func: function(sprite, script) {
+                    return 'negative';
+                },
+            },
             wildcard_string: {
                 color: '#7C7C7C',
                 skeleton: 'basic_string_field',
@@ -1158,5 +1205,5 @@ module.exports = {
                 },
             },
         };
-    }
-}
+    },
+};

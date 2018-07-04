@@ -158,6 +158,8 @@ EntryStatic.getAllBlocks = function() {
                 "check_variable_by_name",
                 "show_prompt",
                 "check_goal_success",
+                "positive_number",
+                "negative_number",
                 "wildcard_string",
                 "wildcard_boolean",
                 "register_score"
