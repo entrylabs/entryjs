@@ -63,7 +63,6 @@ Entry.trueRobot = {
 			};
         }
         Entry.hw.update();
-	*/
     },
 };
 
