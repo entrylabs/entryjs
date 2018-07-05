@@ -79,7 +79,7 @@ Entry.Utils.inherit(Entry.FieldDropdown, Entry.FieldDropdownDynamic);
     p.renderOptions = function() {
         var that = this;
 
-        this._attachDisposeEvent();
+        this._attachDisposeEvent(() => {});
 
         this.optionGroup = Entry.Dom('ul', {
             class: 'entry-widget-dropdown',
