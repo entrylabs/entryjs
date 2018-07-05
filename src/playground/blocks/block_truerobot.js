@@ -4,6 +4,7 @@ Entry.trueRobot = {
     name: 'trueRobot',
     url: 'http://www.sigongmedia.co.kr',
     imageName: 'truetrue.png',
+    delayTime: 30,
     title: {
         "en": "TrueTrueRobot",
         "ko": "뚜루뚜루"
@@ -26,20 +27,47 @@ Entry.trueRobot = {
     },
     setZero: function() {
         var portMap = Entry.trueRobot.PORT_MAP;
+        var portMap2 = Entry.trueRobot.PORT_MAP;
+		if (!Entry.hw.sendQueue['SET']) {
+            Entry.hw.sendQueue['SET'] = {};
+        }
         var sq = Entry.hw.sendQueue;
-        for (var port in portMap) {
+
+		var intoDevice;
+		var intoPort;
+
+		for (var port in portMap) {
             sq[port] = portMap[port];
+			intoPort = portMap[port];
+			for (var device in portMap2) {
+				intoDevice = portMap2[port];
+				Entry.hw.sendQueue['SET'][intoDevice] = {
+						port: intoPort,
+						dataA: 0,
+						dataB: 0,
+						dataC: 0,
+				};
+			  Entry.hw.update();
+			}
+        }
+      
+
+		var device2 =Entry.trueRobot.PORT_MAP.colorled;
+		for (var port in portMap) {
+            sq[port] = portMap[port];
+		
+			Entry.hw.sendQueue['SET'][device2] = {
+                    port: portMap[port],
+                    dataA: 0,
+                    dataB: 0,
+                    dataC: 255,
+			};
         }
         Entry.hw.update();
-        /*
-        var trueRobot = Entry.trueRobot.DeviceID;
-        trueRobot.leftWheel = 0;
-        trueRobot.rightWheel = 0;
-        trueRobot.colorRed = 0;
-        trueRobot.colorGreen = 0;
-        trueRobot.colorBlue = 0;
-	*/
+
     },
+	
+
 };
 
 Entry.trueRobot.getBlocks = function() {
@@ -76,6 +104,7 @@ Entry.trueRobot.getBlocks = function() {
             func: function(sprite, script) {
                 var pd = Entry.hw.portData;
                 var dev = script.getField('position');
+				//console.log(pd[dev]);
                 return pd[dev];
             },
             syntax: { js: [], py: [] },
@@ -106,6 +135,7 @@ Entry.trueRobot.getBlocks = function() {
             func: function(sprite, script) {
                 var pd = Entry.hw.portData;
                 var dev = script.getField('position');
+				//				console.log(pd[dev]);
                 return pd[dev];
             },
             syntax: { js: [], py: [] },
@@ -141,6 +171,7 @@ Entry.trueRobot.getBlocks = function() {
             func: function(sprite, script) {
                 var pd = Entry.hw.portData;
                 var dev = script.getField('position');
+				//				console.log(pd[dev]);
                 return pd[dev];
             },
             syntax: { js: [], py: [] },
@@ -176,6 +207,7 @@ Entry.trueRobot.getBlocks = function() {
             func: function(sprite, script) {
                 var pd = Entry.hw.portData;
                 var dev = script.getField('position');
+				//				console.log(pd[dev]);
                 return pd[dev];
             },
             syntax: { js: [], py: [] },
@@ -209,6 +241,7 @@ Entry.trueRobot.getBlocks = function() {
             func: function(sprite, script) {
                 var pd = Entry.hw.portData;
                 var dev = script.getField('position');
+				//				console.log(pd[dev]);
                 return pd[dev];
             },
             syntax: { js: [], py: [] },
@@ -220,7 +253,7 @@ Entry.trueRobot.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [['Left', '9'], ['Right', '10']],
+                    options: [['Left', '9'], ['Right', '10'], ['All', '11']],
                     value: 'Left',
                     fontSize: 11,
                 },
@@ -261,18 +294,56 @@ Entry.trueRobot.getBlocks = function() {
                     speed = value;
                     direction = 0;
                 }
+				
                 if (!Entry.hw.sendQueue['SET']) {
                     Entry.hw.sendQueue['SET'] = {};
                 }
+				
+				if (!script.isStart) {
+                    script.isStart = true;
+                    script.timeFlag = 1;
 
+
+				if( script.getNumberField('PORT') == 11) {
+					device = Entry.trueRobot.PORT_MAP.dualmotor;
+					Entry.hw.sendQueue['SET'][device] = {
+						port: script.getNumberField('PORT'),
+						dataA: value,
+						dataB: value,
+						dataC: 1,
+					};
+				}else{
+					Entry.hw.sendQueue['SET'][device] = {
+						port: script.getNumberField('PORT'),
+						dataA: speed,
+						dataB: direction,
+						dataC: 0,
+					};
+				}
+
+				/*
                 Entry.hw.sendQueue['SET'][device] = {
                     port: script.getNumberField('PORT'),
                     dataA: speed,
                     dataB: direction,
                     dataC: 0,
                 };
+				*/
+				
+					setTimeout(function() {
+						 script.timeFlag = 2;
+					}, Entry.trueRobot.delayTime);
+					return script;
+				}else if (script.timeFlag == 1) {
+					return script;
+				}else if(script.timeFlag == 2) {
+					delete script.timeFlag;
+                    delete script.isStart;
+                    Entry.engine.isContinue = false;
+					return script.callReturn();
+				}
 
-                return script.callReturn();
+                //return script.callReturn();
             },
             syntax: { js: [], py: [] },
         },
@@ -345,6 +416,21 @@ Entry.trueRobot.getBlocks = function() {
                     };
 
                     var timeValue = script.getNumberValue('delayValue');
+
+					if( timeValue == 0 ){
+						/*
+						var delayDefultTimeValue = 60 / fps * 1 * 1000;
+						setTimeout(function() {
+                        script.timeFlag = 2;
+	                    }, timeValue);
+	                    return script;
+						*/
+						setTimeout(function() {
+							 script.timeFlag = 2;
+						}, Entry.trueRobot.delayTime);
+						 return script;
+					}
+
                     timeValue = Math.round(timeValue);
                     timeValue = Math.max(timeValue, -100);
                     timeValue = Math.min(timeValue, 100);
@@ -356,7 +442,12 @@ Entry.trueRobot.getBlocks = function() {
                     return script;
                 } else if (script.timeFlag == 1) {
                     return script;
-                } else {
+                } else if (script.timeFlag == 2) {
+					delete script.timeFlag;
+                    delete script.isStart;
+                    Entry.engine.isContinue = false;
+                    return script.callReturn();
+                }else {
                     delete script.timeFlag;
                     delete script.isStart;
                     Entry.engine.isContinue = false;
@@ -429,13 +520,31 @@ Entry.trueRobot.getBlocks = function() {
                 if (!Entry.hw.sendQueue['SET']) {
                     Entry.hw.sendQueue['SET'] = {};
                 }
+
+				if (!script.isStart) {
+                    script.isStart = true;
+                    script.timeFlag = 1;
+				
                 Entry.hw.sendQueue['SET'][device] = {
                     port: Entry.trueRobot.PORT_MAP.colorled,
                     dataA: redColor,
                     dataB: greenColor,
                     dataC: blueColor,
                 };
-                return script.callReturn();
+
+					setTimeout(function() {
+						 script.timeFlag = 2;
+					}, Entry.trueRobot.delayTime);
+					return script;
+				}else if (script.timeFlag == 1) {
+					return script;
+				}else if(script.timeFlag == 2) {
+					delete script.timeFlag;
+                    delete script.isStart;
+                    Entry.engine.isContinue = false;
+					return script.callReturn();
+				}
+                // return script.callReturn();
             },
             syntax: { js: [], py: [] },
         },
@@ -482,13 +591,30 @@ Entry.trueRobot.getBlocks = function() {
                 if (!Entry.hw.sendQueue['SET']) {
                     Entry.hw.sendQueue['SET'] = {};
                 }
+
+				if (!script.isStart) {
+                    script.isStart = true;
+                    script.timeFlag = 1;
+
                 Entry.hw.sendQueue['SET'][device] = {
                     port: script.getNumberField('PORT'),
                     dataA: value,
                     dataB: 0x07,
                     dataC: 0x07,
                 };
-                return script.callReturn();
+                setTimeout(function() {
+						 script.timeFlag = 2;
+					}, Entry.trueRobot.delayTime);
+					return script;
+				}else if (script.timeFlag == 1) {
+					return script;
+				}else if(script.timeFlag == 2) {
+					delete script.timeFlag;
+                    delete script.isStart;
+                    Entry.engine.isContinue = false;
+					return script.callReturn();
+				}
+				//return script.callReturn();
             },
             syntax: { js: [], py: [] },
         },
@@ -535,13 +661,31 @@ Entry.trueRobot.getBlocks = function() {
                 if (!Entry.hw.sendQueue['SET']) {
                     Entry.hw.sendQueue['SET'] = {};
                 }
+
+				if (!script.isStart) {
+                    script.isStart = true;
+                    script.timeFlag = 1;
+
                 Entry.hw.sendQueue['SET'][device] = {
                     port: script.getNumberField('PORT'),
                     dataA: value,
                     dataB: 0x07,
                     dataC: 0x07,
                 };
-                return script.callReturn();
+                
+				setTimeout(function() {
+						 script.timeFlag = 2;
+					}, Entry.trueRobot.delayTime);
+					return script;
+				}else if (script.timeFlag == 1) {
+					return script;
+				}else if(script.timeFlag == 2) {
+					delete script.timeFlag;
+                    delete script.isStart;
+                    Entry.engine.isContinue = false;
+					return script.callReturn();
+				}
+				//return script.callReturn();
             },
             syntax: { js: [], py: [] },
         },
@@ -581,13 +725,30 @@ Entry.trueRobot.getBlocks = function() {
                 if (!Entry.hw.sendQueue['SET']) {
                     Entry.hw.sendQueue['SET'] = {};
                 }
+
+				if (!script.isStart) {
+                    script.isStart = true;
+                    script.timeFlag = 1;
+
                 Entry.hw.sendQueue['SET'][device] = {
                     port: Entry.trueRobot.PORT_MAP.led_line,
                     dataA: value,
                     dataB: 0x07,
                     dataC: 0x07,
                 };
-                return script.callReturn();
+                setTimeout(function() {
+						 script.timeFlag = 2;
+					}, Entry.trueRobot.delayTime);
+					return script;
+				}else if (script.timeFlag == 1) {
+					return script;
+				}else if(script.timeFlag == 2) {
+					delete script.timeFlag;
+                    delete script.isStart;
+                    Entry.engine.isContinue = false;
+					return script.callReturn();
+				}
+				//return script.callReturn();
             },
             syntax: { js: [], py: [] },
         },
@@ -627,16 +788,34 @@ Entry.trueRobot.getBlocks = function() {
                 if (!Entry.hw.sendQueue['SET']) {
                     Entry.hw.sendQueue['SET'] = {};
                 }
+
+				if (!script.isStart) {
+                    script.isStart = true;
+                    script.timeFlag = 1;
+
                 Entry.hw.sendQueue['SET'][device] = {
                     port: Entry.trueRobot.PORT_MAP.led_line,
                     dataA: value,
                     dataB: 0x07,
                     dataC: 0x07,
                 };
-                return script.callReturn();
+
+					setTimeout(function() {
+						 script.timeFlag = 2;
+					}, Entry.trueRobot.delayTime);
+					return script;
+				}else if (script.timeFlag == 1) {
+					return script;
+				}else if(script.timeFlag == 2) {
+					delete script.timeFlag;
+                    delete script.isStart;
+                    Entry.engine.isContinue = false;
+					return script.callReturn();
+				}
+                //return script.callReturn();
             },
             syntax: { js: [], py: [] },
         },
-        //endregion TrueTrueRobot 뚜루뚜루로봇
+		
     };
 };
