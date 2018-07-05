@@ -2298,9 +2298,15 @@ Entry.VariableContainer = function() {
             return;
         }
 
+        var csrfToken ='';
+        try {
+            csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+        } catch (e) {}
+
         $.ajax({
             url: '/api/project/variable/' + projectId,
             type: 'PUT',
+            headers: {'csrf-token': csrfToken},
             data: {
                 variables,
                 lists,
