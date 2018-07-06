@@ -79,7 +79,10 @@ Entry.Utils.inherit(Entry.FieldDropdown, Entry.FieldDropdownDynamic);
     p.renderOptions = function() {
         var that = this;
 
-        this._attachDisposeEvent(() => {});
+        /* 
+        * this._attachDisposeEvent(() => {});
+        * 이후 disposeEvent가 필요한 경우 다시 작성 필요.
+        */
 
         this.optionGroup = Entry.Dom('ul', {
             class: 'entry-widget-dropdown',
