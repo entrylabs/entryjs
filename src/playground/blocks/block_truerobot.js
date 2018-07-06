@@ -104,7 +104,7 @@ Entry.trueRobot.getBlocks = function() {
             func: function(sprite, script) {
                 var pd = Entry.hw.portData;
                 var dev = script.getField('position');
-				//console.log(pd[dev]);
+				
                 return pd[dev];
             },
             syntax: { js: [], py: [] },
@@ -135,7 +135,7 @@ Entry.trueRobot.getBlocks = function() {
             func: function(sprite, script) {
                 var pd = Entry.hw.portData;
                 var dev = script.getField('position');
-				//				console.log(pd[dev]);
+				
                 return pd[dev];
             },
             syntax: { js: [], py: [] },
@@ -171,7 +171,7 @@ Entry.trueRobot.getBlocks = function() {
             func: function(sprite, script) {
                 var pd = Entry.hw.portData;
                 var dev = script.getField('position');
-				//				console.log(pd[dev]);
+				
                 return pd[dev];
             },
             syntax: { js: [], py: [] },
@@ -207,7 +207,7 @@ Entry.trueRobot.getBlocks = function() {
             func: function(sprite, script) {
                 var pd = Entry.hw.portData;
                 var dev = script.getField('position');
-				//				console.log(pd[dev]);
+				
                 return pd[dev];
             },
             syntax: { js: [], py: [] },
@@ -241,7 +241,7 @@ Entry.trueRobot.getBlocks = function() {
             func: function(sprite, script) {
                 var pd = Entry.hw.portData;
                 var dev = script.getField('position');
-				//				console.log(pd[dev]);
+				
                 return pd[dev];
             },
             syntax: { js: [], py: [] },
@@ -320,16 +320,6 @@ Entry.trueRobot.getBlocks = function() {
 						dataC: 0,
 					};
 				}
-
-				/*
-                Entry.hw.sendQueue['SET'][device] = {
-                    port: script.getNumberField('PORT'),
-                    dataA: speed,
-                    dataB: direction,
-                    dataC: 0,
-                };
-				*/
-				
 					setTimeout(function() {
 						 script.timeFlag = 2;
 					}, Entry.trueRobot.delayTime);
@@ -343,7 +333,7 @@ Entry.trueRobot.getBlocks = function() {
 					return script.callReturn();
 				}
 
-                //return script.callReturn();
+                
             },
             syntax: { js: [], py: [] },
         },
@@ -418,13 +408,7 @@ Entry.trueRobot.getBlocks = function() {
                     var timeValue = script.getNumberValue('delayValue');
 
 					if( timeValue == 0 ){
-						/*
-						var delayDefultTimeValue = 60 / fps * 1 * 1000;
-						setTimeout(function() {
-                        script.timeFlag = 2;
-	                    }, timeValue);
-	                    return script;
-						*/
+						
 						setTimeout(function() {
 							 script.timeFlag = 2;
 						}, Entry.trueRobot.delayTime);
@@ -544,7 +528,7 @@ Entry.trueRobot.getBlocks = function() {
                     Entry.engine.isContinue = false;
 					return script.callReturn();
 				}
-                // return script.callReturn();
+                
             },
             syntax: { js: [], py: [] },
         },
@@ -614,7 +598,7 @@ Entry.trueRobot.getBlocks = function() {
                     Entry.engine.isContinue = false;
 					return script.callReturn();
 				}
-				//return script.callReturn();
+				
             },
             syntax: { js: [], py: [] },
         },
@@ -685,7 +669,7 @@ Entry.trueRobot.getBlocks = function() {
                     Entry.engine.isContinue = false;
 					return script.callReturn();
 				}
-				//return script.callReturn();
+				
             },
             syntax: { js: [], py: [] },
         },
@@ -748,7 +732,7 @@ Entry.trueRobot.getBlocks = function() {
                     Entry.engine.isContinue = false;
 					return script.callReturn();
 				}
-				//return script.callReturn();
+				
             },
             syntax: { js: [], py: [] },
         },
@@ -812,7 +796,7 @@ Entry.trueRobot.getBlocks = function() {
                     Entry.engine.isContinue = false;
 					return script.callReturn();
 				}
-                //return script.callReturn();
+                
             },
             syntax: { js: [], py: [] },
         },
