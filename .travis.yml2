@@ -20,9 +20,9 @@ jobs:
       script:
         - yarn test
     - stage: deploy
-      if: 
-        - type = push
-        - branch = master OR branch = /^deploy\/.*$/
+      if: |
+        branch = master OR branch = /^deploy\/.*$/ AND \
+        type = push        
       before_script:
         - chmod +x ./scripts/build.sh
         - chmod +x ./scripts/deploy.sh
