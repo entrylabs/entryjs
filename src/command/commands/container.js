@@ -3,11 +3,7 @@
  */
 'use strict';
 
-var {
-    createTooltip,
-    returnEmptyArr,
-    getExpectedData,
-} = require('../command_util');
+var { createTooltip, returnEmptyArr, getExpectedData } = require('../command_util');
 
 (function(c) {
     var COMMAND_TYPES = Entry.STATIC.COMMAND_TYPES;
@@ -74,44 +70,35 @@ var {
 
     c[COMMAND_TYPES.addObject] = {
         do: function(objectModel, index) {
-            objectModel.id =
-                getExpectedData('objectModel', {}).id || objectModel.id;
+            objectModel.id = getExpectedData('objectModel', {}).id || objectModel.id;
             Entry.container.addObjectFunc(objectModel, index);
             Entry.dispatchEvent('dismissModal');
         },
         state: function(objectModel, index) {
-            objectModel.id =
-                getExpectedData('objectModel', {}).id || objectModel.id;
+            objectModel.id = getExpectedData('objectModel', {}).id || objectModel.id;
             return [objectModel.id, index];
         },
         log: function(objectModel, index) {
-            var { sprite, options } = objectModel;
+            const { sprite, options = {} } = objectModel;
+            const { font } = options;
 
             //$$hashKey can't saved for db
             var _omitFunc = _.partial(_.omit, _, '$$hashKey');
 
             objectModel.sprite = _omitFunc(sprite);
-            if (options) {
-                objectModel.options.font = _omitFunc(options.font);
+            if (_.isObject(font)) {
+                objectModel.options.font = _omitFunc(font);
             }
-            return [
-                ['objectModel', objectModel],
-                ['objectIndex', index],
-                ['spriteId', sprite._id],
-            ];
+            return [['objectModel', objectModel], ['objectIndex', index], ['spriteId', sprite._id]];
         },
         dom: ['.btn_confirm_modal'],
         restrict: function(data, domQuery, callback) {
             Entry.dispatchEvent('dismissModal');
             var { tooltip: { title, content } } = data;
 
-            var tooltip = createTooltip(
-                title,
-                content,
-                '.btn_confirm_modal',
-                callback,
-                { render: false }
-            );
+            var tooltip = createTooltip(title, content, '.btn_confirm_modal', callback, {
+                render: false,
+            });
 
             var event = Entry.getMainWS().widgetUpdateEvent;
 
