@@ -1589,6 +1589,8 @@ EntryStatic.getQuestionCategoryData = function() {
         category: 'dummy',
         blocks: [
             'hidden_event',
+            'hidden_loop2',
+            'hidden_if_else2',
             'hidden',
             'hidden_string',
             'hidden_boolean'
