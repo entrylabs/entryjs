@@ -9,18 +9,17 @@ node_js:
   - '8'
 env:
   global:
-    - CI: false
     - GH_REF: github.com/entrylabs/entryjs.git
     - GH_REPO: https://github.com/entrylabs/entryjs.git
 cache:
   directories:
-  - node_modules
-  - $HOME/.npm
+    - node_modules
+    - $HOME/.npm
 jobs:
   include:
     - stage: test
       script: yarn test
-    - stage: deploy      
+    - stage: deploy
       before_script:
         - chmod +x ./scripts/build.sh
         - chmod +x ./scripts/deploy.sh
