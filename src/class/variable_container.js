@@ -1561,6 +1561,8 @@ Entry.VariableContainer = function() {
     p.generateVariableAddView = function() {
         var CE = Entry.createElement; //alias
         var _whenEnter = Entry.Utils.whenEnter;
+        var _setFocused = Entry.Utils.setFocused;
+        var _setBlurredTimer = Entry.Utils.setBlurredTimer;
 
         var that = this;
 
@@ -1586,17 +1588,17 @@ Entry.VariableContainer = function() {
             if (this.enterKeyDisabled) this.blur();
             else that._addVariable();
         });
-        addSpaceInput.onfocus = function() {
-            this.blurred = false;
-        };
-        addSpaceInput.onblur = function(e) {
-            var value = this.value;
-            if (!value || this.blurred) {
-                return;
-            }
-            Entry.do('variableAddSetName', value);
-            this.blurred = true;
-        };
+        addSpaceInput.onfocus = _setFocused;
+        const doBlur = _setBlurredTimer(function() {
+            this.isBlurred = false;
+            console.log('onblur', this.value);
+            Entry.do('variableAddSetName', this.value);
+            this.blurCallback && this.blurCallback();
+        });
+        addSpaceInput.onblur = function () {
+            this.isBlurred = true;
+            doBlur.apply(this);
+        }
 
         this.variableAddPanel.view.name = addSpaceInput;
 
@@ -1681,27 +1683,43 @@ Entry.VariableContainer = function() {
     };
 
     p._addVariable = function() {
-        $('.entryVariableAddSpaceInputWorkspace').blur();
-        Entry.do(
-            'variableContainerAddVariable',
-            new Entry.Variable(this._makeVariableData('variable'))
-        );
-        var [variable] = this.variables_;
-        this.updateSelectedVariable(variable);
-        var { editButton, nameField } = variable.listElement;
-        nameField.removeAttribute('disabled');
+        const variableInput = Entry.getDom(['variableContainer', 'variableAddInput']);
+        const blurCallback = () => {
+            delete variableInput.blurCallback;
+            Entry.do(
+                'variableContainerAddVariable',
+                new Entry.Variable(this._makeVariableData('variable'))
+            );
+            var [variable] = this.variables_;
+            this.updateSelectedVariable(variable);
+            var { editButton, nameField } = variable.listElement;
+            nameField.removeAttribute('disabled');
+        };
+        if(variableInput.isBlurred) {
+            variableInput.blurCallback = blurCallback;
+        } else {
+            blurCallback();
+        }
     };
 
     p._addList = function() {
-        Entry.getDom(['variableContainer', 'listAddInput']).blur();
-        Entry.do(
-            'variableContainerAddList',
-            new Entry.Variable(this._makeVariableData('list'))
-        );
-        var [list] = this.lists_;
-        this.updateSelectedVariable(list);
-        var { editButton, nameField } = list.listElement;
-        nameField.removeAttribute('disabled');
+        const listInput = Entry.getDom(['variableContainer', 'listAddInput']);
+        const blurCallback = () => {
+            Entry.do(
+                'variableContainerAddList',
+                new Entry.Variable(this._makeVariableData('list'))
+            );
+            var [list] = this.lists_;
+            this.updateSelectedVariable(list);
+            var { editButton, nameField } = list.listElement;
+            nameField.removeAttribute('disabled');
+        }
+
+        if(listInput.isBlurred) {
+            listInput.blurCallback = blurCallback;
+        } else {
+            blurCallback();
+        }
     };
 
     p.generateListAddView = function() {
@@ -1733,9 +1751,15 @@ Entry.VariableContainer = function() {
             else that._addList();
         });
         addSpaceInput.onfocus = _setFocused;
-        addSpaceInput.onblur = function() {
+        const doBlur = _setBlurredTimer(function() {
+            this.isBlurred = false;
             Entry.do('listAddSetName', this.value);
-        };
+            this.blurCallback && this.blurCallback();
+        });
+        addSpaceInput.onblur = function () {
+            this.isBlurred = true;
+            doBlur.apply(this);
+        }
 
         var addSpaceGlobalWrapper = CE('div')
             .addClass('entryVariableAddSpaceGlobalWrapperWorkspace')
