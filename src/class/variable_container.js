@@ -1591,7 +1591,6 @@ Entry.VariableContainer = function() {
         addSpaceInput.onfocus = _setFocused;
         const doBlur = _setBlurredTimer(function() {
             this.isBlurred = false;
-            console.log('onblur', this.value);
             Entry.do('variableAddSetName', this.value);
             this.blurCallback && this.blurCallback();
         });
