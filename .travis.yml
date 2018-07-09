@@ -18,7 +18,10 @@ cache:
 jobs:
   include:
     - stage: test
-      script: yarn test
+      install:
+        - npm prune
+        - npm install
+      script: npm run test
     - stage: deploy
       before_script:
         - chmod +x ./scripts/build.sh
