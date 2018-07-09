@@ -1733,9 +1733,9 @@ Entry.VariableContainer = function() {
             else that._addList();
         });
         addSpaceInput.onfocus = _setFocused;
-        addSpaceInput.onblur = _setBlurredTimer(function() {
+        addSpaceInput.onblur = function() {
             Entry.do('listAddSetName', this.value);
-        });
+        };
 
         var addSpaceGlobalWrapper = CE('div')
             .addClass('entryVariableAddSpaceGlobalWrapperWorkspace')
