@@ -24,11 +24,14 @@
     "lint": "cross-env NODE_ENV=lint webpack -w",
     "serve": "cross-env NODE_ENV=serve webpack-dev-server --open",
     "dev": "webpack -w",
+    "test": "jest",
     "dist": "webpack"
   },
   "license": "MIT",
   "dependencies": {
+    "google-closure-compiler": "^20180610.0.2",
     "grunt-karma": "^2.0.0",
+    "jest": "^23.3.0",
     "lodash": "^4.17.5",
     "lodash-webpack-plugin": "^0.11.4",
     "uglifyjs-webpack-plugin": "^1.2.2",
@@ -38,6 +41,7 @@
     "babel-core": "^6.26.0",
     "babel-eslint": "^8.2.2",
     "babel-loader": "^7.1.3",
+    "babel-plugin-dynamic-import-node": "^2.0.0",
     "babel-plugin-syntax-dynamic-import": "^6.18.0",
     "babel-plugin-transform-object-assign": "^6.22.0",
     "babel-plugin-transform-runtime": "^6.23.0",
