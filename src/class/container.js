@@ -275,10 +275,13 @@ Entry.Container.prototype.selectPicture = function(pictureId, objectId) {
  * @return {Entry.EntryObject}
  */
 Entry.Container.prototype.addObject = function(objectModel, ...rest) {
-    objectModel.sprite.name = Entry.getOrderedName(
-        objectModel.sprite.name,
-        this.objects_
-    );
+    let target;
+    if (objectModel.sprite.name) {
+        target = objectModel.sprite;
+    } else if (objectModel.name) {
+        target = objectModel;
+    }
+    target.name = Entry.getOrderedName(target.name, this.objects_);
     objectModel.id = objectModel.id || Entry.generateHash();
     return Entry.do('addObject', objectModel, ...rest);
 };
