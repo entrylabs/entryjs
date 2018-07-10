@@ -274,17 +274,14 @@ Entry.Container.prototype.selectPicture = function(pictureId, objectId) {
  * @param {?number} index exist when user add object
  * @return {Entry.EntryObject}
  */
-Entry.Container.prototype.addObject = function(objectModel, ...rest) {  
+Entry.Container.prototype.addObject = function(objectModel, ...rest) {
     let target;
-    if(objectModel.sprite.name) {
+    if (objectModel.sprite.name) {
         target = objectModel.sprite;
-    } else if(objectModel.name) {
+    } else if (objectModel.name) {
         target = objectModel;
     }
-    target.name = Entry.getOrderedName(
-        target.name,
-        this.objects_
-    );
+    target.name = Entry.getOrderedName(target.name, this.objects_);
     objectModel.id = objectModel.id || Entry.generateHash();
     return Entry.do('addObject', objectModel, ...rest);
 };
