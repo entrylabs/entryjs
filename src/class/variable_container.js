@@ -2536,6 +2536,7 @@ Entry.VariableContainer = function() {
         _removeFunc(container.inputValue);
         _.each(this.functions_, _destroyFunc);
 
+        this.viewMode_ = 'all';
         this.variables_ = [];
         this.lists_ = [];
         this.messages_ = [];
