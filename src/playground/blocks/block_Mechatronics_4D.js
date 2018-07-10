@@ -292,7 +292,7 @@ Entry.Mechatronics_4D.getBlocks = function() {
             syntax: undefined,
         },
 
-        //endregion 4D Mechatronics 4D 현장실습 fin
+        //endregion 4D Mechatronics 4D 현장실습 fin-
 
     };
 };
