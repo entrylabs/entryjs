@@ -161,7 +161,7 @@
 .entryVariableListElementWorkspace.active .entryVariableListElementDeleteWorkspace,
 .entryVariableListElementWorkspace.activeForce .entryVariableListElementDeleteWorkspace ,
 .entryVariableListElementWorkspace.active .entryVariableListElementEditWorkspace,
-.entryVariableListElementWorkspace.activeForce .entryVariableListElementEditWorkspace, {
+.entryVariableListElementWorkspace.activeForce .entryVariableListElementEditWorkspace {
     opacity: 1;
 }
 
@@ -473,17 +473,35 @@
 
 .entryListSettingWorkspace {
     width: 100%;
-    padding-top: 24px;
-    padding-bottom: 5px;
     border-top: 1px solid #a8a8a8;
-    padding-left: 16px;
-    padding-right: 16px;
     font-size: 13px;
     background-color: #efefef;
 }
 
+.entryListSettingWorkspace > .entryListSettingPaddingWrapper {
+    padding: 24px 16px 5px;
+}
+
+
 .entryListSettingVisibleWrapperWorkspace {
     cursor: pointer;
+}
+
+.entryListSettingTransferWrapperWorkspace {
+    width: 100%;
+    height: 60px;
+    background-color: #e5e5e5;
+    border-bottom: solid 1px #a8a8a8;
+    text-align: center;
+}
+
+.entryListSettingImportButton, .entryListSettingExportButton {
+    width: 102px;
+    height: 32px;
+    margin: 14px 4px;
+    border-radius: 3px;
+    background-color: #eeeeee;
+    border: solid 1px #cccccc;
 }
 
 .entryListSettingCheckWorkspace {

@@ -2083,6 +2083,9 @@ Entry.VariableContainer = function() {
         view.removeClass('entryRemove');
     };
 
+    /**
+     * 속성 > 리스트 편집창 표기
+     */
     p.generateListSettingView = function() {
         var that = this;
         var element = Entry.createElement('div')
@@ -2093,13 +2096,26 @@ Entry.VariableContainer = function() {
 
         this.listSettingView = element;
 
-        var visibleWrapper = Entry.createElement('div')
+	    // list import, export 버튼 영역
+	    var listTransferWrapper = Entry.createElement('div')
+	    .addClass('entryListSettingTransferWrapperWorkspace')
+	    .appendTo(element);
+	    var importButton = Entry.createElement('button').addClass('entryListSettingImportButton').appendTo(listTransferWrapper);
+	    importButton.innerHTML = Lang.Workspace.list_import;
+	    var exportButton = Entry.createElement('button').addClass('entryListSettingExportButton').appendTo(listTransferWrapper);
+	    exportButton.innerHTML = Lang.Workspace.list_export;
+	    // list import, export 버튼 영역 종료
+
+	    // padding wrapper (list wrapper) 시작
+	    var paddingWrapper = Entry.createElement('div').addClass('entryListSettingPaddingWrapper').appendTo(element);
+
+	    var visibleWrapper = Entry.createElement('div')
             .addClass('entryListSettingVisibleWrapperWorkspace')
             .bindOnClick((e) => {
                 var v = that.selectedList;
                 Entry.do('listSetVisibility', v.id_, !v.isVisible());
             })
-            .appendTo(element);
+            .appendTo(paddingWrapper);
 
         Entry.createElement('span').appendTo(visibleWrapper).innerHTML =
             Lang.Workspace.show_list_workspace;
@@ -2110,7 +2126,7 @@ Entry.VariableContainer = function() {
 
         var lengthWrapper = Entry.createElement('div')
             .addClass('entryListSettingLengthWrapperWorkspace')
-            .appendTo(element);
+            .appendTo(paddingWrapper);
 
         Entry.createElement('span')
             .addClass('entryListSettingLengthSpanWorkspace')
@@ -2155,11 +2171,13 @@ Entry.VariableContainer = function() {
 
         element.seperator = Entry.createElement('div')
             .addClass('entryListSettingSeperatorWorkspace')
-            .appendTo(element);
+            .appendTo(paddingWrapper);
 
         element.listValues = Entry.createElement('div')
             .addClass('entryListSettingListValuesWorkspace')
-            .appendTo(element);
+            .appendTo(paddingWrapper);
+
+        // padding wrapper (list wrapper) 영역 종료
     };
 
     p.updateListSettingView = function(list) {
