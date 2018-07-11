@@ -291,8 +291,6 @@ Entry.Mechatronics_4D.getBlocks = function() {
             isNotFor: ['Mechatronics_4D'],
             syntax: undefined,
         },
-
-        //endregion 4D Mechatronics 4D 현장실습 fin-
-
+        //endregion 4D Mechatronics 현장실습
     };
 };
