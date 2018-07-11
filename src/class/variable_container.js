@@ -2100,9 +2100,19 @@ Entry.VariableContainer = function() {
 	    var listTransferWrapper = Entry.createElement('div')
 	    .addClass('entryListSettingTransferWrapperWorkspace')
 	    .appendTo(element);
-	    var importButton = Entry.createElement('button').addClass('entryListSettingImportButton').appendTo(listTransferWrapper);
+	    var importButton = Entry.createElement('button').addClass('entryListSettingImportButton').appendTo(listTransferWrapper)
+            .bindOnClick((e) => {
+                e.stopPropagation();
+                var {array_: array} = that.selectedList;
+                console.log(that.selectedList);
+            });
 	    importButton.innerHTML = Lang.Workspace.list_import;
-	    var exportButton = Entry.createElement('button').addClass('entryListSettingExportButton').appendTo(listTransferWrapper);
+	    var exportButton = Entry.createElement('button').addClass('entryListSettingExportButton').appendTo(listTransferWrapper)
+            .bindOnClick((e) => {
+                e.stopPropagation();
+                var {array_ : array} = that.selectedList;
+                new entrylms.Modal({type:'LIST_EXPORT', theme:'BLUE', title:'hi', content:array}).show();
+            });
 	    exportButton.innerHTML = Lang.Workspace.list_export;
 	    // list import, export 버튼 영역 종료
 
