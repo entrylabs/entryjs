@@ -265,29 +265,32 @@ Entry.Expansion_Weather.getBlocks = function () {
             color: '#ff8888',
             skeleton: 'basic_boolean_field',
             statements: [],
-            params: [params.getDate(), params.getLocation(), params.getFineDust()],
+            params: [params.getLocation(), params.getFineDust()],
             events: {},
             def: {
-                params: [params.getDate().value, params.getLocation().value, params.getFineDust().value],
+                params: [params.getLocation().value, params.getFineDust().value],
                 type: 'check_finedust',
             },
             pyHelpDef: {
-                params: ['B&value', 'C&value', null],
+                params: ['B&value', null],
                 type: 'check_finedust',
             },
             paramsKeyMap: {
-                DATE: 0,
-                LOCATION: 1,
-                FINEDUST: 2
+                LOCATION: 0,
+                FINEDUST: 1
             },
             class: 'weather',
             isNotFor: ['weather'],
             func: function (sprite, script) {
-                var date = Entry.EXPANSION_BLOCK.weather.getDate(script.getField('DATE', script));
+                var now = new Date();
+                var date = now.toISOString().slice(0, 10).replace(/-/g, "");
+                var time = now.getHours();  // [0, 3, 6, 9, 12, 15, 18, 21]
+                time = time - time%3;
+
                 var location = script.getField('LOCATION', script);
                 var finedust = script.getField('FINEDUST', script);
 
-                var apiResult = Entry.EXPANSION_BLOCK.weather.getData(location, "date", date, "0000");
+                var apiResult = Entry.EXPANSION_BLOCK.weather.getData(location, "time", date, time);
 
                 return Math.round(apiResult.data["pm10Grade"]) == finedust;
             },
@@ -295,28 +298,28 @@ Entry.Expansion_Weather.getBlocks = function () {
                 js: [],
                 py: [
                     {
-                        syntax: 'Weather.is_finedust_grade_good(%1, %2)',
-                        params: [null, null, 'good'],
+                        syntax: 'Weather.is_current_finedust_grade_good(%1)',
+                        params: [null, 'good'],
                         blockType: 'param',
-                        textParams: [params.getDate(true), params.getLocation(true), params.getFineDust(true)]
+                        textParams: [params.getLocation(true), params.getFineDust(true)]
                     },
                     {
-                        syntax: 'Weather.is_finedust_grade_normal(%1, %2)',
-                        params: [null, null, 'normal'],
+                        syntax: 'Weather.is_current_finedust_grade_normal(%1)',
+                        params: [null, 'normal'],
                         blockType: 'param',
-                        textParams: [params.getDate(true), params.getLocation(true), params.getFineDust(true)]
+                        textParams: [params.getLocation(true), params.getFineDust(true)]
                     },
                     {
-                        syntax: 'Weather.is_finedust_grade_bad(%1, %2)',
-                        params: [null, null, 'bad'],
+                        syntax: 'Weather.is_current_finedust_grade_bad(%1)',
+                        params: [null, 'bad'],
                         blockType: 'param',
-                        textParams: [params.getDate(true), params.getLocation(true), params.getFineDust(true)]
+                        textParams: [params.getLocation(true), params.getFineDust(true)]
                     },
                     {
-                        syntax: 'Weather.is_finedust_grade_very_bad(%1, %2)',
-                        params: [null, null, 'very_bad'],
+                        syntax: 'Weather.is_current_finedust_grade_very_bad(%1)',
+                        params: [, null, 'very_bad'],
                         blockType: 'param',
-                        textParams: [params.getDate(true), params.getLocation(true), params.getFineDust(true)]
+                        textParams: [params.getLocation(true), params.getFineDust(true)]
                     },
                 ],
             },
