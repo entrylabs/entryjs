@@ -2115,7 +2115,7 @@ Entry.VariableContainer = function() {
                     .on('click', function(e) {
                         switch (e) {
                             case 'copied':
-                                entrylms.alert(Lang.Menus.contentCopied);
+                                entrylms.alert(Lang.Menus.content_copied);
                                 break;
                             case 'excel':
                                 //TODO excel download 로직 구현
