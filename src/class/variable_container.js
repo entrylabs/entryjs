@@ -2107,7 +2107,9 @@ Entry.VariableContainer = function() {
                     .on('click', function(e, data) {
                         switch (e) {
                             case 'save':
-                                console.log('import requested : ' + data);
+                                var list = that.selectedList;
+                                list.array_ = data.map(element => { return { data:element } });
+                                Entry.do('listChangeLength', list.id_, list.array_.length);
                                 break;
                             default:
                                 break;
