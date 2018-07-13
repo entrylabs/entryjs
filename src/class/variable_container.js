@@ -2103,16 +2103,26 @@ Entry.VariableContainer = function() {
         var importButton = Entry.createElement('button').addClass('entryListSettingImportButton').appendTo(listTransferWrapper)
             .bindOnClick((e) => {
                 e.stopPropagation();
-                var { array_: array } = that.selectedList;
-                console.log(that.selectedList);
+                var modal = new entrylms.Modal([{ type: 'LIST_IMPORT', theme: 'BLUE' }])
+                    .on('click', function(e, data) {
+                        switch (e) {
+                            case 'save':
+                                console.log('import requested : ' + data);
+                                break;
+                            default:
+                                break;
+                        }
+                    });
+                modal.show();
             });
         importButton.innerHTML = Lang.Workspace.list_import;
+
         var exportButton = Entry.createElement('button').addClass('entryListSettingExportButton').appendTo(listTransferWrapper)
             .bindOnClick((e) => {
                 e.stopPropagation();
                 var { array_: array } = that.selectedList;
                 var modal = new entrylms.Modal([{ type: 'LIST_EXPORT', theme: 'BLUE', content: array }])
-                    .on('click', function(e) {
+                    .on('click', function(e, data) {
                         switch (e) {
                             case 'copied':
                                 entrylms.alert(Lang.Menus.content_copied);
