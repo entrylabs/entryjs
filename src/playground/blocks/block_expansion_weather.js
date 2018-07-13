@@ -164,6 +164,10 @@ Entry.Expansion_Weather.getBlocks = function () {
         }
     };
 
+    function pad2(n) {
+        return n < 10 ? '0' + n : n
+    }
+
     return {
         weather_title: {
             skeleton: 'basic_text',
@@ -205,12 +209,12 @@ Entry.Expansion_Weather.getBlocks = function () {
             class: 'weather',
             isNotFor: ['weather'],
             func: function (sprite, script) {
-                var date = Entry.EXPANSION_BLOCK.weather.getDate(script.getField('DATE', script));
+                var datetime = Entry.EXPANSION_BLOCK.weather.getDate(script.getField('DATE', script)) + "00";
                 var location = script.getField('LOCATION', script);
                 var weather = script.getField('WEATHER', script);
-                var apiResult = Entry.EXPANSION_BLOCK.weather.getData(location, "date", date, 0);
+                var apiResult = Entry.EXPANSION_BLOCK.weather.getData(location, datetime);
 
-                return Entry.EXPANSION_BLOCK.weather.checkWeather(apiResult.data.sky_code) == weather;
+                return Entry.EXPANSION_BLOCK.weather.checkWeather(apiResult.sky_code) == weather;
             },
             syntax: {
                 js: [],
@@ -284,15 +288,14 @@ Entry.Expansion_Weather.getBlocks = function () {
             func: function (sprite, script) {
                 var now = new Date();
                 var date = now.toISOString().slice(0, 10).replace(/-/g, "");
-                var time = now.getHours();  // [0, 3, 6, 9, 12, 15, 18, 21]
-                time = time - time%3;
+                var time = pad2(now.getHours() - now.getHours()%3);  // [0, 3, 6, 9, 12, 15, 18, 21]
 
                 var location = script.getField('LOCATION', script);
                 var finedust = script.getField('FINEDUST', script);
 
-                var apiResult = Entry.EXPANSION_BLOCK.weather.getData(location, "time", date, time);
+                var apiResult = Entry.EXPANSION_BLOCK.weather.getData(location, date + time);
 
-                return Math.round(apiResult.data["pm10Grade"]) == finedust;
+                return Entry.EXPANSION_BLOCK.weather.checkFineDust(apiResult.pm10) == finedust;
             },
             syntax: {
                 js: [],
@@ -346,12 +349,15 @@ Entry.Expansion_Weather.getBlocks = function () {
             class: 'weather',
             isNotFor: ['weather'],
             func: function (sprite, script) {
-                var date = Entry.EXPANSION_BLOCK.weather.getDate(script.getField('DATE', script));
+                var datetime = Entry.EXPANSION_BLOCK.weather.getDate(script.getField('DATE', script)) + "00";
                 var location = script.getField('LOCATION', script);
-                var type = script.getField('TYPE', script);
-                var apiResult = Entry.EXPANSION_BLOCK.weather.getData(location, "date", date, "0000");
+                var type = Entry.EXPANSION_BLOCK.weather.propertyMap[script.getField('TYPE', script)];
+                var apiResult = Entry.EXPANSION_BLOCK.weather.getData(location, datetime);
 
-                return apiResult.data[type];
+                if(apiResult[type]) {
+                    return apiResult[type];
+                }
+                return 0;
             },
             syntax: {
                 js: [],
@@ -418,12 +424,15 @@ Entry.Expansion_Weather.getBlocks = function () {
             func: function (sprite, script) {
                 var now = new Date();
                 var location = script.getField('LOCATION', script);
-                var type = script.getField('TYPE', script);
+                var type = Entry.EXPANSION_BLOCK.weather.propertyMap[script.getField('TYPE', script)];
                 var date = now.toISOString().slice(0, 10).replace(/-/g, "");
-                var time = now.getHours();  // [0, 3, 6, 9, 12, 15, 18, 21]
-                time = time - time%3;
-                var apiResult = Entry.EXPANSION_BLOCK.weather.getData(location, "time", date, time);
-                return apiResult.data[type];
+                var time = pad2(now.getHours() - now.getHours()%3);  // [0, 3, 6, 9, 12, 15, 18, 21]
+
+                var apiResult = Entry.EXPANSION_BLOCK.weather.getData(location, date + time);
+                if(apiResult[type]) {
+                    return apiResult[type];
+                }
+                return 0;
             },
             syntax: {
                 js: [],
@@ -467,8 +476,8 @@ Entry.Expansion_Weather.getBlocks = function () {
                 var location = script.getField('LOCATION', script);
                 var time = script.getField('TIME', script);
                 var date = new Date().toISOString().slice(0, 10).replace(/-/g, "");
-                var apiResult = Entry.EXPANSION_BLOCK.weather.getData(location, "time", date, time);
-                return apiResult.data.temperature;
+                var apiResult = Entry.EXPANSION_BLOCK.weather.getData(location, date + time);
+                return apiResult.temp;
             },
             syntax: {
                 js: [],
