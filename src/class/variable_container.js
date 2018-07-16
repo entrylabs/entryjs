@@ -2105,7 +2105,12 @@ Entry.VariableContainer = function() {
             .bindOnClick((e) => {
                 e.stopPropagation();
                 var { array_ } = that.selectedList;
-                Entry.dispatchEvent('openExportListModal', array_);
+
+                if(array_.length === 0) {
+                    entrylms.alert(Lang.Menus.nothing_to_export);
+                } else {
+                    Entry.dispatchEvent('openExportListModal', array_);
+                }
             });
         exportButton.innerHTML = Lang.Workspace.list_export;
 
