@@ -2103,50 +2103,15 @@ Entry.VariableContainer = function() {
         var importButton = Entry.createElement('button').addClass('entryListSettingImportButton').appendTo(listTransferWrapper)
             .bindOnClick((e) => {
                 e.stopPropagation();
-                var modal = new entrylms.Modal([{ type: 'LIST_IMPORT', theme: 'BLUE' }])
-                    .on('click', (e, data) => {
-                        switch (e) {
-                            case 'save':
-                                var list = this.selectedList;
-                                list.array_ = data.map(element => { return { data:element } });
-                                Entry.do('listChangeLength', list.id_, list.array_.length);
-                                break;
-                            default:
-                                break;
-                        }
-                    });
-                modal.show();
+                Entry.dispatchEvent('openImportListModal');
             });
         importButton.innerHTML = Lang.Workspace.list_import;
         
         var exportButton = Entry.createElement('button').addClass('entryListSettingExportButton').appendTo(listTransferWrapper)
             .bindOnClick((e) => {
                 e.stopPropagation();
-                var { array_: array } = that.selectedList;
-                var modal = new entrylms.Modal([{ type: 'LIST_EXPORT', theme: 'BLUE', content: array }])
-                    .on('click', function(e, data) {
-                        switch (e) {
-                            case 'copied':
-                                entrylms.alert(Lang.Menus.content_copied);
-                                break;
-                            case 'excel':
-                                var inputBody = '';
-                                var csrfTokenElement = '<input type="hidden" name="_csrf" value="'
-                                    + document.querySelector('meta[name="csrf-token"]').getAttribute('content') + '" />';
-                                
-                                _.forEach(data, (element) => {
-                                    inputBody += '<input type="hidden" name="list" value="' + element + '" />';
-                                });
-
-                                $('<form action="/api/commons/excel" method="post">' + inputBody + csrfTokenElement + '</form>')
-                                    .appendTo('body').submit().remove();
-                                
-                                break;
-                            default:
-                                break;
-                        }
-                    });
-                modal.show();
+                var { array_ } = that.selectedList;
+                Entry.dispatchEvent('openExportListModal', array_);
             });
         exportButton.innerHTML = Lang.Workspace.list_export;
         // list import, export 버튼 영역 종료
