@@ -2100,13 +2100,7 @@ Entry.VariableContainer = function() {
         var listTransferWrapper = Entry.createElement('div')
             .addClass('entryListSettingTransferWrapperWorkspace')
             .appendTo(element);
-        var importButton = Entry.createElement('button').addClass('entryListSettingImportButton').appendTo(listTransferWrapper)
-            .bindOnClick((e) => {
-                e.stopPropagation();
-                Entry.dispatchEvent('openImportListModal');
-            });
-        importButton.innerHTML = Lang.Workspace.list_import;
-        
+
         var exportButton = Entry.createElement('button').addClass('entryListSettingExportButton').appendTo(listTransferWrapper)
             .bindOnClick((e) => {
                 e.stopPropagation();
@@ -2114,6 +2108,14 @@ Entry.VariableContainer = function() {
                 Entry.dispatchEvent('openExportListModal', array_);
             });
         exportButton.innerHTML = Lang.Workspace.list_export;
+
+        var importButton = Entry.createElement('button').addClass('entryListSettingImportButton').appendTo(listTransferWrapper)
+            .bindOnClick((e) => {
+                e.stopPropagation();
+                Entry.dispatchEvent('openImportListModal');
+            });
+        importButton.innerHTML = Lang.Workspace.list_import;
+
         // list import, export 버튼 영역 종료
 
         // padding wrapper (list wrapper) 시작
