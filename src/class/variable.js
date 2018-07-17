@@ -3,12 +3,15 @@
  */
 'use strict';
 
+import PIXIHelper from "./PIXIHelper";
+
 /**
  * Block variable constructor
  * @param {variable model} variable
  * @constructor
  */
 Entry.Variable = function(variable) {
+    console.log("Entry.Variable");
     Entry.assert(
         typeof variable.name == 'string',
         'Variable name must be given'
@@ -61,6 +64,13 @@ Entry.Variable = function(variable) {
     Entry.addEventListener('workspaceChangeMode', this.updateView.bind(this));
 };
 
+
+
+function __textWidth(pixiText) {
+    return pixiText.getBounds().width;
+}
+
+
 /**
  * Generate variable view on canvas
  * @param {number} variableIndex index of this variable for render position
@@ -68,23 +78,20 @@ Entry.Variable = function(variable) {
 Entry.Variable.prototype.generateView = function(variableIndex) {
     var type = this.type;
     if (type == 'variable' || type == 'timer' || type == 'answer') {
-        this.view_ = new createjs.Container();
-        this.rect_ = new createjs.Shape();
+        this.view_ = new PIXI.Container();
+        this.rect_ = new PIXI.Graphics();
         this.view_.addChild(this.rect_);
         this.view_.variable = this;
-        this.wrapper_ = new createjs.Shape();
+        this.wrapper_ = new PIXI.Graphics();
         this.view_.addChild(this.wrapper_);
-        this.textView_ = new createjs.Text('asdf', this.FONT, '#000000');
-        this.textView_.textBaseline = 'alphabetic';
+        this.textView_ = PIXIHelper.text('asdf', this.FONT, '#000000', 'alphabetic');
         this.textView_.x = 4;
         this.textView_.y = 1;
         this.view_.addChild(this.textView_);
-        this.valueView_ = new createjs.Text(
-            'asdf',
-            '10pt NanumGothic',
-            '#ffffff'
-        );
-        this.valueView_.textBaseline = 'alphabetic';
+
+        this.valueView_ = PIXIHelper.text('asdf', '10pt NanumGothic', "#ffffff", 'alphabetic');
+
+
         var variableLength = Entry.variableContainer.variables_.length;
         if (this.getX() && this.getY()) {
             this.setX(this.getX());
@@ -119,23 +126,19 @@ Entry.Variable.prototype.generateView = function(variableIndex) {
         });
     } else if (type == 'slide') {
         var slide = this;
-        this.view_ = new createjs.Container();
-        this.rect_ = new createjs.Shape();
+        this.view_ = new PIXI.Container();
+        this.rect_ = new PIXI.Graphics();
         this.view_.addChild(this.rect_);
         this.view_.variable = this;
-        this.wrapper_ = new createjs.Shape();
+        this.wrapper_ = new PIXI.Graphics();
         this.view_.addChild(this.wrapper_);
-        this.textView_ = new createjs.Text('name', this.FONT, '#000000');
-        this.textView_.textBaseline = 'alphabetic';
+        this.textView_ = PIXIHelper.text("name", this.FONT, '#000000', 'alphabetic');
         this.textView_.x = 4;
         this.textView_.y = 1;
         this.view_.addChild(this.textView_);
-        this.valueView_ = new createjs.Text(
-            'value',
-            '10pt NanumGothic',
-            '#ffffff'
-        );
-        this.valueView_.textBaseline = 'alphabetic';
+
+        this.valueView_ = PIXIHelper.text('value', '10pt NanumGothic', '#ffffff', 'alphabetic');
+
         this.view_.on('mousedown', function(evt) {
             if (Entry.type != 'workspace') return;
             this.offset = {
@@ -153,28 +156,52 @@ Entry.Variable.prototype.generateView = function(variableIndex) {
         this.view_.visible = this.visible_;
         this.view_.addChild(this.valueView_);
 
+        // var width =
+        //     this.textView_.getMeasuredWidth() +
+        //     this.valueView_.getMeasuredWidth() +
+        //     26;
+
         var width =
-            this.textView_.getMeasuredWidth() +
-            this.valueView_.getMeasuredWidth() +
+            __textWidth(this.textView_) +
+            __textWidth(this.valueView_) +
             26;
+
         width = Math.max(width, 90);
         this.maxWidth = width - 20;
 
-        this.slideBar_ = new createjs.Shape();
-        this.slideBar_.graphics
-            .beginFill('#A0A1A1')
-            .s('#A0A1A1')
-            .ss(1)
-            .dr(10, 10, this.maxWidth, 1.5);
+        // this.slideBar_ = new createjs.Shape();
+        // this.slideBar_.graphics
+        //     .beginFill('#A0A1A1')
+        //     .s('#A0A1A1')
+        //     .ss(1)
+        //     .dr(10, 10, this.maxWidth, 1.5);
+        // this.view_.addChild(this.slideBar_);
+
+        this.slideBar_ = new PIXI.Graphics();
+        this.slideBar_
+            .beginFill(0xA0A1A1)
+            .drawRect(10, 10, this.maxWidth, 1.5);
         this.view_.addChild(this.slideBar_);
 
+
+
         var position = this.getSlidePosition(this.maxWidth);
-        this.valueSetter_ = new createjs.Shape();
-        this.valueSetter_.graphics
-            .beginFill('#1bafea')
-            .s('#A0A1A1')
-            .ss(1)
-            .dc(position, 10 + 0.5, 3);
+
+        // this.valueSetter_ = new createjs.Shape();
+        // this.valueSetter_.graphics
+        //     .beginFill('#1bafea')
+        //     .s('#A0A1A1')
+        //     .ss(1)
+        //     .dc(position, 10 + 0.5, 3);
+
+        this.valueSetter_ = new PIXI.Graphics();
+        this.valueSetter_
+            .beginFill(0x1bafea)
+            .lineStyle(1, 0xA0A1A1)
+            .drawCircle(position, 10 + 0.5, 3);
+
+
+
         this.valueSetter_.cursor = 'pointer';
         this.valueSetter_.on('mousedown', function(evt) {
             if (!Entry.engine.isState('run')) return;
@@ -215,26 +242,49 @@ Entry.Variable.prototype.generateView = function(variableIndex) {
             );
         }
     } else {
-        this.view_ = new createjs.Container();
-        this.rect_ = new createjs.Shape();
+        // this.view_ = new createjs.Container();
+        // this.rect_ = new createjs.Shape();
+        // this.view_.addChild(this.rect_);
+        // this.view_.variable = this;
+        // this.titleView_ = new createjs.Text('asdf', this.FONT, '#000');
+        // this.titleView_.textBaseline = 'alphabetic';
+        // this.titleView_.textAlign = 'center';
+        // this.titleView_.width = this.width_ - 2 * this.BORDER;
+        // this.titleView_.y = this.BORDER + 10;
+        // this.titleView_.x = this.width_ / 2;
+        // this.view_.addChild(this.titleView_);
+
+
+        this.view_ = new PIXI.Container();
+        this.rect_ = new PIXI.Graphics();
         this.view_.addChild(this.rect_);
         this.view_.variable = this;
-        this.titleView_ = new createjs.Text('asdf', this.FONT, '#000');
-        this.titleView_.textBaseline = 'alphabetic';
-        this.titleView_.textAlign = 'center';
+        this.titleView_ = PIXIHelper.text("asdf", this.FONT, '#000', 'alphabetic', 'center');
         this.titleView_.width = this.width_ - 2 * this.BORDER;
         this.titleView_.y = this.BORDER + 10;
         this.titleView_.x = this.width_ / 2;
         this.view_.addChild(this.titleView_);
 
-        this.resizeHandle_ = new createjs.Shape();
-        this.resizeHandle_.graphics
-            .f('#1bafea')
-            .ss(1, 0, 0)
-            .s('#1bafea')
-            .lt(0, -9)
-            .lt(-9, 0)
-            .lt(0, 0);
+
+
+
+        // this.resizeHandle_ = new createjs.Shape();
+        // this.resizeHandle_.graphics
+        //     .f('#1bafea')
+        //     .ss(1, 0, 0)
+        //     .s('#1bafea')
+        //     .lt(0, -9)
+        //     .lt(-9, 0)
+        //     .lt(0, 0);
+
+        this.resizeHandle_ = new PIXI.Graphics()
+            .moveTo(0, 0)
+            .beginFill(0x1bafea)
+            .lineStyle(3, 0x1bafea)
+            .lineTo(0, -9)
+            .lineTo(-9, 0)
+            .lineTo(0, 0);
+
         this.view_.addChild(this.resizeHandle_);
 
         this.resizeHandle_.list = this;
@@ -284,25 +334,34 @@ Entry.Variable.prototype.generateView = function(variableIndex) {
             this.variable.updateView();
         });
 
-        this.elementView = new createjs.Container();
-        var indexView = new createjs.Text('asdf', this.FONT, '#000');
-        indexView.textBaseline = 'middle';
+        // this.elementView = new createjs.Container();
+        // var indexView = new createjs.Text('asdf', this.FONT, '#000');
+        // indexView.textBaseline = 'middle';
+        this.elementView = new PIXI.Container();
+        var indexView = PIXIHelper.text("asdf", this.FONT, '#000', '', 'middle');
+
         indexView.y = 5;
         this.elementView.addChild(indexView);
         this.elementView.indexView = indexView;
-        var valueWrapper = new createjs.Shape();
+        // var valueWrapper = new createjs.Shape();
+        var valueWrapper = new PIXI.Graphics();
         this.elementView.addChild(valueWrapper);
         this.elementView.valueWrapper = valueWrapper;
-        var valueView = new createjs.Text('fdsa', this.FONT, '#eee');
+        // var valueView = new createjs.Text('fdsa', this.FONT, '#eee');
+        var valueView = PIXIHelper.text('fdsa', this.FONT, '#eeeeee', '', 'middle');
         valueView.x = 24;
         valueView.y = 6;
-        valueView.textBaseline = 'middle';
+        // valueView.textBaseline = 'middle';
         this.elementView.addChild(valueView);
         this.elementView.valueView = valueView;
         this.elementView.x = this.BORDER;
 
-        this.scrollButton_ = new createjs.Shape();
-        this.scrollButton_.graphics.f('#aaa').rr(0, 0, 7, 30, 3.5);
+        // this.scrollButton_ = new createjs.Shape();
+        // this.scrollButton_.graphics.f('#aaa').rr(0, 0, 7, 30, 3.5);
+        this.scrollButton_ = new PIXI.Graphics();
+        this.scrollButton_
+            .beginFill(0xaaaaaa)
+            .drawRoundedRect(0, 0, 7, 30, 3.5);
         this.view_.addChild(this.scrollButton_);
         this.scrollButton_.y = 23;
 
@@ -390,44 +449,75 @@ Entry.Variable.prototype.updateView = function() {
                 this.valueView_.text = this.getValue();
             }
 
+            // if (this._nameWidth === null)
+            //     this._nameWidth = this.textView_.getMeasuredWidth();
+
             if (this._nameWidth === null)
-                this._nameWidth = this.textView_.getMeasuredWidth();
+                this._nameWidth = PIXIHelper.textWidth(this.textView_);
+
             this.valueView_.x = this._nameWidth + 14;
             this.valueView_.y = 1;
             // INFO: Number체크는 slide 일때만 하도록 처리 기본 문자로 처리함(#4876)
 
+            // if (this._valueWidth === null)
+            //     this._valueWidth = this.valueView_.getMeasuredWidth();
+            // this.rect_.graphics
+            //     .clear()
+            //     .f('#ffffff')
+            //     .ss(1, 2, 0)
+            //     .s('#A0A1A1')
+            //     .rc(
+            //         0,
+            //         -14,
+            //         this._nameWidth + this._valueWidth + 26,
+            //         20,
+            //         4,
+            //         4,
+            //         4,
+            //         4
+            //     );
             if (this._valueWidth === null)
-                this._valueWidth = this.valueView_.getMeasuredWidth();
-            this.rect_.graphics
+                this._valueWidth = PIXIHelper.textWidth(this.valueView_);
+            this.rect_
                 .clear()
-                .f('#ffffff')
-                .ss(1, 2, 0)
-                .s('#A0A1A1')
-                .rc(
+                .beginFill(0xffffff)
+                .lineStyle(1, 0xA0A1A1)
+                .drawRoundedRect(
                     0,
                     -14,
                     this._nameWidth + this._valueWidth + 26,
                     20,
-                    4,
-                    4,
-                    4,
                     4
                 );
-            this.wrapper_.graphics
+            // this.wrapper_.graphics
+            //     .clear()
+            //     .f('#1bafea')
+            //     .ss(1, 2, 0)
+            //     .s('#1bafea')
+            //     .rc(
+            //         this._nameWidth + 7,
+            //         -11,
+            //         this._valueWidth + 15,
+            //         14,
+            //         7,
+            //         7,
+            //         7,
+            //         7
+            //     );
+
+            this.wrapper_
                 .clear()
-                .f('#1bafea')
-                .ss(1, 2, 0)
-                .s('#1bafea')
-                .rc(
+                .beginFill(0x1bafea)
+                .lineStyle(1, 0x1bafea)
+                .drawRoundedRect(
                     this._nameWidth + 7,
                     -11,
                     this._valueWidth + 15,
                     14,
-                    7,
-                    7,
-                    7,
                     7
                 );
+
+
         } else if (this.type == 'slide') {
             this.view_.x = this.getX();
             this.view_.y = this.getY();
@@ -444,8 +534,13 @@ Entry.Variable.prototype.updateView = function() {
                 this._nameWidth = null;
             }
 
-            if (this._nameWidth === null)
-                this._nameWidth = this.textView_.getMeasuredWidth();
+            // if (this._nameWidth === null)
+            //     this._nameWidth = this.textView_.getMeasuredWidth();
+
+            if (this._nameWidth === null) {
+                this._nameWidth = PIXIHelper.textWidth(this.textView_);
+            }
+
             this.valueView_.x = this._nameWidth + 14;
             this.valueView_.y = 1;
             var value = String(this.getValue());
@@ -463,29 +558,52 @@ Entry.Variable.prototype.updateView = function() {
 
             this.valueView_.text = value;
 
+            // if (this._valueWidth === null)
+            //     this._valueWidth = this.valueView_.getMeasuredWidth();
+
             if (this._valueWidth === null)
-                this._valueWidth = this.valueView_.getMeasuredWidth();
+                this._valueWidth = PIXIHelper.textWidth(this.valueView_);
+
             var width = this._nameWidth + this._valueWidth + 26;
             width = Math.max(width, 90);
-            this.rect_.graphics
+            // this.rect_.graphics
+            //     .clear()
+            //     .f('#ffffff')
+            //     .ss(1, 2, 0)
+            //     .s('#A0A1A1')
+            //     .rc(0, -14, width, 33, 4, 4, 4, 4);
+
+            this.rect_
                 .clear()
-                .f('#ffffff')
-                .ss(1, 2, 0)
-                .s('#A0A1A1')
-                .rc(0, -14, width, 33, 4, 4, 4, 4);
-            this.wrapper_.graphics
+                .beginFill(0xffffff)
+                .lineStyle(1, 0xA0A1A1)
+                .drawRoundedRect(0, -14, width, 33, 4);
+
+            // this.wrapper_.graphics
+            //     .clear()
+            //     .f('#1bafea')
+            //     .ss(1, 2, 0)
+            //     .s('#1bafea')
+            //     .rc(
+            //         this._nameWidth + 7,
+            //         -11,
+            //         this._valueWidth + 15,
+            //         14,
+            //         7,
+            //         7,
+            //         7,
+            //         7
+            //     );
+
+            this.wrapper_
                 .clear()
-                .f('#1bafea')
-                .ss(1, 2, 0)
-                .s('#1bafea')
-                .rc(
+                .beginFill(0x1bafea)
+                .lineStyle(1, 0x1bafea)
+                .drawRoundedRect(
                     this._nameWidth + 7,
                     -11,
                     this._valueWidth + 15,
                     14,
-                    7,
-                    7,
-                    7,
                     7
                 );
 
@@ -493,19 +611,34 @@ Entry.Variable.prototype.updateView = function() {
             width = Math.max(width, 90);
             this.maxWidth = width - 20;
 
-            this.slideBar_.graphics
+            // this.slideBar_.graphics
+            //     .clear()
+            //     .beginFill('#A0A1A1')
+            //     .s('#A0A1A1')
+            //     .ss(1)
+            //     .dr(10, 10, this.maxWidth, 1.5);
+
+            this.slideBar_
                 .clear()
-                .beginFill('#A0A1A1')
-                .s('#A0A1A1')
-                .ss(1)
-                .dr(10, 10, this.maxWidth, 1.5);
+                .beginFill(0xA0A1A1)
+                .lineStyle(1, 0xA0A1A1)
+                .drawRect(10, 10, this.maxWidth, 1.5);
+
             var position = this.getSlidePosition(this.maxWidth);
-            this.valueSetter_.graphics
+
+            // this.valueSetter_.graphics
+            //     .clear()
+            //     .beginFill('#1bafea')
+            //     .s('#A0A1A1')
+            //     .ss(1)
+            //     .dc(position, 10 + 0.5, 3);
+
+            this.valueSetter_
                 .clear()
-                .beginFill('#1bafea')
-                .s('#A0A1A1')
-                .ss(1)
-                .dc(position, 10 + 0.5, 3);
+                .beginFill(0x1bafea)
+                .lineStyle(1, 0xA0A1A1)
+                .drawCircle(position, 10 + 0.5, 3);
+
         } else if (this.type == 'list') {
             this.view_.x = this.getX();
             this.view_.y = this.getY();
@@ -520,20 +653,37 @@ Entry.Variable.prototype.updateView = function() {
             }
 
             this.titleView_.text = name;
-            if (this.titleView_.getMeasuredWidth() > this.width_) {
+            // if (this.titleView_.getMeasuredWidth() > this.width_) {
+            //     name = name + '..';
+            //     while (this.titleView_.getMeasuredWidth() > this.width_) {
+            //         name = name.substr(0, name.length - 3) + '..';
+            //         this.titleView_.text = name;
+            //     }
+            // }
+
+            if (PIXIHelper.textWidth(this.titleView_) > this.width_) {
                 name = name + '..';
-                while (this.titleView_.getMeasuredWidth() > this.width_) {
+                while (PIXIHelper.textWidth(this.titleView_) > this.width_) {
                     name = name.substr(0, name.length - 3) + '..';
                     this.titleView_.text = name;
                 }
             }
+
             this.titleView_.x = this.width_ / 2;
-            this.rect_.graphics
+
+            // this.rect_.graphics
+            //     .clear()
+            //     .f('#ffffff')
+            //     .ss(1, 2, 0)
+            //     .s('#A0A1A1')
+            //     .rect(0, 0, this.width_, this.height_);
+
+            this.rect_
                 .clear()
-                .f('#ffffff')
-                .ss(1, 2, 0)
-                .s('#A0A1A1')
-                .rect(0, 0, this.width_, this.height_);
+                .beginFill(0xffffff)
+                .lineStyle(1, 0xA0A1A1)
+                .drawRect(0, 0, this.width_, this.height_);
+
 
             while (this.view_.children[4])
                 this.view_.removeChild(this.view_.children[4]);
@@ -547,10 +697,16 @@ Entry.Variable.prototype.updateView = function() {
             if (isOverFlow) {
                 if (this.scrollButton_.y > this.getHeight() - 40)
                     this.scrollButton_.y = this.getHeight() - 40;
-                this.elementView.valueWrapper.graphics
+                // this.elementView.valueWrapper.graphics
+                //     .clear()
+                //     .f('#1bafea')
+                //     .rr(20, -2, wrapperWidth, 17, 2);
+
+                this.elementView.valueWrapper
                     .clear()
-                    .f('#1bafea')
-                    .rr(20, -2, wrapperWidth, 17, 2);
+                    .beginFill(0x1bafea)
+                    .drawRoundedRect(20, -2, wrapperWidth, 17, 2);
+
                 this.scrollButton_.x = totalWidth - 12;
                 this.scrollPosition = Math.floor(
                     (this.scrollButton_.y - 23) /
@@ -558,10 +714,16 @@ Entry.Variable.prototype.updateView = function() {
                         (arr.length - maxView)
                 );
             } else {
-                this.elementView.valueWrapper.graphics
+                // this.elementView.valueWrapper.graphics
+                //     .clear()
+                //     .f('#1bafea')
+                //     .rr(20, -2, wrapperWidth, 17, 2);
+
+                this.elementView.valueWrapper
                     .clear()
-                    .f('#1bafea')
-                    .rr(20, -2, wrapperWidth, 17, 2);
+                    .beginFill(0x1bafea)
+                    .drawRoundedRect(20, -2, wrapperWidth, 17, 2);
+
                 this.scrollPosition = 0;
             }
             this.scrollButton_.visible = isOverFlow;
@@ -597,11 +759,13 @@ Entry.Variable.prototype.updateView = function() {
 
                     valueView.text = text;
 
-                    if (valueView.getMeasuredWidth() > wrapperWidth) {
+                    // if (valueView.getMeasuredWidth() > wrapperWidth) {
+                    if (PIXIHelper.textWidth(valueView) > wrapperWidth) {
                         valueView.text = execText;
 
                         while (
-                            valueView.getMeasuredWidth() < wrapperWidth &&
+                            // valueView.getMeasuredWidth() < wrapperWidth &&
+                            PIXIHelper.textWidth(valueView) < wrapperWidth &&
                             text[charIndex] !== undefined
                         ) {
                             execText += text[charIndex++];
@@ -609,7 +773,8 @@ Entry.Variable.prototype.updateView = function() {
                         }
 
                         var subCnt = 1;
-                        while (valueView.getMeasuredWidth() > wrapperWidth) {
+                        // while (valueView.getMeasuredWidth() > wrapperWidth) {
+                        while (PIXIHelper.textWidth(valueView) > wrapperWidth) {
                             execText =
                                 execText.substr(0, execText.length - subCnt) +
                                 '..';
@@ -622,7 +787,9 @@ Entry.Variable.prototype.updateView = function() {
                     maxLen = Math.max(execText.length, maxLen);
                 }
 
-                var view = this.elementView.clone(true);
+                // var view = this.elementView.clone(true);
+                var view = PIXIHelper.pixiContainerClone(this.elementView, true);
+
                 view.y = (i - this.scrollPosition) * 20 + 23;
                 this.view_.addChild(view);
             }
@@ -642,49 +809,85 @@ Entry.Variable.prototype.updateView = function() {
             } else {
                 this.valueView_.text = this.getValue();
             }
+            // if (this._nameWidth === null)
+            //     this._nameWidth = this.textView_.getMeasuredWidth();
+            // if (this._valueWidth === null)
+            //     this._valueWidth = this.valueView_.getMeasuredWidth();
+
             if (this._nameWidth === null)
-                this._nameWidth = this.textView_.getMeasuredWidth();
+                this._nameWidth = PIXIHelper.text(this.textView_);
             if (this._valueWidth === null)
-                this._valueWidth = this.valueView_.getMeasuredWidth();
+                this._valueWidth = PIXIHelper.text(this.valueView_);
 
             this.valueView_.x = this._nameWidth + 14;
-            this.rect_.graphics
+            // this.rect_.graphics
+            //     .clear()
+            //     .f('#ffffff')
+            //     .ss(1, 2, 0)
+            //     .s('#A0A1A1')
+            //     .rc(
+            //         0,
+            //         -14,
+            //         this._nameWidth + this._valueWidth + 26,
+            //         20,
+            //         4,
+            //         4,
+            //         4,
+            //         4
+            //     );
+
+            this.rect_
                 .clear()
-                .f('#ffffff')
-                .ss(1, 2, 0)
-                .s('#A0A1A1')
-                .rc(
+                .beginFill(0xffffff)
+                .lineStyle(1, 0xA0A1A1, 0)
+                .drawRoundedRect(
                     0,
                     -14,
                     this._nameWidth + this._valueWidth + 26,
                     20,
-                    4,
-                    4,
-                    4,
                     4
                 );
+
+
+            // this.wrapper_.graphics
+            //     .clear()
+            //     .f('#E457DC')
+            //     .ss(1, 2, 0)
+            //     .s('#E457DC')
+            //     .rc(
+            //         this._nameWidth + 7,
+            //         -11,
+            //         this._valueWidth + 15,
+            //         14,
+            //         7,
+            //         7,
+            //         7,
+            //         7
+            //     );
+
             this.wrapper_.graphics
                 .clear()
-                .f('#E457DC')
-                .ss(1, 2, 0)
-                .s('#E457DC')
-                .rc(
+                .beginFill(0xE457DC)
+                .lineStyle(1, 0xE457DC, 0)
+                .drawRoundedRect(
                     this._nameWidth + 7,
                     -11,
                     this._valueWidth + 15,
                     14,
-                    7,
-                    7,
-                    7,
                     7
                 );
+
+
         } else {
             this.view_.x = this.getX();
             this.view_.y = this.getY();
             this.textView_.text = this.getName();
 
+            // if (this._nameWidth === null)
+            //     this._nameWidth = this.textView_.getMeasuredWidth();
+
             if (this._nameWidth === null)
-                this._nameWidth = this.textView_.getMeasuredWidth();
+                this._nameWidth = PIXIHelper.textWidth(this.textView_);
 
             this.valueView_.x = this._nameWidth + 14;
             this.valueView_.y = 1;
@@ -694,39 +897,68 @@ Entry.Variable.prototype.updateView = function() {
                     .replace('.00', '');
             else this.valueView_.text = this.getValue();
 
-            if (this._valueWidth === null)
-                this._valueWidth = this.valueView_.getMeasuredWidth();
+            // if (this._valueWidth === null)
+            //     this._valueWidth = this.valueView_.getMeasuredWidth();
 
-            this.rect_.graphics
+            if (this._valueWidth === null)
+                this._valueWidth = PIXIHelper.textWidth(this.valueView_);
+
+            // this.rect_.graphics
+            //     .clear()
+            //     .f('#ffffff')
+            //     .ss(1, 2, 0)
+            //     .s('#A0A1A1')
+            //     .rc(
+            //         0,
+            //         -14,
+            //         this._nameWidth + this._valueWidth + 26,
+            //         20,
+            //         4,
+            //         4,
+            //         4,
+            //         4
+            //     );
+
+            this.rect_
                 .clear()
-                .f('#ffffff')
-                .ss(1, 2, 0)
-                .s('#A0A1A1')
-                .rc(
+                .beginFill(0xffffff)
+                .lineStyle(1, 0xA0A1A1)
+                .drawRoundedRect(
                     0,
                     -14,
                     this._nameWidth + this._valueWidth + 26,
                     20,
-                    4,
-                    4,
-                    4,
                     4
                 );
-            this.wrapper_.graphics
+
+            // this.wrapper_.graphics
+            //     .clear()
+            //     .f('#ffbb14')
+            //     .ss(1, 2, 0)
+            //     .s('orange')
+            //     .rc(
+            //         this._nameWidth + 7,
+            //         -11,
+            //         this._valueWidth + 15,
+            //         14,
+            //         7,
+            //         7,
+            //         7,
+            //         7
+            //     );
+
+            this.wrapper_
                 .clear()
-                .f('#ffbb14')
-                .ss(1, 2, 0)
-                .s('orange')
-                .rc(
+                .beginFill(0xffbb14)
+                .lineStyle(1, 0xffa500) //orange color
+                .drawRoundedRect(
                     this._nameWidth + 7,
                     -11,
                     this._valueWidth + 15,
                     14,
-                    7,
-                    7,
-                    7,
                     7
                 );
+
         }
     }
     Entry.requestUpdate = true;
