@@ -2104,12 +2104,12 @@ Entry.VariableContainer = function() {
         var exportButton = Entry.createElement('button').addClass('entryListSettingExportButton').appendTo(listTransferWrapper)
             .bindOnClick((e) => {
                 e.stopPropagation();
-                var { array_ } = that.selectedList;
+                var { array_, name_ } = that.selectedList;
 
                 if(array_.length === 0) {
                     entrylms.alert(Lang.Menus.nothing_to_export);
                 } else {
-                    Entry.dispatchEvent('openExportListModal', array_);
+                    Entry.dispatchEvent('openExportListModal', array_, name_);
                 }
             });
         exportButton.innerHTML = Lang.Workspace.list_export;
