@@ -1,7 +1,10 @@
 /**
  * @fileoverview entity object is class for entry object canvas view.
  */
+
 'use strict';
+
+import PIXIHelper from "./PIXIHelper";
 
 /**
  * Construct entity class
@@ -9,6 +12,8 @@
  * @constructor
  */
 Entry.EntityObject = function(object) {
+    window.bot = this;
+    console.log("[TEST] window.bot 에 할당 됨.");
     /** @type {!string} */
     this.parent = object;
     this.type = object.objectType;
@@ -21,19 +26,32 @@ Entry.EntityObject = function(object) {
     this.shapes = [];
 
     if (this.type == 'sprite') {
-        this.object = new createjs.Bitmap();
+        // this.object = new createjs.Bitmap();
+        this.object = new PIXI.Sprite();
         this.setInitialEffectValue();
     } else if (this.type == 'textBox') {
-        this.object = new createjs.Container();
-        this.textObject = new createjs.Text();
-        this.textObject.font = '20px Nanum Gothic';
-        this.textObject.textBaseline = 'middle';
-        this.textObject.textAlign = 'center';
-        this.bgObject = new createjs.Shape();
-        this.bgObject.graphics
-            .setStrokeStyle(1)
-            .beginStroke('#f00')
+        // this.object = new createjs.Container();
+        this.object = new PIXI.Container();
+
+        // this.textObject = new createjs.Text();
+        // this.textObject.font = '20px Nanum Gothic';
+        // this.textObject.textBaseline = 'middle';
+        // this.textObject.textAlign = 'center';
+
+        this.textObject = PIXIHelper.text("", '20px Nanum Gothic', 'middle', 'center');
+
+        // this.bgObject = new createjs.Shape();
+        // this.bgObject.graphics
+        //     .setStrokeStyle(1)
+        //     .beginStroke('#f00')
+        //     .drawRect(0, 0, 100, 100);
+
+        this.bgObject = new PIXI.Graphics();
+        this.bgObject
+            .beginFill(0xff0000)
             .drawRect(0, 0, 100, 100);
+
+
         this.object.addChild(this.bgObject);
         this.object.addChild(this.textObject);
 
@@ -339,7 +357,7 @@ Entry.EntityObject.prototype.getRegY = function() {
 Entry.EntityObject.prototype.setScaleX = function(scaleX) {
     /** @type {number} */
     this.scaleX = scaleX;
-    this.object.scaleX = this.scaleX;
+    this.object.scale.x = this.scaleX;
     this.parent.updateCoordinateView();
     this.updateDialog();
     Entry.requestUpdate = true;
@@ -360,7 +378,7 @@ Entry.EntityObject.prototype.getScaleX = function() {
 Entry.EntityObject.prototype.setScaleY = function(scaleY) {
     /** @type {number} */
     this.scaleY = scaleY;
-    this.object.scaleY = this.scaleY;
+    this.object.scale.y = this.scaleY;
     this.parent.updateCoordinateView();
     this.updateDialog();
     Entry.requestUpdate = true;
@@ -832,15 +850,22 @@ Entry.EntityObject.prototype.setImage = function(pictureModel) {
                 '.png';
         }
 
-        that.object.image = image;
-        if (!_.isEmpty(that.object.filters)) that.cache();
-        else that.object.uncache();
+        // that.object.image = image;
+        PIXIHelper.setTextureToPIXISprite(that.object, image);
+        // if (!_.isEmpty(that.object.filters)) that.cache();
+        // else that.object.uncache();
+        PIXIHelper.setTextureToPIXISprite(that);
+
     } else setImage(image);
 
     function setImage(datum) {
-        that.object.image = datum;
-        if (!_.isEmpty(that.object.filters)) that.cache();
-        else that.object.uncache();
+        // that.object.image = datum;
+        PIXIHelper.setTextureToPIXISprite(that.object, image);
+
+        // if (!_.isEmpty(that.object.filters)) that.cache();
+        // else that.object.uncache();
+        PIXIHelper.setTextureToPIXISprite(that);
+
         Entry.requestUpdate = true;
     }
 
@@ -864,7 +889,7 @@ Entry.EntityObject.prototype.applyFilter = function(isForce, forceEffects) {
     (function(e, obj) {
         var f = [];
         var adjust = Entry.adjustValueWithMaxMin;
-
+        console.log("diffEffects", diffEffects);
         if (~diffEffects.indexOf('brightness')) {
             e.brightness = e.brightness;
             var cmBrightness = new createjs.ColorMatrix();
@@ -1042,7 +1067,9 @@ Entry.EntityObject.prototype.resetFilter = function() {
     this.setInitialEffectValue();
     object.alpha = this.effect.alpha;
 
-    object.uncache();
+    // object.uncache();
+    PIXIHelper.createjsUncache(object);
+
 };
 
 /**
@@ -1174,6 +1201,7 @@ Entry.EntityObject.prototype._removeShapes = function() {
     this.shapes = [];
 };
 
+//TODO 준배늼 gl 로 변경
 Entry.EntityObject.prototype.updateBG = function() {
     if (!this.bgObject) return;
     this.bgObject.graphics.clear();
@@ -1254,6 +1282,7 @@ Entry.EntityObject.prototype.removeStamps = function() {
     Entry.requestUpdate = true;
 };
 
+/*
 Entry.EntityObject.prototype.destroy = function(isClone) {
     if (this.removed) return;
 
@@ -1278,11 +1307,36 @@ Entry.EntityObject.prototype.destroy = function(isClone) {
         container.unCachePictures(this, this.parent.pictures, isClone);
     }
 };
+*/
+Entry.EntityObject.prototype.destroy = function(isClone) {
+    if (this.removed) return;
+
+    this.removed = true;
+
+    var object = this.object;
+    if (object) {
+        object.removeAllListeners();
+        delete object.image;
+        delete object.entity;
+    }
+
+    if (this.stamps) this.removeStamps();
+
+    _.result(this.dialog, 'remove');
+    this.brush && this.removeBrush();
+    Entry.stage.unloadEntity(this);
+
+    var container = Entry.container;
+    if (container) {
+        container.unCachePictures(this, this.parent.pictures, isClone);
+    }
+};
 
 Entry.EntityObject.prototype.cache = function() {
     var { object } = this;
     if (object) {
-        object.cache(0, 0, this.getWidth(), this.getHeight());
+        //TODO 준배님 createjs cache 이거 어떡합니까?
+        // object.cache(0, 0, this.getWidth(), this.getHeight());
         Entry.requestUpdate = true;
     }
 };
