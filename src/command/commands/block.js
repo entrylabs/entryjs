@@ -76,16 +76,21 @@
     c[COMMAND_TYPES.destroyThread] = {
         do: function(thread) {
             // thread can be index
-            if (!(thread instanceof Entry.Thread))
+            if (!(thread instanceof Entry.Thread)) {
                 thread = this.editor.board.code.getThread(thread);
-            var block = thread.getFirstBlock();
-            block.destroy(true, true);
+            }
+            if(thread) {
+                var block = thread.getFirstBlock();
+                block.destroy(true, true);
+            }
         },
         state: function(thread) {
-            if (!(thread instanceof Entry.Thread))
+            if (!(thread instanceof Entry.Thread)) {
                 thread = this.editor.board.code.getThread(thread);
-            var index = this.editor.board.code.getThreadIndex(thread);
-            return [thread.toJSON(), index];
+            }
+            const index = this.editor.board.code.getThreadIndex(thread);
+            const json = thread ? thread.toJSON() : {};
+            return [json, index];
         },
         log: function(threadIndex) {
             if (threadIndex instanceof Entry.Thread)
