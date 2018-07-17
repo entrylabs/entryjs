@@ -12,14 +12,14 @@
 Entry.Stage = function() {
     /** @type {Dictionary} */
     this.variables = {};
-    this.background = new createjs.Shape();
-    this.background.graphics
-        .beginFill('#ffffff')
+    this.background = new PIXI.Graphics();
+    this.background
+        .beginFill(0xffffff)
         .drawRect(-480, -240, 960, 480);
     this.objectContainers = [];
     this.selectedObjectContainer = null;
-    this.variableContainer = new createjs.Container();
-    this.dialogContainer = new createjs.Container();
+    this.variableContainer = new PIXI.Container();
+    this.dialogContainer = new PIXI.Container();
     /** @type {null|Entry.EntryObject} */
     this.selectedObject = null;
     this.isObjectClick = false;
@@ -31,13 +31,27 @@ Entry.Stage = function() {
  * @param {!Element} canvas for stage
  */
 Entry.Stage.prototype.initStage = function(canvas) {
-    this.canvas = new createjs.Stage(canvas.id);
+
+    var app = new PIXI.Application({
+        view: canvas,
+        width: canvas.width,
+        height: canvas.height
+    });
+
+    this.canvas = app.stage;
+    this.canvas.canvas = canvas;
+
+    // this.canvas = new createjs.Stage(canvas.id);
     this.canvas.x = 960 / 1.5 / 2;
     this.canvas.y = 540 / 1.5 / 2;
-    this.canvas.scaleX = this.canvas.scaleY = 2 / 1.5;
-    createjs.Touch.enable(this.canvas);
-    this.canvas.enableMouseOver(10);
-    this.canvas.mouseMoveOutside = true;
+    // this.canvas.scaleX = this.canvas.scaleY = 2 / 1.5;
+    this.canvas.scale.set(2 / 1.5, 2 / 1.5);
+
+    //TODO 봉배님 PIXI 변경하면서 누락된 부분이예요. 이것도 적용해야 함요.
+    // createjs.Touch.enable(this.canvas);
+    // this.canvas.enableMouseOver(10);
+    // this.canvas.mouseMoveOutside = true;
+
     this.canvas.addChild(this.background);
     this.canvas.addChild(this.variableContainer);
     this.canvas.addChild(this.dialogContainer);
@@ -286,29 +300,38 @@ Entry.Stage.prototype.sortZorderRun = function() {
  * Initialize coordinate on canvas. It is toggle by Engine.
  */
 Entry.Stage.prototype.initCoordinator = function() {
-    var coordinator = (this.coordinator = Object.assign(
-        new createjs.Container(),
-        {
-            mouseEnabled: false,
-            tickEnabled: false,
-            tickChildren: false,
-            visible: false,
-        }
-    ));
-    coordinator.addChild(
-        Object.assign(
-            new createjs.Bitmap(
-                Entry.mediaFilePath + 'workspace_coordinate.png'
-            ),
-            {
-                scaleX: 0.5,
-                scaleY: 0.5,
-                x: -240,
-                y: -135,
-            }
-        )
-    );
-    this.canvas.addChild(coordinator);
+    var c = this.coordinator = new PIXI.Container();
+    c.interactive = false;
+    c.interactiveChildren = false;
+
+    var sp = PIXI.Sprite.fromImage(Entry.mediaFilePath + 'workspace_coordinate.png');
+    sp.scale.set(0.5, 0.5);
+    sp.position.set(-240, -135);
+
+    this.canvas.addChild(c);
+    // var coordinator = (this.coordinator = Object.assign(
+    //     new createjs.Container(),
+    //     {
+    //         mouseEnabled: false,
+    //         tickEnabled: false,
+    //         tickChildren: false,
+    //         visible: false,
+    //     }
+    // ));
+    // coordinator.addChild(
+    //     Object.assign(
+    //         new createjs.Bitmap(
+    //             Entry.mediaFilePath + 'workspace_coordinate.png'
+    //         ),
+    //         {
+    //             scaleX: 0.5,
+    //             scaleY: 0.5,
+    //             x: -240,
+    //             y: -135,
+    //         }
+    //     )
+    // );
+    // this.canvas.addChild(coordinator);
 };
 
 /**
@@ -520,41 +543,62 @@ Entry.Stage.prototype.endEdit = function() {
 };
 
 Entry.Stage.prototype.initWall = function() {
-    var wall = new createjs.Container();
-    wall.mouseEnabled = false;
-    var bound = new Image();
-    bound.src = Entry.mediaFilePath + 'media/bound.png';
+    var wall = new PIXI.Container();
+    wall.interactiveChildren = false;
+    wall.interactive = false;
+    // wall.mouseEnabled = false;
+    // var bound = new Image();
+    // bound.src = Entry.mediaFilePath + 'media/bound.png';
+    var path = Entry.mediaFilePath + 'media/bound.png';
 
-    wall.up = new createjs.Bitmap();
-    wall.up.scaleX = 480 / 30;
-    wall.up.y = -135 - 30;
-    wall.up.x = -240;
-    wall.up.image = bound;
-    wall.addChild(wall.up);
-
-    wall.down = new createjs.Bitmap();
-    wall.down.scaleX = 480 / 30;
-    wall.down.y = 135;
-    wall.down.x = -240;
-    wall.down.image = bound;
-    wall.addChild(wall.down);
-
-    wall.right = new createjs.Bitmap();
-    wall.right.scaleY = 270 / 30;
-    wall.right.y = -135;
-    wall.right.x = 240;
-    wall.right.image = bound;
-    wall.addChild(wall.right);
-
-    wall.left = new createjs.Bitmap();
-    wall.left.scaleY = 270 / 30;
-    wall.left.y = -135;
-    wall.left.x = -240 - 30;
-    wall.left.image = bound;
-    wall.addChild(wall.left);
+    function newSide(x, y, sx, sy) {
+        var sp = PIXI.Sprite.fromImage(path);
+        sp.position.set(x, y);
+        sx ?  sp.scale.x = sx : 0;
+        sy ?  sp.scale.y = sy : 0;
+        wall.addChild(sp);
+        return sp;
+    }
+    wall.up = newSide( -240, -135 - 30, 480 / 30, 0);
+    wall.down = newSide( -240, 135, 480 / 30, 0);
+    wall.right = newSide( 240, -135, 0, 270 / 30);
+    wall.left = newSide( -240 - 30, -135, 0, 270 / 30);
 
     this.canvas.addChild(wall);
     this.wall = wall;
+
+    // wall.up = new createjs.Bitmap();
+    // wall.up.scaleX = 480 / 30;
+    // wall.up.y = -135 - 30;
+    // wall.up.x = -240;
+    // wall.up.image = bound;
+    // wall.addChild(wall.up);
+    //
+    // wall.down = new createjs.Bitmap();
+    // wall.down.scaleX = 480 / 30;
+    // wall.down.y = 135;
+    // wall.down.x = -240;
+    // wall.down.image = bound;
+    // wall.addChild(wall.down);
+    //
+    // wall.right = new createjs.Bitmap();
+    // wall.right.scaleY = 270 / 30;
+    // wall.right.y = -135;
+    // wall.right.x = 240;
+    // wall.right.image = bound;
+    // wall.addChild(wall.right);
+    //
+    // wall.left = new createjs.Bitmap();
+    // wall.left.scaleY = 270 / 30;
+    // wall.left.y = -135;
+    // wall.left.x = -240 - 30;
+    // wall.left.image = bound;
+    // wall.addChild(wall.left);
+    //
+    // this.canvas.addChild(wall);
+    // this.wall = wall;
+
+
 };
 
 /**
@@ -586,21 +630,36 @@ Entry.Stage.prototype.showInputField = function() {
         });
     }
 
-    var inputSubmitButton = new createjs.Container();
+    // var inputSubmitButton = new createjs.Container();
+    // var buttonImg = new Image();
+    // var button = new createjs.Bitmap();
+    // buttonImg.onload = function() {
+    //     button.image = this;
+    //     Entry.requestUpdate = true;
+    // };
+    // buttonImg.src = Entry.mediaFilePath + 'confirm_button.png';
+    // button.scaleX = 0.23;
+    // button.scaleY = 0.23;
+    // button.x = 160;
+    // button.y = 89;
+    // button.cursor = 'pointer';
+    // button.image = buttonImg;
+    // inputSubmitButton.addChild(button);
+
+    var inputSubmitButton = new PIXI.Container();
     var buttonImg = new Image();
-    var button = new createjs.Bitmap();
+    var button = new PIXI.Sprite();
+    var imgPath = Entry.mediaFilePath + 'confirm_button.png';
     buttonImg.onload = function() {
-        button.image = this;
+        button.texture = Texture.fromLoader(buttonImg, imgPath);
         Entry.requestUpdate = true;
     };
-    buttonImg.src = Entry.mediaFilePath + 'confirm_button.png';
-    button.scaleX = 0.23;
-    button.scaleY = 0.23;
-    button.x = 160;
-    button.y = 89;
+    buttonImg.src = imgPath;
+    button.scale.set(0.23, 0.23);
+    button.position.set(160, 89);
     button.cursor = 'pointer';
-    button.image = buttonImg;
     inputSubmitButton.addChild(button);
+
 
     inputSubmitButton.on('mousedown', () => {
         if(this.inputField._readonly == false) {
@@ -677,7 +736,8 @@ Entry.Stage.prototype.selectObjectContainer = function(scene) {
  * init object containers
  */
 Entry.Stage.prototype.createObjectContainer = function(scene) {
-    return Object.assign(new createjs.Container(), { scene });
+    // return Object.assign(new createjs.Container(), { scene });
+    return Object.assign(new PIXI.Container(), { scene });
 };
 
 /**
