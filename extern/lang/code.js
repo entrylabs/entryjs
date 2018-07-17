@@ -1761,12 +1761,24 @@ Lang.Buttons = {
     "maze_hint_btn_guide": "이용 안내",
     "maze_hint_btn_block": "블록 도움말",
     "maze_hint_btn_map": "힌트 보기",
-    "maze_hint_btn_goal": "목표"
+    "maze_hint_btn_goal": "목표",
+    "list_save": "저장하기",
+    "duplication": "복사하기",
+    "export_to_excel": "엑셀로 내려받기"
 };
 Lang.ko = "한국어";
 Lang.vn = "tiếng Việt";
 Lang.jp = "日本語";
 Lang.Menus = {
+    "nothing_to_import": "내려받기 할 항목이 없습니다.",
+    "nothing_to_export": "불러오기 할 항목이 없습니다.",
+    "content_copied": "내용이 복사되었습니다.",
+    "list_import_title": "리스트 불러오기",
+    "list_import_placeholder": "예)\n내용1\n내용2\n내용3\n내용4\n내용5\n내용6\n내용7\n내용8",
+    "list_import_notice_1": "리스트 항목의 내용을 올릴 수 있습니다.",
+    "list_import_notice_2": "기존 내용은 새로 저장한 내용으로 변경됩니다.",
+    "list_export_title": "리스트 내보내기",
+    "list_export_notice": "리스트 항목의 내용을 복사하거나, 엑셀로 내려받을 수 있습니다.",
     "robotis_opencm70": "로보티즈 IoT",
     "cannnot_mark_favorite": "비공개 작품은 관심 작품으로 지정할 수 없습니다.",
     "enterPassword": "비밀번호를 입력해주세요.",
@@ -4344,7 +4356,7 @@ Lang.Workspace = {
     "list_dup": "같은 이름의 리스트가 이미 존재합니다.",
     "list_newname": "새로운 이름",
     "list_export": "리스트 내보내기",
-    "list_import": "리스트 가져오기",
+    "list_import": "리스트 불러오기",
     "list_remove": "리스트 삭제",
     "list_rename": "리스트 이름 변경",
     "list_rename_failed": "리스트 이름 변경 실패",

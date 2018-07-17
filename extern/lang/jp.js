@@ -1761,12 +1761,24 @@ Lang.Buttons = {
     "maze_hint_btn_guide": "利用案内",
     "maze_hint_btn_block": "ブロックヘルプ",
     "maze_hint_btn_map": "ヒントを見る",
-    "maze_hint_btn_goal": "目標"
+    "maze_hint_btn_goal": "目標",
+    "list_save": "Upload",
+    "duplication": "Copy",
+    "export_to_excel": "Download"
 };
 Lang.ko = "韓国語";
 Lang.vn = "tiếng Việt";
 Lang.jp = "日本語";
 Lang.Menus = {
+    "nothing_to_import": "There is no content to download.",
+    "nothing_to_export": "There is no content to upload.",
+    "content_copied": "The data is copied.",
+    "list_import_title": "Import",
+    "list_import_placeholder": "Example)\nData1\nData2\nData3\nData4\nData5\nData6\nData7\nData8",
+    "list_import_notice_1": "You can upload the data in the list.",
+    "list_import_notice_2": "The original data will be changed into the newly uploaded data.",
+    "list_export_title": "Export",
+    "list_export_notice": "You can copy or download the data in the list.",
     "robotis_opencm70": "Robotis Open CM70",
     "cannnot_mark_favorite": "非公開の作品はお気に入りに指定できません。",
     "enterPassword": "パスワードを入力してください。",
@@ -4343,8 +4355,8 @@ Lang.Workspace = {
     "list_create": "リスト追加",
     "list_dup": "同名のリストがすでに存在します。",
     "list_newname": "新しい名前",
-    "list_export": "",
-    "list_import": "",
+    "list_export": "Export",
+    "list_import": "Import",
     "list_remove": "リスト削除",
     "list_rename": "リスト名変更",
     "list_rename_failed": "リスト名変更失敗",

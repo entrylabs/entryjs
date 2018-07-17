@@ -1761,12 +1761,24 @@ Lang.Buttons = {
     "maze_hint_btn_guide": "User Guide",
     "maze_hint_btn_block": "Block Help",
     "maze_hint_btn_map": "Map Hint",
-    "maze_hint_btn_goal": "goal"
+    "maze_hint_btn_goal": "goal",
+    "list_save": "Upload",
+    "duplication": "Copy",
+    "export_to_excel": "Download"
 };
 Lang.ko = "한국어";
 Lang.vn = "tiếng Việt";
 Lang.jp = "日本語";
 Lang.Menus = {
+    "nothing_to_import": "There is no content to download.",
+    "nothing_to_export": "There is no content to upload.",
+    "content_copied": "The data is copied.",
+    "list_import_title": "Import",
+    "list_import_placeholder": "Example)\nData1\nData2\nData3\nData4\nData5\nData6\nData7\nData8",
+    "list_import_notice_1": "You can upload the data in the list.",
+    "list_import_notice_2": "The original data will be changed into the newly uploaded data.",
+    "list_export_title": "Export",
+    "list_export_notice": "You can copy or download the data in the list.",
     "robotis_opencm70": "Robotis Open CM70",
     "cannnot_mark_favorite": "Private project cannot be marked as a favorite.",
     "enterPassword": "Enter password.",
@@ -4343,8 +4355,8 @@ Lang.Workspace = {
     "list_create": "thêm danh sách",
     "list_dup": "",
     "list_newname": "New name",
-    "list_export": "",
-    "list_import": "",
+    "list_export": "Export",
+    "list_import": "Import",
     "list_remove": "Remove list",
     "list_rename": "đổi tên danh sách",
     "list_rename_failed": "",
