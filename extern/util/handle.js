@@ -101,12 +101,14 @@ var EaselHandle = function(canvas) {
 
     p.setWidth = function(width) {
         this.width = width;
-        this.background.scaleX = width / 100;
+        // this.background.scaleX = width / 100;
+        this.background.scale.x = width / 100;
     };
 
     p.setHeight = function(height) {
         this.height = height;
-        this.background.scaleY = height / 100;
+        // this.background.scaleY = height / 100;
+        this.background.scale.y = height / 100;
     };
 
     p.setRegX = function(regX) {
@@ -146,15 +148,16 @@ var EaselHandle = function(canvas) {
 
     p.createHandle = function() {
         var handle = this;
-        var container = new createjs.Container();
+        var container = new PIXI.Container();
+        // var container = new createjs.Container();
 
         //border
-        var border = new createjs.Shape();
+        var border = new PIXI.Graphics();
         container.addChild(border);
         this.border = border;
 
         //edge
-        var edge = new createjs.Shape();
+        var edge = new PIXI.Graphics();
         edge.cursor = 'move';
         edge.on('mousedown', function(e) {
             var offset = handle.getEventCoordinate(e);
@@ -180,7 +183,7 @@ var EaselHandle = function(canvas) {
         this.edge = edge;
 
         //rotate knob
-        var rotateKnob = new createjs.Shape();
+        var rotateKnob = new PIXI.Graphics();
         rotateKnob.cursor = 'crosshair';
         rotateKnob.on('mousedown', function(e) {
             handle.dispatchEditStartEvent();
@@ -200,19 +203,22 @@ var EaselHandle = function(canvas) {
         container.setChildIndex(rotateKnob, 1);
         this.rotateKnob = rotateKnob;
 
-        var directionArrow = new createjs.Shape();
+        var directionArrow = new PIXI.Graphics();
 
-        directionArrow.graphics
-            .ss(4, 1, 1)
-            .s(this.arrowColor)
-            .f(this.arrowColor)
-            .dc(0, 0, this.DHANDLE_RADIUS)
-            .mt(0, 0)
-            .lt(0, -40)
-            .lt(7, -32)
-            .lt(-7, -32)
-            .lt(0, -40)
-            .es();
+        // directionArrow
+        //     .ss(4, 1, 1)
+        //     .s(this.arrowColor)
+        //     .f(this.arrowColor)
+        //     .dc(0, 0, this.DHANDLE_RADIUS)
+        //     .mt(0, 0)
+        //     .lt(0, -40)
+        //     .lt(7, -32)
+        //     .lt(-7, -32)
+        //     .lt(0, -40)
+        //     .es();
+        __tempDraw(directionArrow);
+
+
         directionArrow.on('mousedown', function(e) {
             handle.dispatchEditStartEvent();
         });
@@ -230,12 +236,14 @@ var EaselHandle = function(canvas) {
         this.directionArrow = directionArrow;
 
         // center
-        var centerPoint = new createjs.Shape();
-        centerPoint.graphics
-            .beginFill(this.centerColor)
-            .ss(1, 2, 0)
-            .s(this.centerColor)
-            .dc(0, 0, 5, 5);
+        var centerPoint = new PIXI.Graphics();
+        // centerPoint
+        //     .beginFill(this.centerColor)
+        //     .ss(1, 2, 0)
+        //     .s(this.centerColor)
+        //     .dc(0, 0, 5, 5);
+        __tempDraw(centerPoint);
+
         centerPoint.on('mousedown', function(e) {
             handle.dispatchEditStartEvent();
         });
@@ -255,12 +263,13 @@ var EaselHandle = function(canvas) {
         //resize knobs
         this.knobs = [];
         for (var i = 0; i < 8; i++) {
-            var knob = new createjs.Shape();
-            knob.graphics
-                .beginFill(this.color)
-                .ss(1, 2, 0)
-                .s(this.color)
-                .dr(-3, -3, 6, 6);
+            var knob = new PIXI.Graphics();
+            // knob
+            //     .beginFill(this.color)
+            //     .ss(1, 2, 0)
+            //     .s(this.color)
+            //     .dr(-3, -3, 6, 6);
+            __tempDraw(knob);
             knob.knobIndex = i;
             //knob.cursor = "move";
             knob.on('mousedown', function(e) {
@@ -289,12 +298,13 @@ var EaselHandle = function(canvas) {
             this.knobs.push(knob);
         }
 
-        var background = new createjs.Shape();
-        background.graphics
-            .ss(1, 2, 0)
-            .s('rgba(254,254,254,0.01)')
-            .beginFill('rgba(254,254,254,1)')
-            .dr(-50, -50, 100, 100);
+        var background = new PIXI.Graphics();
+        // background
+        //     .ss(1, 2, 0)
+        //     .s('rgba(254,254,254,0.01)')
+        //     .beginFill('rgba(254,254,254,1)')
+        //     .dr(-50, -50, 100, 100);
+        __tempDraw(background);
         background.on('mousedown', function(e) {
             var offset = handle.getEventCoordinate(e);
             offset.x -= handle.x;
@@ -345,48 +355,51 @@ var EaselHandle = function(canvas) {
     p.renderEdge = function() {
         var width = this.width;
         var height = this.height;
-        this.edge.graphics
-            .clear()
-            .ss(10, 2, 0)
-            .s('rgba(254,254,254,0.01)')
-            .lt(-width / 2, -height / 2)
-            .lt(0, -height / 2)
-            .lt(0, -height / 2)
-            .lt(+width / 2, -height / 2)
-            .lt(+width / 2, +height / 2)
-            .lt(-width / 2, +height / 2)
-            .cp();
+        // this.edge.graphics
+        //     .clear()
+        //     .ss(10, 2, 0)
+        //     .s('rgba(254,254,254,0.01)')
+        //     .lt(-width / 2, -height / 2)
+        //     .lt(0, -height / 2)
+        //     .lt(0, -height / 2)
+        //     .lt(+width / 2, -height / 2)
+        //     .lt(+width / 2, +height / 2)
+        //     .lt(-width / 2, +height / 2)
+        //     .cp();
+        __tempDraw(this.edge);
     };
 
     p.renderRotateKnob = function() {
         var width = this.width;
         var height = this.height;
-        this.rotateKnob.graphics
-            .clear()
-            .ss(1, 2, 0)
-            .s(this.rotateKnobColor)
-            .mt(0, -height / 2)
-            .lt(0, -height / 2)
-            .lt(0, -height / 2 - 20)
-            .cp()
-            .beginFill(this.rotateKnobColor)
-            .dc(0, -height / 2 - 20, 4);
+        // this.rotateKnob.graphics
+        //     .clear()
+        //     .ss(1, 2, 0)
+        //     .s(this.rotateKnobColor)
+        //     .mt(0, -height / 2)
+        //     .lt(0, -height / 2)
+        //     .lt(0, -height / 2 - 20)
+        //     .cp()
+        //     .beginFill(this.rotateKnobColor)
+        //     .dc(0, -height / 2 - 20, 4);
+        __tempDraw(this.rotateKnob);
     };
 
     p.renderBorder = function() {
         var width = this.width;
         var height = this.height;
-        this.border.graphics
-            .clear()
-            .ss(1, 2, 0)
-            .s(this.color)
-            .lt(-width / 2, -height / 2)
-            .lt(0, -height / 2)
-            .lt(0, -height / 2)
-            .lt(+width / 2, -height / 2)
-            .lt(+width / 2, +height / 2)
-            .lt(-width / 2, +height / 2)
-            .cp();
+        // this.border.graphics
+        //     .clear()
+        //     .ss(1, 2, 0)
+        //     .s(this.color)
+        //     .lt(-width / 2, -height / 2)
+        //     .lt(0, -height / 2)
+        //     .lt(0, -height / 2)
+        //     .lt(+width / 2, -height / 2)
+        //     .lt(+width / 2, +height / 2)
+        //     .lt(-width / 2, +height / 2)
+        //     .cp();
+        __tempDraw(this.border);
     };
 
     p.renderKnobs = function() {
@@ -538,4 +551,11 @@ var EaselHandle = function(canvas) {
     p.getDraggable = function() {
         return this.draggable;
     };
+
+    function __tempDraw(g) {
+        g
+            .beginFill(0xE79040)
+            .drawCircle(0, 0, 20);
+    }
+
 })(EaselHandle.prototype);
