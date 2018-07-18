@@ -9,8 +9,8 @@ npm run dist
 cp -r dist build/
 cp -r extern build/
 cp -r images build/
-cp -r src/playground/blocks/ build/
-mkdir -p build/src/playground
+mkdir -p build/src/playground/blocks
+cp -r src/playground/blocks/ build/src/playground/blocks/
 cp src/playground/block_entry.js src/playground/block_entry_mini.js build/src/playground/
 ls -al
 ls -al build
