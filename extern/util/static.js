@@ -685,6 +685,11 @@ EntryStatic.getAllBlocks = function() {
                 "truetrue_set_led_colorsensor",
                 "truetrue_set_led_linesensor",
                 "truetrue_set_linetracer",
+				"truetrue_set_head_colorled",
+				"truetrue_set_move",
+				"truetrue_set_sec_move",
+				"truetrue_set_rotate",
+				"truetrue_set_sec_rotate",
                 //CODEino
                 "CODEino_get_named_sensor_value",
                 "CODEino_get_sound_status",
