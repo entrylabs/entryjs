@@ -2,21 +2,21 @@
 # set -e # 에러 발생 시 스크립트 중단
 
 rm .gitignore
-branchName="${TRAVIS_BRANCH}"
+branchName="${env.BRANCH_NAME}"
 distText="dist"
 deployName="${branchName/deploy/$distText}"
 
 DATEFMT=`date "+%Y%m%d"`
 # echo "$DATEFMT: My message"
 cd build
-git config user.name "JY KIM"
-git config user.email "kimorkim@gmail.com"
+git config user.name "Entry Dev"
+git config user.email "entrydev@nts-corp.com"
 
 if [ "$branchName" = "master" ]
 then
     git add .
-    git commit -m "Entry Js PUBLISH by v3.$DATEFMT.${TRAVIS_BUILD_NUMBER}"
-    git tag -a "v3.$DATEFMT.${TRAVIS_BUILD_NUMBER}" -m "build v3.$DATEFMT.${TRAVIS_BUILD_NUMBER}"
+    git commit -m "Entry Js PUBLISH by v3.$DATEFMT.${env.BUILD_ID}"
+    git tag -a "v3.$DATEFMT.${env.BUILD_ID}" -m "build v3.$DATEFMT.${env.BUILD_ID}"
     git push --force --quiet "https://${GH_TOKEN}@${GH_REF}" build --tags
 else
     git checkout -b "$deployName"
