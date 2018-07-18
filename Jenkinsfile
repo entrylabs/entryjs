@@ -104,6 +104,11 @@ chmod +x ./scripts/deploy.sh
       }
     }
   }
+  post {
+    always {
+      junit 'reports/**/*.xml'
+    }
+  }
   environment {
     GH_REPO = 'https://github.com/entrylabs/entryjs.git'
     GH_REF = 'github.com/entrylabs/entryjs.git'
