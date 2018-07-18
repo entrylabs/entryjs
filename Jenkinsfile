@@ -15,7 +15,8 @@ pipeline {
       }
       steps {
         script {
-          sh "yarn"
+          sh "npm prune"
+          sh "npm install"
           sh "yarn test"
         }
       }
