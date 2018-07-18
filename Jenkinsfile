@@ -91,7 +91,8 @@ pipeline {
       }
       steps {
         script {
-          sh '''yarn
+          sh '''npm prune
+npm install
 chmod +x ./scripts/build.sh
 chmod +x ./scripts/deploy.sh
 ./scripts/build.sh
