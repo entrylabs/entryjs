@@ -130,7 +130,7 @@ Entry.VariableContainer = function() {
                 Entry.do('variableContainerAddMessage', {
                     id: Entry.generateHash(),
                     name: Entry.getOrderedName(
-                        Lang.Workspace.message + ' ',
+                        Lang.Workspace.message,
                         this.messages_,
                         'name'
                     ),
