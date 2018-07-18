@@ -15,6 +15,7 @@ pipeline {
       }
       steps {
         script {
+          sh "yarn"
           sh "yarn test"
         }
       }
