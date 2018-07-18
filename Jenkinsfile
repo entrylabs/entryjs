@@ -20,6 +20,11 @@ pipeline {
           sh "yarn test"
         }
       }
+      post {
+        always {
+          junit 'reports/*.xml'
+        }
+      }
     }
     stage('SonarQube Analysis') {
       when { 
@@ -50,11 +55,6 @@ pipeline {
             "-Dsonar.github.pullRequest=${env.CHANGE_ID} " +
             "-Dsonar.sources=src "
           }
-        }
-      }      
-      post {
-        always {
-          junit 'reports/**/*.xml'
         }
       }
     }
