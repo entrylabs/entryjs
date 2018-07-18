@@ -42,7 +42,7 @@ pipeline {
             "-Dsonar.projectName=entryjs " +
             "-Dsonar.sourceEncoding=UTF-8 " +
             "-Dsonar.analysis.mode=preview " +
-            "-Dsonar.github.repository=entrylabs/entry-offline " +
+            "-Dsonar.github.repository=entrylabs/entryjs " +
             "-Dsonar.github.endpoint=https://api.github.com " +
             "-Dsonar.github.oauth=${GH_TOKEN} " +
             "-Dsonar.issuesReport.console.enable=true " +
