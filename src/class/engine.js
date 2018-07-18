@@ -596,7 +596,7 @@ Entry.Engine = function() {
         createjs.Sound.setVolume(1);
         createjs.Sound.stop();
         Entry.soundInstances = [];
-        Entry.targetChecker.clearListener();
+        Entry.targetChecker && Entry.targetChecker.clearListener();
 
         this.view_.removeClass('entryEngineBlueWorkspace');
         if (this.runButton) {
