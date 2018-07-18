@@ -15,6 +15,8 @@ pipeline {
       }
       steps {
         script {
+          sh "npm prune"
+          sh "npm install"
           sh "yarn test"
         }
       }
@@ -40,7 +42,7 @@ pipeline {
             "-Dsonar.projectName=entryjs " +
             "-Dsonar.sourceEncoding=UTF-8 " +
             "-Dsonar.analysis.mode=preview " +
-            "-Dsonar.github.repository=entrylabs/entry-offline " +
+            "-Dsonar.github.repository=entrylabs/entryjs " +
             "-Dsonar.github.endpoint=https://api.github.com " +
             "-Dsonar.github.oauth=${GH_TOKEN} " +
             "-Dsonar.issuesReport.console.enable=true " +
@@ -91,7 +93,8 @@ pipeline {
       }
       steps {
         script {
-          sh '''yarn
+          sh '''npm prune
+npm install
 chmod +x ./scripts/build.sh
 chmod +x ./scripts/deploy.sh
 ./scripts/build.sh

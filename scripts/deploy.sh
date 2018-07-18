@@ -2,7 +2,7 @@
 # set -e # 에러 발생 시 스크립트 중단
 
 rm .gitignore
-branchName="${env.BRANCH_NAME}"
+branchName="${BRANCH_NAME}"
 distText="dist"
 deployName="${branchName/deploy/$distText}"
 
@@ -15,8 +15,8 @@ git config user.email "entrydev@nts-corp.com"
 if [ "$branchName" = "master" ]
 then
     git add .
-    git commit -m "Entry Js PUBLISH by v3.$DATEFMT.${env.BUILD_ID}"
-    git tag -a "v3.$DATEFMT.${env.BUILD_ID}" -m "build v3.$DATEFMT.${env.BUILD_ID}"
+    git commit -m "Entry Js PUBLISH by v3.$DATEFMT.${BUILD_ID}"
+    git tag -a "v3.$DATEFMT.${BUILD_ID}" -m "build v3.$DATEFMT.${BUILD_ID}"
     git push --force --quiet "https://${GH_TOKEN}@${GH_REF}" build --tags
 else
     git checkout -b "$deployName"
