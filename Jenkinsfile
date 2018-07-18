@@ -20,6 +20,11 @@ pipeline {
           sh "yarn test"
         }
       }
+      post {
+        always {
+          junit 'reports/*.xml'
+        }
+      }
     }
     stage('SonarQube Analysis') {
       when { 
