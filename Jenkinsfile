@@ -51,6 +51,11 @@ pipeline {
             "-Dsonar.sources=src "
           }
         }
+      }      
+      post {
+        always {
+          junit 'reports/**/*.xml'
+        }
       }
     }
     stage('SonarQube Scan') {
@@ -102,11 +107,6 @@ chmod +x ./scripts/deploy.sh
 ./scripts/deploy.sh'''
         }
       }
-    }
-  }
-  post {
-    always {
-      junit 'reports/**/*.xml'
     }
   }
   environment {
