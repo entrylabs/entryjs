@@ -56,8 +56,9 @@ pipeline {
     stage('SonarQube Scan') {
       when {
         beforeAgent true
-        expression {
-          return env.CHANGE_ID
+        allOf {
+          expression { BRANCH_NAME ==~ /(^master$)/ }
+          not { changeRequest() }
         }
       }
       agent {
