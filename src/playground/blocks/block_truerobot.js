@@ -24,6 +24,7 @@ Entry.trueRobot = {
         colorBlue: 0,
         ledPort: 0,
         dualPort: 11,
+		linePort: 0xF0,
     },
     setZero: function() {
         var portMap = Entry.trueRobot.PORT_MAP;
@@ -309,13 +310,14 @@ Entry.trueRobot.getBlocks = function() {
 						dataC: 0,
 					};
 				}
-					setTimeout(function() {
+					var myTimer = setTimeout(function() {
 						 script.timeFlag = 2;
 					}, Entry.trueRobot.delayTime);
 					return script;
 				}else if (script.timeFlag == 1) {
 					return script;
 				}else if(script.timeFlag == 2) {
+					clearTimeout(myTimer);
 					delete script.timeFlag;
                     delete script.isStart;
                     Entry.engine.isContinue = false;
@@ -398,7 +400,7 @@ Entry.trueRobot.getBlocks = function() {
 
 					if( timeValue == 0 ){
 						
-						setTimeout(function() {
+						var myTimer = setTimeout(function() {
 							 script.timeFlag = 2;
 						}, Entry.trueRobot.delayTime);
 						 return script;
@@ -409,20 +411,19 @@ Entry.trueRobot.getBlocks = function() {
                     timeValue = Math.min(timeValue, 100);
                     var fps = Entry.FPS || 60;
                     timeValue = 60 / fps * timeValue * 1000;
-                    setTimeout(function() {
+                    var myTimer = setTimeout(function() {
                         script.timeFlag = 0;
                     }, timeValue);
                     return script;
                 } else if (script.timeFlag == 1) {
                     return script;
                 } else if (script.timeFlag == 2) {
+					clearTimeout(myTimer);
 					delete script.timeFlag;
                     delete script.isStart;
                     Entry.engine.isContinue = false;
                     return script.callReturn();
                 }else {
-                    delete script.timeFlag;
-                    delete script.isStart;
                     Entry.engine.isContinue = false;
 
                     Entry.hw.sendQueue['SET'][device] = {
@@ -431,8 +432,10 @@ Entry.trueRobot.getBlocks = function() {
                         dataB: 0,
                         dataC: 0,
                     };
-
-                    return script.callReturn();
+					var myTimer = setTimeout(function() {
+							 script.timeFlag = 2;
+					}, Entry.trueRobot.delayTime);
+                    return script;
                 }
             },
             syntax: { js: [], py: [] },
@@ -505,13 +508,14 @@ Entry.trueRobot.getBlocks = function() {
                     dataC: blueColor,
                 };
 
-					setTimeout(function() {
+					var myTimer = setTimeout(function() {
 						 script.timeFlag = 2;
 					}, Entry.trueRobot.delayTime);
 					return script;
 				}else if (script.timeFlag == 1) {
 					return script;
 				}else if(script.timeFlag == 2) {
+					clearTimeout(myTimer);
 					delete script.timeFlag;
                     delete script.isStart;
                     Entry.engine.isContinue = false;
@@ -528,14 +532,14 @@ Entry.trueRobot.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [['근접센서왼쪽', 9], ['근접센서오른쪽', 10]],
-                    value: '근접센서왼쪽',
+                    options: [[Lang.Blocks.truetruebot_front_near_left, 9], [Lang.Blocks.truetruebot_front_near_right, 10]],
+                    value: 9,
                     fontSize: 11,
                 },
                 {
                     type: 'Dropdown',
-                    options: [['켜기', 'on'], ['끄기', 'off']],
-                    value: '켜기',
+                    options: [[Lang.Blocks.truetruebot_on, 'on'], [Lang.Blocks.truetruebot_off, 'off']],
+                    value: 'on',
                     fontSize: 11,
                 },
                 {
@@ -575,13 +579,14 @@ Entry.trueRobot.getBlocks = function() {
                     dataB: 0x07,
                     dataC: 0x07,
                 };
-                setTimeout(function() {
+                var myTimer = setTimeout(function() {
 						 script.timeFlag = 2;
 					}, Entry.trueRobot.delayTime);
 					return script;
 				}else if (script.timeFlag == 1) {
 					return script;
 				}else if(script.timeFlag == 2) {
+					clearTimeout(myTimer);
 					delete script.timeFlag;
                     delete script.isStart;
                     Entry.engine.isContinue = false;
@@ -598,14 +603,14 @@ Entry.trueRobot.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [['전면컬러센서', 3], ['바닥컬러센서', 4]],
-                    value: '전면컬러센서',
+                    options: [[Lang.Blocks.truetruebot_front_color, 3], [Lang.Blocks.truetruebot_bottom_color, 4]],
+                    value: 3,
                     fontSize: 11,
                 },
                 {
                     type: 'Dropdown',
-                    options: [['켜기', 'on'], ['끄기', 'off']],
-                    value: '켜기',
+                    options: [[Lang.Blocks.truetruebot_on, 'on'], [Lang.Blocks.truetruebot_off, 'off']],
+                    value: 'on',
                     fontSize: 11,
                 },
                 {
@@ -646,13 +651,14 @@ Entry.trueRobot.getBlocks = function() {
                     dataC: 0x07,
                 };
                 
-				setTimeout(function() {
+				var myTimer = setTimeout(function() {
 						 script.timeFlag = 2;
 					}, Entry.trueRobot.delayTime);
 					return script;
 				}else if (script.timeFlag == 1) {
 					return script;
 				}else if(script.timeFlag == 2) {
+					clearTimeout(myTimer);
 					delete script.timeFlag;
                     delete script.isStart;
                     Entry.engine.isContinue = false;
@@ -669,8 +675,8 @@ Entry.trueRobot.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [['켜기', 'on'], ['끄기', 'off']],
-                    value: '켜기',
+                    options: [[Lang.Blocks.truetruebot_on, 'on'], [Lang.Blocks.truetruebot_off, 'off']],
+                    value: 'on',
                     fontSize: 11,
                 },
                 {
@@ -709,13 +715,14 @@ Entry.trueRobot.getBlocks = function() {
                     dataB: 0x07,
                     dataC: 0x07,
                 };
-                setTimeout(function() {
+                var myTimer = setTimeout(function() {
 						 script.timeFlag = 2;
 					}, Entry.trueRobot.delayTime);
 					return script;
 				}else if (script.timeFlag == 1) {
 					return script;
 				}else if(script.timeFlag == 2) {
+					clearTimeout(myTimer);
 					delete script.timeFlag;
                     delete script.isStart;
                     Entry.engine.isContinue = false;
@@ -732,8 +739,8 @@ Entry.trueRobot.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [['켜기', 'on'], ['끄기', 'off']],
-                    value: '켜기',
+                    options: [[Lang.Blocks.truetruebot_on, 'on'], [Lang.Blocks.truetruebot_off, 'off']],
+                    value: 'on',
                     fontSize: 11,
                 },
                 {
@@ -773,13 +780,14 @@ Entry.trueRobot.getBlocks = function() {
                     dataC: 0x07,
                 };
 
-					setTimeout(function() {
+					var myTimer = setTimeout(function() {
 						 script.timeFlag = 2;
 					}, Entry.trueRobot.delayTime);
 					return script;
 				}else if (script.timeFlag == 1) {
 					return script;
 				}else if(script.timeFlag == 2) {
+					clearTimeout(myTimer);
 					delete script.timeFlag;
                     delete script.isStart;
                     Entry.engine.isContinue = false;
@@ -789,6 +797,473 @@ Entry.trueRobot.getBlocks = function() {
             },
             syntax: { js: [], py: [] },
         },
-		
+		truetrue_set_head_colorled: {
+            color: '#00979D',
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+					type: 'Dropdown',
+                    options: [[Lang.Blocks.truetruebot_head_color_white, 101]
+						, [Lang.Blocks.truetruebot_head_color_red, 102]
+						, [Lang.Blocks.truetruebot_head_color_green, 103]
+						, [Lang.Blocks.truetruebot_head_color_blue, 104]
+						, [Lang.Blocks.truetruebot_head_color_cyan, 105]
+						, [Lang.Blocks.truetruebot_head_color_magenta, 106]
+						, [Lang.Blocks.truetruebot_head_color_yellow, 107]
+						, [Lang.Blocks.truetruebot_head_color_off, 100]],
+                    value: 101,
+                    fontSize: 11,
+                },
+				{
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_03.png',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [101,  null],
+                type: 'truetrue_set_head_colorled',
+            },
+            paramsKeyMap: {
+                headColor: 0,
+            },
+            class: 'trueRobot_control',
+            isNotFor: ['trueRobot'],
+            func: function(sprite, script) {
+					
+                var device = Entry.trueRobot.PORT_MAP.colorled;
+
+                var headColor = script.getField('headColor');
+				
+				var redColor; var greenColor; var blueColor;
+				
+                if( headColor == 101 ){
+					redColor=255; greenColor=255; blueColor=255;
+				}else if( headColor == 102 ){
+					redColor=255; greenColor=0; blueColor=0;
+				}else if( headColor == 103 ){
+					redColor=0; greenColor=255; blueColor=0;
+				}else if( headColor == 104 ){
+					redColor=0; greenColor=0; blueColor=255;
+				}else if( headColor == 105 ){
+					redColor=0; greenColor=255; blueColor=255;
+				}else if( headColor == 106 ){
+					redColor=255; greenColor=0; blueColor=255;
+				}else if( headColor == 107 ){
+					redColor=255; greenColor=255; blueColor=0;
+				}else if( headColor == 100 ){
+					redColor=0; greenColor=0; blueColor=0;
+				}
+				
+                if (!Entry.hw.sendQueue['SET']) {
+                    Entry.hw.sendQueue['SET'] = {};
+                }
+
+				if (!script.isStart) {
+                    script.isStart = true;
+                    script.timeFlag = 1;
+				
+                Entry.hw.sendQueue['SET'][device] = {
+                    port: Entry.trueRobot.PORT_MAP.colorled,
+                    dataA: redColor,
+                    dataB: greenColor,
+                    dataC: blueColor,
+                };
+
+					var myTimer = setTimeout(function() {
+						 script.timeFlag = 2;
+					}, Entry.trueRobot.delayTime);
+					return script;
+				}else if (script.timeFlag == 1) {
+					return script;
+				}else if(script.timeFlag == 2) {
+					clearTimeout(myTimer);
+					delete script.timeFlag;
+                    delete script.isStart;
+                    Entry.engine.isContinue = false;
+					return script.callReturn();
+				}
+            },
+            syntax: { js: [], py: [] },
+        },
+		truetrue_set_move: {
+            color: '#00979D',
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+						[Lang.Blocks.truetruebot_move_forward, 101], 
+						[Lang.Blocks.truetruebot_move_backward, 102]
+						],
+                    value: 101,
+                    fontSize: 11,
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_03.png',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [101,  null],
+                type: 'truetrue_set_move',
+            },
+            paramsKeyMap: {
+                moveValue: 0,
+            },
+            class: 'trueRobot_control',
+            isNotFor: ['trueRobot'],
+            func: function(sprite, script) {
+                var device = Entry.trueRobot.PORT_MAP.dualmotor;
+
+                if (!Entry.hw.sendQueue['SET']) {
+                    Entry.hw.sendQueue['SET'] = {};
+                }
+
+                if (!script.isStart) {
+                    script.isStart = true;
+                    script.timeFlag = 1;
+
+
+					var moveValue = script.getField('moveValue');
+                    var leftValue;
+                    var rightValue;
+                    var delayValue;
+
+					if(moveValue == 101){
+						leftValue=100; rightValue=100; delayValue=0;
+					}else if(moveValue == 102){
+						leftValue=-100; rightValue=-100; delayValue=0;
+					}
+
+                    Entry.hw.sendQueue['SET'][device] = {
+                        port: Entry.trueRobot.PORT_MAP.dualPort,
+                        dataA: leftValue,
+                        dataB: rightValue,
+                        dataC: delayValue,
+                    };
+                    
+                    var myTimer = setTimeout(function() {
+						 script.timeFlag = 2;
+					}, Entry.trueRobot.delayTime);
+                    return script;
+                } else if (script.timeFlag == 1) {
+                    return script;
+                } else if (script.timeFlag == 2) {
+					clearTimeout(myTimer);
+					delete script.timeFlag;
+                    delete script.isStart;
+                    Entry.engine.isContinue = false;
+                    return script.callReturn();
+                }
+            },
+            syntax: { js: [], py: [] },
+        },
+		truetrue_set_sec_move: {
+            color: '#00979D',
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+						[Lang.Blocks.truetruebot_move_forward, 101], 
+						[Lang.Blocks.truetruebot_move_backward, 102]
+						],
+                    value: 101,
+                    fontSize: 11,
+                },
+				{
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_03.png',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [101, '0', null],
+                type: 'truetrue_set_sec_move',
+            },
+            paramsKeyMap: {
+                moveValue: 0,
+				delayValue: 1,
+            },
+            class: 'trueRobot_control',
+            isNotFor: ['trueRobot'],
+            func: function(sprite, script) {
+                var device = Entry.trueRobot.PORT_MAP.dualmotor;
+
+                if (!Entry.hw.sendQueue['SET']) {
+                    Entry.hw.sendQueue['SET'] = {};
+                }
+
+				
+				var timeValue = script.getNumberValue('delayValue');
+				var delayValue = script.getNumberValue('delayValue');
+                    delayValue = Math.round(delayValue);
+                    delayValue = Math.max(delayValue, -100);
+                    delayValue = Math.min(delayValue, 100);
+
+                if (!script.isStart) {
+                    script.isStart = true;
+                    script.timeFlag = 1;
+
+
+					var moveValue = script.getField('moveValue');
+                    var leftValue;
+                    var rightValue;
+                   
+					if(moveValue == 101){
+						leftValue=100; rightValue=100;
+					}else if(moveValue == 102){
+						leftValue=-100; rightValue=-100; 
+					}
+
+                    Entry.hw.sendQueue['SET'][device] = {
+                        port: Entry.trueRobot.PORT_MAP.dualPort,
+                        dataA: leftValue,
+                        dataB: rightValue,
+                        dataC: delayValue,
+                    };
+
+					if( timeValue == 0 ){
+						var myTimer = setTimeout(function() {
+							 script.timeFlag = 2;
+						}, Entry.trueRobot.delayTime);
+						 return script;
+					}
+
+					timeValue = Math.round(timeValue);
+                    timeValue = Math.max(timeValue, -100);
+                    timeValue = Math.min(timeValue, 100);
+                    var fps = Entry.FPS || 60;
+                    timeValue = 60 / fps * timeValue * 1000;
+                    var myTimer = setTimeout(function() {
+                        script.timeFlag = 0;
+                    }, timeValue);
+                    return script;
+                } else if (script.timeFlag == 1) {
+                    return script;
+                } else if (script.timeFlag == 2) {
+					clearTimeout(myTimer);
+					delete script.timeFlag;
+                    delete script.isStart;
+                    Entry.engine.isContinue = false;
+                    return script.callReturn();
+                }else {
+                    Entry.engine.isContinue = false;
+
+                    Entry.hw.sendQueue['SET'][device] = {
+                        port: Entry.trueRobot.PORT_MAP.dualPort,
+                        dataA: 0,
+                        dataB: 0,
+                        dataC: 0,
+                    };
+					var myTimer = setTimeout(function() {
+							 script.timeFlag = 2;
+					}, Entry.trueRobot.delayTime);
+                    return script;
+                }
+            },
+            syntax: { js: [], py: [] },
+        },
+		truetrue_set_rotate: {
+            color: '#00979D',
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+						[Lang.Blocks.truetruebot_move_right, 101], 
+						[Lang.Blocks.truetruebot_move_left, 102]
+						],
+                    value: 101,
+                    fontSize: 11,
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_03.png',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [101,  null],
+                type: 'truetrue_set_rotate',
+            },
+            paramsKeyMap: {
+                moveValue: 0,
+            },
+            class: 'trueRobot_control',
+            isNotFor: ['trueRobot'],
+            func: function(sprite, script) {
+                var device = Entry.trueRobot.PORT_MAP.dualmotor;
+
+                if (!Entry.hw.sendQueue['SET']) {
+                    Entry.hw.sendQueue['SET'] = {};
+                }
+
+                if (!script.isStart) {
+                    script.isStart = true;
+                    script.timeFlag = 1;
+
+
+					var moveValue = script.getField('moveValue');
+                    var leftValue;
+                    var rightValue;
+                    var delayValue;
+
+					if(moveValue == 101){
+						leftValue=100; rightValue=-100; delayValue=0;
+					}else if(moveValue == 102){
+						leftValue=-100; rightValue=100; delayValue=0;
+					}
+
+                    Entry.hw.sendQueue['SET'][device] = {
+                        port: Entry.trueRobot.PORT_MAP.dualPort,
+                        dataA: leftValue,
+                        dataB: rightValue,
+                        dataC: delayValue,
+                    };
+                    
+                    var myTimer = setTimeout(function() {
+						 script.timeFlag = 2;
+					}, Entry.trueRobot.delayTime);
+                    return script;
+                } else if (script.timeFlag == 1) {
+                    return script;
+                } else if (script.timeFlag == 2) {
+					clearTimeout(myTimer);
+					delete script.timeFlag;
+                    delete script.isStart;
+                    Entry.engine.isContinue = false;
+                    return script.callReturn();
+                }
+            },
+            syntax: { js: [], py: [] },
+        },
+		truetrue_set_sec_rotate: {
+            color: '#00979D',
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+						[Lang.Blocks.truetruebot_move_right, 101], 
+						[Lang.Blocks.truetruebot_move_left, 102]
+						],
+                    value: 101,
+                    fontSize: 11,
+                },
+				{
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_03.png',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [101, '0', null],
+                type: 'truetrue_set_sec_rotate',
+            },
+            paramsKeyMap: {
+                moveValue: 0,
+				delayValue: 1,
+            },
+            class: 'trueRobot_control',
+            isNotFor: ['trueRobot'],
+            func: function(sprite, script) {
+                var device = Entry.trueRobot.PORT_MAP.dualmotor;
+
+                if (!Entry.hw.sendQueue['SET']) {
+                    Entry.hw.sendQueue['SET'] = {};
+                }
+
+				
+				var timeValue = script.getNumberValue('delayValue');
+				var delayValue = script.getNumberValue('delayValue');
+                    delayValue = Math.round(delayValue);
+                    delayValue = Math.max(delayValue, -100);
+                    delayValue = Math.min(delayValue, 100);
+
+                if (!script.isStart) {
+                    script.isStart = true;
+                    script.timeFlag = 1;
+
+
+					var moveValue = script.getField('moveValue');
+                    var leftValue;
+                    var rightValue;
+                   
+					if(moveValue == 101){
+						leftValue=100; rightValue=-100;
+					}else if(moveValue == 102){
+						leftValue=-100; rightValue=100; 
+					}
+
+                    Entry.hw.sendQueue['SET'][device] = {
+                        port: Entry.trueRobot.PORT_MAP.dualPort,
+                        dataA: leftValue,
+                        dataB: rightValue,
+                        dataC: delayValue,
+                    };
+
+					if( timeValue == 0 ){
+						var myTimer = setTimeout(function() {
+							 script.timeFlag = 2;
+						}, Entry.trueRobot.delayTime);
+						 return script;
+					}
+
+					timeValue = Math.round(timeValue);
+                    timeValue = Math.max(timeValue, -100);
+                    timeValue = Math.min(timeValue, 100);
+                    var fps = Entry.FPS || 60;
+                    timeValue = 60 / fps * timeValue * 1000;
+                    var myTimer = setTimeout(function() {
+                        script.timeFlag = 0;
+                    }, timeValue);
+                    return script;
+                } else if (script.timeFlag == 1) {
+                    return script;
+                } else if (script.timeFlag == 2) {
+					clearTimeout(myTimer);
+					delete script.timeFlag;
+                    delete script.isStart;
+                    Entry.engine.isContinue = false;
+                    return script.callReturn();
+                }else {
+                    Entry.engine.isContinue = false;
+
+                    Entry.hw.sendQueue['SET'][device] = {
+                        port: Entry.trueRobot.PORT_MAP.dualPort,
+                        dataA: 0,
+                        dataB: 0,
+                        dataC: 0,
+                    };
+					var myTimer = setTimeout(function() {
+							 script.timeFlag = 2;
+					}, Entry.trueRobot.delayTime);
+                    return script;
+                }
+            },
+            syntax: { js: [], py: [] },
+        },
+
     };
 };
