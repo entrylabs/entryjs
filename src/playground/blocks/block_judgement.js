@@ -121,7 +121,7 @@ module.exports = {
                 class: 'boolean_collision',
                 isNotFor: [],
                 func: function(sprite, script) {
-                    if (!sprite.getVisible()) return false;
+                    if (sprite.getVisible && !sprite.getVisible()) return false;
                     var targetSpriteId = script.getField('VALUE', script);
                     var reg = /wall/;
                     var ath = 0.2;
