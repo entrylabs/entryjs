@@ -4,7 +4,6 @@ if (typeof global.Entry !== 'object') {
     global.Entry = {};
 }
 
-
 if (typeof exports == 'object') {
     /* IGNORE_WEBPACK:START */
     var Lang = require('../../extern/lang/ko.js').Lang;
@@ -2401,11 +2400,7 @@ const block = {
             },
             {
                 type: 'Dropdown',
-                options: [
-                    ['=', 'EQUAL'],
-                    ['<', 'SMALLER'],
-                    ['>', 'BIGGER'],
-                ],
+                options: [['=', 'EQUAL'], ['<', 'SMALLER'], ['>', 'BIGGER']],
                 value: 'EQUAL',
                 fontSize: 11,
             },
@@ -7943,6 +7938,40 @@ const block = {
         isNotFor: [],
         func: function(sprite, script) {},
     },
+    hidden_loop2: {
+        color: '#7C7C7C',
+        skeleton: 'basic_loop',
+        template: '         %1       ',
+        statements: [
+            {
+                accept: 'basic',
+            },
+        ],
+        params: [
+            {
+                type: 'TextInput',
+                value: '?',
+                clearBG: true,
+                color: 'white',
+            },
+            {
+                type: 'Indicator',
+                color: '#6B6B6B',
+                size: 12,
+            },
+        ],
+        events: {},
+        def: {
+            params: [null],
+            type: 'hidden_loop2',
+        },
+        paramsKeyMap: {
+            VALUE: 0,
+        },
+        class: 'etc',
+        isNotFor: [],
+        func: function(sprite, script) {},
+    },
     hidden_if_else: {
         color: '#7C7C7C',
         skeleton: 'basic_double_loop',
@@ -7975,6 +8004,49 @@ const block = {
         def: {
             params: [null],
             type: 'hidden_if',
+        },
+        class: 'etc',
+        isNotFor: [],
+        func: function(sprite, script) {},
+    },
+    hidden_if_else2: {
+        color: '#7C7C7C',
+        skeleton: 'basic_double_loop',
+        template: '         %1       %2%3      %4       ',
+        statements: [
+            {
+                accept: 'basic',
+            },
+            {
+                accept: 'basic',
+            },
+        ],
+        params: [
+            {
+                type: 'TextInput',
+                value: '?',
+                clearBG: true,
+                color: 'white',
+            },
+            {
+                type: 'Indicator',
+                color: '#6B6B6B',
+                size: 12,
+            },
+            {
+                type: 'LineBreak',
+            },
+            {
+                type: 'TextInput',
+                value: '?',
+                clearBG: true,
+                color: 'white',
+            },
+        ],
+        events: {},
+        def: {
+            params: [null],
+            type: 'hidden_if_else2',
         },
         class: 'etc',
         isNotFor: [],
@@ -8076,17 +8148,17 @@ if (typeof exports == 'object') {
 }
 
 function setHardwareLanguage() {
-    for(let id in Entry.HARDWARE_LIST) {
+    for (let id in Entry.HARDWARE_LIST) {
         const hw = Entry.HARDWARE_LIST[id];
-        if(!hw) {
+        if (!hw) {
             continue;
         }
-        if('setLanguage' in hw) {
+        if ('setLanguage' in hw) {
             var hwLang = hw.setLanguage();
             var data = hwLang[global.Lang.type];
-            for(let key in data) {
+            for (let key in data) {
                 Object.assign(Lang[key], data[key]);
             }
         }
-    };
+    }
 }

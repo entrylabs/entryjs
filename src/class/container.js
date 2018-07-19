@@ -583,6 +583,12 @@ Entry.Container.prototype.getDropdownList = function(menuName, object) {
         case 'sprites':
             result = this.getCurrentObjects().map(({ name, id }) => [name, id]);
             break;
+        case 'allSprites':
+            result = this.getAllObjects().map(({ name, id, scene = {} }) => {
+                const { name: sceneName } = scene;
+                return [`${sceneName} - ${name}`, id];
+            });
+            break;
         case 'spritesWithMouse':
             result = this.getCurrentObjects().map(({ name, id }) => [name, id]);
             result.push([Lang.Blocks.mouse_pointer, 'mouse']);
@@ -688,6 +694,9 @@ Entry.Container.prototype.clearRunningState = function() {
 
 Entry.Container.prototype.clearRunningStateOnScene = function() {
     this.mapObjectOnScene((object) => {
+        if (object instanceof Entry.TargetChecker) {
+            return;
+        }
         object.clearExecutor();
     });
 };
@@ -1022,7 +1031,6 @@ Entry.Container.prototype.removeFuncBlocks = function(functionType) {
 
 Entry.Container.prototype.clear = function() {
     [...this.objects_, ...this._extensionObjects].forEach((o) => o.destroy());
-
     this.objects_ = [];
     // INFO : clear 시도할때 _extensionObjects 초기화
     this._extensionObjects = [];

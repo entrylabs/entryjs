@@ -1,7 +1,9 @@
 {
-    "presets": [
-        "es2017",
-        "env"
-    ],
-    "plugins": ["transform-runtime", "transform-object-assign"]
+    "presets": ["es2017", "env"],
+    "plugins": ["transform-runtime", "transform-object-assign", "syntax-dynamic-import"],
+    "env": {
+        "test": {
+            "plugins": ["dynamic-import-node"]
+        }
+    }
 }

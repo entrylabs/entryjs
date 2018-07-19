@@ -66,7 +66,12 @@ var {
         state: returnEmptyArr,
         log: returnEmptyArr,
         recordable: RECORDABLE.SUPPORT,
-        undo: 'variableContainerClickVariableAddButton',
+        get undo() {
+            try{
+                getVC()._getAddPanel().view.name.value = ""
+            } catch(e) {}
+            return 'variableContainerClickVariableAddButton';
+        },
         dom: ['variableContainer', 'variableAddButton'],
     };
 
@@ -108,10 +113,11 @@ var {
 
     c[variableAddSetName] = {
         do: function(value) {
-            var dom = $('.entryVariableAddSpaceInputWorkspace');
-            dom[0].blurred = true;
-            dom.blur();
-            dom.val(getExpectedData('value', value));
+            var { dom } = c[variableAddSetName];
+
+            dom = Entry.getDom(dom);
+            dom._focused = false;
+            dom.value = getExpectedData('value', value);
         },
         state: function(value) {
             return [''];
@@ -121,9 +127,9 @@ var {
         },
         restrict: function(data, domQuery, callback) {
             getVC().clickVariableAddButton(true);
-            var dom = _.head($('.entryVariableAddSpaceInputWorkspace'));
-            dom.enterKeyDisabled = true;
+            var dom = Entry.getDom(this.dom);
             Entry.Utils.focusIfNotActive(dom);
+            dom.enterKeyDisabled = true;
             var { title, content } = data.tooltip;
             return createTooltip(title, content, domQuery, callback, {
                 noDispose: true,
@@ -397,7 +403,12 @@ var {
         state: returnEmptyArr,
         log: returnEmptyArr,
         recordable: RECORDABLE.SUPPORT,
-        undo: 'variableContainerClickListAddButton',
+        get undo() {
+            try{
+                getVC()._getAddPanel('list').view.name.value = ""
+            } catch(e) {}
+            return 'variableContainerClickListAddButton';
+        },
         dom: ['variableContainer', 'listAddButton'],
     };
 
