@@ -437,16 +437,18 @@ var P_UP = "__pointerup";
 
         var hw = width / 2;
         var hh = height / 2;
+        //pixi line은 interaction 이 안됨. 그래서 rect 로 draw함.
+        var THICK = 10;
+        var H_THICK = THICK/2;
         this.edge
             .clear()
-            .lineStyle(10, 0xff0000, 1)
-            // .lineStyle(10, 0xfefefe, 0.01)
-            .moveTo(-hw, +hh)
-            .lineTo(-hw, -hh)
-            .lineTo(+hw, -hh)
-            .lineTo(+hw, +hh)
-            .lineTo(-hw, +hh)
-            .closePath();
+            .lineStyle(0)
+            .beginFill(0xfefefe, 0.01)
+            .drawRect(-hw - H_THICK, -hh - H_THICK, width + THICK, THICK)//top
+            .drawRect(-hw - H_THICK, +hh - H_THICK, width + THICK, THICK)//bottom
+            .drawRect(-hw - H_THICK, -hh - H_THICK, THICK, height + THICK)//left
+            .drawRect(+hw - H_THICK, -hh - H_THICK, THICK, height + THICK);//right
+
 
     };
 
