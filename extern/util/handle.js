@@ -332,6 +332,8 @@ var P_UP = "__pointerup";
             knob.knobIndex = i;
             //knob.cursor = "move";
             knob.on(P_DOWN, function(e) {
+                var targetKnob = e.currentTarget;
+                handle._dragHelper.handleDrag(targetKnob);
                 var otherKnobIndex =
                     this.knobIndex + 4 > 7
                         ? this.knobIndex + 4 - 8
