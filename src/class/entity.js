@@ -318,7 +318,8 @@ Entry.EntityObject.prototype.setRegX = function(regX) {
     if (this.type == 'textBox') regX = 0;
     /** @type {number} */
     this.regX = regX;
-    this.object.regX = this.regX;
+    //this.object.regX = this.regX;
+    this.object.pivot.x = this.regX;
     Entry.requestUpdate = true;
 };
 
@@ -338,7 +339,8 @@ Entry.EntityObject.prototype.setRegY = function(regY) {
     if (this.type == 'textBox') regY = 0;
     /** @type {number} */
     this.regY = regY;
-    this.object.regY = this.regY;
+    // this.object.regY = this.regY;
+    this.object.pivot.y = this.regY;
     Entry.requestUpdate = true;
 };
 
