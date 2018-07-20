@@ -32,13 +32,29 @@ Entry.Stage = function() {
  */
 Entry.Stage.prototype.initStage = function(canvas) {
 
-    var app = new PIXI.Application({
+    var _pixiApp = new PIXI.Application({
         view: canvas,
         width: canvas.width,
-        height: canvas.height
+        height: canvas.height,
+        autoStart: true,
+        antialias:true
     });
+    this._pixiApp = _pixiApp;
 
-    this.canvas = app.stage;
+    window.stage = _pixiApp.stage;
+    console.log("[TEST] window.stage 할당됨");
+
+    var gg = new PIXI.Graphics();
+    gg.beginFill(0xff0000).drawCircle(0, 0, 100, 100);
+    window.gg = gg;
+    gg.interactive = true;
+    gg.on("pointerdown", (e)=>{
+        console.log(e);
+    });
+    //window.stage.addChild(gg);
+
+
+    this.canvas = _pixiApp.stage;
     this.canvas.canvas = canvas;
 
     // this.canvas = new createjs.Stage(canvas.id);
@@ -179,7 +195,8 @@ Entry.Stage.prototype.update = function() {
         Entry.requestUpdate = false;
         return;
     }
-    this.canvas.update();
+    //this.canvas.update();
+    this._pixiApp.render();
 
     if (Entry.engine.isState('stop') && this.objectUpdated) {
         this.objectUpdated = false;
@@ -651,7 +668,7 @@ Entry.Stage.prototype.showInputField = function() {
     var button = new PIXI.Sprite();
     var imgPath = Entry.mediaFilePath + 'confirm_button.png';
     buttonImg.onload = function() {
-        button.texture = Texture.fromLoader(buttonImg, imgPath);
+        button.texture = PIXI.Texture.fromLoader(buttonImg, imgPath);
         Entry.requestUpdate = true;
     };
     buttonImg.src = imgPath;
