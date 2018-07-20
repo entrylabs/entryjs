@@ -314,13 +314,14 @@ var P_UP = "__pointerup";
         this.centerPoint = centerPoint;
 
         //resize knobs
+        var knobColor = colorToUint(this.color);
         this.knobs = [];
         for (var i = 0; i < 8; i++) {
             var knob = new PIXI.Graphics();
             knob.interactive = true;
             knob
-                .beginFill(colorToUint(this.color))
-                .lineStyle(1, colorToUint(this.color))
+                .beginFill(knobColor)
+                .lineStyle(1, knobColor)
                 .drawRect(-3, -3, 6, 6);
 
             // knob
