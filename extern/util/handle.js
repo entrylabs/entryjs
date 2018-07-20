@@ -531,17 +531,18 @@ var P_UP = "__pointerup";
     };
 
     p.getGlobalCoordinate = function(childObject) {
-        var container = this.container;
-        var rotation = -(this.container.rotation * Math.PI / 180);
+        var rotation = -this.container.rotation;
+        var cos = Math.cos(rotation);
+        var sin = Math.sin(rotation);
         return {
             x:
                 this.x +
-                childObject.x * Math.cos(rotation) +
-                childObject.y * Math.sin(rotation),
+                childObject.x * cos +
+                childObject.y * sin,
             y:
                 this.y +
-                childObject.y * Math.cos(rotation) -
-                childObject.x * Math.sin(rotation),
+                childObject.y * cos -
+                childObject.x * sin,
         };
     };
 
