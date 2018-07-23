@@ -443,13 +443,11 @@ var P_UP = "__pointerup";
             .drawRect(-hw - H_THICK, +hh - H_THICK, width + THICK, THICK)//bottom
             .drawRect(-hw - H_THICK, -hh - H_THICK, THICK, height + THICK)//left
             .drawRect(+hw - H_THICK, -hh - H_THICK, THICK, height + THICK);//right
-
-
     };
 
     p.renderRotateKnob = function() {
-        var width = this.width;
-        var height = this.height;
+        // var width = this.width;
+        // var height = this.height;
         // this.rotateKnob.graphics
         //     .clear()
         //     .ss(1, 2, 0)
@@ -462,16 +460,12 @@ var P_UP = "__pointerup";
         //     .dc(0, -height / 2 - 20, 4);
 
         var color = colorToUint(this.rotateKnobColor);
+        var hh = this.height / 2;//half height
         this.rotateKnob
             .clear()
-            .lineStyle(1, color)
-            .moveTo(0, -height / 2)
-            .lineTo(0, -height / 2)
-            .lineTo(0, -height / 2 - 20)
-            .closePath()
             .beginFill(color)
-            .drawCircle(0, -height / 2 - 20, 4);
-
+            .drawCircle(0, -hh - 20, 4)
+            .drawRect(-1,-hh - 20, 2, 20);
     };
 
     p.renderBorder = function() {
