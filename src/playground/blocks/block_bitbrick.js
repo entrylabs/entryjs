@@ -12,6 +12,7 @@ Entry.Bitbrick = {
         20: 'LED',
         19: 'SERVO',
         18: 'DC',
+    
     },
     PORT_MAP: {
         buzzer: 2,
