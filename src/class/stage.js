@@ -37,22 +37,14 @@ Entry.Stage.prototype.initStage = function(canvas) {
         width: canvas.width,
         height: canvas.height,
         autoStart: true,
-        antialias:true
+        antialias:true,
+        transparent: true
+
     });
     this._pixiApp = _pixiApp;
 
     window.stage = _pixiApp.stage;
     console.log("[TEST] window.stage 할당됨");
-
-    var gg = new PIXI.Graphics();
-    gg.beginFill(0xff0000).drawCircle(0, 0, 100, 100);
-    window.gg = gg;
-    gg.interactive = true;
-    gg.on("pointerdown", (e)=>{
-        console.log(e);
-    });
-    //window.stage.addChild(gg);
-
 
     this.canvas = _pixiApp.stage;
     this.canvas.canvas = canvas;
