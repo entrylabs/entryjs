@@ -144,8 +144,11 @@ var P_UP = "__pointerup";
     p.setRotation = function(rotation) {
         rotation = (rotation + 360) % 360;
         this.rotation = rotation;
-        this.container.rotation = rotation;
-        this.background.rotation = rotation;
+        // this.container.rotation = rotation;
+        // this.background.rotation = rotation;
+        var rad = rotation * Math.PI / 180;
+        this.container.rotation = rad;
+        this.background.rotation = rad;
         this.updateKnobCursor();
     };
 
@@ -364,8 +367,9 @@ var P_UP = "__pointerup";
         var background = new PIXI.Graphics();
         background.interactive = true;
         background
-            .lineStyle(1, 0xfefefe, 0.01)
-            .beginFill(0xfefefe, 1)
+            .lineStyle(0)
+            // .beginFill(0xfefefe, 1)
+            .beginFill(0xff0000, 1)
             .drawRect(-50, -50, 100, 100);
 
         // background
@@ -375,6 +379,7 @@ var P_UP = "__pointerup";
         //     .dr(-50, -50, 100, 100);
 
         background.on(P_DOWN, function(e) {
+            handle._dragHelper.handleDrag(background);
             var offset = handle.getEventCoordinate(e);
             offset.x -= handle.x;
             offset.y -= handle.y;
@@ -533,6 +538,7 @@ var P_UP = "__pointerup";
 
     p.getGlobalCoordinate = function(childObject) {
         var rotation = -this.container.rotation;
+        console.log('GlobalCoordinate');
         var cos = Math.cos(rotation);
         var sin = Math.sin(rotation);
         return {
@@ -549,12 +555,15 @@ var P_UP = "__pointerup";
 
     p.getLocalCoordinate = function(pos) {
         var container = this.container;
-        var rotation = this.container.rotation * Math.PI / 180;
+        // var rotation = this.container.rotation * Math.PI / 180;
+        var rotation = this.container.rotation;
+        var cos = Math.cos(rotation);
+        var sin = Math.sin(rotation);
         pos.x -= this.x;
         pos.y -= this.y;
         return {
-            x: pos.x * Math.cos(rotation) + pos.y * Math.sin(rotation),
-            y: pos.y * Math.cos(rotation) - pos.x * Math.sin(rotation),
+            x: pos.x * cos + pos.y * sin,
+            y: pos.y * cos - pos.x * sin,
         };
     };
 

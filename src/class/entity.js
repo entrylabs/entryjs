@@ -294,7 +294,7 @@ Entry.EntityObject.prototype.setRotation = function(rotation) {
     if (this.parent.getRotateMethod() !== 'free') rotation = 0;
 
     this.rotation = rotation.mod(360);
-    this.object.rotation = this.rotation;
+    this.object.rotation = this.rotation * Math.PI / 180;
     this.updateDialog();
     !this.isClone && this.parent.updateRotationView();
     Entry.dispatchEvent('updateObject');
