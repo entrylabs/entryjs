@@ -34,7 +34,9 @@ module.exports = merge(common, {
     },
     devServer: {
         contentBase: './',
+        disableHostCheck: true,
         port: 8080,
+        host: "0.0.0.0",
         historyApiFallback: {
             index: '/example/example.html',
             rewrites: [
