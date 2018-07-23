@@ -232,27 +232,15 @@ var P_UP = "__pointerup";
         this.rotateKnob = rotateKnob;
 
         var directionArrow = new PIXI.Graphics();
-        // directionArrow
-        //     .lineStyle(4, colorToUint(this.arrowColor))
-        //     .beginFill(colorToUint(this.arrowColor))
-        //     .drawCircle(0, 0, this.DHANDLE_RADIUS)
-        //     .moveTo(0, 0)
-        //     .lineTo(0, -40)
-        //     .lineTo(7, -32)
-        //     .lineTo(-7, -32)
-        //     .lineTo(0, -40)
-        //     .closePath();
-
         directionArrow.interactive = true;
         directionArrow
-        // .beginFill(0x00ff00) .drawCircle(0, 0, this.DHANDLE_RADIUS) //박봉배: 이건 안쓰는거 같은데요?
-            .lineStyle(4, 0xff0000)
-            .moveTo(0, 0)
-            .lineTo(0, -40)
-            .lineTo(7, -32)
-            .lineTo(-7, -32)
-            .lineTo(0, -40)
-            .closePath();
+        // .drawCircle(0, 0, this.DHANDLE_RADIUS) //박봉배: 이건 안쓰는거 같은데요?
+            .beginFill(colorToUint(this.arrowColor))
+            .moveTo(0, -42)
+            .lineTo(9, -30)
+            .lineTo(-9, -30)
+            .closePath()
+            .drawRect(-2, -32, 4, 32);
 
 
 
