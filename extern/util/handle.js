@@ -155,7 +155,8 @@ var P_UP = "__pointerup";
     p.setDirection = function(direction) {
         direction = (direction + 360) % 360;
         this.direction = direction;
-        this.directionArrow.rotation = direction;
+        // this.directionArrow.rotation = direction;
+        this.directionArrow.rotation = direction * Math.PI / 180;
     };
 
     p.setVisible = function(visible) {
