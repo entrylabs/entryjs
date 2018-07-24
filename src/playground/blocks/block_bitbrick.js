@@ -736,7 +736,8 @@ Entry.Bitbrick.getBlocks = function () {
 Entry.Bitbrick.setLanguage = function () {
     return {
         ko: {
-            Blocks: {
+            // ko.js에 작성하던 내용
+            template: {
                 bitbrick_sensor_value: "%%1  값",
                 bitbrick_is_touch_pressed: "버튼 %1 이(가) 눌렸는가?",
                 bitbrick_turn_off_color_led: "컬러 LED 끄기 %1",
@@ -749,6 +750,8 @@ Entry.Bitbrick.setLanguage = function () {
                 bitbrick_dc_direction_speed: "DC 모터 %1   %2  방향  속력 %3 %4",
                 bitbrick_servomotor_angle: "서보 모터 %1  각도 %2 %3",
                 bitbrick_convert_scale: "변환 %1 값 %2 ~ %3 에서 %4 ~ %5",
+            },
+            Blocks: {
                 BITBRICK_light: "밝기센서",
                 BITBRICK_IR: "거리센서",
                 BITBRICK_touch: "버튼",
@@ -765,7 +768,7 @@ Entry.Bitbrick.setLanguage = function () {
         },
         en: {
             // en.js에 작성하던 내용
-            Block: {
+            template: {
                 bitbrick_sensor_value: "Value %1",
                 bitbrick_is_touch_pressed: "Pressed %1 button? ",
                 bitbrick_turn_off_color_led: "Turn off color LED %1",
@@ -778,6 +781,8 @@ Entry.Bitbrick.setLanguage = function () {
                 bitbrick_dc_direction_speed: "DC motor %1 %2 direction speed %3 %4",
                 bitbrick_servomotor_angle: "Servo motor %1 angle %2 %3",
                 bitbrick_convert_scale: "Convert %1 value from %2~%3 to %4~%4",
+            },
+            Blocks: {
                 BITBRICK_light: "light",
                 BITBRICK_IR: "IR",
                 BITBRICK_touch: "touch",
