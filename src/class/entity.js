@@ -874,8 +874,9 @@ Entry.EntityObject.prototype.setImage = function(pictureModel) {
     Entry.dispatchEvent('updateObject');
 };
 
+
 /**
- * Apply easel filter
+ * Apply PIXI filter
  */
 Entry.EntityObject.prototype.applyFilter = function(isForce, forceEffects) {
     var effects = this.effect;
@@ -891,13 +892,19 @@ Entry.EntityObject.prototype.applyFilter = function(isForce, forceEffects) {
     (function(e, obj) {
         var f = [];
         var adjust = Entry.adjustValueWithMaxMin;
-        console.log("diffEffects", diffEffects);
         if (~diffEffects.indexOf('brightness')) {
-            e.brightness = e.brightness;
-            var cmBrightness = new createjs.ColorMatrix();
-            cmBrightness.adjustColor(adjust(e.brightness, -100, 100), 0, 0, 0);
-            var brightnessFilter = new createjs.ColorMatrixFilter(cmBrightness);
-            f.push(brightnessFilter);
+            // pixi 필터에 brightness 가 있지만, createjs 와 matrix 값이 달라 결과가 다르게 보임. 그래서 동일하게 구현함.
+            var brigthness = adjust(e.brightness, -100, 100);
+            brigthness /= 255;
+            const matrix = [
+                1, 0, 0, 0, brigthness,
+                0, 1, 0, 0, brigthness,
+                0, 0, 1, 0, brigthness,
+                0, 0, 0, 1, 0,
+            ];
+            var cmBrightness = new PIXI.filters.ColorMatrixFilter();
+            cmBrightness.matrix = matrix;
+            f.push(cmBrightness);
         }
 
         if (~diffEffects.indexOf('hue')) {
@@ -1057,6 +1064,193 @@ Entry.EntityObject.prototype.applyFilter = function(isForce, forceEffects) {
         return diffEffects;
     }
 };
+
+
+
+
+// /**
+//  * Apply easel filter
+//  */
+// Entry.EntityObject.prototype.applyFilter = function(isForce, forceEffects) {
+//     var effects = this.effect;
+//     var object = this.object;
+//
+//     var diffEffects = isEqualEffects(effects, this.getInitialEffectValue());
+//     if (!isForce && diffEffects.length === 0) return;
+//
+//     if (Array.isArray(forceEffects)) {
+//         diffEffects = diffEffects.concat(forceEffects);
+//     }
+//
+//     (function(e, obj) {
+//         var f = [];
+//         var adjust = Entry.adjustValueWithMaxMin;
+//         console.log("diffEffects", diffEffects);
+//         if (~diffEffects.indexOf('brightness')) {
+//             e.brightness = e.brightness;
+//             var cmBrightness = new createjs.ColorMatrix();
+//             cmBrightness.adjustColor(adjust(e.brightness, -100, 100), 0, 0, 0);
+//             var brightnessFilter = new createjs.ColorMatrixFilter(cmBrightness);
+//             f.push(brightnessFilter);
+//         }
+//
+//         if (~diffEffects.indexOf('hue')) {
+//             e.hue = e.hue.mod(360);
+//             var cmHue = new createjs.ColorMatrix();
+//             cmHue.adjustColor(0, 0, 0, e.hue);
+//             var hueFilter = new createjs.ColorMatrixFilter(cmHue);
+//             f.push(hueFilter);
+//         }
+//
+//         if (~diffEffects.indexOf('hsv')) {
+//             var matrixValue = [
+//                 1,
+//                 0,
+//                 0,
+//                 0,
+//                 0,
+//                 0,
+//                 1,
+//                 0,
+//                 0,
+//                 0,
+//                 0,
+//                 0,
+//                 1,
+//                 0,
+//                 0,
+//                 0,
+//                 0,
+//                 0,
+//                 1,
+//                 0,
+//                 0,
+//                 0,
+//                 0,
+//                 0,
+//                 1,
+//             ];
+//
+//             var degrees = e.hsv * 3.6;
+//             var r = degrees * 3 * Math.PI / 180;
+//             var cosVal = Math.cos(r);
+//             var sinVal = Math.sin(r);
+//
+//             var v = Math.abs(e.hsv / 100);
+//             if (v > 1) {
+//                 v = v - Math.floor(v);
+//             }
+//
+//             if (v > 0 && v <= 0.33) {
+//                 var matrixValue = [
+//                     1,
+//                     0,
+//                     0,
+//                     0,
+//                     0,
+//                     0,
+//                     cosVal,
+//                     sinVal,
+//                     0,
+//                     0,
+//                     0,
+//                     -1 * sinVal,
+//                     cosVal,
+//                     0,
+//                     0,
+//                     0,
+//                     0,
+//                     0,
+//                     1,
+//                     0,
+//                     0,
+//                     0,
+//                     0,
+//                     0,
+//                     1,
+//                 ];
+//             } else if (v <= 0.66) {
+//                 var matrixValue = [
+//                     cosVal,
+//                     0,
+//                     sinVal,
+//                     0,
+//                     0,
+//                     0,
+//                     1,
+//                     0,
+//                     0,
+//                     0,
+//                     sinVal,
+//                     0,
+//                     cosVal,
+//                     0,
+//                     0,
+//                     0,
+//                     0,
+//                     0,
+//                     1,
+//                     0,
+//                     0,
+//                     0,
+//                     0,
+//                     0,
+//                     1,
+//                 ];
+//             } else if (v <= 0.99) {
+//                 var matrixValue = [
+//                     cosVal,
+//                     sinVal,
+//                     0,
+//                     0,
+//                     0,
+//                     -1 * sinVal,
+//                     cosVal,
+//                     0,
+//                     0,
+//                     0,
+//                     0,
+//                     0,
+//                     1,
+//                     0,
+//                     0,
+//                     0,
+//                     0,
+//                     0,
+//                     1,
+//                     0,
+//                     0,
+//                     0,
+//                     0,
+//                     0,
+//                     1,
+//                 ];
+//             }
+//
+//             var calcMatrix = new createjs.ColorMatrix().concat(matrixValue);
+//             var colorFilter = new createjs.ColorMatrixFilter(calcMatrix);
+//             f.push(colorFilter);
+//         }
+//
+//         if (~diffEffects.indexOf('alpha')) {
+//             obj.alpha = e.alpha = adjust(e.alpha, 0, 1);
+//         }
+//
+//         obj.filters = f;
+//     })(effects, object);
+//
+//     this.cache();
+//
+//     function isEqualEffects(effectsA, effectsB) {
+//         var diffEffects = [];
+//         for (var key in effectsA) {
+//             if (effectsA[key] !== effectsB[key]) {
+//                 diffEffects.push(key);
+//             }
+//         }
+//         return diffEffects;
+//     }
+// };
 
 /**
  * Remove all filter
