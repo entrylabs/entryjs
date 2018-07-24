@@ -13,6 +13,9 @@ Entry.EXPANSION_BLOCK.weather = {
 };
 
 Entry.EXPANSION_BLOCK.weather.getData = function (locationStr, datetime) {
+    if(this.data.length == 0 ) {
+        throw new Error('NO WEATHER DATA');
+    }
     return this.data.find(function (d) {return d.aplYmdt == datetime && d.locationStr == locationStr})
 };
 
