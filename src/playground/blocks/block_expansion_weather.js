@@ -3,7 +3,7 @@
 
 Entry.Expansion_Weather = {
     name: 'weather',
-    imageName: 'arduino.png',
+    imageName: 'weather.png',
     title: {
         "ko": "날씨",
         "en": "weather"
