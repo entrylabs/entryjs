@@ -201,8 +201,8 @@ Entry.Roboid = {
     url: 'http://robomation.net/',
     imageName: 'block_roboid.png',
     title: {
-        "en": "Roboid",
-        "ko": "로보이드"
+        en: 'Roboid',
+        ko: '로보이드',
     },
     monitorTemplate: {
         imgPath: 'hw/transparent.png',
@@ -607,6 +607,41 @@ Entry.Roboid = {
         },
         mode: 'both',
     },
+};
+
+Entry.Roboid.setLanguage = function() {
+    return {
+        ko: {
+            Blocks: {
+                ROBOID_close_gripper: '닫기',
+                ROBOID_open_gripper: '열기',
+            },
+            Helper: {
+                roboid_hamster_gripper: '집게를 열거나 닫습니다.',
+                roboid_hamster_release_gripper:
+                    '집게의 전원을 끄고 자유롭게 움직일 수 있도록 합니다.',
+            },
+            template: {
+                roboid_hamster_gripper: '햄스터 %1: 집게 %2 %3',
+                roboid_hamster_release_gripper: '햄스터 %1: 집게 끄기 %2',
+            },
+        },
+        en: {
+            Blocks: {
+                ROBOID_close_gripper: 'close',
+                ROBOID_open_gripper: 'open',
+            },
+            Helper: {
+                roboid_hamster_gripper: 'Opens or closes the gripper.',
+                roboid_hamster_release_gripper:
+                    'Turns off the gripper so that it can be moved freely.',
+            },
+            template: {
+                roboid_hamster_gripper: 'Hamster %1: %2 gripper %3',
+                roboid_hamster_release_gripper: 'Hamster %1: release gripper %2',
+            },
+        },
+    };
 };
 
 Entry.Roboid.getBlocks = function() {
@@ -4630,6 +4665,181 @@ Entry.Roboid.getBlocks = function() {
                             },
                         ],
                         params: [null, 'AB'],
+                    },
+                ],
+            },
+        },
+        roboid_hamster_gripper: {
+            color: '#00979D',
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.Blocks.ROBOID_open_gripper, 'OPEN'],
+                        [Lang.Blocks.ROBOID_close_gripper, 'CLOSE'],
+                    ],
+                    value: 'OPEN',
+                    fontSize: 11,
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_03.png',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    null,
+                    null,
+                ],
+                type: 'roboid_hamster_gripper',
+            },
+            paramsKeyMap: {
+                INDEX: 0,
+                ACTION: 1,
+            },
+            class: 'hamster_port',
+            isNotFor: ['roboid'],
+            func: function(sprite, script) {
+                var index = script.getNumberValue('INDEX');
+                var robot = Entry.Roboid.getHamster(index);
+                var packet = robot.packet;
+                if (!script.isStart) {
+                    script.isStart = true;
+                    script.timeFlag = 1;
+                    packet.ioModeA = 10;
+                    packet.ioModeB = 10;
+                    var action = script.getField('ACTION');
+                    if (action == 'OPEN') {
+                        packet.outputA = 1;
+                        packet.outputB = 0;
+                    } else {
+                        packet.outputA = 0;
+                        packet.outputB = 1;
+                    }
+                    var timer = setTimeout(function() {
+                        script.timeFlag = 0;
+                        Entry.Roboid.removeTimeout(timer);
+                    }, 500);
+                    Entry.Roboid.timeouts.push(timer);
+                    return script;
+                } else if (script.timeFlag == 1) {
+                    return script;
+                } else {
+                    delete script.isStart;
+                    delete script.timeFlag;
+                    Entry.engine.isContinue = false;
+                    return script.callReturn();
+                }
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Roboid.hamster_open_gripper(%1)',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.ROBOID_open_gripper, 'OPEN'],
+                                    [Lang.Blocks.ROBOID_close_gripper, 'CLOSE'],
+                                ],
+                                value: 'OPEN',
+                                fontSize: 11,
+                            },
+                        ],
+                        params: [null, 'OPEN'],
+                    },
+                    {
+                        syntax: 'Roboid.hamster_close_gripper(%1)',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                            {
+                                type: 'Dropdown',
+                                options: [
+                                    [Lang.Blocks.ROBOID_open_gripper, 'OPEN'],
+                                    [Lang.Blocks.ROBOID_close_gripper, 'CLOSE'],
+                                ],
+                                value: 'OPEN',
+                                fontSize: 11,
+                            },
+                        ],
+                        params: [null, 'CLOSE'],
+                    },
+                ],
+            },
+        },
+        roboid_hamster_release_gripper: {
+            color: '#00979D',
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_03.png',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    null,
+                ],
+                type: 'roboid_hamster_release_gripper',
+            },
+            paramsKeyMap: {
+                INDEX: 0,
+            },
+            class: 'hamster_port',
+            isNotFor: ['roboid'],
+            func: function(sprite, script) {
+                var index = script.getNumberValue('INDEX');
+                var robot = Entry.Roboid.getHamster(index);
+                var packet = robot.packet;
+                packet.ioModeA = 10;
+                packet.ioModeB = 10;
+                packet.outputA = 0;
+                packet.outputB = 0;
+                return script.callReturn();
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Roboid.hamster_release_gripper(%1)',
+                        textParams: [
+                            {
+                                type: 'Block',
+                                accept: 'string',
+                            },
+                        ],
+                        params: [null],
                     },
                 ],
             },

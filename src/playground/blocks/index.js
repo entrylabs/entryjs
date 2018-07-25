@@ -51,6 +51,8 @@ require('./block_mechatro');
 require('./block_creamo');
 require('./block_funboard');
 require('./block_microbit');
+require('./block_mrt');
+require('./block_dash');
 
 Entry.HARDWARE_LIST = {
     '1.1': Entry.Arduino,
@@ -109,6 +111,8 @@ Entry.HARDWARE_LIST = {
     '20.1': Entry.Creamo,
     '21.1': Entry.FunBoard,
     '22.1': Entry.Microbit,
+    '23.1': Entry.MRT,
+    '24.1': Entry.Dash,
 };
 
 const startBlock = require('./block_start');
@@ -124,7 +128,7 @@ const variableBlock = require('./block_variable');
 const funcBlock = require('./block_func');
 
 require('./block_expansion_weather');
-
+Entry.EXPANSION_BLOCK = {};
 Entry.EXPANSION_BLOCK_LIST = {
     'weather' : Entry.Expansion_Weather
 };

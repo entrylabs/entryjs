@@ -13,7 +13,7 @@ EntryStatic.usageList = [
    'usage_signal', 'usage_random', 'usage_variable', 'usage_ask_answer' , 'usage_comp_operation', 'usage_math_operation',
    'usage_logical_operation' , 'usage_list', 'usage_function', 'usage_arrow_move', 'usage_coordinate', 'usage_rotation', 'usage_speak',
    'usage_picture_effect', 'usage_shape', 'usage_sound', 'usage_draw','usage_confirm', 'usage_timer', 'usage_textBox', 'usage_scene',
-   'usage_clone', 'usage_hw'
+   'usage_clone', 'usage_hw', 'usage_expansion'
 ];
 
 EntryStatic.conceptList = [
@@ -338,6 +338,7 @@ EntryStatic.getAllBlocks = function() {
             category: "expansion",
             blocks: [
                 "expansionBlockAddButton",
+                "weather_title",
                 "check_weather",
                 "check_finedust",
                 "get_weather_data",
@@ -548,6 +549,8 @@ EntryStatic.getAllBlocks = function() {
                 "hamster_set_port_to",
                 "hamster_change_output_by",
                 "hamster_set_output_to",
+                "hamster_gripper",
+                "hamster_release_gripper",
                 "turtle_touching_color",
                 "turtle_is_color_pattern",
                 "turtle_button_state",
@@ -609,7 +612,9 @@ EntryStatic.getAllBlocks = function() {
                 "roboid_hamster_set_tempo_to",
                 "roboid_hamster_set_port_to",
                 "roboid_hamster_change_output_by",
-                "roboid_hamster_set_output_to",
+                "roboid_hamster_set_output_to",                
+                "roboid_hamster_gripper",
+                "roboid_hamster_release_gripper",
                 "roboid_turtle_touching_color",
                 "roboid_turtle_is_color_pattern",
                 "roboid_turtle_button_state",
@@ -1313,6 +1318,42 @@ EntryStatic.getAllBlocks = function() {
                 "microbit_set_bpm",
                 // "microbit_radio_receive_event",
                 //endregion microbit
+                //region MRT-X Blocks added
+                "mrt_digitalInput",
+                "mrt_digitalOutput",
+                "mrt_analogValue",
+                "mrt_ultra",
+                "mrt_color",
+                "mrt_gyro",
+                "mrt_remotecontrol",
+                "mrt_keyvalue",
+                "mrt_buzzer",
+                "mrt_servo",
+                "mrt_oneWheel",
+                "mrt_lcd",
+                //endregion end of MRT-X Blocks added
+
+                //region dash
+                "dash_sensor1",
+                "dash_sensor2",
+                "dash_turn_drive",
+                "dash_turn_drive_360",
+                "dash_drive",
+                "dash_wheel_speed",
+                "dash_drive_stop",
+                "dash_v_head",
+                "dash_h_head",
+                "dash_forward_head",
+                "dash_sound_say",
+                "dash_sound_animal",
+                "dash_sound_move",
+                "dash_sound_strange",
+                "dash_my_sound",
+                "dash_light_color",
+                "dash_tail_light_color",
+                "dash_eye",
+                "dash_animation",
+                //endregion dash
             ]
         }
     ]
@@ -1533,6 +1574,7 @@ EntryStatic.ARROW_COLOR_JUDGE = '#89a1f7';
 EntryStatic.ARROW_COLOR_CALC = '#e8b349';
 EntryStatic.ARROW_COLOR_VARIABLE = '#ce38ce';
 EntryStatic.ARROW_COLOR_HW = '#097e84';
+EntryStatic.ARROW_COLOR_EXPANSION = '#ff8888';
 
 
 EntryStatic.COMMAND_TYPES = {
@@ -1560,6 +1602,8 @@ EntryStatic.getQuestionCategoryData = function() {
         category: 'dummy',
         blocks: [
             'hidden_event',
+            'hidden_loop2',
+            'hidden_if_else2',
             'hidden',
             'hidden_string',
             'hidden_boolean'
