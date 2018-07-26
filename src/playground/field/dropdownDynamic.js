@@ -100,11 +100,6 @@ Entry.Utils.inherit(Entry.FieldDropdown, Entry.FieldDropdownDynamic);
 
         var CONTENT_HEIGHT = this._CONTENT_HEIGHT + 4;
 
-        this.optionGroup.bind('init.dropDown', (e) =>{
-            e.stopPropagation();
-            that.destroyOption(undefined, true);
-        });
-
         this.optionGroup.on('mouseup', '.rect', function(e) {
             e.stopPropagation();
             that.applyValue(this._value);
