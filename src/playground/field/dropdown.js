@@ -169,6 +169,11 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
             e.stopPropagation()
         );
 
+        this.optionGroup.bind('init.dropDown', (e) =>{
+            e.stopPropagation();
+            that.destroyOption(undefined, true);
+        });
+
         this.optionGroup.on('mouseup', '.rect', function(e) {
             e.stopPropagation();
             that.applyValue(this._value);
