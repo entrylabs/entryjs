@@ -1502,6 +1502,87 @@ Entry.setCloneBrush = function(sprite, parentBrush) {
     sprite.shapes.push(shape);
 };
 
+/* PIXI 변환전 코드 백업
+Entry.setBasicBrush = function(sprite) {
+    var brush = new createjs.Graphics();
+    if (sprite.brush) {
+        var parentBrush = sprite.brush;
+        brush.thickness = parentBrush.thickness;
+        brush.rgb = parentBrush.rgb;
+
+        brush.opacity = parentBrush.opacity;
+        brush.setStrokeStyle(brush.thickness);
+        brush.beginStroke(
+            'rgba(' +
+                brush.rgb.r +
+                ',' +
+                brush.rgb.g +
+                ',' +
+                brush.rgb.b +
+                ',' +
+                (1 - brush.opacity / 100) +
+                ')'
+        );
+    } else {
+        brush.thickness = 1;
+        brush.rgb = Entry.hex2rgb('#ff0000');
+        brush.opacity = 0;
+        brush.setStrokeStyle(1);
+        brush.beginStroke('rgba(255,0,0,1)');
+    }
+
+    brush.entity = sprite;
+
+    var shape = new createjs.Shape(brush);
+    shape.entity = sprite;
+    var selectedObjectContainer = Entry.stage.selectedObjectContainer;
+    selectedObjectContainer.addChildAt(
+        shape,
+        selectedObjectContainer.getChildIndex(sprite.object)
+    );
+
+    if (sprite.brush) sprite.brush = null;
+    sprite.brush = brush;
+
+    sprite.shapes.push(shape);
+};
+
+Entry.setCloneBrush = function(sprite, parentBrush) {
+    var brush = new createjs.Graphics();
+    brush.thickness = parentBrush.thickness;
+    brush.rgb = parentBrush.rgb;
+
+    brush.opacity = parentBrush.opacity;
+    brush.setStrokeStyle(brush.thickness);
+    brush.beginStroke(
+        'rgba(' +
+            brush.rgb.r +
+            ',' +
+            brush.rgb.g +
+            ',' +
+            brush.rgb.b +
+            ',' +
+            (1 - brush.opacity / 100) +
+            ')'
+    );
+
+    var shape = new createjs.Shape(brush);
+    shape.entity = sprite;
+    var selectedObjectContainer = Entry.stage.selectedObjectContainer;
+    selectedObjectContainer.addChildAt(
+        shape,
+        selectedObjectContainer.getChildIndex(sprite.object)
+    );
+
+    brush.stop = parentBrush.stop;
+
+    if (sprite.brush) sprite.brush = null;
+    sprite.brush = brush;
+
+    sprite.shapes.push(shape);
+};
+ */
+
 Entry.isFloat = function(num) {
     return /\d+\.{1}\d+$/.test(num);
 };
