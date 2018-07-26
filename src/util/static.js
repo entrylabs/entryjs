@@ -80,6 +80,8 @@ Entry.STATIC = {
         objectUpdateDirectionValue: 215,
         objectUpdateRotateMethod: 216,
         entitySetModel: 217,
+        objectAddExpansionBlock: 218,
+        objectRemoveExpansionBlock: 219,
 
         do: 301,
         undo: 302,
@@ -144,12 +146,15 @@ Entry.STATIC = {
         variableSetName: 828,
         listSetName: 829,
 
-        //utility commands
+
         dismissModal: 900,
 
         funcCreateStart: 1001,
         funcEditStart: 1002,
         funcEditCancel: 1003,
+
+        playgroundClickAddExpansionBlock: 1101,
+        playgroundClickAddExpansionBlockCancel: 1102,
     },
 
     RECORDABLE: {

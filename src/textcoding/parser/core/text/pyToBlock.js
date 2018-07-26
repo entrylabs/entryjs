@@ -760,7 +760,6 @@ Entry.PyToBlockParser = function(blockSyntax) {
                         ? defParams[index]
                         : undefined
                 );
-
                 this.assert(
                     !(typeof param === 'string' && arg.type === 'Identifier'),
                     param,
