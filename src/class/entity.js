@@ -909,10 +909,9 @@ Entry.EntityObject.prototype.applyFilter = function(isForce, forceEffects) {
 
         if (~diffEffects.indexOf('hue')) {
             e.hue = e.hue.mod(360);
-            var cmHue = new createjs.ColorMatrix();
-            cmHue.adjustColor(0, 0, 0, e.hue);
-            var hueFilter = new createjs.ColorMatrixFilter(cmHue);
-            f.push(hueFilter);
+            var cmHue = new PIXI.filters.ColorMatrixFilter();
+            cmHue.hue(e.hue);
+            f.push(cmHue);
         }
 
         if (~diffEffects.indexOf('hsv')) {
