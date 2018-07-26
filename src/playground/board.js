@@ -904,8 +904,6 @@ Entry.Board.DRAG_RADIUS = 5;
     };
 
     p._removeActivated = function() {
-        $(".entry-widget-dropdown").trigger("init.dropDown");
-
         if (!this._activatedBlockView) return;
 
         this._activatedBlockView.removeActivated();

@@ -79,10 +79,9 @@ Entry.Utils.inherit(Entry.FieldDropdown, Entry.FieldDropdownDynamic);
     p.renderOptions = function() {
         var that = this;
 
-        /* 
-        * this._attachDisposeEvent(() => {});
-        * 이후 disposeEvent가 필요한 경우 다시 작성 필요.
-        */
+        this._attachDisposeEvent(() => {
+            that.destroyOption(undefined, true);
+        });
 
         this.optionGroup = Entry.Dom('ul', {
             class: 'entry-widget-dropdown',
@@ -100,10 +99,6 @@ Entry.Utils.inherit(Entry.FieldDropdown, Entry.FieldDropdownDynamic);
         var maxWidth = 0;
 
         var CONTENT_HEIGHT = this._CONTENT_HEIGHT + 4;
-
-        this.optionGroup.bind('mousedown touchstart', (e) =>
-            e.stopPropagation()
-        );
 
         this.optionGroup.bind('init.dropDown', (e) =>{
             e.stopPropagation();
