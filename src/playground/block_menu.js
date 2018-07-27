@@ -1016,7 +1016,11 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
             }
             const { type, params: threadParams } = thread.getFirstBlock();
             let option = true;
-            if (blockType === 'calc_basic' || blockType === 'boolean_basic_operator') {
+            if (
+                blockType === 'calc_basic' ||
+                blockType === 'boolean_basic_operator' ||
+                blockType === 'boolean_and_or'
+            ) {
                 option = type === blockType && threadParams[1] === params[1];
             }
             return type === blockType && option;
