@@ -11,8 +11,8 @@ Entry.Chocopi = {
     p: {},
     ev: {},
     blocks: [],
-    setZero: function() {},
-    getport: function(id, port) {
+    setZero: function () { },
+    getport: function (id, port) {
         if (!this.blocks) return -1;
         if (this.blocks[port].id == id) return port;
         for (var p in this.blocks) if (this.blocks[p].id == id) return p;
@@ -37,7 +37,7 @@ Entry.Chocopi = {
         ['BLE7', 14],
         ['BLE8', 15],
     ],
-    dataHandler: function(data) {
+    dataHandler: function (data) {
         if (!this.connected) {
             this.connected = true;
             Entry.hw.sendQueue.init = true;
@@ -62,7 +62,7 @@ Entry.Chocopi = {
     },
 };
 
-Entry.Chocopi.getBlocks = function() {
+Entry.Chocopi.getBlocks = function () {
     return {
         //region chocopi 초코파이
         chocopi_sensor: {
@@ -111,7 +111,7 @@ Entry.Chocopi.getBlocks = function() {
             paramsKeyMap: { port: 0, sensor: 1 },
             class: 'chocopi_sensor',
             isNotFor: ['chocopi'],
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 var port = Entry.Chocopi.getport(8, script.getField('port'));
                 var name = script.getField('sensor');
                 if (port == -1) return 0;
@@ -187,7 +187,7 @@ Entry.Chocopi.getBlocks = function() {
             class: 'chocopi_touch',
             isNotFor: ['chocopi'],
             event: 'touch14',
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 var port = Entry.Chocopi.getport(9, script.getField('port'));
                 if (port == -1) return this.die();
                 var id = script.getField('id');
@@ -255,7 +255,7 @@ Entry.Chocopi.getBlocks = function() {
             paramsKeyMap: { port: 0, sensor: 1 },
             class: 'chocopi_touch',
             isNotFor: ['chocopi'],
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 var port = Entry.Chocopi.getport(9, script.getField('port'));
                 var sensor = script.getField('sensor');
                 if (port == -1) return false;
@@ -315,7 +315,7 @@ Entry.Chocopi.getBlocks = function() {
             paramsKeyMap: { port: 0, sensor: 1 },
             class: 'chocopi_touch',
             isNotFor: ['chocopi'],
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 var port = Entry.Chocopi.getport(9, script.getField('port'));
                 if (port == -1) return false;
                 var sensor = script.getField('sensor');
@@ -383,7 +383,7 @@ Entry.Chocopi.getBlocks = function() {
             class: 'chocopi_control',
             isNotFor: ['chocopi'],
             event: 'control14',
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 var port = Entry.Chocopi.getport(10, script.getField('port'));
                 if (port == -1) return this.die();
                 var id = script.getField('id');
@@ -442,7 +442,7 @@ Entry.Chocopi.getBlocks = function() {
             paramsKeyMap: { port: 0, sensor: 1 },
             class: 'chocopi_control',
             isNotFor: ['chocopi'],
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 var port = Entry.Chocopi.getport(10, script.getField('port'));
                 if (port == -1) return false;
                 var sensor = script.getField('sensor');
@@ -494,7 +494,7 @@ Entry.Chocopi.getBlocks = function() {
             paramsKeyMap: { port: 0, sensor: 1 },
             class: 'chocopi_control',
             isNotFor: ['chocopi'],
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 var port = Entry.Chocopi.getport(10, script.getField('port'));
                 if (port == -1) return false;
                 var sensor = script.getField('sensor');
@@ -554,7 +554,7 @@ Entry.Chocopi.getBlocks = function() {
             paramsKeyMap: { port: 0, sensor: 1, action: 2 },
             class: 'chocopi_motion',
             isNotFor: ['chocopi'],
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 var port = Entry.Chocopi.getport(11, script.getField('port'));
                 if (port == -1) return 0;
                 var sensor = script.getField('sensor');
@@ -598,6 +598,9 @@ Entry.Chocopi.getBlocks = function() {
                         [Lang.Hw.IR + ' 1', 0],
                         [Lang.Hw.IR + ' 2', 1],
                         [Lang.Hw.IR + ' 3', 2],
+                        [Lang.Blocks.chocopi_motion_angle_x, 9],
+                        [Lang.Blocks.chocopi_motion_angle_y, 10],
+                        [Lang.Blocks.chocopi_motion_angle_z, 11],
                         [Lang.Hw.acceleration + 'X', 3],
                         [Lang.Hw.acceleration + 'Y', 4],
                         [Lang.Hw.acceleration + 'Z', 5],
@@ -613,14 +616,21 @@ Entry.Chocopi.getBlocks = function() {
             paramsKeyMap: { port: 0, sensor: 1 },
             class: 'chocopi_motion',
             isNotFor: ['chocopi'],
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 var port = Entry.Chocopi.getport(11, script.getField('port'));
                 if (port == -1) return 0;
                 var sensor = script.getField('sensor');
-                return Entry.Chocopi.p[port].s[sensor];
+                var v=Entry.Chocopi.p[port].s
+                if(sensor<9) return v[sensor];
+                switch(sensor){
+                    case 9 : return  Math.atan2(v[3], v[5]) * 180 / Math.PI;
+                    case 10 : return  Math.atan2(v[4], v[5]) * 180 / Math.PI;
+                    case 11 : return  Math.atan2(v[3], v[4]) * 180 / Math.PI;
+                }
+                return 0;
             },
             syntax: { js: [], py: ['Chocopi.motionValue(%1, %2)'] },
-        },
+        },       
         chocopi_motion_photogate_status: {
             color: '#00979D',
             fontColor: '#fff',
@@ -660,7 +670,7 @@ Entry.Chocopi.getBlocks = function() {
             paramsKeyMap: { port: 0, sensor: 1 },
             class: 'chocopi_motion',
             isNotFor: ['chocopi'],
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 var port = Entry.Chocopi.getport(11, script.getField('port'));
                 if (port == -1) return 0;
                 var sensor = script.getField('sensor');
@@ -741,7 +751,7 @@ Entry.Chocopi.getBlocks = function() {
             class: 'chocopi_motion',
             isNotFor: ['chocopi'],
             event: 'motion14',
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 var port = Entry.Chocopi.getport(11, script.getField('port'));
                 if (port == -1) return this.die();
                 var id = script.getField('id');
@@ -796,16 +806,16 @@ Entry.Chocopi.getBlocks = function() {
                 params: [
                     null,
                     { type: 'number', params: [1] },
-                    { type: 'number', params: [2] },
-                    { type: 'number', params: [1] },
-                    { type: 'number', params: [1] },
+                    { type: 'number', params: [0] },
+                    { type: 'number', params: [0] },
+                    { type: 'number', params: [0] },
                 ],
                 type: 'chocopi_led',
             },
             paramsKeyMap: { port: 0, l: 1, r: 2, g: 3, b: 4 },
             class: 'chocopi_output',
             isNotFor: ['chocopi'],
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 var port = Entry.Chocopi.getport(12, script.getField('port'));
                 if (port == -1) return script.callReturn();
                 var l = script.getNumberValue('l');
@@ -871,13 +881,13 @@ Entry.Chocopi.getBlocks = function() {
                 },
             ],
             def: {
-                params: [null, null, { type: 'number', params: [31] }],
+                params: [null, null, { type: 'number', params: [0] }],
                 type: 'chocopi_dc_motor',
             },
             paramsKeyMap: { port: 0, id: 1, power: 2, direction: 3 },
             class: 'chocopi_output',
             isNotFor: ['chocopi'],
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 var port = Entry.Chocopi.getport(14, script.getField('port'));
                 if (port == -1) return script.callReturn();
                 var id = script.getField('id');
@@ -938,7 +948,7 @@ Entry.Chocopi.getBlocks = function() {
             paramsKeyMap: { port: 0, id: 1, angle: 2 },
             class: 'chocopi_output',
             isNotFor: ['chocopi'],
-            func: function(sprite, script) {
+            func: function (sprite, script) {
                 var port = Entry.Chocopi.getport(15, script.getField('port'));
                 if (port == -1) return script.callReturn();
                 var id = script.getField('id');
@@ -950,6 +960,40 @@ Entry.Chocopi.getBlocks = function() {
             },
             syntax: { js: [], py: ['Chocopi.servo(%1, %2, %3)'] },
         },
-        //endregion coconut 코코넛
+        chocopi_map_range: {
+            color: '#00979D',
+            fontColor: '#fff',
+            skeleton: 'basic_string_field',
+            statements: [],
+            params: [
+                { type: 'Block', accept: 'string' },
+                { type: 'Block', accept: 'string' },
+                { type: 'Block', accept: 'string' },
+                { type: 'Block', accept: 'string' },
+                { type: 'Block', accept: 'string' },
+            ],
+            def: {
+                params: [{ type: 'number', params: [0] },
+                { type: 'number', params: [0] },
+                { type: 'number', params: [4096] },
+                { type: 'number', params: [0] },
+                { type: 'number', params: [255] }
+                ], type: 'chocopi_map_range'
+            },
+            paramsKeyMap: { x: 0, x1: 1,x2: 2,y1: 3,y2: 4 },
+            class: 'chocopi',
+            isNotFor: ['chocopi'],
+            func: function (sprite, script) {
+                var x =script.getNumberValue('x');
+                var x1 = script.getNumberValue('x1');
+                var x2 = script.getNumberValue('x2');
+                var y1 = script.getNumberValue('y1');
+                var y2 = script.getNumberValue('y2');
+                if(x1===x2) return 0;
+                return (x-x1)*(y2-y1)/(x2-x1);
+            },
+            syntax: { js: [], py: ['Chocopi.mapRange(%1, %2, %3, %4, %5)'] },
+        },
+
     };
 };

@@ -829,6 +829,7 @@ EntryStatic.getAllBlocks = function() {
                 'chocopi_led',
                 'chocopi_dc_motor',
                 'chocopi_servo_motor',
+                'chocopi_map_range',
 
                 //jeil science smartBoard. 2016-11-03
                 //smartBoard
