@@ -474,7 +474,9 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
     };
 
     p.onMouseDown = function(e) {
-        if (e.stopPropagation) e.stopPropagation();
+        if(!this.isInBlockMenu && e.originalEvent && e.originalEvent.touches) {
+            if (e.stopPropagation) e.stopPropagation();
+        }
         if (e.preventDefault) e.preventDefault();
         var longPressTimer = null;
 
@@ -537,8 +539,15 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
 
         var that = this;
 
+        function isVerticalMove(mouseEvent, dragInstance) {
+            const dx = Math.abs(mouseEvent.pageX - dragInstance.offsetX);
+            const dy = Math.abs(mouseEvent.pageY - dragInstance.offsetY);
+            return dy / dx > 1.75;
+        }
+
         function onMouseMove(e) {
             e.stopPropagation();
+
             var workspaceMode = board.workspace.getMode();
 
             var mouseEvent;
@@ -547,6 +556,13 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
             if (e.originalEvent && e.originalEvent.touches)
                 mouseEvent = e.originalEvent.touches[0];
             else mouseEvent = e;
+
+            if(blockView.isInBlockMenu && longPressTimer && isVerticalMove(mouseEvent, blockView.dragInstance)) {
+                onMouseUp();
+                return ;
+            }else {
+                $(document).unbind('.blockMenu');
+            }
 
             var mouseDownCoordinate = blockView.mouseDownCoordinate;
             var diff = Math.sqrt(
