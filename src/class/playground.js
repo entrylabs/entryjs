@@ -57,7 +57,7 @@ Entry.Playground = function() {
                 .appendTo(this.view_);
             var [
                 mentHead,
-                mentTail,
+                mentTail = '',
             ] = Lang.Workspace.cannot_edit_click_to_stop.split('.');
             curtainView.innerHTML = mentHead + '.<br/>' + mentTail;
             curtainView.addEventListener('click', function() {
