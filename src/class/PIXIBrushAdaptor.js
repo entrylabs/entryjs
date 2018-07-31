@@ -42,6 +42,7 @@ export class PIXIBrushAdaptor {
 
     lineTo(x, y) {
         if(!this._shape) return;
+        this._setStyle();
         this._shape.lineTo(x, y);
     }
 
