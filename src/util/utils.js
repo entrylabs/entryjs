@@ -1,5 +1,7 @@
 'use strict';
 
+import { PIXIBrushAdaptor } from '../class/PIXIBrushAdaptor';
+
 Entry.Utils = {};
 
 Entry.TEXT_ALIGN_CENTER = 0;
@@ -1424,25 +1426,17 @@ Entry.getBrowserType = function() {
 };
 
 Entry.setBasicBrush = function(sprite) {
-    var brush = new createjs.Graphics();
+    var brush = new PIXIBrushAdaptor();
     if (sprite.brush) {
         var parentBrush = sprite.brush;
         brush.thickness = parentBrush.thickness;
         brush.rgb = parentBrush.rgb;
 
         brush.opacity = parentBrush.opacity;
+        var rgb = brush.rgb;
+        var alpha = 1 - brush.opacity / 100;
         brush.setStrokeStyle(brush.thickness);
-        brush.beginStroke(
-            'rgba(' +
-                brush.rgb.r +
-                ',' +
-                brush.rgb.g +
-                ',' +
-                brush.rgb.b +
-                ',' +
-                (1 - brush.opacity / 100) +
-                ')'
-        );
+        brush.beginStroke(`rgba(${rgb.r},${rgb.g},${rgb.b},${alpha})`);
     } else {
         brush.thickness = 1;
         brush.rgb = Entry.hex2rgb('#ff0000');
@@ -1453,7 +1447,8 @@ Entry.setBasicBrush = function(sprite) {
 
     brush.entity = sprite;
 
-    var shape = new createjs.Shape(brush);
+    var shape = new PIXI.Graphics();
+    brush.internal_setShape(shape);
     shape.entity = sprite;
     var selectedObjectContainer = Entry.stage.selectedObjectContainer;
     selectedObjectContainer.addChildAt(
@@ -1468,25 +1463,21 @@ Entry.setBasicBrush = function(sprite) {
 };
 
 Entry.setCloneBrush = function(sprite, parentBrush) {
-    var brush = new createjs.Graphics();
+    var brush = new PIXIBrushAdaptor();
     brush.thickness = parentBrush.thickness;
     brush.rgb = parentBrush.rgb;
 
     brush.opacity = parentBrush.opacity;
-    brush.setStrokeStyle(brush.thickness);
-    brush.beginStroke(
-        'rgba(' +
-            brush.rgb.r +
-            ',' +
-            brush.rgb.g +
-            ',' +
-            brush.rgb.b +
-            ',' +
-            (1 - brush.opacity / 100) +
-            ')'
-    );
 
-    var shape = new createjs.Shape(brush);
+    var rgb = brush.rgb;
+    var alpha = 1 - brush.opacity / 100;
+
+    brush.setStrokeStyle(brush.thickness);
+    brush.beginStroke(`rgba(${rgb.r},${rgb.g},${rgb.b},${alpha})`);
+
+
+    var shape = new PIXI.Graphics();
+    brush.internal_setShape(shape);
     shape.entity = sprite;
     var selectedObjectContainer = Entry.stage.selectedObjectContainer;
     selectedObjectContainer.addChildAt(
