@@ -3,7 +3,10 @@
  * @fileoverview This manage canvas
  *
  */
+
 'use strict';
+
+import { PIXIHandle } from './PIXIHandle';
 
 /**
  * class for a canvas
@@ -366,7 +369,7 @@ Entry.Stage.prototype.selectObject = function(object) {
  * Initialize handle. Handle is use for transform object on canvas.
  */
 Entry.Stage.prototype.initHandle = function() {
-    this.handle = new EaselHandle(this.canvas)
+    this.handle = new PIXIHandle(this.canvas)
         .setChangeListener(this, this.updateHandle)
         .setEditStartListener(this, this.startEdit)
         .setEditEndListener(this, this.endEdit);
