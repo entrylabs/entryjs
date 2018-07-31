@@ -1,17 +1,12 @@
 /**
  * Resize handle on Easel.js
  */
-
 'use strict';
-
 
 var EaselHandle = function(canvas) {
     if (typeof createjs != 'object') {
         throw 'createjs is not founded';
     }
-
-    this._dragHelper = new DragHelper();
-
     this.canvas = canvas;
     this.color = '#c1c7cd';
     //this.color = "#6BD5FF";
@@ -41,24 +36,9 @@ var EaselHandle = function(canvas) {
     this.createHandle();
     this.render();
     this.selectedObject = null;
-
 };
 
-var P_DOWN = "pointerdown";
-var P_MOVE = "__pointermove";
-var P_UP = "__pointerup";
-
 (function(p) {
-
-    /**
-     * #ff00ff --> 0xff00ff
-     * @param strColor
-     */
-    function colorToUint(strColor) {
-        return Number(strColor.replace("#", "0x"));
-    }
-
-
     p.setChangeListener = function(object, func) {
         this.onChangeFunction = func;
         this.callerObject = object;
@@ -121,14 +101,12 @@ var P_UP = "__pointerup";
 
     p.setWidth = function(width) {
         this.width = width;
-        // this.background.scaleX = width / 100;
-        this.background.scale.x = width / 100;
+        this.background.scaleX = width / 100;
     };
 
     p.setHeight = function(height) {
         this.height = height;
-        // this.background.scaleY = height / 100;
-        this.background.scale.y = height / 100;
+        this.background.scaleY = height / 100;
     };
 
     p.setRegX = function(regX) {
@@ -144,19 +122,15 @@ var P_UP = "__pointerup";
     p.setRotation = function(rotation) {
         rotation = (rotation + 360) % 360;
         this.rotation = rotation;
-        // this.container.rotation = rotation;
-        // this.background.rotation = rotation;
-        var rad = rotation * Math.PI / 180;
-        this.container.rotation = rad;
-        this.background.rotation = rad;
+        this.container.rotation = rotation;
+        this.background.rotation = rotation;
         this.updateKnobCursor();
     };
 
     p.setDirection = function(direction) {
         direction = (direction + 360) % 360;
         this.direction = direction;
-        // this.directionArrow.rotation = direction;
-        this.directionArrow.rotation = direction * Math.PI / 180;
+        this.directionArrow.rotation = direction;
     };
 
     p.setVisible = function(visible) {
@@ -172,27 +146,24 @@ var P_UP = "__pointerup";
 
     p.createHandle = function() {
         var handle = this;
-        var container = new PIXI.Container();
-        // var container = new createjs.Container();
+        var container = new createjs.Container();
 
         //border
-        var border = new PIXI.Graphics();
+        var border = new createjs.Shape();
         container.addChild(border);
         this.border = border;
 
         //edge
-        var edge = new PIXI.Graphics();
-        edge.interactive = true;
+        var edge = new createjs.Shape();
         edge.cursor = 'move';
-        edge.on(P_DOWN, function(e) {
-            handle._dragHelper.handleDrag(edge);
+        edge.on('mousedown', function(e) {
             var offset = handle.getEventCoordinate(e);
             offset.x -= handle.x;
             offset.y -= handle.y;
             this.offset = offset;
             handle.dispatchEditStartEvent();
         });
-        edge.on(P_MOVE, function(e) {
+        edge.on('pressmove', function(e) {
             if (handle.getDraggable()) {
                 var pos = handle.getEventCoordinate(e);
                 pos.x -= this.offset.x;
@@ -202,21 +173,19 @@ var P_UP = "__pointerup";
                 handle.dispatchOnChangeEvent();
             }
         });
-        edge.on(P_UP, function(e) {
+        edge.on('pressup', function(e) {
             handle.dispatchEditEndEvent();
         });
         container.addChild(edge);
         this.edge = edge;
 
         //rotate knob
-        var rotateKnob = new PIXI.Graphics();
-        rotateKnob.interactive = true;
+        var rotateKnob = new createjs.Shape();
         rotateKnob.cursor = 'crosshair';
-        rotateKnob.on(P_DOWN, function(e) {
-            handle._dragHelper.handleDrag(rotateKnob);
+        rotateKnob.on('mousedown', function(e) {
             handle.dispatchEditStartEvent();
         });
-        rotateKnob.on(P_MOVE, function(e) {
+        rotateKnob.on('pressmove', function(e) {
             var pos = handle.getEventCoordinate(e);
             pos.x -= handle.x;
             pos.y -= handle.y;
@@ -224,50 +193,36 @@ var P_UP = "__pointerup";
             handle.setRotation(rotation);
             handle.dispatchOnChangeEvent();
         });
-        rotateKnob.on(P_UP, function(e) {
+        rotateKnob.on('pressup', function(e) {
             handle.dispatchEditEndEvent();
         });
         container.addChild(rotateKnob);
         container.setChildIndex(rotateKnob, 1);
         this.rotateKnob = rotateKnob;
 
-        var directionArrow = new PIXI.Graphics();
-        directionArrow.interactive = true;
-        directionArrow
-        // .drawCircle(0, 0, this.DHANDLE_RADIUS) //박봉배: 이건 안쓰는거 같은데요?
-            .beginFill(colorToUint(this.arrowColor))
-            .moveTo(0, -42)
-            .lineTo(9, -30)
-            .lineTo(-9, -30)
-            .closePath()
-            .drawRect(-2, -32, 4, 32);
+        var directionArrow = new createjs.Shape();
 
-
-
-        // directionArrow
-        //     .ss(4, 1, 1)
-        //     .s(this.arrowColor)
-        //     .f(this.arrowColor)
-        //     .dc(0, 0, this.DHANDLE_RADIUS)
-        //     .mt(0, 0)
-        //     .lt(0, -40)
-        //     .lt(7, -32)
-        //     .lt(-7, -32)
-        //     .lt(0, -40)
-        //     .es();
-
-        // directionArrow.on('mousedown', function(e) {
-        directionArrow.on(P_DOWN, function(e) {
-            handle._dragHelper.handleDrag(directionArrow);
+        directionArrow.graphics
+            .ss(4, 1, 1)
+            .s(this.arrowColor)
+            .f(this.arrowColor)
+            .dc(0, 0, this.DHANDLE_RADIUS)
+            .mt(0, 0)
+            .lt(0, -40)
+            .lt(7, -32)
+            .lt(-7, -32)
+            .lt(0, -40)
+            .es();
+        directionArrow.on('mousedown', function(e) {
             handle.dispatchEditStartEvent();
         });
-        directionArrow.on(P_MOVE, function(e) {
+        directionArrow.on('pressmove', function(e) {
             var pos = handle.getLocalCoordinate(handle.getEventCoordinate(e));
             var rotation = -Math.atan2(pos.x, pos.y) / Math.PI * 180 - 180;
             handle.setDirection(rotation);
             handle.dispatchOnChangeEvent();
         });
-        directionArrow.on(P_UP, function(e) {
+        directionArrow.on('pressup', function(e) {
             handle.dispatchEditEndEvent();
         });
         container.addChild(directionArrow);
@@ -275,58 +230,40 @@ var P_UP = "__pointerup";
         this.directionArrow = directionArrow;
 
         // center
-        var centerPoint = new PIXI.Graphics();
-        centerPoint.interactive = true;
-        centerPoint
-            .beginFill(colorToUint(this.centerColor))
-            .lineStyle(1, colorToUint(this.centerColor))
-            .drawCircle(0, 0, 5, 5);
-
-        // centerPoint
-        //     .beginFill(this.centerColor)
-        //     .ss(1, 2, 0)
-        //     .s(this.centerColor)
-        //     .dc(0, 0, 5, 5);
-
-        centerPoint.on(P_DOWN, function(e) {
-            handle._dragHelper.handleDrag(centerPoint);
+        var centerPoint = new createjs.Shape();
+        centerPoint.graphics
+            .beginFill(this.centerColor)
+            .ss(1, 2, 0)
+            .s(this.centerColor)
+            .dc(0, 0, 5, 5);
+        centerPoint.on('mousedown', function(e) {
             handle.dispatchEditStartEvent();
         });
-        centerPoint.on(P_MOVE, function(e) {
+        centerPoint.on('pressmove', function(e) {
             var pos = handle.getEventCoordinate(e);
             pos = handle.getLocalCoordinate(pos);
             handle.setRegX(pos.x);
             handle.setRegY(pos.y);
             handle.dispatchOnChangeEvent();
         });
-        centerPoint.on(P_UP, function(e) {
+        centerPoint.on('pressup', function(e) {
             handle.dispatchEditEndEvent();
         });
         container.addChild(centerPoint);
         this.centerPoint = centerPoint;
 
         //resize knobs
-        var knobColor = colorToUint(this.color);
         this.knobs = [];
         for (var i = 0; i < 8; i++) {
-            var knob = new PIXI.Graphics();
-            knob.interactive = true;
-            knob
-                .beginFill(knobColor)
-                .lineStyle(1, knobColor)
-                .drawRect(-3, -3, 6, 6);
-
-            // knob
-            //     .beginFill(this.color)
-            //     .ss(1, 2, 0)
-            //     .s(this.color)
-            //     .dr(-3, -3, 6, 6);
-
+            var knob = new createjs.Shape();
+            knob.graphics
+                .beginFill(this.color)
+                .ss(1, 2, 0)
+                .s(this.color)
+                .dr(-3, -3, 6, 6);
             knob.knobIndex = i;
             //knob.cursor = "move";
-            knob.on(P_DOWN, function(e) {
-                var targetKnob = e.currentTarget;
-                handle._dragHelper.handleDrag(targetKnob);
+            knob.on('mousedown', function(e) {
                 var otherKnobIndex =
                     this.knobIndex + 4 > 7
                         ? this.knobIndex + 4 - 8
@@ -336,7 +273,7 @@ var P_UP = "__pointerup";
                 this.otherKnobPos = otherKnobPos;
                 handle.dispatchEditStartEvent();
             });
-            knob.on(P_MOVE, function(e) {
+            knob.on('pressmove', function(e) {
                 var pos = handle.getEventCoordinate(e);
                 if (handle.checkCenterPointState(handle.regX, handle.regY)) {
                     handle.setRegX(0);
@@ -345,37 +282,27 @@ var P_UP = "__pointerup";
                 }
                 handle.adjust(this.knobIndex, this.otherKnobPos, pos);
             });
-            knob.on(P_UP, function(e) {
+            knob.on('pressup', function(e) {
                 handle.dispatchEditEndEvent();
             });
             container.addChild(knob);
             this.knobs.push(knob);
         }
 
-        //TODO 봉배님 백그라운드가 안보임요.
-        var background = new PIXI.Graphics();
-        background.interactive = true;
-        background
-            .lineStyle(0)
-            // .beginFill(0xfefefe, 1)
-            .beginFill(0xff0000, 1)
-            .drawRect(-50, -50, 100, 100);
-
-        // background
-        //     .ss(1, 2, 0)
-        //     .s('rgba(254,254,254,0.01)')
-        //     .beginFill('rgba(254,254,254,1)')
-        //     .dr(-50, -50, 100, 100);
-
-        background.on(P_DOWN, function(e) {
-            handle._dragHelper.handleDrag(background);
+        var background = new createjs.Shape();
+        background.graphics
+            .ss(1, 2, 0)
+            .s('rgba(254,254,254,0.01)')
+            .beginFill('rgba(254,254,254,1)')
+            .dr(-50, -50, 100, 100);
+        background.on('mousedown', function(e) {
             var offset = handle.getEventCoordinate(e);
             offset.x -= handle.x;
             offset.y -= handle.y;
             this.offset = offset;
             handle.dispatchEditStartEvent();
         });
-        background.on(P_MOVE, function(e) {
+        background.on('pressmove', function(e) {
             if (handle.getDraggable()) {
                 var pos = handle.getEventCoordinate(e);
                 pos.x -= this.offset.x;
@@ -385,7 +312,7 @@ var P_UP = "__pointerup";
                 handle.dispatchOnChangeEvent();
             }
         });
-        background.on(P_UP, function(e) {
+        background.on('pressup', function(e) {
             handle.dispatchEditEndEvent();
         });
         this.canvas.addChildAt(background, 0);
@@ -418,84 +345,48 @@ var P_UP = "__pointerup";
     p.renderEdge = function() {
         var width = this.width;
         var height = this.height;
-        // this.edge.graphics
-        //     .clear()
-        //     .ss(10, 2, 0)
-        //     .s('rgba(254,254,254,0.01)')
-        //     .lt(-width / 2, -height / 2)
-        //     .lt(0, -height / 2)
-        //     .lt(0, -height / 2)
-        //     .lt(+width / 2, -height / 2)
-        //     .lt(+width / 2, +height / 2)
-        //     .lt(-width / 2, +height / 2)
-        //     .cp();
-
-        var hw = width / 2;
-        var hh = height / 2;
-        //pixi line은 interaction 이 안됨. 그래서 rect 로 draw함.
-        var THICK = 10;
-        var H_THICK = THICK/2;
-        this.edge
+        this.edge.graphics
             .clear()
-            .lineStyle(0)
-            .beginFill(0xfefefe, 0.01)
-            .drawRect(-hw - H_THICK, -hh - H_THICK, width + THICK, THICK)//top
-            .drawRect(-hw - H_THICK, +hh - H_THICK, width + THICK, THICK)//bottom
-            .drawRect(-hw - H_THICK, -hh - H_THICK, THICK, height + THICK)//left
-            .drawRect(+hw - H_THICK, -hh - H_THICK, THICK, height + THICK);//right
+            .ss(10, 2, 0)
+            .s('rgba(254,254,254,0.01)')
+            .lt(-width / 2, -height / 2)
+            .lt(0, -height / 2)
+            .lt(0, -height / 2)
+            .lt(+width / 2, -height / 2)
+            .lt(+width / 2, +height / 2)
+            .lt(-width / 2, +height / 2)
+            .cp();
     };
 
     p.renderRotateKnob = function() {
-        // var width = this.width;
-        // var height = this.height;
-        // this.rotateKnob.graphics
-        //     .clear()
-        //     .ss(1, 2, 0)
-        //     .s(this.rotateKnobColor)
-        //     .mt(0, -height / 2)
-        //     .lt(0, -height / 2)
-        //     .lt(0, -height / 2 - 20)
-        //     .cp()
-        //     .beginFill(this.rotateKnobColor)
-        //     .dc(0, -height / 2 - 20, 4);
-
-        var color = colorToUint(this.rotateKnobColor);
-        var hh = this.height / 2;//half height
-        this.rotateKnob
+        var width = this.width;
+        var height = this.height;
+        this.rotateKnob.graphics
             .clear()
-            .beginFill(color)
-            .drawCircle(0, -hh - 20, 4)
-            .drawRect(-1,-hh - 20, 2, 20);
+            .ss(1, 2, 0)
+            .s(this.rotateKnobColor)
+            .mt(0, -height / 2)
+            .lt(0, -height / 2)
+            .lt(0, -height / 2 - 20)
+            .cp()
+            .beginFill(this.rotateKnobColor)
+            .dc(0, -height / 2 - 20, 4);
     };
 
     p.renderBorder = function() {
         var width = this.width;
         var height = this.height;
-        // this.border.graphics
-        //     .clear()
-        //     .ss(1, 2, 0)
-        //     .s(this.color)
-        //     .lt(-width / 2, -height / 2)
-        //     .lt(0, -height / 2)
-        //     .lt(0, -height / 2)
-        //     .lt(+width / 2, -height / 2)
-        //     .lt(+width / 2, +height / 2)
-        //     .lt(-width / 2, +height / 2)
-        //     .cp();
-
-        var color = colorToUint(this.color);
-        var hw = width / 2;
-        var hh = height / 2;
-        this.border
+        this.border.graphics
             .clear()
-            .lineStyle(1, color)
-            .moveTo(-hw, +hh)
-            .lineTo(-hw, -hh)
-            .lineTo(+hw, -hh)
-            .lineTo(+hw, +hh)
-            .lineTo(-hw, +hh)
-            .closePath();
-
+            .ss(1, 2, 0)
+            .s(this.color)
+            .lt(-width / 2, -height / 2)
+            .lt(0, -height / 2)
+            .lt(0, -height / 2)
+            .lt(+width / 2, -height / 2)
+            .lt(+width / 2, +height / 2)
+            .lt(-width / 2, +height / 2)
+            .cp();
     };
 
     p.renderKnobs = function() {
@@ -508,45 +399,35 @@ var P_UP = "__pointerup";
     };
 
     p.getEventCoordinate = function(e) {
-        var g = e.data.global;
         return {
-            x: g.x * 0.75 - 240,
-            y: g.y * 0.75 - 135,
+            x: e.stageX * 0.75 - 240,
+            y: e.stageY * 0.75 - 135,
         };
-        // return {
-        //     x: e.stageX * 0.75 - 240,
-        //     y: e.stageY * 0.75 - 135,
-        // };
     };
 
     p.getGlobalCoordinate = function(childObject) {
-        var rotation = -this.container.rotation;
-        console.log('GlobalCoordinate');
-        var cos = Math.cos(rotation);
-        var sin = Math.sin(rotation);
+        var container = this.container;
+        var rotation = -(this.container.rotation * Math.PI / 180);
         return {
             x:
-                this.x +
-                childObject.x * cos +
-                childObject.y * sin,
+            this.x +
+            childObject.x * Math.cos(rotation) +
+            childObject.y * Math.sin(rotation),
             y:
-                this.y +
-                childObject.y * cos -
-                childObject.x * sin,
+            this.y +
+            childObject.y * Math.cos(rotation) -
+            childObject.x * Math.sin(rotation),
         };
     };
 
     p.getLocalCoordinate = function(pos) {
         var container = this.container;
-        // var rotation = this.container.rotation * Math.PI / 180;
-        var rotation = this.container.rotation;
-        var cos = Math.cos(rotation);
-        var sin = Math.sin(rotation);
+        var rotation = this.container.rotation * Math.PI / 180;
         pos.x -= this.x;
         pos.y -= this.y;
         return {
-            x: pos.x * cos + pos.y * sin,
-            y: pos.y * cos - pos.x * sin,
+            x: pos.x * Math.cos(rotation) + pos.y * Math.sin(rotation),
+            y: pos.y * Math.cos(rotation) - pos.x * Math.sin(rotation),
         };
     };
 
@@ -562,7 +443,7 @@ var P_UP = "__pointerup";
         };
         var newLength = Math.sqrt(
             Math.pow(newPoint.x - otherKnobPos.x, 2) +
-                Math.pow(newPoint.y - otherKnobPos.y, 2)
+            Math.pow(newPoint.y - otherKnobPos.y, 2)
         );
         if (knobIndex % 4 == 0) {
             var ratio = newLength / this.height;
@@ -577,7 +458,7 @@ var P_UP = "__pointerup";
                 2 *
                 Math.sqrt(
                     Math.pow(this.x - otherKnobPos.x, 2) +
-                        Math.pow(this.y - otherKnobPos.y, 2)
+                    Math.pow(this.y - otherKnobPos.y, 2)
                 );
             var newWidth = this.width * newLength / oldLength;
             var ratio = newWidth / this.width;
@@ -657,45 +538,4 @@ var P_UP = "__pointerup";
     p.getDraggable = function() {
         return this.draggable;
     };
-
 })(EaselHandle.prototype);
-
-/**
- * pixi 에는 createjs 의 pressmove 가 없어서 그것을 대신해주는 헬퍼 클라스.
- * @constructor
- */
-var DragHelper= function() {
-
-};
-
-//pixi drag helper
-(function(p){
-    /**
-     * @param {PIXI.DisplayObject} target
-     */
-    p.handleDrag = function(target) {
-        var self = this;
-        this._onMove = function(e){
-            target.emit(P_MOVE, e);
-        };
-        this._onUp = function(e){
-            target.emit(P_UP, e);
-            self._unhandleDrag(target);
-        };
-
-        target.on("pointermove", this._onMove);
-        target.on("pointerup", this._onUp);
-        target.on("pointerupoutside", this._onUp);
-        target.on("pointercancel", this._onUp);
-    };
-
-    p._unhandleDrag = function(target) {
-        target.off("pointermove", this._onMove);
-        target.off("pointerup", this._onUp);
-        target.off("pointerupoutside", this._onUp);
-        target.off("pointercancel", this._onUp);
-        this._onMove = this._onUp = null;
-    };
-
-
-})(DragHelper.prototype);
