@@ -1944,6 +1944,7 @@ Entry.VariableContainer = function() {
 
         answer.generateView();
         Entry.container.inputValue = answer;
+        Entry.container.inputValue.setName(Lang.Blocks.VARIABLE_get_canvas_input_value);
     };
 
     p.generateVariableSettingView = function() {
