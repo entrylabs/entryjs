@@ -474,7 +474,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
     };
 
     p.onMouseDown = function(e) {
-        if(!this.isInBlockMenu && e.originalEvent && e.originalEvent.touches) {
+        if(!this.isInBlockMenu) {
             if (e.stopPropagation) e.stopPropagation();
         }
         if (e.preventDefault) e.preventDefault();
