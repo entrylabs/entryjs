@@ -115,7 +115,7 @@ module.exports = {
                    size.width = bound.width * Math.sqrt(1.0 + (bound.height/bound.width) * (bound.height/bound.width));
                    size.height = bound.height * Math.sqrt(1.0 + (bound.width/bound.height) * (bound.width/bound.height));
                    */
-                    moveInToBound(sprite.object, Entry.stage.wall);
+                    //moveInToBound(sprite.object, Entry.stage.wall);
 
                     if (method == 'free')
                         var angle = (
