@@ -1,9 +1,9 @@
 export default class PIXIHelper {
     static text(str, font, color, textBaseline, textAlign) {
         var reg = /((\d+)(pt|sp|px))?\s*(.+)/gi;
-        var result = reg.exec(font);
-        var fontName = (result&&result[4]) || "NanumGothic";
-        var size = (result&&result[1]) || "10pt";
+        var result = reg.exec(font) || [];
+        var fontName = (result[4]) || "NanumGothic";
+        var size = (result[1]) || "10pt";
 
         console.log({
             input: font,
@@ -16,7 +16,8 @@ export default class PIXIHelper {
             fontSize: size,
             fill: color,
             textBaseline: textBaseline || 'alphabetic',
-            align: textAlign || "left"
+            align: textAlign || "left",
+            miterLimit: 2.5 //createjs default value
         });
         return t;
     }
