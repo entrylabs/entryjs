@@ -8,6 +8,7 @@ Entry.Expansion_Weather = {
         "ko": "날씨",
         "en": "weather"
     },
+    description: Lang.Msgs.expansion_weather_description
 };
 
 Entry.Expansion_Weather.getBlocks = function () {
