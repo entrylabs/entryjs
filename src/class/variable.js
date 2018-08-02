@@ -4,6 +4,7 @@
 'use strict';
 
 import PIXIHelper from "./PIXIHelper";
+import { PIXIDragHelper } from './PIXIDragHelper';
 
 /**
  * Block variable constructor
@@ -11,7 +12,6 @@ import PIXIHelper from "./PIXIHelper";
  * @constructor
  */
 Entry.Variable = function(variable) {
-    console.log("Entry.Variable");
     Entry.assert(
         typeof variable.name == 'string',
         'Variable name must be given'
@@ -79,6 +79,7 @@ Entry.Variable.prototype.generateView = function(variableIndex) {
     var type = this.type;
     if (type == 'variable' || type == 'timer' || type == 'answer') {
         this.view_ = new PIXI.Container();
+        this.view_.interactive = true;
         this.rect_ = new PIXI.Graphics();
         this.view_.addChild(this.rect_);
         this.view_.variable = this;
@@ -86,7 +87,7 @@ Entry.Variable.prototype.generateView = function(variableIndex) {
         this.view_.addChild(this.wrapper_);
         this.textView_ = PIXIHelper.text('asdf', this.FONT, '#000000', 'alphabetic');
         this.textView_.x = 4;
-        this.textView_.y = 1;
+        this.textView_.y = -10;
         this.view_.addChild(this.textView_);
 
         this.valueView_ = PIXIHelper.text('asdf', '10pt NanumGothic', "#ffffff", 'alphabetic');
@@ -109,24 +110,29 @@ Entry.Variable.prototype.generateView = function(variableIndex) {
         this.view_.visible = this.visible_;
         this.view_.addChild(this.valueView_);
 
-        this.view_.on('mousedown', function(evt) {
+        this.view_.on(PIXIDragHelper.DOWN, function(evt) {
             if (Entry.type != 'workspace') return;
+            PIXIDragHelper.handleDrag(this);
+            var gp = evt.data.global;
+
             this.offset = {
-                x: this.x - (evt.stageX * 0.75 - 240),
-                y: this.y - (evt.stageY * 0.75 - 135),
+                x: this.x - (gp.x * 0.75 - 240),
+                y: this.y - (gp.y * 0.75 - 135),
             };
             this.cursor = 'move';
         });
 
-        this.view_.on('pressmove', function(evt) {
+        this.view_.on(PIXIDragHelper.MOVE, function(evt) {
             if (Entry.type != 'workspace') return;
-            this.variable.setX(evt.stageX * 0.75 - 240 + this.offset.x);
-            this.variable.setY(evt.stageY * 0.75 - 135 + this.offset.y);
+            var gp = evt.data.global;
+            this.variable.setX(gp.x * 0.75 - 240 + this.offset.x);
+            this.variable.setY(gp.y * 0.75 - 135 + this.offset.y);
             this.variable.updateView();
         });
     } else if (type == 'slide') {
         var slide = this;
         this.view_ = new PIXI.Container();
+        this.view_.interactive = true;
         this.rect_ = new PIXI.Graphics();
         this.view_.addChild(this.rect_);
         this.view_.variable = this;
@@ -134,23 +140,26 @@ Entry.Variable.prototype.generateView = function(variableIndex) {
         this.view_.addChild(this.wrapper_);
         this.textView_ = PIXIHelper.text("name", this.FONT, '#000000', 'alphabetic');
         this.textView_.x = 4;
-        this.textView_.y = 1;
+        this.textView_.y = -10;
         this.view_.addChild(this.textView_);
 
         this.valueView_ = PIXIHelper.text('value', '10pt NanumGothic', '#ffffff', 'alphabetic');
 
-        this.view_.on('mousedown', function(evt) {
+        this.view_.on(PIXIDragHelper.DOWN, function(evt) {
             if (Entry.type != 'workspace') return;
+            PIXIDragHelper.handleDrag(this);
+            var gp = evt.data.global;
             this.offset = {
-                x: this.x - (evt.stageX * 0.75 - 240),
-                y: this.y - (evt.stageY * 0.75 - 135),
+                x: this.x - (gp.x * 0.75 - 240),
+                y: this.y - (gp.y * 0.75 - 135),
             };
         });
 
-        this.view_.on('pressmove', function(evt) {
+        this.view_.on(PIXIDragHelper.MOVE, function(evt) {
             if (Entry.type != 'workspace' || slide.isAdjusting) return;
-            this.variable.setX(evt.stageX * 0.75 - 240 + this.offset.x);
-            this.variable.setY(evt.stageY * 0.75 - 135 + this.offset.y);
+            var gp = evt.data.global;
+            this.variable.setX(gp.x * 0.75 - 240 + this.offset.x);
+            this.variable.setY(gp.y * 0.75 - 135 + this.offset.y);
             this.variable.updateView();
         });
         this.view_.visible = this.visible_;
@@ -195,6 +204,7 @@ Entry.Variable.prototype.generateView = function(variableIndex) {
         //     .dc(position, 10 + 0.5, 3);
 
         this.valueSetter_ = new PIXI.Graphics();
+        this.valueSetter_.interactive = true;
         this.valueSetter_
             .beginFill(0x1bafea)
             .lineStyle(1, 0xA0A1A1)
@@ -203,18 +213,20 @@ Entry.Variable.prototype.generateView = function(variableIndex) {
 
 
         this.valueSetter_.cursor = 'pointer';
-        this.valueSetter_.on('mousedown', function(evt) {
+        this.valueSetter_.on(PIXIDragHelper.DOWN, function(evt) {
             if (!Entry.engine.isState('run')) return;
-
+            evt.stopPropagation();// 슬라이드가 드래그 될 때 변수 view가 drag 되는걸 막기 위함.
+            PIXIDragHelper.handleDrag(this);
+            var gp = evt.data.global;
             slide.isAdjusting = true;
-            this.offsetX = -(this.x - evt.stageX * 0.75 + 240);
+            this.offsetX = -(this.x - gp.x * 0.75 + 240);
         });
 
-        this.valueSetter_.on('pressmove', function(evt) {
+        this.valueSetter_.on(PIXIDragHelper.MOVE, function(evt) {
             if (!Entry.engine.isState('run')) return;
-
+            var gp = evt.data.global;
             var oldOffsetX = this.offsetX;
-            this.offsetX = -(this.x - evt.stageX * 0.75 + 240);
+            this.offsetX = -(this.x - gp.x * 0.75 + 240);
             if (oldOffsetX === this.offsetX) return;
             var slideX = slide.getX();
             var value;
@@ -224,7 +236,7 @@ Entry.Variable.prototype.generateView = function(variableIndex) {
             else value = slide.maxWidth + 10;
             slide.setSlideCommandX(value);
         });
-        this.valueSetter_.on('pressup', function(evt) {
+        this.valueSetter_.on(PIXIDragHelper.UP, function(evt) {
             slide.isAdjusting = false;
         });
         this.view_.addChild(this.valueSetter_);
@@ -293,7 +305,7 @@ Entry.Variable.prototype.generateView = function(variableIndex) {
             this.cursor = 'nwse-resize';
         });
 
-        this.resizeHandle_.on('mousedown', function(evt) {
+        this.resizeHandle_.on('pointerdown', function(evt) {
             // if(Entry.type != 'workspace') return;
             this.list.isResizing = true;
             this.offset = {
@@ -313,7 +325,7 @@ Entry.Variable.prototype.generateView = function(variableIndex) {
             this.cursor = 'move';
         });
 
-        this.view_.on('mousedown', function(evt) {
+        this.view_.on('pointerdown', function(evt) {
             if (Entry.type != 'workspace' || this.variable.isResizing) return;
             this.offset = {
                 x: this.x - (evt.stageX * 0.75 - 240),
@@ -366,7 +378,7 @@ Entry.Variable.prototype.generateView = function(variableIndex) {
         this.scrollButton_.y = 23;
 
         this.scrollButton_.list = this;
-        this.scrollButton_.on('mousedown', function(evt) {
+        this.scrollButton_.on('pointerdown', function(evt) {
             // if(Entry.type != 'workspace') return;
             this.list.isResizing = true;
             this.cursor = 'pointer';
@@ -456,7 +468,7 @@ Entry.Variable.prototype.updateView = function() {
                 this._nameWidth = PIXIHelper.textWidth(this.textView_);
 
             this.valueView_.x = this._nameWidth + 14;
-            this.valueView_.y = 1;
+            this.valueView_.y = -10;
             // INFO: Number체크는 slide 일때만 하도록 처리 기본 문자로 처리함(#4876)
 
             // if (this._valueWidth === null)
@@ -542,7 +554,7 @@ Entry.Variable.prototype.updateView = function() {
             }
 
             this.valueView_.x = this._nameWidth + 14;
-            this.valueView_.y = 1;
+            this.valueView_.y = -10;
             var value = String(this.getValue());
 
             if (this.isFloatPoint()) {
@@ -1232,7 +1244,11 @@ Entry.Variable.prototype.getSlidePosition = function(width) {
 };
 
 Entry.Variable.prototype.setSlideCommandX = function(value) {
-    var command = this.valueSetter_.graphics.command;
+    // var command = this.valueSetter_.graphics.command;
+    if(!this.valueSetter_.command) {
+        this.valueSetter_.command = {};
+    }
+    var command = this.valueSetter_.command;
     value = typeof value == 'undefined' ? 10 : value;
     value = Math.max(value, 10);
     value = Math.min(this.maxWidth + 10, value);
@@ -1242,7 +1258,8 @@ Entry.Variable.prototype.setSlideCommandX = function(value) {
 
 Entry.Variable.prototype.updateSlideValueByView = function() {
     var maxWidth = this.maxWidth;
-    var position = Math.max(this.valueSetter_.graphics.command.x - 10, 0);
+    // var position = Math.max(this.valueSetter_.graphics.command.x - 10, 0);
+    var position = Math.max(this.valueSetter_.command.x - 10, 0);
     var ratio = position / maxWidth;
     if (ratio < 0) ratio = 0;
     if (ratio > 1) ratio = 1;
