@@ -697,6 +697,11 @@ EntryStatic.getAllBlocks = function() {
                 "truetrue_set_led_colorsensor",
                 "truetrue_set_led_linesensor",
                 "truetrue_set_linetracer",
+				"truetrue_set_head_colorled",
+				"truetrue_set_move",
+				"truetrue_set_sec_move",
+				"truetrue_set_rotate",
+				"truetrue_set_sec_rotate",
                 //CODEino
                 "CODEino_get_named_sensor_value",
                 "CODEino_get_sound_status",
@@ -788,10 +793,12 @@ EntryStatic.getAllBlocks = function() {
 
                 "ev3_get_sensor_value",
                 "ev3_touch_sensor",
+                "ev3_button_pressed",
                 "ev3_color_sensor",
                 "ev3_motor_power",
                 "ev3_motor_power_on_time",
                 "ev3_motor_degrees",
+                "ev3_status_led",
 
                 "roduino_on_block",
                 "roduino_off_block",
