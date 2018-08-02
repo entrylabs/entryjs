@@ -8,6 +8,7 @@ export class PIXIDragHelper {
      */
     static handleDrag(target) {
         const C = PIXIDragHelper;
+        console.log(`%chandleDrag(${C.__CNT})`, 'background: #222; color: #bada55');
         C._onMove = function(e){
             target.emit(C.MOVE, e);
         };
@@ -28,6 +29,7 @@ export class PIXIDragHelper {
      */
     static _unhandleDrag(target) {
         const C = PIXIDragHelper;
+        console.log(`%c_unhandleDrag(${C.__CNT++})`, 'background: #222; color: #bada55');
         target.off("pointermove", C._onMove);
         target.off("pointerup", C._onUp);
         target.off("pointerupoutside", C._onUp);
@@ -35,7 +37,7 @@ export class PIXIDragHelper {
         C._onMove = C._onUp = null;
     }
 }
-
+PIXIDragHelper.__CNT = 0;
 PIXIDragHelper.DOWN = "pointerdown";
 PIXIDragHelper.MOVE = "__pointermove";
 PIXIDragHelper.UP = "__pointerup";
