@@ -152,7 +152,13 @@ Entry.Container.prototype.generateView = function(containerView, option) {
  * enable sort.
  */
 Entry.Container.prototype.enableSort = function() {
-    $(this.listView_).sortable({
+    var view = this.listView_;
+
+    if (!view) {
+        return;
+    }
+
+    $(view).sortable({
         start: function(event, ui) {
             ui.item.data('start_pos', ui.item.index());
         },
@@ -171,7 +177,13 @@ Entry.Container.prototype.enableSort = function() {
  * disable sort.
  */
 Entry.Container.prototype.disableSort = function() {
-    $(this.listView_).sortable('destroy');
+    var view = this.listView_;
+
+    if (!view) {
+        return;
+    }
+
+    $(view).sortable('destroy');
 };
 
 /**
@@ -214,7 +226,9 @@ Entry.Container.prototype.updateListView = function() {
  */
 Entry.Container.prototype.setObjects = function(objectModels) {
     for (var i in objectModels) {
-        this.objects_.push(new Entry.EntryObject(objectModels[i]));
+        var object = new Entry.EntryObject(objectModels[i]);
+        this.objects_.push(object);
+        this.initExpansionBlocks(object);
     }
     this.updateObjectsOrder();
     this.updateListView();
@@ -226,6 +240,21 @@ Entry.Container.prototype.setObjects = function(objectModels) {
     }
 };
 
+
+Entry.Container.prototype.initExpansionBlocks = function(object) {
+    for (var type in Entry.EXPANSION_BLOCK_LIST) {
+        var blocks = Object.keys(Entry.EXPANSION_BLOCK_LIST[type].getBlocks());
+        var intersection = object.script.getBlockList().filter(function(value) {
+            return -1 !== blocks.indexOf(value.data.type);
+        });
+        if (intersection.length > 0) {
+            Entry.EXPANSION_BLOCK[type].init();
+            if (Entry.type == 'workspace') {
+                Entry.playground.blockMenu.unbanClass(type);
+            }
+        }
+    }
+}
 /**
  * get Pictures element
  * @param {!String} pictureId

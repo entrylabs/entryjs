@@ -194,7 +194,7 @@ Entry.CodeMap = {};
                 show: 'SHOW',
                 hide: 'HIDE',
             },
-        ],
+        ]
     };
 
     cc.Arduino = {
