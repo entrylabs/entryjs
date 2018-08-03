@@ -32,6 +32,18 @@ Entry.loadProject = function(project) {
     Entry.FPS = project.speed ? project.speed : 60;
     createjs.Ticker.setFPS(Entry.FPS);
 
+    Entry.expansionBlocks = project.expansionBlocks || [];
+    if (Entry.expansionBlocks.length > 0) {
+        for (var type in Entry.EXPANSION_BLOCK_LIST) {
+            if (Entry.expansionBlocks.indexOf(type) > -1) {
+                Entry.EXPANSION_BLOCK[type].init();
+                if (Entry.type == 'workspace') {
+                    Entry.playground.blockMenu.unbanClass(type);
+                }
+            }
+        }
+    }
+
     if (!Entry.engine.projectTimer) Entry.variableContainer.generateTimer();
 
     if (Object.keys(Entry.container.inputValue).length === 0)
@@ -105,6 +117,7 @@ Entry.exportProject = function(project) {
     project.scenes = Entry.scene.toJSON();
     project.speed = Entry.FPS;
     project.interface = Entry.captureInterfaceState();
+    project.expansionBlocks = Entry.expansionBlocks;
 
     if (!objects || !objects.length) return false;
 
