@@ -7,6 +7,7 @@ Entry.GlobalSvg = {};
     gs._inited = false;
     gs.REMOVE = 1;
     gs.RETURN = 2;
+    gs.scale = 1;
 
     gs.createDom = function() {
         if (this.inited) return;
@@ -42,8 +43,7 @@ Entry.GlobalSvg = {};
         if (data.isReadOnly() || !view.movable) return;
         this._view = view;
         this._mode = mode;
-        if (mode !== Entry.Workspace.MODE_VIMBOARD)
-            view.set({ visible: false });
+        if (mode !== Entry.Workspace.MODE_VIMBOARD) view.set({ visible: false });
 
         this.draw();
         this.show();
@@ -64,10 +64,7 @@ Entry.GlobalSvg = {};
             height: Math.round(bBox.height + 4) + 'px',
         });
 
-        this.svgGroup = Entry.SVG.createElement(
-            blockView.svgGroup.cloneNode(true),
-            { opacity: 1 }
-        );
+        this.svgGroup = Entry.SVG.createElement(blockView.svgGroup.cloneNode(true), { opacity: 1 });
 
         this.svg.appendChild(this.svgGroup);
         //TODO selectAll function replace
@@ -117,7 +114,7 @@ Entry.GlobalSvg = {};
         offsetY += 1;
         this._offsetX = offsetX;
         this._offsetY = offsetY;
-        var transform = 'translate(' + offsetX + ',' + offsetY + ')';
+        var transform = `translate(${offsetX}, ${offsetY})`;
         this.svgGroup.attr({ transform: transform });
     };
 
@@ -135,9 +132,12 @@ Entry.GlobalSvg = {};
         if (!blockView) return;
         var pos = blockView.getAbsoluteCoordinate();
         var offset = blockView.getBoard().offset();
-        this.left = pos.x + offset.left - this._offsetX;
-        this.top = pos.y + offset.top - this._offsetY;
+        var ofX = window.ofX || this._offsetX;
+        var ofY = window.ofY || this._offsetY;
+        this.left = pos.scaleX + ((offset.left / this.scale) - (ofX));
+        this.top = pos.scaleY + ((offset.top / this.scale) - (ofY));
 
+        console.log('global', pos.scaleX, pos.scaleY, this.left, this.top, (offset.left / this.scale), (offset.top / this.scale));
         this._applyDomPos(this.left, this.top);
     };
 
@@ -153,7 +153,7 @@ Entry.GlobalSvg = {};
 
     gs._applyDomPos = function(left, top) {
         this.svgDom.css({
-            transform: 'translate3d(' + left + 'px,' + top + 'px, 0px)',
+            transform: `scale(${this.scale}) translate3d(${left}px,${top}px, 0px)`,
         });
     };
 
@@ -164,8 +164,7 @@ Entry.GlobalSvg = {};
         var bLeft = blockMenu.offset().left;
         var bTop = blockMenu.offset().top;
         var bWidth = blockMenu.visible ? blockMenu.svgDom.width() : 0;
-        if (mousePos.y > board.offset().top - 20 && mousePos.x > bLeft + bWidth)
-            return this.DONE;
+        if (mousePos.y > board.offset().top - 20 && mousePos.x > bLeft + bWidth) return this.DONE;
         else if (mousePos.y > bTop && mousePos.x > bLeft && blockMenu.visible) {
             if (!blockView.block.isDeletable()) return this.RETURN;
             else return this.REMOVE;
@@ -206,5 +205,10 @@ Entry.GlobalSvg = {};
         function onMouseUp(e) {
             $(document).unbind('.block');
         }
+    };
+
+    gs.setScale = function(scale = 1) {
+        console.log(`Global SVG SCALE ${scale}`);
+        this.scale = scale;
     };
 })(Entry.GlobalSvg);

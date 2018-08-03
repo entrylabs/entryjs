@@ -8,6 +8,7 @@
  */
 Entry.Board = function(option) {
     Entry.Model(this, false);
+    this.scale = 1;
     this.readOnly = option.readOnly === undefined ? false : option.readOnly;
     this.changeEvent = new Entry.Event(this);
 
@@ -1222,5 +1223,11 @@ Entry.Board.DRAG_RADIUS = 5;
     p.getSvgDomRect = function() {
         if (!this._svgDomRect) this.updateOffset();
         return this._svgDomRect;
+    };
+
+    p.setScale = function(scale = 1) {
+        console.log(`Board SVG SCALE ${scale}`);
+        this.scale = scale;
+        this.svgGroup.attr('transform', `scale(${scale})`);
     };
 })(Entry.Board.prototype);

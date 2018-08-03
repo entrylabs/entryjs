@@ -40,7 +40,7 @@ Entry.Workspace = function(options) {
     }
 
     option = options.board;
-    if (option) {
+    if (option) {  
         option.workspace = this;
         option.readOnly = this.readOnly;
         this.board = new Entry.Board(option);
@@ -686,4 +686,9 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                 return this.overlayBoard;
         }
     };
+
+    p.setScale = function(scale) {
+        this.board.setScale(scale);
+        Entry.GlobalSvg.setScale(scale);
+    }
 })(Entry.Workspace.prototype);

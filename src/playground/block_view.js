@@ -10,10 +10,7 @@ Entry.BlockView = function(block, board, mode) {
     var that = this;
     Entry.Model(this, false);
     this.block = block;
-    this._lazyUpdatePos = Entry.Utils.debounce(
-        block._updatePos.bind(block),
-        200
-    );
+    this._lazyUpdatePos = Entry.Utils.debounce(block._updatePos.bind(block), 200);
     this.mouseUpEvent = new Entry.Event(this);
     this.disableMouseEvent = false;
 
@@ -54,17 +51,13 @@ Entry.BlockView = function(block, board, mode) {
     if (skeleton.magnets && skeleton.magnets(this).next) {
         this.svgGroup.nextMagnet = this.block;
         this._nextGroup = this.svgGroup.elem('g');
-        this._observers.push(
-            this.observe(this, '_updateMagnet', ['contentHeight'])
-        );
+        this._observers.push(this.observe(this, '_updateMagnet', ['contentHeight']));
     }
 
     this.isInBlockMenu = this.getBoard() instanceof Entry.BlockMenu;
 
     this.mouseHandler = function() {
-        (_.result(that.block.events, 'mousedown') || []).forEach((fn) =>
-            fn(that)
-        );
+        (_.result(that.block.events, 'mousedown') || []).forEach((fn) => fn(that));
         that.onMouseDown.apply(that, arguments);
     };
 
@@ -75,19 +68,13 @@ Entry.BlockView = function(block, board, mode) {
     this._observers.push(thisBlock.observe(this, '_setMovable', ['movable']));
     this._observers.push(thisBlock.observe(this, '_setReadOnly', ['movable']));
     this._observers.push(thisBlock.observe(this, '_setCopyable', ['copyable']));
-    this._observers.push(
-        thisBlock.observe(this, '_updateColor', ['deletable'], false)
-    );
+    this._observers.push(thisBlock.observe(this, '_updateColor', ['deletable'], false));
     this._observers.push(this.observe(this, '_updateBG', ['magneting'], false));
 
-    this._observers.push(
-        this.observe(this, '_updateOpacity', ['visible'], false)
-    );
+    this._observers.push(this.observe(this, '_updateOpacity', ['visible'], false));
     this._observers.push(this.observe(this, '_updateDisplay', ['display']));
     this._observers.push(this.observe(this, '_updateMagnet', ['offsetY']));
-    this._observers.push(
-        board.code.observe(this, '_setBoard', ['board'], false)
-    );
+    this._observers.push(board.code.observe(this, '_setBoard', ['board'], false));
 
     this.dragMode = Entry.DRAG_MODE_NONE;
     Entry.Utils.disableContextmenu(this.svgGroup.node);
@@ -152,9 +139,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
         var { deletable, emphasized } = this.block;
 
         if (deletable === Entry.Block.DELETABLE_FALSE_LIGHTEN || emphasized) {
-            fillColor =
-                this._schema.emphasizedColor ||
-                Entry.Utils.getEmphasizeColor(fillColor);
+            fillColor = this._schema.emphasizedColor || Entry.Utils.getEmphasizeColor(fillColor);
         }
 
         this._fillColor = fillColor;
@@ -168,13 +153,9 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
 
         if (this.magnet.next || this._skeleton.nextShadow) {
             this.pathGroup.attr({
-                filter:
-                    'url(#entryBlockShadowFilter_' +
-                    this.getBoard().suffix +
-                    ')',
+                filter: 'url(#entryBlockShadowFilter_' + this.getBoard().suffix + ')',
             });
-        } else if (this.magnet.string || this.magnet.boolean)
-            pathStyle.stroke = skeleton.outerLine;
+        } else if (this.magnet.string || this.magnet.boolean) pathStyle.stroke = skeleton.outerLine;
 
         if (skeleton.outerLine) {
             pathStyle['stroke-width'] = '0.6';
@@ -225,18 +206,14 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
                 !reg.test(template) &&
                 this.isInBlockMenu
             ) {
-                template = template.replace(
-                    'else',
-                    '%' + params.length + ' else'
-                );
+                template = template.replace('else', '%' + params.length + ' else');
             }
         }
 
         var _renderMode = mode || this.renderMode;
         template.split(reg).forEach((param, i) => {
             if (param[0] === ' ') param = param.substring(1);
-            if (param[param.length - 1] === ' ')
-                param = param.substring(0, param.length - 1);
+            if (param[param.length - 1] === ' ') param = param.substring(0, param.length - 1);
             if (!param.length) return;
 
             parsingRet = parsingReg.exec(param);
@@ -306,18 +283,12 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
 
             var box = c.box;
             if (statementIndex !== 0) {
-                secondLineHeight = Math.max(
-                    Math.round(box.height) * 1000000,
-                    secondLineHeight
-                );
+                secondLineHeight = Math.max(Math.round(box.height) * 1000000, secondLineHeight);
             } else cursor.height = Math.max(box.height, cursor.height);
 
             cursor.x += box.width;
             width = Math.max(width, cursor.x);
-            if (
-                this.contentWidth !== width ||
-                this.contentHeight !== cursor.height
-            ) {
+            if (this.contentWidth !== width || this.contentHeight !== cursor.height) {
                 this.set({
                     contentWidth: width,
                     contentHeight: cursor.height,
@@ -358,9 +329,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
     };
 
     p._alignStatement = function(animate, index) {
-        var positions = this._skeleton.statementPos
-            ? this._skeleton.statementPos(this)
-            : [];
+        var positions = this._skeleton.statementPos ? this._skeleton.statementPos(this) : [];
         var statement = this._statements[index];
         if (!statement) return;
         var pos = positions[index];
@@ -381,11 +350,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
         if (false && Entry.ANIMATION_DURATION !== 0) {
             var that = this;
             setTimeout(function() {
-                that._path.animate(
-                    { d: newPath },
-                    Entry.ANIMATION_DURATION,
-                    mina.easeinout
-                );
+                that._path.animate({ d: newPath }, Entry.ANIMATION_DURATION, mina.easeinout);
             }, 0);
         } else {
             this._path.attr({ d: newPath });
@@ -394,10 +359,13 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
     };
 
     p._setPosition = function(animate = true) {
+        const board = this.getBoard();
+        const { scale = 1 } = board || {};
         if (!(this.x || this.y)) {
             this.svgGroup.removeAttr('transform');
         } else {
-            var transform = 'translate(' + this.x + ',' + this.y + ')';
+            console.log('_setPosition', this.x / scale, this.y / scale);
+            var transform = 'translate(' + (this.x / scale) + ',' + (this.y / scale) + ')';
 
             if (animate && Entry.ANIMATION_DURATION !== 0) {
                 this.svgGroup.attr('transform', transform);
@@ -501,8 +469,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
                 y: mouseEvent.pageY,
             };
             var doc = $(document);
-            if (!this.disableMouseEvent)
-                doc.bind('mousemove.block touchmove.block', onMouseMove);
+            if (!this.disableMouseEvent) doc.bind('mousemove.block touchmove.block', onMouseMove);
             doc.bind('mouseup.block touchend.block', onMouseUp);
             this.dragInstance = new Entry.DragInstance({
                 startX: mouseEvent.pageX,
@@ -530,9 +497,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
         if (board.workspace.getMode() === Entry.Workspace.MODE_VIMBOARD && e) {
             document
                 .getElementsByClassName('CodeMirror')[0]
-                .dispatchEvent(
-                    Entry.Utils.createMouseEvent('dragStart', event)
-                );
+                .dispatchEvent(Entry.Utils.createMouseEvent('dragStart', event));
         }
 
         var that = this;
@@ -542,10 +507,8 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
             var workspaceMode = board.workspace.getMode();
 
             var mouseEvent;
-            if (workspaceMode === Entry.Workspace.MODE_VIMBOARD)
-                p.vimBoardEvent(e, 'dragOver');
-            if (e.originalEvent && e.originalEvent.touches)
-                mouseEvent = e.originalEvent.touches[0];
+            if (workspaceMode === Entry.Workspace.MODE_VIMBOARD) p.vimBoardEvent(e, 'dragOver');
+            if (e.originalEvent && e.originalEvent.touches) mouseEvent = e.originalEvent.touches[0];
             else mouseEvent = e;
 
             var mouseDownCoordinate = blockView.mouseDownCoordinate;
@@ -553,10 +516,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
                 Math.pow(mouseEvent.pageX - mouseDownCoordinate.x, 2) +
                     Math.pow(mouseEvent.pageY - mouseDownCoordinate.y, 2)
             );
-            if (
-                blockView.dragMode == Entry.DRAG_MODE_DRAG ||
-                diff > Entry.BlockView.DRAG_RADIUS
-            ) {
+            if (blockView.dragMode == Entry.DRAG_MODE_DRAG || diff > Entry.BlockView.DRAG_RADIUS) {
                 if (longPressTimer) {
                     clearTimeout(longPressTimer);
                     longPressTimer = null;
@@ -656,21 +616,14 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
             if (dragMode === Entry.DRAG_MODE_DRAG) {
                 var ripple = false;
                 var prevBlock = this.block.getPrevBlock(this.block);
-                var suffix = this._board.workspace.trashcan.isOver
-                    ? 'ForDestroy'
-                    : '';
+                var suffix = this._board.workspace.trashcan.isOver ? 'ForDestroy' : '';
                 switch (gsRet) {
                     case gs.DONE:
                         var closeBlock = board.magnetedBlockView;
-                        if (closeBlock instanceof Entry.BlockView)
-                            closeBlock = closeBlock.block;
+                        if (closeBlock instanceof Entry.BlockView) closeBlock = closeBlock.block;
                         if (prevBlock && !closeBlock) {
                             Entry.do('separateBlock' + suffix, block);
-                        } else if (
-                            !prevBlock &&
-                            !closeBlock &&
-                            !fromBlockMenu
-                        ) {
+                        } else if (!prevBlock && !closeBlock && !fromBlockMenu) {
                             if (!block.getThread().view.isGlobal()) {
                                 Entry.do('separateBlock' + suffix, block);
                             } else {
@@ -685,15 +638,11 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
                                     this.dragMode = dragMode;
                                     var targetPointer = closeBlock.pointer();
                                     targetPointer[3] = -1;
-                                    Entry.do(
-                                        'insertBlock' + suffix,
-                                        block,
-                                        targetPointer
-                                    ).isPass(fromBlockMenu);
+                                    Entry.do('insertBlock' + suffix, block, targetPointer).isPass(
+                                        fromBlockMenu
+                                    );
 
-                                    Entry.ConnectionRipple.setView(
-                                        closeBlock.view
-                                    ).dispose();
+                                    Entry.ConnectionRipple.setView(closeBlock.view).dispose();
                                     this.dragMode = Entry.DRAG_MODE_NONE;
                                 } else {
                                     if (closeBlock.getThread) {
@@ -701,25 +650,19 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
                                         var closeBlockType = closeBlock.type;
                                         if (
                                             closeBlockType &&
-                                            thread instanceof
-                                                Entry.FieldBlock &&
-                                            !Entry.block[closeBlockType]
-                                                .isPrimitive
+                                            thread instanceof Entry.FieldBlock &&
+                                            !Entry.block[closeBlockType].isPrimitive
                                         )
                                             suffix += 'FollowSeparate';
                                     }
-                                    Entry.do(
-                                        'insertBlock' + suffix,
-                                        block,
-                                        closeBlock
-                                    ).isPass(fromBlockMenu);
+                                    Entry.do('insertBlock' + suffix, block, closeBlock).isPass(
+                                        fromBlockMenu
+                                    );
                                     ripple = true;
                                 }
                                 createjs.Sound.play('entryMagneting');
                             } else {
-                                Entry.do('moveBlock' + suffix, block).isPass(
-                                    fromBlockMenu
-                                );
+                                Entry.do('moveBlock' + suffix, block).isPass(fromBlockMenu);
                                 this.dominate();
                             }
                         }
@@ -727,9 +670,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
                     case gs.RETURN:
                         var block = this.block;
                         if (fromBlockMenu) {
-                            Entry.do('destroyBlockBelow', this.block).isPass(
-                                true
-                            );
+                            Entry.do('destroyBlockBelow', this.block).isPass(true);
                         } else {
                             if (prevBlock) {
                                 this.set({ animating: false });
@@ -744,11 +685,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
                                     Entry.do('insertBlock', block, parent);
                                 } else {
                                     var originPos = this.originPos;
-                                    this._moveTo(
-                                        originPos.x,
-                                        originPos.y,
-                                        false
-                                    );
+                                    this._moveTo(originPos.x, originPos.y, false);
                                     this.dominate();
                                 }
                             }
@@ -756,9 +693,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
                         break;
                     case gs.REMOVE:
                         createjs.Sound.play('entryDelete');
-                        Entry.do('destroyBlockBelow', this.block).isPass(
-                            fromBlockMenu
-                        );
+                        Entry.do('destroyBlockBelow', this.block).isPass(fromBlockMenu);
                         break;
                 }
 
@@ -850,10 +785,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
 
     p.getShadow = function() {
         if (!this._shadow) {
-            this._shadow = Entry.SVG.createElement(
-                this.svgGroup.cloneNode(true),
-                { opacity: 0.5 }
-            );
+            this._shadow = Entry.SVG.createElement(this.svgGroup.cloneNode(true), { opacity: 0.5 });
             this.getBoard().svgGroup.appendChild(this._shadow);
         }
         return this._shadow;
@@ -876,6 +808,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
         this.block.getThread().changeEvent.notify();
     };
 
+    // FIXME: scale에 따라 블록 가이드가 변경되어야함 
     p._updateBG = function() {
         var dragBlock = this._board.dragBlock;
         if (!dragBlock || !dragBlock.dragInstance) return;
@@ -886,10 +819,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
             // field block
             if (this.magneting) {
                 svgGroup.attr({
-                    filter:
-                        'url(#entryBlockHighlightFilter_' +
-                        this.getBoard().suffix +
-                        ')',
+                    filter: 'url(#entryBlockHighlightFilter_' + this.getBoard().suffix + ')',
                 });
                 svgGroup.addClass('outputHighlight');
             } else {
@@ -906,21 +836,12 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
             var magnet, transform;
             if (magneting === 'previous') {
                 magnet = this.magnet.next;
-                transform =
-                    'translate(' +
-                    (pos.x + magnet.x) +
-                    ',' +
-                    (pos.y + magnet.y) +
-                    ')';
+                transform = 'translate(' + (pos.x + magnet.x) + ',' + (pos.y + magnet.y) + ')';
             } else if (magneting === 'next') {
                 magnet = this.magnet.previous;
                 var dragHeight = dragBlock.getBelowHeight();
                 transform =
-                    'translate(' +
-                    (pos.x + magnet.x) +
-                    ',' +
-                    (pos.y + magnet.y - dragHeight) +
-                    ')';
+                    'translate(' + (pos.x + magnet.x) + ',' + (pos.y + magnet.y - dragHeight) + ')';
             }
 
             var $shadow = $(shadow);
@@ -938,10 +859,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
                 delete blockView.nextBackground;
             }
 
-            if (
-                magneting === 'previous' &&
-                dragBlock.block.thread instanceof Entry.Thread
-            ) {
+            if (magneting === 'previous' && dragBlock.block.thread instanceof Entry.Thread) {
                 var height = dragBlock.getBelowHeight() + this.offsetY;
 
                 blockView.originalHeight = blockView.offsetY;
@@ -1029,27 +947,21 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
         this.movable =
             this.block.isMovable() !== null
                 ? this.block.isMovable()
-                : this._skeleton.movable !== undefined
-                    ? this._skeleton.movable
-                    : true;
+                : this._skeleton.movable !== undefined ? this._skeleton.movable : true;
     };
 
     p._setReadOnly = function() {
         this.readOnly =
             this.block.isReadOnly() !== null
                 ? this.block.isReadOnly()
-                : this._skeleton.readOnly !== undefined
-                    ? this._skeleton.readOnly
-                    : false;
+                : this._skeleton.readOnly !== undefined ? this._skeleton.readOnly : false;
     };
 
     p._setCopyable = function() {
         this.copyable =
             this.block.isCopyable() !== null
                 ? this.block.isCopyable()
-                : this._skeleton.copyable !== undefined
-                    ? this._skeleton.copyable
-                    : true;
+                : this._skeleton.copyable !== undefined ? this._skeleton.copyable : true;
     };
 
     p.bumpAway = function(distance = 15, delay) {
@@ -1059,8 +971,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
                 oldY = this.y;
             window.setTimeout(function() {
                 //only when position not changed
-                if (oldX === that.x && oldY === that.y)
-                    that._moveBy(distance, distance, false);
+                if (oldX === that.x && oldY === that.y) that._moveBy(distance, distance, false);
             }, delay);
         } else that._moveBy(distance, distance, false);
     };
@@ -1072,14 +983,9 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
             if (nextBlock)
                 if (nextBlock && nextBlock !== this.block) {
                     var endBlock = this.block.getLastBlock();
-                    if (isDestroy)
-                        nextBlock.view._toLocalCoordinate(
-                            prevBlock.view._nextGroup
-                        );
+                    if (isDestroy) nextBlock.view._toLocalCoordinate(prevBlock.view._nextGroup);
                     else if (endBlock.view.magnet.next)
-                        nextBlock.view._toLocalCoordinate(
-                            endBlock.view._nextGroup
-                        );
+                        nextBlock.view._toLocalCoordinate(endBlock.view._nextGroup);
                     else {
                         nextBlock.view._toGlobalCoordinate();
                         nextBlock.separate();
@@ -1093,24 +999,29 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
 
                 this._toLocalCoordinate(prevBlockView._nextGroup);
                 var nextBlock = this.block.getNextBlock();
-                if (nextBlock && nextBlock.view)
-                    nextBlock.view._toLocalCoordinate(this._nextGroup);
+                if (nextBlock && nextBlock.view) nextBlock.view._toLocalCoordinate(this._nextGroup);
             }
         }
     };
 
     p.getAbsoluteCoordinate = function(dragMode) {
+        const board = this.getBoard();
+        const { scale = 1 } = board || {};
         dragMode = dragMode !== undefined ? dragMode : this.dragMode;
         if (dragMode === Entry.DRAG_MODE_DRAG) {
             return {
                 x: this.x,
                 y: this.y,
+                scaleX: this.x / scale,
+                scaleY: this.y / scale,
             };
         }
 
         var pos = this.block.getThread().view.requestAbsoluteCoordinate(this);
         pos.x += this.x;
         pos.y += this.y;
+        pos.scaleX = pos.x / scale;
+        pos.scaleY = pos.y / scale;
         return pos;
     };
 
@@ -1233,14 +1144,12 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
         } else {
             _.toArray(images).forEach((img) => {
                 var href = img.getAttribute('href');
-                loadImage(
-                    href,
-                    img.getAttribute('width'),
-                    img.getAttribute('height')
-                ).then(function(src) {
-                    img.setAttribute('href', src);
-                    if (++counts == images.length) return processSvg();
-                });
+                loadImage(href, img.getAttribute('width'), img.getAttribute('height')).then(
+                    function(src) {
+                        img.setAttribute('href', src);
+                        if (++counts == images.length) return processSvg();
+                    }
+                );
             });
         }
 
@@ -1248,21 +1157,13 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
 
         function processSvg() {
             svgData = svgData
-                .replace(
-                    '(svgGroup)',
-                    new XMLSerializer().serializeToString(svgGroup)
-                )
+                .replace('(svgGroup)', new XMLSerializer().serializeToString(svgGroup))
                 .replace('%W', bBox.width * scale)
                 .replace('%H', bBox.height * scale)
-                .replace(
-                    '(defs)',
-                    new XMLSerializer().serializeToString(defs[0])
-                )
+                .replace('(defs)', new XMLSerializer().serializeToString(defs[0]))
                 .replace(/>\s+/g, '>')
                 .replace(/\s+</g, '<');
-            var src =
-                'data:image/svg+xml;base64,' +
-                btoa(unescape(encodeURIComponent(svgData)));
+            var src = 'data:image/svg+xml;base64,' + btoa(unescape(encodeURIComponent(svgData)));
             svgData = null;
             if (notPng) {
                 deferred.resolve({
@@ -1355,11 +1256,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
 
         //if long pressed block is function_general block
         //edit function
-        if (
-            this.isInBlockMenu &&
-            eventSource === 'longPress' &&
-            block.getFuncId()
-        ) {
+        if (this.isInBlockMenu && eventSource === 'longPress' && block.getFuncId()) {
             return this._schema.events.dblclick[0](this);
         }
 
@@ -1372,11 +1269,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
             var isBoardReadOnly = blockView._board.readOnly,
                 { block, isInBlockMenu, copyable } = blockView,
                 {
-                    Blocks: {
-                        Duplication_option,
-                        CONTEXT_COPY_option,
-                        Delete_Blocks,
-                    },
+                    Blocks: { Duplication_option, CONTEXT_COPY_option, Delete_Blocks },
                     Menus: { save_as_image },
                 } = Lang;
 
@@ -1423,11 +1316,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
             return options;
 
             function _isDownloadable() {
-                return (
-                    Entry.Utils.isChrome() &&
-                    Entry.type == 'workspace' &&
-                    !Entry.isMobile()
-                );
+                return Entry.Utils.isChrome() && Entry.type == 'workspace' && !Entry.isMobile();
             }
         }
     };
@@ -1477,8 +1366,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
             if (workspace && workspace.vimBoard) {
                 syntax = workspace.vimBoard.getBlockSyntax(this);
             } else {
-                if (board.getBlockSyntax)
-                    syntax = board.getBlockSyntax(this, renderMode);
+                if (board.getBlockSyntax) syntax = board.getBlockSyntax(this, renderMode);
             }
 
             if (syntax) {
@@ -1487,9 +1375,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
             }
         }
 
-        return (
-            template || this._schema.template || Lang.template[this.block.type]
-        );
+        return template || this._schema.template || Lang.template[this.block.type];
     };
 
     p._getSchemaParams = function(mode) {
