@@ -205,6 +205,10 @@ const { returnEmptyArr, createTooltip } = require('../command_util');
 
             if( typeof Entry.EXPANSION_BLOCK !== "undefined" && typeof Entry.EXPANSION_BLOCK[block.name] !== "undefined") {
                 Entry.EXPANSION_BLOCK[block.name].init();
+                if(typeof Entry.expansionBlocks == "undefined") {
+                    Entry.expansionBlocks = [];
+                }
+                Entry.expansionBlocks.push(block.name);
             }
 
             Entry.playground.blockMenu.unbanClass(block.name);
