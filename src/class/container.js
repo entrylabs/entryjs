@@ -242,18 +242,31 @@ Entry.Container.prototype.setObjects = function(objectModels) {
 
 
 Entry.Container.prototype.initExpansionBlocks = function(object) {
+    const funcBlocks = Entry.variableContainer.getFunctionJSON()
+        .flatMap(func => {
+            return JSON.parse(func.content).flatMap(block=> block);
+        }).flatMap(block=>block.params)
+        .filter(block=> block != null && block.hasOwnProperty("type"));
+
     for (var type in Entry.EXPANSION_BLOCK_LIST) {
         var blocks = Object.keys(Entry.EXPANSION_BLOCK_LIST[type].getBlocks());
-        var intersection = object.script.getBlockList().filter(function(value) {
+        var blockInterSection = object.script.getBlockList().filter(function(value) {
             return -1 !== blocks.indexOf(value.data.type);
         });
-        if (intersection.length > 0) {
+
+        var functionInterSection = funcBlocks.filter(function(value) {
+            return -1 !== blocks.indexOf(value.type);
+        });
+
+        if (blockInterSection.length + functionInterSection.length > 0) {
             Entry.EXPANSION_BLOCK[type].init();
             if (Entry.type == 'workspace') {
                 Entry.playground.blockMenu.unbanClass(type);
             }
         }
     }
+
+
 }
 /**
  * get Pictures element
