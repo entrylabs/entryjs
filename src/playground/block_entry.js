@@ -201,6 +201,29 @@ if (Entry && Entry.block) {
 const blocks = require('./blocks');
 
 const block = {
+    expansionBlockAddButton: {
+        skeleton: 'basic_button',
+        color: '#eee',
+        isNotFor: [],
+        params: [
+            {
+                type: 'Text',
+                text: Lang.template.load_expansion_block,
+                color: '#333',
+                align: 'center',
+            },
+        ],
+        def: {
+            type: 'expansionBlockAddButton',
+        },
+        events: {
+            mousedown: [
+                function () {
+                    Entry.do('playgroundClickAddExpansionBlock');
+                },
+            ],
+        },
+    },
     //region hardware 하드웨어 기본
     arduino_download_connector: {
         skeleton: 'basic_button',
