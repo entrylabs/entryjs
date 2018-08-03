@@ -13,7 +13,7 @@ EntryStatic.usageList = [
    'usage_signal', 'usage_random', 'usage_variable', 'usage_ask_answer' , 'usage_comp_operation', 'usage_math_operation',
    'usage_logical_operation' , 'usage_list', 'usage_function', 'usage_arrow_move', 'usage_coordinate', 'usage_rotation', 'usage_speak',
    'usage_picture_effect', 'usage_shape', 'usage_sound', 'usage_draw','usage_confirm', 'usage_timer', 'usage_textBox', 'usage_scene',
-   'usage_clone', 'usage_hw', 'usage_expansion'
+   'usage_clone', 'usage_hw'
 ];
 
 EntryStatic.conceptList = [
@@ -332,18 +332,6 @@ EntryStatic.getAllBlocks = function() {
             category: "func",
             blocks: [
                 "functionAddButton",
-            ]
-        },
-        {
-            category: "expansion",
-            blocks: [
-                "expansionBlockAddButton",
-                "weather_title",
-                "check_weather",
-                "check_finedust",
-                "get_weather_data",
-                "get_current_weather_data",
-                "get_today_temperature"
             ]
         },
         {
@@ -697,6 +685,11 @@ EntryStatic.getAllBlocks = function() {
                 "truetrue_set_led_colorsensor",
                 "truetrue_set_led_linesensor",
                 "truetrue_set_linetracer",
+				"truetrue_set_head_colorled",
+				"truetrue_set_move",
+				"truetrue_set_sec_move",
+				"truetrue_set_rotate",
+				"truetrue_set_sec_rotate",
                 //CODEino
                 "CODEino_get_named_sensor_value",
                 "CODEino_get_sound_status",
@@ -788,10 +781,12 @@ EntryStatic.getAllBlocks = function() {
 
                 "ev3_get_sensor_value",
                 "ev3_touch_sensor",
+                "ev3_button_pressed",
                 "ev3_color_sensor",
                 "ev3_motor_power",
                 "ev3_motor_power_on_time",
                 "ev3_motor_degrees",
+                "ev3_status_led",
 
                 "roduino_on_block",
                 "roduino_off_block",
@@ -1578,7 +1573,6 @@ EntryStatic.ARROW_COLOR_JUDGE = '#89a1f7';
 EntryStatic.ARROW_COLOR_CALC = '#e8b349';
 EntryStatic.ARROW_COLOR_VARIABLE = '#ce38ce';
 EntryStatic.ARROW_COLOR_HW = '#097e84';
-EntryStatic.ARROW_COLOR_EXPANSION = '#ff8888';
 
 
 EntryStatic.COMMAND_TYPES = {
@@ -1606,8 +1600,6 @@ EntryStatic.getQuestionCategoryData = function() {
         category: 'dummy',
         blocks: [
             'hidden_event',
-            'hidden_loop2',
-            'hidden_if_else2',
             'hidden',
             'hidden_string',
             'hidden_boolean'
