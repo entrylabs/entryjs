@@ -335,24 +335,27 @@ Entry.Variable.prototype.generateView = function(variableIndex) {
 
         this.resizeHandle_.list = this;
 
-        // this.resizeHandle_.on('mouseover', function(evt) {
         this.resizeHandle_.on('pointerover', function(evt) {
             this.cursor = 'nwse-resize';
         });
 
-        this.resizeHandle_.on('pointerdown', function(evt) {
+        this.resizeHandle_.on(PIXIDragHelper.DOWN, function(evt) {
             // if(Entry.type != 'workspace') return;
+            PIXIDragHelper.handleDrag(this);
             this.list.isResizing = true;
+            var gp = evt.data.global;
             this.offset = {
-                x: evt.stageX * 0.75 - this.list.getWidth(),
-                y: evt.stageY * 0.75 - this.list.getHeight(),
+                x: gp.x * 0.75 - this.list.getWidth(),
+                y: gp.y * 0.75 - this.list.getHeight(),
             };
             this.parent.cursor = 'nwse-resize';
         });
-        this.resizeHandle_.on('pressmove', function(evt) {
+
+        this.resizeHandle_.on(PIXIDragHelper.MOVE, function(evt) {
             // if(Entry.type != 'workspace') return;
-            this.list.setWidth(evt.stageX * 0.75 - this.offset.x);
-            this.list.setHeight(evt.stageY * 0.75 - this.offset.y);
+            var gp = evt.data.global;
+            this.list.setWidth(gp.x * 0.75 - this.offset.x);
+            this.list.setHeight(gp.y * 0.75 - this.offset.y);
             this.list.updateView();
         });
 
