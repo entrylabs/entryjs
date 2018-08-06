@@ -30,11 +30,6 @@ export default class PIXIHelper {
         return pixiText.width;
     }
 
-    static pixiContainerClone(pixiContainer, recusive) {
-        console.log("pixiContainerClone");
-        return src.clone;
-    }
-
     static cacheIfHasFilters(that) {
         // if (!_.isEmpty(that.object.filters)) that.cache();
         // else that.object.uncache();
@@ -62,6 +57,8 @@ export default class PIXIHelper {
         return Number(strColor.replace("#", "0x"));
     }
 
+    static needDestroy(target) {
 
+    }
 }
 
