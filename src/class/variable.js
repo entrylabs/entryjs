@@ -363,24 +363,27 @@ Entry.Variable.prototype.generateView = function(variableIndex) {
             this.cursor = 'move';
         });
 
-        this.view_.on('pointerdown', function(evt) {
+        this.view_.on(PIXIDragHelper.DOWN, function(evt) {
             if (Entry.type != 'workspace' || this.variable.isResizing) return;
+            PIXIDragHelper.handleDrag(this);
+            var gp = evt.data.global;
             this.offset = {
-                x: this.x - (evt.stageX * 0.75 - 240),
-                y: this.y - (evt.stageY * 0.75 - 135),
+                x: this.x - (gp.x * 0.75 - 240),
+                y: this.y - (gp.y * 0.75 - 135),
             };
             this.cursor = 'move';
         });
 
-        this.view_.on('pressup', function(evt) {
+        this.view_.on(PIXIDragHelper.UP, function(evt) {
             this.cursor = 'initial';
             this.variable.isResizing = false;
         });
 
-        this.view_.on('pressmove', function(evt) {
+        this.view_.on(PIXIDragHelper.MOVE, function(evt) {
             if (Entry.type != 'workspace' || this.variable.isResizing) return;
-            this.variable.setX(evt.stageX * 0.75 - 240 + this.offset.x);
-            this.variable.setY(evt.stageY * 0.75 - 135 + this.offset.y);
+            var gp = evt.data.global;
+            this.variable.setX(gp.x * 0.75 - 240 + this.offset.x);
+            this.variable.setY(gp.y * 0.75 - 135 + this.offset.y);
             this.variable.updateView();
         });
 
