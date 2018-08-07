@@ -287,18 +287,6 @@ Entry.Variable.prototype.generateView = function(variableIndex) {
             );
         }
     } else {
-        // this.view_ = new createjs.Container();
-        // this.rect_ = new createjs.Shape();
-        // this.view_.addChild(this.rect_);
-        // this.view_.variable = this;
-        // this.titleView_ = new createjs.Text('asdf', this.FONT, '#000');
-        // this.titleView_.textBaseline = 'alphabetic';
-        // this.titleView_.textAlign = 'center';
-        // this.titleView_.width = this.width_ - 2 * this.BORDER;
-        // this.titleView_.y = this.BORDER + 10;
-        // this.titleView_.x = this.width_ / 2;
-        // this.view_.addChild(this.titleView_);
-
 
         this.view_ = new PIXI.Container();
         this.view_.interactive = true;
@@ -306,58 +294,52 @@ Entry.Variable.prototype.generateView = function(variableIndex) {
         this.view_.addChild(this.rect_);
         this.view_.variable = this;
         this.titleView_ = PIXIHelper.text("asdf", this.FONT, '#000', 'alphabetic', 'center');
-        this.titleView_.width = this.width_ - 2 * this.BORDER;
-        this.titleView_.y = this.BORDER + 10;
-        this.titleView_.x = this.width_ / 2;
+        this.titleView_.y = this.BORDER ;
+        this.titleView_.x = this.width_ - 2;
         this.view_.addChild(this.titleView_);
 
-
-
-
-        // this.resizeHandle_ = new createjs.Shape();
-        // this.resizeHandle_.graphics
-        //     .f('#1bafea')
-        //     .ss(1, 0, 0)
-        //     .s('#1bafea')
-        //     .lt(0, -9)
-        //     .lt(-9, 0)
-        //     .lt(0, 0);
-
-        this.resizeHandle_ = new PIXI.Graphics()
+        var resizeHandle = this.resizeHandle_ = new PIXI.Graphics()
             .moveTo(0, 0)
             .beginFill(0x1bafea)
-            .lineStyle(3, 0x1bafea)
+            .lineStyle(1, 0x1bafea)
             .lineTo(0, -9)
             .lineTo(-9, 0)
             .lineTo(0, 0);
-        this.resizeHandle_.interactive = true;
-        this.view_.addChild(this.resizeHandle_);
+        resizeHandle.interactive = true;
+        this.view_.addChild(resizeHandle);
 
-        this.resizeHandle_.list = this;
+        resizeHandle.list = this;
 
-        this.resizeHandle_.on('pointerover', function(evt) {
-            this.cursor = 'nwse-resize';
+        resizeHandle.on('pointerover', (evt) => {
+            resizeHandle.cursor = 'nwse-resize';
         });
 
-        this.resizeHandle_.on(PIXIDragHelper.DOWN, function(evt) {
+        resizeHandle.on(PIXIDragHelper.DOWN, (evt) => {
             // if(Entry.type != 'workspace') return;
-            PIXIDragHelper.handleDrag(this);
-            this.list.isResizing = true;
+            PIXIDragHelper.handleDrag(resizeHandle);
+            this.isResizing = true;
             var gp = evt.data.global;
-            this.offset = {
-                x: gp.x * 0.75 - this.list.getWidth(),
-                y: gp.y * 0.75 - this.list.getHeight(),
+            resizeHandle.offset = {
+                x: gp.x * 0.75 - this.getWidth(),
+                y: gp.y * 0.75 - this.getHeight(),
             };
-            this.parent.cursor = 'nwse-resize';
+            this.view_.cursor = 'nwse-resize';
         });
 
-        this.resizeHandle_.on(PIXIDragHelper.MOVE, function(evt) {
+        resizeHandle.on(PIXIDragHelper.MOVE, (evt) => {
             // if(Entry.type != 'workspace') return;
             var gp = evt.data.global;
-            this.list.setWidth(gp.x * 0.75 - this.offset.x);
-            this.list.setHeight(gp.y * 0.75 - this.offset.y);
-            this.list.updateView();
+            this.setWidth(gp.x * 0.75 - resizeHandle.offset.x);
+            this.setHeight(gp.y * 0.75 - resizeHandle.offset.y);
+            this.updateView();
         });
+
+        resizeHandle.on(PIXIDragHelper.UP, (evt) => {
+            //resizeHandle.cursor = 'initial';
+            this.view_.cursor = 'move';
+            this.isResizing = false;
+        });
+
 
         this.view_.on('pointerover', function(evt) {
             this.cursor = 'move';
@@ -374,11 +356,6 @@ Entry.Variable.prototype.generateView = function(variableIndex) {
             this.cursor = 'move';
         });
 
-        this.view_.on(PIXIDragHelper.UP, function(evt) {
-            this.cursor = 'initial';
-            this.variable.isResizing = false;
-        });
-
         this.view_.on(PIXIDragHelper.MOVE, function(evt) {
             if (Entry.type != 'workspace' || this.variable.isResizing) return;
             var gp = evt.data.global;
@@ -387,46 +364,39 @@ Entry.Variable.prototype.generateView = function(variableIndex) {
             this.variable.updateView();
         });
 
-        // this.scrollButton_ = new createjs.Shape();
-        // this.scrollButton_.graphics.f('#aaa').rr(0, 0, 7, 30, 3.5);
-        this.scrollButton_ = new PIXI.Graphics();
-        this.scrollButton_
+        var scrollButton = this.scrollButton_ = new PIXI.Graphics();
+        scrollButton.interactive = true;
+        scrollButton
             .beginFill(0xaaaaaa)
             .drawRoundedRect(0, 0, 7, 30, 3.5);
-        this.view_.addChild(this.scrollButton_);
-        this.scrollButton_.y = 23;
+        this.view_.addChild(scrollButton);
+        scrollButton.y = 23;
 
-        this.scrollButton_.list = this;
-        this.scrollButton_.on('pointerdown', function(evt) {
+        scrollButton.list = this;
+        scrollButton.cursor = 'pointer';
+        scrollButton.on(PIXIDragHelper.DOWN, (evt) => {
             // if(Entry.type != 'workspace') return;
-            this.list.isResizing = true;
-            this.cursor = 'pointer';
-            this.offsetY =
-                !Entry.Utils.isNumber(this.offsetY) || this.offsetY < 0
-                    ? evt.rawY / 2
-                    : this.offsetY;
+            evt.stopPropagation();
+            PIXIDragHelper.handleDrag(scrollButton);
+            var gp = evt.data.global;
+            scrollButton.offset = {
+                y: gp.y - scrollButton.y / 0.75
+            };
         });
-        this.scrollButton_.on('pressmove', function(evt) {
+        scrollButton.on(PIXIDragHelper.MOVE, (evt) => {
             // if(Entry.type != 'workspace') return;
-            if (this.moveAmount === undefined) {
-                this.y = evt.target.y;
-                this.moveAmount = true;
-            } else {
-                this.y =
-                    evt.rawY / 2 -
-                    this.offsetY +
-                    23 * (this.list.height_ / 100);
-            }
 
-            if (this.y < 23) this.y = 23;
-            if (this.y > this.list.getHeight() - 40)
-                this.y = this.list.getHeight() - 40;
-            this.list.updateView();
+            var gp = evt.data.global;
+            var yPos = (gp.y - scrollButton.offset.y) * 0.75;
+            var min = 23;
+            var max = this.getHeight() - 40;
+            if(yPos < min) yPos = min;
+            if(yPos > max) yPos = max;
+            scrollButton.y = yPos;
+
+            this.updateView();
         });
 
-        this.scrollButton_.on('pressup', function(evt) {
-            this.moveAmount = undefined;
-        });
         if (this.getX() && this.getY()) {
             this.setX(this.getX());
             this.setY(this.getY());
@@ -693,7 +663,7 @@ Entry.Variable.prototype.updateView = function() {
                 }
             }
 
-            this.titleView_.x = this.width_ / 2;
+            this.titleView_.x = (this.width_ - this.titleView_.width) / 2;
 
             this.rect_
                 .clear()
@@ -789,9 +759,6 @@ Entry.Variable.prototype.updateView = function() {
                     _cache[text.substr(0, 150)] = execText;
                     maxLen = Math.max(execText.length, maxLen);
                 }
-
-                // var view = this.elementView.clone(true);
-                // var view = PIXIHelper.pixiContainerClone(this.elementView, true);
 
                 elementView.y = (i - this.scrollPosition) * 20 + 23;
                 this.view_.addChild(elementView);
