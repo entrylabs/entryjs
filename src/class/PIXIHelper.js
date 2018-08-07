@@ -5,11 +5,11 @@ export default class PIXIHelper {
         var fontName = (result[4]) || "NanumGothic";
         var size = (result[1]) || "10pt";
 
-        console.log({
-            input: font,
-            fontName: fontName,
-            size: size
-        });
+        // console.log({
+        //     input: font,
+        //     fontName: fontName,
+        //     size: size
+        // });
 
         var t = new PIXI.Text(str, {
             fontFamily: fontName,
