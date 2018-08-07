@@ -8,12 +8,19 @@ export class PIXIDragHelper {
      */
     static handleDrag(target) {
         const C = PIXIDragHelper;
+        if(C._TARGET) {
+            console.log(`%coh my godness. drag target already exist.`, 'background: #00fffff; color: #ff0000');
+            C._unhandleDrag(C._TARGET);
+            C._TARGET = null;
+        }
+        C._TARGET = target;
         console.log(`%chandleDrag(${C.__CNT})`, 'background: #222; color: #bada55');
         C._onMove = function(e){
             target.emit(C.MOVE, e);
         };
         C._onUp = function(e){
             target.emit(C.UP, e);
+            C._TARGET = null;
             C._unhandleDrag(target);
         };
 
