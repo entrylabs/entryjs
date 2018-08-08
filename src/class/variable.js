@@ -142,7 +142,7 @@ Entry.Variable.prototype.generateView = function(variableIndex) {
         }
         this.view_.visible = this.visible_;
         this.view_.addChild(this.valueView_);
-
+        this.view_.cursor = "move";
         this.view_.on(PIXIDragHelper.DOWN, function(evt) {
             if (Entry.type != 'workspace') return;
             PIXIDragHelper.handleDrag(this);
@@ -152,7 +152,6 @@ Entry.Variable.prototype.generateView = function(variableIndex) {
                 x: this.x - (gp.x * 0.75 - 240),
                 y: this.y - (gp.y * 0.75 - 135),
             };
-            this.cursor = 'move';
         });
 
         this.view_.on(PIXIDragHelper.MOVE, function(evt) {
