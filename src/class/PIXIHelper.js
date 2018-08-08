@@ -61,10 +61,14 @@ export default class PIXIHelper {
      * @param strColor
      */
     static colorToUint(strColor) {
-        return strColor ? Number(strColor.replace("#", "0x")) : 0;
+        return strColor ? Number(strColor.replace("#", "0x")) : undefined;
     }
 
     static needDestroy(target) {
+
+    }
+
+    static todo(msg) {
 
     }
 }

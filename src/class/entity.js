@@ -424,7 +424,8 @@ Entry.EntityObject.prototype.getSize = function(toFixedValue) {
 Entry.EntityObject.prototype.setWidth = function(width) {
     /** @type {number} */
     this.width = width;
-    this.object.width = this.width;
+    PIXIHelper.todo("원래는 width 였는데 $width 우선 바궈놓음");
+    this.object.$width = this.width;
     if (this.textObject && this.getLineBreak())
         this.textObject.lineWidth = this.width;
     this.updateDialog();
@@ -448,7 +449,8 @@ Entry.EntityObject.prototype.setHeight = function(height) {
     /** @type {number} */
     this.height = height;
     if (this.textObject) {
-        this.object.height = this.height;
+        PIXIHelper.todo("원래는 height 였는데 $height 우선 바궈놓음");
+        this.object.$height = this.height;
         this.alignTextBox();
     }
     this.updateDialog();
