@@ -1339,6 +1339,7 @@ Entry.Dash.getBlocks = function() {
                         ['2번 버튼', 0x07],
                         ['3번 버튼', 0x08],
                         ['박수 소리', 0x09],
+                        ['소리', 0x0A],
                     ],
                     fontSize: 11,
                 },
@@ -1370,6 +1371,9 @@ Entry.Dash.getBlocks = function() {
                         break;
                     case 0x09:
                         return pd.clap ? true : false;
+                        break;
+                    case 0x0A:
+                        return pd.sound ? true : false;
                         break;
                     default:
                         break;
