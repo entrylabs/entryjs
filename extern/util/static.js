@@ -697,11 +697,6 @@ EntryStatic.getAllBlocks = function() {
                 "truetrue_set_led_colorsensor",
                 "truetrue_set_led_linesensor",
                 "truetrue_set_linetracer",
-				"truetrue_set_head_colorled",
-				"truetrue_set_move",
-				"truetrue_set_sec_move",
-				"truetrue_set_rotate",
-				"truetrue_set_sec_rotate",
                 //CODEino
                 "CODEino_get_named_sensor_value",
                 "CODEino_get_sound_status",
@@ -760,6 +755,19 @@ EntryStatic.getAllBlocks = function() {
                 "xbot_twoWheel",
                 "xbot_lcd",
                 //end of XBOT Blocks added
+                                //BINGLES Blocks added
+                "bingles_analogValue",
+                "bingles_digitalOutput",
+                "bingles_rgb",
+                "bingles_rgb_picker",
+                "bingles_buzzer",
+                "bingles_servo",
+                "bingles_twoWheel",
+                "bingles_lcd",
+                "bingles_remotecontrol",
+                "bingles_oled",
+                "bingles_motorgo",
+                //end of BIGNLES Blocks added
                 // ardublock Added 2016-06-01
                 "ardublock_get_analog_value",
                 "ardublock_get_analog_value_map",
@@ -793,12 +801,10 @@ EntryStatic.getAllBlocks = function() {
 
                 "ev3_get_sensor_value",
                 "ev3_touch_sensor",
-                "ev3_button_pressed",
                 "ev3_color_sensor",
                 "ev3_motor_power",
                 "ev3_motor_power_on_time",
                 "ev3_motor_degrees",
-                "ev3_status_led",
 
                 "roduino_on_block",
                 "roduino_off_block",
