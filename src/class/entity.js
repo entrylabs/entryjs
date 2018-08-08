@@ -318,7 +318,6 @@ Entry.EntityObject.prototype.setRegX = function(regX) {
     if (this.type == 'textBox') regX = 0;
     /** @type {number} */
     this.regX = regX;
-    //this.object.regX = this.regX;
     this.object.pivot.x = this.regX;
     Entry.requestUpdate = true;
 };
@@ -339,7 +338,6 @@ Entry.EntityObject.prototype.setRegY = function(regY) {
     if (this.type == 'textBox') regY = 0;
     /** @type {number} */
     this.regY = regY;
-    // this.object.regY = this.regY;
     this.object.pivot.y = this.regY;
     Entry.requestUpdate = true;
 };
@@ -473,7 +471,9 @@ Entry.EntityObject.prototype.getHeight = function() {
 Entry.EntityObject.prototype.setColour = function(colour = '#000000') {
     /** @type {string} */
     this.colour = colour;
-    if (this.textObject) this.textObject.color = this.colour;
+    if (this.textObject) {
+        this.textObject.style.fill = this.colour;
+    }
     Entry.requestUpdate = true;
 };
 
@@ -560,7 +560,8 @@ Entry.EntityObject.prototype.setFont = function(font = '20px Nanum Gothic') {
 
     this.textObject.font = this.getFont();
     Entry.stage.update();
-    this.setWidth(this.textObject.getMeasuredWidth());
+    // this.setWidth(this.textObject.getMeasuredWidth());
+    this.setWidth(PIXIHelper.textWidth(this.textObject));
     this.updateBG();
     Entry.stage.updateObject();
 };
@@ -580,19 +581,29 @@ Entry.EntityObject.prototype.setLineHeight = function() {
 
 Entry.EntityObject.prototype.syncFont = function() {
     var textObject = this.textObject;
-    textObject.font = this.getFont();
+    // textObject.font = this.getFont();
+
+    var style = textObject.style;
+    style.fontSize = this.getFontSize() + 'px';
+    style.fontStyle = this.fontItalic ? "italic" : "normal";
+    style.fontWeight = this.fontBold ? "bold" : "normal";
+    style.fontFamily = this.fontType;
+
     this.setLineHeight();
     Entry.stage.update();
     if (this.getLineBreak()) {
         if (this.fontType == 'Nanum Gothic Coding') {
             textObject.y =
-                textObject.getMeasuredLineHeight() / 2 -
+                // textObject.getMeasuredLineHeight() / 2 -
+                PIXIHelper.getMeasuredLineHeight(textObject) / 2 -
                 this.getHeight() / 2 +
                 10;
         }
     } else {
-        this.setWidth(textObject.getMeasuredWidth());
-        this.setHeight(textObject.getMeasuredHeight());
+        this.setWidth(PIXIHelper.textWidth(textObject));
+        this.setHeight(PIXIHelper.textHeight(textObject));
+        // this.setWidth(textObject.getMeasuredWidth());
+        // this.setHeight(textObject.getMeasuredHeight());
     }
     Entry.stage.updateObject();
     Entry.requestUpdate = true;
@@ -688,7 +699,8 @@ Entry.EntityObject.prototype.setText = function(text = '') {
     this.text = text;
     this.textObject.text = this.text;
     if (!this.lineBreak) {
-        this.setWidth(this.textObject.getMeasuredWidth());
+        // this.setWidth(this.textObject.getMeasuredWidth());
+        this.setWidth(PIXIHelper.textWidth(this.textObject));
         this.parent.updateCoordinateView();
     }
     this.updateBG();
@@ -1315,13 +1327,12 @@ Entry.EntityObject.prototype._removeShapes = function() {
 //TODO 준배늼 gl 로 변경
 Entry.EntityObject.prototype.updateBG = function() {
     if (!this.bgObject) return;
-    this.bgObject.graphics.clear();
+    this.bgObject.clear();
     var width = this.getWidth();
     var height = this.getHeight();
-    this.bgObject.graphics
-        .setStrokeStyle(1)
-        .beginStroke()
-        .beginFill(this.getBGColour())
+    this.bgObject
+        .lineStyle(0)
+        .beginFill(PIXIHelper.colorToUint(this.getBGColour()))
         .drawRect(-width / 2, -height / 2, width, height);
     if (this.getLineBreak()) {
         this.bgObject.x = 0;
@@ -1339,6 +1350,36 @@ Entry.EntityObject.prototype.updateBG = function() {
                 break;
         }
     }
+
+
+
+
+
+    // if (!this.bgObject) return;
+    // this.bgObject.graphics.clear();
+    // var width = this.getWidth();
+    // var height = this.getHeight();
+    // this.bgObject.graphics
+    //     .setStrokeStyle(1)
+    //     .beginStroke()
+    //     .beginFill(this.getBGColour())
+    //     .drawRect(-width / 2, -height / 2, width, height);
+    // if (this.getLineBreak()) {
+    //     this.bgObject.x = 0;
+    // } else {
+    //     var fontAlign = this.getTextAlign();
+    //     switch (fontAlign) {
+    //         case Entry.TEXT_ALIGN_LEFT:
+    //             this.bgObject.x = width / 2;
+    //             break;
+    //         case Entry.TEXT_ALIGN_CENTER:
+    //             this.bgObject.x = 0;
+    //             break;
+    //         case Entry.TEXT_ALIGN_RIGHT:
+    //             this.bgObject.x = -width / 2;
+    //             break;
+    //     }
+    // }
 };
 
 Entry.EntityObject.prototype.alignTextBox = function() {

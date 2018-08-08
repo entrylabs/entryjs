@@ -29,6 +29,13 @@ export default class PIXIHelper {
     static textWidth(pixiText) {
         return pixiText.width;
     }
+    static textHeight(pixiText) {
+        return pixiText.height;
+    }
+    static getMeasuredLineHeight(pixiText) {
+        return pixiText.height;
+    }
+
 
     static cacheIfHasFilters(that) {
         // if (!_.isEmpty(that.object.filters)) that.cache();
@@ -54,7 +61,7 @@ export default class PIXIHelper {
      * @param strColor
      */
     static colorToUint(strColor) {
-        return Number(strColor.replace("#", "0x"));
+        return strColor ? Number(strColor.replace("#", "0x")) : 0;
     }
 
     static needDestroy(target) {
