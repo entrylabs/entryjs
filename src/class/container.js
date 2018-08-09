@@ -228,7 +228,6 @@ Entry.Container.prototype.setObjects = function(objectModels) {
     for (var i in objectModels) {
         var object = new Entry.EntryObject(objectModels[i]);
         this.objects_.push(object);
-        this.initExpansionBlocks(object);
     }
     this.updateObjectsOrder();
     this.updateListView();
@@ -240,34 +239,6 @@ Entry.Container.prototype.setObjects = function(objectModels) {
     }
 };
 
-
-Entry.Container.prototype.initExpansionBlocks = function(object) {
-    const funcBlocks = Entry.variableContainer.getFunctionJSON()
-        .flatMap(func => {
-            return JSON.parse(func.content).flatMap(block=> block);
-        }).flatMap(block=>block.params)
-        .filter(block=> block != null && block.hasOwnProperty("type"));
-
-    for (var type in Entry.EXPANSION_BLOCK_LIST) {
-        var blocks = Object.keys(Entry.EXPANSION_BLOCK_LIST[type].getBlocks());
-        var blockInterSection = object.script.getBlockList().filter(function(value) {
-            return -1 !== blocks.indexOf(value.data.type);
-        });
-
-        var functionInterSection = funcBlocks.filter(function(value) {
-            return -1 !== blocks.indexOf(value.type);
-        });
-
-        if (blockInterSection.length + functionInterSection.length > 0) {
-            Entry.EXPANSION_BLOCK[type].init();
-            if (Entry.type == 'workspace') {
-                Entry.playground.blockMenu.unbanClass(type);
-            }
-        }
-    }
-
-
-}
 /**
  * get Pictures element
  * @param {!String} pictureId
