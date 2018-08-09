@@ -3,10 +3,9 @@
  */
 'use strict';
 
-goog.provide("Entry.TargetChecker");
 
-goog.require("Entry.Utils");
-goog.require("Entry.Extension");
+require("../util/utils")
+require("../extensions/extension")
 
 /**
  * @constructor
@@ -16,6 +15,7 @@ Entry.TargetChecker = function(code, isForEdit, type) {
     this.goals = [];
     this.publicGoals = [];
     this.unachievedGoals = [];
+    this.listener = {};
     this.remainPublicGoal = 0;
     this.lastMessage = "";
     if (this.isForEdit) {
@@ -222,6 +222,13 @@ Entry.Utils.inherit(Entry.Extension, Entry.TargetChecker);
     p.clearExecutor = function() {
         this.script.clearExecutors();
     };
+
+    p.clearListener = function () {
+        Object.values(this.listener).forEach((listener) => {
+            listener.destroy();
+        });
+        this.listener = {};
+    }
 
     p.destroy = function() {
         this.reset();

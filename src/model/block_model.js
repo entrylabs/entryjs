@@ -1,10 +1,5 @@
 'use strict';
 
-goog.provide('Entry.BlockModel');
-
-goog.require('Entry.Model');
-goog.require('Entry.STATIC');
-
 Entry.BlockModel = function() {
     Entry.Model(this);
 };
@@ -18,5 +13,5 @@ Entry.BlockModel.prototype.schema = {
     statements: {},
     prev: null,
     next: null,
-    view: null
+    view: null,
 };

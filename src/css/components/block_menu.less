@@ -246,6 +246,15 @@
     border-right: none;
 }
 
+#entryCategoryexpansion {
+    .backgroundImage("expansion.png");
+    background-repeat: no-repeat;
+}
+
+.entrySelectedCategory#entryCategoryexpansion {
+    border-right: none;
+}
+
 #entryCategoryscene {
     border-right: none;
     .backgroundImage("scene.png");
@@ -263,6 +272,72 @@
 }
 
 .entrySelectedCategory#entryCategoryarduino {
+    border-right: none;
+}
+
+#entryCategoryhw_sensor {
+    &:not(.entrySelectedCategory){
+        background-color: #C7DCDD;
+    }
+    .backgroundImage("others.png");
+    background-repeat: no-repeat;
+    border-bottom: #5494A3 solid 1px;
+}
+
+.entrySelectedCategory#entryCategoryhw_sensor {
+    border-right: none;
+}
+
+#entryCategoryhw_led {
+    &:not(.entrySelectedCategory){
+        background-color: #C7DCDD;
+    }
+    font-size: 10px;
+    .backgroundImage("diode.png");
+    background-repeat: no-repeat;
+    border-bottom: #5494A3 solid 1px;
+}
+
+.entrySelectedCategory#entryCategoryhw_led {
+    border-right: none;
+}
+
+#entryCategoryhw_motor {
+    &:not(.entrySelectedCategory){
+        background-color: #C7DCDD;
+    }
+    .backgroundImage("dcmotor.png");
+    background-repeat: no-repeat;
+    border-bottom: #5494A3 solid 1px;
+}
+
+.entrySelectedCategory#entryCategoryhw_motor {
+    border-right: none;
+}
+
+#entryCategoryhw_melody {
+    &:not(.entrySelectedCategory){
+        background-color: #C7DCDD;
+    }
+    .backgroundImage("melody.png");
+    background-repeat: no-repeat;
+    border-bottom: #5494A3 solid 1px;
+}
+
+.entrySelectedCategory#entryCategoryhw_melody {
+    border-right: none;
+}
+
+#entryCategoryhw_robot {
+    &:not(.entrySelectedCategory){
+        background-color: #C7DCDD;
+    }
+    .backgroundImage("robot.png");
+    background-repeat: no-repeat;
+    border-bottom: #5494A3 solid 1px;
+}
+
+.entrySelectedCategory#entryCategoryhw_robot {
     border-right: none;
 }
 
@@ -287,11 +362,6 @@
 }
 
 @keyframes foldBlockly {
-    from {}
-    to {left: 64px;}
-}
-
-@-ot-keyframes foldBlockly {
     from {}
     to {left: 64px;}
 }
