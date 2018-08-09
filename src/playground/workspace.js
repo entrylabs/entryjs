@@ -5,7 +5,7 @@
 
 Entry.Workspace = function(options) {
     Entry.Model(this, false);
-
+    this.scale = 1;
     this.dSetMode = Entry.Utils.debounce(this.setMode, 200);
     this.dReDraw = Entry.Utils.debounce(this.reDraw, 150);
 
@@ -351,6 +351,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
             dom: this.board.view,
             workspace: this,
             isOverlay: true,
+            scale: this.scale,
         });
         this.overlayBoard.changeCode(new Entry.Code([]));
         this.overlayBoard.workspace = this;
@@ -687,8 +688,12 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
         }
     };
 
-    p.setScale = function(scale) {
+    p.setScale = function(scale = 1) {
+        this.scale = scale;
         this.board.setScale(scale);
         Entry.GlobalSvg.setScale(scale);
+        if(this.overlayBoard) {
+            this.overlayBoard.setScale(scale);
+        }
     }
 })(Entry.Workspace.prototype);

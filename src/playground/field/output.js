@@ -172,10 +172,12 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldOutput);
     };
 
     p.requestAbsoluteCoordinate = function(blockView) {
+        const board = this.getBoard();
+        const { scale = 1 } = board || {};
         var blockView = this._blockView;
         var contentPos = blockView.contentPos;
         var pos = blockView.getAbsoluteCoordinate();
-        pos.x += this.box.x + contentPos.x;
+        pos.x += (this.box.x + contentPos.x) * scale;
         pos.y += this.box.y + contentPos.y;
         return pos;
     };

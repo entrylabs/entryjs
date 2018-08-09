@@ -25,7 +25,7 @@ Entry.GlobalSvg = {};
 
         this.svgDom = Entry.Dom(
             $(
-                '<svg id="globalSvg" width="10" height="10"' +
+                '<svg id="globalSvg" width="1" height="1"' +
                     'version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'
             ),
             { parent: this._container }
@@ -59,10 +59,11 @@ Entry.GlobalSvg = {};
         var isVimMode = this._mode == Entry.Workspace.MODE_VIMBOARD;
         var bBox = blockView.svgGroup.getBBox();
 
-        this.svgDom.attr({
-            width: Math.round(bBox.width + 4) + 'px',
-            height: Math.round(bBox.height + 4) + 'px',
-        });
+        // ISSUE: 배율 변경시 좌표 틀어짐 발생
+        // this.svgDom.attr({
+        //     width: Math.round(bBox.width + 4) + 'px',
+        //     height: Math.round(bBox.height + 4) + 'px',
+        // });
 
         this.svgGroup = Entry.SVG.createElement(blockView.svgGroup.cloneNode(true), { opacity: 1 });
 
@@ -132,12 +133,8 @@ Entry.GlobalSvg = {};
         if (!blockView) return;
         var pos = blockView.getAbsoluteCoordinate();
         var offset = blockView.getBoard().offset();
-        var ofX = window.ofX || this._offsetX;
-        var ofY = window.ofY || this._offsetY;
-        this.left = pos.scaleX + ((offset.left / this.scale) - (ofX));
-        this.top = pos.scaleY + ((offset.top / this.scale) - (ofY));
-
-        console.log('global', pos.scaleX, pos.scaleY, this.left, this.top, (offset.left / this.scale), (offset.top / this.scale));
+        this.left = pos.scaleX + (offset.left / this.scale - this._offsetX);
+        this.top = pos.scaleY + (offset.top / this.scale - this._offsetY);
         this._applyDomPos(this.left, this.top);
     };
 
@@ -208,7 +205,6 @@ Entry.GlobalSvg = {};
     };
 
     gs.setScale = function(scale = 1) {
-        console.log(`Global SVG SCALE ${scale}`);
         this.scale = scale;
     };
 })(Entry.GlobalSvg);

@@ -364,7 +364,6 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
         if (!(this.x || this.y)) {
             this.svgGroup.removeAttr('transform');
         } else {
-            console.log('_setPosition', this.x / scale, this.y / scale);
             var transform = 'translate(' + (this.x / scale) + ',' + (this.y / scale) + ')';
 
             if (animate && Entry.ANIMATION_DURATION !== 0) {
@@ -719,13 +718,15 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
             return;
         }
 
-        var board = this.getBoard();
-
+        const board = this.getBoard();
+        const { scale = 1 } = board || {};
+        const x = this.x / scale;
+        const y = this.y / scale;
         for (var type in this.magnet) {
             var view = _.result(
                 board.getNearestMagnet(
-                    this.x,
-                    type === 'next' ? this.y + this.getBelowHeight() : this.y,
+                    x,
+                    type === 'next' ? y + this.getBelowHeight() : y,
                     type
                 ),
                 'view'
@@ -799,16 +800,17 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
     p._updateMagnet = function() {
         if (!this._skeleton.magnets) return;
         var magnet = this._skeleton.magnets(this);
-        if (magnet.next)
+
+        if (magnet.next) {
             this._nextGroup.attr(
                 'transform',
                 'translate(' + magnet.next.x + ',' + magnet.next.y + ')'
             );
+        }
         this.magnet = magnet;
         this.block.getThread().changeEvent.notify();
     };
 
-    // FIXME: scale에 따라 블록 가이드가 변경되어야함 
     p._updateBG = function() {
         var dragBlock = this._board.dragBlock;
         if (!dragBlock || !dragBlock.dragInstance) return;
@@ -836,12 +838,12 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
             var magnet, transform;
             if (magneting === 'previous') {
                 magnet = this.magnet.next;
-                transform = 'translate(' + (pos.x + magnet.x) + ',' + (pos.y + magnet.y) + ')';
+                transform = 'translate(' + (pos.scaleX + magnet.x) + ',' + (pos.scaleY + magnet.y) + ')';
             } else if (magneting === 'next') {
                 magnet = this.magnet.previous;
                 var dragHeight = dragBlock.getBelowHeight();
                 transform =
-                    'translate(' + (pos.x + magnet.x) + ',' + (pos.y + magnet.y - dragHeight) + ')';
+                    'translate(' + (pos.scaleX + magnet.x) + ',' + (pos.scaleY + magnet.y - dragHeight) + ')';
             }
 
             var $shadow = $(shadow);
@@ -861,7 +863,6 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
 
             if (magneting === 'previous' && dragBlock.block.thread instanceof Entry.Thread) {
                 var height = dragBlock.getBelowHeight() + this.offsetY;
-
                 blockView.originalHeight = blockView.offsetY;
                 blockView.set({
                     offsetY: height,
