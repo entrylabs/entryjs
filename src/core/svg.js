@@ -21,6 +21,7 @@ Entry.SVG.NS_XLINK = 'http://www.w3.org/1999/xlink';
 
 Entry.SVG.createElement = function(tag, options) {
     var el;
+    let isAppend = true;
     if (typeof tag === 'string')
         el = document.createElementNS(Entry.SVG.NS, tag);
     else el = tag;
@@ -29,6 +30,10 @@ Entry.SVG.createElement = function(tag, options) {
         if (options.href) {
             el.setAttributeNS(Entry.SVG.NS_XLINK, 'href', options.href);
             delete options.href;
+        }
+
+        if(options.isPrepend) {
+            isAppend = false;
         }
 
         for (var key in options) {
@@ -52,7 +57,13 @@ Entry.SVG.createElement = function(tag, options) {
             'preserve'
         );
 
-    if (this instanceof SVGElement) this.appendChild(el);
+    if (this instanceof SVGElement) {
+        if(isAppend || !this.firstChild) {
+            this.appendChild(el);
+        } else {
+            this.insertBefore(el, this.firstChild);
+        }
+    }
 
     return el;
 };

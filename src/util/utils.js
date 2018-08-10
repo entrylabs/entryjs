@@ -1692,6 +1692,14 @@ Entry.Utils.addFilters = function(boardSvgDom, suffix) {
         mode: 'normal',
     });
 
+    var blockFilter2 = defs.elem('filter', {
+        id: 'entryBlockShadowFilter2_' + suffix,
+    });
+    blockFilter2.elem('feColorMatrix', {
+        type: 'matrix',
+        values: '0.7 0 0 0 0 0 0.7 0 0 0 0 0 0.7 0 0 0 0 0 1 0',
+    });
+
     var blockHighlightFilter = defs.elem('filter', {
         id: 'entryBlockHighlightFilter_' + suffix,
     });

@@ -173,13 +173,30 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
                     this.getBoard().suffix +
                     ')',
             });
-        } else if (this.magnet.string || this.magnet.boolean)
+        } else if (this.magnet.string || this.magnet.boolean) {
             pathStyle.stroke = skeleton.outerLine;
+        }
 
         if (skeleton.outerLine) {
             pathStyle['stroke-width'] = '0.6';
         }
         this._path.attr(pathStyle);
+
+        if (!_.isEmpty(this._schema.statements)) {
+            const {height, statementHeight} = this._getStatementInnerHeight();
+            this.statementLine = this.pathGroup.elem('rect', {
+                isPrepend: true,
+            });            
+            this.statementLine.attr({
+                x: '7',
+                y: height - 1,
+                width: '1.4',
+                height: statementHeight,
+                fill: fillColor,
+                filter: `url(#entryBlockShadowFilter2_${this.getBoard().suffix})`,
+                'stroke-width': '0',
+            })
+        }
 
         this._moveTo(this.x, this.y, false);
         this._startContentRender(mode);
@@ -193,6 +210,21 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
 
         this.bindPrev();
     };
+
+    p._getStatementInnerHeight = function () {
+        var height = this.contentHeight;                
+        var statementHeight = 0;
+        if(!_.isEmpty(this._statements)) {
+            var statementHeight = this._statements[0] ? this._statements[0].height : 20;
+            height = Math.max(30, height + 2);
+            statementHeight = Math.max(statementHeight, 20) + 1;
+        }
+        console.log(statementHeight);
+        return {
+            height,
+            statementHeight,
+        }
+    }
 
     p._startContentRender = function(mode) {
         mode = _.isUndefined(mode) ? this.renderMode : mode;
@@ -209,7 +241,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
         var statements = schema.statements;
 
         if (!_.isEmpty(statements)) {
-            this.statementSvgGroup = this.svgGroup.elem('g');
+            this.statementSvgGroup = this.svgGroup.elem('g');            
         }
 
         var reg = /(%\d+)/im;
@@ -379,16 +411,29 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
         if (this._path.getAttribute('d') === newPath) return;
 
         if (false && Entry.ANIMATION_DURATION !== 0) {
-            var that = this;
-            setTimeout(function() {
-                that._path.animate(
+            setTimeout(() => {
+                this._path.animate(
                     { d: newPath },
                     Entry.ANIMATION_DURATION,
                     mina.easeinout
-                );
+                );                
+                if (this.statementLine) {
+                    const {height, statementHeight} = this._getStatementInnerHeight();
+                    this.statementLine.attr({
+                        y: height,
+                        height: statementHeight,
+                    });
+                }
             }, 0);
         } else {
             this._path.attr({ d: newPath });
+            if (this.statementLine) {
+                const {height, statementHeight} = this._getStatementInnerHeight();
+                this.statementLine.attr({
+                    y: height,
+                    height: statementHeight,
+                });
+            }
             this.animating === true && this.set({ animating: false });
         }
     };
