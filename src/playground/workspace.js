@@ -395,18 +395,12 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                             .copyToClipboard();
                     }
                     break;
-                case 219: //setMode(block) for textcoding
+                case 219: //setMode(block) for textcoding ( ctrl + [ )
                     if (!Entry.options.textCodingEnable) {
                         return;
                     }
-                    var oldMode = Entry.getMainWS().oldMode;
-                    if (oldMode == Entry.Workspace.MODE_OVERLAYBOARD) return;
-
-                    var message = Entry.TextCodingUtil.isNamesIncludeSpace() || Entry.TextCodingUtil.validateFunctionToPython();
-                    if (message) {
-                        entrylms.alert(message);
-                        return;
-                    }
+                    const oldMode = Entry.getMainWS().oldMode;
+                    if (oldMode === Entry.Workspace.MODE_OVERLAYBOARD) return;
 
                     this.dSetMode({
                         boardType: Entry.Workspace.MODE_BOARD,
@@ -414,20 +408,14 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                     });
                     e.preventDefault();
                     break;
-                case 221: //setMode(python) for textcoding
+                case 221: //setMode(python) for textcoding ( ctrl + ] )
                     if (!Entry.options.textCodingEnable) {
                         return;
                     }
-                    var message;
-                    message = Entry.TextCodingUtil.canConvertTextModeForOverlayMode(
+                    
+                    const message = Entry.TextCodingUtil.canConvertTextModeForOverlayMode(
                         Entry.Workspace.MODE_VIMBOARD
                     );
-                    if (message) {
-                        entrylms.alert(message);
-                        return;
-                    }
-
-                    var message = Entry.TextCodingUtil.isNamesIncludeSpace() || Entry.TextCodingUtil.validateFunctionToPython();
                     if (message) {
                         entrylms.alert(message);
                         return;
