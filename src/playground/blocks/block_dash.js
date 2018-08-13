@@ -387,7 +387,7 @@ Entry.Dash.getBlocks = function() {
             skeleton: 'basic',
             fontColor: '#fff',
             statements: [],
-            template: '녹음된 %1 소리내기 %2',
+            template: '녹음된 %1 소리 내기 %2',
             params: [
                 {
                     type: 'Dropdown',
@@ -1176,7 +1176,7 @@ Entry.Dash.getBlocks = function() {
             fontColor: '#fff',
             statements: [],
             template:
-                '왼쪽바퀴 %1 (으)로 %2, 오른쪽 바퀴 %3 (으)로 %4 움직이기 %5',
+                '왼쪽 바퀴 %1 (으)로 %2, 오른쪽 바퀴 %3 (으)로 %4 움직이기 %5',
             params: [
                 {
                     type: 'Dropdown',
@@ -1448,8 +1448,8 @@ Entry.Dash.getBlocks = function() {
                     options: [
                         ['안녕', 0x00],
                         ['안녕하세요', 0x01],
-                        ['걱정마 (오른쪽)', 0x02],
-                        ['걱정마 (왼쪽)', 0x07],
+                        ['걱정 마 (오른쪽)', 0x02],
+                        ['걱정 마 (왼쪽)', 0x07],
                         ['잘가 #1', 0x03],
                         ['잘가 #2', 0x04],
                         ['자신감 있는', 0x05],
