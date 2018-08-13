@@ -140,28 +140,22 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
             blockMenu = this.blockMenu,
             Util = Entry.TextCodingUtil;
 
-        var alert_message;
+        let alert_message;
 
         switch (this.mode) {
             case WORKSPACE.MODE_VIMBOARD:
-                var alert_message = Util.isNamesIncludeSpace();
+                alert_message =
+                    Util.isNamesIncludeSpace() ||
+                    Util.isNameIncludeNotValidChar() ||
+                    Util.validateFunctionToPython();
+                
                 if (alert_message) {
                     entrylms.alert(alert_message);
-                    var mode = {};
+                    const mode = {};
                     mode.boardType = WORKSPACE.MODE_BOARD;
                     mode.textType = -1;
                     Entry.getMainWS().setMode(mode);
                     break;
-                }
-
-                alert_message = Util.isNameIncludeNotValidChar();
-                if (alert_message) {
-                    entrylms.alert(alert_message);
-                    var mode = {};
-                    mode.boardType = WORKSPACE.MODE_BOARD;
-                    mode.textType = -1;
-                    Entry.getMainWS().setMode(mode);
-                    return;
                 }
 
                 alert_message = Util.canConvertTextModeForOverlayMode(
@@ -408,7 +402,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                     var oldMode = Entry.getMainWS().oldMode;
                     if (oldMode == Entry.Workspace.MODE_OVERLAYBOARD) return;
 
-                    var message = Entry.TextCodingUtil.isNamesIncludeSpace();
+                    var message = Entry.TextCodingUtil.isNamesIncludeSpace() || Entry.TextCodingUtil.validateFunctionToPython();
                     if (message) {
                         entrylms.alert(message);
                         return;
@@ -433,7 +427,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                         return;
                     }
 
-                    var message = Entry.TextCodingUtil.isNamesIncludeSpace();
+                    var message = Entry.TextCodingUtil.isNamesIncludeSpace() || Entry.TextCodingUtil.validateFunctionToPython();
                     if (message) {
                         entrylms.alert(message);
                         return;

@@ -1870,37 +1870,43 @@ Entry.TextCodingUtil = {};
                 return "메시지 이름이 공백 포함";
         }*/
 
-        //inspect functions
-
-        var ERROR_LANG = Lang.TextCoding;
-        var ERROR = Entry.TextCodingError;
-        var DISORDER = ERROR_LANG[ERROR.ALERT_FUNCTION_NAME_DISORDER];
-        var FIELD_MULTI = ERROR_LANG[ERROR.ALERT_FUNCTION_NAME_FIELD_MULTI];
-        var EMPTY_TEXT = ERROR_LANG[ERROR.ALERT_FUNCTION_NAME_EMPTY_TEXT];
-
-        targets = vc.functions_ || {};
-
-        for (i in targets) {
-            var paramBlock = targets[i].content.getEventMap('funcDef')[0];
-            paramBlock = paramBlock && paramBlock.params[0];
-
-            if (!paramBlock) continue;
-
-            if (paramBlock.type !== 'function_field_label') return DISORDER;
-
-            var params = paramBlock.params;
-
-            if (!params[1]) {
-                if (test(params[0])) return EMPTY_TEXT;
-            } else if (this.hasFunctionFieldLabel(params[1])) {
-                return FIELD_MULTI;
-            }
-        }
-
         return false;
 
         function test(name) {
             return / /.test(name);
+        }
+    };
+
+    tu.validateFunctionToPython = function() {
+        const vc = Entry.variableContainer;
+        if(!vc) return;
+
+        const ERROR_LANG = Lang.TextCoding;
+        const ERROR = Entry.TextCodingError;
+        const DISORDER = ERROR_LANG[ERROR.ALERT_FUNCTION_NAME_DISORDER];
+        const FIELD_MULTI = ERROR_LANG[ERROR.ALERT_FUNCTION_NAME_FIELD_MULTI];
+        const EMPTY_TEXT = ERROR_LANG[ERROR.ALERT_FUNCTION_NAME_EMPTY_TEXT];
+
+        const targets = vc.functions_ || {};
+
+        for (let i in targets) {
+            let paramBlock = targets[i].content.getEventMap('funcDef')[0];
+            paramBlock = paramBlock && paramBlock.params[0];
+
+            if (!paramBlock) continue;
+
+            // 함수 파라미터의 첫 값이 이름이어야 한다.
+            if (paramBlock.type !== 'function_field_label') return DISORDER;
+
+            const params = paramBlock.params;
+
+            // 인자가 하나이상 존재하면 함수명에 공백이 허용되고, 함수명만 존재하면 공백을 허용하지 않는다.
+            if (!params[1]) {
+                if (/ /.test(params[0])) return EMPTY_TEXT;
+            } else if (this.hasFunctionFieldLabel(params[1])) {
+                //이름은 처음에만 등장해야한다.
+                return FIELD_MULTI;
+            }
         }
     };
 
