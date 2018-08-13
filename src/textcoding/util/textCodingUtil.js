@@ -1972,6 +1972,12 @@ Entry.TextCodingUtil = {};
         return false;
     };
 
+    tu.hasFunctionBooleanField = function(fBlock) {
+        if (!fBlock || !fBlock.data) return false;
+        const {data} = fBlock;
+        return data.type === 'function_field_boolean' || this.hasFunctionBooleanField(data.params[1]);
+    };
+
     /*tu.addFuncParam = function(param) {
         this._funcParams.push(param);
     };
