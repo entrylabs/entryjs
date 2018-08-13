@@ -145,8 +145,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
         switch (this.mode) {
             case WORKSPACE.MODE_VIMBOARD:
                 alert_message =
-                    Util.isNamesIncludeSpace() ||
-                    Util.isNameIncludeNotValidChar() ||
+                    Util.validateVariableToPython() ||
                     Util.validateFunctionToPython();
                 
                 if (alert_message) {

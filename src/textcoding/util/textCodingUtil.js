@@ -1840,41 +1840,22 @@ Entry.TextCodingUtil = {};
     };
 
     tu.isNamesIncludeSpace = function() {
-        var vc = Entry.variableContainer;
+        const vc = Entry.variableContainer;
         if (!vc) return;
 
-        //inspect variables
-        var targets = vc.variables_ || [];
-        for (var i = 0; i < targets.length; i++) {
-            if (test(targets[i].name_)) {
-                return Lang.TextCoding[
-                    Entry.TextCodingError.ALERT_VARIABLE_EMPTY_TEXT
-                ];
+        const hasWhiteSpace = (targets, message) => {
+            for (let i = 0; i < targets.length; i++) {
+                if (/ /.test(targets[i].name_))
+                    return message;
             }
-        }
-
-        //inspect lists
-        targets = vc.lists_ || [];
-        for (i = 0; i < targets.length; i++) {
-            if (test(targets[i].name_))
-                return Lang.TextCoding[
-                    Entry.TextCodingError.ALERT_LIST_EMPTY_TEXT
-                ];
-        }
-
-        //this doesn't need for now
-        //inspect messages
-        /*targets = vc.messages_ || [];
-        for (i=0; i<targets.length; i++) {
-            if (test(targets[i].name_))
-                return "메시지 이름이 공백 포함";
-        }*/
-
-        return false;
-
-        function test(name) {
-            return / /.test(name);
-        }
+        };
+        
+        return hasWhiteSpace(vc.lists_ || [] , Lang.TextCoding[Entry.TextCodingError.ALERT_LIST_EMPTY_TEXT]) ||
+            hasWhiteSpace(vc.variables_ || [] , Lang.TextCoding[Entry.TextCodingError.ALERT_VARIABLE_EMPTY_TEXT]);
+    };
+    
+    tu.validateVariableToPython = function() {
+        return this.isNamesIncludeSpace() || this.isNameIncludeNotValidChar();
     };
 
     tu.validateFunctionToPython = function() {
@@ -1898,7 +1879,7 @@ Entry.TextCodingUtil = {};
             // 함수 파라미터의 첫 값이 이름이어야 한다.
             if (paramBlock.type !== 'function_field_label') return DISORDER;
 
-            const params = paramBlock.params;
+            const {params} = paramBlock;
 
             // 인자가 하나이상 존재하면 함수명에 공백이 허용되고, 함수명만 존재하면 공백을 허용하지 않는다.
             if (!params[1]) {
@@ -1931,23 +1912,19 @@ Entry.TextCodingUtil = {};
     };
 
     tu.isNameIncludeNotValidChar = function() {
-        var vc = Entry.variableContainer;
+        const vc = Entry.variableContainer;
         if (!vc) return;
-        //inspect variables
-        var targets = vc.variables_ || [];
-        for (var i = 0; i < targets.length; i++) {
-            if (this.checkName(targets[i].name_, 'v')) {
-                return this.checkName(targets[i].name_, 'v');
+        
+        const validateList = (targets, errorSuffix) => {
+            for (let i = 0; i < targets.length; i++) {
+                if (this.checkName(targets[i].name_, errorSuffix)) {
+                    return this.checkName(targets[i].name_, errorSuffix);
+                }
             }
-        }
+        };
 
-        //inspect lists
-        targets = vc.lists_ || [];
-        for (i = 0; i < targets.length; i++) {
-            if (this.checkName(targets[i].name_, 'l')) {
-                return this.checkName(targets[i].name_, 'l');
-            }
-        }
+        return validateList(vc.variables_ || [] , 'v') ||
+            validateList(vc.lists_ || [] , 'l');
     };
 
     tu.hasFunctionFieldLabel = function(fBlock) {
