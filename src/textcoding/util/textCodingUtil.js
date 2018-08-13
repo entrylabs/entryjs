@@ -1972,38 +1972,17 @@ Entry.TextCodingUtil = {};
         return false;
     };
 
+    /**
+     * 함수 인자에 판단형 파라미터가 존재하는지 찾는다.
+     * 이 함수는 재귀로 동작한다.
+     * @param fBlock 함수명이 포함되지 않은 functionBlock 목록
+     * @returns {Boolean} 판단형 파라미터가 존재하는 경우 true, 존재하지 않는 경우 false
+     */
     tu.hasFunctionBooleanField = function(fBlock) {
         if (!fBlock || !fBlock.data) return false;
         const {data} = fBlock;
         return data.type === 'function_field_boolean' || this.hasFunctionBooleanField(data.params[1]);
     };
-
-    /*tu.addFuncParam = function(param) {
-        this._funcParams.push(param);
-    };
-
-    tu.clearFuncParam = function() {
-        this._funcParams = [];
-    };
-
-    tu.isFuncParam = function(paramName) {
-        var result = false;
-
-        var funcParams = this._funcParams;
-
-        if(funcParams.length == 0)
-            return false;
-
-        for(var p in funcParams) {
-            var funcParam = funcParams[p];
-            if(funcParam == paramName) {
-                result = true;
-                break;
-            }
-        }
-
-        return result;
-    };*/
 
     tu.makeExpressionStatementForEntryEvent = function(calleName, arg) {
         var expressionStatement = {};
