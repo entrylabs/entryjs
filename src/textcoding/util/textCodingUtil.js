@@ -1873,7 +1873,6 @@ Entry.TextCodingUtil = {};
         const ERROR = Entry.TextCodingError;
         const DISORDER = ERROR_LANG[ERROR.ALERT_FUNCTION_NAME_DISORDER];
         const FIELD_MULTI = ERROR_LANG[ERROR.ALERT_FUNCTION_NAME_FIELD_MULTI];
-        const EMPTY_TEXT = ERROR_LANG[ERROR.ALERT_FUNCTION_NAME_EMPTY_TEXT];
         const HAS_BOOLEAN = ERROR_LANG[ERROR.ALERT_FUNCTION_HAS_BOOLEAN];
         const result = {
             message : undefined,
@@ -1896,12 +1895,7 @@ Entry.TextCodingUtil = {};
             const {params} = paramBlock;
 
             // 인자가 하나이상 존재하면 함수명에 공백이 허용되고, 함수명만 존재하면 공백을 허용하지 않는다.
-            if (!params[1]) {
-                if (/ /.test(params[0])){
-                    result.message = EMPTY_TEXT;
-                    return result;
-                }
-            } else if (this.hasFunctionFieldLabel(params[1])) {
+            if (this.hasFunctionFieldLabel(params[1])) {
                 //이름은 처음에만 등장해야한다.
                 result.message = FIELD_MULTI;
                 return result;

@@ -47,7 +47,6 @@ Entry.TextCodingError = {};
         'alert_function_name_empty_text_add_change';
     tce.ALERT_VARIABLE_EMPTY_TEXT = 'alert_variable_empty_text';
     tce.ALERT_LIST_EMPTY_TEXT = 'alert_list_empty_text';
-    tce.ALERT_FUNCTION_NAME_EMPTY_TEXT = 'alert_function_name_empty_text';
     tce.ALERT_FUNCTION_NAME_FIELD_MULTI = 'alert_function_name_field_multi';
     tce.ALERT_FUNCTION_NAME_DISORDER = 'alert_function_name_disorder';
     tce.ALERT_FUNCTION_HAS_BOOLEAN = 'alert_function_has_boolean';
