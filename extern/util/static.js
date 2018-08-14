@@ -760,6 +760,19 @@ EntryStatic.getAllBlocks = function() {
                 "xbot_twoWheel",
                 "xbot_lcd",
                 //end of XBOT Blocks added
+                //bingles Blocks added
+                "bingles_analogValue",
+                "bingles_digitalOutput",
+                "bingles_rgb",
+                "bingles_rgb_picker",
+                "bingles_buzzer",
+                "bingles_servo",
+                "bingles_twoWheel",
+                "bingles_lcd",
+                "bingles_remotecontrol",
+                "bingles_oled",
+                "bingles_motorgo",
+                //end of bingles Blocks added
                 // ardublock Added 2016-06-01
                 "ardublock_get_analog_value",
                 "ardublock_get_analog_value_map",
