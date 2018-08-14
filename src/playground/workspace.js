@@ -135,33 +135,34 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
         this.mode = Number(this.mode);
         if (this.oldMode === this.mode) return;
 
-        var VIM = Entry.Vim,
-            WORKSPACE = Entry.Workspace,
-            blockMenu = this.blockMenu,
-            Util = Entry.TextCodingUtil;
-
-        let alert_message;
+        const VIM = Entry.Vim;
+        const WORKSPACE = Entry.Workspace;
+        const blockMenu = this.blockMenu;
+        const Util = Entry.TextCodingUtil;
 
         switch (this.mode) {
             case WORKSPACE.MODE_VIMBOARD:
-                alert_message =
+                const alertMessage =
                     Util.validateVariableToPython() ||
                     Util.validateFunctionToPython();
                 
-                if (alert_message) {
-                    entrylms.alert(alert_message);
-                    const mode = {};
-                    mode.boardType = WORKSPACE.MODE_BOARD;
-                    mode.textType = -1;
-                    Entry.getMainWS().setMode(mode);
-                    break;
+                if (alertMessage && alertMessage.message) {
+                    entrylms.alert(alertMessage.message);
+                    
+                    if(alertMessage.type === 'error') {
+                        const mode = {};
+                        mode.boardType = WORKSPACE.MODE_BOARD;
+                        mode.textType = -1;
+                        Entry.getMainWS().setMode(mode);
+                        break;
+                    }
                 }
 
-                alert_message = Util.canConvertTextModeForOverlayMode(
+                const invalidEditorModeErrorMessage = Util.canConvertTextModeForOverlayMode(
                     Entry.Workspace.MODE_VIMBOARD
                 );
-                if (alert_message) {
-                    entrylms.alert(alert_message);
+                if (invalidEditorModeErrorMessage) {
+                    entrylms.alert(invalidEditorModeErrorMessage);
                     return;
                 }
 
