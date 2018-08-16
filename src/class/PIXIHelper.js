@@ -1,3 +1,5 @@
+import { PIXIText } from './pixi/text/PIXIText';
+
 export default class PIXIHelper {
     static text(str, font, color, textBaseline, textAlign) {
         var reg = /((\d+)(pt|sp|px))?\s*(.+)/gi;
@@ -11,7 +13,8 @@ export default class PIXIHelper {
         //     size: size
         // });
 
-        var t = new PIXI.Text(str, {
+        // var t = new PIXI.Text(str, {
+        var t = new PIXIText(str, {
             fontFamily: fontName,
             fontSize: size,
             fill: color,
