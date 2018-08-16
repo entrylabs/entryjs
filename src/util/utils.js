@@ -1015,7 +1015,7 @@ Entry.adjustValueWithMaxMin = function(input, min, max) {
  * @return {boolean} return true when target value exists already
  */
 Entry.isExist = function(targetValue, identifier, arr) {
-    return !!_.findWhere(arr, { [identifier]: targetValue });
+    return !!_.find(arr, { [identifier]: targetValue });
 };
 
 Entry.getColourCodes = function() {

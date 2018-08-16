@@ -138,7 +138,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
         this.optionGroup.on('keyup', function(e) {
             that.applyValue(e);
 
-            if (_.contains(exitKeys, e.keyCode || e.which))
+            if (_.includes(exitKeys, e.keyCode || e.which))
                 that.destroyOption(undefined, true);
         });
 

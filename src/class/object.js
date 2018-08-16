@@ -936,7 +936,7 @@ Entry.EntryObject = function(model) {
         $(objectView).bind('mousedown touchstart', (e) => {
             if (
                 Entry.container.getObject(objectId) &&
-                !_.contains(exceptionsForMouseDown, e.target)
+                !_.includes(exceptionsForMouseDown, e.target)
             ) {
                 var currentObject = Entry.playground.object || {};
                 if (currentObject === that && currentObject.isEditing) {

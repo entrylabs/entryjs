@@ -51,7 +51,7 @@ Entry.Engine = function() {
             return;
         }
 
-        if (_.contains([37, 38, 39, 40, 32], code)) {
+        if (_.includes([37, 38, 39, 40, 32], code)) {
             e.preventDefault();
         }
     }

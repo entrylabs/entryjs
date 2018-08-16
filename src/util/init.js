@@ -3,7 +3,7 @@
  */
 'use strict';
 
-require("./utils")
+require('./utils');
 
 /**
  * Initialize method with options.
@@ -11,16 +11,19 @@ require("./utils")
  * @param {!object} options for initialize.
  */
 Entry.init = function(container, options) {
-    Entry.assert(typeof options === "object", 'Init option is not object');
+    Entry.assert(typeof options === 'object', 'Init option is not object');
     this.events_ = {};
     this.interfaceState = {
-        menuWidth: 264
+        menuWidth: 264,
     };
 
     Entry.Utils.bindGlobalEvent([
-        'resize', 'mousedown',
-        'mousemove', 'keydown',
-        'keyup', 'dispose'
+        'resize',
+        'mousedown',
+        'mousemove',
+        'keydown',
+        'keyup',
+        'dispose',
     ]);
 
     /** @type {object} */
@@ -30,16 +33,13 @@ Entry.init = function(container, options) {
     this.defaultPath = options.defaultDir || '';
     this.blockInjectPath = options.blockInjectDir || '';
 
-    if (this.type == 'workspace' && this.isPhone())
-        this.type = 'phone';
+    if (this.type == 'workspace' && this.isPhone()) this.type = 'phone';
     this.initialize_();
     /** @type {!Element} */
     this.view_ = container;
-    $(this.view_).addClass("entry");
-    if (this.type === "minimize")
-        $(this.view_).addClass(this.type);
-    if (this.device === 'tablet')
-        $(this.view_).addClass("tablet");
+    $(this.view_).addClass('entry');
+    if (this.type === 'minimize') $(this.view_).addClass(this.type);
+    if (this.device === 'tablet') $(this.view_).addClass('tablet');
 
     Entry.initFonts(options.fonts);
     this.createDom(container, this.type);
@@ -49,10 +49,10 @@ Entry.init = function(container, options) {
     this.cloudSavable = true;
     this.startTime = new Date().getTime();
 
-    document.onkeydown=function(e){
+    document.onkeydown = function(e) {
         Entry.dispatchEvent('keyPressed', e);
     };
-    document.onkeyup=function(e){
+    document.onkeyup = function(e) {
         Entry.dispatchEvent('keyUpped', e);
     };
     window.onresize = function(e) {
@@ -60,15 +60,15 @@ Entry.init = function(container, options) {
     };
     window.onbeforeunload = this.beforeUnload;
 
-    Entry.addEventListener("saveWorkspace", function(e) {
-        Entry.addActivity("save");
+    Entry.addEventListener('saveWorkspace', function(e) {
+        Entry.addActivity('save');
     });
 
-    Entry.addEventListener("showBlockHelper", function(e) {
-        Entry.propertyPanel.select("helper");
+    Entry.addEventListener('showBlockHelper', function(e) {
+        Entry.propertyPanel.select('helper');
     });
 
-    if (Entry.getBrowserType().substr(0,2) == 'IE' && !window.flashaudio) {
+    if (Entry.getBrowserType().substr(0, 2) == 'IE' && !window.flashaudio) {
         createjs.FlashAudioPlugin.swfPath = this.mediaFilePath + 'media/';
         createjs.Sound.registerPlugins([createjs.FlashAudioPlugin]);
         window.flashaudio = true;
@@ -81,13 +81,21 @@ Entry.init = function(container, options) {
     Entry.soundInstances = [];
 
     Entry.loadAudio_(
-        [Entry.mediaFilePath + 'sounds/click.mp3',
-        Entry.mediaFilePath + 'sounds/click.wav',
-        Entry.mediaFilePath + 'sounds/click.ogg'], 'entryMagneting');
+        [
+            Entry.mediaFilePath + 'sounds/click.mp3',
+            Entry.mediaFilePath + 'sounds/click.wav',
+            Entry.mediaFilePath + 'sounds/click.ogg',
+        ],
+        'entryMagneting'
+    );
     Entry.loadAudio_(
-        [Entry.mediaFilePath + 'sounds/delete.mp3',
-        Entry.mediaFilePath + 'sounds/delete.ogg',
-        Entry.mediaFilePath + 'sounds/delete.wav'], 'entryDelete');
+        [
+            Entry.mediaFilePath + 'sounds/delete.mp3',
+            Entry.mediaFilePath + 'sounds/delete.ogg',
+            Entry.mediaFilePath + 'sounds/delete.wav',
+        ],
+        'entryDelete'
+    );
 
     createjs.Sound.stop();
     BigNumber.config({ ERRORS: false });
@@ -98,23 +106,23 @@ Entry.changeContainer = function(container) {
 };
 
 Entry.loadAudio_ = function(filenames, name) {
-  if (!window.Audio || !filenames.length) {
-    // No browser support for Audio.
-    return;
-  }
+    if (!window.Audio || !filenames.length) {
+        // No browser support for Audio.
+        return;
+    }
 
-  for (var i = 0; i < filenames.length; i++) {
-    var filename = filenames[i];
-    //var path = Blockly.pathToBlockly + filename;
-    var id = filename.match(/\/([^.]+)./)[1];
-    //createjs.Sound.registerSound(path, id, 4);
-    Entry.soundQueue.loadFile({
-        id: name,
-        src: filename,
-        type: createjs.LoadQueue.SOUND
-    });
-    break;
-  }
+    for (var i = 0; i < filenames.length; i++) {
+        var filename = filenames[i];
+        //var path = Blockly.pathToBlockly + filename;
+        var id = filename.match(/\/([^.]+)./)[1];
+        //createjs.Sound.registerSound(path, id, 4);
+        Entry.soundQueue.loadFile({
+            id: name,
+            src: filename,
+            type: createjs.LoadQueue.SOUND,
+        });
+        break;
+    }
 };
 
 /**
@@ -129,8 +137,7 @@ Entry.initialize_ = function() {
      */
     this.stage = new Entry.Stage();
 
-    if (Entry.engine && Entry.engine.projectTimer)
-        Entry.engine.clearTimer();
+    if (Entry.engine && Entry.engine.projectTimer) Entry.engine.clearTimer();
     /**
      * Initialize engine for run.
      * @type {!Entry.Engine}
@@ -143,8 +150,7 @@ Entry.initialize_ = function() {
      * @type {!object}
      */
 
-    if (this.type !== "minimize")
-        this.propertyPanel = new Entry.PropertyPanel();
+    if (this.type !== 'minimize') this.propertyPanel = new Entry.PropertyPanel();
 
     /**
      * Initialize container for objects.
@@ -190,19 +196,22 @@ Entry.initialize_ = function() {
      */
     this.toast = new Entry.Toast();
 
-    if (this.hw)
-        this.hw.closeConnection();
+    if (this.hw) this.hw.closeConnection();
     /**
      * Initialize hardware manager.
      * @type {!Entry.Toast}
      */
     this.hw = new Entry.HW();
 
-    if (Entry.enableActivityLogging)
-        this.reporter = new Entry.Reporter(false);
+    if (Entry.enableActivityLogging) this.reporter = new Entry.Reporter(false);
     else if (this.type == 'workspace' || this.type == 'phone')
         this.reporter = new Entry.Reporter(true);
+};
 
+Entry.disposeContainer = function() {
+    while (this.view_.firstChild) {
+        this.view_.removeChild(this.view_.firstChild);
+    }
 };
 
 /**
@@ -214,9 +223,7 @@ Entry.initialize_ = function() {
 Entry.createDom = function(container, option) {
     var that = this;
     if (!option || option == 'workspace') {
-        Entry.documentMousedown.attach(
-            that, that.cancelObjectEdit
-        );
+        Entry.documentMousedown.attach(that, that.cancelObjectEdit);
 
         var sceneView = Entry.createElement('div');
         container.appendChild(sceneView);
@@ -243,19 +250,17 @@ Entry.createDom = function(container, option) {
         canvas.height = 360;
         engineView.insertBefore(canvas, this.engine.addButton);
 
-        canvas.addEventListener("mousewheel" , function(evt) {
+        canvas.addEventListener('mousewheel', function(evt) {
             var lists = [];
             var mousePosition = Entry.stage.mouseCoordinate;
             var tempList = Entry.variableContainer.getListById(mousePosition);
             var wheelDirection = evt.wheelDelta > 0 ? true : false;
 
-            for(var i=0; i<tempList.length; i++) {
+            for (var i = 0; i < tempList.length; i++) {
                 var list = tempList[i];
-                if(wheelDirection){
-                    if(list.scrollButton_.y >= 46 )
-                        list.scrollButton_.y -= 23;
-                    else
-                        list.scrollButton_.y = 23;
+                if (wheelDirection) {
+                    if (list.scrollButton_.y >= 46) list.scrollButton_.y -= 23;
+                    else list.scrollButton_.y = 23;
                 } else {
                     list.scrollButton_.y += 23;
                 }
@@ -273,10 +278,10 @@ Entry.createDom = function(container, option) {
         /** @type {!Element} */
         this.containerView = containerView;
         this.container.generateView(this.containerView, option);
-        this.propertyPanel.addMode("object", this.container);
+        this.propertyPanel.addMode('object', this.container);
 
         this.helper.generateView(this.containerView, option);
-        this.propertyPanel.addMode("helper" , this.helper);
+        this.propertyPanel.addMode('helper', this.helper);
 
         var playgroundView = Entry.createElement('div');
         container.appendChild(playgroundView);
@@ -284,11 +289,10 @@ Entry.createDom = function(container, option) {
         this.playgroundView = playgroundView;
         this.playground.generateView(this.playgroundView, option);
 
-
-        this.propertyPanel.select("object");
+        this.propertyPanel.select('object');
         this.helper.bindWorkspace(this.playground.mainWorkspace);
     } else if (option == 'minimize') {
-       var canvas = Entry.createElement('canvas');
+        var canvas = Entry.createElement('canvas');
         canvas.className = 'entryCanvasWorkspace minimize';
         canvas.id = 'entryCanvas';
         canvas.width = 640;
@@ -348,21 +352,18 @@ Entry.createDom = function(container, option) {
  * @param {?number} FPS
  */
 Entry.start = function(FPS) {
-    if (Entry.type === "invisible")
-        return;
+    if (Entry.type === 'invisible') return;
     /** @type {number} */
-    if (!this.FPS)
-        this.FPS = 60;
-    Entry.assert(typeof(this.FPS) == 'number', 'FPS must be number');
+    if (!this.FPS) this.FPS = 60;
+    Entry.assert(typeof this.FPS == 'number', 'FPS must be number');
     Entry.engine.start(this.FPS);
 };
 
 Entry.stop = function() {
-    if (Entry.type === "invisible")
-        return;
+    if (Entry.type === 'invisible') return;
     this.FPS = null;
     Entry.engine.stop();
-}
+};
 
 /**
  * Parse init options
@@ -374,77 +375,58 @@ Entry.parseOptions = function(options) {
 
     this.hashId = options.hashId || this.hasId;
 
-    if (options.device)
-        this.device = options.device;
+    if (options.device) this.device = options.device;
 
     this.projectSaveable = options.projectsaveable;
-    if (this.projectSaveable === undefined)
-        this.projectSaveable = true;
+    if (this.projectSaveable === undefined) this.projectSaveable = true;
 
     this.objectAddable = options.objectaddable;
-    if (this.objectAddable === undefined)
-        this.objectAddable = true;
+    if (this.objectAddable === undefined) this.objectAddable = true;
 
     this.objectEditable = options.objectEditable;
-    if (this.objectEditable === undefined)
-        this.objectEditable = true;
-    if (!this.objectEditable)
-        this.objectAddable = false;
+    if (this.objectEditable === undefined) this.objectEditable = true;
+    if (!this.objectEditable) this.objectAddable = false;
 
     this.objectDeletable = options.objectdeletable;
-    if (this.objectDeletable === undefined)
-        this.objectDeletable = true;
+    if (this.objectDeletable === undefined) this.objectDeletable = true;
 
     this.soundEditable = options.soundeditable;
-    if (this.soundEditable === undefined)
-        this.soundEditable = true;
+    if (this.soundEditable === undefined) this.soundEditable = true;
 
     this.pictureEditable = options.pictureeditable;
-    if (this.pictureEditable === undefined)
-        this.pictureEditable = true;
+    if (this.pictureEditable === undefined) this.pictureEditable = true;
 
     this.sceneEditable = options.sceneEditable;
-    if (this.sceneEditable === undefined)
-        this.sceneEditable = true;
+    if (this.sceneEditable === undefined) this.sceneEditable = true;
 
     this.functionEnable = options.functionEnable;
-    if (this.functionEnable === undefined)
-        this.functionEnable = true;
+    if (this.functionEnable === undefined) this.functionEnable = true;
 
     this.messageEnable = options.messageEnable;
-    if (this.messageEnable === undefined)
-        this.messageEnable = true;
+    if (this.messageEnable === undefined) this.messageEnable = true;
 
     this.variableEnable = options.variableEnable;
-    if (this.variableEnable === undefined)
-        this.variableEnable = true;
+    if (this.variableEnable === undefined) this.variableEnable = true;
 
     this.listEnable = options.listEnable;
-    if (this.listEnable === undefined)
-        this.listEnable = true;
+    if (this.listEnable === undefined) this.listEnable = true;
 
     this.doCommandAll = options.doCommandAll;
-    if (this.doCommandAll === undefined)
-        this.doCommandAll = false;
+    if (this.doCommandAll === undefined) this.doCommandAll = false;
 
     this.hasVariableManager = options.hasvariablemanager;
-    if (!(this.variableEnable || this.messageEnable ||
-          this.listEnable || this.functionEnable))
+    if (!(this.variableEnable || this.messageEnable || this.listEnable || this.functionEnable))
         this.hasVariableManager = false;
-    else if (this.hasVariableManager === undefined)
-        this.hasVariableManager = true;
+    else if (this.hasVariableManager === undefined) this.hasVariableManager = true;
 
     this.readOnly = options.readOnly || false;
     if (this.readOnly) {
         this.soundEditable = this.sceneEditable = this.objectAddable = false;
     }
 
-    if (options.isForLecture)
-        this.isForLecture = options.isForLecture;
-    if (options.textCodingEnable)
-        this.textCodingEnable = options.textCodingEnable;
+    if (options.isForLecture) this.isForLecture = options.isForLecture;
+    if (options.textCodingEnable) this.textCodingEnable = options.textCodingEnable;
 };
-
 
 Entry.initFonts = function(fonts) {
     this.fonts = fonts;
@@ -472,13 +454,20 @@ Entry.Utils.initEntryEvent_ = function() {
  */
 Entry.initSound = function(sound) {
     if (!sound || !sound.duration || sound.duration == 0) return;
-    sound.path = sound.fileurl ||
-        Entry.defaultPath + '/uploads/' + sound.filename.substring(0,2) + '/' +
-        sound.filename.substring(2,4) + '/' + sound.filename + sound.ext;
+    sound.path =
+        sound.fileurl ||
+        Entry.defaultPath +
+            '/uploads/' +
+            sound.filename.substring(0, 2) +
+            '/' +
+            sound.filename.substring(2, 4) +
+            '/' +
+            sound.filename +
+            sound.ext;
 
     Entry.soundQueue.loadFile({
         id: sound.id,
         src: sound.path,
-        type: createjs.LoadQueue.SOUND
+        type: createjs.LoadQueue.SOUND,
     });
 };
