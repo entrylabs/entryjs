@@ -5,6 +5,7 @@
 'use strict';
 
 import PIXIHelper from "./PIXIHelper";
+import { PIXIDragHelper } from './PIXIDragHelper';
 
 /**
  * Construct entity class
@@ -26,25 +27,21 @@ Entry.EntityObject = function(object) {
     this.shapes = [];
 
     if (this.type == 'sprite') {
-        // this.object = new createjs.Bitmap();
         this.object = new PIXI.Sprite();
         this.setInitialEffectValue();
     } else if (this.type == 'textBox') {
-        // this.object = new createjs.Container();
         this.object = new PIXI.Container();
-
         // this.textObject = new createjs.Text();
         // this.textObject.font = '20px Nanum Gothic';
         // this.textObject.textBaseline = 'middle';
         // this.textObject.textAlign = 'center';
 
-        this.textObject = PIXIHelper.text("", '20px Nanum Gothic', 'middle', 'center');
+        // this.textObject = PIXIHelper.text("", '20px Nanum Gothic', "#000000", 'middle', 'center');
+        this.textObject = PIXIHelper.text("", '20px Nanum Gothic', "#000000", 'alphabetic', 'center');
+        this.textObject.anchor.set(0.5, 0.5);
 
-        // this.bgObject = new createjs.Shape();
-        // this.bgObject.graphics
-        //     .setStrokeStyle(1)
-        //     .beginStroke('#f00')
-        //     .drawRect(0, 0, 100, 100);
+        //엔트리 베타 개발 서버를 찾아서 entry.min.js 만 교체하고, 오브젝트를 넣을 수 있도록 하세요.
+            
 
         this.bgObject = new PIXI.Graphics();
         this.bgObject
@@ -62,19 +59,21 @@ Entry.EntityObject = function(object) {
         this.underLine = false;
         this.strike = false;
     }
-
+    this.object.interactive = true;
     this.object.entity = this;
     this.object.cursor = 'pointer';
 
-    this.object.on('mousedown', function({ stageX, stageY }) {
+    this.object.on(PIXIDragHelper.DOWN, function(evt) {
         var id = this.entity.parent.id;
         Entry.dispatchEvent('entityClick', this.entity);
         Entry.stage.isObjectClick = true;
 
         if (Entry.type != 'minimize' && Entry.stage.isEntitySelectable()) {
+            PIXIDragHelper.handleDrag(this);
+            var gp = evt.data.global;
             this.offset = {
-                x: -this.parent.x + this.entity.getX() - (stageX * 0.75 - 240),
-                y: -this.parent.y - this.entity.getY() - (stageY * 0.75 - 135),
+                x: -this.parent.x + this.entity.getX() - (gp.x * 0.75 - 240),
+                y: -this.parent.y - this.entity.getY() - (gp.y * 0.75 - 135),
             };
             this.cursor = 'move';
             this.entity.initCommand();
@@ -82,19 +81,20 @@ Entry.EntityObject = function(object) {
         }
     });
 
-    this.object.on('pressup', function(evt) {
+    this.object.on(PIXIDragHelper.UP, function(evt) {
         Entry.dispatchEvent('entityClickCanceled', this.entity);
         this.cursor = 'pointer';
         this.entity.checkCommand();
     });
 
     if (Entry.type !== 'minimize') {
-        this.object.on('pressmove', function({ stageX, stageY }) {
+        this.object.on(PIXIDragHelper.MOVE, function(evt) {
             if (Entry.stage.isEntitySelectable()) {
                 var entity = this.entity;
                 if (entity.parent.getLock()) return;
-                entity.setX(stageX * 0.75 - 240 + this.offset.x);
-                entity.setY(-(stageY * 0.75 - 135) - this.offset.y);
+                var gp = evt.data.global;
+                entity.setX(gp.x * 0.75 - 240 + this.offset.x);
+                entity.setY(-(gp.y * 0.75 - 135) - this.offset.y);
                 Entry.stage.updateObject();
             }
         });
@@ -427,7 +427,7 @@ Entry.EntityObject.prototype.setWidth = function(width) {
     PIXIHelper.todo("원래는 width 였는데 $width 우선 바궈놓음");
     this.object.$width = this.width;
     if (this.textObject && this.getLineBreak())
-        this.textObject.lineWidth = this.width;
+        this.textObject.style.wordWrapWidth = this.width;
     this.updateDialog();
     this.updateBG();
     Entry.requestUpdate = true;
@@ -509,7 +509,7 @@ Entry.EntityObject.prototype.getBGColour = function() {
 
 Entry.EntityObject.prototype.setUnderLine = function(underLine = false) {
     this.underLine = underLine;
-    this.textObject.underLine = underLine;
+    this.textObject.style.underLine = underLine;
     Entry.requestUpdate = true;
 };
 
@@ -519,7 +519,7 @@ Entry.EntityObject.prototype.getUnderLine = function() {
 
 Entry.EntityObject.prototype.setStrike = function(strike = false) {
     this.strike = strike;
-    this.textObject.strike = strike;
+    this.textObject.style.cancelLine = strike;
     Entry.requestUpdate = true;
 };
 
@@ -726,7 +726,24 @@ Entry.EntityObject.prototype.setTextAlign = function(textAlign) {
     if (textAlign === undefined) textAlign = Entry.TEXT_ALIGN_CENTER;
     this.textAlign = textAlign;
 
-    this.textObject.textAlign = Entry.TEXT_ALIGNS[this.textAlign];
+    var anchorX = 0;
+    var alingValue = "center";
+    switch(textAlign) {
+        case Entry.TEXT_ALIGN_LEFT:
+            alingValue = "left";
+            anchorX = 0;
+            break;
+        case Entry.TEXT_ALIGN_CENTER:
+            alingValue = "center";
+            anchorX = 0.5;
+            break;
+        case Entry.TEXT_ALIGN_RIGHT:
+            alingValue = "right";
+            anchorX = 1;
+            break;
+    }
+    this.textObject.anchor.x = anchorX;
+    this.textObject.style.align = alingValue;
     this.alignTextBox();
     this.updateBG();
     Entry.stage.updateObject();
@@ -755,19 +772,23 @@ Entry.EntityObject.prototype.setLineBreak = function(lineBreak = false) {
     this.lineBreak = lineBreak;
 
     if (previousState && !this.lineBreak) {
-        this.textObject.lineWidth = null;
-        this.setHeight(this.textObject.getMeasuredLineHeight());
+        // this.textObject.lineWidth = null;
+        this.textObject.style.wordWrap = false;
+        this.setHeight(PIXIHelper.getMeasuredLineHeight(this.textObject));
         this.setText(this.getText().replace(/\n/g, ''));
     } else if (!previousState && this.lineBreak) {
         this.setFontSize(this.getFontSize() * this.getScaleX());
-        this.setHeight(this.textObject.getMeasuredLineHeight() * 3);
+        this.setHeight(PIXIHelper.getMeasuredLineHeight(this.textObject) * 3);
         this.setWidth(this.getWidth() * this.getScaleX());
         this.setScaleX(1);
         this.setScaleY(1);
-        this.textObject.lineWidth = this.getWidth();
+        this.textObject.style.wordWrap = true;
+        this.textObject.style.breakWords = true;
+        this.textObject.style.wordWrapWidth = this.getWidth();
+        // this.textObject.lineWidth = this.getWidth();
         this.alignTextBox();
         if (this.fontType == 'Nanum Gothic Coding') {
-            var textObjectHeight = this.textObject.getMeasuredLineHeight();
+            var textObjectHeight = PIXIHelper.getMeasuredLineHeight(this.textObject);
             this.textObject.y =
                 textObjectHeight / 2 - this.getHeight() / 2 + 10;
         }
@@ -775,6 +796,35 @@ Entry.EntityObject.prototype.setLineBreak = function(lineBreak = false) {
 
     Entry.stage.updateObject();
 };
+
+// Entry.EntityObject.prototype.setLineBreak = function(lineBreak = false) {
+//     if (this.parent.objectType != 'textBox') return;
+//
+//     var previousState = this.lineBreak;
+//     this.lineBreak = lineBreak;
+//
+//     if (previousState && !this.lineBreak) {
+//         this.textObject.lineWidth = null;
+//         this.setHeight(this.textObject.getMeasuredLineHeight());
+//         this.setText(this.getText().replace(/\n/g, ''));
+//     } else if (!previousState && this.lineBreak) {
+//         this.setFontSize(this.getFontSize() * this.getScaleX());
+//         this.setHeight(this.textObject.getMeasuredLineHeight() * 3);
+//         this.setWidth(this.getWidth() * this.getScaleX());
+//         this.setScaleX(1);
+//         this.setScaleY(1);
+//         this.textObject.lineWidth = this.getWidth();
+//         this.alignTextBox();
+//         if (this.fontType == 'Nanum Gothic Coding') {
+//             var textObjectHeight = this.textObject.getMeasuredLineHeight();
+//             this.textObject.y =
+//                 textObjectHeight / 2 - this.getHeight() / 2 + 10;
+//         }
+//     }
+//
+//     Entry.stage.updateObject();
+// };
+
 
 /**
  * lineBreak getter
@@ -1326,7 +1376,6 @@ Entry.EntityObject.prototype._removeShapes = function() {
     this.shapes = [];
 };
 
-//TODO 준배늼 gl 로 변경
 Entry.EntityObject.prototype.updateBG = function() {
     if (!this.bgObject) return;
     this.bgObject.clear();
@@ -1388,9 +1437,13 @@ Entry.EntityObject.prototype.alignTextBox = function() {
     if (this.type != 'textBox') return;
     var textObject = this.textObject;
 
+    // if (this.lineBreak) {
+    //     textObject.y =
+    //         textObject.getMeasuredLineHeight() / 2 - this.getHeight() / 2;
+
     if (this.lineBreak) {
         textObject.y =
-            textObject.getMeasuredLineHeight() / 2 - this.getHeight() / 2;
+            PIXIHelper.getMeasuredLineHeight(textObject) / 2 - this.getHeight() / 2;
 
         if (this.fontType == 'Nanum Gothic Coding') {
             textObject.y += 10;
