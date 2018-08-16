@@ -1381,9 +1381,14 @@ Entry.EntityObject.prototype.updateBG = function() {
     this.bgObject.clear();
     var width = this.getWidth();
     var height = this.getHeight();
+
+    var bgColor = this.getBGColour();
+    var hasColor = (bgColor || "").indexOf("#") === 0;
+
+    this.bgObject.alpha = hasColor ? 1 : 0;
     this.bgObject
         .lineStyle(0)
-        .beginFill(PIXIHelper.colorToUint(this.getBGColour()))
+        .beginFill(PIXIHelper.colorToUint(bgColor))
         .drawRect(-width / 2, -height / 2, width, height);
     if (this.getLineBreak()) {
         this.bgObject.x = 0;
