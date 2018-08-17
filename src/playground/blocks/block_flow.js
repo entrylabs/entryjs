@@ -49,26 +49,13 @@ module.exports = {
                         var timeValue = script.getNumberValue('SECOND', script);
                         var fps = Entry.FPS || 60;
                         timeValue = 60 / fps * timeValue * 1000;
-                        console.log('timeValue=', timeValue);
-                        if (!Entry.timerInstances)
-                            Entry.timerInstances = [];
-                        
-                        var timerInstance = new Entry.TimerUtil(function() {
+
+                        var blockId = script.block.id;
+                        Entry.TimeWaitManager.add(blockId, function() {
                             script.timeFlag = 0;
                         }, timeValue);
-                        Entry.timerInstances.push(timerInstance);
-                        /*
-                        Entry.timerInstance = new Entry.TimerUtil(function() {
-                            console.log('timeFlag=0');
-                            script.timeFlag = 0;
-                        }, timeValue);
-                        */
-                        console.log(Entry.timerInstances.length, 'timerInstance created');
-                        /*
-                        setTimeout(function() {
-                            script.timeFlag = 0;
-                        }, timeValue);
-                        */
+                        //console.log(Entry.timerInstances.length, 'timerInstance created');
+
                         return script;
                     } else if (script.timeFlag == 1) {
                         return script;

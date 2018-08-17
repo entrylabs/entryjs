@@ -1,6 +1,27 @@
 'use strict';
 
-Entry.TimerUtil = function(cb, ms) {
+Entry.TimeWaitManager = {
+    add: function(id, cb, ms) {
+        if (!Entry.timerInstances)
+            Entry.timerInstances = [];
+
+        var instance = new Entry.TimeWait(id, cb, ms);
+        Entry.timerInstances.push(instance);
+    },
+    remove: function(id) {
+        if (!Entry.timerInstances || Entry.timerInstances.length == 0)
+            return;
+        Entry.timerInstances = Entry.timerInstances.filter(function(instance) {
+            if (instance.id === id)
+                return false;
+            else
+                return true;
+        });
+    }
+}
+
+Entry.TimeWait = function(id, cb, ms) {
+    this.id = id;
     this.cb = cb;
     this.ms = ms;
     this.startTime = performance.now();
@@ -9,22 +30,19 @@ Entry.TimerUtil = function(cb, ms) {
 
 (function(p) {
     p.callback = function() {
-        // destroy 된 instance를 다시 호출시 this.cb 가 undefined가 됨.
-        // 별도의 time slot manager 가 필요할듯.
         this.cb();
         this.destroy();
+        Entry.TimeWaitManager.remove(this.id);
     }
 
     p.pause = function() {
         if (this.timer) {
             this.ms = this.ms - (performance.now() - this.startTime);
-            console.log('pause ms=', this.ms);
             clearTimeout(this.timer);
         }
     }
 
     p.resume = function() {
-        console.log('resume ms=', this.ms);
         this.timer = setTimeout(this.callback.bind(this), this.ms);
         this.startTime = performance.now();
     }
@@ -35,4 +53,4 @@ Entry.TimerUtil = function(cb, ms) {
         delete this.ms;
         delete this.startTime;
     }
-})(Entry.TimerUtil.prototype);
+})(Entry.TimeWait.prototype);

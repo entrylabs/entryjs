@@ -650,18 +650,12 @@ Entry.Engine = function() {
                 this.runButton.addClass('entryRemove');
                 if (this.runButton2) this.runButton2.addClass('entryRemove');
             }
+
             if (Entry.timerInstances) {
-                for (var i=0; i<Entry.timerInstances.length; i++) {
-                    Entry.timerInstances[i].resume();
-                }
-                Entry.timerInstances = undefined;
+                Entry.timerInstances.forEach(function(instance) {
+                    instance.resume();
+                });
             }
-            /*
-            if (Entry.timerInstance) {
-                console.log('resume');
-                Entry.timerInstance.resume();
-            }
-            */
         } else {
             this.state = 'pause';
             this.setEnableInputField(false);
@@ -677,17 +671,12 @@ Entry.Engine = function() {
                 this.stopButton.removeClass('entryRemove');
                 if (this.runButton2) this.runButton2.removeClass('entryRemove');
             }
+
             if (Entry.timerInstances) {
-                Entry.timerInstances.forEach(function(timer) {
-                    timer.pause();
+                Entry.timerInstances.forEach(function(instance) {
+                    instance.pause();
                 });
             }
-            /*
-            if (Entry.timerInstance) {
-                console.log('pause');
-                Entry.timerInstance.pause();
-            }
-            */
         }
     };
 

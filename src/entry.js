@@ -6,7 +6,7 @@ module.exports = Entry;
 global.Entry = Entry;
 
 require('./css/entry.less');
-require('./class/timer_util');
+require('./class/time_wait');
 require('./class/container');
 require('./class/dialog');
 require('./class/doneProject');
