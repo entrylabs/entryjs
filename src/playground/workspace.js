@@ -135,40 +135,34 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
         this.mode = Number(this.mode);
         if (this.oldMode === this.mode) return;
 
-        var VIM = Entry.Vim,
-            WORKSPACE = Entry.Workspace,
-            blockMenu = this.blockMenu,
-            Util = Entry.TextCodingUtil;
-
-        var alert_message;
+        const VIM = Entry.Vim;
+        const WORKSPACE = Entry.Workspace;
+        const blockMenu = this.blockMenu;
+        const Util = Entry.TextCodingUtil;
 
         switch (this.mode) {
             case WORKSPACE.MODE_VIMBOARD:
-                var alert_message = Util.isNamesIncludeSpace();
-                if (alert_message) {
-                    entrylms.alert(alert_message);
-                    var mode = {};
-                    mode.boardType = WORKSPACE.MODE_BOARD;
-                    mode.textType = -1;
-                    Entry.getMainWS().setMode(mode);
-                    break;
+                const alertMessage =
+                    Util.validateVariableToPython() ||
+                    Util.validateFunctionToPython();
+                
+                if (alertMessage && alertMessage.message) {
+                    entrylms.alert(alertMessage.message);
+                    
+                    if(alertMessage.type === 'error') {
+                        const mode = {};
+                        mode.boardType = WORKSPACE.MODE_BOARD;
+                        mode.textType = -1;
+                        Entry.getMainWS().setMode(mode);
+                        break;
+                    }
                 }
 
-                alert_message = Util.isNameIncludeNotValidChar();
-                if (alert_message) {
-                    entrylms.alert(alert_message);
-                    var mode = {};
-                    mode.boardType = WORKSPACE.MODE_BOARD;
-                    mode.textType = -1;
-                    Entry.getMainWS().setMode(mode);
-                    return;
-                }
-
-                alert_message = Util.canConvertTextModeForOverlayMode(
+                const invalidEditorModeErrorMessage = Util.canConvertTextModeForOverlayMode(
                     Entry.Workspace.MODE_VIMBOARD
                 );
-                if (alert_message) {
-                    entrylms.alert(alert_message);
+                if (invalidEditorModeErrorMessage) {
+                    entrylms.alert(invalidEditorModeErrorMessage);
                     return;
                 }
 
@@ -401,18 +395,12 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                             .copyToClipboard();
                     }
                     break;
-                case 219: //setMode(block) for textcoding
+                case 219: //setMode(block) for textcoding ( ctrl + [ )
                     if (!Entry.options.textCodingEnable) {
                         return;
                     }
-                    var oldMode = Entry.getMainWS().oldMode;
-                    if (oldMode == Entry.Workspace.MODE_OVERLAYBOARD) return;
-
-                    var message = Entry.TextCodingUtil.isNamesIncludeSpace();
-                    if (message) {
-                        entrylms.alert(message);
-                        return;
-                    }
+                    const oldMode = Entry.getMainWS().oldMode;
+                    if (oldMode === Entry.Workspace.MODE_OVERLAYBOARD) return;
 
                     this.dSetMode({
                         boardType: Entry.Workspace.MODE_BOARD,
@@ -420,20 +408,14 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                     });
                     e.preventDefault();
                     break;
-                case 221: //setMode(python) for textcoding
+                case 221: //setMode(python) for textcoding ( ctrl + ] )
                     if (!Entry.options.textCodingEnable) {
                         return;
                     }
-                    var message;
-                    message = Entry.TextCodingUtil.canConvertTextModeForOverlayMode(
+                    
+                    const message = Entry.TextCodingUtil.canConvertTextModeForOverlayMode(
                         Entry.Workspace.MODE_VIMBOARD
                     );
-                    if (message) {
-                        entrylms.alert(message);
-                        return;
-                    }
-
-                    var message = Entry.TextCodingUtil.isNamesIncludeSpace();
                     if (message) {
                         entrylms.alert(message);
                         return;
