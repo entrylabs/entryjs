@@ -95,6 +95,7 @@ Entry.EntityObject = function(object) {
                 var entity = this.entity;
                 if (entity.parent.getLock()) return;
                 var gp = evt.data.global;
+                this.cursor = 'move';
                 entity.setX(gp.x * 0.75 - 240 + this.offset.x);
                 entity.setY(-(gp.y * 0.75 - 135) - this.offset.y);
                 Entry.stage.updateObject();
