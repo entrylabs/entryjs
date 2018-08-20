@@ -28,6 +28,7 @@ Entry.EntityObject = function(object) {
 
     if (this.type == 'sprite') {
         this.object = new PIXI.Sprite();
+        this.object.pixelPerfect = true;
         this.setInitialEffectValue();
     } else if (this.type == 'textBox') {
         this.object = new PIXI.Container();
@@ -59,6 +60,7 @@ Entry.EntityObject = function(object) {
         this.underLine = false;
         this.strike = false;
     }
+    
     this.object.interactive = true;
     this.object.entity = this;
     this.object.cursor = 'pointer';
