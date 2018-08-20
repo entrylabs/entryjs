@@ -125,7 +125,6 @@ Entry.Variable.prototype.generateView = function(variableIndex) {
 
         this.valueView_ = PIXIHelper.text('asdf', '10pt NanumGothic', "#ffffff", 'alphabetic');
 
-
         var variableLength = Entry.variableContainer.variables_.length;
         if (this.getX() && this.getY()) {
             this.setX(this.getX());
@@ -766,7 +765,7 @@ Entry.Variable.prototype.updateView = function() {
             this.view_.x = this.getX();
             this.view_.y = this.getY();
             this.textView_.text = this.getName();
-            this.valueView_.y = 1;
+            this.valueView_.y = -10;
             if (this.isNumber()) {
                 var v = Number(this.getValue());
                 if (parseInt(this.getValue(), 10) == this.getValue())
@@ -784,9 +783,9 @@ Entry.Variable.prototype.updateView = function() {
             //     this._valueWidth = this.valueView_.getMeasuredWidth();
 
             if (this._nameWidth === null)
-                this._nameWidth = PIXIHelper.text(this.textView_);
+                this._nameWidth = PIXIHelper.textWidth(this.textView_);
             if (this._valueWidth === null)
-                this._valueWidth = PIXIHelper.text(this.valueView_);
+                this._valueWidth = PIXIHelper.textWidth(this.valueView_);
 
             this.valueView_.x = this._nameWidth + 14;
             // this.rect_.graphics
@@ -808,7 +807,7 @@ Entry.Variable.prototype.updateView = function() {
             this.rect_
                 .clear()
                 .beginFill(0xffffff)
-                .lineStyle(1, 0xA0A1A1, 0)
+                .lineStyle(1, 0xA0A1A1, 1)
                 .drawRoundedRect(
                     0,
                     -14,
@@ -834,7 +833,7 @@ Entry.Variable.prototype.updateView = function() {
             //         7
             //     );
 
-            this.wrapper_.graphics
+            this.wrapper_
                 .clear()
                 .beginFill(0xE457DC)
                 .lineStyle(1, 0xE457DC, 0)
@@ -845,7 +844,6 @@ Entry.Variable.prototype.updateView = function() {
                     14,
                     7
                 );
-
 
         } else {
             this.view_.x = this.getX();
