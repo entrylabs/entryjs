@@ -4,15 +4,20 @@
  *
  */
 
+
 'use strict';
 
 import { PIXIHandle } from './PIXIHandle';
+import { PIXIPixelPerfectInteractionPlugIn } from './pixi/etc/PIXIPixelPerfectInteractionPlugIn';
 
 /**
  * class for a canvas
  * @constructor
  */
 Entry.Stage = function() {
+
+    new PIXIPixelPerfectInteractionPlugIn();
+
     /** @type {Dictionary} */
     this.variables = {};
     this.background = new PIXI.Graphics();
