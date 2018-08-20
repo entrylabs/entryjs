@@ -13,6 +13,7 @@
         "goog": true,
         "acorn": true,
         "createjs": true,
+        "PIXI": true,
         "Entry": true,
         "Blockly": true,
         "Lang": true,

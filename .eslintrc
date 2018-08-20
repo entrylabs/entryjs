@@ -5,6 +5,7 @@
         "goog": true,
         "acorn": true,
         "createjs": true,
+        "PIXI": true,
         "Entry": true,
         "filbert": true,
         "Blockly": true,
