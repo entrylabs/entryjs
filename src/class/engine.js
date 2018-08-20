@@ -587,6 +587,11 @@ Entry.Engine = function() {
             variable.loadSnapshot();
         });
         this.stopProjectTimer();
+        if (Entry.timerInstances) {
+            Entry.timerInstances.forEach(function(instance) {
+                instance.destroy();
+            });
+        }
         container.clearRunningState();
         container.loadSequenceSnapshot();
         this.projectTimer.loadSnapshot();
@@ -650,6 +655,12 @@ Entry.Engine = function() {
                 this.runButton.addClass('entryRemove');
                 if (this.runButton2) this.runButton2.addClass('entryRemove');
             }
+
+            if (Entry.timerInstances) {
+                Entry.timerInstances.forEach(function(instance) {
+                    instance.resume();
+                });
+            }
         } else {
             this.state = 'pause';
             this.setEnableInputField(false);
@@ -664,6 +675,12 @@ Entry.Engine = function() {
                 this.runButton.removeClass('entryRemove');
                 this.stopButton.removeClass('entryRemove');
                 if (this.runButton2) this.runButton2.removeClass('entryRemove');
+            }
+
+            if (Entry.timerInstances) {
+                Entry.timerInstances.forEach(function(instance) {
+                    instance.pause();
+                });
             }
         }
     };
