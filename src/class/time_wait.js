@@ -32,7 +32,6 @@ Entry.TimeWait = function(id, cb, ms) {
     p.callback = function() {
         this.cb();
         this.destroy();
-        Entry.TimeWaitManager.remove(this.id);
     }
 
     p.pause = function() {
@@ -52,5 +51,6 @@ Entry.TimeWait = function(id, cb, ms) {
         delete this.cb;
         delete this.ms;
         delete this.startTime;
+        Entry.TimeWaitManager.remove(this.id);
     }
 })(Entry.TimeWait.prototype);

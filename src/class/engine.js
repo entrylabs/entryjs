@@ -587,6 +587,11 @@ Entry.Engine = function() {
             variable.loadSnapshot();
         });
         this.stopProjectTimer();
+        if (Entry.timerInstances) {
+            Entry.timerInstances.forEach(function(instance) {
+                instance.destroy();
+            });
+        }
         container.clearRunningState();
         container.loadSequenceSnapshot();
         this.projectTimer.loadSnapshot();
