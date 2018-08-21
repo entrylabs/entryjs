@@ -2,7 +2,7 @@ stages:
   - name: test
     if: type = pull_request
   - name: deploy
-    if: (branch = /^deploy\/.*$/) OR (branch = master)
+    if: (type = push) AND ((branch =~ /^deploy\/.*$/) OR (branch = master))
 language:
   - node_js
 node_js:
