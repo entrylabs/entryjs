@@ -9,13 +9,14 @@
 
 import { PIXIHandle } from './PIXIHandle';
 import { PIXIPixelPerfectInteractionPlugIn } from './pixi/etc/PIXIPixelPerfectInteractionPlugIn';
+import { PIXITempStore } from './pixi/etc/PIXITempStore';
 
 /**
  * class for a canvas
  * @constructor
  */
 Entry.Stage = function() {
-
+    PIXITempStore.init();
     new PIXIPixelPerfectInteractionPlugIn();
 
     /** @type {Dictionary} */
