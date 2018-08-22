@@ -1,4 +1,5 @@
 import { PIXIText } from './pixi/text/PIXIText';
+import { PIXITempStore } from './pixi/etc/PIXITempStore';
 
 export default class PIXIHelper {
     static text(str, font, color, textBaseline, textAlign) {
@@ -74,5 +75,44 @@ export default class PIXIHelper {
     static todo(msg) {
 
     }
+
+    /**
+     * createjs.DisplayObject#getTransformBound()
+     * @param {PIXI.DisplayObject} target
+     */
+    static getTransformBound(target) {
+        var bounds = target.getLocalBounds(PIXITempStore.rect);
+
+        var x = bounds.x, y = bounds.y, width = bounds.width, height = bounds.height;
+        var mtx = PIXITempStore.matrix1;
+        target.localTransform.copy(mtx);
+
+        if (x || y) {
+            var mat2 = PIXITempStore.matrix2.identity().translate(-x,-y);
+            mtx.append(mat2);
+        }
+
+        var x_a = width*mtx.a, x_b = width*mtx.b;
+        var y_c = height*mtx.c, y_d = height*mtx.d;
+        var tx = mtx.tx, ty = mtx.ty;
+
+        var minX = tx, maxX = tx, minY = ty, maxY = ty;
+
+        if ((x = x_a + tx) < minX) { minX = x; } else if (x > maxX) { maxX = x; }
+        if ((x = x_a + y_c + tx) < minX) { minX = x; } else if (x > maxX) { maxX = x; }
+        if ((x = y_c + tx) < minX) { minX = x; } else if (x > maxX) { maxX = x; }
+
+        if ((y = x_b + ty) < minY) { minY = y; } else if (y > maxY) { maxY = y; }
+        if ((y = x_b + y_d + ty) < minY) { minY = y; } else if (y > maxY) { maxY = y; }
+        if ((y = y_d + ty) < minY) { minY = y; } else if (y > maxY) { maxY = y; }
+
+        bounds.x = minX;
+        bounds.y = minY;
+        bounds.width = maxX-minX;
+        bounds.height = maxY-minY;
+        return bounds;
+    }
+
+
 }
 
