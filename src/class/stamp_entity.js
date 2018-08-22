@@ -20,10 +20,24 @@ Entry.StampEntity = function(object, entity) {
     this.width = entity.getWidth();
     this.height = entity.getHeight();
     if (this.type == 'sprite') {
-        this.object = entity.object.clone();
-        this.object.mouseEnabled = false;
-        this.object.tickEnabled = false;
-        this.object.filters = null;
+
+        var orgObj = entity.object;
+        this.object = new PIXI.Sprite(orgObj.texture);
+        this.object.visible = orgObj.visible;
+        this.object.interactive = false;
+        this.object.interactiveChildren = false;
+        this.object.setTransform(
+            orgObj.x,
+            orgObj.y,
+            orgObj.scale.x,
+            orgObj.scale.y,
+            orgObj.rotation,
+            orgObj.skew.x,
+            orgObj.skew.y,
+            orgObj.pivot.x,
+            orgObj.pivot.y
+        );
+
         if (entity.effect) {
             this.effect = _.clone(entity.effect);
             this.applyFilter();
