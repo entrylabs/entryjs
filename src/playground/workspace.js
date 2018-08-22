@@ -120,7 +120,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
 
         Entry.disposeEvent.notify();
 
-        var playground = Entry.playground;
+        const playground = Entry.playground;
 
         if (!isForce && !checkObjectAndAlert(playground && playground.object))
             return false; // change mode fail
@@ -139,24 +139,49 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
         const WORKSPACE = Entry.Workspace;
         const blockMenu = this.blockMenu;
         const Util = Entry.TextCodingUtil;
+        const dispatchChangeBoardEvent = () => {
+            this.oldMode = this.mode;
+            Entry.isTextMode = this.mode === WORKSPACE.MODE_VIMBOARD;
+
+            blockMenu.align();
+            Entry.dispatchEvent('workspaceChangeMode');
+            this.changeEvent.notify(message);
+            Entry.dispatchEvent('cancelBlockMenuDynamic');
+        };
+
+        const changeToPythonMode = () => {
+            try {
+                this.board && this.board.hide();
+                this.overlayBoard && this.overlayBoard.hide();
+                this.set({ selectedBoard: this.vimBoard });
+                this.vimBoard.show();
+                blockMenu.banClass('functionInit', true);
+                this.codeToText(this.board.code, mode);
+                this.oldTextType = this.textType;
+                this.board.clear();
+            } catch (e) {
+                this.vimBoard.hide();
+                this.board.show();
+                blockMenu.unbanClass('functionInit');
+                this.set({ selectedBoard: this.board });
+                this.mode = WORKSPACE.MODE_BOARD;
+                mode.boardType = WORKSPACE.MODE_BOARD;
+                if (this.oldTextType === VIM.TEXT_TYPE_JS) {
+                    mode.runType = VIM.MAZE_MODE;
+                } else if (this.oldTextType === VIM.TEXT_TYPE_PY) {
+                    mode.runType = VIM.WORKSPACE_MODE;
+                }
+                e.block &&
+                Entry.getMainWS() &&
+                Entry.getMainWS().board.activateBlock(e.block);
+            }
+        };
 
         switch (this.mode) {
             case WORKSPACE.MODE_VIMBOARD:
                 const alertMessage =
                     Util.validateVariableToPython() ||
                     Util.validateFunctionToPython();
-                
-                if (alertMessage && alertMessage.message) {
-                    entrylms.alert(alertMessage.message);
-                    
-                    if(alertMessage.type === 'error') {
-                        const mode = {};
-                        mode.boardType = WORKSPACE.MODE_BOARD;
-                        mode.textType = -1;
-                        Entry.getMainWS().setMode(mode);
-                        break;
-                    }
-                }
 
                 const invalidEditorModeErrorMessage = Util.canConvertTextModeForOverlayMode(
                     Entry.Workspace.MODE_VIMBOARD
@@ -166,30 +191,34 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                     return;
                 }
 
-                try {
-                    this.board && this.board.hide();
-                    this.overlayBoard && this.overlayBoard.hide();
-                    this.set({ selectedBoard: this.vimBoard });
-                    this.vimBoard.show();
-                    blockMenu.banClass('functionInit', true);
-                    this.codeToText(this.board.code, mode);
-                    this.oldTextType = this.textType;
-                    this.board.clear();
-                } catch (e) {
-                    this.vimBoard.hide();
-                    this.board.show();
-                    blockMenu.unbanClass('functionInit');
-                    this.set({ selectedBoard: this.board });
-                    this.mode = WORKSPACE.MODE_BOARD;
-                    mode.boardType = WORKSPACE.MODE_BOARD;
-                    if (this.oldTextType == VIM.TEXT_TYPE_JS) {
-                        mode.runType = VIM.MAZE_MODE;
-                    } else if (this.oldTextType == VIM.TEXT_TYPE_PY) {
-                        mode.runType = VIM.WORKSPACE_MODE;
+                if (alertMessage) {
+                    if(alertMessage.type === 'warning') {
+                        entrylms.confirm(alertMessage.message).then((result) => {
+                            if(result) {
+                                changeToPythonMode();
+                                dispatchChangeBoardEvent();
+                            } else {
+                                const mode = {};
+                                mode.boardType = WORKSPACE.MODE_BOARD;
+                                mode.textType = -1;
+                                Entry.getMainWS().setMode(mode);
+                                dispatchChangeBoardEvent();
+                            }
+                        });
                     }
-                    e.block &&
-                        Entry.getMainWS() &&
-                        Entry.getMainWS().board.activateBlock(e.block);
+                    else if(alertMessage.type === 'error') {
+                        entrylms.alert(alertMessage.message);
+
+                        const mode = {};
+                        mode.boardType = WORKSPACE.MODE_BOARD;
+                        mode.textType = -1;
+                        Entry.getMainWS().setMode(mode);
+                        dispatchChangeBoardEvent();
+                        break;
+                    }
+                } else {
+                    changeToPythonMode();
+                    dispatchChangeBoardEvent();
                 }
                 break;
             case WORKSPACE.MODE_BOARD:
@@ -208,12 +237,12 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                     blockMenu.banClass('functionInit');
                     this.mode = WORKSPACE.MODE_VIMBOARD;
 
-                    if (this.oldTextType == VIM.TEXT_TYPE_JS) {
+                    if (this.oldTextType === VIM.TEXT_TYPE_JS) {
                         mode.boardType = WORKSPACE.MODE_VIMBOARD;
                         mode.textType = VIM.TEXT_TYPE_JS;
                         mode.runType = VIM.MAZE_MODE;
                         this.oldTextType = VIM.TEXT_TYPE_JS;
-                    } else if (this.oldTextType == VIM.TEXT_TYPE_PY) {
+                    } else if (this.oldTextType === VIM.TEXT_TYPE_PY) {
                         mode.boardType = WORKSPACE.MODE_VIMBOARD;
                         mode.textType = VIM.TEXT_TYPE_PY;
                         mode.runType = VIM.WORKSPACE_MODE;
@@ -221,28 +250,22 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                     }
                 }
                 Entry.commander.setCurrentEditor('board', this.board);
+                dispatchChangeBoardEvent();
                 break;
 
             case WORKSPACE.MODE_OVERLAYBOARD:
-                if (this.oldMode == WORKSPACE.MODE_VIMBOARD)
+                if (this.oldMode === WORKSPACE.MODE_VIMBOARD)
                     this.overlayModefrom = WORKSPACE.MODE_VIMBOARD;
-                else if (this.oldMode == WORKSPACE.MODE_BOARD)
+                else if (this.oldMode === WORKSPACE.MODE_BOARD)
                     this.overlayModefrom = WORKSPACE.MODE_BOARD;
 
                 if (!this.overlayBoard) this.initOverlayBoard();
                 this.overlayBoard.show();
                 this.set({ selectedBoard: this.overlayBoard });
                 Entry.commander.setCurrentEditor('board', this.overlayBoard);
+                dispatchChangeBoardEvent();
                 break;
         }
-
-        this.oldMode = this.mode;
-        Entry.isTextMode = this.mode == WORKSPACE.MODE_VIMBOARD;
-
-        blockMenu.align();
-        Entry.dispatchEvent('workspaceChangeMode');
-        this.changeEvent.notify(message);
-        Entry.dispatchEvent('cancelBlockMenuDynamic');
 
         function checkObjectAndAlert(object, message) {
             if (Entry.type === 'workspace' && !object) {
