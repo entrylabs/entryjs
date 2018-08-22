@@ -160,6 +160,7 @@ Entry.initialize_ = function() {
      */
     this.helper = new Entry.Helper();
     this.youtube = new Entry.Youtube();
+    this.recorder = new Entry.Recorder();
     // this.tvCast = new Entry.TvCast();
     // this.doneProject = new Entry.DoneProject();
     /**

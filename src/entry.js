@@ -94,6 +94,7 @@ require('./util/tvCast');
 require('./util/utils');
 require('./util/youtube');
 require('./util/weather_forecast');
+require('./util/recorder');
 require('./command/commands/block');
 require('./command/commands/container');
 require('./command/commands/engine');
