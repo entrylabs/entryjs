@@ -4,6 +4,8 @@
  * @fileoverview Show dialog on canvas
  */
  
+import PIXIHelper from './PIXIHelper';
+
 /**
  * Construct dialog
  * @param {!Entry.EntityObject} entity parent entity
@@ -26,33 +28,39 @@ Entry.Dialog = function(entity, message, mode, isStamp) {
     message = messageChunks.join('\n');
     this.message_ = message;
     this.mode_ = mode;
+    console.log("mode", mode);
     if (mode === 'speak' || mode === 'ask')
         this.generateSpeak();
     if (!isStamp)
         Entry.stage.loadDialog(this);
+    window.dialog = this;
 };
 
 /**
  * Generate speak dialog box
  */
+
 Entry.Dialog.prototype.generateSpeak = function() {
     /** @type {createjs.Container} Easel object */
-    this.object = new createjs.Container();
-    var text = new createjs.Text();
-    text.font = "15px NanumGothic";
-    text.textBaseline = "top";
-    text.textAlign = "left";
-    text.text = this.message_;
-    var bound = text.getTransformedBounds();
-    var height = bound.height;
-    var width = bound.width >= 10 ? bound.width : 17;
-    var rect = new createjs.Shape();
-    rect.graphics.f("#f5f5f5").ss(2,'round').s("#6FC0DD").rr(
-        -this.padding, -this.padding,
-        width + 2*this.padding, height + 2*this.padding, this.padding);
+    this.object = new PIXI.Container();
+    var text = PIXIHelper.text(this.message_,"15px NanumGothic", 0x0, "", "" );
+    var height = text.height;
+    var width = text.width >= 10 ? text.width : 17;
+    var rect = new PIXI.Graphics();
+
+    const PAD = this.padding;
+    const DPAD = PAD * 2;
+
+    rect
+        .lineStyle(2, 0x6FC0DD)
+        .beginFill(0xf5f5f5)
+        .drawRoundedRect(-PAD, -PAD, width + DPAD, height + DPAD, PAD);
+
     this.object.addChild(rect);
-    this.object.regX = width/2;
-    this.object.regY = height/2;
+
+    this.object.pivot.x = width/2;
+    this.object.pivot.y = height/2;
+
     this.width = width;
     this.height = height;
     this.notch = this.createSpeakNotch('ne');
@@ -62,21 +70,30 @@ Entry.Dialog.prototype.generateSpeak = function() {
     Entry.requestUpdate = true;
 };
 
+
 /**
  * Set position
  */
 Entry.Dialog.prototype.update = function() {
-    var bound = this.parent.object.getTransformedBounds();
+
+    var parentObj = this.parent.object;
+    var calcParentBound = function() {
+        return PIXIHelper.getTransformBound(parentObj);
+    };
+
+    var bound = calcParentBound();
+
     if (!bound && this.parent.type === 'textBox') {
         if (!this._isNoContentTried) {
             this.parent.setText(' ');
-            bound = this.parent.object.getTransformedBounds();
+            bound = calcParentBound();
             this._isNoContentTried = true;
         } else {
             delete this._isNoContentTried;
             return;
         }
     }
+
     var notchType = '';
 
     if (bound.y -20 - this.border> -135) {
@@ -121,28 +138,31 @@ Entry.Dialog.prototype.update = function() {
  * @return {createjs.Shape}
  */
 Entry.Dialog.prototype.createSpeakNotch = function(type) {
-    var notch = new createjs.Shape();
+    var notch = new PIXI.Graphics();
     notch.type = type;
+
+    notch.beginFill(0xf5f5f5).lineStyle(2, 0x6FC0DD);
+
     if (type == 'ne')
-        notch.graphics.f("#f5f5f5").ss(2,'round').s("#6FC0DD")
-            .mt(0,this.height+this.padding-1.5)
-            .lt(-10,this.height+this.padding+20)
-            .lt(20,this.height+this.padding-1.5);
+        notch
+            .moveTo(0,this.height+this.padding-1.5)
+            .lineTo(-10,this.height+this.padding+20)
+            .lineTo(20,this.height+this.padding-1.5);
     else if (type == 'nw')
-        notch.graphics.f("#f5f5f5").ss(2,'round').s("#6FC0DD")
-            .mt(this.width,this.height+this.padding-1.5)
-            .lt(this.width+10,this.height+this.padding+20)
-            .lt(this.width-20,this.height+this.padding-1.5);
+        notch
+            .moveTo(this.width,this.height+this.padding-1.5)
+            .lineTo(this.width+10,this.height+this.padding+20)
+            .lineTo(this.width-20,this.height+this.padding-1.5);
     else if (type == 'se')
-        notch.graphics.f("#f5f5f5").ss(2,'round').s("#6FC0DD")
-            .mt(0,-this.padding+1.5)
-            .lt(-10,-this.padding-20)
-            .lt(20,-this.padding+1.5);
+        notch
+            .moveTo(0,-this.padding+1.5)
+            .lineTo(-10,-this.padding-20)
+            .lineTo(20,-this.padding+1.5);
     else if (type == 'sw')
-        notch.graphics.f("#f5f5f5").ss(2,'round').s("#6FC0DD")
-            .mt(this.width,-this.padding+1.5)
-            .lt(this.width+10,-this.padding-20)
-            .lt(this.width-20,-this.padding+1.5);
+        notch
+            .moveTo(this.width,-this.padding+1.5)
+            .lineTo(this.width+10,-this.padding-20)
+            .lineTo(this.width-20,-this.padding+1.5);
     return notch;
 };
 
