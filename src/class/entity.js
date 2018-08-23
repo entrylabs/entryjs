@@ -1025,6 +1025,12 @@ Entry.EntityObject.prototype.applyFilter = function(isForce, forceEffects) {
             var colorFilter = new PIXI.filters.ColorMatrixFilter();
             colorFilter.matrix = matrixValue;
             f.push(colorFilter);
+
+            // var rgb = PIXIHelper.HSVtoRGB(degrees/360, v, 1);
+            // var color = (rgb.r << 16) + (rgb.g << 8) + rgb.b;
+            // console.log(rgb, color);
+            // obj.tint = color;
+
         }
 
         if (~diffEffects.indexOf('alpha')) {
