@@ -163,12 +163,7 @@ module.exports = {
                                 );
                         }
                     } else if (targetSpriteId == 'mouse') {
-                        var stage = Entry.stage.canvas;
-                        var pt = object.globalToLocal(
-                            stage.mouseX,
-                            stage.mouseY
-                        );
-                        return object.hitTest(pt.x, pt.y);
+                        return Entry.stage.hitTestObject(object);
                     } else {
                         var targetSprite = Entry.container.getEntity(
                             targetSpriteId
