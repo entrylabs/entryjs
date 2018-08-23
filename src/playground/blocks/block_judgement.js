@@ -149,9 +149,7 @@ module.exports = {
                                 return !!collision(object, wall.left, ath, true);
                         }
                     } else if (targetSpriteId === 'mouse') {
-                        const stage = Entry.stage.canvas;
-                        const pt = object.globalToLocal(stage.mouseX, stage.mouseY);
-                        return object.hitTest(pt.x, pt.y);
+                        return Entry.stage.hitTestObject(object);
                     } else {
                         const targetSprite = Entry.container.getEntity(targetSpriteId);
                         if (targetSprite.type === 'textBox' || sprite.type === 'textBox') {

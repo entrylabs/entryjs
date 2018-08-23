@@ -827,3 +827,14 @@ Entry.Stage.prototype.setEntitySelectable = function(value) {
 Entry.Stage.prototype.isEntitySelectable = function() {
     return Entry.engine.isState('stop') && this._entitySelectable;
 };
+
+/**
+ * @param {PIXI.Container} target
+ * @param {PIXI.Point} [globalPoint]
+ * @return boolean
+ */
+Entry.Stage.prototype.hitTestObject = function(target, globalPoint) {
+    var interactionManager = this._pixiApp.renderer.plugins.interaction;
+    var hitObject = interactionManager.hitTest(globalPoint || interactionManager.mouse.global, target);
+    return !!hitObject;
+};
