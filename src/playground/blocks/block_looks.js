@@ -239,8 +239,8 @@ module.exports = {
                 },
                 class: 'say',
                 isNotFor: ['textBox'],
-                func: function(sprite, script) {
-                    var message = script.getValue('VALUE', script);
+                func: async function(sprite, script) {
+                    var message = await script.getValue('VALUE', script);
                     if (message === '') {
                         message = '    ';
                     } else if (typeof message === 'boolean') {

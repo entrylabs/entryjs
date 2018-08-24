@@ -123,11 +123,11 @@ module.exports = {
                 },
                 class: 'repeat',
                 isNotFor: [],
-                func: function(sprite, script) {
+                func: async function(sprite, script) {
                     var iterNumber;
                     if (!script.isLooped) {
                         script.isLooped = true;
-                        var iterNumber = script.getNumberValue('VALUE', script);
+                        var iterNumber = await script.getNumberValue('VALUE', script);
                         if (iterNumber < 0)
                             throw new Error(
                                 Lang.Blocks.FLOW_repeat_basic_errorMsg

@@ -1,17 +1,13 @@
 module.exports = {
     getBlocks() {
-        function moveInToBound(object, wall){
-            if(wall.up.y > object.y)
-                object.y = wall.up.y;
+        function moveInToBound(object, wall) {
+            if (wall.up.y > object.y) object.y = wall.up.y;
 
-            if(wall.down.y < object.y)
-                object.y = wall.down.y;
+            if (wall.down.y < object.y) object.y = wall.down.y;
 
-            if(wall.right.x < object.x)
-                object.x = wall.right.x;
+            if (wall.right.x < object.x) object.x = wall.right.x;
 
-            if(wall.left.x > object.x)
-                object.x = wall.left.x;
+            if (wall.left.x > object.x) object.x = wall.left.x;
         }
 
         return {
@@ -56,15 +52,13 @@ module.exports = {
                 },
                 class: 'walk',
                 isNotFor: [],
-                func: function(sprite, script) {
-                    var value = script.getNumberValue('VALUE', script);
+                func: async function(sprite, script) {
+                    var value = await script.getNumberValue('VALUE', script);
                     sprite.setX(
                         sprite.getX() +
                             value *
                                 Math.cos(
-                                    (sprite.getRotation() +
-                                        sprite.getDirection() -
-                                        90) /
+                                    (sprite.getRotation() + sprite.getDirection() - 90) /
                                         180 *
                                         Math.PI
                                 )
@@ -73,9 +67,7 @@ module.exports = {
                         sprite.getY() -
                             value *
                                 Math.sin(
-                                    (sprite.getRotation() +
-                                        sprite.getDirection() -
-                                        90) /
+                                    (sprite.getRotation() + sprite.getDirection() - 90) /
                                         180 *
                                         Math.PI
                                 )
@@ -118,16 +110,11 @@ module.exports = {
                     //moveInToBound(sprite.object, Entry.stage.wall);
 
                     if (method == 'free')
-                        var angle = (
-                            sprite.getRotation() + sprite.getDirection()
-                        ).mod(360);
+                        var angle = (sprite.getRotation() + sprite.getDirection()).mod(360);
                     else var angle = sprite.getDirection();
 
                     var skip = Entry.Utils.COLLISION.NONE;
-                    if (
-                        (angle < 90 && angle >= 0) ||
-                        (angle < 360 && angle >= 270)
-                    ) {
+                    if ((angle < 90 && angle >= 0) || (angle < 360 && angle >= 270)) {
                         skip = sprite.collision == Entry.Utils.COLLISION.UP;
                         var up = ndgmr.checkPixelCollision(
                             Entry.stage.wall.up,
@@ -135,50 +122,37 @@ module.exports = {
                             threshold,
                             false
                         );
-                        if (!up && skip)
-                            sprite.collision = Entry.Utils.COLLISION.NONE;
+                        if (!up && skip) sprite.collision = Entry.Utils.COLLISION.NONE;
 
                         if (up && skip) up = false;
 
                         if (up) {
                             if (method == 'free')
                                 sprite.setRotation(
-                                    -sprite.getRotation() -
-                                        sprite.getDirection() * 2 +
-                                        180
+                                    -sprite.getRotation() - sprite.getDirection() * 2 + 180
                                 );
-                            else
-                                sprite.setDirection(
-                                    -sprite.getDirection() + 180
-                                );
+                            else sprite.setDirection(-sprite.getDirection() + 180);
 
                             sprite.collision = Entry.Utils.COLLISION.UP;
                             //sprite.setY(135 - bound.height/2 - 1);
                         } else {
-                            skip =
-                                sprite.collision == Entry.Utils.COLLISION.DOWN;
+                            skip = sprite.collision == Entry.Utils.COLLISION.DOWN;
                             var down = ndgmr.checkPixelCollision(
                                 Entry.stage.wall.down,
                                 sprite.object,
                                 threshold,
                                 false
                             );
-                            if (!down && skip)
-                                sprite.collision = Entry.Utils.COLLISION.NONE;
+                            if (!down && skip) sprite.collision = Entry.Utils.COLLISION.NONE;
 
                             if (down && skip) down = false;
 
                             if (down) {
                                 if (method == 'free')
                                     sprite.setRotation(
-                                        -sprite.getRotation() -
-                                            sprite.getDirection() * 2 +
-                                            180
+                                        -sprite.getRotation() - sprite.getDirection() * 2 + 180
                                     );
-                                else
-                                    sprite.setDirection(
-                                        -sprite.getDirection() + 180
-                                    );
+                                else sprite.setDirection(-sprite.getDirection() + 180);
 
                                 sprite.collision = Entry.Utils.COLLISION.DOWN;
                                 //sprite.setY(-135 + bound.height/2 + 1);
@@ -192,22 +166,16 @@ module.exports = {
                             threshold,
                             false
                         );
-                        if (!down && skip)
-                            sprite.collision = Entry.Utils.COLLISION.NONE;
+                        if (!down && skip) sprite.collision = Entry.Utils.COLLISION.NONE;
 
                         if (down && skip) down = false;
 
                         if (down) {
                             if (method == 'free')
                                 sprite.setRotation(
-                                    -sprite.getRotation() -
-                                        sprite.getDirection() * 2 +
-                                        180
+                                    -sprite.getRotation() - sprite.getDirection() * 2 + 180
                                 );
-                            else
-                                sprite.setDirection(
-                                    -sprite.getDirection() + 180
-                                );
+                            else sprite.setDirection(-sprite.getDirection() + 180);
 
                             sprite.collision = Entry.Utils.COLLISION.DOWN;
                             //sprite.setY(-135 + bound.height/2 + 1);
@@ -219,22 +187,16 @@ module.exports = {
                                 threshold,
                                 false
                             );
-                            if (!up && skip)
-                                sprite.collision = Entry.Utils.COLLISION.NONE;
+                            if (!up && skip) sprite.collision = Entry.Utils.COLLISION.NONE;
 
                             if (up && skip) up = false;
 
                             if (up) {
                                 if (method == 'free')
                                     sprite.setRotation(
-                                        -sprite.getRotation() -
-                                            sprite.getDirection() * 2 +
-                                            180
+                                        -sprite.getRotation() - sprite.getDirection() * 2 + 180
                                     );
-                                else
-                                    sprite.setDirection(
-                                        -sprite.getDirection() + 180
-                                    );
+                                else sprite.setDirection(-sprite.getDirection() + 180);
 
                                 sprite.collision = Entry.Utils.COLLISION.UP;
                                 //sprite.setY(135 - bound.height/2 - 1);
@@ -249,48 +211,37 @@ module.exports = {
                             threshold,
                             false
                         );
-                        if (!left && skip)
-                            sprite.collision = Entry.Utils.COLLISION.NONE;
+                        if (!left && skip) sprite.collision = Entry.Utils.COLLISION.NONE;
 
                         if (left && skip) left = false;
 
                         if (left) {
                             if (method == 'free')
                                 sprite.setRotation(
-                                    -sprite.getRotation() -
-                                        sprite.getDirection() * 2
+                                    -sprite.getRotation() - sprite.getDirection() * 2
                                 );
-                            else
-                                sprite.setDirection(
-                                    -sprite.getDirection() + 360
-                                );
+                            else sprite.setDirection(-sprite.getDirection() + 360);
 
                             sprite.collision = Entry.Utils.COLLISION.LEFT;
                             //sprite.setX(-240 + bound.width/2 + 1);
                         } else {
-                            skip =
-                                sprite.collision == Entry.Utils.COLLISION.RIGHT;
+                            skip = sprite.collision == Entry.Utils.COLLISION.RIGHT;
                             var right = ndgmr.checkPixelCollision(
                                 Entry.stage.wall.right,
                                 sprite.object,
                                 threshold,
                                 false
                             );
-                            if (!right && skip)
-                                sprite.collision = Entry.Utils.COLLISION.NONE;
+                            if (!right && skip) sprite.collision = Entry.Utils.COLLISION.NONE;
 
                             if (right && skip) right = false;
 
                             if (right) {
                                 if (method == 'free')
                                     sprite.setRotation(
-                                        -sprite.getRotation() -
-                                            sprite.getDirection() * 2
+                                        -sprite.getRotation() - sprite.getDirection() * 2
                                     );
-                                else
-                                    sprite.setDirection(
-                                        -sprite.getDirection() + 360
-                                    );
+                                else sprite.setDirection(-sprite.getDirection() + 360);
 
                                 sprite.collision = Entry.Utils.COLLISION.RIGHT;
                                 //sprite.setX(240 - bound.width/2 - 1);
@@ -304,48 +255,37 @@ module.exports = {
                             threshold,
                             false
                         );
-                        if (!right && skip)
-                            sprite.collision = Entry.Utils.COLLISION.NONE;
+                        if (!right && skip) sprite.collision = Entry.Utils.COLLISION.NONE;
 
                         if (right && skip) right = false;
 
                         if (right) {
                             if (method == 'free')
                                 sprite.setRotation(
-                                    -sprite.getRotation() -
-                                        sprite.getDirection() * 2
+                                    -sprite.getRotation() - sprite.getDirection() * 2
                                 );
-                            else
-                                sprite.setDirection(
-                                    -sprite.getDirection() + 360
-                                );
+                            else sprite.setDirection(-sprite.getDirection() + 360);
 
                             sprite.collision = Entry.Utils.COLLISION.RIGHT;
                             //sprite.setX(240 - bound.width/2 - 1);
                         } else {
-                            skip =
-                                sprite.collision == Entry.Utils.COLLISION.LEFT;
+                            skip = sprite.collision == Entry.Utils.COLLISION.LEFT;
                             var left = ndgmr.checkPixelCollision(
                                 Entry.stage.wall.left,
                                 sprite.object,
                                 threshold,
                                 false
                             );
-                            if (!left && skip)
-                                sprite.collision = Entry.Utils.COLLISION.NONE;
+                            if (!left && skip) sprite.collision = Entry.Utils.COLLISION.NONE;
 
                             if (left && skip) left = false;
 
                             if (left) {
                                 if (method == 'free')
                                     sprite.setRotation(
-                                        -sprite.getRotation() -
-                                            sprite.getDirection() * 2
+                                        -sprite.getRotation() - sprite.getDirection() * 2
                                     );
-                                else
-                                    sprite.setDirection(
-                                        -sprite.getDirection() + 360
-                                    );
+                                else sprite.setDirection(-sprite.getDirection() + 360);
 
                                 sprite.collision = Entry.Utils.COLLISION.LEFT;
                                 //sprite.setX(-240 + bound.width/2 + 1);
@@ -532,10 +472,7 @@ module.exports = {
                         var xValue = script.getNumberValue('VALUE2', script);
                         var yValue = script.getNumberValue('VALUE3', script);
                         script.isStart = true;
-                        script.frameCount = Math.max(
-                            Math.floor(timeValue * Entry.FPS),
-                            1
-                        );
+                        script.frameCount = Math.max(Math.floor(timeValue * Entry.FPS), 1);
                         script.dX = xValue / script.frameCount;
                         script.dY = yValue / script.frameCount;
 
@@ -556,10 +493,7 @@ module.exports = {
                         sprite.setY(sprite.getY() + script.dY);
                         script.frameCount--;
                         if (sprite.brush && !sprite.brush.stop) {
-                            sprite.brush.lineTo(
-                                sprite.getX(),
-                                sprite.getY() * -1
-                            );
+                            sprite.brush.lineTo(sprite.getX(), sprite.getY() * -1);
                         }
                     }
                 },
@@ -805,10 +739,7 @@ module.exports = {
                         var timeValue;
                         timeValue = script.getNumberValue('VALUE1', script);
                         script.isStart = true;
-                        script.frameCount = Math.max(
-                            Math.floor(timeValue * Entry.FPS),
-                            1
-                        );
+                        script.frameCount = Math.max(Math.floor(timeValue * Entry.FPS), 1);
                         script.x = script.getNumberValue('VALUE2', script);
                         script.y = script.getNumberValue('VALUE3', script);
 
@@ -833,10 +764,7 @@ module.exports = {
                         sprite.setY(sprite.getY() + dY);
                         script.frameCount--;
                         if (sprite.brush && !sprite.brush.stop) {
-                            sprite.brush.lineTo(
-                                sprite.getX(),
-                                sprite.getY() * -1
-                            );
+                            sprite.brush.lineTo(sprite.getX(), sprite.getY() * -1);
                         }
                     }
                 },
@@ -904,8 +832,7 @@ module.exports = {
                                     menuName: 'spritesWithMouse',
                                     fontSize: 11,
                                     arrowColor: EntryStatic.ARROW_COLOR_MOVING,
-                                    converter:
-                                        Entry.block.converters.returnStringKey,
+                                    converter: Entry.block.converters.returnStringKey,
                                     codeMap: 'Entry.CodeMap.Entry.locate[0]',
                                 },
                             ],
@@ -976,9 +903,7 @@ module.exports = {
                                 xValue = mouseCoordi.x - sprite.getX();
                                 yValue = mouseCoordi.y - sprite.getY();
                             } else {
-                                var targetEntity = Entry.container.getEntity(
-                                    targetId
-                                );
+                                var targetEntity = Entry.container.getEntity(targetId);
                                 xValue = targetEntity.getX() - sprite.getX();
                                 yValue = targetEntity.getY() - sprite.getY();
                             }
@@ -992,19 +917,14 @@ module.exports = {
                                 xValue = Number(mouseCoordi.x);
                                 yValue = Number(mouseCoordi.y);
                             } else {
-                                var targetEntity = Entry.container.getEntity(
-                                    targetId
-                                );
+                                var targetEntity = Entry.container.getEntity(targetId);
                                 xValue = targetEntity.getX();
                                 yValue = targetEntity.getY();
                             }
                             sprite.setX(xValue);
                             sprite.setY(yValue);
                             if (sprite.brush && !sprite.brush.stop) {
-                                sprite.brush.lineTo(
-                                    sprite.getX(),
-                                    sprite.getY() * -1
-                                );
+                                sprite.brush.lineTo(sprite.getX(), sprite.getY() * -1);
                             }
                             return script.callReturn();
                         }
@@ -1014,10 +934,7 @@ module.exports = {
                         sprite.setY(sprite.getY() + script.dY);
                         script.frameCount--;
                         if (sprite.brush && !sprite.brush.stop)
-                            sprite.brush.lineTo(
-                                sprite.getX(),
-                                sprite.getY() * -1
-                            );
+                            sprite.brush.lineTo(sprite.getX(), sprite.getY() * -1);
                         return script;
                     } else {
                         delete script.isStart;
@@ -1041,10 +958,8 @@ module.exports = {
                                     menuName: 'spritesWithMouse',
                                     fontSize: 11,
                                     arrowColor: EntryStatic.ARROW_COLOR_MOVING,
-                                    converter:
-                                        Entry.block.converters.returnStringKey,
-                                    codeMap:
-                                        'Entry.CodeMap.Entry.locate_object_time[1]',
+                                    converter: Entry.block.converters.returnStringKey,
+                                    codeMap: 'Entry.CodeMap.Entry.locate_object_time[1]',
                                 },
                             ],
                         },
@@ -1209,10 +1124,7 @@ module.exports = {
                         timeValue = script.getNumberValue('VALUE', script);
                         var angleValue = script.getNumberValue('ANGLE', script);
                         script.isStart = true;
-                        script.frameCount = Math.max(
-                            Math.floor(timeValue * Entry.FPS),
-                            1
-                        );
+                        script.frameCount = Math.max(Math.floor(timeValue * Entry.FPS), 1);
                         script.dAngle = angleValue / script.frameCount;
 
                         if (script.frameCount == 1) action();
@@ -1227,9 +1139,7 @@ module.exports = {
                     }
 
                     function action() {
-                        sprite.setRotation(
-                            sprite.getRotation() + script.dAngle
-                        );
+                        sprite.setRotation(sprite.getRotation() + script.dAngle);
                         script.frameCount--;
                     }
                 },
@@ -1294,15 +1204,9 @@ module.exports = {
                     if (!script.isStart) {
                         var timeValue;
                         timeValue = script.getNumberValue('DURATION', script);
-                        var directionValue = script.getNumberValue(
-                            'AMOUNT',
-                            script
-                        );
+                        var directionValue = script.getNumberValue('AMOUNT', script);
                         script.isStart = true;
-                        script.frameCount = Math.max(
-                            Math.floor(timeValue * Entry.FPS),
-                            1
-                        );
+                        script.frameCount = Math.max(Math.floor(timeValue * Entry.FPS), 1);
                         script.dDirection = directionValue / script.frameCount;
 
                         if (script.frameCount == 1) action();
@@ -1318,9 +1222,7 @@ module.exports = {
                     }
 
                     function action() {
-                        sprite.setDirection(
-                            sprite.getDirection() + script.dDirection
-                        );
+                        sprite.setDirection(sprite.getDirection() + script.dDirection);
                         script.frameCount--;
                     }
                 },
@@ -1462,8 +1364,7 @@ module.exports = {
                     var spriteY = sprite.getY();
                     var deltaX, deltaY, value;
 
-                    if (sprite.parent.id == targetId)
-                        return script.callReturn();
+                    if (sprite.parent.id == targetId) return script.callReturn();
 
                     if (targetId == 'mouse') {
                         var mX = Entry.stage.mouseCoordinate.x;
@@ -1480,22 +1381,15 @@ module.exports = {
                     if (deltaX === 0 && deltaY === 0) {
                         value = sprite.getDirection() + sprite.getRotation();
                     } else if (deltaX >= 0) {
-                        value =
-                            -Math.atan(deltaY / deltaX) / Math.PI * 180 + 90;
+                        value = -Math.atan(deltaY / deltaX) / Math.PI * 180 + 90;
                     } else {
-                        value =
-                            -Math.atan(deltaY / deltaX) / Math.PI * 180 + 270;
+                        value = -Math.atan(deltaY / deltaX) / Math.PI * 180 + 270;
                     }
-                    if (this.entity.parent.getRotateMethod() === "free") {
-                        var nativeDirection =
-                            sprite.getDirection() + sprite.getRotation();
-                        sprite.setRotation(
-                            sprite.getRotation() + value - nativeDirection
-                        );
+                    if (this.entity.parent.getRotateMethod() === 'free') {
+                        var nativeDirection = sprite.getDirection() + sprite.getRotation();
+                        sprite.setRotation(sprite.getRotation() + value - nativeDirection);
                     } else {
-                        sprite.setDirection(
-                            value
-                        );
+                        sprite.setDirection(value);
                     }
                     return script.callReturn();
                 },
@@ -1511,10 +1405,8 @@ module.exports = {
                                     menuName: 'spritesWithMouse',
                                     fontSize: 11,
                                     arrowColor: EntryStatic.ARROW_COLOR_MOVING,
-                                    converter:
-                                        Entry.block.converters.returnStringKey,
-                                    codeMap:
-                                        'Entry.CodeMap.Entry.see_angle_object[0]',
+                                    converter: Entry.block.converters.returnStringKey,
+                                    codeMap: 'Entry.CodeMap.Entry.see_angle_object[0]',
                                 },
                             ],
                         },
@@ -1579,14 +1471,8 @@ module.exports = {
                 func: function(sprite, script) {
                     var value = script.getNumberValue('VALUE', script);
                     var angle = script.getNumberValue('ANGLE', script);
-                    sprite.setX(
-                        sprite.getX() +
-                            value * Math.cos((angle - 90) / 180 * Math.PI)
-                    );
-                    sprite.setY(
-                        sprite.getY() -
-                            value * Math.sin((angle - 90) / 180 * Math.PI)
-                    );
+                    sprite.setX(sprite.getX() + value * Math.cos((angle - 90) / 180 * Math.PI));
+                    sprite.setY(sprite.getY() - value * Math.sin((angle - 90) / 180 * Math.PI));
                     if (sprite.brush && !sprite.brush.stop) {
                         sprite.brush.lineTo(sprite.getX(), sprite.getY() * -1);
                     }
@@ -1595,5 +1481,5 @@ module.exports = {
                 syntax: { js: [], py: ['Entry.move_to_degree(%2, %1)'] },
             },
         };
-    }
-}
+    },
+};

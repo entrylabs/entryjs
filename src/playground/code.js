@@ -51,8 +51,7 @@ Entry.PARAM = -1;
     };
 
     p.clear = function(isNotForce = false) {
-        for (var i = this._data.length - 1; i >= 0; i--)
-            this._data[i].destroy(false, isNotForce);
+        for (var i = this._data.length - 1; i >= 0; i--) this._data[i].destroy(false, isNotForce);
 
         this.clearExecutors();
     };
@@ -137,20 +136,16 @@ Entry.PARAM = -1;
         var executedBlocks = [];
 
         var _executeEvent = _.partial(Entry.dispatchEvent, 'blockExecute');
-        var _executeEndEvent = _.partial(
-            Entry.dispatchEvent,
-            'blockExecuteEnd'
-        );
+        var _executeEndEvent = _.partial(Entry.dispatchEvent, 'blockExecuteEnd');
 
         for (var i = 0; i < executors.length; i++) {
             var executor = executors[i];
-            if (!executor.isEnd()) {
+            if (!executor.isEnd() && !executor.isPending()) {
                 var { view } = executor.scope.block || {};
                 _executeEvent(view);
                 ret = executor.execute(true);
-                if (shouldNotifyWatch)
-                    executedBlocks = executedBlocks.concat(ret);
-            } else {
+                if (shouldNotifyWatch) executedBlocks = executedBlocks.concat(ret);
+            } else if (executor.isEnd()) {
                 _executeEndEvent(this.board);
                 executors.splice(i--, 1);
                 if (_.isEmpty(executors)) {
@@ -247,10 +242,7 @@ Entry.PARAM = -1;
     };
 
     p.countBlock = function() {
-        return this.getThreads().reduce(
-            (cnt, thread) => cnt + thread.countBlock(),
-            0
-        );
+        return this.getThreads().reduce((cnt, thread) => cnt + thread.countBlock(), 0);
     };
 
     p.moveBy = function(x, y) {
@@ -331,8 +323,7 @@ Entry.PARAM = -1;
         } else {
             block = thread.getBlock(pointer.shift());
             while (pointer.length) {
-                if (!(block instanceof Entry.Block))
-                    block = block.getValueBlock();
+                if (!(block instanceof Entry.Block)) block = block.getValueBlock();
                 var type = pointer.shift();
                 var index = pointer.shift();
                 if (type > -1) {
