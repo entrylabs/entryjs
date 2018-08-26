@@ -5,6 +5,7 @@ Entry.EXPANSION_BLOCK.weather = {
         if(this.isInitialized) {
             return ;
         }
+        Entry.EXPANSION_BLOCK.weather.date = new Date();
         $.get("/api/expansionBlock/weather").done(function(data) {
             Entry.EXPANSION_BLOCK.weather.data = data;
             Entry.EXPANSION_BLOCK.weather.isInitialized = true;
@@ -33,7 +34,7 @@ Entry.EXPANSION_BLOCK.weather.propertyMap ={
 };
 
 Entry.EXPANSION_BLOCK.weather.getDate = function (key) {
-    var date = new Date();
+    var date = Entry.EXPANSION_BLOCK.weather.date;
     switch (key) {
         case "yesterday":
             date.setDate(date.getDate() - 1);
