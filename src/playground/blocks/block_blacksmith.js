@@ -98,7 +98,7 @@ Entry.Blacksmith.setLanguage = function() {
                 "blacksmith_set_digital_dcmotor": "DC모터 %1 번 핀을 %2 %3 번 핀의 속도를 %4 로 정하기 %5",
                 "blacksmith_module_digital_lcd": "LCD화면 %1 줄에 %2 나타내기 %3",
                 "blacksmith_module_digital_bluetooth": "블루투스 TX 3 핀에 %1 데이터 보내기 %2",
-                "blacksmith_module_digital_oled" : "OLED화면 X 좌표 %1 Y 좌표 %2 에 %3 나타내기 %4",
+                "blacksmith_module_digital_oled" : "OLED화면 X 좌표 %1  Y 좌표 %2 에 %3 나타내기 %4",
             }
         },
         en: {
