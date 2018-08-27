@@ -10,6 +10,7 @@
 import { PIXIHandle } from './PIXIHandle';
 import { PIXIPixelPerfectInteractionPlugIn } from './pixi/etc/PIXIPixelPerfectInteractionPlugIn';
 import { PIXITempStore } from './pixi/etc/PIXITempStore';
+import PIXIHelper from './PIXIHelper';
 
 /**
  * class for a canvas
@@ -625,6 +626,8 @@ Entry.Stage.prototype.initWall = function() {
 Entry.Stage.prototype.showInputField = function() {
     if (!this.inputField) {
         var scale = 1 / 1.5;
+        var posX = 202 * scale;
+        var posY = 450 * scale;
         this.inputField = new CanvasInput({
             canvas: document.getElementById('entryCanvas'),
             fontSize: 30 * scale,
@@ -638,48 +641,40 @@ Entry.Stage.prototype.showInputField = function() {
             borderRadius: 3,
             boxShadow: 'none',
             innerShadow: '0px 0px 5px rgba(0, 0, 0, 0.5)',
-            x: 202 * scale,
-            y: 450 * scale,
+            x: posX,
+            y: posY,
             readonly: false,
             topPosition: true,
             onsubmit: function() {
                 Entry.dispatchEvent('canvasInputComplete');
             },
         });
+        var globalScale = this.canvas.scale.x;
+        var textView = this.inputField.getPixiView();
+        textView.scale.set(1/globalScale);
+        textView.position.set(
+            (posX / globalScale - this.canvas.x / globalScale),
+            (posY / globalScale - this.canvas.y / globalScale),
+        );
     }
+    this.canvas.addChild(this.inputField.getPixiView());
 
-    // var inputSubmitButton = new createjs.Container();
-    // var buttonImg = new Image();
-    // var button = new createjs.Bitmap();
-    // buttonImg.onload = function() {
-    //     button.image = this;
-    //     Entry.requestUpdate = true;
-    // };
-    // buttonImg.src = Entry.mediaFilePath + 'confirm_button.png';
-    // button.scaleX = 0.23;
-    // button.scaleY = 0.23;
-    // button.x = 160;
-    // button.y = 89;
-    // button.cursor = 'pointer';
-    // button.image = buttonImg;
-    // inputSubmitButton.addChild(button);
 
-    var inputSubmitButton = new PIXI.Container();
+    PIXIHelper.todo("버튼 텍스쳐 화 하기. 비동기 코드도 삭제 되것죠?");
     var buttonImg = new Image();
-    var button = new PIXI.Sprite();
+    var inputSubmitButton = new PIXI.Sprite();
+    inputSubmitButton.interactive = true;
     var imgPath = Entry.mediaFilePath + 'confirm_button.png';
     buttonImg.onload = function() {
-        button.texture = PIXI.Texture.fromLoader(buttonImg, imgPath);
+        inputSubmitButton.texture = PIXI.Texture.fromLoader(buttonImg, imgPath);
         Entry.requestUpdate = true;
     };
     buttonImg.src = imgPath;
-    button.scale.set(0.23, 0.23);
-    button.position.set(160, 89);
-    button.cursor = 'pointer';
-    inputSubmitButton.addChild(button);
+    inputSubmitButton.scale.set(0.23, 0.23);
+    inputSubmitButton.position.set(160, 89);
+    inputSubmitButton.cursor = 'pointer';
 
-
-    inputSubmitButton.on('mousedown', () => {
+    inputSubmitButton.on('pointerdown', () => {
         if(this.inputField._readonly == false) {
             Entry.dispatchEvent('canvasInputComplete');
         }
@@ -706,7 +701,10 @@ Entry.Stage.prototype.hideInputField = function() {
         this.inputSubmitButton = null;
     }
 
-    if (this.inputField) this.inputField.hide();
+    if (this.inputField) {
+        this.inputField.hide();
+        this.canvas.removeChild(this.inputField.getPixiView());
+    }
     Entry.requestUpdate = true;
 };
 

@@ -71,6 +71,10 @@
         self._renderCanvas.setAttribute('height', self.outerH);
         self._renderCtx = self._renderCanvas.getContext('2d');
 
+        var texture = PIXI.Texture.fromCanvas(self._renderCanvas);
+        self._pixiView = new PIXI.Sprite( texture );
+        self._pixiView.interactive = false;
+
         // setup another off-DOM canvas for inner-shadows
         self._shadowCanvas = document.createElement('canvas');
         self._shadowCanvas.setAttribute('width', self._width + self._padding * 2);
@@ -178,6 +182,11 @@
 
     // setup the prototype
     CanvasInput.prototype = {
+
+        getPixiView: function() {
+            return this._pixiView;
+        },
+
         /**
          * Get/set the main canvas.
          * @param  {Object} data Canvas reference.
@@ -1162,11 +1171,11 @@
                 }
 
                 // draw to the visible canvas
-                if (self._ctx) {
-                    // self._ctx.clearRect(self._x, self._y, ctx.canvas.width, ctx.canvas.height);
-                    self._ctx.drawImage(self._renderCanvas, self._x, self._y);
-                }
-
+                // if (self._ctx) {
+                //     // self._ctx.clearRect(self._x, self._y, ctx.canvas.width, ctx.canvas.height);
+                //     self._ctx.drawImage(self._renderCanvas, self._x, self._y);
+                // }
+                self._pixiView.texture.update();
                 return self;
 
             });
@@ -1284,10 +1293,12 @@
             self._shadowCanvas.setAttribute('height', self._height + self._padding * 2);
 
             // clear the main canvas
-            if (self._ctx) {
-                self._ctx.clearRect(self._x, self._y, oldW, oldH);
-            }
+            //do nothing. entryjs will control main canvas.
+            // if (self._ctx) {
+            //     self._ctx.clearRect(self._x, self._y, oldW, oldH);
+            // }
         },
+
 
         /**
          * Creates the path for a rectangle with rounded corners.
