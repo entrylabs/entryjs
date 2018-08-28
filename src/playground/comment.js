@@ -1,13 +1,9 @@
 Entry.Comment = class Comment {
     constructor(block, board) {
-        this.data = {
-            x: 0,
-            y: 0,
-        };
         Entry.Model(this, false);
         const { comment, view } = block;
-        const { svgGroup } = view || {};
-        this.parentSvgGroup = svgGroup;
+        const { svgGroup, pathGroup } = view || {};
+        this.pathGroup = pathGroup;
         this.svgGroup = svgGroup.elem('g');
         this.board = board;
         this.mouseDown = this.mouseDown.bind(this);
@@ -18,27 +14,31 @@ Entry.Comment = class Comment {
             this.addControl();
         }
 
-        // this.observe(this, 'a', ['x'])
+        this.observe(this, 'a', ['moveX', 'moveY']);
     }
 
-    // a() {
-    //     if(this._comment){
-    //         console.log(this.data);
-    //         const {x: ix, y: iy} = this.data;
-    //         const { x, y, width } = this.parentSvgGroup.getBBox();
-    //         this._comment.attr({
-    //             x: x - ix - width - 50,
-    //             y: y - iy,
-    //         });
-    //     }
-    // }
+    a() {
+        if(this._comment && this.isMouseEvent){
+            console.log('update');
+            const {posX = 0, posY = 0} = this.mouseDownCoordinate || {};
+            this._comment.attr({
+                x: this.moveX + posX,
+                y: this.moveY + posY,
+            });
+
+            this._line.attr({
+                x2: this.moveX + posX + 80,
+                y2: this.moveY + posY,
+            });
+        }
+    }
 
     startRender() {
         if (this.svgGroup) {
             this._line = this.svgGroup.elem('line');
             this._comment = this.svgGroup.elem('rect');
-            const { x, width } = this.parentSvgGroup.getBBox();
-            
+            const { x, width } = this.pathGroup.getBBox();
+
             this._comment.attr({
                 width: '160',
                 height: '22',
@@ -56,21 +56,27 @@ Entry.Comment = class Comment {
                 y2: 13,
                 style: 'stroke:#eda913;stroke-width:2',
             });
+
+            this.canRender = true;
         }
     }
 
     mouseDown(e) {
         e.preventDefault();
         e.stopPropagation();
+        this.isMouseEvent = true;
         const mouseEvent = Entry.Utils.convertMouseEvent(e);
         this.mouseDownCoordinate = {
             x: mouseEvent.pageX,
             y: mouseEvent.pageY,
+            posX: Number(this._comment.getAttribute('x')) || 0,
+            posY: Number(this._comment.getAttribute('y')) || 0,
         };
-        e.target.onmousemove = this.mouseMove;
-        e.target.ontouchmove = this.mouseMove;
-        e.target.onmouseup = this.mouseUp;
-        e.target.ontouchend = this.mouseUp;
+        console.log(this.mouseDownCoordinate);
+        document.onmousemove = this.mouseMove;
+        document.ontouchmove = this.mouseMove;
+        document.onmouseup = this.mouseUp;
+        document.ontouchend = this.mouseUp;
     }
 
     mouseMove(e) {
@@ -81,20 +87,20 @@ Entry.Comment = class Comment {
             Math.pow(mouseEvent.pageX - this.mouseDownCoordinate.x, 2) +
                 Math.pow(mouseEvent.pageY - this.mouseDownCoordinate.y, 2)
         );
-        console.log(mouseEvent.pageX);
         this.set({
-            x: mouseEvent.pageX,
-            y: mouseEvent.pageY,
+            moveX: mouseEvent.pageX - this.mouseDownCoordinate.x,
+            moveY: mouseEvent.pageY - this.mouseDownCoordinate.y,
         })
     }
 
     mouseUp(e) {
         e.preventDefault();
         e.stopPropagation();
-        e.target.onmousemove = undefined;
-        e.target.ontouchmove = undefined;
-        e.target.onmouseup = undefined;
-        e.target.ontouchend = undefined;
+        this.isMouseEvent = false;
+        document.onmousemove = undefined;
+        document.ontouchmove = undefined;
+        document.onmouseup = undefined;
+        document.ontouchend = undefined;
     }
 
     addControl() {
@@ -108,6 +114,6 @@ Entry.Comment = class Comment {
 };
 
 Entry.Comment.prototype.schema = {
-    x: 0,
-    y: 0,
+    moveX: 0,
+    moveY: 0,
 };

@@ -368,8 +368,8 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
     };
 
     p.targetPointer = function(pointer = []) {
-        var pointer = this._block.pointer([Entry.PARAM, this._index, ...pointer]);
-        return pointer;
+        var _pointer = this._block.pointer([Entry.PARAM, this._index, ...pointer]);
+        return _pointer;
     };
 
     p.isParamBlockType = function() {

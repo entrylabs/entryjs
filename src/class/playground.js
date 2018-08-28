@@ -13,6 +13,7 @@ var Entry = require('../entry');
  */
 Entry.Playground = function() {
     this.isTextBGMode_ = false;
+    console.log();
     this.enableArduino = false;
 
     /**
