@@ -196,6 +196,7 @@
             var self = this;
 
             if (typeof data !== 'undefined') {
+                throw new Error("Deprecated: CanvasInput.canvas");
                 self._canvas = data;
                 self._ctx = self._canvas.getContext('2d');
 
@@ -971,7 +972,9 @@
             var inputField = Entry.stage.inputField;
             if (isOver && !inputField._isHidden) {
                 self._hasFocus = true;
-                inputField.focus();
+                setTimeout(()=>{
+                    inputField.focus();
+                }, 1);
             } else if (!isOver && inputField) {
                 self._hasFocus = false;
                 inputField.blur();
