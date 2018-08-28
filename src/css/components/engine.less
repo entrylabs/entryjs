@@ -387,22 +387,34 @@
     .backgroundImage("layers_icon_grid_nor_1.png");
 }
 
+.entryCaptureButtonMinimize {
+    float: right;
+    background-size: contain;
+    .backgroundImage("layers_icon_capture.png");
+}
+
 .entryRecordButtonMinimize {
     float: right;
-    .backgroundImage("grid.png");
+    background-size: contain;
+    .backgroundImage("layers_icon_record.png");
 }
 
 .entryRecordButtonWorkspace_w {
     float: right;
-    .backgroundImage("layers_icon_grid_nor.png");
+    .backgroundImage("layers_icon_record.png");
+}
+
+
+.entryRecordButtonMinimize.toggleOn {
+    .backgroundImage("layers_icon_record_stop.png");
 }
 
 .entryRecordButtonWorkspace.toggleOn {
-    .backgroundImage("coordinates_edit_on.png");
+    .backgroundImage("layers_icon_record_stop.png");
 }
 
 .entryRecordButtonWorkspace_w.toggleOn {
-    .backgroundImage("layers_icon_grid_nor_1.png");
+    .backgroundImage("layers_icon_record_stop.png");
 }
 
 .entryEngineBlueWorkspace > .entryCoordinateButtonWorkspace {

@@ -230,29 +230,23 @@ Entry.Engine = function() {
             });
 
             this.recordButton = Entry.createElement('button');
-            this.recordButton.innerHTML = Lang.Workspace.record;
             this.recordButton.addClass('entryEngineButtonMinimize');
-            this.recordButton.addClass('entryCoordinateButtonMinimize');
+            this.recordButton.addClass('entryRecordButtonMinimize');
             this.view_.appendChild(this.recordButton);
             this.recordButton.bindOnClick(function(e) {
                 if (this.hasClass('toggleOn')) {
                     this.removeClass('toggleOn');
-                    this.innerHTML = "녹화중";
                 } else {
                     this.addClass('toggleOn');
-                    this.innerHTML = "녹화";
                 }
                 Entry.stage.toggleRecord();
             });
 
             this.captureButton = Entry.createElement('button');
-            this.captureButton.innerHTML = Lang.Workspace.capture;
             this.captureButton.addClass('entryEngineButtonMinimize');
-            this.captureButton.addClass('entryCoordinateButtonMinimize');
+            this.captureButton.addClass('entryCaptureButtonMinimize');
             this.view_.appendChild(this.captureButton);
             this.captureButton.bindOnClick(function(e) {
-                if (this.hasClass('toggleOn')) this.removeClass('toggleOn');
-                else this.addClass('toggleOn');
                 Entry.stage.captureCanvas();
             });
 

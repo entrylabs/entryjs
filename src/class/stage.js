@@ -315,7 +315,7 @@ Entry.Stage.prototype.initCoordinator = function() {
  * capture
  */
 Entry.Stage.prototype.captureCanvas = function() {
-    const dataURL = this.canvas.toDataURL({
+    var dataURL = this.canvas.toDataURL({
         format: 'png',
         left: 300,
         top: 250,
