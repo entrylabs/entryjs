@@ -10,6 +10,7 @@ Entry.BlockView = function(block, board, mode) {
     var that = this;
     Entry.Model(this, false);
     this.block = block;
+    this._comment = block.getComment();
     this._lazyUpdatePos = Entry.Utils.debounce(
         block._updatePos.bind(block),
         200
@@ -68,6 +69,7 @@ Entry.BlockView = function(block, board, mode) {
         that.onMouseDown.apply(that, arguments);
     };
 
+    
     this._startRender(block, mode);
 
     // observe
@@ -123,6 +125,11 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
         animating: false,
         shadow: true,
         display: true,
+        comment: {
+            use: false,
+            x: 0,
+            y: 0,
+        }
     };
 
     p._startRender = function(block, mode) {
@@ -180,7 +187,6 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
             pathStyle['stroke-width'] = '0.6';
         }
         this._path.attr(pathStyle);
-
         this._moveTo(this.x, this.y, false);
         this._startContentRender(mode);
         this._startExtension(mode);

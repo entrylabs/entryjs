@@ -62,6 +62,7 @@ require('./playground/block_entry_mini');
 require('./playground/block_menu');
 require('./playground/block_menu_scroll');
 require('./playground/block_view');
+require('./playground/comment');
 require('./playground/board');
 require('./playground/code');
 require('./playground/code_view');

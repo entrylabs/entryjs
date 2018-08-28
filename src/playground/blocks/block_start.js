@@ -1,6 +1,34 @@
 module.exports = {
     getBlocks() {
         return {
+            when_run_button_click1: {
+                color: '#EDA913',
+                skeleton: 'comment',
+                template: 'dasdasdsadsa',
+                statements: [],
+                params: [
+                ],
+                events: {},
+                def: {
+                    params: [],
+                    type: 'when_run_button_click1',
+                },
+                class: 'event',
+                isNotFor: [],
+                func: function(sprite, script) {
+                    return script.callReturn();
+                },
+                event: null,
+                syntax: {
+                    js: [],
+                    py: [
+                        {
+                            syntax: 'def when_start():',
+                            blockType: 'event',
+                        },
+                    ],
+                },
+            },
             when_run_button_click: {
                 color: '#3BBD70',
                 skeleton: 'basic_event',
