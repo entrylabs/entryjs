@@ -1,15 +1,13 @@
 'use strict';
 
-Entry.GlobalSvg = {};
+class GlobalSvg {
+    DONE = 0;
+    _inited = false;
+    REMOVE = 1;
+    RETURN = 2;
+    scale = 1;
 
-(function(gs) {
-    gs.DONE = 0;
-    gs._inited = false;
-    gs.REMOVE = 1;
-    gs.RETURN = 2;
-    gs.scale = 1;
-
-    gs.createDom = function() {
+    createDom() {
         if (this.inited) return;
 
         //document attached element not removed by angular
@@ -35,11 +33,11 @@ Entry.GlobalSvg = {};
         this.left = 0;
         this.top = 0;
         this._inited = true;
-    };
+    }
 
-    gs.setView = function(view, mode) {
+    setView(view, mode) {
         if (view == this._view) return;
-        var data = view.block;
+        var data = view.block || view;
         if (data.isReadOnly() || !view.movable) return;
         this._view = view;
         this._mode = mode;
@@ -50,9 +48,22 @@ Entry.GlobalSvg = {};
         this.align();
         this.position();
         return true;
-    };
+    }
 
-    gs.draw = function() {
+    setComment(view, mode) {
+        if (view == this._view || view.readOnly || !view.movable) {
+            return;
+        }
+        this._view = view;
+        this._mode = mode;
+        if (mode !== Entry.Workspace.MODE_VIMBOARD) view.set({ visible: false });
+        this.draw();
+        this.show();
+        this.align();
+        this.commentPosition();
+    }
+
+    draw() {
         var that = this;
         var blockView = this._view;
         if (this._svg) this.remove();
@@ -92,9 +103,9 @@ Entry.GlobalSvg = {};
                 }
             );
         }
-    };
+    }
 
-    gs.remove = function() {
+    remove() {
         if (!this.svgGroup) return;
         this.svgGroup.remove();
         delete this.svgGroup;
@@ -104,31 +115,34 @@ Entry.GlobalSvg = {};
         delete this._startX;
         delete this._startY;
         this.hide();
-    };
+    }
 
-    gs.align = function() {
-        var offsetX = this._view.getSkeleton().box(this._view).offsetX || 0;
-        var offsetY = this._view.getSkeleton().box(this._view).offsetY || 0;
+    align() {
+        let offsetX = 0;
+        let offsetY = 0;
+        if (this._view.getSkeleton) {
+            offsetX = this._view.getSkeleton().box(this._view).offsetX || 0;
+            offsetY = this._view.getSkeleton().box(this._view).offsetY || 0;
+        }
         offsetX *= -1;
         offsetX += 1;
         offsetY *= -1;
         offsetY += 1;
         this._offsetX = offsetX;
         this._offsetY = offsetY;
-        var transform = `translate(${offsetX}, ${offsetY})`;
+        const transform = `translate(${offsetX}, ${offsetY})`;
         this.svgGroup.attr({ transform: transform });
-    };
+    }
 
-    gs.show = function() {
+    show() {
         this._container.removeClass('entryRemove');
-    };
+    }
 
-    gs.hide = function() {
+    hide() {
         this._container.addClass('entryRemove');
-    };
+    }
 
-    gs.position = function() {
-        var that = this;
+    position() {
         var blockView = this._view;
         if (!blockView) return;
         var pos = blockView.getAbsoluteCoordinate();
@@ -136,9 +150,26 @@ Entry.GlobalSvg = {};
         this.left = pos.scaleX + (offset.left / this.scale - this._offsetX);
         this.top = pos.scaleY + (offset.top / this.scale - this._offsetY);
         this._applyDomPos(this.left, this.top);
-    };
+    }
 
-    gs.adjust = function(adjustX, adjustY) {
+    commentPosition({startX = 0, startY = 0} = {}) {
+        var view = this._view;
+        if (!view) return;
+        var pos = view.getAbsoluteCoordinate();
+        var offset = view.board.offset();
+        this.left = pos.scaleX + (offset.left / this.scale - this._offsetX);
+        this.top = pos.scaleY + (offset.top / this.scale - this._offsetY);
+        const [comment] = this.svgGroup.getElementsByTagName('rect');
+        const [line] = this.svgGroup.getElementsByTagName('line');
+        comment.setAttribute('x', this.left);
+        comment.setAttribute('y', this.top);
+        line.setAttribute('x1', startX + (offset.left / this.scale - this._offsetX));
+        line.setAttribute('y1', startY + (offset.top / this.scale - this._offsetY));
+        line.setAttribute('x2', this.left + 80);
+        line.setAttribute('y2', this.top);
+    }
+
+    adjust(adjustX, adjustY) {
         var left = this.left + (adjustX || 0);
         var top = this.top + (adjustY || 0);
         if (left === this.left && top === this.top) return;
@@ -146,15 +177,15 @@ Entry.GlobalSvg = {};
         this.left = left;
         this.top = top;
         this._applyDomPos(this.left, this.top);
-    };
+    }
 
-    gs._applyDomPos = function(left, top) {
+    _applyDomPos(left, top) {
         this.svgDom.css({
             transform: `scale(${this.scale}) translate3d(${left}px,${top}px, 0px)`,
         });
-    };
+    }
 
-    gs.terminateDrag = function(blockView) {
+    terminateDrag(blockView) {
         var mousePos = Entry.mouseCoordinate;
         var board = blockView.getBoard();
         var blockMenu = board.workspace.blockMenu;
@@ -166,13 +197,13 @@ Entry.GlobalSvg = {};
             if (!blockView.block.isDeletable()) return this.RETURN;
             else return this.REMOVE;
         } else return this.RETURN;
-    };
+    }
 
-    gs.addControl = function(e) {
+    addControl(e) {
         this.onMouseDown.apply(this, arguments);
-    };
+    }
 
-    gs.onMouseDown = function(e) {
+    onMouseDown(e) {
         this._startY = e.pageY;
         var that = this;
         e.stopPropagation();
@@ -202,9 +233,11 @@ Entry.GlobalSvg = {};
         function onMouseUp(e) {
             $(document).unbind('.block');
         }
-    };
+    }
 
-    gs.setScale = function(scale = 1) {
+    setScale(scale = 1) {
         this.scale = scale;
-    };
-})(Entry.GlobalSvg);
+    }
+}
+
+Entry.GlobalSvg = new GlobalSvg();

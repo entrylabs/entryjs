@@ -14,8 +14,6 @@ Entry.Comment = class Comment {
             this.startRender();
             this.addControl();
         }
-
-        this.observe(this, 'a', ['moveX', 'moveY']);
     }
 
     get board() {
@@ -26,29 +24,11 @@ Entry.Comment = class Comment {
         return this._blockView;
     }
 
-    a() {
-        return;
-        if (this._comment && this.isMouseEvent) {
-            console.log('update');
-            const { posX = 0, posY = 0 } = this.mouseDownCoordinate || {};
-            this._comment.attr({
-                x: this.moveX + posX,
-                y: this.moveY + posY,
-            });
-
-            this._line.attr({
-                x2: this.moveX + posX + 80,
-                y2: this.moveY + posY,
-            });
-        }
-    }
-
     startRender() {
         if (this.svgGroup) {
             this._line = this.svgGroup.elem('line');
             this._comment = this.svgGroup.elem('rect');
             const { x, width } = this.pathGroup.getBBox();
-
             const startX = x + width + 50;
             const startY = 3;
 
@@ -63,7 +43,7 @@ Entry.Comment = class Comment {
             });
 
             this._line.attr({
-                x1: x + width,
+                x1: startX - 50,
                 y1: startY + 10,
                 x2: startX + 80,
                 y2: startY + 10,
@@ -78,7 +58,7 @@ Entry.Comment = class Comment {
         }
     }
 
-    moveTo(x, y, animate, doNotUpdatePos) {
+    moveTo(x, y) {
         var thisX = this.x;
         var thisY = this.y;
         if (!this.display) {
@@ -87,17 +67,16 @@ Entry.Comment = class Comment {
         }
         if (thisX !== x || thisY !== y) this.set({ x: x, y: y });
 
-        doNotUpdatePos !== true && this._lazyUpdatePos();
+        // / !== true && this._lazyUpdatePos();
 
-        if (this.visible && this.display) this.setPosition(animate);
+        if (!this.visible && this.display) this.setPosition();
     }
 
-    moveBy(x, y, animate, doNotUpdatePos) {
-        return this.moveTo(this.x + x, this.y + y, animate, doNotUpdatePos);
+    moveBy(x, y) {
+        return this.moveTo(this.x + x, this.y + y, );
     }
 
     setPosition() {
-        console.log(this.x, this.startX, this.y, this.startY);
         this._comment.attr({
             x: this.x + this.startX,
             y: this.y + this.startY,
@@ -129,11 +108,10 @@ Entry.Comment = class Comment {
             document.ontouchend = this.mouseUp;
 
             this.dragInstance = new Entry.DragInstance({
-                startX: mouseEvent.pageX,
-                startY: mouseEvent.pageY,
+                startX: this.startX,
+                startY: this.startY,
                 offsetX: mouseEvent.pageX,
                 offsetY: mouseEvent.pageY,
-                height: 0,
                 mode: true,
             });
             this.dragMode = Entry.DRAG_MODE_MOUSEDOWN;
@@ -158,7 +136,7 @@ Entry.Comment = class Comment {
                 // this._toGlobalCoordinate(undefined, true);
                 this.dragMode = Entry.DRAG_MODE_DRAG;
                 // this.block.getThread().changeEvent.notify();
-                Entry.GlobalSvg.setView(this, workspaceMode);
+                Entry.GlobalSvg.setComment(this, workspaceMode);
                 isFirst = true;
             }
 
@@ -175,18 +153,8 @@ Entry.Comment = class Comment {
                 offsetY: mouseEvent.pageY,
             });
 
-            Entry.GlobalSvg.position();
-
-            if (!this.originPos) {
-                this.originPos = {
-                    x: this.x,
-                    y: this.y,
-                };
-            }
-            // this.set({
-            //     moveX: mouseEvent.pageX - this.mouseDownCoordinate.x,
-            //     moveY: mouseEvent.pageY - this.mouseDownCoordinate.y,
-            // })
+            console.log(dragInstance.startX, dragInstance.startY);
+            Entry.GlobalSvg.commentPosition(dragInstance);
         }
     }
 
@@ -201,6 +169,7 @@ Entry.Comment = class Comment {
         this.board.set({ dragBlock: null });
         Entry.GlobalSvg.remove();
         this.blockView.set({visible: true});
+        this.setPosition();
 
         delete this.mouseDownCoordinate;
         delete this.dragInstance;
@@ -230,6 +199,35 @@ Entry.Comment = class Comment {
     removeSelected() {
         this.svgGroup.removeClass('selected');
     }
+
+    isReadOnly() {
+        return this.readOnly;
+    }
+
+    getBoard() {
+        return undefined;
+    }
+
+    getAbsoluteCoordinate(dragMode = this.dragMode) {
+        const { scale = 1 } = this.board || {};
+        let pos = null;
+        if (dragMode === Entry.DRAG_MODE_DRAG) {
+            pos = {
+                x: this.x + this.startX,
+                y: this.y + this.startY,
+                scaleX: (this.x + this.startX) / scale,
+                scaleY: (this.y + this.startY) / scale,
+            };
+        } else {
+            pos = this.block.getThread().view.requestAbsoluteCoordinate(this);
+            pos.x += this.x + this.startX;
+            pos.y += this.y + this.startY;
+            pos.scaleX = (pos.x + this.startX) / scale;
+            pos.scaleY = (pos.y + this.startY) / scale;
+        }        
+        console.log(pos.x, pos.y);
+        return pos;
+    }
 };
 
 Entry.Comment.prototype.schema = {
@@ -242,4 +240,5 @@ Entry.Comment.prototype.schema = {
     readOnly: false,
     visible: true,
     display: true,
+    movable: true,
 };
