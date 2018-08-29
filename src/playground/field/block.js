@@ -233,10 +233,12 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
     };
 
     p.requestAbsoluteCoordinate = function(blockView) {
+        const board = this.getBoard();
+        const { scale = 1 } = board || {};
         var blockView = this._blockView;
         var contentPos = blockView.contentPos;
         var pos = blockView.getAbsoluteCoordinate();
-        pos.x += this.box.x + contentPos.x;
+        pos.x += (this.box.x + contentPos.x) * scale;
         pos.y += this.box.y + contentPos.y;
         return pos;
     };
@@ -298,7 +300,9 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
             valueBlock.view._toGlobalCoordinate();
 
             Entry.do('separateBlockByCommand', valueBlock).isPass(true);
-            valueBlock.view.bumpAway(30, 150);
+            const board = this.getBoard();
+            const { scale = 1 } = board || {};
+            valueBlock.view.bumpAway(30 * scale, 150);
         }
         this.updateValueBlock(block);
         block.view._toLocalCoordinate(this.svgGroup);

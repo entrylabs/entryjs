@@ -49,6 +49,8 @@ Entry.ThreadView = function(thread, board) {
     };
 
     p.requestAbsoluteCoordinate = function(blockView) {
+        const board = this.board;
+        const { scale = 1 } = board || {};
         var blocks = this.thread.getBlocks();
         var block = blocks.shift();
         var pos = {
@@ -69,7 +71,7 @@ Entry.ThreadView = function(thread, board) {
         while (block && block.view !== blockView && block.view) {
             var prevBlockView = block.view;
             pos.x += prevBlockView.x + prevBlockView.magnet.next.x;
-            pos.y += prevBlockView.y + prevBlockView.magnet.next.y;
+            pos.y += prevBlockView.y + (prevBlockView.magnet.next.y * scale);
             block = blocks.shift();
         }
         return pos;

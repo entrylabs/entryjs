@@ -109,9 +109,11 @@ Entry.FieldStatement = function(content, blockView, index) {
     };
 
     p.requestAbsoluteCoordinate = function() {
+        const board = this._blockView.getBoard();
+        const { scale = 1 } = board || {};
         var pos = this._blockView.getAbsoluteCoordinate();
-        pos.x += this.x;
-        pos.y += this.y;
+        pos.x += this.x * scale;
+        pos.y += this.y * scale;
         return pos;
     };
 
@@ -129,13 +131,12 @@ Entry.FieldStatement = function(content, blockView, index) {
 
         var blockView = this;
         var magneting = blockView.magneting;
-        var block = blockView.block;
-        var svgGroup = blockView.svgGroup;
+        const { scale = 1 } = this._board || {};
 
         if (magneting) {
             var shadow = dragBlock.getShadow();
             var pos = this.requestAbsoluteCoordinate();
-            var transform = 'translate(' + pos.x + ',' + pos.y + ')';
+            var transform = `translate(${pos.x / scale}, ${pos.y / scale})`;
             $(shadow).attr({
                 transform: transform,
                 display: 'block',

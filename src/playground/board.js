@@ -6,52 +6,61 @@
  *
  * @param {object} dom which to inject playground
  */
-Entry.Board = function(option) {
-    Entry.Model(this, false);
-    this.readOnly = option.readOnly === undefined ? false : option.readOnly;
-    this.changeEvent = new Entry.Event(this);
+Entry.Board = class Board {
+    constructor(option) {
+        Entry.Model(this, false);
+        this.scale = option.scale || 1;
+        this.readOnly = option.readOnly === undefined ? false : option.readOnly;
+        this.changeEvent = new Entry.Event(this);
 
-    this.createView(option);
-    this.updateOffset();
+        this.createView(option);
+        this.updateOffset();
 
-    this.scroller = new Entry.Scroller(this, true, true);
+        this.scroller = new Entry.Scroller(this, true, true);
 
-    this._magnetMap = {};
+        this._magnetMap = {};
 
-    Entry.ANIMATION_DURATION = 200;
-    Entry.BOARD_PADDING = 100;
+        Entry.ANIMATION_DURATION = 200;
+        Entry.BOARD_PADDING = 100;
 
-    this._initContextOptions();
-    Entry.Utils.disableContextmenu(this.svgDom);
+        this._initContextOptions();
+        Entry.Utils.disableContextmenu(this.svgDom);
 
-    this._addControl();
-    this._bindEvent();
-    Entry.addEventListener('fontLoaded', this.reDraw.bind(this));
-    Entry.Utils.setSVGDom(this.svgDom);
-};
+        this._addControl();
+        this._bindEvent();
+        Entry.addEventListener('fontLoaded', this.reDraw.bind(this));
+        Entry.Utils.setSVGDom(this.svgDom);
+    }
 
-Entry.Board.OPTION_PASTE = 0;
-Entry.Board.OPTION_ALIGN = 1;
-Entry.Board.OPTION_CLEAR = 2;
-Entry.Board.OPTION_DOWNLOAD = 3;
+    static get OPTION_PASTE() {
+        return 0;
+    }
+    static get OPTION_ALIGN() {
+        return 1;
+    }
+    static get OPTION_CLEAR() {
+        return 2;
+    }
+    static get OPTION_DOWNLOAD() {
+        return 3;
+    }
+    static get DRAG_RADIUS() {
+        return 5;
+    }
 
-Entry.Board.DRAG_RADIUS = 5;
-
-(function(p) {
-    p.schema = {
+    schema = {
         code: null,
         dragBlock: null,
         magnetedBlockView: null,
         selectedBlockView: null,
     };
 
-    p.createView = function(option) {
+    createView(option) {
         var dom = option.dom;
         if (typeof dom === 'string') dom = $('#' + dom);
         else dom = $(dom);
 
-        if (dom.prop('tagName') !== 'DIV')
-            return console.error('Dom is not div element');
+        if (dom.prop('tagName') !== 'DIV') return console.error('Dom is not div element');
 
         this.view = dom;
         this._svgId = 'play' + new Date().getTime();
@@ -80,9 +89,10 @@ Entry.Board.DRAG_RADIUS = 5;
         $(window).scroll(this.updateOffset.bind(this));
 
         this.svgGroup = this.svg.elem('g');
+        this.svgGroup.attr('transform', `scale(${this.scale})`);
         this.svgThreadGroup = this.svgGroup.elem('g');
         this.svgThreadGroup.board = this;
-
+        
         this.svgBlockGroup = this.svgGroup.elem('g');
         this.svgBlockGroup.board = this;
 
@@ -93,13 +103,10 @@ Entry.Board.DRAG_RADIUS = 5;
         } else this.suffix = 'board';
 
         Entry.Utils.addFilters(this.svg, this.suffix);
-        this.pattern = Entry.Utils.addBlockPattern(
-            this.svg,
-            this.suffix
-        ).pattern;
-    };
+        this.pattern = Entry.Utils.addBlockPattern(this.svg, this.suffix).pattern;
+    }
 
-    p.changeCode = function(code, shouldNotCreateView, cb) {
+    changeCode(code, shouldNotCreateView, cb) {
         if (this.code && this.codeListener) this.codeListener.destroy();
 
         this.set({ code });
@@ -118,38 +125,37 @@ Entry.Board.DRAG_RADIUS = 5;
             cb && cb();
         }
         this.scroller.resizeScrollBar();
-    };
+    }
 
-    p.bindCodeView = function(codeView) {
+    bindCodeView(codeView) {
         this.svgBlockGroup.remove();
         this.svgThreadGroup.remove();
         this.svgBlockGroup = codeView.svgBlockGroup;
         this.svgThreadGroup = codeView.svgThreadGroup;
         this.svgGroup.appendChild(this.svgThreadGroup);
         this.svgGroup.appendChild(this.svgBlockGroup);
-    };
+    }
 
-    p.setMagnetedBlock = function(block, magnetType) {
+    setMagnetedBlock(block, magnetType) {
         if (this.magnetedBlockView === block) return;
 
-        this.magnetedBlockView &&
-            this.magnetedBlockView.set({ magneting: false });
+        this.magnetedBlockView && this.magnetedBlockView.set({ magneting: false });
         this.set({ magnetedBlockView: block });
         if (block) {
             block.set({ magneting: magnetType });
             block.dominate();
         }
-    };
+    }
 
-    p.getCode = function() {
+    getCode() {
         return this.code;
-    };
+    }
 
-    p.findById = function(id) {
+    findById(id) {
         return this.code.findById(id);
-    };
+    }
 
-    p._addControl = function() {
+    _addControl() {
         var dom = this.svgDom;
         var that = this;
         dom.mousedown(function() {
@@ -173,13 +179,13 @@ Entry.Board.DRAG_RADIUS = 5;
         }
 
         Entry.Utils.bindBlockViewHoverEvent(this, dom);
-    };
+    }
 
-    p.removeControl = function(eventType) {
+    removeControl(eventType) {
         this.svgDom.off(eventType);
-    };
+    }
 
-    p.onMouseDown = function(e) {
+    onMouseDown(e) {
         if (this.workspace.getMode() == Entry.Workspace.MODE_VIMBOARD) return;
 
         if (e.stopPropagation) e.stopPropagation();
@@ -190,8 +196,7 @@ Entry.Board.DRAG_RADIUS = 5;
         if (e.button === 0 || (e.originalEvent && e.originalEvent.touches)) {
             var eventType = e.type;
             var mouseEvent = Entry.Utils.convertMouseEvent(e);
-            if (Entry.documentMousedown)
-                Entry.documentMousedown.notify(mouseEvent);
+            if (Entry.documentMousedown) Entry.documentMousedown.notify(mouseEvent);
             var doc = $(document);
 
             this.mouseDownCoordinate = {
@@ -242,10 +247,7 @@ Entry.Board.DRAG_RADIUS = 5;
             }
 
             var dragInstance = board.dragInstance;
-            board.scroller.scroll(
-                pageX - dragInstance.offsetX,
-                pageY - dragInstance.offsetY
-            );
+            board.scroller.scroll(pageX - dragInstance.offsetX, pageY - dragInstance.offsetY);
             dragInstance.set({ offsetX: pageX, offsetY: pageY });
         }
 
@@ -258,21 +260,18 @@ Entry.Board.DRAG_RADIUS = 5;
             delete board.mouseDownCoordinate;
             delete board.dragInstance;
         }
-    };
+    }
 
-    p.mouseWheel = function(e) {
+    mouseWheel(e) {
         e = e.originalEvent;
         e.preventDefault();
         var disposeEvent = Entry.disposeEvent;
         if (disposeEvent) disposeEvent.notify(e);
 
-        this.scroller.scroll(
-            e.wheelDeltaX || -e.deltaX,
-            e.wheelDeltaY || -e.deltaY
-        );
-    };
+        this.scroller.scroll(e.wheelDeltaX || -e.deltaX, e.wheelDeltaY || -e.deltaY);
+    }
 
-    p.setSelectedBlock = function(blockView) {
+    setSelectedBlock(blockView) {
         var old = this.selectedBlockView;
 
         if (old) old.removeSelected();
@@ -282,19 +281,19 @@ Entry.Board.DRAG_RADIUS = 5;
         } else blockView = null;
 
         this.set({ selectedBlockView: blockView });
-    };
+    }
 
-    p.hide = function() {
+    hide() {
         this.wrapper.addClass('entryRemove');
         this.visible = false;
-    };
+    }
 
-    p.show = function() {
+    show() {
         this.wrapper.removeClass('entryRemove');
         this.visible = true;
-    };
+    }
 
-    p.alignThreads = function(reDraw) {
+    alignThreads(reDraw) {
         var threads = this.code.getThreads();
         if (!threads.length) return;
 
@@ -323,14 +322,14 @@ Entry.Board.DRAG_RADIUS = 5;
             acculmulatedTop = acculmulatedTop + bBox.height + verticalGap;
         });
         this.scroller.resizeScrollBar();
-    };
+    }
 
-    p.clear = function() {
+    clear() {
         this.svgBlockGroup.remove();
         this.svgThreadGroup.remove();
-    };
+    }
 
-    p.updateOffset = function() {
+    updateOffset() {
         this._offset = this.svg.getBoundingClientRect();
         var w = $(window),
             scrollTop = w.scrollTop(),
@@ -353,17 +352,13 @@ Entry.Board.DRAG_RADIUS = 5;
         if (this.btnWrapper) {
             this.btnWrapper.attr({
                 transform:
-                    'translate(' +
-                    (offset.width / 2 - 65) +
-                    ',' +
-                    (offset.height - 200) +
-                    ')',
+                    'translate(' + (offset.width / 2 - 65) + ',' + (offset.height - 200) + ')',
             });
         }
-    };
+    }
 
-    p.generateButtons = function() {
-        var btnWrapper = (this.btnWrapper = this.svgGroup.elem('g'));
+    generateButtons() {
+        var btnWrapper = (this.btnWrapper = this.svg.elem('g'));
 
         var TEXT_CLASS = 'entryFunctionButtonText';
         var BUTTON_CLASS = 'entryFunctionButton';
@@ -405,17 +400,17 @@ Entry.Board.DRAG_RADIUS = 5;
         $(saveText).bind('mousedown touchstart', saveFunc);
         $(cancelButton).bind('mousedown touchstart', cancelFunc);
         $(cancelText).bind('mousedown touchstart', cancelFunc);
-    };
+    }
 
-    p.cancelEdit = function() {
+    cancelEdit() {
         Entry.do('funcEditCancel');
-    };
+    }
 
-    p.save = function() {
+    save() {
         Entry.do('funcCreate');
-    };
+    }
 
-    p.generateCodeMagnetMap = function() {
+    generateCodeMagnetMap() {
         var code = this.code;
         var dragBlock = this.dragBlock;
         if (!(code && dragBlock)) return;
@@ -432,9 +427,7 @@ Entry.Board.DRAG_RADIUS = 5;
                 continue;
             }
 
-            var metaData = this._getCodeBlocks(code, targetType).sort(
-                (a, b) => a.point - b.point
-            );
+            var metaData = this._getCodeBlocks(code, targetType).sort((a, b) => a.point - b.point);
 
             metaData.unshift({ point: -Number.MAX_VALUE, blocks: [] });
 
@@ -459,9 +452,9 @@ Entry.Board.DRAG_RADIUS = 5;
 
             this._magnetMap[targetType] = metaData;
         }
-    };
+    }
 
-    p._getCodeBlocks = function(code, targetType) {
+    _getCodeBlocks(code, targetType) {
         var func;
         switch (targetType) {
             case 'previous':
@@ -482,13 +475,11 @@ Entry.Board.DRAG_RADIUS = 5;
         }
 
         return code.getThreads().reduce((blocks, thread) => {
-            return blocks.concat(
-                func.call(this, thread, thread.view.zIndex, null, targetType)
-            );
+            return blocks.concat(func.call(this, thread, thread.view.zIndex, null, targetType));
         }, []);
-    };
+    }
 
-    p._getNextMagnets = function(thread, zIndex, offset, targetType) {
+    _getNextMagnets(thread, zIndex, offset, targetType) {
         var blocks = thread.getBlocks();
         var statementBlocks = [];
         var metaData = [];
@@ -504,7 +495,7 @@ Entry.Board.DRAG_RADIUS = 5;
                 break;
             }
 
-            cursorY += blockView.y;
+            cursorY += blockView.y / this.scale;
             cursorX += blockView.x;
             var endPoint = cursorY + 1;
             if (blockView.magnet.next) {
@@ -526,7 +517,7 @@ Entry.Board.DRAG_RADIUS = 5;
                 var thread = block.statements[j];
                 var statement = block.view._statements[j];
                 statement.zIndex = zIndex;
-                statement.absX = cursorX + statement.x;
+                statement.absX = cursorX + (statement.x * this.scale);
                 metaData.push({
                     point: statement.y + cursorY - 30,
                     endPoint: statement.y + cursorY,
@@ -543,7 +534,7 @@ Entry.Board.DRAG_RADIUS = 5;
                         thread,
                         zIndex,
                         {
-                            x: statement.x + cursorX,
+                            x: (statement.x * this.scale) + cursorX,
                             y: statement.y + cursorY,
                         },
                         targetType
@@ -552,13 +543,13 @@ Entry.Board.DRAG_RADIUS = 5;
             }
             if (blockView.magnet.next) {
                 cursorY += blockView.magnet.next.y;
-                cursorX += blockView.magnet.next.x;
+                cursorX += blockView.magnet.next.x * this.scale;
             }
         }
         return statementBlocks.concat(metaData);
-    };
+    }
 
-    p._getPreviousMagnets = function(thread, zIndex, offset, targetType) {
+    _getPreviousMagnets(thread, zIndex, offset, targetType) {
         var blocks = thread.getBlocks();
         var metaData = [];
         if (!offset) offset = { x: 0, y: 0 };
@@ -569,7 +560,7 @@ Entry.Board.DRAG_RADIUS = 5;
         var blockView = block.view;
         blockView.zIndex = zIndex;
         if (blockView.dragInstance) return [];
-        cursorY += blockView.y - 15;
+        cursorY += (blockView.y / this.scale) - 15;
         cursorX += blockView.x;
         var endPoint = cursorY + 1;
         if (blockView.magnet.previous) {
@@ -588,13 +579,13 @@ Entry.Board.DRAG_RADIUS = 5;
             return metaData;
         }
         return [];
-    };
+    }
 
-    p._getFieldMagnets = function(thread, zIndex, offset, targetType) {
+    _getFieldMagnets(thread, zIndex, offset, targetType) {
         var blocks = thread.getBlocks();
         var statementBlocks = [];
         var metaData = [];
-        var that = this;
+
         if (!offset) offset = { x: 0, y: 0 };
         var cursorX = offset.x;
         var cursorY = offset.y;
@@ -603,29 +594,21 @@ Entry.Board.DRAG_RADIUS = 5;
             var blockView = block.view;
             if (blockView.dragInstance) break;
             blockView.zIndex = zIndex;
-            cursorY += blockView.y;
+            cursorY += blockView.y / this.scale;
             cursorX += blockView.x;
-            var endPoint = cursorY + 1;
-            if (blockView.magnet.next) endPoint += blockView.magnet.next.y;
             metaData = metaData.concat(
-                this._getFieldBlockMetaData(
-                    blockView,
-                    cursorX,
-                    cursorY,
-                    zIndex,
-                    targetType
-                )
+                this._getFieldBlockMetaData(blockView, cursorX, cursorY, zIndex, targetType)
             );
             if (block.statements) zIndex += 0.01;
             for (var j = 0; j < block.statements.length; j++) {
                 var thread = block.statements[j];
-                var statement = block.view._statements[j];
+                var statement = block.view._statements[j];                
                 statementBlocks = statementBlocks.concat(
                     this._getFieldMagnets(
                         thread,
                         zIndex,
                         {
-                            x: statement.x + cursorX,
+                            x: (statement.x * this.scale) + cursorX,
                             y: statement.y + cursorY,
                         },
                         targetType
@@ -634,19 +617,13 @@ Entry.Board.DRAG_RADIUS = 5;
             }
             if (blockView.magnet.next) {
                 cursorY += blockView.magnet.next.y;
-                cursorX += blockView.magnet.next.x;
+                cursorX += blockView.magnet.next.x * this.scale;
             }
         }
         return statementBlocks.concat(metaData);
-    };
+    }
 
-    p._getFieldBlockMetaData = function(
-        blockView,
-        cursorX,
-        cursorY,
-        zIndex,
-        targetType
-    ) {
+    _getFieldBlockMetaData(blockView, cursorX, cursorY, zIndex, targetType) {
         var contents = blockView._contents;
         var metaData = [];
         cursorY += blockView.contentPos.y;
@@ -655,17 +632,11 @@ Entry.Board.DRAG_RADIUS = 5;
             if (!(content instanceof Entry.FieldBlock)) continue;
             var contentBlock = content._valueBlock;
             if (contentBlock.view.dragInstance) continue;
-            if (
-                content.acceptType !== targetType &&
-                content.acceptType !== 'boolean'
-            ) {
+            if (content.acceptType !== targetType && content.acceptType !== 'boolean') {
                 continue;
             }
-            var startX = cursorX + content.box.x;
-            var startY =
-                cursorY +
-                content.box.y +
-                (blockView.contentHeight % 1000) * -0.5;
+            var startX = cursorX + (content.box.x * this.scale);
+            var startY = cursorY + content.box.y + (blockView.contentHeight % 1000) * -0.5;
             var endY = cursorY + content.box.y + content.box.height;
             if (content.acceptType === targetType) {
                 metaData.push({
@@ -685,7 +656,7 @@ Entry.Board.DRAG_RADIUS = 5;
             metaData = metaData.concat(
                 this._getFieldBlockMetaData(
                     contentBlockView,
-                    startX + contentBlockView.contentPos.x,
+                    startX + (contentBlockView.contentPos.x * this.scale),
                     startY + contentBlockView.contentPos.y,
                     zIndex + 0.01,
                     targetType
@@ -693,9 +664,9 @@ Entry.Board.DRAG_RADIUS = 5;
             );
         }
         return metaData;
-    };
+    }
 
-    p._getOutputMagnets = function(thread, zIndex, offset, targetType) {
+    _getOutputMagnets(thread, zIndex, offset, targetType) {
         var blocks = thread.getBlocks();
         var statementBlocks = [];
         var metaData = [];
@@ -708,18 +679,10 @@ Entry.Board.DRAG_RADIUS = 5;
             var blockView = block.view;
             if (blockView.dragInstance) break;
             blockView.zIndex = zIndex;
-            cursorY += blockView.y;
+            cursorY += blockView.y / this.scale;
             cursorX += blockView.x;
-            var endPoint = cursorY + 1;
-            if (blockView.magnet.next) endPoint += blockView.magnet.next.y;
             metaData = metaData.concat(
-                this._getOutputMetaData(
-                    blockView,
-                    cursorX,
-                    cursorY,
-                    zIndex,
-                    targetType
-                )
+                this._getOutputMetaData(blockView, cursorX, cursorY, zIndex, targetType)
             );
             if (block.statements) zIndex += 0.01;
             for (var j = 0; j < block.statements.length; j++) {
@@ -730,7 +693,7 @@ Entry.Board.DRAG_RADIUS = 5;
                         thread,
                         zIndex,
                         {
-                            x: statement.x + cursorX,
+                            x: (statement.x * this.scale) + cursorX,
                             y: statement.y + cursorY,
                         },
                         targetType
@@ -739,26 +702,21 @@ Entry.Board.DRAG_RADIUS = 5;
             }
             if (blockView.magnet.next) {
                 cursorY += blockView.magnet.next.y;
-                cursorX += blockView.magnet.next.x;
+                cursorX += blockView.magnet.next.x * this.scale;
             }
         }
         return statementBlocks.concat(metaData);
-    };
+    }
 
-    p._getOutputMetaData = function(
-        blockView,
-        cursorX,
-        cursorY,
-        zIndex,
-        targetType
-    ) {
+    _getOutputMetaData(blockView, cursorX, cursorY, zIndex, targetType) {
         var contents = blockView._contents;
         var metaData = [];
-        cursorX += blockView.contentPos.x;
+        cursorX += blockView.contentPos.x * this.scale;
         cursorY += blockView.contentPos.y;
         for (var i = 0; i < contents.length; i++) {
             var content = contents[i];
-            var startX = cursorX + content.box.x;
+            const contentScaleX = content.box.x * this.scale;
+            var startX = cursorX + contentScaleX;
             var startY = cursorY - 24;
             var endY = cursorY;
             if (content instanceof Entry.FieldBlock) {
@@ -813,7 +771,7 @@ Entry.Board.DRAG_RADIUS = 5;
                 metaData = metaData.concat(
                     this._getOutputMetaData(
                         contentBlockView,
-                        cursorX + content.box.x,
+                        cursorX + contentScaleX,
                         cursorY + content.box.y,
                         zIndex + 0.01,
                         targetType
@@ -822,9 +780,9 @@ Entry.Board.DRAG_RADIUS = 5;
             }
         }
         return metaData;
-    };
+    }
 
-    p.getNearestMagnet = function(x, y, targetType) {
+    getNearestMagnet(x, y, targetType) {
         var targetArray = this._magnetMap[targetType];
         if (!targetArray || targetArray.length === 0) return;
 
@@ -838,7 +796,6 @@ Entry.Board.DRAG_RADIUS = 5;
         while (minIndex <= maxIndex) {
             index = ((minIndex + maxIndex) / 2) | 0;
             pointData = targetArray[index];
-
             if (searchValue < pointData.point) {
                 maxIndex = index - 1;
             } else if (searchValue > pointData.endPoint) {
@@ -847,15 +804,11 @@ Entry.Board.DRAG_RADIUS = 5;
                 var blocks = pointData.blocks;
                 for (var i = 0; i < blocks.length; i++) {
                     var blockView = blocks[i].view;
-                    if (
-                        blockView.absX - leftOffset < x &&
-                        x < blockView.absX + blockView.width
-                    ) {
+                    const minX = blockView.absX / this.scale - leftOffset;
+                    const maxX = blockView.width + minX;
+                    if (minX < x && x < maxX) {
                         var resultBlock = pointData.blocks[i];
-                        if (
-                            !result ||
-                            result.view.zIndex < resultBlock.view.zIndex
-                        )
+                        if (!result || result.view.zIndex < resultBlock.view.zIndex)
                             result = pointData.blocks[i];
                     }
                 }
@@ -863,9 +816,9 @@ Entry.Board.DRAG_RADIUS = 5;
             }
         }
         return null;
-    };
+    }
 
-    p.dominate = function(thread) {
+    dominate(thread) {
         if (!thread) {
             return;
         }
@@ -893,24 +846,24 @@ Entry.Board.DRAG_RADIUS = 5;
         function _shouldDominate(zIndex, max) {
             return zIndex + 1 < max || !zIndex || !max;
         }
-    };
+    }
 
-    p.enablePattern = function() {
+    enablePattern() {
         this.pattern.removeAttribute('style');
-    };
+    }
 
-    p.disablePattern = function() {
+    disablePattern() {
         this.pattern.attr({ style: 'display: none' });
-    };
+    }
 
-    p._removeActivated = function() {
+    _removeActivated() {
         if (!this._activatedBlockView) return;
 
         this._activatedBlockView.removeActivated();
         this._activatedBlockView = null;
-    };
+    }
 
-    p.activateBlock = function(block) {
+    activateBlock(block) {
         var view = block.view;
         var { x: blockX, y: blockY } = view.getAbsoluteCoordinate();
 
@@ -920,21 +873,20 @@ Entry.Board.DRAG_RADIUS = 5;
         view.addActivated();
 
         this._activatedBlockView = view;
-    };
+    }
 
-    p.reDraw = function() {
+    reDraw() {
         this.code && this.code.view && this.code.view.reDraw();
-    };
+    }
 
-    p.separate = function(block, count, index) {
+    separate(block, count, index) {
         if (typeof block === 'string') block = this.findById(block);
         if (block.view) block.view._toGlobalCoordinate();
         if (block.getBlockType() === 'output') {
             if (!count) return;
             var prevOutputBlock = block.getPrevOutputBlock();
             var nextOutputBlock = block;
-            for (var i = 0; i < count; i++)
-                nextOutputBlock = nextOutputBlock.getOutputBlock();
+            for (var i = 0; i < count; i++) nextOutputBlock = nextOutputBlock.getOutputBlock();
 
             block.separate(count, index);
             if (prevOutputBlock && nextOutputBlock) {
@@ -949,25 +901,21 @@ Entry.Board.DRAG_RADIUS = 5;
                 block.thread instanceof Entry.Thread &&
                 block.thread.parent instanceof Entry.Code
             ) {
-                nextBlock = block.thread.getBlock(
-                    block.thread.indexOf(block) + count
-                );
+                nextBlock = block.thread.getBlock(block.thread.indexOf(block) + count);
 
-                if (nextBlock)
-                    backupPos = nextBlock.view.getAbsoluteCoordinate();
+                if (nextBlock) backupPos = nextBlock.view.getAbsoluteCoordinate();
             }
             var prevThread = block.thread;
             block.separate(count, index);
-            if (prevBlock && prevBlock.getNextBlock())
-                prevBlock.getNextBlock().view.bindPrev();
+            if (prevBlock && prevBlock.getNextBlock()) prevBlock.getNextBlock().view.bindPrev();
             else if (nextBlock) {
                 nextBlock.view._toGlobalCoordinate();
                 nextBlock.moveTo(backupPos.x, backupPos.y);
             }
         }
-    };
+    }
 
-    p.insert = function(block, pointer, count) {
+    insert(block, pointer, count) {
         // pointer can be target
         if (typeof block === 'string') block = this.findById(block);
 
@@ -989,12 +937,10 @@ Entry.Board.DRAG_RADIUS = 5;
         } else {
             this.separate(block, count);
             var targetObj;
-            if (pointer instanceof Array)
-                targetObj = this.code.getByPointer(pointer);
+            if (pointer instanceof Array) targetObj = this.code.getByPointer(pointer);
             else targetObj = pointer;
             if (targetObj instanceof Entry.Block) {
-                if (block.getBlockType() === 'basic')
-                    block.view.bindPrev(targetObj);
+                if (block.getBlockType() === 'basic') block.view.bindPrev(targetObj);
                 block.doInsert(targetObj);
             } else if (targetObj instanceof Entry.FieldStatement) {
                 block.view.bindPrev(targetObj);
@@ -1007,9 +953,9 @@ Entry.Board.DRAG_RADIUS = 5;
                 block.doInsert(targetObj);
             }
         }
-    };
+    }
 
-    p.adjustThreadsPosition = function() {
+    adjustThreadsPosition() {
         var code = this.code;
         if (!code) return;
         if (!code.view) return;
@@ -1017,9 +963,7 @@ Entry.Board.DRAG_RADIUS = 5;
         var threads = code.getThreads();
         if (!threads || threads.length === 0) return;
 
-        threads = threads.sort(
-            (a, b) => a.getFirstBlock().view.x - b.getFirstBlock().view.x
-        );
+        threads = threads.sort((a, b) => a.getFirstBlock().view.x - b.getFirstBlock().view.x);
 
         var block = threads[0].getFirstBlock();
         if (block) {
@@ -1027,9 +971,9 @@ Entry.Board.DRAG_RADIUS = 5;
             var { x, y } = block.getAbsoluteCoordinate();
             this.scroller.scroll(50 - x, 30 - y, true);
         }
-    };
+    }
 
-    p._initContextOptions = function() {
+    _initContextOptions() {
         var that = this;
         this._contextOptions = [
             {
@@ -1066,9 +1010,7 @@ Entry.Board.DRAG_RADIUS = 5;
             },
             {
                 activated:
-                    Entry.type === 'workspace' &&
-                    Entry.Utils.isChrome() &&
-                    !Entry.isMobile(),
+                    Entry.type === 'workspace' && Entry.Utils.isChrome() && !Entry.isMobile(),
                 option: {
                     text: Lang.Menus.save_as_image_all,
                     enable: !this.readOnly,
@@ -1078,7 +1020,6 @@ Entry.Board.DRAG_RADIUS = 5;
                         threads.forEach((t, i) => {
                             var topBlock = t.getFirstBlock();
                             if (!topBlock) return;
-                            console.log('threads.length=', threads.length);
                             if (threads.length > 1 && Entry.isOffline) {
                                 topBlock.view.getDataUrl().then((data) => {
                                     images.push(data);
@@ -1096,17 +1037,17 @@ Entry.Board.DRAG_RADIUS = 5;
                 },
             },
         ];
-    };
+    }
 
-    p.activateContextOption = function(option) {
+    activateContextOption(option) {
         this._contextOptions[option].activated = true;
-    };
+    }
 
-    p.deActivateContextOption = function(option) {
+    deActivateContextOption(option) {
         this._contextOptions[option].activated = false;
-    };
+    }
 
-    p._bindEvent = function() {
+    _bindEvent() {
         var evt = Entry.documentMousedown;
         if (evt) {
             evt.attach(this, this.setSelectedBlock);
@@ -1115,28 +1056,23 @@ Entry.Board.DRAG_RADIUS = 5;
 
         evt = Entry.windowResized;
         if (evt) evt.attach(this, Entry.Utils.debounce(this.updateOffset, 200));
-    };
+    }
 
-    p.offset = function() {
-        if (
-            !this._offset ||
-            (this._offset.top === 0 && this._offset.left === 0)
-        ) {
+    offset() {
+        if (!this._offset || (this._offset.top === 0 && this._offset.left === 0)) {
             this.updateOffset();
             return this._offset;
         }
         return this._offset;
-    };
+    }
 
-    p._rightClick = function(e) {
+    _rightClick(e) {
         var disposeEvent = Entry.disposeEvent;
         disposeEvent && disposeEvent.notify(e);
         if (!this.visible) return;
 
         var contextOptions = this._contextOptions;
-        contextOptions[
-            Entry.Board.OPTION_PASTE
-        ].option.enable = !!Entry.clipboard;
+        contextOptions[Entry.Board.OPTION_PASTE].option.enable = !!Entry.clipboard;
         contextOptions[Entry.Board.OPTION_DOWNLOAD].option.enable =
             this.code.getThreads().length !== 0;
 
@@ -1151,9 +1087,9 @@ Entry.Board.DRAG_RADIUS = 5;
             null,
             { x, y }
         );
-    };
+    }
 
-    p.getDom = function(query) {
+    getDom(query) {
         query = query.concat();
         var key = query.shift();
         if (key === 'trashcan') {
@@ -1183,16 +1119,16 @@ Entry.Board.DRAG_RADIUS = 5;
                 return targetObj.svgGroup;
             }
         }
-    };
+    }
 
-    p.findBlock = function(block) {
+    findBlock(block) {
         if (typeof block === 'string') return this.findById(block);
         else if (block && block.id) return this.findById(block.id) || block;
         else if (block instanceof Array) return this.code.getByPointer(block);
         return block;
-    };
+    }
 
-    p.scrollToPointer = function(pointer, query) {
+    scrollToPointer(pointer, query) {
         var obj = this.code.getByPointer(pointer);
         var pos;
         if (obj instanceof Entry.Block) {
@@ -1200,8 +1136,7 @@ Entry.Board.DRAG_RADIUS = 5;
             obj.view.dominate();
         } else if (obj instanceof Entry.Thread) {
             pos = obj.view.requestAbsoluteCoordinate();
-        } else if (obj.getAbsolutePosFromBoard)
-            pos = obj.getAbsolutePosFromBoard();
+        } else if (obj.getAbsolutePosFromBoard) pos = obj.getAbsolutePosFromBoard();
 
         var newX = 0,
             newY = 0,
@@ -1217,10 +1152,16 @@ Entry.Board.DRAG_RADIUS = 5;
 
         this.scroller.scroll(newX, newY, true);
         return [newX, newY];
-    };
+    }
 
-    p.getSvgDomRect = function() {
+    getSvgDomRect() {
         if (!this._svgDomRect) this.updateOffset();
         return this._svgDomRect;
-    };
-})(Entry.Board.prototype);
+    }
+
+    setScale(scale = 1) {
+        this.scale = scale;
+        this.svgGroup.attr('transform', `scale(${scale})`);
+        this.adjustThreadsPosition();
+    }
+};
