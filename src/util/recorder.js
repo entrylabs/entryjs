@@ -38,6 +38,7 @@ Entry.Recorder = function() {
         console.log('end Recording');
         this.mediaRecorder.stop();
         this.download();
+        this.isRecording = false;
     }
 
     p.startRecording = function() {
