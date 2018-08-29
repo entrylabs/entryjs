@@ -291,11 +291,12 @@ Entry.Expansion_Weather.getBlocks = function () {
             class: 'weather',
             isNotFor: ['weather'],
             func: function (sprite, script) {
+                var now = Entry.EXPANSION_BLOCK.weather.date;
+
                 if(!Entry.EXPANSION_BLOCK.weather.isInitialized){
                     return true;
                 }
 
-                var now = new Date();
                 var date = now.toISOString().slice(0, 10).replace(/-/g, "");
                 var time = pad2(now.getHours() - now.getHours()%3);  // [0, 3, 6, 9, 12, 15, 18, 21]
 
@@ -435,11 +436,12 @@ Entry.Expansion_Weather.getBlocks = function () {
             class: 'weather',
             isNotFor: ['weather'],
             func: function (sprite, script) {
+                var now = Entry.EXPANSION_BLOCK.weather.date;
+
                 if(!Entry.EXPANSION_BLOCK.weather.isInitialized){
                     return 0;
                 }
 
-                var now = new Date();
                 var location = script.getField('LOCATION', script);
                 var type = Entry.EXPANSION_BLOCK.weather.propertyMap[script.getField('TYPE', script)];
                 var date = now.toISOString().slice(0, 10).replace(/-/g, "");
@@ -496,7 +498,7 @@ Entry.Expansion_Weather.getBlocks = function () {
 
                 var location = script.getField('LOCATION', script);
                 var time = script.getField('TIME', script);
-                var date = new Date().toISOString().slice(0, 10).replace(/-/g, "");
+                var date = Entry.EXPANSION_BLOCK.weather.date.toISOString().slice(0, 10).replace(/-/g, "");
                 var apiResult = Entry.EXPANSION_BLOCK.weather.getData(location, date + time);
                 return apiResult.temp;
             },
