@@ -49,9 +49,13 @@ module.exports = {
                         var timeValue = script.getNumberValue('SECOND', script);
                         var fps = Entry.FPS || 60;
                         timeValue = 60 / fps * timeValue * 1000;
-                        setTimeout(function() {
+
+                        var blockId = script.block.id;
+                        Entry.TimeWaitManager.add(blockId, function() {
                             script.timeFlag = 0;
                         }, timeValue);
+                        //console.log(Entry.timerInstances.length, 'timerInstance created');
+
                         return script;
                     } else if (script.timeFlag == 1) {
                         return script;

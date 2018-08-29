@@ -120,7 +120,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
 
         Entry.disposeEvent.notify();
 
-        var playground = Entry.playground;
+        const playground = Entry.playground;
 
         if (!isForce && !checkObjectAndAlert(playground && playground.object))
             return false; // change mode fail
@@ -135,67 +135,90 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
         this.mode = Number(this.mode);
         if (this.oldMode === this.mode) return;
 
-        var VIM = Entry.Vim,
-            WORKSPACE = Entry.Workspace,
-            blockMenu = this.blockMenu,
-            Util = Entry.TextCodingUtil;
+        const VIM = Entry.Vim;
+        const WORKSPACE = Entry.Workspace;
+        const blockMenu = this.blockMenu;
+        const Util = Entry.TextCodingUtil;
+        const dispatchChangeBoardEvent = () => {
+            this.oldMode = this.mode;
+            Entry.isTextMode = this.mode === WORKSPACE.MODE_VIMBOARD;
 
-        var alert_message;
+            blockMenu.align();
+            Entry.dispatchEvent('workspaceChangeMode');
+            this.changeEvent.notify(message);
+            Entry.dispatchEvent('cancelBlockMenuDynamic');
+        };
+
+        const changeToPythonMode = () => {
+            try {
+                this.board && this.board.hide();
+                this.overlayBoard && this.overlayBoard.hide();
+                this.set({ selectedBoard: this.vimBoard });
+                this.vimBoard.show();
+                blockMenu.banClass('functionInit', true);
+                this.codeToText(this.board.code, mode);
+                this.oldTextType = this.textType;
+                this.board.clear();
+            } catch (e) {
+                this.vimBoard.hide();
+                this.board.show();
+                blockMenu.unbanClass('functionInit');
+                this.set({ selectedBoard: this.board });
+                this.mode = WORKSPACE.MODE_BOARD;
+                mode.boardType = WORKSPACE.MODE_BOARD;
+                if (this.oldTextType === VIM.TEXT_TYPE_JS) {
+                    mode.runType = VIM.MAZE_MODE;
+                } else if (this.oldTextType === VIM.TEXT_TYPE_PY) {
+                    mode.runType = VIM.WORKSPACE_MODE;
+                }
+                e.block &&
+                Entry.getMainWS() &&
+                Entry.getMainWS().board.activateBlock(e.block);
+            }
+        };
 
         switch (this.mode) {
             case WORKSPACE.MODE_VIMBOARD:
-                var alert_message = Util.isNamesIncludeSpace();
-                if (alert_message) {
-                    entrylms.alert(alert_message);
-                    var mode = {};
-                    mode.boardType = WORKSPACE.MODE_BOARD;
-                    mode.textType = -1;
-                    Entry.getMainWS().setMode(mode);
-                    break;
-                }
+                const alertMessage =
+                    Util.validateVariableToPython() ||
+                    Util.validateFunctionToPython();
 
-                alert_message = Util.isNameIncludeNotValidChar();
-                if (alert_message) {
-                    entrylms.alert(alert_message);
-                    var mode = {};
-                    mode.boardType = WORKSPACE.MODE_BOARD;
-                    mode.textType = -1;
-                    Entry.getMainWS().setMode(mode);
-                    return;
-                }
-
-                alert_message = Util.canConvertTextModeForOverlayMode(
+                const invalidEditorModeErrorMessage = Util.canConvertTextModeForOverlayMode(
                     Entry.Workspace.MODE_VIMBOARD
                 );
-                if (alert_message) {
-                    entrylms.alert(alert_message);
+                if (invalidEditorModeErrorMessage) {
+                    entrylms.alert(invalidEditorModeErrorMessage);
                     return;
                 }
 
-                try {
-                    this.board && this.board.hide();
-                    this.overlayBoard && this.overlayBoard.hide();
-                    this.set({ selectedBoard: this.vimBoard });
-                    this.vimBoard.show();
-                    blockMenu.banClass('functionInit', true);
-                    this.codeToText(this.board.code, mode);
-                    this.oldTextType = this.textType;
-                    this.board.clear();
-                } catch (e) {
-                    this.vimBoard.hide();
-                    this.board.show();
-                    blockMenu.unbanClass('functionInit');
-                    this.set({ selectedBoard: this.board });
-                    this.mode = WORKSPACE.MODE_BOARD;
-                    mode.boardType = WORKSPACE.MODE_BOARD;
-                    if (this.oldTextType == VIM.TEXT_TYPE_JS) {
-                        mode.runType = VIM.MAZE_MODE;
-                    } else if (this.oldTextType == VIM.TEXT_TYPE_PY) {
-                        mode.runType = VIM.WORKSPACE_MODE;
+                if (alertMessage) {
+                    if(alertMessage.type === 'warning') {
+                        entrylms.confirm(alertMessage.message).then((result) => {
+                            if(result) {
+                                changeToPythonMode();
+                                dispatchChangeBoardEvent();
+                            } else {
+                                const mode = {};
+                                mode.boardType = WORKSPACE.MODE_BOARD;
+                                mode.textType = -1;
+                                Entry.getMainWS().setMode(mode);
+                                dispatchChangeBoardEvent();
+                            }
+                        });
                     }
-                    e.block &&
-                        Entry.getMainWS() &&
-                        Entry.getMainWS().board.activateBlock(e.block);
+                    else if(alertMessage.type === 'error') {
+                        entrylms.alert(alertMessage.message);
+
+                        const mode = {};
+                        mode.boardType = WORKSPACE.MODE_BOARD;
+                        mode.textType = -1;
+                        Entry.getMainWS().setMode(mode);
+                        dispatchChangeBoardEvent();
+                        break;
+                    }
+                } else {
+                    changeToPythonMode();
+                    dispatchChangeBoardEvent();
                 }
                 break;
             case WORKSPACE.MODE_BOARD:
@@ -214,12 +237,12 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                     blockMenu.banClass('functionInit');
                     this.mode = WORKSPACE.MODE_VIMBOARD;
 
-                    if (this.oldTextType == VIM.TEXT_TYPE_JS) {
+                    if (this.oldTextType === VIM.TEXT_TYPE_JS) {
                         mode.boardType = WORKSPACE.MODE_VIMBOARD;
                         mode.textType = VIM.TEXT_TYPE_JS;
                         mode.runType = VIM.MAZE_MODE;
                         this.oldTextType = VIM.TEXT_TYPE_JS;
-                    } else if (this.oldTextType == VIM.TEXT_TYPE_PY) {
+                    } else if (this.oldTextType === VIM.TEXT_TYPE_PY) {
                         mode.boardType = WORKSPACE.MODE_VIMBOARD;
                         mode.textType = VIM.TEXT_TYPE_PY;
                         mode.runType = VIM.WORKSPACE_MODE;
@@ -227,28 +250,22 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                     }
                 }
                 Entry.commander.setCurrentEditor('board', this.board);
+                dispatchChangeBoardEvent();
                 break;
 
             case WORKSPACE.MODE_OVERLAYBOARD:
-                if (this.oldMode == WORKSPACE.MODE_VIMBOARD)
+                if (this.oldMode === WORKSPACE.MODE_VIMBOARD)
                     this.overlayModefrom = WORKSPACE.MODE_VIMBOARD;
-                else if (this.oldMode == WORKSPACE.MODE_BOARD)
+                else if (this.oldMode === WORKSPACE.MODE_BOARD)
                     this.overlayModefrom = WORKSPACE.MODE_BOARD;
 
                 if (!this.overlayBoard) this.initOverlayBoard();
                 this.overlayBoard.show();
                 this.set({ selectedBoard: this.overlayBoard });
                 Entry.commander.setCurrentEditor('board', this.overlayBoard);
+                dispatchChangeBoardEvent();
                 break;
         }
-
-        this.oldMode = this.mode;
-        Entry.isTextMode = this.mode == WORKSPACE.MODE_VIMBOARD;
-
-        blockMenu.align();
-        Entry.dispatchEvent('workspaceChangeMode');
-        this.changeEvent.notify(message);
-        Entry.dispatchEvent('cancelBlockMenuDynamic');
 
         function checkObjectAndAlert(object, message) {
             if (Entry.type === 'workspace' && !object) {
@@ -401,18 +418,12 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                             .copyToClipboard();
                     }
                     break;
-                case 219: //setMode(block) for textcoding
+                case 219: //setMode(block) for textcoding ( ctrl + [ )
                     if (!Entry.options.textCodingEnable) {
                         return;
                     }
-                    var oldMode = Entry.getMainWS().oldMode;
-                    if (oldMode == Entry.Workspace.MODE_OVERLAYBOARD) return;
-
-                    var message = Entry.TextCodingUtil.isNamesIncludeSpace();
-                    if (message) {
-                        entrylms.alert(message);
-                        return;
-                    }
+                    const oldMode = Entry.getMainWS().oldMode;
+                    if (oldMode === Entry.Workspace.MODE_OVERLAYBOARD) return;
 
                     this.dSetMode({
                         boardType: Entry.Workspace.MODE_BOARD,
@@ -420,20 +431,14 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                     });
                     e.preventDefault();
                     break;
-                case 221: //setMode(python) for textcoding
+                case 221: //setMode(python) for textcoding ( ctrl + ] )
                     if (!Entry.options.textCodingEnable) {
                         return;
                     }
-                    var message;
-                    message = Entry.TextCodingUtil.canConvertTextModeForOverlayMode(
+                    
+                    const message = Entry.TextCodingUtil.canConvertTextModeForOverlayMode(
                         Entry.Workspace.MODE_VIMBOARD
                     );
-                    if (message) {
-                        entrylms.alert(message);
-                        return;
-                    }
-
-                    var message = Entry.TextCodingUtil.isNamesIncludeSpace();
                     if (message) {
                         entrylms.alert(message);
                         return;
