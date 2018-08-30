@@ -175,8 +175,8 @@ Entry.Arduino.getBlocks = function() {
             paramsKeyMap: {
                 VALUE: 0,
             },
-            func: function(sprite, script) {
-                var signal = script.getValue('VALUE', script);
+            func: async function(sprite, script) {
+                var signal = await script.getValue('VALUE', script);
                 var xmlHttp = new XMLHttpRequest();
                 xmlHttp.open('POST', 'http://localhost:23518/arduino/', false);
                 xmlHttp.send(String(signal));
@@ -201,8 +201,8 @@ Entry.Arduino.getBlocks = function() {
             paramsKeyMap: {
                 VALUE: 0,
             },
-            func: function(sprite, script) {
-                var signal = script.getValue('VALUE', script);
+            func: async function(sprite, script) {
+                var signal = await script.getValue('VALUE', script);
                 var xmlHttp = new XMLHttpRequest();
                 xmlHttp.open('POST', 'http://localhost:23518/arduino/', false);
                 xmlHttp.send(String(signal));
@@ -228,8 +228,8 @@ Entry.Arduino.getBlocks = function() {
             paramsKeyMap: {
                 VALUE: 0,
             },
-            func: function(sprite, script) {
-                var signal = script.getValue('VALUE', script);
+            func: async function(sprite, script) {
+                var signal = await script.getValue('VALUE', script);
                 var xmlHttp = new XMLHttpRequest();
                 xmlHttp.open('POST', 'http://localhost:23518/arduino/', false);
                 xmlHttp.send(String(signal));
@@ -453,8 +453,8 @@ Entry.Arduino.getBlocks = function() {
             },
             class: 'arduino_value',
             isNotFor: ['arduino'],
-            func: function(sprite, script) {
-                var signal = script.getValue('VALUE', script);
+            func: async function(sprite, script) {
+                var signal = await script.getValue('VALUE', script);
                 return Entry.hw.getAnalogPortValue(signal[1]);
             },
             syntax: {
@@ -498,13 +498,13 @@ Entry.Arduino.getBlocks = function() {
             },
             class: 'arduino_value',
             isNotFor: ['arduino'],
-            func: function(sprite, script) {
+            func: async function(sprite, script) {
                 const { hwModule = {} } = Entry.hw;
                 const { name } = hwModule;
                 if(name === 'ArduinoExt') {                    
-                    return Entry.block.arduino_ext_get_digital.func(sprite, script);
+                    return await Entry.block.arduino_ext_get_digital.func(sprite, script);
                 } else {
-                    var signal = script.getNumberValue('PORT', script);
+                    var signal = await script.getNumberValue('PORT', script);
                     return Entry.hw.getDigitalPortValue(signal);
                 }
             },
@@ -567,8 +567,8 @@ Entry.Arduino.getBlocks = function() {
             },
             class: 'arduino_set',
             isNotFor: ['arduino'],
-            func: function(sprite, script) {
-                var port = script.getNumberValue('VALUE');
+            func: async function(sprite, script) {
+                var port = await script.getNumberValue('VALUE');
                 var operator = script.getField('OPERATOR');
                 var value = operator == 'on' ? 255 : 0;
                 Entry.hw.setDigitalPortValue(port, value);
@@ -640,9 +640,8 @@ Entry.Arduino.getBlocks = function() {
             },
             class: 'arduino_set',
             isNotFor: ['arduino'],
-            func: function(sprite, script) {
-                var port = script.getNumberValue('PORT');
-                var value = script.getNumberValue('VALUE');
+            func: async function(sprite, script) {
+                let [port , value] = await Promise.all([script.getNumberValue('PORT'), script.getNumberValue('VALUE')]);
                 value = Math.round(value);
                 value = Math.max(value, 0);
                 value = Math.min(value, 255);
@@ -735,16 +734,15 @@ Entry.Arduino.getBlocks = function() {
             },
             class: 'arduino',
             isNotFor: ['arduino'],
-            func: function(sprite, script) {
-                var value1 = script.getNumberValue('VALUE1', script);
-                var value2 = script.getNumberValue('VALUE2', script);
-                var value3 = script.getNumberValue('VALUE3', script);
-                var value4 = script.getNumberValue('VALUE4', script);
-                var value5 = script.getNumberValue('VALUE5', script);
+            func: async function(sprite, script) {
+                let [value1, value2, value3, value4, value5] = await Promise.all([
+                    script.getNumberValue('VALUE1', script), script.getNumberValue('VALUE2', script),
+                    script.getNumberValue('VALUE3', script), script.getNumberValue('VALUE4', script),
+                    script.getNumberValue('VALUE5', script)]);
 
-                var stringValue4 = script.getValue('VALUE4', script);
-                var stringValue5 = script.getValue('VALUE5', script);
-                var isFloat = false;
+                const stringValue4 = String(value4);
+                const stringValue5 = String(value5);
+                let isFloat = false;
 
                 if (
                     (Entry.Utils.isNumber(stringValue4) &&
