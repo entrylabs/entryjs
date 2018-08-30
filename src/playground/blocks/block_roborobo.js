@@ -2,6 +2,12 @@
 
 Entry.Roborobo_Roduino = {
     name: 'roborobo_roduino',
+    url: 'http://www.roborobo.co.kr',
+    imageName: 'roborobo_roduino.png',
+    title: {
+        "ko": "로두이노",
+        "en": "Roduino"
+    },
     INSTRUCTION: {
         INPUT: 0,
         OUTPUT: 1,
@@ -198,6 +204,12 @@ Entry.Roborobo_Roduino.setLanguage = function() {
 
 Entry.Roborobo_SchoolKit = {
     name: 'roborobo_schoolkit',
+    url: 'http://www.roborobo.co.kr',
+    imageName: 'roborobo_schoolkit.png',
+    title: {
+        "ko": "스쿨키트",
+        "en": "School Kit"
+    },
     pinMode: {
         INPUT: 0,
         OUTPUT: 1,
