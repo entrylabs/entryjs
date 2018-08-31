@@ -134,9 +134,9 @@ Entry.ardublock.getBlocks = function() {
             },
             class: 'ardublockGet',
             isNotFor: ['ardublock'],
-            func: function(sprite, script) {
-                var port = script.getValue('PORT', script);
-                var ANALOG = Entry.hw.portData.ANALOG;
+            func: async function(sprite, script) {
+                let port = await script.getValue('PORT', script);
+                const ANALOG = Entry.hw.portData.ANALOG;
                 if (port[0] === 'A') port = port.substring(1);
                 return ANALOG ? ANALOG[port] || 0 : 0;
             },
@@ -208,13 +208,16 @@ Entry.ardublock.getBlocks = function() {
             },
             class: 'ardublockGet',
             isNotFor: ['ardublock'],
-            func: function(sprite, script) {
-                var result = script.getValue('PORT', script);
+            func: async function(sprite, script) {
                 var ANALOG = Entry.hw.portData.ANALOG;
-                var value2 = script.getNumberValue('VALUE2', script);
-                var value3 = script.getNumberValue('VALUE3', script);
-                var value4 = script.getNumberValue('VALUE4', script);
-                var value5 = script.getNumberValue('VALUE5', script);
+
+                let [result, value2, value3, value4, value5] = await Promise.all([
+                    script.getValue('PORT', script),
+                    script.getNumberValue('VALUE2', script),
+                    script.getNumberValue('VALUE3', script),
+                    script.getNumberValue('VALUE4', script),
+                    script.getNumberValue('VALUE5', script),
+                ]);
 
                 if (value2 > value3) {
                     var swap = value2;
@@ -271,9 +274,11 @@ Entry.ardublock.getBlocks = function() {
             },
             class: 'ardublockGet',
             isNotFor: ['ardublock'],
-            func: function(sprite, script) {
-                var port1 = script.getNumberValue('PORT1', script);
-                var port2 = script.getNumberValue('PORT2', script);
+            func: async function(sprite, script) {
+                const [port1, port2] = await Promise.all([
+                    script.getNumberValue('PORT1', script),
+                    script.getNumberValue('PORT2', script),
+                ]);
 
                 if (!Entry.hw.sendQueue['SET']) {
                     Entry.hw.sendQueue['SET'] = {};
@@ -318,8 +323,8 @@ Entry.ardublock.getBlocks = function() {
             },
             class: 'ardublockGet',
             isNotFor: ['ardublock'],
-            func: function(sprite, script) {
-                var port = script.getNumberValue('PORT', script);
+            func: async function(sprite, script) {
+                const port = await script.getNumberValue('PORT', script);
                 var DIGITAL = Entry.hw.portData.DIGITAL;
                 if (!Entry.hw.sendQueue['GET']) {
                     Entry.hw.sendQueue['GET'] = {};
@@ -373,9 +378,11 @@ Entry.ardublock.getBlocks = function() {
             },
             class: 'ardublock',
             isNotFor: ['ardublock'],
-            func: function(sprite, script) {
-                var port = script.getNumberValue('PORT');
-                var value = script.getValue('VALUE');
+            func: async function(sprite, script) {
+                let [port, value] = await Promise.all([
+                    script.getNumberValue('PORT'),
+                    script.getValue('VALUE'),
+                ]);
 
                 if (typeof value === 'string') {
                     value = value.toLowerCase();
@@ -438,9 +445,12 @@ Entry.ardublock.getBlocks = function() {
             },
             class: 'ardublock',
             isNotFor: ['ardublock'],
-            func: function(sprite, script) {
-                var port = script.getNumberValue('PORT');
-                var value = script.getNumberValue('VALUE');
+            func: async function(sprite, script) {
+                let [port, value] = await Promise.all([
+                    script.getNumberValue('PORT'),
+                    script.getValue('VALUE'),
+                ]);
+
                 value = Math.round(value);
                 value = Math.max(value, 0);
                 value = Math.min(value, 255);
@@ -518,8 +528,8 @@ Entry.ardublock.getBlocks = function() {
             paramsKeyMap: {
                 NOTE: 0,
             },
-            func: function(sprite, script) {
-                return script.getNumberValue('NOTE');
+            func: async function(sprite, script) {
+                return await script.getNumberValue('NOTE');
             },
             syntax: { js: [], py: [] },
         },
@@ -612,12 +622,18 @@ Entry.ardublock.getBlocks = function() {
             },
             class: 'ardublock',
             isNotFor: ['ardublock'],
-            func: function(sprite, script) {
-                var sq = Entry.hw.sendQueue;
-                var port = script.getNumberValue('PORT', script);
+            func: async function(sprite, script) {
+                const sq = Entry.hw.sendQueue;
+                let [port, note, duration, octave] = await Promise.all([
+                    script.getNumberValue('PORT', script),
+                    script.getValue('NOTE', script),
+                    script.getNumberValue('DURATION', script),
+                    script.getNumberValue('OCTAVE', script),
+                ]);
+
+                octave -= 1;
 
                 if (!script.isStart) {
-                    var note = script.getValue('NOTE', script);
                     if (!Entry.Utils.isNumber(note))
                         note = Entry.ardublock.toneTable[note];
 
@@ -626,8 +642,6 @@ Entry.ardublock.getBlocks = function() {
                     } else if (note > 12) {
                         note = 12;
                     }
-
-                    var duration = script.getNumberValue('DURATION', script);
 
                     if (duration < 0) {
                         duration = 0;
@@ -646,7 +660,6 @@ Entry.ardublock.getBlocks = function() {
                         return script.callReturn();
                     }
 
-                    var octave = script.getNumberValue('OCTAVE', script) - 1;
                     if (octave < 0) {
                         octave = 0;
                     } else if (octave > 5) {
@@ -728,10 +741,12 @@ Entry.ardublock.getBlocks = function() {
             },
             class: 'ardublock',
             isNotFor: ['ardublock'],
-            func: function(sprite, script) {
-                var sq = Entry.hw.sendQueue;
-                var port = script.getNumberValue('PORT', script);
-                var value = script.getNumberValue('VALUE', script);
+            func: async function(sprite, script) {
+                const sq = Entry.hw.sendQueue;
+                let [port, value] = await Promise.all([
+                    script.getNumberValue('PORT', script),
+                    script.getNumberValue('VALUE', script),
+                ]);
                 value = Math.min(180, value);
                 value = Math.max(0, value);
 
@@ -815,9 +830,14 @@ Entry.ardublock.getBlocks = function() {
             },
             class: 'ardublock',
             isNotFor: ['ardublock'],
-            func: function(sprite, script) {
+            func: async function(sprite, script) {
                 // var sq = Entry.hw.sendQueue;
-                var direction = script.getValue('MOTOR_DIRECTION', script);
+                let [direction, speed] = await Promise.all([
+                    script.getValue('MOTOR_DIRECTION', script),
+                    script.getNumberValue('MOTOR_SPEED', script)
+                ]);
+                speed -= 1;
+
                 if (!Entry.Utils.isNumber(direction))
                     direction = Entry.ardublock.directionTable[direction];
 
@@ -827,7 +847,6 @@ Entry.ardublock.getBlocks = function() {
                     direction = 1;
                 }
 
-                var speed = script.getNumberValue('MOTOR_SPEED', script) - 1;
                 if (speed < 0) {
                     speed = 0;
                 } else if (speed > 254) {
@@ -893,9 +912,14 @@ Entry.ardublock.getBlocks = function() {
             },
             class: 'ardublock',
             isNotFor: ['ardublock'],
-            func: function(sprite, script) {
+            func: async function(sprite, script) {
                 // var sq = Entry.hw.sendQueue;
-                var direction = script.getValue('MOTOR_DIRECTION', script);
+                let [direction, speed] = await Promise.all([
+                    script.getValue('MOTOR_DIRECTION', script),
+                    script.getNumberValue('MOTOR_SPEED', script),
+                ]);
+                speed -= 1;
+
                 if (!Entry.Utils.isNumber(direction))
                     direction = Entry.ardublock.directionTable[direction];
 
@@ -905,7 +929,6 @@ Entry.ardublock.getBlocks = function() {
                     direction = 1;
                 }
 
-                var speed = script.getNumberValue('MOTOR_SPEED', script) - 1;
                 if (speed < 0) {
                     speed = 0;
                 } else if (speed > 254) {
@@ -959,9 +982,9 @@ Entry.ardublock.getBlocks = function() {
             },
             class: 'ardublockGet',
             isNotFor: ['ardublock'],
-            func: function(sprite, script) {
-                var port = script.getValue('PORT', script);
-                var ANALOG = Entry.hw.portData.ANALOG;
+            func: async function(sprite, script) {
+                let port = await script.getValue('PORT', script);
+                const ANALOG = Entry.hw.portData.ANALOG;
                 if (port[0] === 'A') port = port.substring(1);
                 return ANALOG ? ANALOG[port] || 0 : 0;
             },
@@ -993,9 +1016,9 @@ Entry.ardublock.getBlocks = function() {
             },
             class: 'ardublockGet',
             isNotFor: ['ardublock'],
-            func: function(sprite, script) {
-                var port = script.getValue('PORT', script);
-                var ANALOG = Entry.hw.portData.ANALOG;
+            func: async function(sprite, script) {
+                let port = await script.getValue('PORT', script);
+                const ANALOG = Entry.hw.portData.ANALOG;
                 if (port[0] === 'A') port = port.substring(1);
                 return ANALOG ? ANALOG[port] || 0 : 0;
             },
@@ -1041,9 +1064,11 @@ Entry.ardublock.getBlocks = function() {
             },
             class: 'ardublock',
             isNotFor: ['ardublock'],
-            func: function(sprite, script) {
-                var port = script.getNumberValue('PORT');
-                var value = script.getValue('VALUE');
+            func: async function(sprite, script) {
+                let [port, value] = await Promise.all([
+                    script.getNumberValue('PORT'),
+                    script.getValue('VALUE'),
+                ]);
 
                 if (typeof value === 'string') {
                     value = value.toLowerCase();
@@ -1107,9 +1132,11 @@ Entry.ardublock.getBlocks = function() {
             },
             class: 'ardublock',
             isNotFor: ['ardublock'],
-            func: function(sprite, script) {
-                var port = script.getNumberValue('PORT');
-                var value = script.getValue('VALUE');
+            func: async function(sprite, script) {
+                let [port, value] = await Promise.all([
+                    script.getNumberValue('PORT'),
+                    script.getValue('VALUE'),
+                ]);
 
                 if (typeof value === 'string') {
                     value = value.toLowerCase();
@@ -1159,9 +1186,9 @@ Entry.ardublock.getBlocks = function() {
             },
             class: 'ardublockGet',
             isNotFor: ['ardublock'],
-            func: function(sprite, script) {
-                var port = script.getValue('PORT', script);
-                var ANALOG = Entry.hw.portData.ANALOG;
+            func: async function(sprite, script) {
+                let port = await script.getValue('PORT', script);
+                const ANALOG = Entry.hw.portData.ANALOG;
                 if (port[0] === 'A') port = port.substring(1);
                 return ANALOG ? ANALOG[port] || 0 : 0;
             },
