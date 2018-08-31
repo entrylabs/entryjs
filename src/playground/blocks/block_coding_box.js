@@ -259,9 +259,9 @@ Entry.CodingBox.getBlocks = function() {
             },
             class: 'CodingBoxArduinoRead',
             isNotFor: ['CodingBox'],
-            func: function(sprite, script) {
-                var port = script.getValue('PORT', script);
-                var ANALOG = Entry.hw.portData.ANALOG;
+            func: async function(sprite, script) {
+                let port = await script.getValue('PORT', script);
+                const ANALOG = Entry.hw.portData.ANALOG;
                 if (port[0] === 'A') port = port.substring(1);
                 return ANALOG ? ANALOG[port] || 0 : 0;
             },
@@ -348,15 +348,19 @@ Entry.CodingBox.getBlocks = function() {
             class: 'CodingBoxArduinoRead',
             isNotFor: ['CodingBox'],
             func: function(sprite, script) {
-                var result = script.getValue('PORT', script);
-                var ANALOG = Entry.hw.portData.ANALOG;
-                var value2 = script.getNumberValue('VALUE2', script);
-                var value3 = script.getNumberValue('VALUE3', script);
-                var value4 = script.getNumberValue('VALUE4', script);
-                var value5 = script.getNumberValue('VALUE5', script);
-                var stringValue4 = script.getValue('VALUE4', script);
-                var stringValue5 = script.getValue('VALUE5', script);
-                var isFloat = false;
+                const ANALOG = Entry.hw.portData.ANALOG;
+                let isFloat = false;
+
+                let [result, value2, value3, value4, value5] = await Promise.all([
+                    script.getValue('PORT', script),
+                    script.getNumberValue('VALUE2', script),
+                    script.getNumberValue('VALUE3', script),
+                    script.getNumberValue('VALUE4', script),
+                    script.getNumberValue('VALUE5', script),
+                ]);
+
+                const stringValue4 = String(value4);
+                const stringValue5 = String(value5);
 
                 if (
                     (Entry.Utils.isNumber(stringValue4) &&
@@ -458,9 +462,11 @@ Entry.CodingBox.getBlocks = function() {
             },
             class: 'CodingBoxArduinoRead',
             isNotFor: ['CodingBox'],
-            func: function(sprite, script) {
-                var port1 = script.getNumberValue('PORT1', script);
-                var port2 = script.getNumberValue('PORT2', script);
+            func: async function(sprite, script) {
+                const [port1, port2] = await Promise.all([
+                    script.getNumberValue('PORT1', script),
+                    script.getNumberValue('PORT2', script),
+                ]);
 
                 if (!Entry.hw.sendQueue['SET']) {
                     Entry.hw.sendQueue['SET'] = {};
@@ -524,13 +530,13 @@ Entry.CodingBox.getBlocks = function() {
             },
             class: 'CodingBoxArduinoRead',
             isNotFor: ['CodingBox'],
-            func: function(sprite, script) {
+            func: async function(sprite, script) {
                 const { hwModule = {} } = Entry.hw;
                 const { name } = hwModule;
 
                 if (name === 'CodingBox') {
-                    var port = script.getNumberValue('PORT', script);
-                    var DIGITAL = Entry.hw.portData.DIGITAL;
+                    const port = await script.getNumberValue('PORT', script);
+                    const DIGITAL = Entry.hw.portData.DIGITAL;
                     if (!Entry.hw.sendQueue['GET']) {
                         Entry.hw.sendQueue['GET'] = {};
                     }
@@ -542,9 +548,9 @@ Entry.CodingBox.getBlocks = function() {
                     };
                     return DIGITAL ? DIGITAL[port] || 0 : 0;
                 } else {
-                    return Entry.block.arduino_get_digital_value.func(
+                    return await Entry.block.arduino_get_digital_value.func(
                         sprite,
-                        script
+                        script,
                     );
                 }
             },
@@ -657,9 +663,11 @@ Entry.CodingBox.getBlocks = function() {
             },
             class: 'CodingBoxArduinoWrite',
             isNotFor: ['CodingBox'],
-            func: function(sprite, script) {
-                var port = script.getNumberValue('PORT');
-                var value = script.getValue('VALUE');
+            func: async function(sprite, script) {
+                let [port, value] = await Promise.all([
+                    script.getNumberValue('PORT'),
+                    script.getValue('VALUE'),
+                ]);
 
                 if (typeof value === 'string') {
                     value = value.toLowerCase();
@@ -739,9 +747,12 @@ Entry.CodingBox.getBlocks = function() {
             },
             class: 'CodingBoxArduinoWrite',
             isNotFor: ['CodingBox'],
-            func: function(sprite, script) {
-                var port = script.getNumberValue('PORT');
-                var value = script.getNumberValue('VALUE');
+            func: async function(sprite, script) {
+                let [port, value] = await Promise.all([
+                    script.getNumberValue('PORT'),
+                    script.getNumberValue('VALUE'),
+                ]);
+
                 value = Math.round(value);
                 value = Math.max(value, 0);
                 value = Math.min(value, 255);
@@ -869,8 +880,8 @@ Entry.CodingBox.getBlocks = function() {
             paramsKeyMap: {
                 NOTE: 0,
             },
-            func: function(sprite, script) {
-                return script.getNumberValue('NOTE');
+            func: async function(sprite, script) {
+                return await script.getNumberValue('NOTE');
             },
             syntax: {
                 js: [],
@@ -978,22 +989,25 @@ Entry.CodingBox.getBlocks = function() {
             },
             class: 'CodingBoxArduinoWrite',
             isNotFor: ['CodingBox'],
-            func: function(sprite, script) {
-                var sq = Entry.hw.sendQueue;
-                var port = script.getNumberValue('PORT', script);
+            func: async function(sprite, script) {
+                const sq = Entry.hw.sendQueue;
+                let [port, note, duration, octave] = await Promise.all([
+                    script.getNumberValue('PORT', script),
+                    script.getValue('NOTE', script),
+                    script.getNumberValue('DURATION', script),
+                    script.getNumberValue('OCTAVE', script),
+                ]);
+                octave -= 1;
 
                 if (!script.isStart) {
-                    var note = script.getValue('NOTE', script);
-                    if (!Entry.Utils.isNumber(note))
+                    if (!Entry.Utils.isNumber(note)) {
                         note = Entry.CodingBox.toneTable[note];
-
+                    }
                     if (note < 0) {
                         note = 0;
                     } else if (note > 12) {
                         note = 12;
                     }
-
-                    var duration = script.getNumberValue('DURATION', script);
 
                     if (duration < 0) {
                         duration = 0;
@@ -1012,7 +1026,6 @@ Entry.CodingBox.getBlocks = function() {
                         return script.callReturn();
                     }
 
-                    var octave = script.getNumberValue('OCTAVE', script) - 1;
                     if (octave < 0) {
                         octave = 0;
                     } else if (octave > 5) {
@@ -1119,10 +1132,12 @@ Entry.CodingBox.getBlocks = function() {
             },
             class: 'CodingBoxArduinoWrite',
             isNotFor: ['CodingBox'],
-            func: function(sprite, script) {
-                var sq = Entry.hw.sendQueue;
-                var port = script.getNumberValue('PORT', script);
-                var value = script.getNumberValue('VALUE', script);
+            func: async function(sprite, script) {
+                const sq = Entry.hw.sendQueue;
+                let [port, value] = await Promise.all([
+                    script.getNumberValue('PORT', script),
+                    script.getNumberValue('VALUE', script),
+                ]);
 
                 value = Math.min(180, value);
                 value = Math.max(0, value);
@@ -1234,11 +1249,11 @@ Entry.CodingBox.getBlocks = function() {
             },
             class: 'CodingBoxRead',
             isNotFor: ['CodingBox'],
-            func: function(sprite, script) {
-                var port = script.getValue('PORT', script);
-                var ANALOG = Entry.hw.portData.ANALOG;
-                var value = ANALOG ? ANALOG[port] || 0 : 0;
-                var isPush = 0;
+            func: async function(sprite, script) {
+                let port = await script.getValue('PORT', script);
+                const ANALOG = Entry.hw.portData.ANALOG;
+                const value = ANALOG ? ANALOG[port] || 0 : 0;
+                let isPush = 0;
 
                 if (port[0] === 'A') port = port.substring(1);
                 if (value > 600) {
@@ -1426,9 +1441,11 @@ Entry.CodingBox.getBlocks = function() {
             },
             class: 'CodingBoxWrite',
             isNotFor: ['CodingBox'],
-            func: function(sprite, script) {
-                var port = script.getNumberValue('PORT');
-                var value = script.getNumberValue('VALUE');
+            func: async function(sprite, script) {
+                let [port, value] = await Promise.all([
+                    script.getNumberValue('PORT'),
+                    script.getNumberValue('VALUE'),
+                ]);
 
                 value = Math.round(value);
                 value = Math.max(value, 0);
@@ -1492,11 +1509,13 @@ Entry.CodingBox.getBlocks = function() {
             },
             class: 'CodingBoxWrite',
             isNotFor: ['CodingBox'],
-            func: function(sprite, script) {
-                var sq = Entry.hw.sendQueue;
-                var row = script.getNumberValue('ROW');
-                var column = script.getNumberValue('COLUMN');
-                var text = script.getValue('TEXT');
+            func: async function(sprite, script) {
+                const sq = Entry.hw.sendQueue;
+                const [row, column, text] = await Promise.all([
+                    script.getNumberValue('ROW'),
+                    script.getNumberValue('COLUMN'),
+                    script.getValue('TEXT'),
+                ]);
                 let time = new Date().getTime();
 
                 //      아래코드에서 보조 변수들(script.isStart, script.timeFlag등)이 들어간 이유는 fps(초당프레임)를 위해서입니다.
@@ -1533,8 +1552,6 @@ Entry.CodingBox.getBlocks = function() {
                     Entry.engine.isContinue = false;
                     return script.callReturn();
                 }
-
-                return script.callReturn();
             },
             syntax: {
                 js: [],
@@ -1636,13 +1653,16 @@ Entry.CodingBox.getBlocks = function() {
             },
             class: 'CodingBoxWrite',
             isNotFor: ['CodingBox'],
-            func: function(sprite, script) {
+            func: async function(sprite, script) {
                 var redPort = Entry.CodingBox.pins.RGB_R;
                 var greenPort = Entry.CodingBox.pins.RGB_G;
                 var bluePort = Entry.CodingBox.pins.RGB_B;
-                var redPWM = script.getNumberValue('R');
-                var greenPWM = script.getNumberValue('G');
-                var bluePWM = script.getNumberValue('B');
+
+                let [redPWM, greenPWM, bluePWM] = await Promise.all([
+                    script.getNumberValue('R'),
+                    script.getNumberValue('G'),
+                    script.getNumberValue('B'),
+                ]);
 
                 redPWM = Math.round(redPWM);
                 redPWM = Math.max(redPWM, 0);
@@ -2232,10 +2252,10 @@ Entry.CodingBox.getBlocks = function() {
             },
             class: 'CodingBoxWrite',
             isNotFor: ['CodingBox'],
-            func: function(sprite, script) {
-                var sq = Entry.hw.sendQueue;
-                var port = Entry.CodingBox.pins.SERVO;
-                var angle = script.getNumberValue('ANGLE', script);
+            func: async function(sprite, script) {
+                const sq = Entry.hw.sendQueue;
+                const port = Entry.CodingBox.pins.SERVO;
+                let angle = await script.getNumberValue('ANGLE', script);
 
                 angle = Math.min(180, angle);
                 angle = Math.max(0, angle);
@@ -2317,31 +2337,34 @@ Entry.CodingBox.getBlocks = function() {
             },
             class: 'CodingBoxWrite',
             isNotFor: ['CodingBox'],
-            func: function(sprite, script) {
-                var sq = Entry.hw.sendQueue;
-                var port = Entry.CodingBox.pins.BUZZER;
+            func: async function(sprite, script) {
+                const sq = Entry.hw.sendQueue;
+                const port = Entry.CodingBox.pins.BUZZER;
+
+                let [note, duration, octave] = await Promise.all([
+                    script.getValue('NOTE', script),
+                    script.getNumberValue('DURATION', script),
+                    script.getNumberValue('OCTAVE', script),
+                ]);
+                octave -= 1;
 
                 if (!script.isStart) {
-                    var note = script.getValue('NOTE', script);
-                    if (!Entry.Utils.isNumber(note))
-                        note = Entry.CodingBox.toneTable[note];
+                    if (!Entry.Utils.isNumber(note)) {
 
+                        note = Entry.CodingBox.toneTable[note];
+                    }
                     if (note < 0) {
                         note = 0;
                     } else if (note > 12) {
                         note = 12;
                     }
-
-                    var duration = script.getNumberValue('DURATION', script);
-
                     if (duration < 0) {
                         duration = 0;
-                    }
 
+                    }
                     if (!sq['SET']) {
                         sq['SET'] = {};
                     }
-
                     if (duration === 0) {
                         sq['SET'][port] = {
                             type: Entry.CodingBox.sensorTypes.TONE,
@@ -2349,9 +2372,8 @@ Entry.CodingBox.getBlocks = function() {
                             time: new Date().getTime(),
                         };
                         return script.callReturn();
-                    }
 
-                    var octave = script.getNumberValue('OCTAVE', script) - 1;
+                    }
                     if (octave < 0) {
                         octave = 0;
                     } else if (octave > 5) {
@@ -2460,11 +2482,15 @@ Entry.CodingBox.getBlocks = function() {
             },
             class: 'CodingBoxWrite',
             isNotFor: ['CodingBox'],
-            func: function(sprite, script) {
+            func: async function(sprite, script) {
                 var dcmAPin = Entry.CodingBox.pins.DCM_A;
                 var dcmBPin = Entry.CodingBox.pins.DCM_B;
-                var direction = script.getNumberValue('DIRECTION');
-                var speed = script.getNumberValue('SPEED', script);
+
+                let [direction, speed] = await Promise.all([
+                    script.getNumberValue('DIRECTION'),
+                    script.getNumberValue('SPEED', script),
+                ]);
+
                 var dcmASpeed = 0;
                 var dcmBSpeed = 0;
 
