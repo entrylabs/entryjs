@@ -192,8 +192,8 @@ Entry.dplay.getBlocks = function() {
                 VALUE: 0,
             },
             class: 'dplay_get',
-            func: function(sprite, script) {
-                var signal = script.getValue('VALUE', script);
+            func: async function(sprite, script) {
+                const signal = await script.getValue('VALUE', script);
                 return Entry.hw.getAnalogPortValue(signal[1]);
             },
             syntax: { js: [], py: ['Dplay.gas_sensor_value(%1)'] },
@@ -277,8 +277,8 @@ Entry.dplay.getBlocks = function() {
             },
             class: 'dplay_get',
             isNotFor: ['dplay'],
-            func: function(sprite, script) {
-                var signal = script.getValue('VALUE', script);
+            func: async function(sprite, script) {
+                const signal = await script.getValue('VALUE', script);
                 return Entry.hw.getAnalogPortValue(signal[1]);
             },
             syntax: { js: [], py: ['Dplay.value(%1, %2)'] },
@@ -605,7 +605,7 @@ Entry.dplay.getBlocks = function() {
             },
             class: 'dplay_set',
             isNotFor: ['dplay'],
-            func: function(sprite, script) {
+            func: async function(sprite, script) {
                 var port1 = 0;
                 var port2 = 0;
                 var port3 = 0;
@@ -626,7 +626,7 @@ Entry.dplay.getBlocks = function() {
                     port3 = 11;
                     port4 = 6;
                 }
-                var operator = script.getNumberValue('VALUE', script);
+                let operator = await script.getNumberValue('VALUE', script);
                 operator = Math.max(operator, -100);
                 operator = Math.min(operator, 100);
                 if (operator == 0) {
@@ -740,11 +740,11 @@ Entry.dplay.getBlocks = function() {
             },
             class: 'dplay_set',
             isNotFor: ['dplay'],
-            func: function(sprite, script) {
+            func: async function(sprite, script) {
                 if (!script.isStart) {
                     var note = script.getNumberField('NOTE', script);
                     var octave = script.getNumberField('OCTAVE', script);
-                    var beat = script.getNumberValue('VALUE');
+                    const beat = await script.getNumberValue('VALUE');
                     var tempo = 60;
                     var note_go = note + (octave - 1) * 12;
                     var timeValue = beat * 60 * 1000 / tempo;
@@ -810,9 +810,9 @@ Entry.dplay.getBlocks = function() {
             },
             class: 'dplay_set',
             isNotFor: ['dplay'],
-            func: function(sprite, script) {
+            func: async function(sprite, script) {
                 var port = 9;
-                var value = script.getNumberValue('VALUE');
+                var value = await script.getNumberValue('VALUE');
                 value = Math.round(value);
                 value = Math.max(value, 1);
                 value = Math.min(value, 179);
@@ -944,7 +944,7 @@ Entry.dplay.getBlocks = function() {
             },
             class: 'dplay_robot',
             isNotFor: ['dplay'],
-            func: function(sprite, script) {
+            func: async function(sprite, script) {
                 var port1 = 3;
                 var port2 = 5;
                 var port3 = 6;
@@ -959,7 +959,7 @@ Entry.dplay.getBlocks = function() {
                 if (!script.isStart) {
                     script.isStart = true;
                     script.timeFlag = 1;
-                    var timeValue = script.getNumberValue('VALUE') * 1000;
+                    var timeValue = await script.getNumberValue('VALUE') * 1000;
                     var timer = setTimeout(function() {
                         script.timeFlag = 0;
                         Entry.dplay.removeTimeout(timer);
@@ -1048,7 +1048,7 @@ Entry.dplay.getBlocks = function() {
             },
             class: 'dplay_robot',
             isNotFor: ['dplay'],
-            func: function(sprite, script) {
+            func: async function(sprite, script) {
                 var port1 = 0;
                 var port2 = 0;
                 var port3 = 0;
@@ -1059,7 +1059,7 @@ Entry.dplay.getBlocks = function() {
                 var value4 = 0;
                 var result = 0;
                 var port = script.getField('PORT');
-                var operator = script.getNumberValue('VALUE', script);
+                var operator = await script.getNumberValue('VALUE', script);
                 operator = Math.max(operator, -100);
                 operator = Math.min(operator, 100);
                 if (port == '1') {
@@ -1206,7 +1206,7 @@ Entry.dplay.getBlocks = function() {
             },
             class: 'dplay_robot',
             isNotFor: ['dplay'],
-            func: function(sprite, script) {
+            func: async function(sprite, script) {
                 var port1 = 3;
                 var port2 = 5;
                 var port3 = 6;
@@ -1217,7 +1217,11 @@ Entry.dplay.getBlocks = function() {
                 var value4 = 0;
                 var result_R = 0;
                 var result_L = 0;
-                var value_L = script.getNumberValue('L_VALUE', script);
+                let [value_L, value_R] = await Promise.all([
+                    script.getNumberValue('L_VALUE', script),
+                    script.getNumberValue('R_VALUE', script),
+                ]);
+
                 value_L = Math.max(value_L, -100);
                 value_L = Math.min(value_L, 100);
                 if (value_L > 0) {
@@ -1237,7 +1241,6 @@ Entry.dplay.getBlocks = function() {
                     value2 = 0;
                     Entry.dplay.Left_value = 0;
                 }
-                var value_R = script.getNumberValue('R_VALUE', script);
                 value_R = Math.max(value_R, -100);
                 value_R = Math.min(value_R, 100);
                 if (value_R > 0) {
