@@ -243,10 +243,10 @@ Entry.Xbot.getBlocks = function() {
             },
             class: 'xbot_sensor',
             isNotFor: ['xbot_epor_edge'],
-            func: function(sprite, script) {
-                var sq = Entry.hw.sendQueue;
-                var dev = script.getStringField('DEVICE', script);
-                var value = script.getNumberValue('VALUE', script);
+            func: async function(sprite, script) {
+                const sq = Entry.hw.sendQueue;
+                const dev = script.getStringField('DEVICE', script);
+                const value = await script.getNumberValue('VALUE', script);
 
                 if (dev == 'analogD5') {
                     sq.analogD5 = value;
@@ -300,10 +300,10 @@ Entry.Xbot.getBlocks = function() {
             },
             class: 'xbot_motor',
             isNotFor: ['xbot_epor_edge'],
-            func: function(sprite, script) {
-                var sq = Entry.hw.sendQueue;
-                var mtype = script.getStringField('DEVICE', script);
-                var angle = script.getNumberValue('VALUE', script);
+            func: async function(sprite, script) {
+                const sq = Entry.hw.sendQueue;
+                const mtype = script.getStringField('DEVICE', script);
+                const angle = await script.getNumberValue('VALUE', script);
 
                 if (mtype == 'head') {
                     sq.head = angle;
@@ -361,11 +361,11 @@ Entry.Xbot.getBlocks = function() {
             },
             class: 'xbot_motor',
             isNotFor: ['xbot_epor_edge'],
-            func: function(sprite, script) {
+            func: async function(sprite, script) {
                 //console.log('xbot_move_forward_for_secs');
-                var sq = Entry.hw.sendQueue;
-                var dir = script.getStringField('DEVICE', script);
-                var speed = script.getNumberValue('VALUE', script);
+                const sq = Entry.hw.sendQueue;
+                const dir = script.getStringField('DEVICE', script);
+                const speed = await script.getNumberValue('VALUE', script);
 
                 if (dir == 'rightWheel') sq.rightWheel = speed;
                 else if (dir == 'leftWheel') sq.leftWheel = speed;
@@ -415,12 +415,16 @@ Entry.Xbot.getBlocks = function() {
             },
             class: 'xbot_motor',
             isNotFor: ['xbot_epor_edge'],
-            func: function(sprite, script) {
+            func: async function(sprite, script) {
                 //console.log('xbot_move_forward_for_secs');
-                var sq = Entry.hw.sendQueue;
+                const sq = Entry.hw.sendQueue;
+                const [rightWheel, leftWheel] = await Promise.all([
+                    script.getNumberValue('rightWheel'),
+                    script.getNumberValue('leftWheel')
+                ]);
 
-                sq.rightWheel = script.getNumberValue('rightWheel');
-                sq.leftWheel = script.getNumberValue('leftWheel');
+                sq.rightWheel = rightWheel;
+                sq.leftWheel = leftWheel;
 
                 return script.callReturn();
             },
@@ -475,12 +479,17 @@ Entry.Xbot.getBlocks = function() {
             },
             class: 'xbot_rgb',
             isNotFor: ['xbot_epor_edge'],
-            func: function(sprite, script) {
-                var sq = Entry.hw.sendQueue;
+            func: async function(sprite, script) {
+                const sq = Entry.hw.sendQueue;
 
-                sq.ledR = script.getNumberValue('ledR');
-                sq.ledG = script.getNumberValue('ledG');
-                sq.ledB = script.getNumberValue('ledB');
+                let [ledR, ledG, ledB] = await Promise.all([
+                    script.getNumberValue('ledR'),
+                    script.getNumberValue('ledG'),
+                    script.getNumberValue('ledB'),
+                ]);
+                sq.ledR = ledR;
+                sq.ledG = ledG;
+                sq.ledB = ledB;
 
                 //console.log('ledR' + sq.ledR + ' ledG ' + sq.ledG +' ledB ' + sq.ledB);
                 return script.callReturn();
@@ -585,13 +594,13 @@ Entry.Xbot.getBlocks = function() {
             },
             class: 'xbot_sensor',
             isNotFor: ['xbot_epor_edge'],
-            func: function(sprite, script) {
-                var sq = Entry.hw.sendQueue;
+            func: async function(sprite, script) {
+                const sq = Entry.hw.sendQueue;
 
                 if (!script.isStart) {
                     var note = script.getStringField('NOTE', script);
                     var octave = script.getStringField('OCTAVE', script);
-                    var duration = script.getNumberValue('VALUE', script);
+                    var duration = await script.getNumberValue('VALUE', script);
                     var noteOctave = note + octave; // 'C'+ 2 = "C2"
                     //console.log('xbot_buzzer noteOctave' + note + ' ' + octave + ' ' + duration);
 
@@ -705,10 +714,10 @@ Entry.Xbot.getBlocks = function() {
             },
             class: 'xbot_sensor',
             isNotFor: ['xbot_epor_edge'],
-            func: function(sprite, script) {
+            func: async function(sprite, script) {
                 var sq = Entry.hw.sendQueue;
                 var line = script.getNumberField('LINE', script);
-                var str = script.getStringValue('VALUE', script);
+                var str = await script.getStringValue('VALUE', script);
 
                 if (line == 0) {
                     sq.lcdNum = 0;
