@@ -848,9 +848,8 @@ Entry.CODEino.getBlocks = function() {
             },
             class: 'CODEino_Setmode',
             isNotFor: ['CODEino'],
-            func: function(sprite, script) {
-                var port = script.getNumberValue('PORT');
-                var value = script.getNumberField('VALUE');
+            func: async function(sprite, script) {
+                const [port, value] = await Promise.all([script.getNumberValue('PORT'), script.getNumberField('VALUE')]);
 
                 if (!Entry.hw.sendQueue['SET']) {
                     Entry.hw.sendQueue['SET'] = {};
@@ -923,9 +922,9 @@ Entry.CODEino.getBlocks = function() {
             },
             class: 'CODEino_Setmode',
             isNotFor: ['CODEino'],
-            func: function(sprite, script) {
-                var port = script.getNumberValue('PORT');
-                var value = script.getNumberValue('VALUE');
+            func: async function(sprite, script) {
+                let [port, value] = await Promise.all([script.getNumberValue('PORT'), script.getNumberField('VALUE')]);
+
                 value = Math.round(value);
                 value = Math.max(value, 0);
                 value = Math.min(value, 255);
@@ -1023,12 +1022,13 @@ Entry.CODEino.getBlocks = function() {
             },
             class: 'CODEino_extmode',
             isNotFor: ['CODEino'],
-            func: function(sprite, script) {
-                var value1 = script.getNumberValue('VALUE1', script);
-                var value2 = script.getNumberValue('VALUE2', script);
-                var value3 = script.getNumberValue('VALUE3', script);
-                var value4 = script.getNumberValue('VALUE4', script);
-                var value5 = script.getNumberValue('VALUE5', script);
+            func: async function(sprite, script) {
+                let [value1, value2, value3, value4, value5] = await Promise.all([
+                    script.getNumberValue('VALUE1', script), script.getNumberValue('VALUE2', script),
+                    script.getNumberValue('VALUE3', script), script.getNumberValue('VALUE4', script),
+                    script.getNumberValue('VALUE5', script)
+                ]);
+
                 var result = value1;
                 if (value2 > value3) {
                     var swap = value2;
@@ -1085,9 +1085,9 @@ Entry.CODEino.getBlocks = function() {
             },
             class: 'CODEino_RGBLED_mode',
             isNotFor: ['CODEino'],
-            func: function(sprite, script) {
-                var port = script.getNumberField('PORT', script);
-                var value = script.getNumberValue('VALUE', script);
+            func: async function(sprite, script) {
+                let [port, value] = await Promise.all([script.getNumberValue('PORT'), script.getNumberField('VALUE')]);
+
                 value = Math.min(255, value);
                 value = Math.max(0, value);
 
@@ -1170,9 +1170,9 @@ Entry.CODEino.getBlocks = function() {
             },
             class: 'CODEino_RGBLED_mode',
             isNotFor: ['CODEino'],
-            func: function(sprite, script) {
-                var port = script.getNumberField('PORT', script);
-                var value = script.getNumberValue('VALUE', script);
+            func: async function(sprite, script) {
+                let [port, value] = await Promise.all([script.getNumberValue('PORT'), script.getNumberField('VALUE')]);
+
                 value = Math.min(255, value);
                 value = Math.max(0, value);
 
@@ -1254,9 +1254,9 @@ Entry.CODEino.getBlocks = function() {
             },
             class: 'CODEino_RGBLED_mode',
             isNotFor: ['CODEino'],
-            func: function(sprite, script) {
-                var value = script.getStringField('VALUE');
-                var sq = Entry.hw.sendQueue;
+            func: async function(sprite, script) {
+                const value = await script.getStringField('VALUE');
+                const sq = Entry.hw.sendQueue;
 
                 Entry.CODEino.LED_RED_VALUE = parseInt(value.substr(1, 2), 16);
                 Entry.CODEino.LED_GREEN_VALUE = parseInt(
@@ -1323,9 +1323,9 @@ Entry.CODEino.getBlocks = function() {
             class: 'CODEino_RGBLED_mode',
             isNotFor: ['CODEino'],
             func: function(sprite, script) {
-                var sq = Entry.hw.sendQueue;
+                const sq = Entry.hw.sendQueue;
+                let port = 17;
 
-                var port = 17;
                 Entry.CODEino.LED_RED_VALUE = 0;
                 if (!sq['SET']) {
                     sq['SET'] = {};
@@ -1433,14 +1433,17 @@ Entry.CODEino.getBlocks = function() {
             },
             class: 'CODEino_RGBLED_mode',
             isNotFor: ['CODEino'],
-            func: function(sprite, script) {
-                var sq = Entry.hw.sendQueue;
+            func: async function(sprite, script) {
+                const sq = Entry.hw.sendQueue;
+                const [rValue, gValue, bValue] = await Promise.all([
+                    script.getNumberValue('rValue'), script.getNumberValue('gValue'),
+                    script.getNumberValue('bValue')
+                ]);
+                Entry.CODEino.LED_RED_VALUE = rValue;
+                Entry.CODEino.LED_GREEN_VALUE = gValue;
+                Entry.CODEino.LED_BLUE_VALUE = bValue;
 
-                Entry.CODEino.LED_RED_VALUE = script.getNumberValue('rValue');
-                Entry.CODEino.LED_GREEN_VALUE = script.getNumberValue('gValue');
-                Entry.CODEino.LED_BLUE_VALUE = script.getNumberValue('bValue');
-
-                var port = 17;
+                let port = 17;
                 if (!sq['SET']) {
                     sq['SET'] = {};
                 }
@@ -1498,9 +1501,9 @@ Entry.CODEino.getBlocks = function() {
             class: 'CODEino_RGBLED_mode',
             isNotFor: ['CODEino'],
             func: function(sprite, script) {
-                var sq = Entry.hw.sendQueue;
+                const sq = Entry.hw.sendQueue;
 
-                var port = 17;
+                let port = 17;
                 Entry.CODEino.LED_RED_VALUE = 100;
                 if (!sq['SET']) {
                     sq['SET'] = {};
