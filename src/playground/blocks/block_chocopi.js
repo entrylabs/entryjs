@@ -5,8 +5,8 @@ Entry.Chocopi = {
     url: 'http://chocopi.org/entry/',
     imageName: 'chocopi.png',
     title: {
-        "ko": "초코파이보드",
-        "en": "ChocoPi"
+        ko: '초코파이보드',
+        en: 'ChocoPi',
     },
     p: {},
     ev: {},
@@ -193,10 +193,7 @@ Entry.Chocopi.getBlocks = function() {
                 var id = script.getField('id');
                 var status = script.getField('status');
                 var ev = Entry.Chocopi.ev[port];
-                if (
-                    ((ev.id >> id) & 1) != 1 ||
-                    ((Entry.Chocopi.p[port].ts >> id) & 1) != status
-                ) {
+                if (((ev.id >> id) & 1) != 1 || ((Entry.Chocopi.p[port].ts >> id) & 1) != status) {
                     return this.die();
                 }
                 return script.callReturn();
@@ -540,10 +537,7 @@ Entry.Chocopi.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [
-                            Lang.Blocks.chocopi_motion_photogate_time_unblocked,
-                            0,
-                        ],
+                        [Lang.Blocks.chocopi_motion_photogate_time_unblocked, 0],
                         [Lang.Blocks.chocopi_motion_photogate_time_blocked, 1],
                     ],
                     value: 1,
@@ -725,11 +719,7 @@ Entry.Chocopi.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [
-                            Lang.Blocks
-                                .chocopi_motion_photogate_event_unblocked,
-                            0,
-                        ],
+                        [Lang.Blocks.chocopi_motion_photogate_event_unblocked, 0],
                         [Lang.Blocks.chocopi_motion_photogate_event_blocked, 1],
                     ],
                     value: 1,
@@ -805,14 +795,15 @@ Entry.Chocopi.getBlocks = function() {
             paramsKeyMap: { port: 0, l: 1, r: 2, g: 3, b: 4 },
             class: 'chocopi_output',
             isNotFor: ['chocopi'],
-            func: function(sprite, script) {
+            func: async function(sprite, script) {
                 var port = Entry.Chocopi.getport(12, script.getField('port'));
                 if (port == -1) return script.callReturn();
-                var l = script.getNumberValue('l');
-                var r = script.getNumberValue('r');
-                var g = script.getNumberValue('g');
-                var b = script.getNumberValue('b');
-                console.log([l, r, g, b]);
+                let [l, r, g, b] = await Promise.all([
+                    script.getNumberValue('l'),
+                    script.getNumberValue('r'),
+                    script.getNumberValue('g'),
+                    script.getNumberValue('b'),
+                ]);
                 Entry.hw.sendQueue.data[port] = [l, r, g, b];
                 Entry.hw.update();
                 delete Entry.hw.sendQueue.data[port];
@@ -857,10 +848,7 @@ Entry.Chocopi.getBlocks = function() {
                 { type: 'Block', accept: 'string' },
                 {
                     type: 'Dropdown',
-                    options: [
-                        [Lang.General.clock, 0],
-                        [Lang.General.counter_clock, 1],
-                    ],
+                    options: [[Lang.General.clock, 0], [Lang.General.counter_clock, 1]],
                     value: 0,
                     fontSize: 11,
                 },
@@ -877,11 +865,11 @@ Entry.Chocopi.getBlocks = function() {
             paramsKeyMap: { port: 0, id: 1, power: 2, direction: 3 },
             class: 'chocopi_output',
             isNotFor: ['chocopi'],
-            func: function(sprite, script) {
+            func: async function(sprite, script) {
                 var port = Entry.Chocopi.getport(14, script.getField('port'));
                 if (port == -1) return script.callReturn();
                 var id = script.getField('id');
-                var s = script.getNumberValue('power');
+                var s = await script.getNumberValue('power');
                 var d = script.getField('direction');
                 Entry.hw.sendQueue.data[port] = [id, s, d];
                 Entry.hw.update();
@@ -938,11 +926,11 @@ Entry.Chocopi.getBlocks = function() {
             paramsKeyMap: { port: 0, id: 1, angle: 2 },
             class: 'chocopi_output',
             isNotFor: ['chocopi'],
-            func: function(sprite, script) {
+            func: async function(sprite, script) {
                 var port = Entry.Chocopi.getport(15, script.getField('port'));
                 if (port == -1) return script.callReturn();
                 var id = script.getField('id');
-                var a = script.getNumberValue('angle');
+                var a = await script.getNumberValue('angle');
                 Entry.hw.sendQueue.data[port] = [id, a];
                 Entry.hw.update();
                 delete Entry.hw.sendQueue.data[port];

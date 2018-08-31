@@ -9,8 +9,8 @@ Entry.Microbit = new class Microbit {
         this.url = 'http://microbit.org/ko/';
         this.imageName = 'microbit.png';
         this.title = {
-            "en": "Microbit",
-            "ko": "마이크로빗"
+            en: 'Microbit',
+            ko: '마이크로빗',
         };
         this.name = 'microbit';
         this.blockIds = {};
@@ -80,7 +80,7 @@ Entry.Microbit = new class Microbit {
                 scope.timeFlag = 0;
             });
             return false;
-        }else if (this.blockIds[this.nowBlockId] && scope.timeFlag === 0) {
+        } else if (this.blockIds[this.nowBlockId] && scope.timeFlag === 0) {
             delete this.blockIds[this.nowBlockId];
             delete scope.isStart;
             this.execTimeFlag = 0;
@@ -121,11 +121,7 @@ Entry.Microbit = new class Microbit {
     afterReceive({ blockId = '', RADIO }) {
         if (blockId in this.blockIds) {
             this.blockIds[blockId] = true;
-        } else if (
-            RADIO &&
-            Entry.engine.isState('run') &&
-            RADIO.time > this.radioTime
-        ) {
+        } else if (RADIO && Entry.engine.isState('run') && RADIO.time > this.radioTime) {
             this.radioTime = RADIO.time;
             Entry.engine.fireEvent('MicrobitRadioReceive');
         }
@@ -150,11 +146,7 @@ Entry.Microbit.getBlocks = function() {
                 },
                 {
                     type: 'Dropdown',
-                    options: [
-                        ['켜기', 'on'],
-                        ['끄기', 'off'],
-                        ['반전', 'toggle'],
-                    ],
+                    options: [['켜기', 'on'], ['끄기', 'off'], ['반전', 'toggle']],
                     value: 'on',
                     fontSize: 11,
                 },
@@ -185,10 +177,12 @@ Entry.Microbit.getBlocks = function() {
                 Y: 1,
                 VALUE: 2,
             },
-            func: function(sprite, script) {
+            func: async function(sprite, script) {
                 const value = script.getField('VALUE');
-                let x = script.getNumberValue('X');
-                let y = script.getNumberValue('Y');
+                let [x, y] = await Promise.all([
+                    script.getNumberValue('X'),
+                    script.getNumberValue('Y'),
+                ]);
                 x = Math.max(0, x);
                 x = Math.min(4, x);
                 y = Math.max(0, y);
@@ -243,9 +237,11 @@ Entry.Microbit.getBlocks = function() {
                 X: 0,
                 Y: 1,
             },
-            func: function(sprite, script) {
-                let x = script.getNumberValue('X');
-                let y = script.getNumberValue('Y');
+            func: async function(sprite, script) {
+                let [x, y] = await Promise.all([
+                    script.getNumberValue('X'),
+                    script.getNumberValue('Y'),
+                ]);
                 x = Math.max(0, x);
                 x = Math.min(4, x);
                 y = Math.max(0, y);
@@ -305,8 +301,8 @@ Entry.Microbit.getBlocks = function() {
             paramsKeyMap: {
                 VALUE: 0,
             },
-            func: function(sprite, script) {
-                let value = script.getStringValue('VALUE');
+            func: async function(sprite, script) {
+                let value = await script.getStringValue('VALUE');
                 value = value.replace(
                     /[^A-Za-z0-9_\`\~\!\@\#\$\%\^\&\*\(\)\-\=\+\\\{\}\[\]\'\"\;\:\<\,\>\.\?\/\s]/gim,
                     ''
@@ -423,8 +419,7 @@ Entry.Microbit.getBlocks = function() {
             fontColor: '#ffffff',
             skeleton: 'basic_string_field',
             statements: [],
-            template:
-                '아날로그 핀 %1번 센서값의 범위를 %2~%3 에서 %4~%5 (으)로 바꾼값',
+            template: '아날로그 핀 %1번 센서값의 범위를 %2~%3 에서 %4~%5 (으)로 바꾼값',
             params: [
                 {
                     type: 'Dropdown',
@@ -481,7 +476,7 @@ Entry.Microbit.getBlocks = function() {
                 VALUE4: 3,
                 VALUE5: 4,
             },
-            func: function(sprite, script) {
+            func: async function(sprite, script) {
                 const value = script.getField('PORT');
                 const data = {
                     type: 'GET_ANALOG',
@@ -504,19 +499,27 @@ Entry.Microbit.getBlocks = function() {
                     _set(scope.cacheValue, `GET_ANALOG.${value}`, returnData);
                 }
 
-                var value2 = script.getNumberValue('VALUE2', script);
-                var value3 = script.getNumberValue('VALUE3', script);
-                var value4 = script.getNumberValue('VALUE4', script);
-                var value5 = script.getNumberValue('VALUE5', script);
-                var stringValue4 = script.getValue('VALUE4', script);
-                var stringValue5 = script.getValue('VALUE5', script);
+                let [
+                    value2,
+                    value3,
+                    value4,
+                    value5,
+                    stringValue4,
+                    stringValue5,
+                ] = await Promise.all([
+                    script.getNumberValue('VALUE2', script),
+                    script.getNumberValue('VALUE3', script),
+                    script.getNumberValue('VALUE4', script),
+                    script.getNumberValue('VALUE5', script),
+                    script.getNumberValue('VALUE4', script),
+                    script.getNumberValue('VALUE5', script),
+                ]);
+
                 var isFloat = false;
 
                 if (
-                    (Entry.Utils.isNumber(stringValue4) &&
-                        stringValue4.indexOf('.') > -1) ||
-                    (Entry.Utils.isNumber(stringValue5) &&
-                        stringValue5.indexOf('.') > -1)
+                    (Entry.Utils.isNumber(stringValue4) && stringValue4.indexOf('.') > -1) ||
+                    (Entry.Utils.isNumber(stringValue5) && stringValue5.indexOf('.') > -1)
                 ) {
                     isFloat = true;
                 }
@@ -532,8 +535,7 @@ Entry.Microbit.getBlocks = function() {
                     value5 = swap;
                 }
                 returnData -= value2;
-                returnData =
-                    returnData * ((value5 - value4) / (value3 - value2));
+                returnData = returnData * ((value5 - value4) / (value3 - value2));
                 returnData += value4;
                 returnData = Math.min(value5, returnData);
                 returnData = Math.max(value4, returnData);
@@ -703,12 +705,7 @@ Entry.Microbit.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [
-                        ['x축', 0],
-                        ['y축', 1],
-                        ['z축', 2],
-                        ['크기', 3],
-                    ],
+                    options: [['x축', 0], ['y축', 1], ['z축', 2], ['크기', 3]],
                     value: 'x',
                     fontSize: 11,
                 },
@@ -742,11 +739,7 @@ Entry.Microbit.getBlocks = function() {
                     if (!scope.cacheValue) {
                         scope.cacheValue = {};
                     }
-                    _set(
-                        scope.cacheValue,
-                        `GET_ACCELEROMETER.${value}`,
-                        returnData
-                    );
+                    _set(scope.cacheValue, `GET_ACCELEROMETER.${value}`, returnData);
                 }
                 return returnData;
             },
@@ -879,8 +872,8 @@ Entry.Microbit.getBlocks = function() {
             paramsKeyMap: {
                 VALUE: 0,
             },
-            func: function(sprite, script) {
-                const value = script.getNumberValue('VALUE');
+            func: async function(sprite, script) {
+                const value = await script.getNumberValue('VALUE');
                 const data = {
                     type: 'CHANGE_BPM',
                     data: {
@@ -925,8 +918,8 @@ Entry.Microbit.getBlocks = function() {
             paramsKeyMap: {
                 VALUE: 0,
             },
-            func: function(sprite, script) {
-                const value = script.getNumberValue('VALUE');
+            func: async function(sprite, script) {
+                const value = await script.getNumberValue('VALUE');
                 const data = {
                     type: 'SET_BPM',
                     data: {
@@ -954,7 +947,7 @@ Entry.Microbit.getBlocks = function() {
                 },
             ],
             def: { params: [], type: 'microbit_radio_receive_event' },
-            paramsKeyMap: { },
+            paramsKeyMap: {},
             class: 'MicrobitRadio',
             isNotFor: ['microbit'],
             event: 'MicrobitRadioReceive',

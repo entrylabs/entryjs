@@ -49,8 +49,8 @@ Entry.JDKit = {
     url: 'http://www.junilab.co.kr',
     imageName: 'jdkit.png',
     title: {
-        "en": "JDKit",
-        "ko": "제이디키트"
+        en: 'JDKit',
+        ko: '제이디키트',
     },
     monitorTemplate: {
         imgPath: 'hw/coconut.png',
@@ -171,12 +171,9 @@ Entry.JDKit.getBlocks = function() {
                 var sensorData = Entry.hw.portData.CMD;
                 var joystick = script.getField('JOYSTICK');
 
-                if (joystick == 1)
-                    return sensorData[Entry.JDKit.Sensor.JOYSTICK_LTB];
-                else if (joystick == 2)
-                    return 100 - sensorData[Entry.JDKit.Sensor.JOYSTICK_LLR];
-                else if (joystick == 3)
-                    return sensorData[Entry.JDKit.Sensor.JOYSTICK_RTB] - 100;
+                if (joystick == 1) return sensorData[Entry.JDKit.Sensor.JOYSTICK_LTB];
+                else if (joystick == 2) return 100 - sensorData[Entry.JDKit.Sensor.JOYSTICK_LLR];
+                else if (joystick == 3) return sensorData[Entry.JDKit.Sensor.JOYSTICK_RTB] - 100;
                 else return 100 - sensorData[Entry.JDKit.Sensor.JOYSTICK_RLR];
             },
             syntax: { js: [], py: [] },
@@ -216,9 +213,7 @@ Entry.JDKit.getBlocks = function() {
             func: function(sprite, script) {
                 var sensorData = Entry.hw.portData.CMD;
                 var button = script.getField('BUTTON');
-                return sensorData[Entry.JDKit.Sensor.BUTTON] & (0x01 << button)
-                    ? 0
-                    : 1;
+                return sensorData[Entry.JDKit.Sensor.BUTTON] & (0x01 << button) ? 0 : 1;
             },
             syntax: { js: [], py: [] },
         },
@@ -253,8 +248,7 @@ Entry.JDKit.getBlocks = function() {
                 var gyro = script.getField('GYRO');
                 var gyro_x = sensorData[Entry.JDKit.Sensor.GYRO_X];
                 var gyro_y = sensorData[Entry.JDKit.Sensor.GYRO_Y];
-                if (gyro == 1)
-                    return gyro_y > 127 ? (gyro_y ^ 0xff) + 1 : -1 * gyro_y;
+                if (gyro == 1) return gyro_y > 127 ? (gyro_y ^ 0xff) + 1 : -1 * gyro_y;
                 else return gyro_x > 127 ? (gyro_x ^ 0xff) + 1 : -1 * gyro_x;
             },
             syntax: { js: [], py: [] },
@@ -360,30 +354,12 @@ Entry.JDKit.getBlocks = function() {
 
             func: function(sprite, script) {
                 if (typeof Entry.hw.sendQueue.CMD == 'undefined')
-                    Entry.hw.sendQueue.CMD = [
-                        0xf0,
-                        0,
-                        0,
-                        0,
-                        100,
-                        100,
-                        100,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                    ];
+                    Entry.hw.sendQueue.CMD = [0xf0, 0, 0, 0, 100, 100, 100, 0, 0, 0, 0, 0, 0];
                 var cmd = Entry.hw.sendQueue.CMD;
                 var color = script.getField('COLOR', script);
                 var act = script.getField('ACTION', script);
-                if (color == 1)
-                    cmd[Entry.JDKit.Cmd.LED] =
-                        act == 3 ? cmd[1] | 0x01 : cmd[1] & 0x02;
-                else
-                    cmd[Entry.JDKit.Cmd.LED] =
-                        act == 3 ? cmd[1] | 0x02 : cmd[1] & 0x01;
+                if (color == 1) cmd[Entry.JDKit.Cmd.LED] = act == 3 ? cmd[1] | 0x01 : cmd[1] & 0x02;
+                else cmd[Entry.JDKit.Cmd.LED] = act == 3 ? cmd[1] | 0x02 : cmd[1] & 0x01;
                 return script.callReturn();
             },
             syntax: { js: [], py: [] },
@@ -443,28 +419,13 @@ Entry.JDKit.getBlocks = function() {
 
             func: function(sprite, script) {
                 if (typeof Entry.hw.sendQueue.CMD == 'undefined')
-                    Entry.hw.sendQueue.CMD = [
-                        0xf0,
-                        0,
-                        0,
-                        0,
-                        100,
-                        100,
-                        100,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                    ];
+                    Entry.hw.sendQueue.CMD = [0xf0, 0, 0, 0, 100, 100, 100, 0, 0, 0, 0, 0, 0];
                 var cmd = Entry.hw.sendQueue.CMD;
 
                 var note = script.getField('NOTE', script);
                 var duration = script.getField('DURATION', script);
                 var noteCount = Entry.hw.sendQueue.noteCount;
-                Entry.hw.sendQueue.noteCount =
-                    typeof noteCount == 'undefined' ? 1 : noteCount + 1;
+                Entry.hw.sendQueue.noteCount = typeof noteCount == 'undefined' ? 1 : noteCount + 1;
                 cmd[Entry.JDKit.Cmd.TUNE] = note;
                 cmd[Entry.JDKit.Cmd.TUNEDUR] = duration;
                 return script.callReturn();
@@ -512,29 +473,14 @@ Entry.JDKit.getBlocks = function() {
             class: 'JDKit_Command',
             isNotFor: ['JDKit'],
 
-            func: function(sprite, script) {
+            func: async function(sprite, script) {
                 if (typeof Entry.hw.sendQueue.CMD == 'undefined')
-                    Entry.hw.sendQueue.CMD = [
-                        0xf0,
-                        0,
-                        0,
-                        0,
-                        100,
-                        100,
-                        100,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                    ];
+                    Entry.hw.sendQueue.CMD = [0xf0, 0, 0, 0, 100, 100, 100, 0, 0, 0, 0, 0, 0];
                 var cmd = Entry.hw.sendQueue.CMD;
                 var motor = script.getField('MOTOR', script);
-                var power = script.getNumberValue('POWER', script);
+                var power = await script.getNumberValue('POWER', script);
 
-                cmd[Entry.JDKit.Cmd.MOTOR0 + motor] =
-                    power > 100 ? 100 : power < 0 ? 0 : power;
+                cmd[Entry.JDKit.Cmd.MOTOR0 + motor] = power > 100 ? 100 : power < 0 ? 0 : power;
                 return script.callReturn();
             },
             syntax: { js: [], py: [] },
@@ -568,28 +514,13 @@ Entry.JDKit.getBlocks = function() {
             class: 'JDKit_Command',
             isNotFor: ['JDKit'],
 
-            func: function(sprite, script) {
+            func: async function(sprite, script) {
                 if (typeof Entry.hw.sendQueue.CMD == 'undefined')
-                    Entry.hw.sendQueue.CMD = [
-                        0xf0,
-                        0,
-                        0,
-                        0,
-                        100,
-                        100,
-                        100,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                    ];
+                    Entry.hw.sendQueue.CMD = [0xf0, 0, 0, 0, 100, 100, 100, 0, 0, 0, 0, 0, 0];
                 var cmd = Entry.hw.sendQueue.CMD;
-                var throttle = script.getNumberValue('THROTTLE', script);
+                var throttle = await script.getNumberValue('THROTTLE', script);
 
-                cmd[Entry.JDKit.Cmd.THROTTLE] =
-                    throttle > 200 ? 200 : throttle < 0 ? 0 : throttle;
+                cmd[Entry.JDKit.Cmd.THROTTLE] = throttle > 200 ? 200 : throttle < 0 ? 0 : throttle;
                 cmd[Entry.JDKit.Cmd.OPTION] = 0x01;
                 return script.callReturn();
             },
@@ -623,28 +554,13 @@ Entry.JDKit.getBlocks = function() {
             class: 'JDKit_Command',
             isNotFor: ['JDKit'],
 
-            func: function(sprite, script) {
+            func: async function(sprite, script) {
                 if (typeof Entry.hw.sendQueue.CMD == 'undefined')
-                    Entry.hw.sendQueue.CMD = [
-                        0xf0,
-                        0,
-                        0,
-                        0,
-                        100,
-                        100,
-                        100,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                    ];
+                    Entry.hw.sendQueue.CMD = [0xf0, 0, 0, 0, 100, 100, 100, 0, 0, 0, 0, 0, 0];
                 var cmd = Entry.hw.sendQueue.CMD;
-                var alt = script.getNumberValue('ALTITUDE', script);
+                var alt = await script.getNumberValue('ALTITUDE', script);
 
-                cmd[Entry.JDKit.Cmd.THROTTLE] =
-                    alt > 200 ? 200 : alt < 0 ? 0 : alt;
+                cmd[Entry.JDKit.Cmd.THROTTLE] = alt > 200 ? 200 : alt < 0 ? 0 : alt;
                 cmd[Entry.JDKit.Cmd.OPTION] = 0x05;
                 return script.callReturn();
             },
@@ -688,32 +604,15 @@ Entry.JDKit.getBlocks = function() {
             class: 'JDKit_Command',
             isNotFor: ['JDKit'],
 
-            func: function(sprite, script) {
+            func: async function(sprite, script) {
                 if (typeof Entry.hw.sendQueue.CMD == 'undefined')
-                    Entry.hw.sendQueue.CMD = [
-                        0xf0,
-                        0,
-                        0,
-                        0,
-                        100,
-                        100,
-                        100,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                    ];
+                    Entry.hw.sendQueue.CMD = [0xf0, 0, 0, 0, 100, 100, 100, 0, 0, 0, 0, 0, 0];
                 var cmd = Entry.hw.sendQueue.CMD;
                 var dir = script.getField('DIR', script);
-                var power = script.getNumberValue('POWER', script);
+                var power = await script.getNumberValue('POWER', script);
                 if (dir == 1)
-                    cmd[Entry.JDKit.Cmd.PITCH] =
-                        power > 100 ? 200 : power < -100 ? 0 : power + 100;
-                else
-                    cmd[Entry.JDKit.Cmd.ROLL] =
-                        power > 100 ? 200 : power < -100 ? 0 : power + 100;
+                    cmd[Entry.JDKit.Cmd.PITCH] = power > 100 ? 200 : power < -100 ? 0 : power + 100;
+                else cmd[Entry.JDKit.Cmd.ROLL] = power > 100 ? 200 : power < -100 ? 0 : power + 100;
                 return script.callReturn();
             },
             syntax: { js: [], py: [] },
@@ -746,28 +645,13 @@ Entry.JDKit.getBlocks = function() {
             class: 'JDKit_Command',
             isNotFor: ['JDKit'],
 
-            func: function(sprite, script) {
+            func: async function(sprite, script) {
                 if (typeof Entry.hw.sendQueue.CMD == 'undefined')
-                    Entry.hw.sendQueue.CMD = [
-                        0xf0,
-                        0,
-                        0,
-                        0,
-                        100,
-                        100,
-                        100,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                    ];
+                    Entry.hw.sendQueue.CMD = [0xf0, 0, 0, 0, 100, 100, 100, 0, 0, 0, 0, 0, 0];
                 var cmd = Entry.hw.sendQueue.CMD;
-                var yaw = script.getNumberValue('YAW', script);
+                var yaw = await script.getNumberValue('YAW', script);
 
-                cmd[Entry.JDKit.Cmd.YAW] =
-                    yaw > 25 ? 101 : yaw < -25 ? 99 : 100;
+                cmd[Entry.JDKit.Cmd.YAW] = yaw > 25 ? 101 : yaw < -25 ? 99 : 100;
                 return script.callReturn();
             },
             syntax: { js: [], py: [] },
@@ -794,21 +678,7 @@ Entry.JDKit.getBlocks = function() {
 
             func: function(sprite, script) {
                 if (typeof Entry.hw.sendQueue.CMD == 'undefined')
-                    Entry.hw.sendQueue.CMD = [
-                        0xf0,
-                        0,
-                        0,
-                        0,
-                        100,
-                        100,
-                        100,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                        0,
-                    ];
+                    Entry.hw.sendQueue.CMD = [0xf0, 0, 0, 0, 100, 100, 100, 0, 0, 0, 0, 0, 0];
                 var cmd = Entry.hw.sendQueue.CMD;
 
                 cmd[Entry.JDKit.Cmd.OPTION] = 0x81;

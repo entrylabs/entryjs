@@ -5,8 +5,8 @@ Entry.Roborobo_Roduino = {
     url: 'http://www.roborobo.co.kr',
     imageName: 'roborobo_roduino.png',
     title: {
-        "ko": "로두이노",
-        "en": "Roduino"
+        ko: '로두이노',
+        en: 'Roduino',
     },
     INSTRUCTION: {
         DIGITAL_READ: 1,
@@ -33,8 +33,8 @@ Entry.Roborobo_SchoolKit = {
     url: 'http://www.roborobo.co.kr',
     imageName: 'roborobo_schoolkit.png',
     title: {
-        "ko": "스쿨키트",
-        "en": "School Kit"
+        ko: '스쿨키트',
+        en: 'School Kit',
     },
     pinMode: {
         INPUT: 0,
@@ -229,8 +229,7 @@ Entry.Roborobo_Roduino.getBlocks = function() {
             isNotFor: ['roborobo_roduino'],
             func: function(sprite, script) {
                 var signal = script.getNumberValue('VALUE', script);
-                Entry.hw.sendQueue[0] =
-                    Entry.Roborobo_Roduino.INSTRUCTION.DIGITAL_READ;
+                Entry.hw.sendQueue[0] = Entry.Roborobo_Roduino.INSTRUCTION.DIGITAL_READ;
                 Entry.hw.sendQueue[1] = signal;
                 Entry.hw.update();
                 return Entry.hw.getDigitalPortValue(signal - 2);
@@ -310,10 +309,7 @@ Entry.Roborobo_Roduino.getBlocks = function() {
                 },
                 {
                     type: 'Dropdown',
-                    options: [
-                        [Lang.Blocks.roborobo_on, 'on'],
-                        [Lang.Blocks.roborobo_off, 'off'],
-                    ],
+                    options: [[Lang.Blocks.roborobo_on, 'on'], [Lang.Blocks.roborobo_off, 'off']],
                     value: 'on',
                     fontSize: 11,
                     arrowColor: EntryStatic.ARROW_COLOR_HW,
@@ -396,9 +392,9 @@ Entry.Roborobo_Roduino.getBlocks = function() {
             class: 'roduino_set',
             isNotFor: ['roborobo_roduino'],
             func: function(sprite, script) {
-                var pin1 = 0
+                var pin1 = 0;
                 var pin2 = 0;
-                var value1 = 0
+                var value1 = 0;
                 var value2 = 0;
                 var mode = script.getField('MODE');
                 var operator = script.getField('OPERATOR');
@@ -475,14 +471,15 @@ Entry.Roborobo_Roduino.getBlocks = function() {
             },
             class: 'roduino_set',
             isNotFor: ['roborobo_roduino'],
-            func: function(sprite, script) {
-                var redPin = script.getNumberValue('RED', script);
-                var greenPin = script.getNumberValue('GREEN', script);
-                var bluePin = script.getNumberValue('BLUE', script);
+            func: async function(sprite, script) {
+                let [redPin, greenPin, bluePin] = await Promise.all([
+                    script.getNumberValue('RED', script),
+                    script.getNumberValue('GREEN', script),
+                    script.getNumberValue('BLUE', script),
+                ]);
 
                 Entry.Roborobo_Roduino.ColorPin = [redPin, greenPin, bluePin];
-                Entry.hw.sendQueue[0] =
-                    Entry.Roborobo_Roduino.INSTRUCTION.COLOR;
+                Entry.hw.sendQueue[0] = Entry.Roborobo_Roduino.INSTRUCTION.COLOR;
                 Entry.hw.sendQueue.colorPin = redPin;
                 Entry.hw.update();
                 return script.callReturn();
@@ -548,13 +545,7 @@ Entry.Roborobo_SchoolKit.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [
-                        ['OUT1', 2],
-                        ['OUT2', 3],
-                        ['OUT3', 4],
-                        ['OUT4', 5],
-                        ['OUT5', 6],
-                    ],
+                    options: [['OUT1', 2], ['OUT2', 3], ['OUT3', 4], ['OUT4', 5], ['OUT5', 6]],
                     value: 2,
                     fontSize: 11,
                     arrowColor: EntryStatic.ARROW_COLOR_HW,
@@ -638,10 +629,7 @@ Entry.Roborobo_SchoolKit.getBlocks = function() {
                 },
                 {
                     type: 'Dropdown',
-                    options: [
-                        [Lang.Blocks.roborobo_on, 'on'],
-                        [Lang.Blocks.roborobo_off, 'off'],
-                    ],
+                    options: [[Lang.Blocks.roborobo_on, 'on'], [Lang.Blocks.roborobo_off, 'off']],
                     value: 'on',
                     fontSize: 11,
                     arrowColor: EntryStatic.ARROW_COLOR_HW,
@@ -678,8 +666,7 @@ Entry.Roborobo_SchoolKit.getBlocks = function() {
                     Entry.hw.sendQueue.digitalPinMode = {};
                 }
 
-                Entry.hw.sendQueue.digitalPinMode[pin] =
-                    Entry.Roborobo_SchoolKit.pinMode.OUTPUT;
+                Entry.hw.sendQueue.digitalPinMode[pin] = Entry.Roborobo_SchoolKit.pinMode.OUTPUT;
                 Entry.hw.sendQueue[pin] = value;
                 return script.callReturn();
             },
@@ -770,11 +757,11 @@ Entry.Roborobo_SchoolKit.getBlocks = function() {
             },
             class: 'schoolkit_set',
             isNotFor: ['roborobo_schoolkit'],
-            func: function(sprite, script) {
+            func: async function(sprite, script) {
                 var mode = script.getField('MODE');
                 var pin = 0;
                 var operator = script.getField('OPERATOR');
-                var value = script.getNumberValue('VALUE');
+                var value = await script.getNumberValue('VALUE');
 
                 if (mode == 'motor1') {
                     pin = 0;
@@ -792,10 +779,8 @@ Entry.Roborobo_SchoolKit.getBlocks = function() {
                     Entry.hw.sendQueue.digitalPinMode = {};
                 }
 
-                Entry.hw.sendQueue.digitalPinMode[pin] =
-                    Entry.Roborobo_SchoolKit.pinMode.PWM;
-                Entry.hw.sendQueue.digitalPinMode[pin + 7] =
-                    Entry.Roborobo_SchoolKit.pinMode.PWM;
+                Entry.hw.sendQueue.digitalPinMode[pin] = Entry.Roborobo_SchoolKit.pinMode.PWM;
+                Entry.hw.sendQueue.digitalPinMode[pin + 7] = Entry.Roborobo_SchoolKit.pinMode.PWM;
                 if (operator == 'cw') {
                     Entry.hw.sendQueue[pin] = value;
                 } else if (operator == 'ccw') {
@@ -845,9 +830,9 @@ Entry.Roborobo_SchoolKit.getBlocks = function() {
             },
             class: 'schoolkit_set',
             isNotFor: ['roborobo_schoolkit'],
-            func: function(sprite, script) {
+            func: async function(sprite, script) {
                 var pin = script.getNumberValue('PIN', script);
-                var value = script.getNumberValue('VALUE');
+                var value = await script.getNumberValue('VALUE');
 
                 if (!Entry.hw.sendQueue.digitalPinMode) {
                     Entry.hw.sendQueue.digitalPinMode = {};
@@ -857,8 +842,7 @@ Entry.Roborobo_SchoolKit.getBlocks = function() {
                     Entry.hw.sendQueue.servo = {};
                 }
 
-                Entry.hw.sendQueue.digitalPinMode[pin] =
-                    Entry.Roborobo_SchoolKit.pinMode.SERVO;
+                Entry.hw.sendQueue.digitalPinMode[pin] = Entry.Roborobo_SchoolKit.pinMode.SERVO;
 
                 if (value < 0) {
                     value = 0;

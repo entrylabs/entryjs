@@ -4,8 +4,8 @@ Entry.MODI = {
     url: 'http://www.luxrobo.com/',
     imageName: 'modi.png',
     title: {
-        "ko": "모디",
-        "en": "MODI"
+        ko: '모디',
+        en: 'MODI',
     },
     setZero: function() {
         Entry.hw.sendQueue.moduleValue = {
@@ -63,8 +63,7 @@ Entry.MODI = {
 
         list = [];
         for (var i = 0; i < moduleData['environment'].length; i++) {
-            if (moduleData['environment'][i])
-                list.push([i.toString(), i.toString()]);
+            if (moduleData['environment'][i]) list.push([i.toString(), i.toString()]);
         }
         return list;
     },
@@ -106,8 +105,7 @@ Entry.MODI = {
 
         list = [];
         for (var i = 0; i < moduleData['button'].length; i++) {
-            if (moduleData['button'][i])
-                list.push([i.toString(), i.toString()]);
+            if (moduleData['button'][i]) list.push([i.toString(), i.toString()]);
         }
         return list;
     },
@@ -135,8 +133,7 @@ Entry.MODI = {
 
         list = [];
         for (var i = 0; i < moduleData['ultrasonic'].length; i++) {
-            if (moduleData['ultrasonic'][i])
-                list.push([i.toString(), i.toString()]);
+            if (moduleData['ultrasonic'][i]) list.push([i.toString(), i.toString()]);
         }
         return list;
     },
@@ -177,8 +174,7 @@ Entry.MODI = {
 
         list = [];
         for (var i = 0; i < moduleData['speaker'].length; i++) {
-            if (moduleData['speaker'][i])
-                list.push([i.toString(), i.toString()]);
+            if (moduleData['speaker'][i]) list.push([i.toString(), i.toString()]);
         }
         return list;
     },
@@ -192,8 +188,7 @@ Entry.MODI = {
 
         list = [];
         for (var i = 0; i < moduleData['display'].length; i++) {
-            if (moduleData['display'][i])
-                list.push([i.toString(), i.toString()]);
+            if (moduleData['display'][i]) list.push([i.toString(), i.toString()]);
         }
         return list;
     },
@@ -286,9 +281,7 @@ Entry.MODI.getBlocks = function() {
                 var key = script.getStringField('name');
                 var property = script.getNumberField('property');
 
-                var pd = JSON.parse(
-                    Entry.hw.portData.module['environment'][key]
-                );
+                var pd = JSON.parse(Entry.hw.portData.module['environment'][key]);
                 var moduleID = pd.id;
 
                 if (!Entry.hw.sendQueue['getProperty']) {
@@ -351,8 +344,7 @@ Entry.MODI.getBlocks = function() {
             }*/
                 }
 
-                var moduleID = JSON.parse(Entry.hw.portData.module['dial'][key])
-                    .id;
+                var moduleID = JSON.parse(Entry.hw.portData.module['dial'][key]).id;
 
                 return pd.value[2];
             },
@@ -430,12 +422,7 @@ Entry.MODI.getBlocks = function() {
                 },
                 {
                     type: 'Dropdown',
-                    options: [
-                        ['Click', 2],
-                        ['Double Click', 3],
-                        ['Toggle', 5],
-                        ['Press', 4],
-                    ],
+                    options: [['Click', 2], ['Double Click', 3], ['Toggle', 5], ['Press', 4]],
                     fontSize: 11,
                 },
             ],
@@ -450,18 +437,13 @@ Entry.MODI.getBlocks = function() {
             class: 'button',
             isNotFor: ['modi'],
             func: function(sprite, script) {
-                if (
-                    !Entry.hw.sendQueue.moduleValue ||
-                    !Entry.hw.sendQueue['getProperty']
-                ) {
+                if (!Entry.hw.sendQueue.moduleValue || !Entry.hw.sendQueue['getProperty']) {
                     Entry.MODI.initSend();
                 }
 
                 var key = script.getStringField('name');
                 var property = script.getNumberField('property');
-                var moduleID = JSON.parse(
-                    Entry.hw.portData.module['button'][key]
-                ).id;
+                var moduleID = JSON.parse(Entry.hw.portData.module['button'][key]).id;
                 var pd = JSON.parse(Entry.hw.portData.module['button'][key]);
 
                 if (!Entry.hw.sendQueue['getProperty']) {
@@ -583,9 +565,7 @@ Entry.MODI.getBlocks = function() {
             func: function(sprite, script) {
                 var key = script.getStringField('name');
 
-                var pd = JSON.parse(
-                    Entry.hw.portData.module['ultrasonic'][key]
-                );
+                var pd = JSON.parse(Entry.hw.portData.module['ultrasonic'][key]);
                 var moduleID = pd.id;
 
                 if (!Entry.hw.sendQueue['getProperty']) {
@@ -663,17 +643,17 @@ Entry.MODI.getBlocks = function() {
             },
             class: 'motor',
             isNotFor: ['modi'],
-            func: function(sprite, script) {
+            func: async function(sprite, script) {
                 if (!Entry.hw.sendQueue.moduleValue) {
                     Entry.MODI.initSend();
                 }
                 var key = script.getStringField('name'),
-                    property = script.getStringField('property'),
-                    upper = script.getNumberValue('upper'),
-                    bottom = script.getNumberValue('bottom');
-                var moduleID = JSON.parse(
-                    Entry.hw.portData.module['motor'][key]
-                ).id;
+                    property = script.getStringField('property');
+                let [upper, bottom] = await Promise.all([
+                    script.getNumberValue('upper'),
+                    script.getNumberValue('bottom'),
+                ]);
+                var moduleID = JSON.parse(Entry.hw.portData.module['motor'][key]).id;
 
                 var sq = Entry.hw.sendQueue.moduleValue;
                 sq['motor'][key] = JSON.stringify({
@@ -734,14 +714,14 @@ Entry.MODI.getBlocks = function() {
             },
             class: 'motor',
             isNotFor: ['modi'],
-            func: function(sprite, script) {
+            func: async function(sprite, script) {
                 if (!Entry.hw.sendQueue.moduleValue) {
                     Entry.MODI.initSend();
                 }
 
                 var key = script.getStringField('name'),
-                    value = script.getNumberValue('value'),
                     property = script.getStringField('property');
+                let value = await script.getNumberValue('value');
 
                 var pd = JSON.parse(Entry.hw.portData.module['motor'][key]);
                 var moduleID = pd.id;
@@ -750,12 +730,9 @@ Entry.MODI.getBlocks = function() {
                 var upper = value,
                     bottom = 0;
 
-                if (upper > 100)
-                    upper = 100;
-                else if (upper < 0 && property == 'MOTOR_ANGLE')
-                    upper = 0;
-                else if (upper < -100 && property != 'MOTOR_ANGLE')
-                    upper = -100;
+                if (upper > 100) upper = 100;
+                else if (upper < 0 && property == 'MOTOR_ANGLE') upper = 0;
+                else if (upper < -100 && property != 'MOTOR_ANGLE') upper = -100;
 
                 sq['motor'][key] = JSON.stringify({
                     module: property,
@@ -816,14 +793,14 @@ Entry.MODI.getBlocks = function() {
                 property: 1,
                 value: 2,
             },
-            func: function(sprite, script) {
+            func: async function(sprite, script) {
                 if (!Entry.hw.sendQueue.moduleValue) {
                     Entry.MODI.initSend();
                 }
 
                 var key = script.getStringField('name'),
-                    value = script.getNumberValue('value'),
                     property = script.getStringField('property');
+                let value = await script.getNumberValue('value');
 
                 var pd = JSON.parse(Entry.hw.portData.module['motor'][key]);
                 var moduleID = pd.id;
@@ -832,12 +809,9 @@ Entry.MODI.getBlocks = function() {
                 var upper = 0,
                     bottom = value;
 
-                if (bottom > 100)
-                    bottom = 100;
-                else if (bottom < 0 && property == 'MOTOR_ANGLE')
-                    bottom = 0;
-                else if (bottom < -100 && property != 'MOTOR_ANGLE')
-                    bottom = -100;
+                if (bottom > 100) bottom = 100;
+                else if (bottom < 0 && property == 'MOTOR_ANGLE') bottom = 0;
+                else if (bottom < -100 && property != 'MOTOR_ANGLE') bottom = -100;
 
                 sq['motor'][key] = JSON.stringify({
                     module: property,
@@ -881,8 +855,7 @@ Entry.MODI.getBlocks = function() {
                 }
 
                 var key = script.getStringField('name');
-                var moduleID = JSON.parse(Entry.hw.portData.module['led'][key])
-                    .id;
+                var moduleID = JSON.parse(Entry.hw.portData.module['led'][key]).id;
 
                 var sq = Entry.hw.sendQueue.moduleValue;
                 sq['led'][key] = JSON.stringify({
@@ -951,15 +924,17 @@ Entry.MODI.getBlocks = function() {
             },
             class: 'led',
             isNotFor: ['modi'],
-            func: function(sprite, script) {
+            func: async function(sprite, script) {
                 if (!Entry.hw.sendQueue.moduleValue) {
                     Entry.MODI.initSend();
                 }
                 var key = script.getStringField('name');
-                var red = script.getNumberValue('rValue');
-                var green = script.getNumberValue('gValue');
-                var blue = script.getNumberValue('bValue');
-                
+                let [red, green, blue] = await Promise.all([
+                    script.getNumberValue('rValue'),
+                    script.getNumberValue('gValue'),
+                    script.getNumberValue('bValue'),
+                ]);
+
                 var moduleID = JSON.parse(Entry.hw.portData.module['led'][key]).id;
 
                 var sq = Entry.hw.sendQueue.moduleValue;
@@ -1067,7 +1042,7 @@ Entry.MODI.getBlocks = function() {
                         [Lang.Blocks.modi_speaker_F_RE_7, 'F_RE_7'],
                         [Lang.Blocks.modi_speaker_F_MI_7, 'F_MI_7'],
                         [Lang.Blocks.modi_speaker_F_DO_S_7, 'F_DO_S_7'],
-                        [Lang.Blocks.modi_speaker_F_RE_S_7, 'F_RE_S_7']
+                        [Lang.Blocks.modi_speaker_F_RE_S_7, 'F_RE_S_7'],
                     ],
                     fontSize: 11,
                 },
@@ -1100,16 +1075,14 @@ Entry.MODI.getBlocks = function() {
             },
             class: 'speaker',
             isNotFor: ['modi'],
-            func: function(sprite, script) {
+            func: async function(sprite, script) {
                 if (!Entry.hw.sendQueue.moduleValue) {
                     Entry.MODI.initSend();
                 }
                 var key = script.getStringField('name'),
-                    frequence = script.getStringField('frequence'),
-                    volume = script.getNumberValue('volume', script);
-                var moduleID = JSON.parse(
-                    Entry.hw.portData.module['speaker'][key]
-                ).id;
+                    frequence = script.getStringField('frequence');
+                let volume = await script.getNumberValue('volume', script);
+                var moduleID = JSON.parse(Entry.hw.portData.module['speaker'][key]).id;
 
                 var sq = Entry.hw.sendQueue.moduleValue;
                 sq['speaker'][key] = JSON.stringify({
@@ -1168,16 +1141,17 @@ Entry.MODI.getBlocks = function() {
             },
             class: 'speaker',
             isNotFor: ['modi'],
-            func: function(sprite, script) {
+            func: async function(sprite, script) {
                 if (!Entry.hw.sendQueue.moduleValue) {
                     Entry.MODI.initSend();
                 }
-                var key = script.getStringField('name'),
-                    frequence = script.getNumberValue('frequence'),
-                    volume = script.getNumberValue('volume', script);
-                var moduleID = JSON.parse(
-                    Entry.hw.portData.module['speaker'][key]
-                ).id;
+                var key = script.getStringField('name');
+                let [frequence, volume] = await Promise.all([
+                    script.getNumberValue('frequence'),
+                    script.getNumberValue('volume', script),
+                ]);
+
+                var moduleID = JSON.parse(Entry.hw.portData.module['speaker'][key]).id;
 
                 var sq = Entry.hw.sendQueue.moduleValue;
                 sq['speaker'][key] = JSON.stringify({
@@ -1228,21 +1202,19 @@ Entry.MODI.getBlocks = function() {
             },
             class: 'display',
             isNotFor: ['modi'],
-            func: function(sprite, script) {
+            func: async function(sprite, script) {
                 if (!Entry.hw.sendQueue.moduleValue) {
                     Entry.MODI.initSend();
                 }
 
-                var key = script.getStringField('name'),
-                    text = script.getStringValue('text');
+                var key = script.getStringField('name');
+                let text = await script.getStringValue('text');
 
                 if (text.length > 27) {
                     return script.callReturn();
                 }
 
-                var moduleID = JSON.parse(
-                    Entry.hw.portData.module['display'][key]
-                ).id;
+                var moduleID = JSON.parse(Entry.hw.portData.module['display'][key]).id;
 
                 var sq = Entry.hw.sendQueue.moduleValue;
                 sq['display'][key] = JSON.stringify({

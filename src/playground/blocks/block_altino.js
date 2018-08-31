@@ -48,8 +48,8 @@ Entry.Altino = {
     url: 'http://saeon.co.kr/',
     imageName: 'altino.png',
     title: {
-        "en": "Altino",
-        "ko": "알티노",
+        en: 'Altino',
+        ko: '알티노',
     },
 };
 
@@ -214,11 +214,16 @@ Entry.Altino.getBlocks = function() {
             },
             class: 'altino_motor',
             isNotFor: ['altino'],
-            func: function(sprite, script) {
+            func: async function(sprite, script) {
                 var sq = Entry.hw.sendQueue;
 
-                sq.rightWheel = script.getNumberValue('rightWheel');
-                sq.leftWheel = script.getNumberValue('leftWheel');
+                let [rightWheel, leftWheel] = await Promise.all([
+                    script.getNumberValue('rightWheel'),
+                    script.getNumberValue('leftWheel'),
+                ]);
+
+                sq.rightWheel = rightWheel;
+                sq.leftWheel = leftWheel;
 
                 return script.callReturn();
             },
@@ -381,10 +386,7 @@ Entry.Altino.getBlocks = function() {
                 },
                 {
                     type: 'Dropdown',
-                    options: [
-                        [Lang.Blocks.ALTINO_h2, '255'],
-                        [Lang.Blocks.ALTINO_h, '0'],
-                    ],
+                    options: [[Lang.Blocks.ALTINO_h2, '255'], [Lang.Blocks.ALTINO_h, '0']],
                     value: '255',
                     fontSize: 11,
                 },
@@ -476,9 +478,9 @@ Entry.Altino.getBlocks = function() {
             },
             class: 'altino_display',
             isNotFor: ['altino'],
-            func: function(sprite, script) {
+            func: async function(sprite, script) {
                 var sq = Entry.hw.sendQueue;
-                var str = script.getStringValue('VALUE');
+                var str = await script.getStringValue('VALUE');
                 sq.ascii = str.charCodeAt(0);
 
                 return script.callReturn();
@@ -592,17 +594,27 @@ Entry.Altino.getBlocks = function() {
             },
             class: 'altino_display',
             isNotFor: ['altino'],
-            func: function(sprite, script) {
+            func: async function(sprite, script) {
                 var sq = Entry.hw.sendQueue;
                 sq.ascii = 0;
-                sq.dot1 = script.getNumberValue('VALUE1');
-                sq.dot2 = script.getNumberValue('VALUE2');
-                sq.dot3 = script.getNumberValue('VALUE3');
-                sq.dot4 = script.getNumberValue('VALUE4');
-                sq.dot5 = script.getNumberValue('VALUE5');
-                sq.dot6 = script.getNumberValue('VALUE6');
-                sq.dot7 = script.getNumberValue('VALUE7');
-                sq.dot8 = script.getNumberValue('VALUE8');
+                let [dot1, dot2, dot3, dot4, dot5, dot6, dot7, dot8] = await Promise.all([
+                    script.getNumberValue('VALUE1'),
+                    script.getNumberValue('VALUE2'),
+                    script.getNumberValue('VALUE3'),
+                    script.getNumberValue('VALUE4'),
+                    script.getNumberValue('VALUE5'),
+                    script.getNumberValue('VALUE6'),
+                    script.getNumberValue('VALUE7'),
+                    script.getNumberValue('VALUE8'),
+                ]);
+                sq.dot1 = dot1;
+                sq.dot2 = dot2;
+                sq.dot3 = dot3;
+                sq.dot4 = dot4;
+                sq.dot5 = dot5;
+                sq.dot6 = dot6;
+                sq.dot7 = dot7;
+                sq.dot8 = dot8;
 
                 return script.callReturn();
             },

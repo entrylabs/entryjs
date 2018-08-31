@@ -53,8 +53,8 @@ Entry.hummingbird = {
     url: 'http://www.creartbot.com/hummingbird',
     imageName: 'hummingbirdduo.png',
     title: {
-        "en": "Hummingbird Duo",
-        "ko": "허밍버드 듀오"
+        en: 'Hummingbird Duo',
+        ko: '허밍버드 듀오',
     },
 };
 
@@ -72,12 +72,7 @@ Entry.hummingbird.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [
-                        ['1', 'adc1'],
-                        ['2', 'adc2'],
-                        ['3', 'adc3'],
-                        ['4', 'adc4'],
-                    ],
+                    options: [['1', 'adc1'], ['2', 'adc2'], ['3', 'adc3'], ['4', 'adc4']],
                     value: 'adc1',
                     fontSize: 11,
                 },
@@ -110,12 +105,7 @@ Entry.hummingbird.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [
-                        ['1', 'adc1'],
-                        ['2', 'adc2'],
-                        ['3', 'adc3'],
-                        ['4', 'adc4'],
-                    ],
+                    options: [['1', 'adc1'], ['2', 'adc2'], ['3', 'adc3'], ['4', 'adc4']],
                     value: 'adc1',
                     fontSize: 11,
                 },
@@ -148,12 +138,7 @@ Entry.hummingbird.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [
-                        ['1', 'adc1'],
-                        ['2', 'adc2'],
-                        ['3', 'adc3'],
-                        ['4', 'adc4'],
-                    ],
+                    options: [['1', 'adc1'], ['2', 'adc2'], ['3', 'adc3'], ['4', 'adc4']],
                     value: 'adc1',
                     fontSize: 11,
                 },
@@ -187,12 +172,7 @@ Entry.hummingbird.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [
-                        ['1', 'adc1'],
-                        ['2', 'adc2'],
-                        ['3', 'adc3'],
-                        ['4', 'adc4'],
-                    ],
+                    options: [['1', 'adc1'], ['2', 'adc2'], ['3', 'adc3'], ['4', 'adc4']],
                     value: 'adc1',
                     fontSize: 11,
                 },
@@ -252,12 +232,7 @@ Entry.hummingbird.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [
-                        ['1', 'adc1'],
-                        ['2', 'adc2'],
-                        ['3', 'adc3'],
-                        ['4', 'adc4'],
-                    ],
+                    options: [['1', 'adc1'], ['2', 'adc2'], ['3', 'adc3'], ['4', 'adc4']],
                     value: 'adc1',
                     fontSize: 11,
                 },
@@ -294,12 +269,7 @@ Entry.hummingbird.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [
-                        ['1', 'adc1'],
-                        ['2', 'adc2'],
-                        ['3', 'adc3'],
-                        ['4', 'adc4'],
-                    ],
+                    options: [['1', 'adc1'], ['2', 'adc2'], ['3', 'adc3'], ['4', 'adc4']],
                     value: 'adc1',
                     fontSize: 11,
                 },
@@ -365,10 +335,10 @@ Entry.hummingbird.getBlocks = function() {
             },
             class: 'hummingbird_motor',
             isNotFor: ['hummingbird'],
-            func: function(sprite, script) {
+            func: async function(sprite, script) {
                 var sq = Entry.hw.sendQueue;
                 var dev = script.getStringField('DEVICE', script);
-                var value = script.getNumberValue('VALUE', script);
+                var value = await script.getNumberValue('VALUE', script);
 
                 if (value > 100) value = 127;
                 else if (value < 0) value = 0;
@@ -390,12 +360,7 @@ Entry.hummingbird.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [
-                        ['1', 'servo1'],
-                        ['2', 'servo2'],
-                        ['3', 'servo3'],
-                        ['4', 'servo4'],
-                    ],
+                    options: [['1', 'servo1'], ['2', 'servo2'], ['3', 'servo3'], ['4', 'servo4']],
                     value: 'servo1',
                     fontSize: 11,
                 },
@@ -427,10 +392,10 @@ Entry.hummingbird.getBlocks = function() {
             },
             class: 'hummingbird_motor',
             isNotFor: ['hummingbird'],
-            func: function(sprite, script) {
+            func: async function(sprite, script) {
                 var sq = Entry.hw.sendQueue;
                 var mtype = script.getStringField('DEVICE', script);
-                var angle = script.getNumberValue('VALUE', script);
+                var angle = await script.getNumberValue('VALUE', script);
 
                 if (angle < 0) angle = 0;
                 else if (angle > 180) angle = 180;
@@ -485,10 +450,10 @@ Entry.hummingbird.getBlocks = function() {
             },
             class: 'hummingbird_motor',
             isNotFor: ['hummingbird'],
-            func: function(sprite, script) {
+            func: async function(sprite, script) {
                 var sq = Entry.hw.sendQueue;
                 var dir = script.getStringField('DEVICE', script);
-                var speed = script.getNumberValue('VALUE', script);
+                var speed = await script.getNumberValue('VALUE', script);
 
                 if (speed == 0) speed = 256;
                 else if (speed > 100) speed = 127;
@@ -511,12 +476,7 @@ Entry.hummingbird.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [
-                        ['1', 'led1'],
-                        ['2', 'led2'],
-                        ['3', 'led3'],
-                        ['4', 'led4'],
-                    ],
+                    options: [['1', 'led1'], ['2', 'led2'], ['3', 'led3'], ['4', 'led4']],
                     value: 'led1',
                     fontSize: 11,
                 },
@@ -548,10 +508,10 @@ Entry.hummingbird.getBlocks = function() {
             },
             class: 'hummingbird_led',
             isNotFor: ['hummingbird'],
-            func: function(sprite, script) {
+            func: async function(sprite, script) {
                 var sq = Entry.hw.sendQueue;
                 var ledtype = script.getStringField('DEVICE', script);
-                var value = script.getNumberValue('VALUE', script);
+                var value = await script.getNumberValue('VALUE', script);
                 if (value > 100) value = 100;
                 if (value < 0) value = 0;
                 value = Math.floor(value * 2.55);
@@ -628,12 +588,14 @@ Entry.hummingbird.getBlocks = function() {
             },
             class: 'hummingbird_led',
             isNotFor: ['hummingbird'],
-            func: function(sprite, script) {
+            func: async function(sprite, script) {
                 var sq = Entry.hw.sendQueue;
-                var ledtype = script.getStringField('DEVICE', script);
-                var colorRed = script.getNumberValue('cRED', script);
-                var colorGreen = script.getNumberValue('cGREEN', script);
-                var colorBlue = script.getNumberValue('cBLUE', script);
+                const ledtype = script.getStringField('DEVICE', script);
+                let [colorRed, colorGreen, colorBlue] = await Promise.all([
+                    script.getNumberValue('cRED', script),
+                    script.getNumberValue('cGREEN', script),
+                    script.getNumberValue('cBLUE', script),
+                ]);
 
                 if (colorRed > 100) colorRed = 100;
                 if (colorGreen > 100) colorGreen = 100;

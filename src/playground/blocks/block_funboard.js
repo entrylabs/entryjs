@@ -6,8 +6,8 @@ Entry.FunBoard = {
     url: 'http://www.thinkfunedu.com',
     imageName: 'funboard.png',
     title: {
-        "en": "funboard",
-        "ko": "펀보드"
+        en: 'funboard',
+        ko: '펀보드',
     },
     Static: {
         FUNBOARD_BLOCK_COLOR: '#00979D', // gray(#848484)
@@ -49,8 +49,7 @@ Entry.FunBoard = {
         } else {
             var keySet = Object.keys(Entry.hw.sendQueue.SET);
             keySet.forEach(function(key) {
-                Entry.hw.sendQueue.SET[key].type =
-                    Entry.FunBoard.sensorTypes.ETC;
+                Entry.hw.sendQueue.SET[key].type = Entry.FunBoard.sensorTypes.ETC;
                 Entry.hw.sendQueue.SET[key].data = 0;
                 Entry.hw.sendQueue.SET[key].time = new Date().getTime();
             });
@@ -171,10 +170,8 @@ Entry.FunBoard = {
         var isFloat = false;
 
         if (
-            (Entry.Utils.isNumber(stringValue4) &&
-                stringValue4.indexOf('.') > -1) ||
-            (Entry.Utils.isNumber(stringValue5) &&
-                stringValue5.indexOf('.') > -1)
+            (Entry.Utils.isNumber(stringValue4) && stringValue4.indexOf('.') > -1) ||
+            (Entry.Utils.isNumber(stringValue5) && stringValue5.indexOf('.') > -1)
         ) {
             isFloat = true;
         }
@@ -789,12 +786,9 @@ Entry.FunBoard.getBlocks = function() {
                 var port = 0;
                 var bt_index = script.getNumberValue('PORT');
                 if (bt_index == 1) port = Entry.FunBoard.PORT_MAP['up_bt'];
-                else if (bt_index == 2)
-                    port = Entry.FunBoard.PORT_MAP['down_bt'];
-                else if (bt_index == 3)
-                    port = Entry.FunBoard.PORT_MAP['left_bt'];
-                else if (bt_index == 4)
-                    port = Entry.FunBoard.PORT_MAP['right_bt'];
+                else if (bt_index == 2) port = Entry.FunBoard.PORT_MAP['down_bt'];
+                else if (bt_index == 3) port = Entry.FunBoard.PORT_MAP['left_bt'];
+                else if (bt_index == 4) port = Entry.FunBoard.PORT_MAP['right_bt'];
 
                 var DIGITAL = Entry.hw.portData.DIGITAL;
                 var value = 0;
@@ -849,18 +843,12 @@ Entry.FunBoard.getBlocks = function() {
                 var port = 0;
                 var bt_index = script.getNumberValue('PORT');
                 if (bt_index == 1) port = Entry.FunBoard.PORT_MAP['up_bt'];
-                else if (bt_index == 2)
-                    port = Entry.FunBoard.PORT_MAP['down_bt'];
-                else if (bt_index == 3)
-                    port = Entry.FunBoard.PORT_MAP['left_bt'];
-                else if (bt_index == 4)
-                    port = Entry.FunBoard.PORT_MAP['right_bt'];
-                else if (bt_index == 5)
-                    port = Entry.FunBoard.PORT_MAP['space_touchbt'];
-                else if (bt_index == 6)
-                    port = Entry.FunBoard.PORT_MAP['enter_touchbt'];
-                else if (bt_index == 7)
-                    port = Entry.FunBoard.PORT_MAP['escape_touchbt'];
+                else if (bt_index == 2) port = Entry.FunBoard.PORT_MAP['down_bt'];
+                else if (bt_index == 3) port = Entry.FunBoard.PORT_MAP['left_bt'];
+                else if (bt_index == 4) port = Entry.FunBoard.PORT_MAP['right_bt'];
+                else if (bt_index == 5) port = Entry.FunBoard.PORT_MAP['space_touchbt'];
+                else if (bt_index == 6) port = Entry.FunBoard.PORT_MAP['enter_touchbt'];
+                else if (bt_index == 7) port = Entry.FunBoard.PORT_MAP['escape_touchbt'];
 
                 var value = 0;
                 var bt_pressed = 0;
@@ -919,12 +907,9 @@ Entry.FunBoard.getBlocks = function() {
                 var port = 0;
                 var bt_index = script.getNumberValue('PORT');
                 if (bt_index == 1) port = Entry.FunBoard.PORT_MAP['up_bt'];
-                else if (bt_index == 2)
-                    port = Entry.FunBoard.PORT_MAP['down_bt'];
-                else if (bt_index == 3)
-                    port = Entry.FunBoard.PORT_MAP['left_bt'];
-                else if (bt_index == 4)
-                    port = Entry.FunBoard.PORT_MAP['right_bt'];
+                else if (bt_index == 2) port = Entry.FunBoard.PORT_MAP['down_bt'];
+                else if (bt_index == 3) port = Entry.FunBoard.PORT_MAP['left_bt'];
+                else if (bt_index == 4) port = Entry.FunBoard.PORT_MAP['right_bt'];
 
                 var DIGITAL = Entry.hw.portData.DIGITAL;
                 var value = 0;
@@ -977,18 +962,12 @@ Entry.FunBoard.getBlocks = function() {
                 var port = 0;
                 var bt_index = script.getNumberValue('PORT');
                 if (bt_index == 1) port = Entry.FunBoard.PORT_MAP['up_bt'];
-                else if (bt_index == 2)
-                    port = Entry.FunBoard.PORT_MAP['down_bt'];
-                else if (bt_index == 3)
-                    port = Entry.FunBoard.PORT_MAP['left_bt'];
-                else if (bt_index == 4)
-                    port = Entry.FunBoard.PORT_MAP['right_bt'];
-                else if (bt_index == 5)
-                    port = Entry.FunBoard.PORT_MAP['space_touchbt'];
-                else if (bt_index == 6)
-                    port = Entry.FunBoard.PORT_MAP['enter_touchbt'];
-                else if (bt_index == 7)
-                    port = Entry.FunBoard.PORT_MAP['escape_touchbt'];
+                else if (bt_index == 2) port = Entry.FunBoard.PORT_MAP['down_bt'];
+                else if (bt_index == 3) port = Entry.FunBoard.PORT_MAP['left_bt'];
+                else if (bt_index == 4) port = Entry.FunBoard.PORT_MAP['right_bt'];
+                else if (bt_index == 5) port = Entry.FunBoard.PORT_MAP['space_touchbt'];
+                else if (bt_index == 6) port = Entry.FunBoard.PORT_MAP['enter_touchbt'];
+                else if (bt_index == 7) port = Entry.FunBoard.PORT_MAP['escape_touchbt'];
 
                 var value = 0;
                 if (bt_index >= 5) {
@@ -1112,11 +1091,7 @@ Entry.FunBoard.getBlocks = function() {
 
                 vlimit =
                     vmin +
-                    Math.max(
-                        0,
-                        Math.abs(vmax - vmin) *
-                            Entry.FunBoard.Static.ANALOG_STATE_PERCENT
-                    );
+                    Math.max(0, Math.abs(vmax - vmin) * Entry.FunBoard.Static.ANALOG_STATE_PERCENT);
 
                 var ret = 0;
                 //작다
@@ -1192,26 +1167,33 @@ Entry.FunBoard.getBlocks = function() {
             },
             class: 'funboardget',
             isNotFor: ['funboard'],
-            func: function(sprite, script) {
+            func: async function(sprite, script) {
                 var index = script.getValue('PORT', script);
                 var port = 0;
                 if (index == 1) port = Entry.FunBoard.PORT_MAP['slide'];
                 else if (index == 2) port = Entry.FunBoard.PORT_MAP['cds'];
                 else if (index == 3) port = Entry.FunBoard.PORT_MAP['mic'];
 
-                var value2 = script.getNumberValue('VALUE2', script);
-                var value3 = script.getNumberValue('VALUE3', script);
-                var value4 = script.getNumberValue('VALUE4', script);
-                var value5 = script.getNumberValue('VALUE5', script);
+                let [
+                    value2,
+                    value3,
+                    value4,
+                    value5,
+                    stringValue4,
+                    stringValue5,
+                ] = await Promise.all([
+                    script.getNumberValue('VALUE2', script),
+                    script.getNumberValue('VALUE3', script),
+                    script.getNumberValue('VALUE4', script),
+                    script.getNumberValue('VALUE5', script),
+                    script.getNumberValue('VALUE4', script),
+                    script.getNumberValue('VALUE5', script),
+                ]);
 
-                var stringValue4 = script.getValue('VALUE4', script);
-                var stringValue5 = script.getValue('VALUE5', script);
                 var isFloat = false;
                 if (
-                    (Entry.Utils.isNumber(stringValue4) &&
-                        stringValue4.indexOf('.') > -1) ||
-                    (Entry.Utils.isNumber(stringValue5) &&
-                        stringValue5.indexOf('.') > -1)
+                    (Entry.Utils.isNumber(stringValue4) && stringValue4.indexOf('.') > -1) ||
+                    (Entry.Utils.isNumber(stringValue5) && stringValue5.indexOf('.') > -1)
                 ) {
                     isFloat = true;
                 }
@@ -1295,9 +1277,9 @@ Entry.FunBoard.getBlocks = function() {
             },
             class: 'funboardset',
             isNotFor: ['funboard'],
-            func: function(sprite, script) {
+            func: async function(sprite, script) {
                 var port = Entry.FunBoard.PORT_MAP['buzzer'];
-                var duration = script.getNumberValue('DURATION');
+                var duration = await script.getNumberValue('DURATION');
                 var octave = script.getNumberValue('OCTAVE') - 1;
                 var value = 0;
 
@@ -1416,8 +1398,7 @@ Entry.FunBoard.getBlocks = function() {
                 if (!script.isStart) {
                     {
                         var port = 0;
-                        if (onoff == '1')
-                            port = Entry.FunBoard.EventTypes.BUZZER_ON;
+                        if (onoff == '1') port = Entry.FunBoard.EventTypes.BUZZER_ON;
                         else port = Entry.FunBoard.EventTypes.BUZZER_OFF;
 
                         if (!Entry.hw.sendQueue['SET']) {
@@ -1569,12 +1550,10 @@ Entry.FunBoard.getBlocks = function() {
                 if (!script.isStart) {
                     {
                         //1 based value
-                        var eff_value =
-                            Math.floor(Math.random() * (123 - 1)) + 1;
+                        var eff_value = Math.floor(Math.random() * (123 - 1)) + 1;
 
                         var port = 0;
-                        if (onoff == '1')
-                            port = Entry.FunBoard.EventTypes.BUZZER_ON;
+                        if (onoff == '1') port = Entry.FunBoard.EventTypes.BUZZER_ON;
                         else port = Entry.FunBoard.EventTypes.BUZZER_OFF;
 
                         if (!Entry.hw.sendQueue['SET']) {
@@ -1590,10 +1569,7 @@ Entry.FunBoard.getBlocks = function() {
                     script.isStart = true;
                     script.timeFlag = 1;
                     var fps = Entry.FPS || 60;
-                    var timeValue = Math.max(
-                        1,
-                        3 * Entry.FunBoard.Static.DELAY_SECOND
-                    );
+                    var timeValue = Math.max(1, 3 * Entry.FunBoard.Static.DELAY_SECOND);
                     timeValue = Entry.FunBoard.Static.DELAY_SECOND;
                     timeValue = 60 / fps * timeValue * 1000;
                     setTimeout(function() {
@@ -1681,9 +1657,7 @@ Entry.FunBoard.getBlocks = function() {
                                 if (!Entry.hw.sendQueue['SET']) {
                                     Entry.hw.sendQueue['SET'] = {};
                                 }
-                                Entry.hw.sendQueue['SET'][
-                                    Entry.FunBoard.PORT_MAP['led_red']
-                                ] = {
+                                Entry.hw.sendQueue['SET'][Entry.FunBoard.PORT_MAP['led_red']] = {
                                     type: Entry.FunBoard.sensorTypes.DIGITAL,
                                     data: portR,
                                     time: new Date().getTime(),
@@ -1693,9 +1667,7 @@ Entry.FunBoard.getBlocks = function() {
                                 if (!Entry.hw.sendQueue['SET']) {
                                     Entry.hw.sendQueue['SET'] = {};
                                 }
-                                Entry.hw.sendQueue['SET'][
-                                    Entry.FunBoard.PORT_MAP['led_yellow']
-                                ] = {
+                                Entry.hw.sendQueue['SET'][Entry.FunBoard.PORT_MAP['led_yellow']] = {
                                     type: Entry.FunBoard.sensorTypes.DIGITAL,
                                     data: portY,
                                     time: new Date().getTime(),
@@ -1705,9 +1677,7 @@ Entry.FunBoard.getBlocks = function() {
                                 if (!Entry.hw.sendQueue['SET']) {
                                     Entry.hw.sendQueue['SET'] = {};
                                 }
-                                Entry.hw.sendQueue['SET'][
-                                    Entry.FunBoard.PORT_MAP['led_green']
-                                ] = {
+                                Entry.hw.sendQueue['SET'][Entry.FunBoard.PORT_MAP['led_green']] = {
                                     type: Entry.FunBoard.sensorTypes.DIGITAL,
                                     data: portG,
                                     time: new Date().getTime(),
@@ -1717,9 +1687,7 @@ Entry.FunBoard.getBlocks = function() {
                                 if (!Entry.hw.sendQueue['SET']) {
                                     Entry.hw.sendQueue['SET'] = {};
                                 }
-                                Entry.hw.sendQueue['SET'][
-                                    Entry.FunBoard.PORT_MAP['led_blue']
-                                ] = {
+                                Entry.hw.sendQueue['SET'][Entry.FunBoard.PORT_MAP['led_blue']] = {
                                     type: Entry.FunBoard.sensorTypes.DIGITAL,
                                     data: portB,
                                     time: new Date().getTime(),
@@ -1747,9 +1715,7 @@ Entry.FunBoard.getBlocks = function() {
                                 if (!Entry.hw.sendQueue['SET']) {
                                     Entry.hw.sendQueue['SET'] = {};
                                 }
-                                Entry.hw.sendQueue['SET'][
-                                    Entry.FunBoard.PORT_MAP['led_red']
-                                ] = {
+                                Entry.hw.sendQueue['SET'][Entry.FunBoard.PORT_MAP['led_red']] = {
                                     type: Entry.FunBoard.sensorTypes.DIGITAL,
                                     data: portR,
                                     time: new Date().getTime(),
@@ -1759,9 +1725,7 @@ Entry.FunBoard.getBlocks = function() {
                                 if (!Entry.hw.sendQueue['SET']) {
                                     Entry.hw.sendQueue['SET'] = {};
                                 }
-                                Entry.hw.sendQueue['SET'][
-                                    Entry.FunBoard.PORT_MAP['led_yellow']
-                                ] = {
+                                Entry.hw.sendQueue['SET'][Entry.FunBoard.PORT_MAP['led_yellow']] = {
                                     type: Entry.FunBoard.sensorTypes.DIGITAL,
                                     data: portY,
                                     time: new Date().getTime(),
@@ -1771,9 +1735,7 @@ Entry.FunBoard.getBlocks = function() {
                                 if (!Entry.hw.sendQueue['SET']) {
                                     Entry.hw.sendQueue['SET'] = {};
                                 }
-                                Entry.hw.sendQueue['SET'][
-                                    Entry.FunBoard.PORT_MAP['led_green']
-                                ] = {
+                                Entry.hw.sendQueue['SET'][Entry.FunBoard.PORT_MAP['led_green']] = {
                                     type: Entry.FunBoard.sensorTypes.DIGITAL,
                                     data: portG,
                                     time: new Date().getTime(),
@@ -1783,9 +1745,7 @@ Entry.FunBoard.getBlocks = function() {
                                 if (!Entry.hw.sendQueue['SET']) {
                                     Entry.hw.sendQueue['SET'] = {};
                                 }
-                                Entry.hw.sendQueue['SET'][
-                                    Entry.FunBoard.PORT_MAP['led_blue']
-                                ] = {
+                                Entry.hw.sendQueue['SET'][Entry.FunBoard.PORT_MAP['led_blue']] = {
                                     type: Entry.FunBoard.sensorTypes.DIGITAL,
                                     data: portB,
                                     time: new Date().getTime(),
@@ -1864,9 +1824,9 @@ Entry.FunBoard.getBlocks = function() {
             },
             class: 'funboardset',
             isNotFor: ['funboard'],
-            func: function(sprite, script) {
+            func: async function(sprite, script) {
                 var color_index = script.getNumberValue('VALUE');
-                var li_percent = script.getNumberValue('PERCENT');
+                var li_percent = await script.getNumberValue('PERCENT');
                 li_percent = Entry.FunBoard.MinMax(li_percent, 0, 100);
                 var pwm_value = Math.round(
                     Entry.FunBoard.Static.FUNBOARD_LED_ON * (li_percent / 100)
@@ -1883,9 +1843,7 @@ Entry.FunBoard.getBlocks = function() {
                             if (!Entry.hw.sendQueue['SET']) {
                                 Entry.hw.sendQueue['SET'] = {};
                             }
-                            Entry.hw.sendQueue['SET'][
-                                Entry.FunBoard.PORT_MAP['led_red']
-                            ] = {
+                            Entry.hw.sendQueue['SET'][Entry.FunBoard.PORT_MAP['led_red']] = {
                                 type: Entry.FunBoard.sensorTypes.PWM,
                                 data: portR,
                                 time: new Date().getTime(),
@@ -1895,9 +1853,7 @@ Entry.FunBoard.getBlocks = function() {
                             if (!Entry.hw.sendQueue['SET']) {
                                 Entry.hw.sendQueue['SET'] = {};
                             }
-                            Entry.hw.sendQueue['SET'][
-                                Entry.FunBoard.PORT_MAP['led_yellow']
-                            ] = {
+                            Entry.hw.sendQueue['SET'][Entry.FunBoard.PORT_MAP['led_yellow']] = {
                                 type: Entry.FunBoard.sensorTypes.PWM,
                                 data: portY,
                                 time: new Date().getTime(),
@@ -1966,8 +1922,8 @@ Entry.FunBoard.getBlocks = function() {
             },
             class: 'funboardsetmatrix',
             isNotFor: ['funboard'],
-            func: function(sprite, script) {
-                var li_percent = script.getNumberValue('PERCENT');
+            func: async function(sprite, script) {
+                var li_percent = await script.getNumberValue('PERCENT');
                 //1-based value (setZero와 구별)
                 li_percent = Entry.FunBoard.MinMax(li_percent, 0, 100);
                 li_percent = li_percent + 1;
@@ -2120,8 +2076,7 @@ Entry.FunBoard.getBlocks = function() {
 
                 if (!script.isStart) {
                     {
-                        var port =
-                            Entry.FunBoard.EventTypes.MATRIX_SCROLL_RAPID;
+                        var port = Entry.FunBoard.EventTypes.MATRIX_SCROLL_RAPID;
                         if (!Entry.hw.sendQueue['SET']) {
                             Entry.hw.sendQueue['SET'] = {};
                         }
@@ -2188,8 +2143,7 @@ Entry.FunBoard.getBlocks = function() {
 
                 if (!script.isStart) {
                     var port = Entry.FunBoard.EventTypes.MATRIX_OFF_ALL;
-                    if (onoff == '1')
-                        port = Entry.FunBoard.EventTypes.MATRIX_ON_ALL;
+                    if (onoff == '1') port = Entry.FunBoard.EventTypes.MATRIX_ON_ALL;
 
                     if (!Entry.hw.sendQueue['SET']) {
                         Entry.hw.sendQueue['SET'] = {};
@@ -2279,8 +2233,7 @@ Entry.FunBoard.getBlocks = function() {
                     script.isStart = true;
                     script.timeFlag = 1;
                     var fps = Entry.FPS || 60;
-                    var timeValue =
-                        (char_tot + 0.5) * Entry.FunBoard.Static.DELAY_SECOND;
+                    var timeValue = (char_tot + 0.5) * Entry.FunBoard.Static.DELAY_SECOND;
                     timeValue = 60 / fps * timeValue * 1000;
 
                     Entry.hw.sendQueue['SET'][port] = {
@@ -2391,8 +2344,7 @@ Entry.FunBoard.getBlocks = function() {
                     script.isStart = true;
                     script.timeFlag = 1;
                     var fps = Entry.FPS || 60;
-                    var timeValue =
-                        char_tot * Entry.FunBoard.Static.DELAY_SECOND;
+                    var timeValue = char_tot * Entry.FunBoard.Static.DELAY_SECOND;
                     //scroll//var timeValue = (char_tot*3)*Entry.FunBoard.Static.DELAY_SECOND;
                     timeValue = 60 / fps * timeValue * 1000;
 
@@ -2487,8 +2439,8 @@ Entry.FunBoard.getBlocks = function() {
             },
             class: 'funboardsetmatrix',
             isNotFor: ['funboard'],
-            func: function(sprite, script) {
-                var string = script.getValue('VALUE', script);
+            func: async function(sprite, script) {
+                var string = await script.getValue('VALUE', script);
                 var scroll_opt = script.getValue('SCROLL', script);
                 if (string.length < 1) return script.callReturn();
 
@@ -2499,16 +2451,11 @@ Entry.FunBoard.getBlocks = function() {
 
                 if (!script.isStart) {
                     var port = Entry.FunBoard.EventTypes.STR_OUT_NO_SCROLL;
-                    if (scroll_opt == '1')
-                        port = Entry.FunBoard.EventTypes.STR_OUT_NO_SCROLL;
-                    else if (scroll_opt == '2')
-                        port = Entry.FunBoard.EventTypes.STR_OUT_LEFT;
-                    else if (scroll_opt == '3')
-                        port = Entry.FunBoard.EventTypes.STR_OUT_UP;
-                    else if (scroll_opt == '4')
-                        port = Entry.FunBoard.EventTypes.STR_OUT_RIGHT;
-                    else if (scroll_opt == '5')
-                        port = Entry.FunBoard.EventTypes.STR_OUT_DOWN;
+                    if (scroll_opt == '1') port = Entry.FunBoard.EventTypes.STR_OUT_NO_SCROLL;
+                    else if (scroll_opt == '2') port = Entry.FunBoard.EventTypes.STR_OUT_LEFT;
+                    else if (scroll_opt == '3') port = Entry.FunBoard.EventTypes.STR_OUT_UP;
+                    else if (scroll_opt == '4') port = Entry.FunBoard.EventTypes.STR_OUT_RIGHT;
+                    else if (scroll_opt == '5') port = Entry.FunBoard.EventTypes.STR_OUT_DOWN;
 
                     var text = [];
                     if (typeof string === 'string') {
@@ -2614,10 +2561,7 @@ Entry.FunBoard.getBlocks = function() {
                 var string = script.getField('VALUE');
                 //1 based value (setZero 구별)
                 var value = parseInt(string);
-                if (
-                    value < 1 ||
-                    value > Entry.FunBoard.Static.MATRIX_REGISTED_SYMBOL_TOTAL
-                ) {
+                if (value < 1 || value > Entry.FunBoard.Static.MATRIX_REGISTED_SYMBOL_TOTAL) {
                     return script.callReturn();
                 }
 
@@ -2721,8 +2665,7 @@ Entry.FunBoard.getBlocks = function() {
                     script.isStart = true;
                     script.timeFlag = 1;
                     var fps = Entry.FPS || 60;
-                    var timeValue =
-                        char_tot * Entry.FunBoard.Static.DELAY_SECOND;
+                    var timeValue = char_tot * Entry.FunBoard.Static.DELAY_SECOND;
                     timeValue = 60 / fps * timeValue * 1000;
 
                     Entry.hw.sendQueue['SET'][port] = {
@@ -2846,8 +2789,7 @@ Entry.FunBoard.getBlocks = function() {
                     script.isStart = true;
                     script.timeFlag = 1;
                     var fps = Entry.FPS || 60;
-                    var timeValue =
-                        char_tot * Entry.FunBoard.Static.DELAY_SECOND;
+                    var timeValue = char_tot * Entry.FunBoard.Static.DELAY_SECOND;
                     timeValue = 60 / fps * timeValue * 1000;
 
                     Entry.hw.sendQueue['SET'][port] = {
@@ -2971,8 +2913,7 @@ Entry.FunBoard.getBlocks = function() {
                     script.isStart = true;
                     script.timeFlag = 1;
                     var fps = Entry.FPS || 60;
-                    var timeValue =
-                        char_tot * Entry.FunBoard.Static.DELAY_SECOND;
+                    var timeValue = char_tot * Entry.FunBoard.Static.DELAY_SECOND;
                     timeValue = 60 / fps * timeValue * 1000;
 
                     Entry.hw.sendQueue['SET'][port] = {
@@ -3104,8 +3045,7 @@ Entry.FunBoard.getBlocks = function() {
                     script.isStart = true;
                     script.timeFlag = 1;
                     var fps = Entry.FPS || 60;
-                    var timeValue =
-                        char_tot * Entry.FunBoard.Static.DELAY_SECOND;
+                    var timeValue = char_tot * Entry.FunBoard.Static.DELAY_SECOND;
                     timeValue = 60 / fps * timeValue * 1000;
 
                     Entry.hw.sendQueue['SET'][port] = {
@@ -3185,9 +3125,9 @@ Entry.FunBoard.getBlocks = function() {
             },
             class: 'funboardsetmatrix',
             isNotFor: ['funboard'],
-            func: function(sprite, script) {
+            func: async function(sprite, script) {
                 var str = script.getNumberValue('WHAT');
-                var str_bit8 = script.getStringValue('BIT8', script);
+                var str_bit8 = await script.getStringValue('BIT8', script);
 
                 var charset = '1#*';
                 var pos = -1;
@@ -3302,9 +3242,9 @@ Entry.FunBoard.getBlocks = function() {
             },
             class: 'funboardsetmatrix',
             isNotFor: ['funboard'],
-            func: function(sprite, script) {
+            func: async function(sprite, script) {
                 var str = script.getNumberValue('WHAT');
-                var str_bit8 = script.getStringValue('BIT8', script);
+                var str_bit8 = await script.getStringValue('BIT8', script);
 
                 var charset = '1#*';
                 var pos = -1;

@@ -13,8 +13,8 @@ Entry.mechatro = {
     url: 'http://cafe.naver.com/easybread',
     imageName: 'mechatronics_4d.png',
     title: {
-        "en": "4D Mechatronics",
-        "ko": "4D 메카트로닉스"
+        en: '4D Mechatronics',
+        ko: '4D 메카트로닉스',
     },
     setZero: function() {
         Entry.hw.sendQueue = {};
@@ -269,10 +269,7 @@ Entry.mechatro.getBlocks = function() {
                 if (Entry.hw.portData[portNo] !== undefined) {
                     value = Entry.hw.portData[portNo];
                     if (portNo > 14) {
-                        value =
-                            value > Entry.mechatro.state.THRESHOLD[portNo]
-                                ? 1
-                                : 0;
+                        value = value > Entry.mechatro.state.THRESHOLD[portNo] ? 1 : 0;
                     }
                     return value;
                 } else {
@@ -375,9 +372,9 @@ Entry.mechatro.getBlocks = function() {
             },
             class: 'MechatroGet',
             isNotFor: ['mechatro'],
-            func: function(sprite, script) {
+            func: async function(sprite, script) {
                 var portNo = script.getNumberField('PORT', script);
-                var value = script.getValue('VALUE');
+                var value = await script.getValue('VALUE');
 
                 if (!Entry.Utils.isNumber(value)) value = 0;
                 value = Math.max(value, 10);
@@ -560,10 +557,10 @@ Entry.mechatro.getBlocks = function() {
             },
             class: 'Mechatro_d_out',
             isNotFor: ['mechatro'],
-            func: function(sprite, script) {
+            func: async function(sprite, script) {
                 var portNo = script.getNumberField('PORT', script);
                 var mode = Entry.mechatro.portMode.SET_PWM;
-                var value = script.getValue('VALUE');
+                var value = await script.getValue('VALUE');
 
                 if (!Entry.Utils.isNumber(value)) value = 0;
                 value = Math.max(value, 0);
@@ -658,12 +655,12 @@ Entry.mechatro.getBlocks = function() {
             },
             class: 'Mechatro_d_out',
             isNotFor: ['mechatro'],
-            func: function(sprite, script) {
+            func: async function(sprite, script) {
                 var portNo = script.getNumberField('PORT', script);
                 var mPortNo = 'm' + portNo;
 
                 if (!script.isStart) {
-                    var duration = script.getNumberValue('DURATION', script);
+                    var duration = await script.getNumberValue('DURATION', script);
                     if (duration < 0) {
                         duration = 0;
                     }
@@ -671,8 +668,7 @@ Entry.mechatro.getBlocks = function() {
                     var note = script.getNumberField('NOTE', script);
 
                     if (duration === 0 || note === 0) {
-                        Entry.hw.sendQueue[mPortNo] =
-                            Entry.mechatro.portMode.COM_NO_TONE;
+                        Entry.hw.sendQueue[mPortNo] = Entry.mechatro.portMode.COM_NO_TONE;
                         Entry.hw.update();
                         delete Entry.hw.sendQueue[mPortNo];
                         return script.callReturn();
@@ -684,8 +680,7 @@ Entry.mechatro.getBlocks = function() {
                     script.isStart = true;
                     script.timeFlag = 1;
 
-                    Entry.hw.sendQueue[mPortNo] =
-                        Entry.mechatro.portMode.SET_TONE;
+                    Entry.hw.sendQueue[mPortNo] = Entry.mechatro.portMode.SET_TONE;
                     Entry.hw.sendQueue[portNo] = (octave << 4) | (note - 1);
                     Entry.hw.update();
                     delete Entry.hw.sendQueue[mPortNo];
@@ -698,8 +693,7 @@ Entry.mechatro.getBlocks = function() {
                 } else if (script.timeFlag == 1) {
                     return script;
                 } else {
-                    Entry.hw.sendQueue[mPortNo] =
-                        Entry.mechatro.portMode.COM_NO_TONE;
+                    Entry.hw.sendQueue[mPortNo] = Entry.mechatro.portMode.COM_NO_TONE;
                     delete Entry.hw.sendQueue[portNo];
                     Entry.hw.update();
                     delete Entry.hw.sendQueue[mPortNo];
@@ -886,9 +880,9 @@ Entry.mechatro.getBlocks = function() {
             },
             class: 'set_motor',
             isNotFor: ['mechatro'],
-            func: function(sprite, script) {
+            func: async function(sprite, script) {
                 var portNo = script.getField('PORT', script);
-                var value = script.getValue('SPEED');
+                var value = await script.getValue('SPEED');
 
                 if (!Entry.Utils.isNumber(value)) value = 0;
 
@@ -952,12 +946,7 @@ Entry.mechatro.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [
-                        ['D2', '2'],
-                        ['D5', '5'],
-                        ['D6', '6'],
-                        ['D10', '10'],
-                    ],
+                    options: [['D2', '2'], ['D5', '5'], ['D6', '6'], ['D10', '10']],
                     value: '2',
                     fontSize: 11,
                 },
@@ -989,10 +978,10 @@ Entry.mechatro.getBlocks = function() {
             },
             class: 'set_motor',
             isNotFor: ['mechatro'],
-            func: function(sprite, script) {
+            func: async function(sprite, script) {
                 var portNo = script.getNumberField('PORT', script);
                 var mode = Entry.mechatro.portMode.SET_SERVO_POSITION;
-                var value = script.getValue('DEGREE');
+                var value = await script.getValue('DEGREE');
 
                 if (!Entry.Utils.isNumber(value)) value = 90;
                 value = Math.max(value, 0);
@@ -1014,12 +1003,7 @@ Entry.mechatro.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [
-                        ['D2', '22'],
-                        ['D5', '23'],
-                        ['D6', '24'],
-                        ['D10', '25'],
-                    ],
+                    options: [['D2', '22'], ['D5', '23'], ['D6', '24'], ['D10', '25']],
                     value: '22',
                     fontSize: 11,
                 },
@@ -1051,10 +1035,10 @@ Entry.mechatro.getBlocks = function() {
             },
             class: 'set_motor',
             isNotFor: ['mechatro'],
-            func: function(sprite, script) {
+            func: async function(sprite, script) {
                 var portNo = script.getNumberField('PORT', script);
                 var mode = Entry.mechatro.portMode.SET_SERVO_SPEED;
-                var value = script.getValue('SPEED');
+                var value = await script.getValue('SPEED');
 
                 if (!Entry.Utils.isNumber(value)) value = 255;
                 value = Math.max(value, 0);
@@ -1131,14 +1115,17 @@ Entry.mechatro.getBlocks = function() {
             },
             class: 'Mechatro_blue',
             isNotFor: ['mechatro'],
-            func: function(sprite, script) {
+            func: async function(sprite, script) {
                 var mode = Entry.mechatro.portMode.COM_SET_BLUE_PW;
 
-                var value =
-                    script.getNumberValue('PW1') * 1000 +
-                    script.getNumberValue('PW2') * 100 +
-                    script.getNumberValue('PW3') * 10 +
-                    script.getNumberValue('PW4');
+                let [pw1, pw2, pw3, pw4] = await Promise.all([
+                    script.getNumberValue('PW1'),
+                    script.getNumberValue('PW2'),
+                    script.getNumberValue('PW3'),
+                    script.getNumberValue('PW4'),
+                ]);
+
+                var value = pw1 * 1000 + pw2 * 100 + pw3 * 10 + pw4;
 
                 Entry.mechatro.transferModeValue(2, mode, value);
 

@@ -5,8 +5,8 @@ Entry.Creamo = {
     url: 'http://www.creamo.co.kr',
     imageName: 'creamo.png',
     title: {
-        "en": "creamo",
-        "ko": "크리모"
+        en: 'creamo',
+        ko: '크리모',
     },
     setZero: function() {
         Entry.hw.sendQueue.readablePorts = [];
@@ -304,9 +304,9 @@ Entry.Creamo.getBlocks = function() {
             },
             class: 'arduino_set',
             isNotFor: ['creamo'],
-            func: function(sprite, script) {
+            func: async function(sprite, script) {
                 var port = script.getNumberValue('PORT');
-                var value = script.getNumberValue('VALUE');
+                var value = await script.getNumberValue('VALUE');
                 value = Math.round(value);
                 value = Math.max(value, 0);
                 value = Math.min(value, 255);
@@ -367,9 +367,7 @@ Entry.Creamo.getBlocks = function() {
                                 value: '3',
                                 fontSize: 11,
                                 arrowColor: EntryStatic.ARROW_COLOR_HW,
-                                converter:
-                                    Entry.block.converters
-                                        .returnStringOrNumberByValue,
+                                converter: Entry.block.converters.returnStringOrNumberByValue,
                             },
                         ],
                         keyOption: 'arduino_get_pwm_port_number',

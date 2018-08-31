@@ -52,8 +52,7 @@ Entry.coconut = {
     },
 
     move: function(direction) {
-        if (typeof direction == 'string')
-            direction = this.directions[direction];
+        if (typeof direction == 'string') direction = this.directions[direction];
         // seq, direction, speed, degree, time
         return this.runPackage(this.devices['Motor'], 0, direction, this.speed);
     },
@@ -206,15 +205,13 @@ Entry.coconut = {
      * @param   direction     방향 (1: Left, 2: Right, 3: Forward, 4: Backward), default: Go
      */
     moveMotor: function(direction) {
-        if (typeof direction == 'string')
-            direction = this.directions[direction];
+        if (typeof direction == 'string') direction = this.directions[direction];
         // seq, direction, speed, degree, time
         return this.runPackage(this.devices['Motor'], 0, direction, this.speed);
     },
 
     moveMotorSpeed: function(direction, speed) {
-        if (typeof direction == 'string')
-            direction = this.directions[direction];
+        if (typeof direction == 'string') direction = this.directions[direction];
         // seq, direction, speed, degree, time
         return this.runPackage(this.devices['Motor'], 0, direction, this.speed);
     },
@@ -226,8 +223,7 @@ Entry.coconut = {
      * @param   direction     방향 (1: Left, 2: Right, 3: Forward, 4: Backward), default: Go
      */
     turnMotor: function(direction) {
-        if (typeof direction == 'string')
-            direction = this.directions[direction];
+        if (typeof direction == 'string') direction = this.directions[direction];
         // seq, direction, speed, degree, time
         return this.runPackage(this.devices['Motor'], 0, direction, this.speed);
     },
@@ -251,8 +247,7 @@ Entry.coconut = {
     moveTurnAngle: function(direction, degree) {
         var sec = 0; // 제한없음
 
-        if (typeof direction == 'string')
-            direction = this.directions[direction];
+        if (typeof direction == 'string') direction = this.directions[direction];
 
         // 각도가 360 이상일 경우 360으로 고정
         if (degree > 360 || degree < -360) degree = 360;
@@ -273,8 +268,7 @@ Entry.coconut = {
         if (sec < 0) sec = -sec;
         sec = 1000 * sec; // ms 변환
 
-        if (typeof direction == 'string')
-            direction = this.directions[direction];
+        if (typeof direction == 'string') direction = this.directions[direction];
 
         // seq, direction, speed, degree, time
         return this.runPackage(
@@ -298,8 +292,7 @@ Entry.coconut = {
         if (sec < 0) sec = -sec;
         sec = 1000 * sec; // ms 변환
 
-        if (typeof direction == 'string')
-            direction = this.directions[direction];
+        if (typeof direction == 'string') direction = this.directions[direction];
 
         return this.runPackage(
             this.devices['Motor'],
@@ -319,8 +312,7 @@ Entry.coconut = {
     moveMotorColor: function(direction, color) {
         var deviceID = this.devices['Motor'];
 
-        if (typeof direction == 'string')
-            direction = this.directions[direction];
+        if (typeof direction == 'string') direction = this.directions[direction];
         if (typeof color == 'string') color = this.colors[color];
 
         // deviceid, seq, direction, speed, color
@@ -338,8 +330,7 @@ Entry.coconut = {
     moveMotorAngleColor: function(direction, angle, color) {
         var deviceID = this.devices['Motor'];
 
-        if (typeof direction == 'string')
-            direction = this.directions[direction];
+        if (typeof direction == 'string') direction = this.directions[direction];
         if (typeof color == 'string') color = this.colors[color];
         if (typeof angle != 'number') angle = 90;
 
@@ -362,8 +353,7 @@ Entry.coconut = {
      * @param speed 속도 (0-255)
      */
     moveExtMotor: function(direction, speed) {
-        if (typeof direction == 'string')
-            direction = this.directions[direction];
+        if (typeof direction == 'string') direction = this.directions[direction];
 
         // deviceid, seq, direction, speed
         return this.runPackage(this.devices['Motor'], 7, direction, speed);
@@ -378,8 +368,7 @@ Entry.coconut = {
      * @param color 색상 (1: Red, 2: Green, 3: Blue), default: Red
      */
     rgbOn: function(direction, color) {
-        if (typeof direction == 'string')
-            direction = this.directions[direction];
+        if (typeof direction == 'string') direction = this.directions[direction];
         if (typeof color == 'string') color = this.colors[color];
 
         return this.runPackage(this.devices['RGBled'], 0, direction, color);
@@ -392,8 +381,7 @@ Entry.coconut = {
      * @param direction방향 (0: all, 1: Left, 2: Right), default: Left
      */
     rgbOff: function(direction) {
-        if (typeof direction == 'string')
-            direction = this.directions[direction];
+        if (typeof direction == 'string') direction = this.directions[direction];
 
         return this.runPackage(this.devices['RGBled'], 1, direction, 0);
     },
@@ -407,8 +395,7 @@ Entry.coconut = {
      * @param color 색상 (1: Red, 2: Green, 3: Blue), default: Red
      */
     rgbOffColor: function(direction, color) {
-        if (typeof direction == 'string')
-            direction = this.directions[direction];
+        if (typeof direction == 'string') direction = this.directions[direction];
         if (typeof color == 'string') color = this.colors[color];
 
         return this.runPackage(this.devices['RGBled'], 1, direction, color);
@@ -424,8 +411,7 @@ Entry.coconut = {
      * @param sec 시간, 초
      */
     ledOnTime: function(direction, color, sec) {
-        if (typeof direction == 'string')
-            direction = this.directions[direction];
+        if (typeof direction == 'string') direction = this.directions[direction];
         if (typeof color == 'string') color = this.colors[color];
 
         // 시간이 정수가 아니거나 0보다 작을 경우 0으로 변경
@@ -433,13 +419,7 @@ Entry.coconut = {
         else if (sec < 0) sec = 0;
         else sec *= 1000; // ms 변환
 
-        return this.runPackage(
-            this.devices['RGBled'],
-            3,
-            direction,
-            color,
-            this.short2array(sec)
-        );
+        return this.runPackage(this.devices['RGBled'], 3, direction, color, this.short2array(sec));
     },
 
     /// buzzer
@@ -604,8 +584,7 @@ Entry.coconut = {
         note = this.getNote(note);
 
         if (typeof beat == 'string') beat = this.beats[beat];
-        if (typeof direction == 'string')
-            direction = this.directions[direction];
+        if (typeof direction == 'string') direction = this.directions[direction];
         if (typeof color == 'string') color = this.colors[color];
 
         return this.runPackage(
@@ -642,12 +621,7 @@ Entry.coconut = {
 
         if (typeof beat == 'string') beat = this.beats[beat];
 
-        return this.runPackage(
-            deviceID,
-            seq,
-            this.short2array(tone),
-            this.short2array(beat)
-        );
+        return this.runPackage(deviceID, seq, this.short2array(tone), this.short2array(beat));
     },
 
     // led blink
@@ -679,14 +653,8 @@ Entry.coconut = {
      * @param standard감지 기준
      */
     setStandard: function(direction, standard) {
-        if (typeof direction == 'string')
-            direction = this.directions[direction];
-        return this.runPackage(
-            this.devices['IRdistance'],
-            0,
-            direction,
-            standard
-        );
+        if (typeof direction == 'string') direction = this.directions[direction];
+        return this.runPackage(this.devices['IRdistance'], 0, direction, standard);
     },
 
     /**
@@ -794,11 +762,7 @@ Entry.coconut = {
     extLedOn: function(pin, sec) {
         if (typeof pin == 'string') pin = this.pins[pin];
         sec *= 1000;
-        return this.runPackage(
-            this.devices['ExLed'],
-            pin,
-            this.short2array(sec)
-        );
+        return this.runPackage(this.devices['ExLed'], pin, this.short2array(sec));
     },
 
     /**
@@ -853,8 +817,7 @@ Entry.coconut = {
      * @param outputValue 출력값 (HIGH:1, LOW:0)
      */
     digitalWrite: function(pin, outputValue) {
-        if (typeof outputValue == 'string')
-            outputValue = this.outputValues[outputValue];
+        if (typeof outputValue == 'string') outputValue = this.outputValues[outputValue];
         return this.runPackage(this.devices['Digital'], pin, outputValue);
     },
 
@@ -877,12 +840,7 @@ Entry.coconut = {
     },
 
     readFloat: function(arr, position) {
-        var f = [
-            arr[position],
-            arr[position + 1],
-            arr[position + 2],
-            arr[position + 3],
-        ];
+        var f = [arr[position], arr[position + 1], arr[position + 2], arr[position + 3]];
         return parseFloat(f);
     }, //function
 
@@ -939,8 +897,8 @@ Entry.coconut = {
     url: 'http://coco-nut.kr',
     imageName: 'coconut.png',
     title: {
-        "ko": "코코넛",
-        "en": "coconut"
+        ko: '코코넛',
+        en: 'coconut',
     },
     monitorTemplate: {
         imgPath: 'hw/coconut.png',
@@ -1226,13 +1184,13 @@ Entry.coconut.getBlocks = function() {
             },
             class: 'coconut_wheel',
             isNotFor: ['coconut'],
-            func: function(sprite, script) {
+            func: async function(sprite, script) {
                 var sq = Entry.hw.sendQueue;
                 var pd = Entry.hw.portData;
 
                 var dist = script.getField('DIST', script);
                 var move = parseInt(dist);
-                var time = script.getNumberValue('VALUE');
+                var time = await script.getNumberValue('VALUE');
                 var arrMsg = Entry.coconut.moveGoTime(move, time); //앞으로 1초동안 움직이기
                 //var arrMsg = ["0xff","0x55","0x08","0x00","0x02","0x1a","0x03","0x03","0x3c","0xe8","0x03"];
 
@@ -1304,13 +1262,13 @@ Entry.coconut.getBlocks = function() {
             },
             class: 'coconut_wheel',
             isNotFor: ['coconut'],
-            func: function(sprite, script) {
+            func: async function(sprite, script) {
                 var sq = Entry.hw.sendQueue;
                 var pd = Entry.hw.portData;
 
                 var dist = script.getField('DIST', script);
                 var move = parseInt(dist);
-                var time = script.getNumberValue('VALUE');
+                var time = await script.getNumberValue('VALUE');
                 var arrMsg = Entry.coconut.moveGoTime(move, time); //왼쪽으로 1초동안 돌기
                 //var arrMsg = ["0xff","0x55","0x08","0x00","0x02","0x1a","0x03","0x01","0x3c","0xe8","0x03"];
 
@@ -1464,13 +1422,13 @@ Entry.coconut.getBlocks = function() {
             },
             class: 'coconut_wheel',
             isNotFor: ['coconut'],
-            func: function(sprite, script) {
+            func: async function(sprite, script) {
                 var sq = Entry.hw.sendQueue;
                 var pd = Entry.hw.portData;
 
                 var dist1 = script.getField('DIST', script);
                 var move = parseInt(dist1);
-                var speed = script.getNumberValue('VALUE');
+                var speed = await script.getNumberValue('VALUE');
                 var arrMsg = Entry.coconut.moveExtMotor(move, speed); //외부모터 앞으로 움직이기
                 //var arrMsg = ["0xff","0x55","0x06","0x00","0x02","0x1a","0x07","0x03","0x3c"];
 
@@ -1791,13 +1749,13 @@ Entry.coconut.getBlocks = function() {
             },
             class: 'coconut_led',
             isNotFor: ['coconut'],
-            func: function(sprite, script) {
+            func: async function(sprite, script) {
                 var sq = Entry.hw.sendQueue;
                 var pd = Entry.hw.portData;
 
                 var dist1 = script.getField('DIST', script);
                 var dist2 = script.getField('COLOR', script);
-                var time = script.getNumberValue('VALUE');
+                var time = await script.getNumberValue('VALUE');
                 var color = parseInt(dist2);
                 var arrMsg = Entry.coconut.ledOnTime(dist1, color, time); //왼쪽 LED 빨간색으로 1초동안 켜기
                 //var arrMsg = ["0xff","0x55","0x08","0x00","0x02","0x19","0x03","0x01","0x02","0xe8","0x03"];
@@ -1909,11 +1867,11 @@ Entry.coconut.getBlocks = function() {
             },
             class: 'coconut_buzzer',
             isNotFor: ['coconut'],
-            func: function(sprite, script) {
+            func: async function(sprite, script) {
                 var sq = Entry.hw.sendQueue;
                 var pd = Entry.hw.portData;
 
-                var time = script.getNumberValue('VALUE');
+                var time = await script.getNumberValue('VALUE');
                 var arrMsg = Entry.coconut.playBuzzerTime(time); //버저음을 1초동안 소리내기
                 //var arrMsg = ["0xff","0x55","0x08","0x00","0x02","0x03","0x00","0x06","0x01","0xe8","0x03"];
 
@@ -1982,12 +1940,12 @@ Entry.coconut.getBlocks = function() {
             },
             class: 'coconut_buzzer',
             isNotFor: ['coconut'],
-            func: function(sprite, script) {
+            func: async function(sprite, script) {
                 var sq = Entry.hw.sendQueue;
                 var pd = Entry.hw.portData;
 
                 var hz = script.getNumberValue('HZ');
-                var time = script.getNumberValue('TIME');
+                var time = await script.getNumberValue('TIME');
                 var arrMsg = Entry.coconut.playBuzzerFreq(hz, time); //버저음 1000hz를 1초동안 소리내기
                 //var arrMsg = ["0xff","0x55","0x08","0x00","0x02","0x03","0x00","0x2c","0x01","0xe8","0x03"];
 
@@ -2356,14 +2314,7 @@ Entry.coconut.getBlocks = function() {
                 var beat = parseInt(dist4);
                 var dir = parseInt(dist5);
                 var color = parseInt(dist6);
-                var arrMsg = Entry.coconut.playNoteColor(
-                    note,
-                    octave,
-                    semi,
-                    beat,
-                    dir,
-                    color
-                );
+                var arrMsg = Entry.coconut.playNoteColor(note, octave, semi, beat, dir, color);
                 //도 4 - 음을 2분음표 박자로 연주하는 동안 왼쪽 LED 빨간색 켜기
                 //var arrMsg = ["0xff","0x55","0x0b","0x00","0x02","0x03","0x05","0x43","0x04","0x2d","0xf4","0x01","0x01","0x02"];
 
@@ -2729,36 +2680,24 @@ Entry.coconut.getBlocks = function() {
                     }
                 } else if (dir == '1') {
                     if (det == '1') {
-                        if (
-                            pd.BothProximityDetection == 2 ||
-                            pd.BothProximityDetection == 3
-                        )
+                        if (pd.BothProximityDetection == 2 || pd.BothProximityDetection == 3)
                             // 왼쪽 바닥센서가 감지
                             return true;
                         else return false;
                     } else {
-                        if (
-                            pd.BothProximityDetection == 0 ||
-                            pd.BothProximityDetection == 1
-                        )
+                        if (pd.BothProximityDetection == 0 || pd.BothProximityDetection == 1)
                             // 왼쪽 바닥센서가 감지
                             return true;
                         else return false;
                     }
                 } else if (dir == '2') {
                     if (det == '1') {
-                        if (
-                            pd.BothProximityDetection == 1 ||
-                            pd.BothProximityDetection == 3
-                        )
+                        if (pd.BothProximityDetection == 1 || pd.BothProximityDetection == 3)
                             // 오른쪽 바닥센서가 감지
                             return true;
                         else return false;
                     } else {
-                        if (
-                            pd.BothProximityDetection == 0 ||
-                            pd.BothProximityDetection == 2
-                        )
+                        if (pd.BothProximityDetection == 0 || pd.BothProximityDetection == 2)
                             // 오른쪽 바닥센서가 감지
                             return true;
                         else return false;
@@ -3516,12 +3455,12 @@ Entry.coconut.getBlocks = function() {
             },
             class: 'coconut_led',
             isNotFor: ['coconut'],
-            func: function(sprite, script) {
+            func: async function(sprite, script) {
                 var sq = Entry.hw.sendQueue;
                 var pd = Entry.hw.portData;
 
                 var pin = script.getNumberField('PIN');
-                var time = script.getNumberValue('TIME');
+                var time = await script.getNumberValue('TIME');
                 var arrMsg = Entry.coconut.extLedOn(pin, time); //외부 LED 설정 D4 0.5초동안 켜기
                 //var arrMsg = ["0xff","0x55","0x06","0x00","0x02","0x2c","0x04","0xf4","0x01"];
 
@@ -3598,13 +3537,15 @@ Entry.coconut.getBlocks = function() {
             },
             class: 'coconut_led',
             isNotFor: ['coconut'],
-            func: function(sprite, script) {
+            func: async function(sprite, script) {
                 var sq = Entry.hw.sendQueue;
                 var pd = Entry.hw.portData;
 
                 var pin = script.getNumberField('PIN');
-                var hz = script.getNumberValue('HZ');
-                var time = script.getNumberValue('TIME');
+                let [hz, time] = await Promise.all([
+                    script.getNumberValue('HZ'),
+                    script.getNumberValue('TIME'),
+                ]);
                 var arrMsg = Entry.coconut.playSpeaker(pin, hz, time); //외부 스피커 설정 D10 100hz로 0.5초 동안 소리내기
                 //var arrMsg = ["0xff","0x55","0x08","0x00","0x02","0x29","0x10","0x64","0x00","0xf4","0x01"];
 
@@ -3812,12 +3753,12 @@ Entry.coconut.getBlocks = function() {
             },
             class: 'coconut_led',
             isNotFor: ['coconut'],
-            func: function(sprite, script) {
+            func: async function(sprite, script) {
                 var sq = Entry.hw.sendQueue;
                 var pd = Entry.hw.portData;
 
                 var pin = script.getNumberField('PIN');
-                var angle = script.getNumberValue('ANGLE');
+                var angle = await script.getNumberValue('ANGLE');
                 var arrMsg = Entry.coconut.runExtServo(pin, angle); //서보모터 연결 D4 각도 90
                 //var arrMsg = ["0xff","0x55","0x05","0x00","0x02","0x43","0x04","0x5a"];
 

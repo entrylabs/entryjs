@@ -5,8 +5,8 @@ Entry.playcode = {
     url: 'http://www.playcode.kr/product',
     imageName: 'playcode.png',
     title: {
-        "en": "playcode",
-        "ko": "플레이코드"
+        en: 'playcode',
+        ko: '플레이코드',
     },
     setZero: function() {
         if (!Entry.hw.sendQueue.SET) {
@@ -507,9 +507,7 @@ Entry.playcode.getBlocks = function() {
                     Entry.hw.sendQueue['GET'] = {};
                 }
 
-                Entry.hw.sendQueue['GET'][
-                    Entry.playcode.sensorTypes.MICROPHONE
-                ] = {
+                Entry.hw.sendQueue['GET'][Entry.playcode.sensorTypes.MICROPHONE] = {
                     port: [port],
                     data: 1,
                     time: new Date().getTime(),
@@ -532,10 +530,7 @@ Entry.playcode.getBlocks = function() {
                 },
                 {
                     type: 'Dropdown',
-                    options: [
-                        [Lang.Blocks.ARDUINO_on, 'on'],
-                        [Lang.Blocks.ARDUINO_off, 'off'],
-                    ],
+                    options: [[Lang.Blocks.ARDUINO_on, 'on'], [Lang.Blocks.ARDUINO_off, 'off']],
                     value: 'on',
                     fontSize: 11,
                     arrowColor: EntryStatic.ARROW_COLOR_HW,
@@ -625,9 +620,9 @@ Entry.playcode.getBlocks = function() {
             class: 'playcode_set',
             isNotFor: ['playcode'],
 
-            func: function(sprite, script) {
+            func: async function(sprite, script) {
                 var port = script.getNumberValue('PORT');
-                var value = script.getNumberValue('VALUE');
+                var value = await script.getNumberValue('VALUE');
 
                 value = Math.round(value);
                 value = Math.min(value, 180);
@@ -686,9 +681,9 @@ Entry.playcode.getBlocks = function() {
             },
             class: 'playcode_set',
             isNotFor: ['playcode'],
-            func: function(sprite, script) {
+            func: async function(sprite, script) {
                 var port = script.getNumberValue('PORT');
-                var value = script.getNumberValue('VALUE');
+                var value = await script.getNumberValue('VALUE');
 
                 value = Math.round(value);
                 value = Math.min(value, 255);

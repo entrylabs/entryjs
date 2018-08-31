@@ -4,8 +4,8 @@ Entry.EduMaker = {
     name: 'EduMaker',
     imageName: 'edumaker.png',
     title: {
-        "ko": "에듀메이커 보드",
-        "en": "EduMaker Board"
+        ko: '에듀메이커 보드',
+        en: 'EduMaker Board',
     },
     setZero: function() {
         if (!Entry.hw.sendQueue.SET) {
@@ -201,22 +201,29 @@ Entry.EduMaker.getBlocks = function() {
             },
             class: 'EduMakerGet',
             isNotFor: ['EduMaker'],
-            func: function(sprite, script) {
+            func: async function(sprite, script) {
                 var result = script.getValue('PORT', script);
                 var ANALOG = Entry.hw.portData.ANALOG;
-                var value2 = script.getNumberValue('VALUE2', script);
-                var value3 = script.getNumberValue('VALUE3', script);
-                var value4 = script.getNumberValue('VALUE4', script);
-                var value5 = script.getNumberValue('VALUE5', script);
-                var stringValue4 = script.getValue('VALUE4', script);
-                var stringValue5 = script.getValue('VALUE5', script);
+                let [
+                    value2,
+                    value3,
+                    value4,
+                    value5,
+                    stringValue4,
+                    stringValue5,
+                ] = await Promise.all([
+                    script.getNumberValue('VALUE2', script),
+                    script.getNumberValue('VALUE3', script),
+                    script.getNumberValue('VALUE4', script),
+                    script.getNumberValue('VALUE5', script),
+                    script.getNumberValue('VALUE4', script),
+                    script.getNumberValue('VALUE5', script),
+                ]);
                 var isFloat = false;
 
                 if (
-                    (Entry.Utils.isNumber(stringValue4) &&
-                        stringValue4.indexOf('.') > -1) ||
-                    (Entry.Utils.isNumber(stringValue5) &&
-                        stringValue5.indexOf('.') > -1)
+                    (Entry.Utils.isNumber(stringValue4) && stringValue4.indexOf('.') > -1) ||
+                    (Entry.Utils.isNumber(stringValue5) && stringValue5.indexOf('.') > -1)
                 ) {
                     isFloat = true;
                 }
@@ -295,9 +302,7 @@ Entry.EduMaker.getBlocks = function() {
                 if (!Entry.hw.sendQueue['GET']) {
                     Entry.hw.sendQueue['GET'] = {};
                 }
-                Entry.hw.sendQueue['GET'][
-                    Entry.ArduinoExt.sensorTypes.ULTRASONIC
-                ] = {
+                Entry.hw.sendQueue['GET'][Entry.ArduinoExt.sensorTypes.ULTRASONIC] = {
                     port: [port1, port2],
                     time: new Date().getTime(),
                 };
@@ -336,9 +341,7 @@ Entry.EduMaker.getBlocks = function() {
                 if (!Entry.hw.sendQueue['GET']) {
                     Entry.hw.sendQueue['GET'] = {};
                 }
-                Entry.hw.sendQueue['GET'][
-                    Entry.ArduinoExt.sensorTypes.DIGITAL
-                ] = {
+                Entry.hw.sendQueue['GET'][Entry.ArduinoExt.sensorTypes.DIGITAL] = {
                     port: port,
                     time: new Date().getTime(),
                 };
@@ -353,10 +356,7 @@ Entry.EduMaker.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [
-                        [Lang.Blocks.ARDUINO_on, 'on'],
-                        [Lang.Blocks.ARDUINO_off, 'off'],
-                    ],
+                    options: [[Lang.Blocks.ARDUINO_on, 'on'], [Lang.Blocks.ARDUINO_off, 'off']],
                     value: 'on',
                     fontSize: 11,
                     arrowColor: EntryStatic.ARROW_COLOR_HW,
@@ -479,9 +479,9 @@ Entry.EduMaker.getBlocks = function() {
             },
             class: 'EduMaker',
             isNotFor: ['EduMaker'],
-            func: function(sprite, script) {
+            func: async function(sprite, script) {
                 var port = script.getNumberValue('PORT');
-                var value = script.getNumberValue('VALUE');
+                var value = await script.getNumberValue('VALUE');
                 value = Math.round(value);
                 value = Math.max(value, 0);
                 value = Math.min(value, 255);
@@ -652,14 +652,13 @@ Entry.EduMaker.getBlocks = function() {
             },
             class: 'EduMaker',
             isNotFor: ['EduMaker'],
-            func: function(sprite, script) {
+            func: async function(sprite, script) {
                 var sq = Entry.hw.sendQueue;
                 var port = script.getNumberValue('PORT', script);
 
                 if (!script.isStart) {
                     var note = script.getValue('NOTE', script);
-                    if (!Entry.Utils.isNumber(note))
-                        note = Entry.ArduinoExt.toneTable[note];
+                    if (!Entry.Utils.isNumber(note)) note = Entry.ArduinoExt.toneTable[note];
 
                     if (note < 0) {
                         note = 0;
@@ -667,7 +666,7 @@ Entry.EduMaker.getBlocks = function() {
                         note = 12;
                     }
 
-                    var duration = script.getNumberValue('DURATION', script);
+                    var duration = await script.getNumberValue('DURATION', script);
 
                     if (duration < 0) {
                         duration = 0;
@@ -768,10 +767,10 @@ Entry.EduMaker.getBlocks = function() {
             },
             class: 'EduMaker',
             isNotFor: ['EduMaker'],
-            func: function(sprite, script) {
+            func: async function(sprite, script) {
                 var sq = Entry.hw.sendQueue;
                 var port = script.getNumberValue('PORT', script);
-                var value = script.getNumberValue('VALUE', script);
+                var value = await script.getNumberValue('VALUE', script);
                 value = Math.min(180, value);
                 value = Math.max(0, value);
 

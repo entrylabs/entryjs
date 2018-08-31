@@ -684,11 +684,7 @@ Entry.Dash.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [
-                        ['위쪽', 0x04],
-                        ['가운데', 0x05],
-                        ['아래쪽', 0x06],
-                    ],
+                    options: [['위쪽', 0x04], ['가운데', 0x05], ['아래쪽', 0x06]],
                     fontSize: 11,
                 },
                 {
@@ -1127,9 +1123,9 @@ Entry.Dash.getBlocks = function() {
             },
             class: 'Dash_drive',
             isNotFor: ['Dash'],
-            func: function(sprite, script) {
+            func: async function(sprite, script) {
                 var var1 = script.getNumberField('DIRECTION', script);
-                var var2 = script.getNumberValue('DISTANCE', script);
+                var var2 = await script.getNumberValue('DISTANCE', script);
                 var var3 = script.getNumberField('SPEED', script);
                 var sq = Entry.hw.sendQueue;
                 var pd = Entry.hw.portData;
@@ -1175,8 +1171,7 @@ Entry.Dash.getBlocks = function() {
             skeleton: 'basic',
             fontColor: '#fff',
             statements: [],
-            template:
-                '왼쪽바퀴 %1 (으)로 %2, 오른쪽 바퀴 %3 (으)로 %4 움직이기 %5',
+            template: '왼쪽바퀴 %1 (으)로 %2, 오른쪽 바퀴 %3 (으)로 %4 움직이기 %5',
             params: [
                 {
                     type: 'Dropdown',
