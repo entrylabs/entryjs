@@ -291,9 +291,12 @@ Entry.Cobl.getBlocks = function() {
             },
             class: 'cobl',
             isNotFor: ['cobl'],
-            func: function(sprite, script) {
-                var port = script.getStringField('PORT');
-                var value = script.getStringField('OPERATOR');
+            func: async function(sprite, script) {
+                const [port, value] = await Promise.all([
+                    script.getStringField('PORT'),
+                    script.getStringField('OPERATOR'),
+                ]);
+
                 Entry.hw.setDigitalPortValue('RainBowLED_' + port, value);
                 Entry.hw.update();
                 delete Entry.hw.sendQueue['RainBowLED_' + port];
@@ -380,11 +383,13 @@ Entry.Cobl.getBlocks = function() {
             },
             class: 'cobl',
             isNotFor: ['cobl'],
-            func: function(sprite, script) {
-                var led = script.getNumberField('LED');
-                var r = script.getStringField('RED');
-                var g = script.getStringField('GREEN');
-                var b = script.getStringField('BLUE');
+            func: async function(sprite, script) {
+                const [led, r, g, b] = await Promise.all([
+                    script.getNumberField('LED'),
+                    script.getStringField('RED'),
+                    script.getStringField('GREEN'),
+                    script.getStringField('BLUE'),
+                ]);
 
                 Entry.hw.setDigitalPortValue('BLED_IDX', led);
                 Entry.hw.setDigitalPortValue('BLED_R', r);
@@ -424,8 +429,8 @@ Entry.Cobl.getBlocks = function() {
             },
             class: 'cobl',
             isNotFor: ['cobl'],
-            func: function(sprite, script) {
-                var value = script.getNumberField('VALUE');
+            func: async function(sprite, script) {
+                let value = await script.getNumberField('VALUE');
                 value = Math.round(value);
                 value = Math.max(value, 15);
                 value = Math.min(value, 165);
@@ -492,9 +497,11 @@ Entry.Cobl.getBlocks = function() {
             },
             class: 'cobl',
             isNotFor: ['cobl'],
-            func: function(sprite, script) {
-                var melody = script.getStringField('MELODY');
-                var duration = script.getStringField('DURATION');
+            func: async function(sprite, script) {
+                const [melody, duration] = await Promise.all([
+                    script.getStringField('MELODY'),
+                    script.getStringField('DURATION'),
+                ]);
 
                 Entry.hw.setDigitalPortValue('Melody', melody);
                 Entry.hw.setDigitalPortValue('Melody_DUR', duration);
@@ -554,10 +561,12 @@ Entry.Cobl.getBlocks = function() {
             },
             class: 'cobl',
             isNotFor: ['cobl'],
-            func: function(sprite, script) {
-                var motor = script.getStringField('MOTOR');
-                var direction = script.getStringField('DIRECTION');
-                var speed = script.getStringField('SPEED');
+            func: async function(sprite, script) {
+                const [motor, direction, speed] = await Promise.all([
+                    script.getStringField('MOTOR'),
+                    script.getStringField('DIRECTION'),
+                    script.getStringField('SPEED'),
+                ]);
 
                 if (motor == 1) {
                     Entry.hw.setDigitalPortValue('DC1_DIR', direction);
@@ -617,9 +626,11 @@ Entry.Cobl.getBlocks = function() {
             },
             class: 'cobl',
             isNotFor: ['cobl'],
-            func: function(sprite, script) {
-                var port = script.getStringField('PORT');
-                var level = script.getStringField('LEVEL');
+            func: async function(sprite, script) {
+                let [port, level] = await Promise.all([
+                    script.getStringField('PORT'),
+                    script.getStringField('LEVEL'),
+                ]);
 
                 if (port == 1) {
                     Entry.hw.setDigitalPortValue('EXUSB1', level);
@@ -677,9 +688,11 @@ Entry.Cobl.getBlocks = function() {
             },
             class: 'cobl',
             isNotFor: ['cobl'],
-            func: function(sprite, script) {
-                var led = script.getStringField('PORT');
-                var value = script.getStringField('OPERATOR');
+            func: async function(sprite, script) {
+                const [led, value] = await Promise.all([
+                    script.getStringField('PORT'),
+                    script.getStringField('OPERATOR'),
+                ]);
 
                 Entry.hw.setDigitalPortValue('ELED_IDX', led);
 
@@ -808,11 +821,13 @@ Entry.Cobl.getBlocks = function() {
             },
             class: 'cobl',
             isNotFor: ['cobl'],
-            func: function(sprite, script) {
-                var led = script.getNumberField('LED');
-                var r = script.getStringField('RED');
-                var g = script.getStringField('GREEN');
-                var b = script.getStringField('BLUE');
+            func: async function(sprite, script) {
+                const [led, r, g, b] = await Promise.all([
+                    script.getNumberField('LED'),
+                    script.getStringField('RED'),
+                    script.getStringField('GREEN'),
+                    script.getStringField('BLUE'),
+                ]);
 
                 Entry.hw.setDigitalPortValue('ELED_IDX', led);
                 Entry.hw.setDigitalPortValue('ELED_R', r);
@@ -852,10 +867,10 @@ Entry.Cobl.getBlocks = function() {
             },
             class: 'cobl',
             isNotFor: ['cobl'],
-            func: function(sprite, script) {
-                var value = script.getNumberField('VALUE');
-                var value_s = value.toString();
-                var value_c = value_s.substring(0, 4);
+            func: async function(sprite, script) {
+                const value = await script.getNumberField('VALUE');
+                const value_s = value.toString();
+                const value_c = value_s.substring(0, 4);
                 Entry.hw.setDigitalPortValue('7SEG', value_c);
                 Entry.hw.update();
                 delete Entry.hw.sendQueue['7SEG'];
