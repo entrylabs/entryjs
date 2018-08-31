@@ -1432,8 +1432,8 @@ Entry.Hamster.getBlocks = function() {
             },
             class: 'hamster_wheel',
             isNotFor: ['hamster'],
-            func: function(sprite, script) {
-                var sq = Entry.hw.sendQueue;
+            func: async function(sprite, script) {
+                const sq = Entry.hw.sendQueue;
                 Entry.Hamster.setModule(sq); // akaii: add
                 if (!script.isStart) {
                     script.isStart = true;
@@ -1443,8 +1443,8 @@ Entry.Hamster.getBlocks = function() {
                     sq.rightWheel = 30;
                     Entry.Hamster.boardCommand = 0; // akaii: add
                     Entry.Hamster.setLineTracerMode(sq, 0);
-                    var timeValue = script.getNumberValue('VALUE') * 1000;
-                    var timer = setTimeout(function() {
+                    const timeValue = await script.getNumberValue('VALUE') * 1000;
+                    const timer = setTimeout(function() {
                         script.timeFlag = 0;
                         Entry.Hamster.removeTimeout(timer);
                     }, timeValue);
@@ -1508,8 +1508,8 @@ Entry.Hamster.getBlocks = function() {
             },
             class: 'hamster_wheel',
             isNotFor: ['hamster'],
-            func: function(sprite, script) {
-                var sq = Entry.hw.sendQueue;
+            func: async function(sprite, script) {
+                const sq = Entry.hw.sendQueue;
                 Entry.Hamster.setModule(sq); // akaii: add
                 if (!script.isStart) {
                     script.isStart = true;
@@ -1519,8 +1519,8 @@ Entry.Hamster.getBlocks = function() {
                     sq.rightWheel = -30;
                     Entry.Hamster.boardCommand = 0; // akaii: add
                     Entry.Hamster.setLineTracerMode(sq, 0);
-                    var timeValue = script.getNumberValue('VALUE') * 1000;
-                    var timer = setTimeout(function() {
+                    const timeValue = await script.getNumberValue('VALUE') * 1000;
+                    const timer = setTimeout(function() {
                         script.timeFlag = 0;
                         Entry.Hamster.removeTimeout(timer);
                     }, timeValue);
@@ -1595,13 +1595,13 @@ Entry.Hamster.getBlocks = function() {
             },
             class: 'hamster_wheel',
             isNotFor: ['hamster'],
-            func: function(sprite, script) {
-                var sq = Entry.hw.sendQueue;
+            func: async function(sprite, script) {
+                const sq = Entry.hw.sendQueue;
                 Entry.Hamster.setModule(sq); // akaii: add
                 if (!script.isStart) {
                     script.isStart = true;
                     script.timeFlag = 1;
-                    var direction = script.getField('DIRECTION', script);
+                    const direction = script.getField('DIRECTION', script);
                     if (direction == 'LEFT') {
                         sq.motion = 3; // akaii: add
                         sq.leftWheel = -30;
@@ -1613,8 +1613,8 @@ Entry.Hamster.getBlocks = function() {
                     }
                     Entry.Hamster.boardCommand = 0; // akaii: add
                     Entry.Hamster.setLineTracerMode(sq, 0);
-                    var timeValue = script.getNumberValue('VALUE') * 1000;
-                    var timer = setTimeout(function() {
+                    const timeValue = await script.getNumberValue('VALUE') * 1000;
+                    const timer = setTimeout(function() {
                         script.timeFlag = 0;
                         Entry.Hamster.removeTimeout(timer);
                     }, timeValue);
@@ -1726,11 +1726,14 @@ Entry.Hamster.getBlocks = function() {
             },
             class: 'hamster_wheel',
             isNotFor: ['hamster'],
-            func: function(sprite, script) {
-                var sq = Entry.hw.sendQueue;
+            func: async function(sprite, script) {
+                const sq = Entry.hw.sendQueue;
                 Entry.Hamster.setModule(sq); // akaii: add
-                var left = script.getNumberValue('LEFT');
-                var right = script.getNumberValue('RIGHT');
+                const [left, right] = await Promise.all([
+                    script.getNumberValue('LEFT'),
+                    script.getNumberValue('RIGHT'),
+                ]);
+
                 sq.motion = 0; // akaii: add
                 sq.leftWheel =
                     sq.leftWheel != undefined ? sq.leftWheel + left : left;
@@ -1799,12 +1802,16 @@ Entry.Hamster.getBlocks = function() {
             },
             class: 'hamster_wheel',
             isNotFor: ['hamster'],
-            func: function(sprite, script) {
-                var sq = Entry.hw.sendQueue;
+            func: async function(sprite, script) {
+                const sq = Entry.hw.sendQueue;
                 Entry.Hamster.setModule(sq); // akaii: add
                 sq.motion = 0; // akaii: add
-                sq.leftWheel = script.getNumberValue('LEFT');
-                sq.rightWheel = script.getNumberValue('RIGHT');
+                const [leftWheel, rightWheel] = await Promise.all([
+                    script.getNumberValue('LEFT'),
+                    script.getNumberValue('RIGHT')
+                ]);
+                sq.leftWheel = leftWheel;
+                sq.rightWheel = rightWheel;
                 Entry.Hamster.boardCommand = 0; // akaii: add
                 Entry.Hamster.setLineTracerMode(sq, 0);
                 return script.callReturn();
@@ -1871,11 +1878,11 @@ Entry.Hamster.getBlocks = function() {
             },
             class: 'hamster_wheel',
             isNotFor: ['hamster'],
-            func: function(sprite, script) {
-                var sq = Entry.hw.sendQueue;
+            func: async function(sprite, script) {
+                const sq = Entry.hw.sendQueue;
                 Entry.Hamster.setModule(sq); // akaii: add
-                var direction = script.getField('DIRECTION');
-                var value = script.getNumberValue('VALUE');
+                const direction = script.getField('DIRECTION');
+                const value = await script.getNumberValue('VALUE');
                 sq.motion = 0; // akaii: add
                 if (direction == 'LEFT') {
                     sq.leftWheel =
@@ -2017,11 +2024,11 @@ Entry.Hamster.getBlocks = function() {
             },
             class: 'hamster_wheel',
             isNotFor: ['hamster'],
-            func: function(sprite, script) {
-                var sq = Entry.hw.sendQueue;
+            func: async function(sprite, script) {
+                const sq = Entry.hw.sendQueue;
                 Entry.Hamster.setModule(sq); // akaii: add
-                var direction = script.getField('DIRECTION');
-                var value = script.getNumberValue('VALUE');
+                const direction = script.getField('DIRECTION');
+                const value = await script.getNumberValue('VALUE');
                 sq.motion = 0; // akaii: add
                 if (direction == 'LEFT') {
                     sq.leftWheel = value;
@@ -3975,10 +3982,10 @@ Entry.Hamster.getBlocks = function() {
             },
             class: 'hamster_buzzer',
             isNotFor: ['hamster'],
-            func: function(sprite, script) {
-                var sq = Entry.hw.sendQueue;
+            func: async function(sprite, script) {
+                const sq = Entry.hw.sendQueue;
                 Entry.Hamster.setModule(sq); // akaii: add
-                var value = script.getNumberValue('VALUE');
+                const value = await script.getNumberValue('VALUE');
                 sq.buzzer = sq.buzzer != undefined ? sq.buzzer + value : value;
                 sq.note = 0;
                 return script.callReturn();
@@ -4023,10 +4030,10 @@ Entry.Hamster.getBlocks = function() {
             },
             class: 'hamster_buzzer',
             isNotFor: ['hamster'],
-            func: function(sprite, script) {
-                var sq = Entry.hw.sendQueue;
+            func: async function(sprite, script) {
+                const sq = Entry.hw.sendQueue;
                 Entry.Hamster.setModule(sq); // akaii: add
-                sq.buzzer = script.getNumberValue('VALUE');
+                sq.buzzer = await script.getNumberValue('VALUE');
                 sq.note = 0;
                 return script.callReturn();
             },
@@ -4142,13 +4149,16 @@ Entry.Hamster.getBlocks = function() {
             },
             class: 'hamster_buzzer',
             isNotFor: ['hamster'],
-            func: function(sprite, script) {
-                var sq = Entry.hw.sendQueue;
+            func: async function(sprite, script) {
+                const sq = Entry.hw.sendQueue;
                 Entry.Hamster.setModule(sq); // akaii: add
                 if (!script.isStart) {
-                    var note = script.getNumberField('NOTE', script);
-                    var octave = script.getNumberField('OCTAVE', script);
-                    var beat = script.getNumberValue('VALUE', script);
+                    let [note, octave, beat] = await Promise.all([
+                        script.getNumberField('NOTE', script),
+                        script.getNumberField('OCTAVE', script),
+                        script.getNumberValue('VALUE', script),
+                    ]);
+
                     var tempo = Entry.Hamster.tempo;
                     note += (octave - 1) * 12;
                     var timeValue = beat * 60 * 1000 / tempo;
@@ -4266,17 +4276,17 @@ Entry.Hamster.getBlocks = function() {
             },
             class: 'hamster_buzzer',
             isNotFor: ['hamster'],
-            func: function(sprite, script) {
-                var sq = Entry.hw.sendQueue;
+            func: async function(sprite, script) {
+                const sq = Entry.hw.sendQueue;
                 Entry.Hamster.setModule(sq); // akaii: add
                 if (!script.isStart) {
                     script.isStart = true;
                     script.timeFlag = 1;
-                    var timeValue = script.getNumberValue('VALUE');
+                    let timeValue = await script.getNumberValue('VALUE');
                     timeValue = timeValue * 60 * 1000 / Entry.Hamster.tempo;
                     sq.buzzer = 0;
                     sq.note = 0;
-                    var timer = setTimeout(function() {
+                    const timer = setTimeout(function() {
                         script.timeFlag = 0;
                         Entry.Hamster.removeTimeout(timer);
                     }, timeValue);
@@ -4348,9 +4358,9 @@ Entry.Hamster.getBlocks = function() {
             },
             class: 'hamster_buzzer',
             isNotFor: ['hamster'],
-            func: function(sprite, script) {
+            func: async function(sprite, script) {
                 Entry.Hamster.setModule(Entry.hw.sendQueue); // akaii: add
-                Entry.Hamster.tempo += script.getNumberValue('VALUE');
+                Entry.Hamster.tempo += await script.getNumberValue('VALUE');
                 if (Entry.Hamster.tempo < 1) Entry.Hamster.tempo = 1;
                 return script.callReturn();
             },
@@ -4400,9 +4410,9 @@ Entry.Hamster.getBlocks = function() {
             },
             class: 'hamster_buzzer',
             isNotFor: ['hamster'],
-            func: function(sprite, script) {
+            func: async function(sprite, script) {
                 Entry.Hamster.setModule(Entry.hw.sendQueue); // akaii: add
-                Entry.Hamster.tempo = script.getNumberValue('VALUE');
+                Entry.Hamster.tempo = await script.getNumberValue('VALUE');
                 if (Entry.Hamster.tempo < 1) Entry.Hamster.tempo = 1;
                 return script.callReturn();
             },
@@ -4691,11 +4701,11 @@ Entry.Hamster.getBlocks = function() {
             },
             class: 'hamster_port',
             isNotFor: ['hamster'],
-            func: function(sprite, script) {
-                var sq = Entry.hw.sendQueue;
+            func: async function(sprite, script) {
+                const sq = Entry.hw.sendQueue;
                 Entry.Hamster.setModule(sq); // akaii: add
-                var port = script.getField('PORT');
-                var value = script.getNumberValue('VALUE');
+                const port = script.getField('PORT');
+                const value = await script.getNumberValue('VALUE');
                 if (port == 'A') {
                     sq.outputA =
                         sq.outputA != undefined ? sq.outputA + value : value;
@@ -4825,11 +4835,11 @@ Entry.Hamster.getBlocks = function() {
             },
             class: 'hamster_port',
             isNotFor: ['hamster'],
-            func: function(sprite, script) {
-                var sq = Entry.hw.sendQueue;
+            func: async function(sprite, script) {
+                const sq = Entry.hw.sendQueue;
                 Entry.Hamster.setModule(sq); // akaii: add
-                var port = script.getField('PORT');
-                var value = script.getNumberValue('VALUE');
+                const port = script.getField('PORT');
+                const value = await script.getNumberValue('VALUE');
                 if (port == 'A') {
                     sq.outputA = value;
                 } else if (port == 'B') {
