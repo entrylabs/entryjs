@@ -279,7 +279,6 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
                 view: new Entry.BlockView(this, board, mode),
             });
             this._updatePos();
-            this._comment = new Entry.Comment(this, board);
         }
     };
 

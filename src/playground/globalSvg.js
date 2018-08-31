@@ -30,6 +30,7 @@ class GlobalSvg {
         );
 
         this.svg = Entry.SVG('globalSvg');
+        this.svgPoint = this.svg.createSVGPoint();
         this.left = 0;
         this.top = 0;
         this._inited = true;
@@ -157,14 +158,15 @@ class GlobalSvg {
         if (!view) return;
         var pos = view.getAbsoluteCoordinate();
         var offset = view.board.offset();
-        this.left = pos.scaleX + (offset.left / this.scale - this._offsetX);
-        this.top = pos.scaleY + (offset.top / this.scale - this._offsetY);
+        this.left = pos.scaleX// + (offset.left / this.scale - this._offsetX);
+        this.top = pos.scaleY// + (offset.top / this.scale - this._offsetY);
+        console.log('commentPosition', this.left, this.top);
         const [comment] = this.svgGroup.getElementsByTagName('rect');
         const [line] = this.svgGroup.getElementsByTagName('line');
         comment.setAttribute('x', this.left);
         comment.setAttribute('y', this.top);
-        line.setAttribute('x1', startX + (offset.left / this.scale - this._offsetX));
-        line.setAttribute('y1', startY + (offset.top / this.scale - this._offsetY));
+        line.setAttribute('x1', startX);
+        line.setAttribute('y1', startY);
         line.setAttribute('x2', this.left + 80);
         line.setAttribute('y2', this.top);
     }
@@ -237,6 +239,10 @@ class GlobalSvg {
 
     setScale(scale = 1) {
         this.scale = scale;
+    }
+
+    getRelativePoint(matrix) {
+        return this.svgPoint.matrixTransform(matrix);
     }
 }
 

@@ -60,7 +60,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
 
         if (!this.textElement) {
             this.textElement = this.svgGroup.elem('text', {
-                x: X_PADDING / 2,
+                x: -2,
                 y: TEXT_Y_PADDING,
                 fill: this._contents.color || 'black',
                 'font-size': this._font_size + 'px',
@@ -80,12 +80,13 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
         if (!this._header)
             this._header = this.svgGroup.elem('rect', {
                 width,
+                x: -2,
                 y,
                 height: CONTENT_HEIGHT,
-                rx: 3,
+                rx: 0,
                 ry: 3,
                 fill: '#fff',
-                'fill-opacity': this._isClearBG ? 0 : 0.4,
+                'fill-opacity': 0,
             });
         else {
             this._header.setAttribute('width', width);

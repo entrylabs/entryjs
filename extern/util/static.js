@@ -138,7 +138,6 @@ EntryStatic.getAllBlocks = function() {
         {
             category: "start",
             blocks: [
-                "when_run_button_click1",
                 "when_run_button_click",
                 "when_some_key_pressed",
                 "mouse_clicked",

@@ -15,13 +15,19 @@ Entry.skeleton.basic = {
     path: function(blockView) {
         var width = blockView.contentWidth;
         var height = blockView.contentHeight;
-        height = Math.max(30, height + 2);
+        height = Math.max(28, height + 2);
         width = Math.max(0, width + 9 - height / 2);
         var halfHeight = height/2;
 
-        return "m -8,0 l 8,8 8,-8 h " + width +" a " + halfHeight + "," +
-            halfHeight + " 0 0,1 0," + height + " h -" + width + " l -8,8 -8,-8 v -" +
-            height + " z";
+        return `M 0 0
+        l 6 6
+        l 6 -6
+        h ${width}
+        a ${halfHeight} ${halfHeight} 0 0 1 0 ${height}
+        h -${width}
+        l -6 6
+        l -6 -6
+        z`;
     },
     box: function(blockView) {
         var width = blockView ? blockView.contentWidth : 150;
@@ -29,13 +35,13 @@ Entry.skeleton.basic = {
         return {
             offsetX: -8, offsetY: 0,
             width: width + 30,
-            height: Math.max(30, height + 2),
+            height: Math.max(28, height + 2),
             marginBottom: 0
         };
     },
     magnets: function(blockView) {
         // apply scale required.
-        var height = blockView ? Math.max(blockView.height, 30) : 30;
+        var height = blockView ? Math.max(blockView.height, 28) : 28;
         return {
             previous: {x: 0, y: 0},
             next: {x: 0, y: height + 1 + blockView.offsetY}
@@ -55,6 +61,8 @@ Entry.skeleton.basic_create = {
         var height = blockView.contentHeight;
         height = Math.max(30, height + 2);
         width = Math.max(0, width + 9 - height / 2);
+
+        
         return "m -8,0 l 16,0 h %w a %h,%h 0 0,1 0,%wh h -%w l -8,8 -8,-8 v -%wh z"
             .replace(/%wh/gi, height)
             .replace(/%w/gi, width)
@@ -91,12 +99,23 @@ Entry.skeleton.basic_event = {
         width = Math.max(0, width);
         width -= 30;
 
-        return "m -8,0 m 0,-5 a 19.5,19.5 0, 0,1 16,0 c 10,5 15,5 20,5 h " +
-            width + " " + "a 15,15 0 0,1 0,30 H 8 l -8,8 -8,-8 l 0,0.5 a 19.5,19.5 0, 0,1 0,-35 z";
+        return `m 24 34
+        h ${width}
+        a 14 14 0 0 0 0 -28
+        H 30
+        A 17 17 0 0 0 18 1
+        C 8.611 1 1 8.611 1 18
+        c 0 7.2 4.5 13.5 11 16
+        l 6 6
+        l 6 -6
+        z`;
+
+        // return "m -8,0 m 0,-5 a 19.5,19.5 0, 0,1 16,0 c 10,5 15,5 20,5 h " +
+        //     width + " " + "a 15,15 0 0,1 0,30 H 8 l -8,8 -8,-8 l 0,0.5 a 19.5,19.5 0, 0,1 0,-35 z";
     },
     box: function(blockView) {
         return {
-            offsetX: -19, offsetY: -7,
+            offsetX: 0, offsetY: -7,
             width: blockView.contentWidth + 30,
             height: 30,
             marginBottom: 0
@@ -120,19 +139,52 @@ Entry.skeleton.basic_loop = {
     path: function(blockView) {
         var width = blockView.contentWidth;
         var height = blockView.contentHeight;
-        height = Math.max(30, height + 2);
+        height = Math.max(28, height + 2);
         width = Math.max(0, width + 9 - height / 2);
         var statementHeight = blockView._statements[0] ? blockView._statements[0].height : 20;
         statementHeight = Math.max(statementHeight, 20) + 1;
         var bw = width - 8;
         var halfHeight = height / 2;
+        console.log(statementHeight);
 
-        return "m -8,0 l 8,8 8,-8 h " +  width + " a " + halfHeight + "," +
-            halfHeight + " 0 0,1 0," + height + " H 24 l -8,8 -8,-8 h -0.4 v " +
-            statementHeight + " h 0.4 l 8,8 8,-8 h " + bw + " a 8,8 0 0,1 0,16 H 8 l -8,8 -8,-8 z";
+        return `m 0 0
+        l 6 6
+        l 6 -6
+        h ${width}
+        a ${halfHeight} ${halfHeight} 0 0 1 0 ${height}
+        H 26
+        l -6 6
+        l -6 -6
+        v ${statementHeight}
+        l 6 6
+        l 6 -6
+        h ${bw}
+        a 7.5 7.5 0 0 1 0 15
+        H 12
+        l -6 6
+        l -6 -6
+        z`;
+        // return `M 1 1
+        // v ${statementHeight + 48}
+        // l 6 6
+        // l 6 -6
+        // h ${bw}
+        // a 7.5 7.5 0 1 0 0 -15
+        // H 26
+        // l -6 6
+        // l -6 -6
+        // V 29
+        // l 6 6
+        // l 6 -6
+        // h ${width}
+        // a ${halfHeight} ${halfHeight} 0 0 0 0 -${height}
+        // H 13
+        // L 7 7
+        // L 1 1
+        // z`
     },
     magnets: function(blockView) {
-        var contentHeight = Math.max(blockView.contentHeight + 2, 30);
+        var contentHeight = Math.max(blockView.contentHeight + 2, 28);
         var statementHeight = blockView._statements[0] ? blockView._statements[0].height : 20;
         statementHeight = Math.max(statementHeight, 20);
         return {
@@ -142,7 +194,7 @@ Entry.skeleton.basic_loop = {
     },
     box: function(blockView) {
         var contentWidth = blockView.contentWidth;
-        var contentHeight = Math.max(blockView.contentHeight + 2, 30);
+        var contentHeight = Math.max(blockView.contentHeight + 2, 28);
         var statementHeight = blockView._statements[0] ? blockView._statements[0].height : 20;
         statementHeight = Math.max(statementHeight, 20);
         return {
@@ -342,20 +394,26 @@ Entry.skeleton.basic_string_field = {
         var width = blockView.contentWidth;
         var height = blockView.contentHeight;
         height = Math.max(18, height + 2);
-        width = Math.max(0, width - height + 12);
+        width = Math.max(0, width - height);
         var halfHeight = height/2;
 
-        return "m " + halfHeight + ",0 h " + width + " a " + halfHeight +"," + halfHeight + " 0 1,1 0," + height + " H " + halfHeight + " A " + halfHeight +","+ halfHeight + " 0 1,1 "+ halfHeight + ",0 z";
+        return `m ${halfHeight} 0
+        h ${width}
+        a ${halfHeight} ${halfHeight} 0 1 1 0 ${height}
+        H ${halfHeight}
+        a ${halfHeight} ${halfHeight} 0 0 1 0 -${height}
+        z`;
+        // return "m " + halfHeight + ",0 h " + width + " a " + halfHeight +"," + halfHeight + " 0 1,1 0," + height + " H " + halfHeight + " A " + halfHeight +","+ halfHeight + " 0 1,1 "+ halfHeight + ",0 z";
     },
-    color: "#000",
-    outerLine: '#768dce',
+    color: "#FFDE82",
+    outerLine: '#FF9C00',
     box: function(blockView) {
         var width = blockView ? blockView.contentWidth : 5;
-        var height = blockView ? blockView.contentHeight : 18;
+        var height = blockView ? blockView.contentHeight : 0;
         return {
             offsetX: 0, offsetY: 0,
             width: width + 12,
-            height: Math.max(height + 2, 18),
+            height: Math.max(height + 2, 0),
             marginBottom: 0
         };
     },
@@ -379,10 +437,18 @@ Entry.skeleton.basic_boolean_field = {
         width = Math.max(0, width - height + 19);
         var halfHeight = height/2;
 
-        return "m " + halfHeight + ",0 h " + width + " l " + halfHeight + "," +
-            halfHeight + " -" + halfHeight + "," + halfHeight + " H "+ halfHeight +
-            " l -" + halfHeight + ",-" + halfHeight + " " + halfHeight + ",-" +
-            halfHeight + " z";
+        return `m ${halfHeight} 0
+        h ${width}
+        l ${halfHeight} ${halfHeight}
+        l -${halfHeight} ${halfHeight}
+        H ${halfHeight}
+        l -${halfHeight} -${halfHeight}
+        l ${halfHeight} -${halfHeight}
+        z`;
+        // return "m " + halfHeight + ",0 h " + width + " l " + halfHeight + "," +
+        //     halfHeight + " -" + halfHeight + "," + halfHeight + " H "+ halfHeight +
+        //     " l -" + halfHeight + ",-" + halfHeight + " " + halfHeight + ",-" +
+        //     halfHeight + " z";
     },
     color: "#000",
     outerLine: '#768dce',
@@ -501,16 +567,24 @@ Entry.skeleton.basic_without_next = {
     path: function(blockView) {
         var width = blockView.contentWidth;
         var height = blockView.contentHeight;
-        height = Math.max(30, height + 2);
+        height = Math.max(28, height + 2);
         width = Math.max(0, width + 9 - height / 2);
         var halfHeight = height/2;
 
-        return "m -8,0 l 8,8 8,-8 h " + width + " a " + halfHeight + "," +
-            halfHeight + " 0 0,1 0, " + height + " H -8 z";
+        return `M 13 1
+        L 7 7
+        L 1 1
+        v ${height}
+        h ${width}
+        a ${halfHeight} ${halfHeight} 0 0 0 0 -${height}
+        H 13
+        z`;
+        // return "m -8,0 l 8,8 8,-8 h " + width + " a " + halfHeight + "," +
+        //     halfHeight + " 0 0,1 0, " + height + " H -8 z";
     },
     magnets: function(blockView) {
         // apply scale required.
-        var height = blockView ? Math.max(blockView.height, 30) : 30;
+        var height = blockView ? Math.max(blockView.height, 28) : 28;
         return {
             previous: {x: 0, y: 0}
         };
@@ -535,12 +609,38 @@ Entry.skeleton.basic_double_loop = {
 
         statementHeight1 = Math.max(statementHeight1, 20) + 1;
         statementHeight2 = Math.max(statementHeight2, 20) + 1;
-
-        return "m -8,0 l 8,8 8,-8 h " + width + " a " + halfHeight1 + "," +
-            halfHeight1 + " 0 0,1 0," + height1 + " H 24 l -8,8 -8,-8 h -0.4 v " +
-            statementHeight1 + " h 0.4 l 8,8 8,-8 h " + bw + " a " + halfHeight2 +
-            "," + halfHeight2 + " 0 0,1 0," + height2 + " H 24 l -8,8 -8,-8 h -0.4 v " +
-            statementHeight2 + " h 0.4 l 8,8 8,-8 h " + bw + " a 8,8 0 0,1 0,16 H 8 l -8,8 -8,-8 z";
+        console.log(statementHeight1, statementHeight2)
+        
+        return `m 0 0
+        l 6 6
+        l 6 -6
+        h ${width}
+        a 14 14 0 0 1 0 28
+        H 26
+        l -6 6
+        l -6 -6
+        v ${statementHeight1}
+        l 6 6
+        l 6 -6
+        h ${bw}
+        a 14 14 0 0 1 0 28
+        H 26
+        l -6 6
+        l -6 -6
+        v ${statementHeight2}
+        l 6 6
+        l 6 -6
+        h ${bw}
+        a 7.5 7.5 0 0 1 0 15
+        H 12
+        l -6 6
+        l -6 -6
+        z`;
+        // return "m -8,0 l 8,8 8,-8 h " + width + " a " + halfHeight1 + "," +
+        //     halfHeight1 + " 0 0,1 0," + height1 + " H 24 l -8,8 -8,-8 h -0.4 v " +
+        //     statementHeight1 + " h 0.4 l 8,8 8,-8 h " + bw + " a " + halfHeight2 +
+        //     "," + halfHeight2 + " 0 0,1 0," + height2 + " H 24 l -8,8 -8,-8 h -0.4 v " +
+        //     statementHeight2 + " h 0.4 l 8,8 8,-8 h " + bw + " a 8,8 0 0,1 0,16 H 8 l -8,8 -8,-8 z";
     },
     magnets: function(blockView) {
         var contentHeight1 = Math.max(blockView.contentHeight%1000000 + 2, 30);

@@ -12,7 +12,8 @@ Entry.Board = class Board {
         this.scale = option.scale || 1;
         this.readOnly = option.readOnly === undefined ? false : option.readOnly;
         this.changeEvent = new Entry.Event(this);
-
+        
+        console.log('Board');
         this.createView(option);
         this.updateOffset();
 
@@ -95,6 +96,9 @@ Entry.Board = class Board {
         
         this.svgBlockGroup = this.svgGroup.elem('g');
         this.svgBlockGroup.board = this;
+        
+        this.svgCommentGroup = this.svgGroup.elem('g');
+        this.svgCommentGroup.board = this;
 
         if (option.isOverlay) {
             this.wrapper.addClass('entryOverlayBoard');
@@ -116,6 +120,7 @@ Entry.Board = class Board {
             this.codeListener = this.code.changeEvent.attach(this, function() {
                 that.changeEvent.notify();
             });
+            this.svgCommentGroup.remove();
             this.svgBlockGroup.remove();
             this.svgThreadGroup.remove();
             code.createView(this);
@@ -128,12 +133,15 @@ Entry.Board = class Board {
     }
 
     bindCodeView(codeView) {
+        this.svgCommentGroup.remove();
         this.svgBlockGroup.remove();
         this.svgThreadGroup.remove();
+        this.svgCommentGroup = codeView.svgCommentGroup;
         this.svgBlockGroup = codeView.svgBlockGroup;
         this.svgThreadGroup = codeView.svgThreadGroup;
         this.svgGroup.appendChild(this.svgThreadGroup);
         this.svgGroup.appendChild(this.svgBlockGroup);
+        this.svgGroup.appendChild(this.svgCommentGroup);
     }
 
     setMagnetedBlock(block, magnetType) {
@@ -325,6 +333,7 @@ Entry.Board = class Board {
     }
 
     clear() {
+        this.svgCommentGroup.remove();
         this.svgBlockGroup.remove();
         this.svgThreadGroup.remove();
     }
