@@ -192,9 +192,9 @@ Entry.ArduinoExt.getBlocks = function() {
             },
             class: 'ArduinoExtGet',
             isNotFor: ['ArduinoExt'],
-            func: function(sprite, script) {
-                var port = script.getValue('PORT', script);
-                var ANALOG = Entry.hw.portData.ANALOG;
+            func: async function(sprite, script) {
+                let port = await script.getValue('PORT', script);
+                const ANALOG = Entry.hw.portData.ANALOG;
                 if (port[0] === 'A') port = port.substring(1);
                 return ANALOG ? ANALOG[port] || 0 : 0;
             },
@@ -280,16 +280,20 @@ Entry.ArduinoExt.getBlocks = function() {
             },
             class: 'ArduinoExtGet',
             isNotFor: ['ArduinoExt'],
-            func: function(sprite, script) {
-                var result = script.getValue('PORT', script);
-                var ANALOG = Entry.hw.portData.ANALOG;
-                var value2 = script.getNumberValue('VALUE2', script);
-                var value3 = script.getNumberValue('VALUE3', script);
-                var value4 = script.getNumberValue('VALUE4', script);
-                var value5 = script.getNumberValue('VALUE5', script);
-                var stringValue4 = script.getValue('VALUE4', script);
-                var stringValue5 = script.getValue('VALUE5', script);
-                var isFloat = false;
+            func: async function(sprite, script) {
+                let isFloat = false;
+                const ANALOG = Entry.hw.portData.ANALOG;
+
+                let [result, value2, value3, value4, value5] = await Promise.all([
+                    script.getValue('PORT', script),
+                    script.getNumberValue('VALUE2', script),
+                    script.getNumberValue('VALUE3', script),
+                    script.getNumberValue('VALUE4', script),
+                    script.getNumberValue('VALUE5', script),
+                ]);
+
+                const stringValue4 = String(value4);
+                const stringValue5 = String(value5);
 
                 if (
                     (Entry.Utils.isNumber(stringValue4) &&
@@ -391,9 +395,11 @@ Entry.ArduinoExt.getBlocks = function() {
             },
             class: 'ArduinoExtGet',
             isNotFor: ['ArduinoExt'],
-            func: function(sprite, script) {
-                var port1 = script.getNumberValue('PORT1', script);
-                var port2 = script.getNumberValue('PORT2', script);
+            func: async function(sprite, script) {
+                const [port1, port2] = await Promise.all([
+                    script.getNumberValue('PORT1', script),
+                    script.getNumberValue('PORT2', script),
+                ]);
 
                 if (!Entry.hw.sendQueue['SET']) {
                     Entry.hw.sendQueue['SET'] = {};
@@ -457,12 +463,12 @@ Entry.ArduinoExt.getBlocks = function() {
             },
             class: 'ArduinoExtGet',
             isNotFor: ['ArduinoExt'],
-            func: function(sprite, script) {                
+            func: async function(sprite, script) {
                 const { hwModule = {} } = Entry.hw;
                 const { name } = hwModule;
                 if(name === 'ArduinoExt') {
-                    var port = script.getNumberValue('PORT', script);
-                    var DIGITAL = Entry.hw.portData.DIGITAL;
+                    const port = await script.getNumberValue('PORT', script);
+                    const DIGITAL = Entry.hw.portData.DIGITAL;
                     if (!Entry.hw.sendQueue['GET']) {
                         Entry.hw.sendQueue['GET'] = {};
                     }
@@ -474,7 +480,7 @@ Entry.ArduinoExt.getBlocks = function() {
                     };
                     return DIGITAL ? DIGITAL[port] || 0 : 0;
                 } else {
-                    return Entry.block.arduino_get_digital_value.func(sprite, script);
+                    return await Entry.block.arduino_get_digital_value.func(sprite, script);
                 }
             },
             syntax: {
@@ -586,9 +592,11 @@ Entry.ArduinoExt.getBlocks = function() {
             },
             class: 'ArduinoExt',
             isNotFor: ['ArduinoExt'],
-            func: function(sprite, script) {
-                var port = script.getNumberValue('PORT');
-                var value = script.getValue('VALUE');
+            func: async function(sprite, script) {
+                let [port, value] = await Promise.all([
+                    script.getNumberValue('PORT'),
+                    script.getValue('VALUE'),
+                ]);
 
                 if (typeof value === 'string') {
                     value = value.toLowerCase();
@@ -668,9 +676,12 @@ Entry.ArduinoExt.getBlocks = function() {
             },
             class: 'ArduinoExt',
             isNotFor: ['ArduinoExt'],
-            func: function(sprite, script) {
-                var port = script.getNumberValue('PORT');
-                var value = script.getNumberValue('VALUE');
+            func: async function(sprite, script) {
+                let [port, value] = await Promise.all([
+                    script.getNumberValue('PORT'),
+                    script.getValue('VALUE'),
+                ]);
+
                 value = Math.round(value);
                 value = Math.max(value, 0);
                 value = Math.min(value, 255);
@@ -798,8 +809,8 @@ Entry.ArduinoExt.getBlocks = function() {
             paramsKeyMap: {
                 NOTE: 0,
             },
-            func: function(sprite, script) {
-                return script.getNumberValue('NOTE');
+            func: async function(sprite, script) {
+                return await script.getNumberValue('NOTE');
             },
             syntax: {
                 js: [],
@@ -907,12 +918,17 @@ Entry.ArduinoExt.getBlocks = function() {
             },
             class: 'ArduinoExt',
             isNotFor: ['ArduinoExt'],
-            func: function(sprite, script) {
-                var sq = Entry.hw.sendQueue;
-                var port = script.getNumberValue('PORT', script);
+            func: async function(sprite, script) {
+                const sq = Entry.hw.sendQueue;
+                let [port, octave, duration, note] = await Promise.all([
+                    script.getNumberValue('PORT', script),
+                    script.getNumberValue('OCTAVE', script),
+                    script.getNumberValue('DURATION', script),
+                    script.getValue('NOTE', script),
+                ]);
+                octave -= 1;
 
                 if (!script.isStart) {
-                    var note = script.getValue('NOTE', script);
                     if (!Entry.Utils.isNumber(note))
                         note = Entry.ArduinoExt.toneTable[note];
 
@@ -921,8 +937,6 @@ Entry.ArduinoExt.getBlocks = function() {
                     } else if (note > 12) {
                         note = 12;
                     }
-
-                    var duration = script.getNumberValue('DURATION', script);
 
                     if (duration < 0) {
                         duration = 0;
@@ -941,7 +955,6 @@ Entry.ArduinoExt.getBlocks = function() {
                         return script.callReturn();
                     }
 
-                    var octave = script.getNumberValue('OCTAVE', script) - 1;
                     if (octave < 0) {
                         octave = 0;
                     } else if (octave > 5) {
@@ -1048,10 +1061,13 @@ Entry.ArduinoExt.getBlocks = function() {
             },
             class: 'ArduinoExt',
             isNotFor: ['ArduinoExt'],
-            func: function(sprite, script) {
-                var sq = Entry.hw.sendQueue;
-                var port = script.getNumberValue('PORT', script);
-                var value = script.getNumberValue('VALUE', script);
+            func: async function(sprite, script) {
+                const sq = Entry.hw.sendQueue;
+                let [port, value] = await Promise.all([
+                    script.getNumberValue('PORT', script),
+                    script.getNumberValue('VALUE', script),
+                ]);
+
                 value = Math.min(180, value);
                 value = Math.max(0, value);
 
