@@ -608,9 +608,9 @@ Entry.Blacksmith.getBlocks = function() {
             },
             class: 'blacksmithGet',
             isNotFor: ['blacksmith'],
-            func: function(sprite, script) {
-                var port = script.getValue('PORT', script);
-                var ANALOG = Entry.hw.portData.ANALOG;
+            func: async function(sprite, script) {
+                let port = await script.getValue('PORT', script);
+                const ANALOG = Entry.hw.portData.ANALOG;
 
                 if (port[0] === 'A') port = port.substring(1);
 
@@ -680,14 +680,16 @@ Entry.Blacksmith.getBlocks = function() {
             },
             class: 'blacksmithGet',
             isNotFor: ['blacksmith'],
-            func: function(sprite, script) {
-                var port = script.getValue('PORT', script);
-                var result = 0;
-                var ANALOG = Entry.hw.portData.ANALOG;
-                var value2 = script.getNumberValue('VALUE2', script);
-                var value3 = script.getNumberValue('VALUE3', script);
-                var value4 = script.getNumberValue('VALUE4', script);
-                var value5 = script.getNumberValue('VALUE5', script);
+            func: async function(sprite, script) {
+                let result = 0;
+                const ANALOG = Entry.hw.portData.ANALOG;
+                let [port, value2, value3, value4, value5] = await Promise.all([
+                    script.getValue('PORT', script),
+                    script.getNumberValue('VALUE2', script),
+                    script.getNumberValue('VALUE3', script),
+                    script.getNumberValue('VALUE4', script),
+                    script.getNumberValue('VALUE5', script),
+                ]);
 
                 if (port[0] === 'A') {
                     port = port.substring(1);
@@ -788,9 +790,11 @@ Entry.Blacksmith.getBlocks = function() {
             },
             class: 'blacksmithGet',
             isNotFor: ['blacksmith'],
-            func: function(sprite, script) {
-                var port1 = script.getNumberValue('PORT1');
-                var port2 = script.getNumberValue('PORT2');
+            func: async function(sprite, script) {
+                const [port1, port2] = await Promise.all([
+                    script.getNumberValue('PORT1'),
+                    script.getNumberValue('PORT2'),
+                ]);
 
                 if (!Entry.hw.sendQueue['SET']) {
                     Entry.hw.sendQueue['SET'] = {};
@@ -840,9 +844,9 @@ Entry.Blacksmith.getBlocks = function() {
             },
             class: 'blacksmithGet',
             isNotFor: ['blacksmith'],
-            func: function(sprite, script) {
-                var port = script.getNumberValue('PORT');
-                var DIGITAL = Entry.hw.portData.DIGITAL;
+            func: async function(sprite, script) {
+                const port = await script.getNumberValue('PORT');
+                const DIGITAL = Entry.hw.portData.DIGITAL;
 
                 if (!Entry.hw.sendQueue['GET']) {
                     Entry.hw.sendQueue['GET'] = {};
@@ -898,9 +902,11 @@ Entry.Blacksmith.getBlocks = function() {
             },
             class: 'blacksmithSet',
             isNotFor: ['blacksmith'],
-            func: function(sprite, script) {
-                var port = script.getNumberValue('PORT');
-                var value = script.getValue('VALUE');
+            func: async function(sprite, script) {
+                let [port, value] = await Promise.all([
+                    script.getNumberValue('PORT'),
+                    script.getValue('VALUE'),
+                ]);
 
                 if (typeof value === 'string') {
                     value = value.toLowerCase();
@@ -966,9 +972,11 @@ Entry.Blacksmith.getBlocks = function() {
             },
             class: 'blacksmithSet',
             isNotFor: ['blacksmith'],
-            func: function(sprite, script) {
-                var port = script.getNumberValue('PORT');
-                var value = script.getNumberValue('VALUE');
+            func: async function(sprite, script) {
+                let [port, value] = await Promise.all([
+                    script.getNumberValue('PORT'),
+                    script.getNumberValue('VALUE'),
+                ]);
 
                 value = Math.round(value);
                 value = Math.min(value, 255);
@@ -1027,9 +1035,12 @@ Entry.Blacksmith.getBlocks = function() {
             },
             class: 'blacksmithSet',
             isNotFor: ['blacksmith'],
-            func: function(sprite, script) {
-                var port = script.getNumberValue('PORT');
-                var value = script.getNumberValue('VALUE');
+            func: async function(sprite, script) {
+                let [port, value] = await Promise.all([
+                    script.getNumberValue('PORT'),
+                    script.getNumberValue('VALUE'),
+                ]);
+
                 value = Math.min(value, 180);
                 value = Math.max(value, 0);
 
@@ -1103,11 +1114,15 @@ Entry.Blacksmith.getBlocks = function() {
             },
             class: 'blacksmithSet',
             isNotFor: ['blacksmith'],
-            func: function(sprite, script) {
-                var port = script.getNumberValue('PORT');
-                var duration = script.getNumberValue('DURATION');
-                var octave = script.getNumberValue('OCTAVE') - 1;
-                var value = 0;
+            func: async function(sprite, script) {
+                let [port, duration, octave] = await Promise.all([
+                    script.getNumberValue('PORT'),
+                    script.getNumberValue('DURATION'),
+                    script.getNumberValue('OCTAVE'),
+                ]);
+
+                octave -= 1;
+                let value = 0;
 
                 if (!script.isStart) {
                     var note = script.getValue('NOTE');
@@ -1219,10 +1234,12 @@ Entry.Blacksmith.getBlocks = function() {
             },
             class: 'blacksmithSet',
             isNotFor: ['blacksmith'],
-            func: function(sprite, script) {
-                var line = script.getNumberValue('LINE');
-                var string = script.getValue('STRING');
-                var text = [];
+            func: async function(sprite, script) {
+                const [line, string] = await Promise.all([
+                    script.getNumberValue('LINE'),
+                    script.getValue('STRING'),
+                ]);
+                let text = [];
 
                 if (!script.isStart) {
                     if (typeof string === 'string') {
@@ -1316,10 +1333,10 @@ Entry.Blacksmith.getBlocks = function() {
             },
             class: 'blacksmithSet',
             isNotFor: ['blacksmith'],
-            func: function(sprite, script) {
-                var string = script.getValue('STRING');
-                var port = 3;
-                var text = [];
+            func: async function(sprite, script) {
+                const string = await script.getValue('STRING');
+                const port = 3;
+                const text = [];
 
                 if (!script.isStart) {
                     if (typeof string === 'string') {
