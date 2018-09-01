@@ -17,6 +17,7 @@ import PIXIHelper from './PIXIHelper';
  * @constructor
  */
 Entry.Stage = function() {
+    ndgmr.initTempObject();
     PIXITempStore.init();
     new PIXIPixelPerfectInteractionPlugIn();
 

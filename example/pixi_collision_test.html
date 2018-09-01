@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>collision</title>
+    <style>
+        body { padding: 0; margin: 0; background: #cccccc}
+        canvas { border: 1px solid red; }
+    </style>
+</head>
+<body>
+<script src="http://play-entry.com/lib/jquery/jquery.min.js"></script>
+<script src="../extern/util/PIXI-ndgmr.Collision.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pixi.js/4.7.1/pixi.min.js"></script>
+<canvas id="canvas" width="800" height="800"></canvas>
+
+
+
+
+<script>
+
+
+    ndgmr.initTempObject();
+
+    ndgmr.DEBUG = 1;
+
+
+    var rotateItems = [];
+    var items = [];
+
+    var app = new PIXI.Application({
+        view: document.getElementById("canvas"),
+        antialias: true
+    });
+    app.ticker.add((e)=>{
+        rotateItems.forEach((item)=>{
+            item.rotation += 0.003;
+        });
+        checkCollision();
+    });
+
+    var stage = app.stage;
+    var viewContainer = new PIXI.Container();
+    var boundContainer = new PIXI.Container();
+    stage.addChild(viewContainer);
+    stage.addChild(boundContainer);
+
+    var view1 = newRect("#ffffff", 200, 200);
+    var view2 = newRect("#00ffff", 270, 270);
+
+
+    var rectCollisionView = new PIXI.Graphics().beginFill(0xff0000, 0.3).drawRect(0,0,100,100);
+    stage.addChild(rectCollisionView);
+
+    var pixelCollisionView = new PIXI.Graphics().beginFill(0x00ff00, 0.7).drawRect(0,0,100,100);
+    stage.addChild(pixelCollisionView);
+
+
+
+    function checkCollision() {
+        drawBoundView(view1);
+        drawBoundView(view2);
+
+        var pixelCollision = ndgmr.checkPixelCollision(view1, view2, 1, true);
+        r = ndgmr.___debugIntersectionRect;
+        if(!r) return;
+
+        updateCollisionView(rectCollisionView, r);
+        updateCollisionView(pixelCollisionView, pixelCollision);
+    }
+
+
+    function updateCollisionView(view, rect) {
+        view.x = rect.x;
+        view.y = rect.y;
+        view.width = rect.width;
+        view.height = rect.height;
+    }
+
+
+
+    function newRect(fill, x ,y) {
+
+        var offCanvas = document.createElement("canvas");
+        offCanvas.width = 100;
+        offCanvas.height = 100;
+        /** @type {CanvasRenderingContext2D} */
+        var offCtx = offCanvas.getContext("2d");
+        offCtx.fillStyle = fill;
+        offCtx.fillRect(0,0, 100, 100);
+
+        var r = PIXI.Sprite.from(offCanvas);
+        rotateItems.push(r);
+        r.anchor.set(0.5, 0.5);
+        r.position.set(x, y);
+
+        r.on("pointerdown", (e)=>{
+            onDown(e, r);
+        });
+        r.interactive = true;
+        viewContainer.addChild(r);
+
+        var boundView = PIXI.Sprite.from(offCanvas);
+        r.boundView = boundView;
+        boundView.alpha = 0.3;
+        boundContainer.addChild(boundView);
+
+        items.push(r);
+
+        return r;
+    }
+
+    function onDown(e, r) {
+        var _move = function(e) {
+            onMove(e, r);
+        };
+
+        function _onRelease(e) {
+            r.off("pointermove", _move);
+            r.off("pointercancel", _onRelease);
+            r.off("pointerupoutside", _onRelease);
+            r.off("pointerup", _onRelease);
+            onRelease(e, r);
+        }
+
+        r.on("pointermove", _move);
+        r.on("pointercancel", _onRelease);
+        r.on("pointerupoutside", _onRelease);
+        r.on("pointerup", _onRelease);
+    }
+
+    function onMove(e, r) {
+        var gp = e.data.global;
+        r.position.set(gp.x, gp.y);
+    }
+
+    function onRelease(e, r) {
+
+    }
+
+    function drawBoundView(view) {
+        var r = view.getBounds();
+        var bv = view.boundView;
+        bv.position.set(r.x, r.y);
+        bv.width = r.width;
+        bv.height = r.height;
+        return r;
+    }
+
+
+
+
+
+</script>
+</body>
+</html>
