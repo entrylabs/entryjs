@@ -209,12 +209,14 @@ Entry.SmartBoard.getBlocks = function() {
             },
             class: 'smartBoard_sensor',
             isNotFor: ['smartBoard'],
-            func: function(sprite, script) {
+            func: async function(sprite, script) {
                 var value1 = script.getNumberValue('VALUE1', script);
-                var value2 = script.getNumberValue('VALUE2', script);
-                var value3 = script.getNumberValue('VALUE3', script);
-                var value4 = script.getNumberValue('VALUE4', script);
-                var value5 = script.getNumberValue('VALUE5', script);
+                let [value2, value3, value4, value5] = await Promise.all([
+                    script.getNumberValue('VALUE2', script),
+                    script.getNumberValue('VALUE3', script),
+                    script.getNumberValue('VALUE4', script),
+                    script.getNumberValue('VALUE5', script),
+                ]);
                 var result = value1;
                 if (value2 > value3) {
                     var swap = value2;
@@ -402,9 +404,9 @@ Entry.SmartBoard.getBlocks = function() {
             },
             class: 'dc_motor',
             isNotFor: ['smartBoard'],
-            func: function(sprite, script) {
+            func: async function(sprite, script) {
                 var port = script.getField('PORT');
-                var value = script.getNumberValue('VALUE');
+                var value = await script.getNumberValue('VALUE');
                 value = Math.round(value);
                 value = Math.max(value, 0);
                 value = Math.min(value, 255);
@@ -510,9 +512,9 @@ Entry.SmartBoard.getBlocks = function() {
             },
             class: 'smartBoard_servo_motor',
             isNotFor: ['smartBoard'],
-            func: function(sprite, script) {
+            func: async function(sprite, script) {
                 var port = script.getField('PORT');
-                var value = script.getNumberValue('VALUE');
+                var value = await script.getNumberValue('VALUE');
                 value = Math.round(value);
                 value = Math.max(value, 1);
                 value = Math.min(value, 180);
@@ -592,9 +594,9 @@ Entry.SmartBoard.getBlocks = function() {
             },
             class: 'ext',
             isNotFor: ['smartBoard'],
-            func: function(sprite, script) {
+            func: async function(sprite, script) {
                 var port = 3;
-                var value = script.getNumberValue('VALUE');
+                var value = await script.getNumberValue('VALUE');
                 value = Math.round(value);
                 value = Math.max(value, 0);
                 value = Math.min(value, 255);

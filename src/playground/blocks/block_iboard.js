@@ -5,8 +5,8 @@ Entry.iboard = {
     url: 'http://www.io-tech.co.kr',
     imageName: 'iboard.png',
     title: {
-        "en": "iboard",
-        "ko": "아이보드"
+        en: 'iboard',
+        ko: '아이보드',
     },
     setZero: function() {
         if (!Entry.hw.sendQueue.SET) {
@@ -111,10 +111,8 @@ Entry.iboard.getBlocks = function() {
                                 ],
                                 value: '0',
                                 fontSize: 11,
-                                converter:
-                                    Entry.block.converters.returnStringKey,
-                                codeMap:
-                                    'Entry.CodeMap.Arduino.iboard_analog_list[0]',
+                                converter: Entry.block.converters.returnStringKey,
+                                codeMap: 'Entry.CodeMap.Arduino.iboard_analog_list[0]',
                             },
                         ],
                         keyOption: 'iboard_analog_list',
@@ -144,10 +142,8 @@ Entry.iboard.getBlocks = function() {
                                 options: [['A0', '0'], ['A1', '1']],
                                 value: '1',
                                 fontSize: 11,
-                                converter:
-                                    Entry.block.converters.returnStringKey,
-                                codeMap:
-                                    'Entry.CodeMap.Arduino.iboard_temp_sensor_get_value[0]',
+                                converter: Entry.block.converters.returnStringKey,
+                                codeMap: 'Entry.CodeMap.Arduino.iboard_temp_sensor_get_value[0]',
                             },
                         ],
                         keyOption: 'iboard_temp_sensor_get_value',
@@ -177,10 +173,8 @@ Entry.iboard.getBlocks = function() {
                                 options: [['A2', '2'], ['A3', '3']],
                                 value: '2',
                                 fontSize: 11,
-                                converter:
-                                    Entry.block.converters.returnStringKey,
-                                codeMap:
-                                    'Entry.CodeMap.Arduino.iboard_cds_sensor_get_value[0]',
+                                converter: Entry.block.converters.returnStringKey,
+                                codeMap: 'Entry.CodeMap.Arduino.iboard_cds_sensor_get_value[0]',
                             },
                         ],
                         keyOption: 'iboard_cds_sensor_get_value',
@@ -210,10 +204,8 @@ Entry.iboard.getBlocks = function() {
                                 options: [['A3', '3'], ['A4', '4']],
                                 value: '3',
                                 fontSize: 11,
-                                converter:
-                                    Entry.block.converters.returnStringKey,
-                                codeMap:
-                                    'Entry.CodeMap.Arduino.iboard_mic_get_value[0]',
+                                converter: Entry.block.converters.returnStringKey,
+                                codeMap: 'Entry.CodeMap.Arduino.iboard_mic_get_value[0]',
                             },
                         ],
                         keyOption: 'iboard_mic_get_value',
@@ -267,8 +259,8 @@ Entry.iboard.getBlocks = function() {
             paramsKeyMap: {
                 PORT: 0,
             },
-            func: function(sprite, script) {
-                return script.getStringField('PORT');
+            func: async function(sprite, script) {
+                return await script.getStringField('PORT');
             },
         },
         iboard_led_list: {
@@ -353,12 +345,7 @@ Entry.iboard.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [
-                        ['정지', '0'],
-                        ['미풍', '100'],
-                        ['약풍', '170'],
-                        ['강풍', '255'],
-                    ],
+                    options: [['정지', '0'], ['미풍', '100'], ['약풍', '170'], ['강풍', '255']],
                     value: '0',
                     fontSize: 11,
                     arrowColor: EntryStatic.ARROW_COLOR_HW,

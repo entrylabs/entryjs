@@ -5,8 +5,8 @@ Entry.DaduBlock = {
     url: 'http://www.dadublock.com/',
     imageName: 'dadublock.png',
     title: {
-        "ko": "다두블럭",
-        "en": "DaduBlock"
+        ko: '다두블럭',
+        en: 'DaduBlock',
     },
     setZero: function() {
         if (!Entry.hw.sendQueue.SET) {
@@ -56,8 +56,8 @@ Entry.DaduBlock_Car = {
     url: 'http://www.dadublock.com/',
     imageName: 'dadublock_car.png',
     title: {
-        "ko": "다두블럭 자동차",
-        "en": "DaduBlock Car"
+        ko: '다두블럭 자동차',
+        en: 'DaduBlock Car',
     },
     setZero: function() {
         if (!Entry.hw.sendQueue.SET) {
@@ -113,12 +113,7 @@ Entry.DaduBlock.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [
-                        ['A0', '0'],
-                        ['A1', '1'],
-                        ['A2', '2'],
-                        ['A3', '3'],
-                    ],
+                    options: [['A0', '0'], ['A1', '1'], ['A2', '2'], ['A3', '3']],
                     value: '0',
                     fontSize: 11,
                 },
@@ -147,12 +142,7 @@ Entry.DaduBlock.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [
-                        ['A0', '0'],
-                        ['A1', '1'],
-                        ['A2', '2'],
-                        ['A3', '3'],
-                    ],
+                    options: [['A0', '0'], ['A1', '1'], ['A2', '2'], ['A3', '3']],
                     value: '0',
                     fontSize: 11,
                 },
@@ -205,13 +195,15 @@ Entry.DaduBlock.getBlocks = function() {
             },
             class: 'dadublockget',
             isNotFor: ['dadublock'],
-            func: function(sprite, script) {
+            func: async function(sprite, script) {
                 var port = script.getField('PORT', script);
                 var ANALOG = Entry.hw.portData.ANALOG;
-                var value2 = script.getNumberValue('VALUE2', script);
-                var value3 = script.getNumberValue('VALUE3', script);
-                var value4 = script.getNumberValue('VALUE4', script);
-                var value5 = script.getNumberValue('VALUE5', script);
+                let [value2, value3, value4, value5] = await Promise.all([
+                    script.getNumberValue('VALUE2', script),
+                    script.getNumberValue('VALUE3', script),
+                    script.getNumberValue('VALUE4', script),
+                    script.getNumberValue('VALUE5', script),
+                ]);
 
                 var result = ANALOG[port] || 0;
                 if (value2 > value3) {
@@ -301,9 +293,7 @@ Entry.DaduBlock.getBlocks = function() {
                 if (!Entry.hw.sendQueue['GET']) {
                     Entry.hw.sendQueue['GET'] = {};
                 }
-                Entry.hw.sendQueue['GET'][
-                    Entry.DaduBlock.sensorTypes.ULTRASONIC
-                ] = {
+                Entry.hw.sendQueue['GET'][Entry.DaduBlock.sensorTypes.ULTRASONIC] = {
                     port: [port1, port2],
                     time: new Date().getTime(),
                 };
@@ -352,9 +342,7 @@ Entry.DaduBlock.getBlocks = function() {
                 if (!Entry.hw.sendQueue['GET']) {
                     Entry.hw.sendQueue['GET'] = {};
                 }
-                Entry.hw.sendQueue['GET'][
-                    Entry.DaduBlock.sensorTypes.DIGITAL
-                ] = {
+                Entry.hw.sendQueue['GET'][Entry.DaduBlock.sensorTypes.DIGITAL] = {
                     port: port,
                     time: new Date().getTime(),
                 };
@@ -435,12 +423,7 @@ Entry.DaduBlock.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [
-                        ['~5', '5'],
-                        ['~6', '6'],
-                        ['~9', '9'],
-                        ['~10', '10'],
-                    ],
+                    options: [['~5', '5'], ['~6', '6'], ['~9', '9'], ['~10', '10']],
                     value: '5',
                     fontSize: 11,
                 },
@@ -472,10 +455,10 @@ Entry.DaduBlock.getBlocks = function() {
             },
             class: 'dadublockset',
             isNotFor: ['dadublock'],
-            func: function(sprite, script) {
+            func: async function(sprite, script) {
                 //var port = script.getNumberValue("PORT");
                 var port = script.getField('PORT');
-                var value = script.getNumberValue('VALUE');
+                var value = await script.getNumberValue('VALUE');
                 value = Math.round(value);
                 value = Math.max(value, 0);
                 value = Math.min(value, 255);
@@ -536,11 +519,11 @@ Entry.DaduBlock.getBlocks = function() {
             },
             class: 'dadublockset',
             isNotFor: ['dadublock'],
-            func: function(sprite, script) {
+            func: async function(sprite, script) {
                 var sq = Entry.hw.sendQueue;
                 //var port = script.getNumberValue("PORT", script);
                 var port = script.getField('PORT', script);
-                var value = script.getNumberValue('VALUE', script);
+                var value = await script.getNumberValue('VALUE', script);
                 value = Math.min(180, value);
                 value = Math.max(0, value);
 
@@ -646,14 +629,14 @@ Entry.DaduBlock.getBlocks = function() {
             },
             class: 'dadublockset',
             isNotFor: ['dadublock'],
-            func: function(sprite, script) {
+            func: async function(sprite, script) {
                 var sq = Entry.hw.sendQueue;
                 //var port = script.getNumberValue("PORT", script);
                 var port = script.getField('PORT', script);
 
                 if (!script.isStart) {
                     var note = script.getNumberField('NOTE', script);
-                    var duration = script.getNumberValue('DURATION', script);
+                    var duration = await script.getNumberValue('DURATION', script);
 
                     if (duration < 0) {
                         duration = 0;
@@ -715,12 +698,7 @@ Entry.DaduBlock.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [
-                        ['A0', '0'],
-                        ['A1', '1'],
-                        ['A2', '2'],
-                        ['A3', '3'],
-                    ],
+                    options: [['A0', '0'], ['A1', '1'], ['A2', '2'], ['A3', '3']],
                     value: '0',
                     fontSize: 11,
                 },
@@ -749,12 +727,7 @@ Entry.DaduBlock.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [
-                        ['A0', '0'],
-                        ['A1', '1'],
-                        ['A2', '2'],
-                        ['A3', '3'],
-                    ],
+                    options: [['A0', '0'], ['A1', '1'], ['A2', '2'], ['A3', '3']],
                     value: '0',
                     fontSize: 11,
                 },
@@ -807,13 +780,15 @@ Entry.DaduBlock.getBlocks = function() {
             },
             class: 'dadublock_car_get',
             isNotFor: ['dadublock_car'],
-            func: function(sprite, script) {
+            func: async function(sprite, script) {
+                let [value2, value3, value4, value5] = await Promise.all([
+                    script.getNumberValue('VALUE2', script),
+                    script.getNumberValue('VALUE3', script),
+                    script.getNumberValue('VALUE4', script),
+                    script.getNumberValue('VALUE5', script),
+                ]);
                 var port = script.getField('PORT', script);
                 var ANALOG = Entry.hw.portData.ANALOG;
-                var value2 = script.getNumberValue('VALUE2', script);
-                var value3 = script.getNumberValue('VALUE3', script);
-                var value4 = script.getNumberValue('VALUE4', script);
-                var value5 = script.getNumberValue('VALUE5', script);
 
                 var result = ANALOG[port] || 0;
                 if (value2 > value3) {
@@ -903,9 +878,7 @@ Entry.DaduBlock.getBlocks = function() {
                 if (!Entry.hw.sendQueue['GET']) {
                     Entry.hw.sendQueue['GET'] = {};
                 }
-                Entry.hw.sendQueue['GET'][
-                    Entry.DaduBlock.sensorTypes.ULTRASONIC
-                ] = {
+                Entry.hw.sendQueue['GET'][Entry.DaduBlock.sensorTypes.ULTRASONIC] = {
                     port: [port1, port2],
                     time: new Date().getTime(),
                 };
@@ -954,9 +927,7 @@ Entry.DaduBlock.getBlocks = function() {
                 if (!Entry.hw.sendQueue['GET']) {
                     Entry.hw.sendQueue['GET'] = {};
                 }
-                Entry.hw.sendQueue['GET'][
-                    Entry.DaduBlock.sensorTypes.DIGITAL
-                ] = {
+                Entry.hw.sendQueue['GET'][Entry.DaduBlock.sensorTypes.DIGITAL] = {
                     port: port,
                     time: new Date().getTime(),
                 };
@@ -1037,12 +1008,7 @@ Entry.DaduBlock.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [
-                        ['~5', '5'],
-                        ['~6', '6'],
-                        ['~9', '9'],
-                        ['~10', '10'],
-                    ],
+                    options: [['~5', '5'], ['~6', '6'], ['~9', '9'], ['~10', '10']],
                     value: '5',
                     fontSize: 11,
                 },
@@ -1074,10 +1040,10 @@ Entry.DaduBlock.getBlocks = function() {
             },
             class: 'dadublock_car_set',
             isNotFor: ['dadublock_car'],
-            func: function(sprite, script) {
+            func: async function(sprite, script) {
                 //var port = script.getNumberValue("PORT");
                 var port = script.getField('PORT');
-                var value = script.getNumberValue('VALUE');
+                var value = await script.getNumberValue('VALUE');
                 value = Math.round(value);
                 value = Math.max(value, 0);
                 value = Math.min(value, 255);
@@ -1138,11 +1104,11 @@ Entry.DaduBlock.getBlocks = function() {
             },
             class: 'dadublock_car_set',
             isNotFor: ['dadublock_car'],
-            func: function(sprite, script) {
+            func: async function(sprite, script) {
                 var sq = Entry.hw.sendQueue;
                 //var port = script.getNumberValue("PORT", script);
                 var port = script.getField('PORT', script);
-                var value = script.getNumberValue('VALUE', script);
+                var value = await script.getNumberValue('VALUE', script);
                 value = Math.min(180, value);
                 value = Math.max(0, value);
 
@@ -1248,14 +1214,14 @@ Entry.DaduBlock.getBlocks = function() {
             },
             class: 'dadublock_car_set',
             isNotFor: ['dadublock_car'],
-            func: function(sprite, script) {
+            func: async function(sprite, script) {
                 var sq = Entry.hw.sendQueue;
                 //var port = script.getNumberValue("PORT", script);
                 var port = script.getField('PORT', script);
 
                 if (!script.isStart) {
                     var note = script.getNumberField('NOTE', script);
-                    var duration = script.getNumberValue('DURATION', script);
+                    var duration = await script.getNumberValue('DURATION', script);
 
                     if (duration < 0) {
                         duration = 0;
@@ -1428,10 +1394,10 @@ Entry.DaduBlock.getBlocks = function() {
             },
             class: 'dadublock_car_motor',
             isNotFor: ['dadublock_car'],
-            func: function(sprite, script) {
+            func: async function(sprite, script) {
                 var port = script.getField('PORT');
                 var direction = script.getField('DIRECTION');
-                var value = script.getNumberValue('VALUE');
+                var value = await script.getNumberValue('VALUE');
                 value = Math.round(value);
                 value = Math.max(value, 0);
                 value = Math.min(value, 100);
@@ -1563,9 +1529,7 @@ Entry.DaduBlock.getBlocks = function() {
                 if (!Entry.hw.sendQueue['GET']) {
                     Entry.hw.sendQueue['GET'] = {};
                 }
-                Entry.hw.sendQueue['GET'][
-                    Entry.DaduBlock.sensorTypes.DIGITAL
-                ] = {
+                Entry.hw.sendQueue['GET'][Entry.DaduBlock.sensorTypes.DIGITAL] = {
                     port: port,
                     time: new Date().getTime(),
                 };

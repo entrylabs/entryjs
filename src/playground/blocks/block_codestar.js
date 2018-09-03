@@ -5,8 +5,8 @@ Entry.Codestar = {
     url: 'http://codestar.co.kr',
     imageName: 'codestar.png',
     title: {
-        "ko": "코드스타",
-        "en": "Codestar"
+        ko: '코드스타',
+        en: 'Codestar',
     },
     setZero: function() {
         Entry.hw.sendQueue.readablePorts = [];
@@ -90,10 +90,7 @@ Entry.Codestar.getBlocks = function() {
                 },
                 {
                     type: 'Dropdown',
-                    options: [
-                        [Lang.Blocks.ARDUINO_on, 'on'],
-                        [Lang.Blocks.ARDUINO_off, 'off'],
-                    ],
+                    options: [[Lang.Blocks.ARDUINO_on, 'on'], [Lang.Blocks.ARDUINO_off, 'off']],
                 },
                 {
                     type: 'Indicator',
@@ -151,9 +148,9 @@ Entry.Codestar.getBlocks = function() {
             },
             class: 'codestar_output_sensor',
             isNotFor: ['codestar'],
-            func: function(sprite, script) {
+            func: async function(sprite, script) {
                 var port = script.getField('PORT');
-                var value = script.getNumberValue('VALUE');
+                var value = await script.getNumberValue('VALUE');
                 value = Math.round(value);
                 value = Math.max(value, 0);
                 value = Math.min(value, 255);
@@ -169,10 +166,7 @@ Entry.Codestar.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [
-                        [Lang.Blocks.ARDUINO_on, 'on'],
-                        [Lang.Blocks.ARDUINO_off, 'off'],
-                    ],
+                    options: [[Lang.Blocks.ARDUINO_on, 'on'], [Lang.Blocks.ARDUINO_off, 'off']],
                 },
                 {
                     type: 'Indicator',
@@ -330,12 +324,7 @@ Entry.Codestar.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [
-                        ['앞으로', '0'],
-                        ['뒤로', '1'],
-                        ['왼쪽', '2'],
-                        ['오른쪽', '3'],
-                    ],
+                    options: [['앞으로', '0'], ['뒤로', '1'], ['왼쪽', '2'], ['오른쪽', '3']],
                 },
                 {
                     type: 'Block',
@@ -358,9 +347,9 @@ Entry.Codestar.getBlocks = function() {
             },
             class: 'codestar_motor',
             isNotFor: ['codestar'],
-            func: function(sprite, script) {
-                var value = script.getNumberValue('VALUE');
+            func: async function(sprite, script) {
                 var dir = Number(script.getField('DIRECTION'));
+                var value = await script.getNumberValue('VALUE');
                 var id = 0;
                 //if(value == 0) value = 1;
                 value = Math.round(value);
@@ -405,9 +394,9 @@ Entry.Codestar.getBlocks = function() {
             },
             class: 'codestar_motor',
             isNotFor: ['codestar'],
-            func: function(sprite, script) {
-                var value = script.getNumberValue('VALUE');
+            func: async function(sprite, script) {
                 var dir = Number(script.getField('DIRECTION'));
+                var value = await script.getNumberValue('VALUE');
                 var id = 1;
                 //if(value == 0)value = 1;
                 value = Math.round(value);
@@ -471,12 +460,7 @@ Entry.Codestar.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [
-                        ['A0', '0'],
-                        ['A4', '4'],
-                        ['A5', '5'],
-                        ['A7', '7'],
-                    ],
+                    options: [['A0', '0'], ['A4', '4'], ['A5', '5'], ['A7', '7']],
                 },
             ],
             events: {},
@@ -522,12 +506,7 @@ Entry.Codestar.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [
-                        ['A0', '0'],
-                        ['A1', '1'],
-                        ['A4', '4'],
-                        ['A5', '5'],
-                    ],
+                    options: [['A0', '0'], ['A1', '1'], ['A4', '4'], ['A5', '5']],
                 },
             ],
             events: {},
