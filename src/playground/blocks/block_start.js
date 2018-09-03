@@ -8,7 +8,7 @@ module.exports = {
                 params: [
                     {
                         type: 'Indicator',
-                        img: 'block_icon/start_icon_play.png',
+                        img: 'block_icon/start_icon_play.svg',
                         size: 17,
                         position: {
                             x: 0,

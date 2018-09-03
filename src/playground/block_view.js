@@ -161,14 +161,16 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
             blockId: this.id,
         };
 
-        if (this.magnet.next || this._skeleton.nextShadow) {
-            this.pathGroup.attr({
-                filter: 'url(#entryBlockShadowFilter_' + this.getBoard().suffix + ')',
-            });
-        } else if (this.magnet.string || this.magnet.boolean) pathStyle.stroke = skeleton.outerLine;
+        // if (this.magnet.next || this._skeleton.nextShadow) {
+            // this.pathGroup.attr({
+            //     filter: 'url(#entryBlockShadowFilter_' + this.getBoard().suffix + ')',
+            // });
+        // } else if (this.magnet.string || this.magnet.boolean) pathStyle.stroke = 
+        
+        pathStyle.stroke = skeleton.outerLine || '#000';
 
         if (skeleton.outerLine) {
-            pathStyle['stroke-width'] = '0.6';
+            pathStyle['stroke-width'] = '1';
         }
         this._path.attr(pathStyle);
         this._moveTo(this.x, this.y, false);

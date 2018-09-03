@@ -115,7 +115,7 @@ Entry.skeleton.basic_event = {
     },
     box: function(blockView) {
         return {
-            offsetX: 0, offsetY: -7,
+            offsetX: 5, offsetY: -7,
             width: blockView.contentWidth + 30,
             height: 30,
             marginBottom: 0
@@ -125,7 +125,7 @@ Entry.skeleton.basic_event = {
         // apply scale required.
         var height = blockView ? Math.max(blockView.height + blockView.offsetY + 7, 30) : 30;
         return {
-            next: {x: 0, y: height + 1}
+            next: {x: 12, y: height + 3}
         };
     },
     contentPos: function(blockView) {
@@ -436,15 +436,24 @@ Entry.skeleton.basic_boolean_field = {
         height = Math.max(18, height + 2);
         width = Math.max(0, width - height + 19);
         var halfHeight = height/2;
+        var x = height*0.4;
 
         return `m ${halfHeight} 0
+        l -${x} ${halfHeight}
+        l ${x} ${halfHeight}
         h ${width}
-        l ${halfHeight} ${halfHeight}
-        l -${halfHeight} ${halfHeight}
-        H ${halfHeight}
-        l -${halfHeight} -${halfHeight}
-        l ${halfHeight} -${halfHeight}
-        z`;
+        l ${x} -${halfHeight}
+        l -${x} -${halfHeight}
+        z
+        `
+        // return `m ${halfHeight} 0
+        // h ${width}
+        // l ${halfHeight} ${halfHeight}
+        // l -${halfHeight} ${halfHeight}
+        // H ${halfHeight}
+        // l -${halfHeight} -${halfHeight}
+        // l ${halfHeight} -${halfHeight}
+        // z`;
         // return "m " + halfHeight + ",0 h " + width + " l " + halfHeight + "," +
         //     halfHeight + " -" + halfHeight + "," + halfHeight + " H "+ halfHeight +
         //     " l -" + halfHeight + ",-" + halfHeight + " " + halfHeight + ",-" +
@@ -535,7 +544,7 @@ Entry.skeleton.basic_text = {
         height = Math.max(18, height + 2);
         width = Math.max(0, width - height + 12);
         var halfHeight = height/2;
-
+        console.log('basic_text');
         return "m " + halfHeight + ",0 h " + width + " a " + halfHeight +"," + halfHeight + " 0 1,1 0," + height + " H " + halfHeight + " A " + halfHeight +","+ halfHeight + " 0 1,1 "+ halfHeight + ",0 z";
     },
     box: function(blockView) {
@@ -571,14 +580,21 @@ Entry.skeleton.basic_without_next = {
         width = Math.max(0, width + 9 - height / 2);
         var halfHeight = height/2;
 
-        return `M 13 1
-        L 7 7
-        L 1 1
-        v ${height}
+        return `m 0 0
+        l 6 6
+        l 6 -6
         h ${width}
-        a ${halfHeight} ${halfHeight} 0 0 0 0 -${height}
-        H 13
+        a ${halfHeight} ${halfHeight} 0 0 1 0 ${height}
+        H 0
         z`;
+        // return `M 13 1
+        // L 7 7
+        // L 1 1
+        // v ${height}
+        // h ${width}
+        // a ${halfHeight} ${halfHeight} 0 0 0 0 -${height}
+        // H 13
+        // z`;
         // return "m -8,0 l 8,8 8,-8 h " + width + " a " + halfHeight + "," +
         //     halfHeight + " 0 0,1 0, " + height + " H -8 z";
     },

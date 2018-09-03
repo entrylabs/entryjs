@@ -1671,26 +1671,41 @@ Entry.Utils.addFilters = function(boardSvgDom, suffix) {
         feMerge
     );
 
-    var blockFilter = defs.elem('filter', {
-        id: 'entryBlockShadowFilter_' + suffix,
-    });
-    blockFilter.elem('feOffset', {
-        result: 'offOut',
-        in: 'SourceGraphic',
-        dx: 0,
-        dy: 1,
-    });
-    blockFilter.elem('feColorMatrix', {
-        result: 'matrixOut',
-        in: 'offOut',
-        type: 'matrix',
-        values: '0.7 0 0 0 0 0 0.7 0 0 0 0 0 0.7 0 0 0 0 0 1 0',
-    });
-    blockFilter.elem('feBlend', {
-        in: 'SourceGraphic',
-        in1: 'offOut',
-        mode: 'normal',
-    });
+    // var blockFilter = defs.elem('filter', {
+    //     id: 'entryBlockShadowFilter_' + suffix,
+    // });
+    // blockFilter.elem('feOffset', {
+    //     result: 'offOut',
+    //     in: 'SourceGraphic',
+    //     dx: 0,
+    //     dy: 1,
+    // });
+    // blockFilter.elem('feColorMatrix', {
+    //     result: 'matrixOut',
+    //     in: 'offOut',
+    //     type: 'matrix',
+    //     values: '0.7 0 0 0 0 0 0.7 0 0 0 0 0 0.7 0 0 0 0 0 1 0',
+    // });
+    // blockFilter.elem('feMorphology', {
+    //     in: 'SourceAlpha',
+    //     result: 'MORPH',
+    //     operator: 'dilate',
+    //     radius: '1',
+    // });
+    // blockFilter.elem('feColorMatrix', {
+    //     result: 'WHITENED',
+    //     in: 'MORPH',
+    //     type: 'matrix',
+    //     values: '0.7 0 0 0 0 0 0.7 0 0 0 0 0 0.7 0 0 0 0 0 1 0',
+    // });
+    // var feMerge = blockFilter.elem('feMerge');
+    // feMerge.elem('feMergeNode', {
+    //     in: 'WHITENED',
+    // });
+    
+    // feMerge.elem('feMergeNode', {
+    //     in: 'SourceGraphic',
+    // });
 
     var blockHighlightFilter = defs.elem('filter', {
         id: 'entryBlockHighlightFilter_' + suffix,
