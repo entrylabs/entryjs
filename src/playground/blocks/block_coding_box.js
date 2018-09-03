@@ -347,7 +347,7 @@ Entry.CodingBox.getBlocks = function() {
             },
             class: 'CodingBoxArduinoRead',
             isNotFor: ['CodingBox'],
-            func: function(sprite, script) {
+            func: async function(sprite, script) {
                 const ANALOG = Entry.hw.portData.ANALOG;
                 let isFloat = false;
 
