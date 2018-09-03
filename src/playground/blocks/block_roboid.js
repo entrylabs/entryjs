@@ -673,12 +673,12 @@ Entry.Roboid.getBlocks = function() {
             },
             class: 'hamster_sensor',
             isNotFor: ['roboid'],
-            func: function(sprite, script) {
-                var pd = Entry.hw.portData;
-                var index = script.getNumberValue('INDEX');
-                var key = 'hamster' + index;
-                var leftProximity = pd[key + 'leftProximity'];
-                var rightProximity = pd[key + 'rightProximity'];
+            func: async function(sprite, script) {
+                const pd = Entry.hw.portData;
+                const index = await script.getNumberValue('INDEX');
+                const key = 'hamster' + index;
+                let leftProximity = pd[key + 'leftProximity'];
+                let rightProximity = pd[key + 'rightProximity'];
                 if (!leftProximity) leftProximity = 0;
                 if (!rightProximity) rightProximity = 0;
                 return leftProximity > 50 || rightProximity > 50;
@@ -764,11 +764,11 @@ Entry.Roboid.getBlocks = function() {
             },
             class: 'hamster_sensor',
             isNotFor: ['roboid'],
-            func: function(sprite, script) {
-                var pd = Entry.hw.portData;
-                var index = script.getNumberValue('INDEX');
-                var dev = script.getField('DEVICE');
-                var value = pd['hamster' + index + dev];
+            func: async function(sprite, script) {
+                const pd = Entry.hw.portData;
+                const index = await script.getNumberValue('INDEX');
+                const dev = script.getField('DEVICE');
+                let value = pd['hamster' + index + dev];
                 if (typeof value !== 'number') value = 0;
                 return value;
             },
@@ -1661,11 +1661,11 @@ Entry.Roboid.getBlocks = function() {
             },
             class: 'hamster_board',
             isNotFor: ['roboid'],
-            func: function(sprite, script) {
-                var pd = Entry.hw.portData;
-                var index = script.getNumberValue('INDEX');
-                var robot = Entry.Roboid.getHamster(index);
-                var packet = robot.packet;
+            func: async function(sprite, script) {
+                const pd = Entry.hw.portData;
+                const index = await script.getNumberValue('INDEX');
+                const robot = Entry.Roboid.getHamster(index);
+                const packet = robot.packet;
                 if (!script.isStart) {
                     script.isStart = true;
                     script.isMoving = true;
@@ -1679,8 +1679,8 @@ Entry.Roboid.getBlocks = function() {
                     return script;
                 } else if (script.isMoving) {
                     if (robot.boardCommand != 1) return script;
-                    var leftFloor = pd['hamster' + index + 'leftFloor'];
-                    var rightFloor = pd['hamster' + index + 'rightFloor'];
+                    const leftFloor = pd['hamster' + index + 'leftFloor'];
+                    const rightFloor = pd['hamster' + index + 'rightFloor'];
                     switch (script.boardState) {
                         case 1: {
                             if (script.count < 2) {
@@ -1792,18 +1792,18 @@ Entry.Roboid.getBlocks = function() {
             },
             class: 'hamster_board',
             isNotFor: ['roboid'],
-            func: function(sprite, script) {
-                var pd = Entry.hw.portData;
-                var index = script.getNumberValue('INDEX');
-                var robot = Entry.Roboid.getHamster(index);
-                var packet = robot.packet;
+            func: async function(sprite, script) {
+                const pd = Entry.hw.portData;
+                const index = await script.getNumberValue('INDEX');
+                const robot = Entry.Roboid.getHamster(index);
+                const packet = robot.packet;
                 if (!script.isStart) {
                     script.isStart = true;
                     script.isMoving = true;
                     script.count = 0;
                     script.boardState = 1;
                     packet.motion = 0;
-                    var direction = script.getField('DIRECTION', script);
+                    const direction = script.getField('DIRECTION', script);
                     if (direction == 'LEFT') {
                         script.isLeft = true;
                         packet.leftWheel = -45;
@@ -1818,8 +1818,8 @@ Entry.Roboid.getBlocks = function() {
                     return script;
                 } else if (script.isMoving) {
                     if (robot.boardCommand != 2) return script;
-                    var leftFloor = pd['hamster' + index + 'leftFloor'];
-                    var rightFloor = pd['hamster' + index + 'rightFloor'];
+                    const leftFloor = pd['hamster' + index + 'leftFloor'];
+                    const rightFloor = pd['hamster' + index + 'rightFloor'];
                     if (script.isLeft) {
                         switch (script.boardState) {
                             case 1: {
@@ -2021,10 +2021,15 @@ Entry.Roboid.getBlocks = function() {
             },
             class: 'hamster_wheel',
             isNotFor: ['roboid'],
-            func: function(sprite, script) {
-                var index = script.getNumberValue('INDEX');
-                var robot = Entry.Roboid.getHamster(index);
-                var packet = robot.packet;
+            func: async function(sprite, script) {
+                let [index, timeValue] = await Promise.all([
+                    script.getNumberValue('INDEX'),
+                    script.getNumberValue('VALUE'),
+                ]);
+                timeValue *= 1000;
+
+                const robot = Entry.Roboid.getHamster(index);
+                const packet = robot.packet;
                 if (!script.isStart) {
                     script.isStart = true;
                     script.timeFlag = 1;
@@ -2033,8 +2038,7 @@ Entry.Roboid.getBlocks = function() {
                     packet.rightWheel = 30;
                     robot.boardCommand = 0;
                     robot.setLineTracerMode(0);
-                    var timeValue = script.getNumberValue('VALUE') * 1000;
-                    var timer = setTimeout(function() {
+                    const timer = setTimeout(function() {
                         script.timeFlag = 0;
                         Entry.Roboid.removeTimeout(timer);
                     }, timeValue);
@@ -2111,8 +2115,12 @@ Entry.Roboid.getBlocks = function() {
             },
             class: 'hamster_wheel',
             isNotFor: ['roboid'],
-            func: function(sprite, script) {
-                var index = script.getNumberValue('INDEX');
+            func: async function(sprite, script) {
+                let [index, timeValue] = await Promise.all([
+                    script.getNumberValue('INDEX'),
+                    script.getNumberValue('VALUE'),
+                ]);
+                timeValue *= 1000;
                 var robot = Entry.Roboid.getHamster(index);
                 var packet = robot.packet;
                 if (!script.isStart) {
@@ -2123,8 +2131,7 @@ Entry.Roboid.getBlocks = function() {
                     packet.rightWheel = -30;
                     robot.boardCommand = 0;
                     robot.setLineTracerMode(0);
-                    var timeValue = script.getNumberValue('VALUE') * 1000;
-                    var timer = setTimeout(function() {
+                    const timer = setTimeout(function() {
                         script.timeFlag = 0;
                         Entry.Roboid.removeTimeout(timer);
                     }, timeValue);
@@ -2212,14 +2219,18 @@ Entry.Roboid.getBlocks = function() {
             },
             class: 'hamster_wheel',
             isNotFor: ['roboid'],
-            func: function(sprite, script) {
-                var index = script.getNumberValue('INDEX');
-                var robot = Entry.Roboid.getHamster(index);
-                var packet = robot.packet;
+            func: async function(sprite, script) {
+                let [index, timeValue] = await Promise.all([
+                    script.getNumberValue('INDEX'),
+                    script.getNumberValue('VALUE'),
+                ]);
+                timeValue *= 1000;
+                const robot = Entry.Roboid.getHamster(index);
+                const packet = robot.packet;
                 if (!script.isStart) {
                     script.isStart = true;
                     script.timeFlag = 1;
-                    var direction = script.getField('DIRECTION', script);
+                    const direction = script.getField('DIRECTION', script);
                     if (direction == 'LEFT') {
                         packet.motion = 3;
                         packet.leftWheel = -30;
@@ -2231,8 +2242,7 @@ Entry.Roboid.getBlocks = function() {
                     }
                     robot.boardCommand = 0;
                     robot.setLineTracerMode(0);
-                    var timeValue = script.getNumberValue('VALUE') * 1000;
-                    var timer = setTimeout(function() {
+                    const timer = setTimeout(function() {
                         script.timeFlag = 0;
                         Entry.Roboid.removeTimeout(timer);
                     }, timeValue);
@@ -2361,12 +2371,16 @@ Entry.Roboid.getBlocks = function() {
             },
             class: 'hamster_wheel',
             isNotFor: ['roboid'],
-            func: function(sprite, script) {
-                var index = script.getNumberValue('INDEX');
-                var robot = Entry.Roboid.getHamster(index);
-                var packet = robot.packet;
-                var left = script.getNumberValue('LEFT');
-                var right = script.getNumberValue('RIGHT');
+            func: async function(sprite, script) {
+                const [index, left, right] = await Promise.all([
+                    script.getNumberValue('INDEX'),
+                    script.getNumberValue('LEFT'),
+                    script.getNumberValue('RIGHT'),
+                ]);
+
+                const robot = Entry.Roboid.getHamster(index);
+                const packet = robot.packet;
+
                 packet.motion = 0;
                 packet.leftWheel =
                     packet.leftWheel != undefined
@@ -2452,13 +2466,18 @@ Entry.Roboid.getBlocks = function() {
             },
             class: 'hamster_wheel',
             isNotFor: ['roboid'],
-            func: function(sprite, script) {
-                var index = script.getNumberValue('INDEX');
-                var robot = Entry.Roboid.getHamster(index);
-                var packet = robot.packet;
+            func: async function(sprite, script) {
+                const [index, left, right] = await Promise.all([
+                    script.getNumberValue('INDEX'),
+                    script.getNumberValue('LEFT'),
+                    script.getNumberValue('RIGHT'),
+                ]);
+                
+                const robot = Entry.Roboid.getHamster(index);
+                const packet = robot.packet;
                 packet.motion = 0;
-                packet.leftWheel = script.getNumberValue('LEFT');
-                packet.rightWheel = script.getNumberValue('RIGHT');
+                packet.leftWheel = left;
+                packet.rightWheel = right;
                 robot.boardCommand = 0;
                 robot.setLineTracerMode(0);
                 return script.callReturn();
@@ -2538,12 +2557,14 @@ Entry.Roboid.getBlocks = function() {
             },
             class: 'hamster_wheel',
             isNotFor: ['roboid'],
-            func: function(sprite, script) {
-                var index = script.getNumberValue('INDEX');
-                var robot = Entry.Roboid.getHamster(index);
-                var packet = robot.packet;
-                var direction = script.getField('DIRECTION');
-                var value = script.getNumberValue('VALUE');
+            func: async function(sprite, script) {
+                const [index, value] = await Promise.all([
+                    script.getNumberValue('INDEX'),
+                    script.getNumberValue('VALUE'),
+                ]);
+                const robot = Entry.Roboid.getHamster(index);
+                const direction = script.getField('DIRECTION');
+                const packet = robot.packet;
                 packet.motion = 0;
                 if (direction == 'LEFT') {
                     packet.leftWheel =
@@ -2705,12 +2726,14 @@ Entry.Roboid.getBlocks = function() {
             },
             class: 'hamster_wheel',
             isNotFor: ['roboid'],
-            func: function(sprite, script) {
-                var index = script.getNumberValue('INDEX');
-                var robot = Entry.Roboid.getHamster(index);
-                var packet = robot.packet;
-                var direction = script.getField('DIRECTION');
-                var value = script.getNumberValue('VALUE');
+            func: async function(sprite, script) {
+                const [index, value] = await Promise.all([
+                    script.getNumberValue('INDEX'),
+                    script.getNumberValue('VALUE'),
+                ]);
+                const robot = Entry.Roboid.getHamster(index);
+                const direction = script.getField('DIRECTION');
+                const packet = robot.packet;
                 packet.motion = 0;
                 if (direction == 'LEFT') {
                     packet.leftWheel = value;
@@ -2862,12 +2885,12 @@ Entry.Roboid.getBlocks = function() {
             },
             class: 'hamster_wheel',
             isNotFor: ['roboid'],
-            func: function(sprite, script) {
-                var index = script.getNumberValue('INDEX');
-                var robot = Entry.Roboid.getHamster(index);
-                var packet = robot.packet;
-                var color = script.getField('COLOR');
-                var direction = script.getField('DIRECTION');
+            func: async function(sprite, script) {
+                const index = await script.getNumberValue('INDEX');
+                const robot = Entry.Roboid.getHamster(index);
+                const packet = robot.packet;
+                const color = script.getField('COLOR');
+                const direction = script.getField('DIRECTION');
 
                 var mode = 1;
                 if (direction == 'RIGHT') mode = 2;
@@ -2983,15 +3006,15 @@ Entry.Roboid.getBlocks = function() {
             },
             class: 'hamster_wheel',
             isNotFor: ['roboid'],
-            func: function(sprite, script) {
-                var index = script.getNumberValue('INDEX');
-                var robot = Entry.Roboid.getHamster(index);
-                var packet = robot.packet;
-                var pd = Entry.hw.portData;
-                var color = script.getField('COLOR');
-                var direction = script.getField('DIRECTION');
+            func: async function(sprite, script) {
+                const index = await script.getNumberValue('INDEX');
+                const robot = Entry.Roboid.getHamster(index);
+                const packet = robot.packet;
+                const pd = Entry.hw.portData;
+                const color = script.getField('COLOR');
+                const direction = script.getField('DIRECTION');
 
-                var mode = 4;
+                let mode = 4;
                 if (direction == 'RIGHT') mode = 5;
                 else if (direction == 'FRONT') mode = 6;
                 else if (direction == 'REAR') mode = 7;
@@ -3006,11 +3029,11 @@ Entry.Roboid.getBlocks = function() {
                     robot.setLineTracerMode(mode);
                     return script;
                 } else {
-                    var lineTracerStateId =
+                    const lineTracerStateId =
                         pd['hamster' + index + 'lineTracerStateId'];
                     if (lineTracerStateId != robot.lineTracerStateId) {
                         robot.lineTracerStateId = lineTracerStateId;
-                        var lineTracerState =
+                        const lineTracerState =
                             pd['hamster' + index + 'lineTracerState'];
                         if (lineTracerState == 0x40) {
                             delete script.isStart;
@@ -3115,10 +3138,10 @@ Entry.Roboid.getBlocks = function() {
             },
             class: 'hamster_wheel',
             isNotFor: ['roboid'],
-            func: function(sprite, script) {
-                var index = script.getNumberValue('INDEX');
-                var robot = Entry.Roboid.getHamster(index);
-                var packet = robot.packet;
+            func: async function(sprite, script) {
+                const index = await script.getNumberValue('INDEX');
+                const robot = Entry.Roboid.getHamster(index);
+                const packet = robot.packet;
                 packet.lineTracerSpeed = Number(
                     script.getField('SPEED', script)
                 );
@@ -3188,10 +3211,10 @@ Entry.Roboid.getBlocks = function() {
             },
             class: 'hamster_wheel',
             isNotFor: ['roboid'],
-            func: function(sprite, script) {
-                var index = script.getNumberValue('INDEX');
-                var robot = Entry.Roboid.getHamster(index);
-                var packet = robot.packet;
+            func: async function(sprite, script) {
+                const index = await script.getNumberValue('INDEX');
+                const robot = Entry.Roboid.getHamster(index);
+                const packet = robot.packet;
                 packet.motion = 0;
                 packet.leftWheel = 0;
                 packet.rightWheel = 0;
@@ -3273,12 +3296,12 @@ Entry.Roboid.getBlocks = function() {
             },
             class: 'hamster_led',
             isNotFor: ['roboid'],
-            func: function(sprite, script) {
-                var index = script.getNumberValue('INDEX');
-                var robot = Entry.Roboid.getHamster(index);
-                var packet = robot.packet;
-                var direction = script.getField('DIRECTION', script);
-                var color = Number(script.getField('COLOR', script));
+            func: async function(sprite, script) {
+                const index = await script.getNumberValue('INDEX');
+                const robot = Entry.Roboid.getHamster(index);
+                const packet = robot.packet;
+                const direction = script.getField('DIRECTION', script);
+                const color = Number(script.getField('COLOR', script));
                 if (direction == 'LEFT') {
                     packet.leftLed = color;
                 } else if (direction == 'RIGHT') {
@@ -3458,11 +3481,11 @@ Entry.Roboid.getBlocks = function() {
             },
             class: 'hamster_led',
             isNotFor: ['roboid'],
-            func: function(sprite, script) {
-                var index = script.getNumberValue('INDEX');
-                var robot = Entry.Roboid.getHamster(index);
-                var packet = robot.packet;
-                var direction = script.getField('DIRECTION', script);
+            func: async function(sprite, script) {
+                const index = await script.getNumberValue('INDEX');
+                const robot = Entry.Roboid.getHamster(index);
+                const packet = robot.packet;
+                const direction = script.getField('DIRECTION', script);
                 if (direction == 'LEFT') {
                     packet.leftLed = 0;
                 } else if (direction == 'RIGHT') {
@@ -3576,17 +3599,17 @@ Entry.Roboid.getBlocks = function() {
             },
             class: 'hamster_buzzer',
             isNotFor: ['roboid'],
-            func: function(sprite, script) {
-                var index = script.getNumberValue('INDEX');
-                var robot = Entry.Roboid.getHamster(index);
-                var packet = robot.packet;
+            func: async function(sprite, script) {
+                const index = await script.getNumberValue('INDEX');
+                const robot = Entry.Roboid.getHamster(index);
+                const packet = robot.packet;
                 if (!script.isStart) {
                     script.isStart = true;
                     script.timeFlag = 1;
                     packet.buzzer = 440;
                     packet.note = 0;
-                    var timeValue = 0.2 * 1000;
-                    var timer = setTimeout(function() {
+                    const timeValue = 0.2 * 1000;
+                    const timer = setTimeout(function() {
                         script.timeFlag = 0;
                         Entry.Roboid.removeTimeout(timer);
                     }, timeValue);
@@ -3657,11 +3680,13 @@ Entry.Roboid.getBlocks = function() {
             },
             class: 'hamster_buzzer',
             isNotFor: ['roboid'],
-            func: function(sprite, script) {
-                var index = script.getNumberValue('INDEX');
-                var robot = Entry.Roboid.getHamster(index);
-                var packet = robot.packet;
-                var value = script.getNumberValue('VALUE');
+            func: async function(sprite, script) {
+                const [index, value] = await Promise.all([
+                    script.getNumberValue('INDEX'),
+                    script.getNumberValue('VALUE'),
+                ]);
+                const robot = Entry.Roboid.getHamster(index);
+                const packet = robot.packet;
                 packet.buzzer =
                     packet.buzzer != undefined ? packet.buzzer + value : value;
                 packet.note = 0;
@@ -3726,11 +3751,14 @@ Entry.Roboid.getBlocks = function() {
             },
             class: 'hamster_buzzer',
             isNotFor: ['roboid'],
-            func: function(sprite, script) {
-                var index = script.getNumberValue('INDEX');
-                var robot = Entry.Roboid.getHamster(index);
-                var packet = robot.packet;
-                packet.buzzer = script.getNumberValue('VALUE');
+            func: async function(sprite, script) {
+                const [index, value] = await Promise.all([
+                    script.getNumberValue('INDEX'),
+                    script.getNumberValue('VALUE'),
+                ]);
+                const robot = Entry.Roboid.getHamster(index);
+                const packet = robot.packet;
+                packet.buzzer = value;
                 packet.note = 0;
                 return script.callReturn();
             },
@@ -3774,10 +3802,10 @@ Entry.Roboid.getBlocks = function() {
             },
             class: 'hamster_buzzer',
             isNotFor: ['roboid'],
-            func: function(sprite, script) {
-                var index = script.getNumberValue('INDEX');
-                var robot = Entry.Roboid.getHamster(index);
-                var packet = robot.packet;
+            func: async function(sprite, script) {
+                const index = await script.getNumberValue('INDEX');
+                const robot = Entry.Roboid.getHamster(index);
+                const packet = robot.packet;
                 packet.buzzer = 0;
                 packet.note = 0;
                 return script.callReturn();
@@ -3868,28 +3896,31 @@ Entry.Roboid.getBlocks = function() {
             },
             class: 'hamster_buzzer',
             isNotFor: ['roboid'],
-            func: function(sprite, script) {
-                var index = script.getNumberValue('INDEX');
-                var robot = Entry.Roboid.getHamster(index);
-                var packet = robot.packet;
+            func: async function(sprite, script) {
+                let [index, note, octave, beat] = await Promise.all([
+                    script.getNumberValue('INDEX'),
+                    script.getNumberField('NOTE', script),
+                    script.getNumberField('OCTAVE', script),
+                    script.getNumberValue('VALUE', script),
+                ]);
+
+                const robot = Entry.Roboid.getHamster(index);
+                const packet = robot.packet;
                 if (!script.isStart) {
-                    var note = script.getNumberField('NOTE', script);
-                    var octave = script.getNumberField('OCTAVE', script);
-                    var beat = script.getNumberValue('VALUE', script);
                     note += (octave - 1) * 12;
-                    var timeValue = beat * 60 * 1000 / robot.tempo;
+                    const timeValue = beat * 60 * 1000 / robot.tempo;
                     script.isStart = true;
                     script.timeFlag = 1;
                     packet.buzzer = 0;
                     packet.note = note;
                     if (timeValue > 100) {
-                        var timer1 = setTimeout(function() {
+                        const timer1 = setTimeout(function() {
                             packet.note = 0;
                             Entry.Roboid.removeTimeout(timer1);
                         }, timeValue - 100);
                         Entry.Roboid.timeouts.push(timer1);
                     }
-                    var timer2 = setTimeout(function() {
+                    const timer2 = setTimeout(function() {
                         script.timeFlag = 0;
                         Entry.Roboid.removeTimeout(timer2);
                     }, timeValue);
@@ -4005,18 +4036,22 @@ Entry.Roboid.getBlocks = function() {
             },
             class: 'hamster_buzzer',
             isNotFor: ['roboid'],
-            func: function(sprite, script) {
-                var index = script.getNumberValue('INDEX');
-                var robot = Entry.Roboid.getHamster(index);
-                var packet = robot.packet;
+            func: async function(sprite, script) {
+                let [index, timeValue] = await Promise.all([
+                    script.getNumberValue('INDEX'),
+                    script.getNumberValue('VALUE'),
+                ]);
+                
+                const robot = Entry.Roboid.getHamster(index);
+                const packet = robot.packet;
                 if (!script.isStart) {
                     script.isStart = true;
                     script.timeFlag = 1;
-                    var timeValue = script.getNumberValue('VALUE');
+                    
                     timeValue = timeValue * 60 * 1000 / robot.tempo;
                     packet.buzzer = 0;
                     packet.note = 0;
-                    var timer = setTimeout(function() {
+                    const timer = setTimeout(function() {
                         script.timeFlag = 0;
                         Entry.Roboid.removeTimeout(timer);
                     }, timeValue);
@@ -4090,11 +4125,13 @@ Entry.Roboid.getBlocks = function() {
             },
             class: 'hamster_buzzer',
             isNotFor: ['roboid'],
-            func: function(sprite, script) {
-                var index = script.getNumberValue('INDEX');
-                var robot = Entry.Roboid.getHamster(index);
-                var packet = robot.packet;
-                robot.tempo += script.getNumberValue('VALUE');
+            func: async function(sprite, script) {
+                const [index, value] = await Promise.all([
+                    script.getNumberValue('INDEX'),
+                    script.getNumberValue('VALUE'),
+                ]);
+                const robot = Entry.Roboid.getHamster(index);
+                robot.tempo += value;
                 if (robot.tempo < 1) robot.tempo = 1;
                 return script.callReturn();
             },
@@ -4157,11 +4194,13 @@ Entry.Roboid.getBlocks = function() {
             },
             class: 'hamster_buzzer',
             isNotFor: ['roboid'],
-            func: function(sprite, script) {
-                var index = script.getNumberValue('INDEX');
-                var robot = Entry.Roboid.getHamster(index);
-                var packet = robot.packet;
-                robot.tempo = script.getNumberValue('VALUE');
+            func: async function(sprite, script) {
+                const [index, value] = await Promise.all([
+                    script.getNumberValue('INDEX'),
+                    script.getNumberValue('VALUE'),
+                ]);
+                const robot = Entry.Roboid.getHamster(index);
+                robot.tempo = value;
                 if (robot.tempo < 1) robot.tempo = 1;
                 return script.callReturn();
             },
@@ -4241,12 +4280,12 @@ Entry.Roboid.getBlocks = function() {
             },
             class: 'hamster_port',
             isNotFor: ['roboid'],
-            func: function(sprite, script) {
-                var index = script.getNumberValue('INDEX');
-                var robot = Entry.Roboid.getHamster(index);
-                var packet = robot.packet;
-                var port = script.getField('PORT', script);
-                var mode = Number(script.getField('MODE', script)) - 1;
+            func: async function(sprite, script) {
+                const index = await script.getNumberValue('INDEX');
+                const robot = Entry.Roboid.getHamster(index);
+                const packet = robot.packet;
+                const port = script.getField('PORT', script);
+                const mode = Number(script.getField('MODE', script)) - 1;
                 if (port == 'A') {
                     packet.ioModeA = mode;
                 } else if (port == 'B') {
@@ -4405,12 +4444,14 @@ Entry.Roboid.getBlocks = function() {
             },
             class: 'hamster_port',
             isNotFor: ['roboid'],
-            func: function(sprite, script) {
-                var index = script.getNumberValue('INDEX');
-                var robot = Entry.Roboid.getHamster(index);
-                var packet = robot.packet;
-                var port = script.getField('PORT');
-                var value = script.getNumberValue('VALUE');
+            func: async function(sprite, script) {
+                const [index, value] = await Promise.all([
+                    script.getNumberValue('INDEX'),
+                    script.getNumberValue('VALUE'),
+                ]);
+                const robot = Entry.Roboid.getHamster(index);
+                const packet = robot.packet;
+                const port = script.getField('PORT');
                 if (port == 'A') {
                     packet.outputA =
                         packet.outputA != undefined
@@ -4569,12 +4610,14 @@ Entry.Roboid.getBlocks = function() {
             },
             class: 'hamster_port',
             isNotFor: ['roboid'],
-            func: function(sprite, script) {
-                var index = script.getNumberValue('INDEX');
-                var robot = Entry.Roboid.getHamster(index);
-                var packet = robot.packet;
-                var port = script.getField('PORT');
-                var value = script.getNumberValue('VALUE');
+            func: async function(sprite, script) {
+                const [index, value] = await Promise.all([
+                    script.getNumberValue('INDEX'),
+                    script.getNumberValue('VALUE'),
+                ]);
+                const robot = Entry.Roboid.getHamster(index);
+                const packet = robot.packet;
+                const port = script.getField('PORT');
                 if (port == 'A') {
                     packet.outputA = value;
                 } else if (port == 'B') {
@@ -4711,16 +4754,16 @@ Entry.Roboid.getBlocks = function() {
             },
             class: 'hamster_port',
             isNotFor: ['roboid'],
-            func: function(sprite, script) {
-                var index = script.getNumberValue('INDEX');
-                var robot = Entry.Roboid.getHamster(index);
-                var packet = robot.packet;
+            func: async function(sprite, script) {
+                const index = await script.getNumberValue('INDEX');
+                const robot = Entry.Roboid.getHamster(index);
+                const packet = robot.packet;
                 if (!script.isStart) {
                     script.isStart = true;
                     script.timeFlag = 1;
                     packet.ioModeA = 10;
                     packet.ioModeB = 10;
-                    var action = script.getField('ACTION');
+                    const action = script.getField('ACTION');
                     if (action == 'OPEN') {
                         packet.outputA = 1;
                         packet.outputB = 0;
@@ -4728,7 +4771,7 @@ Entry.Roboid.getBlocks = function() {
                         packet.outputA = 0;
                         packet.outputB = 1;
                     }
-                    var timer = setTimeout(function() {
+                    const timer = setTimeout(function() {
                         script.timeFlag = 0;
                         Entry.Roboid.removeTimeout(timer);
                     }, 500);
@@ -4818,10 +4861,10 @@ Entry.Roboid.getBlocks = function() {
             },
             class: 'hamster_port',
             isNotFor: ['roboid'],
-            func: function(sprite, script) {
-                var index = script.getNumberValue('INDEX');
-                var robot = Entry.Roboid.getHamster(index);
-                var packet = robot.packet;
+            func: async function(sprite, script) {
+                const index = await script.getNumberValue('INDEX');
+                const robot = Entry.Roboid.getHamster(index);
+                const packet = robot.packet;
                 packet.ioModeA = 10;
                 packet.ioModeB = 10;
                 packet.outputA = 0;
@@ -4888,9 +4931,9 @@ Entry.Roboid.getBlocks = function() {
             },
             class: 'turtle_sensor',
             isNotFor: ['roboid'],
-            func: function(sprite, script) {
-                var pd = Entry.hw.portData;
-                var index = script.getNumberValue('INDEX');
+            func: async function(sprite, script) {
+                const pd = Entry.hw.portData;
+                const index = await script.getNumberValue('INDEX');
                 return (
                     Number(script.getField('COLOR')) - 1 ===
                     pd['turtle' + index + 'colorNumber']
@@ -4988,9 +5031,9 @@ Entry.Roboid.getBlocks = function() {
             },
             class: 'turtle_sensor',
             isNotFor: ['roboid'],
-            func: function(sprite, script) {
-                var pd = Entry.hw.portData;
-                var index = script.getNumberValue('INDEX');
+            func: async function(sprite, script) {
+                const pd = Entry.hw.portData;
+                const index = await script.getNumberValue('INDEX');
                 return (
                     Number(script.getField('COLOR1')) * 10 +
                         Number(script.getField('COLOR2')) ===
@@ -5085,10 +5128,10 @@ Entry.Roboid.getBlocks = function() {
             },
             class: 'turtle_sensor',
             isNotFor: ['roboid'],
-            func: function(sprite, script) {
-                var pd = Entry.hw.portData;
-                var index = script.getNumberValue('INDEX');
-                var event = script.getField('EVENT');
+            func: async function(sprite, script) {
+                const pd = Entry.hw.portData;
+                const index = await script.getNumberValue('INDEX');
+                const event = script.getField('EVENT');
                 return pd['turtle' + index + event] === 1;
             },
             syntax: {
@@ -5226,11 +5269,11 @@ Entry.Roboid.getBlocks = function() {
             },
             class: 'turtle_sensor',
             isNotFor: ['roboid'],
-            func: function(sprite, script) {
-                var pd = Entry.hw.portData;
-                var index = script.getNumberValue('INDEX');
-                var dev = script.getField('DEVICE');
-                var value = pd['turtle' + index + dev];
+            func: async function(sprite, script) {
+                const pd = Entry.hw.portData;
+                const index = await script.getNumberValue('INDEX');
+                const dev = script.getField('DEVICE');
+                let value = pd['turtle' + index + dev];
                 if (typeof value !== 'number')
                     value = Entry.Roboid.TURTLE_SENSOR[dev];
                 return value;
@@ -5587,29 +5630,31 @@ Entry.Roboid.getBlocks = function() {
             },
             class: 'turtle_wheel',
             isNotFor: ['roboid'],
-            func: function(sprite, script) {
-                var pd = Entry.hw.portData;
-                var index = script.getNumberValue('INDEX');
-                var robot = Entry.Roboid.getTurtle(index);
-                var packet = robot.packet;
+            func: async function(sprite, script) {
+                const pd = Entry.hw.portData;
+                const [index, value] = await Promise.all([
+                    script.getNumberValue('INDEX'),
+                    script.getNumberValue('VALUE'),
+                ]);
+                const robot = Entry.Roboid.getTurtle(index);
+                const packet = robot.packet;
                 if (!script.isStart) {
                     script.isStart = true;
                     packet.leftWheel = 0;
                     packet.rightWheel = 0;
                     robot.setPulse(0);
                     robot.setLineTracerMode(0);
-                    var field = script.getField('UNIT');
-                    var unit = 1;
+                    const field = script.getField('UNIT');
+                    let unit = 1;
                     if (field == 'SEC') unit = 2;
                     else if (field == 'PULSE') unit = 3;
-                    var value = script.getNumberValue('VALUE');
                     robot.setMotion(1, unit, 0, value, 0);
                     return script;
                 } else {
-                    var wheelStateId = pd['turtle' + index + 'wheelStateId'];
+                    const wheelStateId = pd['turtle' + index + 'wheelStateId'];
                     if (wheelStateId != robot.wheelStateId) {
                         robot.wheelStateId = wheelStateId;
-                        var wheelState = pd['turtle' + index + 'wheelState'];
+                        const wheelState = pd['turtle' + index + 'wheelState'];
                         if (wheelState == 0) {
                             delete script.isStart;
                             Entry.engine.isContinue = false;
@@ -5706,29 +5751,31 @@ Entry.Roboid.getBlocks = function() {
             },
             class: 'turtle_wheel',
             isNotFor: ['roboid'],
-            func: function(sprite, script) {
-                var pd = Entry.hw.portData;
-                var index = script.getNumberValue('INDEX');
-                var robot = Entry.Roboid.getTurtle(index);
-                var packet = robot.packet;
+            func: async function(sprite, script) {
+                const pd = Entry.hw.portData;
+                const [index, value] = await Promise.all([
+                    script.getNumberValue('INDEX'),
+                    script.getNumberValue('VALUE'),
+                ]);
+                const robot = Entry.Roboid.getTurtle(index);
+                const packet = robot.packet;
                 if (!script.isStart) {
                     script.isStart = true;
                     packet.leftWheel = 0;
                     packet.rightWheel = 0;
                     robot.setPulse(0);
                     robot.setLineTracerMode(0);
-                    var field = script.getField('UNIT');
-                    var unit = 1;
+                    const field = script.getField('UNIT');
+                    let unit = 1;
                     if (field == 'SEC') unit = 2;
                     else if (field == 'PULSE') unit = 3;
-                    var value = script.getNumberValue('VALUE');
                     robot.setMotion(2, unit, 0, value, 0);
                     return script;
                 } else {
-                    var wheelStateId = pd['turtle' + index + 'wheelStateId'];
+                    const wheelStateId = pd['turtle' + index + 'wheelStateId'];
                     if (wheelStateId != robot.wheelStateId) {
                         robot.wheelStateId = wheelStateId;
-                        var wheelState = pd['turtle' + index + 'wheelState'];
+                        const wheelState = pd['turtle' + index + 'wheelState'];
                         if (wheelState == 0) {
                             delete script.isStart;
                             Entry.engine.isContinue = false;
@@ -5836,32 +5883,34 @@ Entry.Roboid.getBlocks = function() {
             },
             class: 'turtle_wheel',
             isNotFor: ['roboid'],
-            func: function(sprite, script) {
-                var pd = Entry.hw.portData;
-                var index = script.getNumberValue('INDEX');
-                var robot = Entry.Roboid.getTurtle(index);
-                var packet = robot.packet;
+            func: async function(sprite, script) {
+                const pd = Entry.hw.portData;
+                const [index, value] = await Promise.all([
+                    script.getNumberValue('INDEX'),
+                    script.getNumberValue('VALUE'),
+                ]);
+                const robot = Entry.Roboid.getTurtle(index);
+                const packet = robot.packet;
                 if (!script.isStart) {
                     script.isStart = true;
                     packet.leftWheel = 0;
                     packet.rightWheel = 0;
                     robot.setPulse(0);
                     robot.setLineTracerMode(0);
-                    var direction = script.getField('DIRECTION');
-                    var field = script.getField('UNIT');
-                    var unit = 1;
+                    const direction = script.getField('DIRECTION');
+                    const field = script.getField('UNIT');
+                    let unit = 1;
                     if (field == 'SEC') unit = 2;
                     else if (field == 'PULSE') unit = 3;
-                    var value = script.getNumberValue('VALUE');
                     if (direction == 'LEFT')
                         robot.setMotion(3, unit, 0, value, 0);
                     else robot.setMotion(4, unit, 0, value, 0);
                     return script;
                 } else {
-                    var wheelStateId = pd['turtle' + index + 'wheelStateId'];
+                    const wheelStateId = pd['turtle' + index + 'wheelStateId'];
                     if (wheelStateId != robot.wheelStateId) {
                         robot.wheelStateId = wheelStateId;
-                        var wheelState = pd['turtle' + index + 'wheelState'];
+                        const wheelState = pd['turtle' + index + 'wheelState'];
                         if (wheelState == 0) {
                             delete script.isStart;
                             Entry.engine.isContinue = false;
@@ -6040,25 +6089,27 @@ Entry.Roboid.getBlocks = function() {
             },
             class: 'turtle_wheel',
             isNotFor: ['roboid'],
-            func: function(sprite, script) {
-                var pd = Entry.hw.portData;
-                var index = script.getNumberValue('INDEX');
-                var robot = Entry.Roboid.getTurtle(index);
-                var packet = robot.packet;
+            func: async function(sprite, script) {
+                const pd = Entry.hw.portData;
+                const [index, value, radius] = await Promise.all([
+                    script.getNumberValue('INDEX'),
+                    script.getNumberValue('VALUE'),
+                    script.getNumberValue('RADIUS'),
+                ]);
+                const robot = Entry.Roboid.getTurtle(index);
+                const packet = robot.packet;
                 if (!script.isStart) {
                     script.isStart = true;
                     packet.leftWheel = 0;
                     packet.rightWheel = 0;
                     robot.setPulse(0);
                     robot.setLineTracerMode(0);
-                    var direction = script.getField('DIRECTION');
-                    var field = script.getField('UNIT');
-                    var unit = 1;
+                    const direction = script.getField('DIRECTION');
+                    const field = script.getField('UNIT');
+                    let unit = 1;
                     if (field == 'SEC') unit = 2;
                     else if (field == 'PULSE') unit = 3;
-                    var value = script.getNumberValue('VALUE');
-                    var head = script.getField('HEAD');
-                    var radius = script.getNumberValue('RADIUS');
+                    const head = script.getField('HEAD');
                     if (direction == 'LEFT') {
                         if (head == 'HEAD')
                             robot.setMotion(9, unit, 0, value, radius);
@@ -6070,10 +6121,10 @@ Entry.Roboid.getBlocks = function() {
                     }
                     return script;
                 } else {
-                    var wheelStateId = pd['turtle' + index + 'wheelStateId'];
+                    const wheelStateId = pd['turtle' + index + 'wheelStateId'];
                     if (wheelStateId != robot.wheelStateId) {
                         robot.wheelStateId = wheelStateId;
-                        var wheelState = pd['turtle' + index + 'wheelState'];
+                        const wheelState = pd['turtle' + index + 'wheelState'];
                         if (wheelState == 0) {
                             delete script.isStart;
                             Entry.engine.isContinue = false;
@@ -6277,23 +6328,25 @@ Entry.Roboid.getBlocks = function() {
             },
             class: 'turtle_wheel',
             isNotFor: ['roboid'],
-            func: function(sprite, script) {
-                var pd = Entry.hw.portData;
-                var index = script.getNumberValue('INDEX');
-                var robot = Entry.Roboid.getTurtle(index);
-                var packet = robot.packet;
+            func: async function(sprite, script) {
+                const pd = Entry.hw.portData;
+                const [index, value] = await Promise.all([
+                    script.getNumberValue('INDEX'),
+                    script.getNumberValue('VALUE'),
+                ]);
+                const robot = Entry.Roboid.getTurtle(index);
+                const packet = robot.packet;
                 if (!script.isStart) {
                     script.isStart = true;
                     packet.leftWheel = 0;
                     packet.rightWheel = 0;
                     robot.setPulse(0);
                     robot.setLineTracerMode(0);
-                    var direction = script.getField('DIRECTION');
-                    var field = script.getField('UNIT');
-                    var unit = 1;
+                    const direction = script.getField('DIRECTION');
+                    const field = script.getField('UNIT');
+                    let unit = 1;
                     if (field == 'SEC') unit = 2;
                     else if (field == 'PULSE') unit = 3;
-                    var value = script.getNumberValue('VALUE');
                     var head = script.getField('HEAD');
                     if (direction == 'LEFT') {
                         if (head == 'HEAD')
@@ -6306,10 +6359,10 @@ Entry.Roboid.getBlocks = function() {
                     }
                     return script;
                 } else {
-                    var wheelStateId = pd['turtle' + index + 'wheelStateId'];
+                    const wheelStateId = pd['turtle' + index + 'wheelStateId'];
                     if (wheelStateId != robot.wheelStateId) {
                         robot.wheelStateId = wheelStateId;
-                        var wheelState = pd['turtle' + index + 'wheelState'];
+                        const wheelState = pd['turtle' + index + 'wheelState'];
                         if (wheelState == 0) {
                             delete script.isStart;
                             Entry.engine.isContinue = false;
@@ -6480,12 +6533,14 @@ Entry.Roboid.getBlocks = function() {
             },
             class: 'turtle_wheel',
             isNotFor: ['roboid'],
-            func: function(sprite, script) {
-                var index = script.getNumberValue('INDEX');
-                var robot = Entry.Roboid.getTurtle(index);
-                var packet = robot.packet;
-                var left = script.getNumberValue('LEFT');
-                var right = script.getNumberValue('RIGHT');
+            func: async function(sprite, script) {
+                const [index, left, right] = await Promise.all([
+                    script.getNumberValue('INDEX'),
+                    script.getNumberValue('LEFT'),
+                    script.getNumberValue('RIGHT'),
+                ]);
+                const robot = Entry.Roboid.getTurtle(index);
+                const packet = robot.packet;
                 robot.setPulse(0);
                 robot.setLineTracerMode(0);
                 robot.setMotion(0, 0, 0, 0, 0);
@@ -6571,15 +6626,19 @@ Entry.Roboid.getBlocks = function() {
             },
             class: 'turtle_wheel',
             isNotFor: ['roboid'],
-            func: function(sprite, script) {
-                var index = script.getNumberValue('INDEX');
-                var robot = Entry.Roboid.getTurtle(index);
-                var packet = robot.packet;
+            func: async function(sprite, script) {
+                const [index, left, right] = await Promise.all([
+                    script.getNumberValue('INDEX'),
+                    script.getNumberValue('LEFT'),
+                    script.getNumberValue('RIGHT'),
+                ]);
+                const robot = Entry.Roboid.getTurtle(index);
+                const packet = robot.packet;
                 robot.setPulse(0);
                 robot.setLineTracerMode(0);
                 robot.setMotion(0, 0, 0, 0, 0);
-                packet.leftWheel = script.getNumberValue('LEFT');
-                packet.rightWheel = script.getNumberValue('RIGHT');
+                packet.leftWheel = left;
+                packet.rightWheel = right;
                 return script.callReturn();
             },
             syntax: {
@@ -6657,12 +6716,14 @@ Entry.Roboid.getBlocks = function() {
             },
             class: 'turtle_wheel',
             isNotFor: ['roboid'],
-            func: function(sprite, script) {
-                var index = script.getNumberValue('INDEX');
-                var robot = Entry.Roboid.getTurtle(index);
-                var packet = robot.packet;
-                var direction = script.getField('DIRECTION');
-                var value = script.getNumberValue('VALUE');
+            func: async function(sprite, script) {
+                const [index, value] = await Promise.all([
+                    script.getNumberValue('INDEX'),
+                    script.getNumberValue('VALUE'),
+                ]);
+                const robot = Entry.Roboid.getTurtle(index);
+                const packet = robot.packet;
+                const direction = script.getField('DIRECTION');
                 robot.setPulse(0);
                 robot.setLineTracerMode(0);
                 robot.setMotion(0, 0, 0, 0, 0);
@@ -6824,12 +6885,14 @@ Entry.Roboid.getBlocks = function() {
             },
             class: 'turtle_wheel',
             isNotFor: ['roboid'],
-            func: function(sprite, script) {
-                var index = script.getNumberValue('INDEX');
-                var robot = Entry.Roboid.getTurtle(index);
-                var packet = robot.packet;
-                var direction = script.getField('DIRECTION');
-                var value = script.getNumberValue('VALUE');
+            func: async function(sprite, script) {
+                const [index, value] = await Promise.all([
+                    script.getNumberValue('INDEX'),
+                    script.getNumberValue('VALUE'),
+                ]);
+                const robot = Entry.Roboid.getTurtle(index);
+                const packet = robot.packet;
+                const direction = script.getField('DIRECTION');
                 robot.setPulse(0);
                 robot.setLineTracerMode(0);
                 robot.setMotion(0, 0, 0, 0, 0);
@@ -6972,15 +7035,15 @@ Entry.Roboid.getBlocks = function() {
             },
             class: 'turtle_wheel',
             isNotFor: ['roboid'],
-            func: function(sprite, script) {
-                var index = script.getNumberValue('INDEX');
-                var robot = Entry.Roboid.getTurtle(index);
-                var packet = robot.packet;
+            func: async function(sprite, script) {
+                const index = await script.getNumberValue('INDEX');
+                const robot = Entry.Roboid.getTurtle(index);
+                const packet = robot.packet;
                 packet.leftWheel = 0;
                 packet.rightWheel = 0;
                 robot.setPulse(0);
                 robot.setMotion(0, 0, 0, 0, 0);
-                var mode = Number(script.getField('COLOR'));
+                const mode = Number(script.getField('COLOR'));
                 robot.setLineTracerMode(mode);
                 return script.callReturn();
             },
@@ -7062,26 +7125,26 @@ Entry.Roboid.getBlocks = function() {
             },
             class: 'turtle_wheel',
             isNotFor: ['roboid'],
-            func: function(sprite, script) {
-                var pd = Entry.hw.portData;
-                var index = script.getNumberValue('INDEX');
-                var robot = Entry.Roboid.getTurtle(index);
-                var packet = robot.packet;
+            func: async function(sprite, script) {
+                const pd = Entry.hw.portData;
+                const index = await script.getNumberValue('INDEX');
+                const robot = Entry.Roboid.getTurtle(index);
+                const packet = robot.packet;
                 if (!script.isStart) {
                     script.isStart = true;
                     packet.leftWheel = 0;
                     packet.rightWheel = 0;
                     robot.setPulse(0);
                     robot.setMotion(0, 0, 0, 0, 0);
-                    var mode = Number(script.getField('COLOR'));
+                    const mode = Number(script.getField('COLOR'));
                     robot.setLineTracerMode(mode);
                     return script;
                 } else {
-                    var lineTracerStateId =
+                    const lineTracerStateId =
                         pd['turtle' + index + 'lineTracerStateId'];
                     if (lineTracerStateId != robot.lineTracerStateId) {
                         robot.lineTracerStateId = lineTracerStateId;
-                        var lineTracerState =
+                        const lineTracerState =
                             pd['turtle' + index + 'lineTracerState'];
                         if (lineTracerState == 0x02) {
                             delete script.isStart;
@@ -7170,26 +7233,26 @@ Entry.Roboid.getBlocks = function() {
             },
             class: 'turtle_wheel',
             isNotFor: ['roboid'],
-            func: function(sprite, script) {
-                var pd = Entry.hw.portData;
-                var index = script.getNumberValue('INDEX');
-                var robot = Entry.Roboid.getTurtle(index);
-                var packet = robot.packet;
+            func: async function(sprite, script) {
+                const pd = Entry.hw.portData;
+                const index = await script.getNumberValue('INDEX');
+                const robot = Entry.Roboid.getTurtle(index);
+                const packet = robot.packet;
                 if (!script.isStart) {
                     script.isStart = true;
                     packet.leftWheel = 0;
                     packet.rightWheel = 0;
                     robot.setPulse(0);
                     robot.setMotion(0, 0, 0, 0, 0);
-                    var mode = Number(script.getField('COLOR'));
+                    const mode = Number(script.getField('COLOR'));
                     robot.setLineTracerMode(mode);
                     return script;
                 } else {
-                    var lineTracerStateId =
+                    const lineTracerStateId =
                         pd['turtle' + index + 'lineTracerStateId'];
                     if (lineTracerStateId != robot.lineTracerStateId) {
                         robot.lineTracerStateId = lineTracerStateId;
-                        var lineTracerState =
+                        const lineTracerState =
                             pd['turtle' + index + 'lineTracerState'];
                         if (lineTracerState == 0x02) {
                             delete script.isStart;
@@ -7262,11 +7325,11 @@ Entry.Roboid.getBlocks = function() {
             },
             class: 'turtle_wheel',
             isNotFor: ['roboid'],
-            func: function(sprite, script) {
-                var pd = Entry.hw.portData;
-                var index = script.getNumberValue('INDEX');
-                var robot = Entry.Roboid.getTurtle(index);
-                var packet = robot.packet;
+            func: async function(sprite, script) {
+                const pd = Entry.hw.portData;
+                const index = await script.getNumberValue('INDEX');
+                const robot = Entry.Roboid.getTurtle(index);
+                const packet = robot.packet;
                 if (!script.isStart) {
                     script.isStart = true;
                     packet.leftWheel = 0;
@@ -7276,11 +7339,11 @@ Entry.Roboid.getBlocks = function() {
                     robot.setLineTracerMode(40);
                     return script;
                 } else {
-                    var lineTracerStateId =
+                    const lineTracerStateId =
                         pd['turtle' + index + 'lineTracerStateId'];
                     if (lineTracerStateId != robot.lineTracerStateId) {
                         robot.lineTracerStateId = lineTracerStateId;
-                        var lineTracerState =
+                        const lineTracerState =
                             pd['turtle' + index + 'lineTracerState'];
                         if (lineTracerState == 0x02) {
                             delete script.isStart;
@@ -7350,26 +7413,26 @@ Entry.Roboid.getBlocks = function() {
             },
             class: 'turtle_wheel',
             isNotFor: ['roboid'],
-            func: function(sprite, script) {
-                var pd = Entry.hw.portData;
-                var index = script.getNumberValue('INDEX');
-                var robot = Entry.Roboid.getTurtle(index);
-                var packet = robot.packet;
+            func: async function(sprite, script) {
+                const pd = Entry.hw.portData;
+                const index = await script.getNumberValue('INDEX');
+                const robot = Entry.Roboid.getTurtle(index);
+                const packet = robot.packet;
                 if (!script.isStart) {
                     script.isStart = true;
                     packet.leftWheel = 0;
                     packet.rightWheel = 0;
                     robot.setPulse(0);
                     robot.setMotion(0, 0, 0, 0, 0);
-                    var mode = Number(script.getField('DIRECTION'));
+                    const mode = Number(script.getField('DIRECTION'));
                     robot.setLineTracerMode(mode);
                     return script;
                 } else {
-                    var lineTracerStateId =
+                    const lineTracerStateId =
                         pd['turtle' + index + 'lineTracerStateId'];
                     if (lineTracerStateId != robot.lineTracerStateId) {
                         robot.lineTracerStateId = lineTracerStateId;
-                        var lineTracerState =
+                        const lineTracerState =
                             pd['turtle' + index + 'lineTracerState'];
                         if (lineTracerState == 0x02) {
                             delete script.isStart;
@@ -7501,11 +7564,11 @@ Entry.Roboid.getBlocks = function() {
             },
             class: 'turtle_wheel',
             isNotFor: ['roboid'],
-            func: function(sprite, script) {
-                var index = script.getNumberValue('INDEX');
-                var robot = Entry.Roboid.getTurtle(index);
-                var packet = robot.packet;
-                var speed = Number(script.getField('SPEED'));
+            func: async function(sprite, script) {
+                const index = await script.getNumberValue('INDEX');
+                const robot = Entry.Roboid.getTurtle(index);
+                const packet = robot.packet;
+                const speed = Number(script.getField('SPEED'));
                 packet.lineTracerSpeed = speed;
                 packet.lineTracerGain = speed;
                 return script.callReturn();
@@ -7574,10 +7637,10 @@ Entry.Roboid.getBlocks = function() {
             },
             class: 'turtle_wheel',
             isNotFor: ['roboid'],
-            func: function(sprite, script) {
-                var index = script.getNumberValue('INDEX');
-                var robot = Entry.Roboid.getTurtle(index);
-                var packet = robot.packet;
+            func: async function(sprite, script) {
+                const index = await script.getNumberValue('INDEX');
+                const robot = Entry.Roboid.getTurtle(index);
+                const packet = robot.packet;
                 packet.leftWheel = 0;
                 packet.rightWheel = 0;
                 robot.setPulse(0);
@@ -7649,11 +7712,11 @@ Entry.Roboid.getBlocks = function() {
             },
             class: 'turtle_led',
             isNotFor: ['roboid'],
-            func: function(sprite, script) {
-                var index = script.getNumberValue('INDEX');
-                var robot = Entry.Roboid.getTurtle(index);
-                var packet = robot.packet;
-                var color = script.getField('COLOR');
+            func: async function(sprite, script) {
+                const index = await script.getNumberValue('INDEX');
+                const robot = Entry.Roboid.getTurtle(index);
+                const packet = robot.packet;
+                const color = script.getField('COLOR');
                 robot.setLedColor(color);
                 return script.callReturn();
             },
@@ -7753,13 +7816,15 @@ Entry.Roboid.getBlocks = function() {
             },
             class: 'turtle_led',
             isNotFor: ['roboid'],
-            func: function(sprite, script) {
-                var index = script.getNumberValue('INDEX');
-                var robot = Entry.Roboid.getTurtle(index);
-                var packet = robot.packet;
-                var red = script.getNumberValue('RED');
-                var green = script.getNumberValue('GREEN');
-                var blue = script.getNumberValue('BLUE');
+            func: async function(sprite, script) {
+                const [index, red, green, blue] = await Promise.all([
+                    script.getNumberValue('INDEX'),
+                    script.getNumberValue('RED'),
+                    script.getNumberValue('GREEN'),
+                    script.getNumberValue('BLUE'),
+                ]);
+                const robot = Entry.Roboid.getTurtle(index);
+                const packet = robot.packet;
                 packet.ledRed =
                     packet.ledRed != undefined ? packet.ledRed + red : red;
                 packet.ledGreen =
@@ -7855,13 +7920,18 @@ Entry.Roboid.getBlocks = function() {
             },
             class: 'turtle_led',
             isNotFor: ['roboid'],
-            func: function(sprite, script) {
-                var index = script.getNumberValue('INDEX');
-                var robot = Entry.Roboid.getTurtle(index);
-                var packet = robot.packet;
-                packet.ledRed = script.getNumberValue('RED');
-                packet.ledGreen = script.getNumberValue('GREEN');
-                packet.ledBlue = script.getNumberValue('BLUE');
+            func: async function(sprite, script) {
+                const [index, red, green, blue] = await Promise.all([
+                    script.getNumberValue('INDEX'),
+                    script.getNumberValue('RED'),
+                    script.getNumberValue('GREEN'),
+                    script.getNumberValue('BLUE'),
+                ]);
+                const robot = Entry.Roboid.getTurtle(index);
+                const packet = robot.packet;
+                packet.ledRed = red;
+                packet.ledGreen = green;
+                packet.ledBlue = blue;
                 return script.callReturn();
             },
             syntax: {
@@ -7922,10 +7992,10 @@ Entry.Roboid.getBlocks = function() {
             },
             class: 'turtle_led',
             isNotFor: ['roboid'],
-            func: function(sprite, script) {
-                var index = script.getNumberValue('INDEX');
-                var robot = Entry.Roboid.getTurtle(index);
-                var packet = robot.packet;
+            func: async function(sprite, script) {
+                const index = await script.getNumberValue('INDEX');
+                const robot = Entry.Roboid.getTurtle(index);
+                const packet = robot.packet;
                 packet.ledRed = 0;
                 packet.ledGreen = 0;
                 packet.ledBlue = 0;
@@ -8004,14 +8074,16 @@ Entry.Roboid.getBlocks = function() {
             },
             class: 'turtle_sound',
             isNotFor: ['roboid'],
-            func: function(sprite, script) {
-                var index = script.getNumberValue('INDEX');
-                var robot = Entry.Roboid.getTurtle(index);
-                var packet = robot.packet;
+            func: async function(sprite, script) {
+                const [index, count] = await Promise.all([
+                    script.getNumberValue('INDEX'),
+                    script.getNumberValue('COUNT'),
+                ]);
+                const robot = Entry.Roboid.getTurtle(index);
+                const packet = robot.packet;
                 packet.buzzer = 0;
                 packet.note = 0;
-                var sound = Number(script.getField('SOUND'));
-                var count = script.getNumberValue('COUNT');
+                const sound = Number(script.getField('SOUND'));
                 if (count) robot.setSound(sound, count);
                 return script.callReturn();
             },
@@ -8112,17 +8184,19 @@ Entry.Roboid.getBlocks = function() {
             },
             class: 'turtle_sound',
             isNotFor: ['roboid'],
-            func: function(sprite, script) {
-                var pd = Entry.hw.portData;
-                var index = script.getNumberValue('INDEX');
-                var robot = Entry.Roboid.getTurtle(index);
-                var packet = robot.packet;
+            func: async function(sprite, script) {
+                const pd = Entry.hw.portData;
+                const [index, count] = await Promise.all([
+                    script.getNumberValue('INDEX'),
+                    script.getNumberValue('COUNT'),
+                ]);
+                const robot = Entry.Roboid.getTurtle(index);
+                const packet = robot.packet;
                 if (!script.isStart) {
                     script.isStart = true;
                     packet.buzzer = 0;
                     packet.note = 0;
-                    var sound = Number(script.getField('SOUND'));
-                    var count = script.getNumberValue('COUNT');
+                    const sound = Number(script.getField('SOUND'));
                     if (count) {
                         robot.setSound(sound, count);
                         return script;
@@ -8134,10 +8208,10 @@ Entry.Roboid.getBlocks = function() {
                         return script.callReturn();
                     }
                 } else {
-                    var soundStateId = pd['turtle' + index + 'soundStateId'];
+                    const soundStateId = pd['turtle' + index + 'soundStateId'];
                     if (soundStateId != robot.soundStateId) {
                         robot.soundStateId = soundStateId;
-                        var soundState = pd['turtle' + index + 'soundState'];
+                        const soundState = pd['turtle' + index + 'soundState'];
                         if (soundState == 0) {
                             delete script.isStart;
                             Entry.engine.isContinue = false;
@@ -8226,11 +8300,13 @@ Entry.Roboid.getBlocks = function() {
             },
             class: 'turtle_sound',
             isNotFor: ['roboid'],
-            func: function(sprite, script) {
-                var index = script.getNumberValue('INDEX');
-                var robot = Entry.Roboid.getTurtle(index);
-                var packet = robot.packet;
-                var value = script.getNumberValue('VALUE');
+            func: async function(sprite, script) {
+                const [index, value] = await Promise.all([
+                    script.getNumberValue('INDEX'),
+                    script.getNumberValue('VALUE'),
+                ]);
+                const robot = Entry.Roboid.getTurtle(index);
+                const packet = robot.packet;
                 packet.buzzer =
                     packet.buzzer != undefined ? packet.buzzer + value : value;
                 packet.note = 0;
@@ -8296,11 +8372,14 @@ Entry.Roboid.getBlocks = function() {
             },
             class: 'turtle_sound',
             isNotFor: ['roboid'],
-            func: function(sprite, script) {
-                var index = script.getNumberValue('INDEX');
-                var robot = Entry.Roboid.getTurtle(index);
-                var packet = robot.packet;
-                packet.buzzer = script.getNumberValue('VALUE');
+            func: async function(sprite, script) {
+                const [index, value] = await Promise.all([
+                    script.getNumberValue('INDEX'),
+                    script.getNumberValue('VALUE'),
+                ]);
+                const robot = Entry.Roboid.getTurtle(index);
+                const packet = robot.packet;
+                packet.buzzer = value;
                 packet.note = 0;
                 robot.setSound(0);
                 return script.callReturn();
@@ -8355,10 +8434,10 @@ Entry.Roboid.getBlocks = function() {
             },
             class: 'turtle_sound',
             isNotFor: ['roboid'],
-            func: function(sprite, script) {
-                var index = script.getNumberValue('INDEX');
-                var robot = Entry.Roboid.getTurtle(index);
-                var packet = robot.packet;
+            func: async function(sprite, script) {
+                const index = await script.getNumberValue('INDEX');
+                const robot = Entry.Roboid.getTurtle(index);
+                const packet = robot.packet;
                 packet.buzzer = 0;
                 packet.note = 0;
                 robot.setSound(0);
@@ -8448,12 +8527,14 @@ Entry.Roboid.getBlocks = function() {
             },
             class: 'turtle_sound',
             isNotFor: ['roboid'],
-            func: function(sprite, script) {
-                var index = script.getNumberValue('INDEX');
-                var robot = Entry.Roboid.getTurtle(index);
-                var packet = robot.packet;
-                var note = script.getNumberField('NOTE', script);
-                var octave = script.getNumberField('OCTAVE', script);
+            func: async function(sprite, script) {
+                let [index, note, octave] = await Promise.all([
+                    script.getNumberValue('INDEX'),
+                    script.getNumberField('NOTE', script),
+                    script.getNumberField('OCTAVE', script),
+                ]);
+                const robot = Entry.Roboid.getTurtle(index);
+                const packet = robot.packet;
                 packet.buzzer = 0;
                 note += (octave - 1) * 12;
                 packet.note = note;
@@ -8592,29 +8673,31 @@ Entry.Roboid.getBlocks = function() {
             },
             class: 'turtle_sound',
             isNotFor: ['roboid'],
-            func: function(sprite, script) {
-                var index = script.getNumberValue('INDEX');
-                var robot = Entry.Roboid.getTurtle(index);
-                var packet = robot.packet;
+            func: async function(sprite, script) {
+                let [index, note, octave, beat] = await Promise.all([
+                    script.getNumberValue('INDEX'),
+                    script.getNumberField('NOTE', script),
+                    script.getNumberField('OCTAVE', script),
+                    script.getNumberValue('VALUE', script),
+                ]);
+                const robot = Entry.Roboid.getTurtle(index);
+                const packet = robot.packet;
                 if (!script.isStart) {
-                    var note = script.getNumberField('NOTE', script);
-                    var octave = script.getNumberField('OCTAVE', script);
-                    var beat = script.getNumberValue('VALUE', script);
                     note += (octave - 1) * 12;
-                    var timeValue = beat * 60 * 1000 / robot.tempo;
+                    const timeValue = beat * 60 * 1000 / robot.tempo;
                     script.isStart = true;
                     script.timeFlag = 1;
                     packet.buzzer = 0;
                     packet.note = note;
                     robot.setSound(0);
                     if (timeValue > 100) {
-                        var timer1 = setTimeout(function() {
+                        const timer1 = setTimeout(function() {
                             packet.note = 0;
                             Entry.Roboid.removeTimeout(timer1);
                         }, timeValue - 100);
                         Entry.Roboid.timeouts.push(timer1);
                     }
-                    var timer2 = setTimeout(function() {
+                    const timer2 = setTimeout(function() {
                         script.timeFlag = 0;
                         Entry.Roboid.removeTimeout(timer2);
                     }, timeValue);
@@ -8729,19 +8812,21 @@ Entry.Roboid.getBlocks = function() {
             },
             class: 'turtle_sound',
             isNotFor: ['roboid'],
-            func: function(sprite, script) {
-                var index = script.getNumberValue('INDEX');
-                var robot = Entry.Roboid.getTurtle(index);
-                var packet = robot.packet;
+            func: async function(sprite, script) {
+                let [index, timeValue] = await Promise.all([
+                    script.getNumberValue('INDEX'),
+                    script.getNumberValue('VALUE'),
+                ]);
+                const robot = Entry.Roboid.getTurtle(index);
+                const packet = robot.packet;
                 if (!script.isStart) {
                     script.isStart = true;
                     script.timeFlag = 1;
-                    var timeValue = script.getNumberValue('VALUE');
                     timeValue = timeValue * 60 * 1000 / robot.tempo;
                     packet.buzzer = 0;
                     packet.note = 0;
                     robot.setSound(0);
-                    var timer = setTimeout(function() {
+                    const timer = setTimeout(function() {
                         script.timeFlag = 0;
                         Entry.Roboid.removeTimeout(timer);
                     }, timeValue);
@@ -8815,10 +8900,13 @@ Entry.Roboid.getBlocks = function() {
             },
             class: 'turtle_sound',
             isNotFor: ['roboid'],
-            func: function(sprite, script) {
-                var index = script.getNumberValue('INDEX');
-                var robot = Entry.Roboid.getTurtle(index);
-                robot.tempo += script.getNumberValue('VALUE');
+            func: async function(sprite, script) {
+                const [index, value] = await Promise.all([
+                    script.getNumberValue('INDEX'),
+                    script.getNumberValue('VALUE'),
+                ]);
+                const robot = Entry.Roboid.getTurtle(index);
+                robot.tempo += value;
                 if (robot.tempo < 1) robot.tempo = 1;
                 return script.callReturn();
             },
@@ -8881,10 +8969,13 @@ Entry.Roboid.getBlocks = function() {
             },
             class: 'turtle_sound',
             isNotFor: ['roboid'],
-            func: function(sprite, script) {
-                var index = script.getNumberValue('INDEX');
-                var robot = Entry.Roboid.getTurtle(index);
-                robot.tempo = script.getNumberValue('VALUE');
+            func: async function(sprite, script) {
+                const [index, value] = await Promise.all([
+                    script.getNumberValue('INDEX'),
+                    script.getNumberValue('VALUE'),
+                ]);
+                const robot = Entry.Roboid.getTurtle(index);
+                robot.tempo = value;
                 if (robot.tempo < 1) robot.tempo = 1;
                 return script.callReturn();
             },

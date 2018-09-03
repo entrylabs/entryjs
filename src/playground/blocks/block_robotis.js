@@ -600,16 +600,16 @@ Entry.Robotis_carCont.getBlocks = function() {
             },
             class: 'robotis_carCont_cm',
             isNotFor: ['robotis_carCont'],
-            func: function(sprite, script) {
+            func: async function(sprite, script) {
                 // instruction / address / length / value / default length
-                var direction = script.getField('DIRECTION', script);
-                var directionAngle = script.getField('DIRECTION_ANGLE', script);
-                var value = script.getNumberValue('VALUE');
+                const direction = script.getField('DIRECTION', script);
+                const directionAngle = script.getField('DIRECTION_ANGLE', script);
+                let value = await script.getNumberValue('VALUE');
 
-                var data_instruction = Entry.Robotis_carCont.INSTRUCTION.WRITE;
-                var data_address = 0;
-                var data_length = 0;
-                var data_value = 0;
+                const data_instruction = Entry.Robotis_carCont.INSTRUCTION.WRITE;
+                let data_address = 0;
+                let data_length = 0;
+                let data_value = 0;
 
                 if (direction == 'LEFT') {
                     data_address =
@@ -640,7 +640,7 @@ Entry.Robotis_carCont.getBlocks = function() {
 
                 data_value = value;
 
-                var data_sendqueue = [
+                const data_sendqueue = [
                     [data_instruction, data_address, data_length, data_value],
                 ];
                 return Entry.Robotis_carCont.postCallReturn(
@@ -718,16 +718,16 @@ Entry.Robotis_carCont.getBlocks = function() {
             },
             class: 'robotis_carCont_cm',
             isNotFor: ['robotis_carCont'],
-            func: function(sprite, script) {
-                var data_instruction = Entry.Robotis_carCont.INSTRUCTION.WRITE,
-                    address =
-                        Entry.Robotis_carCont.CONTROL_TABLE
-                            .AUX_MOTOR_SPEED_LEFT[0];
+            func: async function(sprite, script) {
+                const data_instruction = Entry.Robotis_carCont.INSTRUCTION.WRITE;
+                const address = Entry.Robotis_carCont.CONTROL_TABLE.AUX_MOTOR_SPEED_LEFT[0];
 
-                var leftAngle = script.getField('LEFT_ANGLE', script);
-                var leftValue = script.getNumberValue('LEFT_VALUE');
-                var rightAngle = script.getField('RIGHT_ANGLE', script);
-                var rightValue = script.getNumberValue('RIGHT_VALUE');
+                const leftAngle = script.getField('LEFT_ANGLE', script);
+                const rightAngle = script.getField('RIGHT_ANGLE', script);
+                let [leftValue, rightValue] = await Promise.all([
+                    script.getNumberValue('LEFT_VALUE'),
+                    script.getNumberValue('RIGHT_VALUE'),
+                ]);
 
                 leftValue = Math.min(leftValue, 1023);
                 leftValue = Math.max(leftValue, 0);
@@ -741,8 +741,8 @@ Entry.Robotis_carCont.getBlocks = function() {
                     rightValue += 1024;
                 }
 
-                var value = leftValue + (rightValue << 16);
-                var data_sendqueue = [[data_instruction, address, 4, value]];
+                const value = leftValue + (rightValue << 16);
+                const data_sendqueue = [[data_instruction, address, 4, value]];
                 return Entry.Robotis_carCont.postCallReturn(
                     script,
                     data_sendqueue,
@@ -792,15 +792,15 @@ Entry.Robotis_carCont.getBlocks = function() {
             },
             class: 'robotis_carCont_cm',
             isNotFor: ['robotis_carCont'],
-            func: function(sprite, script) {
+            func: async function(sprite, script) {
                 // instruction / address / length / value / default length
-                var direction = script.getField('DIRECTION', script);
-                var value = script.getNumberValue('VALUE');
+                const direction = script.getField('DIRECTION', script);
+                const value = await script.getNumberValue('VALUE');
 
-                var data_instruction = Entry.Robotis_carCont.INSTRUCTION.WRITE;
-                var data_address = 0;
-                var data_length = 0;
-                var data_value = 0;
+                const data_instruction = Entry.Robotis_carCont.INSTRUCTION.WRITE;
+                let data_address = 0;
+                let data_length = 0;
+                let data_value = 0;
 
                 if (direction == 'LEFT') {
                     data_address =
@@ -820,7 +820,7 @@ Entry.Robotis_carCont.getBlocks = function() {
 
                 data_value = value;
 
-                var data_sendqueue = [
+                const data_sendqueue = [
                     [data_instruction, data_address, data_length, data_value],
                 ];
                 return Entry.Robotis_carCont.postCallReturn(
@@ -880,19 +880,19 @@ Entry.Robotis_openCM70.getBlocks = function() {
             },
             class: 'robotis_openCM70_custom',
             isNotFor: ['robotis_openCM70'],
-            func: function(sprite, script) {
-                var scope = script.executor.scope;
+            func: async function(sprite, script) {
+                const scope = script.executor.scope;
 
                 // instruction / address / length / value / default length
-                var data_instruction = Entry.Robotis_openCM70.INSTRUCTION.READ;
-                var data_address = 0;
-                var data_length = 0;
-                var data_value = 0;
+                const data_instruction = Entry.Robotis_openCM70.INSTRUCTION.READ;
+                let data_address = 0;
+                let data_length = 0;
+                const data_value = 0;
 
-                var data_default_address = 0;
-                var data_default_length = 0;
+                let data_default_address = 0;
+                let data_default_length = 0;
 
-                var size = script.getStringField('SIZE');
+                const size = script.getStringField('SIZE');
 
                 if (size == 'BYTE') {
                     data_length = 1;
@@ -902,7 +902,7 @@ Entry.Robotis_openCM70.getBlocks = function() {
                     data_length = 4;
                 }
 
-                data_address = script.getNumberValue('VALUE');
+                data_address = await script.getNumberValue('VALUE');
 
                 data_default_address = data_address;
                 data_default_length = data_length;
@@ -932,7 +932,7 @@ Entry.Robotis_openCM70.getBlocks = function() {
                 // Entry.hw.socket.send(JSON.stringify(Entry.hw.sendQueue));
                 Entry.Robotis_carCont.update();
 
-                var result = Entry.hw.portData[data_default_address];
+                const result = Entry.hw.portData[data_default_address];
                 Entry.hw.sendQueue.prevAddress = data_default_address;
                 Entry.hw.sendQueue.prevTime = new Date();
                 Entry.hw.sendQueue.prevResult = result;
@@ -1419,22 +1419,22 @@ Entry.Robotis_openCM70.getBlocks = function() {
             },
             class: 'robotis_openCM70_cm',
             isNotFor: ['robotis_openCM70'],
-            func: function(sprite, script) {
+            func: async function(sprite, script) {
                 // instruction / address / length / value / default length
-                var cmBuzzerIndex = script.getField('CM_BUZZER_INDEX', script);
-                var cmBuzzerTime = script.getNumberValue(
+                const cmBuzzerIndex = script.getField('CM_BUZZER_INDEX', script);
+                const cmBuzzerTime = await script.getNumberValue(
                     'CM_BUZZER_TIME',
-                    script
+                    script,
                 );
 
-                var data_instruction = Entry.Robotis_openCM70.INSTRUCTION.WRITE;
-                var data_address_1 = 0;
-                var data_length_1 = 0;
-                var data_value_1 = 0;
-                var data_address_2 = 0;
-                var data_length_2 = 0;
-                var data_value_2 = 0;
-                var interval = 100;
+                const data_instruction = Entry.Robotis_openCM70.INSTRUCTION.WRITE;
+                let data_address_1 = 0;
+                let data_length_1 = 0;
+                let data_value_1 = 0;
+                let data_address_2 = 0;
+                let data_length_2 = 0;
+                let data_value_2 = 0;
+                const interval = 100;
 
                 data_address_1 =
                     Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_TIME[0];
@@ -1453,7 +1453,7 @@ Entry.Robotis_openCM70.getBlocks = function() {
                     Entry.Robotis_openCM70.CONTROL_TABLE.CM_BUZZER_INDEX[1];
                 data_value_2 = cmBuzzerIndex;
 
-                var data_sendqueue = [
+                const data_sendqueue = [
                     [
                         data_instruction,
                         data_address_1,
@@ -1736,19 +1736,19 @@ Entry.Robotis_openCM70.getBlocks = function() {
             },
             class: 'robotis_openCM70_cm',
             isNotFor: ['robotis_openCM70'],
-            func: function(sprite, script) {
+            func: async function(sprite, script) {
                 // instruction / address / length / value / default length
-                var data_instruction = Entry.Robotis_openCM70.INSTRUCTION.WRITE;
-                var data_address = 0;
-                var data_length = 0;
-                var data_value = 0;
+                const data_instruction = Entry.Robotis_openCM70.INSTRUCTION.WRITE;
+                let data_address = 0;
+                let data_length = 0;
+                let data_value = 0;
 
                 data_address =
                     Entry.Robotis_openCM70.CONTROL_TABLE.CM_MOTION[0];
                 data_length = Entry.Robotis_openCM70.CONTROL_TABLE.CM_MOTION[1];
-                data_value = script.getNumberValue('VALUE', script);
+                data_value = await script.getNumberValue('VALUE', script);
 
-                var data_sendqueue = [
+                const data_sendqueue = [
                     [data_instruction, data_address, data_length, data_value],
                 ];
                 return Entry.Robotis_carCont.postCallReturn(
@@ -1812,16 +1812,16 @@ Entry.Robotis_openCM70.getBlocks = function() {
             },
             class: 'robotis_openCM70_cm',
             isNotFor: ['robotis_openCM70'],
-            func: function(sprite, script) {
+            func: async function(sprite, script) {
                 // instruction / address / length / value / default length
-                var port = script.getField('PORT', script);
-                var directionAngle = script.getField('DIRECTION_ANGLE', script);
-                var value = script.getNumberValue('VALUE');
+                const port = script.getField('PORT', script);
+                const directionAngle = script.getField('DIRECTION_ANGLE', script);
+                let value = await script.getNumberValue('VALUE');
 
-                var data_instruction = Entry.Robotis_openCM70.INSTRUCTION.WRITE;
-                var data_address = 0;
-                var data_length = 0;
-                var data_value = 0;
+                const data_instruction = Entry.Robotis_openCM70.INSTRUCTION.WRITE;
+                let data_address = 0;
+                let data_length = 0;
+                let data_value = 0;
 
                 data_address =
                     Entry.Robotis_openCM70.CONTROL_TABLE.AUX_MOTOR_SPEED[0];
@@ -1843,7 +1843,7 @@ Entry.Robotis_openCM70.getBlocks = function() {
 
                 data_value = value;
 
-                var data_sendqueue = [
+                const data_sendqueue = [
                     [data_instruction, data_address, data_length, data_value],
                 ];
                 return Entry.Robotis_carCont.postCallReturn(
@@ -1983,16 +1983,16 @@ Entry.Robotis_openCM70.getBlocks = function() {
             },
             class: 'robotis_openCM70_cm',
             isNotFor: ['robotis_openCM70'],
-            func: function(sprite, script) {
+            func: async function(sprite, script) {
                 // instruction / address / length / value / default length
-                var port = script.getField('PORT', script);
-                var directionAngle = script.getField('DIRECTION_ANGLE', script);
-                var value = script.getNumberValue('VALUE');
+                const port = script.getField('PORT', script);
+                const directionAngle = script.getField('DIRECTION_ANGLE', script);
+                let value = await script.getNumberValue('VALUE');
 
-                var data_instruction = Entry.Robotis_openCM70.INSTRUCTION.WRITE;
-                var data_address = 0;
-                var data_length = 0;
-                var data_value = 0;
+                const data_instruction = Entry.Robotis_openCM70.INSTRUCTION.WRITE;
+                let data_address = 0;
+                let data_length = 0;
+                let data_value = 0;
 
                 data_address =
                     Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_SPEED[0];
@@ -2014,7 +2014,7 @@ Entry.Robotis_openCM70.getBlocks = function() {
 
                 data_value = value;
 
-                var data_sendqueue = [
+                const data_sendqueue = [
                     [data_instruction, data_address, data_length, data_value],
                 ];
                 return Entry.Robotis_carCont.postCallReturn(
@@ -2072,15 +2072,15 @@ Entry.Robotis_openCM70.getBlocks = function() {
             },
             class: 'robotis_openCM70_cm',
             isNotFor: ['robotis_openCM70'],
-            func: function(sprite, script) {
+            func: async function(sprite, script) {
                 // instruction / address / length / value / default length
-                var port = script.getField('PORT', script);
-                var value = script.getNumberValue('VALUE');
+                const port = script.getField('PORT', script);
+                let value = await script.getNumberValue('VALUE');
 
-                var data_instruction = Entry.Robotis_openCM70.INSTRUCTION.WRITE;
-                var data_address = 0;
-                var data_length = 0;
-                var data_value = 0;
+                const data_instruction = Entry.Robotis_openCM70.INSTRUCTION.WRITE;
+                let data_address = 0;
+                let data_length = 0;
+                let data_value = 0;
 
                 data_address =
                     Entry.Robotis_openCM70.CONTROL_TABLE.AUX_SERVO_POSITION[0];
@@ -2097,7 +2097,7 @@ Entry.Robotis_openCM70.getBlocks = function() {
 
                 data_value = value;
 
-                var data_sendqueue = [
+                const data_sendqueue = [
                     [data_instruction, data_address, data_length, data_value],
                 ];
                 return Entry.Robotis_carCont.postCallReturn(
@@ -2244,15 +2244,15 @@ Entry.Robotis_openCM70.getBlocks = function() {
             },
             class: 'robotis_openCM70_cm',
             isNotFor: ['robotis_openCM70'],
-            func: function(sprite, script) {
+            func: async function(sprite, script) {
                 // instruction / address / length / value / default length
-                var port = script.getField('PORT', script);
-                var value = script.getNumberValue('VALUE');
+                const port = script.getField('PORT', script);
+                let value = await script.getNumberValue('VALUE');
 
-                var data_instruction = Entry.Robotis_openCM70.INSTRUCTION.WRITE;
-                var data_address = 0;
-                var data_length = 0;
-                var data_value = 0;
+                const data_instruction = Entry.Robotis_openCM70.INSTRUCTION.WRITE;
+                let data_address = 0;
+                let data_length = 0;
+                let data_value = 0;
 
                 data_address =
                     Entry.Robotis_openCM70.CONTROL_TABLE.AUX_CUSTOM[0];
@@ -2262,7 +2262,7 @@ Entry.Robotis_openCM70.getBlocks = function() {
                 data_address = data_address + (port - 1) * data_length;
                 data_value = value;
 
-                var data_sendqueue = [
+                const data_sendqueue = [
                     [data_instruction, data_address, data_length, data_value],
                 ];
                 return Entry.Robotis_carCont.postCallReturn(
@@ -2313,15 +2313,20 @@ Entry.Robotis_openCM70.getBlocks = function() {
             },
             class: 'robotis_openCM70_custom',
             isNotFor: ['robotis_openCM70'],
-            func: function(sprite, script) {
+            func: async function(sprite, script) {
                 // instruction / address / length / value / default length
-                var data_instruction = Entry.Robotis_openCM70.INSTRUCTION.WRITE;
-                var data_address = 0;
-                var data_length = 0;
-                var data_value = 0;
+                const data_instruction = Entry.Robotis_openCM70.INSTRUCTION.WRITE;
+                const [address, value] = await Promise.all([
+                    script.getNumberValue('ADDRESS'),
+                    script.getNumberValue('VALUE'),
+                ]);
 
-                data_address = script.getNumberValue('ADDRESS');
-                data_value = script.getNumberValue('VALUE');
+                let data_address = 0;
+                let data_length = 0;
+                let data_value = 0;
+
+                data_address = address;
+                data_value = value;
                 if (data_value > 65535) {
                     data_length = 4;
                 } else if (data_value > 255) {
@@ -2330,7 +2335,7 @@ Entry.Robotis_openCM70.getBlocks = function() {
                     data_length = 1;
                 }
 
-                var data_sendqueue = [
+                const data_sendqueue = [
                     [data_instruction, data_address, data_length, data_value],
                 ];
                 return Entry.Robotis_carCont.postCallReturn(

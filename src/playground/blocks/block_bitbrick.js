@@ -297,14 +297,16 @@ Entry.Bitbrick.getBlocks = function () {
             },
             class: 'condition',
             isNotFor: ['bitbrick'],
-            func: function (sprite, script) {
-                var red = script.getNumberValue('rValue'),
-                    green = script.getNumberValue('gValue'),
-                    blue = script.getNumberValue('bValue'),
-                    min = 0,
-                    max = 255,
-                    adjustor = Entry.adjustValueWithMaxMin,
-                    sq = Entry.hw.sendQueue;
+            func: async function (sprite, script) {
+                const [red, green, blue] = await Promise.all([
+                    script.getNumberValue('rValue'),
+                    script.getNumberValue('gValue'),
+                    script.getNumberValue('bValue'),
+                ]);
+                const min = 0;
+                const max = 255;
+                const adjustor = Entry.adjustValueWithMaxMin;
+                const sq = Entry.hw.sendQueue;
 
                 sq['LEDR'] = adjustor(red, min, max);
                 sq['LEDG'] = adjustor(green, min, max);
@@ -377,9 +379,9 @@ Entry.Bitbrick.getBlocks = function () {
             },
             class: 'condition',
             isNotFor: ['bitbrick'],
-            func: function (sprite, script) {
-                var value = script.getNumberValue('VALUE');
-                var red, green, blue;
+            func: async function (sprite, script) {
+                let value = await script.getNumberValue('VALUE');
+                let red, green, blue;
                 value = value % 200;
                 if (value < 67) {
                     red = 200 - value * 3;
@@ -434,10 +436,9 @@ Entry.Bitbrick.getBlocks = function () {
             },
             class: 'condition',
             isNotFor: ['bitbrick'],
-            func: function (sprite, script) {
+            func: async function (sprite, script) {
                 if (!script.isStart) {
-                    var value = script.getNumberValue('VALUE');
-                    Entry.hw.sendQueue['buzzer'] = value;
+                    Entry.hw.sendQueue['buzzer'] = script.getNumberValue('VALUE');
                     script.isStart = true;
                     return script;
                 } else {
@@ -518,8 +519,8 @@ Entry.Bitbrick.getBlocks = function () {
             },
             class: 'condition',
             isNotFor: ['bitbrick'],
-            func: function (sprite, script) {
-                var value = script.getNumberValue('VALUE');
+            func: async function (sprite, script) {
+                let value = await script.getNumberValue('VALUE');
                 value = Math.min(value, Entry.Bitbrick.dcMaxValue);
                 value = Math.max(value, Entry.Bitbrick.dcMinValue);
 
@@ -578,9 +579,9 @@ Entry.Bitbrick.getBlocks = function () {
             },
             class: 'condition',
             isNotFor: ['bitbrick'],
-            func: function (sprite, script) {
-                var isFront = script.getStringField('DIRECTION') === 'CW';
-                var value = script.getNumberValue('VALUE');
+            func: async function (sprite, script) {
+                const isFront = script.getStringField('DIRECTION') === 'CW';
+                let value = await script.getNumberValue('VALUE');
                 value = Math.min(value, Entry.Bitbrick.dcMaxValue);
                 value = Math.max(value, 0);
 
@@ -630,10 +631,10 @@ Entry.Bitbrick.getBlocks = function () {
             },
             class: 'condition',
             isNotFor: ['bitbrick'],
-            func: function (sprite, script) {
-                var value =
+            func: async function (sprite, script) {
+                let value =
                     Entry.Bitbrick.servoMaxValue -
-                    (script.getNumberValue('VALUE') + 1);
+                    (await script.getNumberValue('VALUE') + 1);
                 value = Math.min(value, Entry.Bitbrick.servoMaxValue);
                 value = Math.max(value, Entry.Bitbrick.servoMinValue);
                 Entry.hw.sendQueue[script.getStringField('PORT')] = value;
@@ -702,17 +703,19 @@ Entry.Bitbrick.getBlocks = function () {
             },
             class: 'condition',
             isNotFor: ['bitbrick'],
-            func: function (sprite, script) {
-                var port = script.getNumberField('PORT');
-                var value1 = Entry.hw.portData[port].value;
-                var value2 = script.getNumberValue('VALUE2', script);
-                var value3 = script.getNumberValue('VALUE3', script);
-                var value4 = script.getNumberValue('VALUE4', script);
-                var value5 = script.getNumberValue('VALUE5', script);
-                var result = value1;
+            func: async function (sprite, script) {
+                const port = script.getNumberField('PORT');
+                const value1 = Entry.hw.portData[port].value;
+                let [value2, value3, value4, value5] = await Promise.all([
+                    script.getNumberValue('VALUE2', script),
+                    script.getNumberValue('VALUE3', script),
+                    script.getNumberValue('VALUE4', script),
+                    script.getNumberValue('VALUE5', script),
+                ]);
+                let result = value1;
 
                 if (value4 > value5) {
-                    var swap = value4;
+                    const swap = value4;
                     value4 = value5;
                     value5 = swap;
                 }

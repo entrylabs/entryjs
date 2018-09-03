@@ -866,10 +866,10 @@ Entry.Turtle.getBlocks = function() {
             },
             class: 'turtle_wheel',
             isNotFor: ['turtle'],
-            func: function(sprite, script) {
-                var sq = Entry.hw.sendQueue;
-                var pd = Entry.hw.portData;
-                var turtle = Entry.Turtle;
+            func: async function(sprite, script) {
+                const sq = Entry.hw.sendQueue;
+                const pd = Entry.hw.portData;
+                const turtle = Entry.Turtle;
                 turtle.setModule(sq);
                 if (!script.isStart) {
                     script.isStart = true;
@@ -877,11 +877,11 @@ Entry.Turtle.getBlocks = function() {
                     sq.rightWheel = 0;
                     turtle.setPulse(sq, 0);
                     turtle.setLineTracerMode(sq, 0);
-                    var field = script.getField('UNIT');
-                    var unit = 1;
+                    const field = script.getField('UNIT');
+                    let unit = 1;
                     if (field == 'SEC') unit = 2;
                     else if (field == 'PULSE') unit = 3;
-                    var value = script.getNumberValue('VALUE');
+                    const value = await script.getNumberValue('VALUE');
                     turtle.setMotion(sq, 1, unit, 0, value, 0);
                     return script;
                 } else {
@@ -970,10 +970,10 @@ Entry.Turtle.getBlocks = function() {
             },
             class: 'turtle_wheel',
             isNotFor: ['turtle'],
-            func: function(sprite, script) {
-                var sq = Entry.hw.sendQueue;
-                var pd = Entry.hw.portData;
-                var turtle = Entry.Turtle;
+            func: async function(sprite, script) {
+                const sq = Entry.hw.sendQueue;
+                const pd = Entry.hw.portData;
+                const turtle = Entry.Turtle;
                 turtle.setModule(sq);
                 if (!script.isStart) {
                     script.isStart = true;
@@ -981,11 +981,11 @@ Entry.Turtle.getBlocks = function() {
                     sq.rightWheel = 0;
                     turtle.setPulse(sq, 0);
                     turtle.setLineTracerMode(sq, 0);
-                    var field = script.getField('UNIT');
-                    var unit = 1;
+                    const field = script.getField('UNIT');
+                    let unit = 1;
                     if (field == 'SEC') unit = 2;
                     else if (field == 'PULSE') unit = 3;
-                    var value = script.getNumberValue('VALUE');
+                    const value = await script.getNumberValue('VALUE');
                     turtle.setMotion(sq, 2, unit, 0, value, 0);
                     return script;
                 } else {
@@ -1085,10 +1085,10 @@ Entry.Turtle.getBlocks = function() {
             },
             class: 'turtle_wheel',
             isNotFor: ['turtle'],
-            func: function(sprite, script) {
-                var sq = Entry.hw.sendQueue;
-                var pd = Entry.hw.portData;
-                var turtle = Entry.Turtle;
+            func: async function(sprite, script) {
+                const sq = Entry.hw.sendQueue;
+                const pd = Entry.hw.portData;
+                const turtle = Entry.Turtle;
                 turtle.setModule(sq);
                 if (!script.isStart) {
                     script.isStart = true;
@@ -1096,12 +1096,12 @@ Entry.Turtle.getBlocks = function() {
                     sq.rightWheel = 0;
                     turtle.setPulse(sq, 0);
                     turtle.setLineTracerMode(sq, 0);
-                    var direction = script.getField('DIRECTION');
-                    var field = script.getField('UNIT');
-                    var unit = 1;
+                    const direction = script.getField('DIRECTION');
+                    const field = script.getField('UNIT');
+                    let unit = 1;
                     if (field == 'SEC') unit = 2;
                     else if (field == 'PULSE') unit = 3;
-                    var value = script.getNumberValue('VALUE');
+                    const value = await script.getNumberValue('VALUE');
                     if (direction == 'LEFT')
                         turtle.setMotion(sq, 3, unit, 0, value, 0);
                     else turtle.setMotion(sq, 4, unit, 0, value, 0);
@@ -1270,10 +1270,10 @@ Entry.Turtle.getBlocks = function() {
             },
             class: 'turtle_wheel',
             isNotFor: ['turtle'],
-            func: function(sprite, script) {
-                var sq = Entry.hw.sendQueue;
-                var pd = Entry.hw.portData;
-                var turtle = Entry.Turtle;
+            func: async function(sprite, script) {
+                const sq = Entry.hw.sendQueue;
+                const pd = Entry.hw.portData;
+                const turtle = Entry.Turtle;
                 turtle.setModule(sq);
                 if (!script.isStart) {
                     script.isStart = true;
@@ -1281,14 +1281,16 @@ Entry.Turtle.getBlocks = function() {
                     sq.rightWheel = 0;
                     turtle.setPulse(sq, 0);
                     turtle.setLineTracerMode(sq, 0);
-                    var direction = script.getField('DIRECTION');
-                    var field = script.getField('UNIT');
-                    var unit = 1;
+                    const direction = script.getField('DIRECTION');
+                    const field = script.getField('UNIT');
+                    let unit = 1;
                     if (field == 'SEC') unit = 2;
                     else if (field == 'PULSE') unit = 3;
-                    var value = script.getNumberValue('VALUE');
-                    var head = script.getField('HEAD');
-                    var radius = script.getNumberValue('RADIUS');
+                    const [value, head, radius] = await Promise.all([
+                        script.getNumberValue('VALUE'),
+                        script.getField('HEAD'),
+                        script.getNumberValue('RADIUS'),
+                    ]);
                     if (direction == 'LEFT') {
                         if (head == 'HEAD')
                             turtle.setMotion(sq, 9, unit, 0, value, radius);
@@ -1488,10 +1490,10 @@ Entry.Turtle.getBlocks = function() {
             },
             class: 'turtle_wheel',
             isNotFor: ['turtle'],
-            func: function(sprite, script) {
-                var sq = Entry.hw.sendQueue;
-                var pd = Entry.hw.portData;
-                var turtle = Entry.Turtle;
+            func: async function(sprite, script) {
+                const sq = Entry.hw.sendQueue;
+                const pd = Entry.hw.portData;
+                const turtle = Entry.Turtle;
                 turtle.setModule(sq);
                 if (!script.isStart) {
                     script.isStart = true;
@@ -1499,13 +1501,13 @@ Entry.Turtle.getBlocks = function() {
                     sq.rightWheel = 0;
                     turtle.setPulse(sq, 0);
                     turtle.setLineTracerMode(sq, 0);
-                    var direction = script.getField('DIRECTION');
-                    var field = script.getField('UNIT');
-                    var unit = 1;
+                    const direction = script.getField('DIRECTION');
+                    const field = script.getField('UNIT');
+                    let unit = 1;
                     if (field == 'SEC') unit = 2;
                     else if (field == 'PULSE') unit = 3;
-                    var value = script.getNumberValue('VALUE');
-                    var head = script.getField('HEAD');
+                    const value = await script.getNumberValue('VALUE');
+                    const head = script.getField('HEAD');
                     if (direction == 'LEFT') {
                         if (head == 'HEAD')
                             turtle.setMotion(sq, 5, unit, 0, value, 0);
@@ -1672,11 +1674,13 @@ Entry.Turtle.getBlocks = function() {
             },
             class: 'turtle_wheel',
             isNotFor: ['turtle'],
-            func: function(sprite, script) {
-                var sq = Entry.hw.sendQueue;
-                var left = script.getNumberValue('LEFT');
-                var right = script.getNumberValue('RIGHT');
-                var turtle = Entry.Turtle;
+            func: async function(sprite, script) {
+                const sq = Entry.hw.sendQueue;
+                const turtle = Entry.Turtle;
+                const [left, right] = await Promise.all([
+                    script.getNumberValue('LEFT'),
+                    script.getNumberValue('RIGHT'),
+                ]);
                 turtle.setModule(sq);
                 turtle.setPulse(sq, 0);
                 turtle.setLineTracerMode(sq, 0);
@@ -1746,15 +1750,20 @@ Entry.Turtle.getBlocks = function() {
             },
             class: 'turtle_wheel',
             isNotFor: ['turtle'],
-            func: function(sprite, script) {
-                var sq = Entry.hw.sendQueue;
-                var turtle = Entry.Turtle;
+            func: async function(sprite, script) {
+                const sq = Entry.hw.sendQueue;
+                const turtle = Entry.Turtle;
                 turtle.setModule(sq);
                 turtle.setPulse(sq, 0);
                 turtle.setLineTracerMode(sq, 0);
                 turtle.setMotion(sq, 0, 0, 0, 0, 0);
-                sq.leftWheel = script.getNumberValue('LEFT');
-                sq.rightWheel = script.getNumberValue('RIGHT');
+
+                const [left, right] = await Promise.all([
+                    script.getNumberValue('LEFT'),
+                    script.getNumberValue('RIGHT'),
+                ]);
+                sq.leftWheel = left;
+                sq.rightWheel = right;
                 return script.callReturn();
             },
             syntax: {
@@ -1819,11 +1828,11 @@ Entry.Turtle.getBlocks = function() {
             },
             class: 'turtle_wheel',
             isNotFor: ['turtle'],
-            func: function(sprite, script) {
-                var sq = Entry.hw.sendQueue;
-                var direction = script.getField('DIRECTION');
-                var value = script.getNumberValue('VALUE');
-                var turtle = Entry.Turtle;
+            func: async function(sprite, script) {
+                const sq = Entry.hw.sendQueue;
+                const direction = script.getField('DIRECTION');
+                const value = await script.getNumberValue('VALUE');
+                const turtle = Entry.Turtle;
                 turtle.setModule(sq);
                 turtle.setPulse(sq, 0);
                 turtle.setLineTracerMode(sq, 0);
@@ -1966,11 +1975,11 @@ Entry.Turtle.getBlocks = function() {
             },
             class: 'turtle_wheel',
             isNotFor: ['turtle'],
-            func: function(sprite, script) {
-                var sq = Entry.hw.sendQueue;
-                var direction = script.getField('DIRECTION');
-                var value = script.getNumberValue('VALUE');
-                var turtle = Entry.Turtle;
+            func: async function(sprite, script) {
+                const sq = Entry.hw.sendQueue;
+                const direction = script.getField('DIRECTION');
+                const value = await script.getNumberValue('VALUE');
+                const turtle = Entry.Turtle;
                 turtle.setModule(sq);
                 turtle.setPulse(sq, 0);
                 turtle.setLineTracerMode(sq, 0);
@@ -2715,12 +2724,14 @@ Entry.Turtle.getBlocks = function() {
             },
             class: 'turtle_led',
             isNotFor: ['turtle'],
-            func: function(sprite, script) {
-                var sq = Entry.hw.sendQueue;
+            func: async function(sprite, script) {
+                const sq = Entry.hw.sendQueue;
                 Entry.Turtle.setModule(sq);
-                var red = script.getNumberValue('RED');
-                var green = script.getNumberValue('GREEN');
-                var blue = script.getNumberValue('BLUE');
+                const [red, green, blue] = await Promise.all([
+                    script.getNumberValue('RED'),
+                    script.getNumberValue('GREEN'),
+                    script.getNumberValue('BLUE'),
+                ]);
                 sq.ledRed = sq.ledRed != undefined ? sq.ledRed + red : red;
                 sq.ledGreen =
                     sq.ledGreen != undefined ? sq.ledGreen + green : green;
@@ -2799,12 +2810,17 @@ Entry.Turtle.getBlocks = function() {
             },
             class: 'turtle_led',
             isNotFor: ['turtle'],
-            func: function(sprite, script) {
-                var sq = Entry.hw.sendQueue;
+            func: async function(sprite, script) {
+                const sq = Entry.hw.sendQueue;
                 Entry.Turtle.setModule(sq);
-                sq.ledRed = script.getNumberValue('RED');
-                sq.ledGreen = script.getNumberValue('GREEN');
-                sq.ledBlue = script.getNumberValue('BLUE');
+                const [red, green, blue] = await Promise.all([
+                    script.getNumberValue('RED'),
+                    script.getNumberValue('GREEN'),
+                    script.getNumberValue('BLUE'),
+                ]);
+                sq.ledRed = red;
+                sq.ledGreen = green;
+                sq.ledBlue = blue;
                 return script.callReturn();
             },
             syntax: {
@@ -2914,13 +2930,13 @@ Entry.Turtle.getBlocks = function() {
             },
             class: 'turtle_sound',
             isNotFor: ['turtle'],
-            func: function(sprite, script) {
-                var sq = Entry.hw.sendQueue;
+            func: async function(sprite, script) {
+                const sq = Entry.hw.sendQueue;
                 Entry.Turtle.setModule(sq);
                 sq.buzzer = 0;
                 sq.note = 0;
-                var sound = Number(script.getField('SOUND'));
-                var count = script.getNumberValue('COUNT');
+                const sound = Number(script.getField('SOUND'));
+                const count = await script.getNumberValue('COUNT');
                 if (count) Entry.Turtle.setSound(sq, sound, count);
                 return script.callReturn();
             },
@@ -3008,17 +3024,17 @@ Entry.Turtle.getBlocks = function() {
             },
             class: 'turtle_sound',
             isNotFor: ['turtle'],
-            func: function(sprite, script) {
-                var sq = Entry.hw.sendQueue;
-                var pd = Entry.hw.portData;
-                var turtle = Entry.Turtle;
+            func: async function(sprite, script) {
+                const sq = Entry.hw.sendQueue;
+                const pd = Entry.hw.portData;
+                const turtle = Entry.Turtle;
                 turtle.setModule(sq);
                 if (!script.isStart) {
                     script.isStart = true;
                     sq.buzzer = 0;
                     sq.note = 0;
-                    var sound = Number(script.getField('SOUND'));
-                    var count = script.getNumberValue('COUNT');
+                    const sound = Number(script.getField('SOUND'));
+                    const count = await script.getNumberValue('COUNT');
                     if (count) {
                         turtle.setSound(sq, sound, count);
                         return script;
@@ -3107,10 +3123,10 @@ Entry.Turtle.getBlocks = function() {
             },
             class: 'turtle_sound',
             isNotFor: ['turtle'],
-            func: function(sprite, script) {
-                var sq = Entry.hw.sendQueue;
+            func: async function(sprite, script) {
+                const sq = Entry.hw.sendQueue;
                 Entry.Turtle.setModule(sq);
-                var value = script.getNumberValue('VALUE');
+                const value = await script.getNumberValue('VALUE');
                 sq.buzzer = sq.buzzer != undefined ? sq.buzzer + value : value;
                 sq.note = 0;
                 Entry.Turtle.setSound(sq, 0);
@@ -3156,10 +3172,10 @@ Entry.Turtle.getBlocks = function() {
             },
             class: 'turtle_sound',
             isNotFor: ['turtle'],
-            func: function(sprite, script) {
-                var sq = Entry.hw.sendQueue;
+            func: async function(sprite, script) {
+                const sq = Entry.hw.sendQueue;
                 Entry.Turtle.setModule(sq);
-                sq.buzzer = script.getNumberValue('VALUE');
+                sq.buzzer = await script.getNumberValue('VALUE');
                 sq.note = 0;
                 Entry.Turtle.setSound(sq, 0);
                 return script.callReturn();
@@ -3272,10 +3288,12 @@ Entry.Turtle.getBlocks = function() {
             },
             class: 'turtle_sound',
             isNotFor: ['turtle'],
-            func: function(sprite, script) {
-                var sq = Entry.hw.sendQueue;
-                var note = script.getNumberField('NOTE', script);
-                var octave = script.getNumberField('OCTAVE', script);
+            func: async function(sprite, script) {
+                const sq = Entry.hw.sendQueue;
+                let [note, octave] = await Promise.all([
+                    script.getNumberField('NOTE', script),
+                    script.getNumberField('OCTAVE', script)
+                ]);
                 Entry.Turtle.setModule(sq);
                 sq.buzzer = 0;
                 note += (octave - 1) * 12;
@@ -3402,29 +3420,31 @@ Entry.Turtle.getBlocks = function() {
             },
             class: 'turtle_sound',
             isNotFor: ['turtle'],
-            func: function(sprite, script) {
-                var sq = Entry.hw.sendQueue;
-                var turtle = Entry.Turtle;
+            func: async function(sprite, script) {
+                const sq = Entry.hw.sendQueue;
+                const turtle = Entry.Turtle;
                 turtle.setModule(sq);
                 if (!script.isStart) {
-                    var note = script.getNumberField('NOTE', script);
-                    var octave = script.getNumberField('OCTAVE', script);
-                    var beat = script.getNumberValue('VALUE', script);
+                    let [note, octave, beat] = await Promise.all([
+                        script.getNumberField('NOTE', script),
+                        script.getNumberField('OCTAVE', script),
+                        script.getNumberValue('VALUE', script),
+                    ]);
                     note += (octave - 1) * 12;
-                    var timeValue = beat * 60 * 1000 / turtle.tempo;
+                    const timeValue = beat * 60 * 1000 / turtle.tempo;
                     script.isStart = true;
                     script.timeFlag = 1;
                     sq.buzzer = 0;
                     sq.note = note;
                     turtle.setSound(sq, 0);
                     if (timeValue > 100) {
-                        var timer1 = setTimeout(function() {
+                        const timer1 = setTimeout(function() {
                             sq.note = 0;
                             turtle.removeTimeout(timer1);
                         }, timeValue - 100);
                         turtle.timeouts.push(timer1);
                     }
-                    var timer2 = setTimeout(function() {
+                    const timer2 = setTimeout(function() {
                         script.timeFlag = 0;
                         turtle.removeTimeout(timer2);
                     }, timeValue);
@@ -3526,19 +3546,19 @@ Entry.Turtle.getBlocks = function() {
             },
             class: 'turtle_sound',
             isNotFor: ['turtle'],
-            func: function(sprite, script) {
-                var sq = Entry.hw.sendQueue;
-                var turtle = Entry.Turtle;
+            func: async function(sprite, script) {
+                const sq = Entry.hw.sendQueue;
+                const turtle = Entry.Turtle;
                 turtle.setModule(sq);
                 if (!script.isStart) {
                     script.isStart = true;
                     script.timeFlag = 1;
-                    var timeValue = script.getNumberValue('VALUE');
+                    let timeValue = await script.getNumberValue('VALUE');
                     timeValue = timeValue * 60 * 1000 / turtle.tempo;
                     sq.buzzer = 0;
                     sq.note = 0;
                     turtle.setSound(sq, 0);
-                    var timer = setTimeout(function() {
+                    const timer = setTimeout(function() {
                         script.timeFlag = 0;
                         turtle.removeTimeout(timer);
                     }, timeValue);
@@ -3610,10 +3630,10 @@ Entry.Turtle.getBlocks = function() {
             },
             class: 'turtle_sound',
             isNotFor: ['turtle'],
-            func: function(sprite, script) {
-                var turtle = Entry.Turtle;
+            func: async function(sprite, script) {
+                const turtle = Entry.Turtle;
                 turtle.setModule(Entry.hw.sendQueue);
-                turtle.tempo += script.getNumberValue('VALUE');
+                turtle.tempo += await script.getNumberValue('VALUE');
                 if (turtle.tempo < 1) turtle.tempo = 1;
                 return script.callReturn();
             },
@@ -3663,10 +3683,10 @@ Entry.Turtle.getBlocks = function() {
             },
             class: 'turtle_sound',
             isNotFor: ['turtle'],
-            func: function(sprite, script) {
-                var turtle = Entry.Turtle;
+            func: async function(sprite, script) {
+                const turtle = Entry.Turtle;
                 turtle.setModule(Entry.hw.sendQueue);
-                turtle.tempo = script.getNumberValue('VALUE');
+                turtle.tempo = await script.getNumberValue('VALUE');
                 if (turtle.tempo < 1) turtle.tempo = 1;
                 return script.callReturn();
             },

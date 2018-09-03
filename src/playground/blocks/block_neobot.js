@@ -276,22 +276,24 @@ Entry.Neobot.getBlocks = function() {
             },
             class: 'neobot_value',
             isNotFor: ['neobot', 'neobot_sensor_theme'],
-            func: function(sprite, script) {
-                var port = script.getStringField('PORT');
-                var value = Entry.hw.portData[port];
-                var omin = script.getNumberValue('OMIN', script);
-                var omax = script.getNumberValue('OMAX', script);
-                var min = script.getNumberValue('MIN', script);
-                var max = script.getNumberValue('MAX', script);
+            func: async function(sprite, script) {
+                const port = script.getStringField('PORT');
+                let value = Entry.hw.portData[port];
+                let [omin, omax, min, max] = await Promise.all([
+                    script.getNumberValue('OMIN', script),
+                    script.getNumberValue('OMAX', script),
+                    script.getNumberValue('MIN', script),
+                    script.getNumberValue('MAX', script),
+                ]);
 
                 if (omin > omax) {
-                    var temp = omin;
+                    const temp = omin;
                     omin = omax;
                     omax = temp;
                 }
 
                 if (min > max) {
-                    var temp = min;
+                    const temp = min;
                     min = max;
                     max = temp;
                 }
@@ -491,9 +493,9 @@ Entry.Neobot.getBlocks = function() {
             },
             class: 'neobot_motor',
             isNotFor: ['neobot'],
-            func: function(sprite, script) {
-                var speed = Entry.parseNumber(script.getStringValue('SPEED'));
-                var direction = script.getNumberField('DIRECTION');
+            func: async function(sprite, script) {
+                const speed = Entry.parseNumber(await script.getStringValue('SPEED'));
+                const direction = script.getNumberField('DIRECTION');
                 Entry.hw.sendQueue['DCL'] = speed + direction;
                 return script.callReturn();
             },
@@ -563,9 +565,9 @@ Entry.Neobot.getBlocks = function() {
             },
             class: 'neobot_motor',
             isNotFor: ['neobot'],
-            func: function(sprite, script) {
-                var speed = Entry.parseNumber(script.getStringValue('SPEED'));
-                var direction = script.getNumberField('DIRECTION');
+            func: async function(sprite, script) {
+                const speed = Entry.parseNumber(await script.getStringValue('SPEED'));
+                const direction = script.getNumberField('DIRECTION');
                 Entry.hw.sendQueue['DCR'] = speed + direction;
                 return script.callReturn();
             },
@@ -650,15 +652,18 @@ Entry.Neobot.getBlocks = function() {
             },
             class: 'neobot_motor',
             isNotFor: ['neobot'],
-            func: function(sprite, script) {
-                var sq = Entry.hw.sendQueue;
+            func: async function(sprite, script) {
+                const sq = Entry.hw.sendQueue;
+                let [speedString, duration] = await Promise.all([
+                    script.getStringValue('SPEED'),
+                    script.getNumberValue('DURATION'),
+                ]);
 
                 if (!script.isStart) {
-                    var speed = Entry.parseNumber(
-                        script.getStringValue('SPEED')
+                    const speed = Entry.parseNumber(
+                        speedString,
                     );
-                    var direction = script.getNumberField('DIRECTION');
-                    var duration = script.getNumberValue('DURATION');
+                    const direction = script.getNumberField('DIRECTION');
 
                     if (duration < 0) {
                         duration = 0;
@@ -775,16 +780,16 @@ Entry.Neobot.getBlocks = function() {
             },
             class: 'neobot_output',
             isNotFor: ['neobot'],
-            func: function(sprite, script) {
-                var port = script.getStringField('PORT', script);
-                var degree = script.getNumberValue('DEGREE');
+            func: async function(sprite, script) {
+                const port = script.getStringField('PORT', script);
+                let degree = await script.getNumberValue('DEGREE');
                 if (degree < 0) {
                     degree = 0;
                 } else if (degree > 180) {
                     degree = 180;
                 }
                 Entry.hw.sendQueue[port] = degree;
-                var option = port;
+                let option = port;
                 if (option === 3) {
                     option = 4;
                 }
@@ -838,10 +843,10 @@ Entry.Neobot.getBlocks = function() {
             },
             class: 'neobot_output',
             isNotFor: ['neobot', 'neobot_sensor_theme'],
-            func: function(sprite, script) {
-                var port = script.getStringField('PORT', script);
-                var value = script.getNumberValue('VALUE', script);
-                var option = port;
+            func: async function(sprite, script) {
+                const port = script.getStringField('PORT', script);
+                let value = await script.getNumberValue('VALUE', script);
+                let option = port;
                 if (value < 0) {
                     value = 0;
                 } else if (value > 255) {
@@ -887,8 +892,8 @@ Entry.Neobot.getBlocks = function() {
             },
             class: 'neobot_output',
             isNotFor: ['neobot'],
-            func: function(sprite, script) {
-                var value = script.getNumberValue('VALUE', script);
+            func: async function(sprite, script) {
+                let value = await script.getNumberValue('VALUE', script);
                 if (value > 99) {
                     value = 99;
                 }
@@ -991,14 +996,16 @@ Entry.Neobot.getBlocks = function() {
             },
             class: 'neobot_note',
             isNotFor: ['neobot'],
-            func: function(sprite, script) {
-                var sq = Entry.hw.sendQueue;
+            func: async function(sprite, script) {
+                const sq = Entry.hw.sendQueue;
 
                 if (!script.isStart) {
-                    var note = script.getNumberField('NOTE', script);
-                    var octave = script.getNumberField('OCTAVE', script);
-                    var duration = script.getNumberField('DURATION', script);
-                    var value = note > 0 ? note + 12 * octave : 0;
+                    const [note, octave, duration] = await Promise.all([
+                        script.getNumberField('NOTE', script),
+                        script.getNumberField('OCTAVE', script),
+                        script.getNumberField('DURATION', script),
+                    ]);
+                    let value = note > 0 ? note + 12 * octave : 0;
 
                     script.isStart = true;
                     script.timeFlag = 1;
@@ -1078,25 +1085,27 @@ Entry.Neobot.getBlocks = function() {
             },
             class: 'neobot_note',
             isNotFor: ['neobot'],
-            func: function(sprite, script) {
-                var sq = Entry.hw.sendQueue;
+            func: async function(sprite, script) {
+                const sq = Entry.hw.sendQueue;
 
                 //Value Translate
-                var port = script.getStringField('PORT', script);
-                var value = Entry.hw.portData[port];
-                var omin = script.getNumberValue('MIN_VALUE', script);
-                var omax = script.getNumberValue('MAX_VALUE', script);
-                var min = 0;
-                var max = 72; //밑에가 65면 얘도 65로
+                const port = script.getStringField('PORT', script);
+                let value = Entry.hw.portData[port];
+                let [omin, omax] = await Promise.all([
+                    script.getNumberValue('MIN_VALUE', script),
+                    script.getNumberValue('MAX_VALUE', script),
+                ]);
+                let min = 0;
+                let max = 72; //밑에가 65면 얘도 65로
 
                 if (omin > omax) {
-                    var temp = omin;
+                    const temp = omin;
                     omin = omax;
                     omax = temp;
                 }
 
                 if (min > max) {
-                    var temp = min;
+                    const temp = min;
                     min = max;
                     max = temp;
                 }
