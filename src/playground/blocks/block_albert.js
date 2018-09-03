@@ -392,10 +392,10 @@ Entry.Albert.getBlocks = function() {
             },
             class: 'albert_sensor',
             isNotFor: ['albert'],
-            func: function(sprite, script) {
-                var pd = Entry.hw.portData;
-                var oid = script.getField('OID', script);
-                var value = script.getNumberValue('VALUE');
+            func: async function(sprite, script) {
+                const pd = Entry.hw.portData;
+                const oid = script.getField('OID', script);
+                const value = await script.getNumberValue('VALUE');
                 if (oid == 'FRONT') {
                     return pd.frontOid == value;
                 } else {
@@ -496,15 +496,15 @@ Entry.Albert.getBlocks = function() {
             },
             class: 'albert_wheel',
             isNotFor: ['albert'],
-            func: function(sprite, script) {
-                var sq = Entry.hw.sendQueue;
+            func: async function(sprite, script) {
+                const sq = Entry.hw.sendQueue;
                 if (!script.isStart) {
                     script.isStart = true;
                     script.timeFlag = 1;
                     sq.leftWheel = 30;
                     sq.rightWheel = 30;
-                    var timeValue = script.getNumberValue('VALUE') * 1000;
-                    var timer = setTimeout(function() {
+                    const timeValue = await script.getNumberValue('VALUE') * 1000;
+                    const timer = setTimeout(function() {
                         script.timeFlag = 0;
                         Entry.Albert.removeTimeout(timer);
                     }, timeValue);
@@ -554,15 +554,15 @@ Entry.Albert.getBlocks = function() {
             },
             class: 'albert_wheel',
             isNotFor: ['albert'],
-            func: function(sprite, script) {
-                var sq = Entry.hw.sendQueue;
+            func: async function(sprite, script) {
+                const sq = Entry.hw.sendQueue;
                 if (!script.isStart) {
                     script.isStart = true;
                     script.timeFlag = 1;
                     sq.leftWheel = -30;
                     sq.rightWheel = -30;
-                    var timeValue = script.getNumberValue('VALUE') * 1000;
-                    var timer = setTimeout(function() {
+                    const timeValue = await script.getNumberValue('VALUE') * 1000;
+                    const timer = setTimeout(function() {
                         script.timeFlag = 0;
                         Entry.Albert.removeTimeout(timer);
                     }, timeValue);
@@ -624,12 +624,12 @@ Entry.Albert.getBlocks = function() {
             },
             class: 'albert_wheel',
             isNotFor: ['albert'],
-            func: function(sprite, script) {
-                var sq = Entry.hw.sendQueue;
+            func: async function(sprite, script) {
+                const sq = Entry.hw.sendQueue;
                 if (!script.isStart) {
                     script.isStart = true;
                     script.timeFlag = 1;
-                    var direction = script.getField('DIRECTION', script);
+                    const direction = script.getField('DIRECTION', script);
                     if (direction == 'LEFT') {
                         sq.leftWheel = -30;
                         sq.rightWheel = 30;
@@ -637,8 +637,8 @@ Entry.Albert.getBlocks = function() {
                         sq.leftWheel = 30;
                         sq.rightWheel = -30;
                     }
-                    var timeValue = script.getNumberValue('VALUE') * 1000;
-                    var timer = setTimeout(function() {
+                    const timeValue = await script.getNumberValue('VALUE') * 1000;
+                    const timer = setTimeout(function() {
                         script.timeFlag = 0;
                         Entry.Albert.removeTimeout(timer);
                     }, timeValue);
@@ -697,10 +697,13 @@ Entry.Albert.getBlocks = function() {
             },
             class: 'albert_wheel',
             isNotFor: ['albert'],
-            func: function(sprite, script) {
-                var sq = Entry.hw.sendQueue;
-                var left = script.getNumberValue('LEFT');
-                var right = script.getNumberValue('RIGHT');
+            func: async function(sprite, script) {
+                const sq = Entry.hw.sendQueue;
+                const [left, right] = await Promise.all([
+                    script.getNumberValue('LEFT'),
+                    script.getNumberValue('RIGHT'),
+                ]);
+
                 sq.leftWheel =
                     sq.leftWheel != undefined ? sq.leftWheel + left : left;
                 sq.rightWheel =
@@ -749,10 +752,14 @@ Entry.Albert.getBlocks = function() {
             },
             class: 'albert_wheel',
             isNotFor: ['albert'],
-            func: function(sprite, script) {
-                var sq = Entry.hw.sendQueue;
-                sq.leftWheel = script.getNumberValue('LEFT');
-                sq.rightWheel = script.getNumberValue('RIGHT');
+            func: async function(sprite, script) {
+                const sq = Entry.hw.sendQueue;
+                const [left, right] = await Promise.all([
+                    script.getNumberValue('LEFT'),
+                    script.getNumberValue('RIGHT'),
+                ]);
+                sq.leftWheel = left;
+                sq.rightWheel = right;
                 return script.callReturn();
             },
             syntax: { js: [], py: ['Albert.set_both_wheels(%1, %2)'] },
@@ -800,10 +807,10 @@ Entry.Albert.getBlocks = function() {
             },
             class: 'albert_wheel',
             isNotFor: ['albert'],
-            func: function(sprite, script) {
-                var sq = Entry.hw.sendQueue;
-                var direction = script.getField('DIRECTION');
-                var value = script.getNumberValue('VALUE');
+            func: async function(sprite, script) {
+                const sq = Entry.hw.sendQueue;
+                const direction = script.getField('DIRECTION');
+                const value = await script.getNumberValue('VALUE');
                 if (direction == 'LEFT') {
                     sq.leftWheel =
                         sq.leftWheel != undefined
@@ -871,10 +878,10 @@ Entry.Albert.getBlocks = function() {
             },
             class: 'albert_wheel',
             isNotFor: ['albert'],
-            func: function(sprite, script) {
-                var sq = Entry.hw.sendQueue;
-                var direction = script.getField('DIRECTION');
-                var value = script.getNumberValue('VALUE');
+            func: async function(sprite, script) {
+                const sq = Entry.hw.sendQueue;
+                const direction = script.getField('DIRECTION');
+                const value = await script.getNumberValue('VALUE');
                 if (direction == 'LEFT') {
                     sq.leftWheel = value;
                 } else if (direction == 'RIGHT') {
@@ -955,10 +962,15 @@ Entry.Albert.getBlocks = function() {
             },
             class: 'albert_wheel',
             isNotFor: ['albert'],
-            func: function(sprite, script) {
-                var sq = Entry.hw.sendQueue;
-                sq.padWidth = script.getNumberValue('WIDTH');
-                sq.padHeight = script.getNumberValue('HEIGHT');
+            func: async function(sprite, script) {
+                const sq = Entry.hw.sendQueue;
+                const [width, height] = await Promise.all([
+                    script.getNumberValue('WIDTH'),
+                    script.getNumberValue('HEIGHT'),
+                ]);
+
+                sq.padWidth = width;
+                sq.padHeight = height;
                 return script.callReturn();
             },
             syntax: { js: [], py: ['Albert.set_pad_size(%1, %2)'] },
@@ -1003,10 +1015,15 @@ Entry.Albert.getBlocks = function() {
             },
             class: 'albert_wheel',
             isNotFor: ['albert'],
-            func: function(sprite, script) {
-                var sq = Entry.hw.sendQueue;
-                var pd = Entry.hw.portData;
-                var controller = Entry.Albert.controller;
+            func: async function(sprite, script) {
+                const sq = Entry.hw.sendQueue;
+                const pd = Entry.hw.portData;
+                const controller = Entry.Albert.controller;
+                const [x, y] = await Promise.all([
+                    script.getNumberValue('X'),
+                    script.getNumberValue('Y'),
+                ]);
+
                 if (!script.isStart) {
                     script.isStart = true;
                     script.isMoving = true;
@@ -1015,8 +1032,8 @@ Entry.Albert.getBlocks = function() {
                     script.x = -1;
                     script.y = -1;
                     script.theta = -200;
-                    script.targetX = script.getNumberValue('X');
-                    script.targetY = script.getNumberValue('Y');
+                    script.targetX = x;
+                    script.targetY = y;
                     controller.clear();
                     sq.leftWheel = 0;
                     sq.rightWheel = 0;
@@ -1125,16 +1142,17 @@ Entry.Albert.getBlocks = function() {
             },
             class: 'albert_wheel',
             isNotFor: ['albert'],
-            func: function(sprite, script) {
-                var sq = Entry.hw.sendQueue;
-                var pd = Entry.hw.portData;
-                var controller = Entry.Albert.controller;
+            func: async function(sprite, script) {
+                const sq = Entry.hw.sendQueue;
+                const pd = Entry.hw.portData;
+                const controller = Entry.Albert.controller;
+                const orientation = await script.getNumberValue('ORIENTATION');
                 if (!script.isStart) {
                     script.isStart = true;
                     script.isMoving = true;
                     script.boardState = 1;
                     script.theta = -200;
-                    script.targetTheta = script.getNumberValue('ORIENTATION');
+                    script.targetTheta = orientation;
                     controller.clear();
                     sq.leftWheel = 0;
                     sq.rightWheel = 0;
@@ -1445,9 +1463,9 @@ Entry.Albert.getBlocks = function() {
             },
             class: 'albert_buzzer',
             isNotFor: ['albert'],
-            func: function(sprite, script) {
-                var sq = Entry.hw.sendQueue;
-                var value = script.getNumberValue('VALUE');
+            func: async function(sprite, script) {
+                const sq = Entry.hw.sendQueue;
+                const value = await script.getNumberValue('VALUE');
                 sq.buzzer = sq.buzzer != undefined ? sq.buzzer + value : value;
                 sq.note = 0;
                 return script.callReturn();
@@ -1485,9 +1503,9 @@ Entry.Albert.getBlocks = function() {
             },
             class: 'albert_buzzer',
             isNotFor: ['albert'],
-            func: function(sprite, script) {
-                var sq = Entry.hw.sendQueue;
-                sq.buzzer = script.getNumberValue('VALUE');
+            func: async function(sprite, script) {
+                const sq = Entry.hw.sendQueue;
+                sq.buzzer = await script.getNumberValue('VALUE');
                 sq.note = 0;
                 return script.callReturn();
             },
@@ -1587,27 +1605,29 @@ Entry.Albert.getBlocks = function() {
             },
             class: 'albert_buzzer',
             isNotFor: ['albert'],
-            func: function(sprite, script) {
-                var sq = Entry.hw.sendQueue;
+            func: async function(sprite, script) {
+                const sq = Entry.hw.sendQueue;
                 if (!script.isStart) {
-                    var note = script.getNumberField('NOTE', script);
-                    var octave = script.getNumberField('OCTAVE', script);
-                    var beat = script.getNumberValue('VALUE', script);
-                    var tempo = Entry.Albert.tempo;
+                    let [note, octave, beat] = await Promise.all([
+                        script.getNumberField('NOTE', script),
+                        script.getNumberField('OCTAVE', script),
+                        script.getNumberValue('VALUE', script),
+                    ]);
+                    const tempo = Entry.Albert.tempo;
                     note += (octave - 1) * 12;
-                    var timeValue = beat * 60 * 1000 / tempo;
+                    const timeValue = beat * 60 * 1000 / tempo;
                     script.isStart = true;
                     script.timeFlag = 1;
                     sq.buzzer = 0;
                     sq.note = note;
                     if (timeValue > 100) {
-                        var timer1 = setTimeout(function() {
+                        const timer1 = setTimeout(function() {
                             sq.note = 0;
                             Entry.Albert.removeTimeout(timer1);
                         }, timeValue - 100);
                         Entry.Albert.timeouts.push(timer1);
                     }
-                    var timer2 = setTimeout(function() {
+                    const timer2 = setTimeout(function() {
                         script.timeFlag = 0;
                         Entry.Albert.removeTimeout(timer2);
                     }, timeValue);
@@ -1656,16 +1676,16 @@ Entry.Albert.getBlocks = function() {
             },
             class: 'albert_buzzer',
             isNotFor: ['albert'],
-            func: function(sprite, script) {
-                var sq = Entry.hw.sendQueue;
+            func: async function(sprite, script) {
+                const sq = Entry.hw.sendQueue;
                 if (!script.isStart) {
                     script.isStart = true;
                     script.timeFlag = 1;
-                    var timeValue = script.getNumberValue('VALUE');
+                    let timeValue = await script.getNumberValue('VALUE');
                     timeValue = timeValue * 60 * 1000 / Entry.Albert.tempo;
                     sq.buzzer = 0;
                     sq.note = 0;
-                    var timer = setTimeout(function() {
+                    const timer = setTimeout(function() {
                         script.timeFlag = 0;
                         Entry.Albert.removeTimeout(timer);
                     }, timeValue);
@@ -1713,8 +1733,8 @@ Entry.Albert.getBlocks = function() {
             },
             class: 'albert_buzzer',
             isNotFor: ['albert'],
-            func: function(sprite, script) {
-                Entry.Albert.tempo += script.getNumberValue('VALUE');
+            func: async function(sprite, script) {
+                Entry.Albert.tempo += await script.getNumberValue('VALUE');
                 if (Entry.Albert.tempo < 1) Entry.Albert.tempo = 1;
                 return script.callReturn();
             },
@@ -1751,8 +1771,8 @@ Entry.Albert.getBlocks = function() {
             },
             class: 'albert_buzzer',
             isNotFor: ['albert'],
-            func: function(sprite, script) {
-                Entry.Albert.tempo = script.getNumberValue('VALUE');
+            func: async function(sprite, script) {
+                Entry.Albert.tempo = await script.getNumberValue('VALUE');
                 if (Entry.Albert.tempo < 1) Entry.Albert.tempo = 1;
                 return script.callReturn();
             },
@@ -2027,11 +2047,11 @@ Entry.Albert.getBlocks = function() {
                 DIRECTION: 0,
                 VALUE: 1,
             },
-            func: function(sprite, script) {
-                var sq = Entry.hw.sendQueue;
-                var pd = Entry.hw.portData;
-                var direction = script.getField('DIRECTION');
-                var value = script.getNumberValue('VALUE');
+            func: async function(sprite, script) {
+                const sq = Entry.hw.sendQueue;
+                const pd = Entry.hw.portData;
+                const direction = script.getField('DIRECTION');
+                const value = await script.getNumberValue('VALUE');
 
                 if (direction == 'LEFT') {
                     sq.leftWheel =
@@ -2091,10 +2111,10 @@ Entry.Albert.getBlocks = function() {
                 DIRECTION: 0,
                 VALUE: 1,
             },
-            func: function(sprite, script) {
-                var sq = Entry.hw.sendQueue;
-                var direction = script.getField('DIRECTION');
-                var value = script.getNumberValue('VALUE');
+            func: async function(sprite, script) {
+                const sq = Entry.hw.sendQueue;
+                const direction = script.getField('DIRECTION');
+                const value = await script.getNumberValue('VALUE');
 
                 if (direction == 'LEFT') sq.leftWheel = value;
                 else if (direction == 'RIGHT') sq.rightWheel = value;
