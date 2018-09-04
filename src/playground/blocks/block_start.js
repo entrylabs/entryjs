@@ -2,8 +2,8 @@ module.exports = {
     getBlocks() {
         return {
             when_run_button_click: {
-                color: '#10D35E',
-                outerLine: '#13BF68',
+                color: EntryStatic.COLOR_START_1,
+                outerLine: EntryStatic.COLOR_START_2,
                 skeleton: 'basic_event',
                 statements: [],
                 params: [
@@ -39,8 +39,8 @@ module.exports = {
                 },
             },
             when_some_key_pressed: {
-                color: '#10D35E',
-                outerLine: '#13BF68',
+                color: EntryStatic.COLOR_START_1,
+                outerLine: EntryStatic.COLOR_START_2,
                 skeleton: 'basic_event',
                 statements: [],
                 params: [
@@ -97,8 +97,8 @@ module.exports = {
                 },
             },
             mouse_clicked: {
-                color: '#10D35E',
-                outerLine: '#13BF68',
+                color: EntryStatic.COLOR_START_1,
+                outerLine: EntryStatic.COLOR_START_2,
                 skeleton: 'basic_event',
                 statements: [],
                 params: [
@@ -134,8 +134,8 @@ module.exports = {
                 },
             },
             mouse_click_cancled: {
-                color: '#10D35E',
-                outerLine: '#13BF68',
+                color: EntryStatic.COLOR_START_1,
+                outerLine: EntryStatic.COLOR_START_2,
                 skeleton: 'basic_event',
                 statements: [],
                 params: [
@@ -171,8 +171,8 @@ module.exports = {
                 },
             },
             when_object_click: {
-                color: '#10D35E',
-                outerLine: '#13BF68',
+                color: EntryStatic.COLOR_START_1,
+                outerLine: EntryStatic.COLOR_START_2,
                 skeleton: 'basic_event',
                 statements: [],
                 params: [
@@ -208,8 +208,8 @@ module.exports = {
                 },
             },
             when_object_click_canceled: {
-                color: '#10D35E',
-                outerLine: '#13BF68',
+                color: EntryStatic.COLOR_START_1,
+                outerLine: EntryStatic.COLOR_START_2,
                 skeleton: 'basic_event',
                 statements: [],
                 params: [
@@ -245,8 +245,8 @@ module.exports = {
                 },
             },
             when_message_cast: {
-                color: '#10D35E',
-                outerLine: '#13BF68',
+                color: EntryStatic.COLOR_START_1,
+                outerLine: EntryStatic.COLOR_START_2,
                 skeleton: 'basic_event',
                 statements: [],
                 params: [
@@ -263,7 +263,9 @@ module.exports = {
                         type: 'DropdownDynamic',
                         value: null,
                         menuName: 'messages',
-                        fontSize: 11,
+                        fontSize: 10,
+                        textColor: '#FFFFFF',
+                        bgColor: EntryStatic.COLOR_START_2,
                         arrowColor: EntryStatic.ARROW_COLOR_START,
                     },
                 ],
@@ -324,8 +326,8 @@ module.exports = {
                 },
             },
             message_cast: {
-                color: '#10D35E',
-                outerLine: '#13BF68',
+                color: EntryStatic.COLOR_START_1,
+                outerLine: EntryStatic.COLOR_START_2,
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -405,8 +407,8 @@ module.exports = {
                 },
             },
             message_cast_wait: {
-                color: '#10D35E',
-                outerLine: '#13BF68',
+                color: EntryStatic.COLOR_START_1,
+                outerLine: EntryStatic.COLOR_START_2,
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -505,8 +507,8 @@ module.exports = {
                 },
             },
             when_scene_start: {
-                color: '#10D35E',
-                outerLine: '#13BF68',
+                color: EntryStatic.COLOR_START_1,
+                outerLine: EntryStatic.COLOR_START_2,
                 skeleton: 'basic_event',
                 statements: [],
                 params: [
@@ -542,8 +544,8 @@ module.exports = {
                 },
             },
             start_scene: {
-                color: '#10D35E',
-                outerLine: '#13BF68',
+                color: EntryStatic.COLOR_START_1,
+                outerLine: EntryStatic.COLOR_START_2,
                 skeleton: 'basic_without_next',
                 statements: [],
                 params: [
@@ -605,8 +607,8 @@ module.exports = {
                 },
             },
             start_neighbor_scene: {
-                color: '#10D35E',
-                outerLine: '#13BF68',
+                color: EntryStatic.COLOR_START_1,
+                outerLine: EntryStatic.COLOR_START_2,
                 skeleton: 'basic_without_next',
                 statements: [],
                 params: [

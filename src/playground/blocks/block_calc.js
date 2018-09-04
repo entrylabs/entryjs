@@ -2,7 +2,8 @@ module.exports = {
     getBlocks() {
         return {
             calc_basic: {
-                color: '#FFD974',
+                color: '#FEB71A',
+                outerLine: '#FF9C00',
                 skeleton: 'basic_string_field',
                 statements: [],
                 params: [
@@ -192,7 +193,8 @@ module.exports = {
                 },
             },
             calc_rand: {
-                color: '#FFD974',
+                color: '#FEB71A',
+                outerLine: '#FF9C00',
                 skeleton: 'basic_string_field',
                 statements: [],
                 params: [
@@ -320,7 +322,8 @@ module.exports = {
                 },
             },
             coordinate_mouse: {
-                color: '#FFD974',
+                color: '#FEB71A',
+                outerLine: '#FF9C00',
                 skeleton: 'basic_string_field',
                 statements: [],
                 params: [
@@ -398,7 +401,8 @@ module.exports = {
                 },
             },
             coordinate_object: {
-                color: '#FFD974',
+                color: '#FEB71A',
+                outerLine: '#FF9C00',
                 skeleton: 'basic_string_field',
                 statements: [],
                 params: [
@@ -562,7 +566,8 @@ module.exports = {
                 },
             },
             get_sound_volume: {
-                color: '#FFD974',
+                color: '#FEB71A',
+                outerLine: '#FF9C00',
                 skeleton: 'basic_string_field',
                 statements: [],
                 params: [
@@ -598,7 +603,8 @@ module.exports = {
                 },
             },
             quotient_and_mod: {
-                color: '#FFD974',
+                color: '#FEB71A',
+                outerLine: '#FF9C00',
                 skeleton: 'basic_string_field',
                 statements: [],
                 params: [
@@ -776,7 +782,8 @@ module.exports = {
                 },
             },
             calc_operation: {
-                color: '#FFD974',
+                color: '#FEB71A',
+                outerLine: '#FF9C00',
                 skeleton: 'basic_string_field',
                 statements: [],
                 params: [
@@ -1164,7 +1171,8 @@ module.exports = {
                 },
             },
             get_project_timer_value: {
-                color: '#FFD974',
+                color: '#FEB71A',
+                outerLine: '#FF9C00',
                 skeleton: 'basic_string_field',
                 statements: [],
                 params: [
@@ -1215,7 +1223,8 @@ module.exports = {
                 },
             },
             choose_project_timer_action: {
-                color: '#FFD974',
+                color: '#FEB71A',
+                outerLine: '#FF9C00',
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -1254,8 +1263,8 @@ module.exports = {
                     },
                     {
                         type: 'Indicator',
-                        img: 'block_icon/calc_01.png',
-                        size: 12,
+                        img: 'block_icon/calc_icon.svg',
+                        size: 11,
                     },
                 ],
                 events: {
@@ -1367,7 +1376,8 @@ module.exports = {
                 },
             },
             set_visible_project_timer: {
-                color: '#FFD974',
+                color: '#FEB71A',
+                outerLine: '#FF9C00',
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -1393,8 +1403,8 @@ module.exports = {
                     },
                     {
                         type: 'Indicator',
-                        img: 'block_icon/calc_01.png',
-                        size: 12,
+                        img: 'block_icon/calc_icon.svg',
+                        size: 11,
                     },
                 ],
                 events: {
@@ -1478,7 +1488,8 @@ module.exports = {
                 },
             },
             get_date: {
-                color: '#FFD974',
+                color: '#FEB71A',
+                outerLine: '#FF9C00',
                 skeleton: 'basic_string_field',
                 statements: [],
                 params: [
@@ -1579,7 +1590,8 @@ module.exports = {
                 },
             },
             distance_something: {
-                color: '#FFD974',
+                color: '#FEB71A',
+                outerLine: '#FF9C00',
                 skeleton: 'basic_string_field',
                 statements: [],
                 params: [
@@ -1656,7 +1668,8 @@ module.exports = {
                 },
             },
             get_sound_duration: {
-                color: '#FFD974',
+                color: '#FEB71A',
+                outerLine: '#FF9C00',
                 skeleton: 'basic_string_field',
                 statements: [],
                 params: [
@@ -1724,7 +1737,8 @@ module.exports = {
                 },
             },
             get_user_name: {
-                color: '#FFD974',
+                color: '#FEB71A',
+                outerLine: '#FF9C00',
                 skeleton: 'basic_string_field',
                 statements: [],
                 params: [],
@@ -1749,7 +1763,8 @@ module.exports = {
                 },
             },
             length_of_string: {
-                color: '#FFD974',
+                color: '#FEB71A',
+                outerLine: '#FF9C00',
                 skeleton: 'basic_string_field',
                 statements: [],
                 params: [
@@ -1811,7 +1826,8 @@ module.exports = {
                 },
             },
             combine_something: {
-                color: '#FFD974',
+                color: '#FEB71A',
+                outerLine: '#FF9C00',
                 skeleton: 'basic_string_field',
                 statements: [],
                 params: [
@@ -1896,7 +1912,8 @@ module.exports = {
                 },
             },
             char_at: {
-                color: '#FFD974',
+                color: '#FEB71A',
+                outerLine: '#FF9C00',
                 skeleton: 'basic_string_field',
                 statements: [],
                 params: [
@@ -2008,7 +2025,8 @@ module.exports = {
                 },
             },
             substring: {
-                color: '#FFD974',
+                color: '#FEB71A',
+                outerLine: '#FF9C00',
                 skeleton: 'basic_string_field',
                 statements: [],
                 params: [
@@ -2139,7 +2157,8 @@ module.exports = {
                 },
             },
             index_of_string: {
-                color: '#FFD974',
+                color: '#FEB71A',
+                outerLine: '#FF9C00',
                 skeleton: 'basic_string_field',
                 statements: [],
                 params: [
@@ -2223,7 +2242,8 @@ module.exports = {
                 },
             },
             replace_string: {
-                color: '#FFD974',
+                color: '#FEB71A',
+                outerLine: '#FF9C00',
                 skeleton: 'basic_string_field',
                 statements: [],
                 params: [
@@ -2332,7 +2352,8 @@ module.exports = {
                 },
             },
             change_string_case: {
-                color: '#FFD974',
+                color: '#FEB71A',
+                outerLine: '#FF9C00',
                 skeleton: 'basic_string_field',
                 statements: [],
                 params: [

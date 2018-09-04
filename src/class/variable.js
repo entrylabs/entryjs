@@ -665,9 +665,9 @@ Entry.Variable.prototype.updateView = function() {
                 );
             this.wrapper_.graphics
                 .clear()
-                .f('#E457DC')
+                .f('#F57DF1')
                 .ss(1, 2, 0)
-                .s('#E457DC')
+                .s('#F57DF1')
                 .rc(
                     this._nameWidth + 7,
                     -11,

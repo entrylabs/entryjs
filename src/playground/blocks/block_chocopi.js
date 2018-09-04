@@ -66,7 +66,8 @@ Entry.Chocopi.getBlocks = function() {
     return {
         //region chocopi 초코파이
         chocopi_sensor: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -120,7 +121,8 @@ Entry.Chocopi.getBlocks = function() {
             syntax: { js: [], py: ['Chocopi.sensor(%1, %2)'] },
         },
         chocopi_touch_event: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_event',
             statements: [],
@@ -204,7 +206,8 @@ Entry.Chocopi.getBlocks = function() {
             syntax: { js: [], py: ['def on_chocopi_touch(%2, %3, %4 ):'] },
         },
         chocopi_touch_status: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_boolean_field',
             statements: [],
@@ -264,7 +267,8 @@ Entry.Chocopi.getBlocks = function() {
             syntax: { js: [], py: ['Chocopi.touchStatus(%1, %2)'] },
         },
         chocopi_touch_value: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -324,7 +328,8 @@ Entry.Chocopi.getBlocks = function() {
             syntax: { js: [], py: ['Chocopi.touchValue(%1, %2)'] },
         },
         chocopi_control_event: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_event',
             statements: [],
@@ -400,7 +405,8 @@ Entry.Chocopi.getBlocks = function() {
             },
         },
         chocopi_control_joystick: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -451,7 +457,8 @@ Entry.Chocopi.getBlocks = function() {
             syntax: { js: [], py: ['Chocopi.joystick(%1, %2)'] },
         },
         chocopi_control_button: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_boolean_field',
             statements: [],
@@ -504,7 +511,8 @@ Entry.Chocopi.getBlocks = function() {
             syntax: { js: [], py: ['Chocopi.button(%1, %2)'] },
         },
         chocopi_motion_photogate_time: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -565,7 +573,8 @@ Entry.Chocopi.getBlocks = function() {
             syntax: { js: [], py: ['Chocopi.photogateTime(%1, %2, %3)'] },
         },
         chocopi_motion_value: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -622,7 +631,8 @@ Entry.Chocopi.getBlocks = function() {
             syntax: { js: [], py: ['Chocopi.motionValue(%1, %2)'] },
         },
         chocopi_motion_photogate_status: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_boolean_field',
             statements: [],
@@ -670,7 +680,8 @@ Entry.Chocopi.getBlocks = function() {
             syntax: { js: [], py: ['Chocopi.motionPhotogateStatus(%1, %2)'] },
         },
         chocopi_motion_photogate_event: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_event',
             statements: [],
@@ -755,7 +766,8 @@ Entry.Chocopi.getBlocks = function() {
             syntax: { js: [], py: ['def on_chocopi_photogate(%2, %3, %4 ):'] },
         },
         chocopi_led: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic',
             statements: [],
@@ -788,7 +800,7 @@ Entry.Chocopi.getBlocks = function() {
                 { type: 'Block', accept: 'string' },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -821,7 +833,8 @@ Entry.Chocopi.getBlocks = function() {
             syntax: { js: [], py: ['Chocopi.LED(%1, %2, %3, %4, %5)'] },
         },
         chocopi_dc_motor: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic',
             statements: [],
@@ -866,7 +879,7 @@ Entry.Chocopi.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -891,7 +904,8 @@ Entry.Chocopi.getBlocks = function() {
             syntax: { js: [], py: ['Chocopi.DCmotor(%1, %2, %3, %4)'] },
         },
         chocopi_servo_motor: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic',
             statements: [],
@@ -927,7 +941,7 @@ Entry.Chocopi.getBlocks = function() {
                 { type: 'Block', accept: 'string' },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],

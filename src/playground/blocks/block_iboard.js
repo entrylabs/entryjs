@@ -222,7 +222,8 @@ Entry.iboard.getBlocks = function() {
             },
         },
         iboard_button_list: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
@@ -247,7 +248,8 @@ Entry.iboard.getBlocks = function() {
             },
         },
         iboard_pwm_led_list: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
@@ -272,7 +274,8 @@ Entry.iboard.getBlocks = function() {
             },
         },
         iboard_led_list: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
@@ -297,7 +300,8 @@ Entry.iboard.getBlocks = function() {
             },
         },
         iboard_rgb_led_list: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
@@ -322,7 +326,8 @@ Entry.iboard.getBlocks = function() {
             },
         },
         iboard_motor_list: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
@@ -346,7 +351,8 @@ Entry.iboard.getBlocks = function() {
             },
         },
         iboard_motor_list2: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
@@ -376,7 +382,8 @@ Entry.iboard.getBlocks = function() {
             },
         },
         iboard_tmp: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -415,7 +422,8 @@ Entry.iboard.getBlocks = function() {
             },
         },
         iboard_mic: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -452,7 +460,8 @@ Entry.iboard.getBlocks = function() {
             },
         },
         iboard_var_res: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -485,7 +494,8 @@ Entry.iboard.getBlocks = function() {
             },
         },
         iboard_cds: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],

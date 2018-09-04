@@ -17,15 +17,14 @@ Entry.FieldDropdownDynamic = function(content, blockView, index) {
     this._contents = content;
     this._index = index;
 
-    var arrowColor = content.arrowColor;
-    if (
-        this._block.deletable === Entry.Block.DELETABLE_FALSE_LIGHTEN ||
-        this._block.emphasized
-    ) {
+    let { bgColor, textColor, arrowColor } = content;
+    if (this._block.deletable === Entry.Block.DELETABLE_FALSE_LIGHTEN || this._block.emphasized) {
         arrowColor = blockView._fillColor;
     }
 
     this._arrowColor = arrowColor;
+    this._textColor = textColor || '#FFFFFF';
+    this._bgColor = bgColor || '#FFFFFF';
 
     var menuName = this._contents.menuName;
 
@@ -44,9 +43,7 @@ Entry.FieldDropdownDynamic = function(content, blockView, index) {
         blockView.getBoard().workspace &&
         blockView.getBoard().workspace.changeEvent
     ) {
-        blockView
-            .getBoard()
-            .workspace.changeEvent.attach(this, this._updateValue);
+        blockView.getBoard().workspace.changeEvent.attach(this, this._updateValue);
     }
 };
 
@@ -59,11 +56,7 @@ Entry.Utils.inherit(Entry.FieldDropdown, Entry.FieldDropdownDynamic);
         var object = this._block.getCode().object;
         var options = [];
         if (Entry.container) {
-            if (this._menuName)
-                options = Entry.container.getDropdownList(
-                    this._menuName,
-                    object
-                );
+            if (this._menuName) options = Entry.container.getDropdownList(this._menuName, object);
             else options = this._menuGenerator();
         }
 
@@ -89,8 +82,7 @@ Entry.Utils.inherit(Entry.FieldDropdown, Entry.FieldDropdownDynamic);
         });
 
         var options;
-        if (this._menuName)
-            options = Entry.container.getDropdownList(this._contents.menuName);
+        if (this._menuName) options = Entry.container.getDropdownList(this._contents.menuName);
         else options = this._menuGenerator();
 
         this._contents.options = options;
@@ -100,9 +92,7 @@ Entry.Utils.inherit(Entry.FieldDropdown, Entry.FieldDropdownDynamic);
 
         var CONTENT_HEIGHT = this._CONTENT_HEIGHT + 4;
 
-        this.optionGroup.bind('mousedown touchstart', (e) =>
-            e.stopPropagation()
-        );
+        this.optionGroup.bind('mousedown touchstart', (e) => e.stopPropagation());
 
         this.optionGroup.on('mouseup', '.rect', function(e) {
             e.stopPropagation();

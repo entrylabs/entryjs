@@ -2,14 +2,15 @@ module.exports = {
     getBlocks() {
         return {
             show: {
-                color: '#EC4466',
+                color: '#FF5174',
+                outerLine: '#EE3157',
                 skeleton: 'basic',
                 statements: [],
                 params: [
                     {
                         type: 'Indicator',
-                        img: 'block_icon/looks_03.png',
-                        size: 12,
+                        img: 'block_icon/looks_icon.svg',
+                        size: 11,
                     },
                 ],
                 events: {},
@@ -26,14 +27,15 @@ module.exports = {
                 syntax: { js: [], py: ['Entry.show()'] },
             },
             hide: {
-                color: '#EC4466',
+                color: '#FF5174',
+                outerLine: '#EE3157',
                 skeleton: 'basic',
                 statements: [],
                 params: [
                     {
                         type: 'Indicator',
-                        img: 'block_icon/looks_03.png',
-                        size: 12,
+                        img: 'block_icon/looks_icon.svg',
+                        size: 11,
                     },
                 ],
                 events: {},
@@ -50,7 +52,8 @@ module.exports = {
                 syntax: { js: [], py: ['Entry.hide()'] },
             },
             dialog_time: {
-                color: '#EC4466',
+                color: '#FF5174',
+                outerLine: '#EE3157',
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -71,8 +74,8 @@ module.exports = {
                     },
                     {
                         type: 'Indicator',
-                        img: 'block_icon/looks_03.png',
-                        size: 12,
+                        img: 'block_icon/looks_icon.svg',
+                        size: 11,
                     },
                 ],
                 events: {},
@@ -189,7 +192,8 @@ module.exports = {
                 },
             },
             dialog: {
-                color: '#EC4466',
+                color: '#FF5174',
+                outerLine: '#EE3157',
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -206,8 +210,8 @@ module.exports = {
                     },
                     {
                         type: 'Indicator',
-                        img: 'block_icon/looks_03.png',
-                        size: 12,
+                        img: 'block_icon/looks_icon.svg',
+                        size: 11,
                     },
                 ],
                 events: {},
@@ -265,14 +269,15 @@ module.exports = {
                 },
             },
             remove_dialog: {
-                color: '#EC4466',
+                color: '#FF5174',
+                outerLine: '#EE3157',
                 skeleton: 'basic',
                 statements: [],
                 params: [
                     {
                         type: 'Indicator',
-                        img: 'block_icon/looks_03.png',
-                        size: 12,
+                        img: 'block_icon/looks_icon.svg',
+                        size: 11,
                     },
                 ],
                 events: {},
@@ -289,7 +294,8 @@ module.exports = {
                 syntax: { js: [], py: ['Entry.clear_print()'] },
             },
             change_to_some_shape: {
-                color: '#EC4466',
+                color: '#FF5174',
+                outerLine: '#EE3157',
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -299,8 +305,8 @@ module.exports = {
                     },
                     {
                         type: 'Indicator',
-                        img: 'block_icon/looks_03.png',
-                        size: 12,
+                        img: 'block_icon/looks_icon.svg',
+                        size: 11,
                     },
                 ],
                 events: {},
@@ -348,7 +354,8 @@ module.exports = {
                 },
             },
             change_to_next_shape: {
-                color: '#EC4466',
+                color: '#FF5174',
+                outerLine: '#EE3157',
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -364,8 +371,8 @@ module.exports = {
                     },
                     {
                         type: 'Indicator',
-                        img: 'block_icon/looks_03.png',
-                        size: 12,
+                        img: 'block_icon/looks_icon.svg',
+                        size: 11,
                     },
                 ],
                 events: {},
@@ -429,7 +436,8 @@ module.exports = {
                 },
             },
             add_effect_amount: {
-                color: '#EC4466',
+                color: '#FF5174',
+                outerLine: '#EE3157',
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -450,8 +458,8 @@ module.exports = {
                     },
                     {
                         type: 'Indicator',
-                        img: 'block_icon/looks_03.png',
-                        size: 12,
+                        img: 'block_icon/looks_icon.svg',
+                        size: 11,
                     },
                 ],
                 events: {},
@@ -537,7 +545,8 @@ module.exports = {
                 },
             },
             change_effect_amount: {
-                color: '#EC4466',
+                color: '#FF5174',
+                outerLine: '#EE3157',
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -558,8 +567,8 @@ module.exports = {
                     },
                     {
                         type: 'Indicator',
-                        img: 'block_icon/looks_03.png',
-                        size: 12,
+                        img: 'block_icon/looks_icon.svg',
+                        size: 11,
                     },
                 ],
                 events: {},
@@ -643,14 +652,15 @@ module.exports = {
                 },
             },
             erase_all_effects: {
-                color: '#EC4466',
+                color: '#FF5174',
+                outerLine: '#EE3157',
                 skeleton: 'basic',
                 statements: [],
                 params: [
                     {
                         type: 'Indicator',
-                        img: 'block_icon/looks_03.png',
-                        size: 12,
+                        img: 'block_icon/looks_icon.svg',
+                        size: 11,
                     },
                 ],
                 events: {},
@@ -667,7 +677,8 @@ module.exports = {
                 syntax: { js: [], py: ['Entry.clear_effect()'] },
             },
             change_scale_size: {
-                color: '#EC4466',
+                color: '#FF5174',
+                outerLine: '#EE3157',
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -677,8 +688,8 @@ module.exports = {
                     },
                     {
                         type: 'Indicator',
-                        img: 'block_icon/looks_03.png',
-                        size: 12,
+                        img: 'block_icon/looks_icon.svg',
+                        size: 11,
                     },
                 ],
                 events: {},
@@ -715,7 +726,8 @@ module.exports = {
                 syntax: { js: [], py: ['Entry.add_size(%1)'] },
             },
             set_scale_size: {
-                color: '#EC4466',
+                color: '#FF5174',
+                outerLine: '#EE3157',
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -725,8 +737,8 @@ module.exports = {
                     },
                     {
                         type: 'Indicator',
-                        img: 'block_icon/looks_03.png',
-                        size: 12,
+                        img: 'block_icon/looks_icon.svg',
+                        size: 11,
                     },
                 ],
                 events: {},
@@ -763,14 +775,15 @@ module.exports = {
                 syntax: { js: [], py: ['Entry.set_size(%1)'] },
             },
             flip_x: {
-                color: '#EC4466',
+                color: '#FF5174',
+                outerLine: '#EE3157',
                 skeleton: 'basic',
                 statements: [],
                 params: [
                     {
                         type: 'Indicator',
-                        img: 'block_icon/looks_03.png',
-                        size: 12,
+                        img: 'block_icon/looks_icon.svg',
+                        size: 11,
                     },
                 ],
                 events: {},
@@ -787,14 +800,15 @@ module.exports = {
                 syntax: { js: [], py: ['Entry.flip_horizontal()'] },
             },
             flip_y: {
-                color: '#EC4466',
+                color: '#FF5174',
+                outerLine: '#EE3157',
                 skeleton: 'basic',
                 statements: [],
                 params: [
                     {
                         type: 'Indicator',
-                        img: 'block_icon/looks_03.png',
-                        size: 12,
+                        img: 'block_icon/looks_icon.svg',
+                        size: 11,
                     },
                 ],
                 events: {},
@@ -811,7 +825,8 @@ module.exports = {
                 syntax: { js: [], py: ['Entry.flip_vertical()'] },
             },
             change_object_index: {
-                color: '#EC4466',
+                color: '#FF5174',
+                outerLine: '#EE3157',
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -841,8 +856,8 @@ module.exports = {
                     },
                     {
                         type: 'Indicator',
-                        img: 'block_icon/looks_03.png',
-                        size: 12,
+                        img: 'block_icon/looks_icon.svg',
+                        size: 11,
                     },
                 ],
                 events: {},

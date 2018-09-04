@@ -2,7 +2,8 @@ module.exports = {
     getBlocks() {
         return {
             sound_something_with_block: {
-                color: '#A4D01D',
+                color: '#82D214',
+                outerLine: '#6EBC02',
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -12,8 +13,8 @@ module.exports = {
                     },
                     {
                         type: 'Indicator',
-                        img: 'block_icon/sound_03.png',
-                        size: 12,
+                        img: 'block_icon/sound_icon.svg',
+                        size: 11,
                     },
                 ],
                 events: {},
@@ -64,7 +65,8 @@ module.exports = {
                 },
             },
             sound_something_second_with_block: {
-                color: '#A4D01D',
+                color: '#82D214',
+                outerLine: '#6EBC02',
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -78,8 +80,8 @@ module.exports = {
                     },
                     {
                         type: 'Indicator',
-                        img: 'block_icon/sound_03.png',
-                        size: 12,
+                        img: 'block_icon/sound_icon.svg',
+                        size: 11,
                     },
                 ],
                 events: {},
@@ -143,7 +145,8 @@ module.exports = {
                 },
             },
             sound_from_to: {
-                color: '#A4D01D',
+                color: '#82D214',
+                outerLine: '#6EBC02',
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -161,8 +164,8 @@ module.exports = {
                     },
                     {
                         type: 'Indicator',
-                        img: 'block_icon/sound_03.png',
-                        size: 12,
+                        img: 'block_icon/sound_icon.svg',
+                        size: 11,
                     },
                 ],
                 events: {},
@@ -235,7 +238,8 @@ module.exports = {
                 },
             },
             sound_something_wait_with_block: {
-                color: '#A4D01D',
+                color: '#82D214',
+                outerLine: '#6EBC02',
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -245,8 +249,8 @@ module.exports = {
                     },
                     {
                         type: 'Indicator',
-                        img: 'block_icon/sound_03.png',
-                        size: 12,
+                        img: 'block_icon/sound_icon.svg',
+                        size: 11,
                     },
                 ],
                 events: {},
@@ -307,7 +311,8 @@ module.exports = {
                 },
             },
             sound_something_second_wait_with_block: {
-                color: '#A4D01D',
+                color: '#82D214',
+                outerLine: '#6EBC02',
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -321,8 +326,8 @@ module.exports = {
                     },
                     {
                         type: 'Indicator',
-                        img: 'block_icon/sound_03.png',
-                        size: 12,
+                        img: 'block_icon/sound_icon.svg',
+                        size: 11,
                     },
                 ],
                 events: {},
@@ -399,7 +404,8 @@ module.exports = {
                 },
             },
             sound_from_to_and_wait: {
-                color: '#A4D01D',
+                color: '#82D214',
+                outerLine: '#6EBC02',
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -417,8 +423,8 @@ module.exports = {
                     },
                     {
                         type: 'Indicator',
-                        img: 'block_icon/sound_03.png',
-                        size: 12,
+                        img: 'block_icon/sound_icon.svg',
+                        size: 11,
                     },
                 ],
                 events: {},
@@ -503,7 +509,8 @@ module.exports = {
                 },
             },
             sound_volume_change: {
-                color: '#A4D01D',
+                color: '#82D214',
+                outerLine: '#6EBC02',
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -513,8 +520,8 @@ module.exports = {
                     },
                     {
                         type: 'Indicator',
-                        img: 'block_icon/sound_03.png',
-                        size: 12,
+                        img: 'block_icon/sound_icon.svg',
+                        size: 11,
                     },
                 ],
                 events: {},
@@ -554,7 +561,8 @@ module.exports = {
                 syntax: { js: [], py: ['Entry.add_sound_volume(%1)'] },
             },
             sound_volume_set: {
-                color: '#A4D01D',
+                color: '#82D214',
+                outerLine: '#6EBC02',
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -564,8 +572,8 @@ module.exports = {
                     },
                     {
                         type: 'Indicator',
-                        img: 'block_icon/sound_03.png',
-                        size: 12,
+                        img: 'block_icon/sound_icon.svg',
+                        size: 11,
                     },
                 ],
                 events: {},
@@ -604,14 +612,15 @@ module.exports = {
                 syntax: { js: [], py: ['Entry.set_sound_volume(%1)'] },
             },
             sound_silent_all: {
-                color: '#A4D01D',
+                color: '#82D214',
+                outerLine: '#6EBC02',
                 skeleton: 'basic',
                 statements: [],
                 params: [
                     {
                         type: 'Indicator',
-                        img: 'block_icon/sound_03.png',
-                        size: 12,
+                        img: 'block_icon/sound_icon.svg',
+                        size: 11,
                     },
                 ],
                 events: {},

@@ -16,7 +16,7 @@ Entry.FieldDropdown = function(content, blockView, index) {
     this._contents = content;
     this._noArrow = content.noArrow;
 
-    var arrowColor = content.arrowColor;
+    let { bgColor, textColor, arrowColor } = content;
     var { deletable, emphasized } = this._block;
 
     if (deletable === Entry.Block.DELETABLE_FALSE_LIGHTEN || emphasized) {
@@ -24,6 +24,8 @@ Entry.FieldDropdown = function(content, blockView, index) {
     }
 
     this._arrowColor = arrowColor;
+    this._textColor = textColor || '#FFFFFF';
+    this._bgColor = bgColor || '#FFFFFF';
     this._index = index;
     this.setValue(this.getValue());
 
@@ -69,6 +71,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
             this.textElement = this.svgGroup.elem('text', {
                 x: 5,
                 style: 'white-space: pre;',
+                fill: this._textColor,
                 'font-size': +that._font_size + 'px',
             });
         }
@@ -164,9 +167,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
 
         var CONTENT_HEIGHT = this._CONTENT_HEIGHT + 4;
 
-        this.optionGroup.bind('mousedown touchstart', (e) =>
-            e.stopPropagation()
-        );
+        this.optionGroup.bind('mousedown touchstart', (e) => e.stopPropagation());
 
         this.optionGroup.on('mouseup', '.rect', function(e) {
             e.stopPropagation();
@@ -259,8 +260,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
         var reg = /&value/gm;
         if (reg.test(value)) return value.replace(reg, '');
 
-        if ((!value && typeof value !== 'number') || value === 'null')
-            return Lang.Blocks.no_target;
+        if ((!value && typeof value !== 'number') || value === 'null') return Lang.Blocks.no_target;
 
         var matched = _.find(this._contents.options, ([, cValue]) => {
             return cValue == value;
@@ -278,9 +278,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
 
     p.getContentHeight = function(height) {
         height =
-            height ||
-            this._blockView.getSkeleton().dropdownHeight ||
-            (Entry.isMobile() ? 22 : 16);
+            height || this._blockView.getSkeleton().dropdownHeight || (Entry.isMobile() ? 22 : 16);
         return height;
     };
 
@@ -297,8 +295,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
     p._setTextValue = function() {
         var textValue = this.getTextByValue(this.getValue());
         var newValue = this._convert(textValue, this.getValue());
-        if (this.getTextValue() !== newValue)
-            this.textElement.textContent = newValue;
+        if (this.getTextValue() !== newValue) this.textElement.textContent = newValue;
     };
 
     p.getTextValue = function() {

@@ -2,7 +2,8 @@ module.exports = {
     getBlocks() {
         return {
             is_clicked: {
-                color: '#AEB8FF',
+                color: '#7E8EFE',
+                outerLine: '#6173F5',
                 skeleton: 'basic_boolean_field',
                 statements: [],
                 params: [
@@ -33,7 +34,8 @@ module.exports = {
                 },
             },
             is_press_some_key: {
-                color: '#AEB8FF',
+                color: '#7E8EFE',
+                outerLine: '#6173F5',
                 skeleton: 'basic_boolean_field',
                 statements: [],
                 params: [
@@ -84,7 +86,8 @@ module.exports = {
                 },
             },
             reach_something: {
-                color: '#AEB8FF',
+                color: '#7E8EFE',
+                outerLine: '#6173F5',
                 skeleton: 'basic_boolean_field',
                 statements: [],
                 params: [
@@ -253,7 +256,8 @@ module.exports = {
                 },
             },
             boolean_basic_operator: {
-                color: '#AEB8FF',
+                color: '#7E8EFE',
+                outerLine: '#6173F5',
                 skeleton: 'basic_boolean_field',
                 statements: [],
                 params: [
@@ -443,7 +447,8 @@ module.exports = {
                 },
             },
             boolean_and_or: {
-                color: '#AEB8FF',
+                color: '#7E8EFE',
+                outerLine: '#6173F5',
                 skeleton: 'basic_boolean_field',
                 statements: [],
                 params: [
@@ -548,7 +553,8 @@ module.exports = {
                 },
             },
             boolean_not: {
-                color: '#AEB8FF',
+                color: '#7E8EFE',
+                outerLine: '#6173F5',
                 skeleton: 'basic_boolean_field',
                 statements: [],
                 params: [

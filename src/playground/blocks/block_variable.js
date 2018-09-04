@@ -51,7 +51,8 @@ module.exports = {
                 },
             },
             ask_and_wait: {
-                color: '#E457DC',
+                color: '#F57DF1',
+                outerLine: '#EC52E7',
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -61,8 +62,8 @@ module.exports = {
                     },
                     {
                         type: 'Indicator',
-                        img: 'block_icon/variable_03.png',
-                        size: 12,
+                        img: 'block_icon/variable_icon.svg',
+                        size: 11,
                     },
                 ],
                 events: {
@@ -153,7 +154,8 @@ module.exports = {
                 syntax: { js: [], py: ['Entry.input(%1)'] },
             },
             get_canvas_input_value: {
-                color: '#E457DC',
+                color: '#F57DF1',
+                outerLine: '#EC52E7',
                 skeleton: 'basic_string_field',
                 statements: [],
                 params: [
@@ -208,7 +210,8 @@ module.exports = {
                 },
             },
             set_visible_answer: {
-                color: '#E457DC',
+                color: '#F57DF1',
+                outerLine: '#EC52E7',
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -224,8 +227,8 @@ module.exports = {
                     },
                     {
                         type: 'Indicator',
-                        img: 'block_icon/variable_03.png',
-                        size: 12,
+                        img: 'block_icon/variable_icon.svg',
+                        size: 11,
                     },
                 ],
                 events: {
@@ -299,7 +302,8 @@ module.exports = {
                 },
             },
             get_variable: {
-                color: '#E457DC',
+                color: '#F57DF1',
+                outerLine: '#EC52E7',
                 skeleton: 'basic_string_field',
                 statements: [],
                 params: [
@@ -377,7 +381,8 @@ module.exports = {
                 },
             },
             change_variable: {
-                color: '#E457DC',
+                color: '#F57DF1',
+                outerLine: '#EC52E7',
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -394,8 +399,8 @@ module.exports = {
                     },
                     {
                         type: 'Indicator',
-                        img: 'block_icon/variable_03.png',
-                        size: 12,
+                        img: 'block_icon/variable_icon.svg',
+                        size: 11,
                     },
                 ],
                 events: {
@@ -520,7 +525,8 @@ module.exports = {
                 },
             },
             set_variable: {
-                color: '#E457DC',
+                color: '#F57DF1',
+                outerLine: '#EC52E7',
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -537,8 +543,8 @@ module.exports = {
                     },
                     {
                         type: 'Indicator',
-                        img: 'block_icon/variable_03.png',
-                        size: 12,
+                        img: 'block_icon/variable_icon.svg',
+                        size: 11,
                     },
                 ],
                 events: {
@@ -622,7 +628,8 @@ module.exports = {
                 },
             },
             show_variable: {
-                color: '#E457DC',
+                color: '#F57DF1',
+                outerLine: '#EC52E7',
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -635,8 +642,8 @@ module.exports = {
                     },
                     {
                         type: 'Indicator',
-                        img: 'block_icon/variable_03.png',
-                        size: 12,
+                        img: 'block_icon/variable_icon.svg',
+                        size: 11,
                     },
                 ],
                 events: {
@@ -698,7 +705,8 @@ module.exports = {
                 },
             },
             hide_variable: {
-                color: '#E457DC',
+                color: '#F57DF1',
+                outerLine: '#EC52E7',
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -711,8 +719,8 @@ module.exports = {
                     },
                     {
                         type: 'Indicator',
-                        img: 'block_icon/variable_03.png',
-                        size: 12,
+                        img: 'block_icon/variable_icon.svg',
+                        size: 11,
                     },
                 ],
                 events: {
@@ -773,7 +781,8 @@ module.exports = {
                 },
             },
             value_of_index_from_list: {
-                color: '#E457DC',
+                color: '#F57DF1',
+                outerLine: '#EC52E7',
                 fontColor: '#fff',
                 skeleton: 'basic_string_field',
                 statements: [],
@@ -897,7 +906,8 @@ module.exports = {
                 },
             },
             add_value_to_list: {
-                color: '#E457DC',
+                color: '#F57DF1',
+                outerLine: '#EC52E7',
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -914,8 +924,8 @@ module.exports = {
                     },
                     {
                         type: 'Indicator',
-                        img: 'block_icon/variable_03.png',
-                        size: 12,
+                        img: 'block_icon/variable_icon.svg',
+                        size: 11,
                     },
                 ],
                 events: {
@@ -998,7 +1008,8 @@ module.exports = {
                 },
             },
             remove_value_from_list: {
-                color: '#E457DC',
+                color: '#F57DF1',
+                outerLine: '#EC52E7',
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -1016,8 +1027,8 @@ module.exports = {
                     },
                     {
                         type: 'Indicator',
-                        img: 'block_icon/variable_03.png',
-                        size: 12,
+                        img: 'block_icon/variable_icon.svg',
+                        size: 11,
                     },
                 ],
                 events: {
@@ -1108,7 +1119,8 @@ module.exports = {
                 },
             },
             insert_value_to_list: {
-                color: '#E457DC',
+                color: '#F57DF1',
+                outerLine: '#EC52E7',
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -1130,8 +1142,8 @@ module.exports = {
                     },
                     {
                         type: 'Indicator',
-                        img: 'block_icon/variable_03.png',
-                        size: 12,
+                        img: 'block_icon/variable_icon.svg',
+                        size: 11,
                     },
                 ],
                 events: {
@@ -1236,7 +1248,8 @@ module.exports = {
                 },
             },
             change_value_list_index: {
-                color: '#E457DC',
+                color: '#F57DF1',
+                outerLine: '#EC52E7',
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -1258,8 +1271,8 @@ module.exports = {
                     },
                     {
                         type: 'Indicator',
-                        img: 'block_icon/variable_03.png',
-                        size: 12,
+                        img: 'block_icon/variable_icon.svg',
+                        size: 11,
                     },
                 ],
                 events: {
@@ -1363,7 +1376,8 @@ module.exports = {
                 },
             },
             length_of_list: {
-                color: '#E457DC',
+                color: '#F57DF1',
+                outerLine: '#EC52E7',
                 fontColor: '#fff',
                 skeleton: 'basic_string_field',
                 statements: [],
@@ -1445,7 +1459,8 @@ module.exports = {
                 },
             },
             is_included_in_list: {
-                color: '#E457DC',
+                color: '#F57DF1',
+                outerLine: '#EC52E7',
                 fontColor: '#fff',
                 skeleton: 'basic_boolean_field',
                 statements: [],
@@ -1567,7 +1582,8 @@ module.exports = {
                 },
             },
             show_list: {
-                color: '#E457DC',
+                color: '#F57DF1',
+                outerLine: '#EC52E7',
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -1580,8 +1596,8 @@ module.exports = {
                     },
                     {
                         type: 'Indicator',
-                        img: 'block_icon/variable_03.png',
-                        size: 12,
+                        img: 'block_icon/variable_icon.svg',
+                        size: 11,
                     },
                 ],
                 events: {
@@ -1640,7 +1656,8 @@ module.exports = {
                 },
             },
             hide_list: {
-                color: '#E457DC',
+                color: '#F57DF1',
+                outerLine: '#EC52E7',
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -1653,8 +1670,8 @@ module.exports = {
                     },
                     {
                         type: 'Indicator',
-                        img: 'block_icon/variable_03.png',
-                        size: 12,
+                        img: 'block_icon/variable_icon.svg',
+                        size: 11,
                     },
                 ],
                 events: {

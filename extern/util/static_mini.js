@@ -899,6 +899,7 @@ EntryStatic.ARROW_COLOR_JUDGE = '#89a1f7';
 EntryStatic.ARROW_COLOR_CALC = '#e8b349';
 EntryStatic.ARROW_COLOR_VARIABLE = '#ce38ce';
 EntryStatic.ARROW_COLOR_HW = '#097e84';
+EntryStatic.ARROW_COLOR_EXPANSION = '#ff8888';
 
 EntryStatic.initOptions = {
     listEnable: false,

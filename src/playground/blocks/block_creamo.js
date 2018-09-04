@@ -148,7 +148,8 @@ Entry.Creamo.getBlocks = function() {
             syntax: { js: [], py: ['creamo.get_number_sensor_value(%1)'] },
         },
         creamo_get_port_number: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
             statements: [],
             params: [
@@ -224,7 +225,8 @@ Entry.Creamo.getBlocks = function() {
             syntax: { js: [], py: ['creamo.toggle_led(%1)'] },
         },
         creamo_motor_port_number: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
             statements: [],
             params: [
@@ -266,7 +268,8 @@ Entry.Creamo.getBlocks = function() {
             },
         },
         creamo_toggle_pwm: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -280,7 +283,7 @@ Entry.Creamo.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -333,7 +336,8 @@ Entry.Creamo.getBlocks = function() {
             },
         },
         creamo_get_pwm_port_number: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
             statements: [],
             params: [

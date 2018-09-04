@@ -517,16 +517,16 @@ Entry.Utils.colorLighten = function(color, amount) {
 
 Entry.Utils._EmphasizeColorMap = {
     '#10D35E': '#5BC982',
-    '#498DEB': '#62A5F4',
-    '#A751E3': '#C08FF7',
-    '#EC4466': '#F46487',
-    '#FF9E20': '#FFB05A',
-    '#A4D01D': '#C4DD31',
-    '#00979D': '#09BAB5',
-    '#FFD974': '#FCDA90',
-    '#E457DC': '#F279F2',
+    '#31C1EC': '#62A5F4',
+    '#CA7DFF': '#C08FF7',
+    '#FF5174': '#F46487',
+    '#FC7E01': '#FFB05A',
+    '#82D214': '#C4DD31',
+    '#00CFCA': '#09BAB5',
+    '#FEB71A': '#FCDA90',
+    '#F57DF1': '#F279F2',
     '#CC7337': '#DD884E',
-    '#AEB8FF': '#C0CBFF',
+    '#7E8EFE': '#C0CBFF',
     '#FFCA36': '#F2C670',
 };
 

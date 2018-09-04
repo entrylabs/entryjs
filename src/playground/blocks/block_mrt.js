@@ -97,7 +97,8 @@ Entry.MRT.getBlocks = function() {
     return {
         //region xbot 엑스봇
         mrt_analogValue: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
             statements: [],
             params: [
@@ -132,7 +133,8 @@ Entry.MRT.getBlocks = function() {
             syntax: { js: [], py: ['MRT.analog_value(%1)'] },
         },
         mrt_ultra: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
             statements: [],
             fontColor: '#ffffff',
@@ -165,7 +167,8 @@ Entry.MRT.getBlocks = function() {
         },
 
         mrt_color: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
             statements: [],
             fontColor: '#ffffff',
@@ -199,7 +202,8 @@ Entry.MRT.getBlocks = function() {
 
 
         mrt_remotecontrol: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
             statements: [],
             fontColor: '#ffffff',
@@ -233,7 +237,8 @@ Entry.MRT.getBlocks = function() {
 
 
         mrt_keyvalue: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
             statements: [],
             fontColor: '#ffffff',
@@ -266,7 +271,8 @@ Entry.MRT.getBlocks = function() {
         },
 
         mrt_gyro: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
             statements: [],
             fontColor: '#ffffff',
@@ -301,7 +307,8 @@ Entry.MRT.getBlocks = function() {
         },
 
         mrt_digitalOutput: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -327,7 +334,7 @@ Entry.MRT.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -377,7 +384,8 @@ Entry.MRT.getBlocks = function() {
         },
         
         mrt_servo: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -397,7 +405,7 @@ Entry.MRT.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -437,7 +445,8 @@ Entry.MRT.getBlocks = function() {
             syntax: { js: [], py: ['MRT.servo(%1, %2)'] },
         },
         mrt_oneWheel: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -459,7 +468,7 @@ Entry.MRT.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -499,7 +508,8 @@ Entry.MRT.getBlocks = function() {
         },
         
         mrt_lcd: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -516,7 +526,7 @@ Entry.MRT.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],

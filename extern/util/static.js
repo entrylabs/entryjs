@@ -1571,7 +1571,9 @@ EntryStatic.fonts = [
 }
 ];
 
-EntryStatic.ARROW_COLOR_START = '#2f975a';
+EntryStatic.COLOR_START_1 = '#10D35E';
+EntryStatic.COLOR_START_2 = '#13BF68';
+EntryStatic.ARROW_COLOR_START = '#ffffff';
 EntryStatic.ARROW_COLOR_FLOW = '#3a71bc';
 EntryStatic.ARROW_COLOR_MOVING = '#8641b6';
 EntryStatic.ARROW_COLOR_LOOKS = '#d8234e';

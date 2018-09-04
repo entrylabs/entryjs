@@ -136,7 +136,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
             Entry.playground.focusBlockMenu = true;
             var bBox = that.svgGroup.getBBox();
             var adjust = that.hasCategory() ? 64 : 0;
-            var expandWidth = bBox.width + bBox.x + adjust;
+            var expandWidth = bBox.width + bBox.x + adjust + 2;
             var { menuWidth } = Entry.interfaceState;
             if (expandWidth > menuWidth) {
                 this.widthBackup = menuWidth - adjust;

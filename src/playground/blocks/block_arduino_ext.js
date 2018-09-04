@@ -108,7 +108,8 @@ Entry.ArduinoExt.setLanguage = function() {
 Entry.ArduinoExt.getBlocks = function() {
     return {
         arduino_ext_analog_list: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
@@ -168,7 +169,8 @@ Entry.ArduinoExt.getBlocks = function() {
             },
         },
         arduino_ext_get_analog_value: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -215,7 +217,8 @@ Entry.ArduinoExt.getBlocks = function() {
             },
         },
         arduino_ext_get_analog_value_map: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -357,7 +360,8 @@ Entry.ArduinoExt.getBlocks = function() {
             },
         },
         arduino_ext_get_ultrasonic_value: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -433,7 +437,8 @@ Entry.ArduinoExt.getBlocks = function() {
             },
         },
         arduino_ext_get_digital: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             fontColor: '#fff',
             skeleton: 'basic_boolean_field',
             params: [
@@ -494,7 +499,8 @@ Entry.ArduinoExt.getBlocks = function() {
             },
         },
         arduino_get_digital_toggle: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
             statements: [],
             params: [
@@ -547,7 +553,8 @@ Entry.ArduinoExt.getBlocks = function() {
             },
         },
         arduino_ext_toggle_led: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -561,7 +568,7 @@ Entry.ArduinoExt.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -630,7 +637,8 @@ Entry.ArduinoExt.getBlocks = function() {
             },
         },
         arduino_ext_digital_pwm: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -644,7 +652,7 @@ Entry.ArduinoExt.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -704,7 +712,8 @@ Entry.ArduinoExt.getBlocks = function() {
             },
         },
         arduino_ext_tone_list: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
@@ -776,7 +785,8 @@ Entry.ArduinoExt.getBlocks = function() {
             },
         },
         arduino_ext_tone_value: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
@@ -812,7 +822,8 @@ Entry.ArduinoExt.getBlocks = function() {
             },
         },
         arduino_ext_octave_list: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
@@ -852,7 +863,8 @@ Entry.ArduinoExt.getBlocks = function() {
             },
         },
         arduino_ext_set_tone: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -874,7 +886,7 @@ Entry.ArduinoExt.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
@@ -1013,7 +1025,8 @@ Entry.ArduinoExt.getBlocks = function() {
             },
         },
         arduino_ext_set_servo: {
-            color: '#00979D',
+            color: '#00CFCA',
+			outerLine: '#04B5B0',
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1027,7 +1040,7 @@ Entry.ArduinoExt.getBlocks = function() {
                 },
                 {
                     type: 'Indicator',
-                    img: 'block_icon/hardware_03.png',
+                    img: 'block_icon/hardware_icon.svg',
                     size: 12,
                 },
             ],
