@@ -186,7 +186,7 @@ Entry.Scope = function(block, executor) {
         var value = this.getValue(key);
         if (value === undefined)
             return false;
-        value = Number(this.getValue(key));
+        value = Number(value);
         return isNaN(value) ? true : value; // handle "0" or "0.00"
     };
 

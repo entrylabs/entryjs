@@ -1,5 +1,19 @@
 module.exports = {
     getBlocks() {
+        function moveInToBound(object, wall){
+            if(wall.up.y > object.y)
+                object.y = wall.up.y;
+
+            if(wall.down.y < object.y)
+                object.y = wall.down.y;
+
+            if(wall.right.x < object.x)
+                object.x = wall.right.x;
+
+            if(wall.left.x > object.x)
+                object.x = wall.left.x;
+        }
+
         return {
             move_direction: {
                 color: '#A751E3',
@@ -101,6 +115,7 @@ module.exports = {
                    size.width = bound.width * Math.sqrt(1.0 + (bound.height/bound.width) * (bound.height/bound.width));
                    size.height = bound.height * Math.sqrt(1.0 + (bound.width/bound.height) * (bound.width/bound.height));
                    */
+                    //moveInToBound(sprite.object, Entry.stage.wall);
 
                     if (method == 'free')
                         var angle = (
@@ -1471,11 +1486,17 @@ module.exports = {
                         value =
                             -Math.atan(deltaY / deltaX) / Math.PI * 180 + 270;
                     }
-                    var nativeDirection =
-                        sprite.getDirection() + sprite.getRotation();
-                    sprite.setRotation(
-                        sprite.getRotation() + value - nativeDirection
-                    );
+                    if (this.entity.parent.getRotateMethod() === "free") {
+                        var nativeDirection =
+                            sprite.getDirection() + sprite.getRotation();
+                        sprite.setRotation(
+                            sprite.getRotation() + value - nativeDirection
+                        );
+                    } else {
+                        sprite.setDirection(
+                            value
+                        );
+                    }
                     return script.callReturn();
                 },
                 syntax: {

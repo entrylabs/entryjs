@@ -9,8 +9,8 @@ deployName="${branchName/deploy/$distText}"
 DATEFMT=`date "+%Y%m%d"`
 # echo "$DATEFMT: My message"
 cd build
-git config user.name "JY KIM"
-git config user.email "kimorkim@gmail.com"
+git config user.name "Entry Dev"
+git config user.email "entrydev@nts-corp.com"
 
 if [ "$branchName" = "master" ]
 then

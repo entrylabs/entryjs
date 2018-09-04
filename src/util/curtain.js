@@ -45,6 +45,7 @@ Entry.Curtain = {};
             dom.addClass(key);
             dom.bind('mousedown', function(e) {
                 e.stopPropagation();
+                Entry.disposeEvent.notify(undefined, true);
             });
         }
     };

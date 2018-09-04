@@ -100,17 +100,15 @@ Entry.Model = function(obj, isSeal) {
 
         if (!observers.length) return;
 
-        var intersect = Entry.Utils.intersectArray;
-
-        observers.forEach(function(observeData) {
+        observers.forEach((observeData) => {
             var attrs = keys;
             if (observeData.attrs !== undefined)
-                attrs = intersect(observeData.attrs, keys);
+                attrs = _.intersection(observeData.attrs, keys);
 
             if (!attrs.length) return;
 
             observeData.object[observeData.funcName](
-                attrs.forEach(function(key) {
+                attrs.forEach((key) => {
                     return {
                         name: key,
                         object: that,

@@ -56,6 +56,7 @@ Entry.Dom = function(tag, options) {
         } else {
             $(this).on('click tab', handler);
         }
+        return this;
     };
 
     return dom;

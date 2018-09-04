@@ -158,8 +158,10 @@
     background-position: center;
 }
 
-.entryVariableListElementWorkspace:hover
-.entryVariableListElementDeleteWorkspace {
+.entryVariableListElementWorkspace.active .entryVariableListElementDeleteWorkspace,
+.entryVariableListElementWorkspace.activeForce .entryVariableListElementDeleteWorkspace ,
+.entryVariableListElementWorkspace.active .entryVariableListElementEditWorkspace,
+.entryVariableListElementWorkspace.activeForce .entryVariableListElementEditWorkspace {
     opacity: 1;
 }
 
@@ -168,20 +170,15 @@
     float: right;
     border: 0;
     outline: 0;
-    width: 20px;
-    height: 40px;
-    margin-top: 5px;
+    width: 19px;
+    height: 19px;
+    margin-top: 16px;
     margin-right: 25px;
     background-color: transparent;
     .backgroundImage("layers_icon_edit_nor_new_1.png");
     background-repeat: no-repeat;
     background-position: center;
     opacity: 0;
-}
-
-.entryVariableListElementWorkspace:hover
-.entryVariableListElementEditWorkspace {
-    opacity: 1;
 }
 
 .entryVariableListCallerListWorkspace {
@@ -476,17 +473,36 @@
 
 .entryListSettingWorkspace {
     width: 100%;
-    padding-top: 24px;
-    padding-bottom: 5px;
     border-top: 1px solid #a8a8a8;
-    padding-left: 16px;
-    padding-right: 16px;
     font-size: 13px;
     background-color: #efefef;
 }
 
+.entryListSettingWorkspace > .entryListSettingPaddingWrapper {
+    padding: 24px 10px 5px;
+}
+
+
 .entryListSettingVisibleWrapperWorkspace {
     cursor: pointer;
+}
+
+.entryListSettingTransferWrapperWorkspace {
+    width: 100%;
+    height: 60px;
+    background-color: #e5e5e5;
+    border-bottom: solid 1px #a8a8a8;
+    text-align: center;
+}
+
+.entryListSettingImportButton, .entryListSettingExportButton {
+    width: 100px;
+    height: 32px;
+    margin: 14px 4px;
+    font-size: 12px;
+    border-radius: 3px;
+    background-color: #eeeeee;
+    border: solid 1px #cccccc;
 }
 
 .entryListSettingCheckWorkspace {

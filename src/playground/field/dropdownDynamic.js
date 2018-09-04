@@ -29,7 +29,7 @@ Entry.FieldDropdownDynamic = function(content, blockView, index) {
 
     var menuName = this._contents.menuName;
 
-    if (Entry.Utils.isFunction(menuName)) this._menuGenerator = menuName;
+    if (_.isFunction(menuName)) this._menuGenerator = menuName;
     else this._menuName = menuName;
 
     this._CONTENT_HEIGHT = this.getContentHeight(content.dropdownHeight);
@@ -79,23 +79,20 @@ Entry.Utils.inherit(Entry.FieldDropdown, Entry.FieldDropdownDynamic);
     p.renderOptions = function() {
         var that = this;
 
-        var blockView = this._block.view;
-
-        this._attachDisposeEvent();
+        this._attachDisposeEvent(() => {
+            that.destroyOption(undefined, true);
+        });
 
         this.optionGroup = Entry.Dom('ul', {
             class: 'entry-widget-dropdown',
             parent: $('body'),
         });
 
-        this.optionGroup.bind('mousedown touchstart', function(e) {
-            e.stopPropagation();
-        });
-
         var options;
         if (this._menuName)
             options = Entry.container.getDropdownList(this._contents.menuName);
         else options = this._menuGenerator();
+
         this._contents.options = options;
 
         var OPTION_X_PADDING = 30;
@@ -103,38 +100,42 @@ Entry.Utils.inherit(Entry.FieldDropdown, Entry.FieldDropdownDynamic);
 
         var CONTENT_HEIGHT = this._CONTENT_HEIGHT + 4;
 
-        var fragment = document.createDocumentFragment();
+        this.optionGroup.bind('mousedown touchstart', (e) =>
+            e.stopPropagation()
+        );
 
-        for (var i = 0; i < options.length; i++) {
-            var option = options[i];
+        this.optionGroup.on('mouseup', '.rect', function(e) {
+            e.stopPropagation();
+            that.applyValue(this._value);
+            that.destroyOption(undefined, true);
+            that._selectBlockView();
+        });
+
+        var fragment = document.createDocumentFragment();
+        options.forEach((option) => {
             var text = (option[0] = this._convert(option[0], option[1]));
             var value = option[1];
             var element = Entry.Dom('li', {
                 class: 'rect',
             });
+            var elem = element[0];
+            elem._value = value;
+
             var left = Entry.Dom('span', {
                 class: 'left',
                 parent: element,
             });
+
+            if (this.getValue() == value) left.text('\u2713');
 
             Entry.Dom('span', {
                 class: 'right',
                 parent: element,
             }).text(text);
 
-            if (this.getValue() == value) left.text('\u2713');
+            fragment.appendChild(elem);
+        });
 
-            (function(elem, value) {
-                elem.mouseup(function(e) {
-                    e.stopPropagation();
-                    that.applyValue(value);
-                    that.destroyOption(undefined, true);
-                    that._selectBlockView();
-                });
-            })(element, value);
-
-            fragment.appendChild(element[0]);
-        }
         this.optionGroup[0].appendChild(fragment);
         this._position();
 

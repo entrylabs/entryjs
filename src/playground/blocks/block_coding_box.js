@@ -1444,10 +1444,6 @@ Entry.CodingBox.getBlocks = function() {
                 };
                 return script.callReturn();
             },
-            syntax: {
-                js: [],
-                py: [{}],
-            },
         },
         cbx_write_lcd: {
             color: '#00979D',
