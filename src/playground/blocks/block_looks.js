@@ -1,3 +1,6 @@
+const PromiseManager = require('@core/promiseManager');
+const pm = new PromiseManager();
+
 module.exports = {
     getBlocks() {
         return {
@@ -119,41 +122,21 @@ module.exports = {
                         script.getNumberValue('SECOND', script),
                         script.getValue('VALUE', script),
                     ]);
-                    if (!script.isStart) {
-                        script.isStart = true;
-                        script.timeFlag = 1;
-                        if (message === '') {
-                            message = '    ';
-                        } else if (typeof message === 'boolean') {
-                            message = message ? 'True' : 'False';
-                        } else {
-                            message = message + '';
-                        }
-                        message = Entry.convertToRoundedDecimals(message, 3);
-                        new Entry.Dialog(sprite, message, mode);
-                        sprite.syncDialogVisible(sprite.getVisible());
-                        setTimeout(function() {
-                            script.timeFlag = 0;
-                        }, timeValue * 1000);
-                    }
-                    if (script.timeFlag == 0) {
-                        delete script.timeFlag;
-                        delete script.isStart;
-                        if (sprite.dialog) {
-                            sprite.dialog.remove();
-                        }
-                        return script.callReturn();
+
+                    if (message === '') {
+                        message = '    ';
+                    } else if (typeof message === 'boolean') {
+                        message = message ? 'True' : 'False';
                     } else {
-                        if (!sprite.dialog) {
-                            if (!message && typeof message != 'number') {
-                                message = '    ';
-                            }
-                            message = Entry.convertToRoundedDecimals(message, 3);
-                            new Entry.Dialog(sprite, message, mode);
-                            sprite.syncDialogVisible(sprite.getVisible());
-                        }
-                        return script;
+                        message = message + '';
                     }
+                    message = Entry.convertToRoundedDecimals(message, 3);
+                    new Entry.Dialog(sprite, message, mode);
+                    sprite.syncDialogVisible(sprite.getVisible());
+
+                    await pm.sleepWithPause(timeValue * 1000, script.block.id);
+
+                    sprite.dialog && sprite.dialog.remove();
                 },
                 syntax: {
                     js: [],
