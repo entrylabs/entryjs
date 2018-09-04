@@ -17,6 +17,15 @@ module.exports = class PromiseManager {
         }, timeout);
     }
 
+    sleep(time) {
+        return this.Promise((resolve, reject) => {
+            this.setPromiseTimer(resolve, reject, {
+                timeout : time,
+                defaultValue : 0
+            });
+        });
+    }
+
     /**
      * sample code
      * Entry.addEventListener('callApi', ({url}, resolve, reject) => {
