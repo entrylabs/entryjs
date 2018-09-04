@@ -158,14 +158,14 @@ module.exports = {
                 class: 'calc',
                 isNotFor: [],
                 func: async function(sprite, script) {
-                    var operator = script.getField('OPERATOR', script);
+                    const operator = script.getField('OPERATOR', script);
                     let [leftValue, rightValue] = await Promise.all([
                         script.getNumberValue('LEFTHAND', script),
                         script.getNumberValue('RIGHTHAND', script),
                     ]);
                     if (operator == 'PLUS') {
-                        var leftStringValue = String(leftValue);
-                        var rightStringValue = String(rightValue);
+                        const leftStringValue = String(leftValue);
+                        const rightStringValue = String(rightValue);
                         if (!Entry.Utils.isNumber(leftStringValue)) leftValue = leftStringValue;
                         if (!Entry.Utils.isNumber(rightStringValue)) rightValue = rightStringValue;
                         if (typeof leftValue === 'number' && typeof rightValue === 'number')
