@@ -335,7 +335,9 @@ module.exports = {
                         type: 'DropdownDynamic',
                         value: null,
                         menuName: 'messages',
-                        fontSize: 11,
+                        fontSize: 10,
+                        textColor: '#fff',
+                        bgColor: EntryStatic.COLOR_START_2,
                         arrowColor: EntryStatic.ARROW_COLOR_START,
                     },
                     {
@@ -416,7 +418,9 @@ module.exports = {
                         type: 'DropdownDynamic',
                         value: null,
                         menuName: 'messages',
-                        fontSize: 11,
+                        fontSize: 10,
+                        textColor: '#fff',
+                        bgColor: EntryStatic.COLOR_START_2,
                         arrowColor: EntryStatic.ARROW_COLOR_START,
                     },
                     {
@@ -553,7 +557,9 @@ module.exports = {
                         type: 'DropdownDynamic',
                         value: null,
                         menuName: 'scenes',
-                        fontSize: 11,
+                        fontSize: 10,
+                        textColor: '#fff',
+                        bgColor: EntryStatic.COLOR_START_2,
                         arrowColor: EntryStatic.ARROW_COLOR_START,
                     },
                     {
@@ -619,7 +625,9 @@ module.exports = {
                             [Lang.Blocks.SCENE_start_scene_pre, 'pre'],
                         ],
                         value: 'next',
-                        fontSize: 11,
+                        fontSize: 10,
+                        textColor: '#fff',
+                        bgColor: EntryStatic.COLOR_START_2,
                         arrowColor: EntryStatic.ARROW_COLOR_START,
                     },
                     {

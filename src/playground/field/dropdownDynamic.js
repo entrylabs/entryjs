@@ -24,7 +24,7 @@ Entry.FieldDropdownDynamic = function(content, blockView, index) {
 
     this._arrowColor = arrowColor;
     this._textColor = textColor || '#FFFFFF';
-    this._bgColor = bgColor || '#FFFFFF';
+    this._bgColor = bgColor;
 
     var menuName = this._contents.menuName;
 

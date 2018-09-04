@@ -25,7 +25,7 @@ Entry.FieldDropdown = function(content, blockView, index) {
 
     this._arrowColor = arrowColor;
     this._textColor = textColor || '#FFFFFF';
-    this._bgColor = bgColor || '#FFFFFF';
+    this._bgColor = bgColor;
     this._index = index;
     this.setValue(this.getValue());
 
@@ -57,14 +57,21 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
         }
 
         if (!this._header) {
-            this._header = this.svgGroup.elem('rect', {
+            const rectInfo =  {
                 height: CONTENT_HEIGHT,
                 y: -CONTENT_HEIGHT / 2,
                 rx: that._ROUND,
                 ry: that._ROUND,
-                fill: '#fff',
-                'fill-opacity': 0.4,
-            });
+            };
+
+            if(this._bgColor) {
+                rectInfo.fill = this._bgColor;
+            } else {
+                rectInfo.fill = '#fff';
+                rectInfo['fill-opacity'] = 0.4;
+            }
+
+            this._header = this.svgGroup.elem('rect', rectInfo);
         }
 
         if (!this.textElement) {
@@ -284,6 +291,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
 
     p.getArrow = function() {
         var isBig = Entry.isMobile();
+        console.log(this._arrowColor);
         return {
             color: this._arrowColor || this._blockView._schema.color,
             points: isBig ? '0,0 19,0 9.5,13' : '0,0 6.4,0 3.2,4.2',
