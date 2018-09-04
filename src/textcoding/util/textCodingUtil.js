@@ -1840,67 +1840,70 @@ Entry.TextCodingUtil = {};
     };
 
     tu.isNamesIncludeSpace = function() {
-        var vc = Entry.variableContainer;
+        const vc = Entry.variableContainer;
         if (!vc) return;
 
-        //inspect variables
-        var targets = vc.variables_ || [];
-        for (var i = 0; i < targets.length; i++) {
-            if (test(targets[i].name_)) {
-                return Lang.TextCoding[
-                    Entry.TextCodingError.ALERT_VARIABLE_EMPTY_TEXT
-                ];
+        const hasWhiteSpace = (targets, message) => {
+            const result = {
+                message : undefined,
+                type : 'error'
+            };
+
+            for (let i = 0; i < targets.length; i++) {
+                if (/ /.test(targets[i].name_)){
+                    result.message = message;
+                    return result;
+                }
             }
-        }
+        };
+        
+        return hasWhiteSpace(vc.lists_ || [] , Lang.TextCoding[Entry.TextCodingError.ALERT_LIST_EMPTY_TEXT]) ||
+            hasWhiteSpace(vc.variables_ || [] , Lang.TextCoding[Entry.TextCodingError.ALERT_VARIABLE_EMPTY_TEXT]);
+    };
+    
+    tu.validateVariableToPython = function() {
+        return this.isNamesIncludeSpace() || this.isNameIncludeNotValidChar();
+    };
 
-        //inspect lists
-        targets = vc.lists_ || [];
-        for (i = 0; i < targets.length; i++) {
-            if (test(targets[i].name_))
-                return Lang.TextCoding[
-                    Entry.TextCodingError.ALERT_LIST_EMPTY_TEXT
-                ];
-        }
+    tu.validateFunctionToPython = function() {
+        const vc = Entry.variableContainer;
+        if(!vc) return;
 
-        //this doesn't need for now
-        //inspect messages
-        /*targets = vc.messages_ || [];
-        for (i=0; i<targets.length; i++) {
-            if (test(targets[i].name_))
-                return "메시지 이름이 공백 포함";
-        }*/
+        const ERROR_LANG = Lang.TextCoding;
+        const ERROR = Entry.TextCodingError;
+        const DISORDER = ERROR_LANG[ERROR.ALERT_FUNCTION_NAME_DISORDER];
+        const FIELD_MULTI = ERROR_LANG[ERROR.ALERT_FUNCTION_NAME_FIELD_MULTI];
+        const HAS_BOOLEAN = ERROR_LANG[ERROR.ALERT_FUNCTION_HAS_BOOLEAN];
+        const result = {
+            message : undefined,
+            type : 'error'
+        };
 
-        //inspect functions
+        const targets = vc.functions_ || {};
 
-        var ERROR_LANG = Lang.TextCoding;
-        var ERROR = Entry.TextCodingError;
-        var DISORDER = ERROR_LANG[ERROR.ALERT_FUNCTION_NAME_DISORDER];
-        var FIELD_MULTI = ERROR_LANG[ERROR.ALERT_FUNCTION_NAME_FIELD_MULTI];
-        var EMPTY_TEXT = ERROR_LANG[ERROR.ALERT_FUNCTION_NAME_EMPTY_TEXT];
-
-        targets = vc.functions_ || {};
-
-        for (i in targets) {
-            var paramBlock = targets[i].content.getEventMap('funcDef')[0];
+        for (let i in targets) {
+            let paramBlock = targets[i].content.getEventMap('funcDef')[0];
             paramBlock = paramBlock && paramBlock.params[0];
-
             if (!paramBlock) continue;
 
-            if (paramBlock.type !== 'function_field_label') return DISORDER;
-
-            var params = paramBlock.params;
-
-            if (!params[1]) {
-                if (test(params[0])) return EMPTY_TEXT;
-            } else if (this.hasFunctionFieldLabel(params[1])) {
-                return FIELD_MULTI;
+            // 함수 파라미터의 첫 값이 이름이어야 한다.
+            if (paramBlock.type !== 'function_field_label'){
+                result.message = DISORDER;
+                return result;
             }
-        }
 
-        return false;
+            const {params} = paramBlock;
 
-        function test(name) {
-            return / /.test(name);
+            // 인자가 하나이상 존재하면 함수명에 공백이 허용되고, 함수명만 존재하면 공백을 허용하지 않는다.
+            if (this.hasFunctionFieldLabel(params[1])) {
+                //이름은 처음에만 등장해야한다.
+                result.message = FIELD_MULTI;
+                return result;
+            } else if (this.hasFunctionBooleanField(params[1])) {
+                result.message = HAS_BOOLEAN;
+                result.type = 'warning';
+                return result;
+            }
         }
     };
 
@@ -1925,23 +1928,26 @@ Entry.TextCodingUtil = {};
     };
 
     tu.isNameIncludeNotValidChar = function() {
-        var vc = Entry.variableContainer;
+        const vc = Entry.variableContainer;
         if (!vc) return;
-        //inspect variables
-        var targets = vc.variables_ || [];
-        for (var i = 0; i < targets.length; i++) {
-            if (this.checkName(targets[i].name_, 'v')) {
-                return this.checkName(targets[i].name_, 'v');
-            }
-        }
+        
+        const validateList = (targets, errorSuffix) => {
+            const result = {
+                message : undefined,
+                type : 'error'
+            };
 
-        //inspect lists
-        targets = vc.lists_ || [];
-        for (i = 0; i < targets.length; i++) {
-            if (this.checkName(targets[i].name_, 'l')) {
-                return this.checkName(targets[i].name_, 'l');
+            for (let i = 0; i < targets.length; i++) {
+                const errorMessage = this.checkName(targets[i].name_, errorSuffix);
+                if (errorMessage) {
+                    result.message = errorMessage;
+                    return result;
+                }
             }
-        }
+        };
+
+        return validateList(vc.variables_ || [] , 'v') ||
+            validateList(vc.lists_ || [] , 'l');
     };
 
     tu.hasFunctionFieldLabel = function(fBlock) {
@@ -1966,32 +1972,17 @@ Entry.TextCodingUtil = {};
         return false;
     };
 
-    /*tu.addFuncParam = function(param) {
-        this._funcParams.push(param);
+    /**
+     * 함수 인자에 판단형 파라미터가 존재하는지 찾는다.
+     * 이 함수는 재귀로 동작한다.
+     * @param fBlock 함수명이 포함되지 않은 functionBlock 목록
+     * @returns {Boolean} 판단형 파라미터가 존재하는 경우 true, 존재하지 않는 경우 false
+     */
+    tu.hasFunctionBooleanField = function(fBlock) {
+        if (!fBlock || !fBlock.data) return false;
+        const {data} = fBlock;
+        return data.type === 'function_field_boolean' || this.hasFunctionBooleanField(data.params[1]);
     };
-
-    tu.clearFuncParam = function() {
-        this._funcParams = [];
-    };
-
-    tu.isFuncParam = function(paramName) {
-        var result = false;
-
-        var funcParams = this._funcParams;
-
-        if(funcParams.length == 0)
-            return false;
-
-        for(var p in funcParams) {
-            var funcParam = funcParams[p];
-            if(funcParam == paramName) {
-                result = true;
-                break;
-            }
-        }
-
-        return result;
-    };*/
 
     tu.makeExpressionStatementForEntryEvent = function(calleName, arg) {
         var expressionStatement = {};
