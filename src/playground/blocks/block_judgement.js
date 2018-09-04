@@ -75,8 +75,7 @@ module.exports = {
                                 {
                                     type: 'Keyboard',
                                     value: '81',
-                                    converter:
-                                        Entry.block.converters.keyboardCode,
+                                    converter: Entry.block.converters.keyboardCode,
                                 },
                             ],
                         },
@@ -141,56 +140,26 @@ module.exports = {
                             case 'wall_up':
                                 return !!collision(object, wall.up, ath, true);
                             case 'wall_down':
-                                return !!collision(
-                                    object,
-                                    wall.down,
-                                    ath,
-                                    true
-                                );
+                                return !!collision(object, wall.down, ath, true);
                             case 'wall_right':
-                                return !!collision(
-                                    object,
-                                    wall.right,
-                                    ath,
-                                    true
-                                );
+                                return !!collision(object, wall.right, ath, true);
                             case 'wall_left':
-                                return !!collision(
-                                    object,
-                                    wall.left,
-                                    ath,
-                                    true
-                                );
+                                return !!collision(object, wall.left, ath, true);
                         }
                     } else if (targetSpriteId == 'mouse') {
                         var stage = Entry.stage.canvas;
-                        var pt = object.globalToLocal(
-                            stage.mouseX,
-                            stage.mouseY
-                        );
+                        var pt = object.globalToLocal(stage.mouseX, stage.mouseY);
                         return object.hitTest(pt.x, pt.y);
                     } else {
-                        var targetSprite = Entry.container.getEntity(
-                            targetSpriteId
-                        );
-                        if (
-                            targetSprite.type == 'textBox' ||
-                            sprite.type == 'textBox'
-                        ) {
+                        var targetSprite = Entry.container.getEntity(targetSpriteId);
+                        if (targetSprite.type == 'textBox' || sprite.type == 'textBox') {
                             var targetBound = targetSprite.object.getTransformedBounds();
                             var bound = object.getTransformedBounds();
-                            if (Entry.checkCollisionRect(bound, targetBound))
-                                return true;
-                            var clonedEntities =
-                                targetSprite.parent.clonedEntities;
-                            for (
-                                var i = 0, len = clonedEntities.length;
-                                i < len;
-                                i++
-                            ) {
+                            if (Entry.checkCollisionRect(bound, targetBound)) return true;
+                            var clonedEntities = targetSprite.parent.clonedEntities;
+                            for (var i = 0, len = clonedEntities.length; i < len; i++) {
                                 var entity = clonedEntities[i];
-                                if (entity.isStamp || !entity.getVisible())
-                                    continue;
+                                if (entity.isStamp || !entity.getVisible()) continue;
                                 if (
                                     Entry.checkCollisionRect(
                                         bound,
@@ -202,26 +171,14 @@ module.exports = {
                         } else {
                             if (
                                 targetSprite.getVisible() &&
-                                collision(
-                                    object,
-                                    targetSprite.object,
-                                    ath,
-                                    true
-                                )
+                                collision(object, targetSprite.object, ath, true)
                             )
                                 return true;
-                            var clonedEntities =
-                                targetSprite.parent.clonedEntities;
-                            for (
-                                var i = 0, len = clonedEntities.length;
-                                i < len;
-                                i++
-                            ) {
+                            var clonedEntities = targetSprite.parent.clonedEntities;
+                            for (var i = 0, len = clonedEntities.length; i < len; i++) {
                                 var entity = clonedEntities[i];
-                                if (entity.isStamp || !entity.getVisible())
-                                    continue;
-                                if (collision(object, entity.object, ath, true))
-                                    return true;
+                                if (entity.isStamp || !entity.getVisible()) continue;
+                                if (collision(object, entity.object, ath, true)) return true;
                             }
                         }
                     }
@@ -241,11 +198,8 @@ module.exports = {
                                     menuName: 'collision',
                                     fontSize: 11,
                                     arrowColor: EntryStatic.ARROW_COLOR_JUDGE,
-                                    converter:
-                                        Entry.block.converters
-                                            .returnObjectOrStringValue,
-                                    codeMap:
-                                        'Entry.CodeMap.Entry.reach_something[1]',
+                                    converter: Entry.block.converters.returnObjectOrStringValue,
+                                    codeMap: 'Entry.CodeMap.Entry.reach_something[1]',
                                 },
                             ],
                         },
@@ -387,10 +341,12 @@ module.exports = {
                 },
                 class: 'boolean_compare',
                 isNotFor: [],
-                func: function(sprite, script) {
+                func: async function(sprite, script) {
                     var operator = script.getField('OPERATOR', script);
-                    var leftValue = script.getValue('LEFTHAND', script);
-                    var rightValue = script.getValue('RIGHTHAND', script);
+                    let [leftValue, rightValue] = await Promise.all([
+                        script.getValue('LEFTHAND', script),
+                        script.getValue('RIGHTHAND', script),
+                    ]);
 
                     switch (operator) {
                         case 'EQUAL':
@@ -430,8 +386,7 @@ module.exports = {
                                     value: 'EQUAL',
                                     fontSize: 11,
                                     noArrow: true,
-                                    converter:
-                                        Entry.block.converters.returnOperator,
+                                    converter: Entry.block.converters.returnOperator,
                                 },
                                 {
                                     type: 'Block',
@@ -499,15 +454,17 @@ module.exports = {
                     OPERATOR: 1,
                     RIGHTHAND: 2,
                 },
-                func: function(sprite, script) {
-                    var operator = script.getField('OPERATOR', script);
-                    var leftValue = script.getBooleanValue('LEFTHAND', script);
-                    var rightValue = script.getBooleanValue(
-                        'RIGHTHAND',
-                        script
-                    );
-                    if (operator == 'AND') return leftValue && rightValue;
-                    else return leftValue || rightValue;
+                func: async function(sprite, script) {
+                    const operator = script.getField('OPERATOR', script);
+                    let [leftValue, rightValue] = await Promise.all([
+                        script.getValue('LEFTHAND', script),
+                        script.getValue('RIGHTHAND', script),
+                    ]);
+                    if (operator == 'AND') {
+                        return leftValue && rightValue;
+                    } else {
+                        return leftValue || rightValue;
+                    }
                 },
                 syntax: {
                     js: [],
@@ -524,17 +481,10 @@ module.exports = {
                                 {
                                     type: 'Dropdown',
                                     options: [
-                                        [
-                                            Lang.Blocks.JUDGEMENT_boolean_and,
-                                            'AND',
-                                        ],
-                                        [
-                                            Lang.Blocks.JUDGEMENT_boolean_or,
-                                            'OR',
-                                        ],
+                                        [Lang.Blocks.JUDGEMENT_boolean_and, 'AND'],
+                                        [Lang.Blocks.JUDGEMENT_boolean_or, 'OR'],
                                     ],
-                                    converter:
-                                        Entry.block.converters.returnOperator,
+                                    converter: Entry.block.converters.returnOperator,
                                     value: 'AND',
                                     fontSize: 11,
                                 },
@@ -581,8 +531,8 @@ module.exports = {
                 },
                 class: 'boolean',
                 isNotFor: [],
-                func: function(sprite, script) {
-                    return !script.getBooleanValue('VALUE');
+                func: async function(sprite, script) {
+                    return !await script.getBooleanValue('VALUE');
                 },
                 syntax: {
                     js: [],
@@ -603,5 +553,5 @@ module.exports = {
                 },
             },
         };
-    }
-}
+    },
+};
