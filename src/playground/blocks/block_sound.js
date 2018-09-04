@@ -1,3 +1,6 @@
+const PromiseManager = require('@core/promiseManager');
+const pm = new PromiseManager();
+
 module.exports = {
     getBlocks() {
         return {
@@ -41,8 +44,8 @@ module.exports = {
                 },
                 class: 'sound_play',
                 isNotFor: [],
-                func: function(sprite, script) {
-                    var soundId = script.getStringValue('VALUE', script);
+                func: async function(sprite, script) {
+                    var soundId = await script.getStringValue('VALUE', script);
                     var sound = sprite.parent.getSound(soundId);
 
                     if (sound) {
@@ -116,8 +119,10 @@ module.exports = {
                 class: 'sound_play',
                 isNotFor: [],
                 func: async function(sprite, script) {
-                    const soundId = script.getStringValue('VALUE', script);
-                    const timeValue = await script.getNumberValue('SECOND', script);
+                    const [soundId, timeValue] = await Promise.all([
+                        script.getStringValue('VALUE', script),
+                        script.getNumberValue('SECOND', script),
+                    ]);
                     const sound = sprite.parent.getSound(soundId);
 
                     if (sound) {
@@ -207,16 +212,16 @@ module.exports = {
                 class: 'sound_play',
                 isNotFor: [],
                 func: async function(sprite, script) {
-                    var soundId = script.getStringValue('VALUE', script);
+                    let [start, end, soundId] = await Promise.all([
+                        script.getNumberValue('START', script),
+                        script.getNumberValue('END', script),
+                        script.getStringValue('VALUE', script),
+                    ]);
+                    start = start * 1000;
+                    end = end * 1000;
                     var sound = sprite.parent.getSound(soundId);
 
                     if (sound) {
-                        let [start, end] = await Promise.all([
-                            script.getNumberValue('START', script),
-                            script.getNumberValue('END', script),
-                        ]);
-                        start = start * 1000;
-                        end = end * 1000;
                         createjs.Sound.play(sound.id, {
                             startTime: Math.min(start, end),
                             duration: Math.max(start, end) - Math.min(start, end),
@@ -274,26 +279,13 @@ module.exports = {
                 },
                 class: 'sound_wait',
                 isNotFor: [],
-                func: function(sprite, script) {
-                    if (!script.isPlay) {
-                        script.isPlay = true;
-                        script.playState = 1;
-                        var soundId = script.getStringValue('VALUE', script);
-                        var sound = sprite.parent.getSound(soundId);
-                        if (sound) {
-                            var instance = createjs.Sound.play(sound.id);
-                            Entry.Utils.addSoundInstances(instance);
-                            setTimeout(function() {
-                                script.playState = 0;
-                            }, sound.duration * 1000);
-                        }
-                        return script;
-                    } else if (script.playState == 1) {
-                        return script;
-                    } else {
-                        delete script.playState;
-                        delete script.isPlay;
-                        return script.callReturn();
+                func: async function(sprite, script) {
+                    const soundId = await script.getStringValue('VALUE', script);
+                    const sound = sprite.parent.getSound(soundId);
+                    if (sound) {
+                        const instance = createjs.Sound.play(sound.id);
+                        Entry.Utils.addSoundInstances(instance);
+                        await pm.sleepWithPause(sound.duration * 1000, script.block.id);
                     }
                 },
                 syntax: {
@@ -360,27 +352,16 @@ module.exports = {
                 class: 'sound_wait',
                 isNotFor: [],
                 func: async function(sprite, script) {
-                    if (!script.isPlay) {
-                        script.isPlay = true;
-                        script.playState = 1;
-                        const soundId = script.getStringValue('VALUE', script);
-                        const sound = sprite.parent.getSound(soundId);
-                        if (sound) {
-                            const instance = createjs.Sound.play(sound.id);
-                            const timeValue = await script.getNumberValue('SECOND', script);
-                            setTimeout(function() {
-                                instance.stop();
-                                script.playState = 0;
-                            }, timeValue * 1000);
-                            instance.addEventListener('complete', function(e) {});
-                        }
-                        return script;
-                    } else if (script.playState == 1) {
-                        return script;
-                    } else {
-                        delete script.isPlay;
-                        delete script.playState;
-                        return script.callReturn();
+                    const [soundId, timeValue] = await Promise.all([
+                        script.getStringValue('VALUE', script),
+                        script.getNumberValue('SECOND', script),
+                    ]);
+                    const sound = sprite.parent.getSound(soundId);
+                    if (sound) {
+                        const instance = createjs.Sound.play(sound.id);
+                        console.log(timeValue * 1000);
+                        await pm.sleepWithPause(timeValue * 1000, script.block.id);
+                        instance.addEventListener('complete', function(e) {});
                     }
                 },
                 syntax: {
@@ -460,38 +441,25 @@ module.exports = {
                 class: 'sound_wait',
                 isNotFor: [],
                 func: async function(sprite, script) {
-                    if (!script.isPlay) {
-                        script.isPlay = true;
-                        script.playState = 1;
-                        const soundId = script.getStringValue('VALUE', script);
-                        const sound = sprite.parent.getSound(soundId);
-                        if (sound) {
-                            let [start, end] = await Promise.all([
-                                script.getNumberValue('START', script),
-                                script.getNumberValue('END', script),
-                            ]);
-                            start = start * 1000;
-                            end = end * 1000;
-                            const startTime = Math.min(start, end);
-                            const endTime = Math.max(start, end);
-                            const duration = endTime - startTime;
+                    let [start, end, soundId] = await Promise.all([
+                        script.getNumberValue('START', script),
+                        script.getNumberValue('END', script),
+                        script.getStringValue('VALUE', script),
+                    ]);
+                    start = start * 1000;
+                    end = end * 1000;
+                    const sound = sprite.parent.getSound(soundId);
+                    if (sound) {
+                        const startTime = Math.min(start, end);
+                        const endTime = Math.max(start, end);
+                        const duration = endTime - startTime;
 
-                            createjs.Sound.play(sound.id, {
-                                duration,
-                                startTime,
-                            });
+                        createjs.Sound.play(sound.id, {
+                            duration,
+                            startTime,
+                        });
 
-                            setTimeout(function() {
-                                script.playState = 0;
-                            }, duration);
-                        }
-                        return script;
-                    } else if (script.playState == 1) {
-                        return script;
-                    } else {
-                        delete script.isPlay;
-                        delete script.playState;
-                        return script.callReturn();
+                        await pm.sleepWithPause(duration, script.block.id);
                     }
                 },
                 syntax: {
