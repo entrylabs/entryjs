@@ -26,6 +26,15 @@ module.exports = class PromiseManager {
         });
     }
 
+    sleepWithPause(time, blockId) {
+        return this.Promise((resolve) => {
+            Entry.TimeWaitManager.add(blockId, () => {
+                Entry.engine.isContinue = false;
+                resolve();
+            }, time);
+        });
+    }
+
     /**
      * sample code
      * Entry.addEventListener('callApi', ({url}, resolve, reject) => {
