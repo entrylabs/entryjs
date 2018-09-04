@@ -72,8 +72,7 @@ module.exports = {
                 class: 'brush_control',
                 isNotFor: ['textBox'],
                 func: function(sprite, script) {
-                    if (sprite.brush && sprite.shapes.length)
-                        sprite.brush.stop = true;
+                    if (sprite.brush && sprite.shapes.length) sprite.brush.stop = true;
 
                     return script.callReturn();
                 },
@@ -144,9 +143,7 @@ module.exports = {
                             textParams: [
                                 {
                                     type: 'Color',
-                                    converter:
-                                        Entry.block.converters
-                                            .returnStringValueUpperCase,
+                                    converter: Entry.block.converters.returnStringValueUpperCase,
                                     codeMap: 'Entry.CodeMap.Entry.set_color[0]',
                                 },
                             ],
@@ -241,8 +238,8 @@ module.exports = {
                 },
                 class: 'brush_thickness',
                 isNotFor: ['textBox'],
-                func: function(sprite, script) {
-                    var thickness = script.getNumberValue('VALUE', script);
+                func: async function(sprite, script) {
+                    const thickness = await script.getNumberValue('VALUE', script);
 
                     if (!sprite.brush || !sprite.shapes.length) {
                         Entry.setBasicBrush(sprite);
@@ -251,8 +248,7 @@ module.exports = {
 
                     if (sprite.brush) {
                         sprite.brush.thickness += thickness;
-                        if (sprite.brush.thickness < 1)
-                            sprite.brush.thickness = 1;
+                        if (sprite.brush.thickness < 1) sprite.brush.thickness = 1;
 
                         sprite.brush.setStrokeStyle(sprite.brush.thickness);
 
@@ -304,8 +300,8 @@ module.exports = {
                 },
                 class: 'brush_thickness',
                 isNotFor: ['textBox'],
-                func: function(sprite, script) {
-                    var thickness = script.getNumberValue('VALUE', script);
+                func: async function(sprite, script) {
+                    const thickness = await script.getNumberValue('VALUE', script);
 
                     if (!sprite.brush || !sprite.shapes.length) {
                         Entry.setBasicBrush(sprite);
@@ -364,18 +360,14 @@ module.exports = {
                 },
                 class: 'brush_opacity',
                 isNotFor: ['textBox'],
-                func: function(sprite, script) {
-                    var opacity = script.getNumberValue('VALUE', script);
+                func: async function(sprite, script) {
+                    let opacity = await script.getNumberValue('VALUE', script);
 
                     if (!sprite.brush || !sprite.shapes.length) {
                         Entry.setBasicBrush(sprite);
                         sprite.brush.stop = true;
                     }
-                    opacity = Entry.adjustValueWithMaxMin(
-                        sprite.brush.opacity + opacity,
-                        0,
-                        100
-                    );
+                    opacity = Entry.adjustValueWithMaxMin(sprite.brush.opacity + opacity, 0, 100);
 
                     if (sprite.brush) {
                         sprite.brush.opacity = opacity;
@@ -440,8 +432,8 @@ module.exports = {
                 },
                 class: 'brush_opacity',
                 isNotFor: ['textBox'],
-                func: function(sprite, script) {
-                    var opacity = script.getNumberValue('VALUE', script);
+                func: async function(sprite, script) {
+                    const opacity = await script.getNumberValue('VALUE', script);
 
                     if (!sprite.brush || !sprite.shapes.length) {
                         Entry.setBasicBrush(sprite);
@@ -449,11 +441,7 @@ module.exports = {
                     }
 
                     if (sprite.brush) {
-                        sprite.brush.opacity = Entry.adjustValueWithMaxMin(
-                            opacity,
-                            0,
-                            100
-                        );
+                        sprite.brush.opacity = Entry.adjustValueWithMaxMin(opacity, 0, 100);
                         sprite.brush.endStroke();
                         var rgb = sprite.brush.rgb;
                         sprite.brush.beginStroke(
@@ -502,5 +490,5 @@ module.exports = {
                 syntax: { js: [], py: ['Entry.clear_drawing()'] },
             },
         };
-    }
-}
+    },
+};
