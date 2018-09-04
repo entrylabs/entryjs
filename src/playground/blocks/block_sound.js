@@ -46,9 +46,7 @@ module.exports = {
                     var sound = sprite.parent.getSound(soundId);
 
                     if (sound) {
-                        Entry.Utils.addSoundInstances(
-                            createjs.Sound.play(sound.id)
-                        );
+                        Entry.Utils.addSoundInstances(createjs.Sound.play(sound.id));
                     }
 
                     return script.callReturn();
@@ -117,10 +115,10 @@ module.exports = {
                 },
                 class: 'sound_play',
                 isNotFor: [],
-                func: function(sprite, script) {
-                    var soundId = script.getStringValue('VALUE', script);
-                    var timeValue = script.getNumberValue('SECOND', script);
-                    var sound = sprite.parent.getSound(soundId);
+                func: async function(sprite, script) {
+                    const soundId = script.getStringValue('VALUE', script);
+                    const timeValue = await script.getNumberValue('SECOND', script);
+                    const sound = sprite.parent.getSound(soundId);
 
                     if (sound) {
                         Entry.Utils.addSoundInstances(
@@ -208,18 +206,20 @@ module.exports = {
                 },
                 class: 'sound_play',
                 isNotFor: [],
-                func: function(sprite, script) {
+                func: async function(sprite, script) {
                     var soundId = script.getStringValue('VALUE', script);
                     var sound = sprite.parent.getSound(soundId);
 
                     if (sound) {
-                        var start =
-                            script.getNumberValue('START', script) * 1000;
-                        var end = script.getNumberValue('END', script) * 1000;
+                        let [start, end] = await Promise.all([
+                            script.getNumberValue('START', script),
+                            script.getNumberValue('END', script),
+                        ]);
+                        start = start * 1000;
+                        end = end * 1000;
                         createjs.Sound.play(sound.id, {
                             startTime: Math.min(start, end),
-                            duration:
-                                Math.max(start, end) - Math.min(start, end),
+                            duration: Math.max(start, end) - Math.min(start, end),
                         });
                     }
                     return script.callReturn();
@@ -359,25 +359,20 @@ module.exports = {
                 },
                 class: 'sound_wait',
                 isNotFor: [],
-                func: function(sprite, script) {
+                func: async function(sprite, script) {
                     if (!script.isPlay) {
                         script.isPlay = true;
                         script.playState = 1;
-                        var soundId = script.getStringValue('VALUE', script);
-                        var sound = sprite.parent.getSound(soundId);
+                        const soundId = script.getStringValue('VALUE', script);
+                        const sound = sprite.parent.getSound(soundId);
                         if (sound) {
-                            var instance = createjs.Sound.play(sound.id);
-                            var timeValue = script.getNumberValue(
-                                'SECOND',
-                                script
-                            );
+                            const instance = createjs.Sound.play(sound.id);
+                            const timeValue = await script.getNumberValue('SECOND', script);
                             setTimeout(function() {
                                 instance.stop();
                                 script.playState = 0;
                             }, timeValue * 1000);
-                            instance.addEventListener('complete', function(
-                                e
-                            ) {});
+                            instance.addEventListener('complete', function(e) {});
                         }
                         return script;
                     } else if (script.playState == 1) {
@@ -464,24 +459,26 @@ module.exports = {
                 },
                 class: 'sound_wait',
                 isNotFor: [],
-                func: function(sprite, script) {
+                func: async function(sprite, script) {
                     if (!script.isPlay) {
                         script.isPlay = true;
                         script.playState = 1;
-                        var soundId = script.getStringValue('VALUE', script);
-                        var sound = sprite.parent.getSound(soundId);
+                        const soundId = script.getStringValue('VALUE', script);
+                        const sound = sprite.parent.getSound(soundId);
                         if (sound) {
-                            var start =
-                                script.getNumberValue('START', script) * 1000;
-                            var end =
-                                script.getNumberValue('END', script) * 1000;
-                            var startValue = Math.min(start, end);
-                            var endValue = Math.max(start, end);
-                            var duration = endValue - startValue;
+                            let [start, end] = await Promise.all([
+                                script.getNumberValue('START', script),
+                                script.getNumberValue('END', script),
+                            ]);
+                            start = start * 1000;
+                            end = end * 1000;
+                            const startTime = Math.min(start, end);
+                            const endTime = Math.max(start, end);
+                            const duration = endTime - startTime;
 
                             createjs.Sound.play(sound.id, {
-                                startTime: startValue,
-                                duration: duration,
+                                duration,
+                                startTime,
                             });
 
                             setTimeout(function() {
@@ -543,8 +540,8 @@ module.exports = {
                 },
                 class: 'sound_volume',
                 isNotFor: [],
-                func: function(sprite, script) {
-                    var value = script.getNumberValue('VALUE', script) / 100;
+                func: async function(sprite, script) {
+                    let value = (await script.getNumberValue('VALUE', script)) / 100;
                     value = value + createjs.Sound.getVolume();
                     if (value > 1) value = 1;
                     if (value < 0) value = 0;
@@ -594,8 +591,8 @@ module.exports = {
                 },
                 class: 'sound_volume',
                 isNotFor: [],
-                func: function(sprite, script) {
-                    var value = script.getNumberValue('VALUE', script) / 100;
+                func: async function(sprite, script) {
+                    let value = (await script.getNumberValue('VALUE', script)) / 100;
                     if (value > 1) value = 1;
                     if (value < 0) value = 0;
                     createjs.Sound.setVolume(value);
@@ -628,5 +625,5 @@ module.exports = {
                 syntax: { js: [], py: ['Entry.stop_sound()'] },
             },
         };
-    }
-}
+    },
+};
