@@ -1,6 +1,16 @@
 'use strict';
 
+const PromiseManager = require('@core/promiseManager');
+const pm = new PromiseManager();
+
 Entry.EV3 = {
+    name: 'EV3',
+    url: 'http://www.lego.com/ko-kr/mindstorms/about-ev3',
+    imageName: 'ev3.png',
+    title: {
+        ko: 'EV3',
+        en: 'EV3',
+    },
     PORT_MAP: {
         A: 0,
         B: 0,
@@ -38,23 +48,23 @@ Entry.EV3 = {
     timeouts: [],
     removeTimeout: function(id) {
         clearTimeout(id);
-        var timeouts = this.timeouts;
-        var index = timeouts.indexOf(id);
+        const timeouts = this.timeouts;
+        const index = timeouts.indexOf(id);
         if (index >= 0) {
             timeouts.splice(index, 1);
         }
     },
     removeAllTimeouts: function() {
-        var timeouts = this.timeouts;
-        for (var i in timeouts) {
+        const timeouts = this.timeouts;
+        for (let i in timeouts) {
             clearTimeout(timeouts[i]);
         }
         this.timeouts = [];
     },
     setZero: function() {
-        var portMap = this.PORT_MAP;
+        const portMap = this.PORT_MAP;
         Object.keys(portMap).forEach(function(port) {
-            var regex = /[A-D]/i;
+            const regex = /[A-D]/i;
             if (regex.test(port)) {
                 Entry.hw.sendQueue[port] = {
                     type: Entry.EV3.motorMovementTypes.Power,
@@ -66,13 +76,6 @@ Entry.EV3 = {
         });
         Entry.hw.sendQueue.STATUS_COLOR = 'GREEN';
         Entry.hw.update();
-    },
-    name: 'EV3',
-    url: 'http://www.lego.com/ko-kr/mindstorms/about-ev3',
-    imageName: 'ev3.png',
-    title: {
-        ko: 'EV3',
-        en: 'EV3',
     },
 };
 
@@ -107,7 +110,6 @@ Entry.EV3.setLanguage = function() {
 
 Entry.EV3.getBlocks = function() {
     return {
-        //region ev3 이브이3
         ev3_color_sensor: {
             color: '#00979D',
             fontColor: '#fff',
@@ -139,12 +141,12 @@ Entry.EV3.getBlocks = function() {
             class: 'ev3_sensor',
             isNotFor: ['EV3'],
             func: function(sprite, script) {
-                var port = script.getStringField('PORT', script);
-                var rgb = script.getStringField('RGB', script);
-                var portData = Entry.hw.getDigitalPortValue(script.getNumberField('PORT', script));
-                var result = '';
-                if (portData.type == Entry.EV3.deviceTypes.Color) {
-                    if (portData.siValue == 0) {
+                const port = script.getStringField('PORT', script);
+                const rgb = script.getStringField('RGB', script);
+                const portData = Entry.hw.getDigitalPortValue(port);
+                let result = '';
+                if (portData.type === Entry.EV3.deviceTypes.Color) {
+                    if (portData.siValue === 0) {
                         result = '';
                     } else {
                         switch (rgb) {
@@ -201,9 +203,9 @@ Entry.EV3.getBlocks = function() {
             class: 'ev3_sensor',
             isNotFor: ['EV3'],
             func: function(sprite, script) {
-                var port = script.getStringField('PORT', script);
-                var portData = Entry.hw.getDigitalPortValue(script.getNumberField('PORT', script));
-                var result;
+                const port = script.getStringField('PORT', script);
+                const portData = Entry.hw.getDigitalPortValue(port);
+                let result;
                 if ($.isPlainObject(portData)) {
                     result = portData.siValue || 0;
                 }
@@ -256,21 +258,22 @@ Entry.EV3.getBlocks = function() {
             class: 'ev3_output',
             isNotFor: ['EV3'],
             func: async function(sprite, script) {
-                var port = script.getStringField('PORT', script);
-                var degree = await script.getValue('DEGREE', script);
+                const port = script.getStringField('PORT', script);
+                let degree = await script.getValue('DEGREE', script);
+
                 if (degree <= 0) {
                     degree = 0;
                 } else if (degree >= 720) {
                     degree = 720;
                 }
-                var direction = script.getStringField('DIRECTION', script);
+
+                const direction = script.getStringField('DIRECTION', script);
                 Entry.hw.sendQueue[port] = {
                     id: Math.floor(Math.random() * 100000, 0),
                     type: Entry.EV3.motorMovementTypes.Degrees,
                     degree: degree,
-                    power: direction == 'CW' ? 50 : -50,
+                    power: direction === 'CW' ? 50 : -50,
                 };
-                return script.callReturn();
             },
         },
         ev3_motor_power: {
@@ -314,12 +317,12 @@ Entry.EV3.getBlocks = function() {
             func: async function(sprite, script) {
                 const port = script.getStringField('PORT', script);
                 let value = await script.getValue('VALUE', script);
+
                 Entry.hw.sendQueue[port] = {
                     id: Math.floor(Math.random() * 100000, 0),
                     type: Entry.EV3.motorMovementTypes.Power,
                     power: value,
                 };
-                return script.callReturn();
             },
         },
         ev3_motor_power_on_time: {
@@ -370,39 +373,26 @@ Entry.EV3.getBlocks = function() {
             class: 'ev3_output',
             isNotFor: ['EV3'],
             func: async function(sprite, script) {
-                var sq = Entry.hw.sendQueue;
-                var port = script.getStringField('PORT', script);
-                if (!script.isStart) {
-                    let [time, value] = await Promise.all([
-                        script.getValue('TIME', script),
-                        script.getValue('VALUE', script),
-                    ]);
-                    script.isStart = true;
-                    script.timeFlag = 1;
-                    Entry.hw.sendQueue[port] = {
-                        id: Math.floor(Math.random() * 100000, 0),
-                        type: Entry.EV3.motorMovementTypes.Power,
-                        power: value,
-                    };
-                    var timeValue = time * 1000;
-                    var timer = setTimeout(function() {
-                        script.timeFlag = 0;
-                        Entry.EV3.removeTimeout(timer);
-                    }, timeValue);
-                    Entry.EV3.timeouts.push(timer);
-                    return script;
-                } else if (script.timeFlag == 1) {
-                    return script;
-                } else {
-                    delete script.isStart;
-                    delete script.timeFlag;
-                    Entry.engine.isContinue = false;
-                    Entry.hw.sendQueue[port] = {
-                        id: Math.floor(Math.random() * 100000, 0),
-                        type: Entry.EV3.motorMovementTypes.Power,
-                        power: 0,
-                    };
-                    return script.callReturn();
+                const port = script.getStringField('PORT', script);
+
+                let [time, value] = await Promise.all([
+                    script.getValue('TIME', script),
+                    script.getValue('VALUE', script),
+                ]);
+
+                Entry.hw.sendQueue[port] = {
+                    id: Math.floor(Math.random() * 100000, 0),
+                    type: Entry.EV3.motorMovementTypes.Power,
+                    power: value,
+                };
+
+                await pm.sleep(time * 1000);
+                
+                Entry.engine.isContinue = false;
+                Entry.hw.sendQueue[port] = {
+                    id: Math.floor(Math.random() * 100000, 0),
+                    type: Entry.EV3.motorMovementTypes.Power,
+                    power: 0,
                 }
             },
         },
@@ -430,10 +420,10 @@ Entry.EV3.getBlocks = function() {
             class: 'ev3_sensor',
             isNotFor: ['EV3'],
             func: function(sprite, script) {
-                var port = script.getStringField('PORT', script);
-                var portData = Entry.hw.getDigitalPortValue(script.getNumberField('PORT', script));
-                var result = false;
-                if (portData.type == Entry.EV3.deviceTypes.Touch) {
+                const portData = Entry.hw.getDigitalPortValue(
+                    script.getNumberField('PORT', script));
+                let result = false;
+                if (portData.type === Entry.EV3.deviceTypes.Touch) {
                     if (Number(portData.siValue) >= 1) {
                         result = true;
                     }
@@ -474,13 +464,9 @@ Entry.EV3.getBlocks = function() {
             isNotFor: ['EV3'],
             func: function(sprite, script) {
                 const buttonValue = script.getStringField('BUTTON', script);
-                var buttonData = Entry.hw.getDigitalPortValue(buttonValue);
-                var result = false;
-                if (buttonData.pressed) {
-                    return true;
-                }
+                const buttonData = Entry.hw.getDigitalPortValue(buttonValue);
 
-                return result;
+                return buttonData.pressed || false;
             },
         },
         ev3_status_led: {
