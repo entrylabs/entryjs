@@ -1,3 +1,7 @@
+'use strict';
+const PromiseManager = require('@core/promiseManager');
+const pm = new PromiseManager();
+
 module.exports = {
     getBlocks() {
         return {
@@ -42,29 +46,18 @@ module.exports = {
                 },
                 class: 'delay',
                 isNotFor: [],
-                func: function(sprite, script) {
-                    if (!script.isStart) {
-                        script.isStart = true;
-                        script.timeFlag = 1;
-                        var timeValue = script.getNumberValue('SECOND', script);
-                        var fps = Entry.FPS || 60;
-                        timeValue = 60 / fps * timeValue * 1000;
+                func: async function(sprite, script) {
+                    const timeValue = await script.getNumberValue('SECOND', script);
+                    const fps = Entry.FPS || 60;
+                    const blockId = script.block.id;
+                    const realTimeValueSecond = 60 / fps * timeValue * 1000;
 
-                        var blockId = script.block.id;
-                        Entry.TimeWaitManager.add(blockId, function() {
-                            script.timeFlag = 0;
-                        }, timeValue);
-                        //console.log(Entry.timerInstances.length, 'timerInstance created');
-
-                        return script;
-                    } else if (script.timeFlag == 1) {
-                        return script;
-                    } else {
-                        delete script.timeFlag;
-                        delete script.isStart;
-                        Entry.engine.isContinue = false;
-                        return script.callReturn();
-                    }
+                    await pm.Promise((resolve) => {
+                        Entry.TimeWaitManager.add(blockId, () => {
+                            Entry.engine.isContinue = false;
+                            resolve();
+                        }, realTimeValueSecond);
+                    });
                 },
                 syntax: {
                     js: [],
@@ -124,17 +117,16 @@ module.exports = {
                 class: 'repeat',
                 isNotFor: [],
                 func: async function(sprite, script) {
-                    var iterNumber;
                     if (!script.isLooped) {
                         script.isLooped = true;
-                        var iterNumber = await script.getNumberValue('VALUE', script);
+                        const iterNumber = await script.getNumberValue('VALUE', script);
                         if (iterNumber < 0)
                             throw new Error(
                                 Lang.Blocks.FLOW_repeat_basic_errorMsg
                             );
                         script.iterCount = Math.floor(iterNumber);
                     }
-                    if (script.iterCount != 0 && !(script.iterCount < 0)) {
+                    if (script.iterCount !== 0 && !(script.iterCount < 0)) {
                         script.iterCount--;
                         return script.getStatement('DO', script);
                     } else {
@@ -194,7 +186,6 @@ module.exports = {
                 class: 'repeat',
                 isNotFor: [],
                 func: function(sprite, script) {
-                    //return script.getStatement("DO", script);
                     script.isLooped = true;
                     return script.getStatement('DO');
                 },
@@ -275,10 +266,10 @@ module.exports = {
                 },
                 class: 'repeat',
                 isNotFor: [],
-                func: function(sprite, script) {
-                    var value = script.getBooleanValue('BOOL', script);
+                func: async function(sprite, script) {
+                    let value = await script.getBooleanValue('BOOL', script);
 
-                    if (script.getField('OPTION', script) == 'until')
+                    if (script.getField('OPTION', script) === 'until')
                         value = !value;
                     script.isLooped = value;
 
@@ -366,12 +357,12 @@ module.exports = {
                 },
                 class: 'condition',
                 isNotFor: [],
-                func: function(sprite, script) {
+                func: async function(sprite, script) {
                     if (script.isCondition) {
                         delete script.isCondition;
                         return script.callReturn();
                     }
-                    var value = script.getBooleanValue('BOOL', script);
+                    const value = await script.getBooleanValue('BOOL', script);
                     if (value) {
                         script.isCondition = true;
                         return script.getStatement('STACK', script);
@@ -438,12 +429,12 @@ module.exports = {
                 },
                 class: 'condition',
                 isNotFor: [],
-                func: function(sprite, script) {
+                func: async function(sprite, script) {
                     if (script.isCondition) {
                         delete script.isCondition;
                         return script.callReturn();
                     }
-                    var value = script.getBooleanValue('BOOL', script);
+                    const value = await script.getBooleanValue('BOOL', script);
                     script.isCondition = true;
                     if (value) return script.getStatement('STACK_IF', script);
                     else return script.getStatement('STACK_ELSE', script);
@@ -508,8 +499,8 @@ module.exports = {
                 },
                 class: 'wait',
                 isNotFor: [],
-                func: function(sprite, script) {
-                    var value = script.getBooleanValue('BOOL', script);
+                func: async function(sprite, script) {
+                    const value = await script.getBooleanValue('BOOL', script);
                     if (value) {
                         return script.callReturn();
                     } else {
@@ -569,7 +560,7 @@ module.exports = {
                 class: 'terminate',
                 isNotFor: [],
                 func: function(sprite, script) {
-                    var object = sprite.parent;
+                    const object = sprite.parent;
 
                     switch (script.getField('TARGET', script)) {
                         case 'all':
@@ -588,13 +579,13 @@ module.exports = {
                         case 'thisThread':
                             return this.die();
                         case 'otherThread':
-                            var executor = this.executor;
-                            var code = object.script;
-                            var executors = code.executors;
-                            var spriteId = sprite.id;
+                            const executor = this.executor;
+                            const code = object.script;
+                            const executors = code.executors;
+                            const spriteId = sprite.id;
 
-                            for (var i = 0; i < executors.length; i++) {
-                                var currentExecutor = executors[i];
+                            for (let i = 0; i < executors.length; i++) {
+                                const currentExecutor = executors[i];
                                 if (
                                     currentExecutor !== executor &&
                                     currentExecutor.entity.id === spriteId
@@ -756,16 +747,16 @@ module.exports = {
                 class: 'clone',
                 isNotFor: [],
                 func: function(sprite, script) {
-                    var targetSpriteId = script.getField('VALUE', script);
-                    var returnBlock = script.callReturn();
-                    if (targetSpriteId == 'self')
+                    const targetSpriteId = script.getField('VALUE', script);
+                    const returnBlock = script.callReturn();
+                    if (targetSpriteId === 'self')
                         sprite.parent.addCloneEntity(
                             sprite.parent,
                             sprite,
                             null
                         );
                     else {
-                        var object = Entry.container.getObject(targetSpriteId);
+                        const object = Entry.container.getObject(targetSpriteId);
                         object.addCloneEntity(sprite.parent, null, null);
                     }
                     return returnBlock;
@@ -836,7 +827,7 @@ module.exports = {
                 class: 'clone',
                 isNotFor: [],
                 func: function(sprite, script) {
-                    var clonedEntities = sprite.parent.getClonedEntities();
+                    let clonedEntities = sprite.parent.getClonedEntities();
                     clonedEntities.map(function(entity) {
                         entity.removeClone();
                     });
