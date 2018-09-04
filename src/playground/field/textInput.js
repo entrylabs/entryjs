@@ -19,7 +19,7 @@ Entry.FieldTextInput = function(content, blockView, index) {
     this._index = index;
     this.value = this.getValue() || '';
     this._CONTENT_HEIGHT = this.getContentHeight();
-    this._font_size = 12;
+    this._font_size = 10;
     this._neighborFields = null;
 
     this.renderStart();

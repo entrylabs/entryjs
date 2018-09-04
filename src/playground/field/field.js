@@ -240,7 +240,7 @@ Entry.Field = function() {};
     };
 
     p.getFontSize = function(size) {
-        return size || this._blockView.getSkeleton().fontSize || 12;
+        return size || this._blockView.getSkeleton().fontSize || 10;
     };
 
     p.getContentHeight = function() {

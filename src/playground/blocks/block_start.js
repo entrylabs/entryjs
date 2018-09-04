@@ -2,14 +2,15 @@ module.exports = {
     getBlocks() {
         return {
             when_run_button_click: {
-                color: '#3BBD70',
+                color: '#10D35E',
+                outerLine: '#13BF68',
                 skeleton: 'basic_event',
                 statements: [],
                 params: [
                     {
                         type: 'Indicator',
                         img: 'block_icon/start_icon_play.svg',
-                        size: 17,
+                        size: 14,
                         position: {
                             x: 0,
                             y: -2,
@@ -38,14 +39,15 @@ module.exports = {
                 },
             },
             when_some_key_pressed: {
-                color: '#3BBD70',
+                color: '#10D35E',
+                outerLine: '#13BF68',
                 skeleton: 'basic_event',
                 statements: [],
                 params: [
                     {
                         type: 'Indicator',
-                        img: 'block_icon/start_icon_keyboard.png',
-                        size: 17,
+                        img: 'block_icon/start_icon_keyboard.svg',
+                        size: 14,
                         position: {
                             x: 0,
                             y: -2,
@@ -95,14 +97,15 @@ module.exports = {
                 },
             },
             mouse_clicked: {
-                color: '#3BBD70',
+                color: '#10D35E',
+                outerLine: '#13BF68',
                 skeleton: 'basic_event',
                 statements: [],
                 params: [
                     {
                         type: 'Indicator',
-                        img: 'block_icon/start_icon_mouse.png',
-                        size: 17,
+                        img: 'block_icon/start_icon_mouse.svg',
+                        size: 14,
                         position: {
                             x: 0,
                             y: -2,
@@ -131,14 +134,15 @@ module.exports = {
                 },
             },
             mouse_click_cancled: {
-                color: '#3BBD70',
+                color: '#10D35E',
+                outerLine: '#13BF68',
                 skeleton: 'basic_event',
                 statements: [],
                 params: [
                     {
                         type: 'Indicator',
-                        img: 'block_icon/start_icon_mouse.png',
-                        size: 17,
+                        img: 'block_icon/start_icon_mouse.svg',
+                        size: 14,
                         position: {
                             x: 0,
                             y: -2,
@@ -167,14 +171,15 @@ module.exports = {
                 },
             },
             when_object_click: {
-                color: '#3BBD70',
+                color: '#10D35E',
+                outerLine: '#13BF68',
                 skeleton: 'basic_event',
                 statements: [],
                 params: [
                     {
                         type: 'Indicator',
-                        img: 'block_icon/start_icon_mouse.png',
-                        size: 17,
+                        img: 'block_icon/start_icon_mouse.svg',
+                        size: 14,
                         position: {
                             x: 0,
                             y: -2,
@@ -203,14 +208,15 @@ module.exports = {
                 },
             },
             when_object_click_canceled: {
-                color: '#3BBD70',
+                color: '#10D35E',
+                outerLine: '#13BF68',
                 skeleton: 'basic_event',
                 statements: [],
                 params: [
                     {
                         type: 'Indicator',
-                        img: 'block_icon/start_icon_mouse.png',
-                        size: 17,
+                        img: 'block_icon/start_icon_mouse.svg',
+                        size: 14,
                         position: {
                             x: 0,
                             y: -2,
@@ -239,14 +245,15 @@ module.exports = {
                 },
             },
             when_message_cast: {
-                color: '#3BBD70',
+                color: '#10D35E',
+                outerLine: '#13BF68',
                 skeleton: 'basic_event',
                 statements: [],
                 params: [
                     {
                         type: 'Indicator',
-                        img: 'block_icon/start_icon_signal.png',
-                        size: 17,
+                        img: 'block_icon/start_icon_signal.svg',
+                        size: 14,
                         position: {
                             x: 0,
                             y: -2,
@@ -317,7 +324,8 @@ module.exports = {
                 },
             },
             message_cast: {
-                color: '#3BBD70',
+                color: '#10D35E',
+                outerLine: '#13BF68',
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -330,8 +338,8 @@ module.exports = {
                     },
                     {
                         type: 'Indicator',
-                        img: 'block_icon/start_03.png',
-                        size: 12,
+                        img: 'block_icon/start.svg',
+                        size: 11,
                     },
                 ],
                 events: {
@@ -397,7 +405,8 @@ module.exports = {
                 },
             },
             message_cast_wait: {
-                color: '#3BBD70',
+                color: '#10D35E',
+                outerLine: '#13BF68',
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -410,8 +419,8 @@ module.exports = {
                     },
                     {
                         type: 'Indicator',
-                        img: 'block_icon/start_03.png',
-                        size: 12,
+                        img: 'block_icon/start.svg',
+                        size: 11,
                     },
                 ],
                 events: {
@@ -496,14 +505,15 @@ module.exports = {
                 },
             },
             when_scene_start: {
-                color: '#3BBD70',
+                color: '#10D35E',
+                outerLine: '#13BF68',
                 skeleton: 'basic_event',
                 statements: [],
                 params: [
                     {
                         type: 'Indicator',
-                        img: 'block_icon/start_icon_scene_1_2.png',
-                        size: 17,
+                        img: 'block_icon/start_icon_scene.svg',
+                        size: 14,
                         position: {
                             x: 0,
                             y: -2,
@@ -532,7 +542,8 @@ module.exports = {
                 },
             },
             start_scene: {
-                color: '#3BBD70',
+                color: '#10D35E',
+                outerLine: '#13BF68',
                 skeleton: 'basic_without_next',
                 statements: [],
                 params: [
@@ -545,8 +556,8 @@ module.exports = {
                     },
                     {
                         type: 'Indicator',
-                        img: 'block_icon/start_03.png',
-                        size: 12,
+                        img: 'block_icon/start.svg',
+                        size: 11,
                     },
                 ],
                 events: {},
@@ -594,7 +605,8 @@ module.exports = {
                 },
             },
             start_neighbor_scene: {
-                color: '#3BBD70',
+                color: '#10D35E',
+                outerLine: '#13BF68',
                 skeleton: 'basic_without_next',
                 statements: [],
                 params: [
@@ -610,8 +622,8 @@ module.exports = {
                     },
                     {
                         type: 'Indicator',
-                        img: 'block_icon/start_03.png',
-                        size: 12,
+                        img: 'block_icon/start.svg',
+                        size: 11,
                     },
                 ],
                 events: {},

@@ -38,6 +38,7 @@ Entry.SVG.createElement = function(tag, options) {
 
     //add util functions
     el.elem = Entry.SVG.createElement;
+    el.prepend = Entry.SVG.prepend;
     el.attr = Entry.SVG.attr;
     el.addClass = Entry.SVG.addClass;
     el.removeClass = Entry.SVG.removeClass;
@@ -56,6 +57,33 @@ Entry.SVG.createElement = function(tag, options) {
 
     return el;
 };
+
+Entry.SVG.prepend = function(tag) {
+    let el;
+    if (typeof tag === 'string') {
+        el = document.createElementNS(Entry.SVG.NS, tag);
+    } else {
+        el = tag;
+    }
+    //add util functions
+    el.elem = Entry.SVG.createElement;
+    el.prepend = Entry.SVG.prepend;
+    el.attr = Entry.SVG.attr;
+    el.addClass = Entry.SVG.addClass;
+    el.removeClass = Entry.SVG.removeClass;
+    el.hasClass = Entry.SVG.hasClass;
+    el.remove = Entry.SVG.remove;
+    el.removeAttr = Entry.SVG.removeAttr;
+
+    if (this instanceof SVGElement){
+        if(this.childNodes.length) {
+            this.insertBefore(el, this.childNodes[0]);
+        } else {
+            this.appendChild(el);
+        }
+    }
+    return el;
+}
 
 Entry.SVG.attr = function(options, property) {
     if (typeof options === 'string') {

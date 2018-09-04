@@ -17,7 +17,7 @@ Entry.FieldText = function(
 
     this.box = new Entry.BoxModel();
 
-    this._font_size = fontSize || blockView.getSkeleton().fontSize || 12;
+    this._font_size = fontSize || blockView.getSkeleton().fontSize || 10;
     this._color =
         color ||
         this._block.getSchema().fontColor ||

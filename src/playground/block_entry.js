@@ -2796,7 +2796,7 @@ const block = {
         syntax: { js: [], py: ['False'] },
     },
     press_some_key: {
-        color: '#3BBD70',
+        color: '#10D35E',
         skeleton: 'basic_event',
         statements: [],
         params: [
@@ -2848,7 +2848,7 @@ const block = {
         syntax: { js: [], py: [''] },
     },
     when_some_key_click: {
-        color: '#3BBD70',
+        color: '#10D35E',
         skeleton: 'basic_event',
         statements: [],
         params: [
@@ -2944,13 +2944,13 @@ const block = {
     //region basic 기본
     run: {
         skeleton: 'basic',
-        color: '#3BBD70',
+        color: '#10D35E',
         contents: ['this is', 'basic block'],
     },
     mutant: {
         skeleton: 'basic',
         event: 'start',
-        color: '#3BBD70',
+        color: '#10D35E',
         params: [],
         changeEvent: {
             _listeners: [],
@@ -2959,12 +2959,12 @@ const block = {
     jr_start: {
         skeleton: 'pebble_event',
         event: 'start',
-        color: '#3BBD70',
+        color: '#10D35E',
         params: [
             {
                 type: 'Indicator',
                 img: '../../../img/assets/ntry/bitmap/jr/block_play_image.png',
-                highlightColor: '#3BBD70',
+                highlightColor: '#10D35E',
                 position: {
                     x: 0,
                     y: 0,
@@ -3342,13 +3342,13 @@ const block = {
     jr_start_basic: {
         skeleton: 'basic_event',
         event: 'start',
-        color: '#3BBD70',
+        color: '#10D35E',
         params: [
             {
                 type: 'Indicator',
                 boxMultiplier: 2,
                 img: '../../../img/assets/block_icon/start_icon_play.png',
-                highlightColor: '#3BBD70',
+                highlightColor: '#10D35E',
                 size: 17,
                 position: {
                     x: 0,
@@ -3673,14 +3673,14 @@ const block = {
         skeleton: 'basic_event',
         mode: 'maze',
         event: 'start',
-        color: '#3BBD70',
+        color: '#10D35E',
         syntax: ['Program'],
         params: [
             {
                 type: 'Indicator',
                 boxMultiplier: 2,
                 img: '../../../img/assets/block_icon/start_icon_play.png',
-                highlightColor: '#3BBD70',
+                highlightColor: '#10D35E',
                 size: 17,
                 position: {
                     x: 0,
@@ -7283,7 +7283,7 @@ const block = {
     test_wrapper: {
         skeleton: 'basic',
         mode: 'maze',
-        color: '#3BBD70',
+        color: '#10D35E',
         params: [
             {
                 type: 'Block',

@@ -516,7 +516,7 @@ Entry.Utils.colorLighten = function(color, amount) {
 };
 
 Entry.Utils._EmphasizeColorMap = {
-    '#3BBD70': '#5BC982',
+    '#10D35E': '#5BC982',
     '#498DEB': '#62A5F4',
     '#A751E3': '#C08FF7',
     '#EC4466': '#F46487',

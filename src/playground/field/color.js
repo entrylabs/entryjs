@@ -16,7 +16,7 @@ Entry.FieldColor = function(content, blockView, index) {
     this._contents = content;
     this._index = index;
     this._position = content.position;
-    this._fontSize = content.fontSize || blockView.getSkeleton().fontSize || 12;
+    this._fontSize = content.fontSize || blockView.getSkeleton().fontSize || 10;
     this._color =
         content.color ||
         this._block.getSchema().fontColor ||

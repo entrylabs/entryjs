@@ -64,7 +64,6 @@ Entry.BlockView = function(block, board, mode) {
         (_.result(that.block.events, 'mousedown') || []).forEach((fn) => fn(that));
         that.onMouseDown.apply(that, arguments);
     };
-
     
     this._startRender(block, mode);
 
@@ -140,7 +139,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
 
         var path = skeleton.path(this);
 
-        this.pathGroup = svgGroup.elem('g');
+        this.pathGroup = svgGroup.prepend('g');
         this._updateMagnet();
 
         this._path = this.pathGroup.elem('path');
@@ -166,8 +165,11 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
             //     filter: 'url(#entryBlockShadowFilter_' + this.getBoard().suffix + ')',
             // });
         // } else if (this.magnet.string || this.magnet.boolean) pathStyle.stroke = 
-        
-        pathStyle.stroke = skeleton.outerLine || '#000';
+        const block_schema = this._schema;
+        const { outerLine } = block_schema;
+        pathStyle.stroke = outerLine || skeleton.outerLine || '#000';
+        pathStyle['stroke-linejoin'] = 'round';
+        pathStyle['stroke-linecap'] = 'round';
 
         if (skeleton.outerLine) {
             pathStyle['stroke-width'] = '1';
