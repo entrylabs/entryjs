@@ -18,8 +18,8 @@ Entry.byrobot_dronefighter_drive = {
     url: 'http://www.byrobot.co.kr/',
     imageName: 'byrobot_dronefighter_drive.png',
     title: {
-        "ko": "바이로봇 드론파이터 자동차",
-        "en": "BYROBOT Drone Fighter drive"
+        ko: '바이로봇 드론파이터 자동차',
+        en: 'BYROBOT Drone Fighter drive',
     },
 
     // 초기화
@@ -82,70 +82,52 @@ Entry.byrobot_dronefighter_drive = {
                 pos: { x: 0, y: 0 },
             },
             joystick_left_x: {
-                name:
-                    Lang.Blocks.byrobot_dronefighter_controller_joystick_left_x,
+                name: Lang.Blocks.byrobot_dronefighter_controller_joystick_left_x,
                 type: 'input',
                 pos: { x: 0, y: 0 },
             },
             joystick_left_y: {
-                name:
-                    Lang.Blocks.byrobot_dronefighter_controller_joystick_left_y,
+                name: Lang.Blocks.byrobot_dronefighter_controller_joystick_left_y,
                 type: 'input',
                 pos: { x: 0, y: 0 },
             },
             joystick_left_direction: {
-                name:
-                    Lang.Blocks
-                        .byrobot_dronefighter_controller_joystick_left_direction,
+                name: Lang.Blocks.byrobot_dronefighter_controller_joystick_left_direction,
                 type: 'input',
                 pos: { x: 0, y: 0 },
             },
             joystick_left_event: {
-                name:
-                    Lang.Blocks
-                        .byrobot_dronefighter_controller_joystick_left_event,
+                name: Lang.Blocks.byrobot_dronefighter_controller_joystick_left_event,
                 type: 'input',
                 pos: { x: 0, y: 0 },
             },
             joystick_left_command: {
-                name:
-                    Lang.Blocks
-                        .byrobot_dronefighter_controller_joystick_left_command,
+                name: Lang.Blocks.byrobot_dronefighter_controller_joystick_left_command,
                 type: 'input',
                 pos: { x: 0, y: 0 },
             },
             joystick_right_x: {
-                name:
-                    Lang.Blocks
-                        .byrobot_dronefighter_controller_joystick_right_x,
+                name: Lang.Blocks.byrobot_dronefighter_controller_joystick_right_x,
                 type: 'input',
                 pos: { x: 0, y: 0 },
             },
             joystick_right_y: {
-                name:
-                    Lang.Blocks
-                        .byrobot_dronefighter_controller_joystick_right_y,
+                name: Lang.Blocks.byrobot_dronefighter_controller_joystick_right_y,
                 type: 'input',
                 pos: { x: 0, y: 0 },
             },
             joystick_right_direction: {
-                name:
-                    Lang.Blocks
-                        .byrobot_dronefighter_controller_joystick_right_direction,
+                name: Lang.Blocks.byrobot_dronefighter_controller_joystick_right_direction,
                 type: 'input',
                 pos: { x: 0, y: 0 },
             },
             joystick_right_event: {
-                name:
-                    Lang.Blocks
-                        .byrobot_dronefighter_controller_joystick_right_event,
+                name: Lang.Blocks.byrobot_dronefighter_controller_joystick_right_event,
                 type: 'input',
                 pos: { x: 0, y: 0 },
             },
             joystick_right_command: {
-                name:
-                    Lang.Blocks
-                        .byrobot_dronefighter_controller_joystick_right_command,
+                name: Lang.Blocks.byrobot_dronefighter_controller_joystick_right_command,
                 type: 'input',
                 pos: { x: 0, y: 0 },
             },
@@ -160,9 +142,7 @@ Entry.byrobot_dronefighter_drive = {
                 pos: { x: 0, y: 0 },
             },
             entryhw_countTransferReserved: {
-                name:
-                    Lang.Blocks
-                        .byrobot_dronefighter_entryhw_count_transfer_reserved,
+                name: Lang.Blocks.byrobot_dronefighter_entryhw_count_transfer_reserved,
                 type: 'output',
                 pos: { x: 0, y: 0 },
             },
@@ -440,14 +420,7 @@ Entry.byrobot_dronefighter_drive = {
         }
     },
 
-    setBuzzerScale: function(
-        script,
-        octave,
-        scale,
-        time,
-        flagDelay,
-        flagInstantly
-    ) {
+    setBuzzerScale: function(script, octave, scale, time, flagDelay, flagInstantly) {
         time = Math.max(time, 0);
         time = Math.min(time, 60000);
 
@@ -534,14 +507,7 @@ Entry.byrobot_dronefighter_drive = {
         }
     },
 
-    setVibrator: function(
-        script,
-        timeOn,
-        timeOff,
-        timeRun,
-        flagDelay,
-        flagInstantly
-    ) {
+    setVibrator: function(script, timeOn, timeOff, timeRun, flagDelay, flagInstantly) {
         timeRun = Math.max(timeRun, 0);
         timeRun = Math.min(timeRun, 60000);
 
@@ -615,11 +581,7 @@ Entry.byrobot_dronefighter_drive = {
         switch (this.checkFinish(script, 40)) {
             case 'Start':
                 {
-                    this.transferMotorSingle(
-                        motorIndex,
-                        motorDirection,
-                        motorSpeed
-                    );
+                    this.transferMotorSingle(motorIndex, motorDirection, motorSpeed);
                 }
                 return script;
 
@@ -667,13 +629,7 @@ Entry.byrobot_dronefighter_drive = {
         }
     },
 
-    sendControlDoubleSingle: function(
-        script,
-        controlTarget,
-        value,
-        time,
-        flagDelay
-    ) {
+    sendControlDoubleSingle: function(script, controlTarget, value, time, flagDelay) {
         var timeDelay = 40;
         if (flagDelay) timeDelay = time;
 
@@ -770,20 +726,9 @@ Entry.byrobot_dronefighter_drive.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_drone_attitude_roll,
-                            'attitude_roll',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_drone_attitude_pitch,
-                            'attitude_pitch',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_dronefighter_drone_attitude_yaw,
-                            'attitude_yaw',
-                        ],
+                        [Lang.Blocks.byrobot_dronefighter_drone_attitude_roll, 'attitude_roll'],
+                        [Lang.Blocks.byrobot_dronefighter_drone_attitude_pitch, 'attitude_pitch'],
+                        [Lang.Blocks.byrobot_dronefighter_drone_attitude_yaw, 'attitude_yaw'],
                     ],
                     value: 'attitude_roll', // 초기 선택항목 지정
                     fontSize: 11,
@@ -814,24 +759,15 @@ Entry.byrobot_dronefighter_drive.getBlocks = function() {
                     type: 'Dropdown',
                     options: [
                         [
-                            Lang.Blocks
-                                .byrobot_dronefighter_drone_state_mode_vehicle,
+                            Lang.Blocks.byrobot_dronefighter_drone_state_mode_vehicle,
                             'state_modeVehicle',
                         ],
                         [
-                            Lang.Blocks
-                                .byrobot_dronefighter_drone_state_mode_drive,
+                            Lang.Blocks.byrobot_dronefighter_drone_state_mode_drive,
                             'state_modeDrive',
                         ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_drone_state_battery,
-                            'state_battery',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_dronefighter_drone_irmessage,
-                            'irmessage_irdata',
-                        ],
+                        [Lang.Blocks.byrobot_dronefighter_drone_state_battery, 'state_battery'],
+                        [Lang.Blocks.byrobot_dronefighter_drone_irmessage, 'irmessage_irdata'],
                     ],
                     value: 'irmessage_irdata', // 초기 선택항목 지정
                     fontSize: 11,
@@ -862,15 +798,10 @@ Entry.byrobot_dronefighter_drive.getBlocks = function() {
                     type: 'Dropdown',
                     options: [
                         [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_button_button,
+                            Lang.Blocks.byrobot_dronefighter_controller_button_button,
                             'button_button',
                         ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_button_event,
-                            'button_event',
-                        ],
+                        [Lang.Blocks.byrobot_dronefighter_controller_button_event, 'button_event'],
                     ],
                     value: 'button_button', // 초기 선택항목 지정
                     fontSize: 11,
@@ -901,53 +832,43 @@ Entry.byrobot_dronefighter_drive.getBlocks = function() {
                     type: 'Dropdown',
                     options: [
                         [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_joystick_left_x,
+                            Lang.Blocks.byrobot_dronefighter_controller_joystick_left_x,
                             'joystick_left_x',
                         ],
                         [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_joystick_left_y,
+                            Lang.Blocks.byrobot_dronefighter_controller_joystick_left_y,
                             'joystick_left_y',
                         ],
                         [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_joystick_left_direction,
+                            Lang.Blocks.byrobot_dronefighter_controller_joystick_left_direction,
                             'joystick_left_direction',
                         ],
                         [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_joystick_left_event,
+                            Lang.Blocks.byrobot_dronefighter_controller_joystick_left_event,
                             'joystick_left_event',
                         ],
                         [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_joystick_left_command,
+                            Lang.Blocks.byrobot_dronefighter_controller_joystick_left_command,
                             'joystick_left_command',
                         ],
                         [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_joystick_right_x,
+                            Lang.Blocks.byrobot_dronefighter_controller_joystick_right_x,
                             'joystick_right_x',
                         ],
                         [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_joystick_right_y,
+                            Lang.Blocks.byrobot_dronefighter_controller_joystick_right_y,
                             'joystick_right_y',
                         ],
                         [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_joystick_right_direction,
+                            Lang.Blocks.byrobot_dronefighter_controller_joystick_right_direction,
                             'joystick_right_direction',
                         ],
                         [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_joystick_right_event,
+                            Lang.Blocks.byrobot_dronefighter_controller_joystick_right_event,
                             'joystick_right_event',
                         ],
                         [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_joystick_right_command,
+                            Lang.Blocks.byrobot_dronefighter_controller_joystick_right_command,
                             'joystick_right_command',
                         ],
                     ],
@@ -980,64 +901,19 @@ Entry.byrobot_dronefighter_drive.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
+                        [Lang.Blocks.byrobot_dronefighter_controller_button_front_left, '1'],
+                        [Lang.Blocks.byrobot_dronefighter_controller_button_front_right, '2'],
+                        [Lang.Blocks.byrobot_dronefighter_controller_button_front_left_right, '3'],
+                        [Lang.Blocks.byrobot_dronefighter_controller_button_center_up_left, '4'],
+                        [Lang.Blocks.byrobot_dronefighter_controller_button_center_up_right, '8'],
+                        [Lang.Blocks.byrobot_dronefighter_controller_button_center_up, '16'],
+                        [Lang.Blocks.byrobot_dronefighter_controller_button_center_left, '32'],
+                        [Lang.Blocks.byrobot_dronefighter_controller_button_center_right, '64'],
+                        [Lang.Blocks.byrobot_dronefighter_controller_button_center_down, '128'],
+                        [Lang.Blocks.byrobot_dronefighter_controller_button_bottom_left, '256'],
+                        [Lang.Blocks.byrobot_dronefighter_controller_button_bottom_right, '512'],
                         [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_button_front_left,
-                            '1',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_button_front_right,
-                            '2',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_button_front_left_right,
-                            '3',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_button_center_up_left,
-                            '4',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_button_center_up_right,
-                            '8',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_button_center_up,
-                            '16',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_button_center_left,
-                            '32',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_button_center_right,
-                            '64',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_button_center_down,
-                            '128',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_button_bottom_left,
-                            '256',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_button_bottom_right,
-                            '512',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_button_bottom_left_right,
+                            Lang.Blocks.byrobot_dronefighter_controller_button_bottom_left_right,
                             '768',
                         ],
                     ],
@@ -1060,10 +936,7 @@ Entry.byrobot_dronefighter_drive.getBlocks = function() {
                 var button = 'button_button'; // paramsKeyMap에 정의된 이름 사용
                 var buttonevent = 'button_event'; // paramsKeyMap에 정의된 이름 사용
 
-                if (
-                    read[button] == script.getField('BUTTON') &&
-                    read[buttonevent] == 2
-                )
+                if (read[button] == script.getField('BUTTON') && read[buttonevent] == 2)
                     return true;
                 else return false;
             },
@@ -1078,14 +951,8 @@ Entry.byrobot_dronefighter_drive.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [
-                            Lang.Blocks.byrobot_dronefighter_common_left,
-                            'joystick_left_direction',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_dronefighter_common_right,
-                            'joystick_right_direction',
-                        ],
+                        [Lang.Blocks.byrobot_dronefighter_common_left, 'joystick_left_direction'],
+                        [Lang.Blocks.byrobot_dronefighter_common_right, 'joystick_right_direction'],
                     ],
                     value: 'joystick_left_direction',
                     fontSize: 11,
@@ -1094,33 +961,21 @@ Entry.byrobot_dronefighter_drive.getBlocks = function() {
                     type: 'Dropdown',
                     options: [
                         [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_joystick_direction_left_up,
+                            Lang.Blocks.byrobot_dronefighter_controller_joystick_direction_left_up,
                             '17',
                         ],
+                        [Lang.Blocks.byrobot_dronefighter_controller_joystick_direction_up, '18'],
                         [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_joystick_direction_up,
-                            '18',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_joystick_direction_right_up,
+                            Lang.Blocks.byrobot_dronefighter_controller_joystick_direction_right_up,
                             '20',
                         ],
+                        [Lang.Blocks.byrobot_dronefighter_controller_joystick_direction_left, '33'],
                         [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_joystick_direction_left,
-                            '33',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_joystick_direction_center,
+                            Lang.Blocks.byrobot_dronefighter_controller_joystick_direction_center,
                             '34',
                         ],
                         [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_joystick_direction_right,
+                            Lang.Blocks.byrobot_dronefighter_controller_joystick_direction_right,
                             '36',
                         ],
                         [
@@ -1128,11 +983,7 @@ Entry.byrobot_dronefighter_drive.getBlocks = function() {
                                 .byrobot_dronefighter_controller_joystick_direction_left_down,
                             '65',
                         ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_joystick_direction_down,
-                            '66',
-                        ],
+                        [Lang.Blocks.byrobot_dronefighter_controller_joystick_direction_down, '66'],
                         [
                             Lang.Blocks
                                 .byrobot_dronefighter_controller_joystick_direction_right_down,
@@ -1146,8 +997,7 @@ Entry.byrobot_dronefighter_drive.getBlocks = function() {
             events: {},
             def: {
                 params: [null, null],
-                type:
-                    'byrobot_dronefighter_drive_controller_if_joystick_direction',
+                type: 'byrobot_dronefighter_drive_controller_if_joystick_direction',
             },
             paramsKeyMap: {
                 DEVICE: 0,
@@ -1196,13 +1046,11 @@ Entry.byrobot_dronefighter_drive.getBlocks = function() {
                     type: 'Dropdown',
                     options: [
                         [
-                            Lang.Blocks
-                                .byrobot_dronefighter_drone_control_double_wheel,
+                            Lang.Blocks.byrobot_dronefighter_drone_control_double_wheel,
                             'control_wheel',
                         ],
                         [
-                            Lang.Blocks
-                                .byrobot_dronefighter_drone_control_double_accel_forward,
+                            Lang.Blocks.byrobot_dronefighter_drone_control_double_accel_forward,
                             'control_accel',
                         ],
                     ],
@@ -1237,9 +1085,9 @@ Entry.byrobot_dronefighter_drive.getBlocks = function() {
             },
             class: 'byrobot_dronefighter_drive_control_drive',
             isNotFor: ['byrobot_dronefighter_drive'],
-            func: function(sprite, script) {
+            func: async function(sprite, script) {
                 var controlTarget = script.getField('CONTROLTARGET');
-                var value = parseInt(script.getNumberValue('VALUE', script));
+                var value = parseInt(await script.getNumberValue('VALUE', script));
 
                 return Entry.byrobot_dronefighter_drive.sendControlDoubleSingle(
                     script,
@@ -1259,13 +1107,11 @@ Entry.byrobot_dronefighter_drive.getBlocks = function() {
                     type: 'Dropdown',
                     options: [
                         [
-                            Lang.Blocks
-                                .byrobot_dronefighter_drone_control_double_wheel,
+                            Lang.Blocks.byrobot_dronefighter_drone_control_double_wheel,
                             'control_wheel',
                         ],
                         [
-                            Lang.Blocks
-                                .byrobot_dronefighter_drone_control_double_accel_forward,
+                            Lang.Blocks.byrobot_dronefighter_drone_control_double_accel_forward,
                             'control_accel',
                         ],
                     ],
@@ -1300,8 +1146,7 @@ Entry.byrobot_dronefighter_drive.getBlocks = function() {
                     },
                     null,
                 ],
-                type:
-                    'byrobot_dronefighter_drive_drone_control_double_one_delay',
+                type: 'byrobot_dronefighter_drive_drone_control_double_one_delay',
             },
             paramsKeyMap: {
                 CONTROLTARGET: 0,
@@ -1310,12 +1155,13 @@ Entry.byrobot_dronefighter_drive.getBlocks = function() {
             },
             class: 'byrobot_dronefighter_drive_control_drive',
             isNotFor: ['byrobot_dronefighter_drive'],
-            func: function(sprite, script) {
+            func: async function(sprite, script) {
                 var controlTarget = script.getField('CONTROLTARGET');
-                var value = parseInt(script.getNumberValue('VALUE', script));
-                var time = parseInt(
-                    script.getNumberValue('TIME', script) * 1000
-                );
+                let [value, time] = await Promise.all([
+                    script.getNumberValue('VALUE', script),
+                    script.getNumberValue('TIME', script),
+                ]);
+                time = parseInt(time * 1000);
 
                 return Entry.byrobot_dronefighter_drive.sendControlDoubleSingle(
                     script,
@@ -1366,9 +1212,14 @@ Entry.byrobot_dronefighter_drive.getBlocks = function() {
             },
             class: 'byrobot_dronefighter_drive_control_drive',
             isNotFor: ['byrobot_dronefighter_drive'],
-            func: function(sprite, script) {
-                var wheel = parseInt(script.getNumberValue('WHEEL', script));
-                var accel = parseInt(script.getNumberValue('ACCEL', script));
+            func: async function(sprite, script) {
+                let [wheel, accel] = await Promise([
+                    script.getNumberValue('WHEEL', script),
+                    script.getNumberValue('ACCEL', script),
+                ]);
+                wheel = parseInt(wheel);
+                accel = parseInt(accel);
+
                 return Entry.byrobot_dronefighter_drive.sendControlDouble(
                     script,
                     wheel,
@@ -1440,12 +1291,10 @@ Entry.byrobot_dronefighter_drive.getBlocks = function() {
             },
             class: 'byrobot_dronefighter_drive_motor',
             isNotFor: ['byrobot_dronefighter_drive'],
-            func: function(sprite, script) {
+            func: async function(sprite, script) {
                 var motorIndex = parseInt(script.getField('MOTORINDEX'));
                 var motorDirection = 1;
-                var motorSpeed = parseInt(
-                    script.getNumberValue('MOTORSPEED', script)
-                );
+                var motorSpeed = parseInt(await script.getNumberValue('MOTORSPEED', script));
 
                 return Entry.byrobot_dronefighter_drive.setMotorSingle(
                     script,
@@ -1495,13 +1344,14 @@ Entry.byrobot_dronefighter_drive.getBlocks = function() {
             },
             class: 'byrobot_dronefighter_drive_motor',
             isNotFor: ['byrobot_dronefighter_drive'],
-            func: function(sprite, script) {
-                var motorIndex =
-                    parseInt(script.getNumberValue('MOTORINDEX', script)) - 1;
+            func: async function(sprite, script) {
+                let [motorIndex, motorSpeed] = await Promise.all([
+                    script.getNumberValue('MOTORINDEX', script),
+                    script.getNumberValue('MOTORSPEED', script),
+                ]);
+                motorIndex = parseInt(motorIndex) - 1;
+                motorSpeed = parseInt(motorSpeed);
                 var motorDirection = 1;
-                var motorSpeed = parseInt(
-                    script.getNumberValue('MOTORSPEED', script)
-                );
 
                 return Entry.byrobot_dronefighter_drive.setMotorSingle(
                     script,
@@ -1542,12 +1392,9 @@ Entry.byrobot_dronefighter_drive.getBlocks = function() {
             },
             class: 'byrobot_dronefighter_drive_irmessage',
             isNotFor: ['byrobot_dronefighter_drive'],
-            func: function(sprite, script) {
-                var irmessage = script.getNumberValue('IRMESSAGE', script);
-                return Entry.byrobot_dronefighter_drive.sendIrMessage(
-                    script,
-                    irmessage
-                );
+            func: async function(sprite, script) {
+                var irmessage = await script.getNumberValue('IRMESSAGE', script);
+                return Entry.byrobot_dronefighter_drive.sendIrMessage(script, irmessage);
             },
         },
         byrobot_dronefighter_drive_controller_light_manual_single_off: {
@@ -1564,19 +1411,13 @@ Entry.byrobot_dronefighter_drive.getBlocks = function() {
             events: {},
             def: {
                 params: [null],
-                type:
-                    'byrobot_dronefighter_drive_controller_light_manual_single_off',
+                type: 'byrobot_dronefighter_drive_controller_light_manual_single_off',
             },
             paramsKeyMap: {},
             class: 'byrobot_dronefighter_drive_controller_light',
             isNotFor: ['byrobot_dronefighter_drive'],
             func: function(sprite, script) {
-                return Entry.byrobot_dronefighter_drive.setLightManual(
-                    script,
-                    0x11,
-                    0xff,
-                    0
-                );
+                return Entry.byrobot_dronefighter_drive.setLightManual(script, 0x11, 0xff, 0);
             },
         },
         byrobot_dronefighter_drive_controller_light_manual_single: {
@@ -1587,51 +1428,15 @@ Entry.byrobot_dronefighter_drive.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_common_light_manual_all,
-                            '255',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_common_light_manual_1,
-                            '128',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_common_light_manual_2,
-                            '64',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_common_light_manual_3,
-                            '32',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_common_light_manual_4,
-                            '16',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_common_light_manual_5,
-                            '8',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_common_light_manual_6,
-                            '4',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_common_light_manual_blue,
-                            '2',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_common_light_manual_red,
-                            '1',
-                        ],
+                        [Lang.Blocks.byrobot_dronefighter_common_light_manual_all, '255'],
+                        [Lang.Blocks.byrobot_dronefighter_common_light_manual_1, '128'],
+                        [Lang.Blocks.byrobot_dronefighter_common_light_manual_2, '64'],
+                        [Lang.Blocks.byrobot_dronefighter_common_light_manual_3, '32'],
+                        [Lang.Blocks.byrobot_dronefighter_common_light_manual_4, '16'],
+                        [Lang.Blocks.byrobot_dronefighter_common_light_manual_5, '8'],
+                        [Lang.Blocks.byrobot_dronefighter_common_light_manual_6, '4'],
+                        [Lang.Blocks.byrobot_dronefighter_common_light_manual_blue, '2'],
+                        [Lang.Blocks.byrobot_dronefighter_common_light_manual_red, '1'],
                     ],
                     value: '4',
                     fontSize: 11,
@@ -1639,36 +1444,12 @@ Entry.byrobot_dronefighter_drive.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_common_light_manual_on,
-                            '220',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_common_light_manual_off,
-                            '0',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_common_light_manual_b25,
-                            '75',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_common_light_manual_b50,
-                            '125',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_common_light_manual_b75,
-                            '200',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_common_light_manual_b100,
-                            '255',
-                        ],
+                        [Lang.Blocks.byrobot_dronefighter_common_light_manual_on, '220'],
+                        [Lang.Blocks.byrobot_dronefighter_common_light_manual_off, '0'],
+                        [Lang.Blocks.byrobot_dronefighter_common_light_manual_b25, '75'],
+                        [Lang.Blocks.byrobot_dronefighter_common_light_manual_b50, '125'],
+                        [Lang.Blocks.byrobot_dronefighter_common_light_manual_b75, '200'],
+                        [Lang.Blocks.byrobot_dronefighter_common_light_manual_b100, '255'],
                     ],
                     value: '220',
                     fontSize: 11,
@@ -1682,8 +1463,7 @@ Entry.byrobot_dronefighter_drive.getBlocks = function() {
             events: {},
             def: {
                 params: [null, null, null],
-                type:
-                    'byrobot_dronefighter_drive_controller_light_manual_single',
+                type: 'byrobot_dronefighter_drive_controller_light_manual_single',
             },
             paramsKeyMap: {
                 FLAGS: 0,
@@ -1734,8 +1514,7 @@ Entry.byrobot_dronefighter_drive.getBlocks = function() {
                     },
                     null,
                 ],
-                type:
-                    'byrobot_dronefighter_drive_controller_light_manual_single_input',
+                type: 'byrobot_dronefighter_drive_controller_light_manual_single_input',
             },
             paramsKeyMap: {
                 FLAGS: 0,
@@ -1743,9 +1522,11 @@ Entry.byrobot_dronefighter_drive.getBlocks = function() {
             },
             class: 'byrobot_dronefighter_drive_controller_light',
             isNotFor: ['byrobot_dronefighter_drive'],
-            func: function(sprite, script) {
-                var flags = script.getNumberValue('FLAGS');
-                var brightness = script.getNumberValue('BRIGHTNESS');
+            func: async function(sprite, script) {
+                let [flags, brightness] = await Promise.all([
+                    script.getNumberValue('FLAGS'),
+                    script.getNumberValue('BRIGHTNESS'),
+                ]);
                 return Entry.byrobot_dronefighter_drive.setLightManual(
                     script,
                     0x11,
@@ -1768,19 +1549,13 @@ Entry.byrobot_dronefighter_drive.getBlocks = function() {
             events: {},
             def: {
                 params: [null],
-                type:
-                    'byrobot_dronefighter_drive_drone_light_manual_single_off',
+                type: 'byrobot_dronefighter_drive_drone_light_manual_single_off',
             },
             paramsKeyMap: {},
             class: 'byrobot_dronefighter_drive_drone_light',
             isNotFor: ['byrobot_dronefighter_drive'],
             func: function(sprite, script) {
-                return Entry.byrobot_dronefighter_drive.setLightManual(
-                    script,
-                    0x10,
-                    0xff,
-                    0
-                );
+                return Entry.byrobot_dronefighter_drive.setLightManual(script, 0x10, 0xff, 0);
             },
         },
         byrobot_dronefighter_drive_drone_light_manual_single: {
@@ -1791,41 +1566,13 @@ Entry.byrobot_dronefighter_drive.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_common_light_manual_all,
-                            '255',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_common_light_manual_1,
-                            '128',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_common_light_manual_2,
-                            '64',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_common_light_manual_3,
-                            '32',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_common_light_manual_4,
-                            '16',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_common_light_manual_blue,
-                            '8',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_common_light_manual_red,
-                            '4',
-                        ],
+                        [Lang.Blocks.byrobot_dronefighter_common_light_manual_all, '255'],
+                        [Lang.Blocks.byrobot_dronefighter_common_light_manual_1, '128'],
+                        [Lang.Blocks.byrobot_dronefighter_common_light_manual_2, '64'],
+                        [Lang.Blocks.byrobot_dronefighter_common_light_manual_3, '32'],
+                        [Lang.Blocks.byrobot_dronefighter_common_light_manual_4, '16'],
+                        [Lang.Blocks.byrobot_dronefighter_common_light_manual_blue, '8'],
+                        [Lang.Blocks.byrobot_dronefighter_common_light_manual_red, '4'],
                     ],
                     value: '4',
                     fontSize: 11,
@@ -1833,36 +1580,12 @@ Entry.byrobot_dronefighter_drive.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_common_light_manual_on,
-                            '220',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_common_light_manual_off,
-                            '0',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_common_light_manual_b25,
-                            '75',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_common_light_manual_b50,
-                            '125',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_common_light_manual_b75,
-                            '200',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_common_light_manual_b100,
-                            '255',
-                        ],
+                        [Lang.Blocks.byrobot_dronefighter_common_light_manual_on, '220'],
+                        [Lang.Blocks.byrobot_dronefighter_common_light_manual_off, '0'],
+                        [Lang.Blocks.byrobot_dronefighter_common_light_manual_b25, '75'],
+                        [Lang.Blocks.byrobot_dronefighter_common_light_manual_b50, '125'],
+                        [Lang.Blocks.byrobot_dronefighter_common_light_manual_b75, '200'],
+                        [Lang.Blocks.byrobot_dronefighter_common_light_manual_b100, '255'],
                     ],
                     value: '220',
                     fontSize: 11,
@@ -1927,8 +1650,7 @@ Entry.byrobot_dronefighter_drive.getBlocks = function() {
                     },
                     null,
                 ],
-                type:
-                    'byrobot_dronefighter_drive_drone_light_manual_single_input',
+                type: 'byrobot_dronefighter_drive_drone_light_manual_single_input',
             },
             paramsKeyMap: {
                 FLAGS: 0,
@@ -1936,9 +1658,11 @@ Entry.byrobot_dronefighter_drive.getBlocks = function() {
             },
             class: 'byrobot_dronefighter_drive_drone_light',
             isNotFor: ['byrobot_dronefighter_drive'],
-            func: function(sprite, script) {
-                var flags = script.getNumberValue('FLAGS');
-                var brightness = script.getNumberValue('BRIGHTNESS');
+            func: async function(sprite, script) {
+                let [flags, brightness] = await Promise.all([
+                    script.getNumberValue('FLAGS'),
+                    script.getNumberValue('BRIGHTNESS'),
+                ]);
                 return Entry.byrobot_dronefighter_drive.setLightManual(
                     script,
                     0x10,
@@ -1977,84 +1701,26 @@ Entry.byrobot_dronefighter_drive.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [
-                        ['4', '3'],
-                        ['5', '4'],
-                        ['6', '5'],
-                        ['7', '6'],
-                        ['8', '7'],
-                    ],
+                    options: [['4', '3'], ['5', '4'], ['6', '5'], ['7', '6'], ['8', '7']],
                     value: '4',
                     fontSize: 11,
                 },
                 {
                     type: 'Dropdown',
                     options: [
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_buzzer_mute,
-                            '-1',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_buzzer_c,
-                            '0',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_buzzer_cs,
-                            '1',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_buzzer_d,
-                            '2',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_buzzer_ds,
-                            '3',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_buzzer_e,
-                            '4',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_buzzer_f,
-                            '5',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_buzzer_fs,
-                            '6',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_buzzer_g,
-                            '7',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_buzzer_gs,
-                            '8',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_buzzer_a,
-                            '9',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_buzzer_as,
-                            '10',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_buzzer_b,
-                            '11',
-                        ],
+                        [Lang.Blocks.byrobot_dronefighter_controller_buzzer_mute, '-1'],
+                        [Lang.Blocks.byrobot_dronefighter_controller_buzzer_c, '0'],
+                        [Lang.Blocks.byrobot_dronefighter_controller_buzzer_cs, '1'],
+                        [Lang.Blocks.byrobot_dronefighter_controller_buzzer_d, '2'],
+                        [Lang.Blocks.byrobot_dronefighter_controller_buzzer_ds, '3'],
+                        [Lang.Blocks.byrobot_dronefighter_controller_buzzer_e, '4'],
+                        [Lang.Blocks.byrobot_dronefighter_controller_buzzer_f, '5'],
+                        [Lang.Blocks.byrobot_dronefighter_controller_buzzer_fs, '6'],
+                        [Lang.Blocks.byrobot_dronefighter_controller_buzzer_g, '7'],
+                        [Lang.Blocks.byrobot_dronefighter_controller_buzzer_gs, '8'],
+                        [Lang.Blocks.byrobot_dronefighter_controller_buzzer_a, '9'],
+                        [Lang.Blocks.byrobot_dronefighter_controller_buzzer_as, '10'],
+                        [Lang.Blocks.byrobot_dronefighter_controller_buzzer_b, '11'],
                     ],
                     value: '0',
                     fontSize: 11,
@@ -2105,84 +1771,26 @@ Entry.byrobot_dronefighter_drive.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [
-                        ['4', '3'],
-                        ['5', '4'],
-                        ['6', '5'],
-                        ['7', '6'],
-                        ['8', '7'],
-                    ],
+                    options: [['4', '3'], ['5', '4'], ['6', '5'], ['7', '6'], ['8', '7']],
                     value: '4',
                     fontSize: 11,
                 },
                 {
                     type: 'Dropdown',
                     options: [
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_buzzer_mute,
-                            '-1',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_buzzer_c,
-                            '0',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_buzzer_cs,
-                            '1',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_buzzer_d,
-                            '2',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_buzzer_ds,
-                            '3',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_buzzer_e,
-                            '4',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_buzzer_f,
-                            '5',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_buzzer_fs,
-                            '6',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_buzzer_g,
-                            '7',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_buzzer_gs,
-                            '8',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_buzzer_a,
-                            '9',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_buzzer_as,
-                            '10',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_buzzer_b,
-                            '11',
-                        ],
+                        [Lang.Blocks.byrobot_dronefighter_controller_buzzer_mute, '-1'],
+                        [Lang.Blocks.byrobot_dronefighter_controller_buzzer_c, '0'],
+                        [Lang.Blocks.byrobot_dronefighter_controller_buzzer_cs, '1'],
+                        [Lang.Blocks.byrobot_dronefighter_controller_buzzer_d, '2'],
+                        [Lang.Blocks.byrobot_dronefighter_controller_buzzer_ds, '3'],
+                        [Lang.Blocks.byrobot_dronefighter_controller_buzzer_e, '4'],
+                        [Lang.Blocks.byrobot_dronefighter_controller_buzzer_f, '5'],
+                        [Lang.Blocks.byrobot_dronefighter_controller_buzzer_fs, '6'],
+                        [Lang.Blocks.byrobot_dronefighter_controller_buzzer_g, '7'],
+                        [Lang.Blocks.byrobot_dronefighter_controller_buzzer_gs, '8'],
+                        [Lang.Blocks.byrobot_dronefighter_controller_buzzer_a, '9'],
+                        [Lang.Blocks.byrobot_dronefighter_controller_buzzer_as, '10'],
+                        [Lang.Blocks.byrobot_dronefighter_controller_buzzer_b, '11'],
                     ],
                     value: '0',
                     fontSize: 11,
@@ -2208,8 +1816,7 @@ Entry.byrobot_dronefighter_drive.getBlocks = function() {
                     },
                     null,
                 ],
-                type:
-                    'byrobot_dronefighter_drive_controller_buzzer_scale_delay',
+                type: 'byrobot_dronefighter_drive_controller_buzzer_scale_delay',
             },
             paramsKeyMap: {
                 OCTAVE: 0,
@@ -2218,18 +1825,13 @@ Entry.byrobot_dronefighter_drive.getBlocks = function() {
             },
             class: 'byrobot_dronefighter_drive_buzzer',
             isNotFor: ['byrobot_dronefighter_drive'],
-            func: function(sprite, script) {
+            func: async function(sprite, script) {
                 var octave = parseInt(script.getField('OCTAVE'));
                 var scale = parseInt(script.getField('SCALE'));
-                var time = parseInt(script.getNumberValue('TIME') * 1000);
+                var time = parseInt((await script.getNumberValue('TIME')) * 1000);
 
                 if (scale == -1)
-                    return Entry.byrobot_dronefighter_drive.setBuzzerMute(
-                        script,
-                        time,
-                        true,
-                        true
-                    );
+                    return Entry.byrobot_dronefighter_drive.setBuzzerMute(script, time, true, true);
                 else
                     return Entry.byrobot_dronefighter_drive.setBuzzerScale(
                         script,
@@ -2248,84 +1850,26 @@ Entry.byrobot_dronefighter_drive.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [
-                        ['4', '3'],
-                        ['5', '4'],
-                        ['6', '5'],
-                        ['7', '6'],
-                        ['8', '7'],
-                    ],
+                    options: [['4', '3'], ['5', '4'], ['6', '5'], ['7', '6'], ['8', '7']],
                     value: '4',
                     fontSize: 11,
                 },
                 {
                     type: 'Dropdown',
                     options: [
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_buzzer_mute,
-                            '-1',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_buzzer_c,
-                            '0',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_buzzer_cs,
-                            '1',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_buzzer_d,
-                            '2',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_buzzer_ds,
-                            '3',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_buzzer_e,
-                            '4',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_buzzer_f,
-                            '5',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_buzzer_fs,
-                            '6',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_buzzer_g,
-                            '7',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_buzzer_gs,
-                            '8',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_buzzer_a,
-                            '9',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_buzzer_as,
-                            '10',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_dronefighter_controller_buzzer_b,
-                            '11',
-                        ],
+                        [Lang.Blocks.byrobot_dronefighter_controller_buzzer_mute, '-1'],
+                        [Lang.Blocks.byrobot_dronefighter_controller_buzzer_c, '0'],
+                        [Lang.Blocks.byrobot_dronefighter_controller_buzzer_cs, '1'],
+                        [Lang.Blocks.byrobot_dronefighter_controller_buzzer_d, '2'],
+                        [Lang.Blocks.byrobot_dronefighter_controller_buzzer_ds, '3'],
+                        [Lang.Blocks.byrobot_dronefighter_controller_buzzer_e, '4'],
+                        [Lang.Blocks.byrobot_dronefighter_controller_buzzer_f, '5'],
+                        [Lang.Blocks.byrobot_dronefighter_controller_buzzer_fs, '6'],
+                        [Lang.Blocks.byrobot_dronefighter_controller_buzzer_g, '7'],
+                        [Lang.Blocks.byrobot_dronefighter_controller_buzzer_gs, '8'],
+                        [Lang.Blocks.byrobot_dronefighter_controller_buzzer_a, '9'],
+                        [Lang.Blocks.byrobot_dronefighter_controller_buzzer_as, '10'],
+                        [Lang.Blocks.byrobot_dronefighter_controller_buzzer_b, '11'],
                     ],
                     value: '0',
                     fontSize: 11,
@@ -2351,8 +1895,7 @@ Entry.byrobot_dronefighter_drive.getBlocks = function() {
                     },
                     null,
                 ],
-                type:
-                    'byrobot_dronefighter_drive_controller_buzzer_scale_reserve',
+                type: 'byrobot_dronefighter_drive_controller_buzzer_scale_reserve',
             },
             paramsKeyMap: {
                 OCTAVE: 0,
@@ -2361,10 +1904,10 @@ Entry.byrobot_dronefighter_drive.getBlocks = function() {
             },
             class: 'byrobot_dronefighter_drive_buzzer',
             isNotFor: ['byrobot_dronefighter_drive'],
-            func: function(sprite, script) {
+            func: async function(sprite, script) {
                 var octave = parseInt(script.getField('OCTAVE'));
                 var scale = parseInt(script.getField('SCALE'));
-                var time = parseInt(script.getNumberValue('TIME') * 1000);
+                var time = parseInt((await script.getNumberValue('TIME')) * 1000);
 
                 if (scale == -1)
                     return Entry.byrobot_dronefighter_drive.setBuzzerMute(
@@ -2415,15 +1958,9 @@ Entry.byrobot_dronefighter_drive.getBlocks = function() {
             },
             class: 'byrobot_dronefighter_drive_buzzer',
             isNotFor: ['byrobot_dronefighter_drive'],
-            func: function(sprite, script) {
-                var hz = parseInt(script.getNumberValue('HZ', script));
-                return Entry.byrobot_dronefighter_drive.setBuzzerHz(
-                    script,
-                    hz,
-                    60000,
-                    false,
-                    true
-                );
+            func: async function(sprite, script) {
+                var hz = parseInt(await script.getNumberValue('HZ', script));
+                return Entry.byrobot_dronefighter_drive.setBuzzerHz(script, hz, 60000, false, true);
             },
         },
         byrobot_dronefighter_drive_controller_buzzer_hz_delay: {
@@ -2466,16 +2003,14 @@ Entry.byrobot_dronefighter_drive.getBlocks = function() {
             },
             class: 'byrobot_dronefighter_drive_buzzer',
             isNotFor: ['byrobot_dronefighter_drive'],
-            func: function(sprite, script) {
-                var hz = parseInt(script.getNumberValue('HZ', script));
-                var time = parseInt(script.getNumberValue('TIME') * 1000);
-                return Entry.byrobot_dronefighter_drive.setBuzzerHz(
-                    script,
-                    hz,
-                    time,
-                    true,
-                    true
-                );
+            func: async function(sprite, script) {
+                let [hz, time] = await Promise.all([
+                    script.getNumberValue('HZ', script),
+                    script.getNumberValue('TIME'),
+                ]);
+                hz = parseInt(hz);
+                time = parseInt(time * 1000);
+                return Entry.byrobot_dronefighter_drive.setBuzzerHz(script, hz, time, true, true);
             },
         },
         byrobot_dronefighter_drive_controller_buzzer_hz_reserve: {
@@ -2518,16 +2053,14 @@ Entry.byrobot_dronefighter_drive.getBlocks = function() {
             },
             class: 'byrobot_dronefighter_drive_buzzer',
             isNotFor: ['byrobot_dronefighter_drive'],
-            func: function(sprite, script) {
-                var hz = parseInt(script.getNumberValue('HZ', script));
-                var time = parseInt(script.getNumberValue('TIME') * 1000);
-                return Entry.byrobot_dronefighter_drive.setBuzzerHz(
-                    script,
-                    hz,
-                    time,
-                    false,
-                    false
-                );
+            func: async function(sprite, script) {
+                let [hz, time] = await Promise.all([
+                    script.getNumberValue('HZ', script),
+                    script.getNumberValue('TIME'),
+                ]);
+                hz = parseInt(hz);
+                time = parseInt(time * 1000);
+                return Entry.byrobot_dronefighter_drive.setBuzzerHz(script, hz, time, false, false);
             },
         },
         byrobot_dronefighter_drive_controller_vibrator_off: {
@@ -2584,8 +2117,8 @@ Entry.byrobot_dronefighter_drive.getBlocks = function() {
             },
             class: 'byrobot_dronefighter_drive_vibrator',
             isNotFor: ['byrobot_dronefighter_drive'],
-            func: function(sprite, script) {
-                var timeOn = parseInt(script.getNumberValue('TIMEON') * 1000);
+            func: async function(sprite, script) {
+                var timeOn = parseInt(await script.getNumberValue('TIMEON') * 1000);
                 return Entry.byrobot_dronefighter_drive.setVibrator(
                     script,
                     timeOn,
@@ -2620,16 +2153,15 @@ Entry.byrobot_dronefighter_drive.getBlocks = function() {
                     },
                     null,
                 ],
-                type:
-                    'byrobot_dronefighter_drive_controller_vibrator_on_reserve',
+                type: 'byrobot_dronefighter_drive_controller_vibrator_on_reserve',
             },
             paramsKeyMap: {
                 TIMEON: 0,
             },
             class: 'byrobot_dronefighter_drive_vibrator',
             isNotFor: ['byrobot_dronefighter_drive'],
-            func: function(sprite, script) {
-                var timeOn = parseInt(script.getNumberValue('TIMEON') * 1000);
+            func: async function(sprite, script) {
+                var timeOn = parseInt(await script.getNumberValue('TIMEON') * 1000);
                 return Entry.byrobot_dronefighter_drive.setVibrator(
                     script,
                     timeOn,
@@ -2689,10 +2221,15 @@ Entry.byrobot_dronefighter_drive.getBlocks = function() {
             },
             class: 'byrobot_dronefighter_drive_vibrator',
             isNotFor: ['byrobot_dronefighter_drive'],
-            func: function(sprite, script) {
-                var timeOn = parseInt(script.getNumberValue('TIMEON') * 1000);
-                var timeOff = parseInt(script.getNumberValue('TIMEOFF') * 1000);
-                var timeRun = parseInt(script.getNumberValue('TIMERUN') * 1000);
+            func: async function(sprite, script) {
+                let [timeOn, timeOff, timeRun] = await Promise.all([
+                    script.getNumberValue('TIMEON'),
+                    script.getNumberValue('TIMEOFF'),
+                    script.getNumberValue('TIMERUN'),
+                ]);
+                timeOn = parseInt(timeOn * 1000);
+                timeOff = parseInt(timeOff * 1000);
+                timeRun = parseInt(stimeRun * 1000);
                 return Entry.byrobot_dronefighter_drive.setVibrator(
                     script,
                     timeOn,
@@ -2752,10 +2289,15 @@ Entry.byrobot_dronefighter_drive.getBlocks = function() {
             },
             class: 'byrobot_dronefighter_drive_vibrator',
             isNotFor: ['byrobot_dronefighter_drive'],
-            func: function(sprite, script) {
-                var timeOn = parseInt(script.getNumberValue('TIMEON') * 1000);
-                var timeOff = parseInt(script.getNumberValue('TIMEOFF') * 1000);
-                var timeRun = parseInt(script.getNumberValue('TIMERUN') * 1000);
+            func: async function(sprite, script) {
+                let [timeOn, timeOff, timeRun] = await Promise.all([
+                    script.getNumberValue('TIMEON'),
+                    script.getNumberValue('TIMEOFF'),
+                    script.getNumberValue('TIMERUN'),
+                ]);
+                timeOn = parseInt(timeOn * 1000);
+                timeOff = parseInt(timeOff * 1000);
+                timeRun = parseInt(stimeRun * 1000);
                 return Entry.byrobot_dronefighter_drive.setVibrator(
                     script,
                     timeOn,

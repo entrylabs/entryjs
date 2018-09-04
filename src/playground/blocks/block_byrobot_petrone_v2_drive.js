@@ -18,8 +18,8 @@ Entry.byrobot_petrone_v2_drive = {
     url: 'http://www.byrobot.co.kr/',
     imageName: 'byrobot_petrone_v2_drive.png',
     title: {
-        "en": "BYROBOT Petrone V2 drive",
-        "ko": "바이로봇 페트론V2 자동차"
+        en: 'BYROBOT Petrone V2 drive',
+        ko: '바이로봇 페트론V2 자동차',
     },
 
     // 초기화
@@ -160,42 +160,32 @@ Entry.byrobot_petrone_v2_drive = {
                 pos: { x: 0, y: 0 },
             },
             joystick_left_direction: {
-                name:
-                    Lang.Blocks
-                        .byrobot_petrone_v2_controller_joystick_left_direction,
+                name: Lang.Blocks.byrobot_petrone_v2_controller_joystick_left_direction,
                 type: 'input',
                 pos: { x: 0, y: 0 },
             },
             joystick_left_event: {
-                name:
-                    Lang.Blocks
-                        .byrobot_petrone_v2_controller_joystick_left_event,
+                name: Lang.Blocks.byrobot_petrone_v2_controller_joystick_left_event,
                 type: 'input',
                 pos: { x: 0, y: 0 },
             },
             joystick_right_x: {
-                name:
-                    Lang.Blocks.byrobot_petrone_v2_controller_joystick_right_x,
+                name: Lang.Blocks.byrobot_petrone_v2_controller_joystick_right_x,
                 type: 'input',
                 pos: { x: 0, y: 0 },
             },
             joystick_right_y: {
-                name:
-                    Lang.Blocks.byrobot_petrone_v2_controller_joystick_right_y,
+                name: Lang.Blocks.byrobot_petrone_v2_controller_joystick_right_y,
                 type: 'input',
                 pos: { x: 0, y: 0 },
             },
             joystick_right_direction: {
-                name:
-                    Lang.Blocks
-                        .byrobot_petrone_v2_controller_joystick_right_direction,
+                name: Lang.Blocks.byrobot_petrone_v2_controller_joystick_right_direction,
                 type: 'input',
                 pos: { x: 0, y: 0 },
             },
             joystick_right_event: {
-                name:
-                    Lang.Blocks
-                        .byrobot_petrone_v2_controller_joystick_right_event,
+                name: Lang.Blocks.byrobot_petrone_v2_controller_joystick_right_event,
                 type: 'input',
                 pos: { x: 0, y: 0 },
             },
@@ -210,9 +200,7 @@ Entry.byrobot_petrone_v2_drive = {
                 pos: { x: 0, y: 0 },
             },
             entryhw_countTransferReserved: {
-                name:
-                    Lang.Blocks
-                        .byrobot_petrone_v2_entryhw_count_transfer_reserved,
+                name: Lang.Blocks.byrobot_petrone_v2_entryhw_count_transfer_reserved,
                 type: 'output',
                 pos: { x: 0, y: 0 },
             },
@@ -330,15 +318,7 @@ Entry.byrobot_petrone_v2_drive = {
         delete Entry.hw.sendQueue['light_color_b'];
     },
 
-    transferDisplayClear: function(
-        target,
-        pixel,
-        clearAll,
-        x,
-        y,
-        width,
-        height
-    ) {
+    transferDisplayClear: function(target, pixel, clearAll, x, y, width, height) {
         if (clearAll) {
             // 전송
             Entry.hw.setDigitalPortValue('target', target);
@@ -457,16 +437,7 @@ Entry.byrobot_petrone_v2_drive = {
         delete Entry.hw.sendQueue['display_draw_line_line'];
     },
 
-    transferDisplayDrawRect: function(
-        target,
-        x,
-        y,
-        width,
-        height,
-        pixel,
-        flagFill,
-        line
-    ) {
+    transferDisplayDrawRect: function(target, x, y, width, height, pixel, flagFill, line) {
         // 범위 조정
         x = Math.max(x, 0);
         x = Math.min(x, 128);
@@ -551,16 +522,7 @@ Entry.byrobot_petrone_v2_drive = {
         delete Entry.hw.sendQueue['display_draw_string_string'];
     },
 
-    transferDisplayDrawStringAlign: function(
-        target,
-        xStart,
-        xEnd,
-        y,
-        align,
-        font,
-        pixel,
-        string
-    ) {
+    transferDisplayDrawStringAlign: function(target, xStart, xEnd, y, align, font, pixel, string) {
         // 범위 조정
         xStart = Math.max(xStart, 0);
         xStart = Math.min(xStart, 124);
@@ -571,19 +533,13 @@ Entry.byrobot_petrone_v2_drive = {
 
         // 전송
         Entry.hw.setDigitalPortValue('target', target);
-        Entry.hw.setDigitalPortValue(
-            'display_draw_string_align_x_start',
-            xStart
-        );
+        Entry.hw.setDigitalPortValue('display_draw_string_align_x_start', xStart);
         Entry.hw.setDigitalPortValue('display_draw_string_align_x_end', xEnd);
         Entry.hw.setDigitalPortValue('display_draw_string_align_y', y);
         Entry.hw.setDigitalPortValue('display_draw_string_align_align', align);
         Entry.hw.setDigitalPortValue('display_draw_string_align_font', font);
         Entry.hw.setDigitalPortValue('display_draw_string_align_pixel', pixel);
-        Entry.hw.setDigitalPortValue(
-            'display_draw_string_align_string',
-            string
-        );
+        Entry.hw.setDigitalPortValue('display_draw_string_align_string', string);
 
         Entry.hw.update();
 
@@ -778,28 +734,11 @@ Entry.byrobot_petrone_v2_drive = {
     },
 
     // OLED - 화면 전체 지우기, 선택 영역 지우기
-    setDisplayClear: function(
-        script,
-        target,
-        pixel,
-        clearAll,
-        x,
-        y,
-        width,
-        height
-    ) {
+    setDisplayClear: function(script, target, pixel, clearAll, x, y, width, height) {
         switch (this.checkFinish(script, 40)) {
             case 'Start':
                 {
-                    this.transferDisplayClear(
-                        target,
-                        pixel,
-                        clearAll,
-                        x,
-                        y,
-                        width,
-                        height
-                    );
+                    this.transferDisplayClear(target, pixel, clearAll, x, y, width, height);
                 }
                 return script;
 
@@ -859,15 +798,7 @@ Entry.byrobot_petrone_v2_drive = {
         switch (this.checkFinish(script, 40)) {
             case 'Start':
                 {
-                    this.transferDisplayDrawLine(
-                        target,
-                        x1,
-                        y1,
-                        x2,
-                        y2,
-                        pixel,
-                        line
-                    );
+                    this.transferDisplayDrawLine(target, x1, y1, x2, y2, pixel, line);
                 }
                 return script;
 
@@ -883,17 +814,7 @@ Entry.byrobot_petrone_v2_drive = {
     },
 
     // OLED - 화면에 사각형 그리기
-    setDisplayDrawRect: function(
-        script,
-        target,
-        x,
-        y,
-        width,
-        height,
-        pixel,
-        flagFill,
-        line
-    ) {
+    setDisplayDrawRect: function(script, target, x, y, width, height, pixel, flagFill, line) {
         switch (this.checkFinish(script, 40)) {
             case 'Start':
                 {
@@ -922,26 +843,11 @@ Entry.byrobot_petrone_v2_drive = {
     },
 
     // OLED - 화면에 원 그리기
-    setDisplayDrawCircle: function(
-        script,
-        target,
-        x,
-        y,
-        radius,
-        pixel,
-        flagFill
-    ) {
+    setDisplayDrawCircle: function(script, target, x, y, radius, pixel, flagFill) {
         switch (this.checkFinish(script, 40)) {
             case 'Start':
                 {
-                    this.transferDisplayDrawCircle(
-                        target,
-                        x,
-                        y,
-                        radius,
-                        pixel,
-                        flagFill
-                    );
+                    this.transferDisplayDrawCircle(target, x, y, radius, pixel, flagFill);
                 }
                 return script;
 
@@ -961,14 +867,7 @@ Entry.byrobot_petrone_v2_drive = {
         switch (this.checkFinish(script, 40)) {
             case 'Start':
                 {
-                    this.transferDisplayDrawString(
-                        target,
-                        x,
-                        y,
-                        font,
-                        pixel,
-                        string
-                    );
+                    this.transferDisplayDrawString(target, x, y, font, pixel, string);
                 }
                 return script;
 
@@ -1082,14 +981,7 @@ Entry.byrobot_petrone_v2_drive = {
         }
     },
 
-    setBuzzerScale: function(
-        script,
-        octave,
-        scale,
-        time,
-        flagDelay,
-        flagInstantly
-    ) {
+    setBuzzerScale: function(script, octave, scale, time, flagDelay, flagInstantly) {
         time = Math.max(time, 0);
         time = Math.min(time, 60000);
 
@@ -1176,14 +1068,7 @@ Entry.byrobot_petrone_v2_drive = {
         }
     },
 
-    setVibrator: function(
-        script,
-        timeOn,
-        timeOff,
-        timeRun,
-        flagDelay,
-        flagInstantly
-    ) {
+    setVibrator: function(script, timeOn, timeOff, timeRun, flagDelay, flagInstantly) {
         timeRun = Math.max(timeRun, 0);
         timeRun = Math.min(timeRun, 60000);
 
@@ -1258,11 +1143,7 @@ Entry.byrobot_petrone_v2_drive = {
         switch (this.checkFinish(script, 40)) {
             case 'Start':
                 {
-                    this.transferMotorSingle(
-                        motorIndex,
-                        motorRotation,
-                        motorSpeed
-                    );
+                    this.transferMotorSingle(motorIndex, motorRotation, motorSpeed);
                 }
                 return script;
 
@@ -1310,13 +1191,7 @@ Entry.byrobot_petrone_v2_drive = {
         }
     },
 
-    sendControlDoubleSingle: function(
-        script,
-        controlTarget,
-        value,
-        time,
-        flagDelay
-    ) {
+    sendControlDoubleSingle: function(script, controlTarget, value, time, flagDelay) {
         var timeDelay = 40;
         if (flagDelay) timeDelay = time;
 
@@ -1413,18 +1288,9 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_drone_attitude_roll,
-                            'imu_angleRoll',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_drone_attitude_pitch,
-                            'imu_anglePitch',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_drone_attitude_yaw,
-                            'imu_angleYaw',
-                        ],
+                        [Lang.Blocks.byrobot_petrone_v2_drone_attitude_roll, 'imu_angleRoll'],
+                        [Lang.Blocks.byrobot_petrone_v2_drone_attitude_pitch, 'imu_anglePitch'],
+                        [Lang.Blocks.byrobot_petrone_v2_drone_attitude_yaw, 'imu_angleYaw'],
                     ],
                     value: 'imu_angleRoll', // 초기 선택항목 지정
                     fontSize: 11,
@@ -1452,30 +1318,12 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_drone_accel_x,
-                            'imu_accX',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_drone_accel_y,
-                            'imu_accY',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_drone_accel_z,
-                            'imu_accZ',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_drone_gyro_roll,
-                            'imu_gyroRoll',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_drone_gyro_pitch,
-                            'imu_gyroPitch',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_drone_gyro_yaw,
-                            'imu_gyroYaw',
-                        ],
+                        [Lang.Blocks.byrobot_petrone_v2_drone_accel_x, 'imu_accX'],
+                        [Lang.Blocks.byrobot_petrone_v2_drone_accel_y, 'imu_accY'],
+                        [Lang.Blocks.byrobot_petrone_v2_drone_accel_z, 'imu_accZ'],
+                        [Lang.Blocks.byrobot_petrone_v2_drone_gyro_roll, 'imu_gyroRoll'],
+                        [Lang.Blocks.byrobot_petrone_v2_drone_gyro_pitch, 'imu_gyroPitch'],
+                        [Lang.Blocks.byrobot_petrone_v2_drone_gyro_yaw, 'imu_gyroYaw'],
                     ],
                     value: 'imu_accX', // 초기 선택항목 지정
                     fontSize: 11,
@@ -1504,29 +1352,22 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
                     type: 'Dropdown',
                     options: [
                         [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_drone_pressure_temperature,
+                            Lang.Blocks.byrobot_petrone_v2_drone_pressure_temperature,
                             'pressure_temperature',
                         ],
                         [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_drone_pressure_pressure,
+                            Lang.Blocks.byrobot_petrone_v2_drone_pressure_pressure,
                             'pressure_pressure',
                         ],
                         [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_drone_imageflow_positionX,
+                            Lang.Blocks.byrobot_petrone_v2_drone_imageflow_positionX,
                             'imageflow_positionX',
                         ],
                         [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_drone_imageflow_positionY,
+                            Lang.Blocks.byrobot_petrone_v2_drone_imageflow_positionY,
                             'imageflow_positionY',
                         ],
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_drone_range_bottom,
-                            'range_bottom',
-                        ],
+                        [Lang.Blocks.byrobot_petrone_v2_drone_range_bottom, 'range_bottom'],
                     ],
                     value: 'pressure_temperature', // 초기 선택항목 지정
                     fontSize: 11,
@@ -1555,23 +1396,12 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
                     type: 'Dropdown',
                     options: [
                         [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_drone_state_mode_vehicle,
+                            Lang.Blocks.byrobot_petrone_v2_drone_state_mode_vehicle,
                             'state_modeVehicle',
                         ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_drone_state_mode_drive,
-                            'state_modeDrive',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_drone_state_battery,
-                            'state_battery',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_drone_irmessage,
-                            'irmessage_irdata',
-                        ],
+                        [Lang.Blocks.byrobot_petrone_v2_drone_state_mode_drive, 'state_modeDrive'],
+                        [Lang.Blocks.byrobot_petrone_v2_drone_state_battery, 'state_battery'],
+                        [Lang.Blocks.byrobot_petrone_v2_drone_irmessage, 'irmessage_irdata'],
                     ],
                     value: 'irmessage_irdata', // 초기 선택항목 지정
                     fontSize: 11,
@@ -1599,16 +1429,8 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_button_button,
-                            'button_button',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_button_event,
-                            'button_event',
-                        ],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_button_button, 'button_button'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_button_event, 'button_event'],
                     ],
                     value: 'button_button', // 초기 선택항목 지정
                     fontSize: 11,
@@ -1637,43 +1459,35 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
                     type: 'Dropdown',
                     options: [
                         [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_joystick_left_x,
+                            Lang.Blocks.byrobot_petrone_v2_controller_joystick_left_x,
                             'joystick_left_x',
                         ],
                         [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_joystick_left_y,
+                            Lang.Blocks.byrobot_petrone_v2_controller_joystick_left_y,
                             'joystick_left_y',
                         ],
                         [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_joystick_left_direction,
+                            Lang.Blocks.byrobot_petrone_v2_controller_joystick_left_direction,
                             'joystick_left_direction',
                         ],
                         [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_joystick_left_event,
+                            Lang.Blocks.byrobot_petrone_v2_controller_joystick_left_event,
                             'joystick_left_event',
                         ],
                         [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_joystick_right_x,
+                            Lang.Blocks.byrobot_petrone_v2_controller_joystick_right_x,
                             'joystick_right_x',
                         ],
                         [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_joystick_right_y,
+                            Lang.Blocks.byrobot_petrone_v2_controller_joystick_right_y,
                             'joystick_right_y',
                         ],
                         [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_joystick_right_direction,
+                            Lang.Blocks.byrobot_petrone_v2_controller_joystick_right_direction,
                             'joystick_right_direction',
                         ],
                         [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_joystick_right_event,
+                            Lang.Blocks.byrobot_petrone_v2_controller_joystick_right_event,
                             'joystick_right_event',
                         ],
                     ],
@@ -1704,66 +1518,18 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_button_front_left,
-                            '1',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_button_front_right,
-                            '2',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_button_front_left_right,
-                            '3',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_button_center_up_left,
-                            '4',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_button_center_up_right,
-                            '8',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_button_center_up,
-                            '16',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_button_center_left,
-                            '32',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_button_center_right,
-                            '64',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_button_center_down,
-                            '128',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_button_bottom_left,
-                            '256',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_button_bottom_right,
-                            '512',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_button_bottom_left_right,
-                            '768',
-                        ],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_button_front_left, '1'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_button_front_right, '2'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_button_front_left_right, '3'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_button_center_up_left, '4'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_button_center_up_right, '8'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_button_center_up, '16'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_button_center_left, '32'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_button_center_right, '64'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_button_center_down, '128'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_button_bottom_left, '256'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_button_bottom_right, '512'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_button_bottom_left_right, '768'],
                     ],
                     value: '1',
                     fontSize: 11,
@@ -1784,10 +1550,7 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
                 var button = 'button_button'; // paramsKeyMap에 정의된 이름 사용
                 var buttonevent = 'button_event'; // paramsKeyMap에 정의된 이름 사용
 
-                if (
-                    read[button] == script.getField('BUTTON') &&
-                    read[buttonevent] == 2
-                )
+                if (read[button] == script.getField('BUTTON') && read[buttonevent] == 2)
                     return true;
                 else return false;
             },
@@ -1802,14 +1565,8 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_common_left,
-                            'joystick_left_direction',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_common_right,
-                            'joystick_right_direction',
-                        ],
+                        [Lang.Blocks.byrobot_petrone_v2_common_left, 'joystick_left_direction'],
+                        [Lang.Blocks.byrobot_petrone_v2_common_right, 'joystick_right_direction'],
                     ],
                     value: 'joystick_left_direction',
                     fontSize: 11,
@@ -1818,48 +1575,24 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
                     type: 'Dropdown',
                     options: [
                         [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_joystick_direction_left_up,
+                            Lang.Blocks.byrobot_petrone_v2_controller_joystick_direction_left_up,
                             '17',
                         ],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_joystick_direction_up, '18'],
                         [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_joystick_direction_up,
-                            '18',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_joystick_direction_right_up,
+                            Lang.Blocks.byrobot_petrone_v2_controller_joystick_direction_right_up,
                             '20',
                         ],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_joystick_direction_left, '33'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_joystick_direction_center, '34'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_joystick_direction_right, '36'],
                         [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_joystick_direction_left,
-                            '33',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_joystick_direction_center,
-                            '34',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_joystick_direction_right,
-                            '36',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_joystick_direction_left_down,
+                            Lang.Blocks.byrobot_petrone_v2_controller_joystick_direction_left_down,
                             '65',
                         ],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_joystick_direction_down, '66'],
                         [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_joystick_direction_down,
-                            '66',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_joystick_direction_right_down,
+                            Lang.Blocks.byrobot_petrone_v2_controller_joystick_direction_right_down,
                             '68',
                         ],
                     ],
@@ -1870,8 +1603,7 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
             events: {},
             def: {
                 params: [null, null],
-                type:
-                    'byrobot_petrone_v2_drive_controller_if_joystick_direction',
+                type: 'byrobot_petrone_v2_drive_controller_if_joystick_direction',
             },
             paramsKeyMap: {
                 DEVICE: 0,
@@ -1902,19 +1634,13 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
             events: {},
             def: {
                 params: [null],
-                type:
-                    'byrobot_petrone_v2_drive_controller_light_manual_single_off',
+                type: 'byrobot_petrone_v2_drive_controller_light_manual_single_off',
             },
             paramsKeyMap: {},
             class: 'byrobot_petrone_v2_drive_controller_light',
             isNotFor: ['byrobot_petrone_v2_drive'],
             func: function(sprite, script) {
-                return Entry.byrobot_petrone_v2_drive.setLightManual(
-                    script,
-                    0x31,
-                    0xff,
-                    0
-                );
+                return Entry.byrobot_petrone_v2_drive.setLightManual(script, 0x31, 0xff, 0);
             },
         },
         byrobot_petrone_v2_drive_controller_light_manual_single: {
@@ -1925,41 +1651,13 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_common_light_manual_red,
-                            '128',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_common_light_manual_green,
-                            '64',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_common_light_manual_blue,
-                            '32',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_common_light_manual_yellow,
-                            '192',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_common_light_manual_magenta,
-                            '160',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_common_light_manual_cyan,
-                            '96',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_common_light_manual_white,
-                            '255',
-                        ],
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_manual_red, '128'],
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_manual_green, '64'],
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_manual_blue, '32'],
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_manual_yellow, '192'],
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_manual_magenta, '160'],
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_manual_cyan, '96'],
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_manual_white, '255'],
                     ],
                     value: '128',
                     fontSize: 11,
@@ -1967,36 +1665,12 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_common_light_manual_on,
-                            '220',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_common_light_manual_off,
-                            '0',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_common_light_manual_b25,
-                            '75',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_common_light_manual_b50,
-                            '125',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_common_light_manual_b75,
-                            '200',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_common_light_manual_b100,
-                            '255',
-                        ],
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_manual_on, '220'],
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_manual_off, '0'],
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_manual_b25, '75'],
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_manual_b50, '125'],
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_manual_b75, '200'],
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_manual_b100, '255'],
                     ],
                     value: '220',
                     fontSize: 11,
@@ -2061,8 +1735,7 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
                     },
                     null,
                 ],
-                type:
-                    'byrobot_petrone_v2_drive_controller_light_manual_single_input',
+                type: 'byrobot_petrone_v2_drive_controller_light_manual_single_input',
             },
             paramsKeyMap: {
                 FLAGS: 0,
@@ -2070,9 +1743,11 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
             },
             class: 'byrobot_petrone_v2_drive_controller_light',
             isNotFor: ['byrobot_petrone_v2_drive'],
-            func: function(sprite, script) {
-                var flags = script.getNumberValue('FLAGS');
-                var brightness = script.getNumberValue('BRIGHTNESS');
+            func: async function(sprite, script) {
+                let [flags, brightness] = await Promise.all([
+                    script.getNumberValue('FLAGS'),
+                    script.getNumberValue('BRIGHTNESS'),
+                ]);
                 return Entry.byrobot_petrone_v2_drive.setLightManual(
                     script,
                     0x31,
@@ -2101,26 +1776,10 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_common_light_mode_hold,
-                            '0',
-                        ], // TeamHold = 0x12
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_common_light_mode_flicker,
-                            '1',
-                        ], // TeamFlicker = 0x13
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_common_light_mode_flicker_double,
-                            '2',
-                        ], // TeamFlickerDouble = 0x14
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_common_light_mode_dimming,
-                            '3',
-                        ], // TeamDimming = 0x15
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_mode_hold, '0'], // TeamHold = 0x12
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_mode_flicker, '1'], // TeamFlicker = 0x13
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_mode_flicker_double, '2'], // TeamFlickerDouble = 0x14
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_mode_dimming, '3'], // TeamDimming = 0x15
                     ],
                     value: '0',
                     fontSize: 11,
@@ -2149,8 +1808,7 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
                     null,
                     null,
                 ],
-                type:
-                    'byrobot_petrone_v2_drive_controller_light_color_rgb_input',
+                type: 'byrobot_petrone_v2_drive_controller_light_color_rgb_input',
             },
             paramsKeyMap: {
                 RED: 0,
@@ -2160,11 +1818,13 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
             },
             class: 'byrobot_petrone_v2_drive_controller_light',
             isNotFor: ['byrobot_petrone_v2_drive'],
-            func: function(sprite, script) {
+            func: async function(sprite, script) {
                 var mode = 0x12 + parseInt(script.getField('ADDITION'));
-                var red = script.getNumberValue('RED');
-                var green = script.getNumberValue('GREEN');
-                var blue = script.getNumberValue('BLUE');
+                let [red, green, blue] = await Promise.all([
+                    script.getNumberValue('RED'),
+                    script.getNumberValue('GREEN'),
+                    script.getNumberValue('BLUE'),
+                ]);
                 return Entry.byrobot_petrone_v2_drive.setLightColorRgb(
                     script,
                     0x31,
@@ -2183,36 +1843,18 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_color_sunset, 'sunset'],
                         [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_common_light_color_sunset,
-                            'sunset',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_common_light_color_cottoncandy,
+                            Lang.Blocks.byrobot_petrone_v2_common_light_color_cottoncandy,
                             'cottonCandy',
                         ],
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_color_muscat, 'muscat'],
                         [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_common_light_color_muscat,
-                            'muscat',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_common_light_color_strawberrymilk,
+                            Lang.Blocks.byrobot_petrone_v2_common_light_color_strawberrymilk,
                             'strawberryMilk',
                         ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_common_light_color_emerald,
-                            'emerald',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_common_light_color_lavender,
-                            'lavender',
-                        ],
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_color_emerald, 'emerald'],
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_color_lavender, 'lavender'],
                     ],
                     value: 'sunset',
                     fontSize: 11,
@@ -2220,26 +1862,10 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_common_light_mode_hold,
-                            '0',
-                        ], // TeamHold = 0x12
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_common_light_mode_flicker,
-                            '1',
-                        ], // TeamFlicker = 0x13
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_common_light_mode_flicker_double,
-                            '2',
-                        ], // TeamFlickerDouble = 0x14
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_common_light_mode_dimming,
-                            '3',
-                        ], // TeamDimming = 0x15
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_mode_hold, '0'], // TeamHold = 0x12
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_mode_flicker, '1'], // TeamFlicker = 0x13
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_mode_flicker_double, '2'], // TeamFlickerDouble = 0x14
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_mode_dimming, '3'], // TeamDimming = 0x15
                     ],
                     value: '0',
                     fontSize: 11,
@@ -2253,8 +1879,7 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
             events: {},
             def: {
                 params: [null, null, null],
-                type:
-                    'byrobot_petrone_v2_drive_controller_light_color_rgb_select',
+                type: 'byrobot_petrone_v2_drive_controller_light_color_rgb_select',
             },
             paramsKeyMap: {
                 SELECT: 0,
@@ -2332,12 +1957,7 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
             class: 'byrobot_petrone_v2_drive_drone_light',
             isNotFor: ['byrobot_petrone_v2_drive'],
             func: function(sprite, script) {
-                return Entry.byrobot_petrone_v2_drive.setLightManual(
-                    script,
-                    0x30,
-                    0xff,
-                    0
-                );
+                return Entry.byrobot_petrone_v2_drive.setLightManual(script, 0x30, 0xff, 0);
             },
         },
         byrobot_petrone_v2_drive_drone_light_manual_single: {
@@ -2348,36 +1968,12 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_drone_light_manual_eye_red,
-                            '128',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_drone_light_manual_eye_green,
-                            '64',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_drone_light_manual_eye_blue,
-                            '32',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_drone_light_manual_arm_red,
-                            '16',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_drone_light_manual_arm_green,
-                            '8',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_drone_light_manual_arm_blue,
-                            '4',
-                        ],
+                        [Lang.Blocks.byrobot_petrone_v2_drone_light_manual_eye_red, '128'],
+                        [Lang.Blocks.byrobot_petrone_v2_drone_light_manual_eye_green, '64'],
+                        [Lang.Blocks.byrobot_petrone_v2_drone_light_manual_eye_blue, '32'],
+                        [Lang.Blocks.byrobot_petrone_v2_drone_light_manual_arm_red, '16'],
+                        [Lang.Blocks.byrobot_petrone_v2_drone_light_manual_arm_green, '8'],
+                        [Lang.Blocks.byrobot_petrone_v2_drone_light_manual_arm_blue, '4'],
                     ],
                     value: '128',
                     fontSize: 11,
@@ -2385,36 +1981,12 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_common_light_manual_on,
-                            '220',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_common_light_manual_off,
-                            '0',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_common_light_manual_b25,
-                            '75',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_common_light_manual_b50,
-                            '125',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_common_light_manual_b75,
-                            '200',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_common_light_manual_b100,
-                            '255',
-                        ],
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_manual_on, '220'],
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_manual_off, '0'],
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_manual_b25, '75'],
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_manual_b50, '125'],
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_manual_b75, '200'],
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_manual_b100, '255'],
                     ],
                     value: '220',
                     fontSize: 11,
@@ -2479,8 +2051,7 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
                     },
                     null,
                 ],
-                type:
-                    'byrobot_petrone_v2_drive_drone_light_manual_single_input',
+                type: 'byrobot_petrone_v2_drive_drone_light_manual_single_input',
             },
             paramsKeyMap: {
                 FLAGS: 0,
@@ -2488,9 +2059,11 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
             },
             class: 'byrobot_petrone_v2_drive_drone_light',
             isNotFor: ['byrobot_petrone_v2_drive'],
-            func: function(sprite, script) {
-                var flags = script.getNumberValue('FLAGS');
-                var brightness = script.getNumberValue('BRIGHTNESS');
+            func: async function(sprite, script) {
+                let [flags, brightness] = await Promise.all([
+                    script.getNumberValue('FLAGS'),
+                    script.getNumberValue('BRIGHTNESS'),
+                ]);
                 return Entry.byrobot_petrone_v2_drive.setLightManual(
                     script,
                     0x30,
@@ -2507,16 +2080,8 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_drone_light_color_eye,
-                            '18',
-                        ], // EyeHold = 0x12
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_drone_light_color_arm,
-                            '66',
-                        ], // ArmHold = 0x42
+                        [Lang.Blocks.byrobot_petrone_v2_drone_light_color_eye, '18'], // EyeHold = 0x12
+                        [Lang.Blocks.byrobot_petrone_v2_drone_light_color_arm, '66'], // ArmHold = 0x42
                     ],
                     value: '18',
                     fontSize: 11,
@@ -2536,26 +2101,10 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_common_light_mode_hold,
-                            '0',
-                        ], // EyeHold = 0x12,          // ArmHold = 0x42
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_common_light_mode_flicker,
-                            '1',
-                        ], // EyeFlicker = 0x13,       // ArmFlicker = 0x43
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_common_light_mode_flicker_double,
-                            '2',
-                        ], // EyeFlickerDouble = 0x14, // ArmFlickerDouble = 0x44
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_common_light_mode_dimming,
-                            '3',
-                        ], // EyeDimming = 0x15,       // ArmDimming = 0x45
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_mode_hold, '0'], // EyeHold = 0x12,          // ArmHold = 0x42
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_mode_flicker, '1'], // EyeFlicker = 0x13,       // ArmFlicker = 0x43
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_mode_flicker_double, '2'], // EyeFlickerDouble = 0x14, // ArmFlickerDouble = 0x44
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_mode_dimming, '3'], // EyeDimming = 0x15,       // ArmDimming = 0x45
                     ],
                     value: '0',
                     fontSize: 11,
@@ -2596,13 +2145,14 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
             },
             class: 'byrobot_petrone_v2_drive_drone_light',
             isNotFor: ['byrobot_petrone_v2_drive'],
-            func: function(sprite, script) {
+            func: async function(sprite, script) {
                 var mode =
-                    parseInt(script.getField('MODE')) +
-                    parseInt(script.getField('ADDITION'));
-                var red = script.getNumberValue('RED');
-                var green = script.getNumberValue('GREEN');
-                var blue = script.getNumberValue('BLUE');
+                    parseInt(script.getField('MODE')) + parseInt(script.getField('ADDITION'));
+                let [red, green, blue] = await Promise.all([
+                    script.getNumberValue('RED'),
+                    script.getNumberValue('GREEN'),
+                    script.getNumberValue('BLUE'),
+                ]);
                 return Entry.byrobot_petrone_v2_drive.setLightColorRgb(
                     script,
                     0x30,
@@ -2621,16 +2171,8 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_drone_light_color_eye,
-                            '18',
-                        ], // EyeHold = 0x12
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_drone_light_color_arm,
-                            '66',
-                        ], // ArmHold = 0x42
+                        [Lang.Blocks.byrobot_petrone_v2_drone_light_color_eye, '18'], // EyeHold = 0x12
+                        [Lang.Blocks.byrobot_petrone_v2_drone_light_color_arm, '66'], // ArmHold = 0x42
                     ],
                     value: '18',
                     fontSize: 11,
@@ -2638,36 +2180,18 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_color_sunset, 'sunset'],
                         [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_common_light_color_sunset,
-                            'sunset',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_common_light_color_cottoncandy,
+                            Lang.Blocks.byrobot_petrone_v2_common_light_color_cottoncandy,
                             'cottonCandy',
                         ],
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_color_muscat, 'muscat'],
                         [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_common_light_color_muscat,
-                            'muscat',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_common_light_color_strawberrymilk,
+                            Lang.Blocks.byrobot_petrone_v2_common_light_color_strawberrymilk,
                             'strawberryMilk',
                         ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_common_light_color_emerald,
-                            'emerald',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_common_light_color_lavender,
-                            'lavender',
-                        ],
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_color_emerald, 'emerald'],
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_color_lavender, 'lavender'],
                     ],
                     value: 'sunset',
                     fontSize: 11,
@@ -2675,26 +2199,10 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_common_light_mode_hold,
-                            '0',
-                        ], // EyeHold = 0x12,          // ArmHold = 0x42
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_common_light_mode_flicker,
-                            '1',
-                        ], // EyeFlicker = 0x13,       // ArmFlicker = 0x43
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_common_light_mode_flicker_double,
-                            '2',
-                        ], // EyeFlickerDouble = 0x14, // ArmFlickerDouble = 0x44
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_common_light_mode_dimming,
-                            '3',
-                        ], // EyeDimming = 0x15,       // ArmDimming = 0x45
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_mode_hold, '0'], // EyeHold = 0x12,          // ArmHold = 0x42
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_mode_flicker, '1'], // EyeFlicker = 0x13,       // ArmFlicker = 0x43
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_mode_flicker_double, '2'], // EyeFlickerDouble = 0x14, // ArmFlickerDouble = 0x44
+                        [Lang.Blocks.byrobot_petrone_v2_common_light_mode_dimming, '3'], // EyeDimming = 0x15,       // ArmDimming = 0x45
                     ],
                     value: '0',
                     fontSize: 11,
@@ -2719,8 +2227,7 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
             isNotFor: ['byrobot_petrone_v2_drive'],
             func: function(sprite, script) {
                 var mode =
-                    parseInt(script.getField('MODE')) +
-                    parseInt(script.getField('ADDITION'));
+                    parseInt(script.getField('MODE')) + parseInt(script.getField('ADDITION'));
                 var select = script.getField('SELECT');
                 var red = 0;
                 var green = 0;
@@ -2777,16 +2284,8 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_display_pixel_black,
-                            '0',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_display_pixel_white,
-                            '1',
-                        ],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_display_pixel_black, '0'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_display_pixel_white, '1'],
                     ],
                     value: '0',
                     fontSize: 11,
@@ -2845,16 +2344,8 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_display_pixel_black,
-                            '0',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_display_pixel_white,
-                            '1',
-                        ],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_display_pixel_black, '0'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_display_pixel_white, '1'],
                     ],
                     value: '1',
                     fontSize: 11,
@@ -2898,11 +2389,13 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
             },
             class: 'byrobot_petrone_v2_drive_controller_display',
             isNotFor: ['byrobot_petrone_v2_drive'],
-            func: function(sprite, script) {
-                var x = script.getNumberValue('X');
-                var y = script.getNumberValue('Y');
-                var width = script.getNumberValue('WIDTH');
-                var height = script.getNumberValue('HEIGHT');
+            func: async function(sprite, script) {
+                let [x, y, width, height] = await Promise.all([
+                    script.getNumberValue('X'),
+                    script.getNumberValue('Y'),
+                    script.getNumberValue('WIDTH'),
+                    script.getNumberValue('HEIGHT'),
+                ]);
                 var pixel = parseInt(script.getField('PIXEL'));
                 return Entry.byrobot_petrone_v2_drive.setDisplayClear(
                     script,
@@ -2975,11 +2468,13 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
             },
             class: 'byrobot_petrone_v2_drive_controller_display',
             isNotFor: ['byrobot_petrone_v2_drive'],
-            func: function(sprite, script) {
-                var x = script.getNumberValue('X');
-                var y = script.getNumberValue('Y');
-                var width = script.getNumberValue('WIDTH');
-                var height = script.getNumberValue('HEIGHT');
+            func: async function(sprite, script) {
+                let [x, y, width, height] = await Promise.all([
+                    script.getNumberValue('X'),
+                    script.getNumberValue('Y'),
+                    script.getNumberValue('WIDTH'),
+                    script.getNumberValue('HEIGHT'),
+                ]);
                 return Entry.byrobot_petrone_v2_drive.setDisplayInvert(
                     script,
                     0x31,
@@ -3006,16 +2501,8 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_display_pixel_black,
-                            '0',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_display_pixel_white,
-                            '1',
-                        ],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_display_pixel_black, '0'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_display_pixel_white, '1'],
                     ],
                     value: '1',
                     fontSize: 11,
@@ -3049,9 +2536,11 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
             },
             class: 'byrobot_petrone_v2_drive_controller_display',
             isNotFor: ['byrobot_petrone_v2_drive'],
-            func: function(sprite, script) {
-                var x = script.getNumberValue('X');
-                var y = script.getNumberValue('Y');
+            func: async function(sprite, script) {
+                let [x, y] = await Promise.all([
+                    script.getNumberValue('X'),
+                    script.getNumberValue('Y'),
+                ]);
                 var pixel = parseInt(script.getField('PIXEL'));
                 return Entry.byrobot_petrone_v2_drive.setDisplayDrawPoint(
                     script,
@@ -3086,16 +2575,8 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_display_pixel_black,
-                            '0',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_display_pixel_white,
-                            '1',
-                        ],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_display_pixel_black, '0'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_display_pixel_white, '1'],
                     ],
                     value: '1',
                     fontSize: 11,
@@ -3103,21 +2584,9 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_display_line_solid,
-                            '0',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_display_line_dotted,
-                            '1',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_display_line_dashed,
-                            '2',
-                        ],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_display_line_solid, '0'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_display_line_dotted, '1'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_display_line_dashed, '2'],
                     ],
                     value: '0',
                     fontSize: 11,
@@ -3163,11 +2632,13 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
             },
             class: 'byrobot_petrone_v2_drive_controller_display',
             isNotFor: ['byrobot_petrone_v2_drive'],
-            func: function(sprite, script) {
-                var x1 = script.getNumberValue('X1');
-                var y1 = script.getNumberValue('Y1');
-                var x2 = script.getNumberValue('X2');
-                var y2 = script.getNumberValue('Y2');
+            func: async function(sprite, script) {
+                let [x1, y1, x2, y2] = await Promise.all([
+                    script.getNumberValue('X1'),
+                    script.getNumberValue('Y1'),
+                    script.getNumberValue('X2'),
+                    script.getNumberValue('Y2'),
+                ]);
                 var pixel = parseInt(script.getField('PIXEL'));
                 var line = parseInt(script.getField('LINE'));
                 return Entry.byrobot_petrone_v2_drive.setDisplayDrawLine(
@@ -3206,16 +2677,8 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_display_pixel_black,
-                            '0',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_display_pixel_white,
-                            '1',
-                        ],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_display_pixel_black, '0'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_display_pixel_white, '1'],
                     ],
                     value: '1',
                     fontSize: 11,
@@ -3223,16 +2686,8 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_display_flagfill_off,
-                            '0',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_display_flagfill_on,
-                            '1',
-                        ],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_display_flagfill_off, '0'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_display_flagfill_on, '1'],
                     ],
                     value: '1',
                     fontSize: 11,
@@ -3240,21 +2695,9 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_display_line_solid,
-                            '0',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_display_line_dotted,
-                            '1',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_display_line_dashed,
-                            '2',
-                        ],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_display_line_solid, '0'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_display_line_dotted, '1'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_display_line_dashed, '2'],
                     ],
                     value: '2',
                     fontSize: 11,
@@ -3302,11 +2745,13 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
             },
             class: 'byrobot_petrone_v2_drive_controller_display',
             isNotFor: ['byrobot_petrone_v2_drive'],
-            func: function(sprite, script) {
-                var x = script.getNumberValue('X');
-                var y = script.getNumberValue('Y');
-                var width = script.getNumberValue('WIDTH');
-                var height = script.getNumberValue('HEIGHT');
+            func: async function(sprite, script) {
+                let [x, y, width, height] = await Promise.all([
+                    script.getNumberValue('X'),
+                    script.getNumberValue('Y'),
+                    script.getNumberValue('WIDTH'),
+                    script.getNumberValue('HEIGHT'),
+                ]);
                 var pixel = parseInt(script.getField('PIXEL'));
                 var flagFill = parseInt(script.getField('FLAGFILL'));
                 var line = parseInt(script.getField('LINE'));
@@ -3343,16 +2788,8 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_display_pixel_black,
-                            '0',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_display_pixel_white,
-                            '1',
-                        ],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_display_pixel_black, '0'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_display_pixel_white, '1'],
                     ],
                     value: '1',
                     fontSize: 11,
@@ -3360,16 +2797,8 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_display_flagfill_off,
-                            '0',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_display_flagfill_on,
-                            '1',
-                        ],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_display_flagfill_off, '0'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_display_flagfill_on, '1'],
                     ],
                     value: '1',
                     fontSize: 11,
@@ -3410,10 +2839,12 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
             },
             class: 'byrobot_petrone_v2_drive_controller_display',
             isNotFor: ['byrobot_petrone_v2_drive'],
-            func: function(sprite, script) {
-                var x = script.getNumberValue('X');
-                var y = script.getNumberValue('Y');
-                var radius = script.getNumberValue('RADIUS');
+            func: async function(sprite, script) {
+                let [x, y, radius] = await Promise.all([
+                    script.getNumberValue('X'),
+                    script.getNumberValue('Y'),
+                    script.getNumberValue('RADIUS'),
+                ]);
                 var pixel = parseInt(script.getField('PIXEL'));
                 var flagFill = parseInt(script.getField('FLAGFILL'));
                 return Entry.byrobot_petrone_v2_drive.setDisplayDrawCircle(
@@ -3443,16 +2874,8 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_display_font_5x8,
-                            '0',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_display_font_10x16,
-                            '1',
-                        ],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_display_font_5x8, '0'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_display_font_10x16, '1'],
                     ],
                     value: '1',
                     fontSize: 11,
@@ -3460,16 +2883,8 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_display_pixel_black,
-                            '0',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_display_pixel_white,
-                            '1',
-                        ],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_display_pixel_black, '0'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_display_pixel_white, '1'],
                     ],
                     value: '1',
                     fontSize: 11,
@@ -3514,12 +2929,14 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
             },
             class: 'byrobot_petrone_v2_drive_controller_display',
             isNotFor: ['byrobot_petrone_v2_drive'],
-            func: function(sprite, script) {
-                var x = script.getNumberValue('X');
-                var y = script.getNumberValue('Y');
+            func: async function(sprite, script) {
+                let [x, y, string] = await Promise.all([
+                    script.getNumberValue('X'),
+                    script.getNumberValue('Y'),
+                    script.getNumberValue('STRING'),
+                ]);
                 var font = parseInt(script.getField('FONT'));
                 var pixel = parseInt(script.getField('PIXEL'));
-                var string = script.getStringValue('STRING');
                 return Entry.byrobot_petrone_v2_drive.setDisplayDrawString(
                     script,
                     0x31,
@@ -3551,21 +2968,9 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_display_align_left,
-                            '0',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_display_align_center,
-                            '1',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_display_align_right,
-                            '2',
-                        ],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_display_align_left, '0'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_display_align_center, '1'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_display_align_right, '2'],
                     ],
                     value: '0',
                     fontSize: 11,
@@ -3573,16 +2978,8 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_display_font_5x8,
-                            '0',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_display_font_10x16,
-                            '1',
-                        ],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_display_font_5x8, '0'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_display_font_10x16, '1'],
                     ],
                     value: '1',
                     fontSize: 11,
@@ -3590,16 +2987,8 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_display_pixel_black,
-                            '0',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_display_pixel_white,
-                            '1',
-                        ],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_display_pixel_black, '0'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_display_pixel_white, '1'],
                     ],
                     value: '1',
                     fontSize: 11,
@@ -3638,8 +3027,7 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
                     },
                     null,
                 ],
-                type:
-                    'byrobot_petrone_v2_drive_controller_display_draw_string_align',
+                type: 'byrobot_petrone_v2_drive_controller_display_draw_string_align',
             },
             paramsKeyMap: {
                 XSTART: 0,
@@ -3652,14 +3040,16 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
             },
             class: 'byrobot_petrone_v2_drive_controller_display',
             isNotFor: ['byrobot_petrone_v2_drive'],
-            func: function(sprite, script) {
-                var xStart = script.getNumberValue('XSTART');
-                var xEnd = script.getNumberValue('XEND');
-                var y = script.getNumberValue('Y');
+            func: async function(sprite, script) {
+                let [xStart, xEnd, y, string] = await Promise.all([
+                    script.getNumberValue('XSTART'),
+                    script.getNumberValue('XEND'),
+                    script.getNumberValue('Y'),
+                    script.getNumberValue('STRING'),
+                ]);
                 var align = parseInt(script.getField('ALIGN'));
                 var font = parseInt(script.getField('FONT'));
                 var pixel = parseInt(script.getField('PIXEL'));
-                var string = script.getStringValue('STRING');
                 return Entry.byrobot_petrone_v2_drive.setDisplayDrawStringAlign(
                     script,
                     0x31,
@@ -3703,72 +3093,26 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [
-                        ['4', '3'],
-                        ['5', '4'],
-                        ['6', '5'],
-                        ['7', '6'],
-                        ['8', '7'],
-                    ],
+                    options: [['4', '3'], ['5', '4'], ['6', '5'], ['7', '6'], ['8', '7']],
                     value: '4',
                     fontSize: 11,
                 },
                 {
                     type: 'Dropdown',
                     options: [
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_buzzer_mute,
-                            '-1',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_controller_buzzer_c,
-                            '0',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_controller_buzzer_cs,
-                            '1',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_controller_buzzer_d,
-                            '2',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_controller_buzzer_ds,
-                            '3',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_controller_buzzer_e,
-                            '4',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_controller_buzzer_f,
-                            '5',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_controller_buzzer_fs,
-                            '6',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_controller_buzzer_g,
-                            '7',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_controller_buzzer_gs,
-                            '8',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_controller_buzzer_a,
-                            '9',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_controller_buzzer_as,
-                            '10',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_controller_buzzer_b,
-                            '11',
-                        ],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_mute, '-1'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_c, '0'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_cs, '1'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_d, '2'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_ds, '3'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_e, '4'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_f, '5'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_fs, '6'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_g, '7'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_gs, '8'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_a, '9'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_as, '10'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_b, '11'],
                     ],
                     value: '0',
                     fontSize: 11,
@@ -3795,12 +3139,7 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
                 var scale = parseInt(script.getField('SCALE'));
 
                 if (scale == -1)
-                    return Entry.byrobot_petrone_v2_drive.setBuzzerMute(
-                        script,
-                        60000,
-                        false,
-                        true
-                    );
+                    return Entry.byrobot_petrone_v2_drive.setBuzzerMute(script, 60000, false, true);
                 else
                     return Entry.byrobot_petrone_v2_drive.setBuzzerScale(
                         script,
@@ -3819,72 +3158,26 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [
-                        ['4', '3'],
-                        ['5', '4'],
-                        ['6', '5'],
-                        ['7', '6'],
-                        ['8', '7'],
-                    ],
+                    options: [['4', '3'], ['5', '4'], ['6', '5'], ['7', '6'], ['8', '7']],
                     value: '4',
                     fontSize: 11,
                 },
                 {
                     type: 'Dropdown',
                     options: [
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_buzzer_mute,
-                            '-1',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_controller_buzzer_c,
-                            '0',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_controller_buzzer_cs,
-                            '1',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_controller_buzzer_d,
-                            '2',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_controller_buzzer_ds,
-                            '3',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_controller_buzzer_e,
-                            '4',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_controller_buzzer_f,
-                            '5',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_controller_buzzer_fs,
-                            '6',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_controller_buzzer_g,
-                            '7',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_controller_buzzer_gs,
-                            '8',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_controller_buzzer_a,
-                            '9',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_controller_buzzer_as,
-                            '10',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_controller_buzzer_b,
-                            '11',
-                        ],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_mute, '-1'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_c, '0'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_cs, '1'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_d, '2'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_ds, '3'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_e, '4'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_f, '5'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_fs, '6'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_g, '7'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_gs, '8'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_a, '9'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_as, '10'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_b, '11'],
                     ],
                     value: '0',
                     fontSize: 11,
@@ -3919,18 +3212,13 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
             },
             class: 'byrobot_petrone_v2_drive_buzzer',
             isNotFor: ['byrobot_petrone_v2_drive'],
-            func: function(sprite, script) {
+            func: async function(sprite, script) {
                 var octave = parseInt(script.getField('OCTAVE'));
                 var scale = parseInt(script.getField('SCALE'));
-                var time = parseInt(script.getNumberValue('TIME') * 1000);
+                var time = parseInt((await script.getNumberValue('TIME')) * 1000);
 
                 if (scale == -1)
-                    return Entry.byrobot_petrone_v2_drive.setBuzzerMute(
-                        script,
-                        time,
-                        true,
-                        true
-                    );
+                    return Entry.byrobot_petrone_v2_drive.setBuzzerMute(script, time, true, true);
                 else
                     return Entry.byrobot_petrone_v2_drive.setBuzzerScale(
                         script,
@@ -3949,72 +3237,26 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
             params: [
                 {
                     type: 'Dropdown',
-                    options: [
-                        ['4', '3'],
-                        ['5', '4'],
-                        ['6', '5'],
-                        ['7', '6'],
-                        ['8', '7'],
-                    ],
+                    options: [['4', '3'], ['5', '4'], ['6', '5'], ['7', '6'], ['8', '7']],
                     value: '4',
                     fontSize: 11,
                 },
                 {
                     type: 'Dropdown',
                     options: [
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_controller_buzzer_mute,
-                            '-1',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_controller_buzzer_c,
-                            '0',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_controller_buzzer_cs,
-                            '1',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_controller_buzzer_d,
-                            '2',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_controller_buzzer_ds,
-                            '3',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_controller_buzzer_e,
-                            '4',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_controller_buzzer_f,
-                            '5',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_controller_buzzer_fs,
-                            '6',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_controller_buzzer_g,
-                            '7',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_controller_buzzer_gs,
-                            '8',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_controller_buzzer_a,
-                            '9',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_controller_buzzer_as,
-                            '10',
-                        ],
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_controller_buzzer_b,
-                            '11',
-                        ],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_mute, '-1'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_c, '0'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_cs, '1'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_d, '2'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_ds, '3'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_e, '4'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_f, '5'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_fs, '6'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_g, '7'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_gs, '8'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_a, '9'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_as, '10'],
+                        [Lang.Blocks.byrobot_petrone_v2_controller_buzzer_b, '11'],
                     ],
                     value: '0',
                     fontSize: 11,
@@ -4040,8 +3282,7 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
                     },
                     null,
                 ],
-                type:
-                    'byrobot_petrone_v2_drive_controller_buzzer_scale_reserve',
+                type: 'byrobot_petrone_v2_drive_controller_buzzer_scale_reserve',
             },
             paramsKeyMap: {
                 OCTAVE: 0,
@@ -4050,18 +3291,13 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
             },
             class: 'byrobot_petrone_v2_drive_buzzer',
             isNotFor: ['byrobot_petrone_v2_drive'],
-            func: function(sprite, script) {
+            func: async function(sprite, script) {
                 var octave = parseInt(script.getField('OCTAVE'));
                 var scale = parseInt(script.getField('SCALE'));
-                var time = parseInt(script.getNumberValue('TIME') * 1000);
+                var time = parseInt((await script.getNumberValue('TIME')) * 1000);
 
                 if (scale == -1)
-                    return Entry.byrobot_petrone_v2_drive.setBuzzerMute(
-                        script,
-                        time,
-                        false,
-                        false
-                    );
+                    return Entry.byrobot_petrone_v2_drive.setBuzzerMute(script, time, false, false);
                 else
                     return Entry.byrobot_petrone_v2_drive.setBuzzerScale(
                         script,
@@ -4104,15 +3340,9 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
             },
             class: 'byrobot_petrone_v2_drive_buzzer',
             isNotFor: ['byrobot_petrone_v2_drive'],
-            func: function(sprite, script) {
-                var hz = parseInt(script.getNumberValue('HZ', script));
-                return Entry.byrobot_petrone_v2_drive.setBuzzerHz(
-                    script,
-                    hz,
-                    60000,
-                    false,
-                    true
-                );
+            func: async function(sprite, script) {
+                var hz = parseInt(await script.getNumberValue('HZ', script));
+                return Entry.byrobot_petrone_v2_drive.setBuzzerHz(script, hz, 60000, false, true);
             },
         },
         byrobot_petrone_v2_drive_controller_buzzer_hz_delay: {
@@ -4155,16 +3385,14 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
             },
             class: 'byrobot_petrone_v2_drive_buzzer',
             isNotFor: ['byrobot_petrone_v2_drive'],
-            func: function(sprite, script) {
-                var hz = parseInt(script.getNumberValue('HZ', script));
-                var time = parseInt(script.getNumberValue('TIME') * 1000);
-                return Entry.byrobot_petrone_v2_drive.setBuzzerHz(
-                    script,
-                    hz,
-                    time,
-                    true,
-                    true
-                );
+            func: async function(sprite, script) {
+                let [hz, time] = await Promise.all([
+                    script.getNumberValue('HZ', script),
+                    script.getNumberValue('TIME'),
+                ]);
+                hz = parseInt(hz);
+                time = parseInt(time * 1000);
+                return Entry.byrobot_petrone_v2_drive.setBuzzerHz(script, hz, time, true, true);
             },
         },
         byrobot_petrone_v2_drive_controller_buzzer_hz_reserve: {
@@ -4207,16 +3435,14 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
             },
             class: 'byrobot_petrone_v2_drive_buzzer',
             isNotFor: ['byrobot_petrone_v2_drive'],
-            func: function(sprite, script) {
-                var hz = parseInt(script.getNumberValue('HZ', script));
-                var time = parseInt(script.getNumberValue('TIME') * 1000);
-                return Entry.byrobot_petrone_v2_drive.setBuzzerHz(
-                    script,
-                    hz,
-                    time,
-                    false,
-                    false
-                );
+            func: async function(sprite, script) {
+                let [hz, time] = await Promise.all([
+                    script.getNumberValue('HZ', script),
+                    script.getNumberValue('TIME'),
+                ]);
+                hz = parseInt(hz);
+                time = parseInt(time * 1000);
+                return Entry.byrobot_petrone_v2_drive.setBuzzerHz(script, hz, time, false, false);
             },
         },
         byrobot_petrone_v2_drive_controller_vibrator_off: {
@@ -4273,8 +3499,8 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
             },
             class: 'byrobot_petrone_v2_drive_vibrator',
             isNotFor: ['byrobot_petrone_v2_drive'],
-            func: function(sprite, script) {
-                var timeOn = parseInt(script.getNumberValue('TIMEON') * 1000);
+            func: async function(sprite, script) {
+                var timeOn = parseInt((await script.getNumberValue('TIMEON')) * 1000);
                 return Entry.byrobot_petrone_v2_drive.setVibrator(
                     script,
                     timeOn,
@@ -4316,8 +3542,8 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
             },
             class: 'byrobot_petrone_v2_drive_vibrator',
             isNotFor: ['byrobot_petrone_v2_drive'],
-            func: function(sprite, script) {
-                var timeOn = parseInt(script.getNumberValue('TIMEON') * 1000);
+            func: async function(sprite, script) {
+                var timeOn = parseInt((await script.getNumberValue('TIMEON')) * 1000);
                 return Entry.byrobot_petrone_v2_drive.setVibrator(
                     script,
                     timeOn,
@@ -4377,10 +3603,15 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
             },
             class: 'byrobot_petrone_v2_drive_vibrator',
             isNotFor: ['byrobot_petrone_v2_drive'],
-            func: function(sprite, script) {
-                var timeOn = parseInt(script.getNumberValue('TIMEON') * 1000);
-                var timeOff = parseInt(script.getNumberValue('TIMEOFF') * 1000);
-                var timeRun = parseInt(script.getNumberValue('TIMERUN') * 1000);
+            func: async function(sprite, script) {
+                let [timeOn, timeOff, timeRun] = await Promise.all([
+                    script.getNumberValue('TIMEON'),
+                    script.getNumberValue('TIMEOFF'),
+                    script.getNumberValue('TIMERUN'),
+                ]);
+                timeOn = parseInt(timeOn * 1000);
+                timeOff = parseInt(timeOff * 1000);
+                timeRun = parseInt(stimeRun * 1000);
                 return Entry.byrobot_petrone_v2_drive.setVibrator(
                     script,
                     timeOn,
@@ -4440,10 +3671,15 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
             },
             class: 'byrobot_petrone_v2_drive_vibrator',
             isNotFor: ['byrobot_petrone_v2_drive'],
-            func: function(sprite, script) {
-                var timeOn = parseInt(script.getNumberValue('TIMEON') * 1000);
-                var timeOff = parseInt(script.getNumberValue('TIMEOFF') * 1000);
-                var timeRun = parseInt(script.getNumberValue('TIMERUN') * 1000);
+            func: async function(sprite, script) {
+                let [timeOn, timeOff, timeRun] = await Promise.all([
+                    script.getNumberValue('TIMEON'),
+                    script.getNumberValue('TIMEOFF'),
+                    script.getNumberValue('TIMERUN'),
+                ]);
+                timeOn = parseInt(timeOn * 1000);
+                timeOff = parseInt(timeOff * 1000);
+                timeRun = parseInt(stimeRun * 1000);
                 return Entry.byrobot_petrone_v2_drive.setVibrator(
                     script,
                     timeOn,
@@ -4485,14 +3721,10 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
             },
             class: 'byrobot_petrone_v2_drive_irmessage',
             isNotFor: ['byrobot_petrone_v2_drive'],
-            func: function(sprite, script) {
+            func: async function(sprite, script) {
                 var irdirection = 0;
-                var irmessage = script.getNumberValue('IRMESSAGE', script);
-                return Entry.byrobot_petrone_v2_drive.sendIrMessage(
-                    script,
-                    irdirection,
-                    irmessage
-                );
+                var irmessage = await script.getNumberValue('IRMESSAGE', script);
+                return Entry.byrobot_petrone_v2_drive.sendIrMessage(script, irdirection, irmessage);
             },
         },
         byrobot_petrone_v2_drive_drone_motor_stop: {
@@ -4557,12 +3789,10 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
             },
             class: 'byrobot_petrone_v2_drive_motor',
             isNotFor: ['byrobot_petrone_v2_drive'],
-            func: function(sprite, script) {
+            func: async function(sprite, script) {
                 var motorIndex = parseInt(script.getField('MOTORINDEX'));
                 var motorRotation = motorIndex % 2 + 1;
-                var motorSpeed = parseInt(
-                    script.getNumberValue('MOTORSPEED', script)
-                );
+                var motorSpeed = parseInt(await script.getNumberValue('MOTORSPEED', script));
 
                 return Entry.byrobot_petrone_v2_drive.setMotorSingle(
                     script,
@@ -4612,13 +3842,14 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
             },
             class: 'byrobot_petrone_v2_drive_motor',
             isNotFor: ['byrobot_petrone_v2_drive'],
-            func: function(sprite, script) {
-                var motorIndex =
-                    parseInt(script.getNumberValue('MOTORINDEX', script)) - 1;
+            func: async function(sprite, script) {
+                let [motorIndex, motorSpeed] = await Promise.all([
+                    script.getNumberValue('MOTORINDEX', script),
+                    script.getNumberValue('MOTORSPEED', script),
+                ]);
+                motorIndex = parseInt(motorIndex) - 1;
+                motorSpeed = parseInt(motorSpeed);
                 var motorRotation = motorIndex % 2 + 1;
-                var motorSpeed = parseInt(
-                    script.getNumberValue('MOTORSPEED', script)
-                );
 
                 return Entry.byrobot_petrone_v2_drive.setMotorSingle(
                     script,
@@ -4642,16 +3873,8 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_drone_motor_rotation_clockwise,
-                            '1',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_drone_motor_rotation_counterclockwise,
-                            '2',
-                        ],
+                        [Lang.Blocks.byrobot_petrone_v2_drone_motor_rotation_clockwise, '1'],
+                        [Lang.Blocks.byrobot_petrone_v2_drone_motor_rotation_counterclockwise, '2'],
                     ],
                     value: '1',
                     fontSize: 11,
@@ -4686,12 +3909,10 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
             },
             class: 'byrobot_petrone_v2_drive_motor',
             isNotFor: ['byrobot_petrone_v2_drive'],
-            func: function(sprite, script) {
+            func: async function(sprite, script) {
                 var motorIndex = parseInt(script.getField('MOTORINDEX'));
                 var motorRotation = parseInt(script.getField('MOTORROTATION'));
-                var motorSpeed = parseInt(
-                    script.getNumberValue('MOTORSPEED', script)
-                );
+                var motorSpeed = parseInt(await script.getNumberValue('MOTORSPEED', script));
 
                 return Entry.byrobot_petrone_v2_drive.setMotorSingle(
                     script,
@@ -4709,15 +3930,8 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [
-                            Lang.Blocks.byrobot_petrone_v2_drone_vehicle_drive,
-                            '32',
-                        ],
-                        [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_drone_vehicle_drive_fpv,
-                            '33',
-                        ],
+                        [Lang.Blocks.byrobot_petrone_v2_drone_vehicle_drive, '32'],
+                        [Lang.Blocks.byrobot_petrone_v2_drone_vehicle_drive_fpv, '33'],
                     ],
                     value: '32',
                     fontSize: 11,
@@ -4740,10 +3954,7 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
             isNotFor: ['byrobot_petrone_v2_drive'],
             func: function(sprite, script) {
                 var vehicle = script.getField('VEHICLE');
-                return Entry.byrobot_petrone_v2_drive.setModeVehicle(
-                    script,
-                    vehicle
-                );
+                return Entry.byrobot_petrone_v2_drive.setModeVehicle(script, vehicle);
             },
         },
         byrobot_petrone_v2_drive_drone_control_car_stop: {
@@ -4778,13 +3989,11 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
                     type: 'Dropdown',
                     options: [
                         [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_drone_control_double_wheel,
+                            Lang.Blocks.byrobot_petrone_v2_drone_control_double_wheel,
                             'control_wheel',
                         ],
                         [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_drone_control_double_accel_forward,
+                            Lang.Blocks.byrobot_petrone_v2_drone_control_double_accel_forward,
                             'control_accel',
                         ],
                     ],
@@ -4819,9 +4028,9 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
             },
             class: 'byrobot_petrone_v2_drive_control_drive',
             isNotFor: ['byrobot_petrone_v2_drive'],
-            func: function(sprite, script) {
+            func: async function(sprite, script) {
                 var controlTarget = script.getField('CONTROLTARGET');
-                var value = parseInt(script.getNumberValue('VALUE', script));
+                var value = parseInt(await script.getNumberValue('VALUE', script));
 
                 return Entry.byrobot_petrone_v2_drive.sendControlDoubleSingle(
                     script,
@@ -4841,13 +4050,11 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
                     type: 'Dropdown',
                     options: [
                         [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_drone_control_double_wheel,
+                            Lang.Blocks.byrobot_petrone_v2_drone_control_double_wheel,
                             'control_wheel',
                         ],
                         [
-                            Lang.Blocks
-                                .byrobot_petrone_v2_drone_control_double_accel_forward,
+                            Lang.Blocks.byrobot_petrone_v2_drone_control_double_accel_forward,
                             'control_accel',
                         ],
                     ],
@@ -4891,12 +4098,13 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
             },
             class: 'byrobot_petrone_v2_drive_control_drive',
             isNotFor: ['byrobot_petrone_v2_drive'],
-            func: function(sprite, script) {
+            func: async function(sprite, script) {
                 var controlTarget = script.getField('CONTROLTARGET');
-                var value = parseInt(script.getNumberValue('VALUE', script));
-                var time = parseInt(
-                    script.getNumberValue('TIME', script) * 1000
-                );
+                let [value, time] = await Promise.all([
+                    script.getNumberValue('VALUE', script),
+                    script.getNumberValue('TIME', script),
+                ]);
+                time = parseInt(time * 1000);
 
                 return Entry.byrobot_petrone_v2_drive.sendControlDoubleSingle(
                     script,
@@ -4947,9 +4155,13 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
             },
             class: 'byrobot_petrone_v2_drive_control_drive',
             isNotFor: ['byrobot_petrone_v2_drive'],
-            func: function(sprite, script) {
-                var wheel = parseInt(script.getNumberValue('WHEEL', script));
-                var accel = parseInt(script.getNumberValue('ACCEL', script));
+            func: async function(sprite, script) {
+                let [wheel, accel] = await Promise([
+                    script.getNumberValue('WHEEL', script),
+                    script.getNumberValue('ACCEL', script),
+                ]);
+                wheel = parseInt(wheel);
+                accel = parseInt(accel);
 
                 return Entry.byrobot_petrone_v2_drive.sendControlDouble(
                     script,
@@ -5009,12 +4221,15 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
             },
             class: 'byrobot_petrone_v2_drive_control_drive',
             isNotFor: ['byrobot_petrone_v2_drive'],
-            func: function(sprite, script) {
-                var wheel = parseInt(script.getNumberValue('WHEEL', script));
-                var accel = parseInt(script.getNumberValue('ACCEL', script));
-                var time = parseInt(
-                    script.getNumberValue('TIME', script) * 1000
-                );
+            func: async function(sprite, script) {
+                let [wheel, accel, time] = Promise.all([
+                    script.getNumberValue('WHEEL', script),
+                    script.getNumberValue('ACCEL', script),
+                    script.getNumberValue('TIME', script),
+                ]);
+                wheel = parseInt(wheel);
+                accel = parseInt(accel);
+                time = parseInt(time * 1000);
 
                 return Entry.byrobot_petrone_v2_drive.sendControlDouble(
                     script,

@@ -39,8 +39,8 @@ Entry.robotori = {
     url: 'http://www.robotori.com/',
     imageName: 'robotori.png',
     title: {
-        "ko": "로보토리",
-        "en": "robotori"
+        ko: '로보토리',
+        en: 'robotori',
     },
     monitorTemplate: {
         imgPath: 'hw/robotori.png',
@@ -148,10 +148,7 @@ Entry.robotori.getBlocks = function() {
                 },
                 {
                     type: 'Dropdown',
-                    options: [
-                        [Lang.Blocks.robotori_On, 'ON'],
-                        [Lang.Blocks.robotori_Off, 'OFF'],
-                    ],
+                    options: [[Lang.Blocks.robotori_On, 'ON'], [Lang.Blocks.robotori_Off, 'OFF']],
                     value: 'ON',
                     fontSize: 11,
                 },
@@ -247,10 +244,10 @@ Entry.robotori.getBlocks = function() {
             },
             class: 'robotori_sensor',
             isNotFor: ['robotori'],
-            func: function(sprite, script) {
+            func: async function(sprite, script) {
                 var sq = Entry.hw.sendQueue;
                 var dev = script.getStringField('DEVICE', script);
-                var value = script.getNumberValue('VALUE', script);
+                var value = await script.getNumberValue('VALUE', script);
 
                 if (dev == 'AOUT5') {
                     sq.AOUT5 = value;
@@ -294,9 +291,9 @@ Entry.robotori.getBlocks = function() {
             },
             class: 'robotori_motor',
             isNotFor: ['robotori'],
-            func: function(sprite, script) {
+            func: async function(sprite, script) {
                 var sq = Entry.hw.sendQueue;
-                sq.SERVO = script.getNumberValue('SERVO');
+                sq.SERVO = await script.getNumberValue('SERVO');
 
                 return script.callReturn();
             },
