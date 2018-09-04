@@ -158,14 +158,14 @@ module.exports = {
                 class: 'calc',
                 isNotFor: [],
                 func: async function(sprite, script) {
-                    var operator = script.getField('OPERATOR', script);
+                    const operator = script.getField('OPERATOR', script);
                     let [leftValue, rightValue] = await Promise.all([
                         script.getNumberValue('LEFTHAND', script),
                         script.getNumberValue('RIGHTHAND', script),
                     ]);
                     if (operator == 'PLUS') {
-                        var leftStringValue = String(leftValue);
-                        var rightStringValue = String(rightValue);
+                        const leftStringValue = String(leftValue);
+                        const rightStringValue = String(rightValue);
                         if (!Entry.Utils.isNumber(leftStringValue)) leftValue = leftStringValue;
                         if (!Entry.Utils.isNumber(rightStringValue)) rightValue = rightStringValue;
                         if (typeof leftValue === 'number' && typeof rightValue === 'number')
@@ -281,16 +281,20 @@ module.exports = {
                 },
                 class: 'calc',
                 isNotFor: [],
-                func: function(sprite, script) {
-                    var leftValue = script.getStringValue('LEFTHAND', script);
-                    var rightValue = script.getStringValue('RIGHTHAND', script);
-                    var left = Math.min(leftValue, rightValue);
-                    var right = Math.max(leftValue, rightValue);
-                    var isLeftFloat = Entry.isFloat(leftValue);
-                    var isRightFloat = Entry.isFloat(rightValue);
-                    if (isRightFloat || isLeftFloat)
+                func: async function(sprite, script) {
+                    let [leftValue, rightValue] = await Promise.all([
+                        script.getStringValue('LEFTHAND', script),
+                        script.getStringValue('RIGHTHAND', script),
+                    ]);
+                    const left = Math.min(leftValue, rightValue);
+                    const right = Math.max(leftValue, rightValue);
+                    const isLeftFloat = Entry.isFloat(leftValue);
+                    const isRightFloat = Entry.isFloat(rightValue);
+                    if (isRightFloat || isLeftFloat) {
                         return (Math.random() * (right - left) + left).toFixed(2);
-                    else return Math.floor(Math.random() * (right - left + 1) + left);
+                    } else {
+                        return Math.floor(Math.random() * (right - left + 1) + left);
+                    }
                 },
                 syntax: {
                     js: [],
@@ -651,13 +655,20 @@ module.exports = {
                 },
                 class: 'calc',
                 isNotFor: [],
-                func: function(sprite, script) {
-                    var left = script.getNumberValue('LEFTHAND', script);
-                    var right = script.getNumberValue('RIGHTHAND', script);
-                    if (isNaN(left) || isNaN(right)) throw new Error();
-                    var operator = script.getField('OPERATOR', script);
-                    if (operator == 'QUOTIENT') return Math.floor(left / right);
-                    else return left % right;
+                func: async function(sprite, script) {
+                    let [left, right] = await Promise.all([
+                        script.getNumberValue('LEFTHAND', script),
+                        script.getNumberValue('RIGHTHAND', script),
+                    ]);
+                    if (isNaN(left) || isNaN(right)) {
+                        throw new Error();
+                    }
+                    const operator = script.getField('OPERATOR', script);
+                    if (operator === 'QUOTIENT') {
+                        return Math.floor(left / right);
+                    } else {
+                        return left % right;
+                    }
                 },
                 syntax: {
                     js: [],
@@ -800,19 +811,19 @@ module.exports = {
                 },
                 class: 'calc',
                 isNotFor: [],
-                func: function(sprite, script) {
-                    var value = script.getNumberValue('LEFTHAND', script);
-                    var operator = script.getField('VALUE', script);
-                    var xRangeCheckList = ['asin_radian', 'acos_radian'];
+                func: async function(sprite, script) {
+                    let value = await script.getNumberValue('LEFTHAND', script);
+                    let operator = script.getField('VALUE', script);
+                    const xRangeCheckList = ['asin_radian', 'acos_radian'];
                     if (xRangeCheckList.indexOf(operator) > -1 && (value > 1 || value < -1))
                         throw new Error('x range exceeded');
 
-                    var needToConvertList = ['sin', 'cos', 'tan'];
+                    const needToConvertList = ['sin', 'cos', 'tan'];
                     if (operator.indexOf('_')) operator = operator.split('_')[0];
 
                     if (needToConvertList.indexOf(operator) > -1) value = Entry.toRadian(value);
 
-                    var returnVal = 0;
+                    let returnVal = 0;
                     switch (operator) {
                         case 'square':
                             returnVal = value * value;
@@ -1665,8 +1676,8 @@ module.exports = {
                 },
                 class: 'calc_string',
                 isNotFor: [],
-                func: function(sprite, script) {
-                    return script.getStringValue('STRING', script).length;
+                func: async function(sprite, script) {
+                    return (await script.getStringValue('STRING', script)).length;
                 },
                 syntax: {
                     js: [],
@@ -1747,9 +1758,11 @@ module.exports = {
                 },
                 class: 'calc_string',
                 isNotFor: [],
-                func: function(sprite, script) {
-                    var leftValue = script.getStringValue('VALUE1', script);
-                    var rightValue = script.getStringValue('VALUE2', script);
+                func: async function(sprite, script) {
+                    let [leftValue, rightValue] = await Promise.all([
+                        script.getStringValue('VALUE1', script),
+                        script.getStringValue('VALUE2', script),
+                    ]);
 
                     return leftValue + rightValue;
                 },
@@ -1833,11 +1846,17 @@ module.exports = {
                 },
                 class: 'calc_string',
                 isNotFor: [],
-                func: function(sprite, script) {
-                    var str = script.getStringValue('LEFTHAND', script);
-                    var index = script.getNumberValue('RIGHTHAND', script) - 1;
-                    if (index < 0 || index > str.length - 1) throw new Error();
-                    else return str[index];
+                func: async function(sprite, script) {
+                    let [str, index] = await Promise.all([
+                        script.getStringValue('LEFTHAND', script),
+                        script.getNumberValue('RIGHTHAND', script),
+                    ]);
+                    index = index - 1;
+                    if (index < 0 || index > str.length - 1) {
+                        throw new Error();
+                    } else {
+                        return str[index];
+                    }
                 },
                 syntax: {
                     js: [],
@@ -1965,13 +1984,20 @@ module.exports = {
                 },
                 class: 'calc_string',
                 isNotFor: [],
-                func: function(sprite, script) {
-                    var str = script.getStringValue('STRING', script);
-                    var start = script.getNumberValue('START', script) - 1;
-                    var end = script.getNumberValue('END', script) - 1;
-                    var strLen = str.length - 1;
-                    if (start < 0 || end < 0 || start > strLen || end > strLen) throw new Error();
-                    else return str.substring(Math.min(start, end), Math.max(start, end) + 1);
+                func: async function(sprite, script) {
+                    let [str, start, end] = await Promise.all([
+                        script.getStringValue('STRING', script),
+                        script.getNumberValue('START', script),
+                        script.getNumberValue('END', script),
+                    ]);
+                    start = start - 1;
+                    end = end - 1;
+                    const strLen = str.length - 1;
+                    if (start < 0 || end < 0 || start > strLen || end > strLen) {
+                        throw new Error();
+                    } else {
+                        return str.substring(Math.min(start, end), Math.max(start, end) + 1);
+                    }
                 },
                 syntax: {
                     js: [],
@@ -2070,10 +2096,12 @@ module.exports = {
                 },
                 class: 'calc_string',
                 isNotFor: [],
-                func: function(sprite, script) {
-                    var str = script.getStringValue('LEFTHAND', script);
-                    var target = script.getStringValue('RIGHTHAND', script);
-                    var index = str.indexOf(target);
+                func: async function(sprite, script) {
+                    let [str, target] = await Promise.all([
+                        script.getStringValue('LEFTHAND', script),
+                        script.getStringValue('RIGHTHAND', script),
+                    ]);
+                    const index = str.indexOf(target);
                     return index + 1;
                 },
                 syntax: {
@@ -2174,13 +2202,13 @@ module.exports = {
                 },
                 class: 'calc_string',
                 isNotFor: [],
-                func: function(sprite, script) {
-                    return script
-                        .getStringValue('STRING', script)
-                        .replace(
-                            new RegExp(script.getStringValue('OLD_WORD', script), 'gm'),
-                            script.getStringValue('NEW_WORD', script)
-                        );
+                func: async function(sprite, script) {
+                    let [string, oldWord, newWord] = await Promise.all([
+                        script.getStringValue('STRING', script),
+                        script.getStringValue('OLD_WORD', script),
+                        script.getStringValue('NEW_WORD', script),
+                    ]);
+                    return string.replace(new RegExp(oldWord, 'gm'), newWord);
                 },
                 syntax: {
                     js: [],
@@ -2260,10 +2288,9 @@ module.exports = {
                 },
                 class: 'calc_string',
                 isNotFor: [],
-                func: function(sprite, script) {
-                    return script
-                        .getStringValue('STRING', script)
-                        [script.getField('CASE', script)]();
+                func: async function(sprite, script) {
+                    let string = await script.getStringValue('STRING', script);
+                    return string[script.getField('CASE', script)]();
                 },
                 syntax: {
                     js: [],
