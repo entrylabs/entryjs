@@ -1324,7 +1324,7 @@ const block = {
                 },
             ],
         },
-        func: function(entity) {
+        func: async function(entity) {
             if (!this.initiated) {
                 this.initiated = true;
                 Entry.callStackLength++;
@@ -1351,7 +1351,7 @@ const block = {
                 this.funcExecutor.parentExecutor = this.executor;
                 this.funcExecutor.isFuncExecutor = true;
             }
-            this.funcExecutor.execute();
+            await this.funcExecutor.execute();
             if (!this.funcExecutor.isEnd()) {
                 this.funcCode.removeExecutor(this.funcExecutor);
                 return Entry.STATIC.BREAK;
