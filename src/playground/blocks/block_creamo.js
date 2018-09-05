@@ -305,7 +305,7 @@ Entry.Creamo.getBlocks = function() {
             class: 'arduino_set',
             isNotFor: ['creamo'],
             func: async function(sprite, script) {
-                const [port, value] = await Promise.all([
+                let [port, value] = await Promise.all([
                     script.getNumberValue('PORT'),
                     script.getNumberValue('VALUE'),
                 ]);

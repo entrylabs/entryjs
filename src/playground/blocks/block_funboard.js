@@ -1171,7 +1171,7 @@ Entry.FunBoard.getBlocks = function() {
             isNotFor: ['funboard'],
             func: async function(sprite, script) {
                 let [
-                    index
+                    index,
                     value2,
                     value3,
                     value4,
@@ -1179,7 +1179,7 @@ Entry.FunBoard.getBlocks = function() {
                     stringValue4,
                     stringValue5,
                 ] = await Promise.all([
-                    script.getValue('PORT', script)
+                    script.getValue('PORT', script),
                     script.getNumberValue('VALUE2', script),
                     script.getNumberValue('VALUE3', script),
                     script.getNumberValue('VALUE4', script),
@@ -2329,7 +2329,7 @@ Entry.FunBoard.getBlocks = function() {
             },
             class: 'funboardsetmatrix',
             isNotFor: ['funboard'],
-            func: await function(sprite, script) {
+            func: async function(sprite, script) {
                 var string = await script.getValue('VALUE', script);
                 if (string.length < 1) {
                     return script.callReturn();

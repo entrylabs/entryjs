@@ -1540,8 +1540,8 @@ const block = {
         },
         class: 'scale',
         isNotFor: [],
-        func: function(sprite, script) {
-            var scaleValue = (script.getNumberValue('VALUE', script) + 100) / 100;
+        func: async function(sprite, script) {
+            var scaleValue = (await script.getNumberValue('VALUE', script) + 100) / 100;
             sprite.setScaleX(sprite.getScaleX() * scaleValue);
             sprite.setScaleY(sprite.getScaleY() * scaleValue);
             return script.callReturn();

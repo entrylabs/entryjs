@@ -1123,7 +1123,7 @@
                 const nMax = 255;
                 const x = Entry.hw.portData['IN' + inputPort];
                 const percent = (x - oMin) / (oMax - oMin);
-                const result = percent * (nMax - nMin) + nMin;
+                let result = percent * (nMax - nMin) + nMin;
                 if (result > nMax) result = nMax;
                 if (result < nMin) result = nMin;
 
@@ -2262,7 +2262,7 @@
                 const nMax = 255;
                 const x = Entry.hw.portData[inputPort - 7] / 4;
                 const percent = (x - oMin) / (oMax - oMin);
-                const result = percent * (nMax - nMin) + nMin;
+                let result = percent * (nMax - nMin) + nMin;
                 if (result > nMax) result = nMax;
                 if (result < nMin) result = nMin;
 
@@ -3001,7 +3001,7 @@
                 const operator = script.getField('OPERATOR', script);
                 const rightValue = await script.getNumberValue('RIGHTVALUE', script);
                 const leftValue = Entry.hw.portData['DETECTINGSOUNDE1'];
-                const isCheck = false;
+                let isCheck = false;
 
                 switch (operator) {
                     case 'EQUAL':
@@ -4100,7 +4100,6 @@
                 let data_address2 = 0;
                 let data_length2 = 1;
                 let data_value2 = 7;
-                let data_instruction = Entry.Robotis_openCM70.INSTRUCTION.WRITE;
                 let data_address = 0;
                 let data_length = 0;
                 let data_value = 0;

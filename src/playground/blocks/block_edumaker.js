@@ -204,7 +204,7 @@ Entry.EduMaker.getBlocks = function() {
             func: async function(sprite, script) {
                 const ANALOG = Entry.hw.portData.ANALOG;
                 let [
-                    result
+                    result,
                     value2,
                     value3,
                     value4,
