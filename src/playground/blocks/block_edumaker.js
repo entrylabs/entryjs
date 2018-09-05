@@ -127,8 +127,8 @@ Entry.EduMaker.getBlocks = function() {
             },
             class: 'EduMakerGet',
             isNotFor: ['EduMaker'],
-            func: function(sprite, script) {
-                var port = script.getValue('PORT', script);
+            func: async function(sprite, script) {
+                var port = await script.getValue('PORT', script);
                 var ANALOG = Entry.hw.portData.ANALOG;
                 if (port[0] === 'A') port = port.substring(1);
                 return ANALOG ? ANALOG[port] || 0 : 0;
@@ -202,9 +202,9 @@ Entry.EduMaker.getBlocks = function() {
             class: 'EduMakerGet',
             isNotFor: ['EduMaker'],
             func: async function(sprite, script) {
-                var result = script.getValue('PORT', script);
-                var ANALOG = Entry.hw.portData.ANALOG;
+                const ANALOG = Entry.hw.portData.ANALOG;
                 let [
+                    result
                     value2,
                     value3,
                     value4,
@@ -212,6 +212,7 @@ Entry.EduMaker.getBlocks = function() {
                     stringValue4,
                     stringValue5,
                 ] = await Promise.all([
+                    script.getValue('PORT', script),
                     script.getNumberValue('VALUE2', script),
                     script.getNumberValue('VALUE3', script),
                     script.getNumberValue('VALUE4', script),
@@ -219,7 +220,7 @@ Entry.EduMaker.getBlocks = function() {
                     script.getNumberValue('VALUE4', script),
                     script.getNumberValue('VALUE5', script),
                 ]);
-                var isFloat = false;
+                let isFloat = false;
 
                 if (
                     (Entry.Utils.isNumber(stringValue4) && stringValue4.indexOf('.') > -1) ||
@@ -289,9 +290,11 @@ Entry.EduMaker.getBlocks = function() {
             },
             class: 'EduMakerGet',
             isNotFor: ['EduMaker'],
-            func: function(sprite, script) {
-                var port1 = script.getNumberValue('PORT1', script);
-                var port2 = script.getNumberValue('PORT2', script);
+            func: async function(sprite, script) {
+                const [port1, port2] = await Promise.all([
+                    script.getNumberValue('PORT1', script),
+                    script.getNumberValue('PORT2', script),
+                ]);
 
                 if (!Entry.hw.sendQueue['SET']) {
                     Entry.hw.sendQueue['SET'] = {};
@@ -335,8 +338,8 @@ Entry.EduMaker.getBlocks = function() {
             },
             class: 'EduMakerGet',
             isNotFor: ['EduMaker'],
-            func: function(sprite, script) {
-                var port = script.getNumberValue('PORT', script);
+            func: async function(sprite, script) {
+                var port = await script.getNumberValue('PORT', script);
                 var DIGITAL = Entry.hw.portData.DIGITAL;
                 if (!Entry.hw.sendQueue['GET']) {
                     Entry.hw.sendQueue['GET'] = {};
@@ -414,9 +417,11 @@ Entry.EduMaker.getBlocks = function() {
             },
             class: 'EduMaker',
             isNotFor: ['EduMaker'],
-            func: function(sprite, script) {
-                var port = script.getNumberValue('PORT');
-                var value = script.getValue('VALUE');
+            func: async function(sprite, script) {
+                let [port, value] = await Promise.all([
+                    script.getNumberValue('PORT'),
+                    script.getValue('VALUE'),
+                ]);
 
                 if (typeof value === 'string') {
                     value = value.toLowerCase();
@@ -480,8 +485,11 @@ Entry.EduMaker.getBlocks = function() {
             class: 'EduMaker',
             isNotFor: ['EduMaker'],
             func: async function(sprite, script) {
-                var port = script.getNumberValue('PORT');
-                var value = await script.getNumberValue('VALUE');
+                let [port, value] = await Promise.all([
+                    script.getNumberValue('PORT'),
+                    script.getNumberValue('VALUE'),
+                ]);
+                
                 value = Math.round(value);
                 value = Math.max(value, 0);
                 value = Math.min(value, 255);
@@ -653,11 +661,16 @@ Entry.EduMaker.getBlocks = function() {
             class: 'EduMaker',
             isNotFor: ['EduMaker'],
             func: async function(sprite, script) {
-                var sq = Entry.hw.sendQueue;
-                var port = script.getNumberValue('PORT', script);
-
+                const sq = Entry.hw.sendQueue;
+                let [port, note, duration, octave] = await Promise.all([
+                    script.getNumberValue('PORT', script),
+                    script.getValue('NOTE', script),
+                    script.getNumberValue('DURATION', script),
+                    script.getNumberValue('OCTAVE', script),
+                ]);
+                octave -= 1;
+                
                 if (!script.isStart) {
-                    var note = script.getValue('NOTE', script);
                     if (!Entry.Utils.isNumber(note)) note = Entry.ArduinoExt.toneTable[note];
 
                     if (note < 0) {
@@ -665,8 +678,6 @@ Entry.EduMaker.getBlocks = function() {
                     } else if (note > 12) {
                         note = 12;
                     }
-
-                    var duration = await script.getNumberValue('DURATION', script);
 
                     if (duration < 0) {
                         duration = 0;
@@ -685,7 +696,6 @@ Entry.EduMaker.getBlocks = function() {
                         return script.callReturn();
                     }
 
-                    var octave = script.getNumberValue('OCTAVE', script) - 1;
                     if (octave < 0) {
                         octave = 0;
                     } else if (octave > 5) {
@@ -769,8 +779,10 @@ Entry.EduMaker.getBlocks = function() {
             isNotFor: ['EduMaker'],
             func: async function(sprite, script) {
                 var sq = Entry.hw.sendQueue;
-                var port = script.getNumberValue('PORT', script);
-                var value = await script.getNumberValue('VALUE', script);
+                let [port, value] = await Promise.all([
+                    script.getNumberValue('PORT', script),
+                    script.getNumberValue('VALUE', script),
+                ]);
                 value = Math.min(180, value);
                 value = Math.max(0, value);
 

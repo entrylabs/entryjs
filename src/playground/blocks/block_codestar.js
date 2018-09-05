@@ -302,9 +302,9 @@ Entry.Codestar.getBlocks = function() {
             },
             class: 'codestar_motor',
             isNotFor: ['codestar'],
-            func: function(sprite, script) {
-                var value = script.getNumberValue('VALUE');
-                var sq = Entry.hw.sendQueue;
+            func: async function(sprite, script) {
+                const value = await script.getNumberValue('VALUE');
+                const sq = Entry.hw.sendQueue;
                 sq.outport = script.getField('PORT');
                 sq.value = 0;
                 if (!isNaN(value)) {

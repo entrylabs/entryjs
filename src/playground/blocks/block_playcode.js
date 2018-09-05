@@ -451,8 +451,8 @@ Entry.playcode.getBlocks = function() {
             },
             class: 'playcode_get',
             isNotFor: ['playcode'],
-            func: function(sprite, script) {
-                var port = script.getValue('PORT', script);
+            func: async function(sprite, script) {
+                var port = await script.getValue('PORT', script);
                 var ANALOG = Entry.hw.portData.LIGHT;
 
                 if (port[0] === 'A') port = port.substring(1);
@@ -497,8 +497,8 @@ Entry.playcode.getBlocks = function() {
             },
             class: 'playcode_get',
             isNotFor: ['playcode'],
-            func: function(sprite, script) {
-                var port = script.getValue('PORT', script);
+            func: async function(sprite, script) {
+                var port = await script.getValue('PORT', script);
                 var ANALOG = Entry.hw.portData.MIC;
 
                 if (port[0] === 'A') port = port.substring(1);
@@ -558,8 +558,8 @@ Entry.playcode.getBlocks = function() {
             },
             class: 'playcode_set',
             isNotFor: ['playcode'],
-            func: function(sprite, script) {
-                var port = script.getNumberValue('PORT');
+            func: async function(sprite, script) {
+                var port = await script.getNumberValue('PORT');
                 var operator = script.getField('OPERATOR');
                 var value = operator == 'on' ? 1 : 0;
 
@@ -621,8 +621,10 @@ Entry.playcode.getBlocks = function() {
             isNotFor: ['playcode'],
 
             func: async function(sprite, script) {
-                var port = script.getNumberValue('PORT');
-                var value = await script.getNumberValue('VALUE');
+                let [port, value] = await Promise.all([
+                    script.getNumberValue('PORT'),
+                    script.getNumberValue('VALUE'),
+                ]);
 
                 value = Math.round(value);
                 value = Math.min(value, 180);
@@ -682,8 +684,10 @@ Entry.playcode.getBlocks = function() {
             class: 'playcode_set',
             isNotFor: ['playcode'],
             func: async function(sprite, script) {
-                var port = script.getNumberValue('PORT');
-                var value = await script.getNumberValue('VALUE');
+                let [port, value] = await Promise.all([
+                    script.getNumberValue('PORT'),
+                    script.getNumberValue('VALUE'),
+                ]);
 
                 value = Math.round(value);
                 value = Math.min(value, 255);

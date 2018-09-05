@@ -1115,17 +1115,17 @@ Entry.Blacksmith.getBlocks = function() {
             class: 'blacksmithSet',
             isNotFor: ['blacksmith'],
             func: async function(sprite, script) {
-                let [port, duration, octave] = await Promise.all([
+                let [port, duration, octave, note] = await Promise.all([
                     script.getNumberValue('PORT'),
                     script.getNumberValue('DURATION'),
                     script.getNumberValue('OCTAVE'),
+                    script.getValue('NOTE'),
                 ]);
 
                 octave -= 1;
                 let value = 0;
 
                 if (!script.isStart) {
-                    var note = script.getValue('NOTE');
                     if (!Entry.Utils.isNumber(note)) {
                         note = Entry.Blacksmith.toneTable[note];
                     }

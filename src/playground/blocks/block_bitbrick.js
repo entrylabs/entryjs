@@ -438,7 +438,7 @@ Entry.Bitbrick.getBlocks = function () {
             isNotFor: ['bitbrick'],
             func: async function (sprite, script) {
                 if (!script.isStart) {
-                    Entry.hw.sendQueue['buzzer'] = script.getNumberValue('VALUE');
+                    Entry.hw.sendQueue['buzzer'] = await script.getNumberValue('VALUE');
                     script.isStart = true;
                     return script;
                 } else {

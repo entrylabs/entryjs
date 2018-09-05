@@ -391,7 +391,7 @@ Entry.trueRobot.getBlocks = function() {
                         dataC: delayValue,
                     };
 
-                    var timeValue = script.getNumberValue('delayValue');
+                    var timeValue = delayValue;
 
                     if (timeValue == 0) {
                         var myTimer = setTimeout(function() {
@@ -469,20 +469,23 @@ Entry.trueRobot.getBlocks = function() {
             },
             class: 'trueRobot_control',
             isNotFor: ['trueRobot'],
-            func: function(sprite, script) {
+            func: async function(sprite, script) {
                 var device = Entry.trueRobot.PORT_MAP.colorled;
 
-                var redColor = script.getNumberValue('redColor');
+                let [redColor, greenColor, blueColor] = await Promise.all([
+                    script.getNumberValue('redColor'),
+                    script.getNumberValue('greenColor'),
+                    script.getNumberValue('blueColor'),
+                ]);
+                
                 redColor = Math.round(redColor);
                 redColor = Math.max(redColor, 0);
                 redColor = Math.min(redColor, 255);
-
-                var greenColor = script.getNumberValue('greenColor');
+                
                 greenColor = Math.round(greenColor);
                 greenColor = Math.max(greenColor, 0);
                 greenColor = Math.min(greenColor, 255);
-
-                var blueColor = script.getNumberValue('blueColor');
+                
                 blueColor = Math.round(blueColor);
                 blueColor = Math.max(blueColor, 0);
                 blueColor = Math.min(blueColor, 255);

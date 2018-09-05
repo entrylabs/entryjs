@@ -3748,9 +3748,9 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function() {
             },
             class: 'byrobot_petrone_v2_flight_irmessage',
             isNotFor: ['byrobot_petrone_v2_flight'],
-            func: function(sprite, script) {
-                var irdirection = 0;
-                var irmessage = script.getNumberValue('IRMESSAGE', script);
+            func: async function(sprite, script) {
+                const irdirection = 0;
+                const irmessage = await script.getNumberValue('IRMESSAGE', script);
                 return Entry.byrobot_petrone_v2_flight.sendIrMessage(
                     script,
                     irdirection,

@@ -768,14 +768,14 @@ Entry.CODEino.getBlocks = function() {
             },
             class: 'CODEino_Adumode',
             isNotFor: ['CODEino'],
-            func: function(sprite, script) {
-                var port = script.getNumberValue('PORT', script);
-                var nowTime = Entry.CODEino.getSensorTime(
+            func: async function(sprite, script) {
+                const port = await script.getNumberValue('PORT', script);
+                const nowTime = Entry.CODEino.getSensorTime(
                     Entry.CODEino.sensorTypes.DIGITAL
                 );
-                var hardwareTime = Entry.hw.portData['TIME'] || 0;
-                var scope = script.executor.scope;
-                var DIGITAL = Entry.hw.portData.DIGITAL;
+                const hardwareTime = Entry.hw.portData['TIME'] || 0;
+                const scope = script.executor.scope;
+                const DIGITAL = Entry.hw.portData.DIGITAL;
                 if (!scope.isStart) {
                     scope.isStart = true;
                     scope.stamp = nowTime;

@@ -782,9 +782,9 @@ Entry.FunBoard.getBlocks = function() {
             },
             class: 'funboardget',
             isNotFor: ['funboard'],
-            func: function(sprite, script) {
+            func: async function(sprite, script) {
                 var port = 0;
-                var bt_index = script.getNumberValue('PORT');
+                var bt_index = await script.getNumberValue('PORT');
                 if (bt_index == 1) port = Entry.FunBoard.PORT_MAP['up_bt'];
                 else if (bt_index == 2) port = Entry.FunBoard.PORT_MAP['down_bt'];
                 else if (bt_index == 3) port = Entry.FunBoard.PORT_MAP['left_bt'];
@@ -839,9 +839,9 @@ Entry.FunBoard.getBlocks = function() {
             },
             class: 'funboardget',
             isNotFor: ['funboard'],
-            func: function(sprite, script) {
+            func: async function(sprite, script) {
                 var port = 0;
-                var bt_index = script.getNumberValue('PORT');
+                var bt_index = await script.getNumberValue('PORT');
                 if (bt_index == 1) port = Entry.FunBoard.PORT_MAP['up_bt'];
                 else if (bt_index == 2) port = Entry.FunBoard.PORT_MAP['down_bt'];
                 else if (bt_index == 3) port = Entry.FunBoard.PORT_MAP['left_bt'];
@@ -903,9 +903,9 @@ Entry.FunBoard.getBlocks = function() {
             },
             class: 'funboardget',
             isNotFor: ['funboard'],
-            func: function(sprite, script) {
+            func: async function(sprite, script) {
                 var port = 0;
-                var bt_index = script.getNumberValue('PORT');
+                var bt_index = await script.getNumberValue('PORT');
                 if (bt_index == 1) port = Entry.FunBoard.PORT_MAP['up_bt'];
                 else if (bt_index == 2) port = Entry.FunBoard.PORT_MAP['down_bt'];
                 else if (bt_index == 3) port = Entry.FunBoard.PORT_MAP['left_bt'];
@@ -958,9 +958,9 @@ Entry.FunBoard.getBlocks = function() {
             },
             class: 'funboardget',
             isNotFor: ['funboard'],
-            func: function(sprite, script) {
+            func: async function(sprite, script) {
                 var port = 0;
-                var bt_index = script.getNumberValue('PORT');
+                var bt_index = await script.getNumberValue('PORT');
                 if (bt_index == 1) port = Entry.FunBoard.PORT_MAP['up_bt'];
                 else if (bt_index == 2) port = Entry.FunBoard.PORT_MAP['down_bt'];
                 else if (bt_index == 3) port = Entry.FunBoard.PORT_MAP['left_bt'];
@@ -1028,9 +1028,9 @@ Entry.FunBoard.getBlocks = function() {
             },
             class: 'funboardget',
             isNotFor: ['funboard'],
-            func: function(sprite, script) {
+            func: async function(sprite, script) {
                 var port = 0;
-                var index = script.getValue('PORT', script);
+                var index = await script.getValue('PORT', script);
                 if (index == 1) port = Entry.FunBoard.PORT_MAP['slide'];
                 else if (index == 2) port = Entry.FunBoard.PORT_MAP['cds'];
                 else if (index == 3) port = Entry.FunBoard.PORT_MAP['mic'];
@@ -1074,9 +1074,11 @@ Entry.FunBoard.getBlocks = function() {
             },
             class: 'funboardget',
             isNotFor: ['funboard'],
-            func: function(sprite, script) {
-                var index = script.getValue('PORT', script);
-                var state = script.getValue('STATE', script);
+            func: async function(sprite, script) {
+                const [index, state] = await Promise.all([
+                    script.getValue('PORT', script),
+                    script.getValue('STATE', script),
+                ]);
                 var vmin = 0,
                     vmax = 1023,
                     vlimit;
@@ -1168,13 +1170,8 @@ Entry.FunBoard.getBlocks = function() {
             class: 'funboardget',
             isNotFor: ['funboard'],
             func: async function(sprite, script) {
-                var index = script.getValue('PORT', script);
-                var port = 0;
-                if (index == 1) port = Entry.FunBoard.PORT_MAP['slide'];
-                else if (index == 2) port = Entry.FunBoard.PORT_MAP['cds'];
-                else if (index == 3) port = Entry.FunBoard.PORT_MAP['mic'];
-
                 let [
+                    index
                     value2,
                     value3,
                     value4,
@@ -1182,6 +1179,7 @@ Entry.FunBoard.getBlocks = function() {
                     stringValue4,
                     stringValue5,
                 ] = await Promise.all([
+                    script.getValue('PORT', script)
                     script.getNumberValue('VALUE2', script),
                     script.getNumberValue('VALUE3', script),
                     script.getNumberValue('VALUE4', script),
@@ -1189,6 +1187,11 @@ Entry.FunBoard.getBlocks = function() {
                     script.getNumberValue('VALUE4', script),
                     script.getNumberValue('VALUE5', script),
                 ]);
+
+                var port = 0;
+                if (index == 1) port = Entry.FunBoard.PORT_MAP['slide'];
+                else if (index == 2) port = Entry.FunBoard.PORT_MAP['cds'];
+                else if (index == 3) port = Entry.FunBoard.PORT_MAP['mic'];
 
                 var isFloat = false;
                 if (
@@ -1279,12 +1282,15 @@ Entry.FunBoard.getBlocks = function() {
             isNotFor: ['funboard'],
             func: async function(sprite, script) {
                 var port = Entry.FunBoard.PORT_MAP['buzzer'];
-                var duration = await script.getNumberValue('DURATION');
-                var octave = script.getNumberValue('OCTAVE') - 1;
+                let [note, duration, octave] = await Promise.all([
+                    script.getValue('NOTE'),
+                    script.getNumberValue('DURATION'),
+                    script.getNumberValue('OCTAVE'),
+                ]);
+                octave -= 1;
                 var value = 0;
 
                 if (!script.isStart) {
-                    var note = script.getValue('NOTE');
                     if (!Entry.Utils.isNumber(note)) {
                         note = Entry.FunBoard.toneTable[note];
                     }
@@ -1389,9 +1395,11 @@ Entry.FunBoard.getBlocks = function() {
             },
             class: 'funboardset',
             isNotFor: ['funboard'],
-            func: function(sprite, script) {
-                var onoff = script.getNumberValue('ONOFF');
-                var duration = script.getNumberValue('DURATION');
+            func: async function(sprite, script) {
+                const [onoff, duration] = await Promise.all([
+                    script.getNumberValue('ONOFF'),
+                    script.getNumberValue('DURATION'),
+                ]);
                 var li_duration = Math.ceil(duration);
                 if (li_duration < 1) return script.callReturn();
 
@@ -1493,11 +1501,13 @@ Entry.FunBoard.getBlocks = function() {
             },
             class: 'funboardset',
             isNotFor: ['funboard'],
-            func: function(sprite, script) {
+            func: async function(sprite, script) {
                 var sq = Entry.hw.sendQueue;
-                var note = script.getStringField('NOTE', script);
-                var octave = script.getStringField('OCTAVE', script);
-                var duration = script.getNumberValue('VALUE', script);
+                const [note, octave, duration] = await Promise.all([
+                    script.getStringField('NOTE', script),
+                    script.getStringField('OCTAVE', script),
+                    script.getNumberValue('VALUE', script),
+                ]);
 
                 var value = 255;
                 if (note == 'C') value = 39;
@@ -1544,8 +1554,8 @@ Entry.FunBoard.getBlocks = function() {
             },
             class: 'funboardset',
             isNotFor: ['funboard'],
-            func: function(sprite, script) {
-                var onoff = script.getNumberValue('ONOFF');
+            func: async function(sprite, script) {
+                var onoff = await script.getNumberValue('ONOFF');
 
                 if (!script.isStart) {
                     {
@@ -1625,9 +1635,11 @@ Entry.FunBoard.getBlocks = function() {
             },
             class: 'funboardset',
             isNotFor: ['funboard'],
-            func: function(sprite, script) {
-                var color_index = script.getNumberValue('VALUE');
-                var onoff = script.getValue('ONOFF');
+            func: async function(sprite, script) {
+                const [color_index, onoff] = await Promise.all([
+                    script.getNumberValue('VALUE'),
+                    script.getValue('ONOFF'),
+                ]);
 
                 if (!script.isStart) {
                     {
@@ -1825,8 +1837,10 @@ Entry.FunBoard.getBlocks = function() {
             class: 'funboardset',
             isNotFor: ['funboard'],
             func: async function(sprite, script) {
-                var color_index = script.getNumberValue('VALUE');
-                var li_percent = await script.getNumberValue('PERCENT');
+                let [color_index, li_percent] = await Promise.all([
+                    script.getNumberValue('VALUE'),
+                    script.getNumberValue('PERCENT'),
+                ]);
                 li_percent = Entry.FunBoard.MinMax(li_percent, 0, 100);
                 var pwm_value = Math.round(
                     Entry.FunBoard.Static.FUNBOARD_LED_ON * (li_percent / 100)
@@ -1992,8 +2006,8 @@ Entry.FunBoard.getBlocks = function() {
             },
             class: 'funboardsetmatrix',
             isNotFor: ['funboard'],
-            func: function(sprite, script) {
-                var value = script.getValue('OPTION', script);
+            func: async function(sprite, script) {
+                var value = await script.getValue('OPTION', script);
                 if (value.length < 1) return script.callReturn();
 
                 if (!script.isStart) {
@@ -2068,8 +2082,8 @@ Entry.FunBoard.getBlocks = function() {
             },
             class: 'funboardsetmatrix',
             isNotFor: ['funboard'],
-            func: function(sprite, script) {
-                var li_percent = script.getNumberValue('PERCENT');
+            func: async function(sprite, script) {
+                var li_percent = await script.getNumberValue('PERCENT');
                 //1-based value로 (setZero와 구별)
                 li_percent = Entry.FunBoard.MinMax(li_percent, 0, 100);
                 li_percent = li_percent + 1;
@@ -2137,8 +2151,8 @@ Entry.FunBoard.getBlocks = function() {
             },
             class: 'funboardsetmatrix',
             isNotFor: ['funboard'],
-            func: function(sprite, script) {
-                var onoff = script.getValue('ONOFF', script);
+            func: async function(sprite, script) {
+                var onoff = await script.getValue('ONOFF', script);
                 var eff_value = Math.floor(Math.random() * (123 - 1)) + 1;
 
                 if (!script.isStart) {
@@ -2205,8 +2219,8 @@ Entry.FunBoard.getBlocks = function() {
             },
             class: 'funboardsetmatrix',
             isNotFor: ['funboard'],
-            func: function(sprite, script) {
-                var string = script.getValue('VALUE', script);
+            func: async function(sprite, script) {
+                var string = await script.getValue('VALUE', script);
                 if (string.length < 1) {
                     return script.callReturn();
                 }
@@ -2315,8 +2329,8 @@ Entry.FunBoard.getBlocks = function() {
             },
             class: 'funboardsetmatrix',
             isNotFor: ['funboard'],
-            func: function(sprite, script) {
-                var string = script.getValue('VALUE', script);
+            func: await function(sprite, script) {
+                var string = await script.getValue('VALUE', script);
                 if (string.length < 1) {
                     return script.callReturn();
                 }
@@ -2440,8 +2454,10 @@ Entry.FunBoard.getBlocks = function() {
             class: 'funboardsetmatrix',
             isNotFor: ['funboard'],
             func: async function(sprite, script) {
-                var string = await script.getValue('VALUE', script);
-                var scroll_opt = script.getValue('SCROLL', script);
+                const [string, scroll_opt] = await Promise.all([
+                    script.getValue('VALUE', script),
+                    script.getValue('SCROLL', script),
+                ]);
                 if (string.length < 1) return script.callReturn();
 
                 var char_tot = Math.min(
@@ -3126,8 +3142,10 @@ Entry.FunBoard.getBlocks = function() {
             class: 'funboardsetmatrix',
             isNotFor: ['funboard'],
             func: async function(sprite, script) {
-                var str = script.getNumberValue('WHAT');
-                var str_bit8 = await script.getStringValue('BIT8', script);
+                const [str, str_bit8] = await Promise.all([
+                    script.getNumberValue('WHAT'),
+                    script.getStringValue('BIT8', script),
+                ]);
 
                 var charset = '1#*';
                 var pos = -1;
@@ -3243,8 +3261,10 @@ Entry.FunBoard.getBlocks = function() {
             class: 'funboardsetmatrix',
             isNotFor: ['funboard'],
             func: async function(sprite, script) {
-                var str = script.getNumberValue('WHAT');
-                var str_bit8 = await script.getStringValue('BIT8', script);
+                const [str, str_bit8] = await Promise.all([
+                    script.getNumberValue('WHAT'),
+                    script.getStringValue('BIT8', script),
+                ]);
 
                 var charset = '1#*';
                 var pos = -1;
@@ -3368,10 +3388,12 @@ Entry.FunBoard.getBlocks = function() {
             },
             class: 'funboardsetmatrix',
             isNotFor: ['funboard'],
-            func: function(sprite, script) {
-                var str = script.getNumberValue('WHAT');
-                var how = script.getNumberValue('HOW');
-                var str_bit8 = script.getStringValue('BIT8', script);
+            func: async function(sprite, script) {
+                const [str, how, str_bit8] = await Promise.all([
+                    script.getNumberValue('WHAT'),
+                    script.getNumberValue('HOW'),
+                    script.getStringValue('BIT8', script),
+                ]);
 
                 var charset = '1#*';
                 var pos = -1;
@@ -3498,10 +3520,12 @@ Entry.FunBoard.getBlocks = function() {
             },
             class: 'funboardsetmatrix',
             isNotFor: ['funboard'],
-            func: function(sprite, script) {
-                var str_row = script.getNumberValue('ROW');
-                var str_col = script.getNumberValue('COL');
-                var str_onoff = script.getValue('ONOFF');
+            func: async function(sprite, script) {
+                const [str_row, str_col, str_onoff] = await Promise.all([
+                    script.getNumberValue('ROW'),
+                    script.getNumberValue('COL'),
+                    script.getValue('ONOFF'),
+                ]);
 
                 var port = Entry.FunBoard.EventTypes.SET_ROW_COL;
 

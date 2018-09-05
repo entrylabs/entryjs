@@ -197,8 +197,8 @@ Entry.Roborobo_Roduino.getBlocks = function() {
             },
             class: 'roduino_value',
             isNotFor: ['roborobo_roduino'],
-            func: function(sprite, script) {
-                var signal = script.getValue('VALUE', script);
+            func: async function(sprite, script) {
+                var signal = await script.getValue('VALUE', script);
                 return Entry.hw.getAnalogPortValue(signal);
             },
         },
@@ -227,8 +227,8 @@ Entry.Roborobo_Roduino.getBlocks = function() {
             },
             class: 'roduino_value',
             isNotFor: ['roborobo_roduino'],
-            func: function(sprite, script) {
-                var signal = script.getNumberValue('VALUE', script);
+            func: async function(sprite, script) {
+                var signal = await script.getNumberValue('VALUE', script);
                 Entry.hw.sendQueue[0] = Entry.Roborobo_Roduino.INSTRUCTION.DIGITAL_READ;
                 Entry.hw.sendQueue[1] = signal;
                 Entry.hw.update();
@@ -337,8 +337,8 @@ Entry.Roborobo_Roduino.getBlocks = function() {
             },
             class: 'roduino_set',
             isNotFor: ['roborobo_roduino'],
-            func: function(sprite, script) {
-                var pin = script.getNumberValue('VALUE', script);
+            func: async function(sprite, script) {
+                var pin = await script.getNumberValue('VALUE', script);
                 var operator = script.getField('OPERATOR');
                 var value = operator == 'on' ? 1 : 0;
 
@@ -657,8 +657,8 @@ Entry.Roborobo_SchoolKit.getBlocks = function() {
             },
             class: 'schoolkit_set',
             isNotFor: ['roborobo_schoolkit'],
-            func: function(sprite, script) {
-                var pin = script.getNumberValue('VALUE', script);
+            func: async function(sprite, script) {
+                var pin = await script.getNumberValue('VALUE', script);
                 var operator = script.getField('OPERATOR');
                 var value = operator == 'on' ? 1 : 0;
 
@@ -696,8 +696,8 @@ Entry.Roborobo_SchoolKit.getBlocks = function() {
             },
             class: 'schoolkit_value',
             isNotFor: ['roborobo_schoolkit'],
-            func: function(sprite, script) {
-                var signal = script.getNumberValue('VALUE', script);
+            func: async function(sprite, script) {
+                var signal = await script.getNumberValue('VALUE', script);
                 return Entry.hw.portData[signal - 7];
             },
         },
@@ -831,8 +831,10 @@ Entry.Roborobo_SchoolKit.getBlocks = function() {
             class: 'schoolkit_set',
             isNotFor: ['roborobo_schoolkit'],
             func: async function(sprite, script) {
-                var pin = script.getNumberValue('PIN', script);
-                var value = await script.getNumberValue('VALUE');
+                let [pin, value] = await Promise.all([
+                    script.getNumberValue('PIN', script),
+                    script.getNumberValue('VALUE'),
+                ]);
 
                 if (!Entry.hw.sendQueue.digitalPinMode) {
                     Entry.hw.sendQueue.digitalPinMode = {};

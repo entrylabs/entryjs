@@ -305,8 +305,10 @@ Entry.Creamo.getBlocks = function() {
             class: 'arduino_set',
             isNotFor: ['creamo'],
             func: async function(sprite, script) {
-                var port = script.getNumberValue('PORT');
-                var value = await script.getNumberValue('VALUE');
+                const [port, value] = await Promise.all([
+                    script.getNumberValue('PORT'),
+                    script.getNumberValue('VALUE'),
+                ]);
                 value = Math.round(value);
                 value = Math.max(value, 0);
                 value = Math.min(value, 255);

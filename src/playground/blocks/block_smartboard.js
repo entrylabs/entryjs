@@ -210,8 +210,8 @@ Entry.SmartBoard.getBlocks = function() {
             class: 'smartBoard_sensor',
             isNotFor: ['smartBoard'],
             func: async function(sprite, script) {
-                var value1 = script.getNumberValue('VALUE1', script);
-                let [value2, value3, value4, value5] = await Promise.all([
+                let [value1, value2, value3, value4, value5] = await Promise.all([
+                    script.getNumberValue('VALUE1', script),
                     script.getNumberValue('VALUE2', script),
                     script.getNumberValue('VALUE3', script),
                     script.getNumberValue('VALUE4', script),

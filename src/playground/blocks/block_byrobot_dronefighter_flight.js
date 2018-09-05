@@ -1144,9 +1144,11 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
             },
             class: 'byrobot_dronefighter_flight_controller_light',
             isNotFor: ['byrobot_dronefighter_flight'],
-            func: function(sprite, script) {
-                var flags = script.getNumberValue('FLAGS');
-                var brightness = script.getNumberValue('BRIGHTNESS');
+            func: async function(sprite, script) {
+                const [flags, brightness] = await Promise.all([
+                    script.getNumberValue('FLAGS'),
+                    script.getNumberValue('BRIGHTNESS'),
+                ]);
                 return Entry.byrobot_dronefighter_flight.setLightManual(
                     script,
                     0x11,

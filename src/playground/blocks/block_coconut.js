@@ -1941,12 +1941,15 @@ Entry.coconut.getBlocks = function() {
             class: 'coconut_buzzer',
             isNotFor: ['coconut'],
             func: async function(sprite, script) {
-                var sq = Entry.hw.sendQueue;
-                var pd = Entry.hw.portData;
+                const sq = Entry.hw.sendQueue;
+                const pd = Entry.hw.portData;
 
-                var hz = script.getNumberValue('HZ');
-                var time = await script.getNumberValue('TIME');
-                var arrMsg = Entry.coconut.playBuzzerFreq(hz, time); //버저음 1000hz를 1초동안 소리내기
+                const [hz, time] = await Promise.all([
+                    script.getNumberValue('HZ'),
+                    script.getNumberValue('TIME'),
+                ]);
+
+                const arrMsg = Entry.coconut.playBuzzerFreq(hz, time); //버저음 1000hz를 1초동안 소리내기
                 //var arrMsg = ["0xff","0x55","0x08","0x00","0x02","0x03","0x00","0x2c","0x01","0xe8","0x03"];
 
                 if (!script.isStart) {
