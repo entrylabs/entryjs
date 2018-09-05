@@ -307,10 +307,9 @@ module.exports = {
                 },
                 class: 'shape',
                 isNotFor: ['textBox'],
-                func: function(sprite, script) {
-                    var imageId = script.getStringValue('VALUE');
-                    var value = Entry.parseNumber(imageId);
-                    var picture = sprite.parent.getPicture(imageId);
+                func: async function(sprite, script) {
+                    const imageId = await script.getStringValue('VALUE');
+                    const picture = sprite.parent.getPicture(imageId);
 
                     sprite.setImage(picture);
                     return script.callReturn();

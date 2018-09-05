@@ -235,7 +235,7 @@ module.exports = {
                 class: 'ask',
                 isNotFor: [],
                 func: function(sprite, script) {
-                    var bool = script.getField('BOOL', script);
+                    const bool = script.getField('BOOL', script);
                     if (bool == 'HIDE') Entry.container.inputValue.setVisible(false);
                     else Entry.container.inputValue.setVisible(true);
                     return script.callReturn();
@@ -309,8 +309,8 @@ module.exports = {
                 class: 'variable',
                 isNotFor: ['variableNotExist'],
                 func: function(sprite, script) {
-                    var variableId = script.getField('VARIABLE', script);
-                    var variable = Entry.variableContainer.getVariable(variableId, sprite);
+                    const variableId = script.getField('VARIABLE', script);
+                    const variable = Entry.variableContainer.getVariable(variableId, sprite);
                     return variable.getValue();
                 },
                 syntax: {
@@ -399,17 +399,17 @@ module.exports = {
                 },
                 class: 'variable',
                 isNotFor: ['variableNotExist'],
-                func: function(sprite, script) {
-                    var variableId = script.getField('VARIABLE', script);
-                    var value = script.getValue('VALUE', script);
-                    var fixed = 0;
+                func: async function(sprite, script) {
+                    const variableId = script.getField('VARIABLE', script);
+                    let value = await script.getValue('VALUE', script);
+                    let fixed = 0;
 
                     if (value == false && typeof value == 'boolean')
                         throw new Error('Type is not correct');
 
-                    var variable = Entry.variableContainer.getVariable(variableId, sprite);
-                    var variableValue = variable.getValue();
-                    var sumValue;
+                    const variable = Entry.variableContainer.getVariable(variableId, sprite);
+                    let variableValue = variable.getValue();
+                    let sumValue;
                     if (Entry.Utils.isNumber(value) && variable.isNumber()) {
                         value = Entry.parseNumber(value);
                         variableValue = Entry.parseNumber(variableValue);
@@ -530,10 +530,10 @@ module.exports = {
                 },
                 class: 'variable',
                 isNotFor: ['variableNotExist'],
-                func: function(sprite, script) {
-                    var variableId = script.getField('VARIABLE', script);
-                    var value = script.getValue('VALUE', script);
-                    var variable = Entry.variableContainer.getVariable(variableId, sprite);
+                func: async function(sprite, script) {
+                    const variableId = script.getField('VARIABLE', script);
+                    const value = await script.getValue('VALUE', script);
+                    const variable = Entry.variableContainer.getVariable(variableId, sprite);
                     variable.setValue(value);
                     return script.callReturn();
                 },
@@ -608,8 +608,8 @@ module.exports = {
                 class: 'variable_visibility',
                 isNotFor: ['variableNotExist'],
                 func: function(sprite, script) {
-                    var variableId = script.getField('VARIABLE', script);
-                    var variable = Entry.variableContainer.getVariable(variableId, sprite);
+                    const variableId = script.getField('VARIABLE', script);
+                    const variable = Entry.variableContainer.getVariable(variableId, sprite);
                     variable.setVisible(true);
                     variable.updateView();
                     return script.callReturn();
@@ -679,8 +679,8 @@ module.exports = {
                 class: 'variable_visibility',
                 isNotFor: ['variableNotExist'],
                 func: function(sprite, script) {
-                    var variableId = script.getField('VARIABLE', script);
-                    var variable = Entry.variableContainer.getVariable(variableId, sprite);
+                    const variableId = script.getField('VARIABLE', script);
+                    const variable = Entry.variableContainer.getVariable(variableId, sprite);
                     variable.setVisible(false);
                     return script.callReturn();
                 },
@@ -781,10 +781,10 @@ module.exports = {
                 },
                 class: 'list_element',
                 isNotFor: ['listNotExist'],
-                func: function(sprite, script) {
-                    var listId = script.getField('LIST', script);
-                    var index = script.getValue('INDEX', script);
-                    var list = Entry.variableContainer.getList(listId, sprite);
+                func: async function(sprite, script) {
+                    const listId = script.getField('LIST', script);
+                    let index = await script.getValue('INDEX', script);
+                    const list = Entry.variableContainer.getList(listId, sprite);
                     index = Entry.getListRealIndex(index, list);
 
                     if (!list.array_ || !Entry.Utils.isNumber(index) || index > list.array_.length)
@@ -884,10 +884,10 @@ module.exports = {
                 },
                 class: 'list',
                 isNotFor: ['listNotExist'],
-                func: function(sprite, script) {
-                    var listId = script.getField('LIST', script);
-                    var value = script.getValue('VALUE', script);
-                    var list = Entry.variableContainer.getList(listId, sprite);
+                func: async function(sprite, script) {
+                    const listId = script.getField('LIST', script);
+                    const value = await script.getValue('VALUE', script);
+                    const list = Entry.variableContainer.getList(listId, sprite);
 
                     if (!list.array_) list.array_ = [];
                     list.array_.push({ data: value });
@@ -983,10 +983,10 @@ module.exports = {
                 },
                 class: 'list',
                 isNotFor: ['listNotExist'],
-                func: function(sprite, script) {
-                    var listId = script.getField('LIST', script);
-                    var value = script.getValue('VALUE', script);
-                    var list = Entry.variableContainer.getList(listId, sprite);
+                func: async function(sprite, script) {
+                    const listId = script.getField('LIST', script);
+                    const value = await script.getValue('VALUE', script);
+                    const list = Entry.variableContainer.getList(listId, sprite);
 
                     if (!list.array_ || !Entry.Utils.isNumber(value) || value > list.array_.length)
                         throw new Error('can not remove value from array');
@@ -1099,11 +1099,13 @@ module.exports = {
                 },
                 class: 'list',
                 isNotFor: ['listNotExist'],
-                func: function(sprite, script) {
-                    var listId = script.getField('LIST', script);
-                    var data = script.getValue('DATA', script);
-                    var index = script.getValue('INDEX', script);
-                    var list = Entry.variableContainer.getList(listId, sprite);
+                func: async function(sprite, script) {
+                    const listId = script.getField('LIST', script);
+                    const [data, index] = await Promise.all([
+                        script.getValue('DATA', script),
+                        script.getValue('INDEX', script),
+                    ]);
+                    const list = Entry.variableContainer.getList(listId, sprite);
 
                     if (
                         !list.array_ ||
@@ -1113,7 +1115,7 @@ module.exports = {
                     )
                         throw new Error('can not insert value to array');
 
-                    list.array_.splice(index - 1, 0, { data: data });
+                    list.array_.splice(index - 1, 0, { data });
                     list.updateView();
                     return script.callReturn();
                 },
@@ -1224,11 +1226,13 @@ module.exports = {
                 },
                 class: 'list',
                 isNotFor: ['listNotExist'],
-                func: function(sprite, script) {
-                    var listId = script.getField('LIST', script);
-                    var data = script.getValue('DATA', script);
-                    var index = script.getValue('INDEX', script);
-                    var list = Entry.variableContainer.getList(listId, sprite);
+                func: async function(sprite, script) {
+                    const listId = script.getField('LIST', script);
+                    const [data, index] = await Promise.all([
+                        script.getValue('DATA', script),
+                        script.getValue('INDEX', script),
+                    ]);
+                    const list = Entry.variableContainer.getList(listId, sprite);
 
                     if (!list.array_ || !Entry.Utils.isNumber(index) || index > list.array_.length)
                         throw new Error('can not insert value to array');
@@ -1318,8 +1322,8 @@ module.exports = {
                 class: 'list',
                 isNotFor: ['listNotExist'],
                 func: function(sprite, script) {
-                    var listId = script.getField('LIST', script);
-                    var list = Entry.variableContainer.getList(listId, sprite);
+                    const listId = script.getField('LIST', script);
+                    const list = Entry.variableContainer.getList(listId, sprite);
 
                     return list.array_.length;
                 },
@@ -1424,12 +1428,12 @@ module.exports = {
                 },
                 class: 'list',
                 isNotFor: ['listNotExist'],
-                func: function(sprite, script) {
-                    var listId = script.getField('LIST', script);
-                    var data = script.getStringValue('DATA', script);
-                    var list = Entry.variableContainer.getList(listId, sprite);
+                func: async function(sprite, script) {
+                    const listId = script.getField('LIST', script);
+                    const data = await script.getStringValue('DATA', script);
+                    const list = Entry.variableContainer.getList(listId, sprite);
                     if (!list) return false;
-                    var arr = list.array_;
+                    const arr = list.array_;
 
                     for (var i = 0, len = arr.length; i < len; i++) {
                         if (arr[i].data.toString() == data.toString()) return true;
@@ -1509,8 +1513,8 @@ module.exports = {
                 class: 'list_visibility',
                 isNotFor: ['listNotExist'],
                 func: function(sprite, script) {
-                    var listId = script.getField('LIST', script);
-                    var list = Entry.variableContainer.getList(listId);
+                    const listId = script.getField('LIST', script);
+                    const list = Entry.variableContainer.getList(listId);
 
                     list.setVisible(true);
                     return script.callReturn();
@@ -1580,8 +1584,8 @@ module.exports = {
                 class: 'list_visibility',
                 isNotFor: ['listNotExist'],
                 func: function(sprite, script) {
-                    var listId = script.getField('LIST', script);
-                    var list = Entry.variableContainer.getList(listId);
+                    const listId = script.getField('LIST', script);
+                    const list = Entry.variableContainer.getList(listId);
 
                     list.setVisible(false);
                     return script.callReturn();

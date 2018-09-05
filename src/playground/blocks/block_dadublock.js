@@ -336,7 +336,6 @@ Entry.DaduBlock.getBlocks = function() {
             class: 'dadublockget',
             isNotFor: ['dadublock'],
             func: function(sprite, script) {
-                //var port = script.getNumberValue("PORT", script);
                 var port = script.getField('PORT', script);
                 var DIGITAL = Entry.hw.portData.DIGITAL;
                 if (!Entry.hw.sendQueue['GET']) {
@@ -397,7 +396,6 @@ Entry.DaduBlock.getBlocks = function() {
             class: 'dadublockset',
             isNotFor: ['dadublock'],
             func: function(sprite, script) {
-                //var port = script.getNumberValue("PORT");
                 var port = script.getField('PORT');
                 var value = script.getField('VALUE');
                 if (value == 'on') {
@@ -456,7 +454,6 @@ Entry.DaduBlock.getBlocks = function() {
             class: 'dadublockset',
             isNotFor: ['dadublock'],
             func: async function(sprite, script) {
-                //var port = script.getNumberValue("PORT");
                 var port = script.getField('PORT');
                 var value = await script.getNumberValue('VALUE');
                 value = Math.round(value);
@@ -521,7 +518,6 @@ Entry.DaduBlock.getBlocks = function() {
             isNotFor: ['dadublock'],
             func: async function(sprite, script) {
                 var sq = Entry.hw.sendQueue;
-                //var port = script.getNumberValue("PORT", script);
                 var port = script.getField('PORT', script);
                 var value = await script.getNumberValue('VALUE', script);
                 value = Math.min(180, value);
@@ -631,7 +627,6 @@ Entry.DaduBlock.getBlocks = function() {
             isNotFor: ['dadublock'],
             func: async function(sprite, script) {
                 var sq = Entry.hw.sendQueue;
-                //var port = script.getNumberValue("PORT", script);
                 var port = script.getField('PORT', script);
 
                 if (!script.isStart) {
@@ -921,7 +916,6 @@ Entry.DaduBlock.getBlocks = function() {
             class: 'dadublock_car_get',
             isNotFor: ['dadublock_car'],
             func: function(sprite, script) {
-                //var port = script.getNumberValue("PORT", script);
                 var port = script.getField('PORT', script);
                 var DIGITAL = Entry.hw.portData.DIGITAL;
                 if (!Entry.hw.sendQueue['GET']) {
@@ -982,7 +976,6 @@ Entry.DaduBlock.getBlocks = function() {
             class: 'dadublock_car_set',
             isNotFor: ['dadublock_car'],
             func: function(sprite, script) {
-                //var port = script.getNumberValue("PORT");
                 var port = script.getField('PORT');
                 var value = script.getField('VALUE');
                 if (value == 'on') {
@@ -1041,7 +1034,6 @@ Entry.DaduBlock.getBlocks = function() {
             class: 'dadublock_car_set',
             isNotFor: ['dadublock_car'],
             func: async function(sprite, script) {
-                //var port = script.getNumberValue("PORT");
                 var port = script.getField('PORT');
                 var value = await script.getNumberValue('VALUE');
                 value = Math.round(value);
@@ -1106,7 +1098,6 @@ Entry.DaduBlock.getBlocks = function() {
             isNotFor: ['dadublock_car'],
             func: async function(sprite, script) {
                 var sq = Entry.hw.sendQueue;
-                //var port = script.getNumberValue("PORT", script);
                 var port = script.getField('PORT', script);
                 var value = await script.getNumberValue('VALUE', script);
                 value = Math.min(180, value);
@@ -1216,7 +1207,6 @@ Entry.DaduBlock.getBlocks = function() {
             isNotFor: ['dadublock_car'],
             func: async function(sprite, script) {
                 var sq = Entry.hw.sendQueue;
-                //var port = script.getNumberValue("PORT", script);
                 var port = script.getField('PORT', script);
 
                 if (!script.isStart) {
@@ -1523,7 +1513,6 @@ Entry.DaduBlock.getBlocks = function() {
             class: 'dadublock_car_motor',
             isNotFor: ['dadublock_car'],
             func: function(sprite, script) {
-                //var port = script.getNumberValue("PORT", script);
                 var port = script.getField('PORT', script);
                 var DIGITAL = Entry.hw.portData.DIGITAL;
                 if (!Entry.hw.sendQueue['GET']) {

@@ -45,15 +45,11 @@ if (Entry && Entry.block) {
         };
 
         c.returnStringKey = function(key, value) {
-            if ((!value && typeof value !== 'number') || value === 'null')
-                return 'None';
+            if ((!value && typeof value !== 'number') || value === 'null') return 'None';
             key = String(key);
             if (value === 'mouse') key = 'mouse';
 
-            var name = Entry.TextCodingUtil.dropdownDynamicIdToNameConvertor(
-                value,
-                this.menuName
-            );
+            var name = Entry.TextCodingUtil.dropdownDynamicIdToNameConvertor(value, this.menuName);
             if (name) key = name;
             if (this.codeMap) var codeMap = eval(this.codeMap);
             var codeMapKey = value;
@@ -67,22 +63,17 @@ if (Entry && Entry.block) {
         };
 
         c.returnRawStringKey = function(key, value) {
-            if ((!value && typeof value !== 'number') || value === 'null')
-                return 'None';
+            if ((!value && typeof value !== 'number') || value === 'null') return 'None';
             key = String(key);
             if (value === 'mouse') key = value;
-            var name = Entry.TextCodingUtil.dropdownDynamicIdToNameConvertor(
-                value,
-                this.menuName
-            );
+            var name = Entry.TextCodingUtil.dropdownDynamicIdToNameConvertor(value, this.menuName);
             if (name) key = name;
             key = key.replace(/\"/gi, '');
             return '"()"'.replace('"()"', key);
         };
 
         c.returnStringValue = function(key, value) {
-            if ((!value && typeof value !== 'number') || value === 'null')
-                return 'None';
+            if ((!value && typeof value !== 'number') || value === 'null') return 'None';
 
             if (this.codeMap) var codeMap = eval(this.codeMap);
             var codeMapKey = value;
@@ -218,7 +209,7 @@ const block = {
         },
         events: {
             mousedown: [
-                function () {
+                function() {
                     Entry.do('playgroundClickAddExpansionBlock');
                 },
             ],
@@ -431,18 +422,14 @@ const block = {
         },
         class: 'brush_opacity',
         isNotFor: ['textBox'],
-        func: function(sprite, script) {
-            var opacity = script.getNumberValue('VALUE', script);
+        func: async function(sprite, script) {
+            let opacity = await script.getNumberValue('VALUE', script);
 
             if (!sprite.brush || !sprite.shapes.length) {
                 Entry.setBasicBrush(sprite);
                 sprite.brush.stop = true;
             }
-            opacity = Entry.adjustValueWithMaxMin(
-                sprite.brush.opacity + opacity,
-                0,
-                100
-            );
+            opacity = Entry.adjustValueWithMaxMin(sprite.brush.opacity + opacity, 0, 100);
 
             if (sprite.brush) {
                 sprite.brush.opacity = opacity;
@@ -497,8 +484,8 @@ const block = {
         },
         class: 'brush_opacity',
         isNotFor: ['textBox'],
-        func: function(sprite, script) {
-            var opacity = script.getNumberValue('VALUE', script);
+        func: async function(sprite, script) {
+            const opacity = await script.getNumberValue('VALUE', script);
 
             if (!sprite.brush || !sprite.shapes.length) {
                 Entry.setBasicBrush(sprite);
@@ -506,11 +493,7 @@ const block = {
             }
 
             if (sprite.brush) {
-                sprite.brush.opacity = Entry.adjustValueWithMaxMin(
-                    opacity,
-                    0,
-                    100
-                );
+                sprite.brush.opacity = Entry.adjustValueWithMaxMin(opacity, 0, 100);
                 sprite.brush.endStroke();
                 var rgb = sprite.brush.rgb;
                 sprite.brush.beginStroke(
@@ -561,9 +544,7 @@ const block = {
                     textParams: [
                         {
                             type: 'TextInput',
-                            converter:
-                                Entry.block.converters
-                                    .returnStringOrNumberByValue,
+                            converter: Entry.block.converters.returnStringOrNumberByValue,
                         },
                     ],
                 },
@@ -600,9 +581,7 @@ const block = {
                     textParams: [
                         {
                             type: 'Angle',
-                            converter:
-                                Entry.block.converters
-                                    .returnRawNumberValueByKey,
+                            converter: Entry.block.converters.returnRawNumberValueByKey,
                         },
                     ],
                 },
@@ -702,8 +681,7 @@ const block = {
         isNotFor: [],
         func: function(sprite, script) {
             var o = script.getField('OPERATOR', script);
-            if (o.toUpperCase() == 'DIRECTION')
-                return parseFloat(sprite.getDirection().toFixed(1));
+            if (o.toUpperCase() == 'DIRECTION') return parseFloat(sprite.getDirection().toFixed(1));
             else return parseFloat(sprite.getRotation().toFixed(1));
         },
         syntax: { js: [], py: [''] },
@@ -735,9 +713,11 @@ const block = {
             LEFTHAND: 0,
             RIGHTHAND: 2,
         },
-        func: function(sprite, script) {
-            var leftValue = script.getNumberValue('LEFTHAND', script);
-            var rightValue = script.getNumberValue('RIGHTHAND', script);
+        func: async function(sprite, script) {
+            const [leftValue, rightValue] = await Promise.all([
+                script.getNumberValue('LEFTHAND', script),
+                script.getNumberValue('RIGHTHAND', script),
+            ]);
             return leftValue + rightValue;
         },
         syntax: { js: [], py: [''] },
@@ -769,9 +749,11 @@ const block = {
             LEFTHAND: 0,
             RIGHTHAND: 2,
         },
-        func: function(sprite, script) {
-            var leftValue = script.getNumberValue('LEFTHAND', script);
-            var rightValue = script.getNumberValue('RIGHTHAND', script);
+        func: async function(sprite, script) {
+            const [leftValue, rightValue] = await Promise.all([
+                script.getNumberValue('LEFTHAND', script),
+                script.getNumberValue('RIGHTHAND', script),
+            ]);
             return leftValue - rightValue;
         },
         syntax: { js: [], py: [''] },
@@ -803,9 +785,11 @@ const block = {
             LEFTHAND: 0,
             RIGHTHAND: 2,
         },
-        func: function(sprite, script) {
-            var leftValue = script.getNumberValue('LEFTHAND', script);
-            var rightValue = script.getNumberValue('RIGHTHAND', script);
+        func: async function(sprite, script) {
+            const [leftValue, rightValue] = await Promise.all([
+                script.getNumberValue('LEFTHAND', script),
+                script.getNumberValue('RIGHTHAND', script),
+            ]);
             return leftValue * rightValue;
         },
         syntax: { js: [], py: [''] },
@@ -837,9 +821,11 @@ const block = {
             LEFTHAND: 0,
             RIGHTHAND: 2,
         },
-        func: function(sprite, script) {
-            var leftValue = script.getNumberValue('LEFTHAND', script);
-            var rightValue = script.getNumberValue('RIGHTHAND', script);
+        func: async function(sprite, script) {
+            const [leftValue, rightValue] = await Promise.all([
+                script.getNumberValue('LEFTHAND', script),
+                script.getNumberValue('RIGHTHAND', script),
+            ]);
             return leftValue / rightValue;
         },
         syntax: { js: [], py: [''] },
@@ -890,9 +876,11 @@ const block = {
         },
         class: 'calc',
         isNotFor: [],
-        func: function(sprite, script) {
-            var leftValue = script.getNumberValue('LEFTHAND', script);
-            var rightValue = script.getNumberValue('RIGHTHAND', script);
+        func: async function(sprite, script) {
+            const [leftValue, rightValue] = await Promise.all([
+                script.getNumberValue('LEFTHAND', script),
+                script.getNumberValue('RIGHTHAND', script),
+            ]);
             return leftValue % rightValue;
         },
         syntax: { js: [], py: ['Entry.get_remainder(%1, %3)'] },
@@ -943,9 +931,11 @@ const block = {
         },
         class: 'calc',
         isNotFor: [],
-        func: function(sprite, script) {
-            var leftValue = script.getNumberValue('LEFTHAND', script);
-            var rightValue = script.getNumberValue('RIGHTHAND', script);
+        func: async function(sprite, script) {
+            const [leftValue, rightValue] = await Promise.all([
+                script.getNumberValue('LEFTHAND', script),
+                script.getNumberValue('RIGHTHAND', script),
+            ]);
             return Math.floor(leftValue / rightValue);
         },
         syntax: { js: [], py: [''] },
@@ -969,8 +959,7 @@ const block = {
             ],
             viewDestroy: [
                 function(block, notIncludeSelf) {
-                    if (Entry.engine)
-                        Entry.engine.hideProjectTimer(block, notIncludeSelf);
+                    if (Entry.engine) Entry.engine.hideProjectTimer(block, notIncludeSelf);
                 },
             ],
         },
@@ -1025,8 +1014,7 @@ const block = {
             ],
             viewDestroy: [
                 function(block, notIncludeSelf) {
-                    if (Entry.engine)
-                        Entry.engine.hideProjectTimer(block, notIncludeSelf);
+                    if (Entry.engine) Entry.engine.hideProjectTimer(block, notIncludeSelf);
                 },
             ],
         },
@@ -1072,11 +1060,8 @@ const block = {
                             value: 'SHOW',
                             fontSize: 11,
                             arrowColor: EntryStatic.ARROW_COLOR_CALC,
-                            converter:
-                                Entry.block.converters
-                                    .returnStringValueLowerCase,
-                            codeMap:
-                                'Entry.CodeMap.Entry.set_visible_project_timer[1]',
+                            converter: Entry.block.converters.returnStringValueLowerCase,
+                            codeMap: 'Entry.CodeMap.Entry.set_visible_project_timer[1]',
                         },
                         {
                             type: 'Text',
@@ -1232,9 +1217,7 @@ const block = {
             ],
         },
         func: function() {
-            return this.executor.register.params[
-                this.executor.register.paramMap[this.block.type]
-            ];
+            return this.executor.register.params[this.executor.register.paramMap[this.block.type]];
         },
         syntax: { js: [], py: [''] },
     },
@@ -1250,9 +1233,7 @@ const block = {
             ],
         },
         func: function() {
-            return this.executor.register.params[
-                this.executor.register.paramMap[this.block.type]
-            ];
+            return this.executor.register.params[this.executor.register.paramMap[this.block.type]];
         },
         syntax: { js: [], py: [''] },
     },
@@ -1337,14 +1318,9 @@ const block = {
                     throw new Error();
                 }
 
-                var func = Entry.variableContainer.getFunction(
-                    this.block.getFuncId()
-                );
+                var func = Entry.variableContainer.getFunction(this.block.getFuncId());
                 this.funcCode = func.content;
-                this.funcExecutor = this.funcCode.raiseEvent(
-                    'funcDef',
-                    entity
-                )[0];
+                this.funcExecutor = this.funcCode.raiseEvent('funcDef', entity)[0];
                 this.funcExecutor.register.params = this.getParams();
                 var paramMap = {};
                 this.funcExecutor.register.paramMap = func.paramMap;
@@ -1442,10 +1418,10 @@ const block = {
         },
         class: 'effect',
         isNotFor: ['textBox'],
-        func: function(sprite, script) {
-            var effect = script.getField('EFFECT', script);
-            var effectValue = script.getNumberValue('VALUE', script);
-            var effectName = '';
+        func: async function(sprite, script) {
+            const effect = script.getField('EFFECT', script);
+            const effectValue = await script.getNumberValue('VALUE', script);
+            let effectName = '';
             if (effect == 'color') {
                 sprite.effect.hue = effectValue + sprite.effect.hue;
                 effectName = 'hue';
@@ -1454,8 +1430,7 @@ const block = {
             } else if (effect == 'pixel') {
             } else if (effect == 'mosaic') {
             } else if (effect == 'brightness') {
-                sprite.effect.brightness =
-                    effectValue + sprite.effect.brightness;
+                sprite.effect.brightness = effectValue + sprite.effect.brightness;
                 effectName = 'brightness';
             } else if (effect == 'blur') {
             } else if (effect == 'opacity') {
@@ -1510,10 +1485,10 @@ const block = {
         },
         class: 'effect',
         isNotFor: ['textBox'],
-        func: function(sprite, script) {
-            var effect = script.getField('EFFECT', script);
-            var effectValue = script.getNumberValue('VALUE', script);
-            var effectName = '';
+        func: async function(sprite, script) {
+            const effect = script.getField('EFFECT', script);
+            const effectValue = await script.getNumberValue('VALUE', script);
+            let effectName = '';
             if (effect == 'color') {
                 sprite.effect.hue = effectValue;
                 effectName = 'hue';
@@ -1566,8 +1541,7 @@ const block = {
         class: 'scale',
         isNotFor: [],
         func: function(sprite, script) {
-            var scaleValue =
-                (script.getNumberValue('VALUE', script) + 100) / 100;
+            var scaleValue = (script.getNumberValue('VALUE', script) + 100) / 100;
             sprite.setScaleX(sprite.getScaleX() * scaleValue);
             sprite.setScaleY(sprite.getScaleY() * scaleValue);
             return script.callReturn();
@@ -1605,9 +1579,9 @@ const block = {
         },
         class: 'scale',
         isNotFor: [],
-        func: function(sprite, script) {
-            var scaleValue = script.getNumberValue('VALUE', script) / 100;
-            var snapshot = sprite.snapshot_;
+        func: async function(sprite, script) {
+            const scaleValue = await script.getNumberValue('VALUE', script) / 100;
+            const snapshot = sprite.snapshot_;
             sprite.setScaleX(scaleValue * snapshot.scaleX);
             sprite.setScaleY(scaleValue * snapshot.scaleY);
             return script.callReturn();
@@ -1644,9 +1618,7 @@ const block = {
         func: function(sprite, script) {
             var targetIndex = script.getField('VALUE', script);
             //var currentIndex = Entry.container.getBelongedObjectsToScene().indexOf(sprite.parent);
-            var currentIndex = Entry.container
-                .getCurrentObjects()
-                .indexOf(sprite.parent);
+            var currentIndex = Entry.container.getCurrentObjects().indexOf(sprite.parent);
 
             if (currentIndex > -1) {
                 return script.callReturn();
@@ -1740,16 +1712,15 @@ const block = {
         },
         class: 'effect',
         isNotFor: ['textBox'],
-        func: function(sprite, script) {
-            var effect = script.getField('EFFECT', script);
-            var effectValue = script.getNumberValue('VALUE', script);
-            var effectName = '';
+        func: async function(sprite, script) {
+            const effect = script.getField('EFFECT', script);
+            const effectValue = await script.getNumberValue('VALUE', script);
+            let effectName = '';
             if (effect == 'color') {
                 sprite.effect.hue = effectValue + sprite.effect.hue;
                 effectName = 'hue';
             } else if (effect == 'brightness') {
-                sprite.effect.brightness =
-                    effectValue + sprite.effect.brightness;
+                sprite.effect.brightness = effectValue + sprite.effect.brightness;
                 effectName = 'brightness';
             } else if (effect == 'transparency') {
                 sprite.effect.alpha = sprite.effect.alpha - effectValue / 100;
@@ -1803,10 +1774,10 @@ const block = {
         },
         class: 'effect',
         isNotFor: ['textBox'],
-        func: function(sprite, script) {
-            var effect = script.getField('EFFECT', script);
-            var effectValue = script.getNumberValue('VALUE', script);
-            var effectName = '';
+        func: async function(sprite, script) {
+            const effect = script.getField('EFFECT', script);
+            const effectValue = await script.getNumberValue('VALUE', script);
+            let effectName = '';
             if (effect == 'color') {
                 sprite.effect.hue = effectValue;
                 effectName = 'hue';
@@ -1853,8 +1824,8 @@ const block = {
         },
         class: 'rotate',
         isNotFor: [],
-        func: function(sprite, script) {
-            var value = script.getNumberValue('VALUE', script);
+        func: async function(sprite, script) {
+            const value = await script.getNumberValue('VALUE', script);
             sprite.setRotation(sprite.getRotation() + value);
             return script.callReturn();
         },
@@ -1867,12 +1838,7 @@ const block = {
         params: [
             {
                 type: 'Dropdown',
-                options: [
-                    ['45', '45'],
-                    ['90', '90'],
-                    ['135', '135'],
-                    ['180', '180'],
-                ],
+                options: [['45', '45'], ['90', '90'], ['135', '135'], ['180', '180']],
                 value: '45',
                 fontSize: 11,
             },
@@ -1930,8 +1896,8 @@ const block = {
         },
         class: 'rotate',
         isNotFor: [],
-        func: function(sprite, script) {
-            var value = script.getNumberValue('VALUE', script);
+        func: async function(sprite, script) {
+            const value = await script.getNumberValue('VALUE', script);
             sprite.setDirection(value);
             return script.callReturn();
         },
@@ -1967,13 +1933,9 @@ const block = {
             var deltaX = targetEntity.getX() - sprite.getX();
             var deltaY = targetEntity.getY() - sprite.getY();
             if (deltaX >= 0) {
-                sprite.setRotation(
-                    Math.atan(deltaY / deltaX) / Math.PI * 180 + 90
-                );
+                sprite.setRotation(Math.atan(deltaY / deltaX) / Math.PI * 180 + 90);
             } else {
-                sprite.setRotation(
-                    Math.atan(deltaY / deltaX) / Math.PI * 180 + 270
-                );
+                sprite.setRotation(Math.atan(deltaY / deltaX) / Math.PI * 180 + 270);
             }
             return script.callReturn();
         },
@@ -2015,11 +1977,10 @@ const block = {
         },
         class: 'rotate',
         isNotFor: [],
-        func: function(sprite, script) {
+        func: async function(sprite, script) {
             if (!script.isStart) {
-                var timeValue;
-                timeValue = script.getNumberValue('VALUE', script);
-                var angleValue = script.getNumberField('VALUE', script);
+                const timeValue = await script.getNumberValue('VALUE', script);
+                const angleValue = script.getNumberField('VALUE', script);
                 script.isStart = true;
                 script.frameCount = Math.floor(timeValue * Entry.FPS);
                 script.dAngle = angleValue / script.frameCount;
@@ -2109,9 +2070,9 @@ const block = {
         },
         class: 'rotate',
         isNotFor: [],
-        func: function(sprite, script) {
-            var value = script.getNumberValue('VALUE', script);
-            var nativeDirection = sprite.getDirection() + sprite.getRotation();
+        func: async function(sprite, script) {
+            const value = await script.getNumberValue('VALUE', script);
+            const nativeDirection = sprite.getDirection() + sprite.getRotation();
             sprite.setRotation(sprite.getRotation() + value - nativeDirection);
             return script.callReturn();
         },
@@ -2148,8 +2109,8 @@ const block = {
         },
         class: 'rotate',
         isNotFor: [],
-        func: function(sprite, script) {
-            var value = script.getNumberValue('VALUE', script);
+        func: async function(sprite, script) {
+            const value = await script.getNumberValue('VALUE', script);
             sprite.setDirection(value + sprite.getDirection());
             return script.callReturn();
         },
@@ -2232,11 +2193,11 @@ const block = {
         },
         class: 'sound',
         isNotFor: [],
-        func: function(sprite, script) {
-            var soundId = script.getField('VALUE', script);
-            var timeValue = script.getNumberValue('SECOND', script);
-            var sounds = sprite.parent.sounds;
-            var isExist = Entry.isExist(soundId, 'id', sounds);
+        func: async function(sprite, script) {
+            const soundId = script.getField('VALUE', script);
+            const timeValue = await script.getNumberValue('SECOND', script);
+            const sounds = sprite.parent.sounds;
+            const isExist = Entry.isExist(soundId, 'id', sounds);
             if (isExist) {
                 var instance = createjs.Sound.play(soundId);
                 Entry.Utils.addSoundInstances(instance);
@@ -2340,16 +2301,16 @@ const block = {
         },
         class: 'sound',
         isNotFor: [],
-        func: function(sprite, script) {
+        func: async function(sprite, script) {
             if (!script.isPlay) {
                 script.isPlay = true;
                 script.playState = 1;
-                var soundId = script.getField('VALUE', script);
-                var sounds = sprite.parent.sounds;
-                var isExist = Entry.isExist(soundId, 'id', sounds);
+                const soundId = script.getField('VALUE', script);
+                const sounds = sprite.parent.sounds;
+                const isExist = Entry.isExist(soundId, 'id', sounds);
                 if (isExist) {
-                    var instance = createjs.Sound.play(soundId);
-                    var timeValue = script.getNumberValue('SECOND', script);
+                    const instance = createjs.Sound.play(soundId);
+                    const timeValue = await script.getNumberValue('SECOND', script);
                     Entry.Utils.addSoundInstances(instance);
                     setTimeout(function() {
                         instance.stop();
@@ -2442,10 +2403,12 @@ const block = {
             OPERATOR: 1,
             RIGHTHAND: 2,
         },
-        func: function(sprite, script) {
-            var operator = script.getField('OPERATOR', script);
-            var leftValue = script.getNumberValue('LEFTHAND', script);
-            var rightValue = script.getNumberValue('RIGHTHAND', script);
+        func: async function(sprite, script) {
+            const [leftValue, rightValue] = await Promise.all([
+                script.getNumberValue('LEFTHAND', script),
+                script.getNumberValue('RIGHTHAND', script),
+            ]);
+            const operator = script.getField('OPERATOR', script);
             if (operator == 'EQUAL') return leftValue == rightValue;
             else if (operator == 'BIGGER') return leftValue > rightValue;
             else return leftValue < rightValue;
@@ -2492,9 +2455,11 @@ const block = {
         },
         class: 'boolean_compare',
         isNotFor: [],
-        func: function(sprite, script) {
-            var leftValue = script.getStringValue('LEFTHAND', script);
-            var rightValue = script.getStringValue('RIGHTHAND', script);
+        func: async function(sprite, script) {
+            const [leftValue, rightValue] = await Promise.all([
+                script.getNumberValue('LEFTHAND', script),
+                script.getNumberValue('RIGHTHAND', script),
+            ]);
             return leftValue == rightValue;
         },
         syntax: { js: [], py: [''] },
@@ -2539,9 +2504,11 @@ const block = {
         },
         class: 'boolean_compare',
         isNotFor: [],
-        func: function(sprite, script) {
-            var leftValue = script.getNumberValue('LEFTHAND', script);
-            var rightValue = script.getNumberValue('RIGHTHAND', script);
+        func: async function(sprite, script) {
+            const [leftValue, rightValue] = await Promise.all([
+                script.getNumberValue('LEFTHAND', script),
+                script.getNumberValue('RIGHTHAND', script),
+            ]);
             return leftValue > rightValue;
         },
         syntax: { js: [], py: [''] },
@@ -2586,9 +2553,11 @@ const block = {
         },
         class: 'boolean_compare',
         isNotFor: [],
-        func: function(sprite, script) {
-            var leftValue = script.getNumberValue('LEFTHAND', script);
-            var rightValue = script.getNumberValue('RIGHTHAND', script);
+        func: async function(sprite, script) {
+            const [leftValue, rightValue] = await Promise.all([
+                script.getNumberValue('LEFTHAND', script),
+                script.getNumberValue('RIGHTHAND', script),
+            ]);
             return leftValue < rightValue;
         },
         syntax: { js: [], py: [''] },
@@ -2645,9 +2614,11 @@ const block = {
         },
         class: 'boolean',
         isNotFor: [],
-        func: function(sprite, script) {
-            var leftValue = script.getBooleanValue('LEFTHAND', script);
-            var rightValue = script.getBooleanValue('RIGHTHAND', script);
+        func: async function(sprite, script) {
+            const [leftValue, rightValue] = await Promise.all([
+                script.getNumberValue('LEFTHAND', script),
+                script.getNumberValue('RIGHTHAND', script),
+            ]);
             return leftValue && rightValue;
         },
         syntax: {
@@ -2706,9 +2677,11 @@ const block = {
         },
         class: 'boolean',
         isNotFor: [],
-        func: function(sprite, script) {
-            var leftValue = script.getBooleanValue('LEFTHAND', script);
-            var rightValue = script.getBooleanValue('RIGHTHAND', script);
+        func: async function(sprite, script) {
+            const [leftValue, rightValue] = await Promise.all([
+                script.getNumberValue('LEFTHAND', script),
+                script.getNumberValue('RIGHTHAND', script),
+            ]);
             return leftValue || rightValue;
         },
         syntax: {
@@ -2903,9 +2876,7 @@ const block = {
                     textParams: [
                         {
                             type: 'TextInput',
-                            converter:
-                                Entry.block.converters
-                                    .returnStringOrNumberByValue,
+                            converter: Entry.block.converters.returnStringOrNumberByValue,
                         },
                     ],
                 },
@@ -2919,11 +2890,7 @@ const block = {
         params: [
             {
                 type: 'Dropdown',
-                options: [
-                    ['첫번째', 'FIRST'],
-                    ['마지막', 'LAST'],
-                    ['무작위', 'RANDOM'],
-                ],
+                options: [['첫번째', 'FIRST'], ['마지막', 'LAST'], ['무작위', 'RANDOM']],
                 value: 'FIRST',
                 fontSize: 11,
             },
@@ -2973,16 +2940,11 @@ const block = {
             },
         ],
         func: function() {
-            var entities = Ntry.entityManager.getEntitiesByComponent(
-                Ntry.STATIC.UNIT
-            );
+            var entities = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT);
 
             for (var key in entities) this._unit = entities[key];
 
-            Ntry.unitComp = Ntry.entityManager.getComponent(
-                this._unit.id,
-                Ntry.STATIC.UNIT
-            );
+            Ntry.unitComp = Ntry.entityManager.getComponent(this._unit.id, Ntry.STATIC.UNIT);
         },
     },
     jr_repeat: {
@@ -3052,11 +3014,7 @@ const block = {
                     Ntry.dispatchEvent('getItem');
                     self.isAction = false;
                 };
-                Ntry.dispatchEvent(
-                    'unitAction',
-                    Ntry.STATIC.GET_ITEM,
-                    callBack
-                );
+                Ntry.dispatchEvent('unitAction', Ntry.STATIC.GET_ITEM, callBack);
                 return Entry.STATIC.BREAK;
             } else if (this.isAction) {
                 return Entry.STATIC.BREAK;
@@ -3090,11 +3048,7 @@ const block = {
                     Ntry.dispatchEvent('getItem');
                     self.isAction = false;
                 };
-                Ntry.dispatchEvent(
-                    'unitAction',
-                    Ntry.STATIC.GET_ITEM,
-                    callBack
-                );
+                Ntry.dispatchEvent('unitAction', Ntry.STATIC.GET_ITEM, callBack);
                 return Entry.STATIC.BREAK;
             } else if (this.isAction) {
                 return Entry.STATIC.BREAK;
@@ -3126,13 +3080,9 @@ const block = {
                 var self = this;
                 var callBack = function() {
                     window.setTimeout(function() {
-                        Ntry.dispatchEvent(
-                            'unitAction',
-                            Ntry.STATIC.WALK,
-                            function() {
-                                self.isAction = false;
-                            }
-                        );
+                        Ntry.dispatchEvent('unitAction', Ntry.STATIC.WALK, function() {
+                            self.isAction = false;
+                        });
                     }, 3);
                 };
                 var actionType;
@@ -3150,8 +3100,7 @@ const block = {
                         callBack();
                         break;
                 }
-                if (actionType)
-                    Ntry.dispatchEvent('unitAction', actionType, callBack);
+                if (actionType) Ntry.dispatchEvent('unitAction', actionType, callBack);
                 return Entry.STATIC.BREAK;
             } else if (this.isAction) {
                 return Entry.STATIC.BREAK;
@@ -3184,13 +3133,9 @@ const block = {
                 var self = this;
                 var callBack = function() {
                     window.setTimeout(function() {
-                        Ntry.dispatchEvent(
-                            'unitAction',
-                            STATIC.WALK,
-                            function() {
-                                self.isAction = false;
-                            }
-                        );
+                        Ntry.dispatchEvent('unitAction', STATIC.WALK, function() {
+                            self.isAction = false;
+                        });
                     }, 3);
                 };
 
@@ -3210,8 +3155,7 @@ const block = {
                         callBack();
                         break;
                 }
-                if (actionType)
-                    Ntry.dispatchEvent('unitAction', actionType, callBack);
+                if (actionType) Ntry.dispatchEvent('unitAction', actionType, callBack);
                 return Entry.STATIC.BREAK;
             } else if (this.isAction) {
                 return Entry.STATIC.BREAK;
@@ -3243,13 +3187,9 @@ const block = {
                 var self = this;
                 var callBack = function() {
                     window.setTimeout(function() {
-                        Ntry.dispatchEvent(
-                            'unitAction',
-                            Ntry.STATIC.WALK,
-                            function() {
-                                self.isAction = false;
-                            }
-                        );
+                        Ntry.dispatchEvent('unitAction', Ntry.STATIC.WALK, function() {
+                            self.isAction = false;
+                        });
                     }, 3);
                 };
 
@@ -3269,8 +3209,7 @@ const block = {
                         callBack();
                         break;
                 }
-                if (actionType)
-                    Ntry.dispatchEvent('unitAction', actionType, callBack);
+                if (actionType) Ntry.dispatchEvent('unitAction', actionType, callBack);
                 return Entry.STATIC.BREAK;
             } else if (this.isAction) {
                 return Entry.STATIC.BREAK;
@@ -3302,13 +3241,9 @@ const block = {
                 var self = this;
                 var callBack = function() {
                     window.setTimeout(function() {
-                        Ntry.dispatchEvent(
-                            'unitAction',
-                            STATIC.WALK,
-                            function() {
-                                self.isAction = false;
-                            }
-                        );
+                        Ntry.dispatchEvent('unitAction', STATIC.WALK, function() {
+                            self.isAction = false;
+                        });
                     }, 3);
                 };
 
@@ -3328,8 +3263,7 @@ const block = {
                         callBack();
                         break;
                 }
-                if (actionType)
-                    Ntry.dispatchEvent('unitAction', actionType, callBack);
+                if (actionType) Ntry.dispatchEvent('unitAction', actionType, callBack);
                 return Entry.STATIC.BREAK;
             } else if (this.isAction) {
                 return Entry.STATIC.BREAK;
@@ -3361,16 +3295,11 @@ const block = {
             },
         ],
         func: function() {
-            var entities = Ntry.entityManager.getEntitiesByComponent(
-                Ntry.STATIC.UNIT
-            );
+            var entities = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT);
 
             for (var key in entities) this._unit = entities[key];
 
-            Ntry.unitComp = Ntry.entityManager.getComponent(
-                this._unit.id,
-                Ntry.STATIC.UNIT
-            );
+            Ntry.unitComp = Ntry.entityManager.getComponent(this._unit.id, Ntry.STATIC.UNIT);
         },
     },
     jr_go_straight: {
@@ -3379,8 +3308,7 @@ const block = {
         params: [
             {
                 type: 'Image',
-                img:
-                    '../../../img/assets/ntry/bitmap/jr/cparty_go_straight.png',
+                img: '../../../img/assets/ntry/bitmap/jr/cparty_go_straight.png',
                 size: 24,
             },
         ],
@@ -3425,11 +3353,7 @@ const block = {
                 };
 
                 // turn direction
-                Ntry.dispatchEvent(
-                    'unitAction',
-                    Ntry.STATIC.TURN_LEFT,
-                    callBack
-                );
+                Ntry.dispatchEvent('unitAction', Ntry.STATIC.TURN_LEFT, callBack);
 
                 return Entry.STATIC.BREAK;
             } else if (this.isAction) {
@@ -3461,11 +3385,7 @@ const block = {
                 };
 
                 // turn direction
-                Ntry.dispatchEvent(
-                    'unitAction',
-                    Ntry.STATIC.TURN_RIGHT,
-                    callBack
-                );
+                Ntry.dispatchEvent('unitAction', Ntry.STATIC.TURN_RIGHT, callBack);
 
                 return Entry.STATIC.BREAK;
             } else if (this.isAction) {
@@ -3545,8 +3465,7 @@ const block = {
         params: [
             {
                 type: 'Image',
-                img:
-                    '../../../img/assets/ntry/bitmap/jr/jr_construction_image.png',
+                img: '../../../img/assets/ntry/bitmap/jr/jr_construction_image.png',
                 size: 18,
             },
             {
@@ -3562,21 +3481,13 @@ const block = {
         ],
         func: function() {
             if (this.isContinue) return;
-            var entities = Ntry.entityManager.getEntitiesByComponent(
-                Ntry.STATIC.UNIT
-            );
+            var entities = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT);
 
             var entity;
             for (var key in entities) entity = entities[key];
 
-            var unitComp = Ntry.entityManager.getComponent(
-                entity.id,
-                Ntry.STATIC.UNIT
-            );
-            var gridComp = Ntry.entityManager.getComponent(
-                entity.id,
-                Ntry.STATIC.GRID
-            );
+            var unitComp = Ntry.entityManager.getComponent(entity.id, Ntry.STATIC.UNIT);
+            var gridComp = Ntry.entityManager.getComponent(entity.id, Ntry.STATIC.GRID);
 
             var grid = { x: gridComp.x, y: gridComp.y };
             Ntry.addVectorByDirection(grid, unitComp.direction, 1);
@@ -3627,21 +3538,13 @@ const block = {
         ],
         func: function() {
             if (this.isContinue) return;
-            var entities = Ntry.entityManager.getEntitiesByComponent(
-                Ntry.STATIC.UNIT
-            );
+            var entities = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT);
 
             var entity;
             for (var key in entities) entity = entities[key];
 
-            var unitComp = Ntry.entityManager.getComponent(
-                entity.id,
-                Ntry.STATIC.UNIT
-            );
-            var gridComp = Ntry.entityManager.getComponent(
-                entity.id,
-                Ntry.STATIC.GRID
-            );
+            var unitComp = Ntry.entityManager.getComponent(entity.id, Ntry.STATIC.UNIT);
+            var gridComp = Ntry.entityManager.getComponent(entity.id, Ntry.STATIC.GRID);
 
             var grid = { x: gridComp.x, y: gridComp.y };
             Ntry.addVectorByDirection(grid, unitComp.direction, 1);
@@ -3689,16 +3592,11 @@ const block = {
             },
         ],
         func: function() {
-            var entities = Ntry.entityManager.getEntitiesByComponent(
-                Ntry.STATIC.UNIT
-            );
+            var entities = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT);
 
             for (var key in entities) this._unit = entities[key];
 
-            Ntry.unitComp = Ntry.entityManager.getComponent(
-                this._unit.id,
-                Ntry.STATIC.UNIT
-            );
+            Ntry.unitComp = Ntry.entityManager.getComponent(this._unit.id, Ntry.STATIC.UNIT);
             Ntry.unit = this._unit;
         },
     },
@@ -3745,18 +3643,13 @@ const block = {
                     self.isAction = false;
                 };
 
-                var entities = Ntry.entityManager.getEntitiesByComponent(
-                    Ntry.STATIC.UNIT
-                );
+                var entities = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT);
                 var unitId;
                 $.each(entities, function(id, entity) {
                     unitId = id;
                 });
 
-                var unitComp = Ntry.entityManager.getComponent(
-                    unitId,
-                    Ntry.STATIC.UNIT
-                );
+                var unitComp = Ntry.entityManager.getComponent(unitId, Ntry.STATIC.UNIT);
                 var unitGrid = $.extend(
                     {},
                     Ntry.entityManager.getComponent(unitId, Ntry.STATIC.GRID)
@@ -3772,16 +3665,8 @@ const block = {
                     2
                 );
                 if (isCollisionPossible) {
-                    Ntry.dispatchEvent(
-                        'unitAction',
-                        Ntry.STATIC.FAIL_JUMP,
-                        callBack
-                    );
-                    Ntry.dispatchEvent(
-                        'complete',
-                        false,
-                        Ntry.STATIC.CONTACT_IRON
-                    );
+                    Ntry.dispatchEvent('unitAction', Ntry.STATIC.FAIL_JUMP, callBack);
+                    Ntry.dispatchEvent('complete', false, Ntry.STATIC.CONTACT_IRON);
                     return;
                 }
                 Ntry.dispatchEvent('unitAction', Ntry.STATIC.JUMP, callBack);
@@ -3819,16 +3704,8 @@ const block = {
                     1
                 );
                 if (isCollisionPossible) {
-                    Ntry.dispatchEvent(
-                        'unitAction',
-                        Ntry.STATIC.FAIL_JUMP,
-                        callBack
-                    );
-                    Ntry.dispatchEvent(
-                        'complete',
-                        false,
-                        Ntry.STATIC.HIT_UNIT_BY_MUSHROOM
-                    );
+                    Ntry.dispatchEvent('unitAction', Ntry.STATIC.FAIL_JUMP, callBack);
+                    Ntry.dispatchEvent('complete', false, Ntry.STATIC.HIT_UNIT_BY_MUSHROOM);
                     return;
                 }
 
@@ -4002,21 +3879,13 @@ const block = {
         ],
         func: function() {
             if (this.isContinue) return;
-            var entities = Ntry.entityManager.getEntitiesByComponent(
-                Ntry.STATIC.UNIT
-            );
+            var entities = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT);
 
             var entity;
             for (var key in entities) entity = entities[key];
 
-            var unitComp = Ntry.entityManager.getComponent(
-                entity.id,
-                Ntry.STATIC.UNIT
-            );
-            var gridComp = Ntry.entityManager.getComponent(
-                entity.id,
-                Ntry.STATIC.GRID
-            );
+            var unitComp = Ntry.entityManager.getComponent(entity.id, Ntry.STATIC.UNIT);
+            var gridComp = Ntry.entityManager.getComponent(entity.id, Ntry.STATIC.GRID);
 
             var grid = { x: gridComp.x, y: gridComp.y };
             Ntry.addVectorByDirection(grid, unitComp.direction, 1);
@@ -4082,21 +3951,13 @@ const block = {
         func: function() {
             if (this.isContinue) return;
 
-            var entities = Ntry.entityManager.getEntitiesByComponent(
-                Ntry.STATIC.UNIT
-            );
+            var entities = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT);
 
             var entity;
             for (var key in entities) entity = entities[key];
 
-            var unitComp = Ntry.entityManager.getComponent(
-                entity.id,
-                Ntry.STATIC.UNIT
-            );
-            var gridComp = Ntry.entityManager.getComponent(
-                entity.id,
-                Ntry.STATIC.GRID
-            );
+            var unitComp = Ntry.entityManager.getComponent(entity.id, Ntry.STATIC.UNIT);
+            var gridComp = Ntry.entityManager.getComponent(entity.id, Ntry.STATIC.GRID);
 
             var grid = { x: gridComp.x, y: gridComp.y };
             Ntry.addVectorByDirection(grid, unitComp.direction, 1);
@@ -4139,15 +4000,11 @@ const block = {
         ],
         func: function() {
             if (!this.funcExecutor) {
-                var codes = Ntry.entityManager.getEntitiesByComponent(
-                    Ntry.STATIC.CODE
-                );
+                var codes = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.CODE);
 
                 for (var key in codes) {
                     var code = codes[key].components[Ntry.STATIC.CODE].code;
-                    this.funcExecutor = new Entry.Executor(
-                        code.getEventMap('define')[0]
-                    );
+                    this.funcExecutor = new Entry.Executor(code.getEventMap('define')[0]);
                 }
             }
 
@@ -4208,21 +4065,13 @@ const block = {
         func: function() {
             if (this.isContinue) return;
 
-            var entities = Ntry.entityManager.getEntitiesByComponent(
-                Ntry.STATIC.UNIT
-            );
+            var entities = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT);
 
             var entity;
             for (var key in entities) entity = entities[key];
 
-            var unitComp = Ntry.entityManager.getComponent(
-                entity.id,
-                Ntry.STATIC.UNIT
-            );
-            var gridComp = Ntry.entityManager.getComponent(
-                entity.id,
-                Ntry.STATIC.GRID
-            );
+            var unitComp = Ntry.entityManager.getComponent(entity.id, Ntry.STATIC.UNIT);
+            var gridComp = Ntry.entityManager.getComponent(entity.id, Ntry.STATIC.GRID);
 
             var grid = { x: gridComp.x, y: gridComp.y };
             Ntry.addVectorByDirection(grid, unitComp.direction, 1);
@@ -4276,21 +4125,13 @@ const block = {
         func: function() {
             if (this.isContinue) return;
 
-            var entities = Ntry.entityManager.getEntitiesByComponent(
-                Ntry.STATIC.UNIT
-            );
+            var entities = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT);
 
             var entity;
             for (var key in entities) entity = entities[key];
 
-            var unitComp = Ntry.entityManager.getComponent(
-                entity.id,
-                Ntry.STATIC.UNIT
-            );
-            var gridComp = Ntry.entityManager.getComponent(
-                entity.id,
-                Ntry.STATIC.GRID
-            );
+            var unitComp = Ntry.entityManager.getComponent(entity.id, Ntry.STATIC.UNIT);
+            var gridComp = Ntry.entityManager.getComponent(entity.id, Ntry.STATIC.GRID);
 
             var grid = { x: gridComp.x, y: gridComp.y };
             Ntry.addVectorByDirection(grid, unitComp.direction, 1);
@@ -4373,11 +4214,7 @@ const block = {
                 };
 
                 // turn direction
-                Ntry.dispatchEvent(
-                    'unitAction',
-                    Ntry.STATIC.TURN_LEFT,
-                    callBack
-                );
+                Ntry.dispatchEvent('unitAction', Ntry.STATIC.TURN_LEFT, callBack);
 
                 return Entry.STATIC.BREAK;
             } else if (this.isAction) {
@@ -4410,11 +4247,7 @@ const block = {
                 };
 
                 // turn direction
-                Ntry.dispatchEvent(
-                    'unitAction',
-                    Ntry.STATIC.TURN_RIGHT,
-                    callBack
-                );
+                Ntry.dispatchEvent('unitAction', Ntry.STATIC.TURN_RIGHT, callBack);
 
                 return Entry.STATIC.BREAK;
             } else if (this.isAction) {
@@ -4477,8 +4310,7 @@ const block = {
                 this.isDead = true;
                 return Entry.STATIC.BREAK;
             } else {
-                Ntry.unit.components[Ntry.STATIC.UNIT].direction =
-                    Ntry.STATIC.EAST;
+                Ntry.unit.components[Ntry.STATIC.UNIT].direction = Ntry.STATIC.EAST;
                 this.executor.register.isTurned = true;
             }
         },
@@ -4503,8 +4335,7 @@ const block = {
                 this.isDead = true;
                 return Entry.STATIC.BREAK;
             } else {
-                Ntry.unit.components[Ntry.STATIC.UNIT].direction =
-                    Ntry.STATIC.WEST;
+                Ntry.unit.components[Ntry.STATIC.UNIT].direction = Ntry.STATIC.WEST;
                 this.executor.register.isTurned = true;
             }
         },
@@ -4538,14 +4369,8 @@ const block = {
         },
         func: function(sprite, script) {
             if (this.isContinue) return;
-            var unitComp = Ntry.entityManager.getComponent(
-                Ntry.unit.id,
-                Ntry.STATIC.UNIT
-            );
-            var gridComp = Ntry.entityManager.getComponent(
-                Ntry.unit.id,
-                Ntry.STATIC.GRID
-            );
+            var unitComp = Ntry.entityManager.getComponent(Ntry.unit.id, Ntry.STATIC.UNIT);
+            var gridComp = Ntry.entityManager.getComponent(Ntry.unit.id, Ntry.STATIC.GRID);
             var grid = { x: gridComp.x - 1, y: gridComp.y };
             var fitEntities = Ntry.entityManager
                 .find({
@@ -4593,14 +4418,8 @@ const block = {
         },
         func: function(sprite, script) {
             if (this.isContinue) return;
-            var unitComp = Ntry.entityManager.getComponent(
-                Ntry.unit.id,
-                Ntry.STATIC.UNIT
-            );
-            var gridComp = Ntry.entityManager.getComponent(
-                Ntry.unit.id,
-                Ntry.STATIC.GRID
-            );
+            var unitComp = Ntry.entityManager.getComponent(Ntry.unit.id, Ntry.STATIC.UNIT);
+            var gridComp = Ntry.entityManager.getComponent(Ntry.unit.id, Ntry.STATIC.GRID);
             var grid = { x: gridComp.x + 1, y: gridComp.y };
             var fitEntities = Ntry.entityManager
                 .find({
@@ -4653,14 +4472,8 @@ const block = {
         },
         func: function(sprite, script) {
             if (this.isContinue) return;
-            var unitComp = Ntry.entityManager.getComponent(
-                Ntry.unit.id,
-                Ntry.STATIC.UNIT
-            );
-            var gridComp = Ntry.entityManager.getComponent(
-                Ntry.unit.id,
-                Ntry.STATIC.GRID
-            );
+            var unitComp = Ntry.entityManager.getComponent(Ntry.unit.id, Ntry.STATIC.UNIT);
+            var gridComp = Ntry.entityManager.getComponent(Ntry.unit.id, Ntry.STATIC.GRID);
             var grid = { x: gridComp.x, y: gridComp.y };
             Ntry.addVectorByDirection(grid, unitComp.direction, 1);
             var fitEntities = Ntry.entityManager.find(
@@ -4709,17 +4522,12 @@ const block = {
             if (!script.isContinue) {
                 script.isContinue = true;
                 script.isAction = true;
-                var entities = Ntry.entityManager.getEntitiesByComponent(
-                    Ntry.STATIC.UNIT
-                );
+                var entities = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT);
                 var unitId;
                 $.each(entities, function(id, entity) {
                     unitId = id;
                 });
-                var unitComp = Ntry.entityManager.getComponent(
-                    unitId,
-                    Ntry.STATIC.UNIT
-                );
+                var unitComp = Ntry.entityManager.getComponent(unitId, Ntry.STATIC.UNIT);
                 var unitGrid = $.extend(
                     {},
                     Ntry.entityManager.getComponent(unitId, Ntry.STATIC.GRID)
@@ -4746,17 +4554,9 @@ const block = {
                     }
                 }
                 if (isCollisionPossible) {
-                    Ntry.dispatchEvent(
-                        'unitAction',
-                        Ntry.STATIC.CLIMB,
-                        callBack
-                    );
+                    Ntry.dispatchEvent('unitAction', Ntry.STATIC.CLIMB, callBack);
                 } else {
-                    Ntry.dispatchEvent(
-                        'unitAction',
-                        Ntry.STATIC.NOT_FOUND_LADDER,
-                        callBack
-                    );
+                    Ntry.dispatchEvent('unitAction', Ntry.STATIC.NOT_FOUND_LADDER, callBack);
                 }
                 return Entry.STATIC.BREAK;
             } else if (script.isAction) {
@@ -4787,24 +4587,16 @@ const block = {
         ],
         func: function(sprite, script) {
             if (!script.isContinue) {
-                var entities = Ntry.entityManager.getEntitiesByComponent(
-                    Ntry.STATIC.UNIT
-                );
+                var entities = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT);
                 var unitId;
                 $.each(entities, function(id, entity) {
                     unitId = id;
                 });
-                var unitComp = Ntry.entityManager.getComponent(
-                    unitId,
-                    Ntry.STATIC.UNIT
-                );
+                var unitComp = Ntry.entityManager.getComponent(unitId, Ntry.STATIC.UNIT);
                 script.isContinue = true;
                 script.isAction = true;
                 var isFoundMushroom = false;
-                var grid = $.extend(
-                    {},
-                    Ntry.entityManager.getComponent(unitId, Ntry.STATIC.GRID)
-                );
+                var grid = $.extend({}, Ntry.entityManager.getComponent(unitId, Ntry.STATIC.GRID));
                 for (var i = 0; i < 2; i++) {
                     Ntry.addVectorByDirection(grid, unitComp.direction, 1);
                     var findTile = Ntry.entityManager.find(
@@ -4823,13 +4615,9 @@ const block = {
                     }
                 }
                 if (isFoundMushroom) {
-                    Ntry.dispatchEvent(
-                        'unitAction',
-                        Ntry.STATIC.WRONG_ATTACK_OBSTACLE,
-                        function() {
-                            script.isAction = false;
-                        }
-                    );
+                    Ntry.dispatchEvent('unitAction', Ntry.STATIC.WRONG_ATTACK_OBSTACLE, function() {
+                        script.isAction = false;
+                    });
                     return Entry.STATIC.BREAK;
                 }
                 var unitGrid = $.extend(
@@ -4858,11 +4646,7 @@ const block = {
                         script.isAction = false;
                     });
                 };
-                Ntry.dispatchEvent(
-                    'unitAction',
-                    Ntry.STATIC.ATTACK_LUPIN,
-                    callBack
-                );
+                Ntry.dispatchEvent('unitAction', Ntry.STATIC.ATTACK_LUPIN, callBack);
                 return Entry.STATIC.BREAK;
             } else if (script.isAction) {
                 return Entry.STATIC.BREAK;
@@ -4893,42 +4677,24 @@ const block = {
                 script.isAction = true;
                 var grid = $.extend(
                     { type: Ntry.STATIC.GRID },
-                    Ntry.entityManager.getComponent(
-                        Ntry.unit.id,
-                        Ntry.STATIC.GRID
-                    )
+                    Ntry.entityManager.getComponent(Ntry.unit.id, Ntry.STATIC.GRID)
                 );
                 var backGrid = $.extend(
                     { type: Ntry.STATIC.GRID },
-                    Ntry.entityManager.getComponent(
-                        Ntry.unit.id,
-                        Ntry.STATIC.GRID
-                    )
+                    Ntry.entityManager.getComponent(Ntry.unit.id, Ntry.STATIC.GRID)
                 );
                 Ntry.addVectorByDirection(grid, Ntry.unitComp.direction, 1);
-                Ntry.addVectorByDirection(
-                    backGrid,
-                    Ntry.unitComp.direction,
-                    -1
-                );
-                var frontExist = !!Ntry.entityManager
-                    .find(grid)
-                    .filter(function(e) {
-                        return e.components[Ntry.STATIC.ENEMY];
-                    }).length;
-                var backExist = !!Ntry.entityManager
-                    .find(backGrid)
-                    .filter(function(e) {
-                        return e.components[Ntry.STATIC.ENEMY];
-                    }).length;
+                Ntry.addVectorByDirection(backGrid, Ntry.unitComp.direction, -1);
+                var frontExist = !!Ntry.entityManager.find(grid).filter(function(e) {
+                    return e.components[Ntry.STATIC.ENEMY];
+                }).length;
+                var backExist = !!Ntry.entityManager.find(backGrid).filter(function(e) {
+                    return e.components[Ntry.STATIC.ENEMY];
+                }).length;
                 if (!frontExist || !backExist) {
-                    Ntry.dispatchEvent(
-                        'unitAction',
-                        Ntry.STATIC.BOTH_SIDE_FAIL,
-                        function() {
-                            script.isAction = false;
-                        }
-                    );
+                    Ntry.dispatchEvent('unitAction', Ntry.STATIC.BOTH_SIDE_FAIL, function() {
+                        script.isAction = false;
+                    });
                     return Entry.STATIC.BREAK;
                 }
                 Ntry.dispatchEvent('destroyObstacle', 1, function(state) {});
@@ -4938,11 +4704,7 @@ const block = {
                         script.isAction = false;
                     });
                 };
-                Ntry.dispatchEvent(
-                    'unitAction',
-                    Ntry.STATIC.BOTH_SIDE,
-                    callBack
-                );
+                Ntry.dispatchEvent('unitAction', Ntry.STATIC.BOTH_SIDE, callBack);
                 return Entry.STATIC.BREAK;
             } else if (script.isAction) {
                 return Entry.STATIC.BREAK;
@@ -4977,97 +4739,54 @@ const block = {
                 script.isAction = true;
                 var grid = $.extend(
                     { type: Ntry.STATIC.GRID },
-                    Ntry.entityManager.getComponent(
-                        Ntry.unit.id,
-                        Ntry.STATIC.GRID
-                    )
+                    Ntry.entityManager.getComponent(Ntry.unit.id, Ntry.STATIC.GRID)
                 );
                 var backGrid = $.extend(
                     { type: Ntry.STATIC.GRID },
-                    Ntry.entityManager.getComponent(
-                        Ntry.unit.id,
-                        Ntry.STATIC.GRID
-                    )
+                    Ntry.entityManager.getComponent(Ntry.unit.id, Ntry.STATIC.GRID)
                 );
                 Ntry.addVectorByDirection(grid, Ntry.unitComp.direction, 1);
                 var findTile = Ntry.entityManager.find(grid, {
                     type: Ntry.STATIC.TILE,
                     tileType: Ntry.STATIC.OBSTACLE_PEPE,
                 });
-                Ntry.addVectorByDirection(
-                    backGrid,
-                    Ntry.unitComp.direction,
-                    -1
-                );
-                var findBackTile = Ntry.entityManager
-                    .find(backGrid)
-                    .filter(function(e) {
-                        return e.components[Ntry.STATIC.ENEMY];
-                    });
-                var frontEnemyExist = !!Ntry.entityManager
-                    .find(grid)
-                    .filter(function(e) {
-                        return e.components[Ntry.STATIC.ENEMY];
-                    }).length;
+                Ntry.addVectorByDirection(backGrid, Ntry.unitComp.direction, -1);
+                var findBackTile = Ntry.entityManager.find(backGrid).filter(function(e) {
+                    return e.components[Ntry.STATIC.ENEMY];
+                });
+                var frontEnemyExist = !!Ntry.entityManager.find(grid).filter(function(e) {
+                    return e.components[Ntry.STATIC.ENEMY];
+                }).length;
                 var frontEnemyValid = !!findTile.length;
                 var backEnemyExist = !!findBackTile.length;
                 if (frontEnemyValid && !backEnemyExist) {
                     // success
                     var callBack = function() {
-                        Ntry.dispatchEvent('destroyObstacle', 1, function(
-                            state
-                        ) {});
+                        Ntry.dispatchEvent('destroyObstacle', 1, function(state) {});
                         Ntry.dispatchEvent('startEnemyWalk', true, function() {
                             script.isAction = false;
                         });
                     };
-                    Ntry.dispatchEvent(
-                        'unitAction',
-                        Ntry.STATIC.PEPE,
-                        callBack
-                    );
+                    Ntry.dispatchEvent('unitAction', Ntry.STATIC.PEPE, callBack);
                 } else if (frontEnemyValid && backEnemyExist) {
                     // attack and dead
                     var callBack = function() {
-                        Ntry.dispatchEvent('destroyObstacle', 1, function(
-                            state
-                        ) {});
-                        Ntry.dispatchEvent(
-                            'startEnemyWalk',
-                            false,
-                            function() {}
-                        );
+                        Ntry.dispatchEvent('destroyObstacle', 1, function(state) {});
+                        Ntry.dispatchEvent('startEnemyWalk', false, function() {});
                     };
-                    Ntry.dispatchEvent(
-                        'unitAction',
-                        Ntry.STATIC.PEPE,
-                        callBack
-                    );
+                    Ntry.dispatchEvent('unitAction', Ntry.STATIC.PEPE, callBack);
                 } else if (backEnemyExist) {
                     // dead
                     if (frontEnemyExist)
-                        Ntry.dispatchEvent(
-                            'unitAction',
-                            Ntry.STATIC.PEPE_FAIL,
-                            function() {
-                                script.isAction = false;
-                            }
-                        );
-                    else
-                        Ntry.dispatchEvent(
-                            'startEnemyWalk',
-                            false,
-                            function() {}
-                        );
+                        Ntry.dispatchEvent('unitAction', Ntry.STATIC.PEPE_FAIL, function() {
+                            script.isAction = false;
+                        });
+                    else Ntry.dispatchEvent('startEnemyWalk', false, function() {});
                 } else {
                     // music time
-                    Ntry.dispatchEvent(
-                        'unitAction',
-                        Ntry.STATIC.PEPE_FAIL,
-                        function() {
-                            script.isAction = false;
-                        }
-                    );
+                    Ntry.dispatchEvent('unitAction', Ntry.STATIC.PEPE_FAIL, function() {
+                        script.isAction = false;
+                    });
                 }
                 return Entry.STATIC.BREAK;
             } else if (script.isAction) {
@@ -5103,97 +4822,54 @@ const block = {
                 script.isAction = true;
                 var grid = $.extend(
                     { type: Ntry.STATIC.GRID },
-                    Ntry.entityManager.getComponent(
-                        Ntry.unit.id,
-                        Ntry.STATIC.GRID
-                    )
+                    Ntry.entityManager.getComponent(Ntry.unit.id, Ntry.STATIC.GRID)
                 );
                 var backGrid = $.extend(
                     { type: Ntry.STATIC.GRID },
-                    Ntry.entityManager.getComponent(
-                        Ntry.unit.id,
-                        Ntry.STATIC.GRID
-                    )
+                    Ntry.entityManager.getComponent(Ntry.unit.id, Ntry.STATIC.GRID)
                 );
                 Ntry.addVectorByDirection(grid, Ntry.unitComp.direction, 1);
                 var findTile = Ntry.entityManager.find(grid, {
                     type: Ntry.STATIC.TILE,
                     tileType: Ntry.STATIC.OBSTACLE_YETI,
                 });
-                Ntry.addVectorByDirection(
-                    backGrid,
-                    Ntry.unitComp.direction,
-                    -1
-                );
-                var findBackTile = Ntry.entityManager
-                    .find(backGrid)
-                    .filter(function(e) {
-                        return e.components[Ntry.STATIC.ENEMY];
-                    });
-                var frontEnemyExist = !!Ntry.entityManager
-                    .find(grid)
-                    .filter(function(e) {
-                        return e.components[Ntry.STATIC.ENEMY];
-                    }).length;
+                Ntry.addVectorByDirection(backGrid, Ntry.unitComp.direction, -1);
+                var findBackTile = Ntry.entityManager.find(backGrid).filter(function(e) {
+                    return e.components[Ntry.STATIC.ENEMY];
+                });
+                var frontEnemyExist = !!Ntry.entityManager.find(grid).filter(function(e) {
+                    return e.components[Ntry.STATIC.ENEMY];
+                }).length;
                 var frontEnemyValid = !!findTile.length;
                 var backEnemyExist = !!findBackTile.length;
                 if (frontEnemyValid && !backEnemyExist) {
                     // success
                     var callBack = function() {
-                        Ntry.dispatchEvent('destroyObstacle', 1, function(
-                            state
-                        ) {});
+                        Ntry.dispatchEvent('destroyObstacle', 1, function(state) {});
                         Ntry.dispatchEvent('startEnemyWalk', true, function() {
                             script.isAction = false;
                         });
                     };
-                    Ntry.dispatchEvent(
-                        'unitAction',
-                        Ntry.STATIC.PEPE,
-                        callBack
-                    );
+                    Ntry.dispatchEvent('unitAction', Ntry.STATIC.PEPE, callBack);
                 } else if (frontEnemyValid && backEnemyExist) {
                     // attack and dead
                     var callBack = function() {
-                        Ntry.dispatchEvent('destroyObstacle', 1, function(
-                            state
-                        ) {});
-                        Ntry.dispatchEvent(
-                            'startEnemyWalk',
-                            false,
-                            function() {}
-                        );
+                        Ntry.dispatchEvent('destroyObstacle', 1, function(state) {});
+                        Ntry.dispatchEvent('startEnemyWalk', false, function() {});
                     };
-                    Ntry.dispatchEvent(
-                        'unitAction',
-                        Ntry.STATIC.PEPE,
-                        callBack
-                    );
+                    Ntry.dispatchEvent('unitAction', Ntry.STATIC.PEPE, callBack);
                 } else if (backEnemyExist) {
                     // dead
                     if (frontEnemyExist)
-                        Ntry.dispatchEvent(
-                            'unitAction',
-                            Ntry.STATIC.YETI_FAIL,
-                            function() {
-                                script.isAction = false;
-                            }
-                        );
-                    else
-                        Ntry.dispatchEvent(
-                            'startEnemyWalk',
-                            false,
-                            function() {}
-                        );
+                        Ntry.dispatchEvent('unitAction', Ntry.STATIC.YETI_FAIL, function() {
+                            script.isAction = false;
+                        });
+                    else Ntry.dispatchEvent('startEnemyWalk', false, function() {});
                 } else {
                     // music time
-                    Ntry.dispatchEvent(
-                        'unitAction',
-                        Ntry.STATIC.YETI_FAIL,
-                        function() {
-                            script.isAction = false;
-                        }
-                    );
+                    Ntry.dispatchEvent('unitAction', Ntry.STATIC.YETI_FAIL, function() {
+                        script.isAction = false;
+                    });
                 }
                 return Entry.STATIC.BREAK;
             } else if (script.isAction) {
@@ -5224,17 +4900,12 @@ const block = {
         ],
         func: function(sprite, script) {
             if (!script.isContinue) {
-                var entities = Ntry.entityManager.getEntitiesByComponent(
-                    Ntry.STATIC.UNIT
-                );
+                var entities = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT);
                 var unitId;
                 $.each(entities, function(id, entity) {
                     unitId = id;
                 });
-                var unitComp = Ntry.entityManager.getComponent(
-                    unitId,
-                    Ntry.STATIC.UNIT
-                );
+                var unitComp = Ntry.entityManager.getComponent(unitId, Ntry.STATIC.UNIT);
                 var unitGrid = $.extend(
                     {},
                     Ntry.entityManager.getComponent(unitId, Ntry.STATIC.GRID)
@@ -5263,11 +4934,7 @@ const block = {
                         script.isAction = false;
                     });
                 };
-                Ntry.dispatchEvent(
-                    'unitAction',
-                    Ntry.STATIC.ATTACK_MUSHROOM,
-                    callBack
-                );
+                Ntry.dispatchEvent('unitAction', Ntry.STATIC.ATTACK_MUSHROOM, callBack);
                 return Entry.STATIC.BREAK;
             } else if (script.isAction) {
                 return Entry.STATIC.BREAK;
@@ -5303,97 +4970,54 @@ const block = {
                 script.isAction = true;
                 var grid = $.extend(
                     { type: Ntry.STATIC.GRID },
-                    Ntry.entityManager.getComponent(
-                        Ntry.unit.id,
-                        Ntry.STATIC.GRID
-                    )
+                    Ntry.entityManager.getComponent(Ntry.unit.id, Ntry.STATIC.GRID)
                 );
                 var backGrid = $.extend(
                     { type: Ntry.STATIC.GRID },
-                    Ntry.entityManager.getComponent(
-                        Ntry.unit.id,
-                        Ntry.STATIC.GRID
-                    )
+                    Ntry.entityManager.getComponent(Ntry.unit.id, Ntry.STATIC.GRID)
                 );
                 Ntry.addVectorByDirection(grid, Ntry.unitComp.direction, 1);
                 var findTile = Ntry.entityManager.find(grid, {
                     type: Ntry.STATIC.TILE,
                     tileType: Ntry.STATIC.OBSTACLE_PETI,
                 });
-                Ntry.addVectorByDirection(
-                    backGrid,
-                    Ntry.unitComp.direction,
-                    -1
-                );
-                var findBackTile = Ntry.entityManager
-                    .find(backGrid)
-                    .filter(function(e) {
-                        return e.components[Ntry.STATIC.ENEMY];
-                    });
-                var frontEnemyExist = !!Ntry.entityManager
-                    .find(grid)
-                    .filter(function(e) {
-                        return e.components[Ntry.STATIC.ENEMY];
-                    }).length;
+                Ntry.addVectorByDirection(backGrid, Ntry.unitComp.direction, -1);
+                var findBackTile = Ntry.entityManager.find(backGrid).filter(function(e) {
+                    return e.components[Ntry.STATIC.ENEMY];
+                });
+                var frontEnemyExist = !!Ntry.entityManager.find(grid).filter(function(e) {
+                    return e.components[Ntry.STATIC.ENEMY];
+                }).length;
                 var frontEnemyValid = !!findTile.length;
                 var backEnemyExist = !!findBackTile.length;
                 if (frontEnemyValid && !backEnemyExist) {
                     // success
-                    Ntry.dispatchEvent('destroyObstacle', 1, function(
-                        state
-                    ) {});
+                    Ntry.dispatchEvent('destroyObstacle', 1, function(state) {});
                     var callBack = function() {
                         Ntry.dispatchEvent('startEnemyWalk', true, function() {
                             script.isAction = false;
                         });
                     };
-                    Ntry.dispatchEvent(
-                        'unitAction',
-                        Ntry.STATIC.PETI,
-                        callBack
-                    );
+                    Ntry.dispatchEvent('unitAction', Ntry.STATIC.PETI, callBack);
                 } else if (frontEnemyValid && backEnemyExist) {
                     // attack and dead
-                    Ntry.dispatchEvent('destroyObstacle', 1, function(
-                        state
-                    ) {});
+                    Ntry.dispatchEvent('destroyObstacle', 1, function(state) {});
                     var callBack = function() {
-                        Ntry.dispatchEvent(
-                            'startEnemyWalk',
-                            false,
-                            function() {}
-                        );
+                        Ntry.dispatchEvent('startEnemyWalk', false, function() {});
                     };
-                    Ntry.dispatchEvent(
-                        'unitAction',
-                        Ntry.STATIC.PETI,
-                        callBack
-                    );
+                    Ntry.dispatchEvent('unitAction', Ntry.STATIC.PETI, callBack);
                 } else if (backEnemyExist) {
                     // dead
                     if (frontEnemyExist)
-                        Ntry.dispatchEvent(
-                            'unitAction',
-                            Ntry.STATIC.PETI_FAIL,
-                            function() {
-                                script.isAction = false;
-                            }
-                        );
-                    else
-                        Ntry.dispatchEvent(
-                            'startEnemyWalk',
-                            false,
-                            function() {}
-                        );
+                        Ntry.dispatchEvent('unitAction', Ntry.STATIC.PETI_FAIL, function() {
+                            script.isAction = false;
+                        });
+                    else Ntry.dispatchEvent('startEnemyWalk', false, function() {});
                 } else {
                     // music time
-                    Ntry.dispatchEvent(
-                        'unitAction',
-                        Ntry.STATIC.PETI_FAIL,
-                        function() {
-                            script.isAction = false;
-                        }
-                    );
+                    Ntry.dispatchEvent('unitAction', Ntry.STATIC.PETI_FAIL, function() {
+                        script.isAction = false;
+                    });
                 }
                 return Entry.STATIC.BREAK;
             } else if (script.isAction) {
@@ -5421,9 +5045,7 @@ const block = {
             if (!script.isContinue) {
                 script.isContinue = true;
                 script.isAction = true;
-                var entities = Ntry.entityManager.getEntitiesByComponent(
-                    Ntry.STATIC.UNIT
-                );
+                var entities = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT);
                 var unitId;
                 $.each(entities, function(id, entity) {
                     unitId = id;
@@ -5431,27 +5053,14 @@ const block = {
                 var callBack = function() {
                     script.isAction = false;
                 };
-                var unitComp = Ntry.entityManager.getComponent(
-                    unitId,
-                    Ntry.STATIC.UNIT
-                );
+                var unitComp = Ntry.entityManager.getComponent(unitId, Ntry.STATIC.UNIT);
                 var unitGrid = $.extend(
                     {},
                     Ntry.entityManager.getComponent(unitId, Ntry.STATIC.GRID)
                 );
-                var meatEntity = Ntry.checkTileByGrid(
-                    unitGrid,
-                    Ntry.STATIC.MEAT
-                );
-                if (
-                    !meatEntity ||
-                    meatEntity.components[Ntry.STATIC.ITEM].isEaten
-                ) {
-                    Ntry.dispatchEvent(
-                        'unitAction',
-                        Ntry.STATIC.NOT_FOUND_MEAT,
-                        callBack
-                    );
+                var meatEntity = Ntry.checkTileByGrid(unitGrid, Ntry.STATIC.MEAT);
+                if (!meatEntity || meatEntity.components[Ntry.STATIC.ITEM].isEaten) {
+                    Ntry.dispatchEvent('unitAction', Ntry.STATIC.NOT_FOUND_MEAT, callBack);
                     return Entry.STATIC.BREAK;
                 }
                 Ntry.dispatchEvent('unlockItem');
@@ -5487,11 +5096,7 @@ const block = {
                 };
 
                 // turn direction
-                Ntry.dispatchEvent(
-                    'unitAction',
-                    Ntry.STATIC.TURN_LEFT,
-                    callBack
-                );
+                Ntry.dispatchEvent('unitAction', Ntry.STATIC.TURN_LEFT, callBack);
 
                 return Entry.STATIC.BREAK;
             } else if (this.isAction) {
@@ -5524,11 +5129,7 @@ const block = {
                 };
 
                 // turn direction
-                Ntry.dispatchEvent(
-                    'unitAction',
-                    Ntry.STATIC.TURN_RIGHT,
-                    callBack
-                );
+                Ntry.dispatchEvent('unitAction', Ntry.STATIC.TURN_RIGHT, callBack);
 
                 return Entry.STATIC.BREAK;
             } else if (this.isAction) {
@@ -5555,17 +5156,12 @@ const block = {
             // TODO: func 내용은 변경해야 함.
 
             if (!this.isContinue) {
-                var entities = Ntry.entityManager.getEntitiesByComponent(
-                    Ntry.STATIC.UNIT
-                );
+                var entities = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT);
                 var unitId;
                 $.each(entities, function(id, entity) {
                     unitId = id;
                 });
-                var unitComp = Ntry.entityManager.getComponent(
-                    unitId,
-                    Ntry.STATIC.UNIT
-                );
+                var unitComp = Ntry.entityManager.getComponent(unitId, Ntry.STATIC.UNIT);
                 var unitGrid = $.extend(
                     {},
                     Ntry.entityManager.getComponent(unitId, Ntry.STATIC.GRID)
@@ -5578,15 +5174,8 @@ const block = {
                 );
 
                 if (!isCollisionPossible) {
-                    Ntry.dispatchEvent(
-                        'playSound',
-                        Ntry.STATIC.NOT_FOUND_DESTORY_OBJECT
-                    );
-                    Ntry.dispatchEvent(
-                        'complete',
-                        false,
-                        Ntry.STATIC.NOT_FOUND_DESTORY_OBJECT
-                    );
+                    Ntry.dispatchEvent('playSound', Ntry.STATIC.NOT_FOUND_DESTORY_OBJECT);
+                    Ntry.dispatchEvent('complete', false, Ntry.STATIC.NOT_FOUND_DESTORY_OBJECT);
                     return;
                 }
                 this.isContinue = true;
@@ -5632,83 +5221,57 @@ const block = {
                 this.isContinue = true;
                 this.isAction = true;
 
-                var entities = Ntry.entityManager.getEntitiesByComponent(
-                    Ntry.STATIC.UNIT
-                );
+                var entities = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT);
                 var unitId, components;
                 $.each(entities, function(id, entity) {
                     unitId = id;
                     components = entity.components;
                 });
 
-                var unitComp = Ntry.entityManager.getComponent(
-                    unitId,
-                    Ntry.STATIC.UNIT
-                );
+                var unitComp = Ntry.entityManager.getComponent(unitId, Ntry.STATIC.UNIT);
                 var unitGrid = $.extend(
                     {},
                     Ntry.entityManager.getComponent(unitId, Ntry.STATIC.GRID)
                 );
-                var isCollisionPossible = Ntry.checkCollisionTile(
-                    unitGrid,
-                    unitComp.direction,
-                    [Ntry.STATIC.OBSTACLE_SPIDER]
-                );
+                var isCollisionPossible = Ntry.checkCollisionTile(unitGrid, unitComp.direction, [
+                    Ntry.STATIC.OBSTACLE_SPIDER,
+                ]);
                 var particleZIndex = 550;
                 if (unitComp.direction === Ntry.STATIC.NORTH) {
                     particleZIndex = 450;
                 }
                 if (!isCollisionPossible) {
-                    Ntry.dispatchEvent(
-                        'playSound',
-                        Ntry.STATIC.NOT_FOUND_DESTORY_OBJECT
-                    );
-                    Ntry.dispatchEvent(
-                        'complete',
-                        false,
-                        Ntry.STATIC.NOT_FOUND_DESTORY_OBJECT
-                    );
+                    Ntry.dispatchEvent('playSound', Ntry.STATIC.NOT_FOUND_DESTORY_OBJECT);
+                    Ntry.dispatchEvent('complete', false, Ntry.STATIC.NOT_FOUND_DESTORY_OBJECT);
                     return;
                 }
 
                 var particle = Ntry.entityManager.addEntity();
-                Ntry.dispatchEvent(
-                    'unitAction',
-                    Ntry.STATIC.ATTACK,
-                    function() {
-                        $.each(components, function(type, component) {
-                            if (+type === Ntry.STATIC.SPRITE) {
-                                var cloneComponent = $.extend({}, component);
-                                cloneComponent.zIndex = particleZIndex;
-                                Ntry.entityManager.addComponent(
-                                    particle.id,
-                                    cloneComponent
-                                );
-                            } else if (+type != Ntry.STATIC.UNIT) {
-                                Ntry.entityManager.addComponent(
-                                    particle.id,
-                                    component
-                                );
-                            } else {
-                                Ntry.entityManager.addComponent(particle.id, {
-                                    type: Ntry.STATIC.PARTICLE,
-                                    direction: component.direction,
-                                    collisionList: [
-                                        Ntry.STATIC.OBSTACLE_SPIDER,
-                                    ],
-                                });
-                            }
-                        });
-                        Ntry.dispatchEvent('particleAction', {
-                            entityId: particle.id,
-                            actionType: Ntry.STATIC.FLOWER_ATTACK,
-                            callback: function() {
-                                Ntry.entityManager.removeEntity(particle.id);
-                                self.isAction = false;
-                            },
-                        });
-                    }
-                );
+                Ntry.dispatchEvent('unitAction', Ntry.STATIC.ATTACK, function() {
+                    $.each(components, function(type, component) {
+                        if (+type === Ntry.STATIC.SPRITE) {
+                            var cloneComponent = $.extend({}, component);
+                            cloneComponent.zIndex = particleZIndex;
+                            Ntry.entityManager.addComponent(particle.id, cloneComponent);
+                        } else if (+type != Ntry.STATIC.UNIT) {
+                            Ntry.entityManager.addComponent(particle.id, component);
+                        } else {
+                            Ntry.entityManager.addComponent(particle.id, {
+                                type: Ntry.STATIC.PARTICLE,
+                                direction: component.direction,
+                                collisionList: [Ntry.STATIC.OBSTACLE_SPIDER],
+                            });
+                        }
+                    });
+                    Ntry.dispatchEvent('particleAction', {
+                        entityId: particle.id,
+                        actionType: Ntry.STATIC.FLOWER_ATTACK,
+                        callback: function() {
+                            Ntry.entityManager.removeEntity(particle.id);
+                            self.isAction = false;
+                        },
+                    });
+                });
                 return Entry.STATIC.BREAK;
             } else if (this.isAction) {
                 return Entry.STATIC.BREAK;
@@ -5734,9 +5297,7 @@ const block = {
         func: function() {
             var self = this;
             if (!this.isContinue) {
-                var entities = Ntry.entityManager.getEntitiesByComponent(
-                    Ntry.STATIC.UNIT
-                );
+                var entities = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT);
 
                 var unitId, components;
                 $.each(entities, function(id, entity) {
@@ -5744,10 +5305,7 @@ const block = {
                     components = entity.components;
                 });
 
-                var unitComp = Ntry.entityManager.getComponent(
-                    unitId,
-                    Ntry.STATIC.UNIT
-                );
+                var unitComp = Ntry.entityManager.getComponent(unitId, Ntry.STATIC.UNIT);
                 var unitGrid = $.extend(
                     {},
                     Ntry.entityManager.getComponent(unitId, Ntry.STATIC.GRID)
@@ -5755,10 +5313,7 @@ const block = {
                 var isCollisionPossible = Ntry.checkCollisionTile(
                     unitGrid,
                     unitComp.direction,
-                    [
-                        Ntry.STATIC.OBSTACLE_ENERMY5,
-                        Ntry.STATIC.OBSTACLE_ENERMY4,
-                    ],
+                    [Ntry.STATIC.OBSTACLE_ENERMY5, Ntry.STATIC.OBSTACLE_ENERMY4],
                     2
                 );
                 var particleZIndex = 550;
@@ -5766,15 +5321,8 @@ const block = {
                     particleZIndex = 450;
                 }
                 if (!isCollisionPossible) {
-                    Ntry.dispatchEvent(
-                        'playSound',
-                        Ntry.STATIC.NOT_FOUND_DESTORY_OBJECT
-                    );
-                    Ntry.dispatchEvent(
-                        'complete',
-                        false,
-                        Ntry.STATIC.NOT_FOUND_DESTORY_OBJECT
-                    );
+                    Ntry.dispatchEvent('playSound', Ntry.STATIC.NOT_FOUND_DESTORY_OBJECT);
+                    Ntry.dispatchEvent('complete', false, Ntry.STATIC.NOT_FOUND_DESTORY_OBJECT);
                     return;
                 }
 
@@ -5783,47 +5331,37 @@ const block = {
 
                 var particle = Ntry.entityManager.addEntity();
 
-                Ntry.dispatchEvent(
-                    'unitAction',
-                    Ntry.STATIC.ATTACK,
-                    function() {
-                        $.each(components, function(type, component) {
-                            if (+type === Ntry.STATIC.SPRITE) {
-                                var cloneComponent = $.extend({}, component);
-                                cloneComponent.zIndex = particleZIndex;
-                                Ntry.entityManager.addComponent(
-                                    particle.id,
-                                    cloneComponent
-                                );
-                            } else if (+type != Ntry.STATIC.UNIT) {
-                                Ntry.entityManager.addComponent(
-                                    particle.id,
-                                    component
-                                );
-                            } else {
-                                Ntry.entityManager.addComponent(particle.id, {
-                                    type: Ntry.STATIC.PARTICLE,
-                                    direction: component.direction,
-                                    collisionList: [
-                                        Ntry.STATIC.OBSTACLE_ENERMY5,
-                                        ,
-                                        Ntry.STATIC.OBSTACLE_ENERMY4,
-                                    ],
-                                    penetrationList: [Ntry.STATIC.WALL],
-                                });
-                            }
-                        });
+                Ntry.dispatchEvent('unitAction', Ntry.STATIC.ATTACK, function() {
+                    $.each(components, function(type, component) {
+                        if (+type === Ntry.STATIC.SPRITE) {
+                            var cloneComponent = $.extend({}, component);
+                            cloneComponent.zIndex = particleZIndex;
+                            Ntry.entityManager.addComponent(particle.id, cloneComponent);
+                        } else if (+type != Ntry.STATIC.UNIT) {
+                            Ntry.entityManager.addComponent(particle.id, component);
+                        } else {
+                            Ntry.entityManager.addComponent(particle.id, {
+                                type: Ntry.STATIC.PARTICLE,
+                                direction: component.direction,
+                                collisionList: [
+                                    Ntry.STATIC.OBSTACLE_ENERMY5,
+                                    ,
+                                    Ntry.STATIC.OBSTACLE_ENERMY4,
+                                ],
+                                penetrationList: [Ntry.STATIC.WALL],
+                            });
+                        }
+                    });
 
-                        Ntry.dispatchEvent('particleAction', {
-                            entityId: particle.id,
-                            actionType: Ntry.STATIC.HEART_ATTACK,
-                            callback: function() {
-                                Ntry.entityManager.removeEntity(particle.id);
-                                self.isAction = false;
-                            },
-                        });
-                    }
-                );
+                    Ntry.dispatchEvent('particleAction', {
+                        entityId: particle.id,
+                        actionType: Ntry.STATIC.HEART_ATTACK,
+                        callback: function() {
+                            Ntry.entityManager.removeEntity(particle.id);
+                            self.isAction = false;
+                        },
+                    });
+                });
                 return Entry.STATIC.BREAK;
             } else if (this.isAction) {
                 return Entry.STATIC.BREAK;
@@ -5848,9 +5386,7 @@ const block = {
         func: function() {
             var self = this;
             if (!this.isContinue) {
-                var entities = Ntry.entityManager.getEntitiesByComponent(
-                    Ntry.STATIC.UNIT
-                );
+                var entities = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT);
 
                 var unitId, components;
                 $.each(entities, function(id, entity) {
@@ -5858,38 +5394,24 @@ const block = {
                     components = entity.components;
                 });
 
-                var unitComp = Ntry.entityManager.getComponent(
-                    unitId,
-                    Ntry.STATIC.UNIT
-                );
+                var unitComp = Ntry.entityManager.getComponent(unitId, Ntry.STATIC.UNIT);
                 var unitGrid = $.extend(
                     {},
                     Ntry.entityManager.getComponent(unitId, Ntry.STATIC.GRID)
                 );
-                var isCollisionPossible = Ntry.checkCollisionTile(
-                    unitGrid,
-                    unitComp.direction,
-                    [
-                        Ntry.STATIC.OBSTACLE_ENERMY1,
-                        Ntry.STATIC.OBSTACLE_ENERMY2,
-                        Ntry.STATIC.OBSTACLE_ENERMY3,
-                        Ntry.STATIC.OBSTACLE_ENERMY5,
-                    ]
-                );
+                var isCollisionPossible = Ntry.checkCollisionTile(unitGrid, unitComp.direction, [
+                    Ntry.STATIC.OBSTACLE_ENERMY1,
+                    Ntry.STATIC.OBSTACLE_ENERMY2,
+                    Ntry.STATIC.OBSTACLE_ENERMY3,
+                    Ntry.STATIC.OBSTACLE_ENERMY5,
+                ]);
                 var particleZIndex = 550;
                 if (unitComp.direction === Ntry.STATIC.NORTH) {
                     particleZIndex = 450;
                 }
                 if (!isCollisionPossible) {
-                    Ntry.dispatchEvent(
-                        'playSound',
-                        Ntry.STATIC.NOT_FOUND_DESTORY_OBJECT
-                    );
-                    Ntry.dispatchEvent(
-                        'complete',
-                        false,
-                        Ntry.STATIC.NOT_FOUND_DESTORY_OBJECT
-                    );
+                    Ntry.dispatchEvent('playSound', Ntry.STATIC.NOT_FOUND_DESTORY_OBJECT);
+                    Ntry.dispatchEvent('complete', false, Ntry.STATIC.NOT_FOUND_DESTORY_OBJECT);
                     return;
                 }
 
@@ -5898,47 +5420,37 @@ const block = {
 
                 var particle = Ntry.entityManager.addEntity();
 
-                Ntry.dispatchEvent(
-                    'unitAction',
-                    Ntry.STATIC.ATTACK,
-                    function() {
-                        $.each(components, function(type, component) {
-                            if (+type === Ntry.STATIC.SPRITE) {
-                                var cloneComponent = $.extend({}, component);
-                                cloneComponent.zIndex = particleZIndex;
-                                Ntry.entityManager.addComponent(
-                                    particle.id,
-                                    cloneComponent
-                                );
-                            } else if (+type != Ntry.STATIC.UNIT) {
-                                Ntry.entityManager.addComponent(
-                                    particle.id,
-                                    component
-                                );
-                            } else {
-                                Ntry.entityManager.addComponent(particle.id, {
-                                    type: Ntry.STATIC.PARTICLE,
-                                    direction: component.direction,
-                                    collisionList: [
-                                        Ntry.STATIC.OBSTACLE_ENERMY1,
-                                        Ntry.STATIC.OBSTACLE_ENERMY2,
-                                        Ntry.STATIC.OBSTACLE_ENERMY3,
-                                        Ntry.STATIC.OBSTACLE_ENERMY5,
-                                    ],
-                                });
-                            }
-                        });
+                Ntry.dispatchEvent('unitAction', Ntry.STATIC.ATTACK, function() {
+                    $.each(components, function(type, component) {
+                        if (+type === Ntry.STATIC.SPRITE) {
+                            var cloneComponent = $.extend({}, component);
+                            cloneComponent.zIndex = particleZIndex;
+                            Ntry.entityManager.addComponent(particle.id, cloneComponent);
+                        } else if (+type != Ntry.STATIC.UNIT) {
+                            Ntry.entityManager.addComponent(particle.id, component);
+                        } else {
+                            Ntry.entityManager.addComponent(particle.id, {
+                                type: Ntry.STATIC.PARTICLE,
+                                direction: component.direction,
+                                collisionList: [
+                                    Ntry.STATIC.OBSTACLE_ENERMY1,
+                                    Ntry.STATIC.OBSTACLE_ENERMY2,
+                                    Ntry.STATIC.OBSTACLE_ENERMY3,
+                                    Ntry.STATIC.OBSTACLE_ENERMY5,
+                                ],
+                            });
+                        }
+                    });
 
-                        Ntry.dispatchEvent('particleAction', {
-                            entityId: particle.id,
-                            actionType: Ntry.STATIC.HEART_ATTACK,
-                            callback: function() {
-                                Ntry.entityManager.removeEntity(particle.id);
-                                self.isAction = false;
-                            },
-                        });
-                    }
-                );
+                    Ntry.dispatchEvent('particleAction', {
+                        entityId: particle.id,
+                        actionType: Ntry.STATIC.HEART_ATTACK,
+                        callback: function() {
+                            Ntry.entityManager.removeEntity(particle.id);
+                            self.isAction = false;
+                        },
+                    });
+                });
                 return Entry.STATIC.BREAK;
             } else if (this.isAction) {
                 return Entry.STATIC.BREAK;
@@ -5964,9 +5476,7 @@ const block = {
         func: function() {
             var self = this;
             if (!this.isContinue) {
-                var entities = Ntry.entityManager.getEntitiesByComponent(
-                    Ntry.STATIC.UNIT
-                );
+                var entities = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT);
 
                 var unitId, components;
                 $.each(entities, function(id, entity) {
@@ -5974,10 +5484,7 @@ const block = {
                     components = entity.components;
                 });
 
-                var unitComp = Ntry.entityManager.getComponent(
-                    unitId,
-                    Ntry.STATIC.UNIT
-                );
+                var unitComp = Ntry.entityManager.getComponent(unitId, Ntry.STATIC.UNIT);
                 var unitGrid = $.extend(
                     {},
                     Ntry.entityManager.getComponent(unitId, Ntry.STATIC.GRID)
@@ -5985,10 +5492,7 @@ const block = {
                 var isCollisionPossible = Ntry.checkCollisionTile(
                     unitGrid,
                     unitComp.direction,
-                    [
-                        Ntry.STATIC.OBSTACLE_ENERMY3,
-                        Ntry.STATIC.OBSTACLE_ENERMY4,
-                    ],
+                    [Ntry.STATIC.OBSTACLE_ENERMY3, Ntry.STATIC.OBSTACLE_ENERMY4],
                     2
                 );
                 var particleZIndex = 550;
@@ -5996,15 +5500,8 @@ const block = {
                     particleZIndex = 450;
                 }
                 if (!isCollisionPossible) {
-                    Ntry.dispatchEvent(
-                        'playSound',
-                        Ntry.STATIC.NOT_FOUND_DESTORY_OBJECT
-                    );
-                    Ntry.dispatchEvent(
-                        'complete',
-                        false,
-                        Ntry.STATIC.NOT_FOUND_DESTORY_OBJECT
-                    );
+                    Ntry.dispatchEvent('playSound', Ntry.STATIC.NOT_FOUND_DESTORY_OBJECT);
+                    Ntry.dispatchEvent('complete', false, Ntry.STATIC.NOT_FOUND_DESTORY_OBJECT);
                     return;
                 }
 
@@ -6013,49 +5510,37 @@ const block = {
 
                 var particle = Ntry.entityManager.addEntity();
 
-                Ntry.dispatchEvent(
-                    'unitAction',
-                    Ntry.STATIC.ATTACK,
-                    function() {
-                        $.each(components, function(type, component) {
-                            if (+type === Ntry.STATIC.SPRITE) {
-                                var cloneComponent = $.extend({}, component);
-                                cloneComponent.zIndex = particleZIndex;
-                                Ntry.entityManager.addComponent(
-                                    particle.id,
-                                    cloneComponent
-                                );
-                            } else if (+type != Ntry.STATIC.UNIT) {
-                                Ntry.entityManager.addComponent(
-                                    particle.id,
-                                    component
-                                );
-                            } else {
-                                Ntry.entityManager.addComponent(particle.id, {
-                                    type: Ntry.STATIC.PARTICLE,
-                                    direction: component.direction,
-                                    collisionList: [
-                                        Ntry.STATIC.OBSTACLE_ENERMY3,
-                                        Ntry.STATIC.OBSTACLE_ENERMY4,
-                                        Ntry.STATIC.OBSTACLE_ENERMY_AREA,
-                                    ],
-                                    penetrationList: [
-                                        Ntry.STATIC.OBSTACLE_ENERMY_AREA,
-                                    ],
-                                });
-                            }
-                        });
+                Ntry.dispatchEvent('unitAction', Ntry.STATIC.ATTACK, function() {
+                    $.each(components, function(type, component) {
+                        if (+type === Ntry.STATIC.SPRITE) {
+                            var cloneComponent = $.extend({}, component);
+                            cloneComponent.zIndex = particleZIndex;
+                            Ntry.entityManager.addComponent(particle.id, cloneComponent);
+                        } else if (+type != Ntry.STATIC.UNIT) {
+                            Ntry.entityManager.addComponent(particle.id, component);
+                        } else {
+                            Ntry.entityManager.addComponent(particle.id, {
+                                type: Ntry.STATIC.PARTICLE,
+                                direction: component.direction,
+                                collisionList: [
+                                    Ntry.STATIC.OBSTACLE_ENERMY3,
+                                    Ntry.STATIC.OBSTACLE_ENERMY4,
+                                    Ntry.STATIC.OBSTACLE_ENERMY_AREA,
+                                ],
+                                penetrationList: [Ntry.STATIC.OBSTACLE_ENERMY_AREA],
+                            });
+                        }
+                    });
 
-                        Ntry.dispatchEvent('particleAction', {
-                            entityId: particle.id,
-                            actionType: Ntry.STATIC.HEART_ATTACK,
-                            callback: function() {
-                                Ntry.entityManager.removeEntity(particle.id);
-                                self.isAction = false;
-                            },
-                        });
-                    }
-                );
+                    Ntry.dispatchEvent('particleAction', {
+                        entityId: particle.id,
+                        actionType: Ntry.STATIC.HEART_ATTACK,
+                        callback: function() {
+                            Ntry.entityManager.removeEntity(particle.id);
+                            self.isAction = false;
+                        },
+                    });
+                });
                 return Entry.STATIC.BREAK;
             } else if (this.isAction) {
                 return Entry.STATIC.BREAK;
@@ -6085,20 +5570,12 @@ const block = {
                 var self = this;
                 var gridSize = Ntry.configManager.getConfig('gridSize');
                 var tileSize = Ntry.configManager.getConfig('tileSize').width;
-                var entities = Ntry.entityManager.getEntitiesByComponent(
-                    Ntry.STATIC.OBSTACLE
-                );
+                var entities = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.OBSTACLE);
 
                 for (var id in entities) {
-                    var obstacleComp = Ntry.entityManager.getComponent(
-                        id,
-                        Ntry.STATIC.OBSTACLE
-                    );
+                    var obstacleComp = Ntry.entityManager.getComponent(id, Ntry.STATIC.OBSTACLE);
                     if (obstacleComp.tileType === Ntry.STATIC.OBSTACLE_IRON) {
-                        var obstacleGrid = Ntry.entityManager.getComponent(
-                            id,
-                            Ntry.STATIC.GRID
-                        );
+                        var obstacleGrid = Ntry.entityManager.getComponent(id, Ntry.STATIC.GRID);
                         var obstaclePosition = Ntry.entityManager.getComponent(
                             id,
                             Ntry.STATIC.POSITION
@@ -6132,24 +5609,13 @@ const block = {
                         };
 
                         if (deltaY > 0) {
-                            targetPos.maxY =
-                                obstacleGrid.y * tileSize + tileSize / 2;
+                            targetPos.maxY = obstacleGrid.y * tileSize + tileSize / 2;
                         } else {
-                            targetPos.minY =
-                                obstacleGrid.y * tileSize + tileSize / 2;
+                            targetPos.minY = obstacleGrid.y * tileSize + tileSize / 2;
                         }
 
-                        (function(
-                            _id,
-                            _deltaPos,
-                            _deltaPos2,
-                            _targetPos,
-                            obstacleGrid
-                        ) {
-                            var comp = Ntry.entityManager.getComponent(
-                                _id,
-                                Ntry.STATIC.ANIMATE
-                            );
+                        (function(_id, _deltaPos, _deltaPos2, _targetPos, obstacleGrid) {
+                            var comp = Ntry.entityManager.getComponent(_id, Ntry.STATIC.ANIMATE);
                             if (comp) {
                                 if (eventCount === 0) {
                                     self.isAction = false;
@@ -6200,16 +5666,14 @@ const block = {
                                                 var unitGrid = Ntry.getUtilGrid();
 
                                                 if (
-                                                    obstacleGrid.x ==
-                                                        unitGrid.x &&
+                                                    obstacleGrid.x == unitGrid.x &&
                                                     obstacleGrid.y == unitGrid.y
                                                 ) {
                                                     console.log('충돌');
                                                     // Ntry.dispatchEvent("playSound", Ntry.STATIC.NOT_FOUND_DESTORY_OBJECT);
                                                     Ntry.dispatchEvent(
                                                         'unitAction',
-                                                        Ntry.STATIC
-                                                            .CONTACT_IRON2
+                                                        Ntry.STATIC.CONTACT_IRON2
                                                     );
                                                     // Ntry.dispatchEvent("complete", false, Ntry.STATIC.CONTACT_IRON2);
                                                 }
@@ -6245,17 +5709,12 @@ const block = {
         func: function() {
             if (!this.isContinue) {
                 var self = this;
-                var entities = Ntry.entityManager.getEntitiesByComponent(
-                    Ntry.STATIC.UNIT
-                );
+                var entities = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT);
                 var unitId;
                 $.each(entities, function(id, entity) {
                     unitId = id;
                 });
-                var unitComp = Ntry.entityManager.getComponent(
-                    unitId,
-                    Ntry.STATIC.UNIT
-                );
+                var unitComp = Ntry.entityManager.getComponent(unitId, Ntry.STATIC.UNIT);
                 var unitGrid = $.extend(
                     {},
                     Ntry.entityManager.getComponent(unitId, Ntry.STATIC.GRID)
@@ -6268,15 +5727,8 @@ const block = {
                 );
 
                 if (!isCollisionPossible) {
-                    Ntry.dispatchEvent(
-                        'playSound',
-                        Ntry.STATIC.NOT_FOUND_DESTORY_OBJECT
-                    );
-                    Ntry.dispatchEvent(
-                        'complete',
-                        false,
-                        Ntry.STATIC.NOT_FOUND_DESTORY_OBJECT
-                    );
+                    Ntry.dispatchEvent('playSound', Ntry.STATIC.NOT_FOUND_DESTORY_OBJECT);
+                    Ntry.dispatchEvent('complete', false, Ntry.STATIC.NOT_FOUND_DESTORY_OBJECT);
                     return;
                 }
                 this.isContinue = true;
@@ -6333,39 +5785,22 @@ const block = {
                 return;
             }
 
-            var entities = Ntry.entityManager.getEntitiesByComponent(
-                Ntry.STATIC.UNIT
-            );
+            var entities = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT);
             var entity;
             for (var key in entities) {
                 entity = entities[key];
             }
 
-            var unitComp = Ntry.entityManager.getComponent(
-                entity.id,
-                Ntry.STATIC.UNIT
-            );
+            var unitComp = Ntry.entityManager.getComponent(entity.id, Ntry.STATIC.UNIT);
 
             if (unitComp.isStartedUnit) {
-                var unitGrid = Ntry.entityManager.getComponent(
-                    entity.id,
-                    Ntry.STATIC.GRID
-                );
-                var entities = Ntry.entityManager.getEntitiesByGrid(
-                    unitGrid.x,
-                    unitGrid.y
-                );
+                var unitGrid = Ntry.entityManager.getComponent(entity.id, Ntry.STATIC.GRID);
+                var entities = Ntry.entityManager.getEntitiesByGrid(unitGrid.x, unitGrid.y);
 
                 for (var idx in entities) {
                     var entity = entities[idx];
-                    var tile = Ntry.entityManager.getComponent(
-                        entity.id,
-                        Ntry.STATIC.TILE
-                    );
-                    var item = Ntry.entityManager.getComponent(
-                        entity.id,
-                        Ntry.STATIC.ITEM
-                    );
+                    var tile = Ntry.entityManager.getComponent(entity.id, Ntry.STATIC.TILE);
+                    var item = Ntry.entityManager.getComponent(entity.id, Ntry.STATIC.ITEM);
 
                     if (
                         tile &&
@@ -6591,10 +6026,7 @@ const block = {
         params: [
             {
                 type: 'Dropdown',
-                options: [
-                    [Lang.Menus.maze_distance1, '1'],
-                    [Lang.Menus.maze_distance2, '2'],
-                ],
+                options: [[Lang.Menus.maze_distance1, '1'], [Lang.Menus.maze_distance2, '2']],
                 value: '1',
                 fontSize: 11,
             },
@@ -6620,10 +6052,7 @@ const block = {
             var entityId = Ntry.getRadarEntityIdByDistance(distance);
             var tileType;
             if (entityId) {
-                var tileComp = Ntry.entityManager.getComponent(
-                    entityId,
-                    Ntry.STATIC.TILE
-                );
+                var tileComp = Ntry.entityManager.getComponent(entityId, Ntry.STATIC.TILE);
                 switch (tileComp.tileType) {
                     case Ntry.STATIC.OBSTACLE_HOLE:
                         tileType = 'TRAP';
@@ -6676,21 +6105,13 @@ const block = {
         func: function() {
             if (this.isContinue) return;
 
-            var entities = Ntry.entityManager.getEntitiesByComponent(
-                Ntry.STATIC.UNIT
-            );
+            var entities = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT);
 
             var entity;
             for (var key in entities) entity = entities[key];
 
-            var unitComp = Ntry.entityManager.getComponent(
-                entity.id,
-                Ntry.STATIC.UNIT
-            );
-            var gridComp = Ntry.entityManager.getComponent(
-                entity.id,
-                Ntry.STATIC.GRID
-            );
+            var unitComp = Ntry.entityManager.getComponent(entity.id, Ntry.STATIC.UNIT);
+            var gridComp = Ntry.entityManager.getComponent(entity.id, Ntry.STATIC.GRID);
 
             var grid = { x: gridComp.x, y: gridComp.y };
             Ntry.addVectorByDirection(grid, unitComp.direction, 1);
@@ -6745,21 +6166,13 @@ const block = {
         func: function() {
             if (this.isContinue) return;
 
-            var entities = Ntry.entityManager.getEntitiesByComponent(
-                Ntry.STATIC.UNIT
-            );
+            var entities = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT);
 
             var entity;
             for (var key in entities) entity = entities[key];
 
-            var unitComp = Ntry.entityManager.getComponent(
-                entity.id,
-                Ntry.STATIC.UNIT
-            );
-            var gridComp = Ntry.entityManager.getComponent(
-                entity.id,
-                Ntry.STATIC.GRID
-            );
+            var unitComp = Ntry.entityManager.getComponent(entity.id, Ntry.STATIC.UNIT);
+            var gridComp = Ntry.entityManager.getComponent(entity.id, Ntry.STATIC.GRID);
 
             var grid = { x: gridComp.x, y: gridComp.y };
             Ntry.addVectorByDirection(grid, unitComp.direction, 1);
@@ -6815,21 +6228,13 @@ const block = {
         func: function() {
             if (this.isContinue) return;
 
-            var entities = Ntry.entityManager.getEntitiesByComponent(
-                Ntry.STATIC.UNIT
-            );
+            var entities = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT);
 
             var entity;
             for (var key in entities) entity = entities[key];
 
-            var unitComp = Ntry.entityManager.getComponent(
-                entity.id,
-                Ntry.STATIC.UNIT
-            );
-            var gridComp = Ntry.entityManager.getComponent(
-                entity.id,
-                Ntry.STATIC.GRID
-            );
+            var unitComp = Ntry.entityManager.getComponent(entity.id, Ntry.STATIC.UNIT);
+            var gridComp = Ntry.entityManager.getComponent(entity.id, Ntry.STATIC.GRID);
 
             var grid = { x: gridComp.x, y: gridComp.y };
             Ntry.addVectorByDirection(grid, unitComp.direction, 1);
@@ -6887,21 +6292,13 @@ const block = {
         ],
         func: function() {
             if (this.isContinue) return;
-            var entities = Ntry.entityManager.getEntitiesByComponent(
-                Ntry.STATIC.UNIT
-            );
+            var entities = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT);
             var entity;
             for (var key in entities) {
                 entity = entities[key];
             }
-            var unitComp = Ntry.entityManager.getComponent(
-                entity.id,
-                Ntry.STATIC.UNIT
-            );
-            var gridComp = Ntry.entityManager.getComponent(
-                entity.id,
-                Ntry.STATIC.GRID
-            );
+            var unitComp = Ntry.entityManager.getComponent(entity.id, Ntry.STATIC.UNIT);
+            var gridComp = Ntry.entityManager.getComponent(entity.id, Ntry.STATIC.GRID);
             var grid = { x: gridComp.x, y: gridComp.y };
             Ntry.addVectorByDirection(grid, unitComp.direction, 1);
             var fitEntities = Ntry.entityManager.find(
@@ -6950,21 +6347,13 @@ const block = {
         ],
         func: function() {
             if (this.isContinue) return;
-            var entities = Ntry.entityManager.getEntitiesByComponent(
-                Ntry.STATIC.UNIT
-            );
+            var entities = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT);
             var entity;
             for (var key in entities) {
                 entity = entities[key];
             }
-            var unitComp = Ntry.entityManager.getComponent(
-                entity.id,
-                Ntry.STATIC.UNIT
-            );
-            var gridComp = Ntry.entityManager.getComponent(
-                entity.id,
-                Ntry.STATIC.GRID
-            );
+            var unitComp = Ntry.entityManager.getComponent(entity.id, Ntry.STATIC.UNIT);
+            var gridComp = Ntry.entityManager.getComponent(entity.id, Ntry.STATIC.GRID);
             var grid = { x: gridComp.x, y: gridComp.y };
             Ntry.addVectorByDirection(grid, unitComp.direction, 2);
             var fitEntities = Ntry.entityManager.find(
@@ -7020,21 +6409,13 @@ const block = {
                 delete script.isCondition;
                 return script.callReturn();
             }
-            var entities = Ntry.entityManager.getEntitiesByComponent(
-                Ntry.STATIC.UNIT
-            );
+            var entities = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT);
             var entity;
             for (var key in entities) {
                 entity = entities[key];
             }
-            var unitComp = Ntry.entityManager.getComponent(
-                entity.id,
-                Ntry.STATIC.UNIT
-            );
-            var gridComp = Ntry.entityManager.getComponent(
-                entity.id,
-                Ntry.STATIC.GRID
-            );
+            var unitComp = Ntry.entityManager.getComponent(entity.id, Ntry.STATIC.UNIT);
+            var gridComp = Ntry.entityManager.getComponent(entity.id, Ntry.STATIC.GRID);
             var grid = { x: gridComp.x, y: gridComp.y };
             Ntry.addVectorByDirection(grid, unitComp.direction, 1);
             var fitEntities = Ntry.entityManager.find(
@@ -7092,21 +6473,13 @@ const block = {
                 delete script.isCondition;
                 return script.callReturn();
             }
-            var entities = Ntry.entityManager.getEntitiesByComponent(
-                Ntry.STATIC.UNIT
-            );
+            var entities = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT);
             var entity;
             for (var key in entities) {
                 entity = entities[key];
             }
-            var unitComp = Ntry.entityManager.getComponent(
-                entity.id,
-                Ntry.STATIC.UNIT
-            );
-            var gridComp = Ntry.entityManager.getComponent(
-                entity.id,
-                Ntry.STATIC.GRID
-            );
+            var unitComp = Ntry.entityManager.getComponent(entity.id, Ntry.STATIC.UNIT);
+            var gridComp = Ntry.entityManager.getComponent(entity.id, Ntry.STATIC.GRID);
             var grid = { x: gridComp.x, y: gridComp.y };
             Ntry.addVectorByDirection(grid, unitComp.direction, 1);
             var fitEntities = Ntry.entityManager.find(
@@ -7164,21 +6537,13 @@ const block = {
                 delete script.isCondition;
                 return script.callReturn();
             }
-            var entities = Ntry.entityManager.getEntitiesByComponent(
-                Ntry.STATIC.UNIT
-            );
+            var entities = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT);
             var entity;
             for (var key in entities) {
                 entity = entities[key];
             }
-            var unitComp = Ntry.entityManager.getComponent(
-                entity.id,
-                Ntry.STATIC.UNIT
-            );
-            var gridComp = Ntry.entityManager.getComponent(
-                entity.id,
-                Ntry.STATIC.GRID
-            );
+            var unitComp = Ntry.entityManager.getComponent(entity.id, Ntry.STATIC.UNIT);
+            var gridComp = Ntry.entityManager.getComponent(entity.id, Ntry.STATIC.GRID);
             var grid = { x: gridComp.x, y: gridComp.y };
             Ntry.addVectorByDirection(grid, unitComp.direction, 2);
             var fitEntities = Ntry.entityManager.find(
@@ -7236,21 +6601,13 @@ const block = {
                 delete script.isCondition;
                 return script.callReturn();
             }
-            var entities = Ntry.entityManager.getEntitiesByComponent(
-                Ntry.STATIC.UNIT
-            );
+            var entities = Ntry.entityManager.getEntitiesByComponent(Ntry.STATIC.UNIT);
             var entity;
             for (var key in entities) {
                 entity = entities[key];
             }
-            var unitComp = Ntry.entityManager.getComponent(
-                entity.id,
-                Ntry.STATIC.UNIT
-            );
-            var gridComp = Ntry.entityManager.getComponent(
-                entity.id,
-                Ntry.STATIC.GRID
-            );
+            var unitComp = Ntry.entityManager.getComponent(entity.id, Ntry.STATIC.UNIT);
+            var gridComp = Ntry.entityManager.getComponent(entity.id, Ntry.STATIC.GRID);
             var grid = { x: gridComp.x, y: gridComp.y };
             if (grid.y > 3) {
                 grid.y = 2;
@@ -7377,10 +6734,7 @@ const block = {
                     Ntry.STATIC.SPACE_SHIP
                 );
                 spaceShipComp.direction = Ntry.STATIC.EAST;
-                var gridComp = Ntry.entityManager.getComponent(
-                    entity.id,
-                    Ntry.STATIC.GRID
-                );
+                var gridComp = Ntry.entityManager.getComponent(entity.id, Ntry.STATIC.GRID);
                 Ntry.entityManager.addComponent(entity.id, {
                     type: Ntry.STATIC.ANIMATE,
                     animateType: Ntry.STATIC.ROTATE_TO,
@@ -7421,10 +6775,7 @@ const block = {
                     Ntry.STATIC.SPACE_SHIP
                 );
                 spaceShipComp.direction = Ntry.STATIC.NORTH;
-                var gridComp = Ntry.entityManager.getComponent(
-                    entity.id,
-                    Ntry.STATIC.GRID
-                );
+                var gridComp = Ntry.entityManager.getComponent(entity.id, Ntry.STATIC.GRID);
                 Ntry.entityManager.addComponent(entity.id, {
                     type: Ntry.STATIC.ANIMATE,
                     animateType: Ntry.STATIC.ROTATE_TO,
@@ -7466,10 +6817,7 @@ const block = {
                     Ntry.STATIC.SPACE_SHIP
                 );
                 spaceShipComp.direction = Ntry.STATIC.SOUTH;
-                var gridComp = Ntry.entityManager.getComponent(
-                    entity.id,
-                    Ntry.STATIC.GRID
-                );
+                var gridComp = Ntry.entityManager.getComponent(entity.id, Ntry.STATIC.GRID);
                 Ntry.entityManager.addComponent(entity.id, {
                     type: Ntry.STATIC.ANIMATE,
                     animateType: Ntry.STATIC.ROTATE_TO,
@@ -7544,19 +6892,12 @@ const block = {
                 delete script.isLooped;
                 return script.callReturn();
             }
-            var radar = Ntry.entityManager.getComponent(
-                entity.id,
-                Ntry.STATIC.RADAR
-            );
+            var radar = Ntry.entityManager.getComponent(entity.id, Ntry.STATIC.RADAR);
 
             var statements = this.block.statements;
             var index = 1;
             script.isLooped = true;
-            if (
-                radar.center.type == Ntry.STATIC.AI_METEO &&
-                radar.center.distance == 1
-            )
-                index = 0;
+            if (radar.center.type == Ntry.STATIC.AI_METEO && radar.center.distance == 1) index = 0;
             this.executor.stepInto(statements[index]);
             return Entry.STATIC.BREAK;
         },
@@ -7596,10 +6937,7 @@ const block = {
             },
         ],
         func: function(entity, script) {
-            var radar = Ntry.entityManager.getComponent(
-                entity.id,
-                Ntry.STATIC.RADAR
-            );
+            var radar = Ntry.entityManager.getComponent(entity.id, Ntry.STATIC.RADAR);
 
             var params = this.block.params;
 
@@ -7619,8 +6957,7 @@ const block = {
                     radarValue = radar.right;
                     break;
             }
-            if (radarValue.type == Ntry.STATIC.AI_GOAL)
-                radarValue = Number.MAX_VALUE;
+            if (radarValue.type == Ntry.STATIC.AI_GOAL) radarValue = Number.MAX_VALUE;
             else radarValue = radarValue.distance;
 
             switch (operator) {
@@ -7655,10 +6992,7 @@ const block = {
             },
         ],
         func: function(entity, script) {
-            var radar = Ntry.entityManager.getComponent(
-                entity.id,
-                Ntry.STATIC.RADAR
-            );
+            var radar = Ntry.entityManager.getComponent(entity.id, Ntry.STATIC.RADAR);
             var radarValue = {};
             switch (this.block.params[0]) {
                 case 'UP':
@@ -7671,9 +7005,7 @@ const block = {
                     radarValue = radar.right;
                     break;
             }
-            return radarValue.type == Ntry.STATIC.AI_GOAL
-                ? Number.MAX_VALUE
-                : radarValue.distance;
+            return radarValue.type == Ntry.STATIC.AI_GOAL ? Number.MAX_VALUE : radarValue.distance;
         },
     },
     ai_boolean_object: {
@@ -7706,10 +7038,7 @@ const block = {
             },
         ],
         func: function(entity, script) {
-            var radar = Ntry.entityManager.getComponent(
-                entity.id,
-                Ntry.STATIC.RADAR
-            );
+            var radar = Ntry.entityManager.getComponent(entity.id, Ntry.STATIC.RADAR);
 
             var params = this.block.params;
 
@@ -7760,10 +7089,7 @@ const block = {
                     Ntry.STATIC.SPACE_SHIP
                 );
                 spaceShipComp.direction = Ntry.STATIC.EAST;
-                var gridComp = Ntry.entityManager.getComponent(
-                    entity.id,
-                    Ntry.STATIC.GRID
-                );
+                var gridComp = Ntry.entityManager.getComponent(entity.id, Ntry.STATIC.GRID);
                 Ntry.entityManager.addComponent(entity.id, {
                     type: Ntry.STATIC.ANIMATE,
                     animateType: Ntry.STATIC.ROTATE_TO,
