@@ -1,40 +1,101 @@
 'use strict';
 Entry.EXPANSION_BLOCK.weather = {
     isInitialized : false,
+    baseUrl : "http://local.playentry.org/api/expansionBlock/w11/",
+    data: {},
     init: function () {
         if(this.isInitialized) {
             return ;
         }
         Entry.EXPANSION_BLOCK.weather.date = new Date();
-        $.get("/api/expansionBlock/weather").done(function(data) {
-            Entry.EXPANSION_BLOCK.weather.data = data;
-            Entry.EXPANSION_BLOCK.weather.isInitialized = true;
+        Entry.EXPANSION_BLOCK.weather.isInitialized = true;
+    },
+    locationMap : {
+        'Seoul' : '1100000000',
+        'Gangwon' : '4200000000',
+        'Gyeonggi-do' : '4100000000',
+        'Gyeongsangnam-do' : '4700000000',
+        'Gyeongsangbuk-do' : '4800000000',
+        'Gwangju' : '2900000000',
+        'Daegu' : '2700000000',
+        'Daejeon' : '3000000000',
+        'Busan' : '2600000000',
+        'Sejong' : '3600000000',
+        'Ulsan' : '3100000000',
+        'Incheon' : '2800000000',
+        'Jeollanam-do' : '4600000000',
+        'Jeollabuk-do' : '4500000000',
+        'Jeju' : '5000000000',
+        'Chungcheongnam-do' : '4400000000',
+        'Chungcheongbuk-do' : '4300000000'
+    },
+    propertyMap : {
+        //날짜별
+        'the_lowest_temperature' : 'min_temp',
+        'the_highest_temperature' : 'max_temp',
+        'humidity' : 'humidity',
+        'precipitation' : 'rain',
+        'precipitation_probability' : 'rain_p',
+        'wind_speed' : 'windspd',
+        //현재
+        'temperature' : 'temp',
+        'concentration_of_fine_dust' : 'pm10'
+    },
+    //api 조회 실패시 노출될 값.
+    defaultData : {
+        //week
+        //aplYmd: 20180905,
+        max_temp: 0,
+        min_temp: 0,
+        sky: "구름조금",
+        sky_code: "2",
+        winddir: "W",
+        windspd: 0,
+        rain: 0,
+        rain_p: 0,
+        humidity: 0,
+        locationCode: "1100000000",
+        updated: "2018-09-05T03:27:42.804Z",
+        //hour
+        //aplYmdt: "2018090500",
+        rainAmt: 0,
+        temp: 0,
+        //now
+        pm10: 0,
+        pm10_s: "좋음"
+    }
+};
+
+function resolveData(weatherData, type, dateStr) {
+    if(type == "now") {
+        return weatherData[Object.keys(weatherData)[0]];
+    }else if(type == "hour") {
+        return weatherData[dateStr];
+    }else {
+        return weatherData[Entry.EXPANSION_BLOCK.weather.getDate(dateStr)];
+    }
+}
+
+Entry.EXPANSION_BLOCK.weather.getData = function( type, locationStr, dateStr ) {
+    const url = this.baseUrl + type;
+    const location = this.locationMap[locationStr];
+
+    if(this.data[type]) {
+        return resolveData(this.data[type][location], type, dateStr);
+    }
+
+    return new Promise(function (resolve, reject) {
+        $.get(url).done( function (response) {
+            Entry.EXPANSION_BLOCK.weather.data[type] = response;
+            resolve(resolveData(response[location], type, dateStr));
+        }).fail(function() {
+            resolve(Entry.EXPANSION_BLOCK.weather.defaultData);
         });
-    }
-};
-
-Entry.EXPANSION_BLOCK.weather.getData = function (locationStr, datetime) {
-    if(this.data.length == 0 ) {
-        throw new Error('NO WEATHER DATA');
-    }
-    return this.data.find(function (d) {return d.aplYmdt == datetime && d.locationStr == locationStr})
-};
-
-Entry.EXPANSION_BLOCK.weather.propertyMap ={
-    //날짜별
-    'the_lowest_temperature' : 'min_temp',
-    'the_highest_temperature' : 'max_temp',
-    'humidity' : 'humidity',
-    'precipitation' : 'rain',
-    'precipitation_probability' : 'rain_p',
-    'wind_speed' : 'windspd',
-    //현재
-    'temperature' : 'temp',
-    'concentration_of_fine_dust' : 'pm10'
-};
+    });
+}
 
 Entry.EXPANSION_BLOCK.weather.getDate = function (key) {
-    var date = Entry.EXPANSION_BLOCK.weather.date;
+    var date = new Date(Entry.EXPANSION_BLOCK.weather.date);
     switch (key) {
         case "yesterday":
             date.setDate(date.getDate() - 1);
@@ -65,7 +126,11 @@ Entry.EXPANSION_BLOCK.weather.getDate = function (key) {
     return date.toISOString().slice(0, 10).replace(/-/g, "");
 };
 
-Entry.EXPANSION_BLOCK.weather.checkWeather = function (sky_code) {
+Entry.EXPANSION_BLOCK.weather.checkWeather = function (sky_code, weather) {
+    if(!Entry.EXPANSION_BLOCK.weather.data.week) {
+        return true;
+    }
+
     const skyCodeMap = {
         "1"  : "sunny", //"맑음",
         "2"  : "partly_cloudy", //"구름조금",
@@ -92,13 +157,17 @@ Entry.EXPANSION_BLOCK.weather.checkWeather = function (sky_code) {
         "22" : "cloudy"
     }
     if(skyCodeMap[sky_code]) {
-        return skyCodeMap[sky_code];
+        return skyCodeMap[sky_code] == weather;
     }else {
-        return "sunny";
+        return "sunny" == weather;
     }
 };
 
-Entry.EXPANSION_BLOCK.weather.checkFineDust = function(pm10) {
+Entry.EXPANSION_BLOCK.weather.checkFineDust = function(pm10, finedust) {
+    if(!Entry.EXPANSION_BLOCK.weather.data.now) {
+        return true;
+    }
+
     const fineDustMap = {
         "good" : {"min" :0, "max" : 30},
         "normal" : {"min" :31, "max" : 80},
@@ -108,10 +177,10 @@ Entry.EXPANSION_BLOCK.weather.checkFineDust = function(pm10) {
 
     for(var key in fineDustMap){
         if(fineDustMap[key].min <= pm10 && pm10 <= fineDustMap[key].max) {
-            return key;
+            return key == finedust;
         }
     }
-    return "very_bad";
+    return "very_bad" == finedust;
 }
 
 
