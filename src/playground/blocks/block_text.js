@@ -62,8 +62,7 @@ module.exports = {
                                     menuName: 'textBoxWithSelf',
                                     fontSize: 11,
                                     arrowColor: EntryStatic.ARROW_COLOR_TEXT,
-                                    converter:
-                                        Entry.block.converters.returnStringKey,
+                                    converter: Entry.block.converters.returnStringKey,
                                     codeMap: 'Entry.CodeMap.Entry.text_read[0]',
                                 },
                             ],
@@ -112,8 +111,8 @@ module.exports = {
                 },
                 class: 'text',
                 isNotFor: ['sprite'],
-                func: function(sprite, script) {
-                    var text = script.getStringValue('VALUE', script);
+                func: async function(sprite, script) {
+                    const text = await script.getStringValue('VALUE', script);
                     sprite.setText(text);
                     return script.callReturn();
                 },
@@ -160,8 +159,8 @@ module.exports = {
                 },
                 class: 'text',
                 isNotFor: ['sprite'],
-                func: function(sprite, script) {
-                    var text = script.getStringValue('VALUE', script);
+                func: async function(sprite, script) {
+                    const text = await script.getStringValue('VALUE', script);
                     sprite.setText(sprite.getText() + '' + text);
                     return script.callReturn();
                 },
@@ -208,8 +207,8 @@ module.exports = {
                 },
                 class: 'text',
                 isNotFor: ['sprite'],
-                func: function(sprite, script) {
-                    var text = script.getStringValue('VALUE', script);
+                func: async function(sprite, script) {
+                    const text = await script.getStringValue('VALUE', script);
                     sprite.setText(text + '' + sprite.getText());
                     return script.callReturn();
                 },
@@ -240,5 +239,5 @@ module.exports = {
                 syntax: { js: [], py: ['Entry.clear_text()'] },
             },
         };
-    }
-}
+    },
+};
