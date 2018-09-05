@@ -34,7 +34,7 @@ Entry.ExtSideTag = function(content, blockView, mode) {
         this.textElement = this.svgGroup.elem('text').attr({
             style: 'white-space: pre;',
             'font-size': '10px',
-            'font-family': 'nanumBarunRegular',
+            'font-family': 'Nanum Gothic',
             class: 'dragNone',
             fill: '#000000',
         });

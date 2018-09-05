@@ -44,7 +44,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldText);
                 .attr({
                     style: 'white-space: pre;',
                     'font-size': this._font_size + 'px',
-                    'font-family': 'nanumBarunRegular',
+                    'font-family': 'Nanum Gothic',
                     class: 'dragNone',
                     fill: this._color,
                 });

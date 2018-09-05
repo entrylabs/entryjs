@@ -33,7 +33,7 @@ Entry.FieldDropdown = function(content, blockView, index) {
 
     this._font_size = this.getFontSize(content.fontSize);
 
-    this._ROUND = content.roundValue || 3;
+    this._ROUND = content.roundValue || 2;
 
     this.renderStart();
 };
@@ -64,6 +64,8 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
                 ry: that._ROUND,
             };
 
+            // width="48" height="20" fill="#13BF68" fill-rule="nonzero" rx="2"
+
             if(this._bgColor) {
                 rectInfo.fill = this._bgColor;
             } else {
@@ -84,8 +86,16 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
         }
 
         if (!this._noArrow && !this._arrow) {
-            this._arrow = this.svgGroup.elem('polygon', {
-                points: arrowInfo.points,
+            this._arrow = this.svgGroup.elem('path', {
+                d: `M 5.79 0.818
+                L 3.339 3.8
+                a 0.5 0.5 0 0 1 -0.772 0
+                L 0.114 0.818
+                A 0.5 0.5 0 0 1 0.5 0
+                h 4.904
+                a 0.5 0.5 0 0 1 0.387 0.818
+                z
+                `,
                 fill: arrowInfo.color,
                 stroke: arrowInfo.color,
             });
@@ -285,7 +295,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
 
     p.getContentHeight = function(height) {
         height =
-            height || this._blockView.getSkeleton().dropdownHeight || (Entry.isMobile() ? 22 : 16);
+            height || this._blockView.getSkeleton().dropdownHeight || 20;
         return height;
     };
 
