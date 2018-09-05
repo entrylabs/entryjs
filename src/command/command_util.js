@@ -30,7 +30,7 @@ var obj = {
         return (
             skipUndoStack === true ||
             (!Entry.doCommandAll &&
-                _.contains(Entry.STATIC.COMMAND_TYPES_NOT_ALWAYS, commandType))
+                _.includes(Entry.STATIC.COMMAND_TYPES_NOT_ALWAYS, commandType))
         );
     },
     getExpectedData(name, defaultValue) {

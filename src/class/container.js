@@ -518,7 +518,7 @@ Entry.Container.prototype.getObject = function(objectId) {
         objectId = playground.object.id;
     else if (objectId instanceof Entry.EntryObject) return objectId;
 
-    return _.findWhere(this.objects_, { id: objectId });
+    return _.find(this.objects_, { id: objectId });
 };
 
 /**

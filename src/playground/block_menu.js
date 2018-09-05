@@ -639,7 +639,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
 
     p.banClass = function(className, doNotAlign) {
         var banned = this._bannedClass;
-        if (!_.contains(banned, className)) {
+        if (!_.includes(banned, className)) {
             banned.push(className);
             doNotAlign !== true && this._dAlign();
         }
@@ -663,7 +663,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
         isNotFor = isNotFor.filter(_.identity);
 
         for (var i = 0; i < isNotFor.length; i++) {
-            if (!_.contains(banned, isNotFor[i])) {
+            if (!_.includes(banned, isNotFor[i])) {
                 return false;
             }
         }
@@ -676,7 +676,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
 
         if (!this.lastSelector || this._selectDynamic) return true;
 
-        return !_.contains(blockInfo.isFor || [], `category_${this.lastSelector}`);
+        return !_.includes(blockInfo.isFor || [], `category_${this.lastSelector}`);
     };
 
     p._addControl = function(dom) {

@@ -255,7 +255,7 @@ Entry.VariableContainer = function() {
     };
 
     p.getMessage = function(id) {
-        return _.findWhere(this.messages_, { id });
+        return _.find(this.messages_, { id });
     };
 
     /**
@@ -265,7 +265,7 @@ Entry.VariableContainer = function() {
         var messageId = message.id;
 
         var callers = this._messageRefs.filter(({ block: { params } }) => {
-            return _.contains(params, messageId);
+            return _.includes(params, messageId);
         });
 
         var listView = Entry.createElement('ul').addClass(
@@ -322,7 +322,7 @@ Entry.VariableContainer = function() {
         var variableId = variable.id_;
 
         var callers = this._variableRefs.filter(({ block: { params } }) => {
-            return _.contains(params, variableId);
+            return _.includes(params, variableId);
         });
 
         var listView = Entry.createElement('ul').addClass(
@@ -794,9 +794,9 @@ Entry.VariableContainer = function() {
      */
     p.getVariable = function(id_, entity = {}) {
         const criteria = { id_ };
-        var variable = _.findWhere(this.variables_, criteria);
+        var variable = _.find(this.variables_, criteria);
         if (entity.isClone && variable.object_) {
-            variable = _.findWhere(entity.variables, criteria);
+            variable = _.find(entity.variables, criteria);
         }
 
         return variable;
@@ -808,9 +808,9 @@ Entry.VariableContainer = function() {
      */
     p.getList = function(listId, { isClone, lists } = {}) {
         const criteria = { id_: listId };
-        var list = _.findWhere(this.lists_, criteria);
+        var list = _.find(this.lists_, criteria);
         if (isClone && list.object_) {
-            list = _.findWhere(lists, criteria);
+            list = _.find(lists, criteria);
         }
 
         return list;
@@ -2477,8 +2477,8 @@ Entry.VariableContainer = function() {
             if (!type) {
                 return;
             }
-            var isMessage = _.contains(EntryStatic.messageBlockList, type);
-            var isVariable = _.contains(EntryStatic.variableBlockList, type);
+            var isMessage = _.includes(EntryStatic.messageBlockList, type);
+            var isVariable = _.includes(EntryStatic.variableBlockList, type);
 
             if (isMessage || isVariable) {
                 block.data.params.forEach(function(param) {

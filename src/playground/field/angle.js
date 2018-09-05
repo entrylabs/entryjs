@@ -95,7 +95,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
         this.optionGroup.on('keyup', (e) => {
             this.applyValue(e);
 
-            if (_.contains([13, 27], e.keyCode || e.which))
+            if (_.includes([13, 27], e.keyCode || e.which))
                 this.destroyOption(undefined, true);
         });
 
