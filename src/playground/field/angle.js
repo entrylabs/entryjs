@@ -46,6 +46,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
             x: X_PADDING / 2,
             y: TEXT_Y_PADDING,
             'font-size': '11px',
+            'font-family': 'NanumGothic',
         });
 
         this._setTextValue();

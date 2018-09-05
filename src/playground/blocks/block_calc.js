@@ -20,7 +20,8 @@ module.exports = {
                             ['/', 'DIVIDE'],
                         ],
                         value: 'PLUS',
-                        fontSize: 11,
+                        fontSize: 10,
+                        bgColor: EntryStatic.COLOR_CALC_2,
                         noArrow: true,
                     },
                     {
@@ -201,7 +202,7 @@ module.exports = {
                     {
                         type: 'Text',
                         text: Lang.Blocks.CALC_calc_rand_1,
-                        color: '#3D3D3D',
+                        color: '#FFF',
                     },
                     {
                         type: 'Block',
@@ -210,7 +211,7 @@ module.exports = {
                     {
                         type: 'Text',
                         text: Lang.Blocks.CALC_calc_rand_2,
-                        color: '#3D3D3D',
+                        color: '#FFF',
                     },
                     {
                         type: 'Block',
@@ -219,7 +220,7 @@ module.exports = {
                     {
                         type: 'Text',
                         text: Lang.Blocks.CALC_calc_rand_3,
-                        color: '#3D3D3D',
+                        color: '#FFF',
                     },
                 ],
                 events: {},
@@ -330,19 +331,20 @@ module.exports = {
                     {
                         type: 'Text',
                         text: Lang.Blocks.CALC_coordinate_mouse_1,
-                        color: '#3D3D3D',
+                        color: '#FFF',
                     },
                     {
                         type: 'Dropdown',
                         options: [['x', 'x'], ['y', 'y']],
                         value: 'x',
-                        fontSize: 11,
-                        arrowColor: EntryStatic.ARROW_COLOR_CALC,
+                        fontSize: 10,
+                        bgColor: EntryStatic.COLOR_CALC_2,
+                        arrowColor: EntryStatic.ARROW_COLOR_DEFAULT,
                     },
                     {
                         type: 'Text',
                         text: Lang.Blocks.CALC_coordinate_mouse_2,
-                        color: '#3D3D3D',
+                        color: '#FFF',
                     },
                 ],
                 events: {},
@@ -377,7 +379,7 @@ module.exports = {
                                 {
                                     type: 'Text',
                                     text: Lang.Blocks.CALC_coordinate_mouse_1,
-                                    color: '#3D3D3D',
+                                    color: '#FFF',
                                 },
                                 {
                                     type: 'Dropdown',
@@ -393,7 +395,7 @@ module.exports = {
                                 {
                                     type: 'Text',
                                     text: Lang.Blocks.CALC_coordinate_mouse_2,
-                                    color: '#3D3D3D',
+                                    color: '#FFF',
                                 },
                             ],
                         },
@@ -409,19 +411,20 @@ module.exports = {
                     {
                         type: 'Text',
                         text: Lang.Blocks.CALC_coordinate_object_1,
-                        color: '#3D3D3D',
+                        color: '#FFF',
                     },
                     {
                         type: 'DropdownDynamic',
                         value: null,
                         menuName: 'spritesWithSelf',
-                        fontSize: 11,
-                        arrowColor: EntryStatic.ARROW_COLOR_CALC,
+                        fontSize: 10,
+                        bgColor: EntryStatic.COLOR_CALC_2,
+                        arrowColor: EntryStatic.ARROW_COLOR_DEFAULT,
                     },
                     {
                         type: 'Text',
                         text: Lang.Blocks.CALC_coordinate_object_2,
-                        color: '#3D3D3D',
+                        color: '#FFF',
                     },
                     {
                         type: 'Dropdown',
@@ -441,8 +444,9 @@ module.exports = {
                             [Lang.Blocks.CALC_picture_name, 'picture_name'],
                         ],
                         value: 'x',
-                        fontSize: 11,
-                        arrowColor: EntryStatic.ARROW_COLOR_CALC,
+                        fontSize: 10,
+                        bgColor: EntryStatic.COLOR_CALC_2,
+                        arrowColor: EntryStatic.ARROW_COLOR_DEFAULT,
                     },
                 ],
                 events: {},
@@ -574,12 +578,12 @@ module.exports = {
                     {
                         type: 'Text',
                         text: Lang.Blocks.CALC_get_sound_volume,
-                        color: '#3D3D3D',
+                        color: '#FFF',
                     },
                     {
                         type: 'Text',
                         text: '',
-                        color: '#3D3D3D',
+                        color: '#FFF',
                     },
                 ],
                 events: {},
@@ -611,7 +615,7 @@ module.exports = {
                     {
                         type: 'Text',
                         text: Lang.Blocks.CALC_quotient_and_mod_1,
-                        color: '#3D3D3D',
+                        color: '#FFF',
                     },
                     {
                         type: 'Block',
@@ -620,7 +624,7 @@ module.exports = {
                     {
                         type: 'Text',
                         text: Lang.Blocks.CALC_quotient_and_mod_2,
-                        color: '#3D3D3D',
+                        color: '#FFF',
                     },
                     {
                         type: 'Block',
@@ -629,7 +633,7 @@ module.exports = {
                     {
                         type: 'Text',
                         text: Lang.Blocks.CALC_quotient_and_mod_3,
-                        color: '#3D3D3D',
+                        color: '#FFF',
                     },
                     {
                         type: 'Dropdown',
@@ -641,8 +645,9 @@ module.exports = {
                             [Lang.Blocks.CALC_quotient_and_mod_sub_2, 'MOD'],
                         ],
                         value: 'QUOTIENT',
-                        fontSize: 11,
-                        arrowColor: EntryStatic.ARROW_COLOR_CALC,
+                        fontSize: 10,
+                        bgColor: EntryStatic.COLOR_CALC_2,
+                        arrowColor: EntryStatic.ARROW_COLOR_DEFAULT,
                     },
                 ],
                 events: {},
@@ -790,7 +795,7 @@ module.exports = {
                     {
                         type: 'Text',
                         text: Lang.Blocks.CALC_calc_operation_of_1,
-                        color: '#3D3D3D',
+                        color: '#FFF',
                     },
                     {
                         type: 'Block',
@@ -799,7 +804,7 @@ module.exports = {
                     {
                         type: 'Text',
                         text: Lang.Blocks.CALC_calc_operation_of_2,
-                        color: '#3D3D3D',
+                        color: '#FFF',
                     },
                     {
                         type: 'Dropdown',
@@ -837,8 +842,9 @@ module.exports = {
                             [Lang.Blocks.CALC_calc_operation_abs, 'abs'],
                         ],
                         value: 'square',
-                        fontSize: 11,
-                        arrowColor: EntryStatic.ARROW_COLOR_CALC,
+                        fontSize: 10,
+                        bgColor: EntryStatic.COLOR_CALC_2,
+                        arrowColor: EntryStatic.ARROW_COLOR_DEFAULT,
                     },
                 ],
                 events: {},
@@ -1179,12 +1185,12 @@ module.exports = {
                     {
                         type: 'Text',
                         text: Lang.Blocks.CALC_get_timer_value,
-                        color: '#3D3D3D',
+                        color: '#FFF',
                     },
                     {
                         type: 'Text',
                         text: '',
-                        color: '#3D3D3D',
+                        color: '#FFF',
                     },
                 ],
                 events: {
@@ -1231,7 +1237,7 @@ module.exports = {
                     {
                         type: 'Text',
                         text: Lang.Blocks.CALC_choose_project_timer_action_1,
-                        color: '#000',
+                        color: '#FFF',
                     },
                     {
                         type: 'Dropdown',
@@ -1253,8 +1259,9 @@ module.exports = {
                             ],
                         ],
                         value: 'START',
-                        fontSize: 11,
-                        arrowColor: EntryStatic.ARROW_COLOR_CALC,
+                        fontSize: 10,
+                        bgColor: EntryStatic.COLOR_CALC_2,
+                        arrowColor: EntryStatic.ARROW_COLOR_DEFAULT,
                     },
                     {
                         type: 'Text',
@@ -1384,7 +1391,7 @@ module.exports = {
                     {
                         type: 'Text',
                         text: Lang.Blocks.CALC_timer_visible_1,
-                        color: '#000',
+                        color: '#FFF',
                     },
                     {
                         type: 'Dropdown',
@@ -1393,8 +1400,9 @@ module.exports = {
                             [Lang.Blocks.CALC_timer_visible_hide, 'HIDE'],
                         ],
                         value: 'SHOW',
-                        fontSize: 11,
-                        arrowColor: EntryStatic.ARROW_COLOR_CALC,
+                        fontSize: 10,
+                        bgColor: EntryStatic.COLOR_CALC_2,
+                        arrowColor: EntryStatic.ARROW_COLOR_DEFAULT,
                     },
                     {
                         type: 'Text',
@@ -1496,7 +1504,7 @@ module.exports = {
                     {
                         type: 'Text',
                         text: Lang.Blocks.CALC_get_date_1,
-                        color: '#3D3D3D',
+                        color: '#FFF',
                     },
                     {
                         type: 'Dropdown',
@@ -1509,13 +1517,14 @@ module.exports = {
                             [Lang.Blocks.CALC_get_date_second, 'SECOND'],
                         ],
                         value: 'YEAR',
-                        fontSize: 11,
-                        arrowColor: EntryStatic.ARROW_COLOR_CALC,
+                        fontSize: 10,
+                        bgColor: EntryStatic.COLOR_CALC_2,
+                        arrowColor: EntryStatic.ARROW_COLOR_DEFAULT,
                     },
                     {
                         type: 'Text',
                         text: Lang.Blocks.CALC_get_date_2,
-                        color: '#3D3D3D',
+                        color: '#FFF',
                     },
                 ],
                 events: {},
@@ -1598,19 +1607,20 @@ module.exports = {
                     {
                         type: 'Text',
                         text: Lang.Blocks.CALC_distance_something_1,
-                        color: '#3D3D3D',
+                        color: '#FFF',
                     },
                     {
                         type: 'DropdownDynamic',
                         value: null,
                         menuName: 'spritesWithMouse',
-                        fontSize: 11,
-                        arrowColor: EntryStatic.ARROW_COLOR_CALC,
+                        fontSize: 10,
+                        bgColor: EntryStatic.COLOR_CALC_2,
+                        arrowColor: EntryStatic.ARROW_COLOR_DEFAULT,
                     },
                     {
                         type: 'Text',
                         text: Lang.Blocks.CALC_distance_something_2,
-                        color: '#3D3D3D',
+                        color: '#FFF',
                     },
                 ],
                 events: {},
@@ -1676,19 +1686,20 @@ module.exports = {
                     {
                         type: 'Text',
                         text: Lang.Blocks.CALC_get_sound_duration_1,
-                        color: '#3D3D3D',
+                        color: '#FFF',
                     },
                     {
                         type: 'DropdownDynamic',
                         value: null,
                         menuName: 'sounds',
-                        fontSize: 11,
-                        arrowColor: EntryStatic.ARROW_COLOR_CALC,
+                        fontSize: 10,
+                        bgColor: EntryStatic.COLOR_CALC_2,
+                        arrowColor: EntryStatic.ARROW_COLOR_DEFAULT,
                     },
                     {
                         type: 'Text',
                         text: Lang.Blocks.CALC_get_sound_duration_2,
-                        color: '#3D3D3D',
+                        color: '#FFF',
                     },
                 ],
                 events: {},
@@ -1738,6 +1749,7 @@ module.exports = {
             },
             get_user_name: {
                 color: '#FEB71A',
+                fontColor: '#FFF',
                 outerLine: '#FF9C00',
                 skeleton: 'basic_string_field',
                 statements: [],
@@ -1771,7 +1783,7 @@ module.exports = {
                     {
                         type: 'Text',
                         text: Lang.Blocks.CALC_length_of_string_1,
-                        color: '#3D3D3D',
+                        color: '#FFF',
                     },
                     {
                         type: 'Block',
@@ -1780,7 +1792,7 @@ module.exports = {
                     {
                         type: 'Text',
                         text: Lang.Blocks.CALC_length_of_string_2,
-                        color: '#3D3D3D',
+                        color: '#FFF',
                     },
                 ],
                 events: {},
@@ -1834,7 +1846,7 @@ module.exports = {
                     {
                         type: 'Text',
                         text: Lang.Blocks.VARIABLE_combine_something_1,
-                        color: '#3D3D3D',
+                        color: '#FFF',
                     },
                     {
                         type: 'Block',
@@ -1843,7 +1855,7 @@ module.exports = {
                     {
                         type: 'Text',
                         text: Lang.Blocks.VARIABLE_combine_something_2,
-                        color: '#3D3D3D',
+                        color: '#FFF',
                     },
                     {
                         type: 'Block',
@@ -1852,7 +1864,7 @@ module.exports = {
                     {
                         type: 'Text',
                         text: Lang.Blocks.VARIABLE_combine_something_3,
-                        color: '#3D3D3D',
+                        color: '#FFF',
                     },
                 ],
                 events: {},
@@ -1920,7 +1932,7 @@ module.exports = {
                     {
                         type: 'Text',
                         text: Lang.Blocks.CALC_char_at_1,
-                        color: '#3D3D3D',
+                        color: '#FFF',
                     },
                     {
                         type: 'Block',
@@ -1929,7 +1941,7 @@ module.exports = {
                     {
                         type: 'Text',
                         text: Lang.Blocks.CALC_char_at_2,
-                        color: '#3D3D3D',
+                        color: '#FFF',
                     },
                     {
                         type: 'Block',
@@ -1939,7 +1951,7 @@ module.exports = {
                     {
                         type: 'Text',
                         text: Lang.Blocks.CALC_char_at_3,
-                        color: '#3D3D3D',
+                        color: '#FFF',
                     },
                 ],
                 events: {},
@@ -1997,7 +2009,7 @@ module.exports = {
                                 {
                                     type: 'Text',
                                     text: Lang.Blocks.CALC_char_at_1,
-                                    color: '#3D3D3D',
+                                    color: '#FFF',
                                 },
                                 {
                                     type: 'Block',
@@ -2006,7 +2018,7 @@ module.exports = {
                                 {
                                     type: 'Text',
                                     text: Lang.Blocks.CALC_char_at_2,
-                                    color: '#3D3D3D',
+                                    color: '#FFF',
                                 },
                                 {
                                     type: 'Block',
@@ -2016,7 +2028,7 @@ module.exports = {
                                 {
                                     type: 'Text',
                                     text: Lang.Blocks.CALC_char_at_3,
-                                    color: '#3D3D3D',
+                                    color: '#FFF',
                                 },
                             ],
                             keyOption: 'char_at',
@@ -2033,7 +2045,7 @@ module.exports = {
                     {
                         type: 'Text',
                         text: Lang.Blocks.CALC_substring_1,
-                        color: '#3D3D3D',
+                        color: '#FFF',
                     },
                     {
                         type: 'Block',
@@ -2042,7 +2054,7 @@ module.exports = {
                     {
                         type: 'Text',
                         text: Lang.Blocks.CALC_substring_2,
-                        color: '#3D3D3D',
+                        color: '#FFF',
                     },
                     {
                         type: 'Block',
@@ -2052,7 +2064,7 @@ module.exports = {
                     {
                         type: 'Text',
                         text: Lang.Blocks.CALC_substring_3,
-                        color: '#3D3D3D',
+                        color: '#FFF',
                     },
                     {
                         type: 'Block',
@@ -2061,7 +2073,7 @@ module.exports = {
                     {
                         type: 'Text',
                         text: Lang.Blocks.CALC_substring_4,
-                        color: '#3D3D3D',
+                        color: '#FFF',
                     },
                 ],
                 events: {},
@@ -2165,7 +2177,7 @@ module.exports = {
                     {
                         type: 'Text',
                         text: Lang.Blocks.CALC_index_of_string_1,
-                        color: '#3D3D3D',
+                        color: '#FFF',
                     },
                     {
                         type: 'Block',
@@ -2174,7 +2186,7 @@ module.exports = {
                     {
                         type: 'Text',
                         text: Lang.Blocks.CALC_index_of_string_2,
-                        color: '#3D3D3D',
+                        color: '#FFF',
                     },
                     {
                         type: 'Block',
@@ -2183,7 +2195,7 @@ module.exports = {
                     {
                         type: 'Text',
                         text: Lang.Blocks.CALC_index_of_string_3,
-                        color: '#3D3D3D',
+                        color: '#FFF',
                     },
                 ],
                 events: {},
@@ -2250,7 +2262,7 @@ module.exports = {
                     {
                         type: 'Text',
                         text: Lang.Blocks.CALC_replace_string_1,
-                        color: '#3D3D3D',
+                        color: '#FFF',
                     },
                     {
                         type: 'Block',
@@ -2259,7 +2271,7 @@ module.exports = {
                     {
                         type: 'Text',
                         text: Lang.Blocks.CALC_replace_string_2,
-                        color: '#3D3D3D',
+                        color: '#FFF',
                     },
                     {
                         type: 'Block',
@@ -2268,7 +2280,7 @@ module.exports = {
                     {
                         type: 'Text',
                         text: Lang.Blocks.CALC_replace_string_3,
-                        color: '#3D3D3D',
+                        color: '#FFF',
                     },
                     {
                         type: 'Block',
@@ -2277,7 +2289,7 @@ module.exports = {
                     {
                         type: 'Text',
                         text: Lang.Blocks.CALC_replace_string_4,
-                        color: '#3D3D3D',
+                        color: '#FFF',
                     },
                 ],
                 events: {},
@@ -2360,7 +2372,7 @@ module.exports = {
                     {
                         type: 'Text',
                         text: Lang.Blocks.CALC_change_string_case_1,
-                        color: '#3D3D3D',
+                        color: '#FFF',
                     },
                     {
                         type: 'Block',
@@ -2369,7 +2381,7 @@ module.exports = {
                     {
                         type: 'Text',
                         text: Lang.Blocks.CALC_change_string_case_2,
-                        color: '#3D3D3D',
+                        color: '#FFF',
                     },
                     {
                         type: 'Dropdown',
@@ -2384,13 +2396,14 @@ module.exports = {
                             ],
                         ],
                         value: 'toUpperCase',
-                        fontSize: 11,
-                        arrowColor: EntryStatic.ARROW_COLOR_CALC,
+                        fontSize: 10,
+                        bgColor: EntryStatic.COLOR_CALC_2,
+                        arrowColor: EntryStatic.ARROW_COLOR_DEFAULT,
                     },
                     {
                         type: 'Text',
                         text: Lang.Blocks.CALC_change_string_case_3,
-                        color: '#3D3D3D',
+                        color: '#FFF',
                     },
                 ],
                 events: {},

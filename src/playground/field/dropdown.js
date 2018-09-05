@@ -82,6 +82,8 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
                 style: 'white-space: pre;',
                 fill: this._textColor,
                 'font-size': +that._font_size + 'px',
+                'font-weight': 'bold',
+                'font-family': 'NanumGothic',
             });
         }
 
@@ -301,7 +303,6 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
 
     p.getArrow = function() {
         var isBig = Entry.isMobile();
-        console.log(this._arrowColor);
         return {
             color: this._arrowColor || this._blockView._schema.color,
             points: isBig ? '0,0 19,0 9.5,13' : '0,0 6.4,0 3.2,4.2',

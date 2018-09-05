@@ -60,10 +60,12 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
 
         if (!this.textElement) {
             this.textElement = this.svgGroup.elem('text', {
-                x: -2,
+                x: 0,
                 y: TEXT_Y_PADDING,
                 fill: this._contents.color || 'black',
                 'font-size': this._font_size + 'px',
+                'font-weight': 'bold',
+                'font-family': 'NanumGothic',
             });
         }
 
@@ -80,7 +82,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
         if (!this._header)
             this._header = this.svgGroup.elem('rect', {
                 width,
-                x: -2,
+                x: 0,
                 y,
                 height: CONTENT_HEIGHT,
                 rx: 0,
@@ -155,9 +157,9 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
         var { x, y } = this.getAbsolutePosFromDocument();
         y -= this.box.height / 2;
         this.optionGroup.css({
-            height: this._CONTENT_HEIGHT,
+            height: this._CONTENT_HEIGHT - 2,
             left: x,
-            top: y,
+            top: y + 1,
             width: that.box.width,
         });
 
@@ -171,6 +173,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
         //normally option group is done editing and destroyed
         //before blur called
         this.optionGroup.one('blur', () => {
+            return;
             this.isEditing() && this.destroyOption(undefined, true);
         });
     };
@@ -191,7 +194,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
     };
 
     p.getTextWidth = function() {
-        return this.getTextBBox().width + X_PADDING + 2;
+        return Math.max(this.getTextBBox().width, 7);
     };
 
     p._setTextValue = function() {

@@ -1658,6 +1658,7 @@ const block = {
     },
     get_pictures: {
         color: '#FF5174',
+        outerLine: EntryStatic.COLOR_LOOKS_2,
         skeleton: 'basic_string_field',
         statements: [],
         params: [
@@ -1665,7 +1666,8 @@ const block = {
                 type: 'DropdownDynamic',
                 value: null,
                 menuName: 'pictures',
-                fontSize: 11,
+                fontSize: 10,
+                bgColor: EntryStatic.COLOR_LOOKS_2,
                 arrowColor: EntryStatic.ARROW_COLOR_LOOKS,
             },
         ],
@@ -2372,6 +2374,7 @@ const block = {
     },
     get_sounds: {
         color: '#82D214',
+        outerLine: EntryStatic.COLOR_SOUNDS_2,
         skeleton: 'basic_string_field',
         statements: [],
         params: [
@@ -2379,8 +2382,9 @@ const block = {
                 type: 'DropdownDynamic',
                 value: null,
                 menuName: 'sounds',
-                fontSize: 11,
-                arrowColor: EntryStatic.ARROW_COLOR_SOUNDS,
+                fontSize: 10,
+                bgColor: EntryStatic.COLOR_SOUNDS_2,
+                arrowColor: EntryStatic.ARROW_COLOR_DEFAULT,
             },
         ],
         events: {},

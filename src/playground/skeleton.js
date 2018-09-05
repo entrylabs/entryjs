@@ -56,7 +56,6 @@ Entry.skeleton.basic = {
         height = Math.max(28, height + 2);
         width = Math.max(0, width + 6 - height / 2);
         var halfHeight = height / 2;
-        console.log(width);
         return `M 0 0
         l 6 6
         l 6 -6
@@ -70,7 +69,6 @@ Entry.skeleton.basic = {
     box: function(blockView) {
         var width = blockView ? blockView.contentWidth : 150;
         var height = blockView ? blockView.contentHeight : 28;
-        console.log(width + 30);
         return {
             offsetX: -8,
             offsetY: 0,
@@ -507,10 +505,10 @@ Entry.skeleton.pebble_basic = {
 
 Entry.skeleton.basic_string_field = {
     path: function(blockView) {
-        var width = blockView.contentWidth;
+        var width = blockView.contentWidth < 10 ? blockView.contentWidth : blockView.contentWidth + 2;
         var height = blockView.contentHeight;
-        height = Math.max(18, height + 2);
-        width = Math.max(0, width - height);
+        height = Math.max(20, height);
+        width = Math.max(0, width - height + 12);
         var halfHeight = height / 2;
 
         return `m ${halfHeight} 0
@@ -519,18 +517,18 @@ Entry.skeleton.basic_string_field = {
         H ${halfHeight}
         a ${halfHeight} ${halfHeight} 0 0 1 0 -${height}
         z`;
-        // return "m " + halfHeight + ",0 h " + width + " a " + halfHeight +"," + halfHeight + " 0 1,1 0," + height + " H " + halfHeight + " A " + halfHeight +","+ halfHeight + " 0 1,1 "+ halfHeight + ",0 z";
     },
     color: '#FFDE82',
     outerLine: '#FF9C00',
+    fontSize: 10,
     box: function(blockView) {
         var width = blockView ? blockView.contentWidth : 5;
         var height = blockView ? blockView.contentHeight : 0;
         return {
-            offsetX: 0,
+            offsetX: -8,
             offsetY: 0,
-            width: width + 12,
-            height: Math.max(height + 2, 0),
+            width: width + 15,
+            height: Math.max(height, 0),
             marginBottom: 0,
         };
     },
@@ -541,8 +539,8 @@ Entry.skeleton.basic_string_field = {
     },
     contentPos: function(blockView) {
         // apply scale required.
-        var height = Math.max(blockView.contentHeight, 16);
-        return { x: 6, y: height / 2 + 1 };
+        var height = Math.max(blockView.contentHeight, 20);
+        return { x: 7, y: height / 2 };
     },
 };
 
@@ -651,7 +649,6 @@ Entry.skeleton.basic_text = {
         height = Math.max(18, height + 2);
         width = Math.max(0, width - height + 12);
         var halfHeight = height / 2;
-        console.log('basic_text');
         return (
             'm ' +
             halfHeight +

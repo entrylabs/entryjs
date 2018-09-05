@@ -100,8 +100,9 @@ module.exports = {
                         type: 'DropdownDynamic',
                         value: null,
                         menuName: 'collision',
-                        fontSize: 11,
-                        arrowColor: EntryStatic.ARROW_COLOR_JUDGE,
+                        fontSize: 10,
+                        bgColor: EntryStatic.COLOR_JUDGE_2,
+                        arrowColor: EntryStatic.ARROW_COLOR_DEFAULT,
                     },
                     {
                         type: 'Text',
@@ -275,7 +276,8 @@ module.exports = {
                             ['≤', 'LESS_OR_EQUAL'],
                         ],
                         value: 'EQUAL',
-                        fontSize: 11,
+                        fontSize: 10,
+                        bgColor: EntryStatic.COLOR_JUDGE_2,
                         noArrow: true,
                     },
                     {
@@ -463,7 +465,9 @@ module.exports = {
                             [Lang.Blocks.JUDGEMENT_boolean_or, 'OR'],
                         ],
                         value: 'AND',
-                        fontSize: 11,
+                        fontSize: 10,
+                        bgColor: EntryStatic.COLOR_JUDGE_2,
+                        arrowColor: EntryStatic.ARROW_COLOR_DEFAULT,
                     },
                     {
                         type: 'Block',

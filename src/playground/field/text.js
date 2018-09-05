@@ -17,7 +17,7 @@ Entry.FieldText = function(
 
     this.box = new Entry.BoxModel();
 
-    this._font_size = fontSize || blockView.getSkeleton().fontSize || 10;
+    this._font_size = fontSize || blockView.getSkeleton().fontSize || 12;
     this._color =
         color ||
         this._block.getSchema().fontColor ||
@@ -44,7 +44,8 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldText);
                 .attr({
                     style: 'white-space: pre;',
                     'font-size': this._font_size + 'px',
-                    'font-family': 'Nanum Gothic',
+                    'font-weight': 'bold',
+                    'font-family': 'NanumGothic',
                     class: 'dragNone',
                     fill: this._color,
                 });

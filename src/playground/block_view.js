@@ -1127,7 +1127,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
         var texts = svgGroup.getElementsByTagName('text');
 
         var fontFamily =
-            "'Nanum Gothic', 'NanumGothic', '나눔고딕','NanumGothicWeb', '맑은 고딕', 'Malgun Gothic', Dotum";
+            "'NanumGothic', 'NanumGothic', '나눔고딕','NanumGothicWeb', '맑은 고딕', 'Malgun Gothic', Dotum";
         var boldTypes = ['≥', '≤'];
         var notResizeTypes = ['≥', '≤', '-', '>', '<', '=', '+', '-', 'x', '/'];
 

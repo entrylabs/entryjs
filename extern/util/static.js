@@ -1573,6 +1573,15 @@ EntryStatic.fonts = [
 
 EntryStatic.COLOR_START_1 = '#10D35E';
 EntryStatic.COLOR_START_2 = '#13BF68';
+EntryStatic.COLOR_FLOW_2 = '#08acdd';
+EntryStatic.COLOR_MOVING_2 = '#b13efe';
+EntryStatic.COLOR_LOOKS_2 = '#ee3157';
+EntryStatic.COLOR_TEXT_2 = '#ee3157';
+EntryStatic.COLOR_SOUNDS_2 = '#6ebc02';
+EntryStatic.COLOR_JUDGE_2 = '#6173F5';
+EntryStatic.COLOR_CALC_2 = '#FF9C00';
+EntryStatic.COLOR_VARIABLE_2 = '#EC52E7';
+EntryStatic.ARROW_COLOR_DEFAULT = '#ffffff';
 EntryStatic.ARROW_COLOR_START = '#ffffff';
 EntryStatic.ARROW_COLOR_FLOW = '#3a71bc';
 EntryStatic.ARROW_COLOR_MOVING = '#8641b6';

@@ -56,7 +56,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldColor);
             this.textElement = this.svgGroup.elem('text').attr({
                 style: 'white-space: pre;',
                 'font-size': this._fontSize + 'px',
-                'font-family': 'Nanum Gothic',
+                'font-family': 'NanumGothic',
                 class: 'dragNone',
                 fill: this._color,
             });

@@ -244,7 +244,7 @@ Entry.Field = function() {};
     };
 
     p.getContentHeight = function() {
-        return Entry.isMobile() ? 22 : 16;
+        return 20;
     };
 
     p._getRenderMode = function() {

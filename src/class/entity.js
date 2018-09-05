@@ -37,7 +37,7 @@ Entry.EntityObject = function(object) {
         this.object.addChild(this.bgObject);
         this.object.addChild(this.textObject);
 
-        this.fontType = 'Nanum Gothic';
+        this.fontType = 'NanumGothic';
         this.fontSize = 20;
         this.fontBold = false;
         this.fontItalic = false;
