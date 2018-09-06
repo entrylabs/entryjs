@@ -21,25 +21,25 @@ module.exports = {
                 class: 'calc_timer',
                 isNotFor: [],
                 func: async function(sprite, script) {
-                    memoizeClearByTime(getFindNotice, 1000);
-                    return pm.Promise((resolve) => {
-                        getFindNotice()
-                            .then(({ data }) => {
-                                const [item = {}] = data;
-                                const { title = 'TITLE' } = item;
-                                resolve(title);
-                            })
-                            .catch(({ message = 'error' }) => {
-                                resolve(message);
-                            });
-                    });
-                    // return new PromiseManager().EventPromise('callApi', {url: '/api/discuss/findNotice'}, { timeout: 10000, defaultValue: 10 });
-                    // return new PromiseManager().Promise((resolve)=> {
-                    //     setTimeout(()=> {
-                    //         console.log('aaa');
-                    //         resolve(3);
-                    //     }, 300)
+                    // memoizeClearByTime(getFindNotice, 1000);
+                    // return pm.Promise((resolve) => {
+                    //     getFindNotice()
+                    //         .then(({ data }) => {
+                    //             const [item = {}] = data;
+                    //             const { title = 'TITLE' } = item;
+                    //             resolve(title);
+                    //         })
+                    //         .catch(({ message = 'error' }) => {
+                    //             resolve(message);
+                    //         });
                     // });
+                    // return new PromiseManager().EventPromise('callApi', {url: '/api/discuss/findNotice'}, { timeout: 10000, defaultValue: 10 });
+                    return new PromiseManager().Promise((resolve)=> {
+                        setTimeout(()=> {
+                            console.log('aaa');
+                            resolve(30);
+                        }, 1000)
+                    });
                 },
             },
             calc_basic: {

@@ -285,6 +285,7 @@ Entry.Scene.prototype.selectScene = function(scene) {
     var container = Entry.container;
 
     container.resetSceneDuringRun();
+    scene.sessionSceneId = Entry.generateHash();
 
     if (this.selectedScene && this.selectedScene.id == scene.id) return;
 
@@ -566,3 +567,8 @@ Entry.Scene.prototype.getDom = function(query) {
             return;
     }
 };
+
+
+Entry.Scene.prototype.resetSessionSceneId = function(scene) {
+    this.selectedScene.sessionSceneId = Entry.generateHash();
+}

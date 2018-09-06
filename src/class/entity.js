@@ -1233,7 +1233,9 @@ Entry.EntityObject.prototype.alignTextBox = function() {
 };
 
 Entry.EntityObject.prototype.syncDialogVisible = function() {
-    if (this.dialog) this.dialog.object.visible = this.visible;
+    if (this.dialog) {
+        this.dialog.object.visible = this.visible;
+    }
 };
 
 Entry.EntityObject.prototype.addStamp = function() {

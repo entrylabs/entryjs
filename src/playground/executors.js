@@ -27,6 +27,7 @@ Entry.Executor = class {
         if (isFromOrigin) Entry.callStackLength = 0;
 
         const entity = this.entity;
+        this.scope.executedBlocks = executedBlocks;
         while (true) {
             this._isPending = true;
             let result = await new Promise(async (resolve) => {
@@ -142,6 +143,9 @@ Entry.Scope = class {
         this.type = block ? block.type : null; //legacy
         this.executor = executor;
         this.entity = executor.entity;
+        const { selectedScene = {} } = Entry.scene || {};
+        const { sessionSceneId } = selectedScene;
+        this.sessionSceneId = sessionSceneId;
     }
 
     callReturn() {
@@ -170,6 +174,11 @@ Entry.Scope = class {
         var fieldBlock = this.block.params[this._getParamIndex(key, block)];
         var newScope = new Entry.Scope(fieldBlock, this.executor);
         var result = await Entry.block[fieldBlock.type].func.call(newScope, this.entity, newScope);
+        const { selectedScene = {} } = Entry.scene || {};
+        const { sessionSceneId } = selectedScene;
+        if(this.sessionSceneId !== sessionSceneId) {
+            throw new Entry.Utils.AsyncError('Scene Match Miss');
+        }
         return result;
     }
 
