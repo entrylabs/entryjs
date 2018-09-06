@@ -276,6 +276,8 @@ Entry.Func.requestParamBlock = function(type) {
             return null;
     }
 
+    console.log(blockPrototype);
+
     var blockType = type + 'Param_' + Entry.generateHash();
     Entry.block[blockType] = Entry.Func.createParamBlock(
         blockType,

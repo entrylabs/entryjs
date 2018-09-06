@@ -167,11 +167,11 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
         // } else if (this.magnet.string || this.magnet.boolean) pathStyle.stroke = 
         const block_schema = this._schema;
         const { outerLine } = block_schema;
-        pathStyle.stroke = outerLine || skeleton.outerLine || '#000';
+        pathStyle.stroke = outerLine || skeleton.outerLine;
         pathStyle['stroke-linejoin'] = 'round';
         pathStyle['stroke-linecap'] = 'round';
 
-        if (skeleton.outerLine) {
+        if (skeleton.stroke) {
             pathStyle['stroke-width'] = '1';
         }
         this._path.attr(pathStyle);

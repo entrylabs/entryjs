@@ -29,7 +29,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
 
 (function(p) {
     var X_PADDING = 6,
-        TEXT_Y_PADDING = 4;
+        TEXT_Y_PADDING = 3;
 
     p._focusNeighbor = function(direction) {
         var fields = this.getNeighborFields();

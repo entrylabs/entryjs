@@ -505,7 +505,8 @@ Entry.skeleton.pebble_basic = {
 
 Entry.skeleton.basic_string_field = {
     path: function(blockView) {
-        var width = blockView.contentWidth < 10 ? blockView.contentWidth : blockView.contentWidth + 2;
+        var width =
+            blockView.contentWidth < 10 ? blockView.contentWidth : blockView.contentWidth + 2;
         var height = blockView.contentHeight;
         height = Math.max(20, height);
         width = Math.max(0, width - height + 12);
@@ -518,7 +519,7 @@ Entry.skeleton.basic_string_field = {
         a ${halfHeight} ${halfHeight} 0 0 1 0 -${height}
         z`;
     },
-    color: '#FFDE82',
+    color: '#FFF',
     outerLine: '#FF9C00',
     fontSize: 10,
     box: function(blockView) {
@@ -562,8 +563,9 @@ Entry.skeleton.basic_boolean_field = {
         z
         `;
     },
-    color: '#000',
+    color: '#FFF',
     outerLine: '#6173F5',
+    fontSize: 10,
     box: function(blockView) {
         var width = blockView ? blockView.contentWidth : 5;
         var height = blockView ? blockView.contentHeight : 18;
@@ -593,12 +595,26 @@ Entry.skeleton.basic_param = {
         var output = blockView._contents[blockView._contents.length - 1];
         if (output) width -= output.box.width + Entry.BlockView.PARAM_SPACE - 2;
         width = Math.max(0, width);
-        return (
-            'm 4,0 h 10 h %w l 2,2 0,3 3,0 1,1 0,12 -1,1 -3,0 0,3 -2,2' +
-            'h -%w h -10 l -2,-2 0,-3 3,0 1,-1 0,-12 -1,-1 -3,0 0,-3 2,-2'
-        ).replace(/%w/gi, width);
+        return `m 2 0
+        h ${width + 11}
+        a 3 3 0 0 1 3 3
+        h 1.775
+        a 2 2 0 0 1 2 2
+        v 14
+        a 2 2 0 0 1 -2 2
+        h -1.775
+        a 3 3 0 0 1 -3 3
+        H 3
+        a 3 3 0 0 1 -3 -3
+        h 2
+        a 2 2 0 0 0 2 -2
+        V 5
+        a 2 2 0 0 0 -2 -2
+        H 0
+        a 3 3 0 0 1 3 -3
+        z
+        `
     },
-    outerLine: '#768dce',
     box: function(blockView) {
         var width = blockView ? blockView.contentWidth : 5;
         return {
@@ -614,8 +630,11 @@ Entry.skeleton.basic_param = {
             param: {},
         };
     },
-    contentPos: function(blockView) {
-        // apply scale required.
+    contentPos: function({ data } = {}) {
+        const { type } = data || {};
+        if (type === 'function_field_string') {
+            return { x: 11, y: 7.5 };
+        }
         return { x: 11, y: 12 };
     },
 };

@@ -10,7 +10,7 @@ module.exports = {
                     {
                         type: 'Text',
                         text: Lang.Blocks.JUDGEMENT_is_clicked,
-                        color: '#3D3D3D',
+                        color: '#FFF',
                     },
                 ],
                 events: {},
@@ -46,7 +46,7 @@ module.exports = {
                     {
                         type: 'Text',
                         text: Lang.Blocks.JUDGEMENT_is_press_some_key_2,
-                        color: '#3D3D3D',
+                        color: '#FFF',
                     },
                 ],
                 events: {},
@@ -94,7 +94,7 @@ module.exports = {
                     {
                         type: 'Text',
                         text: Lang.Blocks.JUDGEMENT_reach_something_1,
-                        color: '#3D3D3D',
+                        color: '#FFF',
                     },
                     {
                         type: 'DropdownDynamic',
@@ -107,7 +107,7 @@ module.exports = {
                     {
                         type: 'Text',
                         text: Lang.Blocks.JUDGEMENT_reach_something_2,
-                        color: '#3D3D3D',
+                        color: '#FFF',
                     },
                 ],
                 events: {},
@@ -565,7 +565,7 @@ module.exports = {
                     {
                         type: 'Text',
                         text: Lang.Blocks.JUDGEMENT_boolean_not_1,
-                        color: '#3D3D3D',
+                        color: '#FFF',
                     },
                     {
                         type: 'Block',
@@ -574,7 +574,7 @@ module.exports = {
                     {
                         type: 'Text',
                         text: Lang.Blocks.JUDGEMENT_boolean_not_2,
-                        color: '#3D3D3D',
+                        color: '#FFF',
                     },
                 ],
                 events: {},

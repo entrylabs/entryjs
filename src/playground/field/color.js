@@ -92,9 +92,13 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldColor);
             this._header = this.svgGroup.elem('rect', {
                 x: x,
                 y: y,
-                width: WIDTH,
-                height: HEIGHT,
+                rx: 2,
+                ry: 2,
+                width: 20,//WIDTH,
+                height: 20,//HEIGHT,
                 fill: this.getValue(),
+                stroke: '#fff',
+                'stroke-width': '1',
             });
         }
 
@@ -179,7 +183,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldColor);
     };
 
     p.getContentWidth = function() {
-        return Entry.isMobile() ? 20 : 14.5;
+        return 22;
     };
 })(Entry.FieldColor.prototype);
 

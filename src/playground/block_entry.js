@@ -2765,7 +2765,7 @@ const block = {
             {
                 type: 'Text',
                 text: Lang.Blocks.JUDGEMENT_true,
-                color: '#3D3D3D',
+                color: EntryStatic.DEFAULT_TEXT_COLOR,
             },
         ],
         events: {},
