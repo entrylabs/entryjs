@@ -19,21 +19,24 @@ Entry.Executor = class {
     }
 
     async execute(isFromOrigin) {
-        if (this.isEnd()) return;
+        if (this.isEnd()) {
+            return;
+        }
 
-        var executedBlocks = [];
-        var block;
+        const executedBlocks = [];
         if (isFromOrigin) Entry.callStackLength = 0;
 
-        var entity = this.entity;
-
+        const entity = this.entity;
         while (true) {
             this._isPending = true;
             let result = await new Promise(async (resolve) => {
                 var returnVal = null;
-                executedBlocks.push(this.scope.block);
-
+                
+                if (this.isEnd()) {
+                    return resolve('end');
+                }
                 try {
+                    executedBlocks.push(this.scope.block);
                     var schema = this.scope.block.getSchema();
                     if (schema && Entry.skeleton[schema.skeleton].executable) {
                         Entry.dispatchEvent(
@@ -70,7 +73,6 @@ Entry.Executor = class {
                             this.scope = this._callStack.pop();
                             if (this.scope.isLooped !== oldScope.isLooped) {
                                 return resolve('break');
-                                
                             }
                         } else {
                             return resolve('break');
@@ -186,8 +188,12 @@ Entry.Scope = class {
         return isNaN(value) ? true : value; // handle "0" or "0.00"
     }
 
-    getField(key, block) {
-        return this.block.params[this._getParamIndex(key)];
+    getField(key) {
+        if(!this.block) {
+            throw new Entry.Utils.AsyncError('getField Pass');
+        }
+        const { params } = this.block;
+        return params[this._getParamIndex(key)];
     }
 
     getStringField(key, block) {
@@ -198,7 +204,10 @@ Entry.Scope = class {
         return Number(this.getField(key));
     }
 
-    getStatement(key, block) {
+    getStatement(key, block) {        
+        if(!this.block) {
+            throw new Entry.Utils.AsyncError('getStatement Pass');
+        }
         return this.executor.stepInto(this.block.statements[this._getStatementIndex(key, block)]);
     }
 
