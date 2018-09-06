@@ -451,7 +451,11 @@ Entry.Expansion_Weather.getBlocks = function () {
             isNotFor: ['weather'],
             func: async function (sprite, script) {
                 const date = Entry.EXPANSION_BLOCK.weather.date.toISOString().slice(0, 10).replace(/-/g, "");
-                const time = script.getField('TIME', script);
+                let time = script.getField('TIME', script);
+                // db에 저장하지 않으면서 00시가 없어져서 03시부터 가능..
+                if(time == "00") {
+                    time = "03";
+                }
                 const apiResult = await Entry.EXPANSION_BLOCK.weather.getData("hour", script.getField('LOCATION', script), date + pad2(time - time % 3));
 
                 return apiResult.temp;

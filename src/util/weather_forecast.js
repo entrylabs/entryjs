@@ -1,7 +1,7 @@
 'use strict';
 Entry.EXPANSION_BLOCK.weather = {
     isInitialized : false,
-    baseUrl : "http://local.playentry.org/api/expansionBlock/w11/",
+    baseUrl : "/api/expansionBlock/weather/",
     data: {},
     init: function () {
         if(this.isInitialized) {
