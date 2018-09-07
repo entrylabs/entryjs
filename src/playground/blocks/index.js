@@ -135,7 +135,7 @@ require('./block_expansion_translate');
 
 Entry.EXPANSION_BLOCK_LIST = {
     weather: Entry.Expansion_Weather,
-    translate: Entry.Expansion_Translate
+    translate: Entry.EXPANSION_BLOCK.translate
 };
 
 function getBlockObject(items) {

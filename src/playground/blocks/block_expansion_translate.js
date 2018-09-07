@@ -1,49 +1,46 @@
 'use strict';
 
-Entry.Expansion_Translate = {
+Entry.EXPANSION_BLOCK.translate = {
     name: 'translate',
     imageName: 'weather.png',
     title: {
-        "ko": "번역",
-        "en": "translate"
+        'ko': '번역',
+        'en': 'translate',
     },
-    description: Lang.Msgs.expansion_translate_description
-};
-
-Entry.EXPANSION_BLOCK.translate = {
-    isInitialized : false,
-    init: function () {
-        if(this.isInitialized) {
-            return ;
+    description: Lang.Msgs.expansion_translate_description,
+    isInitialized: false,
+    init: function() {
+        if (this.isInitialized) {
+            return;
         }
         Entry.EXPANSION_BLOCK.translate.isInitialized = true;
     },
-    api: "/api/expansionBlock/",
-    typeMap : {
-        "dictionary" : "nsmt",
-        "artificial_intelligence" : "n2mt"
-    }
+    api: '/api/expansionBlock/',
+    typeMap: {
+        'dictionary': 'nsmt',
+        'artificial_intelligence': 'n2mt',
+    },
 };
 
-Entry.Expansion_Translate.getBlocks = function () {
+Entry.EXPANSION_BLOCK.translate.getBlocks = function() {
     let params = {
-        getType : function(isPython) {
+        getType: function(isPython) {
             let param = {
                 type: 'Dropdown',
                 options: [
                     [Lang.Blocks.dictionary, 'dictionary'],
-                    [Lang.Blocks.artificial_intelligence, 'artificial_intelligence']
+                    [Lang.Blocks.artificial_intelligence, 'artificial_intelligence'],
                 ],
                 value: 'dictionary',
                 fontSize: 11,
-                arrowColor: EntryStatic.ARROW_COLOR_EXPANSION
+                arrowColor: EntryStatic.ARROW_COLOR_EXPANSION,
             };
-            if(isPython) {
+            if (isPython) {
                 param.converter = Entry.block.converters.returnStringValue;
             }
             return param;
         },
-        getLang : function(isPython) {
+        getLang: function(isPython) {
             let param = {
                 type: 'Dropdown',
                 options: [
@@ -52,17 +49,17 @@ Entry.Expansion_Translate.getBlocks = function () {
                     [Lang.Menus.japan, 'ja'],
                     [Lang.Menus.russia, 'ru'],
                     [Lang.Menus.chinese_simplified, 'zh-CN'],
-                    [Lang.Menus.chinese_traditional, 'zh-TW']
+                    [Lang.Menus.chinese_traditional, 'zh-TW'],
                 ],
                 value: 'ko',
                 fontSize: 11,
-                arrowColor: EntryStatic.ARROW_COLOR_EXPANSION
+                arrowColor: EntryStatic.ARROW_COLOR_EXPANSION,
             };
-            if(isPython) {
+            if (isPython) {
                 param.converter = Entry.block.converters.returnStringValue;
             }
             return param;
-        }
+        },
     };
 
     return {
@@ -82,7 +79,7 @@ Entry.Expansion_Translate.getBlocks = function () {
             },
             class: 'translate',
             isNotFor: ['translate'],
-            events: {}
+            events: {},
         },
         get_translated_string: {
             color: '#ff8888',
@@ -95,7 +92,7 @@ Entry.Expansion_Translate.getBlocks = function () {
                 },
                 params.getType(),
                 params.getLang(),
-                params.getLang()
+                params.getLang(),
             ],
             events: {},
             def: {
@@ -106,7 +103,7 @@ Entry.Expansion_Translate.getBlocks = function () {
                     },
                     params.getType().value,
                     params.getLang().value,
-                    params.getLang().value
+                    params.getLang().value,
                 ],
                 type: 'get_translated_string',
             },
@@ -118,27 +115,27 @@ Entry.Expansion_Translate.getBlocks = function () {
                 TEXT: 0,
                 TYPE: 1,
                 SOURCE: 2,
-                TARGET: 3
+                TARGET: 3,
             },
             class: 'translate',
             isNotFor: ['translate'],
-            func: async function (sprite, script) {
+            func: async function(sprite, script) {
                 const param = {
                     text: await script.getStringValue('TEXT', script),
                     target: script.getField('TARGET', script),
-                    source:script.getField('SOURCE', script),
+                    source: script.getField('SOURCE', script),
                 };
 
-                if(param.target == param.source) {
+                if (param.target == param.source) {
                     return param.text;
                 }
 
                 var type = Entry.EXPANSION_BLOCK.translate.typeMap[script.getField('TYPE', script)];
-                var result = await $.get(Entry.EXPANSION_BLOCK.translate.api + "translate/" + type, param);
-                if(result) {
+                var result = await $.get(Entry.EXPANSION_BLOCK.translate.api + 'translate/' + type, param);
+                if (result) {
                     return result.translatedText;
-                }else {
-                    return "";
+                } else {
+                    return '';
                 }
 
             },
@@ -155,8 +152,8 @@ Entry.Expansion_Translate.getBlocks = function () {
                             },
                             params.getType(),
                             params.getLang(),
-                            params.getLang()
-                        ]
+                            params.getLang(),
+                        ],
                     },
                 ],
             },
@@ -170,7 +167,7 @@ Entry.Expansion_Translate.getBlocks = function () {
                     type: 'Block',
                     accept: 'string',
                 },
-                params.getLang()
+                params.getLang(),
             ],
             events: {},
             def: {
@@ -189,18 +186,18 @@ Entry.Expansion_Translate.getBlocks = function () {
             },
             paramsKeyMap: {
                 TEXT: 0,
-                LANG: 1
+                LANG: 1,
             },
             class: 'translate',
             isNotFor: ['translate'],
-            func: async function (sprite, script) {
+            func: async function(sprite, script) {
                 const query = await script.getStringValue('TEXT', script);
                 const lang = script.getField('LANG', script);
 
-                var result = await $.get(Entry.EXPANSION_BLOCK.translate.api + "dect/langs", {query});
-                if(result && result.langCode) {
+                var result = await $.get(Entry.EXPANSION_BLOCK.translate.api + 'dect/langs', { query });
+                if (result && result.langCode) {
                     return result.langCode == lang;
-                }else {
+                } else {
                     return true;
                 }
             },
@@ -216,9 +213,9 @@ Entry.Expansion_Translate.getBlocks = function () {
                                 type: 'Block',
                                 accept: 'string',
                             },
-                            params.getLang(true)
-                        ]
-                    }
+                            params.getLang(true),
+                        ],
+                    },
                 ],
             },
         },
