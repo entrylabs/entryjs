@@ -343,7 +343,10 @@ EntryStatic.getAllBlocks = function() {
                 "check_finedust",
                 "get_weather_data",
                 "get_current_weather_data",
-                "get_today_temperature"
+                "get_today_temperature",
+                "translate_title",
+                "get_translated_string",
+                "check_language"
             ]
         },
         {
