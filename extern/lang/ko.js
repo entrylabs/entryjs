@@ -157,7 +157,7 @@ Lang.Blocks = {
     "BITBRICK_IR": "거리센서",
     "BITBRICK_touch": "버튼",
     "BITBRICK_potentiometer": "가변저항",
-    "BITBRICK_MIC": "소리감지센서",
+    "BITBRICK_MIC": "소리센서",
     "BITBRICK_UserSensor": "사용자입력",
     "BITBRICK_UserInput": "사용자입력",
     "BITBRICK_dc_direction_ccw": "반시계",
