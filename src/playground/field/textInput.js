@@ -189,11 +189,11 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
 
     p.resize = function() {
         const { scale = 1 } = this.board;
-        var obj = { width: this.getTextWidth() };
-        var scaleSize = { width: this.getTextWidth() / scale };
+        var size = { width: this.getTextWidth() * scale };
+        var scaleSize = { width: this.getTextWidth()  };
         this._header.attr(scaleSize);
         this.box.set(scaleSize);
-        this.optionGroup.css(obj);
+        this.optionGroup.css(size);
         this._blockView.dAlignContent();
     };
 

@@ -382,8 +382,8 @@ Entry.Field = function() {};
             const board = this._blockView.getBoard();
             const { scale = 1 } = board;
             bBox = {
-                width: Math.round(bBox.width * 100) / 100, // scale,
-                height: Math.round(bBox.height * 100) / 100 // scale,
+                width: Math.round(bBox.width * 100) / 100 / scale,
+                height: Math.round(bBox.height * 100) / 100 / scale,
             };
 
             if (fontSize && window.fontLoaded && bBox.width && bBox.height) _cache[key] = bBox;
