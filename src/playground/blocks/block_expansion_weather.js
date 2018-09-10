@@ -209,13 +209,9 @@ Entry.Expansion_Weather.getBlocks = function () {
             },
             class: 'weather',
             isNotFor: ['weather'],
-            func: function (sprite, script) {
-                var datetime = Entry.EXPANSION_BLOCK.weather.getDate(script.getField('DATE', script)) + "00";
-                var location = script.getField('LOCATION', script);
-                var weather = script.getField('WEATHER', script);
-                var apiResult = Entry.EXPANSION_BLOCK.weather.getData(location, datetime);
-
-                return Entry.EXPANSION_BLOCK.weather.checkWeather(apiResult.sky_code) == weather;
+            func: async function (sprite, script) {
+                const apiResult = await Entry.EXPANSION_BLOCK.weather.getData("week", script.getField('LOCATION', script), script.getField('DATE', script));
+                return Entry.EXPANSION_BLOCK.weather.checkWeather(apiResult.sky_code, script.getField('WEATHER', script));
             },
             syntax: {
                 js: [],
@@ -286,17 +282,9 @@ Entry.Expansion_Weather.getBlocks = function () {
             },
             class: 'weather',
             isNotFor: ['weather'],
-            func: function (sprite, script) {
-                var now = Entry.EXPANSION_BLOCK.weather.date;
-                var date = now.toISOString().slice(0, 10).replace(/-/g, "");
-                var time = pad2(now.getHours() - now.getHours()%3);  // [0, 3, 6, 9, 12, 15, 18, 21]
-
-                var location = script.getField('LOCATION', script);
-                var finedust = script.getField('FINEDUST', script);
-
-                var apiResult = Entry.EXPANSION_BLOCK.weather.getData(location, date + time);
-
-                return Entry.EXPANSION_BLOCK.weather.checkFineDust(apiResult.pm10) == finedust;
+            func: async function (sprite, script) {
+                const apiResult = await Entry.EXPANSION_BLOCK.weather.getData("now", script.getField('LOCATION', script), null);
+                return Entry.EXPANSION_BLOCK.weather.checkFineDust(apiResult.pm10, script.getField('FINEDUST', script));
             },
             syntax: {
                 js: [],
@@ -349,16 +337,11 @@ Entry.Expansion_Weather.getBlocks = function () {
             },
             class: 'weather',
             isNotFor: ['weather'],
-            func: function (sprite, script) {
-                var datetime = Entry.EXPANSION_BLOCK.weather.getDate(script.getField('DATE', script)) + "00";
-                var location = script.getField('LOCATION', script);
-                var type = Entry.EXPANSION_BLOCK.weather.propertyMap[script.getField('TYPE', script)];
-                var apiResult = Entry.EXPANSION_BLOCK.weather.getData(location, datetime);
+            func: async function (sprite, script) {
+                const apiResult = await Entry.EXPANSION_BLOCK.weather.getData("week", script.getField('LOCATION', script), script.getField('DATE', script));
+                const type = Entry.EXPANSION_BLOCK.weather.propertyMap[script.getField('TYPE', script)];
 
-                if(apiResult[type]) {
-                    return apiResult[type];
-                }
-                return 0;
+                return apiResult[type];
             },
             syntax: {
                 js: [],
@@ -422,18 +405,11 @@ Entry.Expansion_Weather.getBlocks = function () {
             },
             class: 'weather',
             isNotFor: ['weather'],
-            func: function (sprite, script) {
-                var now = Entry.EXPANSION_BLOCK.weather.date;
-                var location = script.getField('LOCATION', script);
+            func: async function (sprite, script) {
+                var apiResult = await Entry.EXPANSION_BLOCK.weather.getData("now", script.getField('LOCATION', script), null);
                 var type = Entry.EXPANSION_BLOCK.weather.propertyMap[script.getField('TYPE', script)];
-                var date = now.toISOString().slice(0, 10).replace(/-/g, "");
-                var time = pad2(now.getHours() - now.getHours()%3);  // [0, 3, 6, 9, 12, 15, 18, 21]
 
-                var apiResult = Entry.EXPANSION_BLOCK.weather.getData(location, date + time);
-                if(apiResult[type]) {
-                    return apiResult[type];
-                }
-                return 0;
+                return apiResult[type];
             },
             syntax: {
                 js: [],
@@ -473,11 +449,15 @@ Entry.Expansion_Weather.getBlocks = function () {
             },
             class: 'weather',
             isNotFor: ['weather'],
-            func: function (sprite, script) {
-                var location = script.getField('LOCATION', script);
-                var time = script.getField('TIME', script);
-                var date = Entry.EXPANSION_BLOCK.weather.date.toISOString().slice(0, 10).replace(/-/g, "");
-                var apiResult = Entry.EXPANSION_BLOCK.weather.getData(location, date + time);
+            func: async function (sprite, script) {
+                const date = Entry.EXPANSION_BLOCK.weather.date.toISOString().slice(0, 10).replace(/-/g, "");
+                let time = script.getField('TIME', script);
+                // db에 저장하지 않으면서 00시가 없어져서 03시부터 가능..
+                if(time == "00") {
+                    time = "03";
+                }
+                const apiResult = await Entry.EXPANSION_BLOCK.weather.getData("hour", script.getField('LOCATION', script), date + pad2(time - time % 3));
+
                 return apiResult.temp;
             },
             syntax: {
