@@ -141,8 +141,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
         this.optionGroup.on('keyup', function(e) {
             that.applyValue(e);
 
-            if (_.includes(exitKeys, e.keyCode || e.which))
-                that.destroyOption(undefined, true);
+            if (_.includes(exitKeys, e.keyCode || e.which)) that.destroyOption(undefined, true);
         });
 
         this.optionGroup.on('keydown', function(e) {
@@ -156,12 +155,12 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
         const { scale = 1 } = this.board;
         this._font_size = 10 * scale;
         var { x, y } = this.getAbsolutePosFromDocument();
-        y -= (this.box.height) / 2;
+        y -= this.box.height / 2;
         const height = (this._CONTENT_HEIGHT - 4) * scale;
         this.optionGroup.css({
             height,
             left: x + 1,
-            top: y + ((scale -1) * 4) + (2 * scale) - (1 * (scale / 2)),
+            top: y + (scale - 1) * 4 + 2 * scale - 1 * (scale / 2),
             width: that.box.width * scale,
             'font-size': `${this._font_size}px`,
             'background-color': EntryStatic.COLOR_CALC_1,
@@ -204,8 +203,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
 
     p._setTextValue = function() {
         var newValue = this._convert(this.getValue(), this.getValue());
-        if (this.textElement.textContent !== newValue)
-            this.textElement.textContent = newValue;
+        if (this.textElement.textContent !== newValue) this.textElement.textContent = newValue;
     };
 
     p.getNeighborFields = function() {
