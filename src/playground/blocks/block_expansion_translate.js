@@ -15,7 +15,7 @@ Entry.EXPANSION_BLOCK.translate = {
         }
         Entry.EXPANSION_BLOCK.translate.isInitialized = true;
     },
-    api: '/api/expansionBlock/',
+    api: '/api/expansionBlock/papago/',
     typeMap: {
         'dictionary': 'nsmt',
         'artificial_intelligence': 'n2mt',
