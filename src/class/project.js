@@ -120,6 +120,7 @@ Entry.getStartProject = function(mediaFilePath) {
                 "active" : true
             }
         ],
+        "expansionBlocks" : [],
         "speed" : 60
     };
 };

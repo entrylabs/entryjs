@@ -123,4 +123,54 @@
         undo: '',
         dom: ['playground', 'soundAddButton'],
     };
+
+    c[COMMAND_TYPES.playgroundClickAddExpansionBlock] = {
+        do: function() {
+            Entry.dispatchEvent('openExpansionBlockManager');
+        },
+        state: function() {
+            return [];
+        },
+        log: function() {
+            return [];
+        },
+        validate: false,
+        recordable: Entry.STATIC.RECORDABLE.SUPPORT,
+        restrict: function(data, domQuery, callback, restrictor) {
+            Entry.dispatchEvent('dismissModal');
+            var tooltip = new Entry.Tooltip(
+                [
+                    {
+                        title: data.tooltip.title,
+                        content: data.tooltip.content,
+                        target: domQuery,
+                    },
+                ],
+                {
+                    restrict: true,
+                    dimmed: true,
+                    callBack: callback,
+                }
+            );
+            return tooltip;
+        },
+        undo: 'playgroundClickAddExpansionBlockCancel',
+        dom: ['playground', 'soundAddButton'],
+    };
+
+    c[COMMAND_TYPES.playgroundClickAddExpansionBlockCancel] = {
+        do: function() {
+            Entry.dispatchEvent('dismissModal');
+        },
+        state: function() {
+            return [];
+        },
+        log: function() {
+            return [];
+        },
+        validate: false,
+        recordable: Entry.STATIC.RECORDABLE.SUPPORT,
+        undo: '',
+        dom: ['playground', 'soundAddButton'],
+    };
 })(Entry.Command);

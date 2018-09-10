@@ -2,7 +2,7 @@
 # set -e # 에러 발생 시 스크립트 중단
 
 rm .gitignore
-branchName="${BRANCH_NAME}"
+branchName="${TRAVIS_BRANCH}"
 distText="dist"
 deployName="${branchName/deploy/$distText}"
 
@@ -15,8 +15,8 @@ git config user.email "entrydev@nts-corp.com"
 if [ "$branchName" = "master" ]
 then
     git add .
-    git commit -m "Entry Js PUBLISH by v3.$DATEFMT.${BUILD_ID}"
-    git tag -a "v3.$DATEFMT.${BUILD_ID}" -m "build v3.$DATEFMT.${BUILD_ID}"
+    git commit -m "Entry Js PUBLISH by v3.$DATEFMT.${TRAVIS_BUILD_NUMBER}"
+    git tag -a "v3.$DATEFMT.${TRAVIS_BUILD_NUMBER}" -m "build v3.$DATEFMT.${TRAVIS_BUILD_NUMBER}"
     git push --force --quiet "https://${GH_TOKEN}@${GH_REF}" build --tags
 else
     git checkout -b "$deployName"

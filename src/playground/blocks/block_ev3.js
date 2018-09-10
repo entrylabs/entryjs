@@ -73,6 +73,7 @@ Entry.EV3 = {
                 Entry.hw.sendQueue[port] = portMap[port];
             }
         });
+        Entry.hw.sendQueue.STATUS_COLOR = 'GREEN';
         Entry.hw.update();
     },
     name: 'EV3',
@@ -82,6 +83,35 @@ Entry.EV3 = {
         "ko": "EV3",
         "en": "EV3"
     },
+};
+
+Entry.EV3.setLanguage = function() {
+    return {
+        ko: {
+            template: {
+                ev3_get_sensor_value: '%1 의 값',
+                ev3_touch_sensor: '%1 의 터치센서가 작동되었는가?',
+                ev3_button_pressed: '%1 버튼이 눌려져있는가?',
+                ev3_color_sensor: '%1 의 %2 값',
+                ev3_motor_power: '%1 의 값을 %2 으로 출력 %3',
+                ev3_motor_power_on_time: '%1 의 값을 %2 초 동안 %3 으로 출력 %4',
+                ev3_motor_degrees: '%1 의 값을 %2 으로  %3 도 만큼 회전 %4',
+                ev3_status_led: 'LED 색깔을 %1 (으)로 정하기 %2'
+            }
+        },
+        en: {
+            template: {
+                ev3_get_sensor_value: '%1\'s value',
+                ev3_touch_sensor: '%1\'s touch sensor activated?',
+                ev3_button_pressed: '%1\'s button pressed?',
+                ev3_color_sensor: '%1\'s %2 value',
+                ev3_motor_power: '%1\'s value print as %2 %3',
+                ev3_motor_power_on_time: '%1\'s value for %2seconds %3 printed %4',
+                ev3_motor_degrees: '%1\'s value in %2 direction turn %3 degrees %4',
+                ev3_status_led: 'Set status light to %1 %2'
+            }
+        },
+    };
 };
 
 Entry.EV3.getBlocks = function() {
@@ -431,6 +461,76 @@ Entry.EV3.getBlocks = function() {
                 }
 
                 return result;
+            },
+        },
+        ev3_button_pressed: {
+            color: '#00979D',
+            fontColor: '#fff',
+            skeleton: 'basic_boolean_field',
+            statements: [],
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [['위', 'UP'], ['아래', 'DOWN'], ['왼쪽', 'LEFT'], ['오른쪽', 'RIGHT'], ['가운데', 'ENTER'], ['뒤로', 'BACK']],
+                    value: 'UP',
+                    fontSize: 11,
+                },
+            ],
+            events: {},
+            def: {
+                params: [null],
+                type: 'ev3_button_pressed',
+            },
+            paramsKeyMap: {
+                BUTTON: 0,
+            },
+            class: 'ev3_sensor',
+            isNotFor: ['EV3'],
+            func: function(sprite, script) {
+                const buttonValue = script.getStringField('BUTTON', script);
+                var buttonData = Entry.hw.getDigitalPortValue(buttonValue);
+                var result = false;
+                if (buttonData.pressed) {
+                    return true;
+                }
+
+                return result;
+            },
+        },
+        ev3_status_led: {
+            color: '#00979D',
+            fontColor: '#fff',
+            skeleton: 'basic',
+            statements: [],
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        ['주황', 'ORANGE'],['끄기', 'OFF'], ['초록', 'GREEN'], ['빨강', 'RED'],
+                        ['초록 깜박임', 'GREEN_FLASH'], ['빨강 깜박임', 'RED_FLASH'], ['주황 깜박임', 'ORANGE_FLASH'],
+                        ['초록 진동', 'GREEN_PULSE'], ['빨강 진동', 'RED_PULSE'], ['주황 진동', 'ORANGE_PULSE']
+                    ],
+                    value: 'ORANGE',
+                    fontSize: 11,
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_03.png',
+                    size: 12,
+                }
+            ],
+            events: {},
+            def: {
+                params: [null],
+                type: 'ev3_status_led',
+            },
+            paramsKeyMap: {
+                COLOR: 0,
+            },
+            class: 'ev3_output',
+            isNotFor: ['EV3'],
+            func: function(sprite, script) {
+                Entry.hw.sendQueue.STATUS_COLOR = script.getStringField('COLOR', script);
             },
         },
         //endregion ev3 이브이3

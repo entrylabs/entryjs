@@ -53,6 +53,7 @@ require('./block_funboard');
 require('./block_microbit');
 require('./block_mrt');
 require('./block_dash');
+require('./block_bingles');
 
 Entry.HARDWARE_LIST = {
     '1.1': Entry.Arduino,
@@ -113,6 +114,7 @@ Entry.HARDWARE_LIST = {
     '22.1': Entry.Microbit,
     '23.1': Entry.MRT,
     '24.1': Entry.Dash,
+    '1.D': Entry.BINGLES,
 };
 
 const startBlock = require('./block_start');
@@ -126,6 +128,12 @@ const judgementBlock = require('./block_judgement');
 const calcBlock = require('./block_calc');
 const variableBlock = require('./block_variable');
 const funcBlock = require('./block_func');
+
+require('./block_expansion_weather');
+Entry.EXPANSION_BLOCK = {};
+Entry.EXPANSION_BLOCK_LIST = {
+    'weather' : Entry.Expansion_Weather
+};
 
 function getBlockObject(items) {
     const blockObject = {};
@@ -150,9 +158,10 @@ module.exports = {
             judgementBlock,
             calcBlock,
             variableBlock,
-            funcBlock,
+            funcBlock
         ];
+        const expansionBlockList = Object.values(Entry.EXPANSION_BLOCK_LIST);
         const hardwareList = Object.values(Entry.HARDWARE_LIST);
-        return getBlockObject(basicBlockList.concat(hardwareList));
+        return getBlockObject(basicBlockList.concat(hardwareList).concat(expansionBlockList));
     }
 }

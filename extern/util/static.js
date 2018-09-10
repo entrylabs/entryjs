@@ -13,7 +13,7 @@ EntryStatic.usageList = [
    'usage_signal', 'usage_random', 'usage_variable', 'usage_ask_answer' , 'usage_comp_operation', 'usage_math_operation',
    'usage_logical_operation' , 'usage_list', 'usage_function', 'usage_arrow_move', 'usage_coordinate', 'usage_rotation', 'usage_speak',
    'usage_picture_effect', 'usage_shape', 'usage_sound', 'usage_draw','usage_confirm', 'usage_timer', 'usage_textBox', 'usage_scene',
-   'usage_clone', 'usage_hw'
+   'usage_clone', 'usage_hw', 'usage_expansion'
 ];
 
 EntryStatic.conceptList = [
@@ -332,6 +332,18 @@ EntryStatic.getAllBlocks = function() {
             category: "func",
             blocks: [
                 "functionAddButton",
+            ]
+        },
+        {
+            category: "expansion",
+            blocks: [
+                "expansionBlockAddButton",
+                "weather_title",
+                "check_weather",
+                "check_finedust",
+                "get_weather_data",
+                "get_current_weather_data",
+                "get_today_temperature"
             ]
         },
         {
@@ -685,6 +697,11 @@ EntryStatic.getAllBlocks = function() {
                 "truetrue_set_led_colorsensor",
                 "truetrue_set_led_linesensor",
                 "truetrue_set_linetracer",
+				"truetrue_set_head_colorled",
+				"truetrue_set_move",
+				"truetrue_set_sec_move",
+				"truetrue_set_rotate",
+				"truetrue_set_sec_rotate",
                 //CODEino
                 "CODEino_get_named_sensor_value",
                 "CODEino_get_sound_status",
@@ -743,6 +760,19 @@ EntryStatic.getAllBlocks = function() {
                 "xbot_twoWheel",
                 "xbot_lcd",
                 //end of XBOT Blocks added
+                //bingles Blocks added
+                "bingles_analogValue",
+                "bingles_digitalOutput",
+                "bingles_rgb",
+                "bingles_rgb_picker",
+                "bingles_buzzer",
+                "bingles_servo",
+                "bingles_twoWheel",
+                "bingles_lcd",
+                "bingles_remotecontrol",
+                "bingles_oled",
+                "bingles_motorgo",
+                //end of bingles Blocks added
                 // ardublock Added 2016-06-01
                 "ardublock_get_analog_value",
                 "ardublock_get_analog_value_map",
@@ -776,19 +806,25 @@ EntryStatic.getAllBlocks = function() {
 
                 "ev3_get_sensor_value",
                 "ev3_touch_sensor",
+                "ev3_button_pressed",
                 "ev3_color_sensor",
                 "ev3_motor_power",
                 "ev3_motor_power_on_time",
                 "ev3_motor_degrees",
+                "ev3_status_led",
 
                 "roduino_on_block",
                 "roduino_off_block",
+                "roduino_get_sensor_analog_value",
+                "roduino_get_sensor_digital_value",
                 "roduino_get_analog_value",
                 "roduino_get_digital_value",
                 "roduino_get_color",
                 "roduino_set_digital",
                 "roduino_motor",
                 "roduino_set_color_pin",
+                "roduino_set_servo_value",
+                "roduino_set_pwm_value",
 
                 "schoolkit_on_block",
                 "schoolkit_off_block",
@@ -1563,6 +1599,7 @@ EntryStatic.ARROW_COLOR_JUDGE = '#89a1f7';
 EntryStatic.ARROW_COLOR_CALC = '#e8b349';
 EntryStatic.ARROW_COLOR_VARIABLE = '#ce38ce';
 EntryStatic.ARROW_COLOR_HW = '#097e84';
+EntryStatic.ARROW_COLOR_EXPANSION = '#ff8888';
 
 
 EntryStatic.COMMAND_TYPES = {

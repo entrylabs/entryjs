@@ -132,10 +132,55 @@ Lang.CommandTooltip = {
     "802": "변수 추가하기@@<b>[변수 추가]</b>를 클릭합니다.",
     "803": "변수 추가하기@@<b>[확인]</b>을 클릭합니다.",
     "804": "변수 삭제하기@@이 버튼을 눌러 변수를 삭제합니다.",
-    "805": "변수 이름 설정"
+    "805": "변수 이름 설정",
+    "1101": "확장 블록 추가하기@@<b>확장 블록 블러오기</b>를 클릭합니다."
 };
 Lang.Blocks = {
     "download_guide": "연결 안내 다운로드",
+    "date_yesterday": "어제",
+    "date_today": "오늘",
+    "date_tomorrow": "내일",
+    "date_after_2_days": "모레",
+    "date_after_3_days": "3일 후",
+    "date_after_4_days": "4일 후",
+    "date_after_5_days": "5일 후",
+    "date_after_6_days": "6일 후",
+    "location_seoul": "서울",
+    "location_gangwon": "강원",
+    "location_gyeonggi": "경기",
+    "location_gyeongsangnam": "경남",
+    "location_gyeongsangbuk": "경북",
+    "location_gwangju": "광주",
+    "location_daegu": "대구",
+    "location_daejeon": "대전",
+    "location_busan": "부산",
+    "location_sejong": "세종",
+    "location_ulsan": "울산",
+    "location_incheon": "인천",
+    "location_jeollanam": "전남",
+    "location_jeollabuk": "전북",
+    "location_jeju": "제주",
+    "location_chungcheongnam": "충남",
+    "location_chungcheongbuk": "충북",
+    "EXPANSION_WEATHER_sunny": "맑음",
+    "EXPANSION_WEATHER_partly_cloudy": "구름조금",
+    "EXPANSION_WEATHER_mostly_cloudy": "구름많음",
+    "EXPANSION_WEATHER_cloudy": "흐림",
+    "EXPANSION_WEATHER_rainy": "비",
+    "EXPANSION_WEATHER_sleet": "진눈깨비",
+    "EXPANSION_WEATHER_snowy": "눈",
+    "EXPANSION_WEATHER_finedust_good": "좋음",
+    "EXPANSION_WEATHER_finedust_normal": "보통",
+    "EXPANSION_WEATHER_finedust_bad": "나쁨",
+    "EXPANSION_WEATHER_finedust_very_bad": "매우나쁨",
+    "EXPANSION_WEATHER_lowest_temperature": "최저기온(℃)",
+    "EXPANSION_WEATHER_highest_temperature": "최고기온(℃)",
+    "EXPANSION_WEATHER_humidity": "습도(%)",
+    "EXPANSION_WEATHER_precipitation": "강수량(mm)",
+    "EXPANSION_WEATHER_precipitation_probability": "강수확률(%)",
+    "EXPANSION_WEATHER_wind_speed": "풍속(m/s)",
+    "EXPANSION_WEATHER_temperature": "기온(℃)",
+    "EXPANSION_WEATHER_finedust": "미세먼지농도(㎍)",
     "ARDUINO": "하드웨어",
     "ARDUINO_download_connector": "연결 프로그램 다운로드",
     "ARDUINO_open_connector": "연결 프로그램 열기",
@@ -564,6 +609,7 @@ Lang.Blocks = {
     "ARDUINO_convert_scale_5": "~",
     "ARDUINO_convert_scale_6": "",
     "ARDUINO_off": "Off",
+    "EXPANSION": "확장",
     "brightness": "밝기",
     "BRUSH": "붓",
     "BRUSH_brush_erase_all": "this.brush.removeAll()",
@@ -1770,8 +1816,8 @@ Lang.ko = "한국어";
 Lang.vn = "tiếng Việt";
 Lang.jp = "日本語";
 Lang.Menus = {
-    "nothing_to_import": "내려받기 할 항목이 없습니다.",
-    "nothing_to_export": "불러오기 할 항목이 없습니다.",
+    "nothing_to_import": "불러오기 할 항목이 없습니다.",
+    "nothing_to_export": "내려받기 할 항목이 없습니다.",
     "content_copied": "내용이 복사되었습니다.",
     "list_import_title": "리스트 불러오기",
     "list_import_placeholder": "예)\n내용1\n내용2\n내용3\n내용4\n내용5\n내용6\n내용7\n내용8",
@@ -2642,8 +2688,9 @@ Lang.Menus = {
     "blog": "블로그",
     "post": "포스트",
     "tvCast": "TV캐스트",
-    "Youtube": "유튜브",
-    "facebook": "페이스북",
+    "about_entry_pre": "엔트리",
+    "about_youtube": "유튜브",
+    "about_facebook": "페이스북",
     "albertSchool": "알버트 스쿨버전",
     "arduinoBoard": "아두이노 정품보드",
     "arduinoCompatible": "아두이노 호환보드",
@@ -4154,7 +4201,9 @@ Lang.Menus = {
     "choseok_mission_statement_top2": "미션 2 : 가위바위보를 시작하기",
     "choseok_mission_statement_top3": "미션 3 : 가위바위보 승패 만들기",
     "choseok_mission_statement_top4": "미션 4 : 가위바위보 결과 보여주기",
-    "choseok_mission_statement_top5": "미션 5 : 자유롭게 만들어보기"
+    "choseok_mission_statement_top5": "미션 5 : 자유롭게 만들어보기",
+    "advisory_title": "엔트리 자문단",
+    "advisory_sub_title": "엔트리를 함께 만들어가는 선생님 학생 자문단입니다."
 };
 Lang.Msgs = {
     "monthly_intro_0": "<월간 엔트리>는 소프트웨어 교육에 익숙하지 않은 선생님들도 쉽고 재미있게 소프트웨어 교육을 하실 수 있도록 만들어진 ",
@@ -4248,7 +4297,10 @@ Lang.Msgs = {
     "version_update_msg2": "엔트리 하드웨어 새 버전(%1)을\n사용하실 수 있습니다.",
     "version_update_msg3": "지금 업데이트 하시겠습니까?",
     "select_the_hardware": "수업에 활용할<br />하드웨어를 선택하세요.",
-    "select_hardware_button": "하드웨어 선택하기"
+    "select_hardware_button": "하드웨어 선택하기",
+    "select_the_expansion_block": "수업에 활용할 확장 블록을 선택하세요.",
+    "select_expansion_block_button": "확장 블록 선택하기",
+    "expansion_weather_description": "기온, 강수량, 미세먼지 농도 등 한국의 날씨와 관련된 블록들의 모음입니다."
 };
 Lang.Users = {
     "auth_failed": "인증에 실패하였습니다",
@@ -4288,6 +4340,7 @@ Lang.Users = {
     "verification_complete": "이메일 주소가 인증되었습니다."
 };
 Lang.Workspace = {
+    "follow": "따라해보기",
     "SaveWithPicture": "저장되지 않은 그림이 있습니다. 저장하시겠습니까?",
     "RecursiveCallWarningTitle": "함수 호출 제한",
     "RecursiveCallWarningContent": "한 번에 너무 많은 함수가 호출되었습니다. 함수의 호출 횟수를 줄여주세요.",
@@ -4313,6 +4366,7 @@ Lang.Workspace = {
     "cannot_add_object": "실행중에는 오브젝트를 추가할 수 없습니다.",
     "cannot_add_picture": "실행중에는 모양을 추가할 수 없습니다.",
     "cannot_add_sound": "실행중에는 소리를 추가할 수 없습니다.",
+    "cannot_add_expansion_block": "실행중에는 확장 블럭을 추가할 수 없습니다.",
     "cannot_edit_click_to_stop": "실행중에는 수정할 수 없습니다.\n클릭하여 정지하기.",
     "cannot_open_private_project": "비공개 작품은 불러올 수 없습니다. 홈으로 이동합니다.",
     "cannot_save_running_project": "실행 중에는 저장할 수 없습니다.",
@@ -4404,6 +4458,8 @@ Lang.Workspace = {
     "shape_remove_fail_msg": "적어도 하나 이상의 모양이 존재하여야 합니다.",
     "shape_remove_ok": "모양이 삭제 되었습니다. ",
     "shape_remove_ok_msg": "이(가) 삭제 되었습니다.",
+    "load_exapnsion_block": "확장블록 불러오기",
+    "select_expansion_block": "확장블록 선택",
     "sound_add": "소리 추가",
     "sound_remove_fail": "소리 삭제 실패",
     "sound_remove_ok": "소리 삭제 완료",
@@ -4560,6 +4616,7 @@ Lang.code = "코드보기";
 Lang.EntryStatic = {
     "groupProject": "학급 공유하기",
     "usage_parallel": "병렬",
+    "usage_expansion": "확장",
     "usage_hw": "하드웨어",
     "usage_sequence": "순차",
     "privateProject": "나만보기",
@@ -5255,7 +5312,12 @@ Lang.Helper = {
     "byrobot_petrone_v2_flight_drone_value_etc": "<br>페트론V2 설정과 관련된 값들과 적외선 통신으로 받은 값을 반환합니다.<br><br><font color='crimson'>#값</font> <font color='dodgerblue'>#드론</font> <font color='forestgreen'>#기타</font>",
     "byrobot_petrone_v2_flight_drone_value_imu": "<br>페트론V2 IMU센서와 관련된 값들을 반환합니다.<br>(병진운동) 가속도는 x, y, z축에 대한 중력가속도입니다. 1g = 9.8m/s^2<br>(회전운동) 각속도는 x, y, z축을 기준으로 회전하는 속력을 나타내는 벡터입니다.(pitch, roll, yaw) <br><br><font color='crimson'>#값</font> <font color='dodgerblue'>#드론</font> <font color='forestgreen'>#IMU센서</font> <font color='crimson'>#가속도</font> <font color='dodgerblue'>#병진운동</font> <font color='crimson'>#각속도</font> <font color='dodgerblue'>#회전운동</font>",
     "byrobot_petrone_v2_flight_drone_value_sensor": "<br>페트론V2 센서와 관련된 값들을 반환합니다.<br>온도 단위=섭씨 도, 해발고도 단위=m, image flow 단위=m, 바닥까지의 거리 단위=m<br>해발고도 값은 대기압의 영향을 받아서 오차범위가 큽니다. 바닥까지 거리의 유효 측정 거리는 2m입니다. image flow값은 일정한 속도와 높이에서 이동할 경우에 유효합니다. 이러한 센서값들을 이용하여 Petrone V2는 호버링(고도 유지) 기능을 수행합니다.<br><br><font color='crimson'>#값</font> <font color='dodgerblue'>#드론</font> <font color='forestgreen'>#센서</font> <font color='crimson'>#온도</font> <font color='dodgerblue'>#해발고도</font> <font color='forestgreen'>#image flow</font> <font color='crimson'>#range</font> <font color='dodgerblue'>#대기압</font> <font color='forestgreen'>#호버링</font>",
-    "boolean_and_or": "그리고 : 두 판단이 모두 참인 경우 ‘참’으로 판단합니다.<br>또는 : 두 판단 중 하나라도 참이 있는 경우 ‘참’으로 판단합니다."
+    "boolean_and_or": "그리고 : 두 판단이 모두 참인 경우 ‘참’으로 판단합니다.<br>또는 : 두 판단 중 하나라도 참이 있는 경우 ‘참’으로 판단합니다.",
+    "check_weather": "<br>선택한 날짜와 지역의 날씨 정보를 실제 날씨 상태와 비교하여 일치하는 경우 ‘참’으로 판단합니다.<br> * 옵션<br> 날짜: 어제, 오늘, 내일, 모레, 3일 후, 4일 후, 5일 후, 6일 후<br> 지역: 서울, 강원, 경기, 경남, 경북, 광주, 대구, 대전, 부산, 세종, 울산, 인천, 전남, 전북, 제주, 충남, 충북<br> 날씨: 맑음, 구름조금, 구름많음, 흐림, 비, 진눈깨비, 눈",
+    "check_finedust": "<br>선택한 지역의 현재 미세먼지 정보를 실제 미세먼지 등급과 비교하여 일치하는 경우 ‘참’으로 판단합니다.<br> * 옵션<br> 지역: 서울, 강원, 경기, 경남, 경북, 광주, 대구, 대전, 부산, 세종, 울산, 인천, 전남, 전북, 제주, 충남, 충북<br> 미세먼지 등급: 좋음, 보통, 나쁨, 매우나쁨",
+    "get_weather_data": "<br>선택한 날짜와 지역의 각종 날씨 정보값(최저기온, 최고기온, 습도, 강수량, 강수확률, 풍속)입니다.<br> * 옵션<br> 날짜: 어제, 오늘, 내일, 모레, 3일 후, 4일 후, 5일 후, 6일 후<br> 지역: 서울, 강원, 경기, 경남, 경북, 광주, 대구, 대전, 부산, 세종, 울산, 인천, 전남, 전북, 제주, 충남, 충북<br> 정보: 최저기온(℃), 최고기온(℃), 습도(%), 강수량(mm), 강수확률(%), 풍속(m/s)",
+    "get_current_weather_data": "<br>현재 선택한 지역의 날씨 정보값(기온, 미세먼지농도)입니다.<br> * 옵션<br> 지역: 서울, 강원, 경기, 경남, 경북, 광주, 대구, 대전, 부산, 세종, 울산, 인천, 전남, 전북, 제주, 충남, 충북<br> 정보: (기온(℃)), 미세먼지농도(㎍)",
+    "get_today_temperature": "<br>오늘 선택한 지역과 시간대의 기온을 의미합니다.<br> * 옵션<br> 지역: 서울, 강원, 경기, 경남, 경북, 광주, 대구, 대전, 부산, 세종, 울산, 인천, 전남, 전북, 제주, 충남, 충북<br> 시간대: 00, 03, 06, 09, 12, 15, 18, 21"
 };
 Lang.Category = {
     "entrybot_friends": "엔트리봇 친구들",
@@ -5867,6 +5929,15 @@ Lang.template = {
     "function_param_boolean": "Judgement",
     "function_create": "define function %1 %2",
     "function_general": "function %1",
+    "expansionBlockAddButton": "%1",
+    "weather_title": "%1",
+    "check_weather": "%1 %2 의 날씨가 %3인가?",
+    "check_finedust": "현재 %1 의 미세먼지 등급이 %2인가?",
+    "get_weather_data": "%1 %2 의 %3",
+    "get_current_weather_data": "현재 %1 의 %2",
+    "get_today_temperature": "오늘 %1의 %2시 기온",
+    "load_expansion_block": "확장 블록 불러오기",
+    "weather_title_text": "날씨",
     "hamster_hand_found": "Entry.Hamster.isHandFound()",
     "hamster_value": "%1",
     "hamster_move_forward_once": "Entry.Hamster.moveForwardOnceOnBoard() %1",
@@ -6512,6 +6583,7 @@ Lang.TextCoding = {
     "alert_function_name_empty_text": "등록된 함수 중에 함수 이름에 공백(띄어쓰기)이 포함된 함수가 있으면 모드 변환을 할 수 없습니다.",
     "alert_function_name_field_multi": "등록된 함수 중에 함수 이름에 [이름] 블록이 두번이상 포함되어 있으면 모드 변환을 할 수 없습니다.",
     "alert_function_name_disorder": "등록된 함수 중에[이름] 블록이 [문자/숫자값] 또는 [판단값] 블록보다 뒤에 쓰이면 모드 변환을 할 수 없습니다.",
+    "alert_function_has_boolean": "엔트리파이선으로 변환 후 다시 블록코딩으로 모드로 변경하면 함수에 사용된 [판단값]은 모두 [문자/숫자형]으로 변환됩니다.",
     "alert_function_editor": "함수 생성 및 편집 중에는 모드 변환을 할 수 없습니다.",
     "alert_function_no_support": "텍스트모드에서는 함수 생성 및 편집을 할 수 없습니다.",
     "alert_list_no_support": "텍스트모드에서는 리스트 생성 및 편집을 할 수 없습니다.",
@@ -7021,7 +7093,27 @@ Lang.PythonHelper = {
     "boolean_and_or_desc": "A와 B의 판단값을 확인하여 True 또는 False로 판단합니다.",
     "boolean_and_or_elements": "② or : A와 B의 판단 중 하나라도 True인 경우 True, 아닌 경우 False",
     "boolean_and_or_exampleCode": "def when_start():\n    while True:\n        if Entry.is_key_pressed(\"a\") and Entry.is_key_pressed(\"s\"):\n            Entry.add_effect(\"color\", 10)",
-    "boolean_and_or_exampleDesc": "[시작하기]버튼을 클릭하고 키보드의 \"a\" 와 \"s\"키를 동시에 눌렀을 때, 색깔 효과를 10만큼 줍니다."
+    "boolean_and_or_exampleDesc": "[시작하기]버튼을 클릭하고 키보드의 \"a\" 와 \"s\"키를 동시에 눌렀을 때, 색깔 효과를 10만큼 줍니다.",
+    "check_weather_desc": "B날짜에 C지역의 날씨가 A인 경우 True로 판단합니다.",
+    "check_weather_elements": "A-- 아래 선택지 중 하나<br>①    \"sunny\" : 맑음<br>②    \"partly cloudy\" : 구름조금<br>③    \"mostly cloudy\" : 구름많음<br>④    \"cloudy\" : 흐림<br>⑤    \"rainy\" : 비<br>⑥    \"sleet\" : 진눈깨비<br>⑦    \"snowy\" : 눈%nextB-- 아래 선택지 중 하나<br>①    \"yesterday\" : 어제<br>②    \"today\" : 오늘<br>③    \"tomorrow\" : 내일<br>④    \"After 2 days\" : 모레<br>⑤    \"After 3 days\" : 3일 후<br>⑥    \"After 4 days\" : 4일 후<br>⑦    \"After 5 days\" : 5일 후<br>⑧    \"After 6 days\" : 6일 후%nextC-- 아래 선택지 중 하나<br>①    \"Seoul\" : 서울<br>②    \"Gangwon-do\" : 강원<br>③    \"Gyeonggi-do\" : 경기<br>④    \"Gyeongsangnam-do\" : 경남<br>⑤    \"Gyeongsangbuk-do\" : 경북<br>⑥    \"Gwangju\" : 광주<br>⑦    \"Daegu\" : 대구<br>⑧    \"Daejeon\" : 대전<br>⑨    \"Busan\" : 부산<br>⑩    \"Sejong\" : 세종<br>⑪    \"Ulsan\" : 울산<br>⑫    \"Incheon\" : 인천<br>⑬    \"Jeollanam-do\" : 전남<br>⑭    \"Jeollabuk-do\" : 전북<br>⑮    \"Jeju\" : 제주<br>Ⓐ \"Chungcheongnam-do\" : 충남<br>Ⓑ \"Chungcheongbuk-do\": 충북",
+    "check_weather_exampleCode": "def when_start():\n    if Weather.is_condition_sunny(\"today\", \"Seoul\"):\n        Entry.print(\"오늘 서울의 날씨는 맑습니다.\")",
+    "check_weather_exampleDesc": "[시작하기]버튼을 클릭하면 오늘 서울의 날씨가 맑은지 확인합니다. 만약 서울의 날씨가 맑다면 오브젝트가 \"오늘 서울의 날씨는 맑습니다.\"라고 말합니다.​",
+    "check_finedust_desc": "선택한 지역의 현재 미세먼지 정보를 실제 미세먼지 등급과 비교하여 일치하는 경우 ‘참’으로 판단합니다.",
+    "check_finedust_elements": "A-- 아래 선택지 중 하나<br>①    \"good\" : 좋음<br>②    \"normal\" : 보통<br>③    \"bad\" : 나쁨<br>④    \"very bad\" : 매우나쁨%nextB-- 아래 선택지 중 하나<br>①    \"Seoul\" : 서울<br>②    \"Gangwon-do\" : 강원<br>③    \"Gyeonggi-do\" : 경기<br>④    \"Gyeongsangnam-do\" : 경남<br>⑤    \"Gyeongsangbuk-do\" : 경북<br>⑥    \"Gwangju\" : 광주<br>⑦    \"Daegu\" : 대구<br>⑧    \"Daejeon\" : 대전<br>⑨    \"Busan\" : 부산<br>⑩    \"Sejong\" : 세종<br>⑪    \"Ulsan\" : 울산<br>⑫    \"Incheon\" : 인천<br>⑬    \"Jeollanam-do\" : 전남<br>⑭    \"Jeollabuk-do\" : 전북<br>⑮    \"Jeju\" : 제주<br>Ⓐ \"Chungcheongnam-do\" : 충남<br>Ⓑ \"Chungcheongbuk-do\": 충북",
+    "check_finedust_exampleCode": "def when_start():\n    if Weather.is_current_finedust_grade_good(\"Seoul\"):\n        Entry.print(\"현재 서울의 미세먼지 등급은 좋음입니다.\")",
+    "check_finedust_exampleDesc": "[시작하기]버튼을 클릭하면 현재 서울의 미세먼지 등급이 좋음인지 확인합니다. 만약 서울의 날씨가 맑다면 오브젝트가 “오늘 서울의 미세먼지 등급은 좋음입니다.”라고 말합니다.​",
+    "get_weather_data_desc": "선택한 날짜와 지역의 각종 날씨 정보값(최저기온, 최고기온, 습도, 강수량, 강수확률, 풍속)입니다.",
+    "get_weather_data_elements": "A-- 아래 선택지 중 하나<br>①    \"the lowest temperature\" : 최저기온<br>②    \"the highest temperature\" : 최고기온<br>③    \"humidity\" : 습도<br>④    \"precipitation\" : 강수량<br>⑤    \"precipitation probability\" : 강수확률<br>⑥    \"wind speed\" : 풍속%nextB-- 아래 선택지 중 하나<br>①    \"yesterday\" : 어제<br>②    \"today\" : 오늘<br>③    \"tomorrow\" : 내일<br>④    \"After 2 days\" : 모레<br>⑤    \"After 3 days\" : 3일 후<br>⑥    \"After 4 days\" : 4일 후<br>⑦    \"After 5 days\" : 5일 후<br>⑧    \"After 6 days\" : 6일 후%nextC-- 아래 선택지 중 하나<br>①    \"Seoul\" : 서울<br>②    \"Gangwon-do\" : 강원<br>③    \"Gyeonggi-do\" : 경기<br>④    \"Gyeongsangnam-do\" : 경남<br>⑤    \"Gyeongsangbuk-do\" : 경북<br>⑥    \"Gwangju\" : 광주<br>⑦    \"Daegu\" : 대구<br>⑧    \"Daejeon\" : 대전<br>⑨    \"Busan\" : 부산<br>⑩    \"Sejong\" : 세종<br>⑪    \"Ulsan\" : 울산<br>⑫    \"Incheon\" : 인천<br>⑬    \"Jeollanam-do\" : 전남<br>⑭    \"Jeollabuk-do\" : 전북<br>⑮    \"Jeju\" : 제주<br>Ⓐ \"Chungcheongnam-do\" : 충남<br>Ⓑ \"Chungcheongbuk-do\": 충북",
+    "get_weather_data_exampleCode": "def when_start():\n    Entry.print(Weather.get_lowest_temperature(\"today\", \"Seoul\"))",
+    "get_weather_data_exampleDesc": "[시작하기]버튼을 클릭하면 오브젝트가 오늘 서울의 최저기온을 말합니다.​",
+    "get_current_weather_data_desc": "현재 B지역의 A 날씨 정보값을 의미합니다.",
+    "get_current_weather_data_elements": "A-- 아래 선택지 중 하나<br>①    \"Seoul\" : 서울<br>②    \"Gangwon-do\" : 강원<br>③    \"Gyeonggi-do\" : 경기<br>④    \"Gyeongsangnam-do\" : 경남<br>⑤    \"Gyeongsangbuk-do\" : 경북<br>⑥    \"Gwangju\" : 광주<br>⑦    \"Daegu\" : 대구<br>⑧    \"Daejeon\" : 대전<br>⑨    \"Busan\" : 부산<br>⑩    \"Sejong\" : 세종<br>⑪    \"Ulsan\" : 울산<br>⑫    \"Incheon\" : 인천<br>⑬    \"Jeollanam-do\" : 전남<br>⑭    \"Jeollabuk-do\" : 전북<br>⑮    \"Jeju\" : 제주<br>Ⓐ \"Chungcheongnam-do\" : 충남<br>Ⓑ \"Chungcheongbuk-do\": 충북%nextB-- 아래 선택지 중 하나<br>①    \"temperature\" : 기온<br>②    \"concentration of fine dust\" : 미세먼지농도",
+    "get_current_weather_data_exampleCode": "def when_start():\n    Entry.print(Weather.get_current_temperature(\"Seoul\"))",
+    "get_current_weather_data_exampleDesc": "[시작하기]버튼을 클릭하면 오브젝트가 현재 서울의 기온을 말합니다.",
+    "get_today_temperature_desc": "오늘 A지역의 B 시간대 기온 정보값을 의미합니다.",
+    "get_today_temperature_elements": "A-- 아래 선택지 중 하나<br>①    \"Seoul\" : 서울<br>②    \"Gangwon-do\" : 강원<br>③    \"Gyeonggi-do\" : 경기<br>④    \"Gyeongsangnam-do\" : 경남<br>⑤    \"Gyeongsangbuk-do\" : 경북<br>⑥    \"Gwangju\" : 광주<br>⑦    \"Daegu\" : 대구<br>⑧    \"Daejeon\" : 대전<br>⑨    \"Busan\" : 부산<br>⑩    \"Sejong\" : 세종<br>⑪    \"Ulsan\" : 울산<br>⑫    \"Incheon\" : 인천<br>⑬    \"Jeollanam-do\" : 전남<br>⑭    \"Jeollabuk-do\" : 전북<br>⑮    \"Jeju\" : 제주<br>Ⓐ \"Chungcheongnam-do\" : 충남<br>Ⓑ \"Chungcheongbuk-do\": 충북%nextB-- 아래 선택지 중 하나<br>①    \"00\" : 당일 00시 측정된 기온값<br>②    \"03\" : 당일 03시 측정된 기온값<br>③    \"06\" : 당일 06시 측정된 기온값<br>④    \"09\" : 당일 09시 측정된 기온값<br>⑤    \"12\" : 당일 12시 측정된 기온값<br>⑥    \"15\" : 당일 15시 측정된 기온값<br>⑦    \"18\" : 당일 18시 측정된 기온값<br>⑧    \"21\" : 당일 21시 측정된 기온값",
+    "get_today_temperature_exampleCode": "def when_start():\n    Entry.print(Weather.get_today_temperature(\"Seoul\", 00))",
+    "get_today_temperature_exampleDesc": "[시작하기]버튼을 클릭하면 오브젝트가 오늘 서울의 00시 기온을 말합니다.​"
 };
 
 Lang.Support = ["ko", "en", "ebs", "code", "vn", "jp"];

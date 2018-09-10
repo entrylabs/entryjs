@@ -6,6 +6,7 @@ module.exports = Entry;
 global.Entry = Entry;
 
 require('./css/entry.less');
+require('./class/time_wait');
 require('./class/container');
 require('./class/dialog');
 require('./class/doneProject');
@@ -92,6 +93,7 @@ require('./util/tooltip');
 require('./util/tvCast');
 require('./util/utils');
 require('./util/youtube');
+require('./util/weather_forecast');
 require('./command/commands/block');
 require('./command/commands/container');
 require('./command/commands/engine');

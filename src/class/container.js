@@ -152,7 +152,13 @@ Entry.Container.prototype.generateView = function(containerView, option) {
  * enable sort.
  */
 Entry.Container.prototype.enableSort = function() {
-    $(this.listView_).sortable({
+    var view = this.listView_;
+
+    if (!view) {
+        return;
+    }
+
+    $(view).sortable({
         start: function(event, ui) {
             ui.item.data('start_pos', ui.item.index());
         },
@@ -171,7 +177,13 @@ Entry.Container.prototype.enableSort = function() {
  * disable sort.
  */
 Entry.Container.prototype.disableSort = function() {
-    $(this.listView_).sortable('destroy');
+    var view = this.listView_;
+
+    if (!view) {
+        return;
+    }
+
+    $(view).sortable('destroy');
 };
 
 /**
@@ -214,7 +226,8 @@ Entry.Container.prototype.updateListView = function() {
  */
 Entry.Container.prototype.setObjects = function(objectModels) {
     for (var i in objectModels) {
-        this.objects_.push(new Entry.EntryObject(objectModels[i]));
+        var object = new Entry.EntryObject(objectModels[i]);
+        this.objects_.push(object);
     }
     this.updateObjectsOrder();
     this.updateListView();
