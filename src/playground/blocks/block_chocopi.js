@@ -960,7 +960,7 @@ Entry.Chocopi.getBlocks = function () {
                 return script.callReturn();
             },
             syntax: { js: [], py: ['Chocopi.servo(%1, %2, %3)'] },
-        },
+        },        
         chocopi_map_range: {
             color: '#00979D',
             fontColor: '#fff',
