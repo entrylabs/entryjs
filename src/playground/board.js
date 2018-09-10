@@ -13,7 +13,6 @@ Entry.Board = class Board {
         this.readOnly = option.readOnly === undefined ? false : option.readOnly;
         this.changeEvent = new Entry.Event(this);
         
-        console.log('Board');
         this.createView(option);
         this.updateOffset();
 

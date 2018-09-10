@@ -1,6 +1,12 @@
-.block.selected > g > .blockPath {
-    stroke-width: 3px;
-    stroke: #798EB1;
+.block.selected > g > .blockPath,
+.block.selected > g > .blockBackgroundPath {
+    // stroke-width: 3px;
+    // stroke: #798EB1;
+    filter: none;
+    
+    &:not([fill^="url(#blockHoverPattern"]) {
+        filter: url(#entryBlockTestFilter_board);
+    }
 }
 
 .block.outputHighlight > g > .blockPath {
@@ -90,7 +96,6 @@ svg .svgBlockGroup text {
 .entry-widget-input-field {
     position: fixed;
     font-family: NanumGothic;
-    font-size: 10px;
     font-weight: bold;
     border: none;
     border-radius: 5px;
@@ -98,7 +103,8 @@ svg .svgBlockGroup text {
     line-height: normal;
     z-index: 301;
     color: #000000;
-    background-color: #feb71a;    
+    // font-size: 10px;
+    // background-color: #feb71a;    
  }
 
 .entry-widget-input-field::-ms-clear, 

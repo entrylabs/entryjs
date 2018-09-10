@@ -532,7 +532,7 @@ const block = {
         syntax: { js: [], py: [''] },
     },
     number: {
-        color: '#FEB71A',
+        color: '#FFDE82',
         skeleton: 'basic_string_field',
         statements: [],
         params: [
@@ -571,7 +571,7 @@ const block = {
         },
     },
     angle: {
-        color: '#FEB71A',
+        color: '#FFDE82',
         skeleton: 'basic_string_field',
         statements: [],
         params: [
@@ -610,7 +610,7 @@ const block = {
         },
     },
     get_x_coordinate: {
-        color: '#FEB71A',
+        color: '#FFDE82',
         skeleton: 'basic_string_field',
         statements: [],
         params: [
@@ -633,7 +633,7 @@ const block = {
         syntax: { js: [], py: [''] },
     },
     get_y_coordinate: {
-        color: '#FEB71A',
+        color: '#FFDE82',
         skeleton: 'basic_string_field',
         statements: [],
         params: [
@@ -656,7 +656,7 @@ const block = {
         syntax: { js: [], py: [''] },
     },
     get_angle: {
-        color: '#FEB71A',
+        color: '#FFDE82',
         skeleton: 'basic_string_field',
         statements: [],
         params: [
@@ -676,7 +676,7 @@ const block = {
         syntax: { js: [], py: [''] },
     },
     get_rotation_direction: {
-        color: '#FEB71A',
+        color: '#FFDE82',
         skeleton: 'basic_string_field',
         statements: [],
         params: [
@@ -709,7 +709,7 @@ const block = {
         syntax: { js: [], py: [''] },
     },
     calc_plus: {
-        color: '#FEB71A',
+        color: '#FFDE82',
         skeleton: 'basic_string_field',
         statements: [],
         params: [
@@ -743,7 +743,7 @@ const block = {
         syntax: { js: [], py: [''] },
     },
     calc_minus: {
-        color: '#FEB71A',
+        color: '#FFDE82',
         skeleton: 'basic_string_field',
         statements: [],
         params: [
@@ -777,7 +777,7 @@ const block = {
         syntax: { js: [], py: [''] },
     },
     calc_times: {
-        color: '#FEB71A',
+        color: '#FFDE82',
         skeleton: 'basic_string_field',
         statements: [],
         params: [
@@ -811,7 +811,7 @@ const block = {
         syntax: { js: [], py: [''] },
     },
     calc_divide: {
-        color: '#FEB71A',
+        color: '#FFDE82',
         skeleton: 'basic_string_field',
         statements: [],
         params: [
@@ -845,7 +845,7 @@ const block = {
         syntax: { js: [], py: [''] },
     },
     calc_mod: {
-        color: '#FEB71A',
+        color: '#FFDE82',
         skeleton: 'basic_string_field',
         statements: [],
         params: [
@@ -898,7 +898,7 @@ const block = {
         syntax: { js: [], py: ['Entry.get_remainder(%1, %3)'] },
     },
     calc_share: {
-        color: '#FEB71A',
+        color: '#FFDE82',
         skeleton: 'basic_string_field',
         statements: [],
         params: [
@@ -951,7 +951,7 @@ const block = {
         syntax: { js: [], py: [''] },
     },
     reset_project_timer: {
-        color: '#FEB71A',
+        color: '#FFDE82',
         skeleton: 'basic',
         statements: [],
         params: [
@@ -987,7 +987,7 @@ const block = {
         syntax: { js: [], py: [''] },
     },
     set_visible_project_timer: {
-        color: '#FEB71A',
+        color: '#FFDE82',
         skeleton: 'basic',
         statements: [],
         params: [
@@ -1089,7 +1089,7 @@ const block = {
         },
     },
     timer_variable: {
-        color: '#FEB71A',
+        color: '#FFDE82',
         skeleton: 'basic_string_field',
         statements: [],
         params: [
@@ -1161,7 +1161,7 @@ const block = {
     function_field_string: {
         skeleton: 'basic_param',
         isNotFor: ['functionEdit'],
-        color: '#FEB71A',
+        color: '#FFDE82',
         params: [
             {
                 type: 'Block',
@@ -1222,7 +1222,7 @@ const block = {
     },
     function_param_string: {
         skeleton: 'basic_string_field',
-        color: '#FEB71A',
+        color: '#FFDE82',
         template: '%1 %2',
         events: {
             viewAdd: [
@@ -2879,7 +2879,7 @@ const block = {
         syntax: { js: [], py: ['Entry.on_key_press_down(%1)'] },
     },
     text: {
-        color: '#FEB71A',
+        color: '#FFDE82',
         skeleton: 'basic_string_field',
         statements: [],
         params: [
@@ -7646,7 +7646,7 @@ const block = {
     ai_distance_value: {
         skeleton: 'basic_string_field',
         mode: 'maze',
-        color: '#FEB71A',
+        color: '#FFDE82',
         syntax: ['Scope', 'radar_%1#'],
         params: [
             {

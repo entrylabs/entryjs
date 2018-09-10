@@ -81,17 +81,14 @@ Entry.loadProject = function(project) {
     if (project.interface && Entry.options.loadInterface)
         Entry.loadInterfaceState(project.interface);
 
-    if (window.parent && window.parent.childIframeLoaded)
-        window.parent.childIframeLoaded();
+    if (window.parent && window.parent.childIframeLoaded) window.parent.childIframeLoaded();
     return project;
 };
 
 Entry.clearProject = function() {
     Entry.stop();
     Entry.projectId = null;
-    Entry.type !== 'invisible' &&
-        Entry.playground &&
-        Entry.playground.changeViewMode('code');
+    Entry.type !== 'invisible' && Entry.playground && Entry.playground.changeViewMode('code');
     Entry.variableContainer.clear();
     Entry.container.clear();
     Entry.scene.clear();
@@ -152,8 +149,7 @@ Entry.beforeUnload = function(e) {
                 JSON.stringify(Entry.captureInterfaceState())
             );
         }
-        if (!Entry.stateManager.isSaved())
-            return Lang.Workspace.project_changed;
+        if (!Entry.stateManager.isSaved()) return Lang.Workspace.project_changed;
     }
 };
 
@@ -174,10 +170,7 @@ Entry.loadInterfaceState = function(interfaceState) {
     if (Entry.type == 'workspace') {
         if (interfaceState) {
             Entry.container.selectObject(interfaceState.object, true);
-        } else if (
-            localStorage &&
-            localStorage.getItem('workspace-interface')
-        ) {
+        } else if (localStorage && localStorage.getItem('workspace-interface')) {
             var interfaceModel = localStorage.getItem('workspace-interface');
             interfaceState = JSON.parse(interfaceModel);
         } else {
@@ -233,11 +226,7 @@ Entry.cancelObjectEdit = function({ target, type }) {
     var objectView = object.view_;
     var isCurrent = $(objectView).find(target).length !== 0;
     var tagName = target.tagName.toUpperCase();
-    if (
-        !object.isEditing ||
-        ((tagName === 'INPUT' && isCurrent) || type === 'touchstart')
-    )
-        return;
+    if (!object.isEditing || ((tagName === 'INPUT' && isCurrent) || type === 'touchstart')) return;
     object.editObjectValues(false);
 };
 
@@ -313,9 +302,7 @@ Entry.resizeElement = function(interfaceModel) {
 
         Entry.propertyPanel.resize(canvasSize);
 
-        var addButton = Entry.engine.view_.getElementsByClassName(
-            'entryAddButtonWorkspace_w'
-        )[0];
+        var addButton = Entry.engine.view_.getElementsByClassName('entryAddButtonWorkspace_w')[0];
         if (addButton) {
             var addButtonStyle = addButton.style;
             if (Entry.objectAddable) {
@@ -334,9 +321,7 @@ Entry.resizeElement = function(interfaceModel) {
             }
         }
 
-        var runButton = Entry.engine.view_.getElementsByClassName(
-            'entryRunButtonWorkspace_w'
-        )[0];
+        var runButton = Entry.engine.view_.getElementsByClassName('entryRunButtonWorkspace_w')[0];
         if (runButton) {
             var runButtonStyle = runButton.style;
             if (Entry.objectAddable) {
@@ -350,9 +335,7 @@ Entry.resizeElement = function(interfaceModel) {
             }
         }
 
-        var stopButton = Entry.engine.view_.getElementsByClassName(
-            'entryStopButtonWorkspace_w'
-        )[0];
+        var stopButton = Entry.engine.view_.getElementsByClassName('entryStopButtonWorkspace_w')[0];
         if (stopButton) {
             var stopButtonStyle = stopButton.style;
             if (Entry.objectAddable) {
@@ -423,9 +406,7 @@ Entry.overridePrototype = function() {
             // main part. But anyway, most current (August 2014) browsers can't handle
             // strings 1 << 28 chars or longer, so:
             if (str.length * count >= 1 << 28) {
-                throw new RangeError(
-                    'repeat count must not overflow maximum string size'
-                );
+                throw new RangeError('repeat count must not overflow maximum string size');
             }
             var rpt = '';
             for (;;) {
@@ -461,9 +442,7 @@ Entry.Utils.isNumber = function(num) {
 };
 
 Entry.Utils.generateId = function(object) {
-    return (
-        '0000' + ((Math.random() * Math.pow(36, 4)) << 0).toString(36)
-    ).substr(-4);
+    return ('0000' + ((Math.random() * Math.pow(36, 4)) << 0).toString(36)).substr(-4);
 };
 
 Entry.Utils.isPointInMatrix = function(matrix, point, offset) {
@@ -537,9 +516,7 @@ Entry.Utils.getEmphasizeColor = function(color) {
 // Take input from [0, n] and return it as [0, 1]
 Entry.Utils.bound01 = function(n, max) {
     function isOnePointZero(n) {
-        return (
-            typeof n == 'string' && n.indexOf('.') != -1 && parseFloat(n) === 1
-        );
+        return typeof n == 'string' && n.indexOf('.') != -1 && parseFloat(n) === 1;
     }
 
     function isPercentage(n) {
@@ -670,16 +647,14 @@ Entry.Utils.bindIOSDeviceWatch = function() {
     var Agent = Entry.Utils.mobileAgentParser();
     if (Agent.apple.device) {
         console.log('APPLE! MOBILE DEVICE');
-        var lastHeight =
-            window.innerHeight || document.documentElement.clientHeight;
+        var lastHeight = window.innerHeight || document.documentElement.clientHeight;
         var lastSVGDomHeight = 0;
         if (Entry.Utils.SVGDom) {
             lastSVGDomHeight = Entry.Utils.SVGDom.height();
         }
 
         setInterval(function() {
-            var nowHeight =
-                window.innerHeight || document.documentElement.clientHeight;
+            var nowHeight = window.innerHeight || document.documentElement.clientHeight;
             var SVGDomCheck = false;
             if (Entry.Utils.SVGDom) {
                 var nowSVGDomHeight = Entry.Utils.SVGDom.height();
@@ -701,14 +676,7 @@ Entry.Utils.bindIOSDeviceWatch = function() {
 Entry.Utils.bindGlobalEvent = function(options) {
     var doc = $(document);
     if (options === undefined)
-        options = [
-            'resize',
-            'mousedown',
-            'mousemove',
-            'keydown',
-            'keyup',
-            'dispose',
-        ];
+        options = ['resize', 'mousedown', 'mousemove', 'keydown', 'keyup', 'dispose'];
 
     if (options.indexOf('resize') > -1) {
         if (Entry.windowReszied) {
@@ -742,8 +710,7 @@ Entry.Utils.bindGlobalEvent = function(options) {
         Entry.mouseCoordinate = {};
         Entry.documentMousemove = new Entry.Event(window);
         doc.on('touchmove mousemove', function(e) {
-            if (e.originalEvent && e.originalEvent.touches)
-                e = e.originalEvent.touches[0];
+            if (e.originalEvent && e.originalEvent.touches) e = e.originalEvent.touches[0];
             Entry.documentMousemove.notify(e);
             Entry.mouseCoordinate.x = e.clientX;
             Entry.mouseCoordinate.y = e.clientY;
@@ -760,8 +727,7 @@ Entry.Utils.bindGlobalEvent = function(options) {
         doc.on('keydown', function(e) {
             var keyCode = e.keyCode;
 
-            if (Entry.pressedKeys.indexOf(keyCode) < 0)
-                Entry.pressedKeys.push(keyCode);
+            if (Entry.pressedKeys.indexOf(keyCode) < 0) Entry.pressedKeys.push(keyCode);
             Entry.keyPressed.notify(e);
         });
     }
@@ -838,8 +804,7 @@ Entry.parseTexttoXML = function(xmlText) {
  * @return {!Element}
  */
 Entry.createElement = function(type, elementId) {
-    var element =
-        type instanceof HTMLElement ? type : document.createElement(type);
+    var element = type instanceof HTMLElement ? type : document.createElement(type);
     if (elementId) element.id = elementId;
 
     return element;
@@ -851,10 +816,7 @@ Entry.makeAutolink = function(html) {
             '(http|https|ftp|telnet|news|irc)://([-/.a-zA-Z0-9_~#%$?&=:200-377()][^)\\]}]+)',
             'gi'
         );
-        var regEmail = new RegExp(
-            '([xA1-xFEa-z0-9_-]+@[xA1-xFEa-z0-9-]+.[a-z0-9-]+)',
-            'gi'
-        );
+        var regEmail = new RegExp('([xA1-xFEa-z0-9_-]+@[xA1-xFEa-z0-9-]+.[a-z0-9-]+)', 'gi');
         return html
             .replace(regURL, "<a href='$1://$2' target='_blank'>$1://$2</a>")
             .replace(regEmail, "<a href='mailto:$1'>$1</a>");
@@ -868,9 +830,7 @@ Entry.makeAutolink = function(html) {
  * @return {string}
  */
 Entry.generateHash = function() {
-    return (
-        '0000' + ((Math.random() * Math.pow(36, 4)) << 0).toString(36)
-    ).substr(-4);
+    return ('0000' + ((Math.random() * Math.pow(36, 4)) << 0).toString(36)).substr(-4);
 };
 
 /**
@@ -1400,10 +1360,7 @@ Entry.getBrowserType = function() {
     if (Entry.userAgent) return Entry.userAgent;
     var ua = navigator.userAgent,
         tem,
-        M =
-            ua.match(
-                /(opera|chrome|safari|firefox|msie|trident(?=\/))\/?\s*(\d+)/i
-            ) || [];
+        M = ua.match(/(opera|chrome|safari|firefox|msie|trident(?=\/))\/?\s*(\d+)/i) || [];
     if (/trident/i.test(M[1])) {
         tem = /\brv[ :]+(\d+)/g.exec(ua) || [];
         return 'IE ' + (tem[1] || '');
@@ -1456,10 +1413,7 @@ Entry.setBasicBrush = function(sprite) {
     var shape = new createjs.Shape(brush);
     shape.entity = sprite;
     var selectedObjectContainer = Entry.stage.selectedObjectContainer;
-    selectedObjectContainer.addChildAt(
-        shape,
-        selectedObjectContainer.getChildIndex(sprite.object)
-    );
+    selectedObjectContainer.addChildAt(shape, selectedObjectContainer.getChildIndex(sprite.object));
 
     if (sprite.brush) sprite.brush = null;
     sprite.brush = brush;
@@ -1489,10 +1443,7 @@ Entry.setCloneBrush = function(sprite, parentBrush) {
     var shape = new createjs.Shape(brush);
     shape.entity = sprite;
     var selectedObjectContainer = Entry.stage.selectedObjectContainer;
-    selectedObjectContainer.addChildAt(
-        shape,
-        selectedObjectContainer.getChildIndex(sprite.object)
-    );
+    selectedObjectContainer.addChildAt(shape, selectedObjectContainer.getChildIndex(sprite.object));
 
     brush.stop = parentBrush.stop;
 
@@ -1671,41 +1622,88 @@ Entry.Utils.addFilters = function(boardSvgDom, suffix) {
         feMerge
     );
 
-    // var blockFilter = defs.elem('filter', {
-    //     id: 'entryBlockShadowFilter_' + suffix,
+    // <filter id="a">
+    //     <feMorphology in="SourceGraphic" operator="dilate" radius="1"/>
+    //     <feComponentTransfer result="outBlur">
+    //         <feFuncA type="table" tableValues="0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1">
+    //         </feFuncA>
+    //     </feComponentTransfer>
+    //     <feFlood flood-color="#00FF00" flood-opacity="1" result="outColor"></feFlood>
+    //     <feComposite in="outColor" in2="outBlur" operator="in" result="outGlow"></feComposite>
+    //     <feComposite in="SourceGraphic" in2="outGlow" operator="over"></feComposite>
+    // </filter>
+    // var blockTestFilter = defs.elem('filter', {
+    //     id: 'entryBlockTestFilter_' + suffix,
     // });
-    // blockFilter.elem('feOffset', {
-    //     result: 'offOut',
+    // blockTestFilter.elem('feMorphology', {
     //     in: 'SourceGraphic',
-    //     dx: 0,
-    //     dy: 1,
-    // });
-    // blockFilter.elem('feColorMatrix', {
-    //     result: 'matrixOut',
-    //     in: 'offOut',
-    //     type: 'matrix',
-    //     values: '0.7 0 0 0 0 0 0.7 0 0 0 0 0 0.7 0 0 0 0 0 1 0',
-    // });
-    // blockFilter.elem('feMorphology', {
-    //     in: 'SourceAlpha',
-    //     result: 'MORPH',
     //     operator: 'dilate',
-    //     radius: '1',
+    //     radius: 1,
     // });
-    // blockFilter.elem('feColorMatrix', {
-    //     result: 'WHITENED',
-    //     in: 'MORPH',
-    //     type: 'matrix',
-    //     values: '0.7 0 0 0 0 0 0.7 0 0 0 0 0 0.7 0 0 0 0 0 1 0',
+    // blockTestFilter.elem('feMorphology', {
+    //     in: 'SourceAlpha',
+    //     operator: 'dilate',
+    //     radius: 3,
     // });
-    // var feMerge = blockFilter.elem('feMerge');
-    // feMerge.elem('feMergeNode', {
-    //     in: 'WHITENED',
+    // var fec = blockTestFilter.elem('feComponentTransfer', {
+    //     result: 'outBlur',
     // });
-    
-    // feMerge.elem('feMergeNode', {
+    // fec.elem('feFuncA', {
+    //     type: 'table',
+    //     tableValues: '0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1',
+    // });
+    // blockTestFilter.elem('feFlood', {
+    //     'flood-color': '#00FF00',
+    //     'flood-opacity': '1',
+    //     result: 'outColor',
+    // });
+    // blockTestFilter.elem('feComposite', {
+    //     in: 'outColor',
+    //     in2: 'outBlur',
+    //     operator: 'in',
+    //     result: 'outGlow',
+    // });
+    // blockTestFilter.elem('feComposite', {
     //     in: 'SourceGraphic',
+    //     in2: 'outGlow',
+    //     operator: 'over',
     // });
+
+
+
+
+    var blockTestFilter = defs.elem('filter', {
+        id: 'entryBlockTestFilter_' + suffix,
+    });
+    blockTestFilter.elem('feGaussianBlur', {
+        id:"blur" ,
+        in:"SourceGraphic" ,
+        stdDeviation:"1" ,
+        result:"b",
+    });    
+    var fct = blockTestFilter.elem('feComponentTransfer', {
+        in:"b" ,
+        result:"c",
+    });    
+    fct.elem('feFuncA', {
+        id:"contour",
+        type: 'table',
+        tableValues: '0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1',
+    });
+    blockTestFilter.elem('feColorMatrix', {
+        id:"recolor" ,
+        in:"c" ,
+        type:"matrix" ,
+        values:"0 0 0 0 0.475 0 0 0 0 0.557 0 0 0 0 0.694 0 0 0 1 0" ,
+        result:"sa",
+    });
+    var fm = blockTestFilter.elem('feMerge');    
+    fm.elem('feMergeNode', {
+        in:"sa"
+    });
+    fm.elem('feMergeNode', {
+        in:"SourceGraphic"
+    });
 
     var blockHighlightFilter = defs.elem('filter', {
         id: 'entryBlockHighlightFilter_' + suffix,
@@ -1810,19 +1808,14 @@ Entry.Utils.stopProjectWithToast = function(scope, message, error) {
 
         if (block) {
             var id = block.getCode().object && block.getCode().object.id;
-            if (id)
-                Entry.container.selectObject(block.getCode().object.id, true);
+            if (id) Entry.container.selectObject(block.getCode().object.id, true);
             var view = block.view;
             view && view.getBoard().activateBlock(block);
         }
     }
 
     if (Entry.toast) {
-        Entry.toast.alert(
-            Lang.Msgs.warn,
-            Lang.Workspace.check_runtime_error,
-            true
-        );
+        Entry.toast.alert(Lang.Msgs.warn, Lang.Workspace.check_runtime_error, true);
     }
 
     if (error) {
@@ -1920,9 +1913,7 @@ Entry.isMobile = function() {
 
     var platform = window.platform;
     var ret =
-        platform &&
-        platform.type &&
-        (platform.type === 'tablet' || platform.type === 'mobile');
+        platform && platform.type && (platform.type === 'tablet' || platform.type === 'mobile');
 
     if (ret) {
         Entry.device = 'tablet';
@@ -1989,10 +1980,7 @@ Entry.Utils.mobileAgentParser = function(userAgent) {
         phone: match(apple_phone, ua),
         ipod: match(apple_ipod, ua),
         tablet: !match(apple_phone, ua) && match(apple_tablet, ua),
-        device:
-            match(apple_phone, ua) ||
-            match(apple_ipod, ua) ||
-            match(apple_tablet, ua),
+        device: match(apple_phone, ua) || match(apple_ipod, ua) || match(apple_tablet, ua),
     };
     this.amazon = {
         phone: match(amazon_phone, ua),
@@ -2041,15 +2029,13 @@ Entry.Utils.mobileAgentParser = function(userAgent) {
     this.phone = this.apple.phone || this.android.phone || this.windows.phone;
 
     // excludes 7 inch devices, classifying as phone or tablet is left to the user
-    this.tablet =
-        this.apple.tablet || this.android.tablet || this.windows.tablet;
+    this.tablet = this.apple.tablet || this.android.tablet || this.windows.tablet;
 
     return this;
 };
 
 Entry.Utils.convertMouseEvent = function(e) {
-    if (e.originalEvent && e.originalEvent.touches)
-        return e.originalEvent.touches[0];
+    if (e.originalEvent && e.originalEvent.touches) return e.originalEvent.touches[0];
     else if (e.changedTouches) return e.changedTouches[0];
     else return e;
 };
@@ -2074,8 +2060,7 @@ Entry.Utils.isNewVersion = function(old_version = '', new_version = '') {
         new_version = new_version.replace('v', '');
         var arrOld = old_version.split('.');
         var arrNew = new_version.split('.');
-        var count =
-            arrOld.length < arrNew.length ? arrOld.length : arrNew.length;
+        var count = arrOld.length < arrNew.length ? arrOld.length : arrNew.length;
         var isNew = false;
         var isSame = true;
         for (var i = 0; i < count; i++) {
@@ -2252,21 +2237,9 @@ Entry.Utils.allowAction = function() {
     if (this._restrictHandler) {
         if (entryDom.addEventListener) {
             entryDom.removeEventListener('click', this._restrictHandler, true);
-            entryDom.removeEventListener(
-                'mousedown',
-                this._restrictHandler,
-                true
-            );
-            entryDom.removeEventListener(
-                'mouseup',
-                this._restrictHandler,
-                true
-            );
-            entryDom.removeEventListener(
-                'touchstart',
-                this._restrictHandler,
-                true
-            );
+            entryDom.removeEventListener('mousedown', this._restrictHandler, true);
+            entryDom.removeEventListener('mouseup', this._restrictHandler, true);
+            entryDom.removeEventListener('touchstart', this._restrictHandler, true);
         } else {
             entryDom.detachEvent('onclick', this._restrictHandler);
             entryDom.detachEvent('onmousedown', this._restrictHandler);
@@ -2314,7 +2287,7 @@ Entry.Utils.glideBlock = function(svgGroup, x, y, callback) {
 Entry.Utils.getScrollPos = function() {
     return {
         left: window.pageXOffset || document.documentElement.scrollLeft,
-        top: window.pageYOffset || document.documentElement.scrollTop
+        top: window.pageYOffset || document.documentElement.scrollTop,
     };
 };
 
@@ -2452,10 +2425,7 @@ Entry.Utils.focusBlockView = (() => {
 
         if (blockView) {
             //darken all
-            _getAllElem(svgGroup).attr(
-                'filter',
-                `url(#entryBlockDarkenFilter_${suffix})`
-            );
+            _getAllElem(svgGroup).attr('filter', `url(#entryBlockDarkenFilter_${suffix})`);
 
             //brighten only block
             var { _path, contentSvgGroup } = blockView;

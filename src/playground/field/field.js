@@ -111,18 +111,15 @@ Entry.Field = function() {};
     //get absolute position of field from parent document
     p.getAbsolutePosFromDocument = function() {
         var blockView = this._block.view;
+        const board = blockView.getBoard();
+        const { scale = 1 } = board || {};
         var contentPos = blockView.getContentPos();
         var absPos = blockView.getAbsoluteCoordinate();
         var offset = blockView.getBoard().svgDom.offset();
-
+        console.log( absPos.y , this.box.y , contentPos.y , offset.top);
         return {
-            x: absPos.x + this.box.x + contentPos.x + offset.left,
-            y:
-                absPos.y +
-                this.box.y +
-                contentPos.y +
-                offset.top -
-                $(window).scrollTop(),
+            x: absPos.x + this.box.x + contentPos.x * scale + offset.left,
+            y: absPos.y + this.box.y + contentPos.y + offset.top - $(window).scrollTop(),
         };
     };
 
@@ -157,9 +154,7 @@ Entry.Field = function() {};
         if (contents && !_.isEmpty(contents.reference)) {
             var reference = contents.reference.concat();
             if (reference[0][0] === '%')
-                data = this._block.params[
-                    parseInt(reference.shift().substr(1)) - 1
-                ];
+                data = this._block.params[parseInt(reference.shift().substr(1)) - 1];
             if (!data) return data;
 
             return data.getDataByPointer(reference);
@@ -178,9 +173,7 @@ Entry.Field = function() {};
             var index = ref.pop();
             var targetBlock = this._block.params[this._index];
             if (ref.length && ref[0][0] === '%')
-                targetBlock = this._block.params[
-                    parseInt(ref.shift().substr(1)) - 1
-                ];
+                targetBlock = this._block.params[parseInt(ref.shift().substr(1)) - 1];
             if (ref.length) targetBlock = targetBlock.getDataByPointer(ref);
             targetBlock.params[index] = value;
         } else this._block.params[this._index] = value;
@@ -189,8 +182,7 @@ Entry.Field = function() {};
     };
 
     p._isEditable = function() {
-        if (Entry.ContextMenu.visible || this._blockView.getBoard().readOnly)
-            return false;
+        if (Entry.ContextMenu.visible || this._blockView.getBoard().readOnly) return false;
         var dragMode = this._block.view.dragMode;
         if (dragMode == Entry.DRAG_MODE_DRAG) return false;
         var blockView = this._block.view;
@@ -199,15 +191,11 @@ Entry.Field = function() {};
 
         var selectedBlockView = board.workspace.selectedBlockView;
 
-        if (!selectedBlockView || board != selectedBlockView.getBoard())
-            return false;
+        if (!selectedBlockView || board != selectedBlockView.getBoard()) return false;
 
         var root = blockView.getSvgRoot();
 
-        return (
-            root == selectedBlockView.svgGroup ||
-            $(root).has($(blockView.svgGroup))
-        );
+        return root == selectedBlockView.svgGroup || $(root).has($(blockView.svgGroup));
     };
 
     p._selectBlockView = function() {
@@ -221,18 +209,15 @@ Entry.Field = function() {};
         var that = this;
 
         this.svgGroup._isBinded = true;
-        $(this.svgGroup).on(
-            'mouseup.fieldBindEvent touchend.fieldBindEvent',
-            function(e) {
-                if (that._isEditable()) {
-                    that._code = that.getCode();
-                    that.destroyOption();
-                    that._startValue = that.getValue();
-                    that.renderOptions();
-                    that._isEditing = true;
-                }
+        $(this.svgGroup).on('mouseup.fieldBindEvent touchend.fieldBindEvent', function(e) {
+            if (that._isEditable()) {
+                that._code = that.getCode();
+                that.destroyOption();
+                that._startValue = that.getValue();
+                that.renderOptions();
+                that._isEditing = true;
             }
-        );
+        });
     };
 
     p.pointer = function(pointer = []) {
@@ -315,8 +300,7 @@ Entry.Field = function() {};
     p.getFieldRawType = function() {
         if (this instanceof Entry.FieldTextInput) return 'textInput';
         else if (this instanceof Entry.FieldDropdown) return 'dropdown';
-        else if (this instanceof Entry.FieldDropdownDynamic)
-            return 'dropdownDynamic';
+        else if (this instanceof Entry.FieldDropdownDynamic) return 'dropdownDynamic';
         else if (this instanceof Entry.FieldKeyboard) return 'keyboard';
     };
 
@@ -395,14 +379,14 @@ Entry.Field = function() {};
 
             bBox = textElement.getBoundingClientRect();
             clearDoms();
-
+            const board = this._blockView.getBoard();
+            const { scale = 1 } = board;
             bBox = {
-                width: Math.round(bBox.width * 100) / 100,
-                height: Math.round(bBox.height * 100) / 100,
+                width: Math.round(bBox.width * 100) / 100, // scale,
+                height: Math.round(bBox.height * 100) / 100 // scale,
             };
 
-            if (fontSize && window.fontLoaded && bBox.width && bBox.height)
-                _cache[key] = bBox;
+            if (fontSize && window.fontLoaded && bBox.width && bBox.height) _cache[key] = bBox;
             return bBox;
         };
     })();

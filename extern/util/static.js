@@ -1573,6 +1573,7 @@ EntryStatic.fonts = [
 
 EntryStatic.COLOR_START_1 = '#10D35E';
 EntryStatic.COLOR_START_2 = '#13BF68';
+EntryStatic.COLOR_CALC_1 = '#FFDE82';
 EntryStatic.COLOR_FLOW_2 = '#08acdd';
 EntryStatic.COLOR_MOVING_2 = '#b13efe';
 EntryStatic.COLOR_LOOKS_2 = '#ee3157';

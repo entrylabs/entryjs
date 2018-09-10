@@ -7,6 +7,7 @@
  */
 Entry.FieldTextInput = function(content, blockView, index) {
     this._blockView = blockView;
+    this.board = this._blockView.getBoard();
     this._block = blockView.block;
 
     this.box = new Entry.BoxModel();
@@ -75,7 +76,6 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
         this._setTextValue();
 
         var width = this.getTextWidth();
-
         var y = this.position && this.position.y ? this.position.y : 0;
         var CONTENT_HEIGHT = this._CONTENT_HEIGHT;
         y -= CONTENT_HEIGHT / 2;
@@ -153,14 +153,18 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
                 that._focusNeighbor(e.shiftKey ? 'prev' : 'next');
             }
         });
-
+        const { scale = 1 } = this.board;
+        this._font_size = 10 * scale;
         var { x, y } = this.getAbsolutePosFromDocument();
-        y -= this.box.height / 2;
+        y -= (this.box.height) / 2;
+        const height = (this._CONTENT_HEIGHT - 4) * scale;
         this.optionGroup.css({
-            height: this._CONTENT_HEIGHT - 2,
-            left: x,
-            top: y + 1,
-            width: that.box.width,
+            height,
+            left: x + 1,
+            top: y + ((scale -1) * 4) + (2 * scale) - (1 * (scale / 2)),
+            width: that.box.width * scale,
+            'font-size': `${this._font_size}px`,
+            'background-color': EntryStatic.COLOR_CALC_1,
         });
 
         this.optionGroup.focus && this.optionGroup.focus();
@@ -185,11 +189,12 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
     };
 
     p.resize = function() {
+        const { scale = 1 } = this.board;
         var obj = { width: this.getTextWidth() };
-
-        this._header.attr(obj);
+        var scaleSize = { width: this.getTextWidth() / scale };
+        this._header.attr(scaleSize);
+        this.box.set(scaleSize);
         this.optionGroup.css(obj);
-        this.box.set(obj);
         this._blockView.dAlignContent();
     };
 

@@ -79,7 +79,7 @@ Entry.FieldStatement = function(content, blockView, index) {
             if (this._position.x) x = this._position.x;
             if (this._position.y) y = this._position.y;
         }
-
+        
         var transform = 'translate(' + x + ',' + y + ')';
 
         if (this.x !== x || this.y !== y) this.set({ x: x, y: y });
@@ -109,10 +109,9 @@ Entry.FieldStatement = function(content, blockView, index) {
     };
 
     p.requestAbsoluteCoordinate = function() {
-        const board = this._blockView.getBoard();
-        const { scale = 1 } = board || {};
+        const { scale = 1 } = this._board || {};
         var pos = this._blockView.getAbsoluteCoordinate();
-        pos.x += this.x * scale;
+        pos.x += this._blockView.x + (this.x * scale);
         pos.y += this.y * scale;
         return pos;
     };
@@ -132,7 +131,7 @@ Entry.FieldStatement = function(content, blockView, index) {
         var blockView = this;
         var magneting = blockView.magneting;
         const { scale = 1 } = this._board || {};
-
+        
         if (magneting) {
             var shadow = dragBlock.getShadow();
             var pos = this.requestAbsoluteCoordinate();

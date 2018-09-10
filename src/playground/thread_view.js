@@ -70,7 +70,7 @@ Entry.ThreadView = function(thread, board) {
 
         while (block && block.view !== blockView && block.view) {
             var prevBlockView = block.view;
-            pos.x += prevBlockView.x + prevBlockView.magnet.next.x;
+            pos.x += prevBlockView.x + prevBlockView.magnet.next.x * scale;
             pos.y += prevBlockView.y + (prevBlockView.magnet.next.y * scale);
             block = blocks.shift();
         }

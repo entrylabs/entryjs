@@ -160,11 +160,6 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
             blockId: this.id,
         };
 
-        // if (this.magnet.next || this._skeleton.nextShadow) {
-            // this.pathGroup.attr({
-            //     filter: 'url(#entryBlockShadowFilter_' + this.getBoard().suffix + ')',
-            // });
-        // } else if (this.magnet.string || this.magnet.boolean) pathStyle.stroke = 
         const block_schema = this._schema;
         const { outerLine } = block_schema;
         pathStyle.stroke = outerLine || skeleton.outerLine;
