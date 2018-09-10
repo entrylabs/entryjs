@@ -238,7 +238,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
                 this._contents.push(field);
                 this._paramMap[paramIndex] = field;
             } else {
-                this._contents.push(new Entry.FieldText({ text: param }, this));
+                this._contents.push(new Entry.FieldText({ text: param, color: schema.fontColor }, this));
             }
         });
 

@@ -311,6 +311,7 @@ Entry.Func.createParamBlock = function(type, blockPrototype, originalType) {
     blockSchema = new blockSchema();
     blockSchema.changeEvent = new Entry.Event();
     blockSchema.template = Lang.template[originalType];
+    blockSchema.fontColor = blockPrototype.fontColor || '#FFF';
 
     Entry.block[type] = blockSchema;
     return blockSchema;

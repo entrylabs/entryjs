@@ -1223,6 +1223,7 @@ const block = {
     function_param_string: {
         skeleton: 'basic_string_field',
         color: '#FFDE82',
+        fontColor: '#000',
         template: '%1 %2',
         events: {
             viewAdd: [

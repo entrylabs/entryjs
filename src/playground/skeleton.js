@@ -529,7 +529,7 @@ Entry.skeleton.basic_string_field = {
             offsetX: -8,
             offsetY: 0,
             width: width + 15,
-            height: Math.max(height, 0),
+            height: Math.max(height, 20),
             marginBottom: 0,
         };
     },
@@ -549,7 +549,7 @@ Entry.skeleton.basic_boolean_field = {
     path: function(blockView) {
         var width = blockView.contentWidth;
         var height = blockView.contentHeight;
-        height = Math.max(18, height + 2);
+        height = Math.max(20, height);
         width = Math.max(0, width - height + 19);
         var halfHeight = height / 2;
         var x = height * 0.4;
@@ -573,7 +573,7 @@ Entry.skeleton.basic_boolean_field = {
             offsetX: 0,
             offsetY: 0,
             width: width + 19,
-            height: Math.max(height + 2, 18),
+            height: Math.max(height, 20),
             marginBottom: 0,
         };
     },
@@ -584,8 +584,8 @@ Entry.skeleton.basic_boolean_field = {
     },
     contentPos: function(blockView) {
         // apply scale required.
-        var height = Math.max(blockView.contentHeight, 16);
-        return { x: 10, y: height / 2 + 1 };
+        var height = Math.max(blockView.contentHeight, 20);
+        return { x: 10, y: height / 2 };
     },
 };
 
@@ -600,7 +600,7 @@ Entry.skeleton.basic_param = {
         a 3 3 0 0 1 3 3
         h 1.775
         a 2 2 0 0 1 2 2
-        v 14
+        v 12
         a 2 2 0 0 1 -2 2
         h -1.775
         a 3 3 0 0 1 -3 3
@@ -620,8 +620,8 @@ Entry.skeleton.basic_param = {
         return {
             offsetX: 0,
             offsetY: 0,
-            width: width + 11,
-            height: 24,
+            width: width + 16,
+            height: 22,
             marginBottom: 0,
         };
     },
@@ -632,10 +632,10 @@ Entry.skeleton.basic_param = {
     },
     contentPos: function({ data } = {}) {
         const { type } = data || {};
-        if (type === 'function_field_string') {
-            return { x: 11, y: 7.5 };
-        }
-        return { x: 11, y: 12 };
+        // if (type === 'function_field_string') {
+        //     return { x: 11, y: 7.5 };
+        // }
+        return { x: 11, y: 11 };
     },
 };
 
