@@ -1,5 +1,8 @@
 'use strict';
 
+const PromiseManager = require('@core/promiseManager');
+const { callApi } = require('@util/common');
+
 Entry.EXPANSION_BLOCK.translate = {
     name: 'translate',
     imageName: 'weather.png',
@@ -119,25 +122,35 @@ Entry.EXPANSION_BLOCK.translate.getBlocks = function() {
             },
             class: 'translate',
             isNotFor: ['translate'],
-            func: async function(sprite, script) {
-                const param = {
-                    text: await script.getStringValue('TEXT', script),
-                    target: script.getField('TARGET', script),
-                    source: script.getField('SOURCE', script),
-                };
+            func: function(sprite, script) {
+                const defaultValue = '';
+                return new PromiseManager().Promise((resolve) => {
+                    resolve(script.getStringValue('TEXT', script));
+                }).then(text => {
+                    const type = Entry.EXPANSION_BLOCK.translate.typeMap[script.getField('TYPE', script)];
+                    const params = {
+                        text: text,
+                        target: script.getField('TARGET', script),
+                        source: script.getField('SOURCE', script),
+                    };
 
-                if (param.target == param.source) {
-                    return param.text;
-                }
+                    if (params.target == params.source) {
+                        throw params.text;
+                    }
 
-                var type = Entry.EXPANSION_BLOCK.translate.typeMap[script.getField('TYPE', script)];
-                var result = await $.get(Entry.EXPANSION_BLOCK.translate.api + 'translate/' + type, param);
-                if (result) {
-                    return result.translatedText;
-                } else {
-                    return '';
-                }
-
+                    const key = 'translate-' + type + JSON.stringify(params);
+                    return new PromiseManager().Promise(function(resolve, reject) {
+                        callApi(key, {
+                            url: Entry.EXPANSION_BLOCK.translate.api + 'translate/' + type,
+                            params: params,
+                        }).then((result) => {
+                            if (result.data) {
+                                return resolve(result.data.translatedText);
+                            }
+                            return reject(defaultValue);
+                        });
+                    }).catch(() => defaultValue);
+                }).catch((data) => data);
             },
             syntax: {
                 js: [],
@@ -190,16 +203,24 @@ Entry.EXPANSION_BLOCK.translate.getBlocks = function() {
             },
             class: 'translate',
             isNotFor: ['translate'],
-            func: async function(sprite, script) {
-                const query = await script.getStringValue('TEXT', script);
-                const lang = script.getField('LANG', script);
-
-                var result = await $.get(Entry.EXPANSION_BLOCK.translate.api + 'dect/langs', { query });
-                if (result && result.langCode) {
-                    return result.langCode == lang;
-                } else {
-                    return true;
-                }
+            func: function(sprite, script) {
+                const defaultValue = true;
+                return new PromiseManager().Promise((resolve) => {
+                    resolve(script.getStringValue('TEXT', script));
+                }).then(query => {
+                    const lang = script.getField('LANG', script);
+                    return new PromiseManager().Promise(function(resolve, reject) {
+                        callApi('translate-detect-' + query, {
+                            url: Entry.EXPANSION_BLOCK.translate.api + 'dect/langs',
+                            params: { query },
+                        }).then((result) => {
+                            if (result.data && result.data.langCode) {
+                                return resolve(result.data.langCode == lang);
+                            }
+                            return reject(true);
+                        });
+                    }).catch(() => defaultValue);
+                }).catch((data) => data);
             },
             syntax: {
                 js: [],
