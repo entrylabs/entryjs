@@ -10,7 +10,7 @@ import { PIXIDragHelper } from './PIXIDragHelper';
 
 export var PIXIHandle = function(canvas) {
     if (typeof PIXI != 'object') {
-        throw 'createjs is not founded';
+        throw 'PIXI is not founded';
     }
 
     this.canvas = canvas;
@@ -519,7 +519,6 @@ export var PIXIHandle = function(canvas) {
 
     p.getGlobalCoordinate = function(childObject) {
         var rotation = -this.container.rotation;
-        console.log('GlobalCoordinate');
         var cos = Math.cos(rotation);
         var sin = Math.sin(rotation);
         return {

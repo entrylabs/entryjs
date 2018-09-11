@@ -3,6 +3,7 @@ import { PIXITempStore } from './pixi/etc/PIXITempStore';
 
 export default class PIXIHelper {
     static text(str, font, color, textBaseline, textAlign) {
+        console.log(str, font);
         var reg = /((\d+)(pt|sp|px))?\s*(.+)/gi;
         var result = reg.exec(font) || [];
         var fontName = (result[4]) || "NanumGothic";
