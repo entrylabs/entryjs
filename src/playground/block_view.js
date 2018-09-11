@@ -1170,6 +1170,12 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
 
         this._updateContents(true);
 
+        //해당 블럭이 가진 파라미터가 다른 블럭인 경우 재귀로 동작. indicator(undefined), string 은 제외
+        (this.block.data.params || []).forEach((param) => {
+            if(_.has(param, 'data.view')){
+                param.data.view.reDraw();
+            }
+        });
         (this.block.statements || []).forEach(({ view }) => view.reDraw());
         (this._extensions || []).forEach((ext) => _.result(ext, 'updatePos'));
     };
