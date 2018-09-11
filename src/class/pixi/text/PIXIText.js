@@ -1,6 +1,6 @@
 /**
- * 취소선, 밑줄 추가를 위해 PIXI.Text 를 상속함.  
- * PIXI.Text.updateText 을 그대로 복사 한 후, 함수 하단부에 this.drawLineAt 부분만 추가.
+ * 취소선, 밑줄, maxHeight 구현을 위해 PIXI.Text 를 상속함.
+ * PIXI.Text 내부 함수 복사하여 수정/추가함.
  */
 
 import PIXITextStyle from './PIXITextStyle';
@@ -143,11 +143,19 @@ export class PIXIText extends PIXI.Text {
         // set canvas text styles
         context.fillStyle = this._generateFillStyle(style, lines);
 
+        const WORD_WRAP = style.wordWrap;
+        const MAX_HEIGHT = style.maxHeight < 0 ? 0xffff : style.maxHeight;
+
         // draw lines line by line
         for (let i = 0; i < lines.length; i++)
         {
             linePositionX = style.strokeThickness / 2;
             linePositionY = ((style.strokeThickness / 2) + (i * lineHeight)) + fontProperties.ascent;
+
+            if( WORD_WRAP && (linePositionY > MAX_HEIGHT) )
+            {
+                break;
+            }
 
             if (style.align === 'right')
             {
