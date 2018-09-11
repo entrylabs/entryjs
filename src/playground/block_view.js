@@ -6,6 +6,8 @@
 /*
  *
  */
+import _hasIn from 'lodash/hasIn';
+
 Entry.BlockView = function(block, board, mode) {
     var that = this;
     Entry.Model(this, false);
@@ -1172,7 +1174,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
 
         //해당 블럭이 가진 파라미터가 다른 블럭인 경우 재귀로 동작. indicator(undefined), string 은 제외
         (this.block.data.params || []).forEach((param) => {
-            if(_.has(param, 'data.view')){
+            if(_hasIn(param, 'data.view')){
                 param.data.view.reDraw();
             }
         });
