@@ -193,15 +193,17 @@ Entry.EXPANSION_BLOCK.festival.getBlocks = function() {
                     month: script.getField('MONTH', script),
                     list: 'N',
                 };
-                const key = "festival.api-" + JSON.stringify(params);
+                const key = 'festival.api-' + JSON.stringify(params);
                 return new PromiseManager().Promise((resolve, reject) => {
-                    callApi(key, {url:Entry.EXPANSION_BLOCK.festival.api, params:params}).then((result) => {
-                        if (result && result.hasOwnProperty("data")) {
+                    callApi(key, { url: Entry.EXPANSION_BLOCK.festival.api, params: params }).then((result) => {
+                        if (result && result.hasOwnProperty('data')) {
                             return resolve(result.data.response.body.items.item.totalCnt);
                         }
                         reject(defaultValue);
-                    }).catch(()=> { return reject(defaultValue);});
-                }).catch(()=> defaultValue);
+                    }).catch(() => {
+                        return reject(defaultValue);
+                    });
+                }).catch(() => defaultValue);
             },
             syntax: {
                 js: [],
@@ -211,7 +213,7 @@ Entry.EXPANSION_BLOCK.festival.getBlocks = function() {
                         blockType: 'param',
                         textParams: [
                             params.getLocation(true),
-                            params.getMonth(true)
+                            params.getMonth(true),
                         ],
                     },
                 ],
@@ -270,11 +272,11 @@ Entry.EXPANSION_BLOCK.festival.getBlocks = function() {
                         area: Entry.EXPANSION_BLOCK.festival.locationMap[script.getField('LOCATION', script)],
                         month: script.getField('MONTH', script),
                         page: Math.floor((number - 1) / 10 + 1),
-                    }
-                    const key = "festival.api-" + JSON.stringify(params);
+                    };
+                    const key = 'festival.api-' + JSON.stringify(params);
                     return new PromiseManager().Promise(function(resolve, reject) {
                         //2. 숫자에 따라 페이지를 구해 리스트 api에서 기본정보 가지고 오기.
-                        callApi(key, {url : Entry.EXPANSION_BLOCK.festival.api, params:params}).then((result) => {
+                        callApi(key, { url: Entry.EXPANSION_BLOCK.festival.api, params: params }).then((result) => {
                             console.log(result);
                             let items = result.data.response.body.items.item;
                             let item = items[num - 1];
@@ -288,20 +290,24 @@ Entry.EXPANSION_BLOCK.festival.getBlocks = function() {
                                     }
                                     return reject(defaultValue);
                             }
-                        }).catch(()=> { return reject(defaultValue);});
+                        }).catch(() => {
+                            return reject(defaultValue);
+                        });
                     });
                 }).then(contentid => {
-                    const key = "festival.api.detail_" + contentid;
+                    const key = 'festival.api.detail_' + contentid;
                     return new PromiseManager().Promise(function(resolve, reject) {
                         //3. homepage나 overview인 경우 detail api에서 정보 가지고오기.
-                        callApi(key, {url : Entry.EXPANSION_BLOCK.festival.api + '/' + contentid}).then((response) => {
+                        callApi(key, { url: Entry.EXPANSION_BLOCK.festival.api + '/' + contentid }).then((response) => {
                             console.log(response);
                             let result = response.data.response.body.items.item[infoType];
                             if (result) {
                                 return resolve(Entry.EXPANSION_BLOCK.festival.strip(result));
                             }
                             reject(defaultValue);
-                        }).catch(()=> { return reject(defaultValue);});
+                        }).catch(() => {
+                            return reject(defaultValue);
+                        });
                     });
                 }).catch((data) => data);
             },
