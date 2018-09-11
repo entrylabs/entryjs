@@ -19,6 +19,13 @@ export default class PIXITextStyle extends PIXI.TextStyle {
          * @private
          */
         this._underLine = false;
+
+        /**
+         * 멀티 라인일때 ( wordWrap = true ) 글씨가 보여지는 최대 높이. 음수일때는 글씨를 모두 보여줌.
+         * @type {number}
+         * @private
+         */
+        this._maxHeight = -1;
     }
 
     
@@ -54,6 +61,20 @@ export default class PIXITextStyle extends PIXI.TextStyle {
         if (this._underLine !== value)
         {
             this._underLine = value;
+            this.styleID++;
+        }
+    }
+
+    get maxHeight()
+    {
+        return this._maxHeight;
+    }
+
+    set maxHeight(value)
+    {
+        if(this._maxHeight !== value)
+        {
+            this._maxHeight = value;
             this.styleID++;
         }
     }
