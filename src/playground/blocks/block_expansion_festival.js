@@ -2,12 +2,7 @@
 
 
 const PromiseManager = require('@core/promiseManager');
-const axios = require('axios');
-const _memoize = require('lodash/memoize');
-let apiCall = _memoize((key, opt) => {
-    const {url, params, headers} = opt;
-    return axios.get(url, {params, headers});
-});
+const { callApi } = require('@util/common');
 
 Entry.EXPANSION_BLOCK.festival = {
     name: 'festival',
@@ -200,7 +195,7 @@ Entry.EXPANSION_BLOCK.festival.getBlocks = function() {
                 };
                 const key = "festival.api-" + JSON.stringify(params);
                 return new PromiseManager().Promise((resolve, reject) => {
-                    apiCall(key, {url:Entry.EXPANSION_BLOCK.festival.api, params:params}).then((result) => {
+                    callApi(key, {url:Entry.EXPANSION_BLOCK.festival.api, params:params}).then((result) => {
                         if (result && result.hasOwnProperty("data")) {
                             return resolve(result.data.response.body.items.item.totalCnt);
                         }
@@ -279,7 +274,7 @@ Entry.EXPANSION_BLOCK.festival.getBlocks = function() {
                     const key = "festival.api-" + JSON.stringify(params);
                     return new PromiseManager().Promise(function(resolve, reject) {
                         //2. 숫자에 따라 페이지를 구해 리스트 api에서 기본정보 가지고 오기.
-                        apiCall(key, {url : Entry.EXPANSION_BLOCK.festival.api, params:params}).then((result) => {
+                        callApi(key, {url : Entry.EXPANSION_BLOCK.festival.api, params:params}).then((result) => {
                             console.log(result);
                             let items = result.data.response.body.items.item;
                             let item = items[num - 1];
@@ -299,7 +294,7 @@ Entry.EXPANSION_BLOCK.festival.getBlocks = function() {
                     const key = "festival.api.detail_" + contentid;
                     return new PromiseManager().Promise(function(resolve, reject) {
                         //3. homepage나 overview인 경우 detail api에서 정보 가지고오기.
-                        apiCall(key, {url : Entry.EXPANSION_BLOCK.festival.api + '/' + contentid}).then((response) => {
+                        callApi(key, {url : Entry.EXPANSION_BLOCK.festival.api + '/' + contentid}).then((response) => {
                             console.log(response);
                             let result = response.data.response.body.items.item[infoType];
                             if (result) {
