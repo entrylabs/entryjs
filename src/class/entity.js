@@ -707,6 +707,9 @@ Entry.EntityObject.prototype.setText = function(text = '') {
         // this.setWidth(this.textObject.getMeasuredWidth());
         this.setWidth(PIXIHelper.textWidth(this.textObject));
         this.parent.updateCoordinateView();
+    } else {
+        //TODO (박봉배 2018.09.11)alignTextBox 대신에 y 중앙 정렬 코드만 넣는것이 좋아보임.
+        this.alignTextBox();
     }
     this.updateBG();
     Entry.stage.updateObject();
@@ -1474,7 +1477,7 @@ Entry.EntityObject.prototype.alignTextBox = function() {
                 textObject.x = this.getWidth() / 2;
                 break;
         }
-        textObject.maxHeight = this.getHeight();
+        textObject.style.maxHeight = this.getHeight();
     } else {
         textObject.x = 0;
         textObject.y = 0;
