@@ -141,6 +141,55 @@ Entry.EXPANSION_BLOCK.festival.getBlocks = function() {
         },
     };
 
+    const getDetailInfo = (contentid, defaultValue) => {
+        const key = 'festival.api.detail_' + contentid;
+
+        return new PromiseManager().Promise(function(resolve) {
+            callApi(key, { url: Entry.EXPANSION_BLOCK.festival.api + '/' + contentid }).then((response) => {
+                let item = response.data.response.body.items.item;
+                if (item) {
+                    return resolve(item);
+                }
+                return resolve(defaultValue);
+            }).catch(() => {
+                return resolve(defaultValue);
+            });
+        });
+    };
+
+    const getFestivalCount = (params, defaultValue) => {
+        const key = 'festival.api-' + JSON.stringify(params);
+        return new PromiseManager().Promise((resolve) => {
+            callApi(key, { url: Entry.EXPANSION_BLOCK.festival.api, params: params }).then((result) => {
+                if (result && result.hasOwnProperty('data')) {
+                    return resolve(result.data.response.body.items.item.totalCnt);
+                }
+                resolve(defaultValue);
+            }).catch(() => {
+                return resolve(defaultValue);
+            });
+        });
+    };
+
+    const getFestivals = (number, params, defaultValue) => {
+        if (number < 1) {
+            return defaultValue;
+        }
+
+        const num = number % 10 || 10;
+        params.page = Math.floor((number - 1) / 10 + 1);
+        const key = 'festival.api-' + JSON.stringify(params);
+        return new PromiseManager().Promise(function(resolve) {
+            callApi(key, { url: Entry.EXPANSION_BLOCK.festival.api, params: params }).then((result) => {
+                let items = result.data.response.body.items.item;
+                let item = items[num - 1];
+                return resolve(item);
+            }).catch(() => {
+                return resolve(defaultValue);
+            });
+        });
+    };
+
     return {
         festival_title: {
             skeleton: 'basic_text',
@@ -186,24 +235,14 @@ Entry.EXPANSION_BLOCK.festival.getBlocks = function() {
             },
             class: 'festival',
             isNotFor: ['festival'],
-            func: function(sprite, script) {
+            func: async function(sprite, script) {
                 const defaultValue = 0;
                 const params = {
                     area: Entry.EXPANSION_BLOCK.festival.locationMap[script.getField('LOCATION', script)],
                     month: script.getField('MONTH', script),
                     list: 'N',
                 };
-                const key = 'festival.api-' + JSON.stringify(params);
-                return new PromiseManager().Promise((resolve, reject) => {
-                    callApi(key, { url: Entry.EXPANSION_BLOCK.festival.api, params: params }).then((result) => {
-                        if (result && result.hasOwnProperty('data')) {
-                            return resolve(result.data.response.body.items.item.totalCnt);
-                        }
-                        reject(defaultValue);
-                    }).catch(() => {
-                        return reject(defaultValue);
-                    });
-                }).catch(() => defaultValue);
+                return await getFestivalCount(params, defaultValue);
             },
             syntax: {
                 js: [],
@@ -254,62 +293,25 @@ Entry.EXPANSION_BLOCK.festival.getBlocks = function() {
             },
             class: 'festival',
             isNotFor: ['festival'],
-            func: function(sprite, script) {
+            func: async function(sprite, script) {
+                const number = await script.getStringValue('NUMBER', script);
                 const type = script.getField('TYPE', script);
                 const infoType = Entry.EXPANSION_BLOCK.festival.infoTypeMap[type];
                 const defaultValue = '정보없음';
+                const params = {
+                    area: Entry.EXPANSION_BLOCK.festival.locationMap[script.getField('LOCATION', script)],
+                    month: script.getField('MONTH', script),
+                };
 
-                return new PromiseManager().Promise((resolve) => {
-                    //1. 몇번째 행사인지 숫자 가지고오기.
-                    resolve(script.getStringValue('NUMBER', script));
-                }).then(number => {
-                    if (number < 1) {
-                        throw defaultValue;
-                    }
-
-                    const num = number % 10 || 10;
-                    const params = {
-                        area: Entry.EXPANSION_BLOCK.festival.locationMap[script.getField('LOCATION', script)],
-                        month: script.getField('MONTH', script),
-                        page: Math.floor((number - 1) / 10 + 1),
-                    };
-                    const key = 'festival.api-' + JSON.stringify(params);
-                    return new PromiseManager().Promise(function(resolve, reject) {
-                        //2. 숫자에 따라 페이지를 구해 리스트 api에서 기본정보 가지고 오기.
-                        callApi(key, { url: Entry.EXPANSION_BLOCK.festival.api, params: params }).then((result) => {
-                            console.log(result);
-                            let items = result.data.response.body.items.item;
-                            let item = items[num - 1];
-                            switch (type) {
-                                case 'homepage':
-                                case 'overview':
-                                    return resolve(item.contentid);
-                                default:
-                                    if (item && item.hasOwnProperty(infoType)) {
-                                        reject(item[infoType]);
-                                    }
-                                    return reject(defaultValue);
-                            }
-                        }).catch(() => {
-                            return reject(defaultValue);
-                        });
-                    });
-                }).then(contentid => {
-                    const key = 'festival.api.detail_' + contentid;
-                    return new PromiseManager().Promise(function(resolve, reject) {
-                        //3. homepage나 overview인 경우 detail api에서 정보 가지고오기.
-                        callApi(key, { url: Entry.EXPANSION_BLOCK.festival.api + '/' + contentid }).then((response) => {
-                            console.log(response);
-                            let result = response.data.response.body.items.item[infoType];
-                            if (result) {
-                                return resolve(Entry.EXPANSION_BLOCK.festival.strip(result));
-                            }
-                            reject(defaultValue);
-                        }).catch(() => {
-                            return reject(defaultValue);
-                        });
-                    });
-                }).catch((data) => data);
+                const festival = await getFestivals(number, params, {});
+                switch (type) {
+                    case 'homepage':
+                    case 'overview':
+                        const detailInfo = await getDetailInfo(festival.contentid, {});
+                        return Entry.EXPANSION_BLOCK.festival.strip(detailInfo[infoType] || defaultValue);
+                    default:
+                        return festival[infoType] || defaultValue;
+                }
             },
             syntax: {
                 js: [],
