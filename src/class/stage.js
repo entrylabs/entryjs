@@ -47,7 +47,7 @@ Entry.Stage.prototype.initStage = function(canvas) {
         view: canvas,
         width: canvas.width,
         height: canvas.height,
-        autoStart: true,
+        autoStart: false,
         antialias:true,
         transparent: true
 
@@ -60,10 +60,8 @@ Entry.Stage.prototype.initStage = function(canvas) {
     this.canvas = _pixiApp.stage;
     this.canvas.canvas = canvas;
 
-    // this.canvas = new createjs.Stage(canvas.id);
     this.canvas.x = 960 / 1.5 / 2;
     this.canvas.y = 540 / 1.5 / 2;
-    // this.canvas.scaleX = this.canvas.scaleY = 2 / 1.5;
     this.canvas.scale.set(2 / 1.5, 2 / 1.5);
 
     //TODO 봉배님 PIXI 변경하면서 누락된 부분이예요. 이것도 적용해야 함요.
@@ -198,7 +196,7 @@ Entry.Stage.prototype.update = function() {
         Entry.requestUpdate = false;
         return;
     }
-    //this.canvas.update();
+
     this._pixiApp.render();
 
     if (Entry.engine.isState('stop') && this.objectUpdated) {
