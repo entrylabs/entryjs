@@ -128,7 +128,7 @@ Entry.PARAM = -1;
         this._data.map(func);
     };
 
-    p.tick = function() {
+    p.tick = async function() {
         var executors = this.executors;
         var watchEvent = this.watchEvent;
         var shouldNotifyWatch = watchEvent.hasListeners();
@@ -143,7 +143,7 @@ Entry.PARAM = -1;
             if (!executor.isEnd() && !executor.isPending()) {
                 var { view } = executor.scope.block || {};
                 _executeEvent(view);
-                ret = executor.execute(true);
+                ret = await executor.execute(true);
                 if (shouldNotifyWatch) executedBlocks = executedBlocks.concat(ret);
             } else if (executor.isEnd()) {
                 _executeEndEvent(this.board);
