@@ -41,7 +41,7 @@ Entry.Dialog = function(entity, message, mode, isStamp) {
  */
 
 Entry.Dialog.prototype.generateSpeak = function() {
-    /** @type {createjs.Container} Easel object */
+    /** @type {PIXI.Container} object */
     this.object = new PIXI.Container();
     var text = PIXIHelper.text(this.message_,"15px NanumGothic", 0x0, "", "" );
     var height = text.height;
@@ -135,7 +135,7 @@ Entry.Dialog.prototype.update = function() {
 /**
  * Generate speak notch
  * @param {!string} type can be 'ne', 'nw', 'se', 'sw'
- * @return {createjs.Shape}
+ * @return {PIXI.Graphics}
  */
 Entry.Dialog.prototype.createSpeakNotch = function(type) {
     var notch = new PIXI.Graphics();
