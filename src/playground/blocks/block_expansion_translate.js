@@ -65,6 +65,38 @@ Entry.EXPANSION_BLOCK.translate.getBlocks = function() {
         },
     };
 
+    const translate = (params, type, defaultValue) => {
+        const key = 'translate-' + type + JSON.stringify(params);
+        return new PromiseManager().Promise(function(resolve) {
+            callApi(key, {
+                url: Entry.EXPANSION_BLOCK.translate.api + 'translate/' + type,
+                params: params,
+            }).then((result) => {
+                if (result.data) {
+                    return resolve(result.data.translatedText);
+                }
+                return resolve(defaultValue);
+            }).catch(() => {
+                return resolve(defaultValue);
+            });
+        });
+    };
+
+    const checkLang = (query, defaultValue) => {
+        return new PromiseManager().Promise(function(resolve) {
+            callApi('translate-detect-' + query, {
+                url: Entry.EXPANSION_BLOCK.translate.api + 'dect/langs',
+                params: { query },
+            }).then((result) => {
+                if (result.data && result.data.langCode) {
+                    return resolve(result.data.langCode);
+                }
+                return resolve(defaultValue);
+            }).catch(() => {
+                return resolve(defaultValue);
+            });
+        });
+    };
     return {
         translate_title: {
             skeleton: 'basic_text',
@@ -122,35 +154,19 @@ Entry.EXPANSION_BLOCK.translate.getBlocks = function() {
             },
             class: 'translate',
             isNotFor: ['translate'],
-            func: function(sprite, script) {
-                const defaultValue = '';
-                return new PromiseManager().Promise((resolve) => {
-                    resolve(script.getStringValue('TEXT', script));
-                }).then(text => {
-                    const type = Entry.EXPANSION_BLOCK.translate.typeMap[script.getField('TYPE', script)];
-                    const params = {
-                        text: text,
-                        target: script.getField('TARGET', script),
-                        source: script.getField('SOURCE', script),
-                    };
+            func: async function(sprite, script) {
+                const type = Entry.EXPANSION_BLOCK.translate.typeMap[script.getField('TYPE', script)];
+                const params = {
+                    text: await script.getStringValue('TEXT', script),
+                    target: script.getField('TARGET', script),
+                    source: script.getField('SOURCE', script),
+                };
 
-                    if (params.target == params.source) {
-                        throw params.text;
-                    }
+                if (params.target == params.source) {
+                    return params.text;
+                }
 
-                    const key = 'translate-' + type + JSON.stringify(params);
-                    return new PromiseManager().Promise(function(resolve, reject) {
-                        callApi(key, {
-                            url: Entry.EXPANSION_BLOCK.translate.api + 'translate/' + type,
-                            params: params,
-                        }).then((result) => {
-                            if (result.data) {
-                                return resolve(result.data.translatedText);
-                            }
-                            return reject(defaultValue);
-                        });
-                    }).catch(() => defaultValue);
-                }).catch((data) => data);
+                return await translate(params, type, '');
             },
             syntax: {
                 js: [],
@@ -203,24 +219,10 @@ Entry.EXPANSION_BLOCK.translate.getBlocks = function() {
             },
             class: 'translate',
             isNotFor: ['translate'],
-            func: function(sprite, script) {
-                const defaultValue = true;
-                return new PromiseManager().Promise((resolve) => {
-                    resolve(script.getStringValue('TEXT', script));
-                }).then(query => {
-                    const lang = script.getField('LANG', script);
-                    return new PromiseManager().Promise(function(resolve, reject) {
-                        callApi('translate-detect-' + query, {
-                            url: Entry.EXPANSION_BLOCK.translate.api + 'dect/langs',
-                            params: { query },
-                        }).then((result) => {
-                            if (result.data && result.data.langCode) {
-                                return resolve(result.data.langCode == lang);
-                            }
-                            return reject(true);
-                        });
-                    }).catch(() => defaultValue);
-                }).catch((data) => data);
+            func: async function(sprite, script) {
+                const text = await script.getStringValue('TEXT', script);
+                const langCode = script.getField('LANG', script);
+                return langCode == await checkLang(text, langCode);
             },
             syntax: {
                 js: [],
