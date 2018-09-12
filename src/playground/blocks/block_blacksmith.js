@@ -366,7 +366,7 @@ Entry.Blacksmith.getBlocks = function() {
     return {
         //region blacksmith 대장장이보드
         blacksmith_list_analog_basic: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
@@ -395,7 +395,7 @@ Entry.Blacksmith.getBlocks = function() {
             },
         },
         blacksmith_list_digital_basic: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
@@ -412,7 +412,7 @@ Entry.Blacksmith.getBlocks = function() {
                     ],
                     value: '10',
                     fontSize: 11,
-                    arrowColor: EntryStatic.ARROW_COLOR_HW,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -427,7 +427,7 @@ Entry.Blacksmith.getBlocks = function() {
             },
         },
         blacksmith_list_digital_octave: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
@@ -460,7 +460,7 @@ Entry.Blacksmith.getBlocks = function() {
             },
         },
         blacksmith_list_digital_pwm: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
@@ -475,7 +475,7 @@ Entry.Blacksmith.getBlocks = function() {
                     ],
                     value: '10',
                     fontSize: 11,
-                    arrowColor: EntryStatic.ARROW_COLOR_HW,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -490,7 +490,7 @@ Entry.Blacksmith.getBlocks = function() {
             },
         },
         blacksmith_list_digital_toggle: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
@@ -503,7 +503,7 @@ Entry.Blacksmith.getBlocks = function() {
                     ],
                     value: 'on',
                     fontSize: 11,
-                    arrowColor: EntryStatic.ARROW_COLOR_HW,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -518,7 +518,7 @@ Entry.Blacksmith.getBlocks = function() {
             },
         },
         blacksmith_list_digital_tone: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
@@ -556,7 +556,7 @@ Entry.Blacksmith.getBlocks = function() {
             },
         },
         blacksmith_list_digital_lcd: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
@@ -583,7 +583,7 @@ Entry.Blacksmith.getBlocks = function() {
             },
         },
         blacksmith_get_analog_value: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             template: Lang.template.blacksmith_get_analog_value,
@@ -619,7 +619,7 @@ Entry.Blacksmith.getBlocks = function() {
             syntax: { js: [], py: ['blacksmith.get_analog_value(%1)'] },
         },
         blacksmith_get_analog_mapping: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             template: Lang.template.blacksmith_get_analog_mapping,
@@ -717,7 +717,7 @@ Entry.Blacksmith.getBlocks = function() {
             },
         },
         blacksmith_get_digital_bluetooth: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             template: Lang.template.blacksmith_get_digital_bluetooth,
@@ -753,7 +753,7 @@ Entry.Blacksmith.getBlocks = function() {
             syntax: { js: [], py: ['blacksmith.get_digital_bluetooth()'] },
         },
         blacksmith_get_digital_ultrasonic: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             template: Lang.template.blacksmith_get_digital_ultrasonic,
@@ -815,7 +815,7 @@ Entry.Blacksmith.getBlocks = function() {
             },
         },
         blacksmith_get_digital_toggle: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_boolean_field',
             statements: [],
@@ -859,7 +859,7 @@ Entry.Blacksmith.getBlocks = function() {
             syntax: { js: [], py: ['blacksmith.get_digital_toggle(%1)'] },
         },
         blacksmith_set_digital_toggle: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic',
             statements: [],
@@ -926,7 +926,7 @@ Entry.Blacksmith.getBlocks = function() {
             syntax: { js: [], py: ['blacksmith.set_digital_toggle(%1, %2)'] },
         },
         blacksmith_set_digital_pwm: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic',
             statements: [],
@@ -987,7 +987,7 @@ Entry.Blacksmith.getBlocks = function() {
             syntax: { js: [], py: ['blacksmith.set_digital_pwm(%1, %2)'] },
         },
         blacksmith_set_digital_servo: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic',
             statements: [],
@@ -1047,7 +1047,7 @@ Entry.Blacksmith.getBlocks = function() {
             syntax: { js: [], py: ['blacksmith.set_digital_servo(%1, %2)'] },
         },
         blacksmith_set_digital_buzzer: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic',
             statements: [],
@@ -1179,7 +1179,7 @@ Entry.Blacksmith.getBlocks = function() {
             },
         },
         blacksmith_set_digital_lcd: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic',
             template: Lang.template.blacksmith_set_digital_lcd,
@@ -1284,7 +1284,7 @@ Entry.Blacksmith.getBlocks = function() {
             syntax: { js: [], py: ['blacksmith.set_digital_lcd(%1, %2)'] },
         },
         blacksmith_set_digital_bluetooth: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic',
             template: Lang.template.blacksmith_set_digital_bluetooth,

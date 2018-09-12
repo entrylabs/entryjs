@@ -2,7 +2,7 @@ module.exports = {
     getBlocks() {
         return {
             wait_second: {
-                color: '#498deb',
+                color: EntryStatic.colorSet.block.default.FLOW,
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -76,7 +76,7 @@ module.exports = {
                 },
             },
             repeat_basic: {
-                color: '#498deb',
+                color: EntryStatic.colorSet.block.default.FLOW,
                 skeleton: 'basic_loop',
                 statements: [
                     {
@@ -155,7 +155,7 @@ module.exports = {
                 },
             },
             repeat_inf: {
-                color: '#498deb',
+                color: EntryStatic.colorSet.block.default.FLOW,
                 skeleton: 'basic_loop',
                 statements: [
                     {
@@ -216,7 +216,7 @@ module.exports = {
                 },
             },
             repeat_while_true: {
-                color: '#498deb',
+                color: EntryStatic.colorSet.block.default.FLOW,
                 skeleton: 'basic_loop',
                 statements: [
                     {
@@ -236,7 +236,7 @@ module.exports = {
                         ],
                         value: 'until',
                         fontSize: 11,
-                        arrowColor: EntryStatic.ARROW_COLOR_FLOW,
+                        arrowColor: EntryStatic.colorSet.arrow.default.FLOW,
                     },
                     {
                         type: 'Indicator',
@@ -297,7 +297,7 @@ module.exports = {
                 },
             },
             stop_repeat: {
-                color: '#498deb',
+                color: EntryStatic.colorSet.block.default.FLOW,
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -320,7 +320,7 @@ module.exports = {
                 syntax: { js: [], py: ['break'] },
             },
             _if: {
-                color: '#498deb',
+                color: EntryStatic.colorSet.block.default.FLOW,
                 skeleton: 'basic_loop',
                 statements: [
                     {
@@ -385,7 +385,7 @@ module.exports = {
                 },
             },
             if_else: {
-                color: '#498deb',
+                color: EntryStatic.colorSet.block.default.FLOW,
                 skeleton: 'basic_double_loop',
                 statements: [
                     {
@@ -469,7 +469,7 @@ module.exports = {
                 },
             },
             wait_until_true: {
-                color: '#498deb',
+                color: EntryStatic.colorSet.block.default.FLOW,
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -519,7 +519,7 @@ module.exports = {
                 syntax: { js: [], py: ['Entry.wait_until(%1)'] },
             },
             stop_object: {
-                color: '#498deb',
+                color: EntryStatic.colorSet.block.default.FLOW,
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -546,7 +546,7 @@ module.exports = {
                         ],
                         value: 'all',
                         fontSize: 11,
-                        arrowColor: EntryStatic.ARROW_COLOR_FLOW,
+                        arrowColor: EntryStatic.colorSet.arrow.default.FLOW,
                     },
                     {
                         type: 'Indicator',
@@ -651,7 +651,7 @@ module.exports = {
                                     ],
                                     value: 'all',
                                     fontSize: 11,
-                                    arrowColor: EntryStatic.ARROW_COLOR_FLOW,
+                                    arrowColor: EntryStatic.colorSet.arrow.default.FLOW,
                                     converter:
                                         Entry.block.converters
                                             .returnStringValue,
@@ -664,7 +664,7 @@ module.exports = {
                 },
             },
             restart_project: {
-                color: '#498deb',
+                color: EntryStatic.colorSet.block.default.FLOW,
                 skeleton: 'basic_without_next',
                 statements: [],
                 params: [
@@ -688,7 +688,7 @@ module.exports = {
                 syntax: { js: [], py: ['Entry.start_again()'] },
             },
             when_clone_start: {
-                color: '#498deb',
+                color: EntryStatic.colorSet.block.default.FLOW,
                 skeleton: 'basic_event',
                 statements: [],
                 params: [
@@ -724,7 +724,7 @@ module.exports = {
                 },
             },
             create_clone: {
-                color: '#498deb',
+                color: EntryStatic.colorSet.block.default.FLOW,
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -733,7 +733,7 @@ module.exports = {
                         value: null,
                         menuName: 'clone',
                         fontSize: 11,
-                        arrowColor: EntryStatic.ARROW_COLOR_FLOW,
+                        arrowColor: EntryStatic.colorSet.arrow.default.FLOW,
                     },
                     {
                         type: 'Indicator',
@@ -781,7 +781,7 @@ module.exports = {
                                     value: null,
                                     menuName: 'clone',
                                     fontSize: 11,
-                                    arrowColor: EntryStatic.ARROW_COLOR_FLOW,
+                                    arrowColor: EntryStatic.colorSet.arrow.default.FLOW,
                                     converter:
                                         Entry.block.converters.returnStringKey,
                                     codeMap:
@@ -793,7 +793,7 @@ module.exports = {
                 },
             },
             delete_clone: {
-                color: '#498deb',
+                color: EntryStatic.colorSet.block.default.FLOW,
                 skeleton: 'basic_without_next',
                 statements: [],
                 params: [
@@ -818,7 +818,7 @@ module.exports = {
                 syntax: { js: [], py: ['Entry.remove_this_clone()'] },
             },
             remove_all_clones: {
-                color: '#498deb',
+                color: EntryStatic.colorSet.block.default.FLOW,
                 skeleton: 'basic',
                 statements: [],
                 params: [

@@ -369,7 +369,7 @@ Entry.mkboard.getBlocks = function() {
     return {
         //region mkboard 몽키보드
         mkboard_analog_list: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
@@ -403,7 +403,7 @@ Entry.mkboard.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         mkboard_get_analog_value: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -436,7 +436,7 @@ Entry.mkboard.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         mkboard_get_analog_value_map: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -530,7 +530,7 @@ Entry.mkboard.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         mkboard_get_ultrasonic_value: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -588,7 +588,7 @@ Entry.mkboard.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         mkboard_get_digital: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_boolean_field',
             params: [
@@ -626,7 +626,7 @@ Entry.mkboard.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         mkboard_toggle_led: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -691,7 +691,7 @@ Entry.mkboard.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         mkboard_digital_pwm: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -748,7 +748,7 @@ Entry.mkboard.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         mkboard_tone_list: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
@@ -787,7 +787,7 @@ Entry.mkboard.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         mkboard_tone_value: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
@@ -815,7 +815,7 @@ Entry.mkboard.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         mkboard_octave_list: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
@@ -847,7 +847,7 @@ Entry.mkboard.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         mkboard_set_tone: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -984,7 +984,7 @@ Entry.mkboard.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         mkboard_set_servo: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1040,7 +1040,7 @@ Entry.mkboard.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         mkboard_list_digital_lcd_line: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
@@ -1064,7 +1064,7 @@ Entry.mkboard.getBlocks = function() {
             },
         },
         mkboard_list_digital_lcd_column: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
@@ -1105,7 +1105,7 @@ Entry.mkboard.getBlocks = function() {
             },
         },
         mkboard_set_lcd: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic',
             template: Lang.template.mkboard_set_lcd,
@@ -1231,7 +1231,7 @@ Entry.mkboard.getBlocks = function() {
             syntax: { js: [], py: ['mkboard.mkboard_set_lcd(%1, %2, %3)'] },
         },
         mkboard_list_lcd_command: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
@@ -1263,7 +1263,7 @@ Entry.mkboard.getBlocks = function() {
             },
         },
         mkboard_lcd_command: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             template: Lang.template.mkboard_lcd_command,
             //"template": "%1 %2",

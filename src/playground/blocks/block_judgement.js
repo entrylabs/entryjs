@@ -2,7 +2,7 @@ module.exports = {
     getBlocks() {
         return {
             is_clicked: {
-                color: '#AEB8FF',
+                color: EntryStatic.colorSet.block.default.BOOLEAN,
                 skeleton: 'basic_boolean_field',
                 statements: [],
                 params: [
@@ -33,7 +33,7 @@ module.exports = {
                 },
             },
             is_press_some_key: {
-                color: '#AEB8FF',
+                color: EntryStatic.colorSet.block.default.BOOLEAN,
                 skeleton: 'basic_boolean_field',
                 statements: [],
                 params: [
@@ -84,7 +84,7 @@ module.exports = {
                 },
             },
             reach_something: {
-                color: '#AEB8FF',
+                color: EntryStatic.colorSet.block.default.BOOLEAN,
                 skeleton: 'basic_boolean_field',
                 statements: [],
                 params: [
@@ -98,7 +98,7 @@ module.exports = {
                         value: null,
                         menuName: 'collision',
                         fontSize: 11,
-                        arrowColor: EntryStatic.ARROW_COLOR_JUDGE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.JUDGE,
                     },
                     {
                         type: 'Text',
@@ -240,7 +240,7 @@ module.exports = {
                                     value: null,
                                     menuName: 'collision',
                                     fontSize: 11,
-                                    arrowColor: EntryStatic.ARROW_COLOR_JUDGE,
+                                    arrowColor: EntryStatic.colorSet.arrow.default.JUDGE,
                                     converter:
                                         Entry.block.converters
                                             .returnObjectOrStringValue,
@@ -253,7 +253,7 @@ module.exports = {
                 },
             },
             boolean_basic_operator: {
-                color: '#AEB8FF',
+                color: EntryStatic.colorSet.block.default.BOOLEAN,
                 skeleton: 'basic_boolean_field',
                 statements: [],
                 params: [
@@ -443,7 +443,7 @@ module.exports = {
                 },
             },
             boolean_and_or: {
-                color: '#AEB8FF',
+                color: EntryStatic.colorSet.block.default.BOOLEAN,
                 skeleton: 'basic_boolean_field',
                 statements: [],
                 params: [
@@ -548,7 +548,7 @@ module.exports = {
                 },
             },
             boolean_not: {
-                color: '#AEB8FF',
+                color: EntryStatic.colorSet.block.default.BOOLEAN,
                 skeleton: 'basic_boolean_field',
                 statements: [],
                 params: [

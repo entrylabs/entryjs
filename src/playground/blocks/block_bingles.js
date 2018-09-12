@@ -127,7 +127,7 @@ Entry.BINGLES.getBlocks = function() {
     return {
         //region xbot 엑스봇
         bingles_analogValue: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic_string_field',
             statements: [],
             params: [
@@ -164,7 +164,7 @@ Entry.BINGLES.getBlocks = function() {
         },
         
         bingles_remotecontrol: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic_string_field',
             statements: [],
             fontColor: '#ffffff',
@@ -197,7 +197,7 @@ Entry.BINGLES.getBlocks = function() {
         },
 
         bingles_digitalOutput: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -252,7 +252,7 @@ Entry.BINGLES.getBlocks = function() {
         },
         
         bingles_servo: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -312,7 +312,7 @@ Entry.BINGLES.getBlocks = function() {
         },
         
         bingles_lcd: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -321,7 +321,7 @@ Entry.BINGLES.getBlocks = function() {
                     options: [['0', '0'], ['1', '1']],
                     value: '0',
                     fontSize: 11,
-                    arrowColor: EntryStatic.ARROW_COLOR_HW,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -364,7 +364,7 @@ Entry.BINGLES.getBlocks = function() {
         },
 
         bingles_buzzer: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -465,7 +465,7 @@ Entry.BINGLES.getBlocks = function() {
         },
 
         bingles_rgb: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -527,7 +527,7 @@ Entry.BINGLES.getBlocks = function() {
         },
         
         bingles_rgb_picker: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -564,7 +564,7 @@ Entry.BINGLES.getBlocks = function() {
         },
 
         bingles_twoWheel: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -616,7 +616,7 @@ Entry.BINGLES.getBlocks = function() {
         },
 
        bingles_motorgo: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -673,7 +673,7 @@ Entry.BINGLES.getBlocks = function() {
         },
 
         bingles_oled: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [

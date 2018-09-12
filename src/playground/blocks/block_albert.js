@@ -337,7 +337,7 @@ Entry.Albert.getBlocks = function() {
     return {
         //region albert 알버트
         albert_hand_found: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_boolean_field',
             statements: [],
@@ -356,7 +356,7 @@ Entry.Albert.getBlocks = function() {
             syntax: { js: [], py: ['Albert.hand_found()'] },
         },
         albert_is_oid_value: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_boolean_field',
             statements: [],
@@ -404,7 +404,7 @@ Entry.Albert.getBlocks = function() {
             },
         },
         albert_value: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic_string_field',
             statements: [],
             params: [
@@ -466,7 +466,7 @@ Entry.Albert.getBlocks = function() {
             syntax: { js: [], py: ['Albert.value(%1)'] },
         },
         albert_move_forward_for_secs: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -524,7 +524,7 @@ Entry.Albert.getBlocks = function() {
             syntax: { js: [], py: ['Albert.move_forward_for_secs(%1)'] },
         },
         albert_move_backward_for_secs: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -582,7 +582,7 @@ Entry.Albert.getBlocks = function() {
             syntax: { js: [], py: ['Albert.move_backward_for_secs(%1)'] },
         },
         albert_turn_for_secs: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -658,7 +658,7 @@ Entry.Albert.getBlocks = function() {
             syntax: { js: [], py: ['Albert.turn_for_secs(%1, %2)'] },
         },
         albert_change_both_wheels_by: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -710,7 +710,7 @@ Entry.Albert.getBlocks = function() {
             syntax: { js: [], py: ['Albert.change_both_wheels(%1, %2)'] },
         },
         albert_set_both_wheels_to: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -758,7 +758,7 @@ Entry.Albert.getBlocks = function() {
             syntax: { js: [], py: ['Albert.set_both_wheels(%1, %2)'] },
         },
         albert_change_wheel_by: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -829,7 +829,7 @@ Entry.Albert.getBlocks = function() {
             syntax: { js: [], py: ['Albert.change_wheel(%1, %2)'] },
         },
         albert_set_wheel_to: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -888,7 +888,7 @@ Entry.Albert.getBlocks = function() {
             syntax: { js: [], py: ['Albert.set_wheel(%1, %2)'] },
         },
         albert_stop: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -915,7 +915,7 @@ Entry.Albert.getBlocks = function() {
             syntax: { js: [], py: ['Albert.stop()'] },
         },
         albert_set_pad_size_to: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -964,7 +964,7 @@ Entry.Albert.getBlocks = function() {
             syntax: { js: [], py: ['Albert.set_pad_size(%1, %2)'] },
         },
         albert_move_to_x_y_on_board: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1095,7 +1095,7 @@ Entry.Albert.getBlocks = function() {
             },
         },
         albert_set_orientation_on_board: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1185,7 +1185,7 @@ Entry.Albert.getBlocks = function() {
             },
         },
         albert_set_eye_to: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1247,7 +1247,7 @@ Entry.Albert.getBlocks = function() {
             syntax: { js: [], py: ['Albert.set_eye(%1, %2)'] },
         },
         albert_clear_eye: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1293,7 +1293,7 @@ Entry.Albert.getBlocks = function() {
             syntax: { js: [], py: ['Albert.clear_eye(%1)'] },
         },
         albert_body_led: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1332,7 +1332,7 @@ Entry.Albert.getBlocks = function() {
             syntax: { js: [], py: ['Albert.body_led(%1)'] },
         },
         albert_front_led: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1371,7 +1371,7 @@ Entry.Albert.getBlocks = function() {
             syntax: { js: [], py: ['Albert.front_led(%1)'] },
         },
         albert_beep: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1415,7 +1415,7 @@ Entry.Albert.getBlocks = function() {
             syntax: { js: [], py: ['Albert.beep()'] },
         },
         albert_change_buzzer_by: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1455,7 +1455,7 @@ Entry.Albert.getBlocks = function() {
             syntax: { js: [], py: ['Albert.change_buzzer(%1)'] },
         },
         albert_set_buzzer_to: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1494,7 +1494,7 @@ Entry.Albert.getBlocks = function() {
             syntax: { js: [], py: ['Albert.set_buzzer(%1)'] },
         },
         albert_clear_buzzer: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1520,7 +1520,7 @@ Entry.Albert.getBlocks = function() {
             syntax: { js: [], py: ['Albert.clear_buzzer()'] },
         },
         albert_play_note_for: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1626,7 +1626,7 @@ Entry.Albert.getBlocks = function() {
             syntax: { js: [], py: ['Albert.play_note(%1, %2, %3)'] },
         },
         albert_rest_for: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1683,7 +1683,7 @@ Entry.Albert.getBlocks = function() {
             syntax: { js: [], py: ['Albert.rest(%1)'] },
         },
         albert_change_tempo_by: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1721,7 +1721,7 @@ Entry.Albert.getBlocks = function() {
             syntax: { js: [], py: ['Albert.change_tempo(%1)'] },
         },
         albert_set_tempo_to: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1759,7 +1759,7 @@ Entry.Albert.getBlocks = function() {
             syntax: { js: [], py: ['Albert.set_tempo(%1)'] },
         },
         albert_move_forward: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1799,7 +1799,7 @@ Entry.Albert.getBlocks = function() {
             syntax: { js: [], py: ['Albert.move_forward()'] },
         },
         albert_move_backward: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1839,7 +1839,7 @@ Entry.Albert.getBlocks = function() {
             syntax: { js: [], py: ['Albert.move_backward()'] },
         },
         albert_turn_around: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1897,7 +1897,7 @@ Entry.Albert.getBlocks = function() {
             syntax: { js: [], py: ['Albert.turn_around()'] },
         },
         albert_set_led_to: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1954,7 +1954,7 @@ Entry.Albert.getBlocks = function() {
             syntax: { js: [], py: ['Albert.set_led(%1, %2)'] },
         },
         albert_clear_led: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1995,7 +1995,7 @@ Entry.Albert.getBlocks = function() {
             syntax: { js: [], py: ['Albert.clear_led(%1)'] },
         },
         albert_change_wheels_by: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2059,7 +2059,7 @@ Entry.Albert.getBlocks = function() {
             syntax: { js: [], py: ['Albert.change_wheels(%1, %2)'] },
         },
         albert_set_wheels_to: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [

@@ -1,12 +1,10 @@
-
-'use strict'
+'use strict';
 
 var EntryStatic = {};
-
 EntryStatic.objectTypes = [
     "sprite",
     "textBox"
-]
+];
 
 EntryStatic.usageList = [
    'usage_sequence' , 'usage_repeat', 'usage_condition_repeat', 'usage_condition', 'usage_parallel', 'usage_event',
@@ -612,7 +610,7 @@ EntryStatic.getAllBlocks = function() {
                 "roboid_hamster_set_tempo_to",
                 "roboid_hamster_set_port_to",
                 "roboid_hamster_change_output_by",
-                "roboid_hamster_set_output_to",                
+                "roboid_hamster_set_output_to",
                 "roboid_hamster_gripper",
                 "roboid_hamster_release_gripper",
                 "roboid_turtle_touching_color",
@@ -1588,17 +1586,53 @@ EntryStatic.fonts = [
 }
 ];
 
-EntryStatic.ARROW_COLOR_START = '#2f975a';
-EntryStatic.ARROW_COLOR_FLOW = '#3a71bc';
-EntryStatic.ARROW_COLOR_MOVING = '#8641b6';
-EntryStatic.ARROW_COLOR_LOOKS = '#d8234e';
-EntryStatic.ARROW_COLOR_TEXT = '#dc9c32';
-EntryStatic.ARROW_COLOR_SOUNDS = '#83a617';
-EntryStatic.ARROW_COLOR_JUDGE = '#89a1f7';
-EntryStatic.ARROW_COLOR_CALC = '#e8b349';
-EntryStatic.ARROW_COLOR_VARIABLE = '#ce38ce';
-EntryStatic.ARROW_COLOR_HW = '#097e84';
-EntryStatic.ARROW_COLOR_EXPANSION = '#ff8888';
+EntryStatic.colorSet = {
+    arrow: {
+        default: {
+            START: '#2F975A',
+            FLOW: '#3A71BC',
+            MOVING: '#8641B6',
+            LOOKS: '#D8234E',
+            TEXT: '#DC9C32',
+            SOUNDS: '#83A617',
+            JUDGE: '#89A1F7',
+            CALC: '#E8B349',
+            VARIABLE: '#CE38CE',
+            HARDWARE: '#097E84',
+            EXPANSION: '#FF8888',
+        },
+    },
+    block: {
+        default: {
+            START: '#3BBD70',
+            FLOW: '#498DEB',
+            MOVING: '#A751E3',
+            LOOKS: '#EC4466',
+            BRUSH: '#FF9E20',
+            SOUNDS: '#A4D01D',
+            HARDWARE: '#00979D',
+            CALC: '#FFD974',
+            VARIABLE: '#E457DC',
+            FUNCTION: '#CC7337',
+            BOOLEAN: '#AEB8FF',
+            TEXT: '#FFCA36',
+        },
+        emphasize: {
+            START: '#5BC982',
+            FLOW: '#62A5F4',
+            MOVING: '#C08FF7',
+            LOOKS: '#F46487',
+            BRUSH: '#FFB05A',
+            SOUNDS: '#C4DD31',
+            HARDWARE: '#09BAB5',
+            CALC: '#FCDA90',
+            VARIABLE: '#F279F2',
+            FUNCTION: '#DD884E',
+            BOOLEAN: '#C0CBFF',
+            TEXT: '#F2C670',
+        },
+    },
+};
 
 
 EntryStatic.COMMAND_TYPES = {

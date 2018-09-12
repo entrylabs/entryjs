@@ -140,7 +140,7 @@ Entry.JDKit.getBlocks = function() {
     return {
         //region JDKit
         jdkit_joystick: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -182,7 +182,7 @@ Entry.JDKit.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         jdkit_button: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -223,7 +223,7 @@ Entry.JDKit.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         jdkit_gyro: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -260,7 +260,7 @@ Entry.JDKit.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         jdkit_ultrasonic: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -279,7 +279,7 @@ Entry.JDKit.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         jdkit_connect: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -298,7 +298,7 @@ Entry.JDKit.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         jdkit_ready: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -318,7 +318,7 @@ Entry.JDKit.getBlocks = function() {
         },
 
         jdkit_led: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -389,7 +389,7 @@ Entry.JDKit.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         jdkit_tune: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -473,7 +473,7 @@ Entry.JDKit.getBlocks = function() {
         },
 
         jdkit_motor: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -541,7 +541,7 @@ Entry.JDKit.getBlocks = function() {
         },
 
         jdkit_throttle: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -596,7 +596,7 @@ Entry.JDKit.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         jdkit_altitude: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -651,7 +651,7 @@ Entry.JDKit.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         jdkit_rollpitch: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -719,7 +719,7 @@ Entry.JDKit.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         jdkit_yaw: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -773,7 +773,7 @@ Entry.JDKit.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         jdkit_emergency: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [

@@ -2,7 +2,7 @@ module.exports = {
     getBlocks() {
         return {
             calc_basic: {
-                color: '#FFD974',
+                color: EntryStatic.colorSet.block.default.CALC,
                 skeleton: 'basic_string_field',
                 statements: [],
                 params: [
@@ -192,7 +192,7 @@ module.exports = {
                 },
             },
             calc_rand: {
-                color: '#FFD974',
+                color: EntryStatic.colorSet.block.default.CALC,
                 skeleton: 'basic_string_field',
                 statements: [],
                 params: [
@@ -320,7 +320,7 @@ module.exports = {
                 },
             },
             coordinate_mouse: {
-                color: '#FFD974',
+                color: EntryStatic.colorSet.block.default.CALC,
                 skeleton: 'basic_string_field',
                 statements: [],
                 params: [
@@ -334,7 +334,7 @@ module.exports = {
                         options: [['x', 'x'], ['y', 'y']],
                         value: 'x',
                         fontSize: 11,
-                        arrowColor: EntryStatic.ARROW_COLOR_CALC,
+                        arrowColor: EntryStatic.colorSet.arrow.default.CALC,
                     },
                     {
                         type: 'Text',
@@ -381,7 +381,7 @@ module.exports = {
                                     options: [['x', 'x'], ['y', 'y']],
                                     value: 'x',
                                     fontSize: 11,
-                                    arrowColor: EntryStatic.ARROW_COLOR_CALC,
+                                    arrowColor: EntryStatic.colorSet.arrow.default.CALC,
                                     converter:
                                         Entry.block.converters.returnStringKey,
                                     codeMap:
@@ -398,7 +398,7 @@ module.exports = {
                 },
             },
             coordinate_object: {
-                color: '#FFD974',
+                color: EntryStatic.colorSet.block.default.CALC,
                 skeleton: 'basic_string_field',
                 statements: [],
                 params: [
@@ -412,7 +412,7 @@ module.exports = {
                         value: null,
                         menuName: 'spritesWithSelf',
                         fontSize: 11,
-                        arrowColor: EntryStatic.ARROW_COLOR_CALC,
+                        arrowColor: EntryStatic.colorSet.arrow.default.CALC,
                     },
                     {
                         type: 'Text',
@@ -438,7 +438,7 @@ module.exports = {
                         ],
                         value: 'x',
                         fontSize: 11,
-                        arrowColor: EntryStatic.ARROW_COLOR_CALC,
+                        arrowColor: EntryStatic.colorSet.arrow.default.CALC,
                     },
                 ],
                 events: {},
@@ -504,7 +504,7 @@ module.exports = {
                                     value: null,
                                     menuName: 'spritesWithSelf',
                                     fontSize: 11,
-                                    arrowColor: EntryStatic.ARROW_COLOR_CALC,
+                                    arrowColor: EntryStatic.colorSet.arrow.default.CALC,
                                     converter:
                                         Entry.block.converters
                                             .returnObjectOrStringValue,
@@ -549,7 +549,7 @@ module.exports = {
                                     ],
                                     value: 'x',
                                     fontSize: 11,
-                                    arrowColor: EntryStatic.ARROW_COLOR_CALC,
+                                    arrowColor: EntryStatic.colorSet.arrow.default.CALC,
                                     converter:
                                         Entry.block.converters
                                             .returnStringValue,
@@ -562,7 +562,7 @@ module.exports = {
                 },
             },
             get_sound_volume: {
-                color: '#FFD974',
+                color: EntryStatic.colorSet.block.default.CALC,
                 skeleton: 'basic_string_field',
                 statements: [],
                 params: [
@@ -598,7 +598,7 @@ module.exports = {
                 },
             },
             quotient_and_mod: {
-                color: '#FFD974',
+                color: EntryStatic.colorSet.block.default.CALC,
                 skeleton: 'basic_string_field',
                 statements: [],
                 params: [
@@ -636,7 +636,7 @@ module.exports = {
                         ],
                         value: 'QUOTIENT',
                         fontSize: 11,
-                        arrowColor: EntryStatic.ARROW_COLOR_CALC,
+                        arrowColor: EntryStatic.colorSet.arrow.default.CALC,
                     },
                 ],
                 events: {},
@@ -725,7 +725,7 @@ module.exports = {
                                     ],
                                     value: 'QUOTIENT',
                                     fontSize: 11,
-                                    arrowColor: EntryStatic.ARROW_COLOR_CALC,
+                                    arrowColor: EntryStatic.colorSet.arrow.default.CALC,
                                     converter:
                                         Entry.block.converters
                                             .returnStringValue,
@@ -765,7 +765,7 @@ module.exports = {
                                     ],
                                     value: 'QUOTIENT',
                                     fontSize: 11,
-                                    arrowColor: EntryStatic.ARROW_COLOR_CALC,
+                                    arrowColor: EntryStatic.colorSet.arrow.default.CALC,
                                     converter:
                                         Entry.block.converters
                                             .returnStringValue,
@@ -776,7 +776,7 @@ module.exports = {
                 },
             },
             calc_operation: {
-                color: '#FFD974',
+                color: EntryStatic.colorSet.block.default.CALC,
                 skeleton: 'basic_string_field',
                 statements: [],
                 params: [
@@ -831,7 +831,7 @@ module.exports = {
                         ],
                         value: 'square',
                         fontSize: 11,
-                        arrowColor: EntryStatic.ARROW_COLOR_CALC,
+                        arrowColor: EntryStatic.colorSet.arrow.default.CALC,
                     },
                 ],
                 events: {},
@@ -1164,7 +1164,7 @@ module.exports = {
                 },
             },
             get_project_timer_value: {
-                color: '#FFD974',
+                color: EntryStatic.colorSet.block.default.CALC,
                 skeleton: 'basic_string_field',
                 statements: [],
                 params: [
@@ -1215,7 +1215,7 @@ module.exports = {
                 },
             },
             choose_project_timer_action: {
-                color: '#FFD974',
+                color: EntryStatic.colorSet.block.default.CALC,
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -1245,7 +1245,7 @@ module.exports = {
                         ],
                         value: 'START',
                         fontSize: 11,
-                        arrowColor: EntryStatic.ARROW_COLOR_CALC,
+                        arrowColor: EntryStatic.colorSet.arrow.default.CALC,
                     },
                     {
                         type: 'Text',
@@ -1349,7 +1349,7 @@ module.exports = {
                                     ],
                                     value: 'START',
                                     fontSize: 11,
-                                    arrowColor: EntryStatic.ARROW_COLOR_CALC,
+                                    arrowColor: EntryStatic.colorSet.arrow.default.CALC,
                                     converter:
                                         Entry.block.converters
                                             .returnStringValueLowerCase,
@@ -1367,7 +1367,7 @@ module.exports = {
                 },
             },
             set_visible_project_timer: {
-                color: '#FFD974',
+                color: EntryStatic.colorSet.block.default.CALC,
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -1384,7 +1384,7 @@ module.exports = {
                         ],
                         value: 'SHOW',
                         fontSize: 11,
-                        arrowColor: EntryStatic.ARROW_COLOR_CALC,
+                        arrowColor: EntryStatic.colorSet.arrow.default.CALC,
                     },
                     {
                         type: 'Text',
@@ -1460,7 +1460,7 @@ module.exports = {
                                     ],
                                     value: 'SHOW',
                                     fontSize: 11,
-                                    arrowColor: EntryStatic.ARROW_COLOR_CALC,
+                                    arrowColor: EntryStatic.colorSet.arrow.default.CALC,
                                     converter:
                                         Entry.block.converters
                                             .returnStringValueLowerCase,
@@ -1478,7 +1478,7 @@ module.exports = {
                 },
             },
             get_date: {
-                color: '#FFD974',
+                color: EntryStatic.colorSet.block.default.CALC,
                 skeleton: 'basic_string_field',
                 statements: [],
                 params: [
@@ -1499,7 +1499,7 @@ module.exports = {
                         ],
                         value: 'YEAR',
                         fontSize: 11,
-                        arrowColor: EntryStatic.ARROW_COLOR_CALC,
+                        arrowColor: EntryStatic.colorSet.arrow.default.CALC,
                     },
                     {
                         type: 'Text',
@@ -1567,7 +1567,7 @@ module.exports = {
                                     ],
                                     value: 'YEAR',
                                     fontSize: 11,
-                                    arrowColor: EntryStatic.ARROW_COLOR_CALC,
+                                    arrowColor: EntryStatic.colorSet.arrow.default.CALC,
                                     converter:
                                         Entry.block.converters
                                             .returnStringValueLowerCase,
@@ -1579,7 +1579,7 @@ module.exports = {
                 },
             },
             distance_something: {
-                color: '#FFD974',
+                color: EntryStatic.colorSet.block.default.CALC,
                 skeleton: 'basic_string_field',
                 statements: [],
                 params: [
@@ -1593,7 +1593,7 @@ module.exports = {
                         value: null,
                         menuName: 'spritesWithMouse',
                         fontSize: 11,
-                        arrowColor: EntryStatic.ARROW_COLOR_CALC,
+                        arrowColor: EntryStatic.colorSet.arrow.default.CALC,
                     },
                     {
                         type: 'Text',
@@ -1644,7 +1644,7 @@ module.exports = {
                                     value: null,
                                     menuName: 'spritesWithMouse',
                                     fontSize: 11,
-                                    arrowColor: EntryStatic.ARROW_COLOR_CALC,
+                                    arrowColor: EntryStatic.colorSet.arrow.default.CALC,
                                     converter:
                                         Entry.block.converters.returnStringKey,
                                     codeMap:
@@ -1656,7 +1656,7 @@ module.exports = {
                 },
             },
             get_sound_duration: {
-                color: '#FFD974',
+                color: EntryStatic.colorSet.block.default.CALC,
                 skeleton: 'basic_string_field',
                 statements: [],
                 params: [
@@ -1670,7 +1670,7 @@ module.exports = {
                         value: null,
                         menuName: 'sounds',
                         fontSize: 11,
-                        arrowColor: EntryStatic.ARROW_COLOR_CALC,
+                        arrowColor: EntryStatic.colorSet.arrow.default.CALC,
                     },
                     {
                         type: 'Text',
@@ -1714,7 +1714,7 @@ module.exports = {
                                     value: null,
                                     menuName: 'sounds',
                                     fontSize: 11,
-                                    arrowColor: EntryStatic.ARROW_COLOR_CALC,
+                                    arrowColor: EntryStatic.colorSet.arrow.default.CALC,
                                     converter:
                                         Entry.block.converters.returnStringKey,
                                 },
@@ -1724,7 +1724,7 @@ module.exports = {
                 },
             },
             get_user_name: {
-                color: '#FFD974',
+                color: EntryStatic.colorSet.block.default.CALC,
                 skeleton: 'basic_string_field',
                 statements: [],
                 params: [],
@@ -1749,7 +1749,7 @@ module.exports = {
                 },
             },
             length_of_string: {
-                color: '#FFD974',
+                color: EntryStatic.colorSet.block.default.CALC,
                 skeleton: 'basic_string_field',
                 statements: [],
                 params: [
@@ -1811,7 +1811,7 @@ module.exports = {
                 },
             },
             combine_something: {
-                color: '#FFD974',
+                color: EntryStatic.colorSet.block.default.CALC,
                 skeleton: 'basic_string_field',
                 statements: [],
                 params: [
@@ -1896,7 +1896,7 @@ module.exports = {
                 },
             },
             char_at: {
-                color: '#FFD974',
+                color: EntryStatic.colorSet.block.default.CALC,
                 skeleton: 'basic_string_field',
                 statements: [],
                 params: [
@@ -2008,7 +2008,7 @@ module.exports = {
                 },
             },
             substring: {
-                color: '#FFD974',
+                color: EntryStatic.colorSet.block.default.CALC,
                 skeleton: 'basic_string_field',
                 statements: [],
                 params: [
@@ -2139,7 +2139,7 @@ module.exports = {
                 },
             },
             index_of_string: {
-                color: '#FFD974',
+                color: EntryStatic.colorSet.block.default.CALC,
                 skeleton: 'basic_string_field',
                 statements: [],
                 params: [
@@ -2223,7 +2223,7 @@ module.exports = {
                 },
             },
             replace_string: {
-                color: '#FFD974',
+                color: EntryStatic.colorSet.block.default.CALC,
                 skeleton: 'basic_string_field',
                 statements: [],
                 params: [
@@ -2332,7 +2332,7 @@ module.exports = {
                 },
             },
             change_string_case: {
-                color: '#FFD974',
+                color: EntryStatic.colorSet.block.default.CALC,
                 skeleton: 'basic_string_field',
                 statements: [],
                 params: [
@@ -2364,7 +2364,7 @@ module.exports = {
                         ],
                         value: 'toUpperCase',
                         fontSize: 11,
-                        arrowColor: EntryStatic.ARROW_COLOR_CALC,
+                        arrowColor: EntryStatic.colorSet.arrow.default.CALC,
                     },
                     {
                         type: 'Text',
@@ -2440,7 +2440,7 @@ module.exports = {
                                     ],
                                     value: 'toUpperCase',
                                     fontSize: 11,
-                                    arrowColor: EntryStatic.ARROW_COLOR_CALC,
+                                    arrowColor: EntryStatic.colorSet.arrow.default.CALC,
                                     converter:
                                         Entry.block.converters
                                             .returnStringValue,
@@ -2474,7 +2474,7 @@ module.exports = {
                                     ],
                                     value: 'toUpperCase',
                                     fontSize: 11,
-                                    arrowColor: EntryStatic.ARROW_COLOR_CALC,
+                                    arrowColor: EntryStatic.colorSet.arrow.default.CALC,
                                     converter:
                                         Entry.block.converters
                                             .returnStringValue,

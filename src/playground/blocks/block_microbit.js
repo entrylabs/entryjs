@@ -135,7 +135,7 @@ Entry.Microbit = new class Microbit {
 Entry.Microbit.getBlocks = function() {
     return {
         microbit_led_toggle: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             template: 'LED의 X:%1 Y:%2 %3 %4',
@@ -208,7 +208,7 @@ Entry.Microbit.getBlocks = function() {
             },
         },
         microbit_get_led: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             fontColor: '#ffffff',
             skeleton: 'basic_boolean_field',
             statements: [],
@@ -275,7 +275,7 @@ Entry.Microbit.getBlocks = function() {
             },
         },
         microbit_show_string: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             template: '%1 출력하기 %2',
@@ -324,7 +324,7 @@ Entry.Microbit.getBlocks = function() {
             },
         },
         microbit_show_image: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             template: '%1 아이콘 출력하기 %2',
@@ -371,7 +371,7 @@ Entry.Microbit.getBlocks = function() {
             },
         },
         microbit_get_analog: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             fontColor: '#ffffff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -419,7 +419,7 @@ Entry.Microbit.getBlocks = function() {
             },
         },
         microbit_get_analog_map: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             fontColor: '#ffffff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -547,7 +547,7 @@ Entry.Microbit.getBlocks = function() {
             },
         },
         microbit_get_digital: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             fontColor: '#ffffff',
             skeleton: 'basic_boolean_field',
             statements: [],
@@ -595,7 +595,7 @@ Entry.Microbit.getBlocks = function() {
             },
         },
         microbit_get_button: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             fontColor: '#ffffff',
             skeleton: 'basic_boolean_field',
             statements: [],
@@ -643,7 +643,7 @@ Entry.Microbit.getBlocks = function() {
             },
         },
         microbit_get_sensor: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             fontColor: '#ffffff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -695,7 +695,7 @@ Entry.Microbit.getBlocks = function() {
             },
         },
         microbit_get_accelerometer: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             fontColor: '#ffffff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -752,7 +752,7 @@ Entry.Microbit.getBlocks = function() {
             },
         },
         microbit_play_note: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             fontColor: '#ffffff',
             skeleton: 'basic',
             statements: [],
@@ -848,7 +848,7 @@ Entry.Microbit.getBlocks = function() {
             },
         },
         microbit_change_bpm: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             fontColor: '#ffffff',
             skeleton: 'basic',
             statements: [],
@@ -894,7 +894,7 @@ Entry.Microbit.getBlocks = function() {
             },
         },
         microbit_set_bpm: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             fontColor: '#ffffff',
             skeleton: 'basic',
             statements: [],
@@ -940,7 +940,7 @@ Entry.Microbit.getBlocks = function() {
             },
         },
         microbit_radio_receive_event: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_event',
             statements: [],

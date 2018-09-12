@@ -10,8 +10,8 @@ Entry.FunBoard = {
         "ko": "펀보드"
     },
     Static: {
-        FUNBOARD_BLOCK_COLOR: '#00979D', // gray(#848484)
-        FUNBOARD_ARROW_COLOR_HW: '#00979D',
+        FUNBOARD_BLOCK_COLOR: EntryStatic.colorSet.block.default.HARDWARE, // gray(#848484)
+        FUNBOARD_ARROW_COLOR_HW: EntryStatic.colorSet.block.default.HARDWARE,
         FUNBOARD_FONT_COLOR: '#000f0f', // cyan(#000f0f), lightgray(#000113), reddish-brown(#982600)
         FUNBOARD_LED_ON: 255,
         BUTTON_PRESS_VALUE: 0, // 버튼 눌림 값
@@ -281,7 +281,7 @@ Entry.FunBoard.getBlocks = function() {
     return {
         //region FunBoard
         funboard_list_pushbutton_basic: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
@@ -310,7 +310,7 @@ Entry.FunBoard.getBlocks = function() {
             },
         },
         funboard_list_touchbutton_basic: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
@@ -342,7 +342,7 @@ Entry.FunBoard.getBlocks = function() {
             },
         },
         funboard_list_analogsensor_basic: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
@@ -370,7 +370,7 @@ Entry.FunBoard.getBlocks = function() {
             },
         },
         funboard_list_2_state_basic: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
@@ -397,7 +397,7 @@ Entry.FunBoard.getBlocks = function() {
             },
         },
         funboard_list_ledcolor_basic: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
@@ -427,7 +427,7 @@ Entry.FunBoard.getBlocks = function() {
             },
         },
         funboard_list_ledcolor_pwm_basic: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
@@ -454,7 +454,7 @@ Entry.FunBoard.getBlocks = function() {
             },
         },
         funboard_list_onoff_basic: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
@@ -481,7 +481,7 @@ Entry.FunBoard.getBlocks = function() {
             },
         },
         funboard_list_digital_octave: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
@@ -514,7 +514,7 @@ Entry.FunBoard.getBlocks = function() {
             },
         },
         funboard_list_digital_tone: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
@@ -552,7 +552,7 @@ Entry.FunBoard.getBlocks = function() {
             },
         },
         funboard_list_matrix_rows: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
@@ -585,7 +585,7 @@ Entry.FunBoard.getBlocks = function() {
             },
         },
         funboard_list_matrix_row_or_column: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
@@ -612,7 +612,7 @@ Entry.FunBoard.getBlocks = function() {
             },
         },
         funboard_list_matrix_scroll_option: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
@@ -642,7 +642,7 @@ Entry.FunBoard.getBlocks = function() {
             },
         },
         funboard_list_matrix_char: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
@@ -761,7 +761,7 @@ Entry.FunBoard.getBlocks = function() {
             },
         },
         funboard_what_button_pressed: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_boolean_field',
             statements: [],
@@ -821,7 +821,7 @@ Entry.FunBoard.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         funboard_what_touch_button_pressed: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_boolean_field',
             statements: [],
@@ -891,7 +891,7 @@ Entry.FunBoard.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         funboard_get_digital_button_value: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -949,7 +949,7 @@ Entry.FunBoard.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         funboard_get_touch_button_value: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -1025,7 +1025,7 @@ Entry.FunBoard.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         funboard_get_number_sensor_value: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -1063,7 +1063,7 @@ Entry.FunBoard.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         funboard_get_analog_sensor_2state: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_boolean_field',
             statements: [],
@@ -1132,7 +1132,7 @@ Entry.FunBoard.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         funboard_convert_scale: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -1248,7 +1248,7 @@ Entry.FunBoard.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         funboard_set_digital_buzzer: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic',
             statements: [],
@@ -1369,7 +1369,7 @@ Entry.FunBoard.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         funboard_buzzer_second: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1451,7 +1451,7 @@ Entry.FunBoard.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         funboard_buzzer_tone_simple: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1534,7 +1534,7 @@ Entry.FunBoard.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         funboard_buzzer_onoff: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1612,7 +1612,7 @@ Entry.FunBoard.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         funboard_color_led_onoff: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1815,7 +1815,7 @@ Entry.FunBoard.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         funboard_color_led_on_pwm: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1926,7 +1926,7 @@ Entry.FunBoard.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         funboard_dotmatrix_intensity: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2007,7 +2007,7 @@ Entry.FunBoard.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         funboard_dotmatrix_scroll_option: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2072,7 +2072,7 @@ Entry.FunBoard.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         funboard_dotmatrix_scroll_rapid: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2153,7 +2153,7 @@ Entry.FunBoard.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         funboard_dotmatrix_onoff: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2222,7 +2222,7 @@ Entry.FunBoard.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         funboard_dotmatrix_char_display: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2322,7 +2322,7 @@ Entry.FunBoard.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         funboard_dotmatrix_string_display: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2435,7 +2435,7 @@ Entry.FunBoard.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         funboard_dotmatrix_string_display_scroll: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2573,7 +2573,7 @@ Entry.FunBoard.getBlocks = function() {
             },
         },
         funboard_dotmatrix_symbol: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2654,7 +2654,7 @@ Entry.FunBoard.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         funboard_dotmatrix_num: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2764,7 +2764,7 @@ Entry.FunBoard.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         funboard_dotmatrix_big_eng: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2889,7 +2889,7 @@ Entry.FunBoard.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         funboard_dotmatrix_small_eng: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -3014,7 +3014,7 @@ Entry.FunBoard.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         funboard_dotmatrix_extra_char: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -3147,7 +3147,7 @@ Entry.FunBoard.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         funboard_dotmatrix_1row: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -3264,7 +3264,7 @@ Entry.FunBoard.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         funboard_dotmatrix_1column: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -3382,7 +3382,7 @@ Entry.FunBoard.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         funboard_dotmatrix_1row_1column: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -3513,7 +3513,7 @@ Entry.FunBoard.getBlocks = function() {
             },
         },
         funboard_dotmatrix_set: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [

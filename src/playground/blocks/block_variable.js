@@ -51,7 +51,7 @@ module.exports = {
                 },
             },
             ask_and_wait: {
-                color: '#E457DC',
+                color: EntryStatic.colorSet.block.default.VARIABLE,
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -153,7 +153,7 @@ module.exports = {
                 syntax: { js: [], py: ['Entry.input(%1)'] },
             },
             get_canvas_input_value: {
-                color: '#E457DC',
+                color: EntryStatic.colorSet.block.default.VARIABLE,
                 skeleton: 'basic_string_field',
                 statements: [],
                 params: [
@@ -208,7 +208,7 @@ module.exports = {
                 },
             },
             set_visible_answer: {
-                color: '#E457DC',
+                color: EntryStatic.colorSet.block.default.VARIABLE,
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -220,7 +220,7 @@ module.exports = {
                         ],
                         value: 'SHOW',
                         fontSize: 11,
-                        arrowColor: EntryStatic.ARROW_COLOR_VARIABLE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.VARIABLE,
                     },
                     {
                         type: 'Indicator',
@@ -286,7 +286,7 @@ module.exports = {
                                     value: 'SHOW',
                                     fontSize: 11,
                                     arrowColor:
-                                        EntryStatic.ARROW_COLOR_VARIABLE,
+                                        EntryStatic.colorSet.arrow.default.VARIABLE,
                                     converter:
                                         Entry.block.converters
                                             .returnStringValueLowerCase,
@@ -299,7 +299,7 @@ module.exports = {
                 },
             },
             get_variable: {
-                color: '#E457DC',
+                color: EntryStatic.colorSet.block.default.VARIABLE,
                 skeleton: 'basic_string_field',
                 statements: [],
                 params: [
@@ -308,7 +308,7 @@ module.exports = {
                         value: null,
                         menuName: 'variables',
                         fontSize: 11,
-                        arrowColor: EntryStatic.ARROW_COLOR_VARIABLE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.VARIABLE,
                     },
                     {
                         type: 'Text',
@@ -366,7 +366,7 @@ module.exports = {
                                     menuName: 'variables',
                                     fontSize: 11,
                                     arrowColor:
-                                        EntryStatic.ARROW_COLOR_VARIABLE,
+                                        EntryStatic.colorSet.arrow.default.VARIABLE,
                                     converter:
                                         Entry.block.converters
                                             .returnRawStringKey,
@@ -377,7 +377,7 @@ module.exports = {
                 },
             },
             change_variable: {
-                color: '#E457DC',
+                color: EntryStatic.colorSet.block.default.VARIABLE,
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -386,7 +386,7 @@ module.exports = {
                         value: null,
                         menuName: 'variables',
                         fontSize: 11,
-                        arrowColor: EntryStatic.ARROW_COLOR_VARIABLE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.VARIABLE,
                     },
                     {
                         type: 'Block',
@@ -485,7 +485,7 @@ module.exports = {
                                     menuName: 'variables',
                                     fontSize: 11,
                                     arrowColor:
-                                        EntryStatic.ARROW_COLOR_VARIABLE,
+                                        EntryStatic.colorSet.arrow.default.VARIABLE,
                                     converter:
                                         Entry.block.converters
                                             .returnRawStringKey,
@@ -505,7 +505,7 @@ module.exports = {
                                     menuName: 'variables',
                                     fontSize: 11,
                                     arrowColor:
-                                        EntryStatic.ARROW_COLOR_VARIABLE,
+                                        EntryStatic.colorSet.arrow.default.VARIABLE,
                                     converter:
                                         Entry.block.converters
                                             .returnRawStringKey,
@@ -520,7 +520,7 @@ module.exports = {
                 },
             },
             set_variable: {
-                color: '#E457DC',
+                color: EntryStatic.colorSet.block.default.VARIABLE,
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -529,7 +529,7 @@ module.exports = {
                         value: null,
                         menuName: 'variables',
                         fontSize: 11,
-                        arrowColor: EntryStatic.ARROW_COLOR_VARIABLE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.VARIABLE,
                     },
                     {
                         type: 'Block',
@@ -607,7 +607,7 @@ module.exports = {
                                     menuName: 'variables',
                                     fontSize: 11,
                                     arrowColor:
-                                        EntryStatic.ARROW_COLOR_VARIABLE,
+                                        EntryStatic.colorSet.arrow.default.VARIABLE,
                                     converter:
                                         Entry.block.converters
                                             .returnRawStringKey,
@@ -622,7 +622,7 @@ module.exports = {
                 },
             },
             show_variable: {
-                color: '#E457DC',
+                color: EntryStatic.colorSet.block.default.VARIABLE,
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -631,7 +631,7 @@ module.exports = {
                         value: null,
                         menuName: 'variables',
                         fontSize: 11,
-                        arrowColor: EntryStatic.ARROW_COLOR_VARIABLE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.VARIABLE,
                     },
                     {
                         type: 'Indicator',
@@ -688,7 +688,7 @@ module.exports = {
                                     menuName: 'variables',
                                     fontSize: 11,
                                     arrowColor:
-                                        EntryStatic.ARROW_COLOR_VARIABLE,
+                                        EntryStatic.colorSet.arrow.default.VARIABLE,
                                     converter:
                                         Entry.block.converters.returnStringKey,
                                 },
@@ -698,7 +698,7 @@ module.exports = {
                 },
             },
             hide_variable: {
-                color: '#E457DC',
+                color: EntryStatic.colorSet.block.default.VARIABLE,
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -707,7 +707,7 @@ module.exports = {
                         value: null,
                         menuName: 'variables',
                         fontSize: 11,
-                        arrowColor: EntryStatic.ARROW_COLOR_VARIABLE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.VARIABLE,
                     },
                     {
                         type: 'Indicator',
@@ -763,7 +763,7 @@ module.exports = {
                                     menuName: 'variables',
                                     fontSize: 11,
                                     arrowColor:
-                                        EntryStatic.ARROW_COLOR_VARIABLE,
+                                        EntryStatic.colorSet.arrow.default.VARIABLE,
                                     converter:
                                         Entry.block.converters.returnStringKey,
                                 },
@@ -773,7 +773,7 @@ module.exports = {
                 },
             },
             value_of_index_from_list: {
-                color: '#E457DC',
+                color: EntryStatic.colorSet.block.default.VARIABLE,
                 fontColor: '#fff',
                 skeleton: 'basic_string_field',
                 statements: [],
@@ -788,7 +788,7 @@ module.exports = {
                         value: null,
                         menuName: 'lists',
                         fontSize: 11,
-                        arrowColor: EntryStatic.ARROW_COLOR_VARIABLE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.VARIABLE,
                     },
                     {
                         type: 'Text',
@@ -880,7 +880,7 @@ module.exports = {
                                     menuName: 'lists',
                                     fontSize: 11,
                                     arrowColor:
-                                        EntryStatic.ARROW_COLOR_VARIABLE,
+                                        EntryStatic.colorSet.arrow.default.VARIABLE,
                                     converter:
                                         Entry.block.converters
                                             .returnRawStringKey,
@@ -897,7 +897,7 @@ module.exports = {
                 },
             },
             add_value_to_list: {
-                color: '#E457DC',
+                color: EntryStatic.colorSet.block.default.VARIABLE,
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -910,7 +910,7 @@ module.exports = {
                         value: null,
                         menuName: 'lists',
                         fontSize: 11,
-                        arrowColor: EntryStatic.ARROW_COLOR_VARIABLE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.VARIABLE,
                     },
                     {
                         type: 'Indicator',
@@ -987,7 +987,7 @@ module.exports = {
                                     menuName: 'lists',
                                     fontSize: 11,
                                     arrowColor:
-                                        EntryStatic.ARROW_COLOR_VARIABLE,
+                                        EntryStatic.colorSet.arrow.default.VARIABLE,
                                     converter:
                                         Entry.block.converters
                                             .returnRawStringKey,
@@ -998,7 +998,7 @@ module.exports = {
                 },
             },
             remove_value_from_list: {
-                color: '#E457DC',
+                color: EntryStatic.colorSet.block.default.VARIABLE,
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -1012,7 +1012,7 @@ module.exports = {
                         value: null,
                         menuName: 'lists',
                         fontSize: 11,
-                        arrowColor: EntryStatic.ARROW_COLOR_VARIABLE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.VARIABLE,
                     },
                     {
                         type: 'Indicator',
@@ -1097,7 +1097,7 @@ module.exports = {
                                     menuName: 'lists',
                                     fontSize: 11,
                                     arrowColor:
-                                        EntryStatic.ARROW_COLOR_VARIABLE,
+                                        EntryStatic.colorSet.arrow.default.VARIABLE,
                                     converter:
                                         Entry.block.converters
                                             .returnRawStringKey,
@@ -1108,7 +1108,7 @@ module.exports = {
                 },
             },
             insert_value_to_list: {
-                color: '#E457DC',
+                color: EntryStatic.colorSet.block.default.VARIABLE,
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -1121,7 +1121,7 @@ module.exports = {
                         value: null,
                         menuName: 'lists',
                         fontSize: 11,
-                        arrowColor: EntryStatic.ARROW_COLOR_VARIABLE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.VARIABLE,
                     },
                     {
                         type: 'Block',
@@ -1220,7 +1220,7 @@ module.exports = {
                                     menuName: 'lists',
                                     fontSize: 11,
                                     arrowColor:
-                                        EntryStatic.ARROW_COLOR_VARIABLE,
+                                        EntryStatic.colorSet.arrow.default.VARIABLE,
                                     converter:
                                         Entry.block.converters
                                             .returnRawStringKey,
@@ -1236,7 +1236,7 @@ module.exports = {
                 },
             },
             change_value_list_index: {
-                color: '#E457DC',
+                color: EntryStatic.colorSet.block.default.VARIABLE,
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -1245,7 +1245,7 @@ module.exports = {
                         value: null,
                         menuName: 'lists',
                         fontSize: 11,
-                        arrowColor: EntryStatic.ARROW_COLOR_VARIABLE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.VARIABLE,
                     },
                     {
                         type: 'Block',
@@ -1343,7 +1343,7 @@ module.exports = {
                                     menuName: 'lists',
                                     fontSize: 11,
                                     arrowColor:
-                                        EntryStatic.ARROW_COLOR_VARIABLE,
+                                        EntryStatic.colorSet.arrow.default.VARIABLE,
                                     converter:
                                         Entry.block.converters
                                             .returnRawStringKey,
@@ -1363,7 +1363,7 @@ module.exports = {
                 },
             },
             length_of_list: {
-                color: '#E457DC',
+                color: EntryStatic.colorSet.block.default.VARIABLE,
                 fontColor: '#fff',
                 skeleton: 'basic_string_field',
                 statements: [],
@@ -1378,7 +1378,7 @@ module.exports = {
                         value: null,
                         menuName: 'lists',
                         fontSize: 11,
-                        arrowColor: EntryStatic.ARROW_COLOR_VARIABLE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.VARIABLE,
                     },
                     {
                         type: 'Text',
@@ -1434,7 +1434,7 @@ module.exports = {
                                     menuName: 'lists',
                                     fontSize: 11,
                                     arrowColor:
-                                        EntryStatic.ARROW_COLOR_VARIABLE,
+                                        EntryStatic.colorSet.arrow.default.VARIABLE,
                                     converter:
                                         Entry.block.converters
                                             .returnRawStringKey,
@@ -1445,7 +1445,7 @@ module.exports = {
                 },
             },
             is_included_in_list: {
-                color: '#E457DC',
+                color: EntryStatic.colorSet.block.default.VARIABLE,
                 fontColor: '#fff',
                 skeleton: 'basic_boolean_field',
                 statements: [],
@@ -1460,7 +1460,7 @@ module.exports = {
                         value: null,
                         menuName: 'lists',
                         fontSize: 11,
-                        arrowColor: EntryStatic.ARROW_COLOR_VARIABLE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.VARIABLE,
                     },
                     {
                         type: 'Text',
@@ -1551,7 +1551,7 @@ module.exports = {
                                     menuName: 'lists',
                                     fontSize: 11,
                                     arrowColor:
-                                        EntryStatic.ARROW_COLOR_VARIABLE,
+                                        EntryStatic.colorSet.arrow.default.VARIABLE,
                                     converter:
                                         Entry.block.converters
                                             .returnRawStringKey,
@@ -1567,7 +1567,7 @@ module.exports = {
                 },
             },
             show_list: {
-                color: '#E457DC',
+                color: EntryStatic.colorSet.block.default.VARIABLE,
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -1576,7 +1576,7 @@ module.exports = {
                         value: null,
                         menuName: 'lists',
                         fontSize: 11,
-                        arrowColor: EntryStatic.ARROW_COLOR_VARIABLE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.VARIABLE,
                     },
                     {
                         type: 'Indicator',
@@ -1630,7 +1630,7 @@ module.exports = {
                                     menuName: 'lists',
                                     fontSize: 11,
                                     arrowColor:
-                                        EntryStatic.ARROW_COLOR_VARIABLE,
+                                        EntryStatic.colorSet.arrow.default.VARIABLE,
                                     converter:
                                         Entry.block.converters.returnStringKey,
                                 },
@@ -1640,7 +1640,7 @@ module.exports = {
                 },
             },
             hide_list: {
-                color: '#E457DC',
+                color: EntryStatic.colorSet.block.default.VARIABLE,
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -1649,7 +1649,7 @@ module.exports = {
                         value: null,
                         menuName: 'lists',
                         fontSize: 11,
-                        arrowColor: EntryStatic.ARROW_COLOR_VARIABLE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.VARIABLE,
                     },
                     {
                         type: 'Indicator',
@@ -1703,7 +1703,7 @@ module.exports = {
                                     menuName: 'lists',
                                     fontSize: 11,
                                     arrowColor:
-                                        EntryStatic.ARROW_COLOR_VARIABLE,
+                                        EntryStatic.colorSet.arrow.default.VARIABLE,
                                     converter:
                                         Entry.block.converters.returnStringKey,
                                 },

@@ -21,7 +21,7 @@ Entry.nemoino.getBlocks = function() {
     return {
         //region nemoino 네모이노
         nemoino_get_named_sensor_value: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -59,7 +59,7 @@ Entry.nemoino.getBlocks = function() {
             },
         },
         nemoino_get_sound_status: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_boolean_field',
             statements: [],
@@ -91,7 +91,7 @@ Entry.nemoino.getBlocks = function() {
             },
         },
         nemoino_is_button_pressed: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_boolean_field',
             statements: [],
@@ -129,7 +129,7 @@ Entry.nemoino.getBlocks = function() {
             },
         },
         nemoino_get_accelerometer_direction: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_boolean_field',
             statements: [],
@@ -184,7 +184,7 @@ Entry.nemoino.getBlocks = function() {
             },
         },
         nemoino_get_accelerometer_value: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],

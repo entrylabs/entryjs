@@ -79,7 +79,7 @@ Entry.Codestar.getBlocks = function() {
     return {
         //region codestar 코드스타
         codestar_color_single: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             template: '%1 LED %2 %3',
@@ -121,7 +121,7 @@ Entry.Codestar.getBlocks = function() {
             },
         },
         codestar_3color: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             template: '3색 LED %1 밝기 %2 %3',
@@ -162,7 +162,7 @@ Entry.Codestar.getBlocks = function() {
             },
         },
         codestar_vibration: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             template: '진동모터 %1 %2',
@@ -199,7 +199,7 @@ Entry.Codestar.getBlocks = function() {
             },
         },
         codestar_buzzer: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             template: '부저 톤%1 %2',
@@ -246,7 +246,7 @@ Entry.Codestar.getBlocks = function() {
             },
         },
         codestar_buzzer_stop: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             template: '부저 중지 %1',
@@ -271,7 +271,7 @@ Entry.Codestar.getBlocks = function() {
             },
         },
         codestar_servo: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             template: '서보모터 %1 모터값 %2 %3',
@@ -323,7 +323,7 @@ Entry.Codestar.getBlocks = function() {
             },
         },
         codestar_drive: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             template: '방향 %1 속도 %2 %3',
@@ -375,7 +375,7 @@ Entry.Codestar.getBlocks = function() {
             },
         },
         codestar_wheel: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             template: '방향 %1 바퀴속도 %2 %3',
@@ -425,7 +425,7 @@ Entry.Codestar.getBlocks = function() {
             },
         },
         codestar_light: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -444,7 +444,7 @@ Entry.Codestar.getBlocks = function() {
             },
         },
         codestar_button: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -463,7 +463,7 @@ Entry.Codestar.getBlocks = function() {
             },
         },
         codestar_ir: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -495,7 +495,7 @@ Entry.Codestar.getBlocks = function() {
             },
         },
         codestar_sonar: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -514,7 +514,7 @@ Entry.Codestar.getBlocks = function() {
             },
         },
         codestar_variable_R: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -546,7 +546,7 @@ Entry.Codestar.getBlocks = function() {
             },
         },
         codestar_mic: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -565,7 +565,7 @@ Entry.Codestar.getBlocks = function() {
             },
         },
         codestar_temperature: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -584,7 +584,7 @@ Entry.Codestar.getBlocks = function() {
             },
         },
         codestar_gyroscope: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -615,7 +615,7 @@ Entry.Codestar.getBlocks = function() {
             },
         },
         codestar_geomagnetic: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -646,7 +646,7 @@ Entry.Codestar.getBlocks = function() {
             },
         },
         codestar_irR: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -665,7 +665,7 @@ Entry.Codestar.getBlocks = function() {
             },
         },
         codestar_tilt: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],

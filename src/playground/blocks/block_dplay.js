@@ -235,7 +235,7 @@ Entry.dplay.getBlocks = function() {
             syntax: { js: [], py: ['Dplay.convert_scale(%1, %2, %3, %4, %5)'] },
         },
         dplay_get_value: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             fontColor: '#FFF',
             skeleton: 'basic_string_field',
             statements: [],
@@ -257,7 +257,7 @@ Entry.dplay.getBlocks = function() {
                     ],
                     value: 'INFR',
                     fontSize: 11,
-                    arrowColor: EntryStatic.ARROW_COLOR_HW,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -298,7 +298,7 @@ Entry.dplay.getBlocks = function() {
             syntax: { js: [], py: ['Dplay.digital_value(%1)'] },
         },
         dplay_get_switch_status: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             fontColor: '#FFF',
             skeleton: 'basic_boolean_field',
             statements: [],
@@ -309,14 +309,14 @@ Entry.dplay.getBlocks = function() {
                     options: [['2', '2'], ['4', '4']],
                     value: '2',
                     fontSize: 11,
-                    arrowColor: EntryStatic.ARROW_COLOR_HW,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Dropdown',
                     options: [['눌림', 'ON'], ['열림', 'OFF']],
                     value: 'ON',
                     fontSize: 11,
-                    arrowColor: EntryStatic.ARROW_COLOR_HW,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -343,7 +343,7 @@ Entry.dplay.getBlocks = function() {
             syntax: { js: [], py: ['Dplay.switch_status(%1, %2)'] },
         },
         dplay_get_tilt: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             fontColor: '#FFF',
             skeleton: 'basic_boolean_field',
             statements: [],
@@ -354,14 +354,14 @@ Entry.dplay.getBlocks = function() {
                     options: [['2', '2'], ['4', '4']],
                     value: '2',
                     fontSize: 11,
-                    arrowColor: EntryStatic.ARROW_COLOR_HW,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Dropdown',
                     options: [['왼쪽', 'LEFT'], ['오른쪽', 'LIGHT']],
                     value: 'LEFT',
                     fontSize: 11,
-                    arrowColor: EntryStatic.ARROW_COLOR_HW,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -423,7 +423,7 @@ Entry.dplay.getBlocks = function() {
             syntax: { js: [], py: ['Dplay.toggle_pwm(%1, %2)'] },
         },
         dplay_select_led: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             fontColor: '#FFF',
             skeleton: 'basic',
             statements: [],
@@ -439,14 +439,14 @@ Entry.dplay.getBlocks = function() {
                     ],
                     value: '7',
                     fontSize: 11,
-                    arrowColor: EntryStatic.ARROW_COLOR_HW,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Dropdown',
                     options: [['켜기', 'ON'], ['끄기', 'OFF']],
                     value: 'ON',
                     fontSize: 11,
-                    arrowColor: EntryStatic.ARROW_COLOR_HW,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',
@@ -480,7 +480,7 @@ Entry.dplay.getBlocks = function() {
             syntax: { js: [], py: ['Dplay.select_led(%1, %2)'] },
         },
         dplay_DCmotor: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             fontColor: '#FFF',
             skeleton: 'basic',
             statements: [],
@@ -491,7 +491,7 @@ Entry.dplay.getBlocks = function() {
                     options: [['왼쪽', '1'], ['오른쪽', '2'], ['양쪽', '3']],
                     value: '1',
                     fontSize: 11,
-                    arrowColor: EntryStatic.ARROW_COLOR_HW,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Dropdown',
@@ -502,7 +502,7 @@ Entry.dplay.getBlocks = function() {
                     ],
                     value: 'FRONT',
                     fontSize: 11,
-                    arrowColor: EntryStatic.ARROW_COLOR_HW,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',
@@ -564,7 +564,7 @@ Entry.dplay.getBlocks = function() {
             syntax: { js: [], py: ['Dplay.dc_motor(%1, %2)'] },
         },
         dplay_DCmotor_speed: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             fontColor: '#FFF',
             skeleton: 'basic',
             statements: [],
@@ -575,7 +575,7 @@ Entry.dplay.getBlocks = function() {
                     options: [['왼쪽', '1'], ['오른쪽', '2'], ['양쪽', '3']],
                     value: '1',
                     fontSize: 11,
-                    arrowColor: EntryStatic.ARROW_COLOR_HW,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -676,7 +676,7 @@ Entry.dplay.getBlocks = function() {
             syntax: { js: [], py: ['Dplay.dc_motor_speed(%1, %2)'] },
         },
         dplay_buzzer: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             fontColor: '#FFF',
             skeleton: 'basic',
             statements: [],
@@ -701,14 +701,14 @@ Entry.dplay.getBlocks = function() {
                     ],
                     value: '1',
                     fontSize: 11,
-                    arrowColor: EntryStatic.ARROW_COLOR_HW,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Dropdown',
                     options: [['1', '1'], ['2', '2'], ['3', '3']],
                     value: '1',
                     fontSize: 11,
-                    arrowColor: EntryStatic.ARROW_COLOR_HW,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -778,7 +778,7 @@ Entry.dplay.getBlocks = function() {
             syntax: { js: [], py: ['Dplay.buzzer(%1, %2, %3)'] },
         },
         dplay_servo: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             fontColor: '#FFF',
             skeleton: 'basic',
             statements: [],
@@ -822,7 +822,7 @@ Entry.dplay.getBlocks = function() {
             syntax: { js: [], py: ['Dplay.servo(%1)'] },
         },
         dplay_Robot_run: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             fontColor: '#FFF',
             skeleton: 'basic',
             statements: [],
@@ -838,7 +838,7 @@ Entry.dplay.getBlocks = function() {
                     ],
                     value: '1',
                     fontSize: 11,
-                    arrowColor: EntryStatic.ARROW_COLOR_HW,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',
@@ -898,7 +898,7 @@ Entry.dplay.getBlocks = function() {
             syntax: { js: [], py: ['Dplay.robot_run(%1)'] },
         },
         dplay_Robot_run_sec: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             fontColor: '#FFF',
             skeleton: 'basic',
             statements: [],
@@ -918,7 +918,7 @@ Entry.dplay.getBlocks = function() {
                     ],
                     value: '1',
                     fontSize: 11,
-                    arrowColor: EntryStatic.ARROW_COLOR_HW,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',
@@ -1007,7 +1007,7 @@ Entry.dplay.getBlocks = function() {
             syntax: { js: [], py: ['Dplay.robot_run_sec(%1, %2)'] },
         },
         dplay_robot_speed_sel: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             fontColor: '#FFF',
             skeleton: 'basic',
             statements: [],
@@ -1018,7 +1018,7 @@ Entry.dplay.getBlocks = function() {
                     options: [['왼쪽', '1'], ['오른쪽', '2'], ['양쪽', '3']],
                     value: '1',
                     fontSize: 11,
-                    arrowColor: EntryStatic.ARROW_COLOR_HW,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -1165,7 +1165,7 @@ Entry.dplay.getBlocks = function() {
             },
         },
         dplay_robot_speed_set: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             fontColor: '#FFF',
             skeleton: 'basic',
             statements: [],
@@ -1287,7 +1287,7 @@ Entry.dplay.getBlocks = function() {
             syntax: { js: [], py: ['Dplay.robot_speed_sel(%1, %2)'] },
         },
         dplay_robot_stop: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             fontColor: '#FFF',
             skeleton: 'basic',
             statements: [],

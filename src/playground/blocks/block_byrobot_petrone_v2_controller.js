@@ -1023,7 +1023,7 @@ Entry.byrobot_petrone_v2_controller.getBlocks = function() {
         //region byrobot 바이로봇
         /* BYROBOT PetroneV2 Controller Start */
         byrobot_petrone_v2_controller_controller_value_button: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic_string_field',
             statements: [],
             params: [
@@ -1062,7 +1062,7 @@ Entry.byrobot_petrone_v2_controller.getBlocks = function() {
             },
         },
         byrobot_petrone_v2_controller_controller_value_joystick: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic_string_field',
             statements: [],
             params: [
@@ -1131,7 +1131,7 @@ Entry.byrobot_petrone_v2_controller.getBlocks = function() {
             },
         },
         byrobot_petrone_v2_controller_controller_if_button_press: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_boolean_field',
             statements: [],
@@ -1229,7 +1229,7 @@ Entry.byrobot_petrone_v2_controller.getBlocks = function() {
             },
         },
         byrobot_petrone_v2_controller_controller_if_joystick_direction: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_boolean_field',
             statements: [],
@@ -1324,7 +1324,7 @@ Entry.byrobot_petrone_v2_controller.getBlocks = function() {
             },
         },
         byrobot_petrone_v2_controller_controller_light_manual_single_off: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1353,7 +1353,7 @@ Entry.byrobot_petrone_v2_controller.getBlocks = function() {
             },
         },
         byrobot_petrone_v2_controller_controller_light_manual_single: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1466,7 +1466,7 @@ Entry.byrobot_petrone_v2_controller.getBlocks = function() {
             },
         },
         byrobot_petrone_v2_controller_controller_light_manual_single_input: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1518,7 +1518,7 @@ Entry.byrobot_petrone_v2_controller.getBlocks = function() {
             },
         },
         byrobot_petrone_v2_controller_controller_light_color_rgb_input: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1612,7 +1612,7 @@ Entry.byrobot_petrone_v2_controller.getBlocks = function() {
             },
         },
         byrobot_petrone_v2_controller_controller_light_color_rgb_select: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1749,7 +1749,7 @@ Entry.byrobot_petrone_v2_controller.getBlocks = function() {
             },
         },
         byrobot_petrone_v2_controller_controller_display_clear_all: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1802,7 +1802,7 @@ Entry.byrobot_petrone_v2_controller.getBlocks = function() {
             },
         },
         byrobot_petrone_v2_controller_controller_display_clear: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1897,7 +1897,7 @@ Entry.byrobot_petrone_v2_controller.getBlocks = function() {
             },
         },
         byrobot_petrone_v2_controller_controller_display_invert: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1971,7 +1971,7 @@ Entry.byrobot_petrone_v2_controller.getBlocks = function() {
             },
         },
         byrobot_petrone_v2_controller_controller_display_draw_point: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2044,7 +2044,7 @@ Entry.byrobot_petrone_v2_controller.getBlocks = function() {
             },
         },
         byrobot_petrone_v2_controller_controller_display_draw_line: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2165,7 +2165,7 @@ Entry.byrobot_petrone_v2_controller.getBlocks = function() {
             },
         },
         byrobot_petrone_v2_controller_controller_display_draw_rect: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2307,7 +2307,7 @@ Entry.byrobot_petrone_v2_controller.getBlocks = function() {
             },
         },
         byrobot_petrone_v2_controller_controller_display_draw_circle: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2412,7 +2412,7 @@ Entry.byrobot_petrone_v2_controller.getBlocks = function() {
             },
         },
         byrobot_petrone_v2_controller_controller_display_draw_string: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2517,7 +2517,7 @@ Entry.byrobot_petrone_v2_controller.getBlocks = function() {
             },
         },
         byrobot_petrone_v2_controller_controller_display_draw_string_align: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2659,7 +2659,7 @@ Entry.byrobot_petrone_v2_controller.getBlocks = function() {
             },
         },
         byrobot_petrone_v2_controller_controller_buzzer_off: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2684,7 +2684,7 @@ Entry.byrobot_petrone_v2_controller.getBlocks = function() {
             },
         },
         byrobot_petrone_v2_controller_controller_buzzer_scale: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2800,7 +2800,7 @@ Entry.byrobot_petrone_v2_controller.getBlocks = function() {
             },
         },
         byrobot_petrone_v2_controller_controller_buzzer_scale_delay: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2931,7 +2931,7 @@ Entry.byrobot_petrone_v2_controller.getBlocks = function() {
             },
         },
         byrobot_petrone_v2_controller_controller_buzzer_scale_reserve: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -3062,7 +3062,7 @@ Entry.byrobot_petrone_v2_controller.getBlocks = function() {
             },
         },
         byrobot_petrone_v2_controller_controller_buzzer_hz: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -3104,7 +3104,7 @@ Entry.byrobot_petrone_v2_controller.getBlocks = function() {
             },
         },
         byrobot_petrone_v2_controller_controller_buzzer_hz_delay: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -3157,7 +3157,7 @@ Entry.byrobot_petrone_v2_controller.getBlocks = function() {
             },
         },
         byrobot_petrone_v2_controller_controller_buzzer_hz_reserve: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -3210,7 +3210,7 @@ Entry.byrobot_petrone_v2_controller.getBlocks = function() {
             },
         },
         byrobot_petrone_v2_controller_controller_vibrator_off: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -3235,7 +3235,7 @@ Entry.byrobot_petrone_v2_controller.getBlocks = function() {
             },
         },
         byrobot_petrone_v2_controller_controller_vibrator_on_delay: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -3279,7 +3279,7 @@ Entry.byrobot_petrone_v2_controller.getBlocks = function() {
             },
         },
         byrobot_petrone_v2_controller_controller_vibrator_on_reserve: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -3323,7 +3323,7 @@ Entry.byrobot_petrone_v2_controller.getBlocks = function() {
             },
         },
         byrobot_petrone_v2_controller_controller_vibrator_delay: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -3386,7 +3386,7 @@ Entry.byrobot_petrone_v2_controller.getBlocks = function() {
             },
         },
         byrobot_petrone_v2_controller_controller_vibrator_reserve: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [

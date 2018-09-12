@@ -369,7 +369,7 @@ Entry.playcode.getBlocks = function() {
     return {
         //region playcode
         playcode_port_list: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
@@ -402,7 +402,7 @@ Entry.playcode.getBlocks = function() {
             },
         },
         playcode_first_port_list: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic_string_field',
             statements: [],
             template: '%1',
@@ -426,7 +426,7 @@ Entry.playcode.getBlocks = function() {
             },
         },
         playcode_get_light_value: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             template: '빛센서 : %1 포트 값',
@@ -472,7 +472,7 @@ Entry.playcode.getBlocks = function() {
             syntax: { js: [], py: ['playcode.get_analog_value(%1)'] },
         },
         playcode_get_mic_value: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             template: '마이크센서 : %1 포트 값',
@@ -520,7 +520,7 @@ Entry.playcode.getBlocks = function() {
             syntax: { js: [], py: ['playcode.get_analog_value(%1)'] },
         },
         playcode_gpio: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic',
             template: 'GPIO : %1포트에 %2 보내기 %3',
@@ -538,7 +538,7 @@ Entry.playcode.getBlocks = function() {
                     ],
                     value: 'on',
                     fontSize: 11,
-                    arrowColor: EntryStatic.ARROW_COLOR_HW,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',
@@ -585,7 +585,7 @@ Entry.playcode.getBlocks = function() {
             syntax: { js: [], py: ['playcode.playcode_gpio(%1)'] },
         },
         playcode_servo: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             template: 'Servo : %1포트에 %2 보내기 %3',
             params: [
@@ -647,7 +647,7 @@ Entry.playcode.getBlocks = function() {
             },
         },
         playcode_speed: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             template: 'Speed : %1포트에 %2 보내기 %3',
             params: [

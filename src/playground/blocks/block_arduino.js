@@ -120,7 +120,7 @@ Entry.Arduino.getBlocks = function() {
     return {
         //region arduino 아두이노
         arduino_text: {
-            color: '#FFD974',
+            color: EntryStatic.colorSet.block.default.CALC,
             skeleton: 'basic_string_field',
             statements: [],
             params: [
@@ -159,7 +159,7 @@ Entry.Arduino.getBlocks = function() {
             },
         },
         arduino_send: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -185,7 +185,7 @@ Entry.Arduino.getBlocks = function() {
             },
         },
         arduino_get_number: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic_string_field',
             statements: [],
             params: [
@@ -212,7 +212,7 @@ Entry.Arduino.getBlocks = function() {
             },
         },
         arduino_get_string: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic_string_field',
             statements: [],
             params: [
@@ -239,7 +239,7 @@ Entry.Arduino.getBlocks = function() {
             },
         },
         arduino_get_sensor_number: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic_string_field',
             statements: [],
             params: [
@@ -255,7 +255,7 @@ Entry.Arduino.getBlocks = function() {
                     ],
                     value: 'A0',
                     fontSize: 11,
-                    arrowColor: EntryStatic.ARROW_COLOR_HW,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -287,7 +287,7 @@ Entry.Arduino.getBlocks = function() {
                                 ],
                                 value: 'A0',
                                 fontSize: 11,
-                                arrowColor: EntryStatic.ARROW_COLOR_HW,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -298,7 +298,7 @@ Entry.Arduino.getBlocks = function() {
             },
         },
         arduino_get_port_number: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic_string_field',
             statements: [],
             params: [
@@ -322,7 +322,7 @@ Entry.Arduino.getBlocks = function() {
                     ],
                     value: '0',
                     fontSize: 11,
-                    arrowColor: EntryStatic.ARROW_COLOR_HW,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -361,7 +361,7 @@ Entry.Arduino.getBlocks = function() {
                                 ],
                                 value: '0',
                                 fontSize: 11,
-                                arrowColor: EntryStatic.ARROW_COLOR_HW,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                             },
                         ],
                         keyOption: 'arduino_get_port_number',
@@ -370,7 +370,7 @@ Entry.Arduino.getBlocks = function() {
             },
         },
         arduino_get_pwm_port_number: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic_string_field',
             statements: [],
             params: [
@@ -386,7 +386,7 @@ Entry.Arduino.getBlocks = function() {
                     ],
                     value: '3',
                     fontSize: 11,
-                    arrowColor: EntryStatic.ARROW_COLOR_HW,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -417,7 +417,7 @@ Entry.Arduino.getBlocks = function() {
                                 ],
                                 value: '3',
                                 fontSize: 11,
-                                arrowColor: EntryStatic.ARROW_COLOR_HW,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters
                                         .returnStringOrNumberByValue,
@@ -429,7 +429,7 @@ Entry.Arduino.getBlocks = function() {
             },
         },
         arduino_get_number_sensor_value: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -474,7 +474,7 @@ Entry.Arduino.getBlocks = function() {
             },
         },
         arduino_get_digital_value: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_boolean_field',
             statements: [],
@@ -526,7 +526,7 @@ Entry.Arduino.getBlocks = function() {
             },
         },
         arduino_toggle_led: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -542,7 +542,7 @@ Entry.Arduino.getBlocks = function() {
                     ],
                     value: 'on',
                     fontSize: 11,
-                    arrowColor: EntryStatic.ARROW_COLOR_HW,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',
@@ -592,7 +592,7 @@ Entry.Arduino.getBlocks = function() {
                                 ],
                                 value: 'on',
                                 fontSize: 11,
-                                arrowColor: EntryStatic.ARROW_COLOR_HW,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters.returnStringValue,
                             },
@@ -602,7 +602,7 @@ Entry.Arduino.getBlocks = function() {
             },
         },
         arduino_toggle_pwm: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -669,7 +669,7 @@ Entry.Arduino.getBlocks = function() {
             },
         },
         arduino_convert_scale: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
