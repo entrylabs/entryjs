@@ -1,4 +1,6 @@
-import { PIXITempStore } from '../../class/pixi/etc/PIXITempStore';
+var TEMP_RECT1 = {x:0, y:0, width: 0, height: 0};
+var TEMP_RECT2 = {x:0, y:0, width: 0, height: 0};
+
 
 module.exports = {
     getBlocks() {
@@ -155,8 +157,8 @@ module.exports = {
                     } else {
                         const targetSprite = Entry.container.getEntity(targetSpriteId);
                         if (targetSprite.type === 'textBox' || sprite.type === 'textBox') {
-                            const targetBound = targetSprite.object.getBounds(false, PIXITempStore.rect1);
-                            const bound = object.getBounds(false, PIXITempStore.rect2);
+                            const targetBound = targetSprite.object.getBounds(false, TEMP_RECT1);
+                            const bound = object.getBounds(false, TEMP_RECT2);
                             if (Entry.checkCollisionRect(bound, targetBound)) {
                                 return true;
                             }
@@ -169,7 +171,7 @@ module.exports = {
                                 if (
                                     Entry.checkCollisionRect(
                                         bound,
-                                        entity.object.getBounds(false, PIXITempStore.rect1)
+                                        entity.object.getBounds(false, TEMP_RECT1)
                                     )
                                 ) {
                                     return true;
