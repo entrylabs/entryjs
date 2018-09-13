@@ -3,7 +3,7 @@
  */
 'use strict';
 
-require("./utils")
+require("./utils");
 
 /**
  * Initialize method with options.
