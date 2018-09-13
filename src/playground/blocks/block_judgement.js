@@ -1,4 +1,6 @@
-import { PIXITempStore } from '../../class/pixi/etc/PIXITempStore';
+var TEMP_RECT1 = {x:0, y:0, width: 0, height: 0};
+var TEMP_RECT2 = {x:0, y:0, width: 0, height: 0};
+
 
 module.exports = {
     getBlocks() {
@@ -174,8 +176,8 @@ module.exports = {
                             targetSprite.type == 'textBox' ||
                             sprite.type == 'textBox'
                         ) {
-                            var targetBound = targetSprite.object.getBounds(false, PIXITempStore.rect1);
-                            var bound = object.getBounds(false, PIXITempStore.rect2);
+                            var targetBound = targetSprite.object.getBounds(false, TEMP_RECT1);
+                            var bound = object.getBounds(false, TEMP_RECT2);
                             if (Entry.checkCollisionRect(bound, targetBound))
                                 return true;
                             var clonedEntities =
@@ -191,7 +193,7 @@ module.exports = {
                                 if (
                                     Entry.checkCollisionRect(
                                         bound,
-                                        entity.object.getBounds(false, PIXITempStore.rect1)
+                                        entity.object.getBounds(false, TEMP_RECT1)
                                     )
                                 )
                                     return true;
