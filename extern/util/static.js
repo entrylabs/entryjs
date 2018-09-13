@@ -1586,6 +1586,13 @@ EntryStatic.fonts = [
     },
 ];
 
+/**
+ * default colorSet.
+ * entryjs 가 init 될때의 옵션으로 theme: [name] 이 포함되는 경우,
+ * 해당 colorSet 으로 치환됩니다. 그렇지 않은 경우는 해당 정보를 사용합니다.
+ *
+ * 이 기본값은 src/theme/standard.js 의 값과 동일합니다.
+ */
 EntryStatic.colorSet = {
     arrow: {
         default: {

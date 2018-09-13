@@ -1,7 +1,9 @@
 'use strict';
 
 /**
- * default
+ * static.js 의 default colorSet 과 동일합니다.
+ * 정확한 기획스펙이 없는 상태에서 page reload 없이 ws 만 재로딩 하는 경우
+ * 다른 theme -> 초기 theme 로 돌아갈때 필요할 수 있어서 만들어둔 테마입니다.
  */
 module.exports = {
     arrow: {
