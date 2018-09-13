@@ -325,31 +325,9 @@ Entry.Stage.prototype.initCoordinator = function() {
     var sp = PIXI.Sprite.fromImage(Entry.mediaFilePath + 'workspace_coordinate.png');
     sp.scale.set(0.5, 0.5);
     sp.position.set(-240, -135);
+    c.addChild(sp);
 
     this.canvas.addChild(c);
-    // var coordinator = (this.coordinator = Object.assign(
-    //     new createjs.Container(),
-    //     {
-    //         mouseEnabled: false,
-    //         tickEnabled: false,
-    //         tickChildren: false,
-    //         visible: false,
-    //     }
-    // ));
-    // coordinator.addChild(
-    //     Object.assign(
-    //         new createjs.Bitmap(
-    //             Entry.mediaFilePath + 'workspace_coordinate.png'
-    //         ),
-    //         {
-    //             scaleX: 0.5,
-    //             scaleY: 0.5,
-    //             x: -240,
-    //             y: -135,
-    //         }
-    //     )
-    // );
-    // this.canvas.addChild(coordinator);
 };
 
 /**
