@@ -46,14 +46,8 @@ this.ndgmr = this.ndgmr || {};
 
   var checkRectCollision = function(bitmap1,bitmap2) {
     var b1, b2;
-    if (bitmap1 instanceof createjs.Container ||
-           bitmap2 instanceof createjs.Container) {
-        b1 = bitmap1.getTransformedBounds();
-        b2 = bitmap2.getTransformedBounds();
-    } else {
-        b1 = getBounds(bitmap1);
-        b2 = getBounds(bitmap2);
-    }
+    b1 = bitmap1 instanceof createjs.Container? bitmap1.getTransformedBounds() : getBounds(bitmap1);
+    b2 = bitmap2 instanceof createjs.Container? bitmap2.getTransformedBounds() : getBounds(bitmap2);
     if (Math.min(b1.width, b1.height, b2.width, b2.height) < 2)
         threshold = 1;
     else
@@ -81,7 +75,7 @@ this.ndgmr = this.ndgmr || {};
         return false;
     }
 
-    intersection = checkRectCollision(bitmap1,bitmap2);
+    var intersection = checkRectCollision(bitmap1,bitmap2);
     if ( !intersection ) {
         return false;
     }
@@ -131,8 +125,8 @@ this.ndgmr = this.ndgmr || {};
   var _collisionDistancePrecheck = function(bitmap1,bitmap2) {
     var ir1, ir2;
 
-    ir1 = bitmap1.getTransformedBounds();
-    ir2 = bitmap2.getTransformedBounds();
+    ir1 = bitmap1 instanceof createjs.Container? bitmap1.getTransformedBounds() : getBounds(bitmap1);
+    ir2 = bitmap2 instanceof createjs.Container? bitmap2.getTransformedBounds() : getBounds(bitmap2);
 
     //precheck if objects are even close enough
     return ( Math.abs(ir2.x-ir1.x) < (ir1.x < ir2.x ? ir1.width : ir2.width)

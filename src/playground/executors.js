@@ -32,8 +32,13 @@ Entry.Executor = class {
             this._isPending = true;
             let result = await new Promise(async (resolve) => {
                 var returnVal = null;
-                
-                if (this.isEnd()) {
+
+                const { selectedScene = {} } = Entry.scene || {};
+                const { sessionSceneId } = selectedScene;
+                if (
+                    this.isEnd() ||
+                    (this.sessionSceneId && this.sessionSceneId !== sessionSceneId)
+                ) {
                     return resolve('end');
                 }
                 try {
@@ -176,7 +181,7 @@ Entry.Scope = class {
         var result = await Entry.block[fieldBlock.type].func.call(newScope, this.entity, newScope);
         const { selectedScene = {} } = Entry.scene || {};
         const { sessionSceneId } = selectedScene;
-        if(this.sessionSceneId !== sessionSceneId) {
+        if (this.sessionSceneId !== sessionSceneId) {
             throw new Entry.Utils.AsyncError('Scene Match Miss');
         }
         return result;
@@ -198,7 +203,7 @@ Entry.Scope = class {
     }
 
     getField(key) {
-        if(!this.block) {
+        if (!this.block) {
             throw new Entry.Utils.AsyncError('getField Pass');
         }
         const { params } = this.block;
@@ -213,8 +218,8 @@ Entry.Scope = class {
         return Number(this.getField(key));
     }
 
-    getStatement(key, block) {        
-        if(!this.block) {
+    getStatement(key, block) {
+        if (!this.block) {
             throw new Entry.Utils.AsyncError('getStatement Pass');
         }
         return this.executor.stepInto(this.block.statements[this._getStatementIndex(key, block)]);

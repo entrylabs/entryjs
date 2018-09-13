@@ -1326,6 +1326,7 @@ const block = {
                 this.funcExecutor.register.paramMap = func.paramMap;
                 this.funcExecutor.parentExecutor = this.executor;
                 this.funcExecutor.isFuncExecutor = true;
+                this.funcExecutor.sessionSceneId = this.funcExecutor.scope.sessionSceneId;
             }
             await this.funcExecutor.execute();
             if (!this.funcExecutor.isEnd()) {
