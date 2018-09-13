@@ -1599,7 +1599,7 @@ EntryStatic.colorSet = {
             CALC: '#E8B349',
             VARIABLE: '#CE38CE',
             HARDWARE: '#097E84',
-            EXPANSION: '#FF8888',
+            EXTENSION: '#FF8888',
         },
     },
     block: {

@@ -13,7 +13,7 @@ module.exports = {
             CALC: '#00FF00',
             VARIABLE: '#00FF00',
             HARDWARE: '#00FF00',
-            EXPANSION: '#00FF00',
+            EXTENSION: '#00FF00',
         },
     },
     block: {
