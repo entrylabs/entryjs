@@ -189,7 +189,7 @@ Entry.Expansion_Weather.getBlocks = function () {
             events: {},
         },
         check_weather: {
-            color: '#ff8888',
+            color: EntryStatic.colorSet.block.default.EXTENSION,
             skeleton: 'basic_boolean_field',
             statements: [],
             params: [params.getDate(), params.getLocation(), params.getSky()],
@@ -271,7 +271,7 @@ Entry.Expansion_Weather.getBlocks = function () {
             },
         },
         check_finedust: {
-            color: '#ff8888',
+            color: EntryStatic.colorSet.block.default.EXTENSION,
             skeleton: 'basic_boolean_field',
             statements: [],
             params: [params.getLocation(), params.getFineDust()],
@@ -338,7 +338,7 @@ Entry.Expansion_Weather.getBlocks = function () {
             },
         },
         get_weather_data: {
-            color: '#ff8888',
+            color: EntryStatic.colorSet.block.default.EXTENSION,
             skeleton: 'basic_string_field',
             statements: [],
             params: [params.getDate(), params.getLocation(), params.getWeatherElements()],
@@ -416,7 +416,7 @@ Entry.Expansion_Weather.getBlocks = function () {
             },
         },
         get_current_weather_data: {
-            color: '#ff8888',
+            color: EntryStatic.colorSet.block.default.EXTENSION,
             skeleton: 'basic_string_field',
             statements: [],
             params: [params.getLocation(), params.getNowWeatherElement()],
@@ -472,7 +472,7 @@ Entry.Expansion_Weather.getBlocks = function () {
             },
         },
         get_today_temperature: {
-            color: '#ff8888',
+            color: EntryStatic.colorSet.block.default.EXTENSION,
             skeleton: 'basic_string_field',
             statements: [],
             params: [params.getLocation(), params.getTime()],

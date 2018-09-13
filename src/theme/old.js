@@ -33,6 +33,7 @@ module.exports = {
             FUNCTION: '#CC7337',
             BOOLEAN: '#AEB8FF',
             TEXT: '#FFCA36',
+            EXTENSION: '#FF8888',
         },
         lighten: {
             //NOTE not have boolean, extension block color
