@@ -1,5 +1,8 @@
 'use strict';
 
+const PromiseManager = require('@core/promiseManager');
+const pm = new PromiseManager();
+
 Entry.ArduinoExt = {
     name: 'ArduinoExt',
     url: 'http://www.arduino.cc/',
@@ -920,6 +923,14 @@ Entry.ArduinoExt.getBlocks = function() {
             isNotFor: ['ArduinoExt'],
             func: async function(sprite, script) {
                 const sq = Entry.hw.sendQueue;
+                const buzzerRequest = (value) => {
+                    return {
+                        type: Entry.ArduinoExt.sensorTypes.TONE,
+                        data: value,
+                        time: new Date().getTime(),
+                    }
+                };
+
                 let [port, octave, duration, note] = await Promise.all([
                     script.getNumberValue('PORT', script),
                     script.getNumberValue('OCTAVE', script),
@@ -928,75 +939,44 @@ Entry.ArduinoExt.getBlocks = function() {
                 ]);
                 octave -= 1;
 
-                if (!script.isStart) {
-                    if (!Entry.Utils.isNumber(note))
-                        note = Entry.ArduinoExt.toneTable[note];
+                if (!Entry.Utils.isNumber(note)){
+                    note = Entry.ArduinoExt.toneTable[note];
+                }
 
-                    if (note < 0) {
-                        note = 0;
-                    } else if (note > 12) {
-                        note = 12;
-                    }
+                if (note < 0) {
+                    note = 0;
+                } else if (note > 12) {
+                    note = 12;
+                }
 
-                    if (duration < 0) {
-                        duration = 0;
-                    }
+                if (duration < 0) {
+                    duration = 0;
+                }
 
-                    if (!sq['SET']) {
-                        sq['SET'] = {};
-                    }
+                if (octave < 0) {
+                    octave = 0;
+                } else if (octave > 5) {
+                    octave = 5;
+                }
 
-                    if (duration === 0) {
-                        sq['SET'][port] = {
-                            type: Entry.ArduinoExt.sensorTypes.TONE,
-                            data: 0,
-                            time: new Date().getTime(),
-                        };
-                        return script.callReturn();
-                    }
+                if (!sq['SET']) {
+                    sq['SET'] = {};
+                }
 
-                    if (octave < 0) {
-                        octave = 0;
-                    } else if (octave > 5) {
-                        octave = 5;
-                    }
-
-                    var value = 0;
-
-                    if (note != 0) {
-                        value = Entry.ArduinoExt.toneMap[note][octave];
-                    }
-
-                    duration = duration * 1000;
-                    script.isStart = true;
-                    script.timeFlag = 1;
-
-                    sq['SET'][port] = {
-                        type: Entry.ArduinoExt.sensorTypes.TONE,
-                        data: {
-                            value: value,
-                            duration: duration,
-                        },
-                        time: new Date().getTime(),
-                    };
-
-                    setTimeout(function() {
-                        script.timeFlag = 0;
-                    }, duration + 32);
-                    return script;
-                } else if (script.timeFlag == 1) {
-                    return script;
-                } else {
-                    delete script.timeFlag;
-                    delete script.isStart;
-                    sq['SET'][port] = {
-                        type: Entry.ArduinoExt.sensorTypes.TONE,
-                        data: 0,
-                        time: new Date().getTime(),
-                    };
-                    Entry.engine.isContinue = false;
+                if (duration === 0) {
+                    sq['SET'][port] = buzzerRequest(0);
                     return script.callReturn();
                 }
+
+                let value = 0;
+
+                if (note !== 0) {
+                    value = Entry.ArduinoExt.toneMap[note][octave];
+                }
+
+                sq['SET'][port] = buzzerRequest(value);
+                await pm.sleep(duration * 1000 + 32);
+                sq['SET'][port] = buzzerRequest(0);
             },
             syntax: {
                 js: [],
