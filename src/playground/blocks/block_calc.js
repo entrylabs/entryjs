@@ -1,6 +1,36 @@
 module.exports = {
     getBlocks() {
         return {
+            async_value: {
+                color: '#FFD974',
+                template: '테스트',
+                skeleton: 'basic_string_field',
+                statements: [],
+                async: true,
+                class: 'calc_timer',
+                isNotFor: [],
+                func: async function(sprite, script) {
+                    // memoizeClearByTime(getFindNotice, 1000);
+                    // return pm.Promise((resolve) => {
+                    //     getFindNotice()
+                    //         .then(({ data }) => {
+                    //             const [item = {}] = data;
+                    //             const { title = 'TITLE' } = item;
+                    //             resolve(title);
+                    //         })
+                    //         .catch(({ message = 'error' }) => {
+                    //             resolve(message);
+                    //         });
+                    // });
+                    // return new PromiseManager().EventPromise('callApi', {url: '/api/discuss/findNotice'}, { timeout: 10000, defaultValue: 10 });
+                    return new Promise((resolve)=> {
+                        setTimeout(()=> {
+                            console.log('aaa');
+                            resolve(30);
+                        }, 1000)
+                    });
+                },
+            },
             calc_basic: {
                 color: '#FFD974',
                 skeleton: 'basic_string_field',
@@ -121,19 +151,15 @@ module.exports = {
                 },
                 class: 'calc',
                 isNotFor: [],
-                func: function(sprite, script) {
+                func: async function(sprite, script) {
                     var operator = script.getField('OPERATOR', script);
-                    var leftValue = script.getNumberValue('LEFTHAND', script);
-                    var rightValue = script.getNumberValue('RIGHTHAND', script);
+                    var [leftValue, rightValue] = await Promise.all([script.getAsyncValue('LEFTHAND', script) , script.getAsyncValue('RIGHTHAND', script)]);
+                    leftValue = Number(leftValue);
+                    rightValue = Number(rightValue);
+                    // var rightValue = ;
                     if (operator == 'PLUS') {
-                        var leftStringValue = script.getValue(
-                            'LEFTHAND',
-                            script
-                        );
-                        var rightStringValue = script.getValue(
-                            'RIGHTHAND',
-                            script
-                        );
+                        var leftStringValue = String(leftValue);
+                        var rightStringValue = String(rightValue)
                         if (!Entry.Utils.isNumber(leftStringValue))
                             leftValue = leftStringValue;
                         if (!Entry.Utils.isNumber(rightStringValue))

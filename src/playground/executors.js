@@ -27,7 +27,7 @@ Entry.Executor.MAXIMUM_CALLSTACK = 100;
         while (true) {
             var returnVal = null;
             executedBlocks.push(this.scope.block);
-
+            
             try {
                 var schema = this.scope.block.getSchema();
                 if (schema && Entry.skeleton[schema.skeleton].executable) {
@@ -40,6 +40,7 @@ Entry.Executor.MAXIMUM_CALLSTACK = 100;
                         entity,
                         this.scope
                     );
+                    this.scope.key = Entry.generateHash();
                 }
             } catch (e) {
                 if (e.name === 'AsyncError') {
@@ -127,6 +128,8 @@ Entry.Executor.MAXIMUM_CALLSTACK = 100;
 
 Entry.Scope = function(block, executor) {
     this.block = block;
+    this.key = Entry.generateHash();
+    this.result = {};
     this.type = block ? block.type : null; //legacy
     this.executor = executor;
     this.entity = executor.entity;
@@ -163,14 +166,45 @@ Entry.Scope = function(block, executor) {
         });
     };
 
-    p.getValue = function(key, block) {
+    p.getAsyncValue = async function (key, block) {
         var fieldBlock = this.block.params[this._getParamIndex(key, block)];
         var newScope = new Entry.Scope(fieldBlock, this.executor);
+        newScope.key = block.key;
+        var result = await Entry.block[fieldBlock.type].func.call(
+            newScope,
+            this.entity,
+            newScope
+        );
+        return result;
+    }
+
+    p.getValues = function(...keys) {
+    }
+    p.getValue = function(key, block) {
+        var fieldBlock = this.block.params[this._getParamIndex(key, block)];
+        if(!fieldBlock.cache) {
+            fieldBlock.cache = {};
+        }
+        if(fieldBlock.cache[`${block.key}`] === 'isPending') {
+            throw new Entry.Utils.AsyncError();
+        } else if(fieldBlock.cache[`${block.key}`] !== undefined) {
+            return fieldBlock.cache[`${block.key}`];
+        }
+        var newScope = new Entry.Scope(fieldBlock, this.executor);
+        newScope.key = block.key;
         var result = Entry.block[fieldBlock.type].func.call(
             newScope,
             this.entity,
             newScope
         );
+        if(result instanceof Promise) {
+            fieldBlock.cache[`${block.key}`] = 'isPending';
+            result.then((r) => {
+                console.log(block.key);
+                fieldBlock.cache[`${block.key}`] = r;
+            });
+            throw new Entry.Utils.AsyncError();
+        }
         return result;
     };
 
@@ -179,11 +213,11 @@ Entry.Scope = function(block, executor) {
     };
 
     p.getNumberValue = function(key, block) {
-        return Number(this.getValue(key));
+        return Number(this.getValue(key, block));
     };
 
     p.getBooleanValue = function(key, block) {
-        var value = this.getValue(key);
+        var value = this.getValue(key, block);
         if (value === undefined)
             return false;
         value = Number(value);

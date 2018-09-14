@@ -582,7 +582,7 @@ module.exports = {
                 class: 'boolean',
                 isNotFor: [],
                 func: function(sprite, script) {
-                    return !script.getBooleanValue('VALUE');
+                    return !script.getBooleanValue('VALUE', script);
                 },
                 syntax: {
                     js: [],
