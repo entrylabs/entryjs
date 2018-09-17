@@ -9,7 +9,7 @@ module.exports = {
                 async: true,
                 class: 'calc_timer',
                 isNotFor: [],
-                func: async function(sprite, script) {
+                func: function(sprite, script) {
                     // memoizeClearByTime(getFindNotice, 1000);
                     // return pm.Promise((resolve) => {
                     //     getFindNotice()
@@ -26,8 +26,8 @@ module.exports = {
                     return new Promise((resolve)=> {
                         setTimeout(()=> {
                             console.log('aaa');
-                            resolve(30);
-                        }, 1000)
+                            resolve(10);
+                        }, 1000);
                     });
                 },
             },
@@ -151,9 +151,11 @@ module.exports = {
                 },
                 class: 'calc',
                 isNotFor: [],
-                func: async function(sprite, script) {
+                func: function(sprite, script) {
                     var operator = script.getField('OPERATOR', script);
-                    var [leftValue, rightValue] = await Promise.all([script.getAsyncValue('LEFTHAND', script) , script.getAsyncValue('RIGHTHAND', script)]);
+                    var [leftValue, rightValue] = script.getValues(['LEFTHAND', 'RIGHTHAND'], script);
+                    // var leftValue = script.getValue('LEFTHAND', script);
+                    // var rightValue = script.getValue('RIGHTHAND', script);
                     leftValue = Number(leftValue);
                     rightValue = Number(rightValue);
                     // var rightValue = ;

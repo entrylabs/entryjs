@@ -9,6 +9,7 @@ Entry.Executor = function(block, entity) {
     this._callStack = [];
     this.register = {};
     this.parentExecutor = null;
+    this.valueMap = {};
     this.id = Entry.Utils.generateId();
 };
 
@@ -21,7 +22,6 @@ Entry.Executor.MAXIMUM_CALLSTACK = 100;
         }
 
         const executedBlocks = [];
-        let block;
         if (isFromOrigin) {
             Entry.callStackLength = 0;
         }
@@ -57,6 +57,7 @@ Entry.Executor.MAXIMUM_CALLSTACK = 100;
 
             if (returnVal === undefined || returnVal === null || returnVal === Entry.STATIC.PASS) {
                 this.scope = new Entry.Scope(this.scope.block.getNextBlock(), this);
+                this.valueMap = {};
                 if (this.scope.block === null) {
                     if (this._callStack.length) {
                         const oldScope = this.scope;
@@ -126,7 +127,6 @@ Entry.Executor.MAXIMUM_CALLSTACK = 100;
 Entry.Scope = function(block, executor) {
     this.block = block;
     this.key = Entry.generateHash();
-    this.result = {};
     this.type = block ? block.type : null; //legacy
     this.executor = executor;
     this.entity = executor.entity;
@@ -171,23 +171,23 @@ Entry.Scope = function(block, executor) {
 
     p.getValues = function(...keys) {};
     p.getValue = function(key, block) {
+        const executorValueMap = this.executor.valueMap;
         const fieldBlock = this.block.params[this._getParamIndex(key, block)];
-        if (!fieldBlock.cache) {
-            fieldBlock.cache = {};
-        }
-        if (fieldBlock.cache[`${block.key}`] === 'isPending') {
+        const blockID = fieldBlock.data.id;
+
+        if (executorValueMap[blockID] === 'isPending') {
             throw new Entry.Utils.AsyncError();
-        } else if (fieldBlock.cache[`${block.key}`] !== undefined) {
-            return fieldBlock.cache[`${block.key}`];
+        } else if (executorValueMap[blockID] !== undefined) {
+            return executorValueMap[blockID];
         }
         const newScope = new Entry.Scope(fieldBlock, this.executor);
-        newScope.key = block.key;
         const result = Entry.block[fieldBlock.type].func.call(newScope, this.entity, newScope);
+
         if (result instanceof Promise) {
-            fieldBlock.cache[`${block.key}`] = 'isPending';
-            result.then((r) => {
-                console.log(block.key);
-                fieldBlock.cache[`${block.key}`] = r;
+            executorValueMap[blockID] = 'isPending';
+            result.then((value) => {
+                console.log(this.key);
+                executorValueMap[blockID] = value;
             });
             throw new Entry.Utils.AsyncError();
         }
