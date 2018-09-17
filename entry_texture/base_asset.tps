@@ -6,7 +6,7 @@
         <key>texturePackerVersion</key>
         <string>4.5.0</string>
         <key>fileName</key>
-        <string>C:/Users/NTS/Desktop/entry_texture/entry-handle.tps</string>
+        <string>C:/works/101_html/3323_entry/1111_playentry.com/public/lib/entryjs/entry_texture/base_asset.tps</string>
         <key>autoSDSettings</key>
         <array>
             <struct type="AutoSDSettings">
@@ -150,7 +150,7 @@
             <key>data</key>
             <struct type="DataFile">
                 <key>name</key>
-                <filename>entry-handle.json</filename>
+                <filename>base_asset.json</filename>
             </struct>
         </map>
         <key>multiPack</key>
@@ -199,7 +199,7 @@
         </struct>
         <key>individualSpriteSettings</key>
         <map type="IndividualSpriteSettingsMap">
-            <key type="filename">arrow.png</key>
+            <key type="filename">imgs/arrow.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -212,7 +212,7 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">border.png</key>
+            <key type="filename">imgs/border.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -225,7 +225,20 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">centerPoint.png</key>
+            <key type="filename">imgs/bound.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>8,8,15,15</rect>
+                <key>scale9Paddings</key>
+                <rect>8,8,15,15</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">imgs/centerPoint.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -238,7 +251,20 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">knob.png</key>
+            <key type="filename">imgs/confirm_button.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>25,25,51,51</rect>
+                <key>scale9Paddings</key>
+                <rect>25,25,51,51</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">imgs/knob.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -251,7 +277,7 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">rotateKnob.png</key>
+            <key type="filename">imgs/rotateKnob.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -261,17 +287,26 @@
                 <rect>3,6,5,13</rect>
                 <key>scale9Paddings</key>
                 <rect>3,6,5,13</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">imgs/workspace_coordinate.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>240,135,480,270</rect>
+                <key>scale9Paddings</key>
+                <rect>240,135,480,270</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
         </map>
         <key>fileList</key>
         <array>
-            <filename>arrow.png</filename>
-            <filename>border.png</filename>
-            <filename>centerPoint.png</filename>
-            <filename>knob.png</filename>
-            <filename>rotateKnob.png</filename>
+            <filename>imgs</filename>
         </array>
         <key>ignoreFileList</key>
         <array/>
