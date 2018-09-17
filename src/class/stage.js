@@ -11,6 +11,7 @@ import { PIXIHandle } from './PIXIHandle';
 import { PIXIPixelPerfectInteractionPlugIn } from './pixi/etc/PIXIPixelPerfectInteractionPlugIn';
 import { PIXITempStore } from './pixi/etc/PIXITempStore';
 import PIXIHelper from './PIXIHelper';
+import { PIXIBaseAsset } from './pixi/init/PIXIBaseAsset';
 
 /**
  * class for a canvas
@@ -43,21 +44,24 @@ Entry.Stage = function() {
  */
 Entry.Stage.prototype.initStage = function(canvas) {
 
-    var _pixiApp = new PIXI.Application({
+    var pixiApp = new PIXI.Application({
         view: canvas,
         width: canvas.width,
         height: canvas.height,
         autoStart: false,
+        // autoStart: true,
         antialias:true,
         transparent: true
 
     });
-    this._pixiApp = _pixiApp;
+    this._pixiApp = pixiApp;
 
-    window.stage = _pixiApp.stage;
+    this._baseAsset = new PIXIBaseAsset();
+
+    window.stage = pixiApp.stage;
     console.log("[TEST] window.stage 할당됨");
 
-    this.canvas = _pixiApp.stage;
+    this.canvas = pixiApp.stage;
     this.canvas.canvas = canvas;
 
     this.canvas.x = 960 / 1.5 / 2;
@@ -322,7 +326,7 @@ Entry.Stage.prototype.initCoordinator = function() {
     c.interactive = false;
     c.interactiveChildren = false;
 
-    var sp = PIXI.Sprite.fromImage(Entry.mediaFilePath + 'workspace_coordinate.png');
+    var sp = this._baseAsset.newSprite("workspace_coordinate");
     sp.scale.set(0.5, 0.5);
     sp.position.set(-240, -135);
     c.addChild(sp);
@@ -542,13 +546,10 @@ Entry.Stage.prototype.initWall = function() {
     var wall = new PIXI.Container();
     wall.interactiveChildren = false;
     wall.interactive = false;
-    // wall.mouseEnabled = false;
-    // var bound = new Image();
-    // bound.src = Entry.mediaFilePath + 'media/bound.png';
-    var path = Entry.mediaFilePath + 'media/bound.png';
+    var THIS = this;
 
     function newSide(x, y, sx, sy) {
-        var sp = PIXI.Sprite.fromImage(path);
+        var sp = THIS._baseAsset.newSprite("bound");
         sp.position.set(x, y);
         sx ?  sp.scale.x = sx : 0;
         sy ?  sp.scale.y = sy : 0;
@@ -562,39 +563,6 @@ Entry.Stage.prototype.initWall = function() {
 
     this.canvas.addChild(wall);
     this.wall = wall;
-
-    // wall.up = new createjs.Bitmap();
-    // wall.up.scaleX = 480 / 30;
-    // wall.up.y = -135 - 30;
-    // wall.up.x = -240;
-    // wall.up.image = bound;
-    // wall.addChild(wall.up);
-    //
-    // wall.down = new createjs.Bitmap();
-    // wall.down.scaleX = 480 / 30;
-    // wall.down.y = 135;
-    // wall.down.x = -240;
-    // wall.down.image = bound;
-    // wall.addChild(wall.down);
-    //
-    // wall.right = new createjs.Bitmap();
-    // wall.right.scaleY = 270 / 30;
-    // wall.right.y = -135;
-    // wall.right.x = 240;
-    // wall.right.image = bound;
-    // wall.addChild(wall.right);
-    //
-    // wall.left = new createjs.Bitmap();
-    // wall.left.scaleY = 270 / 30;
-    // wall.left.y = -135;
-    // wall.left.x = -240 - 30;
-    // wall.left.image = bound;
-    // wall.addChild(wall.left);
-    //
-    // this.canvas.addChild(wall);
-    // this.wall = wall;
-
-
 };
 
 /**
@@ -636,17 +604,9 @@ Entry.Stage.prototype.showInputField = function() {
     }
     this.canvas.addChild(this.inputField.getPixiView());
 
-
-    PIXIHelper.todo("버튼 텍스쳐 화 하기. 비동기 코드도 삭제 되것죠?");
-    var buttonImg = new Image();
-    var inputSubmitButton = new PIXI.Sprite();
+    var inputSubmitButton = this._baseAsset.newSprite("confirm_button");
+    window.bt = inputSubmitButton;
     inputSubmitButton.interactive = true;
-    var imgPath = Entry.mediaFilePath + 'confirm_button.png';
-    buttonImg.onload = function() {
-        inputSubmitButton.texture = PIXI.Texture.fromLoader(buttonImg, imgPath);
-        Entry.requestUpdate = true;
-    };
-    buttonImg.src = imgPath;
     inputSubmitButton.scale.set(0.23, 0.23);
     inputSubmitButton.position.set(160, 89);
     inputSubmitButton.cursor = 'pointer';
@@ -656,6 +616,7 @@ Entry.Stage.prototype.showInputField = function() {
             Entry.dispatchEvent('canvasInputComplete');
         }
     });
+    Entry.requestUpdate = true;
 
     if (!this.inputSubmitButton) {
         this.inputField.value('');
