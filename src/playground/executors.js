@@ -210,22 +210,41 @@ Entry.Scope = function(block, executor) {
         const fieldBlock = this.block.params[this._getParamIndex(key, scope)];
         const blockId = fieldBlock.data.id;
 
-        if (executorValueMap[blockId] === 'isPending') {
-            throw new Entry.Utils.AsyncError();
-        } else if (executorValueMap[blockId] !== undefined) {
-            return executorValueMap[blockId];
-        }
-        const newScope = new Entry.Scope(fieldBlock, this.executor);
-        const result = Entry.block[fieldBlock.type].func.call(newScope, this.entity, newScope);
+        this._setExecutorValueMap(fieldBlock);
+        return executorValueMap[blockId];
+    };
 
-        if (result instanceof Promise) {
-            executorValueMap[blockId] = 'isPending';
-            result.then((value) => {
-                executorValueMap[blockId] = value;
-            });
-            throw new Entry.Utils.AsyncError();
-        }
-        return result;
+    /**
+     * 일반 getValue 값을 가져오기 전,
+     * 현 Scope 상태에서의 executor.valueMap 을 세팅한다.
+     * 이 로직은 Promise.all[] 과 유사하며, 모든 값이 준비될 때까지 Scope 를 멈춘다.
+     * @param{Array} fieldBlocks getValue 에 의한 호출의 경우 1, getValues 의 경우 1 이상
+     */
+    p._setExecutorValueMap = function(...fieldBlocks) {
+        const executorValueMap = this.executor.valueMap;
+
+        fieldBlocks.forEach(block => {
+            const blockId = block.data.id;
+
+            if (executorValueMap[blockId] === 'isPending') {
+                throw new Entry.Utils.AsyncError();
+            } else if (executorValueMap[blockId] !== undefined) {
+                return executorValueMap[blockId];
+            }
+
+            const newScope = new Entry.Scope(block, this.executor);
+            const result = Entry.block[block.type].func.call(newScope, this.entity, newScope);
+
+            if (result instanceof Promise) {
+                executorValueMap[blockId] = 'isPending';
+                result.then((value) => {
+                    executorValueMap[blockId] = value;
+                });
+                throw new Entry.Utils.AsyncError();
+            } else {
+                executorValueMap[blockId] = result;
+            }
+        });
     };
 
     p.getStringValue = function(key, scope) {
