@@ -209,7 +209,8 @@ export var PIXIHandle = function(canvas, baseAsset) {
         this.edge = edge;
 
         //rotate knob
-        var rotateKnob = new PIXI.Graphics();
+        var rotateKnob = BASE_ASSET.newSprite("rotateKnob");
+        rotateKnob.anchor.set(0.5, 1);
         rotateKnob.interactive = true;
         rotateKnob.cursor = 'crosshair';
         rotateKnob.on(PIXIDragHelper.DOWN, function(e) {
@@ -434,26 +435,7 @@ export var PIXIHandle = function(canvas, baseAsset) {
     };
 
     p.renderRotateKnob = function() {
-        // var width = this.width;
-        // var height = this.height;
-        // this.rotateKnob.graphics
-        //     .clear()
-        //     .ss(1, 2, 0)
-        //     .s(this.rotateKnobColor)
-        //     .mt(0, -height / 2)
-        //     .lt(0, -height / 2)
-        //     .lt(0, -height / 2 - 20)
-        //     .cp()
-        //     .beginFill(this.rotateKnobColor)
-        //     .dc(0, -height / 2 - 20, 4);
-
-        var color = colorToUint(this.rotateKnobColor);
-        var hh = this.height / 2;//half height
-        this.rotateKnob
-            .clear()
-            .beginFill(color)
-            .drawCircle(0, -hh - 20, 4)
-            .drawRect(-1,-hh - 20, 2, 20);
+        this.rotateKnob.y = -this.height / 2;
     };
 
     p.renderBorder = function() {
