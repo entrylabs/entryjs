@@ -158,10 +158,10 @@ Entry.Scope = function(block, executor) {
         });
     };
 
-    p.getValues = function(keys, block) {
+    p.getValues = function(keys, scope) {
         const scopeTree = this.executor.scopeTree;
-        const fieldBlocks = keys.map((key) => this.block.params[this._getParamIndex(key, block)]);
-        const currentBlockId = block.block.data.id;
+        const fieldBlocks = keys.map((key) => this.block.params[this._getParamIndex(key, scope)]);
+        const currentBlockId = scope.block.data.id;
         scopeTree[currentBlockId] = scopeTree[currentBlockId] || { state: 'wait' };
 
         let hasWait = false;
@@ -205,9 +205,9 @@ Entry.Scope = function(block, executor) {
         return fieldBlocks.map((fieldBlock) => scopeTree[fieldBlock.data.id].value);
     };
 
-    p.getValue = function(key, block) {
+    p.getValue = function(key, scope) {
         const executorValueMap = this.executor.valueMap;
-        const fieldBlock = this.block.params[this._getParamIndex(key, block)];
+        const fieldBlock = this.block.params[this._getParamIndex(key, scope)];
         const blockId = fieldBlock.data.id;
 
         if (executorValueMap[blockId] === 'isPending') {
@@ -228,16 +228,16 @@ Entry.Scope = function(block, executor) {
         return result;
     };
 
-    p.getStringValue = function(key, block) {
-        return String(this.getValue(key, block));
+    p.getStringValue = function(key, scope) {
+        return String(this.getValue(key, scope));
     };
 
-    p.getNumberValue = function(key, block) {
-        return Number(this.getValue(key, block));
+    p.getNumberValue = function(key, scope) {
+        return Number(this.getValue(key, scope));
     };
 
-    p.getBooleanValue = function(key, block) {
-        let value = this.getValue(key, block);
+    p.getBooleanValue = function(key, scope) {
+        let value = this.getValue(key, scope);
         if (value === undefined) {
             return false;
         }
@@ -257,8 +257,8 @@ Entry.Scope = function(block, executor) {
         return Number(this.getField(key));
     };
 
-    p.getStatement = function(key, block) {
-        return this.executor.stepInto(this.block.statements[this._getStatementIndex(key, block)]);
+    p.getStatement = function(key, scope) {
+        return this.executor.stepInto(this.block.statements[this._getStatementIndex(key, scope)]);
     };
 
     p._getParamIndex = function(key) {
