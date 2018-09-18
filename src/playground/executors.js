@@ -10,7 +10,7 @@ Entry.Executor = function(block, entity) {
     this.register = {};
     this.parentExecutor = null;
     this.valueMap = {};
-    this.scopeTree = {};
+    this.valueState = {};
     this.id = Entry.Utils.generateId();
 };
 
@@ -59,7 +59,7 @@ Entry.Executor.MAXIMUM_CALLSTACK = 100;
             if (returnVal === undefined || returnVal === null || returnVal === Entry.STATIC.PASS) {
                 this.scope = new Entry.Scope(this.scope.block.getNextBlock(), this);
                 this.valueMap = {};
-                this.scopeTree = {};
+                this.valueState = {};
                 if (this.scope.block === null) {
                     if (this._callStack.length) {
                         const oldScope = this.scope;

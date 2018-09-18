@@ -31,50 +31,42 @@ Entry.Scope = function(block, executor) {
     };
 
     p.getValues = function(keys, scope) {
-        const scopeTree = this.executor.scopeTree;
+        const valueState = this.executor.valueState || {};
         const fieldBlocks = keys.map((key) => this.block.params[this._getParamIndex(key, scope)]);
         const currentBlockId = scope.block.data.id;
-        scopeTree[currentBlockId] = scopeTree[currentBlockId] || { state: 'wait' };
+        valueState[currentBlockId] = valueState[currentBlockId] || { state: 'wait' };
 
         let hasWait = false;
         let hasPending = false;
-        if (scopeTree[currentBlockId].state !== 'pending') {
+        if (valueState[currentBlockId].state !== 'pending') {
             fieldBlocks.forEach((fieldBlock) => {
                 const blockId = fieldBlock.data.id;
-                scopeTree[blockId] = scopeTree[blockId] || {
-                    state: 'wait',
-                    parents: currentBlockId,
-                };
+                valueState[blockId] = valueState[blockId] || { state: 'wait' };
 
-                if (scopeTree[blockId] && scopeTree[blockId].state === 'pending') {
+                if (valueState[blockId] && valueState[blockId].state === 'pending') {
                     hasPending = true;
                 }
 
-                if (scopeTree[blockId].state === 'wait') {
+                if (valueState[blockId].state === 'wait') {
                     hasWait = true;
-                    this._checkTreeValuesResolve(fieldBlock, scopeTree, blockId);
+                    this._checkTreeValuesResolve(fieldBlock, valueState, blockId);
                 }
             });
         }
 
-        if (
-            !hasWait &&
-            hasPending &&
-            scopeTree[currentBlockId] &&
-            scopeTree[currentBlockId].state === 'wait'
-        ) {
-            scopeTree[currentBlockId].state = 'pending';
+        if (!hasWait && hasPending && valueState[currentBlockId].state === 'wait') {
+            valueState[currentBlockId].state = 'pending';
             throw new Entry.Utils.AsyncError();
         }
 
         fieldBlocks.forEach((fieldBlock) => {
             const blockId = fieldBlock.data.id;
-            if (scopeTree[blockId].state === 'pending') {
-                this._checkTreeValuesResolve(fieldBlock, scopeTree, blockId);
+            if (valueState[blockId].state === 'pending') {
+                this._checkTreeValuesResolve(fieldBlock, valueState, blockId);
             }
         });
 
-        return fieldBlocks.map((fieldBlock) => scopeTree[fieldBlock.data.id].value);
+        return fieldBlocks.map((fieldBlock) => valueState[fieldBlock.data.id].value);
     };
 
     p.getValue = function(key, scope) {
@@ -166,20 +158,20 @@ Entry.Scope = function(block, executor) {
         return this._schema.statementsKeyMap[key];
     };
 
-    p._checkTreeValuesResolve = function(fieldBlock, scopeTree, blockId) {
+    p._checkTreeValuesResolve = function(fieldBlock, valueState, blockId) {
         const newScope = new Entry.Scope(fieldBlock, this.executor);
         const result = Entry.block[fieldBlock.type].func.call(newScope, this.entity, newScope);
 
         if (result instanceof Promise) {
-            scopeTree[blockId].state = 'pending';
+            valueState[blockId].state = 'pending';
             result.then((value) => {
-                scopeTree[blockId].state = 'complete';
-                scopeTree[blockId].value = value;
+                valueState[blockId].state = 'complete';
+                valueState[blockId].value = value;
             });
             throw new Entry.Utils.AsyncError();
         } else {
-            scopeTree[blockId].state = 'complete';
-            scopeTree[blockId].value = result;
+            valueState[blockId].state = 'complete';
+            valueState[blockId].value = result;
         }
     };
 
