@@ -10,6 +10,7 @@ Entry.Executor = function(block, entity) {
     this.register = {};
     this.parentExecutor = null;
     this.valueMap = {};
+    this.scopeTree = {};
     this.id = Entry.Utils.generateId();
 };
 
@@ -58,6 +59,7 @@ Entry.Executor.MAXIMUM_CALLSTACK = 100;
             if (returnVal === undefined || returnVal === null || returnVal === Entry.STATIC.PASS) {
                 this.scope = new Entry.Scope(this.scope.block.getNextBlock(), this);
                 this.valueMap = {};
+                this.scopeTree = {};
                 if (this.scope.block === null) {
                     if (this._callStack.length) {
                         const oldScope = this.scope;
@@ -169,25 +171,97 @@ Entry.Scope = function(block, executor) {
         return result;
     };
 
-    p.getValues = function(...keys) {};
+    p.getValues = function(keys, block) {
+        const scopeTree = this.executor.scopeTree;
+        const fieldBlocks = keys.map((key) => this.block.params[this._getParamIndex(key, block)]);
+        const currentBlockId = block.block.data.id;
+
+        let hasWait = false;
+        let hasPending = false;
+        fieldBlocks.forEach((fieldBlock) => {
+            const blockId = fieldBlock.data.id;
+            scopeTree[blockId] = scopeTree[blockId] || { state: 'wait', parents: currentBlockId };
+
+            if (scopeTree[blockId] && scopeTree[blockId].state === 'pending') {
+                hasPending = true;
+            }
+            
+            if (scopeTree[blockId].state === 'wait') {
+                hasWait = true;
+                const newScope = new Entry.Scope(fieldBlock, this.executor);
+                const result = Entry.block[fieldBlock.type].func.call(
+                    newScope,
+                    this.entity,
+                    newScope
+                );
+
+                if (result instanceof Promise) {
+                    scopeTree[blockId].state = 'pending';
+                    result.then((value) => {
+                        scopeTree[blockId].state = 'complete';
+                        scopeTree[blockId].value = value;
+                    });
+                } else {
+                    scopeTree[blockId].state = 'complete';
+                    scopeTree[blockId].value = result;
+                }
+            }
+        });
+
+        if (
+            !hasWait &&
+            hasPending &&
+            scopeTree[currentBlockId] &&
+            scopeTree[currentBlockId].state === 'wait'
+        ) {
+            scopeTree[currentBlockId].state = 'pending';
+            throw new Entry.Utils.AsyncError();
+        }
+
+        fieldBlocks.forEach((fieldBlock) => {
+            const blockId = fieldBlock.data.id;
+            if (scopeTree[blockId].state === 'pending') {
+                const newScope = new Entry.Scope(fieldBlock, this.executor);
+                const result = Entry.block[fieldBlock.type].func.call(
+                    newScope,
+                    this.entity,
+                    newScope
+                );
+
+                if (result instanceof Promise) {
+                    scopeTree[blockId].state = 'pending';
+                    result.then((value) => {
+                        scopeTree[blockId].state = 'complete';
+                        scopeTree[blockId].value = value;
+                    });
+                    throw new Entry.Utils.AsyncError();
+                } else {
+                    scopeTree[blockId].state = 'complete';
+                    scopeTree[blockId].value = result;
+                }
+            }
+        });
+
+        return fieldBlocks.map((fieldBlock) => scopeTree[fieldBlock.data.id].value);
+    };
+
     p.getValue = function(key, block) {
         const executorValueMap = this.executor.valueMap;
         const fieldBlock = this.block.params[this._getParamIndex(key, block)];
-        const blockID = fieldBlock.data.id;
+        const blockId = fieldBlock.data.id;
 
-        if (executorValueMap[blockID] === 'isPending') {
+        if (executorValueMap[blockId] === 'isPending') {
             throw new Entry.Utils.AsyncError();
-        } else if (executorValueMap[blockID] !== undefined) {
-            return executorValueMap[blockID];
+        } else if (executorValueMap[blockId] !== undefined) {
+            return executorValueMap[blockId];
         }
         const newScope = new Entry.Scope(fieldBlock, this.executor);
         const result = Entry.block[fieldBlock.type].func.call(newScope, this.entity, newScope);
 
         if (result instanceof Promise) {
-            executorValueMap[blockID] = 'isPending';
+            executorValueMap[blockId] = 'isPending';
             result.then((value) => {
-                console.log(this.key);
-                executorValueMap[blockID] = value;
+                executorValueMap[blockId] = value;
             });
             throw new Entry.Utils.AsyncError();
         }
@@ -211,11 +285,11 @@ Entry.Scope = function(block, executor) {
         return isNaN(value) ? true : value; // handle "0" or "0.00"
     };
 
-    p.getField = function(key, block) {
+    p.getField = function(key) {
         return this.block.params[this._getParamIndex(key)];
     };
 
-    p.getStringField = function(key, block) {
+    p.getStringField = function(key) {
         return String(this.getField(key));
     };
 
