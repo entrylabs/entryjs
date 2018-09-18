@@ -357,7 +357,7 @@ Entry.Stage.prototype.selectObject = function(object) {
  * Initialize handle. Handle is use for transform object on canvas.
  */
 Entry.Stage.prototype.initHandle = function() {
-    this.handle = new PIXIHandle(this.canvas)
+    this.handle = new PIXIHandle(this.canvas, this._baseAsset)
         .setChangeListener(this, this.updateHandle)
         .setEditStartListener(this, this.startEdit)
         .setEditEndListener(this, this.endEdit);
