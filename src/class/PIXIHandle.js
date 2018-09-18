@@ -8,12 +8,13 @@
 
 import { PIXIDragHelper } from './PIXIDragHelper';
 
-export var PIXIHandle = function(canvas) {
+export var PIXIHandle = function(canvas, baseAsset) {
     if (typeof PIXI != 'object') {
         throw 'PIXI is not founded';
     }
 
     this.canvas = canvas;
+    this._baseAsset = baseAsset;
     this.color = '#c1c7cd';
     //this.color = "#6BD5FF";
     this.arrowColor = '#E79040';
