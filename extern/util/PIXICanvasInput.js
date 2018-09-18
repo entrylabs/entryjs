@@ -1179,6 +1179,7 @@
                 //     self._ctx.drawImage(self._renderCanvas, self._x, self._y);
                 // }
                 self._pixiView.texture.update();
+                Entry.requestUpdate = true;
                 return self;
 
             });
