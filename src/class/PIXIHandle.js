@@ -171,6 +171,7 @@ export var PIXIHandle = function(canvas, baseAsset) {
 
     p.createHandle = function() {
         var handle = this;
+        var BASE_ASSET = this._baseAsset;
         var container = new PIXI.Container();
         // var container = new createjs.Container();
 
@@ -305,24 +306,12 @@ export var PIXIHandle = function(canvas, baseAsset) {
         this.centerPoint = centerPoint;
 
         //resize knobs
-        var knobColor = colorToUint(this.color);
         this.knobs = [];
         for (var i = 0; i < 8; i++) {
-            var knob = new PIXI.Graphics();
+            var knob = BASE_ASSET.newSprite("knob");
+            knob.pivot.set(4, 4);
             knob.interactive = true;
-            knob
-                .beginFill(knobColor)
-                .lineStyle(1, knobColor)
-                .drawRect(-3, -3, 6, 6);
-
-            // knob
-            //     .beginFill(this.color)
-            //     .ss(1, 2, 0)
-            //     .s(this.color)
-            //     .dr(-3, -3, 6, 6);
-
             knob.knobIndex = i;
-            //knob.cursor = "move";
             knob.on(PIXIDragHelper.DOWN, function(e) {
                 var targetKnob = e.currentTarget;
                 PIXIDragHelper.handleDrag(targetKnob);
