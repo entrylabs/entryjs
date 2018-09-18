@@ -128,7 +128,6 @@ Entry.Executor.MAXIMUM_CALLSTACK = 100;
 
 Entry.Scope = function(block, executor) {
     this.block = block;
-    this.key = Entry.generateHash();
     this.type = block ? block.type : null; //legacy
     this.executor = executor;
     this.entity = executor.entity;
@@ -157,18 +156,6 @@ Entry.Scope = function(block, executor) {
                 return param;
             }
         });
-    };
-
-    p.getAsyncValue = async function(key, block) {
-        const fieldBlock = this.block.params[this._getParamIndex(key, block)];
-        const newScope = new Entry.Scope(fieldBlock, this.executor);
-        newScope.key = block.key;
-        const result = await Entry.block[fieldBlock.type].func.call(
-            newScope,
-            this.entity,
-            newScope
-        );
-        return result;
     };
 
     p.getValues = function(keys, block) {
