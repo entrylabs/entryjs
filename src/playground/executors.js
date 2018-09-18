@@ -175,38 +175,28 @@ Entry.Scope = function(block, executor) {
         const scopeTree = this.executor.scopeTree;
         const fieldBlocks = keys.map((key) => this.block.params[this._getParamIndex(key, block)]);
         const currentBlockId = block.block.data.id;
+        scopeTree[currentBlockId] = scopeTree[currentBlockId] || { state: 'wait' };
 
         let hasWait = false;
         let hasPending = false;
-        fieldBlocks.forEach((fieldBlock) => {
-            const blockId = fieldBlock.data.id;
-            scopeTree[blockId] = scopeTree[blockId] || { state: 'wait', parents: currentBlockId };
+        if (scopeTree[currentBlockId].state !== 'pending') {
+            fieldBlocks.forEach((fieldBlock) => {
+                const blockId = fieldBlock.data.id;
+                scopeTree[blockId] = scopeTree[blockId] || {
+                    state: 'wait',
+                    parents: currentBlockId,
+                };
 
-            if (scopeTree[blockId] && scopeTree[blockId].state === 'pending') {
-                hasPending = true;
-            }
-            
-            if (scopeTree[blockId].state === 'wait') {
-                hasWait = true;
-                const newScope = new Entry.Scope(fieldBlock, this.executor);
-                const result = Entry.block[fieldBlock.type].func.call(
-                    newScope,
-                    this.entity,
-                    newScope
-                );
-
-                if (result instanceof Promise) {
-                    scopeTree[blockId].state = 'pending';
-                    result.then((value) => {
-                        scopeTree[blockId].state = 'complete';
-                        scopeTree[blockId].value = value;
-                    });
-                } else {
-                    scopeTree[blockId].state = 'complete';
-                    scopeTree[blockId].value = result;
+                if (scopeTree[blockId] && scopeTree[blockId].state === 'pending') {
+                    hasPending = true;
                 }
-            }
-        });
+
+                if (scopeTree[blockId].state === 'wait') {
+                    hasWait = true;
+                    this._checkTreeValuesResolve(fieldBlock, scopeTree, blockId);
+                }
+            });
+        }
 
         if (
             !hasWait &&
@@ -221,24 +211,7 @@ Entry.Scope = function(block, executor) {
         fieldBlocks.forEach((fieldBlock) => {
             const blockId = fieldBlock.data.id;
             if (scopeTree[blockId].state === 'pending') {
-                const newScope = new Entry.Scope(fieldBlock, this.executor);
-                const result = Entry.block[fieldBlock.type].func.call(
-                    newScope,
-                    this.entity,
-                    newScope
-                );
-
-                if (result instanceof Promise) {
-                    scopeTree[blockId].state = 'pending';
-                    result.then((value) => {
-                        scopeTree[blockId].state = 'complete';
-                        scopeTree[blockId].value = value;
-                    });
-                    throw new Entry.Utils.AsyncError();
-                } else {
-                    scopeTree[blockId].state = 'complete';
-                    scopeTree[blockId].value = result;
-                }
+                this._checkTreeValuesResolve(fieldBlock, scopeTree, blockId);
             }
         });
 
@@ -313,6 +286,23 @@ Entry.Scope = function(block, executor) {
             this._schema = Entry.block[this.type];
         }
         return this._schema.statementsKeyMap[key];
+    };
+
+    p._checkTreeValuesResolve = function(fieldBlock, scopeTree, blockId) {
+        const newScope = new Entry.Scope(fieldBlock, this.executor);
+        const result = Entry.block[fieldBlock.type].func.call(newScope, this.entity, newScope);
+
+        if (result instanceof Promise) {
+            scopeTree[blockId].state = 'pending';
+            result.then((value) => {
+                scopeTree[blockId].state = 'complete';
+                scopeTree[blockId].value = value;
+            });
+            throw new Entry.Utils.AsyncError();
+        } else {
+            scopeTree[blockId].state = 'complete';
+            scopeTree[blockId].value = result;
+        }
     };
 
     p.die = function() {
