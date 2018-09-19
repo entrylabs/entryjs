@@ -36,7 +36,7 @@ Entry.Scope = function(block, executor) {
         const fieldBlocks = keys.map((key) => this.block.params[this._getParamIndex(key, scope)]);
 
         this._makeLeafValueTree(fieldBlocks);
-        return fieldBlocks.map((fieldBlocks) => { return this._getValueFromValueMap(fieldBlocks); });
+        return fieldBlocks.map((fieldBlocks) => this._getValueFromValueMap(fieldBlocks));
     };
 
     p.getValue = function(key, scope) {
@@ -48,7 +48,7 @@ Entry.Scope = function(block, executor) {
 
     p._getValueFromValueMap = function(block) {
         const value = this.executor.valueMap[block.data.id];
-        if(value === 'isPending') {
+        if (value === 'isPending') {
             throw new Entry.Utils.AsyncError();
         } else if (value) {
             return value;
@@ -62,7 +62,7 @@ Entry.Scope = function(block, executor) {
         const executorValueMap = this.executor.valueMap;
         const leafBlocks = [];
 
-        if(Object.keys(executorValueMap).length > 0) {
+        if (Object.keys(executorValueMap).length > 0) {
             return;
         }
 
@@ -72,7 +72,7 @@ Entry.Scope = function(block, executor) {
             if (params instanceof Array === false || params.length <= 1) {
                 leafBlocks.push(block);
             } else {
-                params.forEach(value => {
+                params.forEach((value) => {
                     if (typeof value === 'object') {
                         addValueBlockRecursive(value);
                     }
