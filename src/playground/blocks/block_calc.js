@@ -139,23 +139,31 @@ module.exports = {
                         script
                     );
 
-                    const leftValue = Entry.Utils.isNumber(leftStringValue) ? Number(leftStringValue) : leftStringValue;
-                    const rightValue = Entry.Utils.isNumber(rightStringValue) ? Number(rightStringValue) : rightStringValue;
+                    const leftValue = Entry.Utils.isNumber(leftStringValue)
+                        ? Number(leftStringValue)
+                        : leftStringValue;
+                    const rightValue = Entry.Utils.isNumber(rightStringValue)
+                        ? Number(rightStringValue)
+                        : rightStringValue;
 
                     switch (operator) {
                         case 'PLUS': {
                             if (typeof leftValue === 'number' && typeof rightValue === 'number') {
-                                return new BigNumber(leftValue).plus(rightValue).toNumber();
+                                return new BigNumber(leftValue).plus(rightValue)
+                                    .toNumber();
                             } else {
                                 return leftValue + rightValue;
                             }
                         }
                         case 'MINUS':
-                            return new BigNumber(leftValue).minus(rightValue).toNumber();
+                            return new BigNumber(leftValue).minus(rightValue)
+                                .toNumber();
                         case 'MULTI':
-                            return new BigNumber(leftValue).times(rightValue).toNumber();
+                            return new BigNumber(leftValue).times(rightValue)
+                                .toNumber();
                         case 'DIVIDE':
-                            return new BigNumber(leftValue).dividedBy(rightValue).toNumber();
+                            return new BigNumber(leftValue).dividedBy(rightValue)
+                                .toNumber();
                         default:
                             throw new Error('Not Invalid Operator');
                     }
@@ -460,6 +468,8 @@ module.exports = {
                     }
 
                     const targetCoordinate = script.getField('COORDINATE', script);
+                    const object = targetEntity.parent;
+                    const pictures = object.pictures;
                     switch (targetCoordinate) {
                         case 'x':
                             return targetEntity.getX();
@@ -469,17 +479,14 @@ module.exports = {
                             return targetEntity.getRotation();
                         case 'direction':
                             return targetEntity.getDirection();
-                        case 'picture_index':
-                            var object = targetEntity.parent;
-                            var pictures = object.pictures;
+                        case 'picture_index': 
                             return pictures.indexOf(targetEntity.picture) + 1;
                         case 'size':
                             return Number(targetEntity.getSize().toFixed(1));
-                        case 'picture_name':
-                            var object = targetEntity.parent;
-                            var pictures = object.pictures;
-                            var picture = pictures[pictures.indexOf(targetEntity.picture)];
+                        case 'picture_name': {
+                            const picture = pictures[pictures.indexOf(targetEntity.picture)];
                             return picture.name;
+                        }
                     }
                 },
                 syntax: {

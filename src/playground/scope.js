@@ -35,14 +35,16 @@ Entry.Scope = function(block, executor) {
     p.getValues = function(keys, scope) {
         const fieldBlocks = keys.map((key) => this.block.params[this._getParamIndex(key, scope)]);
 
-        this._makeLeafValueTree(fieldBlocks);
+        this._setValueMap(fieldBlocks);
+        
         return fieldBlocks.map((fieldBlocks) => this._getValueFromValueMap(fieldBlocks));
     };
 
     p.getValue = function(key, scope) {
         const fieldBlock = this.block.params[this._getParamIndex(key, scope)];
 
-        this._makeLeafValueTree(fieldBlock);
+        this._setValueMap(fieldBlock);
+
         return this._getValueFromValueMap(fieldBlock);
     };
 
@@ -73,40 +75,21 @@ Entry.Scope = function(block, executor) {
      * 해당 scope 에서 한번 실행된 함수는 더이상 트리를 순회하지 않는다.
      * @param rootBlocks 기준 블록
      */
-    p._makeLeafValueTree = function(...rootBlocks) {
+    p._setValueMap = function(...rootBlocks) {
         const executorValueMap = this.executor.valueMap;
-        const leafBlocks = [];
-
         // 현재 스코프에서 한번 생성된 트리를 다시 순회하지 않는다.
         if (Object.keys(executorValueMap).length > 0) {
             return;
         }
 
-        const addValueBlockRecursive = (block) => {
-            const params = block.data && block.data.params;
-
-            if (params instanceof Array === false || params.length <= 1) {
-                leafBlocks.push(block);
-            } else {
-                params.forEach((value) => {
-                    if (typeof value === 'object') {
-                        addValueBlockRecursive(value);
-                    }
-                });
-            }
-        };
-        rootBlocks.flat().forEach(addValueBlockRecursive);
-
+        const leafBlocks = this._getLeafBlocks(rootBlocks);
         leafBlocks.forEach((block) => {
             const blockId = block.data.id;
-
             const newScope = new Entry.Scope(block, this.executor);
             const result = Entry.block[block.type].func.call(newScope, this.entity, newScope);
 
             if (result instanceof Promise) {
-                executorValueMap[blockId] = {
-                    isResolved: false,
-                };
+                executorValueMap[blockId] = { isResolved: false };
                 result.then((value) => {
                     executorValueMap[blockId] = {
                         value,
@@ -120,6 +103,27 @@ Entry.Scope = function(block, executor) {
                 };
             }
         });
+    };
+
+    p._getLeafBlocks = function(rootBlocks) {
+        const leafBlocks = [];
+
+        const addValueBlockRecursive = (block) => {
+            const params = block.data && block.data.params;
+
+            if (params.length <= 1) {
+                leafBlocks.push(block);
+            } else {
+                params.forEach((value) => {
+                    if (typeof value === 'object') {
+                        addValueBlockRecursive(value);
+                    }
+                });
+            }
+        };
+        rootBlocks.flat().forEach(addValueBlockRecursive);
+
+        return leafBlocks;
     };
 
     p.getStringValue = function(key, scope) {
