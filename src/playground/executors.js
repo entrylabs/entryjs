@@ -72,6 +72,7 @@ Entry.Executor.MAXIMUM_CALLSTACK = 100;
                     }
                 }
             } else if (returnVal === Entry.STATIC.CONTINUE) {
+                this.valueMap = {};
             } else if (returnVal === Entry.STATIC.BREAK || this.scope === returnVal) {
                 break;
             }

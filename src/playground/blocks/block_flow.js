@@ -124,17 +124,16 @@ module.exports = {
                 class: 'repeat',
                 isNotFor: [],
                 func: function(sprite, script) {
-                    var iterNumber;
                     if (!script.isLooped) {
+                        const iterNumber = script.getNumberValue('VALUE', script);
                         script.isLooped = true;
-                        var iterNumber = script.getNumberValue('VALUE', script);
                         if (iterNumber < 0)
                             throw new Error(
                                 Lang.Blocks.FLOW_repeat_basic_errorMsg
                             );
                         script.iterCount = Math.floor(iterNumber);
                     }
-                    if (script.iterCount != 0 && !(script.iterCount < 0)) {
+                    if (script.iterCount !== 0 && !(script.iterCount < 0)) {
                         script.iterCount--;
                         return script.getStatement('DO', script);
                     } else {
