@@ -72,7 +72,7 @@
             </struct>
         </struct>
         <key>shapePadding</key>
-        <uint>0</uint>
+        <uint>2</uint>
         <key>jpgQuality</key>
         <uint>80</uint>
         <key>pngOptimizationLevel</key>
@@ -86,7 +86,7 @@
         <key>textureFormat</key>
         <enum type="SettingsBase::TextureFormat">png</enum>
         <key>borderPadding</key>
-        <uint>0</uint>
+        <uint>2</uint>
         <key>maxTextureSize</key>
         <QSize>
             <key>width</key>
@@ -199,32 +199,6 @@
         </struct>
         <key>individualSpriteSettings</key>
         <map type="IndividualSpriteSettingsMap">
-            <key type="filename">imgs/arrow.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>5,11,9,22</rect>
-                <key>scale9Paddings</key>
-                <rect>5,11,9,22</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
-            <key type="filename">imgs/border.png</key>
-            <struct type="IndividualSpriteSettings">
-                <key>pivotPoint</key>
-                <point_f>0.5,0.5</point_f>
-                <key>scale9Enabled</key>
-                <false/>
-                <key>scale9Borders</key>
-                <rect>7,3,14,5</rect>
-                <key>scale9Paddings</key>
-                <rect>7,3,14,5</rect>
-                <key>scale9FromFile</key>
-                <false/>
-            </struct>
             <key type="filename">imgs/bound.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
@@ -238,16 +212,17 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">imgs/centerPoint.png</key>
+            <key type="filename">imgs/common_blank.png</key>
+            <key type="filename">imgs/handle/bg.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
                 <key>scale9Enabled</key>
                 <false/>
                 <key>scale9Borders</key>
-                <rect>3,3,6,6</rect>
+                <rect>1,1,1,1</rect>
                 <key>scale9Paddings</key>
-                <rect>3,3,6,6</rect>
+                <rect>1,1,1,1</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
@@ -264,7 +239,46 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">imgs/knob.png</key>
+            <key type="filename">imgs/handle/arrow.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>5,11,9,22</rect>
+                <key>scale9Paddings</key>
+                <rect>5,11,9,22</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">imgs/handle/border.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>3,3,5,5</rect>
+                <key>scale9Paddings</key>
+                <rect>3,3,5,5</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">imgs/handle/centerPoint.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>3,3,6,6</rect>
+                <key>scale9Paddings</key>
+                <rect>3,3,6,6</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">imgs/handle/knob.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -277,16 +291,16 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
-            <key type="filename">imgs/rotateKnob.png</key>
+            <key type="filename">imgs/handle/rotateKnob.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
                 <key>scale9Enabled</key>
                 <false/>
                 <key>scale9Borders</key>
-                <rect>3,6,5,13</rect>
+                <rect>2,6,5,13</rect>
                 <key>scale9Paddings</key>
-                <rect>3,6,5,13</rect>
+                <rect>2,6,5,13</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>

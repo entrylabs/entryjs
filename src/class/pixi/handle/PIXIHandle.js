@@ -50,15 +50,6 @@ export var PIXIHandle = function(canvas, baseAsset) {
 
 (function(p) {
 
-    /**
-     * #ff00ff --> 0xff00ff
-     * @param strColor
-     */
-    function colorToUint(strColor) {
-        return Number(strColor.replace("#", "0x"));
-    }
-
-
     p.setChangeListener = function(object, func) {
         this.onChangeFunction = func;
         this.callerObject = object;
@@ -121,15 +112,11 @@ export var PIXIHandle = function(canvas, baseAsset) {
 
     p.setWidth = function(width) {
         this.width = width;
-        // this.background.scaleX = width / 100;
-        // this.background.scale.x = width / 100;
         this.background.width = width;
     };
 
     p.setHeight = function(height) {
         this.height = height;
-        // this.background.scaleY = height / 100;
-        // this.background.scale.y = height / 100;
         this.background.height = height;
     };
 
@@ -146,8 +133,6 @@ export var PIXIHandle = function(canvas, baseAsset) {
     p.setRotation = function(rotation) {
         rotation = (rotation + 360) % 360;
         this.rotation = rotation;
-        // this.container.rotation = rotation;
-        // this.background.rotation = rotation;
         var rad = rotation * Math.PI / 180;
         this.container.rotation = rad;
         this.background.rotation = rad;
@@ -157,7 +142,6 @@ export var PIXIHandle = function(canvas, baseAsset) {
     p.setDirection = function(direction) {
         direction = (direction + 360) % 360;
         this.direction = direction;
-        // this.directionArrow.rotation = direction;
         this.directionArrow.rotation = direction * Math.PI / 180;
     };
 
@@ -176,7 +160,6 @@ export var PIXIHandle = function(canvas, baseAsset) {
         var handle = this;
         var BASE_ASSET = this._baseAsset;
         var container = new PIXI.Container();
-        // var container = new createjs.Container();
 
         //border
         var border = new PIXI.Graphics();
@@ -235,32 +218,10 @@ export var PIXIHandle = function(canvas, baseAsset) {
         container.setChildIndex(rotateKnob, 1);
         this.rotateKnob = rotateKnob;
 
-        var directionArrow = new PIXI.Graphics();
+        var directionArrow = BASE_ASSET.newSprite("handle/arrow");
         directionArrow.interactive = true;
-        directionArrow
-        // .drawCircle(0, 0, this.DHANDLE_RADIUS) //박봉배: 이건 안쓰는거 같은데요?
-            .beginFill(colorToUint(this.arrowColor))
-            .moveTo(0, -42)
-            .lineTo(9, -30)
-            .lineTo(-9, -30)
-            .closePath()
-            .drawRect(-2, -32, 4, 32);
+        directionArrow.pivot.set(9, 42);
 
-
-
-        // directionArrow
-        //     .ss(4, 1, 1)
-        //     .s(this.arrowColor)
-        //     .f(this.arrowColor)
-        //     .dc(0, 0, this.DHANDLE_RADIUS)
-        //     .mt(0, 0)
-        //     .lt(0, -40)
-        //     .lt(7, -32)
-        //     .lt(-7, -32)
-        //     .lt(0, -40)
-        //     .es();
-
-        // directionArrow.on('mousedown', function(e) {
         directionArrow.on(PIXIDragHelper.DOWN, function(e) {
             PIXIDragHelper.handleDrag(directionArrow);
             handle.dispatchEditStartEvent();
@@ -281,12 +242,6 @@ export var PIXIHandle = function(canvas, baseAsset) {
         var centerPoint = BASE_ASSET.newSprite("handle/centerPoint");
         centerPoint.interactive = true;
         centerPoint.anchor.set(0.5, 0.5);
-
-        // centerPoint
-        //     .beginFill(this.centerColor)
-        //     .ss(1, 2, 0)
-        //     .s(this.centerColor)
-        //     .dc(0, 0, 5, 5);
 
         centerPoint.on(PIXIDragHelper.DOWN, function(e) {
             PIXIDragHelper.handleDrag(centerPoint);
@@ -343,12 +298,6 @@ export var PIXIHandle = function(canvas, baseAsset) {
         var background = BASE_ASSET.newSprite("handle/bg");
         background.interactive = true;
         background.anchor.set(0.5, 0.5);
-
-        // background
-        //     .ss(1, 2, 0)
-        //     .s('rgba(254,254,254,0.01)')
-        //     .beginFill('rgba(254,254,254,1)')
-        //     .dr(-50, -50, 100, 100);
 
         background.on(PIXIDragHelper.DOWN, function(e) {
             PIXIDragHelper.handleDrag(background);
@@ -449,8 +398,6 @@ export var PIXIHandle = function(canvas, baseAsset) {
     };
 
     p.getLocalCoordinate = function(pos) {
-        var container = this.container;
-        // var rotation = this.container.rotation * Math.PI / 180;
         var rotation = this.container.rotation;
         var cos = Math.cos(rotation);
         var sin = Math.sin(rotation);

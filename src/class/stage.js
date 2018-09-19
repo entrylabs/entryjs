@@ -24,14 +24,10 @@ Entry.Stage = function() {
 
     /** @type {Dictionary} */
     this.variables = {};
-    this.background = new PIXI.Graphics();
-    this.background
-        .beginFill(0xffffff)
-        .drawRect(-480, -240, 960, 480);
+
     this.objectContainers = [];
     this.selectedObjectContainer = null;
-    this.variableContainer = new PIXI.Container();
-    this.dialogContainer = new PIXI.Container();
+
     /** @type {null|Entry.EntryObject} */
     this.selectedObject = null;
     this.isObjectClick = false;
@@ -48,8 +44,8 @@ Entry.Stage.prototype.initStage = function(canvas) {
         view: canvas,
         width: canvas.width,
         height: canvas.height,
-        autoStart: false,
-        // autoStart: true,
+        // autoStart: false,
+        autoStart: true,
         antialias:true,
         transparent: true
 
@@ -72,6 +68,15 @@ Entry.Stage.prototype.initStage = function(canvas) {
     // createjs.Touch.enable(this.canvas);
     // this.canvas.enableMouseOver(10);
     // this.canvas.mouseMoveOutside = true;
+
+    this.background = this._baseAsset.newSprite("common_blank");
+    this.background.width = 960;
+    this.background.height = 480;
+    this.background.anchor.set(0.5, 0.5);
+
+    this.variableContainer = new PIXI.Container();
+    this.dialogContainer = new PIXI.Container();
+
 
     this.canvas.addChild(this.background);
     this.canvas.addChild(this.variableContainer);
