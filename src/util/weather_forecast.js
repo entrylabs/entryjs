@@ -1,6 +1,7 @@
 'use strict';
 
 const PromiseManager = require('@core/promiseManager');
+const { callApi } = require('@util/common');
 
 Entry.EXPANSION_BLOCK.weather = {
     isInitialized: false,
@@ -82,16 +83,10 @@ function resolveData(weatherData, type, dateStr) {
 Entry.EXPANSION_BLOCK.weather.getData = function(type, locationStr, dateStr) {
     const url = this.baseUrl + type;
     const location = this.locationMap[locationStr];
-
-    if (this.data[type]) {
-        return resolveData(this.data[type][location], type, dateStr);
-    }
-
     return new PromiseManager().Promise(function(resolve) {
-        $.get(url).done(function(response) {
-            Entry.EXPANSION_BLOCK.weather.data[type] = response;
-            resolve(resolveData(response[location], type, dateStr));
-        }).fail(function() {
+        callApi(url, { url }).then((response) => {
+            resolve(resolveData(response.data[location], type, dateStr));
+        }).catch(() => {
             resolve(Entry.EXPANSION_BLOCK.weather.defaultData);
         });
     });
