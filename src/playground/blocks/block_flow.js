@@ -42,22 +42,21 @@ module.exports = {
                 },
                 class: 'delay',
                 isNotFor: [],
-                func: function(sprite, script) {
+                func(sprite, script) {
                     if (!script.isStart) {
                         script.isStart = true;
                         script.timeFlag = 1;
-                        var timeValue = script.getNumberValue('SECOND', script);
-                        var fps = Entry.FPS || 60;
+                        let timeValue = script.getNumberValue('SECOND', script);
+                        const fps = Entry.FPS || 60;
                         timeValue = 60 / fps * timeValue * 1000;
 
-                        var blockId = script.block.id;
+                        const blockId = script.block.id;
                         Entry.TimeWaitManager.add(blockId, function() {
                             script.timeFlag = 0;
                         }, timeValue);
-                        //console.log(Entry.timerInstances.length, 'timerInstance created');
 
                         return script;
-                    } else if (script.timeFlag == 1) {
+                    } else if (script.timeFlag === 1) {
                         return script;
                     } else {
                         delete script.timeFlag;
@@ -123,14 +122,15 @@ module.exports = {
                 },
                 class: 'repeat',
                 isNotFor: [],
-                func: function(sprite, script) {
+                func(sprite, script) {
                     if (!script.isLooped) {
                         const iterNumber = script.getNumberValue('VALUE', script);
                         script.isLooped = true;
-                        if (iterNumber < 0)
+                        if (iterNumber < 0) {
                             throw new Error(
                                 Lang.Blocks.FLOW_repeat_basic_errorMsg
                             );
+                        }
                         script.iterCount = Math.floor(iterNumber);
                     }
                     if (script.iterCount !== 0 && !(script.iterCount < 0)) {
@@ -192,8 +192,7 @@ module.exports = {
                 },
                 class: 'repeat',
                 isNotFor: [],
-                func: function(sprite, script) {
-                    //return script.getStatement("DO", script);
+                func(sprite, script) {
                     script.isLooped = true;
                     return script.getStatement('DO');
                 },
@@ -274,11 +273,12 @@ module.exports = {
                 },
                 class: 'repeat',
                 isNotFor: [],
-                func: function(sprite, script) {
-                    var value = script.getBooleanValue('BOOL', script);
+                func(sprite, script) {
+                    let value = script.getBooleanValue('BOOL', script);
 
-                    if (script.getField('OPTION', script) == 'until')
+                    if (script.getField('OPTION', script) === 'until') {
                         value = !value;
+                    }
                     script.isLooped = value;
 
                     return value
@@ -313,7 +313,7 @@ module.exports = {
                 },
                 class: 'repeat',
                 isNotFor: [],
-                func: function(sprite, script) {
+                func(sprite, script) {
                     return this.executor.breakLoop();
                 },
                 syntax: { js: [], py: ['break'] },
@@ -365,12 +365,12 @@ module.exports = {
                 },
                 class: 'condition',
                 isNotFor: [],
-                func: function(sprite, script) {
+                func(sprite, script) {
                     if (script.isCondition) {
                         delete script.isCondition;
                         return script.callReturn();
                     }
-                    var value = script.getBooleanValue('BOOL', script);
+                    const value = script.getBooleanValue('BOOL', script);
                     if (value) {
                         script.isCondition = true;
                         return script.getStatement('STACK', script);
@@ -437,15 +437,18 @@ module.exports = {
                 },
                 class: 'condition',
                 isNotFor: [],
-                func: function(sprite, script) {
+                func(sprite, script) {
                     if (script.isCondition) {
                         delete script.isCondition;
                         return script.callReturn();
                     }
-                    var value = script.getBooleanValue('BOOL', script);
+                    const value = script.getBooleanValue('BOOL', script);
                     script.isCondition = true;
-                    if (value) return script.getStatement('STACK_IF', script);
-                    else return script.getStatement('STACK_ELSE', script);
+                    if (value) {
+                        return script.getStatement('STACK_IF', script);
+                    } else {
+                        return script.getStatement('STACK_ELSE', script);
+                    }
                 },
                 syntax: {
                     js: [],
@@ -507,8 +510,8 @@ module.exports = {
                 },
                 class: 'wait',
                 isNotFor: [],
-                func: function(sprite, script) {
-                    var value = script.getBooleanValue('BOOL', script);
+                func(sprite, script) {
+                    const value = script.getBooleanValue('BOOL', script);
                     if (value) {
                         return script.callReturn();
                     } else {
@@ -567,14 +570,16 @@ module.exports = {
                 },
                 class: 'terminate',
                 isNotFor: [],
-                func: function(sprite, script) {
-                    var object = sprite.parent;
-
+                func(sprite, script) {
+                    const object = sprite.parent;
+                    
                     switch (script.getField('TARGET', script)) {
                         case 'all':
                             Entry.container.mapObject(function(obj) {
-                                if (!obj.objectType) return;
-
+                                if (!obj.objectType) {
+                                    return;
+                                }
+                            
                                 obj.script.clearExecutors();
                             });
                             return this.die();
@@ -586,14 +591,13 @@ module.exports = {
                             return this.die();
                         case 'thisThread':
                             return this.die();
-                        case 'otherThread':
-                            var executor = this.executor;
-                            var code = object.script;
-                            var executors = code.executors;
-                            var spriteId = sprite.id;
-
-                            for (var i = 0; i < executors.length; i++) {
-                                var currentExecutor = executors[i];
+                        case 'otherThread': {
+                            const executor = this.executor;
+                            const code = object.script;
+                            const executors = code.executors;
+                            const spriteId = sprite.id;
+                            for (let i = 0; i < executors.length; i++) {
+                                const currentExecutor = executors[i];
                                 if (
                                     currentExecutor !== executor &&
                                     currentExecutor.entity.id === spriteId
@@ -603,6 +607,7 @@ module.exports = {
                                 }
                             }
                             return script.callReturn();
+                        }
                         case 'other_objects':
                             Entry.container.mapObject(function(obj) {
                                 if (!obj.objectType || obj === object) {
@@ -680,7 +685,7 @@ module.exports = {
                 },
                 class: 'terminate',
                 isNotFor: [],
-                func: function(sprite, script) {
+                func(sprite, script) {
                     Entry.engine.toggleStop();
                     Entry.engine.toggleRun();
                 },
@@ -708,7 +713,7 @@ module.exports = {
                 },
                 class: 'clone',
                 isNotFor: [],
-                func: function(sprite, script) {
+                func(sprite, script) {
                     return script.callReturn();
                 },
                 event: 'when_clone_start',
@@ -754,17 +759,17 @@ module.exports = {
                 },
                 class: 'clone',
                 isNotFor: [],
-                func: function(sprite, script) {
-                    var targetSpriteId = script.getField('VALUE', script);
-                    var returnBlock = script.callReturn();
-                    if (targetSpriteId == 'self')
+                func(sprite, script) {
+                    const targetSpriteId = script.getField('VALUE', script);
+                    const returnBlock = script.callReturn();
+                    if (targetSpriteId === 'self') {
                         sprite.parent.addCloneEntity(
                             sprite.parent,
                             sprite,
                             null
                         );
-                    else {
-                        var object = Entry.container.getObject(targetSpriteId);
+                    } else {
+                        const object = Entry.container.getObject(targetSpriteId);
                         object.addCloneEntity(sprite.parent, null, null);
                     }
                     return returnBlock;
@@ -809,8 +814,10 @@ module.exports = {
                 },
                 class: 'clone',
                 isNotFor: [],
-                func: function(sprite, script) {
-                    if (!sprite.isClone) return script.callReturn();
+                func(sprite, script) {
+                    if (!sprite.isClone) {
+                        return script.callReturn();
+                    }
                     sprite.removeClone();
                     return this.die();
                 },
@@ -834,8 +841,8 @@ module.exports = {
                 },
                 class: 'clone',
                 isNotFor: [],
-                func: function(sprite, script) {
-                    var clonedEntities = sprite.parent.getClonedEntities();
+                func(sprite, script) {
+                    let clonedEntities = sprite.parent.getClonedEntities();
                     clonedEntities.map(function(entity) {
                         entity.removeClone();
                     });
@@ -846,5 +853,5 @@ module.exports = {
                 syntax: { js: [], py: ['Entry.remove_all_clone()'] },
             },
         };
-    }
-}
+    },
+};
