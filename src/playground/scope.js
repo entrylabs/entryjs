@@ -36,25 +36,19 @@ Entry.Scope = function(block, executor) {
         const currentBlockId = scope.block.data.id;
         valueState[currentBlockId] = valueState[currentBlockId] || { state: 'wait' };
 
-        let hasWait = false;
         let hasPending = false;
         if (valueState[currentBlockId].state === 'wait') {
             fieldBlocks.forEach((fieldBlock) => {
                 const blockId = fieldBlock.data.id;
                 valueState[blockId] = valueState[blockId] || { state: 'wait' };
-
-                if (valueState[blockId] && valueState[blockId].state === 'pending') {
-                    hasPending = true;
-                }
-
                 if (valueState[blockId].state === 'wait') {
-                    hasWait = true;
-                    this._checkValueState(fieldBlock, valueState, blockId);
+                    this._checkValueState(fieldBlock, valueState);
                 }
+                hasPending = !hasPending || valueState[blockId].state === 'pending';
             });
         }
 
-        if (!hasWait && hasPending && valueState[currentBlockId].state === 'wait') {
+        if (hasPending && valueState[currentBlockId].state === 'wait') {
             valueState[currentBlockId].state = 'pending';
             throw new Entry.Utils.AsyncError();
         }
@@ -62,7 +56,7 @@ Entry.Scope = function(block, executor) {
         fieldBlocks.forEach((fieldBlock) => {
             const blockId = fieldBlock.data.id;
             if (valueState[blockId].state === 'pending') {
-                this._checkValueState(fieldBlock, valueState, blockId);
+                this._checkValueState(fieldBlock, valueState);
             }
         });
 
@@ -158,9 +152,10 @@ Entry.Scope = function(block, executor) {
         return this._schema.statementsKeyMap[key];
     };
 
-    p._checkValueState = function(fieldBlock, valueState, blockId) {
+    p._checkValueState = function(fieldBlock, valueState) {
         const newScope = new Entry.Scope(fieldBlock, this.executor);
         const result = Entry.block[fieldBlock.type].func.call(newScope, this.entity, newScope);
+        const blockId = fieldBlock.data.id;
 
         if (result instanceof Promise) {
             if (valueState[blockId].state === 'pending') {
