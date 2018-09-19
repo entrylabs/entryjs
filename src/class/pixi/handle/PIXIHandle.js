@@ -122,13 +122,15 @@ export var PIXIHandle = function(canvas, baseAsset) {
     p.setWidth = function(width) {
         this.width = width;
         // this.background.scaleX = width / 100;
-        this.background.scale.x = width / 100;
+        // this.background.scale.x = width / 100;
+        this.background.width = width;
     };
 
     p.setHeight = function(height) {
         this.height = height;
         // this.background.scaleY = height / 100;
-        this.background.scale.y = height / 100;
+        // this.background.scale.y = height / 100;
+        this.background.height = height;
     };
 
     p.setRegX = function(regX) {
@@ -210,7 +212,7 @@ export var PIXIHandle = function(canvas, baseAsset) {
         this.edge = edge;
 
         //rotate knob
-        var rotateKnob = BASE_ASSET.newSprite("rotateKnob");
+        var rotateKnob = BASE_ASSET.newSprite("handle/rotateKnob");
         rotateKnob.anchor.set(0.5, 1);
         rotateKnob.interactive = true;
         rotateKnob.cursor = 'crosshair';
@@ -276,13 +278,9 @@ export var PIXIHandle = function(canvas, baseAsset) {
         container.setChildIndex(directionArrow, 0);
         this.directionArrow = directionArrow;
 
-        // center
-        var centerPoint = new PIXI.Graphics();
+        var centerPoint = BASE_ASSET.newSprite("handle/centerPoint");
         centerPoint.interactive = true;
-        centerPoint
-            .beginFill(colorToUint(this.centerColor))
-            .lineStyle(1, colorToUint(this.centerColor))
-            .drawCircle(0, 0, 5, 5);
+        centerPoint.anchor.set(0.5, 0.5);
 
         // centerPoint
         //     .beginFill(this.centerColor)
@@ -310,7 +308,7 @@ export var PIXIHandle = function(canvas, baseAsset) {
         //resize knobs
         this.knobs = [];
         for (var i = 0; i < 8; i++) {
-            var knob = BASE_ASSET.newSprite("knob");
+            var knob = BASE_ASSET.newSprite("handle/knob");
             knob.pivot.set(4, 4);
             knob.interactive = true;
             knob.knobIndex = i;
@@ -342,14 +340,9 @@ export var PIXIHandle = function(canvas, baseAsset) {
             this.knobs.push(knob);
         }
 
-        //TODO 봉배님 백그라운드가 안보임요.
-        var background = new PIXI.Graphics();
+        var background = BASE_ASSET.newSprite("handle/bg");
         background.interactive = true;
-        background
-            .lineStyle(0)
-            // .beginFill(0xfefefe, 1)
-            .beginFill(0xff0000, 1)
-            .drawRect(-50, -50, 100, 100);
+        background.anchor.set(0.5, 0.5);
 
         // background
         //     .ss(1, 2, 0)
@@ -406,46 +399,20 @@ export var PIXIHandle = function(canvas, baseAsset) {
     };
 
     p.renderEdge = function() {
-        var width = this.width;
-        var height = this.height;
-
         this.edge.renderEdge(this.width, this.height);
-
-        return;
-
-        // this.edge.graphics
-        //     .clear()
-        //     .ss(10, 2, 0)
-        //     .s('rgba(254,254,254,0.01)')
-        //     .lt(-width / 2, -height / 2)
-        //     .lt(0, -height / 2)
-        //     .lt(0, -height / 2)
-        //     .lt(+width / 2, -height / 2)
-        //     .lt(+width / 2, +height / 2)
-        //     .lt(-width / 2, +height / 2)
-        //     .cp();
-
-        var hw = width / 2;
-        var hh = height / 2;
-        //pixi line은 interaction 이 안됨. 그래서 rect 로 draw함.
-        var THICK = 10;
-        var H_THICK = THICK/2;
-        this.edge
-            .clear()
-            .lineStyle(0)
-            .beginFill(0xfefefe, 0.01)
-            .drawRect(-hw - H_THICK, -hh - H_THICK, width + THICK, THICK)//top
-            .drawRect(-hw - H_THICK, +hh - H_THICK, width + THICK, THICK)//bottom
-            .drawRect(-hw - H_THICK, -hh - H_THICK, THICK, height + THICK)//left
-            .drawRect(+hw - H_THICK, -hh - H_THICK, THICK, height + THICK);//right
     };
 
     p.renderRotateKnob = function() {
         this.rotateKnob.y = -this.height / 2;
     };
 
+    /**
+     * @deprecated 2018.09.19 박준배.
+     * graphics 에서 texture 로 변경하면서 border와 edge 를 합쳐버림.
+     * 그래서 보더가 필요 없음.
+     * 함수가 public naming 이라서 삭제를 못하겠음.
+     */
     p.renderBorder = function() {
-        //2018.09.19 박준배. texture 로 변경하면서 border가 사라짐. 함수가 public naming 이라서 삭제를 못하겠음.
     };
 
     p.renderKnobs = function() {

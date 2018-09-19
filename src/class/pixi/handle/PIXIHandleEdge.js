@@ -2,7 +2,7 @@ export class PIXIHandleEdge extends PIXI.Container {
     constructor(baseAsset) {
         super();
         var spriteFactory = ()=>{
-            var sp = baseAsset.newSprite("border");
+            var sp = baseAsset.newSprite("handle/border");
             sp.pivot.set(0, 4);
             this.addChild(sp);
             return sp;
