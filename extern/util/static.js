@@ -1361,6 +1361,12 @@ EntryStatic.getAllBlocks = function() {
                 "dash_eye",
                 "dash_animation",
                 //endregion dash
+		    
+		//sciencecube
+		"sciencecube_temper",  
+                "sciencecube_voltage",
+                "sciencecube_current",
+                "sciencecube_pressue",    
             ]
         }
     ]
