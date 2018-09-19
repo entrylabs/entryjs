@@ -38,7 +38,7 @@ Entry.Scope = function(block, executor) {
 
         let hasWait = false;
         let hasPending = false;
-        if (valueState[currentBlockId].state !== 'pending') {
+        if (valueState[currentBlockId].state === 'wait') {
             fieldBlocks.forEach((fieldBlock) => {
                 const blockId = fieldBlock.data.id;
                 valueState[blockId] = valueState[blockId] || { state: 'wait' };
@@ -49,7 +49,7 @@ Entry.Scope = function(block, executor) {
 
                 if (valueState[blockId].state === 'wait') {
                     hasWait = true;
-                    this._checkTreeValuesResolve(fieldBlock, valueState, blockId);
+                    this._checkValueState(fieldBlock, valueState, blockId);
                 }
             });
         }
@@ -62,7 +62,7 @@ Entry.Scope = function(block, executor) {
         fieldBlocks.forEach((fieldBlock) => {
             const blockId = fieldBlock.data.id;
             if (valueState[blockId].state === 'pending') {
-                this._checkTreeValuesResolve(fieldBlock, valueState, blockId);
+                this._checkValueState(fieldBlock, valueState, blockId);
             }
         });
 
@@ -158,17 +158,19 @@ Entry.Scope = function(block, executor) {
         return this._schema.statementsKeyMap[key];
     };
 
-    p._checkTreeValuesResolve = function(fieldBlock, valueState, blockId) {
+    p._checkValueState = function(fieldBlock, valueState, blockId) {
         const newScope = new Entry.Scope(fieldBlock, this.executor);
         const result = Entry.block[fieldBlock.type].func.call(newScope, this.entity, newScope);
 
         if (result instanceof Promise) {
+            if (valueState[blockId].state === 'pending') {
+                throw new Entry.Utils.AsyncError();
+            }
             valueState[blockId].state = 'pending';
             result.then((value) => {
                 valueState[blockId].state = 'complete';
                 valueState[blockId].value = value;
             });
-            throw new Entry.Utils.AsyncError();
         } else {
             valueState[blockId].state = 'complete';
             valueState[blockId].value = result;
