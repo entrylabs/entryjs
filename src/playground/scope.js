@@ -34,9 +34,8 @@ Entry.Scope = function(block, executor) {
 
     p.getValues = function(keys, scope) {
         const fieldBlocks = keys.map((key) => this.block.params[this._getParamIndex(key, scope)]);
-
-        this._setValueMap(fieldBlocks);
         
+        this._setValueMap(fieldBlocks);
         return fieldBlocks.map((fieldBlocks) => this._getValueFromValueMap(fieldBlocks));
     };
 
@@ -44,7 +43,6 @@ Entry.Scope = function(block, executor) {
         const fieldBlock = this.block.params[this._getParamIndex(key, scope)];
 
         this._setValueMap(fieldBlock);
-
         return this._getValueFromValueMap(fieldBlock);
     };
 
@@ -75,7 +73,8 @@ Entry.Scope = function(block, executor) {
      * 해당 scope 에서 한번 실행된 함수는 더이상 트리를 순회하지 않는다.
      * @param rootBlocks 기준 블록
      */
-    p._setValueMap = function(...rootBlocks) {
+    p._setValueMap = function(blocks) {
+        const rootBlocks = blocks instanceof Array ? blocks : [blocks];
         const executorValueMap = this.executor.valueMap;
         // 현재 스코프에서 한번 생성된 트리를 다시 순회하지 않는다.
         if (Object.keys(executorValueMap).length > 0) {
@@ -107,10 +106,8 @@ Entry.Scope = function(block, executor) {
 
     p._getLeafBlocks = function(rootBlocks) {
         const leafBlocks = [];
-
         const addValueBlockRecursive = (block) => {
             const params = block.data && block.data.params;
-
             if (params.length <= 1) {
                 leafBlocks.push(block);
             } else {
@@ -121,8 +118,8 @@ Entry.Scope = function(block, executor) {
                 });
             }
         };
-        rootBlocks.flat().forEach(addValueBlockRecursive);
 
+        rootBlocks.forEach(addValueBlockRecursive);
         return leafBlocks;
     };
 
