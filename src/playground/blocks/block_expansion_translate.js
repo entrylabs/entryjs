@@ -23,6 +23,20 @@ Entry.EXPANSION_BLOCK.translate = {
         'dictionary': 'nsmt',
         'artificial_intelligence': 'n2mt',
     },
+    apiType : "nsmt",
+    langCodeMap : {
+        "ko" : Lang.Blocks.lang_ko,
+        "en" : Lang.Blocks.lang_en,
+        "es" : Lang.Blocks.lang_es,
+        "fr" : Lang.Blocks.lang_fr,
+        "id" : Lang.Blocks.lang_id,
+        "ja" : Lang.Blocks.lang_ja,
+        "th" : Lang.Blocks.lang_th,
+        "vi" : Lang.Blocks.lang_vi,
+        "zh-CN" : Lang.Blocks.lang_zh_cn,
+        "zh-TW" : Lang.Blocks.lang_zh_tw,
+        "it" : Lang.Blocks.lang_it
+    }
 };
 
 Entry.EXPANSION_BLOCK.translate.getBlocks = function() {
@@ -43,7 +57,27 @@ Entry.EXPANSION_BLOCK.translate.getBlocks = function() {
             }
             return param;
         },
-        getLang: function(isPython) {
+        getSourceLang: function(isPython) {
+            let param = {
+                type: 'Dropdown',
+                options: [
+                    [Lang.Blocks.lang_ko, 'ko'],
+                    [Lang.Blocks.lang_en, 'en'],
+                    [Lang.Blocks.lang_ja, 'ja'],
+                    [Lang.Menus.russia, 'ru'],
+                    [Lang.Menus.chinese_simplified, 'zh-CN'],
+                    [Lang.Menus.chinese_traditional, 'zh-TW'],
+                ],
+                value: 'ko',
+                fontSize: 11,
+                arrowColor: EntryStatic.ARROW_COLOR_EXPANSION,
+            };
+            if (isPython) {
+                param.converter = Entry.block.converters.returnStringValue;
+            }
+            return param;
+        },
+        getTargetLang: function(isPython) {
             let param = {
                 type: 'Dropdown',
                 options: [
@@ -97,6 +131,28 @@ Entry.EXPANSION_BLOCK.translate.getBlocks = function() {
             });
         });
     };
+
+    const checkText = function(text) {
+        let result = {
+            result : false,
+            message : "알수없는 문장입니다."
+        };
+
+        if(!text) {
+            result.message = "문장이 없습니다."
+            return result;
+        }
+
+        if(text.length > 20) {
+            result.message = "20자 이내로 작성해 주십시오.";
+            return result;
+        }
+
+        return {
+            result : true,
+            message : text
+        };
+    }
     return {
         translate_title: {
             skeleton: 'basic_text',
@@ -121,43 +177,45 @@ Entry.EXPANSION_BLOCK.translate.getBlocks = function() {
             skeleton: 'basic_string_field',
             statements: [],
             params: [
+                params.getSourceLang(),
                 {
                     type: 'Block',
                     accept: 'string',
                 },
-                params.getType(),
-                params.getLang(),
-                params.getLang(),
+                params.getTargetLang(),
             ],
             events: {},
             def: {
                 params: [
+                    params.getSourceLang().value,
                     {
                         type: 'text',
                         params: [Lang.Blocks.entry],
                     },
-                    params.getType().value,
-                    params.getLang().value,
-                    params.getLang().value,
+                    params.getTargetLang().value,
                 ],
                 type: 'get_translated_string',
             },
             pyHelpDef: {
-                params: ['A&value', 'B&value', 'C&value', 'D&value'],
+                params: ['A&value', 'B&value', 'C&value'],
                 type: 'get_translated_string',
             },
             paramsKeyMap: {
-                TEXT: 0,
-                TYPE: 1,
-                SOURCE: 2,
-                TARGET: 3,
+                SOURCE: 0,
+                TEXT: 1,
+                TARGET: 2,
             },
             class: 'translate',
             isNotFor: ['translate'],
             func: async function(sprite, script) {
-                const type = Entry.EXPANSION_BLOCK.translate.typeMap[script.getField('TYPE', script)];
+                const textObj = checkText(await script.getStringValue('TEXT', script));
+                if(!textObj.result) {
+                    return textObj.message;
+                };
+
+                const type = Entry.EXPANSION_BLOCK.translate.apiType;
                 const params = {
-                    text: await script.getStringValue('TEXT', script),
+                    text: textObj.message,
                     target: script.getField('TARGET', script),
                     source: script.getField('SOURCE', script),
                 };
@@ -166,22 +224,21 @@ Entry.EXPANSION_BLOCK.translate.getBlocks = function() {
                     return params.text;
                 }
 
-                return await translate(params, type, '');
+                return await translate(params, type, '알 수 없는 문장입니다.');
             },
             syntax: {
                 js: [],
                 py: [
                     {
-                        syntax: 'Translate.do(%1, %2)',
+                        syntax: 'Translate.do(%1, %2, %3)',
                         blockType: 'param',
                         textParams: [
+                            params.getSourceLang(true),
                             {
                                 type: 'Block',
                                 accept: 'string',
                             },
-                            params.getType(),
-                            params.getLang(),
-                            params.getLang(),
+                            params.getTargetLang(true),
                         ],
                     },
                 ],
@@ -189,14 +246,13 @@ Entry.EXPANSION_BLOCK.translate.getBlocks = function() {
         },
         check_language: {
             color: '#ff8888',
-            skeleton: 'basic_boolean_field',
+            skeleton: 'basic_string_field',
             statements: [],
             params: [
                 {
                     type: 'Block',
                     accept: 'string',
                 },
-                params.getLang(),
             ],
             events: {},
             def: {
@@ -205,12 +261,11 @@ Entry.EXPANSION_BLOCK.translate.getBlocks = function() {
                         type: 'text',
                         params: [Lang.Blocks.entry],
                     },
-                    params.getLang().value,
                 ],
                 type: 'check_language',
             },
             pyHelpDef: {
-                params: ['A&value', 'B&value'],
+                params: ['A&value'],
                 type: 'check_language',
             },
             paramsKeyMap: {
@@ -220,23 +275,30 @@ Entry.EXPANSION_BLOCK.translate.getBlocks = function() {
             class: 'translate',
             isNotFor: ['translate'],
             func: async function(sprite, script) {
-                const text = await script.getStringValue('TEXT', script);
-                const langCode = script.getField('LANG', script);
-                return langCode == await checkLang(text, langCode);
+                const textObj = checkText(await script.getStringValue('TEXT', script));
+                if(!textObj.result) {
+                    return textObj.message;
+                }
+
+                const langCode = await checkLang(textObj.message, langCode);
+                const result = Entry.EXPANSION_BLOCK.translate.langCodeMap[langCode];
+                if(result) {
+                    return result;
+                }
+                return "알 수 없는 문장입니다.";
             },
             syntax: {
                 js: [],
                 py: [
                     {
-                        syntax: 'Weather.is_current_finedust_grade_good(%1)',
-                        params: [null, 'good'],
+                        syntax: 'Translate.getLang(%1)',
+                        params: [null],
                         blockType: 'param',
                         textParams: [
                             {
                                 type: 'Block',
                                 accept: 'string',
-                            },
-                            params.getLang(true),
+                            }
                         ],
                     },
                 ],
