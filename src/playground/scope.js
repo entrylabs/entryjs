@@ -47,14 +47,14 @@ Entry.Scope = function(block, executor) {
     };
 
     p._getValueFromValueMap = function(block) {
-        const value = this.executor.valueMap[block.data.id];
-        if (value === 'isPending') {
-            throw new Entry.Utils.AsyncError();
-        } else if (value) {
-            return value;
-        } else {
+        const result = this.executor.valueMap[block.data.id];
+        if (result === undefined) {
             const newScope = new Entry.Scope(block, this.executor);
             return Entry.block[block.type].func.call(newScope, this.entity, newScope);
+        } else if (result.isResolved) {
+            return result.value;
+        } else {
+            throw new Entry.Utils.AsyncError();
         }
     };
 
@@ -91,12 +91,20 @@ Entry.Scope = function(block, executor) {
                 const result = Entry.block[block.type].func.call(newScope, this.entity, newScope);
 
                 if (result instanceof Promise) {
-                    executorValueMap[blockId] = 'isPending';
+                    executorValueMap[blockId] = {
+                        isResolved : false,
+                    };
                     result.then((value) => {
-                        executorValueMap[blockId] = value;
+                        executorValueMap[blockId] = {
+                            value,
+                            isResolved : true,
+                        };
                     });
                 } else {
-                    executorValueMap[blockId] = result;
+                    executorValueMap[blockId] = {
+                        value : result,
+                        isResolved : true,
+                    };
                 }
             }
         });
