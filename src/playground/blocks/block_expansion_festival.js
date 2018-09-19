@@ -108,6 +108,20 @@ Entry.EXPANSION_BLOCK.festival = {
         return tmp.textContent || tmp.innerText || '';
 
     },
+    monthMap: {
+        'January' : 1,
+        'Febuary ' : 2,
+        'March' : 3,
+        'April' : 4,
+        'May' : 5,
+        'June' : 6,
+        'July' : 7,
+        'August' : 8,
+        'September' : 9,
+        'October' : 10,
+        'November' : 11,
+        'December' : 12,
+    }
 };
 
 Entry.EXPANSION_BLOCK.festival.getBlocks = function() {
@@ -147,20 +161,20 @@ Entry.EXPANSION_BLOCK.festival.getBlocks = function() {
             let param = {
                 type: 'Dropdown',
                 options: [
-                    [Lang.Menus.jan, '1'],
-                    [Lang.Menus.feb, '2'],
-                    [Lang.Menus.mar, '3'],
-                    [Lang.Menus.apr, '4'],
-                    [Lang.Menus.may, '5'],
-                    [Lang.Menus.jun, '6'],
-                    [Lang.Menus.jul, '7'],
-                    [Lang.Menus.aug, '8'],
-                    [Lang.Menus.sep, '9'],
-                    [Lang.Menus.oct, '10'],
-                    [Lang.Menus.nov, '11'],
-                    [Lang.Menus.dec, '12'],
+                    [Lang.Menus.jan, 'January'],
+                    [Lang.Menus.feb, 'Febuary '],
+                    [Lang.Menus.mar, 'March'],
+                    [Lang.Menus.apr, 'April'],
+                    [Lang.Menus.may, 'May'],
+                    [Lang.Menus.jun, 'June'],
+                    [Lang.Menus.jul, 'July'],
+                    [Lang.Menus.aug, 'August'],
+                    [Lang.Menus.sep, 'September'],
+                    [Lang.Menus.oct, 'October'],
+                    [Lang.Menus.nov, 'November'],
+                    [Lang.Menus.dec, 'December'],
                 ],
-                value: '1',
+                value: 'January',
                 fontSize: 11,
                 arrowColor: EntryStatic.ARROW_COLOR_EXPANSION,
             };
@@ -283,7 +297,7 @@ Entry.EXPANSION_BLOCK.festival.getBlocks = function() {
                 type: 'count_festival',
             },
             pyHelpDef: {
-                params: ['A&value', 'B&value', 'C&value', 'D&value'],
+                params: ['A&value', 'B&value'],
                 type: 'count_festival',
             },
             paramsKeyMap: {
@@ -296,7 +310,7 @@ Entry.EXPANSION_BLOCK.festival.getBlocks = function() {
                 const defaultValue = 0;
                 const params = {
                     area: Entry.EXPANSION_BLOCK.festival.locationMap[script.getField('LOCATION', script)].code,
-                    month: script.getField('MONTH', script),
+                    month: Entry.EXPANSION_BLOCK.festival.monthMap[script.getField('MONTH', script)],
                     list: 'N',
                 };
                 return await getFestivalCount(params, defaultValue);
@@ -355,10 +369,10 @@ Entry.EXPANSION_BLOCK.festival.getBlocks = function() {
                 const type = script.getField('TYPE', script);
                 const infoType = Entry.EXPANSION_BLOCK.festival.infoTypeMap[type];
                 const location = Entry.EXPANSION_BLOCK.festival.locationMap[script.getField('LOCATION', script)];
-                const defaultValue = '정보없음';
+                const defaultValue = Lang.Blocks.no_data;
                 const params = {
                     area: location.code,
-                    month: script.getField('MONTH', script),
+                    month: Entry.EXPANSION_BLOCK.festival.monthMap[script.getField('MONTH', script)],
                 };
 
                 const festival = await getFestivals(number, params, {});
