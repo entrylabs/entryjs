@@ -149,23 +149,6 @@ Entry.Scope = function(block, executor) {
         return this._schema.statementsKeyMap[key];
     };
 
-    p._checkTreeValuesResolve = function(fieldBlock, valueState, blockId) {
-        const newScope = new Entry.Scope(fieldBlock, this.executor);
-        const result = Entry.block[fieldBlock.type].func.call(newScope, this.entity, newScope);
-
-        if (result instanceof Promise) {
-            valueState[blockId].state = 'pending';
-            result.then((value) => {
-                valueState[blockId].state = 'complete';
-                valueState[blockId].value = value;
-            });
-            throw new Entry.Utils.AsyncError();
-        } else {
-            valueState[blockId].state = 'complete';
-            valueState[blockId].value = result;
-        }
-    };
-
     p.die = function() {
         this.block = null;
         return Entry.STATIC.BREAK;
