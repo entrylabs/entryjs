@@ -6,7 +6,8 @@
 'use strict';
 
 
-import { PIXIDragHelper } from './PIXIDragHelper';
+import { PIXIDragHelper } from '../../PIXIDragHelper';
+import { PIXIHandleEdge } from './PIXIHandleEdge';
 
 export var PIXIHandle = function(canvas, baseAsset) {
     if (typeof PIXI != 'object') {
@@ -181,7 +182,7 @@ export var PIXIHandle = function(canvas, baseAsset) {
         this.border = border;
 
         //edge
-        var edge = new PIXI.Graphics();
+        var edge = new PIXIHandleEdge(BASE_ASSET);
         edge.interactive = true;
         edge.cursor = 'move';
         edge.on(PIXIDragHelper.DOWN, function(e) {
@@ -407,6 +408,11 @@ export var PIXIHandle = function(canvas, baseAsset) {
     p.renderEdge = function() {
         var width = this.width;
         var height = this.height;
+
+        this.edge.renderEdge(this.width, this.height);
+
+        return;
+
         // this.edge.graphics
         //     .clear()
         //     .ss(10, 2, 0)
@@ -439,33 +445,7 @@ export var PIXIHandle = function(canvas, baseAsset) {
     };
 
     p.renderBorder = function() {
-        var width = this.width;
-        var height = this.height;
-        // this.border.graphics
-        //     .clear()
-        //     .ss(1, 2, 0)
-        //     .s(this.color)
-        //     .lt(-width / 2, -height / 2)
-        //     .lt(0, -height / 2)
-        //     .lt(0, -height / 2)
-        //     .lt(+width / 2, -height / 2)
-        //     .lt(+width / 2, +height / 2)
-        //     .lt(-width / 2, +height / 2)
-        //     .cp();
-
-        var color = colorToUint(this.color);
-        var hw = width / 2;
-        var hh = height / 2;
-        this.border
-            .clear()
-            .lineStyle(1, color)
-            .moveTo(-hw, +hh)
-            .lineTo(-hw, -hh)
-            .lineTo(+hw, -hh)
-            .lineTo(+hw, +hh)
-            .lineTo(-hw, +hh)
-            .closePath();
-
+        //2018.09.19 박준배. texture 로 변경하면서 border가 사라짐. 함수가 public naming 이라서 삭제를 못하겠음.
     };
 
     p.renderKnobs = function() {
@@ -483,10 +463,6 @@ export var PIXIHandle = function(canvas, baseAsset) {
             x: g.x * 0.75 - 240,
             y: g.y * 0.75 - 135,
         };
-        // return {
-        //     x: e.stageX * 0.75 - 240,
-        //     y: e.stageY * 0.75 - 135,
-        // };
     };
 
     p.getGlobalCoordinate = function(childObject) {

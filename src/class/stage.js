@@ -7,7 +7,7 @@
 
 'use strict';
 
-import { PIXIHandle } from './PIXIHandle';
+import { PIXIHandle } from './pixi/handle/PIXIHandle';
 import { PIXIPixelPerfectInteractionPlugIn } from './pixi/etc/PIXIPixelPerfectInteractionPlugIn';
 import { PIXITempStore } from './pixi/etc/PIXITempStore';
 import PIXIHelper from './PIXIHelper';
