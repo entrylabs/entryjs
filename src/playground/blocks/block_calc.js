@@ -134,35 +134,30 @@ module.exports = {
                 isNotFor: [],
                 func(sprite, script) {
                     const operator = script.getField('OPERATOR', script);
-                    let [leftValue, rightValue] = script.getValues(
+                    const [leftStringValue, rightStringValue] = script.getValues(
                         ['LEFTHAND', 'RIGHTHAND'],
                         script
                     );
-                    leftValue = Number(leftValue);
-                    rightValue = Number(rightValue);
-                    if (operator === 'PLUS') {
-                        const leftStringValue = String(leftValue);
-                        const rightStringValue = String(rightValue);
-                        if (!Entry.Utils.isNumber(leftStringValue)) {
-                            leftValue = leftStringValue;
+
+                    const leftValue = Entry.Utils.isNumber(leftStringValue) ? Number(leftStringValue) : leftStringValue;
+                    const rightValue = Entry.Utils.isNumber(rightStringValue) ? Number(rightStringValue) : rightStringValue;
+
+                    switch (operator) {
+                        case 'PLUS': {
+                            if (typeof leftValue === 'number' && typeof rightValue === 'number') {
+                                return new BigNumber(leftValue).plus(rightValue).toNumber();
+                            } else {
+                                return leftValue + rightValue;
+                            }
                         }
-                        if (!Entry.Utils.isNumber(rightStringValue)) {
-                            rightValue = rightStringValue;
-                        }
-                        if (typeof leftValue === 'number' && typeof rightValue === 'number') {
-                            return new BigNumber(leftValue).plus(rightValue)
-                                .toNumber();
-                        } else {
-                            return leftValue + rightValue;
-                        }
-                    }
-                    leftValue = new BigNumber(leftValue);
-                    if (operator === 'MINUS') {
-                        return leftValue.minus(rightValue).toNumber();
-                    } else if (operator === 'MULTI') {
-                        return leftValue.times(rightValue).toNumber();
-                    } else {
-                        return leftValue.dividedBy(rightValue).toNumber();
+                        case 'MINUS':
+                            return new BigNumber(leftValue).minus(rightValue).toNumber();
+                        case 'MULTI':
+                            return new BigNumber(leftValue).times(rightValue).toNumber();
+                        case 'DIVIDE':
+                            return new BigNumber(leftValue).dividedBy(rightValue).toNumber();
+                        default:
+                            throw new Error('Not Invalid Operator');
                     }
                 },
                 syntax: {
