@@ -6,7 +6,7 @@ const { callApi } = require('../../util/common');
 
 Entry.EXPANSION_BLOCK.festival = {
     name: 'festival',
-    imageName: 'weather.png',
+    imageName: 'festival.png',
     title: {
         'ko': '행사',
         'en': 'festival',
