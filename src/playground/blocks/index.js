@@ -131,9 +131,10 @@ const funcBlock = require('./block_func');
 
 Entry.EXPANSION_BLOCK = {};
 require('./block_expansion_weather');
-
+require('./block_expansion_translate');
 Entry.EXPANSION_BLOCK_LIST = {
-    'weather' : Entry.Expansion_Weather
+    'weather' : Entry.Expansion_Weather,
+    'translate' : Entry.EXPANSION_BLOCK.translate
 };
 
 function getBlockObject(items) {
