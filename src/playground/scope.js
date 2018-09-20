@@ -60,10 +60,22 @@ class Scope {
      * @throws Entry.Utils.AsyncError Promise pending 중인 값을 호출한 경우
      */
     _getValueFromValueMap(block) {
-        const result = this.executor.valueMap[block.data.id];
+        const blockId = block.data.id;
+        const executorValueMap = this.executor.valueMap;
+        const result = executorValueMap[blockId];
         if (result === undefined) {
             const newScope = new Entry.Scope(block, this.executor);
-            return Entry.block[block.type].func.call(newScope, this.entity, newScope);
+            const result = Entry.block[block.type].func.call(newScope, this.entity, newScope);
+            if(result instanceof Promise) {
+                executorValueMap[blockId] = { isResolved: false };
+                result.then((value) => {
+                    executorValueMap[blockId] = {
+                        value,
+                        isResolved: true,
+                    };
+                });
+                throw new Entry.Utils.AsyncError();
+            }
         } else if (result.isResolved) {
             return result.value;
         } else {
