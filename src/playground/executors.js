@@ -53,6 +53,7 @@ class Executor {
                 return executedBlocks;
             }
 
+
             if (returnVal === undefined || returnVal === null || returnVal === Entry.STATIC.PASS) {
                 this.scope = new Entry.Scope(this.scope.block.getNextBlock(), this);
                 this.valueMap = {};
@@ -69,7 +70,10 @@ class Executor {
                 }
             } else if (returnVal === Entry.STATIC.CONTINUE) {
                 this.valueMap = {};
-            } else if (returnVal === Entry.STATIC.BREAK || this.scope === returnVal) {
+            } else if (returnVal === this.scope) {
+                this.valueMap = {};
+                break;
+            } else if (returnVal === Entry.STATIC.BREAK) {
                 break;
             }
         }
