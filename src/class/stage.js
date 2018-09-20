@@ -4,13 +4,13 @@
  *
  */
 
-
 'use strict';
 
+require("./pixi/etc/PIXI-ndgmr.Collision");
+require("./pixi/etc/PIXICanvasInput");
 import { PIXIHandle } from './pixi/handle/PIXIHandle';
 import { PIXIPixelPerfectInteractionPlugIn } from './pixi/etc/PIXIPixelPerfectInteractionPlugIn';
 import { PIXITempStore } from './pixi/etc/PIXITempStore';
-import PIXIHelper from './PIXIHelper';
 import { PIXIBaseAsset } from './pixi/init/PIXIBaseAsset';
 
 /**

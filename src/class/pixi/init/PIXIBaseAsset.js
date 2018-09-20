@@ -2,7 +2,7 @@
  * 기본 텍스쳐 로드 되기 전에 객체를 생성 할 수 있도록 json은 함께 번들링함.
  */
 
-var atlasJson = require("./../../../../entry_texture/base_asset");
+var atlasJson = require("./../../../entry_texture/base_asset.json");
 
 export class PIXIBaseAsset {
 

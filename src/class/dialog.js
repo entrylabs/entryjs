@@ -3,8 +3,7 @@
 /**
  * @fileoverview Show dialog on canvas
  */
- 
-import PIXIHelper from './PIXIHelper';
+import PIXIHelper from './pixi/helper/PIXIHelper';
 
 /**
  * Construct dialog

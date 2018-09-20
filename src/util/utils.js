@@ -1,6 +1,6 @@
 'use strict';
 
-import { PIXIBrushAdaptor } from '../class/PIXIBrushAdaptor';
+import { PIXIBrushAdaptor } from '../class/pixi/etc/PIXIBrushAdaptor';
 
 Entry.Utils = {};
 

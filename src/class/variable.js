@@ -1,10 +1,11 @@
 /**
  * @fileoverview Variable object for entry variable block.
  */
+
 'use strict';
 
-import PIXIHelper from "./PIXIHelper";
-import { PIXIDragHelper } from './PIXIDragHelper';
+import PIXIHelper from './pixi/helper/PIXIHelper';
+import { PIXIDragHelper } from './pixi/helper/PIXIDragHelper';
 
 /**
  * Block variable constructor

@@ -33,7 +33,7 @@
  *
  **/
 
-this.ndgmr = this.ndgmr || {};
+window.ndgmr = window.ndgmr || {};
 (function(ndgmr) {
 
     //--------- Class CollisionCanvas -------
@@ -119,7 +119,7 @@ this.ndgmr = this.ndgmr || {};
         canvas2 = new CollisionCanvas();
     };
 
-    this.ndgmr.checkPixelCollision = function(bitmap1, bitmap2, alphaThreshold, getRect) {
+    ndgmr.checkPixelCollision = function(bitmap1, bitmap2, alphaThreshold, getRect) {
         if (ndgmr.DEBUG || ndgmr.DEBUG_COLLISION) {
             if(!canvas1.isOffscreenCanvas) {
                 document.body.appendChild(canvas1._canvas);
@@ -308,4 +308,4 @@ this.ndgmr = this.ndgmr || {};
 
 
 
-})(this.ndgmr);
+})(window.ndgmr);
