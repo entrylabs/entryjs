@@ -273,8 +273,12 @@ module.exports = {
                 class: 'calc',
                 isNotFor: [],
                 func(sprite, script) {
-                    const leftValue = script.getStringValue('LEFTHAND', script);
-                    const rightValue = script.getStringValue('RIGHTHAND', script);
+                    let [leftValue, rightValue] = script.getValues(
+                        ['LEFTHAND', 'RIGHTHAND'],
+                        script
+                    );
+                    leftValue = String(leftValue);
+                    rightValue = String(rightValue);
                     const left = Math.min(leftValue, rightValue);
                     const right = Math.max(leftValue, rightValue);
                     const isLeftFloat = Entry.isFloat(leftValue);
@@ -479,7 +483,7 @@ module.exports = {
                             return targetEntity.getRotation();
                         case 'direction':
                             return targetEntity.getDirection();
-                        case 'picture_index': 
+                        case 'picture_index':
                             return pictures.indexOf(targetEntity.picture) + 1;
                         case 'size':
                             return Number(targetEntity.getSize().toFixed(1));
@@ -647,8 +651,9 @@ module.exports = {
                 class: 'calc',
                 isNotFor: [],
                 func(sprite, script) {
-                    const left = script.getNumberValue('LEFTHAND', script);
-                    const right = script.getNumberValue('RIGHTHAND', script);
+                    let [left, right] = script.getValues(['LEFTHAND', 'RIGHTHAND'], script);
+                    left = Number(left);
+                    right = Number(right);
                     if (isNaN(left) || isNaN(right)) {
                         throw new Error();
                     }
@@ -1781,8 +1786,9 @@ module.exports = {
                 class: 'calc_string',
                 isNotFor: [],
                 func(sprite, script) {
-                    const leftValue = script.getStringValue('VALUE1', script);
-                    const rightValue = script.getStringValue('VALUE2', script);
+                    let [leftValue, rightValue] = script.getValues(['VALUE1', 'VALUE2'], script);
+                    leftValue = String(leftValue);
+                    rightValue = String(rightValue);
 
                     return leftValue + rightValue;
                 },
@@ -1867,8 +1873,9 @@ module.exports = {
                 class: 'calc_string',
                 isNotFor: [],
                 func(sprite, script) {
-                    const str = script.getStringValue('LEFTHAND', script);
-                    const index = script.getNumberValue('RIGHTHAND', script) - 1;
+                    let [str, index] = script.getValues(['LEFTHAND', 'RIGHTHAND'], script);
+                    str = String(str);
+                    index = Number(index) - 1;
                     if (index < 0 || index > str.length - 1) {
                         throw new Error();
                     } else {
@@ -2002,9 +2009,10 @@ module.exports = {
                 class: 'calc_string',
                 isNotFor: [],
                 func(sprite, script) {
-                    const str = script.getStringValue('STRING', script);
-                    const start = script.getNumberValue('START', script) - 1;
-                    const end = script.getNumberValue('END', script) - 1;
+                    let [str, start, end] = script.getValues(['STRING', 'START', 'END'], script);
+                    str = String(str);
+                    start = Number(start) - 1;
+                    end = Number(end) - 1;
                     const strLen = str.length - 1;
                     if (start < 0 || end < 0 || start > strLen || end > strLen) {
                         throw new Error();
@@ -2110,8 +2118,9 @@ module.exports = {
                 class: 'calc_string',
                 isNotFor: [],
                 func(sprite, script) {
-                    const str = script.getStringValue('LEFTHAND', script);
-                    const target = script.getStringValue('RIGHTHAND', script);
+                    let [str, target] = script.getValues(['LEFTHAND', 'RIGHTHAND'], script);
+                    str = String(str);
+                    target = String(target);
                     const index = str.indexOf(target);
                     return index + 1;
                 },
@@ -2214,12 +2223,12 @@ module.exports = {
                 class: 'calc_string',
                 isNotFor: [],
                 func(sprite, script) {
+                    let [oldWord, newWord] = script.getValues(['OLD_WORD', 'NEW_WORD'], script);
+                    oldWord = String(oldWord);
+                    newWord = String(newWord);
                     return script
                         .getStringValue('STRING', script)
-                        .replace(
-                            new RegExp(script.getStringValue('OLD_WORD', script), 'gm'),
-                            script.getStringValue('NEW_WORD', script)
-                        );
+                        .replace(new RegExp(oldWord, 'gm'), newWord);
                 },
                 syntax: {
                     js: [],
