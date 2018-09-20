@@ -520,7 +520,7 @@ Entry.Expansion_Weather.getBlocks = function () {
                 js: [],
                 py: [
                     {
-                        syntax: 'Weather.get_today_temperaturet(%1, %2, %3)',
+                        syntax: 'Weather.get_today_temperature(%1, %2, %3)',
                         blockType: 'param',
                         textParams: [params.getLocation(true), params.getSubLocation(0, true), params.getTime(true)]
                     },
@@ -805,7 +805,7 @@ Entry.Expansion_Weather.getBlocks = function () {
                 js: [],
                 py: [
                     {
-                        syntax: 'Legacy.Weather.get_today_temperaturet(%1, %2)',
+                        syntax: 'Legacy.Weather.get_today_temperature(%1, %2)',
                         blockType: 'param',
                         textParams: [params.getLocation(true), params.getTime(true)]
                     },
