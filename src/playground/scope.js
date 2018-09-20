@@ -108,14 +108,14 @@ Entry.Scope = function(block, executor) {
         const leafBlocks = [];
         const addValueBlockRecursive = (block) => {
             const params = block.data && block.data.params;
-            if (params.length <= 1) {
-                leafBlocks.push(block);
-            } else {
-                params.forEach((value) => {
-                    if (typeof value === 'object') {
-                        addValueBlockRecursive(value);
-                    }
+            const blockParams = params.filter(value => value instanceof Entry.Block);
+
+            if (blockParams.length >= 1) {
+                blockParams.forEach((value) => {
+                    addValueBlockRecursive(value);
                 });
+            } else {
+                leafBlocks.push(block);
             }
         };
 
