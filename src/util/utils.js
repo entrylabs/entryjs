@@ -1609,10 +1609,17 @@ Entry.Utils.addFilters = function(boardSvgDom, suffix) {
         dx: 1,
         dy: 1,
         result: 'offsetBlur',
+    });    
+    trashCanFilter.elem('feColorMatrix', {
+        id:"recolor" ,
+        in:"offsetBlur" ,
+        type:"matrix" ,
+        values:"0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.15 0" ,
+        result:"colorMatrix",
     });
     var feMerge = trashCanFilter.elem('feMerge');
     feMerge.elem('feMergeNode', {
-        in: 'offsetBlur',
+        in: 'colorMatrix',
     });
     feMerge.elem(
         'feMergeNode',
@@ -1622,84 +1629,34 @@ Entry.Utils.addFilters = function(boardSvgDom, suffix) {
         feMerge
     );
 
-    // <filter id="a">
-    //     <feMorphology in="SourceGraphic" operator="dilate" radius="1"/>
-    //     <feComponentTransfer result="outBlur">
-    //         <feFuncA type="table" tableValues="0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1">
-    //         </feFuncA>
-    //     </feComponentTransfer>
-    //     <feFlood flood-color="#00FF00" flood-opacity="1" result="outColor"></feFlood>
-    //     <feComposite in="outColor" in2="outBlur" operator="in" result="outGlow"></feComposite>
-    //     <feComposite in="SourceGraphic" in2="outGlow" operator="over"></feComposite>
-    // </filter>
-    // var blockTestFilter = defs.elem('filter', {
-    //     id: 'entryBlockTestFilter_' + suffix,
-    // });
-    // blockTestFilter.elem('feMorphology', {
-    //     in: 'SourceGraphic',
-    //     operator: 'dilate',
-    //     radius: 1,
-    // });
-    // blockTestFilter.elem('feMorphology', {
-    //     in: 'SourceAlpha',
-    //     operator: 'dilate',
-    //     radius: 3,
-    // });
-    // var fec = blockTestFilter.elem('feComponentTransfer', {
-    //     result: 'outBlur',
-    // });
-    // fec.elem('feFuncA', {
-    //     type: 'table',
-    //     tableValues: '0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1',
-    // });
-    // blockTestFilter.elem('feFlood', {
-    //     'flood-color': '#00FF00',
-    //     'flood-opacity': '1',
-    //     result: 'outColor',
-    // });
-    // blockTestFilter.elem('feComposite', {
-    //     in: 'outColor',
-    //     in2: 'outBlur',
-    //     operator: 'in',
-    //     result: 'outGlow',
-    // });
-    // blockTestFilter.elem('feComposite', {
-    //     in: 'SourceGraphic',
-    //     in2: 'outGlow',
-    //     operator: 'over',
-    // });
-
-
-
-
-    var blockTestFilter = defs.elem('filter', {
-        id: 'entryBlockTestFilter_' + suffix,
+    var blockSelectFilter = defs.elem('filter', {
+        id: 'entryBlockSelectFilter_' + suffix,
     });
-    blockTestFilter.elem('feGaussianBlur', {
+    blockSelectFilter.elem('feGaussianBlur', {
         id:"blur" ,
         in:"SourceGraphic" ,
         stdDeviation:"1" ,
-        result:"b",
+        result:"blur",
     });    
-    var fct = blockTestFilter.elem('feComponentTransfer', {
-        in:"b" ,
-        result:"c",
+    var fct = blockSelectFilter.elem('feComponentTransfer', {
+        in:"blur" ,
+        result:"component",
     });    
     fct.elem('feFuncA', {
         id:"contour",
         type: 'table',
         tableValues: '0 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 1',
     });
-    blockTestFilter.elem('feColorMatrix', {
+    blockSelectFilter.elem('feColorMatrix', {
         id:"recolor" ,
-        in:"c" ,
+        in:"component" ,
         type:"matrix" ,
         values:"0 0 0 0 0.475 0 0 0 0 0.557 0 0 0 0 0.694 0 0 0 1 0" ,
-        result:"sa",
+        result:"colorMatrix",
     });
-    var fm = blockTestFilter.elem('feMerge');    
+    var fm = blockSelectFilter.elem('feMerge');    
     fm.elem('feMergeNode', {
-        in:"sa"
+        in:"colorMatrix"
     });
     fm.elem('feMergeNode', {
         in:"SourceGraphic"
