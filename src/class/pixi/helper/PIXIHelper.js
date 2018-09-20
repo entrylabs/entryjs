@@ -1,5 +1,5 @@
-import { PIXIText } from './pixi/text/PIXIText';
-import { PIXITempStore } from './pixi/etc/PIXITempStore';
+import { PIXITempStore } from '../etc/PIXITempStore';
+import { PIXIText } from '../text/PIXIText';
 
 export default class PIXIHelper {
     static text(str, font, color, textBaseline, textAlign) {

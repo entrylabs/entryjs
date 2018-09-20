@@ -6,8 +6,8 @@
 'use strict';
 
 
-import { PIXIDragHelper } from '../../PIXIDragHelper';
 import { PIXIHandleEdge } from './PIXIHandleEdge';
+import { PIXIDragHelper } from '../helper/PIXIDragHelper';
 
 export var PIXIHandle = function(canvas, baseAsset) {
     if (typeof PIXI != 'object') {

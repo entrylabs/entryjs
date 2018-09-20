@@ -4,8 +4,8 @@
 
 'use strict';
 
-import PIXIHelper from "./PIXIHelper";
-import { PIXIDragHelper } from './PIXIDragHelper';
+import PIXIHelper from './pixi/helper/PIXIHelper';
+import { PIXIDragHelper } from './pixi/helper/PIXIDragHelper';
 
 /**
  * Construct entity class
