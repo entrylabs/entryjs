@@ -207,14 +207,13 @@ Entry.EXPANSION_BLOCK.festival.getBlocks = function() {
         },
     };
 
-    const getDetailInfo = (contentid, defaultValue) => {
+    const getDetailInfo = (contentid, defaultValue, infoType) => {
         const key = 'festival.api.detail_' + contentid;
-
         return new PromiseManager().Promise(function(resolve) {
             callApi(key, { url: Entry.EXPANSION_BLOCK.festival.api + '/' + contentid }).then((response) => {
                 let item = response.data.response.body.items.item;
-                if (item) {
-                    return resolve(item);
+                if (item && item[infoType]) {
+                    return resolve(Entry.EXPANSION_BLOCK.festival.strip(item[infoType]));
                 }
                 return resolve(defaultValue);
             }).catch(() => {
@@ -306,14 +305,14 @@ Entry.EXPANSION_BLOCK.festival.getBlocks = function() {
             },
             class: 'festival',
             isNotFor: ['festival'],
-            func: async function(sprite, script) {
+            func: function(sprite, script) {
                 const defaultValue = 0;
                 const params = {
                     area: Entry.EXPANSION_BLOCK.festival.locationMap[script.getField('LOCATION', script)].code,
                     month: Entry.EXPANSION_BLOCK.festival.monthMap[script.getField('MONTH', script)],
                     list: 'N',
                 };
-                return await getFestivalCount(params, defaultValue);
+                return getFestivalCount(params, defaultValue);
             },
             syntax: {
                 js: [],
@@ -364,8 +363,8 @@ Entry.EXPANSION_BLOCK.festival.getBlocks = function() {
             },
             class: 'festival',
             isNotFor: ['festival'],
-            func: async function(sprite, script) {
-                const number = await script.getStringValue('NUMBER', script);
+            func: function(sprite, script) {
+                const number = script.getStringValue('NUMBER', script);
                 const type = script.getField('TYPE', script);
                 const infoType = Entry.EXPANSION_BLOCK.festival.infoTypeMap[type];
                 const location = Entry.EXPANSION_BLOCK.festival.locationMap[script.getField('LOCATION', script)];
@@ -375,17 +374,17 @@ Entry.EXPANSION_BLOCK.festival.getBlocks = function() {
                     month: Entry.EXPANSION_BLOCK.festival.monthMap[script.getField('MONTH', script)],
                 };
 
-                const festival = await getFestivals(number, params, {});
-                switch (type) {
-                    case 'area':
-                        return location.sub[festival[infoType] - 1] || defaultValue;
-                    case 'homepage':
-                    case 'overview':
-                        const detailInfo = await getDetailInfo(festival.contentid, {});
-                        return Entry.EXPANSION_BLOCK.festival.strip(detailInfo[infoType] || defaultValue);
-                    default:
-                        return festival[infoType] || defaultValue;
-                }
+                return getFestivals(number, params, {}).then(festival => {
+                    switch (type) {
+                        case 'area':
+                            return location.sub[festival[infoType] - 1] || defaultValue;
+                        case 'homepage':
+                        case 'overview':
+                            return getDetailInfo(festival.contentid, defaultValue, infoType);
+                        default:
+                            return festival[infoType] || defaultValue;
+                    }
+                });
             },
             syntax: {
                 js: [],
