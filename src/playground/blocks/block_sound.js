@@ -41,14 +41,12 @@ module.exports = {
                 },
                 class: 'sound_play',
                 isNotFor: [],
-                func: function(sprite, script) {
-                    var soundId = script.getStringValue('VALUE', script);
-                    var sound = sprite.parent.getSound(soundId);
+                func(sprite, script) {
+                    const soundId = script.getStringValue('VALUE', script);
+                    const sound = sprite.parent.getSound(soundId);
 
                     if (sound) {
-                        Entry.Utils.addSoundInstances(
-                            createjs.Sound.play(sound.id)
-                        );
+                        Entry.Utils.addSoundInstances(createjs.Sound.play(sound.id));
                     }
 
                     return script.callReturn();
@@ -117,11 +115,12 @@ module.exports = {
                 },
                 class: 'sound_play',
                 isNotFor: [],
-                func: function(sprite, script) {
-                    var soundId = script.getStringValue('VALUE', script);
-                    var timeValue = script.getNumberValue('SECOND', script);
-                    var sound = sprite.parent.getSound(soundId);
+                func(sprite, script) {
+                    let [soundId, timeValue] = script.getValues(['VALUE', 'SECOND'], script);
+                    soundId = String(soundId);
+                    timeValue = Number(timeValue);
 
+                    const sound = sprite.parent.getSound(soundId);
                     if (sound) {
                         Entry.Utils.addSoundInstances(
                             createjs.Sound.play(sound.id, {
@@ -208,18 +207,18 @@ module.exports = {
                 },
                 class: 'sound_play',
                 isNotFor: [],
-                func: function(sprite, script) {
-                    var soundId = script.getStringValue('VALUE', script);
-                    var sound = sprite.parent.getSound(soundId);
+                func(sprite, script) {
+                    const soundId = script.getStringValue('VALUE', script);
+                    const sound = sprite.parent.getSound(soundId);
 
                     if (sound) {
-                        var start =
-                            script.getNumberValue('START', script) * 1000;
-                        var end = script.getNumberValue('END', script) * 1000;
+                        let [start, end] = script.getValues(['START', 'END'], script);
+                        start = Number(start);
+                        end = Number(end);
+
                         createjs.Sound.play(sound.id, {
                             startTime: Math.min(start, end),
-                            duration:
-                                Math.max(start, end) - Math.min(start, end),
+                            duration: Math.max(start, end) - Math.min(start, end),
                         });
                     }
                     return script.callReturn();
@@ -274,21 +273,21 @@ module.exports = {
                 },
                 class: 'sound_wait',
                 isNotFor: [],
-                func: function(sprite, script) {
+                func(sprite, script) {
                     if (!script.isPlay) {
                         script.isPlay = true;
-                        script.playState = 1;
-                        var soundId = script.getStringValue('VALUE', script);
-                        var sound = sprite.parent.getSound(soundId);
+                        const soundId = script.getStringValue('VALUE', script);
+                        const sound = sprite.parent.getSound(soundId);
                         if (sound) {
-                            var instance = createjs.Sound.play(sound.id);
+                            script.playState = 1;
+                            const instance = createjs.Sound.play(sound.id);
                             Entry.Utils.addSoundInstances(instance);
                             setTimeout(function() {
                                 script.playState = 0;
                             }, sound.duration * 1000);
                         }
                         return script;
-                    } else if (script.playState == 1) {
+                    } else if (script.playState === 1) {
                         return script;
                     } else {
                         delete script.playState;
@@ -359,28 +358,23 @@ module.exports = {
                 },
                 class: 'sound_wait',
                 isNotFor: [],
-                func: function(sprite, script) {
+                func(sprite, script) {
                     if (!script.isPlay) {
                         script.isPlay = true;
-                        script.playState = 1;
-                        var soundId = script.getStringValue('VALUE', script);
-                        var sound = sprite.parent.getSound(soundId);
+                        const soundId = script.getStringValue('VALUE', script);
+                        const sound = sprite.parent.getSound(soundId);
                         if (sound) {
-                            var instance = createjs.Sound.play(sound.id);
-                            var timeValue = script.getNumberValue(
-                                'SECOND',
-                                script
-                            );
+                            script.playState = 1;
+                            const instance = createjs.Sound.play(sound.id);
+                            const timeValue = script.getNumberValue('SECOND', script);
                             setTimeout(function() {
                                 instance.stop();
                                 script.playState = 0;
                             }, timeValue * 1000);
-                            instance.addEventListener('complete', function(
-                                e
-                            ) {});
+                            instance.addEventListener('complete', function(e) {});
                         }
                         return script;
-                    } else if (script.playState == 1) {
+                    } else if (script.playState === 1) {
                         return script;
                     } else {
                         delete script.isPlay;
@@ -464,24 +458,24 @@ module.exports = {
                 },
                 class: 'sound_wait',
                 isNotFor: [],
-                func: function(sprite, script) {
+                func(sprite, script) {
                     if (!script.isPlay) {
                         script.isPlay = true;
-                        script.playState = 1;
-                        var soundId = script.getStringValue('VALUE', script);
-                        var sound = sprite.parent.getSound(soundId);
+                        const soundId = script.getStringValue('VALUE', script);
+                        const sound = sprite.parent.getSound(soundId);
                         if (sound) {
-                            var start =
-                                script.getNumberValue('START', script) * 1000;
-                            var end =
-                                script.getNumberValue('END', script) * 1000;
-                            var startValue = Math.min(start, end);
-                            var endValue = Math.max(start, end);
-                            var duration = endValue - startValue;
+                            script.playState = 1;
+                            let [start, end] = script.getValues(['START', 'END'], script);
+                            start = Number(start);
+                            end = Number(end);
+
+                            const startValue = Math.min(start, end);
+                            const endValue = Math.max(start, end);
+                            const duration = endValue - startValue;
 
                             createjs.Sound.play(sound.id, {
                                 startTime: startValue,
-                                duration: duration,
+                                duration,
                             });
 
                             setTimeout(function() {
@@ -489,7 +483,7 @@ module.exports = {
                             }, duration);
                         }
                         return script;
-                    } else if (script.playState == 1) {
+                    } else if (script.playState === 1) {
                         return script;
                     } else {
                         delete script.isPlay;
@@ -543,11 +537,15 @@ module.exports = {
                 },
                 class: 'sound_volume',
                 isNotFor: [],
-                func: function(sprite, script) {
-                    var value = script.getNumberValue('VALUE', script) / 100;
+                func(sprite, script) {
+                    let value = script.getNumberValue('VALUE', script) / 100;
                     value = value + createjs.Sound.getVolume();
-                    if (value > 1) value = 1;
-                    if (value < 0) value = 0;
+                    if (value > 1) {
+                        value = 1;
+                    }
+                    if (value < 0) {
+                        value = 0;
+                    }
                     createjs.Sound.setVolume(value);
                     return script.callReturn();
                 },
@@ -594,10 +592,14 @@ module.exports = {
                 },
                 class: 'sound_volume',
                 isNotFor: [],
-                func: function(sprite, script) {
-                    var value = script.getNumberValue('VALUE', script) / 100;
-                    if (value > 1) value = 1;
-                    if (value < 0) value = 0;
+                func(sprite, script) {
+                    let value = script.getNumberValue('VALUE', script) / 100;
+                    if (value > 1) {
+                        value = 1;
+                    }
+                    if (value < 0) {
+                        value = 0;
+                    }
                     createjs.Sound.setVolume(value);
                     return script.callReturn();
                 },
@@ -621,12 +623,12 @@ module.exports = {
                 },
                 class: 'sound_stop',
                 isNotFor: [],
-                func: function(sprite, script) {
+                func(sprite, script) {
                     createjs.Sound.stop();
                     return script.callReturn();
                 },
                 syntax: { js: [], py: ['Entry.stop_sound()'] },
             },
         };
-    }
-}
+    },
+};

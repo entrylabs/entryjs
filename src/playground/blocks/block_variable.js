@@ -18,9 +18,7 @@ module.exports = {
                 events: {
                     mousedown: [
                         function() {
-                            Entry.variableContainer.openVariableAddPanel(
-                                'variable'
-                            );
+                            Entry.variableContainer.openVariableAddPanel('variable');
                         },
                     ],
                 },
@@ -43,9 +41,7 @@ module.exports = {
                 events: {
                     mousedown: [
                         function() {
-                            Entry.variableContainer.openVariableAddPanel(
-                                'list'
-                            );
+                            Entry.variableContainer.openVariableAddPanel('list');
                         },
                     ],
                 },
@@ -68,17 +64,16 @@ module.exports = {
                 events: {
                     viewAdd: [
                         function() {
-                            if (Entry.container)
+                            if (Entry.container) {
                                 Entry.container.showProjectAnswer();
+                            }
                         },
                     ],
                     viewDestroy: [
                         function(block, notIncludeSelf) {
-                            if (Entry.container)
-                                Entry.container.hideProjectAnswer(
-                                    block,
-                                    notIncludeSelf
-                                );
+                            if (Entry.container) {
+                                Entry.container.hideProjectAnswer(block, notIncludeSelf);
+                            }
                         },
                     ],
                 },
@@ -107,42 +102,38 @@ module.exports = {
                 },
                 class: 'ask',
                 isNotFor: [],
-                func: function(sprite, script) {
-                    var inputModel = Entry.container.inputValue,
-                        inputView = Entry.stage.inputField,
-                        message = script.getValue('VALUE', script);
+                func(sprite, script) {
+                    const inputModel = Entry.container.inputValue;
+                    const inputView = Entry.stage.inputField;
+                    const message = script.getValue('VALUE', script);
 
                     if (_.isUndefined(message) || message === '') {
                         throw new Error('message can not be empty');
                     }
 
-                    if (
-                        inputModel.sprite == sprite &&
-                        inputView &&
-                        !inputView._isHidden
-                    ) {
+                    if (inputModel.sprite === sprite && inputView && !inputView._isHidden) {
                         return script;
-                    } else if (inputModel.sprite != sprite && script.isInit) {
-                        if (sprite.dialog) sprite.dialog.remove();
+                    } else if (inputModel.sprite !== sprite && script.isInit) {
+                        if (sprite.dialog) {
+                            sprite.dialog.remove();
+                        }
                         delete script.isInit;
                         return script.callReturn();
                     } else if (
                         inputModel.complete &&
-                        inputModel.sprite == sprite &&
+                        inputModel.sprite === sprite &&
                         inputView._isHidden &&
                         script.isInit
                     ) {
-                        if (sprite.dialog) sprite.dialog.remove();
+                        if (sprite.dialog) {
+                            sprite.dialog.remove();
+                        }
                         delete inputModel.complete;
                         delete script.isInit;
                         return script.callReturn();
                     } else {
                         Entry.stage.showInputField();
-                        new Entry.Dialog(
-                            sprite,
-                            Entry.convertToRoundedDecimals(message, 3),
-                            'ask'
-                        );
+                        new Entry.Dialog(sprite, Entry.convertToRoundedDecimals(message, 3), 'ask');
                         inputModel.script = script;
                         inputModel.sprite = sprite;
                         inputModel.complete = false;
@@ -166,17 +157,16 @@ module.exports = {
                 events: {
                     viewAdd: [
                         function() {
-                            if (Entry.container)
+                            if (Entry.container) {
                                 Entry.container.showProjectAnswer();
+                            }
                         },
                     ],
                     viewDestroy: [
                         function(block, notIncludeSelf) {
-                            if (Entry.container)
-                                Entry.container.hideProjectAnswer(
-                                    block,
-                                    notIncludeSelf
-                                );
+                            if (Entry.container) {
+                                Entry.container.hideProjectAnswer(block, notIncludeSelf);
+                            }
                         },
                     ],
                 },
@@ -186,7 +176,7 @@ module.exports = {
                 },
                 class: 'ask',
                 isNotFor: [],
-                func: function(sprite, script) {
+                func(sprite, script) {
                     return Entry.container.getInputValue();
                 },
                 syntax: {
@@ -230,18 +220,17 @@ module.exports = {
                 ],
                 events: {
                     viewAdd: [
-                        function(block) {
-                            if (Entry.container)
+                        function() {
+                            if (Entry.container) {
                                 Entry.container.showProjectAnswer();
+                            }
                         },
                     ],
                     viewDestroy: [
                         function(block, notIncludeSelf) {
-                            if (Entry.container)
-                                Entry.container.hideProjectAnswer(
-                                    block,
-                                    notIncludeSelf
-                                );
+                            if (Entry.container) {
+                                Entry.container.hideProjectAnswer(block, notIncludeSelf);
+                            }
                         },
                     ],
                 },
@@ -258,11 +247,13 @@ module.exports = {
                 },
                 class: 'ask',
                 isNotFor: [],
-                func: function(sprite, script) {
-                    var bool = script.getField('BOOL', script);
-                    if (bool == 'HIDE')
+                func(sprite, script) {
+                    const bool = script.getField('BOOL', script);
+                    if (bool === 'HIDE') {
                         Entry.container.inputValue.setVisible(false);
-                    else Entry.container.inputValue.setVisible(true);
+                    } else {
+                        Entry.container.inputValue.setVisible(true);
+                    }
                     return script.callReturn();
                 },
                 syntax: {
@@ -274,24 +265,14 @@ module.exports = {
                                 {
                                     type: 'Dropdown',
                                     options: [
-                                        [
-                                            Lang.Blocks.CALC_timer_visible_show,
-                                            'SHOW',
-                                        ],
-                                        [
-                                            Lang.Blocks.CALC_timer_visible_hide,
-                                            'HIDE',
-                                        ],
+                                        [Lang.Blocks.CALC_timer_visible_show, 'SHOW'],
+                                        [Lang.Blocks.CALC_timer_visible_hide, 'HIDE'],
                                     ],
                                     value: 'SHOW',
                                     fontSize: 11,
-                                    arrowColor:
-                                        EntryStatic.ARROW_COLOR_VARIABLE,
-                                    converter:
-                                        Entry.block.converters
-                                            .returnStringValueLowerCase,
-                                    codeMap:
-                                        'Entry.CodeMap.Entry.set_visible_answer[0]',
+                                    arrowColor: EntryStatic.ARROW_COLOR_VARIABLE,
+                                    converter: Entry.block.converters.returnStringValueLowerCase,
+                                    codeMap: 'Entry.CodeMap.Entry.set_visible_answer[0]',
                                 },
                             ],
                         },
@@ -319,14 +300,18 @@ module.exports = {
                 events: {
                     dataAdd: [
                         function(block) {
-                            var vc = Entry.variableContainer;
-                            if (vc) vc.addRef('_variableRefs', block);
+                            const vc = Entry.variableContainer;
+                            if (vc) {
+                                vc.addRef('_variableRefs', block);
+                            }
                         },
                     ],
                     dataDestroy: [
                         function(block) {
-                            var vc = Entry.variableContainer;
-                            if (vc) vc.removeRef('_variableRefs', block);
+                            const vc = Entry.variableContainer;
+                            if (vc) {
+                                vc.removeRef('_variableRefs', block);
+                            }
                         },
                     ],
                 },
@@ -343,12 +328,9 @@ module.exports = {
                 },
                 class: 'variable',
                 isNotFor: ['variableNotExist'],
-                func: function(sprite, script) {
-                    var variableId = script.getField('VARIABLE', script);
-                    var variable = Entry.variableContainer.getVariable(
-                        variableId,
-                        sprite
-                    );
+                func(sprite, script) {
+                    const variableId = script.getField('VARIABLE', script);
+                    const variable = Entry.variableContainer.getVariable(variableId, sprite);
                     return variable.getValue();
                 },
                 syntax: {
@@ -365,11 +347,8 @@ module.exports = {
                                     value: null,
                                     menuName: 'variables',
                                     fontSize: 11,
-                                    arrowColor:
-                                        EntryStatic.ARROW_COLOR_VARIABLE,
-                                    converter:
-                                        Entry.block.converters
-                                            .returnRawStringKey,
+                                    arrowColor: EntryStatic.ARROW_COLOR_VARIABLE,
+                                    converter: Entry.block.converters.returnRawStringKey,
                                 },
                             ],
                         },
@@ -401,14 +380,18 @@ module.exports = {
                 events: {
                     dataAdd: [
                         function(block) {
-                            var vc = Entry.variableContainer;
-                            if (vc) vc.addRef('_variableRefs', block);
+                            const vc = Entry.variableContainer;
+                            if (vc) {
+                                vc.addRef('_variableRefs', block);
+                            }
                         },
                     ],
                     dataDestroy: [
                         function(block) {
-                            var vc = Entry.variableContainer;
-                            if (vc) vc.removeRef('_variableRefs', block);
+                            const vc = Entry.variableContainer;
+                            if (vc) {
+                                vc.removeRef('_variableRefs', block);
+                            }
                         },
                     ],
                 },
@@ -440,33 +423,28 @@ module.exports = {
                 },
                 class: 'variable',
                 isNotFor: ['variableNotExist'],
-                func: function(sprite, script) {
-                    var variableId = script.getField('VARIABLE', script);
-                    var value = script.getValue('VALUE', script);
-                    var fixed = 0;
+                func(sprite, script) {
+                    const variableId = script.getField('VARIABLE', script);
+                    let value = script.getValue('VALUE', script);
+                    let fixed = 0;
 
-                    if (value == false && typeof value == 'boolean')
+                    if (value === false && typeof value === 'boolean') {
                         throw new Error('Type is not correct');
+                    }
 
-                    var variable = Entry.variableContainer.getVariable(
-                        variableId,
-                        sprite
-                    );
-                    var variableValue = variable.getValue();
-                    var sumValue;
+                    const variable = Entry.variableContainer.getVariable(variableId, sprite);
+                    let variableValue = variable.getValue();
+                    let sumValue;
                     if (Entry.Utils.isNumber(value) && variable.isNumber()) {
                         value = Entry.parseNumber(value);
                         variableValue = Entry.parseNumber(variableValue);
-                        fixed = Entry.getMaxFloatPoint([
-                            value,
-                            variable.getValue(),
-                        ]);
+                        fixed = Entry.getMaxFloatPoint([value, variable.getValue()]);
                         sumValue = new BigNumber(value)
                             .plus(variableValue)
                             .toNumber()
                             .toFixed(fixed);
                     } else {
-                        sumValue = '' + variableValue + value;
+                        sumValue = `${variableValue}${value}`;
                     }
 
                     variable.setValue(sumValue);
@@ -484,11 +462,8 @@ module.exports = {
                                     value: null,
                                     menuName: 'variables',
                                     fontSize: 11,
-                                    arrowColor:
-                                        EntryStatic.ARROW_COLOR_VARIABLE,
-                                    converter:
-                                        Entry.block.converters
-                                            .returnRawStringKey,
+                                    arrowColor: EntryStatic.ARROW_COLOR_VARIABLE,
+                                    converter: Entry.block.converters.returnRawStringKey,
                                 },
                                 {
                                     type: 'Block',
@@ -504,11 +479,8 @@ module.exports = {
                                     value: null,
                                     menuName: 'variables',
                                     fontSize: 11,
-                                    arrowColor:
-                                        EntryStatic.ARROW_COLOR_VARIABLE,
-                                    converter:
-                                        Entry.block.converters
-                                            .returnRawStringKey,
+                                    arrowColor: EntryStatic.ARROW_COLOR_VARIABLE,
+                                    converter: Entry.block.converters.returnRawStringKey,
                                 },
                                 {
                                     type: 'Block',
@@ -544,14 +516,18 @@ module.exports = {
                 events: {
                     dataAdd: [
                         function(block) {
-                            var vc = Entry.variableContainer;
-                            if (vc) vc.addRef('_variableRefs', block);
+                            const vc = Entry.variableContainer;
+                            if (vc) {
+                                vc.addRef('_variableRefs', block);
+                            }
                         },
                     ],
                     dataDestroy: [
                         function(block) {
-                            var vc = Entry.variableContainer;
-                            if (vc) vc.removeRef('_variableRefs', block);
+                            const vc = Entry.variableContainer;
+                            if (vc) {
+                                vc.removeRef('_variableRefs', block);
+                            }
                         },
                     ],
                 },
@@ -583,13 +559,10 @@ module.exports = {
                 },
                 class: 'variable',
                 isNotFor: ['variableNotExist'],
-                func: function(sprite, script) {
-                    var variableId = script.getField('VARIABLE', script);
-                    var value = script.getValue('VALUE', script);
-                    var variable = Entry.variableContainer.getVariable(
-                        variableId,
-                        sprite
-                    );
+                func(sprite, script) {
+                    const variableId = script.getField('VARIABLE', script);
+                    const value = script.getValue('VALUE', script);
+                    const variable = Entry.variableContainer.getVariable(variableId, sprite);
                     variable.setValue(value);
                     return script.callReturn();
                 },
@@ -606,11 +579,8 @@ module.exports = {
                                     value: null,
                                     menuName: 'variables',
                                     fontSize: 11,
-                                    arrowColor:
-                                        EntryStatic.ARROW_COLOR_VARIABLE,
-                                    converter:
-                                        Entry.block.converters
-                                            .returnRawStringKey,
+                                    arrowColor: EntryStatic.ARROW_COLOR_VARIABLE,
+                                    converter: Entry.block.converters.returnRawStringKey,
                                 },
                                 {
                                     type: 'Block',
@@ -642,14 +612,18 @@ module.exports = {
                 events: {
                     dataAdd: [
                         function(block) {
-                            var vc = Entry.variableContainer;
-                            if (vc) vc.addRef('_variableRefs', block);
+                            const vc = Entry.variableContainer;
+                            if (vc) {
+                                vc.addRef('_variableRefs', block);
+                            }
                         },
                     ],
                     dataDestroy: [
                         function(block) {
-                            var vc = Entry.variableContainer;
-                            if (vc) vc.removeRef('_variableRefs', block);
+                            const vc = Entry.variableContainer;
+                            if (vc) {
+                                vc.removeRef('_variableRefs', block);
+                            }
                         },
                     ],
                 },
@@ -666,12 +640,9 @@ module.exports = {
                 },
                 class: 'variable_visibility',
                 isNotFor: ['variableNotExist'],
-                func: function(sprite, script) {
-                    var variableId = script.getField('VARIABLE', script);
-                    var variable = Entry.variableContainer.getVariable(
-                        variableId,
-                        sprite
-                    );
+                func(sprite, script) {
+                    const variableId = script.getField('VARIABLE', script);
+                    const variable = Entry.variableContainer.getVariable(variableId, sprite);
                     variable.setVisible(true);
                     variable.updateView();
                     return script.callReturn();
@@ -687,10 +658,8 @@ module.exports = {
                                     value: null,
                                     menuName: 'variables',
                                     fontSize: 11,
-                                    arrowColor:
-                                        EntryStatic.ARROW_COLOR_VARIABLE,
-                                    converter:
-                                        Entry.block.converters.returnStringKey,
+                                    arrowColor: EntryStatic.ARROW_COLOR_VARIABLE,
+                                    converter: Entry.block.converters.returnStringKey,
                                 },
                             ],
                         },
@@ -718,14 +687,18 @@ module.exports = {
                 events: {
                     dataAdd: [
                         function(block) {
-                            var vc = Entry.variableContainer;
-                            if (vc) vc.addRef('_variableRefs', block);
+                            const vc = Entry.variableContainer;
+                            if (vc) {
+                                vc.addRef('_variableRefs', block);
+                            }
                         },
                     ],
                     dataDestroy: [
                         function(block) {
-                            var vc = Entry.variableContainer;
-                            if (vc) vc.removeRef('_variableRefs', block);
+                            const vc = Entry.variableContainer;
+                            if (vc) {
+                                vc.removeRef('_variableRefs', block);
+                            }
                         },
                     ],
                 },
@@ -742,12 +715,9 @@ module.exports = {
                 },
                 class: 'variable_visibility',
                 isNotFor: ['variableNotExist'],
-                func: function(sprite, script) {
-                    var variableId = script.getField('VARIABLE', script);
-                    var variable = Entry.variableContainer.getVariable(
-                        variableId,
-                        sprite
-                    );
+                func(sprite, script) {
+                    const variableId = script.getField('VARIABLE', script);
+                    const variable = Entry.variableContainer.getVariable(variableId, sprite);
                     variable.setVisible(false);
                     return script.callReturn();
                 },
@@ -762,10 +732,8 @@ module.exports = {
                                     value: null,
                                     menuName: 'variables',
                                     fontSize: 11,
-                                    arrowColor:
-                                        EntryStatic.ARROW_COLOR_VARIABLE,
-                                    converter:
-                                        Entry.block.converters.returnStringKey,
+                                    arrowColor: EntryStatic.ARROW_COLOR_VARIABLE,
+                                    converter: Entry.block.converters.returnStringKey,
                                 },
                             ],
                         },
@@ -809,14 +777,18 @@ module.exports = {
                 events: {
                     dataAdd: [
                         function(block) {
-                            var vc = Entry.variableContainer;
-                            if (vc) vc.addRef('_variableRefs', block);
+                            const vc = Entry.variableContainer;
+                            if (vc) {
+                                vc.addRef('_variableRefs', block);
+                            }
                         },
                     ],
                     dataDestroy: [
                         function(block) {
-                            var vc = Entry.variableContainer;
-                            if (vc) vc.removeRef('_variableRefs', block);
+                            const vc = Entry.variableContainer;
+                            if (vc) {
+                                vc.removeRef('_variableRefs', block);
+                            }
                         },
                     ],
                 },
@@ -850,18 +822,19 @@ module.exports = {
                 },
                 class: 'list_element',
                 isNotFor: ['listNotExist'],
-                func: function(sprite, script) {
-                    var listId = script.getField('LIST', script);
-                    var index = script.getValue('INDEX', script);
-                    var list = Entry.variableContainer.getList(listId, sprite);
+                func(sprite, script) {
+                    const listId = script.getField('LIST', script);
+                    let index = script.getValue('INDEX', script);
+                    const list = Entry.variableContainer.getList(listId, sprite);
                     index = Entry.getListRealIndex(index, list);
 
                     if (
                         !list.array_ ||
                         !Entry.Utils.isNumber(index) ||
                         index > list.array_.length
-                    )
+                    ) {
                         throw new Error('can not insert value to array');
+                    }
 
                     return list.array_[index - 1].data;
                 },
@@ -879,11 +852,8 @@ module.exports = {
                                     value: null,
                                     menuName: 'lists',
                                     fontSize: 11,
-                                    arrowColor:
-                                        EntryStatic.ARROW_COLOR_VARIABLE,
-                                    converter:
-                                        Entry.block.converters
-                                            .returnRawStringKey,
+                                    arrowColor: EntryStatic.ARROW_COLOR_VARIABLE,
+                                    converter: Entry.block.converters.returnRawStringKey,
                                 },
                                 undefined,
                                 {
@@ -921,14 +891,18 @@ module.exports = {
                 events: {
                     dataAdd: [
                         function(block) {
-                            var vc = Entry.variableContainer;
-                            if (vc) vc.addRef('_variableRefs', block);
+                            const vc = Entry.variableContainer;
+                            if (vc) {
+                                vc.addRef('_variableRefs', block);
+                            }
                         },
                     ],
                     dataDestroy: [
                         function(block) {
-                            var vc = Entry.variableContainer;
-                            if (vc) vc.removeRef('_variableRefs', block);
+                            const vc = Entry.variableContainer;
+                            if (vc) {
+                                vc.removeRef('_variableRefs', block);
+                            }
                         },
                     ],
                 },
@@ -960,12 +934,14 @@ module.exports = {
                 },
                 class: 'list',
                 isNotFor: ['listNotExist'],
-                func: function(sprite, script) {
-                    var listId = script.getField('LIST', script);
-                    var value = script.getValue('VALUE', script);
-                    var list = Entry.variableContainer.getList(listId, sprite);
+                func(sprite, script) {
+                    const listId = script.getField('LIST', script);
+                    const value = script.getValue('VALUE', script);
+                    const list = Entry.variableContainer.getList(listId, sprite);
 
-                    if (!list.array_) list.array_ = [];
+                    if (!list.array_) {
+                        list.array_ = [];
+                    }
                     list.array_.push({ data: value });
                     list.updateView();
                     return script.callReturn();
@@ -986,11 +962,8 @@ module.exports = {
                                     value: null,
                                     menuName: 'lists',
                                     fontSize: 11,
-                                    arrowColor:
-                                        EntryStatic.ARROW_COLOR_VARIABLE,
-                                    converter:
-                                        Entry.block.converters
-                                            .returnRawStringKey,
+                                    arrowColor: EntryStatic.ARROW_COLOR_VARIABLE,
+                                    converter: Entry.block.converters.returnRawStringKey,
                                 },
                             ],
                         },
@@ -1023,14 +996,18 @@ module.exports = {
                 events: {
                     dataAdd: [
                         function(block) {
-                            var vc = Entry.variableContainer;
-                            if (vc) vc.addRef('_variableRefs', block);
+                            const vc = Entry.variableContainer;
+                            if (vc) {
+                                vc.addRef('_variableRefs', block);
+                            }
                         },
                     ],
                     dataDestroy: [
                         function(block) {
-                            var vc = Entry.variableContainer;
-                            if (vc) vc.removeRef('_variableRefs', block);
+                            const vc = Entry.variableContainer;
+                            if (vc) {
+                                vc.removeRef('_variableRefs', block);
+                            }
                         },
                     ],
                 },
@@ -1062,17 +1039,18 @@ module.exports = {
                 },
                 class: 'list',
                 isNotFor: ['listNotExist'],
-                func: function(sprite, script) {
-                    var listId = script.getField('LIST', script);
-                    var value = script.getValue('VALUE', script);
-                    var list = Entry.variableContainer.getList(listId, sprite);
+                func(sprite, script) {
+                    const listId = script.getField('LIST', script);
+                    const value = script.getValue('VALUE', script);
+                    const list = Entry.variableContainer.getList(listId, sprite);
 
                     if (
                         !list.array_ ||
                         !Entry.Utils.isNumber(value) ||
                         value > list.array_.length
-                    )
+                    ) {
                         throw new Error('can not remove value from array');
+                    }
 
                     list.array_.splice(value - 1, 1);
 
@@ -1096,11 +1074,8 @@ module.exports = {
                                     value: null,
                                     menuName: 'lists',
                                     fontSize: 11,
-                                    arrowColor:
-                                        EntryStatic.ARROW_COLOR_VARIABLE,
-                                    converter:
-                                        Entry.block.converters
-                                            .returnRawStringKey,
+                                    arrowColor: EntryStatic.ARROW_COLOR_VARIABLE,
+                                    converter: Entry.block.converters.returnRawStringKey,
                                 },
                             ],
                         },
@@ -1137,14 +1112,18 @@ module.exports = {
                 events: {
                     dataAdd: [
                         function(block) {
-                            var vc = Entry.variableContainer;
-                            if (vc) vc.addRef('_variableRefs', block);
+                            const vc = Entry.variableContainer;
+                            if (vc) {
+                                vc.addRef('_variableRefs', block);
+                            }
                         },
                     ],
                     dataDestroy: [
                         function(block) {
-                            var vc = Entry.variableContainer;
-                            if (vc) vc.removeRef('_variableRefs', block);
+                            const vc = Entry.variableContainer;
+                            if (vc) {
+                                vc.removeRef('_variableRefs', block);
+                            }
                         },
                     ],
                 },
@@ -1185,21 +1164,21 @@ module.exports = {
                 },
                 class: 'list',
                 isNotFor: ['listNotExist'],
-                func: function(sprite, script) {
-                    var listId = script.getField('LIST', script);
-                    var data = script.getValue('DATA', script);
-                    var index = script.getValue('INDEX', script);
-                    var list = Entry.variableContainer.getList(listId, sprite);
+                func(sprite, script) {
+                    const listId = script.getField('LIST', script);
+                    const [data, index] = script.getValues(['DATA', 'INDEX'], script);
+                    const list = Entry.variableContainer.getList(listId, sprite);
 
                     if (
                         !list.array_ ||
                         !Entry.Utils.isNumber(index) ||
-                        index == 0 ||
+                        index === 0 ||
                         index > list.array_.length + 1
-                    )
+                    ) {
                         throw new Error('can not insert value to array');
+                    }
 
-                    list.array_.splice(index - 1, 0, { data: data });
+                    list.array_.splice(index - 1, 0, { data });
                     list.updateView();
                     return script.callReturn();
                 },
@@ -1219,11 +1198,8 @@ module.exports = {
                                     value: null,
                                     menuName: 'lists',
                                     fontSize: 11,
-                                    arrowColor:
-                                        EntryStatic.ARROW_COLOR_VARIABLE,
-                                    converter:
-                                        Entry.block.converters
-                                            .returnRawStringKey,
+                                    arrowColor: EntryStatic.ARROW_COLOR_VARIABLE,
+                                    converter: Entry.block.converters.returnRawStringKey,
                                 },
                                 {
                                     type: 'Block',
@@ -1265,14 +1241,18 @@ module.exports = {
                 events: {
                     dataAdd: [
                         function(block) {
-                            var vc = Entry.variableContainer;
-                            if (vc) vc.addRef('_variableRefs', block);
+                            const vc = Entry.variableContainer;
+                            if (vc) {
+                                vc.addRef('_variableRefs', block);
+                            }
                         },
                     ],
                     dataDestroy: [
                         function(block) {
-                            var vc = Entry.variableContainer;
-                            if (vc) vc.removeRef('_variableRefs', block);
+                            const vc = Entry.variableContainer;
+                            if (vc) {
+                                vc.removeRef('_variableRefs', block);
+                            }
                         },
                     ],
                 },
@@ -1313,18 +1293,18 @@ module.exports = {
                 },
                 class: 'list',
                 isNotFor: ['listNotExist'],
-                func: function(sprite, script) {
-                    var listId = script.getField('LIST', script);
-                    var data = script.getValue('DATA', script);
-                    var index = script.getValue('INDEX', script);
-                    var list = Entry.variableContainer.getList(listId, sprite);
+                func(sprite, script) {
+                    const listId = script.getField('LIST', script);
+                    const [data, index] = script.getValues(['DATA', 'INDEX'], script);
+                    const list = Entry.variableContainer.getList(listId, sprite);
 
                     if (
                         !list.array_ ||
                         !Entry.Utils.isNumber(index) ||
                         index > list.array_.length
-                    )
+                    ) {
                         throw new Error('can not insert value to array');
+                    }
 
                     list.array_[index - 1].data = data;
                     list.updateView();
@@ -1342,11 +1322,8 @@ module.exports = {
                                     value: null,
                                     menuName: 'lists',
                                     fontSize: 11,
-                                    arrowColor:
-                                        EntryStatic.ARROW_COLOR_VARIABLE,
-                                    converter:
-                                        Entry.block.converters
-                                            .returnRawStringKey,
+                                    arrowColor: EntryStatic.ARROW_COLOR_VARIABLE,
+                                    converter: Entry.block.converters.returnRawStringKey,
                                 },
                                 {
                                     type: 'Block',
@@ -1389,14 +1366,18 @@ module.exports = {
                 events: {
                     dataAdd: [
                         function(block) {
-                            var vc = Entry.variableContainer;
-                            if (vc) vc.addRef('_variableRefs', block);
+                            const vc = Entry.variableContainer;
+                            if (vc) {
+                                vc.addRef('_variableRefs', block);
+                            }
                         },
                     ],
                     dataDestroy: [
                         function(block) {
-                            var vc = Entry.variableContainer;
-                            if (vc) vc.removeRef('_variableRefs', block);
+                            const vc = Entry.variableContainer;
+                            if (vc) {
+                                vc.removeRef('_variableRefs', block);
+                            }
                         },
                     ],
                 },
@@ -1413,9 +1394,9 @@ module.exports = {
                 },
                 class: 'list',
                 isNotFor: ['listNotExist'],
-                func: function(sprite, script) {
-                    var listId = script.getField('LIST', script);
-                    var list = Entry.variableContainer.getList(listId, sprite);
+                func(sprite, script) {
+                    const listId = script.getField('LIST', script);
+                    const list = Entry.variableContainer.getList(listId, sprite);
 
                     return list.array_.length;
                 },
@@ -1433,11 +1414,8 @@ module.exports = {
                                     value: null,
                                     menuName: 'lists',
                                     fontSize: 11,
-                                    arrowColor:
-                                        EntryStatic.ARROW_COLOR_VARIABLE,
-                                    converter:
-                                        Entry.block.converters
-                                            .returnRawStringKey,
+                                    arrowColor: EntryStatic.ARROW_COLOR_VARIABLE,
+                                    converter: Entry.block.converters.returnRawStringKey,
                                 },
                             ],
                         },
@@ -1480,14 +1458,18 @@ module.exports = {
                 events: {
                     dataAdd: [
                         function(block) {
-                            var vc = Entry.variableContainer;
-                            if (vc) vc.addRef('_variableRefs', block);
+                            const vc = Entry.variableContainer;
+                            if (vc) {
+                                vc.addRef('_variableRefs', block);
+                            }
                         },
                     ],
                     dataDestroy: [
                         function(block) {
-                            var vc = Entry.variableContainer;
-                            if (vc) vc.removeRef('_variableRefs', block);
+                            const vc = Entry.variableContainer;
+                            if (vc) {
+                                vc.removeRef('_variableRefs', block);
+                            }
                         },
                     ],
                 },
@@ -1523,16 +1505,19 @@ module.exports = {
                 },
                 class: 'list',
                 isNotFor: ['listNotExist'],
-                func: function(sprite, script) {
-                    var listId = script.getField('LIST', script);
-                    var data = script.getStringValue('DATA', script);
-                    var list = Entry.variableContainer.getList(listId, sprite);
-                    if (!list) return false;
-                    var arr = list.array_;
+                func(sprite, script) {
+                    const listId = script.getField('LIST', script);
+                    const data = script.getStringValue('DATA', script);
+                    const list = Entry.variableContainer.getList(listId, sprite);
+                    if (!list) {
+                        return false;
+                    }
+                    const arr = list.array_;
 
-                    for (var i = 0, len = arr.length; i < len; i++) {
-                        if (arr[i].data.toString() == data.toString())
+                    for (let i = 0, len = arr.length; i < len; i++) {
+                        if (arr[i].data.toString() === data.toString()) {
                             return true;
+                        }
                     }
                     return false;
                 },
@@ -1550,11 +1535,8 @@ module.exports = {
                                     value: null,
                                     menuName: 'lists',
                                     fontSize: 11,
-                                    arrowColor:
-                                        EntryStatic.ARROW_COLOR_VARIABLE,
-                                    converter:
-                                        Entry.block.converters
-                                            .returnRawStringKey,
+                                    arrowColor: EntryStatic.ARROW_COLOR_VARIABLE,
+                                    converter: Entry.block.converters.returnRawStringKey,
                                 },
                                 undefined,
                                 {
@@ -1587,14 +1569,18 @@ module.exports = {
                 events: {
                     dataAdd: [
                         function(block) {
-                            var vc = Entry.variableContainer;
-                            if (vc) vc.addRef('_variableRefs', block);
+                            const vc = Entry.variableContainer;
+                            if (vc) {
+                                vc.addRef('_variableRefs', block);
+                            }
                         },
                     ],
                     dataDestroy: [
                         function(block) {
-                            var vc = Entry.variableContainer;
-                            if (vc) vc.removeRef('_variableRefs', block);
+                            const vc = Entry.variableContainer;
+                            if (vc) {
+                                vc.removeRef('_variableRefs', block);
+                            }
                         },
                     ],
                 },
@@ -1611,9 +1597,9 @@ module.exports = {
                 },
                 class: 'list_visibility',
                 isNotFor: ['listNotExist'],
-                func: function(sprite, script) {
-                    var listId = script.getField('LIST', script);
-                    var list = Entry.variableContainer.getList(listId);
+                func(sprite, script) {
+                    const listId = script.getField('LIST', script);
+                    const list = Entry.variableContainer.getList(listId);
 
                     list.setVisible(true);
                     return script.callReturn();
@@ -1629,10 +1615,8 @@ module.exports = {
                                     value: null,
                                     menuName: 'lists',
                                     fontSize: 11,
-                                    arrowColor:
-                                        EntryStatic.ARROW_COLOR_VARIABLE,
-                                    converter:
-                                        Entry.block.converters.returnStringKey,
+                                    arrowColor: EntryStatic.ARROW_COLOR_VARIABLE,
+                                    converter: Entry.block.converters.returnStringKey,
                                 },
                             ],
                         },
@@ -1660,14 +1644,18 @@ module.exports = {
                 events: {
                     dataAdd: [
                         function(block) {
-                            var vc = Entry.variableContainer;
-                            if (vc) vc.addRef('_variableRefs', block);
+                            const vc = Entry.variableContainer;
+                            if (vc) {
+                                vc.addRef('_variableRefs', block);
+                            }
                         },
                     ],
                     dataDestroy: [
                         function(block) {
-                            var vc = Entry.variableContainer;
-                            if (vc) vc.removeRef('_variableRefs', block);
+                            const vc = Entry.variableContainer;
+                            if (vc) {
+                                vc.removeRef('_variableRefs', block);
+                            }
                         },
                     ],
                 },
@@ -1684,9 +1672,9 @@ module.exports = {
                 },
                 class: 'list_visibility',
                 isNotFor: ['listNotExist'],
-                func: function(sprite, script) {
-                    var listId = script.getField('LIST', script);
-                    var list = Entry.variableContainer.getList(listId);
+                func(sprite, script) {
+                    const listId = script.getField('LIST', script);
+                    const list = Entry.variableContainer.getList(listId);
 
                     list.setVisible(false);
                     return script.callReturn();
@@ -1702,10 +1690,8 @@ module.exports = {
                                     value: null,
                                     menuName: 'lists',
                                     fontSize: 11,
-                                    arrowColor:
-                                        EntryStatic.ARROW_COLOR_VARIABLE,
-                                    converter:
-                                        Entry.block.converters.returnStringKey,
+                                    arrowColor: EntryStatic.ARROW_COLOR_VARIABLE,
+                                    converter: Entry.block.converters.returnStringKey,
                                 },
                             ],
                         },
