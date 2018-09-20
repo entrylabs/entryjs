@@ -5,7 +5,7 @@ const { callApi } = require('../../util/common');
 
 Entry.EXPANSION_BLOCK.translate = {
     name: 'translate',
-    imageName: 'weather.png',
+    imageName: 'papago.png',
     title: {
         'ko': '번역',
         'en': 'translate',
@@ -23,20 +23,69 @@ Entry.EXPANSION_BLOCK.translate = {
         'dictionary': 'nsmt',
         'artificial_intelligence': 'n2mt',
     },
-    apiType : "nsmt",
-    langCodeMap : {
-        "ko" : Lang.Blocks.lang_ko,
-        "en" : Lang.Blocks.lang_en,
-        "es" : Lang.Blocks.lang_es,
-        "fr" : Lang.Blocks.lang_fr,
-        "id" : Lang.Blocks.lang_id,
-        "ja" : Lang.Blocks.lang_ja,
-        "th" : Lang.Blocks.lang_th,
-        "vi" : Lang.Blocks.lang_vi,
-        "zh-CN" : Lang.Blocks.lang_zh_cn,
-        "zh-TW" : Lang.Blocks.lang_zh_tw,
-        "it" : Lang.Blocks.lang_it
-    }
+    apiType: 'nsmt',
+    langCodeMap: {
+        'auto': {
+            lang: Lang.Blocks.auto,
+            sub: ['ko', 'en', 'ja', 'zh-CN', 'zh-TW', 'es', 'fr', 'de', 'ru', 'pt', 'th', 'vi', 'id', 'hi'],
+        },
+        'ko': {
+            lang: Lang.Blocks.korean,
+            sub: ['en', 'ja', 'zh-CN', 'zh-TW', 'es', 'fr', 'de', 'ru', 'pt', 'th', 'vi', 'id'],
+        },
+        'en': {
+            lang: Lang.Blocks.english,
+            sub: ['ko', 'ja', 'zh-CN', 'zh-TW', 'es', 'fr', 'de', 'ru', 'pt', 'th', 'vi', 'id', 'hi'],
+        },
+        'ja': {
+            lang: Lang.Blocks.japan,
+            sub: ['ko', 'en', 'zh-CN', 'zh-TW', 'es', 'fr', 'de', 'ru', 'pt', 'th', 'vi', 'id', 'hi'],
+        },
+        'zh-CN': {
+            lang: Lang.Blocks.chinese_simplified,
+            sub: ['ko', 'en', 'ja', 'zh-TW', 'es', 'fr', 'de', 'ru', 'pt', 'th', 'vi', 'id', 'hi'],
+        },
+        'zh-TW': {
+            lang: Lang.Blocks.chinese_traditional,
+            sub: ['ko', 'en', 'ja', 'zh-CN', 'es', 'fr', 'de', 'ru', 'pt', 'th', 'vi', 'id', 'hi'],
+        },
+        'es': {
+            lang: Lang.Blocks.spanish,
+            sub: ['ko', 'en', 'ja', 'zh-CN', 'zh-TW', 'fr', 'de', 'ru', 'th', 'vi', 'id'],
+        },
+        'fr': {
+            lang: Lang.Blocks.french,
+            sub: ['ko', 'en', 'ja', 'zh-CN', 'zh-TW', 'es', 'de', 'ru', 'th', 'vi', 'id'],
+        },
+        'de': {
+            lang: Lang.Blocks.german,
+            sub: ['ko', 'en', 'ja', 'zh-CN', 'zh-TW', 'es', 'fr', 'ru', 'pt', 'th', 'vi', 'id', 'hi'],
+        },
+        'ru': {
+            lang: Lang.Blocks.russian,
+            sub: ['ko', 'en', 'ja', 'zh-CN', 'zh-TW', 'es', 'fr', 'de', 'pt', 'th', 'vi', 'id', 'hi'],
+        },
+        'pt': {
+            lang: Lang.Blocks.portuguese,
+            sub: ['ko', 'en', 'ja', 'zh-CN', 'zh-TW', 'de', 'ru', 'hi'],
+        },
+        'th': {
+            lang: Lang.Blocks.thai,
+            sub: ['ko', 'en', 'ja', 'zh-CN', 'zh-TW', 'es', 'fr', 'de', 'ru', 'vi'],
+        },
+        'vi': {
+            lang: Lang.Blocks.vietnamese,
+            sub: ['ko', 'en', 'ja', 'zh-CN', 'zh-TW', 'es', 'fr', 'de', 'ru', 'th', 'id'],
+        },
+        'id': {
+            lang: Lang.Blocks.indonesian,
+            sub: ['ko', 'en', 'zh-CN', 'zh-TW', 'es', 'fr', 'de', 'ru', 'th', 'vi'],
+        },
+        'hi': {
+            lang: Lang.Blocks.hindi,
+            sub: ['ko', 'en', 'ja', 'zh-CN', 'zh-TW', 'de', 'ru', 'pt'],
+        },
+    },
 };
 
 Entry.EXPANSION_BLOCK.translate.getBlocks = function() {
@@ -61,14 +110,23 @@ Entry.EXPANSION_BLOCK.translate.getBlocks = function() {
             let param = {
                 type: 'Dropdown',
                 options: [
-                    [Lang.Blocks.lang_ko, 'ko'],
-                    [Lang.Blocks.lang_en, 'en'],
-                    [Lang.Blocks.lang_ja, 'ja'],
-                    [Lang.Menus.russia, 'ru'],
-                    [Lang.Menus.chinese_simplified, 'zh-CN'],
-                    [Lang.Menus.chinese_traditional, 'zh-TW'],
+                    [Lang.Blocks.auto, 'auto'],
+                    [Lang.Blocks.korean, 'ko'],
+                    [Lang.Blocks.english, 'en'],
+                    [Lang.Blocks.japan, 'ja'],
+                    [Lang.Blocks.chinese_simplified, 'zh-CN'],
+                    [Lang.Blocks.chinese_traditional, 'zh-TW'],
+                    [Lang.Blocks.spanish, 'es'],
+                    [Lang.Blocks.french, 'fr'],
+                    [Lang.Blocks.german, 'de'],
+                    [Lang.Blocks.russian, 'ru'],
+                    [Lang.Blocks.portuguese, 'pt'],
+                    [Lang.Blocks.thai, 'th'],
+                    [Lang.Blocks.vietnamese, 'vi'],
+                    [Lang.Blocks.indonesian, 'id'],
+                    [Lang.Blocks.hindi, 'hi'],
                 ],
-                value: 'ko',
+                value: 'auto',
                 fontSize: 11,
                 arrowColor: EntryStatic.ARROW_COLOR_EXPANSION,
             };
@@ -77,18 +135,28 @@ Entry.EXPANSION_BLOCK.translate.getBlocks = function() {
             }
             return param;
         },
-        getTargetLang: function(isPython) {
+        getTargetLang: function(targetIndex = 0, isPython = false) {
             let param = {
-                type: 'Dropdown',
-                options: [
-                    [Lang.Menus.korean, 'ko'],
-                    [Lang.Menus.english, 'en'],
-                    [Lang.Menus.japan, 'ja'],
-                    [Lang.Menus.russia, 'ru'],
-                    [Lang.Menus.chinese_simplified, 'zh-CN'],
-                    [Lang.Menus.chinese_traditional, 'zh-TW'],
-                ],
-                value: 'ko',
+                type: 'DropdownDynamic',
+                value: null,
+                menuName: function(value) {
+                    const langCodeMap = Entry.EXPANSION_BLOCK.translate.langCodeMap;
+                    if (value) {
+                        return langCodeMap[value].sub.map((code) => {
+                            return [langCodeMap[code].lang, code];
+                        });
+                    }
+
+                    if (this._contents.options) {
+                        return this._contents.options;
+                    } else {
+                        return langCodeMap['auto'].sub.map((code) => {
+                            return [langCodeMap[code].lang, code];
+                        });
+                    }
+                },
+                targetIndex: targetIndex,
+                needDeepCopy: true,
                 fontSize: 11,
                 arrowColor: EntryStatic.ARROW_COLOR_EXPANSION,
             };
@@ -113,7 +181,7 @@ Entry.EXPANSION_BLOCK.translate.getBlocks = function() {
             }).catch(() => {
                 return resolve(defaultValue);
             });
-        });
+        }).catch(() => defaultValue);
     };
 
     const checkLang = (query, defaultValue) => {
@@ -129,30 +197,30 @@ Entry.EXPANSION_BLOCK.translate.getBlocks = function() {
             }).catch(() => {
                 return resolve(defaultValue);
             });
-        });
+        }).catch(() => defaultValue);
     };
 
     const checkText = function(text) {
         let result = {
-            result : false,
-            message : "알수없는 문장입니다."
+            result: false,
+            message: Lang.Blocks.unknown_sentence,
         };
 
-        if(!text) {
-            result.message = "문장이 없습니다."
+        if (!text) {
+            result.message = Lang.Blocks.no_sentence;
             return result;
         }
 
-        if(text.length > 20) {
-            result.message = "20자 이내로 작성해 주십시오.";
+        if (text.length > 20) {
+            result.message = Lang.Blocks.sentence_over_20_charactor;
             return result;
         }
 
         return {
-            result : true,
-            message : text
+            result: true,
+            message: text,
         };
-    }
+    };
     return {
         translate_title: {
             skeleton: 'basic_text',
@@ -182,7 +250,7 @@ Entry.EXPANSION_BLOCK.translate.getBlocks = function() {
                     type: 'Block',
                     accept: 'string',
                 },
-                params.getTargetLang(),
+                params.getTargetLang(0),
             ],
             events: {},
             def: {
@@ -192,7 +260,7 @@ Entry.EXPANSION_BLOCK.translate.getBlocks = function() {
                         type: 'text',
                         params: [Lang.Blocks.entry],
                     },
-                    params.getTargetLang().value,
+                    null,
                 ],
                 type: 'get_translated_string',
             },
@@ -209,9 +277,10 @@ Entry.EXPANSION_BLOCK.translate.getBlocks = function() {
             isNotFor: ['translate'],
             func: async function(sprite, script) {
                 const textObj = checkText(await script.getStringValue('TEXT', script));
-                if(!textObj.result) {
+                if (!textObj.result) {
                     return textObj.message;
-                };
+                }
+                ;
 
                 const type = Entry.EXPANSION_BLOCK.translate.apiType;
                 const params = {
@@ -224,7 +293,7 @@ Entry.EXPANSION_BLOCK.translate.getBlocks = function() {
                     return params.text;
                 }
 
-                return await translate(params, type, '알 수 없는 문장입니다.');
+                return await translate(params, type, Lang.Blocks.unknown_sentence,);
             },
             syntax: {
                 js: [],
@@ -238,7 +307,7 @@ Entry.EXPANSION_BLOCK.translate.getBlocks = function() {
                                 type: 'Block',
                                 accept: 'string',
                             },
-                            params.getTargetLang(true),
+                            params.getTargetLang(0, true),
                         ],
                     },
                 ],
@@ -276,16 +345,16 @@ Entry.EXPANSION_BLOCK.translate.getBlocks = function() {
             isNotFor: ['translate'],
             func: async function(sprite, script) {
                 const textObj = checkText(await script.getStringValue('TEXT', script));
-                if(!textObj.result) {
+                if (!textObj.result) {
                     return textObj.message;
                 }
 
-                const langCode = await checkLang(textObj.message, langCode);
+                const langCode = await checkLang(textObj.message, Lang.Blocks.unknown_sentence);
                 const result = Entry.EXPANSION_BLOCK.translate.langCodeMap[langCode];
-                if(result) {
-                    return result;
+                if (result) {
+                    return result.lang;
                 }
-                return "알 수 없는 문장입니다.";
+                return Lang.Blocks.unknown_sentence;
             },
             syntax: {
                 js: [],
@@ -298,7 +367,7 @@ Entry.EXPANSION_BLOCK.translate.getBlocks = function() {
                             {
                                 type: 'Block',
                                 accept: 'string',
-                            }
+                            },
                         ],
                     },
                 ],
