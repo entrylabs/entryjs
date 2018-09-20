@@ -76,6 +76,7 @@ class Scope {
                 });
                 throw new Entry.Utils.AsyncError();
             }
+            return result;
         } else if (result.isResolved) {
             return result.value;
         } else {
