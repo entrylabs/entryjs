@@ -3,20 +3,18 @@
  */
 'use strict';
 
-Entry.Executor = function(block, entity) {
-    this.scope = new Entry.Scope(block, this);
-    this.entity = entity;
-    this._callStack = [];
-    this.register = {};
-    this.parentExecutor = null;
-    this.valueMap = {};
-    this.id = Entry.Utils.generateId();
-};
+class Executor {
+    constructor(block, entity) {
+        this.scope = new Entry.Scope(block, this);
+        this.entity = entity;
+        this._callStack = [];
+        this.register = {};
+        this.parentExecutor = null;
+        this.valueMap = {};
+        this.id = Entry.Utils.generateId();
+    }
 
-Entry.Executor.MAXIMUM_CALLSTACK = 100;
-
-(function(p) {
-    p.execute = function(isFromOrigin) {
+    execute(isFromOrigin) {
         if (this.isEnd()) {
             return;
         }
@@ -76,9 +74,9 @@ Entry.Executor.MAXIMUM_CALLSTACK = 100;
             }
         }
         return executedBlocks;
-    };
+    }
 
-    p.stepInto = function(thread) {
+    stepInto(thread) {
         if (!(thread instanceof Entry.Thread)) {
             console.error('Must step in to thread');
         }
@@ -92,16 +90,16 @@ Entry.Executor.MAXIMUM_CALLSTACK = 100;
 
         this.scope = new Entry.Scope(block, this);
         return Entry.STATIC.CONTINUE;
-    };
+    }
 
-    p.break = function() {
+    break() {
         if (this._callStack.length) {
             this.scope = this._callStack.pop();
         }
         return Entry.STATIC.PASS;
-    };
+    }
 
-    p.breakLoop = function() {
+    breakLoop() {
         if (this._callStack.length) {
             this.scope = this._callStack.pop();
         }
@@ -113,14 +111,16 @@ Entry.Executor.MAXIMUM_CALLSTACK = 100;
             this.scope = this._callStack.pop();
         }
         return Entry.STATIC.PASS;
-    };
+    }
 
-    p.end = function() {
+    end() {
         Entry.dispatchEvent('blockExecuteEnd', this.scope.block && this.scope.block.view);
         this.scope.block = null;
-    };
+    }
 
-    p.isEnd = function() {
+    isEnd() {
         return this.scope.block === null;
-    };
-})(Entry.Executor.prototype);
+    }
+}
+
+Entry.Executor = Executor;
