@@ -27,7 +27,7 @@ Entry.EXPANSION_BLOCK.translate = {
     langCodeMap: {
         'auto': {
             lang: Lang.Blocks.auto,
-            sub: ['ko', 'en', 'ja', 'zh-CN', 'zh-TW', 'es', 'fr', 'de', 'ru', 'pt', 'th', 'vi', 'id', 'hi'],
+            sub: ['en', 'ja', 'zh-CN', 'zh-TW', 'es', 'fr', 'de', 'ru', 'pt', 'th', 'vi', 'id', 'hi', 'ko'],
         },
         'ko': {
             lang: Lang.Blocks.korean,
@@ -185,13 +185,14 @@ Entry.EXPANSION_BLOCK.translate.getBlocks = function() {
     };
 
     const checkLang = (query, defaultValue) => {
+        const langCodeMap = Entry.EXPANSION_BLOCK.translate.langCodeMap;
         return new PromiseManager().Promise(function(resolve) {
             callApi('translate-detect-' + query, {
                 url: Entry.EXPANSION_BLOCK.translate.api + 'dect/langs',
                 params: { query },
             }).then((result) => {
-                if (result.data && result.data.langCode) {
-                    return resolve(result.data.langCode);
+                if (result.data && result.data.langCode && langCodeMap[result.data.langCode]) {
+                    return resolve(langCodeMap[result.data.langCode].lang);
                 }
                 return resolve(defaultValue);
             }).catch(() => {
@@ -275,12 +276,11 @@ Entry.EXPANSION_BLOCK.translate.getBlocks = function() {
             },
             class: 'translate',
             isNotFor: ['translate'],
-            func: async function(sprite, script) {
-                const textObj = checkText(await script.getStringValue('TEXT', script));
+            func: function(sprite, script) {
+                const textObj = checkText(script.getStringValue('TEXT', script));
                 if (!textObj.result) {
                     return textObj.message;
                 }
-                ;
 
                 const type = Entry.EXPANSION_BLOCK.translate.apiType;
                 const params = {
@@ -293,7 +293,7 @@ Entry.EXPANSION_BLOCK.translate.getBlocks = function() {
                     return params.text;
                 }
 
-                return await translate(params, type, Lang.Blocks.unknown_sentence,);
+                return translate(params, type, Lang.Blocks.unknown_sentence);
             },
             syntax: {
                 js: [],
@@ -343,18 +343,14 @@ Entry.EXPANSION_BLOCK.translate.getBlocks = function() {
             },
             class: 'translate',
             isNotFor: ['translate'],
-            func: async function(sprite, script) {
-                const textObj = checkText(await script.getStringValue('TEXT', script));
+            func: function(sprite, script) {
+                const text = script.getStringValue('TEXT', script);
+                const textObj = checkText(text);
                 if (!textObj.result) {
                     return textObj.message;
                 }
 
-                const langCode = await checkLang(textObj.message, Lang.Blocks.unknown_sentence);
-                const result = Entry.EXPANSION_BLOCK.translate.langCodeMap[langCode];
-                if (result) {
-                    return result.lang;
-                }
-                return Lang.Blocks.unknown_sentence;
+                return checkLang(textObj.message, Lang.Blocks.unknown_sentence);
             },
             syntax: {
                 js: [],
