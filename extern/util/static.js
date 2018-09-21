@@ -352,7 +352,10 @@ EntryStatic.getAllBlocks = function() {
                 "get_today_city_temperature",
                 "translate_title",
                 "get_translated_string",
-                "check_language"
+                "check_language",
+                "festival_title",
+                "count_festival",
+                "get_festival_info"
             ]
         },
         {
