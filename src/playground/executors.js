@@ -11,6 +11,7 @@ class Executor {
         this.register = {};
         this.parentExecutor = null;
         this.valueMap = {};
+        this.valueState = {};
         this.id = Entry.Utils.generateId();
     }
 
@@ -57,6 +58,7 @@ class Executor {
             if (returnVal === undefined || returnVal === null || returnVal === Entry.STATIC.PASS) {
                 this.scope = new Entry.Scope(this.scope.block.getNextBlock(), this);
                 this.valueMap = {};
+                this.valueState = {};
                 if (this.scope.block === null) {
                     if (this._callStack.length) {
                         const oldScope = this.scope;

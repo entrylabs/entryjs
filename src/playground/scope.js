@@ -33,114 +33,106 @@ class Scope {
     }
 
     getValues(keys, scope) {
+        const valueState = this.executor.valueState || {};
         const fieldBlocks = keys.map((key) => {
             return this.block.params[this._getParamIndex(key, scope)];
         });
+        const currentBlockId = scope.block.data.id;
+        valueState[currentBlockId] = valueState[currentBlockId] || { state: 'wait' };
 
-        this._setValueMap(fieldBlocks);
-        return fieldBlocks.map((fieldBlocks) => {
-            return this._getValueFromValueMap(fieldBlocks);
+        let hasWait = false;
+        let hasPending = false;
+        if (valueState[currentBlockId].state !== 'pending') {
+            fieldBlocks.forEach((fieldBlock) => {
+                const blockId = fieldBlock.data.id;
+                valueState[blockId] = valueState[blockId] || { state: 'wait' };
+
+                if (valueState[blockId] && valueState[blockId].state === 'pending') {
+                    hasPending = true;
+                }
+
+                if (valueState[blockId].state === 'wait') {
+                    hasWait = true;
+                    this._checkTreeValuesResolve(fieldBlock, valueState, blockId);
+                }
+            });
+        }
+
+        if (!hasWait && hasPending && valueState[currentBlockId].state === 'wait') {
+            valueState[currentBlockId].state = 'pending';
+            throw new Entry.Utils.AsyncError();
+        }
+
+        fieldBlocks.forEach((fieldBlock) => {
+            const blockId = fieldBlock.data.id;
+            if (valueState[blockId].state === 'pending') {
+                this._checkTreeValuesResolve(fieldBlock, valueState, blockId);
+            }
+        });
+
+        return fieldBlocks.map((fieldBlock) => {
+            return valueState[fieldBlock.data.id].value;
         });
     }
 
-    getValue(key, scope) {
-        const fieldBlock = this.block.params[this._getParamIndex(key, scope)];
+    _checkTreeValuesResolve(fieldBlock, valueState, blockId) {
+        const newScope = new Entry.Scope(fieldBlock, this.executor);
+        const result = Entry.block[fieldBlock.type].func.call(newScope, this.entity, newScope);
 
-        this._setValueMap(fieldBlock);
-        return this._getValueFromValueMap(fieldBlock);
-    }
-
-    /**
-     * getValue(s) 에서 사용되는 함수. executor 의 valueMap 에 데이터가 있는지 가져온다.
-     * 데이터가 아예 없는 경우 (말단 값블럭이 아닌경우) func 를 호출한다.
-     * 또한 isResolved === false 인 경우는 Promise 가 pending 중인 경우이므로 AsyncError 를 던진다.
-     *
-     * @param block 값을 가져올 블럭
-     * @returns {*} 블록의 결과 값
-     * @throws Entry.Utils.AsyncError Promise pending 중인 값을 호출한 경우
-     */
-    _getValueFromValueMap(block) {
-        const blockId = block.data.id;
-        const executorValueMap = this.executor.valueMap;
-        const result = executorValueMap[blockId];
-        if (result === undefined) {
-            const newScope = new Entry.Scope(block, this.executor);
-            const result = Entry.block[block.type].func.call(newScope, this.entity, newScope);
-            if(result instanceof Promise) {
-                executorValueMap[blockId] = { isResolved: false };
-                result.then((value) => {
-                    executorValueMap[blockId] = {
-                        value,
-                        isResolved: true,
-                    };
-                });
-                throw new Entry.Utils.AsyncError();
-            }
-            return result;
-        } else if (result.isResolved) {
-            return result.value;
-        } else {
+        if (result instanceof Promise) {
+            valueState[blockId].state = 'pending';
+            result.then((value) => {
+                valueState[blockId].state = 'complete';
+                valueState[blockId].value = value;
+            });
             throw new Entry.Utils.AsyncError();
+        } else {
+            valueState[blockId].state = 'complete';
+            valueState[blockId].value = result;
         }
     }
 
-    /**
-     * 현재 블록을 기준으로 중첩된 블록을 전부 순회하며 말단 블록을 가져온다.
-     * 말단 블록 리스트는 executor 에 기록되며 한번 기록이 된 이후에는 다음 scope 가 되기전까지 변하지 않는다.
-     * 해당 scope 에서 한번 실행된 함수는 더이상 트리를 순회하지 않는다.
-     * @param rootBlocks 기준 블록
-     */
-    _setValueMap(blocks) {
-        const rootBlocks = blocks instanceof Array ? blocks : [blocks];
+    getValue(key, scope) {
         const executorValueMap = this.executor.valueMap;
-        // 현재 스코프에서 한번 생성된 트리를 다시 순회하지 않는다.
-        if (Object.keys(executorValueMap).length > 0) {
-            return;
-        }
+        const fieldBlock = this.block.params[this._getParamIndex(key, scope)];
+        const blockId = fieldBlock.data.id;
 
-        const leafBlocks = this._getLeafBlocks(rootBlocks);
-        leafBlocks.forEach((block) => {
+        this._setExecutorValueMap([fieldBlock]);
+        return executorValueMap[blockId];
+    };
+
+    /**
+     * 일반 getValue 값을 가져오기 전,
+     * 현 Scope 상태에서의 executor.valueMap 을 세팅한다.
+     * 이 로직은 Promise.all[] 과 유사하며, 모든 값이 준비될 때까지 Scope 를 멈춘다.
+     * @param{Array} fieldBlocks getValue 에 의한 호출의 경우 1, getValues 의 경우 1 이상
+     */
+    _setExecutorValueMap(fieldBlocks) {
+        const executorValueMap = this.executor.valueMap;
+
+        fieldBlocks.forEach((block) => {
             const blockId = block.data.id;
+
+            if (executorValueMap[blockId] === 'isPending') {
+                throw new Entry.Utils.AsyncError();
+            } else if (executorValueMap[blockId] !== undefined) {
+                return executorValueMap[blockId];
+            }
+
             const newScope = new Entry.Scope(block, this.executor);
             const result = Entry.block[block.type].func.call(newScope, this.entity, newScope);
 
             if (result instanceof Promise) {
-                executorValueMap[blockId] = { isResolved: false };
+                executorValueMap[blockId] = 'isPending';
                 result.then((value) => {
-                    executorValueMap[blockId] = {
-                        value,
-                        isResolved: true,
-                    };
+                    executorValueMap[blockId] = value;
                 });
+                throw new Entry.Utils.AsyncError();
             } else {
-                executorValueMap[blockId] = {
-                    value: result,
-                    isResolved: true,
-                };
+                executorValueMap[blockId] = result;
             }
         });
-    }
-
-    _getLeafBlocks(rootBlocks) {
-        const leafBlocks = [];
-        const addValueBlockRecursive = (block) => {
-            const params = block.data && block.data.params;
-            const blockParams = params.filter((value) => {
-                return value instanceof Entry.Block;
-            });
-
-            if (blockParams.length >= 1) {
-                blockParams.forEach((value) => {
-                    addValueBlockRecursive(value);
-                });
-            } else {
-                leafBlocks.push(block);
-            }
-        };
-
-        rootBlocks.forEach(addValueBlockRecursive);
-        return leafBlocks;
-    }
+    };
 
     getStringValue(key, scope) {
         return String(this.getValue(key, scope));
