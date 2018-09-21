@@ -117,7 +117,7 @@ module.exports = {
                     if (!script.isStart) {
                         let [timeValue, message] = script.getValues(['SECOND]', 'VALUE'], script);
                         timeValue = Number(timeValue);
-                        
+
                         const mode = script.getField('OPTION', script);
                         script.isStart = true;
                         script.timeFlag = 1;
@@ -699,7 +699,7 @@ module.exports = {
                         size: 12,
                     },
                 ],
-                events: {}, 
+                events: {},
                 def: {
                     params: [
                         {
