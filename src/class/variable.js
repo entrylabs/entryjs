@@ -79,8 +79,7 @@ Entry.Variable.prototype._createListElementView = function(wrapperWidth){
     indexView.y = 1;
     elementView.addChild(indexView);
     elementView.indexView = indexView;
-    // var valueWrapper = new createjs.Shape();
-    var valueWrapper = new PIXI.mesh.NineSlicePlane(Entry.stage._baseAsset.getTexture("vars/list_value_box"), 6, 6, 6, 6);
+    var valueWrapper = getNinePlane("vars/list_value_box", 6, 6, 6, 6);
     elementView.addChild(valueWrapper);
     elementView.valueWrapper = valueWrapper;
     // var valueView = new createjs.Text('fdsa', this.FONT, '#eee');
@@ -116,7 +115,7 @@ Entry.Variable.prototype.generateView = function(variableIndex) {
     if (type == 'variable' || type == 'timer' || type == 'answer') {
         this.view_ = new PIXI.Container();
         this.view_.interactive = true;
-        this.rect_ = new PIXI.Graphics();
+        this.rect_ = getNinePlane("vars/var_bg", 6, 6, 6, 6);
         this.view_.addChild(this.rect_);
         this.view_.variable = this;
         this.wrapper_ = new PIXI.Graphics();
@@ -167,7 +166,7 @@ Entry.Variable.prototype.generateView = function(variableIndex) {
         var slide = this;
         this.view_ = new PIXI.Container();
         this.view_.interactive = true;
-        this.rect_ = new PIXI.Graphics();
+        this.rect_ = getNinePlane("vars/var_bg", 6, 6, 6, 6);
         this.view_.addChild(this.rect_);
         this.view_.variable = this;
         this.wrapper_ = new PIXI.Graphics();
@@ -291,7 +290,7 @@ Entry.Variable.prototype.generateView = function(variableIndex) {
 
         this.view_ = new PIXI.Container();
         this.view_.interactive = true;
-        this.rect_ = new PIXI.mesh.NineSlicePlane(Entry.stage._baseAsset.getTexture("vars/list_bg"), 2, 2, 2, 2);
+        this.rect_ = getNinePlane("vars/list_bg", 2, 2, 2, 2);
         this.view_.addChild(this.rect_);
         this.view_.variable = this;
         this.titleView_ = PIXIHelper.text("asdf", this.FONT, '#000', 'alphabetic', 'center');
@@ -457,36 +456,14 @@ Entry.Variable.prototype.updateView = function() {
             this.valueView_.y = -10;
             // INFO: Number체크는 slide 일때만 하도록 처리 기본 문자로 처리함(#4876)
 
-            // if (this._valueWidth === null)
-            //     this._valueWidth = this.valueView_.getMeasuredWidth();
-            // this.rect_.graphics
-            //     .clear()
-            //     .f('#ffffff')
-            //     .ss(1, 2, 0)
-            //     .s('#A0A1A1')
-            //     .rc(
-            //         0,
-            //         -14,
-            //         this._nameWidth + this._valueWidth + 26,
-            //         20,
-            //         4,
-            //         4,
-            //         4,
-            //         4
-            //     );
-            if (this._valueWidth === null)
+
+            if (this._valueWidth === null) {
                 this._valueWidth = PIXIHelper.textWidth(this.valueView_);
-            this.rect_
-                .clear()
-                .beginFill(0xffffff)
-                .lineStyle(1, 0xA0A1A1)
-                .drawRoundedRect(
-                    0,
-                    -14,
-                    this._nameWidth + this._valueWidth + 26,
-                    20,
-                    4
-                );
+            }
+            this.rect_.position.set(0, -14);
+            this.rect_.width = this._nameWidth + this._valueWidth + 26;
+            this.rect_.height = 20;
+
             // this.wrapper_.graphics
             //     .clear()
             //     .f('#1bafea')
@@ -571,11 +548,10 @@ Entry.Variable.prototype.updateView = function() {
             //     .s('#A0A1A1')
             //     .rc(0, -14, width, 33, 4, 4, 4, 4);
 
-            this.rect_
-                .clear()
-                .beginFill(0xffffff)
-                .lineStyle(1, 0xA0A1A1)
-                .drawRoundedRect(0, -14, width, 33, 4);
+
+            this.rect_.position.set(0, -14);
+            this.rect_.width = width;
+            this.rect_.height = 33;
 
             // this.wrapper_.graphics
             //     .clear()
@@ -783,33 +759,10 @@ Entry.Variable.prototype.updateView = function() {
                 this._valueWidth = PIXIHelper.textWidth(this.valueView_);
 
             this.valueView_.x = this._nameWidth + 14;
-            // this.rect_.graphics
-            //     .clear()
-            //     .f('#ffffff')
-            //     .ss(1, 2, 0)
-            //     .s('#A0A1A1')
-            //     .rc(
-            //         0,
-            //         -14,
-            //         this._nameWidth + this._valueWidth + 26,
-            //         20,
-            //         4,
-            //         4,
-            //         4,
-            //         4
-            //     );
 
-            this.rect_
-                .clear()
-                .beginFill(0xffffff)
-                .lineStyle(1, 0xA0A1A1, 1)
-                .drawRoundedRect(
-                    0,
-                    -14,
-                    this._nameWidth + this._valueWidth + 26,
-                    20,
-                    4
-                );
+            this.rect_.position.set(0, -14);
+            this.rect_.width = this._nameWidth + this._valueWidth + 26;
+            this.rect_.height = 20;
 
 
             // this.wrapper_.graphics
@@ -1261,3 +1214,7 @@ Entry.Variable.prototype.isFloatPoint = function() {
     return this.isMaxFloat || this.isMinFloat;
 };
 
+
+function getNinePlane(key, a, b, c, d) {
+    return new PIXI.mesh.NineSlicePlane(Entry.stage._baseAsset.getTexture(key), a, b, c, d);
+}
