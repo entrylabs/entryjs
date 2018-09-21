@@ -129,8 +129,9 @@ const calcBlock = require('./block_calc');
 const variableBlock = require('./block_variable');
 const funcBlock = require('./block_func');
 
-require('./block_expansion_weather');
 Entry.EXPANSION_BLOCK = {};
+require('./block_expansion_weather');
+
 Entry.EXPANSION_BLOCK_LIST = {
     'weather' : Entry.Expansion_Weather
 };
