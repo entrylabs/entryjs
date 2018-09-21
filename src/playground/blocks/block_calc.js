@@ -1,22 +1,6 @@
 module.exports = {
     getBlocks() {
         return {
-            async_value: {
-                color: '#FFD974',
-                template: '테스트',
-                skeleton: 'basic_string_field',
-                statements: [],
-                async: true,
-                class: 'calc_timer',
-                isNotFor: [],
-                func(sprite, script) {
-                    return new Promise((resolve) => {
-                        setTimeout(() => {
-                            resolve(10);
-                        }, 1000);
-                    });
-                },
-            },
             calc_basic: {
                 color: '#FFD974',
                 skeleton: 'basic_string_field',
