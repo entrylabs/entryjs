@@ -21,5 +21,8 @@ export class PIXIBaseAsset {
     newSprite(key) {
         return new PIXI.Sprite(this._sheet.textures[key]);
     }
+    getTexture(key) {
+        return this._sheet.textures[key];
+    }
 
 }

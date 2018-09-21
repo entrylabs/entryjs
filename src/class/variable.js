@@ -79,7 +79,7 @@ Entry.Variable.prototype._createListElementView = function(wrapperWidth){
     elementView.addChild(indexView);
     elementView.indexView = indexView;
     // var valueWrapper = new createjs.Shape();
-    var valueWrapper = new PIXI.Graphics();
+    var valueWrapper = new PIXI.mesh.NineSlicePlane(Entry.stage._baseAsset.getTexture("vras/list_value_box"), 6, 6, 6, 6);
     elementView.addChild(valueWrapper);
     elementView.valueWrapper = valueWrapper;
     // var valueView = new createjs.Text('fdsa', this.FONT, '#eee');
@@ -92,10 +92,10 @@ Entry.Variable.prototype._createListElementView = function(wrapperWidth){
     elementView.valueView = valueView;
     elementView.x = this.BORDER;
 
-    elementView.valueWrapper
-        .clear()
-        .beginFill(0x1bafea)
-        .drawRoundedRect(20, -2, wrapperWidth, 17, 2);
+    valueWrapper.width = wrapperWidth;
+    valueWrapper.height = 17;
+    valueWrapper.x = 20;
+    valueWrapper.y = -2;
 
     return elementView;
 };
