@@ -111,9 +111,9 @@ module.exports = {
                         throw new Error('message can not be empty');
                     }
 
-                    if (inputModel.sprite === sprite && inputView && !inputView._isHidden) {
+                    if (inputModel.sprite == sprite && inputView && !inputView._isHidden) {
                         return script;
-                    } else if (inputModel.sprite !== sprite && script.isInit) {
+                    } else if (inputModel.sprite != sprite && script.isInit) {
                         if (sprite.dialog) {
                             sprite.dialog.remove();
                         }
@@ -121,7 +121,7 @@ module.exports = {
                         return script.callReturn();
                     } else if (
                         inputModel.complete &&
-                        inputModel.sprite === sprite &&
+                        inputModel.sprite == sprite &&
                         inputView._isHidden &&
                         script.isInit
                     ) {
@@ -146,7 +146,7 @@ module.exports = {
             get_canvas_input_value: {
                 color: '#E457DC',
                 skeleton: 'basic_string_field',
-                statements: [],
+                statements: [], 
                 params: [
                     {
                         type: 'Text',
@@ -428,7 +428,7 @@ module.exports = {
                     let value = script.getValue('VALUE', script);
                     let fixed = 0;
 
-                    if (value === false && typeof value === 'boolean') {
+                    if (value == false && typeof value === 'boolean') {
                         throw new Error('Type is not correct');
                     }
 
@@ -1172,7 +1172,7 @@ module.exports = {
                     if (
                         !list.array_ ||
                         !Entry.Utils.isNumber(index) ||
-                        index === 0 ||
+                        index == 0 ||
                         index > list.array_.length + 1
                     ) {
                         throw new Error('can not insert value to array');
@@ -1515,7 +1515,7 @@ module.exports = {
                     const arr = list.array_;
 
                     for (let i = 0, len = arr.length; i < len; i++) {
-                        if (arr[i].data.toString() === data.toString()) {
+                        if (arr[i].data.toString() == data.toString()) {
                             return true;
                         }
                     }
