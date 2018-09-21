@@ -135,7 +135,7 @@ module.exports = {
                             script.timeFlag = 0;
                         }, timeValue * 1000);
                     }
-                    if (script.timeFlag === 0) {
+                    if (script.timeFlag == 0) {
                         delete script.timeFlag;
                         delete script.isStart;
                         if (sprite.dialog) {
@@ -699,7 +699,7 @@ module.exports = {
                         size: 12,
                     },
                 ],
-                events: {},
+                events: {}, 
                 def: {
                     params: [
                         {
