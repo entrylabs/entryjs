@@ -13,6 +13,7 @@ import { PIXIDragHelper } from './pixi/helper/PIXIDragHelper';
  * @constructor
  */
 Entry.Variable = function(variable) {
+    console.log("new Variable");
     Entry.assert(
         typeof variable.name == 'string',
         'Variable name must be given'
@@ -80,7 +81,7 @@ Entry.Variable.prototype._createListElementView = function(wrapperWidth){
     elementView.addChild(indexView);
     elementView.indexView = indexView;
     // var valueWrapper = new createjs.Shape();
-    var valueWrapper = new PIXI.mesh.NineSlicePlane(Entry.stage._baseAsset.getTexture("vras/list_value_box"), 6, 6, 6, 6);
+    var valueWrapper = new PIXI.mesh.NineSlicePlane(Entry.stage._baseAsset.getTexture("vars/list_value_box"), 6, 6, 6, 6);
     elementView.addChild(valueWrapper);
     elementView.valueWrapper = valueWrapper;
     // var valueView = new createjs.Text('fdsa', this.FONT, '#eee');
@@ -111,6 +112,7 @@ function __textWidth(pixiText) {
  * @param {number} variableIndex index of this variable for render position
  */
 Entry.Variable.prototype.generateView = function(variableIndex) {
+    console.log("generateView");
     var type = this.type;
     if (type == 'variable' || type == 'timer' || type == 'answer') {
         this.view_ = new PIXI.Container();
@@ -290,7 +292,7 @@ Entry.Variable.prototype.generateView = function(variableIndex) {
 
         this.view_ = new PIXI.Container();
         this.view_.interactive = true;
-        this.rect_ = new PIXI.Graphics();
+        this.rect_ = new PIXI.mesh.NineSlicePlane(Entry.stage._baseAsset.getTexture("vars/list_bg"), 2, 2, 2, 2);
         this.view_.addChild(this.rect_);
         this.view_.variable = this;
         this.titleView_ = PIXIHelper.text("asdf", this.FONT, '#000', 'alphabetic', 'center');
@@ -298,13 +300,9 @@ Entry.Variable.prototype.generateView = function(variableIndex) {
         this.titleView_.x = this.width_ - 2;
         this.view_.addChild(this.titleView_);
 
-        var resizeHandle = this.resizeHandle_ = new PIXI.Graphics()
-            .moveTo(0, 0)
-            .beginFill(0x1bafea)
-            .lineStyle(1, 0x1bafea)
-            .lineTo(0, -9)
-            .lineTo(-9, 0)
-            .lineTo(0, 0);
+        var resizeHandle = this.resizeHandle_ = Entry.stage._baseAsset.newSprite("vars/list_resize_handle");
+        resizeHandle.anchor.set(1);
+
         resizeHandle.interactive = true;
         this.view_.addChild(resizeHandle);
 
@@ -665,12 +663,8 @@ Entry.Variable.prototype.updateView = function() {
 
             this.titleView_.x = (this.width_ - this.titleView_.width) / 2;
 
-            this.rect_
-                .clear()
-                .beginFill(0xffffff)
-                .lineStyle(1, 0xA0A1A1)
-                .drawRect(0, 0, this.width_, this.height_);
-
+            this.rect_.width = this.width_;
+            this.rect_.height = this.height_;
 
             while (this.view_.children[4]) {
                 this.view_.removeChild(this.view_.children[4]);
