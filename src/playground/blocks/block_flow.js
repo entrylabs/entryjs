@@ -51,12 +51,16 @@ module.exports = {
                         timeValue = 60 / fps * timeValue * 1000;
 
                         const blockId = script.block.id;
-                        Entry.TimeWaitManager.add(blockId, function() {
-                            script.timeFlag = 0;
-                        }, timeValue);
+                        Entry.TimeWaitManager.add(
+                            blockId,
+                            function() {
+                                script.timeFlag = 0;
+                            },
+                            timeValue
+                        );
 
                         return script;
-                    } else if (script.timeFlag === 1) {
+                    } else if (script.timeFlag == 1) {
                         return script;
                     } else {
                         delete script.timeFlag;
@@ -127,9 +131,7 @@ module.exports = {
                         const iterNumber = script.getNumberValue('VALUE', script);
                         script.isLooped = true;
                         if (iterNumber < 0) {
-                            throw new Error(
-                                Lang.Blocks.FLOW_repeat_basic_errorMsg
-                            );
+                            throw new Error(Lang.Blocks.FLOW_repeat_basic_errorMsg);
                         }
                         script.iterCount = Math.floor(iterNumber);
                     }
@@ -281,9 +283,7 @@ module.exports = {
                     }
                     script.isLooped = value;
 
-                    return value
-                        ? script.getStatement('DO', script)
-                        : script.callReturn();
+                    return value ? script.getStatement('DO', script) : script.callReturn();
                 },
                 syntax: {
                     js: [],
@@ -529,22 +529,10 @@ module.exports = {
                         type: 'Dropdown',
                         options: [
                             [Lang.Blocks.FLOW_stop_object_all, 'all'],
-                            [
-                                Lang.Blocks.FLOW_stop_object_this_object,
-                                'thisOnly',
-                            ],
-                            [
-                                Lang.Blocks.FLOW_stop_object_this_thread,
-                                'thisThread',
-                            ],
-                            [
-                                Lang.Blocks.FLOW_stop_object_other_thread,
-                                'otherThread',
-                            ],
-                            [
-                                Lang.Blocks.FLOW_stop_object_other_objects,
-                                'other_objects',
-                            ],
+                            [Lang.Blocks.FLOW_stop_object_this_object, 'thisOnly'],
+                            [Lang.Blocks.FLOW_stop_object_this_thread, 'thisThread'],
+                            [Lang.Blocks.FLOW_stop_object_other_thread, 'otherThread'],
+                            [Lang.Blocks.FLOW_stop_object_other_objects, 'other_objects'],
                         ],
                         value: 'all',
                         fontSize: 11,
@@ -572,14 +560,14 @@ module.exports = {
                 isNotFor: [],
                 func(sprite, script) {
                     const object = sprite.parent;
-                    
+
                     switch (script.getField('TARGET', script)) {
                         case 'all':
                             Entry.container.mapObject(function(obj) {
                                 if (!obj.objectType) {
                                     return;
                                 }
-                            
+
                                 obj.script.clearExecutors();
                             });
                             return this.die();
@@ -628,39 +616,20 @@ module.exports = {
                                 {
                                     type: 'Dropdown',
                                     options: [
+                                        [Lang.Blocks.FLOW_stop_object_all, 'all'],
+                                        [Lang.Blocks.FLOW_stop_object_this_object, 'thisOnly'],
+                                        [Lang.Blocks.FLOW_stop_object_this_thread, 'thisThread'],
+                                        [Lang.Blocks.FLOW_stop_object_other_thread, 'otherThread'],
                                         [
-                                            Lang.Blocks.FLOW_stop_object_all,
-                                            'all',
-                                        ],
-                                        [
-                                            Lang.Blocks
-                                                .FLOW_stop_object_this_object,
-                                            'thisOnly',
-                                        ],
-                                        [
-                                            Lang.Blocks
-                                                .FLOW_stop_object_this_thread,
-                                            'thisThread',
-                                        ],
-                                        [
-                                            Lang.Blocks
-                                                .FLOW_stop_object_other_thread,
-                                            'otherThread',
-                                        ],
-                                        [
-                                            Lang.Blocks
-                                                .FLOW_stop_object_other_objects,
+                                            Lang.Blocks.FLOW_stop_object_other_objects,
                                             'other_objects',
                                         ],
                                     ],
                                     value: 'all',
                                     fontSize: 11,
                                     arrowColor: EntryStatic.ARROW_COLOR_FLOW,
-                                    converter:
-                                        Entry.block.converters
-                                            .returnStringValue,
-                                    codeMap:
-                                        'Entry.CodeMap.Entry.stop_object[0]',
+                                    converter: Entry.block.converters.returnStringValue,
+                                    codeMap: 'Entry.CodeMap.Entry.stop_object[0]',
                                 },
                             ],
                         },
@@ -763,11 +732,7 @@ module.exports = {
                     const targetSpriteId = script.getField('VALUE', script);
                     const returnBlock = script.callReturn();
                     if (targetSpriteId === 'self') {
-                        sprite.parent.addCloneEntity(
-                            sprite.parent,
-                            sprite,
-                            null
-                        );
+                        sprite.parent.addCloneEntity(sprite.parent, sprite, null);
                     } else {
                         const object = Entry.container.getObject(targetSpriteId);
                         object.addCloneEntity(sprite.parent, null, null);
@@ -786,10 +751,8 @@ module.exports = {
                                     menuName: 'clone',
                                     fontSize: 11,
                                     arrowColor: EntryStatic.ARROW_COLOR_FLOW,
-                                    converter:
-                                        Entry.block.converters.returnStringKey,
-                                    codeMap:
-                                        'Entry.CodeMap.Entry.create_clone[0]',
+                                    converter: Entry.block.converters.returnStringKey,
+                                    codeMap: 'Entry.CodeMap.Entry.create_clone[0]',
                                 },
                             ],
                         },
