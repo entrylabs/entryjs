@@ -330,6 +330,7 @@ Entry.Stage.prototype.initCoordinator = function() {
     var c = this.coordinator = new PIXI.Container();
     c.interactive = false;
     c.interactiveChildren = false;
+    c.visible = false;
 
     var sp = this._baseAsset.newSprite("workspace_coordinate");
     sp.scale.set(0.5, 0.5);
