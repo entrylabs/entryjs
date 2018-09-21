@@ -39,7 +39,7 @@ module.exports = {
                 paramsKeyMap: {
                     VALUE: 0,
                 },
-                class: 'sound_play',
+                class: 'sound_play', 
                 isNotFor: [],
                 func(sprite, script) {
                     const soundId = script.getStringValue('VALUE', script);
@@ -287,7 +287,7 @@ module.exports = {
                             }, sound.duration * 1000);
                         }
                         return script;
-                    } else if (script.playState === 1) {
+                    } else if (script.playState == 1) {
                         return script;
                     } else {
                         delete script.playState;
@@ -374,7 +374,7 @@ module.exports = {
                             instance.addEventListener('complete', function(e) {});
                         }
                         return script;
-                    } else if (script.playState === 1) {
+                    } else if (script.playState == 1) {
                         return script;
                     } else {
                         delete script.isPlay;
@@ -483,7 +483,7 @@ module.exports = {
                             }, duration);
                         }
                         return script;
-                    } else if (script.playState === 1) {
+                    } else if (script.playState == 1) {
                         return script;
                     } else {
                         delete script.isPlay;
