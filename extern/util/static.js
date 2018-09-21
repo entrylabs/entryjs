@@ -345,6 +345,11 @@ EntryStatic.getAllBlocks = function() {
                 "get_weather_data",
                 "get_current_weather_data",
                 "get_today_temperature",
+                "check_city_weather",
+                "check_city_finedust",
+                "get_city_weather_data",
+                "get_current_city_weather_data",
+                "get_today_city_temperature",
                 "translate_title",
                 "get_translated_string",
                 "check_language"
