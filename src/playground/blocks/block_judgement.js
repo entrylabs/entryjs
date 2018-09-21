@@ -362,7 +362,7 @@ module.exports = {
 
                     switch (operator) {
                         case 'EQUAL':
-                            return leftValue === rightValue;
+                            return leftValue == rightValue;
                         case 'GREATER':
                             return Number(leftValue) > Number(rightValue);
                         case 'LESS':
