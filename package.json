@@ -29,6 +29,7 @@
   },
   "license": "MIT",
   "dependencies": {
+    "axios": "^0.18.0",
     "google-closure-compiler": "^20180610.0.2",
     "grunt-karma": "^2.0.0",
     "jest": "^23.3.0",
