@@ -10,7 +10,7 @@
 },
 "common_blank":
 {
-	"frame": {"x":967,"y":65,"w":2,"h":2},
+	"frame": {"x":1012,"y":82,"w":2,"h":2},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":2,"h":2},
@@ -26,7 +26,7 @@
 },
 "handle/arrow":
 {
-	"frame": {"x":1001,"y":3,"w":18,"h":44},
+	"frame": {"x":1001,"y":24,"w":18,"h":44},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":18,"h":44},
@@ -34,7 +34,7 @@
 },
 "handle/bg":
 {
-	"frame": {"x":973,"y":65,"w":2,"h":2},
+	"frame": {"x":1018,"y":82,"w":2,"h":2},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":2,"h":2},
@@ -42,7 +42,7 @@
 },
 "handle/border":
 {
-	"frame": {"x":983,"y":37,"w":10,"h":10},
+	"frame": {"x":987,"y":37,"w":10,"h":10},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":10,"h":10},
@@ -50,7 +50,7 @@
 },
 "handle/centerPoint":
 {
-	"frame": {"x":967,"y":37,"w":12,"h":12},
+	"frame": {"x":967,"y":57,"w":12,"h":12},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":12,"h":12},
@@ -58,7 +58,7 @@
 },
 "handle/knob":
 {
-	"frame": {"x":967,"y":53,"w":8,"h":8},
+	"frame": {"x":1000,"y":72,"w":8,"h":8},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":8,"h":8},
@@ -66,11 +66,43 @@
 },
 "handle/rotateKnob":
 {
-	"frame": {"x":983,"y":51,"w":9,"h":25},
+	"frame": {"x":987,"y":51,"w":9,"h":25},
 	"rotated": false,
 	"trimmed": false,
 	"spriteSourceSize": {"x":0,"y":0,"w":9,"h":25},
 	"sourceSize": {"w":9,"h":25}
+},
+"vars/list_bg":
+{
+	"frame": {"x":1012,"y":72,"w":6,"h":6},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":6,"h":6},
+	"sourceSize": {"w":6,"h":6}
+},
+"vars/list_resize_handle":
+{
+	"frame": {"x":967,"y":73,"w":11,"h":11},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":11,"h":11},
+	"sourceSize": {"w":11,"h":11}
+},
+"vars/list_value_box":
+{
+	"frame": {"x":1001,"y":3,"w":20,"h":17},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":20,"h":17},
+	"sourceSize": {"w":20,"h":17}
+},
+"vars/var_bg":
+{
+	"frame": {"x":967,"y":37,"w":16,"h":16},
+	"rotated": false,
+	"trimmed": false,
+	"spriteSourceSize": {"x":0,"y":0,"w":16,"h":16},
+	"sourceSize": {"w":16,"h":16}
 },
 "workspace_coordinate":
 {
@@ -87,6 +119,6 @@
 	"format": "RGBA8888",
 	"size": {"w":1024,"h":1024},
 	"scale": "1",
-	"smartupdate": "$TexturePacker:SmartUpdate:5d75d7f21bc44531124fe738f2a249d8:fb20d9e2d26e71e802b2516b17de6fa8:03fe3340ba96f1778143b8915386ea2b$"
+	"smartupdate": "$TexturePacker:SmartUpdate:af8bbc73c09aa16f16cd747125c7c1bc:e7c286d4f98364c8df00a6e33e6546c2:03fe3340ba96f1778143b8915386ea2b$"
 }
 }

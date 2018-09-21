@@ -1,3 +1,3 @@
-copy base_asset.png ..\images\
+copy base_asset.png ..\..\images\
 
 pause
