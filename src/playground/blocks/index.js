@@ -36,6 +36,7 @@ require('./block_hamster');
 require('./block_hummingbird');
 require('./block_iboard');
 require('./block_jdkit');
+require('./block_codingmachine');
 require('./block_mechatronics_4d');
 require('./block_modi');
 require('./block_neobot');
@@ -115,6 +116,8 @@ Entry.HARDWARE_LIST = {
     '23.1': Entry.MRT,
     '24.1': Entry.Dash,
     '1.D': Entry.BINGLES,
+    'FF.FF': Entry.Codingmachine
+    
 };
 
 const startBlock = require('./block_start');
