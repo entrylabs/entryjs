@@ -341,11 +341,8 @@ Entry.Variable.prototype.generateView = function(variableIndex) {
             this.variable.updateView();
         });
 
-        var scrollButton = this.scrollButton_ = new PIXI.Graphics();
+        var scrollButton = this.scrollButton_ = getNewSprite("vars/list_scroll_thumb");
         scrollButton.interactive = true;
-        scrollButton
-            .beginFill(0xaaaaaa)
-            .drawRoundedRect(0, 0, 7, 30, 3.5);
         this.view_.addChild(scrollButton);
         scrollButton.y = 23;
 
