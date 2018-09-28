@@ -181,8 +181,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
             case WORKSPACE.MODE_VIMBOARD:
                 const alertMessage =
                     Util.validateVariableToPython() ||
-                    Util.validateFunctionToPython() ||
-                    Util.hasExpansionBlocks();
+                    Util.validateFunctionToPython();
 
                 const invalidEditorModeErrorMessage = Util.canConvertTextModeForOverlayMode(
                     Entry.Workspace.MODE_VIMBOARD
