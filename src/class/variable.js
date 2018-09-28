@@ -6,6 +6,7 @@
 
 import PIXIHelper from './pixi/helper/PIXIHelper';
 import { PIXIDragHelper } from './pixi/helper/PIXIDragHelper';
+import { PIXIH3Plane } from './pixi/mesh/PIXIH3Plane';
 
 /**
  * Block variable constructor
@@ -118,7 +119,7 @@ Entry.Variable.prototype.generateView = function(variableIndex) {
         this.rect_ = getNinePlane("vars/var_bg", 6, 6, 6, 6);
         this.view_.addChild(this.rect_);
         this.view_.variable = this;
-        this.wrapper_ = new PIXI.Graphics();
+        this.wrapper_ = getH3Plane();
         this.view_.addChild(this.wrapper_);
         this.textView_ = PIXIHelper.text('asdf', this.FONT, '#000000', 'alphabetic');
         this.textView_.x = 4;
@@ -169,7 +170,7 @@ Entry.Variable.prototype.generateView = function(variableIndex) {
         this.rect_ = getNinePlane("vars/var_bg", 6, 6, 6, 6);
         this.view_.addChild(this.rect_);
         this.view_.variable = this;
-        this.wrapper_ = new PIXI.Graphics();
+        this.wrapper_ = getH3Plane();
         this.view_.addChild(this.wrapper_);
         this.textView_ = PIXIHelper.text("name", this.FONT, '#000000', 'alphabetic');
         this.textView_.x = 4;
@@ -441,33 +442,11 @@ Entry.Variable.prototype.updateView = function() {
             this.rect_.width = this._nameWidth + this._valueWidth + 26;
             this.rect_.height = 20;
 
-            // this.wrapper_.graphics
-            //     .clear()
-            //     .f('#1bafea')
-            //     .ss(1, 2, 0)
-            //     .s('#1bafea')
-            //     .rc(
-            //         this._nameWidth + 7,
-            //         -11,
-            //         this._valueWidth + 15,
-            //         14,
-            //         7,
-            //         7,
-            //         7,
-            //         7
-            //     );
-
-            this.wrapper_
-                .clear()
-                .beginFill(0x1bafea)
-                .lineStyle(1, 0x1bafea)
-                .drawRoundedRect(
-                    this._nameWidth + 7,
-                    -11,
-                    this._valueWidth + 15,
-                    14,
-                    7
-                );
+            this.wrapper_.assignTexture("vars/var_value_bg_");
+            this.wrapper_.tint = 0x1bafea;
+            this.wrapper_.x = this._nameWidth + 7;
+            this.wrapper_.y = -11;
+            this.wrapper_.width = this._valueWidth + 15;
 
 
         } else if (this.type == 'slide') {
@@ -518,45 +497,17 @@ Entry.Variable.prototype.updateView = function() {
 
             var width = this._nameWidth + this._valueWidth + 26;
             width = Math.max(width, 90);
-            // this.rect_.graphics
-            //     .clear()
-            //     .f('#ffffff')
-            //     .ss(1, 2, 0)
-            //     .s('#A0A1A1')
-            //     .rc(0, -14, width, 33, 4, 4, 4, 4);
-
 
             this.rect_.position.set(0, -14);
             this.rect_.width = width;
             this.rect_.height = 33;
 
-            // this.wrapper_.graphics
-            //     .clear()
-            //     .f('#1bafea')
-            //     .ss(1, 2, 0)
-            //     .s('#1bafea')
-            //     .rc(
-            //         this._nameWidth + 7,
-            //         -11,
-            //         this._valueWidth + 15,
-            //         14,
-            //         7,
-            //         7,
-            //         7,
-            //         7
-            //     );
+            this.wrapper_.assignTexture("vars/var_value_bg_");
+            this.wrapper_.tint = 0x1bafea;
+            this.wrapper_.x = this._nameWidth + 7;
+            this.wrapper_.y = -11;
+            this.wrapper_.width = this._valueWidth + 15;
 
-            this.wrapper_
-                .clear()
-                .beginFill(0x1bafea)
-                .lineStyle(1, 0x1bafea)
-                .drawRoundedRect(
-                    this._nameWidth + 7,
-                    -11,
-                    this._valueWidth + 15,
-                    14,
-                    7
-                );
 
             var width = this._nameWidth + this._valueWidth + 26;
             width = Math.max(width, 90);
@@ -724,34 +675,11 @@ Entry.Variable.prototype.updateView = function() {
             this.rect_.width = this._nameWidth + this._valueWidth + 26;
             this.rect_.height = 20;
 
-
-            // this.wrapper_.graphics
-            //     .clear()
-            //     .f('#E457DC')
-            //     .ss(1, 2, 0)
-            //     .s('#E457DC')
-            //     .rc(
-            //         this._nameWidth + 7,
-            //         -11,
-            //         this._valueWidth + 15,
-            //         14,
-            //         7,
-            //         7,
-            //         7,
-            //         7
-            //     );
-
-            this.wrapper_
-                .clear()
-                .beginFill(0xE457DC)
-                .lineStyle(1, 0xE457DC, 0)
-                .drawRoundedRect(
-                    this._nameWidth + 7,
-                    -11,
-                    this._valueWidth + 15,
-                    14,
-                    7
-                );
+            this.wrapper_.assignTexture("vars/var_value_bg_");
+            this.wrapper_.tint = 0xE457DC;
+            this.wrapper_.x = this._nameWidth + 7;
+            this.wrapper_.y = -11;
+            this.wrapper_.width = this._valueWidth + 15;
 
         } else {
             this.view_.x = this.getX();
@@ -765,7 +693,7 @@ Entry.Variable.prototype.updateView = function() {
                 this._nameWidth = PIXIHelper.textWidth(this.textView_);
 
             this.valueView_.x = this._nameWidth + 14;
-            this.valueView_.y = 1;
+            this.valueView_.y = -10;
             if (this.isNumber())
                 this.valueView_.text = Number(this.getValue())
                     .toFixed(1)
@@ -778,62 +706,14 @@ Entry.Variable.prototype.updateView = function() {
             if (this._valueWidth === null)
                 this._valueWidth = PIXIHelper.textWidth(this.valueView_);
 
-            // this.rect_.graphics
-            //     .clear()
-            //     .f('#ffffff')
-            //     .ss(1, 2, 0)
-            //     .s('#A0A1A1')
-            //     .rc(
-            //         0,
-            //         -14,
-            //         this._nameWidth + this._valueWidth + 26,
-            //         20,
-            //         4,
-            //         4,
-            //         4,
-            //         4
-            //     );
+            this.rect_.position.set(0, -14);
+            this.rect_.width = this._nameWidth + this._valueWidth + 26;
+            this.rect_.height = 20;
 
-            this.rect_
-                .clear()
-                .beginFill(0xffffff)
-                .lineStyle(1, 0xA0A1A1)
-                .drawRoundedRect(
-                    0,
-                    -14,
-                    this._nameWidth + this._valueWidth + 26,
-                    20,
-                    4
-                );
-
-            // this.wrapper_.graphics
-            //     .clear()
-            //     .f('#ffbb14')
-            //     .ss(1, 2, 0)
-            //     .s('orange')
-            //     .rc(
-            //         this._nameWidth + 7,
-            //         -11,
-            //         this._valueWidth + 15,
-            //         14,
-            //         7,
-            //         7,
-            //         7,
-            //         7
-            //     );
-
-            this.wrapper_
-                .clear()
-                .beginFill(0xffbb14)
-                .lineStyle(1, 0xffa500) //orange color
-                .drawRoundedRect(
-                    this._nameWidth + 7,
-                    -11,
-                    this._valueWidth + 15,
-                    14,
-                    7
-                );
-
+            this.wrapper_.assignTexture("vars/var_time_value_bg_");
+            this.wrapper_.x = this._nameWidth + 7;
+            this.wrapper_.y = -11;
+            this.wrapper_.width = this._valueWidth + 15;
         }
     }
     Entry.requestUpdate = true;
@@ -1174,6 +1054,10 @@ Entry.Variable.prototype.isFloatPoint = function() {
     return this.isMaxFloat || this.isMinFloat;
 };
 
+
+function getH3Plane() {
+    return new PIXIH3Plane(Entry.stage._baseAsset);
+}
 
 function getNinePlane(key, a, b, c, d) {
     return new PIXI.mesh.NineSlicePlane(Entry.stage._baseAsset.getTexture(key), a, b, c, d);
