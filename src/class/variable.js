@@ -211,41 +211,21 @@ Entry.Variable.prototype.generateView = function(variableIndex) {
         width = Math.max(width, 90);
         this.maxWidth = width - 20;
 
-        // this.slideBar_ = new createjs.Shape();
-        // this.slideBar_.graphics
-        //     .beginFill('#A0A1A1')
-        //     .s('#A0A1A1')
-        //     .ss(1)
-        //     .dr(10, 10, this.maxWidth, 1.5);
-        // this.view_.addChild(this.slideBar_);
-
-        this.slideBar_ = new PIXI.Graphics();
-        this.slideBar_
-            .beginFill(0xA0A1A1)
-            .drawRect(10, 10, this.maxWidth, 1.5);
+        this.slideBar_ = getNewSprite("common_blank");
+        this.slideBar_.tint = 0xA0A1A1;
+        this.slideBar_.position.set(10, 10);
+        this.slideBar_.width = this.maxWidth;
+        this.slideBar_.height = 1.5;
         this.view_.addChild(this.slideBar_);
 
-
-
-        var position = this.getSlidePosition(this.maxWidth);
-
-        // this.valueSetter_ = new createjs.Shape();
-        // this.valueSetter_.graphics
-        //     .beginFill('#1bafea')
-        //     .s('#A0A1A1')
-        //     .ss(1)
-        //     .dc(position, 10 + 0.5, 3);
-
-        this.valueSetter_ = new PIXI.Graphics();
+        this.valueSetter_ = getNewSprite("vars/var_scroll_thumb");
         this.valueSetter_.interactive = true;
-        this.valueSetter_
-            .beginFill(0x1bafea)
-            .lineStyle(1, 0xA0A1A1)
-            .drawCircle(position, 10 + 0.5, 3);
-
-
+        this.valueSetter_.anchor.set(0.5);
+        this.valueSetter_.pivot.x = -this.getSlidePosition(this.maxWidth);
+        this.valueSetter_.y = 10.5;
 
         this.valueSetter_.cursor = 'pointer';
+
         this.valueSetter_.on(PIXIDragHelper.DOWN, function(evt) {
             if (!Entry.engine.isState('run')) return;
             evt.stopPropagation();// 슬라이드가 드래그 될 때 변수 view가 drag 되는걸 막기 위함.
@@ -585,26 +565,9 @@ Entry.Variable.prototype.updateView = function() {
             width = Math.max(width, 90);
             this.maxWidth = width - 20;
 
-            // this.slideBar_.graphics
-            //     .clear()
-            //     .beginFill('#A0A1A1')
-            //     .s('#A0A1A1')
-            //     .ss(1)
-            //     .dr(10, 10, this.maxWidth, 1.5);
+            this.slideBar_.width = this.maxWidth;
 
-            this.slideBar_
-                .clear()
-                .beginFill(0xA0A1A1)
-                .lineStyle(1, 0xA0A1A1)
-                .drawRect(10, 10, this.maxWidth, 1.5);
-
-            var position = this.getSlidePosition(this.maxWidth);
-
-            this.valueSetter_
-                .clear()
-                .beginFill(0x1bafea)
-                .lineStyle(1, 0xA0A1A1)
-                .drawCircle(position, 10 + 0.5, 3);
+            this.valueSetter_.pivot.x = -this.getSlidePosition(this.maxWidth);
 
         } else if (this.type == 'list') {
             this.view_.x = this.getX();
@@ -1217,4 +1180,7 @@ Entry.Variable.prototype.isFloatPoint = function() {
 
 function getNinePlane(key, a, b, c, d) {
     return new PIXI.mesh.NineSlicePlane(Entry.stage._baseAsset.getTexture(key), a, b, c, d);
+}
+function getNewSprite(key) {
+    return Entry.stage._baseAsset.newSprite(key);
 }
