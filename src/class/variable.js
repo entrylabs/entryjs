@@ -279,7 +279,8 @@ Entry.Variable.prototype.generateView = function(variableIndex) {
         this.titleView_.x = this.width_ - 2;
         this.view_.addChild(this.titleView_);
 
-        var resizeHandle = this.resizeHandle_ = Entry.stage._baseAsset.newSprite("vars/list_resize_handle");
+        var resizeHandle = this.resizeHandle_ = getNewSprite("vars/list_resize_handle");
+
         resizeHandle.anchor.set(1);
 
         resizeHandle.interactive = true;

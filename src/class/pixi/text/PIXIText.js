@@ -215,4 +215,3 @@ export class PIXIText extends PIXI.Text {
 
 PIXIText.cancelLineOffset = -0.23;
 PIXIText.underLineOffset = 0.12;
-window.PIXIText = PIXIText;
