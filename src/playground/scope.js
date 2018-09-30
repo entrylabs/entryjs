@@ -32,13 +32,28 @@ class Scope {
         });
     }
 
-    getValues(keys, scope) {
+    _setBlockState(fieldBlock, valueState) {
+        const newScope = new Entry.Scope(fieldBlock, this.executor);
+        const result = Entry.block[fieldBlock.type].func.call(newScope, this.entity, newScope);
+        const blockId = fieldBlock.data.id;
+
+        if (result instanceof Promise) {
+            if (valueState[blockId].state === 'pending') {
+                throw new Entry.Utils.AsyncError();
+            }
+            valueState[blockId].state = 'pending';
+            result.then((value) => {
+                valueState[blockId].state = 'complete';
+                valueState[blockId].value = value;
+            });
+        } else {
+            valueState[blockId].state = 'complete';
+            valueState[blockId].value = result;
+        }
+    }
+
+    _setChildBlockState(fieldBlocks, currentBlockId) {
         const valueState = this.executor.valueState || {};
-        const fieldBlocks = keys.map((key) => {
-            return this.block.params[this._getParamIndex(key, scope)];
-        });
-        const currentBlockId = scope.block.data.id;
-        valueState[currentBlockId] = valueState[currentBlockId] || { state: 'wait' };
 
         let hasPending = false;
         if (valueState[currentBlockId].state === 'wait') {
@@ -46,7 +61,7 @@ class Scope {
                 const blockId = fieldBlock.data.id;
                 valueState[blockId] = valueState[blockId] || { state: 'wait' };
                 if (valueState[blockId].state === 'wait') {
-                    this._checkValueState(fieldBlock, valueState);
+                    this._setBlockState(fieldBlock, valueState);
                 }
                 hasPending = hasPending || valueState[blockId].state === 'pending';
             });
@@ -56,11 +71,22 @@ class Scope {
             valueState[currentBlockId].state = 'pending';
             throw new Entry.Utils.AsyncError();
         }
+    }
+
+    getValues(keys, scope) {
+        const valueState = this.executor.valueState || {};
+        const fieldBlocks = keys.map((key) => {
+            return this.block.params[this._getParamIndex(key, scope)];
+        });
+        const currentBlockId = scope.block.data.id;
+        valueState[currentBlockId] = valueState[currentBlockId] || { state: 'wait' };
+
+        this._setChildBlockState(fieldBlocks, currentBlockId);
 
         fieldBlocks.forEach((fieldBlock) => {
             const blockId = fieldBlock.data.id;
             if (valueState[blockId].state === 'pending') {
-                this._checkValueState(fieldBlock, valueState);
+                this._setBlockState(fieldBlock, valueState);
             }
         });
 
@@ -156,26 +182,6 @@ class Scope {
             this._schema = Entry.block[this.type];
         }
         return this._schema.statementsKeyMap[key];
-    }
-
-    _checkValueState(fieldBlock, valueState) {
-        const newScope = new Entry.Scope(fieldBlock, this.executor);
-        const result = Entry.block[fieldBlock.type].func.call(newScope, this.entity, newScope);
-        const blockId = fieldBlock.data.id;
-
-        if (result instanceof Promise) {
-            if (valueState[blockId].state === 'pending') {
-                throw new Entry.Utils.AsyncError();
-            }
-            valueState[blockId].state = 'pending';
-            result.then((value) => {
-                valueState[blockId].state = 'complete';
-                valueState[blockId].value = value;
-            });
-        } else {
-            valueState[blockId].state = 'complete';
-            valueState[blockId].value = result;
-        }
     }
 
     die() {
