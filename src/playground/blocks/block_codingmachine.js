@@ -4,7 +4,7 @@ Entry.Codingmachine = {
     url: 'http://wonn.co.kr/',
     imageName: 'codingmachine.png', //thumbnail
     title: {
-        "ko": 'ÄÚµù¸Ó½Å',
+        "ko": 'ì½”ë”©ë¨¸ì‹ ',
         "en": 'Codingmachine'
     },
     Cmd: {
@@ -38,12 +38,12 @@ Entry.Codingmachine = {
         GYRO_X: 8,
         GYRO_Y: 9,
         DRONEREADY: 10,
-        /*Ãß°¡*/
+        /*ì¶”ê°€*/
         DIGITAL_IN1: 11,
         DIGITAL_IN2: 12,
         ANALOG_A4: 13,
         ANALOG_A5: 14,
-        /*Ãß°¡*/
+        /*ì¶”ê°€*/
     },
     setZero: function () {
         Entry.hw.sendQueue.CMD = [
@@ -60,7 +60,7 @@ Entry.Codingmachine = {
             0x00,
             0x00,
             0x00,
-            /* -------- Ãß°¡ ------- */
+            /* -------- ì¶”ê°€ ------- */
             0x00,
             0x00,
             0x00,
@@ -68,7 +68,7 @@ Entry.Codingmachine = {
             0x00,
             0x00,
             0x00,
-            /* -------- Ãß°¡ ------- */
+            /* -------- ì¶”ê°€ ------- */
         ];
         Entry.hw.update();
     },
@@ -159,48 +159,48 @@ Entry.Codingmachine.setLanguage = function () {
     return {
         ko: {
             template: {
-                codingmachine_altitude: 'µå·ĞÀ» %1 ³ôÀÌ¸¸Å­ ³¯¸®±â %2',
-                codingmachine_button: '%1¹ø ¹öÆ° °ª ÀĞ¾î¿À±â',
-                codingmachine_connect: 'µå·Ğ ¿¬°á »óÅÂ ÀĞ¾î¿À±â',
-                codingmachine_emergency: 'µå·ĞÀ» Áï½Ã ¸ØÃß±â %1',
-                codingmachine_gyro: 'º¸µå %1 ±â¿ï±â °ª ÀĞ¾î¿À±â',
-                codingmachine_joystick: 'Á¶ÀÌ½ºÆ½ %1 ÀĞ±â',
+                codingmachine_altitude: 'ë“œë¡ ì„ %1 ë†’ì´ë§Œí¼ ë‚ ë¦¬ê¸° %2',
+                codingmachine_button: '%1ë²ˆ ë²„íŠ¼ ê°’ ì½ì–´ì˜¤ê¸°',
+                codingmachine_connect: 'ë“œë¡  ì—°ê²° ìƒíƒœ ì½ì–´ì˜¤ê¸°',
+                codingmachine_emergency: 'ë“œë¡ ì„ ì¦‰ì‹œ ë©ˆì¶”ê¸° %1',
+                codingmachine_gyro: 'ë³´ë“œ %1 ê¸°ìš¸ê¸° ê°’ ì½ì–´ì˜¤ê¸°',
+                codingmachine_joystick: 'ì¡°ì´ìŠ¤í‹± %1 ì½ê¸°',
                 codingmachine_led: '%1 LED %2  %3',
-                codingmachine_motor: '%1 ¸ğÅÍ¸¦ %2 ¼¼±â·Î µ¹¸®±â %3',
-                codingmachine_ready: 'µå·Ğ ºñÇà ÁØºñ »óÅÂ ÀĞ¾î¿À±â',
-                codingmachine_rollpitch: 'µå·ĞÀ» %1 ¹æÇâ %2 ¼¼±â·Î ¿òÁ÷ÀÌ±â %3',
-                codingmachine_throttle: 'µå·Ğ ÇÁ·ÎÆç·¯¸¦ %1 ¸¸Å­ ¼¼±â·Î µ¹¸®±â %2',
-                codingmachine_tune: '%1 À½À»  %2 ÃÊµ¿¾È ¼Ò¸®³»±â %3',
-                codingmachine_ultrasonic: '°Å¸®(ÃÊÀ½ÆÄ)°ª ÀĞ¾î¿À±â',
-                codingmachine_yaw: 'µå·ĞÀ» %1 ¸¸Å­ È¸ÀüÇÏ±â %2',
-                codingmachine_digital_out: 'µğÁöÅĞ %1¹ø ÇÉ %2',
-                codingmachine_digital_in: 'µğÁöÅĞ %1 ¹ø°ª ÀĞ¾î¿À±â',
-                codingmachine_analog_in: '¾Æ³¯·Î±× %1 ¹ø ¼¾¼­°ª',
-                codingmachine_digital_pwm: 'µğÁöÅĞ Ãâ·Â %1 ¹ø ¼¼±â·Î Ãâ·ÂÇÏ±â %2',
-                codingmachine_servo: 'µğÁöÅĞ  %1 ÇÉÀÇ ¼­º¸¸ğÅÍ¸¦ %2 °¢µµ·Î Á¤ÇÏ±â',
+                codingmachine_motor: '%1 ëª¨í„°ë¥¼ %2 ì„¸ê¸°ë¡œ ëŒë¦¬ê¸° %3',
+                codingmachine_ready: 'ë“œë¡  ë¹„í–‰ ì¤€ë¹„ ìƒíƒœ ì½ì–´ì˜¤ê¸°',
+                codingmachine_rollpitch: 'ë“œë¡ ì„ %1 ë°©í–¥ %2 ì„¸ê¸°ë¡œ ì›€ì§ì´ê¸° %3',
+                codingmachine_throttle: 'ë“œë¡  í”„ë¡œí ëŸ¬ë¥¼ %1 ë§Œí¼ ì„¸ê¸°ë¡œ ëŒë¦¬ê¸° %2',
+                codingmachine_tune: '%1 ìŒì„  %2 ì´ˆë™ì•ˆ ì†Œë¦¬ë‚´ê¸° %3',
+                codingmachine_ultrasonic: 'ê±°ë¦¬(ì´ˆìŒíŒŒ)ê°’ ì½ì–´ì˜¤ê¸°',
+                codingmachine_yaw: 'ë“œë¡ ì„ %1 ë§Œí¼ íšŒì „í•˜ê¸° %2',
+                codingmachine_digital_out: 'ë””ì§€í„¸ %1ë²ˆ í•€ %2',
+                codingmachine_digital_in: 'ë””ì§€í„¸ %1 ë²ˆê°’ ì½ì–´ì˜¤ê¸°',
+                codingmachine_analog_in: 'ì•„ë‚ ë¡œê·¸ %1 ë²ˆ ì„¼ì„œê°’',
+                codingmachine_digital_pwm: 'ë””ì§€í„¸ ì¶œë ¥ %1 ë²ˆ ì„¸ê¸°ë¡œ ì¶œë ¥í•˜ê¸° %2',
+                codingmachine_servo: 'ë””ì§€í„¸  %1 í•€ì˜ ì„œë³´ëª¨í„°ë¥¼ %2 ê°ë„ë¡œ ì •í•˜ê¸°',
             }
         },
         en: {
             template: {
-                codingmachine_altitude: 'µå·ĞÀ» %1 ³ôÀÌ¸¸Å­ ³¯¸®±â %2',
-                codingmachine_button: '%1¹ø ¹öÆ° °ª ÀĞ¾î¿À±â',
-                codingmachine_connect: 'µå·Ğ ¿¬°á »óÅÂ ÀĞ¾î¿À±â',
-                codingmachine_emergency: 'µå·ĞÀ» Áï½Ã ¸ØÃß±â %1',
-                codingmachine_gyro: 'º¸µå %1 ±â¿ï±â °ª ÀĞ¾î¿À±â',
-                codingmachine_joystick: 'Á¶ÀÌ½ºÆ½ %1 ÀĞ±â',
+                codingmachine_altitude: 'ë“œë¡ ì„ %1 ë†’ì´ë§Œí¼ ë‚ ë¦¬ê¸° %2',
+                codingmachine_button: '%1ë²ˆ ë²„íŠ¼ ê°’ ì½ì–´ì˜¤ê¸°',
+                codingmachine_connect: 'ë“œë¡  ì—°ê²° ìƒíƒœ ì½ì–´ì˜¤ê¸°',
+                codingmachine_emergency: 'ë“œë¡ ì„ ì¦‰ì‹œ ë©ˆì¶”ê¸° %1',
+                codingmachine_gyro: 'ë³´ë“œ %1 ê¸°ìš¸ê¸° ê°’ ì½ì–´ì˜¤ê¸°',
+                codingmachine_joystick: 'ì¡°ì´ìŠ¤í‹± %1 ì½ê¸°',
                 codingmachine_led: '%1 LED %2  %3',
-                codingmachine_motor: '%1 ¸ğÅÍ¸¦ %2 ¼¼±â·Î µ¹¸®±â %3',
-                codingmachine_ready: 'µå·Ğ ºñÇà ÁØºñ »óÅÂ ÀĞ¾î¿À±â',
-                codingmachine_rollpitch: 'µå·ĞÀ» %1 ¹æÇâ %2 ¼¼±â·Î ¿òÁ÷ÀÌ±â %3',
-                codingmachine_throttle: 'µå·Ğ ÇÁ·ÎÆç·¯¸¦ %1 ¸¸Å­ ¼¼±â·Î µ¹¸®±â %2',
-                codingmachine_tune: '%1 À½À»  %2 ÃÊµ¿¾È ¼Ò¸®³»±â %3',
-                codingmachine_ultrasonic: '°Å¸®(ÃÊÀ½ÆÄ)°ª ÀĞ¾î¿À±â',
-                codingmachine_yaw: 'µå·ĞÀ» %1 ¸¸Å­ È¸ÀüÇÏ±â %2',
-                codingmachine_digital_out: 'µğÁöÅĞ %1¹ø ÇÉ %2',
-                codingmachine_digital_in: 'µğÁöÅĞ %1 ¹ø°ª ÀĞ¾î¿À±â',
+                codingmachine_motor: '%1 ëª¨í„°ë¥¼ %2 ì„¸ê¸°ë¡œ ëŒë¦¬ê¸° %3',
+                codingmachine_ready: 'ë“œë¡  ë¹„í–‰ ì¤€ë¹„ ìƒíƒœ ì½ì–´ì˜¤ê¸°',
+                codingmachine_rollpitch: 'ë“œë¡ ì„ %1 ë°©í–¥ %2 ì„¸ê¸°ë¡œ ì›€ì§ì´ê¸° %3',
+                codingmachine_throttle: 'ë“œë¡  í”„ë¡œí ëŸ¬ë¥¼ %1 ë§Œí¼ ì„¸ê¸°ë¡œ ëŒë¦¬ê¸° %2',
+                codingmachine_tune: '%1 ìŒì„  %2 ì´ˆë™ì•ˆ ì†Œë¦¬ë‚´ê¸° %3',
+                codingmachine_ultrasonic: 'ê±°ë¦¬(ì´ˆìŒíŒŒ)ê°’ ì½ì–´ì˜¤ê¸°',
+                codingmachine_yaw: 'ë“œë¡ ì„ %1 ë§Œí¼ íšŒì „í•˜ê¸° %2',
+                codingmachine_digital_out: 'ë””ì§€í„¸ %1ë²ˆ í•€ %2',
+                codingmachine_digital_in: 'ë””ì§€í„¸ %1 ë²ˆê°’ ì½ì–´ì˜¤ê¸°',
                 codingmachine_analog_in: 'analog %1 sensor',
-                codingmachine_digital_pwm: 'µğÁöÅĞ Ãâ·Â %1 ¹ø ¼¼±â·Î Ãâ·ÂÇÏ±â %2',
-                codingmachine_servo: 'µğÁöÅĞ  %1 ÇÉÀÇ ¼­º¸¸ğÅÍ¸¦ %2 °¢µµ·Î Á¤ÇÏ±â',
+                codingmachine_digital_pwm: 'ë””ì§€í„¸ ì¶œë ¥ %1 ë²ˆ ì„¸ê¸°ë¡œ ì¶œë ¥í•˜ê¸° %2',
+                codingmachine_servo: 'ë””ì§€í„¸  %1 í•€ì˜ ì„œë³´ëª¨í„°ë¥¼ %2 ê°ë„ë¡œ ì •í•˜ê¸°',
             }
         }
     }
@@ -208,7 +208,7 @@ Entry.Codingmachine.setLanguage = function () {
 Entry.Codingmachine.getBlocks = function () {
     return {
         //region JDKit
-        /* ----------- Ãß°¡ --------- */
+        /* ----------- ì¶”ê°€ --------- */
         codingmachine_analog_in: {
             color: '#00979D',
             fontColor: '#fff',
@@ -246,7 +246,7 @@ Entry.Codingmachine.getBlocks = function () {
             },
             syntax: { js: [], py: [] },
         },
-        /* ----------- Ãß°¡ --------- */
+        /* ----------- ì¶”ê°€ --------- */
         codingmachine_joystick: {
             template: Lang.template.jdkit_joystick,
             parent: 'jdkit_joystick',
@@ -255,10 +255,11 @@ Entry.Codingmachine.getBlocks = function () {
                 type: 'codingmachine_joystick',
             },
             isNotFor: ['Codingmachine'],
-            },
             syntax: { js: [], py: [] },
+        },
+            
        
-        /* ----------- Ãß°¡ --------- */
+        /* ----------- ì¶”ê°€ --------- */
         codingmachine_digital_in: {
             color: '#00979D',
             fontColor: '#fff',
@@ -307,7 +308,7 @@ Entry.Codingmachine.getBlocks = function () {
             },
             syntax: { js: [], py: [] },
         },
-        /* ----------- Ãß°¡ --------- */
+        /* ----------- ì¶”ê°€ --------- */
         codingmachine_button: {
             template: Lang.template.jdkit_button,
             parent: 'jdkit_button',
@@ -317,8 +318,9 @@ Entry.Codingmachine.getBlocks = function () {
             },
            isNotFor: ['Codingmachine'],
            
-            },
             syntax: { js: [], py: [] },
+        },
+            
         
         codingmachine_gyro: {
             template: Lang.template.jdkit_gyro,
@@ -328,8 +330,9 @@ Entry.Codingmachine.getBlocks = function () {
                 type: 'codingmachine_gyro',
             },
             isNotFor: ['Codingmachine'],
-        },        
             syntax: { js: [], py: [] },
+        },        
+           
        
         codingmachine_ultrasonic: {
             template: Lang.template.jdkit_ultrasonic,
@@ -339,9 +342,9 @@ Entry.Codingmachine.getBlocks = function () {
                 type: 'codingmachine_ultrasonic',
             },
             isNotFor: ['Codingmachine'],
-           
-            },
             syntax: { js: [], py: [] },
+            },
+            
         
         codingmachine_connect: {
             template: Lang.template.jdkit_connect,
@@ -350,9 +353,11 @@ Entry.Codingmachine.getBlocks = function () {
                 params: [null],
                 type: 'codingmachine_connect',
             },
-           isNotFor: ['Codingmachine'],
-                        },
+            isNotFor: ['Codingmachine'],
             syntax: { js: [], py: [] },
+
+        },
+            
         
         codingmachine_ready: {
             template: Lang.template.jdkit_ready,
@@ -363,11 +368,11 @@ Entry.Codingmachine.getBlocks = function () {
             },
            
             isNotFor: ['Codingmachine'],
-           
-            },
             syntax: { js: [], py: [] },
+            },
+           
         
-        /* -------- Ãß°¡ ------- */
+        /* -------- ì¶”ê°€ ------- */
         codingmachine_servo: {
             color: '#00979D',
             skeleton: 'basic',
@@ -427,7 +432,7 @@ Entry.Codingmachine.getBlocks = function () {
                         0,
                         0,
                         0,
-                        /* -------- Ãß°¡ ------- */
+                        /* -------- ì¶”ê°€ ------- */
                         0x00,
                         0x00,
                         0x00,
@@ -435,7 +440,7 @@ Entry.Codingmachine.getBlocks = function () {
                         0x00,
                         0x00,
                         0x00,
-                        /* -------- Ãß°¡ ------- */
+                        /* -------- ì¶”ê°€ ------- */
                     ];
                 var cmd = Entry.hw.sendQueue.CMD;
                 var digital_pin = script.getField('DIGITAL_PIN', script);
@@ -446,8 +451,8 @@ Entry.Codingmachine.getBlocks = function () {
             },
             syntax: { js: [], py: [] },
         },
-        /* -------- Ãß°¡ ------- */
-        /* -------- Ãß°¡ ------- */
+        /* -------- ì¶”ê°€ ------- */
+        /* -------- ì¶”ê°€ ------- */
         codingmachine_digital_pwm: {
             color: '#00979D',
             skeleton: 'basic',
@@ -503,7 +508,7 @@ Entry.Codingmachine.getBlocks = function () {
                         0,
                         0,
                         0,
-                        /* -------- Ãß°¡ ------- */
+                        /* -------- ì¶”ê°€ ------- */
                         0x00,
                         0x00,
                         0x00,
@@ -511,7 +516,7 @@ Entry.Codingmachine.getBlocks = function () {
                         0x00,
                         0x00,
                         0x00,
-                        /* -------- Ãß°¡ ------- */
+                        /* -------- ì¶”ê°€ ------- */
                     ];
                 var cmd = Entry.hw.sendQueue.CMD;
                 var digital_pin = script.getField('DIGITAL_PIN', script);
@@ -522,8 +527,8 @@ Entry.Codingmachine.getBlocks = function () {
             },
             syntax: { js: [], py: [] },
         },
-        /* -------- Ãß°¡ ------- */
-        /* -------- Ãß°¡ ------- */
+        /* -------- ì¶”ê°€ ------- */
+        /* -------- ì¶”ê°€ ------- */
         codingmachine_digital_out: {
             color: '#00979D',
             skeleton: 'basic',
@@ -587,7 +592,7 @@ Entry.Codingmachine.getBlocks = function () {
                         0,
                         0,
                         0,
-                        /* -------- Ãß°¡ ------- */
+                        /* -------- ì¶”ê°€ ------- */
                         0x00,
                         0x00,
                         0x00,
@@ -595,7 +600,7 @@ Entry.Codingmachine.getBlocks = function () {
                         0x00,
                         0x00,
                         0x00,
-                        /* -------- Ãß°¡ ------- */
+                        /* -------- ì¶”ê°€ ------- */
                     ];
                 var cmd = Entry.hw.sendQueue.CMD;
                 var digital_pin = script.getField('DIGITAL_PIN', script);
@@ -632,7 +637,7 @@ Entry.Codingmachine.getBlocks = function () {
             },
             syntax: { js: [], py: [] },
         },
-        /* -------- Ãß°¡ ------- */
+        /* -------- ì¶”ê°€ ------- */
         codingmachine_led: {
             template: Lang.template.jdkit_led,
             parent: 'jdkit_led',
@@ -642,8 +647,9 @@ Entry.Codingmachine.getBlocks = function () {
             },
             
             isNotFor: ['Codingmachine'],
-        },
             syntax: { js: [], py: [] },
+        },
+           
         
         codingmachine_tune: {
             template: Lang.template.jdkit_tune,
@@ -654,9 +660,9 @@ Entry.Codingmachine.getBlocks = function () {
             },
             
             isNotFor: ['Codingmachine'],
-            
-            },
             syntax: { js: [], py: [] },
+            },
+            
         
         codingmachine_motor: {
             template: Lang.template.jdkit_motor,
@@ -667,9 +673,9 @@ Entry.Codingmachine.getBlocks = function () {
             },
            
             isNotFor: ['Codingmachine'],
-            
-            },
             syntax: { js: [], py: [] },
+            },
+            
         
         codingmachine_throttle: {
             template: Lang.template.jdkit_throttle,
@@ -680,9 +686,9 @@ Entry.Codingmachine.getBlocks = function () {
             },
            
             isNotFor: ['Codingmachine'],
-            
-            },
             syntax: { js: [], py: [] },
+            },
+           
         
         codingmachine_altitude: {
             template: Lang.template.jdkit_altitude,
@@ -693,9 +699,9 @@ Entry.Codingmachine.getBlocks = function () {
             },
             
             isNotFor: ['Codingmachine'],
-            
-            },
             syntax: { js: [], py: [] },
+            },
+           
         
         codingmachine_rollpitch: {
             template: Lang.template.jdkit_rollpitch,
@@ -706,9 +712,9 @@ Entry.Codingmachine.getBlocks = function () {
             },
             
             isNotFor: ['Codingmachine'],
-            
-            },
             syntax: { js: [], py: [] },
+            },
+           
         
         codingmachine_yaw: {
             template: Lang.template.jdkit_yaw,
@@ -719,9 +725,9 @@ Entry.Codingmachine.getBlocks = function () {
             },
             
             isNotFor: ['Codingmachine'],
-            
-            },
             syntax: { js: [], py: [] },
+            },
+           
         
         codingmachine_emergency: {
             template: Lang.template.jdkit_emergency,
@@ -732,9 +738,9 @@ Entry.Codingmachine.getBlocks = function () {
             },
             
             isNotFor: ['Codingmachine'],
-            
-            },
             syntax: { js: [], py: [] },
+            },
+            
         
         //endregion JDKit
     };
