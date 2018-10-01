@@ -166,8 +166,15 @@ Entry.EXPANSION_BLOCK.translate.getBlocks = function() {
             return param;
         },
     };
+    const getProjectId = function() {
+        if(Entry.projectId) {
+            return Entry.projectId;
+        }
+        return "";
+    }
 
     const translate = (params, type, defaultValue) => {
+        params['projectId'] = getProjectId();
         const key = 'translate-' + type + JSON.stringify(params);
         return new PromiseManager().Promise(function(resolve) {
             callApi(key, {
@@ -189,7 +196,7 @@ Entry.EXPANSION_BLOCK.translate.getBlocks = function() {
         return new PromiseManager().Promise(function(resolve) {
             callApi('translate-detect-' + query, {
                 url: Entry.EXPANSION_BLOCK.translate.api + 'dect/langs',
-                params: { query },
+                params: { query , projectId : getProjectId()},
             }).then((result) => {
                 if (result.data && result.data.langCode && langCodeMap[result.data.langCode]) {
                     return resolve(langCodeMap[result.data.langCode].lang);
