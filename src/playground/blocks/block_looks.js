@@ -115,7 +115,7 @@ module.exports = {
                 isNotFor: ['textBox'],
                 func(sprite, script) {
                     if (!script.isStart) {
-                        let [timeValue, message] = script.getValues(['SECOND]', 'VALUE'], script);
+                        let [timeValue, message] = script.getValues(['SECOND', 'VALUE'], script);
                         timeValue = Number(timeValue);
 
                         const mode = script.getField('OPTION', script);
