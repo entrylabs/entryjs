@@ -280,6 +280,7 @@
                 <false/>
             </struct>
             <key type="filename">imgs/handle/knob.png</key>
+            <key type="filename">imgs/vars/var_scroll_thumb.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
                 <point_f>0.5,0.5</point_f>
@@ -318,6 +319,19 @@
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
+            <key type="filename">imgs/vars/list_scroll_thumb.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>2,8,4,15</rect>
+                <key>scale9Paddings</key>
+                <rect>2,8,4,15</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
             <key type="filename">imgs/vars/list_value_box.png</key>
             <struct type="IndividualSpriteSettings">
                 <key>pivotPoint</key>
@@ -341,6 +355,36 @@
                 <rect>4,4,8,8</rect>
                 <key>scale9Paddings</key>
                 <rect>4,4,8,8</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">imgs/vars/var_time_value_bg_0.png</key>
+            <key type="filename">imgs/vars/var_time_value_bg_1.png</key>
+            <key type="filename">imgs/vars/var_time_value_bg_2.png</key>
+            <key type="filename">imgs/vars/var_value_bg_0.png</key>
+            <key type="filename">imgs/vars/var_value_bg_2.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>2,4,4,7</rect>
+                <key>scale9Paddings</key>
+                <rect>2,4,4,7</rect>
+                <key>scale9FromFile</key>
+                <false/>
+            </struct>
+            <key type="filename">imgs/vars/var_value_bg_1.png</key>
+            <struct type="IndividualSpriteSettings">
+                <key>pivotPoint</key>
+                <point_f>0.5,0.5</point_f>
+                <key>scale9Enabled</key>
+                <false/>
+                <key>scale9Borders</key>
+                <rect>1,4,1,7</rect>
+                <key>scale9Paddings</key>
+                <rect>1,4,1,7</rect>
                 <key>scale9FromFile</key>
                 <false/>
             </struct>
