@@ -52,7 +52,8 @@ Entry.Stage.prototype.initStage = function(canvas) {
     });
     this._pixiApp = pixiApp;
 
-    this._baseAsset = new PIXIBaseAsset();
+    /** @public **/
+    this.baseAsset = new PIXIBaseAsset();
 
     window.stage = pixiApp.stage;
     console.log("[TEST] window.stage 할당됨");
@@ -69,7 +70,7 @@ Entry.Stage.prototype.initStage = function(canvas) {
     // this.canvas.enableMouseOver(10);
     // this.canvas.mouseMoveOutside = true;
 
-    this.background = this._baseAsset.newSprite("common_blank");
+    this.background = this.baseAsset.newSprite("common_blank");
     this.background.width = 960;
     this.background.height = 480;
     this.background.anchor.set(0.5, 0.5);
@@ -332,7 +333,7 @@ Entry.Stage.prototype.initCoordinator = function() {
     c.interactiveChildren = false;
     c.visible = false;
 
-    var sp = this._baseAsset.newSprite("workspace_coordinate");
+    var sp = this.baseAsset.newSprite("workspace_coordinate");
     sp.scale.set(0.5, 0.5);
     sp.position.set(-240, -135);
     c.addChild(sp);
@@ -363,7 +364,7 @@ Entry.Stage.prototype.selectObject = function(object) {
  * Initialize handle. Handle is use for transform object on canvas.
  */
 Entry.Stage.prototype.initHandle = function() {
-    this.handle = new PIXIHandle(this.canvas, this._baseAsset)
+    this.handle = new PIXIHandle(this.canvas, this.baseAsset)
         .setChangeListener(this, this.updateHandle)
         .setEditStartListener(this, this.startEdit)
         .setEditEndListener(this, this.endEdit);
@@ -555,7 +556,7 @@ Entry.Stage.prototype.initWall = function() {
     var THIS = this;
 
     function newSide(x, y, sx, sy) {
-        var sp = THIS._baseAsset.newSprite("bound");
+        var sp = THIS.baseAsset.newSprite("bound");
         sp.position.set(x, y);
         sx ?  sp.scale.x = sx : 0;
         sy ?  sp.scale.y = sy : 0;
@@ -610,7 +611,7 @@ Entry.Stage.prototype.showInputField = function() {
     }
     this.canvas.addChild(this.inputField.getPixiView());
 
-    var inputSubmitButton = this._baseAsset.newSprite("confirm_button");
+    var inputSubmitButton = this.baseAsset.newSprite("confirm_button");
     window.bt = inputSubmitButton;
     inputSubmitButton.interactive = true;
     inputSubmitButton.scale.set(0.23, 0.23);

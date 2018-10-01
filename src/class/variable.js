@@ -1076,13 +1076,17 @@ Entry.Variable.prototype.setArray = function(array) {
     Entry.requestUpdateTwice = true;
 };
 
+function baseAsset() {
+    return Entry.stage.baseAsset;
+}
+
 function getH3Plane() {
-    return new PIXIH3Plane(Entry.stage._baseAsset);
+    return new PIXIH3Plane(baseAsset());
 }
 
 function getNinePlane(key, a, b, c, d) {
-    return new PIXI.mesh.NineSlicePlane(Entry.stage._baseAsset.getTexture(key), a, b, c, d);
+    return new PIXI.mesh.NineSlicePlane(baseAsset().getTexture(key), a, b, c, d);
 }
 function getNewSprite(key) {
-    return Entry.stage._baseAsset.newSprite(key);
+    return baseAsset().newSprite(key);
 }
