@@ -116,7 +116,6 @@ Entry.Field = function() {};
         var contentPos = blockView.getContentPos();
         var absPos = blockView.getAbsoluteCoordinate();
         var offset = blockView.getBoard().svgDom.offset();
-        console.log( absPos.y , this.box.y , contentPos.y , offset.top);
         return {
             x: absPos.x + this.box.x + contentPos.x * scale + offset.left,
             y: absPos.y + this.box.y + contentPos.y + offset.top - $(window).scrollTop(),

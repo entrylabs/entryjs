@@ -8,7 +8,7 @@
  */
 Entry.Code = function(code, object) {
     Entry.Model(this, false);
-
+    this.id = Entry.generateHash();
     if (object) this.object = object;
 
     this._data = new Entry.Collection();

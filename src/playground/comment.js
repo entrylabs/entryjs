@@ -6,26 +6,27 @@ Entry.Comment = class Comment {
     constructor(block, board) {
         Entry.Model(this, false);
 
-        if(!board.svgCommentGroup) {
+        if (!board.svgCommentGroup) {
             return;
         }
         const { comment, view } = block;
-        const { svgGroup, pathGroup } = view || {};
+        const { svgGroup } = view || {};
+        this._block = block;
         this._board = board;
         this._blockView = view;
-        this.pathGroup = pathGroup;
-        this.parentGroup = svgGroup;
-        const wrapper = Entry.SVG(null, board.svgCommentGroup);
-        this.svgGroup = wrapper.elem('g');
-        this.mouseDown = this.mouseDown.bind(this);
-        this.mouseMove = this.mouseMove.bind(this);
-        this.mouseUp = this.mouseUp.bind(this);
         if (svgGroup && !(board instanceof Entry.BlockMenu)) {
+            console.time('a');
+            this.createComment();
             this.startRender();
             this.addControl();
+            console.timeEnd('a');
         }
 
-        this.observe(this, 'updateOpacity', ['visible'], false)
+        this.observe(this, 'updateOpacity', ['visible'], false);
+    }
+
+    get block() {
+        return this._block;
     }
 
     get board() {
@@ -36,18 +37,46 @@ Entry.Comment = class Comment {
         return this._blockView;
     }
 
+    createComment() {
+        // const { comment, view } = this.block;
+        let thread = this.block.getThread();
+        while (!(thread.parent instanceof Entry.Code)) {
+            if (thread instanceof Entry.FieldBlock) {
+                thread = thread.getParentThread();
+            } else {
+                thread = thread.parent.getThread();
+            }
+        }
+        const { id } = thread;
+        const { svgGroup, pathGroup } = this.blockView || {};
+        this.pathGroup = pathGroup;
+        this.parentGroup = svgGroup;
+        const wrapper = Entry.SVG(null, this.board.svgCommentGroup);
+        const target = $(wrapper).find(`> #${id}C`)[0];
+        this.svgGroup = target
+            ? target
+            : wrapper.elem('g', {
+                  id: `${id}C`,
+              });
+        this.mouseDown = this.mouseDown.bind(this);
+        this.mouseMove = this.mouseMove.bind(this);
+        this.mouseUp = this.mouseUp.bind(this);
+    }
+
     startRender() {
         if (this.svgGroup) {
             this._line = this.svgGroup.elem('line');
             this._comment = this.svgGroup.elem('rect');
+
+            // const {x: offsetX, y: offsetY} = this.blockView.getAbsoluteCoordinate();
+            // console.log(offsetX, offsetY);
             const { x, width, y, height } = this.pathGroup.getBBox();
-            
+
             const matrix = this.parentGroup.getCTM();
             const { x: pathX, y: pathY } = Entry.GlobalSvg.getRelativePoint(matrix);
-
-            const startX = x + width + this.offsetX + pathX;
-            const startY = y + pathY;
-            console.log('startRender', x, y, startX, startY, pathX, pathY);
+            const startX = pathX + width;
+            const startY = pathY + 12;
+            console.log('startRender', x, width, this.offsetX, pathX, startX);
             this._comment.attr({
                 width: '160',
                 height: '22',
@@ -59,8 +88,8 @@ Entry.Comment = class Comment {
             });
 
             this._line.attr({
-                x1: startX - this.offsetX,
-                y1: startY + this.offsetY,
+                x1: startX,
+                y1: startY,
                 x2: startX + 80,
                 y2: startY + this.offsetY,
                 style: 'stroke:#eda913;stroke-width:2',
@@ -74,7 +103,27 @@ Entry.Comment = class Comment {
         }
     }
 
-    moveTo(x, y) {
+    updatePos() {
+        if (this.pathGroup) {
+            const { x, width, y, height } = this.pathGroup.getBBox();
+            const matrix = this.parentGroup.getCTM();
+            const { x: pathX, y: pathY } = Entry.GlobalSvg.getRelativePoint(matrix);
+            const startX = pathX + width;
+            const startY = pathY + 12;
+
+            this._line.attr({
+                x1: startX,
+                y1: startY,
+            });
+
+            this.set({
+                startX,
+                startY,
+            });
+        }
+    }
+
+    moveTo(x, y, animate, doNotUpdatePos) {
         var thisX = this.x;
         var thisY = this.y;
         if (!this.display) {
@@ -85,8 +134,8 @@ Entry.Comment = class Comment {
         if (this.visible && this.display) this.setPosition();
     }
 
-    moveBy(x, y) {
-        return this.moveTo(this.x + x, this.y + y);
+    moveBy(x, y, animate, doNotUpdatePos) {
+        return this.moveTo(this.x + x, this.y + y, animate, doNotUpdatePos);
     }
 
     setPosition() {
@@ -153,7 +202,7 @@ Entry.Comment = class Comment {
                 const offset = this.board.offset();
                 Entry.GlobalSvg._applyDomPos(offset.left, offset.top);
                 isFirst = true;
-            }            
+            }
             this.moveBy(
                 mouseEvent.pageX - dragInstance.offsetX,
                 mouseEvent.pageY - dragInstance.offsetY,
@@ -213,7 +262,7 @@ Entry.Comment = class Comment {
     getAbsoluteCoordinate(dragMode = this.dragMode) {
         const { scale = 1 } = this.board || {};
         let pos = null;
-        const {parentX, parentY} = this.mouseDownCoordinate;
+        const { parentX, parentY } = this.mouseDownCoordinate;
         if (dragMode === Entry.DRAG_MODE_DRAG) {
             pos = {
                 x: this.x + this.startX + parentX,

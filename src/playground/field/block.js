@@ -1,54 +1,50 @@
-/*i
- */
 'use strict';
 
-/*
- *
- */
-Entry.FieldBlock = function(content, blockView, index, mode, contentIndex) {
-    Entry.Model(this, false);
-    this._blockView = blockView;
-    this._block = blockView.block;
-    this._valueBlock = null;
-    this._oldPrimitiveValue = null;
+Entry.FieldBlock = class FieldBlock extends Entry.Field{
+    constructor(content, blockView, index, mode, contentIndex) {
+        super(content, blockView, index, mode, contentIndex);
+        Entry.Model(this, false);
+        this._blockView = blockView;
+        this._block = blockView.block;
+        this._valueBlock = null;
+        this._oldPrimitiveValue = null;
 
-    this.box = new Entry.BoxModel();
-    this.changeEvent = new Entry.Event(this);
+        this.box = new Entry.BoxModel();
+        this.changeEvent = new Entry.Event(this);
 
-    this._index = index;
-    this.contentIndex = contentIndex;
-    this._content = content;
+        this._index = index;
+        this.contentIndex = contentIndex;
+        this._content = content;
 
-    this.acceptType = content.accept;
-    this._restoreCurrent = content.restore;
+        this.acceptType = content.accept;
+        this._restoreCurrent = content.restore;
 
-    this.view = this;
+        this.view = this;
 
-    this.svgGroup = null;
-  
-    this._position = content.position;
+        this.svgGroup = null;
+    
+        this._position = content.position;
 
-    this.observe(this, '_updateBG', ['magneting'], false);
+        this.observe(this, '_updateBG', ['magneting'], false);
 
-    this.renderStart(this.getBoard(), mode);
-};
+        this.renderStart(this.getBoard(), mode);
 
-Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
+        this.schema = {
+            magneting: false,
+        };
+        this.calcHeight = this.calcWH;
+        this.doSeparate = this.separate;
+    };    
 
-(function(p) {
-    p.schema = {
-        magneting: false,
-    };
-
-    p.getBoard = function() {
+    getBoard() {
         return _.result(this._blockView, 'getBoard');
     };
 
-    p.getBlockType = () => {
+    getBlockType = () => {
         return 'field';
     }
 
-    p.renderStart = function(board, mode, renderMode, isReDraw) {
+    renderStart(board, mode, renderMode, isReDraw) {
         if (!this.svgGroup) {
             this.svgGroup = this._blockView.contentSvgGroup.elem('g');
         }
@@ -77,7 +73,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
         );
     };
 
-    p.align = function(x, y, animate = true) {
+    align(x, y, animate = true) {
         var svgGroup = this.svgGroup;
         if (this._position) {
             if (this._position.x) x = this._position.x;
@@ -118,7 +114,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
         box.set({ x: x, y: y });
     };
 
-    p.calcWH = function() {
+    calcWH() {
         var block = this._valueBlock;
         var box = this.box;
         var oldWidth = box.width;
@@ -142,13 +138,11 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
         }
     };
 
-    p.calcHeight = p.calcWH;
-
-    p.destroy = function() {
+    destroy() {
         _.result(this._valueBlock, 'destroyView');
     };
 
-    p.inspectBlock = function() {
+    inspectBlock() {
         var blockType = null;
         if (this._originBlock) {
             blockType = this._originBlock.type;
@@ -172,7 +166,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
         return this._createBlockByType(blockType);
     };
 
-    p._setValueBlock = function(block) {
+    _setValueBlock(block) {
         if (this._restoreCurrent) {
             this._originBlock = this._valueBlock;
         }
@@ -188,11 +182,11 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
         return this._valueBlock;
     };
 
-    p.getValueBlock = function() {
+    getValueBlock() {
         return this._valueBlock;
     };
 
-    p.updateValueBlock = function(block) {
+    updateValueBlock(block) {
         if (!(block instanceof Entry.Block)) {
             block = undefined;
         }
@@ -217,22 +211,22 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
         this._sizeObserver = view.observe(this, 'calcWH', ['width', 'height']);
     };
 
-    p._destroyObservers = function() {
+    _destroyObservers() {
         var _destroyFunc = _.partial(_.result, _, 'destroy');
         _destroyFunc(this._sizeObserver);
         _destroyFunc(this._posObserver);
     };
 
-    p.getPrevBlock = function(block) {
+    getPrevBlock(block) {
         if (this._valueBlock === block) return this;
         else return null;
     };
 
-    p.getNextBlock = function() {
+    getNextBlock() {
         return null;
     };
 
-    p.requestAbsoluteCoordinate = function(blockView) {
+    requestAbsoluteCoordinate(blockView) {
         const board = this.getBoard();
         const { scale = 1 } = board || {};
         var blockView = this._blockView;
@@ -243,7 +237,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
         return pos;
     };
 
-    p.requestPartHeight = function(blockView, forAll) {
+    requestPartHeight(blockView, forAll) {
         return blockView
             ? blockView.magnet.next
                 ? blockView.magnet.next.y
@@ -251,36 +245,34 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
             : 0;
     };
 
-    p.getCount = function() {
+    getCount() {
         return 0;
     };
 
-    p.dominate = function() {
+    dominate() {
         this._blockView.dominate();
     };
 
-    p.isGlobal = function() {
+    isGlobal() {
         return false;
     };
 
-    p.separate = function(block) {
+    separate(block) {
         this.getCode().createThread([block]);
         this.calcWH();
         this.changeEvent.notify();
     };
 
-    p.doSeparate = p.separate;
-
-    p.getCode = function() {
+    getCode() {
         return this._block.thread.getCode();
     };
 
-    p.cut = function(block) {
+    cut(block) {
         if (this._valueBlock === block) return [block];
         else return null;
     };
 
-    p.replace = function(block) {
+    replace(block) {
         if (typeof block === 'string') block = this._createBlockByType(block);
 
         var valueBlock = this._valueBlock;
@@ -310,15 +302,19 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
         this.changeEvent.notify();
     };
 
-    p.setParent = function(parent) {
+    setParent(parent) {
         this._parent = parent;
     };
 
-    p.getParent = function() {
+    getParent() {
         return this._parent;
     };
 
-    p._createBlockByType = function(blockType) {
+    get parent() {
+        return this._parent;
+    }
+
+    _createBlockByType(blockType) {
         var board = this._blockView.getBoard();
         var selected = _.result(board.workspace, 'selectedBlockView');
         var isFromUserAction = false;
@@ -343,11 +339,11 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
         return block;
     };
 
-    p.spliceBlock = function() {
+    spliceBlock() {
         this.updateValueBlock();
     };
 
-    p._updateBG = function() {
+    _updateBG() {
         if (this.magneting) {
             this._bg = this.svgGroup.elem('path', {
                 d:
@@ -363,25 +359,29 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
         }
     };
 
-    p.getThread = function() {
+    getThread() {
         return this;
     };
 
-    p.pointer = function(pointer = []) {
+    getParentThread() {
+        return this._block.getThread();
+    };
+
+    pointer(pointer = []) {
         return this._block.pointer([Entry.PARAM, this._index, ...pointer]);
     };
 
-    p.targetPointer = function(pointer = []) {
+    targetPointer(pointer = []) {
         var _pointer = this._block.pointer([Entry.PARAM, this._index, ...pointer]);
         return _pointer;
     };
 
-    p.isParamBlockType = function() {
+    isParamBlockType() {
         return true;
     };
 
     //check block schema and view
-    p._ensureBlock = function(block) {
+    _ensureBlock(block) {
         if (!block) return;
 
         if (block.constructor !== Entry.Block) {
@@ -404,4 +404,10 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
 
         return block;
     };
-})(Entry.FieldBlock.prototype);
+}
+
+// Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
+
+// (function(p) {
+    
+// })(Entry.FieldBlock.prototype);

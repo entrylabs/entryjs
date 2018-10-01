@@ -10,7 +10,6 @@ Entry.BlockView = function(block, board, mode) {
     var that = this;
     Entry.Model(this, false);
     this.block = block;
-    this._comment = block.getComment();
     this._lazyUpdatePos = Entry.Utils.debounce(
         block._updatePos.bind(block),
         200
@@ -23,6 +22,7 @@ Entry.BlockView = function(block, board, mode) {
     this._observers = [];
     this.set(block);
     this.svgGroup = board.svgBlockGroup.elem('g');
+    this.svgGroup.attr('id', Entry.generateHash());
     this.svgGroup.blockView = this;
 
     this._schema = Entry.skinContainer.getSkin(block);
@@ -415,6 +415,10 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
     };
 
     p._moveBy = function(x, y, animate, doNotUpdatePos) {
+        const comment = this.getComment();
+        if(comment) {
+            comment.moveBy(x, y, animate, doNotUpdatePos);
+        }
         return this._moveTo(this.x + x, this.y + y, animate, doNotUpdatePos);
     };
 
@@ -763,6 +767,10 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
     p.getBoard = function() {
         return this._board;
     };
+
+    p.getComment = function() {
+        return this.block.getComment();
+    }
 
     p._setBoard = function() {
         this._board = this._board.code.board;

@@ -829,8 +829,8 @@ Entry.makeAutolink = function(html) {
  * Generate random hash
  * @return {string}
  */
-Entry.generateHash = function() {
-    return ('0000' + ((Math.random() * Math.pow(36, 4)) << 0).toString(36)).substr(-4);
+Entry.generateHash = function(length = 4) {
+    return Math.random().toString(36).substr(2, length);
 };
 
 /**
@@ -1651,7 +1651,7 @@ Entry.Utils.addFilters = function(boardSvgDom, suffix) {
         id:"recolor" ,
         in:"component" ,
         type:"matrix" ,
-        values:"0 0 0 0 0.475 0 0 0 0 0.557 0 0 0 0 0.694 0 0 0 1 0" ,
+        values:"0 0 0 0 1 0 0 0 0 0.902 0 0 0 0 0 0 0 0 1 0" ,
         result:"colorMatrix",
     });
     var fm = blockSelectFilter.elem('feMerge');    

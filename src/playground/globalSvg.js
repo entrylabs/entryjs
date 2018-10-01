@@ -42,7 +42,9 @@ class GlobalSvg {
         if (data.isReadOnly() || !view.movable) return;
         this._view = view;
         this._mode = mode;
-        if (mode !== Entry.Workspace.MODE_VIMBOARD) view.set({ visible: false });
+        if (mode !== Entry.Workspace.MODE_VIMBOARD) {
+            view.set({ visible: false });
+        }
 
         this.draw();
         this.show();
@@ -57,7 +59,9 @@ class GlobalSvg {
         }
         this._view = view;
         this._mode = mode;
-        if (mode !== Entry.Workspace.MODE_VIMBOARD) view.set({ visible: false });
+        if (mode !== Entry.Workspace.MODE_VIMBOARD) {
+            view.set({ visible: false });
+        }
         this.draw();
         this.show();
         this.align();
@@ -69,16 +73,24 @@ class GlobalSvg {
         var blockView = this._view;
         if (this._svg) this.remove();
         var isVimMode = this._mode == Entry.Workspace.MODE_VIMBOARD;
-        var bBox = blockView.svgGroup.getBBox();
-
         // ISSUE: 배율 변경시 좌표 틀어짐 발생
+        // var bBox = blockView.svgGroup.getBBox();
         // this.svgDom.attr({
         //     width: Math.round(bBox.width + 4) + 'px',
         //     height: Math.round(bBox.height + 4) + 'px',
         // });
 
         this.svgGroup = Entry.SVG.createElement(blockView.svgGroup.cloneNode(true), { opacity: 1 });
-
+        if(!(blockView instanceof Entry.Comment)) {
+            const commentSvgGroup = Entry.SVG.createElement(blockView.getComment().svgGroup.cloneNode(true), { opacity: 1 });
+            console.log(blockView.svgGroup.getCTM(), commentSvgGroup.getCTM());
+            const blockGroup = blockView.svgGroup.getCTM();
+            const commentGroup = commentSvgGroup.getCTM();
+            $(commentSvgGroup).css({
+                transform: `scale(${this.scale}) translate3d(${commentGroup.e - blockGroup.e}px,${commentGroup.f - blockGroup.f}px, 0px)`,
+            });
+            this.svgGroup.appendChild(commentSvgGroup);
+        }
         this.svg.appendChild(this.svgGroup);
         //TODO selectAll function replace
         if (isVimMode) {

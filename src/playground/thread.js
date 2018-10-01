@@ -7,6 +7,7 @@
  *
  */
 Entry.Thread = function(thread, code, parent) {
+    this.id = Entry.generateHash();
     this._data = new Entry.Collection();
     this._code = code;
     this.changeEvent = new Entry.Event(this);
@@ -18,6 +19,10 @@ Entry.Thread = function(thread, code, parent) {
 };
 
 (function(p) {
+    p.getId = function () {
+        return this.id;
+    };
+
     p.load = function(thread, mode) {
         if (thread === undefined || thread === null) thread = [];
         if (!(thread instanceof Array)) {
@@ -153,7 +158,7 @@ Entry.Thread = function(thread, code, parent) {
     p.handleChange = function() {
         if (this._data.length === 0) this.destroy();
     };
-
+    
     p.getCode = function() {
         return this._code;
     };

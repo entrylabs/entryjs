@@ -12,7 +12,7 @@ Entry.Block = function(block, thread) {
     this._schema = null;
 
     if (block._backupParams) {
-        this._backupParams = block._backupParams;
+        this._backupParams = block._backupParams;  
     }
 
     this.setThread(thread);
@@ -260,6 +260,9 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
         if (!this.view) {
             return;
         }
+        // if(this._comment) {
+        //     this._comment.updatePos();
+        // }
         this.set({
             x: this.view.x,
             y: this.view.y,
@@ -278,6 +281,7 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
             this.set({
                 view: new Entry.BlockView(this, board, mode),
             });
+            this._comment = new Entry.Comment(this, board);
             this._updatePos();
         }
     };
