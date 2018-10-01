@@ -133,7 +133,7 @@ EntryStatic.categoryProjectOption = [
    }
 ]
 
-EntryStatic.getAllBlocks = function () {
+EntryStatic.getAllBlocks = function() {
     return [
         {
             category: "start",
@@ -335,6 +335,18 @@ EntryStatic.getAllBlocks = function () {
             ]
         },
         {
+            category: "expansion",
+            blocks: [
+                "expansionBlockAddButton",
+                "weather_title",
+                "check_weather",
+                "check_finedust",
+                "get_weather_data",
+                "get_current_weather_data",
+                "get_today_temperature"
+            ]
+        },
+        {
             category: "arduino",
             blocks: [
                 "arduino_download_connector",
@@ -431,19 +443,19 @@ EntryStatic.getAllBlocks = function () {
                 "dplay_robot_stop",
                 //iboard
                 "iboard_tmp",
-                "iboard_var_res",
-                "iboard_cds",
-                "iboard_mic",
-                "iboard_button",
-                "iboard_led",
-                "iboard_rgb_led",
-                "iboard_pwm_led",
-                "iboard_set_tone",
-                "iboard_motor",
-                "iboard_get_analog_value",
-                "iboard_get_analog_value_map",
-                "iboard_get_digital",
-                "iboard_toggle_led",
+				"iboard_var_res",
+				"iboard_cds",
+				"iboard_mic",
+				"iboard_button",
+				"iboard_led",
+				"iboard_rgb_led",
+				"iboard_pwm_led",
+				"iboard_set_tone",
+				"iboard_motor",
+				"iboard_get_analog_value",
+				"iboard_get_analog_value_map",
+				"iboard_get_digital",
+				"iboard_toggle_led",
                 "iboard_digital_pwm",
                 //nemoino
                 "nemoino_get_named_sensor_value",
@@ -600,7 +612,7 @@ EntryStatic.getAllBlocks = function () {
                 "roboid_hamster_set_tempo_to",
                 "roboid_hamster_set_port_to",
                 "roboid_hamster_change_output_by",
-                "roboid_hamster_set_output_to",
+                "roboid_hamster_set_output_to",                
                 "roboid_hamster_gripper",
                 "roboid_hamster_release_gripper",
                 "roboid_turtle_touching_color",
@@ -685,6 +697,11 @@ EntryStatic.getAllBlocks = function () {
                 "truetrue_set_led_colorsensor",
                 "truetrue_set_led_linesensor",
                 "truetrue_set_linetracer",
+				"truetrue_set_head_colorled",
+				"truetrue_set_move",
+				"truetrue_set_sec_move",
+				"truetrue_set_rotate",
+				"truetrue_set_sec_rotate",
                 //CODEino
                 "CODEino_get_named_sensor_value",
                 "CODEino_get_sound_status",
@@ -743,6 +760,19 @@ EntryStatic.getAllBlocks = function () {
                 "xbot_twoWheel",
                 "xbot_lcd",
                 //end of XBOT Blocks added
+                //bingles Blocks added
+                "bingles_analogValue",
+                "bingles_digitalOutput",
+                "bingles_rgb",
+                "bingles_rgb_picker",
+                "bingles_buzzer",
+                "bingles_servo",
+                "bingles_twoWheel",
+                "bingles_lcd",
+                "bingles_remotecontrol",
+                "bingles_oled",
+                "bingles_motorgo",
+                //end of bingles Blocks added
                 // ardublock Added 2016-06-01
                 "ardublock_get_analog_value",
                 "ardublock_get_analog_value_map",
@@ -776,19 +806,25 @@ EntryStatic.getAllBlocks = function () {
 
                 "ev3_get_sensor_value",
                 "ev3_touch_sensor",
+                "ev3_button_pressed",
                 "ev3_color_sensor",
                 "ev3_motor_power",
                 "ev3_motor_power_on_time",
                 "ev3_motor_degrees",
+                "ev3_status_led",
 
                 "roduino_on_block",
                 "roduino_off_block",
+                "roduino_get_sensor_analog_value",
+                "roduino_get_sensor_digital_value",
                 "roduino_get_analog_value",
                 "roduino_get_digital_value",
                 "roduino_get_color",
                 "roduino_set_digital",
                 "roduino_motor",
                 "roduino_set_color_pin",
+                "roduino_set_servo_value",
+                "roduino_set_pwm_value",
 
                 "schoolkit_on_block",
                 "schoolkit_off_block",
@@ -1174,7 +1210,7 @@ EntryStatic.getAllBlocks = function () {
                 //rokoboard Blocks
                 "rokoboard_get_sensor_value_by_name",
                 "rokoboard_is_button_pressed",
-                //Altino Blocks added
+                 //Altino Blocks added
                 "altino_analogValue",
                 "altino_rear_wheel",
                 "altino_steering",
@@ -1197,27 +1233,6 @@ EntryStatic.getAllBlocks = function () {
                 "jdkit_rollpitch",
                 "jdkit_yaw",
                 "jdkit_emergency",
-                //Codingmachine Blocks
-                "codingmachine_led",
-                "codingmachine_tune",
-                "codingmachine_motor",
-                "codingmachine_joystick",
-                "codingmachine_button",
-                "codingmachine_gyro",
-                "codingmachine_ultrasonic",
-                "codingmachine_connect",
-                "codingmachine_ready",
-                "codingmachine_throttle",
-                "codingmachine_altitude",
-                "codingmachine_rollpitch",
-                "codingmachine_yaw",
-                "codingmachine_emergency",
-                "codingmachine_digital_out",
-                "codingmachine_digital_in",
-                "codingmachine_analog_in",
-                "codingmachine_digital_pwm",
-                "codingmachine_servo",
-
                 // memaker Added 2017-10-01
                 "memaker_get_analog_value",
                 "memaker_get_analog_value_map",
@@ -1254,7 +1269,7 @@ EntryStatic.getAllBlocks = function () {
                 "edumaker_set_servo",
                 // EduMaker Added 2017-11-30
 
-                // playcode Added 2018-01-02
+		        // playcode Added 2018-01-02
                 "playcode_get_light_value",
                 "playcode_get_mic_value",
                 "playcode_gpio",
@@ -1284,7 +1299,6 @@ EntryStatic.getAllBlocks = function () {
                 "mechatro_set_blue_pw",
                 // mechatro Added 2018-02-12
 
-                
                 //FunBoard
                 "funboard_list_pushbutton_basic",
                 "funboard_list_touchbutton_basic",
@@ -1364,8 +1378,28 @@ EntryStatic.getAllBlocks = function () {
                 "dash_eye",
                 "dash_animation",
                 //endregion dash
-               
-                
+
+                //Codingmachine Blocks
+                "codingmachine_led",
+                "codingmachine_tune",
+                "codingmachine_motor",
+                "codingmachine_joystick",
+                "codingmachine_button",
+                "codingmachine_gyro",
+                "codingmachine_ultrasonic",
+                "codingmachine_connect",
+                "codingmachine_ready",
+                "codingmachine_throttle",
+                "codingmachine_altitude",
+                "codingmachine_rollpitch",
+                "codingmachine_yaw",
+                "codingmachine_emergency",
+                "codingmachine_digital_out",
+                "codingmachine_digital_in",
+                "codingmachine_analog_in",
+                "codingmachine_digital_pwm",
+                "codingmachine_servo",
+                //Added 2018-09-24
             ]
         }
     ]
