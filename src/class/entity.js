@@ -60,7 +60,7 @@ Entry.EntityObject = function(object) {
     this.object.entity = this;
     this.object.cursor = 'pointer';
 
-    this.object.on(PIXIDragHelper.DOWN, function(evt) {
+    this.object.on("pointerdown", function(evt) {
         var id = this.entity.parent.id;
         Entry.dispatchEvent('entityClick', this.entity);
         Entry.stage.isObjectClick = true;
@@ -78,11 +78,13 @@ Entry.EntityObject = function(object) {
         }
     });
 
-    this.object.on(PIXIDragHelper.UP, function(evt) {
+    var _onPointerUp = function(evt) {
         Entry.dispatchEvent('entityClickCanceled', this.entity);
         this.cursor = 'pointer';
         this.entity.checkCommand();
-    });
+    };
+    this.object.on("pointerup", _onPointerUp);
+    this.object.on("pointerupoutside", _onPointerUp);
 
     if (Entry.type !== 'minimize') {
         this.object.on(PIXIDragHelper.MOVE, function(evt) {
