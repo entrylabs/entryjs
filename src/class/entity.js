@@ -41,14 +41,9 @@ Entry.EntityObject = function(object) {
         this.textObject = PIXIHelper.text("", '20px Nanum Gothic', "#000000", 'alphabetic', 'center');
         this.textObject.anchor.set(0.5, 0.5);
 
-        //엔트리 베타 개발 서버를 찾아서 entry.min.js 만 교체하고, 오브젝트를 넣을 수 있도록 하세요.
-            
 
-        this.bgObject = new PIXI.Graphics();
-        this.bgObject
-            .beginFill(0xff0000)
-            .drawRect(0, 0, 100, 100);
-
+        this.bgObject = Entry.stage.baseAsset.newSprite("common_blank");
+        this.bgObject.anchor.set(0.5, 0.5);
 
         this.object.addChild(this.bgObject);
         this.object.addChild(this.textObject);
@@ -1390,7 +1385,6 @@ Entry.EntityObject.prototype._removeShapes = function() {
 
 Entry.EntityObject.prototype.updateBG = function() {
     if (!this.bgObject) return;
-    this.bgObject.clear();
     var width = this.getWidth();
     var height = this.getHeight();
 
@@ -1398,10 +1392,10 @@ Entry.EntityObject.prototype.updateBG = function() {
     var hasColor = (bgColor || "").indexOf("#") === 0;
 
     this.bgObject.alpha = hasColor ? 1 : 0;
-    this.bgObject
-        .lineStyle(0)
-        .beginFill(PIXIHelper.colorToUint(bgColor))
-        .drawRect(-width / 2, -height / 2, width, height);
+    this.bgObject.width = width;
+    this.bgObject.height = height;
+    this.bgObject.tint = PIXIHelper.colorToUint(bgColor);
+
     if (this.getLineBreak()) {
         this.bgObject.x = 0;
     } else {
