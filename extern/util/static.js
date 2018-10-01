@@ -1,36 +1,47 @@
+
 'use strict'
+
 var EntryStatic = {};
+
 EntryStatic.objectTypes = [
     "sprite",
     "textBox"
 ]
+
 EntryStatic.usageList = [
-    'usage_sequence', 'usage_repeat', 'usage_condition_repeat', 'usage_condition', 'usage_parallel', 'usage_event',
-    'usage_signal', 'usage_random', 'usage_variable', 'usage_ask_answer', 'usage_comp_operation', 'usage_math_operation',
-    'usage_logical_operation', 'usage_list', 'usage_function', 'usage_arrow_move', 'usage_coordinate', 'usage_rotation', 'usage_speak',
-    'usage_picture_effect', 'usage_shape', 'usage_sound', 'usage_draw', 'usage_confirm', 'usage_timer', 'usage_textBox', 'usage_scene',
-    'usage_clone', 'usage_hw', 'usage_expansion'
+   'usage_sequence' , 'usage_repeat', 'usage_condition_repeat', 'usage_condition', 'usage_parallel', 'usage_event',
+   'usage_signal', 'usage_random', 'usage_variable', 'usage_ask_answer' , 'usage_comp_operation', 'usage_math_operation',
+   'usage_logical_operation' , 'usage_list', 'usage_function', 'usage_arrow_move', 'usage_coordinate', 'usage_rotation', 'usage_speak',
+   'usage_picture_effect', 'usage_shape', 'usage_sound', 'usage_draw','usage_confirm', 'usage_timer', 'usage_textBox', 'usage_scene',
+   'usage_clone', 'usage_hw', 'usage_expansion'
 ];
+
 EntryStatic.conceptList = [
-    'concept_resource_analytics', 'concept_individual', 'concept_abstractive', 'concept_procedual',
-    'concept_automation', 'concept_simulation', 'concept_parallel'
+    'concept_resource_analytics', 'concept_individual', 'concept_abstractive','concept_procedual',
+     'concept_automation', 'concept_simulation', 'concept_parallel'
 ];
+
 EntryStatic.subjectList = [
-    'subject_korean', 'subject_mathmatics', 'subject_social',
-    'subject_science', 'subject_english', 'subject_courtesy', 'subject_music', 'subject_paint',
-    'subject_athletic', 'subject_progmatic'
+    'subject_korean', 'subject_mathmatics',  'subject_social',
+    'subject_science', 'subject_english', 'subject_courtesy','subject_music', 'subject_paint',
+    'subject_athletic',  'subject_progmatic'
 ];
-EntryStatic.lectureLevels = [1, 2, 3];
+
+EntryStatic.lectureLevels=[1,2,3];
+
 // EntryStatic.lectureLevels = ['level_high', 'level_mid','level_row'];
+
 EntryStatic.lectureGrades = [
     'e_1', 'e_2', 'e_3', 'e_4', 'e_5', 'e_6',
     'm_1', 'm_2', 'm_3',
     'general'
 ];
+
 EntryStatic.categoryList = [
     'category_game', 'category_animation', 'category_media_art',
     'category_physical', 'category_etc'
 ];
+
 EntryStatic.variableBlockList = [
     "get_variable",
     "change_variable",
@@ -47,77 +58,82 @@ EntryStatic.variableBlockList = [
     "show_list",
     "hide_list",
 ];
+
 EntryStatic.messageBlockList = [
     "when_message_cast",
     "message_cast",
     "message_cast_wait",
 ];
-EntryStatic.requiredTimes = [1, 2, 3, 4, 5];
+
+EntryStatic.requiredTimes = [1,2,3,4,5];
+
 EntryStatic.searchProjectOption = [
-    {
-        'key': 'search_updated',
-        'lang': 'search_updated',
-        'value': 'updated'
-    },
-    {
-        'key': 'search_recent',
-        'lang': 'search_recent',
-        'value': 'recent'
-    },
-    {
-        'key': 'search_complexity',
-        'lang': 'search_complexity',
-        'value': 'complexity'
-    },
-    {
-        'key': 'search_staffPicked',
-        'lang': 'search_staffPicked',
-        'value': 'staffPicked'
-    },
-    {
-        'key': 'search_childCnt',
-        'lang': 'search_childCnt',
-        'value': 'childCnt'
-    },
-    {
-        'key': 'search_likeCnt',
-        'lang': 'search_likeCnt',
-        'value': 'recentLikeCnt'
-    }
+   {
+       'key':'search_updated',
+       'lang':'search_updated',
+       'value': 'updated'
+   },
+   {
+       'key':'search_recent',
+       'lang':'search_recent',
+       'value': 'recent'
+   },
+   {
+       'key':'search_complexity',
+       'lang':'search_complexity',
+       'value':'complexity'
+   },
+   {
+       'key':'search_staffPicked',
+       'lang':'search_staffPicked',
+       'value': 'staffPicked'
+   },
+   {
+       'key':'search_childCnt',
+       'lang':'search_childCnt',
+       'value': 'childCnt'
+   },
+   {
+       'key':'search_likeCnt',
+       'lang':'search_likeCnt',
+       'value': 'recentLikeCnt'
+   }
 ]
+
 EntryStatic.categoryProjectOption = [
-    {
-        'key': 'search_genre_all',
-        'lang': 'search_¿¸√º',
-        'value': '¿¸√º'
-    },
-    {
-        'key': 'search_genre_game',
-        'lang': 'search_∞‘¿”',
-        'value': '∞‘¿”'
-    },
-    {
-        'key': 'search_genre_animation',
-        'lang': 'search_æ÷¥œ∏ﬁ¿Ãº«',
-        'value': 'æ÷¥œ∏ﬁ¿Ãº«'
-    },
-    {
-        'key': 'search_genre_media',
-        'lang': 'search_πÃµæÓæ∆∆Æ',
-        'value': 'πÃµæÓæ∆∆Æ'
-    },
-    {
-        'key': 'search_genre_physical',
-        'lang': 'search_««¡ˆƒ√',
-        'value': '««¡ˆƒ√'
-    },
-    {
-        'key': 'search_genre_etc',
-        'lang': 'search_±‚≈∏',
-        'value': '±‚≈∏'
-    }
+   {
+       'key':'search_genre_all',
+       'lang':'search_Ï†ÑÏ≤¥',
+       'value': 'Ï†ÑÏ≤¥'
+   },
+   {
+       'key':'search_genre_game',
+       'lang':'search_Í≤åÏûÑ',
+       'value': 'Í≤åÏûÑ'
+   },
+   {
+       'key':'search_genre_animation',
+       'lang':'search_Ïï†ÎãàÎ©îÏù¥ÏÖò',
+       'value': 'Ïï†ÎãàÎ©îÏù¥ÏÖò'
+   },
+   {
+       'key':'search_genre_media',
+       'lang':'search_ÎØ∏ÎîîÏñ¥ÏïÑÌä∏',
+       'value': 'ÎØ∏ÎîîÏñ¥ÏïÑÌä∏'
+   },
+   {
+       'key':'search_genre_physical',
+       'lang':'search_ÌîºÏßÄÏª¨',
+       'value': 'ÌîºÏßÄÏª¨'
+   },
+   {
+       'key':'search_genre_etc',
+       'lang':'search_Í∏∞ÌÉÄ',
+       'value': 'Í∏∞ÌÉÄ'
+   }
 ]
-EntryStatic.getAllBlocks = function () {
+
+EntryStatic.getAllBlocks = function() {
     return [
         {
             category: "start",
@@ -427,19 +443,19 @@ EntryStatic.getAllBlocks = function () {
                 "dplay_robot_stop",
                 //iboard
                 "iboard_tmp",
-                "iboard_var_res",
-                "iboard_cds",
-                "iboard_mic",
-                "iboard_button",
-                "iboard_led",
-                "iboard_rgb_led",
-                "iboard_pwm_led",
-                "iboard_set_tone",
-                "iboard_motor",
-                "iboard_get_analog_value",
-                "iboard_get_analog_value_map",
-                "iboard_get_digital",
-                "iboard_toggle_led",
+				"iboard_var_res",
+				"iboard_cds",
+				"iboard_mic",
+				"iboard_button",
+				"iboard_led",
+				"iboard_rgb_led",
+				"iboard_pwm_led",
+				"iboard_set_tone",
+				"iboard_motor",
+				"iboard_get_analog_value",
+				"iboard_get_analog_value_map",
+				"iboard_get_digital",
+				"iboard_toggle_led",
                 "iboard_digital_pwm",
                 //nemoino
                 "nemoino_get_named_sensor_value",
@@ -596,7 +612,7 @@ EntryStatic.getAllBlocks = function () {
                 "roboid_hamster_set_tempo_to",
                 "roboid_hamster_set_port_to",
                 "roboid_hamster_change_output_by",
-                "roboid_hamster_set_output_to",
+                "roboid_hamster_set_output_to",                
                 "roboid_hamster_gripper",
                 "roboid_hamster_release_gripper",
                 "roboid_turtle_touching_color",
@@ -681,11 +697,11 @@ EntryStatic.getAllBlocks = function () {
                 "truetrue_set_led_colorsensor",
                 "truetrue_set_led_linesensor",
                 "truetrue_set_linetracer",
-                "truetrue_set_head_colorled",
-                "truetrue_set_move",
-                "truetrue_set_sec_move",
-                "truetrue_set_rotate",
-                "truetrue_set_sec_rotate",
+				"truetrue_set_head_colorled",
+				"truetrue_set_move",
+				"truetrue_set_sec_move",
+				"truetrue_set_rotate",
+				"truetrue_set_sec_rotate",
                 //CODEino
                 "CODEino_get_named_sensor_value",
                 "CODEino_get_sound_status",
@@ -730,6 +746,7 @@ EntryStatic.getAllBlocks = function () {
                 "robotis_carCont_aux_motor_speed",
                 "robotis_carCont_aux_motor_speed2",
                 "robotis_carCont_cm_calibration",
+
                 //XBOT Blocks added
                 "xbot_analogValue",
                 "xbot_digitalInput",
@@ -773,6 +790,7 @@ EntryStatic.getAllBlocks = function () {
                 "ardublock_toggle_right_led",
                 "ardublock_get_sound_analog_value",
                 // ardublock Added 2016-06-01
+
                 // mkboard Added 2017-07-04
                 "mkboard_get_analog_value",
                 "mkboard_get_analog_value_map",
@@ -785,6 +803,7 @@ EntryStatic.getAllBlocks = function () {
                 "mkboard_set_lcd",
                 "mkboard_lcd_command",
                 // mkboard Added 2017-07-04
+
                 "ev3_get_sensor_value",
                 "ev3_touch_sensor",
                 "ev3_button_pressed",
@@ -793,6 +812,7 @@ EntryStatic.getAllBlocks = function () {
                 "ev3_motor_power_on_time",
                 "ev3_motor_degrees",
                 "ev3_status_led",
+
                 "roduino_on_block",
                 "roduino_off_block",
                 "roduino_get_sensor_analog_value",
@@ -805,12 +825,14 @@ EntryStatic.getAllBlocks = function () {
                 "roduino_set_color_pin",
                 "roduino_set_servo_value",
                 "roduino_set_pwm_value",
+
                 "schoolkit_on_block",
                 "schoolkit_off_block",
                 "schoolkit_get_input_value",
                 "schoolkit_set_output",
                 "schoolkit_motor",
                 "schoolkit_set_servo_value",
+
                 // codestar 2016-09-26
                 'codestar_color_single',
                 'codestar_3color',
@@ -826,6 +848,8 @@ EntryStatic.getAllBlocks = function () {
                 'codestar_mic',
                 'codestar_temperature',
                 'codestar_tilt',
+
+
                 //koreasci.com chocopi
                 'chocopi_sensor',
                 'chocopi_touch_event',
@@ -841,6 +865,7 @@ EntryStatic.getAllBlocks = function () {
                 'chocopi_led',
                 'chocopi_dc_motor',
                 'chocopi_servo_motor',
+
                 //jeil science smartBoard. 2016-11-03
                 //smartBoard
                 "smartBoard_get_named_sensor_value",
@@ -853,6 +878,7 @@ EntryStatic.getAllBlocks = function () {
                 "smartBoard_set_servo_angle",
                 "smartBoard_set_number_eight_pin",
                 "smartBoard_set_gs1_pwm",
+
                 //robotori Add 20161129 begin
                 "robotori_digitalInput",
                 "robotori_analogInput",
@@ -861,6 +887,7 @@ EntryStatic.getAllBlocks = function () {
                 "robotori_servo",
                 "robotori_dc_direction",
                 //robotori add 20161129 end
+
                 //dadublock 2016-12-19
                 "dadublock_get_analog_value",
                 "dadublock_get_analog_value_map",
@@ -870,6 +897,7 @@ EntryStatic.getAllBlocks = function () {
                 "dadublock_digital_pwm",
                 "dadublock_set_servo",
                 "dadublock_set_tone",
+
                 //dadublock_car
                 "dadublock_car_get_analog_value",
                 "dadublock_car_get_analog_value_map",
@@ -882,6 +910,7 @@ EntryStatic.getAllBlocks = function () {
                 "dadublock_car_motor_stop",
                 "dadublock_car_motor",
                 "dadublock_car_get_irsensor",
+
                 // BYROBOT - DroneFighter Controller
                 "byrobot_dronefighter_controller_controller_value_button",
                 "byrobot_dronefighter_controller_controller_value_joystick",
@@ -904,6 +933,7 @@ EntryStatic.getAllBlocks = function () {
                 "byrobot_dronefighter_controller_controller_vibrator_reserve",
                 "byrobot_dronefighter_controller_controller_userinterface_preset",
                 "byrobot_dronefighter_controller_controller_userinterface",
+
                 // BYROBOT - DroneFighter Drive
                 "byrobot_dronefighter_drive_drone_value_attitude",
                 "byrobot_dronefighter_drive_drone_value_etc",
@@ -937,6 +967,7 @@ EntryStatic.getAllBlocks = function () {
                 "byrobot_dronefighter_drive_controller_vibrator_on_reserve",
                 "byrobot_dronefighter_drive_controller_vibrator_delay",
                 "byrobot_dronefighter_drive_controller_vibrator_reserve",
+
                 // BYROBOT - DroneFighter Flight
                 "byrobot_dronefighter_flight_drone_value_attitude",
                 "byrobot_dronefighter_flight_drone_value_etc",
@@ -972,6 +1003,7 @@ EntryStatic.getAllBlocks = function () {
                 "byrobot_dronefighter_flight_controller_vibrator_on_reserve",
                 "byrobot_dronefighter_flight_controller_vibrator_delay",
                 "byrobot_dronefighter_flight_controller_vibrator_reserve",
+
                 // BYROBOT - PetroneV2 Controller
                 "byrobot_petrone_v2_controller_controller_value_button",
                 "byrobot_petrone_v2_controller_controller_value_joystick",
@@ -1003,6 +1035,7 @@ EntryStatic.getAllBlocks = function () {
                 "byrobot_petrone_v2_controller_controller_vibrator_on_reserve",
                 "byrobot_petrone_v2_controller_controller_vibrator_delay",
                 "byrobot_petrone_v2_controller_controller_vibrator_reserve",
+
                 // BYROBOT - PetroneV2 Drive
                 "byrobot_petrone_v2_drive_drone_value_attitude",
                 "byrobot_petrone_v2_drive_drone_value_imu",
@@ -1054,6 +1087,7 @@ EntryStatic.getAllBlocks = function () {
                 "byrobot_petrone_v2_drive_controller_vibrator_on_reserve",
                 "byrobot_petrone_v2_drive_controller_vibrator_delay",
                 "byrobot_petrone_v2_drive_controller_vibrator_reserve",
+
                 // BYROBOT - PetroneV2 Flight
                 "byrobot_petrone_v2_flight_drone_value_attitude",
                 "byrobot_petrone_v2_flight_drone_value_imu",
@@ -1109,6 +1143,7 @@ EntryStatic.getAllBlocks = function () {
                 "byrobot_petrone_v2_flight_controller_vibrator_on_reserve",
                 "byrobot_petrone_v2_flight_controller_vibrator_delay",
                 "byrobot_petrone_v2_flight_controller_vibrator_reserve",
+
                 //MODI
                 "modi_microphone_value",
                 "modi_environment_value",
@@ -1128,6 +1163,7 @@ EntryStatic.getAllBlocks = function () {
                 "modi_set_basic_speaker",
                 "modi_set_custom_speaker",
                 "modi_print_display_by_value",
+
                 // COCONUT
                 "coconut_move_motor",
                 "coconut_turn_motor",
@@ -1174,7 +1210,7 @@ EntryStatic.getAllBlocks = function () {
                 //rokoboard Blocks
                 "rokoboard_get_sensor_value_by_name",
                 "rokoboard_is_button_pressed",
-                //Altino Blocks added
+                 //Altino Blocks added
                 "altino_analogValue",
                 "altino_rear_wheel",
                 "altino_steering",
@@ -1208,6 +1244,7 @@ EntryStatic.getAllBlocks = function () {
                 "memaker_set_lcd",
                 "memaker_lcd_command",
                 // memaker Added 2017-10-01
+
                 //hummingbirdduo
                 "hummingbird_sensorValue",
                 "hummingbird_temperatureValue",
@@ -1220,6 +1257,7 @@ EntryStatic.getAllBlocks = function () {
                 "hummingbird_dcMotor",
                 "hummingbird_triLED",
                 "hummingbird_led",
+
                 // EduMaker Added 2017-11-30
                 "edumaker_get_analog_value",
                 "edumaker_get_analog_value_map",
@@ -1230,13 +1268,15 @@ EntryStatic.getAllBlocks = function () {
                 "edumaker_set_tone",
                 "edumaker_set_servo",
                 // EduMaker Added 2017-11-30
-                // playcode Added 2018-01-02
+
+		        // playcode Added 2018-01-02
                 "playcode_get_light_value",
                 "playcode_get_mic_value",
                 "playcode_gpio",
                 "playcode_servo",
                 "playcode_speed",
                 // playcode Added 2018-01-02
+
                 //creamo
                 "creamo_toggle_led",
                 "creamo_get_number_sensor_value",
@@ -1258,6 +1298,7 @@ EntryStatic.getAllBlocks = function () {
                 "mechatro_set_servo_speed",
                 "mechatro_set_blue_pw",
                 // mechatro Added 2018-02-12
+
                 //FunBoard
                 "funboard_list_pushbutton_basic",
                 "funboard_list_touchbutton_basic",
@@ -1284,6 +1325,7 @@ EntryStatic.getAllBlocks = function () {
                 "funboard_dotmatrix_set",
                 "funboard_dotmatrix_1row",
                 "funboard_dotmatrix_1column",
+
                 //region microbit
                 "microbit_led_toggle",
                 "microbit_get_led",
@@ -1314,6 +1356,7 @@ EntryStatic.getAllBlocks = function () {
                 "mrt_oneWheel",
                 "mrt_lcd",
                 //endregion end of MRT-X Blocks added
+
                 //region dash
                 "dash_sensor1",
                 "dash_sensor2",
@@ -1335,149 +1378,178 @@ EntryStatic.getAllBlocks = function () {
                 "dash_eye",
                 "dash_animation",
                 //endregion dash
+
+                //Codingmachine Blocks
+                "codingmachine_led",
+                "codingmachine_tune",
+                "codingmachine_motor",
+                "codingmachine_joystick",
+                "codingmachine_button",
+                "codingmachine_gyro",
+                "codingmachine_ultrasonic",
+                "codingmachine_connect",
+                "codingmachine_ready",
+                "codingmachine_throttle",
+                "codingmachine_altitude",
+                "codingmachine_rollpitch",
+                "codingmachine_yaw",
+                "codingmachine_emergency",
+                "codingmachine_digital_out",
+                "codingmachine_digital_in",
+                "codingmachine_analog_in",
+                "codingmachine_digital_pwm",
+                "codingmachine_servo",
+                //Added 2018-09-24
             ]
         }
     ]
 }
+
 EntryStatic.discussCategories = [
-    // 'notice',
-    'qna',
-    'tips',
+   // 'notice',
+   'qna',
+   'tips',
     'free',
-    'report',
-    'notice',
+   'report',
+   'notice',
 ];
+
 EntryStatic.artCategories = [
     {
-        'key': 'art_category_',
-        'lang': 'art_category_all',
+        'key':'art_category_',
+        'lang':'art_category_all',
         'value': ''
     },
     {
-        'key': 'art_category_∞‘¿”',
-        'lang': 'art_category_game',
-        'value': '∞‘¿”'
+        'key':'art_category_Í≤åÏûÑ',
+        'lang':'art_category_game',
+        'value': 'Í≤åÏûÑ'
     },
     {
-        'key': 'art_category_æ÷¥œ∏ﬁ¿Ãº«',
-        'lang': 'art_category_animation',
-        'value': 'æ÷¥œ∏ﬁ¿Ãº«'
+        'key':'art_category_Ïï†ÎãàÎ©îÏù¥ÏÖò',
+        'lang':'art_category_animation',
+        'value':'Ïï†ÎãàÎ©îÏù¥ÏÖò'
     },
     {
-        'key': 'art_category_πÃµæÓæ∆∆Æ',
-        'lang': 'art_category_media',
-        'value': 'πÃµæÓæ∆∆Æ'
+        'key':'art_category_ÎØ∏ÎîîÏñ¥ÏïÑÌä∏',
+        'lang':'art_category_media',
+        'value': 'ÎØ∏ÎîîÏñ¥ÏïÑÌä∏'
     },
     {
-        'key': 'art_category_««¡ˆƒ√',
-        'lang': 'art_category_physical',
-        'value': '««¡ˆƒ√'
+        'key':'art_category_ÌîºÏßÄÏª¨',
+        'lang':'art_category_physical',
+        'value': 'ÌîºÏßÄÏª¨'
     },
     {
-        'key': 'art_category_±‚≈∏',
-        'lang': 'art_category_etc',
-        'value': '±‚≈∏'
+        'key':'art_category_Í∏∞ÌÉÄ',
+        'lang':'art_category_etc',
+        'value': 'Í∏∞ÌÉÄ'
     }
 ]
+
 EntryStatic.artSortOptions = [
     {
-        'key': 'art_sort_updated',
-        'lang': 'art_sort_updated',
+        'key':'art_sort_updated',
+        'lang':'art_sort_updated',
         'value': 'updated'
     },
     {
-        'key': 'art_sort_visit',
-        'lang': 'art_sort_visit',
+        'key':'art_sort_visit',
+        'lang':'art_sort_visit',
         'value': 'visit'
     },
     {
-        'key': 'art_sort_likeCnt',
-        'lang': 'art_sort_likeCnt',
+        'key':'art_sort_likeCnt',
+        'lang':'art_sort_likeCnt',
         'value': 'likeCnt'
     },
     {
-        'key': 'art_sort_comment',
-        'lang': 'art_sort_comment',
+        'key':'art_sort_comment',
+        'lang':'art_sort_comment',
         'value': 'comment'
     },
 ]
+
 EntryStatic.discussSortOptions = [
     {
-        'lang': 'discuss_sort_created',
+        'lang':'discuss_sort_created',
         'value': 'created'
     },
     {
-        'lang': 'discuss_sort_visit',
+        'lang':'discuss_sort_visit',
         'value': 'visit'
     },
     {
-        'lang': 'discuss_sort_likesLength',
+        'lang':'discuss_sort_likesLength',
         'value': 'likesLength'
     },
     {
-        'lang': 'discuss_sort_commentsLength',
+        'lang':'discuss_sort_commentsLength',
         'value': 'commentsLength'
     },
 ]
 EntryStatic.discussPeriodOptions = [
     {
-        'key': 'discuss_period_',
-        'lang': 'discuss_period_all',
+        'key':'discuss_period_',
+        'lang':'discuss_period_all',
         'value': ''
     },
     {
-        'key': 'discuss_period_1',
-        'lang': 'discuss_period_day',
+        'key':'discuss_period_1',
+        'lang':'discuss_period_day',
         'value': '1'
     },
     {
-        'key': 'discuss_period_7',
-        'lang': 'discuss_period_week',
+        'key':'discuss_period_7',
+        'lang':'discuss_period_week',
         'value': '7'
     },
     {
-        'key': 'discuss_period_30',
-        'lang': 'discuss_period_month',
+        'key':'discuss_period_30',
+        'lang':'discuss_period_month',
         'value': '30'
     },
     {
-        'key': 'discuss_period_90',
-        'lang': 'discuss_period_three_month',
+        'key':'discuss_period_90',
+        'lang':'discuss_period_three_month',
         'value': '90'
     },
 ]
+
+
 EntryStatic.artPeriodOptions = [
     {
-        'key': 'art_period_',
-        'lang': 'art_period_all',
+        'key':'art_period_',
+        'lang':'art_period_all',
         'value': ''
     },
     {
-        'key': 'art_period_1',
-        'lang': 'art_period_day',
+        'key':'art_period_1',
+        'lang':'art_period_day',
         'value': '1'
     },
     {
-        'key': 'art_period_7',
-        'lang': 'art_period_week',
+        'key':'art_period_7',
+        'lang':'art_period_week',
         'value': '7'
     },
     {
-        'key': 'art_period_30',
-        'lang': 'art_period_month',
+        'key':'art_period_30',
+        'lang':'art_period_month',
         'value': '30'
     },
     {
-        'key': 'art_period_90',
-        'lang': 'art_period_three_month',
+        'key':'art_period_90',
+        'lang':'art_period_three_month',
         'value': '90'
     }
 ]
-EntryStatic.getCategoryByBlock = function (blockName) {
+
+EntryStatic.getCategoryByBlock = function(blockName) {
     if (!blockName)
         return false;
     var allBlocks = EntryStatic.getAllBlocks();
-    for (var i = 0, len = allBlocks.length; i < len; i++) {
+    for (var i=0,len=allBlocks.length; i<len; i++) {
         var blocks = allBlocks[i].blocks;
         if (blocks.indexOf(blockName) > -1) {
             return allBlocks[i].category;
@@ -1485,9 +1557,11 @@ EntryStatic.getCategoryByBlock = function (blockName) {
     }
     return false;
 }
+
 EntryStatic.objectMainCategories = ['entrybot_friends', 'people', 'animal', 'plant', 'vehicles',
-    'architect', 'food', 'environment', 'stuff', 'fantasy', 'interface',
-    'background'];
+                'architect', 'food', 'environment', 'stuff', 'fantasy', 'interface',
+                'background'];
+
 EntryStatic.objectSubCategories = {
     'entrybot_friends': [],
     'people': [],
@@ -1502,38 +1576,40 @@ EntryStatic.objectSubCategories = {
     'interface': [],
     'background': ['background_outdoor', 'background_indoor', 'background_nature', 'background_others']
 };
+
 EntryStatic.fonts = [
-    {
-        name: Lang.Fonts.batang,
-        family: 'KoPub Batang',
-        url: '/css/kopubbatang.css'
-    },
-    {
-        name: Lang.Fonts.myeongjo,
-        family: 'Nanum Myeongjo',
-        url: '/css/nanummyeongjo.css'
-    },
-    {
-        name: Lang.Fonts.gothic,
-        family: 'Nanum Gothic',
-        url: '/css/nanumgothic.css'
-    },
-    {
-        name: Lang.Fonts.pen_script,
-        family: 'Nanum Pen Script',
-        url: '/css/nanumpenscript.css'
-    },
-    {
-        name: Lang.Fonts.jeju_hallasan,
-        family: 'Jeju Hallasan',
-        url: '/css/jejuhallasan.css'
-    },
-    {
-        name: Lang.Fonts.gothic_coding,
-        family: 'Nanum Gothic Coding',
-        url: '/css/nanumgothiccoding.css'
-    }
+{
+    name: Lang.Fonts.batang,
+    family: 'KoPub Batang',
+    url: '/css/kopubbatang.css'
+},
+{
+    name: Lang.Fonts.myeongjo,
+    family: 'Nanum Myeongjo',
+    url: '/css/nanummyeongjo.css'
+},
+{
+    name: Lang.Fonts.gothic,
+    family: 'Nanum Gothic',
+    url: '/css/nanumgothic.css'
+},
+{
+    name: Lang.Fonts.pen_script,
+    family: 'Nanum Pen Script',
+    url: '/css/nanumpenscript.css'
+},
+{
+    name: Lang.Fonts.jeju_hallasan,
+    family: 'Jeju Hallasan',
+    url: '/css/jejuhallasan.css'
+},
+{
+    name: Lang.Fonts.gothic_coding,
+    family: 'Nanum Gothic Coding',
+    url: '/css/nanumgothiccoding.css'
+}
 ];
+
 EntryStatic.ARROW_COLOR_START = '#2f975a';
 EntryStatic.ARROW_COLOR_FLOW = '#3a71bc';
 EntryStatic.ARROW_COLOR_MOVING = '#8641b6';
@@ -1545,6 +1621,8 @@ EntryStatic.ARROW_COLOR_CALC = '#e8b349';
 EntryStatic.ARROW_COLOR_VARIABLE = '#ce38ce';
 EntryStatic.ARROW_COLOR_HW = '#097e84';
 EntryStatic.ARROW_COLOR_EXPANSION = '#ff8888';
+
+
 EntryStatic.COMMAND_TYPES = {
     addThread: 101,
     destroyThread: 102,
@@ -1557,12 +1635,15 @@ EntryStatic.COMMAND_TYPES = {
     uncloneBlock: 109,
     scrollBoard: 110,
     setFieldValue: 111,
+
     selectObject: 201,
+
     'do': 301,
     'undo': 302,
     'redo': 303
 };
-EntryStatic.getQuestionCategoryData = function () {
+
+EntryStatic.getQuestionCategoryData = function() {
     return {
         category: 'dummy',
         blocks: [
@@ -1575,6 +1656,7 @@ EntryStatic.getQuestionCategoryData = function () {
         ]
     }
 };
+
 // for server node js code
 if (typeof exports == "object") {
     exports.blockInfo = EntryStatic.blockInfo;
