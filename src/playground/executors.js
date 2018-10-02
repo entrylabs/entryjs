@@ -15,7 +15,7 @@ class Executor {
         this.id = Entry.Utils.generateId();
     }
 
-    execute(isFromOrigin) {
+    execute(isFromOrigin) { 
         if (this.isEnd()) {
             return;
         }
@@ -72,8 +72,10 @@ class Executor {
                 }
             } else if (returnVal === Entry.STATIC.CONTINUE) {
                 this.valueMap = {};
+                this.valueState = {};
             } else if (returnVal === this.scope) {
                 this.valueMap = {};
+                this.valueState = {};
                 break;
             } else if (returnVal === Entry.STATIC.BREAK) {
                 break;
