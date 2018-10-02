@@ -213,10 +213,10 @@ module.exports = {
 
                     if (sound) {
                         let [start, end] = script.getValues(['START', 'END'], script);
-                        start = Number(start);
-                        end = Number(end);
+                        start = Number(start) * 1000;
+                        end = Number(end) * 1000;
 
-                        createjs.Sound.play(sound.id, {
+                        createjs.Sound.play(sound.id, { 
                             startTime: Math.min(start, end),
                             duration: Math.max(start, end) - Math.min(start, end),
                         });
@@ -466,8 +466,8 @@ module.exports = {
                         if (sound) {
                             script.playState = 1;
                             let [start, end] = script.getValues(['START', 'END'], script);
-                            start = Number(start);
-                            end = Number(end);
+                            start = Number(start) * 1000;
+                            end = Number(end) * 1000;
 
                             const startValue = Math.min(start, end);
                             const endValue = Math.max(start, end);
