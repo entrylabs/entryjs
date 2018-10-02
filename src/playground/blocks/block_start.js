@@ -54,6 +54,18 @@ module.exports = {
                         },
                     },
                     {
+                        type: 'Dropdown',
+                        options: [
+                            [Lang.Blocks.SCENE_start_scene_next, 'next'],
+                            [Lang.Blocks.SCENE_start_scene_pre, 'pre'],
+                        ],
+                        value: 'next',
+                        fontSize: 10,
+                        textColor: '#fff',
+                        bgColor: EntryStatic.COLOR_START_2,
+                        arrowColor: EntryStatic.ARROW_COLOR_START,
+                    },
+                    {
                         type: 'Keyboard',
                         value: '81',
                     },

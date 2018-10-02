@@ -10,10 +10,7 @@ Entry.BlockView = function(block, board, mode) {
     var that = this;
     Entry.Model(this, false);
     this.block = block;
-    this._lazyUpdatePos = Entry.Utils.debounce(
-        block._updatePos.bind(block),
-        200
-    );
+    this._lazyUpdatePos = Entry.Utils.debounce(block._updatePos.bind(block), 200);
     this.mouseUpEvent = new Entry.Event(this);
     this.disableMouseEvent = false;
 
@@ -64,7 +61,7 @@ Entry.BlockView = function(block, board, mode) {
         (_.result(that.block.events, 'mousedown') || []).forEach((fn) => fn(that));
         that.onMouseDown.apply(that, arguments);
     };
-    
+
     this._startRender(block, mode);
 
     // observe
@@ -118,7 +115,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
             use: false,
             x: 0,
             y: 0,
-        }
+        },
     };
 
     p._startRender = function(block, mode) {
@@ -238,7 +235,9 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
                 this._contents.push(field);
                 this._paramMap[paramIndex] = field;
             } else {
-                this._contents.push(new Entry.FieldText({ text: param, color: schema.fontColor }, this));
+                this._contents.push(
+                    new Entry.FieldText({ text: param, color: schema.fontColor }, this)
+                );
             }
         });
 
@@ -372,7 +371,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
         if (!(this.x || this.y)) {
             this.svgGroup.removeAttr('transform');
         } else {
-            var transform = 'translate(' + (this.x / scale) + ',' + (this.y / scale) + ')';
+            var transform = 'translate(' + this.x / scale + ',' + this.y / scale + ')';
 
             if (animate && Entry.ANIMATION_DURATION !== 0) {
                 this.svgGroup.attr('transform', transform);
@@ -416,7 +415,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
 
     p._moveBy = function(x, y, animate, doNotUpdatePos) {
         const comment = this.getComment();
-        if(comment) {
+        if (comment) {
             comment.moveBy(x, y, animate, doNotUpdatePos);
         }
         return this._moveTo(this.x + x, this.y + y, animate, doNotUpdatePos);
@@ -736,11 +735,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
         const y = this.y / scale;
         for (var type in this.magnet) {
             var view = _.result(
-                board.getNearestMagnet(
-                    x,
-                    type === 'next' ? y + this.getBelowHeight() : y,
-                    type
-                ),
+                board.getNearestMagnet(x, type === 'next' ? y + this.getBelowHeight() : y, type),
                 'view'
             );
 
@@ -770,7 +765,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
 
     p.getComment = function() {
         return this.block.getComment();
-    }
+    };
 
     p._setBoard = function() {
         this._board = this._board.code.board;
@@ -854,12 +849,17 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
             var magnet, transform;
             if (magneting === 'previous') {
                 magnet = this.magnet.next;
-                transform = 'translate(' + (pos.scaleX + magnet.x) + ',' + (pos.scaleY + magnet.y) + ')';
+                transform =
+                    'translate(' + (pos.scaleX + magnet.x) + ',' + (pos.scaleY + magnet.y) + ')';
             } else if (magneting === 'next') {
                 magnet = this.magnet.previous;
                 var dragHeight = dragBlock.getBelowHeight();
                 transform =
-                    'translate(' + (pos.scaleX + magnet.x) + ',' + (pos.scaleY + magnet.y - dragHeight) + ')';
+                    'translate(' +
+                    (pos.scaleX + magnet.x) +
+                    ',' +
+                    (pos.scaleY + magnet.y - dragHeight) +
+                    ')';
             }
 
             var $shadow = $(shadow);
@@ -920,10 +920,18 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
 
     p.addSelected = function() {
         $(this.pathGroup).insertAfter(this._nextGroup);
+        // statements 부모의 블록 선택시 border보이게 코드
+        // if(this.statementSvgGroup) {
+        //     $(this.statementSvgGroup).insertAfter(this._nextGroup);
+        // }
         this.svgGroup.addClass('selected');
     };
 
     p.removeSelected = function() {
+        // statements 부모의 블록 선택시 border보이게 코드
+        // if(this.statementSvgGroup) {
+        //     $(this.statementSvgGroup).insertAfter(this.contentSvgGroup);
+        // }
         $(this.pathGroup).insertBefore(this._nextGroup);
         this.svgGroup.removeClass('selected');
     };

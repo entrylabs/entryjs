@@ -148,6 +148,7 @@ Entry.ZoomController = class ZoomController {
         this.removeToast();
     }
 
+    // 애니메이션 Debounce 처리
     removeToast = _.debounce(() => {
         this.toast.removeClass('fadeToast');
     }, 3000);
