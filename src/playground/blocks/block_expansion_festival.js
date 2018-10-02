@@ -11,7 +11,7 @@ Entry.EXPANSION_BLOCK.festival = {
         'ko': '행사',
         'en': 'festival',
     },
-    description: Lang.Msgs.expansion_translate_description,
+    description: Lang.Msgs.expansion_festival_description,
     isInitialized: false,
     init: function() {
         if (this.isInitialized) {
