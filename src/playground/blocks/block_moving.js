@@ -862,8 +862,8 @@ module.exports = {
                         value: null,
                         menuName: 'spritesWithMouse',
                         fontSize: 10,
-                        bgColor: EntryStatic.COLOR_MOVING_2,
-                        arrowColor: EntryStatic.ARROW_COLOR_DEFAULT,
+                        bgColor: EntryStatic.colorSet.block.darken.MOVING,
+                        arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
                     },
                     {
                         type: 'Indicator',
@@ -914,7 +914,7 @@ module.exports = {
                                     value: null,
                                     menuName: 'spritesWithMouse',
                                     fontSize: 11,
-                                    arrowColor: EntryStatic.ARROW_COLOR_MOVING,
+                                    arrowColor: EntryStatic.colorSet.arrow.default.MOVING,
                                     converter:
                                         Entry.block.converters.returnStringKey,
                                     codeMap: 'Entry.CodeMap.Entry.locate[0]',
@@ -939,8 +939,8 @@ module.exports = {
                         value: null,
                         menuName: 'spritesWithMouse',
                         fontSize: 10,
-                        bgColor: EntryStatic.COLOR_MOVING_2,
-                        arrowColor: EntryStatic.ARROW_COLOR_DEFAULT,
+                        bgColor: EntryStatic.colorSet.block.darken.MOVING,
+                        arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
                     },
                     {
                         type: 'Indicator',
@@ -1053,7 +1053,7 @@ module.exports = {
                                     value: null,
                                     menuName: 'spritesWithMouse',
                                     fontSize: 11,
-                                    arrowColor: EntryStatic.ARROW_COLOR_MOVING,
+                                    arrowColor: EntryStatic.colorSet.arrow.default.MOVING,
                                     converter:
                                         Entry.block.converters.returnStringKey,
                                     codeMap:
@@ -1454,8 +1454,8 @@ module.exports = {
                         value: null,
                         menuName: 'spritesWithMouse',
                         fontSize: 10,
-                        bgColor: EntryStatic.COLOR_MOVING_2,
-                        arrowColor: EntryStatic.ARROW_COLOR_DEFAULT,
+                        bgColor: EntryStatic.colorSet.block.darken.MOVING,
+                        arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
                     },
                     {
                         type: 'Indicator',
@@ -1531,7 +1531,7 @@ module.exports = {
                                     value: null,
                                     menuName: 'spritesWithMouse',
                                     fontSize: 11,
-                                    arrowColor: EntryStatic.ARROW_COLOR_MOVING,
+                                    arrowColor: EntryStatic.colorSet.arrow.default.MOVING,
                                     converter:
                                         Entry.block.converters.returnStringKey,
                                     codeMap:

@@ -494,23 +494,8 @@ Entry.Utils.colorLighten = function(color, amount) {
     return Entry.Utils.hslToHex(hsl);
 };
 
-Entry.Utils._EmphasizeColorMap = {
-    '#10D35E': '#5BC982',
-    '#31C1EC': '#62A5F4',
-    '#CA7DFF': '#C08FF7',
-    '#FF5174': '#F46487',
-    '#FC7E01': '#FFB05A',
-    '#82D214': '#C4DD31',
-    '#00CFCA': '#09BAB5',
-    '#FEB71A': '#FCDA90',
-    '#F57DF1': '#F279F2',
-    '#CC7337': '#DD884E',
-    '#7E8EFE': '#C0CBFF',
-    '#FFCA36': '#F2C670',
-};
-
 Entry.Utils.getEmphasizeColor = function(color) {
-    return Entry.Utils._EmphasizeColorMap[color.toUpperCase()] || color;
+    return EntryStatic.colorSet.block.emphasize[color] || color;
 };
 
 // Take input from [0, n] and return it as [0, 1]

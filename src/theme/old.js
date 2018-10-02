@@ -1,17 +1,18 @@
 'use strict';
 
 /**
- * default
+ * 기존 색상 팔레트
  */
 module.exports = {
     arrow: {
         default: {
+            DEFAULT: '#FFFFFF',
             START: '#2F975A',
             FLOW: '#3A71BC',
             MOVING: '#8641B6',
             LOOKS: '#D8234E',
             TEXT: '#DC9C32',
-            SOUNDS: '#83A617',
+            SOUND: '#83A617',
             JUDGE: '#89A1F7',
             CALC: '#E8B349',
             VARIABLE: '#CE38CE',
@@ -78,5 +79,9 @@ module.exports = {
             '#AEB8FF': '#C0CBFF',
             '#FFCA36': '#F2C670',
         },
+        common: {
+            WHITE: '#FFFFFF',
+            DARK: '#000000'
+        }
     },
 };

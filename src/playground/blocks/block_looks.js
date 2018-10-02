@@ -70,8 +70,8 @@ module.exports = {
                         options: [[Lang.Blocks.speak, 'speak']],
                         value: 'speak',
                         fontSize: 10,
-                        bgColor: EntryStatic.COLOR_LOOKS_2,
-                        arrowColor: EntryStatic.ARROW_COLOR_DEFAULT,
+                        bgColor: EntryStatic.colorSet.block.darken.LOOKS,
+                        arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
                     },
                     {
                         type: 'Indicator',
@@ -182,7 +182,7 @@ module.exports = {
                                     options: [[Lang.Blocks.speak, 'speak']],
                                     value: 'speak',
                                     fontSize: 11,
-                                    arrowColor: EntryStatic.ARROW_COLOR_LOOKS,
+                                    arrowColor: EntryStatic.colorSet.arrow.default.LOOKS,
                                     converter:
                                         Entry.block.converters
                                             .returnStringValue,
@@ -207,8 +207,8 @@ module.exports = {
                         options: [[Lang.Blocks.speak, 'speak']],
                         value: 'speak',
                         fontSize: 10,
-                        bgColor: EntryStatic.COLOR_LOOKS_2,
-                        arrowColor: EntryStatic.ARROW_COLOR_DEFAULT,
+                        bgColor: EntryStatic.colorSet.block.darken.LOOKS,
+                        arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
                     },
                     {
                         type: 'Indicator',
@@ -369,8 +369,8 @@ module.exports = {
                         ],
                         value: 'next',
                         fontSize: 10,
-                        bgColor: EntryStatic.COLOR_LOOKS_2,
-                        arrowColor: EntryStatic.ARROW_COLOR_DEFAULT,
+                        bgColor: EntryStatic.colorSet.block.darken.LOOKS,
+                        arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
                     },
                     {
                         type: 'Indicator',
@@ -426,7 +426,7 @@ module.exports = {
                                     ],
                                     value: 'next',
                                     fontSize: 11,
-                                    arrowColor: EntryStatic.ARROW_COLOR_LOOKS,
+                                    arrowColor: EntryStatic.colorSet.arrow.default.LOOKS,
                                     converter:
                                         Entry.block.converters
                                             .returnStringValue,
@@ -453,8 +453,8 @@ module.exports = {
                         ],
                         value: 'color',
                         fontSize: 10,
-                        bgColor: EntryStatic.COLOR_LOOKS_2,
-                        arrowColor: EntryStatic.ARROW_COLOR_DEFAULT,
+                        bgColor: EntryStatic.colorSet.block.darken.LOOKS,
+                        arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
                     },
                     {
                         type: 'Block',
@@ -532,7 +532,7 @@ module.exports = {
                                     ],
                                     value: 'color',
                                     fontSize: 11,
-                                    arrowColor: EntryStatic.ARROW_COLOR_LOOKS,
+                                    arrowColor: EntryStatic.colorSet.arrow.default.LOOKS,
                                     converter:
                                         Entry.block.converters
                                             .returnStringValue,
@@ -563,8 +563,8 @@ module.exports = {
                         ],
                         value: 'color',
                         fontSize: 10,
-                        bgColor: EntryStatic.COLOR_LOOKS_2,
-                        arrowColor: EntryStatic.ARROW_COLOR_DEFAULT,
+                        bgColor: EntryStatic.colorSet.block.darken.LOOKS,
+                        arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
                     },
                     {
                         type: 'Block',
@@ -640,7 +640,7 @@ module.exports = {
                                     ],
                                     value: 'color',
                                     fontSize: 11,
-                                    arrowColor: EntryStatic.ARROW_COLOR_LOOKS,
+                                    arrowColor: EntryStatic.colorSet.arrow.default.LOOKS,
                                     converter:
                                         Entry.block.converters
                                             .returnStringValue,
@@ -857,8 +857,8 @@ module.exports = {
                         ],
                         value: 'FRONT',
                         fontSize: 10,
-                        bgColor: EntryStatic.COLOR_LOOKS_2,
-                        arrowColor: EntryStatic.ARROW_COLOR_DEFAULT,
+                        bgColor: EntryStatic.colorSet.block.darken.LOOKS,
+                        arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
                     },
                     {
                         type: 'Indicator',
@@ -960,7 +960,7 @@ module.exports = {
                                     ],
                                     value: 'FRONT',
                                     fontSize: 11,
-                                    arrowColor: EntryStatic.ARROW_COLOR_LOOKS,
+                                    arrowColor: EntryStatic.colorSet.arrow.default.LOOKS,
                                     converter:
                                         Entry.block.converters
                                             .returnStringValueLowerCase,

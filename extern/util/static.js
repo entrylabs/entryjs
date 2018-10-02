@@ -1571,40 +1571,16 @@ EntryStatic.fonts = [
 }
 ];
 
-EntryStatic.COLOR_START_1 = '#10D35E';
-EntryStatic.COLOR_START_2 = '#13BF68';
-EntryStatic.COLOR_CALC_1 = '#FFDE82';
-EntryStatic.COLOR_FLOW_2 = '#08acdd';
-EntryStatic.COLOR_MOVING_2 = '#b13efe';
-EntryStatic.COLOR_LOOKS_2 = '#ee3157';
-EntryStatic.COLOR_TEXT_2 = '#e43500';
-EntryStatic.COLOR_SOUNDS_2 = '#6ebc02';
-EntryStatic.COLOR_JUDGE_2 = '#6173F5';
-EntryStatic.COLOR_CALC_2 = '#FF9C00';
-EntryStatic.COLOR_VARIABLE_2 = '#EC52E7';
-EntryStatic.ARROW_COLOR_DEFAULT = '#ffffff';
-EntryStatic.ARROW_COLOR_START = '#ffffff';
-EntryStatic.ARROW_COLOR_FLOW = '#3a71bc';
-EntryStatic.ARROW_COLOR_MOVING = '#8641b6';
-EntryStatic.ARROW_COLOR_LOOKS = '#d8234e';
-EntryStatic.ARROW_COLOR_TEXT = '#dc9c32';
-EntryStatic.ARROW_COLOR_SOUNDS = '#83a617';
-EntryStatic.ARROW_COLOR_JUDGE = '#89a1f7';
-EntryStatic.ARROW_COLOR_CALC = '#e8b349';
-EntryStatic.ARROW_COLOR_VARIABLE = '#ce38ce';
-EntryStatic.ARROW_COLOR_HW = '#097e84';
-EntryStatic.ARROW_COLOR_EXPANSION = '#ff8888';
-EntryStatic.DEFAULT_TEXT_COLOR = '#FFFFFF';
-
 EntryStatic.colorSet = {
     arrow: {
         default: {
-            START: '#2F975A',
+            DEFAULT: '#FFFFFF',
+            START: '#FFFFFF',
             FLOW: '#3A71BC',
             MOVING: '#8641B6',
             LOOKS: '#D8234E',
             TEXT: '#DC9C32',
-            SOUNDS: '#83A617',
+            SOUND: '#83A617',
             JUDGE: '#89A1F7',
             CALC: '#E8B349',
             VARIABLE: '#CE38CE',
@@ -1672,6 +1648,10 @@ EntryStatic.colorSet = {
             '#FC5D01': '#F2C670',
         },
     },
+    common: {
+        WHITE: '#FFFFFF',
+        DARK: '#000000'
+    }
 };
 
 EntryStatic.COMMAND_TYPES = {

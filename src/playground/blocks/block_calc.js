@@ -21,7 +21,7 @@ module.exports = {
                         ],
                         value: 'PLUS',
                         fontSize: 10,
-                        bgColor: EntryStatic.COLOR_CALC_2,
+                        bgColor: EntryStatic.colorSet.block.darken.CALC,
                         noArrow: true,
                     },
                     {
@@ -338,8 +338,8 @@ module.exports = {
                         options: [['x', 'x'], ['y', 'y']],
                         value: 'x',
                         fontSize: 10,
-                        bgColor: EntryStatic.COLOR_CALC_2,
-                        arrowColor: EntryStatic.ARROW_COLOR_DEFAULT,
+                        bgColor: EntryStatic.colorSet.block.darken.CALC,
+                        arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
                     },
                     {
                         type: 'Text',
@@ -386,7 +386,7 @@ module.exports = {
                                     options: [['x', 'x'], ['y', 'y']],
                                     value: 'x',
                                     fontSize: 11,
-                                    arrowColor: EntryStatic.ARROW_COLOR_CALC,
+                                    arrowColor: EntryStatic.colorSet.arrow.default.CALC,
                                     converter:
                                         Entry.block.converters.returnStringKey,
                                     codeMap:
@@ -418,8 +418,8 @@ module.exports = {
                         value: null,
                         menuName: 'spritesWithSelf',
                         fontSize: 10,
-                        bgColor: EntryStatic.COLOR_CALC_2,
-                        arrowColor: EntryStatic.ARROW_COLOR_DEFAULT,
+                        bgColor: EntryStatic.colorSet.block.darken.CALC,
+                        arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
                     },
                     {
                         type: 'Text',
@@ -445,8 +445,8 @@ module.exports = {
                         ],
                         value: 'x',
                         fontSize: 10,
-                        bgColor: EntryStatic.COLOR_CALC_2,
-                        arrowColor: EntryStatic.ARROW_COLOR_DEFAULT,
+                        bgColor: EntryStatic.colorSet.block.darken.CALC,
+                        arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
                     },
                 ],
                 events: {},
@@ -512,7 +512,7 @@ module.exports = {
                                     value: null,
                                     menuName: 'spritesWithSelf',
                                     fontSize: 11,
-                                    arrowColor: EntryStatic.ARROW_COLOR_CALC,
+                                    arrowColor: EntryStatic.colorSet.arrow.default.CALC,
                                     converter:
                                         Entry.block.converters
                                             .returnObjectOrStringValue,
@@ -557,7 +557,7 @@ module.exports = {
                                     ],
                                     value: 'x',
                                     fontSize: 11,
-                                    arrowColor: EntryStatic.ARROW_COLOR_CALC,
+                                    arrowColor: EntryStatic.colorSet.arrow.default.CALC,
                                     converter:
                                         Entry.block.converters
                                             .returnStringValue,
@@ -646,8 +646,8 @@ module.exports = {
                         ],
                         value: 'QUOTIENT',
                         fontSize: 10,
-                        bgColor: EntryStatic.COLOR_CALC_2,
-                        arrowColor: EntryStatic.ARROW_COLOR_DEFAULT,
+                        bgColor: EntryStatic.colorSet.block.darken.CALC,
+                        arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
                     },
                 ],
                 events: {},
@@ -736,7 +736,7 @@ module.exports = {
                                     ],
                                     value: 'QUOTIENT',
                                     fontSize: 11,
-                                    arrowColor: EntryStatic.ARROW_COLOR_CALC,
+                                    arrowColor: EntryStatic.colorSet.arrow.default.CALC,
                                     converter:
                                         Entry.block.converters
                                             .returnStringValue,
@@ -776,7 +776,7 @@ module.exports = {
                                     ],
                                     value: 'QUOTIENT',
                                     fontSize: 11,
-                                    arrowColor: EntryStatic.ARROW_COLOR_CALC,
+                                    arrowColor: EntryStatic.colorSet.arrow.default.CALC,
                                     converter:
                                         Entry.block.converters
                                             .returnStringValue,
@@ -843,8 +843,8 @@ module.exports = {
                         ],
                         value: 'square',
                         fontSize: 10,
-                        bgColor: EntryStatic.COLOR_CALC_2,
-                        arrowColor: EntryStatic.ARROW_COLOR_DEFAULT,
+                        bgColor: EntryStatic.colorSet.block.darken.CALC,
+                        arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
                     },
                 ],
                 events: {},
@@ -1260,8 +1260,8 @@ module.exports = {
                         ],
                         value: 'START',
                         fontSize: 10,
-                        bgColor: EntryStatic.COLOR_CALC_2,
-                        arrowColor: EntryStatic.ARROW_COLOR_DEFAULT,
+                        bgColor: EntryStatic.colorSet.block.darken.CALC,
+                        arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
                     },
                     {
                         type: 'Text',
@@ -1365,7 +1365,7 @@ module.exports = {
                                     ],
                                     value: 'START',
                                     fontSize: 11,
-                                    arrowColor: EntryStatic.ARROW_COLOR_CALC,
+                                    arrowColor: EntryStatic.colorSet.arrow.default.CALC,
                                     converter:
                                         Entry.block.converters
                                             .returnStringValueLowerCase,
@@ -1401,8 +1401,8 @@ module.exports = {
                         ],
                         value: 'SHOW',
                         fontSize: 10,
-                        bgColor: EntryStatic.COLOR_CALC_2,
-                        arrowColor: EntryStatic.ARROW_COLOR_DEFAULT,
+                        bgColor: EntryStatic.colorSet.block.darken.CALC,
+                        arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
                     },
                     {
                         type: 'Text',
@@ -1478,7 +1478,7 @@ module.exports = {
                                     ],
                                     value: 'SHOW',
                                     fontSize: 11,
-                                    arrowColor: EntryStatic.ARROW_COLOR_CALC,
+                                    arrowColor: EntryStatic.colorSet.arrow.default.CALC,
                                     converter:
                                         Entry.block.converters
                                             .returnStringValueLowerCase,
@@ -1518,8 +1518,8 @@ module.exports = {
                         ],
                         value: 'YEAR',
                         fontSize: 10,
-                        bgColor: EntryStatic.COLOR_CALC_2,
-                        arrowColor: EntryStatic.ARROW_COLOR_DEFAULT,
+                        bgColor: EntryStatic.colorSet.block.darken.CALC,
+                        arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
                     },
                     {
                         type: 'Text',
@@ -1587,7 +1587,7 @@ module.exports = {
                                     ],
                                     value: 'YEAR',
                                     fontSize: 11,
-                                    arrowColor: EntryStatic.ARROW_COLOR_CALC,
+                                    arrowColor: EntryStatic.colorSet.arrow.default.CALC,
                                     converter:
                                         Entry.block.converters
                                             .returnStringValueLowerCase,
@@ -1614,8 +1614,8 @@ module.exports = {
                         value: null,
                         menuName: 'spritesWithMouse',
                         fontSize: 10,
-                        bgColor: EntryStatic.COLOR_CALC_2,
-                        arrowColor: EntryStatic.ARROW_COLOR_DEFAULT,
+                        bgColor: EntryStatic.colorSet.block.darken.CALC,
+                        arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
                     },
                     {
                         type: 'Text',
@@ -1666,7 +1666,7 @@ module.exports = {
                                     value: null,
                                     menuName: 'spritesWithMouse',
                                     fontSize: 11,
-                                    arrowColor: EntryStatic.ARROW_COLOR_CALC,
+                                    arrowColor: EntryStatic.colorSet.arrow.default.CALC,
                                     converter:
                                         Entry.block.converters.returnStringKey,
                                     codeMap:
@@ -1693,8 +1693,8 @@ module.exports = {
                         value: null,
                         menuName: 'sounds',
                         fontSize: 10,
-                        bgColor: EntryStatic.COLOR_CALC_2,
-                        arrowColor: EntryStatic.ARROW_COLOR_DEFAULT,
+                        bgColor: EntryStatic.colorSet.block.darken.CALC,
+                        arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
                     },
                     {
                         type: 'Text',
@@ -1738,7 +1738,7 @@ module.exports = {
                                     value: null,
                                     menuName: 'sounds',
                                     fontSize: 11,
-                                    arrowColor: EntryStatic.ARROW_COLOR_CALC,
+                                    arrowColor: EntryStatic.colorSet.arrow.default.CALC,
                                     converter:
                                         Entry.block.converters.returnStringKey,
                                 },
@@ -2397,8 +2397,8 @@ module.exports = {
                         ],
                         value: 'toUpperCase',
                         fontSize: 10,
-                        bgColor: EntryStatic.COLOR_CALC_2,
-                        arrowColor: EntryStatic.ARROW_COLOR_DEFAULT,
+                        bgColor: EntryStatic.colorSet.block.darken.CALC,
+                        arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
                     },
                     {
                         type: 'Text',
@@ -2474,7 +2474,7 @@ module.exports = {
                                     ],
                                     value: 'toUpperCase',
                                     fontSize: 11,
-                                    arrowColor: EntryStatic.ARROW_COLOR_CALC,
+                                    arrowColor: EntryStatic.colorSet.arrow.default.CALC,
                                     converter:
                                         Entry.block.converters
                                             .returnStringValue,
@@ -2508,7 +2508,7 @@ module.exports = {
                                     ],
                                     value: 'toUpperCase',
                                     fontSize: 11,
-                                    arrowColor: EntryStatic.ARROW_COLOR_CALC,
+                                    arrowColor: EntryStatic.colorSet.arrow.default.CALC,
                                     converter:
                                         Entry.block.converters
                                             .returnStringValue,

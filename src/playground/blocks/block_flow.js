@@ -240,8 +240,8 @@ module.exports = {
                         ],
                         value: 'until',
                         fontSize: 10,
-                        bgColor: EntryStatic.COLOR_FLOW_2,
-                        arrowColor: EntryStatic.ARROW_COLOR_DEFAULT,
+                        bgColor: EntryStatic.colorSet.block.darken.FLOW,
+                        arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
                     },
                     {
                         type: 'Indicator',
@@ -556,8 +556,8 @@ module.exports = {
                         ],
                         value: 'all',
                         fontSize: 10,
-                        bgColor: EntryStatic.COLOR_FLOW_2,
-                        arrowColor: EntryStatic.ARROW_COLOR_DEFAULT,
+                        bgColor: EntryStatic.colorSet.block.darken.FLOW,
+                        arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
                     },
                     {
                         type: 'Indicator',
@@ -662,7 +662,7 @@ module.exports = {
                                     ],
                                     value: 'all',
                                     fontSize: 11,
-                                    arrowColor: EntryStatic.ARROW_COLOR_FLOW,
+                                    arrowColor: EntryStatic.colorSet.arrow.default.FLOW,
                                     converter:
                                         Entry.block.converters
                                             .returnStringValue,
@@ -748,8 +748,8 @@ module.exports = {
                         menuName: 'clone',
                         fontSize: 10,
                         textColor: '#fff',
-                        bgColor: EntryStatic.COLOR_FLOW_2,
-                        arrowColor: EntryStatic.ARROW_COLOR_DEFAULT,
+                        bgColor: EntryStatic.colorSet.block.darken.FLOW,
+                        arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
                     },
                     {
                         type: 'Indicator',
@@ -797,7 +797,7 @@ module.exports = {
                                     value: null,
                                     menuName: 'clone',
                                     fontSize: 11,
-                                    arrowColor: EntryStatic.ARROW_COLOR_FLOW,
+                                    arrowColor: EntryStatic.colorSet.arrow.default.FLOW,
                                     converter:
                                         Entry.block.converters.returnStringKey,
                                     codeMap:
