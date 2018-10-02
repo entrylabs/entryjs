@@ -79,6 +79,7 @@ require('./playground/skinner');
 require('./playground/thread');
 require('./playground/thread_view');
 require('./playground/trashcan');
+require('./playground/zoom_controller');
 require('./playground/vim');
 require('./playground/workspace');
 require('./textcoding/parser');

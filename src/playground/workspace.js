@@ -11,6 +11,7 @@ Entry.Workspace = function(options) {
 
     this.observe(this, '_handleChangeBoard', ['selectedBoard'], false);
     this.trashcan = new Entry.FieldTrashcan();
+    this.zoomController = new Entry.ZoomController();
 
     this.readOnly = options.readOnly === undefined ? false : options.readOnly;
 
@@ -573,7 +574,10 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
     p._handleChangeBoard = function() {
         var board = this.selectedBoard;
         if (!board) return;
-        if (board.constructor === Entry.Board) this.trashcan.setBoard(board);
+        if (board.constructor === Entry.Board) {
+            this.zoomController.setBoard(board);
+            this.trashcan.setBoard(board);
+        }
     };
 
     p._syncTextCode = function() {

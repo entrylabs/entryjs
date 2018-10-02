@@ -82,14 +82,17 @@ class GlobalSvg {
 
         this.svgGroup = Entry.SVG.createElement(blockView.svgGroup.cloneNode(true), { opacity: 1 });
         if(!(blockView instanceof Entry.Comment)) {
-            const commentSvgGroup = Entry.SVG.createElement(blockView.getComment().svgGroup.cloneNode(true), { opacity: 1 });
-            console.log(blockView.svgGroup.getCTM(), commentSvgGroup.getCTM());
-            const blockGroup = blockView.svgGroup.getCTM();
-            const commentGroup = commentSvgGroup.getCTM();
-            $(commentSvgGroup).css({
-                transform: `scale(${this.scale}) translate3d(${commentGroup.e - blockGroup.e}px,${commentGroup.f - blockGroup.f}px, 0px)`,
-            });
-            this.svgGroup.appendChild(commentSvgGroup);
+            const comment = blockView.getComment();
+            if(comment) {
+                const commentSvgGroup = Entry.SVG.createElement(comment.svgGroup.cloneNode(true), { opacity: 1 });
+                console.log(blockView.svgGroup.getCTM(), commentSvgGroup.getCTM());
+                const blockGroup = blockView.svgGroup.getCTM();
+                const commentGroup = commentSvgGroup.getCTM();
+                $(commentSvgGroup).css({
+                    transform: `scale(${this.scale}) translate3d(${commentGroup.e - blockGroup.e}px,${commentGroup.f - blockGroup.f}px, 0px)`,
+                });
+                this.svgGroup.appendChild(commentSvgGroup);
+            }
         }
         this.svg.appendChild(this.svgGroup);
         //TODO selectAll function replace

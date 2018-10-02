@@ -1686,6 +1686,33 @@ Entry.Utils.addFilters = function(boardSvgDom, suffix) {
             type: 'matrix',
             values: '.45 0 0 0 0 0 .45 0 0 0 0 0 .45 0 0 0 0 0 1 0',
         });
+
+        
+    var buttonShadow = defs.elem('filter', {
+        id: 'entryButtonShadowFilter',
+    });
+    buttonShadow.elem('feOffset', {
+        result: 'offOut',
+        in: 'SourceGraphic',
+        dx: 1,
+        dy: 1,
+    });    
+    buttonShadow.elem('feColorMatrix', {
+        result: 'matrixOut',
+        in: 'offOut',
+        type: 'matrix',
+        values: '0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0.15 0',
+    });
+    buttonShadow.elem('feGaussianBlur', {
+        result: 'blurOut',
+        in: 'matrixOut',
+        stdDeviation: '1',
+    });
+    buttonShadow.elem('feBlend', {
+        in: 'SourceGraphic',
+        in2: 'blurOut',
+        mode: 'normal',
+    });
 };
 
 Entry.Utils.addBlockPattern = function(boardSvgDom, suffix) {
