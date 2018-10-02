@@ -8152,7 +8152,7 @@ const block = {
 };
 
 setHardwareLanguage();
-Object.assign(Entry.block, block, blocks.getBlocks());
+assignBlocks();
 
 (function() {
     // console.log('hw', Entry.HW, Entry.Arduino);
@@ -8173,8 +8173,8 @@ Object.assign(Entry.block, block, blocks.getBlocks());
     }
 })();
 
-if (typeof exports == 'object') {
-    exports.block = Entry.block;
+function assignBlocks() {
+    Object.assign(Entry.block, block, blocks.getBlocks());
 }
 
 function setHardwareLanguage() {
@@ -8191,4 +8191,9 @@ function setHardwareLanguage() {
             }
         }
     }
+}
+
+if (typeof exports == 'object') {
+    exports.block = Entry.block;
+    exports.assignBlocks = assignBlocks;
 }
