@@ -27,6 +27,25 @@ export default class PIXIHelper {
         return t;
     }
 
+    static getOffScreenCanvas() {
+        if(!this._canvasFactory) {
+            this._createCanvasFactory();
+        }
+        return this._canvasFactory();
+    }
+    
+    static _createCanvasFactory() {
+        if( "OffscreenCanvas" in window ) {
+            this._canvasFactory = ()=>{
+                return new OffscreenCanvas(1,1);
+            };
+        } else {
+            this._canvasFactory = ()=>{
+                document.createElement('canvas');
+            };
+        }
+    }
+
     /**
      * createjs.Text.getMeasuredWidth() 의 pollyfill
      * @param pixiText
