@@ -168,10 +168,10 @@ Entry.EXPANSION_BLOCK.behaviorConductLifeSafety.getBlocks = function() {
                 },
             ],
             def: {
-                type: 'translate_title',
+                type: 'behaviorConductLifeSafety_title',
             },
-            class: 'behaviorConductDisaster',
-            isNotFor: ['behaviorConductDisaster'],
+            class: 'behaviorConductLifeSafety',
+            isNotFor: ['behaviorConductLifeSafety'],
             events: {},
         },
         count_lifeSafety_behavior: {

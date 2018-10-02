@@ -164,7 +164,7 @@ Entry.EXPANSION_BLOCK.behaviorConductDisaster.getBlocks = function() {
                 },
             ],
             def: {
-                type: 'translate_title',
+                type: 'behaviorConductDisaster_title',
             },
             class: 'behaviorConductDisaster',
             isNotFor: ['behaviorConductDisaster'],
