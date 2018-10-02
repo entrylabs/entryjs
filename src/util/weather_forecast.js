@@ -14,6 +14,9 @@ Entry.EXPANSION_BLOCK.weather = {
             return;
         }
         Entry.EXPANSION_BLOCK.weather.date = new Date();
+        Entry.EXPANSION_BLOCK.weather.getData("week","Seoul","today");
+        Entry.EXPANSION_BLOCK.weather.getData("hour","Seoul","00");
+        Entry.EXPANSION_BLOCK.weather.getData("now","Seoul");
         Entry.EXPANSION_BLOCK.weather.isInitialized = true;
     },
     locationMap: {
