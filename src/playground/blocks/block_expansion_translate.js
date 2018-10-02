@@ -110,7 +110,6 @@ Entry.EXPANSION_BLOCK.translate.getBlocks = function() {
             let param = {
                 type: 'Dropdown',
                 options: [
-                    [Lang.Blocks.auto, 'auto'],
                     [Lang.Blocks.korean, 'ko'],
                     [Lang.Blocks.english, 'en'],
                     [Lang.Blocks.japan, 'ja'],
@@ -126,7 +125,7 @@ Entry.EXPANSION_BLOCK.translate.getBlocks = function() {
                     [Lang.Blocks.indonesian, 'id'],
                     [Lang.Blocks.hindi, 'hi'],
                 ],
-                value: 'auto',
+                value: 'ko',
                 fontSize: 11,
                 arrowColor: EntryStatic.ARROW_COLOR_EXPANSION,
             };
