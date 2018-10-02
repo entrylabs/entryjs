@@ -168,6 +168,10 @@ Entry.EXPANSION_BLOCK.translate.getBlocks = function() {
         },
     };
     const getProjectId = function() {
+        if(Entry.projectId) {
+            Entry.EXPANSION_BLOCK.translate.delayKey = Entry.projectId;
+        }
+
         if(Entry.EXPANSION_BLOCK.translate.delayKey) {
             return Entry.EXPANSION_BLOCK.translate.delayKey;
         }
