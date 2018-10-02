@@ -188,17 +188,6 @@ Entry.ZoomController = class ZoomController {
         if (!this.svgGroup) {
             this.generateView();
         }
-
-        var svg = board.svg;
-        var firstChild = svg.firstChild;
-        if (firstChild) {
-            svg.insertBefore(this.svgGroup, firstChild);
-        } else {
-            svg.appendChild(this.svgGroup);
-        }
-        // this.svgGroup.attr({
-        //     filter: 'url(#entryDefaultShadowFilter_' + board.suffix + ')',
-        // });
         this.setPosition();
     }
 };

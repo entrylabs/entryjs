@@ -919,10 +919,12 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
     };
 
     p.addSelected = function() {
+        $(this.pathGroup).insertAfter(this._nextGroup);
         this.svgGroup.addClass('selected');
     };
 
     p.removeSelected = function() {
+        $(this.pathGroup).insertBefore(this._nextGroup);
         this.svgGroup.removeClass('selected');
     };
 
