@@ -665,9 +665,9 @@ Entry.Variable.prototype.updateView = function() {
                 );
             this.wrapper_.graphics
                 .clear()
-                .f('#E457DC')
+                .f(EntryStatic.colorSet.block.default.VARIABLE)
                 .ss(1, 2, 0)
-                .s('#E457DC')
+                .s(EntryStatic.colorSet.block.default.VARIABLE)
                 .rc(
                     this._nameWidth + 7,
                     -11,

@@ -64,7 +64,7 @@ Entry.trueRobot.getBlocks = function() {
     return {
         //region TrueTrueRobot 뚜루뚜루로봇
         truetrue_get_linesensor: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -100,7 +100,7 @@ Entry.trueRobot.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         truetrue_get_proxisensor: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -131,7 +131,7 @@ Entry.trueRobot.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         truetrue_get_accsensor: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -167,7 +167,7 @@ Entry.trueRobot.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         truetrue_get_bottomcolorsensor: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -203,7 +203,7 @@ Entry.trueRobot.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         truetrue_get_frontcolorsensor: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -237,7 +237,7 @@ Entry.trueRobot.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         truetrue_set_singlemotor: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -329,7 +329,7 @@ Entry.trueRobot.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         truetrue_set_dualmotor: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -441,7 +441,7 @@ Entry.trueRobot.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         truetrue_set_colorled: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -526,7 +526,7 @@ Entry.trueRobot.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         truetrue_set_led_proxi: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -597,7 +597,7 @@ Entry.trueRobot.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         truetrue_set_led_colorsensor: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -669,7 +669,7 @@ Entry.trueRobot.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         truetrue_set_led_linesensor: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -733,7 +733,7 @@ Entry.trueRobot.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         truetrue_set_linetracer: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -798,7 +798,7 @@ Entry.trueRobot.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
 		truetrue_set_head_colorled: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -889,7 +889,7 @@ Entry.trueRobot.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
 		truetrue_set_move: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -965,7 +965,7 @@ Entry.trueRobot.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
 		truetrue_set_sec_move: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1077,7 +1077,7 @@ Entry.trueRobot.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
 		truetrue_set_rotate: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1153,7 +1153,7 @@ Entry.trueRobot.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
 		truetrue_set_sec_rotate: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [

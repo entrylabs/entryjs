@@ -648,7 +648,7 @@ Entry.Roboid.getBlocks = function() {
     return {
         //region roboid 로보이드
         roboid_hamster_hand_found: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_boolean_field',
             statements: [],
@@ -700,7 +700,7 @@ Entry.Roboid.getBlocks = function() {
             },
         },
         roboid_hamster_value: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -1631,7 +1631,7 @@ Entry.Roboid.getBlocks = function() {
             },
         },
         roboid_hamster_move_forward_once: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1751,7 +1751,7 @@ Entry.Roboid.getBlocks = function() {
             },
         },
         roboid_hamster_turn_once: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1982,7 +1982,7 @@ Entry.Roboid.getBlocks = function() {
             },
         },
         roboid_hamster_move_forward_for_secs: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2072,7 +2072,7 @@ Entry.Roboid.getBlocks = function() {
             },
         },
         roboid_hamster_move_backward_for_secs: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2162,7 +2162,7 @@ Entry.Roboid.getBlocks = function() {
             },
         },
         roboid_hamster_turn_for_secs: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2313,7 +2313,7 @@ Entry.Roboid.getBlocks = function() {
             },
         },
         roboid_hamster_change_both_wheels_by: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2404,7 +2404,7 @@ Entry.Roboid.getBlocks = function() {
             },
         },
         roboid_hamster_set_both_wheels_to: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2487,7 +2487,7 @@ Entry.Roboid.getBlocks = function() {
             },
         },
         roboid_hamster_change_wheel_by: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2654,7 +2654,7 @@ Entry.Roboid.getBlocks = function() {
             },
         },
         roboid_hamster_set_wheel_to: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2809,7 +2809,7 @@ Entry.Roboid.getBlocks = function() {
             },
         },
         roboid_hamster_follow_line_using: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -2929,7 +2929,7 @@ Entry.Roboid.getBlocks = function() {
             },
         },
         roboid_hamster_follow_line_until: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -3068,7 +3068,7 @@ Entry.Roboid.getBlocks = function() {
             },
         },
         roboid_hamster_set_following_speed_to: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -3158,7 +3158,7 @@ Entry.Roboid.getBlocks = function() {
             },
         },
         roboid_hamster_stop: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -3215,7 +3215,7 @@ Entry.Roboid.getBlocks = function() {
             },
         },
         roboid_hamster_set_led_to: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -3416,7 +3416,7 @@ Entry.Roboid.getBlocks = function() {
             },
         },
         roboid_hamster_clear_led: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -3546,7 +3546,7 @@ Entry.Roboid.getBlocks = function() {
             },
         },
         roboid_hamster_beep: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -3618,7 +3618,7 @@ Entry.Roboid.getBlocks = function() {
             },
         },
         roboid_hamster_change_buzzer_by: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -3687,7 +3687,7 @@ Entry.Roboid.getBlocks = function() {
             },
         },
         roboid_hamster_set_buzzer_to: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -3744,7 +3744,7 @@ Entry.Roboid.getBlocks = function() {
             },
         },
         roboid_hamster_clear_buzzer: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -3792,7 +3792,7 @@ Entry.Roboid.getBlocks = function() {
             },
         },
         roboid_hamster_play_note_for: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -3966,7 +3966,7 @@ Entry.Roboid.getBlocks = function() {
             },
         },
         roboid_hamster_rest_for: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -4051,7 +4051,7 @@ Entry.Roboid.getBlocks = function() {
             },
         },
         roboid_hamster_change_tempo_by: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -4118,7 +4118,7 @@ Entry.Roboid.getBlocks = function() {
             },
         },
         roboid_hamster_set_tempo_to: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -4185,7 +4185,7 @@ Entry.Roboid.getBlocks = function() {
             },
         },
         roboid_hamster_set_port_to: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -4354,7 +4354,7 @@ Entry.Roboid.getBlocks = function() {
             },
         },
         roboid_hamster_change_output_by: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -4518,7 +4518,7 @@ Entry.Roboid.getBlocks = function() {
             },
         },
         roboid_hamster_set_output_to: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -4670,7 +4670,7 @@ Entry.Roboid.getBlocks = function() {
             },
         },
         roboid_hamster_gripper: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -4788,7 +4788,7 @@ Entry.Roboid.getBlocks = function() {
             },
         },
         roboid_hamster_release_gripper: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -4845,7 +4845,7 @@ Entry.Roboid.getBlocks = function() {
             },
         },
         roboid_turtle_touching_color: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_boolean_field',
             statements: [],
@@ -4933,7 +4933,7 @@ Entry.Roboid.getBlocks = function() {
             },
         },
         roboid_turtle_is_color_pattern: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_boolean_field',
             statements: [],
@@ -5048,7 +5048,7 @@ Entry.Roboid.getBlocks = function() {
             },
         },
         roboid_turtle_button_state: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_boolean_field',
             statements: [],
@@ -5185,7 +5185,7 @@ Entry.Roboid.getBlocks = function() {
             },
         },
         roboid_turtle_value: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -5536,7 +5536,7 @@ Entry.Roboid.getBlocks = function() {
             },
         },
         roboid_turtle_move_forward_unit: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -5655,7 +5655,7 @@ Entry.Roboid.getBlocks = function() {
             },
         },
         roboid_turtle_move_backward_unit: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -5774,7 +5774,7 @@ Entry.Roboid.getBlocks = function() {
             },
         },
         roboid_turtle_turn_unit_in_place: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -5958,7 +5958,7 @@ Entry.Roboid.getBlocks = function() {
             },
         },
         roboid_turtle_turn_unit_with_radius_in_direction: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -6204,7 +6204,7 @@ Entry.Roboid.getBlocks = function() {
             },
         },
         roboid_turtle_pivot_around_wheel_unit_in_direction: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -6432,7 +6432,7 @@ Entry.Roboid.getBlocks = function() {
             },
         },
         roboid_turtle_change_wheels_by_left_right: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -6523,7 +6523,7 @@ Entry.Roboid.getBlocks = function() {
             },
         },
         roboid_turtle_set_wheels_to_left_right: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -6606,7 +6606,7 @@ Entry.Roboid.getBlocks = function() {
             },
         },
         roboid_turtle_change_wheel_by: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -6773,7 +6773,7 @@ Entry.Roboid.getBlocks = function() {
             },
         },
         roboid_turtle_set_wheel_to: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -6928,7 +6928,7 @@ Entry.Roboid.getBlocks = function() {
             },
         },
         roboid_turtle_follow_line: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -7016,7 +7016,7 @@ Entry.Roboid.getBlocks = function() {
             },
         },
         roboid_turtle_follow_line_until: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -7127,7 +7127,7 @@ Entry.Roboid.getBlocks = function() {
             },
         },
         roboid_turtle_follow_line_until_black: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -7232,7 +7232,7 @@ Entry.Roboid.getBlocks = function() {
             },
         },
         roboid_turtle_cross_intersection: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -7308,7 +7308,7 @@ Entry.Roboid.getBlocks = function() {
             },
         },
         roboid_turtle_turn_at_intersection: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -7454,7 +7454,7 @@ Entry.Roboid.getBlocks = function() {
             },
         },
         roboid_turtle_set_following_speed_to: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -7544,7 +7544,7 @@ Entry.Roboid.getBlocks = function() {
             },
         },
         roboid_turtle_stop: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -7601,7 +7601,7 @@ Entry.Roboid.getBlocks = function() {
             },
         },
         roboid_turtle_set_head_led_to: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -7696,7 +7696,7 @@ Entry.Roboid.getBlocks = function() {
             },
         },
         roboid_turtle_change_head_led_by_rgb: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -7798,7 +7798,7 @@ Entry.Roboid.getBlocks = function() {
             },
         },
         roboid_turtle_set_head_led_to_rgb: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -7892,7 +7892,7 @@ Entry.Roboid.getBlocks = function() {
             },
         },
         roboid_turtle_clear_head_led: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -7947,7 +7947,7 @@ Entry.Roboid.getBlocks = function() {
             },
         },
         roboid_turtle_play_sound_times: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -8055,7 +8055,7 @@ Entry.Roboid.getBlocks = function() {
             },
         },
         roboid_turtle_play_sound_times_until_done: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -8187,7 +8187,7 @@ Entry.Roboid.getBlocks = function() {
             },
         },
         roboid_turtle_change_buzzer_by: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -8257,7 +8257,7 @@ Entry.Roboid.getBlocks = function() {
             },
         },
         roboid_turtle_set_buzzer_to: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -8325,7 +8325,7 @@ Entry.Roboid.getBlocks = function() {
             },
         },
         roboid_turtle_clear_sound: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -8381,7 +8381,7 @@ Entry.Roboid.getBlocks = function() {
             },
         },
         roboid_turtle_play_note: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -8516,7 +8516,7 @@ Entry.Roboid.getBlocks = function() {
             },
         },
         roboid_turtle_play_note_for_beats: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -8690,7 +8690,7 @@ Entry.Roboid.getBlocks = function() {
             },
         },
         roboid_turtle_rest_for_beats: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -8776,7 +8776,7 @@ Entry.Roboid.getBlocks = function() {
             },
         },
         roboid_turtle_change_tempo_by: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -8842,7 +8842,7 @@ Entry.Roboid.getBlocks = function() {
             },
         },
         roboid_turtle_set_tempo_to: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [

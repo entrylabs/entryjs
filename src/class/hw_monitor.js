@@ -212,7 +212,7 @@ Entry.HWMonitor = function(hwModule) {
         path = this.pathGroup.elem('path').attr({
             d: 'm0,0',
             fill: 'none',
-            stroke: port.type === 'input' ? '#00979d' : '#A751E3',
+            stroke: port.type === 'input' ? EntryStatic.colorSet.block.default.HARDWARE : EntryStatic.colorSet.block.default.MOVING,
             'stroke-width': 3,
         });
 
@@ -244,7 +244,7 @@ Entry.HWMonitor = function(hwModule) {
             height: 18,
             rx: 9,
             ry: 9,
-            fill: port.type === 'input' ? '#00979d' : '#A751E3',
+            fill: port.type === 'input' ? EntryStatic.colorSet.block.default.HARDWARE : EntryStatic.colorSet.block.default.MOVING,
         });
 
         var valueView = svgGroup.elem('text').attr({
@@ -325,12 +325,12 @@ Entry.HWMonitor = function(hwModule) {
                     port.value.textContent = value ? value : 0;
                     port.group
                         .getElementsByTagName('rect')[1]
-                        .attr({ fill: '#00979D' });
+                        .attr({ fill: EntryStatic.colorSet.block.default.HARDWARE });
                 } else {
                     port.value.textContent = value ? value : 0;
                     port.group
                         .getElementsByTagName('rect')[1]
-                        .attr({ fill: '#00979D' });
+                        .attr({ fill: EntryStatic.colorSet.block.default.HARDWARE });
                 }
             } else {
                 var value = sendQueue[key];
@@ -345,12 +345,12 @@ Entry.HWMonitor = function(hwModule) {
                     port.value.textContent = value ? value : 0;
                     port.group
                         .getElementsByTagName('rect')[1]
-                        .attr({ fill: '#A751E3' });
+                        .attr({ fill: EntryStatic.colorSet.block.default.MOVING });
                 } else {
                     port.value.textContent = value ? value : 0;
                     port.group
                         .getElementsByTagName('rect')[1]
-                        .attr({ fill: '#A751E3' });
+                        .attr({ fill: EntryStatic.colorSet.block.default.MOVING });
                 }
             }
         }

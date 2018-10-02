@@ -28,7 +28,7 @@ Entry.Expansion_Weather.getBlocks = function () {
                 ],
                 value: 'today',
                 fontSize: 11,
-                arrowColor: EntryStatic.ARROW_COLOR_EXPANSION
+                arrowColor: EntryStatic.colorSet.arrow.default.EXTENSION
             };
             if(isPython) {
                 param.converter = Entry.block.converters.returnStringValue;
@@ -59,7 +59,7 @@ Entry.Expansion_Weather.getBlocks = function () {
                 ],
                 value: 'Seoul',
                 fontSize: 11,
-                arrowColor: EntryStatic.ARROW_COLOR_EXPANSION
+                arrowColor: EntryStatic.colorSet.arrow.default.EXTENSION
             };
             if(isPython) {
                 param.converter = Entry.block.converters.returnStringValue;
@@ -80,7 +80,7 @@ Entry.Expansion_Weather.getBlocks = function () {
                 ],
                 value: 'sunny',
                 fontSize: 11,
-                arrowColor: EntryStatic.ARROW_COLOR_EXPANSION
+                arrowColor: EntryStatic.colorSet.arrow.default.EXTENSION
             };
             if(isPython) {
                 param.converter = Entry.block.converters.returnStringValue;
@@ -98,7 +98,7 @@ Entry.Expansion_Weather.getBlocks = function () {
                 ],
                 value: 'good',
                 fontSize: 11,
-                arrowColor: EntryStatic.ARROW_COLOR_EXPANSION
+                arrowColor: EntryStatic.colorSet.arrow.default.EXTENSION
             };
             if(isPython) {
                 param.converter = Entry.block.converters.returnStringValue;
@@ -118,7 +118,7 @@ Entry.Expansion_Weather.getBlocks = function () {
                 ],
                 value: 'the_lowest_temperature',
                 fontSize: 11,
-                arrowColor: EntryStatic.ARROW_COLOR_EXPANSION
+                arrowColor: EntryStatic.colorSet.arrow.default.EXTENSION
             };
             if(isPython) {
                 param.converter = Entry.block.converters.returnStringValue;
@@ -134,7 +134,7 @@ Entry.Expansion_Weather.getBlocks = function () {
                 ],
                 value: 'temperature',
                 fontSize: 11,
-                arrowColor: EntryStatic.ARROW_COLOR_EXPANSION
+                arrowColor: EntryStatic.colorSet.arrow.default.EXTENSION
             };
             if(isPython) {
                 param.converter = Entry.block.converters.returnStringValue;
@@ -156,7 +156,7 @@ Entry.Expansion_Weather.getBlocks = function () {
                     ],
                         value: "00",
                         fontSize: 11,
-                        arrowColor: EntryStatic.ARROW_COLOR_EXPANSION
+                        arrowColor: EntryStatic.colorSet.arrow.default.EXTENSION
                     }
             if(isPython) {
                 param.converter = Entry.block.converters.returnStringOrNumberByValue;
@@ -189,7 +189,7 @@ Entry.Expansion_Weather.getBlocks = function () {
             events: {},
         },
         check_weather: {
-            color: '#ff8888',
+            color: EntryStatic.colorSet.block.default.EXTENSION,
             skeleton: 'basic_boolean_field',
             statements: [],
             params: [params.getDate(), params.getLocation(), params.getSky()],
@@ -271,7 +271,7 @@ Entry.Expansion_Weather.getBlocks = function () {
             },
         },
         check_finedust: {
-            color: '#ff8888',
+            color: EntryStatic.colorSet.block.default.EXTENSION,
             skeleton: 'basic_boolean_field',
             statements: [],
             params: [params.getLocation(), params.getFineDust()],
@@ -338,7 +338,7 @@ Entry.Expansion_Weather.getBlocks = function () {
             },
         },
         get_weather_data: {
-            color: '#ff8888',
+            color: EntryStatic.colorSet.block.default.EXTENSION,
             skeleton: 'basic_string_field',
             statements: [],
             params: [params.getDate(), params.getLocation(), params.getWeatherElements()],
@@ -416,7 +416,7 @@ Entry.Expansion_Weather.getBlocks = function () {
             },
         },
         get_current_weather_data: {
-            color: '#ff8888',
+            color: EntryStatic.colorSet.block.default.EXTENSION,
             skeleton: 'basic_string_field',
             statements: [],
             params: [params.getLocation(), params.getNowWeatherElement()],
@@ -472,7 +472,7 @@ Entry.Expansion_Weather.getBlocks = function () {
             },
         },
         get_today_temperature: {
-            color: '#ff8888',
+            color: EntryStatic.colorSet.block.default.EXTENSION,
             skeleton: 'basic_string_field',
             statements: [],
             params: [params.getLocation(), params.getTime()],

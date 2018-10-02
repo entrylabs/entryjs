@@ -2,7 +2,7 @@ module.exports = {
     getBlocks() {
         return {
             text_read: {
-                color: '#FFCA36',
+                color: EntryStatic.colorSet.block.default.TEXT,
                 fontColor: '#FFFFFF',
                 skeleton: 'basic_string_field',
                 statements: [],
@@ -12,7 +12,7 @@ module.exports = {
                         value: null,
                         menuName: 'textBoxWithSelf',
                         fontSize: 11,
-                        arrowColor: EntryStatic.ARROW_COLOR_TEXT,
+                        arrowColor: EntryStatic.colorSet.arrow.default.TEXT,
                     },
                     {
                         type: 'Indicator',
@@ -61,7 +61,7 @@ module.exports = {
                                     value: null,
                                     menuName: 'textBoxWithSelf',
                                     fontSize: 11,
-                                    arrowColor: EntryStatic.ARROW_COLOR_TEXT,
+                                    arrowColor: EntryStatic.colorSet.arrow.default.TEXT,
                                     converter:
                                         Entry.block.converters.returnStringKey,
                                     codeMap: 'Entry.CodeMap.Entry.text_read[0]',
@@ -72,7 +72,7 @@ module.exports = {
                 },
             },
             text_write: {
-                color: '#FFCA36',
+                color: EntryStatic.colorSet.block.default.TEXT,
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -120,7 +120,7 @@ module.exports = {
                 syntax: { js: [], py: ['Entry.write_text(%1)'] },
             },
             text_append: {
-                color: '#FFCA36',
+                color: EntryStatic.colorSet.block.default.TEXT,
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -168,7 +168,7 @@ module.exports = {
                 syntax: { js: [], py: ['Entry.append_text(%1)'] },
             },
             text_prepend: {
-                color: '#FFCA36',
+                color: EntryStatic.colorSet.block.default.TEXT,
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -216,7 +216,7 @@ module.exports = {
                 syntax: { js: [], py: ['Entry.prepend_text(%1)'] },
             },
             text_flush: {
-                color: '#FFCA36',
+                color: EntryStatic.colorSet.block.default.TEXT,
                 skeleton: 'basic',
                 statements: [],
                 params: [

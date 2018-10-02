@@ -115,7 +115,7 @@ Entry.SmartBoard.getBlocks = function() {
     return {
         //region smartBoard 스마트보드
         smartBoard_get_named_sensor_value: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -149,7 +149,7 @@ Entry.SmartBoard.getBlocks = function() {
             },
         },
         smartBoard_convert_scale: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -239,7 +239,7 @@ Entry.SmartBoard.getBlocks = function() {
             },
         },
         smartBoard_is_button_pressed: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_boolean_field',
             statements: [],
@@ -273,7 +273,7 @@ Entry.SmartBoard.getBlocks = function() {
             },
         },
         smartBoard_set_dc_motor_direction: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -315,7 +315,7 @@ Entry.SmartBoard.getBlocks = function() {
             },
         },
         smartBoard_set_dc_motor_speed: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -364,7 +364,7 @@ Entry.SmartBoard.getBlocks = function() {
             },
         },
         smartBoard_set_dc_motor_pwm: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -413,7 +413,7 @@ Entry.SmartBoard.getBlocks = function() {
             },
         },
         smartBoard_set_servo_speed: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -472,7 +472,7 @@ Entry.SmartBoard.getBlocks = function() {
             },
         },
         smartBoard_set_servo_angle: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -521,7 +521,7 @@ Entry.SmartBoard.getBlocks = function() {
             },
         },
         smartBoard_set_number_eight_pin: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -563,7 +563,7 @@ Entry.SmartBoard.getBlocks = function() {
             },
         },
         smartBoard_set_gs1_pwm: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [

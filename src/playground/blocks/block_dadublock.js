@@ -106,7 +106,7 @@ Entry.DaduBlock.getBlocks = function() {
     return {
         //region dadublock 다두블록
         dadublock_get_analog_value: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -140,7 +140,7 @@ Entry.DaduBlock.getBlocks = function() {
             },
         },
         dadublock_get_analog_value_map: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -234,7 +234,7 @@ Entry.DaduBlock.getBlocks = function() {
             },
         },
         dadublock_get_ultrasonic_value: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -311,7 +311,7 @@ Entry.DaduBlock.getBlocks = function() {
             },
         },
         dadublock_get_digital: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_boolean_field',
             params: [
@@ -362,7 +362,7 @@ Entry.DaduBlock.getBlocks = function() {
             },
         },
         dadublock_toggle_led: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -429,7 +429,7 @@ Entry.DaduBlock.getBlocks = function() {
             },
         },
         dadublock_digital_pwm: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -492,7 +492,7 @@ Entry.DaduBlock.getBlocks = function() {
             syntax: { js: [], py: ['Arduino.analogWrite(%1, %2)'] },
         },
         dadublock_set_servo: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -558,7 +558,7 @@ Entry.DaduBlock.getBlocks = function() {
             syntax: { js: [], py: ['Arduino.servomotorWrite(%1, %2)'] },
         },
         dadublock_set_tone: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -708,7 +708,7 @@ Entry.DaduBlock.getBlocks = function() {
             },
         },
         dadublock_car_get_analog_value: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -742,7 +742,7 @@ Entry.DaduBlock.getBlocks = function() {
             },
         },
         dadublock_car_get_analog_value_map: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -836,7 +836,7 @@ Entry.DaduBlock.getBlocks = function() {
             },
         },
         dadublock_car_get_ultrasonic_value: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
@@ -913,7 +913,7 @@ Entry.DaduBlock.getBlocks = function() {
             },
         },
         dadublock_car_get_digital: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_boolean_field',
             params: [
@@ -964,7 +964,7 @@ Entry.DaduBlock.getBlocks = function() {
             },
         },
         dadublock_car_toggle_led: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1031,7 +1031,7 @@ Entry.DaduBlock.getBlocks = function() {
             },
         },
         dadublock_car_digital_pwm: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1094,7 +1094,7 @@ Entry.DaduBlock.getBlocks = function() {
             syntax: { js: [], py: ['Arduino.analogWrite(%1, %2)'] },
         },
         dadublock_car_set_servo: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1160,7 +1160,7 @@ Entry.DaduBlock.getBlocks = function() {
             syntax: { js: [], py: ['Arduino.servomotorWrite(%1, %2)'] },
         },
         dadublock_car_set_tone: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1310,7 +1310,7 @@ Entry.DaduBlock.getBlocks = function() {
             },
         },
         dadublock_car_motor_stop: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1382,7 +1382,7 @@ Entry.DaduBlock.getBlocks = function() {
             },
         },
         dadublock_car_motor: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             skeleton: 'basic',
             statements: [],
             params: [
@@ -1522,7 +1522,7 @@ Entry.DaduBlock.getBlocks = function() {
             },
         },
         dadublock_car_get_irsensor: {
-            color: '#00979D',
+            color: EntryStatic.colorSet.block.default.HARDWARE,
             fontColor: '#fff',
             skeleton: 'basic_boolean_field',
             params: [

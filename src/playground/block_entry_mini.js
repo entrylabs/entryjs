@@ -581,7 +581,7 @@
             }
         },
         practical_course_light_value: {
-            color: '#498DEB',
+            color: EntryStatic.colorSet.block.default.FLOW,
             skeleton: 'basic_string_field',
             fontColor: '#fff',
             statements: [],
@@ -612,7 +612,7 @@
             }
         },
         practical_course_light_value_boolean: {
-            color: '#498DEB',
+            color: EntryStatic.colorSet.block.default.FLOW,
             skeleton: 'basic_boolean_field',
             fontColor: '#fff',
             isNotFor: ['neobot'],
@@ -1770,7 +1770,7 @@
             }
         },
         roborobo_light_value: {
-            color: '#498DEB',
+            color: EntryStatic.colorSet.block.default.FLOW,
             skeleton: 'basic_string_field',
             fontColor: '#fff',
             statements: [],
@@ -1794,7 +1794,7 @@
             }
         },
         roborobo_light_value_boolean: {
-            color: '#498DEB',
+            color: EntryStatic.colorSet.block.default.FLOW,
             skeleton: 'basic_boolean_field',
             fontColor: '#fff',
             isNotFor: ['roborobo_schoolkit'],
@@ -2684,7 +2684,7 @@
             }
         },
         robotis_light_value: {
-            color: '#498DEB',
+            color: EntryStatic.colorSet.block.default.FLOW,
             skeleton: 'basic_string_field',
             fontColor: '#fff',
             statements: [],
@@ -2716,7 +2716,7 @@
             }
         },
         robotis_light_value_boolean: {
-            color: '#498DEB',
+            color: EntryStatic.colorSet.block.default.FLOW,
             skeleton: 'basic_boolean_field',
             fontColor: '#fff',
             isNotFor: ['robotis_openCM70'],

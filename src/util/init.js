@@ -3,7 +3,7 @@
  */
 'use strict';
 
-require("./utils")
+require("./utils");
 
 /**
  * Initialize method with options.
@@ -42,6 +42,16 @@ Entry.init = function(container, options) {
         $(this.view_).addClass("tablet");
 
     Entry.initFonts(options.fonts);
+    const { theme = 'default' } = options;
+    if(theme !== 'default') {
+        try{
+            EntryStatic.colorSet = require(`../theme/${theme}`);
+            require('../playground/block_entry').assignBlocks();
+        } catch (e) {
+            console.log('not exist theme!', e);
+        }
+    }
+
     this.createDom(container, this.type);
     this.loadInterfaceState();
     this.overridePrototype();
@@ -444,7 +454,6 @@ Entry.parseOptions = function(options) {
     if (options.textCodingEnable)
         this.textCodingEnable = options.textCodingEnable;
 };
-
 
 Entry.initFonts = function(fonts) {
     this.fonts = fonts;
