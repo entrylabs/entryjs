@@ -2,6 +2,7 @@
 
 const PromiseManager = require('../../core/promiseManager');
 const { callApi } = require('../../util/common');
+const _uniqueId = require('lodash/uniqueId');
 
 Entry.EXPANSION_BLOCK.translate = {
     name: 'translate',
@@ -16,6 +17,7 @@ Entry.EXPANSION_BLOCK.translate = {
         if (this.isInitialized) {
             return;
         }
+        Entry.EXPANSION_BLOCK.translate.delayKey = Entry.projectId;
         Entry.EXPANSION_BLOCK.translate.isInitialized = true;
     },
     api: '/api/expansionBlock/papago/',
@@ -166,10 +168,12 @@ Entry.EXPANSION_BLOCK.translate.getBlocks = function() {
         },
     };
     const getProjectId = function() {
-        if(Entry.projectId) {
-            return Entry.projectId;
+        if(Entry.EXPANSION_BLOCK.translate.delayKey) {
+            return Entry.EXPANSION_BLOCK.translate.delayKey;
         }
-        return "";
+
+        Entry.EXPANSION_BLOCK.translate.delayKey = _.uniqueId(Entry.generateHash());
+        return Entry.EXPANSION_BLOCK.translate.delayKey;
     }
 
     const translate = (params, type, defaultValue) => {
