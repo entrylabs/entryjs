@@ -247,4 +247,5 @@ export class PIXIText extends PIXI.Text {
 
 PIXIText.cancelLineOffset = -0.23;
 PIXIText.underLineOffset = 0.12;
-PIXIText.STAGE_SCALE = 1.4;
+PIXIText.STAGE_SCALE = 1.51;//2/1.5;
+console.log(`PIXIText.STAGE_SCALE1(${PIXIText.STAGE_SCALE})`);
