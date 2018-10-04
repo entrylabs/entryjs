@@ -51,13 +51,13 @@ export default class PIXIHelper {
      * @param pixiText
      */
     static textWidth(pixiText) {
-        return pixiText.width;
+        return pixiText.measuredWidth;
     }
     static textHeight(pixiText) {
-        return pixiText.height;
+        return pixiText.measuredHeight;
     }
     static getMeasuredLineHeight(pixiText) {
-        return pixiText.height;
+        return pixiText.measuredLineHeight;
     }
 
 
