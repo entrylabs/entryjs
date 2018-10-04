@@ -57,7 +57,7 @@ export class PIXIBrushAdaptor {
 
     _setStyle() {
         if(!this._shape) return;
-        console.log("setStyle", this._thickness, this._color, this._alpha);
+        //console.log("setStyle", this._thickness, this._color, this._alpha);
         this._shape.lineStyle(this._thickness, this._color, this._alpha);
     }
 

@@ -5,7 +5,7 @@
  */
 
 'use strict';
-
+require("./pixi/__testfiles/articleloader");
 require("./pixi/etc/PIXI-ndgmr.Collision");
 require("./pixi/etc/PIXICanvasInput");
 import { PIXIHandle } from './pixi/handle/PIXIHandle';
