@@ -172,7 +172,7 @@ Entry.Bitbrick.getBlocks = function () {
                     type: 'DropdownDynamic',
                     value: null,
                     fontSize: 11,
-                    arrowColor: EntryStatic.ARROW_COLOR_HW,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                     menuName: Entry.Bitbrick.sensorList,
                 },
             ],

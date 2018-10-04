@@ -460,7 +460,7 @@ Entry.MRT.getBlocks = function() {
                     ],
                     value: 'RIGHT_WHEEL1',
                     fontSize: 11,
-                    arrowColor: EntryStatic.ARROW_COLOR_HW,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -518,7 +518,7 @@ Entry.MRT.getBlocks = function() {
                     options: [['0', '0'], ['1', '1']],
                     value: '0',
                     fontSize: 11,
-                    arrowColor: EntryStatic.ARROW_COLOR_HW,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',

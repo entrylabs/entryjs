@@ -42,6 +42,15 @@ Entry.init = function(container, options) {
     if (this.device === 'tablet') $(this.view_).addClass('tablet');
 
     Entry.initFonts(options.fonts);
+    const { theme = 'default' } = options;
+    if(theme !== 'default') {
+        try{
+            EntryStatic.colorSet = require(`../theme/${theme}`);
+            require('../playground/block_entry').assignBlocks();
+        } catch (e) {
+            console.log('not exist theme!', e);
+        }
+    }
     this.createDom(container, this.type);
     this.loadInterfaceState();
     this.overridePrototype();

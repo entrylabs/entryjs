@@ -441,7 +441,7 @@ Entry.Neobot.getBlocks = function() {
                     ],
                     value: '15',
                     fontSize: 11,
-                    arrowColor: EntryStatic.ARROW_COLOR_HW,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -467,7 +467,7 @@ Entry.Neobot.getBlocks = function() {
                     options: [[Lang.Blocks.neobot_direction_forward, '16'], [Lang.Blocks.neobot_direction_backward, '32']],
                     value: '16',
                     fontSize: 11,
-                    arrowColor: EntryStatic.ARROW_COLOR_HW,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -541,7 +541,7 @@ Entry.Neobot.getBlocks = function() {
                     options: [[Lang.Blocks.neobot_direction_forward, '16'], [Lang.Blocks.neobot_direction_backward, '32']],
                     value: '16',
                     fontSize: 11,
-                    arrowColor: EntryStatic.ARROW_COLOR_HW,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -622,7 +622,7 @@ Entry.Neobot.getBlocks = function() {
                     ],
                     value: '1',
                     fontSize: 11,
-                    arrowColor: EntryStatic.ARROW_COLOR_HW,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -764,7 +764,7 @@ Entry.Neobot.getBlocks = function() {
                     ],
                     value: 'OUT1',
                     fontSize: 11,
-                    arrowColor: EntryStatic.ARROW_COLOR_HW,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -821,7 +821,7 @@ Entry.Neobot.getBlocks = function() {
                     ],
                     value: 'OUT1',
                     fontSize: 11,
-                    arrowColor: EntryStatic.ARROW_COLOR_HW,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Block',
@@ -1169,7 +1169,7 @@ Entry.Neobot.getBlocks = function() {
                     ],
                     value: 'OUT1',
                     fontSize: 11,
-                    arrowColor: EntryStatic.ARROW_COLOR_HW,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Color',
@@ -1216,7 +1216,7 @@ Entry.Neobot.getBlocks = function() {
                     ],
                     value: 'OUT1',
                     fontSize: 11,
-                    arrowColor: EntryStatic.ARROW_COLOR_HW,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Dropdown',
