@@ -173,11 +173,11 @@ Entry.Codingmachine.setLanguage = function () {
                 codingmachine_tune: '%1 음을  %2 초동안 소리내기 %3',
                 codingmachine_ultrasonic: '거리(초음파)값 읽어오기',
                 codingmachine_yaw: '드론을 %1 만큼 회전하기 %2',
-                codingmachine_digital_out: '디지털 %1번 핀 %2',
+                codingmachine_digital_out: '디지털 %1번 핀 %2 %3',
                 codingmachine_digital_in: '디지털 %1 번값 읽어오기',
                 codingmachine_analog_in: '아날로그 %1 번 센서값',
-                codingmachine_digital_pwm: '디지털 출력 %1 번 세기로 출력하기 %2',
-                codingmachine_servo: '디지털  %1 핀의 서보모터를 %2 각도로 정하기',
+                codingmachine_digital_pwm: '디지털 출력 %1 번 세기로 출력하기 %2 %3',
+                codingmachine_servo: '디지털  %1 핀의 서보모터를 %2 각도로 정하기 %3',
             }
         },
         en: {
@@ -196,11 +196,11 @@ Entry.Codingmachine.setLanguage = function () {
                 codingmachine_tune: '%1 음을  %2 초동안 소리내기 %3',
                 codingmachine_ultrasonic: '거리(초음파)값 읽어오기',
                 codingmachine_yaw: '드론을 %1 만큼 회전하기 %2',
-                codingmachine_digital_out: '디지털 %1번 핀 %2',
+                codingmachine_digital_out: '디지털 %1번 핀 %2 %3',
                 codingmachine_digital_in: '디지털 %1 번값 읽어오기',
                 codingmachine_analog_in: 'analog %1 sensor',
-                codingmachine_digital_pwm: '디지털 출력 %1 번 세기로 출력하기 %2',
-                codingmachine_servo: '디지털  %1 핀의 서보모터를 %2 각도로 정하기',
+                codingmachine_digital_pwm: '디지털 출력 %1 번 세기로 출력하기 %2 %3',
+                codingmachine_servo: '디지털  %1 핀의 서보모터를 %2 각도로 정하기 %3',
             }
         }
     }
