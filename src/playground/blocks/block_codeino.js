@@ -833,7 +833,7 @@ Entry.CODEino.getBlocks = function() {
                         [Lang.Blocks.ARDUINO_off, '0'],
                     ],
                     fontSize: 11,
-                    arrowColor: EntryStatic.ARROW_COLOR_HW,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
                 {
                     type: 'Indicator',

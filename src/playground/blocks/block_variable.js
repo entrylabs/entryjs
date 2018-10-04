@@ -223,8 +223,8 @@ module.exports = {
                         ],
                         value: 'SHOW',
                         fontSize: 10,
-                        bgColor: EntryStatic.COLOR_VARIABLE_2,
-                        arrowColor: EntryStatic.ARROW_COLOR_DEFAULT,
+                        bgColor: EntryStatic.colorSet.block.darken.VARIABLE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
                     },
                     {
                         type: 'Indicator',
@@ -290,7 +290,7 @@ module.exports = {
                                     value: 'SHOW',
                                     fontSize: 11,
                                     arrowColor:
-                                        EntryStatic.ARROW_COLOR_VARIABLE,
+                                        EntryStatic.colorSet.arrow.default.VARIABLE,
                                     converter:
                                         Entry.block.converters
                                             .returnStringValueLowerCase,
@@ -313,8 +313,8 @@ module.exports = {
                         value: null,
                         menuName: 'variables',
                         fontSize: 10,
-                        bgColor: EntryStatic.COLOR_VARIABLE_2,
-                        arrowColor: EntryStatic.ARROW_COLOR_DEFAULT,
+                        bgColor: EntryStatic.colorSet.block.darken.VARIABLE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
                     },
                     {
                         type: 'Text',
@@ -372,7 +372,7 @@ module.exports = {
                                     menuName: 'variables',
                                     fontSize: 11,
                                     arrowColor:
-                                        EntryStatic.ARROW_COLOR_VARIABLE,
+                                        EntryStatic.colorSet.arrow.default.VARIABLE,
                                     converter:
                                         Entry.block.converters
                                             .returnRawStringKey,
@@ -393,8 +393,8 @@ module.exports = {
                         value: null,
                         menuName: 'variables',
                         fontSize: 10,
-                        bgColor: EntryStatic.COLOR_VARIABLE_2,
-                        arrowColor: EntryStatic.ARROW_COLOR_DEFAULT,
+                        bgColor: EntryStatic.colorSet.block.darken.VARIABLE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
                     },
                     {
                         type: 'Block',
@@ -493,7 +493,7 @@ module.exports = {
                                     menuName: 'variables',
                                     fontSize: 11,
                                     arrowColor:
-                                        EntryStatic.ARROW_COLOR_VARIABLE,
+                                        EntryStatic.colorSet.arrow.default.VARIABLE,
                                     converter:
                                         Entry.block.converters
                                             .returnRawStringKey,
@@ -513,7 +513,7 @@ module.exports = {
                                     menuName: 'variables',
                                     fontSize: 11,
                                     arrowColor:
-                                        EntryStatic.ARROW_COLOR_VARIABLE,
+                                        EntryStatic.colorSet.arrow.default.VARIABLE,
                                     converter:
                                         Entry.block.converters
                                             .returnRawStringKey,
@@ -538,8 +538,8 @@ module.exports = {
                         value: null,
                         menuName: 'variables',
                         fontSize: 10,
-                        bgColor: EntryStatic.COLOR_VARIABLE_2,
-                        arrowColor: EntryStatic.ARROW_COLOR_DEFAULT,
+                        bgColor: EntryStatic.colorSet.block.darken.VARIABLE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
                     },
                     {
                         type: 'Block',
@@ -617,7 +617,7 @@ module.exports = {
                                     menuName: 'variables',
                                     fontSize: 11,
                                     arrowColor:
-                                        EntryStatic.ARROW_COLOR_VARIABLE,
+                                        EntryStatic.colorSet.arrow.default.VARIABLE,
                                     converter:
                                         Entry.block.converters
                                             .returnRawStringKey,
@@ -642,8 +642,8 @@ module.exports = {
                         value: null,
                         menuName: 'variables',
                         fontSize: 10,
-                        bgColor: EntryStatic.COLOR_VARIABLE_2,
-                        arrowColor: EntryStatic.ARROW_COLOR_DEFAULT,
+                        bgColor: EntryStatic.colorSet.block.darken.VARIABLE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
                     },
                     {
                         type: 'Indicator',
@@ -700,7 +700,7 @@ module.exports = {
                                     menuName: 'variables',
                                     fontSize: 11,
                                     arrowColor:
-                                        EntryStatic.ARROW_COLOR_VARIABLE,
+                                        EntryStatic.colorSet.arrow.default.VARIABLE,
                                     converter:
                                         Entry.block.converters.returnStringKey,
                                 },
@@ -720,8 +720,8 @@ module.exports = {
                         value: null,
                         menuName: 'variables',
                         fontSize: 10,
-                        bgColor: EntryStatic.COLOR_VARIABLE_2,
-                        arrowColor: EntryStatic.ARROW_COLOR_DEFAULT,
+                        bgColor: EntryStatic.colorSet.block.darken.VARIABLE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
                     },
                     {
                         type: 'Indicator',
@@ -777,7 +777,7 @@ module.exports = {
                                     menuName: 'variables',
                                     fontSize: 11,
                                     arrowColor:
-                                        EntryStatic.ARROW_COLOR_VARIABLE,
+                                        EntryStatic.colorSet.arrow.default.VARIABLE,
                                     converter:
                                         Entry.block.converters.returnStringKey,
                                 },
@@ -803,8 +803,8 @@ module.exports = {
                         value: null,
                         menuName: 'lists',
                         fontSize: 10,
-                        bgColor: EntryStatic.COLOR_VARIABLE_2,
-                        arrowColor: EntryStatic.ARROW_COLOR_DEFAULT,
+                        bgColor: EntryStatic.colorSet.block.darken.VARIABLE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
                     },
                     {
                         type: 'Text',
@@ -896,7 +896,7 @@ module.exports = {
                                     menuName: 'lists',
                                     fontSize: 11,
                                     arrowColor:
-                                        EntryStatic.ARROW_COLOR_VARIABLE,
+                                        EntryStatic.colorSet.arrow.default.VARIABLE,
                                     converter:
                                         Entry.block.converters
                                             .returnRawStringKey,
@@ -927,8 +927,8 @@ module.exports = {
                         value: null,
                         menuName: 'lists',
                         fontSize: 10,
-                        bgColor: EntryStatic.COLOR_VARIABLE_2,
-                        arrowColor: EntryStatic.ARROW_COLOR_DEFAULT,
+                        bgColor: EntryStatic.colorSet.block.darken.VARIABLE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
                     },
                     {
                         type: 'Indicator',
@@ -1005,7 +1005,7 @@ module.exports = {
                                     menuName: 'lists',
                                     fontSize: 11,
                                     arrowColor:
-                                        EntryStatic.ARROW_COLOR_VARIABLE,
+                                        EntryStatic.colorSet.arrow.default.VARIABLE,
                                     converter:
                                         Entry.block.converters
                                             .returnRawStringKey,
@@ -1031,8 +1031,8 @@ module.exports = {
                         value: null,
                         menuName: 'lists',
                         fontSize: 10,
-                        bgColor: EntryStatic.COLOR_VARIABLE_2,
-                        arrowColor: EntryStatic.ARROW_COLOR_DEFAULT,
+                        bgColor: EntryStatic.colorSet.block.darken.VARIABLE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
                     },
                     {
                         type: 'Indicator',
@@ -1117,7 +1117,7 @@ module.exports = {
                                     menuName: 'lists',
                                     fontSize: 11,
                                     arrowColor:
-                                        EntryStatic.ARROW_COLOR_VARIABLE,
+                                        EntryStatic.colorSet.arrow.default.VARIABLE,
                                     converter:
                                         Entry.block.converters
                                             .returnRawStringKey,
@@ -1142,8 +1142,8 @@ module.exports = {
                         value: null,
                         menuName: 'lists',
                         fontSize: 10,
-                        bgColor: EntryStatic.COLOR_VARIABLE_2,
-                        arrowColor: EntryStatic.ARROW_COLOR_DEFAULT,
+                        bgColor: EntryStatic.colorSet.block.darken.VARIABLE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
                     },
                     {
                         type: 'Block',
@@ -1242,7 +1242,7 @@ module.exports = {
                                     menuName: 'lists',
                                     fontSize: 11,
                                     arrowColor:
-                                        EntryStatic.ARROW_COLOR_VARIABLE,
+                                        EntryStatic.colorSet.arrow.default.VARIABLE,
                                     converter:
                                         Entry.block.converters
                                             .returnRawStringKey,
@@ -1268,8 +1268,8 @@ module.exports = {
                         value: null,
                         menuName: 'lists',
                         fontSize: 10,
-                        bgColor: EntryStatic.COLOR_VARIABLE_2,
-                        arrowColor: EntryStatic.ARROW_COLOR_DEFAULT,
+                        bgColor: EntryStatic.colorSet.block.darken.VARIABLE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
                     },
                     {
                         type: 'Block',
@@ -1367,7 +1367,7 @@ module.exports = {
                                     menuName: 'lists',
                                     fontSize: 11,
                                     arrowColor:
-                                        EntryStatic.ARROW_COLOR_VARIABLE,
+                                        EntryStatic.colorSet.arrow.default.VARIABLE,
                                     converter:
                                         Entry.block.converters
                                             .returnRawStringKey,
@@ -1403,8 +1403,8 @@ module.exports = {
                         value: null,
                         menuName: 'lists',
                         fontSize: 10,
-                        bgColor: EntryStatic.COLOR_VARIABLE_2,
-                        arrowColor: EntryStatic.ARROW_COLOR_DEFAULT,
+                        bgColor: EntryStatic.colorSet.block.darken.VARIABLE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
                     },
                     {
                         type: 'Text',
@@ -1460,7 +1460,7 @@ module.exports = {
                                     menuName: 'lists',
                                     fontSize: 11,
                                     arrowColor:
-                                        EntryStatic.ARROW_COLOR_VARIABLE,
+                                        EntryStatic.colorSet.arrow.default.VARIABLE,
                                     converter:
                                         Entry.block.converters
                                             .returnRawStringKey,
@@ -1487,8 +1487,8 @@ module.exports = {
                         value: null,
                         menuName: 'lists',
                         fontSize: 10,
-                        bgColor: EntryStatic.COLOR_VARIABLE_2,
-                        arrowColor: EntryStatic.ARROW_COLOR_DEFAULT,
+                        bgColor: EntryStatic.colorSet.block.darken.VARIABLE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
                     },
                     {
                         type: 'Text',
@@ -1579,7 +1579,7 @@ module.exports = {
                                     menuName: 'lists',
                                     fontSize: 11,
                                     arrowColor:
-                                        EntryStatic.ARROW_COLOR_VARIABLE,
+                                        EntryStatic.colorSet.arrow.default.VARIABLE,
                                     converter:
                                         Entry.block.converters
                                             .returnRawStringKey,
@@ -1605,8 +1605,8 @@ module.exports = {
                         value: null,
                         menuName: 'lists',
                         fontSize: 10,
-                        bgColor: EntryStatic.COLOR_VARIABLE_2,
-                        arrowColor: EntryStatic.ARROW_COLOR_DEFAULT,
+                        bgColor: EntryStatic.colorSet.block.darken.VARIABLE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
                     },
                     {
                         type: 'Indicator',
@@ -1660,7 +1660,7 @@ module.exports = {
                                     menuName: 'lists',
                                     fontSize: 11,
                                     arrowColor:
-                                        EntryStatic.ARROW_COLOR_VARIABLE,
+                                        EntryStatic.colorSet.arrow.default.VARIABLE,
                                     converter:
                                         Entry.block.converters.returnStringKey,
                                 },
@@ -1680,8 +1680,8 @@ module.exports = {
                         value: null,
                         menuName: 'lists',
                         fontSize: 10,
-                        bgColor: EntryStatic.COLOR_VARIABLE_2,
-                        arrowColor: EntryStatic.ARROW_COLOR_DEFAULT,
+                        bgColor: EntryStatic.colorSet.block.darken.VARIABLE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
                     },
                     {
                         type: 'Indicator',
@@ -1735,7 +1735,7 @@ module.exports = {
                                     menuName: 'lists',
                                     fontSize: 11,
                                     arrowColor:
-                                        EntryStatic.ARROW_COLOR_VARIABLE,
+                                        EntryStatic.colorSet.arrow.default.VARIABLE,
                                     converter:
                                         Entry.block.converters.returnStringKey,
                                 },

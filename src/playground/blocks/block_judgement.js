@@ -155,8 +155,8 @@ module.exports = {
                         value: null,
                         menuName: 'collision',
                         fontSize: 10,
-                        bgColor: EntryStatic.COLOR_JUDGE_2,
-                        arrowColor: EntryStatic.ARROW_COLOR_DEFAULT,
+                        bgColor: EntryStatic.colorSet.block.darken.JUDGE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
                     },
                     {
                         type: 'Text',
@@ -298,7 +298,7 @@ module.exports = {
                                     value: null,
                                     menuName: 'collision',
                                     fontSize: 11,
-                                    arrowColor: EntryStatic.ARROW_COLOR_JUDGE,
+                                    arrowColor: EntryStatic.colorSet.arrow.default.JUDGE,
                                     converter:
                                         Entry.block.converters
                                             .returnObjectOrStringValue,
@@ -331,7 +331,7 @@ module.exports = {
                         ],
                         value: 'EQUAL',
                         fontSize: 10,
-                        bgColor: EntryStatic.COLOR_JUDGE_2,
+                        bgColor: EntryStatic.colorSet.block.darken.JUDGE,
                         noArrow: true,
                     },
                     {
@@ -520,8 +520,8 @@ module.exports = {
                         ],
                         value: 'AND',
                         fontSize: 10,
-                        bgColor: EntryStatic.COLOR_JUDGE_2,
-                        arrowColor: EntryStatic.ARROW_COLOR_DEFAULT,
+                        bgColor: EntryStatic.colorSet.block.darken.JUDGE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
                     },
                     {
                         type: 'Block',

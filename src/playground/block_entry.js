@@ -1004,7 +1004,7 @@ const block = {
                 ],
                 value: 'SHOW',
                 fontSize: 11,
-                arrowColor: EntryStatic.ARROW_COLOR_CALC,
+                arrowColor: EntryStatic.colorSet.arrow.default.CALC,
             },
             {
                 type: 'Text',
@@ -1071,7 +1071,7 @@ const block = {
                             ],
                             value: 'SHOW',
                             fontSize: 11,
-                            arrowColor: EntryStatic.ARROW_COLOR_CALC,
+                            arrowColor: EntryStatic.colorSet.arrow.default.CALC,
                             converter:
                                 Entry.block.converters
                                     .returnStringValueLowerCase,
@@ -1659,7 +1659,7 @@ const block = {
     },
     get_pictures: {
         color: '#FF5174',
-        outerLine: EntryStatic.COLOR_LOOKS_2,
+        outerLine: EntryStatic.colorSet.block.darken.LOOKS,
         skeleton: 'basic_string_field',
         statements: [],
         params: [
@@ -1668,8 +1668,8 @@ const block = {
                 value: null,
                 menuName: 'pictures',
                 fontSize: 10,
-                bgColor: EntryStatic.COLOR_LOOKS_2,
-                arrowColor: EntryStatic.ARROW_COLOR_LOOKS,
+                bgColor: EntryStatic.colorSet.block.darken.LOOKS,
+                arrowColor: EntryStatic.colorSet.arrow.default.LOOKS,
             },
         ],
         events: {},
@@ -1694,7 +1694,7 @@ const block = {
                             value: null,
                             menuName: 'pictures',
                             fontSize: 11,
-                            arrowColor: EntryStatic.ARROW_COLOR_LOOKS,
+                            arrowColor: EntryStatic.colorSet.arrow.default.LOOKS,
                             converter: Entry.block.converters.returnStringKey,
                         },
                     ],
@@ -2375,7 +2375,7 @@ const block = {
     },
     get_sounds: {
         color: '#82D214',
-        outerLine: EntryStatic.COLOR_SOUNDS_2,
+        outerLine: EntryStatic.colorSet.block.darken.SOUND,
         skeleton: 'basic_string_field',
         statements: [],
         params: [
@@ -2384,8 +2384,8 @@ const block = {
                 value: null,
                 menuName: 'sounds',
                 fontSize: 10,
-                bgColor: EntryStatic.COLOR_SOUNDS_2,
-                arrowColor: EntryStatic.ARROW_COLOR_DEFAULT,
+                bgColor: EntryStatic.colorSet.block.darken.SOUND,
+                arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
             },
         ],
         events: {},
@@ -2410,7 +2410,7 @@ const block = {
                             value: null,
                             menuName: 'sounds',
                             fontSize: 11,
-                            arrowColor: EntryStatic.ARROW_COLOR_SOUNDS,
+                            arrowColor: EntryStatic.colorSet.arrow.default.SOUND,
                             converter: Entry.block.converters.returnStringKey,
                         },
                     ],
@@ -2766,7 +2766,7 @@ const block = {
             {
                 type: 'Text',
                 text: Lang.Blocks.JUDGEMENT_true,
-                color: EntryStatic.DEFAULT_TEXT_COLOR,
+                color: EntryStatic.colorSet.common.WHITE,
             },
         ],
         events: {},
@@ -7699,7 +7699,7 @@ const block = {
                 ],
                 value: 'RIGHT',
                 fontSize: 11,
-                arrowColor: EntryStatic.ARROW_COLOR_HW,
+                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
             },
             {
                 type: 'Dropdown',
@@ -8152,7 +8152,7 @@ const block = {
 };
 
 setHardwareLanguage();
-Object.assign(Entry.block, block, blocks.getBlocks());
+assignBlocks();
 
 (function() {
     // console.log('hw', Entry.HW, Entry.Arduino);
@@ -8173,8 +8173,8 @@ Object.assign(Entry.block, block, blocks.getBlocks());
     }
 })();
 
-if (typeof exports == 'object') {
-    exports.block = Entry.block;
+function assignBlocks() {
+    Object.assign(Entry.block, block, blocks.getBlocks());
 }
 
 function setHardwareLanguage() {
@@ -8191,4 +8191,9 @@ function setHardwareLanguage() {
             }
         }
     }
+}
+
+if (typeof exports == 'object') {
+    exports.block = Entry.block;
+    exports.assignBlocks = assignBlocks;
 }

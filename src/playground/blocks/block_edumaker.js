@@ -365,7 +365,7 @@ Entry.EduMaker.getBlocks = function() {
                     ],
                     value: 'on',
                     fontSize: 11,
-                    arrowColor: EntryStatic.ARROW_COLOR_HW,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},

@@ -163,7 +163,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
             top: y + (scale - 1) * 4 + 2 * scale - 1 * (scale / 2),
             width: that.box.width * scale,
             'font-size': `${this._font_size}px`,
-            'background-color': EntryStatic.COLOR_CALC_1,
+            'background-color': EntryStatic.colorSet.block.lighten.CALC,
         });
 
         this.optionGroup.focus && this.optionGroup.focus();

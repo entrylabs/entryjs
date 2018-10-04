@@ -583,7 +583,7 @@ Entry.CodingBox.getBlocks = function() {
                     ],
                     value: 'on',
                     fontSize: 11,
-                    arrowColor: EntryStatic.ARROW_COLOR_HW,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -610,7 +610,7 @@ Entry.CodingBox.getBlocks = function() {
                                 ],
                                 value: 'on',
                                 fontSize: 11,
-                                arrowColor: EntryStatic.ARROW_COLOR_HW,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters
                                         .returnStringValueUpperCase,
@@ -1727,7 +1727,7 @@ Entry.CodingBox.getBlocks = function() {
                     options: [['LED1', '10'], ['LED2', '11']],
                     value: '10',
                     fontSize: 11,
-                    arrowColor: EntryStatic.ARROW_COLOR_HW,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -1751,7 +1751,7 @@ Entry.CodingBox.getBlocks = function() {
                                 options: [['LED1', '10'], ['LED2', '11']],
                                 value: '3',
                                 fontSize: 11,
-                                arrowColor: EntryStatic.ARROW_COLOR_HW,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters
                                         .returnStringOrNumberByValue,
@@ -1777,7 +1777,7 @@ Entry.CodingBox.getBlocks = function() {
                     ],
                     value: '1',
                     fontSize: 11,
-                    arrowColor: EntryStatic.ARROW_COLOR_HW,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -1804,7 +1804,7 @@ Entry.CodingBox.getBlocks = function() {
                                 ],
                                 value: '3',
                                 fontSize: 11,
-                                arrowColor: EntryStatic.ARROW_COLOR_HW,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters
                                         .returnStringOrNumberByValue,
@@ -1834,7 +1834,7 @@ Entry.CodingBox.getBlocks = function() {
                     ],
                     value: '255',
                     fontSize: 11,
-                    arrowColor: EntryStatic.ARROW_COLOR_HW,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -1867,7 +1867,7 @@ Entry.CodingBox.getBlocks = function() {
                                 ],
                                 value: '3',
                                 fontSize: 11,
-                                arrowColor: EntryStatic.ARROW_COLOR_HW,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters
                                         .returnStringOrNumberByValue,
@@ -1897,7 +1897,7 @@ Entry.CodingBox.getBlocks = function() {
                     ],
                     value: '255',
                     fontSize: 11,
-                    arrowColor: EntryStatic.ARROW_COLOR_HW,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -1928,7 +1928,7 @@ Entry.CodingBox.getBlocks = function() {
                                 ],
                                 value: '3',
                                 fontSize: 11,
-                                arrowColor: EntryStatic.ARROW_COLOR_HW,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters
                                         .returnStringOrNumberByValue,
@@ -1959,7 +1959,7 @@ Entry.CodingBox.getBlocks = function() {
                     ],
                     value: '255',
                     fontSize: 11,
-                    arrowColor: EntryStatic.ARROW_COLOR_HW,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -1990,7 +1990,7 @@ Entry.CodingBox.getBlocks = function() {
                                 ],
                                 value: '3',
                                 fontSize: 11,
-                                arrowColor: EntryStatic.ARROW_COLOR_HW,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters
                                         .returnStringOrNumberByValue,
@@ -2030,7 +2030,7 @@ Entry.CodingBox.getBlocks = function() {
                     ],
                     value: '0',
                     fontSize: 11,
-                    arrowColor: EntryStatic.ARROW_COLOR_HW,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -2071,7 +2071,7 @@ Entry.CodingBox.getBlocks = function() {
                                 ],
                                 value: '3',
                                 fontSize: 11,
-                                arrowColor: EntryStatic.ARROW_COLOR_HW,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters
                                         .returnStringOrNumberByValue,
@@ -2094,7 +2094,7 @@ Entry.CodingBox.getBlocks = function() {
                     options: [['1', '0'], ['2', '1']],
                     value: '0',
                     fontSize: 11,
-                    arrowColor: EntryStatic.ARROW_COLOR_HW,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -2118,7 +2118,7 @@ Entry.CodingBox.getBlocks = function() {
                                 options: [['1', '0'], ['2', '1']],
                                 value: '3',
                                 fontSize: 11,
-                                arrowColor: EntryStatic.ARROW_COLOR_HW,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters
                                         .returnStringOrNumberByValue,
@@ -2144,7 +2144,7 @@ Entry.CodingBox.getBlocks = function() {
                     ],
                     value: Entry.CodingBox.pins.SWITCH_1,
                     fontSize: 11,
-                    arrowColor: EntryStatic.ARROW_COLOR_HW,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -2171,7 +2171,7 @@ Entry.CodingBox.getBlocks = function() {
                                 ],
                                 value: Entry.CodingBox.pins.SWITCH_1,
                                 fontSize: 11,
-                                arrowColor: EntryStatic.ARROW_COLOR_HW,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters
                                         .returnStringOrNumberByValue,
@@ -2197,7 +2197,7 @@ Entry.CodingBox.getBlocks = function() {
                     ],
                     value: '1',
                     fontSize: 11,
-                    arrowColor: EntryStatic.ARROW_COLOR_HW,
+                    arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                 },
             ],
             events: {},
@@ -2221,7 +2221,7 @@ Entry.CodingBox.getBlocks = function() {
                                 options: [['forward', '1'], ['reverse', '0']],
                                 value: '1',
                                 fontSize: 11,
-                                arrowColor: EntryStatic.ARROW_COLOR_HW,
+                                arrowColor: EntryStatic.colorSet.arrow.default.HARDWARE,
                                 converter:
                                     Entry.block.converters
                                         .returnStringOrNumberByValue,
