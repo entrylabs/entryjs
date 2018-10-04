@@ -93,9 +93,8 @@ module.exports = {
                         ],
                         value: 'next',
                         fontSize: 10,
-                        textColor: '#fff',
-                        bgColor: EntryStatic.COLOR_JUDGE_2,
-                        arrowColor: EntryStatic.ARROW_COLOR_START,
+                        bgColor: EntryStatic.colorSet.block.darken.JUDGE,
+                        arrowColor: EntryStatic.colorSet.arrow.default.DEFAULT,
                     },
                     {
                         type: 'Text',
