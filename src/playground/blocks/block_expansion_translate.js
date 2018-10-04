@@ -151,7 +151,7 @@ Entry.EXPANSION_BLOCK.translate.getBlocks = function() {
                     if (this._contents.options) {
                         return this._contents.options;
                     } else {
-                        return langCodeMap['auto'].sub.map((code) => {
+                        return langCodeMap['ko'].sub.map((code) => {
                             return [langCodeMap[code].lang, code];
                         });
                     }
