@@ -356,8 +356,12 @@ Entry.EntityObject.prototype.getRegY = function() {
  */
 Entry.EntityObject.prototype.setScaleX = function(scaleX) {
     /** @type {number} */
+    console.log(`setScaleX(${scaleX})`);
     this.scaleX = scaleX;
     this.object.scale.x = this.scaleX;
+    if(this.textObject) {
+        this.textObject.setFontScaleX(scaleX);
+    }
     this.parent.updateCoordinateView();
     this.updateDialog();
     Entry.requestUpdate = true;
@@ -377,8 +381,12 @@ Entry.EntityObject.prototype.getScaleX = function() {
  */
 Entry.EntityObject.prototype.setScaleY = function(scaleY) {
     /** @type {number} */
+    console.log(`setScaleY(${scaleY})`);
     this.scaleY = scaleY;
     this.object.scale.y = this.scaleY;
+    if(this.textObject) {
+        this.textObject.setFontScaleY(scaleY);
+    }
     this.parent.updateCoordinateView();
     this.updateDialog();
     Entry.requestUpdate = true;
@@ -422,6 +430,7 @@ Entry.EntityObject.prototype.getSize = function(toFixedValue) {
  * @param {number} width
  */
 Entry.EntityObject.prototype.setWidth = function(width) {
+    console.log(`setWidth(${width})`);
     /** @type {number} */
     this.width = width;
     PIXIHelper.todo("원래는 width 였는데 $width 우선 바궈놓음");
@@ -447,6 +456,7 @@ Entry.EntityObject.prototype.getWidth = function() {
  */
 Entry.EntityObject.prototype.setHeight = function(height) {
     /** @type {number} */
+    console.log(`setHeight(${height})`);
     this.height = height;
     if (this.textObject) {
         PIXIHelper.todo("원래는 height 였는데 $height 우선 바궈놓음");
@@ -584,7 +594,7 @@ Entry.EntityObject.prototype.setLineHeight = function() {
 Entry.EntityObject.prototype.syncFont = function() {
     var textObject = this.textObject;
     // textObject.font = this.getFont();
-
+    console.log("syncFont");
     var style = textObject.style;
     style.fontSize = this.getFontSize() + 'px';
     style.fontStyle = this.fontItalic ? "italic" : "normal";
@@ -770,7 +780,7 @@ Entry.EntityObject.prototype.getTextAlign = function() {
  */
 Entry.EntityObject.prototype.setLineBreak = function(lineBreak = false) {
     if (this.parent.objectType != 'textBox') return;
-
+    console.log("setLineBreak'");
     var previousState = this.lineBreak;
     this.lineBreak = lineBreak;
 

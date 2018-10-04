@@ -1,7 +1,3 @@
-/**
- * 취소선, 밑줄, maxHeight 구현을 위해 PIXI.Text 를 상속함.
- * PIXI.Text 내부 함수 복사하여 수정/추가함.
- */
 
 import PIXITextStyle from './PIXITextStyle';
 
@@ -12,6 +8,8 @@ export class PIXIText extends PIXI.Text {
 
     constructor(text, style, canvas) {
         super(text, style, canvas);
+        this.setFontScaleX(1);
+        this.setFontScaleY(1);
     }
     
     set style(style) // eslint-disable-line require-jsdoc
@@ -35,6 +33,35 @@ export class PIXIText extends PIXI.Text {
         return super.style;
     }
 
+    setFontScaleX(value) {
+        value = value * PIXIText.STAGE_SCALE;
+        this._fontScaleX = value;
+        this.scale.x = 1/value;
+        this.dirty = true;
+    }
+    setFontScaleY(value) {
+        value = value * PIXIText.STAGE_SCALE;
+        this._fontScaleY = value;
+        this.scale.y = 1/value;
+        this.dirty = true;
+    }
+
+
+    get measuredWidth() {
+        this.updateText(true);
+        // console.log(`measuredWidth(${this._measuredWidth})`);
+        return this._measuredWidth;
+    }
+    get measuredHeight() {
+        this.updateText(true);
+        // console.log(`measuredHeight(${this._measuredHeight})`);
+        return this._measuredHeight;
+    }
+    get measuredLineHeight() {
+        this.updateText(true);
+        // console.log(`measuredLineHeight(${this._measuredLineHeight})`);
+        return this._measuredLineHeight;
+    }
 
     /**
      * Renders text and updates it when needed.
@@ -44,6 +71,7 @@ export class PIXIText extends PIXI.Text {
      */
     updateText(respectDirty)
     {
+
         const style = this._style;
 
         // check if style has changed..
@@ -59,21 +87,24 @@ export class PIXIText extends PIXI.Text {
         }
 
         this._font = this._style.toFontString();
-
         const context = this.context;
         const measured = TextMetrics.measureText(this._text, this._style, this._style.wordWrap, this.canvas);
-        const width = measured.width;
-        const height = measured.height;
+        const width = this._measuredWidth = measured.width;
+        const height = this._measuredHeight = measured.height;
         const lines = measured.lines;
-        const lineHeight = measured.lineHeight;
+        const lineHeight = this._measuredLineHeight = measured.lineHeight;
         const lineWidths = measured.lineWidths;
         const maxLineWidth = measured.maxLineWidth;
         const fontProperties = measured.fontProperties;
 
-        this.canvas.width = Math.ceil((Math.max(1, width) + (style.padding * 2)) * this.resolution);
-        this.canvas.height = Math.ceil((Math.max(1, height) + (style.padding * 2)) * this.resolution);
+        const UN = undefined;
+        const FSX = this._fontScaleX === UN ? 1 : this._fontScaleX;
+        const FSY = this._fontScaleY === UN ? 1 : this._fontScaleY;
 
-        context.scale(this.resolution, this.resolution);
+        this.canvas.width = Math.ceil((Math.max(1, width) + (style.padding * 2)) * this.resolution * FSX);
+        this.canvas.height = Math.ceil((Math.max(1, height) + (style.padding * 2)) * this.resolution * FSY);
+
+        context.scale(this.resolution * FSX, this.resolution * FSY);
 
         context.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
@@ -187,12 +218,12 @@ export class PIXIText extends PIXI.Text {
 
             //취소선 추가
             if (style.cancelLine) {
-                this.drawLineAt(context, linePositionX, linePositionY, lineWidths[i], lineHeight * PIXIText.cancelLineOffset);
+                this._drawLineAt(context, linePositionX, linePositionY, lineWidths[i], lineHeight * PIXIText.cancelLineOffset);
             }
 
             //밑줄
             if (style.underLine) {
-                this.drawLineAt(context, linePositionX, linePositionY, lineWidths[i], lineHeight * PIXIText.underLineOffset);
+                this._drawLineAt(context, linePositionX, linePositionY, lineWidths[i], lineHeight * PIXIText.underLineOffset);
             }
             
         }
@@ -202,16 +233,18 @@ export class PIXIText extends PIXI.Text {
 
     /**
      * 취소선 or 밑줄을 draw 하기 위한 함수.
+     * @private
      * @param {CanvasRenderingContext2D} ctx
      * @param x
      * @param y
      * @param width
      * @param offsetY
      */
-    drawLineAt(ctx, x, y, width, offsetY) {
+    _drawLineAt(ctx, x, y, width, offsetY) {
         ctx.fillRect(x, y + offsetY, width, 2);
     }
 }
 
 PIXIText.cancelLineOffset = -0.23;
 PIXIText.underLineOffset = 0.12;
+PIXIText.STAGE_SCALE = 1.4;
