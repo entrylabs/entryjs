@@ -1264,6 +1264,309 @@ Entry.trueRobot.getBlocks = function() {
             },
             syntax: { js: [], py: [] },
         },
+
+		truetrue_set_grid_block: {
+            color: '#00979D',
+            skeleton: 'basic',
+            statements: [],
+            params: [
+				{
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_03.png',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: ['0',null],
+                type: 'truetrue_set_grid_block',
+            },
+            paramsKeyMap: {
+               gridValue : 0,
+            },
+            class: 'trueRobot_control',
+            isNotFor: ['trueRobot'],
+            func: function(sprite, script) {
+                var device = Entry.trueRobot.PORT_MAP.dualmotor;
+				var pd = Entry.hw.portData;
+				var leftValue;
+                var rightValue;
+                var delayValue=0;
+				var gridValue = script.getNumberValue('gridValue');
+				if (!script.isStart) { 
+					script.flag=0;
+					script.stop=0;
+					script.checkCount=0;
+					script.isStart = true;
+					script.timeFlag = 0;
+					script.bufferFlag = 2;
+				}
+
+				if( script.timeFlag == 0 ){
+					script.timeFlag = 1;
+			
+				if( pd['L1'] > 110 && pd['R1'] > 110 ){
+					leftValue=100;
+					rightValue=100;	
+					
+				}else if( pd['L1'] >= 0 || pd['R1'] >= 0 ){
+					if(pd['L1'] > pd['R1'] - 20){
+						leftValue= 100;
+						rightValue = pd['L1']-pd['R1'];
+
+						var maxright = rightValue;
+
+						rightValue =  Math.max( Math.min( Math.round( 100 - (100*rightValue) /230 )  , 70 ) , 0 );
+						
+					}else if(pd['L1'] < pd['R1'] - 20){
+						
+						leftValue = pd['R1']-pd['L1'];
+						leftValue = Math.max( Math.min( Math.round( 100 - (100*leftValue) /230 )   , 70 ) , 0 );
+
+						rightValue=100;
+						
+					}else{
+						leftValue=100;
+						rightValue=100;
+						
+					}
+				}else{
+					leftValue=100;
+					rightValue=100;
+					
+				}
+
+					
+				if(  pd['L1'] > 0 && pd['R1']  > 0 && pd['L2'] > 0 && pd['R2'] > 0 && pd['L2'] > 130 && pd['R2'] > 130){
+					if( script.flag == 1){
+						script.checkCount++;
+						script.flag = 0;
+					}
+					if(script.checkCount >= gridValue){
+						if( pd['L1'] < 170 && pd['R1']  < 170 && pd['L2']  < 170 && pd['R2']  < 170 ){
+							script.stop = 1;
+						}else{
+							script.stop = 1;
+						}
+					}
+					
+				}else{
+					script.flag = 1;
+				}
+
+				if( script.stop == 1 && script.flag == 1 ){
+					script.timeFlag = 1;
+					script.bufferFlag = 3;
+
+					var myTimer = setTimeout(function() {
+							 script.timeFlag = script.bufferFlag;
+						}, 80);
+					return script;
+				}
+
+				if (!Entry.hw.sendQueue['SET']) {
+                    Entry.hw.sendQueue['SET'] = {};
+                }
+			
+				Entry.hw.sendQueue['SET'][device] = {
+                    port: Entry.trueRobot.PORT_MAP.dualPort,
+                    dataA: leftValue,
+                    dataB: rightValue,
+                    dataC: delayValue,
+                };
+
+
+	
+						var myTimer = setTimeout(function() {
+							 script.timeFlag = script.bufferFlag;
+						}, Entry.trueRobot.delayTime/2);
+						return script;
+
+
+				}else if(script.timeFlag == 1) {
+					return script;
+				}else if(script.timeFlag == 2) {
+					clearTimeout(myTimer);
+					script.timeFlag = 0;
+					return script;
+				}else if(script.timeFlag == 3) {
+					clearTimeout(myTimer);
+
+					Entry.hw.sendQueue['SET'][device] = {
+							port: Entry.trueRobot.PORT_MAP.dualPort,
+							dataA: 0,
+							dataB: 0,
+							dataC: 1,
+						};
+
+						return script.callReturn();
+					
+				}
+
+				return script;
+
+            },
+            syntax: { js: [], py: [] },
+        },
+
+
+		truetrue_set_grid_rotate: {
+            color: '#00979D',
+            skeleton: 'basic',
+            statements: [],
+            params: [
+				{
+                    type: 'Dropdown',
+                    options: [
+						[Lang.Blocks.truetruebot_move_right, 101], 
+						[Lang.Blocks.truetruebot_move_left, 102]
+						],
+                    value: 101,
+                    fontSize: 11,
+                },
+				{
+                    type: 'Block',
+                    accept: 'string',
+                },
+				{
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_03.png',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [101,'0',null],
+                type: 'truetrue_set_grid_rotate',
+            },
+            paramsKeyMap: {
+				moveValue: 0,
+				rotateValue: 1,
+			},
+            class: 'trueRobot_control',
+            isNotFor: ['trueRobot'],
+            func: function(sprite, script) {
+                var device = Entry.trueRobot.PORT_MAP.dualmotor;
+				var pd = Entry.hw.portData;
+				var leftValue;
+                var rightValue;
+                var delayValue;
+				
+				var moveValue = script.getField('moveValue');
+				var rotateValue = script.getNumberValue('rotateValue');
+
+				if (!Entry.hw.sendQueue['SET']) {
+                    Entry.hw.sendQueue['SET'] = {};
+                }
+
+				if (!script.isStart) { 
+					script.flag=0;
+					script.stop=0;
+					script.checkCount=0;
+					script.isStart = true;
+					script.timeFlag = 0;
+					script.bufferFlag = 2;
+					script.tempcheck = 0;
+				}
+
+				if( script.timeFlag == 0 ){
+					script.timeFlag = 1;
+
+					if(moveValue == 101){
+						leftValue=50; rightValue=-30; delayValue=0;
+					}else if(moveValue == 102){
+						leftValue=-30; rightValue=50; delayValue=0;
+					}
+
+					if(moveValue == 101){
+						if(  pd['L1'] > 0 && pd['L2'] == 0 && pd['R2'] == 0 && pd['R1'] == 0 ){
+							
+							if( script.flag == 1){ 
+							script.tempcheck = 1;
+							}
+					
+						}else if( pd['L2'] > 0 && pd['L1'] == 0 ) {
+							script.flag = 1;
+						}
+					}else if(moveValue == 102){
+						if(  pd['R1'] > 0 && pd['R2'] == 0 && pd['L2'] == 0 && pd['L1'] == 0 ){
+							
+							if( script.flag == 1){ 
+								script.tempcheck = 2;
+							}
+					
+						}else if( pd['R2'] > 0 && pd['R1'] == 0 ) {
+							script.flag = 1;
+						}
+					}
+						
+						if( script.tempcheck == 1 && pd['L1'] < 100){ 
+								script.tempcheck = 0;
+								script.checkCount++;
+								script.flag = 0;
+						}
+						if( script.tempcheck == 2 && pd['R1'] < 100){ 
+								script.tempcheck = 0;
+								script.checkCount++;
+								script.flag = 0;
+						}
+
+					
+					
+					if( script.checkCount >= rotateValue){
+						leftValue=0;
+						rightValue=0;	
+						script.timeFlag = 1;
+						script.bufferFlag = 3;
+					}
+
+					
+					Entry.hw.sendQueue['SET'][device] = {
+							port: Entry.trueRobot.PORT_MAP.dualPort,
+							dataA: leftValue,
+							dataB: rightValue,
+							dataC: delayValue,
+					};
+					
+						var myTimer = setTimeout(function() {
+							 script.timeFlag = script.bufferFlag;
+						}, Entry.trueRobot.delayTime/5);
+						return script;
+
+					
+	
+				}else if(script.timeFlag == 1) {
+					return script;
+				}else if(script.timeFlag == 2) {
+					clearTimeout(myTimer);
+					script.timeFlag = 0;
+					return script;
+				}else if(script.timeFlag == 3) {
+					clearTimeout(myTimer);
+
+					Entry.hw.sendQueue['SET'][device] = {
+							port: Entry.trueRobot.PORT_MAP.dualPort,
+							dataA: 0,
+							dataB: 0,
+							dataC: 1,
+						};
+
+					return script.callReturn();
+				
+				}
+
+				return script;
+
+
+
+
+            },
+            syntax: { js: [], py: [] },
+        },
     };
 };
 
@@ -1290,6 +1593,8 @@ Entry.trueRobot.setLanguage = function () {
 				"truetrue_set_sec_move": "로봇을 %1  %2 초 이동 %3",
 				"truetrue_set_rotate": "로봇을 %1 계속 회전 %2",
 				"truetrue_set_sec_rotate": "로봇을 %1  %2 초 회전 %3",
+				"truetrue_set_grid_block": "뚜루뚜루를 격자 %1 칸 만큼 이동 %2 ",
+				"truetrue_set_grid_rotate": "뚜루뚜루를 격자에서 %1 %2 회 회전 %3 ",
             },
 			Blocks: {
 				"truetruebot_on":"켜기",
@@ -1331,6 +1636,8 @@ Entry.trueRobot.setLanguage = function () {
 				"truetrue_set_sec_move": "로봇을 %1  %2 초 이동 %3",
 				"truetrue_set_rotate": "로봇을 %1 계속 회전 %2",
 				"truetrue_set_sec_rotate": "로봇을 %1  %2 초 회전 %3",
+				"truetrue_set_grid_block": "뚜루뚜루를 격자 %1 칸 만큼 이동 %2 ",
+				"truetrue_set_grid_rotate": "뚜루뚜루를 격자에서 %1 %2 회 회전 %3 ",
             },
 			Blocks: {
 				"truetruebot_on":"켜기",
@@ -1372,6 +1679,8 @@ Entry.trueRobot.setLanguage = function () {
 				"truetrue_set_sec_move": "로봇을 %1  %2 초 이동 %3",
 				"truetrue_set_rotate": "로봇을 %1 계속 회전 %2",
 				"truetrue_set_sec_rotate": "로봇을 %1  %2 초 회전 %3",
+				"truetrue_set_grid_block": "뚜루뚜루를 격자 %1 칸 만큼 이동 %2 ",
+				"truetrue_set_grid_rotate": "뚜루뚜루를 격자에서 %1 %2 회 회전 %3 ",
             },
 			Blocks: {
 				"truetruebot_on":"켜기",
@@ -1413,6 +1722,8 @@ Entry.trueRobot.setLanguage = function () {
 				"truetrue_set_sec_move": "Move TRUETRUE %1 for %2 second(s) %3",
 				"truetrue_set_rotate": "Rotate TRUETRUE %1 forever %2",
 				"truetrue_set_sec_rotate": "Rotate TRUETRUE %1 for %2 Second(s) %3",
+				"truetrue_set_grid_block": "Move TRUETRUE %1 block(s) on the GRID %2",
+				"truetrue_set_grid_rotate": "Rotate TRUETRUE %1 %2 time(s) on the GRID %3",
             },
 			Blocks: {
 				"truetruebot_on":"on",
@@ -1454,6 +1765,8 @@ Entry.trueRobot.setLanguage = function () {
 				"truetrue_set_sec_move": "Move TRUETRUE %1 for %2 second(s) %3",
 				"truetrue_set_rotate": "Rotate TRUETRUE %1 forever %2",
 				"truetrue_set_sec_rotate": "Rotate TRUETRUE %1 for %2 Second(s) %3",
+				"truetrue_set_grid_block": "Move TRUETRUE %1 block(s) on the GRID %2",
+				"truetrue_set_grid_rotate": "Rotate TRUETRUE %1 %2 time(s) on the GRID %3",
             },
 			Blocks: {
 				"truetruebot_on":"on",
@@ -1495,6 +1808,8 @@ Entry.trueRobot.setLanguage = function () {
 				"truetrue_set_sec_move": "Move TRUETRUE %1 for %2 second(s) %3",
 				"truetrue_set_rotate": "Rotate TRUETRUE %1 forever %2",
 				"truetrue_set_sec_rotate": "Rotate TRUETRUE %1 for %2 Second(s) %3",
+				"truetrue_set_grid_block": "Move TRUETRUE %1 block(s) on the GRID %2",
+				"truetrue_set_grid_rotate": "Rotate TRUETRUE %1 %2 time(s) on the GRID %3",
             },
 			Blocks: {
 				"truetruebot_on":"on",
