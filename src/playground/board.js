@@ -528,7 +528,8 @@ Entry.Board = class Board {
         }, []);
     }
 
-    _getNextMagnets(thread, zIndex, offset = { x: 0, y: 0 }, targetType) {
+    _getNextMagnets(thread, zIndex, offset, targetType) {
+        offset = offset ? offset : { x: 0, y: 0 };
         const blocks = thread.getBlocks();
         let statementBlocks = [];
         const metaData = [];
@@ -599,7 +600,8 @@ Entry.Board = class Board {
         return statementBlocks.concat(metaData);
     }
 
-    _getPreviousMagnets(thread, zIndex, offset = { x: 0, y: 0 }) {
+    _getPreviousMagnets(thread, zIndex, offset) {
+        offset = offset ? offset : { x: 0, y: 0 };
         const blocks = thread.getBlocks();
         const metaData = [];
         let cursorX = offset.x;
@@ -632,7 +634,8 @@ Entry.Board = class Board {
         return [];
     }
 
-    _getFieldMagnets(thread, zIndex, offset = { x: 0, y: 0 }, targetType) {
+    _getFieldMagnets(thread, zIndex, offset, targetType) {
+        offset = offset ? offset : { x: 0, y: 0 };
         const blocks = thread.getBlocks();
         let statementBlocks = [];
         let metaData = [];
@@ -723,7 +726,8 @@ Entry.Board = class Board {
         return metaData;
     }
 
-    _getOutputMagnets(thread, zIndex, offset = { x: 0, y: 0 }, targetType) {
+    _getOutputMagnets(thread, zIndex, offset, targetType) {
+        offset = offset ? offset : { x: 0, y: 0 };
         const blocks = thread.getBlocks();
         let statementBlocks = [];
         let metaData = [];
