@@ -1,5 +1,3 @@
-/*
- */
 'use strict';
 
 /*
@@ -12,7 +10,7 @@ Entry.Board = class Board {
         this.scale = option.scale || 1;
         this.readOnly = option.readOnly === undefined ? false : option.readOnly;
         this.changeEvent = new Entry.Event(this);
-        
+
         this.createView(option);
         this.updateOffset();
 
@@ -56,14 +54,19 @@ Entry.Board = class Board {
     };
 
     createView(option) {
-        var dom = option.dom;
-        if (typeof dom === 'string') dom = $('#' + dom);
-        else dom = $(dom);
+        let dom = option.dom;
+        if (typeof dom === 'string') {
+            dom = $(`#${dom}`);
+        } else {
+            dom = $(dom);
+        }
 
-        if (dom.prop('tagName') !== 'DIV') return console.error('Dom is not div element');
+        if (dom.prop('tagName') !== 'DIV') {
+            return console.error('Dom is not div element');
+        }
 
         this.view = dom;
-        this._svgId = 'play' + new Date().getTime();
+        this._svgId = `play${new Date().getTime()}`;
 
         this.workspace = option.workspace;
 
@@ -76,10 +79,8 @@ Entry.Board = class Board {
 
         this.svgDom = Entry.Dom(
             $(
-                '<svg id="' +
-                    this._svgId +
-                    '" class="entryBoard" width="100%" height="100%"' +
-                    'version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'
+                `<svg id="${this._svgId}" class="entryBoard" width="100%" height="100%"` +
+                    `version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>`
             ),
             { parent: this.wrapper }
         );
@@ -92,10 +93,10 @@ Entry.Board = class Board {
         this.svgGroup.attr('transform', `scale(${this.scale})`);
         this.svgThreadGroup = this.svgGroup.elem('g');
         this.svgThreadGroup.board = this;
-        
+
         this.svgBlockGroup = this.svgGroup.elem('g');
         this.svgBlockGroup.board = this;
-        
+
         this.svgCommentGroup = this.svgGroup.elem('g');
         this.svgCommentGroup.board = this;
 
@@ -103,18 +104,22 @@ Entry.Board = class Board {
             this.wrapper.addClass('entryOverlayBoard');
             this.generateButtons();
             this.suffix = 'overlayBoard';
-        } else this.suffix = 'board';
+        } else {
+            this.suffix = 'board';
+        }
 
         Entry.Utils.addFilters(this.svg, this.suffix);
         this.pattern = Entry.Utils.addBlockPattern(this.svg, this.suffix).pattern;
     }
 
     changeCode(code, shouldNotCreateView, cb) {
-        if (this.code && this.codeListener) this.codeListener.destroy();
+        if (this.code && this.codeListener) {
+            this.codeListener.destroy();
+        }
 
         this.set({ code });
 
-        var that = this;
+        const that = this;
         if (code && !shouldNotCreateView) {
             this.codeListener = this.code.changeEvent.attach(this, function() {
                 that.changeEvent.notify();
@@ -144,7 +149,9 @@ Entry.Board = class Board {
     }
 
     setMagnetedBlock(block, magnetType) {
-        if (this.magnetedBlockView === block) return;
+        if (this.magnetedBlockView === block) {
+            return;
+        }
 
         this.magnetedBlockView && this.magnetedBlockView.set({ magneting: false });
         this.set({ magnetedBlockView: block });
@@ -163,24 +170,24 @@ Entry.Board = class Board {
     }
 
     _addControl() {
-        var dom = this.svgDom;
-        var that = this;
+        const dom = this.svgDom;
+        const that = this;
         dom.mousedown(function() {
-            that.onMouseDown.apply(that, arguments);
+            that.onMouseDown(...arguments);
         });
         dom.bind('touchstart', function() {
-            that.onMouseDown.apply(that, arguments);
+            that.onMouseDown(...arguments);
         });
         dom.on('wheel', function() {
-            that.mouseWheel.apply(that, arguments);
+            that.mouseWheel(...arguments);
         });
 
-        var scroller = that.scroller;
+        const scroller = that.scroller;
         if (scroller) {
-            dom.mouseenter(function(e) {
+            dom.mouseenter(function() {
                 scroller.setOpacity(1);
             });
-            dom.mouseleave(function(e) {
+            dom.mouseleave(function() {
                 scroller.setOpacity(0);
             });
         }
@@ -193,18 +200,26 @@ Entry.Board = class Board {
     }
 
     onMouseDown(e) {
-        if (this.workspace.getMode() == Entry.Workspace.MODE_VIMBOARD) return;
+        if (this.workspace.getMode() == Entry.Workspace.MODE_VIMBOARD) {
+            return;
+        }
 
-        if (e.stopPropagation) e.stopPropagation();
-        if (e.preventDefault) e.preventDefault();
+        if (e.stopPropagation) {
+            e.stopPropagation();
+        }
+        if (e.preventDefault) {
+            e.preventDefault();
+        }
 
-        var board = this;
-        var longPressTimer = null;
+        const board = this;
+        let longPressTimer = null;
         if (e.button === 0 || (e.originalEvent && e.originalEvent.touches)) {
-            var eventType = e.type;
-            var mouseEvent = Entry.Utils.convertMouseEvent(e);
-            if (Entry.documentMousedown) Entry.documentMousedown.notify(mouseEvent);
-            var doc = $(document);
+            const eventType = e.type;
+            const mouseEvent = Entry.Utils.convertMouseEvent(e);
+            if (Entry.documentMousedown) {
+                Entry.documentMousedown.notify(mouseEvent);
+            }
+            const doc = $(document);
 
             this.mouseDownCoordinate = {
                 x: mouseEvent.pageX,
@@ -231,34 +246,42 @@ Entry.Board = class Board {
                     }
                 }, 1000);
             }
-        } else if (Entry.Utils.isRightButton(e)) this._rightClick(e);
+        } else if (Entry.Utils.isRightButton(e)) {
+            this._rightClick(e);
+        }
 
         function onMouseMove(e) {
-            if (e.stopPropagation) e.stopPropagation();
-            if (e.preventDefault) e.preventDefault();
+            if (e.stopPropagation) {
+                e.stopPropagation();
+            }
+            if (e.preventDefault) {
+                e.preventDefault();
+            }
 
-            var mouseEvent = Entry.Utils.convertMouseEvent(e);
+            const mouseEvent = Entry.Utils.convertMouseEvent(e);
 
-            var mouseDownCoordinate = board.mouseDownCoordinate;
-            var pageX = mouseEvent.pageX;
-            var pageY = mouseEvent.pageY;
-            var diff = Math.sqrt(
+            const mouseDownCoordinate = board.mouseDownCoordinate;
+            const pageX = mouseEvent.pageX;
+            const pageY = mouseEvent.pageY;
+            const diff = Math.sqrt(
                 Math.pow(pageX - mouseDownCoordinate.x, 2) +
                     Math.pow(pageY - mouseDownCoordinate.y, 2)
             );
-            if (diff < Entry.Board.DRAG_RADIUS) return;
+            if (diff < Entry.Board.DRAG_RADIUS) {
+                return;
+            }
 
             if (longPressTimer) {
                 clearTimeout(longPressTimer);
                 longPressTimer = null;
             }
 
-            var dragInstance = board.dragInstance;
+            const dragInstance = board.dragInstance;
             board.scroller.scroll(pageX - dragInstance.offsetX, pageY - dragInstance.offsetY);
             dragInstance.set({ offsetX: pageX, offsetY: pageY });
         }
 
-        function onMouseUp(e) {
+        function onMouseUp() {
             if (longPressTimer) {
                 clearTimeout(longPressTimer);
                 longPressTimer = null;
@@ -272,20 +295,26 @@ Entry.Board = class Board {
     mouseWheel(e) {
         e = e.originalEvent;
         e.preventDefault();
-        var disposeEvent = Entry.disposeEvent;
-        if (disposeEvent) disposeEvent.notify(e);
+        const disposeEvent = Entry.disposeEvent;
+        if (disposeEvent) {
+            disposeEvent.notify(e);
+        }
 
         this.scroller.scroll(e.wheelDeltaX || -e.deltaX, e.wheelDeltaY || -e.deltaY);
     }
 
     setSelectedBlock(blockView) {
-        var old = this.selectedBlockView;
+        const old = this.selectedBlockView;
 
-        if (old) old.removeSelected();
+        if (old) {
+            old.removeSelected();
+        }
 
         if (blockView instanceof Entry.BlockView) {
             blockView.addSelected();
-        } else blockView = null;
+        } else {
+            blockView = null;
+        }
 
         this.set({ selectedBlockView: blockView });
     }
@@ -301,23 +330,29 @@ Entry.Board = class Board {
     }
 
     alignThreads(reDraw) {
-        var threads = this.code.getThreads();
-        if (!threads.length) return;
+        const threads = this.code.getThreads();
+        if (!threads.length) {
+            return;
+        }
 
-        var verticalGap = 15;
-        var acculmulatedTop = 15;
-        var columWidth = 0;
-        var limitTopPosition = this.svgDom.height() - 30;
-        var left = 50;
+        const verticalGap = 15;
+        let acculmulatedTop = 15;
+        let columWidth = 0;
+        const limitTopPosition = this.svgDom.height() - 30;
+        let left = 50;
 
         threads.forEach((thread) => {
-            var block = thread.getFirstBlock();
-            if (!block) return;
+            const block = thread.getFirstBlock();
+            if (!block) {
+                return;
+            }
             reDraw && thread.view.reDraw();
-            var blockView = block.view;
-            if (!blockView.movable) return;
-            var bBox = blockView.svgGroup.getBBox();
-            var top = acculmulatedTop + verticalGap;
+            const blockView = block.view;
+            if (!blockView.movable) {
+                return;
+            }
+            const bBox = blockView.svgGroup.getBBox();
+            let top = acculmulatedTop + verticalGap;
             if (top > limitTopPosition) {
                 left = left + columWidth + 10;
                 columWidth = 0;
@@ -339,17 +374,17 @@ Entry.Board = class Board {
 
     updateOffset() {
         this._offset = this.svg.getBoundingClientRect();
-        var w = $(window),
-            scrollTop = w.scrollTop(),
-            scrollLeft = w.scrollLeft(),
-            offset = this._offset;
+        const w = $(window);
+        const scrollTop = w.scrollTop();
+        const scrollLeft = w.scrollLeft();
+        const offset = this._offset;
 
         this.relativeOffset = {
             top: offset.top - scrollTop,
             left: offset.left - scrollLeft,
         };
 
-        var svgDom = this.svgDom;
+        const svgDom = this.svgDom;
         if (svgDom) {
             this._svgDomRect = {
                 width: svgDom.width(),
@@ -359,33 +394,33 @@ Entry.Board = class Board {
 
         if (this.btnWrapper) {
             this.btnWrapper.attr({
-                transform:
-                    'translate(' + (offset.width / 2 - 65) + ',' + (offset.height - 200) + ')',
+                transform: `translate(${offset.width / 2 - 65},${offset.height - 200})`,
             });
         }
     }
 
     generateButtons() {
-        var btnWrapper = (this.btnWrapper = this.svg.elem('g'));
+        this.btnWrapper = this.svg.elem('g');
+        const btnWrapper = this.btnWrapper;
 
-        var TEXT_CLASS = 'entryFunctionButtonText';
-        var BUTTON_CLASS = 'entryFunctionButton';
+        const TEXT_CLASS = 'entryFunctionButtonText';
+        const BUTTON_CLASS = 'entryFunctionButton';
 
-        var saveText = btnWrapper.elem('text', {
+        const saveText = btnWrapper.elem('text', {
             x: 102.5,
             y: 33,
             class: TEXT_CLASS,
         });
         saveText.textContent = Lang.Buttons.save;
 
-        var cancelText = btnWrapper.elem('text', {
+        const cancelText = btnWrapper.elem('text', {
             x: 27,
             y: 33,
             class: TEXT_CLASS,
         });
         cancelText.textContent = Lang.Buttons.cancel;
 
-        var saveButton = btnWrapper.elem('circle', {
+        const saveButton = btnWrapper.elem('circle', {
             cx: 102.5,
             cy: 27.5,
             r: 27.5,
@@ -393,15 +428,15 @@ Entry.Board = class Board {
         });
         this.saveButton = saveButton;
 
-        var cancelButton = btnWrapper.elem('circle', {
+        const cancelButton = btnWrapper.elem('circle', {
             cx: 27.5,
             cy: 27.5,
             r: 27.5,
             class: BUTTON_CLASS,
         });
 
-        var saveFunc = this.save.bind(this);
-        var cancelFunc = this.cancelEdit.bind(this);
+        const saveFunc = this.save.bind(this);
+        const cancelFunc = this.cancelEdit.bind(this);
         this.cancelButton = cancelButton;
 
         $(saveButton).bind('mousedown touchstart', saveFunc);
@@ -419,14 +454,16 @@ Entry.Board = class Board {
     }
 
     generateCodeMagnetMap() {
-        var code = this.code;
-        var dragBlock = this.dragBlock;
-        if (!(code && dragBlock)) return;
+        const code = this.code;
+        const dragBlock = this.dragBlock;
+        if (!(code && dragBlock)) {
+            return;
+        }
 
         //reset magnetMap
         this._magnetMap = {};
 
-        for (var targetType in dragBlock.magnet) {
+        for (const targetType in dragBlock.magnet) {
             if (
                 targetType === 'next' &&
                 dragBlock.thread && // 파이썬 변환 후 basic skeleton 블록이 필드에 있는 경우 제외
@@ -435,22 +472,26 @@ Entry.Board = class Board {
                 continue;
             }
 
-            var metaData = this._getCodeBlocks(code, targetType).sort((a, b) => a.point - b.point);
+            const metaData = this._getCodeBlocks(code, targetType).sort((a, b) => {
+                return a.point - b.point;
+            });
 
             metaData.unshift({ point: -Number.MAX_VALUE, blocks: [] });
 
-            for (var i = 1; i < metaData.length; i++) {
-                var pointData = metaData[i];
-                var includeData = pointData;
-                var block = pointData.startBlock;
+            for (let i = 1; i < metaData.length; i++) {
+                const pointData = metaData[i];
+                let includeData = pointData;
+                const block = pointData.startBlock;
                 if (block) {
-                    var limit = pointData.endPoint,
-                        index = i;
+                    const limit = pointData.endPoint;
+                    let index = i;
                     while (limit > includeData.point) {
                         includeData.blocks.push(block);
                         index++;
                         includeData = metaData[index];
-                        if (!includeData) break;
+                        if (!includeData) {
+                            break;
+                        }
                     }
                     delete pointData.startBlock;
                 }
@@ -463,7 +504,7 @@ Entry.Board = class Board {
     }
 
     _getCodeBlocks(code, targetType) {
-        var func;
+        let func;
         switch (targetType) {
             case 'previous':
                 func = this._getNextMagnets;
@@ -487,17 +528,16 @@ Entry.Board = class Board {
         }, []);
     }
 
-    _getNextMagnets(thread, zIndex, offset, targetType) {
-        var blocks = thread.getBlocks();
-        var statementBlocks = [];
-        var metaData = [];
-        if (!offset) offset = { x: 0, y: 0 };
-        var cursorX = offset.x;
-        var cursorY = offset.y;
+    _getNextMagnets(thread, zIndex, offset = { x: 0, y: 0 }, targetType) {
+        const blocks = thread.getBlocks();
+        let statementBlocks = [];
+        const metaData = [];
+        let cursorX = offset.x;
+        let cursorY = offset.y;
 
-        for (var i = 0; i < blocks.length; i++) {
-            var block = blocks[i];
-            var blockView = block.view;
+        for (let i = 0; i < blocks.length; i++) {
+            const block = blocks[i];
+            const blockView = block.view;
             blockView.zIndex = zIndex;
             if (blockView.dragInstance) {
                 break;
@@ -505,12 +545,12 @@ Entry.Board = class Board {
 
             cursorY += blockView.y / this.scale;
             cursorX += blockView.x;
-            var endPoint = cursorY + 1;
+            let endPoint = cursorY + 1;
             if (blockView.magnet.next) {
                 endPoint += blockView.height;
                 metaData.push({
                     point: cursorY,
-                    endPoint: endPoint,
+                    endPoint,
                     startBlock: block,
                     blocks: [],
                 });
@@ -520,12 +560,14 @@ Entry.Board = class Board {
                 });
                 blockView.absX = cursorX;
             }
-            if (block.statements) zIndex += 0.01;
-            for (var j = 0; j < block.statements.length; j++) {
-                var thread = block.statements[j];
-                var statement = block.view._statements[j];
+            if (block.statements) {
+                zIndex += 0.01;
+            }
+            for (let j = 0; j < block.statements.length; j++) {
+                const thread = block.statements[j];
+                const statement = block.view._statements[j];
                 statement.zIndex = zIndex;
-                statement.absX = cursorX + (statement.x * this.scale);
+                statement.absX = cursorX + statement.x * this.scale;
                 metaData.push({
                     point: statement.y + cursorY - 30,
                     endPoint: statement.y + cursorY,
@@ -542,7 +584,7 @@ Entry.Board = class Board {
                         thread,
                         zIndex,
                         {
-                            x: (statement.x * this.scale) + cursorX,
+                            x: statement.x * this.scale + cursorX,
                             y: statement.y + cursorY,
                         },
                         targetType
@@ -557,25 +599,26 @@ Entry.Board = class Board {
         return statementBlocks.concat(metaData);
     }
 
-    _getPreviousMagnets(thread, zIndex, offset, targetType) {
-        var blocks = thread.getBlocks();
-        var metaData = [];
-        if (!offset) offset = { x: 0, y: 0 };
-        var cursorX = offset.x;
-        var cursorY = offset.y;
+    _getPreviousMagnets(thread, zIndex, offset = { x: 0, y: 0 }) {
+        const blocks = thread.getBlocks();
+        const metaData = [];
+        let cursorX = offset.x;
+        let cursorY = offset.y;
 
-        var block = blocks[0];
-        var blockView = block.view;
+        const block = blocks[0];
+        const blockView = block.view;
         blockView.zIndex = zIndex;
-        if (blockView.dragInstance) return [];
-        cursorY += (blockView.y / this.scale) - 15;
+        if (blockView.dragInstance) {
+            return [];
+        }
+        cursorY += blockView.y / this.scale - 15;
         cursorX += blockView.x;
-        var endPoint = cursorY + 1;
+        let endPoint = cursorY + 1;
         if (blockView.magnet.previous) {
             endPoint += blockView.height;
             metaData.push({
                 point: cursorY,
-                endPoint: endPoint,
+                endPoint,
                 startBlock: block,
                 blocks: [],
             });
@@ -589,34 +632,36 @@ Entry.Board = class Board {
         return [];
     }
 
-    _getFieldMagnets(thread, zIndex, offset, targetType) {
-        var blocks = thread.getBlocks();
-        var statementBlocks = [];
-        var metaData = [];
-
-        if (!offset) offset = { x: 0, y: 0 };
-        var cursorX = offset.x;
-        var cursorY = offset.y;
-        for (var i = 0; i < blocks.length; i++) {
-            var block = blocks[i];
-            var blockView = block.view;
-            if (blockView.dragInstance) break;
+    _getFieldMagnets(thread, zIndex, offset = { x: 0, y: 0 }, targetType) {
+        const blocks = thread.getBlocks();
+        let statementBlocks = [];
+        let metaData = [];
+        let cursorX = offset.x;
+        let cursorY = offset.y;
+        for (let i = 0; i < blocks.length; i++) {
+            const block = blocks[i];
+            const blockView = block.view;
+            if (blockView.dragInstance) {
+                break;
+            }
             blockView.zIndex = zIndex;
             cursorY += blockView.y / this.scale;
             cursorX += blockView.x;
             metaData = metaData.concat(
                 this._getFieldBlockMetaData(blockView, cursorX, cursorY, zIndex, targetType)
             );
-            if (block.statements) zIndex += 0.01;
-            for (var j = 0; j < block.statements.length; j++) {
-                var thread = block.statements[j];
-                var statement = block.view._statements[j];                
+            if (block.statements) {
+                zIndex += 0.01;
+            }
+            for (let j = 0; j < block.statements.length; j++) {
+                const thread = block.statements[j];
+                const statement = block.view._statements[j];
                 statementBlocks = statementBlocks.concat(
                     this._getFieldMagnets(
                         thread,
                         zIndex,
                         {
-                            x: (statement.x * this.scale) + cursorX,
+                            x: statement.x * this.scale + cursorX,
                             y: statement.y + cursorY,
                         },
                         targetType
@@ -632,20 +677,24 @@ Entry.Board = class Board {
     }
 
     _getFieldBlockMetaData(blockView, cursorX, cursorY, zIndex, targetType) {
-        var contents = blockView._contents;
-        var metaData = [];
+        const contents = blockView._contents;
+        let metaData = [];
         cursorY += blockView.contentPos.y;
-        for (var i = 0; i < contents.length; i++) {
-            var content = contents[i];
-            if (!(content instanceof Entry.FieldBlock)) continue;
-            var contentBlock = content._valueBlock;
-            if (contentBlock.view.dragInstance) continue;
+        for (let i = 0; i < contents.length; i++) {
+            const content = contents[i];
+            if (!(content instanceof Entry.FieldBlock)) {
+                continue;
+            }
+            const contentBlock = content._valueBlock;
+            if (contentBlock.view.dragInstance) {
+                continue;
+            }
             if (content.acceptType !== targetType && content.acceptType !== 'boolean') {
                 continue;
             }
-            var startX = cursorX + (content.box.x * this.scale);
-            var startY = cursorY + content.box.y + (blockView.contentHeight % 1000) * -0.5;
-            var endY = cursorY + content.box.y + content.box.height;
+            const startX = cursorX + content.box.x * this.scale;
+            const startY = cursorY + content.box.y + (blockView.contentHeight % 1000) * -0.5;
+            const endY = cursorY + content.box.y + content.box.height;
             if (content.acceptType === targetType) {
                 metaData.push({
                     point: startY,
@@ -658,13 +707,13 @@ Entry.Board = class Board {
                     blocks: [],
                 });
             }
-            var contentBlockView = contentBlock.view;
+            const contentBlockView = contentBlock.view;
             contentBlockView.absX = startX;
             contentBlockView.zIndex = zIndex;
             metaData = metaData.concat(
                 this._getFieldBlockMetaData(
                     contentBlockView,
-                    startX + (contentBlockView.contentPos.x * this.scale),
+                    startX + contentBlockView.contentPos.x * this.scale,
                     startY + contentBlockView.contentPos.y,
                     zIndex + 0.01,
                     targetType
@@ -674,34 +723,36 @@ Entry.Board = class Board {
         return metaData;
     }
 
-    _getOutputMagnets(thread, zIndex, offset, targetType) {
-        var blocks = thread.getBlocks();
-        var statementBlocks = [];
-        var metaData = [];
-        var that = this;
-        if (!offset) offset = { x: 0, y: 0 };
-        var cursorX = offset.x;
-        var cursorY = offset.y;
-        for (var i = 0; i < blocks.length; i++) {
-            var block = blocks[i];
-            var blockView = block.view;
-            if (blockView.dragInstance) break;
+    _getOutputMagnets(thread, zIndex, offset = { x: 0, y: 0 }, targetType) {
+        const blocks = thread.getBlocks();
+        let statementBlocks = [];
+        let metaData = [];
+        let cursorX = offset.x;
+        let cursorY = offset.y;
+        for (let i = 0; i < blocks.length; i++) {
+            const block = blocks[i];
+            const blockView = block.view;
+            if (blockView.dragInstance) {
+                break;
+            }
             blockView.zIndex = zIndex;
             cursorY += blockView.y / this.scale;
             cursorX += blockView.x;
             metaData = metaData.concat(
                 this._getOutputMetaData(blockView, cursorX, cursorY, zIndex, targetType)
             );
-            if (block.statements) zIndex += 0.01;
-            for (var j = 0; j < block.statements.length; j++) {
-                var thread = block.statements[j];
-                var statement = block.view._statements[j];
+            if (block.statements) {
+                zIndex += 0.01;
+            }
+            for (let j = 0; j < block.statements.length; j++) {
+                const thread = block.statements[j];
+                const statement = block.view._statements[j];
                 statementBlocks = statementBlocks.concat(
                     this._getOutputMagnets(
                         thread,
                         zIndex,
                         {
-                            x: (statement.x * this.scale) + cursorX,
+                            x: statement.x * this.scale + cursorX,
                             y: statement.y + cursorY,
                         },
                         targetType
@@ -717,16 +768,16 @@ Entry.Board = class Board {
     }
 
     _getOutputMetaData(blockView, cursorX, cursorY, zIndex, targetType) {
-        var contents = blockView._contents;
-        var metaData = [];
+        const contents = blockView._contents;
+        let metaData = [];
         cursorX += blockView.contentPos.x * this.scale;
         cursorY += blockView.contentPos.y;
-        for (var i = 0; i < contents.length; i++) {
-            var content = contents[i];
+        for (let i = 0; i < contents.length; i++) {
+            const content = contents[i];
             const contentScaleX = content.box.x * this.scale;
-            var startX = cursorX + contentScaleX;
-            var startY = cursorY - 24;
-            var endY = cursorY;
+            const startX = cursorX + contentScaleX;
+            const startY = cursorY - 24;
+            const endY = cursorY;
             if (content instanceof Entry.FieldBlock) {
                 if (content.acceptType === targetType) {
                     metaData.push({
@@ -744,7 +795,7 @@ Entry.Board = class Board {
                     content.width = 20;
                 }
 
-                var contentBlock = content._valueBlock;
+                const contentBlock = content._valueBlock;
                 if (contentBlock) {
                     metaData = metaData.concat(
                         this._getOutputMetaData(
@@ -758,7 +809,9 @@ Entry.Board = class Board {
                 }
                 continue;
             } else if (content instanceof Entry.FieldOutput) {
-                if (content.acceptType !== targetType) continue;
+                if (content.acceptType !== targetType) {
+                    continue;
+                }
                 metaData.push({
                     point: startY,
                     endPoint: endY,
@@ -772,10 +825,14 @@ Entry.Board = class Board {
                 content.absX = startX;
                 content.zIndex = zIndex;
                 content.width = 20;
-                var contentBlock = content._valueBlock;
-                if (!contentBlock) continue;
-                if (contentBlock.view.dragInstance) continue;
-                var contentBlockView = contentBlock.view;
+                const contentBlock = content._valueBlock;
+                if (!contentBlock) {
+                    continue;
+                }
+                if (contentBlock.view.dragInstance) {
+                    continue;
+                }
+                const contentBlockView = contentBlock.view;
                 metaData = metaData.concat(
                     this._getOutputMetaData(
                         contentBlockView,
@@ -791,16 +848,18 @@ Entry.Board = class Board {
     }
 
     getNearestMagnet(x, y, targetType) {
-        var targetArray = this._magnetMap[targetType];
-        if (!targetArray || targetArray.length === 0) return;
+        const targetArray = this._magnetMap[targetType];
+        if (!targetArray || targetArray.length === 0) {
+            return;
+        }
 
-        var minIndex = 0,
-            maxIndex = targetArray.length - 1,
-            index,
-            pointData,
-            result = null,
-            searchValue = targetType === 'previous' ? y - 15 : y,
-            leftOffset = ['previous', 'next'].indexOf(targetType) > -1 ? 20 : 0;
+        let minIndex = 0;
+        let maxIndex = targetArray.length - 1;
+        let index;
+        let pointData;
+        let result = null;
+        const searchValue = targetType === 'previous' ? y - 15 : y;
+        const leftOffset = ['previous', 'next'].indexOf(targetType) > -1 ? 20 : 0;
         while (minIndex <= maxIndex) {
             index = ((minIndex + maxIndex) / 2) | 0;
             pointData = targetArray[index];
@@ -809,15 +868,16 @@ Entry.Board = class Board {
             } else if (searchValue > pointData.endPoint) {
                 minIndex = index + 1;
             } else {
-                var blocks = pointData.blocks;
-                for (var i = 0; i < blocks.length; i++) {
-                    var blockView = blocks[i].view;
+                const blocks = pointData.blocks;
+                for (let i = 0; i < blocks.length; i++) {
+                    const blockView = blocks[i].view;
                     const minX = blockView.absX / this.scale - leftOffset;
                     const maxX = blockView.width + minX;
                     if (minX < x && x < maxX) {
-                        var resultBlock = pointData.blocks[i];
-                        if (!result || result.view.zIndex < resultBlock.view.zIndex)
+                        const resultBlock = pointData.blocks[i];
+                        if (!result || result.view.zIndex < resultBlock.view.zIndex) {
                             result = pointData.blocks[i];
+                        }
                     }
                 }
                 return result;
@@ -831,21 +891,23 @@ Entry.Board = class Board {
             return;
         }
 
-        var code = this.code;
+        const code = this.code;
         // currently top of dom
         // no need to dominate again
         if (!_shouldDominate(thread.view.zIndex, code.getMaxZIndex())) {
             return;
         }
 
-        var block = thread.getFirstBlock();
-        if (!block) return;
+        const block = thread.getFirstBlock();
+        if (!block) {
+            return;
+        }
 
         //udpate zIndex data first
         code.dominate(thread);
         //udpate visual things next frame
         requestAnimationFrame(() => {
-            var svgGroup = _.result(block && block.view, 'svgGroup');
+            const svgGroup = _.result(block && block.view, 'svgGroup');
             if (this.svgBlockGroup && svgGroup) {
                 this.svgBlockGroup.appendChild(svgGroup);
             }
@@ -865,17 +927,19 @@ Entry.Board = class Board {
     }
 
     _removeActivated() {
-        if (!this._activatedBlockView) return;
+        if (!this._activatedBlockView) {
+            return;
+        }
 
         this._activatedBlockView.removeActivated();
         this._activatedBlockView = null;
     }
 
     activateBlock(block) {
-        var view = block.view;
-        var { x: blockX, y: blockY } = view.getAbsoluteCoordinate();
+        const view = block.view;
+        const { x: blockX, y: blockY } = view.getAbsoluteCoordinate();
 
-        var { width, height } = this.getSvgDomRect();
+        const { width, height } = this.getSvgDomRect();
         this.scroller.scroll(width / 2 - blockX, height / 2 - blockY - 100);
 
         view.addActivated();
@@ -888,13 +952,21 @@ Entry.Board = class Board {
     }
 
     separate(block, count, index) {
-        if (typeof block === 'string') block = this.findById(block);
-        if (block.view) block.view._toGlobalCoordinate();
+        if (typeof block === 'string') {
+            block = this.findById(block);
+        }
+        if (block.view) {
+            block.view._toGlobalCoordinate();
+        }
         if (block.getBlockType() === 'output') {
-            if (!count) return;
-            var prevOutputBlock = block.getPrevOutputBlock();
-            var nextOutputBlock = block;
-            for (var i = 0; i < count; i++) nextOutputBlock = nextOutputBlock.getOutputBlock();
+            if (!count) {
+                return;
+            }
+            const prevOutputBlock = block.getPrevOutputBlock();
+            let nextOutputBlock = block;
+            for (let i = 0; i < count; i++) {
+                nextOutputBlock = nextOutputBlock.getOutputBlock();
+            }
 
             block.separate(count, index);
             if (prevOutputBlock && nextOutputBlock) {
@@ -902,8 +974,9 @@ Entry.Board = class Board {
                 nextOutputBlock.doInsert(prevOutputBlock.view._contents[1]);
             }
         } else {
-            var nextBlock, backupPos;
-            var prevBlock = block.getPrevBlock();
+            let nextBlock;
+            let backupPos;
+            const prevBlock = block.getPrevBlock();
             if (
                 !prevBlock &&
                 block.thread instanceof Entry.Thread &&
@@ -911,12 +984,14 @@ Entry.Board = class Board {
             ) {
                 nextBlock = block.thread.getBlock(block.thread.indexOf(block) + count);
 
-                if (nextBlock) backupPos = nextBlock.view.getAbsoluteCoordinate();
+                if (nextBlock) {
+                    backupPos = nextBlock.view.getAbsoluteCoordinate();
+                }
             }
-            var prevThread = block.thread;
             block.separate(count, index);
-            if (prevBlock && prevBlock.getNextBlock()) prevBlock.getNextBlock().view.bindPrev();
-            else if (nextBlock) {
+            if (prevBlock && prevBlock.getNextBlock()) {
+                prevBlock.getNextBlock().view.bindPrev();
+            } else if (nextBlock) {
                 nextBlock.view._toGlobalCoordinate();
                 nextBlock.moveTo(backupPos.x, backupPos.y);
             }
@@ -925,9 +1000,11 @@ Entry.Board = class Board {
 
     insert(block, pointer, count) {
         // pointer can be target
-        if (typeof block === 'string') block = this.findById(block);
+        if (typeof block === 'string') {
+            block = this.findById(block);
+        }
 
-        var targetBlock;
+        let targetBlock;
 
         if (pointer.length === 3) {
             // for global
@@ -944,11 +1021,16 @@ Entry.Board = class Board {
             targetBlock.doInsert(block);
         } else {
             this.separate(block, count);
-            var targetObj;
-            if (pointer instanceof Array) targetObj = this.code.getByPointer(pointer);
-            else targetObj = pointer;
+            let targetObj;
+            if (pointer instanceof Array) {
+                targetObj = this.code.getByPointer(pointer);
+            } else {
+                targetObj = pointer;
+            }
             if (targetObj instanceof Entry.Block) {
-                if (block.getBlockType() === 'basic') block.view.bindPrev(targetObj);
+                if (block.getBlockType() === 'basic') {
+                    block.view.bindPrev(targetObj);
+                }
                 block.doInsert(targetObj);
             } else if (targetObj instanceof Entry.FieldStatement) {
                 block.view.bindPrev(targetObj);
@@ -964,32 +1046,40 @@ Entry.Board = class Board {
     }
 
     adjustThreadsPosition() {
-        var code = this.code;
-        if (!code) return;
-        if (!code.view) return;
+        const code = this.code;
+        if (!code) {
+            return;
+        }
+        if (!code.view) {
+            return;
+        }
 
-        var threads = code.getThreads();
-        if (!threads || threads.length === 0) return;
+        let threads = code.getThreads();
+        if (!threads || threads.length === 0) {
+            return;
+        }
 
-        threads = threads.sort((a, b) => a.getFirstBlock().view.x - b.getFirstBlock().view.x);
+        threads = threads.sort((a, b) => {
+            return a.getFirstBlock().view.x - b.getFirstBlock().view.x;
+        });
 
-        var block = threads[0].getFirstBlock();
+        let block = threads[0].getFirstBlock();
         if (block) {
             block = block.view;
-            var { x, y } = block.getAbsoluteCoordinate();
+            const { x, y } = block.getAbsoluteCoordinate();
             this.scroller.scroll(50 - x, 30 - y, true);
         }
     }
 
     _initContextOptions() {
-        var that = this;
+        const that = this;
         this._contextOptions = [
             {
                 activated: true,
                 option: {
                     text: Lang.Blocks.Paste_blocks,
                     enable: !!Entry.clipboard && !this.readOnly,
-                    callback: function() {
+                    callback() {
                         Entry.do('addThread', Entry.clipboard)
                             .value.getFirstBlock()
                             .copyToClipboard();
@@ -1001,7 +1091,7 @@ Entry.Board = class Board {
                 option: {
                     text: Lang.Blocks.tidy_up_block,
                     enable: !this.readOnly,
-                    callback: function() {
+                    callback() {
                         that.alignThreads();
                     },
                 },
@@ -1011,7 +1101,7 @@ Entry.Board = class Board {
                 option: {
                     text: Lang.Blocks.Clear_all_blocks,
                     enable: !this.readOnly,
-                    callback: function() {
+                    callback() {
                         Entry.do('destroyThreads');
                     },
                 },
@@ -1022,18 +1112,20 @@ Entry.Board = class Board {
                 option: {
                     text: Lang.Menus.save_as_image_all,
                     enable: !this.readOnly,
-                    callback: function() {
-                        var threads = that.code.getThreads();
-                        var images = [];
+                    callback() {
+                        const threads = that.code.getThreads();
+                        const images = [];
                         threads.forEach((t, i) => {
-                            var topBlock = t.getFirstBlock();
-                            if (!topBlock) return;
+                            const topBlock = t.getFirstBlock();
+                            if (!topBlock) {
+                                return;
+                            }
                             if (threads.length > 1 && Entry.isOffline) {
                                 topBlock.view.getDataUrl().then((data) => {
                                     images.push(data);
                                     if (images.length == threads.length) {
                                         Entry.dispatchEvent('saveBlockImages', {
-                                            images: images,
+                                            images,
                                         });
                                     }
                                 });
@@ -1056,14 +1148,16 @@ Entry.Board = class Board {
     }
 
     _bindEvent() {
-        var evt = Entry.documentMousedown;
+        let evt = Entry.documentMousedown;
         if (evt) {
             evt.attach(this, this.setSelectedBlock);
             evt.attach(this, this._removeActivated);
         }
 
         evt = Entry.windowResized;
-        if (evt) evt.attach(this, Entry.Utils.debounce(this.updateOffset, 200));
+        if (evt) {
+            evt.attach(this, Entry.Utils.debounce(this.updateOffset, 200));
+        }
     }
 
     offset() {
@@ -1075,16 +1169,18 @@ Entry.Board = class Board {
     }
 
     _rightClick(e) {
-        var disposeEvent = Entry.disposeEvent;
+        const disposeEvent = Entry.disposeEvent;
         disposeEvent && disposeEvent.notify(e);
-        if (!this.visible) return;
+        if (!this.visible) {
+            return;
+        }
 
-        var contextOptions = this._contextOptions;
+        const contextOptions = this._contextOptions;
         contextOptions[Entry.Board.OPTION_PASTE].option.enable = !!Entry.clipboard;
         contextOptions[Entry.Board.OPTION_DOWNLOAD].option.enable =
             this.code.getThreads().length !== 0;
 
-        var { clientX: x, clientY: y } = Entry.Utils.convertMouseEvent(e);
+        const { clientX: x, clientY: y } = Entry.Utils.convertMouseEvent(e);
         Entry.ContextMenu.show(
             contextOptions.reduce((options, { activated, option }) => {
                 if (activated) {
@@ -1099,14 +1195,14 @@ Entry.Board = class Board {
 
     getDom(query) {
         query = query.concat();
-        var key = query.shift();
+        const key = query.shift();
         if (key === 'trashcan') {
             return this.workspace.trashcan.svgGroup;
         } else if (key === 'coord') {
             return {
                 getBoundingClientRect: function() {
-                    var halfWidth = 20,
-                        boardOffset = this.relativeOffset;
+                    const halfWidth = 20;
+                    const boardOffset = this.relativeOffset;
                     return {
                         top: query[1] + boardOffset.top - halfWidth,
                         left: query[0] + boardOffset.left - halfWidth,
@@ -1120,7 +1216,7 @@ Entry.Board = class Board {
         } else if (key === 'saveButton') {
             return this.saveButton;
         } else if (key instanceof Array) {
-            var targetObj = this.code.getByPointer(key);
+            const targetObj = this.code.getByPointer(key);
             if (targetObj.getDom) {
                 return targetObj.getDom(query);
             } else {
@@ -1130,40 +1226,54 @@ Entry.Board = class Board {
     }
 
     findBlock(block) {
-        if (typeof block === 'string') return this.findById(block);
-        else if (block && block.id) return this.findById(block.id) || block;
-        else if (block instanceof Array) return this.code.getByPointer(block);
+        if (typeof block === 'string') {
+            return this.findById(block);
+        } else if (block && block.id) {
+            return this.findById(block.id) || block;
+        } else if (block instanceof Array) {
+            return this.code.getByPointer(block);
+        }
         return block;
     }
 
-    scrollToPointer(pointer, query) {
-        var obj = this.code.getByPointer(pointer);
-        var pos;
+    scrollToPointer(pointer) {
+        const obj = this.code.getByPointer(pointer);
+        let pos;
         if (obj instanceof Entry.Block) {
             pos = obj.view.getAbsoluteCoordinate();
             obj.view.dominate();
         } else if (obj instanceof Entry.Thread) {
             pos = obj.view.requestAbsoluteCoordinate();
-        } else if (obj.getAbsolutePosFromBoard) pos = obj.getAbsolutePosFromBoard();
+        } else if (obj.getAbsolutePosFromBoard) {
+            pos = obj.getAbsolutePosFromBoard();
+        }
 
-        var newX = 0,
-            newY = 0,
-            offset = this._offset,
-            width = offset.width,
-            height = offset.height;
+        let newX = 0;
+        let newY = 0;
+        const offset = this._offset;
+        const width = offset.width;
+        const height = offset.height;
 
-        if (pos.x > width - 200) newX = width - 200 - pos.x;
-        else if (pos.x < 100) newX = 100 - pos.x;
+        if (pos.x > width - 200) {
+            newX = width - 200 - pos.x;
+        } else if (pos.x < 100) {
+            newX = 100 - pos.x;
+        }
 
-        if (pos.y > height - 200) newY = height - 200 - pos.y;
-        else if (pos.y < 100) newY = 100 - pos.y;
+        if (pos.y > height - 200) {
+            newY = height - 200 - pos.y;
+        } else if (pos.y < 100) {
+            newY = 100 - pos.y;
+        }
 
         this.scroller.scroll(newX, newY, true);
         return [newX, newY];
     }
 
     getSvgDomRect() {
-        if (!this._svgDomRect) this.updateOffset();
+        if (!this._svgDomRect) {
+            this.updateOffset();
+        }
         return this._svgDomRect;
     }
 
