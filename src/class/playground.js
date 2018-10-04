@@ -1877,7 +1877,10 @@ Entry.Playground = function() {
         var blockMenu = _.result(this.mainWorkspace, 'blockMenu');
         if (!blockMenu) return;
 
-        Object.values(Entry.EXPANSION_BLOCK_LIST).forEach(block => {blockMenu.banClass(block.name, true);});
+        Object.values(Entry.EXPANSION_BLOCK_LIST).forEach(block => {
+            blockMenu.banClass(block.name, true);
+            blockMenu.banClass(block.name + "_legacy", true);
+        });
     }
 
     p.updateHW = function() {
