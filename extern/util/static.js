@@ -702,6 +702,8 @@ EntryStatic.getAllBlocks = function() {
 				"truetrue_set_sec_move",
 				"truetrue_set_rotate",
 				"truetrue_set_sec_rotate",
+				"truetrue_set_grid_block",
+				"truetrue_set_grid_rotate",
                 //CODEino
                 "CODEino_get_named_sensor_value",
                 "CODEino_get_sound_status",
@@ -865,6 +867,7 @@ EntryStatic.getAllBlocks = function() {
                 'chocopi_led',
                 'chocopi_dc_motor',
                 'chocopi_servo_motor',
+                'chocopi_map_range',
 
                 //jeil science smartBoard. 2016-11-03
                 //smartBoard
