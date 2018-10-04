@@ -2,8 +2,8 @@ module.exports = {
     getBlocks() {
         return {
             when_run_button_click: {
-                color: EntryStatic.COLOR_START_1,
-                outerLine: EntryStatic.COLOR_START_2,
+                color: EntryStatic.colorSet.block.default.START,
+                outerLine: EntryStatic.colorSet.block.darken.START,
                 skeleton: 'basic_event',
                 statements: [],
                 params: [
@@ -39,8 +39,8 @@ module.exports = {
                 },
             },
             when_some_key_pressed: {
-                color: EntryStatic.COLOR_START_1,
-                outerLine: EntryStatic.COLOR_START_2,
+                color: EntryStatic.colorSet.block.default.START,
+                outerLine: EntryStatic.colorSet.block.darken.START,
                 skeleton: 'basic_event',
                 statements: [],
                 params: [
@@ -109,8 +109,8 @@ module.exports = {
                 },
             },
             mouse_clicked: {
-                color: EntryStatic.COLOR_START_1,
-                outerLine: EntryStatic.COLOR_START_2,
+                color: EntryStatic.colorSet.block.default.START,
+                outerLine: EntryStatic.colorSet.block.darken.START,
                 skeleton: 'basic_event',
                 statements: [],
                 params: [
@@ -146,8 +146,8 @@ module.exports = {
                 },
             },
             mouse_click_cancled: {
-                color: EntryStatic.COLOR_START_1,
-                outerLine: EntryStatic.COLOR_START_2,
+                color: EntryStatic.colorSet.block.default.START,
+                outerLine: EntryStatic.colorSet.block.darken.START,
                 skeleton: 'basic_event',
                 statements: [],
                 params: [
@@ -183,8 +183,8 @@ module.exports = {
                 },
             },
             when_object_click: {
-                color: EntryStatic.COLOR_START_1,
-                outerLine: EntryStatic.COLOR_START_2,
+                color: EntryStatic.colorSet.block.default.START,
+                outerLine: EntryStatic.colorSet.block.darken.START,
                 skeleton: 'basic_event',
                 statements: [],
                 params: [
@@ -220,8 +220,8 @@ module.exports = {
                 },
             },
             when_object_click_canceled: {
-                color: EntryStatic.COLOR_START_1,
-                outerLine: EntryStatic.COLOR_START_2,
+                color: EntryStatic.colorSet.block.default.START,
+                outerLine: EntryStatic.colorSet.block.darken.START,
                 skeleton: 'basic_event',
                 statements: [],
                 params: [
@@ -257,8 +257,8 @@ module.exports = {
                 },
             },
             when_message_cast: {
-                color: EntryStatic.COLOR_START_1,
-                outerLine: EntryStatic.COLOR_START_2,
+                color: EntryStatic.colorSet.block.default.START,
+                outerLine: EntryStatic.colorSet.block.darken.START,
                 skeleton: 'basic_event',
                 statements: [],
                 params: [
@@ -277,8 +277,8 @@ module.exports = {
                         menuName: 'messages',
                         fontSize: 10,
                         textColor: '#FFFFFF',
-                        bgColor: EntryStatic.COLOR_START_2,
-                        arrowColor: EntryStatic.ARROW_COLOR_START,
+                        bgColor: EntryStatic.colorSet.block.darken.START,
+                        arrowColor: EntryStatic.colorSet.arrow.default.START,
                     },
                 ],
                 events: {
@@ -328,7 +328,7 @@ module.exports = {
                                     value: null,
                                     menuName: 'messages',
                                     fontSize: 11,
-                                    arrowColor: EntryStatic.ARROW_COLOR_START,
+                                    arrowColor: EntryStatic.colorSet.arrow.default.START,
                                     converter:
                                         Entry.block.converters.returnStringKey,
                                 },
@@ -338,8 +338,8 @@ module.exports = {
                 },
             },
             message_cast: {
-                color: EntryStatic.COLOR_START_1,
-                outerLine: EntryStatic.COLOR_START_2,
+                color: EntryStatic.colorSet.block.default.START,
+                outerLine: EntryStatic.colorSet.block.darken.START,
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -349,8 +349,8 @@ module.exports = {
                         menuName: 'messages',
                         fontSize: 10,
                         textColor: '#fff',
-                        bgColor: EntryStatic.COLOR_START_2,
-                        arrowColor: EntryStatic.ARROW_COLOR_START,
+                        bgColor: EntryStatic.colorSet.block.darken.START,
+                        arrowColor: EntryStatic.colorSet.arrow.default.START,
                     },
                     {
                         type: 'Indicator',
@@ -409,7 +409,7 @@ module.exports = {
                                     value: null,
                                     menuName: 'messages',
                                     fontSize: 11,
-                                    arrowColor: EntryStatic.ARROW_COLOR_START,
+                                    arrowColor: EntryStatic.colorSet.arrow.default.START,
                                     converter:
                                         Entry.block.converters.returnStringKey,
                                     paramType: 'signal',
@@ -421,8 +421,8 @@ module.exports = {
                 },
             },
             message_cast_wait: {
-                color: EntryStatic.COLOR_START_1,
-                outerLine: EntryStatic.COLOR_START_2,
+                color: EntryStatic.colorSet.block.default.START,
+                outerLine: EntryStatic.colorSet.block.darken.START,
                 skeleton: 'basic',
                 statements: [],
                 params: [
@@ -432,8 +432,8 @@ module.exports = {
                         menuName: 'messages',
                         fontSize: 10,
                         textColor: '#fff',
-                        bgColor: EntryStatic.COLOR_START_2,
-                        arrowColor: EntryStatic.ARROW_COLOR_START,
+                        bgColor: EntryStatic.colorSet.block.darken.START,
+                        arrowColor: EntryStatic.colorSet.arrow.default.START,
                     },
                     {
                         type: 'Indicator',
@@ -513,7 +513,7 @@ module.exports = {
                                     value: null,
                                     menuName: 'messages',
                                     fontSize: 11,
-                                    arrowColor: EntryStatic.ARROW_COLOR_START,
+                                    arrowColor: EntryStatic.colorSet.arrow.default.START,
                                     converter:
                                         Entry.block.converters.returnStringKey,
                                 },
@@ -523,8 +523,8 @@ module.exports = {
                 },
             },
             when_scene_start: {
-                color: EntryStatic.COLOR_START_1,
-                outerLine: EntryStatic.COLOR_START_2,
+                color: EntryStatic.colorSet.block.default.START,
+                outerLine: EntryStatic.colorSet.block.darken.START,
                 skeleton: 'basic_event',
                 statements: [],
                 params: [
@@ -560,8 +560,8 @@ module.exports = {
                 },
             },
             start_scene: {
-                color: EntryStatic.COLOR_START_1,
-                outerLine: EntryStatic.COLOR_START_2,
+                color: EntryStatic.colorSet.block.default.START,
+                outerLine: EntryStatic.colorSet.block.darken.START,
                 skeleton: 'basic_without_next',
                 statements: [],
                 params: [
@@ -571,8 +571,8 @@ module.exports = {
                         menuName: 'scenes',
                         fontSize: 10,
                         textColor: '#fff',
-                        bgColor: EntryStatic.COLOR_START_2,
-                        arrowColor: EntryStatic.ARROW_COLOR_START,
+                        bgColor: EntryStatic.colorSet.block.darken.START,
+                        arrowColor: EntryStatic.colorSet.arrow.default.START,
                     },
                     {
                         type: 'Indicator',
@@ -615,7 +615,7 @@ module.exports = {
                                     value: null,
                                     menuName: 'scenes',
                                     fontSize: 11,
-                                    arrowColor: EntryStatic.ARROW_COLOR_START,
+                                    arrowColor: EntryStatic.colorSet.arrow.default.START,
                                     converter:
                                         Entry.block.converters.returnStringKey,
                                 },
@@ -625,8 +625,8 @@ module.exports = {
                 },
             },
             start_neighbor_scene: {
-                color: EntryStatic.COLOR_START_1,
-                outerLine: EntryStatic.COLOR_START_2,
+                color: EntryStatic.colorSet.block.default.START,
+                outerLine: EntryStatic.colorSet.block.darken.START,
                 skeleton: 'basic_without_next',
                 statements: [],
                 params: [
@@ -639,8 +639,8 @@ module.exports = {
                         value: 'next',
                         fontSize: 10,
                         textColor: '#fff',
-                        bgColor: EntryStatic.COLOR_START_2,
-                        arrowColor: EntryStatic.ARROW_COLOR_START,
+                        bgColor: EntryStatic.colorSet.block.darken.START,
+                        arrowColor: EntryStatic.colorSet.arrow.default.START,
                     },
                     {
                         type: 'Indicator',
@@ -711,7 +711,7 @@ module.exports = {
                                     ],
                                     value: 'next',
                                     fontSize: 11,
-                                    arrowColor: EntryStatic.ARROW_COLOR_START,
+                                    arrowColor: EntryStatic.colorSet.arrow.default.START,
                                     converter:
                                         Entry.block.converters
                                             .returnStringValue,
