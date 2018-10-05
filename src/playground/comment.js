@@ -56,8 +56,8 @@ Entry.Comment = class Comment {
         this.svgGroup = target
             ? target
             : wrapper.elem('g', {
-                  id: `${id}C`,
-              });
+                id: `${id}C`,
+            });
         this.mouseDown = this.mouseDown.bind(this);
         this.mouseMove = this.mouseMove.bind(this);
         this.mouseUp = this.mouseUp.bind(this);
@@ -71,7 +71,7 @@ Entry.Comment = class Comment {
             // const {x: offsetX, y: offsetY} = this.blockView.getAbsoluteCoordinate();
             // console.log(offsetX, offsetY);
             const { x, width, y, height } = this.pathGroup.getBBox();
-
+ 
             const matrix = this.parentGroup.getCTM();
             const { x: pathX, y: pathY } = Entry.GlobalSvg.getRelativePoint(matrix);
             const startX = pathX + width;
@@ -124,14 +124,18 @@ Entry.Comment = class Comment {
     }
 
     moveTo(x, y, animate, doNotUpdatePos) {
-        var thisX = this.x;
-        var thisY = this.y;
+        const thisX = this.x;
+        const thisY = this.y;
         if (!this.display) {
             x = -99999;
             y = -99999;
         }
-        if (thisX !== x || thisY !== y) this.set({ x: x, y: y });
-        if (this.visible && this.display) this.setPosition();
+        if (thisX !== x || thisY !== y) {
+            this.set({ x, y });
+        }
+        if (this.visible && this.display) {
+            this.setPosition();
+        }
     }
 
     moveBy(x, y, animate, doNotUpdatePos) {
@@ -194,14 +198,12 @@ Entry.Comment = class Comment {
         if (this.dragMode == Entry.DRAG_MODE_DRAG || diff > Entry.BlockView.DRAG_RADIUS) {
             const workspaceMode = this.board.workspace.getMode();
 
-            let isFirst = false;
-            var dragInstance = this.dragInstance;
+            const dragInstance = this.dragInstance;
             if (this.dragMode != Entry.DRAG_MODE_DRAG) {
                 this.dragMode = Entry.DRAG_MODE_DRAG;
                 Entry.GlobalSvg.setComment(this, workspaceMode);
                 const offset = this.board.offset();
                 Entry.GlobalSvg._applyDomPos(offset.left, offset.top);
-                isFirst = true;
             }
             this.moveBy(
                 mouseEvent.pageX - dragInstance.offsetX,
@@ -236,8 +238,7 @@ Entry.Comment = class Comment {
     }
 
     addControl() {
-        var dom = this.svgGroup;
-        var that = this;
+        const dom = this.svgGroup;
         dom.onmousedown = this.mouseDown;
         dom.ontouchstart = this.mouseDown;
     }
