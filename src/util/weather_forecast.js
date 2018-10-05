@@ -34,7 +34,7 @@ Entry.EXPANSION_BLOCK.weather.propertyMap ={
 };
 
 Entry.EXPANSION_BLOCK.weather.getDate = function (key) {
-    var date = Entry.EXPANSION_BLOCK.weather.date;
+    let date = new Date(Entry.EXPANSION_BLOCK.weather.date);
     switch (key) {
         case "yesterday":
             date.setDate(date.getDate() - 1);
