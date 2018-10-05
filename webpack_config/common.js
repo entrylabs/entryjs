@@ -13,6 +13,10 @@ module.exports = {
         chunkFilename: '[name].bundle.js',
         filename: '[name].js',
     },
+    resolve: {
+        // Add '.ts' and '.tsx' as resolvable extensions.
+        extensions: [".ts", ".tsx", ".js", ".json"]
+    },
     module: {
         rules: [
             {
@@ -39,6 +43,10 @@ module.exports = {
                     limit: 10000,
                 },
             },
+            {
+                test: /\.tsx?$/,
+                loader: 'awesome-typescript-loader'
+            }
         ],
     },
     plugins: [
