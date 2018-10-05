@@ -626,6 +626,7 @@ Entry.Engine = function() {
                 w.getMode() === Entry.Workspace.MODE_VIMBOARD &&
                 w.codeToText();
         })(Entry.getMainWS());
+        Entry.dispatchEvent('dispatchEventDidToggleStop');
     };
 
     p.setEnableInputField = function(on) {
@@ -683,6 +684,7 @@ Entry.Engine = function() {
                 });
             }
         }
+        Entry.dispatchEvent('dispatchEventDidTogglePause');
     };
 
     p.setPauseButton = function(option) {

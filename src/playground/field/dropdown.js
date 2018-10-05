@@ -173,6 +173,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
             that.applyValue(this._value);
             that.destroyOption(undefined, true);
             that._selectBlockView();
+            $(that._blockView.contentSvgGroup).trigger('optionChanged', {block:that._block, value:that.getValue(), index:that._index});
         });
 
         var fragment = document.createDocumentFragment();
