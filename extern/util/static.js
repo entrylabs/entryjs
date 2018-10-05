@@ -1381,6 +1381,28 @@ EntryStatic.getAllBlocks = function() {
                 "dash_eye",
                 "dash_animation",
                 //endregion dash
+
+                //Codingmachine Blocks
+                "codingmachine_led",
+                "codingmachine_tune",
+                "codingmachine_motor",
+                "codingmachine_joystick",
+                "codingmachine_button",
+                "codingmachine_gyro",
+                "codingmachine_ultrasonic",
+                "codingmachine_connect",
+                "codingmachine_ready",
+                "codingmachine_throttle",
+                "codingmachine_altitude",
+                "codingmachine_rollpitch",
+                "codingmachine_yaw",
+                "codingmachine_emergency",
+                "codingmachine_digital_out",
+                "codingmachine_digital_in",
+                "codingmachine_analog_in",
+                "codingmachine_digital_pwm",
+                "codingmachine_servo",
+                //Added 2018-09-24
             ]
         }
     ]
