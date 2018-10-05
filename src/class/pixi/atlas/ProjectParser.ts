@@ -1,13 +1,34 @@
+interface IObjectPicture {
+    id:string;
+    dimension: { width:number, height:number },
+    fileurl:string,
+    filename:string,
+    name:string,
+}
+interface IRawObject {
+    id: string,
+    name: string,
+    script: string,
+    objectType: string,
+    rotateMethod: string,
+    scene: string,
+    sprite:{ pictures:IObjectPicture[], sounds:any[] },
+    text: string,
+    lock: boolean,
+    entity: any
+}
+
 export class ProjectParser {
 
-    static parse(objects) {
+    static parse(objects:IRawObject[]) {
         var LEN = objects.length;
-        var sceneMap = {};
+        var sceneMap:any = {};
         var scene;
-        var obj;
+        var obj:IRawObject;
         var sceneID;
         for (var i = 0 ; i < LEN ; i++) {
             obj = objects[i];
+
             sceneID = obj.scene;
             scene = sceneMap[sceneID];
             if(!scene) {
@@ -18,7 +39,7 @@ export class ProjectParser {
     }
 
 
-    static _pushPictures(sceneID, scene, pics) {
+    static _pushPictures(sceneID:string, scene:PicInfo[], pics:any[]) {
         if(!pics || !pics.length) return;
         var LEN = pics.length;
         var info;
@@ -30,11 +51,16 @@ export class ProjectParser {
 }
 
 export class PicInfo {
-    constructor(sceneID, rawInfo) {
-        this.sceneID = sceneID;
+    public url:string;
+    public height:number;
+    private width:number;
+    private filename:string;
+    private id:string;
+
+    constructor(public sceneID:string, rawInfo:IObjectPicture) {
         var d = rawInfo.dimension;
-        this.w = d.width;
-        this.h = d.height;
+        this.width = d.width;
+        this.height = d.height;
         this.url = rawInfo.fileurl;
         this.filename = rawInfo.filename;
         this.id = rawInfo.id;
