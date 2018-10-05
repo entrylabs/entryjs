@@ -116,7 +116,7 @@ Entry.HARDWARE_LIST = {
     '23.1': Entry.MRT,
     '24.1': Entry.Dash,
     '1.D': Entry.BINGLES,
-    '26.1': Entry.Codingmachine
+    '26.1': Entry.Codingmachine,
 };
 
 const startBlock = require('./block_start');
