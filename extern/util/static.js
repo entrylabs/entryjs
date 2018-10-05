@@ -88,33 +88,33 @@ EntryStatic.searchProjectOption = [
 EntryStatic.categoryProjectOption = [
     {
         'key': 'search_genre_all',
-        'lang': 'search_ÀüÃ¼',
-        'value': 'ÀüÃ¼'
+        'lang': 'search_ì „ì²´',
+        'value': 'ì „ì²´'
     },
     {
         'key': 'search_genre_game',
-        'lang': 'search_°ÔÀÓ',
-        'value': '°ÔÀÓ'
+        'lang': 'search_ê²Œì„',
+        'value': 'ê²Œì„'
     },
     {
         'key': 'search_genre_animation',
-        'lang': 'search_¾Ö´Ï¸ŞÀÌ¼Ç',
-        'value': '¾Ö´Ï¸ŞÀÌ¼Ç'
+        'lang': 'search_ì• ë‹ˆë©”ì´ì…˜',
+        'value': 'ì• ë‹ˆë©”ì´ì…˜'
     },
     {
         'key': 'search_genre_media',
-        'lang': 'search_¹Ìµğ¾î¾ÆÆ®',
-        'value': '¹Ìµğ¾î¾ÆÆ®'
+        'lang': 'search_ë¯¸ë””ì–´ì•„íŠ¸',
+        'value': 'ë¯¸ë””ì–´ì•„íŠ¸'
     },
     {
         'key': 'search_genre_physical',
-        'lang': 'search_ÇÇÁöÄÃ',
-        'value': 'ÇÇÁöÄÃ'
+        'lang': 'search_í”¼ì§€ì»¬',
+        'value': 'í”¼ì§€ì»¬'
     },
     {
         'key': 'search_genre_etc',
-        'lang': 'search_±âÅ¸',
-        'value': '±âÅ¸'
+        'lang': 'search_ê¸°íƒ€',
+        'value': 'ê¸°íƒ€'
     }
 ]
 EntryStatic.getAllBlocks = function () {
@@ -1376,29 +1376,29 @@ EntryStatic.artCategories = [
         'value': ''
     },
     {
-        'key': 'art_category_°ÔÀÓ',
+        'key': 'art_category_ê²Œì„',
         'lang': 'art_category_game',
-        'value': '°ÔÀÓ'
+        'value': 'ê²Œì„'
     },
     {
-        'key': 'art_category_¾Ö´Ï¸ŞÀÌ¼Ç',
+        'key': 'art_category_ì• ë‹ˆë©”ì´ì…˜',
         'lang': 'art_category_animation',
-        'value': '¾Ö´Ï¸ŞÀÌ¼Ç'
+        'value': 'ì• ë‹ˆë©”ì´ì…˜'
     },
     {
-        'key': 'art_category_¹Ìµğ¾î¾ÆÆ®',
+        'key': 'art_category_ë¯¸ë””ì–´ì•„íŠ¸',
         'lang': 'art_category_media',
-        'value': '¹Ìµğ¾î¾ÆÆ®'
+        'value': 'ë¯¸ë””ì–´ì•„íŠ¸'
     },
     {
-        'key': 'art_category_ÇÇÁöÄÃ',
+        'key': 'art_category_í”¼ì§€ì»¬',
         'lang': 'art_category_physical',
-        'value': 'ÇÇÁöÄÃ'
+        'value': 'í”¼ì§€ì»¬'
     },
     {
-        'key': 'art_category_±âÅ¸',
+        'key': 'art_category_ê¸°íƒ€',
         'lang': 'art_category_etc',
-        'value': '±âÅ¸'
+        'value': 'ê¸°íƒ€'
     }
 ]
 EntryStatic.artSortOptions = [
