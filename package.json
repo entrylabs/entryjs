@@ -30,6 +30,7 @@
   "license": "MIT",
   "dependencies": {
     "babel-core": "^7.0.0-bridge.0",
+    "entry-tool": "C:\\Users\\User\\Documents\\entry-tool",
     "hyperid": "^1.4.1",
     "jest": "^23.3.0",
     "lodash": "^4.17.5",
