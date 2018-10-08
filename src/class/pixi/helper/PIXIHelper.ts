@@ -1,11 +1,19 @@
-import { PIXITempStore } from '../etc/PIXITempStore';
-import { PIXIText } from '../text/PIXIText';
+let PIXITempStore:any = require('../etc/PIXITempStore').PIXITempStore;
+let PIXIText:any = require('../text/PIXIText').PIXIText;
+
+declare let OffscreenCanvas:any;
+declare let PIXI:any;
+
+console.log("PIXIText", PIXIText);
 
 export default class PIXIHelper {
-    static text(str, font, color, textBaseline, textAlign) {
+
+    private static _canvasFactory:()=>HTMLCanvasElement;
+
+    static text(str:string, font:string, color:string, textBaseline:string, textAlign:string) {
         // console.log(str, font);
         var reg = /((\d+)(pt|sp|px))?\s*(.+)/gi;
-        var result = reg.exec(font) || [];
+        var result:any[] = reg.exec(font) || [];
         var fontName = (result[4]) || "NanumGothic";
         var size = (result[1]) || "10pt";
 
@@ -41,7 +49,7 @@ export default class PIXIHelper {
             };
         } else {
             this._canvasFactory = ()=>{
-                document.createElement('canvas');
+                return document.createElement('canvas');
             };
         }
     }
@@ -50,18 +58,18 @@ export default class PIXIHelper {
      * createjs.Text.getMeasuredWidth() 의 pollyfill
      * @param pixiText
      */
-    static textWidth(pixiText) {
+    static textWidth(pixiText:any) {
         return pixiText.measuredWidth;
     }
-    static textHeight(pixiText) {
+    static textHeight(pixiText:any) {
         return pixiText.measuredHeight;
     }
-    static getMeasuredLineHeight(pixiText) {
+    static getMeasuredLineHeight(pixiText:any) {
         return pixiText.measuredLineHeight;
     }
 
 
-    static cacheIfHasFilters(that) {
+    static cacheIfHasFilters(that:any) {
         // if (!_.isEmpty(that.object.filters)) that.cache();
         // else that.object.uncache();
     }
@@ -71,12 +79,12 @@ export default class PIXIHelper {
      * @param {PIXI.Sprite} sp
      * @param {HTMLImageElement} image
      */
-    static setTextureToPIXISprite(sp, image) {
+    static setTextureToPIXISprite(sp:any, image:any) {
         sp.texture = PIXI.Texture.from(image);
     }
 
 
-    static createjsUncache(target) {
+    static createjsUncache(target:any) {
         // object.uncache()
     }
 
@@ -84,15 +92,15 @@ export default class PIXIHelper {
      * #ff00ff --> 0xff00ff
      * @param strColor
      */
-    static colorToUint(strColor) {
+    static colorToUint(strColor:any) {
         return strColor ? Number(strColor.replace("#", "0x")) : undefined;
     }
 
-    static needDestroy(target) {
+    static needDestroy(target:any) {
 
     }
 
-    static todo(msg) {
+    static todo(msg:string) {
 
     }
 
@@ -100,7 +108,7 @@ export default class PIXIHelper {
      * createjs.DisplayObject#getTransformBound()
      * @param {PIXI.DisplayObject} target
      */
-    static getTransformBound(target) {
+    static getTransformBound(target:any) {
         var bounds = target.getLocalBounds(PIXITempStore.rect);
 
         var x = bounds.x, y = bounds.y, width = bounds.width, height = bounds.height;
@@ -134,7 +142,7 @@ export default class PIXIHelper {
     }
 
 
-    static HSVtoRGB(h, s, v) {
+    static HSVtoRGB(h:number, s:number, v:number):{r:number, g:number, b:number} {
         var r, g, b, i, f, p, q, t;
         // https://stackoverflow.com/questions/17242144/javascript-convert-hsb-hsv-color-to-rgb-accurately
         //https://ko.wikipedia.org/wiki/HSV_%EC%83%89_%EA%B3%B5%EA%B0%84
@@ -144,12 +152,12 @@ export default class PIXIHelper {
         q = v * (1 - f * s);
         t = v * (1 - (1 - f) * s);
         switch (i % 6) {
-            case 0: r = v, g = t, b = p; break;
-            case 1: r = q, g = v, b = p; break;
-            case 2: r = p, g = v, b = t; break;
-            case 3: r = p, g = q, b = v; break;
-            case 4: r = t, g = p, b = v; break;
-            case 5: r = v, g = p, b = q; break;
+            case 0: r = v; g = t; b = p; break;
+            case 1: r = q; g = v; b = p; break;
+            case 2: r = p; g = v; b = t; break;
+            case 3: r = p; g = q; b = v; break;
+            case 4: r = t; g = p; b = v; break;
+            case 5: r = v; g = p; b = q; break;
         }
         return {
             r: Math.round(r * 255),
