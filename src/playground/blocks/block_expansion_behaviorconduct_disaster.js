@@ -67,7 +67,7 @@ Entry.EXPANSION_BLOCK.behaviorConductDisaster = {
         },
         '01013': {
             lang: Lang.Blocks.behaviorConduct01013,
-            sub: ['0101302', '0101303', '0101304'],
+            sub: ['0101302', '0101303'],
         },
         '01014': {
             lang: Lang.Blocks.behaviorConduct01014,
