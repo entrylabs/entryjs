@@ -933,7 +933,7 @@ Entry.EntityObject.prototype.setImage = function(pictureModel) {
         PIXIHelper.setTextureToPIXISprite(that.object, image);
         // if (!_.isEmpty(that.object.filters)) that.cache();
         // else that.object.uncache();
-        PIXIHelper.setTextureToPIXISprite(that);
+        PIXIHelper.cacheIfHasFilters(that);
 
     } else setImage(image);
 
@@ -943,7 +943,7 @@ Entry.EntityObject.prototype.setImage = function(pictureModel) {
 
         // if (!_.isEmpty(that.object.filters)) that.cache();
         // else that.object.uncache();
-        PIXIHelper.setTextureToPIXISprite(that);
+        PIXIHelper.cacheIfHasFilters(that);
 
         Entry.requestUpdate = true;
     }
