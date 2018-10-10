@@ -5,6 +5,7 @@
  */
 
 'use strict';
+import { PIXIAtlasManager } from './pixi/atlas/PIXIAtlasManager';
 require("./pixi/__testfiles/articleloader");
 require("./pixi/etc/PIXI-ndgmr.Collision");
 require("./pixi/etc/PIXICanvasInput");
@@ -684,7 +685,7 @@ Entry.Stage.prototype.selectObjectContainer = function(scene) {
     if (_.isEmpty(canvas) || _.isEmpty(containers)) {
         return;
     }
-
+    PIXIAtlasManager.activateScene(scene && scene.id);
     var newContainer = this.getObjectContainerByScene(scene);
 
     containers.forEach(canvas.removeChild.bind(canvas));

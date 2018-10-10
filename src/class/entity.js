@@ -6,6 +6,7 @@
 
 import PIXIHelper from './pixi/helper/PIXIHelper';
 import { PIXIDragHelper } from './pixi/helper/PIXIDragHelper';
+import { PIXIAtlasManager } from './pixi/atlas/PIXIAtlasManager';
 
 /**
  * Construct entity class
@@ -872,7 +873,89 @@ Entry.EntityObject.prototype.getVisible = function() {
  * Change picture
  * @param {?picture model} pictureModel
  */
+// Entry.EntityObject.prototype.setImage = function(pictureModel) {
+//     console.log(pictureModel);
+//     var that = this;
+//     delete pictureModel._id;
+//
+//     Entry.assert(this.type == 'sprite', 'Set image is only for sprite object');
+//     if (!pictureModel.id) pictureModel.id = Entry.generateHash();
+//
+//     this.picture = pictureModel;
+//     var dimension = this.picture.dimension;
+//     var entityWidth = this.getWidth();
+//     var entityHeight = this.getHeight();
+//
+//     var absoluteRegX = this.getRegX() - entityWidth / 2;
+//     var absoluteRegY = this.getRegY() - entityHeight / 2;
+//     this.setWidth(dimension.width);
+//     this.setHeight(dimension.height);
+//     if (!dimension.scaleX) {
+//         dimension.scaleX = this.getScaleX();
+//         dimension.scaleY = this.getScaleY();
+//     }
+//
+//     this.setScaleX(this.scaleX);
+//     this.setScaleY(this.scaleY);
+//     this.setRegX(this.width / 2 + absoluteRegX);
+//     this.setRegY(this.height / 2 + absoluteRegY);
+//
+//     //pictureId can be duplicated by copy/paste
+//     //add entityId in order to differentiate copied pictures
+//     var cacheId = !this.isClone ? pictureModel.id + this.id : pictureModel.id;
+//
+//     var image = Entry.container.getCachedPicture(cacheId);
+//
+//     if (!image) {
+//         image = new Image();
+//
+//         image.onload = function(e) {
+//             if (!that.removed) Entry.container.cachePicture(cacheId, this);
+//
+//             this.onload = null;
+//             setImage(this);
+//         };
+//
+//         var fileUrl = pictureModel.fileurl;
+//         if (fileUrl) image.src = fileUrl;
+//         else {
+//             var fileName = pictureModel.filename;
+//             image.src =
+//                 Entry.defaultPath +
+//                 '/uploads/' +
+//                 fileName.substring(0, 2) +
+//                 '/' +
+//                 fileName.substring(2, 4) +
+//                 '/image/' +
+//                 fileName +
+//                 '.png';
+//         }
+//
+//         // that.object.image = image;
+//         PIXIHelper.setTextureToPIXISprite(that.object, image);
+//         // if (!_.isEmpty(that.object.filters)) that.cache();
+//         // else that.object.uncache();
+//         PIXIHelper.cacheIfHasFilters(that);
+//
+//     } else setImage(image);
+//
+//     function setImage(datum) {
+//         // that.object.image = datum;
+//         PIXIHelper.setTextureToPIXISprite(that.object, image);
+//
+//         // if (!_.isEmpty(that.object.filters)) that.cache();
+//         // else that.object.uncache();
+//         PIXIHelper.cacheIfHasFilters(that);
+//
+//         Entry.requestUpdate = true;
+//     }
+//
+//     Entry.dispatchEvent('updateObject');
+// };
+
+
 Entry.EntityObject.prototype.setImage = function(pictureModel) {
+    console.log(pictureModel);
     var that = this;
     delete pictureModel._id;
 
@@ -902,6 +985,10 @@ Entry.EntityObject.prototype.setImage = function(pictureModel) {
     //add entityId in order to differentiate copied pictures
     var cacheId = !this.isClone ? pictureModel.id + this.id : pictureModel.id;
 
+    this.object.texture = PIXIAtlasManager.getTexture(pictureModel.id);
+
+    Entry.requestUpdate = true;
+
     var image = Entry.container.getCachedPicture(cacheId);
 
     if (!image) {
@@ -909,37 +996,26 @@ Entry.EntityObject.prototype.setImage = function(pictureModel) {
 
         image.onload = function(e) {
             if (!that.removed) Entry.container.cachePicture(cacheId, this);
-
+            PIXIAtlasManager.putImage(pictureModel.id, image);
             this.onload = null;
             setImage(this);
         };
 
-        var fileUrl = pictureModel.fileurl;
-        if (fileUrl) image.src = fileUrl;
-        else {
-            var fileName = pictureModel.filename;
-            image.src =
-                Entry.defaultPath +
-                '/uploads/' +
-                fileName.substring(0, 2) +
-                '/' +
-                fileName.substring(2, 4) +
-                '/image/' +
-                fileName +
-                '.png';
-        }
+        image.src = this._getImagePath(pictureModel);
 
         // that.object.image = image;
-        PIXIHelper.setTextureToPIXISprite(that.object, image);
+        // PIXIHelper.setTextureToPIXISprite(that.object, image);
         // if (!_.isEmpty(that.object.filters)) that.cache();
         // else that.object.uncache();
-        PIXIHelper.cacheIfHasFilters(that);
+        // PIXIHelper.cacheIfHasFilters(that);
 
-    } else setImage(image);
+    } else {
+        setImage(image);
+    }
 
     function setImage(datum) {
         // that.object.image = datum;
-        PIXIHelper.setTextureToPIXISprite(that.object, image);
+        //PIXIHelper.setTextureToPIXISprite(that.object, image);
 
         // if (!_.isEmpty(that.object.filters)) that.cache();
         // else that.object.uncache();
@@ -951,6 +1027,14 @@ Entry.EntityObject.prototype.setImage = function(pictureModel) {
     Entry.dispatchEvent('updateObject');
 };
 
+
+Entry.EntityObject.prototype._getImagePath = function(pictureModel) {
+    var path = pictureModel.fileurl;
+    if (path) return path;
+
+    path = pictureModel.filename;
+    return Entry.defaultPath + '/uploads/' + path.substring(0, 2) + '/' + path.substring(2, 4) + '/image/' + path + '.png';
+};
 
 /**
  * Apply PIXI filter
