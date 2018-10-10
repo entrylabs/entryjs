@@ -7,8 +7,8 @@ Entry.EXPANSION_BLOCK.behaviorConductDisaster = {
     name: 'behaviorConductDisaster',
     imageName: 'behaviorConductDisaster.png',
     title: {
-        'ko': '자연재난 국민행동요령',
-        'en': 'behaviorConductDisaster',
+        'ko': '자연재난',
+        'en': 'Disaster',
     },
     description: Lang.Msgs.expansion_behaviorConductDisaster_description,
     isInitialized: false,

@@ -7,8 +7,8 @@ Entry.EXPANSION_BLOCK.behaviorConductLifeSafety = {
     name: 'behaviorConductLifeSafety',
     imageName: 'translate.png',
     title: {
-        'ko': '생활안전 국민행동요령',
-        'en': 'behaviorConductLifeSafety',
+        'ko': '생활안전',
+        'en': 'LifeSafety',
     },
     description: Lang.Msgs.expansion_behaviorConductLifeSafety_description,
     isInitialized: false,
