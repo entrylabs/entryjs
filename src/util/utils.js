@@ -1,6 +1,7 @@
 'use strict';
 
 import { PIXIBrushAdaptor } from '../class/pixi/etc/PIXIBrushAdaptor';
+import { PIXIAtlasManager } from '../class/pixi/atlas/PIXIAtlasManager';
 
 Entry.Utils = {};
 
@@ -24,6 +25,7 @@ Entry.loadProject = function(project) {
     }
 
     if (this.type == 'workspace') Entry.stateManager.startIgnore();
+    PIXIAtlasManager.loadProject(project.objects);
     Entry.projectId = project._id;
     Entry.variableContainer.setVariables(project.variables);
     Entry.variableContainer.setMessages(project.messages);
