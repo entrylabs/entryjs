@@ -4,11 +4,7 @@ let PIXIText:any = require('../text/PIXIText').PIXIText;
 declare let OffscreenCanvas:any;
 declare let PIXI:any;
 
-console.log("PIXIText", PIXIText);
-
 export default class PIXIHelper {
-
-    private static _canvasFactory:()=>HTMLCanvasElement;
 
     static text(str:string, font:string, color:string, textBaseline:string, textAlign:string) {
         // console.log(str, font);
@@ -35,22 +31,11 @@ export default class PIXIHelper {
         return t;
     }
 
-    static getOffScreenCanvas() {
-        if(!this._canvasFactory) {
-            this._createCanvasFactory();
-        }
-        return this._canvasFactory();
-    }
-    
-    static _createCanvasFactory() {
-        if( "OffscreenCanvas" in window ) {
-            this._canvasFactory = ()=>{
-                return new OffscreenCanvas(1,1);
-            };
+    static getOffScreenCanvas(forceHTMLCanvas:boolean = false) {
+        if( !forceHTMLCanvas && ("OffscreenCanvas" in window) ) {
+            return new OffscreenCanvas(1,1);
         } else {
-            this._canvasFactory = ()=>{
-                return document.createElement('canvas');
-            };
+            return document.createElement('canvas');
         }
     }
 

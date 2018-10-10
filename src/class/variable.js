@@ -14,7 +14,6 @@ import { PIXIH3Plane } from './pixi/mesh/PIXIH3Plane';
  * @constructor
  */
 Entry.Variable = function(variable) {
-    console.log("new Variable");
     Entry.assert(
         typeof variable.name == 'string',
         'Variable name must be given'
@@ -111,7 +110,6 @@ function __textWidth(pixiText) {
  * @param {number} variableIndex index of this variable for render position
  */
 Entry.Variable.prototype.generateView = function(variableIndex) {
-    console.log("generateView");
     var type = this.type;
     if (type == 'variable' || type == 'timer' || type == 'answer') {
         this.view_ = new PIXI.Container();
