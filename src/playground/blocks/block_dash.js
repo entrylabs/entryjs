@@ -387,7 +387,7 @@ Entry.Dash.getBlocks = function() {
             skeleton: 'basic',
             fontColor: '#fff',
             statements: [],
-            template: '녹음된 %1 소리내기 %2',
+            template: '녹음된 %1 소리 내기 %2',
             params: [
                 {
                     type: 'Dropdown',
@@ -1176,7 +1176,7 @@ Entry.Dash.getBlocks = function() {
             fontColor: '#fff',
             statements: [],
             template:
-                '왼쪽바퀴 %1 (으)로 %2, 오른쪽 바퀴 %3 (으)로 %4 움직이기 %5',
+                '왼쪽 바퀴 %1 (으)로 %2, 오른쪽 바퀴 %3 (으)로 %4 움직이기 %5',
             params: [
                 {
                     type: 'Dropdown',
@@ -1338,7 +1338,8 @@ Entry.Dash.getBlocks = function() {
                         ['1번 버튼', 0x06],
                         ['2번 버튼', 0x07],
                         ['3번 버튼', 0x08],
-                        ['소리', 0x09],
+                        ['박수 소리', 0x09],
+                        ['소리', 0x0A],
                     ],
                     fontSize: 11,
                 },
@@ -1370,6 +1371,9 @@ Entry.Dash.getBlocks = function() {
                         break;
                     case 0x09:
                         return pd.clap ? true : false;
+                        break;
+                    case 0x0A:
+                        return pd.sound ? true : false;
                         break;
                     default:
                         break;
@@ -1444,12 +1448,12 @@ Entry.Dash.getBlocks = function() {
                     options: [
                         ['안녕', 0x00],
                         ['안녕하세요', 0x01],
-                        ['걱정마', 0x02],
+                        ['걱정 마 (오른쪽)', 0x02],
+                        ['걱정 마 (왼쪽)', 0x07],
                         ['잘가 #1', 0x03],
                         ['잘가 #2', 0x04],
                         ['자신감 있는', 0x05],
                         ['그래그래', 0x06],
-                        ['걱정마', 0x07],
                         ['아무도 없나요', 0x08],
                         ['그윽', 0x09],
                         ['하품', 0x0a],
