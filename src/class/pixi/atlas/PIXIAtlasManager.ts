@@ -2,6 +2,7 @@ import { IRawObject } from './model/IRawObject';
 import { SceneBins, TextureMap } from './SceneBins';
 import Texture = PIXI.Texture;
 import Sprite = PIXI.Sprite;
+import { AtlasImageCache } from './AtlasImageCache';
 
 
 //underscore
@@ -21,6 +22,8 @@ export class PIXIAtlasManager {
     private static _globalTextureMap:TextureMap = {};
     private static _sceneBinsMap:SceneBinsMap = {};
     private static _activatedScene:SceneBins;
+
+    public static readonly imageCache:AtlasImageCache = new AtlasImageCache();
 
     static loadProject(objects:IRawObject[]) {
         console.log("loadProject");
@@ -64,17 +67,13 @@ export class PIXIAtlasManager {
         // return this._activatedScene.getTexture(id);
     }
 
-    static newSprite(id:string):Sprite {
-        return new Sprite(this._activatedScene.getTexture(id));
-    }
-
     static putImage(picID:string, image:HTMLImageElement ):void {
-        // var texture:Texture = this._textureMap[picID];
-        // var canvas:HTMLCanvasElement = texture.baseTexture.source as HTMLCanvasElement;
-        // var ctx:CanvasRenderingContext2D = canvas.getContext("2d");
-        // var r = texture.frame;
-        // ctx.drawImage(image, 0, 0, image.width, image.height, r.x, r.y, r.width, r.height);
-        // texture.baseTexture.update();
+        var texture:Texture = this._globalTextureMap[picID];
+        var canvas:HTMLCanvasElement = texture.baseTexture.source as HTMLCanvasElement;
+        var ctx:CanvasRenderingContext2D = canvas.getContext("2d");
+        var r = texture.frame;
+        ctx.drawImage(image, 0, 0, image.width, image.height, r.x, r.y, r.width, r.height);
+        texture.baseTexture.update();
     }
 
     static clearProject():void {
