@@ -1,7 +1,7 @@
 /*
  */
 'use strict';
-
+const _cloneDeep = require('lodash/cloneDeep');
 /*
  *
  */
@@ -15,6 +15,11 @@ Entry.FieldDropdownDynamic = function(content, blockView, index) {
     this.svgGroup = null;
 
     this._contents = content;
+
+    if(content.needDeepCopy) {
+        this._contents = _cloneDeep(content);
+    }
+
     this._index = index;
 
     var arrowColor = content.arrowColor;
@@ -48,6 +53,8 @@ Entry.FieldDropdownDynamic = function(content, blockView, index) {
             .getBoard()
             .workspace.changeEvent.attach(this, this._updateValue);
     }
+
+    this.optionChangeTriggeredEvent();
 };
 
 Entry.Utils.inherit(Entry.FieldDropdown, Entry.FieldDropdownDynamic);
@@ -140,5 +147,23 @@ Entry.Utils.inherit(Entry.FieldDropdown, Entry.FieldDropdownDynamic);
         this._position();
 
         this.optionDomCreated();
+    };
+
+    p.optionChangeTriggeredEvent = function() {
+        const that = this;
+        const targetIndex = this._contents.targetIndex;
+
+        if(typeof targetIndex === "undefined") {
+            return ;
+        }
+
+        $(this._blockView.contentSvgGroup).on('optionChanged', function(e, data) {
+            if( that._block == data.block && targetIndex == data.index) {
+                let options = that._menuGenerator(data.value);
+                that._contents.options = options;
+                that.applyValue(options[0][1]);
+            }
+        });
+
     };
 })(Entry.FieldDropdownDynamic.prototype);
