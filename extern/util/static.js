@@ -409,10 +409,13 @@ EntryStatic.getAllBlocks = function() {
                 "blacksmith_get_digital_toggle",
                 "blacksmith_set_digital_toggle",
                 "blacksmith_set_digital_pwm",
+                "blacksmith_set_digital_rgbled",
                 "blacksmith_set_digital_servo",
                 "blacksmith_set_digital_buzzer",
-                "blacksmith_set_digital_lcd",
-                "blacksmith_set_digital_bluetooth",
+                "blacksmith_set_digital_dcmotor",
+                "blacksmith_module_digital_lcd",
+                "blacksmith_module_digital_bluetooth",
+                "blacksmith_module_digital_oled",
                 //joystick
                 "joystick_get_number_sensor_value",
                 "joystick_get_digital_value",
@@ -760,19 +763,6 @@ EntryStatic.getAllBlocks = function() {
                 "xbot_twoWheel",
                 "xbot_lcd",
                 //end of XBOT Blocks added
-                //bingles Blocks added
-                "bingles_analogValue",
-                "bingles_digitalOutput",
-                "bingles_rgb",
-                "bingles_rgb_picker",
-                "bingles_buzzer",
-                "bingles_servo",
-                "bingles_twoWheel",
-                "bingles_lcd",
-                "bingles_remotecontrol",
-                "bingles_oled",
-                "bingles_motorgo",
-                //end of bingles Blocks added
                 // ardublock Added 2016-06-01
                 "ardublock_get_analog_value",
                 "ardublock_get_analog_value_map",
@@ -815,16 +805,12 @@ EntryStatic.getAllBlocks = function() {
 
                 "roduino_on_block",
                 "roduino_off_block",
-                "roduino_get_sensor_analog_value",
-                "roduino_get_sensor_digital_value",
                 "roduino_get_analog_value",
                 "roduino_get_digital_value",
                 "roduino_get_color",
                 "roduino_set_digital",
                 "roduino_motor",
                 "roduino_set_color_pin",
-                "roduino_set_servo_value",
-                "roduino_set_pwm_value",
 
                 "schoolkit_on_block",
                 "schoolkit_off_block",

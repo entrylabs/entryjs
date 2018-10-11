@@ -738,7 +738,7 @@ Entry.Bitbrick.setLanguage = function () {
         ko: {
             // ko.js에 작성하던 내용
             template: {
-                bitbrick_sensor_value: "%1  값",
+                bitbrick_sensor_value: "%%1  값",
                 bitbrick_is_touch_pressed: "버튼 %1 이(가) 눌렸는가?",
                 bitbrick_turn_off_color_led: "컬러 LED 끄기 %1",
                 bitbrick_turn_on_color_led_by_rgb: "컬러 LED 켜기 R %1 G %2 B %3 %4",

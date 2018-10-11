@@ -210,10 +210,6 @@ Entry.Expansion_Weather.getBlocks = function () {
             class: 'weather',
             isNotFor: ['weather'],
             func: function (sprite, script) {
-                if(!Entry.EXPANSION_BLOCK.weather.isInitialized){
-                    return true;
-                }
-
                 var datetime = Entry.EXPANSION_BLOCK.weather.getDate(script.getField('DATE', script)) + "00";
                 var location = script.getField('LOCATION', script);
                 var weather = script.getField('WEATHER', script);
@@ -292,11 +288,6 @@ Entry.Expansion_Weather.getBlocks = function () {
             isNotFor: ['weather'],
             func: function (sprite, script) {
                 var now = Entry.EXPANSION_BLOCK.weather.date;
-
-                if(!Entry.EXPANSION_BLOCK.weather.isInitialized){
-                    return true;
-                }
-
                 var date = now.toISOString().slice(0, 10).replace(/-/g, "");
                 var time = pad2(now.getHours() - now.getHours()%3);  // [0, 3, 6, 9, 12, 15, 18, 21]
 
@@ -359,10 +350,6 @@ Entry.Expansion_Weather.getBlocks = function () {
             class: 'weather',
             isNotFor: ['weather'],
             func: function (sprite, script) {
-                if(!Entry.EXPANSION_BLOCK.weather.isInitialized){
-                    return 0;
-                }
-
                 var datetime = Entry.EXPANSION_BLOCK.weather.getDate(script.getField('DATE', script)) + "00";
                 var location = script.getField('LOCATION', script);
                 var type = Entry.EXPANSION_BLOCK.weather.propertyMap[script.getField('TYPE', script)];
@@ -437,11 +424,6 @@ Entry.Expansion_Weather.getBlocks = function () {
             isNotFor: ['weather'],
             func: function (sprite, script) {
                 var now = Entry.EXPANSION_BLOCK.weather.date;
-
-                if(!Entry.EXPANSION_BLOCK.weather.isInitialized){
-                    return 0;
-                }
-
                 var location = script.getField('LOCATION', script);
                 var type = Entry.EXPANSION_BLOCK.weather.propertyMap[script.getField('TYPE', script)];
                 var date = now.toISOString().slice(0, 10).replace(/-/g, "");
@@ -492,10 +474,6 @@ Entry.Expansion_Weather.getBlocks = function () {
             class: 'weather',
             isNotFor: ['weather'],
             func: function (sprite, script) {
-                if(!Entry.EXPANSION_BLOCK.weather.isInitialized){
-                    return 0;
-                }
-
                 var location = script.getField('LOCATION', script);
                 var time = script.getField('TIME', script);
                 var date = Entry.EXPANSION_BLOCK.weather.date.toISOString().slice(0, 10).replace(/-/g, "");
