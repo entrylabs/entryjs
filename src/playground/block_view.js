@@ -3,10 +3,7 @@
  */
 'use strict';
 
-/*
- *
- */
-import _hasIn from 'lodash/hasIn';
+import _get from 'lodash/get';
 
 Entry.BlockView = function(block, board, mode) {
     var that = this;
@@ -1168,13 +1165,14 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
     };
 
     p.reDraw = function() {
+
         if (!(this.visible && this.display)) return;
 
         this._updateContents(true);
 
         //해당 블럭이 가진 파라미터가 다른 블럭인 경우 재귀로 동작. indicator(undefined), string 은 제외
         (this.block.data.params || []).forEach((param) => {
-            if(_hasIn(param, 'data.view')){
+            if(_get(param, 'data.view', undefined)){
                 param.data.view.reDraw();
             }
         });
