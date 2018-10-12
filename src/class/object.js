@@ -3,6 +3,8 @@
  */
 'use strict';
 
+import { PIXIAtlasManager } from './pixi/atlas/PIXIAtlasManager';
+
 /**
  * Class for entry object.
  * @param {?object model} model for object
@@ -72,7 +74,7 @@ Entry.EntryObject = function(model) {
             ((picture) => {
                 picture.objectId = this.id;
                 if (!picture.id) picture.id = Entry.generateHash();
-
+                PIXIAtlasManager.imageLoader.load(picture);
                 var image = new Image();
                 Entry.Loader.addQueue();
 

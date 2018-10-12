@@ -955,7 +955,6 @@ Entry.EntityObject.prototype.getVisible = function() {
 
 
 Entry.EntityObject.prototype.setImage = function(pictureModel) {
-    console.log(pictureModel);
     var that = this;
     delete pictureModel._id;
 
@@ -989,6 +988,7 @@ Entry.EntityObject.prototype.setImage = function(pictureModel) {
 
     Entry.requestUpdate = true;
 
+    /*
     var image = Entry.container.getCachedPicture(cacheId);
 
     if (!image) {
@@ -1023,7 +1023,7 @@ Entry.EntityObject.prototype.setImage = function(pictureModel) {
 
         Entry.requestUpdate = true;
     }
-
+    */
     Entry.dispatchEvent('updateObject');
 };
 

@@ -1,18 +1,13 @@
 import { IRawObject } from './model/IRawObject';
 import { SceneBins, TextureMap } from './SceneBins';
 import Texture = PIXI.Texture;
-import Sprite = PIXI.Sprite;
-import { AtlasImageCache } from './AtlasImageCache';
+import { AtlasCanvasViewer } from './AtlasCanvasViewer';
+import { AtlasImageLoader } from './loader/AtlasImageLoader';
+import { AtlasImageLoadingInfo } from './loader/AtlasImageLoadingInfo';
 
 
 //underscore
 declare let _:any;
-
-declare let $:any;
-
-
-var ccc:any[] = (window as any).ccc = [];
-
 
 
 type SceneBinsMap = {[key:string]: SceneBins};
@@ -23,10 +18,29 @@ export class PIXIAtlasManager {
     private static _sceneBinsMap:SceneBinsMap = {};
     private static _activatedScene:SceneBins;
 
-    public static readonly imageCache:AtlasImageCache = new AtlasImageCache();
+    public static imageLoader:AtlasImageLoader;
+
+    private static _viewer:AtlasCanvasViewer;
+
+
+
+    /**
+     * @private
+     * @constructor
+     */
+    public static INIT() {
+        if(this.imageLoader) {
+            throw new Error("do not call twice");
+        }
+        this._viewer = new AtlasCanvasViewer();
+        this.imageLoader = new AtlasImageLoader(this._onImageLoaded.bind(this));
+    }
+
+    private static _onImageLoaded(info:AtlasImageLoadingInfo) {
+        this._activatedScene && this._activatedScene.putImage(info);
+    }
 
     static loadProject(objects:IRawObject[]) {
-        console.log("loadProject");
         var sceneBinsMap:SceneBinsMap = this._sceneBinsMap;
         var sceneBins:SceneBins;
         var obj:IRawObject;
@@ -37,11 +51,10 @@ export class PIXIAtlasManager {
             sceneID = obj.scene;
             sceneBins = sceneBinsMap[sceneID];
             if(!sceneBins) {
-                sceneBins = sceneBinsMap[sceneID] = new SceneBins(sceneID, this._globalTextureMap);
+                sceneBins = sceneBinsMap[sceneID] = new SceneBins(sceneID, this._globalTextureMap, this._viewer);
             }
             sceneBins.addRawPicInfos(obj.sprite && obj.sprite.pictures);
         }
-
         this.pack();
     }
 
@@ -55,30 +68,19 @@ export class PIXIAtlasManager {
         if(this._activatedScene) {
             this._activatedScene.deactivate();
         }
-        console.log("active scene");
-        console.log(sceneID);
-
         this._activatedScene = this._sceneBinsMap[sceneID];
         this._activatedScene.activate();
     }
 
     static getTexture(id:string):Texture {
         return this._globalTextureMap[id];
-        // return this._activatedScene.getTexture(id);
     }
 
-    static putImage(picID:string, image:HTMLImageElement ):void {
-        var texture:Texture = this._globalTextureMap[picID];
-        var canvas:HTMLCanvasElement = texture.baseTexture.source as HTMLCanvasElement;
-        var ctx:CanvasRenderingContext2D = canvas.getContext("2d");
-        var r = texture.frame;
-        ctx.drawImage(image, 0, 0, image.width, image.height, r.x, r.y, r.width, r.height);
-        texture.baseTexture.update();
-    }
 
     static clearProject():void {
 
     }
-
-
 }
+
+PIXIAtlasManager.INIT();
+

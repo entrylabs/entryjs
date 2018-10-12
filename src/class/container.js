@@ -816,7 +816,6 @@ Entry.Container.prototype.getCachedPicture = function(pictureId) {
  */
 Entry.Container.prototype.cachePicture = function(pictureId, image) {
     this.cachedPicture[pictureId] = image;
-    PIXIAtlasManager.imageCache.cache(pictureId, image);
 };
 
 Entry.Container.prototype.unCachePictures = function(
@@ -835,7 +834,6 @@ Entry.Container.prototype.unCachePictures = function(
     pictures.forEach(({ id }) => {
         var key = id + (isClone ? '' : entityId);
         delete this.cachedPicture[key];
-        PIXIAtlasManager.imageCache.unCache(key);
     });
 };
 
