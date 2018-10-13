@@ -72,8 +72,9 @@ export class PIXIAtlasManager {
         this._activatedScene.activate();
     }
 
-    static getTextureFromPath(path:string):Texture {
-        return this._path_tex_globalMap[path];
+
+    static getTexture(sceneID:string, path:string):Texture {
+        return this._sceneID_sceneBin_map[sceneID].getTexture(path);
     }
 
 

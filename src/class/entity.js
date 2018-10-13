@@ -984,7 +984,10 @@ Entry.EntityObject.prototype.setImage = function(pictureModel) {
     //add entityId in order to differentiate copied pictures
     var cacheId = !this.isClone ? pictureModel.id + this.id : pictureModel.id;
 
-    this.object.texture = PIXIAtlasManager.getTextureFromPath(pictureModel.fileurl || pictureModel.filename);
+    this.object.texture = PIXIAtlasManager.getTexture(
+        this.parent.scene.id,
+        pictureModel.fileurl || pictureModel.filename
+    );
 
     Entry.requestUpdate = true;
 
