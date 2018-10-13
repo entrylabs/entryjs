@@ -6,7 +6,6 @@ import { AtlasImageLoader } from './loader/AtlasImageLoader';
 import { AtlasImageLoadingInfo } from './loader/AtlasImageLoadingInfo';
 
 
-//underscore
 declare let _:any;
 
 
@@ -18,6 +17,7 @@ export class PIXIAtlasManager {
     private static _sceneID_sceneBin_map:SceneBinsMap = {};
     private static _activatedScene:SceneBins;
 
+    /** @readonly */
     public static imageLoader:AtlasImageLoader;
 
     private static _viewer:AtlasCanvasViewer;
