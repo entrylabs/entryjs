@@ -14,8 +14,8 @@ type SceneBinsMap = {[key:string]: SceneBins};
 
 export class PIXIAtlasManager {
 
-    private static _globalTextureMap:TextureMap = {};
-    private static _sceneBinsMap:SceneBinsMap = {};
+    private static _path_tex_globalMap:TextureMap = {};
+    private static _sceneID_sceneBin_map:SceneBinsMap = {};
     private static _activatedScene:SceneBins;
 
     public static imageLoader:AtlasImageLoader;
@@ -41,7 +41,7 @@ export class PIXIAtlasManager {
     }
 
     static loadProject(objects:IRawObject[]) {
-        var sceneBinsMap:SceneBinsMap = this._sceneBinsMap;
+        var sceneBinsMap:SceneBinsMap = this._sceneID_sceneBin_map;
         var sceneBins:SceneBins;
         var obj:IRawObject;
         var sceneID;
@@ -51,7 +51,7 @@ export class PIXIAtlasManager {
             sceneID = obj.scene;
             sceneBins = sceneBinsMap[sceneID];
             if(!sceneBins) {
-                sceneBins = sceneBinsMap[sceneID] = new SceneBins(sceneID, this._globalTextureMap, this._viewer);
+                sceneBins = sceneBinsMap[sceneID] = new SceneBins(sceneID, this._path_tex_globalMap, this._viewer);
             }
             sceneBins.addRawPicInfos(obj.sprite && obj.sprite.pictures);
         }
@@ -59,7 +59,7 @@ export class PIXIAtlasManager {
     }
 
     static pack() {
-        _.each(this._sceneBinsMap, (sceneBins:SceneBins, id:string)=>{
+        _.each(this._sceneID_sceneBin_map, (sceneBins:SceneBins, sceneID:string)=>{
             sceneBins.pack();
         });
     }
@@ -68,12 +68,12 @@ export class PIXIAtlasManager {
         if(this._activatedScene) {
             this._activatedScene.deactivate();
         }
-        this._activatedScene = this._sceneBinsMap[sceneID];
+        this._activatedScene = this._sceneID_sceneBin_map[sceneID];
         this._activatedScene.activate();
     }
 
-    static getTexture(id:string):Texture {
-        return this._globalTextureMap[id];
+    static getTextureFromPath(path:string):Texture {
+        return this._path_tex_globalMap[path];
     }
 
 

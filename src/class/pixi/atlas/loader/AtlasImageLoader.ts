@@ -7,26 +7,24 @@ type LoadingInfoMap = {[key:string]:AtlasImageLoadingInfo};
 
 export class AtlasImageLoader {
 
-    private _pathMap:LoadingInfoMap = {};
-    private _picIDMap:LoadingInfoMap = {};
+    private _path_info_map:LoadingInfoMap = {};
 
     constructor(private _onLoadCallback:(info:AtlasImageLoadingInfo) => void) {
     }
 
     load(model:IRawPicture) {
         var path = model.filename || model.fileurl;
-        var info:AtlasImageLoadingInfo = this._pathMap[path];
+        var info:AtlasImageLoadingInfo = this._path_info_map[path];
         if(!info) {
             info = new AtlasImageLoadingInfo(model, this._onLoadCallback);
-            this._pathMap[path] = info;
+            this._path_info_map[path] = info;
         }
-        info.addRefModel(model);
-        this._picIDMap[model.id] = info;
+
         info.load();
     }
 
-    getImageInfo(picID:string):AtlasImageLoadingInfo {
-        return this._picIDMap[picID];
+    getImageInfo(rawPath:string):AtlasImageLoadingInfo {
+        return this._path_info_map[rawPath];
     }
 
 
