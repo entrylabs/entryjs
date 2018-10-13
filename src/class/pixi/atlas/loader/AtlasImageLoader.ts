@@ -15,11 +15,11 @@ export class AtlasImageLoader {
     load(model:IRawPicture) {
         var path = model.filename || model.fileurl;
         var info:AtlasImageLoadingInfo = this._path_info_map[path];
-        if(!info) {
-            info = new AtlasImageLoadingInfo(model, this._onLoadCallback);
-            this._path_info_map[path] = info;
-        }
 
+        if(info) return;
+
+        info = new AtlasImageLoadingInfo(model, this._onLoadCallback);
+        this._path_info_map[path] = info;
         info.load();
     }
 

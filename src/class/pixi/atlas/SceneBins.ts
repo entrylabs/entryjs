@@ -1,9 +1,12 @@
+/**
+ * 하나의 Scene에서 사용하는 이미지들을 TextureAtlas 로 만들어줌.
+ */
+
 import { IBin } from 'maxrects-packer/lib/abstract_bin';
 import { MaxRectsPacker } from 'maxrects-packer/lib/maxrects_packer';
 import { IRawPicture } from './model/IRawPicture';
 import { MaxRectsBin } from 'maxrects-packer/lib/maxrects_bin';
 import PIXIHelper from '../helper/PIXIHelper';
-import { IRectangle } from 'maxrects-packer/lib/geom/Rectangle';
 import BaseTexture = PIXI.BaseTexture;
 import { AtlasTexture } from './AtlasTexture';
 import { PIXIAtlasManager } from './PIXIAtlasManager';
@@ -159,7 +162,7 @@ export class SceneBins {
     }
 
     /**
-     * Scene이 활성화 되어 있을때 이미지가 로드 되면 이 함수를 통해 로드된 이미지와, 참조하는 picID 가 주입됨.
+     * Scene이 활성화 되어 있을때 이미지가 로드 되면 이 함수를 통해 로드된 이미지 정보가 주입됨.
      * @param info
      */
     putImage(info:AtlasImageLoadingInfo) {
