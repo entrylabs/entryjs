@@ -1,4 +1,5 @@
 import { IRawPicture } from '../model/IRawPicture';
+import { PrimitiveSet } from '../structure/PrimitiveSet';
 
 declare let Entry:any;
 declare let _:any;
@@ -16,26 +17,15 @@ export class AtlasImageLoadingInfo {
     loadState:LoadingState = LoadingState.NONE;
     img:HTMLImageElement;
 
-    private _refPicID:SetStructure = new SetStructure();
+    /**  계산된 이미지 경로. */
     private _realPath:string;
-    private _modelPath:string;
+
+    /**  picture json 에 정의된 경로. fileurl or filename */
+    private _rawPath:string;
 
     constructor(model:IRawPicture, private _onLoadCallback:(info:AtlasImageLoadingInfo) => void) {
         this._realPath = this._getImageSrc(model);
-        this._modelPath = model.fileurl || model.filename;
-    }
-
-
-    addRefModel(model:IRawPicture) {
-        this._refPicID.put(model.id);
-    }
-
-    removeRefModel(model:IRawPicture) {
-        this._refPicID.remove(model.id);
-    }
-
-    eachRefID(callback:(value:string)=>void) {
-        this._refPicID.each(callback);
+        this._rawPath = model.fileurl || model.filename;
     }
 
 
@@ -52,7 +42,6 @@ export class AtlasImageLoadingInfo {
             this._realPath = null;
             img.onload = null;
         };
-
         img.src = this._realPath;
     }
 
@@ -60,6 +49,8 @@ export class AtlasImageLoadingInfo {
         return this.loadState == LoadingState.COMPLETE;
     }
 
+    /** pictureModel.fileurl or pictureModel.filename **/
+    get path():string { return this._rawPath; }
 
     private _getImageSrc(picture:IRawPicture) {
         if (picture.fileurl) return picture.fileurl;
@@ -80,22 +71,3 @@ export class AtlasImageLoadingInfo {
 }
 
 
-class SetStructure {
-    private _map:any = {};
-    hasValue(value:string):boolean {
-        return this._map[value];
-    }
-    put(value:string) {
-        this._map[value] = true;
-    }
-
-    remove(value:string) {
-        delete this._map[value];
-    }
-
-    each(callback:(value:string)=>void) {
-        _.each(this._map, (v:boolean, key:string)=>{
-            callback(key);
-        });
-    }
-}
