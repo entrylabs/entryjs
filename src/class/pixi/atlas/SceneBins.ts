@@ -150,8 +150,8 @@ export class SceneBins {
         ccc.length = 0;
     }
 
-    getTexture(id:string) {
-        return this._textureMap[id];
+    getTexture(path:string) {
+        return this._textureMap[path];
     }
 
     destroy() {
