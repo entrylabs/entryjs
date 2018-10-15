@@ -12,7 +12,7 @@ Entry.Board = class Board {
         this.scale = option.scale || 1;
         this.readOnly = option.readOnly === undefined ? false : option.readOnly;
         this.changeEvent = new Entry.Event(this);
-        
+
         this.createView(option);
         this.updateOffset();
 
@@ -92,10 +92,10 @@ Entry.Board = class Board {
         this.svgGroup.attr('transform', `scale(${this.scale})`);
         this.svgThreadGroup = this.svgGroup.elem('g');
         this.svgThreadGroup.board = this;
-        
+
         this.svgBlockGroup = this.svgGroup.elem('g');
         this.svgBlockGroup.board = this;
-        
+
         this.svgCommentGroup = this.svgGroup.elem('g');
         this.svgCommentGroup.board = this;
 
@@ -326,7 +326,7 @@ Entry.Board = class Board {
             columWidth = Math.max(columWidth, bBox.width);
             top = acculmulatedTop + verticalGap;
             blockView._moveTo(left - bBox.x, top, false);
-            acculmulatedTop = acculmulatedTop + bBox.height + verticalGap;
+            acculmulatedTop = top + bBox.height * this.scale;
         });
         this.scroller.resizeScrollBar();
     }
@@ -525,7 +525,7 @@ Entry.Board = class Board {
                 var thread = block.statements[j];
                 var statement = block.view._statements[j];
                 statement.zIndex = zIndex;
-                statement.absX = cursorX + (statement.x * this.scale);
+                statement.absX = cursorX + statement.x * this.scale;
                 metaData.push({
                     point: statement.y + cursorY - 30,
                     endPoint: statement.y + cursorY,
@@ -542,7 +542,7 @@ Entry.Board = class Board {
                         thread,
                         zIndex,
                         {
-                            x: (statement.x * this.scale) + cursorX,
+                            x: statement.x * this.scale + cursorX,
                             y: statement.y + cursorY,
                         },
                         targetType
@@ -568,7 +568,7 @@ Entry.Board = class Board {
         var blockView = block.view;
         blockView.zIndex = zIndex;
         if (blockView.dragInstance) return [];
-        cursorY += (blockView.y / this.scale) - 15;
+        cursorY += blockView.y / this.scale - 15;
         cursorX += blockView.x;
         var endPoint = cursorY + 1;
         if (blockView.magnet.previous) {
@@ -610,13 +610,13 @@ Entry.Board = class Board {
             if (block.statements) zIndex += 0.01;
             for (var j = 0; j < block.statements.length; j++) {
                 var thread = block.statements[j];
-                var statement = block.view._statements[j];                
+                var statement = block.view._statements[j];
                 statementBlocks = statementBlocks.concat(
                     this._getFieldMagnets(
                         thread,
                         zIndex,
                         {
-                            x: (statement.x * this.scale) + cursorX,
+                            x: statement.x * this.scale + cursorX,
                             y: statement.y + cursorY,
                         },
                         targetType
@@ -643,7 +643,7 @@ Entry.Board = class Board {
             if (content.acceptType !== targetType && content.acceptType !== 'boolean') {
                 continue;
             }
-            var startX = cursorX + (content.box.x * this.scale);
+            var startX = cursorX + content.box.x * this.scale;
             var startY = cursorY + content.box.y + (blockView.contentHeight % 1000) * -0.5;
             var endY = cursorY + content.box.y + content.box.height;
             if (content.acceptType === targetType) {
@@ -664,7 +664,7 @@ Entry.Board = class Board {
             metaData = metaData.concat(
                 this._getFieldBlockMetaData(
                     contentBlockView,
-                    startX + (contentBlockView.contentPos.x * this.scale),
+                    startX + contentBlockView.contentPos.x * this.scale,
                     startY + contentBlockView.contentPos.y,
                     zIndex + 0.01,
                     targetType
@@ -701,7 +701,7 @@ Entry.Board = class Board {
                         thread,
                         zIndex,
                         {
-                            x: (statement.x * this.scale) + cursorX,
+                            x: statement.x * this.scale + cursorX,
                             y: statement.y + cursorY,
                         },
                         targetType
