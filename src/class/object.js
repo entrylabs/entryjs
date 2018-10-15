@@ -3,6 +3,10 @@
  */
 'use strict';
 
+function clog() {
+    console.log("[object]",...arguments);
+}
+
 import { PIXIAtlasManager } from './pixi/atlas/PIXIAtlasManager';
 
 /**
@@ -11,6 +15,7 @@ import { PIXIAtlasManager } from './pixi/atlas/PIXIAtlasManager';
  * @constructor
  */
 Entry.EntryObject = function(model) {
+    clog("new " + (model ? "with model" : "with no model"));
     var that = this;
     if (model) {
         /** @type {string} */
