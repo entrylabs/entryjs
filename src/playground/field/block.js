@@ -48,6 +48,9 @@ Entry.FieldBlock = class FieldBlock extends Entry.Field {
         if (!this.svgGroup) {
             this.svgGroup = this._blockView.contentSvgGroup.elem('g');
         }
+        if (!this.svgCommentGroup) {
+            this.svgCommentGroup = this._blockView.svgCommentGroup.elem('g');
+        }
 
         this.renderMode = !_.isUndefined(mode)
             ? mode
@@ -55,6 +58,7 @@ Entry.FieldBlock = class FieldBlock extends Entry.Field {
 
         this.view = this;
         this._nextGroup = this.svgGroup;
+        this._nextCommentGroup = this.svgCommentGroup;
 
         this.updateValueBlock(this.getValue());
 
