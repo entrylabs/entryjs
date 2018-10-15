@@ -1,29 +1,21 @@
-import { IRectangle } from "./geom/Rectangle";
 import { IOption } from "./maxrects_packer";
 import { Bin } from "./abstract_bin";
+import { InputRect } from './geom/InputRect';
 
 export class OversizedElementBin extends Bin {
     public maxWidth: number;
     public maxHeight: number;
     public options: IOption;
-    public rects: IRectangle[];
-    public freeRects: IRectangle[];
 
-    constructor (public width: number, public height: number, public data: any) {
+    constructor (public index:number, rect:InputRect) {
         super();
-        this.rects = [{
-            x: 0,
-            y: 0,
-            width: this.width,
-            height: this.height,
-            data: data,
-            oversized: true
-        }];
+        this.rects = [];
         this.freeRects = [];
-        this.maxWidth = width;
-        this.maxHeight = height;
+        this.maxWidth = rect.width;
+        this.maxHeight = rect.height;
         this.options = { smart: false, pot: false, square: false };
+        this.pushRect(rect, true);
     }
+    add (rect:InputRect): boolean { return false; }
 
-    add ():IRectangle | undefined { return undefined; }
 }
