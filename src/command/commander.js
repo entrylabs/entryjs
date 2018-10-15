@@ -3,7 +3,7 @@
  */
 'use strict';
 
-var UTIL = require('./command_util');
+const UTIL = require('./command_util');
 
 Entry.Commander = function(injectType) {
     if (injectType == 'workspace' || injectType == 'phone') {
@@ -33,7 +33,7 @@ Entry.Commander = function(injectType) {
 
 (function(p) {
     p.do = function(commandType, ...args) {
-        var {
+        const {
             stateManager,
             Command: EntryCommand,
             STATIC: { COMMAND_TYPES, getCommandName },
@@ -47,26 +47,23 @@ Entry.Commander = function(injectType) {
         this.report(COMMAND_TYPES.do);
         this.report(commandType, args);
 
-        var command = EntryCommand[commandType];
+        const command = EntryCommand[commandType];
 
         console.log('commandType', commandType, getCommandName(commandType));
 
-        var state;
+        let state;
 
         if (stateManager && !UTIL.checkIsSkip(commandType)) {
-            state = stateManager.addCommand.apply(
-                stateManager,
-                [commandType, this, this.do, command.undo].concat(
-                    command.state.apply(this, args)
-                )
-            );
+            state = stateManager.addCommand(...[commandType, this, this.do, command.undo].concat(
+                command.state.apply(this, args)
+            ));
         }
-        var value = command.do.apply(this, args);
+        const value = command.do.apply(this, args);
         this.doEvent.notify(commandType, args);
-        var id = state ? state.id : null;
+        const id = state ? state.id : null;
 
         return {
-            value: value,
+            value,
             isPass: function(isPass, skipCount) {
                 this.isPassById(id, isPass, skipCount);
             }.bind(this),
@@ -76,9 +73,9 @@ Entry.Commander = function(injectType) {
     p.undo = function(commandType, ...args) {
         this.report(Entry.STATIC.COMMAND_TYPES.undo);
 
-        var command = Entry.Command[commandType];
+        const command = Entry.Command[commandType];
 
-        var state;
+        let state;
         if (Entry.stateManager && command.skipUndoStack !== true) {
             state = Entry.stateManager.addCommand.apply(
                 Entry.stateManager,
@@ -98,7 +95,7 @@ Entry.Commander = function(injectType) {
     p.redo = function(commandType, ...args) {
         this.report(Entry.STATIC.COMMAND_TYPES.redo);
 
-        var command = Entry.Command[commandType];
+        const command = Entry.Command[commandType];
 
         if (Entry.stateManager && command.skipUndoStack !== true) {
             Entry.stateManager.addCommand.apply(
@@ -116,19 +113,27 @@ Entry.Commander = function(injectType) {
     };
 
     p.isPass = function(isPass = true) {
-        if (!Entry.stateManager) return;
+        if (!Entry.stateManager) {
+            return;
+        }
 
-        var lastCommand = Entry.stateManager.getLastCommand();
-        if (lastCommand) lastCommand.isPass = isPass;
+        const lastCommand = Entry.stateManager.getLastCommand();
+        if (lastCommand) {
+            lastCommand.isPass = isPass;
+        }
     };
 
     p.isPassById = function(id, isPass = true, skipCount = 0) {
-        if (!id || !Entry.stateManager) return;
+        if (!id || !Entry.stateManager) {
+            return;
+        }
 
-        var lastCommand = Entry.stateManager.getLastCommandById(id);
+        const lastCommand = Entry.stateManager.getLastCommandById(id);
         if (lastCommand) {
             lastCommand.isPass = isPass;
-            if (skipCount) lastCommand.skipCount = !!skipCount;
+            if (skipCount) {
+                lastCommand.skipCount = !!skipCount;
+            }
         }
     };
 
@@ -140,21 +145,24 @@ Entry.Commander = function(injectType) {
     };
 
     p.removeReporter = function(reporter) {
-        if (reporter.logEventListener)
+        if (reporter.logEventListener) {
             this.logEvent.detatch(reporter.logEventListener);
+        }
         delete reporter.logEventListener;
     };
 
     p.report = function(commandType, argumentsArray) {
-        var data;
+        let data;
 
         if (
             commandType &&
             Entry.Command[commandType] &&
             Entry.Command[commandType].log
-        )
+        ) {
             data = Entry.Command[commandType].log.apply(this, argumentsArray);
-        else data = argumentsArray;
+        } else {
+            data = argumentsArray;
+        }
         data.unshift(commandType);
         this.logEvent.notify(data);
     };
@@ -162,5 +170,4 @@ Entry.Commander = function(injectType) {
     p.applyOption = function() {
         this.doCommandAll = Entry.doCommandAll;
     };
-
 })(Entry.Commander.prototype);
