@@ -2,6 +2,7 @@ import { Rectangle, IRectangle } from "./geom/Rectangle";
 import { MaxRectsBin } from "./maxrects_bin";
 import { OversizedElementBin } from "./oversized_element_bin";
 import { Bin, IBin } from "./abstract_bin";
+import { InputRect } from './geom/InputRect';
 
 export const EDGE_MAX_VALUE: number = 4096;
 export const EDGE_MIN_VALUE: number = 128;
@@ -40,21 +41,17 @@ export class MaxRectsPacker {
         this.bins = [];
     }
 
-    /**
-     * Add a bin/rectangle object with data to packer
-     * @param {number} width of the input bin/rectangle
-     * @param {number} height of the input bin/rectangle
-     * @param {*} data custom data object
-     * @memberof MaxRectsPacker
-     */
-    public add (width: number, height: number, data: any) {
+    public add(rect:InputRect) {
+        var width = rect.width;
+        var height = rect.height;
+        var binIndex:number = this.bins.length;
         if (width > this.width || height > this.height) {
-            this.bins.push(new OversizedElementBin(width, height, data));
+            this.bins.push(new OversizedElementBin(binIndex, rect));
         } else {
-            let added = this.bins.find(bin => bin.add(width, height, data) !== undefined);
+            let added = this.bins.find(bin => bin.add(rect));
             if (!added) {
-                let bin = new MaxRectsBin(this.width, this.height, this.padding, this.options);
-                bin.add(width, height, data);
+                let bin = new MaxRectsBin(binIndex, this.width, this.height, this.padding, this.options);
+                bin.add(rect);
                 this.bins.push(bin);
             }
         }
@@ -66,59 +63,8 @@ export class MaxRectsPacker {
      * @param {IRectangle[]} rects Array of bin/rectangles
      * @memberof MaxRectsPacker
      */
-    public addArray (rects: IRectangle[]) {
-        this.sort(rects).forEach(r => this.add(r.width, r.height, r.data));
-    }
-
-    /**
-     * Load bins to the packer, overwrite exist bins
-     * @param {MaxRectsBin[]} bins MaxRectsBin objects
-     * @memberof MaxRectsPacker
-     */
-    public load (bins: IBin[]) {
-        bins.forEach((bin, index) => {
-            if (bin.maxWidth > this.width || bin.maxHeight > this.height) {
-                this.bins.push(new OversizedElementBin(bin.width, bin.height, {}));
-            } else {
-                let newBin: MaxRectsBin = new MaxRectsBin(this.width, this.height, this.padding, bin.options);
-                newBin.freeRects.splice(0);
-                bin.freeRects.forEach((r, i) => {
-                    newBin.freeRects.push(new Rectangle(r.x, r.y, r.width, r.height));
-                });
-                newBin.width = bin.width;
-                newBin.height = bin.height;
-                this.bins[index] = newBin;
-            }
-        }, this);
-    }
-
-    /**
-     * Output current bins to save
-     * @memberof MaxRectsPacker
-     */
-    public save (): IBin[] {
-        let saveBins: IBin[] = [];
-        this.bins.forEach((bin => {
-            let saveBin: IBin = {
-                width: bin.width,
-                height: bin.height,
-                maxWidth: bin.maxWidth,
-                maxHeight: bin.maxHeight,
-                freeRects: [],
-                rects: [],
-                options: bin.options
-            };
-            bin.freeRects.forEach(r => {
-                saveBin.freeRects.push({
-                    x: r.x,
-                    y: r.y,
-                    width: r.width,
-                    height: r.height
-                });
-            });
-            saveBins.push(saveBin);
-        }));
-        return saveBins;
+    public addArray (rects: InputRect[]) {
+        this.sort(rects).forEach((r:InputRect) => this.add(r));
     }
 
     private sort (rects: IRectangle[]) {

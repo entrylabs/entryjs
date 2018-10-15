@@ -1,16 +1,18 @@
 import { EDGE_MAX_VALUE, IOption } from "./maxrects_packer";
 import { Rectangle, IRectangle } from "./geom/Rectangle";
 import { Bin } from "./abstract_bin";
+import { InputRect } from './geom/InputRect';
 
 export class MaxRectsBin extends Bin {
     public width: number;
     public height: number;
     public freeRects: Rectangle[] = [];
-    public rects: Rectangle[] = [];
+    public rects: InputRect[] = [];
     private verticalExpand: boolean = false;
     private stage: Rectangle;
 
     constructor (
+        public index:number,
         public maxWidth: number = EDGE_MAX_VALUE,
         public maxHeight: number = EDGE_MAX_VALUE,
         public padding: number = 0,
@@ -23,6 +25,47 @@ export class MaxRectsBin extends Bin {
         this.stage = new Rectangle(0, 0, this.width, this.height);
     }
 
+    public add (rect:InputRect): boolean {
+        var width:number = rect.width;
+        var height:number = rect.height;
+        let node: Rectangle | undefined = this.findNode(width + this.padding, height + this.padding);
+        if (node) {
+            this.updateBinSize(node);
+            let numRectToProcess = this.freeRects.length;
+            let i: number = 0;
+            while (i < numRectToProcess) {
+                if (this.splitNode(this.freeRects[i], node)) {
+                    this.freeRects.splice(i, 1);
+                    numRectToProcess--;
+                    i--;
+                }
+                i++;
+            }
+            this.pruneFreeList();
+            this.verticalExpand = this.width > this.height ? true : false;
+            rect.x = node.x;
+            rect.y = node.y;
+            this.pushRect(rect, false);
+            return true;
+        } else if (!this.verticalExpand) {
+            if (this.updateBinSize(new Rectangle(this.width + this.padding, 0, width + this.padding, height + this.padding))
+                || this.updateBinSize(new Rectangle(0, this.height + this.padding, width + this.padding, height + this.padding))) {
+                return this.add(rect);
+            }
+        } else {
+            if (this.updateBinSize(new Rectangle(
+                0, this.height + this.padding,
+                width + this.padding, height + this.padding
+            )) || this.updateBinSize(new Rectangle(
+                this.width + this.padding, 0,
+                width + this.padding, height + this.padding
+            ))) {
+                return this.add(rect);
+            }
+        }
+        return undefined;
+    }
+    /*
     public add (width: number, height: number, data: any): Rectangle | undefined {
         let node: Rectangle | undefined = this.findNode(width + this.padding, height + this.padding);
         if (node) {
@@ -61,6 +104,7 @@ export class MaxRectsBin extends Bin {
         }
         return undefined;
     }
+    */
 
     private findNode (width: number, height: number): Rectangle | undefined {
         let score: number = Number.MAX_VALUE;

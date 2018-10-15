@@ -12,13 +12,12 @@ import { AtlasImageLoadingInfo } from './loader/AtlasImageLoadingInfo';
 import { PrimitiveSet } from './structure/PrimitiveSet';
 import { MaxRectsPacker } from '../../maxrect-packer/maxrects_packer';
 import { MaxRectsBin } from '../../maxrect-packer/maxrects_bin';
-import { IBin } from '../../maxrect-packer/abstract_bin';
+import { InputRect } from '../../maxrect-packer/geom/InputRect';
 
 export type TextureMap = {[key:string]:AtlasTexture};
 
 declare let _:any;
 
-let ccc:any[] = (window as any).ccc = [];
 
 /** BaseTextureOption **/
 let OP = {
@@ -27,22 +26,11 @@ let OP = {
     useOffscreenCanvas: false
 };
 
-
-interface BinInputData {
-    x:number;
-    y:number;
-    width:number;
-    height:number;
-    data:{
-        path:string
-    };
-}
-
 function getRawPath(rawData:IRawPicture):string {
     return rawData.fileurl || rawData.filename;
 }
 
-function newPacker():MaxRectsPacker {
+function newPacker():MaxRectsPacker{
     //https://www.npmjs.com/package/maxrects-packer
     const MAX_SIZE = 2048;
     const PADDING = 2;
@@ -54,15 +42,12 @@ function newPacker():MaxRectsPacker {
     return new MaxRectsPacker(MAX_SIZE, MAX_SIZE, PADDING, OPTION);
 }
 
-
-
 export class SceneBins {
 
     private _pathSet:PrimitiveSet = new PrimitiveSet();
-    private _packedBinData:BinInputData[] = [];
-    private _notPackedBindData:BinInputData[] = [];
+    private _packedBinData:InputRect[] = [];
+    private _notPackedBindData:InputRect[] = [];
     private _arrBaseTexture:BaseTexture[] = [];
-    private _bins:IBin[];
     private _packer:MaxRectsPacker;
     private _textureMap:TextureMap = {};
 
@@ -84,46 +69,33 @@ export class SceneBins {
         if(this._pathSet.hasValue(path)) return;
 
         this._pathSet.put(path);
-        var data:BinInputData = {
-            data: {path: path},
-            x:0, y:0,
-            width: pic.dimension.width,
-            height: pic.dimension.height
+        var rect:InputRect = new InputRect(0, 0, pic.dimension.width, pic.dimension.height);
+        rect.data = {
+            path: path
         };
-        this._notPackedBindData.push(data);
+        this._notPackedBindData.push(rect);
         return this;
     }
 
     pack() {
         var packer = this._packer = this._packer || newPacker();
         packer.addArray(this._notPackedBindData);
-        this._bins = packer.bins;
+
+        this._notPackedBindData.forEach((r:InputRect)=>{
+            var base:BaseTexture = this._getBaseTexture(r.binIndex);
+            var texture:AtlasTexture = new AtlasTexture(base, new PIXI.Rectangle(r.x, r.y, r.width, r.height));
+            this._textureMap[r.data.path] = texture;
+        });
 
         this._packedBinData = this._packedBinData.concat(this._notPackedBindData);
         this._notPackedBindData = [];
-
-        _.each(this._bins, (bin:MaxRectsBin, binIndex:number)=>{
-
-            var base:BaseTexture = new BaseTexture(null, OP.scaleMode);
-            base.source = PIXIHelper.getOffScreenCanvas(!OP.useOffscreenCanvas);
-            base.imageType = "png";
-            base.mipmap = OP.mipmap;
-            this._arrBaseTexture.push(base);
-
-            // sub-texture 생성.
-            _.each(bin.rects, (r:BinInputData, rectIndex:number)=>{
-                var texture:AtlasTexture = new AtlasTexture(base, new PIXI.Rectangle(r.x, r.y, r.width, r.height));
-                var path = r.data.path;
-                this._textureMap[path] = texture;
-            });
-        });
     }
 
     activate() {
         let c = ():number => {
             return Math.floor(Math.random()*255);
         };
-        _.each(this._bins, (bin:MaxRectsBin, index:number)=>{
+        _.each(this._packer.bins, (bin:MaxRectsBin, index:number)=>{
             var base:BaseTexture = this._arrBaseTexture[index];
             var canvas:HTMLCanvasElement = base.source as HTMLCanvasElement;
             canvas.width = bin.maxWidth;
@@ -148,6 +120,17 @@ export class SceneBins {
         });
     }
 
+    private _getBaseTexture(index:number):BaseTexture {
+        var base:BaseTexture = this._arrBaseTexture[index];
+        if(base) return base;
+        base = new BaseTexture(null, OP.scaleMode);
+        base.source = PIXIHelper.getOffScreenCanvas(!OP.useOffscreenCanvas);
+        base.imageType = "png";
+        base.mipmap = OP.mipmap;
+        this._arrBaseTexture[index] = base;
+        return base;
+    }
+
     deactivate() {
         _.each(this._arrBaseTexture, (b:BaseTexture)=>{
             var canvas = (b.source as HTMLCanvasElement) ;
@@ -156,7 +139,6 @@ export class SceneBins {
             b.dispose();
         });
         this._viewer.empty();
-        ccc.length = 0;
     }
 
     getTexture(path:string) {
@@ -175,6 +157,5 @@ export class SceneBins {
         var t:AtlasTexture = this._textureMap[info.path];
         if(!t) return;//이 Scene에서 사용안하는 이미지가 로드 된것임.
         t.drawImageAtBaseTexture(info.img);
-        t.baseTexture.update();
     }
 }

@@ -3,6 +3,7 @@ import PIXIHelper from '../helper/PIXIHelper';
 import { MaxRectsPacker } from '../../maxrect-packer/maxrects_packer';
 import { Bin } from '../../maxrect-packer/abstract_bin';
 import { IRectangle } from '../../maxrect-packer/geom/Rectangle';
+import { InputRect } from '../../maxrect-packer/geom/InputRect';
 
 
 declare let _:any;
@@ -37,7 +38,9 @@ export class BinTest {
         };
         w = w || c(2000) + 1;
         h = h || c(2000) + 1;
-        this.packer.add(w, h, `rgb(${c()},${c()},${c()})`);
+        var r = new InputRect(0,0, w, h);
+        r.data = `rgb(${c()},${c()},${c()})`;
+        this.packer.add(r);
 
         _.each(this.packer.bins,(bin:Bin, index:number)=>{
             var canvas:HTMLCanvasElement = this._arrCanvas[index];
@@ -51,18 +54,18 @@ export class BinTest {
                 ctx.fillRect(0,0, S, S);
             }
 
-            _.each(bin.rects, (r:IRectangle)=>{
+            _.each(bin.rects, (r:InputRect)=>{
                 this._printColor(canvas, r);
             });
             this._viewer.add(canvas);
         });
     }
 
-    _printColor(canvas:HTMLCanvasElement, rect:IRectangle) {
+    _printColor(canvas:HTMLCanvasElement, rect:InputRect) {
 
         var ctx:CanvasRenderingContext2D = canvas.getContext("2d");
         // ctx.fillStyle = ;
-        ctx.fillStyle = rect.data;
+        ctx.fillStyle = rect.data ;
         ctx.fillRect(rect.x,rect.y, rect.width, rect.height);
     }
 
