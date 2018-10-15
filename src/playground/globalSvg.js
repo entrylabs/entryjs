@@ -8,13 +8,15 @@ class GlobalSvg {
     scale = 1;
 
     createDom() {
-        if (this.inited) return;
+        if (this.inited) {
+            return;
+        }
 
         //document attached element not removed by angular
         $('#globalSvgSurface').remove();
         $('#globalSvg').remove();
 
-        var body = $('body');
+        const body = $('body');
         this._container = Entry.Dom('div', {
             classes: ['globalSvgSurface', 'entryRemove'],
             id: 'globalSvgSurface',
@@ -37,9 +39,13 @@ class GlobalSvg {
     }
 
     setView(view, mode) {
-        if (view == this._view) return;
-        var data = view.block || view;
-        if (data.isReadOnly() || !view.movable) return;
+        if (view == this._view) {
+            return;
+        }
+        const data = view.block || view;
+        if (data.isReadOnly() || !view.movable) {
+            return;
+        }
         this._view = view;
         this._mode = mode;
         if (mode !== Entry.Workspace.MODE_VIMBOARD) {
@@ -69,10 +75,11 @@ class GlobalSvg {
     }
 
     draw() {
-        var that = this;
-        var blockView = this._view;
-        if (this._svg) this.remove();
-        var isVimMode = this._mode == Entry.Workspace.MODE_VIMBOARD;
+        const blockView = this._view;
+        if (this._svg) {
+            this.remove();
+        }
+        const isVimMode = this._mode == Entry.Workspace.MODE_VIMBOARD;
         // ISSUE: 배율 변경시 좌표 틀어짐 발생
         // var bBox = blockView.svgGroup.getBBox();
         // this.svgDom.attr({
@@ -81,15 +88,18 @@ class GlobalSvg {
         // });
 
         this.svgGroup = Entry.SVG.createElement(blockView.svgGroup.cloneNode(true), { opacity: 1 });
-        if(!(blockView instanceof Entry.Comment)) {
+        if (!(blockView instanceof Entry.Comment)) {
             const comment = blockView.getComment();
-            if(comment) {
-                const commentSvgGroup = Entry.SVG.createElement(comment.svgGroup.cloneNode(true), { opacity: 1 });
+            if (comment) {
+                const commentSvgGroup = Entry.SVG.createElement(comment.svgGroup.cloneNode(true), {
+                    opacity: 1,
+                });
                 console.log(blockView.svgGroup.getCTM(), commentSvgGroup.getCTM());
                 const blockGroup = blockView.svgGroup.getCTM();
                 const commentGroup = commentSvgGroup.getCTM();
                 $(commentSvgGroup).css({
-                    transform: `scale(${this.scale}) translate3d(${commentGroup.e - blockGroup.e}px,${commentGroup.f - blockGroup.f}px, 0px)`,
+                    transform: `scale(${this.scale}) translate3d(${commentGroup.e -
+                        blockGroup.e}px,${commentGroup.f - blockGroup.f}px, 0px)`,
                 });
                 this.svgGroup.appendChild(commentSvgGroup);
             }
@@ -97,7 +107,7 @@ class GlobalSvg {
         this.svg.appendChild(this.svgGroup);
         //TODO selectAll function replace
         if (isVimMode) {
-            var svg = $(this.svgGroup);
+            const svg = $(this.svgGroup);
 
             svg.find('g').css({ filter: 'none' });
 
@@ -122,7 +132,9 @@ class GlobalSvg {
     }
 
     remove() {
-        if (!this.svgGroup) return;
+        if (!this.svgGroup) {
+            return;
+        }
         this.svgGroup.remove();
         delete this.svgGroup;
         delete this._view;
@@ -147,7 +159,7 @@ class GlobalSvg {
         this._offsetX = offsetX;
         this._offsetY = offsetY;
         const transform = `translate(${offsetX}, ${offsetY})`;
-        this.svgGroup.attr({ transform: transform });
+        this.svgGroup.attr({ transform });
     }
 
     show() {
@@ -159,22 +171,25 @@ class GlobalSvg {
     }
 
     position() {
-        var blockView = this._view;
-        if (!blockView) return;
-        var pos = blockView.getAbsoluteCoordinate();
-        var offset = blockView.getBoard().offset();
+        const blockView = this._view;
+        if (!blockView) {
+            return;
+        }
+        const pos = blockView.getAbsoluteCoordinate();
+        const offset = blockView.getBoard().offset();
         this.left = pos.scaleX + (offset.left / this.scale - this._offsetX);
         this.top = pos.scaleY + (offset.top / this.scale - this._offsetY);
         this._applyDomPos(this.left, this.top);
     }
 
-    commentPosition({startX = 0, startY = 0} = {}) {
-        var view = this._view;
-        if (!view) return;
-        var pos = view.getAbsoluteCoordinate();
-        var offset = view.board.offset();
-        this.left = pos.scaleX// + (offset.left / this.scale - this._offsetX);
-        this.top = pos.scaleY// + (offset.top / this.scale - this._offsetY);
+    commentPosition({ startX = 0, startY = 0 } = {}) {
+        const view = this._view;
+        if (!view) {
+            return;
+        }
+        const pos = view.getAbsoluteCoordinate();
+        this.left = pos.scaleX; // + (offset.left / this.scale - this._offsetX);
+        this.top = pos.scaleY; // + (offset.top / this.scale - this._offsetY);
         console.log('commentPosition', this.left, this.top);
         const [comment] = this.svgGroup.getElementsByTagName('rect');
         const [line] = this.svgGroup.getElementsByTagName('line');
@@ -187,9 +202,11 @@ class GlobalSvg {
     }
 
     adjust(adjustX, adjustY) {
-        var left = this.left + (adjustX || 0);
-        var top = this.top + (adjustY || 0);
-        if (left === this.left && top === this.top) return;
+        const left = this.left + (adjustX || 0);
+        const top = this.top + (adjustY || 0);
+        if (left === this.left && top === this.top) {
+            return;
+        }
 
         this.left = left;
         this.top = top;
@@ -203,17 +220,23 @@ class GlobalSvg {
     }
 
     terminateDrag(blockView) {
-        var mousePos = Entry.mouseCoordinate;
-        var board = blockView.getBoard();
-        var blockMenu = board.workspace.blockMenu;
-        var bLeft = blockMenu.offset().left;
-        var bTop = blockMenu.offset().top;
-        var bWidth = blockMenu.visible ? blockMenu.svgDom.width() : 0;
-        if (mousePos.y > board.offset().top - 20 && mousePos.x > bLeft + bWidth) return this.DONE;
-        else if (mousePos.y > bTop && mousePos.x > bLeft && blockMenu.visible) {
-            if (!blockView.block.isDeletable()) return this.RETURN;
-            else return this.REMOVE;
-        } else return this.RETURN;
+        const mousePos = Entry.mouseCoordinate;
+        const board = blockView.getBoard();
+        const blockMenu = board.workspace.blockMenu;
+        const bLeft = blockMenu.offset().left;
+        const bTop = blockMenu.offset().top;
+        const bWidth = blockMenu.visible ? blockMenu.svgDom.width() : 0;
+        if (mousePos.y > board.offset().top - 20 && mousePos.x > bLeft + bWidth) {
+            return this.DONE;
+        } else if (mousePos.y > bTop && mousePos.x > bLeft && blockMenu.visible) {
+            if (!blockView.block.isDeletable()) {
+                return this.RETURN;
+            } else {
+                return this.REMOVE;
+            }
+        } else {
+            return this.RETURN;
+        }
     }
 
     addControl(e) {
@@ -222,10 +245,10 @@ class GlobalSvg {
 
     onMouseDown(e) {
         this._startY = e.pageY;
-        var that = this;
+        const that = this;
         e.stopPropagation();
         e.preventDefault();
-        var doc = $(document);
+        const doc = $(document);
         doc.bind('mousemove.block', onMouseMove);
         doc.bind('mouseup.block', onMouseUp);
         doc.bind('touchmove.block', onMouseMove);
@@ -234,12 +257,12 @@ class GlobalSvg {
         this._startY = e.pageY;
 
         function onMouseMove(e) {
-            var newX = e.pageX;
-            var newY = e.pageY;
-            var dX = newX - that._startX;
-            var dY = newY - that._startY;
-            var newLeft = that.left + dX;
-            var newTop = that.top + dY;
+            const newX = e.pageX;
+            const newY = e.pageY;
+            const dX = newX - that._startX;
+            const dY = newY - that._startY;
+            const newLeft = that.left + dX;
+            const newTop = that.top + dY;
             that._applyDomPos(newLeft, newTop);
             that._startX = newX;
             that._startY = newY;
