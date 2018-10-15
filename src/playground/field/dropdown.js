@@ -5,43 +5,42 @@
 /*
  *
  */
-Entry.FieldDropdown = function(content, blockView, index) {
-    this._block = blockView.block;
-    this._blockView = blockView;
+Entry.FieldDropdown = class FieldDropdown extends Entry.Field {
+    constructor(content, blockView, index) {
+        super();
+        this._block = blockView.block;
+        this._blockView = blockView;
 
-    this.box = new Entry.BoxModel();
+        this.box = new Entry.BoxModel();
 
-    this.svgGroup = null;
+        this.svgGroup = null;
 
-    this._contents = content;
-    this._noArrow = content.noArrow;
+        this._contents = content;
+        this._noArrow = content.noArrow;
 
-    let { bgColor, textColor, arrowColor } = content;
-    var { deletable, emphasized } = this._block;
+        let { bgColor, textColor, arrowColor } = content;
+        var { deletable, emphasized } = this._block;
 
-    if (deletable === Entry.Block.DELETABLE_FALSE_LIGHTEN || emphasized) {
-        arrowColor = blockView._fillColor;
+        if (deletable === Entry.Block.DELETABLE_FALSE_LIGHTEN || emphasized) {
+            arrowColor = blockView._fillColor;
+        }
+
+        this._arrowColor = arrowColor;
+        this._textColor = textColor || '#FFFFFF';
+        this._bgColor = bgColor;
+        this._index = index;
+        this.setValue(this.getValue());
+
+        this._CONTENT_HEIGHT = this.getContentHeight(content.dropdownHeight);
+
+        this._font_size = this.getFontSize(content.fontSize);
+
+        this._ROUND = content.roundValue || 2;
+
+        this.renderStart();
     }
 
-    this._arrowColor = arrowColor;
-    this._textColor = textColor || '#FFFFFF';
-    this._bgColor = bgColor;
-    this._index = index;
-    this.setValue(this.getValue());
-
-    this._CONTENT_HEIGHT = this.getContentHeight(content.dropdownHeight);
-
-    this._font_size = this.getFontSize(content.fontSize);
-
-    this._ROUND = content.roundValue || 2;
-
-    this.renderStart();
-};
-
-Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
-
-(function(p) {
-    p.renderStart = function() {
+    renderStart() {
         var blockView = this._blockView;
         var isBig = Entry.isMobile();
         var X_PADDING = isBig ? 33 : 20;
@@ -57,7 +56,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
         }
 
         if (!this._header) {
-            const rectInfo =  {
+            const rectInfo = {
                 height: CONTENT_HEIGHT,
                 y: -CONTENT_HEIGHT / 2,
                 rx: that._ROUND,
@@ -66,7 +65,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
 
             // width="48" height="20" fill="#13BF68" fill-rule="nonzero" rx="2"
 
-            if(this._bgColor) {
+            if (this._bgColor) {
                 rectInfo.fill = this._bgColor;
             } else {
                 rectInfo.fill = '#fff';
@@ -140,14 +139,16 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
             width: width,
             height: CONTENT_HEIGHT,
         });
-    };
+    }
 
-    p.resize = function() {
+    resize() {
         var isBig = Entry.isMobile();
         var X_PADDING = isBig ? 33 : 20;
         var X_PADDING_SUBT = isBig ? 24 : 10;
-        var width = this.textElement.getBoundingClientRect().width + X_PADDING;
-
+        const board = this._blockView.getBoard() || {};
+        const { scale = 1 } = board || {};
+        var width = this.textElement.getBoundingClientRect().width / scale + X_PADDING;
+        console.log(width);
         if (!this._noArrow) {
             var arrowInfo = this.getArrow();
             this._arrow.attr({
@@ -166,9 +167,9 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
 
         this.box.set({ width: width });
         this._block.view.dAlignContent();
-    };
+    }
 
-    p.renderOptions = function() {
+    renderOptions() {
         var that = this;
 
         this._attachDisposeEvent(() => {
@@ -224,9 +225,9 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
         this._position();
 
         this.optionDomCreated();
-    };
+    }
 
-    p._position = function() {
+    _position() {
         //inspect enough space below
         var pos = this.getAbsolutePosFromDocument();
         pos.y += this.box.height / 2;
@@ -267,15 +268,15 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
         });
 
         this.optionGroup.find('.right').width(optionGroupWidth - 20);
-    };
+    }
 
-    p.applyValue = function(value) {
+    applyValue(value) {
         if (this.value != value) this.setValue(value);
         this._setTextValue();
         this.resize();
-    };
+    }
 
-    p.getTextByValue = function(value) {
+    getTextByValue(value) {
         var reg = /&value/gm;
         if (reg.test(value)) return value.replace(reg, '');
 
@@ -293,15 +294,14 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
         //check should return value as it is
         if (this._shouldReturnValue(value)) return value;
         return Lang.Blocks.no_target;
-    };
+    }
 
-    p.getContentHeight = function(height) {
-        height =
-            height || this._blockView.getSkeleton().dropdownHeight || 20;
+    getContentHeight(height) {
+        height = height || this._blockView.getSkeleton().dropdownHeight || 20;
         return height;
-    };
+    }
 
-    p.getArrow = function() {
+    getArrow() {
         var isBig = Entry.isMobile();
         return {
             color: this._arrowColor || this._blockView._schema.color,
@@ -309,15 +309,20 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
             height: isBig ? 13 : 4.2,
             width: isBig ? 19 : 6.4,
         };
-    };
+    }
 
-    p._setTextValue = function() {
+    _setTextValue() {
         var textValue = this.getTextByValue(this.getValue());
         var newValue = this._convert(textValue, this.getValue());
         if (this.getTextValue() !== newValue) this.textElement.textContent = newValue;
-    };
+    }
 
-    p.getTextValue = function() {
+    getTextValue() {
         return this.textElement.textContent;
-    };
-})(Entry.FieldDropdown.prototype);
+    }
+}
+// (
+    // Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
+
+//     function(p) {}
+// )(Entry.FieldDropdown.prototype);

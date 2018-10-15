@@ -308,7 +308,7 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
             this.set({
                 view: new Entry.BlockView(this, board, mode),
             });
-            this._comment = new Entry.Comment(this, board);
+            // this._comment = new Entry.Comment(this, board);
             this._updatePos();
         }
     };
