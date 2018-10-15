@@ -59,41 +59,48 @@ function newPacker():MaxRectsPacker {
 export class SceneBins {
 
     private _pathSet:PrimitiveSet = new PrimitiveSet();
-    private _binInputData:BinInputData[] = [];
+    private _packedBinData:BinInputData[] = [];
+    private _notPackedBindData:BinInputData[] = [];
     private _arrBaseTexture:BaseTexture[] = [];
     private _bins:IBin[];
     private _packer:MaxRectsPacker;
     private _textureMap:TextureMap = {};
 
-    constructor(public sceneID:string, private _path_tex_globalMap:TextureMap, private _viewer:AtlasCanvasViewer) {
+    constructor(public sceneID:string, private _viewer:AtlasCanvasViewer) {
 
     }
 
 
     addRawPicInfos(pics:IRawPicture[]) {
-        var pic:IRawPicture;
-        var path:string;
         var LEN = pics.length;
         for(var i = 0 ; i < LEN ; i++ ) {
-            pic = pics[i];
-            path = getRawPath(pic);
-
-            if(this._pathSet.hasValue(path)) continue;
-
-            this._pathSet.put(path);
-            this._binInputData.push({
-                data: {path: path},
-                x:0, y:0,
-                width: pic.dimension.width,
-                height: pic.dimension.height
-            });
+            this.addPicInfo(pics[i]);
         }
+    }
+
+    addPicInfo(pic:IRawPicture):SceneBins {
+        var path = getRawPath(pic);
+
+        if(this._pathSet.hasValue(path)) return;
+
+        this._pathSet.put(path);
+        var data:BinInputData = {
+            data: {path: path},
+            x:0, y:0,
+            width: pic.dimension.width,
+            height: pic.dimension.height
+        };
+        this._notPackedBindData.push(data);
+        return this;
     }
 
     pack() {
         var packer = this._packer = this._packer || newPacker();
-        packer.addArray(this._binInputData as any);
+        packer.addArray(this._notPackedBindData);
         this._bins = packer.bins;
+
+        this._packedBinData = this._packedBinData.concat(this._notPackedBindData);
+        this._notPackedBindData = [];
 
         _.each(this._bins, (bin:MaxRectsBin, binIndex:number)=>{
 
@@ -107,7 +114,6 @@ export class SceneBins {
             _.each(bin.rects, (r:BinInputData, rectIndex:number)=>{
                 var texture:AtlasTexture = new AtlasTexture(base, new PIXI.Rectangle(r.x, r.y, r.width, r.height));
                 var path = r.data.path;
-                this._path_tex_globalMap[path] = texture;
                 this._textureMap[path] = texture;
             });
         });
@@ -120,15 +126,15 @@ export class SceneBins {
         _.each(this._bins, (bin:MaxRectsBin, index:number)=>{
             var base:BaseTexture = this._arrBaseTexture[index];
             var canvas:HTMLCanvasElement = base.source as HTMLCanvasElement;
-            canvas.width = bin.width;
-            canvas.height = bin.height;
+            canvas.width = bin.maxWidth;
+            canvas.height = bin.maxHeight;
             base.hasLoaded = true;
             base.update();
 
             //----------- debug code ---------------
             var ctx:CanvasRenderingContext2D = canvas.getContext("2d");
-            ctx.fillStyle = `rgb(${c()},${c()},${c()})`;
-            ctx.fillRect(0,0, bin.width, bin.height);
+            ctx.fillStyle = `rgba(${c()},${c()},${c()}, 0.3)`;
+            ctx.fillRect(0,0, bin.maxWidth, bin.maxHeight);
             this._viewer.add(canvas);
             //----------- debug code ---------------
         });
