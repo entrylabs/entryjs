@@ -48,7 +48,7 @@ export class PIXIAtlasManager {
         for (var i = 0 ; i < LEN ; i++) {
             obj = objects[i];
             sceneID = obj.scene;
-            sceneBins = this.getSceneBin(obj.scene);
+            sceneBins = this._getSceneBin(obj.scene);
             sceneBins.addRawPicInfos(obj.sprite && obj.sprite.pictures);
         }
         this.pack();
@@ -64,7 +64,7 @@ export class PIXIAtlasManager {
         if(this._activatedScene) {
             this._activatedScene.deactivate();
         }
-        this._activatedScene = this._sceneID_sceneBin_map[sceneID];
+        this._activatedScene = this._getSceneBin(sceneID);
         this._activatedScene.activate();
     }
 
@@ -73,13 +73,20 @@ export class PIXIAtlasManager {
         return this._sceneID_sceneBin_map[sceneID].getTexture(path);
     }
 
-    static addPicAtScene(sceneID:string, pic:IRawPicture):void {
-        this.getSceneBin(sceneID)
+    static getTextureWithModel(sceneID:string, pic:IRawPicture):Texture {
+        this._addPicAtScene(sceneID, pic);
+        return this.getTexture(sceneID, pic.fileurl || pic.filename);
+    }
+
+
+
+    static _addPicAtScene(sceneID:string, pic:IRawPicture):void {
+        this._getSceneBin(sceneID)
             .addPicInfo(pic)
             .pack();
     }
 
-    private static getSceneBin(sceneID:string):SceneBins {
+    private static _getSceneBin(sceneID:string):SceneBins {
         var s:SceneBins = this._sceneID_sceneBin_map[sceneID];
         if(!s) {
             s = this._sceneID_sceneBin_map[sceneID] = new SceneBins(sceneID, this._viewer);

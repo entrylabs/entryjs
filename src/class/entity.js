@@ -4,6 +4,10 @@
 
 'use strict';
 
+function clog() {
+    console.log("[entity]",...arguments);
+}
+
 import PIXIHelper from './pixi/helper/PIXIHelper';
 import { PIXIDragHelper } from './pixi/helper/PIXIDragHelper';
 import { PIXIAtlasManager } from './pixi/atlas/PIXIAtlasManager';
@@ -14,6 +18,7 @@ import { PIXIAtlasManager } from './pixi/atlas/PIXIAtlasManager';
  * @constructor
  */
 Entry.EntityObject = function(object) {
+    clog("new");
     window.bot = this;
     console.log("[TEST] window.bot 에 할당 됨.");
     /** @type {!string} */
@@ -984,9 +989,14 @@ Entry.EntityObject.prototype.setImage = function(pictureModel) {
     //add entityId in order to differentiate copied pictures
     var cacheId = !this.isClone ? pictureModel.id + this.id : pictureModel.id;
 
-    this.object.texture = PIXIAtlasManager.getTexture(
+    // this.object.texture = PIXIAtlasManager.getTexture(
+    //     this.parent.scene.id,
+    //     pictureModel.fileurl || pictureModel.filename
+    // );
+
+    this.object.texture = PIXIAtlasManager.getTextureWithModel(
         this.parent.scene.id,
-        pictureModel.fileurl || pictureModel.filename
+        pictureModel
     );
 
     Entry.requestUpdate = true;
