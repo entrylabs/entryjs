@@ -2,10 +2,7 @@
  * 하나의 Scene에서 사용하는 이미지들을 TextureAtlas 로 만들어줌.
  */
 
-import { IBin } from 'maxrects-packer/lib/abstract_bin';
-import { MaxRectsPacker } from 'maxrects-packer/lib/maxrects_packer';
 import { IRawPicture } from './model/IRawPicture';
-import { MaxRectsBin } from 'maxrects-packer/lib/maxrects_bin';
 import PIXIHelper from '../helper/PIXIHelper';
 import BaseTexture = PIXI.BaseTexture;
 import { AtlasTexture } from './AtlasTexture';
@@ -13,6 +10,9 @@ import { PIXIAtlasManager } from './PIXIAtlasManager';
 import { AtlasCanvasViewer } from './AtlasCanvasViewer';
 import { AtlasImageLoadingInfo } from './loader/AtlasImageLoadingInfo';
 import { PrimitiveSet } from './structure/PrimitiveSet';
+import { MaxRectsPacker } from '../../maxrect-packer/maxrects_packer';
+import { MaxRectsBin } from '../../maxrect-packer/maxrects_bin';
+import { IBin } from '../../maxrect-packer/abstract_bin';
 
 export type TextureMap = {[key:string]:AtlasTexture};
 

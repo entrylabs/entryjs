@@ -25,5 +25,5 @@ export class OversizedElementBin extends Bin {
         this.options = { smart: false, pot: false, square: false };
     }
 
-    add () { return undefined; }
+    add ():IRectangle | undefined { return undefined; }
 }
