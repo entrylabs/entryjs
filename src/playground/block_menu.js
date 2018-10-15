@@ -26,16 +26,21 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
 
     this._threadsMap = {};
 
-    if (typeof dom === 'string') dom = $('#' + dom);
-    else dom = $(dom);
+    if (typeof dom === 'string') {
+        dom = $(`#${  dom}`);
+    } else {
+        dom = $(dom);
+    }
 
-    if (dom.prop('tagName') !== 'DIV') return console.error('Dom is not div element');
+    if (dom.prop('tagName') !== 'DIV') {
+        return console.error('Dom is not div element');
+    }
 
     this.view = dom;
 
     this.visible = true;
     this.hwCodeOutdated = false;
-    this._svgId = 'blockMenu' + _.now();
+    this._svgId = `blockMenu${  _.now()}`;
     this._clearCategory();
     this._categoryData = categoryData;
     this._generateView(categoryData);
@@ -45,7 +50,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
 
     this.svg = Entry.SVG(this._svgId);
     Entry.Utils.addFilters(this.svg, this.suffix);
-    var { pattern } = Entry.Utils.addBlockPattern(this.svg, this.suffix);
+    const { pattern } = Entry.Utils.addBlockPattern(this.svg, this.suffix);
     this.pattern = pattern;
 
     this.svgGroup = this.svg.elem('g');
@@ -55,6 +60,9 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
 
     this.svgBlockGroup = this.svgGroup.elem('g');
     this.svgBlockGroup.board = this;
+
+    this.svgCommentGroup = this.svgGroup.elem('g');
+    this.svgCommentGroup.board = this;
 
     this.changeEvent = new Entry.Event(this);
     this.categoryDoneEvent = new Entry.Event(this);
@@ -91,10 +99,10 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
 };
 
 (function(p) {
-    var VARIABLE = 'variable';
-    var HW = 'arduino';
+    const VARIABLE = 'variable';
+    const HW = 'arduino';
 
-    var splitterHPadding = 20;
+    const splitterHPadding = 20;
 
     p.schema = {
         code: null,
@@ -104,21 +112,21 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
     };
 
     p._generateView = function(categoryData) {
-        var parent = this.view;
-        var that = this;
+        const parent = this.view;
+        const that = this;
 
         categoryData && this._generateCategoryView(categoryData);
 
         this.blockMenuContainer = Entry.Dom('div', {
             class: 'blockMenuContainer',
-            parent: parent,
+            parent,
         });
 
         this.svgDom = Entry.Dom(
             $(
-                '<svg id="' +
-                    this._svgId +
-                    '" class="blockMenu" version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'
+                `<svg id="${ 
+                    this._svgId 
+                }" class="blockMenu" version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>`
             ),
             { parent: this.blockMenuContainer }
         );
@@ -126,18 +134,19 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
         this.svgDom.mouseenter(function(e) {
             that._scroller && that._scroller.setOpacity(1);
 
-            var selectedBlockView = that.workspace.selectedBlockView;
+            const selectedBlockView = that.workspace.selectedBlockView;
             if (
                 !Entry.playground ||
                 Entry.playground.resizing ||
                 (selectedBlockView && selectedBlockView.dragMode === Entry.DRAG_MODE_DRAG)
-            )
+            ) {
                 return;
+            }
             Entry.playground.focusBlockMenu = true;
-            var bBox = that.svgGroup.getBBox();
-            var adjust = that.hasCategory() ? 64 : 0;
-            var expandWidth = bBox.width + bBox.x + adjust + 2;
-            var { menuWidth } = Entry.interfaceState;
+            const bBox = that.svgGroup.getBBox();
+            const adjust = that.hasCategory() ? 64 : 0;
+            const expandWidth = bBox.width + bBox.x + adjust + 2;
+            const { menuWidth } = Entry.interfaceState;
             if (expandWidth > menuWidth) {
                 this.widthBackup = menuWidth - adjust;
                 $(this)
@@ -147,12 +156,16 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
         });
 
         this.svgDom.mouseleave(function(e) {
-            var playground = Entry.playground;
-            if (!playground || playground.resizing) return;
+            const playground = Entry.playground;
+            if (!playground || playground.resizing) {
+                return;
+            }
 
-            if (that._scroller) that._scroller.setOpacity(0);
+            if (that._scroller) {
+                that._scroller.setOpacity(0);
+            }
 
-            var widthBackup = this.widthBackup;
+            const widthBackup = this.widthBackup;
             if (widthBackup) {
                 $(this)
                     .stop()
@@ -167,21 +180,28 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
     };
 
     p.changeCode = function(code, isImmediate) {
-        if (code instanceof Array) code = new Entry.Code(code);
+        if (code instanceof Array) {
+            code = new Entry.Code(code);
+        }
 
-        if (!(code instanceof Entry.Code)) return console.error('You must inject code instance');
+        if (!(code instanceof Entry.Code)) {
+            return console.error('You must inject code instance');
+        }
 
         _.result(this.codeListener, 'destroy');
 
-        var that = this;
-        this.set({ code: code });
+        const that = this;
+        this.set({ code });
         this.codeListener = this.code.changeEvent.attach(this, function() {
             that.changeEvent.notify();
         });
         code.createView(this);
 
-        if (isImmediate) this.align();
-        else this._dAlign();
+        if (isImmediate) {
+            this.align();
+        } else {
+            this._dAlign();
+        }
     };
 
     p.bindCodeView = function(codeView) {
@@ -197,41 +217,49 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
     };
 
     p.align = function() {
-        var code = this.code;
-        if (!(this._isOn() && code)) return;
+        const code = this.code;
+        if (!(this._isOn() && code)) {
+            return;
+        }
         this._clearSplitters();
 
-        var vPadding = 15,
+        let vPadding = 15,
             marginFromTop = 10,
             hPadding = this._align == 'LEFT' ? 10 : this.svgDom.width() / 2;
 
-        var pastClass;
-        var blocks = this._getSortedBlocks();
-        var [visibles = [], inVisibles = []] = blocks;
+        let pastClass;
+        const blocks = this._getSortedBlocks();
+        const [visibles = [], inVisibles = []] = blocks;
 
         inVisibles.forEach(({ view: blockView } = {}) => {
-            if (!blockView) return;
+            if (!blockView) {
+                return;
+            }
             blockView.set({ display: false });
             blockView.detach();
         });
 
-        var lastSelector = this.lastSelector;
-        var shouldReDraw = !this._renderedCategories[lastSelector];
+        const lastSelector = this.lastSelector;
+        const shouldReDraw = !this._renderedCategories[lastSelector];
         visibles.forEach(({ view: blockView, type } = {}) => {
-            if (!blockView) return;
+            if (!blockView) {
+                return;
+            }
             blockView.attach();
             blockView.set({ display: true });
             shouldReDraw && blockView.reDraw();
 
-            var className = Entry.block[type].class;
+            const className = Entry.block[type].class;
             if (pastClass && pastClass !== className) {
                 this._createSplitter(marginFromTop);
                 marginFromTop += vPadding;
             }
             pastClass = className;
 
-            var left = hPadding - blockView.offsetX;
-            if (this._align == 'CENTER') left -= blockView.width / 2;
+            let left = hPadding - blockView.offsetX;
+            if (this._align == 'CENTER') {
+                left -= blockView.width / 2;
+            }
 
             marginFromTop -= blockView.offsetY;
             blockView._moveTo(left, marginFromTop, false);
@@ -241,7 +269,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
         this.updateSplitters();
 
         if (this.workspace) {
-            var mode = this.workspace.getMode();
+            const mode = this.workspace.getMode();
             switch (mode) {
                 case Entry.Workspace.MODE_BOARD:
                 case Entry.Workspace.MODE_OVERLAYBOARD:
@@ -255,24 +283,28 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
             }
         }
 
-        if (lastSelector !== 'func') this._renderedCategories[lastSelector] = true;
+        if (lastSelector !== 'func') {
+            this._renderedCategories[lastSelector] = true;
+        }
         this.changeEvent.notify();
     };
 
     p.cloneToGlobal = function(e) {
-        var blockView = this.dragBlock;
-        if (this._boardBlockView || blockView === null) return;
+        const blockView = this.dragBlock;
+        if (this._boardBlockView || blockView === null) {
+            return;
+        }
 
-        var GS = Entry.GlobalSvg;
-        var workspace = this.workspace;
-        var workspaceMode = workspace.getMode();
-        var { MODE_BOARD, MODE_OVERLAYBOARD } = Entry.Workspace;
+        const GS = Entry.GlobalSvg;
+        const workspace = this.workspace;
+        const workspaceMode = workspace.getMode();
+        const { MODE_BOARD, MODE_OVERLAYBOARD } = Entry.Workspace;
 
-        var svgWidth = this._svgWidth;
+        const svgWidth = this._svgWidth;
 
-        var board = workspace.selectedBoard;
-        var { x = 0, y = 0 } = blockView.mouseDownCoordinate || {};
-        var dx = e.pageX - x,
+        const board = workspace.selectedBoard;
+        const { x = 0, y = 0 } = blockView.mouseDownCoordinate || {};
+        let dx = e.pageX - x,
             dy = e.pageY - y;
 
         if (board && (workspaceMode === MODE_BOARD || workspaceMode === MODE_OVERLAYBOARD)) {
@@ -293,18 +325,18 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
                 return;
             }
 
-            var block = blockView.block;
-            var currentThread = block.getThread();
+            const block = blockView.block;
+            const currentThread = block.getThread();
             if (block && currentThread) {
-                var distance = this.offset().top - board.offset().top - $(window).scrollTop();
+                const distance = this.offset().top - board.offset().top - $(window).scrollTop();
 
-                var datum = currentThread.toJSON(true);
-                var firstBlock = _.head(datum);
+                const datum = currentThread.toJSON(true);
+                const firstBlock = _.head(datum);
                 firstBlock.x = firstBlock.x - svgWidth + (dx || 0);
                 firstBlock.y = firstBlock.y + distance + (dy || 0);
 
-                var newBlock = Entry.do('addThreadFromBlockMenu', datum).value.getFirstBlock();
-                var newBlockView = newBlock && newBlock.view;
+                const newBlock = Entry.do('addThreadFromBlockMenu', datum).value.getFirstBlock();
+                const newBlockView = newBlock && newBlock.view;
 
                 //if some error occured
                 //blockView is not exist
@@ -331,14 +363,16 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
     };
 
     p.terminateDrag = function() {
-        var boardBlockView = this._boardBlockView;
+        const boardBlockView = this._boardBlockView;
 
-        if (!boardBlockView) return;
+        if (!boardBlockView) {
+            return;
+        }
 
         this._boardBlockView = null;
 
         //board block should be removed below the amount of range
-        var { left, width } = Entry.GlobalSvg;
+        const { left, width } = Entry.GlobalSvg;
         return left < boardBlockView.getBoard().offset().left - width / 2;
     };
 
@@ -367,17 +401,19 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
     };
 
     p.renderText = function(blocks) {
-        if (!this._isOn()) return;
+        if (!this._isOn()) {
+            return;
+        }
 
         var blocks = blocks || this._getSortedBlocks();
-        var targetMode = Entry.BlockView.RENDER_MODE_TEXT;
+        const targetMode = Entry.BlockView.RENDER_MODE_TEXT;
 
         blocks[0].forEach((block) => {
             if (targetMode === block.view.renderMode) {
                 return;
             }
-            var thread = block.getThread();
-            var view = thread.view;
+            const thread = block.getThread();
+            const view = thread.view;
             if (view) {
                 view.renderText();
             } else {
@@ -388,15 +424,19 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
     };
 
     p.renderBlock = function(blocks) {
-        if (!this._isOn()) return;
+        if (!this._isOn()) {
+            return;
+        }
 
         blocks = blocks || this._getSortedBlocks();
-        var targetMode = Entry.BlockView.RENDER_MODE_BLOCK;
+        const targetMode = Entry.BlockView.RENDER_MODE_BLOCK;
 
         blocks[0].forEach((block) => {
-            if (targetMode === block.view.renderMode) return;
-            var thread = block.getThread();
-            var view = thread.view;
+            if (targetMode === block.view.renderMode) {
+                return;
+            }
+            const thread = block.getThread();
+            const view = thread.view;
             if (view) {
                 view.renderBlock();
             } else {
@@ -419,8 +459,8 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
     };
 
     p.updateSplitters = function(y = 0) {
-        var xDest = this._svgWidth - splitterHPadding;
-        var yDest;
+        const xDest = this._svgWidth - splitterHPadding;
+        let yDest;
         this._splitters.forEach((line) => {
             yDest = parseFloat(line.getAttribute('y1')) + y;
             line.attr({
@@ -432,8 +472,10 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
     };
 
     p._clearSplitters = function() {
-        var splitters = this._splitters;
-        while (splitters.length) splitters.pop().remove();
+        const splitters = this._splitters;
+        while (splitters.length) {
+            splitters.pop().remove();
+        }
     };
 
     p.setWidth = function() {
@@ -442,63 +484,89 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
     };
 
     p.setMenu = function(doNotAlign) {
-        if (!this.hasCategory()) return;
+        if (!this.hasCategory()) {
+            return;
+        }
 
-        var sorted = [[], []];
+        const sorted = [[], []];
 
         this._categoryData.forEach(({ category, blocks: threads }) => {
             if (category === 'func') {
-                var funcThreads = this.code
+                const funcThreads = this.code
                     .getThreadsByCategory('func')
-                    .map((t) => t.getFirstBlock().type);
+                    .map((t) => {
+                        return t.getFirstBlock().type
+                        ;
+                    });
                 threads = funcThreads.length ? funcThreads : threads;
             }
 
-            var inVisible =
+            const inVisible =
                 threads.reduce(
-                    (count, type) => (this.checkBanClass(Entry.block[type]) ? count - 1 : count),
+                    (count, type) => {
+                        return (this.checkBanClass(Entry.block[type]) ? count - 1 : count)
+                        ;
+                    },
                     threads.length
                 ) === 0;
-            var elem = this._categoryElems[category];
+            const elem = this._categoryElems[category];
 
-            if (inVisible) sorted[1].push(elem);
-            else sorted[0].push(elem);
+            if (inVisible) {
+                sorted[1].push(elem);
+            } else {
+                sorted[0].push(elem);
+            }
         });
 
         requestAnimationFrame(() => {
             //visible
-            sorted[0].forEach((elem) => elem.removeClass('entryRemove'));
+            sorted[0].forEach((elem) => {
+                return elem.removeClass('entryRemove')
+                ;
+            });
             //invisible
-            sorted[1].forEach((elem) => elem.addClass('entryRemove'));
+            sorted[1].forEach((elem) => {
+                return elem.addClass('entryRemove');
+            });
             this.selectMenu(0, true, doNotAlign);
         });
     };
 
     p._convertSelector = function(selector) {
-        if (!Entry.Utils.isNumber(selector)) return selector;
+        if (!Entry.Utils.isNumber(selector)) {
+            return selector;
+        }
 
         selector = Number(selector);
-        var categories = this._categories;
-        var elems = this._categoryElems;
-        for (var i = 0; i < categories.length; i++) {
-            var key = categories[i];
-            var visible = !elems[key].hasClass('entryRemove');
-            if (visible) if (selector-- === 0) return key;
+        const categories = this._categories;
+        const elems = this._categoryElems;
+        for (let i = 0; i < categories.length; i++) {
+            const key = categories[i];
+            const visible = !elems[key].hasClass('entryRemove');
+            if (visible) {
+                if (selector-- === 0) {
+                    return key;
+                }
+            }
         }
     };
 
     p.selectMenu = function(selector, doNotFold, doNotAlign) {
-        if (!this._isOn() || !this._categoryData) return;
+        if (!this._isOn() || !this._categoryData) {
+            return;
+        }
 
-        var oldView = this._selectedCategoryView;
+        const oldView = this._selectedCategoryView;
 
-        var name = this._convertSelector(selector);
+        const name = this._convertSelector(selector);
         if (selector !== undefined && !name) {
             this._dAlign();
             return;
         }
 
-        if (name) this.lastSelector = name;
+        if (name) {
+            this.lastSelector = name;
+        }
 
         this._isSelectingMenu = true;
         switch (name) {
@@ -511,13 +579,15 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
                 break;
         }
 
-        var elem = this._categoryElems[name];
-        var animate = false;
-        var board = this.workspace.board,
+        const elem = this._categoryElems[name];
+        let animate = false;
+        let board = this.workspace.board,
             boardView = board.view,
             className = 'entrySelectedCategory';
 
-        if (oldView) oldView.removeClass(className);
+        if (oldView) {
+            oldView.removeClass(className);
+        }
 
         doNotFold = doNotFold || !this.hasCategory();
 
@@ -536,7 +606,9 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
             }
             boardView.removeClass('folding');
             this.visible = true;
-        } else if (!name) this._selectedCategoryView = null;
+        } else if (!name) {
+            this._selectedCategoryView = null;
+        }
 
         if (animate) {
             Entry.bindAnimationCallbackOnce(boardView, () => {
@@ -565,13 +637,17 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
         if (_.isEmpty(elems)) {
             return;
         }
-        var key = elems.shift();
+        const key = elems.shift();
         if (key !== HW) {
             this._generateCategoryCode(key);
-        } else this._generateHwCode(true);
+        } else {
+            this._generateHwCode(true);
+        }
 
         if (elems.length) {
-            this._generateCodesTimer = setTimeout(() => this._generateCategoryCodes(elems), 0);
+            this._generateCodesTimer = setTimeout(() => {
+                return this._generateCategoryCodes(elems);
+            }, 0);
         } else {
             this._generateCodesTimer = null;
             this.view.removeClass('init');
@@ -582,25 +658,35 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
     };
 
     p._generateCategoryCode = function(category) {
-        if (!this._categoryData) return;
+        if (!this._categoryData) {
+            return;
+        }
 
-        var code = this.code;
-        var blocks = _.result(_.find(this._categoryData, { category }), 'blocks');
-        if (!blocks) return;
+        const code = this.code;
+        const blocks = _.result(_.find(this._categoryData, { category }), 'blocks');
+        if (!blocks) {
+            return;
+        }
 
         this._categories.push(category);
 
-        var index;
+        let index;
         if (category == 'func') {
-            var threads = this.code.getThreadsByCategory('func');
-            if (threads.length) index = this.code.getThreadIndex(threads[0]);
+            const threads = this.code.getThreadsByCategory('func');
+            if (threads.length) {
+                index = this.code.getThreadIndex(threads[0]);
+            }
         }
 
         _buildCategoryCodes(blocks, category).forEach((t) => {
-            if (!t || !t[0]) return;
+            if (!t || !t[0]) {
+                return;
+            }
             t[0].x = -99999;
-            var thread = this._createThread(t, index);
-            if (index !== undefined) index++;
+            const thread = this._createThread(t, index);
+            if (index !== undefined) {
+                index++;
+            }
             delete t[0].x;
         });
 
@@ -608,7 +694,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
     };
 
     p.banCategory = function(categoryName) {
-        var categoryElem = this._categoryElems[categoryName];
+        const categoryElem = this._categoryElems[categoryName];
         if (!categoryElem) {
             return;
         }
@@ -619,18 +705,20 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
     };
 
     p.unbanCategory = function(category) {
-        var threads = _.result(_.find(this._categoryData, { category }), 'blocks');
+        const threads = _.result(_.find(this._categoryData, { category }), 'blocks');
 
         if (!threads) {
             return;
         }
 
-        var count = threads.reduce(
-            (count, block) => (this.checkBanClass(Entry.block[block]) ? count - 1 : count),
+        const count = threads.reduce(
+            (count, block) => {
+                return (this.checkBanClass(Entry.block[block]) ? count - 1 : count);
+            },
             threads.length
         );
 
-        var categoryElem = this._categoryElems[category];
+        const categoryElem = this._categoryElems[category];
         if (categoryElem && count > 0) {
             categoryElem.removeClass('entryRemoveCategory');
             categoryElem.removeClass('entryRemove');
@@ -638,7 +726,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
     };
 
     p.banClass = function(className, doNotAlign) {
-        var banned = this._bannedClass;
+        const banned = this._bannedClass;
         if (!_.includes(banned, className)) {
             banned.push(className);
             doNotAlign !== true && this._dAlign();
@@ -646,8 +734,8 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
     };
 
     p.unbanClass = function(className, doNotAlign) {
-        var banned = this._bannedClass;
-        var index = banned.indexOf(className);
+        const banned = this._bannedClass;
+        const index = banned.indexOf(className);
         if (index > -1) {
             banned.splice(index, 1);
             doNotAlign !== true && this._dAlign();
@@ -659,10 +747,10 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
             return false;
         }
 
-        var banned = this._bannedClass;
+        const banned = this._bannedClass;
         isNotFor = isNotFor.filter(_.identity);
 
-        for (var i = 0; i < isNotFor.length; i++) {
+        for (let i = 0; i < isNotFor.length; i++) {
             if (!_.includes(banned, isNotFor[i])) {
                 return false;
             }
@@ -672,15 +760,19 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
     };
 
     p.checkCategory = function(blockInfo) {
-        if (!this.hasCategory() || !blockInfo) return;
+        if (!this.hasCategory() || !blockInfo) {
+            return;
+        }
 
-        if (!this.lastSelector || this._selectDynamic) return true;
+        if (!this.lastSelector || this._selectDynamic) {
+            return true;
+        }
 
         return !_.includes(blockInfo.isFor || [], `category_${this.lastSelector}`);
     };
 
     p._addControl = function(dom) {
-        var { _mouseWheel, onMouseDown, _scroller } = this;
+        const { _mouseWheel, onMouseDown, _scroller } = this;
 
         dom.on('wheel', _mouseWheel.bind(this));
 
@@ -694,15 +786,21 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
     };
 
     p.onMouseDown = function(e) {
-        if (e.stopPropagation) e.stopPropagation();
-        if (e.preventDefault) e.preventDefault();
+        if (e.stopPropagation) {
+            e.stopPropagation();
+        }
+        if (e.preventDefault) {
+            e.preventDefault();
+        }
 
-        var blockMenu = this;
+        const blockMenu = this;
         if (e.button === 0 || (e.originalEvent && e.originalEvent.touches)) {
-            var mouseEvent = Entry.Utils.convertMouseEvent(e);
+            const mouseEvent = Entry.Utils.convertMouseEvent(e);
 
-            if (Entry.documentMousedown) Entry.documentMousedown.notify(mouseEvent);
-            var doc = $(document);
+            if (Entry.documentMousedown) {
+                Entry.documentMousedown.notify(mouseEvent);
+            }
+            const doc = $(document);
 
             doc.bind('mousemove.blockMenu', onMouseMove);
             doc.bind('mouseup.blockMenu', onMouseUp);
@@ -716,12 +814,16 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
         }
 
         function onMouseMove(e) {
-            if (e.stopPropagation) e.stopPropagation();
-            if (e.preventDefault) e.preventDefault();
+            if (e.stopPropagation) {
+                e.stopPropagation();
+            }
+            if (e.preventDefault) {
+                e.preventDefault();
+            }
 
-            var { pageY } = Entry.Utils.convertMouseEvent(e);
+            const { pageY } = Entry.Utils.convertMouseEvent(e);
 
-            var dragInstance = blockMenu.dragInstance;
+            const dragInstance = blockMenu.dragInstance;
             blockMenu._scroller.scroll(-pageY + dragInstance.offsetY);
             dragInstance.set({ offsetY: pageY });
         }
@@ -735,8 +837,10 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
     p._mouseWheel = function(e) {
         e = e.originalEvent;
         e.preventDefault();
-        var disposeEvent = Entry.disposeEvent;
-        if (disposeEvent) disposeEvent.notify(e);
+        const disposeEvent = Entry.disposeEvent;
+        if (disposeEvent) {
+            disposeEvent.notify(e);
+        }
         this._scroller.scroll(-e.wheelDeltaY || e.deltaY / 3);
     };
 
@@ -745,15 +849,22 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
     };
 
     p.reDraw = function() {
-        if (!this._isOn()) return;
+        if (!this._isOn()) {
+            return;
+        }
 
-        var selector = this.lastSelector;
-        if (this._selectDynamic) selector = undefined;
+        let selector = this.lastSelector;
+        if (this._selectDynamic) {
+            selector = undefined;
+        }
 
         this.selectMenu(selector, true);
         this._getSortedBlocks()
             .shift()
-            .forEach(({ view }) => view.reDraw());
+            .forEach(({ view }) => {
+                return view.reDraw()
+                ;
+            });
     };
 
     p._handleDragBlock = function() {
@@ -764,7 +875,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
     };
 
     p._captureKeyEvent = function(e) {
-        var keyCode = e.keyCode;
+        const keyCode = e.keyCode;
 
         if (e.ctrlKey && Entry.type == 'workspace' && keyCode > 48 && keyCode < 58) {
             e.preventDefault();
@@ -793,13 +904,13 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
         this._categories = [];
         this._threadsMap = {};
 
-        var _removeFunc = _.partial(_.result, _, 'remove');
+        const _removeFunc = _.partial(_.result, _, 'remove');
 
         _.each(this._categoryElems, _removeFunc);
 
         this._categoryElems = {};
 
-        var code = this.code;
+        const code = this.code;
         if (code && code.constructor == Entry.Code) {
             code.clear();
         }
@@ -827,7 +938,9 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
     };
 
     p._generateCategoryView = function(data) {
-        if (!data) return;
+        if (!data) {
+            return;
+        }
 
         _.result(this._categoryCol, 'remove');
 
@@ -836,9 +949,11 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
         });
         this.view.prepend(this._categoryCol);
 
-        var fragment = document.createDocumentFragment();
-        data.forEach(({ category, visible }) =>
-            fragment.appendChild(this._generateCategoryElement(category, visible)[0])
+        const fragment = document.createDocumentFragment();
+        data.forEach(({ category, visible }) => {
+            return fragment.appendChild(this._generateCategoryElement(category, visible)[0])
+            ;
+        }
         );
         this.firstSelector = _.head(data).category;
         this._categoryCol[0].appendChild(fragment);
@@ -846,7 +961,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
 
     p._generateCategoryElement = function(name, visible) {
         return (this._categoryElems[name] = Entry.Dom('li', {
-            id: 'entryCategory' + name,
+            id: `entryCategory${  name}`,
             classes: [
                 'entryCategoryElementWorkspace',
                 'entryRemove',
@@ -867,7 +982,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
     };
 
     p.offset = function() {
-        var { top = 0, left = 0 } = this._offset || {};
+        const { top = 0, left = 0 } = this._offset || {};
         if (top === 0 && left === 0) {
             this.updateOffset();
         }
@@ -875,7 +990,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
     };
 
     p._generateHwCode = function(shouldHide) {
-        var threads = this.code.getThreadsByCategory(HW);
+        const threads = this.code.getThreadsByCategory(HW);
 
         if (!(this._categoryData && this.shouldGenerateHwCode(threads))) {
             return;
@@ -886,13 +1001,20 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
             t.destroy();
         });
 
-        var blocks = _.result(_.find(this._categoryData, { category: HW }), 'blocks');
+        const blocks = _.result(_.find(this._categoryData, { category: HW }), 'blocks');
 
-        if (_.isEmpty(blocks)) return;
+        if (_.isEmpty(blocks)) {
+            return;
+        }
 
-        _buildCategoryCodes(blocks.filter((b) => !this.checkBanClass(Entry.block[b])), HW).forEach(
+        _buildCategoryCodes(blocks.filter((b) => {
+            return !this.checkBanClass(Entry.block[b])
+            ;
+        }), HW).forEach(
             (t) => {
-                if (shouldHide) t[0].x = -99999;
+                if (shouldHide) {
+                    t[0].x = -99999;
+                }
                 this._createThread(t);
                 delete t[0].x;
             }
@@ -911,22 +1033,24 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
     };
 
     p._getSortedBlocks = function() {
-        var visibles = [];
-        var inVisibles;
-        var block;
+        let visibles = [];
+        let inVisibles;
+        let block;
 
-        var _getFirstBlock = _.partial(_.result, _, 'getFirstBlock');
+        const _getFirstBlock = _.partial(_.result, _, 'getFirstBlock');
 
-        var allBlocks = _.chain(this._getThreads())
+        const allBlocks = _.chain(this._getThreads())
             .map(_getFirstBlock)
             .compact()
             .value();
 
         if (this._selectDynamic) {
-            var threadsMap = this._threadsMap;
+            const threadsMap = this._threadsMap;
             visibles = this._dynamicThreads.reduce((visibles, type) => {
                 block = _getFirstBlock(threadsMap[type]);
-                if (block) visibles.push(block);
+                if (block) {
+                    visibles.push(block);
+                }
                 return visibles;
             }, []);
 
@@ -934,8 +1058,11 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
         } else {
             inVisibles = [];
             allBlocks.forEach((block) => {
-                if (!this._isNotVisible(Entry.block[block.type])) visibles.push(block);
-                else inVisibles.push(block);
+                if (!this._isNotVisible(Entry.block[block.type])) {
+                    visibles.push(block);
+                } else {
+                    inVisibles.push(block);
+                }
             });
         }
 
@@ -943,15 +1070,17 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
     };
 
     p._setDynamic = function(blocks = []) {
-        if (!this._isOn()) return;
-        var data;
+        if (!this._isOn()) {
+            return;
+        }
+        let data;
 
         this._dynamicThreads = blocks
             .map((b) => {
                 if (typeof b === 'string') {
                     return b;
                 } else if (b.constructor === Array) {
-                    var keyName = b[0];
+                    const keyName = b[0];
                     if (!this.getThreadByBlockKey(keyName)) {
                         data = b[1];
                         data.category = 'extra';
@@ -1002,7 +1131,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
         if (query[0] === 'category') {
             return this._categoryElems[query[1]];
         } else {
-            var { type, params = [] } = query[0][0];
+            const { type, params = [] } = query[0][0];
             this.align();
             this.scrollToType(type, params);
             return this.getSvgDomByType(type, params);
@@ -1010,7 +1139,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
     };
 
     p.getSvgDomByType = function(blockType, params) {
-        var thread = _.find(this.code.getThreads(), (thread) => {
+        const thread = _.find(this.code.getThreads(), (thread) => {
             if (!thread) {
                 return;
             }
@@ -1026,16 +1155,22 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
             return type === blockType && option;
         });
 
-        if (!thread) return;
+        if (!thread) {
+            return;
+        }
 
         return thread.getFirstBlock().view.svgGroup;
     };
 
     p.scrollToType = function(type, params) {
-        if (!type) return;
+        if (!type) {
+            return;
+        }
 
-        var block = _.head(this.code.getBlockList(false, type));
-        if (!block) return;
+        const block = _.head(this.code.getBlockList(false, type));
+        if (!block) {
+            return;
+        }
 
         this.hasCategory() && this.selectMenu(block.category, true);
 
@@ -1053,13 +1188,17 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
     };
 
     p._registerThreadsMap = function(type, thread) {
-        if (!(type && thread && thread.getFirstBlock())) return;
+        if (!(type && thread && thread.getFirstBlock())) {
+            return;
+        }
         this._threadsMap[type] = thread;
     };
 
     p._deleteThreadsMap = function(thread) {
-        var block = thread && thread.getFirstBlock();
-        if (!block) return;
+        const block = thread && thread.getFirstBlock();
+        if (!block) {
+            return;
+        }
         delete this._threadsMap[block.type];
     };
 
@@ -1072,22 +1211,27 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
     };
 
     p._createThread = function(data, index, keyName) {
-        if (typeof keyName !== 'string') keyName = undefined;
+        if (typeof keyName !== 'string') {
+            keyName = undefined;
+        }
         keyName = keyName || data[0].type;
 
-        var thread = this.code.createThread(data, index);
+        const thread = this.code.createThread(data, index);
         this._registerThreadsMap(keyName, thread);
         return thread;
     };
 
     function _buildCategoryCodes(blocks, category) {
         return blocks.reduce((threads, type) => {
-            var block = Entry.block[type];
+            const block = Entry.block[type];
             if (!block || !block.def) {
-                return [...threads, [{ type: type, category }]];
+                return [...threads, [{ type, category }]];
             } else {
                 return (block.defs || [block.def]).reduce(
-                    (threads, d) => [...threads, [Object.assign(d, { category })]],
+                    (threads, d) => {
+                        return [...threads, [Object.assign(d, { category })]]
+                        ;
+                    },
                     threads
                 );
             }

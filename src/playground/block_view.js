@@ -16,7 +16,7 @@ Entry.BlockView = function(block, board, mode) {
     this.svgGroup = board.svgBlockGroup.elem('g');
     this.svgGroup.attr('id', hash);
     this.svgGroup.blockView = this;
-    this.svgCommentGroup = board.svgBlockGroup.elem('g');
+    this.svgCommentGroup = board.svgCommentGroup.elem('g');
     this.svgCommentGroup.attr('id', `${hash}C`);
     this.svgCommentGroup.blockView = this;
 
@@ -204,6 +204,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
 
         _removeFunc(this.contentSvgGroup);
         _removeFunc(this.statementSvgGroup);
+        _removeFunc(this.statementCommentGroup);
 
         this.contentSvgGroup = this.svgGroup.elem('g');
         this._contents = [];
@@ -213,6 +214,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
 
         if (!_.isEmpty(statements)) {
             this.statementSvgGroup = this.svgGroup.elem('g');
+            this.statementCommentGroup = this.svgCommentGroup.elem('g');
         }
 
         const reg = /(%\d+)/im;
@@ -409,18 +411,18 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
         } else {
             const transform = `translate(${this.x / scale},${this.y / scale})`;
 
-            if (animate && Entry.ANIMATION_DURATION !== 0) {
-                this.svgGroup.attr('transform', transform);
-                this.svgCommentGroup.attr('transform', transform);
-                /*
+            // if (animate && Entry.ANIMATION_DURATION !== 0) {
+            this.svgGroup.attr('transform', transform);
+            this.svgCommentGroup.attr('transform', transform);
+            /*
                 this.svgGroup.animate({
                     transform: transform
                 }, Entry.ANIMATION_DURATION, mina.easeinout);
                 */
-            } else {
-                this.svgGroup.attr('transform', transform);
-                this.svgCommentGroup.attr('transform', transform);
-            }
+            // } else {
+            //     this.svgGroup.attr('transform', transform);
+            //     this.svgCommentGroup.attr('transform', transform);
+            // }
         }
     };
 
@@ -435,7 +437,6 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
         const { x, y } = this.getAbsoluteCoordinate(dragMode);
         this._moveTo(x, y, false, doNotUpdatePos);
         this.getBoard().svgBlockGroup.appendChild(this.svgGroup);
-        console.log('what?', this.getBoard());
         this.getBoard().svgCommentGroup.appendChild(this.svgCommentGroup);
     };
 
