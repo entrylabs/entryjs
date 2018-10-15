@@ -1,6 +1,6 @@
 'use strict';
 
-Entry.FieldBlock = class FieldBlock extends Entry.Field{
+Entry.FieldBlock = class FieldBlock extends Entry.Field {
     constructor(content, blockView, index, mode, contentIndex) {
         super(content, blockView, index, mode, contentIndex);
         Entry.Model(this, false);
@@ -58,7 +58,7 @@ Entry.FieldBlock = class FieldBlock extends Entry.Field{
 
         this.updateValueBlock(this.getValue());
 
-        var valueBlockView = this._valueBlock.view;
+        const valueBlockView = this._valueBlock.view;
         valueBlockView.renderByMode(this.renderMode, isReDraw);
 
         if (this.getBoard().constructor !== Entry.Board) {
@@ -74,13 +74,17 @@ Entry.FieldBlock = class FieldBlock extends Entry.Field{
     };
 
     align(x, y, animate = true) {
-        var svgGroup = this.svgGroup;
+        const svgGroup = this.svgGroup;
         if (this._position) {
-            if (this._position.x) x = this._position.x;
-            if (this._position.y) y = this._position.y;
+            if (this._position.x) {
+                x = this._position.x;
+            }
+            if (this._position.y) {
+                y = this._position.y;
+            }
         }
 
-        var blockView = _.result(this._valueBlock, 'view');
+        const blockView = _.result(this._valueBlock, 'view');
 
         if (blockView) {
             y = blockView.height * -0.5;
@@ -89,18 +93,18 @@ Entry.FieldBlock = class FieldBlock extends Entry.Field{
         if (!(x || y)) {
             svgGroup.removeAttr('transform');
         } else {
-            var transform = 'translate(' + x + ',' + y + ')';
+            const transform = `translate(${  x  },${  y  })`;
             if (animate) {
                 svgGroup.animate(
                     {
-                        transform: transform,
+                        transform,
                     },
                     300,
                     mina.easeinout
                 );
             } else {
                 svgGroup.attr({
-                    transform: transform,
+                    transform,
                 });
             }
         }
@@ -108,19 +112,22 @@ Entry.FieldBlock = class FieldBlock extends Entry.Field{
         x = Math.round(x * 100) / 100;
         y = Math.round(y * 100) / 100;
 
-        var box = this.box;
-        if (box.x === x && box.y === y) return;
+        const box = this.box;
+        if (box.x === x && box.y === y) {
+            return;
+        }
 
-        box.set({ x: x, y: y });
+        box.set({ x, y });
     };
 
     calcWH() {
-        var block = this._valueBlock;
-        var box = this.box;
-        var oldWidth = box.width;
-        var oldHeight = box.height;
-        var newWidth, newHeight;
-        var blockView = block && block.view;
+        const block = this._valueBlock;
+        const box = this.box;
+        const oldWidth = box.width;
+        const oldHeight = box.height;
+        let newWidth;
+        let newHeight;
+        const blockView = block && block.view;
         if (blockView) {
             newWidth = blockView.width;
             newHeight = blockView.height;
@@ -143,7 +150,7 @@ Entry.FieldBlock = class FieldBlock extends Entry.Field{
     };
 
     inspectBlock() {
-        var blockType = null;
+        let blockType = null;
         if (this._originBlock) {
             blockType = this._originBlock.type;
             delete this._originBlock;
@@ -199,7 +206,7 @@ Entry.FieldBlock = class FieldBlock extends Entry.Field{
 
         this._destroyObservers();
 
-        var { view } = this._setValueBlock(block);
+        const { view } = this._setValueBlock(block);
         view.bindPrev(this);
         this._blockView.alignContent();
         this._posObserver = view.observe(
@@ -212,14 +219,17 @@ Entry.FieldBlock = class FieldBlock extends Entry.Field{
     };
 
     _destroyObservers() {
-        var _destroyFunc = _.partial(_.result, _, 'destroy');
+        const _destroyFunc = _.partial(_.result, _, 'destroy');
         _destroyFunc(this._sizeObserver);
         _destroyFunc(this._posObserver);
     };
 
     getPrevBlock(block) {
-        if (this._valueBlock === block) return this;
-        else return null;
+        if (this._valueBlock === block) {
+            return this;
+        } else {
+            return null;
+        }
     };
 
     getNextBlock() {
@@ -230,8 +240,8 @@ Entry.FieldBlock = class FieldBlock extends Entry.Field{
         const board = this.getBoard();
         const { scale = 1 } = board || {};
         var blockView = this._blockView;
-        var contentPos = blockView.contentPos;
-        var pos = blockView.getAbsoluteCoordinate();
+        const contentPos = blockView.contentPos;
+        const pos = blockView.getAbsoluteCoordinate();
         pos.x += (this.box.x + contentPos.x) * scale;
         pos.y += this.box.y + contentPos.y;
         return pos;
@@ -268,14 +278,18 @@ Entry.FieldBlock = class FieldBlock extends Entry.Field{
     };
 
     cut(block) {
-        if (this._valueBlock === block) return [block];
-        else return null;
+        if (this._valueBlock === block) {
+            return [block];
+        }
+        return null;
     };
 
     replace(block) {
-        if (typeof block === 'string') block = this._createBlockByType(block);
+        if (typeof block === 'string') {
+            block = this._createBlockByType(block);
+        }
 
-        var valueBlock = this._valueBlock;
+        const valueBlock = this._valueBlock;
 
         if (Entry.block[valueBlock.type].isPrimitive) {
             valueBlock.doNotSplice = true;
@@ -315,14 +329,14 @@ Entry.FieldBlock = class FieldBlock extends Entry.Field{
     }
 
     _createBlockByType(blockType) {
-        var board = this._blockView.getBoard();
-        var selected = _.result(board.workspace, 'selectedBlockView');
-        var isFromUserAction = false;
+        const board = this._blockView.getBoard();
+        const selected = _.result(board.workspace, 'selectedBlockView');
+        let isFromUserAction = false;
         if (selected) {
             isFromUserAction = !!_.result(selected, 'dragInstance');
         }
 
-        var block = new Entry.Block(
+        const block = new Entry.Block(
             {
                 type: blockType,
                 params: [
@@ -372,7 +386,7 @@ Entry.FieldBlock = class FieldBlock extends Entry.Field{
     };
 
     targetPointer(pointer = []) {
-        var _pointer = this._block.pointer([Entry.PARAM, this._index, ...pointer]);
+        const _pointer = this._block.pointer([Entry.PARAM, this._index, ...pointer]);
         return _pointer;
     };
 
@@ -382,7 +396,9 @@ Entry.FieldBlock = class FieldBlock extends Entry.Field{
 
     //check block schema and view
     _ensureBlock(block) {
-        if (!block) return;
+        if (!block) {
+            return;
+        }
 
         if (block.constructor !== Entry.Block) {
             block = new Entry.Block(block, this._block.thread);
@@ -404,10 +420,5 @@ Entry.FieldBlock = class FieldBlock extends Entry.Field{
 
         return block;
     };
-}
+};
 
-// Entry.Utils.inherit(Entry.Field, Entry.FieldBlock);
-
-// (function(p) {
-    
-// })(Entry.FieldBlock.prototype);
