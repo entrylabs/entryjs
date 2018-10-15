@@ -473,7 +473,7 @@ Entry.Bitbrick.getBlocks = function () {
                     sq[servo[1]] = 0;
                 });
                 bitbrick.dcList().map(function (dc) {
-                    sq[dc[1]] = 128;
+                    sq[dc[1]] = 129;
                 });
                 return script.callReturn();
             },
