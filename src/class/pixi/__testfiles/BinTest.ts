@@ -1,8 +1,9 @@
-import { MaxRectsPacker } from 'maxrects-packer/lib/maxrects_packer';
 import { AtlasCanvasViewer } from '../atlas/AtlasCanvasViewer';
-import { IRectangle } from 'maxrects-packer/lib/geom/Rectangle';
 import PIXIHelper from '../helper/PIXIHelper';
-import { Bin } from 'maxrects-packer/lib/abstract_bin';
+import { MaxRectsPacker } from '../../maxrect-packer/maxrects_packer';
+import { Bin } from '../../maxrect-packer/abstract_bin';
+import { IRectangle } from '../../maxrect-packer/geom/Rectangle';
+
 
 declare let _:any;
 
