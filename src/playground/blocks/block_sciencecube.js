@@ -31,6 +31,26 @@ Entry.sciencecube = {
         }
     }
 };
+Entry.sciencecube.setLanguage = () => {
+ 	return {
+ 		ko: {
+            template: {
+ 				sciencecube_temper: '온도 센서값',
+                 sciencecube_current: '전류 센서값',
+                 sciencecube_pressue: '압력 센서값',
+                 sciencecube_voltage: '전압 센서값'
+            }
+ 		},
+ 		en: {
+ 			template: {
+ 				sciencecube_temper: 'temper sensor',
+                 sciencecube_current: 'current sensor',
+                 sciencecube_pressue: 'pressue sensor',
+                 sciencecube_voltage: 'voltage sensor'
+ 			}
+ 		}
+ 	}
+ }
 
 Entry.sciencecube.getBlocks = () => {
     return {
@@ -39,7 +59,6 @@ Entry.sciencecube.getBlocks = () => {
 	    fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
-            template: "온도 센서값",
             params: [ 
                 {
                     type: "Text",
@@ -70,7 +89,6 @@ Entry.sciencecube.getBlocks = () => {
 	    fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
-            template: "전류 센서값",
             params: [ 
                 {
                     type: "Text",
@@ -101,7 +119,6 @@ Entry.sciencecube.getBlocks = () => {
 	    fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
-            template: "압력 센서값",
             params: [ 
                 {
                     type: "Text",
@@ -132,7 +149,6 @@ Entry.sciencecube.getBlocks = () => {
 	    fontColor: '#fff',
             skeleton: 'basic_string_field',
             statements: [],
-            template: "전압 센서값",
             params: [ 
                 {
                     type: "Text",
