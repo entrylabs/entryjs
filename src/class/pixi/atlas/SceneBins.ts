@@ -97,8 +97,6 @@ export class SceneBins {
     }
 
     activate() {
-        console.log("activate");
-
         _.each(this._packer.bins, (bin:MaxRectsBin, index:number)=>{
             var base:BaseTexture = this._arrBaseTexture[index];
             this._activateBaseTexture(base);
@@ -166,11 +164,7 @@ export class SceneBins {
     putImage(info:AtlasImageLoadingInfo, forceUpdateBaseTexture:boolean = false) {
         if(!info) return;
         var t:AtlasTexture = this._tex_path_map[info.path];
-        if(t) {
-            console.log("putImage with texture");
-        } else {
-            console.log("putImage with no texture");
-        }
+
         if(!t) return;//이 Scene에서 사용안하는 이미지가 로드 된것임.
         if(!t.baseTexture.hasLoaded) {
             this._activateBaseTexture(t.baseTexture);
