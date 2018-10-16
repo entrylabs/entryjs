@@ -53,7 +53,7 @@ export class SceneBins {
     private _notPackedBindData:InputRect[] = [];
     private _arrBaseTexture:BaseTexture[] = [];
     private _packer:MaxRectsPacker;
-    private _tex_path_map:TextureMap = {};
+    private _path_tex_map:TextureMap = {};
 
     constructor(public sceneID:string, private _viewer:AtlasCanvasViewer) {
         this._packer = newPacker();
@@ -87,7 +87,7 @@ export class SceneBins {
         this._notPackedBindData.forEach((r:InputRect)=>{
             var path:string = r.data.path;
             var base:BaseTexture = this._getBaseTexture(r.binIndex);
-            this._tex_path_map[path] = new AtlasTexture(base, new PIXI.Rectangle(r.x, r.y, r.width, r.height));
+            this._path_tex_map[path] = new AtlasTexture(base, new PIXI.Rectangle(r.x, r.y, r.width, r.height));
             this.putImage(PIXIAtlasManager.imageLoader.getImageInfo(path), true); //업데이트 해야 할 baseTexture만 골라내기
         });
 
@@ -97,13 +97,14 @@ export class SceneBins {
     }
 
     activate() {
+        console.log("activate scene");
         _.each(this._packer.bins, (bin:MaxRectsBin, index:number)=>{
             var base:BaseTexture = this._arrBaseTexture[index];
             this._activateBaseTexture(base);
             base.update();
         });
 
-        _.each(this._tex_path_map, (t:AtlasTexture, path:string)=>{
+        _.each(this._path_tex_map, (t:AtlasTexture, path:string)=>{
             var info = PIXIAtlasManager.imageLoader.getImageInfo(path);
             if(!info || !info.isReady ) {
                 return;
@@ -139,6 +140,7 @@ export class SceneBins {
     }
 
     deactivate() {
+        console.log("deactivate scene");
         _.each(this._arrBaseTexture, (b:BaseTexture)=>{
             var canvas = (b.source as HTMLCanvasElement) ;
             canvas.width = 1;
@@ -149,11 +151,25 @@ export class SceneBins {
     }
 
     getTexture(path:string) {
-        return this._tex_path_map[path];
+        return this._path_tex_map[path];
     }
 
     destroy() {
+        this._viewer.empty();
+        _.each(this._path_tex_map, (tex:AtlasTexture)=>{
+            tex.destroy(false);
+        });
+        _.each(this._arrBaseTexture, (base:BaseTexture)=>{
+            base.destroy();
+        });
 
+        this._arrBaseTexture = null;
+        this._path_tex_map = null;
+        this._packer = null;
+        this._pathSet = null;
+        this._viewer = null;
+        this._packedBinData = null;
+        this._notPackedBindData = null;
     }
 
     /**
@@ -163,7 +179,7 @@ export class SceneBins {
      */
     putImage(info:AtlasImageLoadingInfo, forceUpdateBaseTexture:boolean = false) {
         if(!info) return;
-        var t:AtlasTexture = this._tex_path_map[info.path];
+        var t:AtlasTexture = this._path_tex_map[info.path];
 
         if(!t) return;//이 Scene에서 사용안하는 이미지가 로드 된것임.
         if(!t.baseTexture.hasLoaded) {

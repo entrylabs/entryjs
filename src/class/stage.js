@@ -713,6 +713,7 @@ Entry.Stage.prototype.removeObjectContainer = function(scene) {
     if (canvas) {
         canvas.removeChild(objContainer);
     }
+    PIXIAtlasManager.removeScene(scene.id);
     containers.splice(containers.indexOf(objContainer), 1);
 };
 

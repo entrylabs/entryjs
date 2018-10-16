@@ -86,12 +86,22 @@ export class PIXIAtlasManager {
             .pack();
     }
 
-    private static _getSceneBin(sceneID:string):SceneBins {
+    private static _getSceneBin(sceneID:string, createIfNotExist:boolean = true):SceneBins {
         var s:SceneBins = this._sceneID_sceneBin_map[sceneID];
-        if(!s) {
+        if(!s && createIfNotExist) {
             s = this._sceneID_sceneBin_map[sceneID] = new SceneBins(sceneID, this._viewer);
         }
         return s;
+    }
+
+    static removeScene(sceneID:string):void {
+        var s:SceneBins = this._getSceneBin(sceneID, false);
+        if(!s) return;
+        if(this._activatedScene == s ) {
+            this._activatedScene = null;
+        }
+        s.destroy();
+        delete this._sceneID_sceneBin_map[sceneID];
     }
 
 
