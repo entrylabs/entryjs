@@ -177,7 +177,7 @@ export class SceneBins {
      * @param info
      * @param forceUpdateBaseTexture
      */
-    putImage(info:AtlasImageLoadingInfo, forceUpdateBaseTexture:boolean = false) {
+    putImage(info:AtlasImageLoadingInfo, forceUpdateBaseTexture:boolean = true) {
         if(!info) return;
         var t:AtlasTexture = this._path_tex_map[info.path];
 
