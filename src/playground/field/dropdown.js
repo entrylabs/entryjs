@@ -321,8 +321,3 @@ Entry.FieldDropdown = class FieldDropdown extends Entry.Field {
         return this.textElement.textContent;
     }
 }
-// (
-    // Entry.Utils.inherit(Entry.Field, Entry.FieldDropdown);
-
-//     function(p) {}
-// )(Entry.FieldDropdown.prototype);
