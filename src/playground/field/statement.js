@@ -50,7 +50,7 @@ Entry.FieldStatement = function(content, blockView, index) {
         this._nextGroup = this.statementSvgGroup;
         this.commentGroup = this._blockView.statementCommentGroup.elem('g');
         this.statementCommentGroup = this.commentGroup.elem('g');
-        this._nextCommnetGroup = this.statementCommentGroup;
+        this._nextCommentGroup = this.statementCommentGroup;
         this._initThread(board);
         this._board = board;
     };

@@ -376,7 +376,6 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
         const pos = positions[index];
         if (pos) {
             statement.align(pos.x, pos.y, animate);
-            console.log(pos.x, pos.y, animate);
         }
     };
 
@@ -859,6 +858,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
         $(this.svgGroup).unbind('.blockViewMousedown');
         this._destroyObservers();
         const svgGroup = this.svgGroup;
+        const svgCommentGroup = this.svgCommentGroup;
 
         const _destroyFunc = _.partial(_.result, _, 'destroy');
 
@@ -869,6 +869,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
         } else {
             svgGroup.remove();
         }
+        svgCommentGroup.remove();
 
         (this._contents || []).forEach(_destroyFunc);
         (this._statements || []).forEach(_destroyFunc);
@@ -1109,13 +1110,13 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
                     if (isDestroy) {
                         nextBlock.view._toLocalCoordinate(prevBlock.view._nextGroup);
                         nextBlock.view._toLocalCoordinate(
-                            prevBlock.view._nextCommnetGroup,
+                            prevBlock.view._nextCommentGroup,
                             this.svgCommentGroup
                         );
                     } else if (endBlock.view.magnet.next) {
                         nextBlock.view._toLocalCoordinate(endBlock.view._nextGroup);
                         nextBlock.view._toLocalCoordinate(
-                            endBlock.view._nextCommnetGroup,
+                            endBlock.view._nextCommentGroup,
                             this.svgCommentGroup
                         );
                     } else {
@@ -1135,7 +1136,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
                 const nextBlock = this.block.getNextBlock();
                 if (nextBlock && nextBlock.view) {
                     nextBlock.view._toLocalCoordinate(this._nextGroup);
-                    nextBlock.view._toLocalCoordinate(this._nextCommnetGroup, this.svgCommentGroup);
+                    nextBlock.view._toLocalCoordinate(this._nextCommentGroup, this.svgCommentGroup);
                 }
             }
         }
