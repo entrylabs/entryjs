@@ -74,6 +74,7 @@ export class PIXIAtlasManager {
     }
 
     static getTextureWithModel(sceneID:string, pic:IRawPicture):Texture {
+        this.imageLoader.load(pic);
         this._addPicAtScene(sceneID, pic);
         return this.getTexture(sceneID, pic.fileurl || pic.filename);
     }
