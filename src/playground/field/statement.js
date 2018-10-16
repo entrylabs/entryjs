@@ -18,7 +18,9 @@ Entry.FieldStatement = function(content, blockView, index) {
     this.acceptType = content.accept;
 
     this.svgGroup = null;
+    this.commentGroup = null;
     this.statementSvgGroup = null;
+    this.statementCommentGroup = null;
     this._thread = null;
 
     this._position = content.position;
@@ -46,6 +48,9 @@ Entry.FieldStatement = function(content, blockView, index) {
         this.svgGroup = this._blockView.statementSvgGroup.elem('g');
         this.statementSvgGroup = this.svgGroup.elem('g');
         this._nextGroup = this.statementSvgGroup;
+        this.commentGroup = this._blockView.statementCommentGroup.elem('g');
+        this.statementCommentGroup = this.commentGroup.elem('g');
+        this._nextCommnetGroup = this.statementCommentGroup;
         this._initThread(board);
         this._board = board;
     };
@@ -58,6 +63,7 @@ Entry.FieldStatement = function(content, blockView, index) {
         const firstBlock = thread.getFirstBlock();
         if (firstBlock) {
             firstBlock.view._toLocalCoordinate(this.statementSvgGroup);
+            firstBlock.view._toLocalCoordinate(this.statementCommentGroup, firstBlock.view.svgCommentGroup);
             this.firstBlock = firstBlock;
         }
 

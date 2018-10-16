@@ -154,6 +154,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
         const path = skeleton.path(this);
 
         this.pathGroup = svgGroup.prepend('g');
+        this.commentShapeGroup = svgCommentGroup.prepend('g');
         this._updateMagnet();
 
         this._path = this.pathGroup.elem('path');
@@ -375,6 +376,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
         const pos = positions[index];
         if (pos) {
             statement.align(pos.x, pos.y, animate);
+            console.log(pos.x, pos.y, animate);
         }
     };
 
@@ -902,6 +904,10 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
 
         if (magnet.next) {
             this._nextGroup.attr('transform', `translate(${magnet.next.x},${magnet.next.y})`);
+            this._nextCommentGroup.attr(
+                'transform',
+                `translate(${magnet.next.x},${magnet.next.y})`
+            );
         }
         this.magnet = magnet;
         this.block.getThread().changeEvent.notify();
@@ -1236,6 +1242,9 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
             '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 %W %H">(svgGroup)(defs)</svg>';
         const bBox = this.svgGroup.getBoundingClientRect();
         let svgGroup = notClone ? this.svgGroup : this.svgGroup.cloneNode(true);
+        const svgCommentGroup = notClone
+            ? this.svgCommentGroup
+            : this.svgCommentGroup.cloneNode(true);
         const box = this._skeleton.box(this);
         const scale = notPng ? 1 : 1.5;
         let fontWeight = isWindow7() ? 0.9 : 0.95;
@@ -1243,6 +1252,13 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
             fontWeight *= 0.99;
         }
         svgGroup.setAttribute(
+            'transform',
+            'scale(%SCALE) translate(%X,%Y)'
+                .replace('%X', -box.offsetX)
+                .replace('%Y', -box.offsetY)
+                .replace('%SCALE', scale)
+        );
+        svgCommentGroup.setAttribute(
             'transform',
             'scale(%SCALE) translate(%X,%Y)'
                 .replace('%X', -box.offsetX)
