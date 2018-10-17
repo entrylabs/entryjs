@@ -74,7 +74,7 @@ export class PIXIBrushAdaptor {
             this._color = this._RGBToNumber(result);
         }
 
-        if(result = (/^rgba\((\d+),(\d+),(\d+),(\d+)\)$/i).exec(color)) {
+        if(result = (/^rgba\((\d+),(\d+),(\d+),(\d+(\.?\d*))\)$/i).exec(color)) {
             this._color = this._RGBToNumber(result);
             this._alpha = Number(result[4]);
         }
