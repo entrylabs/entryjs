@@ -1,10 +1,10 @@
 import { IRawObject } from './model/IRawObject';
-import { SceneBins, TextureMap } from './SceneBins';
-import Texture = PIXI.Texture;
+import { SceneBins } from './SceneBins';
 import { AtlasCanvasViewer } from './AtlasCanvasViewer';
 import { AtlasImageLoader } from './loader/AtlasImageLoader';
 import { AtlasImageLoadingInfo } from './loader/AtlasImageLoadingInfo';
 import { IRawPicture } from './model/IRawPicture';
+import Texture = PIXI.Texture;
 
 
 declare let _:any;
@@ -112,4 +112,5 @@ export class PIXIAtlasManager {
 }
 
 PIXIAtlasManager.INIT();
+(window as any).PIXIAtlasManager = PIXIAtlasManager;
 
