@@ -63,18 +63,30 @@ Entry.Comment = class Comment {
 
             // const {x: offsetX, y: offsetY} = this.blockView.getAbsoluteCoordinate();
             // console.log(offsetX, offsetY);
-            const { x, width, y, height } = this.pathGroup.getBBox();
- 
+            const { x, width, y } = this.pathGroup.getBBox();
             const matrix = this.parentGroup.getCTM();
             const { x: pathX, y: pathY } = Entry.GlobalSvg.getRelativePoint(matrix);
-            const startX = pathX + width;
-            const startY = pathY + 12;
-            console.log('startRender', x, width, this.offsetX, pathX, startX);
+            const { contentHeight, height } = this._blockView;
+            const startX = width;
+            const startY = (contentHeight || height) / 2;
+            console.log(
+                'startRender',
+                x,
+                y,
+                width,
+                height,
+                pathX,
+                pathY,
+                startX,
+                startY,
+                this._blockView.svgGroup,
+                this._blockView.svgCommentGroup
+            );
             this._comment.attr({
                 width: '160',
                 height: '22',
                 x: startX + 80,
-                y: startY,
+                y: startY - 11,
                 stroke: '#EDA913',
                 fill: '#FBB315',
                 rx: '4',
@@ -84,7 +96,7 @@ Entry.Comment = class Comment {
                 x1: startX,
                 y1: startY,
                 x2: startX + 80,
-                y2: startY + this.offsetY,
+                y2: startY,
                 style: 'stroke:#eda913;stroke-width:2',
             });
 
@@ -102,7 +114,7 @@ Entry.Comment = class Comment {
             const matrix = this.parentGroup.getCTM();
             const { x: pathX, y: pathY } = Entry.GlobalSvg.getRelativePoint(matrix);
             const startX = pathX + width;
-            const startY = pathY + 12;
+            const startY = pathY;
 
             this._line.attr({
                 x1: startX,
