@@ -847,6 +847,10 @@ Entry.PyToBlockParser = function(blockSyntax) {
     };
 
     p.DropdownDynamic = function(value, paramSchema) {
+        if(_.isFunction(paramSchema.menuName)){
+            return value;
+        }
+
         switch (paramSchema.menuName) {
             case 'sprites':
 
