@@ -204,10 +204,12 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
         const _removeFunc = _.partial(_.result, _, 'remove');
 
         _removeFunc(this.contentSvgGroup);
+        _removeFunc(this.contentSvgCommentGroup);
         _removeFunc(this.statementSvgGroup);
         _removeFunc(this.statementCommentGroup);
 
         this.contentSvgGroup = this.svgGroup.elem('g');
+        this.contentSvgCommentGroup = this.svgCommentGroup.elem('g');
         this._contents = [];
 
         const schema = this._schema;
@@ -346,6 +348,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
 
         const contentPos = this.getContentPos();
         this.contentSvgGroup.attr('transform', `translate(${contentPos.x},${contentPos.y})`);
+        this.contentSvgCommentGroup.attr('transform', `translate(${contentPos.x},${contentPos.y})`);
         this.contentPos = contentPos;
         this._render();
 
@@ -403,7 +406,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
         }
     };
 
-    p._setPosition = function(animate = true) {
+    p._setPosition = function() {
         const board = this.getBoard();
         const { scale = 1 } = board || {};
         if (!(this.x || this.y)) {
@@ -411,19 +414,8 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
             this.svgCommentGroup.removeAttr('transform');
         } else {
             const transform = `translate(${this.x / scale},${this.y / scale})`;
-
-            // if (animate && Entry.ANIMATION_DURATION !== 0) {
             this.svgGroup.attr('transform', transform);
             this.svgCommentGroup.attr('transform', transform);
-            /*
-                this.svgGroup.animate({
-                    transform: transform
-                }, Entry.ANIMATION_DURATION, mina.easeinout);
-                */
-            // } else {
-            //     this.svgGroup.attr('transform', transform);
-            //     this.svgCommentGroup.attr('transform', transform);
-            // }
         }
     };
 
@@ -922,6 +914,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
 
         const blockView = this;
         const svgGroup = blockView.svgGroup;
+        const svgCommentGroup = blockView.svgCommentGroup;
         if (!(this.magnet.next || this.magnet.previous)) {
             // field block
             if (this.magneting) {
@@ -1010,18 +1003,10 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
 
     p.addSelected = function() {
         $(this.pathGroup).insertAfter(this._nextGroup);
-        // statements 부모의 블록 선택시 border보이게 코드
-        // if(this.statementSvgGroup) {
-        //     $(this.statementSvgGroup).insertAfter(this._nextGroup);
-        // }
         this.svgGroup.addClass('selected');
     };
 
     p.removeSelected = function() {
-        // statements 부모의 블록 선택시 border보이게 코드
-        // if(this.statementSvgGroup) {
-        //     $(this.statementSvgGroup).insertAfter(this.contentSvgGroup);
-        // }
         $(this.pathGroup).insertBefore(this._nextGroup);
         this.svgGroup.removeClass('selected');
     };

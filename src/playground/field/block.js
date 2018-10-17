@@ -22,7 +22,8 @@ Entry.FieldBlock = class FieldBlock extends Entry.Field {
         this.view = this;
 
         this.svgGroup = null;
-    
+        this.svgCommentGroup = null;
+
         this._position = content.position;
 
         this.observe(this, '_updateBG', ['magneting'], false);
@@ -34,27 +35,23 @@ Entry.FieldBlock = class FieldBlock extends Entry.Field {
         };
         this.calcHeight = this.calcWH;
         this.doSeparate = this.separate;
-    };    
+    }
 
     getBoard() {
         return _.result(this._blockView, 'getBoard');
-    };
+    }
 
     getBlockType = () => {
         return 'field';
-    }
+    };
 
     renderStart(board, mode, renderMode, isReDraw) {
         if (!this.svgGroup) {
             this.svgGroup = this._blockView.contentSvgGroup.elem('g');
-        }
-        if (!this.svgCommentGroup) {
-            this.svgCommentGroup = this._blockView.svgCommentGroup.elem('g');
+            this.svgCommentGroup = this._blockView.contentSvgCommentGroup.elem('g');
         }
 
-        this.renderMode = !_.isUndefined(mode)
-            ? mode
-            : this._blockView.renderMode;
+        this.renderMode = !_.isUndefined(mode) ? mode : this._blockView.renderMode;
 
         this.view = this;
         this._nextGroup = this.svgGroup;
@@ -69,16 +66,12 @@ Entry.FieldBlock = class FieldBlock extends Entry.Field {
             valueBlockView.removeControl();
         }
 
-        this.box.observe(
-            this._blockView,
-            'dAlignContent',
-            ['width', 'height'],
-            false
-        );
-    };
+        this.box.observe(this._blockView, 'dAlignContent', ['width', 'height'], false);
+    }
 
     align(x, y, animate = true) {
         const svgGroup = this.svgGroup;
+        const svgCommentGroup = this.svgCommentGroup;
         if (this._position) {
             if (this._position.x) {
                 x = this._position.x;
@@ -96,8 +89,9 @@ Entry.FieldBlock = class FieldBlock extends Entry.Field {
 
         if (!(x || y)) {
             svgGroup.removeAttr('transform');
+            svgCommentGroup.removeAttr('transform');
         } else {
-            const transform = `translate(${  x  },${  y  })`;
+            const transform = `translate(${x},${y})`;
             if (animate) {
                 svgGroup.animate(
                     {
@@ -106,8 +100,18 @@ Entry.FieldBlock = class FieldBlock extends Entry.Field {
                     300,
                     mina.easeinout
                 );
+                svgCommentGroup.animate(
+                    {
+                        transform,
+                    },
+                    300,
+                    mina.easeinout
+                );
             } else {
                 svgGroup.attr({
+                    transform,
+                });
+                svgCommentGroup.attr({
                     transform,
                 });
             }
@@ -122,7 +126,7 @@ Entry.FieldBlock = class FieldBlock extends Entry.Field {
         }
 
         box.set({ x, y });
-    };
+    }
 
     calcWH() {
         const block = this._valueBlock;
@@ -147,11 +151,11 @@ Entry.FieldBlock = class FieldBlock extends Entry.Field {
         if (newHeight !== oldHeight) {
             box.set({ height: newHeight });
         }
-    };
+    }
 
     destroy() {
         _.result(this._valueBlock, 'destroyView');
-    };
+    }
 
     inspectBlock() {
         let blockType = null;
@@ -175,7 +179,7 @@ Entry.FieldBlock = class FieldBlock extends Entry.Field {
         }
 
         return this._createBlockByType(blockType);
-    };
+    }
 
     _setValueBlock(block) {
         if (this._restoreCurrent) {
@@ -191,11 +195,11 @@ Entry.FieldBlock = class FieldBlock extends Entry.Field {
         this.view.setParent(this);
 
         return this._valueBlock;
-    };
+    }
 
     getValueBlock() {
         return this._valueBlock;
-    };
+    }
 
     updateValueBlock(block) {
         if (!(block instanceof Entry.Block)) {
@@ -213,20 +217,15 @@ Entry.FieldBlock = class FieldBlock extends Entry.Field {
         const { view } = this._setValueBlock(block);
         view.bindPrev(this);
         this._blockView.alignContent();
-        this._posObserver = view.observe(
-            this,
-            'updateValueBlock',
-            ['x', 'y'],
-            false
-        );
+        this._posObserver = view.observe(this, 'updateValueBlock', ['x', 'y'], false);
         this._sizeObserver = view.observe(this, 'calcWH', ['width', 'height']);
-    };
+    }
 
     _destroyObservers() {
         const _destroyFunc = _.partial(_.result, _, 'destroy');
         _destroyFunc(this._sizeObserver);
         _destroyFunc(this._posObserver);
-    };
+    }
 
     getPrevBlock(block) {
         if (this._valueBlock === block) {
@@ -234,11 +233,11 @@ Entry.FieldBlock = class FieldBlock extends Entry.Field {
         } else {
             return null;
         }
-    };
+    }
 
     getNextBlock() {
         return null;
-    };
+    }
 
     requestAbsoluteCoordinate(blockView) {
         const board = this.getBoard();
@@ -249,44 +248,40 @@ Entry.FieldBlock = class FieldBlock extends Entry.Field {
         pos.x += (this.box.x + contentPos.x) * scale;
         pos.y += this.box.y + contentPos.y;
         return pos;
-    };
+    }
 
     requestPartHeight(blockView, forAll) {
-        return blockView
-            ? blockView.magnet.next
-                ? blockView.magnet.next.y
-                : blockView.height
-            : 0;
-    };
+        return blockView ? (blockView.magnet.next ? blockView.magnet.next.y : blockView.height) : 0;
+    }
 
     getCount() {
         return 0;
-    };
+    }
 
     dominate() {
         this._blockView.dominate();
-    };
+    }
 
     isGlobal() {
         return false;
-    };
+    }
 
     separate(block) {
         this.getCode().createThread([block]);
         this.calcWH();
         this.changeEvent.notify();
-    };
+    }
 
     getCode() {
         return this._block.thread.getCode();
-    };
+    }
 
     cut(block) {
         if (this._valueBlock === block) {
             return [block];
         }
         return null;
-    };
+    }
 
     replace(block) {
         if (typeof block === 'string') {
@@ -302,9 +297,7 @@ Entry.FieldBlock = class FieldBlock extends Entry.Field {
         } else if (this.acceptType === 'param') {
             this._destroyObservers();
             valueBlock.view._toGlobalCoordinate();
-            block
-                .getTerminateOutputBlock()
-                .view._contents[1].replace(valueBlock);
+            block.getTerminateOutputBlock().view._contents[1].replace(valueBlock);
         } else {
             this._destroyObservers();
             valueBlock.view._toGlobalCoordinate();
@@ -316,17 +309,18 @@ Entry.FieldBlock = class FieldBlock extends Entry.Field {
         }
         this.updateValueBlock(block);
         block.view._toLocalCoordinate(this.svgGroup);
+        block.view._toLocalCoordinate(this.svgCommentGroup, block.view.svgCommentGroup);
         this.calcWH();
         this.changeEvent.notify();
-    };
+    }
 
     setParent(parent) {
         this._parent = parent;
-    };
+    }
 
     getParent() {
         return this._parent;
-    };
+    }
 
     get parent() {
         return this._parent;
@@ -343,9 +337,7 @@ Entry.FieldBlock = class FieldBlock extends Entry.Field {
         const block = new Entry.Block(
             {
                 type: blockType,
-                params: [
-                    isFromUserAction ? undefined : this._oldPrimitiveValue,
-                ],
+                params: [isFromUserAction ? undefined : this._oldPrimitiveValue],
                 copyable: blockType !== 'function_field_label',
             },
             this
@@ -355,17 +347,16 @@ Entry.FieldBlock = class FieldBlock extends Entry.Field {
 
         delete this._oldPrimitiveValue;
         return block;
-    };
+    }
 
     spliceBlock() {
         this.updateValueBlock();
-    };
+    }
 
     _updateBG() {
         if (this.magneting) {
             this._bg = this.svgGroup.elem('path', {
-                d:
-                    'm 8,12 l -4,0 -2,-2 0,-3 3,0 1,-1 0,-12 -1,-1 -3,0 0,-3 2,-2 l 4,0 z',
+                d: 'm 8,12 l -4,0 -2,-2 0,-3 3,0 1,-1 0,-12 -1,-1 -3,0 0,-3 2,-2 l 4,0 z',
                 fill: '#fff',
                 stroke: '#fff',
                 'fill-opacity': 0.7,
@@ -375,28 +366,28 @@ Entry.FieldBlock = class FieldBlock extends Entry.Field {
             _.result(this._bg, 'remove');
             delete this._bg;
         }
-    };
+    }
 
     getThread() {
         return this;
-    };
+    }
 
     getParentThread() {
         return this._block.getThread();
-    };
+    }
 
     pointer(pointer = []) {
         return this._block.pointer([Entry.PARAM, this._index, ...pointer]);
-    };
+    }
 
     targetPointer(pointer = []) {
         const _pointer = this._block.pointer([Entry.PARAM, this._index, ...pointer]);
         return _pointer;
-    };
+    }
 
     isParamBlockType() {
         return true;
-    };
+    }
 
     //check block schema and view
     _ensureBlock(block) {
@@ -423,6 +414,5 @@ Entry.FieldBlock = class FieldBlock extends Entry.Field {
         }
 
         return block;
-    };
+    }
 };
-
