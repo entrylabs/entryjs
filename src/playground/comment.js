@@ -47,17 +47,10 @@ Entry.Comment = class Comment {
                 thread = thread.parent.getThread();
             }
         }
-        const { id } = thread;
         const { svgGroup, pathGroup } = this.blockView || {};
         this.pathGroup = pathGroup;
         this.parentGroup = svgGroup;
-        const wrapper = Entry.SVG(null, this.board.svgCommentGroup);
-        const target = $(wrapper).find(`> #${id}C`)[0];
-        this.svgGroup = target
-            ? target
-            : wrapper.elem('g', {
-                id: `${id}C`,
-            });
+        this.svgGroup = this._blockView.commentShapeGroup;
         this.mouseDown = this.mouseDown.bind(this);
         this.mouseMove = this.mouseMove.bind(this);
         this.mouseUp = this.mouseUp.bind(this);
@@ -80,7 +73,7 @@ Entry.Comment = class Comment {
             this._comment.attr({
                 width: '160',
                 height: '22',
-                x: startX,
+                x: startX + 80,
                 y: startY,
                 stroke: '#EDA913',
                 fill: '#FBB315',

@@ -12,7 +12,7 @@ Entry.Field = function() {};
     p.TEXT_LIMIT_LENGTH = 20;
 
     p.destroy = function() {
-        var svgGroup = this.svgGroup;
+        const svgGroup = this.svgGroup;
         if (svgGroup) {
             svgGroup._isBinded = false;
             $(svgGroup).off('.fieldBindEvent');
@@ -21,7 +21,7 @@ Entry.Field = function() {};
     };
 
     p.command = function(forceCommand) {
-        var startValue = this._startValue;
+        const startValue = this._startValue;
         if (
             !this._blockView.isInBlockMenu &&
             !_.isUndefined(startValue) &&
@@ -40,8 +40,8 @@ Entry.Field = function() {};
     };
 
     p.destroyOption = function(skipCommand, forceCommand) {
-        var _destroyFunc = _.partial(_.result, _, 'destroy');
-        var _removeFunc = _.partial(_.result, _, 'remove');
+        const _destroyFunc = _.partial(_.result, _, 'destroy');
+        const _removeFunc = _.partial(_.result, _, 'remove');
 
         _destroyFunc(this.documentDownEvent);
         delete this.documentDownEvent;
@@ -61,7 +61,7 @@ Entry.Field = function() {};
     };
 
     p._attachDisposeEvent = function(func) {
-        var that = this;
+        const that = this;
 
         func =
             func ||
@@ -72,35 +72,40 @@ Entry.Field = function() {};
     };
 
     p.align = function(x, y, animate = true) {
-        var svgGroup = this.svgGroup;
+        const svgGroup = this.svgGroup;
         if (this._position) {
-            if (this._position.x) x = this._position.x;
-            if (this._position.y) y = this._position.y;
+            if (this._position.x) {
+                x = this._position.x;
+            }
+            if (this._position.y) {
+                y = this._position.y;
+            }
         }
 
-        var transform = 'translate(' + x + ',' + y + ')';
+        const transform = `translate(${  x  },${  y  })`;
 
-        if (animate)
+        if (animate) {
             svgGroup.animate(
                 {
-                    transform: transform,
+                    transform,
                 },
                 300,
                 mina.easeinout
             );
-        else
+        } else {
             svgGroup.attr({
-                transform: transform,
+                transform,
             });
+        }
 
-        this.box.set({ x: x, y: y });
+        this.box.set({ x, y });
     };
 
     //get absolute position of field from parent board
     p.getAbsolutePosFromBoard = function() {
-        var blockView = this._block.view;
-        var contentPos = blockView.getContentPos();
-        var absPos = blockView.getAbsoluteCoordinate();
+        const blockView = this._block.view;
+        const contentPos = blockView.getContentPos();
+        const absPos = blockView.getAbsoluteCoordinate();
 
         return {
             x: absPos.x + this.box.x + contentPos.x,
@@ -110,12 +115,12 @@ Entry.Field = function() {};
 
     //get absolute position of field from parent document
     p.getAbsolutePosFromDocument = function() {
-        var blockView = this._block.view;
+        const blockView = this._block.view;
         const board = blockView.getBoard();
         const { scale = 1 } = board || {};
-        var contentPos = blockView.getContentPos();
-        var absPos = blockView.getAbsoluteCoordinate();
-        var offset = blockView.getBoard().svgDom.offset();
+        const contentPos = blockView.getContentPos();
+        const absPos = blockView.getAbsoluteCoordinate();
+        const offset = blockView.getBoard().svgDom.offset();
         return {
             x: absPos.x + this.box.x + contentPos.x * scale + offset.left,
             y: absPos.y + this.box.y + contentPos.y + offset.top - $(window).scrollTop(),
@@ -124,8 +129,8 @@ Entry.Field = function() {};
 
     //get relative position of field from blockView origin
     p.getRelativePos = function() {
-        var contentPos = this._block.view.getContentPos();
-        var { x, y } = this.box;
+        const contentPos = this._block.view.getContentPos();
+        const { x, y } = this.box;
 
         return {
             x: x + contentPos.x,
@@ -134,10 +139,12 @@ Entry.Field = function() {};
     };
 
     p.truncate = function() {
-        var value = String(this._convert(this.getValue()));
-        var limit = this.TEXT_LIMIT_LENGTH;
-        var ret = value.substring(0, limit);
-        if (value.length > limit) ret += '...';
+        const value = String(this._convert(this.getValue()));
+        const limit = this.TEXT_LIMIT_LENGTH;
+        let ret = value.substring(0, limit);
+        if (value.length > limit) {
+            ret += '...';
+        }
         return ret;
     };
 
@@ -146,66 +153,90 @@ Entry.Field = function() {};
     };
 
     p.getValue = function() {
-        var data = this._block.params[this._index];
+        let data = this._block.params[this._index];
 
-        var contents = this._contents;
+        const contents = this._contents;
 
         if (contents && !_.isEmpty(contents.reference)) {
-            var reference = contents.reference.concat();
-            if (reference[0][0] === '%')
+            const reference = contents.reference.concat();
+            if (reference[0][0] === '%') {
                 data = this._block.params[parseInt(reference.shift().substr(1)) - 1];
-            if (!data) return data;
+            }
+            if (!data) {
+                return data;
+            }
 
             return data.getDataByPointer(reference);
-        } else return data;
+        } else {
+            return data;
+        }
     };
 
     p.setValue = function(value, reDraw) {
-        if (this.value == value) return;
+        if (this.value == value) {
+            return;
+        }
 
         this.value = value;
 
-        var contents = this._contents;
+        const contents = this._contents;
 
         if (contents && !_.isEmpty(contents.reference)) {
-            var ref = contents.reference.concat();
-            var index = ref.pop();
-            var targetBlock = this._block.params[this._index];
-            if (ref.length && ref[0][0] === '%')
+            const ref = contents.reference.concat();
+            const index = ref.pop();
+            let targetBlock = this._block.params[this._index];
+            if (ref.length && ref[0][0] === '%') {
                 targetBlock = this._block.params[parseInt(ref.shift().substr(1)) - 1];
-            if (ref.length) targetBlock = targetBlock.getDataByPointer(ref);
+            }
+            if (ref.length) {
+                targetBlock = targetBlock.getDataByPointer(ref);
+            }
             targetBlock.params[index] = value;
-        } else this._block.params[this._index] = value;
+        } else {
+            this._block.params[this._index] = value;
+        }
 
-        if (reDraw) this._blockView.reDraw();
+        if (reDraw) {
+            this._blockView.reDraw();
+        }
     };
 
     p._isEditable = function() {
-        if (Entry.ContextMenu.visible || this._blockView.getBoard().readOnly) return false;
-        var dragMode = this._block.view.dragMode;
-        if (dragMode == Entry.DRAG_MODE_DRAG) return false;
-        var blockView = this._block.view;
-        var board = blockView.getBoard();
-        if (board.disableMouseEvent === true) return false;
+        if (Entry.ContextMenu.visible || this._blockView.getBoard().readOnly) {
+            return false;
+        }
+        const dragMode = this._block.view.dragMode;
+        if (dragMode == Entry.DRAG_MODE_DRAG) {
+            return false;
+        }
+        const blockView = this._block.view;
+        const board = blockView.getBoard();
+        if (board.disableMouseEvent === true) {
+            return false;
+        }
 
-        var selectedBlockView = board.workspace.selectedBlockView;
+        const selectedBlockView = board.workspace.selectedBlockView;
 
-        if (!selectedBlockView || board != selectedBlockView.getBoard()) return false;
+        if (!selectedBlockView || board != selectedBlockView.getBoard()) {
+            return false;
+        }
 
-        var root = blockView.getSvgRoot();
+        const root = blockView.getSvgRoot();
 
         return root == selectedBlockView.svgGroup || $(root).has($(blockView.svgGroup));
     };
 
     p._selectBlockView = function() {
-        var blockView = this._block.view;
+        const blockView = this._block.view;
         blockView.getBoard().setSelectedBlock(blockView);
     };
 
     p._bindRenderOptions = function() {
-        if (this.svgGroup._isBinded) return;
+        if (this.svgGroup._isBinded) {
+            return;
+        }
 
-        var that = this;
+        const that = this;
 
         this.svgGroup._isBinded = true;
         $(this.svgGroup).on('mouseup.fieldBindEvent touchend.fieldBindEvent', function(e) {
@@ -232,39 +263,50 @@ Entry.Field = function() {};
     };
 
     p._getRenderMode = function() {
-        var mode = this._blockView.renderMode;
+        const mode = this._blockView.renderMode;
         return mode !== undefined ? mode : Entry.BlockView.RENDER_MODE_BLOCK;
     };
 
     p._convert = function(key, value) {
         value = value !== undefined ? value : this.getValue();
-        var reg = /&value/gm;
-        if (reg.test(value)) return value.replace(reg, '');
-        else if (this._contents.converter) {
+        const reg = /&value/gm;
+        if (reg.test(value)) {
+            return value.replace(reg, '');
+        } else if (this._contents.converter) {
             return this._contents.converter(key, value);
-        } else return key;
+        } else {
+            return key;
+        }
     };
 
     p._updateOptions = function() {
-        var block = Entry.block[this._blockView.type];
-        if (!block) return;
+        const block = Entry.block[this._blockView.type];
+        if (!block) {
+            return;
+        }
 
-        var syntaxes = block.syntax;
+        const syntaxes = block.syntax;
 
-        for (var key in syntaxes) {
-            var syntax = syntaxes[key];
-            if (!syntax) continue;
-            if (syntax.length === 0) continue;
+        for (const key in syntaxes) {
+            const syntax = syntaxes[key];
+            if (!syntax) {
+                continue;
+            }
+            if (syntax.length === 0) {
+                continue;
+            }
 
-            var textParams = syntax[0].textParams;
-            if (!textParams) continue;
+            const textParams = syntax[0].textParams;
+            if (!textParams) {
+                continue;
+            }
 
             textParams[this._index].options = this._contents.options;
         }
     };
 
     p._shouldReturnValue = function(value) {
-        var obj = this._block.getCode().object;
+        const obj = this._block.getCode().object;
         return value === '?' || !obj || obj.constructor !== Entry.EntryObject;
     };
 
@@ -279,7 +321,7 @@ Entry.Field = function() {};
 
         query = [...query];
 
-        var key = query.shift();
+        const key = query.shift();
         if (key === 'option') {
             return this.optionGroup;
         }
@@ -297,10 +339,15 @@ Entry.Field = function() {};
     };
 
     p.getFieldRawType = function() {
-        if (this instanceof Entry.FieldTextInput) return 'textInput';
-        else if (this instanceof Entry.FieldDropdown) return 'dropdown';
-        else if (this instanceof Entry.FieldDropdownDynamic) return 'dropdownDynamic';
-        else if (this instanceof Entry.FieldKeyboard) return 'keyboard';
+        if (this instanceof Entry.FieldTextInput) {
+            return 'textInput';
+        } else if (this instanceof Entry.FieldDropdown) {
+            return 'dropdown';
+        } else if (this instanceof Entry.FieldDropdownDynamic) {
+            return 'dropdownDynamic';
+        } else if (this instanceof Entry.FieldKeyboard) {
+            return 'keyboard';
+        }
     };
 
     p.getTextValueByValue = function(value) {
@@ -310,7 +357,10 @@ Entry.Field = function() {};
             case 'dropdown':
             case 'dropdownDynamic':
                 return _.chain(this._contents.options)
-                    .find(([, optionValue]) => optionValue === value)
+                    .find(([, optionValue]) => {
+                        return optionValue === value
+                        ;
+                    })
                     .head()
                     .value();
             case 'textInput':
@@ -335,8 +385,8 @@ Entry.Field = function() {};
     };
 
     p.getTextBBox = (function() {
-        var _cache = {};
-        var svg;
+        const _cache = {};
+        let svg;
 
         //make invisible svg dom to body
         //in order to calculate text width
@@ -350,27 +400,35 @@ Entry.Field = function() {};
             );
         }
 
-        var clearDoms = Entry.Utils.debounce(function() {
-            if (!svg) return;
+        const clearDoms = Entry.Utils.debounce(function() {
+            if (!svg) {
+                return;
+            }
             $(svg).empty();
         }, 500);
 
         return function() {
-            if (window.fontLoaded && !svg) generateDom();
+            if (window.fontLoaded && !svg) {
+                generateDom();
+            }
 
-            var value = this.getTextValue();
+            const value = this.getTextValue();
 
             //empty string check
-            if (!value) return { width: 0, height: 0 };
+            if (!value) {
+                return { width: 0, height: 0 };
+            }
 
-            var fontSize = this._font_size || '';
+            const fontSize = this._font_size || '';
 
-            var key = value + '&&' + fontSize;
-            var bBox = _cache[key];
+            const key = `${value  }&&${  fontSize}`;
+            let bBox = _cache[key];
 
-            if (bBox) return bBox;
+            if (bBox) {
+                return bBox;
+            }
 
-            var textElement = this.textElement;
+            let textElement = this.textElement;
             if (svg) {
                 textElement = textElement.cloneNode(true);
                 svg.append(textElement);
@@ -385,7 +443,9 @@ Entry.Field = function() {};
                 height: Math.round(bBox.height * 100) / 100 / scale,
             };
 
-            if (fontSize && window.fontLoaded && bBox.width && bBox.height) _cache[key] = bBox;
+            if (fontSize && window.fontLoaded && bBox.width && bBox.height) {
+                _cache[key] = bBox;
+            }
             return bBox;
         };
     })();
