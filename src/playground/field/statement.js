@@ -81,6 +81,7 @@ Entry.FieldStatement = function(content, blockView, index) {
     p.align = function(x, y, animate) {
         animate = animate === undefined ? true : animate;
         const svgGroup = this.svgGroup;
+        const commentGroup = this.commentGroup;
         if (this._position) {
             if (this._position.x) {
                 x = this._position.x;
@@ -104,8 +105,18 @@ Entry.FieldStatement = function(content, blockView, index) {
                 300,
                 mina.easeinout
             );
+            commentGroup.animate(
+                {
+                    transform,
+                },
+                300,
+                mina.easeinout
+            );
         } else {
             svgGroup.attr({
+                transform,
+            });
+            commentGroup.attr({
                 transform,
             });
         }
@@ -167,9 +178,12 @@ Entry.FieldStatement = function(content, blockView, index) {
                 delete blockView.background;
                 delete blockView.nextBackground;
             }
-            var height = dragBlock.getBelowHeight();
+            const height = dragBlock.getBelowHeight();
 
             this.statementSvgGroup.attr({
+                transform: `translate(0,${  height  })`,
+            });
+            this.statementCommentGroup.attr({
                 transform: `translate(0,${  height  })`,
             });
 
@@ -180,7 +194,7 @@ Entry.FieldStatement = function(content, blockView, index) {
                 delete this._clonedShadow;
             }
 
-            var height = blockView.originalHeight;
+            const height = blockView.originalHeight;
             if (height !== undefined) {
                 if (blockView.background) {
                     blockView.background.remove();
@@ -191,6 +205,9 @@ Entry.FieldStatement = function(content, blockView, index) {
                 delete blockView.originalHeight;
             }
             this.statementSvgGroup.attr({
+                transform: 'translate(0,0)',
+            });
+            this.statementCommentSvgGroup.attr({
                 transform: 'translate(0,0)',
             });
             this.calcHeight();
