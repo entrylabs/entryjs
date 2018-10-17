@@ -120,9 +120,9 @@ export class SceneBins {
         base.hasLoaded = true;
 
         //----------- debug code ---------------
-        var ctx:CanvasRenderingContext2D = canvas.getContext("2d");
-        ctx.fillStyle = `rgba(${c()},${c()},${c()}, 0.3)`;
-        ctx.fillRect(0,0, MAX_SIZE, MAX_SIZE);
+        // var ctx:CanvasRenderingContext2D = canvas.getContext("2d");
+        // ctx.fillStyle = `rgba(${c()},${c()},${c()}, 0.3)`;
+        // ctx.fillRect(0,0, MAX_SIZE, MAX_SIZE);
         this._viewer.add(canvas);
         //----------- debug code ---------------
     }
