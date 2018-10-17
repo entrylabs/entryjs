@@ -5,6 +5,7 @@ import { AtlasImageLoader } from './loader/AtlasImageLoader';
 import { AtlasImageLoadingInfo } from './loader/AtlasImageLoadingInfo';
 import { IRawPicture } from './model/IRawPicture';
 import Texture = PIXI.Texture;
+import { PIXIDebugHelper } from '../helper/PIXIDebugHelper';
 
 
 declare let _:any;
@@ -112,5 +113,8 @@ export class PIXIAtlasManager {
 }
 
 PIXIAtlasManager.INIT();
-(window as any).PIXIAtlasManager = PIXIAtlasManager;
+var w:any = window;
+w.PIXIAtlasManager = PIXIAtlasManager;
+w.PIXIDebugHelper = PIXIDebugHelper;
+
 
