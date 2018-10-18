@@ -88,24 +88,30 @@ class GlobalSvg {
         // });
 
         this.svgGroup = Entry.SVG.createElement(blockView.svgGroup.cloneNode(true), { opacity: 1 });
-        if (!(blockView instanceof Entry.Comment)) {
-            const comment = blockView.getComment();
-            if (comment) {
-                const commentSvgGroup = Entry.SVG.createElement(comment.svgGroup.cloneNode(true), {
-                    opacity: 1,
-                });
-                console.log(blockView.svgGroup.getCTM(), commentSvgGroup.getCTM());
-                this.svgGroup.appendChild(commentSvgGroup);
-            }
-        }
         this.svg.appendChild(this.svgGroup);
+        if (blockView.svgCommentGroup) {
+            this.svgCommentGroup = Entry.SVG.createElement(blockView.svgCommentGroup.cloneNode(true), {
+                opacity: 1,
+            });
+            this.svg.appendChild(this.svgCommentGroup);
+        }
         //TODO selectAll function replace
         if (isVimMode) {
             const $svg = $(this.svgGroup);
+            const $svgComment = $(this.svgCommentGroup);
 
             $svg.find('g').css({ filter: 'none' });
+            $svgComment.find('g').css({ filter: 'none' });
 
             $svg.find('path, rect, polygon').velocity(
+                {
+                    opacity: 0,
+                },
+                {
+                    duration: 500,
+                }
+            );
+            $svgComment.find('path, rect, polygon').velocity(
                 {
                     opacity: 0,
                 },
@@ -122,6 +128,14 @@ class GlobalSvg {
                     duration: 530,
                 }
             );
+            $svgComment.find('text').velocity(
+                {
+                    fill: '#000000',
+                },
+                {
+                    duration: 530,
+                }
+            );
         }
     }
 
@@ -130,7 +144,9 @@ class GlobalSvg {
             return;
         }
         this.svgGroup.remove();
+        this.svgCommentGroup.remove();
         delete this.svgGroup;
+        delete this.svgCommentGroup;
         delete this._view;
         delete this._offsetX;
         delete this._offsetY;
@@ -154,6 +170,7 @@ class GlobalSvg {
         this._offsetY = offsetY;
         const transform = `translate(${offsetX}, ${offsetY})`;
         this.svgGroup.attr({ transform });
+        this.svgCommentGroup.attr({ transform });
     }
 
     show() {

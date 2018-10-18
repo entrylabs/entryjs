@@ -1042,8 +1042,10 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
     p._updateOpacity = function() {
         if (this.visible === false) {
             this.svgGroup.attr({ opacity: 0 });
+            this.svgCommentGroup.attr({ opacity: 0 });
         } else {
             this.svgGroup.removeAttr('opacity');
+            this.svgCommentGroup.removeAttr('opacity');
             this._setPosition();
         }
     };
