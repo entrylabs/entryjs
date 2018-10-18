@@ -97,7 +97,7 @@ export class SceneBins {
     }
 
     activate() {
-        console.log("activate scene");
+        // console.log("activate scene");
         _.each(this._packer.bins, (bin:MaxRectsBin, index:number)=>{
             var base:BaseTexture = this._arrBaseTexture[index];
             this._activateBaseTexture(base);
@@ -140,7 +140,7 @@ export class SceneBins {
     }
 
     deactivate() {
-        console.log("deactivate scene");
+        // console.log("deactivate scene");
         _.each(this._arrBaseTexture, (b:BaseTexture)=>{
             var canvas = (b.source as HTMLCanvasElement) ;
             canvas.width = 1;

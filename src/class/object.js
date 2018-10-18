@@ -15,7 +15,7 @@ import { PIXIAtlasManager } from './pixi/atlas/PIXIAtlasManager';
  * @constructor
  */
 Entry.EntryObject = function(model) {
-    clog("new " + (model ? "with model" : "with no model"));
+    // clog("new " + (model ? "with model" : "with no model"));
     var that = this;
     if (model) {
         /** @type {string} */
