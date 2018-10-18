@@ -97,10 +97,10 @@ class GlobalSvg {
                 console.log(blockView.svgGroup.getCTM(), commentSvgGroup.getCTM());
                 const blockGroup = blockView.svgGroup.getCTM();
                 const commentGroup = commentSvgGroup.getCTM();
-                $(commentSvgGroup).css({
-                    transform: `scale(${this.scale}) translate3d(${commentGroup.e -
-                        blockGroup.e}px,${commentGroup.f - blockGroup.f}px, 0px)`,
-                });
+                // $(commentSvgGroup).css({
+                //     transform: `scale(${this.scale}) translate3d(${commentGroup.e -
+                //         blockGroup.e}px,${commentGroup.f - blockGroup.f}px, 0px)`,
+                // });
                 this.svgGroup.appendChild(commentSvgGroup);
             }
         }
