@@ -63,7 +63,10 @@ Entry.FieldStatement = function(content, blockView, index) {
         const firstBlock = thread.getFirstBlock();
         if (firstBlock) {
             firstBlock.view._toLocalCoordinate(this.statementSvgGroup);
-            firstBlock.view._toLocalCoordinate(this.statementCommentGroup, firstBlock.view.svgCommentGroup);
+            firstBlock.view._toLocalCoordinate(
+                this.statementCommentGroup,
+                firstBlock.view.svgCommentGroup
+            );
             this.firstBlock = firstBlock;
         }
 
@@ -90,8 +93,8 @@ Entry.FieldStatement = function(content, blockView, index) {
                 y = this._position.y;
             }
         }
-        
-        const transform = `translate(${  x  },${  y  })`;
+
+        const transform = `translate(${x},${y})`;
 
         if (this.x !== x || this.y !== y) {
             this.set({ x, y });
@@ -137,7 +140,7 @@ Entry.FieldStatement = function(content, blockView, index) {
     p.requestAbsoluteCoordinate = function() {
         const { scale = 1 } = this._board || {};
         const pos = this._blockView.getAbsoluteCoordinate();
-        pos.x += this._blockView.x + (this.x * scale);
+        pos.x += this._blockView.x + this.x * scale;
         pos.y += this.y * scale;
         return pos;
     };
@@ -161,7 +164,7 @@ Entry.FieldStatement = function(content, blockView, index) {
         const blockView = this;
         const magneting = blockView.magneting;
         const { scale = 1 } = this._board || {};
-        
+
         if (magneting) {
             const shadow = dragBlock.getShadow();
             const pos = this.requestAbsoluteCoordinate();
@@ -181,10 +184,10 @@ Entry.FieldStatement = function(content, blockView, index) {
             const height = dragBlock.getBelowHeight();
 
             this.statementSvgGroup.attr({
-                transform: `translate(0,${  height  })`,
+                transform: `translate(0,${height})`,
             });
             this.statementCommentGroup.attr({
-                transform: `translate(0,${  height  })`,
+                transform: `translate(0,${height})`,
             });
 
             this.set({ height: this.height + height });
@@ -207,7 +210,7 @@ Entry.FieldStatement = function(content, blockView, index) {
             this.statementSvgGroup.attr({
                 transform: 'translate(0,0)',
             });
-            this.statementCommentSvgGroup.attr({
+            this.statementCommentGroup.attr({
                 transform: 'translate(0,0)',
             });
             this.calcHeight();

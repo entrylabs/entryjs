@@ -1,11 +1,5 @@
-/*
- *
- */
 'use strict';
 
-/*
- *
- */
 Entry.skeleton = function() {};
 
 Entry.skeleton.basic_event = {
@@ -28,7 +22,7 @@ Entry.skeleton.basic_event = {
     },
     box(blockView) {
         return {
-            contentHeight: 40,
+            topFieldHeight: 40,
             offsetX: 0,
             offsetY: -2,
             width: blockView.contentWidth + 30,
@@ -165,7 +159,7 @@ Entry.skeleton.basic_loop = {
         let statementHeight = blockView._statements[0] ? blockView._statements[0].height : 20;
         statementHeight = Math.max(statementHeight, 20);
         return {
-            contentHeight,
+            topFieldHeight: contentHeight,
             offsetX: -8,
             offsetY: 0,
             width: contentWidth + 30,
@@ -262,7 +256,7 @@ Entry.skeleton.basic_double_loop = {
             width: contentWidth + 30,
             height: contentHeight1 + contentHeight2 + statementHeight1 + statementHeight2 + 17,
             marginBottom: 0,
-            contentHeight: contentHeight1,
+            topFieldHeight: contentHeight1,
         };
     },
     statementPos(blockView) {
@@ -435,7 +429,7 @@ Entry.skeleton.pebble_loop = {
         let statementHeight = blockView._statements[0] ? blockView._statements[0].height : 20;
         statementHeight = Math.max(statementHeight, 51);
         return {
-            contentHeight,
+            topFieldHeight: contentHeight,
             offsetX: -(contentWidth / 2 + 13),
             offsetY: 0,
             width: contentWidth + 30,
@@ -548,8 +542,7 @@ Entry.skeleton.basic_boolean_field = {
         h ${width}
         l ${x} -${halfHeight}
         l -${x} -${halfHeight}
-        z
-        `;
+        z`;
     },
     color: '#FFF',
     outerLine: '#6173F5',

@@ -117,6 +117,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
         height: 0,
         contentWidth: 0,
         contentHeight: 0,
+        topFieldHeight: 0,
         magneting: false,
         visible: true,
         animating: false,

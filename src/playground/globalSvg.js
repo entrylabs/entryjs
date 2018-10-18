@@ -107,11 +107,11 @@ class GlobalSvg {
         this.svg.appendChild(this.svgGroup);
         //TODO selectAll function replace
         if (isVimMode) {
-            const svg = $(this.svgGroup);
+            const $svg = $(this.svgGroup);
 
-            svg.find('g').css({ filter: 'none' });
+            $svg.find('g').css({ filter: 'none' });
 
-            svg.find('path, rect, polygon').velocity(
+            $svg.find('path, rect, polygon').velocity(
                 {
                     opacity: 0,
                 },
@@ -120,7 +120,7 @@ class GlobalSvg {
                 }
             );
 
-            svg.find('text').velocity(
+            $svg.find('text').velocity(
                 {
                     fill: '#000000',
                 },

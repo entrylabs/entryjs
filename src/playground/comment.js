@@ -66,9 +66,9 @@ Entry.Comment = class Comment {
             const { x, width, y } = this.pathGroup.getBBox();
             const matrix = this.parentGroup.getCTM();
             const { x: pathX, y: pathY } = Entry.GlobalSvg.getRelativePoint(matrix);
-            const { contentHeight, height } = this._blockView;
+            const { topFieldHeight, height } = this._blockView;
             const startX = width;
-            const startY = (contentHeight || height) / 2;
+            const startY = (topFieldHeight || height) / 2;
             console.log(
                 'startRender',
                 x,
