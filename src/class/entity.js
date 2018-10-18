@@ -18,9 +18,6 @@ import { PIXIAtlasManager } from './pixi/atlas/PIXIAtlasManager';
  * @constructor
  */
 Entry.EntityObject = function(object) {
-    clog("new");
-    window.bot = this;
-    console.log("[TEST] window.bot 에 할당 됨.");
     /** @type {!string} */
     this.parent = object;
     this.type = object.objectType;

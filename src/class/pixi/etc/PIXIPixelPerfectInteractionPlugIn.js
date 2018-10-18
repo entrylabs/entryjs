@@ -1,10 +1,11 @@
 /**
  * PIXI-js v4.xx pixel perfect interaction plugin
  */
+import PIXIHelper from '../helper/PIXIHelper';
 
 
 const tempPoint = new PIXI.Point();
-const hitTestCanvas = document.createElement('canvas');
+const hitTestCanvas = PIXIHelper.getOffScreenCanvas();
 hitTestCanvas.width = 1;
 hitTestCanvas.height = 1;
 const hitTestConText = hitTestCanvas.getContext("2d");
@@ -23,10 +24,8 @@ export class PIXIPixelPerfectInteractionPlugIn {
          * @type {boolean}
          */
         p.pixelPerfect = false;
-        /**
-         *
-         * @type {number} not ratio. 16 bit value.
-         */
+
+        /** @type {number} not ratio. 16 bit value. */
         p.pixelPerfectAlpha = 0;
 
         
@@ -77,8 +76,8 @@ export class PIXIPixelPerfectInteractionPlugIn {
 
             ctx.clearRect(0, 0, 1, 1);
             ctx.drawImage(texture.baseTexture.source, x, y, 1, 1, 0, 0, 1, 1);
-            let rgb = ctx.getImageData(0, 0, 1, 1);
-            return rgb.data[3] > this.pixelPerfectAlpha;
+            let rgba = ctx.getImageData(0, 0, 1, 1);
+            return rgba.data[3] > this.pixelPerfectAlpha;
         }; //end p._checkPixel
 
 
