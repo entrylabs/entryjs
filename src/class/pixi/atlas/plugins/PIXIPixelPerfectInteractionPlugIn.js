@@ -1,7 +1,7 @@
 /**
  * PIXI-js v4.xx pixel perfect interaction plugin
  */
-import PIXIHelper from '../helper/PIXIHelper';
+import PIXIHelper from '../../helper/PIXIHelper';
 
 
 const tempPoint = new PIXI.Point();

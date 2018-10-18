@@ -4,15 +4,16 @@
  *
  */
 
+
 'use strict';
 import { PIXIAtlasManager } from './pixi/atlas/PIXIAtlasManager';
 require("./pixi/__testfiles/articleloader");
 require("./pixi/etc/PIXI-ndgmr.Collision");
 require("./pixi/etc/PIXICanvasInput");
 import { PIXIHandle } from './pixi/handle/PIXIHandle';
-import { PIXIPixelPerfectInteractionPlugIn } from './pixi/etc/PIXIPixelPerfectInteractionPlugIn';
 import { PIXITempStore } from './pixi/etc/PIXITempStore';
 import { PIXIBaseAsset } from './pixi/init/PIXIBaseAsset';
+import { PIXICustomPluginStarter } from './pixi/atlas/plugins/PIXICustomPluginStarter';
 
 /**
  * class for a canvas
@@ -21,7 +22,7 @@ import { PIXIBaseAsset } from './pixi/init/PIXIBaseAsset';
 Entry.Stage = function() {
     ndgmr.initTempObject();
     PIXITempStore.init();
-    new PIXIPixelPerfectInteractionPlugIn();
+    new PIXICustomPluginStarter();
 
     /** @type {Dictionary} */
     this.variables = {};
