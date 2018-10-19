@@ -107,6 +107,10 @@ export class PIXIText extends PIXI.Text {
         context.scale(this.resolution * FSX, this.resolution * FSY);
 
         context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        //---------- DEBUG CODE ------------
+        context.fillStyle = "rgba(255, 0, 0, 0.3)";
+        context.fillRect(0, 0, this.canvas.width, this.canvas.height);
+        //---------- DEBUG CODE ------------
 
         context.font = this._font;
         context.strokeStyle = style.stroke;
@@ -175,7 +179,7 @@ export class PIXIText extends PIXI.Text {
         context.fillStyle = this._generateFillStyle(style, lines);
 
         const WORD_WRAP = style.wordWrap;
-        const MAX_HEIGHT = style.maxHeight < 0 ? 0xffff : style.maxHeight;
+        const MAX_HEIGHT = style.maxHeight < 0 ? 0xffff : (style.maxHeight - fontProperties.descent);
 
         // draw lines line by line
         for (let i = 0; i < lines.length; i++)
@@ -241,7 +245,7 @@ export class PIXIText extends PIXI.Text {
      * @param offsetY
      */
     _drawLineAt(ctx, x, y, width, offsetY) {
-        ctx.fillRect(x, y + offsetY, width, 2);
+        ctx.fillRect(x, y + offsetY, width, 1.5);
     }
 }
 
