@@ -5,7 +5,7 @@ const { callApi } = require('../../util/common');
 
 Entry.EXPANSION_BLOCK.behaviorConductLifeSafety = {
     name: 'behaviorConductLifeSafety',
-    imageName: 'translate.png',
+    imageName: 'firstaid.png',
     title: {
         'ko': '생활안전',
         'en': 'LifeSafety',

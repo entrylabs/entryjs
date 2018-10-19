@@ -5,7 +5,7 @@ const { callApi } = require('../../util/common');
 
 Entry.EXPANSION_BLOCK.behaviorConductDisaster = {
     name: 'behaviorConductDisaster',
-    imageName: 'behaviorConductDisaster.png',
+    imageName: 'disaster.png',
     title: {
         'ko': '자연재난',
         'en': 'Disaster',
