@@ -1104,7 +1104,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
                     } else if (endBlock.view.magnet.next) {
                         nextBlock.view._toLocalCoordinate(endBlock.view._nextGroup);
                         nextBlock.view._toLocalCoordinate(
-                            prevBlock.view._nextCommentGroup,
+                            endBlock.view._nextCommentGroup,
                             nextBlock.view.svgCommentGroup
                         );
                     } else {

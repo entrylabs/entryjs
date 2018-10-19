@@ -98,7 +98,7 @@ Entry.Thread = function(thread, code, parent) {
         for (let i = 0; i < newBlocks.length; i++) {
             newBlocks[i].setThread(this);
         }
-        this._data.splice.apply(this._data, [index + 1, 0].concat(newBlocks));
+        this._data.splice(...[index + 1, 0].concat(newBlocks));
         this.changeEvent.notify();
     };
 

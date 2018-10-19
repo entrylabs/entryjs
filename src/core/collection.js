@@ -142,11 +142,11 @@ Entry.Collection = function(data) {
 
         const splicedData = ap.splice.call(this, index, amount);
 
-        for (var i = 0, len = splicedData.length; i < len; i++) {
+        for (let i = 0, len = splicedData.length; i < len; i++) {
             delete hashMap[splicedData[i].id];
         }
 
-        for (i = 0, len = args.length; i < len; i++) {
+        for (let i = 0, len = args.length; i < len; i++) {
             const datum = args[i];
             ap.splice.call(this, index++, 0, datum);
             this._hashMap[datum.id] = datum;

@@ -66,10 +66,10 @@ Entry.Comment = class Comment {
             const startX = width;
             const startY = (topFieldHeight || height) / 2;
             this._comment.attr({
-                width: '160',
-                height: '22',
-                x: startX + 80,
-                y: startY - 11,
+                width: this.commentWidth,
+                height: this.commentTitleHeight,
+                x: startX + this.commentWidth / 2,
+                y: startY - this.commentTitleHeight / 2,
                 stroke: '#EDA913',
                 fill: '#FBB315',
                 rx: '4',
@@ -101,7 +101,7 @@ Entry.Comment = class Comment {
 
             this._line.attr({
                 x2: startX,
-                y2: startY,
+                y2: startY + this.commentTitleHeight / 2,
             });
 
             this.set({
@@ -138,7 +138,7 @@ Entry.Comment = class Comment {
 
         this._line.attr({
             x2: this.x + this.startX + 80,
-            y2: this.y + this.startY,
+            y2: this.y + this.startY + this.commentTitleHeight / 2,
         });
     }
 
@@ -281,4 +281,6 @@ Entry.Comment.prototype.schema = {
     visible: true,
     display: true,
     movable: true,
+    commentWidth: 160,
+    commentTitleHeight: 22,
 };
