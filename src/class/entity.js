@@ -792,12 +792,14 @@ Entry.EntityObject.prototype.setLineBreak = function(lineBreak = false) {
         this.textObject.style.wordWrap = false;
         this.setHeight(PIXIHelper.getMeasuredLineHeight(this.textObject));
         this.setText(this.getText().replace(/\n/g, ''));
+        this.textObject.anchor.y = 0.5;
     } else if (!previousState && this.lineBreak) {
         this.setFontSize(this.getFontSize() * this.getScaleX());
         this.setHeight(PIXIHelper.getMeasuredLineHeight(this.textObject) * 3);
         this.setWidth(this.getWidth() * this.getScaleX());
         this.setScaleX(1);
         this.setScaleY(1);
+        this.textObject.anchor.y = 0;
         this.textObject.style.wordWrap = true;
         this.textObject.style.breakWords = true;
         this.textObject.style.wordWrapWidth = this.getWidth();
@@ -1559,8 +1561,8 @@ Entry.EntityObject.prototype.alignTextBox = function() {
     //         textObject.getMeasuredLineHeight() / 2 - this.getHeight() / 2;
 
     if (this.lineBreak) {
-        textObject.y =
-            PIXIHelper.getMeasuredLineHeight(textObject) / 2 - this.getHeight() / 2;
+        // textObject.y = PIXIHelper.getMeasuredLineHeight(textObject) / 2 - this.getHeight() / 2;
+        textObject.y = - this.getHeight() / 2;
 
         if (this.fontType == 'Nanum Gothic Coding') {
             textObject.y += 10;
