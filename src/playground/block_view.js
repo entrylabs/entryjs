@@ -1099,13 +1099,13 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
                         nextBlock.view._toLocalCoordinate(prevBlock.view._nextGroup);
                         nextBlock.view._toLocalCoordinate(
                             prevBlock.view._nextCommentGroup,
-                            this.svgCommentGroup
+                            nextBlock.view.svgCommentGroup
                         );
                     } else if (endBlock.view.magnet.next) {
                         nextBlock.view._toLocalCoordinate(endBlock.view._nextGroup);
                         nextBlock.view._toLocalCoordinate(
-                            endBlock.view._nextCommentGroup,
-                            this.svgCommentGroup
+                            prevBlock.view._nextCommentGroup,
+                            nextBlock.view.svgCommentGroup
                         );
                     } else {
                         nextBlock.view._toGlobalCoordinate();
@@ -1124,7 +1124,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
                 const nextBlock = this.block.getNextBlock();
                 if (nextBlock && nextBlock.view) {
                     nextBlock.view._toLocalCoordinate(this._nextGroup);
-                    nextBlock.view._toLocalCoordinate(this._nextCommentGroup, this.svgCommentGroup);
+                    nextBlock.view._toLocalCoordinate(this._nextCommentGroup, nextBlock.view.svgCommentGroup);
                 }
             }
         }

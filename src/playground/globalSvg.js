@@ -208,7 +208,6 @@ class GlobalSvg {
         const pos = view.getAbsoluteCoordinate();
         this.left = pos.scaleX; // + (offset.left / this.scale - this._offsetX);
         this.top = pos.scaleY; // + (offset.top / this.scale - this._offsetY);
-        console.log('commentPosition', this.left, this.top);
         const [comment] = this.svgGroup.getElementsByTagName('rect');
         const [line] = this.svgGroup.getElementsByTagName('line');
         comment.setAttribute('x', this.left);
