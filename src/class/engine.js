@@ -414,7 +414,7 @@ Entry.Engine = function() {
      */
     p.start = function(FPS) {
         /** @type {!number} */
-        createjs.Ticker.setFPS(Entry.FPS);
+        // createjs.Ticker.setFPS(Entry.FPS);
 
         if (!this.ticker)
             this.ticker = setInterval(
@@ -427,7 +427,7 @@ Entry.Engine = function() {
      * Stop engine
      */
     p.stop = function() {
-        createjs.Ticker.reset();
+        // createjs.Ticker.reset();
         clearInterval(this.ticker);
         this.ticker = null;
     };
