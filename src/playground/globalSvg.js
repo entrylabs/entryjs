@@ -90,9 +90,12 @@ class GlobalSvg {
         this.svgGroup = Entry.SVG.createElement(blockView.svgGroup.cloneNode(true), { opacity: 1 });
         this.svg.appendChild(this.svgGroup);
         if (blockView.svgCommentGroup) {
-            this.svgCommentGroup = Entry.SVG.createElement(blockView.svgCommentGroup.cloneNode(true), {
-                opacity: 1,
-            });
+            this.svgCommentGroup = Entry.SVG.createElement(
+                blockView.svgCommentGroup.cloneNode(true),
+                {
+                    opacity: 1,
+                }
+            );
             this.svg.appendChild(this.svgCommentGroup);
         }
         //TODO selectAll function replace
@@ -144,9 +147,11 @@ class GlobalSvg {
             return;
         }
         this.svgGroup.remove();
-        this.svgCommentGroup.remove();
         delete this.svgGroup;
-        delete this.svgCommentGroup;
+        if (this.svgCommentGroup) {
+            this.svgCommentGroup.remove();
+            delete this.svgCommentGroup;
+        }
         delete this._view;
         delete this._offsetX;
         delete this._offsetY;
@@ -170,7 +175,9 @@ class GlobalSvg {
         this._offsetY = offsetY;
         const transform = `translate(${offsetX}, ${offsetY})`;
         this.svgGroup.attr({ transform });
-        this.svgCommentGroup.attr({ transform });
+        if (this.svgCommentGroup) {
+            this.svgCommentGroup.attr({ transform });
+        }
     }
 
     show() {

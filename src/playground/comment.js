@@ -61,27 +61,10 @@ Entry.Comment = class Comment {
             this._line = this.svgGroup.elem('line');
             this._comment = this.svgGroup.elem('rect');
 
-            // const {x: offsetX, y: offsetY} = this.blockView.getAbsoluteCoordinate();
-            // console.log(offsetX, offsetY);
-            const { x, width, y } = this.pathGroup.getBBox();
-            const matrix = this.parentGroup.getCTM();
-            const { x: pathX, y: pathY } = Entry.GlobalSvg.getRelativePoint(matrix);
+            const { width } = this.pathGroup.getBBox();
             const { topFieldHeight, height } = this._blockView;
             const startX = width;
             const startY = (topFieldHeight || height) / 2;
-            console.log(
-                'startRender',
-                x,
-                y,
-                width,
-                height,
-                pathX,
-                pathY,
-                startX,
-                startY,
-                this._blockView.svgGroup,
-                this._blockView.svgCommentGroup
-            );
             this._comment.attr({
                 width: '160',
                 height: '22',
@@ -117,8 +100,8 @@ Entry.Comment = class Comment {
             const startY = pathY;
 
             this._line.attr({
-                x1: startX,
-                y1: startY,
+                x2: startX,
+                y2: startY,
             });
 
             this.set({
@@ -167,7 +150,6 @@ Entry.Comment = class Comment {
             (e.button === 0 || (e.originalEvent && e.originalEvent.touches)) &&
             !this._board.readOnly
         ) {
-            this.set({ visible: false });
             const mouseEvent = Entry.Utils.convertMouseEvent(e);
             const matrix = this.svgGroup.getCTM();
             const { x, y } = Entry.GlobalSvg.getRelativePoint(matrix);
@@ -182,8 +164,8 @@ Entry.Comment = class Comment {
             document.onmouseup = this.mouseUp;
             document.ontouchend = this.mouseUp;
             this.dragInstance = new Entry.DragInstance({
-                startX: this.startX + x - this.offsetX,
-                startY: this.startY + y + this.offsetY,
+                startX: x + this.startX,
+                startY: y + this.startY,
                 offsetX: mouseEvent.pageX,
                 offsetY: mouseEvent.pageY,
                 mode: true,
@@ -201,6 +183,7 @@ Entry.Comment = class Comment {
                 Math.pow(mouseEvent.pageY - this.mouseDownCoordinate.y, 2)
         );
         if (this.dragMode == Entry.DRAG_MODE_DRAG || diff > Entry.BlockView.DRAG_RADIUS) {
+            this.set({ visible: false });
             const workspaceMode = this.board.workspace.getMode();
 
             const dragInstance = this.dragInstance;
