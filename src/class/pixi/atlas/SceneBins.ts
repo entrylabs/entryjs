@@ -190,4 +190,8 @@ export class SceneBins {
             t.baseTexture.update();
         }
     }
+
+    invalidate(newPathSet:PrimitiveSet):void {
+
+    }
 }

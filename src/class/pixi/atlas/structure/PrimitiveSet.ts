@@ -4,9 +4,11 @@ declare let _:any;
 export class PrimitiveSet {
 
     private _map:any = {};
+
     hasValue(value:string|number):boolean {
         return this._map[value];
     }
+
     put(value:string|number) {
         this._map[value] = true;
     }
@@ -20,4 +22,5 @@ export class PrimitiveSet {
             callback(key);
         });
     }
+
 }
