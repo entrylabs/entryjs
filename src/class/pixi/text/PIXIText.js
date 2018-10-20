@@ -108,8 +108,8 @@ export class PIXIText extends PIXI.Text {
 
         context.clearRect(0, 0, this.canvas.width, this.canvas.height);
         //---------- DEBUG CODE ------------
-        context.fillStyle = "rgba(255, 0, 0, 0.3)";
-        context.fillRect(0, 0, this.canvas.width, this.canvas.height);
+        // context.fillStyle = "rgba(255, 0, 0, 0.3)";
+        // context.fillRect(0, 0, this.canvas.width, this.canvas.height);
         //---------- DEBUG CODE ------------
 
         context.font = this._font;
@@ -245,7 +245,7 @@ export class PIXIText extends PIXI.Text {
      * @param offsetY
      */
     _drawLineAt(ctx, x, y, width, offsetY) {
-        ctx.fillRect(x, y + offsetY, width, 1.5);
+        ctx.fillRect(x, y + offsetY, width, 1);
     }
 }
 
