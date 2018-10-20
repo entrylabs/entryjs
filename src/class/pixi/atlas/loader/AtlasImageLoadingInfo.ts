@@ -1,14 +1,13 @@
 import { IRawPicture } from '../model/IRawPicture';
-import { PrimitiveSet } from '../structure/PrimitiveSet';
 
 declare let Entry:any;
 declare let _:any;
 
-
 enum LoadingState {
     NONE = 1,
     LOADING = 2,
-    COMPLETE = 3
+    COMPLETE = 3,
+    DESTROYED = 4
 }
 
 
@@ -28,7 +27,6 @@ export class AtlasImageLoadingInfo {
         this._rawPath = model.fileurl || model.filename;
     }
 
-
     load() {
         if(this.loadState != LoadingState.NONE) return;
         this.loadState = LoadingState.LOADING;
@@ -36,6 +34,7 @@ export class AtlasImageLoadingInfo {
         this.img = img;
 
         img.onload = ()=>{
+            if( this.loadState == LoadingState.DESTROYED ) return;
             this.loadState = LoadingState.COMPLETE;
             this._onLoadCallback(this);
             this._onLoadCallback = null;
@@ -68,6 +67,13 @@ export class AtlasImageLoadingInfo {
         );
     }
 
+    destroy() {
+        this.loadState = LoadingState.DESTROYED;
+        console.log("[AtlasInfo::destroy] " + this._rawPath);
+        this.img.onload = this.img.onerror = null;
+        this.img = null;
+        this._rawPath = this._realPath = null;
+    }
 }
 
 

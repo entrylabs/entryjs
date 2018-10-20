@@ -1,9 +1,11 @@
 import { AtlasImageLoadingInfo } from './AtlasImageLoadingInfo';
 import { IRawPicture } from '../model/IRawPicture';
+import { PrimitiveSet } from '../structure/PrimitiveSet';
 
 
 type LoadingInfoMap = {[key:string]:AtlasImageLoadingInfo};
 
+declare let _:any;
 
 export class AtlasImageLoader {
 
@@ -28,4 +30,15 @@ export class AtlasImageLoader {
     }
 
 
+    invalidate(pathSet:PrimitiveSet) {
+        var unusedInfo:AtlasImageLoadingInfo[] = [];
+        _.each(this._path_info_map, (info:AtlasImageLoadingInfo, path:string)=>{
+            if( pathSet.hasValue(path) ) return;
+            unusedInfo.push(info);
+        });
+        unusedInfo.forEach((info:AtlasImageLoadingInfo)=>{
+            delete this._path_info_map[info.path];
+            info.destroy();
+        });
+    }
 }
