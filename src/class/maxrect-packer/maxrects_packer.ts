@@ -70,4 +70,8 @@ export class MaxRectsPacker {
     private sort (rects: IRectangle[]) {
         return rects.slice().sort((a, b) => Math.max(b.width, b.height) - Math.max(a.width, a.height));
     }
+
+    public empty() {
+        this.bins = [];
+    }
 }

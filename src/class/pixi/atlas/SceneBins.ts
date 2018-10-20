@@ -13,6 +13,7 @@ import { PrimitiveSet } from './structure/PrimitiveSet';
 import { MaxRectsPacker } from '../../maxrect-packer/maxrects_packer';
 import { MaxRectsBin } from '../../maxrect-packer/maxrects_bin';
 import { InputRect } from '../../maxrect-packer/geom/InputRect';
+import Texture = PIXI.Texture;
 
 export type TextureMap = {[key:string]:AtlasTexture};
 
@@ -48,12 +49,14 @@ function newPacker():MaxRectsPacker{
 
 export class SceneBins {
 
-    private _pathSet:PrimitiveSet = new PrimitiveSet();
+    private _pathSet:PrimitiveSet = new PrimitiveSet();//패킹 전/후 pathf르 모두 저장.
     private _packedBinData:InputRect[] = [];
     private _notPackedBindData:InputRect[] = [];
     private _arrBaseTexture:BaseTexture[] = [];
     private _packer:MaxRectsPacker;
     private _path_tex_map:TextureMap = {};
+    private _activated:boolean;
+
 
     constructor(public sceneID:string, private _viewer:AtlasCanvasViewer) {
         this._packer = newPacker();
@@ -84,12 +87,19 @@ export class SceneBins {
     pack() {
         this._packer.addArray(this._notPackedBindData);
 
+        var willUpdateBaseTextures:BaseTexture[] = [];
+
         this._notPackedBindData.forEach((r:InputRect)=>{
-            var path:string = r.data.path;
             var base:BaseTexture = this._getBaseTexture(r.binIndex);
-            this._path_tex_map[path] = new AtlasTexture(base, new PIXI.Rectangle(r.x, r.y, r.width, r.height));
-            this.putImage(PIXIAtlasManager.imageLoader.getImageInfo(path), true); //업데이트 해야 할 baseTexture만 골라내기
+            this._createOrUpdateTexture(r, base);
+            willUpdateBaseTextures.push(base);
         });
+
+        willUpdateBaseTextures.forEach((base:BaseTexture)=>{
+            base.update();
+        });
+
+        this._destroyBaseTextureAfter(this._packer.bins.length);
 
         this._packedBinData = this._packedBinData.concat(this._notPackedBindData);
 
@@ -97,6 +107,7 @@ export class SceneBins {
     }
 
     activate() {
+        this._activated = true;
         // console.log("activate scene");
         _.each(this._packer.bins, (bin:MaxRectsBin, index:number)=>{
             var base:BaseTexture = this._arrBaseTexture[index];
@@ -140,6 +151,7 @@ export class SceneBins {
     }
 
     deactivate() {
+        this._activated = false;
         // console.log("deactivate scene");
         _.each(this._arrBaseTexture, (b:BaseTexture)=>{
             var canvas = (b.source as HTMLCanvasElement) ;
@@ -150,8 +162,18 @@ export class SceneBins {
         this._viewer.empty();
     }
 
-    getTexture(path:string) {
+    getTexture(path:string):AtlasTexture {
         return this._path_tex_map[path];
+    }
+
+    _createOrUpdateTexture(r:InputRect, base:BaseTexture) {
+        var path:string = r.data.path;
+        var tex:AtlasTexture = this.getTexture(path);
+        if (!tex) {
+            tex = new AtlasTexture(base, new PIXI.Rectangle(r.x, r.y, r.width, r.height));
+            this._path_tex_map[path] = tex;
+        }
+        this.putImage(PIXIAtlasManager.imageLoader.getImageInfo(path), false);
     }
 
     destroy() {
@@ -191,7 +213,29 @@ export class SceneBins {
         }
     }
 
-    invalidate(newPathSet:PrimitiveSet):void {
+    invalidate(usedPathSet:PrimitiveSet):void {
+        var unusedPath:string[] = [];
+        _.each(this._path_tex_map, (texture:AtlasTexture, path:string)=>{
+            if( usedPathSet.hasValue(path) ) return;
+            texture.destroy(false);
+            unusedPath.push(path);
+        });
+        unusedPath.forEach((path:string)=>{
+            this._pathSet.remove(path);
+            delete this._path_tex_map[path];
+        });
+        if(this._activated) {
+            this._packer.empty();
+            this._notPackedBindData = this._packedBinData.concat(this._notPackedBindData);
+            this.pack();
+        }
+    }
 
+    private _destroyBaseTextureAfter(startIndex:number) {
+        var LEN = this._arrBaseTexture.length;
+        for( var i = startIndex ; i < LEN ; i++ ) {
+            this._arrBaseTexture[i].destroy();
+        }
+        this._arrBaseTexture.length = startIndex;
     }
 }

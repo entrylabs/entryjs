@@ -7,5 +7,5 @@ export class InputRect extends Rectangle {
 
     binIndex:number = -1;
     oversized:boolean;
-    data:any;
+    data:{path:string};
 }
