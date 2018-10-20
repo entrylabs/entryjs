@@ -13,7 +13,7 @@ require("./pixi/etc/PIXICanvasInput");
 import { PIXIHandle } from './pixi/handle/PIXIHandle';
 import { PIXITempStore } from './pixi/etc/PIXITempStore';
 import { PIXIBaseAsset } from './pixi/init/PIXIBaseAsset';
-import { PIXICustomPluginStarter } from './pixi/atlas/plugins/PIXICustomPluginStarter';
+import { PIXICustomPluginStarter } from './pixi/plugins/PIXICustomPluginStarter';
 
 /**
  * class for a canvas
