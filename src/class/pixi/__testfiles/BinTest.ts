@@ -39,7 +39,7 @@ export class BinTest {
         w = w || c(2000) + 1;
         h = h || c(2000) + 1;
         var r = new InputRect(0,0, w, h);
-        r.data = `rgb(${c()},${c()},${c()})`;
+        r.data = { path : `rgb(${c()},${c()},${c()})` };
         this.packer.add(r);
 
         _.each(this.packer.bins,(bin:Bin, index:number)=>{
@@ -65,7 +65,7 @@ export class BinTest {
 
         var ctx:CanvasRenderingContext2D = canvas.getContext("2d");
         // ctx.fillStyle = ;
-        ctx.fillStyle = rect.data ;
+        ctx.fillStyle = rect.data.path ;
         ctx.fillRect(rect.x,rect.y, rect.width, rect.height);
     }
 
