@@ -166,9 +166,10 @@ Entry.Comment = class Comment {
             document.ontouchmove = this.mouseMove;
             document.onmouseup = this.mouseUp;
             document.ontouchend = this.mouseUp;
+            console.log(x, this.startX);
             this.dragInstance = new Entry.DragInstance({
-                startX: (x + this.startX) / scale,
-                startY: (y + this.startY) / scale,
+                startX: x / scale + this.startX,
+                startY: y / scale + this.startY,
                 offsetX: mouseEvent.pageX,
                 offsetY: mouseEvent.pageY,
                 mode: true,
@@ -262,8 +263,8 @@ Entry.Comment = class Comment {
             pos = {
                 x: posX,
                 y: posY,
-                scaleX: posX / scale,
-                scaleY: posY / scale,
+                scaleX: this.x + this.startX + parentX / scale + this.defaultLineLength,
+                scaleY: this.y + this.startY + parentY / scale,
             };
         } else {
             pos = this.block.getThread().view.requestAbsoluteCoordinate(this);
