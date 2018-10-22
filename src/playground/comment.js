@@ -78,7 +78,7 @@ Entry.Comment = class Comment {
             this._line.attr({
                 x1: startX,
                 y1: startY,
-                x2: startX + 80,
+                x2: startX + this.commentWidth / 2,
                 y2: startY,
                 style: 'stroke:#eda913;stroke-width:2',
             });
@@ -93,7 +93,7 @@ Entry.Comment = class Comment {
 
     updatePos() {
         if (this.pathGroup) {
-            const { x, width, y, height } = this.pathGroup.getBBox();
+            const { width } = this.pathGroup.getBBox();
             const matrix = this.parentGroup.getCTM();
             const { x: pathX, y: pathY } = Entry.GlobalSvg.getRelativePoint(matrix);
             const startX = pathX + width;
@@ -111,7 +111,7 @@ Entry.Comment = class Comment {
         }
     }
 
-    moveTo(x, y, animate, doNotUpdatePos) {
+    moveTo(x, y) {
         const thisX = this.x;
         const thisY = this.y;
         if (!this.display) {
@@ -126,8 +126,8 @@ Entry.Comment = class Comment {
         }
     }
 
-    moveBy(x, y, animate, doNotUpdatePos) {
-        return this.moveTo(this.x + x, this.y + y, animate, doNotUpdatePos);
+    moveBy(x, y) {
+        return this.moveTo(this.x + x, this.y + y);
     }
 
     setPosition() {
