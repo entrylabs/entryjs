@@ -72,6 +72,6 @@ export class MaxRectsPacker {
     }
 
     public empty() {
-        this.bins = [];
+        this.bins.length = 0;
     }
 }

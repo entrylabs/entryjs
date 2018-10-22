@@ -1,7 +1,10 @@
 import BaseTexture = PIXI.BaseTexture;
 import Rectangle = PIXI.Rectangle;
+import { AtlasBaseTexture } from './AtlasBaseTexture';
 
 export class AtlasTexture extends PIXI.Texture {
+
+    baseTexture: AtlasBaseTexture;
 
     constructor(baseTexture: BaseTexture, frame?: Rectangle, orig?: Rectangle, trim?: Rectangle, rotate?: number) {
         super(baseTexture, frame, orig, trim, rotate);
