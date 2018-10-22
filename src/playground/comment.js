@@ -64,12 +64,14 @@ Entry.Comment = class Comment {
             const { width } = this.pathGroup.getBBox();
             const { topFieldHeight, height } = this._blockView;
             const startX = width;
-            const startY = (topFieldHeight || height) / 2;
+            const startY = 0;
+            const defaultLineLength = this.defaultLineLength;
+            const lineHeight = (topFieldHeight || height) / 2;
             this._comment.attr({
                 width: this.commentWidth,
                 height: this.commentTitleHeight,
-                x: startX + this.commentWidth / 2,
-                y: startY - this.commentTitleHeight / 2,
+                x: startX + defaultLineLength,
+                y: startY + lineHeight - this.commentTitleHeight / 2,
                 stroke: '#EDA913',
                 fill: '#FBB315',
                 rx: '4',
@@ -77,15 +79,15 @@ Entry.Comment = class Comment {
 
             this._line.attr({
                 x1: startX,
-                y1: startY,
-                x2: startX + this.commentWidth / 2,
-                y2: startY,
+                y1: startY + lineHeight,
+                x2: startX + defaultLineLength,
+                y2: startY + lineHeight,
                 style: 'stroke:#eda913;stroke-width:2',
             });
 
             this.set({
                 startX,
-                startY,
+                startY: startY + lineHeight,
             });
             this.canRender = true;
         }
@@ -96,7 +98,7 @@ Entry.Comment = class Comment {
             const { width } = this.pathGroup.getBBox();
             const matrix = this.parentGroup.getCTM();
             const { x: pathX, y: pathY } = Entry.GlobalSvg.getRelativePoint(matrix);
-            const startX = pathX + width;
+            const startX = pathX + width + this.defaultLineLength;
             const startY = pathY;
 
             this._line.attr({
@@ -132,13 +134,13 @@ Entry.Comment = class Comment {
 
     setPosition() {
         this._comment.attr({
-            x: this.x + this.startX,
-            y: this.y + this.startY,
+            x: this.x + this.startX + this.defaultLineLength,
+            y: this.y + this.startY - this.commentTitleHeight / 2,
         });
 
         this._line.attr({
-            x2: this.x + this.startX + 80,
-            y2: this.y + this.startY + this.commentTitleHeight / 2,
+            x2: this.x + this.startX + this.commentWidth / 2 + this.defaultLineLength,
+            y2: this.y + this.startY,
         });
     }
 
@@ -252,19 +254,21 @@ Entry.Comment = class Comment {
         const { scale = 1 } = this.board || {};
         let pos = null;
         const { parentX, parentY } = this.mouseDownCoordinate;
+        const posX = this.x + this.startX + parentX + this.defaultLineLength;
+        const posY = this.y + this.startY + parentY;
         if (dragMode === Entry.DRAG_MODE_DRAG) {
             pos = {
-                x: this.x + this.startX + parentX,
-                y: this.y + this.startY + parentX,
-                scaleX: (this.x + this.startX + parentX) / scale,
-                scaleY: (this.y + this.startY + parentY) / scale,
+                x: posX,
+                y: posY,
+                scaleX: posX / scale,
+                scaleY: posY / scale,
             };
         } else {
             pos = this.block.getThread().view.requestAbsoluteCoordinate(this);
-            pos.x += this.x + this.startX + parentX;
-            pos.y += this.y + this.startY + parentX;
-            pos.scaleX = (pos.x + this.startX + parentX) / scale;
-            pos.scaleY = (pos.y + this.startY + parentX) / scale;
+            pos.x += posX;
+            pos.y += posY;
+            pos.scaleX = pos.x / scale;
+            pos.scaleY = pos.y / scale;
         }
         return pos;
     }
@@ -283,4 +287,5 @@ Entry.Comment.prototype.schema = {
     movable: true,
     commentWidth: 160,
     commentTitleHeight: 22,
+    defaultLineLength: 120,
 };

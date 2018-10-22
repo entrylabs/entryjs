@@ -206,15 +206,20 @@ class GlobalSvg {
             return;
         }
         const pos = view.getAbsoluteCoordinate();
-        this.left = pos.scaleX; // + (offset.left / this.scale - this._offsetX);
-        this.top = pos.scaleY; // + (offset.top / this.scale - this._offsetY);
+        this.left = pos.scaleX;
+        this.top = pos.scaleY;
+        const { commentWidth, commentTitleHeight } = this._view;
         const [comment] = this.svgGroup.getElementsByTagName('rect');
         const [line] = this.svgGroup.getElementsByTagName('line');
+        const commentPoint = {
+            x: commentWidth / 2,
+            y: commentTitleHeight / 2,
+        };
         comment.setAttribute('x', this.left);
-        comment.setAttribute('y', this.top);
+        comment.setAttribute('y', this.top - commentPoint.y);
         line.setAttribute('x1', startX);
         line.setAttribute('y1', startY);
-        line.setAttribute('x2', this.left + 80);
+        line.setAttribute('x2', this.left + commentPoint.x);
         line.setAttribute('y2', this.top);
     }
 
@@ -265,11 +270,11 @@ class GlobalSvg {
         const that = this;
         e.stopPropagation();
         e.preventDefault();
-        const doc = $(document);
-        doc.bind('mousemove.block', onMouseMove);
-        doc.bind('mouseup.block', onMouseUp);
-        doc.bind('touchmove.block', onMouseMove);
-        doc.bind('touchend.block', onMouseUp);
+        const $doc = $(document);
+        $doc.bind('mousemove.block', onMouseMove);
+        $doc.bind('mouseup.block', onMouseUp);
+        $doc.bind('touchmove.block', onMouseMove);
+        $doc.bind('touchend.block', onMouseUp);
         this._startX = e.pageX;
         this._startY = e.pageY;
 
