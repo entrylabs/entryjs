@@ -48,6 +48,10 @@ export class AtlasCanvasViewer {
         cc.addClass("atlas-canvas");
     }
 
+    removeCanvas(c:HTMLCanvasElement) {
+        $(c).remove();
+    }
+
     empty() {
         this.$container.empty();
     }

@@ -115,6 +115,7 @@ class _PIXIAtlasManager {
         var allPathSet:PrimitiveSet = new PrimitiveSet();
         var scenePathMap:{[sceneID:string]:PrimitiveSet} = {};
         _.each(arrObj, (obj:any, index:number)=>{
+            console.log(obj);
             var pics:IRawPicture[] = obj.pictures;
             if(!pics || !pics.length) return;
 
@@ -130,17 +131,23 @@ class _PIXIAtlasManager {
             });
         });
 
-        _.each(scenePathMap, (pathSet:PrimitiveSet, sceneID:string)=>{
-            var bin:SceneBins = this._getSceneBin(sceneID, false);
-            if(!bin) return;
-            bin.invalidate(pathSet);
+        _.each(this._sceneID_sceneBin_map,(bin:SceneBins, sceneID:string):void => {
+            bin.invalidate(scenePathMap[sceneID]);
         });
+
+        // _.each(scenePathMap, (pathSet:PrimitiveSet, sceneID:string)=>{
+        //     console.log("loop :: ", sceneID);
+        //     var bin:SceneBins = this._getSceneBin(sceneID, false);
+        //     if(!bin) return;
+        //     bin.invalidate(pathSet);
+        // });
 
         this.imageLoader.invalidate(allPathSet);
         this._invalidate = false;
     }
 
     requestInvalidate():void {
+        console.log("requestInvalidate");
         if(this._invalidate) return;
         this._invalidate = true;
         this._timer.timeout(500, ()=>{
