@@ -40,6 +40,7 @@ require('./block_mechatronics_4d');
 require('./block_modi');
 require('./block_neobot');
 require('./block_neobot_sensor_theme');
+require('./block_neobot_robot_theme');
 require('./block_roborobo');
 require('./block_robotis');
 require('./block_robotori');
@@ -78,6 +79,7 @@ Entry.HARDWARE_LIST = {
     '4.2': Entry.Arduino,
     '5.1': Entry.Neobot,
     '5.2': Entry.NeobotSensorTheme,
+    '5.3': Entry.NeobotRobotTheme,
     '6.1': Entry.mkboard,
     '6.2': Entry.memaker,
     '7.1': Entry.Robotis_carCont,
