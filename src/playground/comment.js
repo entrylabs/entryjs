@@ -148,6 +148,7 @@ Entry.Comment = class Comment {
         e.preventDefault();
         e.stopPropagation();
 
+        const { scale = 1 } = this.board || {};
         if (
             (e.button === 0 || (e.originalEvent && e.originalEvent.touches)) &&
             !this._board.readOnly
@@ -166,8 +167,8 @@ Entry.Comment = class Comment {
             document.onmouseup = this.mouseUp;
             document.ontouchend = this.mouseUp;
             this.dragInstance = new Entry.DragInstance({
-                startX: x + this.startX,
-                startY: y + this.startY,
+                startX: (x + this.startX) / scale,
+                startY: (y + this.startY) / scale,
                 offsetX: mouseEvent.pageX,
                 offsetY: mouseEvent.pageY,
                 mode: true,
@@ -189,15 +190,16 @@ Entry.Comment = class Comment {
             const workspaceMode = this.board.workspace.getMode();
 
             const dragInstance = this.dragInstance;
+            const { scale = 1 } = this.board || {};
             if (this.dragMode != Entry.DRAG_MODE_DRAG) {
                 this.dragMode = Entry.DRAG_MODE_DRAG;
                 Entry.GlobalSvg.setComment(this, workspaceMode);
                 const offset = this.board.offset();
-                Entry.GlobalSvg._applyDomPos(offset.left, offset.top);
+                Entry.GlobalSvg._applyDomPos(offset.left / scale, offset.top / scale);
             }
             this.moveBy(
-                mouseEvent.pageX - dragInstance.offsetX,
-                mouseEvent.pageY - dragInstance.offsetY,
+                (mouseEvent.pageX - dragInstance.offsetX) / scale,
+                (mouseEvent.pageY - dragInstance.offsetY) / scale,
                 false,
                 true
             );
