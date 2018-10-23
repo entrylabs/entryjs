@@ -98,7 +98,6 @@ export class AtlasImageLoadingInfo {
 
     destroy() {
         this.loadState = LoadingState.DESTROYED;
-        console.log("[AtlasInfo::destroy] " + this._rawPath);
         this.img.onload = this.img.onerror = null;
         this.img = null;
         this._rawPath = this._realPath = null;

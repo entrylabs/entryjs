@@ -4,7 +4,6 @@
 
 import { IRawPicture } from './model/IRawPicture';
 import PIXIHelper from '../helper/PIXIHelper';
-import { PIXIAtlasManager } from './PIXIAtlasManager';
 import { AtlasCanvasViewer } from './AtlasCanvasViewer';
 import { AtlasImageLoadingInfo } from './loader/AtlasImageLoadingInfo';
 import { PrimitiveSet } from './structure/PrimitiveSet';
@@ -14,10 +13,11 @@ import { InputRect } from '../../maxrect-packer/geom/InputRect';
 import { AtlasTexture } from './texture/AtlasTexture';
 import { AtlasBaseTexture } from './texture/AtlasBaseTexture';
 import { PrimitiveMap } from './structure/PrimitiveMap';
+import { AtlasImageLoader } from './loader/AtlasImageLoader';
 
-export type TextureMap = {[key:string]:AtlasTexture};
 
 declare let _:any;
+declare let Entry:any;
 
 let c = ():number => {
     return Math.floor(Math.random()*255);
@@ -35,7 +35,7 @@ function getRawPath(rawData:IRawPicture):string {
 }
 
 /** base texture max pixel size */
-const MAX_SIZE = 2048;
+const MAX_SIZE = 4096;
 function newPacker():MaxRectsPacker{
     //https://www.npmjs.com/package/maxrects-packer
     const PADDING = 2;
@@ -68,7 +68,7 @@ export class SceneBins {
     private _activated:boolean;
 
 
-    constructor(public sceneID:string, private _viewer:AtlasCanvasViewer) {
+    constructor(public sceneID:string, private _loader:AtlasImageLoader, private _viewer:AtlasCanvasViewer) {
 
     }
 
@@ -82,7 +82,6 @@ export class SceneBins {
     addPicInfo(pic:IRawPicture):void {
 
         var path = getRawPath(pic);
-        console.log("add PicInfo", pic);
         if(this._path_tex_map.hasValue(path)) return;
 
         var w = pic.dimension.width,
@@ -102,7 +101,6 @@ export class SceneBins {
     }
 
     private _pack() {
-        console.log("pack", this._notPackedRects.length);
         this._packer.addArray(this._notPackedRects);
 
         var willUpdateBaseTextures:AtlasBaseTexture[] = [];
@@ -110,7 +108,7 @@ export class SceneBins {
         this._notPackedRects.forEach((r:InputRect)=>{
             var base:AtlasBaseTexture = this._getBaseTexture(r.binIndex);
             r.data.tex.updateBaseAndUVs(base);
-            this.putImage(PIXIAtlasManager.imageLoader.getImageInfo(r.data.path), false);
+            this.putImage(this._loader.getImageInfo(r.data.path), false);
             if(willUpdateBaseTextures.indexOf(base) == -1) {
                 willUpdateBaseTextures.push(base);
             }
@@ -135,12 +133,12 @@ export class SceneBins {
 
         _.each(this._packer.bins, (bin:MaxRectsBin, index:number)=>{
             var base:AtlasBaseTexture = this._arrBaseTexture[index];
-            this._activateBaseTexture(base);
+            base.activate(MAX_SIZE);
             base.update();
         });
 
         _.each(this._path_tex_map, (t:AtlasTexture, path:string)=>{
-            var info = PIXIAtlasManager.imageLoader.getImageInfo(path);
+            var info = this._loader.getImageInfo(path);
             if(!info || !info.isReady ) {
                 return;
             }
@@ -148,15 +146,6 @@ export class SceneBins {
         });
     }
 
-    private _activateBaseTexture(base:AtlasBaseTexture) {
-        base.activate(MAX_SIZE);
-        //----------- debug code ---------------
-        // var ctx:CanvasRenderingContext2D = canvas.getContext("2d");
-        // ctx.fillStyle = `rgba(${c()},${c()},${c()}, 0.3)`;
-        // ctx.fillRect(0,0, MAX_SIZE, MAX_SIZE);
-        this._viewer.add(base.getCanvas());
-        //----------- debug code ---------------
-    }
 
     private _getBaseTexture(index:number):AtlasBaseTexture {
         var base:AtlasBaseTexture = this._arrBaseTexture[index];
@@ -189,24 +178,22 @@ export class SceneBins {
      * @param forceUpdateBaseTexture
      */
     putImage(info:AtlasImageLoadingInfo, forceUpdateBaseTexture:boolean = true) {
-        console.log("put image");
         if(!info) return;
         var t:AtlasTexture = this.getTexture(info.path);
 
-        //TODO 다른 프레임에 있ㄴ느 텍스쳐도 미리 만들어 놓으면 참 좋은데 설명할 방법이 없네.
-        if(!t) return;//이 Scene에서 사용안하거나, .. 다른프레임에 있는 이미지
+        if(!t) return;//이 Scene에서 사용안함
 
         if(!t.baseTexture.hasLoaded) {
-            this._activateBaseTexture(t.getBaseTexture());
+            t.getBaseTexture().activate(MAX_SIZE);
         }
         t.drawImageAtBaseTexture(info.img);
         if(forceUpdateBaseTexture) {
             t.baseTexture.update();
         }
+        Entry.requestUpdate = true;
     }
 
     invalidate(usedPathSet:PrimitiveSet|null):void {
-        console.log("invalidate");
         if(!this._activated) return;
 
         this._notPackedRects.length = 0;
@@ -225,7 +212,6 @@ export class SceneBins {
 
         //사용안하는 texture를 제거
         unusedPath.forEach((path:string)=>{
-            console.log("remove", path );
             this._path_tex_map.remove(path).destroy(false);
         });
 

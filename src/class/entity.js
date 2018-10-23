@@ -1654,7 +1654,8 @@ Entry.EntityObject.prototype.destroy = function(isClone) {
 
     var container = Entry.container;
     if (container) {
-        container.unCachePictures(this, this.parent.pictures, isClone);
+        PIXIAtlasManager.requestInvalidate("EntityObjec::destoy");
+        // container.unCachePictures(this, this.parent.pictures, isClone);
     }
 };
 

@@ -71,17 +71,15 @@ Entry.EntryObject = function(model) {
 
         Entry.stage.loadObject(this);
 
-        var entityId = this.entity.id;
-        var cachePicture = Entry.container.cachePicture.bind(Entry.container);
+        // var entityId = this.entity.id;
+        // var cachePicture = Entry.container.cachePicture.bind(Entry.container);
         var pictures = this.pictures;
 
-
         for (var i in pictures) {
-            ((picture) => {
-                picture.objectId = this.id;
-                if (!picture.id) picture.id = Entry.generateHash();
-                PIXIAtlasManager.imageLoader.load(picture);
-            })(pictures[i]);
+            var picture = pictures[i];
+            picture.objectId = this.id;
+            if (!picture.id) picture.id = Entry.generateHash();
+            PIXIAtlasManager.getTextureWithModel(this.scene.id, picture);
         }
 
         /*
@@ -121,11 +119,12 @@ Entry.EntryObject = function(model) {
             })(this.pictures[i]);
         }
         */
+
         Entry.requestUpdate = true;
     }
 
     this._isContextMenuEnabled = true;
-
+    /*
     function getImageSrc(picture) {
         if (picture.fileurl) return picture.fileurl;
 
@@ -141,6 +140,7 @@ Entry.EntryObject = function(model) {
             '.png'
         );
     }
+    */
 };
 
 (function(p) {
@@ -385,7 +385,8 @@ Entry.EntryObject = function(model) {
         if (picture === this.selectedPicture)
             playground.selectPicture(pictures[0]);
 
-        Entry.container.unCachePictures(this.entity, picture);
+        PIXIAtlasManager.requestInvalidate("EntityObject::removePicture");
+        //Entry.container.unCachePictures(this.entity, picture);
 
         playground.injectPicture(this);
         playground.reloadPlayground();

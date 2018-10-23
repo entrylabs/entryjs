@@ -1,4 +1,3 @@
-import { IRawObject } from './model/IRawObject';
 import { SceneBins } from './SceneBins';
 import { AtlasCanvasViewer } from './AtlasCanvasViewer';
 import { AtlasImageLoader } from './loader/AtlasImageLoader';
@@ -21,8 +20,7 @@ class _PIXIAtlasManager {
     private _sceneID_sceneBin_map:SceneBinsMap = {};
     private _activatedScene:SceneBins;
 
-    /** @readonly */
-    public imageLoader:AtlasImageLoader;
+    private _imageLoader:AtlasImageLoader;
 
     private _viewer:AtlasCanvasViewer;
     private _invalidate:boolean;
@@ -33,35 +31,19 @@ class _PIXIAtlasManager {
      * @constructor
      */
     public INIT() {
-        if(this.imageLoader) {
+        if(this._imageLoader) {
             throw new Error("do not call twice");
         }
         this._timer = new TimeoutTimer();
         this._viewer = new AtlasCanvasViewer();
-        this.imageLoader = new AtlasImageLoader(this._onImageLoaded.bind(this));
+        this._imageLoader = new AtlasImageLoader(this._onImageLoaded.bind(this));
     }
 
     private _onImageLoaded(info:AtlasImageLoadingInfo) {
         this._activatedScene && this._activatedScene.putImage(info);
     }
 
-    loadProject(objects:IRawObject[]) {
-        // console.log("PIXIAtlasManager - loadProject");
-        // if(1)return;
-        // var sceneBins:SceneBins;
-        // var obj:IRawObject;
-        // var sceneID;
-        // var LEN = objects.length;
-        // for (var i = 0 ; i < LEN ; i++) {
-        //     obj = objects[i];
-        //     sceneID = obj.scene;
-        //     sceneBins = this._getSceneBin(obj.scene);
-        //     sceneBins.addRawPicInfos(obj.sprite && obj.sprite.pictures);
-        // }
-    }
-
     activateScene(sceneID:string) {
-        console.log("PIXIAtlasManager - activateScene");
         if(this._activatedScene) {
             this._activatedScene.deactivate();
         }
@@ -70,7 +52,7 @@ class _PIXIAtlasManager {
     }
 
     getTextureWithModel(sceneID:string, pic:IRawPicture):Texture {
-        this.imageLoader.load(pic);
+        this._imageLoader.load(pic);
         var bin:SceneBins = this._getSceneBin(sceneID);
         bin.addPicInfo(pic);
         return bin.getTexture(pic.fileurl || pic.filename);
@@ -79,7 +61,7 @@ class _PIXIAtlasManager {
     private _getSceneBin(sceneID:string, createIfNotExist:boolean = true):SceneBins {
         var s:SceneBins = this._sceneID_sceneBin_map[sceneID];
         if(!s && createIfNotExist) {
-            s = this._sceneID_sceneBin_map[sceneID] = new SceneBins(sceneID, this._viewer);
+            s = this._sceneID_sceneBin_map[sceneID] = new SceneBins(sceneID, this._imageLoader, this._viewer);
         }
         return s;
     }
@@ -111,7 +93,6 @@ class _PIXIAtlasManager {
 
         _.each(arrObj, (obj:any, index:number)=>{
             var pics:IRawPicture[] = obj.pictures;
-            console.log(pics);
             if(!pics || !pics.length) return;
 
             var sceneID:string = obj.scene.id;
@@ -119,17 +100,17 @@ class _PIXIAtlasManager {
             _.each(pics, (pic:IRawPicture)=>{
                 var path = pic.filename || pic.fileurl;
                 allPathSet.put(path);
-                console.log(sceneID, activatedSceneID);
                 if(sceneID == activatedSceneID) {
                     activatedScenePathSet.put(path);
                 }
             });
         });
-        this.imageLoader.invalidate(allPathSet);
+        this._imageLoader.invalidate(allPathSet);
         return activatedScenePathSet;
     }
 
-    requestInvalidate():void {
+    requestInvalidate(reason:string):void {
+        console.log("AtlasManager::requestInvalidate - "+reason);
         if(this._invalidate) return;
         this._invalidate = true;
         this._timer.timeout(500, ()=>{
@@ -138,7 +119,7 @@ class _PIXIAtlasManager {
     }
 
     clearProject():void {
-
+        this._timer.reset();
     }
 }
 
