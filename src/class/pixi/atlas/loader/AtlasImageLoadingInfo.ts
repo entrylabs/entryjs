@@ -33,7 +33,10 @@ export class AtlasImageLoadingInfo {
         var img:HTMLImageElement = new Image();
         this.img = img;
 
+        Entry.Loader.addQueue();
+
         img.onload = ()=>{
+            Entry.Loader.removeQueue();
             if( this.loadState == LoadingState.DESTROYED ) return;
             this.loadState = LoadingState.COMPLETE;
             this._onLoadCallback(this);

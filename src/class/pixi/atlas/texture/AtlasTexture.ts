@@ -1,24 +1,37 @@
 import BaseTexture = PIXI.BaseTexture;
 import Rectangle = PIXI.Rectangle;
 import { AtlasBaseTexture } from './AtlasBaseTexture';
+import { InputRect } from '../../../maxrect-packer/geom/InputRect';
 
 export class AtlasTexture extends PIXI.Texture {
 
-    baseTexture: AtlasBaseTexture;
+    public inputRect:InputRect;
 
-    constructor(baseTexture: BaseTexture, frame?: Rectangle, orig?: Rectangle, trim?: Rectangle, rotate?: number) {
-        super(baseTexture, frame, orig, trim, rotate);
-
+    constructor(baseTexture: BaseTexture, inputRect:InputRect) {
+        var frame = new Rectangle(0, 0, inputRect.width, inputRect.height);
+        super(baseTexture, frame);
+        this.inputRect = inputRect;
     }
 
-    drawImageAtBaseTexture(img:HTMLImageElement) {
+    getBaseTexture():AtlasBaseTexture {
+        return this.baseTexture as AtlasBaseTexture;
+    }
+
+    drawImageAtBaseTexture(img:HTMLImageElement):void {
         var texture:AtlasTexture = this;
-        var canvas:HTMLCanvasElement = texture.baseTexture.source as HTMLCanvasElement;
-        var ctx:CanvasRenderingContext2D = canvas.getContext("2d");
+        var ctx:CanvasRenderingContext2D = this.getBaseTexture().getCtx();
         var r = texture.orig;
         var w = img.naturalWidth || img.width;
         var h = img.naturalHeight || img.height;
         ctx.drawImage(img, 0, 0, w, h, r.x, r.y, r.width, r.height);
-        this._updateUvs();
+    }
+
+    updateBaseAndUVs(base:AtlasBaseTexture):void {
+        this.baseTexture = base;
+        if(this.frame.x == this.inputRect.x || this.frame.y == this.inputRect.y) {
+            this.frame.x = this.inputRect.x;
+            this.frame.y = this.inputRect.y;
+            this._updateUvs();
+        }
     }
 }

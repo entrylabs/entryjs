@@ -1,4 +1,5 @@
 import { Rectangle } from './Rectangle';
+import { AtlasTexture } from '../../pixi/atlas/texture/AtlasTexture';
 
 export class InputRect extends Rectangle {
     constructor(public x: number = 0, public y: number = 0, public width: number = 0, public height: number = 0) {
@@ -7,5 +8,5 @@ export class InputRect extends Rectangle {
 
     binIndex:number = -1;
     oversized:boolean;
-    data:{path:string};
+    data:{path:string, tex:AtlasTexture};
 }

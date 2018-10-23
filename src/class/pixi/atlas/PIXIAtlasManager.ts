@@ -46,48 +46,34 @@ class _PIXIAtlasManager {
     }
 
     loadProject(objects:IRawObject[]) {
-        var sceneBins:SceneBins;
-        var obj:IRawObject;
-        var sceneID;
-        var LEN = objects.length;
-        for (var i = 0 ; i < LEN ; i++) {
-            obj = objects[i];
-            sceneID = obj.scene;
-            sceneBins = this._getSceneBin(obj.scene);
-            sceneBins.addRawPicInfos(obj.sprite && obj.sprite.pictures);
-        }
-        this.pack();
-    }
-
-    pack() {
-        _.each(this._sceneID_sceneBin_map, (sceneBins:SceneBins, sceneID:string)=>{
-            sceneBins.pack();
-        });
+        // console.log("PIXIAtlasManager - loadProject");
+        // if(1)return;
+        // var sceneBins:SceneBins;
+        // var obj:IRawObject;
+        // var sceneID;
+        // var LEN = objects.length;
+        // for (var i = 0 ; i < LEN ; i++) {
+        //     obj = objects[i];
+        //     sceneID = obj.scene;
+        //     sceneBins = this._getSceneBin(obj.scene);
+        //     sceneBins.addRawPicInfos(obj.sprite && obj.sprite.pictures);
+        // }
     }
 
     activateScene(sceneID:string) {
+        console.log("PIXIAtlasManager - activateScene");
         if(this._activatedScene) {
             this._activatedScene.deactivate();
         }
         this._activatedScene = this._getSceneBin(sceneID);
-        this._activatedScene.activate();
-    }
-
-
-    getTexture(sceneID:string, path:string):Texture {
-        return this._sceneID_sceneBin_map[sceneID].getTexture(path);
+        this._activatedScene.activate(this._getActivatedScenePathSet());
     }
 
     getTextureWithModel(sceneID:string, pic:IRawPicture):Texture {
         this.imageLoader.load(pic);
-        this._addPicAtScene(sceneID, pic);
-        return this.getTexture(sceneID, pic.fileurl || pic.filename);
-    }
-
-    _addPicAtScene(sceneID:string, pic:IRawPicture):void {
-        this._getSceneBin(sceneID)
-            .addPicInfo(pic)
-            .pack();
+        var bin:SceneBins = this._getSceneBin(sceneID);
+        bin.addPicInfo(pic);
+        return bin.getTexture(pic.fileurl || pic.filename);
     }
 
     private _getSceneBin(sceneID:string, createIfNotExist:boolean = true):SceneBins {
@@ -108,50 +94,46 @@ class _PIXIAtlasManager {
         delete this._sceneID_sceneBin_map[sceneID];
     }
 
-    private gcTexture():void {
+    private _gcTexture():void {
         if(!this._invalidate) return;
+        if(!this._activatedScene) return;
 
-        var arrObj:any[] = Entry.container.getAllObjects();
-        var allPathSet:PrimitiveSet = new PrimitiveSet();
-        var scenePathMap:{[sceneID:string]:PrimitiveSet} = {};
-        _.each(arrObj, (obj:any, index:number)=>{
-            console.log(obj);
-            var pics:IRawPicture[] = obj.pictures;
-            if(!pics || !pics.length) return;
-
-            var sceneID:string = obj.scene.id;
-            var scenePathSet:PrimitiveSet = scenePathMap[sceneID];
-            if(!scenePathSet) {
-                scenePathMap[sceneID] = scenePathSet = new PrimitiveSet();
-            }
-            _.each(pics, (pic:IRawPicture)=>{
-                var path = pic.filename || pic.fileurl;
-                allPathSet.put(path);
-                scenePathSet.put(path);
-            });
-        });
-
-        _.each(this._sceneID_sceneBin_map,(bin:SceneBins, sceneID:string):void => {
-            bin.invalidate(scenePathMap[sceneID]);
-        });
-
-        // _.each(scenePathMap, (pathSet:PrimitiveSet, sceneID:string)=>{
-        //     console.log("loop :: ", sceneID);
-        //     var bin:SceneBins = this._getSceneBin(sceneID, false);
-        //     if(!bin) return;
-        //     bin.invalidate(pathSet);
-        // });
-
-        this.imageLoader.invalidate(allPathSet);
+        this._activatedScene.invalidate(this._getActivatedScenePathSet());
         this._invalidate = false;
     }
 
+    private _getActivatedScenePathSet():PrimitiveSet {
+        var activatedSceneID:string = this._activatedScene.sceneID;
+
+        var arrObj:any[] = Entry.container.getAllObjects();
+        var allPathSet:PrimitiveSet = new PrimitiveSet();
+        var activatedScenePathSet = new PrimitiveSet();
+
+        _.each(arrObj, (obj:any, index:number)=>{
+            var pics:IRawPicture[] = obj.pictures;
+            console.log(pics);
+            if(!pics || !pics.length) return;
+
+            var sceneID:string = obj.scene.id;
+
+            _.each(pics, (pic:IRawPicture)=>{
+                var path = pic.filename || pic.fileurl;
+                allPathSet.put(path);
+                console.log(sceneID, activatedSceneID);
+                if(sceneID == activatedSceneID) {
+                    activatedScenePathSet.put(path);
+                }
+            });
+        });
+        this.imageLoader.invalidate(allPathSet);
+        return activatedScenePathSet;
+    }
+
     requestInvalidate():void {
-        console.log("requestInvalidate");
         if(this._invalidate) return;
         this._invalidate = true;
         this._timer.timeout(500, ()=>{
-            this.gcTexture();
+            this._gcTexture();
         });
     }
 

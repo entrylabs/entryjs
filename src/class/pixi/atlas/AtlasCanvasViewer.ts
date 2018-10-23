@@ -49,6 +49,7 @@ export class AtlasCanvasViewer {
     }
 
     removeCanvas(c:HTMLCanvasElement) {
+        if(!c) return;
         $(c).remove();
     }
 
