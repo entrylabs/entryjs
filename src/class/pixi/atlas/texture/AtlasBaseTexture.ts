@@ -30,6 +30,7 @@ export class AtlasBaseTexture extends BaseTexture {
         this._canvas.width = MAX_SIZE;
         this._canvas.height = MAX_SIZE;
         this.hasLoaded = true;
+        this._viewer.add(this._canvas);
     }
 
     deactivate() {

@@ -46,8 +46,8 @@ Entry.Stage.prototype.initStage = function(canvas) {
         view: canvas,
         width: canvas.width,
         height: canvas.height,
-        // autoStart: false,
-        autoStart: true,
+        autoStart: false,
+        // autoStart: true,
         antialias:true,
         transparent: true
 
