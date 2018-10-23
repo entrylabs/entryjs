@@ -193,10 +193,9 @@ export class SceneBins {
         if(!info) return;
         var t:AtlasTexture = this.getTexture(info.path);
 
-        if(!t) return;//이 Scene에서 사용안하는 이미지가 로드 된것임.
-        if( t.getBaseTexture() === EMPTY_BASE_TEX ) {
-            console.log("zzzzzz");
-        }
+        //TODO 다른 프레임에 있ㄴ느 텍스쳐도 미리 만들어 놓으면 참 좋은데 설명할 방법이 없네.
+        if(!t) return;//이 Scene에서 사용안하거나, .. 다른프레임에 있는 이미지
+
         if(!t.baseTexture.hasLoaded) {
             this._activateBaseTexture(t.getBaseTexture());
         }
@@ -207,7 +206,7 @@ export class SceneBins {
     }
 
     invalidate(usedPathSet:PrimitiveSet|null):void {
-
+        console.log("invalidate");
         if(!this._activated) return;
 
         this._notPackedRects.length = 0;

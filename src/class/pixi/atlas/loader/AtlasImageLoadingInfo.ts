@@ -22,9 +22,13 @@ export class AtlasImageLoadingInfo {
     /**  picture json 에 정의된 경로. fileurl or filename */
     private _rawPath:string;
 
+    private _triedCnt:number = 0;
+    private _picName:string;
+
     constructor(model:IRawPicture, private _onLoadCallback:(info:AtlasImageLoadingInfo) => void) {
         this._realPath = this._getImageSrc(model);
         this._rawPath = model.fileurl || model.filename;
+        this._picName = model.name;
     }
 
     load() {
@@ -32,8 +36,6 @@ export class AtlasImageLoadingInfo {
         this.loadState = LoadingState.LOADING;
         var img:HTMLImageElement = new Image();
         this.img = img;
-
-        Entry.Loader.addQueue();
 
         img.onload = ()=>{
             Entry.Loader.removeQueue();
@@ -44,7 +46,31 @@ export class AtlasImageLoadingInfo {
             this._realPath = null;
             img.onload = null;
         };
-        img.src = this._realPath;
+
+        img.onerror = (err) => {
+            Entry.Loader.removeQueue();
+            if( this.loadState == LoadingState.DESTROYED ) return;
+            if (!this._triedCnt) {
+                if (Entry.type !== 'invisible') {
+                    console.log('err=', this._picName, 'load failed');
+                }
+                this._triedCnt = 1;
+                this._loadPath(this._realPath);
+            } else if (this._triedCnt < 3) {
+                this._triedCnt++;
+                this._loadPath(Entry.mediaFilePath + '_1x1.png');
+            } else {
+                //prevent infinite call
+                img.onerror = null;
+            }
+        };
+        this._loadPath(this._realPath);
+    }
+
+    private _loadPath(path:string) {
+        if(this.loadState == LoadingState.DESTROYED) return;
+        Entry.Loader.addQueue();
+        this.img.src = path;
     }
 
     get isReady() {
