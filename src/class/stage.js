@@ -22,7 +22,8 @@ import { PIXICustomPluginStarter } from './pixi/plugins/PIXICustomPluginStarter'
 Entry.Stage = function() {
     ndgmr.initTempObject();
     PIXITempStore.init();
-    new PIXICustomPluginStarter();
+    console.log("new Stage");
+    PIXICustomPluginStarter.INIT();
 
     /** @type {Dictionary} */
     this.variables = {};

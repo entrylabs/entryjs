@@ -3,8 +3,16 @@ import { PIXIPixelPerfectInteractionPlugIn } from './PIXIPixelPerfectInteraction
 import { PIXIZeroAlphaNoneInteractionPlugins } from './PIXIZeroAlphaNoneInteractionPlugins';
 
 export class PIXICustomPluginStarter {
-    constructor() {
+
+    private static _initialized:boolean;
+
+
+    static INIT() {
+        if(this._initialized) return;
+        this._initialized = true;
         new PIXIZeroAlphaNoneInteractionPlugins();
         new PIXIPixelPerfectInteractionPlugIn();
     }
+
+
 }
