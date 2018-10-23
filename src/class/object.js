@@ -75,6 +75,16 @@ Entry.EntryObject = function(model) {
         var cachePicture = Entry.container.cachePicture.bind(Entry.container);
         var pictures = this.pictures;
 
+
+        for (var i in pictures) {
+            ((picture) => {
+                picture.objectId = this.id;
+                if (!picture.id) picture.id = Entry.generateHash();
+                PIXIAtlasManager.imageLoader.load(picture);
+            })(pictures[i]);
+        }
+
+        /*
         for (var i in pictures) {
             ((picture) => {
                 picture.objectId = this.id;
@@ -110,6 +120,7 @@ Entry.EntryObject = function(model) {
                 image.src = getImageSrc(picture);
             })(this.pictures[i]);
         }
+        */
         Entry.requestUpdate = true;
     }
 

@@ -39,7 +39,7 @@ export class BinTest {
         w = w || c(2000) + 1;
         h = h || c(2000) + 1;
         var r = new InputRect(0,0, w, h);
-        r.data = { path : `rgb(${c()},${c()},${c()})` };
+        r.data = { path : `rgb(${c()},${c()},${c()})`, tex: null };
         this.packer.add(r);
 
         _.each(this.packer.bins,(bin:Bin, index:number)=>{

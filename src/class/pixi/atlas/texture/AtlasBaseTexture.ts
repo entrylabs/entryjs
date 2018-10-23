@@ -1,12 +1,14 @@
 import BaseTexture = PIXI.BaseTexture;
+import { AtlasCanvasViewer } from '../AtlasCanvasViewer';
 
 export class AtlasBaseTexture extends BaseTexture {
 
     private _canvas:HTMLCanvasElement;
     private _ctx:CanvasRenderingContext2D;
+    public IS_EMPTY:boolean = false;
 
-    constructor(source?: HTMLImageElement | HTMLCanvasElement | HTMLVideoElement, scaleMode?: number,resolution?: number ) {
-        super(source, scaleMode, resolution);
+    constructor(private _viewer?:AtlasCanvasViewer, scaleMode?: number) {
+        super(null, scaleMode);
     }
 
     setCanvas(canvas:HTMLCanvasElement) {
@@ -17,10 +19,6 @@ export class AtlasBaseTexture extends BaseTexture {
 
     getCanvas():HTMLCanvasElement {
         return this._canvas;
-    }
-
-    getCtx():CanvasRenderingContext2D {
-        return this._ctx;
     }
 
     cleanCanvas():void {
@@ -44,5 +42,16 @@ export class AtlasBaseTexture extends BaseTexture {
         super.destroy();
         this._canvas = null;
         this._ctx = null;
+    }
+
+    dispose() {
+        super.dispose();
+        if(this._viewer) {
+            this._viewer.removeCanvas(this._canvas);
+        }
+    }
+
+    getCtx() {
+        return this._ctx;
     }
 }
