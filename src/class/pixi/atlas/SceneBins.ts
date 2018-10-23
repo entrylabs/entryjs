@@ -90,8 +90,9 @@ export class SceneBins {
         var tex:AtlasTexture = this._newTexture(path, rect);
         rect.data = { path: path, tex:tex };
         this._notPackedRects.push(rect);
-
-        this._pack();
+        if(this._activated) {
+            this._pack();
+        }
     }
 
     private _newTexture(path:string, rect:InputRect):AtlasTexture {
@@ -101,6 +102,7 @@ export class SceneBins {
     }
 
     private _pack() {
+        console.log("pack - " + this._notPackedRects.length );
         this._packer.addArray(this._notPackedRects);
 
         var willUpdateBaseTextures:AtlasBaseTexture[] = [];
@@ -137,7 +139,7 @@ export class SceneBins {
             base.update();
         });
 
-        _.each(this._path_tex_map, (t:AtlasTexture, path:string)=>{
+        this._path_tex_map.each((t:AtlasTexture, path:string)=>{
             var info = this._loader.getImageInfo(path);
             if(!info || !info.isReady ) {
                 return;
