@@ -166,12 +166,12 @@ function getBlockObject(items) {
  * @return {void}
  */
 function registerHardwareBlockToStatic(blockList) {
-    Object.keys(blockList).forEach((block) => {
-        if (block.ignore !== true &&
-            EntryStatic.DynamicHardwareBlocks.indexOf(block) === -1) {
-            EntryStatic.DynamicHardwareBlocks.push(block);
+    for (let blockName in blockList) {
+        if(blockList[blockName].ignore !== true &&
+            EntryStatic.DynamicHardwareBlocks.indexOf(blockName) === -1) {
+            EntryStatic.DynamicHardwareBlocks.push(blockName);
         }
-    });
+    }
 }
 
 module.exports = {
