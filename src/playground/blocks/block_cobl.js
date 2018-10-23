@@ -118,6 +118,7 @@ Entry.Cobl.getBlocks = function() {
             },
         },
         cobl_read_color: {
+            ignore: true,
             color: '#00979D',
             fontColor: '#fff',
             skeleton: 'basic_string_field',
@@ -137,6 +138,7 @@ Entry.Cobl.getBlocks = function() {
             },
         },
         cobl_read_humid: {
+            ignore: true,
             color: '#00979D',
             fontColor: '#fff',
             skeleton: 'basic_string_field',

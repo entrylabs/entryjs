@@ -120,6 +120,7 @@ Entry.Arduino.getBlocks = function() {
     return {
         //region arduino 아두이노
         arduino_text: {
+            ignore: true,
             color: '#FFD974',
             skeleton: 'basic_string_field',
             statements: [],
@@ -159,6 +160,7 @@ Entry.Arduino.getBlocks = function() {
             },
         },
         arduino_send: {
+            ignore: true,
             color: '#00979D',
             skeleton: 'basic',
             statements: [],
@@ -185,6 +187,7 @@ Entry.Arduino.getBlocks = function() {
             },
         },
         arduino_get_number: {
+            ignore: true,
             color: '#00979D',
             skeleton: 'basic_string_field',
             statements: [],
@@ -212,6 +215,7 @@ Entry.Arduino.getBlocks = function() {
             },
         },
         arduino_get_string: {
+            ignore: true,
             color: '#00979D',
             skeleton: 'basic_string_field',
             statements: [],
@@ -239,6 +243,7 @@ Entry.Arduino.getBlocks = function() {
             },
         },
         arduino_get_sensor_number: {
+            ignore: true,
             color: '#00979D',
             skeleton: 'basic_string_field',
             statements: [],
@@ -298,6 +303,7 @@ Entry.Arduino.getBlocks = function() {
             },
         },
         arduino_get_port_number: {
+            ignore: true,
             color: '#00979D',
             skeleton: 'basic_string_field',
             statements: [],
@@ -370,6 +376,7 @@ Entry.Arduino.getBlocks = function() {
             },
         },
         arduino_get_pwm_port_number: {
+            ignore: true,
             color: '#00979D',
             skeleton: 'basic_string_field',
             statements: [],

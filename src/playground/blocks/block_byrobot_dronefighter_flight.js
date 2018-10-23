@@ -2573,6 +2573,7 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
             },
         },
         byrobot_dronefighter_flight_drone_command_mode_vehicle_drone: {
+            ignore: true,
             color: '#00979D',
             skeleton: 'basic',
             statements: [],
@@ -2600,6 +2601,7 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
             },
         },
         byrobot_dronefighter_flight_drone_control_drone_takeoff: {
+            ignore: true,
             color: '#00979D',
             skeleton: 'basic',
             statements: [],
@@ -2627,6 +2629,7 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
             },
         },
         byrobot_dronefighter_flight_drone_control_drone_landing: {
+            ignore: true,
             color: '#00979D',
             skeleton: 'basic',
             statements: [],

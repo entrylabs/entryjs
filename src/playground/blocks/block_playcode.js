@@ -369,6 +369,7 @@ Entry.playcode.getBlocks = function() {
     return {
         //region playcode
         playcode_port_list: {
+            ignore: true,
             color: '#00979D',
             skeleton: 'basic_string_field',
             statements: [],
@@ -402,6 +403,7 @@ Entry.playcode.getBlocks = function() {
             },
         },
         playcode_first_port_list: {
+            ignore: true,
             color: '#00979D',
             skeleton: 'basic_string_field',
             statements: [],

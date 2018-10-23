@@ -369,6 +369,7 @@ Entry.mkboard.getBlocks = function() {
     return {
         //region mkboard 몽키보드
         mkboard_analog_list: {
+            ignore: true,
             color: '#00979D',
             skeleton: 'basic_string_field',
             statements: [],
@@ -748,6 +749,7 @@ Entry.mkboard.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         mkboard_tone_list: {
+            ignore: true,
             color: '#00979D',
             skeleton: 'basic_string_field',
             statements: [],
@@ -787,6 +789,7 @@ Entry.mkboard.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         mkboard_tone_value: {
+            ignore: true,
             color: '#00979D',
             skeleton: 'basic_string_field',
             statements: [],
@@ -815,6 +818,7 @@ Entry.mkboard.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         mkboard_octave_list: {
+            ignore: true,
             color: '#00979D',
             skeleton: 'basic_string_field',
             statements: [],
@@ -1040,6 +1044,7 @@ Entry.mkboard.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         mkboard_list_digital_lcd_line: {
+            ignore: true,
             color: '#00979D',
             skeleton: 'basic_string_field',
             statements: [],
@@ -1064,6 +1069,7 @@ Entry.mkboard.getBlocks = function() {
             },
         },
         mkboard_list_digital_lcd_column: {
+            ignore: true,
             color: '#00979D',
             skeleton: 'basic_string_field',
             statements: [],
@@ -1231,6 +1237,7 @@ Entry.mkboard.getBlocks = function() {
             syntax: { js: [], py: ['mkboard.mkboard_set_lcd(%1, %2, %3)'] },
         },
         mkboard_list_lcd_command: {
+            ignore: true,
             color: '#00979D',
             skeleton: 'basic_string_field',
             statements: [],

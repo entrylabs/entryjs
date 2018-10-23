@@ -355,6 +355,7 @@ Entry.Roborobo_Roduino.getBlocks = function() {
             },
         },
         roduino_get_analog_number: {
+            ignore: true,
             color: '#00979D',
             skeleton: 'basic_string_field',
             statements: [],
@@ -405,6 +406,7 @@ Entry.Roborobo_Roduino.getBlocks = function() {
             },
         },
         roduino_get_port_number: {
+            ignore: true,
             color: '#00979D',
             skeleton: 'basic_string_field',
             statements: [],
@@ -893,6 +895,7 @@ Entry.Roborobo_Roduino.getBlocks = function() {
             },
         },
         roduino_get_pwm_port_number: {
+            ignore: true,
             color: '#00979D',
             skeleton: 'basic_string_field',
             statements: [],
@@ -938,6 +941,7 @@ Entry.Roborobo_Roduino.getBlocks = function() {
             },
         },
         roduino_get_pwm_output_value: {
+            ignore: true,
             color: '#00979D',
             skeleton: 'basic_string_field',
             statements: [],
@@ -1075,6 +1079,7 @@ Entry.Roborobo_Roduino.getBlocks = function() {
             },
         },
         roduino_get_servo_port_number: {
+            ignore: true,
             color: '#00979D',
             skeleton: 'basic_string_field',
             statements: [],
@@ -1434,6 +1439,7 @@ Entry.Roborobo_SchoolKit.getBlocks = function() {
             },
         },
         schoolkit_get_out_port_number: {
+            ignore: true,
             color: '#00979D',
             skeleton: 'basic_string_field',
             statements: [],
@@ -1483,6 +1489,7 @@ Entry.Roborobo_SchoolKit.getBlocks = function() {
             },
         },
         schoolkit_get_servo_port_number: {
+            ignore: true,
             color: '#00979D',
             skeleton: 'basic_string_field',
             statements: [],
@@ -1528,6 +1535,7 @@ Entry.Roborobo_SchoolKit.getBlocks = function() {
             },
         },
         schoolkit_get_in_port_number: {
+            ignore: true,
             color: '#00979D',
             skeleton: 'basic_string_field',
             statements: [],

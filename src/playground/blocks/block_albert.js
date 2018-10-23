@@ -1759,6 +1759,7 @@ Entry.Albert.getBlocks = function() {
             syntax: { js: [], py: ['Albert.set_tempo(%1)'] },
         },
         albert_move_forward: {
+            ignore: true,
             color: '#00979D',
             skeleton: 'basic',
             statements: [],
@@ -1799,6 +1800,7 @@ Entry.Albert.getBlocks = function() {
             syntax: { js: [], py: ['Albert.move_forward()'] },
         },
         albert_move_backward: {
+            ignore: true,
             color: '#00979D',
             skeleton: 'basic',
             statements: [],
@@ -1839,6 +1841,7 @@ Entry.Albert.getBlocks = function() {
             syntax: { js: [], py: ['Albert.move_backward()'] },
         },
         albert_turn_around: {
+            ignore: true,
             color: '#00979D',
             skeleton: 'basic',
             statements: [],
@@ -1897,6 +1900,7 @@ Entry.Albert.getBlocks = function() {
             syntax: { js: [], py: ['Albert.turn_around()'] },
         },
         albert_set_led_to: {
+            ignore: true,
             color: '#00979D',
             skeleton: 'basic',
             statements: [],
@@ -1954,6 +1958,7 @@ Entry.Albert.getBlocks = function() {
             syntax: { js: [], py: ['Albert.set_led(%1, %2)'] },
         },
         albert_clear_led: {
+            ignore: true,
             color: '#00979D',
             skeleton: 'basic',
             statements: [],
@@ -1995,6 +2000,7 @@ Entry.Albert.getBlocks = function() {
             syntax: { js: [], py: ['Albert.clear_led(%1)'] },
         },
         albert_change_wheels_by: {
+            ignore: true,
             color: '#00979D',
             skeleton: 'basic',
             statements: [],
@@ -2059,6 +2065,7 @@ Entry.Albert.getBlocks = function() {
             syntax: { js: [], py: ['Albert.change_wheels(%1, %2)'] },
         },
         albert_set_wheels_to: {
+            ignore: true,
             color: '#00979D',
             skeleton: 'basic',
             statements: [],

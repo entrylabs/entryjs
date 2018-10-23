@@ -427,6 +427,7 @@ Entry.FunBoard.getBlocks = function() {
             },
         },
         funboard_list_ledcolor_pwm_basic: {
+            ignore: true,
             color: '#00979D',
             skeleton: 'basic_string_field',
             statements: [],
@@ -481,6 +482,7 @@ Entry.FunBoard.getBlocks = function() {
             },
         },
         funboard_list_digital_octave: {
+            ignore: true,
             color: '#00979D',
             skeleton: 'basic_string_field',
             statements: [],
@@ -514,6 +516,7 @@ Entry.FunBoard.getBlocks = function() {
             },
         },
         funboard_list_digital_tone: {
+            ignore: true,
             color: '#00979D',
             skeleton: 'basic_string_field',
             statements: [],
@@ -552,6 +555,7 @@ Entry.FunBoard.getBlocks = function() {
             },
         },
         funboard_list_matrix_rows: {
+            ignore: true,
             color: '#00979D',
             skeleton: 'basic_string_field',
             statements: [],
@@ -585,6 +589,7 @@ Entry.FunBoard.getBlocks = function() {
             },
         },
         funboard_list_matrix_row_or_column: {
+            ignore: true,
             color: '#00979D',
             skeleton: 'basic_string_field',
             statements: [],
@@ -612,6 +617,7 @@ Entry.FunBoard.getBlocks = function() {
             },
         },
         funboard_list_matrix_scroll_option: {
+            ignore: true,
             color: '#00979D',
             skeleton: 'basic_string_field',
             statements: [],
@@ -642,6 +648,7 @@ Entry.FunBoard.getBlocks = function() {
             },
         },
         funboard_list_matrix_char: {
+            ignore: true,
             color: '#00979D',
             skeleton: 'basic_string_field',
             statements: [],
@@ -1369,6 +1376,7 @@ Entry.FunBoard.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         funboard_buzzer_second: {
+            ignore: true,
             color: '#00979D',
             skeleton: 'basic',
             statements: [],
@@ -1451,6 +1459,7 @@ Entry.FunBoard.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         funboard_buzzer_tone_simple: {
+            ignore: true,
             color: '#00979D',
             skeleton: 'basic',
             statements: [],
@@ -2007,6 +2016,7 @@ Entry.FunBoard.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         funboard_dotmatrix_scroll_option: {
+            ignore: true,
             color: '#00979D',
             skeleton: 'basic',
             statements: [],
@@ -2072,6 +2082,7 @@ Entry.FunBoard.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         funboard_dotmatrix_scroll_rapid: {
+            ignore: true,
             color: '#00979D',
             skeleton: 'basic',
             statements: [],
@@ -2322,6 +2333,7 @@ Entry.FunBoard.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         funboard_dotmatrix_string_display: {
+            ignore: true,
             color: '#00979D',
             skeleton: 'basic',
             statements: [],
@@ -2654,6 +2666,7 @@ Entry.FunBoard.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         funboard_dotmatrix_num: {
+            ignore: true,
             color: '#00979D',
             skeleton: 'basic',
             statements: [],
@@ -2764,6 +2777,7 @@ Entry.FunBoard.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         funboard_dotmatrix_big_eng: {
+            ignore: true,
             color: '#00979D',
             skeleton: 'basic',
             statements: [],
@@ -2889,6 +2903,7 @@ Entry.FunBoard.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         funboard_dotmatrix_small_eng: {
+            ignore: true,
             color: '#00979D',
             skeleton: 'basic',
             statements: [],
@@ -3014,6 +3029,7 @@ Entry.FunBoard.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         funboard_dotmatrix_extra_char: {
+            ignore: true,
             color: '#00979D',
             skeleton: 'basic',
             statements: [],
@@ -3382,6 +3398,7 @@ Entry.FunBoard.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         funboard_dotmatrix_1row_1column: {
+            ignore: true,
             color: '#00979D',
             skeleton: 'basic',
             statements: [],

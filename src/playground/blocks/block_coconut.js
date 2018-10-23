@@ -3409,6 +3409,7 @@ Entry.coconut.getBlocks = function() {
             syntax: { js: [], py: ['coconut.turn_for_secs(%1, %2)'] },
         },
         coconut_tmp_senser: {
+            ignore: true,
             color: '#00979D',
             fontColor: '#fff',
             skeleton: 'basic_string_field',

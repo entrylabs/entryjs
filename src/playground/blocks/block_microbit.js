@@ -940,6 +940,7 @@ Entry.Microbit.getBlocks = function() {
             },
         },
         microbit_radio_receive_event: {
+            ignore: true,
             color: '#00979D',
             fontColor: '#fff',
             skeleton: 'basic_event',

@@ -369,6 +369,7 @@ Entry.memaker.getBlocks = function() {
     return {
         //region memaker 미메이커
         memaker_analog_list: {
+            ignore: true,
             color: '#00979D',
             skeleton: 'basic_string_field',
             statements: [],
@@ -804,6 +805,7 @@ Entry.memaker.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         memaker_list_digital_lcd_line: {
+            ignore: true,
             color: '#00979D',
             skeleton: 'basic_string_field',
             statements: [],
@@ -828,6 +830,7 @@ Entry.memaker.getBlocks = function() {
             },
         },
         memaker_list_digital_lcd_column: {
+            ignore: true,
             color: '#00979D',
             skeleton: 'basic_string_field',
             statements: [],
@@ -988,6 +991,7 @@ Entry.memaker.getBlocks = function() {
             syntax: { js: [], py: ['memaker.memaker_set_lcd(%1, %2, %3)'] },
         },
         memaker_list_lcd_command: {
+            ignore: true,
             color: '#00979D',
             skeleton: 'basic_string_field',
             statements: [],

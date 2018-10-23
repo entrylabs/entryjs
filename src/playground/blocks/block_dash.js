@@ -888,6 +888,7 @@ Entry.Dash.getBlocks = function() {
             },
         },
         dash_voice_head: {
+            ignore: true,
             color: '#00979D',
             skeleton: 'basic',
             fontColor: '#fff',

@@ -78,6 +78,7 @@ Entry.ardublock.getBlocks = function() {
     return {
         //region ardublock 아두블록
         ardublock_analog_list: {
+            ignore: true,
             color: '#00979D',
             skeleton: 'basic_string_field',
             statements: [],
@@ -457,6 +458,7 @@ Entry.ardublock.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         ardublock_tone_list: {
+            ignore: true,
             color: '#00979D',
             skeleton: 'basic_string_field',
             statements: [],
@@ -496,6 +498,7 @@ Entry.ardublock.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         ardublock_tone_value: {
+            ignore: true,
             color: '#00979D',
             skeleton: 'basic_string_field',
             statements: [],
@@ -524,6 +527,7 @@ Entry.ardublock.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         ardublock_octave_list: {
+            ignore: true,
             color: '#00979D',
             skeleton: 'basic_string_field',
             statements: [],
@@ -749,6 +753,7 @@ Entry.ardublock.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         ardublock_motor_direction_list: {
+            ignore: true,
             color: '#00979D',
             skeleton: 'basic_string_field',
             statements: [],

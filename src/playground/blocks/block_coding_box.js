@@ -175,6 +175,7 @@ Entry.CodingBox.setLanguage = function() {
 Entry.CodingBox.getBlocks = function() {
     return {
         coding_box_analog_list: {
+            ignore: true,
             color: '#00979D',
             skeleton: 'basic_string_field',
             statements: [],
@@ -565,6 +566,7 @@ Entry.CodingBox.getBlocks = function() {
             },
         },
         arduino_get_digital_toggle: {
+            ignore: true,
             color: '#00979D',
             skeleton: 'basic_string_field',
             statements: [],
@@ -775,6 +777,7 @@ Entry.CodingBox.getBlocks = function() {
             },
         },
         coding_box_tone_list: {
+            ignore: true,
             color: '#00979D',
             skeleton: 'basic_string_field',
             statements: [],
@@ -847,6 +850,7 @@ Entry.CodingBox.getBlocks = function() {
             },
         },
         coding_box_tone_value: {
+            ignore: true,
             color: '#00979D',
             skeleton: 'basic_string_field',
             statements: [],
@@ -883,6 +887,7 @@ Entry.CodingBox.getBlocks = function() {
             },
         },
         coding_box_octave_list: {
+            ignore: true,
             color: '#00979D',
             skeleton: 'basic_string_field',
             statements: [],
@@ -1694,6 +1699,7 @@ Entry.CodingBox.getBlocks = function() {
             },
         },
         cbx_led_number_list: {
+            ignore: true,
             color: '#00979D',
             skeleton: 'basic_string_field',
             statements: [],
@@ -1740,6 +1746,7 @@ Entry.CodingBox.getBlocks = function() {
             },
         },
         cbx_rgb_led_value_list: {
+            ignore: true,
             color: '#00979D',
             skeleton: 'basic_string_field',
             statements: [],
@@ -1792,6 +1799,7 @@ Entry.CodingBox.getBlocks = function() {
             },
         },
         cbx_led_value_list: {
+            ignore: true,
             color: '#00979D',
             skeleton: 'basic_string_field',
             statements: [],
@@ -1854,6 +1862,7 @@ Entry.CodingBox.getBlocks = function() {
             },
         },
         cbx_dcm_speed_list: {
+            ignore: true,
             color: '#00979D',
             skeleton: 'basic_string_field',
             statements: [],
@@ -1914,6 +1923,7 @@ Entry.CodingBox.getBlocks = function() {
             },
         },
         cbx_servo_angle_list: {
+            ignore: true,
             color: '#00979D',
             skeleton: 'basic_string_field',
             statements: [],
@@ -1975,6 +1985,7 @@ Entry.CodingBox.getBlocks = function() {
             },
         },
         cbx_lcd_column_list: {
+            ignore: true,
             color: '#00979D',
             skeleton: 'basic_string_field',
             statements: [],
@@ -2055,6 +2066,7 @@ Entry.CodingBox.getBlocks = function() {
             },
         },
         cbx_lcd_row_list: {
+            ignore: true,
             color: '#00979D',
             skeleton: 'basic_string_field',
             statements: [],
@@ -2101,6 +2113,7 @@ Entry.CodingBox.getBlocks = function() {
             },
         },
         cbx_switch_list: {
+            ignore: true,
             color: '#00979D',
             skeleton: 'basic_string_field',
             statements: [],
@@ -2153,6 +2166,7 @@ Entry.CodingBox.getBlocks = function() {
             },
         },
         cbx_dcm_direction_list: {
+            ignore: true,
             color: '#00979D',
             skeleton: 'basic_string_field',
             statements: [],

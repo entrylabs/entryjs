@@ -271,6 +271,7 @@ Entry.Codestar.getBlocks = function() {
             },
         },
         codestar_servo: {
+            ignore: true,
             color: '#00979D',
             skeleton: 'basic',
             statements: [],
@@ -514,6 +515,7 @@ Entry.Codestar.getBlocks = function() {
             },
         },
         codestar_variable_R: {
+            ignore: true,
             color: '#00979D',
             fontColor: '#fff',
             skeleton: 'basic_string_field',
@@ -584,6 +586,7 @@ Entry.Codestar.getBlocks = function() {
             },
         },
         codestar_gyroscope: {
+            ignore: true,
             color: '#00979D',
             fontColor: '#fff',
             skeleton: 'basic_string_field',
@@ -615,6 +618,7 @@ Entry.Codestar.getBlocks = function() {
             },
         },
         codestar_geomagnetic: {
+            ignore: true,
             color: '#00979D',
             fontColor: '#fff',
             skeleton: 'basic_string_field',
@@ -646,6 +650,7 @@ Entry.Codestar.getBlocks = function() {
             },
         },
         codestar_irR: {
+            ignore: true,
             color: '#00979D',
             fontColor: '#fff',
             skeleton: 'basic_string_field',

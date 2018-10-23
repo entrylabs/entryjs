@@ -161,6 +161,7 @@ Entry.CODEino.getBlocks = function() {
     return {
         //region codeino 코드이노
         CODEino_get_sensor_number: {
+            ignore: true,
             color: '#00979D',
             skeleton: 'basic_string_field',
             statements: [],
@@ -1542,6 +1543,7 @@ Entry.CODEino.getBlocks = function() {
             },
         },
         CODEino_get_number_sensor_value: {
+            ignore: true,
             parent: 'arduino_get_number_sensor_value',
             isNotFor: ['CODEino'],
             def: {
@@ -1556,6 +1558,7 @@ Entry.CODEino.getBlocks = function() {
             syntax: { js: [], py: ['CODEino.get_number_sensor_value(%1)'] },
         },
         CODEino_toggle_led: {
+            ignore: true,
             parent: 'arduino_toggle_led',
             isNotFor: ['CODEino'],
             def: {
@@ -1572,6 +1575,7 @@ Entry.CODEino.getBlocks = function() {
             syntax: { js: [], py: ['CODEino.toggle_led(%1)'] },
         },
         CODEino_toggle_pwm: {
+            ignore: true,
             parent: 'arduino_toggle_pwm',
             isNotFor: ['CODEino'],
             def: {

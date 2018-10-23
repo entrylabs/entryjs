@@ -108,6 +108,7 @@ Entry.ArduinoExt.setLanguage = function() {
 Entry.ArduinoExt.getBlocks = function() {
     return {
         arduino_ext_analog_list: {
+            ignore: true,
             color: '#00979D',
             skeleton: 'basic_string_field',
             statements: [],
@@ -494,6 +495,7 @@ Entry.ArduinoExt.getBlocks = function() {
             },
         },
         arduino_get_digital_toggle: {
+            ignore: true,
             color: '#00979D',
             skeleton: 'basic_string_field',
             statements: [],
@@ -704,6 +706,7 @@ Entry.ArduinoExt.getBlocks = function() {
             },
         },
         arduino_ext_tone_list: {
+            ignore: true,
             color: '#00979D',
             skeleton: 'basic_string_field',
             statements: [],
@@ -776,6 +779,7 @@ Entry.ArduinoExt.getBlocks = function() {
             },
         },
         arduino_ext_tone_value: {
+            ignore: true,
             color: '#00979D',
             skeleton: 'basic_string_field',
             statements: [],
@@ -812,6 +816,7 @@ Entry.ArduinoExt.getBlocks = function() {
             },
         },
         arduino_ext_octave_list: {
+            ignore: true,
             color: '#00979D',
             skeleton: 'basic_string_field',
             statements: [],

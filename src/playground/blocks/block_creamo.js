@@ -148,6 +148,7 @@ Entry.Creamo.getBlocks = function() {
             syntax: { js: [], py: ['creamo.get_number_sensor_value(%1)'] },
         },
         creamo_get_port_number: {
+            ignore: true,
             color: '#00979D',
             skeleton: 'basic_string_field',
             statements: [],
@@ -224,6 +225,7 @@ Entry.Creamo.getBlocks = function() {
             syntax: { js: [], py: ['creamo.toggle_led(%1)'] },
         },
         creamo_motor_port_number: {
+            ignore: true,
             color: '#00979D',
             skeleton: 'basic_string_field',
             statements: [],
@@ -333,6 +335,7 @@ Entry.Creamo.getBlocks = function() {
             },
         },
         creamo_get_pwm_port_number: {
+            ignore: true,
             color: '#00979D',
             skeleton: 'basic_string_field',
             statements: [],

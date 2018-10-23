@@ -109,6 +109,7 @@ Entry.ArduinoNano.getBlocks = function() {
     return {
         //region arduinoNano 아두이노 나노
         arduino_nano_analog_list: {
+            ignore: true,
             parent: 'arduino_ext_analog_list',
             params: [
                 {

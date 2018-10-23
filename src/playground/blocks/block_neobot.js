@@ -306,6 +306,7 @@ Entry.Neobot.getBlocks = function() {
             },
         },
         neobot_sensor_color: {
+            ignore: true,
             color: '#00979D',
             skeleton: 'basic_string_field',
             fontColor: '#fff',
@@ -410,6 +411,7 @@ Entry.Neobot.getBlocks = function() {
             syntax: { js: [], py: ['Entry.neobot_equal_check()'] },
         },
         get_motor_speed: {
+            ignore: true,
             color: '#00979D',
             skeleton: 'basic_string_field',
             statements: [],

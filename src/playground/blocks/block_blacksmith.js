@@ -366,6 +366,7 @@ Entry.Blacksmith.getBlocks = function() {
     return {
         //region blacksmith 대장장이보드
         blacksmith_list_analog_basic: {
+            ignore: true,
             color: '#00979D',
             skeleton: 'basic_string_field',
             statements: [],
@@ -395,6 +396,7 @@ Entry.Blacksmith.getBlocks = function() {
             },
         },
         blacksmith_list_digital_basic: {
+            ignore: true,
             color: '#00979D',
             skeleton: 'basic_string_field',
             statements: [],
@@ -427,6 +429,7 @@ Entry.Blacksmith.getBlocks = function() {
             },
         },
         blacksmith_list_digital_octave: {
+            ignore: true,
             color: '#00979D',
             skeleton: 'basic_string_field',
             statements: [],
@@ -460,6 +463,7 @@ Entry.Blacksmith.getBlocks = function() {
             },
         },
         blacksmith_list_digital_pwm: {
+            ignore: true,
             color: '#00979D',
             skeleton: 'basic_string_field',
             statements: [],
@@ -490,6 +494,7 @@ Entry.Blacksmith.getBlocks = function() {
             },
         },
         blacksmith_list_digital_toggle: {
+            ignore: true,
             color: '#00979D',
             skeleton: 'basic_string_field',
             statements: [],
@@ -518,6 +523,7 @@ Entry.Blacksmith.getBlocks = function() {
             },
         },
         blacksmith_list_digital_tone: {
+            ignore: true,
             color: '#00979D',
             skeleton: 'basic_string_field',
             statements: [],
@@ -556,6 +562,7 @@ Entry.Blacksmith.getBlocks = function() {
             },
         },
         blacksmith_list_digital_lcd: {
+            ignore: true,
             color: '#00979D',
             skeleton: 'basic_string_field',
             statements: [],

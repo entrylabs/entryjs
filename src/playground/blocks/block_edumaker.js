@@ -71,6 +71,7 @@ Entry.EduMaker.getBlocks = function() {
     return {
         //region edumaker 에듀메이커
         edumaker_analog_list: {
+            ignore: true,
             color: '#00979D',
             skeleton: 'basic_string_field',
             statements: [],
@@ -347,6 +348,7 @@ Entry.EduMaker.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         edumaker_digital_toggle: {
+            ignore: true,
             color: '#00979D',
             skeleton: 'basic_string_field',
             statements: [],
@@ -498,6 +500,7 @@ Entry.EduMaker.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         edumaker_tone_list: {
+            ignore: true,
             color: '#00979D',
             skeleton: 'basic_string_field',
             statements: [],
@@ -537,6 +540,7 @@ Entry.EduMaker.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         edumaker_tone_value: {
+            ignore: true,
             color: '#00979D',
             skeleton: 'basic_string_field',
             statements: [],
@@ -565,6 +569,7 @@ Entry.EduMaker.getBlocks = function() {
             syntax: { js: [], py: [] },
         },
         edumaker_octave_list: {
+            ignore: true,
             color: '#00979D',
             skeleton: 'basic_string_field',
             statements: [],
