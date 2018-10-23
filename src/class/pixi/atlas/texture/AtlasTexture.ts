@@ -28,7 +28,7 @@ export class AtlasTexture extends PIXI.Texture {
 
     updateBaseAndUVs(base:AtlasBaseTexture):void {
         this.baseTexture = base;
-        if(this.frame.x == this.inputRect.x || this.frame.y == this.inputRect.y) {
+        if(this.frame.x != this.inputRect.x || this.frame.y != this.inputRect.y) {
             this.frame.x = this.inputRect.x;
             this.frame.y = this.inputRect.y;
             this._updateUvs();
