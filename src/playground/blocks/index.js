@@ -163,7 +163,6 @@ function getBlockObject(items) {
  * block 자체에 ignore: true 프로퍼티가 존재하는 경우 스킵한다.
  *
  * @param {Object} blockList
- * @see getBlockList
  * @return {void}
  */
 function registerHardwareBlockToStatic(blockList) {
