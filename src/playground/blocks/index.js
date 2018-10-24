@@ -177,9 +177,9 @@ function registerHardwareBlockToStatic(blockList) {
 module.exports = {
     getBlocks() {
         const basicAndExpansionBlockObjectList = getBlockObject(basicBlockList.concat(Object.values(Entry.EXPANSION_BLOCK_LIST)));
-        const hardwareObjectList = getBlockObject(Object.values(Entry.HARDWARE_LIST));
-        registerHardwareBlockToStatic(hardwareObjectList);
+        const hardwareBlockObjectList = getBlockObject(Object.values(Entry.HARDWARE_LIST));
+        registerHardwareBlockToStatic(hardwareBlockObjectList);
 
-        return Object.assign({}, basicAndExpansionBlockObjectList, hardwareObjectList);
+        return Object.assign({}, basicAndExpansionBlockObjectList, hardwareBlockObjectList);
     },
 };
