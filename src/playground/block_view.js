@@ -531,10 +531,10 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
 
         if (board.workspace.getMode() === Entry.Workspace.MODE_VIMBOARD && e) {
             document
-                .getElementsByClassName('CodeMirror')[0]
-                .dispatchEvent(
-                    Entry.Utils.createMouseEvent('dragStart', event)
-                );
+            .getElementsByClassName('CodeMirror')[0]
+            .dispatchEvent(
+                Entry.Utils.createMouseEvent('dragStart', event)
+            );
         }
 
         var that = this;
@@ -553,7 +553,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
             var mouseDownCoordinate = blockView.mouseDownCoordinate;
             var diff = Math.sqrt(
                 Math.pow(mouseEvent.pageX - mouseDownCoordinate.x, 2) +
-                    Math.pow(mouseEvent.pageY - mouseDownCoordinate.y, 2)
+                Math.pow(mouseEvent.pageY - mouseDownCoordinate.y, 2)
             );
             if (
                 blockView.dragMode == Entry.DRAG_MODE_DRAG ||
@@ -704,7 +704,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
                                         if (
                                             closeBlockType &&
                                             thread instanceof
-                                                Entry.FieldBlock &&
+                                            Entry.FieldBlock &&
                                             !Entry.block[closeBlockType]
                                                 .isPrimitive
                                         )
@@ -1032,8 +1032,8 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
             this.block.isMovable() !== null
                 ? this.block.isMovable()
                 : this._skeleton.movable !== undefined
-                    ? this._skeleton.movable
-                    : true;
+                ? this._skeleton.movable
+                : true;
     };
 
     p._setReadOnly = function() {
@@ -1041,8 +1041,8 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
             this.block.isReadOnly() !== null
                 ? this.block.isReadOnly()
                 : this._skeleton.readOnly !== undefined
-                    ? this._skeleton.readOnly
-                    : false;
+                ? this._skeleton.readOnly
+                : false;
     };
 
     p._setCopyable = function() {
@@ -1050,8 +1050,8 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
             this.block.isCopyable() !== null
                 ? this.block.isCopyable()
                 : this._skeleton.copyable !== undefined
-                    ? this._skeleton.copyable
-                    : true;
+                ? this._skeleton.copyable
+                : true;
     };
 
     p.bumpAway = function(distance = 15, delay) {
@@ -1199,9 +1199,9 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
         svgGroup.setAttribute(
             'transform',
             'scale(%SCALE) translate(%X,%Y)'
-                .replace('%X', -box.offsetX)
-                .replace('%Y', -box.offsetY)
-                .replace('%SCALE', scale)
+            .replace('%X', -box.offsetX)
+            .replace('%Y', -box.offsetY)
+            .replace('%SCALE', scale)
         );
 
         var defs = this.getBoard().svgDom.find('defs');
@@ -1256,18 +1256,18 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
 
         function processSvg() {
             svgData = svgData
-                .replace(
-                    '(svgGroup)',
-                    new XMLSerializer().serializeToString(svgGroup)
-                )
-                .replace('%W', bBox.width * scale)
-                .replace('%H', bBox.height * scale)
-                .replace(
-                    '(defs)',
-                    new XMLSerializer().serializeToString(defs[0])
-                )
-                .replace(/>\s+/g, '>')
-                .replace(/\s+</g, '<');
+            .replace(
+                '(svgGroup)',
+                new XMLSerializer().serializeToString(svgGroup)
+            )
+            .replace('%W', bBox.width * scale)
+            .replace('%H', bBox.height * scale)
+            .replace(
+                '(defs)',
+                new XMLSerializer().serializeToString(defs[0])
+            )
+            .replace(/>\s+/g, '>')
+            .replace(/\s+</g, '<');
             var src =
                 'data:image/svg+xml;base64,' +
                 btoa(unescape(encodeURIComponent(svgData)));
