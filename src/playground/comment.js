@@ -88,7 +88,10 @@ Entry.Comment = class Comment {
             this.set({
                 x,
                 y,
+                parentWidth,
+                parentHeight,
             });
+
             this.canRender = true;
         }
     }
@@ -98,39 +101,49 @@ Entry.Comment = class Comment {
             const { width: parentWidth } = this.pathGroup.getBBox();
             const { topFieldHeight, height } = this._blockView;
             const parentHeight = topFieldHeight || height;
-            const { width, titleHeight, defaultLineLength } = this;
-            const x = defaultLineLength + parentWidth;
-            const y = parentHeight / 2 - titleHeight / 2;
+            const {
+                width,
+                titleHeight,
+                parentWidth: beforeParentWidth,
+                parentHeight: beforeParentHeight,
+            } = this;
+            const defferenceWidth = parentWidth - beforeParentWidth;
+            const defferenceHeight = parentHeight - beforeParentHeight;
 
-            this._comment.attr({
-                x,
-                y,
-            });
+            if (defferenceWidth || defferenceHeight) {
+                let { x, y } = this;
+                x += defferenceWidth;
+                y += defferenceHeight;
 
-            this._line.attr({
-                x1: parentWidth,
-                y1: parentHeight / 2,
-                x2: x + width / 2,
-                y2: y + titleHeight / 2,
-            });
+                this._comment.attr({
+                    x,
+                    y,
+                });
 
-            this.set({
-                x,
-                y,
-            });
+                this._line.attr({
+                    x1: parentWidth,
+                    y1: parentHeight / 2,
+                    x2: x + width / 2,
+                    y2: y + titleHeight / 2,
+                });
+
+                this.set({
+                    x,
+                    y,
+                    parentWidth,
+                    parentHeight,
+                });
+            }
         }
     }
 
     moveTo(x, y) {
-        const thisX = this.x;
-        const thisY = this.y;
         if (!this.display) {
-            x = -99999;
-            y = -99999;
-        }
-        if (thisX !== x || thisY !== y) {
+            this.set({ x: -99999, y: -99999 });
+        } else {
             this.set({ x, y });
         }
+
         if (this.visible && this.display) {
             this.setPosition();
         }
@@ -290,6 +303,8 @@ Entry.Comment = class Comment {
 Entry.Comment.prototype.schema = {
     x: 0,
     y: 0,
+    parentWidth: 0,
+    parentHeight: 0,
     width: 160,
     height: 100,
     titleHeight: 22,
