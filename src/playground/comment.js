@@ -38,7 +38,6 @@ Entry.Comment = class Comment {
     }
 
     createComment() {
-        // const { comment, view } = this.block;
         let thread = this.block.getThread();
         while (!(thread.parent instanceof Entry.Code)) {
             if (thread instanceof Entry.FieldBlock) {
@@ -61,33 +60,34 @@ Entry.Comment = class Comment {
             this._line = this.svgGroup.elem('line');
             this._comment = this.svgGroup.elem('rect');
 
-            const { width } = this.pathGroup.getBBox();
+            const { width: parentWidth } = this.pathGroup.getBBox();
             const { topFieldHeight, height } = this._blockView;
-            const startX = width;
-            const startY = 0;
-            const defaultLineLength = this.defaultLineLength;
-            const lineHeight = (topFieldHeight || height) / 2;
+            const parentHeight = topFieldHeight || height;
+            const { width, titleHeight, defaultLineLength } = this;
+            const x = defaultLineLength + parentWidth;
+            const y = parentHeight / 2 - titleHeight / 2;
+
             this._comment.attr({
-                width: this.commentWidth,
-                height: this.commentTitleHeight,
-                x: startX + defaultLineLength,
-                y: startY + lineHeight - this.commentTitleHeight / 2,
+                x,
+                y,
+                width,
+                height: titleHeight,
                 stroke: '#EDA913',
                 fill: '#FBB315',
                 rx: '4',
             });
 
             this._line.attr({
-                x1: startX,
-                y1: startY + lineHeight,
-                x2: startX + defaultLineLength,
-                y2: startY + lineHeight,
+                x1: parentWidth,
+                y1: parentHeight / 2,
+                x2: x + width / 2,
+                y2: y + titleHeight / 2,
                 style: 'stroke:#eda913;stroke-width:2',
             });
 
             this.set({
-                startX,
-                startY: startY + lineHeight,
+                x,
+                y,
             });
             this.canRender = true;
         }
@@ -95,20 +95,28 @@ Entry.Comment = class Comment {
 
     updatePos() {
         if (this.pathGroup) {
-            const { width } = this.pathGroup.getBBox();
-            const matrix = this.parentGroup.getCTM();
-            const { x: pathX, y: pathY } = Entry.GlobalSvg.getRelativePoint(matrix);
-            const startX = pathX + width + this.defaultLineLength;
-            const startY = pathY;
+            const { width: parentWidth } = this.pathGroup.getBBox();
+            const { topFieldHeight, height } = this._blockView;
+            const parentHeight = topFieldHeight || height;
+            const { width, titleHeight, defaultLineLength } = this;
+            const x = defaultLineLength + parentWidth;
+            const y = parentHeight / 2 - titleHeight / 2;
+
+            this._comment.attr({
+                x,
+                y,
+            });
 
             this._line.attr({
-                x2: startX,
-                y2: startY + this.commentTitleHeight / 2,
+                x1: parentWidth,
+                y1: parentHeight,
+                x2: x + width / 2,
+                y2: y + titleHeight / 2,
             });
 
             this.set({
-                startX,
-                startY,
+                x,
+                y,
             });
         }
     }
@@ -134,13 +142,13 @@ Entry.Comment = class Comment {
 
     setPosition() {
         this._comment.attr({
-            x: this.x + this.startX + this.defaultLineLength,
-            y: this.y + this.startY - this.commentTitleHeight / 2,
+            x: this.x,
+            y: this.y,
         });
 
         this._line.attr({
-            x2: this.x + this.startX + this.commentWidth / 2 + this.defaultLineLength,
-            y2: this.y + this.startY,
+            x2: this.x + this.width / 2,
+            y2: this.y + this.titleHeight / 2,
         });
     }
 
@@ -153,23 +161,26 @@ Entry.Comment = class Comment {
             (e.button === 0 || (e.originalEvent && e.originalEvent.touches)) &&
             !this._board.readOnly
         ) {
+            const { width: parentWidth } = this.pathGroup.getBBox();
+            const { topFieldHeight, height } = this._blockView;
+            const parentHeight = topFieldHeight || height;
             const mouseEvent = Entry.Utils.convertMouseEvent(e);
             const matrix = this.svgGroup.getCTM();
             const { x, y } = Entry.GlobalSvg.getRelativePoint(matrix);
+            const { mouseMove, mouseUp } = this;
             this.mouseDownCoordinate = {
                 x: mouseEvent.pageX,
                 y: mouseEvent.pageY,
                 parentX: x,
                 parentY: y,
             };
-            document.onmousemove = this.mouseMove;
-            document.ontouchmove = this.mouseMove;
-            document.onmouseup = this.mouseUp;
-            document.ontouchend = this.mouseUp;
-            console.log(x, this.startX);
+            document.onmousemove = mouseMove;
+            document.ontouchmove = mouseMove;
+            document.onmouseup = mouseUp;
+            document.ontouchend = mouseUp;
             this.dragInstance = new Entry.DragInstance({
-                startX: x / scale + this.startX,
-                startY: y / scale + this.startY,
+                startX: x / scale + parentWidth,
+                startY: y / scale + parentHeight / 2,
                 offsetX: mouseEvent.pageX,
                 offsetY: mouseEvent.pageY,
                 mode: true,
@@ -209,7 +220,6 @@ Entry.Comment = class Comment {
                 offsetX: mouseEvent.pageX,
                 offsetY: mouseEvent.pageY,
             });
-
             Entry.GlobalSvg.commentPosition(dragInstance);
         }
     }
@@ -257,14 +267,14 @@ Entry.Comment = class Comment {
         const { scale = 1 } = this.board || {};
         let pos = null;
         const { parentX, parentY } = this.mouseDownCoordinate;
-        const posX = this.x + this.startX + parentX + this.defaultLineLength;
-        const posY = this.y + this.startY + parentY;
+        const posX = this.x + parentX;
+        const posY = this.y + parentY;
         if (dragMode === Entry.DRAG_MODE_DRAG) {
             pos = {
                 x: posX,
                 y: posY,
-                scaleX: this.x + this.startX + parentX / scale + this.defaultLineLength,
-                scaleY: this.y + this.startY + parentY / scale,
+                scaleX: this.x + parentX / scale,
+                scaleY: this.y + parentY / scale,
             };
         } else {
             pos = this.block.getThread().view.requestAbsoluteCoordinate(this);
@@ -280,15 +290,12 @@ Entry.Comment = class Comment {
 Entry.Comment.prototype.schema = {
     x: 0,
     y: 0,
-    moveX: 0,
-    moveY: 0,
-    startX: 0,
-    startY: 0,
+    width: 160,
+    height: 100,
+    titleHeight: 22,
+    defaultLineLength: 120,
     readOnly: false,
     visible: true,
     display: true,
     movable: true,
-    commentWidth: 160,
-    commentTitleHeight: 22,
-    defaultLineLength: 120,
 };

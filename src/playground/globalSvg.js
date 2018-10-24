@@ -208,19 +208,19 @@ class GlobalSvg {
         const pos = view.getAbsoluteCoordinate();
         this.left = pos.scaleX;
         this.top = pos.scaleY;
-        const { commentWidth, commentTitleHeight } = this._view;
+        const { width, titleHeight } = view;
         const [comment] = this.svgGroup.getElementsByTagName('rect');
         const [line] = this.svgGroup.getElementsByTagName('line');
         const commentPoint = {
-            x: commentWidth / 2,
-            y: commentTitleHeight / 2,
+            x: width / 2,
+            y: titleHeight / 2,
         };
         comment.setAttribute('x', this.left);
-        comment.setAttribute('y', this.top - commentPoint.y);
+        comment.setAttribute('y', this.top);
         line.setAttribute('x1', startX);
         line.setAttribute('y1', startY);
         line.setAttribute('x2', this.left + commentPoint.x);
-        line.setAttribute('y2', this.top);
+        line.setAttribute('y2', this.top + commentPoint.y);
     }
 
     adjust(adjustX, adjustY) {
