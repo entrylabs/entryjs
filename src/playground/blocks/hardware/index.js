@@ -1,5 +1,13 @@
 'use strict';
 
+/*
+register all hardware module list in same directory except index.js
+ */
+const moduleListReq = require.context('.', false, /^(?!.*index.js)((.*\.(js\.*))[^.]*$)/im);
+moduleListReq.keys().forEach(moduleListReq);
+
+/*
+TODO PR merge 전 삭제 요망
 require('./block_arduino');
 require('./block_sensorboard');
 require('./block_joystick');
@@ -55,6 +63,7 @@ require('./block_mrt');
 require('./block_dash');
 require('./block_bingles');
 require('./block_codingmachine');
+*/
 
 Entry.HARDWARE_LIST = {
     '1.1': Entry.Arduino,
