@@ -352,6 +352,10 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
         this.contentSvgCommentGroup.attr('transform', `translate(${contentPos.x},${contentPos.y})`);
         this.contentPos = contentPos;
         this._render();
+        const comment = this.block._comment;
+        if (comment) {
+            comment.updatePos();
+        }
 
         this._updateMagnet();
         const ws = this.getBoard().workspace;

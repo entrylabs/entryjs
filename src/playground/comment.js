@@ -109,7 +109,7 @@ Entry.Comment = class Comment {
 
             this._line.attr({
                 x1: parentWidth,
-                y1: parentHeight,
+                y1: parentHeight / 2,
                 x2: x + width / 2,
                 y2: y + titleHeight / 2,
             });
