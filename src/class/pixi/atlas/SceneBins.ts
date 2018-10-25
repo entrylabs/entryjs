@@ -9,13 +9,13 @@ import { AtlasImageLoadingInfo } from './loader/AtlasImageLoadingInfo';
 import { PrimitiveSet } from './structure/PrimitiveSet';
 import { MaxRectsPacker } from '../../maxrect-packer/maxrects_packer';
 import { MaxRectsBin } from '../../maxrect-packer/maxrects_bin';
-import { InputRect } from '../../maxrect-packer/geom/InputRect';
 import { AtlasTexture } from './texture/AtlasTexture';
 import { AtlasBaseTexture } from './texture/AtlasBaseTexture';
 import { PrimitiveMap } from './structure/PrimitiveMap';
 import { AtlasImageLoader } from './loader/AtlasImageLoader';
 import { PIXIAtlasHelper } from './PIXIAtlasHelper';
 import { TimeoutTimer } from '../utils/TimeoutTimer';
+import { ImageRect } from '../../maxrect-packer/geom/ImageRect';
 
 
 declare let _:any;
@@ -60,8 +60,8 @@ EMPTY_BASE_TEX.dispose();
 export class SceneBins {
 
     //private _pathSet:PrimitiveSet = new PrimitiveSet();//패킹 전/후 pathf르 모두 저장.
-    private _packedRects:InputRect[] = [];
-    private _notPackedRects:InputRect[] = [];
+    private _packedRects:ImageRect[] = [];
+    private _notPackedRects:ImageRect[] = [];
     private _arrBaseTexture:AtlasBaseTexture[] = [];
     private _packer:MaxRectsPacker = newPacker();
     private _path_tex_map:PrimitiveMap<AtlasTexture> = new PrimitiveMap();
@@ -79,7 +79,7 @@ export class SceneBins {
 
         var w = pic.dimension.width,
             h = pic.dimension.height;
-        var rect:InputRect = new InputRect(0, 0, w, h);
+        var rect:ImageRect = new ImageRect(0, 0, w, h);
         var tex:AtlasTexture = this._newTexture(path, rect);
         rect.data = { path: path, tex:tex };
         this._notPackedRects.push(rect);
@@ -100,7 +100,7 @@ export class SceneBins {
         });
     }
 
-    private _newTexture(path:string, rect:InputRect):AtlasTexture {
+    private _newTexture(path:string, rect:ImageRect):AtlasTexture {
         var tex = new AtlasTexture(EMPTY_BASE_TEX, rect);
         this._path_tex_map.add(path, tex);
         return tex;
@@ -115,7 +115,7 @@ export class SceneBins {
         this._packer.addArray(this._notPackedRects);
         var willUpdateBaseTextures:AtlasBaseTexture[] = [];
 
-        this._notPackedRects.forEach((r:InputRect)=>{
+        this._notPackedRects.forEach((r:ImageRect)=>{
             var base:AtlasBaseTexture = this._getBaseTexture(r.binIndex);
             r.data.tex.updateBaseAndUVs(base);
             this.putImage(this._loader.getImageInfo(r.data.path), false);
@@ -226,7 +226,7 @@ export class SceneBins {
         this._path_tex_map.each((tex:AtlasTexture, path:string)=>{
             console.log(path);
             if( usedPathSet && usedPathSet.hasValue(path) ) {
-                this._notPackedRects.push(this._path_tex_map.getValue(path).inputRect);
+                this._notPackedRects.push(this._path_tex_map.getValue(path).imageRect);
             } else {
                 unusedPath.push(path);
             }

@@ -1,13 +1,13 @@
 import { EDGE_MAX_VALUE, IOption } from "./maxrects_packer";
 import { Rectangle, IRectangle } from "./geom/Rectangle";
 import { Bin } from "./abstract_bin";
-import { InputRect } from './geom/InputRect';
+import { ImageRect } from './geom/ImageRect';
 
 export class MaxRectsBin extends Bin {
     public width: number;
     public height: number;
     public freeRects: Rectangle[] = [];
-    public rects: InputRect[] = [];
+    public rects: ImageRect[] = [];
     private verticalExpand: boolean = false;
     private stage: Rectangle;
 
@@ -25,7 +25,7 @@ export class MaxRectsBin extends Bin {
         this.stage = new Rectangle(0, 0, this.width, this.height);
     }
 
-    public add (rect:InputRect): boolean {
+    public add (rect:ImageRect): boolean {
         var width:number = rect.width;
         var height:number = rect.height;
         let node: Rectangle | undefined = this.findNode(width + this.padding, height + this.padding);
