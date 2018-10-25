@@ -4,7 +4,14 @@ export class TimeoutTimer {
 
     timeout(timeMS:number, handler:()=>void) {
         this.reset();
-        this._id = window.setTimeout(handler, timeMS);
+        this._id = window.setTimeout(()=>{
+            handler();
+            this._id = 0;
+        }, timeMS);
+    }
+
+    get isRunning():boolean {
+        return Boolean(this._id);
     }
 
     reset():void {

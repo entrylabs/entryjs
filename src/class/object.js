@@ -385,7 +385,7 @@ Entry.EntryObject = function(model) {
         if (picture === this.selectedPicture)
             playground.selectPicture(pictures[0]);
 
-        PIXIAtlasManager.requestInvalidate("EntityObject::removePicture");
+        PIXIAtlasManager.imageRemoved("EntityObject::removePicture");
         //Entry.container.unCachePictures(this.entity, picture);
 
         playground.injectPicture(this);

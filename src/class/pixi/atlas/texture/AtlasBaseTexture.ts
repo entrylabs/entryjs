@@ -5,11 +5,13 @@ export class AtlasBaseTexture extends BaseTexture {
 
     private _canvas:HTMLCanvasElement;
     private _ctx:CanvasRenderingContext2D;
-    public IS_EMPTY:boolean = false;
+    private _activated:boolean;
 
     constructor(private _viewer?:AtlasCanvasViewer, scaleMode?: number) {
         super(null, scaleMode);
     }
+
+    get activated():boolean { return this._activated; }
 
     setCanvas(canvas:HTMLCanvasElement) {
         this.source = canvas;
@@ -27,6 +29,7 @@ export class AtlasBaseTexture extends BaseTexture {
 
 
     activate(MAX_SIZE:number) {
+        this._activated = true;
         this._canvas.width = MAX_SIZE;
         this._canvas.height = MAX_SIZE;
         this.hasLoaded = true;
@@ -34,6 +37,7 @@ export class AtlasBaseTexture extends BaseTexture {
     }
 
     deactivate() {
+        this._activated = false;
         this._canvas.width = 1;
         this._canvas.height = 1;
         this.dispose();
