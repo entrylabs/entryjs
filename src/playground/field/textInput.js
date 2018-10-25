@@ -1,10 +1,5 @@
-/*
- */
 'use strict';
 
-/*
- *
- */
 Entry.FieldTextInput = function(content, blockView, index) {
     this._blockView = blockView;
     this.board = this._blockView.getBoard();
@@ -29,19 +24,18 @@ Entry.FieldTextInput = function(content, blockView, index) {
 Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
 
 (function(p) {
-    var X_PADDING = 6,
-        TEXT_Y_PADDING = 3;
+    const TEXT_Y_PADDING = 3;
 
     p._focusNeighbor = function(direction) {
-        var fields = this.getNeighborFields();
+        const fields = this.getNeighborFields();
 
-        var idx = fields.indexOf(this);
+        let idx = fields.indexOf(this);
         if (direction === 'prev') {
             idx--;
         } else {
             idx++;
         }
-        var field = fields[idx];
+        const field = fields[idx];
 
         //no field to focus
         if (!field) {
@@ -53,7 +47,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
     };
 
     p.renderStart = function() {
-        var blockView = this._blockView;
+        const blockView = this._blockView;
 
         if (!this.svgGroup) {
             this.svgGroup = blockView.contentSvgGroup.elem('g');
@@ -64,22 +58,21 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
                 x: 0,
                 y: TEXT_Y_PADDING,
                 fill: this._contents.color || 'black',
-                'font-size': this._font_size + 'px',
+                'font-size': `${this._font_size}px`,
                 'font-weight': 'bold',
                 'font-family': 'NanumGothic',
             });
         }
 
-        var contents = this._contents;
         this.svgGroup.attr({ class: 'entry-input-field' });
 
         this._setTextValue();
 
-        var width = this.getTextWidth();
-        var y = this.position && this.position.y ? this.position.y : 0;
-        var CONTENT_HEIGHT = this._CONTENT_HEIGHT;
+        const width = this.getTextWidth();
+        let y = this.position && this.position.y ? this.position.y : 0;
+        const CONTENT_HEIGHT = this._CONTENT_HEIGHT;
         y -= CONTENT_HEIGHT / 2;
-        if (!this._header)
+        if (!this._header) {
             this._header = this.svgGroup.elem('rect', {
                 width,
                 x: 0,
@@ -90,7 +83,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
                 fill: '#fff',
                 'fill-opacity': 0,
             });
-        else {
+        } else {
             this._header.setAttribute('width', width);
         }
 
@@ -115,11 +108,9 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
             this._neighborFields = neighborFields;
         }
 
-        var that = this;
+        const that = this;
 
-        var blockView = this._blockView;
-
-        var func = function(skipCommand, forceCommand) {
+        const func = function(skipCommand, forceCommand) {
             skipCommand !== true && that.applyValue();
             that.destroyOption(skipCommand, forceCommand === true);
         };
@@ -137,15 +128,17 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
             e.stopPropagation();
         });
 
-        var exitKeys = [13, 27];
+        const exitKeys = [13, 27];
         this.optionGroup.on('keyup', function(e) {
             that.applyValue(e);
 
-            if (_.includes(exitKeys, e.keyCode || e.which)) that.destroyOption(undefined, true);
+            if (_.includes(exitKeys, e.keyCode || e.which)) {
+                that.destroyOption(undefined, true);
+            }
         });
 
         this.optionGroup.on('keydown', function(e) {
-            var keyCode = e.keyCode || e.which;
+            const keyCode = e.keyCode || e.which;
 
             if (keyCode === 9) {
                 e.preventDefault();
@@ -154,13 +147,12 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
         });
         const { scale = 1 } = this.board;
         this._font_size = 10 * scale;
-        var { x, y } = this.getAbsolutePosFromDocument();
-        y -= this.box.height / 2;
+        const { x, y } = this.getAbsolutePosFromDocument();
         const height = (this._CONTENT_HEIGHT - 4) * scale;
         this.optionGroup.css({
             height,
             left: x + 1,
-            top: y + (scale - 1) * 4 + 2 * scale - 1 * (scale / 2),
+            top: y + (scale - 1) * 4 + 2 * scale - 1 * (scale / 2) - this.box.height / 2,
             width: that.box.width * scale,
             'font-size': `${this._font_size}px`,
             'background-color': EntryStatic.colorSet.block.lighten.CALC,
@@ -168,7 +160,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
 
         this.optionGroup.focus && this.optionGroup.focus();
 
-        var optionGroup = this.optionGroup[0];
+        const optionGroup = this.optionGroup[0];
         optionGroup.setSelectionRange(0, optionGroup.value.length, 'backward');
 
         this.optionDomCreated();
@@ -189,8 +181,8 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
 
     p.resize = function() {
         const { scale = 1 } = this.board;
-        var size = { width: this.getTextWidth() * scale };
-        var scaleSize = { width: this.getTextWidth()  };
+        const size = { width: this.getTextWidth() * scale };
+        const scaleSize = { width: this.getTextWidth() };
         this._header.attr(scaleSize);
         this.box.set(scaleSize);
         this.optionGroup.css(size);
@@ -202,18 +194,22 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
     };
 
     p._setTextValue = function() {
-        var newValue = this._convert(this.getValue(), this.getValue());
-        if (this.textElement.textContent !== newValue) this.textElement.textContent = newValue;
+        const newValue = this._convert(this.getValue(), this.getValue());
+        if (this.textElement.textContent !== newValue) {
+            this.textElement.textContent = newValue;
+        }
     };
 
     p.getNeighborFields = function() {
         if (!this._neighborFields) {
-            var FIELD_TEXT_INPUT = Entry.FieldTextInput;
+            const FIELD_TEXT_INPUT = Entry.FieldTextInput;
             this._neighborFields = this._block
                 .getRootBlock()
                 .getThread()
                 .view.getFields()
-                .filter((f) => f instanceof FIELD_TEXT_INPUT);
+                .filter((f) => {
+                    return f instanceof FIELD_TEXT_INPUT;
+                });
         }
 
         return this._neighborFields;
