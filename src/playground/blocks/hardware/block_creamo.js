@@ -1,6 +1,7 @@
 'use static';
 
 Entry.Creamo = {
+    id: '20.1',
     name: 'creamo',
     url: 'http://www.creamo.co.kr',
     imageName: 'creamo.png',
@@ -383,3 +384,5 @@ Entry.Creamo.getBlocks = function() {
         //endregion creamo
     };
 };
+
+module.exports = Entry.Creamo;

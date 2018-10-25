@@ -36,6 +36,7 @@ Entry.Robotis_carCont = {
 
         this.update();
     },
+    id: '7.1',
     name: 'robotis_carCont',
     url: 'http://www.robotis.com/index/product.php?cate_code=111310',
     imageName: 'robotis_carCont.png',
@@ -210,6 +211,7 @@ Entry.Robotis_openCM70 = {
         Entry.hw.sendQueue['temp'] = null;*/
         //Entry.Robotis_carCont.update();
     },
+    id: '7.2',
     name: 'robotis_openCM70',
     url: 'http://www.robotis.com/index/product.php?cate_code=111310',
     imageName: 'robotis_openCM70.png',
@@ -2344,3 +2346,5 @@ Entry.Robotis_openCM70.getBlocks = function() {
         //endregion robotis 로보티즈
     };
 };
+
+module.exports = [Entry.Robotis_carCont, Entry.Robotis_openCM70];

@@ -59,6 +59,7 @@ Entry.Hamster = {
         sq.lineTracerMode = mode;
         sq.lineTracerModeId = this.lineTracerModeId;
     },
+    id: '2.4',
     name: 'hamster',
     url: 'http://www.robomation.net',
     imageName: 'hamster.png',
@@ -5048,3 +5049,5 @@ Entry.Hamster.getBlocks = function() {
         //endregion hamster 햄스터
     };
 };
+
+module.exports = Entry.Hamster;

@@ -14,6 +14,7 @@
  ***************************************************************************************/
 
 Entry.byrobot_petrone_v2_flight = {
+    id: 'F.6',
     name: 'byrobot_petrone_v2_flight',
     url: 'http://www.byrobot.co.kr/',
     imageName: 'byrobot_petrone_v2_flight.png',
@@ -5261,3 +5262,5 @@ Entry.byrobot_petrone_v2_flight.getBlocks = function() {
         //endregion byrobot 바이로봇
     };
 };
+
+module.exports = Entry.byrobot_petrone_v2_flight;

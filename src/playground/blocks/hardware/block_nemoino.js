@@ -1,6 +1,7 @@
 'use strict';
 
 Entry.nemoino = {
+    id: '1.6',
     name: 'nemoino',
     imageName: 'nemoino.png',
     title: {
@@ -340,3 +341,5 @@ Entry.nemoino.getBlocks = function() {
         //endregion nemoino 네모이노
     };
 };
+
+module.exports = Entry.nemoino;

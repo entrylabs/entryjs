@@ -1,6 +1,7 @@
 'use strict';
 
 Entry.Cobl = {
+    id: '1.A',
     name: 'cobl',
     url: 'http://www.cobl.co.kr/',
     imageName: 'cobl.png',
@@ -867,3 +868,5 @@ Entry.Cobl.getBlocks = function() {
         //endregion cobl 코블
     };
 };
+
+module.exports = Entry.Cobl;

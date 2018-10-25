@@ -1,6 +1,7 @@
 'use strict';
 
 Entry.Arduino = {
+    id: ['1.1', '4.2', '8.1'],
     name: 'arduino',
     url: 'http://www.arduino.cc/',
     imageName: 'arduino.png',
@@ -822,3 +823,5 @@ Entry.Arduino.getBlocks = function() {
         //endregion arduino 아두이노
     };
 };
+
+module.exports = Entry.Arduino;

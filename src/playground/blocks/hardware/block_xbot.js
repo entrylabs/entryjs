@@ -47,6 +47,7 @@ Entry.Xbot = {
         }
         this.timeouts = [];
     },
+    id: '1.7',
     name: 'xbot_epor_edge',
     url: 'http://xbot.co.kr/',
     imageName: 'xbot.png',
@@ -725,3 +726,5 @@ Entry.Xbot.getBlocks = function() {
         //endregion xbot 엑스봇
     };
 };
+
+module.exports = Entry.Xbot;

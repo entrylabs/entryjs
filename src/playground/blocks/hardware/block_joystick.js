@@ -1,6 +1,7 @@
 'use strict';
 
 Entry.joystick = {
+    id: '1.4',
     name: 'joystick',
     url: 'http://www.kocoafab.cc/',
     imageName: 'joystick.png',
@@ -118,3 +119,5 @@ Entry.joystick.getBlocks = function() {
         //endregion joystick 조이스틱
     };
 };
+
+module.exports = Entry.joystick;

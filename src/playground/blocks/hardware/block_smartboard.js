@@ -1,6 +1,7 @@
 'use strict';
 
 Entry.SmartBoard = {
+    id: 'A.1',
     name: 'smartBoard',
     url: 'http://www.sciencebox.co.kr',
     imageName: 'smartboard.png',
@@ -605,3 +606,5 @@ Entry.SmartBoard.getBlocks = function() {
         //endregion smartBoard 스마트보드
     };
 };
+
+module.exports = Entry.SmartBoard;

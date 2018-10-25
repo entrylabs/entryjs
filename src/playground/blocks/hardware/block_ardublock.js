@@ -1,6 +1,7 @@
 'use strict';
 
 Entry.ardublock = {
+    id: '1.8',
     name: 'ardublock',
     url: 'http://www.jkelec.co.kr/',
     imageName: 'ardublock.png',
@@ -1175,3 +1176,5 @@ Entry.ardublock.getBlocks = function() {
         //endregion ardublock 아두블록
     };
 };
+
+module.exports = Entry.ardublock;

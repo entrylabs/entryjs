@@ -9,6 +9,7 @@
  *********************************************************/
 
 Entry.mechatro = {
+    id: '1F.1',
     name: 'mechatro',
     url: 'http://cafe.naver.com/easybread',
     imageName: 'mechatronics_4d.png',
@@ -1149,3 +1150,5 @@ Entry.mechatro.getBlocks = function() {
         //endregion mechatro
     };
 };
+
+module.exports = Entry.mechatro;

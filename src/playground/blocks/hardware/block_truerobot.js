@@ -1,6 +1,7 @@
 'use strict';
 
 Entry.trueRobot = {
+    id: '19.1',
     name: 'trueRobot',
     url: 'http://www.sigongmedia.co.kr',
     imageName: 'truetrue.png',
@@ -1834,3 +1835,5 @@ Entry.trueRobot.setLanguage = function () {
         }
     }
 };
+
+module.exports = Entry.trueRobot;

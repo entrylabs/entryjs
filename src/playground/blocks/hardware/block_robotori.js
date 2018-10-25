@@ -35,6 +35,7 @@ Entry.robotori = {
         Entry.hw.update();
         var Robotori = Entry.robotori;
     },
+    id: 'D.1',
     name: 'robotori',
     url: 'http://www.robotori.com/',
     imageName: 'robotori.png',
@@ -370,3 +371,5 @@ Entry.robotori.getBlocks = function() {
         //endregion robotori 로보토리
     };
 };
+
+module.exports = Entry.robotori;

@@ -1,5 +1,6 @@
 'use strict';
 Entry.Codingmachine = {
+    id: '26.1',
     name: 'Codingmachine',
     url: 'http://wonn.co.kr/',
     imageName: 'codingmachine.png', //thumbnail
@@ -745,3 +746,5 @@ Entry.Codingmachine.getBlocks = function () {
         //endregion JDKit
     };
 };
+
+module.exports = Entry.Codingmachine;

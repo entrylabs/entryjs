@@ -197,6 +197,7 @@ Entry.Roboid = {
         }
         this.timeouts = [];
     },
+    id: '2.FF',
     name: 'roboid',
     url: 'http://robomation.net/',
     imageName: 'block_roboid.png',
@@ -8912,3 +8913,5 @@ Entry.Roboid.getBlocks = function() {
         //endregion roboid 로두이노
     };
 };
+
+module.exports = Entry.Roboid;

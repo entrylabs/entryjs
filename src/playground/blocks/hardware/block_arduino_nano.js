@@ -1,6 +1,7 @@
 'use strict';
 
 Entry.ArduinoNano = {
+    id: ['1.10', '1A.1'],
     name: 'ArduinoNano',
     url: 'http://www.arduino.cc/',
     imageName: 'arduinoNano.png',
@@ -294,3 +295,5 @@ Entry.ArduinoNano.getBlocks = function() {
         //endregion arduinoNano 아두이노 나노
     };
 };
+
+module.exports = Entry.ArduinoNano;

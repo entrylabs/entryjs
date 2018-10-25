@@ -1,6 +1,7 @@
 'use strict';
 
 Entry.Chocopi = {
+    id: '14.1',
     name: 'chocopi',
     url: 'http://chocopi.org/entry/',
     imageName: 'chocopi.png',
@@ -1114,3 +1115,5 @@ Entry.Chocopi.setLanguage = function () {
         }
     }
 };
+
+module.exports = Entry.Chocopi;

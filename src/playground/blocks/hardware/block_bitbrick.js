@@ -79,6 +79,7 @@ Entry.Bitbrick = {
         for (var port in Entry.Bitbrick.PORT_MAP) sq[port] = 0;
         Entry.hw.update();
     },
+    id: '3.1',
     name: 'bitbrick',
     url: 'http://www.bitbrick.cc/',
     imageName: 'bitbrick.png',
@@ -798,3 +799,5 @@ Entry.Bitbrick.setLanguage = function () {
         }
     }
 };
+
+module.exports = Entry.Bitbrick;

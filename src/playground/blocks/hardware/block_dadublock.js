@@ -1,6 +1,7 @@
 'use strict';
 
 Entry.DaduBlock = {
+    id: 'C.1',
     name: 'dadublock',
     url: 'http://www.dadublock.com/',
     imageName: 'dadublock.png',
@@ -52,6 +53,7 @@ Entry.DaduBlock = {
 };
 
 Entry.DaduBlock_Car = {
+    id: 'C.2',
     name: 'dadublock_car',
     url: 'http://www.dadublock.com/',
     imageName: 'dadublock_car.png',
@@ -1575,3 +1577,5 @@ Entry.DaduBlock.getBlocks = function() {
         //endregion dadublock 다두블록
     };
 };
+
+module.exports = [Entry.DaduBlock, Entry.DaduBlock_Car];

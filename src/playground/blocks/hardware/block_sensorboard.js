@@ -1,6 +1,7 @@
 'use strict';
 
 Entry.SensorBoard = {
+    id: '1.2',
     name: 'sensorBoard',
     url: 'http://www.neweducation.co.kr/',
     imageName: 'entrybt.png',
@@ -246,3 +247,5 @@ Entry.SensorBoard.getBlocks = function() {
         //endregion sensorBoard e센서보드
     };
 };
+
+module.exports = Entry.SensorBoard;

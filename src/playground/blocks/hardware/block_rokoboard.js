@@ -1,6 +1,7 @@
 'use strict';
 
 Entry.rokoboard = {
+    id: '13.1',
     name: 'rokoboard',
     url: 'http://www.r-steam.com/',
     imageName: 'rokoboard.png',
@@ -189,3 +190,5 @@ Entry.rokoboard.getBlocks = function() {
         //endregion rokoboard 로코보드
     };
 };
+
+module.exports = Entry.rokoboard;

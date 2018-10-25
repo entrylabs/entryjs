@@ -71,4 +71,6 @@ Entry.Mechatronics_4D = {
     ],
     BlockState: {
     }
-}
+};
+
+module.exports = Entry.Mechatronics_4D;

@@ -1,6 +1,7 @@
 'use strict';
 
 Entry.memaker = {
+    id: '6.2',
     name: 'memaker',
     url: 'http://www.jkelec.co.kr/',
     imageName: 'memaker.png',
@@ -1074,3 +1075,5 @@ Entry.memaker.getBlocks = function() {
         //endregion memaker 미메이커
     };
 };
+
+module.exports = Entry.memaker;

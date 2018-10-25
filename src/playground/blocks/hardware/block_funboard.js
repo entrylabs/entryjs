@@ -2,6 +2,7 @@
 
 Entry.FunBoard = {
     // isNotFor": [ "funboard" ] 값
+    id: '21.1',
     name: 'funboard',
     url: 'http://www.thinkfunedu.com',
     imageName: 'funboard.png',
@@ -3641,3 +3642,5 @@ Entry.FunBoard.getBlocks = function() {
         //endregion FunBoard
     };
 };
+
+module.exports = Entry.FunBoard;

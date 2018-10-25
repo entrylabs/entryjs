@@ -934,7 +934,7 @@ Entry.coconut = {
         return bytes;
     },
     /* Scratch coconut Extension import */
-
+    id : '15.1',
     name: 'coconut',
     url: 'http://coco-nut.kr',
     imageName: 'coconut.png',
@@ -3851,3 +3851,5 @@ Entry.coconut.getBlocks = function() {
         //endregion coconut 코코넛
     };
 };
+
+module.exports = Entry.coconut;

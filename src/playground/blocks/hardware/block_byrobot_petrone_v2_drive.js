@@ -14,6 +14,7 @@
  ***************************************************************************************/
 
 Entry.byrobot_petrone_v2_drive = {
+    id: 'F.5',
     name: 'byrobot_petrone_v2_drive',
     url: 'http://www.byrobot.co.kr/',
     imageName: 'byrobot_petrone_v2_drive.png',
@@ -5029,3 +5030,5 @@ Entry.byrobot_petrone_v2_drive.getBlocks = function() {
         //endregion byrobot 바이로봇
     };
 };
+
+module.exports = Entry.byrobot_petrone_v2_drive;

@@ -49,6 +49,7 @@ Entry.hummingbird = {
     },
 
     //장치이름, 부사장님과 상의가 필요 일단 허밍버드로
+    id: '1C.1',
     name: 'hummingbird',
     url: 'http://www.creartbot.com/hummingbird',
     imageName: 'hummingbirdduo.png',
@@ -660,3 +661,5 @@ Entry.hummingbird.getBlocks = function() {
         //endregion hummingbird 허밍버드
     };
 };
+
+module.exports = Entry.hummingbird;

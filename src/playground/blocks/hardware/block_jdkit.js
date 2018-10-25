@@ -45,6 +45,7 @@ Entry.JDKit = {
         ];
         Entry.hw.update();
     },
+    id: '1D.1',
     name: 'JDKit',
     url: 'http://www.junilab.co.kr',
     imageName: 'jdkit.png',
@@ -820,3 +821,5 @@ Entry.JDKit.getBlocks = function() {
         //endregion JDKit
     };
 };
+
+module.exports = Entry.JDKit;

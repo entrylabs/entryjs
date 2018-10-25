@@ -44,6 +44,7 @@ Entry.Altino = {
         }
         this.timeouts = [];
     },
+    id: '18.1',
     name: 'altino',
     url: 'http://saeon.co.kr/',
     imageName: 'altino.png',
@@ -610,3 +611,5 @@ Entry.Altino.getBlocks = function() {
         //endregion Altino 알티노
     };
 };
+
+module.exports = Entry.Altino;

@@ -1,5 +1,6 @@
 'use strict';
 Entry.MODI = {
+    id: '16.1',
     name: 'modi',
     url: 'http://www.luxrobo.com/',
     imageName: 'modi.png',
@@ -1256,3 +1257,5 @@ Entry.MODI.getBlocks = function() {
     };
 };
 //endregion modi 모디
+
+module.exports = Entry.MODI;

@@ -1,6 +1,7 @@
 'use strict';
 
 Entry.Codestar = {
+    id: 'B.1',
     name: 'codestar',
     url: 'http://codestar.co.kr',
     imageName: 'codestar.png',
@@ -691,3 +692,5 @@ Entry.Codestar.getBlocks = function() {
         //endregion codestar 코드스타
     };
 };
+
+module.exports = Entry.Codestar;

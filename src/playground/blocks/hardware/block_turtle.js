@@ -147,6 +147,7 @@ Entry.Turtle = {
             sq.ledBlue = 255;
         }
     },
+    id: '2.9',
     name: 'turtle',
     url: 'http://turtle.school',
     imageName: 'turtle.png',
@@ -3688,3 +3689,5 @@ Entry.Turtle.getBlocks = function() {
         //endregion turtle 터틀
     };
 };
+
+module.exports = Entry.Turtle;

@@ -1,6 +1,7 @@
 'use strict';
 
 Entry.dplay = {
+    id: '1.5',
     name: 'dplay',
     url: 'http://dplay.cc',
     imageName: 'dplay.png',
@@ -1325,3 +1326,5 @@ Entry.dplay.getBlocks = function() {
         //endregion dplay 디플레이
     };
 };
+
+module.exports = Entry.dplay;

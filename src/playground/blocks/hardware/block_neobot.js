@@ -1,6 +1,7 @@
 'use strict';
 
 Entry.Neobot = {
+    id: '5.1',
     name: 'neobot',
     url: 'http://www.neobot.co.kr',
     imageName: 'neobot.png',
@@ -1245,3 +1246,5 @@ Entry.Neobot.getBlocks = function() {
         //endregion neobot 네오봇
     };
 };
+
+module.exports = Entry.Neobot;

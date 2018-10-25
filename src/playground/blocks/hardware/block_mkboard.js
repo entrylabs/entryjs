@@ -1,6 +1,7 @@
 'use strict';
 
 Entry.mkboard = {
+    id: '6.1',
     name: 'mkboard',
     url: 'http://www.jkelec.co.kr',
     imageName: 'mkboard.png',
@@ -1325,3 +1326,5 @@ Entry.mkboard.getBlocks = function() {
         //endregion mkboard 몽키보드
     };
 };
+
+module.exports = Entry.mkboard;

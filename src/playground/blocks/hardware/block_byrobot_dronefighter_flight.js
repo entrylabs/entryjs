@@ -14,6 +14,7 @@
  ***************************************************************************************/
 
 Entry.byrobot_dronefighter_flight = {
+    id: 'F.3',
     name: 'byrobot_dronefighter_flight',
     url: 'http://www.byrobot.co.kr/',
     imageName: 'byrobot_dronefighter_flight.png',
@@ -2996,3 +2997,5 @@ Entry.byrobot_dronefighter_flight.getBlocks = function() {
         //endregion byrobot 바이로봇
     };
 };
+
+module.exports = Entry.byrobot_dronefighter_flight;

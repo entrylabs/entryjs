@@ -76,6 +76,7 @@ Entry.EV3 = {
         Entry.hw.sendQueue.STATUS_COLOR = 'GREEN';
         Entry.hw.update();
     },
+    id: '12.1',
     name: 'EV3',
     url: 'http://www.lego.com/ko-kr/mindstorms/about-ev3',
     imageName: 'ev3.png',
@@ -536,3 +537,5 @@ Entry.EV3.getBlocks = function() {
         //endregion ev3 이브이3
     };
 };
+
+module.exports = Entry.EV3;

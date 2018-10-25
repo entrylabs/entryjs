@@ -14,6 +14,7 @@
  ***************************************************************************************/
 
 Entry.byrobot_petrone_v2_controller = {
+    id: 'F.4',
     name: 'byrobot_petrone_v2_controller',
     url: 'http://www.byrobot.co.kr/',
     imageName: 'byrobot_petrone_v2_controller.png',
@@ -3453,3 +3454,5 @@ Entry.byrobot_petrone_v2_controller.getBlocks = function() {
         //endregion byrobot 바이로봇
     };
 };
+
+module.exports = Entry.byrobot_petrone_v2_controller;

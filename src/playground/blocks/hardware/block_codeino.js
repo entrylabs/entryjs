@@ -1,6 +1,7 @@
 'use strict';
 
 Entry.CODEino = {
+    id: '1.3',
     name: 'CODEino',
     url: 'http://www.kcsi.co.kr/ko/bbs/content.php?co_id=CODEino1',
     imageName: 'codeino.png',
@@ -1597,3 +1598,5 @@ Entry.CODEino.getBlocks = function() {
         //endregion codeino 코드이노
     };
 };
+
+module.exports = Entry.CODEino;

@@ -1,6 +1,7 @@
 'use strict';
 
 Entry.Blacksmith = {
+    id: '1.B',
     name: 'blacksmith',
     url: 'http://www.hanibot.com',
     imageName: 'blacksmith.png',
@@ -1386,3 +1387,5 @@ Entry.Blacksmith.getBlocks = function() {
         //endregion blacksmith 대장장이보드
     };
 };
+
+module.exports = Entry.Blacksmith;

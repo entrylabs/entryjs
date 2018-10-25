@@ -1,6 +1,7 @@
 'use strict';
 
 Entry.ArduinoExt = {
+    id: '1.9',
     name: 'ArduinoExt',
     url: 'http://www.arduino.cc/',
     imageName: 'arduinoExt.png',
@@ -1093,3 +1094,5 @@ Entry.ArduinoExt.getBlocks = function() {
     };
 };
 //endregion arduinoExt 아두이노 확장모드
+
+module.exports = Entry.ArduinoExt;

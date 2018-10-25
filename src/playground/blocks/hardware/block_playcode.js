@@ -1,6 +1,7 @@
 ﻿'use strict';
 
 Entry.playcode = {
+    id: '1E.1',
     name: 'playcode',
     url: 'http://www.playcode.kr/product',
     imageName: 'playcode.png',
@@ -712,3 +713,5 @@ Entry.playcode.getBlocks = function() {
         //endregion playcode
     };
 };
+
+module.exports = Entry.playcode;

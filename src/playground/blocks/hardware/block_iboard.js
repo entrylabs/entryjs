@@ -1,6 +1,7 @@
 'use strict';
 
 Entry.iboard = {
+    id: '9.1',
     name: 'iboard',
     url: 'http://www.io-tech.co.kr',
     imageName: 'iboard.png',
@@ -746,3 +747,5 @@ Entry.iboard.getBlocks = function() {
         //endregion iboard 아이보드
     };
 };
+
+module.exports = Entry.iboard;

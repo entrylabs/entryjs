@@ -1,6 +1,7 @@
 'use strict';
 
 Entry.EduMaker = {
+    id: '1B.1',
     name: 'EduMaker',
     imageName: 'edumaker.png',
     title: {
@@ -796,3 +797,5 @@ Entry.EduMaker.getBlocks = function() {
         //endregion edumaker 에듀메이커
     };
 };
+
+module.exports = Entry.EduMaker;

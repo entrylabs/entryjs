@@ -1,6 +1,7 @@
 'use strict';
 
 Entry.Roborobo_Roduino = {
+    id: '10.1',
     name: 'roborobo_roduino',
     url: 'http://www.roborobo.co.kr',
     imageName: 'roborobo_roduino.png',
@@ -203,6 +204,7 @@ Entry.Roborobo_Roduino.setLanguage = function() {
 };
 
 Entry.Roborobo_SchoolKit = {
+    id: '10.2',
     name: 'roborobo_schoolkit',
     url: 'http://www.roborobo.co.kr',
     imageName: 'roborobo_schoolkit.png',
@@ -1932,3 +1934,5 @@ Entry.Roborobo_SchoolKit.getBlocks = function() {
         //endregion schoolkit 스쿨키트
     };
 };
+
+module.exports = [Entry.Roborobo_Roduino, Entry.Roborobo_SchoolKit];

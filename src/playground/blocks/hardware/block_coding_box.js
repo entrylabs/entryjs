@@ -1,6 +1,7 @@
 'use strict';
 
 Entry.CodingBox = {
+    id: '1.C',
     name: 'CodingBox',
     url: 'http://smartstore.naver.com/domekit',
     imageName: 'codingbox.png',
@@ -2532,3 +2533,5 @@ Entry.CodingBox.getBlocks = function() {
     };
 };
 //endregion CodingBox
+
+module.exports = Entry.CodingBox;

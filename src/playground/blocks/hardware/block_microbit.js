@@ -6,6 +6,7 @@ const _merge = require('lodash/merge');
 
 Entry.Microbit = new class Microbit {
     constructor() {
+        this.id = '21.1';
         this.url = 'http://microbit.org/ko/';
         this.imageName = 'microbit.png';
         this.title = {
@@ -966,3 +967,5 @@ Entry.Microbit.getBlocks = function() {
         },
     };
 };
+
+module.exports = Entry.Microbit;

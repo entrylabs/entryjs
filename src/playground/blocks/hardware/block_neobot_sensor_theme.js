@@ -1,4 +1,5 @@
 Entry.NeobotSensorTheme = {
+    id: '5.2',
     name: 'neobot_sensor_theme',
     url: 'http://www.neobot.co.kr',
     imageName: 'neobot_sensor_theme.png',
@@ -43,4 +44,6 @@ Entry.NeobotSensorTheme = {
         },
         mode: 'both'
     }
-}
+};
+
+module.exports = Entry.NeobotSensorTheme;

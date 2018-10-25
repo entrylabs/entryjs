@@ -30,6 +30,7 @@ Entry.Dash = {
         }
         Entry.hw.update();
     },
+    id: '24.1',
     name: 'Dash',
     url: 'http://www.dashedu.kr/',
     imageName: 'dash.png',
@@ -1521,3 +1522,5 @@ Entry.Dash.getBlocks = function() {
         },
     };
 };
+
+module.exports = Entry.Dash;

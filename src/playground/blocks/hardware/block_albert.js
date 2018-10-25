@@ -324,6 +324,7 @@ Entry.Albert = {
             return degree * 3.14159265 / 180.0;
         },
     },
+    id: '2.5',
     name: 'albert',
     url: 'http://albert.school/',
     imageName: 'albertschool.png',
@@ -2117,3 +2118,5 @@ Entry.Albert.getBlocks = function() {
         //endregion albert 알버트
     };
 };
+
+module.exports = Entry.Albert;
