@@ -3,6 +3,7 @@
  */
 'use strict';
 
+import { PIXIStarter } from '../class/pixi/init/PIXIStarter';
 require("./utils")
 
 /**
@@ -202,6 +203,8 @@ Entry.initialize_ = function() {
         this.reporter = new Entry.Reporter(false);
     else if (this.type == 'workspace' || this.type == 'phone')
         this.reporter = new Entry.Reporter(true);
+
+    PIXIStarter.initOnce();
 
 };
 
