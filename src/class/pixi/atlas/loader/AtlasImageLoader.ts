@@ -50,7 +50,7 @@ export class AtlasImageLoader {
         var pic:IRawPicture;
         for( var i = 0 ; i < LEN ; i++ ) {
             pics = arrObj[i].pictures;
-            if(!pics || !(LEN2 = pics.length)) return;
+            if(!pics || !(LEN2 = pics.length)) continue;
             for(var j = 0 ; j < LEN2 ; j++) {
                 pic = pics[j];
                 allPathSet.put(pic.filename || pic.fileurl);

@@ -224,7 +224,6 @@ export class SceneBins {
 
         //사용안하는 path를 검색, 패킹을 다시 할 것이기 때문에 사용하는 텍스쳐의 rect 정보를 저장.
         this._path_tex_map.each((tex:AtlasTexture, path:string)=>{
-            console.log(path);
             if( usedPathSet && usedPathSet.hasValue(path) ) {
                 this._notPackedRects.push(this._path_tex_map.getValue(path).imageRect);
             } else {

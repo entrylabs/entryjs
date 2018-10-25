@@ -27,12 +27,11 @@ class _PIXIAtlasHelper {
         var LEN2;
         var pics:IRawPicture[];
         var obj:any;
-        var nowSceneID:string;
         for (var i = 0; i < LEN; i++) {
             obj = arrObj[i];
+            if( sceneID != obj.scene.id ) continue;
             pics = obj.pictures;
-            nowSceneID = obj.scene.id;
-            if (!pics || !(LEN2 = pics.length)) return;
+            if (!pics || !(LEN2 = pics.length)) continue;
             for (var j = 0; j < LEN2; j++) {
                 pathSet.put(this.getRawPath(pics[j]));
             }
