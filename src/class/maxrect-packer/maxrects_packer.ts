@@ -2,7 +2,7 @@ import { Rectangle, IRectangle } from "./geom/Rectangle";
 import { MaxRectsBin } from "./maxrects_bin";
 import { OversizedElementBin } from "./oversized_element_bin";
 import { Bin, IBin } from "./abstract_bin";
-import { InputRect } from './geom/InputRect';
+import { ImageRect } from './geom/ImageRect';
 
 export const EDGE_MAX_VALUE: number = 4096;
 export const EDGE_MIN_VALUE: number = 128;
@@ -41,7 +41,7 @@ export class MaxRectsPacker {
         this.bins = [];
     }
 
-    public add(rect:InputRect) {
+    public add(rect:ImageRect) {
         var width = rect.width;
         var height = rect.height;
         var binIndex:number = this.bins.length;
@@ -63,8 +63,8 @@ export class MaxRectsPacker {
      * @param {IRectangle[]} rects Array of bin/rectangles
      * @memberof MaxRectsPacker
      */
-    public addArray (rects: InputRect[]) {
-        this.sort(rects).forEach((r:InputRect) => this.add(r));
+    public addArray (rects: ImageRect[]) {
+        this.sort(rects).forEach((r:ImageRect) => this.add(r));
     }
 
     private sort (rects: IRectangle[]) {

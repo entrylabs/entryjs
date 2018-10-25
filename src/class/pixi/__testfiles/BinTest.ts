@@ -2,8 +2,7 @@ import { AtlasCanvasViewer } from '../atlas/AtlasCanvasViewer';
 import PIXIHelper from '../helper/PIXIHelper';
 import { MaxRectsPacker } from '../../maxrect-packer/maxrects_packer';
 import { Bin } from '../../maxrect-packer/abstract_bin';
-import { IRectangle } from '../../maxrect-packer/geom/Rectangle';
-import { InputRect } from '../../maxrect-packer/geom/InputRect';
+import { ImageRect } from '../../maxrect-packer/geom/ImageRect';
 
 
 declare let _:any;
@@ -38,7 +37,7 @@ export class BinTest {
         };
         w = w || c(2000) + 1;
         h = h || c(2000) + 1;
-        var r = new InputRect(0,0, w, h);
+        var r = new ImageRect(0,0, w, h);
         r.data = { path : `rgb(${c()},${c()},${c()})`, tex: null };
         this.packer.add(r);
 
@@ -54,14 +53,14 @@ export class BinTest {
                 ctx.fillRect(0,0, S, S);
             }
 
-            _.each(bin.rects, (r:InputRect)=>{
+            _.each(bin.rects, (r:ImageRect)=>{
                 this._printColor(canvas, r);
             });
             this._viewer.add(canvas);
         });
     }
 
-    _printColor(canvas:HTMLCanvasElement, rect:InputRect) {
+    _printColor(canvas:HTMLCanvasElement, rect:ImageRect) {
 
         var ctx:CanvasRenderingContext2D = canvas.getContext("2d");
         // ctx.fillStyle = ;
