@@ -14,6 +14,8 @@ import { AtlasTexture } from './texture/AtlasTexture';
 import { AtlasBaseTexture } from './texture/AtlasBaseTexture';
 import { PrimitiveMap } from './structure/PrimitiveMap';
 import { AtlasImageLoader } from './loader/AtlasImageLoader';
+import { PIXIAtlasHelper } from './PIXIAtlasHelper';
+import { TimeoutTimer } from '../utils/TimeoutTimer';
 
 
 declare let _:any;
@@ -30,9 +32,9 @@ let OP = {
     useOffscreenCanvas: false
 };
 
-function getRawPath(rawData:IRawPicture):string {
-    return rawData.fileurl || rawData.filename;
-}
+
+
+let TIMEOUT_INTERVAL = 250;
 
 /** base texture max pixel size */
 const MAX_SIZE = 4096;
@@ -52,8 +54,6 @@ function newPacker():MaxRectsPacker{
  */
 let EMPTY_BASE_TEX:AtlasBaseTexture = new AtlasBaseTexture();
 EMPTY_BASE_TEX.width = EMPTY_BASE_TEX.height = EMPTY_BASE_TEX.realHeight = EMPTY_BASE_TEX.realWidth = MAX_SIZE;
-EMPTY_BASE_TEX.hasLoaded = true;
-EMPTY_BASE_TEX.IS_EMPTY = true;
 EMPTY_BASE_TEX.dispose();
 
 
@@ -66,22 +66,16 @@ export class SceneBins {
     private _packer:MaxRectsPacker = newPacker();
     private _path_tex_map:PrimitiveMap<AtlasTexture> = new PrimitiveMap();
     private _activated:boolean;
-
+    private _imageRemoved:boolean;
+    private _timer:TimeoutTimer = new TimeoutTimer();
 
     constructor(public sceneID:string, private _loader:AtlasImageLoader, private _viewer:AtlasCanvasViewer) {
 
     }
 
-    addRawPicInfos(pics:IRawPicture[]) {
-        var LEN = pics.length;
-        for(var i = 0 ; i < LEN ; i++ ) {
-            this.addPicInfo(pics[i]);
-        }
-    }
-
     addPicInfo(pic:IRawPicture):void {
 
-        var path = getRawPath(pic);
+        var path = PIXIAtlasHelper.getRawPath(pic);
         if(this._path_tex_map.hasValue(path)) return;
 
         var w = pic.dimension.width,
@@ -90,9 +84,21 @@ export class SceneBins {
         var tex:AtlasTexture = this._newTexture(path, rect);
         rect.data = { path: path, tex:tex };
         this._notPackedRects.push(rect);
-        if(this._activated) {
-            this._pack();
-        }
+
+        if(!this._activated) return;
+
+        if(this._timer.isRunning) return;
+
+        console.log('pack scheduled');
+        this._timer.timeout(TIMEOUT_INTERVAL, () => {
+            if(this._imageRemoved) {
+                console.log('삭제된 이미지가 있어서 invalidate');
+                this._invalidate();
+            } else {
+                console.log('just packing');
+                this._pack();
+            }
+        });
     }
 
     private _newTexture(path:string, rect:InputRect):AtlasTexture {
@@ -101,10 +107,13 @@ export class SceneBins {
         return tex;
     }
 
+    /** 패킹 하지 않은 Rect를 packing 한다. */
     private _pack() {
-        console.log("pack - " + this._notPackedRects.length );
-        this._packer.addArray(this._notPackedRects);
+        if(!this._notPackedRects.length) return;
 
+        var len = this._notPackedRects.length;
+        var time = new Date().getTime();
+        this._packer.addArray(this._notPackedRects);
         var willUpdateBaseTextures:AtlasBaseTexture[] = [];
 
         this._notPackedRects.forEach((r:InputRect)=>{
@@ -121,17 +130,17 @@ export class SceneBins {
         });
 
         this._destroyBaseTextureAfter(this._packer.bins.length);
-
         this._packedRects = this._packedRects.concat(this._notPackedRects);
-
         this._notPackedRects = [];
+        time = new Date().getTime() - time;
+        console.log(`pack ${len} items. time:${time}`);
     }
 
-    activate(usedPathSet:PrimitiveSet) {
+    activate():void {
 
         this._activated = true;
 
-        this.invalidate(usedPathSet);
+        this._invalidate();
 
         _.each(this._packer.bins, (bin:MaxRectsBin, index:number)=>{
             var base:AtlasBaseTexture = this._arrBaseTexture[index];
@@ -148,7 +157,6 @@ export class SceneBins {
         });
     }
 
-
     private _getBaseTexture(index:number):AtlasBaseTexture {
         var base:AtlasBaseTexture = this._arrBaseTexture[index];
         if(base) return base;
@@ -162,6 +170,7 @@ export class SceneBins {
     }
 
     deactivate() {
+        this._timer.reset();
         this._activated = false;
         _.each(this._arrBaseTexture, (b:AtlasBaseTexture)=>{
             b.deactivate();
@@ -184,20 +193,30 @@ export class SceneBins {
         var t:AtlasTexture = this.getTexture(info.path);
 
         if(!t) return;//이 Scene에서 사용안함
+        if(t.isEmptyTexture) return;
 
-        if(!t.baseTexture.hasLoaded) {
-            t.getBaseTexture().activate(MAX_SIZE);
+        console.log("put imgageData");
+
+        var base:AtlasBaseTexture = t.getBaseTexture();
+
+        if(!base.activated) {
+            base.activate(MAX_SIZE);
         }
         t.drawImageAtBaseTexture(info.img);
         if(forceUpdateBaseTexture) {
-            t.baseTexture.update();
+            base.update();
         }
         Entry.requestUpdate = true;
     }
 
-    invalidate(usedPathSet:PrimitiveSet|null):void {
+    /**
+     * 모든 텍스쳐 패킹을 다시 한다.
+     * @private
+     */
+    private _invalidate():void {
         if(!this._activated) return;
-
+        this._imageRemoved = false;
+        let usedPathSet:PrimitiveSet = PIXIAtlasHelper.getScenePathSet(this.sceneID);
         this._notPackedRects.length = 0;
         this._packedRects.length = 0;
 
@@ -230,6 +249,12 @@ export class SceneBins {
         }
     }
 
+
+
+    _internal_imageRemoved():void {
+        this._imageRemoved = true;
+    }
+
     private _destroyBaseTextureAfter(startIndex:number) {
         var LEN = this._arrBaseTexture.length;
         for( var i = startIndex ; i < LEN ; i++ ) {
@@ -239,12 +264,14 @@ export class SceneBins {
     }
 
     destroy() {
+        this._timer.reset();
         _.each(this._path_tex_map, (tex:AtlasTexture)=>{
             tex.destroy(false);
         });
 
         this._destroyBaseTextureAfter(0);
 
+        this._timer = null;
         this._arrBaseTexture = null;
         this._path_tex_map = null;
         this._packer = null;

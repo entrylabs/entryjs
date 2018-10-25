@@ -1,4 +1,5 @@
 import { IRawPicture } from '../model/IRawPicture';
+import { PIXIAtlasHelper } from '../PIXIAtlasHelper';
 
 declare let Entry:any;
 declare let _:any;
@@ -27,7 +28,7 @@ export class AtlasImageLoadingInfo {
 
     constructor(model:IRawPicture, private _onLoadCallback:(info:AtlasImageLoadingInfo) => void) {
         this._realPath = this._getImageSrc(model);
-        this._rawPath = model.fileurl || model.filename;
+        this._rawPath = PIXIAtlasHelper.getRawPath(model);
         this._picName = model.name;
     }
 

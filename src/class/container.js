@@ -429,7 +429,7 @@ Entry.Container.prototype.removeObject = function(id, isPass) {
     }
 
     Entry.playground.reloadPlayground();
-    PIXIAtlasManager.requestInvalidate("container::removeObject");
+    PIXIAtlasManager.imageRemoved("container::removeObject");
 };
 
 /**

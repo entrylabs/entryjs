@@ -5,12 +5,7 @@ import { AtlasImageLoadingInfo } from './loader/AtlasImageLoadingInfo';
 import { IRawPicture } from './model/IRawPicture';
 import Texture = PIXI.Texture;
 import { PIXIDebugHelper } from '../helper/PIXIDebugHelper';
-import { PrimitiveSet } from './structure/PrimitiveSet';
-import { TimeoutTimer } from './TimeoutTimer';
-
-
-declare let _:any;
-declare let Entry:any;
+import { PIXIAtlasHelper } from './PIXIAtlasHelper';
 
 
 type SceneBinsMap = {[key:string]: SceneBins};
@@ -23,8 +18,6 @@ class _PIXIAtlasManager {
     private _imageLoader:AtlasImageLoader;
 
     private _viewer:AtlasCanvasViewer;
-    private _invalidate:boolean;
-    private _timer:TimeoutTimer;
 
     /**
      * @private
@@ -34,7 +27,6 @@ class _PIXIAtlasManager {
         if(this._imageLoader) {
             throw new Error("do not call twice");
         }
-        this._timer = new TimeoutTimer();
         this._viewer = new AtlasCanvasViewer();
         this._imageLoader = new AtlasImageLoader(this._onImageLoaded.bind(this));
     }
@@ -48,14 +40,14 @@ class _PIXIAtlasManager {
             this._activatedScene.deactivate();
         }
         this._activatedScene = this._getSceneBin(sceneID);
-        this._activatedScene.activate(this._getActivatedScenePathSet());
+        this._activatedScene.activate();
     }
 
     getTextureWithModel(sceneID:string, pic:IRawPicture):Texture {
         this._imageLoader.load(pic);
         var bin:SceneBins = this._getSceneBin(sceneID);
         bin.addPicInfo(pic);
-        return bin.getTexture(pic.fileurl || pic.filename);
+        return bin.getTexture(PIXIAtlasHelper.getRawPath(pic));
     }
 
     private _getSceneBin(sceneID:string, createIfNotExist:boolean = true):SceneBins {
@@ -76,50 +68,16 @@ class _PIXIAtlasManager {
         delete this._sceneID_sceneBin_map[sceneID];
     }
 
-    private _gcTexture():void {
-        if(!this._invalidate) return;
-        if(!this._activatedScene) return;
 
-        this._activatedScene.invalidate(this._getActivatedScenePathSet());
-        this._invalidate = false;
-    }
-
-    private _getActivatedScenePathSet():PrimitiveSet {
-        var activatedSceneID:string = this._activatedScene.sceneID;
-
-        var arrObj:any[] = Entry.container.getAllObjects();
-        var allPathSet:PrimitiveSet = new PrimitiveSet();
-        var activatedScenePathSet = new PrimitiveSet();
-
-        _.each(arrObj, (obj:any, index:number)=>{
-            var pics:IRawPicture[] = obj.pictures;
-            if(!pics || !pics.length) return;
-
-            var sceneID:string = obj.scene.id;
-
-            _.each(pics, (pic:IRawPicture)=>{
-                var path = pic.filename || pic.fileurl;
-                allPathSet.put(path);
-                if(sceneID == activatedSceneID) {
-                    activatedScenePathSet.put(path);
-                }
-            });
-        });
-        this._imageLoader.invalidate(allPathSet);
-        return activatedScenePathSet;
-    }
-
-    requestInvalidate(reason:string):void {
-        console.log("AtlasManager::requestInvalidate - "+reason);
-        if(this._invalidate) return;
-        this._invalidate = true;
-        this._timer.timeout(500, ()=>{
-            this._gcTexture();
-        });
+    imageRemoved(reason:string):void {
+        console.log("AtlasManager::imageRemoved - "+reason);
+        // this._requestInvalidate();
+        this._activatedScene && this._activatedScene._internal_imageRemoved();
+        this._imageLoader.requestSync();
     }
 
     clearProject():void {
-        this._timer.reset();
+
     }
 }
 
