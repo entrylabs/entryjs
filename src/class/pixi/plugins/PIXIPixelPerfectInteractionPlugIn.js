@@ -31,6 +31,7 @@ export class PIXIPixelPerfectInteractionPlugIn {
         
         p.containsPoint = function(point) //overwrite PIXI.Sprite.containsPoint
         {
+            if(!this.texture.baseTexture) return false;
             if(!this.texture.baseTexture.source) return false;
             this.worldTransform.applyInverse(point, tempPoint);
 

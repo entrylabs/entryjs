@@ -7,6 +7,8 @@ import Texture = PIXI.Texture;
 import { PIXIDebugHelper } from '../helper/PIXIDebugHelper';
 import { PIXIAtlasHelper } from './PIXIAtlasHelper';
 
+declare let Entry:any;
+
 
 type SceneBinsMap = {[key:string]: SceneBins};
 
@@ -29,6 +31,10 @@ class _PIXIAtlasManager {
         }
         this._viewer = new AtlasCanvasViewer();
         this._imageLoader = new AtlasImageLoader(this._onImageLoaded.bind(this));
+
+        Entry.addEventListener('saveCanvasImage', ()=>{
+            this.imageRemoved("canvas image saved");
+        });
     }
 
     private _onImageLoaded(info:AtlasImageLoadingInfo) {
@@ -71,7 +77,6 @@ class _PIXIAtlasManager {
 
     imageRemoved(reason:string):void {
         console.log("AtlasManager::imageRemoved - "+reason);
-        // this._requestInvalidate();
         this._activatedScene && this._activatedScene._internal_imageRemoved();
         this._imageLoader.requestSync();
     }
@@ -83,7 +88,7 @@ class _PIXIAtlasManager {
 
 export let PIXIAtlasManager:_PIXIAtlasManager = new _PIXIAtlasManager();
 
-PIXIAtlasManager.INIT();
+
 var w:any = window;
 w.PIXIAtlasManager = PIXIAtlasManager;
 w.PIXIDebugHelper = PIXIDebugHelper;

@@ -74,7 +74,6 @@ export class SceneBins {
     }
 
     addPicInfo(pic:IRawPicture):void {
-
         var path = PIXIAtlasHelper.getRawPath(pic);
         if(this._path_tex_map.hasValue(path)) return;
 
@@ -222,14 +221,18 @@ export class SceneBins {
 
         var unusedPath:string[] = [];
 
+
         //사용안하는 path를 검색, 패킹을 다시 할 것이기 때문에 사용하는 텍스쳐의 rect 정보를 저장.
         this._path_tex_map.each((tex:AtlasTexture, path:string)=>{
+            console.log(path);
             if( usedPathSet && usedPathSet.hasValue(path) ) {
                 this._notPackedRects.push(this._path_tex_map.getValue(path).inputRect);
             } else {
                 unusedPath.push(path);
             }
         });
+
+        console.log("unusedPath", unusedPath);
 
         //사용안하는 texture를 제거
         unusedPath.forEach((path:string)=>{

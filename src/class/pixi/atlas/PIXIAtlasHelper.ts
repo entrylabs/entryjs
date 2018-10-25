@@ -37,6 +37,7 @@ class _PIXIAtlasHelper {
                 pathSet.put(this.getRawPath(pics[j]));
             }
         }
+        return pathSet;
     }
 
 
