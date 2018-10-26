@@ -4,7 +4,11 @@
 
 var atlasJson = require("./../../../entry_texture/base_asset.json");
 
+declare let Entry:any;
+
 export class PIXIBaseAsset {
+
+    private _sheet:PIXI.Spritesheet;
 
     constructor() {
         var path =  Entry.mediaFilePath + "base_asset.png";
@@ -18,10 +22,10 @@ export class PIXIBaseAsset {
         this._sheet.parse(()=>{});
     }
 
-    newSprite(key) {
+    newSprite(key:string):PIXI.Sprite {
         return new PIXI.Sprite(this._sheet.textures[key]);
     }
-    getTexture(key) {
+    getTexture(key:string):PIXI.Texture {
         return this._sheet.textures[key];
     }
 

@@ -8,14 +8,15 @@
 
 import { PIXIHandleEdge } from './PIXIHandleEdge';
 import { PIXIDragHelper } from '../helper/PIXIDragHelper';
+import { PIXIGlobal } from '../init/PIXIGlobal';
 
-export var PIXIHandle = function(canvas, baseAsset) {
+export var PIXIHandle = function(canvas) {
     if (typeof PIXI != 'object') {
         throw 'PIXI is not founded';
     }
 
     this.canvas = canvas;
-    this._baseAsset = baseAsset;
+    this._baseAsset = PIXIGlobal.baseAsset;
     this.color = '#c1c7cd';
     //this.color = "#6BD5FF";
     this.arrowColor = '#E79040';
