@@ -193,9 +193,9 @@ Entry.Painter = function (view) {
 
     p.updateEditMenu = function () {
         var isSelected = this.lc.tool.name === "SelectShape" ? "block" : "none";
-        this._cutButton.style.display = isSelected;
-        this._copyButton.style.display = isSelected;
-        this._pasteButton.style.display = this.clipboard ? "block" : "none";
+        // this._cutButton.style.display = isSelected;
+        // this._copyButton.style.display = isSelected;
+        // this._pasteButton.style.display = this.clipboard ? "block" : "none";
     };
 
     p.file_save = function (taskParam) {
@@ -265,128 +265,117 @@ Entry.Painter = function (view) {
         painterTop.addClass('entryPlaygroundPainterTop');
         painterTop.addClass('entryPainterTop');
 
+        var painterTopFullscreenButton = ce('div', 'entryPainterTopFullscreenButton');
+        painterTopFullscreenButton.addClass('entryPlaygroundPainterFullscreenButton');
+        painterTopFullscreenButton.bindOnClick(function () {
+            const {painter = {}} = Entry.playground;
+            const {view = {}} = painter;
+            $(view).toggleClass('fullscreen');
+            $(view).find('.lc-drawing.with-gui').trigger('resize');
+        });
+        painterTop.appendChild(painterTopFullscreenButton);
+
         var painterTopMenu = ce('nav', 'entryPainterTopMenu');
         painterTopMenu.addClass('entryPlaygroundPainterTopMenu');
         painterTop.appendChild(painterTopMenu);
 
-        var $painterTopMenu = $(painterTopMenu);
+        var painterTopMenuFileNew = ce('div', 'entryPainterTopMenuFileNew');
+        painterTopMenuFileNew.bindOnClick(painter.newPicture.bind(this));
+        painterTopMenuFileNew.addClass('entryPlaygroundPainterTopMenuFileNew');
+        painterTopMenuFileNew.innerHTML = Lang.Workspace.new_picture;
+        painterTopMenu.appendChild(painterTopMenuFileNew);
 
-        $painterTopMenu.on('mouseenter', '.painterTopHeader', function() {
-            $(this).addClass('active');
-        });
-
-        $painterTopMenu.on('mouseleave', '.painterTopHeader', function(e) {
-            $(this).removeClass('active');
-        });
-
-        var painterTopMenuContainer = ce('ul');
-        painterTopMenu.appendChild(painterTopMenuContainer);
-
-        var painterTopMenuFileNew = ce('li');
-        painterTopMenuFileNew.addClass('painterTopHeader');
-        painterTopMenuContainer.appendChild(painterTopMenuFileNew);
-
-        var painterTopMenuFileNewLink = ce('a', 'entryPainterTopMenuFileNew');
-        painterTopMenuFileNewLink.bindOnClick(painter.newPicture.bind(this));
-        painterTopMenuFileNewLink.addClass('entryPlaygroundPainterTopMenuFileNew');
-        painterTopMenuFileNewLink.innerHTML = Lang.Workspace.new_picture;
-        painterTopMenuFileNew.appendChild(painterTopMenuFileNewLink);
-
-        var painterTopMenuFile = ce('li', 'entryPainterTopMenuFile');
+        var painterTopMenuFile = ce('div', 'entryPainterTopMenuFile');
         painterTopMenuFile.addClass('entryPlaygroundPainterTopMenuFile painterTopHeader');
-        painterTopMenuFile.innerHTML = Lang.Workspace.painter_file;
-        painterTopMenuContainer.appendChild(painterTopMenuFile);
+        painterTopMenuFile.innerHTML = Lang.Menus.offline_file;
+        var painterTopMenuFileDropdown = ce('div');
+        painterTopMenuFileDropdown.addClass('entryPlaygroundPainterTopMenuFileDropdown');
+        painterTopMenu.appendChild(painterTopMenuFile);
+        painterTopMenuFile.appendChild(painterTopMenuFileDropdown);
 
-        var painterTopMenuFileContainer = ce('ul');
-        painterTopMenuFile.appendChild(painterTopMenuFileContainer);
+        var painterTopMenuEdit = ce('div', 'entryPainterTopMenuEdit');
+        painterTopMenuEdit.addClass('entryPlaygroundPainterTopMenuEdit painterTopHeader');
+        painterTopMenuEdit.innerHTML = Lang.Menus.offline_edit;
+        painterTopMenu.appendChild(painterTopMenuEdit);
 
-        var painterTopMenuFileSave = ce('li');
-        painterTopMenuFileContainer.appendChild(painterTopMenuFileSave);
-        var painterTopMenuFileSaveLink = ce('a', 'entryPainterTopMenuFileSave');
-        painterTopMenuFileSaveLink.bindOnClick(function () {
+        var painterTopMenuFileSave = ce('div', 'entryPainterTopMenuFileSave');
+        painterTopMenuFileSave.bindOnClick(function () {
             painter.file_save(false);
         });
-        painterTopMenuFileSaveLink.addClass('entryPainterTopMenuFileSave');
-        painterTopMenuFileSaveLink.innerHTML = Lang.Workspace.painter_file_save;
-        painterTopMenuFileSave.appendChild(painterTopMenuFileSaveLink);
+        painterTopMenuFileSave.addClass('entryPainterTopMenuFileSave');
+        painterTopMenuFileSave.innerHTML = Lang.Workspace.painter_file_save;
+        painterTopMenuFileDropdown.appendChild(painterTopMenuFileSave);
 
-        var painterTopMenuFileSaveAs = ce('li');
-        painterTopMenuFileContainer.appendChild(painterTopMenuFileSaveAs);
-
-        var painterTopMenuFileSaveAsLink = ce('a', 'entryPainterTopMenuFileSaveAs');
+        var painterTopMenuFileSaveAsLink = ce('div', 'entryPainterTopMenuFileSaveAs');
         painterTopMenuFileSaveAsLink.bindOnClick(function () {
             painter.file.mode = "new";
             painter.file_save(false);
         });
         painterTopMenuFileSaveAsLink.addClass('entryPlaygroundPainterTopMenuFileSaveAs');
         painterTopMenuFileSaveAsLink.innerHTML = Lang.Workspace.painter_file_saveas;
-        painterTopMenuFileSaveAs.appendChild(painterTopMenuFileSaveAsLink);
+        painterTopMenuFileDropdown.appendChild(painterTopMenuFileSaveAsLink);        
 
-        var painterTopMenuEdit = ce('li', 'entryPainterTopMenuEdit');
-        painterTopMenuEdit.addClass('entryPlaygroundPainterTopMenuEdit painterTopHeader');
-        painterTopMenuEdit.innerHTML = Lang.Workspace.painter_edit;
-        painterTopMenuContainer.appendChild(painterTopMenuEdit);
+        var painterTopMenuEditDropdown = ce('div');
+        painterTopMenuEditDropdown.addClass('entryPlaygroundPainterTopMenuEditDropdown');
+        painterTopMenuEdit.appendChild(painterTopMenuEditDropdown);
 
-        var painterTopMenuEditContainer = ce('ul');
-        painterTopMenuEdit.appendChild(painterTopMenuEditContainer);
-
-        var painterTopMenuEditImport = ce('li');
-        painterTopMenuEditContainer.appendChild(painterTopMenuEditImport);
-        var painterTopMenuEditImportLink = ce('a', 'entryPainterTopMenuEditImportLink');
-        painterTopMenuEditImportLink.bindOnClick(function () {
+        var painterTopMenuEditImport = ce('div', 'entryPainterTopMenuEditImport');
+        painterTopMenuEditImport.bindOnClick(function () {
             Entry.dispatchEvent('openPictureImport');
         });
-        painterTopMenuEditImportLink.addClass('entryPainterTopMenuEditImport');
-        painterTopMenuEditImportLink.innerHTML = Lang.Workspace.get_file;
-        painterTopMenuEditImport.appendChild(painterTopMenuEditImportLink);
+        painterTopMenuEditImport.addClass('entryPainterTopMenuEditImport');
+        painterTopMenuEditImport.innerHTML = Lang.Workspace.get_file;
+        painterTopMenuEditDropdown.appendChild(painterTopMenuEditImport);
 
-        var painterTopMenuEditCopy = ce('li');
-        painterTopMenuEditContainer.appendChild(painterTopMenuEditCopy);
-
-        var painterTopMenuEditCopyLink = ce('a', 'entryPainterTopMenuEditCopy');
-        painterTopMenuEditCopyLink.bindOnClick(function () {
+        var painterTopMenuEditCopy = ce('div', 'entryPainterTopMenuEditCopy');
+        painterTopMenuEditCopy.bindOnClick(function () {
             painter.copy();
         });
-        painterTopMenuEditCopyLink.addClass('entryPlaygroundPainterTopMenuEditCopy');
-        painterTopMenuEditCopyLink.innerHTML = Lang.Workspace.copy_file;
-        painterTopMenuEditCopy.appendChild(painterTopMenuEditCopyLink);
-        this._copyButton = painterTopMenuEditCopy;
+        painterTopMenuEditCopy.addClass('entryPlaygroundPainterTopMenuEditCopy');
+        painterTopMenuEditCopy.innerHTML = Lang.Workspace.copy_file;
+        painterTopMenuEditDropdown.appendChild(painterTopMenuEditCopy);
 
-        var painterTopMenuEditCut = ce('li');
-        painterTopMenuEditContainer.appendChild(painterTopMenuEditCut);
-
-        var painterTopMenuEditCutLink = ce('a', 'entryPainterTopMenuEditCut');
-        painterTopMenuEditCutLink.bindOnClick(function () {
+        var painterTopMenuEditCut = ce('div', 'entryPainterTopMenuEditCut');
+        painterTopMenuEditCut.bindOnClick(function () {
             painter.cut();
         });
-        painterTopMenuEditCutLink.addClass('entryPlaygroundPainterTopMenuEditCut');
-        painterTopMenuEditCutLink.innerHTML = Lang.Workspace.cut_picture;
-        painterTopMenuEditCut.appendChild(painterTopMenuEditCutLink);
-        this._cutButton = painterTopMenuEditCut;
+        painterTopMenuEditCut.addClass('entryPlaygroundPainterTopMenuEditCut');
+        painterTopMenuEditCut.innerHTML = Lang.Workspace.cut_picture;
+        painterTopMenuEditDropdown.appendChild(painterTopMenuEditCut);
 
-        var painterTopMenuEditPaste = ce('li');
-        painterTopMenuEditContainer.appendChild(painterTopMenuEditPaste);
-
-        var painterTopMenuEditPasteLink = ce('a', 'entryPainterTopMenuEditPaste');
-        painterTopMenuEditPasteLink.bindOnClick(function () {
+        var painterTopMenuEditPaste = ce('div', 'entryPainterTopMenuEditPaste');
+        painterTopMenuEditPaste.bindOnClick(function () {
             painter.paste();
         });
-        painterTopMenuEditPasteLink.addClass('entryPlaygroundPainterTopMenuEditPaste');
-        painterTopMenuEditPasteLink.innerHTML = Lang.Workspace.paste_picture;
-        painterTopMenuEditPaste.appendChild(painterTopMenuEditPasteLink);
-        this._pasteButton = painterTopMenuEditPaste;
+        painterTopMenuEditPaste.addClass('entryPlaygroundPainterTopMenuEditPaste');
+        painterTopMenuEditPaste.innerHTML = Lang.Workspace.paste_picture;
+        painterTopMenuEditDropdown.appendChild(painterTopMenuEditPaste);
 
-        var painterTopMenuEditEraseAll = ce('li');
-        painterTopMenuEditContainer.appendChild(painterTopMenuEditEraseAll);
-
-        var painterTopMenuEditEraseAllLink = ce('a', 'entryPainterTopMenuEditEraseAll');
-        painterTopMenuEditEraseAllLink.addClass('entryPlaygroundPainterTopMenuEditEraseAll');
-        painterTopMenuEditEraseAllLink.innerHTML = Lang.Workspace.remove_all;
-        painterTopMenuEditEraseAllLink.bindOnClick(function () {
+        var painterTopMenuEditEraseAll = ce('div', 'entryPainterTopMenuEditEraseAll');
+        painterTopMenuEditEraseAll.addClass('entryPlaygroundPainterTopMenuEditEraseAll');
+        painterTopMenuEditEraseAll.innerHTML = Lang.Workspace.remove_all;
+        painterTopMenuEditEraseAll.bindOnClick(function () {
             painter.lc.clear();
         });
+        painterTopMenuEditDropdown.appendChild(painterTopMenuEditEraseAll);
 
-        painterTopMenuEditEraseAll.appendChild(painterTopMenuEditEraseAllLink);
+        $(painterTopMenuFile).on('click tab', function () {
+            $(this).addClass('active');
+        });
+        $(painterTopMenuEdit).on('click tab', function () {
+            $(this).addClass('active');
+        });
+        $(document).on('mousedown touchstart', (e) => {
+            const {target} = e;
+            const isChild = [$(painterTopMenuFile), $(painterTopMenuEdit)].some(($dom) => {
+                return $dom.find(target).length;
+            })
+            if(isChild) {
+                target.click();
+            }
+            $(painterTopMenuFile).removeClass('active');
+            $(painterTopMenuEdit).removeClass('active');
+        });
 
         var painterTopStageXY = ce('div', 'entryPainterTopStageXY');
         this.painterTopStageXY = painterTopStageXY;
