@@ -2,7 +2,10 @@
  * @fileoverview entity object is class for entry object canvas view.
  */
 
+
 'use strict';
+
+import { PIXIGlobal } from './pixi/init/PIXIGlobal';
 
 function clog() {
     console.log("[entity]",...arguments);
@@ -45,7 +48,7 @@ Entry.EntityObject = function(object) {
         this.textObject.anchor.set(0.5, 0.5);
 
 
-        this.bgObject = Entry.stage.baseAsset.newSprite("common_blank");
+        this.bgObject = PIXIGlobal.baseAsset.newSprite("common_blank");
         this.bgObject.anchor.set(0.5, 0.5);
 
         this.object.addChild(this.bgObject);

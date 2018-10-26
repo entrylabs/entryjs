@@ -3,8 +3,8 @@
  */
 'use strict';
 
-import { PIXIStarter } from '../class/pixi/init/PIXIStarter';
-require("./utils")
+import { PIXIGlobal } from '../class/pixi/init/PIXIGlobal';
+require("./utils");
 
 /**
  * Initialize method with options.
@@ -204,7 +204,7 @@ Entry.initialize_ = function() {
     else if (this.type == 'workspace' || this.type == 'phone')
         this.reporter = new Entry.Reporter(true);
 
-    PIXIStarter.initOnce();
+    PIXIGlobal.initOnce();
 
 };
 

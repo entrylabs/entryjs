@@ -2,11 +2,13 @@
  * @fileoverview Variable object for entry variable block.
  */
 
+
 'use strict';
 
 import PIXIHelper from './pixi/helper/PIXIHelper';
 import { PIXIDragHelper } from './pixi/helper/PIXIDragHelper';
 import { PIXIH3Plane } from './pixi/mesh/PIXIH3Plane';
+import { PIXIGlobal } from './pixi/init/PIXIGlobal';
 
 /**
  * Block variable constructor
@@ -1054,7 +1056,7 @@ Entry.Variable.prototype.isFloatPoint = function() {
 };
 
 function baseAsset() {
-    return Entry.stage.baseAsset;
+    return PIXIGlobal.baseAsset;
 }
 
 function getH3Plane() {
