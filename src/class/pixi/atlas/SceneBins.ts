@@ -17,13 +17,9 @@ import { PIXIAtlasHelper } from './PIXIAtlasHelper';
 import { TimeoutTimer } from '../utils/TimeoutTimer';
 import { ImageRect } from '../../maxrect-packer/geom/ImageRect';
 
-
 declare let _:any;
 declare let Entry:any;
 
-let c = ():number => {
-    return Math.floor(Math.random()*255);
-};
 
 /** BaseTextureOption **/
 let OP = {
@@ -135,6 +131,7 @@ export class SceneBins {
         console.log(`pack ${len} items. time:${time}`);
     }
 
+
     activate():void {
 
         this._activated = true;
@@ -156,6 +153,7 @@ export class SceneBins {
         });
     }
 
+
     private _getBaseTexture(index:number):AtlasBaseTexture {
         var base:AtlasBaseTexture = this._arrBaseTexture[index];
         if(base) return base;
@@ -168,6 +166,7 @@ export class SceneBins {
         return base;
     }
 
+
     deactivate() {
         this._timer.reset();
         this._activated = false;
@@ -176,10 +175,10 @@ export class SceneBins {
         });
     }
 
+
     getTexture(path:string):AtlasTexture {
         return this._path_tex_map.getValue(path);
     }
-
 
 
     /**
@@ -207,6 +206,7 @@ export class SceneBins {
         }
         Entry.requestUpdate = true;
     }
+
 
     /**
      * 모든 텍스쳐 패킹을 다시 한다.
@@ -244,6 +244,7 @@ export class SceneBins {
         this._pack();
     }
 
+
     private _cleanCanvas() {
         var LEN = this._arrBaseTexture.length;
         for( var i = 0 ; i < LEN ; i++ ) {
@@ -251,11 +252,10 @@ export class SceneBins {
         }
     }
 
-
-
     _internal_imageRemoved():void {
         this._imageRemoved = true;
     }
+
 
     private _destroyBaseTextureAfter(startIndex:number) {
         var LEN = this._arrBaseTexture.length;
@@ -265,9 +265,10 @@ export class SceneBins {
         this._arrBaseTexture.length = startIndex;
     }
 
+
     destroy() {
         this._timer.reset();
-        _.each(this._path_tex_map, (tex:AtlasTexture)=>{
+        this._path_tex_map.each((tex:AtlasTexture, path:string)=>{
             tex.destroy(false);
         });
 
