@@ -7,7 +7,7 @@ let style = (viewerHeight:number)=>{return `<style>
         position: absolute;
         width: 100%;
         pointer-events: none;
-        /*display: none;*/
+        display: none;
     }
     .atlas-canvas {
         width: auto; height: ${viewerHeight}px; float: right; border: 1px solid red;
