@@ -36,22 +36,8 @@ Entry.Stage = function() {
  */
 Entry.Stage.prototype.initStage = function(canvas) {
 
-    var pixiApp = new PIXI.Application({
-        view: canvas,
-        width: canvas.width,
-        height: canvas.height,
-        autoStart: false,
-        // autoStart: true,
-        antialias:true,
-        transparent: true
-
-    });
-    this._pixiApp = pixiApp;
-
-    window.stage = pixiApp.stage;
-    console.log("[TEST] window.stage 할당됨");
-
-    this.canvas = pixiApp.stage;
+    this._pixiApp = PIXIGlobal.getNewApp(canvas);
+    this.canvas = this._pixiApp.stage;
     this.canvas.canvas = canvas;
 
     this.canvas.x = 960 / 1.5 / 2;
