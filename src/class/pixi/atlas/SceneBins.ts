@@ -193,7 +193,7 @@ export class SceneBins {
         if(!t) return;//이 Scene에서 사용안함
         if(t.isEmptyTexture) return;
 
-        console.log("put imgageData");
+        // console.log("put imgageData");
 
         var base:AtlasBaseTexture = t.getBaseTexture();
 
