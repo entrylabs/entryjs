@@ -5,6 +5,7 @@ import { PIXIAtlasManager } from '../atlas/PIXIAtlasManager';
 import { PIXIZeroAlphaNoneInteractionPlugins } from '../plugins/PIXIZeroAlphaNoneInteractionPlugins';
 import { PIXIPixelPerfectInteractionPlugIn } from '../plugins/PIXIPixelPerfectInteractionPlugIn';
 import { PIXITempStore } from '../etc/PIXITempStore';
+import { PIXITextMetricsPlugIn } from '../plugins/PIXITextMetricsPlugIn';
 
 
 declare let ndgmr:any;
@@ -18,13 +19,13 @@ class _PIXIGlobal {
     initOnce() {
         if(this._init) return;
         this._init = true;
-        console.log("[PIXIStarter.init()");
 
         ndgmr.initTempObject();
         PIXITempStore.init();
         PIXIAtlasManager.INIT();
         new PIXIZeroAlphaNoneInteractionPlugins();
         new PIXIPixelPerfectInteractionPlugIn();
+        new PIXITextMetricsPlugIn();
     }
 
     getNewApp(canvas:HTMLCanvasElement):PIXI.Application {
