@@ -13,13 +13,14 @@ declare let ndgmr:any;
 class _PIXIGlobal {
 
     private _init:boolean;
-    readonly baseAsset:PIXIBaseAsset = new PIXIBaseAsset();
+    /** @readonly */
+    baseAsset:PIXIBaseAsset;
     private _app:PIXI.Application;
 
     initOnce() {
         if(this._init) return;
         this._init = true;
-
+        this.baseAsset = new PIXIBaseAsset();
         ndgmr.initTempObject();
         PIXITempStore.init();
         PIXIAtlasManager.INIT();
