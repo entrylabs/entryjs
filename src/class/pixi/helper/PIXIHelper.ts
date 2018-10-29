@@ -31,7 +31,7 @@ export default class PIXIHelper {
         return t;
     }
 
-    static getOffScreenCanvas(forceHTMLCanvas:boolean = false) {
+    static getOffScreenCanvas(forceHTMLCanvas:boolean = false):HTMLCanvasElement {
         var WIN:any = window;
         if( !forceHTMLCanvas && ("OffscreenCanvas" in WIN) ) {
             return new WIN.OffscreenCanvas(1,1);
