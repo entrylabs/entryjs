@@ -247,6 +247,10 @@ export class PIXIText extends PIXI.Text {
     _drawLineAt(ctx, x, y, width, offsetY) {
         ctx.fillRect(x, y + offsetY, width, 1);
     }
+
+    destroy() {
+        super.destroy({children:false, baseTexture:true, texture: true});
+    }
 }
 
 PIXIText.cancelLineOffset = -0.23;
