@@ -1654,7 +1654,7 @@ Entry.EntityObject.prototype.destroy = function(isClone) {
     _.result(this.dialog, 'remove');
     this.brush && this.removeBrush();
     Entry.stage.unloadEntity(this);
-
+    object.destroy({children: true});
 };
 
 Entry.EntityObject.prototype.cache = function() {
