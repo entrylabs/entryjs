@@ -8,6 +8,7 @@ import { PIXIDebugHelper } from '../helper/PIXIDebugHelper';
 import { PIXIAtlasHelper } from './PIXIAtlasHelper';
 
 declare let Entry:any;
+declare let _:any;
 
 
 type SceneBinsMap = {[key:string]: SceneBins};
@@ -82,7 +83,13 @@ class _PIXIAtlasManager {
     }
 
     clearProject():void {
-
+        console.log("clearProject");
+        this._imageLoader.empty();
+        _.each(this._sceneID_sceneBin_map, (bin:SceneBins)=>{
+            bin.destroy();
+        });
+        this._sceneID_sceneBin_map = {};
+        this._activatedScene = null;
     }
 }
 
