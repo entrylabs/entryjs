@@ -46,6 +46,7 @@ class _PIXIGlobal {
     private _disposeApp() {
         if(!this._app) return;
         this._app.destroy(false, {children: true, texture: false, baseTexture: false});
+        PIXIAtlasManager.clearProject();
         this._app = null;
     }
 

@@ -685,6 +685,7 @@ Entry.Stage.prototype.createObjectContainer = function(scene) {
  */
 Entry.Stage.prototype.removeObjectContainer = function(scene) {
     var containers = this.objectContainers;
+    /** @type {PIXI.Container} */
     var objContainer = this.getObjectContainerByScene(scene);
     var canvas = this.canvas;
     if (canvas) {
