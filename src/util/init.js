@@ -1,9 +1,11 @@
 /**
  * @fileoverview Initialize code fore Entry
  */
+
 'use strict';
 
 import { PIXIGlobal } from '../class/pixi/init/PIXIGlobal';
+import { Destroyer } from './destroyer/Destroyer';
 require("./utils");
 
 /**
@@ -123,12 +125,21 @@ Entry.loadAudio_ = function(filenames, name) {
  * @private
  */
 Entry.initialize_ = function() {
+    /** @type {Destroyer} */
+    if(!this._destroyer) {
+        this._destroyer = new Destroyer();
+    } else {
+        this._destroyer.destroy();
+    }
+
     /**
      * Initialize stage
      * @type {!Entry.Stage}
      * @type {!object}
      */
     this.stage = new Entry.Stage();
+    this._destroyer.add(this.stage);
+
 
     if (Entry.engine && Entry.engine.projectTimer)
         Entry.engine.clearTimer();
@@ -153,7 +164,7 @@ Entry.initialize_ = function() {
      * @type {!object}
      */
     this.container = new Entry.Container();
-
+    this._destroyer.add(this.container);
     /**
      * Initialize helper.
      * @type {!Entry.Helper}
@@ -178,6 +189,7 @@ Entry.initialize_ = function() {
      * @type {!object}
      */
     this.scene = new Entry.Scene();
+    this._destroyer.add(this.scene);
 
     /**
      * Initialize playground.

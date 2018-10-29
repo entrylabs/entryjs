@@ -761,3 +761,7 @@ Entry.Stage.prototype.hitTestObject = function(target, globalPoint) {
     var hitObject = interactionManager.hitTest(globalPoint || interactionManager.mouse.global, target);
     return !!hitObject;
 };
+
+Entry.Stage.prototype.destroy = function() {
+    console.log("[destroy] Entry.Stage");
+};

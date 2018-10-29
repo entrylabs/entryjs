@@ -566,3 +566,7 @@ Entry.Scene.prototype.getDom = function(query) {
             return;
     }
 };
+
+Entry.Scene.prototype.destroy = function() {
+    console.log("[destroy] Entry.Scene");
+};

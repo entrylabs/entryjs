@@ -1129,3 +1129,7 @@ Entry.Container.prototype.scrollToObject = function(ObjectId) {
     view_ && view_.scrollIntoView();
     document.body.scrollIntoView();
 };
+
+Entry.Container.prototype.destroy = function() {
+    console.log("[destroy] Entry.Container");
+};
