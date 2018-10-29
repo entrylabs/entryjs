@@ -33,7 +33,7 @@ let OP = {
 let TIMEOUT_INTERVAL = 250;
 
 /** base texture max pixel size */
-const MAX_SIZE = 4096;
+const MAX_SIZE = computeMaxTextureSize();
 function newPacker():MaxRectsPacker{
     //https://www.npmjs.com/package/maxrects-packer
     const PADDING = 2;
@@ -282,4 +282,15 @@ export class SceneBins {
         this._packedRects = null;
         this._notPackedRects = null;
     }
+}
+
+
+function computeMaxTextureSize():number {
+    var canvas:HTMLCanvasElement = PIXIHelper.getOffScreenCanvas(true);
+    var ctx:WebGLRenderingContext = canvas.getContext("webgl") || canvas.getContext("experimental-webgl");
+    var size = ctx ? ctx.getParameter(ctx.MAX_TEXTURE_SIZE) : 2048;
+    size = Math.min(size, 4096);
+    console.log("Max texture size : " + size);
+    return size;
+
 }
