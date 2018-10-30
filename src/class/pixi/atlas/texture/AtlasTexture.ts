@@ -28,13 +28,34 @@ export class AtlasTexture extends PIXI.Texture {
         return this.baseTexture as AtlasBaseTexture;
     }
 
-    drawImageAtBaseTexture(img:HTMLImageElement):void {
+    /**
+     * @param img
+     * @param extrude - Reduce flickering in some cases where sprites have to be put next to each other in the final program.
+     * example: https://www.codeandweb.com/texturepacker/documentation/texture-settings
+     */
+    drawImageAtBaseTexture(img:HTMLImageElement, extrude:boolean = true):void {
         if(this._isEmptyTexture) return;
         var ctx:CanvasRenderingContext2D = this.getBaseTexture().getCtx();
         var r = this.orig;
         var w = img.naturalWidth || img.width;
         var h = img.naturalHeight || img.height;
+        var rx = r.x;
+        var ry = r.y;
+        var rw = r.width;
+        var rh = r.height;
+
         ctx.drawImage(img, 0, 0, w, h, r.x, r.y, r.width, r.height);
+
+        if(extrude) {
+            //top
+            ctx.drawImage(img, 0, 0, w, 1, rx, ry - 1, rw, 1);
+            //down
+            ctx.drawImage(img, 0, h - 1, w, 1, rx, ry + rh, rw, 1);
+            //left
+            ctx.drawImage(img, 0, 0, 1, h, rx - 1, ry, 1, rh);
+            //right
+            ctx.drawImage(img, w - 1, 0, 1, h, rx + rw, ry, 1, rh);
+        }
     }
 
     updateBaseAndUVs(base:AtlasBaseTexture):void {
