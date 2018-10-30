@@ -208,19 +208,17 @@ Entry.Comment = class Comment {
         const mouseEvent = Entry.Utils.convertMouseEvent(e);
         const diff = Math.sqrt(
             Math.pow(mouseEvent.pageX - this.mouseDownCoordinate.x, 2) +
-                Math.pow(mouseEvent.pageY - this.mouseDownCoordinate.y, 2)
+            Math.pow(mouseEvent.pageY - this.mouseDownCoordinate.y, 2)
         );
         if (this.dragMode == Entry.DRAG_MODE_DRAG || diff > Entry.BlockView.DRAG_RADIUS) {
             this.set({ visible: false });
             const workspaceMode = this.board.workspace.getMode();
-
+                
             const dragInstance = this.dragInstance;
             const { scale = 1 } = this.board || {};
             if (this.dragMode != Entry.DRAG_MODE_DRAG) {
                 this.dragMode = Entry.DRAG_MODE_DRAG;
                 Entry.GlobalSvg.setComment(this, workspaceMode);
-                const offset = this.board.offset();
-                Entry.GlobalSvg._applyDomPos(offset.left / scale, offset.top / scale);
             }
             this.moveBy(
                 (mouseEvent.pageX - dragInstance.offsetX) / scale,
@@ -280,8 +278,8 @@ Entry.Comment = class Comment {
         const { scale = 1 } = this.board || {};
         let pos = null;
         const { parentX, parentY } = this.mouseDownCoordinate;
-        const posX = this.x + parentX;
-        const posY = this.y + parentY;
+        const posX = this.x;
+        const posY = this.y;
         if (dragMode === Entry.DRAG_MODE_DRAG) {
             pos = {
                 x: posX,
@@ -308,7 +306,7 @@ Entry.Comment.prototype.schema = {
     width: 160,
     height: 100,
     titleHeight: 22,
-    defaultLineLength: 120,
+    defaultLineLength: 40,
     readOnly: false,
     visible: true,
     display: true,

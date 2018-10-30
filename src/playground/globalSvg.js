@@ -68,6 +68,8 @@ class GlobalSvg {
         if (mode !== Entry.Workspace.MODE_VIMBOARD) {
             view.set({ visible: false });
         }
+        this.originalX = view.x;
+        this.originalY = view.y;
         this.draw();
         this.show();
         this.align();
@@ -206,21 +208,19 @@ class GlobalSvg {
             return;
         }
         const pos = view.getAbsoluteCoordinate();
-        this.left = pos.scaleX;
-        this.top = pos.scaleY;
-        const { width, titleHeight } = view;
-        const [comment] = this.svgGroup.getElementsByTagName('rect');
+        const offset = view.board.offset();
+        this.left = pos.scaleX + (offset.left / this.scale - this._offsetX) - this.originalX;
+        this.top = pos.scaleY + (offset.top / this.scale - this._offsetY) - this.originalY;
         const [line] = this.svgGroup.getElementsByTagName('line');
-        const commentPoint = {
-            x: width / 2,
-            y: titleHeight / 2,
-        };
-        comment.setAttribute('x', this.left);
-        comment.setAttribute('y', this.top);
-        line.setAttribute('x1', startX);
-        line.setAttribute('y1', startY);
-        line.setAttribute('x2', this.left + commentPoint.x);
-        line.setAttribute('y2', this.top + commentPoint.y);
+        line.setAttribute(
+            'x1',
+            view.pathGroup.getBoundingClientRect().x - this.left + view.parentWidth
+        );
+        line.setAttribute(
+            'y1',
+            view.pathGroup.getBoundingClientRect().y - this.top + view.parentHeight / 2
+        );
+        this._applyDomPos(this.left, this.top);
     }
 
     adjust(adjustX, adjustY) {

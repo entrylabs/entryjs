@@ -1056,23 +1056,23 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
 
     p._setMovable = function() {
         this.movable =
-            this.block.isMovable() !== null
-                ? this.block.isMovable()
-                : this._skeleton.movable !== undefined ? this._skeleton.movable : true;
+            this.block.isMovable() || this._skeleton.movable !== undefined
+                ? this._skeleton.movable
+                : true;
     };
 
     p._setReadOnly = function() {
         this.readOnly =
-            this.block.isReadOnly() !== null
-                ? this.block.isReadOnly()
-                : this._skeleton.readOnly !== undefined ? this._skeleton.readOnly : false;
+            this.block.isReadOnly() || this._skeleton.readOnly !== undefined
+                ? this._skeleton.readOnly
+                : false;
     };
 
     p._setCopyable = function() {
         this.copyable =
-            this.block.isCopyable() !== null
-                ? this.block.isCopyable()
-                : this._skeleton.copyable !== undefined ? this._skeleton.copyable : true;
+            this.block.isCopyable() || this._skeleton.copyable !== undefined
+                ? this._skeleton.copyable
+                : true;
     };
 
     p.bumpAway = function(distance = 15, delay) {
@@ -1128,7 +1128,10 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
                 const nextBlock = this.block.getNextBlock();
                 if (nextBlock && nextBlock.view) {
                     nextBlock.view._toLocalCoordinate(this._nextGroup);
-                    nextBlock.view._toLocalCoordinate(this._nextCommentGroup, nextBlock.view.svgCommentGroup);
+                    nextBlock.view._toLocalCoordinate(
+                        this._nextCommentGroup,
+                        nextBlock.view.svgCommentGroup
+                    );
                 }
             }
         }
