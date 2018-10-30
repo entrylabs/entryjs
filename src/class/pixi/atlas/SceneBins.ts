@@ -36,13 +36,15 @@ let TIMEOUT_INTERVAL = 250;
 const MAX_SIZE = computeMaxTextureSize();
 function newPacker():MaxRectsPacker{
     //https://www.npmjs.com/package/maxrects-packer
-    const PADDING = 2;
+    const PADDING = 1;
+    const BORDER = 1;
     const OPTION = {
-        smart: true,
+        smart: false,
         pot: true,
-        square: false
+        square: false,
+
     };
-    return new MaxRectsPacker(MAX_SIZE, MAX_SIZE, PADDING, OPTION);
+    return new MaxRectsPacker(MAX_SIZE, MAX_SIZE, BORDER, PADDING, OPTION);
 }
 
 /**
