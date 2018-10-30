@@ -112,14 +112,14 @@ Entry.FieldColor = class FieldColor extends Entry.Field {
 
     _attachDisposeEvent(func) {
         let action = func;
-        if(!action) {
+        if (!action) {
             action = (skipCommand) => {
                 this.applyValue(this.colorPicker.getData('color'));
                 this.destroyOption(skipCommand);
                 this._selectBlockView();
             };
         }
-        this.disposeEvent = Entry.disposeEvent.attach(this, action);
+        // this.disposeEvent = Entry.disposeEvent.attach(this, action);
     }
 
     renderOptions() {
@@ -138,7 +138,9 @@ Entry.FieldColor = class FieldColor extends Entry.Field {
             container: this.optionGroup[0],
         });
 
-        this.optionGroup.bind('mousedown touchstart keyup keydown', (e) => e.stopPropagation());
+        // this.optionGroup.bind('mousedown touchstart keyup keydown', (e) => {
+        //     e.stopPropagation();
+        // });
 
         // this.optionGroup[0].appendChild(fragment);
 
