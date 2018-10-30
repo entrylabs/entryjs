@@ -221,7 +221,6 @@ export class SceneBins {
 
         var unusedPath:string[] = [];
 
-
         //사용안하는 path를 검색, 패킹을 다시 할 것이기 때문에 사용하는 텍스쳐의 rect 정보를 저장.
         this._path_tex_map.each((tex:AtlasTexture, path:string)=>{
             if( usedPathSet && usedPathSet.hasValue(path) ) {
@@ -271,6 +270,7 @@ export class SceneBins {
         this._path_tex_map.each((tex:AtlasTexture, path:string)=>{
             tex.destroy(false);
         });
+        this._path_tex_map.destroy();
 
         this._destroyBaseTextureAfter(0);
 
