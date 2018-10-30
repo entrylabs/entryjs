@@ -764,4 +764,15 @@ Entry.Stage.prototype.hitTestObject = function(target, globalPoint) {
 
 Entry.Stage.prototype.destroy = function() {
     console.log("[destroy] Entry.Stage");
+
+    var op = {children: true, texture: false, baseTexture: false}
+    this.objectContainers.forEach((c)=>{
+        c.destroy(op);
+    });
+    this._pixiApp.destroy(op);
+    this._pixiApp = null;
+    this.objectContainers = null;
+    this.handle.destroy();
+    this.handle = null;
+    PIXIAtlasManager.clearProject();
 };

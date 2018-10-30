@@ -30,8 +30,7 @@ class _PIXIGlobal {
     }
 
     getNewApp(canvas:HTMLCanvasElement):PIXI.Application {
-        this._disposeApp();
-        this._app = new PIXI.Application({
+        return new PIXI.Application({
             view: canvas,
             width: canvas.width,
             height: canvas.height,
@@ -40,17 +39,7 @@ class _PIXIGlobal {
             antialias:true,
             transparent: true
         });
-        return this._app;
     }
-
-    private _disposeApp() {
-        if(!this._app) return;
-        this._app.destroy(false, {children: true, texture: false, baseTexture: false});
-        PIXIAtlasManager.clearProject();
-        this._app = null;
-    }
-
-
 }
 
 export let PIXIGlobal:_PIXIGlobal = new _PIXIGlobal();

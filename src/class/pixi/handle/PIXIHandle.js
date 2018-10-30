@@ -518,5 +518,14 @@ export var PIXIHandle = function(canvas) {
         return this.draggable;
     };
 
+    p.destroy = function() {
+        this.onChangeFunction = null;
+        this.callerObject = null;
+        this.onEditStartFunction = null;
+        this.editStartCallerObject = null;
+        this.onEditEndFunction = null;
+        this.editEndCallerObject = null;
+    }
+
 })(PIXIHandle.prototype);
 
