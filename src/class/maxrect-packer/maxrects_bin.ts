@@ -15,20 +15,22 @@ export class MaxRectsBin extends Bin {
         public index:number,
         public maxWidth: number = EDGE_MAX_VALUE,
         public maxHeight: number = EDGE_MAX_VALUE,
+        public border: number = 0,
         public padding: number = 0,
         public options: IOption = { smart: true, pot: true, square: true }
     ) {
         super();
         this.width = this.options.smart ? 0 : maxWidth;
         this.height = this.options.smart ? 0 : maxHeight;
-        this.freeRects.push(new Rectangle(0, 0, this.maxWidth + this.padding, this.maxHeight + this.padding));
+        this.freeRects.push(new Rectangle(border, border, this.maxWidth + this.padding*2 - this.border, this.maxHeight + this.padding*2 - this.border));
         this.stage = new Rectangle(0, 0, this.width, this.height);
     }
 
     public add (rect:ImageRect): boolean {
+        var PAD = this.padding * 2;
         var width:number = rect.width;
         var height:number = rect.height;
-        let node: Rectangle | undefined = this.findNode(width + this.padding, height + this.padding);
+        let node: Rectangle | undefined = this.findNode(width + PAD, height + PAD);
         if (node) {
             this.updateBinSize(node);
             let numRectToProcess = this.freeRects.length;
@@ -48,17 +50,17 @@ export class MaxRectsBin extends Bin {
             this.pushRect(rect, false);
             return true;
         } else if (!this.verticalExpand) {
-            if (this.updateBinSize(new Rectangle(this.width + this.padding, 0, width + this.padding, height + this.padding))
-                || this.updateBinSize(new Rectangle(0, this.height + this.padding, width + this.padding, height + this.padding))) {
+            if (this.updateBinSize(new Rectangle(this.width + PAD, 0, width + this.padding, height + PAD))
+                || this.updateBinSize(new Rectangle(0, this.height + PAD, width + PAD, height + PAD))) {
                 return this.add(rect);
             }
         } else {
             if (this.updateBinSize(new Rectangle(
-                0, this.height + this.padding,
-                width + this.padding, height + this.padding
+                0, this.height + PAD,
+                width + PAD, height + PAD
             )) || this.updateBinSize(new Rectangle(
-                this.width + this.padding, 0,
-                width + this.padding, height + this.padding
+                this.width + PAD, 0,
+                width + PAD, height + PAD
             ))) {
                 return this.add(rect);
             }
@@ -203,8 +205,9 @@ export class MaxRectsBin extends Bin {
     private updateBinSize (node: Rectangle): boolean {
         if (!this.options.smart) return false;
         if (this.stage.contain(node)) return false;
-        let tmpWidth: number = Math.max(this.width, node.x + node.width - this.padding);
-        let tmpHeight: number = Math.max(this.height, node.y + node.height - this.padding);
+        var PAD = this.padding * 2;
+        let tmpWidth: number = Math.max(this.width, node.x + node.width - PAD);
+        let tmpHeight: number = Math.max(this.height, node.y + node.height - PAD);
         if (this.options.pot) {
             tmpWidth = Math.pow(2, Math.ceil(Math.log(tmpWidth) * Math.LOG2E));
             tmpHeight = Math.pow(2, Math.ceil(Math.log(tmpHeight) * Math.LOG2E));
@@ -212,26 +215,27 @@ export class MaxRectsBin extends Bin {
         if (this.options.square) {
             tmpWidth = tmpHeight = Math.max(tmpWidth, tmpHeight);
         }
-        if (tmpWidth > this.maxWidth + this.padding || tmpHeight > this.maxHeight + this.padding) {
+        if (tmpWidth > this.maxWidth + PAD || tmpHeight > this.maxHeight + PAD) {
             return false;
         }
-        this.expandFreeRects(tmpWidth + this.padding, tmpHeight + this.padding);
+        this.expandFreeRects(tmpWidth + PAD, tmpHeight + PAD);
         this.width = this.stage.width = tmpWidth;
         this.height = this.stage.height = tmpHeight;
         return true;
     }
 
     private expandFreeRects (width: number, height: number) {
+        var PAD = this.padding * 2;
         this.freeRects.forEach((freeRect, index) => {
-            if (freeRect.x + freeRect.width >= Math.min(this.width + this.padding, width)) {
+            if (freeRect.x + freeRect.width >= Math.min(this.width + PAD, width)) {
                 freeRect.width = width - freeRect.x;
             }
-            if (freeRect.y + freeRect.height >= Math.min(this.height + this.padding, height)) {
+            if (freeRect.y + freeRect.height >= Math.min(this.height + PAD, height)) {
                 freeRect.height = height - freeRect.y;
             }
         }, this);
-        this.freeRects.push(new Rectangle(this.width + this.padding, 0, width - this.width - this.padding, height));
-        this.freeRects.push(new Rectangle(0, this.height + this.padding, width, height - this.height - this.padding));
+        this.freeRects.push(new Rectangle(this.width + PAD, 0, width - this.width - PAD, height));
+        this.freeRects.push(new Rectangle(0, this.height + PAD, width, height - this.height - PAD));
         this.freeRects.forEach((freeRect, index) => {
             if (freeRect.width <= 0 || freeRect.height <= 0) {
                 this.freeRects.splice(index, 1);

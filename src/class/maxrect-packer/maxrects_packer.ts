@@ -23,11 +23,11 @@ export interface IOption {
 
 export class MaxRectsPacker {
     public bins: Bin[];
-
     /**
      * Creates an instance of MaxRectsPacker.
      * @param {number} width of the output atlas (default is 4096)
      * @param {number} height of the output atlas (default is 4096)
+     * @param {number} border of bin-texture (default is 0)
      * @param {number} padding between glyphs/images (default is 0)
      * @param {IOption} [options={}] (Optional) packing options
      * @memberof MaxRectsPacker
@@ -35,6 +35,7 @@ export class MaxRectsPacker {
     constructor (
         public width: number = EDGE_MAX_VALUE,
         public height: number = EDGE_MAX_VALUE,
+        public border: number = 0,
         public padding: number = 0,
         public options: IOption = { smart: true, pot: true, square: true }
     ) {
@@ -50,7 +51,7 @@ export class MaxRectsPacker {
         } else {
             let added = this.bins.find(bin => bin.add(rect));
             if (!added) {
-                let bin = new MaxRectsBin(binIndex, this.width, this.height, this.padding, this.options);
+                let bin = new MaxRectsBin(binIndex, this.width, this.height, this.border, this.padding, this.options);
                 bin.add(rect);
                 this.bins.push(bin);
             }
