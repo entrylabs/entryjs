@@ -599,7 +599,7 @@ Entry.EntityObject.prototype.setLineHeight = function() {
 
 Entry.EntityObject.prototype.syncFont = function() {
     var textObject = this.textObject;
-    // textObject.font = this.getFont();
+    textObject.font = this.getFont();
     // console.log("syncFont");
     var style = textObject.style;
     style.fontSize = this.getFontSize() + 'px';
