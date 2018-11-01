@@ -12,10 +12,12 @@ export class PIXIBaseAsset {
 
     constructor() {
         var path =  Entry.mediaFilePath + "base_asset.png";
-        this._sheet = new PIXI.Spritesheet(
-            PIXI.BaseTexture.fromImage(path),
-            atlasJson
-        );
+        var base = PIXI.BaseTexture.fromImage(path);
+        base.once("loaded", ()=>{
+            Entry.requestUpdate = true;
+        });
+        this._sheet = new PIXI.Spritesheet(base, atlasJson);
+
 
         //서브텍스쳐의 개수는 반드시 1000개보다 작아야 한다. 그렇지 않으면 parse 가 async 로 작동함.
         //1000 이라는 숫자는 PIXI.Spritesheet.BATCH_SIZE getter 에 정의됨.

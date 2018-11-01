@@ -1,9 +1,6 @@
 let PIXITempStore:any = require('../etc/PIXITempStore').PIXITempStore;
 let PIXIText:any = require('../text/PIXIText').PIXIText;
 
-declare let OffscreenCanvas:any;
-declare let PIXI:any;
-
 export default class PIXIHelper {
 
     static text(str:string, font:string, color:string, textBaseline:string, textAlign:string) {
@@ -24,9 +21,11 @@ export default class PIXIHelper {
             fontFamily: fontName,
             fontSize: size,
             fill: color,
-            textBaseline: textBaseline || 'alphabetic',
+            // textBaseline: textBaseline || 'alphabetic',
+            textBaseline: "middle",
             align: textAlign || "left",
-            miterLimit: 2.5 //createjs default value
+            miterLimit: 2.5 //createjs default value,
+            ,padding: 5 //바운드를 삐져나오는 경우를 대비한 패딩
         });
         return t;
     }
