@@ -102,8 +102,14 @@ Entry.Variable.prototype._createListElementView = function(wrapperWidth){
     return elementView;
 };
 
+/**
+ *
+ * @param {PIXIText} pixiText
+ * @return {*}
+ * @private
+ */
 function __textWidth(pixiText) {
-    return pixiText.getBounds().width;
+    return pixiText.width;
 }
 
 
@@ -122,8 +128,9 @@ Entry.Variable.prototype.generateView = function(variableIndex) {
         this.wrapper_ = getH3Plane();
         this.view_.addChild(this.wrapper_);
         this.textView_ = PIXIHelper.text('asdf', this.FONT, '#000000', 'alphabetic');
+        this.textView_.interactive = false;
         this.textView_.x = 4;
-        this.textView_.y = -10;
+        this.textView_.y = -9;
         this.view_.addChild(this.textView_);
 
         this.valueView_ = PIXIHelper.text('asdf', '10pt NanumGothic', "#ffffff", 'alphabetic');
@@ -174,7 +181,7 @@ Entry.Variable.prototype.generateView = function(variableIndex) {
         this.view_.addChild(this.wrapper_);
         this.textView_ = PIXIHelper.text("name", this.FONT, '#000000', 'alphabetic');
         this.textView_.x = 4;
-        this.textView_.y = -10;
+        this.textView_.y = -9;
         this.view_.addChild(this.textView_);
 
         this.valueView_ = PIXIHelper.text('value', '10pt NanumGothic', '#ffffff', 'alphabetic');
@@ -432,7 +439,7 @@ Entry.Variable.prototype.updateView = function() {
                 this._nameWidth = PIXIHelper.textWidth(this.textView_);
 
             this.valueView_.x = this._nameWidth + 14;
-            this.valueView_.y = -10;
+            this.valueView_.y = -9;
             // INFO: Number체크는 slide 일때만 하도록 처리 기본 문자로 처리함(#4876)
 
 
@@ -474,7 +481,7 @@ Entry.Variable.prototype.updateView = function() {
             }
 
             this.valueView_.x = this._nameWidth + 14;
-            this.valueView_.y = -10;
+            this.valueView_.y = -9;
             var value = String(this.getValue());
 
             if (this.isFloatPoint()) {
@@ -648,7 +655,7 @@ Entry.Variable.prototype.updateView = function() {
             this.view_.x = this.getX();
             this.view_.y = this.getY();
             this.textView_.text = this.getName();
-            this.valueView_.y = -10;
+            this.valueView_.y = -9;
             if (this.isNumber()) {
                 var v = Number(this.getValue());
                 if (parseInt(this.getValue(), 10) == this.getValue())
@@ -694,7 +701,7 @@ Entry.Variable.prototype.updateView = function() {
                 this._nameWidth = PIXIHelper.textWidth(this.textView_);
 
             this.valueView_.x = this._nameWidth + 14;
-            this.valueView_.y = -10;
+            this.valueView_.y = -9;
             if (this.isNumber())
                 this.valueView_.text = Number(this.getValue())
                     .toFixed(1)

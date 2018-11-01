@@ -26,7 +26,7 @@ class _PIXIGlobal {
         PIXIAtlasManager.INIT();
         new PIXIZeroAlphaNoneInteractionPlugins();
         new PIXIPixelPerfectInteractionPlugIn();
-        new PIXITextMetricsPlugIn();
+        PIXITextMetricsPlugIn();
     }
 
     getNewApp(canvas:HTMLCanvasElement):PIXI.Application {

@@ -1,8 +1,11 @@
+/**
+ * createjs 의 rendeeing 방식을 따라 하기 위해 fontProperty를 사용안함.
+ * 뷰의 스케일 조정을 하더라도 깔끔하게 보이기 위해 fontScale 를 추가하여 텍스쳐의 크기를 조절함.
+ */
 
 import PIXITextStyle from './PIXITextStyle';
 
-//PIXI.Text 클래스 내부에서는 PIXI 네임스페이스로 접근을 안하기 때문에 요렇게 변수추가. ( 원본 수정을 최소화 하기 위함 )
-var TextMetrics = PIXI.TextMetrics; 
+var TextMetrics = PIXI.TextMetrics;
 
 export class PIXIText extends PIXI.Text {
 
@@ -177,15 +180,15 @@ export class PIXIText extends PIXI.Text {
 
         // set canvas text styles
         context.fillStyle = this._generateFillStyle(style, lines);
-
         const WORD_WRAP = style.wordWrap;
-        const MAX_HEIGHT = style.maxHeight < 0 ? 0xffff : (style.maxHeight - fontProperties.descent);
-
+        const H_LH = lineHeight * 0.5; // half line-height
+        const MAX_HEIGHT = style.maxHeight < 0 ? 0xffff : style.maxHeight - H_LH;
+        const PAD = style.padding;
         // draw lines line by line
         for (let i = 0; i < lines.length; i++)
         {
             linePositionX = style.strokeThickness / 2;
-            linePositionY = ((style.strokeThickness / 2) + (i * lineHeight)) + fontProperties.ascent;
+            linePositionY = ((style.strokeThickness / 2) + (i * lineHeight)) + H_LH;
 
             if( WORD_WRAP && (linePositionY > MAX_HEIGHT) )
             {
@@ -222,17 +225,71 @@ export class PIXIText extends PIXI.Text {
 
             //취소선 추가
             if (style.cancelLine) {
-                this._drawLineAt(context, linePositionX, linePositionY, lineWidths[i], lineHeight * PIXIText.cancelLineOffset);
+                this._drawLineAt(context, linePositionX + PAD, linePositionY + PAD, lineWidths[i], 0);
             }
 
             //밑줄
             if (style.underLine) {
-                this._drawLineAt(context, linePositionX, linePositionY, lineWidths[i], lineHeight * PIXIText.underLineOffset);
+                this._drawLineAt(context, linePositionX + PAD, linePositionY + PAD, lineWidths[i], lineHeight * 0.4);
             }
             
         }
 
         this.updateTexture();
+    }
+
+
+    updateTexture()
+    {
+        const canvas = this.canvas;
+
+
+        // 박봉배- entryjs 에서 trim 기능 사용안함. 그리고 trimCanvas 의 참조를 pixi 라이브러리로부터 못갖고 오겠음.
+        /*
+        if (this._style.trim)
+        {
+            const trimmed = trimCanvas(canvas);
+
+            if (trimmed.data)
+            {
+                canvas.width = trimmed.width;
+                canvas.height = trimmed.height;
+                this.context.putImageData(trimmed.data, 0, 0);
+            }
+        }
+        */
+
+        const texture = this._texture;
+        const style = this._style;
+        const padding = style.trim ? 0 : style.padding;
+        const baseTexture = texture.baseTexture;
+
+        const UN = undefined;
+        const FSX = this._fontScaleX === UN ? 1 : this._fontScaleX;
+        const FSY = this._fontScaleY === UN ? 1 : this._fontScaleY;
+
+        baseTexture.hasLoaded = true;
+        baseTexture.resolution = this.resolution;
+
+        baseTexture.realWidth = canvas.width;
+        baseTexture.realHeight = canvas.height;
+        baseTexture.width = canvas.width / this.resolution;
+        baseTexture.height = canvas.height / this.resolution;
+
+        texture.trim.width = texture._frame.width = canvas.width / this.resolution;
+        texture.trim.height = texture._frame.height = canvas.height / this.resolution;
+        texture.trim.x = -padding * FSX;
+        texture.trim.y = -padding * FSY;
+
+        texture.orig.width = texture._frame.width - (padding * 2) * FSX;
+        texture.orig.height = texture._frame.height - (padding * 2) * FSY;
+
+        // call sprite onTextureUpdate to update scale if _width or _height were set
+        this._onTextureUpdate();
+
+        baseTexture.emit('update', baseTexture);
+
+        this.dirty = false;
     }
 
     /**
@@ -253,7 +310,7 @@ export class PIXIText extends PIXI.Text {
     }
 }
 
-PIXIText.cancelLineOffset = -0.23;
-PIXIText.underLineOffset = 0.12;
-PIXIText.STAGE_SCALE = 1.51;//2/1.5;
+// PIXIText.STAGE_SCALE = 1.51;
+PIXIText.STAGE_SCALE = 1.53;
+// PIXIText.STAGE_SCALE = 1.41;
 console.log(`PIXIText.STAGE_SCALE1(${PIXIText.STAGE_SCALE})`);
