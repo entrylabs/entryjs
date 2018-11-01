@@ -585,16 +585,20 @@ Entry.EntityObject.prototype.setFont = function(font = '20px Nanum Gothic') {
 };
 
 Entry.EntityObject.prototype.setLineHeight = function() {
+    var lineHeight = 0;
     switch (this.getFontType()) {
         case 'Nanum Gothic Coding': {
-            this.textObject.lineHeight = this.fontSize;
+            // this.textObject.lineHeight = this.fontSize;
+            lineHeight = this.fontSize;
             break;
         }
         default: {
-            this.textObject.lineHeight = 0;
+            // this.textObject.lineHeight = 0;
+            lineHeight = 0;
             break;
         }
     }
+    this.textObject.style.lineHeight = lineHeight;
 };
 
 Entry.EntityObject.prototype.syncFont = function() {
