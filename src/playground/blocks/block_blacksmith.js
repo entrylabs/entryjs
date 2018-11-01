@@ -23,297 +23,6 @@ Entry.Blacksmith = {
         }
         Entry.hw.update();
     },
-    toByte: function(data) {
-        switch (data) {
-            case ' ':
-                data = 32;
-                break;
-            case '!':
-                data = 33;
-                break;
-            case '"':
-                data = 34;
-                break;
-            case '#':
-                data = 35;
-                break;
-            case '$':
-                data = 36;
-                break;
-            case '%':
-                data = 37;
-                break;
-            case '&':
-                data = 38;
-                break;
-            case "'":
-                data = 39;
-                break;
-            case '(':
-                data = 40;
-                break;
-            case ')':
-                data = 41;
-                break;
-            case '*':
-                data = 42;
-                break;
-            case '+':
-                data = 43;
-                break;
-            case ',':
-                data = 44;
-                break;
-            case '-':
-                data = 45;
-                break;
-            case '.':
-                data = 46;
-                break;
-            case '/':
-                data = 47;
-                break;
-            case '0':
-                data = 48;
-                break;
-            case '1':
-                data = 49;
-                break;
-            case '2':
-                data = 50;
-                break;
-            case '3':
-                data = 51;
-                break;
-            case '4':
-                data = 52;
-                break;
-            case '5':
-                data = 53;
-                break;
-            case '6':
-                data = 54;
-                break;
-            case '7':
-                data = 55;
-                break;
-            case '8':
-                data = 56;
-                break;
-            case '9':
-                data = 57;
-                break;
-            case ':':
-                data = 58;
-                break;
-            case ';':
-                data = 59;
-                break;
-            case '<':
-                data = 60;
-                break;
-            case '=':
-                data = 61;
-                break;
-            case '>':
-                data = 62;
-                break;
-            case '?':
-                data = 63;
-                break;
-            case '@':
-                data = 64;
-                break;
-            case 'A':
-                data = 65;
-                break;
-            case 'B':
-                data = 66;
-                break;
-            case 'C':
-                data = 67;
-                break;
-            case 'D':
-                data = 68;
-                break;
-            case 'E':
-                data = 69;
-                break;
-            case 'F':
-                data = 70;
-                break;
-            case 'G':
-                data = 71;
-                break;
-            case 'H':
-                data = 72;
-                break;
-            case 'I':
-                data = 73;
-                break;
-            case 'J':
-                data = 74;
-                break;
-            case 'K':
-                data = 75;
-                break;
-            case 'L':
-                data = 76;
-                break;
-            case 'M':
-                data = 77;
-                break;
-            case 'N':
-                data = 78;
-                break;
-            case 'O':
-                data = 79;
-                break;
-            case 'P':
-                data = 80;
-                break;
-            case 'Q':
-                data = 81;
-                break;
-            case 'R':
-                data = 82;
-                break;
-            case 'S':
-                data = 83;
-                break;
-            case 'T':
-                data = 84;
-                break;
-            case 'U':
-                data = 85;
-                break;
-            case 'V':
-                data = 86;
-                break;
-            case 'W':
-                data = 87;
-                break;
-            case 'X':
-                data = 88;
-                break;
-            case 'Y':
-                data = 89;
-                break;
-            case 'Z':
-                data = 90;
-                break;
-            case '[':
-                data = 91;
-                break;
-            case '\\':
-                data = 92;
-                break;
-            case ']':
-                data = 93;
-                break;
-            case '^':
-                data = 94;
-                break;
-            case '_':
-                data = 95;
-                break;
-            case '`':
-                data = 96;
-                break;
-            case 'a':
-                data = 97;
-                break;
-            case 'b':
-                data = 98;
-                break;
-            case 'c':
-                data = 99;
-                break;
-            case 'd':
-                data = 100;
-                break;
-            case 'e':
-                data = 101;
-                break;
-            case 'f':
-                data = 102;
-                break;
-            case 'g':
-                data = 103;
-                break;
-            case 'h':
-                data = 104;
-                break;
-            case 'i':
-                data = 105;
-                break;
-            case 'j':
-                data = 106;
-                break;
-            case 'k':
-                data = 107;
-                break;
-            case 'l':
-                data = 108;
-                break;
-            case 'm':
-                data = 109;
-                break;
-            case 'n':
-                data = 110;
-                break;
-            case 'o':
-                data = 111;
-                break;
-            case 'p':
-                data = 112;
-                break;
-            case 'q':
-                data = 113;
-                break;
-            case 'r':
-                data = 114;
-                break;
-            case 's':
-                data = 115;
-                break;
-            case 't':
-                data = 116;
-                break;
-            case 'u':
-                data = 117;
-                break;
-            case 'v':
-                data = 118;
-                break;
-            case 'w':
-                data = 119;
-                break;
-            case 'x':
-                data = 120;
-                break;
-            case 'y':
-                data = 121;
-                break;
-            case 'z':
-                data = 122;
-                break;
-            case '{':
-                data = 123;
-                break;
-            case '|':
-                data = 124;
-                break;
-            case '}':
-                data = 125;
-                break;
-            case '~':
-                data = 126;
-                break;
-        }
-
-        return data;
-    },
     sensorTypes: {
         ALIVE: 0,
         DIGITAL: 1,
@@ -324,9 +33,12 @@ Entry.Blacksmith = {
         PULSEIN: 6,
         ULTRASONIC: 7,
         TIMER: 8,
-        rxBLUETOOTH: 9,
-        LCD: 10,
-        txBLUETOOTH: 11,
+        READ_BLUETOOTH: 9,
+        WRITE_BLUETOOTH: 10,
+        LCD: 11,
+        RGBLED: 12,
+        DCMOTOR: 13,
+        OLED: 14,
     },
     toneTable: {
         '0': 0,
@@ -361,7 +73,62 @@ Entry.Blacksmith = {
     lowList: ['low', '0', 'off'],
     BlockState: {},
 };
-
+Entry.Blacksmith.setLanguage = function() {
+    return {
+        ko: {
+            template: {
+                "blacksmith_toggle_on": "켜기",
+                "blacksmith_toggle_off": "끄기",
+                "blacksmith_lcd_first_line": "첫 번째",
+                "blacksmith_lcd_seconds_line": "두 번째",
+                "blacksmith_dcmotor_direction_forward": "정방향",
+                "blacksmith_dcmotor_direction_reverse": "역방향",
+                "blacksmith_btData_select_number": "숫자",
+                "blacksmith_btData_select_character": "문자",
+                "blacksmith_get_analog_value": "아날로그 %1 번 핀 센서 값",
+                "blacksmith_get_analog_mapping": "아날로그 %1 번 핀 센서 값의 범위를 %2 ~ %3 에서 %4 ~ %5 로 바꾼 값",
+                "blacksmith_get_digital_bluetooth": "블루투스 RX 2 핀 %1 데이터 값",
+                "blacksmith_get_digital_ultrasonic": "초음파 Trig %1 핀 Echo %2 핀 센서 값",
+                "blacksmith_get_digital_toggle": "디지털 %1 번 핀 센서 값",
+                "blacksmith_set_digital_toggle": "디지털 %1 번 핀 %2 %3",
+                "blacksmith_set_digital_pwm": "디지털 %1 번 핀을 %2 (으)로 정하기 %3",
+                "blacksmith_set_digital_rgbled": "디지털 %1 번 핀의 RGB LED를 빨강 %2 초록 %3 파랑 %4 로 정하기 %5",
+                "blacksmith_set_digital_servo": "디지털 %1 번 핀의 서보모터를 %2 의 각도로 정하기 %3",
+                "blacksmith_set_digital_buzzer": "디지털 %1 번 핀의 버저를 %2 %3 음으로 %4 초 연주하기 %5",
+                "blacksmith_set_digital_dcmotor": "DC모터 %1 번 핀을 %2 %3 번 핀의 속도를 %4 로 정하기 %5",
+                "blacksmith_module_digital_lcd": "LCD화면 %1 줄에 %2 나타내기 %3",
+                "blacksmith_module_digital_bluetooth": "블루투스 TX 3 핀에 %1 데이터 보내기 %2",
+                "blacksmith_module_digital_oled" : "OLED화면 X 좌표 %1  Y 좌표 %2 에 %3 나타내기 %4",
+            }
+        },
+        en: {
+            template: {
+                "blacksmith_toggle_on": "on",
+                "blacksmith_toggle_off": "off",
+                "blacksmith_lcd_first_line": "first",
+                "blacksmith_lcd_seconds_line": "seconds",                
+                "blacksmith_dcmotor_direction_forward": "forward",
+                "blacksmith_dcmotor_direction_reverse": "reverse",                
+                "blacksmith_btData_select_number": "number",
+                "blacksmith_btData_select_character": "character",
+                "blacksmith_get_analog_value": "Read analog %1 pin sensor value",
+                "blacksmith_get_analog_mapping": "Map analog %1 pin sensor value from %2 ~ %3 to %4 ~ %5",
+                "blacksmith_get_digital_bluetooth": "Bluetooth RX 2 %1 value",
+                "blacksmith_get_digital_ultrasonic": "Read ultrasonic Trig %1 Echo %2 sensor value",
+                "blacksmith_get_digital_toggle": "Digital %1 pin sensor value",
+                "blacksmith_set_digital_toggle": "Digital %1 pin %2 %3",
+                "blacksmith_set_digital_pwm": "Digital pwm %1 Pin %2 %3",                
+                "blacksmith_set_digital_rgbled": "Digital %1 pin RGB LED Red %2 Green %3 Blue %4 %5",
+                "blacksmith_set_digital_servo": "Set servo pin %1 angle as %2 %3",
+                "blacksmith_set_digital_buzzer": "Play tone pin %1 on note %2 octave %3 beat %4 %5",
+                "blacksmith_set_digital_dcmotor": "DC Motor %1 pin direction %2 %3 pin speed %4 %5",
+                "blacksmith_module_digital_lcd": "LCD %1 line %2 appear %3",
+                "blacksmith_module_digital_bluetooth": "Bluetooth TX 3 Pin %1 data send %2",
+                "blacksmith_module_digital_oled" : "OLED X codinate %1 Y coodinate %2 appear %3 %4",
+            }
+        }
+    }
+};
 Entry.Blacksmith.getBlocks = function() {
     return {
         //region blacksmith 대장장이보드
@@ -378,6 +145,8 @@ Entry.Blacksmith.getBlocks = function() {
                         ['A1', '1'],
                         ['A2', '2'],
                         ['A3', '3'],
+                        ['A4', '4'],
+                        ['A5', '5'],
                     ],
                     value: '0',
                     fontSize: 11,
@@ -403,12 +172,20 @@ Entry.Blacksmith.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
+                        ['0', '0'],
+                        ['1', '1'],
+                        ['2', '2'],
+                        ['3', '3'],
+                        ['4', '4'],
+                        ['5', '5'],
                         ['6', '6'],
                         ['7', '7'],
                         ['8', '8'],
                         ['9', '9'],
                         ['10', '10'],
                         ['11', '11'],
+                        ['12', '12'],
+                        ['13', '13'],
                     ],
                     value: '10',
                     fontSize: 11,
@@ -468,12 +245,14 @@ Entry.Blacksmith.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
+                    	['~3', '3'],
+                    	['~5', '5'],
                         ['~6', '6'],
                         ['~9', '9'],
                         ['~10', '10'],
                         ['~11', '11'],
                     ],
-                    value: '10',
+                    value: '11',
                     fontSize: 11,
                     arrowColor: EntryStatic.ARROW_COLOR_HW,
                 },
@@ -498,8 +277,8 @@ Entry.Blacksmith.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [Lang.Blocks.blacksmith_toggle_on, 'on'],
-                        [Lang.Blocks.blacksmith_toggle_off, 'off'],
+                        [Lang.template.blacksmith_toggle_on, 'on'],
+                        [Lang.template.blacksmith_toggle_off, 'off'],
                     ],
                     value: 'on',
                     fontSize: 11,
@@ -564,8 +343,8 @@ Entry.Blacksmith.getBlocks = function() {
                 {
                     type: 'Dropdown',
                     options: [
-                        [Lang.Blocks.blacksmith_lcd_first_line, '0'],
-                        [Lang.Blocks.blacksmith_lcd_seconds_line, '1'],
+                        [Lang.template.blacksmith_lcd_first_line, '0'],
+                        [Lang.template.blacksmith_lcd_seconds_line, '1'],
                     ],
                     value: '0',
                     fontSize: 11,
@@ -580,6 +359,60 @@ Entry.Blacksmith.getBlocks = function() {
             },
             func: function(sprite, script) {
                 return script.getField('LINE');
+            },
+        },
+        blacksmith_list_digital_dcmotor_direction: {
+            color: '#00979D',
+            skeleton: 'basic_string_field',
+            statements: [],
+            template: '%1',
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.template.blacksmith_dcmotor_direction_reverse, '0'],
+                        [Lang.template.blacksmith_dcmotor_direction_forward, '1'],
+                    ],
+                    value: '1',
+                    fontSize: 11,
+                },
+            ],
+            events: {},
+            def: {
+                params: [null],
+            },
+            paramsKeyMap: {
+                DIRECTION: 0,
+            },
+            func: function(sprite, script) {
+                return script.getField('DIRECTION');
+            },
+        },
+        blacksmith_list_digital_btData_select: {
+            color: '#00979D',
+            skeleton: 'basic_string_field',
+            statements: [],
+            template: '%1',
+            params: [
+                {
+                    type: 'Dropdown',
+                    options: [
+                        [Lang.template.blacksmith_btData_select_number, '0'],
+                        [Lang.template.blacksmith_btData_select_character, '1'],
+                    ],
+                    value: '0',
+                    fontSize: 11,
+                },
+            ],
+            events: {},
+            def: {
+                params: [null],
+            },
+            paramsKeyMap: {
+                DIRECTION: 0,
+            },
+            func: function(sprite, script) {
+                return script.getField('DIRECTION');
             },
         },
         blacksmith_get_analog_value: {
@@ -722,17 +555,33 @@ Entry.Blacksmith.getBlocks = function() {
             skeleton: 'basic_string_field',
             template: Lang.template.blacksmith_get_digital_bluetooth,
             statements: [],
-            params: [],
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+            ],
             events: {},
             def: {
-                params: [],
+                params: [
+                    {
+                        type: 'blacksmith_list_digital_btData_select',
+                    },
+                ],
                 type: 'blacksmith_get_digital_bluetooth',
             },
-            paramsKeyMap: {},
+            paramsKeyMap: {
+                VALUE: 0,
+            },
             class: 'blacksmithGet',
             isNotFor: ['blacksmith'],
             func: function(sprite, script) {
                 var port = 2;
+                var lengthCount = 0;
+                var result = '';
+                var makeString = '';                
+                var returnType = script.getValue('VALUE', script);
+                var getString = Entry.hw.portData.READ_BLUETOOTH;
 
                 if (!Entry.hw.sendQueue['SET']) {
                     Entry.hw.sendQueue['SET'] = {};
@@ -742,13 +591,49 @@ Entry.Blacksmith.getBlocks = function() {
                     Entry.hw.sendQueue['GET'] = {};
                 }
                 Entry.hw.sendQueue['GET'][
-                    Entry.Blacksmith.sensorTypes.rxBLUETOOTH
+                    Entry.Blacksmith.sensorTypes.READ_BLUETOOTH
                 ] = {
                     port: port,
                     time: new Date().getTime(),
                 };
 
-                return Entry.hw.portData.rxBLUETOOTH || 0;
+                for(var i = 0; i < getString.length; i++) {
+                    if(i == getString.length - 1) {
+                        if(lengthCount == 2) {
+                            makeString = getString[i-1] + makeString[i];
+                        }
+                        else if (lengthCount == 3) {
+                            makeString = getString[i-2] + getString[i-1] + getString[i];
+                        }
+                        makeString = Number(makeString);
+                        if(returnType == 1) {
+                            makeString = String.fromCharCode(makeString);
+                        }
+                        result = result + makeString;
+                        lengthCount = 0;
+                        makeString = '';
+                    }
+                    if(getString[i] == ',') {
+                        if(lengthCount == 2) {
+                            makeString = getString[i-2] + getString[i-1];
+                        }
+                        else if(lengthCount == 3) {
+                            makeString = getString[i-3] + getString[i-2] + getString[i-1];
+                        }
+                        makeString = Number(makeString);
+                        if(returnType == 1) {
+                            makeString = String.fromCharCode(makeString);
+                        }
+                        result = result + makeString;
+                        lengthCount = 0;
+                        makeString = '';
+                    }
+                    else {
+                        lengthCount += 1;
+                    }
+                }
+
+                return result.slice(0, result.length - 1);
             },
             syntax: { js: [], py: ['blacksmith.get_digital_bluetooth()'] },
         },
@@ -986,6 +871,94 @@ Entry.Blacksmith.getBlocks = function() {
             },
             syntax: { js: [], py: ['blacksmith.set_digital_pwm(%1, %2)'] },
         },
+        blacksmith_set_digital_rgbled: {
+            color: '#00979D',
+            fontColor: '#fff',
+            skeleton: 'basic',
+            statements: [],
+            template: Lang.template.blacksmith_set_digital_rgbled,
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_03.png',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'blacksmith_list_digital_basic',
+                    },
+                    {
+                        type: 'text',
+                        params: ['255'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['0'],
+                    },
+                    null,
+                ],
+                type: 'blacksmith_set_digital_rgbled',
+            },
+            paramsKeyMap: {
+                PORT: 0,
+                VALUE0: 1,
+                VALUE1: 2,
+                VALUE2: 3,
+            },
+            class: 'blacksmithSet',
+            isNotFor: ['blacksmith'],
+            func: function(sprite, script) {
+                var port = script.getNumberValue('PORT');
+                var value = [3];
+                value[0] = script.getNumberValue('VALUE0');
+                value[1] = script.getNumberValue('VALUE1');
+                value[2] = script.getNumberValue('VALUE2');
+
+                for(var i = 0; i < 3; i++) {                    
+                    value[i] = Math.round(value[i]);
+                    value[i] = Math.min(value[i], 200);
+                    value[i] = Math.max(value[i], 0);
+                }
+                if (!Entry.hw.sendQueue['SET']) {
+                    Entry.hw.sendQueue['SET'] = {};
+                }
+                Entry.hw.sendQueue['SET'][port] = {
+                    type: Entry.Blacksmith.sensorTypes.RGBLED,
+                    data: {
+                        redValue: value[0],
+                        greenValue: value[1],
+                        blueValue: value[2],
+                    },
+                    time: new Date().getTime(),
+                };
+
+                return script.callReturn();
+            },
+            syntax: { js: [], py: ['blacksmith.set_digital_pwm(%1, %2)'] },
+        },
         blacksmith_set_digital_servo: {
             color: '#00979D',
             fontColor: '#fff',
@@ -1178,11 +1151,96 @@ Entry.Blacksmith.getBlocks = function() {
                 py: ['blacksmith.set_digital_toggle(%1, %2, %3, %4)'],
             },
         },
-        blacksmith_set_digital_lcd: {
+        blacksmith_set_digital_dcmotor: {
             color: '#00979D',
             fontColor: '#fff',
             skeleton: 'basic',
-            template: Lang.template.blacksmith_set_digital_lcd,
+            statements: [],
+            template: Lang.template.blacksmith_set_digital_dcmotor,
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_03.png',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'blacksmith_list_digital_basic',
+                    },
+                    {
+                        type: 'blacksmith_list_digital_dcmotor_direction',
+                    },
+                    {
+                        type: 'blacksmith_list_digital_pwm',
+                    },
+                    {
+                        type: 'text',
+                        params: ['255'],
+                    },
+                    null,
+                ],
+                type: 'blacksmith_set_digital_dcmotor',
+            },
+            paramsKeyMap: {
+                PORT0: 0,
+                VALUE0: 1,
+                PORT1: 2,
+                VALUE1: 3,
+            },
+            class: 'blacksmithSet',
+            isNotFor: ['blacksmith'],
+            func: function(sprite, script) {
+                var port = 0; // port value is dummy;
+                var directionPort = script.getNumberValue('PORT0');
+                var speedPort = script.getNumberValue('PORT1');
+                var directionValue = script.getNumberValue('VALUE0');
+                var speedValue = script.getNumberValue('VALUE1');
+
+                speedValue = Math.round(speedValue);
+                speedValue = Math.min(speedValue, 255);
+                speedValue = Math.max(speedValue, 0);
+                if (!Entry.hw.sendQueue['SET']) {
+                    Entry.hw.sendQueue['SET'] = {};
+                }
+                Entry.hw.sendQueue['SET'][port] = {
+                    type: Entry.Blacksmith.sensorTypes.DCMOTOR,
+                    data: {
+                        port0: directionPort,
+                        port1: speedPort,
+                        value0: directionValue,
+                        value1: speedValue,
+                    },
+                    time: new Date().getTime(),
+                };
+
+                return script.callReturn();
+            },
+            syntax: { js: [], py: ['blacksmith.set_digital_dcmotor(%1, %2, %3, %4)'] },
+        },
+        blacksmith_module_digital_lcd: {
+            color: '#00979D',
+            fontColor: '#fff',
+            skeleton: 'basic',
+            template: Lang.template.blacksmith_module_digital_lcd,
             statements: [],
             params: [
                 {
@@ -1211,13 +1269,13 @@ Entry.Blacksmith.getBlocks = function() {
                     },
                     null,
                 ],
-                type: 'blacksmith_set_digital_lcd',
+                type: 'blacksmith_module_digital_lcd',
             },
             paramsKeyMap: {
                 LINE: 0,
                 STRING: 1,
             },
-            class: 'blacksmithSet',
+            class: 'blacksmithModule',
             isNotFor: ['blacksmith'],
             func: function(sprite, script) {
                 var line = script.getNumberValue('LINE');
@@ -1227,7 +1285,7 @@ Entry.Blacksmith.getBlocks = function() {
                 if (!script.isStart) {
                     if (typeof string === 'string') {
                         for (var i = 0; i < string.length; i++) {
-                            text[i] = Entry.Blacksmith.toByte(string[i]);
+                            text[i] = string.charCodeAt(i);
                         }
                     } else if (typeof string === 'number') {
                         text[0] = 1;
@@ -1281,13 +1339,136 @@ Entry.Blacksmith.getBlocks = function() {
                     return script.callReturn();
                 }
             },
-            syntax: { js: [], py: ['blacksmith.set_digital_lcd(%1, %2)'] },
+            syntax: { js: [], py: ['blacksmith.module_digital_lcd(%1, %2)'] },
         },
-        blacksmith_set_digital_bluetooth: {
+        blacksmith_module_digital_oled: {
             color: '#00979D',
             fontColor: '#fff',
             skeleton: 'basic',
-            template: Lang.template.blacksmith_set_digital_bluetooth,
+            statements: [],
+            template: Lang.template.blacksmith_module_digital_oled,
+            params: [
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },                
+                {
+                    type: 'Block',
+                    accept: 'string',
+                },
+                {
+                    type: 'Indicator',
+                    img: 'block_icon/hardware_03.png',
+                    size: 12,
+                },
+            ],
+            events: {},
+            def: {
+                params: [
+                    {
+                        type: 'text',
+                        params: ['20'],
+                    },
+                    {
+                        type: 'text',
+                        params: ['20'],
+                    },                    
+                    {
+                        type: 'text',
+                        params: ['My Entry!!'],
+                    },
+                    null,
+                ],
+                type: "blacksmith_module_digital_oled",
+            },
+            paramsKeyMap: {
+                VALUE0: 0,
+                VALUE1: 1,
+                STRING: 2,
+            },
+            class: 'blacksmithModule',
+            isNotFor: ['blacksmith'],
+            func: function(sprite, script) {
+                var port = 0; // port value is dummy;
+                var coodinate_x = script.getNumberValue('VALUE0');
+                var coodinate_y = script.getNumberValue('VALUE1');
+                var string = script.getValue('STRING');
+                var text = [];
+
+                if (!script.isStart) {
+                    if (typeof string === 'string') {
+                        for (var i = 0; i < string.length; i++) {
+                            text[i] = string.charCodeAt(i);
+                        }
+                    } else if (typeof string === 'number') {
+                        text[0] = 1;
+                        text[1] = string / 1;
+                    } else {
+                        text[0] = string;
+                    }
+                    if (!Entry.hw.sendQueue['SET']) {
+                        Entry.hw.sendQueue['SET'] = {};
+                    }
+
+                    script.isStart = true;
+                    script.timeFlag = 1;
+                    var fps = Entry.FPS || 60;
+                    var timeValue = 60 / fps * 50;
+
+                    coodinate_x = Math.min(coodinate_x, 127);
+                    coodinate_x = Math.max(coodinate_x, 0);
+                    coodinate_y = Math.min(coodinate_y, 63);
+                    coodinate_y = Math.max(coodinate_y, 0);
+
+                    Entry.hw.sendQueue['SET'][port] = {
+                        type: Entry.Blacksmith.sensorTypes.OLED,
+                        data: {
+                            value0: coodinate_x,
+                            value1: coodinate_y,
+                            text0: text[0],
+                            text1: text[1],
+                            text2: text[2],
+                            text3: text[3],
+                            text4: text[4],
+                            text5: text[5],
+                            text6: text[6],
+                            text7: text[7],
+                            text8: text[8],
+                            text9: text[9],
+                            text10: text[10],
+                            text11: text[11],
+                            text12: text[12],
+                            text13: text[13],
+                            text14: text[14],
+                            text15: text[15],
+                        },
+                        time: new Date().getTime(),
+                    };
+
+                    setTimeout(function() {
+                        script.timeFlag = 0;
+                    }, timeValue);
+                    return script;
+                } else if (script.timeFlag == 1) {
+                    return script;
+                } else {
+                    delete script.timeFlag;
+                    delete script.isStart;
+                    Entry.engine.isContinue = false;
+                    return script.callReturn();
+                }
+            },
+            syntax: { js: [], py: ['blacksmith.Module_digital_oled(%1, %2, %3)'] },
+        },
+        blacksmith_module_digital_bluetooth: {
+            color: '#00979D',
+            fontColor: '#fff',
+            skeleton: 'basic',
+            template: Lang.template.blacksmith_module_digital_bluetooth,
             statements: [],
             params: [
                 {
@@ -1309,12 +1490,12 @@ Entry.Blacksmith.getBlocks = function() {
                     },
                     null,
                 ],
-                type: 'blacksmith_set_digital_bluetooth',
+                type: 'blacksmith_module_digital_bluetooth',
             },
             paramsKeyMap: {
                 STRING: 0,
             },
-            class: 'blacksmithSet',
+            class: 'blacksmithModule',
             isNotFor: ['blacksmith'],
             func: function(sprite, script) {
                 var string = script.getValue('STRING');
@@ -1324,7 +1505,7 @@ Entry.Blacksmith.getBlocks = function() {
                 if (!script.isStart) {
                     if (typeof string === 'string') {
                         for (var i = 0; i < string.length; i++) {
-                            text[i] = Entry.Blacksmith.toByte(string[i]);
+                            text[i] = string.charCodeAt(i);
                         }
                     } else {
                         text[0] = string;
@@ -1339,7 +1520,7 @@ Entry.Blacksmith.getBlocks = function() {
                     var timeValue = 60 / fps * 50;
 
                     Entry.hw.sendQueue['SET'][port] = {
-                        type: Entry.Blacksmith.sensorTypes.txBLUETOOTH,
+                        type: Entry.Blacksmith.sensorTypes.WRITE_BLUETOOTH,
                         data: {
                             text0: text[0],
                             text1: text[1],
@@ -1374,7 +1555,7 @@ Entry.Blacksmith.getBlocks = function() {
                     return script.callReturn();
                 }
             },
-            syntax: { js: [], py: ['blacksmith.set_digital_bluetooth(%1)'] },
+            syntax: { js: [], py: ['blacksmith.module_digital_bluetooth(%1)'] },
         },
         //endregion blacksmith 대장장이보드
     };
