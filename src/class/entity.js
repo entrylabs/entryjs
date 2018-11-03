@@ -14,6 +14,7 @@ function clog() {
 import PIXIHelper from './pixi/helper/PIXIHelper';
 import { PIXIDragHelper } from './pixi/helper/PIXIDragHelper';
 import { PIXIAtlasManager } from './pixi/atlas/PIXIAtlasManager';
+import { PIXIContainerScaleAdaptor, PIXISpriteScaleAdaptor } from './pixi/etc/PIXIScaleAdator';
 
 /**
  * Construct entity class
@@ -35,9 +36,11 @@ Entry.EntityObject = function(object) {
     if (this.type == 'sprite') {
         this.object = new PIXI.Sprite();
         this.object.pixelPerfect = true;
+        this._scaleAdaptor = new PIXISpriteScaleAdaptor(this.object);
         this.setInitialEffectValue();
     } else if (this.type == 'textBox') {
         this.object = new PIXI.Container();
+        this._scaleAdaptor = new PIXIContainerScaleAdaptor(this.object);
         // this.textObject = new createjs.Text();
         // this.textObject.font = '20px Nanum Gothic';
         // this.textObject.textBaseline = 'middle';
@@ -364,7 +367,8 @@ Entry.EntityObject.prototype.setScaleX = function(scaleX) {
     /** @type {number} */
     // console.log(`setScaleX(${scaleX})`);
     this.scaleX = scaleX;
-    this.object.scale.x = this.scaleX;
+    // this.object.scale.x = this.scaleX;
+    this._scaleAdaptor.setX(this.scaleX);
     if(this.textObject) {
         this.textObject.setFontScaleX(scaleX);
     }
@@ -389,7 +393,8 @@ Entry.EntityObject.prototype.setScaleY = function(scaleY) {
     /** @type {number} */
     // console.log(`setScaleY(${scaleY})`);
     this.scaleY = scaleY;
-    this.object.scale.y = this.scaleY;
+    // this.object.scale.y = this.scaleY;
+    this._scaleAdaptor.setY(this.scaleY);
     if(this.textObject) {
         this.textObject.setFontScaleY(scaleY);
     }
@@ -1651,6 +1656,11 @@ Entry.EntityObject.prototype.destroy = function(isClone) {
         object.removeAllListeners();
         delete object.image;
         delete object.entity;
+    }
+
+    if(this._scaleAdaptor) {
+        this._scaleAdaptor.destroy();
+        this._scaleAdaptor = null;
     }
 
     if (this.stamps) this.removeStamps();

@@ -10,6 +10,7 @@ export class AtlasTexture extends PIXI.Texture {
 
     public imageRect:ImageRect;
     private _isEmptyTexture:boolean;
+    public textureScaleFactor:number;
 
     constructor(baseTexture: AtlasBaseTexture, imageRect:ImageRect) {
         var frame = new Rectangle(0, 0, imageRect.width, imageRect.height);
@@ -18,6 +19,7 @@ export class AtlasTexture extends PIXI.Texture {
         baseTexture.hasLoaded = false;// false 로 해놔야 렌더러에서 drawing을 안함.  이후 updateBaseAndUVs 를 동해 baseTexture 참조가 변경되면 렌더링이 가능해짐.
         this._isEmptyTexture = true;
         this.imageRect = imageRect;
+        this.textureScaleFactor = 1;
     }
 
     get isEmptyTexture():boolean {
