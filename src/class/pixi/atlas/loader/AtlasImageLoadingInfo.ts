@@ -1,5 +1,7 @@
 import { IRawPicture } from '../model/IRawPicture';
 import { PIXIAtlasHelper } from '../PIXIAtlasHelper';
+import { ImageRect } from '../../../maxrect-packer/geom/ImageRect';
+import PIXIHelper from '../../helper/PIXIHelper';
 
 declare let Entry:any;
 declare let _:any;
@@ -12,10 +14,15 @@ enum LoadingState {
 }
 
 
+
+
+
+
 export class AtlasImageLoadingInfo {
 
     loadState:LoadingState = LoadingState.NONE;
-    img:HTMLImageElement;
+    private _img:HTMLImageElement;
+    private _canvas:HTMLCanvasElement;
 
     /**  계산된 이미지 경로. */
     private _realPath:string;
@@ -26,26 +33,41 @@ export class AtlasImageLoadingInfo {
     private _triedCnt:number = 0;
     private _picName:string;
 
-    constructor(model:IRawPicture, private _onLoadCallback:(info:AtlasImageLoadingInfo) => void) {
+    /**
+     * model 의 이미지를 로드 후, imgRect.scaleFactor가 1이 아닐경우 imgRect 만큼 리사이즈한 canvas 를 소스로 설정하긔
+     * @param model
+     * @param _imgRect
+     * @param _onLoadCallback
+     */
+    constructor(model:IRawPicture, private _imgRect:ImageRect, private _onLoadCallback:(info:AtlasImageLoadingInfo) => void) {
         this._realPath = this._getImageSrc(model);
         this._rawPath = PIXIAtlasHelper.getRawPath(model);
         this._picName = model.name;
+    }
+
+    source():HTMLImageElement|HTMLCanvasElement {
+        return this._img || this._canvas;
     }
 
     load() {
         if(this.loadState != LoadingState.NONE) return;
         this.loadState = LoadingState.LOADING;
         var img:HTMLImageElement = new Image();
-        this.img = img;
+        this._img = img;
 
         img.onload = ()=>{
             Entry.Loader.removeQueue();
             if( this.loadState == LoadingState.DESTROYED ) return;
             this.loadState = LoadingState.COMPLETE;
+
+            this._canvas = this._resizeIfOversized();
+            if(this._canvas) {
+                this._destroyImage();
+            }
+
             this._onLoadCallback(this);
             this._onLoadCallback = null;
             this._realPath = null;
-            img.onload = null;
         };
 
         img.onerror = (err) => {
@@ -71,7 +93,7 @@ export class AtlasImageLoadingInfo {
     private _loadPath(path:string) {
         if(this.loadState == LoadingState.DESTROYED) return;
         Entry.Loader.addQueue();
-        this.img.src = path;
+        this._img.src = path;
     }
 
     get isReady() {
@@ -99,9 +121,37 @@ export class AtlasImageLoadingInfo {
 
     destroy() {
         this.loadState = LoadingState.DESTROYED;
-        this.img.onload = this.img.onerror = null;
-        this.img = null;
+        this._destroyImage();
+        if(this._canvas) {
+            this._canvas = null;
+        }
+
         this._rawPath = this._realPath = null;
+    }
+
+    private _destroyImage() {
+        if(!this._img) return;
+        this._img.onload = this._img.onerror = null;
+        this._img = null;
+    }
+
+    private _resizeIfOversized() {
+        var img:HTMLImageElement = this._img;
+        var sw = img.naturalWidth|img.width;
+        var sh = img.naturalHeight|img.height;
+        var r = this._imgRect;
+        if(r.scaleFactor == 1 ) return;
+        console.log(`rezie (${sw},${sh})->(${r.width},${r.height}). factory:${r.scaleFactor}`);
+        var canvas = PIXIHelper.getOffScreenCanvas();
+        canvas.width = r.width;
+        canvas.height = r.height;
+        var ctx:CanvasRenderingContext2D = canvas.getContext("2d");
+        ctx.imageSmoothingEnabled = true;
+        ctx.drawImage(img,
+            0, 0, sw, sh,
+            0, 0, r.width, r.height
+        );
+        return canvas;
     }
 }
 
