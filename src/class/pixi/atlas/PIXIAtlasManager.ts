@@ -51,7 +51,6 @@ class _PIXIAtlasManager {
     }
 
     getTextureWithModel(sceneID:string, pic:IRawPicture):Texture {
-        this._imageLoader.load(pic);
         var bin:SceneBins = this._getSceneBin(sceneID);
         bin.addPicInfo(pic);
         return bin.getTexture(PIXIAtlasHelper.getRawPath(pic));

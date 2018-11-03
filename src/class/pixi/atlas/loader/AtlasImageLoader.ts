@@ -3,6 +3,7 @@ import { IRawPicture } from '../model/IRawPicture';
 import { PrimitiveSet } from '../structure/PrimitiveSet';
 import { TimeoutTimer } from '../../utils/TimeoutTimer';
 import { PIXIAtlasHelper } from '../PIXIAtlasHelper';
+import { ImageRect } from '../../../maxrect-packer/geom/ImageRect';
 
 var TIME_OUT_DELAY:number = 1000;
 
@@ -21,13 +22,18 @@ export class AtlasImageLoader {
     constructor(private _onLoadCallback:(info:AtlasImageLoadingInfo) => void) {
     }
 
-    load(model:IRawPicture) {
+    /**
+     * model 의 이미지를 로드 후, rect.scaleFactor가 1이 아닐경우 rect 만큼 리사이즈한 canvas 를 소스로 설정하긔
+     * @param model
+     * @param imgRect
+     */
+    load(model:IRawPicture, imgRect:ImageRect) {
         var path = PIXIAtlasHelper.getRawPath(model);
         var info:AtlasImageLoadingInfo = this._path_info_map[path];
 
         if(info) return;
 
-        info = new AtlasImageLoadingInfo(model, this._onLoadCallback);
+        info = new AtlasImageLoadingInfo(model, imgRect, this._onLoadCallback);
         this._path_info_map[path] = info;
         info.load();
     }

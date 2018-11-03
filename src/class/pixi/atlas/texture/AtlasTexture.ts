@@ -5,6 +5,7 @@
 import Rectangle = PIXI.Rectangle;
 import { AtlasBaseTexture } from './AtlasBaseTexture';
 import { ImageRect } from '../../../maxrect-packer/geom/ImageRect';
+import { AtlasImageLoadingInfo } from '../loader/AtlasImageLoadingInfo';
 
 export class AtlasTexture extends PIXI.Texture {
 
@@ -19,7 +20,7 @@ export class AtlasTexture extends PIXI.Texture {
         baseTexture.hasLoaded = false;// false 로 해놔야 렌더러에서 drawing을 안함.  이후 updateBaseAndUVs 를 동해 baseTexture 참조가 변경되면 렌더링이 가능해짐.
         this._isEmptyTexture = true;
         this.imageRect = imageRect;
-        this.textureScaleFactor = 1;
+        this.textureScaleFactor = imageRect.scaleFactor;
     }
 
     get isEmptyTexture():boolean {
@@ -35,28 +36,28 @@ export class AtlasTexture extends PIXI.Texture {
      * @param extrude - Reduce flickering in some cases where sprites have to be put next to each other in the final program.
      * example: https://www.codeandweb.com/texturepacker/documentation/texture-settings
      */
-    drawImageAtBaseTexture(img:HTMLImageElement, extrude:boolean = true):void {
+    drawImageAtBaseTexture(info:AtlasImageLoadingInfo, extrude:boolean = true):void {
         if(this._isEmptyTexture) return;
+        var img = info.source();
         var ctx:CanvasRenderingContext2D = this.getBaseTexture().getCtx();
         var r = this.orig;
-        var w = img.naturalWidth || img.width;
-        var h = img.naturalHeight || img.height;
+        var w = r.width;
+        var h = r.height;
         var rx = r.x;
         var ry = r.y;
-        var rw = r.width;
-        var rh = r.height;
 
-        ctx.drawImage(img, 0, 0, w, h, r.x, r.y, r.width, r.height);
+
+        ctx.drawImage(img, 0, 0, w, h, rx, ry, w, h);
 
         if(extrude) {
             //top
-            ctx.drawImage(img, 0, 0, w, 1, rx, ry - 1, rw, 1);
+            ctx.drawImage(img, 0, 0, w, 1, rx, ry - 1, w, 1);
             //down
-            ctx.drawImage(img, 0, h - 1, w, 1, rx, ry + rh, rw, 1);
+            ctx.drawImage(img, 0, h - 1, w, 1, rx, ry + h, w, 1);
             //left
-            ctx.drawImage(img, 0, 0, 1, h, rx - 1, ry, 1, rh);
+            ctx.drawImage(img, 0, 0, 1, h, rx - 1, ry, 1, h);
             //right
-            ctx.drawImage(img, w - 1, 0, 1, h, rx + rw, ry, 1, rh);
+            ctx.drawImage(img, w - 1, 0, 1, h, rx + w, ry, 1, h);
         }
     }
 
