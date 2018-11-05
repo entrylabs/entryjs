@@ -14,7 +14,7 @@ function clog() {
 import PIXIHelper from './pixi/helper/PIXIHelper';
 import { PIXIDragHelper } from './pixi/helper/PIXIDragHelper';
 import { PIXIAtlasManager } from './pixi/atlas/PIXIAtlasManager';
-import { PIXIContainerScaleAdaptor, PIXISpriteScaleAdaptor } from './pixi/etc/PIXIScaleAdator';
+import { PIXIScaleAdaptor } from './pixi/atlas/PIXIScaleAdaptor';
 
 /**
  * Construct entity class
@@ -36,11 +36,11 @@ Entry.EntityObject = function(object) {
     if (this.type == 'sprite') {
         this.object = new PIXI.Sprite();
         this.object.pixelPerfect = true;
-        this._scaleAdaptor = new PIXISpriteScaleAdaptor(this.object);
+        this._scaleAdaptor = PIXIScaleAdaptor.factory(this.object);
         this.setInitialEffectValue();
     } else if (this.type == 'textBox') {
         this.object = new PIXI.Container();
-        this._scaleAdaptor = new PIXIContainerScaleAdaptor(this.object);
+        this._scaleAdaptor = PIXIScaleAdaptor.factory(this.object);
         // this.textObject = new createjs.Text();
         // this.textObject.font = '20px Nanum Gothic';
         // this.textObject.textBaseline = 'middle';
@@ -327,7 +327,7 @@ Entry.EntityObject.prototype.setRegX = function(regX) {
     if (this.type == 'textBox') regX = 0;
     /** @type {number} */
     this.regX = regX;
-    this.object.pivot.x = this.regX;
+    this._scaleAdaptor.pivot.setX(this.regX);
     Entry.requestUpdate = true;
 };
 
@@ -347,7 +347,7 @@ Entry.EntityObject.prototype.setRegY = function(regY) {
     if (this.type == 'textBox') regY = 0;
     /** @type {number} */
     this.regY = regY;
-    this.object.pivot.y = this.regY;
+    this._scaleAdaptor.pivot.setY(this.regY);
     Entry.requestUpdate = true;
 };
 
@@ -368,7 +368,7 @@ Entry.EntityObject.prototype.setScaleX = function(scaleX) {
     // console.log(`setScaleX(${scaleX})`);
     this.scaleX = scaleX;
     // this.object.scale.x = this.scaleX;
-    this._scaleAdaptor.setX(this.scaleX);
+    this._scaleAdaptor.scale.setX(this.scaleX);
     if(this.textObject) {
         this.textObject.setFontScaleX(scaleX);
     }
@@ -394,7 +394,7 @@ Entry.EntityObject.prototype.setScaleY = function(scaleY) {
     // console.log(`setScaleY(${scaleY})`);
     this.scaleY = scaleY;
     // this.object.scale.y = this.scaleY;
-    this._scaleAdaptor.setY(this.scaleY);
+    this._scaleAdaptor.scale.setY(this.scaleY);
     if(this.textObject) {
         this.textObject.setFontScaleY(scaleY);
     }
@@ -1000,15 +1000,11 @@ Entry.EntityObject.prototype.setImage = function(pictureModel) {
     //add entityId in order to differentiate copied pictures
     var cacheId = !this.isClone ? pictureModel.id + this.id : pictureModel.id;
 
-    // this.object.texture = PIXIAtlasManager.getTexture(
-    //     this.parent.scene.id,
-    //     pictureModel.fileurl || pictureModel.filename
-    // );
-
     this.object.texture = PIXIAtlasManager.getTextureWithModel(
         this.parent.scene.id,
         pictureModel
     );
+    this._scaleAdaptor.updateScaleFactor();
 
     Entry.requestUpdate = true;
 
