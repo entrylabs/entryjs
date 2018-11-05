@@ -35,15 +35,15 @@ let TIMEOUT_INTERVAL = 250;
 
 /** base texture max pixel size */
 const BASE_TEX_MAX_SIZE = computeMaxTextureSize();
-// const MAX_SIZE_RECT = new ImageRect(0,0,BASE_TEX_MAX_SIZE, BASE_TEX_MAX_SIZE);
 
+/** 텍스쳐의 최대 사이즈. 이미지가 이 크기보다 크면 리사이즈 하여 사용함. */
 const TEX_MAX_SIZE = 521;
 const TEX_MAX_SIZE_RECT = new ImageRect(0,0,TEX_MAX_SIZE, TEX_MAX_SIZE);
 
 function newPacker():MaxRectsPacker{
     //https://www.npmjs.com/package/maxrects-packer
-    const PADDING = 1;
-    const BORDER = 1;
+    const PADDING = 1; //텍스쳐 사이의 간격.
+    const BORDER = 1; //베이스 텍스쳐 테두리 간격
     const OPTION = {
         smart: false,
         pot: true,
