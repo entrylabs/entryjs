@@ -114,6 +114,8 @@ Entry.ProboConnect.setLanguage = function () {
         ko: {
             // ko.js에 작성하던 내용
             template: {
+                connect_senser_setting: '센서 설정 A1:%1 A2:%2 A3:%3 A4:%4 %5',
+
                 connect_remote_input: '리모컨 입력 %1',
                 connect_digital_input: '디지털 센서 %1',
                 connect_analog_input: '아날로그 센서 %1',
@@ -125,10 +127,9 @@ Entry.ProboConnect.setLanguage = function () {
                 connect_infinite_transform_input: "무한회전 센서 %1 의  %2",
                 connect_infinite_mm_diameter: "무한회전 센서 %1  지름 %2 의 mm 값",
 
-                connect_senser_setting: '센서 설정 A1 : %1 , A2 : %2 , A3 : %3 , A4 : %4 %5',
                 connect_port_output: '출력포트 %1 을(를) %2 %3',
                 connect_servo_output: '서보 모터 %1 의 위치를 %2 로 이동 %3',
-                connect_dc_output: 'DC모터 %1 을(를) %2 속도로 회전 %3',
+                connect_dc_output: 'DC 모터 %1 을(를) %2 속도로 회전 %3',
                 connect_mel_sec_output: '멜로디 %1 을(를) %2 초 동안 소리내기 %3',
                 connect_melody_output: '멜로디 %1 을(를) 소리내기 %2',
                 connect_melody_off: '멜로디 소리끄기 %1',
@@ -143,6 +144,8 @@ Entry.ProboConnect.setLanguage = function () {
         en: {
             // en.js에 작성하던 내용
             template: {
+                connect_senser_setting: 'senser setting A1:%1 A2:%2 A3:%3 A4:%4 %5',
+
                 connect_remote_input: 'remote input %1',
                 connect_digital_input: 'digital senser %1',
                 connect_analog_input: 'analog senser %1',
@@ -154,7 +157,6 @@ Entry.ProboConnect.setLanguage = function () {
                 connect_infinite_transform_input: "infinite rotation sensor %1 to %2",
                 connect_infinite_mm_diameter: "mm value of infinite rotation sensor %1 diameter %2",
 
-                connect_senser_setting: 'senser setting A1 : %1 , A2 : %2 , A3 : %3 , A4 : %4 %5',
                 connect_port_output: 'output %1 port %2 %3',
                 connect_servo_output: 'move position of servo motor %1 to %2 %3',
                 connect_dc_output: 'rotate dc motor %1 at %2 speed %3',
@@ -701,7 +703,7 @@ Entry.ProboConnect.getBlocks = function () {
             paramsKeyMap: {
                 PORT1: 0, PORT2: 1, PORT3: 2, PORT4: 3
             },
-            class: 'output',
+            class: 'setting',
             isNotFor: ['ProboConnect'],
             func: function (sprite, script) {
                 var Aset = [0,0,0,0];

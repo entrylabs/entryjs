@@ -1381,6 +1381,7 @@ EntryStatic.getAllBlocks = function() {
 
                 //region proboconnect
                 ////input
+                "connect_senser_setting",
                 "connect_remote_input",
                 "connect_digital_input",
                 "connect_analog_input",
@@ -1393,7 +1394,6 @@ EntryStatic.getAllBlocks = function() {
                 "connect_infinite_mm_diameter",
                 
                 ////output
-                "connect_senser_setting",
                 "connect_port_output",
                 "connect_servo_output",
                 "connect_dc_output",
@@ -1407,7 +1407,6 @@ EntryStatic.getAllBlocks = function() {
                 "connect_eeprom_write",
                 "connect_eeprom_buffset",
                 "connect_buff_read",
-
                 //endregion proboconnect
             ]
         }
