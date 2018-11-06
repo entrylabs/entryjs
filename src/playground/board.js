@@ -80,7 +80,7 @@ Entry.Board = class Board {
         this.svgDom = Entry.Dom(
             $(
                 `<svg id="${this._svgId}" class="entryBoard" width="100%" height="100%"` +
-                    `version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>`
+                    `version="1.2" xmlns="http://www.w3.org/2000/svg"></svg>`
             ),
             { parent: this.wrapper }
         );

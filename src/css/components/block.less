@@ -2,9 +2,11 @@
 .block.selected > g > .blockBackgroundPath {
     // stroke-width: 3px;
     // stroke: #798EB1;
+    -webkit-filter: none;
     filter: none;
-    
-    &:not([fill^="url(#blockHoverPattern"]) {
+
+    &:not([fill^='url(#blockHoverPattern)']) {
+        -webkit-filter: url(#entryBlockSelectFilter_board);
         filter: url(#entryBlockSelectFilter_board);
     }
 }
@@ -31,19 +33,17 @@
 }
 
 .block {
-    cursor: url('/media/handopen.cur'),
-            auto;
+    cursor: url('/media/handopen.cur'), auto;
     -ms-touch-action: none;
 }
 
 .block.dragging {
-    cursor: url('/media/handclosed.cur'),
-            auto;
+    cursor: url('/media/handclosed.cur'), auto;
 }
 
 .block.selected > path {
     stroke-width: 3px;
-    stroke: #798EB1;
+    stroke: #798eb1;
 }
 
 .block.activated > g > path {
@@ -52,23 +52,15 @@
 }
 
 @keyframes activationDash {
-    to {stroke-dashoffset: 0;}
-}
-
-@-o-keyframes activationDash {
-    to {stroke-dashoffset: 0;}
-}
-
-@-ms-keyframes activationDash {
-    to {stroke-dashoffset: 0;}
-}
-
-@-moz-keyframes activationDash {
-    to {stroke-dashoffset: 0;}
+    to {
+        stroke-dashoffset: 0;
+    }
 }
 
 @-webkit-keyframes activationDash {
-    to {stroke-dashoffset: 0;}
+    to {
+        stroke-dashoffset: 0;
+    }
 }
 
 .block g text,
@@ -104,22 +96,37 @@ svg .svgBlockGroup text {
     z-index: 301;
     color: #000000;
     // font-size: 10px;
-    // background-color: #feb71a;    
- }
+    // background-color: #feb71a;
+}
 
-.entry-widget-input-field::-ms-clear, 
+.entry-widget-input-field::-ms-clear,
 .entry-widget-input-field::-ms-reveal {
     display: none;
 }
 
- .entry-field-angle {
+.entry-widget-textarea {
+    position: fixed;
+    background-color: #ffda85;
+    border-radius: 0 0 4px 4px;
+    border: 1px solid #EDA913;
+    resize: none;
+    line-height: 1.6em;
+    padding: 4px 6px;
+    outline: none;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+    overflow: hidden;
+}
+
+.entry-field-angle {
     cursor: default;
- }
+}
 
 .entry-field-angle-circle {
     stroke: #dbdbdb;
     stroke-width: 1;
-    fill: #FBFBFB;
+    fill: #fbfbfb;
     fill-opacity: 0.8;
 }
 
@@ -241,33 +248,25 @@ svg .svgBlockGroup text {
         .animation-name(blockPatternAnimation);
         .animation-iteration-count(infinite);
     }
-
 }
 
 //hover block background pattern animation
 @keyframes blockPatternAnimation {
-    from {opacity:0}
-    to {opacity:0.2}
-}
-
-@-o-keyframes blockPatternAnimation {
-    from {opacity:0}
-    to {opacity:0.2}
-}
-
-@-ms-keyframes blockPatternAnimation {
-    from {opacity:0}
-    to {opacity:0.2}
-}
-
-@-moz-keyframes blockPatternAnimation {
-    from {opacity:0}
-    to {opacity:0.2}
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 0.2;
+    }
 }
 
 @-webkit-keyframes blockPatternAnimation {
-    from {opacity:0}
-    to {opacity:0.2}
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 0.2;
+    }
 }
 
 g.entry-field-dropdown {

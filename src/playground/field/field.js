@@ -82,7 +82,7 @@ Entry.Field = function() {};
             }
         }
 
-        const transform = `translate(${  x  },${  y  })`;
+        const transform = `translate(${x},${y})`;
 
         if (animate) {
             svgGroup.animate(
@@ -358,8 +358,7 @@ Entry.Field = function() {};
             case 'dropdownDynamic':
                 return _.chain(this._contents.options)
                     .find(([, optionValue]) => {
-                        return optionValue === value
-                        ;
+                        return optionValue === value;
                     })
                     .head()
                     .value();
@@ -394,7 +393,7 @@ Entry.Field = function() {};
             svg = Entry.Dom(
                 $(
                     '<svg id="invisibleBoard" class="entryBoard" width="1px" height="1px"' +
-                        'version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'
+                        'version="1.2" xmlns="http://www.w3.org/2000/svg"></svg>'
                 ),
                 { parent: $('body') }
             );
@@ -421,7 +420,7 @@ Entry.Field = function() {};
 
             const fontSize = this._font_size || '';
 
-            const key = `${value  }&&${  fontSize}`;
+            const key = `${value}&&${fontSize}`;
             let bBox = _cache[key];
 
             if (bBox) {
