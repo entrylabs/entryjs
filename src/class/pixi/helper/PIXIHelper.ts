@@ -89,6 +89,10 @@ export default class PIXIHelper {
 
     }
 
+    static newPIXIGraphics() {
+        return new PIXI.Graphics(true);
+    }
+
     /**
      * createjs.DisplayObject#getTransformBound()
      * @param {PIXI.DisplayObject} target
