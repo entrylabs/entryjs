@@ -1,7 +1,7 @@
 /*
  */
 'use strict';
-
+const _cloneDeep = require('lodash/cloneDeep');
 /*
  *
  */
@@ -15,6 +15,11 @@ Entry.FieldDropdownDynamic = function(content, blockView, index) {
     this.svgGroup = null;
 
     this._contents = content;
+
+    if(content.needDeepCopy) {
+        this._contents = _cloneDeep(content);
+    }
+
     this._index = index;
 
     var arrowColor = content.arrowColor;
@@ -48,12 +53,21 @@ Entry.FieldDropdownDynamic = function(content, blockView, index) {
             .getBoard()
             .workspace.changeEvent.attach(this, this._updateValue);
     }
+
+    this.optionChangeTriggeredEvent();
 };
 
 Entry.Utils.inherit(Entry.FieldDropdown, Entry.FieldDropdownDynamic);
 
 (function(p) {
     p.constructor = Entry.FieldDropDownDynamic;
+
+    p.getIndexValue = function() {
+        if(this._contents.targetIndex >= 0) {
+            return this._block.data.params[this._contents.targetIndex];
+        }
+        return null;
+    }
 
     p._updateValue = function() {
         var object = this._block.getCode().object;
@@ -64,7 +78,7 @@ Entry.Utils.inherit(Entry.FieldDropdown, Entry.FieldDropdownDynamic);
                     this._menuName,
                     object
                 );
-            else options = this._menuGenerator();
+            else options = this._menuGenerator(this.getIndexValue());
         }
 
         this._contents.options = options;
@@ -109,6 +123,7 @@ Entry.Utils.inherit(Entry.FieldDropdown, Entry.FieldDropdownDynamic);
             that.applyValue(this._value);
             that.destroyOption(undefined, true);
             that._selectBlockView();
+            $(that._blockView.contentSvgGroup).trigger('optionChanged', {block:that._block, value:that.getValue(), index:that._index});
         });
 
         var fragment = document.createDocumentFragment();
@@ -140,5 +155,23 @@ Entry.Utils.inherit(Entry.FieldDropdown, Entry.FieldDropdownDynamic);
         this._position();
 
         this.optionDomCreated();
+    };
+
+    p.optionChangeTriggeredEvent = function() {
+        const that = this;
+        const targetIndex = this._contents.targetIndex;
+
+        if(typeof targetIndex === "undefined") {
+            return ;
+        }
+
+        $(this._blockView.contentSvgGroup).on('optionChanged', function(e, data) {
+            if( that._block == data.block && targetIndex == data.index) {
+                let options = that._menuGenerator(data.value);
+                that._contents.options = options;
+                that.applyValue(options[0][1]);
+            }
+        });
+
     };
 })(Entry.FieldDropdownDynamic.prototype);

@@ -29,6 +29,7 @@ Entry.Variable = function(variable) {
     this.object_ = variable.object || null;
     /** @type {boolean} */
     this.isCloud_ = variable.isCloud || false;
+    this.cloudDate = variable.cloudDate || false;
 
     this._nameWidth = null;
     this._valueWidth = null;
@@ -935,6 +936,7 @@ Entry.Variable.prototype.syncModel_ = function(variableModel) {
     this.setY(variableModel.y);
     this.setVisible(variableModel.visible);
     this.isCloud_ = variableModel.isCloud;
+    this.cloudDate = variableModel.cloudDate;
 };
 
 /**
@@ -957,6 +959,7 @@ Entry.Variable.prototype.toJSON = function() {
         json.maxValue = this.maxValue_;
     }
     json.isCloud = this.isCloud_;
+    json.cloudDate = this.cloudDate;
     json.object = this.object_;
     json.x = this.x_;
     json.y = this.y_;
@@ -1060,6 +1063,24 @@ Entry.Variable.prototype.setMaxValue = function(maxValue) {
 
 Entry.Variable.prototype.isFloatPoint = function() {
     return this.isMaxFloat || this.isMinFloat;
+};
+
+Entry.Variable.prototype.getCloudDate = function() {
+    return this.cloudDate;
+};
+
+Entry.Variable.prototype.setCloudDate = function(cloudDate) {
+    this.cloudDate = cloudDate;
+};
+
+Entry.Variable.prototype.getArray = function() {
+    return this.array_;
+};
+
+Entry.Variable.prototype.setArray = function(array) {
+    this.array_ = array;
+    this.updateView();
+    Entry.requestUpdateTwice = true;
 };
 
 function baseAsset() {

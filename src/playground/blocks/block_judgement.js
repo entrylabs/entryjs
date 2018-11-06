@@ -23,7 +23,7 @@ module.exports = {
                 },
                 class: 'boolean_input',
                 isNotFor: [],
-                func: function(sprite, script) {
+                func(sprite, script) {
                     return Entry.stage.isClick;
                 },
                 syntax: {
@@ -65,8 +65,8 @@ module.exports = {
                 },
                 class: 'boolean_input',
                 isNotFor: [],
-                func: function(sprite, script) {
-                    var keycode = Number(script.getField('VALUE', script));
+                func(sprite, script) {
+                    const keycode = Number(script.getField('VALUE', script));
                     return Entry.pressedKeys.indexOf(keycode) >= 0;
                 },
                 syntax: {
@@ -79,8 +79,7 @@ module.exports = {
                                 {
                                     type: 'Keyboard',
                                     value: '81',
-                                    converter:
-                                        Entry.block.converters.keyboardCode,
+                                    converter: Entry.block.converters.keyboardCode,
                                 },
                             ],
                         },
@@ -124,16 +123,18 @@ module.exports = {
                 },
                 class: 'boolean_collision',
                 isNotFor: [],
-                func: function(sprite, script) {
-                    if (sprite.getVisible && !sprite.getVisible()) return false;
-                    var targetSpriteId = script.getField('VALUE', script);
-                    var reg = /wall/;
-                    var ath = 0.2;
-                    var object = sprite.object;
-                    var isWall = reg.test(targetSpriteId);
-                    var collision = ndgmr.checkPixelCollision;
+                func(sprite, script) {
+                    if (sprite.getVisible && !sprite.getVisible()) {
+                        return false;
+                    }
+                    const targetSpriteId = script.getField('VALUE', script);
+                    const reg = /wall/;
+                    const ath = 0.2;
+                    const object = sprite.object;
+                    const isWall = reg.test(targetSpriteId);
+                    const collision = ndgmr.checkPixelCollision;
                     if (isWall) {
-                        var wall = Entry.stage.wall;
+                        const wall = Entry.stage.wall;
                         switch (targetSpriteId) {
                             case 'wall':
                                 return !!(
@@ -145,82 +146,53 @@ module.exports = {
                             case 'wall_up':
                                 return !!collision(object, wall.up, ath, true);
                             case 'wall_down':
-                                return !!collision(
-                                    object,
-                                    wall.down,
-                                    ath,
-                                    true
-                                );
+                                return !!collision(object, wall.down, ath, true);
                             case 'wall_right':
-                                return !!collision(
-                                    object,
-                                    wall.right,
-                                    ath,
-                                    true
-                                );
+                                return !!collision(object, wall.right, ath, true);
                             case 'wall_left':
-                                return !!collision(
-                                    object,
-                                    wall.left,
-                                    ath,
-                                    true
-                                );
+                                return !!collision(object, wall.left, ath, true);
                         }
-                    } else if (targetSpriteId == 'mouse') {
+                    } else if (targetSpriteId === 'mouse') {
                         return Entry.stage.hitTestObject(object);
                     } else {
-                        var targetSprite = Entry.container.getEntity(
-                            targetSpriteId
-                        );
-                        if (
-                            targetSprite.type == 'textBox' ||
-                            sprite.type == 'textBox'
-                        ) {
-                            var targetBound = targetSprite.object.getBounds(false, TEMP_RECT1);
-                            var bound = object.getBounds(false, TEMP_RECT2);
-                            if (Entry.checkCollisionRect(bound, targetBound))
+                        const targetSprite = Entry.container.getEntity(targetSpriteId);
+                        if (targetSprite.type === 'textBox' || sprite.type === 'textBox') {
+                            const targetBound = targetSprite.object.getBounds(false, TEMP_RECT1);
+                            const bound = object.getBounds(false, TEMP_RECT2);
+                            if (Entry.checkCollisionRect(bound, targetBound)) {
                                 return true;
-                            var clonedEntities =
-                                targetSprite.parent.clonedEntities;
-                            for (
-                                var i = 0, len = clonedEntities.length;
-                                i < len;
-                                i++
-                            ) {
-                                var entity = clonedEntities[i];
-                                if (entity.isStamp || !entity.getVisible())
+                            }
+                            const clonedEntities = targetSprite.parent.clonedEntities;
+                            for (let i = 0, len = clonedEntities.length; i < len; i++) {
+                                const entity = clonedEntities[i];
+                                if (entity.isStamp || !entity.getVisible()) {
                                     continue;
+                                }
                                 if (
                                     Entry.checkCollisionRect(
                                         bound,
                                         entity.object.getBounds(false, TEMP_RECT1)
                                     )
-                                )
+                                ) {
                                     return true;
+                                }
                             }
                         } else {
                             if (
                                 targetSprite.getVisible() &&
-                                collision(
-                                    object,
-                                    targetSprite.object,
-                                    ath,
-                                    true
-                                )
-                            )
-                                return true;
-                            var clonedEntities =
-                                targetSprite.parent.clonedEntities;
-                            for (
-                                var i = 0, len = clonedEntities.length;
-                                i < len;
-                                i++
+                                collision(object, targetSprite.object, ath, true)
                             ) {
-                                var entity = clonedEntities[i];
-                                if (entity.isStamp || !entity.getVisible())
+                                return true;
+                            }
+                            const clonedEntities = targetSprite.parent.clonedEntities;
+                            for (let i = 0, len = clonedEntities.length; i < len; i++) {
+                                const entity = clonedEntities[i];
+                                if (entity.isStamp || !entity.getVisible()) {
                                     continue;
-                                if (collision(object, entity.object, ath, true))
+                                }
+                                if (collision(object, entity.object, ath, true)) {
                                     return true;
+                                }
                             }
                         }
                     }
@@ -240,11 +212,8 @@ module.exports = {
                                     menuName: 'collision',
                                     fontSize: 11,
                                     arrowColor: EntryStatic.ARROW_COLOR_JUDGE,
-                                    converter:
-                                        Entry.block.converters
-                                            .returnObjectOrStringValue,
-                                    codeMap:
-                                        'Entry.CodeMap.Entry.reach_something[1]',
+                                    converter: Entry.block.converters.returnObjectOrStringValue,
+                                    codeMap: 'Entry.CodeMap.Entry.reach_something[1]',
                                 },
                             ],
                         },
@@ -386,10 +355,12 @@ module.exports = {
                 },
                 class: 'boolean_compare',
                 isNotFor: [],
-                func: function(sprite, script) {
-                    var operator = script.getField('OPERATOR', script);
-                    var leftValue = script.getValue('LEFTHAND', script);
-                    var rightValue = script.getValue('RIGHTHAND', script);
+                func(sprite, script) {
+                    const operator = script.getField('OPERATOR', script);
+                    const [leftValue, rightValue] = script.getValues(
+                        ['LEFTHAND', 'RIGHTHAND'],
+                        script
+                    );
 
                     switch (operator) {
                         case 'EQUAL':
@@ -429,8 +400,7 @@ module.exports = {
                                     value: 'EQUAL',
                                     fontSize: 11,
                                     noArrow: true,
-                                    converter:
-                                        Entry.block.converters.returnOperator,
+                                    converter: Entry.block.converters.returnOperator,
                                 },
                                 {
                                     type: 'Block',
@@ -498,15 +468,20 @@ module.exports = {
                     OPERATOR: 1,
                     RIGHTHAND: 2,
                 },
-                func: function(sprite, script) {
-                    var operator = script.getField('OPERATOR', script);
-                    var leftValue = script.getBooleanValue('LEFTHAND', script);
-                    var rightValue = script.getBooleanValue(
-                        'RIGHTHAND',
+                func(sprite, script) {
+                    const operator = script.getField('OPERATOR', script);
+                    let [leftValue, rightValue] = script.getValues(
+                        ['LEFTHAND', 'RIGHTHAND'],
                         script
                     );
-                    if (operator == 'AND') return leftValue && rightValue;
-                    else return leftValue || rightValue;
+                    leftValue = Boolean(leftValue);
+                    rightValue = Boolean(rightValue);
+
+                    if (operator === 'AND') {
+                        return leftValue && rightValue;
+                    } else {
+                        return leftValue || rightValue;
+                    }
                 },
                 syntax: {
                     js: [],
@@ -523,17 +498,10 @@ module.exports = {
                                 {
                                     type: 'Dropdown',
                                     options: [
-                                        [
-                                            Lang.Blocks.JUDGEMENT_boolean_and,
-                                            'AND',
-                                        ],
-                                        [
-                                            Lang.Blocks.JUDGEMENT_boolean_or,
-                                            'OR',
-                                        ],
+                                        [Lang.Blocks.JUDGEMENT_boolean_and, 'AND'],
+                                        [Lang.Blocks.JUDGEMENT_boolean_or, 'OR'],
                                     ],
-                                    converter:
-                                        Entry.block.converters.returnOperator,
+                                    converter: Entry.block.converters.returnOperator,
                                     value: 'AND',
                                     fontSize: 11,
                                 },
@@ -580,8 +548,8 @@ module.exports = {
                 },
                 class: 'boolean',
                 isNotFor: [],
-                func: function(sprite, script) {
-                    return !script.getBooleanValue('VALUE');
+                func(sprite, script) {
+                    return !script.getBooleanValue('VALUE', script);
                 },
                 syntax: {
                     js: [],
@@ -602,5 +570,5 @@ module.exports = {
                 },
             },
         };
-    }
-}
+    },
+};

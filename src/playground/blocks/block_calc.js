@@ -12,12 +12,7 @@ module.exports = {
                     },
                     {
                         type: 'Dropdown',
-                        options: [
-                            ['+', 'PLUS'],
-                            ['-', 'MINUS'],
-                            ['x', 'MULTI'],
-                            ['/', 'DIVIDE'],
-                        ],
+                        options: [['+', 'PLUS'], ['-', 'MINUS'], ['x', 'MULTI'], ['/', 'DIVIDE']],
                         value: 'PLUS',
                         fontSize: 11,
                         noArrow: true,
@@ -121,38 +116,41 @@ module.exports = {
                 },
                 class: 'calc',
                 isNotFor: [],
-                func: function(sprite, script) {
-                    var operator = script.getField('OPERATOR', script);
-                    var leftValue = script.getNumberValue('LEFTHAND', script);
-                    var rightValue = script.getNumberValue('RIGHTHAND', script);
-                    if (operator == 'PLUS') {
-                        var leftStringValue = script.getValue(
-                            'LEFTHAND',
-                            script
-                        );
-                        var rightStringValue = script.getValue(
-                            'RIGHTHAND',
-                            script
-                        );
-                        if (!Entry.Utils.isNumber(leftStringValue))
-                            leftValue = leftStringValue;
-                        if (!Entry.Utils.isNumber(rightStringValue))
-                            rightValue = rightStringValue;
-                        if (
-                            typeof leftValue === 'number' &&
-                            typeof rightValue === 'number'
-                        )
-                            return new BigNumber(leftValue)
-                                .plus(rightValue)
+                func(sprite, script) {
+                    const operator = script.getField('OPERATOR', script);
+                    const [leftStringValue, rightStringValue] = script.getValues(
+                        ['LEFTHAND', 'RIGHTHAND'],
+                        script
+                    );
+
+                    const leftValue = Entry.Utils.isNumber(leftStringValue)
+                        ? Number(leftStringValue)
+                        : leftStringValue;
+                    const rightValue = Entry.Utils.isNumber(rightStringValue)
+                        ? Number(rightStringValue)
+                        : rightStringValue;
+
+                    switch (operator) {
+                        case 'PLUS': {
+                            if (typeof leftValue === 'number' && typeof rightValue === 'number') {
+                                return new BigNumber(leftValue).plus(rightValue)
+                                    .toNumber();
+                            } else {
+                                return leftValue + rightValue;
+                            }
+                        }
+                        case 'MINUS':
+                            return new BigNumber(leftValue).minus(rightValue)
                                 .toNumber();
-                        else return leftValue + rightValue;
+                        case 'MULTI':
+                            return new BigNumber(leftValue).times(rightValue)
+                                .toNumber();
+                        case 'DIVIDE':
+                            return new BigNumber(leftValue).dividedBy(rightValue)
+                                .toNumber();
+                        default:
+                            throw new Error('Not Invalid Operator');
                     }
-                    leftValue = new BigNumber(leftValue);
-                    if (operator == 'MINUS')
-                        return leftValue.minus(rightValue).toNumber();
-                    else if (operator == 'MULTI')
-                        return leftValue.times(rightValue).toNumber();
-                    else return leftValue.dividedBy(rightValue).toNumber();
                 },
                 syntax: {
                     js: [],
@@ -178,8 +176,7 @@ module.exports = {
                                     value: 'PLUS',
                                     fontSize: 11,
                                     noArrow: true,
-                                    converter:
-                                        Entry.block.converters.returnOperator,
+                                    converter: Entry.block.converters.returnOperator,
                                     paramType: 'operator',
                                 },
                                 {
@@ -259,21 +256,22 @@ module.exports = {
                 },
                 class: 'calc',
                 isNotFor: [],
-                func: function(sprite, script) {
-                    var leftValue = script.getStringValue('LEFTHAND', script);
-                    var rightValue = script.getStringValue('RIGHTHAND', script);
-                    var left = Math.min(leftValue, rightValue);
-                    var right = Math.max(leftValue, rightValue);
-                    var isLeftFloat = Entry.isFloat(leftValue);
-                    var isRightFloat = Entry.isFloat(rightValue);
-                    if (isRightFloat || isLeftFloat)
-                        return (Math.random() * (right - left) + left).toFixed(
-                            2
-                        );
-                    else
-                        return Math.floor(
-                            Math.random() * (right - left + 1) + left
-                        );
+                func(sprite, script) {
+                    let [leftValue, rightValue] = script.getValues(
+                        ['LEFTHAND', 'RIGHTHAND'],
+                        script
+                    );
+                    leftValue = String(leftValue);
+                    rightValue = String(rightValue);
+                    const left = Math.min(leftValue, rightValue);
+                    const right = Math.max(leftValue, rightValue);
+                    const isLeftFloat = Entry.isFloat(leftValue);
+                    const isRightFloat = Entry.isFloat(rightValue);
+                    if (isRightFloat || isLeftFloat) {
+                        return (Math.random() * (right - left) + left).toFixed(2);
+                    } else {
+                        return Math.floor(Math.random() * (right - left + 1) + left);
+                    }
                 },
                 syntax: {
                     js: [],
@@ -356,8 +354,8 @@ module.exports = {
                 },
                 class: 'calc',
                 isNotFor: [],
-                func: function(sprite, script) {
-                    var targetCoordinate = script.getField('VALUE', script);
+                func(sprite, script) {
+                    const targetCoordinate = script.getField('VALUE', script);
                     if (targetCoordinate === 'x') {
                         return Number(Entry.stage.mouseCoordinate.x);
                     } else {
@@ -382,10 +380,8 @@ module.exports = {
                                     value: 'x',
                                     fontSize: 11,
                                     arrowColor: EntryStatic.ARROW_COLOR_CALC,
-                                    converter:
-                                        Entry.block.converters.returnStringKey,
-                                    codeMap:
-                                        'Entry.CodeMap.Entry.coordinate_mouse[1]',
+                                    converter: Entry.block.converters.returnStringKey,
+                                    codeMap: 'Entry.CodeMap.Entry.coordinate_mouse[1]',
                                 },
                                 {
                                     type: 'Text',
@@ -424,14 +420,8 @@ module.exports = {
                         options: [
                             [Lang.Blocks.CALC_coordinate_x_value, 'x'],
                             [Lang.Blocks.CALC_coordinate_y_value, 'y'],
-                            [
-                                Lang.Blocks.CALC_coordinate_rotation_value,
-                                'rotation',
-                            ],
-                            [
-                                Lang.Blocks.CALC_coordinate_direction_value,
-                                'direction',
-                            ],
+                            [Lang.Blocks.CALC_coordinate_rotation_value, 'rotation'],
+                            [Lang.Blocks.CALC_coordinate_direction_value, 'direction'],
                             [Lang.Blocks.CALC_coordinate_size_value, 'size'],
                             [Lang.Blocks.CALC_picture_index, 'picture_index'],
                             [Lang.Blocks.CALC_picture_name, 'picture_name'],
@@ -456,16 +446,18 @@ module.exports = {
                 },
                 class: 'calc',
                 isNotFor: [],
-                func: function(sprite, script) {
-                    var targetId = script.getField('VALUE', script);
-                    var targetEntity;
-                    if (targetId == 'self') targetEntity = sprite;
-                    else targetEntity = Entry.container.getEntity(targetId);
+                func(sprite, script) {
+                    const targetId = script.getField('VALUE', script);
+                    let targetEntity;
+                    if (targetId === 'self') {
+                        targetEntity = sprite;
+                    } else {
+                        targetEntity = Entry.container.getEntity(targetId);
+                    }
 
-                    var targetCoordinate = script.getField(
-                        'COORDINATE',
-                        script
-                    );
+                    const targetCoordinate = script.getField('COORDINATE', script);
+                    const object = targetEntity.parent;
+                    const pictures = object.pictures;
                     switch (targetCoordinate) {
                         case 'x':
                             return targetEntity.getX();
@@ -476,19 +468,13 @@ module.exports = {
                         case 'direction':
                             return targetEntity.getDirection();
                         case 'picture_index':
-                            var object = targetEntity.parent;
-                            var pictures = object.pictures;
                             return pictures.indexOf(targetEntity.picture) + 1;
                         case 'size':
                             return Number(targetEntity.getSize().toFixed(1));
-                        case 'picture_name':
-                            var object = targetEntity.parent;
-                            var pictures = object.pictures;
-                            var picture =
-                                pictures[
-                                    pictures.indexOf(targetEntity.picture)
-                                ];
+                        case 'picture_name': {
+                            const picture = pictures[pictures.indexOf(targetEntity.picture)];
                             return picture.name;
+                        }
                     }
                 },
                 syntax: {
@@ -505,56 +491,26 @@ module.exports = {
                                     menuName: 'spritesWithSelf',
                                     fontSize: 11,
                                     arrowColor: EntryStatic.ARROW_COLOR_CALC,
-                                    converter:
-                                        Entry.block.converters
-                                            .returnObjectOrStringValue,
-                                    codeMap:
-                                        'Entry.CodeMap.Entry.coordinate_object[1]',
+                                    converter: Entry.block.converters.returnObjectOrStringValue,
+                                    codeMap: 'Entry.CodeMap.Entry.coordinate_object[1]',
                                 },
                                 undefined,
                                 {
                                     type: 'Dropdown',
                                     options: [
-                                        [
-                                            Lang.Blocks.CALC_coordinate_x_value,
-                                            'x',
-                                        ],
-                                        [
-                                            Lang.Blocks.CALC_coordinate_y_value,
-                                            'y',
-                                        ],
-                                        [
-                                            Lang.Blocks
-                                                .CALC_coordinate_rotation_value,
-                                            'rotation',
-                                        ],
-                                        [
-                                            Lang.Blocks
-                                                .CALC_coordinate_direction_value,
-                                            'direction',
-                                        ],
-                                        [
-                                            Lang.Blocks
-                                                .CALC_coordinate_size_value,
-                                            'size',
-                                        ],
-                                        [
-                                            Lang.Blocks.CALC_picture_index,
-                                            'picture_index',
-                                        ],
-                                        [
-                                            Lang.Blocks.CALC_picture_name,
-                                            'picture_name',
-                                        ],
+                                        [Lang.Blocks.CALC_coordinate_x_value, 'x'],
+                                        [Lang.Blocks.CALC_coordinate_y_value, 'y'],
+                                        [Lang.Blocks.CALC_coordinate_rotation_value, 'rotation'],
+                                        [Lang.Blocks.CALC_coordinate_direction_value, 'direction'],
+                                        [Lang.Blocks.CALC_coordinate_size_value, 'size'],
+                                        [Lang.Blocks.CALC_picture_index, 'picture_index'],
+                                        [Lang.Blocks.CALC_picture_name, 'picture_name'],
                                     ],
                                     value: 'x',
                                     fontSize: 11,
                                     arrowColor: EntryStatic.ARROW_COLOR_CALC,
-                                    converter:
-                                        Entry.block.converters
-                                            .returnStringValue,
-                                    codeMap:
-                                        'Entry.CodeMap.Entry.coordinate_object[3]',
+                                    converter: Entry.block.converters.returnStringValue,
+                                    codeMap: 'Entry.CodeMap.Entry.coordinate_object[3]',
                                 },
                             ],
                         },
@@ -584,7 +540,7 @@ module.exports = {
                 },
                 class: 'calc',
                 isNotFor: [],
-                func: function(sprite, script) {
+                func(sprite, script) {
                     return createjs.Sound.getVolume() * 100;
                 },
                 syntax: {
@@ -628,10 +584,7 @@ module.exports = {
                     {
                         type: 'Dropdown',
                         options: [
-                            [
-                                Lang.Blocks.CALC_quotient_and_mod_sub_1,
-                                'QUOTIENT',
-                            ],
+                            [Lang.Blocks.CALC_quotient_and_mod_sub_1, 'QUOTIENT'],
                             [Lang.Blocks.CALC_quotient_and_mod_sub_2, 'MOD'],
                         ],
                         value: 'QUOTIENT',
@@ -681,13 +634,19 @@ module.exports = {
                 },
                 class: 'calc',
                 isNotFor: [],
-                func: function(sprite, script) {
-                    var left = script.getNumberValue('LEFTHAND', script);
-                    var right = script.getNumberValue('RIGHTHAND', script);
-                    if (isNaN(left) || isNaN(right)) throw new Error();
-                    var operator = script.getField('OPERATOR', script);
-                    if (operator == 'QUOTIENT') return Math.floor(left / right);
-                    else return left % right;
+                func(sprite, script) {
+                    let [left, right] = script.getValues(['LEFTHAND', 'RIGHTHAND'], script);
+                    left = Number(left);
+                    right = Number(right);
+                    if (isNaN(left) || isNaN(right)) {
+                        throw new Error();
+                    }
+                    const operator = script.getField('OPERATOR', script);
+                    if (operator === 'QUOTIENT') {
+                        return Math.floor(left / right);
+                    } else {
+                        return left % right;
+                    }
                 },
                 syntax: {
                     js: [],
@@ -712,23 +671,13 @@ module.exports = {
                                 {
                                     type: 'Dropdown',
                                     options: [
-                                        [
-                                            Lang.Blocks
-                                                .CALC_quotient_and_mod_sub_1,
-                                            'QUOTIENT',
-                                        ],
-                                        [
-                                            Lang.Blocks
-                                                .CALC_quotient_and_mod_sub_2,
-                                            'MOD',
-                                        ],
+                                        [Lang.Blocks.CALC_quotient_and_mod_sub_1, 'QUOTIENT'],
+                                        [Lang.Blocks.CALC_quotient_and_mod_sub_2, 'MOD'],
                                     ],
                                     value: 'QUOTIENT',
                                     fontSize: 11,
                                     arrowColor: EntryStatic.ARROW_COLOR_CALC,
-                                    converter:
-                                        Entry.block.converters
-                                            .returnStringValue,
+                                    converter: Entry.block.converters.returnStringValue,
                                 },
                             ],
                         },
@@ -752,23 +701,13 @@ module.exports = {
                                 {
                                     type: 'Dropdown',
                                     options: [
-                                        [
-                                            Lang.Blocks
-                                                .CALC_quotient_and_mod_sub_1,
-                                            'QUOTIENT',
-                                        ],
-                                        [
-                                            Lang.Blocks
-                                                .CALC_quotient_and_mod_sub_2,
-                                            'MOD',
-                                        ],
+                                        [Lang.Blocks.CALC_quotient_and_mod_sub_1, 'QUOTIENT'],
+                                        [Lang.Blocks.CALC_quotient_and_mod_sub_2, 'MOD'],
                                     ],
                                     value: 'QUOTIENT',
                                     fontSize: 11,
                                     arrowColor: EntryStatic.ARROW_COLOR_CALC,
-                                    converter:
-                                        Entry.block.converters
-                                            .returnStringValue,
+                                    converter: Entry.block.converters.returnStringValue,
                                 },
                             ],
                         },
@@ -802,31 +741,16 @@ module.exports = {
                             [Lang.Blocks.CALC_calc_operation_sin, 'sin'],
                             [Lang.Blocks.CALC_calc_operation_cos, 'cos'],
                             [Lang.Blocks.CALC_calc_operation_tan, 'tan'],
-                            [
-                                Lang.Blocks.CALC_calc_operation_asin,
-                                'asin_radian',
-                            ],
-                            [
-                                Lang.Blocks.CALC_calc_operation_acos,
-                                'acos_radian',
-                            ],
-                            [
-                                Lang.Blocks.CALC_calc_operation_atan,
-                                'atan_radian',
-                            ],
+                            [Lang.Blocks.CALC_calc_operation_asin, 'asin_radian'],
+                            [Lang.Blocks.CALC_calc_operation_acos, 'acos_radian'],
+                            [Lang.Blocks.CALC_calc_operation_atan, 'atan_radian'],
                             [Lang.Blocks.CALC_calc_operation_log, 'log'],
                             [Lang.Blocks.CALC_calc_operation_ln, 'ln'],
-                            [
-                                Lang.Blocks.CALC_calc_operation_unnatural,
-                                'unnatural',
-                            ],
+                            [Lang.Blocks.CALC_calc_operation_unnatural, 'unnatural'],
                             [Lang.Blocks.CALC_calc_operation_floor, 'floor'],
                             [Lang.Blocks.CALC_calc_operation_ceil, 'ceil'],
                             [Lang.Blocks.CALC_calc_operation_round, 'round'],
-                            [
-                                Lang.Blocks.CALC_calc_operation_factorial,
-                                'factorial',
-                            ],
+                            [Lang.Blocks.CALC_calc_operation_factorial, 'factorial'],
                             [Lang.Blocks.CALC_calc_operation_abs, 'abs'],
                         ],
                         value: 'square',
@@ -865,24 +789,24 @@ module.exports = {
                 },
                 class: 'calc',
                 isNotFor: [],
-                func: function(sprite, script) {
-                    var value = script.getNumberValue('LEFTHAND', script);
-                    var operator = script.getField('VALUE', script);
-                    var xRangeCheckList = ['asin_radian', 'acos_radian'];
-                    if (
-                        xRangeCheckList.indexOf(operator) > -1 &&
-                        (value > 1 || value < -1)
-                    )
+                func(sprite, script) {
+                    let value = script.getNumberValue('LEFTHAND', script);
+                    let operator = script.getField('VALUE', script);
+                    const xRangeCheckList = ['asin_radian', 'acos_radian'];
+                    if (xRangeCheckList.indexOf(operator) > -1 && (value > 1 || value < -1)) {
                         throw new Error('x range exceeded');
+                    }
 
-                    var needToConvertList = ['sin', 'cos', 'tan'];
-                    if (operator.indexOf('_'))
+                    const needToConvertList = ['sin', 'cos', 'tan'];
+                    if (operator.indexOf('_')) {
                         operator = operator.split('_')[0];
+                    }
 
-                    if (needToConvertList.indexOf(operator) > -1)
+                    if (needToConvertList.indexOf(operator) > -1) {
                         value = Entry.toRadian(value);
+                    }
 
-                    var returnVal = 0;
+                    let returnVal = 0;
                     switch (operator) {
                         case 'square':
                             returnVal = value * value;
@@ -905,10 +829,11 @@ module.exports = {
                             returnVal = Entry.toDegrees(Math[operator](value));
                             break;
                         case 'unnatural':
-                            returnVal = new BigNumber(value)
-                                .minus(Math.floor(value))
+                            returnVal = new BigNumber(value).minus(Math.floor(value))
                                 .toNumber();
-                            if (value < 0) returnVal = 1 - returnVal;
+                            if (value < 0) {
+                                returnVal = 1 - returnVal;
+                            }
                             break;
                         default:
                             returnVal = Math[operator](value);
@@ -1182,16 +1107,16 @@ module.exports = {
                 events: {
                     viewAdd: [
                         function() {
-                            if (Entry.engine) Entry.engine.showProjectTimer();
+                            if (Entry.engine) {
+                                Entry.engine.showProjectTimer();
+                            }
                         },
                     ],
                     viewDestroy: [
                         function(block, notIncludeSelf) {
-                            if (Entry.engine)
-                                Entry.engine.hideProjectTimer(
-                                    block,
-                                    notIncludeSelf
-                                );
+                            if (Entry.engine) {
+                                Entry.engine.hideProjectTimer(block, notIncludeSelf);
+                            }
                         },
                     ],
                 },
@@ -1201,7 +1126,7 @@ module.exports = {
                 },
                 class: 'calc_timer',
                 isNotFor: [],
-                func: function(sprite, script) {
+                func(sprite, script) {
                     return Entry.engine.projectTimer.getValue();
                 },
                 syntax: {
@@ -1227,21 +1152,9 @@ module.exports = {
                     {
                         type: 'Dropdown',
                         options: [
-                            [
-                                Lang.Blocks
-                                    .CALC_choose_project_timer_action_sub_1,
-                                'START',
-                            ],
-                            [
-                                Lang.Blocks
-                                    .CALC_choose_project_timer_action_sub_2,
-                                'STOP',
-                            ],
-                            [
-                                Lang.Blocks
-                                    .CALC_choose_project_timer_action_sub_3,
-                                'RESET',
-                            ],
+                            [Lang.Blocks.CALC_choose_project_timer_action_sub_1, 'START'],
+                            [Lang.Blocks.CALC_choose_project_timer_action_sub_2, 'STOP'],
+                            [Lang.Blocks.CALC_choose_project_timer_action_sub_3, 'RESET'],
                         ],
                         value: 'START',
                         fontSize: 11,
@@ -1261,13 +1174,16 @@ module.exports = {
                 events: {
                     viewAdd: [
                         function() {
-                            if (Entry.engine) Entry.engine.showProjectTimer();
+                            if (Entry.engine) {
+                                Entry.engine.showProjectTimer();
+                            }
                         },
                     ],
                     dataDestroy: [
                         function(block) {
-                            if (Entry.engine)
+                            if (Entry.engine) {
                                 Entry.engine.hideProjectTimer(block);
+                            }
                         },
                     ],
                 },
@@ -1284,21 +1200,21 @@ module.exports = {
                 },
                 class: 'calc_timer',
                 isNotFor: [],
-                func: function(sprite, script) {
-                    var engine = Entry.engine;
-                    var timer = engine.projectTimer;
-                    var isPaused = timer.isPaused;
-                    var isInit = timer.isInit;
-                    var currentTime = new Date().getTime();
+                func(sprite, script) {
+                    const engine = Entry.engine;
+                    const timer = engine.projectTimer;
+                    const isPaused = timer.isPaused;
+                    const isInit = timer.isInit;
+                    const currentTime = new Date().getTime();
 
                     switch (script.getField('ACTION')) {
                         case 'START':
                             if (!isInit) {
                                 engine.startProjectTimer();
                             } else if (isInit && isPaused) {
-                                if (timer.pauseStart)
-                                    timer.pausedTime +=
-                                        currentTime - timer.pauseStart;
+                                if (timer.pauseStart) {
+                                    timer.pausedTime += currentTime - timer.pauseStart;
+                                }
                                 delete timer.pauseStart;
                                 timer.isPaused = false;
                             }
@@ -1332,29 +1248,23 @@ module.exports = {
                                     type: 'Dropdown',
                                     options: [
                                         [
-                                            Lang.Blocks
-                                                .CALC_choose_project_timer_action_sub_1,
+                                            Lang.Blocks.CALC_choose_project_timer_action_sub_1,
                                             'START',
                                         ],
                                         [
-                                            Lang.Blocks
-                                                .CALC_choose_project_timer_action_sub_2,
+                                            Lang.Blocks.CALC_choose_project_timer_action_sub_2,
                                             'STOP',
                                         ],
                                         [
-                                            Lang.Blocks
-                                                .CALC_choose_project_timer_action_sub_3,
+                                            Lang.Blocks.CALC_choose_project_timer_action_sub_3,
                                             'RESET',
                                         ],
                                     ],
                                     value: 'START',
                                     fontSize: 11,
                                     arrowColor: EntryStatic.ARROW_COLOR_CALC,
-                                    converter:
-                                        Entry.block.converters
-                                            .returnStringValueLowerCase,
-                                    codeMap:
-                                        'Entry.CodeMap.Entry.choose_project_timer_action[1]',
+                                    converter: Entry.block.converters.returnStringValueLowerCase,
+                                    codeMap: 'Entry.CodeMap.Entry.choose_project_timer_action[1]',
                                 },
                                 {
                                     type: 'Text',
@@ -1400,16 +1310,16 @@ module.exports = {
                 events: {
                     viewAdd: [
                         function() {
-                            if (Entry.engine) Entry.engine.showProjectTimer();
+                            if (Entry.engine) {
+                                Entry.engine.showProjectTimer();
+                            }
                         },
                     ],
                     viewDestroy: [
                         function(block, notIncludeSelf) {
-                            if (Entry.engine)
-                                Entry.engine.hideProjectTimer(
-                                    block,
-                                    notIncludeSelf
-                                );
+                            if (Entry.engine) {
+                                Entry.engine.hideProjectTimer(block, notIncludeSelf);
+                            }
                         },
                     ],
                 },
@@ -1426,11 +1336,14 @@ module.exports = {
                 },
                 class: 'calc_timer',
                 isNotFor: [],
-                func: function(sprite, script) {
-                    var action = script.getField('ACTION');
-                    var timer = Entry.engine.projectTimer;
-                    if (action == 'SHOW') timer.setVisible(true);
-                    else timer.setVisible(false);
+                func(sprite, script) {
+                    const action = script.getField('ACTION');
+                    const timer = Entry.engine.projectTimer;
+                    if (action === 'SHOW') {
+                        timer.setVisible(true);
+                    } else {
+                        timer.setVisible(false);
+                    }
 
                     return script.callReturn();
                 },
@@ -1449,23 +1362,14 @@ module.exports = {
                                 {
                                     type: 'Dropdown',
                                     options: [
-                                        [
-                                            Lang.Blocks.CALC_timer_visible_show,
-                                            'SHOW',
-                                        ],
-                                        [
-                                            Lang.Blocks.CALC_timer_visible_hide,
-                                            'HIDE',
-                                        ],
+                                        [Lang.Blocks.CALC_timer_visible_show, 'SHOW'],
+                                        [Lang.Blocks.CALC_timer_visible_hide, 'HIDE'],
                                     ],
                                     value: 'SHOW',
                                     fontSize: 11,
                                     arrowColor: EntryStatic.ARROW_COLOR_CALC,
-                                    converter:
-                                        Entry.block.converters
-                                            .returnStringValueLowerCase,
-                                    codeMap:
-                                        'Entry.CodeMap.Entry.set_visible_project_timer[1]',
+                                    converter: Entry.block.converters.returnStringValueLowerCase,
+                                    codeMap: 'Entry.CodeMap.Entry.set_visible_project_timer[1]',
                                 },
                                 {
                                     type: 'Text',
@@ -1521,16 +1425,22 @@ module.exports = {
                 },
                 class: 'calc_date',
                 isNotFor: [],
-                func: function(sprite, script) {
-                    var operator = script.getField('VALUE', script);
-                    var dateTime = new Date();
-                    if (operator == 'YEAR') return dateTime.getFullYear();
-                    else if (operator == 'MONTH')
+                func(sprite, script) {
+                    const operator = script.getField('VALUE', script);
+                    const dateTime = new Date();
+                    if (operator === 'YEAR') {
+                        return dateTime.getFullYear();
+                    } else if (operator === 'MONTH') {
                         return dateTime.getMonth() + 1;
-                    else if (operator == 'DAY') return dateTime.getDate();
-                    else if (operator == 'HOUR') return dateTime.getHours();
-                    else if (operator == 'MINUTE') return dateTime.getMinutes();
-                    else return dateTime.getSeconds();
+                    } else if (operator === 'DAY') {
+                        return dateTime.getDate();
+                    } else if (operator === 'HOUR') {
+                        return dateTime.getHours();
+                    } else if (operator === 'MINUTE') {
+                        return dateTime.getMinutes();
+                    } else {
+                        return dateTime.getSeconds();
+                    }
                 },
                 syntax: {
                     js: [],
@@ -1543,34 +1453,17 @@ module.exports = {
                                 {
                                     type: 'Dropdown',
                                     options: [
-                                        [
-                                            Lang.Blocks.CALC_get_date_year,
-                                            'YEAR',
-                                        ],
-                                        [
-                                            Lang.Blocks.CALC_get_date_month,
-                                            'MONTH',
-                                        ],
+                                        [Lang.Blocks.CALC_get_date_year, 'YEAR'],
+                                        [Lang.Blocks.CALC_get_date_month, 'MONTH'],
                                         [Lang.Blocks.CALC_get_date_day, 'DAY'],
-                                        [
-                                            Lang.Blocks.CALC_get_date_hour,
-                                            'HOUR',
-                                        ],
-                                        [
-                                            Lang.Blocks.CALC_get_date_minute,
-                                            'MINUTE',
-                                        ],
-                                        [
-                                            Lang.Blocks.CALC_get_date_second,
-                                            'SECOND',
-                                        ],
+                                        [Lang.Blocks.CALC_get_date_hour, 'HOUR'],
+                                        [Lang.Blocks.CALC_get_date_minute, 'MINUTE'],
+                                        [Lang.Blocks.CALC_get_date_second, 'SECOND'],
                                     ],
                                     value: 'YEAR',
                                     fontSize: 11,
                                     arrowColor: EntryStatic.ARROW_COLOR_CALC,
-                                    converter:
-                                        Entry.block.converters
-                                            .returnStringValueLowerCase,
+                                    converter: Entry.block.converters.returnStringValueLowerCase,
                                     codeMap: 'Entry.CodeMap.Entry.get_date[1]',
                                 },
                             ],
@@ -1615,16 +1508,16 @@ module.exports = {
                 },
                 class: 'calc_distance',
                 isNotFor: [],
-                func: function(sprite, script) {
-                    var targetId = script.getField('VALUE', script);
-                    if (targetId == 'mouse') {
-                        var mousePos = Entry.stage.mouseCoordinate;
+                func(sprite, script) {
+                    const targetId = script.getField('VALUE', script);
+                    if (targetId === 'mouse') {
+                        const mousePos = Entry.stage.mouseCoordinate;
                         return Math.sqrt(
                             Math.pow(sprite.getX() - mousePos.x, 2) +
                                 Math.pow(sprite.getY() - mousePos.y, 2)
                         );
                     } else {
-                        var targetEntity = Entry.container.getEntity(targetId);
+                        const targetEntity = Entry.container.getEntity(targetId);
                         return Math.sqrt(
                             Math.pow(sprite.getX() - targetEntity.getX(), 2) +
                                 Math.pow(sprite.getY() - targetEntity.getY(), 2)
@@ -1645,10 +1538,8 @@ module.exports = {
                                     menuName: 'spritesWithMouse',
                                     fontSize: 11,
                                     arrowColor: EntryStatic.ARROW_COLOR_CALC,
-                                    converter:
-                                        Entry.block.converters.returnStringKey,
-                                    codeMap:
-                                        'Entry.CodeMap.Entry.distance_something[1]',
+                                    converter: Entry.block.converters.returnStringKey,
+                                    codeMap: 'Entry.CodeMap.Entry.distance_something[1]',
                                 },
                             ],
                         },
@@ -1692,13 +1583,14 @@ module.exports = {
                 },
                 class: 'calc_duration',
                 isNotFor: [],
-                func: function(sprite, script) {
-                    var soundId = script.getField('VALUE', script);
-                    var soundsArr = sprite.parent.sounds;
+                func(sprite, script) {
+                    const soundId = script.getField('VALUE', script);
+                    const soundsArr = sprite.parent.sounds;
 
-                    for (var i = 0; i < soundsArr.length; i++) {
-                        if (soundsArr[i].id == soundId)
+                    for (let i = 0; i < soundsArr.length; i++) {
+                        if (soundsArr[i].id === soundId) {
                             return soundsArr[i].duration;
+                        }
                     }
                 },
                 syntax: {
@@ -1715,8 +1607,7 @@ module.exports = {
                                     menuName: 'sounds',
                                     fontSize: 11,
                                     arrowColor: EntryStatic.ARROW_COLOR_CALC,
-                                    converter:
-                                        Entry.block.converters.returnStringKey,
+                                    converter: Entry.block.converters.returnStringKey,
                                 },
                             ],
                         },
@@ -1735,7 +1626,7 @@ module.exports = {
                 },
                 class: 'calc_user',
                 isNotFor: [],
-                func: function(sprite, script) {
+                func(sprite, script) {
                     return window.user ? window.user.username : ' ';
                 },
                 syntax: {
@@ -1796,7 +1687,7 @@ module.exports = {
                 },
                 class: 'calc_string',
                 isNotFor: [],
-                func: function(sprite, script) {
+                func(sprite, script) {
                     return script.getStringValue('STRING', script).length;
                 },
                 syntax: {
@@ -1878,9 +1769,10 @@ module.exports = {
                 },
                 class: 'calc_string',
                 isNotFor: [],
-                func: function(sprite, script) {
-                    var leftValue = script.getStringValue('VALUE1', script);
-                    var rightValue = script.getStringValue('VALUE2', script);
+                func(sprite, script) {
+                    let [leftValue, rightValue] = script.getValues(['VALUE1', 'VALUE2'], script);
+                    leftValue = String(leftValue);
+                    rightValue = String(rightValue);
 
                     return leftValue + rightValue;
                 },
@@ -1964,11 +1856,15 @@ module.exports = {
                 },
                 class: 'calc_string',
                 isNotFor: [],
-                func: function(sprite, script) {
-                    var str = script.getStringValue('LEFTHAND', script);
-                    var index = script.getNumberValue('RIGHTHAND', script) - 1;
-                    if (index < 0 || index > str.length - 1) throw new Error();
-                    else return str[index];
+                func(sprite, script) {
+                    let [str, index] = script.getValues(['LEFTHAND', 'RIGHTHAND'], script);
+                    str = String(str);
+                    index = Number(index) - 1;
+                    if (index < 0 || index > str.length - 1) {
+                        throw new Error();
+                    } else {
+                        return str[index];
+                    }
                 },
                 syntax: {
                     js: [],
@@ -2096,18 +1992,17 @@ module.exports = {
                 },
                 class: 'calc_string',
                 isNotFor: [],
-                func: function(sprite, script) {
-                    var str = script.getStringValue('STRING', script);
-                    var start = script.getNumberValue('START', script) - 1;
-                    var end = script.getNumberValue('END', script) - 1;
-                    var strLen = str.length - 1;
-                    if (start < 0 || end < 0 || start > strLen || end > strLen)
+                func(sprite, script) {
+                    let [str, start, end] = script.getValues(['STRING', 'START', 'END'], script);
+                    str = String(str);
+                    start = Number(start) - 1;
+                    end = Number(end) - 1;
+                    const strLen = str.length - 1;
+                    if (start < 0 || end < 0 || start > strLen || end > strLen) {
                         throw new Error();
-                    else
-                        return str.substring(
-                            Math.min(start, end),
-                            Math.max(start, end) + 1
-                        );
+                    } else {
+                        return str.substring(Math.min(start, end), Math.max(start, end) + 1);
+                    }
                 },
                 syntax: {
                     js: [],
@@ -2206,10 +2101,11 @@ module.exports = {
                 },
                 class: 'calc_string',
                 isNotFor: [],
-                func: function(sprite, script) {
-                    var str = script.getStringValue('LEFTHAND', script);
-                    var target = script.getStringValue('RIGHTHAND', script);
-                    var index = str.indexOf(target);
+                func(sprite, script) {
+                    let [str, target] = script.getValues(['LEFTHAND', 'RIGHTHAND'], script);
+                    str = String(str);
+                    target = String(target);
+                    const index = str.indexOf(target);
                     return index + 1;
                 },
                 syntax: {
@@ -2310,16 +2206,15 @@ module.exports = {
                 },
                 class: 'calc_string',
                 isNotFor: [],
-                func: function(sprite, script) {
+                func(sprite, script) {
+                    let [oldWord, newWord] = script.getValues(['OLD_WORD', 'NEW_WORD'], script);
+                    oldWord = String(oldWord);
+                    newWord = String(newWord);
+
+                    const escapedOldWord = oldWord.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // 괄호 및 regex escape 문자 치환
                     return script
                         .getStringValue('STRING', script)
-                        .replace(
-                            new RegExp(
-                                script.getStringValue('OLD_WORD', script),
-                                'gm'
-                            ),
-                            script.getStringValue('NEW_WORD', script)
-                        );
+                        .replace(new RegExp(escapedOldWord, 'gm'), newWord);
                 },
                 syntax: {
                     js: [],
@@ -2353,14 +2248,8 @@ module.exports = {
                     {
                         type: 'Dropdown',
                         options: [
-                            [
-                                Lang.Blocks.CALC_change_string_case_sub_1,
-                                'toUpperCase',
-                            ],
-                            [
-                                Lang.Blocks.CALC_change_string_case_sub_2,
-                                'toLowerCase',
-                            ],
+                            [Lang.Blocks.CALC_change_string_case_sub_1, 'toUpperCase'],
+                            [Lang.Blocks.CALC_change_string_case_sub_2, 'toLowerCase'],
                         ],
                         value: 'toUpperCase',
                         fontSize: 11,
@@ -2405,7 +2294,7 @@ module.exports = {
                 },
                 class: 'calc_string',
                 isNotFor: [],
-                func: function(sprite, script) {
+                func(sprite, script) {
                     return script
                         .getStringValue('STRING', script)
                         [script.getField('CASE', script)]();
@@ -2427,23 +2316,13 @@ module.exports = {
                                 {
                                     type: 'Dropdown',
                                     options: [
-                                        [
-                                            Lang.Blocks
-                                                .CALC_change_string_case_sub_1,
-                                            'toUpperCase',
-                                        ],
-                                        [
-                                            Lang.Blocks
-                                                .CALC_change_string_case_sub_2,
-                                            'toLowerCase',
-                                        ],
+                                        [Lang.Blocks.CALC_change_string_case_sub_1, 'toUpperCase'],
+                                        [Lang.Blocks.CALC_change_string_case_sub_2, 'toLowerCase'],
                                     ],
                                     value: 'toUpperCase',
                                     fontSize: 11,
                                     arrowColor: EntryStatic.ARROW_COLOR_CALC,
-                                    converter:
-                                        Entry.block.converters
-                                            .returnStringValue,
+                                    converter: Entry.block.converters.returnStringValue,
                                 },
                             ],
                         },
@@ -2461,23 +2340,13 @@ module.exports = {
                                 {
                                     type: 'Dropdown',
                                     options: [
-                                        [
-                                            Lang.Blocks
-                                                .CALC_change_string_case_sub_1,
-                                            'toUpperCase',
-                                        ],
-                                        [
-                                            Lang.Blocks
-                                                .CALC_change_string_case_sub_2,
-                                            'toLowerCase',
-                                        ],
+                                        [Lang.Blocks.CALC_change_string_case_sub_1, 'toUpperCase'],
+                                        [Lang.Blocks.CALC_change_string_case_sub_2, 'toLowerCase'],
                                     ],
                                     value: 'toUpperCase',
                                     fontSize: 11,
                                     arrowColor: EntryStatic.ARROW_COLOR_CALC,
-                                    converter:
-                                        Entry.block.converters
-                                            .returnStringValue,
+                                    converter: Entry.block.converters.returnStringValue,
                                 },
                             ],
                         },
@@ -2485,5 +2354,5 @@ module.exports = {
                 },
             },
         };
-    }
-}
+    },
+};

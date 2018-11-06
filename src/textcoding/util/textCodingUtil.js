@@ -1874,7 +1874,7 @@ Entry.TextCodingUtil = {};
 
         if (activatedExpansionBlocks.length > 0) {
             return {
-                message : '작품에 함수 블록 또는 확장 블록이 사용된 경우에는 엔트리파이선 모드로 변경할 수 없습니다.',
+                message : Lang.TextCoding[Entry.TextCodingError.ALERT_API_NO_SUPPORT],
                 type : 'error'
             };
         }
