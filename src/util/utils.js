@@ -1,6 +1,7 @@
 'use strict';
 
 import { PIXIBrushAdaptor } from '../class/pixi/etc/PIXIBrushAdaptor';
+import PIXIHelper from '../class/pixi/helper/PIXIHelper';
 
 Entry.Utils = {};
 
@@ -1447,7 +1448,7 @@ Entry.setBasicBrush = function(sprite) {
 
     brush.entity = sprite;
 
-    var shape = new PIXI.Graphics();
+    var shape = PIXIHelper.newPIXIGraphics();
     brush.internal_setShape(shape);
     shape.entity = sprite;
     var selectedObjectContainer = Entry.stage.selectedObjectContainer;
@@ -1476,7 +1477,7 @@ Entry.setCloneBrush = function(sprite, parentBrush) {
     brush.beginStroke(`rgba(${rgb.r},${rgb.g},${rgb.b},${alpha})`);
 
 
-    var shape = new PIXI.Graphics();
+    var shape = PIXIHelper.newPIXIGraphics();
     brush.internal_setShape(shape);
     shape.entity = sprite;
     var selectedObjectContainer = Entry.stage.selectedObjectContainer;
