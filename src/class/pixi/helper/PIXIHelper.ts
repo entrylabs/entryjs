@@ -90,7 +90,7 @@ export default class PIXIHelper {
     }
 
     static newPIXIGraphics() {
-        return new PIXI.Graphics(true);
+        return new PIXI.Graphics(false);
     }
 
     /**
