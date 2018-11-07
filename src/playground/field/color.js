@@ -12,11 +12,9 @@ Entry.FieldColor = class FieldColor extends Entry.Field {
         super(content, blockView, index);
         this._block = blockView.block;
         this._blockView = blockView;
-
+        const board = blockView.getBoard();
         this.box = new Entry.BoxModel();
-
         this.svgGroup = null;
-
         this._contents = content;
         this._index = index;
         this._position = content.position;
@@ -119,37 +117,33 @@ Entry.FieldColor = class FieldColor extends Entry.Field {
                 this._selectBlockView();
             };
         }
-        // this.disposeEvent = Entry.disposeEvent.attach(this, action);
+        this.disposeEvent = Entry.disposeEvent.attach(this, action);
     }
 
     renderOptions() {
-        this._attachDisposeEvent();
-
         this.optionGroup = Entry.Dom('div', {
             class: 'entry-color-picker',
             parent: $('body'),
         });
-
         this.colorPicker = new EntryTool({
             type: 'colorPicker',
             data: {
                 color: this.getValue(),
+                positionDom: this.svgGroup,
+                // boundrayDom: this.boundrayDom,
+                onOutsideClick:(color)=>{
+                    if(this.colorPicker) {
+                        this.colorPicker.hide();
+                        this.applyValue(color);
+                    }
+                    this._attachDisposeEvent();
+                }
             },
             container: this.optionGroup[0],
-        });
-
-        // this.optionGroup.bind('mousedown touchstart keyup keydown', (e) => {
-        //     e.stopPropagation();
-        // });
-
-        // this.optionGroup[0].appendChild(fragment);
-
-        var { x, y } = this.getAbsolutePosFromDocument();
-        y += this.box.height / 2 + 1;
-
-        this.optionGroup.css({
-            left: x,
-            top: y,
+        }).on('change', (color) => {
+            if(color) {
+                this.applyValue(color);
+            }
         });
 
         this.optionDomCreated();
@@ -170,22 +164,19 @@ Entry.FieldColor = class FieldColor extends Entry.Field {
         }
     }
 
-    getContentWidth() {
-        return 22;
+    destroyOption() {
+        if(this.colorPicker) {
+            this.colorPicker.isShow && this.colorPicker.hide();
+            this.colorPicker.remove();
+            this.colorPicker = null;
+        }
+        if(this.optionGroup) {
+            this.optionGroup.remove();
+        }
+        super.destroyOption();
     }
 
-    static getWidgetColorList() {
-        return [
-            ['#FFFFFF', '#CCCCCC', '#C0C0C0', '#999999', '#666666', '#333333', '#000000'],
-            ['#FFCCCC', '#FF6666', '#FF0000', '#CC0000', '#990000', '#660000', '#330000'],
-            ['#FFCC99', '#FF9966', '#FF9900', '#FF6600', '#CC6600', '#993300', '#663300'],
-            ['#FFFF99', '#FFFF66', '#FFCC66', '#FFCC33', '#CC9933', '#996633', '#663333'],
-            ['#FFFFCC', '#FFFF33', '#FFFF00', '#FFCC00', '#999900', '#666600', '#333300'],
-            ['#99FF99', '#66FF99', '#33FF33', '#33CC00', '#009900', '#006600', '#003300'],
-            ['#99FFFF', '#33FFFF', '#66CCCC', '#00CCCC', '#339999', '#336666', '#003333'],
-            ['#CCFFFF', '#66FFFF', '#33CCFF', '#3366FF', '#3333FF', '#000099', '#000066'],
-            ['#CCCCFF', '#9999FF', '#6666CC', '#6633FF', '#6609CC', '#333399', '#330099'],
-            ['#FFCCFF', '#FF99FF', '#CC66CC', '#CC33CC', '#993399', '#663366', '#330033'],
-        ];
+    getContentWidth() {
+        return 22;
     }
 };
