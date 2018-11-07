@@ -1427,6 +1427,7 @@ Entry.getBrowserType = function() {
 };
 
 Entry.setBasicBrush = function(sprite) {
+    //TODO 박봉배 - brush clone. rgb 파싱 연산 최소화 할 수 있겠음.
     var brush = new PIXIBrushAdaptor();
     if (sprite.brush) {
         var parentBrush = sprite.brush;
