@@ -17,7 +17,7 @@ Entry.Event = class Event {
         };
         this._listeners.push(listener);
         return listener;
-    };
+    }
 
     detach(listener) {
         const listeners = this._listeners || [];
@@ -25,24 +25,23 @@ Entry.Event = class Event {
         if (index > -1) {
             return listeners.splice(index, 1);
         }
-    };
+    }
 
     clear() {
         const listeners = this._listeners;
         while (listeners.length) {
             listeners.pop().destroy();
         }
-    };
+    }
 
     notify() {
         const args = arguments;
         this._listeners.slice().forEach(function(listener) {
             listener.fn.apply(listener.obj, args);
         });
-    };
+    }
 
     hasListeners() {
         return !!this._listeners.length;
-    };
-}
-;
+    }
+};

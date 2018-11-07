@@ -214,11 +214,11 @@ class GlobalSvg {
         const [line] = this.svgGroup.getElementsByTagName('line');
         line.setAttribute(
             'x1',
-            view.pathGroup.getBoundingClientRect().x - this.left + view.parentWidth
+            view.pathGroup.getBoundingClientRect().x / this.scale - this.left + view.parentWidth
         );
         line.setAttribute(
             'y1',
-            view.pathGroup.getBoundingClientRect().y - this.top + view.parentHeight / 2
+            view.pathGroup.getBoundingClientRect().y / this.scale - this.top + view.parentHeight / 2
         );
         this._applyDomPos(this.left, this.top);
     }
