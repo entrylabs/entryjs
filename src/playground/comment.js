@@ -10,11 +10,11 @@ Entry.Comment = class Comment {
         width: 160,
         height: 160,
         titleHeight: 22,
-        defaultLineLength: 40,
         readOnly: false,
         visible: true,
         display: true,
         movable: true,
+        isOpened: true,
     };
 
     constructor(block, board) {
@@ -36,6 +36,13 @@ Entry.Comment = class Comment {
         }
 
         this.observe(this, 'updateOpacity', ['visible'], false);
+        this.observe(this, 'toggleContent', ['isOpened'], false);
+        this.observe(
+            this,
+            'setPosition',
+            ['x', 'y', 'width', 'height', 'parentWidth', 'parentHeight'],
+            false
+        );
     }
 
     get block() {
@@ -48,6 +55,10 @@ Entry.Comment = class Comment {
 
     get blockView() {
         return this._blockView;
+    }
+
+    get defaultLineLength() {
+        return 40;
     }
 
     get scale() {
@@ -89,25 +100,31 @@ Entry.Comment = class Comment {
         this.resizeMouseDown = this.resizeMouseDown.bind(this);
         this.resizeMouseMove = this.resizeMouseMove.bind(this);
         this.resizeMouseUp = this.resizeMouseUp.bind(this);
+        this.toggleMouseDown = this.toggleMouseDown.bind(this);
     }
 
     startRender() {
         if (this.svgGroup) {
             this.id = Entry.generateHash();
             this._line = this.svgGroup.elem('line');
-            this._comment = this.svgGroup.elem('rect');
-            this._title = this.svgGroup.elem('rect');
-            this._path = this.svgGroup.elem('defs').elem('path');
-            this._text = this.svgGroup.elem('text');
+
+            this._contentGroup = this.svgGroup.elem('g');
+            this._comment = this._contentGroup.elem('rect');
+            this._path = this._contentGroup.elem('defs').elem('path');
+            this._text = this._contentGroup.elem('text');
             this._textpath = this._text.elem('textPath');
-            this._resizeArea = this.svgGroup.elem('rect');
-            this._resizeArrow = this.svgGroup.elem('image');
+            this._resizeArea = this._contentGroup.elem('rect');
+            this._resizeArrow = this._contentGroup.elem('image');
+
+            this._titleGroup = this.svgGroup.elem('g');
+            this._title = this._titleGroup.elem('rect');
+            this._toggleArea = this._titleGroup.elem('rect');
+            this._toggleArrow = this._titleGroup.elem('image');
 
             this.canRender = true;
-            this.setInitSchema();
             this.setFrame();
+            this.setInitSchema();
         }
-        this.setPosition();
     }
 
     setInitSchema() {
@@ -124,6 +141,7 @@ Entry.Comment = class Comment {
             parentWidth,
             parentHeight,
         });
+        this.setPosition();
     }
 
     setFrame() {
@@ -172,9 +190,23 @@ Entry.Comment = class Comment {
         this._resizeArrow.attr({
             href: `${path}resize_arrow.svg`,
         });
+
+        this._toggleArea.attr({
+            y: this.y,
+            width: 20,
+            height: this.titleHeight,
+            fill: 'transparent',
+        });
+
+        this._toggleArrow.attr({
+            href: `${path}toggle_open_arrow.svg`,
+        });
     }
 
     setPosition() {
+        if (!this.visible || !this.display) {
+            return;
+        }
         const { x, y } = this;
         const width = Math.max(this.width, 100);
         const height = Math.max(this.height, 100);
@@ -214,6 +246,17 @@ Entry.Comment = class Comment {
             x: x + width - 14,
             y: y + height - 14,
         });
+
+        this._toggleArea.attr({
+            y,
+            x: x + width - 20,
+            height: this.titleHeight,
+        });
+
+        this._toggleArrow.attr({
+            x: x + width - 16,
+            y: y + 8,
+        });
     }
 
     updatePos() {
@@ -236,7 +279,6 @@ Entry.Comment = class Comment {
                     parentWidth,
                     parentHeight,
                 });
-                this.setPosition();
             }
         }
     }
@@ -246,10 +288,6 @@ Entry.Comment = class Comment {
             this.set({ x: -99999, y: -99999 });
         } else {
             this.set({ x, y });
-        }
-
-        if (this.visible && this.display) {
-            this.setPosition();
         }
     }
 
@@ -262,7 +300,6 @@ Entry.Comment = class Comment {
             width: this.width + x,
             height: this.height + y,
         });
-        this.setPosition();
     }
 
     setDragInstance(e) {
@@ -365,19 +402,20 @@ Entry.Comment = class Comment {
         this.dragMode = Entry.DRAG_MODE_NONE;
         this.board.set({ dragBlock: null });
         this.set({ visible: true });
-        this.setPosition();
         this.removeDomEvent();
         delete this.mouseDownCoordinate;
         delete this.dragInstance;
     }
 
     addControl() {
-        this._comment.onmousedown = this.mouseDown;
-        this._comment.ontouchstart = this.mouseDown;
-        this._title.onmousedown = this.mouseDown;
-        this._title.ontouchstart = this.mouseDown;
-        this._resizeArea.onmousedown = this.resizeMouseDown;
-        this._resizeArea.ontouchstart = this.resizeMouseDown;
+        const bindEvent = (dom, func) => {
+            dom.onmousedown = func;
+            dom.ontouchstart = func;
+        };
+        bindEvent(this._comment, this.mouseDown);
+        bindEvent(this._title, this.mouseDown);
+        bindEvent(this._resizeArea, this.resizeMouseDown);
+        bindEvent(this._toggleArea, this.toggleMouseDown);
     }
 
     updateOpacity() {
@@ -527,9 +565,32 @@ Entry.Comment = class Comment {
             width,
             height,
         });
-        this.setPosition();
         this.removeDomEvent();
         delete this.mouseDownCoordinate;
         delete this.dragInstance;
+    }
+
+    toggleMouseDown(e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        this.set({
+            isOpened: !this.isOpened,
+        });
+    }
+
+    toggleContent() {
+        const path = `${Entry.mediaFilePath}block_icon/comment/`;
+        let fileName;
+        if (this.isOpened) {
+            this._contentGroup.classList.remove('invisible');
+            fileName = 'toggle_open_arrow.svg';
+        } else {
+            this._contentGroup.classList.add('invisible');
+            fileName = 'toggle_close_arrow.svg';
+        }
+        this._toggleArrow.attr({
+            href: path + fileName,
+        });
     }
 };
