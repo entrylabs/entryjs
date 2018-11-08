@@ -473,7 +473,7 @@ Entry.Bitbrick.getBlocks = function () {
                     sq[servo[1]] = 0;
                 });
                 bitbrick.dcList().map(function (dc) {
-                    sq[dc[1]] = 128;
+                    sq[dc[1]] = 129;
                 });
                 return script.callReturn();
             },
@@ -758,7 +758,7 @@ Entry.Bitbrick.setLanguage = function () {
                 BITBRICK_ultrasonicSensor: "초음파센서",
                 BITBRICK_vibrationSensor: "진동센서",
                 BITBRICK_potentiometer: "가변저항",
-                BITBRICK_MIC: "소리감지센서",
+                BITBRICK_MIC: "소리센서",
                 BITBRICK_UserSensor: "사용자입력",
                 BITBRICK_UserInput: "사용자입력",
                 BITBRICK_dc_direction_ccw: "반시계",
