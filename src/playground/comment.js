@@ -101,8 +101,6 @@ Entry.Comment = class Comment {
         this.resizeMouseUp = this.resizeMouseUp.bind(this);
         this.toggleMouseDown = this.toggleMouseDown.bind(this);
         this.toggleMouseUp = this.toggleMouseUp.bind(this);
-
-        this._block = null;
     }
 
     startRender() {
