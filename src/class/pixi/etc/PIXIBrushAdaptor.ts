@@ -16,16 +16,18 @@ export class PIXIBrushAdaptor {
     /** [박봉배] 추측 - drawing 중인지 아닌지를 저장하는 값으로 생각 됨. */
     public stop:boolean;
 
+    /** [박봉배] 추측 - 이 브러시가 따라다녀야 할 대상 */
+    public entity:PIXI.DisplayObject;
 
     //아래 값들은 내부에서만 사용함.
     private _alpha:number = 1;
     private _thickness:number;
     private _color:number;
+    private _shapeChanged:boolean;
 
     private __alpha:number = 1;
     private __thickness:number;
     private __color:number;
-
 
     private _shape:PIXI.Graphics;
 
@@ -37,9 +39,23 @@ export class PIXIBrushAdaptor {
         this._shape.closePath();
     }
 
-    /** @param color - "#FF0000", "rgba(255,0,0,0.5)" */
+    /**
+     * createjs 스타일. 문자열 파싱을 하기 때문에 느림. 블럭 몇몇곳에서 이 스타일을 사용하기 떄문에 남겨둠.
+     * @param color - "#FF0000", "rgba(255,0,0,0.5)"
+     */
     beginStroke(color:string) {
         this._parseRGBCssStyleColor(color);
+        this._setStyle();
+    }
+
+    /**
+     * pixi 엔진에 최적화된 함수. beginStroke() 보다 빠름.
+     * @param color
+     * @param alpha
+     */
+    beginStrokeFast(color:number, alpha:number):void {
+        this._color = color;
+        this._alpha = alpha;
         this._setStyle();
     }
 
@@ -50,7 +66,7 @@ export class PIXIBrushAdaptor {
 
     moveTo(x:number, y:number) {
         if(!this._shape) return;
-        this._shape.moveTo(Number(x), Number(y)); //
+        this._shape.moveTo(Number(x), Number(y));
     }
 
     lineTo(x:number, y:number) {
@@ -62,6 +78,7 @@ export class PIXIBrushAdaptor {
 
     /** @param shape - drawing 을 할 대상을 지정 */
     internal_setShape(shape:PIXI.Graphics) {
+        this._shapeChanged = this._shape != shape;
         this._shape = shape;
         this._setStyle();
     }
@@ -69,7 +86,11 @@ export class PIXIBrushAdaptor {
     _setStyle() {
         if(!this._shape) return;
         //console.log("setStyle", this._thickness, this._color, this._alpha);
-        if(this._color != this.__color || this._alpha != this.__alpha || this._thickness != this.__thickness) {
+        if(this._shapeChanged &&
+            this._color != this.__color ||
+            this._alpha != this.__alpha ||
+            this._thickness != this.__thickness) {
+
             this.__thickness = this._thickness;
             this.__color = this._color;
             this.__alpha = this._alpha;
@@ -86,21 +107,20 @@ export class PIXIBrushAdaptor {
 
         var result;
 
-        if(result = (/^rgb\((\d+),(\d+),(\d+)\)$/i).exec(color)) {
-            this._color = this._RGBToNumber(result);
-        }
-
+        //rgb 보다 rgba 문자열을 더 많이 사용하는것 같아 이 조건문을 위로 올림
         if(result = (/^rgba\((\d+),(\d+),(\d+),(\d+(\.?\d*))\)$/i).exec(color)) {
             this._color = this._RGBToNumber(result);
             this._alpha = Number(result[4]);
+            return;
+        }
+
+        if(result = (/^rgb\((\d+),(\d+),(\d+)\)$/i).exec(color)) {
+            this._color = this._RGBToNumber(result);
         }
     }
 
     _RGBToNumber(regexResult:any[]) {
-        var r = regexResult[1];
-        var g = regexResult[2];
-        var b = regexResult[3];
-        return (r << 16) + (g << 8) + Number(b);
+        return Entry.rgb2Number(regexResult[1], regexResult[2], regexResult[3]);
     }
 
 }

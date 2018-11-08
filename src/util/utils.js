@@ -987,6 +987,17 @@ Entry.rgb2hex = function(r, g, b) {
     return '#' + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
 };
 
+/**
+ *
+ * @param {number} r - 0~255 integer
+ * @param {number} g - 0~255 integer
+ * @param {number} b - 0~255 integer
+ * @return {number} 0~0xffffff integer
+ */
+Entry.rgb2Number = function(r, g, b) {
+    return (r << 16) + (g << 8) + Number(b);
+};
+
 /*
  * Generate random rgb color object
  */
@@ -1427,7 +1438,7 @@ Entry.getBrowserType = function() {
 };
 
 Entry.setBasicBrush = function(sprite) {
-    //TODO 박봉배 - brush clone. rgb 파싱 연산 최소화 할 수 있겠음.
+    //TODO [박봉배] brushAdaptor 객체를 계속 생성할 필요가 없으나, 어디에서 동적 속성 할당을 할지 몰라서 못하겠음. (ex: brush.stop)
     var brush = new PIXIBrushAdaptor();
     if (sprite.brush) {
         var parentBrush = sprite.brush;
@@ -1438,13 +1449,13 @@ Entry.setBasicBrush = function(sprite) {
         var rgb = brush.rgb;
         var alpha = 1 - brush.opacity / 100;
         brush.setStrokeStyle(brush.thickness);
-        brush.beginStroke(`rgba(${rgb.r},${rgb.g},${rgb.b},${alpha})`);
+        brush.beginStrokeFast(Entry.rgb2Number(rgb.r, rgb.g, rgb.b), alpha);
     } else {
         brush.thickness = 1;
         brush.rgb = Entry.hex2rgb('#ff0000');
         brush.opacity = 0;
         brush.setStrokeStyle(1);
-        brush.beginStroke('rgba(255,0,0,1)');
+        brush.beginStrokeFast(0xff0000, 1);
     }
 
     brush.entity = sprite;
