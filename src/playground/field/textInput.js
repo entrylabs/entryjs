@@ -1,5 +1,7 @@
 'use strict';
 
+import EntryTool from 'entry-tool';
+
 Entry.FieldTextInput = function(content, blockView, index) {
     this._blockView = blockView;
     this.board = this._blockView.getBoard();
@@ -108,8 +110,39 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
             this._neighborFields = neighborFields;
         }
 
-        const that = this;
+        this.optionGroup = Entry.Dom('div', {
+            class: 'entry-widget-number-pad',
+            parent: $('body'),
+        });
 
+        this.numberWidget = new EntryTool({
+            type: 'numberWidget',
+            data: {
+                positionDom: this.svgGroup,
+                onOutsideClick: () => {
+                    if(this.numberWidget) {
+                        this.numberWidget.hide();
+                        this.isEditing() && this.destroyOption(undefined, true);
+                    }
+                },
+            },
+            container: this.optionGroup[0],
+        }).on('click', (eventName, value) => {
+            switch(eventName) {
+                case 'buttonPressed':
+                    this.applyValue(this.value + value);
+                    break;
+                case 'backButtonPressed':
+                    const nextValue = this.value.substring(0, this.value.length - 1);
+                    this.applyValue(_.isEmpty(nextValue) ? 0 : nextValue);
+                    break;
+            }
+        });
+
+
+        /*
+        TODO inputBox 로직. 분기를 통해 사용예정이므로 일단 살려둠 20181108 leegiwoong 불필요시 제거
+        const that = this;
         const func = function(skipCommand, forceCommand) {
             skipCommand !== true && that.applyValue();
             that.destroyOption(skipCommand, forceCommand === true);
@@ -163,18 +196,17 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
         const optionGroup = this.optionGroup[0];
         optionGroup.setSelectionRange(0, optionGroup.value.length, 'backward');
 
-        this.optionDomCreated();
-
         //normally option group is done editing and destroyed
         //before blur called
         this.optionGroup.one('blur', () => {
             return;
-            this.isEditing() && this.destroyOption(undefined, true);
-        });
+        });*/
+
+        this.optionDomCreated();
     };
 
-    p.applyValue = function() {
-        this.setValue(this.optionGroup.val());
+    p.applyValue = function(value) {
+        this.setValue(value);
         this._setTextValue();
         this.resize();
     };
