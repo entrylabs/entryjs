@@ -2210,9 +2210,11 @@ module.exports = {
                     let [oldWord, newWord] = script.getValues(['OLD_WORD', 'NEW_WORD'], script);
                     oldWord = String(oldWord);
                     newWord = String(newWord);
+
+                    const escapedOldWord = oldWord.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // 괄호 및 regex escape 문자 치환
                     return script
                         .getStringValue('STRING', script)
-                        .replace(new RegExp(oldWord, 'gm'), newWord);
+                        .replace(new RegExp(escapedOldWord, 'gm'), newWord);
                 },
                 syntax: {
                     js: [],

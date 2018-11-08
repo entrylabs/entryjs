@@ -386,6 +386,12 @@ EntryStatic.getAllBlocks = function() {
                 'festival_title',
                 'count_festival',
                 'get_festival_info',
+                'behaviorConductDisaster_title',
+                'count_disaster_behavior',
+                'get_disaster_behavior',
+                'behaviorConductLifeSafety_title',
+                'count_lifeSafety_behavior',
+                'get_lifeSafety_behavior'
             ],
         },
         {
@@ -444,17 +450,20 @@ EntryStatic.getAllBlocks = function() {
                 'arduino_nano_set_servo',
                 'arduino_nano_set_tone',
                 //blacksmith
-                'blacksmith_get_analog_value',
-                'blacksmith_get_analog_mapping',
-                'blacksmith_get_digital_bluetooth',
-                'blacksmith_get_digital_ultrasonic',
-                'blacksmith_get_digital_toggle',
-                'blacksmith_set_digital_toggle',
-                'blacksmith_set_digital_pwm',
-                'blacksmith_set_digital_servo',
-                'blacksmith_set_digital_buzzer',
-                'blacksmith_set_digital_lcd',
-                'blacksmith_set_digital_bluetooth',
+                "blacksmith_get_analog_value",
+                "blacksmith_get_analog_mapping",
+                "blacksmith_get_digital_bluetooth",
+                "blacksmith_get_digital_ultrasonic",
+                "blacksmith_get_digital_toggle",
+                "blacksmith_set_digital_toggle",
+                "blacksmith_set_digital_pwm",
+                "blacksmith_set_digital_rgbled",
+                "blacksmith_set_digital_servo",
+                "blacksmith_set_digital_buzzer",
+                "blacksmith_set_digital_dcmotor",
+                "blacksmith_module_digital_lcd",
+                "blacksmith_module_digital_bluetooth",
+                "blacksmith_module_digital_oled",
                 //joystick
                 'joystick_get_number_sensor_value',
                 'joystick_get_digital_value',
@@ -530,6 +539,24 @@ EntryStatic.getAllBlocks = function() {
                 'neobot_play_note_with_sensor',
                 'neobot_change_color_with_color_picker',
                 'neobot_change_color_with_sensor_value',
+
+                //neobot_robot_theme '18.09.05
+                "neobot_port_value",
+                "neobot_ir_sensor_value",
+                "neobot_light_sensor_value",
+                "neobot_sound_sensor_value",
+                "neobot_motor_type1",
+                "neobot_motor_type2",
+                "neobot_motor_type3",
+                "neobot_motor_stop",
+                "neobot_led_on_type1",
+                "neobot_led_on_type2",
+                "neobot_led_off",
+                "neobot_ir_decision",
+                "neobot_light_decision",
+                "neobot_sound_decision",
+                "neobot_port_decision",
+
                 'bitbrick_sensor_value',
                 'bitbrick_convert_scale',
                 'bitbrick_is_touch_pressed',
@@ -1422,7 +1449,14 @@ EntryStatic.getAllBlocks = function() {
                 'dash_eye',
                 'dash_animation',
                 //endregion dash
-
+		    
+		            //sciencecube start    
+            		"sciencecube_temper",  
+                "sciencecube_voltage",
+                "sciencecube_current",
+                "sciencecube_pressue",
+		            //sciencecube end
+              
                 //Codingmachine Blocks
                 "codingmachine_led",
                 "codingmachine_tune",
