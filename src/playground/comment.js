@@ -9,7 +9,6 @@ Entry.Comment = class Comment {
         parentHeight: 0,
         width: 160,
         height: 160,
-        titleHeight: 22,
         readOnly: false,
         visible: true,
         display: true,
@@ -40,7 +39,7 @@ Entry.Comment = class Comment {
         this.observe(
             this,
             'setPosition',
-            ['x', 'y', 'width', 'height', 'parentWidth', 'parentHeight'],
+            ['x', 'y', 'width', 'height', 'parentWidth', 'parentHeight', 'isOpened'],
             false
         );
     }
@@ -59,6 +58,10 @@ Entry.Comment = class Comment {
 
     get defaultLineLength() {
         return 40;
+    }
+
+    get titleHeight() {
+        return 22;
     }
 
     get scale() {
@@ -81,15 +84,11 @@ Entry.Comment = class Comment {
         return d;
     }
 
+    get titleTextAreaPath() {
+        return `M22,14 H${this.width - 22}`;
+    }
+
     createComment() {
-        let thread = this.block.getThread();
-        while (!(thread.parent instanceof Entry.Code)) {
-            if (thread instanceof Entry.FieldBlock) {
-                thread = thread.getParentThread();
-            } else {
-                thread = thread.parent.getThread();
-            }
-        }
         const { svgGroup, pathGroup } = this.blockView || {};
         this.pathGroup = pathGroup;
         this.parentGroup = svgGroup;
@@ -101,6 +100,9 @@ Entry.Comment = class Comment {
         this.resizeMouseMove = this.resizeMouseMove.bind(this);
         this.resizeMouseUp = this.resizeMouseUp.bind(this);
         this.toggleMouseDown = this.toggleMouseDown.bind(this);
+        this.toggleMouseUp = this.toggleMouseUp.bind(this);
+
+        this._block = null;
     }
 
     startRender() {
@@ -112,14 +114,19 @@ Entry.Comment = class Comment {
             this._comment = this._contentGroup.elem('rect');
             this._path = this._contentGroup.elem('defs').elem('path');
             this._text = this._contentGroup.elem('text');
-            this._textpath = this._text.elem('textPath');
+            this._textPath = this._text.elem('textPath');
             this._resizeArea = this._contentGroup.elem('rect');
             this._resizeArrow = this._contentGroup.elem('image');
 
+            this._title = this.svgGroup.elem('rect');
             this._titleGroup = this.svgGroup.elem('g');
-            this._title = this._titleGroup.elem('rect');
-            this._toggleArea = this._titleGroup.elem('rect');
             this._toggleArrow = this._titleGroup.elem('image');
+            this._titlePath = this._titleGroup.elem('defs').elem('path');
+            this._titleText = this._titleGroup.elem('text');
+            this._titleTextPath = this._titleText.elem('textPath');
+
+            this._commentIcon = this.svgGroup.elem('image');
+            this._toggleArea = this.svgGroup.elem('rect');
 
             this.canRender = true;
             this.setFrame();
@@ -162,19 +169,33 @@ Entry.Comment = class Comment {
         });
 
         this._path.attr({
-            id: `${this.id}`,
-            stroke: 'red',
+            id: `${this.id}c`,
+        });
+
+        this._titlePath.attr({
+            id: `${this.id}t`,
         });
 
         this._text.attr({
             'font-size': 10,
         });
 
-        this._textpath.attr({
-            href: `#${this.id}`,
+        this._titleText.attr({
+            'font-size': 10,
+            fill: 'white',
+            'font-weight': 'bold',
+            class: 'invisible',
         });
 
-        this._textpath.textContent =
+        this._textPath.attr({
+            href: `#${this.id}c`,
+        });
+
+        this._titleTextPath.attr({
+            href: `#${this.id}t`,
+        });
+
+        this._textPath.textContent =
             '메모입니다. 메모입니다.메모입니다.메모입니다.메모입니다.메모입니다메모입니다.' +
             '메모입니다.메모입니다.메모입니다.메모입니다.메모입니다.메모입니다. 메모입니다.' +
             '메모입니다.메모입니다.메모입니다.메모입니다.';
@@ -201,6 +222,16 @@ Entry.Comment = class Comment {
         this._toggleArrow.attr({
             href: `${path}toggle_open_arrow.svg`,
         });
+
+        this._commentIcon.attr({
+            href: `${path}comment_icon.svg`,
+        });
+
+        if (!this.block) {
+            this._line.attr({
+                class: 'invisible',
+            });
+        }
     }
 
     setPosition() {
@@ -208,12 +239,18 @@ Entry.Comment = class Comment {
             return;
         }
         const { x, y } = this;
-        const width = Math.max(this.width, 100);
+        let width = Math.max(this.width, 100);
+        let rx = 4;
         const height = Math.max(this.height, 100);
+        if (!this.isOpened && this.block) {
+            width = 22;
+            rx = 11;
+        }
 
         this._title.attr({
             x,
             y,
+            rx,
             width,
             height: this.titleHeight,
         });
@@ -237,6 +274,11 @@ Entry.Comment = class Comment {
             d: this.textAreaPath,
         });
 
+        this._titlePath.attr({
+            transform: `translate(${x}, ${y})`,
+            d: this.titleTextAreaPath,
+        });
+
         this._resizeArea.attr({
             x: x + width - 20,
             y: y + height - 20,
@@ -256,6 +298,11 @@ Entry.Comment = class Comment {
         this._toggleArrow.attr({
             x: x + width - 16,
             y: y + 8,
+        });
+
+        this._commentIcon.attr({
+            x: x + 5,
+            y: y + 5,
         });
     }
 
@@ -349,8 +396,6 @@ Entry.Comment = class Comment {
         e.preventDefault();
         e.stopPropagation();
 
-        this.isEditing && this.destroyTextArea();
-
         if (
             (e.button === 0 || (e.originalEvent && e.originalEvent.touches)) &&
             !this._board.readOnly
@@ -364,40 +409,48 @@ Entry.Comment = class Comment {
     mouseMove(e) {
         e.preventDefault();
         e.stopPropagation();
-        this.isEditing = false;
         const mouseEvent = Entry.Utils.convertMouseEvent(e);
         if (
             this.dragMode === Entry.DRAG_MODE_DRAG ||
             this.getMouseMoveDiff(mouseEvent) > Entry.BlockView.DRAG_RADIUS
         ) {
+            if (this.isEditing) {
+                this.destroyTextArea();
+            }
             this.set({ visible: false });
             const workspaceMode = this.board.workspace.getMode();
 
-            const dragInstance = this.dragInstance;
-            const scale = this.scale;
             if (this.dragMode !== Entry.DRAG_MODE_DRAG) {
                 this.dragMode = Entry.DRAG_MODE_DRAG;
                 Entry.GlobalSvg.setComment(this, workspaceMode);
             }
             this.moveBy(
-                (mouseEvent.pageX - dragInstance.offsetX) / scale,
-                (mouseEvent.pageY - dragInstance.offsetY) / scale
+                (mouseEvent.pageX - this.dragInstance.offsetX) / this.scale,
+                (mouseEvent.pageY - this.dragInstance.offsetY) / this.scale
             );
 
-            dragInstance.set({
+            this.dragInstance.set({
                 offsetX: mouseEvent.pageX,
                 offsetY: mouseEvent.pageY,
             });
-            Entry.GlobalSvg.commentPosition(dragInstance);
+            Entry.GlobalSvg.commentPosition(this.dragInstance);
         }
     }
 
     mouseUp(e) {
         e.preventDefault();
         e.stopPropagation();
-        if (this.dragMode === Entry.DRAG_MODE_MOUSEDOWN) {
-            this.isEditing ? (this.isEditing = false) : this.renderTextArea();
+
+        if (!this.isEditing && this.isOpened && this.dragMode === Entry.DRAG_MODE_MOUSEDOWN) {
+            this.renderTextArea();
+        } else {
+            this.destroyTextArea();
         }
+        
+        this.removeMoveSetting();
+    }
+
+    removeMoveSetting() {
         Entry.GlobalSvg.remove();
         this.dragMode = Entry.DRAG_MODE_NONE;
         this.board.set({ dragBlock: null });
@@ -462,16 +515,15 @@ Entry.Comment = class Comment {
         this.isEditing = true;
         const { top, left } = this._comment.getBoundingClientRect();
         this.event = Entry.disposeEvent.attach(this, () => {
-            this._textpath.textContent = this.textArea.val();
+            this._textPath.textContent = this.textArea.val();
             this.destroyTextArea();
-            this.isEditing = false;
         });
         this.textArea = Entry.Dom('textarea', {
             class: 'entry-widget-textarea',
             parent: $('body'),
         });
         this.bindDomEventTextArea();
-        this.textArea.val(this._textpath.textContent);
+        this.textArea.val(this._textPath.textContent);
         this.textArea.css({
             left,
             top: this.titleHeight * this.scale + top,
@@ -490,13 +542,11 @@ Entry.Comment = class Comment {
         });
         const exitKeys = [13, 27];
         this.textArea.on('keypress', (e) => {
-            this._textpath.textContent = this.textArea.val();
             if (_.includes(exitKeys, e.keyCode || e.which)) {
                 e.preventDefault();
             }
         });
         this.textArea.on('keyup', (e) => {
-            this._textpath.textContent = this.textArea.val();
             if (_.includes(exitKeys, e.keyCode || e.which)) {
                 this.destroyTextArea();
                 this.isEditing = false;
@@ -509,11 +559,18 @@ Entry.Comment = class Comment {
     }
 
     destroyTextArea() {
+        this.isEditing = false;
+
         this.event && this.event.destroy();
         delete this.event;
 
-        this.textArea && this.textArea.remove();
-        delete this.textArea;
+        if (this.textArea) {
+            const textVal = this.textArea.val();
+            this.textArea.remove();
+            this._textPath.textContent = textVal;
+            this._titleTextPath.textContent = textVal;
+            delete this.textArea;
+        }
 
         Entry.Utils.blur();
     }
@@ -557,26 +614,35 @@ Entry.Comment = class Comment {
         e.preventDefault();
         e.stopPropagation();
 
-        this.dragMode = Entry.DRAG_MODE_NONE;
-
-        const width = Number(this._comment.getAttribute('width'));
-        const height = Number(this._comment.getAttribute('height'));
         this.set({
-            width,
-            height,
+            width: Number(this._comment.getAttribute('width')),
+            height: Number(this._comment.getAttribute('height')),
         });
-        this.removeDomEvent();
-        delete this.mouseDownCoordinate;
-        delete this.dragInstance;
+        
+        this.removeMoveSetting();
     }
 
     toggleMouseDown(e) {
         e.preventDefault();
         e.stopPropagation();
 
-        this.set({
-            isOpened: !this.isOpened,
-        });
+        if (e.button === 0 || (e.originalEvent && e.originalEvent.touches)) {
+            this.setDragInstance(e);
+            this.dragMode = Entry.DRAG_MODE_MOUSEDOWN;
+            this.bindDomEvent(this.mouseMove, this.toggleMouseUp);
+        }
+    }
+
+    toggleMouseUp(e) {
+        e.preventDefault();
+        e.stopPropagation();
+
+        if (this.dragMode === Entry.DRAG_MODE_MOUSEDOWN) {
+            this.set({
+                isOpened: !this.isOpened,
+            });
+        }
+        this.removeMoveSetting();
     }
 
     toggleContent() {
@@ -584,10 +650,17 @@ Entry.Comment = class Comment {
         let fileName;
         if (this.isOpened) {
             this._contentGroup.classList.remove('invisible');
+            this._titleText.classList.add('invisible');
+            this._titleGroup.classList.remove('invisible');
             fileName = 'toggle_open_arrow.svg';
         } else {
+            if (this._block) {
+                this._titleGroup.classList.add('invisible');
+            }
             this._contentGroup.classList.add('invisible');
+            this._titleText.classList.remove('invisible');
             fileName = 'toggle_close_arrow.svg';
+            this.destroyTextArea();
         }
         this._toggleArrow.attr({
             href: path + fileName,
