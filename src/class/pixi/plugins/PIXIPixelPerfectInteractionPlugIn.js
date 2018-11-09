@@ -25,8 +25,10 @@ export class PIXIPixelPerfectInteractionPlugIn {
          */
         p.pixelPerfect = false;
 
-        /** @type {number} not ratio. 16 bit value. */
-        p.pixelPerfectAlpha = 0;
+        /** @type {number} not ratio. 16 bit value.
+         *  [박봉배] - createjs 에서 testAlpha > 1 이면 히트로 처리.
+         */
+        p.pixelPerfectAlpha = 1;
 
         
         p.containsPoint = function(point) //overwrite PIXI.Sprite.containsPoint
