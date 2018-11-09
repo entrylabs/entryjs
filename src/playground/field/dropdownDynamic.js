@@ -30,7 +30,6 @@ Entry.FieldDropdownDynamic = class FieldDropdownDynamic extends Entry.FieldDropd
         this._bgColor = bgColor;
 
         var menuName = this._contents.menuName;
-        console.log('_menuGenerator', menuName);
         if (_.isFunction(menuName)) this._menuGenerator = menuName;
         else this._menuName = menuName;
 

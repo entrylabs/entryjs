@@ -10,7 +10,6 @@ import EntryTool from 'entry-tool';
 Entry.FieldDropdown = class FieldDropdown extends Entry.Field {
     constructor(content, blockView, index, renderMode, i, isDynamic) {
         super();
-        console.log('isDynamic', isDynamic);
         if(isDynamic) {
             return;
         }

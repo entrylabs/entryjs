@@ -1173,6 +1173,10 @@ Entry.Board = class Board {
     }
 
     _rightClick(e) {
+        const { target } = e;
+        if (this.workspace.zoomController.view.contains(target)) {
+            return;
+        }
         const disposeEvent = Entry.disposeEvent;
         disposeEvent && disposeEvent.notify(e);
         if (!this.visible) {
