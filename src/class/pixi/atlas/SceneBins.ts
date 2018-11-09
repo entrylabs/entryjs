@@ -34,16 +34,17 @@ let OP = {
 let TIMEOUT_INTERVAL = 250;
 
 /** base texture max pixel size */
-const BASE_TEX_MAX_SIZE = computeMaxTextureSize();
+const BASE_TEX_MAX_SIZE = computeMaxTextureSize(4096);
 
 /** 텍스쳐의 최대 사이즈. 이미지가 이 크기보다 크면 리사이즈 하여 사용함. */
-const TEX_MAX_SIZE = 2048;
+const TEX_MAX_SIZE = Math.min(BASE_TEX_MAX_SIZE, 2048);
 const TEX_MAX_SIZE_RECT = new ImageRect(0,0,TEX_MAX_SIZE, TEX_MAX_SIZE);
 
+const EXTRUDE_SIZE = 2;
 function newPacker():MaxRectsPacker{
     //https://www.npmjs.com/package/maxrects-packer
-    const PADDING = 1; //텍스쳐 사이의 간격.
-    const BORDER = 1; //베이스 텍스쳐 테두리 간격
+    const PADDING = 6; //텍스쳐 사이의 간격.
+    const BORDER = 2; //베이스 텍스쳐 테두리 간격
     const OPTION = {
         smart: false,
         pot: true,
@@ -158,7 +159,7 @@ export class SceneBins {
             if(!info || !info.isReady ) {
                 return;
             }
-            t.drawImageAtBaseTexture(info);
+            t.drawImageAtBaseTexture(info, EXTRUDE_SIZE);
         });
     }
 
@@ -209,7 +210,7 @@ export class SceneBins {
         if(!base.activated) {
             base.activate(BASE_TEX_MAX_SIZE);
         }
-        t.drawImageAtBaseTexture(info);
+        t.drawImageAtBaseTexture(info, EXTRUDE_SIZE);
         if(forceUpdateBaseTexture) {
             base.update();
         }
@@ -305,11 +306,11 @@ export class SceneBins {
 }
 
 
-function computeMaxTextureSize():number {
+function computeMaxTextureSize(LIMIT:number):number {
     var canvas:HTMLCanvasElement = PIXIHelper.getOffScreenCanvas(true);
     var ctx:WebGLRenderingContext = canvas.getContext("webgl") || canvas.getContext("experimental-webgl");
     var size = ctx ? ctx.getParameter(ctx.MAX_TEXTURE_SIZE) : 2048;
-    size = Math.min(size, 4096);
+    size = Math.min(size, LIMIT);
     console.log("Max texture size : " + size);
     return size;
 

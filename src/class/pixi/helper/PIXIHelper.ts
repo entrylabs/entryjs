@@ -93,6 +93,15 @@ export default class PIXIHelper {
         return new PIXI.Graphics(false);
     }
 
+    static randomRGBAString(alpha:number=0.3):string {
+        var rr = this._rand255;
+        return `rgba(${rr()},${rr()},${rr()},${alpha})`
+    }
+
+    private static _rand255():number {
+        return Math.floor(Math.random()*255);
+    }
+
     /**
      * createjs.DisplayObject#getTransformBound()
      * @param {PIXI.DisplayObject} target

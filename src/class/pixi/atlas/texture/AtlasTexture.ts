@@ -29,35 +29,41 @@ export class AtlasTexture extends PIXI.Texture {
 
     getBaseTexture():AtlasBaseTexture {
         return this.baseTexture as AtlasBaseTexture;
+
     }
 
     /**
-     * @param img
-     * @param extrude - Reduce flickering in some cases where sprites have to be put next to each other in the final program.
+     * @param info
+     * @param extrude - must uint value. Reduce flickering in some cases where sprites have to be put next to each other in the final program.
      * example: https://www.codeandweb.com/texturepacker/documentation/texture-settings
      */
-    drawImageAtBaseTexture(info:AtlasImageLoadingInfo, extrude:boolean = true):void {
+    drawImageAtBaseTexture(info:AtlasImageLoadingInfo, extrude:number):void {
         if(this._isEmptyTexture) return;
         var img = info.source();
         var ctx:CanvasRenderingContext2D = this.getBaseTexture().getCtx();
-        var r = this.orig;
+        var r = this.frame;
         var w = r.width;
         var h = r.height;
         var rx = r.x;
         var ry = r.y;
 
-
+        /* //for debug background
+        ctx.fillStyle = PIXIHelper.randomRGBAString(0.3);
+        ctx.fillRect(rx, ry, w, h);
+        //*/
         ctx.drawImage(img, 0, 0, w, h, rx, ry, w, h);
-
         if(extrude) {
+            ctx.save();
+            ctx.imageSmoothingEnabled = false;
             //top
-            ctx.drawImage(img, 0, 0, w, 1, rx, ry - 1, w, 1);
+            ctx.drawImage(img, 0, 0, w, 1, rx, ry - extrude, w, extrude);
             //down
-            ctx.drawImage(img, 0, h - 1, w, 1, rx, ry + h, w, 1);
+            ctx.drawImage(img, 0, h - 1, w, 1, rx, ry + h, w, extrude);
             //left
-            ctx.drawImage(img, 0, 0, 1, h, rx - 1, ry, 1, h);
+            ctx.drawImage(img, 0, 0, 1, h, rx - extrude, ry, extrude, h);
             //right
-            ctx.drawImage(img, w - 1, 0, 1, h, rx + w, ry, 1, h);
+            ctx.drawImage(img, w - 1, 0, 1, h, rx + w, ry, extrude, h);
+            ctx.restore();
         }
     }
 
