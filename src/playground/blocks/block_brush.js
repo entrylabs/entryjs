@@ -20,7 +20,7 @@ module.exports = {
                 },
                 class: 'stamp',
                 isNotFor: ['textBox'],
-                func: function(sprite, script) {
+                func(sprite, script) {
                     sprite.addStamp();
 
                     return script.callReturn();
@@ -46,7 +46,7 @@ module.exports = {
                 },
                 class: 'brush_control',
                 isNotFor: ['textBox'],
-                func: function(sprite, script) {
+                func(sprite, script) {
                     Entry.setBasicBrush(sprite);
 
                     sprite.brush.moveTo(sprite.getX(), sprite.getY() * -1);
@@ -74,9 +74,10 @@ module.exports = {
                 },
                 class: 'brush_control',
                 isNotFor: ['textBox'],
-                func: function(sprite, script) {
-                    if (sprite.brush && sprite.shapes.length)
+                func(sprite, script) {
+                    if (sprite.brush && sprite.shapes.length) {
                         sprite.brush.stop = true;
+                    }
 
                     return script.callReturn();
                 },
@@ -111,8 +112,8 @@ module.exports = {
                 },
                 class: 'brush_color',
                 isNotFor: ['textBox'],
-                func: function(sprite, script) {
-                    var colour = script.getField('VALUE', script);
+                func(sprite, script) {
+                    const colour = script.getField('VALUE', script);
 
                     if (!sprite.brush || !sprite.shapes.length) {
                         Entry.setBasicBrush(sprite);
@@ -120,19 +121,19 @@ module.exports = {
                     }
 
                     if (sprite.brush) {
-                        var rgb = Entry.hex2rgb(colour);
+                        const rgb = Entry.hex2rgb(colour);
                         sprite.brush.rgb = rgb;
                         sprite.brush.endStroke();
                         sprite.brush.beginStroke(
-                            'rgba(' +
-                                rgb.r +
-                                ',' +
-                                rgb.g +
-                                ',' +
-                                rgb.b +
-                                ',' +
-                                (1 - sprite.brush.opacity / 100) +
-                                ')'
+                            `rgba(${ 
+                                rgb.r 
+                            },${ 
+                                rgb.g 
+                            },${ 
+                                rgb.b 
+                            },${ 
+                                1 - sprite.brush.opacity / 100 
+                            })`
                         );
 
                         sprite.brush.moveTo(sprite.getX(), sprite.getY() * -1);
@@ -177,26 +178,26 @@ module.exports = {
                 },
                 class: 'brush_color',
                 isNotFor: ['textBox'],
-                func: function(sprite, script) {
+                func(sprite, script) {
                     if (!sprite.brush || !sprite.shapes.length) {
                         Entry.setBasicBrush(sprite);
                         sprite.brush.stop = true;
                     }
 
                     if (sprite.brush) {
-                        var rgb = Entry.generateRgb();
+                        const rgb = Entry.generateRgb();
                         sprite.brush.rgb = rgb;
                         sprite.brush.endStroke();
                         sprite.brush.beginStroke(
-                            'rgba(' +
-                                rgb.r +
-                                ',' +
-                                rgb.g +
-                                ',' +
-                                rgb.b +
-                                ',' +
-                                (1 - sprite.brush.opacity / 100) +
-                                ')'
+                            `rgba(${ 
+                                rgb.r 
+                            },${ 
+                                rgb.g 
+                            },${ 
+                                rgb.b 
+                            },${ 
+                                1 - sprite.brush.opacity / 100 
+                            })`
                         );
 
                         sprite.brush.moveTo(sprite.getX(), sprite.getY() * -1);
@@ -247,8 +248,8 @@ module.exports = {
                 },
                 class: 'brush_thickness',
                 isNotFor: ['textBox'],
-                func: function(sprite, script) {
-                    var thickness = script.getNumberValue('VALUE', script);
+                func(sprite, script) {
+                    const thickness = script.getNumberValue('VALUE', script);
 
                     if (!sprite.brush || !sprite.shapes.length) {
                         Entry.setBasicBrush(sprite);
@@ -257,8 +258,9 @@ module.exports = {
 
                     if (sprite.brush) {
                         sprite.brush.thickness += thickness;
-                        if (sprite.brush.thickness < 1)
+                        if (sprite.brush.thickness < 1) {
                             sprite.brush.thickness = 1;
+                        }
 
                         sprite.brush.setStrokeStyle(sprite.brush.thickness);
 
@@ -311,8 +313,8 @@ module.exports = {
                 },
                 class: 'brush_thickness',
                 isNotFor: ['textBox'],
-                func: function(sprite, script) {
-                    var thickness = script.getNumberValue('VALUE', script);
+                func(sprite, script) {
+                    const thickness = script.getNumberValue('VALUE', script);
 
                     if (!sprite.brush || !sprite.shapes.length) {
                         Entry.setBasicBrush(sprite);
@@ -372,8 +374,8 @@ module.exports = {
                 },
                 class: 'brush_opacity',
                 isNotFor: ['textBox'],
-                func: function(sprite, script) {
-                    var opacity = script.getNumberValue('VALUE', script);
+                func(sprite, script) {
+                    let opacity = script.getNumberValue('VALUE', script);
 
                     if (!sprite.brush || !sprite.shapes.length) {
                         Entry.setBasicBrush(sprite);
@@ -388,17 +390,17 @@ module.exports = {
                     if (sprite.brush) {
                         sprite.brush.opacity = opacity;
                         sprite.brush.endStroke();
-                        var rgb = sprite.brush.rgb;
+                        const rgb = sprite.brush.rgb;
                         sprite.brush.beginStroke(
-                            'rgba(' +
-                                rgb.r +
-                                ',' +
-                                rgb.g +
-                                ',' +
-                                rgb.b +
-                                ',' +
-                                (1 - sprite.brush.opacity / 100) +
-                                ')'
+                            `rgba(${ 
+                                rgb.r 
+                            },${ 
+                                rgb.g 
+                            },${ 
+                                rgb.b 
+                            },${ 
+                                1 - sprite.brush.opacity / 100 
+                            })`
                         );
                         sprite.brush.moveTo(sprite.getX(), sprite.getY() * -1);
                     }
@@ -449,8 +451,8 @@ module.exports = {
                 },
                 class: 'brush_opacity',
                 isNotFor: ['textBox'],
-                func: function(sprite, script) {
-                    var opacity = script.getNumberValue('VALUE', script);
+                func(sprite, script) {
+                    const opacity = script.getNumberValue('VALUE', script);
 
                     if (!sprite.brush || !sprite.shapes.length) {
                         Entry.setBasicBrush(sprite);
@@ -464,17 +466,17 @@ module.exports = {
                             100
                         );
                         sprite.brush.endStroke();
-                        var rgb = sprite.brush.rgb;
+                        const rgb = sprite.brush.rgb;
                         sprite.brush.beginStroke(
-                            'rgba(' +
-                                rgb.r +
-                                ',' +
-                                rgb.g +
-                                ',' +
-                                rgb.b +
-                                ',' +
-                                (1 - sprite.brush.opacity / 100) +
-                                ')'
+                            `rgba(${ 
+                                rgb.r 
+                            },${ 
+                                rgb.g 
+                            },${ 
+                                rgb.b 
+                            },${ 
+                                1 - sprite.brush.opacity / 100 
+                            })`
                         );
                         sprite.brush.moveTo(sprite.getX(), sprite.getY() * -1);
                     }
@@ -502,7 +504,7 @@ module.exports = {
                 },
                 class: 'brush_clear',
                 isNotFor: ['textBox'],
-                func: function(sprite, script) {
+                func(sprite, script) {
                     sprite.eraseBrush && sprite.eraseBrush();
 
                     sprite.removeStamps();
@@ -512,5 +514,5 @@ module.exports = {
                 syntax: { js: [], py: ['Entry.clear_drawing()'] },
             },
         };
-    }
-}
+    },
+};

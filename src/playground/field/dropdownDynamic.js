@@ -2,7 +2,7 @@
  */
 'use strict';
 import EntryTool from 'entry-tool';
-
+import _cloneDeep from 'lodash/cloneDeep';
 /*
  *
  */
@@ -18,10 +18,18 @@ Entry.FieldDropdownDynamic = class FieldDropdownDynamic extends Entry.FieldDropd
         this.svgGroup = null;
 
         this._contents = content;
+
+        if (content.needDeepCopy) {
+            this._contents = _cloneDeep(content);
+        }
+
         this._index = index;
 
         let { bgColor, textColor, arrowColor } = content;
-        if (this._block.deletable === Entry.Block.DELETABLE_FALSE_LIGHTEN || this._block.emphasized) {
+        if (
+            this._block.deletable === Entry.Block.DELETABLE_FALSE_LIGHTEN ||
+            this._block.emphasized
+        ) {
             arrowColor = blockView._fillColor;
         }
 
@@ -34,7 +42,6 @@ Entry.FieldDropdownDynamic = class FieldDropdownDynamic extends Entry.FieldDropd
         else this._menuName = menuName;
 
         this._CONTENT_HEIGHT = this.getContentHeight(content.dropdownHeight);
-
         this._font_size = this.getFontSize(content.fontSize);
 
         this._ROUND = content.roundValue || 3;
@@ -47,14 +54,22 @@ Entry.FieldDropdownDynamic = class FieldDropdownDynamic extends Entry.FieldDropd
         ) {
             blockView.getBoard().workspace.changeEvent.attach(this, this._updateValue);
         }
-    };
+        this.optionChangeTriggeredEvent();
+    }
+
+    getIndexValue() {
+        if (this._contents.targetIndex >= 0) {
+            return this._block.data.params[this._contents.targetIndex];
+        }
+        return null;
+    }
 
     _updateValue() {
         var object = this._block.getCode().object;
         var options = [];
         if (Entry.container) {
             if (this._menuName) options = Entry.container.getDropdownList(this._menuName, object);
-            else options = this._menuGenerator();
+            else options = this._menuGenerator(this.getIndexValue());
         }
 
         this._contents.options = options;
@@ -64,7 +79,7 @@ Entry.FieldDropdownDynamic = class FieldDropdownDynamic extends Entry.FieldDropd
 
         this._updateOptions();
         this.setValue(value);
-    };
+    }
 
     renderOptions() {
         this.optionGroup = Entry.Dom('div', {
@@ -85,8 +100,30 @@ Entry.FieldDropdownDynamic = class FieldDropdownDynamic extends Entry.FieldDropd
         }).on('select', (item) => {
             this.applyValue(item[1]);
             this.destroyOption();
+            $(this._blockView.contentSvgGroup).trigger('optionChanged', {
+                block: this._block,
+                value: this.getValue(),
+                index: this._index,
+            });
         });
         this.optionDomCreated();
     }
-}
+
+    optionChangeTriggeredEvent() {
+        console.log('optionChangeTriggeredEvent');
+        const targetIndex = this._contents.targetIndex;
+
+        if (typeof targetIndex === 'undefined') {
+            return;
+        }
+
+        $(this._blockView.contentSvgGroup).on('optionChanged', (e, data) => {
+            if (this._block == data.block && targetIndex == data.index) {
+                let options = this._menuGenerator(data.value);
+                this._contents.options = options;
+                this.applyValue(options[0][1]);
+            }
+        });
+    }
+};
 // Entry.Utils.inherit(Entry.FieldDropdown, Entry.FieldDropdownDynamic);

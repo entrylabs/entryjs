@@ -1,6 +1,6 @@
 'use strict';
 
-var Entry = {};
+const Entry = {};
 
 module.exports = Entry;
 global.Entry = Entry;
@@ -70,6 +70,7 @@ require('./playground/code');
 require('./playground/code_view');
 require('./playground/connection_ripple');
 require('./playground/executors');
+require('./playground/scope');
 require('./playground/globalSvg');
 require('./playground/mutator');
 require('./playground/renderView');

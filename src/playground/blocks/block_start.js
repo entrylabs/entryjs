@@ -24,7 +24,7 @@ module.exports = {
                 },
                 class: 'event',
                 isNotFor: [],
-                func: function(sprite, script) {
+                func(sprite, script) {
                     return script.callReturn();
                 },
                 event: 'start',
@@ -125,7 +125,7 @@ module.exports = {
                 },
                 class: 'event',
                 isNotFor: [],
-                func: function(sprite, script) {
+                func(sprite, script) {
                     return script.callReturn();
                 },
                 event: 'keyPress',
@@ -172,7 +172,7 @@ module.exports = {
                 },
                 class: 'event',
                 isNotFor: [],
-                func: function(sprite, script) {
+                func(sprite, script) {
                     return script.callReturn();
                 },
                 event: 'mouse_clicked',
@@ -209,7 +209,7 @@ module.exports = {
                 },
                 class: 'event',
                 isNotFor: [],
-                func: function(sprite, script) {
+                func(sprite, script) {
                     return script.callReturn();
                 },
                 event: 'mouse_click_cancled',
@@ -246,7 +246,7 @@ module.exports = {
                 },
                 class: 'event',
                 isNotFor: [],
-                func: function(sprite, script) {
+                func(sprite, script) {
                     return script.callReturn();
                 },
                 event: 'when_object_click',
@@ -283,7 +283,7 @@ module.exports = {
                 },
                 class: 'event',
                 isNotFor: [],
-                func: function(sprite, script) {
+                func(sprite, script) {
                     return script.callReturn();
                 },
                 event: 'when_object_click_canceled',
@@ -325,14 +325,18 @@ module.exports = {
                 events: {
                     dataAdd: [
                         function(block) {
-                            var vc = Entry.variableContainer;
-                            if (vc) vc.addRef('_messageRefs', block);
+                            const vc = Entry.variableContainer;
+                            if (vc) {
+                                vc.addRef('_messageRefs', block);
+                            }
                         },
                     ],
                     viewDestroy: [
                         function(block) {
-                            var vc = Entry.variableContainer;
-                            if (vc) vc.removeRef('_messageRefs', block);
+                            const vc = Entry.variableContainer;
+                            if (vc) {
+                                vc.removeRef('_messageRefs', block);
+                            }
                         },
                     ],
                 },
@@ -349,7 +353,7 @@ module.exports = {
                 },
                 class: 'message',
                 isNotFor: ['message'],
-                func: function(sprite, script) {
+                func(sprite, script) {
                     return script.callReturn();
                 },
                 event: 'when_message_cast',
@@ -402,14 +406,18 @@ module.exports = {
                 events: {
                     dataAdd: [
                         function(block) {
-                            var vc = Entry.variableContainer;
-                            if (vc) vc.addRef('_messageRefs', block);
+                            const vc = Entry.variableContainer;
+                            if (vc) {
+                                vc.addRef('_messageRefs', block);
+                            }
                         },
                     ],
                     viewDestroy: [
                         function(block) {
-                            var vc = Entry.variableContainer;
-                            if (vc) vc.removeRef('_messageRefs', block);
+                            const vc = Entry.variableContainer;
+                            if (vc) {
+                                vc.removeRef('_messageRefs', block);
+                            }
                         },
                     ],
                 },
@@ -426,14 +434,15 @@ module.exports = {
                 },
                 class: 'message',
                 isNotFor: ['message'],
-                func: function(sprite, script) {
-                    var value = script.getField('VALUE', script);
+                func(sprite, script) {
+                    const value = script.getField('VALUE', script);
 
-                    var arr = Entry.variableContainer.messages_;
-                    var isExist = Entry.isExist(value, 'id', arr);
+                    const arr = Entry.variableContainer.messages_;
+                    const isExist = Entry.isExist(value, 'id', arr);
 
-                    if (value == 'null' || !isExist)
+                    if (value == 'null' || !isExist) {
                         throw new Error('value can not be null or undefined');
+                    }
 
                     setTimeout(function() {
                         Entry.engine.raiseMessage(value);
@@ -485,14 +494,18 @@ module.exports = {
                 events: {
                     dataAdd: [
                         function(block) {
-                            var vc = Entry.variableContainer;
-                            if (vc) vc.addRef('_messageRefs', block);
+                            const vc = Entry.variableContainer;
+                            if (vc) {
+                                vc.addRef('_messageRefs', block);
+                            }
                         },
                     ],
                     dataDestroy: [
                         function(block) {
-                            var vc = Entry.variableContainer;
-                            if (vc) vc.removeRef('_messageRefs', block);
+                            const vc = Entry.variableContainer;
+                            if (vc) {
+                                vc.removeRef('_messageRefs', block);
+                            }
                         },
                     ],
                 },
@@ -509,14 +522,15 @@ module.exports = {
                 },
                 class: 'message',
                 isNotFor: ['message'],
-                func: function(sprite, script) {
+                func(sprite, script) {
                     if (script.runningScript) {
-                        var runningScript = script.runningScript;
-                        var length = runningScript.length;
-                        for (var i = 0; i < length; i++) {
-                            var executor = runningScript.shift();
-                            if (executor && !executor.isEnd())
+                        const runningScript = script.runningScript;
+                        const length = runningScript.length;
+                        for (let i = 0; i < length; i++) {
+                            const executor = runningScript.shift();
+                            if (executor && !executor.isEnd()) {
                                 runningScript.push(executor);
+                            }
                         }
                         if (runningScript.length) {
                             return script;
@@ -524,19 +538,21 @@ module.exports = {
                             return script.callReturn();
                         }
                     } else {
-                        var value = script.getField('VALUE', script);
-                        var arr = Entry.variableContainer.messages_;
-                        var isExist = Entry.isExist(value, 'id', arr);
-                        if (value == 'null' || !isExist)
+                        const value = script.getField('VALUE', script);
+                        const arr = Entry.variableContainer.messages_;
+                        const isExist = Entry.isExist(value, 'id', arr);
+                        if (value == 'null' || !isExist) {
                             throw new Error(
                                 'value can not be null or undefined'
                             );
-                        var data = Entry.engine.raiseMessage(value);
-                        var runningScript = [];
+                        }
+                        const data = Entry.engine.raiseMessage(value);
+                        let runningScript = [];
                         while (data.length) {
-                            var executor = data.shift();
-                            if (executor)
+                            const executor = data.shift();
+                            if (executor) {
                                 runningScript = runningScript.concat(executor);
+                            }
                         }
 
                         script.runningScript = runningScript;
@@ -586,7 +602,7 @@ module.exports = {
                 },
                 class: 'scene',
                 isNotFor: ['scene'],
-                func: function(sprite, script) {
+                func(sprite, script) {
                     return script.callReturn();
                 },
                 event: 'when_scene_start',
@@ -635,9 +651,9 @@ module.exports = {
                 },
                 class: 'scene',
                 isNotFor: ['scene'],
-                func: function(sprite, script) {
-                    var value = script.getField('VALUE', script);
-                    var scene = Entry.scene.getSceneById(value);
+                func(sprite, script) {
+                    const value = script.getField('VALUE', script);
+                    const scene = Entry.scene.getSceneById(value);
                     if (scene) {
                         Entry.scene.selectScene(scene);
                         Entry.engine.fireEvent('when_scene_start');
@@ -703,14 +719,14 @@ module.exports = {
                 },
                 class: 'scene',
                 isNotFor: ['scene'],
-                func: function(sprite, script) {
-                    var currentScene = Entry.scene.selectedScene;
-                    var scenes = Entry.scene.getScenes();
-                    var index = scenes.indexOf(currentScene);
-                    var o = script.getField('OPERATOR', script);
+                func(sprite, script) {
+                    const currentScene = Entry.scene.selectedScene;
+                    const scenes = Entry.scene.getScenes();
+                    const index = scenes.indexOf(currentScene);
+                    const o = script.getField('OPERATOR', script);
                     if (o == 'next') {
                         if (index + 1 < scenes.length) {
-                            var nextScene = Entry.scene.getSceneById(
+                            const nextScene = Entry.scene.getSceneById(
                                 scenes[index + 1].id
                             );
                             if (nextScene) {
@@ -720,7 +736,7 @@ module.exports = {
                         }
                     } else {
                         if (index > 0) {
-                            var nextScene = Entry.scene.getSceneById(
+                            const nextScene = Entry.scene.getSceneById(
                                 scenes[index - 1].id
                             );
                             if (nextScene) {
@@ -828,17 +844,17 @@ module.exports = {
                 },
                 class: 'checker',
                 isNotFor: ['checker'],
-                func: function(sprite, script) {
-                    var obj = Entry.container.getObject(this.block.params[0]),
-                        flow = this.block.params[1],
-                        propertyKey = this.block.params[2],
-                        rightValue = this.getParam(4);
+                func(sprite, script) {
+                    const obj = Entry.container.getObject(this.block.params[0]);
+                    const flow = this.block.params[1];
+                    let propertyKey = this.block.params[2];
+                    const rightValue = this.getParam(4);
                     propertyKey =
                         propertyKey[0].toUpperCase() + propertyKey.substr(1);
-                    var leftValue = obj.entity['get' + propertyKey].call(
-                            obj.entity
-                        ),
-                        returnVal;
+                    const leftValue = obj.entity[`get${  propertyKey}`].call(
+                        obj.entity
+                    );
+                    let returnVal;
 
                     switch (this.block.params[3]) {
                         case 'EQUAL':
@@ -857,9 +873,13 @@ module.exports = {
                             returnVal = Number(leftValue) <= Number(rightValue);
                             break;
                     }
-                    if (returnVal) return;
-                    else if (flow == 0) return Entry.STATIC.BREAK;
-                    else this.die();
+                    if (returnVal) {
+                        return;
+                    } else if (flow == 0) {
+                        return Entry.STATIC.BREAK;
+                    } else {
+                        this.die();
+                    }
                 },
             },
             check_block_execution: {
@@ -904,7 +924,7 @@ module.exports = {
                 },
                 class: 'checker',
                 isNotFor: ['checker'],
-                func: function(sprite, script) {
+                func(sprite, script) {
                     const { block = {} } = this;
                     const { data = {} } = block;
                     const { id = '' } = data;
@@ -913,25 +933,29 @@ module.exports = {
                             this.entity.listener[id].destroy();
                             delete this.entity.listener[id];
                             return;
-                        } else return Entry.STATIC.BREAK;
+                        } else {
+                            return Entry.STATIC.BREAK;
+                        }
                     }
-                    var code = Entry.container.getObject(this.block.params[0])
-                            .script,
-                        accuracy = this.block.params[1],
-                        statements = this.block.statements[0].getBlocks(),
-                        lastBlock = null;
+                    const code = Entry.container.getObject(this.block.params[0])
+                        .script;
+                    const accuracy = this.block.params[1];
+                    const statements = this.block.statements[0].getBlocks();
+                    let lastBlock = null;
                     this.remainCheck = Number(this.block.params[2]);
-                    var index = 0;
+                    let index = 0;
                     this.entity.listener[id] = code.watchEvent.attach(
                         this,
                         (blocks) => {
                             //dangerous
                             blocks = blocks.concat();
-                            var block,
-                                isFirst = true;
+                            let block;
+                            let isFirst = true;
                             while (blocks.length && index < statements.length) {
                                 block = blocks.shift();
-                                if (isFirst && block === lastBlock) continue;
+                                if (isFirst && block === lastBlock) {
+                                    continue;
+                                }
                                 if (
                                     accuracy === 0 &&
                                     statements[index].type === block.type
@@ -985,8 +1009,8 @@ module.exports = {
                 },
                 class: 'checker',
                 isNotFor: ['checker'],
-                func: function(sprite, script) {
-                    var obj = Entry.container.getObject(this.block.params[0]);
+                func(sprite, script) {
+                    const obj = Entry.container.getObject(this.block.params[0]);
                     this.executor.entity = obj.entity;
                 },
             },
@@ -1012,17 +1036,18 @@ module.exports = {
                 },
                 class: 'checker',
                 isNotFor: ['checker'],
-                func: function(sprite, script) {
+                func(sprite, script) {
                     if (this.isSubmitted) {
                         Entry.removeEventListener('answerSubmitted', checkFunc);
                         return;
-                    } else if (this.isSubmitted === false)
+                    } else if (this.isSubmitted === false) {
                         return Entry.STATIC.BREAK;
-                    var checkFunc = function() {
+                    }
+                    const checkFunc = function() {
                         that.isSubmitted = true;
                     };
                     this.isSubmitted = false;
-                    var that = this;
+                    const that = this;
                     Entry.addEventListener('answerSubmitted', checkFunc);
                     return Entry.STATIC.BREAK;
                 },
@@ -1070,10 +1095,10 @@ module.exports = {
                 },
                 class: 'checker',
                 isNotFor: ['checker'],
-                func: function(sprite, script) {
+                func(sprite, script) {
                     Entry.targetChecker.achieveCheck(
                         this.block.params[1],
-                        this.block.params[0] + ''
+                        `${this.block.params[0]  }`
                     );
                 },
             },
@@ -1098,13 +1123,16 @@ module.exports = {
                 },
                 class: 'checker',
                 isNotFor: ['checker'],
-                func: function(sprite, script) {
-                    var variableName = this.block.params[0] + '';
-                    var variable = Entry.variableContainer.getVariableByName(
+                func(sprite, script) {
+                    const variableName = `${this.block.params[0]  }`;
+                    const variable = Entry.variableContainer.getVariableByName(
                         variableName
                     );
-                    if (variable) return variable.getValue();
-                    else return;
+                    if (variable) {
+                        return variable.getValue();
+                    } else {
+                        return;
+                    }
                 },
             },
             show_prompt: {
@@ -1133,11 +1161,12 @@ module.exports = {
                 },
                 class: 'checker',
                 isNotFor: ['checker'],
-                func: function(sprite, script) {
-                    if (Entry.targetChecker)
+                func(sprite, script) {
+                    if (Entry.targetChecker) {
                         Entry.targetChecker.showStatusMessage(
                             this.block.params[0]
                         );
+                    }
                 },
             },
             check_goal_success: {
@@ -1161,8 +1190,8 @@ module.exports = {
                 },
                 class: 'checker',
                 isNotFor: ['checker'],
-                func: function(sprite, script) {
-                    var goalName = this.block.params[0] + '';
+                func(sprite, script) {
+                    const goalName = `${this.block.params[0]  }`;
                     return Entry.targetChecker.checkGoal(goalName);
                 },
             },
@@ -1183,7 +1212,7 @@ module.exports = {
                 },
                 class: 'checker',
                 isNotFor: ['checker'],
-                func: function(sprite, script) {
+                func(sprite, script) {
                     return 'positive';
                 },
             },
@@ -1204,7 +1233,7 @@ module.exports = {
                 },
                 class: 'checker',
                 isNotFor: ['checker'],
-                func: function(sprite, script) {
+                func(sprite, script) {
                     return 'negative';
                 },
             },
@@ -1225,7 +1254,7 @@ module.exports = {
                 },
                 class: 'checker',
                 isNotFor: ['checker'],
-                func: function(sprite, script) {},
+                func(sprite, script) {},
             },
             wildcard_boolean: {
                 color: '#7C7C7C',
@@ -1242,7 +1271,7 @@ module.exports = {
                 paramsKeyMap: {},
                 class: 'checker',
                 isNotFor: ['checker'],
-                func: function(sprite, script) {},
+                func(sprite, script) {},
             },
             register_score: {
                 color: '#7C7C7C',
@@ -1271,11 +1300,12 @@ module.exports = {
                 },
                 class: 'checker',
                 isNotFor: ['checker'],
-                func: function(sprite, script) {
-                    var obj = {};
+                func(sprite, script) {
+                    const obj = {};
                     obj[this.block.params[0]] = this.block.params[1];
-                    if (typeof entrylms !== 'undefined')
+                    if (typeof entrylms !== 'undefined') {
                         entrylms.emit('registerScore', obj);
+                    }
                     return script.callReturn();
                 },
             },

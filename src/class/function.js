@@ -10,22 +10,24 @@
  */
 Entry.Func = function(func) {
     this.id = func && func.id ? func.id : Entry.generateHash();
-    var content;
+    let content;
     //inspect empty content
-    if (func && func.content && func.content.length > 4) content = func.content;
+    if (func && func.content && func.content.length > 4) {
+        content = func.content;
+    }
     this.content = content
         ? new Entry.Code(content)
         : new Entry.Code([
-              [
-                  {
-                      type: 'function_create',
-                      copyable: false,
-                      deletable: false,
-                      x: 40,
-                      y: 40,
-                  },
-              ],
-          ]);
+            [
+                {
+                    type: 'function_create',
+                    copyable: false,
+                    deletable: false,
+                    x: 40,
+                    y: 40,
+                },
+            ],
+        ]);
     this.block = null;
     this.blockMenuBlock = null;
     this._backupContent = null;
@@ -36,8 +38,8 @@ Entry.Func = function(func) {
     Entry.generateFunctionSchema(this.id);
 
     if (func && func.content) {
-        var blockMap = this.content._blockMap;
-        for (var key in blockMap) {
+        const blockMap = this.content._blockMap;
+        for (const key in blockMap) {
             Entry.Func.registerParamBlock(blockMap[key].type);
         }
         Entry.Func.generateWsBlock(this);
@@ -51,15 +53,19 @@ Entry.Func = function(func) {
 Entry.Func.threads = {};
 
 Entry.Func.registerFunction = function(func) {
-    if (!Entry.playground) return;
-    var workspace = Entry.playground.mainWorkspace;
-    if (!workspace) return;
-    var blockMenu = workspace.getBlockMenu();
-    var menuCode = blockMenu.code;
+    if (!Entry.playground) {
+        return;
+    }
+    const workspace = Entry.playground.mainWorkspace;
+    if (!workspace) {
+        return;
+    }
+    const blockMenu = workspace.getBlockMenu();
+    const menuCode = blockMenu.code;
 
     this._targetFuncBlock = menuCode.createThread([
         {
-            type: 'func_' + func.id,
+            type: `func_${  func.id}`,
             category: 'func',
             x: -9999,
         },
@@ -68,7 +74,7 @@ Entry.Func.registerFunction = function(func) {
 };
 
 Entry.Func.executeFunction = function(threadHash) {
-    var script = this.threads[threadHash];
+    let script = this.threads[threadHash];
     script = Entry.Engine.computeThread(script.entity, script);
     if (script) {
         this.threads[threadHash] = script;
@@ -88,7 +94,9 @@ Entry.Func.prototype.destroy = function() {
 };
 
 Entry.Func.edit = function(func) {
-    if (!func) return;
+    if (!func) {
+        return;
+    }
 
     if (typeof func === 'string') {
         func = Entry.variableContainer.getFunction(
@@ -102,15 +110,18 @@ Entry.Func.edit = function(func) {
     this.cancelEdit();
 
     this.targetFunc = func;
-    if (this.initEditView(func.content) === false) return; // edit fail
+    if (this.initEditView(func.content) === false) {
+        return;
+    } // edit fail
     Entry.Func.isEdit = true;
     this.bindFuncChangeEvent(func);
     this.updateMenu();
     setTimeout(
         function() {
-            var schema = Entry.block['func_' + func.id];
-            if (schema && schema.paramsBackupEvent)
+            const schema = Entry.block[`func_${  func.id}`];
+            if (schema && schema.paramsBackupEvent) {
                 schema.paramsBackupEvent.notify();
+            }
 
             this._backupContent = func.content.stringify();
         }.bind(this),
@@ -122,7 +133,7 @@ Entry.Func.initEditView = function(content) {
     if (!this.menuCode) {
         this.setupMenuCode();
     }
-    var workspace = Entry.getMainWS();
+    const workspace = Entry.getMainWS();
     if (workspace.setMode(Entry.Workspace.MODE_OVERLAYBOARD) === false) {
         this.endEdit('cancelEdit');
         return false;
@@ -144,10 +155,11 @@ Entry.Func.initEditView = function(content) {
 Entry.Func.endEdit = function(message) {
     this.unbindFuncChangeEvent();
     this.unbindWorkspaceStateChangeEvent();
-    var targetFuncId = this.targetFunc.id;
+    const targetFuncId = this.targetFunc.id;
 
-    if (this.targetFunc && this.targetFunc.content)
+    if (this.targetFunc && this.targetFunc.content) {
         this.targetFunc.content.destroyView();
+    }
 
     switch (message) {
         case 'save':
@@ -161,9 +173,10 @@ Entry.Func.endEdit = function(message) {
     this._backupContent = null;
 
     delete this.targetFunc;
-    var blockSchema = Entry.block['func_' + targetFuncId];
-    if (blockSchema && blockSchema.destroyParamsBackupEvent)
+    const blockSchema = Entry.block[`func_${  targetFuncId}`];
+    if (blockSchema && blockSchema.destroyParamsBackupEvent) {
         blockSchema.destroyParamsBackupEvent.notify();
+    }
     this.updateMenu();
     Entry.Func.isEdit = false;
 };
@@ -172,9 +185,9 @@ Entry.Func.save = function() {
     this.targetFunc.generateBlock(true);
     Entry.variableContainer.saveFunction(this.targetFunc);
 
-    var ws = Entry.getMainWS();
-    if (ws && ws.overlayModefrom == Entry.Workspace.MODE_VIMBOARD) {
-        var mode = {};
+    const ws = Entry.getMainWS();
+    if (ws && ws.overlayModefrom === Entry.Workspace.MODE_VIMBOARD) {
+        const mode = {};
         mode.boardType = Entry.Workspace.MODE_VIMBOARD;
         mode.textType = Entry.Vim.TEXT_TYPE_PY;
         mode.runType = Entry.Vim.WORKSPACE_MODE;
@@ -184,7 +197,9 @@ Entry.Func.save = function() {
 };
 
 Entry.Func.cancelEdit = function() {
-    if (!this.targetFunc) return;
+    if (!this.targetFunc) {
+        return;
+    }
 
     if (!this.targetFunc.block) {
         this._targetFuncBlock.destroy();
@@ -199,9 +214,9 @@ Entry.Func.cancelEdit = function() {
     }
     Entry.variableContainer.updateList();
 
-    var ws = Entry.getMainWS();
-    if (ws && ws.overlayModefrom == Entry.Workspace.MODE_VIMBOARD) {
-        var mode = {};
+    const ws = Entry.getMainWS();
+    if (ws && ws.overlayModefrom === Entry.Workspace.MODE_VIMBOARD) {
+        const mode = {};
         mode.boardType = Entry.Workspace.MODE_VIMBOARD;
         mode.textType = Entry.Vim.TEXT_TYPE_PY;
         mode.runType = Entry.Vim.WORKSPACE_MODE;
@@ -211,11 +226,13 @@ Entry.Func.cancelEdit = function() {
 };
 
 Entry.Func.setupMenuCode = function() {
-    var workspace = Entry.playground.mainWorkspace;
-    if (!workspace) return;
-    var blockMenu = workspace.getBlockMenu();
-    var menuCode = blockMenu.code;
-    var CATEGORY = 'func';
+    const workspace = Entry.playground.mainWorkspace;
+    if (!workspace) {
+        return;
+    }
+    const blockMenu = workspace.getBlockMenu();
+    const menuCode = blockMenu.code;
+    const CATEGORY = 'func';
     this._fieldLabel = menuCode
         .createThread([
             {
@@ -256,15 +273,19 @@ Entry.Func.setupMenuCode = function() {
 };
 
 Entry.Func.refreshMenuCode = function() {
-    if (!Entry.playground.mainWorkspace) return;
-    if (!this.menuCode) this.setupMenuCode();
+    if (!Entry.playground.mainWorkspace) {
+        return;
+    }
+    if (!this.menuCode) {
+        this.setupMenuCode();
+    }
 
     this._fieldString.params[0].changeType(this.requestParamBlock('string'));
     this._fieldBoolean.params[0].changeType(this.requestParamBlock('boolean'));
 };
 
-Entry.Func.requestParamBlock = function(type) {
-    var blockPrototype;
+Entry.Func.requestParamBlock = function (type) {
+    let blockPrototype;
     switch (type) {
         case 'string':
             blockPrototype = Entry.block.function_param_string;
@@ -276,9 +297,7 @@ Entry.Func.requestParamBlock = function(type) {
             return null;
     }
 
-    console.log(blockPrototype);
-
-    var blockType = type + 'Param_' + Entry.generateHash();
+    const blockType = `${type}Param_${Entry.generateHash()}`;
     Entry.block[blockType] = Entry.Func.createParamBlock(
         blockType,
         blockPrototype,
@@ -288,16 +307,21 @@ Entry.Func.requestParamBlock = function(type) {
 };
 
 Entry.Func.registerParamBlock = function(type) {
-    if (!type) return;
+    if (!type) {
+        return;
+    }
 
-    var blockPrototype;
-    if (type.indexOf('stringParam') > -1)
+    let blockPrototype;
+    if (type.indexOf('stringParam') > -1) {
         blockPrototype = Entry.block.function_param_string;
-    else if (type.indexOf('booleanParam') > -1)
+    } else if (type.indexOf('booleanParam') > -1) {
         blockPrototype = Entry.block.function_param_boolean;
+    }
 
     //not a function param block
-    if (!blockPrototype) return;
+    if (!blockPrototype) {
+        return;
+    }
 
     Entry.Func.createParamBlock(type, blockPrototype, type);
 };
@@ -306,7 +330,7 @@ Entry.Func.createParamBlock = function(type, blockPrototype, originalType) {
     originalType = /string/gi.test(originalType)
         ? 'function_param_string'
         : 'function_param_boolean';
-    var blockSchema = function() {};
+    let blockSchema = function() {};
     blockSchema.prototype = blockPrototype;
     blockSchema = new blockSchema();
     blockSchema.changeEvent = new Entry.Event();
@@ -318,9 +342,11 @@ Entry.Func.createParamBlock = function(type, blockPrototype, originalType) {
 };
 
 Entry.Func.updateMenu = function() {
-    var workspace = Entry.getMainWS();
-    if (!workspace) return;
-    var blockMenu = workspace.getBlockMenu();
+    const workspace = Entry.getMainWS();
+    if (!workspace) {
+        return;
+    }
+    const blockMenu = workspace.getBlockMenu();
     if (this.targetFunc) {
         !this.menuCode && this.setupMenuCode();
         blockMenu.banClass('functionInit', true);
@@ -333,31 +359,34 @@ Entry.Func.updateMenu = function() {
 };
 
 Entry.Func.prototype.edit = function() {
-    if (Entry.Func.isEdit) return;
+    if (Entry.Func.isEdit) {
+        return;
+    }
     Entry.Func.isEdit = true;
-    if (!Entry.Func.svg) Entry.Func.initEditView();
-    else {
+    if (!Entry.Func.svg) {
+        Entry.Func.initEditView();
+    } else {
         this.parentView.appendChild(this.svg);
     }
 };
 
 Entry.Func.generateBlock = function(func) {
-    var blockSchema = Entry.block['func_' + func.id];
-    var block = {
+    const blockSchema = Entry.block[`func_${  func.id}`];
+    const block = {
         template: blockSchema.template,
         params: blockSchema.params,
     };
 
-    var reg = /(%\d)/im;
-    var templateParams = blockSchema.template.split(reg);
-    var description = '';
-    var booleanIndex = 0;
-    var stringIndex = 0;
-    for (var i in templateParams) {
-        var templateChunk = templateParams[i];
+    const reg = /(%\d)/im;
+    const templateParams = blockSchema.template.split(reg);
+    let description = '';
+    let booleanIndex = 0;
+    let stringIndex = 0;
+    for (const i in templateParams) {
+        const templateChunk = templateParams[i];
         if (reg.test(templateChunk)) {
-            var paramIndex = Number(templateChunk.split('%')[1]) - 1;
-            var param = blockSchema.params[paramIndex];
+            const paramIndex = Number(templateChunk.split('%')[1]) - 1;
+            const param = blockSchema.params[paramIndex];
             if (param.type === 'Indicator') {
             } else if (param.accept === 'boolean') {
                 description +=
@@ -375,11 +404,11 @@ Entry.Func.generateBlock = function(func) {
         }
     }
 
-    return { block: block, description: description };
+    return { block, description };
 };
 
 Entry.Func.prototype.generateBlock = function(toSave) {
-    var generatedInfo = Entry.Func.generateBlock(this);
+    const generatedInfo = Entry.Func.generateBlock(this);
     this.block = generatedInfo.block;
     this.description = generatedInfo.description;
 };
@@ -387,32 +416,34 @@ Entry.Func.prototype.generateBlock = function(toSave) {
 Entry.Func.generateWsBlock = function(targetFunc, isRestore) {
     this.unbindFuncChangeEvent();
     targetFunc = targetFunc ? targetFunc : this.targetFunc;
-    var defBlock = targetFunc.content.getEventMap('funcDef')[0];
+    const defBlock = targetFunc.content.getEventMap('funcDef')[0];
 
-    if (!defBlock) return;
+    if (!defBlock) {
+        return;
+    }
 
-    var outputBlock = defBlock.params[0];
-    var booleanIndex = 0;
-    var stringIndex = 0;
-    var schemaParams = [];
-    var schemaTemplate = '';
-    var hashMap = targetFunc.hashMap;
-    var paramMap = targetFunc.paramMap;
-    var blockIds = [];
+    let outputBlock = defBlock.params[0];
+    let booleanIndex = 0;
+    let stringIndex = 0;
+    const schemaParams = [];
+    let schemaTemplate = '';
+    const hashMap = targetFunc.hashMap;
+    const paramMap = targetFunc.paramMap;
+    const blockIds = [];
 
     while (outputBlock) {
-        var value = outputBlock.params[0];
-        var valueType = value.type;
+        const value = outputBlock.params[0];
+        const valueType = value.type;
         switch (outputBlock.type) {
             case 'function_field_label':
-                schemaTemplate = schemaTemplate + ' ' + value;
+                schemaTemplate = `${schemaTemplate  } ${  value}`;
                 break;
             case 'function_field_boolean':
                 Entry.Mutator.mutate(valueType, {
                     template:
-                        Lang.Blocks.FUNCTION_logical_variable +
-                        ' ' +
-                        (booleanIndex + 1),
+                        `${Lang.Blocks.FUNCTION_logical_variable 
+                        } ${ 
+                            booleanIndex + 1}`,
                 });
                 hashMap[valueType] = false;
                 paramMap[valueType] = booleanIndex + stringIndex;
@@ -421,20 +452,20 @@ Entry.Func.generateWsBlock = function(targetFunc, isRestore) {
                     type: 'Block',
                     accept: 'boolean',
                 });
-                schemaTemplate += ' %' + (booleanIndex + stringIndex);
+                schemaTemplate += ` %${  booleanIndex + stringIndex}`;
                 blockIds.push(outputBlock.id);
                 break;
             case 'function_field_string':
                 Entry.Mutator.mutate(valueType, {
                     template:
-                        Lang.Blocks.FUNCTION_character_variable +
-                        ' ' +
-                        (stringIndex + 1),
+                        `${Lang.Blocks.FUNCTION_character_variable 
+                        } ${ 
+                            stringIndex + 1}`,
                 });
                 hashMap[valueType] = false;
                 paramMap[valueType] = booleanIndex + stringIndex;
                 stringIndex++;
-                schemaTemplate += ' %' + (booleanIndex + stringIndex);
+                schemaTemplate += ` %${  booleanIndex + stringIndex}`;
                 schemaParams.push({
                     type: 'Block',
                     accept: 'string',
@@ -445,41 +476,44 @@ Entry.Func.generateWsBlock = function(targetFunc, isRestore) {
         outputBlock = outputBlock.getOutputBlock();
     }
 
-    schemaTemplate += ' %' + (booleanIndex + stringIndex + 1);
+    schemaTemplate += ` %${  booleanIndex + stringIndex + 1}`;
     schemaParams.push({
         type: 'Indicator',
         img: 'block_icon/function_03.png',
         size: 12,
     });
 
-    var funcName = 'func_' + targetFunc.id;
-    var block = Entry.block[funcName];
+    const funcName = `func_${  targetFunc.id}`;
+    const block = Entry.block[funcName];
 
-    var originParams = block.params.slice(0, block.params.length - 1);
-    var newParams = schemaParams.slice(0, schemaParams.length - 1);
-    var originParamsLength = originParams.length;
-    var newParamsLength = newParams.length;
+    const originParams = block.params.slice(0, block.params.length - 1);
+    const newParams = schemaParams.slice(0, schemaParams.length - 1);
+    const originParamsLength = originParams.length;
+    const newParamsLength = newParams.length;
 
-    var changeData = {};
+    let changeData = {};
 
     if (newParamsLength > originParamsLength) {
-        var outputBlockIds = targetFunc.outputBlockIds;
+        const outputBlockIds = targetFunc.outputBlockIds;
         if (outputBlockIds) {
-            var startPos = 0;
-            while (outputBlockIds[startPos] === blockIds[startPos]) startPos++;
+            let startPos = 0;
+            while (outputBlockIds[startPos] === blockIds[startPos]) {
+                startPos++;
+            }
 
-            var endPos = 0;
+            let endPos = 0;
             while (
                 outputBlockIds[outputBlockIds.length - endPos - 1] ===
                 blockIds[blockIds.length - endPos - 1]
-            )
+            ) {
                 endPos++;
+            }
 
             endPos = blockIds.length - endPos - 1;
             changeData = {
                 type: 'insert',
-                startPos: startPos,
-                endPos: endPos,
+                startPos,
+                endPos,
             };
         }
     } else if (newParamsLength < originParamsLength) {
@@ -487,7 +521,9 @@ Entry.Func.generateWsBlock = function(targetFunc, isRestore) {
             type: 'cut',
             pos: newParamsLength,
         };
-    } else changeData = { type: 'noChange' };
+    } else {
+        changeData = { type: 'noChange' };
+    }
 
     changeData.isRestore = isRestore;
 
@@ -502,15 +538,17 @@ Entry.Func.generateWsBlock = function(targetFunc, isRestore) {
         changeData
     );
 
-    for (var key in hashMap) {
-        var state = hashMap[key];
+    for (const key in hashMap) {
+        const state = hashMap[key];
         if (state) {
-            var text = /string/.test(key)
+            const text = /string/.test(key)
                 ? Lang.Blocks.FUNCTION_character_variable
                 : Lang.Blocks.FUNCTION_logical_variable;
 
             Entry.Mutator.mutate(key, { template: text });
-        } else hashMap[key] = true;
+        } else {
+            hashMap[key] = true;
+        }
     }
 
     this.bindFuncChangeEvent(targetFunc);
@@ -521,21 +559,26 @@ Entry.Func.bindFuncChangeEvent = function(targetFunc) {
     if (
         !this._funcChangeEvent &&
         targetFunc.content.getEventMap('funcDef')[0].view
-    )
+    ) {
         this._funcChangeEvent = targetFunc.content
             .getEventMap('funcDef')[0]
             .view._contents[1].changeEvent.attach(this, this.generateWsBlock);
+    }
 };
 
 Entry.Func.unbindFuncChangeEvent = function() {
-    if (!this._funcChangeEvent) return;
+    if (!this._funcChangeEvent) {
+        return;
+    }
     this._funcChangeEvent.destroy();
     delete this._funcChangeEvent;
 };
 
 Entry.Func.unbindWorkspaceStateChangeEvent = function() {
-    var event = this._workspaceStateEvent;
-    if (!event) return;
+    const event = this._workspaceStateEvent;
+    if (!event) {
+        return;
+    }
 
     event.destroy();
     delete this._workspaceStateEvent;

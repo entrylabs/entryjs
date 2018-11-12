@@ -135,7 +135,8 @@ Entry.hummingbird.getBlocks = function() {
             func: function(sprite, script) {
                 var pd = Entry.hw.portData;
                 var dev = script.getField('DEVICE');
-                var temperature_value = Math.round(pd[dev] * 100 / 2048);
+                var rawData = (pd[dev] >> 2) & 0xff;
+                var temperature_value = Math.floor(((rawData - 127) / 2.4 + 25) * 100 / 100);
                 return temperature_value;
             },
             syntax: { js: [], py: [] },
@@ -215,33 +216,27 @@ Entry.hummingbird.getBlocks = function() {
                 var pd = Entry.hw.portData;
                 var dev = script.getField('DEVICE');
 
-                var distance_value = 0;
-                var flipped = 1000 - pd[dev];
-                if (flipped < 180) distance_value = 0;
-                else if (flipped >= 180 && flipped < 280)
-                    distance_value = (flipped - 180) * 4 / 100 + 5;
-                else if (flipped >= 280 && flipped < 400)
-                    distance_value = (flipped - 280) * 3 / 120 + 9;
-                else if (flipped >= 400 && flipped < 500)
-                    distance_value = (flipped - 400) * 3 / 100 + 11;
-                else if (flipped >= 500 && flipped < 580)
-                    distance_value = (flipped - 500) * 3 / 80 + 14;
-                else if (flipped >= 580 && flipped < 620)
-                    distance_value = (flipped - 580) * 2 / 40 + 17;
-                else if (flipped >= 620 && flipped < 660)
-                    distance_value = (flipped - 620) * 4 / 40 + 19;
-                else if (flipped >= 660 && flipped < 700)
-                    distance_value = (flipped - 660) * 4 / 40 + 23;
-                else if (flipped >= 700 && flipped < 740)
-                    distance_value = (flipped - 700) * 6 / 40 + 27;
-                else if (flipped >= 740 && flipped < 780)
-                    distance_value = (flipped - 740) * 7 / 40 + 33;
-                else if (flipped >= 780 && flipped < 820)
-                    distance_value = (flipped - 780) * 15 / 40 + 41;
-                else if (flipped >= 820 && flipped < 860)
-                    distance_value = (flipped - 820) * 11 / 40 + 56;
-                else distance_value = 100;
-                return distance_value.toFixed(0);
+                var distance = 0;
+                var reading = ((pd[dev] >> 2) & 0xff) * 4;
+                if (reading < 130) {
+                    distance = 100.0;
+                }
+                else {
+                    reading = reading - 120;
+                    if (reading > 680) {
+                        distance = 5.0;
+                    }
+                    else {
+                        var sensor_val_square = reading * reading;
+                        distance = sensor_val_square*sensor_val_square*reading*-0.000000000004789
+				               + sensor_val_square*sensor_val_square*0.000000010057143
+				               - sensor_val_square*reading*0.000008279033021 
+				               + sensor_val_square*0.003416264518201 
+				               - reading*0.756893112198934 
+				               + 90.707167605683000;
+                    }
+                }
+                return Math.floor(distance);
             },
             syntax: { js: [], py: [] },
         },
@@ -280,11 +275,14 @@ Entry.hummingbird.getBlocks = function() {
             func: function(sprite, script) {
                 var pd = Entry.hw.portData;
                 var dev = script.getField('DEVICE');
-                var sound_value = pd[dev];
-                if (sound_value <= 35) sound_value = 1;
-                sound_value = Math.round(sound_value * 100 / 330);
-                if (sound_value > 100) sound_value = 100;
-                return sound_value;
+                var sound_value = (pd[dev] >> 2) & 0xff;
+
+                if (sound_value > 14) {
+                    return Math.round((sound_value - 15) * 3 / 2);
+                }
+                else {
+                    return 0;
+                }
             },
             syntax: { js: [], py: [] },
         },

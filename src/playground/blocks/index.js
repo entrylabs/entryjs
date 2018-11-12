@@ -40,6 +40,7 @@ require('./block_mechatronics_4d');
 require('./block_modi');
 require('./block_neobot');
 require('./block_neobot_sensor_theme');
+require('./block_neobot_robot_theme');
 require('./block_roborobo');
 require('./block_robotis');
 require('./block_robotori');
@@ -53,6 +54,9 @@ require('./block_funboard');
 require('./block_microbit');
 require('./block_mrt');
 require('./block_dash');
+require('./block_bingles');
+require('./block_sciencecube');
+require('./block_codingmachine');
 
 Entry.HARDWARE_LIST = {
     '1.1': Entry.Arduino,
@@ -76,6 +80,7 @@ Entry.HARDWARE_LIST = {
     '4.2': Entry.Arduino,
     '5.1': Entry.Neobot,
     '5.2': Entry.NeobotSensorTheme,
+    '5.3': Entry.NeobotRobotTheme,
     '6.1': Entry.mkboard,
     '6.2': Entry.memaker,
     '7.1': Entry.Robotis_carCont,
@@ -113,6 +118,9 @@ Entry.HARDWARE_LIST = {
     '22.1': Entry.Microbit,
     '23.1': Entry.MRT,
     '24.1': Entry.Dash,
+    '1.D': Entry.BINGLES,
+    '25.1': Entry.sciencecube,
+    '26.1': Entry.Codingmachine,
 };
 
 const startBlock = require('./block_start');
@@ -127,10 +135,19 @@ const calcBlock = require('./block_calc');
 const variableBlock = require('./block_variable');
 const funcBlock = require('./block_func');
 
-require('./block_expansion_weather');
 Entry.EXPANSION_BLOCK = {};
+require('./block_expansion_weather');
+require('./block_expansion_festival');
+require('./block_expansion_translate');
+require('./block_expansion_behaviorconduct_disaster');
+require('./block_expansion_behaviorconduct_lifesafety');
+
 Entry.EXPANSION_BLOCK_LIST = {
-    'weather' : Entry.Expansion_Weather
+    weather: Entry.Expansion_Weather,
+    festival: Entry.EXPANSION_BLOCK.festival,
+    translate : Entry.EXPANSION_BLOCK.translate,
+    behaviorConductDisaster : Entry.EXPANSION_BLOCK.behaviorConductDisaster,
+    behaviorConductLifeSafety : Entry.EXPANSION_BLOCK.behaviorConductLifeSafety
 };
 
 function getBlockObject(items) {
