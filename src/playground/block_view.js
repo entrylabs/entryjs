@@ -1,5 +1,11 @@
 'use strict';
 
+/*
+ *
+ */
+import _hasIn from 'lodash/hasIn';
+import _get from 'lodash/get';
+
 Entry.BlockView = function(block, board, mode) {
     const that = this;
     Entry.Model(this, false);
@@ -1056,23 +1062,23 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
 
     p._setMovable = function() {
         this.movable =
-            this.block.isMovable() || this._skeleton.movable !== undefined
-                ? this._skeleton.movable
-                : true;
+            this.block.isMovable() !== null
+                ? this.block.isMovable()
+                : this._skeleton.movable !== undefined ? this._skeleton.movable : true;
     };
 
     p._setReadOnly = function() {
         this.readOnly =
-            this.block.isReadOnly() || this._skeleton.readOnly !== undefined
-                ? this._skeleton.readOnly
-                : false;
+            this.block.isReadOnly() !== null
+                ? this.block.isReadOnly()
+                : this._skeleton.readOnly !== undefined ? this._skeleton.readOnly : false;
     };
 
     p._setCopyable = function() {
         this.copyable =
-            this.block.isCopyable() || this._skeleton.copyable !== undefined
-                ? this._skeleton.copyable
-                : true;
+            this.block.isCopyable() !== null
+                ? this.block.isCopyable()
+                : this._skeleton.copyable !== undefined ? this._skeleton.copyable : true;
     };
 
     p.bumpAway = function(distance = 15, delay) {
@@ -1220,12 +1226,14 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
 
         this._updateContents(true);
 
-        (this.block.statements || []).forEach(({ view }) => {
-            return view.reDraw();
+        //해당 블럭이 가진 파라미터가 다른 블럭인 경우 재귀로 동작. indicator(undefined), string 은 제외
+        (this.block.data.params || []).forEach((param) => {
+            if (_get(param, 'data.view')) {
+                param.data.view.reDraw();
+            }
         });
-        (this._extensions || []).forEach((ext) => {
-            return _.result(ext, 'updatePos');
-        });
+        (this.block.statements || []).forEach(({ view }) => view.reDraw());
+        (this._extensions || []).forEach((ext) => _.result(ext, 'updatePos'));
     };
 
     p.getParam = function(index) {

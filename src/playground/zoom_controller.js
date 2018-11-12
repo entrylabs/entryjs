@@ -36,6 +36,10 @@ Entry.ZoomController = class ZoomController {
         };
     }
 
+    get view() {
+        return this.svgGroup;
+    }
+
     ZOOM_LEVEL = 2;
 
     generateView() {
@@ -101,13 +105,13 @@ Entry.ZoomController = class ZoomController {
 
     addControl() {
         if (this.board) {
-            $(this.zoomOut).bind('mousedown', (e) => {
+            $(this.zoomOut).bind('mousedown touchstart', (e) => {
                 this.zoomChange(this.ZOOM_MODE.OUT);
             });
-            $(this.zoomReset).bind('mousedown', (e) => {
+            $(this.zoomReset).bind('mousedown touchstart', (e) => {
                 this.zoomChange(this.ZOOM_MODE.RESET);
             });
-            $(this.zoomIn).bind('mousedown', (e) => {
+            $(this.zoomIn).bind('mousedown touchstart', (e) => {
                 this.zoomChange(this.ZOOM_MODE.IN);
             });
         }

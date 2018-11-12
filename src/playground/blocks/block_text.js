@@ -31,7 +31,7 @@ module.exports = {
                 },
                 class: 'text',
                 isNotFor: ['sprite'],
-                func: function(sprite, script) {
+                func(sprite, script) {
                     const targetId = script.getField('VALUE', script);
                     let targetEntity;
                     if (targetId === 'self') {
@@ -110,8 +110,8 @@ module.exports = {
                 },
                 class: 'text',
                 isNotFor: ['sprite'],
-                func: function(sprite, script) {
-                    var text = script.getStringValue('VALUE', script);
+                func(sprite, script) {
+                    const text = script.getStringValue('VALUE', script);
                     sprite.setText(text);
                     return script.callReturn();
                 },
@@ -159,9 +159,9 @@ module.exports = {
                 },
                 class: 'text',
                 isNotFor: ['sprite'],
-                func: function(sprite, script) {
-                    var text = script.getStringValue('VALUE', script);
-                    sprite.setText(sprite.getText() + '' + text);
+                func(sprite, script) {
+                    const text = script.getStringValue('VALUE', script);
+                    sprite.setText(`${sprite.getText()  }${  text}`);
                     return script.callReturn();
                 },
                 syntax: { js: [], py: ['Entry.append_text(%1)'] },
@@ -208,9 +208,9 @@ module.exports = {
                 },
                 class: 'text',
                 isNotFor: ['sprite'],
-                func: function(sprite, script) {
-                    var text = script.getStringValue('VALUE', script);
-                    sprite.setText(text + '' + sprite.getText());
+                func(sprite, script) {
+                    const text = script.getStringValue('VALUE', script);
+                    sprite.setText(`${text  }${  sprite.getText()}`);
                     return script.callReturn();
                 },
                 syntax: { js: [], py: ['Entry.prepend_text(%1)'] },
@@ -234,12 +234,12 @@ module.exports = {
                 },
                 class: 'text',
                 isNotFor: ['sprite'],
-                func: function(sprite, script) {
+                func(sprite, script) {
                     sprite.setText('');
                     return script.callReturn();
                 },
                 syntax: { js: [], py: ['Entry.clear_text()'] },
             },
         };
-    }
-}
+    },
+};

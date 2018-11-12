@@ -20,7 +20,7 @@ module.exports = {
                 },
                 class: 'visibility',
                 isNotFor: [],
-                func: function(sprite, script) {
+                func(sprite, script) {
                     sprite.setVisible(true);
                     return script.callReturn();
                 },
@@ -45,7 +45,7 @@ module.exports = {
                 },
                 class: 'visibility',
                 isNotFor: [],
-                func: function(sprite, script) {
+                func(sprite, script) {
                     sprite.setVisible(false);
                     return script.callReturn();
                 },
@@ -117,11 +117,12 @@ module.exports = {
                 },
                 class: 'say',
                 isNotFor: ['textBox'],
-                func: function(sprite, script) {
+                func(sprite, script) {
                     if (!script.isStart) {
-                        var timeValue = script.getNumberValue('SECOND', script);
-                        var message = script.getValue('VALUE', script);
-                        var mode = script.getField('OPTION', script);
+                        let [timeValue, message] = script.getValues(['SECOND', 'VALUE'], script);
+                        timeValue = Number(timeValue);
+
+                        const mode = script.getField('OPTION', script);
                         script.isStart = true;
                         script.timeFlag = 1;
                         if (message === '') {
@@ -129,7 +130,7 @@ module.exports = {
                         } else if (typeof message === 'boolean') {
                             message = message ? 'True' : 'False';
                         } else {
-                            message = message + '';
+                            message = `${message}`;
                         }
                         message = Entry.convertToRoundedDecimals(message, 3);
                         new Entry.Dialog(sprite, message, mode);
@@ -141,21 +142,18 @@ module.exports = {
                     if (script.timeFlag == 0) {
                         delete script.timeFlag;
                         delete script.isStart;
-                        if (sprite.dialog) sprite.dialog.remove();
+                        if (sprite.dialog) {
+                            sprite.dialog.remove();
+                        }
                         return script.callReturn();
                     } else {
                         if (!sprite.dialog) {
-                            var message = script.getStringValue(
-                                'VALUE',
-                                script
-                            );
-                            var mode = script.getField('OPTION', script);
-                            if (!message && typeof message != 'number')
+                            let message = script.getStringValue('VALUE', script);
+                            const mode = script.getField('OPTION', script);
+                            if (!message && typeof message !== 'number') {
                                 message = '    ';
-                            message = Entry.convertToRoundedDecimals(
-                                message,
-                                3
-                            );
+                            }
+                            message = Entry.convertToRoundedDecimals(message, 3);
                             new Entry.Dialog(sprite, message, mode);
                             sprite.syncDialogVisible(sprite.getVisible());
                         }
@@ -183,9 +181,7 @@ module.exports = {
                                     value: 'speak',
                                     fontSize: 11,
                                     arrowColor: EntryStatic.colorSet.arrow.default.LOOKS,
-                                    converter:
-                                        Entry.block.converters
-                                            .returnStringValue,
+                                    converter: Entry.block.converters.returnStringValue,
                                 },
                             ],
                         },
@@ -245,16 +241,16 @@ module.exports = {
                 },
                 class: 'say',
                 isNotFor: ['textBox'],
-                func: function(sprite, script) {
-                    var message = script.getValue('VALUE', script);
+                func(sprite, script) {
+                    let message = script.getValue('VALUE', script);
                     if (message === '') {
                         message = '    ';
                     } else if (typeof message === 'boolean') {
                         message = message ? 'True' : 'False';
                     } else {
-                        message = message + '';
+                        message = `${message}`;
                     }
-                    var mode = script.getField('OPTION', script);
+                    const mode = script.getField('OPTION', script);
                     message = Entry.convertToRoundedDecimals(message, 3);
                     new Entry.Dialog(sprite, message, mode);
                     sprite.syncDialogVisible(sprite.getVisible());
@@ -289,8 +285,10 @@ module.exports = {
                 },
                 class: 'say',
                 isNotFor: ['textBox'],
-                func: function(sprite, script) {
-                    if (sprite.dialog) sprite.dialog.remove();
+                func(sprite, script) {
+                    if (sprite.dialog) {
+                        sprite.dialog.remove();
+                    }
                     return script.callReturn();
                 },
                 syntax: { js: [], py: ['Entry.clear_print()'] },
@@ -337,10 +335,9 @@ module.exports = {
                 },
                 class: 'shape',
                 isNotFor: ['textBox'],
-                func: function(sprite, script) {
-                    var imageId = script.getStringValue('VALUE');
-                    var value = Entry.parseNumber(imageId);
-                    var picture = sprite.parent.getPicture(imageId);
+                func(sprite, script) {
+                    const imageId = script.getStringValue('VALUE');
+                    const picture = sprite.parent.getPicture(imageId);
 
                     sprite.setImage(picture);
                     return script.callReturn();
@@ -392,16 +389,12 @@ module.exports = {
                 },
                 class: 'shape',
                 isNotFor: ['textBox'],
-                func: function(sprite, script) {
-                    var picture;
+                func(sprite, script) {
+                    let picture;
                     if (script.getStringField('DRIECTION') !== 'prev') {
-                        picture = sprite.parent.getNextPicture(
-                            sprite.picture.id
-                        );
+                        picture = sprite.parent.getNextPicture(sprite.picture.id);
                     } else {
-                        picture = sprite.parent.getPrevPicture(
-                            sprite.picture.id
-                        );
+                        picture = sprite.parent.getPrevPicture(sprite.picture.id);
                     }
                     sprite.setImage(picture);
                     return script.callReturn();
@@ -415,23 +408,14 @@ module.exports = {
                                 {
                                     type: 'Dropdown',
                                     options: [
-                                        [
-                                            Lang.Blocks.LOOKS_change_shape_next,
-                                            'next',
-                                        ],
-                                        [
-                                            Lang.Blocks.LOOKS_change_shape_prev,
-                                            'prev',
-                                        ],
+                                        [Lang.Blocks.LOOKS_change_shape_next, 'next'],
+                                        [Lang.Blocks.LOOKS_change_shape_prev, 'prev'],
                                     ],
                                     value: 'next',
                                     fontSize: 11,
                                     arrowColor: EntryStatic.colorSet.arrow.default.LOOKS,
-                                    converter:
-                                        Entry.block.converters
-                                            .returnStringValue,
-                                    codeMap:
-                                        'Entry.CodeMap.Entry.change_to_next_shape[0]',
+                                    converter: Entry.block.converters.returnStringValue,
+                                    codeMap: 'Entry.CodeMap.Entry.change_to_next_shape[0]',
                                 },
                             ],
                         },
@@ -495,20 +479,18 @@ module.exports = {
                 },
                 class: 'effect',
                 isNotFor: ['textBox'],
-                func: function(sprite, script) {
-                    var effect = script.getField('EFFECT', script);
-                    var effectValue = script.getNumberValue('VALUE', script);
-                    var effectName = '';
-                    if (effect == 'color') {
+                func(sprite, script) {
+                    const effect = script.getField('EFFECT', script);
+                    const effectValue = script.getNumberValue('VALUE', script);
+                    let effectName = '';
+                    if (effect === 'color') {
                         sprite.effect.hsv = effectValue + sprite.effect.hsv;
                         effectName = 'hsv';
-                    } else if (effect == 'brightness') {
-                        sprite.effect.brightness =
-                            effectValue + sprite.effect.brightness;
+                    } else if (effect === 'brightness') {
+                        sprite.effect.brightness = effectValue + sprite.effect.brightness;
                         effectName = 'brightness';
-                    } else if (effect == 'transparency') {
-                        sprite.effect.alpha =
-                            sprite.effect.alpha - effectValue / 100;
+                    } else if (effect === 'transparency') {
+                        sprite.effect.alpha = sprite.effect.alpha - effectValue / 100;
                         effectName = 'alpha';
                     }
                     sprite.applyFilter(true, [effectName]);
@@ -525,19 +507,13 @@ module.exports = {
                                     options: [
                                         [Lang.Blocks.color, 'color'],
                                         [Lang.Blocks.brightness, 'brightness'],
-                                        [
-                                            Lang.Blocks.transparency,
-                                            'transparency',
-                                        ],
+                                        [Lang.Blocks.transparency, 'transparency'],
                                     ],
                                     value: 'color',
                                     fontSize: 11,
                                     arrowColor: EntryStatic.colorSet.arrow.default.LOOKS,
-                                    converter:
-                                        Entry.block.converters
-                                            .returnStringValue,
-                                    codeMap:
-                                        'Entry.CodeMap.Entry.add_effect_amount[0]',
+                                    converter: Entry.block.converters.returnStringValue,
+                                    codeMap: 'Entry.CodeMap.Entry.add_effect_amount[0]',
                                 },
                                 {
                                     type: 'Block',
@@ -605,17 +581,17 @@ module.exports = {
                 },
                 class: 'effect',
                 isNotFor: ['textBox'],
-                func: function(sprite, script) {
-                    var effect = script.getField('EFFECT', script);
-                    var effectValue = script.getNumberValue('VALUE', script);
-                    var effectName = '';
-                    if (effect == 'color') {
+                func(sprite, script) {
+                    const effect = script.getField('EFFECT', script);
+                    const effectValue = script.getNumberValue('VALUE', script);
+                    let effectName = '';
+                    if (effect === 'color') {
                         sprite.effect.hsv = effectValue;
                         effectName = 'hsv';
-                    } else if (effect == 'brightness') {
+                    } else if (effect === 'brightness') {
                         sprite.effect.brightness = effectValue;
                         effectName = 'brightness';
-                    } else if (effect == 'transparency') {
+                    } else if (effect === 'transparency') {
                         sprite.effect.alpha = 1 - effectValue / 100;
                         effectName = 'alpha';
                     }
@@ -633,19 +609,13 @@ module.exports = {
                                     options: [
                                         [Lang.Blocks.color, 'color'],
                                         [Lang.Blocks.brightness, 'brightness'],
-                                        [
-                                            Lang.Blocks.transparency,
-                                            'transparency',
-                                        ],
+                                        [Lang.Blocks.transparency, 'transparency'],
                                     ],
                                     value: 'color',
                                     fontSize: 11,
                                     arrowColor: EntryStatic.colorSet.arrow.default.LOOKS,
-                                    converter:
-                                        Entry.block.converters
-                                            .returnStringValue,
-                                    codeMap:
-                                        'Entry.CodeMap.Entry.change_effect_amount[0]',
+                                    converter: Entry.block.converters.returnStringValue,
+                                    codeMap: 'Entry.CodeMap.Entry.change_effect_amount[0]',
                                 },
                                 {
                                     type: 'Block',
@@ -675,7 +645,7 @@ module.exports = {
                 },
                 class: 'effect',
                 isNotFor: ['textBox'],
-                func: function(sprite, script) {
+                func(sprite, script) {
                     sprite.resetFilter();
                     return script.callReturn();
                 },
@@ -723,8 +693,8 @@ module.exports = {
                 },
                 class: 'scale',
                 isNotFor: [],
-                func: function(sprite, script) {
-                    var sizeValue = script.getNumberValue('VALUE', script);
+                func(sprite, script) {
+                    const sizeValue = script.getNumberValue('VALUE', script);
                     sprite.setSize(sprite.getSize() + sizeValue);
                     return script.callReturn();
                 },
@@ -772,8 +742,8 @@ module.exports = {
                 },
                 class: 'scale',
                 isNotFor: [],
-                func: function(sprite, script) {
-                    var sizeValue = script.getNumberValue('VALUE', script);
+                func(sprite, script) {
+                    const sizeValue = script.getNumberValue('VALUE', script);
                     sprite.setSize(sizeValue);
                     return script.callReturn();
                 },
@@ -798,7 +768,7 @@ module.exports = {
                 },
                 class: 'flip',
                 isNotFor: [],
-                func: function(sprite, script) {
+                func(sprite, script) {
                     sprite.setScaleY(-1 * sprite.getScaleY());
                     return script.callReturn();
                 },
@@ -823,7 +793,7 @@ module.exports = {
                 },
                 class: 'flip',
                 isNotFor: [],
-                func: function(sprite, script) {
+                func(sprite, script) {
                     sprite.setScaleX(-1 * sprite.getScaleX());
                     return script.callReturn();
                 },
@@ -838,22 +808,10 @@ module.exports = {
                     {
                         type: 'Dropdown',
                         options: [
-                            [
-                                Lang.Blocks.LOOKS_change_object_index_sub_1,
-                                'FRONT',
-                            ],
-                            [
-                                Lang.Blocks.LOOKS_change_object_index_sub_2,
-                                'FORWARD',
-                            ],
-                            [
-                                Lang.Blocks.LOOKS_change_object_index_sub_3,
-                                'BACKWARD',
-                            ],
-                            [
-                                Lang.Blocks.LOOKS_change_object_index_sub_4,
-                                'BACK',
-                            ],
+                            [Lang.Blocks.LOOKS_change_object_index_sub_1, 'FRONT'],
+                            [Lang.Blocks.LOOKS_change_object_index_sub_2, 'FORWARD'],
+                            [Lang.Blocks.LOOKS_change_object_index_sub_3, 'BACKWARD'],
+                            [Lang.Blocks.LOOKS_change_object_index_sub_4, 'BACK'],
                         ],
                         value: 'FRONT',
                         fontSize: 10,
@@ -880,46 +838,40 @@ module.exports = {
                 },
                 class: 'z-index',
                 isNotFor: [],
-                func: function(sprite, script) {
-                    var location = script.getField('LOCATION', script);
-                    var selectedObjectContainer =
-                        Entry.stage.selectedObjectContainer;
-                    var currentIndex = selectedObjectContainer.getChildIndex(
-                        sprite.object
-                    );
-                    var max = selectedObjectContainer.children.length - 1;
-                    var targetIndex = currentIndex;
+                func(sprite, script) {
+                    const location = script.getField('LOCATION', script);
+                    const selectedObjectContainer = Entry.stage.selectedObjectContainer;
+                    const currentIndex = selectedObjectContainer.getChildIndex(sprite.object);
+                    const max = selectedObjectContainer.children.length - 1;
+                    let targetIndex = currentIndex;
 
                     switch (location) {
                         case 'FRONT':
                             targetIndex = max;
                             break;
-                        case 'FORWARD':
-                            if (currentIndex === max) break;
+                        case 'FORWARD': {
+                            if (currentIndex === max) {
+                                break;
+                            }
 
-                            var frontEntity = selectedObjectContainer.getChildAt(
-                                currentIndex + 1
-                            ).entity;
+                            const frontEntity = selectedObjectContainer.getChildAt(currentIndex + 1)
+                                .entity;
                             targetIndex +=
-                                (frontEntity.shapes.length ? 2 : 1) +
-                                frontEntity.stamps.length;
+                                (frontEntity.shapes.length ? 2 : 1) + frontEntity.stamps.length;
                             break;
-                        case 'BACKWARD':
-                            targetIndex -=
-                                (sprite.shapes.length ? 2 : 1) +
-                                sprite.stamps.length;
-                            var backEntity = selectedObjectContainer.getChildAt(
-                                targetIndex
-                            );
+                        }
+                        case 'BACKWARD': {
+                            targetIndex -= (sprite.shapes.length ? 2 : 1) + sprite.stamps.length;
+                            let backEntity = selectedObjectContainer.getChildAt(targetIndex);
                             if (!backEntity) {
                                 targetIndex = 0;
                                 break;
                             }
                             backEntity = backEntity.entity;
                             targetIndex -=
-                                (backEntity.shapes.length ? 1 : 0) +
-                                backEntity.stamps.length;
+                                (backEntity.shapes.length ? 1 : 0) + backEntity.stamps.length;
                             break;
+                        }
                         case 'BACK':
                             targetIndex = 0;
                             break;
@@ -937,35 +889,16 @@ module.exports = {
                                 {
                                     type: 'Dropdown',
                                     options: [
-                                        [
-                                            Lang.Blocks
-                                                .LOOKS_change_object_index_sub_1,
-                                            'FRONT',
-                                        ],
-                                        [
-                                            Lang.Blocks
-                                                .LOOKS_change_object_index_sub_2,
-                                            'FORWARD',
-                                        ],
-                                        [
-                                            Lang.Blocks
-                                                .LOOKS_change_object_index_sub_3,
-                                            'BACKWARD',
-                                        ],
-                                        [
-                                            Lang.Blocks
-                                                .LOOKS_change_object_index_sub_4,
-                                            'BACK',
-                                        ],
+                                        [Lang.Blocks.LOOKS_change_object_index_sub_1, 'FRONT'],
+                                        [Lang.Blocks.LOOKS_change_object_index_sub_2, 'FORWARD'],
+                                        [Lang.Blocks.LOOKS_change_object_index_sub_3, 'BACKWARD'],
+                                        [Lang.Blocks.LOOKS_change_object_index_sub_4, 'BACK'],
                                     ],
                                     value: 'FRONT',
                                     fontSize: 11,
                                     arrowColor: EntryStatic.colorSet.arrow.default.LOOKS,
-                                    converter:
-                                        Entry.block.converters
-                                            .returnStringValueLowerCase,
-                                    codeMap:
-                                        'Entry.CodeMap.Entry.change_object_index[0]',
+                                    converter: Entry.block.converters.returnStringValueLowerCase,
+                                    codeMap: 'Entry.CodeMap.Entry.change_object_index[0]',
                                 },
                             ],
                         },
@@ -973,5 +906,5 @@ module.exports = {
                 },
             },
         };
-    }
+    },
 };

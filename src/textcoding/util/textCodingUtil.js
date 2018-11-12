@@ -1860,6 +1860,25 @@ Entry.TextCodingUtil = {};
         return hasWhiteSpace(vc.lists_ || [] , Lang.TextCoding[Entry.TextCodingError.ALERT_LIST_EMPTY_TEXT]) ||
             hasWhiteSpace(vc.variables_ || [] , Lang.TextCoding[Entry.TextCodingError.ALERT_VARIABLE_EMPTY_TEXT]);
     };
+
+    /**
+     * TODO 18년 9월자 배포(10/4) 일 임시 코드입니다. 차후 수정 필수입니다.
+     * https://oss.navercorp.com/entry/Entry/issues/9155 링크 참조
+     * @returns {{message: string, type: string} || undefined}
+     */
+    tu.hasExpansionBlocks = function() {
+        const vc = Entry.variableContainer;
+        if (!vc) return;
+
+        const activatedExpansionBlocks = Entry.expansionBlocks;
+
+        if (activatedExpansionBlocks.length > 0) {
+            return {
+                message : Lang.TextCoding[Entry.TextCodingError.ALERT_API_NO_SUPPORT],
+                type : 'error'
+            };
+        }
+    };
     
     tu.validateVariableToPython = function() {
         return this.isNamesIncludeSpace() || this.isNameIncludeNotValidChar();

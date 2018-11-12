@@ -296,12 +296,13 @@ Entry.Field = function() {};
                 continue;
             }
 
-            const textParams = syntax[0].textParams;
-            if (!textParams) {
-                continue;
+            for(var i in syntax) {
+                var textParams = syntax[i].textParams;
+                if (!textParams) continue;
+
+                textParams[this._index].options = this._contents.options;
             }
 
-            textParams[this._index].options = this._contents.options;
         }
     };
 

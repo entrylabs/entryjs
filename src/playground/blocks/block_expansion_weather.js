@@ -1,19 +1,19 @@
 'use strict';
-
+const { getStateOptions, getCityOptions } = require('../../util/location');
 
 Entry.Expansion_Weather = {
     name: 'weather',
     imageName: 'weather.png',
     title: {
-        "ko": "날씨",
-        "en": "weather"
+        ko: '날씨',
+        en: 'weather',
     },
-    description: Lang.Msgs.expansion_weather_description
+    description: Lang.Msgs.expansion_weather_description,
 };
 
-Entry.Expansion_Weather.getBlocks = function () {
+Entry.Expansion_Weather.getBlocks = function() {
     let params = {
-        getDate : function(isPython) {
+        getDate: function(isPython = false) {
             let param = {
                 type: 'Dropdown',
                 options: [
@@ -28,46 +28,53 @@ Entry.Expansion_Weather.getBlocks = function () {
                 ],
                 value: 'today',
                 fontSize: 11,
-                arrowColor: EntryStatic.colorSet.arrow.default.EXPANSION
+                arrowColor: EntryStatic.colorSet.arrow.default.EXPANSION,
             };
-            if(isPython) {
+            if (isPython) {
                 param.converter = Entry.block.converters.returnStringValue;
             }
             return param;
         },
-        getLocation: function(isPython) {
-            let param =  {
+        getLocation: function(isPython = false) {
+            let param = {
                 type: 'Dropdown',
-                options: [
-                    [Lang.Blocks.location_seoul, 'Seoul'],
-                    [Lang.Blocks.location_gangwon, 'Gangwon'],
-                    [Lang.Blocks.location_gyeonggi, 'Gyeonggi-do'],
-                    [Lang.Blocks.location_gyeongsangnam, 'Gyeongsangnam-do'],
-                    [Lang.Blocks.location_gyeongsangbuk, 'Gyeongsangbuk-do'],
-                    [Lang.Blocks.location_gwangju, 'Gwangju'],
-                    [Lang.Blocks.location_daegu, 'Daegu'],
-                    [Lang.Blocks.location_daejeon, 'Daejeon'],
-                    [Lang.Blocks.location_busan, 'Busan'],
-                    [Lang.Blocks.location_sejong, 'Sejong'],
-                    [Lang.Blocks.location_ulsan, 'Ulsan'],
-                    [Lang.Blocks.location_incheon, 'Incheon'],
-                    [Lang.Blocks.location_jeollanam, 'Jeollanam-do'],
-                    [Lang.Blocks.location_jeollabuk, 'Jeollabuk-do'],
-                    [Lang.Blocks.location_jeju, 'Jeju'],
-                    [Lang.Blocks.location_chungcheongnam, 'Chungcheongnam-do'],
-                    [Lang.Blocks.location_chungcheongbuk, 'Chungcheongbuk-do'],
-                ],
+                options: getStateOptions(),
                 value: 'Seoul',
                 fontSize: 11,
-                arrowColor: EntryStatic.colorSet.arrow.default.EXPANSION
+                arrowColor: EntryStatic.colorSet.arrow.default.EXPANSION,
             };
-            if(isPython) {
+            if (isPython) {
                 param.converter = Entry.block.converters.returnStringValue;
             }
             return param;
         },
-        getSky: function(isPython) {
-            let param =  {
+        getSubLocation: function(targetIndex = 0, isPython = false) {
+            let param = {
+                type: 'DropdownDynamic',
+                value: null,
+                menuName: function(value) {
+                    if (value) {
+                        return getCityOptions(value);
+                    }
+
+                    if (this._contents.options) {
+                        return this._contents.options;
+                    } else {
+                        return getCityOptions(this._block.data.params[targetIndex]);
+                    }
+                },
+                targetIndex: targetIndex,
+                needDeepCopy: true,
+                fontSize: 11,
+                arrowColor: EntryStatic.ARROW_COLOR_EXPANSION,
+            };
+            if (isPython) {
+                param.converter = Entry.block.converters.returnStringValue;
+            }
+            return param;
+        },
+        getSky: function(isPython = false) {
+            let param = {
                 type: 'Dropdown',
                 options: [
                     [Lang.Blocks.EXPANSION_WEATHER_sunny, 'sunny'],
@@ -80,15 +87,15 @@ Entry.Expansion_Weather.getBlocks = function () {
                 ],
                 value: 'sunny',
                 fontSize: 11,
-                arrowColor: EntryStatic.colorSet.arrow.default.EXPANSION
+                arrowColor: EntryStatic.colorSet.arrow.default.EXPANSION,
             };
-            if(isPython) {
+            if (isPython) {
                 param.converter = Entry.block.converters.returnStringValue;
             }
             return param;
         },
-        getFineDust: function(isPython) {
-            let param =  {
+        getFineDust: function(isPython = false) {
+            let param = {
                 type: 'Dropdown',
                 options: [
                     [Lang.Blocks.EXPANSION_WEATHER_finedust_good, 'good'],
@@ -98,35 +105,38 @@ Entry.Expansion_Weather.getBlocks = function () {
                 ],
                 value: 'good',
                 fontSize: 11,
-                arrowColor: EntryStatic.colorSet.arrow.default.EXPANSION
+                arrowColor: EntryStatic.colorSet.arrow.default.EXPANSION,
             };
-            if(isPython) {
+            if (isPython) {
                 param.converter = Entry.block.converters.returnStringValue;
             }
             return param;
         },
-        getWeatherElements: function(isPython) {
-            let param =  {
+        getWeatherElements: function(isPython = false) {
+            let param = {
                 type: 'Dropdown',
                 options: [
                     [Lang.Blocks.EXPANSION_WEATHER_lowest_temperature, 'the_lowest_temperature'],
                     [Lang.Blocks.EXPANSION_WEATHER_highest_temperature, 'the_highest_temperature'],
                     [Lang.Blocks.EXPANSION_WEATHER_humidity, 'humidity'],
                     [Lang.Blocks.EXPANSION_WEATHER_precipitation, 'precipitation'],
-                    [Lang.Blocks.EXPANSION_WEATHER_precipitation_probability, 'precipitation_probability'],
+                    [
+                        Lang.Blocks.EXPANSION_WEATHER_precipitation_probability,
+                        'precipitation_probability',
+                    ],
                     [Lang.Blocks.EXPANSION_WEATHER_wind_speed, 'wind_speed'],
                 ],
                 value: 'the_lowest_temperature',
                 fontSize: 11,
-                arrowColor: EntryStatic.colorSet.arrow.default.EXPANSION
+                arrowColor: EntryStatic.colorSet.arrow.default.EXPANSION,
             };
-            if(isPython) {
+            if (isPython) {
                 param.converter = Entry.block.converters.returnStringValue;
             }
             return param;
         },
-        getNowWeatherElement: function(isPython) {
-            let param =  {
+        getNowWeatherElement: function(isPython = false) {
+            let param = {
                 type: 'Dropdown',
                 options: [
                     [Lang.Blocks.EXPANSION_WEATHER_temperature, 'temperature'],
@@ -134,39 +144,39 @@ Entry.Expansion_Weather.getBlocks = function () {
                 ],
                 value: 'temperature',
                 fontSize: 11,
-                arrowColor: EntryStatic.colorSet.arrow.default.EXPANSION
+                arrowColor: EntryStatic.colorSet.arrow.default.EXPANSION,
             };
-            if(isPython) {
+            if (isPython) {
                 param.converter = Entry.block.converters.returnStringValue;
             }
             return param;
         },
-        getTime: function(isPython) {
-            let param =   {
-                    type: 'Dropdown',
-                    options: [
-                        ["00", "00"],
-                        ["03", "03"],
-                        ["06", "06"],
-                        ["09", "09"],
-                        ["12", "12"],
-                        ["15", "15"],
-                        ["18", "18"],
-                        ["21", "21"],
-                    ],
-                        value: "00",
-                        fontSize: 11,
-                        arrowColor: EntryStatic.colorSet.arrow.default.EXPANSION
-                    }
-            if(isPython) {
+        getTime: function(isPython = false) {
+            let param = {
+                type: 'Dropdown',
+                options: [
+                    ['00', '00'],
+                    ['03', '03'],
+                    ['06', '06'],
+                    ['09', '09'],
+                    ['12', '12'],
+                    ['15', '15'],
+                    ['18', '18'],
+                    ['21', '21'],
+                ],
+                value: '00',
+                fontSize: 11,
+                arrowColor: EntryStatic.colorSet.arrow.default.EXPANSION,
+            };
+            if (isPython) {
                 param.converter = Entry.block.converters.returnStringOrNumberByValue;
             }
             return param;
-        }
+        },
     };
 
     function pad2(n) {
-        return n < 10 ? '0' + n : n
+        return n < 10 ? '0' + n : n;
     }
 
     return {
@@ -188,6 +198,459 @@ Entry.Expansion_Weather.getBlocks = function () {
             isNotFor: ['weather'],
             events: {},
         },
+        check_city_weather: {
+            color: '#ff8888',
+            skeleton: 'basic_boolean_field',
+            statements: [],
+            params: [
+                params.getDate(),
+                params.getLocation(),
+                params.getSubLocation(1),
+                params.getSky(),
+            ],
+            events: {},
+            def: {
+                params: [
+                    params.getDate().value,
+                    params.getLocation().value,
+                    params.getSubLocation().value,
+                    params.getSky().value,
+                ],
+                type: 'check_city_weather',
+            },
+            pyHelpDef: {
+                params: ['B&value', 'C&value', 'D&value', null],
+                type: 'check_city_weather',
+            },
+            paramsKeyMap: {
+                DATE: 0,
+                LOCATION: 1,
+                SUBLOCATION: 2,
+                WEATHER: 3,
+            },
+            class: 'weather',
+            isNotFor: ['weather'],
+            func: async function(sprite, script) {
+                const location = {
+                    parent: script.getField('LOCATION', script),
+                    sub: script.getField('SUBLOCATION', script),
+                };
+                const apiResult = await Entry.EXPANSION_BLOCK.weather.getData(
+                    'week',
+                    location,
+                    script.getField('DATE', script)
+                );
+
+                return Entry.EXPANSION_BLOCK.weather.checkWeather(
+                    apiResult.sky_code,
+                    script.getField('WEATHER', script)
+                );
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Weather.is_condition_sunny(%1, %2, %3)',
+                        params: [null, null, null, 'sunny'],
+                        blockType: 'param',
+                        textParams: [
+                            params.getDate(true),
+                            params.getLocation(true),
+                            params.getSubLocation(1, true),
+                            params.getSky(true),
+                        ],
+                    },
+                    {
+                        syntax: 'Weather.is_condition_partly_cloudy(%1, %2, %3)',
+                        params: [null, null, null, 'partly_cloudy'],
+                        blockType: 'param',
+                        textParams: [
+                            params.getDate(true),
+                            params.getLocation(true),
+                            params.getSubLocation(1, true),
+                            params.getSky(true),
+                        ],
+                    },
+                    {
+                        syntax: 'Weather.is_condition_mostly_cloudy(%1, %2, %3)',
+                        params: [null, null, null, 'mostly_cloudy'],
+                        blockType: 'param',
+                        textParams: [
+                            params.getDate(true),
+                            params.getLocation(true),
+                            params.getSubLocation(1, true),
+                            params.getSky(true),
+                        ],
+                    },
+                    {
+                        syntax: 'Weather.is_condition_cloudy(%1, %2, %3)',
+                        params: [null, null, null, 'cloudy'],
+                        blockType: 'param',
+                        textParams: [
+                            params.getDate(true),
+                            params.getLocation(true),
+                            params.getSubLocation(1, true),
+                            params.getSky(true),
+                        ],
+                    },
+                    {
+                        syntax: 'Weather.is_condition_rainy(%1, %2, %3)',
+                        params: [null, null, null, 'rainy'],
+                        blockType: 'param',
+                        textParams: [
+                            params.getDate(true),
+                            params.getLocation(true),
+                            params.getSubLocation(1, true),
+                            params.getSky(true),
+                        ],
+                    },
+                    {
+                        syntax: 'Weather.is_condition_sleet(%1, %2, %3)',
+                        params: [null, null, null, 'sleet'],
+                        blockType: 'param',
+                        textParams: [
+                            params.getDate(true),
+                            params.getLocation(true),
+                            params.getSubLocation(1, true),
+                            params.getSky(true),
+                        ],
+                    },
+                    {
+                        syntax: 'Weather.is_condition_snowy(%1, %2, %3)',
+                        params: [null, null, null, 'snowy'],
+                        blockType: 'param',
+                        textParams: [
+                            params.getDate(true),
+                            params.getLocation(true),
+                            params.getSubLocation(1, true),
+                            params.getSky(true),
+                        ],
+                    },
+                ],
+            },
+        },
+        check_city_finedust: {
+            color: '#ff8888',
+            skeleton: 'basic_boolean_field',
+            statements: [],
+            params: [params.getLocation(), params.getSubLocation(0), params.getFineDust()],
+            events: {},
+            def: {
+                params: [params.getLocation().value, null, params.getFineDust().value],
+                type: 'check_city_finedust',
+            },
+            pyHelpDef: {
+                params: ['B&value', 'C&value', null],
+                type: 'check_city_finedust',
+            },
+            paramsKeyMap: {
+                LOCATION: 0,
+                SUBLOCATION: 1,
+                FINEDUST: 2,
+            },
+            class: 'weather',
+            isNotFor: ['weather'],
+            func: async function(sprite, script) {
+                const location = {
+                    parent: script.getField('LOCATION', script),
+                    sub: script.getField('SUBLOCATION', script),
+                };
+                const apiResult = await Entry.EXPANSION_BLOCK.weather.getData(
+                    'now',
+                    location,
+                    null
+                );
+                return Entry.EXPANSION_BLOCK.weather.checkFineDust(
+                    apiResult.pm10,
+                    script.getField('FINEDUST', script)
+                );
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Weather.is_current_finedust_grade_good(%1, %2)',
+                        params: [null, null, 'good'],
+                        blockType: 'param',
+                        textParams: [
+                            params.getLocation(true),
+                            params.getSubLocation(0, true),
+                            params.getFineDust(true),
+                        ],
+                    },
+                    {
+                        syntax: 'Weather.is_current_finedust_grade_normal(%1, %2)',
+                        params: [null, null, 'normal'],
+                        blockType: 'param',
+                        textParams: [
+                            params.getLocation(true),
+                            params.getSubLocation(0, true),
+                            params.getFineDust(true),
+                        ],
+                    },
+                    {
+                        syntax: 'Weather.is_current_finedust_grade_bad(%1, %2)',
+                        params: [null, null, 'bad'],
+                        blockType: 'param',
+                        textParams: [
+                            params.getLocation(true),
+                            params.getSubLocation(0, true),
+                            params.getFineDust(true),
+                        ],
+                    },
+                    {
+                        syntax: 'Weather.is_current_finedust_grade_very_bad(%1, %2)',
+                        params: [, null, null, 'very_bad'],
+                        blockType: 'param',
+                        textParams: [
+                            params.getLocation(true),
+                            params.getSubLocation(0, true),
+                            params.getFineDust(true),
+                        ],
+                    },
+                ],
+            },
+        },
+        get_city_weather_data: {
+            color: '#ff8888',
+            skeleton: 'basic_string_field',
+            statements: [],
+            params: [
+                params.getDate(),
+                params.getLocation(),
+                params.getSubLocation(1),
+                params.getWeatherElements(),
+            ],
+            events: {},
+            def: {
+                params: [
+                    params.getDate().value,
+                    params.getLocation().value,
+                    null,
+                    params.getWeatherElements().value,
+                ],
+                type: 'get_city_weather_data',
+            },
+            pyHelpDef: {
+                params: ['B&value', 'C&value', 'D&value', null],
+                type: 'get_city_weather_data',
+            },
+            paramsKeyMap: {
+                DATE: 0,
+                LOCATION: 1,
+                SUBLOCATION: 2,
+                TYPE: 3,
+            },
+            class: 'weather',
+            isNotFor: ['weather'],
+            func: async function(sprite, script) {
+                const location = {
+                    parent: script.getField('LOCATION', script),
+                    sub: script.getField('SUBLOCATION', script),
+                };
+                const apiResult = await Entry.EXPANSION_BLOCK.weather.getData(
+                    'week',
+                    location,
+                    script.getField('DATE', script)
+                );
+
+                const type =
+                    Entry.EXPANSION_BLOCK.weather.propertyMap[script.getField('TYPE', script)];
+                return apiResult[type];
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Weather.get_lowest_temperature(%1, %2, %3)',
+                        params: [null, null, null, 'the_lowest_temperature'],
+                        blockType: 'param',
+                        textParams: [
+                            params.getDate(true),
+                            params.getLocation(true),
+                            params.getSubLocation(1, true),
+                            params.getWeatherElements(true),
+                        ],
+                    },
+                    {
+                        syntax: 'Weather.get_highest_temperature(%1, %2, %3)',
+                        params: [null, null, null, 'the_highest_temperature'],
+                        blockType: 'param',
+                        textParams: [
+                            params.getDate(true),
+                            params.getLocation(true),
+                            params.getSubLocation(1, true),
+                            params.getWeatherElements(true),
+                        ],
+                    },
+                    {
+                        syntax: 'Weather.get_humidity(%1, %2, %3)',
+                        params: [null, null, null, 'humidity'],
+                        blockType: 'param',
+                        textParams: [
+                            params.getDate(true),
+                            params.getLocation(true),
+                            params.getSubLocation(1, true),
+                            params.getWeatherElements(true),
+                        ],
+                    },
+                    {
+                        syntax: 'Weather.get_precipitation(%1, %2, %3)',
+                        params: [null, null, null, 'precipitation'],
+                        blockType: 'param',
+                        textParams: [
+                            params.getDate(true),
+                            params.getLocation(true),
+                            params.getSubLocation(1, true),
+                            params.getWeatherElements(true),
+                        ],
+                    },
+                    {
+                        syntax: 'Weather.get_precipitation_probability(%1, %2, %3)',
+                        params: [null, null, null, 'precipitation_probability'],
+                        blockType: 'param',
+                        textParams: [
+                            params.getDate(true),
+                            params.getLocation(true),
+                            params.getSubLocation(1, true),
+                            params.getWeatherElements(true),
+                        ],
+                    },
+                    {
+                        syntax: 'Weather.get_wind_speed(%1, %2, %3)',
+                        params: [null, null, null, 'wind_speed'],
+                        blockType: 'param',
+                        textParams: [
+                            params.getDate(true),
+                            params.getLocation(true),
+                            params.getSubLocation(1, true),
+                            params.getWeatherElements(true),
+                        ],
+                    },
+                ],
+            },
+        },
+        get_current_city_weather_data: {
+            color: '#ff8888',
+            skeleton: 'basic_string_field',
+            statements: [],
+            params: [params.getLocation(), params.getSubLocation(0), params.getNowWeatherElement()],
+            events: {},
+            def: {
+                params: [params.getLocation().value, null, params.getNowWeatherElement().value],
+                type: 'get_current_city_weather_data',
+            },
+            pyHelpDef: {
+                params: ['B&value', 'C&value', null],
+                type: 'get_current_city_weather_data',
+            },
+            paramsKeyMap: {
+                LOCATION: 0,
+                SUBLOCATION: 1,
+                TYPE: 2,
+            },
+            class: 'weather',
+            isNotFor: ['weather'],
+            func: function(sprite, script) {
+                const location = {
+                    parent: script.getField('LOCATION', script),
+                    sub: script.getField('SUBLOCATION', script),
+                };
+                var type =
+                    Entry.EXPANSION_BLOCK.weather.propertyMap[script.getField('TYPE', script)];
+
+                return new Promise((resolve) => {
+                    Entry.EXPANSION_BLOCK.weather.getData('now', location, null).then((data) => {
+                        return resolve(data[type]);
+                    });
+                });
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Weather.get_current_finedust(%1, %2)',
+                        params: [null, null, 'concentration_of_fine_dust'],
+                        blockType: 'param',
+                        textParams: [
+                            params.getLocation(true),
+                            params.getSubLocation(0, true),
+                            params.getNowWeatherElement(true),
+                        ],
+                    },
+                    {
+                        syntax: 'Weather.get_current_temperature(%1, %2)',
+                        params: [null, null, 'temperature'],
+                        blockType: 'param',
+                        textParams: [
+                            params.getLocation(true),
+                            params.getSubLocation(0, true),
+                            params.getNowWeatherElement(true),
+                        ],
+                    },
+                ],
+            },
+        },
+        get_today_city_temperature: {
+            color: '#ff8888',
+            skeleton: 'basic_string_field',
+            statements: [],
+            params: [params.getLocation(), params.getSubLocation(0), params.getTime()],
+            events: {},
+            def: {
+                params: [params.getLocation().value, null, params.getTime().value],
+                type: 'get_today_city_temperature',
+            },
+            pyHelpDef: {
+                params: ['A&value', 'B&value', 'C&value'],
+                type: 'get_today_city_temperature',
+            },
+            paramsKeyMap: {
+                LOCATION: 0,
+                SUBLOCATION: 1,
+                TIME: 2,
+            },
+            class: 'weather',
+            isNotFor: ['weather'],
+            func: async function(sprite, script) {
+                const location = {
+                    parent: script.getField('LOCATION', script),
+                    sub: script.getField('SUBLOCATION', script),
+                };
+                const date = Entry.EXPANSION_BLOCK.weather.date
+                    .toISOString()
+                    .slice(0, 10)
+                    .replace(/-/g, '');
+                let time = script.getField('TIME', script);
+                // db에 저장하지 않으면서 00시가 없어져서 03시부터 가능..
+                if (time == '00') {
+                    time = '03';
+                }
+                const apiResult = await Entry.EXPANSION_BLOCK.weather.getData(
+                    'hour',
+                    location,
+                    date + pad2(time - time % 3)
+                );
+
+                return apiResult.temp;
+            },
+            syntax: {
+                js: [],
+                py: [
+                    {
+                        syntax: 'Weather.get_today_temperature(%1, %2, %3)',
+                        blockType: 'param',
+                        textParams: [
+                            params.getLocation(true),
+                            params.getSubLocation(0, true),
+                            params.getTime(true),
+                        ],
+                    },
+                ],
+            },
+        },
+
+        //시군구 추가로 인한 legacy code 기존 블럭유지를 위해 필요.
         check_weather: {
             color: '#FF8888',
             outerLine: '#EF6D6D',
@@ -206,64 +669,94 @@ Entry.Expansion_Weather.getBlocks = function () {
             paramsKeyMap: {
                 DATE: 0,
                 LOCATION: 1,
-                WEATHER: 2
+                WEATHER: 2,
             },
-            class: 'weather',
-            isNotFor: ['weather'],
-            func: function (sprite, script) {
-                var datetime = Entry.EXPANSION_BLOCK.weather.getDate(script.getField('DATE', script)) + "00";
-                var location = script.getField('LOCATION', script);
-                var weather = script.getField('WEATHER', script);
-                var apiResult = Entry.EXPANSION_BLOCK.weather.getData(location, datetime);
-
-                return Entry.EXPANSION_BLOCK.weather.checkWeather(apiResult.sky_code) == weather;
+            class: 'weather_legacy',
+            isNotFor: ['weather_legacy'],
+            func: async function(sprite, script) {
+                const apiResult = await Entry.EXPANSION_BLOCK.weather.getData(
+                    'week',
+                    script.getField('LOCATION', script),
+                    script.getField('DATE', script)
+                );
+                return Entry.EXPANSION_BLOCK.weather.checkWeather(
+                    apiResult.sky_code,
+                    script.getField('WEATHER', script)
+                );
             },
             syntax: {
                 js: [],
                 py: [
                     {
-                        syntax: 'Weather.is_condition_sunny(%1, %2)',
+                        syntax: 'Legacy.Weather.is_condition_sunny(%1, %2)',
                         params: [null, null, 'sunny'],
                         blockType: 'param',
-                        textParams: [params.getDate(true), params.getLocation(true), params.getSky(true)]
+                        textParams: [
+                            params.getDate(true),
+                            params.getLocation(true),
+                            params.getSky(true),
+                        ],
                     },
                     {
-                        syntax: 'Weather.is_condition_partly_cloudy(%1, %2)',
+                        syntax: 'Legacy.Weather.is_condition_partly_cloudy(%1, %2)',
                         params: [null, null, 'partly_cloudy'],
                         blockType: 'param',
-                        textParams: [params.getDate(true), params.getLocation(true), params.getSky(true)]
+                        textParams: [
+                            params.getDate(true),
+                            params.getLocation(true),
+                            params.getSky(true),
+                        ],
                     },
                     {
-                        syntax: 'Weather.is_condition_mostly_cloudy(%1, %2)',
+                        syntax: 'Legacy.Weather.is_condition_mostly_cloudy(%1, %2)',
                         params: [null, null, 'mostly_cloudy'],
                         blockType: 'param',
-                        textParams: [params.getDate(true), params.getLocation(true), params.getSky(true)]
+                        textParams: [
+                            params.getDate(true),
+                            params.getLocation(true),
+                            params.getSky(true),
+                        ],
                     },
                     {
-                        syntax: 'Weather.is_condition_cloudy(%1, %2)',
+                        syntax: 'Legacy.Weather.is_condition_cloudy(%1, %2)',
                         params: [null, null, 'cloudy'],
                         blockType: 'param',
-                        textParams: [params.getDate(true), params.getLocation(true), params.getSky(true)]
+                        textParams: [
+                            params.getDate(true),
+                            params.getLocation(true),
+                            params.getSky(true),
+                        ],
                     },
                     {
-                        syntax: 'Weather.is_condition_rainy(%1, %2)',
+                        syntax: 'Legacy.Weather.is_condition_rainy(%1, %2)',
                         params: [null, null, 'rainy'],
                         blockType: 'param',
-                        textParams: [params.getDate(true), params.getLocation(true), params.getSky(true)]
+                        textParams: [
+                            params.getDate(true),
+                            params.getLocation(true),
+                            params.getSky(true),
+                        ],
                     },
                     {
-                        syntax: 'Weather.is_condition_sleet(%1, %2)',
+                        syntax: 'Legacy.Weather.is_condition_sleet(%1, %2)',
                         params: [null, null, 'sleet'],
                         blockType: 'param',
-                        textParams: [params.getDate(true), params.getLocation(true), params.getSky(true)]
+                        textParams: [
+                            params.getDate(true),
+                            params.getLocation(true),
+                            params.getSky(true),
+                        ],
                     },
                     {
-                        syntax: 'Weather.is_condition_snowy(%1, %2)',
+                        syntax: 'Legacy.Weather.is_condition_snowy(%1, %2)',
                         params: [null, null, 'snowy'],
                         blockType: 'param',
-                        textParams: [params.getDate(true), params.getLocation(true), params.getSky(true)]
+                        textParams: [
+                            params.getDate(true),
+                            params.getLocation(true),
+                            params.getSky(true),
+                        ],
                     },
-
                 ],
             },
         },
@@ -284,48 +777,47 @@ Entry.Expansion_Weather.getBlocks = function () {
             },
             paramsKeyMap: {
                 LOCATION: 0,
-                FINEDUST: 1
+                FINEDUST: 1,
             },
-            class: 'weather',
-            isNotFor: ['weather'],
-            func: function (sprite, script) {
-                var now = Entry.EXPANSION_BLOCK.weather.date;
-                var date = now.toISOString().slice(0, 10).replace(/-/g, "");
-                var time = pad2(now.getHours() - now.getHours()%3);  // [0, 3, 6, 9, 12, 15, 18, 21]
-
-                var location = script.getField('LOCATION', script);
-                var finedust = script.getField('FINEDUST', script);
-
-                var apiResult = Entry.EXPANSION_BLOCK.weather.getData(location, date + time);
-
-                return Entry.EXPANSION_BLOCK.weather.checkFineDust(apiResult.pm10) == finedust;
+            class: 'weather_legacy',
+            isNotFor: ['weather_legacy'],
+            func: async function(sprite, script) {
+                const apiResult = await Entry.EXPANSION_BLOCK.weather.getData(
+                    'now',
+                    script.getField('LOCATION', script),
+                    null
+                );
+                return Entry.EXPANSION_BLOCK.weather.checkFineDust(
+                    apiResult.pm10,
+                    script.getField('FINEDUST', script)
+                );
             },
             syntax: {
                 js: [],
                 py: [
                     {
-                        syntax: 'Weather.is_current_finedust_grade_good(%1)',
+                        syntax: 'Legacy.Weather.is_current_finedust_grade_good(%1)',
                         params: [null, 'good'],
                         blockType: 'param',
-                        textParams: [params.getLocation(true), params.getFineDust(true)]
+                        textParams: [params.getLocation(true), params.getFineDust(true)],
                     },
                     {
-                        syntax: 'Weather.is_current_finedust_grade_normal(%1)',
+                        syntax: 'Legacy.Weather.is_current_finedust_grade_normal(%1)',
                         params: [null, 'normal'],
                         blockType: 'param',
-                        textParams: [params.getLocation(true), params.getFineDust(true)]
+                        textParams: [params.getLocation(true), params.getFineDust(true)],
                     },
                     {
-                        syntax: 'Weather.is_current_finedust_grade_bad(%1)',
+                        syntax: 'Legacy.Weather.is_current_finedust_grade_bad(%1)',
                         params: [null, 'bad'],
                         blockType: 'param',
-                        textParams: [params.getLocation(true), params.getFineDust(true)]
+                        textParams: [params.getLocation(true), params.getFineDust(true)],
                     },
                     {
-                        syntax: 'Weather.is_current_finedust_grade_very_bad(%1)',
+                        syntax: 'Legacy.Weather.is_current_finedust_grade_very_bad(%1)',
                         params: [, null, 'very_bad'],
                         blockType: 'param',
-                        textParams: [params.getLocation(true), params.getFineDust(true)]
+                        textParams: [params.getLocation(true), params.getFineDust(true)],
                     },
                 ],
             },
@@ -338,7 +830,11 @@ Entry.Expansion_Weather.getBlocks = function () {
             params: [params.getDate(), params.getLocation(), params.getWeatherElements()],
             events: {},
             def: {
-                params: [params.getDate().value, params.getLocation().value, params.getWeatherElements().value],
+                params: [
+                    params.getDate().value,
+                    params.getLocation().value,
+                    params.getWeatherElements().value,
+                ],
                 type: 'get_weather_data',
             },
             pyHelpDef: {
@@ -348,59 +844,82 @@ Entry.Expansion_Weather.getBlocks = function () {
             paramsKeyMap: {
                 DATE: 0,
                 LOCATION: 1,
-                TYPE: 2
+                TYPE: 2,
             },
-            class: 'weather',
-            isNotFor: ['weather'],
-            func: function (sprite, script) {
-                var datetime = Entry.EXPANSION_BLOCK.weather.getDate(script.getField('DATE', script)) + "00";
-                var location = script.getField('LOCATION', script);
-                var type = Entry.EXPANSION_BLOCK.weather.propertyMap[script.getField('TYPE', script)];
-                var apiResult = Entry.EXPANSION_BLOCK.weather.getData(location, datetime);
-
-                if(apiResult[type]) {
-                    return apiResult[type];
-                }
-                return 0;
+            class: 'weather_legacy',
+            isNotFor: ['weather_legacy'],
+            func: async function(sprite, script) {
+                const apiResult = await Entry.EXPANSION_BLOCK.weather.getData(
+                    'week',
+                    script.getField('LOCATION', script),
+                    script.getField('DATE', script)
+                );
+                const type =
+                    Entry.EXPANSION_BLOCK.weather.propertyMap[script.getField('TYPE', script)];
+                return apiResult[type];
             },
             syntax: {
                 js: [],
                 py: [
                     {
-                        syntax: 'Weather.get_lowest_temperature(%1, %2)',
+                        syntax: 'Legacy.Weather.get_lowest_temperature(%1, %2)',
                         params: [null, null, 'the_lowest_temperature'],
                         blockType: 'param',
-                        textParams: [params.getDate(true), params.getLocation(true), params.getWeatherElements(true)]
+                        textParams: [
+                            params.getDate(true),
+                            params.getLocation(true),
+                            params.getWeatherElements(true),
+                        ],
                     },
                     {
-                        syntax: 'Weather.get_highest_temperature(%1, %2)',
+                        syntax: 'Legacy.Weather.get_highest_temperature(%1, %2)',
                         params: [null, null, 'the_highest_temperature'],
                         blockType: 'param',
-                        textParams: [params.getDate(true), params.getLocation(true), params.getWeatherElements(true)]
+                        textParams: [
+                            params.getDate(true),
+                            params.getLocation(true),
+                            params.getWeatherElements(true),
+                        ],
                     },
                     {
-                        syntax: 'Weather.get_humidity(%1, %2)',
+                        syntax: 'Legacy.Weather.get_humidity(%1, %2)',
                         params: [null, null, 'humidity'],
                         blockType: 'param',
-                        textParams: [params.getDate(true), params.getLocation(true), params.getWeatherElements(true)]
+                        textParams: [
+                            params.getDate(true),
+                            params.getLocation(true),
+                            params.getWeatherElements(true),
+                        ],
                     },
                     {
-                        syntax: 'Weather.get_precipitation(%1, %2)',
+                        syntax: 'Legacy.Weather.get_precipitation(%1, %2)',
                         params: [null, null, 'precipitation'],
                         blockType: 'param',
-                        textParams: [params.getDate(true), params.getLocation(true), params.getWeatherElements(true)]
+                        textParams: [
+                            params.getDate(true),
+                            params.getLocation(true),
+                            params.getWeatherElements(true),
+                        ],
                     },
                     {
-                        syntax: 'Weather.get_precipitation_probability(%1, %2)',
+                        syntax: 'Legacy.Weather.get_precipitation_probability(%1, %2)',
                         params: [null, null, 'precipitation_probability'],
                         blockType: 'param',
-                        textParams: [params.getDate(true), params.getLocation(true), params.getWeatherElements(true)]
+                        textParams: [
+                            params.getDate(true),
+                            params.getLocation(true),
+                            params.getWeatherElements(true),
+                        ],
                     },
                     {
-                        syntax: 'Weather.get_wind_speed(%1, %2)',
+                        syntax: 'Legacy.Weather.get_wind_speed(%1, %2)',
                         params: [null, null, 'wind_speed'],
                         blockType: 'param',
-                        textParams: [params.getDate(true), params.getLocation(true), params.getWeatherElements(true)]
+                        textParams: [
+                            params.getDate(true),
+                            params.getLocation(true),
+                            params.getWeatherElements(true),
+                        ],
                     },
                 ],
             },
@@ -422,37 +941,35 @@ Entry.Expansion_Weather.getBlocks = function () {
             },
             paramsKeyMap: {
                 LOCATION: 0,
-                TYPE: 1
+                TYPE: 1,
             },
-            class: 'weather',
-            isNotFor: ['weather'],
-            func: function (sprite, script) {
-                var now = Entry.EXPANSION_BLOCK.weather.date;
-                var location = script.getField('LOCATION', script);
-                var type = Entry.EXPANSION_BLOCK.weather.propertyMap[script.getField('TYPE', script)];
-                var date = now.toISOString().slice(0, 10).replace(/-/g, "");
-                var time = pad2(now.getHours() - now.getHours()%3);  // [0, 3, 6, 9, 12, 15, 18, 21]
+            class: 'weather_legacy',
+            isNotFor: ['weather_legacy'],
+            func: async function(sprite, script) {
+                var apiResult = await Entry.EXPANSION_BLOCK.weather.getData(
+                    'now',
+                    script.getField('LOCATION', script),
+                    null
+                );
+                var type =
+                    Entry.EXPANSION_BLOCK.weather.propertyMap[script.getField('TYPE', script)];
 
-                var apiResult = Entry.EXPANSION_BLOCK.weather.getData(location, date + time);
-                if(apiResult[type]) {
-                    return apiResult[type];
-                }
-                return 0;
+                return apiResult[type];
             },
             syntax: {
                 js: [],
                 py: [
                     {
-                        syntax: 'Weather.get_current_finedust(%1)',
+                        syntax: 'Legacy.Weather.get_current_finedust(%1)',
                         params: [null, 'concentration_of_fine_dust'],
                         blockType: 'param',
-                        textParams: [params.getLocation(true), params.getNowWeatherElement(true)]
+                        textParams: [params.getLocation(true), params.getNowWeatherElement(true)],
                     },
                     {
-                        syntax: 'Weather.get_current_temperature(%1)',
+                        syntax: 'Legacy.Weather.get_current_temperature(%1)',
                         params: [null, 'temperature'],
                         blockType: 'param',
-                        textParams: [params.getLocation(true), params.getNowWeatherElement(true)]
+                        textParams: [params.getLocation(true), params.getNowWeatherElement(true)],
                     },
                 ],
             },
@@ -474,27 +991,38 @@ Entry.Expansion_Weather.getBlocks = function () {
             },
             paramsKeyMap: {
                 LOCATION: 0,
-                TIME: 1
+                TIME: 1,
             },
-            class: 'weather',
-            isNotFor: ['weather'],
-            func: function (sprite, script) {
-                var location = script.getField('LOCATION', script);
-                var time = script.getField('TIME', script);
-                var date = Entry.EXPANSION_BLOCK.weather.date.toISOString().slice(0, 10).replace(/-/g, "");
-                var apiResult = Entry.EXPANSION_BLOCK.weather.getData(location, date + time);
+            class: 'weather_legacy',
+            isNotFor: ['weather_legacy'],
+            func: async function(sprite, script) {
+                const date = Entry.EXPANSION_BLOCK.weather.date
+                    .toISOString()
+                    .slice(0, 10)
+                    .replace(/-/g, '');
+                let time = script.getField('TIME', script);
+                // db에 저장하지 않으면서 00시가 없어져서 03시부터 가능..
+                if (time == '00') {
+                    time = '03';
+                }
+                const apiResult = await Entry.EXPANSION_BLOCK.weather.getData(
+                    'hour',
+                    script.getField('LOCATION', script),
+                    date + pad2(time - time % 3)
+                );
+
                 return apiResult.temp;
             },
             syntax: {
                 js: [],
                 py: [
                     {
-                        syntax: 'Weather.get_today_temperaturet(%1, %2)',
+                        syntax: 'Legacy.Weather.get_today_temperature(%1, %2)',
                         blockType: 'param',
-                        textParams: [params.getLocation(true), params.getTime(true)]
+                        textParams: [params.getLocation(true), params.getTime(true)],
                     },
                 ],
             },
         },
-    }
-}
+    };
+};

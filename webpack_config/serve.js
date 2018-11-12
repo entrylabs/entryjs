@@ -47,7 +47,7 @@ module.exports = merge(common, {
                 target: 'http://localhost:8080',
                 pathRewrite: { '^/lib/entryjs': '' },
             },
-        },
+        }
     },
     devtool: 'source-map',
 });
