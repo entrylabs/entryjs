@@ -23,11 +23,6 @@ export class PIXIBrushAdaptor {
     private _alpha:number = 1;
     private _thickness:number;
     private _color:number;
-    private _shapeChanged:boolean;
-
-    private __alpha:number = 1;
-    private __thickness:number;
-    private __color:number;
 
     private _shape:PIXI.Graphics;
 
@@ -71,31 +66,20 @@ export class PIXIBrushAdaptor {
 
     lineTo(x:number, y:number) {
         if(!this._shape) return;
-        //this._setStyle(); // pixi webgl 오류 때문에 이것을 함.
+        this._setStyle(); // pixi webgl 오류 때문에 이것을 함.
         this._shape.lineTo(Number(x), Number(y)); // 박봉배: #9374 x,y 좌표가 문자로 넘어와서 생긴 이슈
         this._shape.clearDirty++; // 박봉배: [issue](https://github.com/pixijs/pixi.js/issues/5047) 이 이슈 때문에 추가 코딩.
     }
 
     /** @param shape - drawing 을 할 대상을 지정 */
     internal_setShape(shape:PIXI.Graphics) {
-        this._shapeChanged = this._shape != shape;
         this._shape = shape;
         this._setStyle();
     }
 
     _setStyle() {
         if(!this._shape) return;
-        //console.log("setStyle", this._thickness, this._color, this._alpha);
-        if(this._shapeChanged &&
-            this._color != this.__color ||
-            this._alpha != this.__alpha ||
-            this._thickness != this.__thickness) {
-
-            this.__thickness = this._thickness;
-            this.__color = this._color;
-            this.__alpha = this._alpha;
-            this._shape.lineStyle(this._thickness, this._color, this._alpha);
-        }
+        this._shape.lineStyle(this._thickness, this._color, this._alpha);
     }
 
     _parseRGBCssStyleColor(color:string) {
