@@ -212,13 +212,14 @@ class GlobalSvg {
         this.left = pos.scaleX + (offset.left / this.scale - this._offsetX) - this.originalX;
         this.top = pos.scaleY + (offset.top / this.scale - this._offsetY) - this.originalY;
         const [line] = this.svgGroup.getElementsByTagName('line');
+        const { top, left } = view.pathGroup.getBoundingClientRect();
         line.setAttribute(
             'x1',
-            view.pathGroup.getBoundingClientRect().x / this.scale - this.left + view.parentWidth
+            left / this.scale - this.left + view.parentWidth
         );
         line.setAttribute(
             'y1',
-            view.pathGroup.getBoundingClientRect().y / this.scale - this.top + view.parentHeight / 2
+            top / this.scale - this.top + view.parentHeight / 2
         );
         this._applyDomPos(this.left, this.top);
     }
@@ -304,6 +305,6 @@ class GlobalSvg {
     getRelativePoint(matrix) {
         return this.svgPoint.matrixTransform(matrix);
     }
-}
+} 
 
 Entry.GlobalSvg = new GlobalSvg();
