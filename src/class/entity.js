@@ -1150,7 +1150,7 @@ Entry.EntityObject.prototype.applyFilter = function(isForce, forceEffects) {
             obj.alpha = e.alpha = adjust(e.alpha, 0, 1);
         }
 
-        obj.filters = f;
+        obj.filters = f && f.length ? f : null;
     })(effects, object);
 
     this.cache();
@@ -1668,7 +1668,7 @@ Entry.EntityObject.prototype.destroy = function(isClone) {
 
 Entry.EntityObject.prototype.cache = function() {
     var { object } = this;
-    if (object) {
+    if (object && object.filters) {
         if(object.cacheAsBitmap) {
             PIXIHelper.createjsUncache(this);
         }
