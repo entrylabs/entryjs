@@ -212,14 +212,13 @@ class GlobalSvg {
         this.left = pos.scaleX + (offset.left / this.scale - this._offsetX) - this.originalX;
         this.top = pos.scaleY + (offset.top / this.scale - this._offsetY) - this.originalY;
         const [line] = this.svgGroup.getElementsByTagName('line');
-        const { top, left } = view.pathGroup.getBoundingClientRect();
         line.setAttribute(
             'x1',
-            left / this.scale - this.left + view.parentWidth
+            startX / this.scale - this.left + view.parentWidth
         );
         line.setAttribute(
             'y1',
-            top / this.scale - this.top + view.parentHeight / 2
+            startY / this.scale - this.top + view.parentHeight / 2
         );
         this._applyDomPos(this.left, this.top);
     }

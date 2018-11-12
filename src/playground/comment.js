@@ -348,12 +348,10 @@ Entry.Comment = class Comment {
     }
 
     setDragInstance(e) {
-        const { width: parentWidth } = this.pathGroup.getBBox();
-        const { topFieldHeight, height } = this._blockView;
-        const parentHeight = topFieldHeight || height;
         const mouseEvent = Entry.Utils.convertMouseEvent(e);
         const matrix = this.svgGroup.getCTM();
         const { x, y } = Entry.GlobalSvg.getRelativePoint(matrix);
+        const { left: startX, top: startY } = this.pathGroup.getBoundingClientRect();
         this.mouseDownCoordinate = {
             x: mouseEvent.pageX,
             y: mouseEvent.pageY,
@@ -361,8 +359,8 @@ Entry.Comment = class Comment {
             parentY: y,
         };
         this.dragInstance = new Entry.DragInstance({
-            startX: x / this.scale + parentWidth,
-            startY: y / this.scale + parentHeight / 2,
+            startX,
+            startY,
             offsetX: mouseEvent.pageX,
             offsetY: mouseEvent.pageY,
             mode: true,
