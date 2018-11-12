@@ -996,10 +996,6 @@ Entry.EntityObject.prototype.setImage = function(pictureModel) {
     this.setRegX(this.width / 2 + absoluteRegX);
     this.setRegY(this.height / 2 + absoluteRegY);
 
-    //pictureId can be duplicated by copy/paste
-    //add entityId in order to differentiate copied pictures
-    var cacheId = !this.isClone ? pictureModel.id + this.id : pictureModel.id;
-
     this.object.texture = PIXIAtlasManager.getTextureWithModel(
         this.parent.scene.id,
         pictureModel
@@ -1007,6 +1003,9 @@ Entry.EntityObject.prototype.setImage = function(pictureModel) {
     this._scaleAdaptor.updateScaleFactor();
 
     Entry.requestUpdate = true;
+
+    var hasFilter = !_.isEmpty(that.object.filters);
+    hasFilter ? this.cache() : PIXIHelper.createjsUncache(this);
 
     /*
     var image = Entry.container.getCachedPicture(cacheId);
@@ -1365,9 +1364,8 @@ Entry.EntityObject.prototype.resetFilter = function() {
     this.setInitialEffectValue();
     object.alpha = this.effect.alpha;
 
-    // object.uncache();
-    PIXIHelper.createjsUncache(object);
-
+    //object.uncache();
+    PIXIHelper.createjsUncache(this);
 };
 
 /**
@@ -1649,6 +1647,7 @@ Entry.EntityObject.prototype.destroy = function(isClone) {
 
     var object = this.object;
     if (object) {
+        PIXIHelper.createjsUncache(this);
         object.removeAllListeners();
         delete object.image;
         delete object.entity;
@@ -1670,8 +1669,10 @@ Entry.EntityObject.prototype.destroy = function(isClone) {
 Entry.EntityObject.prototype.cache = function() {
     var { object } = this;
     if (object) {
-        //TODO 준배님 createjs cache 이거 어떡합니까?
-        // object.cache(0, 0, this.getWidth(), this.getHeight());
+        if(object.cacheAsBitmap) {
+            PIXIHelper.createjsUncache(this);
+        }
+        object.cacheAsBitmap = true;
         Entry.requestUpdate = true;
     }
 };

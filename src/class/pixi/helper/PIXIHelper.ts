@@ -53,24 +53,10 @@ export default class PIXIHelper {
         return pixiText.measuredLineHeight;
     }
 
-
-    static cacheIfHasFilters(that:any) {
-        // if (!_.isEmpty(that.object.filters)) that.cache();
-        // else that.object.uncache();
-    }
-
-    /**
-     *
-     * @param {PIXI.Sprite} sp
-     * @param {HTMLImageElement} image
-     */
-    static setTextureToPIXISprite(sp:any, image:any) {
-        sp.texture = PIXI.Texture.from(image);
-    }
-
-
     static createjsUncache(target:any) {
-        // object.uncache()
+        var obj:PIXI.Sprite = target.object;
+        if(!obj) return;
+        obj.cacheAsBitmap = false;
     }
 
     /**
