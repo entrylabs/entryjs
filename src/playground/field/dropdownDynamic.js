@@ -12,7 +12,7 @@ Entry.FieldDropdownDynamic = class FieldDropdownDynamic extends Entry.FieldDropd
         this._block = blockView.block;
         this._blockView = blockView;
 
-        var box = new Entry.BoxModel();
+        const box = new Entry.BoxModel();
         this.box = box;
 
         this.svgGroup = null;
@@ -37,9 +37,12 @@ Entry.FieldDropdownDynamic = class FieldDropdownDynamic extends Entry.FieldDropd
         this._textColor = textColor || '#FFFFFF';
         this._bgColor = bgColor;
 
-        var menuName = this._contents.menuName;
-        if (_.isFunction(menuName)) this._menuGenerator = menuName;
-        else this._menuName = menuName;
+        const menuName = this._contents.menuName;
+        if (_.isFunction(menuName)) {
+            this._menuGenerator = menuName;
+        } else {
+            this._menuName = menuName;
+        }
 
         this._CONTENT_HEIGHT = this.getContentHeight(content.dropdownHeight);
         this._font_size = this.getFontSize(content.fontSize);
@@ -65,17 +68,21 @@ Entry.FieldDropdownDynamic = class FieldDropdownDynamic extends Entry.FieldDropd
     }
 
     _updateValue() {
-        var object = this._block.getCode().object;
-        var options = [];
+        const object = this._block.getCode().object;
+        let options = [];
         if (Entry.container) {
-            if (this._menuName) options = Entry.container.getDropdownList(this._menuName, object);
-            else options = this._menuGenerator(this.getIndexValue());
+            if (this._menuName) {
+                options = Entry.container.getDropdownList(this._menuName, object);
+            } else {
+                options = this._menuGenerator(this.getIndexValue());
+            }
         }
 
         this._contents.options = options;
-        var value = this.getValue();
-        if (this._blockView.isInBlockMenu || !value || value == 'null')
+        let value = this.getValue();
+        if (this._blockView.isInBlockMenu || !value || value == 'null') {
             value = options.length !== 0 ? options[0][1] : null;
+        }
 
         this._updateOptions();
         this.setValue(value);
@@ -110,7 +117,6 @@ Entry.FieldDropdownDynamic = class FieldDropdownDynamic extends Entry.FieldDropd
     }
 
     optionChangeTriggeredEvent() {
-        console.log('optionChangeTriggeredEvent');
         const targetIndex = this._contents.targetIndex;
 
         if (typeof targetIndex === 'undefined') {
@@ -119,11 +125,10 @@ Entry.FieldDropdownDynamic = class FieldDropdownDynamic extends Entry.FieldDropd
 
         $(this._blockView.contentSvgGroup).on('optionChanged', (e, data) => {
             if (this._block == data.block && targetIndex == data.index) {
-                let options = this._menuGenerator(data.value);
+                const options = this._menuGenerator(data.value);
                 this._contents.options = options;
                 this.applyValue(options[0][1]);
             }
         });
     }
 };
-// Entry.Utils.inherit(Entry.FieldDropdown, Entry.FieldDropdownDynamic);
