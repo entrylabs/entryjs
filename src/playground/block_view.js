@@ -231,7 +231,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
         const parsingReg = /%(\d+)/im;
         let parsingRet;
 
-        let template = this._getTemplate(mode);
+        let template = this._getTemplate(mode) || '';
         const params = this._getSchemaParams(mode);
 
         if (mode === Entry.BlockView.RENDER_MODE_TEXT) {
@@ -1232,8 +1232,12 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
                 param.data.view.reDraw();
             }
         });
-        (this.block.statements || []).forEach(({ view }) => view.reDraw());
-        (this._extensions || []).forEach((ext) => _.result(ext, 'updatePos'));
+        (this.block.statements || []).forEach(({ view }) => {
+return view.reDraw();
+});
+        (this._extensions || []).forEach((ext) => {
+return _.result(ext, 'updatePos')
+;});
     };
 
     p.getParam = function(index) {

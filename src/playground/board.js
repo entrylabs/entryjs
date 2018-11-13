@@ -10,6 +10,7 @@ Entry.Board = class Board {
         this.scale = option.scale || 1;
         this.readOnly = option.readOnly === undefined ? false : option.readOnly;
         this.changeEvent = new Entry.Event(this);
+        this.isVisibleComment = true;
 
         this.createView(option);
         this.updateOffset();
@@ -41,6 +42,12 @@ Entry.Board = class Board {
     }
     static get OPTION_DOWNLOAD() {
         return 3;
+    }
+    static get ADD_COMMENT() {
+        return 4;
+    }
+    static get VISIBLE_COMMENT() {
+        return 5;
     }
     static get DRAG_RADIUS() {
         return 5;
@@ -1140,6 +1147,26 @@ Entry.Board = class Board {
                     },
                 },
             },
+            {
+                activated: true,
+                option: {
+                    text: '메모 추가하기',
+                    enable: !this.readOnly,
+                    callback() {},
+                },
+            },
+            {
+                activated: true,
+                option: {
+                    text: '모든 메모 숨기기',
+                    enable: !this.readOnly,
+                    callback() {
+                        that.isVisibleComment
+                            ? Entry.do('hideAllCommentBlock', that)
+                            : Entry.do('showAllCommentBlock', that);
+                    },
+                },
+            },
         ];
     }
 
@@ -1187,6 +1214,9 @@ Entry.Board = class Board {
         contextOptions[Entry.Board.OPTION_PASTE].option.enable = !!Entry.clipboard;
         contextOptions[Entry.Board.OPTION_DOWNLOAD].option.enable =
             this.code.getThreads().length !== 0;
+        contextOptions[Entry.Board.VISIBLE_COMMENT].option.text = this.isVisibleComment
+            ? '모든 메모 숨기기'
+            : '모든 메모 보이기';
 
         const { clientX: x, clientY: y } = Entry.Utils.convertMouseEvent(e);
         Entry.ContextMenu.show(

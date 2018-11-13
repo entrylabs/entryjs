@@ -1,6 +1,6 @@
 'use strict';
 
-var Entry = require('../entry');
+const Entry = require('../entry');
 
 Entry.STATIC = {
     /* data type */
@@ -63,6 +63,12 @@ Entry.STATIC = {
         insertBlockFromBlockMenuFollowSeparate: 122,
         insertBlockFollowSeparate: 123,
         separateBlockByCommand: 124,
+        createCommentBlock: 125,
+        removeCommentBlock: 126,
+        showCommentBlock: 127,
+        hideCommentBlock: 128,
+        showAllCommentBlock: 129,
+        hideAllCommentBlock: 130,
 
         selectObject: 201,
         objectEditButtonClick: 202,

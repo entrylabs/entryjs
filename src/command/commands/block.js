@@ -976,4 +976,58 @@
         }
         return c[newType];
     }
+
+    c[COMMAND_TYPES.createCommentBlock] = {
+        do(block, board) {
+            block._comment = new Entry.Comment(block, board);
+        },
+        state() {
+            return [];
+        },
+        log() {
+            return [];
+        },
+        undo: 'removeCommentBlock',
+    };
+
+    c[COMMAND_TYPES.removeCommentBlock] = {
+        do(block) {
+            delete block._comment;
+        },
+        state() {
+            return [];
+        },
+        log() {
+            return [];
+        },
+        undo: 'createCommentBlock',
+    };
+
+    c[COMMAND_TYPES.hideAllCommentBlock] = {
+        do(board) {
+            board.svgCommentGroup.classList.add('invisible');
+            board.isVisibleComment = false;
+        },
+        state() {
+            return [];
+        },
+        log() {
+            return [];
+        },
+        undo: 'showAllCommentBlock',
+    };
+
+    c[COMMAND_TYPES.showAllCommentBlock] = {
+        do(board) {
+            board.svgCommentGroup.classList.remove('invisible');
+            board.isVisibleComment = true;
+        },
+        state() {
+            return [];
+        },
+        log() {
+            return [];
+        },
+        undo: 'hideAllCommentBlock',
+    };
 })(Entry.Command);

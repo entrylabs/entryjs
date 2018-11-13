@@ -128,11 +128,11 @@ Entry.Comment = class Comment {
 
             this.canRender = true;
             this.setFrame();
-            this.setInitSchema();
+            this.initSchema();
         }
     }
 
-    setInitSchema() {
+    initSchema() {
         const { width: parentWidth } = this.pathGroup.getBBox();
         const { topFieldHeight, height } = this._blockView;
         const parentHeight = topFieldHeight || height;
@@ -348,12 +348,10 @@ Entry.Comment = class Comment {
     }
 
     setDragInstance(e) {
-        const { width: parentWidth } = this.pathGroup.getBBox();
-        const { topFieldHeight, height } = this._blockView;
-        const parentHeight = topFieldHeight || height;
         const mouseEvent = Entry.Utils.convertMouseEvent(e);
         const matrix = this.svgGroup.getCTM();
         const { x, y } = Entry.GlobalSvg.getRelativePoint(matrix);
+        const { left: startX, top: startY } = this.pathGroup.getBoundingClientRect();
         this.mouseDownCoordinate = {
             x: mouseEvent.pageX,
             y: mouseEvent.pageY,
@@ -361,8 +359,8 @@ Entry.Comment = class Comment {
             parentY: y,
         };
         this.dragInstance = new Entry.DragInstance({
-            startX: x / this.scale + parentWidth,
-            startY: y / this.scale + parentHeight / 2,
+            startX,
+            startY,
             offsetX: mouseEvent.pageX,
             offsetY: mouseEvent.pageY,
             mode: true,
@@ -370,17 +368,17 @@ Entry.Comment = class Comment {
     }
 
     bindDomEvent(mouseMove, mouseUp) {
-        document.onmousemove = mouseMove;
-        document.ontouchmove = mouseMove;
-        document.onmouseup = mouseUp;
-        document.ontouchend = mouseUp;
+        document.addEventListener('mousemove', mouseMove);
+        document.addEventListener('touchmove', mouseMove);
+        document.addEventListener('mouseup', mouseUp);
+        document.addEventListener('touchend', mouseUp);
     }
 
-    removeDomEvent() {
-        document.onmousemove = undefined;
-        document.ontouchmove = undefined;
-        document.onmouseup = undefined;
-        document.ontouchend = undefined;
+    removeDomEvent(mouseMove, mouseUp) {
+        document.removeEventListener('mousemove', mouseMove);
+        document.removeEventListener('touchmove', mouseMove);
+        document.removeEventListener('mouseup', mouseUp);
+        document.removeEventListener('touchend', mouseUp);
     }
 
     getMouseMoveDiff(mouseEvent) {
@@ -445,23 +443,23 @@ Entry.Comment = class Comment {
             this.destroyTextArea();
         }
         
-        this.removeMoveSetting();
+        this.removeMoveSetting(this.mouseMove, this.mouseUp);
     }
 
-    removeMoveSetting() {
+    removeMoveSetting(mouseMove, mouseUp) {
         Entry.GlobalSvg.remove();
         this.dragMode = Entry.DRAG_MODE_NONE;
         this.board.set({ dragBlock: null });
         this.set({ visible: true });
-        this.removeDomEvent();
+        this.removeDomEvent(mouseMove, mouseUp);
         delete this.mouseDownCoordinate;
         delete this.dragInstance;
     }
 
     addControl() {
         const bindEvent = (dom, func) => {
-            dom.onmousedown = func;
-            dom.ontouchstart = func;
+            dom.addEventListener('mousedown', func);
+            dom.addEventListener('ontouchstart', func);
         };
         bindEvent(this._comment, this.mouseDown);
         bindEvent(this._title, this.mouseDown);
@@ -617,7 +615,7 @@ Entry.Comment = class Comment {
             height: Number(this._comment.getAttribute('height')),
         });
         
-        this.removeMoveSetting();
+        this.removeMoveSetting(this.resizeMouseMove, this.resizeMouseUp);
     }
 
     toggleMouseDown(e) {
@@ -640,7 +638,7 @@ Entry.Comment = class Comment {
                 isOpened: !this.isOpened,
             });
         }
-        this.removeMoveSetting();
+        this.removeMoveSetting(this.mouseMove, this.toggleMouseUp);
     }
 
     toggleContent() {
