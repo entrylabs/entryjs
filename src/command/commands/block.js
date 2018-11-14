@@ -980,6 +980,7 @@
     c[COMMAND_TYPES.createCommentBlock] = {
         do(block, board) {
             block._comment = new Entry.Comment(block, board);
+            board.set({ isVisibleComment: true });
         },
         state() {
             return [];
@@ -1004,24 +1005,9 @@
         undo: 'createCommentBlock',
     };
 
-    c[COMMAND_TYPES.hideAllCommentBlock] = {
-        do(board) {
-            board.svgCommentGroup.classList.add('invisible');
-            board.isVisibleComment = false;
-        },
-        state() {
-            return [];
-        },
-        log() {
-            return [];
-        },
-        undo: 'showAllCommentBlock',
-    };
-
     c[COMMAND_TYPES.showAllCommentBlock] = {
         do(board) {
-            board.svgCommentGroup.classList.remove('invisible');
-            board.isVisibleComment = true;
+            board.set({ isVisibleComment: true });
         },
         state() {
             return [];
@@ -1030,5 +1016,18 @@
             return [];
         },
         undo: 'hideAllCommentBlock',
+    };
+
+    c[COMMAND_TYPES.hideAllCommentBlock] = {
+        do(board) {
+            board.set({ isVisibleComment: false });
+        },
+        state() {
+            return [];
+        },
+        log() {
+            return [];
+        },
+        undo: 'showAllCommentBlock',
     };
 })(Entry.Command);

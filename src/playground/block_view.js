@@ -460,10 +460,6 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
     };
 
     p._moveBy = function(x, y, animate, doNotUpdatePos) {
-        // const comment = this.getComment();
-        // if (comment) {
-        //     comment.moveBy(x, y, animate, doNotUpdatePos);
-        // }
         return this._moveTo(this.x + x, this.y + y, animate, doNotUpdatePos);
     };
 

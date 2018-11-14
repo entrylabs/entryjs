@@ -10,7 +10,6 @@ Entry.Board = class Board {
         this.scale = option.scale || 1;
         this.readOnly = option.readOnly === undefined ? false : option.readOnly;
         this.changeEvent = new Entry.Event(this);
-        this.isVisibleComment = true;
 
         this.createView(option);
         this.updateOffset();
@@ -27,7 +26,9 @@ Entry.Board = class Board {
 
         this._addControl();
         this._bindEvent();
+        this.observe(this, 'handleVisibleComment', ['isVisibleComment'], false);
         Entry.addEventListener('fontLoaded', this.reDraw.bind(this));
+
         Entry.Utils.setSVGDom(this.svgDom);
     }
 
@@ -58,6 +59,7 @@ Entry.Board = class Board {
         dragBlock: null,
         magnetedBlockView: null,
         selectedBlockView: null,
+        isVisibleComment: true,
     };
 
     createView(option) {
@@ -1152,7 +1154,9 @@ Entry.Board = class Board {
                 option: {
                     text: '메모 추가하기',
                     enable: !this.readOnly,
-                    callback() {},
+                    callback() {
+                        Entry.do('createCommentBlock', undefined, that);
+                    },
                 },
             },
             {
@@ -1229,6 +1233,15 @@ Entry.Board = class Board {
             null,
             { x, y }
         );
+    }
+
+    handleVisibleComment() {
+        console.log('hihi', this.isVisibleComment);
+        if (this.isVisibleComment) {
+            this.view.removeClass('invisibleComment');
+        } else {
+            this.view.addClass('invisibleComment');
+        }
     }
 
     getDom(query) {
