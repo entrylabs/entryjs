@@ -83,7 +83,7 @@ Entry.FieldAngle = class FieldAngle extends Entry.Field {
                 positionDom: this.svgGroup,
                 onOutsideClick: (angle) => {
                     if(this.angleWidget) {
-                        this._applyValue(angle);
+                        this._applyValue(FieldAngle._refineDegree(angle));
                         this._setTextValue();
                         this.destroyOption();
                     }
@@ -104,7 +104,7 @@ Entry.FieldAngle = class FieldAngle extends Entry.Field {
             }
             this._applyValue(nextValue);
         }).on('change', (value) => {
-            this._applyValue(value);
+            this._applyValue(String(value));
         });
 
         this.optionGroup.focus();
@@ -138,7 +138,7 @@ Entry.FieldAngle = class FieldAngle extends Entry.Field {
                 }
                 return returnValue;
             case '.':
-                if (/\./.test(returnValue)) {
+                if (/\./.test(returnValue) || returnValue === '-') {
                     return returnValue;
                 }
                 break;
@@ -174,14 +174,17 @@ Entry.FieldAngle = class FieldAngle extends Entry.Field {
     }
 
     _applyValue(value) {
-        let refinedDegree = FieldAngle._refineDegree(value);
+        let rangedValue = value;
+        if (Entry.Utils.isNumber(value) && value.lastIndexOf('.') !== value.length - 1) {
+            rangedValue = String(rangedValue % 360);
+        }
 
-        this.setValue(value);
+        this.setValue(rangedValue);
         this.textElement.textContent = this.getValue();
 
         if(this.angleWidget) {
             this.angleWidget.data = {
-                angle: refinedDegree,
+                angle: FieldAngle._refineDegree(value),
             };
         }
 
@@ -241,6 +244,11 @@ Entry.FieldAngle = class FieldAngle extends Entry.Field {
             refinedDegree %= 360;
         } else if (refinedDegree < 0) {
             refinedDegree = (refinedDegree % 360);
+        }
+        refinedDegree = String(refinedDegree);
+
+        if (refinedDegree.lastIndexOf('.') === refinedDegree.length - 1) {
+            return refinedDegree.slice(0, refinedDegree.length - 1);
         }
 
         return refinedDegree;
