@@ -245,7 +245,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
         }
 
         const _renderMode = mode || this.renderMode;
-        template.split(reg).forEach((param, i) => {
+        template && template.split(reg).forEach((param, i) => {
             if (param[0] === ' ') {
                 param = param.substring(1);
             }
