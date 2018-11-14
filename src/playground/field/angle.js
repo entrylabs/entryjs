@@ -4,36 +4,29 @@
 
 import EntryTool from 'entry-tool';
 
-require('./field');
+Entry.FieldAngle = class FieldAngle extends Entry.Field {
+    constructor(content, blockView, index) {
+        super(content, blockView, index);
 
-/*
- *
- */
-Entry.FieldAngle = function(content, blockView, index) {
-    this._block = blockView.block;
-    this._blockView = blockView;
+        this.X_PADDING = 8;
+        this.TEXT_Y_PADDING = 4;
 
-    this.box = new Entry.BoxModel();
+        this._block = blockView.block;
+        this._blockView = blockView;
+        this.box = new Entry.BoxModel();
+        this.svgGroup = null;
+        this.position = content.position;
+        this._contents = content;
+        this._index = index;
 
-    this.svgGroup = null;
+        const value = this.getValue();
+        this.setValue(FieldAngle._refineDegree(value !== undefined ? value : '90'));
 
-    this.position = content.position;
-    this._contents = content;
-    this._index = index;
-    var value = this.getValue();
-    this.setValue(this._refineDegree(value !== undefined ? value : '90'));
+        this._CONTENT_HEIGHT = this.getContentHeight();
+        this.renderStart();
+    }
 
-    this._CONTENT_HEIGHT = this.getContentHeight();
-    this.renderStart();
-};
-
-Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
-
-(function(p) {
-    const X_PADDING = 8,
-        TEXT_Y_PADDING = 4;
-
-    p.renderStart = function(board, mode) {
+    renderStart() {
         if (this.svgGroup) {
             $(this.svgGroup).remove();
         }
@@ -43,16 +36,16 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
         });
 
         this.textElement = this.svgGroup.elem('text', {
-            x: X_PADDING / 2,
-            y: TEXT_Y_PADDING,
+            x: this.X_PADDING / 2,
+            y: this.TEXT_Y_PADDING,
             'font-size': '11px',
             'font-family': 'NanumGothic',
         });
 
         this._setTextValue();
 
-        var width = this.getTextWidth();
-        var CONTENT_HEIGHT = this._CONTENT_HEIGHT;
+        const width = this.getTextWidth();
+        const CONTENT_HEIGHT = this._CONTENT_HEIGHT;
 
         this._header = this.svgGroup.elem('rect', {
             x: 0,
@@ -75,9 +68,9 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
             width: width,
             height: CONTENT_HEIGHT,
         });
-    };
+    }
 
-    p.renderOptions = function() {
+    renderOptions() {
         this.optionGroup = Entry.Dom('div', {
             class: 'entry-widget-angle',
             parent: $('body'),
@@ -88,54 +81,115 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
             data: {
                 angle: this.getValue(),
                 positionDom: this.svgGroup,
-                onOutsideClick: () => {
+                onOutsideClick: (angle) => {
                     if(this.angleWidget) {
-                        this.angleWidget.hide();
-                        this.applyValue(this.angleWidget.getData('angle'));
-                        this.isEditing() && this.destroyOption(undefined, true);
+                        this._applyValue(angle);
+                        this._setTextValue();
+                        this.destroyOption();
                     }
                 },
             },
             container: this.optionGroup[0],
         }).on('click', (eventName, value) => {
+            let nextValue = 0;
             switch(eventName) {
                 case 'buttonPressed':{
-                    this.applyValue(this.getValue() + value);
+                    nextValue = this._getNextValue(value);
                     break;
                 }
-                case 'backButtonPressed':
-                    const nextValue = this.getValue() / 10;
-                    this.applyValue(nextValue);
+                case 'backButtonPressed':{
+                    nextValue = this._getSubstringValue();
                     break;
+                }
             }
+            this._applyValue(nextValue);
         }).on('change', (value) => {
-            this.applyValue(String(value));
+            this._applyValue(value);
         });
 
         this.optionGroup.focus();
         this.optionGroup.select();
         this.optionDomCreated();
-    };
+    }
 
-    p.applyValue = function(value) {
-        if (!Entry.Utils.isNumber(value) || value === '') return;
-        value = this._refineDegree(value);
+    /**
+     * 기존 값의 뒤에 새 값을 추가한다. 내부에서 모든 숫자는 문자열이다.
+     * 규칙은 아래와 같다.
+     *
+     * - 마이너스 입력은 현재 값이 0 인 경우만 가능
+     * - . 은 값에서 유일하게 하나만 허용한다.
+     * - 현재 값이 0 혹은 -0 인 경우 0은 입력할 수 없다. 다른 숫자는 입력할 수 있다.
+     *
+     * @param value 이번에 입력된 값
+     * @return {string} 규칙에 맞추어 정제된 값
+     * @private
+     */
+    _getNextValue(value) {
+        let returnValue = String(this.getValue());
+
+        if (!FieldAngle._isValidInputValue(value)) {
+            return returnValue;
+        }
+
+        switch(value) {
+            case '-':
+                if (returnValue === '0') {
+                    return '-';
+                }
+                return returnValue;
+            case '.':
+                if (/\./.test(returnValue)) {
+                    return returnValue;
+                }
+                break;
+            case '0':
+                if (returnValue.startsWith('0') || returnValue.startsWith('-0')) {
+                    return returnValue;
+                }
+                break;
+            default:
+                if (returnValue === '0') {
+                    return value;
+                }
+                break;
+        }
+
+        returnValue += value;
+        return returnValue;
+    }
+
+    /**
+     * 현재 값 블록에서 마지막 숫자를 삭제한 값을 반환한다.
+     * 0 인 경우는 0 을 반환, - 인 경우는 0 을 반환한다.
+     * @returns {string} 마지막 위치가 삭제된 블록 값
+     * @private
+     */
+    _getSubstringValue() {
+        let returnValue = String(this.getValue());
+        if (returnValue.length === 1) {
+            return '0';
+        } else {
+            return returnValue.slice(0, returnValue.length - 1);
+        }
+    }
+
+    _applyValue(value) {
+        let refinedDegree = FieldAngle._refineDegree(value);
 
         this.setValue(value);
         this.textElement.textContent = this.getValue();
 
         if(this.angleWidget) {
             this.angleWidget.data = {
-                angle: value,
+                angle: refinedDegree,
             };
         }
 
-        this._setTextValue();
         this.resize();
-    };
+    }
 
-    p.resize = function() {
-        var obj = { width: this.getTextWidth() };
+    resize() {
+        const obj = { width: this.getTextWidth() };
 
         this._header.attr(obj);
         if (this.optionGroup) {
@@ -144,55 +198,55 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldAngle);
 
         this.box.set(obj);
         this._blockView.dAlignContent();
-    };
+    }
 
-    p.getTextWidth = function() {
-        if (!this.textElement) return X_PADDING;
-        return this.getTextBBox().width + X_PADDING;
-    };
+    getTextWidth() {
+        if (!this.textElement) return this.X_PADDING;
+        return this.getTextBBox().width + this.X_PADDING;
+    }
 
-    p.getText = function() {
-        var value = this.getValue();
-        var reg = /&value/gm;
+    getText() {
+        const value = this.getValue();
+        const reg = /&value/gm;
         if (reg.test(value)) return value.replace(reg, '');
         return value + '\u00B0';
-    };
+    }
 
-    p._refineDegree = function(value) {
-        const reg = /&value/gm;
-        if (reg.test(value)) return value;
-
-        let refinedDegree = value;
-        if (refinedDegree > 360) {
-            refinedDegree %= 360;
-        } else if (refinedDegree < 0) {
-            refinedDegree = (refinedDegree % 360) + 360;
+    destroyOption() {
+        if (this.angleWidget) {
+            this.angleWidget.isShow && this.angleWidget.hide();
+            this.angleWidget.remove();
+            this.angleWidget = null;
+        }
+        if (this.optionGroup) {
+            this.optionGroup.remove();
         }
 
-        return refinedDegree;
-    };
+        super.destroyOption();
+    }
 
-    p.destroyOption = function(skipCommand, forceCommand) {
-        var _destroyFunc = _.partial(_.result, _, 'destroy');
-        var _removeFunc = _.partial(_.result, _, 'remove');
-
-        _destroyFunc(this.disposeEvent);
-        delete this.documentDownEvent;
-
-        _removeFunc(this.optionGroup);
-        delete this.optionGroup;
-
-        _removeFunc(this.angleOptionGroup);
-        delete this.angleOptionGroup;
-
-        this._setTextValue();
-        skipCommand !== true && this.command(forceCommand);
-    };
-
-    p._setTextValue = function() {
+    _setTextValue() {
         this.textElement.textContent = this._convert(
             this.getText(),
             this.getValue()
         );
-    };
-})(Entry.FieldAngle.prototype);
+    }
+
+    static _refineDegree(value) {
+        const reg = /&value/gm;
+        if (reg.test(value)) return value;
+
+        let refinedDegree = String(value).match(/[\d|\-|.|\+]+/g)[0] || 0;
+        if (refinedDegree > 360) {
+            refinedDegree %= 360;
+        } else if (refinedDegree < 0) {
+            refinedDegree = (refinedDegree % 360);
+        }
+
+        return refinedDegree;
+    }
+
+    static _isValidInputValue(value) {
+        return Entry.Utils.isNumber(value) || value === '-' || value === '.';
+    }
+};
