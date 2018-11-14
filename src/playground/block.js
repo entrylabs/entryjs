@@ -12,7 +12,7 @@ Entry.Block = function(block, thread) {
     this._schema = null;
 
     if (block._backupParams) {
-        this._backupParams = block._backupParams;  
+        this._backupParams = block._backupParams;
     }
 
     this.setThread(thread);
@@ -23,7 +23,7 @@ Entry.Block = function(block, thread) {
         this.category = category;
         const entryBlock = Entry.block[this.type];
         if (entryBlock) {
-            entryBlock.isFor = [`category_${  category}`];
+            entryBlock.isFor = [`category_${category}`];
         }
     }
 
@@ -163,24 +163,14 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
             return;
         }
 
-        const {
-            changeEvent,
-            paramsBackupEvent,
-            destroyParamsBackupEvent,
-        } = this._schema;
+        const { changeEvent, paramsBackupEvent, destroyParamsBackupEvent } = this._schema;
 
         if (!this._schemaChangeEvent && changeEvent) {
-            this._schemaChangeEvent = changeEvent.attach(
-                this,
-                this.changeSchema
-            );
+            this._schemaChangeEvent = changeEvent.attach(this, this.changeSchema);
         }
 
         if (!this._paramsBackupEvent && paramsBackupEvent) {
-            this._paramsBackupEvent = paramsBackupEvent.attach(
-                this,
-                this.paramsBackup
-            );
+            this._paramsBackupEvent = paramsBackupEvent.attach(this, this.paramsBackup);
         }
 
         if (!this._destroyParamsBackupEvent && destroyParamsBackupEvent) {
@@ -223,10 +213,7 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
 
             const paramInjected = thisParams[i] || i < thisParams.length;
 
-            if (
-                value &&
-                (params[i].type === 'Output' || params[i].type === 'Block')
-            ) {
+            if (value && (params[i].type === 'Output' || params[i].type === 'Block')) {
                 if (typeof value !== 'object') {
                     value = {
                         type: 'number',
@@ -285,9 +272,6 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
         if (!this.view) {
             return;
         }
-        if (this._comment) {
-            this._comment.updatePos();
-        }
         this.set({
             x: this.view.x,
             y: this.view.y,
@@ -308,7 +292,6 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
             this.set({
                 view: new Entry.BlockView(this, board, mode),
             });
-            // this._comment = new Entry.Comment(this, board);
             this._updatePos();
         }
     };
@@ -321,8 +304,7 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
         return new Entry.Block(this.toJSON(true), thread);
     };
 
-    p.toJSON = function(isNew, excludeData, option = {}) {
-        excludeData = excludeData || [];
+    p.toJSON = function(isNew, excludeData = [], option = {}) {
         const jsonBlackList = ['view', 'thread', 'events'];
         const json = this._toJSON();
         const view = this.view;
@@ -346,8 +328,7 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
 
         const params = [isNew, undefined, excludeData, option];
         json.statements = json.statements.map((s) => {
-            return s.toJSON(...params)
-            ;
+            return s.toJSON(...params);
         });
 
         if (this._backupParams) {
@@ -362,14 +343,7 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
 
         return Object.assign(
             _.omit(json, [...jsonBlackList, ...excludeData]),
-            _.pick(this, [
-                'x',
-                'y',
-                'movable',
-                'deletable',
-                'emphasized',
-                'readOnly',
-            ])
+            _.pick(this, ['x', 'y', 'movable', 'deletable', 'emphasized', 'readOnly'])
         );
     };
 
@@ -402,9 +376,7 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
         for (let i = 0; i < params.length; i++) {
             const param = params[i];
             if (param instanceof Entry.Block) {
-                param.doNotSplice = !(
-                    param.thread instanceof Entry.FieldOutput
-                );
+                param.doNotSplice = !(param.thread instanceof Entry.FieldOutput);
                 param.destroy(animate);
             }
         }
@@ -441,13 +413,11 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
                             } else if (pConstructor === Entry.FieldStatement) {
                                 nextBlock.replace(parent._valueBlock);
                             } else {
-                                nextBlockView &&
-                                    nextBlockView._toGlobalCoordinate();
+                                nextBlockView && nextBlockView._toGlobalCoordinate();
                             }
                         }
                     } else {
-                        nextBlockView &&
-                            nextBlockView.bindPrev(prevBlock, true);
+                        nextBlockView && nextBlockView.bindPrev(prevBlock, true);
                     }
                 }
             }
@@ -762,10 +732,7 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
     };
 
     p.isSameParamWith = function(target) {
-        if (
-            target.type.substr(0, 8) === 'wildcard' ||
-            this.type.substr(0, 8) === 'wildcard'
-        ) {
+        if (target.type.substr(0, 8) === 'wildcard' || this.type.substr(0, 8) === 'wildcard') {
             return true;
         }
 
@@ -790,8 +757,8 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
             } else {
                 let l = this.params[i];
                 let r = target.params[i];
-                l = typeof l === 'number' ? `${l  }` : l;
-                r = typeof r === 'number' ? `${r  }` : r;
+                l = typeof l === 'number' ? `${l}` : l;
+                r = typeof r === 'number' ? `${r}` : r;
                 if (l === 'positive') {
                     return r > 0;
                 } else if (l === 'negative') {
@@ -835,9 +802,7 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
     };
 
     p.isParamBlockType = function() {
-        return /^(basic_string_field|basic_boolean_field)$/.test(
-            this._schema.skeleton
-        );
+        return /^(basic_string_field|basic_boolean_field)$/.test(this._schema.skeleton);
     };
 
     p.getFuncId = function() {

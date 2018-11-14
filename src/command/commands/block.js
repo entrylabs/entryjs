@@ -992,6 +992,7 @@
 
     c[COMMAND_TYPES.removeCommentBlock] = {
         do(block) {
+            block._comment.destroy();
             delete block._comment;
         },
         state() {

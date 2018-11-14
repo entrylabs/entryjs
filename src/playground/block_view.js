@@ -1,9 +1,5 @@
 'use strict';
 
-/*
- *
- */
-import _hasIn from 'lodash/hasIn';
 import _get from 'lodash/get';
 
 Entry.BlockView = function(block, board, mode) {
@@ -245,36 +241,37 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
         }
 
         const _renderMode = mode || this.renderMode;
-        template && template.split(reg).forEach((param, i) => {
-            if (param[0] === ' ') {
-                param = param.substring(1);
-            }
-            if (param[param.length - 1] === ' ') {
-                param = param.substring(0, param.length - 1);
-            }
-            if (!param.length) {
-                return;
-            }
+        template &&
+            template.split(reg).forEach((param, i) => {
+                if (param[0] === ' ') {
+                    param = param.substring(1);
+                }
+                if (param[param.length - 1] === ' ') {
+                    param = param.substring(0, param.length - 1);
+                }
+                if (!param.length) {
+                    return;
+                }
 
-            parsingRet = parsingReg.exec(param);
-            if (parsingRet) {
-                const paramIndex = parsingRet[1] - 1;
-                param = params[paramIndex];
-                const field = new Entry[`Field${param.type}`](
-                    param,
-                    this,
-                    paramIndex,
-                    _renderMode,
-                    i
-                );
-                this._contents.push(field);
-                this._paramMap[paramIndex] = field;
-            } else {
-                this._contents.push(
-                    new Entry.FieldText({ text: param, color: schema.fontColor }, this)
-                );
-            }
-        });
+                parsingRet = parsingReg.exec(param);
+                if (parsingRet) {
+                    const paramIndex = parsingRet[1] - 1;
+                    param = params[paramIndex];
+                    const field = new Entry[`Field${param.type}`](
+                        param,
+                        this,
+                        paramIndex,
+                        _renderMode,
+                        i
+                    );
+                    this._contents.push(field);
+                    this._paramMap[paramIndex] = field;
+                } else {
+                    this._contents.push(
+                        new Entry.FieldText({ text: param, color: schema.fontColor }, this)
+                    );
+                }
+            });
 
         (schema.statements || []).forEach((s, i) => {
             this._statements.push(new Entry.FieldStatement(s, this, i));
@@ -1233,11 +1230,11 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
             }
         });
         (this.block.statements || []).forEach(({ view }) => {
-return view.reDraw();
-});
+            return view.reDraw();
+        });
         (this._extensions || []).forEach((ext) => {
-return _.result(ext, 'updatePos')
-;});
+            return _.result(ext, 'updatePos');
+        });
     };
 
     p.getParam = function(index) {
@@ -1437,12 +1434,13 @@ return _.result(ext, 'updatePos')
 
         const { clientX: x, clientY: y } = Entry.Utils.convertMouseEvent(e);
 
+        const board = this.getBoard();
         return Entry.ContextMenu.show(_getOptions(this), null, { x, y });
 
         //helper functon get get context options
         function _getOptions(blockView) {
             const isBoardReadOnly = blockView._board.readOnly;
-            const { block, isInBlockMenu, copyable } = blockView;
+            const { block, isInBlockMenu, copyable, _board } = blockView;
             const {
                 Blocks: { Duplication_option, CONTEXT_COPY_option, Delete_Blocks },
                 Menus: { save_as_image },
@@ -1479,13 +1477,23 @@ return _.result(ext, 'updatePos')
                 },
             };
 
+            const hasComment = block._comment;
+            const comment = {
+                text: hasComment ? '메모 삭제하기' : '메모 추가하기',
+                callback() {
+                    hasComment
+                        ? Entry.do('removeCommentBlock', block)
+                        : Entry.do('createCommentBlock', block, board);
+                },
+            };
+
             let options = [];
             if (_isDownloadable()) {
                 options.push(download);
             }
 
             if (!isInBlockMenu) {
-                options = [copyAndPaste, copy, remove, ...options];
+                options = [copyAndPaste, copy, remove, ...options, comment];
             }
 
             return options;

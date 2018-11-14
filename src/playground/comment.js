@@ -32,6 +32,7 @@ Entry.Comment = class Comment {
             this.createComment();
             this.startRender();
             this.addControl();
+            this.setPosition();
         }
 
         this.observe(this, 'updateOpacity', ['visible'], false);
@@ -92,7 +93,7 @@ Entry.Comment = class Comment {
         const { svgGroup, pathGroup } = this.blockView || {};
         this.pathGroup = pathGroup;
         this.parentGroup = svgGroup;
-        this.svgGroup = this._blockView.commentShapeGroup;
+        this.svgGroup = this.blockView.commentShapeGroup;
         this.mouseDown = this.mouseDown.bind(this);
         this.mouseMove = this.mouseMove.bind(this);
         this.mouseUp = this.mouseUp.bind(this);
@@ -146,7 +147,6 @@ Entry.Comment = class Comment {
             parentWidth,
             parentHeight,
         });
-        this.setPosition();
     }
 
     setFrame() {
@@ -192,11 +192,6 @@ Entry.Comment = class Comment {
         this._titleTextPath.attr({
             href: `#${this.id}t`,
         });
-
-        this._textPath.textContent =
-            '메모입니다. 메모입니다.메모입니다.메모입니다.메모입니다.메모입니다메모입니다.' +
-            '메모입니다.메모입니다.메모입니다.메모입니다.메모입니다.메모입니다. 메모입니다.' +
-            '메모입니다.메모입니다.메모입니다.메모입니다.';
 
         const path = `${Entry.mediaFilePath}block_icon/comment/`;
         this._resizeArea.attr({
@@ -413,12 +408,11 @@ Entry.Comment = class Comment {
             if (this.isEditing) {
                 this.destroyTextArea();
             }
-            this.set({ visible: false });
             const workspaceMode = this.board.workspace.getMode();
-
             if (this.dragMode !== Entry.DRAG_MODE_DRAG) {
                 this.dragMode = Entry.DRAG_MODE_DRAG;
                 Entry.GlobalSvg.setComment(this, workspaceMode);
+                this.set({ visible: false });
             }
             this.moveBy(
                 (mouseEvent.pageX - this.dragInstance.offsetX) / this.scale,
@@ -442,7 +436,7 @@ Entry.Comment = class Comment {
         } else {
             this.destroyTextArea();
         }
-        
+
         this.removeMoveSetting(this.mouseMove, this.mouseUp);
     }
 
@@ -451,6 +445,7 @@ Entry.Comment = class Comment {
         this.dragMode = Entry.DRAG_MODE_NONE;
         this.board.set({ dragBlock: null });
         this.set({ visible: true });
+        this.setPosition();
         this.removeDomEvent(mouseMove, mouseUp);
         delete this.mouseDownCoordinate;
         delete this.dragInstance;
@@ -468,12 +463,9 @@ Entry.Comment = class Comment {
     }
 
     updateOpacity() {
-        if (this.visible === false) {
-            this.svgGroup.attr({ opacity: 0 });
-        } else {
-            this.svgGroup.removeAttr('opacity');
-            this.setPosition();
-        }
+        this.visible
+            ? this.svgGroup.classList.remove('invisible')
+            : this.svgGroup.classList.add('invisible');
     }
 
     isReadOnly() {
@@ -614,7 +606,7 @@ Entry.Comment = class Comment {
             width: Number(this._comment.getAttribute('width')),
             height: Number(this._comment.getAttribute('height')),
         });
-        
+
         this.removeMoveSetting(this.resizeMouseMove, this.resizeMouseUp);
     }
 
@@ -661,5 +653,11 @@ Entry.Comment = class Comment {
         this._toggleArrow.attr({
             href: path + fileName,
         });
+    }
+
+    destroy() {
+        while (this.svgGroup.hasChildNodes()) {
+            this.svgGroup.removeChild(this.svgGroup.firstChild);
+        }
     }
 };
