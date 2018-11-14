@@ -65,9 +65,6 @@ class GlobalSvg {
         }
         this._view = view;
         this._mode = mode;
-        if (mode !== Entry.Workspace.MODE_VIMBOARD) {
-            view.set({ visible: false });
-        }
         this.originalX = view.x;
         this.originalY = view.y;
         this.draw();
@@ -82,12 +79,15 @@ class GlobalSvg {
             this.remove();
         }
         const isVimMode = this._mode == Entry.Workspace.MODE_VIMBOARD;
-        // ISSUE: 배율 변경시 좌표 틀어짐 발생
-        // var bBox = blockView.svgGroup.getBBox();
-        // this.svgDom.attr({
-        //     width: Math.round(bBox.width + 4) + 'px',
-        //     height: Math.round(bBox.height + 4) + 'px',
-        // });
+        const bBox = blockView.svgGroup.getBBox();
+        const { width, height } = bBox;
+        this.svgDom.attr({
+            width: `${Math.round(bBox.width + 4)}px`,
+            height: `${Math.round(bBox.height + 4)}px`,
+        });
+        this.xScaleDiff = width * (this.scale - 1) / (this.scale * 2);
+        this.yscaleDiff = height * (this.scale - 1) / (this.scale * 2);
+        console.log(this.xScaleDiff, this.yscaleDiff);
 
         this.svgGroup = Entry.SVG.createElement(blockView.svgGroup.cloneNode(true), { opacity: 1 });
         this.svg.appendChild(this.svgGroup);
@@ -212,14 +212,8 @@ class GlobalSvg {
         this.left = pos.scaleX + (offset.left / this.scale - this._offsetX) - this.originalX;
         this.top = pos.scaleY + (offset.top / this.scale - this._offsetY) - this.originalY;
         const [line] = this.svgGroup.getElementsByTagName('line');
-        line.setAttribute(
-            'x1',
-            startX / this.scale - this.left + view.parentWidth
-        );
-        line.setAttribute(
-            'y1',
-            startY / this.scale - this.top + view.parentHeight / 2
-        );
+        line.setAttribute('x1', startX / this.scale - this.left + view.parentWidth);
+        line.setAttribute('y1', startY / this.scale - this.top + view.parentHeight / 2);
         this._applyDomPos(this.left, this.top);
     }
 
@@ -237,7 +231,8 @@ class GlobalSvg {
 
     _applyDomPos(left, top) {
         this.svgDom.css({
-            transform: `scale(${this.scale}) translate3d(${left}px,${top}px, 0px)`,
+            transform: `scale(${this.scale}) translate3d(${left + this.xScaleDiff}px,${top +
+                this.yscaleDiff}px, 0px)`,
         });
     }
 
@@ -304,6 +299,6 @@ class GlobalSvg {
     getRelativePoint(matrix) {
         return this.svgPoint.matrixTransform(matrix);
     }
-} 
+}
 
 Entry.GlobalSvg = new GlobalSvg();
