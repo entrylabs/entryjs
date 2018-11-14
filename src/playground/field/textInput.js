@@ -2,33 +2,34 @@
 
 import EntryTool from 'entry-tool';
 
-Entry.FieldTextInput = function(content, blockView, index) {
-    this._blockView = blockView;
-    this.board = this._blockView.getBoard();
-    this._block = blockView.block;
+Entry.FieldTextInput = class FieldTextInput extends Entry.Field {
+    constructor(content, blockView, index) {
+        super(content, blockView, index);
 
-    this.box = new Entry.BoxModel();
+        this.TEXT_Y_PADDING = 3;
 
-    this.svgGroup = null;
+        this._blockView = blockView;
+        this.board = this._blockView.getBoard();
+        this._block = blockView.block;
 
-    this.position = content.position;
-    this._contents = content;
-    this._isClearBG = content.clearBG || false;
-    this._index = index;
-    this.value = this.getValue() || '';
-    this._CONTENT_HEIGHT = this.getContentHeight();
-    this._font_size = 10;
-    this._neighborFields = null;
+        this.box = new Entry.BoxModel();
 
-    this.renderStart();
-};
+        this.svgGroup = null;
 
-Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
+        this.position = content.position;
+        this._contents = content;
+        this._isClearBG = content.clearBG || false;
+        this._index = index;
+        this.value = this.getValue() || '';
+        this._CONTENT_HEIGHT = this.getContentHeight();
+        this._font_size = 10;
+        this._neighborFields = null;
 
-(function(p) {
-    const TEXT_Y_PADDING = 3;
+        this.renderStart();
+    }
 
-    p._focusNeighbor = function(direction) {
+    // 기본 모드의 keyEvent(tab) 용
+    _focusNeighbor(direction) {
         const fields = this.getNeighborFields();
 
         let idx = fields.indexOf(this);
@@ -46,9 +47,9 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
 
         this.destroyOption(undefined, true);
         field.renderOptions(fields);
-    };
+    }
 
-    p.renderStart = function() {
+    renderStart() {
         const blockView = this._blockView;
 
         if (!this.svgGroup) {
@@ -58,7 +59,7 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
         if (!this.textElement) {
             this.textElement = this.svgGroup.elem('text', {
                 x: 0,
-                y: TEXT_Y_PADDING,
+                y: this.TEXT_Y_PADDING,
                 fill: this._contents.color || 'black',
                 'font-size': `${this._font_size}px`,
                 'font-weight': 'bold',
@@ -103,9 +104,9 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
             width,
             height: CONTENT_HEIGHT,
         });
-    };
+    }
 
-    p.renderOptions = function(neighborFields) {
+    renderOptions(neighborFields) {
         if (neighborFields) {
             this._neighborFields = neighborFields;
         }
@@ -128,12 +129,13 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
             },
             container: this.optionGroup[0],
         }).on('click', (eventName, value) => {
+            let prevValue = String(this.getValue());
             switch(eventName) {
                 case 'buttonPressed':
-                    this.applyValue(this.value + value);
+                    this.applyValue(prevValue + value);
                     break;
                 case 'backButtonPressed':
-                    const nextValue = this.value.substring(0, this.value.length - 1);
+                    const nextValue = prevValue.substring(0, prevValue.length - 1);
                     this.applyValue(_.isEmpty(nextValue) ? 0 : nextValue);
                     break;
             }
@@ -203,15 +205,15 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
         });*/
 
         this.optionDomCreated();
-    };
+    }
 
-    p.applyValue = function(value) {
+    applyValue(value) {
         this.setValue(value);
         this._setTextValue();
         this.resize();
-    };
+    }
 
-    p.resize = function() {
+    resize() {
         const { scale = 1 } = this.board;
         const size = { width: this.getTextWidth() * scale };
         const scaleSize = { width: this.getTextWidth() };
@@ -219,31 +221,31 @@ Entry.Utils.inherit(Entry.Field, Entry.FieldTextInput);
         this.box.set(scaleSize);
         this.optionGroup.css(size);
         this._blockView.dAlignContent();
-    };
+    }
 
-    p.getTextWidth = function() {
+    getTextWidth() {
         return Math.max(this.getTextBBox().width, 7);
-    };
+    }
 
-    p._setTextValue = function() {
+    _setTextValue() {
         const newValue = this._convert(this.getValue(), this.getValue());
         if (this.textElement.textContent !== newValue) {
             this.textElement.textContent = newValue;
         }
-    };
+    }
 
-    p.getNeighborFields = function() {
+    getNeighborFields() {
         if (!this._neighborFields) {
             const FIELD_TEXT_INPUT = Entry.FieldTextInput;
             this._neighborFields = this._block
-                .getRootBlock()
-                .getThread()
-                .view.getFields()
-                .filter((f) => {
-                    return f instanceof FIELD_TEXT_INPUT;
-                });
+            .getRootBlock()
+            .getThread()
+            .view.getFields()
+            .filter((f) => {
+                return f instanceof FIELD_TEXT_INPUT;
+            });
         }
 
         return this._neighborFields;
-    };
-})(Entry.FieldTextInput.prototype);
+    }
+};
