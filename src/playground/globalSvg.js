@@ -87,7 +87,6 @@ class GlobalSvg {
         });
         this.xScaleDiff = width * (this.scale - 1) / (this.scale * 2);
         this.yscaleDiff = height * (this.scale - 1) / (this.scale * 2);
-        console.log(this.xScaleDiff, this.yscaleDiff);
 
         this.svgGroup = Entry.SVG.createElement(blockView.svgGroup.cloneNode(true), { opacity: 1 });
         this.svg.appendChild(this.svgGroup);
