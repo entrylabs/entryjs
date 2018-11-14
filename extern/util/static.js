@@ -386,6 +386,12 @@ EntryStatic.getAllBlocks = function() {
                 'festival_title',
                 'count_festival',
                 'get_festival_info',
+                'behaviorConductDisaster_title',
+                'count_disaster_behavior',
+                'get_disaster_behavior',
+                'behaviorConductLifeSafety_title',
+                'count_lifeSafety_behavior',
+                'get_lifeSafety_behavior'
             ],
         },
         {

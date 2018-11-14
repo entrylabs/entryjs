@@ -62,6 +62,13 @@ Entry.Utils.inherit(Entry.FieldDropdown, Entry.FieldDropdownDynamic);
 (function(p) {
     p.constructor = Entry.FieldDropDownDynamic;
 
+    p.getIndexValue = function() {
+        if(this._contents.targetIndex >= 0) {
+            return this._block.data.params[this._contents.targetIndex];
+        }
+        return null;
+    }
+
     p._updateValue = function() {
         var object = this._block.getCode().object;
         var options = [];
@@ -71,7 +78,7 @@ Entry.Utils.inherit(Entry.FieldDropdown, Entry.FieldDropdownDynamic);
                     this._menuName,
                     object
                 );
-            else options = this._menuGenerator();
+            else options = this._menuGenerator(this.getIndexValue());
         }
 
         this._contents.options = options;
@@ -116,6 +123,7 @@ Entry.Utils.inherit(Entry.FieldDropdown, Entry.FieldDropdownDynamic);
             that.applyValue(this._value);
             that.destroyOption(undefined, true);
             that._selectBlockView();
+            $(that._blockView.contentSvgGroup).trigger('optionChanged', {block:that._block, value:that.getValue(), index:that._index});
         });
 
         var fragment = document.createDocumentFragment();
