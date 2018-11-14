@@ -238,12 +238,12 @@ Entry.FieldTextInput = class FieldTextInput extends Entry.Field {
         if (!this._neighborFields) {
             const FIELD_TEXT_INPUT = Entry.FieldTextInput;
             this._neighborFields = this._block
-            .getRootBlock()
-            .getThread()
-            .view.getFields()
-            .filter((f) => {
-                return f instanceof FIELD_TEXT_INPUT;
-            });
+                .getRootBlock()
+                .getThread()
+                .view.getFields()
+                .filter((f) => {
+                    return f instanceof FIELD_TEXT_INPUT;
+                });
         }
 
         return this._neighborFields;
