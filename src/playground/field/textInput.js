@@ -213,8 +213,10 @@ Entry.FieldTextInput = class FieldTextInput extends Entry.Field {
         });
 
         inputField.on('keyup', (e) => {
-            this.applyValue();
-
+            this.applyValue(inputField[0].value);
+            inputField.css({
+                width: this.box.width * scale,
+            });
             if (_.includes([13, 27], e.keyCode || e.which)) {
                 this.destroyOption(undefined, true);
             }
@@ -248,7 +250,6 @@ Entry.FieldTextInput = class FieldTextInput extends Entry.Field {
     }
 
     applyValue(value) {
-        value = value || this.getValue();
         this.setValue(value);
         this._setTextValue();
         this.resize();
