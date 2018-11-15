@@ -22,7 +22,6 @@ Entry.FieldTextInput = class FieldTextInput extends Entry.Field {
         this._contents = content;
         this._isClearBG = content.clearBG || false;
         this._index = index;
-        this.value = this.getValue() || '';
         this._CONTENT_HEIGHT = this.getContentHeight();
         this._font_size = 10;
         this._neighborFields = null;
@@ -110,8 +109,8 @@ Entry.FieldTextInput = class FieldTextInput extends Entry.Field {
 
     renderOptions(neighborFields) {
         const { _block = {} } = this;
-        const { valueType = 'text' } = _block;
-        if (valueType === 'number') {
+        const { defaultType = 'text' } = _block;
+        if (defaultType === 'number') {
             if (neighborFields) {
                 this._neighborFields = neighborFields;
             }
@@ -145,6 +144,44 @@ Entry.FieldTextInput = class FieldTextInput extends Entry.Field {
                         break;
                 }
             });
+        } else if (defaultType === 'angle') {
+            this.optionGroup = Entry.Dom('div', {
+                class: 'entry-widget-angle',
+                parent: $('body'),
+            });
+
+            this.angleWidget = new EntryTool({
+                type: 'angleWidget',
+                data: {
+                    angle: this.getValue(),
+                    positionDom: this.svgGroup,
+                    onOutsideClick: (angle) => {
+                        if (this.angleWidget) {
+                            this.applyAngleValue(FieldTextInput._refineDegree(angle));
+                            this._setTextValue();
+                            this.destroyOption();
+                        }
+                    },
+                },
+                container: this.optionGroup[0],
+            })
+                .on('click', (eventName, value) => {
+                    let nextValue = 0;
+                    switch (eventName) {
+                        case 'buttonPressed': {
+                            nextValue = this._getNextValue(value);
+                            break;
+                        }
+                        case 'backButtonPressed': {
+                            nextValue = this._getSubstringValue();
+                            break;
+                        }
+                    }
+                    this.applyAngleValue(nextValue);
+                })
+                .on('change', (value) => {
+                    this.applyAngleValue(String(value));
+                });
         } else {
             const that = this;
             const func = function(skipCommand, forceCommand) {
@@ -211,6 +248,25 @@ Entry.FieldTextInput = class FieldTextInput extends Entry.Field {
         this.resize();
     }
 
+    applyAngleValue(value) {
+        let rangedValue = value;
+        if (Entry.Utils.isNumber(value) && value.lastIndexOf('.') !== value.length - 1) {
+            rangedValue = String(rangedValue % 360);
+        }
+
+        this.setValue(rangedValue);
+        // this.textElement.textContent = this.getValue();
+        this._setTextValue();
+
+        if (this.angleWidget) {
+            this.angleWidget.data = {
+                angle: FieldTextInput._refineDegree(value),
+            };
+        }
+
+        this.resize();
+    }
+
     resize() {
         const { scale = 1 } = this.board;
         const size = { width: this.getTextWidth() * scale };
@@ -221,12 +277,33 @@ Entry.FieldTextInput = class FieldTextInput extends Entry.Field {
         this._blockView.dAlignContent();
     }
 
+    destroyOption(skipCommand, forceCommand) {
+        let widgetList = [this.numberWidget, this.angleWidget];
+        widgetList.forEach((widget) => {
+            if (widget) {
+                widget.isShow && widget.hide();
+                widget.remove();
+                widget = null;
+            }
+        });
+        if (this.optionGroup) {
+            this.optionGroup.remove();
+        }
+
+        super.destroyOption(skipCommand, forceCommand);
+    }
+
     getTextWidth() {
         return Math.max(this.getTextBBox().width, 7);
     }
 
     _setTextValue() {
-        const newValue = this._convert(this.getValue(), this.getValue());
+        const { _block = {} } = this;
+        const { defaultType = 'text' } = _block;
+        let newValue = this._convert(this.getValue(), this.getValue());
+        if (defaultType === 'angle') {
+            newValue += '°';
+        }
         if (this.textElement.textContent !== newValue) {
             this.textElement.textContent = newValue;
         }
@@ -245,5 +322,90 @@ Entry.FieldTextInput = class FieldTextInput extends Entry.Field {
         }
 
         return this._neighborFields;
+    }
+
+    /**
+     * 기존 값의 뒤에 새 값을 추가한다. 내부에서 모든 숫자는 문자열이다.
+     * 규칙은 아래와 같다.
+     *
+     * - 마이너스 입력은 현재 값이 0 인 경우만 가능
+     * - . 은 값에서 유일하게 하나만 허용한다.
+     * - 현재 값이 0 혹은 -0 인 경우 0은 입력할 수 없다. 다른 숫자는 입력할 수 있다.
+     *
+     * @param value 이번에 입력된 값
+     * @return {string} 규칙에 맞추어 정제된 값
+     * @private
+     */
+    _getNextValue(value) {
+        let returnValue = String(this.getValue());
+        returnValue = returnValue.replace('°', '');
+
+        if (!FieldTextInput._isValidInputValue(value)) {
+            return returnValue;
+        }
+
+        switch (value) {
+            case '-':
+                if (returnValue === '0') {
+                    return '-';
+                }
+                return returnValue;
+            case '.':
+                if (/\./.test(returnValue) || returnValue === '-') {
+                    return returnValue;
+                }
+                break;
+            case '0':
+                if (returnValue.startsWith('0') || returnValue.startsWith('-0')) {
+                    return returnValue;
+                }
+                break;
+            default:
+                if (returnValue === '0') {
+                    return value;
+                }
+                break;
+        }
+
+        returnValue += value;
+        return returnValue;
+    }
+
+    /**
+     * 현재 값 블록에서 마지막 숫자를 삭제한 값을 반환한다.
+     * 0 인 경우는 0 을 반환, - 인 경우는 0 을 반환한다.
+     * @returns {string} 마지막 위치가 삭제된 블록 값
+     * @private
+     */
+    _getSubstringValue() {
+        let returnValue = String(this.getValue());
+        if (returnValue.length === 1) {
+            return '0';
+        } else {
+            return returnValue.slice(0, returnValue.length - 1);
+        }
+    }
+
+    static _refineDegree(value) {
+        const reg = /&value/gm;
+        if (reg.test(value)) return value;
+
+        let refinedDegree = String(value).match(/[\d|\-|.|\+]+/g)[0] || 0;
+        if (refinedDegree > 360) {
+            refinedDegree %= 360;
+        } else if (refinedDegree < 0) {
+            refinedDegree = refinedDegree % 360;
+        }
+        refinedDegree = String(refinedDegree);
+
+        if (refinedDegree.lastIndexOf('.') === refinedDegree.length - 1) {
+            return refinedDegree.slice(0, refinedDegree.length - 1);
+        }
+
+        return refinedDegree;
+    }
+
+    static _isValidInputValue(value) {
+        return Entry.Utils.isNumber(value) || value === '-' || value === '.';
     }
 };

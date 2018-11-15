@@ -595,7 +595,8 @@ const block = {
         statements: [],
         params: [
             {
-                type: 'Angle',
+                type: 'TextInput',
+                value: 90,
             },
         ],
         events: {},

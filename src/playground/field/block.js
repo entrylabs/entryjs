@@ -17,7 +17,7 @@ Entry.FieldBlock = class FieldBlock extends Entry.Field {
         this._content = content;
 
         this.acceptType = content.accept;
-        this.valueType = content.valueType;
+        this.defaultType = content.defaultType;
         this._restoreCurrent = content.restore;
 
         this.view = this;
@@ -342,7 +342,7 @@ Entry.FieldBlock = class FieldBlock extends Entry.Field {
         const block = new Entry.Block(
             {
                 type: blockType,
-                valueType: this.valueType,
+                defaultType: this.defaultType,
                 params: [isFromUserAction ? undefined : this._oldPrimitiveValue],
                 copyable: blockType !== 'function_field_label',
             },
@@ -414,13 +414,13 @@ Entry.FieldBlock = class FieldBlock extends Entry.Field {
             return;
         }
 
+        block.defaultType = this.defaultType;
+
         if (!block.view) {
             block.setThread(this);
             block.createView(this.getBoard(), this.renderMode);
             this.view.setParent(this);
         }
-
-        block.valueType = this.valueType;
 
         return block;
     }

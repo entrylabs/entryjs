@@ -10,7 +10,7 @@ Entry.Block = function(block, thread) {
     const that = this;
     Entry.Model(this, false);
     this._schema = null;
-    this.valueType = block.valueType;
+    this.defaultType = block.defaultType;
 
     if (block._backupParams) {
         this._backupParams = block._backupParams;

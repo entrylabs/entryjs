@@ -28,7 +28,7 @@ module.exports = {
                     {
                         type: 'Block',
                         accept: 'string',
-                        valueType: 'number',
+                        defaultType: 'number',
                     },
                     {
                         type: 'Indicator',
@@ -353,6 +353,7 @@ module.exports = {
                     {
                         type: 'Block',
                         accept: 'string',
+                        defaultType: 'number',
                     },
                     {
                         type: 'Indicator',
@@ -405,6 +406,7 @@ module.exports = {
                     {
                         type: 'Block',
                         accept: 'string',
+                        defaultType: 'number',
                     },
                     {
                         type: 'Indicator',
@@ -457,14 +459,17 @@ module.exports = {
                     {
                         type: 'Block',
                         accept: 'string',
+                        defaultType: 'number',
                     },
                     {
                         type: 'Block',
                         accept: 'string',
+                        defaultType: 'number',
                     },
                     {
                         type: 'Block',
                         accept: 'string',
+                        defaultType: 'number',
                     },
                     {
                         type: 'Indicator',
@@ -565,6 +570,7 @@ module.exports = {
                     {
                         type: 'Block',
                         accept: 'string',
+                        defaultType: 'number',
                     },
                     {
                         type: 'Indicator',
@@ -617,6 +623,7 @@ module.exports = {
                     {
                         type: 'Block',
                         accept: 'string',
+                        defaultType: 'number',
                     },
                     {
                         type: 'Indicator',
@@ -669,10 +676,12 @@ module.exports = {
                     {
                         type: 'Block',
                         accept: 'string',
+                        defaultType: 'number',
                     },
                     {
                         type: 'Block',
                         accept: 'string',
+                        defaultType: 'number',
                     },
                     {
                         type: 'Indicator',
@@ -737,14 +746,17 @@ module.exports = {
                     {
                         type: 'Block',
                         accept: 'string',
+                        defaultType: 'number',
                     },
                     {
                         type: 'Block',
                         accept: 'string',
+                        defaultType: 'number',
                     },
                     {
                         type: 'Block',
                         accept: 'string',
+                        defaultType: 'number',
                     },
                     {
                         type: 'Indicator',
@@ -921,6 +933,7 @@ module.exports = {
                     {
                         type: 'Block',
                         accept: 'string',
+                        defaultType: 'number',
                     },
                     {
                         type: 'DropdownDynamic',
