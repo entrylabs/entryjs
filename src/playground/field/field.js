@@ -296,13 +296,14 @@ Entry.Field = function() {};
                 continue;
             }
 
-            for(var i in syntax) {
-                var textParams = syntax[i].textParams;
-                if (!textParams) continue;
+            for (const i in syntax) {
+                const textParams = syntax[i].textParams;
+                if (!textParams) {
+                    continue;
+                }
 
                 textParams[this._index].options = this._contents.options;
             }
-
         }
     };
 
@@ -394,7 +395,7 @@ Entry.Field = function() {};
             svg = Entry.Dom(
                 $(
                     '<svg id="invisibleBoard" class="entryBoard" width="1px" height="1px"' +
-                        'version="1.2" xmlns="http://www.w3.org/2000/svg"></svg>'
+                        'version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'
                 ),
                 { parent: $('body') }
             );

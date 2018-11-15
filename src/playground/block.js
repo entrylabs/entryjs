@@ -273,9 +273,6 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
         if (!this.view) {
             return;
         }
-        if (this._comment) {
-            this._comment.updatePos();
-        }
         this.set({
             x: this.view.x,
             y: this.view.y,
@@ -296,7 +293,6 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
             this.set({
                 view: new Entry.BlockView(this, board, mode),
             });
-            // this._comment = new Entry.Comment(this, board);
             this._updatePos();
         }
     };
@@ -309,8 +305,7 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
         return new Entry.Block(this.toJSON(true), thread);
     };
 
-    p.toJSON = function(isNew, excludeData, option = {}) {
-        excludeData = excludeData || [];
+    p.toJSON = function(isNew, excludeData = [], option = {}) {
         const jsonBlackList = ['view', 'thread', 'events'];
         const json = this._toJSON();
         const view = this.view;

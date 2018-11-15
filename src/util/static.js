@@ -63,12 +63,6 @@ Entry.STATIC = {
         insertBlockFromBlockMenuFollowSeparate: 122,
         insertBlockFollowSeparate: 123,
         separateBlockByCommand: 124,
-        createCommentBlock: 125,
-        removeCommentBlock: 126,
-        showCommentBlock: 127,
-        hideCommentBlock: 128,
-        showAllCommentBlock: 129,
-        hideAllCommentBlock: 130,
 
         selectObject: 201,
         objectEditButtonClick: 202,
@@ -105,6 +99,11 @@ Entry.STATIC = {
         funcCreate: 1004,
         funcUpdate: 1005,
 
+
+        createCommentBlock: 1201,
+        removeCommentBlock: 1202,
+        showAllCommentBlock: 1203,
+        hideAllCommentBlock: 1204,
         //TODO commands development
     },
 
