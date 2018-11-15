@@ -110,133 +110,145 @@ Entry.FieldTextInput = class FieldTextInput extends Entry.Field {
     renderOptions(neighborFields) {
         const { _block = {} } = this;
         const { defaultType = 'text' } = _block;
-        if (defaultType === 'number') {
-            if (neighborFields) {
-                this._neighborFields = neighborFields;
-            }
+        if (neighborFields) {
+            this._neighborFields = neighborFields;
+        }
 
-            this.optionGroup = Entry.Dom('div', {
-                class: 'entry-widget-number-pad',
-                parent: $('body'),
-            });
+        this.optionGroup = Entry.Dom('div', {
+            class: 'entry-widget-parent',
+            parent: $('body'),
+        });
 
-            this.optionWidget = new EntryTool({
-                type: 'numberWidget',
-                data: {
-                    positionDom: this.svgGroup,
-                    onOutsideClick: () => {
-                        if (this.optionWidget) {
-                            this.optionWidget.hide();
-                            this.isEditing() && this.destroyOption(undefined, true);
-                        }
-                    },
-                },
-                container: this.optionGroup[0],
-            }).on('click', (eventName, value) => {
-                let prevValue = String(this.getValue());
-                switch (eventName) {
-                    case 'buttonPressed':
-                        this.applyValue(prevValue + value);
-                        break;
-                    case 'backButtonPressed':
-                        const nextValue = prevValue.substring(0, prevValue.length - 1);
-                        this.applyValue(_.isEmpty(nextValue) ? 0 : nextValue);
-                        break;
-                }
-            });
-        } else if (defaultType === 'angle') {
-            this.optionGroup = Entry.Dom('div', {
-                class: 'entry-widget-angle',
-                parent: $('body'),
-            });
-
-            this.optionWidget = new EntryTool({
-                type: 'angleWidget',
-                data: {
-                    angle: this.getValue(),
-                    positionDom: this.svgGroup,
-                    onOutsideClick: (angle) => {
-                        if (this.optionWidget) {
-                            this.applyAngleValue(FieldTextInput._refineDegree(angle));
-                            this._setTextValue();
-                            this.destroyOption();
-                        }
-                    },
-                },
-                container: this.optionGroup[0],
-            }).on('click', (eventName, value) => {
-                let nextValue = 0;
-                switch (eventName) {
-                    case 'buttonPressed': {
-                        nextValue = this._getNextValue(value);
-                        break;
-                    }
-                    case 'backButtonPressed': {
-                        nextValue = this._getSubstringValue();
-                        break;
-                    }
-                }
-                this.applyAngleValue(nextValue);
-            }).on('change', (value) => {
-                this.applyAngleValue(String(value));
-                });
-        } else {
-            const that = this;
-            const func = function(skipCommand, forceCommand) {
-                skipCommand !== true && that.applyValue();
-                that.destroyOption(skipCommand, forceCommand === true);
-            };
-
-            this._attachDisposeEvent(func);
-
-            this.optionGroup = Entry.Dom('input', {
-                class: 'entry-widget-input-field',
-                parent: $('body'),
-            });
-
-            this.optionGroup.val(this.getValue());
-
-            this.optionGroup.on('mousedown', function(e) {
-                e.stopPropagation();
-            });
-
-            const exitKeys = [13, 27];
-            this.optionGroup.on('keyup', function(e) {
-                that.applyValue();
-
-                if (_.includes(exitKeys, e.keyCode || e.which)) {
-                    that.destroyOption(undefined, true);
-                }
-            });
-
-            this.optionGroup.on('keydown', function(e) {
-                const keyCode = e.keyCode || e.which;
-
-                if (keyCode === 9) {
-                    e.preventDefault();
-                    that._focusNeighbor(e.shiftKey ? 'prev' : 'next');
-                }
-            });
-            const { scale = 1 } = this.board;
-            this._font_size = 10 * scale;
-            const { x, y } = this.getAbsolutePosFromDocument();
-            const height = (this._CONTENT_HEIGHT - 4) * scale;
-            this.optionGroup.css({
-                height,
-                left: x + 1,
-                top: y + (scale - 1) * 4 + 2 * scale - 1 * (scale / 2) - this.box.height / 2,
-                width: that.box.width * scale,
-                'font-size': `${this._font_size}px`,
-                'background-color': EntryStatic.colorSet.block.lighten.CALC,
-            });
-
-            this.optionGroup.focus && this.optionGroup.focus();
-
-            const optionGroup = this.optionGroup[0];
-            optionGroup.setSelectionRange(0, optionGroup.value.length, 'backward');
+        switch (defaultType) {
+            case 'number':
+                this.optionWidget = this._getNumberOptionWidget();
+                break;
+            case 'angle':
+                this.optionWidget = this._getAngleOptionWidget();
+                break;
+            default:
+                this._getInputFieldOption();
+                break;
         }
 
         this.optionDomCreated();
+    }
+
+    _getNumberOptionWidget() {
+        return new EntryTool({
+            type: 'numberWidget',
+            data: {
+                positionDom: this.svgGroup,
+                onOutsideClick: () => {
+                    if (this.optionWidget) {
+                        this.optionWidget.hide();
+                        this.isEditing() && this.destroyOption(undefined, true);
+                    }
+                },
+            },
+            container: this.optionGroup[0],
+        }).on('click', (eventName, value) => {
+            let prevValue = String(this.getValue());
+            switch (eventName) {
+                case 'buttonPressed':
+                    this.applyValue(prevValue + value);
+                    break;
+                case 'backButtonPressed':
+                    const nextValue = prevValue.substring(0, prevValue.length - 1);
+                    this.applyValue(_.isEmpty(nextValue) ? 0 : nextValue);
+                    break;
+            }
+        });
+    }
+
+    _getAngleOptionWidget() {
+        return new EntryTool({
+            type: 'angleWidget',
+            data: {
+                angle: this.getValue(),
+                outsideExcludeDom: undefined,
+                positionDom: this.svgGroup,
+                onOutsideClick: (angle) => {
+                    if (this.optionWidget) {
+                        this.applyAngleValue(FieldTextInput._refineDegree(angle));
+                        this._setTextValue();
+                        this.destroyOption();
+                    }
+                },
+            },
+            container: this.optionGroup[0],
+        }).on('click', (eventName, value) => {
+            let nextValue = 0;
+            switch (eventName) {
+                case 'buttonPressed': {
+                    nextValue = this._getNextValue(value);
+                    break;
+                }
+                case 'backButtonPressed': {
+                    nextValue = this._getSubstringValue();
+                    break;
+                }
+            }
+            this.applyAngleValue(nextValue);
+        }).on('change', (value) => {
+            this.applyAngleValue(String(value));
+        });
+    }
+
+    _getInputFieldOption() {
+        const that = this;
+        const func = function(skipCommand, forceCommand) {
+            skipCommand !== true && that.applyValue();
+            that.destroyOption(skipCommand, forceCommand === true);
+        };
+
+        this._attachDisposeEvent(func);
+
+        this.optionGroup = Entry.Dom('input', {
+            class: 'entry-widget-input-field',
+            parent: $('body'),
+        });
+
+        this.optionGroup.val(this.getValue());
+
+        this.optionGroup.on('mousedown', function(e) {
+            e.stopPropagation();
+        });
+
+        const exitKeys = [13, 27];
+        this.optionGroup.on('keyup', function(e) {
+            that.applyValue();
+
+            if (_.includes(exitKeys, e.keyCode || e.which)) {
+                that.destroyOption(undefined, true);
+            }
+        });
+
+        this.optionGroup.on('keydown', function(e) {
+            const keyCode = e.keyCode || e.which;
+
+            if (keyCode === 9) {
+                e.preventDefault();
+                that._focusNeighbor(e.shiftKey ? 'prev' : 'next');
+            }
+        });
+        const { scale = 1 } = this.board;
+        this._font_size = 10 * scale;
+        const { x, y } = this.getAbsolutePosFromDocument();
+        const height = (this._CONTENT_HEIGHT - 4) * scale;
+        this.optionGroup.css({
+            height,
+            left: x + 1,
+            top: y + (scale - 1) * 4 + 2 * scale - 1 * (scale / 2) - this.box.height / 2,
+            width: that.box.width * scale,
+            'font-size': `${this._font_size}px`,
+            'background-color': EntryStatic.colorSet.block.lighten.CALC,
+        });
+
+        this.optionGroup.focus && this.optionGroup.focus();
+
+        const optionGroup = this.optionGroup[0];
+        optionGroup.setSelectionRange(0, optionGroup.value.length, 'backward');
     }
 
     applyValue(value) {
