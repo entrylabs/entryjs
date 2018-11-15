@@ -127,7 +127,7 @@ Entry.FieldTextInput = class FieldTextInput extends Entry.Field {
                 this.optionWidget = this._getAngleOptionWidget();
                 break;
             default:
-                this._getInputFieldOption();
+                this.optionWidget = this._getInputFieldOption();
                 break;
         }
 
@@ -196,63 +196,59 @@ Entry.FieldTextInput = class FieldTextInput extends Entry.Field {
     }
 
     _getInputFieldOption() {
-        const that = this;
-        const func = function(skipCommand, forceCommand) {
-            skipCommand !== true && that.applyValue();
-            that.destroyOption(skipCommand, forceCommand === true);
-        };
+        this._attachDisposeEvent((skipCommand, forceCommand) => {
+            skipCommand !== true && this.applyValue(this.getValue());
+            this.destroyOption(skipCommand, forceCommand === true);
+        });
 
-        this._attachDisposeEvent(func);
-
-        this.optionGroup = Entry.Dom('input', {
+        const inputField = Entry.Dom('input', {
             class: 'entry-widget-input-field',
             parent: $('body'),
         });
 
-        this.optionGroup.val(this.getValue());
+        inputField.val(this.getValue());
 
-        this.optionGroup.on('mousedown', function(e) {
+        inputField.on('mousedown', (e) => {
             e.stopPropagation();
         });
 
-        const exitKeys = [13, 27];
-        this.optionGroup.on('keyup', function(e) {
-            that.applyValue();
+        inputField.on('keyup', (e) => {
+            this.applyValue();
 
-            if (_.includes(exitKeys, e.keyCode || e.which)) {
-                that.destroyOption(undefined, true);
+            if (_.includes([13, 27], e.keyCode || e.which)) {
+                this.destroyOption(undefined, true);
             }
         });
 
-        this.optionGroup.on('keydown', function(e) {
+        inputField.on('keydown', (e) => {
             const keyCode = e.keyCode || e.which;
 
             if (keyCode === 9) {
                 e.preventDefault();
-                that._focusNeighbor(e.shiftKey ? 'prev' : 'next');
+                this._focusNeighbor(e.shiftKey ? 'prev' : 'next');
             }
         });
         const { scale = 1 } = this.board;
         this._font_size = 10 * scale;
         const { x, y } = this.getAbsolutePosFromDocument();
         const height = (this._CONTENT_HEIGHT - 4) * scale;
-        this.optionGroup.css({
+        inputField.css({
             height,
             left: x + 1,
             top: y + (scale - 1) * 4 + 2 * scale - 1 * (scale / 2) - this.box.height / 2,
-            width: that.box.width * scale,
+            width: this.box.width * scale,
             'font-size': `${this._font_size}px`,
             'background-color': EntryStatic.colorSet.block.lighten.CALC,
         });
 
-        this.optionGroup.focus && this.optionGroup.focus();
+        inputField.focus && inputField.focus();
 
-        const optionGroup = this.optionGroup[0];
-        optionGroup.setSelectionRange(0, optionGroup.value.length, 'backward');
+        inputField[0].setSelectionRange(0, inputField[0].value.length, 'backward');
+        return inputField;
     }
 
     applyValue(value) {
-        value = value || this.optionGroup.val();
+        value = value || this.getValue();
         this.setValue(value);
         this._setTextValue();
         this.resize();
