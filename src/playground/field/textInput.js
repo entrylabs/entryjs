@@ -120,13 +120,13 @@ Entry.FieldTextInput = class FieldTextInput extends Entry.Field {
                 parent: $('body'),
             });
 
-            this.numberWidget = new EntryTool({
+            this.optionWidget = new EntryTool({
                 type: 'numberWidget',
                 data: {
                     positionDom: this.svgGroup,
                     onOutsideClick: () => {
-                        if (this.numberWidget) {
-                            this.numberWidget.hide();
+                        if (this.optionWidget) {
+                            this.optionWidget.hide();
                             this.isEditing() && this.destroyOption(undefined, true);
                         }
                     },
@@ -150,13 +150,13 @@ Entry.FieldTextInput = class FieldTextInput extends Entry.Field {
                 parent: $('body'),
             });
 
-            this.angleWidget = new EntryTool({
+            this.optionWidget = new EntryTool({
                 type: 'angleWidget',
                 data: {
                     angle: this.getValue(),
                     positionDom: this.svgGroup,
                     onOutsideClick: (angle) => {
-                        if (this.angleWidget) {
+                        if (this.optionWidget) {
                             this.applyAngleValue(FieldTextInput._refineDegree(angle));
                             this._setTextValue();
                             this.destroyOption();
@@ -164,23 +164,21 @@ Entry.FieldTextInput = class FieldTextInput extends Entry.Field {
                     },
                 },
                 container: this.optionGroup[0],
-            })
-                .on('click', (eventName, value) => {
-                    let nextValue = 0;
-                    switch (eventName) {
-                        case 'buttonPressed': {
-                            nextValue = this._getNextValue(value);
-                            break;
-                        }
-                        case 'backButtonPressed': {
-                            nextValue = this._getSubstringValue();
-                            break;
-                        }
+            }).on('click', (eventName, value) => {
+                let nextValue = 0;
+                switch (eventName) {
+                    case 'buttonPressed': {
+                        nextValue = this._getNextValue(value);
+                        break;
                     }
-                    this.applyAngleValue(nextValue);
-                })
-                .on('change', (value) => {
-                    this.applyAngleValue(String(value));
+                    case 'backButtonPressed': {
+                        nextValue = this._getSubstringValue();
+                        break;
+                    }
+                }
+                this.applyAngleValue(nextValue);
+            }).on('change', (value) => {
+                this.applyAngleValue(String(value));
                 });
         } else {
             const that = this;
@@ -258,8 +256,8 @@ Entry.FieldTextInput = class FieldTextInput extends Entry.Field {
         // this.textElement.textContent = this.getValue();
         this._setTextValue();
 
-        if (this.angleWidget) {
-            this.angleWidget.data = {
+        if (this.optionWidget) {
+            this.optionWidget.data = {
                 angle: FieldTextInput._refineDegree(value),
             };
         }
@@ -278,16 +276,10 @@ Entry.FieldTextInput = class FieldTextInput extends Entry.Field {
     }
 
     destroyOption(skipCommand, forceCommand) {
-        let widgetList = [this.numberWidget, this.angleWidget];
-        widgetList.forEach((widget) => {
-            if (widget) {
-                widget.isShow && widget.hide();
-                widget.remove();
-                widget = null;
-            }
-        });
-        if (this.optionGroup) {
-            this.optionGroup.remove();
+        if (this.optionWidget) {
+            this.optionWidget.isShow && this.optionWidget.hide();
+            this.optionWidget.remove();
+            delete this.optionWidget;
         }
 
         super.destroyOption(skipCommand, forceCommand);
