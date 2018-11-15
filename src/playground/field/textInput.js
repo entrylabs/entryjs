@@ -5,7 +5,9 @@ import EntryTool from 'entry-tool';
 Entry.FieldTextInput = class FieldTextInput extends Entry.Field {
     constructor(content, blockView, index) {
         super(content, blockView, index);
-
+        const { data = {} } = blockView;
+        const { type = 'text' } = data;
+        this.type = type;
         this.TEXT_Y_PADDING = 3;
 
         this._blockView = blockView;
@@ -107,107 +109,103 @@ Entry.FieldTextInput = class FieldTextInput extends Entry.Field {
     }
 
     renderOptions(neighborFields) {
-        if (neighborFields) {
-            this._neighborFields = neighborFields;
-        }
+        const { _block = {} } = this;
+        const { valueType = 'text' } = _block;
+        if (valueType === 'number') {
+            if (neighborFields) {
+                this._neighborFields = neighborFields;
+            }
 
-        this.optionGroup = Entry.Dom('div', {
-            class: 'entry-widget-number-pad',
-            parent: $('body'),
-        });
+            this.optionGroup = Entry.Dom('div', {
+                class: 'entry-widget-number-pad',
+                parent: $('body'),
+            });
 
-        this.numberWidget = new EntryTool({
-            type: 'numberWidget',
-            data: {
-                positionDom: this.svgGroup,
-                onOutsideClick: () => {
-                    if(this.numberWidget) {
-                        this.numberWidget.hide();
-                        this.isEditing() && this.destroyOption(undefined, true);
-                    }
+            this.numberWidget = new EntryTool({
+                type: 'numberWidget',
+                data: {
+                    positionDom: this.svgGroup,
+                    onOutsideClick: () => {
+                        if (this.numberWidget) {
+                            this.numberWidget.hide();
+                            this.isEditing() && this.destroyOption(undefined, true);
+                        }
+                    },
                 },
-            },
-            container: this.optionGroup[0],
-        }).on('click', (eventName, value) => {
-            let prevValue = String(this.getValue());
-            switch(eventName) {
-                case 'buttonPressed':
-                    this.applyValue(prevValue + value);
-                    break;
-                case 'backButtonPressed':
-                    const nextValue = prevValue.substring(0, prevValue.length - 1);
-                    this.applyValue(_.isEmpty(nextValue) ? 0 : nextValue);
-                    break;
-            }
-        });
+                container: this.optionGroup[0],
+            }).on('click', (eventName, value) => {
+                let prevValue = String(this.getValue());
+                switch (eventName) {
+                    case 'buttonPressed':
+                        this.applyValue(prevValue + value);
+                        break;
+                    case 'backButtonPressed':
+                        const nextValue = prevValue.substring(0, prevValue.length - 1);
+                        this.applyValue(_.isEmpty(nextValue) ? 0 : nextValue);
+                        break;
+                }
+            });
+        } else {
+            const that = this;
+            const func = function(skipCommand, forceCommand) {
+                skipCommand !== true && that.applyValue();
+                that.destroyOption(skipCommand, forceCommand === true);
+            };
 
+            this._attachDisposeEvent(func);
 
-        /*
-        TODO inputBox 로직. 분기를 통해 사용예정이므로 일단 살려둠 20181108 leegiwoong 불필요시 제거
-        const that = this;
-        const func = function(skipCommand, forceCommand) {
-            skipCommand !== true && that.applyValue();
-            that.destroyOption(skipCommand, forceCommand === true);
-        };
+            this.optionGroup = Entry.Dom('input', {
+                class: 'entry-widget-input-field',
+                parent: $('body'),
+            });
 
-        this._attachDisposeEvent(func);
+            this.optionGroup.val(this.getValue());
 
-        this.optionGroup = Entry.Dom('input', {
-            class: 'entry-widget-input-field',
-            parent: $('body'),
-        });
+            this.optionGroup.on('mousedown', function(e) {
+                e.stopPropagation();
+            });
 
-        this.optionGroup.val(this.getValue());
+            const exitKeys = [13, 27];
+            this.optionGroup.on('keyup', function(e) {
+                that.applyValue();
 
-        this.optionGroup.on('mousedown', function(e) {
-            e.stopPropagation();
-        });
+                if (_.includes(exitKeys, e.keyCode || e.which)) {
+                    that.destroyOption(undefined, true);
+                }
+            });
 
-        const exitKeys = [13, 27];
-        this.optionGroup.on('keyup', function(e) {
-            that.applyValue(e);
+            this.optionGroup.on('keydown', function(e) {
+                const keyCode = e.keyCode || e.which;
 
-            if (_.includes(exitKeys, e.keyCode || e.which)) {
-                that.destroyOption(undefined, true);
-            }
-        });
+                if (keyCode === 9) {
+                    e.preventDefault();
+                    that._focusNeighbor(e.shiftKey ? 'prev' : 'next');
+                }
+            });
+            const { scale = 1 } = this.board;
+            this._font_size = 10 * scale;
+            const { x, y } = this.getAbsolutePosFromDocument();
+            const height = (this._CONTENT_HEIGHT - 4) * scale;
+            this.optionGroup.css({
+                height,
+                left: x + 1,
+                top: y + (scale - 1) * 4 + 2 * scale - 1 * (scale / 2) - this.box.height / 2,
+                width: that.box.width * scale,
+                'font-size': `${this._font_size}px`,
+                'background-color': EntryStatic.colorSet.block.lighten.CALC,
+            });
 
-        this.optionGroup.on('keydown', function(e) {
-            const keyCode = e.keyCode || e.which;
+            this.optionGroup.focus && this.optionGroup.focus();
 
-            if (keyCode === 9) {
-                e.preventDefault();
-                that._focusNeighbor(e.shiftKey ? 'prev' : 'next');
-            }
-        });
-        const { scale = 1 } = this.board;
-        this._font_size = 10 * scale;
-        const { x, y } = this.getAbsolutePosFromDocument();
-        const height = (this._CONTENT_HEIGHT - 4) * scale;
-        this.optionGroup.css({
-            height,
-            left: x + 1,
-            top: y + (scale - 1) * 4 + 2 * scale - 1 * (scale / 2) - this.box.height / 2,
-            width: that.box.width * scale,
-            'font-size': `${this._font_size}px`,
-            'background-color': EntryStatic.colorSet.block.lighten.CALC,
-        });
-
-        this.optionGroup.focus && this.optionGroup.focus();
-
-        const optionGroup = this.optionGroup[0];
-        optionGroup.setSelectionRange(0, optionGroup.value.length, 'backward');
-
-        //normally option group is done editing and destroyed
-        //before blur called
-        this.optionGroup.one('blur', () => {
-            return;
-        });*/
+            const optionGroup = this.optionGroup[0];
+            optionGroup.setSelectionRange(0, optionGroup.value.length, 'backward');
+        }
 
         this.optionDomCreated();
     }
 
     applyValue(value) {
+        value = value || this.optionGroup.val();
         this.setValue(value);
         this._setTextValue();
         this.resize();

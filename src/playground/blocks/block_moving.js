@@ -28,6 +28,7 @@ module.exports = {
                     {
                         type: 'Block',
                         accept: 'string',
+                        valueType: 'number',
                     },
                     {
                         type: 'Indicator',
