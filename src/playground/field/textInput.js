@@ -17,6 +17,8 @@ Entry.FieldTextInput = class FieldTextInput extends Entry.Field {
         this.box = new Entry.BoxModel();
 
         this.svgGroup = null;
+        this.optionWidget = null;
+        this.optionInput = null;
 
         this.position = content.position;
         this._contents = content;
@@ -124,10 +126,12 @@ Entry.FieldTextInput = class FieldTextInput extends Entry.Field {
                 this.optionWidget = this._getNumberOptionWidget();
                 break;
             case 'angle':
+                this.optionInput = this._getInputFieldOption();
                 this.optionWidget = this._getAngleOptionWidget();
                 break;
             default:
-                this.optionWidget = this._getInputFieldOption();
+                this.optionInput = this._getInputFieldOption();
+                this._attachDisposeEvent();
                 break;
         }
 
@@ -140,10 +144,7 @@ Entry.FieldTextInput = class FieldTextInput extends Entry.Field {
             data: {
                 positionDom: this.svgGroup,
                 onOutsideClick: () => {
-                    if (this.optionWidget) {
-                        this.optionWidget.hide();
-                        this.isEditing() && this.destroyOption(undefined, true);
-                    }
+                    this.destroyOption(undefined, true);
                 },
             },
             container: this.optionGroup[0],
@@ -166,14 +167,11 @@ Entry.FieldTextInput = class FieldTextInput extends Entry.Field {
             type: 'angleWidget',
             data: {
                 angle: this.getValue(),
-                outsideExcludeDom: undefined,
+                outsideExcludeDom: this.optionInput && [this.optionInput[0]],
                 positionDom: this.svgGroup,
                 onOutsideClick: (angle) => {
-                    if (this.optionWidget) {
-                        this.applyAngleValue(FieldTextInput._refineDegree(angle));
-                        this._setTextValue();
-                        this.destroyOption();
-                    }
+                    this.applyValue(FieldTextInput._refineDegree(angle));
+                    this.destroyOption();
                 },
             },
             container: this.optionGroup[0],
@@ -189,18 +187,13 @@ Entry.FieldTextInput = class FieldTextInput extends Entry.Field {
                     break;
                 }
             }
-            this.applyAngleValue(nextValue);
+            this.applyValue(nextValue);
         }).on('change', (value) => {
-            this.applyAngleValue(String(value));
+            this.applyValue(String(value));
         });
     }
 
     _getInputFieldOption() {
-        this._attachDisposeEvent((skipCommand, forceCommand) => {
-            skipCommand !== true && this.applyValue(this.getValue());
-            this.destroyOption(skipCommand, forceCommand === true);
-        });
-
         const inputField = Entry.Dom('input', {
             class: 'entry-widget-input-field',
             parent: $('body'),
@@ -249,28 +242,27 @@ Entry.FieldTextInput = class FieldTextInput extends Entry.Field {
         return inputField;
     }
 
+    //this.optionWidget = {} (type{}, object)
     applyValue(value) {
-        this.setValue(value);
-        this._setTextValue();
-        this.resize();
-    }
-
-    applyAngleValue(value) {
-        let rangedValue = value;
-        if (Entry.Utils.isNumber(value) && value.lastIndexOf('.') !== value.length - 1) {
-            rangedValue = String(rangedValue % 360);
+        let result = value;
+        if(this.optionWidget) {
+            switch (this.optionWidget.type) {
+                case 'angleWidget':
+                    this.optionWidget.data = {
+                        angle: FieldTextInput._refineDegree(value),
+                    };
+                    if (Entry.Utils.isNumber(value) && value.lastIndexOf('.') !== value.length - 1) {
+                        result = String(result % 360);
+                    }
+                    break;
+            }
+        }
+        if(this.optionInput) {
+            this.optionInput.val(result);
         }
 
-        this.setValue(rangedValue);
-        // this.textElement.textContent = this.getValue();
+        this.setValue(result);
         this._setTextValue();
-
-        if (this.optionWidget) {
-            this.optionWidget.data = {
-                angle: FieldTextInput._refineDegree(value),
-            };
-        }
-
         this.resize();
     }
 
@@ -289,6 +281,11 @@ Entry.FieldTextInput = class FieldTextInput extends Entry.Field {
             this.optionWidget.isShow && this.optionWidget.hide();
             this.optionWidget.remove();
             delete this.optionWidget;
+        }
+
+        if (this.optionInput) {
+            this.optionInput.remove();
+            delete this.optionInput;
         }
 
         super.destroyOption(skipCommand, forceCommand);
@@ -391,7 +388,8 @@ Entry.FieldTextInput = class FieldTextInput extends Entry.Field {
         const reg = /&value/gm;
         if (reg.test(value)) return value;
 
-        let refinedDegree = String(value).match(/[\d|\-|.|\+]+/g)[0] || 0;
+        const numberOnlyValue = String(value).match(/[\d|\-|.|\+]+/g);
+        let refinedDegree = numberOnlyValue && numberOnlyValue[0] || '0';
         if (refinedDegree > 360) {
             refinedDegree %= 360;
         } else if (refinedDegree < 0) {
