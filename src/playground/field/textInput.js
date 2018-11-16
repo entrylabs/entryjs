@@ -72,7 +72,7 @@ Entry.FieldTextInput = class FieldTextInput extends Entry.Field {
 
         this.svgGroup.attr({ class: 'entry-input-field' });
 
-        this._setTextValue();
+        this._setConvertedValue();
 
         const width = this.getTextWidth();
         let y = this.position && this.position.y ? this.position.y : 0;
@@ -127,7 +127,7 @@ Entry.FieldTextInput = class FieldTextInput extends Entry.Field {
                 break;
             case 'angle':
                 this.optionInput = this._getInputFieldOption();
-                this.optionWidget = this._getAngleOptionWidget();
+                this.optionWidget = this._getAngleOptionWidget(this.optionInput[0]);
                 break;
             default:
                 this.optionInput = this._getInputFieldOption();
@@ -162,12 +162,18 @@ Entry.FieldTextInput = class FieldTextInput extends Entry.Field {
         });
     }
 
-    _getAngleOptionWidget() {
+    /**
+     *
+     * @param {Array} excludeDom outside 로 판단하지 않을 dom target list
+     * @returns {EntryTool} Angle Widget
+     * @private
+     */
+    _getAngleOptionWidget(...excludeDom) {
         return new EntryTool({
             type: 'angleWidget',
             data: {
                 angle: this.getValue(),
-                outsideExcludeDom: this.optionInput && [this.optionInput[0]],
+                outsideExcludeDom: excludeDom,
                 positionDom: this.svgGroup,
                 onOutsideClick: (angle) => {
                     this.applyValue(FieldTextInput._refineDegree(angle));
@@ -207,9 +213,6 @@ Entry.FieldTextInput = class FieldTextInput extends Entry.Field {
 
         inputField.on('keyup', (e) => {
             this.applyValue(inputField[0].value);
-            inputField.css({
-                width: this.box.width * scale,
-            });
             if (_.includes([13, 27], e.keyCode || e.which)) {
                 this.destroyOption(undefined, true);
             }
@@ -272,11 +275,13 @@ Entry.FieldTextInput = class FieldTextInput extends Entry.Field {
         const scaleSize = { width: this.getTextWidth() };
         this._header.attr(scaleSize);
         this.box.set(scaleSize);
-        this.optionGroup.css(size);
+        this.optionInput && this.optionInput.css(size);
         this._blockView.dAlignContent();
     }
 
     destroyOption(skipCommand, forceCommand) {
+        this._setConvertedValue();
+
         if (this.optionWidget) {
             this.optionWidget.isShow && this.optionWidget.hide();
             this.optionWidget.remove();
@@ -296,14 +301,23 @@ Entry.FieldTextInput = class FieldTextInput extends Entry.Field {
     }
 
     _setTextValue() {
+        const value = this.getValue();
+        if (this.textElement.textContent !== value) {
+            this.textElement.textContent = value;
+        }
+    }
+
+    _setConvertedValue() {
         const { _block = {} } = this;
         const { defaultType = 'text' } = _block;
-        let newValue = this._convert(this.getValue(), this.getValue());
+        let value = this._convert(this.getValue(), this.getValue());
+
         if (defaultType === 'angle') {
-            newValue += '°';
+            value += '°';
         }
-        if (this.textElement.textContent !== newValue) {
-            this.textElement.textContent = newValue;
+
+        if (this.textElement.textContent !== value) {
+            this.textElement.textContent = value;
         }
     }
 
