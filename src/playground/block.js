@@ -79,12 +79,6 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
         emphasized: false,
         readOnly: null,
         copyable: true,
-        comment: {
-            x: 0,
-            y: 0,
-            title: 'dasdasdsa',
-            value: 'dasdsa',
-        },
         events: {},
         extensions: [],
     };
@@ -240,6 +234,11 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
             );
         }
 
+        const comment = this._schema.comment;
+        if (comment) {
+            this._commnet = new Entry.Comment(this, this.getCode().board, comment);
+        }
+
         return true;
     };
 
@@ -340,6 +339,10 @@ Entry.Block.DELETABLE_FALSE_LIGHTEN = 3;
                     return p;
                 }
             });
+        }
+
+        if (this._comment) {
+            json.comment = this._comment.toJSON();
         }
 
         return Object.assign(

@@ -45,9 +45,7 @@
             targetDomQuery = ['playground', 'board', '&1', 'magnet', 'next', 0];
         }
 
-        const targetDom = Entry.getDom(
-            restrictor.processDomQuery(targetDomQuery, nextCmd)
-        );
+        const targetDom = Entry.getDom(restrictor.processDomQuery(targetDomQuery, nextCmd));
         const { left, top } = targetDom.getBoundingClientRect();
 
         Entry.Utils.glideBlock(svgGroup, left, top, function() {
@@ -101,9 +99,7 @@
         },
         log(threadIndex) {
             if (threadIndex instanceof Entry.Thread) {
-                threadIndex = this.editor.board.code.getThreadIndex(
-                    threadIndex
-                );
+                threadIndex = this.editor.board.code.getThreadIndex(threadIndex);
             }
 
             return [['index', threadIndex]];
@@ -150,14 +146,9 @@
     c[COMMAND_TYPES.recoverBlock] = {
         do(blockModel, pointer, isThread) {
             if (isThread) {
-                return this.editor.board.code.createThread(
-                    [blockModel],
-                    pointer[2]
-                );
+                return this.editor.board.code.createThread([blockModel], pointer[2]);
             } else {
-                const block = this.editor.board.code
-                    .createThread([blockModel])
-                    .getFirstBlock();
+                const block = this.editor.board.code.createThread([blockModel]).getFirstBlock();
                 this.editor.board.insert(block, pointer);
             }
         },
@@ -191,10 +182,7 @@
 
             if (typeof block !== 'string' && block.getBlockType() === 'basic') {
                 data.push(block.thread.getCount(block));
-            } else if (
-                typeof block !== 'string' &&
-                block.getBlockType() === 'output'
-            ) {
+            } else if (typeof block !== 'string' && block.getBlockType() === 'output') {
                 data.push(count || block.getOutputBlockCount() + 1);
             }
             return data;
@@ -307,25 +295,13 @@
             restrictor.fadeOutTooltip();
             const svgGroup = Entry.getDom(restrictor.processDomQuery(this.dom));
             const targetDom = Entry.getDom(
-                restrictor.processDomQuery([
-                    'playground',
-                    'board',
-                    '&1',
-                    'magnet',
-                    'next',
-                    0,
-                ])
+                restrictor.processDomQuery(['playground', 'board', '&1', 'magnet', 'next', 0])
             );
             const targetRect = targetDom.getBoundingClientRect();
 
-            Entry.Utils.glideBlock(
-                svgGroup,
-                targetRect.left,
-                targetRect.top,
-                function() {
-                    restrictor.fadeInTooltip();
-                }
-            );
+            Entry.Utils.glideBlock(svgGroup, targetRect.left, targetRect.top, function() {
+                restrictor.fadeInTooltip();
+            });
         },
         dom: ['playground', 'board', '&0'],
     };
@@ -338,9 +314,7 @@
     obj.restrict = function(data, domQuery, callback, restrictor) {
         if (restrictor.toolTipRender) {
             if (restrictor.toolTipRender) {
-                const target = Entry.Command.editor.board.code.getByPointer(
-                    data.content[2][1]
-                );
+                const target = Entry.Command.editor.board.code.getByPointer(data.content[2][1]);
 
                 if (!target || target.isParamBlockType()) {
                     restrictor.toolTipRender.contentIndex = 1;
@@ -537,14 +511,9 @@
         const targetDom = Entry.getDom(['playground', 'board', 'trashcan']);
         const targetRect = targetDom.getBoundingClientRect();
 
-        Entry.Utils.glideBlock(
-            svgGroup,
-            targetRect.left,
-            targetRect.top,
-            function() {
-                restrictor.fadeInTooltip();
-            }
-        );
+        Entry.Utils.glideBlock(svgGroup, targetRect.left, targetRect.top, function() {
+            restrictor.fadeInTooltip();
+        });
     };
     obj.followCmd = true;
     c[COMMAND_TYPES.separateBlockForDestroy] = obj;
@@ -610,11 +579,7 @@
         validate: false,
         log(block, x, y) {
             block = this.editor.board.findBlock(block);
-            return [
-                ['block', block.pointer()],
-                ['x', block.view.x],
-                ['y', block.view.y],
-            ];
+            return [['block', block.pointer()], ['x', block.view.x], ['y', block.view.y]];
         },
         undo: 'moveBlock',
         dom: ['playground', 'board', '&0'],
@@ -696,9 +661,7 @@
         ['dom', undefined],
     ]);
 
-    cloneCommand(COMMAND_TYPES.uncloneBlock, COMMAND_TYPES.destroyThread, [
-        ['undo', 'cloneBlock'],
-    ]);
+    cloneCommand(COMMAND_TYPES.uncloneBlock, COMMAND_TYPES.destroyThread, [['undo', 'cloneBlock']]);
 
     c[COMMAND_TYPES.scrollBoard] = {
         do(dx, dy, isPass) {
@@ -748,9 +711,7 @@
 
             Entry.Command.editor.board.scrollToPointer(data.content[1][1]);
 
-            const field = Entry.Command.editor.board.findBlock(
-                data.content[1][1]
-            );
+            const field = Entry.Command.editor.board.findBlock(data.content[1][1]);
             const blockView = field._blockView;
             blockView.disableMouseEvent = true;
             const fieldType = field.getFieldRawType();
@@ -804,9 +765,7 @@
                         );
 
                         if (restrictor.toolTipRender) {
-                            const {
-                                renderData = {},
-                            } = restrictor.toolTipRender;
+                            const { renderData = {} } = restrictor.toolTipRender;
                             renderData.isPrev = false;
                             if (!isDefault) {
                                 restrictor.toolTipRender.titleIndex = 1;
@@ -962,10 +921,7 @@
         undo: 'destroyBlockBelow',
     };
 
-    cloneCommand(
-        COMMAND_TYPES.separateBlockByCommand,
-        COMMAND_TYPES.separateBlock
-    );
+    cloneCommand(COMMAND_TYPES.separateBlockByCommand, COMMAND_TYPES.separateBlock);
 
     function cloneCommand(newType, oldType, props) {
         c[newType] = _.clone(c[oldType]);
@@ -982,8 +938,8 @@
             block._comment = new Entry.Comment(block, board);
             board.set({ isVisibleComment: true });
         },
-        state() {
-            return [];
+        state(block, board) {
+            return [block, board];
         },
         log() {
             return [];
@@ -996,8 +952,8 @@
             block._comment.destroy();
             delete block._comment;
         },
-        state() {
-            return [];
+        state(block) {
+            return [block, block.getCode().board];
         },
         log() {
             return [];
@@ -1009,8 +965,8 @@
         do(board) {
             board.set({ isVisibleComment: true });
         },
-        state() {
-            return [];
+        state(board) {
+            return [board];
         },
         log() {
             return [];
@@ -1022,8 +978,8 @@
         do(board) {
             board.set({ isVisibleComment: false });
         },
-        state() {
-            return [];
+        state(board) {
+            return [board];
         },
         log() {
             return [];
