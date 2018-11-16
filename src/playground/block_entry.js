@@ -595,7 +595,8 @@ const block = {
         statements: [],
         params: [
             {
-                type: 'Angle',
+                type: 'TextInput',
+                value: 90,
             },
         ],
         events: {},
@@ -1100,11 +1101,8 @@ const block = {
                             value: 'SHOW',
                             fontSize: 11,
                             arrowColor: EntryStatic.colorSet.arrow.default.CALC,
-                            converter:
-                                Entry.block.converters
-                                    .returnStringValueLowerCase,
-                            codeMap:
-                                'Entry.CodeMap.Entry.set_visible_project_timer[1]',
+                            converter: Entry.block.converters.returnStringValueLowerCase,
+                            codeMap: 'Entry.CodeMap.Entry.set_visible_project_timer[1]',
                         },
                         {
                             type: 'Text',
@@ -5480,7 +5478,7 @@ const block = {
                                 type: Ntry.STATIC.PARTICLE,
                                 direction: component.direction,
                                 collisionList: [
-                                    Ntry.STATIC.OBSTACLE_ENERMY5,,                                    
+                                    Ntry.STATIC.OBSTACLE_ENERMY5,
                                     Ntry.STATIC.OBSTACLE_ENERMY4,
                                 ],
                                 penetrationList: [Ntry.STATIC.WALL],

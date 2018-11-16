@@ -338,6 +338,7 @@ Entry.EXPANSION_BLOCK.festival.getBlocks = function() {
                 {
                     type: 'Block',
                     accept: 'string',
+                    defaultType: 'number',
                 },
                 params.getInfoType(),
             ],

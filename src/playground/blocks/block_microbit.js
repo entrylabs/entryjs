@@ -144,10 +144,12 @@ Entry.Microbit.getBlocks = function() {
                 {
                     type: 'Block',
                     accept: 'string',
+                    defaultType: 'number',
                 },
                 {
                     type: 'Block',
                     accept: 'string',
+                    defaultType: 'number',
                 },
                 {
                     type: 'Dropdown',
@@ -219,10 +221,12 @@ Entry.Microbit.getBlocks = function() {
                 {
                     type: 'Block',
                     accept: 'string',
+                    defaultType: 'number',
                 },
                 {
                     type: 'Block',
                     accept: 'string',
+                    defaultType: 'number',
                 },
             ],
             events: {},
@@ -441,18 +445,22 @@ Entry.Microbit.getBlocks = function() {
                 {
                     type: 'Block',
                     accept: 'string',
+                    defaultType: 'number',
                 },
                 {
                     type: 'Block',
                     accept: 'string',
+                    defaultType: 'number',
                 },
                 {
                     type: 'Block',
                     accept: 'string',
+                    defaultType: 'number',
                 },
                 {
                     type: 'Block',
                     accept: 'string',
+                    defaultType: 'number',
                 },
             ],
             events: {},
@@ -869,6 +877,7 @@ Entry.Microbit.getBlocks = function() {
                 {
                     type: 'Block',
                     accept: 'string',
+                    defaultType: 'number',
                 },
                 {
                     type: 'Indicator',
@@ -916,6 +925,7 @@ Entry.Microbit.getBlocks = function() {
                 {
                     type: 'Block',
                     accept: 'string',
+                    defaultType: 'number',
                 },
                 {
                     type: 'Indicator',

@@ -444,6 +444,7 @@ Entry.Arduino.getBlocks = function() {
                 {
                     type: 'Block',
                     accept: 'string',
+                    defaultType: 'number',
                 },
             ],
             events: {},
@@ -490,6 +491,7 @@ Entry.Arduino.getBlocks = function() {
                 {
                     type: 'Block',
                     accept: 'string',
+                    defaultType: 'number',
                 },
             ],
             events: {},
@@ -509,7 +511,7 @@ Entry.Arduino.getBlocks = function() {
             func: function(sprite, script) {
                 const { hwModule = {} } = Entry.hw;
                 const { name } = hwModule;
-                if(name === 'ArduinoExt') {                    
+                if(name === 'ArduinoExt') {
                     return Entry.block.arduino_ext_get_digital.func(sprite, script);
                 } else {
                     var signal = script.getNumberValue('PORT', script);
@@ -542,6 +544,7 @@ Entry.Arduino.getBlocks = function() {
                 {
                     type: 'Block',
                     accept: 'string',
+                    defaultType: 'number',
                 },
                 {
                     type: 'Dropdown',
@@ -619,10 +622,12 @@ Entry.Arduino.getBlocks = function() {
                 {
                     type: 'Block',
                     accept: 'string',
+                    defaultType: 'number',
                 },
                 {
                     type: 'Block',
                     accept: 'string',
+                    defaultType: 'number',
                 },
                 {
                     type: 'Indicator',
@@ -688,22 +693,27 @@ Entry.Arduino.getBlocks = function() {
                 {
                     type: 'Block',
                     accept: 'string',
+                    defaultType: 'number',
                 },
                 {
                     type: 'Block',
                     accept: 'string',
+                    defaultType: 'number',
                 },
                 {
                     type: 'Block',
                     accept: 'string',
+                    defaultType: 'number',
                 },
                 {
                     type: 'Block',
                     accept: 'string',
+                    defaultType: 'number',
                 },
                 {
                     type: 'Block',
                     accept: 'string',
+                    defaultType: 'number',
                 },
             ],
             events: {},

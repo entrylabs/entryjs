@@ -17,6 +17,7 @@ Entry.FieldBlock = class FieldBlock extends Entry.Field {
         this._content = content;
 
         this.acceptType = content.accept;
+        this.defaultType = content.defaultType;
         this._restoreCurrent = content.restore;
 
         this.view = this;
@@ -172,7 +173,11 @@ Entry.FieldBlock = class FieldBlock extends Entry.Field {
                 case 'string':
                     blockType = 'text';
                     break;
+                case 'number':
+                    blockType = 'number';
+                    break;
                 case 'param':
+                default:
                     blockType = 'function_field_label';
                     break;
             }
@@ -337,6 +342,7 @@ Entry.FieldBlock = class FieldBlock extends Entry.Field {
         const block = new Entry.Block(
             {
                 type: blockType,
+                defaultType: this.defaultType,
                 params: [isFromUserAction ? undefined : this._oldPrimitiveValue],
                 copyable: blockType !== 'function_field_label',
             },
@@ -354,6 +360,7 @@ Entry.FieldBlock = class FieldBlock extends Entry.Field {
     }
 
     _updateBG() {
+        console.log('..?');
         if (this.magneting) {
             this._bg = this.svgGroup.elem('path', {
                 d: 'm 8,12 l -4,0 -2,-2 0,-3 3,0 1,-1 0,-12 -1,-1 -3,0 0,-3 2,-2 l 4,0 z',
@@ -406,6 +413,8 @@ Entry.FieldBlock = class FieldBlock extends Entry.Field {
             block.destroy();
             return;
         }
+
+        block.defaultType = this.defaultType;
 
         if (!block.view) {
             block.setThread(this);

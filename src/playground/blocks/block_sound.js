@@ -40,7 +40,7 @@ module.exports = {
                 paramsKeyMap: {
                     VALUE: 0,
                 },
-                class: 'sound_play', 
+                class: 'sound_play',
                 isNotFor: [],
                 func(sprite, script) {
                     const soundId = script.getStringValue('VALUE', script);
@@ -75,6 +75,7 @@ module.exports = {
                     {
                         type: 'Block',
                         accept: 'string',
+                        defaultType: 'number',
                     },
                     {
                         type: 'Indicator',
@@ -156,10 +157,12 @@ module.exports = {
                     {
                         type: 'Block',
                         accept: 'string',
+                        defaultType: 'number',
                     },
                     {
                         type: 'Block',
                         accept: 'string',
+                        defaultType: 'number',
                     },
                     {
                         type: 'Indicator',
@@ -219,7 +222,7 @@ module.exports = {
                         start = Number(start) * 1000;
                         end = Number(end) * 1000;
 
-                        createjs.Sound.play(sound.id, { 
+                        createjs.Sound.play(sound.id, {
                             startTime: Math.min(start, end),
                             duration: Math.max(start, end) - Math.min(start, end),
                         });
@@ -322,6 +325,7 @@ module.exports = {
                     {
                         type: 'Block',
                         accept: 'string',
+                        defaultType: 'number',
                     },
                     {
                         type: 'Indicator',
@@ -410,10 +414,12 @@ module.exports = {
                     {
                         type: 'Block',
                         accept: 'string',
+                        defaultType: 'number',
                     },
                     {
                         type: 'Block',
                         accept: 'string',
+                        defaultType: 'number',
                     },
                     {
                         type: 'Indicator',
@@ -511,6 +517,7 @@ module.exports = {
                     {
                         type: 'Block',
                         accept: 'string',
+                        defaultType: 'number',
                     },
                     {
                         type: 'Indicator',
@@ -567,6 +574,7 @@ module.exports = {
                     {
                         type: 'Block',
                         accept: 'string',
+                        defaultType: 'number',
                     },
                     {
                         type: 'Indicator',

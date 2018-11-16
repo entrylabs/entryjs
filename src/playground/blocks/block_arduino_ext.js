@@ -101,7 +101,7 @@ Entry.ArduinoExt.setLanguage = function() {
                 arduino_ext_get_digital: 'Digital %1 Sensor value',
             }
         },
-    };  
+    };
 };
 
 //region arduinoExt 아두이노 확장모드
@@ -178,6 +178,7 @@ Entry.ArduinoExt.getBlocks = function() {
                 {
                     type: 'Block',
                     accept: 'string',
+                    defaultType: 'number',
                 },
             ],
             events: {},
@@ -226,22 +227,27 @@ Entry.ArduinoExt.getBlocks = function() {
                 {
                     type: 'Block',
                     accept: 'string',
+                    defaultType: 'number',
                 },
                 {
                     type: 'Block',
                     accept: 'string',
+                    defaultType: 'number',
                 },
                 {
                     type: 'Block',
                     accept: 'string',
+                    defaultType: 'number',
                 },
                 {
                     type: 'Block',
                     accept: 'string',
+                    defaultType: 'number',
                 },
                 {
                     type: 'Block',
                     accept: 'string',
+                    defaultType: 'number',
                 },
             ],
             events: {},
@@ -369,10 +375,12 @@ Entry.ArduinoExt.getBlocks = function() {
                 {
                     type: 'Block',
                     accept: 'string',
+                    defaultType: 'number',
                 },
                 {
                     type: 'Block',
                     accept: 'string',
+                    defaultType: 'number',
                 },
             ],
             events: {},
@@ -445,6 +453,7 @@ Entry.ArduinoExt.getBlocks = function() {
                 {
                     type: 'Block',
                     accept: 'string',
+                    defaultType: 'number',
                 },
             ],
             events: {},
@@ -462,7 +471,7 @@ Entry.ArduinoExt.getBlocks = function() {
             },
             class: 'ArduinoExtGet',
             isNotFor: ['ArduinoExt'],
-            func: function(sprite, script) {                
+            func: function(sprite, script) {
                 const { hwModule = {} } = Entry.hw;
                 const { name } = hwModule;
                 if(name === 'ArduinoExt') {
@@ -561,6 +570,7 @@ Entry.ArduinoExt.getBlocks = function() {
                 {
                     type: 'Block',
                     accept: 'string',
+                    defaultType: 'number',
                 },
                 {
                     type: 'Block',
@@ -645,10 +655,12 @@ Entry.ArduinoExt.getBlocks = function() {
                 {
                     type: 'Block',
                     accept: 'string',
+                    defaultType: 'number',
                 },
                 {
                     type: 'Block',
                     accept: 'string',
+                    defaultType: 'number',
                 },
                 {
                     type: 'Indicator',
@@ -871,6 +883,7 @@ Entry.ArduinoExt.getBlocks = function() {
                 {
                     type: 'Block',
                     accept: 'string',
+                    defaultType: 'number',
                 },
                 {
                     type: 'Block',
@@ -879,10 +892,12 @@ Entry.ArduinoExt.getBlocks = function() {
                 {
                     type: 'Block',
                     accept: 'string',
+                    defaultType: 'number',
                 },
                 {
                     type: 'Block',
                     accept: 'string',
+                    defaultType: 'number',
                 },
                 {
                     type: 'Indicator',
@@ -1033,10 +1048,12 @@ Entry.ArduinoExt.getBlocks = function() {
                 {
                     type: 'Block',
                     accept: 'string',
+                    defaultType: 'number',
                 },
                 {
                     type: 'Block',
                     accept: 'string',
+                    defaultType: 'number',
                 },
                 {
                     type: 'Indicator',
