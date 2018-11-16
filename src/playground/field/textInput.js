@@ -135,6 +135,7 @@ Entry.FieldTextInput = class FieldTextInput extends Entry.Field {
                 break;
         }
 
+        this._setTextValue();
         this.optionDomCreated();
     }
 
