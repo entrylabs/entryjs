@@ -173,7 +173,7 @@ Entry.Field = function() {};
     };
 
     p.setValue = function(value, reDraw) {
-        if (this.value == value) {
+        if (this.value === value) {
             return;
         }
 

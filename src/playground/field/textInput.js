@@ -152,6 +152,9 @@ Entry.FieldTextInput = class FieldTextInput extends Entry.Field {
             let prevValue = String(this.getValue());
             switch (eventName) {
                 case 'buttonPressed':
+                    if (prevValue === '0' && _.includes(['0', '.'], value) === false) {
+                        prevValue = '';
+                    }
                     this.applyValue(prevValue + value);
                     break;
                 case 'backButtonPressed':
