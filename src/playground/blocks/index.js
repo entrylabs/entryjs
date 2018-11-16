@@ -77,7 +77,7 @@ Entry.HARDWARE_LIST = {
     '2.9': Entry.Turtle,
     '2.FF': Entry.Roboid,
     '3.1': Entry.Bitbrick,
-    '4.2': Entry.Arduino,
+    '4.2': Entry.ArduinoExt,
     '5.1': Entry.Neobot,
     '5.2': Entry.NeobotSensorTheme,
     '5.3': Entry.NeobotRobotTheme,
