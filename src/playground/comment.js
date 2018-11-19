@@ -9,6 +9,7 @@ Entry.Comment = class Comment {
         parentHeight: 0,
         width: 160,
         height: 160,
+        value: '',
         readOnly: false,
         visible: true,
         display: true,
@@ -16,33 +17,35 @@ Entry.Comment = class Comment {
         isOpened: true,
     };
 
-    constructor(block, board) {
+    constructor(block, board, comment) {
         Entry.Model(this, false);
 
+        this.load(comment);
         if (!board.svgCommentGroup) {
             return;
         }
-        const { view } = block;
-        const { svgGroup } = view || {};
         this._block = block;
         this._board = board;
-        this._blockView = view;
-        this.value = '';
-        if (svgGroup && !(board instanceof Entry.BlockMenu)) {
-            this.createComment();
-            this.startRender();
-            this.addControl();
-            this.setPosition();
+        if (block) {
+            const { view } = block;
+            this._blockView = view;
         }
+        this.createComment();
+        this.startRender();
+        this.addControl();
 
         this.observe(this, 'updateOpacity', ['visible'], false);
         this.observe(this, 'toggleContent', ['isOpened'], false);
-        this.observe(
-            this,
-            'setPosition',
-            ['x', 'y', 'width', 'height', 'parentWidth', 'parentHeight', 'isOpened'],
-            false
-        );
+        this.observe(this, 'setValue', ['value']);
+        this.observe(this, 'setPosition', [
+            'x',
+            'y',
+            'width',
+            'height',
+            'parentWidth',
+            'parentHeight',
+            'isOpened',
+        ]);
     }
 
     get block() {
@@ -89,11 +92,22 @@ Entry.Comment = class Comment {
         return `M22,14 H${this.width - 22}`;
     }
 
+    load(comment) {
+        if (comment) {
+            this.set(comment);
+        }
+    }
+
     createComment() {
         const { svgGroup, pathGroup } = this.blockView || {};
         this.pathGroup = pathGroup;
         this.parentGroup = svgGroup;
-        this.svgGroup = this.blockView.commentShapeGroup;
+        if (this.block) {
+            this.svgGroup = this.blockView.svgCommentGroup.prepend('g');
+        } else {
+            this.svgGroup = this.board.svgCommentGroup.elem('g');
+            console.log(this.board.svgCommentGroup, this.svgGroup);
+        }
         this.mouseDown = this.mouseDown.bind(this);
         this.mouseMove = this.mouseMove.bind(this);
         this.mouseUp = this.mouseUp.bind(this);
@@ -105,38 +119,42 @@ Entry.Comment = class Comment {
     }
 
     startRender() {
-        if (this.svgGroup) {
-            this.id = Entry.generateHash();
+        this.id = Entry.generateHash();
+        if (this.block) {
             this._line = this.svgGroup.elem('line');
-
-            this._contentGroup = this.svgGroup.elem('g');
-            this._comment = this._contentGroup.elem('rect');
-            this._path = this._contentGroup.elem('defs').elem('path');
-            this._text = this._contentGroup.elem('text');
-            this._textPath = this._text.elem('textPath');
-            this._resizeArea = this._contentGroup.elem('rect');
-            this._resizeArrow = this._contentGroup.elem('image');
-
-            this._title = this.svgGroup.elem('rect');
-            this._titleGroup = this.svgGroup.elem('g');
-            this._toggleArrow = this._titleGroup.elem('image');
-            this._titlePath = this._titleGroup.elem('defs').elem('path');
-            this._titleText = this._titleGroup.elem('text');
-            this._titleTextPath = this._titleText.elem('textPath');
-
-            this._commentIcon = this.svgGroup.elem('image');
-            this._toggleArea = this.svgGroup.elem('rect');
-
-            this.canRender = true;
-            this.setFrame();
-            this.initSchema();
         }
+
+        this._contentGroup = this.svgGroup.elem('g');
+        this._comment = this._contentGroup.elem('rect');
+        this._path = this._contentGroup.elem('defs').elem('path');
+        this._text = this._contentGroup.elem('text');
+        this._textPath = this._text.elem('textPath');
+        this._resizeArea = this._contentGroup.elem('rect');
+        this._resizeArrow = this._contentGroup.elem('image');
+
+        this._title = this.svgGroup.elem('rect');
+        this._titleGroup = this.svgGroup.elem('g');
+        this._toggleArrow = this._titleGroup.elem('image');
+        this._titlePath = this._titleGroup.elem('defs').elem('path');
+        this._titleText = this._titleGroup.elem('text');
+        this._titleTextPath = this._titleText.elem('textPath');
+
+        this._commentIcon = this.svgGroup.elem('image');
+        this._toggleArea = this.svgGroup.elem('rect');
+
+        this.canRender = true;
+        this.setFrame();
+        this.initSchema();
     }
 
     initSchema() {
-        const { width: parentWidth } = this.pathGroup.getBBox();
-        const { topFieldHeight, height } = this._blockView;
-        const parentHeight = topFieldHeight || height;
+        let parentWidth = 0;
+        let parentHeight = 0;
+        if (this.pathGroup) {
+            parentWidth = this.pathGroup.getBBox().width;
+            const { topFieldHeight, height } = this._blockView;
+            parentHeight = topFieldHeight || height;
+        }
         const { titleHeight, defaultLineLength } = this;
         const x = defaultLineLength + parentWidth;
         const y = parentHeight / 2 - titleHeight / 2;
@@ -162,9 +180,11 @@ Entry.Comment = class Comment {
             rx: '4',
         });
 
-        this._line.attr({
-            style: 'stroke:#eda913;stroke-width:2',
-        });
+        if (this.block) {
+            this._line.attr({
+                style: 'stroke:#eda913;stroke-width:2',
+            });
+        }
 
         this._path.attr({
             id: `${this.id}c`,
@@ -219,12 +239,6 @@ Entry.Comment = class Comment {
         this._commentIcon.attr({
             href: `${path}comment_icon.svg`,
         });
-
-        if (!this.block) {
-            this._line.attr({
-                class: 'invisible',
-            });
-        }
     }
 
     setPosition() {
@@ -255,12 +269,14 @@ Entry.Comment = class Comment {
             height,
         });
 
-        this._line.attr({
-            x1: this.parentWidth,
-            y1: this.parentHeight / 2,
-            x2: x + width / 2,
-            y2: y + this.titleHeight / 2,
-        });
+        if (this.block) {
+            this._line.attr({
+                x1: this.parentWidth,
+                y1: this.parentHeight / 2,
+                x2: x + width / 2,
+                y2: y + this.titleHeight / 2,
+            });
+        }
 
         this._path.attr({
             transform: `translate(${x}, ${y + this.titleHeight})`,
@@ -346,7 +362,8 @@ Entry.Comment = class Comment {
         const mouseEvent = Entry.Utils.convertMouseEvent(e);
         const matrix = this.svgGroup.getCTM();
         const { x, y } = Entry.GlobalSvg.getRelativePoint(matrix);
-        const { left: startX, top: startY } = this.pathGroup.getBoundingClientRect();
+        const { left: startX, top: startY } = (this.pathGroup &&
+            this.pathGroup.getBoundingClientRect()) || { left: x, top: y };
         this.mouseDownCoordinate = {
             x: mouseEvent.pageX,
             y: mouseEvent.pageY,
@@ -456,7 +473,7 @@ Entry.Comment = class Comment {
             dom.addEventListener('mousedown', func);
             dom.addEventListener('ontouchstart', func);
         };
-        bindEvent(this._comment, this.mouseDown);
+        bindEvent(this._contentGroup, this.mouseDown);
         bindEvent(this._title, this.mouseDown);
         bindEvent(this._resizeArea, this.resizeMouseDown);
         bindEvent(this._toggleArea, this.toggleMouseDown);
@@ -503,7 +520,7 @@ Entry.Comment = class Comment {
         this.isEditing = true;
         const { top, left } = this._comment.getBoundingClientRect();
         this.event = Entry.disposeEvent.attach(this, () => {
-            this._textPath.textContent = this.textArea.val();
+            this._textPath.textContent = this.value;
             this.destroyTextArea();
         });
         this.textArea = Entry.Dom('textarea', {
@@ -511,7 +528,7 @@ Entry.Comment = class Comment {
             parent: $('body'),
         });
         this.bindDomEventTextArea();
-        this.textArea.val(this._textPath.textContent);
+        this.textArea.val(this.value);
         this.textArea.css({
             left,
             top: this.titleHeight * this.scale + top,
@@ -553,14 +570,18 @@ Entry.Comment = class Comment {
         delete this.event;
 
         if (this.textArea) {
-            const textVal = this.textArea.val();
+            const value = this.textArea.val();
             this.textArea.remove();
-            this._textPath.textContent = textVal;
-            this._titleTextPath.textContent = textVal;
+            this.set({ value });
             delete this.textArea;
         }
 
         Entry.Utils.blur();
+    }
+
+    setValue() {
+        this._textPath.textContent = this.value;
+        this._titleTextPath.textContent = this.value;
     }
 
     resizeMouseDown(e) {
@@ -659,5 +680,9 @@ Entry.Comment = class Comment {
         while (this.svgGroup.hasChildNodes()) {
             this.svgGroup.removeChild(this.svgGroup.firstChild);
         }
+    }
+
+    toJSON() {
+        return this._toJSON();
     }
 };

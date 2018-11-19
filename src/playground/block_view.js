@@ -2,113 +2,8 @@
 
 import _get from 'lodash/get';
 
-Entry.BlockView = function(block, board, mode) {
-    const that = this;
-    Entry.Model(this, false);
-    this.block = block;
-    this._lazyUpdatePos = Entry.Utils.debounce(block._updatePos.bind(block), 200);
-    this.mouseUpEvent = new Entry.Event(this);
-    this.disableMouseEvent = false;
-
-    this.dAlignContent = this.alignContent;
-    this._board = board;
-    this._observers = [];
-    this.set(block);
-    const hash = Entry.generateHash();
-    this.svgGroup = board.svgBlockGroup.elem('g');
-    this.svgGroup.attr('id', hash);
-    this.svgGroup.blockView = this;
-    this.svgCommentGroup = board.svgCommentGroup.elem('g');
-    this.svgCommentGroup.attr('id', `${hash}C`);
-    this.svgCommentGroup.blockView = this;
-
-    this._schema = Entry.skinContainer.getSkin(block);
-
-    if (this._schema === undefined) {
-        this.block.destroy(false, false);
-        return;
-    }
-
-    if (mode === undefined) {
-        const workspace = this.getBoard().workspace;
-        if (workspace && workspace.getBlockViewRenderMode) {
-            this.renderMode = workspace.getBlockViewRenderMode();
-        } else {
-            this.renderMode = Entry.BlockView.RENDER_MODE_BLOCK;
-        }
-    } else {
-        this.renderMode = Entry.BlockView.RENDER_MODE_BLOCK;
-    }
-
-    if (this._schema.deletable) {
-        this.block.setDeletable(this._schema.deletable);
-    }
-    if (this._schema.copyable) {
-        this.block.setCopyable(this._schema.copyable);
-    }
-    if (this._schema.display === false || block.display === false) {
-        this.set({ display: false });
-    }
-    this._skeleton = Entry.skeleton[this._schema.skeleton];
-    const skeleton = this._skeleton;
-    this._contents = [];
-    this._statements = [];
-    this._extensions = [];
-    this.magnet = {};
-    this._paramMap = {};
-
-    if (skeleton.magnets && skeleton.magnets(this).next) {
-        this.svgGroup.nextMagnet = this.block;
-        this._nextGroup = this.svgGroup.elem('g');
-        this._nextCommentGroup = this.svgCommentGroup.elem('g');
-        this._observers.push(this.observe(this, '_updateMagnet', ['contentHeight']));
-    }
-
-    this.isInBlockMenu = this.getBoard() instanceof Entry.BlockMenu;
-
-    this.mouseHandler = function() {
-        (_.result(that.block.events, 'mousedown') || []).forEach((fn) => {
-            return fn(that);
-        });
-        that.onMouseDown(...arguments);
-    };
-
-    this._startRender(block, mode);
-
-    // observe
-    const thisBlock = this.block;
-    this._observers.push(thisBlock.observe(this, '_setMovable', ['movable']));
-    this._observers.push(thisBlock.observe(this, '_setReadOnly', ['movable']));
-    this._observers.push(thisBlock.observe(this, '_setCopyable', ['copyable']));
-    this._observers.push(thisBlock.observe(this, '_updateColor', ['deletable'], false));
-    this._observers.push(this.observe(this, '_updateBG', ['magneting'], false));
-
-    this._observers.push(this.observe(this, '_updateOpacity', ['visible'], false));
-    this._observers.push(this.observe(this, '_updateDisplay', ['display']));
-    this._observers.push(this.observe(this, '_updateMagnet', ['offsetY']));
-    this._observers.push(board.code.observe(this, '_setBoard', ['board'], false));
-
-    this.dragMode = Entry.DRAG_MODE_NONE;
-    Entry.Utils.disableContextmenu(this.svgGroup.node);
-    const events = block.events.viewAdd || [];
-    if (Entry.type == 'workspace' && this._board instanceof Entry.Board) {
-        events.forEach((fn) => {
-            if (_.isFunction(fn)) {
-                fn(block);
-            }
-        });
-    }
-};
-
-Entry.BlockView.PARAM_SPACE = 5;
-Entry.BlockView.DRAG_RADIUS = 5;
-Entry.BlockView.pngMap = {};
-
-Entry.BlockView.RENDER_MODE_BLOCK = 1;
-Entry.BlockView.RENDER_MODE_TEXT = 2;
-
-(function(p) {
-    p.schema = {
+Entry.BlockView = class BlockView {
+    schema = {
         id: 0,
         type: Entry.STATIC.BLOCK_RENDER_MODEL,
         x: 0,
@@ -125,14 +20,107 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
         animating: false,
         shadow: true,
         display: true,
-        comment: {
-            use: false,
-            x: 0,
-            y: 0,
-        },
     };
 
-    p._startRender = function(block, mode) {
+    constructor(block, board, mode) {
+        const that = this;
+        Entry.Model(this, false);
+        this.block = block;
+        this._lazyUpdatePos = Entry.Utils.debounce(block._updatePos.bind(block), 200);
+        this.mouseUpEvent = new Entry.Event(this);
+        this.disableMouseEvent = false;
+
+        this.dAlignContent = this.alignContent;
+        this._board = board;
+        this._observers = [];
+        this.set(block);
+        const hash = Entry.generateHash();
+        this.svgGroup = board.svgBlockGroup.elem('g');
+        this.svgGroup.attr('id', hash);
+        this.svgGroup.blockView = this;
+        this.svgCommentGroup = board.svgCommentGroup.elem('g');
+        this.svgCommentGroup.attr('id', `${hash}C`);
+        this.svgCommentGroup.blockView = this;
+
+        this._schema = Entry.skinContainer.getSkin(block);
+
+        if (this._schema === undefined) {
+            this.block.destroy(false, false);
+            return;
+        }
+
+        if (mode === undefined) {
+            const workspace = this.getBoard().workspace;
+            if (workspace && workspace.getBlockViewRenderMode) {
+                this.renderMode = workspace.getBlockViewRenderMode();
+            } else {
+                this.renderMode = Entry.BlockView.RENDER_MODE_BLOCK;
+            }
+        } else {
+            this.renderMode = Entry.BlockView.RENDER_MODE_BLOCK;
+        }
+
+        if (this._schema.deletable) {
+            this.block.setDeletable(this._schema.deletable);
+        }
+        if (this._schema.copyable) {
+            this.block.setCopyable(this._schema.copyable);
+        }
+        if (this._schema.display === false || block.display === false) {
+            this.set({ display: false });
+        }
+        this._skeleton = Entry.skeleton[this._schema.skeleton];
+        const skeleton = this._skeleton;
+        this._contents = [];
+        this._statements = [];
+        this._extensions = [];
+        this.magnet = {};
+        this._paramMap = {};
+
+        if (skeleton.magnets && skeleton.magnets(this).next) {
+            this.svgGroup.nextMagnet = this.block;
+            this._nextGroup = this.svgGroup.elem('g');
+            this._nextCommentGroup = this.svgCommentGroup.elem('g');
+            this._observers.push(this.observe(this, '_updateMagnet', ['contentHeight']));
+        }
+
+        this.isInBlockMenu = this.getBoard() instanceof Entry.BlockMenu;
+
+        this.mouseHandler = function() {
+            (_.result(that.block.events, 'mousedown') || []).forEach((fn) => {
+                return fn(that);
+            });
+            that.onMouseDown(...arguments);
+        };
+
+        this._startRender(block, mode);
+
+        // observe
+        const thisBlock = this.block;
+        this._observers.push(thisBlock.observe(this, '_setMovable', ['movable']));
+        this._observers.push(thisBlock.observe(this, '_setReadOnly', ['movable']));
+        this._observers.push(thisBlock.observe(this, '_setCopyable', ['copyable']));
+        this._observers.push(thisBlock.observe(this, '_updateColor', ['deletable'], false));
+        this._observers.push(this.observe(this, '_updateBG', ['magneting'], false));
+
+        this._observers.push(this.observe(this, '_updateOpacity', ['visible'], false));
+        this._observers.push(this.observe(this, '_updateDisplay', ['display']));
+        this._observers.push(this.observe(this, '_updateMagnet', ['offsetY']));
+        this._observers.push(board.code.observe(this, '_setBoard', ['board'], false));
+
+        this.dragMode = Entry.DRAG_MODE_NONE;
+        Entry.Utils.disableContextmenu(this.svgGroup.node);
+        const events = block.events.viewAdd || [];
+        if (Entry.type == 'workspace' && this._board instanceof Entry.Board) {
+            events.forEach((fn) => {
+                if (_.isFunction(fn)) {
+                    fn(block);
+                }
+            });
+        }
+    }
+
+    _startRender(block, mode) {
         const skeleton = this._skeleton;
         const attr = { class: 'block' };
 
@@ -141,14 +129,12 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
         }
 
         const svgGroup = this.svgGroup;
-        const svgCommentGroup = this.svgCommentGroup;
 
         if (this._schema.css) {
             attr.style = this._schema.css;
         }
 
         svgGroup.attr(attr);
-        svgCommentGroup.attr(attr);
 
         (skeleton.classes || []).forEach((c) => {
             return svgGroup.addClass(c);
@@ -157,7 +143,6 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
         const path = skeleton.path(this);
 
         this.pathGroup = svgGroup.prepend('g');
-        this.commentShapeGroup = svgCommentGroup.prepend('g');
         this._updateMagnet();
 
         this._path = this.pathGroup.elem('path');
@@ -199,9 +184,9 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
         guide && svgGroup.insertBefore(guide, svgGroup.firstChild);
 
         this.bindPrev();
-    };
+    }
 
-    p._startContentRender = function(mode) {
+    _startContentRender(mode) {
         mode = _.isUndefined(mode) ? this.renderMode : mode;
 
         const _removeFunc = _.partial(_.result, _, 'remove');
@@ -278,24 +263,24 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
         });
 
         this.alignContent(false);
-    };
+    }
 
-    p._startExtension = function(mode) {
+    _startExtension(mode) {
         this._extensions = this.block.extensions.map(
             function(e) {
                 return new Entry[`Ext${e.type}`](e, this, mode);
             }.bind(this)
         );
-    };
+    }
 
-    p._updateSchema = p._startContentRender;
+    _updateSchema = this._startContentRender;
 
-    p.changeType = function(type) {
+    changeType(type) {
         this._schema = Entry.block[type || this.type];
         this._updateSchema();
-    };
+    }
 
-    p.alignContent = function(animate) {
+    alignContent(animate) {
         if (animate !== true) {
             animate = false;
         }
@@ -365,9 +350,9 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
         if (ws && (this.isFieldEditing() || ws.widgetUpdateEveryTime)) {
             ws.widgetUpdateEvent.notify();
         }
-    };
+    }
 
-    p.isFieldEditing = function() {
+    isFieldEditing() {
         const contents = this._contents;
         for (let i = 0; i < contents.length; i++) {
             const content = contents[i] || {};
@@ -376,9 +361,9 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
             }
         }
         return false;
-    };
+    }
 
-    p._alignStatement = function(animate, index) {
+    _alignStatement(animate, index) {
         const positions = this._skeleton.statementPos ? this._skeleton.statementPos(this) : [];
         const statement = this._statements[index];
         if (!statement) {
@@ -388,14 +373,14 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
         if (pos) {
             statement.align(pos.x, pos.y, animate);
         }
-    };
+    }
 
-    p._render = function() {
+    _render() {
         this._renderPath();
         this.set(this._skeleton.box(this));
-    };
+    }
 
-    p._renderPath = function() {
+    _renderPath() {
         const newPath = this._skeleton.path(this);
 
         //no change occured
@@ -412,9 +397,9 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
             this._path.attr({ d: newPath });
             this.animating === true && this.set({ animating: false });
         }
-    };
+    }
 
-    p._setPosition = function() {
+    _setPosition() {
         const board = this.getBoard();
         const { scale = 1 } = board || {};
         if (!(this.x || this.y)) {
@@ -425,23 +410,23 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
             this.svgGroup.attr('transform', transform);
             this.svgCommentGroup.attr('transform', transform);
         }
-    };
+    }
 
-    p._toLocalCoordinate = function(parentSvgGroup, svgGroup = this.svgGroup) {
+    _toLocalCoordinate(parentSvgGroup, svgGroup = this.svgGroup) {
         this.disableMouseEvent = false;
         this._moveTo(0, 0, false);
         parentSvgGroup.appendChild(svgGroup);
-    };
+    }
 
-    p._toGlobalCoordinate = function(dragMode, doNotUpdatePos) {
+    _toGlobalCoordinate(dragMode, doNotUpdatePos) {
         this.disableMouseEvent = false;
         const { x, y } = this.getAbsoluteCoordinate(dragMode);
         this._moveTo(x, y, false, doNotUpdatePos);
         this.getBoard().svgBlockGroup.appendChild(this.svgGroup);
         this.getBoard().svgCommentGroup.appendChild(this.svgCommentGroup);
-    };
+    }
 
-    p._moveTo = function(x, y, animate, doNotUpdatePos) {
+    _moveTo(x, y, animate, doNotUpdatePos) {
         const thisX = this.x;
         const thisY = this.y;
         if (!this.display) {
@@ -457,15 +442,15 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
         if (this.visible && this.display) {
             this._setPosition(animate);
         }
-    };
+    }
 
-    p._moveBy = function(x, y, animate, doNotUpdatePos) {
+    _moveBy(x, y, animate, doNotUpdatePos) {
         return this._moveTo(this.x + x, this.y + y, animate, doNotUpdatePos);
-    };
+    }
 
-    p.moveBy = p._moveBy;
+    moveBy = this._moveBy;
 
-    p._addControl = function() {
+    _addControl() {
         this._mouseEnable = true;
 
         $(this.svgGroup).bind(
@@ -488,14 +473,14 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
                 });
             });
         }
-    };
+    }
 
-    p.removeControl = function() {
+    removeControl() {
         this._mouseEnable = false;
         $(this.svgGroup).unbind('.blockViewMousedown');
-    };
+    }
 
-    p.onMouseDown = function(e) {
+    onMouseDown(e) {
         if (e.stopPropagation) {
             e.stopPropagation();
         }
@@ -574,7 +559,7 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
 
             let mouseEvent;
             if (workspaceMode === Entry.Workspace.MODE_VIMBOARD) {
-                p.vimBoardEvent(e, 'dragOver');
+                this.vimBoardEvent(e, 'dragOver');
             }
             if (e.originalEvent && e.originalEvent.touches) {
                 mouseEvent = e.originalEvent.touches[0];
@@ -663,9 +648,9 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
             delete blockView.mouseDownCoordinate;
             delete blockView.dragInstance;
         }
-    };
+    }
 
-    p.vimBoardEvent = function(event, type, block) {
+    vimBoardEvent(event, type, block) {
         if (!event) {
             return;
         }
@@ -674,9 +659,9 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
             dragEvent.block = block;
         }
         $('.entryVimBoard>.CodeMirror')[0].dispatchEvent(dragEvent);
-    };
+    }
 
-    p.terminateDrag = function(e) {
+    terminateDrag(e) {
         const gs = Entry.GlobalSvg;
         const board = this.getBoard();
         const dragMode = this.dragMode;
@@ -800,9 +785,9 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
 
         this.destroyShadow();
         delete this.originPos;
-    };
+    }
 
-    p._updateCloseBlock = function() {
+    _updateCloseBlock() {
         if (!this._skeleton.magnets) {
             return;
         }
@@ -822,36 +807,36 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
             }
         }
         board.setMagnetedBlock(null);
-    };
+    }
 
-    p.dominate = function() {
+    dominate() {
         this.block.getThread().view.dominate();
         const board = this.getBoard();
         board.scroller.resizeScrollBar.call(board.scroller);
-    };
+    }
 
-    p.getSvgRoot = function() {
+    getSvgRoot() {
         const svgBlockGroup = this.getBoard().svgBlockGroup;
         let node = this.svgGroup;
         while (node.parentNode !== svgBlockGroup) {
             node = node.parentNode;
         }
         return node;
-    };
+    }
 
-    p.getBoard = function() {
+    getBoard() {
         return this._board;
-    };
+    }
 
-    p.getComment = function() {
+    getComment() {
         return this.block.getComment();
-    };
+    }
 
-    p._setBoard = function() {
+    _setBoard() {
         this._board = this._board.code.board;
-    };
+    }
 
-    p.destroy = function(animate) {
+    destroy(animate) {
         this.block.set({ view: null });
         $(this.svgGroup).unbind('.blockViewMousedown');
         this._destroyObservers();
@@ -880,22 +865,22 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
                 }
             });
         }
-    };
+    }
 
-    p.getShadow = function() {
+    getShadow() {
         if (!this._shadow) {
             this._shadow = Entry.SVG.createElement(this.svgGroup.cloneNode(true), { opacity: 0.5 });
             this.getBoard().svgGroup.appendChild(this._shadow);
         }
         return this._shadow;
-    };
+    }
 
-    p.destroyShadow = function() {
+    destroyShadow() {
         _.result(this._shadow, 'remove');
         delete this._shadow;
-    };
+    }
 
-    p._updateMagnet = function() {
+    _updateMagnet() {
         if (!this._skeleton.magnets) {
             return;
         }
@@ -910,9 +895,9 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
         }
         this.magnet = magnet;
         this.block.getThread().changeEvent.notify();
-    };
+    }
 
-    p._updateBG = function() {
+    _updateBG() {
         const dragBlock = this._board.dragBlock;
         if (!dragBlock || !dragBlock.dragInstance) {
             return;
@@ -997,54 +982,54 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
         }
 
         _.result(blockView.block.thread.changeEvent, 'notify');
-    };
+    }
 
-    p.addDragging = function() {
+    addDragging() {
         this.svgGroup.addClass('dragging');
-    };
+    }
 
-    p.removeDragging = function() {
+    removeDragging() {
         this.svgGroup.removeClass('dragging');
-    };
+    }
 
-    p.addSelected = function() {
+    addSelected() {
         $(this.pathGroup).insertAfter(this._nextGroup);
         this.svgGroup.addClass('selected');
-    };
+    }
 
-    p.removeSelected = function() {
+    removeSelected() {
         $(this.pathGroup).insertBefore(this._nextGroup);
         this.svgGroup.removeClass('selected');
-    };
+    }
 
-    p.getSkeleton = function() {
+    getSkeleton() {
         return this._skeleton;
-    };
+    }
 
-    p.getContentPos = function() {
+    getContentPos() {
         return this._skeleton.contentPos(this);
-    };
+    }
 
-    p.renderText = function() {
+    renderText() {
         this.renderMode = Entry.BlockView.RENDER_MODE_TEXT;
         this._startContentRender(Entry.BlockView.RENDER_MODE_TEXT);
-    };
+    }
 
-    p.renderBlock = function() {
+    renderBlock() {
         this.renderMode = Entry.BlockView.RENDER_MODE_BLOCK;
         this._startContentRender(Entry.BlockView.RENDER_MODE_BLOCK);
-    };
+    }
 
-    p.renderByMode = function(mode, isReDraw) {
+    renderByMode(mode, isReDraw) {
         if (this.isRenderMode(mode) && !isReDraw) {
             return;
         }
 
         this.renderMode = mode;
         this._startContentRender(mode);
-    };
+    }
 
-    p._updateOpacity = function() {
+    _updateOpacity() {
         if (this.visible === false) {
             this.svgGroup.attr({ opacity: 0 });
             this.svgCommentGroup.attr({ opacity: 0 });
@@ -1053,30 +1038,30 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
             this.svgCommentGroup.removeAttr('opacity');
             this._setPosition();
         }
-    };
+    }
 
-    p._setMovable = function() {
+    _setMovable() {
         this.movable =
             this.block.isMovable() !== null
                 ? this.block.isMovable()
                 : this._skeleton.movable !== undefined ? this._skeleton.movable : true;
-    };
+    }
 
-    p._setReadOnly = function() {
+    _setReadOnly() {
         this.readOnly =
             this.block.isReadOnly() !== null
                 ? this.block.isReadOnly()
                 : this._skeleton.readOnly !== undefined ? this._skeleton.readOnly : false;
-    };
+    }
 
-    p._setCopyable = function() {
+    _setCopyable() {
         this.copyable =
             this.block.isCopyable() !== null
                 ? this.block.isCopyable()
                 : this._skeleton.copyable !== undefined ? this._skeleton.copyable : true;
-    };
+    }
 
-    p.bumpAway = function(distance = 15, delay) {
+    bumpAway(distance = 15, delay) {
         const that = this;
         if (delay) {
             const oldX = this.x;
@@ -1090,9 +1075,9 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
         } else {
             that._moveBy(distance, distance, false);
         }
-    };
+    }
 
-    p.bindPrev = function(prevBlock, isDestroy) {
+    bindPrev(prevBlock, isDestroy) {
         if (prevBlock) {
             this._toLocalCoordinate(prevBlock.view._nextGroup);
             this._toLocalCoordinate(prevBlock.view._nextCommentGroup, this.svgCommentGroup);
@@ -1136,9 +1121,9 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
                 }
             }
         }
-    };
+    }
 
-    p.getAbsoluteCoordinate = function(dragMode) {
+    getAbsoluteCoordinate(dragMode) {
         const board = this.getBoard();
         const { scale = 1 } = board || {};
         dragMode = dragMode !== undefined ? dragMode : this.dragMode;
@@ -1157,13 +1142,13 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
         pos.scaleX = pos.x / scale;
         pos.scaleY = pos.y / scale;
         return pos;
-    };
+    }
 
-    p.getBelowHeight = function() {
+    getBelowHeight() {
         return this.block.getThread().view.requestPartHeight(this);
-    };
+    }
 
-    p._updateDisplay = function() {
+    _updateDisplay() {
         if (this.display) {
             $(this.svgGroup).removeAttr('display');
             this._setPosition();
@@ -1172,9 +1157,9 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
                 display: 'none',
             });
         }
-    };
+    }
 
-    p._updateColor = function() {
+    _updateColor() {
         let fillColor = this._schema.color;
         const { deletable, emphasized } = this.block;
 
@@ -1189,32 +1174,32 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
         this._fillColor = fillColor;
         this._path.attr({ fill: fillColor });
         this._updateContents();
-    };
+    }
 
-    p._updateContents = function(isReDraw) {
+    _updateContents(isReDraw) {
         const params = [undefined, undefined, this.renderMode, isReDraw];
         this._contents.forEach((c) => {
             return c.renderStart(...params);
         });
         this.alignContent(false);
-    };
+    }
 
-    p._destroyObservers = function() {
+    _destroyObservers() {
         const observers = this._observers;
         while (observers.length) {
             observers.pop().destroy();
         }
-    };
+    }
 
-    p.addActivated = function() {
+    addActivated() {
         this.svgGroup.addClass('activated');
-    };
+    }
 
-    p.removeActivated = function() {
+    removeActivated() {
         this.svgGroup.removeClass('activated');
-    };
+    }
 
-    p.reDraw = function() {
+    reDraw() {
         if (!(this.visible && this.display)) {
             return;
         }
@@ -1233,13 +1218,13 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
         (this._extensions || []).forEach((ext) => {
             return _.result(ext, 'updatePos');
         });
-    };
+    }
 
-    p.getParam = function(index) {
+    getParam(index) {
         return this._paramMap[index];
-    };
+    }
 
-    p.getDataUrl = function(notClone, notPng) {
+    getDataUrl(notClone, notPng) {
         const $deferred = $.Deferred();
         let svgData =
             '<svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 %W %H">(svgGroup)(defs)</svg>';
@@ -1401,9 +1386,9 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
             }
             return false;
         }
-    };
+    }
 
-    p.downloadAsImage = function(i) {
+    downloadAsImage(i) {
         this.getDataUrl().then((data) => {
             const download = document.createElement('a');
             download.href = data.src;
@@ -1414,9 +1399,9 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
             download.download = `${name}.png`;
             download.click();
         });
-    };
+    }
 
-    p._rightClick = function(e, eventSource) {
+    _rightClick(e, eventSource) {
         const disposeEvent = Entry.disposeEvent;
         if (disposeEvent) {
             disposeEvent.notify(e);
@@ -1500,13 +1485,13 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
                 return Entry.Utils.isChrome() && Entry.type == 'workspace' && !Entry.isMobile();
             }
         }
-    };
+    }
 
-    p.clone = function() {
+    clone() {
         return this.svgGroup.cloneNode(true);
-    };
+    }
 
-    p.setBackgroundPath = function() {
+    setBackgroundPath() {
         const board = this.getBoard();
         if (board.dragBlock) {
             return;
@@ -1527,9 +1512,9 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
         originPath.attr({
             fill: `url(#blockHoverPattern_${board.suffix})`,
         });
-    };
+    }
 
-    p.resetBackgroundPath = function() {
+    resetBackgroundPath() {
         const board = this.getBoard();
         if (!this._backgroundPath || !board || !board.disablePattern) {
             return;
@@ -1539,9 +1524,9 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
         _.result($(this._backgroundPath), 'remove');
         this._backgroundPath = null;
         this._path.attr({ fill: this._fillColor });
-    };
+    }
 
-    p._getTemplate = function(renderMode) {
+    _getTemplate(renderMode) {
         let template;
 
         if (renderMode === Entry.BlockView.RENDER_MODE_TEXT) {
@@ -1566,9 +1551,9 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
         }
 
         return template || this._schema.template || Lang.template[this.block.type];
-    };
+    }
 
-    p._getSchemaParams = function(mode) {
+    _getSchemaParams(mode) {
         let params = this._schema.params;
         if (mode === Entry.BlockView.RENDER_MODE_TEXT) {
             const workspace = this.getBoard().workspace;
@@ -1580,17 +1565,17 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
             }
         }
         return params;
-    };
+    }
 
-    p.detach = function() {
+    detach() {
         this.svgGroup.remove();
-    };
+    }
 
-    p.attach = function(target) {
+    attach(target) {
         (target || this._board.svgBlockGroup).appendChild(this.svgGroup);
-    };
+    }
 
-    p.getMagnet = function(query) {
+    getMagnet(query) {
         const selector = query.shift() || 'next';
         let halfWidth = query.shift();
         if (halfWidth === undefined) {
@@ -1610,13 +1595,13 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
                 };
             }.bind(this),
         };
-    };
+    }
 
-    p.isRenderMode = function(mode) {
+    isRenderMode(mode) {
         return this.renderMode === mode;
-    };
+    }
 
-    p._setHoverBlockView = function(data) {
+    _setHoverBlockView(data) {
         if (!data) {
             return;
         }
@@ -1628,11 +1613,11 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
             return;
         }
         target.setHoverBlockView(blockView);
-    };
+    }
 
-    p.setHoverBlockView = p._setHoverBlockView;
+    setHoverBlockView = this._setHoverBlockView;
 
-    p.getFields = function() {
+    getFields() {
         if (!this._schema) {
             return [];
         }
@@ -1669,5 +1654,12 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
                 return fields;
             }, [])
         );
-    };
-})(Entry.BlockView.prototype);
+    }
+};
+
+Entry.BlockView.PARAM_SPACE = 5;
+Entry.BlockView.DRAG_RADIUS = 5;
+Entry.BlockView.pngMap = {};
+
+Entry.BlockView.RENDER_MODE_BLOCK = 1;
+Entry.BlockView.RENDER_MODE_TEXT = 2;

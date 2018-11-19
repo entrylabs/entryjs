@@ -17,6 +17,8 @@ Entry.FieldTextInput = class FieldTextInput extends Entry.Field {
         this.box = new Entry.BoxModel();
 
         this.svgGroup = null;
+        this.optionWidget = null;
+        this.optionInput = null;
 
         this.position = content.position;
         this._contents = content;
@@ -70,7 +72,7 @@ Entry.FieldTextInput = class FieldTextInput extends Entry.Field {
 
         this.svgGroup.attr({ class: 'entry-input-field' });
 
-        this._setTextValue();
+        this._setConvertedValue();
 
         const width = this.getTextWidth();
         let y = this.position && this.position.y ? this.position.y : 0;
@@ -110,160 +112,164 @@ Entry.FieldTextInput = class FieldTextInput extends Entry.Field {
     renderOptions(neighborFields) {
         const { _block = {} } = this;
         const { defaultType = 'text' } = _block;
-        if (defaultType === 'number') {
-            if (neighborFields) {
-                this._neighborFields = neighborFields;
-            }
-
-            this.optionGroup = Entry.Dom('div', {
-                class: 'entry-widget-number-pad',
-                parent: $('body'),
-            });
-
-            this.numberWidget = new EntryTool({
-                type: 'numberWidget',
-                data: {
-                    positionDom: this.svgGroup,
-                    onOutsideClick: () => {
-                        if (this.numberWidget) {
-                            this.numberWidget.hide();
-                            this.isEditing() && this.destroyOption(undefined, true);
-                        }
-                    },
-                },
-                container: this.optionGroup[0],
-            }).on('click', (eventName, value) => {
-                let prevValue = String(this.getValue());
-                switch (eventName) {
-                    case 'buttonPressed':
-                        this.applyValue(prevValue + value);
-                        break;
-                    case 'backButtonPressed':
-                        const nextValue = prevValue.substring(0, prevValue.length - 1);
-                        this.applyValue(_.isEmpty(nextValue) ? 0 : nextValue);
-                        break;
-                }
-            });
-        } else if (defaultType === 'angle') {
-            this.optionGroup = Entry.Dom('div', {
-                class: 'entry-widget-angle',
-                parent: $('body'),
-            });
-
-            this.angleWidget = new EntryTool({
-                type: 'angleWidget',
-                data: {
-                    angle: this.getValue(),
-                    positionDom: this.svgGroup,
-                    onOutsideClick: (angle) => {
-                        if (this.angleWidget) {
-                            this.applyAngleValue(FieldTextInput._refineDegree(angle));
-                            this._setTextValue();
-                            this.destroyOption();
-                        }
-                    },
-                },
-                container: this.optionGroup[0],
-            })
-                .on('click', (eventName, value) => {
-                    let nextValue = 0;
-                    switch (eventName) {
-                        case 'buttonPressed': {
-                            nextValue = this._getNextValue(value);
-                            break;
-                        }
-                        case 'backButtonPressed': {
-                            nextValue = this._getSubstringValue();
-                            break;
-                        }
-                    }
-                    this.applyAngleValue(nextValue);
-                })
-                .on('change', (value) => {
-                    this.applyAngleValue(String(value));
-                });
-        } else {
-            const that = this;
-            const func = function(skipCommand, forceCommand) {
-                skipCommand !== true && that.applyValue();
-                that.destroyOption(skipCommand, forceCommand === true);
-            };
-
-            this._attachDisposeEvent(func);
-
-            this.optionGroup = Entry.Dom('input', {
-                class: 'entry-widget-input-field',
-                parent: $('body'),
-            });
-
-            this.optionGroup.val(this.getValue());
-
-            this.optionGroup.on('mousedown', function(e) {
-                e.stopPropagation();
-            });
-
-            const exitKeys = [13, 27];
-            this.optionGroup.on('keyup', function(e) {
-                that.applyValue();
-
-                if (_.includes(exitKeys, e.keyCode || e.which)) {
-                    that.destroyOption(undefined, true);
-                }
-            });
-
-            this.optionGroup.on('keydown', function(e) {
-                const keyCode = e.keyCode || e.which;
-
-                if (keyCode === 9) {
-                    e.preventDefault();
-                    that._focusNeighbor(e.shiftKey ? 'prev' : 'next');
-                }
-            });
-            const { scale = 1 } = this.board;
-            this._font_size = 10 * scale;
-            const { x, y } = this.getAbsolutePosFromDocument();
-            const height = (this._CONTENT_HEIGHT - 4) * scale;
-            this.optionGroup.css({
-                height,
-                left: x + 1,
-                top: y + (scale - 1) * 4 + 2 * scale - 1 * (scale / 2) - this.box.height / 2,
-                width: that.box.width * scale,
-                'font-size': `${this._font_size}px`,
-                'background-color': EntryStatic.colorSet.block.lighten.CALC,
-            });
-
-            this.optionGroup.focus && this.optionGroup.focus();
-
-            const optionGroup = this.optionGroup[0];
-            optionGroup.setSelectionRange(0, optionGroup.value.length, 'backward');
+        if (neighborFields) {
+            this._neighborFields = neighborFields;
         }
 
+        this.optionGroup = Entry.Dom('div', {
+            class: 'entry-widget-parent',
+            parent: $('body'),
+        });
+
+        switch (defaultType) {
+            case 'number':
+                this.optionWidget = this._getNumberOptionWidget();
+                break;
+            case 'angle':
+                this.optionInput = this._getInputFieldOption();
+                this.optionWidget = this._getAngleOptionWidget(this.optionInput[0]);
+                break;
+            default:
+                this.optionInput = this._getInputFieldOption();
+                this._attachDisposeEvent();
+                break;
+        }
+
+        this._setTextValue();
         this.optionDomCreated();
     }
 
-    applyValue(value) {
-        value = value || this.optionGroup.val();
-        this.setValue(value);
-        this._setTextValue();
-        this.resize();
+    _getNumberOptionWidget() {
+        return new EntryTool({
+            type: 'numberWidget',
+            data: {
+                positionDom: this.svgGroup,
+                onOutsideClick: () => {
+                    this.destroyOption(undefined, true);
+                },
+            },
+            container: this.optionGroup[0],
+        }).on('click', (eventName, value) => {
+            let prevValue = String(this.getValue());
+            switch (eventName) {
+                case 'buttonPressed':
+                    if (prevValue === '0' && _.includes(['0', '.'], value) === false) {
+                        prevValue = '';
+                    }
+                    this.applyValue(prevValue + value);
+                    break;
+                case 'backButtonPressed':
+                    const nextValue = prevValue.substring(0, prevValue.length - 1);
+                    this.applyValue(_.isEmpty(nextValue) ? 0 : nextValue);
+                    break;
+            }
+        });
     }
 
-    applyAngleValue(value) {
-        let rangedValue = value;
-        if (Entry.Utils.isNumber(value) && value.lastIndexOf('.') !== value.length - 1) {
-            rangedValue = String(rangedValue % 360);
+    /**
+     *
+     * @param {Array} excludeDom outside 로 판단하지 않을 dom target list
+     * @returns {EntryTool} Angle Widget
+     * @private
+     */
+    _getAngleOptionWidget(...excludeDom) {
+        return new EntryTool({
+            type: 'angleWidget',
+            data: {
+                angle: this.getValue(),
+                outsideExcludeDom: excludeDom,
+                positionDom: this.svgGroup,
+                onOutsideClick: (angle) => {
+                    this.applyValue(FieldTextInput._refineDegree(angle));
+                    this.destroyOption();
+                },
+            },
+            container: this.optionGroup[0],
+        }).on('click', (eventName, value) => {
+            let nextValue = 0;
+            switch (eventName) {
+                case 'buttonPressed': {
+                    nextValue = this._getNextValue(value);
+                    break;
+                }
+                case 'backButtonPressed': {
+                    nextValue = this._getSubstringValue();
+                    break;
+                }
+            }
+            this.applyValue(nextValue);
+        }).on('change', (value) => {
+            this.applyValue(String(value));
+        });
+    }
+
+    _getInputFieldOption() {
+        const inputField = Entry.Dom('input', {
+            class: 'entry-widget-input-field',
+            parent: $('body'),
+        });
+
+        inputField.val(this.getValue());
+
+        inputField.on('mousedown', (e) => {
+            e.stopPropagation();
+        });
+
+        inputField.on('keyup', (e) => {
+            this.applyValue(inputField[0].value);
+            if (_.includes([13, 27], e.keyCode || e.which)) {
+                this.destroyOption(undefined, true);
+            }
+        });
+
+        inputField.on('keydown', (e) => {
+            const keyCode = e.keyCode || e.which;
+
+            if (keyCode === 9) {
+                e.preventDefault();
+                this._focusNeighbor(e.shiftKey ? 'prev' : 'next');
+            }
+        });
+        const { scale = 1 } = this.board;
+        this._font_size = 10 * scale;
+        const { x, y } = this.getAbsolutePosFromDocument();
+        const height = (this._CONTENT_HEIGHT - 4) * scale;
+        inputField.css({
+            height,
+            left: x + 1,
+            top: y + (scale - 1) * 4 + 2 * scale - 1 * (scale / 2) - this.box.height / 2,
+            width: this.box.width * scale,
+            'font-size': `${this._font_size}px`,
+            'background-color': EntryStatic.colorSet.block.lighten.CALC,
+        });
+
+        inputField.focus && inputField.focus();
+
+        inputField[0].setSelectionRange(0, inputField[0].value.length, 'backward');
+        return inputField;
+    }
+
+    //this.optionWidget = {} (type{}, object)
+    applyValue(value) {
+        let result = value;
+        if(this.optionWidget) {
+            switch (this.optionWidget.type) {
+                case 'angleWidget':
+                    this.optionWidget.data = {
+                        angle: FieldTextInput._refineDegree(value),
+                    };
+                    if (Entry.Utils.isNumber(value) && value.lastIndexOf('.') !== value.length - 1) {
+                        result = String(result % 360);
+                    }
+                    break;
+            }
+        }
+        if(this.optionInput) {
+            this.optionInput.val(result);
         }
 
-        this.setValue(rangedValue);
-        // this.textElement.textContent = this.getValue();
+        this.setValue(result);
         this._setTextValue();
-
-        if (this.angleWidget) {
-            this.angleWidget.data = {
-                angle: FieldTextInput._refineDegree(value),
-            };
-        }
-
         this.resize();
     }
 
@@ -273,21 +279,22 @@ Entry.FieldTextInput = class FieldTextInput extends Entry.Field {
         const scaleSize = { width: this.getTextWidth() };
         this._header.attr(scaleSize);
         this.box.set(scaleSize);
-        this.optionGroup.css(size);
+        this.optionInput && this.optionInput.css(size);
         this._blockView.dAlignContent();
     }
 
     destroyOption(skipCommand, forceCommand) {
-        let widgetList = [this.numberWidget, this.angleWidget];
-        widgetList.forEach((widget) => {
-            if (widget) {
-                widget.isShow && widget.hide();
-                widget.remove();
-                widget = null;
-            }
-        });
-        if (this.optionGroup) {
-            this.optionGroup.remove();
+        this._setConvertedValue();
+
+        if (this.optionWidget) {
+            this.optionWidget.isShow && this.optionWidget.hide();
+            this.optionWidget.remove();
+            delete this.optionWidget;
+        }
+
+        if (this.optionInput) {
+            this.optionInput.remove();
+            delete this.optionInput;
         }
 
         super.destroyOption(skipCommand, forceCommand);
@@ -298,14 +305,23 @@ Entry.FieldTextInput = class FieldTextInput extends Entry.Field {
     }
 
     _setTextValue() {
+        const value = this.getValue();
+        if (this.textElement.textContent !== value) {
+            this.textElement.textContent = value;
+        }
+    }
+
+    _setConvertedValue() {
         const { _block = {} } = this;
         const { defaultType = 'text' } = _block;
-        let newValue = this._convert(this.getValue(), this.getValue());
+        let value = this._convert(this.getValue(), this.getValue());
+
         if (defaultType === 'angle') {
-            newValue += '°';
+            value += '°';
         }
-        if (this.textElement.textContent !== newValue) {
-            this.textElement.textContent = newValue;
+
+        if (this.textElement.textContent !== value) {
+            this.textElement.textContent = value;
         }
     }
 
@@ -390,7 +406,8 @@ Entry.FieldTextInput = class FieldTextInput extends Entry.Field {
         const reg = /&value/gm;
         if (reg.test(value)) return value;
 
-        let refinedDegree = String(value).match(/[\d|\-|.|\+]+/g)[0] || 0;
+        const numberOnlyValue = String(value).match(/[\d|\-|.|\+]+/g);
+        let refinedDegree = numberOnlyValue && numberOnlyValue[0] || '0';
         if (refinedDegree > 360) {
             refinedDegree %= 360;
         } else if (refinedDegree < 0) {

@@ -1236,7 +1236,6 @@ Entry.Board = class Board {
     }
 
     handleVisibleComment() {
-        console.log('hihi', this.isVisibleComment);
         if (this.isVisibleComment) {
             this.view.removeClass('invisibleComment');
         } else {

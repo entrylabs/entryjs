@@ -82,12 +82,7 @@ Entry.Model = function(obj, isSeal) {
      * @param {boolean} isNotify
      */
     m.observe = function(object, funcName, attrs, isNotify) {
-        const observer = new Entry.Observer(
-            this.observers,
-            object,
-            funcName,
-            attrs
-        );
+        const observer = new Entry.Observer(this.observers, object, funcName, attrs);
         if (isNotify !== false) {
             object[funcName]([]);
         }

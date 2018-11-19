@@ -1,11 +1,5 @@
-/*
- *
- */
 'use strict';
 
-/*
- *
- */
 Entry.Thread = function(thread, code, parent) {
     this.id = Entry.generateHash();
     this._data = new Entry.Collection();
@@ -36,6 +30,8 @@ Entry.Thread = function(thread, code, parent) {
             if (block instanceof Entry.Block || block.isDummy) {
                 block.setThread(this);
                 this._data.push(block);
+            } else if (block instanceof Entry.Comment) {
+                this._data.push(block);
             } else {
                 this._data.push(new Entry.Block(block, this));
             }
@@ -62,16 +58,14 @@ Entry.Thread = function(thread, code, parent) {
             this.view = new Entry.ThreadView(this, board);
         }
         this.getBlocks().forEach((b) => {
-            return b.createView(board, mode)
-            ;
+            return b.createView(board, mode);
         });
     };
 
     p.destroyView = function() {
         this.view = null;
         this._data.map((b) => {
-            return b.destroyView()
-            ;
+            return b.destroyView();
         });
     };
 
@@ -80,10 +74,7 @@ Entry.Thread = function(thread, code, parent) {
             return;
         }
 
-        this._code.createThread(
-            this._data.splice(this._data.indexOf(block), count),
-            index
-        );
+        this._code.createThread(this._data.splice(this._data.indexOf(block), count), index);
         this.changeEvent.notify();
     };
 
@@ -111,12 +102,9 @@ Entry.Thread = function(thread, code, parent) {
     p.clone = function(code, mode) {
         const newThread = new Entry.Thread([], code || this._code);
         return newThread.load(
-            this.getBlocks().reduce(
-                (acc, block) => {
-                    return [...acc, block.clone(newThread)];
-                },
-                []
-            ),
+            this.getBlocks().reduce((acc, block) => {
+                return [...acc, block.clone(newThread)];
+            }, []),
             mode
         );
     };
@@ -132,6 +120,8 @@ Entry.Thread = function(thread, code, parent) {
             const block = data[index];
             if (block instanceof Entry.Block) {
                 array.push(block.toJSON(isNew, excludeData, option));
+            } else if (block instanceof Entry.Comment) {
+                array.push(block.toJSON());
             }
         }
         return array;
@@ -169,12 +159,9 @@ Entry.Thread = function(thread, code, parent) {
 
             count++;
 
-            return (block.statements || []).reduce(
-                (count, statement) => {
-                    return (count += statement.countBlock());
-                },
-                count
-            );
+            return (block.statements || []).reduce((count, statement) => {
+                return (count += statement.countBlock());
+            }, count);
         }, 0);
     };
 
@@ -183,7 +170,7 @@ Entry.Thread = function(thread, code, parent) {
             this.destroy();
         }
     };
-    
+
     p.getCode = function() {
         return this._code;
     };

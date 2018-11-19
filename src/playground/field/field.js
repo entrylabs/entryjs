@@ -6,21 +6,25 @@
 /*
  *
  */
-Entry.Field = function() {};
+Entry.Field = class Field {
+    constructor(content, blockView, index) {
+        this.TEXT_LIMIT_LENGTH = 20;
 
-(function(p) {
-    p.TEXT_LIMIT_LENGTH = 20;
+        this._blockView = blockView;
+        this._contents = content;
+        this._index = index;
+    }
 
-    p.destroy = function() {
+    destroy() {
         const svgGroup = this.svgGroup;
         if (svgGroup) {
             svgGroup._isBinded = false;
             $(svgGroup).off('.fieldBindEvent');
         }
         this.destroyOption(true);
-    };
+    }
 
-    p.command = function(forceCommand) {
+    command(forceCommand) {
         const startValue = this._startValue;
         if (
             !this._blockView.isInBlockMenu &&
@@ -37,9 +41,9 @@ Entry.Field = function() {};
             delete this._code;
         }
         delete this._startValue;
-    };
+    }
 
-    p.destroyOption = function(skipCommand, forceCommand) {
+    destroyOption(skipCommand, forceCommand) {
         const _destroyFunc = _.partial(_.result, _, 'destroy');
         const _removeFunc = _.partial(_.result, _, 'remove');
 
@@ -58,20 +62,18 @@ Entry.Field = function() {};
         this._isEditing = false;
 
         skipCommand !== true && this.command(forceCommand);
-    };
+    }
 
-    p._attachDisposeEvent = function(func) {
-        const that = this;
+    _attachDisposeEvent(func) {
+        const defaultFunc = (skipCommand) => {
+            this.destroyOption(skipCommand);
+        };
+        
+        func = func || defaultFunc;
+        this.disposeEvent = Entry.disposeEvent.attach(this, func);
+    }
 
-        func =
-            func ||
-            function(skipCommand) {
-                that.destroyOption(skipCommand);
-            };
-        that.disposeEvent = Entry.disposeEvent.attach(that, func);
-    };
-
-    p.align = function(x, y, animate = true) {
+    align(x, y, animate = true) {
         const svgGroup = this.svgGroup;
         if (this._position) {
             if (this._position.x) {
@@ -99,10 +101,10 @@ Entry.Field = function() {};
         }
 
         this.box.set({ x, y });
-    };
+    }
 
     //get absolute position of field from parent board
-    p.getAbsolutePosFromBoard = function() {
+    getAbsolutePosFromBoard() {
         const blockView = this._block.view;
         const contentPos = blockView.getContentPos();
         const absPos = blockView.getAbsoluteCoordinate();
@@ -111,10 +113,10 @@ Entry.Field = function() {};
             x: absPos.x + this.box.x + contentPos.x,
             y: absPos.y + this.box.y + contentPos.y,
         };
-    };
+    }
 
     //get absolute position of field from parent document
-    p.getAbsolutePosFromDocument = function() {
+    getAbsolutePosFromDocument() {
         const blockView = this._block.view;
         const board = blockView.getBoard();
         const { scale = 1 } = board || {};
@@ -125,10 +127,10 @@ Entry.Field = function() {};
             x: absPos.x + this.box.x + contentPos.x * scale + offset.left,
             y: absPos.y + this.box.y + contentPos.y + offset.top - $(window).scrollTop(),
         };
-    };
+    }
 
     //get relative position of field from blockView origin
-    p.getRelativePos = function() {
+    getRelativePos() {
         const contentPos = this._block.view.getContentPos();
         const { x, y } = this.box;
 
@@ -136,9 +138,9 @@ Entry.Field = function() {};
             x: x + contentPos.x,
             y: y + contentPos.y,
         };
-    };
+    }
 
-    p.truncate = function() {
+    truncate() {
         const value = String(this._convert(this.getValue()));
         const limit = this.TEXT_LIMIT_LENGTH;
         let ret = value.substring(0, limit);
@@ -146,13 +148,13 @@ Entry.Field = function() {};
             ret += '...';
         }
         return ret;
-    };
+    }
 
-    p.appendSvgOptionGroup = function() {
+    appendSvgOptionGroup() {
         return this._block.view.getBoard().svgGroup.elem('g');
-    };
+    }
 
-    p.getValue = function() {
+    getValue() {
         let data = this._block.params[this._index];
 
         const contents = this._contents;
@@ -170,10 +172,10 @@ Entry.Field = function() {};
         } else {
             return data;
         }
-    };
+    }
 
-    p.setValue = function(value, reDraw) {
-        if (this.value == value) {
+    setValue(value, reDraw) {
+        if (this.value === value) {
             return;
         }
 
@@ -199,9 +201,9 @@ Entry.Field = function() {};
         if (reDraw) {
             this._blockView.reDraw();
         }
-    };
+    }
 
-    p._isEditable = function() {
+    _isEditable() {
         if (Entry.ContextMenu.visible || this._blockView.getBoard().readOnly) {
             return false;
         }
@@ -224,50 +226,48 @@ Entry.Field = function() {};
         const root = blockView.getSvgRoot();
 
         return root == selectedBlockView.svgGroup || $(root).has($(blockView.svgGroup));
-    };
+    }
 
-    p._selectBlockView = function() {
+    _selectBlockView() {
         const blockView = this._block.view;
         blockView.getBoard().setSelectedBlock(blockView);
-    };
+    }
 
-    p._bindRenderOptions = function() {
+    _bindRenderOptions() {
         if (this.svgGroup._isBinded) {
             return;
         }
 
-        const that = this;
-
         this.svgGroup._isBinded = true;
-        $(this.svgGroup).on('mouseup.fieldBindEvent touchend.fieldBindEvent', function(e) {
-            if (that._isEditable()) {
-                that._code = that.getCode();
-                that.destroyOption();
-                that._startValue = that.getValue();
-                that.renderOptions();
-                that._isEditing = true;
+        $(this.svgGroup).on('mouseup.fieldBindEvent touchend.fieldBindEvent', (e) => {
+            if (this._isEditable()) {
+                this._code = this.getCode();
+                this.destroyOption();
+                this._startValue = this.getValue();
+                this.renderOptions();
+                this._isEditing = true;
             }
         });
-    };
+    }
 
-    p.pointer = function(pointer = []) {
+    pointer(pointer = []) {
         return this._block.pointer([Entry.PARAM, this._index, ...pointer]);
-    };
+    }
 
-    p.getFontSize = function(size) {
+    getFontSize(size) {
         return size || this._blockView.getSkeleton().fontSize || 10;
-    };
+    }
 
-    p.getContentHeight = function() {
+    getContentHeight() {
         return 20;
-    };
+    }
 
-    p._getRenderMode = function() {
+    _getRenderMode() {
         const mode = this._blockView.renderMode;
         return mode !== undefined ? mode : Entry.BlockView.RENDER_MODE_BLOCK;
-    };
+    }
 
-    p._convert = function(key, value) {
+    _convert(key, value) {
         value = value !== undefined ? value : this.getValue();
         const reg = /&value/gm;
         if (reg.test(value)) {
@@ -277,9 +277,9 @@ Entry.Field = function() {};
         } else {
             return key;
         }
-    };
+    }
 
-    p._updateOptions = function() {
+    _updateOptions() {
         const block = Entry.block[this._blockView.type];
         if (!block) {
             return;
@@ -305,18 +305,18 @@ Entry.Field = function() {};
                 textParams[this._index].options = this._contents.options;
             }
         }
-    };
+    }
 
-    p._shouldReturnValue = function(value) {
+    _shouldReturnValue(value) {
         const obj = this._block.getCode().object;
         return value === '?' || !obj || obj.constructor !== Entry.EntryObject;
-    };
+    }
 
-    p.isEditing = function(value) {
+    isEditing(value) {
         return !!this._isEditing;
-    };
+    }
 
-    p.getDom = function(query) {
+    getDom(query) {
         if (_.isEmpty(query)) {
             return this.svgGroup;
         }
@@ -330,17 +330,17 @@ Entry.Field = function() {};
 
         //default return value
         return this.svgGroup;
-    };
+    }
 
-    p.optionDomCreated = function() {
+    optionDomCreated() {
         this._blockView.getBoard().workspace.widgetUpdateEvent.notify();
-    };
+    }
 
-    p.fixNextValue = function(value) {
+    fixNextValue(value) {
         this._nextValue = value;
-    };
+    }
 
-    p.getFieldRawType = function() {
+    getFieldRawType() {
         if (this instanceof Entry.FieldTextInput) {
             return 'textInput';
         } else if (this instanceof Entry.FieldDropdown) {
@@ -350,104 +350,96 @@ Entry.Field = function() {};
         } else if (this instanceof Entry.FieldKeyboard) {
             return 'keyboard';
         }
-    };
+    }
 
-    p.getTextValueByValue = function(value) {
+    getTextValueByValue(value) {
         switch (this.getFieldRawType()) {
             case 'keyboard':
                 return Entry.getKeyCodeMap()[value];
             case 'dropdown':
             case 'dropdownDynamic':
                 return _.chain(this._contents.options)
-                    .find(([, optionValue]) => {
-                        return optionValue === value;
-                    })
-                    .head()
-                    .value();
+                .find(([, optionValue]) => {
+                    return optionValue === value;
+                })
+                .head()
+                .value();
             case 'textInput':
                 return value;
         }
-    };
+    }
 
-    p.getBoard = function() {
+    getBoard() {
         return _.result(this._blockView, 'getBoard');
-    };
+    }
 
-    p.getCode = function() {
+    getCode() {
         return _.result(this.getBoard(), 'code');
-    };
+    }
 
-    p.getTextValue = function() {
+    getTextValue() {
         return this.getValue();
-    };
+    }
 
-    p.getIndex = function() {
+    getIndex() {
         return this._index;
-    };
+    }
 
-    p.getTextBBox = (function() {
+    getTextBBox() {
         const _cache = {};
         let svg;
 
-        //make invisible svg dom to body
-        //in order to calculate text width
-        function generateDom() {
+        if (window.fontLoaded && !svg) {
+            //make invisible svg dom to body
+            //in order to calculate text width
             svg = Entry.Dom(
                 $(
                     '<svg id="invisibleBoard" class="entryBoard" width="1px" height="1px"' +
-                        'version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'
+                    'version="1.1" xmlns="http://www.w3.org/2000/svg"></svg>'
                 ),
                 { parent: $('body') }
             );
         }
 
-        const clearDoms = Entry.Utils.debounce(function() {
+        const value = this.getTextValue();
+
+        //empty string check
+        if (!value) {
+            return { width: 0, height: 0 };
+        }
+
+        const fontSize = this._font_size || '';
+
+        const key = `${value}&&${fontSize}`;
+        let bBox = _cache[key];
+
+        if (bBox) {
+            return bBox;
+        }
+
+        let textElement = this.textElement;
+        if (svg) {
+            textElement = textElement.cloneNode(true);
+            svg.append(textElement);
+        }
+
+        bBox = textElement.getBoundingClientRect();
+        Entry.Utils.debounce(function() {
             if (!svg) {
                 return;
             }
             $(svg).empty();
-        }, 500);
-
-        return function() {
-            if (window.fontLoaded && !svg) {
-                generateDom();
-            }
-
-            const value = this.getTextValue();
-
-            //empty string check
-            if (!value) {
-                return { width: 0, height: 0 };
-            }
-
-            const fontSize = this._font_size || '';
-
-            const key = `${value}&&${fontSize}`;
-            let bBox = _cache[key];
-
-            if (bBox) {
-                return bBox;
-            }
-
-            let textElement = this.textElement;
-            if (svg) {
-                textElement = textElement.cloneNode(true);
-                svg.append(textElement);
-            }
-
-            bBox = textElement.getBoundingClientRect();
-            clearDoms();
-            const board = this._blockView.getBoard();
-            const { scale = 1 } = board;
-            bBox = {
-                width: Math.round(bBox.width * 100) / 100 / scale,
-                height: Math.round(bBox.height * 100) / 100 / scale,
-            };
-
-            if (fontSize && window.fontLoaded && bBox.width && bBox.height) {
-                _cache[key] = bBox;
-            }
-            return bBox;
+        }, 500)();
+        const board = this._blockView.getBoard();
+        const { scale = 1 } = board;
+        bBox = {
+            width: Math.round(bBox.width * 100) / 100 / scale,
+            height: Math.round(bBox.height * 100) / 100 / scale,
         };
-    })();
-})(Entry.Field.prototype);
+
+        if (fontSize && window.fontLoaded && bBox.width && bBox.height) {
+            _cache[key] = bBox;
+        }
+        return bBox;
+    }
+};
