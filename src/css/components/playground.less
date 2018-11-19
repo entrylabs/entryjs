@@ -121,11 +121,11 @@
 
 .entryPlaygroundWorkspace {
     position: absolute;
-    top: 40px;
+    top: 47px;
     bottom: 0px;
-    left: 400.5px;
+    left: 294px;
     right: 0px;
-    background-color: #F5F5F5;
+    background-color: #fff;
     // overflow: hidden;
 }
 
@@ -150,11 +150,10 @@
 
 .entryPlaygroundTabWorkspace {
     position: absolute;
-    /*margin-top: 1px;*/
+    left: 0;
     top: 0;
-    height: 43px;
     width: 100%;
-    background-color: #f1f1f1;
+    background-color: #fff;
 }
 
 .entryPlaygroundTabWorkspace.entryRemove {
@@ -169,32 +168,39 @@
 }
 
 .entryTabListWorkspace {
+    overflow: hidden;
     list-style: none;
-    height: 44px;
     padding: 0;
-    margin: 1px 0 0 0;
-    border-bottom: 2px solid #643cd9;
+    margin: 0;
 }
 
 .entryTabListItemWorkspace {
     float: left;
-    min-width: 59px;
-    height: 42px;
-    margin: 0 1px 0 1px;
-    cursor: pointer;
-    display:block;
-    padding: 10px 0 0 0;
+    min-width: 58px;
+    margin: 4px 0 0 2px;
+    padding: 9px 0 5px;
+    cursor: pointer; 
+    background-color: #d6e9f4;
+    border-top-right-radius: 6px;
+    border-top-left-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #8aa3b2;
     text-align: center;
-    font-family: nanumBarunBold !important;
-    color: gray;
-    background-color: #e5e5e5;
-    border-top-right-radius: 7px;
-    border-top-left-radius: 7px;
+    line-height: 14px;
+    vertical-align: bottom;
+}
+.entryTabListItemWorkspace:first-child {
+    margin-left: 0;
 }
 
 .entryTabSelected {
-    color: white;
-    background-color: #6e5ae6;
+    margin-top: 0;
+    padding: 10px 0 7px;
+    color: #fff;
+    background-color: #8274ff;
+    font-size: 14px;
+    line-height: 15px;
 }
 
 .entryTabListItemWorkspace:hover {
@@ -311,7 +317,7 @@
 
 .entryPlaygroundCodeWorkspace {
     height: 100%;
-    background-color: #F5F5F5;
+    background-color: #fff;
 }
 
 .entryPlaygroundCodeWorkspace.entryRemove {
