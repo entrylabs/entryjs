@@ -28,7 +28,7 @@
     overflow: auto;
     width: 100%;
     top: 0;
-    background-color: #363C46;
+    background-color: #fff;
 }
 
 .entryContainerExtensions {
@@ -47,7 +47,6 @@
     width: 100%;
     background-color: #363C46;
     list-style-type: none;
-    border-top: 1pt solid #ebeff1;
 }
 
 .entryContainerListPhone {
@@ -65,23 +64,21 @@
 }
 
 .entryContainerListElementWorkspace {
-    background-color: white;
+    background-color: #ecf8ff;
     display: block;
     padding: 0;
     margin: 0;
-    border-bottom: 1pt solid #ebeff1;
     position: relative;
     overflow: hidden;
     cursor: move;
-    min-height: 59px;
+    min-height: 60px;
     .box-sizing(border-box);
+    border-top: 1px solid #d6e9f4;
 }
 
 .entryContainerListElementWorkspace.selectedObject {
-    background-color: #f4f4f4;
-    height: 118px;
-    border-top: 1px solid #aaaaaa;
-    border-bottom: 1px solid #aaaaaa;
+    background-color: #fff;
+    height: 206px;
 }
 
 .collapsed .selectedObject {
@@ -96,24 +93,24 @@
 .objectInfoView {
     list-style: none;
     padding: 0;
-    height: 59px;
-    width: 19px;
+    height: 60px;
+    width: 18px;
     position: relative;
-    margin-left: 10px;
+    margin-left: 8px;
     float: left;
 }
 
 .objectInfo_visible {
     display: inline-block;
     position: absolute;
-    top: 10px;
+    top: 8px;
     left:0;
     height: 18px;
     width: 18px;
-    .backgroundImage("layers_icon_visible.png");
-    border-bottom: 1px solid rgba(159,159,159,0.3);
     cursor: pointer;
     .box-sizing(border-box);
+    background-size: 18px auto;
+    .backgroundImage("layers_icon_visible.png");
 }
 
 .objectInfo_unvisible {
@@ -123,7 +120,7 @@
 .objectInfo_unlock {
     display: inline-block;
     position: absolute;
-    top:33px;
+    top: 34px;
     left:0;
     height: 18px;
     width: 18px;
@@ -138,42 +135,42 @@
 
 
 .entryObjectThumbnailWorkspace{
-    float: left;
+    overflow: hidden;
     position: absolute;
-    height: 49px;
-    width: 49px;
-    top: 5px;
-    left: 41px;
-    border: 1px solid #bcc2c8;
-    background-color: #ccc;
+    top: 8px;
+    left: 34px;
+    height: 44px;
+    width: 40px;
+    border: 1px solid #e2e2e2;
+    border-radius: 4px;
+    background-color: #fff;
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
 }
 
 .entryObjectWrapperWorkspace{
-    float: left;
-    position: relative;
-    top: 10px;
-    left: 72px;
-    width: 135px;
-    height: 43px;
     overflow: hidden;
+    position: relative;
+    margin: 18px 0 0 82px;
+    padding-right: 16px;
 }
 
 .entryObjectNameWorkspace{
+    overflow: hidden;
     float: left;
-    width: 112px;
-    top: 8px;
-    left: 20px;
-    position: absolute;
-    background-color: transparent;
+    width: 100%;
+    padding: 7px 4px 6px;
+    border: 1px solid #e2e2e2;
+    border-radius: 4px;
+    background-color: #fff;
     border: none;
-    color: #000000;
+    font-size: 10px;
+    font-weight: 600;
+    color: #2c313d;
     white-space: nowrap;
     text-overflow: ellipsis;
-    overflow: hidden;
-    border: 1px solid transparent;
+    line-height: 11px;
 }
 .editButtonToggle {
     display :block;
@@ -184,10 +181,9 @@
 
 .selectedEditingObject {
     background-color: white !important;  
-    border-radius: 3px;
-    border: 1px solid #878787 !important;
+    border-radius: 4px;
+    border: 1px solid #e2e2e2 !important;
     outline:none;
-    background-color: transparent;
 }
 
 .selectedNotEditionObject {
@@ -203,12 +199,8 @@
 }
 /*sj*/
 
-.selectedObject .entryObjectNameWorkspace{
-    color: #474747;
-}
-
 .selectedObject>.entryObjectWrapperWorkspace>.entryObjectNameWorkspace{
-    color: black;
+    color: #2c313d;
     font-family: NanumGothic !important;
 }
 
@@ -216,26 +208,21 @@
 .entryObjectNameWorkspace:disabled{
     background-color: transparent;
 }
-.entryObjectEditWorkspace {
-    float: left;
-    position: absolute;
-    width: 19px;
-    height: 19px;
-    right: 43px;
-    top: 22px;
-    cursor: pointer;
-    .backgroundImage("layers_icon_edit_nor_new.png");
-
-}
 
 .entryObjectDeleteWorkspace {
-    float: left;
+    overflow: hidden;
     position: absolute;
-    width: 19px;
-    height: 19px;
-    right: 21px;
-    top: 22px;
+    right: 26px;
+    top: 18px;
+    width: 24px;
+    height: 24px;
+    border: 1px solid #e2e2e2;
+    border-radius: 4px;
+    background-color: #fff;
     cursor: pointer;
+    background-size: 10px auto;
+    background-position: 50% 50%;
+    background-repeat: no-repeat;
     .backgroundImage("layers_icon_close_nor_new.png");
 }
 
@@ -251,7 +238,6 @@
 }
 
 .entryObjectEditPhone {
-    float: left;
     position: absolute;
     width: 24px;
     background-repeat: no-repeat;
@@ -265,10 +251,9 @@
 }
 
 .entryObjectSelectedImgWorkspace {
-    float: left;
     position: absolute;
-    width: 14px;
-    height: 26px;
+    width: 16px;
+    height: 40px;
     right: 0;
     top: 20px;
     cursor: col-resize;
@@ -277,7 +262,6 @@
 }
 
 .selectedObject .entryObjectSelectedImgWorkspace {
-    float: left;
     position: absolute;
     width: 14px;
     height: 26px;
@@ -290,11 +274,10 @@
 .entryObjectCoordinateWorkspace{
     float: left;
     width: 100%;
-    position: relative;
-    font-size: 9pt;
-    color: #000000;
-    top: 12px;
-    left: 28px;
+    font-size: 10px;
+    font-weight: 600;
+    color: #2c313d;
+    letter-spacing: -0.4px;
     width: auto;
 }
 
@@ -304,15 +287,17 @@
 
 .entryObjectInformationWorkspace{
     position: absolute;
+    right: 0;
+    top: 9px;
+    width: 8px;
+    height: 6px;
+    background-size: 8px auto;
     cursor: pointer;
-    margin: 12px 0 0 0;
-    width: 13px;
-    height: 13px;
-    .backgroundImage("layers_arrow_up_nor.png");
+    .backgroundImage("layers_arrow_down_nor.png");
 }
 
 .selectedObject .entryObjectInformationWorkspace{
-    .backgroundImage("layers_arrow_down_nor.png");
+    .backgroundImage("layers_arrow_up_nor.png");
 }
 
 .informationToggle>.entryObjectWrapperWorkspace>.entryObjectInformationWorkspace{
@@ -378,12 +363,13 @@
 }
 
 .entryObjectRotationWrapperWorkspace {
+    position: relative;
     display: none;
     width: 100%;
-    height: 59px;
-    padding: 0 0px 10px 10px;
-    border-top: 1px solid #e1e1e1;
-    background-color: #e5e5e5;
+    height: 145px;
+    padding: 18px 8px 0;
+    border-top: 1px solid #d6e9f4;
+    background-color: #d6e9f4;
 }
 
 .collapsed .entryObjectRotationWrapperWorkspace {
@@ -399,9 +385,12 @@
 }
 
 .rotationMethodWrapper {
-    float: right;
-    width: 180px;
-    position: relative;
+    position: absolute;
+    left: 0px;
+    top: 98px;
+    right: 0;
+    padding: 7px 8px 0;
+    border-top: 1px solid #fff;
 }
 
 .collapsed .rotationMethodWrapper {
@@ -410,37 +399,30 @@
 
 .entryObjectRotateMethodLabelWorkspace {
     display: inline-block;
-    line-height: 20px;
-    font-size: 9pt;
-    color: #000000;
-    position: absolute;
-    padding-left: 20px;
-    padding-top: 20px;
+    font-size: 10px;
+    font-weight: 600;
+    color: #2c313d;
+    vertical-align: top;
 }
 
-/*.entryObjectRotateLabelWorkspace {
-    display: block;
-    font-size: 9pt;
-    color: #000000;
-    left: 38px;
-    margin-top: 31px;
-}
-*/
 .entryObjectRotateLabelWrapperWorkspace {
     position: absolute;
-    top: 90px;
-    margin-left: 37px;
-    font-size: 9pt;
-    color: #000000;
+    left: 8px;
+    top: 120px;
+    font-size: 10px;
+    font-weight: 600;
+    color: #2c313d;
 }
 
-.entryObjectRotateInputWorkspace, .entryObjectDirectionInputWorkspace {
-    width: 40px;
-    background-color: #e5e5e5;
-    border: none;
-    outline: none;
-    border: 1px solid transparent;
 
+.entryObjectRotateInputWorkspace, .entryObjectDirectionInputWorkspace {
+    width: 48px;
+    height: 24px;
+    background-color: #fff;
+    border: 1px solid #e2e2e2;
+    border-radius: 4px;
+    margin-left: 8px;
+    text-align: center;
 }
 
 .entryObjectDirectionSpanWorkspace {
@@ -450,12 +432,9 @@
 .entryObjectRotateModeWorkspace {
     cursor: pointer;
     display: inline-block;
-    vertical-align: middle;
-    float: left;
-    margin-left: 8px;
-    margin-top: 18px;
     width: 22px;
     height: 22px;
+    vertical-align: top;
 }
 
 .propertyTabhelper {

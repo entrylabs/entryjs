@@ -1109,7 +1109,7 @@ Entry.EntryObject = function(model) {
         );
         rotationWrapperView.appendChild(coordinateView);
         var xCoordi = CE('span').addClass('entryObjectCoordinateSpanWorkspace');
-        xCoordi.innerHTML = 'X:';
+        xCoordi.innerHTML = 'X';
         var xInput = CE('input').addClass(
             'entryObjectCoordinateInputWorkspace'
         );
@@ -1120,7 +1120,7 @@ Entry.EntryObject = function(model) {
         });
 
         var yCoordi = CE('span').addClass('entryObjectCoordinateSpanWorkspace');
-        yCoordi.innerHTML = 'Y:';
+        yCoordi.innerHTML = 'Y';
         var yInput = CE('input').addClass(
             'entryObjectCoordinateInputWorkspace entryObjectCoordinateInputWorkspace_right'
         );
@@ -1132,7 +1132,7 @@ Entry.EntryObject = function(model) {
         var sizeSpan = CE('span').addClass(
             'entryObjectCoordinateSizeWorkspace'
         );
-        sizeSpan.innerHTML = Lang.Workspace.Size + ' : ';
+        sizeSpan.innerHTML = Lang.Workspace.Size + '';
         var sizeInput = CE('input').addClass(
             'entryObjectCoordinateInputWorkspace',
             'entryObjectCoordinateInputWorkspace_size'
@@ -1206,7 +1206,7 @@ Entry.EntryObject = function(model) {
         this.rotateLabelWrapperView_ = rotateLabelWrapperView;
 
         var rotateSpan = CE('span').addClass('entryObjectRotateSpanWorkspace');
-        rotateSpan.innerHTML = Lang.Workspace.rotation + ' : ';
+        rotateSpan.innerHTML = Lang.Workspace.rotation + '';
         var rotateInput = CE('input').addClass(
             'entryObjectRotateInputWorkspace'
         );
@@ -1221,7 +1221,7 @@ Entry.EntryObject = function(model) {
         var directionSpan = CE('span').addClass(
             'entryObjectDirectionSpanWorkspace'
         );
-        directionSpan.innerHTML = Lang.Workspace.direction + ' : ';
+        directionSpan.innerHTML = Lang.Workspace.direction + '';
         var directionInput = CE('input').addClass(
             'entryObjectDirectionInputWorkspace'
         );
@@ -1287,7 +1287,7 @@ Entry.EntryObject = function(model) {
             'entryObjectRotateMethodLabelWorkspace'
         );
         rotationMethodWrapper.appendChild(rotateMethodLabelView);
-        rotateMethodLabelView.innerHTML = Lang.Workspace.rotate_method + ' : ';
+        rotateMethodLabelView.innerHTML = Lang.Workspace.rotate_method + '';
 
         var rotateModeAView = CE('div').addClass(
             'entryObjectRotateModeWorkspace entryObjectRotateModeAWorkspace'
@@ -1449,7 +1449,7 @@ Entry.EntryObject = function(model) {
 
         var rotateSpan = Entry.createElement('span');
         rotateSpan.addClass('entryObjectRotateSpanWorkspace');
-        rotateSpan.innerHTML = Lang.Workspace.rotation + ' : ';
+        rotateSpan.innerHTML = Lang.Workspace.rotation + '';
         var rotateInput = Entry.createElement('input');
         rotateInput.addClass('entryObjectRotateInputWorkspace');
         this.rotateSpan_ = rotateSpan;
@@ -1457,7 +1457,7 @@ Entry.EntryObject = function(model) {
 
         var directionSpan = Entry.createElement('span');
         directionSpan.addClass('entryObjectDirectionSpanWorkspace');
-        directionSpan.innerHTML = Lang.Workspace.direction + ' : ';
+        directionSpan.innerHTML = Lang.Workspace.direction + '';
         var directionInput = Entry.createElement('input');
         directionInput.addClass('entryObjectDirectionInputWorkspace');
         this.directionInput_ = directionInput;
@@ -1512,12 +1512,12 @@ Entry.EntryObject = function(model) {
         rotationWrapperView.appendChild(coordinateView);
         var xCoordi = Entry.createElement('span');
         xCoordi.addClass('entryObjectCoordinateSpanWorkspace');
-        xCoordi.innerHTML = 'X:';
+        xCoordi.innerHTML = 'X';
         var xInput = Entry.createElement('input');
         xInput.addClass('entryObjectCoordinateInputWorkspace');
         var yCoordi = Entry.createElement('span');
         yCoordi.addClass('entryObjectCoordinateSpanWorkspace');
-        yCoordi.innerHTML = 'Y:';
+        yCoordi.innerHTML = 'Y';
         var yInput = Entry.createElement('input');
         yInput.addClass(
             'entryObjectCoordinateInputWorkspace entryObjectCoordinateInputWorkspace_right'
