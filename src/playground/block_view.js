@@ -826,6 +826,8 @@ Entry.BlockView.RENDER_MODE_TEXT = 2;
 
     p.dominate = function() {
         this.block.getThread().view.dominate();
+        const board = this.getBoard();
+        board.scroller.resizeScrollBar.call(board.scroller);
     };
 
     p.getSvgRoot = function() {

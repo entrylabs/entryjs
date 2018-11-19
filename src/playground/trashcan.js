@@ -97,7 +97,7 @@ Entry.FieldTrashcan = class FieldTrashcan {
     setPosition() {
         if (!this.board) return;
         var svgDom = this.board.svgDom;
-        this._x = svgDom.width() - 80;
+        this._x = svgDom.width() - 83.5;
         this._y = svgDom.height() - 110;
         this.align();
     }
@@ -120,7 +120,7 @@ Entry.FieldTrashcan = class FieldTrashcan {
         } else {
             $(trashTop).attr('class', 'trashcanClose');
         }
-        
+
         this.isOver = isOver;
     }
 
