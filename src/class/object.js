@@ -48,8 +48,7 @@ Entry.EntryObject = function(model) {
                 : this.getPicture(model.selectedPictureId);
         }
 
-        this.scene =
-            Entry.scene.getSceneById(model.scene) || Entry.scene.selectedScene;
+        this.scene = Entry.scene.getSceneById(model.scene) || Entry.scene.selectedScene;
 
         this.setRotateMethod(model.rotateMethod);
 
@@ -228,8 +227,7 @@ Entry.EntryObject = function(model) {
                 if (typeof options.font === 'string') {
                     json.font = options.font;
                 } else {
-                    json.font =
-                        fontStyle + `${fontSize}px ` + options.font.family;
+                    json.font = fontStyle + `${fontSize}px ` + options.font.family;
                 }
                 json.colour = options.colour;
                 json.bgColor = options.bgColor || options.background;
@@ -364,8 +362,7 @@ Entry.EntryObject = function(model) {
         var picture = this.getPicture(pictureId);
 
         pictures.splice(pictures.indexOf(picture), 1);
-        if (picture === this.selectedPicture)
-            playground.selectPicture(pictures[0]);
+        if (picture === this.selectedPicture) playground.selectPicture(pictures[0]);
 
         Entry.container.unCachePictures(this.entity, picture);
 
@@ -399,11 +396,7 @@ Entry.EntryObject = function(model) {
         }
 
         var checker = Entry.parseNumber(value);
-        if (
-            !(checker === false && typeof checker == 'boolean') &&
-            len >= checker &&
-            checker > 0
-        ) {
+        if (!(checker === false && typeof checker == 'boolean') && len >= checker && checker > 0) {
             return pictures[checker - 1];
         }
         return null;
@@ -443,8 +436,7 @@ Entry.EntryObject = function(model) {
      */
     p.selectPicture = function(pictureId) {
         var picture = this.getPicture(pictureId);
-        if (!picture)
-            throw new Error('No picture with pictureId : ' + pictureId);
+        if (!picture) throw new Error('No picture with pictureId : ' + pictureId);
 
         this.selectedPicture = picture;
         this.entity.setImage(picture);
@@ -534,8 +526,7 @@ Entry.EntryObject = function(model) {
 
         var rotateMethod = this.rotateMethod;
         if (rotateMethod == 'free') this.rotateModeAView_.addClass(SELECTED);
-        else if (rotateMethod == 'vertical')
-            this.rotateModeBView_.addClass(SELECTED);
+        else if (rotateMethod == 'vertical') this.rotateModeBView_.addClass(SELECTED);
         else this.rotateModeCView_.addClass(SELECTED);
 
         this.updateRotationView();
@@ -565,10 +556,7 @@ Entry.EntryObject = function(model) {
             clonedEntity.applyFilter();
         }
 
-        Entry.engine.raiseEventOnEntity(clonedEntity, [
-            clonedEntity,
-            'when_clone_start',
-        ]);
+        Entry.engine.raiseEventOnEntity(clonedEntity, [clonedEntity, 'when_clone_start']);
 
         clonedEntity.isStarted = true;
         this.addCloneVariables(
@@ -579,9 +567,7 @@ Entry.EntryObject = function(model) {
         );
 
         this.clonedEntities.push(clonedEntity);
-        var targetIndex = Entry.stage.selectedObjectContainer.getChildIndex(
-            entity.object
-        );
+        var targetIndex = Entry.stage.selectedObjectContainer.getChildIndex(entity.object);
         targetIndex -= (entity.shapes.length ? 1 : 0) + entity.stamps.length;
         Entry.stage.loadEntity(clonedEntity, targetIndex);
 
@@ -616,9 +602,7 @@ Entry.EntryObject = function(model) {
             json.text = this.text;
         } else {
             json.selectedPictureId =
-                json.sprite.pictures[
-                    this.pictures.indexOf(this.selectedPicture)
-                ].id;
+                json.sprite.pictures[this.pictures.indexOf(this.selectedPicture)].id;
         }
         json.lock = this.lock;
         json.entity = this.entity.toJSON();
@@ -647,17 +631,12 @@ Entry.EntryObject = function(model) {
         var sounds = this.sounds,
             len = sounds.length;
 
-        for (var i = 0; i < len; i++)
-            if (sounds[i].id == value) return sounds[i];
+        for (var i = 0; i < len; i++) if (sounds[i].id == value) return sounds[i];
 
         for (i = 0; i < len; i++) if (sounds[i].name == value) return sounds[i];
 
         var checker = Entry.parseNumber(value);
-        if (
-            !(checker === false && typeof checker == 'boolean') &&
-            len >= checker &&
-            checker > 0
-        ) {
+        if (!(checker === false && typeof checker == 'boolean') && len >= checker && checker > 0) {
             return sounds[checker - 1];
         }
 
@@ -669,9 +648,7 @@ Entry.EntryObject = function(model) {
         var _cloneFunc = (v) => v.clone();
         var { variables_, lists_ } = Entry.variableContainer;
 
-        entity.variables = (variables || _whereFunc(variables_)).map(
-            _cloneFunc
-        );
+        entity.variables = (variables || _whereFunc(variables_)).map(_cloneFunc);
         entity.lists = (lists || _whereFunc(lists_)).map(_cloneFunc);
     };
 
@@ -823,8 +800,7 @@ Entry.EntryObject = function(model) {
             },
             {
                 text: Lang.Blocks.Paste_blocks,
-                enable:
-                    !Entry.engine.isState('run') && !!container.copiedObject,
+                enable: !Entry.engine.isState('run') && !!container.copiedObject,
                 callback: function() {
                     var container = Entry.container;
                     if (container.copiedObject) {
@@ -871,8 +847,7 @@ Entry.EntryObject = function(model) {
         if (this.isEditing || Entry.engine.isState('run')) return;
 
         this.editObjectValues(true);
-        if (Entry.playground.object !== this)
-            Entry.container.selectObject(this.id);
+        if (Entry.playground.object !== this) Entry.container.selectObject(this.id);
     };
 
     p.getDom = function(query) {
@@ -924,9 +899,7 @@ Entry.EntryObject = function(model) {
 
         var that = this;
         var objectId = this.id;
-        var objectView = CE('li', objectId).addClass(
-            'entryContainerListElementWorkspace'
-        );
+        var objectView = CE('li', objectId).addClass('entryContainerListElementWorkspace');
         var fragment = document.createDocumentFragment('div');
         fragment.appendChild(objectView);
         // generate context menu
@@ -1005,8 +978,7 @@ Entry.EntryObject = function(model) {
         }
 
         var objectInfo_visible = CE('li').addClass('objectInfo_visible');
-        if (!this.entity.getVisible())
-            objectInfo_visible.addClass('objectInfo_unvisible');
+        if (!this.entity.getVisible()) objectInfo_visible.addClass('objectInfo_unvisible');
 
         objectInfo_visible.bindOnClick(function(e) {
             if (Entry.engine.isState('run')) return;
@@ -1093,26 +1065,18 @@ Entry.EntryObject = function(model) {
             });
         }
 
-        var informationView = CE('div').addClass(
-            'entryObjectInformationWorkspace'
-        );
+        var informationView = CE('div').addClass('entryObjectInformationWorkspace');
         wrapperView.appendChild(informationView);
         this.informationView_ = informationView;
 
-        var rotationWrapperView = CE('div').addClass(
-            'entryObjectRotationWrapperWorkspace'
-        );
+        var rotationWrapperView = CE('div').addClass('entryObjectRotationWrapperWorkspace');
         this.view_.appendChild(rotationWrapperView);
 
-        var coordinateView = CE('span').addClass(
-            'entryObjectCoordinateWorkspace'
-        );
+        var coordinateView = CE('span').addClass('entryObjectCoordinateWorkspace');
         rotationWrapperView.appendChild(coordinateView);
         var xCoordi = CE('span').addClass('entryObjectCoordinateSpanWorkspace');
         xCoordi.innerHTML = 'X';
-        var xInput = CE('input').addClass(
-            'entryObjectCoordinateInputWorkspace'
-        );
+        var xInput = CE('input').addClass('entryObjectCoordinateInputWorkspace');
         xInput.setAttribute('readonly', true);
         xInput.bindOnClick(function(e) {
             e.stopPropagation();
@@ -1129,9 +1093,7 @@ Entry.EntryObject = function(model) {
             this.select();
         });
         yInput.setAttribute('readonly', true);
-        var sizeSpan = CE('span').addClass(
-            'entryObjectCoordinateSizeWorkspace'
-        );
+        var sizeSpan = CE('span').addClass('entryObjectCoordinateSizeWorkspace');
         sizeSpan.innerHTML = Lang.Workspace.Size + '';
         var sizeInput = CE('input').addClass(
             'entryObjectCoordinateInputWorkspace',
@@ -1199,17 +1161,13 @@ Entry.EntryObject = function(model) {
             );
         });
 
-        var rotateLabelWrapperView = CE('div').addClass(
-            'entryObjectRotateLabelWrapperWorkspace'
-        );
-        this.view_.appendChild(rotateLabelWrapperView);
+        var rotateLabelWrapperView = CE('div').addClass('entryObjectRotateLabelWrapperWorkspace');
+        rotationWrapperView.appendChild(rotateLabelWrapperView);
         this.rotateLabelWrapperView_ = rotateLabelWrapperView;
 
         var rotateSpan = CE('span').addClass('entryObjectRotateSpanWorkspace');
         rotateSpan.innerHTML = Lang.Workspace.rotation + '';
-        var rotateInput = CE('input').addClass(
-            'entryObjectRotateInputWorkspace'
-        );
+        var rotateInput = CE('input').addClass('entryObjectRotateInputWorkspace');
         rotateInput.setAttribute('readonly', true);
         rotateInput.bindOnClick(function(e) {
             e.stopPropagation();
@@ -1218,13 +1176,9 @@ Entry.EntryObject = function(model) {
         this.rotateSpan_ = rotateSpan;
         this.rotateInput_ = rotateInput;
 
-        var directionSpan = CE('span').addClass(
-            'entryObjectDirectionSpanWorkspace'
-        );
+        var directionSpan = CE('span').addClass('entryObjectDirectionSpanWorkspace');
         directionSpan.innerHTML = Lang.Workspace.direction + '';
-        var directionInput = CE('input').addClass(
-            'entryObjectDirectionInputWorkspace'
-        );
+        var directionInput = CE('input').addClass('entryObjectDirectionInputWorkspace');
         directionInput.setAttribute('readonly', true);
         directionInput.bindOnClick(function(e) {
             e.stopPropagation();
@@ -1283,9 +1237,7 @@ Entry.EntryObject = function(model) {
         rotationWrapperView.appendChild(rotationMethodWrapper);
         this.rotationMethodWrapper_ = rotationMethodWrapper;
 
-        var rotateMethodLabelView = CE('span').addClass(
-            'entryObjectRotateMethodLabelWorkspace'
-        );
+        var rotateMethodLabelView = CE('span').addClass('entryObjectRotateMethodLabelWorkspace');
         rotationMethodWrapper.appendChild(rotateMethodLabelView);
         rotateMethodLabelView.innerHTML = Lang.Workspace.rotate_method + '';
 
@@ -1338,8 +1290,7 @@ Entry.EntryObject = function(model) {
         objectView.addClass('entryContainerListElementWorkspace');
         objectView.object = this;
         objectView.bindOnClick(function(e) {
-            if (Entry.container.getObject(this.id))
-                Entry.container.selectObject(this.id);
+            if (Entry.container.getObject(this.id)) Entry.container.selectObject(this.id);
         });
 
         // generate context menu
@@ -1441,9 +1392,7 @@ Entry.EntryObject = function(model) {
         this.informationView_ = informationView;
 
         var rotateLabelWrapperView = Entry.createElement('div');
-        rotateLabelWrapperView.addClass(
-            'entryObjectRotateLabelWrapperWorkspace'
-        );
+        rotateLabelWrapperView.addClass('entryObjectRotateLabelWrapperWorkspace');
         this.view_.appendChild(rotateLabelWrapperView);
         this.rotateLabelWrapperView_ = rotateLabelWrapperView;
 
@@ -1472,8 +1421,7 @@ Entry.EntryObject = function(model) {
         rotateInput.onkeypress = function(e) {
             if (e.keyCode == 13) {
                 var value = rotateInput.value;
-                if (value.indexOf('˚') != -1)
-                    value = value.substring(0, value.indexOf('˚'));
+                if (value.indexOf('˚') != -1) value = value.substring(0, value.indexOf('˚'));
                 if (Entry.Utils.isNumber(value)) {
                     thisPointer.entity.setRotation(Number(value));
                 }
@@ -1488,8 +1436,7 @@ Entry.EntryObject = function(model) {
         directionInput.onkeypress = function(e) {
             if (e.keyCode == 13) {
                 var value = directionInput.value;
-                if (value.indexOf('˚') != -1)
-                    value = value.substring(0, value.indexOf('˚'));
+                if (value.indexOf('˚') != -1) value = value.substring(0, value.indexOf('˚'));
                 if (Entry.Utils.isNumber(value)) {
                     thisPointer.entity.setDirection(Number(value));
                 }
