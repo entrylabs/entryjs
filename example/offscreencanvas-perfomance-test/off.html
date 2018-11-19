@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>OffScreenCanvasTest</title>
+</head>
+<body>
+<style>
+    #ta_log {
+        width: 400px; height: 400px;
+    }
+</style>
+<div>
+    <span>Source</span>
+    <button onclick="changeSource('img')">Image</button>
+    <button onclick="changeSource('dom')">DomCanvas</button>
+    <button onclick="changeSource('off')">OffCanvas</button>
+</div>
+<div>
+    <span>Target</span>
+    <button onclick="runDomCanvas()">DomCanvas</button>
+    <button onclick="runOffCanvas()">OffCanvas</button>
+</div>
+<div>
+    <button onclick="clearLog()">ClearLog</button>
+</div>
+
+<div>
+    <label> log<br>
+        <textarea id="ta_log" contenteditable="false"></textarea>
+    </label>
+</div>
+
+
+<script>
+    function changeSource(to) {
+        switch(to) {
+            case "img": imgSource = globalImg; break;
+            case "dom": imgSource = domSource; break;
+            case "off": imgSource = offSource; break;
+        }
+        log("swith source to " + to);
+        console.log("swith source to ", imgSource);
+    }
+    var offSource = new OffscreenCanvas(1,1);
+    var domSource = document.createElement("canvas");
+
+
+    /** @type {HTMLTextAreaElement} */
+    var ta = document.getElementById("ta_log");
+    var CNT = 9000;
+    var domCanvas = document.createElement("canvas");
+    var offCanvas = new OffscreenCanvas(1,1);
+    var globalImg = new Image();
+    var imgSource;
+    globalImg.onload = ()=>{
+        drawImageToCanvas(offSource, globalImg);
+        drawImageToCanvas(domSource, globalImg);
+        log("ok ready to test");
+    };
+    globalImg.src = "off.jpg";
+
+    /**
+     * @param {HTMLImageElement} img
+     * @param {HTMLCanvasElement} canvas
+     */
+    function drawImageToCanvas(canvas, img) {
+        var w = canvas.width = img.naturalWidth;
+        var h = canvas.height = img.naturalHeight;
+        var ctx = canvas.getContext("2d");
+        ctx.drawImage(img, 0, 0);
+        // ctx.fillStyle = "rgba(30, 50, 30, 0.3)";
+        // ctx.fillRect(0,0,w, h);
+    }
+
+    /**
+     *
+     * @param {HTMLCanvasElement} _canvas
+     * @param {number} _cnt
+     */
+    function runCnt(_canvas, _cnt) {
+        if(!imgSource) {
+            log("select source");
+            return -1;
+        }
+        var d = Date.now();
+        var img = imgSource;
+        var w = img.width ,
+            h = img.height;
+        var canvas = _canvas;
+        canvas.width = w;
+        canvas.height = h;
+        var ctx = _canvas.getContext("2d");
+        var cnt = _cnt;
+        while (cnt--) {
+            ctx.clearRect(0, 0, w, h);
+            ctx.drawImage(img, 0, 0 );
+        }
+        return Date.now() - d;
+    }
+
+    function runDomCanvas() {
+        log("DomCanvas: " + runCnt(domCanvas, CNT));
+
+    }
+    function runOffCanvas() {
+        log("OffCanvas: " + runCnt(offCanvas, CNT));
+    }
+
+    function log(nn) {
+        ta.textContent += "\n" + nn;
+        ta.scrollTo(0, ta.scrollHeight);
+    }
+
+    function clearLog() {
+        ta.textContent = "";
+    }
+</script>
+
+</body>
+</html>
