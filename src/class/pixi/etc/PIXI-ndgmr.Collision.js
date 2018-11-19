@@ -23,6 +23,8 @@
 */
 
 
+import PIXIHelper from '../helper/PIXIHelper';
+
 /**
  * [original]
  * A Pixel Perfect Collision Detection for EaselJS Bitmap-Objects
@@ -40,19 +42,12 @@ window.ndgmr = window.ndgmr || {};
     function CollisionCanvas () {
         /** @readonly **/
         this.isOffscreenCanvas = false;
-        this._canvas = this._createCanvas();
+        this._canvas = PIXIHelper.getOffScreenCanvas();
+        this.isOffscreenCanvas = !(this._canvas instanceof HTMLCanvasElement);
         this._ctx = this._canvas.getContext('2d');
         this._ctx.save();
     }
     (function(p){
-
-        p._createCanvas = function() {
-            if( "OffscreenCanvas" in window ) {
-                this.isOffscreenCanvas = true;
-                return new OffscreenCanvas(1,1);
-            }
-            return document.createElement('canvas');
-        };
 
         p.render = function(obj, intersectRect) {
             var tex = obj.texture;
@@ -73,7 +68,6 @@ window.ndgmr = window.ndgmr || {};
             _IP.set(IR.x, IR.y);
             obj.toLocal(_IP, null, _LP);
 
-            _TRANSFORM = new PIXI.Transform();
             obj.worldTransform.decompose(_TRANSFORM);
 
             ctx.restore();
