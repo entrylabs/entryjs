@@ -65,14 +65,12 @@ Entry.Field = class Field {
     }
 
     _attachDisposeEvent(func) {
-        const that = this;
-
-        func =
-            func ||
-            function(skipCommand) {
-                that.destroyOption(skipCommand);
-            };
-        that.disposeEvent = Entry.disposeEvent.attach(that, func);
+        const defaultFunc = (skipCommand) => {
+            this.destroyOption(skipCommand);
+        };
+        
+        func = func || defaultFunc;
+        this.disposeEvent = Entry.disposeEvent.attach(this, func);
     }
 
     align(x, y, animate = true) {
@@ -240,16 +238,14 @@ Entry.Field = class Field {
             return;
         }
 
-        const that = this;
-
         this.svgGroup._isBinded = true;
-        $(this.svgGroup).on('mouseup.fieldBindEvent touchend.fieldBindEvent', function(e) {
-            if (that._isEditable()) {
-                that._code = that.getCode();
-                that.destroyOption();
-                that._startValue = that.getValue();
-                that.renderOptions();
-                that._isEditing = true;
+        $(this.svgGroup).on('mouseup.fieldBindEvent touchend.fieldBindEvent', (e) => {
+            if (this._isEditable()) {
+                this._code = this.getCode();
+                this.destroyOption();
+                this._startValue = this.getValue();
+                this.renderOptions();
+                this._isEditing = true;
             }
         });
     }
