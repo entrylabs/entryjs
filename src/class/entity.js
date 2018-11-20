@@ -34,12 +34,12 @@ Entry.EntityObject = function(object) {
     this.shapes = [];
 
     if (this.type == 'sprite') {
-        this.object = new PIXI.Sprite();
+        this.object = PIXIHelper.sprite("entity-sprite");
         this.object.pixelPerfect = true;
         this._scaleAdaptor = PIXIScaleAdaptor.factory(this.object);
         this.setInitialEffectValue();
     } else if (this.type == 'textBox') {
-        this.object = new PIXI.Container();
+        this.object = PIXIHelper.container("entity-container");
         this._scaleAdaptor = PIXIScaleAdaptor.factory(this.object);
         // this.textObject = new createjs.Text();
         // this.textObject.font = '20px Nanum Gothic';

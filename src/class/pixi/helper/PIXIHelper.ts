@@ -1,7 +1,49 @@
+/** for memory profiling */
+import DestroyOptions = PIXI.DestroyOptions;
+
+class PIXISprite extends PIXI.Sprite {
+    public __debugName:string;
+    constructor(texture?:PIXI.Texture) {
+        super(texture);
+    }
+    destroy(options?: DestroyOptions | boolean) {
+        console.log(`[PIXISprite] destroy(${this.__debugName})`);
+        super.destroy(options);
+    }
+}
+
+/** for memory profiling */
+class PIXIContainer extends PIXI.Container {
+    public __debugName:string;
+    constructor() {
+        super();
+    }
+    destroy(options?: DestroyOptions | boolean) {
+        console.log(`[PIXIContainer] destroy(${this.__debugName})`);
+        super.destroy(options);
+    }
+}
+
+
+
 let PIXITempStore:any = require('../etc/PIXITempStore').PIXITempStore;
 let PIXIText:any = require('../text/PIXIText').PIXIText;
 
 export default class PIXIHelper {
+
+    static sprite(debugName?:string, texture?:PIXI.Texture):PIXI.Sprite {
+        //return new PIXI.Sprite(texture);
+        var c = new PIXISprite(texture);
+        c.__debugName = debugName;
+        return c;
+    }
+
+    static container(debugName?:string):PIXI.Container {
+        // return new PIXI.Container();
+        var c = new PIXIContainer();
+        c.__debugName = debugName;
+        return c;
+    }
 
     static text(str:string, font:string, color:string, textBaseline:string, textAlign:string) {
         // console.log(str, font);

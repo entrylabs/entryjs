@@ -9,6 +9,7 @@
 import { PIXIAtlasManager } from './pixi/atlas/PIXIAtlasManager';
 import { PIXIHandle } from './pixi/handle/PIXIHandle';
 import { PIXIGlobal } from './pixi/init/PIXIGlobal';
+import PIXIHelper from './pixi/helper/PIXIHelper';
 
 /**
  * class for a canvas
@@ -54,8 +55,8 @@ Entry.Stage.prototype.initStage = function(canvas) {
     this.background.height = 480;
     this.background.anchor.set(0.5, 0.5);
 
-    this.variableContainer = new PIXI.Container();
-    this.dialogContainer = new PIXI.Container();
+    this.variableContainer = PIXIHelper.container("Stage:VarContainer");
+    this.dialogContainer = PIXIHelper.container("Stage:DialogContainer");
 
 
     this.canvas.addChild(this.background);
@@ -307,7 +308,7 @@ Entry.Stage.prototype.sortZorderRun = function() {
  * Initialize coordinate on canvas. It is toggle by Engine.
  */
 Entry.Stage.prototype.initCoordinator = function() {
-    var c = this.coordinator = new PIXI.Container();
+    var c = this.coordinator = PIXIHelper.container("Stage-Coordinator");
     c.interactive = false;
     c.interactiveChildren = false;
     c.visible = false;
@@ -529,7 +530,7 @@ Entry.Stage.prototype.endEdit = function() {
 };
 
 Entry.Stage.prototype.initWall = function() {
-    var wall = new PIXI.Container();
+    var wall = PIXIHelper.container("[Stage] wall");
     wall.interactiveChildren = false;
     wall.interactive = false;
 
@@ -676,7 +677,7 @@ Entry.Stage.prototype.selectObjectContainer = function(scene) {
  */
 Entry.Stage.prototype.createObjectContainer = function(scene) {
     // return Object.assign(new createjs.Container(), { scene });
-    return Object.assign(new PIXI.Container(), { scene });
+    return Object.assign(PIXIHelper.container("[Stage] SceneContainer"), { scene });
 };
 
 /**
