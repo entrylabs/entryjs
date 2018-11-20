@@ -96,12 +96,6 @@ export default class PIXIHelper {
         return pixiText.measuredLineHeight;
     }
 
-    static createjsUncache(target:any) {
-        var obj:PIXI.Sprite = target.object;
-        if(!obj) return;
-        obj.cacheAsBitmap = false;
-    }
-
     /**
      * #ff00ff --> 0xff00ff
      * @param strColor

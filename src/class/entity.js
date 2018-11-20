@@ -1002,10 +1002,11 @@ Entry.EntityObject.prototype.setImage = function(pictureModel) {
     );
     this._scaleAdaptor.updateScaleFactor();
 
+    var hasFilter = !_.isEmpty(that.object.filters);
+    hasFilter ? this.cache() : this.uncache();
+
     Entry.requestUpdate = true;
 
-    var hasFilter = !_.isEmpty(that.object.filters);
-    hasFilter ? this.cache() : PIXIHelper.createjsUncache(this);
 
     /*
     var image = Entry.container.getCachedPicture(cacheId);
@@ -1365,7 +1366,7 @@ Entry.EntityObject.prototype.resetFilter = function() {
     object.alpha = this.effect.alpha;
 
     //object.uncache();
-    PIXIHelper.createjsUncache(this);
+    this.uncache();
 };
 
 /**
@@ -1647,7 +1648,7 @@ Entry.EntityObject.prototype.destroy = function(isClone) {
 
     var object = this.object;
     if (object) {
-        PIXIHelper.createjsUncache(this);
+        this.uncache();
         object.removeAllListeners();
         delete object.image;
         delete object.entity;
@@ -1670,11 +1671,17 @@ Entry.EntityObject.prototype.cache = function() {
     var { object } = this;
     if (object && object.filters) {
         if(object.cacheAsBitmap) {
-            PIXIHelper.createjsUncache(this);
+            this.uncache();
         }
         object.cacheAsBitmap = true;
         Entry.requestUpdate = true;
     }
+};
+
+Entry.EntityObject.prototype.uncache = function() {
+    var { object } = this;
+    if(!object || !object.cacheAsBitmap) return;
+    object.cacheAsBitmap = false;
 };
 
 Entry.EntityObject.prototype.reset = function() {
