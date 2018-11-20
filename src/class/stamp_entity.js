@@ -59,7 +59,8 @@ Entry.StampEntity = function(object, entity) {
         'getHeight',
         'getInitialEffectValue',
         'destroy',
-        'cache'
+        'cache',
+        'uncache'
     ].forEach(function(key) { p[key] = origin[key]; });
 })(Entry.StampEntity.prototype, Entry.EntityObject.prototype);
 
