@@ -31,6 +31,7 @@ Entry.Thread = function(thread, code, parent) {
                 block.setThread(this);
                 this._data.push(block);
             } else if (block instanceof Entry.Comment) {
+                block.setThread(this);
                 this._data.push(block);
             } else {
                 this._data.push(new Entry.Block(block, this));
@@ -58,7 +59,11 @@ Entry.Thread = function(thread, code, parent) {
             this.view = new Entry.ThreadView(this, board);
         }
         this.getBlocks().forEach((b) => {
-            return b.createView(board, mode);
+            let view;
+            if (b.createView) {
+                view = b.createView(board, mode);
+            }
+            return view;
         });
     };
 

@@ -1463,7 +1463,7 @@ Entry.BlockView = class BlockView {
                 text: hasComment ? '메모 삭제하기' : '메모 추가하기',
                 callback() {
                     hasComment
-                        ? Entry.do('removeCommentBlock', block)
+                        ? Entry.do('removeCommentBlock', block._comment)
                         : Entry.do('createCommentBlock', block, board);
                 },
             };
