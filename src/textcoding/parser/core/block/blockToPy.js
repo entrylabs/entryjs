@@ -3,73 +3,66 @@
  */
 'use strict';
 
-Entry.BlockToPyParser = function() {
-    this._type = 'BlockToPyParser';
+Entry.BlockToPyParser = class {
+    constructor() {
+        this._type = 'BlockToPyParser';
+        this._funcParamMap = new Entry.Map();
+        this._funcDefMap = {};
 
-    var funcParamMap = new Entry.Map();
-    this._funcParamMap = funcParamMap;
+        this._variableDeclaration = null;
+        this._listDeclaration = null;
+        this._forIdCharIndex = 0;
+    }
 
-    var funcDefMap = {};
-    this._funcDefMap = {};
-
-    this._variableDeclaration = null;
-    this._listDeclaration = null;
-    this._forIdCharIndex = 0;
-};
-
-(function(p) {
-    p.Code = function(code, parseMode) {
+    Code(code, parseMode) {
         this._parseMode = parseMode;
         if (!code) return;
         if (code instanceof Entry.Thread) return this.Thread(code);
         if (code instanceof Entry.Block) return this.Block(code);
 
-        var textCode = '',
+        let textCode = '',
             threads = code.getThreads();
 
-        for (var i = 0; i < threads.length; i++) {
+        for (let i = 0; i < threads.length; i++) {
             this._forIdCharIndex = 0;
-            var thread = threads[i];
+            const thread = threads[i];
 
             textCode += this.Thread(thread) + '\n';
         }
         textCode = textCode.trim();
 
         return textCode;
-    };
+    }
 
-    p.Thread = function(thread) {
+    Thread(thread) {
         if (thread instanceof Entry.Block) return this.Block(thread);
-        var result = '',
+        let result = '',
             blocks = thread.getBlocks();
-        var isEventBlock = false;
-        var rootBlock;
-        var rootResult = '';
-        var contentResult = '';
-        var definition = '';
+        let isEventBlock = false;
+        let rootBlock;
+        let rootResult = '';
+        let contentResult = '';
+        let definition = '';
 
-        for (var i = 0; i < blocks.length; i++) {
-            var block = blocks[i];
-            if (this._parseMode == Entry.Parser.PARSE_GENERAL) {
-                /*if(Entry.TextCodingUtil.isNoPrintBlock(block))
-                    continue;*/
-                if (i == 0) {
+        for (let i = 0; i < blocks.length; i++) {
+            const block = blocks[i];
+            if (this._parseMode === Entry.Parser.PARSE_GENERAL) {
+                if (i === 0) {
                     rootBlock = block;
                     isEventBlock = Entry.TextCodingUtil.isEventBlock(block);
                     if (isEventBlock) rootResult = this.Block(block) + '\n';
                     else contentResult += this.Block(block) + '\n';
-                } else if (i != 0) {
-                    var content = this.Block(block) + '\n';
-                    contentResult += content;
+                } else if (i !== 0) {
+                    contentResult += this.Block(block) + '\n';
                 }
-            } else if (this._parseMode == Entry.Parser.PARSE_SYNTAX) {
+            } else if (this._parseMode === Entry.Parser.PARSE_SYNTAX) {
                 isEventBlock = Entry.TextCodingUtil.isEventBlock(block);
                 if (isEventBlock) result = definition;
                 else result = this.Block(block) + '\n';
             }
         }
 
-        if (this._parseMode == Entry.Parser.PARSE_GENERAL) {
+        if (this._parseMode === Entry.Parser.PARSE_GENERAL) {
             if (isEventBlock) {
                 contentResult = Entry.TextCodingUtil.indent(contentResult);
                 result = rootResult + contentResult + '\n';
@@ -79,14 +72,14 @@ Entry.BlockToPyParser = function() {
         }
         result = result.trim() + '\n';
         return result;
-    };
+    }
 
-    p.Block = function(block, template) {
+    Block(block, template) {
         if (!block || !(block instanceof Entry.Block)) return '';
         !block._schema && block.loadSchema();
 
-        var result = '';
-        var syntaxObj, syntax, textParams;
+        let result = '';
+        let syntaxObj, syntax, textParams;
 
         syntaxObj = this.searchSyntax(block);
         if (syntaxObj) {
@@ -108,41 +101,41 @@ Entry.BlockToPyParser = function() {
             }
             if (this.isRegisteredFunc(block))
                 syntax = this.makeFuncSyntax(block);
-            if (this._parseMode == Entry.Parser.PARSE_SYNTAX) return syntax;
+            if (this._parseMode === Entry.Parser.PARSE_SYNTAX) return syntax;
         } else if (this.isFuncStmtParam(block)) {
             result += block.data.type;
         }
 
         if (!syntax && !this.isFuncStmtParam(block)) {
-            var error = new Error();
+            const error = new Error();
             error.block = block;
             throw error;
         }
 
-        var blockReg = /(%.)/im;
-        var statementReg = /(\$.)/im;
-        var blockTokens = syntax.split(blockReg);
-        var schemaParams = block._schema.params;
-        var dataParams = block.data.params;
-        var currentBlock = block;
-        var currentBlockSkeleton = currentBlock._schema.skeleton;
-        var currentBlockParamsKeyMap = currentBlock._schema.paramsKeyMap;
-        var blockParam = '';
+        const blockReg = /(%.)/im;
+        const statementReg = /(\$.)/im;
+        const blockTokens = syntax.split(blockReg);
+        const schemaParams = block._schema.params;
+        const dataParams = block.data.params;
+        const currentBlock = block;
+        const currentBlockSkeleton = currentBlock._schema.skeleton;
+        const currentBlockParamsKeyMap = currentBlock._schema.paramsKeyMap;
+        let blockParam = '';
 
-        for (var i = 0; i < blockTokens.length; i++) {
-            var blockToken = blockTokens[i];
+        for (let i = 0; i < blockTokens.length; i++) {
+            let blockToken = blockTokens[i];
             if (blockToken.length === 0) continue;
-            if (blockToken == '% ') {
+            if (blockToken === '% ') {
                 result += blockToken;
                 continue;
             }
             if (blockReg.test(blockToken)) {
-                var blockParamIndex = blockToken.split('%')[1];
-                var index = Number(blockParamIndex) - 1;
+                const blockParamIndex = blockToken.split('%')[1];
+                let index = Number(blockParamIndex) - 1;
                 if (schemaParams[index]) {
-                    if (schemaParams[index].type == 'Indicator') {
+                    if (schemaParams[index].type === 'Indicator') {
                         index++;
-                    } else if (schemaParams[index].type == 'Block') {
+                    } else if (schemaParams[index].type === 'Block') {
                         var param = this.Block(dataParams[index]).trim();
                         if (syntaxObj.textParams && syntaxObj.textParams[index])
                             var textParam = syntaxObj.textParams[index];
@@ -190,8 +183,12 @@ Entry.BlockToPyParser = function() {
                         result += param;
                     } else {
                         if (syntaxObj.textParams)
-                            var textParams = syntaxObj.textParams;
-                        else var textParams = [];
+                            {
+                                textParams = syntaxObj.textParams;
+                            }
+                        else {
+                            textParams = [];
+                        }
 
                         param = this['Field' + schemaParams[index].type](
                             dataParams[index],
@@ -242,14 +239,18 @@ Entry.BlockToPyParser = function() {
                 }
 
                 result += blockToken;
+
+                console.log(result);
             }
         }
-        return result;
-    };
 
-    p.searchSyntax = function(datum) {
-        var schema;
-        var appliedParams;
+        console.log('last', result);
+        return result;
+    }
+
+    searchSyntax(datum) {
+        let schema;
+        let appliedParams;
         if (datum instanceof Entry.BlockView) {
             schema = datum.block._schema;
             appliedParams = datum.block.data.params;
@@ -285,22 +286,22 @@ Entry.BlockToPyParser = function() {
             }
         }
         return null;
-    };
+    }
 
-    p.FieldAngle = function(dataParam, textParam) {
+    FieldAngle(dataParam, textParam) {
         if (textParam && textParam.converter)
             dataParam = textParam.converter(dataParam);
 
         return dataParam;
-    };
+    }
 
-    p.FieldColor = function(dataParam, textParam) {
+    FieldColor(dataParam, textParam) {
         if (textParam && textParam.converter)
             dataParam = textParam.converter(null, dataParam);
         return dataParam;
-    };
+    }
 
-    p.FieldDropdown = function(dataParam, textParam) {
+    FieldDropdown(dataParam, textParam) {
         if (typeof dataParam == 'object') return 'None'.replace(/\"/gm, '');
 
         if (textParam && textParam.converter && textParam.options) {
@@ -316,9 +317,9 @@ Entry.BlockToPyParser = function() {
         }
 
         return dataParam;
-    };
+    }
 
-    p.FieldDropdownDynamic = function(dataParam, textParam) {
+    FieldDropdownDynamic(dataParam, textParam) {
         if (typeof dataParam == 'object') return 'None'.replace(/\"/gm, '');
 
         if (textParam && textParam.converter && textParam.options) {
@@ -349,20 +350,20 @@ Entry.BlockToPyParser = function() {
         }
 
         return dataParam;
-    };
+    }
 
-    p.FieldImage = function(dataParam, textParam) {
+    FieldImage(dataParam, textParam) {
         if (textParam && textParam.converter)
             dataParam = textParam.converter(null, dataParam);
 
         return dataParam;
-    };
+    }
 
-    p.FieldIndicator = function(dataParam, textParam) {
+    FieldIndicator(dataParam, textParam) {
         return dataParam;
-    };
+    }
 
-    p.FieldKeyboard = function(dataParam, textParam) {
+    FieldKeyboard(dataParam, textParam) {
         var reg = /None/;
         if (reg.test(dataParam)) {
             return dataParam.replace(/\"/gm, '');
@@ -382,20 +383,20 @@ Entry.BlockToPyParser = function() {
 
         dataParam = dataParam.toLowerCase();
         return dataParam;
-    };
+    }
 
-    p.FieldOutput = function(dataParam, textParam) {
+    FieldOutput(dataParam, textParam) {
         return dataParam;
-    };
+    }
 
-    p.FieldText = function(dataParam, textParam) {
+    FieldText(dataParam, textParam) {
         if (textParam && textParam.converter)
             dataParam = textParam.converter(null, dataParam);
 
         return dataParam;
-    };
+    }
 
-    p.FieldTextInput = function(dataParam, textParam) {
+    FieldTextInput(dataParam, textParam) {
         if (typeof dataParam != 'number') {
             dataParam = dataParam.replace('\t', '    ');
             var spaces = dataParam.split(/ /);
@@ -408,16 +409,16 @@ Entry.BlockToPyParser = function() {
             dataParam = textParam.converter(null, dataParam);
 
         return dataParam;
-    };
+    }
 
-    p.FieldNumber = function(dataParam, textParam) {
+    FieldNumber(dataParam, textParam) {
         if (textParam && textParam.converter)
             dataParam = textParam.converter(null, dataParam);
 
         return dataParam;
-    };
+    }
 
-    p.isFunc = function(block) {
+    isFunc(block) {
         if (!block || !block.data || !block.data.type) return false;
         var tokens = block.data.type.split('_');
         var prefix = tokens[0];
@@ -425,16 +426,16 @@ Entry.BlockToPyParser = function() {
 
         if (prefix == 'func') return true;
         else return false;
-    };
+    }
 
-    p.isRegisteredFunc = function(block) {
+    isRegisteredFunc(block) {
         var tokens = block.data.type.split('_');
         var prefix = tokens[0];
         var funcId = tokens[1];
         return !!Entry.variableContainer.functions_[funcId];
-    };
+    }
 
-    p.isFuncStmtParam = function(block) {
+    isFuncStmtParam(block) {
         if (!block || !block.data || !block.data.type) return false;
         var blockType = block.data.type;
         var tokens = blockType.split('_');
@@ -442,9 +443,9 @@ Entry.BlockToPyParser = function() {
 
         if (prefix == 'stringParam' || prefix == 'booleanParam') return true;
         else return false;
-    };
+    }
 
-    p.makeFuncSyntax = function(funcBlock) {
+    makeFuncSyntax(funcBlock) {
         var syntax = '';
         if (funcBlock && funcBlock._schema)
             if (funcBlock._schema.template)
@@ -491,15 +492,15 @@ Entry.BlockToPyParser = function() {
         funcParams = funcParams.substring(0, index);
 
         syntax = funcName
-            .trim()
-            .concat('(')
-            .concat(funcParams.trim())
-            .concat(')');
+        .trim()
+        .concat('(')
+        .concat(funcParams.trim())
+        .concat(')');
 
         return syntax;
-    };
+    }
 
-    p.makeFuncDef = function(funcBlock, exp) {
+    makeFuncDef(funcBlock, exp) {
         if (!this.isRegisteredFunc(funcBlock)) return;
         var result = '';
         var func = this.getFuncInfo(funcBlock);
@@ -520,9 +521,9 @@ Entry.BlockToPyParser = function() {
             paramResult = paramResult.trim();
         }
         result = result
-            .concat('(')
-            .concat(paramResult)
-            .concat(')');
+        .concat('(')
+        .concat(paramResult)
+        .concat(')');
         if (exp) return result;
         else result = 'def ' + result;
 
@@ -543,12 +544,12 @@ Entry.BlockToPyParser = function() {
             //stmtResult = stmtResult.concat('\n');
             result += Entry.TextCodingUtil.indent(stmtResult).concat('\n');
         }
-        //this._funcParamMap.clear();
+        //this._funcParamMaclear();
 
         return result.trim();
-    };
+    }
 
-    p.getFuncInfo = function(funcBlock) {
+    getFuncInfo(funcBlock) {
         var result = {};
         var funcId = funcBlock.getFuncId();
 
@@ -589,15 +590,15 @@ Entry.BlockToPyParser = function() {
             });
         } else {
             funcBlock.params
-                .filter(function(p) {
-                    return p instanceof Entry.Block;
-                })
-                .forEach(function(p) {
-                    var paramText = that.Block(p);
-                    if (!paramText) return;
-                    paramText = that._funcParamMap.get(paramText) || paramText;
-                    funcParams.push(paramText);
-                });
+            .filter(function(p) {
+                return p instanceof Entry.Block;
+            })
+            .forEach(function(p) {
+                var paramText = that.Block(p);
+                if (!paramText) return;
+                paramText = that._funcParamMap.get(paramText) || paramText;
+                funcParams.push(paramText);
+            });
         }
 
         Entry.TextCodingUtil.clearQueue();
@@ -607,5 +608,5 @@ Entry.BlockToPyParser = function() {
         if (funcContents.length !== 0) result.statements = funcContents;
 
         return result;
-    };
-})(Entry.BlockToPyParser.prototype);
+    }
+};
