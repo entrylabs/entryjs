@@ -66,6 +66,7 @@ Entry.BlockToPyParser = class {
         !block._schema && block.loadSchema();
 
         let result = '';
+        const results = [];
         let syntaxObj, syntax;
 
         syntaxObj = this.searchSyntax(block);
@@ -84,7 +85,7 @@ Entry.BlockToPyParser = class {
                 syntax = this.makeFuncSyntax(block);
             if (this._parseMode === Entry.Parser.PARSE_SYNTAX) return syntax;
         } else if (this.isFuncStmtParam(block)) {
-            result += block.data.type;
+            results.push(block.data.type);
         }
 
         if (!syntax && !this.isFuncStmtParam(block)) {
@@ -93,7 +94,48 @@ Entry.BlockToPyParser = class {
             throw error;
         }
 
-        const blockReg = /(%.)/im;
+        const _blockTokens = syntax.split(/[\r\n]/);
+
+        const _blockParamRegex = /%\d/gim;
+        const _blockStatementRegex = /\$\d/gim;
+
+        _blockTokens.forEach((token) => {
+            const paramsTemplate = token.match(_blockParamRegex);
+            const statements = token.match(_blockStatementRegex);
+
+            // %1 과 같은 템플릿 값이 있는 경우
+            if (paramsTemplate) {
+                const paramsValue = paramsTemplate.map((template) => {
+                    const [, templateIndex] = template.split('%');
+
+                    if (templateIndex) {
+                        return this._getParamsValue(templateIndex, block);
+                    }
+                    return '';
+                });
+
+                results.push(
+                    token.replace(/%(\d)/gim, (_, groupMatch) => {
+                        return paramsValue[groupMatch - 1];
+                    })
+                );
+            }
+
+            // $1 과 같이 statement 를 포함하는 경우
+            if (statements) {
+                statements.forEach((_, index) => {
+                    results.push(Entry.TextCodingUtil.indent(
+                        this.Thread(block.statements[index])
+                    ));
+                });
+            }
+
+            if (!statements && !paramsTemplate) {
+                results.push(token);
+            }
+        });
+
+/*        const blockReg = /(%.)/im;
         const statementReg = /(\$.)/im;
         const blockTokens = syntax.split(blockReg);
 
@@ -120,6 +162,7 @@ Entry.BlockToPyParser = class {
                     } else result += statementToken;
                 }
             } else {
+                TODO 여기를 아직 처리안했음, 반복의 반복 & substring
                 if (syntaxObj && syntaxObj.key === 'repeat_basic' && i === 0) {
                     const forStmtTokens = blockToken.split(' ');
                     forStmtTokens[1] = Entry.TextCodingUtil.generateForStmtIndex(this._forIdCharIndex++);
@@ -131,17 +174,18 @@ Entry.BlockToPyParser = class {
 
                 result += blockToken;
             }
-        }
+        }*/
 
-        return result;
+        return results.join('\n');
     }
 
-    _getParamsValue(blockParamIndex, block) {
-        let result = '';
-        const index = Number(blockParamIndex) - 1;
+    // templateIndex 는 1부터 시작한다.
+    _getParamsValue(templateIndex, block) {
+        const index = Number(templateIndex) - 1;
         const schemaParams = block._schema.params;
         const dataParams = block.data.params;
 
+        let result = '';
         const syntaxObj = this.searchSyntax(block);
         const textParams = syntaxObj.textParams && syntaxObj.textParams;
 
@@ -212,7 +256,6 @@ Entry.BlockToPyParser = class {
                 }
             }
         }
-        console.log(result);
         return result;
     }
 
