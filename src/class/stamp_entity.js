@@ -1,9 +1,12 @@
 /**
  * @fileoverview stamp entity object is class for entry stamp entity canvas view.
  */
+
 'use strict';
 
 
+
+import PIXIHelper from './pixi/helper/PIXIHelper';
 
 /**
  * Construct stamp entity class
@@ -22,7 +25,8 @@ Entry.StampEntity = function(object, entity) {
     if (this.type == 'sprite') {
 
         var orgObj = entity.object;
-        this.object = new PIXI.Sprite(orgObj.texture);
+        // this.object = new PIXI.Sprite(orgObj.texture);
+        this.object = PIXIHelper.sprite("StampEntity", orgObj.texture);
         this.object.visible = orgObj.visible;
         this.object.interactive = false;
         this.object.interactiveChildren = false;

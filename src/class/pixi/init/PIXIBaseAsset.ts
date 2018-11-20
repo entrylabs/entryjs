@@ -2,6 +2,12 @@
  * 기본 텍스쳐 로드 되기 전에 객체를 생성 할 수 있도록 json은 함께 번들링함.
  */
 
+class PIXIBaseAssetSprite extends PIXI.Sprite {
+    constructor(t?:any) {
+        super(t);
+    }
+}
+
 var atlasJson = require("./../../../entry_texture/base_asset.json");
 
 declare let Entry:any;
@@ -25,7 +31,8 @@ export class PIXIBaseAsset {
     }
 
     newSprite(key:string):PIXI.Sprite {
-        return new PIXI.Sprite(this._sheet.textures[key]);
+        // return new PIXI.Sprite(this._sheet.textures[key]);
+        return new PIXIBaseAssetSprite(this._sheet.textures[key]);
     }
     getTexture(key:string):PIXI.Texture {
         return this._sheet.textures[key];
