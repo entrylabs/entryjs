@@ -66,14 +66,11 @@ Entry.BlockToPyParser = class {
         !block._schema && block.loadSchema();
 
         let result = '';
-        let syntaxObj, syntax, textParams;
+        let syntaxObj, syntax;
 
         syntaxObj = this.searchSyntax(block);
         if (syntaxObj) {
             syntax = syntaxObj.syntax;
-            if(syntaxObj.textParams) {
-                textParams = syntaxObj.textParams;
-            }
         }
 
         // User Function
@@ -99,8 +96,6 @@ Entry.BlockToPyParser = class {
         const blockReg = /(%.)/im;
         const statementReg = /(\$.)/im;
         const blockTokens = syntax.split(blockReg);
-        const schemaParams = block._schema.params;
-        const dataParams = block.data.params;
 
         for (let i = 0; i < blockTokens.length; i++) {
             let blockToken = blockTokens[i];
@@ -111,87 +106,7 @@ Entry.BlockToPyParser = class {
             }
             if (blockReg.test(blockToken)) {
                 const blockParamIndex = blockToken.split('%')[1];
-                let index = Number(blockParamIndex) - 1;
-                if (schemaParams[index]) {
-                    switch (schemaParams[index].type) {
-                        case 'Indicator': {
-                            index++;
-                            break;
-                        }
-                        case 'Block': {
-                            let param = this.Block(dataParams[index]).trim();
-                            const funcParam = this._funcParamMap.get(param);
-                            let textParam;
-
-                            if (syntaxObj.textParams && syntaxObj.textParams[index]) {
-                                textParam = syntaxObj.textParams[index];
-                            }
-
-                            if (funcParam) {
-                                param = funcParam;
-                            } else {
-                                const funcParamTokens = param.split('_');
-                                const prefix = funcParamTokens[0];
-                                if (funcParamTokens.length === 2) {
-                                    if (prefix === 'stringParam') {
-                                        param = 'string_param';
-                                    } else if (prefix === 'booleanParam') {
-                                        param = 'boolean_param';
-                                    }
-                                }
-                            }
-
-                            if (textParam && textParam.paramType === 'index') {
-                                if (Entry.Utils.isNumber(param)) param = param - 1;
-                                else {
-                                    const tokens = param.split('+');
-                                    if (tokens[tokens.length - 1] === ' 1)') {
-                                        delete tokens[tokens.length - 1];
-                                        param = tokens.join('+');
-                                        param = param.substring(1, param.length - 2);
-                                    } else {
-                                        param += ' - 1';
-                                    }
-                                }
-                            }
-
-                            if (textParam && textParam.paramType === 'integer') {
-                                if (Entry.Utils.isNumber(param) && Entry.isFloat(param)) {
-                                    result = result.replace('randint', 'uniform');
-                                }
-                            }
-
-                            result += param;
-                            break;
-                        }
-                        default: {
-                            if (syntaxObj.textParams)
-                            {
-                                textParams = syntaxObj.textParams;
-                            }
-                            else {
-                                textParams = [];
-                            }
-
-                            const param = this['Field' + schemaParams[index].type](
-                                dataParams[index],
-                                textParams[index]
-                            );
-
-                            // 필드 블록이 아닌 블록에 내재된 파라미터 처리
-                            if (!Entry.Utils.isNumber(param) && block.type === "when_some_key_pressed")
-                                result += '"' + param + '"';
-                            else
-                                result += param;
-                            if (syntaxObj && syntaxObj.key === 'repeat_while_true')
-                                result = Entry.TextCodingUtil.assembleRepeatWhileTrueBlock(
-                                    block,
-                                    result
-                                );
-                            break;
-                        }
-                    }
-                }
+                result += this._getParamsValue(blockParamIndex, block);
             } else if (statementReg.test(blockToken)) {
                 const statements = blockToken.split(statementReg);
                 for (let j = 0; j < statements.length; j++) {
@@ -218,6 +133,86 @@ Entry.BlockToPyParser = class {
             }
         }
 
+        return result;
+    }
+
+    _getParamsValue(blockParamIndex, block) {
+        let result = '';
+        const index = Number(blockParamIndex) - 1;
+        const schemaParams = block._schema.params;
+        const dataParams = block.data.params;
+
+        const syntaxObj = this.searchSyntax(block);
+        const textParams = syntaxObj.textParams && syntaxObj.textParams;
+
+        if (schemaParams[index]) {
+            switch (schemaParams[index].type) {
+                case 'Indicator': {
+                    break;
+                }
+                case 'Block': {
+                    let param = this.Block(dataParams[index]).trim();
+                    const funcParam = this._funcParamMap.get(param);
+                    const textParam = textParams && textParams[index];
+
+                    if (funcParam) {
+                        param = funcParam;
+                    } else {
+                        const funcParamTokens = param.split('_');
+                        const prefix = funcParamTokens[0];
+                        if (funcParamTokens.length === 2) {
+                            if (prefix === 'stringParam') {
+                                param = 'string_param';
+                            } else if (prefix === 'booleanParam') {
+                                param = 'boolean_param';
+                            }
+                        }
+                    }
+
+                    if (textParam && textParam.paramType === 'index') {
+                        if (Entry.Utils.isNumber(param)) param = param - 1;
+                        else {
+                            const tokens = param.split('+');
+                            if (tokens[tokens.length - 1] === ' 1)') {
+                                delete tokens[tokens.length - 1];
+                                param = tokens.join('+');
+                                param = param.substring(1, param.length - 2);
+                            } else {
+                                param += ' - 1';
+                            }
+                        }
+                    }
+
+                    if (textParam && textParam.paramType === 'integer') {
+                        if (Entry.Utils.isNumber(param) && Entry.isFloat(param)) {
+                            result = result.replace('randint', 'uniform');
+                        }
+                    }
+
+                    result += param;
+                    break;
+                }
+                default: {
+                    const textParam = textParams && textParams[index];
+
+                    const param = this['Field' + schemaParams[index].type](dataParams[index], textParam);
+
+                    // 필드 블록이 아닌 블록에 내재된 파라미터 처리
+                    if (!Entry.Utils.isNumber(param) && block.type === 'when_some_key_pressed') {
+                        result += '"' + param + '"';
+                    } else {
+                        result += param;
+                    }
+
+                    if (syntaxObj && syntaxObj.key === 'repeat_while_true') {
+                        result = Entry.TextCodingUtil.assembleRepeatWhileTrueBlock(block, result);
+                    }
+
+                    break;
+                }
+            }
+        }
+        console.log(result);
         return result;
     }
 
