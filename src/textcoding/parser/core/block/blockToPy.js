@@ -20,58 +20,45 @@ Entry.BlockToPyParser = class {
         if (code instanceof Entry.Thread) return this.Thread(code);
         if (code instanceof Entry.Block) return this.Block(code);
 
-        let textCode = '',
-            threads = code.getThreads();
+        const resultTextCode = [];
+        const threads = code.getThreads();
 
         for (let i = 0; i < threads.length; i++) {
             this._forIdCharIndex = 0;
             const thread = threads[i];
 
-            textCode += this.Thread(thread) + '\n';
+            resultTextCode.push(this.Thread(thread));
         }
-        textCode = textCode.trim();
 
-        return textCode;
+        return resultTextCode.join('\n').trim();
     }
 
     Thread(thread) {
         if (thread instanceof Entry.Block) return this.Block(thread);
-        let result = '',
-            blocks = thread.getBlocks();
-        let isEventBlock = false;
-        let rootBlock;
-        let rootResult = '';
-        let contentResult = '';
-        let definition = '';
+        const blocks = thread.getBlocks();
 
-        for (let i = 0; i < blocks.length; i++) {
-            const block = blocks[i];
-            if (this._parseMode === Entry.Parser.PARSE_GENERAL) {
-                if (i === 0) {
-                    rootBlock = block;
-                    isEventBlock = Entry.TextCodingUtil.isEventBlock(block);
-                    if (isEventBlock) rootResult = this.Block(block) + '\n';
-                    else contentResult += this.Block(block) + '\n';
-                } else if (i !== 0) {
+        if (this._parseMode === Entry.Parser.PARSE_SYNTAX) {
+            return blocks
+                .map((block) => { return this.Block(block) + '\n'; })
+                .trim();
+        } else if (this._parseMode === Entry.Parser.PARSE_GENERAL) {
+            let rootResult = '';
+            let contentResult = '';
+
+            blocks.forEach((block, index) => {
+                if (index === 0 && Entry.TextCodingUtil.isEventBlock(block)) {
+                    rootResult = this.Block(block) + '\n';
+                } else {
                     contentResult += this.Block(block) + '\n';
                 }
-            } else if (this._parseMode === Entry.Parser.PARSE_SYNTAX) {
-                isEventBlock = Entry.TextCodingUtil.isEventBlock(block);
-                if (isEventBlock) result = definition;
-                else result = this.Block(block) + '\n';
-            }
-        }
+            });
 
-        if (this._parseMode === Entry.Parser.PARSE_GENERAL) {
-            if (isEventBlock) {
+            if (rootResult !== '') {
                 contentResult = Entry.TextCodingUtil.indent(contentResult);
-                result = rootResult + contentResult + '\n';
-            } else {
-                result = rootResult + contentResult + '\n';
             }
+
+            return (rootResult + contentResult).trim() + '\n';
         }
-        result = result.trim() + '\n';
-        return result;
     }
 
     Block(block, template) {
