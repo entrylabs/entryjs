@@ -140,7 +140,7 @@ Entry.FieldStatement = function(content, blockView, index) {
     p.requestAbsoluteCoordinate = function() {
         const { scale = 1 } = this._board || {};
         const pos = this._blockView.getAbsoluteCoordinate();
-        pos.x += this._blockView.x + this.x * scale;
+        pos.x += this.x * scale;
         pos.y += this.y * scale;
         return pos;
     };

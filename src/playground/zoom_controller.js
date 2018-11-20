@@ -142,7 +142,7 @@ Entry.ZoomController = class ZoomController {
         }
     }
 
-    setScale(scale = 1) {        
+    setScale(scale = 1) {
         this.toastText.textContent = `${scale * 100}%`;
         const { workspace } = this.board;
         workspace.setScale(scale);
@@ -162,7 +162,7 @@ Entry.ZoomController = class ZoomController {
             return;
         }
         var svgDom = this.board.svgDom;
-        this.x = svgDom.width() - (this.CONTROLLER_WIDTH + 8);
+        this.x = svgDom.width() - (this.CONTROLLER_WIDTH + 22.5);
         this.y = 8;
         this.toastX = (svgDom.width() - this.TOAST_WIDTH) / 2;
         this.toastY = 19;

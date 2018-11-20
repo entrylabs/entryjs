@@ -1847,12 +1847,12 @@ Entry.Utils.addBlockPattern = function(boardSvgDom, suffix) {
         patternTransform: 'translate(12, 0)',
         x: 0,
         y: 0,
-        width: 125,
-        height: 33,
+        width: 48,
+        height: 28,
         style: 'display: none',
     });
 
-    const imagePath = `${Entry.mediaFilePath}block_pattern_(order).png`;
+    const imagePath = `${Entry.mediaFilePath}block_pattern_(order).svg`;
     const order = '(order)';
     for (let i = 1; i < 5; i++) {
         pattern.elem('image', {
@@ -1860,8 +1860,8 @@ Entry.Utils.addBlockPattern = function(boardSvgDom, suffix) {
             href: imagePath.replace(order, i),
             x: 0,
             y: 0,
-            width: 125,
-            height: 33,
+            width: 48,
+            height: 28,
         });
     }
 

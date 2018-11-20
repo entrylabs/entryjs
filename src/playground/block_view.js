@@ -559,7 +559,7 @@ Entry.BlockView = class BlockView {
 
             let mouseEvent;
             if (workspaceMode === Entry.Workspace.MODE_VIMBOARD) {
-                vimBoardEvent(e, 'dragOver');
+                this.vimBoardEvent(e, 'dragOver');
             }
             if (e.originalEvent && e.originalEvent.touches) {
                 mouseEvent = e.originalEvent.touches[0];
@@ -811,6 +811,8 @@ Entry.BlockView = class BlockView {
 
     dominate() {
         this.block.getThread().view.dominate();
+        const board = this.getBoard();
+        board.scroller.resizeScrollBar.call(board.scroller);
     }
 
     getSvgRoot() {
@@ -929,7 +931,8 @@ Entry.BlockView = class BlockView {
             } else if (magneting === 'next') {
                 magnet = this.magnet.previous;
                 const dragHeight = dragBlock.getBelowHeight();
-                transform = `translate(${pos.scaleX + magnet.x},${pos.scaleY +
+                const nextX = _get(dragBlock, 'magnet.next.x');
+                transform = `translate(${pos.scaleX + magnet.x - nextX},${pos.scaleY +
                     magnet.y -
                     dragHeight})`;
             }
