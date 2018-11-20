@@ -31,8 +31,7 @@ Entry.BlockMenuScroller = function(board) {
 
     this._domHeight = 0;
     this._dResizeScrollBar = Entry.Utils.debounce(this.resizeScrollBar, 50);
-    if (Entry.windowResized)
-        Entry.windowResized.attach(this, this._dResizeScrollBar);
+    if (Entry.windowResized) Entry.windowResized.attach(this, this._dResizeScrollBar);
 };
 
 Entry.BlockMenuScroller.RADIUS = 7;

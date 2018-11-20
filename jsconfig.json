@@ -3,6 +3,11 @@
         "target": "ES6"
     },
     "exclude": [
+        "test",
+        "test_util",
+        "scripts",
+        "images",
+        "extern/blockly",
         "node_modules",
         "**/node_modules/*"
     ]

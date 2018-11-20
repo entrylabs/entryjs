@@ -5,30 +5,26 @@
 }
 
 .entryOverlayBoard {
-    background: rgba(180,180,180,0.6);
+    background: rgba(180, 180, 180, 0.6);
 }
 
 .boardScrollbar {
-    opacity: 0.4;
+    opacity: 1;
     cursor: move;
     -ms-touch-action: none;
+
+    .scrollbar {
+        &.vertical {
+            cursor: s-resize;
+        }
+        &.horizontal {
+            cursor: w-resize;
+        }
+    }
 }
 
 .boardScrollbar:hover {
     opacity: 0.6;
-}
-
-.entry-color-picker {
-    // width: 396px;
-    // height: 258px;
-    // background: #fff;
-    // opacity: 0.95;
-    // border-radius: 2px;  
-    // z-index: 1001;
-    // position: fixed;
-    // box-shadow: 0 1px 6px 0 rgba(0, 0, 0, 0.25);
-    // border: solid 1px #e2e2e2;
-    // overflow: auto;
 }
 
 .entryBoardWrapper {
@@ -74,67 +70,94 @@
     bottom: 0px;
     right: 0px;
     overflow: hidden;
-    .backgroundImage("entry_bg.svg");
+    .backgroundImage('entry_bg.svg');
 }
 
 .entryWorkspaceBoard.folding {
     z-index: 300;
-    border-left: solid 1px #C4C4B9;
+    border-left: solid 1px #c4c4b9;
     .animation-duration(0.7s);
     .animation-name(foldBoard);
     .animation-fill-mode(forwards);
 }
 
 @keyframes foldBoard {
-    from {}
-    to {left: 64px;}
+    from {
+    }
+    to {
+        left: 64px;
+    }
 }
 
 @-ms-keyframes foldBoard {
-    from {}
-    to {left: 64px;}
+    from {
+    }
+    to {
+        left: 64px;
+    }
 }
 
 @-moz-keyframes foldBoard {
-    from {}
-    to {left: 64px;}
+    from {
+    }
+    to {
+        left: 64px;
+    }
 }
 
 @-webkit-keyframes foldBoard {
-    from {}
-    to {left: 64px;}
+    from {
+    }
+    to {
+        left: 64px;
+    }
 }
 
 .entryWorkspaceBoard.foldOut {
-    z-index:300;
+    z-index: 300;
     .animation-duration(0.7s);
     .animation-name(foldOutBoard);
     .animation-fill-mode(forwards);
 }
 
 @keyframes foldOutBoard {
-    from {left: 64px;}
-    to {}
+    from {
+        left: 64px;
+    }
+    to {
+    }
 }
 
 @-o-keyframes foldOutBoard {
-    from {left: 64px;}
-    to {}
+    from {
+        left: 64px;
+    }
+    to {
+    }
 }
 
 @-ms-keyframes foldOutBoard {
-    from {left: 64px;}
-    to {}
+    from {
+        left: 64px;
+    }
+    to {
+    }
 }
 
 @-moz-keyframes foldOutBoard {
-    from {left: 64px;}
-    to {}
+    from {
+        left: 64px;
+    }
+    to {
+    }
 }
 
 @-webkit-keyframes foldOutBoard {
-    from {left: 64px;}
-    to {}
+    from {
+        left: 64px;
+    }
+    to {
+    }
 }
 
 #invisibleBoard {
