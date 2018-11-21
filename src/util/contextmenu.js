@@ -67,8 +67,6 @@ Entry.ContextMenu = {};
         parent.removeClass('entryRemove');
         this.visible = true;
         this.position(coordinate || Entry.mouseCoordinate);
-        console.log(coordinate);
-        const { x, y } = coordinate;
         this.mouseCoordinate = coordinate || Entry.mouseCoordinate;
     };
 
