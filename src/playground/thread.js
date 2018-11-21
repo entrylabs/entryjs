@@ -1,23 +1,23 @@
 'use strict';
 
-Entry.Thread = function(thread, code, parent) {
-    this.id = Entry.generateHash();
-    this._data = new Entry.Collection();
-    this._code = code;
-    this.changeEvent = new Entry.Event(this);
-    this.changeEvent.attach(this, this.handleChange);
-    this._event = null;
-    this.parent = parent ? parent : code;
+Entry.Thread = class Thread {
+    constructor(thread, code, parent) {
+        this.id = Entry.generateHash();
+        this._data = new Entry.Collection();
+        this._code = code;
+        this.changeEvent = new Entry.Event(this);
+        this.changeEvent.attach(this, this.handleChange);
+        this._event = null;
+        this.parent = parent ? parent : code;
 
-    this.load(thread);
-};
+        this.load(thread);
+    }
 
-(function(p) {
-    p.getId = function() {
+    getId() {
         return this.id;
-    };
+    }
 
-    p.load = function(thread, mode) {
+    load(thread, mode) {
         if (thread === undefined || thread === null) {
             thread = [];
         }
@@ -43,18 +43,18 @@ Entry.Thread = function(thread, code, parent) {
             this.createView(codeView.board, mode);
         }
         return this;
-    };
+    }
 
-    p.registerEvent = function(block, eventType) {
+    registerEvent(block, eventType) {
         this._event = eventType;
         this._code.registerEvent(block, eventType);
-    };
+    }
 
-    p.unregisterEvent = function(block, eventType) {
+    unregisterEvent(block, eventType) {
         this._code.unregisterEvent(block, eventType);
-    };
+    }
 
-    p.createView = function(board, mode) {
+    createView(board, mode) {
         if (!this.view) {
             this.view = new Entry.ThreadView(this, board);
         }
@@ -65,46 +65,46 @@ Entry.Thread = function(thread, code, parent) {
             }
             return view;
         });
-    };
+    }
 
-    p.destroyView = function() {
+    destroyView() {
         this.view = null;
         this._data.map((b) => {
             return b.destroyView();
         });
-    };
+    }
 
-    p.separate = function(block, count, index) {
+    separate(block, count, index) {
         if (!this._data.has(block.id)) {
             return;
         }
 
         this._code.createThread(this._data.splice(this._data.indexOf(block), count), index);
         this.changeEvent.notify();
-    };
+    }
 
-    p.cut = function(block) {
+    cut(block) {
         const splicedData = this._data.splice(this._data.indexOf(block));
         this.changeEvent.notify();
         return splicedData;
-    };
+    }
 
-    p.insertByBlock = function(block, newBlocks) {
+    insertByBlock(block, newBlocks) {
         const index = block ? this._data.indexOf(block) : -1;
         for (let i = 0; i < newBlocks.length; i++) {
             newBlocks[i].setThread(this);
         }
         this._data.splice(...[index + 1, 0].concat(newBlocks));
         this.changeEvent.notify();
-    };
+    }
 
-    p.insertToTop = function(newBlock) {
+    insertToTop(newBlock) {
         newBlock.setThread(this);
         this._data.unshift.apply(this._data, [newBlock]);
         this.changeEvent.notify();
-    };
+    }
 
-    p.clone = function(code, mode) {
+    clone(code, mode) {
         const newThread = new Entry.Thread([], code || this._code);
         return newThread.load(
             this.getBlocks().reduce((acc, block) => {
@@ -112,9 +112,9 @@ Entry.Thread = function(thread, code, parent) {
             }, []),
             mode
         );
-    };
+    }
 
-    p.toJSON = function(isNew, index = 0, excludeData, option) {
+    toJSON(isNew, index = 0, excludeData, option) {
         if (index instanceof Entry.Block) {
             index = this.indexOf(index);
         }
@@ -130,9 +130,9 @@ Entry.Thread = function(thread, code, parent) {
             }
         }
         return array;
-    };
+    }
 
-    p.destroy = function(animate, isNotForce) {
+    destroy(animate, isNotForce) {
         if (this.view) {
             this.view.destroy(animate);
         }
@@ -146,17 +146,17 @@ Entry.Thread = function(thread, code, parent) {
         if (!this._data.length) {
             this._code.destroyThread(this, false);
         }
-    };
+    }
 
-    p.getBlock = function(index) {
+    getBlock(index) {
         return this._data[index];
-    };
+    }
 
-    p.getBlocks = function() {
+    getBlocks() {
         return this._data.map(_.identity);
-    };
+    }
 
-    p.countBlock = function() {
+    countBlock() {
         return this.getBlocks().reduce((count, block) => {
             if (!block.type) {
                 return count;
@@ -168,48 +168,48 @@ Entry.Thread = function(thread, code, parent) {
                 return (count += statement.countBlock());
             }, count);
         }, 0);
-    };
+    }
 
-    p.handleChange = function() {
+    handleChange() {
         if (this._data.length === 0) {
             this.destroy();
         }
-    };
+    }
 
-    p.getCode = function() {
+    getCode() {
         return this._code;
-    };
+    }
 
-    p.setCode = function(code) {
+    setCode(code) {
         this._code = code;
-    };
+    }
 
-    p.spliceBlock = function(block) {
+    spliceBlock(block) {
         this._data.remove(block);
         this.changeEvent.notify();
-    };
+    }
 
-    p.getFirstBlock = function() {
+    getFirstBlock() {
         return this._data[0];
-    };
+    }
 
-    p.getPrevBlock = function(block) {
+    getPrevBlock(block) {
         return this._data.at(this._data.indexOf(block) - 1);
-    };
+    }
 
-    p.getNextBlock = function(block) {
+    getNextBlock(block) {
         return this._data.at(this._data.indexOf(block) + 1);
-    };
+    }
 
-    p.getLastBlock = function() {
+    getLastBlock() {
         return this._data.at(this._data.length - 1);
-    };
+    }
 
-    p.getRootBlock = function() {
+    getRootBlock() {
         return this._data.at(0);
-    };
+    }
 
-    p.hasBlockType = function(type) {
+    hasBlockType(type) {
         for (let i = 0; i < this._data.length; i++) {
             if (inspectBlock(this._data[i])) {
                 return true;
@@ -241,21 +241,21 @@ Entry.Thread = function(thread, code, parent) {
             }
             return false;
         }
-    };
+    }
 
-    p.getCount = function(startBlock) {
+    getCount(startBlock) {
         let result = this._data.length;
         if (startBlock) {
             result -= this._data.indexOf(startBlock);
         }
         return result;
-    };
+    }
 
-    p.indexOf = function(block) {
+    indexOf(block) {
         return this._data.indexOf(block);
-    };
+    }
 
-    p.pointer = function(pointer = [], block) {
+    pointer(pointer = [], block) {
         if (block) {
             pointer.unshift(this.indexOf(block));
         }
@@ -272,9 +272,9 @@ Entry.Thread = function(thread, code, parent) {
         }
 
         return parent.pointer(pointer);
-    };
+    }
 
-    p.getBlockList = function(excludePrimitive, type) {
+    getBlockList(excludePrimitive, type) {
         return _.chain(this._data)
             .map((block) => {
                 if (block.constructor !== Entry.Block) {
@@ -285,18 +285,18 @@ Entry.Thread = function(thread, code, parent) {
             .flatten()
             .compact()
             .value();
-    };
+    }
 
-    p.stringify = function(excludeData) {
+    stringify(excludeData) {
         return JSON.stringify(this.toJSON(undefined, undefined, excludeData));
-    };
+    }
 
-    p.isInOrigin = function() {
+    isInOrigin() {
         const block = this.getFirstBlock();
         return block && block.isInOrigin();
-    };
+    }
 
-    p.getDom = function(query) {
+    getDom(query) {
         const view = this.view;
 
         if (_.isEmpty(query)) {
@@ -309,13 +309,13 @@ Entry.Thread = function(thread, code, parent) {
         if (key === 'magnet') {
             return view.getMagnet('next');
         }
-    };
+    }
 
-    p.isParamBlockType = function() {
+    isParamBlockType() {
         return false;
-    };
+    }
 
-    p.isGlobal = function() {
+    isGlobal() {
         return this._code === this.parent;
-    };
-})(Entry.Thread.prototype);
+    }
+};
