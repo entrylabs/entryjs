@@ -13,14 +13,17 @@
 }
 
 .entryEngineWorkspace_w {
-    position: absolute;
-    left: 8px;
-    top: 47px;
+    position: relative;
     height: 225px;
     width: 270px;
     background-color: white;
     border: 1pt solid #d6e9f4;
     border-radius: 6px;
+}
+.entryEngineWorkspace_w:after {
+    display: block;
+    clear: both;
+    content: '';
 }
 
 .entryPopupWindow > .entryEngineWorkspace {

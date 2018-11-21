@@ -253,11 +253,14 @@
 .entryObjectSelectedImgWorkspace {
     position: absolute;
     width: 16px;
-    height: 40px;
     right: 0;
-    top: 20px;
+    top: 45px;
+    bottom: 0;
     cursor: col-resize;
     .backgroundImage("entry_scroll.png");
+    background-repeat: no-repeat;
+    background-size: 6px auto;
+    background-position: 50% 50%;
     z-index: 250;
 }
 
@@ -272,8 +275,7 @@
 }
 
 .entryObjectCoordinateWorkspace{
-    float: left;
-    width: 100%;
+    display: block;
     font-size: 10px;
     font-weight: 600;
     color: #2c313d;
@@ -366,10 +368,10 @@
     position: relative;
     display: none;
     width: 100%;
-    height: 145px;
-    padding: 18px 8px 0;
+    padding: 18px 8px 7px;
     border-top: 1px solid #d6e9f4;
     background-color: #d6e9f4;
+    clear: both;
 }
 
 .collapsed .entryObjectRotationWrapperWorkspace {
@@ -385,11 +387,8 @@
 }
 
 .rotationMethodWrapper {
-    position: absolute;
-    left: 0px;
-    top: 98px;
-    right: 0;
-    padding: 7px 8px 0;
+    margin-top: 16px;
+    padding-top: 7px;
     border-top: 1px solid #fff;
 }
 
@@ -406,9 +405,7 @@
 }
 
 .entryObjectRotateLabelWrapperWorkspace {
-    position: absolute;
-    left: 8px;
-    top: 120px;
+    margin-top: 16px;
     font-size: 10px;
     font-weight: 600;
     color: #2c313d;
@@ -432,9 +429,10 @@
 .entryObjectRotateModeWorkspace {
     cursor: pointer;
     display: inline-block;
-    width: 22px;
-    height: 22px;
+    width: 30px;
+    height: 30px;
     vertical-align: top;
+    background-size: 30px auto;
 }
 
 .propertyTabhelper {

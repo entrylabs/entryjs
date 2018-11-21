@@ -1,7 +1,7 @@
 .entryWorkspaceBlockMenu {
-    background-color: #e5e5e5;
+    background-color: #fff;
     position: absolute;
-    top: 34px;
+    top: 79px;
     bottom: 0px;
 }
 
@@ -13,20 +13,33 @@
 
 
 .entryCategoryListWorkspace {
-    min-width: 64px;
+    min-width: 58px;
     height: 100%;
     display: inline-block;
-    background-color: #f5f5f5;
+    background-color: #ecf8ff;
     list-style-type: none;
     margin: 0;
     padding: 0;
+}
+.entryCategoryListWorkspace li {
+    margin-top: -1px;
+}
+.entryCategoryListWorkspace li:first-child {
+    margin-top: 0;
+}
+.entrySelectedCategory {
+    position: relative;
+    z-index: 5;
 }
 
 .blockMenuContainer {
     display: inline-block;
     vertical-align: top;
-    width: 200px;
+    width: 194px;
+    margin-left:2px;
     height: 100%;
+    background-color: #ecf8ff;
+    border:1px solid #d6e9f4;
 }
 
 .blockMenu {
@@ -41,60 +54,18 @@
 }
 
 .entryCategoryElementWorkspace {
-    clear: both;
-    padding-top: 38px;
-    min-width: 64px;
+    padding: 35px 0 5px;
+    min-width: 58px;
     text-align: center;
     background-color: #edf5f7;
-    font-size: 13px;
-    color: #474747;
-    float: left;
-    border-bottom: 1px solid #a6cafb;
+    font-size: 12px;
+    color: #595959;
+    border: 1px solid #d6e9f4;
     cursor: pointer;
     font-family: nanumBarunBold !important;
-}
-
-@media screen and (max-height: 10000px) {
-    .entryCategoryElementWorkspace {
-        height: 61px;
-        background-position: 50% 6px;
-        padding-top: 38px;
-    }
-}
-
-@media screen and (max-height: 880px) {
-    .entryCategoryElementWorkspace {
-        height: 56px;
-        background-position: 50% 4px;
-        padding-top: 34px;
-    }
-}
-
-@media screen and (max-height: 810px) {
-    .entryCategoryElementWorkspace {
-        height: 50px;
-        background-position: 50% 2px;
-        padding-top: 30px;
-    }
-}
-
-@media screen and (max-height: 740px) {
-    .entryCategoryElementWorkspace {
-        height: 42px;
-        background-position: 50% 1px;
-        background-size: 35px;
-        padding-top: 23px;
-    }
-
-}
-
-@media screen and (max-height: 640px) {
-    .entryCategoryElementWorkspace {
-        height: 36px;
-        background-position: 50% 1px;
-        background-size: 30px;
-        padding-top: 18px;
-    }
+    line-height: 14px;
+    background-size: 32px auto;
+    background-position: 50% 4px;
 }
 
 .entryCategoryElementPhone {
@@ -120,11 +91,6 @@
     height: 4000px;
 }
 
-.entrySelectedCategory {
-    margin: 0;
-    background-color: #e5e5e5;
-}
-
 .entryCategoryWorkspace {
     width: 74px;
     height: 100%;
@@ -143,14 +109,16 @@
 }
 
 #entryCategorymoving {
-    /*border-right: 4px solid #A751E3;*/
     .backgroundImage("movement.png");
     background-repeat: no-repeat;
 }
 
 .entrySelectedCategory#entryCategorymoving {
-    /*border-left: 4px solid #A751E3;*/
-    border-right: none;
+    .backgroundImage("movement_on.png");
+    background-repeat: no-repeat;
+    background-color: #bf63ff;
+    border-color: #bf63ff;
+    color: #fff;
 }
 
 #entryCategorylooks {
@@ -160,18 +128,24 @@
 }
 
 .entrySelectedCategory#entryCategorylooks {
-    /*border-left: 4px solid #EC4466;*/
-    border-right: none;
+    .backgroundImage("looks_on.png");
+    background-repeat: no-repeat;
+    background-color: #ff5174;
+    border-color: #ff5174;
+    color: #fff;
 }
 
 #entryCategorybrush {
-    /*border-right: 4px solid #FF9E20;*/
     .backgroundImage("brush.png");
     background-repeat: no-repeat;
 }
 
 .entrySelectedCategory#entryCategorybrush {
-    border-right: none;
+    .backgroundImage("brush_on.png");
+    background-repeat: no-repeat;
+    background-color: #fc7e01;
+    border-color: #fc7e01;
+    color: #fff;
 }
 
 #entryCategorytext {
@@ -189,16 +163,22 @@
 }
 
 .entrySelectedCategory#entryCategorysound {
-    border-right: none;
+    .backgroundImage("sound_on.png");
+    background-repeat: no-repeat;
+    background-color: #82d214;
+    border-color: #82d214;
+    color: #fff;
 }
 
 #entryCategorystart {
     .backgroundImage("start.png");
     background-repeat: no-repeat;
 }
-
 .entrySelectedCategory#entryCategorystart {
-    border-right: none;
+    .backgroundImage("start_on.png");
+    background-color: #10d35e;
+    border-color: #10d35e;
+    color: #fff;
 }
 
 #entryCategoryflow {
@@ -207,7 +187,10 @@
 }
 
 .entrySelectedCategory#entryCategoryflow {
-    border-right: none;
+    .backgroundImage("flow_on.png");
+    background-color: #31c1ec;
+    border-color: #31c1ec;
+    color: #fff;
 }
 
 #entryCategoryjudgement {
@@ -216,7 +199,10 @@
 }
 
 .entrySelectedCategory#entryCategoryjudgement {
-    border-right: none;
+    .backgroundImage("judgement_on.png");
+    background-color: #7e8efe;
+    border-color: #7e8efe;
+    color: #fff;
 }
 
 #entryCategorycalc {
@@ -225,7 +211,10 @@
 }
 
 .entrySelectedCategory#entryCategorycalc {
-    border-right: none;
+    .backgroundImage("calc_on.png");
+    background-color: #feb71a;
+    border-color: #feb71a;
+    color: #fff;
 }
 
 #entryCategoryvariable {
@@ -234,7 +223,10 @@
 }
 
 .entrySelectedCategory#entryCategoryvariable {
-    border-right: none;
+    .backgroundImage("variable_on.png");
+    background-color: #f57df1;
+    border-color: #f57df1;
+    color: #fff;
 }
 
 #entryCategoryfunc {
@@ -243,7 +235,10 @@
 }
 
 .entrySelectedCategory#entryCategoryfunc {
-    border-right: none;
+    .backgroundImage("function_on.png");
+    background-color: #de6e22;
+    border-color: #de6e22;
+    color: #fff;
 }
 
 #entryCategoryexpansion {
@@ -252,7 +247,10 @@
 }
 
 .entrySelectedCategory#entryCategoryexpansion {
-    border-right: none;
+    .backgroundImage("expansion_on.png");
+    background-color: #ff8888;
+    border-color: #ff8888;
+    color: #fff;
 }
 
 #entryCategoryscene {
@@ -272,60 +270,58 @@
 }
 
 .entrySelectedCategory#entryCategoryarduino {
-    border-right: none;
+    .backgroundImage("arduino_on.png");
+    background-color: #00cfca;
+    border-color: #00cfca;
+    color: #fff;
 }
 
 #entryCategoryhw_sensor {
-    &:not(.entrySelectedCategory){
-        background-color: #C7DCDD;
-    }
-    .backgroundImage("others.png");
+    .backgroundImage("sensor.png");
     background-repeat: no-repeat;
-    border-bottom: #5494A3 solid 1px;
 }
 
 .entrySelectedCategory#entryCategoryhw_sensor {
-    border-right: none;
+    .backgroundImage("sensor_on.png");
+    background-color: #00cfca;
+    border-color: #00cfca;
+    color: #fff;
 }
 
 #entryCategoryhw_led {
-    &:not(.entrySelectedCategory){
-        background-color: #C7DCDD;
-    }
     font-size: 10px;
     .backgroundImage("diode.png");
-    background-repeat: no-repeat;
-    border-bottom: #5494A3 solid 1px;
 }
 
 .entrySelectedCategory#entryCategoryhw_led {
-    border-right: none;
+    .backgroundImage("diode_on.png");
+    background-color: #00cfca;
+    border-color: #00cfca;
+    color: #fff;
 }
 
 #entryCategoryhw_motor {
-    &:not(.entrySelectedCategory){
-        background-color: #C7DCDD;
-    }
     .backgroundImage("dcmotor.png");
     background-repeat: no-repeat;
-    border-bottom: #5494A3 solid 1px;
 }
 
 .entrySelectedCategory#entryCategoryhw_motor {
-    border-right: none;
+    .backgroundImage("dcmotor_on.png");
+    background-color: #00cfca;
+    border-color: #00cfca;
+    color: #fff;
 }
 
 #entryCategoryhw_melody {
-    &:not(.entrySelectedCategory){
-        background-color: #C7DCDD;
-    }
     .backgroundImage("melody.png");
     background-repeat: no-repeat;
-    border-bottom: #5494A3 solid 1px;
 }
 
 .entrySelectedCategory#entryCategoryhw_melody {
-    border-right: none;
+    .backgroundImage("melody_on.png");
+    background-color: #00cfca;
+    border-color: #00cfca;
+    color: #fff;
 }
 
 #entryCategoryhw_robot {

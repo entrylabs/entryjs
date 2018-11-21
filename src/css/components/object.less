@@ -163,14 +163,17 @@ input.entryObjectNameWorkspace:-moz-read-only {
 }
 
 .entryObjectSelectedImgWorkspace {
-    float: left;
     position: absolute;
-    width: 14px;
-    height: 26px;
+    width: 16px;
     right: 0;
-    top: 20px;
+    top: 45px;
+    bottom: 0;
     cursor: col-resize;
     .backgroundImage("entry_scroll.png");
+    background-repeat: no-repeat;
+    background-size: 6px auto;
+    background-position: 50% 50%;
+    z-index: 250;
 }
 
 .selectedObject .entryObjectSelectedImgWorkspace {
@@ -185,8 +188,7 @@ input.entryObjectNameWorkspace:-moz-read-only {
 }
 
 .entryObjectCoordinateWorkspace{
-    float: left;
-    width: 100%;
+    display: block;
     font-size: 10px;
     font-weight: 600;
     color: #2c313d;
@@ -283,10 +285,10 @@ input.entryObjectNameWorkspace:-moz-read-only {
     position: relative;
     display: none;
     width: 100%;
-    height: 145px;
-    padding: 18px 8px 0;
+    padding: 18px 8px 7px;
     border-top: 1px solid #d6e9f4;
     background-color: #d6e9f4;
+    clear: both;
 }
 
 .collapsed .entryObjectRotationWrapperWorkspace {
@@ -302,10 +304,7 @@ input.entryObjectNameWorkspace:-moz-read-only {
 }
 
 .rotationMethodWrapper {
-    position: absolute;
-    left: 0px;
-    top: 98px;
-    right: 0;
+    margin: 16px -8px 0;
     padding: 7px 8px 0;
     border-top: 1px solid #fff;
 }
@@ -326,9 +325,7 @@ input.entryObjectNameWorkspace:-moz-read-only {
 }
 
 .entryObjectRotateLabelWrapperWorkspace {
-    position: absolute;
-    left: 8px;
-    top: 120px;
+    margin-top: 16px;
     font-size: 10px;
     font-weight: 600;
     color: #2c313d;
@@ -352,13 +349,14 @@ input.entryObjectNameWorkspace:-moz-read-only {
 .entryObjectRotateModeWorkspace {
     cursor: pointer;
     display: inline-block;
-    width: 22px;
-    height: 22px;
+    width: 30px;
+    height: 30px;
     vertical-align: top;
+    background-size: 30px auto;
 }
 
 .entryObjectRotateModeAWorkspace {
-    margin-left: 6px;
+    margin-left: 12px;
     .backgroundImage("layers_icon_rotate01_nor.png");
 }
 
@@ -368,6 +366,7 @@ input.entryObjectNameWorkspace:-moz-read-only {
 
 
 .entryObjectRotateModeBWorkspace {
+    margin-left: 12px;
     .backgroundImage("layers_icon_rotate02_nor.png");
 }
 
@@ -376,6 +375,7 @@ input.entryObjectNameWorkspace:-moz-read-only {
 }
 
 .entryObjectRotateModeCWorkspace {
+    margin-left: 12px;
     .backgroundImage("layers_icon_rotate03_nor.png");
 }
 

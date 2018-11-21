@@ -120,13 +120,10 @@
 }
 
 .entryPlaygroundWorkspace {
-    position: absolute;
-    top: 47px;
-    bottom: 0px;
-    left: 294px;
-    right: 0px;
+    position: relative;
+    overflow: hidden;
+    height: 100%;
     background-color: #fff;
-    // overflow: hidden;
 }
 
 .entryPlaygroundPhone {
@@ -137,22 +134,22 @@
 
 .entryPlaygroundResizeWorkspace {
     position: absolute;
-    top: 45%;
-    height: 28px;
-    width: 11px;
-    left: 272px;
+    top: 50%;
+    height: 40px;
+    width: 16px;
+    left: 254px;
+    margin-top: -20px;
     cursor: ew-resize;
-    border: solid 1px #afafaf;
     border-left: none;
     z-index: 250;
     .backgroundImage("entry_scroll_02.png");
+    background-size: 16px auto;
 }
 
 .entryPlaygroundTabWorkspace {
     position: absolute;
     left: 0;
-    top: 0;
-    width: 100%;
+    top: 45px;
     background-color: #fff;
 }
 
@@ -348,7 +345,7 @@
    right: 0;
    bottom: 0;
    background-color: #ececec;
-   top: 47px;
+   top: 79px;
    margin-left: 0;
 }
 
@@ -573,7 +570,7 @@
 
 .entryPlaygroundSoundWorkspace {
     position: absolute;
-    top: 47px;
+    top: 79px;
     margin-left: 0;
     height: 100%;
     background-color: #ececec;
