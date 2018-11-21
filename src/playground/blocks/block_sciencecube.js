@@ -79,7 +79,7 @@ Entry.sciencecube.getBlocks = () => {
                 Entry.hw.update();
                 if(Entry.sciencecube.value["tempData"])
                     {
-                        return "온도 " + Entry.sciencecube.value["tempData"].toFixed(2) + " ℃";
+                        return Entry.sciencecube.value["tempData"].toFixed(2);
                     }
                     else return "현재 센서와 다릅니다. 다시 연결해주세요.";
             },
@@ -109,7 +109,7 @@ Entry.sciencecube.getBlocks = () => {
                 Entry.hw.update();
                 if(Entry.sciencecube.value["currentData"])
                     {
-                        return "전류 " + Entry.sciencecube.value["currentData"].toFixed(2) + " A";
+                        return Entry.sciencecube.value["currentData"].toFixed(2);
                     }
                     else return "현재 센서와 다릅니다. 다시 연결해주세요.";
             }, 
@@ -139,7 +139,7 @@ Entry.sciencecube.getBlocks = () => {
                 Entry.hw.update();
                 if(Entry.sciencecube.value["pressueData"])
                     {
-                        return "압력 " + Entry.sciencecube.value["pressueData"].toFixed(2) + " hPa";
+                        return Entry.sciencecube.value["pressueData"].toFixed(2);
                     }
                     else return "현재 센서와 다릅니다. 다시 연결해주세요.";
             },
@@ -169,7 +169,7 @@ Entry.sciencecube.getBlocks = () => {
                 Entry.hw.update();
                 if(Entry.sciencecube.value["voltageData"])
                     {
-                        return "전압 " + Entry.sciencecube.value["voltageData"].toFixed(2) + " V";
+                        return Entry.sciencecube.value["voltageData"].toFixed(2);
                     }
                     else return "현재 센서와 다릅니다. 다시 연결해주세요.";
             }, 
