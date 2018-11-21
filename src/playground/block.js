@@ -335,7 +335,6 @@ Entry.Block = class Block {
             json.comment = this._comment.toJSON();
         }
 
-        console.log(json);
         return Object.assign(
             _.omit(json, [...jsonBlackList, ...excludeData]),
             _.pick(this, ['x', 'y', 'movable', 'deletable', 'emphasized', 'readOnly'])

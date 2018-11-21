@@ -547,7 +547,7 @@ Entry.Board = class Board {
 
         for (let i = 0; i < blocks.length; i++) {
             const block = blocks[i];
-            const blockView = block.view || { dragInstance: true };
+            const blockView = block.view;
             blockView.zIndex = zIndex;
             if (blockView.dragInstance) {
                 break;
@@ -572,34 +572,34 @@ Entry.Board = class Board {
             }
             if (block.statements) {
                 zIndex += 0.01;
-            }
-            for (let j = 0; j < block.statements.length; j++) {
-                const thread = block.statements[j];
-                const statement = block.view._statements[j];
-                statement.zIndex = zIndex;
-                statement.absX = cursorX + statement.x * this.scale;
-                metaData.push({
-                    point: statement.y + cursorY - 30,
-                    endPoint: statement.y + cursorY,
-                    startBlock: statement,
-                    blocks: [],
-                });
-                metaData.push({
-                    point: statement.y + cursorY + statement.height,
-                    blocks: [],
-                });
-                zIndex += 0.01;
-                statementBlocks = statementBlocks.concat(
-                    this._getNextMagnets(
-                        thread,
-                        zIndex,
-                        {
-                            x: statement.x * this.scale + cursorX,
-                            y: statement.y + cursorY,
-                        },
-                        targetType
-                    )
-                );
+                for (let j = 0; j < block.statements.length; j++) {
+                    const thread = block.statements[j];
+                    const statement = block.view._statements[j];
+                    statement.zIndex = zIndex;
+                    statement.absX = cursorX + statement.x * this.scale;
+                    metaData.push({
+                        point: statement.y + cursorY - 30,
+                        endPoint: statement.y + cursorY,
+                        startBlock: statement,
+                        blocks: [],
+                    });
+                    metaData.push({
+                        point: statement.y + cursorY + statement.height,
+                        blocks: [],
+                    });
+                    zIndex += 0.01;
+                    statementBlocks = statementBlocks.concat(
+                        this._getNextMagnets(
+                            thread,
+                            zIndex,
+                            {
+                                x: statement.x * this.scale + cursorX,
+                                y: statement.y + cursorY,
+                            },
+                            targetType
+                        )
+                    );
+                }
             }
             if (blockView.magnet.next) {
                 cursorY += blockView.magnet.next.y;
@@ -617,7 +617,7 @@ Entry.Board = class Board {
         let cursorY = offset.y;
 
         const block = blocks[0];
-        const blockView = block.view || { dragInstance: true };
+        const blockView = block.view;
         blockView.zIndex = zIndex;
         if (blockView.dragInstance) {
             return [];

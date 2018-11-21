@@ -48,6 +48,7 @@ Entry.Comment = class Comment {
             'parentHeight',
             'isOpened',
         ]);
+        this.magnet = {};
     }
 
     get block() {
@@ -60,6 +61,10 @@ Entry.Comment = class Comment {
 
     get blockView() {
         return this._blockView;
+    }
+
+    get view() {
+        return this;
     }
 
     get defaultLineLength() {
@@ -364,7 +369,7 @@ Entry.Comment = class Comment {
     }
 
     moveBy(x, y) {
-        return this.moveTo(this.x + x, this.y + y);
+        return this.moveTo(this.x + x / this.scale, this.y + y / this.scale);
     }
 
     resize(x, y) {
@@ -522,8 +527,8 @@ Entry.Comment = class Comment {
                 this.set({ visible: false });
             }
             this.moveBy(
-                (mouseEvent.pageX - this.dragInstance.offsetX) / this.scale,
-                (mouseEvent.pageY - this.dragInstance.offsetY) / this.scale
+                mouseEvent.pageX - this.dragInstance.offsetX,
+                mouseEvent.pageY - this.dragInstance.offsetY
             );
 
             this.dragInstance.set({

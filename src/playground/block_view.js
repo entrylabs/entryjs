@@ -444,11 +444,9 @@ Entry.BlockView = class BlockView {
         }
     }
 
-    _moveBy(x, y, animate, doNotUpdatePos) {
+    moveBy(x, y, animate, doNotUpdatePos) {
         return this._moveTo(this.x + x, this.y + y, animate, doNotUpdatePos);
     }
-
-    moveBy = this._moveBy;
 
     _addControl() {
         this._mouseEnable = true;
@@ -601,7 +599,7 @@ Entry.BlockView = class BlockView {
                     }
 
                     const dragInstance = blockView.dragInstance;
-                    blockView._moveBy(
+                    blockView.moveBy(
                         mouseEvent.pageX - dragInstance.offsetX,
                         mouseEvent.pageY - dragInstance.offsetY,
                         false,
@@ -1070,11 +1068,11 @@ Entry.BlockView = class BlockView {
             window.setTimeout(function() {
                 //only when position not changed
                 if (oldX === that.x && oldY === that.y) {
-                    that._moveBy(distance, distance, false);
+                    that.moveBy(distance, distance, false);
                 }
             }, delay);
         } else {
-            that._moveBy(distance, distance, false);
+            that.moveBy(distance, distance, false);
         }
     }
 
