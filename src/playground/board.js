@@ -1086,6 +1086,7 @@ Entry.Board = class Board {
 
     _initContextOptions() {
         const that = this;
+        const { x, y } = this.offset();
         this._contextOptions = [
             {
                 activated: true,
@@ -1157,7 +1158,11 @@ Entry.Board = class Board {
                     callback() {
                         Entry.do(
                             'createCommentBlock',
-                            { id: Entry.Utils.generateId() },
+                            {
+                                id: Entry.Utils.generateId(),
+                                x: Entry.ContextMenu.mouseCoordinate.x - x,
+                                y: Entry.ContextMenu.mouseCoordinate.y - y,
+                            },
                             undefined,
                             that
                         );
