@@ -3,6 +3,8 @@
  */
 'use strict';
 
+import _includes from 'lodash/includes';
+
 Entry.BlockToPyParser = class {
     constructor() {
         this._type = 'BlockToPyParser';
@@ -65,7 +67,6 @@ Entry.BlockToPyParser = class {
         if (!block || !(block instanceof Entry.Block)) return '';
         !block._schema && block.loadSchema();
 
-        let result = '';
         const results = [];
         let syntaxObj, syntax;
 
@@ -95,86 +96,77 @@ Entry.BlockToPyParser = class {
         }
 
         const _blockTokens = syntax.split(/[\r\n]/);
-
         const _blockParamRegex = /%\d/gim;
         const _blockStatementRegex = /\$\d/gim;
 
         _blockTokens.forEach((token) => {
             const paramsTemplate = token.match(_blockParamRegex);
             const statements = token.match(_blockStatementRegex);
+            let resultTextCode = '';
 
             // %1 과 같은 템플릿 값이 있는 경우
             if (paramsTemplate) {
-                const paramsValue = paramsTemplate.map((template) => {
-                    const [, templateIndex] = template.split('%');
+                const paramsValue = [];
+                paramsTemplate.forEach((template) => {
+                    const [, index] = template.split('%');
 
-                    if (templateIndex) {
-                        return this._getParamsValue(templateIndex, block);
+                    if (index) {
+                        paramsValue[index] = this._getParamsValue(index, block);
                     }
-                    return '';
                 });
 
-                results.push(
-                    token.replace(/%(\d)/gim, (_, groupMatch) => {
-                        return paramsValue[groupMatch - 1];
-                    })
-                );
+                resultTextCode += token.replace(/%(\d)/gim, (_, groupMatch) => paramsValue[groupMatch]);
             }
 
             // $1 과 같이 statement 를 포함하는 경우
             if (statements) {
-                statements.forEach((_, index) => {
-                    results.push(Entry.TextCodingUtil.indent(
-                        this.Thread(block.statements[index])
-                    ));
+                statements.forEach((value) => {
+                    const [, index] = value.split('$');
+                    resultTextCode += Entry.TextCodingUtil.indent(
+                        this.Thread(block.statements[index - 1])
+                    );
                 });
             }
 
+            // 일반 블록 처리
             if (!statements && !paramsTemplate) {
-                results.push(token);
+                resultTextCode += token;
             }
+
+            // 특수 블록 처리
+            // TODO 이와 같은 처리는 블록에 정보가 있고, 정보에 따라 처리해야 한다.
+            if (syntaxObj) {
+                switch (syntaxObj.key) {
+                    case 'repeat_while_true':
+                        resultTextCode = Entry.TextCodingUtil.assembleRepeatWhileTrueBlock(block, resultTextCode);
+                        break;
+                    case 'repeat_basic':
+                        const forStmtTokens = resultTextCode.split(' ');
+
+                        if (_includes(forStmtTokens, 'for', 'i', 'in')) {
+                            forStmtTokens[1] = Entry.TextCodingUtil.generateForStmtIndex(this._forIdCharIndex++);
+                            resultTextCode = forStmtTokens.join(' ');
+                        }
+                        break;
+                    case 'substring':
+                        // "안녕 엔트리"[1:5] -> "안녕 엔트리", [1:5]
+                        const tokens = resultTextCode.split(/(?=\[)/);
+                        if (tokens.length === 2 && Entry.Utils.isNumber(tokens[0])) {
+                            tokens[0] = `"${tokens[0]}"`;
+                        }
+                        resultTextCode = tokens.join('');
+                        console.log(resultTextCode);
+                        break;
+                }
+            }
+
+            // 코멘트 처리
+            if (!statements && block._comment) {
+                resultTextCode += ` #${block._comment.data.value}`;
+            }
+
+            results.push(resultTextCode);
         });
-
-/*        const blockReg = /(%.)/im;
-        const statementReg = /(\$.)/im;
-        const blockTokens = syntax.split(blockReg);
-
-        for (let i = 0; i < blockTokens.length; i++) {
-            let blockToken = blockTokens[i];
-            if (blockToken.length === 0) continue;
-            if (blockToken === '% ') {
-                result += blockToken;
-                continue;
-            }
-            if (blockReg.test(blockToken)) {
-                const blockParamIndex = blockToken.split('%')[1];
-                result += this._getParamsValue(blockParamIndex, block);
-            } else if (statementReg.test(blockToken)) {
-                const statements = blockToken.split(statementReg);
-                for (let j = 0; j < statements.length; j++) {
-                    const statementToken = statements[j];
-                    if (statementToken.length === 0) continue;
-                    if (statementReg.test(statementToken)) {
-                        const index = Number(statementToken.split('$')[1]) - 1;
-                        result += Entry.TextCodingUtil.indent(
-                            this.Thread(block.statements[index])
-                        );
-                    } else result += statementToken;
-                }
-            } else {
-                TODO 여기를 아직 처리안했음, 반복의 반복 & substring
-                if (syntaxObj && syntaxObj.key === 'repeat_basic' && i === 0) {
-                    const forStmtTokens = blockToken.split(' ');
-                    forStmtTokens[1] = Entry.TextCodingUtil.generateForStmtIndex(this._forIdCharIndex++);
-                    blockToken = forStmtTokens.join(' ');
-                }
-                if (syntaxObj && syntaxObj.key === 'substring' && i === 2 && Entry.Utils.isNumber(result)) {
-                    result = '"' + result + '"';
-                }
-
-                result += blockToken;
-            }
-        }*/
 
         return results.join('\n');
     }
@@ -246,10 +238,6 @@ Entry.BlockToPyParser = class {
                         result += '"' + param + '"';
                     } else {
                         result += param;
-                    }
-
-                    if (syntaxObj && syntaxObj.key === 'repeat_while_true') {
-                        result = Entry.TextCodingUtil.assembleRepeatWhileTrueBlock(block, result);
                     }
 
                     break;
