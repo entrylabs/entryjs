@@ -178,6 +178,7 @@ Entry.ProboConnect.getBlocks = function () {
     return {
         connect_remote_input: {
             color: '#00979D',
+            fontColor:'#ffffff',
             skeleton: 'basic_boolean_field',
             params: [
                 {
@@ -223,6 +224,7 @@ Entry.ProboConnect.getBlocks = function () {
         },
         connect_digital_input: {
             color: '#00979D',
+            fontColor:'#ffffff',
             skeleton: 'basic_boolean_field',
             params: [
                 {
@@ -264,7 +266,7 @@ Entry.ProboConnect.getBlocks = function () {
             func: function (sprite, script) {
                 const port = script.getStringField("PORT", script);
                 var rt = false;
-                    
+
                 if(port == "FEA1" || port == "FEA2" || port == "FEA3" || port == "FEA4" ||
                     port == "REA1" || port == "REA2" || port == "REA3" || port == "REA4" ||
                     port == "BEA1" || port == "BEA2" || port == "BEA3" || port == "BEA4"){
@@ -280,12 +282,13 @@ Entry.ProboConnect.getBlocks = function () {
                 }
                 else
                     rt = (Entry.hw.portData.InputData.Digital[port] == 1)? true : false;
-                    
+
                 return rt;
             },
         },
         connect_analog_input: {
             color: '#00979D',
+            fontColor:'#ffffff',
             skeleton: 'basic_string_field',
             params: [
                 {
@@ -325,6 +328,7 @@ Entry.ProboConnect.getBlocks = function () {
         },
         connect_value_mapping: {
             color: '#00979D',
+            fontColor:'#ffffff',
             skeleton: 'basic_string_field',
             params: [
                 { type: "Block", accept: "string" },
@@ -394,6 +398,7 @@ Entry.ProboConnect.getBlocks = function () {
         },
         connect_color_input_b: {
             color: '#00979D',
+            fontColor:'#ffffff',
             skeleton: 'basic_boolean_field',
             params: [
                 {
@@ -445,6 +450,7 @@ Entry.ProboConnect.getBlocks = function () {
         },
         connect_color_input_r: {
             color: '#00979D',
+            fontColor:'#ffffff',
             skeleton: 'basic_string_field',
             params: [
                 {
@@ -499,6 +505,7 @@ Entry.ProboConnect.getBlocks = function () {
         },
         connect_infinite_reset: {
             color: '#00979D',
+            fontColor:'#ffffff',
             skeleton: 'basic',
             params: [
                 {
@@ -540,6 +547,7 @@ Entry.ProboConnect.getBlocks = function () {
         },
         connect_infinite_transform_input: {
             color: '#00979D',
+            fontColor:'#ffffff',
             skeleton: 'basic_string_field',
             params: [
                 {
@@ -602,6 +610,7 @@ Entry.ProboConnect.getBlocks = function () {
         },
         connect_infinite_mm_diameter: {
             color: '#00979D',
+            fontColor:'#ffffff',
             skeleton: 'basic_string_field',
             params: [
                 {
@@ -650,6 +659,7 @@ Entry.ProboConnect.getBlocks = function () {
         //============================================ output =====================================================
         connect_senser_setting: {
             color: '#00979D',
+            fontColor:'#ffffff',
             skeleton: 'basic',
             params: [
                 {
@@ -733,6 +743,7 @@ Entry.ProboConnect.getBlocks = function () {
         },
         connect_port_output: {
             color: '#00979D',
+            fontColor:'#ffffff',
             skeleton: 'basic',
             params: [
                 {
@@ -784,6 +795,7 @@ Entry.ProboConnect.getBlocks = function () {
         },
         connect_servo_output: {
             color: '#00979D',
+            fontColor:'#ffffff',
             skeleton: 'basic',
             params: [
                 {
@@ -830,6 +842,7 @@ Entry.ProboConnect.getBlocks = function () {
         },
         connect_dc_output: {
             color: '#00979D',
+            fontColor:'#ffffff',
             skeleton: 'basic',
             params: [
                 {
@@ -876,6 +889,7 @@ Entry.ProboConnect.getBlocks = function () {
         },
         connect_mel_sec_output: {
             color: '#00979D',
+            fontColor:'#ffffff',
             skeleton: 'basic',
             params: [
                 {
@@ -952,6 +966,7 @@ Entry.ProboConnect.getBlocks = function () {
         },
         connect_melody_output: {
             color: '#00979D',
+            fontColor:'#ffffff',
             skeleton: 'basic',
             params: [
                 {
@@ -998,6 +1013,7 @@ Entry.ProboConnect.getBlocks = function () {
         },
         connect_melody_off: {
             color: '#00979D',
+            fontColor:'#ffffff',
             skeleton: 'basic',
             params: [
                 {
@@ -1021,6 +1037,7 @@ Entry.ProboConnect.getBlocks = function () {
         },
         connect_fnd_output: {
             color: '#00979D',
+            fontColor:'#ffffff',
             skeleton: 'basic',
             params: [
                 {
@@ -1052,6 +1069,7 @@ Entry.ProboConnect.getBlocks = function () {
         },
         connect_fnd_off: {
             color: '#00979D',
+            fontColor:'#ffffff',
             skeleton: 'basic',
             params: [
                 {
@@ -1076,6 +1094,7 @@ Entry.ProboConnect.getBlocks = function () {
         //============================================ EEPROM =====================================================
         connect_eeprom_buffset: {
             color: '#00979D',
+            fontColor:'#ffffff',
             skeleton: 'basic',
             params: [
                 {
@@ -1124,7 +1143,7 @@ Entry.ProboConnect.getBlocks = function () {
                 } else {
                     Entry.ProboConnect.EEPROM.EEPROM_Buff = (Entry.hw.portData.InputData.EEPROM.EEPR2 << 8) + Entry.hw.portData.InputData.EEPROM.EEPR1;
                     Entry.hw.sendQueue["EEPR4"] = 0;
-                    
+
                     delete script.timeFlag;
                     delete script.isStart;
                     Entry.engine.isContinue = false;
@@ -1134,6 +1153,7 @@ Entry.ProboConnect.getBlocks = function () {
         },
         connect_buff_read: {
             color: '#00979D',
+            fontColor:'#ffffff',
             skeleton: 'basic_string_field',
             def: {
                 type: "connect_buff_read"
@@ -1151,6 +1171,7 @@ Entry.ProboConnect.getBlocks = function () {
         },
         connect_eeprom_write: {
             color: '#00979D',
+            fontColor:'#ffffff',
             skeleton: 'basic',
             params: [
                 {
