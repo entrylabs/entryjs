@@ -171,7 +171,13 @@ Entry.BlockToPyParser = class {
         return results.join('\n');
     }
 
-    // templateIndex 는 1부터 시작한다.
+    /**
+     * 해당 block 의 template parameter 의 실제 값을 가져온다.
+     * @param templateIndex index 번호 (%2 라면 2)
+     * @param block 추출할 블록
+     * @returns {string} 블록의 결과값
+     * @private
+     */
     _getParamsValue(templateIndex, block) {
         const index = Number(templateIndex) - 1;
         const schemaParams = block._schema.params;
@@ -526,13 +532,17 @@ Entry.BlockToPyParser = class {
 
         if (exp) {
             return result;
-        } else {
-            result = 'def ' + result;
         }
 
         this._hasRootFunc = true;
 
-        result = result.concat(':\n');
+        result = 'def ' + result;
+        result = result.concat(':');
+        if (func.comment) {
+            result += ` # ${func.comment}`;
+        }
+        result += '\n';
+
         if (func.statements && func.statements.length) {
             let stmtResult = '';
             for (let s in func.statements) {
@@ -571,6 +581,11 @@ Entry.BlockToPyParser = class {
             .getBlocks();
         const defBlock = funcContents.shift();
 
+        let funcComment;
+        if (defBlock._comment) {
+            funcComment = defBlock._comment.data.value;
+        }
+
         Entry.TextCodingUtil.gatherFuncDefParam(defBlock.getParam(0));
 
         const that = this;
@@ -606,6 +621,7 @@ Entry.BlockToPyParser = class {
         Entry.TextCodingUtil.clearQueue();
 
         if (funcName) result.name = funcName;
+        if (funcComment) result.comment = funcComment;
         if (funcParams.length !== 0) result.params = funcParams;
         if (funcContents.length !== 0) result.statements = funcContents;
 
