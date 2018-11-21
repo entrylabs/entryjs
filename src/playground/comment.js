@@ -174,6 +174,8 @@ Entry.Comment = class Comment {
         comment.parentWidth = comment.parentWidth || parentWidth;
         comment.parentHeight = comment.parentHeight || parentHeight;
         this.set(comment);
+        this.originX = this.x;
+        this.originY = this.y;
     }
 
     setFrame() {
@@ -325,6 +327,11 @@ Entry.Comment = class Comment {
     }
 
     updatePos() {
+        this.originX = this.x;
+        this.originY = this.y;
+    }
+
+    updateParentPos() {
         if (this.pathGroup) {
             const { width: parentWidth } = this.pathGroup.getBBox();
             const { topFieldHeight, height } = this._blockView;
@@ -535,7 +542,7 @@ Entry.Comment = class Comment {
             this.renderTextArea();
         } else {
             this.destroyTextArea();
-            Entry.do('moveComment', this, this.x, this.y);
+            Entry.do('moveComment', this);
         }
         this.removeMoveSetting(this.mouseMove, this.mouseUp);
     }
@@ -804,7 +811,7 @@ Entry.Comment = class Comment {
         delete schema.x;
         delete schema.y;
         this.destroy(block);
-        block._comment = new Entry.Comment(block, this.board, schema);
+        block.connectComment(new Entry.Comment(block, this.board, schema));
     }
 
     separateFromBlock() {
@@ -822,7 +829,7 @@ Entry.Comment = class Comment {
         this.removeControl();
         this.svgGroup.remove();
         if (this.block) {
-            delete this.block._comment;
+            delete this.block.disconnectComment();
         } else if (block) {
             block.getCode().destroyThread(block.getThread(0));
         } else {
@@ -840,6 +847,10 @@ Entry.Comment = class Comment {
         destroyEvent(this._title, this.mouseDown);
         destroyEvent(this._resizeArea, this.resizeMouseDown);
         destroyEvent(this._toggleArea, this.toggleMouseDown);
+    }
+
+    getCode() {
+        return this.code;
     }
 
     toJSON() {

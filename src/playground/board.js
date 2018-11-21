@@ -1155,7 +1155,12 @@ Entry.Board = class Board {
                     text: '메모 추가하기',
                     enable: !this.readOnly,
                     callback() {
-                        Entry.do('createCommentBlock', undefined, that);
+                        Entry.do(
+                            'createCommentBlock',
+                            { id: Entry.Utils.generateId() },
+                            undefined,
+                            that
+                        );
                     },
                 },
             },

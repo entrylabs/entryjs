@@ -68,6 +68,10 @@ Entry.Block = class Block {
                 }
             });
         }
+
+        if (block.comment) {
+            this._commentSchema = block.comment;
+        }
     }
 
     load(block) {
@@ -221,11 +225,6 @@ Entry.Block = class Block {
             );
         }
 
-        const comment = this._schema.comment;
-        if (comment) {
-            this._commnet = new Entry.Comment(this, this.getCode().board, comment);
-        }
-
         return true;
     }
 
@@ -281,6 +280,10 @@ Entry.Block = class Block {
             });
             this._updatePos();
         }
+        if (this._commentSchema) {
+            this.connectComment(new Entry.Comment(this, board, this._commentSchema));
+            delete this._commentSchema;
+        }
     }
 
     destroyView() {
@@ -332,6 +335,7 @@ Entry.Block = class Block {
             json.comment = this._comment.toJSON();
         }
 
+        console.log(json);
         return Object.assign(
             _.omit(json, [...jsonBlackList, ...excludeData]),
             _.pick(this, ['x', 'y', 'movable', 'deletable', 'emphasized', 'readOnly'])
@@ -827,6 +831,14 @@ Entry.Block = class Block {
         }
 
         return block;
+    }
+
+    connectComment(comment) {
+        this._comment = comment;
+    }
+
+    disconnectComment() {
+        delete this._comment;
     }
 };
 

@@ -340,9 +340,9 @@ Entry.BlockView = class BlockView {
         this.contentSvgCommentGroup.attr('transform', `translate(${contentPos.x},${contentPos.y})`);
         this.contentPos = contentPos;
         this._render();
-        const comment = this.block._comment;
+        const comment = this.block.comment;
         if (comment) {
-            comment.updatePos();
+            comment.updateParentPos();
         }
 
         this._updateMagnet();
@@ -1461,13 +1461,18 @@ Entry.BlockView = class BlockView {
                 },
             };
 
-            const hasComment = block._comment;
+            const hasComment = block.comment;
             const comment = {
                 text: hasComment ? '메모 삭제하기' : '메모 추가하기',
                 callback() {
                     hasComment
-                        ? Entry.do('removeCommentBlock', block._comment)
-                        : Entry.do('createCommentBlock', block, board);
+                        ? Entry.do('removeCommentBlock', block.comment)
+                        : Entry.do(
+                            'createCommentBlock',
+                            { id: Entry.Utils.generateId() },
+                            block,
+                            board
+                        );
                 },
             };
 

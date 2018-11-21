@@ -4,17 +4,17 @@
     const COMMAND_TYPES = Entry.STATIC.COMMAND_TYPES;
 
     c[COMMAND_TYPES.createCommentBlock] = {
-        do(block, board, point = { x: 0, y: 0 }) {
+        do(schema, block, board) {
+            const comment = new Entry.Comment(block, board, schema);
             if (block) {
-                block._comment = new Entry.Comment(block, board);
+                block.connectComment(comment);
             } else {
-                const comment = new Entry.Comment(undefined, board, point);
                 board.code.createThread([comment], 0);
             }
             board.set({ isVisibleComment: true });
         },
-        state(block, board) {
-            return [block, board];
+        state(schema) {
+            return [schema];
         },
         log() {
             return [];
@@ -23,18 +23,13 @@
     };
 
     c[COMMAND_TYPES.removeCommentBlock] = {
-        do(comment, board) {
-            if (comment instanceof Entry.Comment) {
-                comment.destroy();
-            } else if (comment instanceof Entry.Block) {
-                comment._comment.destroy();
-            } else {
-                const { code } = board || {};
-                code.destroyThread(code.getThread(0));
-            }
+        do(target) {
+            const comment = this.editor.board.findBlock(target);
+            comment.destroy();
         },
-        state(comment) {
-            return [comment.block, comment.board, comment.toJSON()];
+        state(target) {
+            const comment = this.editor.board.findBlock(target);
+            return [comment.toJSON(), comment.block, comment.board];
         },
         log() {
             return [];
@@ -69,11 +64,16 @@
     };
 
     c[COMMAND_TYPES.moveComment] = {
-        do(comment, x, y) {
-            comment.moveTo(x, y);
+        do(target, x, y) {
+            const comment = this.editor.board.findBlock(target);
+            if (x) {
+                comment.moveTo(x, y);
+            }
+            comment.updatePos();
         },
-        state(comment) {
-            return [comment, comment.x, comment.y];
+        state(target) {
+            const comment = this.editor.board.findBlock(target);
+            return [comment, comment.originX, comment.originY];
         },
         log() {
             return [];
@@ -125,8 +125,8 @@
     };
 
     c[COMMAND_TYPES.separateCommentBlock] = {
-        do(object) {
-            const comment = this.editor.board.findBlock(object);
+        do(target) {
+            const comment = this.editor.board.findBlock(target);
             comment.separateFromBlock();
         },
         state(comment) {
@@ -140,8 +140,8 @@
     };
 
     c[COMMAND_TYPES.connectCommentBlock] = {
-        do(object, block) {
-            const comment = this.editor.board.findBlock(object);
+        do(target, block) {
+            const comment = this.editor.board.findBlock(target);
             comment.connectToBlock(block);
         },
         state(comment) {
