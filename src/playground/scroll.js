@@ -289,8 +289,3 @@ Entry.Scroller = class Scroller {
         if (Entry.windowResized) Entry.windowResized.attach(this, dResizeScrollBar);
     }
 };
-// (
-//     // this.RADIUS = 7;
-
-//     function(p) {}
-// )(Entry.Scroller.prototype);

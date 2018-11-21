@@ -99,11 +99,17 @@ Entry.STATIC = {
         funcCreate: 1004,
         funcUpdate: 1005,
 
-
         createCommentBlock: 1201,
         removeCommentBlock: 1202,
         showAllCommentBlock: 1203,
         hideAllCommentBlock: 1204,
+        createCommentWithoutBlock: 1205,
+        moveComment: 1206,
+        toggleCommentBlock: 1207,
+        cloneCommentBlock: 1208,
+        uncloneCommentBlock: 1209,
+        separateCommentBlock: 1210,
+        connectCommentBlock: 1211,
         //TODO commands development
     },
 
@@ -151,7 +157,6 @@ Entry.STATIC = {
         variableSetName: 828,
         listSetName: 829,
 
-
         dismissModal: 900,
 
         funcCreateStart: 1001,
@@ -177,9 +182,6 @@ Entry.STATIC = {
     },
 
     getCommandName(commandType) {
-        return _.findKey(
-            Entry.STATIC.COMMAND_TYPES,
-            _.partial(_.isEqual, commandType)
-        );
+        return _.findKey(Entry.STATIC.COMMAND_TYPES, _.partial(_.isEqual, commandType));
     },
 };

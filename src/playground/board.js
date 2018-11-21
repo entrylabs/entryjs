@@ -547,7 +547,7 @@ Entry.Board = class Board {
 
         for (let i = 0; i < blocks.length; i++) {
             const block = blocks[i];
-            const blockView = block.view;
+            const blockView = block.view || { dragInstance: true };
             blockView.zIndex = zIndex;
             if (blockView.dragInstance) {
                 break;
@@ -617,7 +617,7 @@ Entry.Board = class Board {
         let cursorY = offset.y;
 
         const block = blocks[0];
-        const blockView = block.view;
+        const blockView = block.view || { dragInstance: true };
         blockView.zIndex = zIndex;
         if (blockView.dragInstance) {
             return [];
@@ -1155,7 +1155,12 @@ Entry.Board = class Board {
                     text: '메모 추가하기',
                     enable: !this.readOnly,
                     callback() {
-                        Entry.do('createCommentBlock', undefined, that);
+                        Entry.do(
+                            'createCommentBlock',
+                            { id: Entry.Utils.generateId() },
+                            undefined,
+                            that
+                        );
                     },
                 },
             },

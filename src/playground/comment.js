@@ -3,6 +3,7 @@ Entry.Comment = class Comment {
     offsetX = 50;
     offsetY = 10;
     schema = {
+        id: null,
         x: 0,
         y: 0,
         parentWidth: 0,
@@ -20,7 +21,6 @@ Entry.Comment = class Comment {
     constructor(block, board, comment) {
         Entry.Model(this, false);
 
-        this.load(comment);
         if (!board.svgCommentGroup) {
             return;
         }
@@ -32,7 +32,9 @@ Entry.Comment = class Comment {
         }
         this.createComment();
         this.startRender();
+        this.initSchema(comment);
         this.addControl();
+        this.code.registerBlock(this);
 
         this.observe(this, 'updateOpacity', ['visible'], false);
         this.observe(this, 'toggleContent', ['isOpened'], false);
@@ -76,6 +78,18 @@ Entry.Comment = class Comment {
         return this.scale * 10;
     }
 
+    get value() {
+        return this.value;
+    }
+
+    get thread() {
+        return this._thread;
+    }
+
+    get code() {
+        return this.board.getCode();
+    }
+
     get textAreaPath() {
         let d = '';
         let { width, height } = this;
@@ -92,12 +106,6 @@ Entry.Comment = class Comment {
         return `M22,14 H${this.width - 22}`;
     }
 
-    load(comment) {
-        if (comment) {
-            this.set(comment);
-        }
-    }
-
     createComment() {
         const { svgGroup, pathGroup } = this.blockView || {};
         this.pathGroup = pathGroup;
@@ -106,7 +114,6 @@ Entry.Comment = class Comment {
             this.svgGroup = this.blockView.svgCommentGroup.prepend('g');
         } else {
             this.svgGroup = this.board.svgCommentGroup.elem('g');
-            console.log(this.board.svgCommentGroup, this.svgGroup);
         }
         this.mouseDown = this.mouseDown.bind(this);
         this.mouseMove = this.mouseMove.bind(this);
@@ -119,7 +126,6 @@ Entry.Comment = class Comment {
     }
 
     startRender() {
-        this.id = Entry.generateHash();
         if (this.block) {
             this._line = this.svgGroup.elem('line');
         }
@@ -144,10 +150,9 @@ Entry.Comment = class Comment {
 
         this.canRender = true;
         this.setFrame();
-        this.initSchema();
     }
 
-    initSchema() {
+    initSchema(comment = {}) {
         let parentWidth = 0;
         let parentHeight = 0;
         if (this.pathGroup) {
@@ -159,12 +164,18 @@ Entry.Comment = class Comment {
         const x = defaultLineLength + parentWidth;
         const y = parentHeight / 2 - titleHeight / 2;
 
-        this.set({
-            x,
-            y,
-            parentWidth,
-            parentHeight,
-        });
+        if (comment) {
+            if (!comment.id) {
+                comment.id = Entry.generateHash();
+            }
+        }
+        comment.x = comment.x || x;
+        comment.y = comment.y || y;
+        comment.parentWidth = comment.parentWidth || parentWidth;
+        comment.parentHeight = comment.parentHeight || parentHeight;
+        this.set(comment);
+        this.originX = this.x;
+        this.originY = this.y;
     }
 
     setFrame() {
@@ -316,6 +327,11 @@ Entry.Comment = class Comment {
     }
 
     updatePos() {
+        this.originX = this.x;
+        this.originY = this.y;
+    }
+
+    updateParentPos() {
         if (this.pathGroup) {
             const { width: parentWidth } = this.pathGroup.getBBox();
             const { topFieldHeight, height } = this._blockView;
@@ -403,6 +419,7 @@ Entry.Comment = class Comment {
     mouseDown(e) {
         e.preventDefault();
         e.stopPropagation();
+        let longPressTimer = null;
 
         if (
             (e.button === 0 || (e.originalEvent && e.originalEvent.touches)) &&
@@ -411,6 +428,79 @@ Entry.Comment = class Comment {
             this.setDragInstance(e);
             this.dragMode = Entry.DRAG_MODE_MOUSEDOWN;
             this.bindDomEvent(this.mouseMove, this.mouseUp);
+            const eventType = e.type;
+
+            if (eventType === 'touchstart') {
+                longPressTimer = setTimeout(function() {
+                    if (longPressTimer) {
+                        longPressTimer = null;
+                        this.mouseUp();
+                        this._rightClick(e);
+                    }
+                }, 1000);
+            }
+        } else if (Entry.Utils.isRightButton(e)) {
+            this.rightClick(e);
+        }
+    }
+
+    rightClick(e) {
+        const disposeEvent = Entry.disposeEvent;
+        if (disposeEvent) {
+            disposeEvent.notify(e);
+        }
+
+        const { clientX: x, clientY: y } = Entry.Utils.convertMouseEvent(e);
+
+        const board = this.board;
+        return Entry.ContextMenu.show(_getOptions(this), null, { x, y });
+
+        function _getOptions(comment) {
+            const readOnly = comment.readOnly;
+
+            const copyAndPaste = {
+                text: '메모 복사 & 붙여넣기',
+                enable: !readOnly,
+                callback() {
+                    Entry.do('cloneCommentBlock', comment.copy(), board);
+                },
+            };
+
+            const copy = {
+                text: '메모 복사하기',
+                enable: !readOnly,
+                callback() {
+                    comment.copyToClipboard();
+                },
+            };
+
+            const remove = {
+                text: '메모 삭제하기',
+                enable: !readOnly,
+                callback() {
+                    Entry.do('removeCommentBlock', comment);
+                },
+            };
+
+            const toggle = {
+                text: comment.isOpened ? '메모 접기' : '메모 열기',
+                enable: !readOnly,
+                callback() {
+                    Entry.do('toggleCommentBlock', comment);
+                },
+            };
+
+            const seperate = {
+                text: '메모 분리하기',
+                enable: !!comment.block,
+                callback() {
+                    Entry.do('separateCommentBlock', comment);
+                },
+            };
+
+            const options = [copyAndPaste, copy, remove, toggle, seperate];
+
+            return options;
         }
     }
 
@@ -452,8 +542,8 @@ Entry.Comment = class Comment {
             this.renderTextArea();
         } else {
             this.destroyTextArea();
+            Entry.do('moveComment', this);
         }
-
         this.removeMoveSetting(this.mouseMove, this.mouseUp);
     }
 
@@ -496,7 +586,12 @@ Entry.Comment = class Comment {
     getAbsoluteCoordinate(dragMode = this.dragMode) {
         const scale = this.scale;
         let pos = null;
-        const { parentX, parentY } = this.mouseDownCoordinate;
+        let parentX;
+        let parentY;
+        if (this.mouseDownCoordinate) {
+            parentX = this.mouseDownCoordinate.parentX;
+            parentY = this.mouseDownCoordinate.parentY;
+        }
         const posX = this.x;
         const posY = this.y;
         if (dragMode === Entry.DRAG_MODE_DRAG) {
@@ -507,7 +602,7 @@ Entry.Comment = class Comment {
                 scaleY: this.y + parentY / scale,
             };
         } else {
-            pos = this.block.getThread().view.requestAbsoluteCoordinate(this);
+            pos = this.getThread().view.requestAbsoluteCoordinate(this);
             pos.x += posX;
             pos.y += posY;
             pos.scaleX = pos.x / scale;
@@ -592,6 +687,8 @@ Entry.Comment = class Comment {
             this.setDragInstance(e);
             this.dragMode = Entry.DRAG_MODE_MOUSEDOWN;
             this.bindDomEvent(this.resizeMouseMove, this.resizeMouseUp);
+        } else if (Entry.Utils.isRightButton(e)) {
+            this.rightClick(e);
         }
     }
 
@@ -639,6 +736,8 @@ Entry.Comment = class Comment {
             this.setDragInstance(e);
             this.dragMode = Entry.DRAG_MODE_MOUSEDOWN;
             this.bindDomEvent(this.mouseMove, this.toggleMouseUp);
+        } else if (Entry.Utils.isRightButton(e)) {
+            this.rightClick(e);
         }
     }
 
@@ -650,6 +749,8 @@ Entry.Comment = class Comment {
             this.set({
                 isOpened: !this.isOpened,
             });
+        } else {
+            Entry.do('moveComment', this, this.x, this.y);
         }
         this.removeMoveSetting(this.mouseMove, this.toggleMouseUp);
     }
@@ -676,10 +777,80 @@ Entry.Comment = class Comment {
         });
     }
 
-    destroy() {
-        while (this.svgGroup.hasChildNodes()) {
-            this.svgGroup.removeChild(this.svgGroup.firstChild);
+    setThread(thread) {
+        this._thread = thread;
+    }
+
+    getThread() {
+        let thread;
+        if (this.block) {
+            thread = this.block.getThread();
+        } else {
+            thread = this.thread;
         }
+        return thread;
+    }
+
+    copy() {
+        const cloned = this.toJSON(true);
+
+        const { x, y } = this.getAbsoluteCoordinate();
+        cloned.x = x + 15;
+        cloned.y = y + 15;
+        cloned.id = Entry.Utils.generateId();
+
+        return cloned;
+    }
+
+    copyToClipboard() {
+        Entry.clipboard = this.copy();
+    }
+
+    connectToBlock(block) {
+        const schema = this.toJSON();
+        delete schema.x;
+        delete schema.y;
+        this.destroy(block);
+        block.connectComment(new Entry.Comment(block, this.board, schema));
+    }
+
+    separateFromBlock() {
+        const schema = this.toJSON();
+        const { x, y } = this.getAbsoluteCoordinate();
+        const board = this.board;
+        schema.x = x;
+        schema.y = y;
+        this.destroy();
+        const comment = new Entry.Comment(undefined, board, schema);
+        this.board.code.createThread([comment], 0);
+    }
+
+    destroy(block) {
+        this.removeControl();
+        this.svgGroup.remove();
+        if (this.block) {
+            delete this.block.disconnectComment();
+        } else if (block) {
+            block.getCode().destroyThread(block.getThread(0));
+        } else {
+            this.board.code.destroyThread(this.thread);
+        }
+        this.code.unregisterBlock(this);
+    }
+
+    removeControl() {
+        const destroyEvent = (dom, func) => {
+            dom.removeEventListener('mousedown', func);
+            dom.removeEventListener('ontouchstart', func);
+        };
+        destroyEvent(this._contentGroup, this.mouseDown);
+        destroyEvent(this._title, this.mouseDown);
+        destroyEvent(this._resizeArea, this.resizeMouseDown);
+        destroyEvent(this._toggleArea, this.toggleMouseDown);
+    }
+
+    getCode() {
+        return this.code;
     }
 
     toJSON() {

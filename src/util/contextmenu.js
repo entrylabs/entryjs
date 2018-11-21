@@ -20,8 +20,12 @@ Entry.ContextMenu = {};
     ctx.show = function(options, className, coordinate) {
         this._options = options;
 
-        if (!this.dom) this.createDom();
-        if (!options.length) return;
+        if (!this.dom) {
+            this.createDom();
+        }
+        if (!options.length) {
+            return;
+        }
 
         if (this._hideEvent) {
             this._hideEvent.destroy();
@@ -33,19 +37,20 @@ Entry.ContextMenu = {};
             this.dom.addClass(className);
         }
 
-        var parent = this.dom;
+        const parent = this.dom;
 
         parent.empty();
 
-        var fragment = document.createDocumentFragment();
+        const fragment = document.createDocumentFragment();
 
         options.forEach((option, idx) => {
-            var { text, enable, divider } = option;
+            let { enable } = option;
+            const { text, divider } = option;
             enable = option.enable !== false;
             //set value for later use
             option.enable = enable;
 
-            var elem = Entry.Dom('li').attr(ATTR_KEY, idx);
+            const elem = Entry.Dom('li').attr(ATTR_KEY, idx);
             fragment.appendChild(elem.get(0));
 
             if (divider) {
@@ -65,20 +70,24 @@ Entry.ContextMenu = {};
     };
 
     ctx.position = function(pos) {
-        var dom = this.dom;
+        const dom = this.dom;
         dom.css({
             left: 0,
             top: 0,
         });
-        var width = dom.width();
-        var height = dom.height();
+        const width = dom.width();
+        const height = dom.height();
 
-        var win = $(window);
-        var winWidth = win.width();
-        var winHeight = win.height();
+        const win = $(window);
+        const winWidth = win.width();
+        const winHeight = win.height();
 
-        if (pos.x + width > winWidth) pos.x -= width + 3;
-        if (pos.y + height > winHeight) pos.y -= height;
+        if (pos.x + width > winWidth) {
+            pos.x -= width + 3;
+        }
+        if (pos.y + height > winHeight) {
+            pos.y -= height;
+        }
 
         dom.css({
             left: pos.x,
@@ -88,8 +97,8 @@ Entry.ContextMenu = {};
 
     ctx.hide = function() {
         this.visible = false;
-        var dom = this.dom;
-        
+        const dom = this.dom;
+
         dom.empty().addClass('entryRemove');
 
         if (this._className) {
@@ -105,8 +114,8 @@ Entry.ContextMenu = {};
     ctx.onContextmenu = function(target, callback) {
         target.on('touchstart mousemove mouseup contextmenu', function(e) {
             switch (e.type) {
-                case 'touchstart':
-                    var startEvent = Entry.Utils.convertMouseEvent(e);
+                case 'touchstart': {
+                    const startEvent = Entry.Utils.convertMouseEvent(e);
                     this.coordi = {
                         x: startEvent.clientX,
                         y: startEvent.clientY,
@@ -120,17 +129,20 @@ Entry.ContextMenu = {};
                         900
                     );
                     break;
-                case 'mousemove':
-                    if (!this.coordi) return;
-                    var diff = Math.sqrt(
-                        Math.pow(e.pageX - this.coordi.x, 2) +
-                            Math.pow(e.pageY - this.coordi.y, 2)
+                }
+                case 'mousemove': {
+                    if (!this.coordi) {
+                        return;
+                    }
+                    const diff = Math.sqrt(
+                        Math.pow(e.pageX - this.coordi.x, 2) + Math.pow(e.pageY - this.coordi.y, 2)
                     );
                     if (diff > 5 && this.longTouchEvent) {
                         clearTimeout(this.longTouchEvent);
                         this.longTouchEvent = undefined;
                     }
                     break;
+                }
                 case 'mouseup':
                     // e.stopPropagation();
                     if (this.longTouchEvent) {
@@ -152,7 +164,7 @@ Entry.ContextMenu = {};
     };
 
     function _bindEvent() {
-        var that = this;
+        const that = this;
         this.dom.on('mousedown touchstart', (e) => {
             e.stopPropagation();
         });
@@ -160,13 +172,13 @@ Entry.ContextMenu = {};
         //event delegation
         this.dom.on('mousedown touchstart', 'li', function(e) {
             e.stopPropagation();
-            var options = that._options;
+            const options = that._options;
 
             if (_.isEmpty(options)) {
                 return that.hide();
             }
 
-            var { enable, callback } = options[this.getAttribute(ATTR_KEY)];
+            const { enable, callback } = options[this.getAttribute(ATTR_KEY)];
 
             if (enable && callback) {
                 e.preventDefault();
