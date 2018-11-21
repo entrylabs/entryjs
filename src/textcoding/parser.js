@@ -312,6 +312,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
                     if(this._hasDeclaration)
                         this.removeDeclaration();
                 } catch (e) {
+                    console.error(e);
                     if (e.block) {
                         Entry.toast.alert(Lang.TextCoding.title_converting, Lang.TextCoding.alert_legacy_no_support);
                     }
