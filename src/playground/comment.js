@@ -16,6 +16,7 @@ Entry.Comment = class Comment {
         display: true,
         movable: true,
         isOpened: true,
+        deletable: Entry.Block.DELETABLE_TRUE,
     };
 
     constructor(block, board, comment) {
@@ -852,6 +853,11 @@ Entry.Comment = class Comment {
         destroyEvent(this._title, this.mouseDown);
         destroyEvent(this._resizeArea, this.resizeMouseDown);
         destroyEvent(this._toggleArea, this.toggleMouseDown);
+    }
+
+    isDeletable() {
+        const deletable = this.deletable;
+        return deletable === Entry.Block.DELETABLE_TRUE || deletable === true;
     }
 
     getCode() {

@@ -192,12 +192,10 @@ Entry.BlockView = class BlockView {
         const _removeFunc = _.partial(_.result, _, 'remove');
 
         _removeFunc(this.contentSvgGroup);
-        _removeFunc(this.contentSvgCommentGroup);
         _removeFunc(this.statementSvgGroup);
         _removeFunc(this.statementCommentGroup);
 
         this.contentSvgGroup = this.svgGroup.elem('g');
-        this.contentSvgCommentGroup = this.svgCommentGroup.elem('g');
         this._contents = [];
 
         const schema = this._schema;
@@ -337,7 +335,6 @@ Entry.BlockView = class BlockView {
 
         const contentPos = this.getContentPos();
         this.contentSvgGroup.attr('transform', `translate(${contentPos.x},${contentPos.y})`);
-        this.contentSvgCommentGroup.attr('transform', `translate(${contentPos.x},${contentPos.y})`);
         this.contentPos = contentPos;
         this._render();
         const comment = this.block.comment;
@@ -410,20 +407,6 @@ Entry.BlockView = class BlockView {
             this.svgGroup.attr('transform', transform);
             this.svgCommentGroup.attr('transform', transform);
         }
-    }
-
-    _toLocalCoordinate(parentSvgGroup, svgGroup = this.svgGroup) {
-        this.disableMouseEvent = false;
-        this._moveTo(0, 0, false);
-        parentSvgGroup.appendChild(svgGroup);
-    }
-
-    _toGlobalCoordinate(dragMode, doNotUpdatePos) {
-        this.disableMouseEvent = false;
-        const { x, y } = this.getAbsoluteCoordinate(dragMode);
-        this._moveTo(x, y, false, doNotUpdatePos);
-        this.getBoard().svgBlockGroup.appendChild(this.svgGroup);
-        this.getBoard().svgCommentGroup.appendChild(this.svgCommentGroup);
     }
 
     _moveTo(x, y, animate, doNotUpdatePos) {
@@ -1076,26 +1059,35 @@ Entry.BlockView = class BlockView {
         }
     }
 
+    _toLocalCoordinate(view) {
+        this.disableMouseEvent = false;
+        this._moveTo(0, 0, false);
+        view._nextGroup.appendChild(this.svgGroup);
+        const { _nextCommentGroup } = view._nextGroup;
+        if (_nextCommentGroup) {
+            _nextCommentGroup.appendChild(this.svgCommentGroup);
+        }
+    }
+
+    _toGlobalCoordinate(dragMode, doNotUpdatePos) {
+        this.disableMouseEvent = false;
+        const { x, y } = this.getAbsoluteCoordinate(dragMode);
+        this._moveTo(x, y, false, doNotUpdatePos);
+        this.getBoard().svgBlockGroup.appendChild(this.svgGroup);
+        this.getBoard().svgCommentGroup.appendChild(this.svgCommentGroup);
+    }
+
     bindPrev(prevBlock, isDestroy) {
         if (prevBlock) {
-            this._toLocalCoordinate(prevBlock.view._nextGroup);
-            this._toLocalCoordinate(prevBlock.view._nextCommentGroup, this.svgCommentGroup);
+            this._toLocalCoordinate(prevBlock.view);
             const nextBlock = prevBlock.getNextBlock();
             if (nextBlock) {
                 if (nextBlock && nextBlock !== this.block) {
                     const endBlock = this.block.getLastBlock();
                     if (isDestroy) {
-                        nextBlock.view._toLocalCoordinate(prevBlock.view._nextGroup);
-                        nextBlock.view._toLocalCoordinate(
-                            prevBlock.view._nextCommentGroup,
-                            nextBlock.view.svgCommentGroup
-                        );
+                        nextBlock.view._toLocalCoordinate(prevBlock.view);
                     } else if (endBlock.view.magnet.next) {
-                        nextBlock.view._toLocalCoordinate(endBlock.view._nextGroup);
-                        nextBlock.view._toLocalCoordinate(
-                            endBlock.view._nextCommentGroup,
-                            nextBlock.view.svgCommentGroup
-                        );
+                        nextBlock.view._toLocalCoordinate(endBlock.view);
                     } else {
                         nextBlock.view._toGlobalCoordinate();
                         nextBlock.separate();
@@ -1107,16 +1099,10 @@ Entry.BlockView = class BlockView {
             prevBlock = this.block.getPrevBlock();
             if (prevBlock) {
                 const prevBlockView = prevBlock.view;
-
-                this._toLocalCoordinate(prevBlockView._nextGroup);
-                this._toLocalCoordinate(prevBlockView._nextCommentGroup, this.svgCommentGroup);
+                this._toLocalCoordinate(prevBlockView);
                 const nextBlock = this.block.getNextBlock();
                 if (nextBlock && nextBlock.view) {
-                    nextBlock.view._toLocalCoordinate(this._nextGroup);
-                    nextBlock.view._toLocalCoordinate(
-                        this._nextCommentGroup,
-                        nextBlock.view.svgCommentGroup
-                    );
+                    nextBlock.view._toLocalCoordinate(this);
                 }
             }
         }
@@ -1466,11 +1452,11 @@ Entry.BlockView = class BlockView {
                     hasComment
                         ? Entry.do('removeCommentBlock', block.comment)
                         : Entry.do(
-                            'createCommentBlock',
-                            { id: Entry.Utils.generateId() },
-                            block,
-                            board
-                        );
+                              'createCommentBlock',
+                              { id: Entry.Utils.generateId() },
+                              block,
+                              board
+                          );
                 },
             };
 
