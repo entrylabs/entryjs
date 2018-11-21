@@ -55,6 +55,7 @@ require('./block_microbit');
 require('./block_mrt');
 require('./block_dash');
 require('./block_bingles');
+require('./block_proboconnect');
 require('./block_sciencecube');
 require('./block_codingmachine');
 
@@ -121,6 +122,7 @@ Entry.HARDWARE_LIST = {
     '1.D': Entry.BINGLES,
     '25.1': Entry.sciencecube,
     '26.1': Entry.Codingmachine,
+    '27.1': Entry.ProboConnect,
 };
 
 const startBlock = require('./block_start');
