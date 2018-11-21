@@ -4,8 +4,6 @@ const merge = require('webpack-merge');
 const UglifyJSPlugin = require('uglifyjs-webpack-plugin');
 const common = require('./common.js');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
-const LodashModuleReplacementPlugin = require('lodash-webpack-plugin');
-
 module.exports = merge(common, {
     entry: {
         'entry.min': './src/entry.js',
@@ -42,5 +40,5 @@ module.exports = merge(common, {
     },
     plugins: [new UglifyJSPlugin({
         include: /\.min\.js$/,
-    }), new LodashModuleReplacementPlugin()],
+    })],
 });

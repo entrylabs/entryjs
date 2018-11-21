@@ -30,8 +30,10 @@ Entry.TimeWait = function(id, cb, ms) {
 
 (function(p) {
     p.callback = function() {
-        this.cb();
-        this.destroy();
+        if (this.cb) {
+            this.cb();
+            this.destroy();
+        }
     }
 
     p.pause = function() {
