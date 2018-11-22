@@ -15,6 +15,7 @@ Entry.Block = class Block {
         emphasized: false,
         readOnly: null,
         copyable: true,
+        commentable: true,
         events: {},
         extensions: [],
     };
@@ -72,6 +73,10 @@ Entry.Block = class Block {
         if (block.comment) {
             this._commentSchema = block.comment;
         }
+    }
+
+    isCommentable() {
+        return this.commentable;
     }
 
     load(block) {
@@ -838,6 +843,10 @@ Entry.Block = class Block {
 
     disconnectComment() {
         delete this._comment;
+    }
+
+    getCommentValue() {
+        return (this._comment && this._comment.value) || undefined;
     }
 };
 
