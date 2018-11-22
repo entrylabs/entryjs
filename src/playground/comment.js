@@ -833,13 +833,11 @@ Entry.Comment = class Comment {
         this.board.code.createThread([comment], 0);
     }
 
-    destroy(block) {
+    destroy() {
         this.removeControl();
         this.destroyView();
         if (this.block) {
             delete this.block.disconnectComment();
-        } else if (block) {
-            block.getCode().destroyThread(block.getThread(0));
         } else {
             this.board.code.destroyThread(this.thread);
         }
@@ -862,8 +860,7 @@ Entry.Comment = class Comment {
     }
 
     isDeletable() {
-        const deletable = this.deletable;
-        return deletable === Entry.Block.DELETABLE_TRUE || deletable === true;
+        return this.deletable;
     }
 
     getCode() {

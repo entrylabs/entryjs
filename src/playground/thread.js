@@ -34,7 +34,9 @@ Entry.Thread = class Thread {
                 block.setThread(this);
                 this._data.push(block);
             } else if (block.type == 'comment') {
-                this._data.push(new Entry.Comment(undefined, this._code.board, block));
+                const commment = new Entry.Comment(undefined, this._code.board, block);
+                commment.setThread(this);
+                this._data.push(commment);
             } else {
                 this._data.push(new Entry.Block(block, this));
             }
