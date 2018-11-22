@@ -1,11 +1,15 @@
 'use strict';
 Entry.FieldTrashcan = class FieldTrashcan {
     constructor(board) {
-        if (board) this.setBoard(board);
+        if (board) {
+            this.setBoard(board);
+        }
         this.dragBlock = null;
         this.dragBlockObserver = null;
         this.isOver = false;
-        if (Entry.windowResized) Entry.windowResized.attach(this, this.setPosition);
+        if (Entry.windowResized) {
+            Entry.windowResized.attach(this, this.setPosition);
+        }
     }
 
     _generateView() {
@@ -15,22 +19,21 @@ Entry.FieldTrashcan = class FieldTrashcan {
     }
 
     renderStart() {
-        var path = Entry.mediaFilePath + 'delete_';
+        const path = `${Entry.mediaFilePath}delete_`;
         this.svgGroup.elem('image', {
-            href: path + 'body.svg',
+            href: `${path}body.svg`,
             y: 19,
             width: 61,
             height: 70,
         });
         this.trashcanTop = this.svgGroup.elem('image', {
-            href: path + 'cover.svg',
+            href: `${path}cover.svg`,
             width: 60,
             height: 27,
         });
     }
 
     _addControl() {
-        var that = this;
         $(this.svgGroup).bind('mousedown', function(e) {
             if (Entry.Utils.isRightButton(e)) {
                 e.stopPropagation();
@@ -40,8 +43,8 @@ Entry.FieldTrashcan = class FieldTrashcan {
     }
 
     updateDragBlock() {
-        var block = this.board.dragBlock;
-        var observer = this.dragBlockObserver;
+        const block = this.board.dragBlock;
+        const observer = this.dragBlockObserver;
 
         if (observer) {
             observer.destroy();
@@ -52,7 +55,7 @@ Entry.FieldTrashcan = class FieldTrashcan {
             this.dragBlockObserver = block.observe(this, 'checkBlock', ['x', 'y']);
         } else {
             if (this.isOver && this.dragBlock) {
-                var prevBlock = this.dragBlock.block.getPrevBlock();
+                const prevBlock = this.dragBlock.block.getPrevBlock();
                 if (!prevBlock) {
                     Entry.do('destroyThread', this.dragBlock.block.thread, 'trashcan').isPass(
                         true,
@@ -67,36 +70,41 @@ Entry.FieldTrashcan = class FieldTrashcan {
     }
 
     checkBlock() {
-        var dragBlock = this.dragBlock;
-        if (!dragBlock || !dragBlock.block.isDeletable()) return;
+        const dragBlock = this.dragBlock;
+        if (!dragBlock || !dragBlock.block.isDeletable()) {
+            return;
+        }
 
-        var boardOffset = this.board.offset();
-        var position = this.getPosition();
-        var trashcanX = position.x + boardOffset.left;
-        var trashcanY = position.y + boardOffset.top;
+        const boardOffset = this.board.offset();
+        const position = this.getPosition();
+        const trashcanX = position.x + boardOffset.left;
+        const trashcanY = position.y + boardOffset.top;
 
-        var mouseX, mouseY;
-        var instance = dragBlock.dragInstance;
+        let mouseX;
+        let mouseY;
+        const instance = dragBlock.dragInstance;
         if (instance) {
             mouseX = instance.offsetX;
             mouseY = instance.offsetY;
         }
-        var isOver = mouseX >= trashcanX && mouseY >= trashcanY;
+        const isOver = mouseX >= trashcanX && mouseY >= trashcanY;
         this.tAnimation(isOver);
     }
 
     align() {
-        var position = this.getPosition();
-        var transform = 'translate(' + position.x + ',' + position.y + ')';
+        const position = this.getPosition();
+        const transform = `translate(${position.x},${position.y})`;
 
         this.svgGroup.attr({
-            transform: transform,
+            transform,
         });
     }
 
     setPosition() {
-        if (!this.board) return;
-        var svgDom = this.board.svgDom;
+        if (!this.board) {
+            return;
+        }
+        const svgDom = this.board.svgDom;
         this._x = svgDom.width() - 83.5;
         this._y = svgDom.height() - 110;
         this.align();
@@ -110,11 +118,12 @@ Entry.FieldTrashcan = class FieldTrashcan {
     }
 
     tAnimation(isOver) {
-        if (isOver === this.isOver) return;
+        if (isOver === this.isOver) {
+            return;
+        }
 
         isOver = isOver === undefined ? true : isOver;
-        var animation;
-        var trashTop = this.trashcanTop;
+        const trashTop = this.trashcanTop;
         if (isOver) {
             $(trashTop).attr('class', 'trashcanOpen');
         } else {
@@ -125,19 +134,26 @@ Entry.FieldTrashcan = class FieldTrashcan {
     }
 
     setBoard(board) {
-        if (this._dragBlockObserver) this._dragBlockObserver.destroy();
+        if (this._dragBlockObserver) {
+            this._dragBlockObserver.destroy();
+        }
         this.board = board;
-        if (!this.svgGroup) this._generateView();
+        if (!this.svgGroup) {
+            this._generateView();
+        }
 
         //control z-index
-        var svg = board.svg;
-        var firstChild = svg.firstChild;
-        if (firstChild) svg.insertBefore(this.svgGroup, firstChild);
-        else svg.appendChild(this.svgGroup);
+        const svg = board.svg;
+        const firstChild = svg.firstChild;
+        if (firstChild) {
+            svg.insertBefore(this.svgGroup, firstChild);
+        } else {
+            svg.appendChild(this.svgGroup);
+        }
 
         this._dragBlockObserver = board.observe(this, 'updateDragBlock', ['dragBlock']);
         this.svgGroup.attr({
-            filter: 'url(#entryTrashcanFilter_' + board.suffix + ')',
+            filter: `url(#entryTrashcanFilter_${board.suffix})`,
         });
         this.setPosition();
     }
