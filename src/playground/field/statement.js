@@ -48,9 +48,11 @@ Entry.FieldStatement = function(content, blockView, index) {
         this.svgGroup = this._blockView.statementSvgGroup.elem('g');
         this.statementSvgGroup = this.svgGroup.elem('g');
         this._nextGroup = this.statementSvgGroup;
-        this.commentGroup = this._blockView.statementCommentGroup.elem('g');
-        this.statementCommentGroup = this.commentGroup.elem('g');
-        this._nextCommentGroup = this.statementCommentGroup;
+        if (this._blockView.statementCommentGroup) {
+            this.commentGroup = this._blockView.statementCommentGroup.elem('g');
+            this.statementCommentGroup = this.commentGroup.elem('g');
+            this._nextCommentGroup = this.statementCommentGroup;
+        }
         this._initThread(board);
         this._board = board;
     };
@@ -108,20 +110,24 @@ Entry.FieldStatement = function(content, blockView, index) {
                 300,
                 mina.easeinout
             );
-            commentGroup.animate(
-                {
-                    transform,
-                },
-                300,
-                mina.easeinout
-            );
+            if (commentGroup) {
+                commentGroup.animate(
+                    {
+                        transform,
+                    },
+                    300,
+                    mina.easeinout
+                );
+            }
         } else {
             svgGroup.attr({
                 transform,
             });
-            commentGroup.attr({
-                transform,
-            });
+            if (commentGroup) {
+                commentGroup.attr({
+                    transform,
+                });
+            }
         }
     };
 

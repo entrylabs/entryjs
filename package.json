@@ -29,10 +29,10 @@
   },
   "license": "MIT",
   "dependencies": {
-    "babel-core": "^7.0.0-bridge.0",
-    "entry-tool": "^0.1.5",
-    "hyperid": "^1.4.1",
     "axios": "^0.18.0",
+    "babel-core": "^7.0.0-bridge.0",
+    "entry-tool": "^0.1.6",
+    "hyperid": "^1.4.1",
     "jest": "^23.3.0",
     "lodash": "^4.17.5",
     "uglifyjs-webpack-plugin": "^1.2.2",

@@ -44,11 +44,12 @@ Entry.Scroller = class Scroller {
     }
 
     onMouseMove = (e) => {
+        console.log('onMouseMove');
         e.stopPropagation();
         e.preventDefault();
 
-        if (e.originalEvent && e.originalEvent.touches) {
-            e = e.originalEvent.touches[0];
+        if (window.TouchEvent && e instanceof window.TouchEvent) {
+            e = e.changedTouches[0];
         }
         var dragInstance = this.dragInstance;
         if (this.scrollType === 'horizontal') {
@@ -63,6 +64,7 @@ Entry.Scroller = class Scroller {
     };
 
     onMouseUp = (e) => {
+        console.log('onMouseUp');
         this.removeEventListener(document, ['mousemove', 'touchmove'], this.onMouseMove);
         this.removeEventListener(document, ['mouseup', 'touchend'], this.onMouseUp);
         delete this.dragInstance;
@@ -70,10 +72,14 @@ Entry.Scroller = class Scroller {
     };
 
     onMouseDown = (e) => {
-        if (e.button === 0 || e instanceof Touch) {
+        console.log('onMouseDown', e.button, e);
+        if (e.button === 0 || e instanceof window.TouchEvent) {
+            console.log('go into add event');
             this.scrollType = e.target.type;
             if (Entry.documentMousedown) Entry.documentMousedown.notify(e);
-            this.addEventListener(document, ['mousemove', 'touchmove'], this.onMouseMove);
+            this.addEventListener(document, ['mousemove', 'touchmove'], this.onMouseMove, {
+                passive: false,
+            });
             this.addEventListener(document, ['mouseup', 'touchend'], this.onMouseUp);
             this.dragInstance = new Entry.DragInstance({
                 startX: e.pageX,

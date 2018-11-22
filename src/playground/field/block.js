@@ -49,7 +49,9 @@ Entry.FieldBlock = class FieldBlock extends Entry.Field {
     renderStart(board, mode, renderMode, isReDraw) {
         if (!this.svgGroup) {
             this.svgGroup = this._blockView.contentSvgGroup.elem('g');
-            this.svgCommentGroup = this._blockView.contentSvgCommentGroup.elem('g');
+            if (this._blockView.contentSvgCommentGroup) {
+                this.svgCommentGroup = this._blockView.contentSvgCommentGroup.elem('g');
+            }
         }
 
         this.renderMode = !_.isUndefined(mode) ? mode : this._blockView.renderMode;
@@ -90,7 +92,9 @@ Entry.FieldBlock = class FieldBlock extends Entry.Field {
 
         if (!(x || y)) {
             svgGroup.removeAttr('transform');
-            svgCommentGroup.removeAttr('transform');
+            if (svgCommentGroup) {
+                svgCommentGroup.removeAttr('transform');
+            }
         } else {
             const transform = `translate(${x},${y})`;
             if (animate) {
@@ -101,20 +105,24 @@ Entry.FieldBlock = class FieldBlock extends Entry.Field {
                     300,
                     mina.easeinout
                 );
-                svgCommentGroup.animate(
-                    {
-                        transform,
-                    },
-                    300,
-                    mina.easeinout
-                );
+                if (svgCommentGroup) {
+                    svgCommentGroup.animate(
+                        {
+                            transform,
+                        },
+                        300,
+                        mina.easeinout
+                    );
+                }
             } else {
                 svgGroup.attr({
                     transform,
                 });
-                svgCommentGroup.attr({
-                    transform,
-                });
+                if (svgCommentGroup) {
+                    svgCommentGroup.attr({
+                        transform,
+                    });
+                }
             }
         }
 

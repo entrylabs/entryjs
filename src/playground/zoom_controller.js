@@ -150,6 +150,8 @@ Entry.ZoomController = class ZoomController {
         $(this.toast).width();
         this.toast.addClass('fadeToast');
         this.removeToast();
+        const { scroller } = this.board;
+        scroller.resizeScrollBar && scroller.resizeScrollBar.call(scroller);
     }
 
     // 애니메이션 Debounce 처리

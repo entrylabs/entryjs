@@ -38,9 +38,11 @@ Entry.BlockView = class BlockView {
         this.svgGroup = board.svgBlockGroup.elem('g');
         this.svgGroup.attr('id', hash);
         this.svgGroup.blockView = this;
-        this.svgCommentGroup = board.svgCommentGroup.elem('g');
-        this.svgCommentGroup.attr('id', `${hash}C`);
-        this.svgCommentGroup.blockView = this;
+        if (board.svgCommentGroup) {
+            this.svgCommentGroup = board.svgCommentGroup.elem('g');
+            this.svgCommentGroup.attr('id', `${hash}C`);
+            this.svgCommentGroup.blockView = this;
+        }
 
         this._schema = Entry.skinContainer.getSkin(block);
 
@@ -80,7 +82,9 @@ Entry.BlockView = class BlockView {
         if (skeleton.magnets && skeleton.magnets(this).next) {
             this.svgGroup.nextMagnet = this.block;
             this._nextGroup = this.svgGroup.elem('g');
-            this._nextCommentGroup = this.svgCommentGroup.elem('g');
+            if (this.svgCommentGroup) {
+                this._nextCommentGroup = this.svgCommentGroup.elem('g');
+            }
             this._observers.push(this.observe(this, '_updateMagnet', ['contentHeight']));
         }
 
@@ -192,12 +196,18 @@ Entry.BlockView = class BlockView {
         const _removeFunc = _.partial(_.result, _, 'remove');
 
         _removeFunc(this.contentSvgGroup);
-        _removeFunc(this.contentSvgCommentGroup);
         _removeFunc(this.statementSvgGroup);
-        _removeFunc(this.statementCommentGroup);
+        if (this.contentSvgCommentGroup) {
+            _removeFunc(this.contentSvgCommentGroup);
+        }
+        if (this.statementCommentGroup) {
+            _removeFunc(this.statementCommentGroup);
+        }
 
         this.contentSvgGroup = this.svgGroup.elem('g');
-        this.contentSvgCommentGroup = this.svgCommentGroup.elem('g');
+        if (this.svgCommentGroup) {
+            this.contentSvgCommentGroup = this.svgCommentGroup.elem('g');
+        }
         this._contents = [];
 
         const schema = this._schema;
@@ -205,7 +215,9 @@ Entry.BlockView = class BlockView {
 
         if (!_.isEmpty(statements)) {
             this.statementSvgGroup = this.svgGroup.elem('g');
-            this.statementCommentGroup = this.svgCommentGroup.elem('g');
+            if (this.svgCommentGroup) {
+                this.statementCommentGroup = this.svgCommentGroup.elem('g');
+            }
         }
 
         const reg = /(%\d+)/im;
@@ -337,7 +349,12 @@ Entry.BlockView = class BlockView {
 
         const contentPos = this.getContentPos();
         this.contentSvgGroup.attr('transform', `translate(${contentPos.x},${contentPos.y})`);
-        this.contentSvgCommentGroup.attr('transform', `translate(${contentPos.x},${contentPos.y})`);
+        if (this.contentSvgCommentGroup) {
+            this.contentSvgCommentGroup.attr(
+                'transform',
+                `translate(${contentPos.x},${contentPos.y})`
+            );
+        }
         this.contentPos = contentPos;
         this._render();
         const comment = this.block._comment;
@@ -404,11 +421,15 @@ Entry.BlockView = class BlockView {
         const { scale = 1 } = board || {};
         if (!(this.x || this.y)) {
             this.svgGroup.removeAttr('transform');
-            this.svgCommentGroup.removeAttr('transform');
+            if (this.svgCommentGroup) {
+                this.svgCommentGroup.removeAttr('transform');
+            }
         } else {
             const transform = `translate(${this.x / scale},${this.y / scale})`;
             this.svgGroup.attr('transform', transform);
-            this.svgCommentGroup.attr('transform', transform);
+            if (this.svgCommentGroup) {
+                this.svgCommentGroup.attr('transform', transform);
+            }
         }
     }
 
@@ -852,7 +873,9 @@ Entry.BlockView = class BlockView {
         } else {
             svgGroup.remove();
         }
-        svgCommentGroup.remove();
+        if (svgCommentGroup) {
+            svgCommentGroup.remove();
+        }
 
         (this._contents || []).forEach(_destroyFunc);
         (this._statements || []).forEach(_destroyFunc);
@@ -888,10 +911,12 @@ Entry.BlockView = class BlockView {
 
         if (magnet.next) {
             this._nextGroup.attr('transform', `translate(${magnet.next.x},${magnet.next.y})`);
-            this._nextCommentGroup.attr(
-                'transform',
-                `translate(${magnet.next.x},${magnet.next.y})`
-            );
+            if (this._nextCommentGroup) {
+                this._nextCommentGroup.attr(
+                    'transform',
+                    `translate(${magnet.next.x},${magnet.next.y})`
+                );
+            }
         }
         this.magnet = magnet;
         this.block.getThread().changeEvent.notify();
@@ -905,7 +930,6 @@ Entry.BlockView = class BlockView {
 
         const blockView = this;
         const svgGroup = blockView.svgGroup;
-        const svgCommentGroup = blockView.svgCommentGroup;
         if (!(this.magnet.next || this.magnet.previous)) {
             // field block
             if (this.magneting) {
@@ -1033,10 +1057,14 @@ Entry.BlockView = class BlockView {
     _updateOpacity() {
         if (this.visible === false) {
             this.svgGroup.attr({ opacity: 0 });
-            this.svgCommentGroup.attr({ opacity: 0 });
+            if (this.svgCommentGroup) {
+                this.svgCommentGroup.attr({ opacity: 0 });
+            }
         } else {
             this.svgGroup.removeAttr('opacity');
-            this.svgCommentGroup.removeAttr('opacity');
+            if (this.svgCommentGroup) {
+                this.svgCommentGroup.removeAttr('opacity');
+            }
             this._setPosition();
         }
     }
@@ -1081,7 +1109,9 @@ Entry.BlockView = class BlockView {
     bindPrev(prevBlock, isDestroy) {
         if (prevBlock) {
             this._toLocalCoordinate(prevBlock.view._nextGroup);
-            this._toLocalCoordinate(prevBlock.view._nextCommentGroup, this.svgCommentGroup);
+            if (prevBlock.view._nextCommentGroup) {
+                this._toLocalCoordinate(prevBlock.view._nextCommentGroup, this.svgCommentGroup);
+            }
             const nextBlock = prevBlock.getNextBlock();
             if (nextBlock) {
                 if (nextBlock && nextBlock !== this.block) {
