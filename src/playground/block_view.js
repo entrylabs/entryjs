@@ -175,7 +175,7 @@ Entry.BlockView = class BlockView {
             pathStyle['stroke-width'] = '1';
         }
         this._path.attr(pathStyle);
-        this._moveTo(this.x, this.y, false);
+        this.moveTo(this.x, this.y, false);
         this._startContentRender(mode);
         this._startExtension(mode);
         if (this._board.disableMouseEvent !== true) {
@@ -195,15 +195,11 @@ Entry.BlockView = class BlockView {
 
         _removeFunc(this.contentSvgGroup);
         _removeFunc(this.statementSvgGroup);
-        if (this.contentCommentGroup) {
-            _removeFunc(this.contentCommentGroup);
-        }
         if (this.statementCommentGroup) {
             _removeFunc(this.statementCommentGroup);
         }
 
         this.contentSvgGroup = this.svgGroup.elem('g');
-        this.contentCommentGroup = this.svgGroup.elem('g');
         this._contents = [];
 
         const schema = this._schema;
@@ -343,7 +339,6 @@ Entry.BlockView = class BlockView {
 
         const contentPos = this.getContentPos();
         this.contentSvgGroup.attr('transform', `translate(${contentPos.x},${contentPos.y})`);
-        this.contentCommentGroup.attr('transform', `translate(${contentPos.x},${contentPos.y})`);
         this.contentPos = contentPos;
         this._render();
         const comment = this.block.comment;
@@ -418,7 +413,7 @@ Entry.BlockView = class BlockView {
         }
     }
 
-    _moveTo(x, y, animate, doNotUpdatePos) {
+    moveTo(x, y, animate, doNotUpdatePos) {
         const thisX = this.x;
         const thisY = this.y;
         if (!this.display) {
@@ -437,7 +432,7 @@ Entry.BlockView = class BlockView {
     }
 
     moveBy(x, y, animate, doNotUpdatePos) {
-        return this._moveTo(this.x + x, this.y + y, animate, doNotUpdatePos);
+        return this.moveTo(this.x + x, this.y + y, animate, doNotUpdatePos);
     }
 
     _addControl() {
@@ -747,7 +742,7 @@ Entry.BlockView = class BlockView {
                                     Entry.do('insertBlock', block, parent);
                                 } else {
                                     const originPos = this.originPos;
-                                    this._moveTo(originPos.x, originPos.y, false);
+                                    this.moveTo(originPos.x, originPos.y, false);
                                     this.dominate();
                                 }
                             }
@@ -1069,7 +1064,7 @@ Entry.BlockView = class BlockView {
 
     _toLocalCoordinate(view) {
         this.disableMouseEvent = false;
-        this._moveTo(0, 0, false);
+        this.moveTo(0, 0, false);
         const { _nextGroup: parentSvgGroup, _nextCommentGroup: parentCommentGroup } = view;
         parentSvgGroup.appendChild(this.svgGroup);
         parentCommentGroup && parentCommentGroup.appendChild(this.svgCommentGroup);
@@ -1078,7 +1073,7 @@ Entry.BlockView = class BlockView {
     _toGlobalCoordinate(dragMode, doNotUpdatePos) {
         this.disableMouseEvent = false;
         const { x, y } = this.getAbsoluteCoordinate(dragMode);
-        this._moveTo(x, y, false, doNotUpdatePos);
+        this.moveTo(x, y, false, doNotUpdatePos);
         this.getBoard().svgBlockGroup.appendChild(this.svgGroup);
         this.svgCommentGroup && this.getBoard().svgCommentGroup.appendChild(this.svgCommentGroup);
     }
@@ -1460,11 +1455,11 @@ Entry.BlockView = class BlockView {
                     hasComment
                         ? Entry.do('removeCommentBlock', block.comment)
                         : Entry.do(
-                              'createCommentBlock',
-                              { id: Entry.Utils.generateId() },
-                              block,
-                              board
-                          );
+                            'createCommentBlock',
+                            { id: Entry.Utils.generateId() },
+                            block,
+                            board
+                        );
                 },
             };
 

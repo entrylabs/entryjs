@@ -369,7 +369,7 @@ Entry.Board = class Board {
             }
             columWidth = Math.max(columWidth, bBox.width);
             top = acculmulatedTop + verticalGap;
-            blockView._moveTo(left - bBox.x, top, false);
+            blockView.moveTo(left - bBox.x, top, false);
             acculmulatedTop = top + bBox.height * this.scale;
         });
         this.scroller.resizeScrollBar();

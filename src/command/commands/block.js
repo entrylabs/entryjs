@@ -357,7 +357,7 @@
                 blockView = block.view;
             }
             if (typeof y === 'number') {
-                blockView._moveTo(dragMode, y);
+                blockView.moveTo(dragMode, y);
                 dragMode = undefined;
             }
 

@@ -33,6 +33,8 @@ Entry.Thread = class Thread {
             } else if (block instanceof Entry.Comment) {
                 block.setThread(this);
                 this._data.push(block);
+            } else if (block.type == 'comment') {
+                this._data.push(new Entry.Comment(undefined, this._code.board, block));
             } else {
                 this._data.push(new Entry.Block(block, this));
             }

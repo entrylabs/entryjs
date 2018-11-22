@@ -266,7 +266,7 @@ Entry.Block = class Block {
 
     moveTo(x, y) {
         if (this.view) {
-            this.view._moveTo(x, y);
+            this.view.moveTo(x, y);
         }
         this._updatePos();
         this.getCode().changeEvent.notify();

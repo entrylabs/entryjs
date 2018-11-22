@@ -263,7 +263,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
             }
 
             marginFromTop -= blockView.offsetY;
-            blockView._moveTo(left, marginFromTop, false);
+            blockView.moveTo(left, marginFromTop, false);
             marginFromTop += blockView.height + vPadding;
         });
 

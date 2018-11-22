@@ -34,6 +34,7 @@ Entry.Comment = class Comment {
         this.createComment();
         this.startRender();
         this.initSchema(comment);
+        this.setFrame();
         this.addControl();
         this.code.registerBlock(this);
 
@@ -138,8 +139,8 @@ Entry.Comment = class Comment {
 
         this._contentGroup = this.svgGroup.elem('g');
         this._comment = this._contentGroup.elem('rect');
+        this._path = this._contentGroup.elem('path');
         this._path = this._contentGroup.elem('defs').elem('path');
-        this._text = this._contentGroup.elem('text');
         this._textPath = this._text.elem('textPath');
         this._resizeArea = this._contentGroup.elem('rect');
         this._resizeArrow = this._contentGroup.elem('image');
@@ -155,7 +156,6 @@ Entry.Comment = class Comment {
         this._toggleArea = this.svgGroup.elem('rect');
 
         this.canRender = true;
-        this.setFrame();
     }
 
     initSchema(comment = {}) {
@@ -172,7 +172,7 @@ Entry.Comment = class Comment {
 
         if (comment) {
             if (!comment.id) {
-                comment.id = Entry.generateHash();
+                comment.id = Entry.Utils.generateId();
             }
         }
         comment.x = comment.x || x;
@@ -205,6 +205,7 @@ Entry.Comment = class Comment {
 
         this._path.attr({
             id: `${this.id}c`,
+            stroke: 'red',
         });
 
         this._titlePath.attr({
@@ -429,7 +430,7 @@ Entry.Comment = class Comment {
 
         if (
             (e.button === 0 || (e.originalEvent && e.originalEvent.touches)) &&
-            !this._board.readOnly
+            !this.board.readOnly
         ) {
             this.setDragInstance(e);
             this.dragMode = Entry.DRAG_MODE_MOUSEDOWN;
@@ -634,8 +635,9 @@ Entry.Comment = class Comment {
             left,
             top: this.titleHeight * this.scale + top,
             'font-size': `${this.fontSize}px`,
-            width: this.width * this.scale,
-            height: (this.height - this.titleHeight) * this.scale,
+            width: (this.width - 14) * this.scale,
+            height: (this.height - this.titleHeight - 8) * this.scale,
+            border: `${this.scale}px solid #EDA913`,
             'border-radius': `0 0 ${4 * this.scale}px ${4 * this.scale}px`,
             padding: `${3 * this.scale}px ${6 * this.scale}px`,
         });
@@ -869,6 +871,8 @@ Entry.Comment = class Comment {
     }
 
     toJSON() {
-        return this._toJSON();
+        const json = this._toJSON();
+        json.type = 'comment';
+        return json;
     }
 };
