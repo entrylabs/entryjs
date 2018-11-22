@@ -1651,7 +1651,7 @@ Entry.BlockView = class BlockView {
     }
 };
 
-Entry.BlockView.PARAM_SPACE = 5;
+Entry.BlockView.PARAM_SPACE = 7;
 Entry.BlockView.DRAG_RADIUS = 5;
 Entry.BlockView.pngMap = {};
 

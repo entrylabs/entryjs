@@ -344,7 +344,6 @@ Entry.FieldBlock = class FieldBlock extends Entry.Field {
     }
 
     _updateBG() {
-        console.log('..?');
         if (this.magneting) {
             this._bg = this.svgGroup.elem('path', {
                 d: 'm 8,12 l -4,0 -2,-2 0,-3 3,0 1,-1 0,-12 -1,-1 -3,0 0,-3 2,-2 l 4,0 z',

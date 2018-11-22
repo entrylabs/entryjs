@@ -283,14 +283,16 @@ Entry.skeleton.basic_create = {
     executable: true,
     path(blockView) {
         let width = blockView.contentWidth;
-        let height = blockView.contentHeight;
-        height = Math.max(30, height + 2);
-        width = Math.max(0, width + 9 - height / 2);
+        width = Math.max(0, width + 4);
 
-        return 'm -8,0 l 16,0 h %w a %h,%h 0 0,1 0,%wh h -%w l -8,8 -8,-8 v -%wh z'
-            .replace(/%wh/gi, height)
-            .replace(/%w/gi, width)
-            .replace(/%h/gi, height / 2);
+        return `M 12 29
+                l -6 6 -6 -6
+                V 1
+                h ${width}
+                c 7.732 0 14 6.268 14 14
+                s -6.268 14 -14 14
+                H 13
+                z`;
     },
     box(blockView) {
         const width = blockView ? blockView.contentWidth : 150;
@@ -304,14 +306,12 @@ Entry.skeleton.basic_create = {
         };
     },
     magnets(blockView) {
-        // apply scale required.
         const height = blockView ? Math.max(blockView.height, 30) : 30;
         return {
-            next: { x: 0, y: height + 1 + blockView.offsetY },
+            next: { x: 0, y: height + blockView.offsetY - 1 },
         };
     },
     contentPos(blockView) {
-        // apply scale required.
         const height = Math.max(blockView.contentHeight, 28);
         return { x: 14, y: height / 2 + 1 };
     },
@@ -495,11 +495,11 @@ Entry.skeleton.basic_string_field = {
         const halfHeight = height / 2;
 
         return `m ${halfHeight} 0
-        h ${width}
-        a ${halfHeight} ${halfHeight} 0 1 1 0 ${height}
-        H ${halfHeight}
-        a ${halfHeight} ${halfHeight} 0 0 1 0 -${height}
-        z`;
+                h ${width}
+                a ${halfHeight} ${halfHeight} 0 1 1 0 ${height}
+                H ${halfHeight}
+                a ${halfHeight} ${halfHeight} 0 0 1 0 -${height}
+                z`;
     },
     color: '#FFF',
     outerLine: '#FF9C00',
@@ -537,12 +537,12 @@ Entry.skeleton.basic_boolean_field = {
         const x = height * 0.4;
 
         return `m ${halfHeight} 0
-        l -${x} ${halfHeight}
-        l ${x} ${halfHeight}
-        h ${width}
-        l ${x} -${halfHeight}
-        l -${x} -${halfHeight}
-        z`;
+                l -${x} ${halfHeight}
+                l ${x} ${halfHeight}
+                h ${width}
+                l ${x} -${halfHeight}
+                l -${x} -${halfHeight}
+                z`;
     },
     color: '#FFF',
     outerLine: '#6173F5',
@@ -579,31 +579,30 @@ Entry.skeleton.basic_param = {
         }
         width = Math.max(0, width);
         return `m 2 0
-        h ${width + 11}
-        a 3 3 0 0 1 3 3
-        h 1.775
-        a 2 2 0 0 1 2 2
-        v 12
-        a 2 2 0 0 1 -2 2
-        h -1.775
-        a 3 3 0 0 1 -3 3
-        H 3
-        a 3 3 0 0 1 -3 -3
-        h 2
-        a 2 2 0 0 0 2 -2
-        V 5
-        a 2 2 0 0 0 -2 -2
-        H 0
-        a 3 3 0 0 1 3 -3
-        z
-        `;
+                h ${width + 11}
+                a 3 3 0 0 1 3 3
+                h 2.2
+                a 2 2 0 0 1 2 2
+                v 12
+                a 2 2 0 0 1 -2 2
+                h -2.2
+                a 3 3 0 0 1 -3 3
+                H 3
+                a 3 3 0 0 1 -3 -3
+                h 2
+                a 2 2 0 0 0 2 -2
+                V 5
+                a 2 2 0 0 0 -2 -2
+                H 0
+                a 3 3 0 0 1 3 -3
+                z`;
     },
     box(blockView) {
         const width = blockView ? blockView.contentWidth : 5;
         return {
             offsetX: 0,
             offsetY: 0,
-            width: width + 16,
+            width: width + 11,
             height: 22,
             marginBottom: 0,
         };
