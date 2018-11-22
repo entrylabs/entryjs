@@ -572,34 +572,34 @@ Entry.Board = class Board {
             }
             if (block.statements) {
                 zIndex += 0.01;
-            }
-            for (let j = 0; j < block.statements.length; j++) {
-                const thread = block.statements[j];
-                const statement = block.view._statements[j];
-                statement.zIndex = zIndex;
-                statement.absX = cursorX + statement.x * this.scale;
-                metaData.push({
-                    point: statement.y + cursorY - 30,
-                    endPoint: statement.y + cursorY,
-                    startBlock: statement,
-                    blocks: [],
-                });
-                metaData.push({
-                    point: statement.y + cursorY + statement.height,
-                    blocks: [],
-                });
-                zIndex += 0.01;
-                statementBlocks = statementBlocks.concat(
-                    this._getNextMagnets(
-                        thread,
-                        zIndex,
-                        {
-                            x: statement.x * this.scale + cursorX,
-                            y: statement.y + cursorY,
-                        },
-                        targetType
-                    )
-                );
+                for (let j = 0; j < block.statements.length; j++) {
+                    const thread = block.statements[j];
+                    const statement = block.view._statements[j];
+                    statement.zIndex = zIndex;
+                    statement.absX = cursorX + statement.x * this.scale;
+                    metaData.push({
+                        point: statement.y + cursorY - 30,
+                        endPoint: statement.y + cursorY,
+                        startBlock: statement,
+                        blocks: [],
+                    });
+                    metaData.push({
+                        point: statement.y + cursorY + statement.height,
+                        blocks: [],
+                    });
+                    zIndex += 0.01;
+                    statementBlocks = statementBlocks.concat(
+                        this._getNextMagnets(
+                            thread,
+                            zIndex,
+                            {
+                                x: statement.x * this.scale + cursorX,
+                                y: statement.y + cursorY,
+                            },
+                            targetType
+                        )
+                    );
+                }
             }
             if (blockView.magnet.next) {
                 cursorY += blockView.magnet.next.y;
@@ -1086,6 +1086,7 @@ Entry.Board = class Board {
 
     _initContextOptions() {
         const that = this;
+        const { x, y } = this.offset();
         this._contextOptions = [
             {
                 activated: true,
@@ -1155,7 +1156,16 @@ Entry.Board = class Board {
                     text: '메모 추가하기',
                     enable: !this.readOnly,
                     callback() {
-                        Entry.do('createCommentBlock', undefined, that);
+                        Entry.do(
+                            'createCommentBlock',
+                            {
+                                id: Entry.Utils.generateId(),
+                                x: Entry.ContextMenu.mouseCoordinate.x - x,
+                                y: Entry.ContextMenu.mouseCoordinate.y - y,
+                            },
+                            undefined,
+                            that
+                        );
                     },
                 },
             },

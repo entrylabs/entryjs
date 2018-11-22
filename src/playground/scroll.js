@@ -51,7 +51,7 @@ Entry.Scroller = class Scroller {
         if (window.TouchEvent && e instanceof window.TouchEvent) {
             e = e.changedTouches[0];
         }
-        var dragInstance = this.dragInstance;
+        const dragInstance = this.dragInstance;
         if (this.scrollType === 'horizontal') {
             this.scroll((-e.pageX + dragInstance.offsetX) / this.hRatio, 0);
         } else {
@@ -76,7 +76,9 @@ Entry.Scroller = class Scroller {
         if (e.button === 0 || e instanceof window.TouchEvent) {
             console.log('go into add event');
             this.scrollType = e.target.type;
-            if (Entry.documentMousedown) Entry.documentMousedown.notify(e);
+            if (Entry.documentMousedown) {
+                Entry.documentMousedown.notify(e);
+            }
             this.addEventListener(document, ['mousemove', 'touchmove'], this.onMouseMove, {
                 passive: false,
             });
@@ -103,8 +105,7 @@ Entry.Scroller = class Scroller {
     }
 
     createScrollBar() {
-        var r = this.RADIUS;
-        var scroller = this;
+        const r = this.RADIUS;
 
         this.svgGroup = this.board.svg.elem('g').attr({ class: 'boardScrollbar' });
 
@@ -150,10 +151,12 @@ Entry.Scroller = class Scroller {
     }
 
     scroll(x, y, skipCommand) {
-        if (!this.board.code) return;
+        if (!this.board.code) {
+            return;
+        }
 
-        var board = this.board;
-        var svgRect = board.getSvgDomRect();
+        const board = this.board;
+        const svgRect = board.getSvgDomRect();
         const clientRect = board.svgBlockGroup.getBoundingClientRect();
         const bBox = {
             x: clientRect.left - this.board.offset().left,
@@ -181,7 +184,9 @@ Entry.Scroller = class Scroller {
 
         this._scroll(x, y);
         if (skipCommand !== true) {
-            if (!this._diffs) this._diffs = [0, 0];
+            if (!this._diffs) {
+                this._diffs = [0, 0];
+            }
 
             this._diffs[0] += x;
             this._diffs[1] += y;
@@ -198,7 +203,9 @@ Entry.Scroller = class Scroller {
     }
 
     setVisible(visible) {
-        if (visible == this.isVisible()) return;
+        if (visible == this.isVisible()) {
+            return;
+        }
         this._visible = visible;
         this.svgGroup.attr({
             display: visible === true ? 'block' : 'none',
@@ -210,7 +217,9 @@ Entry.Scroller = class Scroller {
     }
 
     setOpacity(value) {
-        if (this._opacity == value) return;
+        if (this._opacity == value) {
+            return;
+        }
         this.hScrollbar.attr({ opacity: value });
         this.vScrollbar.attr({ opacity: value });
 
@@ -218,7 +227,9 @@ Entry.Scroller = class Scroller {
     }
 
     resizeScrollBar() {
-        if (!this._visible) return;
+        if (!this._visible) {
+            return;
+        }
 
         const board = this.board;
         const offset = board.offset();
@@ -290,8 +301,10 @@ Entry.Scroller = class Scroller {
     }
 
     _bindEvent() {
-        var dResizeScrollBar = Entry.Utils.debounce(this.resizeScrollBar, 250);
+        const dResizeScrollBar = Entry.Utils.debounce(this.resizeScrollBar, 250);
         this.board.changeEvent.attach(this, dResizeScrollBar);
-        if (Entry.windowResized) Entry.windowResized.attach(this, dResizeScrollBar);
+        if (Entry.windowResized) {
+            Entry.windowResized.attach(this, dResizeScrollBar);
+        }
     }
 };

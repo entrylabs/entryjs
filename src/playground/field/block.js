@@ -23,7 +23,6 @@ Entry.FieldBlock = class FieldBlock extends Entry.Field {
         this.view = this;
 
         this.svgGroup = null;
-        this.svgCommentGroup = null;
 
         this._position = content.position;
 
@@ -49,16 +48,12 @@ Entry.FieldBlock = class FieldBlock extends Entry.Field {
     renderStart(board, mode, renderMode, isReDraw) {
         if (!this.svgGroup) {
             this.svgGroup = this._blockView.contentSvgGroup.elem('g');
-            if (this._blockView.contentSvgCommentGroup) {
-                this.svgCommentGroup = this._blockView.contentSvgCommentGroup.elem('g');
-            }
         }
 
         this.renderMode = !_.isUndefined(mode) ? mode : this._blockView.renderMode;
 
         this.view = this;
         this._nextGroup = this.svgGroup;
-        this._nextCommentGroup = this.svgCommentGroup;
 
         this.updateValueBlock(this.getValue());
 
@@ -74,7 +69,6 @@ Entry.FieldBlock = class FieldBlock extends Entry.Field {
 
     align(x, y, animate = true) {
         const svgGroup = this.svgGroup;
-        const svgCommentGroup = this.svgCommentGroup;
         if (this._position) {
             if (this._position.x) {
                 x = this._position.x;
@@ -92,9 +86,6 @@ Entry.FieldBlock = class FieldBlock extends Entry.Field {
 
         if (!(x || y)) {
             svgGroup.removeAttr('transform');
-            if (svgCommentGroup) {
-                svgCommentGroup.removeAttr('transform');
-            }
         } else {
             const transform = `translate(${x},${y})`;
             if (animate) {
@@ -105,24 +96,10 @@ Entry.FieldBlock = class FieldBlock extends Entry.Field {
                     300,
                     mina.easeinout
                 );
-                if (svgCommentGroup) {
-                    svgCommentGroup.animate(
-                        {
-                            transform,
-                        },
-                        300,
-                        mina.easeinout
-                    );
-                }
             } else {
                 svgGroup.attr({
                     transform,
                 });
-                if (svgCommentGroup) {
-                    svgCommentGroup.attr({
-                        transform,
-                    });
-                }
             }
         }
 
@@ -321,8 +298,7 @@ Entry.FieldBlock = class FieldBlock extends Entry.Field {
             valueBlock.view.bumpAway(30 * scale, 150);
         }
         this.updateValueBlock(block);
-        block.view._toLocalCoordinate(this.svgGroup);
-        block.view._toLocalCoordinate(this.svgCommentGroup, block.view.svgCommentGroup);
+        block.view._toLocalCoordinate(this);
         this.calcWH();
         this.changeEvent.notify();
     }
@@ -368,7 +344,6 @@ Entry.FieldBlock = class FieldBlock extends Entry.Field {
     }
 
     _updateBG() {
-        console.log('..?');
         if (this.magneting) {
             this._bg = this.svgGroup.elem('path', {
                 d: 'm 8,12 l -4,0 -2,-2 0,-3 3,0 1,-1 0,-12 -1,-1 -3,0 0,-3 2,-2 l 4,0 z',

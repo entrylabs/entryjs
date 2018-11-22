@@ -54,9 +54,11 @@ Entry.Commander = function(injectType) {
         let state;
 
         if (stateManager && !UTIL.checkIsSkip(commandType)) {
-            state = stateManager.addCommand(...[commandType, this, this.do, command.undo].concat(
-                command.state.apply(this, args)
-            ));
+            state = stateManager.addCommand(
+                ...[commandType, this, this.do, command.undo].concat(
+                    command.state.apply(this, args)
+                )
+            );
         }
         const value = command.do.apply(this, args);
         this.doEvent.notify(commandType, args);
@@ -79,9 +81,7 @@ Entry.Commander = function(injectType) {
         if (Entry.stateManager && command.skipUndoStack !== true) {
             state = Entry.stateManager.addCommand.apply(
                 Entry.stateManager,
-                [commandType, this, this.do, command.undo].concat(
-                    command.state.apply(this, args)
-                )
+                [commandType, this, this.do, command.undo].concat(command.state.apply(this, args))
             );
         }
         return {
@@ -100,9 +100,7 @@ Entry.Commander = function(injectType) {
         if (Entry.stateManager && command.skipUndoStack !== true) {
             Entry.stateManager.addCommand.apply(
                 Entry.stateManager,
-                [commandType, this, this.undo, commandType].concat(
-                    command.state.apply(null, args)
-                )
+                [commandType, this, this.undo, commandType].concat(command.state.apply(null, args))
             );
         }
         command.undo.apply(this, args);
@@ -138,10 +136,7 @@ Entry.Commander = function(injectType) {
     };
 
     p.addReporter = function(reporter) {
-        reporter.logEventListener = this.logEvent.attach(
-            reporter,
-            reporter.add
-        );
+        reporter.logEventListener = this.logEvent.attach(reporter, reporter.add);
     };
 
     p.removeReporter = function(reporter) {
@@ -154,11 +149,7 @@ Entry.Commander = function(injectType) {
     p.report = function(commandType, argumentsArray) {
         let data;
 
-        if (
-            commandType &&
-            Entry.Command[commandType] &&
-            Entry.Command[commandType].log
-        ) {
+        if (commandType && Entry.Command[commandType] && Entry.Command[commandType].log) {
             data = Entry.Command[commandType].log.apply(this, argumentsArray);
         } else {
             data = argumentsArray;

@@ -37,7 +37,7 @@ Entry.Code = class Code {
         }
 
         this.clear();
-        
+
         const parseCode = Array.isArray(code) ? code : JSON.parse(code);
         parseCode.forEach((t) => {
             return this._data.push(new Entry.Thread(t, this));
@@ -271,7 +271,7 @@ Entry.Code = class Code {
         this.getThreads().forEach((thread) => {
             const { view = {} } = thread.getFirstBlock() || {};
             if (view && view.display) {
-                view._moveBy(x, y, false);
+                view.moveBy(x, y, false);
             }
         });
         const { board } = this;

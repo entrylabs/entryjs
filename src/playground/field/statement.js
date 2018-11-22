@@ -64,11 +64,7 @@ Entry.FieldStatement = function(content, blockView, index) {
         thread.view.setParent(this);
         const firstBlock = thread.getFirstBlock();
         if (firstBlock) {
-            firstBlock.view._toLocalCoordinate(this.statementSvgGroup);
-            firstBlock.view._toLocalCoordinate(
-                this.statementCommentGroup,
-                firstBlock.view.svgCommentGroup
-            );
+            firstBlock.view._toLocalCoordinate(this);
             this.firstBlock = firstBlock;
         }
 
