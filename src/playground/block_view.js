@@ -1076,7 +1076,7 @@ Entry.BlockView = class BlockView {
         const { x, y } = this.getAbsoluteCoordinate(dragMode);
         this._moveTo(x, y, false, doNotUpdatePos);
         this.getBoard().svgBlockGroup.appendChild(this.svgGroup);
-        this.getBoard().svgCommentGroup.appendChild(this.svgCommentGroup);
+        this.svgCommentGroup && this.getBoard().svgCommentGroup.appendChild(this.svgCommentGroup);
     }
 
     bindPrev(prevBlock, isDestroy) {
