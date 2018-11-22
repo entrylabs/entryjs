@@ -15,7 +15,6 @@ Entry.Block = class Block {
         emphasized: false,
         readOnly: null,
         copyable: true,
-        commentable: true,
         events: {},
         extensions: [],
     };
@@ -73,10 +72,6 @@ Entry.Block = class Block {
         if (block.comment) {
             this._commentSchema = block.comment;
         }
-    }
-
-    isCommentable() {
-        return this.commentable;
     }
 
     load(block) {
@@ -504,6 +499,11 @@ Entry.Block = class Block {
         return this.readOnly;
     }
 
+    isCommentable() {
+        const skeleton = this._schema.skeleton;
+        return skeleton != 'basic_string_field' && skeleton != '"basic_boolean_field"';
+    }
+
     getCode() {
         return this.thread.getCode();
     }
@@ -846,7 +846,7 @@ Entry.Block = class Block {
     }
 
     getCommentValue() {
-        return (this._comment && this._comment.value) || undefined;
+        return this._comment && this._comment.value;
     }
 };
 

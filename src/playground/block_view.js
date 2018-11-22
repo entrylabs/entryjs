@@ -1448,15 +1448,16 @@ Entry.BlockView = class BlockView {
             const hasComment = block.comment;
             const comment = {
                 text: hasComment ? '메모 삭제하기' : '메모 추가하기',
+                enable: block.isCommentable(),
                 callback() {
                     hasComment
                         ? Entry.do('removeCommentBlock', block.comment)
                         : Entry.do(
-                              'createCommentBlock',
-                              { id: Entry.Utils.generateId() },
-                              block,
-                              board
-                          );
+                            'createCommentBlock',
+                            { id: Entry.Utils.generateId() },
+                            block,
+                            board
+                        );
                 },
             };
 
