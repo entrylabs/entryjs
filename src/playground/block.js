@@ -501,7 +501,7 @@ Entry.Block = class Block {
 
     isCommentable() {
         const exclusion = ['basic_string_field', 'basic_boolean_field', 'basic_param'];
-        const skeleton = (this._schema && this._schema.skeleton) || 'basic_param';
+        const skeleton = this._schema && this._schema.skeleton;
         return !exclusion.includes(skeleton);
     }
 
