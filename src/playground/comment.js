@@ -632,11 +632,11 @@ Entry.Comment = class Comment {
         this.bindDomEventTextArea();
         this.textArea.val(this.value);
         this.textArea.css({
-            left,
-            top: this.titleHeight * this.scale + top,
+            left: left - this.scale * 0.1,
+            top: this.titleHeight * this.scale + top - this.scale * 0.25,
             'font-size': `${this.fontSize}px`,
-            width: (this.width - 14) * this.scale,
-            height: (this.height - this.titleHeight - 8) * this.scale,
+            width: (this.width - 13) * this.scale,
+            height: (this.height - this.titleHeight - 7) * this.scale,
             border: `${this.scale}px solid #EDA913`,
             'border-radius': `0 0 ${4 * this.scale}px ${4 * this.scale}px`,
             padding: `${3 * this.scale}px ${6 * this.scale}px`,
