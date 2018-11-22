@@ -505,6 +505,10 @@ Entry.Block = class Block {
         return !exclusion.includes(skeleton);
     }
 
+    hasComment() {
+        return '_comment' in this;
+    }
+
     getCode() {
         return this.thread.getCode();
     }

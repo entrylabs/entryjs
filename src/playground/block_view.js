@@ -192,10 +192,12 @@ Entry.BlockView = class BlockView {
         const _removeFunc = _.partial(_.result, _, 'remove');
 
         _removeFunc(this.contentSvgGroup);
+        _removeFunc(this.contentCommentGroup);
         _removeFunc(this.statementSvgGroup);
         _removeFunc(this.statementCommentGroup);
 
         this.contentSvgGroup = this.svgGroup.elem('g');
+        this.contentCommentGroup = this.svgGroup.elem('g');
         this._contents = [];
 
         const schema = this._schema;
@@ -335,6 +337,7 @@ Entry.BlockView = class BlockView {
 
         const contentPos = this.getContentPos();
         this.contentSvgGroup.attr('transform', `translate(${contentPos.x},${contentPos.y})`);
+        this.contentCommentGroup.attr('transform', `translate(${contentPos.x},${contentPos.y})`);
         this.contentPos = contentPos;
         this._render();
         const comment = this.block.comment;
@@ -1062,11 +1065,9 @@ Entry.BlockView = class BlockView {
     _toLocalCoordinate(view) {
         this.disableMouseEvent = false;
         this._moveTo(0, 0, false);
-        view._nextGroup.appendChild(this.svgGroup);
-        const { _nextCommentGroup } = view._nextGroup;
-        if (_nextCommentGroup) {
-            _nextCommentGroup.appendChild(this.svgCommentGroup);
-        }
+        const { _nextGroup: parentSvgGroup, _nextCommentGroup: parentCommentGroup } = view;
+        parentSvgGroup.appendChild(this.svgGroup);
+        parentCommentGroup && parentCommentGroup.appendChild(this.svgCommentGroup);
     }
 
     _toGlobalCoordinate(dragMode, doNotUpdatePos) {
@@ -1445,7 +1446,7 @@ Entry.BlockView = class BlockView {
                 },
             };
 
-            const hasComment = block.comment;
+            const hasComment = block._comment;
             const comment = {
                 text: hasComment ? '메모 삭제하기' : '메모 추가하기',
                 enable: block.isCommentable(),
