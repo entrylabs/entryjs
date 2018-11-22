@@ -833,7 +833,7 @@ Entry.Comment = class Comment {
 
     destroy(block) {
         this.removeControl();
-        this.svgGroup.remove();
+        this.destroyView();
         if (this.block) {
             delete this.block.disconnectComment();
         } else if (block) {
@@ -842,6 +842,10 @@ Entry.Comment = class Comment {
             this.board.code.destroyThread(this.thread);
         }
         this.code.unregisterBlock(this);
+    }
+
+    destroyView() {
+        this.svgGroup.remove();
     }
 
     removeControl() {
