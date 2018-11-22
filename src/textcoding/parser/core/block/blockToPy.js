@@ -161,8 +161,9 @@ Entry.BlockToPyParser = class {
             }
 
             // 코멘트 처리
-            if (!statements && block._comment) {
-                resultTextCode += ` #${block._comment.data.value}`;
+            const commentValue = block.getCommentValue();
+            if (!statements && commentValue !== undefined) { // '' 도 표기한다.
+                resultTextCode += ` # ${commentValue}`;
             }
 
             results.push(resultTextCode);
@@ -581,10 +582,7 @@ Entry.BlockToPyParser = class {
             .getBlocks();
         const defBlock = funcContents.shift();
 
-        let funcComment;
-        if (defBlock._comment) {
-            funcComment = defBlock._comment.data.value;
-        }
+        const funcComment = defBlock.getCommentValue();
 
         Entry.TextCodingUtil.gatherFuncDefParam(defBlock.getParam(0));
 
