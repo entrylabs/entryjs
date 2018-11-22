@@ -139,8 +139,8 @@ Entry.Comment = class Comment {
 
         this._contentGroup = this.svgGroup.elem('g');
         this._comment = this._contentGroup.elem('rect');
-        this._path = this._contentGroup.elem('path');
         this._path = this._contentGroup.elem('defs').elem('path');
+        this._text = this._contentGroup.elem('text');
         this._textPath = this._text.elem('textPath');
         this._resizeArea = this._contentGroup.elem('rect');
         this._resizeArrow = this._contentGroup.elem('image');
