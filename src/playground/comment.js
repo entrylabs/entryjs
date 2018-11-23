@@ -38,18 +38,21 @@ Entry.Comment = class Comment {
         this.addControl();
         this.code.registerBlock(this);
 
-        this.observe(this, 'updateOpacity', ['visible'], false);
-        this.observe(this, 'toggleContent', ['isOpened'], false);
-        this.observe(this, 'setValue', ['value']);
-        this.observe(this, 'setPosition', [
-            'x',
-            'y',
-            'width',
-            'height',
-            'parentWidth',
-            'parentHeight',
-            'isOpened',
-        ]);
+        this._observers = [];
+        this._observers.push(this.observe(this, 'updateOpacity', ['visible'], false));
+        this._observers.push(this.observe(this, 'toggleContent', ['isOpened'], false));
+        this._observers.push(this.observe(this, 'setValue', ['value']));
+        this._observers.push(
+            this.observe(this, 'setPosition', [
+                'x',
+                'y',
+                'width',
+                'height',
+                'parentWidth',
+                'parentHeight',
+                'isOpened',
+            ])
+        );
         this.magnet = {};
     }
 
@@ -512,7 +515,6 @@ Entry.Comment = class Comment {
     }
 
     mouseMove(e) {
-        e.preventDefault();
         e.stopPropagation();
         const mouseEvent = Entry.Utils.convertMouseEvent(e);
         if (
@@ -701,7 +703,6 @@ Entry.Comment = class Comment {
     }
 
     resizeMouseMove(e) {
-        e.preventDefault();
         e.stopPropagation();
 
         const mouseEvent = Entry.Utils.convertMouseEvent(e);
@@ -836,6 +837,7 @@ Entry.Comment = class Comment {
     destroy() {
         this.removeControl();
         this.destroyView();
+        this._destroyObservers();
         if (this.block) {
             delete this.block.disconnectComment();
         } else {
@@ -846,6 +848,13 @@ Entry.Comment = class Comment {
 
     destroyView() {
         this.svgGroup.remove();
+    }
+
+    _destroyObservers() {
+        const observers = this._observers;
+        while (observers.length) {
+            observers.pop().destroy();
+        }
     }
 
     removeControl() {
