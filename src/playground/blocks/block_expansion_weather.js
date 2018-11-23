@@ -12,9 +12,9 @@ Entry.Expansion_Weather = {
 };
 
 Entry.Expansion_Weather.getBlocks = function() {
-    let params = {
-        getDate: function(isPython = false) {
-            let param = {
+    const params = {
+        getDate(isPython = false) {
+            const param = {
                 type: 'Dropdown',
                 options: [
                     [Lang.Blocks.date_yesterday, 'yesterday'],
@@ -35,8 +35,8 @@ Entry.Expansion_Weather.getBlocks = function() {
             }
             return param;
         },
-        getLocation: function(isPython = false) {
-            let param = {
+        getLocation(isPython = false) {
+            const param = {
                 type: 'Dropdown',
                 options: getStateOptions(),
                 value: 'Seoul',
@@ -48,11 +48,11 @@ Entry.Expansion_Weather.getBlocks = function() {
             }
             return param;
         },
-        getSubLocation: function(targetIndex = 0, isPython = false) {
-            let param = {
+        getSubLocation(targetIndex = 0, isPython = false) {
+            const param = {
                 type: 'DropdownDynamic',
                 value: null,
-                menuName: function(value) {
+                menuName(value) {
                     if (value) {
                         return getCityOptions(value);
                     }
@@ -63,7 +63,7 @@ Entry.Expansion_Weather.getBlocks = function() {
                         return getCityOptions(this._block.data.params[targetIndex]);
                     }
                 },
-                targetIndex: targetIndex,
+                targetIndex,
                 needDeepCopy: true,
                 fontSize: 11,
                 arrowColor: EntryStatic.ARROW_COLOR_EXPANSION,
@@ -73,8 +73,8 @@ Entry.Expansion_Weather.getBlocks = function() {
             }
             return param;
         },
-        getSky: function(isPython = false) {
-            let param = {
+        getSky(isPython = false) {
+            const param = {
                 type: 'Dropdown',
                 options: [
                     [Lang.Blocks.EXPANSION_WEATHER_sunny, 'sunny'],
@@ -94,8 +94,8 @@ Entry.Expansion_Weather.getBlocks = function() {
             }
             return param;
         },
-        getFineDust: function(isPython = false) {
-            let param = {
+        getFineDust(isPython = false) {
+            const param = {
                 type: 'Dropdown',
                 options: [
                     [Lang.Blocks.EXPANSION_WEATHER_finedust_good, 'good'],
@@ -112,8 +112,8 @@ Entry.Expansion_Weather.getBlocks = function() {
             }
             return param;
         },
-        getWeatherElements: function(isPython = false) {
-            let param = {
+        getWeatherElements(isPython = false) {
+            const param = {
                 type: 'Dropdown',
                 options: [
                     [Lang.Blocks.EXPANSION_WEATHER_lowest_temperature, 'the_lowest_temperature'],
@@ -135,8 +135,8 @@ Entry.Expansion_Weather.getBlocks = function() {
             }
             return param;
         },
-        getNowWeatherElement: function(isPython = false) {
-            let param = {
+        getNowWeatherElement(isPython = false) {
+            const param = {
                 type: 'Dropdown',
                 options: [
                     [Lang.Blocks.EXPANSION_WEATHER_temperature, 'temperature'],
@@ -151,8 +151,8 @@ Entry.Expansion_Weather.getBlocks = function() {
             }
             return param;
         },
-        getTime: function(isPython = false) {
-            let param = {
+        getTime(isPython = false) {
+            const param = {
                 type: 'Dropdown',
                 options: [
                     ['00', '00'],
@@ -176,7 +176,7 @@ Entry.Expansion_Weather.getBlocks = function() {
     };
 
     function pad2(n) {
-        return n < 10 ? '0' + n : n;
+        return n < 10 ? `0${n}` : n;
     }
 
     return {
@@ -200,6 +200,7 @@ Entry.Expansion_Weather.getBlocks = function() {
         },
         check_city_weather: {
             color: '#ff8888',
+            outerLine: '#ef6d6d',
             skeleton: 'basic_boolean_field',
             statements: [],
             params: [
@@ -230,7 +231,7 @@ Entry.Expansion_Weather.getBlocks = function() {
             },
             class: 'weather',
             isNotFor: ['weather'],
-            func: async function(sprite, script) {
+            async func(sprite, script) {
                 const location = {
                     parent: script.getField('LOCATION', script),
                     sub: script.getField('SUBLOCATION', script),
@@ -331,6 +332,7 @@ Entry.Expansion_Weather.getBlocks = function() {
         },
         check_city_finedust: {
             color: '#ff8888',
+            outerLine: '#ef6d6d',
             skeleton: 'basic_boolean_field',
             statements: [],
             params: [params.getLocation(), params.getSubLocation(0), params.getFineDust()],
@@ -350,7 +352,7 @@ Entry.Expansion_Weather.getBlocks = function() {
             },
             class: 'weather',
             isNotFor: ['weather'],
-            func: async function(sprite, script) {
+            async func(sprite, script) {
                 const location = {
                     parent: script.getField('LOCATION', script),
                     sub: script.getField('SUBLOCATION', script),
@@ -413,6 +415,7 @@ Entry.Expansion_Weather.getBlocks = function() {
         },
         get_city_weather_data: {
             color: '#ff8888',
+            outerLine: '#ef6d6d',
             skeleton: 'basic_string_field',
             statements: [],
             params: [
@@ -443,7 +446,7 @@ Entry.Expansion_Weather.getBlocks = function() {
             },
             class: 'weather',
             isNotFor: ['weather'],
-            func: async function(sprite, script) {
+            async func(sprite, script) {
                 const location = {
                     parent: script.getField('LOCATION', script),
                     sub: script.getField('SUBLOCATION', script),
@@ -532,6 +535,7 @@ Entry.Expansion_Weather.getBlocks = function() {
         },
         get_current_city_weather_data: {
             color: '#ff8888',
+            outerLine: '#ef6d6d',
             skeleton: 'basic_string_field',
             statements: [],
             params: [params.getLocation(), params.getSubLocation(0), params.getNowWeatherElement()],
@@ -551,12 +555,12 @@ Entry.Expansion_Weather.getBlocks = function() {
             },
             class: 'weather',
             isNotFor: ['weather'],
-            func: function(sprite, script) {
+            func(sprite, script) {
                 const location = {
                     parent: script.getField('LOCATION', script),
                     sub: script.getField('SUBLOCATION', script),
                 };
-                var type =
+                const type =
                     Entry.EXPANSION_BLOCK.weather.propertyMap[script.getField('TYPE', script)];
 
                 return new Promise((resolve) => {
@@ -593,6 +597,7 @@ Entry.Expansion_Weather.getBlocks = function() {
         },
         get_today_city_temperature: {
             color: '#ff8888',
+            outerLine: '#ef6d6d',
             skeleton: 'basic_string_field',
             statements: [],
             params: [params.getLocation(), params.getSubLocation(0), params.getTime()],
@@ -612,7 +617,7 @@ Entry.Expansion_Weather.getBlocks = function() {
             },
             class: 'weather',
             isNotFor: ['weather'],
-            func: async function(sprite, script) {
+            async func(sprite, script) {
                 const location = {
                     parent: script.getField('LOCATION', script),
                     sub: script.getField('SUBLOCATION', script),
@@ -673,7 +678,7 @@ Entry.Expansion_Weather.getBlocks = function() {
             },
             class: 'weather_legacy',
             isNotFor: ['weather_legacy'],
-            func: async function(sprite, script) {
+            async func(sprite, script) {
                 const apiResult = await Entry.EXPANSION_BLOCK.weather.getData(
                     'week',
                     script.getField('LOCATION', script),
@@ -781,7 +786,7 @@ Entry.Expansion_Weather.getBlocks = function() {
             },
             class: 'weather_legacy',
             isNotFor: ['weather_legacy'],
-            func: async function(sprite, script) {
+            async func(sprite, script) {
                 const apiResult = await Entry.EXPANSION_BLOCK.weather.getData(
                     'now',
                     script.getField('LOCATION', script),
@@ -848,7 +853,7 @@ Entry.Expansion_Weather.getBlocks = function() {
             },
             class: 'weather_legacy',
             isNotFor: ['weather_legacy'],
-            func: async function(sprite, script) {
+            async func(sprite, script) {
                 const apiResult = await Entry.EXPANSION_BLOCK.weather.getData(
                     'week',
                     script.getField('LOCATION', script),
@@ -945,13 +950,13 @@ Entry.Expansion_Weather.getBlocks = function() {
             },
             class: 'weather_legacy',
             isNotFor: ['weather_legacy'],
-            func: async function(sprite, script) {
-                var apiResult = await Entry.EXPANSION_BLOCK.weather.getData(
+            async func(sprite, script) {
+                const apiResult = await Entry.EXPANSION_BLOCK.weather.getData(
                     'now',
                     script.getField('LOCATION', script),
                     null
                 );
-                var type =
+                const type =
                     Entry.EXPANSION_BLOCK.weather.propertyMap[script.getField('TYPE', script)];
 
                 return apiResult[type];
@@ -995,7 +1000,7 @@ Entry.Expansion_Weather.getBlocks = function() {
             },
             class: 'weather_legacy',
             isNotFor: ['weather_legacy'],
-            func: async function(sprite, script) {
+            async func(sprite, script) {
                 const date = Entry.EXPANSION_BLOCK.weather.date
                     .toISOString()
                     .slice(0, 10)

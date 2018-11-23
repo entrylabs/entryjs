@@ -8,12 +8,12 @@ Entry.EXPANSION_BLOCK.translate = {
     name: 'translate',
     imageName: 'papago.png',
     title: {
-        'ko': '번역',
-        'en': 'translate',
+        ko: '번역',
+        en: 'translate',
     },
     description: Lang.Msgs.expansion_translate_description,
     isInitialized: false,
-    init: function() {
+    init() {
         if (this.isInitialized) {
             return;
         }
@@ -22,26 +22,69 @@ Entry.EXPANSION_BLOCK.translate = {
     },
     api: '/api/expansionBlock/papago/',
     typeMap: {
-        'dictionary': 'nsmt',
-        'artificial_intelligence': 'n2mt',
+        dictionary: 'nsmt',
+        artificial_intelligence: 'n2mt',
     },
     apiType: 'nsmt',
     langCodeMap: {
-        'auto': {
+        auto: {
             lang: Lang.Blocks.auto,
-            sub: ['en', 'ja', 'zh-CN', 'zh-TW', 'es', 'fr', 'de', 'ru', 'pt', 'th', 'vi', 'id', 'hi', 'ko'],
+            sub: [
+                'en',
+                'ja',
+                'zh-CN',
+                'zh-TW',
+                'es',
+                'fr',
+                'de',
+                'ru',
+                'pt',
+                'th',
+                'vi',
+                'id',
+                'hi',
+                'ko',
+            ],
         },
-        'ko': {
+        ko: {
             lang: Lang.Blocks.korean,
             sub: ['en', 'ja', 'zh-CN', 'zh-TW', 'es', 'fr', 'de', 'ru', 'pt', 'th', 'vi', 'id'],
         },
-        'en': {
+        en: {
             lang: Lang.Blocks.english,
-            sub: ['ko', 'ja', 'zh-CN', 'zh-TW', 'es', 'fr', 'de', 'ru', 'pt', 'th', 'vi', 'id', 'hi'],
+            sub: [
+                'ko',
+                'ja',
+                'zh-CN',
+                'zh-TW',
+                'es',
+                'fr',
+                'de',
+                'ru',
+                'pt',
+                'th',
+                'vi',
+                'id',
+                'hi',
+            ],
         },
-        'ja': {
+        ja: {
             lang: Lang.Blocks.japan,
-            sub: ['ko', 'en', 'zh-CN', 'zh-TW', 'es', 'fr', 'de', 'ru', 'pt', 'th', 'vi', 'id', 'hi'],
+            sub: [
+                'ko',
+                'en',
+                'zh-CN',
+                'zh-TW',
+                'es',
+                'fr',
+                'de',
+                'ru',
+                'pt',
+                'th',
+                'vi',
+                'id',
+                'hi',
+            ],
         },
         'zh-CN': {
             lang: Lang.Blocks.chinese_simplified,
@@ -51,39 +94,67 @@ Entry.EXPANSION_BLOCK.translate = {
             lang: Lang.Blocks.chinese_traditional,
             sub: ['ko', 'en', 'ja', 'zh-CN', 'es', 'fr', 'de', 'ru', 'pt', 'th', 'vi', 'id', 'hi'],
         },
-        'es': {
+        es: {
             lang: Lang.Blocks.spanish,
             sub: ['ko', 'en', 'ja', 'zh-CN', 'zh-TW', 'fr', 'de', 'ru', 'th', 'vi', 'id'],
         },
-        'fr': {
+        fr: {
             lang: Lang.Blocks.french,
             sub: ['ko', 'en', 'ja', 'zh-CN', 'zh-TW', 'es', 'de', 'ru', 'th', 'vi', 'id'],
         },
-        'de': {
+        de: {
             lang: Lang.Blocks.german,
-            sub: ['ko', 'en', 'ja', 'zh-CN', 'zh-TW', 'es', 'fr', 'ru', 'pt', 'th', 'vi', 'id', 'hi'],
+            sub: [
+                'ko',
+                'en',
+                'ja',
+                'zh-CN',
+                'zh-TW',
+                'es',
+                'fr',
+                'ru',
+                'pt',
+                'th',
+                'vi',
+                'id',
+                'hi',
+            ],
         },
-        'ru': {
+        ru: {
             lang: Lang.Blocks.russian,
-            sub: ['ko', 'en', 'ja', 'zh-CN', 'zh-TW', 'es', 'fr', 'de', 'pt', 'th', 'vi', 'id', 'hi'],
+            sub: [
+                'ko',
+                'en',
+                'ja',
+                'zh-CN',
+                'zh-TW',
+                'es',
+                'fr',
+                'de',
+                'pt',
+                'th',
+                'vi',
+                'id',
+                'hi',
+            ],
         },
-        'pt': {
+        pt: {
             lang: Lang.Blocks.portuguese,
             sub: ['ko', 'en', 'ja', 'zh-CN', 'zh-TW', 'de', 'ru', 'hi'],
         },
-        'th': {
+        th: {
             lang: Lang.Blocks.thai,
             sub: ['ko', 'en', 'ja', 'zh-CN', 'zh-TW', 'es', 'fr', 'de', 'ru', 'vi'],
         },
-        'vi': {
+        vi: {
             lang: Lang.Blocks.vietnamese,
             sub: ['ko', 'en', 'ja', 'zh-CN', 'zh-TW', 'es', 'fr', 'de', 'ru', 'th', 'id'],
         },
-        'id': {
+        id: {
             lang: Lang.Blocks.indonesian,
             sub: ['ko', 'en', 'zh-CN', 'zh-TW', 'es', 'fr', 'de', 'ru', 'th', 'vi'],
         },
-        'hi': {
+        hi: {
             lang: Lang.Blocks.hindi,
             sub: ['ko', 'en', 'ja', 'zh-CN', 'zh-TW', 'de', 'ru', 'pt'],
         },
@@ -91,9 +162,9 @@ Entry.EXPANSION_BLOCK.translate = {
 };
 
 Entry.EXPANSION_BLOCK.translate.getBlocks = function() {
-    let params = {
-        getType: function(isPython) {
-            let param = {
+    const params = {
+        getType(isPython) {
+            const param = {
                 type: 'Dropdown',
                 options: [
                     [Lang.Blocks.dictionary, 'dictionary'],
@@ -108,8 +179,8 @@ Entry.EXPANSION_BLOCK.translate.getBlocks = function() {
             }
             return param;
         },
-        getSourceLang: function(isPython) {
-            let param = {
+        getSourceLang(isPython) {
+            const param = {
                 type: 'Dropdown',
                 options: [
                     [Lang.Blocks.korean, 'ko'],
@@ -136,11 +207,11 @@ Entry.EXPANSION_BLOCK.translate.getBlocks = function() {
             }
             return param;
         },
-        getTargetLang: function(targetIndex = 0, isPython = false) {
-            let param = {
+        getTargetLang(targetIndex = 0, isPython = false) {
+            const param = {
                 type: 'DropdownDynamic',
                 value: null,
-                menuName: function(value) {
+                menuName(value) {
                     const langCodeMap = Entry.EXPANSION_BLOCK.translate.langCodeMap;
                     if (value) {
                         return langCodeMap[value].sub.map((code) => {
@@ -151,12 +222,12 @@ Entry.EXPANSION_BLOCK.translate.getBlocks = function() {
                     if (this._contents.options) {
                         return this._contents.options;
                     } else {
-                        return langCodeMap['ko'].sub.map((code) => {
+                        return langCodeMap.ko.sub.map((code) => {
                             return [langCodeMap[code].lang, code];
                         });
                     }
                 },
-                targetIndex: targetIndex,
+                targetIndex,
                 needDeepCopy: true,
                 fontSize: 11,
                 arrowColor: EntryStatic.ARROW_COLOR_EXPANSION,
@@ -168,55 +239,71 @@ Entry.EXPANSION_BLOCK.translate.getBlocks = function() {
         },
     };
     const getProjectId = function() {
-        if(Entry.projectId) {
+        if (Entry.projectId) {
             Entry.EXPANSION_BLOCK.translate.delayKey = Entry.projectId;
         }
 
-        if(Entry.EXPANSION_BLOCK.translate.delayKey) {
+        if (Entry.EXPANSION_BLOCK.translate.delayKey) {
             return Entry.EXPANSION_BLOCK.translate.delayKey;
         }
 
         Entry.EXPANSION_BLOCK.translate.delayKey = _.uniqueId(Entry.generateHash());
         return Entry.EXPANSION_BLOCK.translate.delayKey;
-    }
+    };
 
     const translate = (params, type, defaultValue) => {
-        params['projectId'] = getProjectId();
-        const key = 'translate-' + type + JSON.stringify(params);
-        return new PromiseManager().Promise(function(resolve) {
-            callApi(key, {
-                url: Entry.EXPANSION_BLOCK.translate.api + 'translate/' + type,
-                params: params,
-            }).then((result) => {
-                if (result.data) {
-                    return resolve(result.data.translatedText);
-                }
-                return resolve(defaultValue);
-            }).catch(() => {
-                return resolve(defaultValue);
+        params.projectId = getProjectId();
+        const key = `translate-${type}${JSON.stringify(params)}`;
+        return new PromiseManager()
+            .Promise(function(resolve) {
+                callApi(key, {
+                    url: `${Entry.EXPANSION_BLOCK.translate.api}translate/${type}`,
+                    params,
+                })
+                    .then((result) => {
+                        if (result.data) {
+                            return resolve(result.data.translatedText);
+                        }
+                        return resolve(defaultValue);
+                    })
+                    .catch(() => {
+                        return resolve(defaultValue);
+                    });
+            })
+            .catch(() => {
+                return defaultValue;
             });
-        }).catch(() => defaultValue);
     };
 
     const checkLang = (query, defaultValue) => {
         const langCodeMap = Entry.EXPANSION_BLOCK.translate.langCodeMap;
-        return new PromiseManager().Promise(function(resolve) {
-            callApi('translate-detect-' + query, {
-                url: Entry.EXPANSION_BLOCK.translate.api + 'dect/langs',
-                params: { query , projectId : getProjectId()},
-            }).then((result) => {
-                if (result.data && result.data.langCode && langCodeMap[result.data.langCode]) {
-                    return resolve(langCodeMap[result.data.langCode].lang);
-                }
-                return resolve(defaultValue);
-            }).catch(() => {
-                return resolve(defaultValue);
+        return new PromiseManager()
+            .Promise(function(resolve) {
+                callApi(`translate-detect-${query}`, {
+                    url: `${Entry.EXPANSION_BLOCK.translate.api}dect/langs`,
+                    params: { query, projectId: getProjectId() },
+                })
+                    .then((result) => {
+                        if (
+                            result.data &&
+                            result.data.langCode &&
+                            langCodeMap[result.data.langCode]
+                        ) {
+                            return resolve(langCodeMap[result.data.langCode].lang);
+                        }
+                        return resolve(defaultValue);
+                    })
+                    .catch(() => {
+                        return resolve(defaultValue);
+                    });
+            })
+            .catch(() => {
+                return defaultValue;
             });
-        }).catch(() => defaultValue);
     };
 
     const checkText = function(text) {
-        let result = {
+        const result = {
             result: false,
             message: Lang.Blocks.unknown_sentence,
         };
@@ -257,6 +344,7 @@ Entry.EXPANSION_BLOCK.translate.getBlocks = function() {
         },
         get_translated_string: {
             color: '#ff8888',
+            outerLine: '#ef6d6d',
             skeleton: 'basic_string_field',
             statements: [],
             params: [
@@ -290,7 +378,7 @@ Entry.EXPANSION_BLOCK.translate.getBlocks = function() {
             },
             class: 'translate',
             isNotFor: ['translate'],
-            func: function(sprite, script) {
+            func(sprite, script) {
                 const textObj = checkText(script.getStringValue('TEXT', script));
                 if (!textObj.result) {
                     return textObj.message;
@@ -329,6 +417,7 @@ Entry.EXPANSION_BLOCK.translate.getBlocks = function() {
         },
         check_language: {
             color: '#ff8888',
+            outerLine: '#ef6d6d',
             skeleton: 'basic_string_field',
             statements: [],
             params: [
@@ -357,7 +446,7 @@ Entry.EXPANSION_BLOCK.translate.getBlocks = function() {
             },
             class: 'translate',
             isNotFor: ['translate'],
-            func: function(sprite, script) {
+            func(sprite, script) {
                 const text = script.getStringValue('TEXT', script);
                 const textObj = checkText(text);
                 if (!textObj.result) {
