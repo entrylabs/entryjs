@@ -247,7 +247,7 @@ class GlobalSvg {
         if (mousePos.y > board.offset().top - 20 && mousePos.x > bLeft + bWidth) {
             return this.DONE;
         } else if (mousePos.y > bTop && mousePos.x > bLeft && blockMenu.visible) {
-            if (!blockView.block.isDeletable()) {
+            if (blockView.block && !blockView.block.isDeletable()) {
                 return this.RETURN;
             } else {
                 return this.REMOVE;

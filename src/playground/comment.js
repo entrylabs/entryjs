@@ -263,9 +263,6 @@ Entry.Comment = class Comment {
     }
 
     setPosition() {
-        if (!this.visible || !this.display) {
-            return;
-        }
         const { x, y } = this;
         let width = Math.max(this.width, 100);
         let rx = 4;
@@ -439,6 +436,7 @@ Entry.Comment = class Comment {
             this.dragMode = Entry.DRAG_MODE_MOUSEDOWN;
             this.bindDomEvent(this.mouseMove, this.mouseUp);
             const eventType = e.type;
+            this.board.set({ dragBlock: this });
 
             if (eventType === 'touchstart') {
                 longPressTimer = setTimeout(function() {
@@ -553,6 +551,9 @@ Entry.Comment = class Comment {
             this.destroyTextArea();
             Entry.do('moveComment', this);
         }
+        if (this.board) {
+            this.board.set({ dragBlock: null });
+        }
         this.removeMoveSetting(this.mouseMove, this.mouseUp);
     }
 
@@ -589,7 +590,7 @@ Entry.Comment = class Comment {
     }
 
     getBoard() {
-        return undefined;
+        return this.board;
     }
 
     getAbsoluteCoordinate(dragMode = this.dragMode) {

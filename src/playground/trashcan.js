@@ -55,13 +55,17 @@ Entry.FieldTrashcan = class FieldTrashcan {
             this.dragBlockObserver = block.observe(this, 'checkBlock', ['x', 'y']);
         } else {
             if (this.isOver && this.dragBlock) {
-                const prevBlock = this.dragBlock.block.getPrevBlock();
-                if (!prevBlock) {
-                    Entry.do('destroyThread', this.dragBlock.block.thread, 'trashcan').isPass(
-                        true,
-                        true
-                    );
-                    createjs.Sound.play('entryDelete');
+                if (this.dragBlock instanceof Entry.BlockView) {
+                    const prevBlock = this.dragBlock.block.getPrevBlock();
+                    if (!prevBlock) {
+                        Entry.do('destroyThread', this.dragBlock.block.thread, 'trashcan').isPass(
+                            true,
+                            true
+                        );
+                        createjs.Sound.play('entryDelete');
+                    }
+                } else if (this.dragBlock instanceof Entry.Comment) {
+                    Entry.do('removeCommentBlock', this.dragBlock).isPass(true, true);
                 }
             }
             this.tAnimation(false);
@@ -71,7 +75,7 @@ Entry.FieldTrashcan = class FieldTrashcan {
 
     checkBlock() {
         const dragBlock = this.dragBlock;
-        if (!dragBlock || !dragBlock.block.isDeletable()) {
+        if (!dragBlock || (dragBlock.block && !dragBlock.block.isDeletable())) {
             return;
         }
 
@@ -123,6 +127,7 @@ Entry.FieldTrashcan = class FieldTrashcan {
         }
 
         isOver = isOver === undefined ? true : isOver;
+        console.log('byebye');
         const trashTop = this.trashcanTop;
         if (isOver) {
             $(trashTop).attr('class', 'trashcanOpen');
