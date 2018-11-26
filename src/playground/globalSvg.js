@@ -63,6 +63,23 @@ class GlobalSvg {
         if (view == this._view || view.readOnly || !view.movable) {
             return;
         }
+
+        view._path.attr({
+            id: `${view.id}C`,
+            stroke: 'red',
+        });
+
+        view._titlePath.attr({
+            id: `${view.id}T`,
+        });
+
+        view._textPath.attr({
+            href: `#${view.id}C`,
+        });
+
+        view._titleTextPath.attr({
+            href: `#${view.id}T`,
+        });
         this._view = view;
         this._mode = mode;
         this.originalX = view.x;

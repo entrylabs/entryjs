@@ -263,6 +263,9 @@ Entry.Comment = class Comment {
     }
 
     setPosition() {
+        if (!this.visible) {
+            return;
+        }
         const { x, y } = this;
         let width = Math.max(this.width, 100);
         let rx = 4;
