@@ -756,9 +756,7 @@ Entry.Comment = class Comment {
         e.stopPropagation();
 
         if (this.dragMode === Entry.DRAG_MODE_MOUSEDOWN) {
-            this.set({
-                isOpened: !this.isOpened,
-            });
+            Entry.do('toggleCommentBlock', this);
         } else {
             Entry.do('moveComment', this, this.x, this.y);
         }
