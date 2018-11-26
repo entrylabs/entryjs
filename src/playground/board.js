@@ -338,11 +338,25 @@ Entry.Board = class Board {
         this.visible = true;
     }
 
+    alignCommentsInBlock() {
+        const blockMap = this.code._blockMap;
+        const keys = Object.keys(blockMap) || [];
+
+        keys.forEach((id) => {
+            const comment = blockMap[id];
+            if (comment instanceof Entry.Comment && comment.block) {
+                comment.initSchema();
+            }
+        });
+    }
+
     alignThreads(reDraw) {
         const threads = this.code.getThreads();
         if (!threads.length) {
             return;
         }
+
+        this.alignCommentsInBlock();
 
         const verticalGap = 15;
         let acculmulatedTop = 15;
@@ -353,6 +367,9 @@ Entry.Board = class Board {
         threads.forEach((thread) => {
             const block = thread.getFirstBlock();
             if (!block) {
+                return;
+            }
+            if (!this.isVisibleComment && block instanceof Entry.Comment) {
                 return;
             }
             reDraw && thread.view.reDraw();
@@ -369,7 +386,7 @@ Entry.Board = class Board {
             }
             columWidth = Math.max(columWidth, bBox.width);
             top = acculmulatedTop + verticalGap;
-            blockView.moveTo(left - bBox.x, top, false);
+            blockView.moveTo(left, top, false);
             acculmulatedTop = top + bBox.height * this.scale;
         });
         this.scroller.resizeScrollBar();

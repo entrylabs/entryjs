@@ -19,40 +19,20 @@ Entry.Comment = class Comment {
         deletable: Entry.Block.DELETABLE_TRUE,
     };
 
-    constructor(block, board, comment) {
+    constructor(block, board, schema) {
         Entry.Model(this, false);
 
-        if (!board.svgCommentGroup) {
-            return;
+        if (schema) {
+            this.set(schema);
         }
         this._block = block;
-        this._board = board;
         if (block) {
             const { view } = block;
             this._blockView = view;
         }
-        this.createComment();
-        this.startRender();
-        this.initSchema(comment);
-        this.setFrame();
-        this.addControl();
-        this.code.registerBlock(this);
-
-        this._observers = [];
-        this._observers.push(this.observe(this, 'updateOpacity', ['visible'], false));
-        this._observers.push(this.observe(this, 'toggleContent', ['isOpened']));
-        this._observers.push(this.observe(this, 'setValue', ['value']));
-        this._observers.push(
-            this.observe(this, 'setPosition', [
-                'x',
-                'y',
-                'width',
-                'height',
-                'parentWidth',
-                'parentHeight',
-                'isOpened',
-            ])
-        );
+        if (board) {
+            this.createComment(board, schema);
+        }
         this.magnet = {};
     }
 
@@ -116,7 +96,15 @@ Entry.Comment = class Comment {
         return `M22,14 H${this.width - 22}`;
     }
 
-    createComment() {
+    generateId(schema = {}) {
+        const id = schema.id || Entry.Utils.generateId();
+        this.set({ id });
+    }
+
+    createComment(board, schema) {
+        if (board) {
+            this._board = board;
+        }
         const { svgGroup, pathGroup } = this.blockView || {};
         this.pathGroup = pathGroup;
         this.parentGroup = svgGroup;
@@ -133,6 +121,15 @@ Entry.Comment = class Comment {
         this.resizeMouseUp = this.resizeMouseUp.bind(this);
         this.toggleMouseDown = this.toggleMouseDown.bind(this);
         this.toggleMouseUp = this.toggleMouseUp.bind(this);
+
+        this.startRender();
+        if (schema) {
+            this.initSchema(schema);
+        }
+        this.setFrame();
+        this.addControl();
+        this.code.registerBlock(this);
+        this.setObservers();
     }
 
     startRender() {
@@ -161,9 +158,10 @@ Entry.Comment = class Comment {
         this.canRender = true;
     }
 
-    initSchema(comment = {}) {
+    initSchema(schema = {}) {
         let parentWidth = 0;
         let parentHeight = 0;
+        this.generateId(schema);
         if (this.pathGroup) {
             parentWidth = this.pathGroup.getBBox().width;
             const { topFieldHeight, height } = this._blockView;
@@ -173,16 +171,13 @@ Entry.Comment = class Comment {
         const x = defaultLineLength + parentWidth;
         const y = parentHeight / 2 - titleHeight / 2;
 
-        if (comment) {
-            if (!comment.id) {
-                comment.id = Entry.Utils.generateId();
-            }
-        }
-        comment.x = comment.x || x;
-        comment.y = comment.y || y;
-        comment.parentWidth = comment.parentWidth || parentWidth;
-        comment.parentHeight = comment.parentHeight || parentHeight;
-        this.set(comment);
+        schema.x = schema.x || x;
+        schema.y = schema.y || y;
+        schema.parentWidth = schema.parentWidth || parentWidth;
+        schema.parentHeight = schema.parentHeight || parentHeight;
+        schema.width = schema.width || 160;
+        schema.height = schema.height || 160;
+        this.set(schema);
         this.originX = this.x;
         this.originY = this.y;
     }
@@ -334,6 +329,24 @@ Entry.Comment = class Comment {
             x: x + 5,
             y: y + 5,
         });
+    }
+
+    setObservers() {
+        this._observers = [];
+        this._observers.push(this.observe(this, 'updateOpacity', ['visible'], false));
+        this._observers.push(this.observe(this, 'toggleContent', ['isOpened']));
+        this._observers.push(this.observe(this, 'setValue', ['value']));
+        this._observers.push(
+            this.observe(this, 'setPosition', [
+                'x',
+                'y',
+                'width',
+                'height',
+                'parentWidth',
+                'parentHeight',
+                'isOpened',
+            ])
+        );
     }
 
     updatePos() {
@@ -852,6 +865,12 @@ Entry.Comment = class Comment {
         }
         this.code.unregisterBlock(this);
     }
+
+    isInOrigin() {
+        return false;
+    }
+
+    reDraw() {}
 
     destroyView() {
         this.svgGroup.remove();

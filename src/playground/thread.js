@@ -17,23 +17,17 @@ Entry.Thread = class Thread {
         return this.id;
     }
 
-    load(thread, mode) {
-        if (thread === undefined || thread === null) {
-            thread = [];
-        }
+    load(thread = [], mode) {
         if (!(thread instanceof Array)) {
             return console.error('thread must be array');
         }
 
         for (let i = 0; i < thread.length; i++) {
             const block = thread[i];
-            if (block instanceof Entry.Block || block.isDummy) {
+            if (block instanceof Entry.Block || block instanceof Entry.Comment || block.isDummy) {
                 block.setThread(this);
                 this._data.push(block);
-            } else if (block instanceof Entry.Comment) {
-                block.setThread(this);
-                this._data.push(block);
-            } else if (block.type == 'comment') {
+            } else if (block.type === 'comment') {
                 const commment = new Entry.Comment(undefined, this._code.board, block);
                 commment.setThread(this);
                 this._data.push(commment);
@@ -66,6 +60,8 @@ Entry.Thread = class Thread {
             let view;
             if (b.createView) {
                 view = b.createView(board, mode);
+            } else if (b.createComment && !b.board) {
+                view = b.createComment(board);
             }
             return view;
         });

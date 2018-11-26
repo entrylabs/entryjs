@@ -112,11 +112,13 @@
     };
 
     c[COMMAND_TYPES.uncloneCommentBlock] = {
-        do(comment) {
+        do(target) {
+            const comment = this.editor.board.findBlock(target);
             comment.destroy();
         },
-        state(comment) {
-            return [comment, comment.board];
+        state(target) {
+            const comment = this.editor.board.findBlock(target);
+            return [target, comment.board];
         },
         log() {
             return [];
