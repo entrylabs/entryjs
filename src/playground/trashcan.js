@@ -127,7 +127,6 @@ Entry.FieldTrashcan = class FieldTrashcan {
         }
 
         isOver = isOver === undefined ? true : isOver;
-        console.log('byebye');
         const trashTop = this.trashcanTop;
         if (isOver) {
             $(trashTop).attr('class', 'trashcanOpen');

@@ -40,7 +40,7 @@ Entry.Comment = class Comment {
 
         this._observers = [];
         this._observers.push(this.observe(this, 'updateOpacity', ['visible'], false));
-        this._observers.push(this.observe(this, 'toggleContent', ['isOpened'], false));
+        this._observers.push(this.observe(this, 'toggleContent', ['isOpened']));
         this._observers.push(this.observe(this, 'setValue', ['value']));
         this._observers.push(
             this.observe(this, 'setPosition', [
@@ -558,12 +558,17 @@ Entry.Comment = class Comment {
     }
 
     removeMoveSetting(mouseMove, mouseUp) {
-        Entry.GlobalSvg.remove();
         this.dragMode = Entry.DRAG_MODE_NONE;
         this.board.set({ dragBlock: null });
         this.set({ visible: true });
         this.setPosition();
         this.removeDomEvent(mouseMove, mouseUp);
+        const gs = Entry.GlobalSvg;
+        const gsRet = gs.terminateDrag(this);
+        if (gsRet === gs.REMOVE) {
+            Entry.do('removeCommentBlock', this).isPass(true, true);
+        }
+        Entry.GlobalSvg.remove();
         delete this.mouseDownCoordinate;
         delete this.dragInstance;
     }
