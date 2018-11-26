@@ -2511,6 +2511,35 @@ Entry.Utils.recoverSoundInstances = function() {
     };
 })(HTMLElement.prototype);
 
+Entry.Utils.hasClass = (elem, name) => {
+    return ` ${elem.getAttribute('class')} `.indexOf(` ${name} `) >= 0;
+};
+
+Entry.Utils.addClass = (elem, name) => {
+    if (!Entry.Utils.hasClass(elem, name)) {
+        elem.setAttribute('class', (elem.getAttribute('class') ? `${elem.className} ` : '') + name);
+    }
+};
+
+Entry.Utils.toggleClass = (elem, name, force) => {
+    if (force || (typeof force === 'undefined' && !Entry.Utils.hasClass(elem, name))) {
+        Entry.Utils.addClass(elem, name);
+    } else {
+        Entry.Utils.removeClass(elem, name);
+    }
+};
+
+Entry.Utils.removeClass = (elem, name) => {
+    let set = ` ${elem.getAttribute('class')} `;
+
+    while (set.indexOf(` ${name} `) >= 0) {
+        set = set.replace(` ${name} `, ' ');
+    }
+
+    const result = typeof set.trim === 'function' ? set.trim() : set.replace(/^\s+|\s+$/g, '');
+    elem.setAttribute('class', result);
+};
+
 Entry.Utils.bindBlockViewHoverEvent = function(board, dom) {
     if (Entry.isMobile()) {
         return;

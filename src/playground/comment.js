@@ -526,7 +526,7 @@ Entry.Comment = class Comment {
             if (this.dragMode !== Entry.DRAG_MODE_DRAG) {
                 this.dragMode = Entry.DRAG_MODE_DRAG;
                 Entry.GlobalSvg.setComment(this, workspaceMode);
-                this.set({ visible: false });
+                this.visible && this.set({ visible: false });
             }
             this.moveBy(
                 mouseEvent.pageX - this.dragInstance.offsetX,
@@ -581,8 +581,8 @@ Entry.Comment = class Comment {
 
     updateOpacity() {
         this.visible
-            ? this.svgGroup.classList.remove('invisible')
-            : this.svgGroup.classList.add('invisible');
+            ? Entry.Utils.removeClass(this.svgGroup, 'invisible')
+            : Entry.Utils.addClass(this.svgGroup, 'invisible');
     }
 
     isReadOnly() {
@@ -769,16 +769,16 @@ Entry.Comment = class Comment {
         const path = `${Entry.mediaFilePath}block_icon/comment/`;
         let fileName;
         if (this.isOpened) {
-            this._contentGroup.classList.remove('invisible');
-            this._titleText.classList.add('invisible');
-            this._titleGroup.classList.remove('invisible');
+            Entry.Utils.removeClass(this._contentGroup, 'invisible');
+            Entry.Utils.addClass(this._titleText, 'invisible');
+            Entry.Utils.removeClass(this._titleGroup, 'invisible');
             fileName = 'toggle_open_arrow.svg';
         } else {
             if (this._block) {
-                this._titleGroup.classList.add('invisible');
+                Entry.Utils.addClass(this._titleGroup, 'invisible');
             }
-            this._contentGroup.classList.add('invisible');
-            this._titleText.classList.remove('invisible');
+            Entry.Utils.addClass(this._contentGroup, 'invisible');
+            Entry.Utils.removeClass(this._titleText, 'invisible');
             fileName = 'toggle_close_arrow.svg';
             this.destroyTextArea();
         }
