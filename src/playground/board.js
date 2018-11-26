@@ -344,7 +344,7 @@ Entry.Board = class Board {
 
         keys.forEach((id) => {
             const comment = blockMap[id];
-            if (comment instanceof Entry.Comment && comment.block) {
+            if (comment instanceof Entry.Comment) {
                 comment.initSchema();
             }
         });
