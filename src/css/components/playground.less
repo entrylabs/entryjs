@@ -106,11 +106,9 @@
 }
 
 .entryPlaygroundSoundLength {
-    float: right;
-    position: relative;
-    top: 20px;
-    right: 10px;
-    font-size: 9pt;
+    margin-top: 6px;
+    font-size: 10px;
+    line-height: 11px;
 }
 
 .entryPlaygroundDefaultWorkspace {
@@ -344,18 +342,16 @@
    left: 0;
    right: 0;
    bottom: 0;
-   background-color: #ececec;
+   background-color: #f9f9f9;
    top: 79px;
    margin-left: 0;
 }
 
 .entryPlaygroundAddPicture {
-    position: absolute;
-    width: 240px;
-    height: 60px;
-    background-color: #e5e5e5;
-    cursor: pointer;
-    border-bottom: 1pt solid #ebeff1;
+    width:254px;
+    padding: 8px 0;
+    background-color: #ecf8ff;
+    border: 1px  solid #d6e9f4;
 }
 
 .entryPlaygroundAddPicturePhone {
@@ -369,17 +365,19 @@
 
 .entryPlaygroundAddPictureInner {
     display: block;
-    width: 141px;
-    height: 30px;
-    background-color: #eeeeee;
-    color: black;
+    width: 146px;
+    height: 40px;
+    margin: 0 auto;
+    background-color: #fff;
+    border: 1px solid #4f80ff;
+    border-radius: 4px;
+    color: #4f80ff;
     text-align: center;
-    font-size: 11px;
-    line-height: 28px;
-    border: 1px solid #cccccc;
-    border-radius: 7px;
-    margin-top: 15px;
-    margin-left: 49.5px;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 40px;
+    cursor: pointer;
+
 }
 
 .entryPlaygroundAddPictureInnerPhone {
@@ -399,105 +397,118 @@
     position: absolute;
     padding: 0px;
     margin: 0px;
-    width: 240px;
-    top: 60px;
-    margin-bottom: 47px;
+    width: 254px;
+    top: 57px;
     bottom: 0px;
     overflow: auto;
     list-style: none;
-    background-color: #Cfcfcf;
+    background-color: #ecf8ff;
+    border: 1px solid #d6e9f4;
 }
 
 .entryPlaygroundPictureListPhone {
-    position: relative;
+    position: absolute;
     padding: 0px;
     margin: 0px;
-    width: 240px;
+    width: 254px;
+    top: 57px;
     bottom: 0px;
     overflow: auto;
     list-style: none;
-    background-color: #Cfcfcf;
+    background-color: #ecf8ff;
+    border: 1px solid #d6e9f4;
 }
 
-.entryPlaygroundPictureElement {
+.entryPlaygroundPictureElement { 
     display: block;
-    background-color: #f4f4f4;
-    border-bottom: 1pt solid #ebeff1;
-    height: 60px;
-    color: #294117;
+    position: relative;
+    background-color: #ecf8ff;
+    border-bottom: 1px solid #d6e9f4;
+    padding: 0 56px 0 64px;
+    height: 61px;
+    color: #2c313d;
     cursor: pointer;
 }
 
 .entryPlaygroundPictureElement:hover {
-    background-color: #C0C0C0;
     cursor: move;
+    background-color: #fff;
 }
 
 
 .entryPlaygroundPictureOrder,
 .entryPlaygroundSoundOrder {
-    width: 15px;
-    height: 100%;
-    float: left;
-    line-height: 57px;
+    overflow: hidden;
+    position: absolute;
+    left: 19px;
+    top: 11px;
+    width: 14px;
+    height: 14px;
+    background-color: #4f80ff;
+    border-radius: 50%;
     font-size: 10px;
+    color: #fff;
     text-align: center;
-    background-color: #d8d8d8;
-}
-
-.entryPlaygroundPictureElement:hover .entryPlaygroundPictureOrder,
-.entryPlaygroundSoundElement:hover .entryPlaygroundSoundOrder {
-    background-color: #634cd9;
-    color: white;
+    line-height:16px;
+    z-index: 10;
 }
 
 .entryPictureSelected {
-    background-color: #c1c1c1;
+    background-color: #fff;
 }
 
 .entryPlaygroundPictureThumbnail {
-    float: left;
-    position: relative;
-    height: 49px;
-    width: 49px;
-    top: 5px;
-    left: 10px;
-    border: 1px solid #bcc2c8;
-    background-color: #ccc;
-    background-size: contain;
+    position: absolute;
+    height: 44px;
+    width: 40px;
+    top: 8px;
+    left: 16px;
+    border: 1px solid #e2e2e2;
+    background-color: #fff;
+    border-radius: 4px;
+    background-size: auto 90%;
     background-repeat: no-repeat;
-    background-position: center;
+    background-position: 50% 50%;
 }
 
 .entryPlaygroundPictureName {
-    float: left;
-    position: relative;
-    top: 17px;
-    left: 17px;
-    width: 78px;
-    background-color: transparent;
-    font-size: 10pt;
+    width: 100%;
+    height: 24px;
+    margin-top: 10px;
+    padding: 0 4px;
+    background-color: #fff;
+    outline: 0;
+    font-size: 10px;
     text-overflow: ellipsis;
-    color: #294117;
+    color: #2c313d;
+    font-weight: 600;
     cursor: text;
-    border: 1px solid transparent;
-}
-
-.entryPlaygroundPictureName:focus, .entryPlaygroundSoundName:focus {
-    border: 1px solid gray;
-    background-color: white;
-}
-
-.entryPlaygroundPictureName:hover, .entryPlaygroundSoundName:hover {
-    border: 1px solid gray;
+    border: 1px solid #e2e2e2;
+    border-radius: 4px;
 }
 
 .entryPlaygroundPictureSize {
-    float: right;
-    position: relative;
-    top: 21px;
-    right: 10px;
-    font-size: 8pt;
+    margin-top: 6px;
+    font-size: 10px;
+    line-height: 11px;
+}
+.entryPlayground_del {
+    position: absolute;
+    right: 26px;
+    top: 18px;
+    width: 24px;
+    height: 24px;
+    border: 1px solid #e2e2e2;
+    border-radius: 4px;
+    background-color: #fff;
+    background-size: 10px;
+    font-size: 0;
+    cursor: pointer;
+    background-size: 10px auto;
+    background-position: 50% 50%;
+    background-repeat: no-repeat;
+    .backgroundImage("layers_icon_close_nor_new.png");
+
 }
 
 .entryPlaygroundTextWorkspace {
@@ -570,19 +581,19 @@
 
 .entryPlaygroundSoundWorkspace {
     position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #f9f9f9;
     top: 79px;
     margin-left: 0;
-    height: 100%;
-    background-color: #ececec;
 }
 
 .entryPlaygroundAddSound {
-    position: absolute;
-    height: 60px;
-    width: 240px;
-    background-color: #e5e5e5;
-    cursor: pointer;
-    border-bottom: 1pt solid #ebeff1;
+    width: 254px;
+    padding: 8px 0;
+    background-color: #ecf8ff;
+    border: 1px solid #d6e9f4;
 }
 
 .entryPlaygroundAddSoundPhone {
@@ -594,17 +605,18 @@
 
 .entryPlaygroundAddSoundInner {
     display: block;
-    width: 141px;
-    height: 30px;
-    background-color: #eeeeee;
-    color: black;
+    width: 146px;
+    height: 40px;
+    margin: 0 auto;
+    background-color: #fff;
+    border: 1px solid #4f80ff;
+    border-radius: 4px;
+    color: #4f80ff;
     text-align: center;
-    font-size: 11px;
-    line-height: 28px;
-    border: 1px solid #cccccc;
-    border-radius: 7px;
-    margin-top: 15px;
-    margin-left: 49.5px;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 40px;
+    cursor: pointer;
 }
 
 .entryPlaygroundAddSoundInnerPhone {
@@ -624,74 +636,73 @@
     position: absolute;
     padding: 0px;
     margin: 0px;
-    width: 240px;
-    top: 60px;
-    margin-bottom: 47px;
+    width: 254px;
+    top: 57px;
     bottom: 0px;
     overflow: auto;
     list-style: none;
-    background-color: #cfcfcf;
+    background-color: #ecf8ff;
+    border: 1px solid #d6e9f4;
 }
 
 .entryPlaygroundSoundListPhone {
-    position: relative;
+    position: absolute;
     padding: 0px;
     margin: 0px;
-    width: 240px;
+    width: 254px;
+    top: 57px;
     bottom: 0px;
     overflow: auto;
     list-style: none;
-    background-color: #cfcfcf;
+    background-color: #ecf8ff;
+    border: 1px solid #d6e9f4;
 }
 
 .entryPlaygroundSoundElement {
     display: block;
-    background-color: #f4f4f4;
-    border-bottom: 1pt solid #ebeff1;
-    height: 60px;
-    color: #294117;
+    position: relative;
+    background-color: #ecf8ff;
+    border-bottom: 1px solid #d6e9f4;
+    padding: 0 56px 0 64px;
+    height: 61px;
+    color: #2c313d;
     cursor: pointer;
 }
 
 .entryPlaygroundSoundElement:hover {
-    background-color: #c1c1c1;
+    background-color: #fff;
     cursor: move;
 }
 
 .entryPlaygroundSoundThumbnail {
-    float: left;
-    position: relative;
-    height: 49px;
-    width: 49px;
-    top: 5px;
-    left: 10px;
-    border: 1px solid #bcc2c8;
-    background-color: #ccc;
-    background-size: 32px 32px;
+    position: absolute;
+    height: 44px;
+    width: 40px;
+    top: 8px;
+    left: 16px;
+    border: 1px solid #e2e2e2;
+    background-color: #fff;
+    border-radius: 4px;
+    background-size: 40px auto;
     background-repeat: no-repeat;
-    background-position: center;
-    cursor: pointer;
-}
-
-.entryPlaygroundSoundThumbnail.entryPlaygroundSoundPlay {
+    background-position: 50% 50%;
     .backgroundImage("workspace_sound_play.png");
 }
 
-.entryPlaygroundSoundThumbnail.entryPlaygroundSoundStop {
-    .backgroundImage("workspace_sound_stop.png");
-}
-
 .entryPlaygroundSoundName {
-    float: left;
-    position: relative;
-    top: 18px;
-    left: 17px;
-    width: 95px;
-    background-color: transparent;
-    font-size: 10pt;
-    border: 1px solid transparent;
+    width: 100%;
+    height: 24px;
+    margin-top: 10px;
+    padding: 0 4px;
+    background-color: #fff;
+    outline: 0;
+    font-size: 10px;
     text-overflow: ellipsis;
-    color: #294117;
+    color: #2c313d;
+    font-weight: 600;
+    cursor: text;
+    border: 1px solid #e2e2e2;
+    border-radius: 4px;
 }
 
 .entryPlayground_text_buttons {
