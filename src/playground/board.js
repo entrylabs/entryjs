@@ -338,7 +338,7 @@ Entry.Board = class Board {
         this.visible = true;
     }
 
-    alignCommentsInBlock() {
+    alignComments() {
         const blockMap = this.code._blockMap;
         const keys = Object.keys(blockMap) || [];
 
