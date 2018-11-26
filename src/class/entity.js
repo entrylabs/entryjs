@@ -1001,10 +1001,7 @@ Entry.EntityObject.prototype.setImage = function(pictureModel) {
         pictureModel
     );
     this._scaleAdaptor.updateScaleFactor();
-
-    var hasFilter = !_.isEmpty(that.object.filters);
-    hasFilter ? this.cache() : this.uncache();
-
+    this.object.refreshFilter();
     Entry.requestUpdate = true;
 
 
@@ -1150,8 +1147,10 @@ Entry.EntityObject.prototype.applyFilter = function(isForce, forceEffects) {
         if (~diffEffects.indexOf('alpha')) {
             obj.alpha = e.alpha = adjust(e.alpha, 0, 1);
         }
-
-        obj.filters = f && f.length ? f : null;
+        obj.setFilterAndCache(f);
+        Entry.requestUpdate = true;
+        // obj.filters = f;
+        // obj.filters = f && f.length ? f : null;
     })(effects, object);
 
     this.cache();
@@ -1361,7 +1360,8 @@ Entry.EntityObject.prototype.resetFilter = function() {
     if (this.parent.objectType !== 'sprite') return;
 
     var object = this.object;
-    object.filters = [];
+    //object.filters = null;
+    object.setFilterAndCache(null);
     this.setInitialEffectValue();
     object.alpha = this.effect.alpha;
 
@@ -1668,6 +1668,7 @@ Entry.EntityObject.prototype.destroy = function(isClone) {
 };
 
 Entry.EntityObject.prototype.cache = function() {
+    return;
     var { object } = this;
     if (object && object.filters) {
         if(object.cacheAsBitmap) {
@@ -1679,6 +1680,7 @@ Entry.EntityObject.prototype.cache = function() {
 };
 
 Entry.EntityObject.prototype.uncache = function() {
+    return;
     var { object } = this;
     if(!object || !object.cacheAsBitmap) return;
     object.cacheAsBitmap = false;
