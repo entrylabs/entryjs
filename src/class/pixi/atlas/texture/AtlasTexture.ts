@@ -29,7 +29,11 @@ export class AtlasTexture extends PIXI.Texture {
 
     getBaseTexture():AtlasBaseTexture {
         return this.baseTexture as AtlasBaseTexture;
+    }
 
+    assignTextureScaleFactor(target:PIXI.RenderTexture) {
+        //textureScaleFactor 변수 네이밍을 여기저기서 쓰지 않으려고 메서드를 만듬.
+        (target as any).textureScaleFactor = this.textureScaleFactor;
     }
 
     /**

@@ -1,9 +1,11 @@
-/** for memory profiling */
-import DestroyOptions = PIXI.DestroyOptions;
 
-class PIXISprite extends PIXI.Sprite {
+import DestroyOptions = PIXI.DestroyOptions;
+import { PIXISprite } from '../plugins/PIXISprite';
+import Texture = PIXI.Texture;
+
+class PIXISpriteDebug extends PIXISprite {
     public __debugName:string;
-    constructor(texture?:PIXI.Texture) {
+    constructor(texture?:Texture) {
         super(texture);
     }
     destroy(options?: DestroyOptions | boolean) {
@@ -31,9 +33,9 @@ let PIXIText:any = require('../text/PIXIText').PIXIText;
 
 export default class PIXIHelper {
 
-    static sprite(debugName?:string, texture?:PIXI.Texture):PIXI.Sprite {
+    static sprite(debugName?:string, texture?:Texture):PIXI.Sprite {
         //return new PIXI.Sprite(texture);
-        var c = new PIXISprite(texture);
+        var c = new PIXISpriteDebug(texture);
         c.__debugName = debugName;
         return c;
     }

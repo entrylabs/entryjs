@@ -50,7 +50,7 @@ window.ndgmr = window.ndgmr || {};
     (function(p){
 
         p.render = function(obj, intersectRect) {
-            var tex = obj.texture;
+            var tex = obj.internal_getOriginalTex();
             if(!tex) return;
             var fr = tex.frame;
             if(!fr || fr.width === 0 || fr.height === 0 ) return;

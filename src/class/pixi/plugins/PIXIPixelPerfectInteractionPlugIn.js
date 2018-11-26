@@ -30,15 +30,25 @@ export class PIXIPixelPerfectInteractionPlugIn {
          */
         p.pixelPerfectAlpha = 1;
 
+
+        /**
+         * PIXISprite.ts 에서 override 함. 메서드명 바꾸지 말긔.
+         * @return {PIXI.BaseTexture | (HTMLImageElement | HTMLCanvasElement | HTMLVideoElement)}
+         */
+        p.internal_getOriginalTex= function() {
+            return this.texture;
+        };
         
         p.containsPoint = function(point) //overwrite PIXI.Sprite.containsPoint
         {
-            if(!this.texture.baseTexture) return false;
-            if(!this.texture.baseTexture.source) return false;
+            var tex = this.internal_getOriginalTex();
+            if(!tex.baseTexture) return false;
+            if(!tex.baseTexture.source) return false;
+
             this.worldTransform.applyInverse(point, tempPoint);
 
-            const width = this._texture.orig.width;
-            const height = this._texture.orig.height;
+            const width = tex.orig.width;
+            const height = tex.orig.height;
             const x1 = -width * this.anchor.x;
             let y1 = 0;
 
@@ -49,7 +59,7 @@ export class PIXIPixelPerfectInteractionPlugIn {
                 if (tempPoint.y >= y1 && tempPoint.y < y1 + height)
                 {
                     if(this.pixelPerfect) {
-                        return this._pixelHasAlpha(tempPoint.x, tempPoint.y);
+                        return this._pixelHasAlpha(tempPoint.x, tempPoint.y, tex);
                     }
                     return true;
                 }
@@ -58,8 +68,8 @@ export class PIXIPixelPerfectInteractionPlugIn {
         };// end p.containsPoint
 
 
-        p._pixelHasAlpha = function(x, y) { //add method into PIXI.Sprite
-            let texture = this.texture;
+        p._pixelHasAlpha = function(x, y, tex) { //add method into PIXI.Sprite
+            let texture = tex;
             let anchor = this.anchor;
             let frame = texture.frame;
 
@@ -77,9 +87,8 @@ export class PIXIPixelPerfectInteractionPlugIn {
             y += frame.y;
 
             let ctx = hitTestConText;
-
             ctx.clearRect(0, 0, 1, 1);
-            ctx.drawImage(texture.baseTexture.source, x, y, 1, 1, 0, 0, 1, 1);
+            ctx.drawImage(tex.baseTexture.source, x, y, 1, 1, 0, 0, 1, 1);
             let rgba = ctx.getImageData(0, 0, 1, 1);
             return rgba.data[3] > this.pixelPerfectAlpha;
         }; //end p._checkPixel

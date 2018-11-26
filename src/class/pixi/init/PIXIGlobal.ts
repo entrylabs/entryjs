@@ -1,6 +1,7 @@
 import { PIXIBaseAsset } from './PIXIBaseAsset';
 require("./../etc/PIXI-ndgmr.Collision");
 require("./../etc/PIXICanvasInput");
+require("../__testfiles/testcodes");
 import { PIXIAtlasManager } from '../atlas/PIXIAtlasManager';
 import { PIXIZeroAlphaNoneInteractionPlugins } from '../plugins/PIXIZeroAlphaNoneInteractionPlugins';
 import { PIXIPixelPerfectInteractionPlugIn } from '../plugins/PIXIPixelPerfectInteractionPlugIn';
