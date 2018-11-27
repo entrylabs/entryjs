@@ -1112,7 +1112,7 @@ Entry.Board = class Board {
                     enable: !!Entry.clipboard && !this.readOnly,
                     callback() {
                         if (Entry.clipboard.type === 'comment') {
-                            Entry.do('createCommentBlock', Entry.clipboard, undefined, that);
+                            Entry.do('createComment', Entry.clipboard, undefined, that);
                         } else {
                             Entry.do('addThread', Entry.clipboard)
                                 .value.getFirstBlock()
@@ -1178,7 +1178,7 @@ Entry.Board = class Board {
                     enable: !this.readOnly,
                     callback() {
                         Entry.do(
-                            'createCommentBlock',
+                            'createComment',
                             {
                                 id: Entry.Utils.generateId(),
                                 x: Entry.ContextMenu.mouseCoordinate.x - x,
@@ -1197,8 +1197,8 @@ Entry.Board = class Board {
                     enable: !this.readOnly,
                     callback() {
                         that.isVisibleComment
-                            ? Entry.do('hideAllCommentBlock', that)
-                            : Entry.do('showAllCommentBlock', that);
+                            ? Entry.do('hideAllComment', that)
+                            : Entry.do('showAllComment', that);
                     },
                 },
             },

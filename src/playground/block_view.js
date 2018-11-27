@@ -1453,13 +1453,8 @@ Entry.BlockView = class BlockView {
                 enable: block.isCommentable(),
                 callback() {
                     hasComment
-                        ? Entry.do('removeCommentBlock', block.comment)
-                        : Entry.do(
-                            'createCommentBlock',
-                            { id: Entry.Utils.generateId() },
-                            block,
-                            board
-                        );
+                        ? Entry.do('removeComment', block.comment)
+                        : Entry.do('createComment', { id: Entry.Utils.generateId() }, block, board);
                 },
             };
 

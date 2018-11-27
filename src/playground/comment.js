@@ -491,7 +491,7 @@ Entry.Comment = class Comment {
                 text: '메모 복사 & 붙여넣기',
                 enable: !readOnly,
                 callback() {
-                    Entry.do('cloneCommentBlock', comment.copy(), board);
+                    Entry.do('cloneComment', comment.copy(), board);
                 },
             };
 
@@ -507,7 +507,7 @@ Entry.Comment = class Comment {
                 text: '메모 삭제하기',
                 enable: !readOnly,
                 callback() {
-                    Entry.do('removeCommentBlock', comment);
+                    Entry.do('removeComment', comment);
                 },
             };
 
@@ -515,7 +515,7 @@ Entry.Comment = class Comment {
                 text: comment.isOpened ? '메모 접기' : '메모 열기',
                 enable: !readOnly,
                 callback() {
-                    Entry.do('toggleCommentBlock', comment);
+                    Entry.do('toggleComment', comment);
                 },
             };
 
@@ -523,7 +523,7 @@ Entry.Comment = class Comment {
                 text: '메모 분리하기',
                 enable: !!comment.block,
                 callback() {
-                    Entry.do('separateCommentBlock', comment);
+                    Entry.do('separateComment', comment);
                 },
             };
 
@@ -587,7 +587,7 @@ Entry.Comment = class Comment {
         const gs = Entry.GlobalSvg;
         const gsRet = gs.terminateDrag(this);
         if (gsRet === gs.REMOVE) {
-            Entry.do('removeCommentBlock', this).isPass(true, true);
+            Entry.do('removeComment', this).isPass(true, true);
         }
         Entry.GlobalSvg.remove();
         delete this.mouseDownCoordinate;
@@ -703,13 +703,16 @@ Entry.Comment = class Comment {
         delete this.event;
 
         if (this.textArea) {
-            const value = this.textArea.val();
             this.textArea.remove();
-            this.set({ value });
+            Entry.do('writeComment', this, this.textArea.val());
             delete this.textArea;
         }
 
         Entry.Utils.blur();
+    }
+
+    writeComment(value) {
+        this.set({ value });
     }
 
     setValue() {
@@ -783,7 +786,7 @@ Entry.Comment = class Comment {
         e.stopPropagation();
 
         if (this.dragMode === Entry.DRAG_MODE_MOUSEDOWN) {
-            Entry.do('toggleCommentBlock', this);
+            Entry.do('toggleComment', this);
         } else {
             Entry.do('moveComment', this, this.x, this.y);
         }

@@ -65,7 +65,7 @@ Entry.FieldTrashcan = class FieldTrashcan {
                         createjs.Sound.play('entryDelete');
                     }
                 } else if (this.dragBlock instanceof Entry.Comment) {
-                    Entry.do('removeCommentBlock', this.dragBlock).isPass(true, true);
+                    Entry.do('removeComment', this.dragBlock).isPass(true, true);
                 }
             }
             this.tAnimation(false);

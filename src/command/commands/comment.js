@@ -3,7 +3,7 @@
 (function(c) {
     const COMMAND_TYPES = Entry.STATIC.COMMAND_TYPES;
 
-    c[COMMAND_TYPES.createCommentBlock] = {
+    c[COMMAND_TYPES.createComment] = {
         do(schema, block, board) {
             const comment = new Entry.Comment(block, board, schema);
             if (block) {
@@ -19,10 +19,10 @@
         log() {
             return [];
         },
-        undo: 'removeCommentBlock',
+        undo: 'removeComment',
     };
 
-    c[COMMAND_TYPES.removeCommentBlock] = {
+    c[COMMAND_TYPES.removeComment] = {
         do(target) {
             const comment = this.editor.board.findBlock(target);
             comment.destroy();
@@ -34,10 +34,10 @@
         log() {
             return [];
         },
-        undo: 'createCommentBlock',
+        undo: 'createComment',
     };
 
-    c[COMMAND_TYPES.showAllCommentBlock] = {
+    c[COMMAND_TYPES.showAllComment] = {
         do(board) {
             board.set({ isVisibleComment: true });
         },
@@ -47,10 +47,10 @@
         log() {
             return [];
         },
-        undo: 'hideAllCommentBlock',
+        undo: 'hideAllComment',
     };
 
-    c[COMMAND_TYPES.hideAllCommentBlock] = {
+    c[COMMAND_TYPES.hideAllComment] = {
         do(board) {
             board.set({ isVisibleComment: false });
         },
@@ -60,7 +60,7 @@
         log() {
             return [];
         },
-        undo: 'showAllCommentBlock',
+        undo: 'showAllComment',
     };
 
     c[COMMAND_TYPES.moveComment] = {
@@ -81,7 +81,7 @@
         undo: 'moveComment',
     };
 
-    c[COMMAND_TYPES.toggleCommentBlock] = {
+    c[COMMAND_TYPES.toggleComment] = {
         do(comment) {
             comment.set({
                 isOpened: !comment.isOpened,
@@ -93,10 +93,10 @@
         log() {
             return [];
         },
-        undo: 'toggleCommentBlock',
+        undo: 'toggleComment',
     };
 
-    c[COMMAND_TYPES.cloneCommentBlock] = {
+    c[COMMAND_TYPES.cloneComment] = {
         do(schema, board) {
             const comment = new Entry.Comment(undefined, board, schema);
             board.code.createThread([comment], 0);
@@ -108,10 +108,10 @@
         log() {
             return [];
         },
-        undo: 'uncloneCommentBlock',
+        undo: 'uncloneComment',
     };
 
-    c[COMMAND_TYPES.uncloneCommentBlock] = {
+    c[COMMAND_TYPES.uncloneComment] = {
         do(target) {
             const comment = this.editor.board.findBlock(target);
             comment.destroy();
@@ -123,10 +123,10 @@
         log() {
             return [];
         },
-        undo: 'cloneCommentBlock',
+        undo: 'cloneComment',
     };
 
-    c[COMMAND_TYPES.separateCommentBlock] = {
+    c[COMMAND_TYPES.separateComment] = {
         do(target) {
             const comment = this.editor.board.findBlock(target);
             comment.separateFromBlock();
@@ -138,10 +138,10 @@
         log() {
             return [];
         },
-        undo: 'connectCommentBlock',
+        undo: 'connectComment',
     };
 
-    c[COMMAND_TYPES.connectCommentBlock] = {
+    c[COMMAND_TYPES.connectComment] = {
         do(target, block) {
             const comment = this.editor.board.findBlock(target);
             comment.connectToBlock(block);
@@ -153,6 +153,22 @@
         log() {
             return [];
         },
-        undo: 'separateCommentBlock',
+        undo: 'separateComment',
+    };
+
+    c[COMMAND_TYPES.writeComment] = {
+        do(target, value) {
+            const comment = this.editor.board.findBlock(target);
+            comment.writeComment(value);
+        },
+        state(target) {
+            const comment = this.editor.board.findBlock(target);
+            const json = comment.toJSON();
+            return [json, json.value];
+        },
+        log() {
+            return [];
+        },
+        undo: 'writeComment',
     };
 })(Entry.Command);
