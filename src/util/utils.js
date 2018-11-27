@@ -300,6 +300,8 @@ Entry.getDom = function(query) {
  * @param {!json} interfaceModel
  */
 Entry.resizeElement = function(interfaceModel) {
+        // 워크 스페이스에 style width / height 값을 임시로 막음.
+        return;
     const mainWorkspace = Entry.getMainWS();
     if (!mainWorkspace) {
         return;
