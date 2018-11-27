@@ -142,8 +142,8 @@ Entry.Comment = class Comment {
         this._path = this._contentGroup.elem('defs').elem('path');
         this._text = this._contentGroup.elem('text');
         this._textPath = this._text.elem('textPath');
-        this._resizeArea = this._contentGroup.elem('rect');
         this._resizeArrow = this._contentGroup.elem('image');
+        this._resizeArea = this._contentGroup.elem('rect');
 
         this._title = this.svgGroup.elem('rect');
         this._titleGroup = this.svgGroup.elem('g');
@@ -162,13 +162,16 @@ Entry.Comment = class Comment {
         let parentWidth = 0;
         let parentHeight = 0;
         this.generateId(schema);
+        let { titleHeight, defaultLineLength } = this;
         if (this.pathGroup) {
             parentWidth = this.pathGroup.getBBox().width;
             const { topFieldHeight, height } = this._blockView;
             parentHeight = topFieldHeight || height;
+        } else {
+            titleHeight = -60;
+            defaultLineLength = 50;
         }
-        const { titleHeight, defaultLineLength } = this;
-        const x = defaultLineLength + parentWidth;
+        const x = parentWidth + defaultLineLength;
         const y = parentHeight / 2 - titleHeight / 2;
 
         schema.x = schema.x || x;
@@ -230,6 +233,7 @@ Entry.Comment = class Comment {
         });
 
         const path = `${Entry.mediaFilePath}block_icon/comment/`;
+
         this._resizeArea.attr({
             width: 20,
             height: 20,
@@ -246,6 +250,7 @@ Entry.Comment = class Comment {
             width: 20,
             height: this.titleHeight,
             fill: 'transparent',
+            class: 'entry-comment-toggle-arrow',
         });
 
         this._toggleArrow.attr({
@@ -596,6 +601,7 @@ Entry.Comment = class Comment {
         };
         bindEvent(this._contentGroup, this.mouseDown);
         bindEvent(this._title, this.mouseDown);
+        bindEvent(this._titleGroup, this.mouseDown);
         bindEvent(this._resizeArea, this.resizeMouseDown);
         bindEvent(this._toggleArea, this.toggleMouseDown);
     }
