@@ -3,119 +3,105 @@
  */
 'use strict';
 
-Entry.Workspace = function(options) {
-    Entry.Model(this, false);
-    this.scale = 1;
-    this.dSetMode = Entry.Utils.debounce(this.setMode, 200);
-    this.dReDraw = Entry.Utils.debounce(this.reDraw, 150);
-
-    this.observe(this, '_handleChangeBoard', ['selectedBoard'], false);
-    this.trashcan = new Entry.FieldTrashcan();
-    this.zoomController = new Entry.ZoomController();
-
-    this.readOnly = options.readOnly === undefined ? false : options.readOnly;
-
-    this.blockViewMouseUpEvent = new Entry.Event(this);
-    this.widgetUpdateEvent = new Entry.Event(this);
-    this.reDrawEvent = new Entry.Event(this);
-    this._blockViewMouseUpEvent = null;
-    this.widgetUpdateEveryTime = false;
-    this._hoverBlockView = null;
-
-    let option = options.blockMenu;
-    if (option) {
-        this.blockMenu = new Entry.BlockMenu(
-            option.dom,
-            option.align,
-            option.categoryData,
-            option.scroll,
-            this.readOnly
-        );
-        this.blockMenu.workspace = this;
-        this.blockMenu.observe(
-            this,
-            '_setSelectedBlockView',
-            ['selectedBlockView'],
-            false
-        );
-    }
-
-    option = options.board;
-    if (option) {  
-        option.workspace = this;
-        option.readOnly = this.readOnly;
-        this.board = new Entry.Board(option);
-        this.board.observe(
-            this,
-            '_setSelectedBlockView',
-            ['selectedBlockView'],
-            false
-        );
-        this.set({ selectedBoard: this.board });
-    }
-
-    option = options.vimBoard;
-    if (option) {
-        this.vimBoard = new Entry.Vim(option.dom);
-        this.vimBoard.workspace = this;
-    }
-
-    if (this.board && this.vimBoard) {
-        this.vimBoard.hide();
-    }
-
-    Entry.GlobalSvg.createDom();
-
-    this.mode = Entry.Workspace.MODE_BOARD;
-
-    this.attachKeyboardCapture();
-
-    // view state change event
-    this.changeEvent = new Entry.Event(this);
-
-    Entry.commander.setCurrentEditor('board', this.board);
-
-    if (options.textType !== undefined) {
-        this.textType = options.textType;
-    } else {
-        this.textType = Entry.Vim.TEXT_TYPE_PY;
-    }
-
-    this.oldMode = Entry.Workspace.MODE_BOARD;
-    this.mode = Entry.Workspace.MODE_BOARD;
-};
-
-Entry.Workspace.MODE_BOARD = 0;
-Entry.Workspace.MODE_VIMBOARD = 1;
-Entry.Workspace.MODE_OVERLAYBOARD = 2;
-
-(function(p) {
-    p.schema = {
+Entry.Workspace = class Workspace {
+    schema = {
         selectedBlockView: null,
         selectedBoard: null,
     };
 
-    p.getBoard = function() {
+    constructor(options) {
+        Entry.Model(this, false);
+        this.scale = 1;
+        this.dSetMode = Entry.Utils.debounce(this.setMode, 200);
+        this.dReDraw = Entry.Utils.debounce(this.reDraw, 150);
+
+        this.observe(this, '_handleChangeBoard', ['selectedBoard'], false);
+        this.trashcan = new Entry.FieldTrashcan();
+        this.zoomController = new Entry.ZoomController();
+
+        this.readOnly = options.readOnly === undefined ? false : options.readOnly;
+
+        this.blockViewMouseUpEvent = new Entry.Event(this);
+        this.widgetUpdateEvent = new Entry.Event(this);
+        this.reDrawEvent = new Entry.Event(this);
+        this._blockViewMouseUpEvent = null;
+        this.widgetUpdateEveryTime = false;
+        this._hoverBlockView = null;
+
+        let option = options.blockMenu;
+        if (option) {
+            this.blockMenu = new Entry.BlockMenu(
+                option.dom,
+                option.align,
+                option.categoryData,
+                option.scroll,
+                this.readOnly
+            );
+            this.blockMenu.workspace = this;
+            this.blockMenu.observe(this, '_setSelectedBlockView', ['selectedBlockView'], false);
+        }
+
+        option = options.board;
+        if (option) {
+            option.workspace = this;
+            option.readOnly = this.readOnly;
+            this.board = new Entry.Board(option);
+            this.board.observe(this, '_setSelectedBlockView', ['selectedBlockView'], false);
+            this.set({ selectedBoard: this.board });
+        }
+
+        option = options.vimBoard;
+        if (option) {
+            this.vimBoard = new Entry.Vim(option.dom);
+            this.vimBoard.workspace = this;
+        }
+
+        if (this.board && this.vimBoard) {
+            this.vimBoard.hide();
+        }
+
+        Entry.GlobalSvg.createDom();
+
+        this.mode = Entry.Workspace.MODE_BOARD;
+
+        this.attachKeyboardCapture();
+
+        // view state change event
+        this.changeEvent = new Entry.Event(this);
+
+        Entry.commander.setCurrentEditor('board', this.board);
+
+        if (options.textType !== undefined) {
+            this.textType = options.textType;
+        } else {
+            this.textType = Entry.Vim.TEXT_TYPE_PY;
+        }
+
+        this.oldMode = Entry.Workspace.MODE_BOARD;
+        this.mode = Entry.Workspace.MODE_BOARD;
+    }
+
+    getBoard() {
         return this.board;
-    };
+    }
 
-    p.getSelectedBoard = function() {
+    getSelectedBoard() {
         return this.selectedBoard;
-    };
+    }
 
-    p.getBlockMenu = function() {
+    getBlockMenu() {
         return this.blockMenu;
-    };
+    }
 
-    p.getVimBoard = function() {
+    getVimBoard() {
         return this.vimBoard;
-    };
+    }
 
-    p.getMode = function() {
+    getMode() {
         return this.mode;
-    };
+    }
 
-    p.setMode = function(mode, message, isForce) {
+    setMode(mode, message, isForce) {
         if (
             Entry.options &&
             !Entry.options.textCodingEnable &&
@@ -181,9 +167,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                 } else if (this.oldTextType === VIM.TEXT_TYPE_PY) {
                     mode.runType = VIM.WORKSPACE_MODE;
                 }
-                e.block &&
-                Entry.getMainWS() &&
-                Entry.getMainWS().board.activateBlock(e.block);
+                e.block && Entry.getMainWS() && Entry.getMainWS().board.activateBlock(e.block);
             }
         };
 
@@ -289,16 +273,14 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
 
         function checkObjectAndAlert(object, message) {
             if (Entry.type === 'workspace' && !object) {
-                entrylms.alert(
-                    message || Lang.Workspace.object_not_exist_error
-                );
+                entrylms.alert(message || Lang.Workspace.object_not_exist_error);
                 return false;
             }
             return true;
         }
-    };
+    }
 
-    p.changeBoardCode = function(code, cb) {
+    changeBoardCode(code, cb) {
         this._syncTextCode();
         const isVim = this.mode === Entry.Workspace.MODE_VIMBOARD;
         this.board.changeCode(code, isVim, cb);
@@ -309,19 +291,19 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
             mode.runType = this.runType;
             this.codeToText(this.board.code, mode);
         }
-    };
+    }
 
-    p.changeOverlayBoardCode = function(code) {
+    changeOverlayBoardCode(code) {
         if (this.overlayBoard) {
             this.overlayBoard.changeCode(code);
         }
-    };
+    }
 
-    p.changeBlockMenuCode = function(code) {
+    changeBlockMenuCode(code) {
         this.blockMenu.changeCode(code);
-    };
+    }
 
-    p.textToCode = function(mode, oldTextType) {
+    textToCode(mode, oldTextType) {
         if (!this.vimBoard || mode !== Entry.Workspace.MODE_VIMBOARD) {
             return;
         }
@@ -345,9 +327,9 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
             }.bind(this),
             0
         );
-    };
+    }
 
-    p.codeToText = function(code, mode) {
+    codeToText(code, mode) {
         if (!this.vimBoard) {
             return;
         }
@@ -360,17 +342,17 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
         };
 
         return this.vimBoard.codeToText(code, mode);
-    };
+    }
 
-    p.getCodeToText = function(code) {
+    getCodeToText(code) {
         if (!this.vimBoard) {
             return;
         }
 
         return this.vimBoard.getCodeToText(code);
-    };
+    }
 
-    p._setSelectedBlockView = function() {
+    _setSelectedBlockView() {
         const view = 'selectedBlockView';
         const blockView =
             this.board[view] ||
@@ -387,15 +369,12 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
 
         this.setHoverBlockView();
         const that = this;
-        this._blockViewMouseUpEvent = blockView.mouseUpEvent.attach(
-            this,
-            function() {
-                that.blockViewMouseUpEvent.notify(blockView);
-            }
-        );
-    };
+        this._blockViewMouseUpEvent = blockView.mouseUpEvent.attach(this, function() {
+            that.blockViewMouseUpEvent.notify(blockView);
+        });
+    }
 
-    p.initOverlayBoard = function() {
+    initOverlayBoard() {
         this.overlayBoard = new Entry.Board({
             dom: this.board.view,
             workspace: this,
@@ -404,15 +383,10 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
         });
         this.overlayBoard.changeCode(new Entry.Code([]));
         this.overlayBoard.workspace = this;
-        this.overlayBoard.observe(
-            this,
-            '_setSelectedBlockView',
-            ['selectedBlockView'],
-            false
-        );
-    };
+        this.overlayBoard.observe(this, '_setSelectedBlockView', ['selectedBlockView'], false);
+    }
 
-    p._keyboardControl = function(e, isForce) {
+    _keyboardControl(e, isForce) {
         if (Entry.Loader && !Entry.Loader.isLoaded()) {
             return;
         }
@@ -421,8 +395,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
         const shiftKey = e.shiftKey;
         const altKey = e.altKey;
         const playground = Entry.playground;
-        const object =
-            playground && playground.object ? playground.object : undefined;
+        const object = playground && playground.object ? playground.object : undefined;
 
         if (Entry.Utils.isInInput(e) && !isForce) {
             return;
@@ -457,7 +430,8 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                             .copyToClipboard();
                     }
                     break;
-                case 219: { //setMode(block) for textcoding ( ctrl + [ )
+                case 219: {
+                    //setMode(block) for textcoding ( ctrl + [ )
                     if (!Entry.options.textCodingEnable) {
                         return;
                     }
@@ -473,11 +447,12 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
                     e.preventDefault();
                     break;
                 }
-                case 221: { //setMode(python) for textcoding ( ctrl + ] )
+                case 221: {
+                    //setMode(python) for textcoding ( ctrl + ] )
                     if (!Entry.options.textCodingEnable) {
                         return;
                     }
-                    
+
                     const message = Entry.TextCodingUtil.canConvertTextModeForOverlayMode(
                         Entry.Workspace.MODE_VIMBOARD
                     );
@@ -563,9 +538,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
             switch (keyCode) {
                 case 9:
                     if (isVimMode) {
-                        CodeMirror.commands.indentLess(
-                            this.vimBoard.codeMirror
-                        );
+                        CodeMirror.commands.indentLess(this.vimBoard.codeMirror);
                         e.preventDefault();
                     }
                     break;
@@ -574,9 +547,7 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
             switch (keyCode) {
                 case 9:
                     if (isVimMode) {
-                        CodeMirror.commands.indentMore(
-                            this.vimBoard.codeMirror
-                        );
+                        CodeMirror.commands.indentMore(this.vimBoard.codeMirror);
                         e.preventDefault();
                     }
                     break;
@@ -605,16 +576,15 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
         function checkObjectAndAlert(object, message) {
             if (!object) {
                 message =
-                    message ||
-                    '오브젝트가 존재하지 않습니다. 오브젝트를 추가한 후 시도해주세요.';
+                    message || '오브젝트가 존재하지 않습니다. 오브젝트를 추가한 후 시도해주세요.';
                 entrylms.alert(message);
                 return false;
             }
             return true;
         }
-    };
+    }
 
-    p._handleChangeBoard = function() {
+    _handleChangeBoard() {
         const board = this.selectedBoard;
         if (!board) {
             return;
@@ -623,9 +593,9 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
             this.zoomController.setBoard(board);
             this.trashcan.setBoard(board);
         }
-    };
+    }
 
-    p._syncTextCode = function() {
+    _syncTextCode() {
         if (
             this.mode !== Entry.Workspace.MODE_VIMBOARD ||
             (Entry.engine && Entry.engine.isState('run'))
@@ -643,22 +613,22 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
 
         const event = Entry.creationChangedEvent;
         event && event.notify(true);
-    };
+    }
 
-    p.addVimBoard = function(dom) {
+    addVimBoard(dom) {
         if (this.vimBoard) {
             return;
         }
         this.vimBoard = new Entry.Vim(dom);
         this.vimBoard.workspace = this;
         this.vimBoard.hide();
-    };
+    }
 
-    p.getParserType = function() {
+    getParserType() {
         return this.vimBoard._parserType;
-    };
+    }
 
-    p.getBlockViewRenderMode = function() {
+    getBlockViewRenderMode() {
         switch (this.mode) {
             case Entry.Workspace.MODE_BOARD:
             case Entry.Workspace.MODE_OVERLAYBOARD:
@@ -666,59 +636,56 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
             case Entry.Workspace.MODE_VIMBOARD:
                 return Entry.BlockView.RENDER_MODE_TEXT;
         }
-    };
+    }
 
-    p._isVimMode = function() {
+    _isVimMode() {
         return this.oldMode === Entry.Workspace.MODE_VIMBOARD;
-    };
+    }
 
-    p.isVimMode = p._isVimMode;
+    isVimMode = this._isVimMode;
 
-    p.attachKeyboardCapture = function() {
+    attachKeyboardCapture() {
         if (Entry.keyPressed) {
             this._keyboardEvent && this.detachKeyboardCapture();
-            this._keyboardEvent = Entry.keyPressed.attach(
-                this,
-                this._keyboardControl
-            );
+            this._keyboardEvent = Entry.keyPressed.attach(this, this._keyboardControl);
         }
-    };
+    }
 
-    p.detachKeyboardCapture = function() {
+    detachKeyboardCapture() {
         if (Entry.keyPressed && this._keyboardEvent) {
             this._keyboardEvent.destroy();
             delete this._keyboardEvent;
         }
-    };
+    }
 
-    p._unbindBlockViewMouseUpEvent = function() {
+    _unbindBlockViewMouseUpEvent() {
         if (this._blockViewMouseUpEvent) {
             this._blockViewMouseUpEvent.destroy();
             this._blockViewMouseUpEvent = null;
         }
-    };
+    }
 
-    p.setWidgetUpdateEveryTime = function(val) {
+    setWidgetUpdateEveryTime(val) {
         this.widgetUpdateEveryTime = !!val;
-    };
+    }
 
-    p.syncCode = function() {
+    syncCode() {
         switch (this.mode) {
             case Entry.Workspace.MODE_VIMBOARD:
                 this._syncTextCode();
                 break;
         }
-    };
+    }
 
-    p.setHoverBlockView = function(blockView) {
+    setHoverBlockView(blockView) {
         const oldBlockView = this._hoverBlockView;
         oldBlockView && oldBlockView.resetBackgroundPath();
 
         this._hoverBlockView = blockView;
         blockView && blockView.setBackgroundPath();
-    };
+    }
 
-    p.reDraw = function() {
+    reDraw() {
         const blockMenu = this.blockMenu;
         const board = this.board;
 
@@ -728,14 +695,10 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
         if (blockMenu || board) {
             this.reDrawEvent.notify();
         }
-    };
+    }
 
-    p.getCurrentBoard = function() {
-        const {
-            MODE_BOARD,
-            MODE_VIMBOARD,
-            MODE_OVERLAYBOARD,
-        } = Entry.Workspace;
+    getCurrentBoard() {
+        const { MODE_BOARD, MODE_VIMBOARD, MODE_OVERLAYBOARD } = Entry.Workspace;
 
         switch (this.mode) {
             case MODE_BOARD:
@@ -745,14 +708,18 @@ Entry.Workspace.MODE_OVERLAYBOARD = 2;
             case MODE_OVERLAYBOARD:
                 return this.overlayBoard;
         }
-    };
+    }
 
-    p.setScale = function(scale = 1) {
+    setScale(scale = 1) {
         this.scale = scale;
         this.board.setScale(scale);
         Entry.GlobalSvg.setScale(scale);
         if (this.overlayBoard) {
             this.overlayBoard.setScale(scale);
         }
-    };
-})(Entry.Workspace.prototype);
+    }
+};
+
+Entry.Workspace.MODE_BOARD = 0;
+Entry.Workspace.MODE_VIMBOARD = 1;
+Entry.Workspace.MODE_OVERLAYBOARD = 2;
