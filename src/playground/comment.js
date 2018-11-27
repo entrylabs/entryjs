@@ -662,14 +662,14 @@ Entry.Comment = class Comment {
         this.bindDomEventTextArea();
         this.textArea.val(this.value);
         this.textArea.css({
-            left: left - this.scale * 0.1,
-            top: this.titleHeight * this.scale + top - this.scale * 0.25,
+            left: left - (1 - this.scale) * 0.2 + 2,
+            top: this.titleHeight * this.scale + top + 1,
             'font-size': `${this.fontSize}px`,
-            width: (this.width - 13) * this.scale,
-            height: (this.height - this.titleHeight - 7) * this.scale,
-            border: `${this.scale}px solid #EDA913`,
+            width: (this.width - 16) * this.scale,
+            height: (this.height - this.titleHeight - 10) * this.scale,
+            border: `${this.scale}px solid transparent`,
             'border-radius': `0 0 ${4 * this.scale}px ${4 * this.scale}px`,
-            padding: `${3 * this.scale}px ${6 * this.scale}px`,
+            padding: `${2 * this.scale}px ${4 * this.scale}px`,
         });
         this.textArea.focus && this.textArea.focus();
     }
@@ -704,7 +704,10 @@ Entry.Comment = class Comment {
 
         if (this.textArea) {
             this.textArea.remove();
-            Entry.do('writeComment', this, this.textArea.val());
+            const value = this.textArea.val();
+            if (this.value !== value) {
+                Entry.do('writeComment', this, value);
+            }
             delete this.textArea;
         }
 
