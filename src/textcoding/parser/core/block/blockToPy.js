@@ -39,9 +39,13 @@ Entry.BlockToPyParser = class {
         if (thread instanceof Entry.Block) return this.Block(thread);
         const blocks = thread.getBlocks();
 
-        if (this._parseMode === Entry.Parser.PARSE_SYNTAX) {
+        if (blocks[0] instanceof Entry.Comment) {
+            return this.Comment(blocks[0]);
+        } else if (this._parseMode === Entry.Parser.PARSE_SYNTAX) {
             return blocks
-                .map((block) => { return this.Block(block) + '\n'; })
+                .map((block) => {
+                    return this.Block(block) + '\n';
+                })
                 .trim();
         } else if (this._parseMode === Entry.Parser.PARSE_GENERAL) {
             let rootResult = '';
@@ -99,6 +103,7 @@ Entry.BlockToPyParser = class {
         const _blockParamRegex = /%\d/gim;
         const _blockStatementRegex = /\$\d/gim;
 
+        let isFirstCommentToken = true;
         _blockTokens.forEach((token) => {
             const paramsTemplate = token.match(_blockParamRegex);
             const statements = token.match(_blockStatementRegex);
@@ -162,14 +167,19 @@ Entry.BlockToPyParser = class {
 
             // 코멘트 처리
             const commentValue = block.getCommentValue();
-            if (!statements && commentValue !== undefined) { // '' 도 표기한다.
+            if (isFirstCommentToken && !statements && commentValue !== undefined) { // '' 도 표기한다.
                 resultTextCode += ` # ${commentValue}`;
+                isFirstCommentToken = !isFirstCommentToken;
             }
 
             results.push(resultTextCode);
         });
 
         return results.join('\n');
+    }
+
+    Comment(comment) {
+        return `# ${comment.value}`;
     }
 
     /**
