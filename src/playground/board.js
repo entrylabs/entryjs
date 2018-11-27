@@ -356,7 +356,7 @@ Entry.Board = class Board {
             return;
         }
 
-        this.alignCommentsInBlock();
+        this.alignComments();
 
         const verticalGap = 15;
         let acculmulatedTop = 15;
