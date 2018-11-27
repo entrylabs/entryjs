@@ -84,28 +84,27 @@ Entry.PyToBlockParser = class {
         return result.filter(function(t) {
             return t.length > 0;
         });
-    };
+    }
 
     Program(component) {
-        var thread = component.body.map(function(n) {
-            var result = this.Node(n);
-            this.assert(
-                typeof result === 'object',
-                '',
-                n,
-                'NO_SUPPORT',
-                'GENERAL',
-            );
+        const thread = component.body.map((n) => {
+            const result = this.Node(n);
+            this.assert(typeof result === 'object', '', n, 'NO_SUPPORT', 'GENERAL');
             return result;
         }, this);
-
-        if (thread[0].constructor == Array) return thread[0];
+        if (thread[0].constructor === Array) return thread[0];
         else return thread;
-    };
+    }
 
     ExpressionStatement(component) {
-        return this.Node(component.expression);
-    };
+        const expression = component.expression;
+        const result = this.Node(expression);
+        if (expression.comment) {
+            result.comment = expression.comment;
+        }
+
+        return result;
+    }
 
     CallExpression(component) {
         var callee = component.callee;
@@ -427,11 +426,12 @@ Entry.PyToBlockParser = class {
     };
 
     WhileStatement(component) {
-        var blocks = component.body.body;
-        var obj = {
+        const comment = component.body.comment;
+        const blocks = component.body.body;
+        const obj = {
             statements: [this.setParams(blocks)],
         };
-        var test = component.test;
+        const test = component.test;
         if (test.raw === 'True') {
             obj.type = 'repeat_inf';
         } else {
@@ -441,6 +441,9 @@ Entry.PyToBlockParser = class {
             } else {
                 obj.params = [this.Node(component.test), 'while'];
             }
+        }
+        if (comment) {
+            obj.comment = comment;
         }
 
         return obj;
@@ -459,20 +462,16 @@ Entry.PyToBlockParser = class {
     };
 
     IfStatement(component) {
-        var arr = [],
-            alternate,
-            blocks,
-            pararms;
+        let alternate;
+        let blocks;
 
-        var tempAlt = component.alternate;
-        var isForState =
+        const tempAlt = component.alternate;
+        const isForState =
             tempAlt &&
             tempAlt.body &&
             tempAlt.body[0] &&
             'type' in tempAlt.body[0] &&
             tempAlt.body[0].type === 'ForInStatement';
-
-        var consequent = component.consequent;
 
         if (isForState) {
             alternate = component.alternate.body.map(this.Node, this);
@@ -487,14 +486,14 @@ Entry.PyToBlockParser = class {
                 params: [this.Node(component.test)],
             };
         } else {
-            var consequents = component.consequent
+            const consequent = component.consequent
                 ? component.consequent.body
                     .map(this.Node, this)
                     .map(function(b) {
                         return Array.isArray(b) ? b[0] : b;
                     })
                 : [];
-            var alternates = component.alternate
+            const alternates = component.alternate
                 ? component.alternate.body
                     .map(this.Node, this)
                     .map(function(b) {
@@ -503,9 +502,13 @@ Entry.PyToBlockParser = class {
                 : [];
             alternate = {
                 type: 'if_else',
-                statements: [consequents, alternates],
+                statements: [consequent, alternates],
                 params: [this.Node(component.test)],
             };
+        }
+
+        if (component.consequent.comment) {
+            alternate.comment = component.consequent.comment;
         }
 
         return alternate;
@@ -519,13 +522,17 @@ Entry.PyToBlockParser = class {
     ForInStatement(component) {
         // var  expression = component.body.body[0] && 'expression' in component.body.body[0] ?
         //                     this.Node(component.body.body[0].expression) : null;
-        var obj = {
+        const result = {
             type: 'repeat_basic',
             params: [],
             statements: [],
         };
 
-        return obj;
+        if (component.body.comment) {
+            result.comment = component.body.comment;
+        }
+
+        return result;
     };
 
     BreakStatement(component) {
@@ -632,51 +639,50 @@ Entry.PyToBlockParser = class {
     // UpdateExpression(component) {};
 
     FunctionDeclaration(component) {
-        var funcName = component.id.name;
-        this.assert(
-            !this._isInFuncDef,
-            funcName,
-            component,
-            'NO_ENTRY_EVENT_FUNCTION',
-            'FUNCTION',
-        );
+        const startBlock = {};
+
+        const funcName = component.id.name;
+        this.assert(!this._isInFuncDef, funcName, component, 'NO_ENTRY_EVENT_FUNCTION', 'FUNCTION');
+
         this._isInFuncDef = true;
-        var startBlock = {};
-        this.assert(
-            component.body.body[0],
-            funcName,
-            component,
-            'NO_OBJECT',
-            'OBJECT',
-        );
-        var blocks = component.body.body[0].argument.callee.object.body.body;
+        this.assert(component.body.body[0], funcName, component, 'NO_OBJECT', 'OBJECT');
 
         if (funcName === 'when_press_key')
             if (!component.arguments || !component.arguments[0]) {
                 startBlock.params = [null, null];
             } else {
-                var name = component.arguments[0].name;
-                startBlock.params = [null, Entry.KeyboardCode.map[name] + ''];
+                startBlock.params = [
+                    null,
+                    String(Entry.KeyboardCode.map[component.arguments[0].name]),
+                ];
             }
 
         if (funcName === 'when_get_signal') {
             if (!component.arguments || !component.arguments[0]) {
                 startBlock.params = [null, null];
             } else {
-                var name = component.arguments[0].name;
-                startBlock.params = [null, this.getMessage(name)];
+                startBlock.params = [
+                    null,
+                    this.getMessage(component.arguments[0].name),
+                ];
             }
         }
 
-        var blockInfo = this.blockSyntax['def ' + funcName];
-        var threadArr;
+        const blockStatement = component.body.body[0].argument.callee.object.body;
+        const comment = blockStatement.comment;
+        const blocks = blockStatement.body;
+        const blockInfo = this.blockSyntax['def ' + funcName];
+
         if (blockInfo) {
             // event block
             startBlock.type = blockInfo.key;
-            var definedBlocks = this.setParams(blocks);
+            if (comment) {
+                startBlock.comment = comment;
+            }
 
-            threadArr = [startBlock];
+            const definedBlocks = this.setParams(blocks);
             definedBlocks.unshift(startBlock);
+
             this._isInFuncDef = false;
             return definedBlocks;
         } else {
@@ -687,8 +693,7 @@ Entry.PyToBlockParser = class {
     };
 
     FunctionExpression(component) {
-        var a = this.Node(component.body);
-        return a;
+        return this.Node(component.body);
     };
 
     ReturnStatement(component) {
@@ -698,15 +703,12 @@ Entry.PyToBlockParser = class {
     // ThisExpression(component) {};
 
     NewExpression(component) {
-        var callee = component.callee;
-        var args = component.arguments;
-
-        return this.Node(callee);
+        return this.Node(component.callee);
     };
 
     SubscriptIndex(component) {
-        var obj = this.Node(component.object);
-        var blockInfo;
+        const obj = this.Node(component.object);
+        let blockInfo;
 
         if (obj.type === 'get_list') {
             // string
@@ -715,7 +717,7 @@ Entry.PyToBlockParser = class {
             // var, list
             blockInfo = this.blockSyntax['%2[%4]#char_at'];
         }
-        var result = this.Block({}, blockInfo);
+        const result = this.Block({}, blockInfo);
         result.params = this.Arguments(
             result.type,
             component.property.arguments,
@@ -723,24 +725,31 @@ Entry.PyToBlockParser = class {
         return result;
     };
 
+    Comment(component) {
+        return {
+            type: 'comment',
+            value: component.value,
+        }
+    }
+
     /**
      * util Function
      */
 
     Arguments(blockType, args, defaultParams) {
-        var defParams, sortedArgs, blockSchema;
+        let defParams, sortedArgs, blockSchema;
         blockSchema = Entry.block[blockType];
         if ((blockType && blockType.substr(0, 5) === 'func_') || !blockSchema) {
             // function block, etc
             sortedArgs = args;
         } else {
-            var syntax = this.PySyntax(blockSchema, defaultParams);
-            var indexes = syntax.match(/%\d+/g, '');
+            const syntax = this.PySyntax(blockSchema, defaultParams);
+            const indexes = syntax.match(/%\d+/g, '');
             if (!indexes) return defaultParams || [];
-            sortedArgs = defaultParams || new Array();
+            sortedArgs = defaultParams || [];
 
-            for (var i = 0; i < indexes.length; i++) {
-                var idx = parseInt(indexes[i].substring(1)) - 1;
+            for (let i = 0; i < indexes.length; i++) {
+                const idx = parseInt(indexes[i].substring(1)) - 1;
                 sortedArgs[idx] = args[i];
             }
             defParams =
@@ -748,12 +757,12 @@ Entry.PyToBlockParser = class {
                     ? blockSchema.def.params
                     : undefined;
         }
-        var results = sortedArgs.map(function(arg, index) {
+        let results = sortedArgs.map((arg, index) => {
             if (arg && arg.type) {
-                var paramSchema = blockSchema
+                let paramSchema = blockSchema
                     ? blockSchema.params[index]
                     : null;
-                var param = this.Node(
+                let param = this.Node(
                     arg,
                     arg.type === 'Literal' ? paramSchema : undefined,
                     arg.type === 'Literal' && defParams
@@ -768,23 +777,20 @@ Entry.PyToBlockParser = class {
                     'VARIABLE',
                 );
 
-                if (!paramSchema) param = param;
-                else if (paramSchema.type !== 'Block' && param && param.params)
-                // for list and variable dropdown
+                if (paramSchema.type !== 'Block' && param && param.params){
+                    // for list and variable dropdown
                     param = param.params[0];
-                else if (
-                    paramSchema.type === 'Block' &&
-                    paramSchema.isListIndex
-                )
+                } else if (paramSchema.type === 'Block' && paramSchema.isListIndex){
                     param = this.ListIndex(param);
+                }
 
                 return param;
             } else return arg; // default params
         }, this);
 
-        var codeMap = this.CodeMap(blockType);
+        const codeMap = this.CodeMap(blockType);
         if (codeMap) {
-            results = results.map(function(arg, index) {
+            results = results.map((arg, index) => {
                 if (codeMap[index] && arg) {
                     return codeMap[index][this.toLowerCase(arg)] || arg;
                 } else {
@@ -977,7 +983,7 @@ Entry.PyToBlockParser = class {
     };
 
     Node(nodeType, node) {
-        var hasType = false;
+        let hasType = false;
         if (typeof nodeType === 'string' && nodeType !== node.type)
             this.assert(
                 false,
@@ -986,9 +992,11 @@ Entry.PyToBlockParser = class {
                 'NO_SUPPORT',
                 'GENERAL',
             );
-        else if (typeof nodeType === 'string') hasType = true;
+        else if (typeof nodeType === 'string') {
+            hasType = true;
+        }
 
-        var args = Array.prototype.slice.call(arguments);
+        const args = Array.prototype.slice.call(arguments);
         if (hasType) args.shift();
 
         node = args[0];

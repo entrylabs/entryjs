@@ -426,6 +426,7 @@
     var _braceR = { type: '}' }, _parenL = { type: '(', beforeExpr: true }, _parenR = { type: ')' };
     var _comma = { type: ',', beforeExpr: true }, _semi = { type: ';', beforeExpr: true };
     var _colon = { type: ':', beforeExpr: true }, _dot = { type: '.' }, _question = { type: '?', beforeExpr: true };
+    const _comment = { type: '#' };
 
     // Operators. These carry several kinds of properties to help the
     // parser use them properly (the presence of these properties is
@@ -631,8 +632,7 @@
     function skipSpace() {
         while (tokPos < inputLen) {
             var ch = input.charCodeAt(tokPos);
-            if (ch === 35) skipLineComment();
-            else if (ch === 92) {
+            if (ch === 92) {
                 ++tokPos;
                 if (isNewline(input.charCodeAt(tokPos))) {
                     if (input.charCodeAt(tokPos) === 13 && input.charCodeAt(tokPos + 1) === 10) ++tokPos;
@@ -687,6 +687,20 @@
     //
     // The `forceRegexp` parameter is used in the one case where the
     // `tokRegexpAllowed` trick does not work. See `parseStatement`.
+
+    function readToken_singleLineComment() {
+        ++tokPos;
+        skipSpace();
+
+        let out = '';
+        let ch = input.charCodeAt(tokPos);
+        while (!isNewline(ch)) {
+            out += String.fromCharCode(ch);
+            ch = input.charCodeAt(++tokPos);
+        }
+
+        return finishToken(_comment, out);
+    }
 
     function readToken_dot() {
         var next = input.charCodeAt(tokPos + 1);
@@ -772,11 +786,6 @@
                     tokLineStart = indentPos;
                     ++tokCurLine;
                 }
-            } else if (ch === 35) { // '#'
-                do {
-                    next = input.charCodeAt(++indentPos);
-                } while (indentPos < inputLen && next !== 10);
-                // TODO: call onComment
             } else {
                 break;
             }
@@ -836,8 +845,7 @@
                 return finishToken(_newline);
 
             case 35: // '#'
-                skipLineComment();
-                return readToken();
+                return readToken_singleLineComment();
 
             // The interpretation of a dot depends on whether it is followed
             // by a digit.
@@ -2255,6 +2263,10 @@
                 next();
                 return finishNode(node, 'EmptyStatement');
 
+            case _comment:
+                node.value = tokVal;
+                next();
+                return finishNode(node, 'Comment');
             // Assume it's an ExpressionStatement. If an assign has been
             // converted to a variable declaration, pass it up as is.
 
@@ -2290,6 +2302,11 @@
         // NOTE: This is not strictly valid Python for this to be an empty block
         var node = startNode();
         node.body = [];
+
+        if (tokType === _comment) {
+            node.comment = { value: tokVal };
+            next();
+        }
         if (eat(_newline)) {
             if (tokType === _indent) {
                 expect(_indent);
@@ -2546,6 +2563,10 @@
                     computed: false,
                 });
             } else node.callee = base;
+            if (tokType === _comment) {
+                node.comment = { value: tokVal };
+                next();
+            }
             return parseSubscripts(node, noCalls);
         }
         return base;
