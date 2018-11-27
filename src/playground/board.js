@@ -1111,9 +1111,13 @@ Entry.Board = class Board {
                     text: Lang.Blocks.Paste_blocks,
                     enable: !!Entry.clipboard && !this.readOnly,
                     callback() {
-                        Entry.do('addThread', Entry.clipboard)
-                            .value.getFirstBlock()
-                            .copyToClipboard();
+                        if (Entry.clipboard.type === 'comment') {
+                            Entry.do('createCommentBlock', Entry.clipboard, undefined, that);
+                        } else {
+                            Entry.do('addThread', Entry.clipboard)
+                                .value.getFirstBlock()
+                                .copyToClipboard();
+                        }
                     },
                 },
             },

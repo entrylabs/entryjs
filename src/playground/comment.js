@@ -827,6 +827,7 @@ Entry.Comment = class Comment {
         cloned.x = x + 15;
         cloned.y = y + 15;
         cloned.id = Entry.Utils.generateId();
+        cloned.type = 'comment';
 
         return cloned;
     }
