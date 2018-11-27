@@ -384,9 +384,13 @@ Entry.Board = class Board {
                 columWidth = 0;
                 acculmulatedTop = 15;
             }
-            columWidth = Math.max(columWidth, bBox.width);
+            columWidth = Math.max(columWidth, bBox.width * this.scale);
             top = acculmulatedTop + verticalGap;
-            blockView.moveTo(left, top, false);
+            if (block instanceof Entry.Block) {
+                blockView.moveTo(left, top, false);
+            } else {
+                blockView.moveTo(left / this.scale, top / this.scale, false);
+            }
             acculmulatedTop = top + bBox.height * this.scale;
         });
         this.scroller.resizeScrollBar();
@@ -1181,8 +1185,8 @@ Entry.Board = class Board {
                             'createComment',
                             {
                                 id: Entry.Utils.generateId(),
-                                x: Entry.ContextMenu.mouseCoordinate.x - x,
-                                y: Entry.ContextMenu.mouseCoordinate.y - y,
+                                x: (Entry.ContextMenu.mouseCoordinate.x - x) / that.scale,
+                                y: (Entry.ContextMenu.mouseCoordinate.y - y) / that.scale,
                             },
                             undefined,
                             that
