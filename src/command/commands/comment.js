@@ -4,8 +4,8 @@
     const COMMAND_TYPES = Entry.STATIC.COMMAND_TYPES;
 
     c[COMMAND_TYPES.createComment] = {
-        do(schema, block, board) {
-            const comment = new Entry.Comment(block, board, schema);
+        do(data, block, board) {
+            const comment = new Entry.Comment(data, board, block);
             if (block) {
                 block.connectComment(comment);
             } else {
@@ -13,8 +13,8 @@
             }
             board.set({ isVisibleComment: true });
         },
-        state(schema) {
-            return [schema];
+        state(data) {
+            return [data];
         },
         log() {
             return [];
@@ -68,12 +68,13 @@
             const comment = this.editor.board.findBlock(target);
             if (x) {
                 comment.moveTo(x, y);
+            } else {
+                comment.updatePos();
             }
-            comment.updatePos();
         },
         state(target) {
             const comment = this.editor.board.findBlock(target);
-            return [comment, comment.originX, comment.originY];
+            return [comment, comment.x, comment.y];
         },
         log() {
             return [];
@@ -97,8 +98,8 @@
     };
 
     c[COMMAND_TYPES.cloneComment] = {
-        do(schema, board) {
-            const comment = new Entry.Comment(undefined, board, schema);
+        do(data, board) {
+            const comment = new Entry.Comment(data, board);
             board.code.createThread([comment], 0);
             board.set({ isVisibleComment: true });
         },
