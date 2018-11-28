@@ -549,7 +549,7 @@ Entry.BlockToPyParser = class {
 
         result = 'def ' + result;
         result = result.concat(':');
-        if (func.comment) {
+        if (func.comment || func.comment === '') {
             result += ` # ${func.comment}`;
         }
         result += '\n';
@@ -629,7 +629,7 @@ Entry.BlockToPyParser = class {
         Entry.TextCodingUtil.clearQueue();
 
         if (funcName) result.name = funcName;
-        if (funcComment) result.comment = funcComment;
+        if (funcComment || funcComment === '') result.comment = funcComment;
         if (funcParams.length !== 0) result.params = funcParams;
         if (funcContents.length !== 0) result.statements = funcContents;
 
