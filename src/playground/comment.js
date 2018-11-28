@@ -76,7 +76,12 @@ Entry.Comment = class Comment {
     }
 
     get code() {
-        return this.board.getCode();
+        if (this.board) {
+            return this.board.getCode();
+        }
+        if (this.thread) {
+            return this.thread.getCode();
+        }
     }
 
     get textAreaPath() {
@@ -865,13 +870,15 @@ Entry.Comment = class Comment {
     }
 
     destroy() {
-        this.removeControl();
-        this.destroyView();
-        this._destroyObservers();
+        if (this.board) {
+            this.removeControl();
+            this.destroyView();
+            this._destroyObservers();
+        }
         if (this.block) {
             delete this.block.disconnectComment();
         } else {
-            this.board.code.destroyThread(this.thread);
+            this.code.destroyThread(this.thread);
         }
         this.code.unregisterBlock(this);
     }
