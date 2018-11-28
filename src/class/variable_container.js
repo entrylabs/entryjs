@@ -1545,7 +1545,8 @@ Entry.VariableContainer = function() {
                 var { object, isCloud } = this.variableAddPanel.info;
                 !object && Entry.do('variableAddSetCloud', !isCloud);
             })
-            .appendTo(variableAddSpace);
+            .appendTo(addSpaceGlobalWrapper);
+
         variableAddSpace.cloudWrapper = addSpaceCloudWrapper;
 
         CE('span')
@@ -1695,7 +1696,7 @@ Entry.VariableContainer = function() {
             .appendTo(addSpaceLocalWrapper);
 
         var addSpaceCloudWrapper = CE('div')
-            .appendTo(listAddSpace)
+            .appendTo(addSpaceGlobalWrapper)
             .addClass('entryVariableAddSpaceCloudWrapperWorkspace')
             .bindOnClick(() => {
                 var { object, isCloud } = this.listAddPanel.info;
