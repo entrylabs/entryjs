@@ -550,8 +550,8 @@ Entry.Comment = class Comment {
                 this.visible && this.set({ visible: false });
             }
 
-            this.moveX += mouseEvent.pageX - this.dragInstance.offsetX;
-            this.moveY += mouseEvent.pageY - this.dragInstance.offsetY;
+            this.moveX += (mouseEvent.pageX - this.dragInstance.offsetX) / this.scale;
+            this.moveY += (mouseEvent.pageY - this.dragInstance.offsetY) / this.scale;
 
             this.dragInstance.set({
                 offsetX: mouseEvent.pageX,
