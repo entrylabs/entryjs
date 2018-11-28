@@ -25,6 +25,7 @@ Entry.Comment = class Comment {
         if (schema) {
             this.set(schema);
         }
+        this.generateId(schema);
         this._block = block;
         const { view } = block || {};
         this._blockView = view;
@@ -159,7 +160,6 @@ Entry.Comment = class Comment {
     initSchema(schema = {}) {
         let parentWidth = 0;
         let parentHeight = 0;
-        this.generateId(schema);
         let { titleHeight, defaultLineLength } = this;
         if (this.pathGroup) {
             parentWidth = this.pathGroup.getBBox().width;

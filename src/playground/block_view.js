@@ -814,7 +814,7 @@ Entry.BlockView = class BlockView {
     }
 
     getComment() {
-        return this.block.getComment();
+        return this.block.comment;
     }
 
     _setBoard() {
@@ -1447,13 +1447,13 @@ Entry.BlockView = class BlockView {
                 },
             };
 
-            const hasComment = block._comment;
+            const hasComment = !!block._comment;
             const comment = {
                 text: hasComment ? '메모 삭제하기' : '메모 추가하기',
                 enable: block.isCommentable(),
                 callback() {
                     hasComment
-                        ? Entry.do('removeComment', block.comment)
+                        ? Entry.do('removeComment', block._comment)
                         : Entry.do('createComment', { id: Entry.Utils.generateId() }, block, board);
                 },
             };

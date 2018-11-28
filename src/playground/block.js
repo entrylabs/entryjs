@@ -70,8 +70,12 @@ Entry.Block = class Block {
         }
 
         if (block.comment) {
-            this._commentJson = block.comment;
+            this._comment = block.comment;
         }
+    }
+
+    get comment() {
+        return this._comment;
     }
 
     load(block) {
@@ -280,9 +284,12 @@ Entry.Block = class Block {
             });
             this._updatePos();
         }
-        if (this._commentJson) {
-            this.connectComment(new Entry.Comment(this._commentJson, board, this));
-            delete this._commentJson;
+        if (this._comment) {
+            let comment = this._comment;
+            if (this._comment instanceof Entry.Comment) {
+                comment = this._comment.toJSON();
+            }
+            this.connectComment(new Entry.Comment(comment, board, this));
         }
     }
 
@@ -455,10 +462,6 @@ Entry.Block = class Block {
 
     getView() {
         return this.view;
-    }
-
-    getComment() {
-        return this._comment;
     }
 
     setMovable(movable) {

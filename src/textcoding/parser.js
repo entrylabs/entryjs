@@ -265,51 +265,62 @@ Entry.Parser = function(mode, type, cm, syntax) {
                 var textCode = this._execParser.Code(code, parseMode);
                 result = textCode;
                 break;
-            case Entry.Vim.PARSER_TYPE_BLOCK_TO_PY:
+            case Entry.Vim.PARSER_TYPE_BLOCK_TO_PY: {
                 try {
                     Entry.getMainWS().blockMenu.renderText();
-                    result = "";
+                    result = '';
+                    let funcKeysBackup;
 
-                    if (parseMode === Entry.Parser.PARSE_BLOCK &&
-                    code.type.substr(0, 5) === "func_") {
-                        var funcKeysBackup = Object.keys(this._execParser._funcDefMap);
+                    if (parseMode === Entry.Parser.PARSE_BLOCK && code.type.substr(0, 5) === 'func_') {
+                        funcKeysBackup = Object.keys(this._execParser.funcDefMap);
                     }
 
-                    var textCode = this._execParser.Code(code, parseMode);
+                    const textCode = this._execParser.Code(code, parseMode);
                     if (!this._pyHinter)
                         this._pyHinter = new Entry.PyHint(this.syntax);
 
-                    if(!this._hasDeclaration)
+                    if (!this._hasDeclaration) {
                         this.initDeclaration();
+                    }
 
-                    if(parseMode == Entry.Parser.PARSE_GENERAL) {
-                        if(this.py_variableDeclaration)
+                    if (parseMode === Entry.Parser.PARSE_GENERAL) {
+                        if (this.py_variableDeclaration) {
                             result += this.py_variableDeclaration;
-
-                        if(this.py_listDeclaration)
-                            result += this.py_listDeclaration;
-
-                        if(this.py_variableDeclaration || this.py_listDeclaration)
-                            result += '\n';
-
-                        var funcDefMap = this._execParser._funcDefMap;
-                        var fd = "";
-
-                        for(var f in funcDefMap) {
-                            var funcDef = funcDefMap[f];
-                            fd += funcDef + '\n\n';
                         }
+
+                        if (this.py_listDeclaration) {
+                            result += this.py_listDeclaration;
+                        }
+
+                        if (this.py_variableDeclaration || this.py_listDeclaration) {
+                            result += '\n';
+                        }
+
+                        // Global Comment Append
+                        const globalCommentList = this._execParser.globalCommentList;
+                        if (globalCommentList.length > 0) {
+                            result += globalCommentList.join('\n') + '\n\n';
+                        }
+
+                        // function Declaration
+                        const funcDefMap = this._execParser.funcDefMap;
+                        let fd = '';
+                        for (let funcKey in funcDefMap) {
+                            fd += funcDefMap[funcKey] + '\n\n';
+                        }
+
                         result += fd;
                     } else if (parseMode === Entry.Parser.PARSE_BLOCK) {
                         if (funcKeysBackup && funcKeysBackup.indexOf(code.type) < 0) {
-                            result += this._execParser._funcDefMap[code.type] + '\n\n';
+                            result += this._execParser.funcDefMap[code.type] + '\n\n';
                         }
                     }
-                    if(textCode)
+                    if (textCode) {
                         result += textCode.trim();
+                    }
 
-                    result = result.replace(/\t/g, "    ");
-                    if(this._hasDeclaration)
+                    result = result.replace(/\t/g, '    ');
+                    if (this._hasDeclaration)
                         this.removeDeclaration();
                 } catch (e) {
                     console.error(e);
@@ -320,6 +331,7 @@ Entry.Parser = function(mode, type, cm, syntax) {
                 }
 
                 break;
+            }
         }
 
         return result;
