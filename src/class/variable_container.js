@@ -1477,7 +1477,10 @@ Entry.VariableContainer = function() {
         var addSpaceNameWrapper = CE('div')
             .addClass('entryVariableAddSpaceNameWrapperWorkspace')
             .appendTo(variableAddSpace);
-
+        var addSpaceInputLabel = CE('label')
+            .addClass('entryVariableAddSpaceInputLabelWorkspace')
+            .appendTo(addSpaceNameWrapper);
+        addSpaceInputLabel.innerText = Lang.Workspace.Variable_placeholder_name;
         var addSpaceInput = CE('input')
             .addClass('entryVariableAddSpaceInputWorkspace')
             .appendTo(addSpaceNameWrapper);
@@ -1628,6 +1631,10 @@ Entry.VariableContainer = function() {
             .addClass('entryListAddSpaceNameWrapperWorkspace')
             .appendTo(listAddSpace);
 
+        var addSpaceInputLabel = CE('label')
+            .addClass('entryVariableAddSpaceInputLabelWorkspace')
+            .appendTo(addSpaceNameWrapper);
+        addSpaceInputLabel.innerText = Lang.Workspace.list_name;
         var addSpaceInput = CE('input')
             .addClass('entryVariableAddSpaceInputWorkspace')
             .appendTo(addSpaceNameWrapper);

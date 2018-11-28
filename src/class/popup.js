@@ -3,8 +3,6 @@
  */
 'use strict';
 
-
-
 /**
  * Constructor of popup
  * @constructor
@@ -14,10 +12,9 @@ Entry.Popup = function(className) {
 
     this.body_ = Entry.createElement('div');
     this.body_.addClass('entryPopup');
-    if (className)
-        this.body_.addClass(className);
+    if (className) this.body_.addClass(className);
     this.body_.bindOnClick(function(e) {
-        if (e.target==this){
+        if (e.target == this) {
             this.popup.remove();
         }
     });
@@ -25,12 +22,9 @@ Entry.Popup = function(className) {
     document.body.appendChild(this.body_);
     this.window_ = Entry.createElement('div');
     this.window_.addClass('entryPopupWindow');
-    if (Entry.targetChecker)
-        this.window_.addClass('targetCheckerPopup');
-    if (Entry.device === 'tablet')
-        this.window_.addClass('tablet');
-    this.window_.bindOnClick(function() {
-    });
+    if (Entry.targetChecker) this.window_.addClass('targetCheckerPopup');
+    if (Entry.device === 'tablet') this.window_.addClass('tablet');
+    this.window_.bindOnClick(function() {});
     Entry.addEventListener('windowResized', this.resize);
     window.popup = this;
     this.resize();
@@ -42,11 +36,17 @@ Entry.Popup = function(className) {
  */
 Entry.Popup.prototype.remove = function() {
     while (this.window_.hasChildNodes()) {
-        if (Entry.type == 'workspace')
-            Entry.view_.insertBefore(this.window_.firstChild,
-                                     Entry.container.view_);
-        else{
-            Entry.view_.insertBefore(this.window_.lastChild, Entry.view_.firstChild);
+        if (Entry.type == 'workspace') {
+            console.log(this.window_.firstChild, Entry.container.view_);
+            Entry.engineContainer.insertBefore(
+                this.window_.firstChild,
+                Entry.engineContainer.firstChild
+            );
+        } else {
+            Entry.engineContainer.insertBefore(
+                this.window_.lastChild,
+                Entry.engineContainer.firstChild
+            );
         }
     }
     $('body').css('overflow', 'auto');
@@ -55,7 +55,7 @@ Entry.Popup.prototype.remove = function() {
     Entry.removeEventListener('windowResized', this.resize);
     Entry.engine.popup = null;
     Entry.windowResized.notify();
-    if (Entry.type === "workspace" && Entry.targetChecker)
+    if (Entry.type === 'workspace' && Entry.targetChecker)
         Entry.targetChecker.getStatusView().remove();
 };
 

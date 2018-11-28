@@ -79,17 +79,20 @@ Entry.Container = class Container {
         //this._view.appendChild(addButton);
 
         const ulWrapper = Entry.createElement('div');
-        const scroll = new Simplebar(ulWrapper);
+        this._view.appendChild(ulWrapper);
+        const scroll = new Simplebar(ulWrapper, { autoHide: false });
+        const scrollWrapper = scroll.contentEl;
+        console.log(scroll);
         console.log(scroll);
         let baseClass = 'entryContainerListWorkspaceWrapper';
         if (Entry.isForLecture) {
             baseClass += ' lecture';
         }
-        ulWrapper.addClass(baseClass);
+        scrollWrapper.addClass(baseClass);
 
-        Entry.Utils.disableContextmenu(ulWrapper);
+        Entry.Utils.disableContextmenu(scrollWrapper);
 
-        $(ulWrapper).bind('mousedown touchstart', function(e) {
+        $(scrollWrapper).bind('mousedown touchstart', function(e) {
             let longPressTimer = null;
             const doc = $(document);
             const eventType = e.type;
@@ -140,16 +143,14 @@ Entry.Container = class Container {
             }
         });
 
-        this._view.appendChild(ulWrapper);
-
         const extensionListView = Entry.createElement('ul');
-        ulWrapper.appendChild(extensionListView);
+        scrollWrapper.appendChild(extensionListView);
         this._extensionListView = Entry.Dom(extensionListView, {
             class: 'entryContainerExtensions',
         });
 
         const listView = Entry.createElement('ul').addClass('entryContainerListWorkspace');
-        ulWrapper.appendChild(listView);
+        scrollWrapper.appendChild(listView);
         this.listView_ = listView;
 
         this.enableSort();

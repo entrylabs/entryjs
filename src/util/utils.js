@@ -2442,8 +2442,8 @@ Entry.Utils.toFixed = function(value, len) {
 
     let retValue = Math.round(value * powValue) / powValue;
 
-    if (Entry.isFloat(value)) {
-        return String(value);
+    if (Entry.isFloat(retValue)) {
+        return String(retValue);
     } else {
         retValue += '.';
         for (let i = 0; i < length; i++) {
