@@ -2,12 +2,24 @@
 @image_url: "../../images/";
 @image_url2: "../images/";
 
+html, body, .wrapper, .entry {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+.wrapper, .entry {
+    position: relative;
+    min-width: 1024px;
+}
+.engineContainer {
+    position: relative;
+    float: left;
+    width: 294px;
+    height: 100%;
+    padding: 45px 16px 0 8px;
+}
 .backgroundImage(@imageName) {
     background-image: url("@{image_url2}@{imageName}");
-}
-
-.entry {
-
 }
 
 .dragNone {

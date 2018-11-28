@@ -43,8 +43,8 @@ Entry.init = function(container, options) {
 
     Entry.initFonts(options.fonts);
     const { theme = 'default' } = options;
-    if(theme !== 'default') {
-        try{
+    if (theme !== 'default') {
+        try {
             EntryStatic.colorSet = require(`../theme/${theme}`);
             require('../playground/block_entry').assignBlocks();
         } catch (e) {
@@ -246,8 +246,11 @@ Entry.createDom = function(container, option) {
         this.stateManagerView = stateManagerView;
         this.stateManager.generateView(this.stateManagerView, option);
 
+        var engineContainer = Entry.createElement('div');
+        engineContainer.classList = 'engineContainer';
+        container.appendChild(engineContainer);
         var engineView = Entry.createElement('div');
-        container.appendChild(engineView);
+        engineContainer.appendChild(engineView);
         /** @type {!Element} */
         this.engineView = engineView;
         this.engine.generateView(this.engineView, option);
@@ -283,7 +286,7 @@ Entry.createDom = function(container, option) {
 
         var containerView = Entry.createElement('div');
         //container.appendChild(containerView);
-        this.propertyPanel.generateView(container, option);
+        this.propertyPanel.generateView(engineContainer, option);
         /** @type {!Element} */
         this.containerView = containerView;
         this.container.generateView(this.containerView, option);

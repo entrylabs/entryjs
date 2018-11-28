@@ -1684,6 +1684,8 @@ Entry.Playground = function() {
             .addClass('entryPlaygroundPictureSize')
             .appendTo(element).innerHTML =
             picture.dimension.width + ' X ' + picture.dimension.height;
+
+        Entry.createElement('div').addClass('entryPlayground_del').appendTo(element).innerHTML = '삭제';
     };
 
     p.generateSoundElement = function(sound) {
@@ -1814,6 +1816,7 @@ Entry.Playground = function() {
             .addClass('entryPlaygroundSoundLength')
             .appendTo(element).innerHTML =
             sound.duration + ' ' + Lang.General.second;
+        Entry.createElement('div').addClass('entryPlayground_del').appendTo(element).innerHTML = '삭제';
     };
 
     p.toggleColourChooser = function(name) {

@@ -13,11 +13,17 @@
 }
 
 .entryEngineWorkspace_w {
+    position: relative;
     height: 225px;
-    width: 400px;
+    width: 270px;
     background-color: white;
-    border-top: 1pt solid #ebeff1;
-    position: absolute;
+    border: 1pt solid #d6e9f4;
+    border-radius: 6px;
+}
+.entryEngineWorkspace_w:after {
+    display: block;
+    clear: both;
+    content: '';
 }
 
 .entryPopupWindow > .entryEngineWorkspace {
@@ -225,12 +231,13 @@
 }
 
 .entryMouseViewWorkspace_w {
-    font-size: 9pt;
+    font-size: 12px;
     margin: 0 auto;
-    width: 40%;
-    color: #61abdb;
-    line-height: 24px;
+    padding: 10px 0 8px;
+    color: #4f80ff;
     text-align: center;
+    letter-spacing: -0.4px;
+    line-height: 14px;
 }
 
 .entryEngineBlueWorkspace > .entryMouseViewWorkspace {
@@ -269,9 +276,10 @@
 
 .entryMaximizeButtonWorkspace_w {
     float: right;
-    margin-right: 5px;
+    margin: 4px 10px 0 6px;
     .backgroundImage("layers_icon_fullmode01_nor_1.png");
     background-repeat: no-repeat;
+    background-size: 16px auto;
 }
 
 .entryEngineBlueWorkspace > .entryMaximizeButtonWorkspace {
@@ -288,11 +296,12 @@
 .entrySpeedButtonWorkspace {
     float: left;
     background-size: contain;
-    width: 22px;
-    height: 15px;
-    margin-top: 5px;
+    width: 18px;
+    height: 16px;
+    margin-top: 8px;
     margin-left: 10px;
     .backgroundImage("speed_edit.png");
+    background-size: 18px auto;
 }
 
 .entryPopupWindow > div > .entrySpeedButtonWorkspace {
@@ -376,7 +385,9 @@
 
 .entryCoordinateButtonWorkspace_w {
     float: right;
+    margin-top: 4px;
     .backgroundImage("layers_icon_grid_nor.png");
+    background-size: 16px auto;
 }
 
 .entryCoordinateButtonWorkspace.toggleOn {
@@ -411,51 +422,39 @@
 }
 
 .entryAddButtonWorkspace_w {
-    top: 289px;
-    left: 0px;
-    width: 236px;
-    height: 37px;
-    font-size: 12pt;
-    background-color: #fff;
-    color: #666666;
-    text-align: center;
     position: absolute;
-    border-top: 1px solid #ccc;
-    padding-left: 50px;
+    top: 192px;
+    left: -1px;
+    width: 157px;
+    height: 32px;
+    padding: 0;
+    background-color: #fff;
+    border: 1px solid #4f80ff;
+    border-radius: 0 0 0 5px;
+    background-color: #fff;
     background-repeat: no-repeat;
-    background-position: 10% 43%;
-    font-weight: 600;
+    background-position: 50% 50%;
+    background-size: 14px auto;
+    font-size: 0;
+    text-align: center;
     .backgroundImage("layers_icon_button_plus_nor.png");
 }
 
-.collapsed>.entryAddButtonWorkspace_w,
-.collapsed>.entryPauseButtonWorkspace_w {
-    color: transparent;
-    background-position: 50% 43%;
-}
-
-.collapsed>.entryAddButtonWorkspace_w,
-.collapsed>.entryRestartButtonWorkspace_w {
-    color: transparent;
-    background-position: 50% 43%;
-}
-
 .entryRunButtonWorkspace_w {
-    top: 289px;
-    left: 272px;
-    width: 156px;
-    height: 37px;
-    font-size: 12pt;
-    border-left: 1px solid #ccc;
-    border-top: 1px solid #ccc;
-    background-color: #fff;
-    padding-left: 28px;
-    color: #666666;
-    text-align: center;
     position: absolute;
+    top: 192px;
+    left: 155px;
+    width: 114px;
+    height: 32px;
+    padding: 0;
+    border: 1px solid #4f80ff;
+    border-radius: 0 0 5px 0;
+    background-color: #fff;
     background-repeat: no-repeat;
-    background-position: 10% 43%;
-    font-family: nanumBarunBold !important;
+    background-position: 50% 50%;
+    background-size: 10px auto;
+    font-size: 0;
+    text-align: center;
     .backgroundImage("layers_icon_button_play_nor_1.png");
 }
 
@@ -497,29 +496,23 @@
 }
 
 .entryStopButtonWorkspace_w {
-    top: 289px;
-    left: 272px;
-    width: 156px;
-    height: 37px;
-    font-size: 12pt;
-    border-top: 1px solid #ccc;
-    border-left: 1px solid #ccc;
-    background-color: #fff;
-    color: #666666;
-    padding-left: 28px;
-    text-align: center;
     position: absolute;
+    top: 192px;
+    left: 155px;
+    width: 114px;
+    height: 32px;
+    font-size: 0;
+    border: 1px solid #4f80ff;
+    border-radius: 0 0 5px 0;
+    background-color: #fff;
+    padding: 0;
+    font-size: 0;
+    text-align: center;
     background-repeat: no-repeat;
-    background-position: 10% center;
-    font-weight: 600;
+    background-position: 50% 50%;
+    background-size: 12px auto;
     .backgroundImage("layers_icon_button_stop_nor_2.png");
 }
-
-.collapsed>.entryStopButtonWorkspace_w {
-    color: transparent;
-    background-position: 50% 43%;
-}
-
 .entryStopButtonWorkspace_w2 {
     display: none;
 }
@@ -559,6 +552,7 @@
 }
 
 .entryPauseButtonWorkspace_w:extend(.entryAddButtonWorkspace_w) {
+    background-size: 12px auto;
     .backgroundImage("layers_icon_button_pause_nor.png");
 }
 
