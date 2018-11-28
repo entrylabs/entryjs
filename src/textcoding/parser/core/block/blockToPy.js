@@ -9,7 +9,9 @@ Entry.BlockToPyParser = class {
     constructor() {
         this._type = 'BlockToPyParser';
         this._funcParamMap = new Entry.Map();
-        this._funcDefMap = {};
+        this.funcDefMap = {};
+
+        this.globalCommentList = [];
 
         this._variableDeclaration = null;
         this._listDeclaration = null;
@@ -29,7 +31,9 @@ Entry.BlockToPyParser = class {
             this._forIdCharIndex = 0;
             const thread = threads[i];
 
-            resultTextCode.push(this.Thread(thread));
+            if (thread) {
+                resultTextCode.push(this.Thread(thread));
+            }
         }
 
         return resultTextCode.join('\n').trim();
@@ -40,7 +44,7 @@ Entry.BlockToPyParser = class {
         const blocks = thread.getBlocks();
 
         if (blocks[0] instanceof Entry.Comment) {
-            return this.Comment(blocks[0]);
+            this.Comment(blocks[0]);
         } else if (this._parseMode === Entry.Parser.PARSE_SYNTAX) {
             return blocks
                 .map((block) => {
@@ -81,9 +85,9 @@ Entry.BlockToPyParser = class {
 
         // User Function
         if (this.isFunc(block)) {
-            if (!this._funcDefMap[block.data.type]) {
+            if (!this.funcDefMap[block.data.type]) {
                 this._rootFuncId = block.data.type;
-                this._funcDefMap[block.data.type] = this.makeFuncDef(block, this._hasRootFunc);
+                this.funcDefMap[block.data.type] = this.makeFuncDef(block, this._hasRootFunc);
                 this._hasRootFunc = false;
             }
             if (this.isRegisteredFunc(block))
@@ -179,7 +183,7 @@ Entry.BlockToPyParser = class {
     }
 
     Comment(comment) {
-        return `# ${comment.value}`;
+        this.globalCommentList.push(`# ${comment.value}`);
     }
 
     /**
