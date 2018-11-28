@@ -519,8 +519,8 @@ Entry.Parser = function(mode, type, cm, syntax) {
         for(let i = 4; i < textArr.length; i++) {
             let textLine = textArr[i] + '\n';
 
-            if (textLine.startsWith('#')) {
-                threads.push(makeLine(textLine));
+            if (textLine.trim().startsWith('#')) {
+                threads.push(textLine.trim() + '\n');
             } else if(Entry.TextCodingUtil.isEntryEventFuncByFullText(textLine.trim())) {
                 if(optText.length !== 0) {
                     threads.push(makeLine(optText));
