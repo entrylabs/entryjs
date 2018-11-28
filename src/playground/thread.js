@@ -60,7 +60,7 @@ Entry.Thread = class Thread {
             let view;
             if (b.createView) {
                 view = b.createView(board, mode);
-            } else if (b.createComment && !b.board) {
+            } else if (b.createComment) {
                 view = b.createComment(board);
             }
             return view;
