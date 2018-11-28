@@ -51,22 +51,25 @@ export class AtlasTexture extends PIXI.Texture {
         var rx = r.x;
         var ry = r.y;
 
+        var sw = info.srcWidth;
+        var sh = info.srcHeight;
+
         /* //for debug background
         ctx.fillStyle = PIXIHelper.randomRGBAString(0.3);
         ctx.fillRect(rx, ry, w, h);
         //*/
-        ctx.drawImage(img, 0, 0, w, h, rx, ry, w, h);
+        ctx.drawImage(img, 0, 0, sw, sh, rx, ry, w, h);
         if(extrude) {
             ctx.save();
             ctx.imageSmoothingEnabled = false;
             //top
-            ctx.drawImage(img, 0, 0, w, 1, rx, ry - extrude, w, extrude);
+            ctx.drawImage(img, 0, 0, sw, 1, rx, ry - extrude, w, extrude);
             //down
-            ctx.drawImage(img, 0, h - 1, w, 1, rx, ry + h, w, extrude);
+            ctx.drawImage(img, 0, sh - 1, sw, 1, rx, ry + h, w, extrude);
             //left
-            ctx.drawImage(img, 0, 0, 1, h, rx - extrude, ry, extrude, h);
+            ctx.drawImage(img, 0, 0, 1, sh, rx - extrude, ry, extrude, h);
             //right
-            ctx.drawImage(img, w - 1, 0, 1, h, rx + w, ry, extrude, h);
+            ctx.drawImage(img, sw - 1, 0, 1, sh, rx + w, ry, extrude, h);
             ctx.restore();
         }
     }
