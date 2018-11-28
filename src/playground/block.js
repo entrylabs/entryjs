@@ -70,7 +70,7 @@ Entry.Block = class Block {
         }
 
         if (block.comment) {
-            this._commentSchema = block.comment;
+            this._commentJson = block.comment;
         }
     }
 
@@ -280,9 +280,9 @@ Entry.Block = class Block {
             });
             this._updatePos();
         }
-        if (this._commentSchema) {
-            this.connectComment(new Entry.Comment(this, board, this._commentSchema));
-            delete this._commentSchema;
+        if (this._commentJson) {
+            this.connectComment(new Entry.Comment(this._commentJson, board, this));
+            delete this._commentJson;
         }
     }
 

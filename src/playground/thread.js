@@ -28,7 +28,7 @@ Entry.Thread = class Thread {
                 block.setThread(this);
                 this._data.push(block);
             } else if (block.type === 'comment') {
-                const commment = new Entry.Comment(undefined, this._code.board, block);
+                const commment = new Entry.Comment(block);
                 commment.setThread(this);
                 this._data.push(commment);
             } else {

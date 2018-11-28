@@ -19,17 +19,15 @@ Entry.Comment = class Comment {
         deletable: Entry.Block.DELETABLE_TRUE,
     };
 
-    constructor(block, board, schema) {
+    constructor(schema, board, block) {
         Entry.Model(this, false);
 
         if (schema) {
             this.set(schema);
         }
         this._block = block;
-        if (block) {
-            const { view } = block;
-            this._blockView = view;
-        }
+        const { view } = block || {};
+        this._blockView = view;
         if (board) {
             this.createComment(board, schema);
         }
@@ -181,8 +179,6 @@ Entry.Comment = class Comment {
         schema.width = schema.width || 160;
         schema.height = schema.height || 160;
         this.set(schema);
-        this.originX = this.x;
-        this.originY = this.y;
     }
 
     setFrame() {
@@ -355,8 +351,10 @@ Entry.Comment = class Comment {
     }
 
     updatePos() {
-        this.originX = this.x;
-        this.originY = this.y;
+        this.set({
+            x: this.moveX,
+            y: this.moveY,
+        });
     }
 
     updateParentPos() {
@@ -545,14 +543,15 @@ Entry.Comment = class Comment {
             }
             const workspaceMode = this.board.workspace.getMode();
             if (this.dragMode !== Entry.DRAG_MODE_DRAG) {
+                this.moveX = this.x;
+                this.moveY = this.y;
                 this.dragMode = Entry.DRAG_MODE_DRAG;
                 Entry.GlobalSvg.setComment(this, workspaceMode);
                 this.visible && this.set({ visible: false });
             }
-            this.moveBy(
-                mouseEvent.pageX - this.dragInstance.offsetX,
-                mouseEvent.pageY - this.dragInstance.offsetY
-            );
+
+            this.moveX += mouseEvent.pageX - this.dragInstance.offsetX;
+            this.moveY += mouseEvent.pageY - this.dragInstance.offsetY;
 
             this.dragInstance.set({
                 offsetX: mouseEvent.pageX,
@@ -623,25 +622,23 @@ Entry.Comment = class Comment {
     getAbsoluteCoordinate(dragMode = this.dragMode) {
         const scale = this.scale;
         let pos = null;
-        let parentX;
-        let parentY;
+        let parentX = 0;
+        let parentY = 0;
         if (this.mouseDownCoordinate) {
             parentX = this.mouseDownCoordinate.parentX;
             parentY = this.mouseDownCoordinate.parentY;
         }
-        const posX = this.x;
-        const posY = this.y;
         if (dragMode === Entry.DRAG_MODE_DRAG) {
             pos = {
-                x: posX,
-                y: posY,
-                scaleX: this.x + parentX / scale,
-                scaleY: this.y + parentY / scale,
+                x: this.moveX,
+                y: this.moveY,
+                scaleX: this.moveX + parentX / scale,
+                scaleY: this.moveY + parentY / scale,
             };
         } else {
             pos = this.getThread().view.requestAbsoluteCoordinate(this);
-            pos.x += posX;
-            pos.y += posY;
+            pos.x += this.x;
+            pos.y += this.y;
             pos.scaleX = pos.x / scale;
             pos.scaleY = pos.y / scale;
         }
@@ -849,21 +846,21 @@ Entry.Comment = class Comment {
     }
 
     connectToBlock(block) {
-        const schema = this.toJSON();
-        delete schema.x;
-        delete schema.y;
+        const data = this.toJSON();
+        delete data.x;
+        delete data.y;
         this.destroy(block);
-        block.connectComment(new Entry.Comment(block, this.board, schema));
+        block.connectComment(new Entry.Comment(data, this.board, block));
     }
 
     separateFromBlock() {
-        const schema = this.toJSON();
+        const data = this.toJSON();
         const { x, y } = this.getAbsoluteCoordinate();
         const board = this.board;
-        schema.x = x;
-        schema.y = y;
+        data.x = x;
+        data.y = y;
         this.destroy();
-        const comment = new Entry.Comment(undefined, board, schema);
+        const comment = new Entry.Comment(data, board);
         this.board.code.createThread([comment], 0);
     }
 
