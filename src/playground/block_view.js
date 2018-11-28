@@ -342,7 +342,7 @@ Entry.BlockView = class BlockView {
         this.contentPos = contentPos;
         this._render();
         const comment = this.block.comment;
-        if (comment) {
+        if (comment instanceof Entry.Comment) {
             comment.updateParentPos();
         }
 
