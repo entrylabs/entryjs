@@ -1,9 +1,11 @@
 .entryVariablePanelWorkspace {
     position: absolute;
-    width: 250px;
+    width: 254px;
     top: 79px;
     bottom: 0px;
-    padding: 6px 4px 0px 4px;
+    padding: 16px 16px 0 8px;
+    background-color: #ecf8ff;
+    border: 1px solid #d6e9f4;
 }
 
 .entryVariablePanelPhone {
@@ -15,61 +17,143 @@
 
 .entryVariableSelectorWorkspace {
     width: 100%;
-    border-collapse: separate;
+    border-collapse: collapse;
     border-spacing: 0;
+    border: 0;
+    padding: 0;
+    margin: 0;
+}
+.entryVariableSelectorWorkspace tr:first-child td:first-child {
+    width: 56px;
 }
 
 .entryVariableSelectButtonWorkspace {
     font-family: nanumBarunBold !important;
-    width: 25%;
-    border-collapse: collapse;
-    text-align: center;
-    vertical-align: center;
-    background-color: #EDEDED;
-    height: 38px;
-    border: solid 1px #bdbdbd;
-    border-left: none;
-    color: #535353;
-    padding-top: 4px;
+    width: 88px;
+    padding: 0;
+    margin: 0;
     cursor: pointer;
+    vertical-align: top;
 }
-
-.entryVariableSelectButtonWorkspace.selected {
-    color: #ffffff;
-    background-color: #0e68e3;
+.entryVariableSelectButtonWorkspace div {
+    position: relative;
+    height: 40px;
+    padding-left: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #728997;
+    background-color: #fff;
+    letter-spacing: -0.4px;
+    line-height: 42px;
 }
-
-.entryVariableSelectButtonWorkspace.allButton {
+.entryVariableSelectButtonWorkspace.selected div {
+    color: #4f80ff;
+    z-index: 10;
+}
+.entryVariableSelectButtonWorkspace.allButton div {
+    height: 80px;
+    padding: 0;
     border-radius: 6px 0 0 6px;
-    border-left: solid 1px #bdbdbd;
+    text-align: center;
+    line-height: 80px;
 }
 
-.entryVariableSelectButtonWorkspace.message {
-    border-radius: 0 6px 0px 0;
+.entryVariableSelectButtonWorkspace.message div {
+    border-radius: 0 6px 0 0;
 }
 
-.entryVariableSelectButtonWorkspace.list {
-    border-top: none;
+.entryVariableSelectButtonWorkspace.func div {
+    border-radius: 0 0 6px 0;
 }
 
-.entryVariableSelectButtonWorkspace.func {
-    border-top: none;
-    border-radius: 0 0px 6px 0;
-}
-
-.entryVariableSelectButtonWorkspace.disable {
-    color: #bdbdbd;
+.entryVariableSelectButtonWorkspace.disable div {
     cursor: default;
+}
+
+.entryVariableSelectButtonWorkspace div:after {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    border: 1px solid #d6e9f4;
+    content: '';
+}
+
+.entryVariableSelectButtonWorkspace.selected div:after {
+    border-color:#4f80ff;
+}
+
+.entryVariableSelectButtonWorkspace.allButton div:after {
+    right: -1px;
+    border-radius: 6px 0 0 6px;
+}
+.entryVariableSelectButtonWorkspace.variable div:after {
+    right: -1px;
+}
+.entryVariableSelectButtonWorkspace.message div:after {
+    border-radius: 0 6px 0 0;
+}
+.entryVariableSelectButtonWorkspace.list div:after {
+    right: -1px;
+    top: -1px;
+}
+.entryVariableSelectButtonWorkspace.func div:after {
+    top: -1px;
+    border-radius: 0 0 6px 0;
+}
+
+.entryVariableSelectButtonWorkspace div:before {
+    display: inline-block;
+    width: 22px;
+    height: 22px;
+    background-size: 22px auto;
+    vertical-align: top;
+    margin: 9px 12px 0 0;
+    content: '';
+}
+
+.entryVariableSelectButtonWorkspace.allButton div:before {
+    display: none;
+}
+
+.entryVariableSelectButtonWorkspace.variable div:before {
+    .backgroundImage("ic_attr_variable.png");
+}
+.entryVariableSelectButtonWorkspace.message div:before {
+    .backgroundImage("ic_attr_message.png");
+}
+.entryVariableSelectButtonWorkspace.list div:before {
+    margin-right: 6px;
+    .backgroundImage("ic_attr_list.png");
+}
+.entryVariableSelectButtonWorkspace.func div:before {
+    .backgroundImage("ic_attr_func.png");
+}
+
+.entryVariableSelectButtonWorkspace.variable.selected div:before {
+    .backgroundImage("ic_attr_variable_on.png");
+}
+.entryVariableSelectButtonWorkspace.message.selected div:before {
+    .backgroundImage("ic_attr_message_on.png");
+}
+.entryVariableSelectButtonWorkspace.list.selected div:before {
+    margin-right: 6px;
+    .backgroundImage("ic_attr_list_on.png");
+}
+.entryVariableSelectButtonWorkspace.func.selected div:before {
+    .backgroundImage("ic_attr_func_on.png");
 }
 
 .entryVariableListWorkspace {
     position: absolute;
-    top: 88px; 
+    top: 112px; 
     bottom: 0px;
-    right: 4px;
-    left: 4px;
-    padding: 0;
+    right: 0px;
+    left: 0px;
+    padding: 16px 0 0 0;
     margin: 0;
+    border-top: 1px solid #d6e9f4;
     list-style: none;
     overflow: auto;
 }
