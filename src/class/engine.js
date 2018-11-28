@@ -19,9 +19,7 @@ Entry.Engine = function() {
     var _addEventListener = Entry.addEventListener.bind(Entry);
 
     _addEventListener('canvasClick', () => this.fireEvent('mouse_clicked'));
-    _addEventListener('canvasClickCanceled', () =>
-        this.fireEvent('mouse_click_cancled')
-    );
+    _addEventListener('canvasClickCanceled', () => this.fireEvent('mouse_click_cancled'));
     _addEventListener('entityClick', (entity) =>
         this.fireEventOnEntity('when_object_click', entity)
     );
@@ -70,9 +68,7 @@ Entry.Engine = function() {
         if (option == 'workspace') {
             /** @type {!Element} */
             this.view_ = controlView;
-            this.view_
-                .addClass('entryEngine_w')
-                .addClass('entryEngineWorkspace_w');
+            this.view_.addClass('entryEngine_w').addClass('entryEngineWorkspace_w');
 
             this.speedButton = Entry.createElement('button')
                 .addClass(
@@ -116,6 +112,14 @@ Entry.Engine = function() {
                     Entry.stage.toggleCoordinator();
                 });
 
+            this.mouseView = Entry.createElement('div')
+                .addClass('entryMouseViewWorkspace_w')
+                .addClass('entryHide')
+                .appendTo(this.view_);
+
+            this.buttonWrapper = Entry.createElement('div')
+                .addClass('entryEngineButtonWrapper')
+                .appendTo(this.view_);
             this.addButton = Entry.createElement('button')
                 .addClass('entryEngineButtonWorkspace_w')
                 .addClass('entryAddButtonWorkspace_w')
@@ -123,7 +127,7 @@ Entry.Engine = function() {
                     Entry.do('addObjectButtonClick');
                     this.blur();
                 })
-                .appendTo(this.view_);
+                .appendTo(this.buttonWrapper);
             this.addButton.innerHTML = Lang.Workspace.add_object;
             if (!Entry.objectAddable) this.addButton.addClass('entryRemove');
 
@@ -131,13 +135,13 @@ Entry.Engine = function() {
                 .addClass('entryEngineButtonWorkspace_w')
                 .addClass('entryRunButtonWorkspace_w')
                 .bindOnClick(() => Entry.do('toggleRun', 'runButton'))
-                .appendTo(this.view_);
+                .appendTo(this.buttonWrapper);
             this.runButton.innerHTML = Lang.Workspace.run;
 
             this.runButton2 = Entry.createElement('button')
                 .addClass('entryEngineButtonWorkspace_w')
                 .addClass('entryRunButtonWorkspace_w2')
-                .appendTo(this.view_)
+                .appendTo(this.buttonWrapper)
                 .bindOnClick(() => Entry.engine.toggleRun());
 
             this.stopButton = Entry.createElement('button')
@@ -145,7 +149,7 @@ Entry.Engine = function() {
                 .addClass('entryStopButtonWorkspace_w')
                 .addClass('entryRemove')
                 .bindOnClick(() => Entry.do('toggleStop', 'stopButton'))
-                .appendTo(this.view_);
+                .appendTo(this.buttonWrapper);
             this.stopButton.innerHTML = Lang.Workspace.stop;
 
             this.stopButton2 = Entry.createElement('button')
@@ -156,14 +160,14 @@ Entry.Engine = function() {
                     this.blur();
                     Entry.engine.toggleStop();
                 })
-                .appendTo(this.view_);
+                .appendTo(this.buttonWrapper);
             this.stopButton2.innerHTML = Lang.Workspace.stop;
 
             this.pauseButton = Entry.createElement('button')
                 .addClass('entryEngineButtonWorkspace_w')
                 .addClass('entryPauseButtonWorkspace_w')
                 .addClass('entryRemove')
-                .appendTo(this.view_)
+                .appendTo(this.buttonWrapper)
                 .bindOnClick(function(e) {
                     this.blur();
                     Entry.engine.togglePause();
@@ -173,16 +177,11 @@ Entry.Engine = function() {
                 .addClass('entryEngineButtonWorkspace_w')
                 .addClass('entryPauseButtonWorkspace_full')
                 .addClass('entryRemove')
-                .appendTo(this.view_)
+                .appendTo(this.buttonWrapper)
                 .bindOnClick(function() {
                     this.blur();
                     Entry.engine.togglePause();
                 });
-
-            this.mouseView = Entry.createElement('div')
-                .addClass('entryMouseViewWorkspace_w')
-                .addClass('entryRemove')
-                .appendTo(this.view_);
         } else if (option == 'minimize') {
             /** @type {!Element} */
             this.view_ = controlView;
@@ -231,7 +230,7 @@ Entry.Engine = function() {
 
             this.mouseView = Entry.createElement('div');
             this.mouseView.addClass('entryMouseViewMinimize');
-            this.mouseView.addClass('entryRemove');
+            this.mouseView.addClass('entryHide');
             this.view_.appendChild(this.mouseView);
 
             Entry.addEventListener('loadComplete', () => {
@@ -250,10 +249,7 @@ Entry.Engine = function() {
             this.view_.appendChild(this.headerView_);
 
             this.maximizeButton = Entry.createElement('button');
-            this.maximizeButton.addClass(
-                'entryEngineButtonPhone',
-                'entryMaximizeButtonPhone'
-            );
+            this.maximizeButton.addClass('entryEngineButtonPhone', 'entryMaximizeButtonPhone');
             this.headerView_.appendChild(this.maximizeButton);
             this.maximizeButton.bindOnClick(function(e) {
                 Entry.engine.footerView_.addClass('entryRemove');
@@ -275,10 +271,7 @@ Entry.Engine = function() {
             this.view_.appendChild(this.footerView_);
 
             this.runButton = Entry.createElement('button');
-            this.runButton.addClass(
-                'entryEngineButtonPhone',
-                'entryRunButtonPhone'
-            );
+            this.runButton.addClass('entryEngineButtonPhone', 'entryRunButtonPhone');
             if (Entry.objectAddable) this.runButton.addClass('small');
             this.runButton.innerHTML = Lang.Workspace.run;
 
@@ -325,17 +318,11 @@ Entry.Engine = function() {
             this.maximizeButton.addClass('entryRemove');
             this.mouseView.addClass('entryRemoveElement');
 
-            this.speedLabel_ = Entry.createElement(
-                'div',
-                'entrySpeedLabelWorkspace'
-            );
+            this.speedLabel_ = Entry.createElement('div', 'entrySpeedLabelWorkspace');
             this.speedLabel_.innerHTML = Lang.Workspace.speed;
             this.view_.insertBefore(this.speedLabel_, this.maximizeButton);
 
-            this.speedProgress_ = Entry.createElement(
-                'table',
-                'entrySpeedProgressWorkspace'
-            );
+            this.speedProgress_ = Entry.createElement('table', 'entrySpeedProgressWorkspace');
             var tr = Entry.createElement('tr').appendTo(this.speedProgress_);
 
             this.speeds.forEach((speed, i) => {
@@ -345,48 +332,33 @@ Entry.Engine = function() {
             });
 
             this.view_.insertBefore(this.speedProgress_, this.maximizeButton);
-            this.speedHandle_ = Entry.createElement(
-                'div',
-                'entrySpeedHandleWorkspace'
-            );
+            this.speedHandle_ = Entry.createElement('div', 'entrySpeedHandleWorkspace');
             var canvasWidth = Entry.interfaceState.canvasWidth;
             var grid = (canvasWidth - 84) / 5;
 
-            $(this.speedHandle_).bind(
-                'mousedown.speedPanel touchstart.speedPanel',
-                function(e) {
-                    if (e.stopPropagation) e.stopPropagation();
-                    if (e.preventDefault) e.preventDefault();
+            $(this.speedHandle_).bind('mousedown.speedPanel touchstart.speedPanel', function(e) {
+                if (e.stopPropagation) e.stopPropagation();
+                if (e.preventDefault) e.preventDefault();
 
-                    if (
-                        e.button === 0 ||
-                        (e.originalEvent && e.originalEvent.touches)
-                    ) {
-                        var mouseEvent = Entry.Utils.convertMouseEvent(e);
-                        var doc = $(document);
-                        doc.bind(
-                            'mousemove.speedPanel touchmove.speedPanel',
-                            onMouseMove
-                        );
-                        doc.bind(
-                            'mouseup.speedPanel touchend.speedPanel',
-                            onMouseUp
-                        );
-                    }
-
-                    function onMouseMove(e) {
-                        e.stopPropagation();
-                        var { clientX } = Entry.Utils.convertMouseEvent(e);
-                        var level = Math.floor((clientX - 80) / (grid * 5) * 5);
-                        if (level < 0 || level > 4) return;
-                        Entry.engine.setSpeedMeter(Entry.engine.speeds[level]);
-                    }
-
-                    function onMouseUp(e) {
-                        $(document).unbind('.speedPanel');
-                    }
+                if (e.button === 0 || (e.originalEvent && e.originalEvent.touches)) {
+                    var mouseEvent = Entry.Utils.convertMouseEvent(e);
+                    var doc = $(document);
+                    doc.bind('mousemove.speedPanel touchmove.speedPanel', onMouseMove);
+                    doc.bind('mouseup.speedPanel touchend.speedPanel', onMouseUp);
                 }
-            );
+
+                function onMouseMove(e) {
+                    e.stopPropagation();
+                    var { clientX } = Entry.Utils.convertMouseEvent(e);
+                    var level = Math.floor((clientX - 80) / (grid * 5) * 5);
+                    if (level < 0 || level > 4) return;
+                    Entry.engine.setSpeedMeter(Entry.engine.speeds[level]);
+                }
+
+                function onMouseUp(e) {
+                    $(document).unbind('.speedPanel');
+                }
+            });
             this.view_.insertBefore(this.speedHandle_, this.maximizeButton);
             this.setSpeedMeter(Entry.FPS);
         }
@@ -416,11 +388,7 @@ Entry.Engine = function() {
         /** @type {!number} */
         createjs.Ticker.setFPS(Entry.FPS);
 
-        if (!this.ticker)
-            this.ticker = setInterval(
-                this.update,
-                Math.floor(1000 / Entry.FPS)
-            );
+        if (!this.ticker) this.ticker = setInterval(this.update, Math.floor(1000 / Entry.FPS));
     };
 
     /**
@@ -525,8 +493,7 @@ Entry.Engine = function() {
             this.achieveEnabled = !(disableAchieve === false);
         }
         this.state = 'run';
-        if (Entry.type == 'mobile')
-            this.view_.addClass('entryEngineBlueWorkspace');
+        if (Entry.type == 'mobile') this.view_.addClass('entryEngineBlueWorkspace');
 
         if (this.runButton) {
             this.setPauseButton(this.option);
@@ -535,19 +502,14 @@ Entry.Engine = function() {
             this.stopButton.removeClass('entryRemove');
             if (this.addButton) {
                 this.addButton.addClass('entryRemove');
-                if (Entry.objectAddable)
-                    this.pauseButton.removeClass('entryRemove');
+                if (Entry.objectAddable) this.pauseButton.removeClass('entryRemove');
             }
-            if (
-                this.pauseButton &&
-                (Entry.type === 'minimize' || Entry.objectAddable)
-            )
+            if (this.pauseButton && (Entry.type === 'minimize' || Entry.objectAddable))
                 this.pauseButton.removeClass('entryRemove');
 
             if (this.runButton2) this.runButton2.addClass('entryRemove');
             if (this.stopButton2) this.stopButton2.removeClass('entryRemove');
-            if (this.pauseButtonFull)
-                this.pauseButtonFull.removeClass('entryRemove');
+            if (this.pauseButtonFull) this.pauseButtonFull.removeClass('entryRemove');
         }
 
         if (!this.isUpdating) {
@@ -608,10 +570,8 @@ Entry.Engine = function() {
             this.runButton.removeClass('entryRemove');
             this.stopButton.addClass('entryRemove');
             if (this.pauseButton) this.pauseButton.addClass('entryRemove');
-            if (this.pauseButtonFull)
-                this.pauseButtonFull.addClass('entryRemove');
-            if (this.addButton && Entry.objectAddable)
-                this.addButton.removeClass('entryRemove');
+            if (this.pauseButtonFull) this.pauseButtonFull.addClass('entryRemove');
+            if (this.addButton && Entry.objectAddable) this.addButton.removeClass('entryRemove');
 
             if (this.runButton2) this.runButton2.removeClass('entryRemove');
             if (this.stopButton2) this.stopButton2.addClass('entryRemove');
@@ -622,22 +582,20 @@ Entry.Engine = function() {
         Entry.dispatchEvent('stop');
         Entry.stage.hideInputField();
         (function(w) {
-            w &&
-                w.getMode() === Entry.Workspace.MODE_VIMBOARD &&
-                w.codeToText();
+            w && w.getMode() === Entry.Workspace.MODE_VIMBOARD && w.codeToText();
         })(Entry.getMainWS());
         Entry.dispatchEvent('dispatchEventDidToggleStop');
     };
 
     p.setEnableInputField = function(on) {
         var inputField = Entry.stage.inputField;
-        if(inputField) {
+        if (inputField) {
             inputField._readonly = !on;
-            if(!inputField._isHidden) {
+            if (!inputField._isHidden) {
                 on ? inputField.focus() : inputField.blur();
             }
         }
-    }
+    };
 
     /**
      * toggle this engine state pause
@@ -653,8 +611,11 @@ Entry.Engine = function() {
             Entry.Utils.recoverSoundInstances();
             if (this.runButton) {
                 this.setPauseButton(this.option);
-                this.runButton.addClass('entryRemove');
-                if (this.runButton2) this.runButton2.addClass('entryRemove');
+                if (this.runButton2) {
+                    this.runButton2.addClass('entryRemove');
+                } else {
+                    this.runButton.addClass('entryRemove');
+                }
             }
 
             if (Entry.timerInstances) {
@@ -673,9 +634,12 @@ Entry.Engine = function() {
             Entry.Utils.pauseSoundInstances();
             if (this.runButton) {
                 this.setPauseButton(this.option);
-                this.runButton.removeClass('entryRemove');
                 this.stopButton.removeClass('entryRemove');
-                if (this.runButton2) this.runButton2.removeClass('entryRemove');
+                if (this.runButton2) {
+                    this.runButton2.removeClass('entryRemove');
+                } else {
+                    this.runButton.removeClass('entryRemove');
+                }
             }
 
             if (Entry.timerInstances) {
@@ -691,45 +655,42 @@ Entry.Engine = function() {
         if (this.state == 'pause') {
             if (this.pauseButton) {
                 this.pauseButton.innerHTML = Lang.Workspace.restart;
-                if(this.option !== 'minimize') {
+                if (this.option !== 'minimize') {
                     this.pauseButton.removeClass('entryPauseButtonWorkspace_w');
                     this.pauseButton.addClass('entryRestartButtonWorkspace_w');
                 }
             }
             if (this.pauseButtonFull) {
                 this.pauseButtonFull.innerHTML = Lang.Workspace.restart;
-                if(this.option !== 'minimize') {
+                if (this.option !== 'minimize') {
                     this.pauseButtonFull.removeClass('entryPauseButtonWorkspace_full');
                     this.pauseButtonFull.addClass('entryRestartButtonWorkspace_full');
                 }
             }
         } else {
-            if (this.pauseButton){
+            if (this.pauseButton) {
                 this.pauseButton.innerHTML = Lang.Workspace.pause;
-                if(this.option !== 'minimize') {
+                if (this.option !== 'minimize') {
                     this.pauseButton.addClass('entryPauseButtonWorkspace_w');
                     this.pauseButton.removeClass('entryRestartButtonWorkspace_w');
                 }
             }
-            if (this.pauseButtonFull){
+            if (this.pauseButtonFull) {
                 this.pauseButtonFull.innerHTML = Lang.Workspace.pause;
-                if(this.option !== 'minimize') {
+                if (this.option !== 'minimize') {
                     this.pauseButtonFull.addClass('entryPauseButtonWorkspace_full');
                     this.pauseButtonFull.removeClass('entryRestartButtonWorkspace_full');
                 }
             }
         }
-    }
+    };
 
     /**
      * @param {string} eventName
      */
     p.fireEvent = function(eventName) {
         if (this.state !== 'run') return;
-        Entry.container.mapEntityIncludeCloneOnScene(
-            this.raiseEvent,
-            eventName
-        );
+        Entry.container.mapEntityIncludeCloneOnScene(this.raiseEvent, eventName);
     };
 
     /**
@@ -747,10 +708,10 @@ Entry.Engine = function() {
      */
     p.fireEventOnEntity = function(eventName, entity) {
         if (this.state == 'run')
-            Entry.container.mapEntityIncludeCloneOnScene(
-                this.raiseEventOnEntity,
-                [entity, eventName]
-            );
+            Entry.container.mapEntityIncludeCloneOnScene(this.raiseEventOnEntity, [
+                entity,
+                eventName,
+            ]);
     };
 
     /**
@@ -778,9 +739,7 @@ Entry.Engine = function() {
         if (keyCode !== 17 && e.ctrlKey && isWorkspace) {
             if (keyCode == 83) {
                 e.preventDefault();
-                Entry.dispatchEvent(
-                    e.shiftKey ? 'saveAsWorkspace' : 'saveWorkspace'
-                );
+                Entry.dispatchEvent(e.shiftKey ? 'saveAsWorkspace' : 'saveWorkspace');
             } else if (keyCode == 82) {
                 e.preventDefault();
                 Entry.engine.run();
@@ -790,10 +749,10 @@ Entry.Engine = function() {
             }
         } else if (Entry.engine.isState('run')) {
             e.preventDefault && e.preventDefault();
-            Entry.container.mapEntityIncludeCloneOnScene(
-                Entry.engine.raiseKeyEvent,
-                ['keyPress', keyCode]
-            );
+            Entry.container.mapEntityIncludeCloneOnScene(Entry.engine.raiseKeyEvent, [
+                'keyPress',
+                keyCode,
+            ]);
         }
 
         if (Entry.engine.isState('stop')) {
@@ -809,11 +768,7 @@ Entry.Engine = function() {
      * @param {Array} param
      */
     p.raiseKeyEvent = function(entity, [eventName, keyCode]) {
-        return entity.parent.script.raiseEvent(
-            eventName,
-            entity,
-            String(keyCode)
-        );
+        return entity.parent.script.raiseEvent(eventName, entity, String(keyCode));
     };
 
     /**
@@ -822,14 +777,14 @@ Entry.Engine = function() {
     p.updateMouseView = function() {
         var { x, y } = Entry.stage.mouseCoordinate;
         this.mouseView.textContent = 'X : ' + x + ', Y : ' + y;
-        this.mouseView.removeClass('entryRemove');
+        this.mouseView.removeClass('entryHide');
     };
 
     /**
      * hide mouse coordinate
      */
     p.hideMouseView = function() {
-        this.mouseView.addClass('entryRemove');
+        this.mouseView.addClass('entryHide');
     };
 
     /**
@@ -849,9 +804,7 @@ Entry.Engine = function() {
             }
             popup.window_.appendChild(Entry.engine.view_);
             if (Entry.type === 'workspace' && Entry.targetChecker)
-                popup.window_.appendChild(
-                    Entry.targetChecker.getStatusView()[0]
-                );
+                popup.window_.appendChild(Entry.targetChecker.getStatusView()[0]);
         } else {
             this.popup.remove();
             this.popup = null;
@@ -869,11 +822,7 @@ Entry.Engine = function() {
     };
 
     p.exitFullScreen = function() {
-        if (
-            document.webkitIsFullScreen ||
-            document.mozIsFullScreen ||
-            document.isFullScreen
-        ) {
+        if (document.webkitIsFullScreen || document.mozIsFullScreen || document.isFullScreen) {
         } else {
             Entry.engine.footerView_.removeClass('entryRemove');
             Entry.engine.headerView_.removeClass('entryRemove');
@@ -971,13 +920,7 @@ Entry.Engine = function() {
         if (typeof value == 'undefined') {
             if (!timer.isPaused && !engine.isState('pause'))
                 timer.setValue(
-                    Math.max(
-                        (current -
-                            (timer.start || current) -
-                            timer.pausedTime) /
-                            1000,
-                        0
-                    )
+                    Math.max((current - (timer.start || current) - timer.pausedTime) / 1000, 0)
                 );
         } else {
             timer.setValue(value);
@@ -988,10 +931,10 @@ Entry.Engine = function() {
 
     p.raiseMessage = function(value) {
         Entry.message.notify(Entry.variableContainer.getMessage(value));
-        return Entry.container.mapEntityIncludeCloneOnScene(
-            this.raiseKeyEvent,
-            ['when_message_cast', value]
-        );
+        return Entry.container.mapEntityIncludeCloneOnScene(this.raiseKeyEvent, [
+            'when_message_cast',
+            value,
+        ]);
     };
 
     p.getDom = function(query) {
@@ -1011,10 +954,7 @@ Entry.Engine = function() {
     p.attachKeyboardCapture = function() {
         if (Entry.keyPressed) {
             this._keyboardEvent && this.detachKeyboardCapture();
-            this._keyboardEvent = Entry.keyPressed.attach(
-                this,
-                this.captureKeyEvent
-            );
+            this._keyboardEvent = Entry.keyPressed.attach(this, this.captureKeyEvent);
         }
     };
 

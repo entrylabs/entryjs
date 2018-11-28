@@ -1,25 +1,31 @@
-@url: "../../img/";
-@image_url: "../../images/";
-@image_url2: "../images/";
+@url: '../../img/';
+@image_url: '../../images/';
+@image_url2: '../images/';
 
-html, body, .wrapper, .entry {
+html,
+body,
+.wrapper,
+.entry {
     height: 100%;
     margin: 0;
     padding: 0;
 }
-.wrapper, .entry {
+.wrapper,
+.entry {
     position: relative;
     min-width: 1024px;
 }
 .engineContainer {
     position: relative;
+    display: flex;
+    flex-direction: column;
     float: left;
     width: 294px;
     height: 100%;
     padding: 45px 16px 0 8px;
 }
 .backgroundImage(@imageName) {
-    background-image: url("@{image_url2}@{imageName}");
+    background-image: url('@{image_url2}@{imageName}');
 }
 
 .dragNone {
@@ -39,6 +45,10 @@ html, body, .wrapper, .entry {
     display: none !important;
 }
 
+.entryHide {
+    visibility: hidden;
+}
+
 .entryRemoveCategory {
     display: none !important;
 }
@@ -50,7 +60,6 @@ html, body, .wrapper, .entry {
 .entryNoDeco {
     text-decoration: none !important;
 }
-
 
 .entryBtn {
     border: none;

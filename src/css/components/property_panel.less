@@ -1,8 +1,9 @@
 .propertyPanel {
     // z-index: 10;
-    position: absolute;
-    top: 288px;
-    left: 8px;
+    position: relative;
+    flex: 1;
+    margin-top: 16px;
+    left: 0px;
     right: 16px;
     bottom: 0px;
 }
@@ -29,36 +30,60 @@
     font-size: 0;
 }
 
-
-.propertyTabobject { 
-    .backgroundImage("property/container_off.png"); 
-    
+.propertyTabobject {
+    .backgroundImage('property/container_off.png');
 }
-.propertyTabobject.selected { .backgroundImage("property/container_on.png"); }
+.propertyTabobject.selected {
+    .backgroundImage('property/container_on.png');
+}
 
-.propertyTabhw { .backgroundImage("property/hw_off.png"); }
-.propertyTabhw.selected { .backgroundImage("property/hw_on.png"); }
+.propertyTabhw {
+    .backgroundImage('property/hw_off.png');
+}
+.propertyTabhw.selected {
+    .backgroundImage('property/hw_on.png');
+}
 
-.propertyTabtvCast {.backgroundImage("property/vedio_off.png");}
-.propertyTabtvCast.selected {.backgroundImage("property/vedio_on.png");}
+.propertyTabtvCast {
+    .backgroundImage('property/vedio_off.png');
+}
+.propertyTabtvCast.selected {
+    .backgroundImage('property/vedio_on.png');
+}
 
-.propertyTabyoutube {.backgroundImage("property/vedio_off.png");}
-.propertyTabyoutube.selected {.backgroundImage("property/vedio_on.png");}
+.propertyTabyoutube {
+    .backgroundImage('property/vedio_off.png');
+}
+.propertyTabyoutube.selected {
+    .backgroundImage('property/vedio_on.png');
+}
 
-.propertyTabgoal {.backgroundImage("property/doneproject.png");}
-.propertyTabgoal.selected {.backgroundImage("property/doneproject_on.png");}
+.propertyTabgoal {
+    .backgroundImage('property/doneproject.png');
+}
+.propertyTabgoal.selected {
+    .backgroundImage('property/doneproject_on.png');
+}
 
-.propertyTabpdf {.backgroundImage("property/pdf_off.png");}
-.propertyTabpdf.selected {.backgroundImage("property/pdf_on.png");}
+.propertyTabpdf {
+    .backgroundImage('property/pdf_off.png');
+}
+.propertyTabpdf.selected {
+    .backgroundImage('property/pdf_on.png');
+}
 
-.propertyTabconsole {.backgroundImage("property/console_off.png");}
-.propertyTabconsole.selected {.backgroundImage("property/console_on.png");}
+.propertyTabconsole {
+    .backgroundImage('property/console_off.png');
+}
+.propertyTabconsole.selected {
+    .backgroundImage('property/console_on.png');
+}
 
 .propertyContent {
     position: absolute;
-    top: 0; 
+    top: 0;
     bottom: 0;
-    left: 25px; 
+    left: 25px;
     right: 0;
     background-color: #fff;
     border: 1px solid #d6e9f4;
@@ -72,13 +97,12 @@
 
 .propertyPanelCover {
     position: absolute;
-    top: 0; 
+    top: 0;
     bottom: 0;
-    left: 0; 
+    left: 0;
     right: 0;
 }
 
 .collapsed .propertyContent {
     left: 30px;
 }
-

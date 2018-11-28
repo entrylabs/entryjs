@@ -300,8 +300,8 @@ Entry.getDom = function(query) {
  * @param {!json} interfaceModel
  */
 Entry.resizeElement = function(interfaceModel) {
-        // 워크 스페이스에 style width / height 값을 임시로 막음.
-        return;
+    // 워크 스페이스에 style width / height 값을 임시로 막음.
+    // return;
     const mainWorkspace = Entry.getMainWS();
     if (!mainWorkspace) {
         return;
@@ -324,7 +324,7 @@ Entry.resizeElement = function(interfaceModel) {
             Entry.engine.toggleSpeedPanel();
         }
 
-        let canvasSize = interfaceModel.canvasWidth;
+        let canvasSize = interfaceModel.canvasWidth - 30;
         if (!canvasSize) {
             canvasSize = 400;
         } else if (canvasSize < 325) {
@@ -335,90 +335,90 @@ Entry.resizeElement = function(interfaceModel) {
         interfaceModel.canvasWidth = canvasSize;
 
         const canvasHeight = canvasSize * 9 / 16;
+        const engineContainer = Entry.engine.view_.parentElement;
+        engineContainer.style.width = `${canvasSize}px`;
+        Entry.engine.view_.style.width = `${canvasSize - 24}px`;
+        Entry.stage.canvas.canvas.style.width = `${canvasSize - 26}px`;
+        // Entry.propertyPanel.resize(canvasSize - 24);
+        // Entry.engine.view_.style.height = `${canvasHeight}px`;
+        // Entry.engine.view_.style.top = '40px';
+        // if (canvasSize >= 400) {
+        //     Entry.engine.view_.removeClass('collapsed');
+        // } else {
+        //     Entry.engine.view_.addClass('collapsed');
+        // }
+        // Entry.playground.view_.style.left = `${canvasSize + 0.5}px`;
 
-        Entry.engine.view_.style.width = `${canvasSize}px`;
-        Entry.engine.view_.style.height = `${canvasHeight}px`;
-        Entry.engine.view_.style.top = '40px';
-        Entry.stage.canvas.canvas.style.width = `${canvasSize}px`;
-        if (canvasSize >= 400) {
-            Entry.engine.view_.removeClass('collapsed');
-        } else {
-            Entry.engine.view_.addClass('collapsed');
-        }
-        Entry.playground.view_.style.left = `${canvasSize + 0.5}px`;
+        // const addButton = Entry.engine.view_.getElementsByClassName('entryAddButtonWorkspace_w')[0];
+        // if (addButton) {
+        //     const addButtonStyle = addButton.style;
+        //     if (Entry.objectAddable) {
+        //         // addButtonStyle.top = `${canvasHeight + 25}px`;
+        //         addButtonStyle.width = `${canvasSize * 0.7}px`;
+        //     }
+        // }
+        // const pauseButton = Entry.engine.view_.getElementsByClassName(
+        //     'entryPauseButtonWorkspace_w'
+        // )[0];
+        // if (pauseButton) {
+        //     const pauseButtonStyle = pauseButton.style;
+        //     if (Entry.objectAddable) {
+        //         // pauseButtonStyle.top = `${canvasHeight + 25}px`;
+        //         pauseButtonStyle.width = `${canvasSize * 0.7}px`;
+        //     }
+        // }
 
-        Entry.propertyPanel.resize(canvasSize);
+        // const runButton = Entry.engine.view_.getElementsByClassName('entryRunButtonWorkspace_w')[0];
+        // if (runButton) {
+        //     const runButtonStyle = runButton.style;
+        //     if (Entry.objectAddable) {
+        //         // runButtonStyle.top = `${canvasHeight + 25}px`;
+        //         // runButtonStyle.left = `${canvasSize * 0.7}px`;
+        //         runButtonStyle.width = `${canvasSize * 0.2}px`;
+        //     } else {
+        //         // runButtonStyle.left = '2px';
+        //         // runButtonStyle.top = `${canvasHeight + 25}px`;
+        //         runButtonStyle.width = `${canvasSize - 4}px`;
+        //     }
+        // }
 
-        const addButton = Entry.engine.view_.getElementsByClassName('entryAddButtonWorkspace_w')[0];
-        if (addButton) {
-            const addButtonStyle = addButton.style;
-            if (Entry.objectAddable) {
-                addButtonStyle.top = `${canvasHeight + 25}px`;
-                addButtonStyle.width = `${canvasSize * 0.7}px`;
-            }
-        }
-        const pauseButton = Entry.engine.view_.getElementsByClassName(
-            'entryPauseButtonWorkspace_w'
-        )[0];
-        if (pauseButton) {
-            const pauseButtonStyle = pauseButton.style;
-            if (Entry.objectAddable) {
-                pauseButtonStyle.top = `${canvasHeight + 25}px`;
-                pauseButtonStyle.width = `${canvasSize * 0.7}px`;
-            }
-        }
+        // const stopButton = Entry.engine.view_.getElementsByClassName(
+        //     'entryStopButtonWorkspace_w'
+        // )[0];
+        // if (stopButton) {
+        //     const stopButtonStyle = stopButton.style;
+        //     if (Entry.objectAddable) {
+        //         stopButtonStyle.top = `${canvasHeight + 25}px`;
+        //         stopButtonStyle.left = `${canvasSize * 0.7}px`;
+        //         stopButtonStyle.width = `${canvasSize * 0.3}px`;
+        //     } else {
+        //         stopButtonStyle.left = '2px';
+        //         stopButtonStyle.top = `${canvasHeight + 25}px`;
+        //         stopButtonStyle.width = `${canvasSize}px`;
+        //     }
+        // }
 
-        const runButton = Entry.engine.view_.getElementsByClassName('entryRunButtonWorkspace_w')[0];
-        if (runButton) {
-            const runButtonStyle = runButton.style;
-            if (Entry.objectAddable) {
-                runButtonStyle.top = `${canvasHeight + 25}px`;
-                runButtonStyle.left = `${canvasSize * 0.7}px`;
-                runButtonStyle.width = `${canvasSize * 0.3}px`;
-            } else {
-                runButtonStyle.left = '2px';
-                runButtonStyle.top = `${canvasHeight + 25}px`;
-                runButtonStyle.width = `${canvasSize - 4}px`;
-            }
-        }
+        // let menuWidth = interfaceModel.menuWidth;
+        // if (!menuWidth) {
+        //     menuWidth = 264;
+        // } else if (menuWidth < 244) {
+        //     menuWidth = 244;
+        // } else if (menuWidth > 400) {
+        //     menuWidth = 400;
+        // }
+        // interfaceModel.menuWidth = menuWidth;
 
-        const stopButton = Entry.engine.view_.getElementsByClassName(
-            'entryStopButtonWorkspace_w'
-        )[0];
-        if (stopButton) {
-            const stopButtonStyle = stopButton.style;
-            if (Entry.objectAddable) {
-                stopButtonStyle.top = `${canvasHeight + 25}px`;
-                stopButtonStyle.left = `${canvasSize * 0.7}px`;
-                stopButtonStyle.width = `${canvasSize * 0.3}px`;
-            } else {
-                stopButtonStyle.left = '2px';
-                stopButtonStyle.top = `${canvasHeight + 25}px`;
-                stopButtonStyle.width = `${canvasSize}px`;
-            }
-        }
+        // const blockMenu = mainWorkspace.blockMenu;
+        // const adjust = blockMenu.hasCategory() ? -64 : 0;
 
-        let menuWidth = interfaceModel.menuWidth;
-        if (!menuWidth) {
-            menuWidth = 264;
-        } else if (menuWidth < 244) {
-            menuWidth = 244;
-        } else if (menuWidth > 400) {
-            menuWidth = 400;
-        }
-        interfaceModel.menuWidth = menuWidth;
+        // $('.blockMenuContainer').css({ width: `${menuWidth + adjust}px` });
+        // $('.blockMenuContainer>svg').css({ width: `${menuWidth + adjust}px` });
+        // blockMenu.setWidth();
+        // $('.entryWorkspaceBoard').css({ left: `${menuWidth}px` });
+        // Entry.playground.resizeHandle_.style.left = `${menuWidth}px`;
+        // Entry.playground.variableViewWrapper_.style.width = `${menuWidth}px`;
 
-        const blockMenu = mainWorkspace.blockMenu;
-        const adjust = blockMenu.hasCategory() ? -64 : 0;
-
-        $('.blockMenuContainer').css({ width: `${menuWidth + adjust}px` });
-        $('.blockMenuContainer>svg').css({ width: `${menuWidth + adjust}px` });
-        blockMenu.setWidth();
-        $('.entryWorkspaceBoard').css({ left: `${menuWidth}px` });
-        Entry.playground.resizeHandle_.style.left = `${menuWidth}px`;
-        Entry.playground.variableViewWrapper_.style.width = `${menuWidth}px`;
-
-        this.interfaceState = interfaceModel;
+        // this.interfaceState = interfaceModel;
     }
 
     Entry.windowResized.notify();

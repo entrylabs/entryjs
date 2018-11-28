@@ -260,7 +260,7 @@ Entry.createDom = function(container, option) {
         canvas.id = 'entryCanvas';
         canvas.width = 640;
         canvas.height = 360;
-        engineView.insertBefore(canvas, this.engine.addButton);
+        engineView.insertBefore(canvas, this.engine.buttonWrapper);
 
         canvas.addEventListener('mousewheel', function(evt) {
             var lists = [];
