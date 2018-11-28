@@ -1315,14 +1315,12 @@ Entry.PyToBlockParser = class {
     };
 
     createFunction(component, funcName, blocks) {
-        var params = component.arguments
-            ? component.arguments.map(this.Node, this)
-            : [];
-        var functions = Entry.variableContainer.functions_;
+        const params = component.arguments ? component.arguments.map(this.Node, this) : [];
+        const functions = Entry.variableContainer.functions_;
 
-        var funcId = Entry.generateHash();
-        for (var key in functions) {
-            var funcSchema = Entry.block['func_' + key];
+        let funcId = Entry.generateHash();
+        for (let key in functions) {
+            const funcSchema = Entry.block['func_' + key];
             if (
                 funcSchema.params.length === params.length + 1 &&
                 funcSchema.template
@@ -1335,30 +1333,37 @@ Entry.PyToBlockParser = class {
             }
         }
 
-        var funcParamPointer = {
+        //함수 선언 블록 내 값블록
+        let funcParamPointer = {
             type: 'function_field_label',
             params: [funcName],
         };
-        var func = {
+        //함수 선언 블록
+        const funcDeclarationContent = {
+            type: 'function_create',
+            params: [funcParamPointer],
+        };
+        const func = {
             id: funcId,
             content: [
-                [
-                    {
-                        type: 'function_create',
-                        params: [funcParamPointer],
-                    },
-                ],
+                [funcDeclarationContent],
             ],
         };
+
+        // 함수 선언 블록에 달린 코멘트 처리
+        const comment = component.body.body[0].argument.callee.object.body.comment;
+        if (comment) {
+            funcDeclarationContent.comment = comment;
+        }
 
         if (!this._funcMap[funcName]) this._funcMap[funcName] = {};
         this._funcMap[funcName][params.length] = func.id;
 
         while (params.length) {
             // generate param
-            var param = params.shift();
-            var paramId = Entry.Func.requestParamBlock('string');
-            var newFuncParam = {
+            const param = params.shift();
+            let paramId = Entry.Func.requestParamBlock('string');
+            const newFuncParam = {
                 type: 'function_field_string',
                 params: [
                     {
@@ -1372,14 +1377,14 @@ Entry.PyToBlockParser = class {
             funcParamPointer = newFuncParam;
         }
 
-        var definedBlocks = this.setParams(blocks); // function content
+        const definedBlocks = this.setParams(blocks); // function content
         this._funcParamMap = {};
 
         func.content[0] = func.content[0].concat(definedBlocks);
 
         func.content = JSON.stringify(func.content);
         if (functions[funcId]) {
-            var targetFunc = functions[funcId];
+            const targetFunc = functions[funcId];
             targetFunc.content = new Entry.Code(func.content);
             targetFunc.generateBlock(true);
             Entry.Func.generateWsBlock(targetFunc);
