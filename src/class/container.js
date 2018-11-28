@@ -1,7 +1,8 @@
 /**
  * @fileoverview Container handle all object in entry.
  */
-'use strict';
+
+import Simplebar from 'simplebar';
 
 /**
  * Class for a container.
@@ -78,6 +79,8 @@ Entry.Container = class Container {
         //this._view.appendChild(addButton);
 
         const ulWrapper = Entry.createElement('div');
+        const scroll = new Simplebar(ulWrapper);
+        console.log(scroll);
         let baseClass = 'entryContainerListWorkspaceWrapper';
         if (Entry.isForLecture) {
             baseClass += ' lecture';
@@ -150,7 +153,7 @@ Entry.Container = class Container {
         this.listView_ = listView;
 
         this.enableSort();
-    };
+    }
     /**
      * enable sort.
      */
@@ -171,7 +174,7 @@ Entry.Container = class Container {
             axis: 'y',
             cancel: 'input.selectedEditingObject',
         });
-    };
+    }
 
     /**
      * disable sort.
@@ -184,7 +187,7 @@ Entry.Container = class Container {
         }
 
         $(view).sortable('destroy');
-    };
+    }
 
     /**
      * update list view to sort item.
@@ -222,7 +225,7 @@ Entry.Container = class Container {
         view.appendChild(fragment);
         Entry.stage.sortZorder();
         return true;
-    };
+    }
 
     /**
      * Set objects
@@ -241,7 +244,7 @@ Entry.Container = class Container {
             const target = this.getCurrentObjects()[0];
             target && this.selectObject(target.id);
         }
-    };
+    }
 
     /**
      * get Pictures element
@@ -255,7 +258,7 @@ Entry.Container = class Container {
         } else {
             throw new Error('No picture found');
         }
-    };
+    }
     /**
      * Set Pictures
      * @param {!Object picture} picture
@@ -272,7 +275,7 @@ Entry.Container = class Container {
             _.pick(picture, ['dimension', 'id', 'filename', 'fileurl', 'name']),
             { view: pictures[index].view }
         );
-    };
+    }
 
     /**
      * Set Pictures
@@ -288,7 +291,7 @@ Entry.Container = class Container {
             return object.id;
         }
         throw new Error('No picture found');
-    };
+    }
 
     /**
      * Add object
@@ -306,7 +309,7 @@ Entry.Container = class Container {
         target.name = Entry.getOrderedName(target.name, this.objects_);
         objectModel.id = objectModel.id || Entry.generateHash();
         return Entry.do('addObject', objectModel, ...rest);
-    };
+    }
 
     addObjectFunc(objectModel, index, isNotRender) {
         const object = new Entry.EntryObject(objectModel);
@@ -337,14 +340,14 @@ Entry.Container = class Container {
             this.updateListView();
             Entry.variableContainer.updateViews();
         }
-    };
+    }
 
     renderObject(object) {
         object.generateView();
         this.setCurrentObjects();
         this.selectObject(object.id);
         Entry.variableContainer.updateViews();
-    };
+    }
 
     addExtension(obj) {
         this._extensionObjects.push(obj);
@@ -352,7 +355,7 @@ Entry.Container = class Container {
             this._extensionListView.append(obj.renderView());
         }
         return obj;
-    };
+    }
 
     removeExtension(obj) {
         if (!obj) {
@@ -366,7 +369,7 @@ Entry.Container = class Container {
         }
 
         obj.destroy && obj.destroy();
-    };
+    }
 
     /**
      * Add Clone object
@@ -396,7 +399,7 @@ Entry.Container = class Container {
             });
             return script;
         }
-    };
+    }
 
     /**
      * Delete object
@@ -428,7 +431,7 @@ Entry.Container = class Container {
         }
 
         Entry.playground.reloadPlayground();
-    };
+    }
 
     /**
      * Select object
@@ -508,14 +511,14 @@ Entry.Container = class Container {
         if (Entry.type != 'minimize' && Entry.engine.isState('stop')) {
             Entry.stage.selectObject(object);
         }
-    };
+    }
 
     /**
      * Get all objects
      */
     getAllObjects() {
         return this.objects_;
-    };
+    }
 
     /**
      * Object Getter
@@ -531,7 +534,7 @@ Entry.Container = class Container {
         }
 
         return _.find(this.objects_, { id: objectId });
-    };
+    }
 
     /**
      * Entity Getter
@@ -548,7 +551,7 @@ Entry.Container = class Container {
             );
         }
         return object.entity;
-    };
+    }
 
     /**
      * get variable on canvas
@@ -564,7 +567,7 @@ Entry.Container = class Container {
                 return variable;
             }
         }
-    };
+    }
 
     /**
      * Move object in objects_
@@ -578,7 +581,7 @@ Entry.Container = class Container {
         const objs = this.getCurrentObjects();
         const startIndex = this.getAllObjects().indexOf(objs[start]);
         const endIndex = this.getAllObjects().indexOf(objs[end]);
-        
+
         if (!isCallFromState && Entry.stateManager) {
             Entry.stateManager.addCommand(
                 'reorder object',
@@ -601,7 +604,7 @@ Entry.Container = class Container {
             startIndex,
             true
         );
-    };
+    }
 
     /**
      * generate list for dropdown dynamic
@@ -735,7 +738,7 @@ Entry.Container = class Container {
             result = [[Lang.Blocks.no_target, 'null']];
         }
         return result;
-    };
+    }
 
     /**
      * Initialize entities to state before run
@@ -744,7 +747,7 @@ Entry.Container = class Container {
         this.mapObject((object) => {
             object.clearExecutor();
         });
-    };
+    }
 
     clearRunningStateOnScene() {
         this.mapObjectOnScene((object) => {
@@ -753,7 +756,7 @@ Entry.Container = class Container {
             }
             object.clearExecutor();
         });
-    };
+    }
 
     /**
      * Apply map function to objects. But this not replace object with returned one.
@@ -766,13 +769,13 @@ Entry.Container = class Container {
         return [...this._extensionObjects, ...this.objects_].map((object) => {
             return mapFunction(object, param);
         });
-    };
+    }
 
     mapObjectOnScene(mapFunction, param) {
         return [...this._extensionObjects, ...this.getCurrentObjects()].map((object) => {
             return mapFunction(object, param);
         });
-    };
+    }
 
     /**
      * Apply map function to objects. But this not replace object with returned one.
@@ -785,13 +788,13 @@ Entry.Container = class Container {
         return this.objects_.map(({ entity }) => {
             return mapFunction(entity, param);
         });
-    };
+    }
 
     mapEntityOnScene(mapFunction, param) {
         return this.getCurrentObjects().map(({ entity }) => {
             return mapFunction(entity, param);
         });
-    };
+    }
 
     /**
      * Apply map function to objects. But this not replace object with returned one.
@@ -817,7 +820,7 @@ Entry.Container = class Container {
             }
         }
         return output;
-    };
+    }
 
     mapEntityIncludeCloneOnScene(mapFunction, param) {
         const objects = this.getCurrentObjects();
@@ -836,7 +839,7 @@ Entry.Container = class Container {
             });
         }
         return output;
-    };
+    }
 
     /**
      * Get cached picture
@@ -846,7 +849,7 @@ Entry.Container = class Container {
     getCachedPicture(pictureId) {
         Entry.assert(typeof pictureId === 'string', 'pictureId must be string');
         return this.cachedPicture[pictureId];
-    };
+    }
 
     /**
      * cache picture
@@ -854,7 +857,7 @@ Entry.Container = class Container {
      */
     cachePicture(pictureId, image) {
         this.cachedPicture[pictureId] = image;
-    };
+    }
 
     unCachePictures(entity, pictures, isClone) {
         if (!entity || !pictures) {
@@ -875,7 +878,7 @@ Entry.Container = class Container {
         pictures.forEach(({ id }) => {
             delete this.cachedPicture[id + (isClone ? '' : entityId)];
         });
-    };
+    }
 
     /**
      * convert this object's data to JSON.
@@ -885,7 +888,7 @@ Entry.Container = class Container {
         return this.objects_.map((object) => {
             return object.toJSON();
         });
-    };
+    }
 
     /**
      * take snapshot of current objects sequence
@@ -896,7 +899,7 @@ Entry.Container = class Container {
         for (let i = 0; i < length; i++) {
             objects[i].index = i;
         }
-    };
+    }
 
     /**
      * load snapshot of original objects sequence
@@ -914,7 +917,7 @@ Entry.Container = class Container {
         this.setCurrentObjects();
         Entry.stage.sortZorder();
         this.updateListView();
-    };
+    }
 
     /**
      * return canvas inputValue
@@ -922,7 +925,7 @@ Entry.Container = class Container {
      */
     getInputValue() {
         return this.inputValue.getValue();
-    };
+    }
 
     /**
      * set canvas inputValue
@@ -943,7 +946,7 @@ Entry.Container = class Container {
             Entry.console.stopInput(inputValue);
         }
         this.inputValue.complete = true;
-    };
+    }
 
     resetSceneDuringRun() {
         if (!Entry.engine.isState('run')) {
@@ -955,17 +958,17 @@ Entry.Container = class Container {
         });
         this.clearRunningStateOnScene();
         Entry.stage.hideInputField();
-    };
+    }
 
     setCopiedObject(object) {
         this.copiedObject = object;
-    };
+    }
 
     updateObjectsOrder() {
         this.objects_ = Entry.scene.getScenes().reduce((objs, scene) => {
             return [...objs, ...this.getSceneObjects(scene)];
         }, []);
-    };
+    }
 
     /**
      *  get objects list belonged to specific scene
@@ -982,14 +985,14 @@ Entry.Container = class Container {
         return this.getAllObjects().filter(({ scene: { id } }) => {
             return id === sceneId;
         });
-    };
+    }
 
     /**
      *  set objects list belonged to specific scene
      */
     setCurrentObjects() {
         this.currentObjects_ = this.getSceneObjects();
-    };
+    }
 
     /**
      *  get objects list belonged to current scene
@@ -999,7 +1002,7 @@ Entry.Container = class Container {
             this.setCurrentObjects();
         }
         return this.currentObjects_ || [];
-    };
+    }
 
     /**
      *  get project jsons in art_view for saving especially for art_viewcontroller
@@ -1012,7 +1015,7 @@ Entry.Container = class Container {
         project.messages = Entry.variableContainer.getMessageJSON();
         project.scenes = Entry.scene.toJSON();
         return project;
-    };
+    }
 
     blurAllInputs() {
         this.getSceneObjects().map(({ view_ }) => {
@@ -1020,7 +1023,7 @@ Entry.Container = class Container {
                 .find('input')
                 .blur();
         });
-    };
+    }
 
     showProjectAnswer() {
         const answer = this.inputValue;
@@ -1028,7 +1031,7 @@ Entry.Container = class Container {
             return;
         }
         answer.setVisible(true);
-    };
+    }
 
     hideProjectAnswer(removeBlock, notIncludeSelf) {
         const answer = this.inputValue;
@@ -1058,16 +1061,16 @@ Entry.Container = class Container {
         //answer related blocks not found
         //hide canvas answer view
         answer.setVisible(false);
-    };
+    }
 
     getView() {
         return this._view;
-    };
+    }
 
     // dummy
     resize() {
         return;
-    };
+    }
 
     _rightClick(e) {
         if (e.stopPropagation) {
@@ -1094,13 +1097,13 @@ Entry.Container = class Container {
             x: e.clientX,
             y: e.clientY,
         });
-    };
+    }
 
     removeFuncBlocks(functionType) {
         this.objects_.forEach(({ script }) => {
             script.removeBlocksByType(functionType);
         });
-    };
+    }
 
     clear() {
         [...this.objects_, ...this._extensionObjects].forEach((o) => {
@@ -1111,7 +1114,7 @@ Entry.Container = class Container {
         this._extensionObjects = [];
         // TODO: clear 때 this._extensionListView 도 비워 줘야 하는지 확인 필요.
         Entry.playground.flushPlayground();
-    };
+    }
 
     selectNeighborObject(option) {
         const objects = this.getCurrentObjects();
@@ -1138,11 +1141,11 @@ Entry.Container = class Container {
         }
 
         Entry.container.selectObject(object.id);
-    };
+    }
 
     getObjectIndex(objectId) {
         return this.objects_.indexOf(this.getObject(objectId));
-    };
+    }
 
     getDom(query) {
         if (query.length >= 1) {
@@ -1154,11 +1157,11 @@ Entry.Container = class Container {
             }
         } else {
         }
-    };
+    }
 
     isSceneObjectsExist() {
         return !_.isEmpty(this.getSceneObjects());
-    };
+    }
 
     adjustClonedValues(oldIds, newIds) {
         if (!(oldIds && newIds)) {
@@ -1188,7 +1191,7 @@ Entry.Container = class Container {
                     changed && b.set({ params: ret });
                 });
         });
-    };
+    }
 
     getBlockList() {
         return _.flatten(
@@ -1196,12 +1199,12 @@ Entry.Container = class Container {
                 return script.getBlockList();
             })
         );
-    };
+    }
 
     scrollToObject(ObjectId) {
         const { view_ } = this.getObject(ObjectId);
 
         view_ && view_.scrollIntoView();
         document.body.scrollIntoView();
-    };
+    }
 };
