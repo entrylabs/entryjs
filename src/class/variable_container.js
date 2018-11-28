@@ -1484,9 +1484,16 @@ Entry.VariableContainer = function() {
             .addClass('entryVariableAddSpaceNameWrapperWorkspace')
             .appendTo(variableAddSpace);
 
+        var addSpaceInputLabel = CE('label')
+            .addClass('entryVariableAddSpaceInputLabelWorkspace')
+            .appendTo(addSpaceNameWrapper);
+        addSpaceInputLabel.innerText = Lang.Workspace.variable_create;
+        addSpaceInputLabel.setAttribute('for', 'entryVariableAddSpaceInputWorkspace');
+
         var addSpaceInput = CE('input')
             .addClass('entryVariableAddSpaceInputWorkspace')
             .appendTo(addSpaceNameWrapper);
+        addSpaceInput.setAttribute('id', 'entryVariableAddSpaceInputWorkspace');
         addSpaceInput.setAttribute('placeholder', Lang.Workspace.Variable_placeholder_name);
         addSpaceInput.variableContainer = this;
         addSpaceInput.onkeypress = _whenEnter(function() {
@@ -1634,9 +1641,16 @@ Entry.VariableContainer = function() {
             .addClass('entryListAddSpaceNameWrapperWorkspace')
             .appendTo(listAddSpace);
 
+        var addSpaceInputLabel = CE('label')
+            .addClass('entryVariableAddSpaceInputLabelWorkspace')
+            .appendTo(addSpaceNameWrapper);
+        addSpaceInputLabel.setAttribute('for', 'entryListAddSpaceInputWorkspace');
+        addSpaceInputLabel.innerText = Lang.Workspace.create_list_block;
+
         var addSpaceInput = CE('input')
             .addClass('entryVariableAddSpaceInputWorkspace')
             .appendTo(addSpaceNameWrapper);
+        addSpaceInput.setAttribute('id', 'entryListAddSpaceInputWorkspace');
         addSpaceInput.setAttribute('placeholder', Lang.Workspace.list_name);
         this.listAddPanel.view.name = addSpaceInput;
 
