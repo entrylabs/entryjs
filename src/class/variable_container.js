@@ -103,7 +103,8 @@ Entry.VariableContainer = function() {
             .addClass('entryVariableAddWorkspace')
             .addClass('entryVariableListElementWorkspace')
             .bindOnClick(() => Entry.do('variableContainerClickVariableAddButton'));
-        variableAddButton.innerHTML = '+ ' + Lang.Workspace.variable_add;
+        var variableAddButtonText = CE('div').appendTo(variableAddButton);
+        variableAddButtonText.innerText = `+ ${Lang.Workspace.variable_add}`;
         this.variableAddButton_ = variableAddButton;
 
         this.generateVariableAddView();
@@ -120,7 +121,9 @@ Entry.VariableContainer = function() {
                     name: Entry.getOrderedName(Lang.Workspace.message, this.messages_, 'name'),
                 });
             });
-        messageAddButton.innerHTML = '+ ' + Lang.Workspace.message_create;
+
+        var messageAddButtonText = CE('div').appendTo(messageAddButton);
+        messageAddButtonText.innerText = `+ ${Lang.Workspace.message_create}`;
         this.messageAddButton_ = messageAddButton;
 
         var listAddButton = CE('li')
@@ -128,13 +131,16 @@ Entry.VariableContainer = function() {
             .addClass('entryVariableListElementWorkspace')
             .bindOnClick(() => Entry.do('variableContainerClickListAddButton'));
 
-        listAddButton.innerHTML = '+ ' + Lang.Workspace.list_create;
+        const listAddButtonText = CE('div').appendTo(listAddButton);
+        listAddButtonText.innerText = `+ ${Lang.Workspace.list_create}`;
         this.listAddButton_ = listAddButton;
         var functionAddButton = CE('li')
             .addClass('entryVariableListElementWorkspace')
             .addClass('entryVariableAddWorkspace')
             .bindOnClick(() => Entry.do('funcCreateStart', Entry.generateHash()));
-        functionAddButton.innerHTML = '+ ' + Lang.Workspace.function_add;
+
+        const functionAddButtonText = CE('div').appendTo(functionAddButton);
+        functionAddButtonText.innerText = `+ ${Lang.Workspace.function_add}`;
         this.functionAddButton_ = functionAddButton;
 
         return view;
