@@ -33,6 +33,10 @@ export class AtlasImageLoadingInfo {
     private _triedCnt:number = 0;
     private _picName:string;
 
+    // 로드된 이미지 혹은 resize된 이미지의 사이즈. dimension 의 값과 다른 경우가 있어서 추가함.
+    public srcWidth:number;
+    public srcHeight:number;
+
     /**
      * model 의 이미지를 로드 후, imgRect.scaleFactor가 1이 아닐경우 imgRect 만큼 리사이즈한 canvas 를 소스로 설정하긔
      * @param model
@@ -137,14 +141,14 @@ export class AtlasImageLoadingInfo {
 
     private _resizeIfOversized() {
         var img:HTMLImageElement = this._img;
-        var sw = img.naturalWidth|img.width;
-        var sh = img.naturalHeight|img.height;
+        var sw = this.srcWidth = img.naturalWidth|img.width;
+        var sh = this.srcHeight = img.naturalHeight|img.height;
         var r = this._imgRect;
         if(r.scaleFactor == 1 ) return;
         console.log(`rezie (${sw},${sh})->(${r.width},${r.height}). factor:${r.scaleFactor}`);
         var canvas = PIXIHelper.getOffScreenCanvas();
-        canvas.width = r.width;
-        canvas.height = r.height;
+        this.srcWidth = canvas.width = r.width;
+        this.srcHeight = canvas.height = r.height;
         var ctx:CanvasRenderingContext2D = canvas.getContext("2d");
         ctx.imageSmoothingEnabled = true;
         ctx.drawImage(img,
