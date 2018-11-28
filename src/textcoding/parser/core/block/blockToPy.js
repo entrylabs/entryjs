@@ -522,7 +522,7 @@ Entry.BlockToPyParser = class {
         return syntax;
     }
 
-    makeFuncDef(funcBlock, exp) {
+    makeFuncDef(funcBlock, isExpression) {
         if (!this.isRegisteredFunc(funcBlock)){
             return;
         }
@@ -545,34 +545,37 @@ Entry.BlockToPyParser = class {
             .concat(paramResult)
             .concat(')');
 
-        if (exp) {
-            return result;
-        }
-
-        this._hasRootFunc = true;
-
-        result = 'def ' + result;
-        result = result.concat(':');
-        if (func.comment || func.comment === '') {
-            result += ` # ${func.comment}`;
-        }
-        result += '\n';
-
-        if (func.statements && func.statements.length) {
-            let stmtResult = '';
-            for (let s in func.statements) {
-                const block = func.statements[s];
-
-                if (this.getFuncInfo(block)) {
-                    stmtResult += this.makeFuncDef(block, true).concat('\n');
-                } else {
-                    stmtResult += this.Block(block).concat('\n');
-                }
+        if (isExpression) {
+            if (func.comment || func.comment === '') {
+                result += ` # ${func.comment}`;
             }
-            result += Entry.TextCodingUtil.indent(stmtResult).concat('\n');
-        }
+            return result;
+        } else {
+            this._hasRootFunc = true;
 
-        return result.trim();
+            result = 'def ' + result;
+            result = result.concat(':');
+            if (func.comment || func.comment === '') {
+                result += ` # ${func.comment}`;
+            }
+            result += '\n';
+
+            if (func.statements && func.statements.length) {
+                let stmtResult = '';
+                for (let s in func.statements) {
+                    const block = func.statements[s];
+
+                    if (this.getFuncInfo(block)) {
+                        stmtResult += this.makeFuncDef(block, true).concat('\n');
+                    } else {
+                        stmtResult += this.Block(block).concat('\n');
+                    }
+                }
+                result += Entry.TextCodingUtil.indent(stmtResult).concat('\n');
+            }
+
+            return result.trim();
+        }
     }
 
     getFuncInfo(funcBlock) {
@@ -596,7 +599,8 @@ Entry.BlockToPyParser = class {
             .getBlocks();
         const defBlock = funcContents.shift();
 
-        const funcComment = defBlock.getCommentValue();
+        // defBlock = 함수선언부 / funcBlock = 함수 내 함수 호출
+        const funcComment = defBlock.getCommentValue() || funcBlock.getCommentValue();
 
         Entry.TextCodingUtil.gatherFuncDefParam(defBlock.getParam(0));
 

@@ -52,7 +52,7 @@ Entry.PyToBlockParser = class {
             err.line = error.line;
             throw err;
         }
-    };
+    }
 
     processPrograms(astArr) {
         this.createFunctionMap();
@@ -107,40 +107,28 @@ Entry.PyToBlockParser = class {
     }
 
     CallExpression(component) {
-        var callee = component.callee;
-        var args = component.arguments;
-        var params = [];
-        var obj = this.Node(callee);
+        const callee = component.callee;
+        const args = component.arguments;
+        let obj = this.Node(callee);
         if (obj.type && component.callee.type === 'Identifier')
         // Duplicate name with variable
             obj = callee.name;
 
-        if (
-            typeof obj === 'string' &&
-            callee.type === 'MemberExpression' &&
-            this[obj]
-        )
+        if (typeof obj === 'string' && callee.type === 'MemberExpression' && this[obj]) {
             return this[obj](component);
+        }
 
         if (callee.type === 'Identifier') {
             // global function
             if (this._funcMap[obj]) {
-                var funcType = this._funcMap[obj][args.length];
-                obj = {
-                    type: 'func_' + funcType,
-                };
+                const funcType = this._funcMap[obj][args.length];
+                obj = { type: 'func_' + funcType, };
             } else if (this[obj]) {
                 // special block like len
                 return this[obj](component);
             } else {
-                var blockInfo = this.blockSyntax[obj];
-                this.assert(
-                    blockInfo && blockInfo.key,
-                    '',
-                    callee,
-                    'NO_FUNCTION',
-                    'GENERAL',
-                );
+                const blockInfo = this.blockSyntax[obj];
+                this.assert(blockInfo && blockInfo.key, '', callee, 'NO_FUNCTION', 'GENERAL');
                 obj = this.Block({}, blockInfo);
             }
         }
@@ -151,21 +139,17 @@ Entry.PyToBlockParser = class {
         }
 
         if (component.arguments) {
-            obj.params = this.Arguments(
-                obj.type,
-                component.arguments,
-                obj.params,
-            );
+            obj.params = this.Arguments(obj.type, component.arguments, obj.params);
         }
 
-        if (obj.type == 'is_press_some_key') {
+        if (obj.type === 'is_press_some_key') {
             obj.params = [
                 Entry.KeyboardCode.map[component.arguments[0].value] + '',
             ];
         }
 
         return obj;
-    };
+    }
 
     Identifier(component) {
         var name = component.name;
@@ -195,7 +179,7 @@ Entry.PyToBlockParser = class {
         var results = component.declarations.map(this.Node, this);
 
         return results;
-    };
+    }
 
     VariableDeclarator(component) {
         if (component.init && component.init.arguments) {
@@ -203,7 +187,7 @@ Entry.PyToBlockParser = class {
         } else {
             return [];
         }
-    };
+    }
 
     AssignmentExpression(component) {
         var lefts = Array.isArray(component.left)
@@ -335,7 +319,7 @@ Entry.PyToBlockParser = class {
         }
 
         return results;
-    };
+    }
 
     Literal(component, paramSchema, paramDef) {
         var value = component.value;
@@ -363,7 +347,7 @@ Entry.PyToBlockParser = class {
             default:
                 return this.getValue(component);
         }
-    };
+    }
 
     MemberExpression(component) {
         var obj;
@@ -423,7 +407,7 @@ Entry.PyToBlockParser = class {
         this.Block(result, blockInfo);
 
         return result;
-    };
+    }
 
     WhileStatement(component) {
         const comment = component.body.comment;
@@ -447,7 +431,7 @@ Entry.PyToBlockParser = class {
         }
 
         return obj;
-    };
+    }
 
     BlockStatement(component) {
         var db = component.body.map(this.Node, this);
@@ -459,7 +443,7 @@ Entry.PyToBlockParser = class {
         }
 
         return db;
-    };
+    }
 
     IfStatement(component) {
         let alternate;
@@ -512,12 +496,12 @@ Entry.PyToBlockParser = class {
         }
 
         return alternate;
-    };
+    }
 
     ForStatement(component) {
         var body = component.body.body;
         return this.Node(body[body.length - 1]);
-    };
+    }
 
     ForInStatement(component) {
         // var  expression = component.body.body[0] && 'expression' in component.body.body[0] ?
@@ -533,13 +517,13 @@ Entry.PyToBlockParser = class {
         }
 
         return result;
-    };
+    }
 
     BreakStatement(component) {
         return {
             type: this.blockSyntax.break.key,
         };
-    };
+    }
 
     UnaryExpression(component) {
         switch (component.operator) {
@@ -572,7 +556,7 @@ Entry.PyToBlockParser = class {
                     'Unary operator ' + component.operator + ' is not supported',
                 );
         }
-    };
+    }
 
     LogicalExpression(component) {
         return {
@@ -583,7 +567,7 @@ Entry.PyToBlockParser = class {
                 this.Node(component.right),
             ],
         };
-    };
+    }
 
     BinaryExpression(component) {
         var operator = component.operator,
@@ -634,7 +618,7 @@ Entry.PyToBlockParser = class {
                 this.Node(component.right),
             ],
         };
-    };
+    }
 
     // UpdateExpression(component) {};
 
@@ -690,21 +674,21 @@ Entry.PyToBlockParser = class {
             this._isInFuncDef = false;
             return [];
         }
-    };
+    }
 
     FunctionExpression(component) {
         return this.Node(component.body);
-    };
+    }
 
     ReturnStatement(component) {
         return component.argument.arguments.map(this.Node, this);
-    };
+    }
 
     // ThisExpression(component) {};
 
     NewExpression(component) {
         return this.Node(component.callee);
-    };
+    }
 
     SubscriptIndex(component) {
         const obj = this.Node(component.object);
@@ -723,7 +707,7 @@ Entry.PyToBlockParser = class {
             component.property.arguments,
         );
         return result;
-    };
+    }
 
     Comment(component) {
         return {
@@ -800,7 +784,7 @@ Entry.PyToBlockParser = class {
         }
 
         return results;
-    };
+    }
 
     getValue(component) {
         var value;
@@ -824,7 +808,7 @@ Entry.PyToBlockParser = class {
             value = this.Node(component);
             return value.params && value.params[0] ? value.params[0] : null;
         }
-    };
+    }
 
     getMessage(name) {
         if (!name) return;
@@ -850,7 +834,7 @@ Entry.PyToBlockParser = class {
         }
 
         return object;
-    };
+    }
 
     DropdownDynamic(value, paramSchema) {
         if (_.isFunction(paramSchema.menuName)) {
@@ -980,7 +964,7 @@ Entry.PyToBlockParser = class {
                 return object;
             case 'objectSequence':
         }
-    };
+    }
 
     Node(nodeType, node) {
         let hasType = false;
@@ -1003,7 +987,7 @@ Entry.PyToBlockParser = class {
 
         if (!this[node.type]) throw new Error(node.type + ' is not supported');
         return this[node.type].apply(this, args);
-    };
+    }
 
     PySyntax(blockSchema, defaultParams) {
         if (defaultParams) {
@@ -1019,21 +1003,21 @@ Entry.PyToBlockParser = class {
         }
         var syntaxObj = blockSchema.syntax.py[0];
         return syntaxObj.syntax || syntaxObj;
-    };
+    }
 
     CodeMap(blockType) {
         for (var objName in Entry.CodeMap) {
             if (Entry.CodeMap[objName] && Entry.CodeMap[objName][blockType])
                 return Entry.CodeMap[objName][blockType];
         }
-    };
+    }
 
     Block(result, blockInfo) {
         result.type = blockInfo.key;
 
         if (blockInfo.params) result.params = blockInfo.params.concat();
         return result;
-    };
+    }
 
     ListIndex(param) {
         if (this.isParamPrimitive(param)) {
@@ -1060,11 +1044,11 @@ Entry.PyToBlockParser = class {
             };
         }
         return param;
-    };
+    }
 
     isParamPrimitive(param) {
         return param && (param.type === 'number' || param.type === 'text');
-    };
+    }
 
     assert(data, keyword, errorNode, message, subject) {
         if (data) return;
@@ -1075,7 +1059,7 @@ Entry.PyToBlockParser = class {
             errorNode.loc,
             Entry.TextCodingError['SUBJECT_CONV_' + (subject || 'GENERAL')],
         );
-    };
+    }
 
     setParams(params) {
         var definedBlocks = params.length
@@ -1103,7 +1087,7 @@ Entry.PyToBlockParser = class {
         return results.filter(function(b) {
             return b.constructor === Object;
         });
-    };
+    }
 
     getVariables(program) {
         var nodes = program.body;
@@ -1190,7 +1174,7 @@ Entry.PyToBlockParser = class {
         }, this);
 
         return [];
-    };
+    }
 
     variableExist(name, type) {
         var variables_ = Entry.variableContainer[type];
@@ -1201,7 +1185,7 @@ Entry.PyToBlockParser = class {
         if (variables_.indexOf(name) > -1)
             return Entry.variableContainer[type][variables_.indexOf(name)];
         return false;
-    };
+    }
 
     /**
      * Special Blocks
@@ -1233,7 +1217,7 @@ Entry.PyToBlockParser = class {
                 params: [undefined, param],
             };
         }
-    };
+    }
 
     ['Hamster.note'](component) {
         var blockInfo;
@@ -1252,35 +1236,35 @@ Entry.PyToBlockParser = class {
                     ];
         }
         return obj;
-    };
+    }
 
     ['Hamster.line_tracer_mode'](component) {
         return this.Special(component, 'Hamster', 'line_tracer_mode');
-    };
+    }
 
     ['Hamster.io_mode_a'](component) {
         return this.Special(component, 'Hamster', 'io_mode_a');
-    };
+    }
 
     ['Hamster.io_mode_b'](component) {
         return this.Special(component, 'Hamster', 'io_mode_b');
-    };
+    }
 
     ['Hamster.io_modes'](component) {
         return this.Special(component, 'Hamster', 'io_modes');
-    };
+    }
 
     ['Hamster.leds'](component) {
         return this.Special(component, 'Hamster', 'leds');
-    };
+    }
 
     ['Hamster.left_led'](component) {
         return this.Special(component, 'Hamster', 'left_led');
-    };
+    }
 
     ['Hamster.right_led'](component) {
         return this.Special(component, 'Hamster', 'right_led');
-    };
+    }
 
     ['__pythonRuntime.ops.in'](component) {
         // "10 in list"
@@ -1288,7 +1272,7 @@ Entry.PyToBlockParser = class {
             type: 'is_included_in_list',
             params: this.Arguments('is_included_in_list', component.arguments),
         };
-    };
+    }
 
     Special(component, name, key) {
         var result = {};
@@ -1298,7 +1282,7 @@ Entry.PyToBlockParser = class {
 
         this.Block(result, blockInfo);
         return result;
-    };
+    }
 
     createFunctionMap() {
         this._funcMap = {};
@@ -1312,7 +1296,7 @@ Entry.PyToBlockParser = class {
             if (!this._funcMap[funcName]) this._funcMap[funcName] = {};
             this._funcMap[funcName][funcSchema.params.length - 1] = key;
         }
-    };
+    }
 
     createFunction(component, funcName, blocks) {
         const params = component.arguments ? component.arguments.map(this.Node, this) : [];
@@ -1391,7 +1375,7 @@ Entry.PyToBlockParser = class {
         } else {
             Entry.variableContainer.setFunctions([func]);
         }
-    };
+    }
 
     /**
      * Not Supported
@@ -1400,7 +1384,7 @@ Entry.PyToBlockParser = class {
     ClassDeclaration(component) {
         var funcName = this.Node(component.id);
         this.assert(false, funcName, component, 'NO_OBJECT', 'OBJECT');
-    };
+    }
 
     // RegExp(component) {};
 
@@ -1484,11 +1468,11 @@ Entry.PyToBlockParser = class {
             }
         }
         return null;
-    };
+    }
 
     toLowerCase(data) {
         if (data && data.toLowerCase) return data.toLowerCase();
         else return data;
-    };
+    }
 
 };
