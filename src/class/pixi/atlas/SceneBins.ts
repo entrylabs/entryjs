@@ -124,7 +124,11 @@ export class SceneBins {
         this._notPackedRects.forEach((r:ImageRect)=>{
             var base:AtlasBaseTexture = this._getBaseTexture(r.binIndex);
             r.data.tex.updateBaseAndUVs(base);
-            this.putImage(this._loader.getImageInfo(r.data.path), false);
+
+            var imgInfo = this._loader.getImageInfo(r.data.path);
+            if(!imgInfo.isReady) return;
+            
+            this.putImage(imgInfo, false);
             if(willUpdateBaseTextures.indexOf(base) == -1) {
                 willUpdateBaseTextures.push(base);
             }

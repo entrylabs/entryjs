@@ -141,8 +141,10 @@ export class AtlasImageLoadingInfo {
 
     private _resizeIfOversized() {
         var img:HTMLImageElement = this._img;
-        var sw = this.srcWidth = img.naturalWidth|img.width;
-        var sh = this.srcHeight = img.naturalHeight|img.height;
+        var sw = img.naturalWidth || img.width;
+        var sh = img.naturalHeight || img.height;
+        this.srcWidth = sw;
+        this.srcHeight = sh;
         var r = this._imgRect;
         if(r.scaleFactor == 1 ) return;
         console.log(`rezie (${sw},${sh})->(${r.width},${r.height}). factor:${r.scaleFactor}`);
@@ -151,12 +153,7 @@ export class AtlasImageLoadingInfo {
         this.srcHeight = canvas.height = r.height;
         var ctx:CanvasRenderingContext2D = canvas.getContext("2d");
         ctx.imageSmoothingEnabled = true;
-        ctx.drawImage(img,
-            0, 0, sw, sh,
-            0, 0, r.width, r.height
-        );
+        ctx.drawImage(img,0, 0, sw, sh,0, 0, r.width, r.height);
         return canvas;
     }
 }
-
-
