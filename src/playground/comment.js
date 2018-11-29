@@ -873,7 +873,6 @@ Entry.Comment = class Comment {
         if (this.board) {
             this.removeControl();
             this.destroyView();
-            this.svgGroup.remove();
             this._destroyObservers();
         }
         if (this.block) {
@@ -881,7 +880,6 @@ Entry.Comment = class Comment {
         } else {
             this.code.destroyThread(this.thread);
         }
-        this.code.unregisterBlock(this);
     }
 
     isInOrigin() {
@@ -890,7 +888,11 @@ Entry.Comment = class Comment {
 
     reDraw() {}
 
-    destroyView() {}
+    destroyView() {
+        this.svgGroup.remove();
+
+        this.code.unregisterBlock(this);
+    }
 
     _destroyObservers() {
         const observers = this._observers;
