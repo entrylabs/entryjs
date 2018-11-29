@@ -673,14 +673,19 @@ Entry.EntryObject = function(model) {
             this.coordinateView_.sizeInput_,
         ];
 
-        if (!isLocked && inputs[0].getAttribute('readonly') === true) return;
+        if (isLocked){
+            inputs.forEach(function(input) {
+                input.removeClass('selectedEditingObject');
+                input.setAttribute('disabled', 'disabled');
+            });
+        } else {
+            inputs.forEach(function(input) {
+                input.addClass('selectedEditingObject');
+                input.removeAttribute('disabled');
+            });
+        }
 
-        inputs.forEach(function(input) {
-            input.removeClass('selectedEditingObject');
-            input.setAttribute('readonly', false);
-        });
-
-        this.isEditing = false;
+        this.isEditing = !isLocked;
     };
 
     p.editObjectValues = function(activate) {
@@ -704,10 +709,8 @@ Entry.EntryObject = function(model) {
             $(inputs).removeClass('selectedNotEditingObject');
             $nameView_.removeClass('selectedNotEditingObject');
 
-            $nameView_.removeAttr('readonly');
             nameView_.addClass('selectedEditingObject');
             for (var i = 0; i < inputs.length; i++) {
-                $(inputs[i]).removeAttr('readonly');
                 inputs[i].addClass('selectedEditingObject');
             }
             this.isEditing = true;
@@ -738,7 +741,6 @@ Entry.EntryObject = function(model) {
             sizeInput_,
         ].forEach(function(input) {
             input.addClass('selectedNotEditingObject');
-            input.setAttribute('readonly', true);
         });
     };
 
@@ -1017,14 +1019,12 @@ Entry.EntryObject = function(model) {
         var nameView = CE('input').addClass('entryObjectNameWorkspace');
         nameView.bindOnClick(function(e) {
             e.preventDefault();
-            if (this.readOnly) return;
             this.focus();
             this.select();
         });
 
         wrapperView.appendChild(nameView);
         this.nameView_ = nameView;
-        nameView.setAttribute('readonly', true);
 
         this.nameView_.onkeypress = _whenEnter;
         this.nameView_.onfocus = _setFocused;
@@ -1077,7 +1077,6 @@ Entry.EntryObject = function(model) {
         var xCoordi = CE('span').addClass('entryObjectCoordinateSpanWorkspace');
         xCoordi.innerHTML = 'X';
         var xInput = CE('input').addClass('entryObjectCoordinateInputWorkspace');
-        xInput.setAttribute('readonly', true);
         xInput.bindOnClick(function(e) {
             e.stopPropagation();
             this.select();
@@ -1092,7 +1091,6 @@ Entry.EntryObject = function(model) {
             e.stopPropagation();
             this.select();
         });
-        yInput.setAttribute('readonly', true);
         var sizeSpan = CE('span').addClass('entryObjectCoordinateSizeWorkspace');
         sizeSpan.innerHTML = Lang.Workspace.Size + '';
         var sizeInput = CE('input').addClass(
@@ -1103,7 +1101,6 @@ Entry.EntryObject = function(model) {
             e.stopPropagation();
             this.select();
         });
-        sizeInput.setAttribute('readonly', true);
         coordinateView.appendChild(xCoordi);
         coordinateView.appendChild(xInput);
         coordinateView.appendChild(yCoordi);
@@ -1168,7 +1165,6 @@ Entry.EntryObject = function(model) {
         var rotateSpan = CE('span').addClass('entryObjectRotateSpanWorkspace');
         rotateSpan.innerHTML = Lang.Workspace.rotation + '';
         var rotateInput = CE('input').addClass('entryObjectRotateInputWorkspace');
-        rotateInput.setAttribute('readonly', true);
         rotateInput.bindOnClick(function(e) {
             e.stopPropagation();
             this.select();
@@ -1179,7 +1175,6 @@ Entry.EntryObject = function(model) {
         var directionSpan = CE('span').addClass('entryObjectDirectionSpanWorkspace');
         directionSpan.innerHTML = Lang.Workspace.direction + '';
         var directionInput = CE('input').addClass('entryObjectDirectionInputWorkspace');
-        directionInput.setAttribute('readonly', true);
         directionInput.bindOnClick(function(e) {
             e.stopPropagation();
             this.select();
