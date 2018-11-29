@@ -132,9 +132,9 @@
             const comment = this.editor.board.findBlock(target);
             comment.separateFromBlock();
         },
-        state(comment) {
-            const data = comment instanceof Entry.Comment ? comment.toJSON() : comment;
-            return [data, comment.block];
+        state(target) {
+            const comment = this.editor.board.findBlock(target);
+            return [comment.toJSON(), comment.block];
         },
         log() {
             return [];

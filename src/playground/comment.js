@@ -860,11 +860,12 @@ Entry.Comment = class Comment {
 
     connectToBlock(block) {
         const data = this.toJSON();
+        const board = this.board;
         delete data.x;
         delete data.y;
         delete data.visible;
-        block.connectComment(new Entry.Comment(data, this.board, block));
         this.destroy();
+        block.connectComment(new Entry.Comment(data, board, block));
     }
 
     separateFromBlock() {
