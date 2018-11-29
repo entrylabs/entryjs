@@ -252,7 +252,12 @@ Entry.BlockToPyParser = class {
                 default: {
                     const textParam = textParams && textParams[index];
 
-                    const param = this['Field' + schemaParams[index].type](dataParams[index], textParam);
+                    let param;
+                    if (textParam.type) {
+                        param = this['Field' + textParam.type](dataParams[index], textParam);
+                    } else {
+                        param = this['Field' + schemaParams[index].type](dataParams[index], textParam);
+                    }
 
                     // 필드 블록이 아닌 블록에 내재된 파라미터 처리
                     if (!Entry.Utils.isNumber(param) && block.type === 'when_some_key_pressed') {

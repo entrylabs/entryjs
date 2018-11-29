@@ -141,8 +141,6 @@ module.exports = {
                                 {
                                     type: 'Keyboard',
                                     value: '81',
-                                    converter:
-                                        Entry.block.converters.keyboardCode1,
                                 },
                             ],
                         },
