@@ -29,7 +29,7 @@ Entry.Comment = class Comment {
         this._block = block;
         const { view } = block || {};
         this._blockView = view;
-        if (board) {
+        if (block) {
             this.createComment(board, schema);
         }
         this.magnet = {};
@@ -553,11 +553,13 @@ Entry.Comment = class Comment {
                 this.dragMode = Entry.DRAG_MODE_DRAG;
                 Entry.GlobalSvg.setComment(this, workspaceMode);
                 this.visible && this.set({ visible: false });
+                this.generateCommentableBlocks();
             }
 
             this.moveX += (mouseEvent.pageX - this.dragInstance.offsetX) / this.scale;
             this.moveY += (mouseEvent.pageY - this.dragInstance.offsetY) / this.scale;
 
+            this.checkConnectableBlock();
             this.dragInstance.set({
                 offsetX: mouseEvent.pageX,
                 offsetY: mouseEvent.pageY,
@@ -574,17 +576,24 @@ Entry.Comment = class Comment {
             this.renderTextArea();
         } else {
             this.destroyTextArea();
-            Entry.do('moveComment', this);
+            if (this.connectableBlockView) {
+                Entry.do('connectComment', this.toJSON(), this.connectableBlockView.block);
+                this.removeSelected();
+            } else {
+                Entry.do('moveComment', this);
+            }
         }
         if (this.board) {
             this.board.set({ dragBlock: null });
         }
+
         this.removeMoveSetting(this.mouseMove, this.mouseUp);
     }
 
     removeMoveSetting(mouseMove, mouseUp) {
         this.dragMode = Entry.DRAG_MODE_NONE;
         this.board.set({ dragBlock: null });
+        delete this.connectableBlocks;
         this.set({ visible: true });
         this.setPosition();
         this.removeDomEvent(mouseMove, mouseUp);
@@ -793,7 +802,7 @@ Entry.Comment = class Comment {
         if (this.dragMode === Entry.DRAG_MODE_MOUSEDOWN) {
             Entry.do('toggleComment', this);
         } else {
-            Entry.do('moveComment', this, this.x, this.y);
+            Entry.do('moveComment', this);
         }
         this.removeMoveSetting(this.mouseMove, this.toggleMouseUp);
     }
@@ -836,7 +845,6 @@ Entry.Comment = class Comment {
 
     copy() {
         const cloned = this.toJSON(true);
-
         const { x, y } = this.getAbsoluteCoordinate();
         cloned.x = x + 15;
         cloned.y = y + 15;
@@ -854,8 +862,9 @@ Entry.Comment = class Comment {
         const data = this.toJSON();
         delete data.x;
         delete data.y;
-        this.destroy(block);
+        delete data.visible;
         block.connectComment(new Entry.Comment(data, this.board, block));
+        this.destroy();
     }
 
     separateFromBlock() {
@@ -880,6 +889,55 @@ Entry.Comment = class Comment {
         } else {
             this.code.destroyThread(this.thread);
         }
+    }
+
+    generateCommentableBlocks() {
+        this.connectableBlocks = [];
+        if (this.block) {
+            return;
+        }
+        const blockMap = this.code._blockMap;
+        for (const index in blockMap) {
+            const block = blockMap[index];
+            if (block instanceof Entry.Block && !block.comment && block.isCommentable()) {
+                const coordinate = block.view.getAbsoluteCoordinate();
+                const { width, height, topFieldHeight } = block.view;
+                this.connectableBlocks.push({
+                    id: block.id,
+                    x1: coordinate.scaleX,
+                    y1: coordinate.scaleY,
+                    x2: coordinate.scaleX + width,
+                    y2: coordinate.scaleY + (topFieldHeight || height),
+                });
+            }
+        }
+    }
+
+    checkConnectableBlock() {
+        if (this.block) {
+            return;
+        }
+        this.removeSelected();
+        for (const coordinate of this.connectableBlocks) {
+            if (this.isOnConnectableBlock(coordinate)) {
+                this.connectableBlockView = this.code.findById(coordinate.id).view;
+                this.board.setSelectedBlock(this.connectableBlockView);
+                return;
+            }
+        }
+    }
+
+    removeSelected() {
+        if (this.connectableBlockView) {
+            this.connectableBlockView.removeSelected();
+            this.connectableBlockView = null;
+        }
+    }
+
+    isOnConnectableBlock(coordinate) {
+        const { x1, y1, x2, y2 } = coordinate;
+        const { moveX: x, moveY: y } = this;
+        return x1 <= x && x < x2 && y1 <= y && y < y2;
     }
 
     isInOrigin() {
