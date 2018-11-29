@@ -40,6 +40,19 @@
     height: 100%;
     background-color: #ecf8ff;
     border:1px solid #d6e9f4;
+
+    .block.selected > g > .blockPath,
+    .block.selected > g > .blockBackgroundPath {
+        // stroke-width: 3px;
+        // stroke: #798EB1;
+        -webkit-filter: none;
+        filter: none;
+
+        &:not([fill^='url(#blockHoverPattern']) {
+            -webkit-filter: url(#entryBlockSelectFilter_blockMenu);
+            filter: url(#entryBlockSelectFilter_blockMenu);
+        }
+    }
 }
 
 .blockMenu {

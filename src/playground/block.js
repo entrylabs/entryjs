@@ -353,6 +353,8 @@ Entry.Block = class Block {
             return;
         }
 
+        this.comment && this.comment.destroy();
+
         const blockType = this.getBlockType();
 
         if (blockType === 'output' && !next) {
