@@ -766,6 +766,9 @@ Entry.Board = class Board {
         for (let i = 0; i < blocks.length; i++) {
             const block = blocks[i];
             const blockView = block.view;
+            if (blockView instanceof Entry.Comment) {
+                continue;
+            }
             if (blockView.dragInstance) {
                 break;
             }

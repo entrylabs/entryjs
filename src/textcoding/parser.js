@@ -507,18 +507,21 @@ Entry.Parser = function(mode, type, cm, syntax) {
     };
 
     p.makeThreads = function(text) {
-        var textArr = text.split("\n");
-        var thread = "";
-        var threads = [];
+        const textArr = text.split('\n');
+        const threads = [];
 
-        var optText = "";
-        var onEntryEvent = false;
+        let optText = '';
+        let onEntryEvent = false;
 
-        var startLine = 0;
-        for(var i = 3; i < textArr.length; i++) {
-            var textLine = textArr[i] + "\n";
-            if(Entry.TextCodingUtil.isEntryEventFuncByFullText(textLine)) {
-                textLine = this.entryEventParamConverter(textLine);
+        let startLine = 0;
+
+        // # 엔트리봇 ~ import Entry 제외
+        for(let i = 4; i < textArr.length; i++) {
+            let textLine = textArr[i] + '\n';
+
+            if (textLine.trim().startsWith('#')) {
+                threads.push(textLine.trim() + '\n');
+            } else if(Entry.TextCodingUtil.isEntryEventFuncByFullText(textLine.trim())) {
                 if(optText.length !== 0) {
                     threads.push(makeLine(optText));
                     startLine = i - 2;
@@ -528,23 +531,18 @@ Entry.Parser = function(mode, type, cm, syntax) {
                 optText += textLine;
                 onEntryEvent = true;
             } else {
-                if(Entry.TextCodingUtil.isEntryEventFuncByFullText(textLine.trim()))
-                    textLine = this.entryEventParamConverter(textLine);
-                if(textLine.length == 1 && !onEntryEvent) { //empty line
+                if(textLine.length === 1 && !onEntryEvent) { //empty line
                     threads.push(makeLine(optText));
                     startLine = i - 2;
                     optText = "";
                 }
-                else if(textLine.length != 1 && textLine.charAt(0) != ' ' && onEntryEvent) { //general line
+                else if(textLine.length !== 1 && textLine.charAt(0) !== ' ' && onEntryEvent) { //general line
                     threads.push(makeLine(optText));
                     startLine = i - 2;
                     optText = "";
                     onEntryEvent = false;
                 }
-
                 optText += textLine;
-
-
             }
         }
 
@@ -553,10 +551,6 @@ Entry.Parser = function(mode, type, cm, syntax) {
             return new Array( startLine + 1 ).join( "\n" ) + text;
         }
         return threads;
-    };
-
-    p.entryEventParamConverter = function(text) {
-        return text;
     };
 
     p.makeSyntaxErrorDisplay = function(subject, keyword, message, line) {

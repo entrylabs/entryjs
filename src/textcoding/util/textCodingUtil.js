@@ -944,21 +944,15 @@ Entry.TextCodingUtil = {};
     };
 
     tu.isEntryEventFunc = function(name) {
-        if (
-            name == 'def when_start' ||
-            name == 'def when_press_key' ||
-            name == 'def when_click_mouse_on' ||
-            name == 'def when_click_mouse_off' ||
-            name == 'def when_click_object_on' ||
-            name == 'def when_click_object_off' ||
-            name == 'def when_get_signal' ||
-            name == 'def when_start_scene' ||
-            name == 'def when_make_clone'
-        ) {
-            return true;
-        }
-
-        return false;
+        return name === 'def when_start' ||
+            name === 'def when_press_key' ||
+            name === 'def when_click_mouse_on' ||
+            name === 'def when_click_mouse_off' ||
+            name === 'def when_click_object_on' ||
+            name === 'def when_click_object_off' ||
+            name === 'def when_get_signal' ||
+            name === 'def when_start_scene' ||
+            name === 'def when_make_clone';
     };
 
     /////////////////////////////////////////////////////
