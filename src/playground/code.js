@@ -234,6 +234,11 @@ Entry.Code = class Code {
         }
     }
 
+    pushBackThread(thread) {
+        this._data.splice(this.getThreadIndex(thread), 1);
+        this._data.push(thread);
+    }
+
     doDestroyThread = this.destroyThread;
 
     getThread(index) {
