@@ -9,25 +9,13 @@
  * @constructor
  */
 Entry.EntryObject = function(model) {
-    var that = this;
     if (model) {
-        /** @type {string} */
         this.id = model.id;
-
-        /** @type {string} */
         this.name = model.name || model.sprite.name;
-
         this.text = model.text || this.name;
-
-        /** @type {string} */
         this.objectType = model.objectType || 'sprite';
-
         this.script = new Entry.Code(model.script || [], this);
-
-        /** @type {Array.<picture object>} */
         this.pictures = Entry.Utils.copy(model.sprite.pictures || []);
-
-        /** @type {Array.<sound object>} */
         this.sounds = Entry.Utils.copy(model.sprite.sounds || []);
 
         this.sounds.forEach(function(s) {
@@ -37,15 +25,11 @@ Entry.EntryObject = function(model) {
             Entry.initSound(s);
         });
 
-        /** @type {string} */
         this.lock = model.lock ? model.lock : false;
-
         this.isEditing = false;
 
-        if (this.objectType == 'sprite') {
-            this.selectedPicture = !model.selectedPictureId
-                ? this.pictures[0]
-                : this.getPicture(model.selectedPictureId);
+        if (this.objectType === 'sprite') {
+            this.selectedPicture = !model.selectedPictureId ? this.pictures[0] : this.getPicture(model.selectedPictureId);
         }
 
         this.scene = Entry.scene.getSceneById(model.scene) || Entry.scene.selectedScene;
@@ -63,16 +47,16 @@ Entry.EntryObject = function(model) {
 
         Entry.stage.loadObject(this);
 
-        var entityId = this.entity.id;
-        var cachePicture = Entry.container.cachePicture.bind(Entry.container);
-        var pictures = this.pictures;
+        const entityId = this.entity.id;
+        const cachePicture = Entry.container.cachePicture.bind(Entry.container);
+        const pictures = this.pictures;
 
-        for (var i in pictures) {
+        for (let i in pictures) {
             ((picture) => {
                 picture.objectId = this.id;
                 if (!picture.id) picture.id = Entry.generateHash();
 
-                var image = new Image();
+                const image = new Image();
                 Entry.Loader.addQueue();
 
                 image.onload = function(e) {
@@ -110,17 +94,12 @@ Entry.EntryObject = function(model) {
     function getImageSrc(picture) {
         if (picture.fileurl) return picture.fileurl;
 
-        var fileName = picture.filename;
+        const fileName = picture.filename;
         return (
-            Entry.defaultPath +
-            '/uploads/' +
-            fileName.substring(0, 2) +
-            '/' +
-            fileName.substring(2, 4) +
-            '/image/' +
-            fileName +
-            '.png'
-        );
+            Entry.defaultPath + '/uploads/' +
+            fileName.substring(0, 2) + '/' +
+            fileName.substring(2, 4) + '/image/' +
+            fileName + '.png');
     }
 };
 
@@ -182,7 +161,7 @@ Entry.EntryObject = function(model) {
      * @return {entity model}
      */
     p.initEntity = function(model) {
-        var json = {};
+        const json = {};
         json.rotation = json.x = json.y = 0;
         json.direction = 90;
 
@@ -256,9 +235,9 @@ Entry.EntryObject = function(model) {
      * Update thumbnail view;
      */
     p.updateThumbnailView = function() {
-        var thumb = this.thumbnailView_;
-        var picture = this.entity.picture;
-        var objectType = this.objectType;
+        const thumb = this.thumbnailView_;
+        const picture = this.entity.picture;
+        const objectType = this.objectType;
 
         if (objectType == 'sprite') {
             if (picture.fileurl) {
@@ -277,7 +256,7 @@ Entry.EntryObject = function(model) {
                     '.png")';
             }
         } else if (objectType == 'textBox') {
-            var textIconPath = Entry.mediaFilePath + '/text_icon.png';
+            const textIconPath = Entry.mediaFilePath + '/text_icon.png';
             thumb.style.backgroundImage = 'url(' + textIconPath + ')';
         }
     };
@@ -288,9 +267,9 @@ Entry.EntryObject = function(model) {
     p.updateCoordinateView = function(isForced) {
         if (!this.isSelected() && !isForced) return;
 
-        var view = this.coordinateView_;
+        const view = this.coordinateView_;
         if (view && view.xInput_ && view.yInput_) {
-            var originX = view.xInput_.value,
+            const originX = view.xInput_.value,
                 originY = view.yInput_.value,
                 size = view.sizeInput_.value,
                 entity = this.entity,
@@ -309,9 +288,9 @@ Entry.EntryObject = function(model) {
      */
     p.updateRotationView = function(isForced) {
         if ((!this.isSelected() || !this.view_) && !isForced) return;
-        var rotateMethod = this.getRotateMethod();
-        var entity = this.entity;
-        var className = 'entryRemove';
+        const rotateMethod = this.getRotateMethod();
+        const entity = this.entity;
+        const className = 'entryRemove';
 
         if (rotateMethod == 'free') {
             this.rotateSpan_.removeClass(className);
@@ -324,13 +303,6 @@ Entry.EntryObject = function(model) {
             this.rotateInput_.addClass(className);
             this.directionInput_.value = entity.getDirection(1) + '˚';
         }
-    };
-
-    /**
-     * Select this object on view
-     */
-    p.select = function(pictureId) {
-        console.log(this);
     };
 
     /**
@@ -354,12 +326,11 @@ Entry.EntryObject = function(model) {
      * @return {boolean} return true if success
      */
     p.removePicture = function(pictureId) {
-        var pictures = this.pictures;
+        const pictures = this.pictures;
         if (pictures.length < 2) return false;
 
-        var playground = Entry.playground;
-
-        var picture = this.getPicture(pictureId);
+        const playground = Entry.playground;
+        const picture = this.getPicture(pictureId);
 
         pictures.splice(pictures.indexOf(picture), 1);
         if (picture === this.selectedPicture) playground.selectPicture(pictures[0]);
@@ -384,14 +355,14 @@ Entry.EntryObject = function(model) {
         if (!value) return this.selectedPicture;
 
         value = (value + '').trim();
-        var pictures = this.pictures,
+        const pictures = this.pictures,
             len = pictures.length;
 
-        for (var i = 0; i < len; i++) {
+        for (let i = 0; i < len; i++) {
             if (pictures[i].id == value) return pictures[i];
         }
 
-        for (i = 0; i < len; i++) {
+        for (let i = 0; i < len; i++) {
             if (pictures[i].name == value) return pictures[i];
         }
 
@@ -412,7 +383,7 @@ Entry.EntryObject = function(model) {
      * @return {picture object}
      */
     p.getPrevPicture = function(pictureId) {
-        var pictures = this.pictures;
+        const pictures = this.pictures;
         var idx = this.getPictureIndex(pictureId);
         return pictures[idx === 0 ? pictures.length - 1 : --idx];
     };
@@ -423,8 +394,8 @@ Entry.EntryObject = function(model) {
      * @return {picture object}
      */
     p.getNextPicture = function(pictureId) {
-        var pictures = this.pictures;
-        var len = pictures.length;
+        const pictures = this.pictures;
+        const len = pictures.length;
         var idx = this.getPictureIndex(pictureId);
         return pictures[idx == len - 1 ? 0 : ++idx];
     };
@@ -435,7 +406,7 @@ Entry.EntryObject = function(model) {
      * @return {picture object}
      */
     p.selectPicture = function(pictureId) {
-        var picture = this.getPicture(pictureId);
+        const picture = this.getPicture(pictureId);
         if (!picture) throw new Error('No picture with pictureId : ' + pictureId);
 
         this.selectedPicture = picture;
@@ -465,7 +436,7 @@ Entry.EntryObject = function(model) {
      * @return {boolean} return true if success
      */
     p.removeSound = function(soundId) {
-        var index, sound;
+        let index, sound;
         sound = this.getSound(soundId);
         index = this.sounds.indexOf(sound);
         this.sounds.splice(index, 1);
@@ -492,8 +463,8 @@ Entry.EntryObject = function(model) {
         this.rotateMethod = rotateMethod;
         this.updateRotateMethodView();
 
-        var stage = Entry.stage;
-        var entity = stage.selectedObject && stage.selectedObject.entity;
+        const stage = Entry.stage;
+        const entity = stage.selectedObject && stage.selectedObject.entity;
 
         if (entity) {
             stage.updateObject();
@@ -506,8 +477,8 @@ Entry.EntryObject = function(model) {
             return;
         }
 
-        var entity = this.entity;
-        var direction = entity.direction;
+        const entity = this.entity;
+        const direction = entity.direction;
         entity.direction = direction !== undefined ? direction : 90.0;
         entity.rotation = 0.0;
         entity.flip = false;
@@ -518,13 +489,13 @@ Entry.EntryObject = function(model) {
             return;
         }
 
-        var SELECTED = 'selected';
+        const SELECTED = 'selected';
 
         this.rotateModeAView_.removeClass(SELECTED);
         this.rotateModeBView_.removeClass(SELECTED);
         this.rotateModeCView_.removeClass(SELECTED);
 
-        var rotateMethod = this.rotateMethod;
+        const rotateMethod = this.rotateMethod;
         if (rotateMethod == 'free') this.rotateModeAView_.addClass(SELECTED);
         else if (rotateMethod == 'vertical') this.rotateModeBView_.addClass(SELECTED);
         else this.rotateModeCView_.addClass(SELECTED);
@@ -543,7 +514,7 @@ Entry.EntryObject = function(model) {
     p.addCloneEntity = function(object, entity, script) {
         if (this.clonedEntities.length > Entry.maxCloneLimit) return;
 
-        var clonedEntity = new Entry.EntityObject(this);
+        const clonedEntity = new Entry.EntityObject(this);
         clonedEntity.isClone = true;
 
         entity = entity || this.entity;
@@ -567,7 +538,7 @@ Entry.EntryObject = function(model) {
         );
 
         this.clonedEntities.push(clonedEntity);
-        var targetIndex = Entry.stage.selectedObjectContainer.getChildIndex(entity.object);
+        let targetIndex = Entry.stage.selectedObjectContainer.getChildIndex(entity.object);
         targetIndex -= (entity.shapes.length ? 1 : 0) + entity.stamps.length;
         Entry.stage.loadEntity(clonedEntity, targetIndex);
 
@@ -587,7 +558,7 @@ Entry.EntryObject = function(model) {
      * @return {JSON}
      */
     p.toJSON = function(isClone) {
-        var json = {};
+        const json = {};
         json.id = isClone ? Entry.generateHash() : this.id;
         json.name = this.name;
         json.script = this.getScriptText();
@@ -628,14 +599,14 @@ Entry.EntryObject = function(model) {
         //2. soundName
         //3. index
         value = String(value).trim();
-        var sounds = this.sounds,
+        const sounds = this.sounds,
             len = sounds.length;
 
-        for (var i = 0; i < len; i++) if (sounds[i].id == value) return sounds[i];
+        for (let i = 0; i < len; i++) if (sounds[i].id == value) return sounds[i];
 
-        for (i = 0; i < len; i++) if (sounds[i].name == value) return sounds[i];
+        for (let i = 0; i < len; i++) if (sounds[i].name == value) return sounds[i];
 
-        var checker = Entry.parseNumber(value);
+        let checker = Entry.parseNumber(value);
         if (!(checker === false && typeof checker == 'boolean') && len >= checker && checker > 0) {
             return sounds[checker - 1];
         }
@@ -644,9 +615,9 @@ Entry.EntryObject = function(model) {
     };
 
     p.addCloneVariables = function({ id }, entity, variables, lists) {
-        var _whereFunc = _.partial(_.where, _, { object_: id });
-        var _cloneFunc = (v) => v.clone();
-        var { variables_, lists_ } = Entry.variableContainer;
+        const _whereFunc = _.partial(_.where, _, { object_: id });
+        const _cloneFunc = (v) => v.clone();
+        const { variables_, lists_ } = Entry.variableContainer;
 
         entity.variables = (variables || _whereFunc(variables_)).map(_cloneFunc);
         entity.lists = (lists || _whereFunc(lists_)).map(_cloneFunc);
@@ -664,7 +635,7 @@ Entry.EntryObject = function(model) {
 
     p.updateInputViews = function(isLocked) {
         isLocked = isLocked || this.getLock();
-        var inputs = [
+        const inputs = [
             this.nameView_,
             this.coordinateView_.xInput_,
             this.coordinateView_.yInput_,
@@ -689,7 +660,7 @@ Entry.EntryObject = function(model) {
     };
 
     p.editObjectValues = function(activate) {
-        var inputs;
+        let inputs;
         if (this.getLock()) {
             inputs = [this.nameView_];
         } else {
@@ -702,15 +673,15 @@ Entry.EntryObject = function(model) {
             ];
         }
 
-        var nameView_ = this.nameView_;
+        const nameView_ = this.nameView_;
         if (activate && !this.isEditing) {
-            var $nameView_ = $(nameView_);
+            const $nameView_ = $(nameView_);
 
             $(inputs).removeClass('selectedNotEditingObject');
             $nameView_.removeClass('selectedNotEditingObject');
 
             nameView_.addClass('selectedEditingObject');
-            for (var i = 0; i < inputs.length; i++) {
+            for (let i = 0; i < inputs.length; i++) {
                 inputs[i].addClass('selectedEditingObject');
             }
             this.isEditing = true;
@@ -730,7 +701,7 @@ Entry.EntryObject = function(model) {
     p.blurAllInput = function() {
         $('.selectedEditingObject').removeClass('selectedEditingObject');
 
-        var { xInput_, yInput_, sizeInput_ } = this.coordinateView_;
+        const { xInput_, yInput_, sizeInput_ } = this.coordinateView_;
 
         [
             this.nameView_,
@@ -755,8 +726,8 @@ Entry.EntryObject = function(model) {
     p.clearExecutor = function() {
         this.script.clearExecutors();
 
-        var clonedEntities = this.clonedEntities;
-        for (var j = clonedEntities.length - 1; j >= 0; j--) {
+        const clonedEntities = this.clonedEntities;
+        for (let j = clonedEntities.length - 1; j >= 0; j--) {
             clonedEntities[j].removeClone(true);
         }
         this.entity.removeStamps();
@@ -765,9 +736,9 @@ Entry.EntryObject = function(model) {
     p._rightClick = function(e) {
         if (!this.isContextMenuEnabled()) return;
 
-        var object = this;
-        var container = Entry.container;
-        var options = [
+        const object = this;
+        const container = Entry.container;
+        const options = [
             {
                 text: Lang.Workspace.context_rename,
                 callback: function(e) {
@@ -810,7 +781,7 @@ Entry.EntryObject = function(model) {
                     } else {
                         Entry.toast.alert(
                             Lang.Workspace.add_object_alert,
-                            Lang.Workspace.object_not_found_for_paste
+                            Lang.Workspace.object_not_found_for_paste,
                         );
                     }
                 },
@@ -889,39 +860,39 @@ Entry.EntryObject = function(model) {
 
     function generateWorkspaceView() {
         //utilities
-        var _setFocused = Entry.Utils.setFocused;
-        var _whenEnter = Entry.Utils.whenEnter(() => {
+        const _setFocused = Entry.Utils.setFocused;
+        const _whenEnter = Entry.Utils.whenEnter(() => {
             this.editObjectValues(false);
         });
-        var _setBlurredTimer = Entry.Utils.setBlurredTimer;
-        var CE = Entry.createElement; //alias
-        var exceptionsForMouseDown = [];
+        const _setBlurredTimer = Entry.Utils.setBlurredTimer;
+        const CE = Entry.createElement; //alias
+        const exceptionsForMouseDown = [];
 
         //end of utilities
 
-        var that = this;
-        var objectId = this.id;
-        var objectView = CE('li', objectId).addClass('entryContainerListElementWorkspace');
-        var fragment = document.createDocumentFragment('div');
+        const that = this;
+        const objectId = this.id;
+        const objectView = CE('li', objectId).addClass('entryContainerListElementWorkspace');
+        const fragment = document.createDocumentFragment('div');
         fragment.appendChild(objectView);
         // generate context menu
         Entry.Utils.disableContextmenu(objectView);
-        var longPressTimer = null;
+        let longPressTimer = null;
 
         $(objectView).bind('mousedown touchstart', (e) => {
             if (
                 Entry.container.getObject(objectId) &&
                 !_.includes(exceptionsForMouseDown, e.target)
             ) {
-                var currentObject = Entry.playground.object || {};
+                const currentObject = Entry.playground.object || {};
                 if (currentObject === that && currentObject.isEditing) {
                     return;
                 }
                 Entry.do('containerSelectObject', objectId);
             }
-            var doc = $(document);
-            var eventType = e.type;
-            var handled = false;
+            const doc = $(document);
+            const eventType = e.type;
+            let handled = false;
 
             if (Entry.Utils.isRightButton(e)) {
                 e.stopPropagation();
@@ -931,7 +902,7 @@ Entry.EntryObject = function(model) {
                 return;
             }
 
-            var mouseDownCoordinate = { x: e.clientX, y: e.clientY };
+            let mouseDownCoordinate = { x: e.clientX, y: e.clientY };
 
             if (eventType === 'touchstart' && !handled) {
                 e.stopPropagation();
@@ -951,9 +922,9 @@ Entry.EntryObject = function(model) {
             function onMouseMove(e) {
                 e.stopPropagation();
                 if (!mouseDownCoordinate) return;
-                var diff = Math.sqrt(
+                const diff = Math.sqrt(
                     Math.pow(e.pageX - mouseDownCoordinate.x, 2) +
-                        Math.pow(e.pageY - mouseDownCoordinate.y, 2)
+                    Math.pow(e.pageY - mouseDownCoordinate.y, 2),
                 );
                 if (diff > 5 && longPressTimer) {
                     clearTimeout(longPressTimer);
@@ -974,24 +945,24 @@ Entry.EntryObject = function(model) {
         /** @type {!Element} */
         this.view_ = objectView;
 
-        var objectInfoView = CE('ul').addClass('objectInfoView');
+        const objectInfoView = CE('ul').addClass('objectInfoView');
         if (!Entry.objectEditable) {
             objectInfoView.addClass('entryHide');
         }
 
-        var objectInfo_visible = CE('li').addClass('objectInfo_visible');
+        const objectInfo_visible = CE('li').addClass('objectInfo_visible');
         if (!this.entity.getVisible()) objectInfo_visible.addClass('objectInfo_unvisible');
 
         objectInfo_visible.bindOnClick(function(e) {
             if (Entry.engine.isState('run')) return;
 
-            var entity = that.entity;
-            var visible = entity.setVisible(!entity.getVisible());
+            const entity = that.entity;
+            const visible = entity.setVisible(!entity.getVisible());
             if (visible) this.removeClass('objectInfo_unvisible');
             else this.addClass('objectInfo_unvisible');
         });
 
-        var objectInfo_lock = CE('li').addClass('objectInfo_unlock');
+        const objectInfo_lock = CE('li').addClass('objectInfo_unlock');
         if (this.getLock()) {
             objectInfo_lock.addClass('objectInfo_lock');
         }
@@ -1009,18 +980,17 @@ Entry.EntryObject = function(model) {
         objectInfoView.appendChild(objectInfo_lock);
         this.view_.appendChild(objectInfoView);
 
-        var thumbnailView = CE('div').addClass('entryObjectThumbnailWorkspace');
+        const thumbnailView = CE('div').addClass('entryObjectThumbnailWorkspace');
         this.view_.appendChild(thumbnailView);
         this.thumbnailView_ = thumbnailView;
 
-        var wrapperView = CE('div').addClass('entryObjectWrapperWorkspace');
+        const wrapperView = CE('div').addClass('entryObjectWrapperWorkspace');
         this.view_.appendChild(wrapperView);
 
-        var nameView = CE('input').addClass('entryObjectNameWorkspace');
+        const nameView = CE('input').addClass('entryObjectNameWorkspace');
         nameView.bindOnClick(function(e) {
             e.preventDefault();
             this.focus();
-            this.select();
         });
 
         wrapperView.appendChild(nameView);
@@ -1029,7 +999,7 @@ Entry.EntryObject = function(model) {
         this.nameView_.onkeypress = _whenEnter;
         this.nameView_.onfocus = _setFocused;
         this.nameView_.onblur = _setBlurredTimer(function() {
-            var object = Entry.container.getObject(that.id);
+            const object = Entry.container.getObject(that.id);
             if (!object) {
                 return;
             }
@@ -1039,7 +1009,7 @@ Entry.EntryObject = function(model) {
 
         this.nameView_.value = this.name;
 
-        var editView = CE('div').addClass('entryObjectEditWorkspace');
+        const editView = CE('div').addClass('entryObjectEditWorkspace');
         this.editView_ = editView;
         this.view_.appendChild(editView);
 
@@ -1054,7 +1024,7 @@ Entry.EntryObject = function(model) {
         });
 
         if (Entry.objectEditable && Entry.objectDeletable) {
-            var deleteView = CE('div').addClass('entryObjectDeleteWorkspace');
+            const deleteView = CE('div').addClass('entryObjectDeleteWorkspace');
             exceptionsForMouseDown.push(deleteView);
             this.deleteView_ = deleteView;
             this.view_.appendChild(deleteView);
@@ -1065,41 +1035,38 @@ Entry.EntryObject = function(model) {
             });
         }
 
-        var informationView = CE('div').addClass('entryObjectInformationWorkspace');
+        const informationView = CE('div').addClass('entryObjectInformationWorkspace');
         wrapperView.appendChild(informationView);
         this.informationView_ = informationView;
 
-        var rotationWrapperView = CE('div').addClass('entryObjectRotationWrapperWorkspace');
+        const rotationWrapperView = CE('div').addClass('entryObjectRotationWrapperWorkspace');
         this.view_.appendChild(rotationWrapperView);
 
-        var coordinateView = CE('span').addClass('entryObjectCoordinateWorkspace');
+        const coordinateView = CE('span').addClass('entryObjectCoordinateWorkspace');
         rotationWrapperView.appendChild(coordinateView);
-        var xCoordi = CE('span').addClass('entryObjectCoordinateSpanWorkspace');
+        const xCoordi = CE('span').addClass('entryObjectCoordinateSpanWorkspace');
         xCoordi.innerHTML = 'X';
-        var xInput = CE('input').addClass('entryObjectCoordinateInputWorkspace');
+        const xInput = CE('input').addClass('entryObjectCoordinateInputWorkspace');
         xInput.bindOnClick(function(e) {
             e.stopPropagation();
-            this.select();
         });
 
-        var yCoordi = CE('span').addClass('entryObjectCoordinateSpanWorkspace');
+        const yCoordi = CE('span').addClass('entryObjectCoordinateSpanWorkspace');
         yCoordi.innerHTML = 'Y';
-        var yInput = CE('input').addClass(
-            'entryObjectCoordinateInputWorkspace entryObjectCoordinateInputWorkspace_right'
+        const yInput = CE('input').addClass(
+            'entryObjectCoordinateInputWorkspace entryObjectCoordinateInputWorkspace_right',
         );
         yInput.bindOnClick(function(e) {
             e.stopPropagation();
-            this.select();
         });
-        var sizeSpan = CE('span').addClass('entryObjectCoordinateSizeWorkspace');
+        const sizeSpan = CE('span').addClass('entryObjectCoordinateSizeWorkspace');
         sizeSpan.innerHTML = Lang.Workspace.Size + '';
-        var sizeInput = CE('input').addClass(
+        const sizeInput = CE('input').addClass(
             'entryObjectCoordinateInputWorkspace',
-            'entryObjectCoordinateInputWorkspace_size'
+            'entryObjectCoordinateInputWorkspace_size',
         );
         sizeInput.bindOnClick(function(e) {
             e.stopPropagation();
-            this.select();
         });
         coordinateView.appendChild(xCoordi);
         coordinateView.appendChild(xInput);
@@ -1115,12 +1082,12 @@ Entry.EntryObject = function(model) {
         xInput.onkeypress = _whenEnter;
         xInput.onfocus = _setFocused;
         xInput.onblur = _setBlurredTimer(function() {
-            var object = Entry.container.getObject(that.id);
+            const object = Entry.container.getObject(that.id);
             if (!object) {
                 return;
             }
 
-            var value = this.value;
+            const value = this.value;
             Entry.do(
                 'objectUpdatePosX',
                 that.id,
@@ -1131,11 +1098,11 @@ Entry.EntryObject = function(model) {
         yInput.onkeypress = _whenEnter;
         yInput.onfocus = _setFocused;
         yInput.onblur = _setBlurredTimer(function() {
-            var object = Entry.container.getObject(that.id);
+            const object = Entry.container.getObject(that.id);
             if (!object) {
                 return;
             }
-            var value = this.value;
+            const value = this.value;
             Entry.do(
                 'objectUpdatePosY',
                 that.id,
@@ -1146,11 +1113,11 @@ Entry.EntryObject = function(model) {
         sizeInput.onkeypress = _whenEnter;
         sizeInput.onfocus = _setFocused;
         sizeInput.onblur = _setBlurredTimer(function() {
-            var object = Entry.container.getObject(that.id);
+            const object = Entry.container.getObject(that.id);
             if (!object) {
                 return;
             }
-            var value = this.value;
+            const value = this.value;
             Entry.do(
                 'objectUpdateSize',
                 that.id,
@@ -1158,26 +1125,24 @@ Entry.EntryObject = function(model) {
             );
         });
 
-        var rotateLabelWrapperView = CE('div').addClass('entryObjectRotateLabelWrapperWorkspace');
+        const rotateLabelWrapperView = CE('div').addClass('entryObjectRotateLabelWrapperWorkspace');
         rotationWrapperView.appendChild(rotateLabelWrapperView);
         this.rotateLabelWrapperView_ = rotateLabelWrapperView;
 
-        var rotateSpan = CE('span').addClass('entryObjectRotateSpanWorkspace');
+        const rotateSpan = CE('span').addClass('entryObjectRotateSpanWorkspace');
         rotateSpan.innerHTML = Lang.Workspace.rotation + '';
-        var rotateInput = CE('input').addClass('entryObjectRotateInputWorkspace');
+        const rotateInput = CE('input').addClass('entryObjectRotateInputWorkspace');
         rotateInput.bindOnClick(function(e) {
             e.stopPropagation();
-            this.select();
         });
         this.rotateSpan_ = rotateSpan;
         this.rotateInput_ = rotateInput;
 
-        var directionSpan = CE('span').addClass('entryObjectDirectionSpanWorkspace');
+        const directionSpan = CE('span').addClass('entryObjectDirectionSpanWorkspace');
         directionSpan.innerHTML = Lang.Workspace.direction + '';
-        var directionInput = CE('input').addClass('entryObjectDirectionInputWorkspace');
+        const directionInput = CE('input').addClass('entryObjectDirectionInputWorkspace');
         directionInput.bindOnClick(function(e) {
             e.stopPropagation();
-            this.select();
         });
         this.directionInput_ = directionInput;
 
@@ -1191,12 +1156,12 @@ Entry.EntryObject = function(model) {
         rotateInput.onkeypress = _whenEnter;
         rotateInput.onfocus = _setFocused;
         rotateInput.onblur = _setBlurredTimer(function() {
-            var object = Entry.container.getObject(that.id);
+            const object = Entry.container.getObject(that.id);
             if (!object) {
                 return;
             }
-            var value = this.value;
-            var idx = value.indexOf('˚');
+            let value = this.value;
+            const idx = value.indexOf('˚');
             if (~idx) {
                 value = value.substring(0, idx);
             }
@@ -1211,12 +1176,12 @@ Entry.EntryObject = function(model) {
         directionInput.onkeypress = _whenEnter;
         directionInput.onfocus = _setFocused;
         directionInput.onblur = _setBlurredTimer(function() {
-            var object = Entry.container.getObject(that.id);
+            const object = Entry.container.getObject(that.id);
             if (!object) {
                 return;
             }
-            var value = this.value;
-            var idx = value.indexOf('˚');
+            let value = this.value;
+            const idx = value.indexOf('˚');
             if (~idx) {
                 value = value.substring(0, idx);
             }
@@ -1228,16 +1193,16 @@ Entry.EntryObject = function(model) {
             );
         });
 
-        var rotationMethodWrapper = CE('div').addClass('rotationMethodWrapper');
+        const rotationMethodWrapper = CE('div').addClass('rotationMethodWrapper');
         rotationWrapperView.appendChild(rotationMethodWrapper);
         this.rotationMethodWrapper_ = rotationMethodWrapper;
 
-        var rotateMethodLabelView = CE('span').addClass('entryObjectRotateMethodLabelWorkspace');
+        const rotateMethodLabelView = CE('span').addClass('entryObjectRotateMethodLabelWorkspace');
         rotationMethodWrapper.appendChild(rotateMethodLabelView);
         rotateMethodLabelView.innerHTML = Lang.Workspace.rotate_method + '';
 
-        var rotateModeAView = CE('div').addClass(
-            'entryObjectRotateModeWorkspace entryObjectRotateModeAWorkspace'
+        const rotateModeAView = CE('div').addClass(
+            'entryObjectRotateModeWorkspace entryObjectRotateModeAWorkspace',
         );
         this.rotateModeAView_ = rotateModeAView;
         rotationMethodWrapper.appendChild(rotateModeAView);
@@ -1248,8 +1213,8 @@ Entry.EntryObject = function(model) {
             }, this)
         );
 
-        var rotateModeBView = CE('div').addClass(
-            'entryObjectRotateModeWorkspace entryObjectRotateModeBWorkspace'
+        const rotateModeBView = CE('div').addClass(
+            'entryObjectRotateModeWorkspace entryObjectRotateModeBWorkspace',
         );
         this.rotateModeBView_ = rotateModeBView;
         rotationMethodWrapper.appendChild(rotateModeBView);
@@ -1259,8 +1224,8 @@ Entry.EntryObject = function(model) {
             }, this)
         );
 
-        var rotateModeCView = CE('div').addClass(
-            'entryObjectRotateModeWorkspace entryObjectRotateModeCWorkspace'
+        const rotateModeCView = CE('div').addClass(
+            'entryObjectRotateModeWorkspace entryObjectRotateModeCWorkspace',
         );
         this.rotateModeCView_ = rotateModeCView;
         rotationMethodWrapper.appendChild(rotateModeCView);
@@ -1281,7 +1246,8 @@ Entry.EntryObject = function(model) {
     }
 
     function generatePhoneView() {
-        var objectView = Entry.createElement('li', this.id);
+        let thisPointer;
+        const objectView = Entry.createElement('li', this.id);
         objectView.addClass('entryContainerListElementWorkspace');
         objectView.object = this;
         objectView.bindOnClick(function(e) {
@@ -1290,7 +1256,7 @@ Entry.EntryObject = function(model) {
 
         // generate context menu
         if ($) {
-            var object = this;
+            const object = this;
             context.attach('#' + this.id, [
                 {
                     text: Lang.Workspace.context_rename,
@@ -1320,26 +1286,26 @@ Entry.EntryObject = function(model) {
         /** @type {!Element} */
         this.view_ = objectView;
 
-        var objectInfoView = Entry.createElement('ul');
+        const objectInfoView = Entry.createElement('ul');
         objectInfoView.addClass('objectInfoView');
-        var objectInfo_visible = Entry.createElement('li');
+        const objectInfo_visible = Entry.createElement('li');
         objectInfo_visible.addClass('objectInfo_visible');
-        var objectInfo_lock = Entry.createElement('li');
+        const objectInfo_lock = Entry.createElement('li');
         objectInfo_lock.addClass('objectInfo_lock');
         objectInfoView.appendChild(objectInfo_visible);
         objectInfoView.appendChild(objectInfo_lock);
         this.view_.appendChild(objectInfoView);
 
-        var thumbnailView = Entry.createElement('div');
+        const thumbnailView = Entry.createElement('div');
         thumbnailView.addClass('entryObjectThumbnailWorkspace');
         this.view_.appendChild(thumbnailView);
         this.thumbnailView_ = thumbnailView;
 
-        var wrapperView = Entry.createElement('div');
+        const wrapperView = Entry.createElement('div');
         wrapperView.addClass('entryObjectWrapperWorkspace');
         this.view_.appendChild(wrapperView);
 
-        var nameView = Entry.createElement('input');
+        const nameView = Entry.createElement('input');
         nameView.addClass('entryObjectNameWorkspace');
         wrapperView.appendChild(nameView);
         this.nameView_ = nameView;
@@ -1354,7 +1320,7 @@ Entry.EntryObject = function(model) {
         this.nameView_.value = this.name;
 
         if (Entry.objectEditable && Entry.objectDeletable) {
-            var deleteView = Entry.createElement('div');
+            const deleteView = Entry.createElement('div');
             deleteView.addClass('entryObjectDeletePhone');
             deleteView.object = this;
             this.deleteView_ = deleteView;
@@ -1368,11 +1334,11 @@ Entry.EntryObject = function(model) {
             });
         }
 
-        var editBtn = Entry.createElement('button');
+        const editBtn = Entry.createElement('button');
         editBtn.addClass('entryObjectEditPhone');
         editBtn.object = this;
         editBtn.bindOnClick(function(e) {
-            var object = Entry.container.getObject(this.id);
+            const object = Entry.container.getObject(this.id);
             if (object) {
                 Entry.container.selectObject(object.id);
                 Entry.playground.injectObject(object);
@@ -1380,29 +1346,29 @@ Entry.EntryObject = function(model) {
         });
         this.view_.appendChild(editBtn);
 
-        var informationView = Entry.createElement('div');
+        const informationView = Entry.createElement('div');
         informationView.addClass('entryObjectInformationWorkspace');
         informationView.object = this;
         wrapperView.appendChild(informationView);
         this.informationView_ = informationView;
 
-        var rotateLabelWrapperView = Entry.createElement('div');
+        const rotateLabelWrapperView = Entry.createElement('div');
         rotateLabelWrapperView.addClass('entryObjectRotateLabelWrapperWorkspace');
         this.view_.appendChild(rotateLabelWrapperView);
         this.rotateLabelWrapperView_ = rotateLabelWrapperView;
 
-        var rotateSpan = Entry.createElement('span');
+        const rotateSpan = Entry.createElement('span');
         rotateSpan.addClass('entryObjectRotateSpanWorkspace');
         rotateSpan.innerHTML = Lang.Workspace.rotation + '';
-        var rotateInput = Entry.createElement('input');
+        const rotateInput = Entry.createElement('input');
         rotateInput.addClass('entryObjectRotateInputWorkspace');
         this.rotateSpan_ = rotateSpan;
         this.rotateInput_ = rotateInput;
 
-        var directionSpan = Entry.createElement('span');
+        const directionSpan = Entry.createElement('span');
         directionSpan.addClass('entryObjectDirectionSpanWorkspace');
         directionSpan.innerHTML = Lang.Workspace.direction + '';
-        var directionInput = Entry.createElement('input');
+        const directionInput = Entry.createElement('input');
         directionInput.addClass('entryObjectDirectionInputWorkspace');
         this.directionInput_ = directionInput;
 
@@ -1412,10 +1378,10 @@ Entry.EntryObject = function(model) {
         rotateLabelWrapperView.appendChild(directionInput);
         rotateLabelWrapperView.rotateInput_ = rotateInput;
         rotateLabelWrapperView.directionInput_ = directionInput;
-        var thisPointer = this;
+        thisPointer = this;
         rotateInput.onkeypress = function(e) {
             if (e.keyCode == 13) {
-                var value = rotateInput.value;
+                const value = rotateInput.value;
                 if (value.indexOf('˚') != -1) value = value.substring(0, value.indexOf('˚'));
                 if (Entry.Utils.isNumber(value)) {
                     thisPointer.entity.setRotation(Number(value));
@@ -1430,7 +1396,7 @@ Entry.EntryObject = function(model) {
         };
         directionInput.onkeypress = function(e) {
             if (e.keyCode == 13) {
-                var value = directionInput.value;
+                const value = directionInput.value;
                 if (value.indexOf('˚') != -1) value = value.substring(0, value.indexOf('˚'));
                 if (Entry.Utils.isNumber(value)) {
                     thisPointer.entity.setDirection(Number(value));
@@ -1444,30 +1410,30 @@ Entry.EntryObject = function(model) {
             Entry.stage.updateObject();
         };
 
-        var rotationWrapperView = Entry.createElement('div');
+        const rotationWrapperView = Entry.createElement('div');
         rotationWrapperView.addClass('entryObjectRotationWrapperWorkspace');
         rotationWrapperView.object = this;
         this.view_.appendChild(rotationWrapperView);
 
-        var coordinateView = Entry.createElement('span');
+        const coordinateView = Entry.createElement('span');
         coordinateView.addClass('entryObjectCoordinateWorkspace');
         rotationWrapperView.appendChild(coordinateView);
-        var xCoordi = Entry.createElement('span');
+        const xCoordi = Entry.createElement('span');
         xCoordi.addClass('entryObjectCoordinateSpanWorkspace');
         xCoordi.innerHTML = 'X';
-        var xInput = Entry.createElement('input');
+        const xInput = Entry.createElement('input');
         xInput.addClass('entryObjectCoordinateInputWorkspace');
-        var yCoordi = Entry.createElement('span');
+        const yCoordi = Entry.createElement('span');
         yCoordi.addClass('entryObjectCoordinateSpanWorkspace');
         yCoordi.innerHTML = 'Y';
-        var yInput = Entry.createElement('input');
+        const yInput = Entry.createElement('input');
         yInput.addClass(
             'entryObjectCoordinateInputWorkspace entryObjectCoordinateInputWorkspace_right'
         );
-        var sizeTitle = Entry.createElement('span');
+        const sizeTitle = Entry.createElement('span');
         sizeTitle.addClass('entryObjectCoordinateSpanWorkspace');
         sizeTitle.innerHTML = Lang.Workspace.Size;
-        var sizeInput = Entry.createElement('input');
+        const sizeInput = Entry.createElement('input');
         sizeInput.addClass(
             'entryObjectCoordinateInputWorkspace',
             'entryObjectCoordinateInputWorkspace_size'
@@ -1482,7 +1448,7 @@ Entry.EntryObject = function(model) {
         coordinateView.yInput_ = yInput;
         coordinateView.sizeInput_ = sizeInput;
         this.coordinateView_ = coordinateView;
-        var thisPointer = this;
+        thisPointer = this;
         xInput.onkeypress = function(e) {
             if (e.keyCode == 13) {
                 if (Entry.Utils.isNumber(xInput.value)) {
@@ -1511,17 +1477,17 @@ Entry.EntryObject = function(model) {
             Entry.stage.updateObject();
         };
 
-        var rotationMethodWrapper = Entry.createElement('div');
+        const rotationMethodWrapper = Entry.createElement('div');
         rotationMethodWrapper.addClass('rotationMethodWrapper');
         rotationWrapperView.appendChild(rotationMethodWrapper);
         this.rotationMethodWrapper_ = rotationMethodWrapper;
 
-        var rotateMethodLabelView = Entry.createElement('span');
+        const rotateMethodLabelView = Entry.createElement('span');
         rotateMethodLabelView.addClass('entryObjectRotateMethodLabelWorkspace');
         rotationMethodWrapper.appendChild(rotateMethodLabelView);
         rotateMethodLabelView.innerHTML = Lang.Workspace.rotate_method + ' : ';
 
-        var rotateModeAView = Entry.createElement('div');
+        const rotateModeAView = Entry.createElement('div');
         rotateModeAView.addClass('entryObjectRotateModeWorkspace');
         rotateModeAView.addClass('entryObjectRotateModeAWorkspace');
         rotateModeAView.object = this;
@@ -1534,7 +1500,7 @@ Entry.EntryObject = function(model) {
             this.object.setRotateMethod('free');
         });
 
-        var rotateModeBView = Entry.createElement('div');
+        const rotateModeBView = Entry.createElement('div');
         rotateModeBView.addClass('entryObjectRotateModeWorkspace');
         rotateModeBView.addClass('entryObjectRotateModeBWorkspace');
         rotateModeBView.object = this;
@@ -1547,7 +1513,7 @@ Entry.EntryObject = function(model) {
             this.object.setRotateMethod('vertical');
         });
 
-        var rotateModeCView = Entry.createElement('div');
+        const rotateModeCView = Entry.createElement('div');
         rotateModeCView.addClass('entryObjectRotateModeWorkspace');
         rotateModeCView.addClass('entryObjectRotateModeCWorkspace');
         rotateModeCView.object = this;
@@ -1582,8 +1548,8 @@ Entry.EntryObject = function(model) {
 
     function _whenRotateEditable(func, obj) {
         return Entry.Utils.when(function() {
-            if (Entry.engine.isState('run') || obj.getLock()) return false;
-            return true;
+            return !(Entry.engine.isState('run') || obj.getLock());
+
         }, func);
     }
 })(Entry.EntryObject.prototype);
