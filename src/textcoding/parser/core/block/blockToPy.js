@@ -551,11 +551,14 @@ Entry.BlockToPyParser = class {
             .concat(')');
 
         if (isExpression) {
-            if (func.comment || func.comment === '') {
-                result += ` # ${func.comment}`;
+            // 선언된 함수 사용하는 블록의 경우
+            const expBlockComment = funcBlock.getCommentValue();
+            if (expBlockComment || expBlockComment === '') {
+                result += ` # ${expBlockComment}`;
             }
             return result;
         } else {
+            // 함수 선언 중인 경우
             this._hasRootFunc = true;
 
             result = 'def ' + result;
@@ -604,8 +607,7 @@ Entry.BlockToPyParser = class {
             .getBlocks();
         const defBlock = funcContents.shift();
 
-        // defBlock = 함수선언부 / funcBlock = 함수 내 함수 호출
-        const funcComment = defBlock.getCommentValue() || funcBlock.getCommentValue();
+        const funcComment = defBlock.getCommentValue();
 
         Entry.TextCodingUtil.gatherFuncDefParam(defBlock.getParam(0));
 
