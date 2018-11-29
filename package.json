@@ -29,12 +29,15 @@
   },
   "license": "MIT",
   "dependencies": {
+    "autoprefixer": "^9.3.1",
     "axios": "^0.18.0",
     "babel-core": "^7.0.0-bridge.0",
     "entry-tool": "^0.1.6",
     "hyperid": "^1.4.1",
     "jest": "^23.3.0",
     "lodash": "^4.17.5",
+    "postcss-flexbugs-fixes": "^4.1.0",
+    "simplebar": "^3.1.0",
     "uglifyjs-webpack-plugin": "^1.2.2",
     "webpack": "^4.0.1"
   },

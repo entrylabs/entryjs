@@ -267,8 +267,8 @@ Entry.VariableContainer = class VariableContainer {
                 Entry.createElement('div')
                     .addClass('entryVariableListCallerNameWorkspace')
                     .appendTo(element).innerHTML = `${object.name} : ${
-                        Lang.Blocks[`START_${block.type}`]
-                    }`;
+                    Lang.Blocks[`START_${block.type}`]
+                }`;
                 element.bindOnClick(() => {
                     if (Entry.playground.object !== object) {
                         Entry.container.selectObject();
@@ -323,8 +323,8 @@ Entry.VariableContainer = class VariableContainer {
                 Entry.createElement('div')
                     .addClass('entryVariableListCallerNameWorkspace')
                     .appendTo(element).innerHTML = `${caller.object.name} : ${
-                        Lang.Blocks[`VARIABLE_${caller.block.type}`]
-                    }`;
+                    Lang.Blocks[`VARIABLE_${caller.block.type}`]
+                }`;
                 element.variable = variable;
                 element.bindOnClick(() => {
                     if (Entry.playground.object != caller.object) {
@@ -1557,6 +1557,10 @@ Entry.VariableContainer = class VariableContainer {
         const addSpaceNameWrapper = createElement('div')
             .addClass('entryVariableAddSpaceNameWrapperWorkspace')
             .appendTo(variableAddSpace);
+        const addSpaceInputLabel = createElement('label')
+            .addClass('entryVariableAddSpaceInputLabelWorkspace')
+            .appendTo(addSpaceNameWrapper);
+        addSpaceInputLabel.innerText = Lang.Workspace.Variable_placeholder_name;
 
         const addSpaceInput = createElement('input')
             .addClass('entryVariableAddSpaceInputWorkspace')
@@ -1715,6 +1719,10 @@ Entry.VariableContainer = class VariableContainer {
             .addClass('entryListAddSpaceNameWrapperWorkspace')
             .appendTo(listAddSpace);
 
+        const addSpaceInputLabel = createElement('label')
+            .addClass('entryVariableAddSpaceInputLabelWorkspace')
+            .appendTo(addSpaceNameWrapper);
+        addSpaceInputLabel.innerText = Lang.Workspace.list_name;
         const addSpaceInput = createElement('input')
             .addClass('entryVariableAddSpaceInputWorkspace')
             .appendTo(addSpaceNameWrapper);

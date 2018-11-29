@@ -251,6 +251,7 @@ Entry.createDom = function(container, option) {
         container.appendChild(engineContainer);
         var engineView = Entry.createElement('div');
         engineContainer.appendChild(engineView);
+        this.engineContainer = engineContainer;
         /** @type {!Element} */
         this.engineView = engineView;
         this.engine.generateView(this.engineView, option);
