@@ -1,5 +1,3 @@
-'use strict';
-
 import 'simplebar/dist/simplebar.css';
 
 const Entry = {};

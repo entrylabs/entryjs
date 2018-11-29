@@ -3,116 +3,129 @@
  *
  * @param {object} dom which to inject playground
  */
-Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
-    Entry.Model(this, false);
 
-    this.reDraw = Entry.Utils.debounce(this.reDraw, 100);
-    this._dAlign = this.align;
-    this._setDynamic = Entry.Utils.debounce(this._setDynamic, 150);
-    this._dSelectMenu = Entry.Utils.debounce(this.selectMenu, 0);
+const VARIABLE = 'variable';
+const HW = 'arduino';
+const splitterHPadding = 20;
 
-    this._align = align || 'CENTER';
-    this.setAlign(this._align);
-    this._scroll = scroll !== undefined ? scroll : false;
-    this._bannedClass = [];
-    this._categories = [];
-    this.suffix = 'blockMenu';
-    this._isSelectingMenu = false;
-    this._dynamicThreads = [];
-    this._setDynamicTimer = null;
-    this._renderedCategories = {};
-    this.categoryRendered = false;
-    this.readOnly = readOnly === undefined ? true : readOnly;
+function _buildCategoryCodes(blocks, category) {
+    return blocks.reduce((threads, type) => {
+        const block = Entry.block[type];
+        if (!block || !block.def) {
+            return [...threads, [{ type, category }]];
+        } else {
+            return (block.defs || [block.def]).reduce((threads, d) => {
+                return [...threads, [Object.assign(d, { category })]];
+            }, threads);
+        }
+    }, []);
+}
 
-    this._threadsMap = {};
-    let $dom;
+class BlockMenu {
+    constructor(dom, align, categoryData, scroll, readOnly) {
+        Entry.Model(this, false);
 
-    if (typeof dom === 'string') {
-        $dom = $(`#${dom}`);
-    } else {
-        $dom = $(dom);
+        this.reDraw = Entry.Utils.debounce(this.reDraw, 100);
+        this._dAlign = this.align;
+        this._setDynamic = Entry.Utils.debounce(this._setDynamic, 150);
+        this._dSelectMenu = Entry.Utils.debounce(this.selectMenu, 0);
+
+        this._align = align || 'CENTER';
+        this.setAlign(this._align);
+        this._scroll = scroll !== undefined ? scroll : false;
+        this._bannedClass = [];
+        this._categories = [];
+        this.suffix = 'blockMenu';
+        this._isSelectingMenu = false;
+        this._dynamicThreads = [];
+        this._setDynamicTimer = null;
+        this._renderedCategories = {};
+        this.categoryRendered = false;
+        this.readOnly = readOnly === undefined ? true : readOnly;
+
+        this._threadsMap = {};
+        let $dom;
+
+        if (typeof dom === 'string') {
+            $dom = $(`#${dom}`);
+        } else {
+            $dom = $(dom);
+        }
+
+        if ($dom.prop('tagName') !== 'DIV') {
+            return console.error('Dom is not div element');
+        }
+
+        this.view = $dom;
+
+        this.visible = true;
+        this.hwCodeOutdated = false;
+        this._svgId = `blockMenu${_.now()}`;
+        this._clearCategory();
+        this._categoryData = categoryData;
+        this._generateView(categoryData);
+
+        this._splitters = [];
+        this.setWidth();
+
+        this.svg = Entry.SVG(this._svgId);
+        Entry.Utils.addFilters(this.svg, this.suffix);
+        const { pattern } = Entry.Utils.addBlockPattern(this.svg, this.suffix);
+        this.pattern = pattern;
+
+        this.svgGroup = this.svg.elem('g');
+
+        this.svgThreadGroup = this.svgGroup.elem('g');
+        this.svgThreadGroup.board = this;
+
+        this.svgBlockGroup = this.svgGroup.elem('g');
+        this.svgBlockGroup.board = this;
+
+        this.svgCommentGroup = this.svgGroup.elem('g');
+        this.svgCommentGroup.board = this;
+
+        this.changeEvent = new Entry.Event(this);
+        this.categoryDoneEvent = new Entry.Event(this);
+
+        this.observe(this, '_handleDragBlock', ['dragBlock']);
+
+        this.changeCode(new Entry.Code([]));
+        categoryData && this._generateCategoryCodes();
+
+        if (this._scroll) {
+            this._scroller = new Entry.BlockMenuScroller(this);
+            this._addControl($dom);
+        }
+
+        if (Entry.documentMousedown) {
+            Entry.documentMousedown.attach(this, this.setSelectedBlock);
+        }
+        if (this.code && Entry.keyPressed) {
+            Entry.keyPressed.attach(this, this._captureKeyEvent);
+        }
+        if (Entry.windowResized) {
+            Entry.windowResized.attach(this, Entry.Utils.debounce(this.updateOffset, 200));
+        }
+
+        Entry.addEventListener(
+            'setBlockMenuDynamic',
+            function() {
+                this._setDynamicTimer = this._setDynamic.apply(this, arguments);
+            }.bind(this)
+        );
+
+        Entry.addEventListener('cancelBlockMenuDynamic', this._cancelDynamic.bind(this));
+        Entry.addEventListener('fontLoaded', this.reDraw.bind(this));
     }
 
-    if ($dom.prop('tagName') !== 'DIV') {
-        return console.error('Dom is not div element');
-    }
-
-    this.view = $dom;
-
-    this.visible = true;
-    this.hwCodeOutdated = false;
-    this._svgId = `blockMenu${_.now()}`;
-    this._clearCategory();
-    this._categoryData = categoryData;
-    this._generateView(categoryData);
-
-    this._splitters = [];
-    this.setWidth();
-
-    this.svg = Entry.SVG(this._svgId);
-    Entry.Utils.addFilters(this.svg, this.suffix);
-    const { pattern } = Entry.Utils.addBlockPattern(this.svg, this.suffix);
-    this.pattern = pattern;
-
-    this.svgGroup = this.svg.elem('g');
-
-    this.svgThreadGroup = this.svgGroup.elem('g');
-    this.svgThreadGroup.board = this;
-
-    this.svgBlockGroup = this.svgGroup.elem('g');
-    this.svgBlockGroup.board = this;
-
-    this.svgCommentGroup = this.svgGroup.elem('g');
-    this.svgCommentGroup.board = this;
-
-    this.changeEvent = new Entry.Event(this);
-    this.categoryDoneEvent = new Entry.Event(this);
-
-    this.observe(this, '_handleDragBlock', ['dragBlock']);
-
-    this.changeCode(new Entry.Code([]));
-    categoryData && this._generateCategoryCodes();
-
-    if (this._scroll) {
-        this._scroller = new Entry.BlockMenuScroller(this);
-        this._addControl($dom);
-    }
-
-    if (Entry.documentMousedown) {
-        Entry.documentMousedown.attach(this, this.setSelectedBlock);
-    }
-    if (this.code && Entry.keyPressed) {
-        Entry.keyPressed.attach(this, this._captureKeyEvent);
-    }
-    if (Entry.windowResized) {
-        Entry.windowResized.attach(this, Entry.Utils.debounce(this.updateOffset, 200));
-    }
-
-    Entry.addEventListener(
-        'setBlockMenuDynamic',
-        function() {
-            this._setDynamicTimer = this._setDynamic.apply(this, arguments);
-        }.bind(this)
-    );
-
-    Entry.addEventListener('cancelBlockMenuDynamic', this._cancelDynamic.bind(this));
-    Entry.addEventListener('fontLoaded', this.reDraw.bind(this));
-};
-
-(function(p) {
-    const VARIABLE = 'variable';
-    const HW = 'arduino';
-
-    const splitterHPadding = 20;
-
-    p.schema = {
+    schema = {
         code: null,
         dragBlock: null,
         closeBlock: null,
         selectedBlockView: null,
     };
 
-    p._generateView = function(categoryData) {
+    _generateView(categoryData) {
         const parent = this.view;
         const that = this;
 
@@ -149,7 +162,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
             const expandWidth = bBox.width + bBox.x + adjust + 2;
             const { menuWidth } = Entry.interfaceState;
             if (expandWidth > menuWidth) {
-                this.widthBackup = menuWidth - adjust;
+                this.widthBackup = menuWidth - adjust - 2;
                 $(this)
                     .stop()
                     .animate({ width: expandWidth - adjust }, 200);
@@ -178,9 +191,9 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
 
         Entry.Utils.bindBlockViewHoverEvent(this, this.svgDom);
         $(window).scroll(this.updateOffset.bind(this));
-    };
+    }
 
-    p.changeCode = function(code, isImmediate) {
+    changeCode(code, isImmediate) {
         if (code instanceof Array) {
             code = new Entry.Code(code);
         }
@@ -203,9 +216,9 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
         } else {
             this._dAlign();
         }
-    };
+    }
 
-    p.bindCodeView = function(codeView) {
+    bindCodeView(codeView) {
         this.svgBlockGroup.remove();
         this.svgThreadGroup.remove();
         this.svgBlockGroup = codeView.svgBlockGroup;
@@ -215,9 +228,9 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
         if (this._scroller) {
             this.svgGroup.appendChild(this._scroller.svgGroup);
         }
-    };
+    }
 
-    p.align = function() {
+    align() {
         const code = this.code;
         if (!(this._isOn() && code)) {
             return;
@@ -288,9 +301,9 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
             this._renderedCategories[lastSelector] = true;
         }
         this.changeEvent.notify();
-    };
+    }
 
-    p.cloneToGlobal = function(e) {
+    cloneToGlobal(e) {
         const blockView = this.dragBlock;
         if (this._boardBlockView || blockView === null) {
             return;
@@ -361,9 +374,9 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
                 GS.addControl(e);
             }
         }
-    };
+    }
 
-    p.terminateDrag = function() {
+    terminateDrag() {
         const boardBlockView = this._boardBlockView;
 
         if (!boardBlockView) {
@@ -375,13 +388,13 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
         //board block should be removed below the amount of range
         const { left, width } = Entry.GlobalSvg;
         return left < boardBlockView.getBoard().offset().left - width / 2;
-    };
+    }
 
-    p.getCode = function(thread) {
+    getCode(thread) {
         return this.code;
-    };
+    }
 
-    p.setSelectedBlock = function(blockView) {
+    setSelectedBlock(blockView) {
         _.result(this.selectedBlockView, 'removeSelected');
 
         if (blockView instanceof Entry.BlockView) {
@@ -391,17 +404,17 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
         }
 
         this.set({ selectedBlockView: blockView });
-    };
+    }
 
-    p.hide = function() {
+    hide() {
         this.view.addClass('entryRemove');
-    };
+    }
 
-    p.show = function() {
+    show() {
         this.view.removeClass('entryRemove');
-    };
+    }
 
-    p.renderText = function(blocks) {
+    renderText(blocks) {
         if (!this._isOn()) {
             return;
         }
@@ -422,9 +435,9 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
             }
         });
         return blocks;
-    };
+    }
 
-    p.renderBlock = function(blocks) {
+    renderBlock(blocks) {
         if (!this._isOn()) {
             return;
         }
@@ -445,9 +458,9 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
             }
         });
         return blocks;
-    };
+    }
 
-    p._createSplitter = function(topPos) {
+    _createSplitter(topPos) {
         this._splitters.push(
             this.svgBlockGroup.elem('line', {
                 x1: splitterHPadding,
@@ -457,9 +470,9 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
                 stroke: '#b5b5b5',
             })
         );
-    };
+    }
 
-    p.updateSplitters = function(y = 0) {
+    updateSplitters(y = 0) {
         const xDest = this._svgWidth - splitterHPadding;
         let yDest;
         this._splitters.forEach((line) => {
@@ -470,21 +483,21 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
                 y2: yDest,
             });
         });
-    };
+    }
 
-    p._clearSplitters = function() {
+    _clearSplitters() {
         const splitters = this._splitters;
         while (splitters.length) {
             splitters.pop().remove();
         }
-    };
+    }
 
-    p.setWidth = function() {
+    setWidth() {
         this._svgWidth = this.blockMenuContainer.width();
         this.updateSplitters();
-    };
+    }
 
-    p.setMenu = function(doNotAlign) {
+    setMenu(doNotAlign) {
         if (!this.hasCategory()) {
             return;
         }
@@ -523,9 +536,9 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
             });
             this.selectMenu(0, true, doNotAlign);
         });
-    };
+    }
 
-    p._convertSelector = function(selector) {
+    _convertSelector(selector) {
         if (!Entry.Utils.isNumber(selector)) {
             return selector;
         }
@@ -542,9 +555,9 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
                 }
             }
         }
-    };
+    }
 
-    p.selectMenu = function(selector, doNotFold, doNotAlign) {
+    selectMenu(selector, doNotFold, doNotAlign) {
         if (!this._isOn() || !this._categoryData) {
             return;
         }
@@ -619,9 +632,9 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
         }
 
         doNotAlign !== true && this._dAlign();
-    };
+    }
 
-    p._generateCategoryCodes = function(elems) {
+    _generateCategoryCodes(elems) {
         if (!elems) {
             this.categoryRendered = false;
             this.view.addClass('init');
@@ -648,9 +661,9 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
             this.categoryRendered = true;
             this.categoryDoneEvent.notify();
         }
-    };
+    }
 
-    p._generateCategoryCode = function(category) {
+    _generateCategoryCode(category) {
         if (!this._categoryData) {
             return;
         }
@@ -684,9 +697,9 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
         });
 
         code.changeEvent.notify();
-    };
+    }
 
-    p.banCategory = function(categoryName) {
+    banCategory(categoryName) {
         const categoryElem = this._categoryElems[categoryName];
         if (!categoryElem) {
             return;
@@ -695,9 +708,9 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
         if (this.lastSelector === categoryName) {
             this._dSelectMenu(this.firstSelector, true);
         }
-    };
+    }
 
-    p.unbanCategory = function(category) {
+    unbanCategory(category) {
         const threads = _.result(_.find(this._categoryData, { category }), 'blocks');
 
         if (!threads) {
@@ -713,26 +726,26 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
             categoryElem.removeClass('entryRemoveCategory');
             categoryElem.removeClass('entryRemove');
         }
-    };
+    }
 
-    p.banClass = function(className, doNotAlign) {
+    banClass(className, doNotAlign) {
         const banned = this._bannedClass;
         if (!_.includes(banned, className)) {
             banned.push(className);
             doNotAlign !== true && this._dAlign();
         }
-    };
+    }
 
-    p.unbanClass = function(className, doNotAlign) {
+    unbanClass(className, doNotAlign) {
         const banned = this._bannedClass;
         const index = banned.indexOf(className);
         if (index > -1) {
             banned.splice(index, 1);
             doNotAlign !== true && this._dAlign();
         }
-    };
+    }
 
-    p.checkBanClass = function({ isNotFor = [] } = {}) {
+    checkBanClass({ isNotFor = [] } = {}) {
         if (_.isEmpty(isNotFor)) {
             return false;
         }
@@ -747,9 +760,9 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
         }
 
         return true;
-    };
+    }
 
-    p.checkCategory = function(blockInfo) {
+    checkCategory(blockInfo) {
         if (!this.hasCategory() || !blockInfo) {
             return;
         }
@@ -759,9 +772,9 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
         }
 
         return !_.includes(blockInfo.isFor || [], `category_${this.lastSelector}`);
-    };
+    }
 
-    p._addControl = function(dom) {
+    _addControl(dom) {
         const { _mouseWheel, onMouseDown, _scroller } = this;
 
         dom.on('wheel', _mouseWheel.bind(this));
@@ -769,13 +782,13 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
         if (_scroller) {
             $(this.svg).bind('mousedown touchstart', onMouseDown.bind(this));
         }
-    };
+    }
 
-    p.removeControl = function(eventType) {
+    removeControl(eventType) {
         this.svgDom.off(eventType);
-    };
+    }
 
-    p.onMouseDown = function(e) {
+    onMouseDown(e) {
         if (e.stopPropagation) {
             e.stopPropagation();
         }
@@ -822,9 +835,9 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
             $(document).unbind('.blockMenu');
             delete blockMenu.dragInstance;
         }
-    };
+    }
 
-    p._mouseWheel = function(e) {
+    _mouseWheel(e) {
         e = e.originalEvent;
         e.preventDefault();
         const disposeEvent = Entry.disposeEvent;
@@ -832,13 +845,13 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
             disposeEvent.notify(e);
         }
         this._scroller.scroll(-e.wheelDeltaY || e.deltaY / 3);
-    };
+    }
 
-    p.dominate = function({ view: { svgGroup } }) {
+    dominate({ view: { svgGroup } }) {
         this.svgBlockGroup.appendChild(svgGroup);
-    };
+    }
 
-    p.reDraw = function() {
+    reDraw() {
         if (!this._isOn()) {
             return;
         }
@@ -854,16 +867,16 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
             .forEach(({ view }) => {
                 return view.reDraw();
             });
-    };
+    }
 
-    p._handleDragBlock = function() {
+    _handleDragBlock() {
         this._boardBlockView = null;
         if (this._scroller) {
             this._scroller.setOpacity(0);
         }
-    };
+    }
 
-    p._captureKeyEvent = function(e) {
+    _captureKeyEvent(e) {
         const keyCode = e.keyCode;
 
         if (e.ctrlKey && Entry.type == 'workspace' && keyCode > 48 && keyCode < 58) {
@@ -873,17 +886,17 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
                 this._dSelectMenu(keyCode - 49, true);
             }, 200);
         }
-    };
+    }
 
-    p.enablePattern = function() {
+    enablePattern() {
         this.pattern.removeAttribute('style');
-    };
+    }
 
-    p.disablePattern = function() {
+    disablePattern() {
         this.pattern.attr({ style: 'display: none' });
-    };
+    }
 
-    p._clearCategory = function() {
+    _clearCategory() {
         if (this._generateCodesTimer) {
             clearTimeout(this._generateCodesTimer);
             this._generateCodesTimer = null;
@@ -906,27 +919,27 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
 
         _removeFunc(this._categoryCol);
         this._categoryData = null;
-    };
+    }
 
-    p.clearCategory = p._clearCategory;
+    clearCategory = this._clearCategory;
 
-    p.setCategoryData = function(data) {
+    setCategoryData(data) {
         this._clearCategory();
         this._categoryData = data;
         this._generateCategoryView(data);
         this._generateCategoryCodes();
         this.setMenu();
         Entry.resizeElement();
-    };
+    }
 
-    p.setNoCategoryData = function(data) {
+    setNoCategoryData(data) {
         this._clearCategory();
         Entry.resizeElement();
         this.changeCode(data, true);
         this.categoryDoneEvent.notify();
-    };
+    }
 
-    p._generateCategoryView = function(data) {
+    _generateCategoryView(data) {
         if (!data) {
             return;
         }
@@ -944,9 +957,9 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
         });
         this.firstSelector = _.head(data).category;
         this._categoryCol[0].appendChild(fragment);
-    };
+    }
 
-    p._generateCategoryElement = function(name, visible) {
+    _generateCategoryElement(name, visible) {
         return (this._categoryElems[name] = Entry.Dom('li', {
             id: `entryCategory${name}`,
             classes: [
@@ -962,21 +975,21 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
                 });
             })
             .text(Lang.Blocks[name.toUpperCase()]));
-    };
+    }
 
-    p.updateOffset = function() {
+    updateOffset() {
         this._offset = this.svgDom.offset();
-    };
+    }
 
-    p.offset = function() {
+    offset() {
         const { top = 0, left = 0 } = this._offset || {};
         if (top === 0 && left === 0) {
             this.updateOffset();
         }
         return this._offset;
-    };
+    }
 
-    p._generateHwCode = function(shouldHide) {
+    _generateHwCode(shouldHide) {
         const threads = this.code.getThreadsByCategory(HW);
 
         if (!(this._categoryData && this.shouldGenerateHwCode(threads))) {
@@ -1009,17 +1022,17 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
 
         this.hwCodeOutdated = false;
         Entry.dispatchEvent('hwCodeGenerated');
-    };
+    }
 
-    p.setAlign = function(align) {
+    setAlign(align) {
         this._align = align || 'CENTER';
-    };
+    }
 
-    p._isNotVisible = function(blockInfo) {
+    _isNotVisible(blockInfo) {
         return this.checkCategory(blockInfo) || this.checkBanClass(blockInfo);
-    };
+    }
 
-    p._getSortedBlocks = function() {
+    _getSortedBlocks() {
         let visibles = [];
         let inVisibles;
         let block;
@@ -1054,9 +1067,9 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
         }
 
         return [visibles, inVisibles];
-    };
+    }
 
-    p._setDynamic = function(blocks = []) {
+    _setDynamic(blocks = []) {
         if (!this._isOn()) {
             return;
         }
@@ -1080,9 +1093,9 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
 
         this._selectDynamic = true;
         this.selectMenu(undefined, true);
-    };
+    }
 
-    p._cancelDynamic = function(fromElement, cb) {
+    _cancelDynamic(fromElement, cb) {
         if (this._setDynamicTimer) {
             clearTimeout(this._setDynamicTimer);
             this._setDynamicTimer = null;
@@ -1093,25 +1106,25 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
             this.selectMenu(this.lastSelector, true);
         }
         cb && cb();
-    };
+    }
 
-    p._isOn = function() {
+    _isOn() {
         return this.view.css('display') !== 'none';
-    };
+    }
 
-    p.deleteRendered = function(name) {
+    deleteRendered(name) {
         delete this._renderedCategories[name];
-    };
+    }
 
-    p.clearRendered = function() {
+    clearRendered() {
         this._renderedCategories = {};
-    };
+    }
 
-    p.hasCategory = function() {
+    hasCategory() {
         return !!this._categoryData;
-    };
+    }
 
-    p.getDom = function(query) {
+    getDom(query) {
         if (_.isEmpty(query)) {
             return;
         }
@@ -1123,9 +1136,9 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
             this.scrollToType(type, params);
             return this.getSvgDomByType(type, params);
         }
-    };
+    }
 
-    p.getSvgDomByType = function(blockType, params) {
+    getSvgDomByType(blockType, params) {
         const thread = _.find(this.code.getThreads(), (thread) => {
             if (!thread) {
                 return;
@@ -1147,9 +1160,9 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
         }
 
         return thread.getFirstBlock().view.svgGroup;
-    };
+    }
 
-    p.scrollToType = function(type, params) {
+    scrollToType(type, params) {
         if (!type) {
             return;
         }
@@ -1168,36 +1181,36 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
         function isOverFlow({ bottom }) {
             return bottom > $(window).height() - 10;
         }
-    };
+    }
 
-    p.shouldGenerateHwCode = function(threads) {
+    shouldGenerateHwCode(threads) {
         return this.hwCodeOutdated || threads.length === 0;
-    };
+    }
 
-    p._registerThreadsMap = function(type, thread) {
+    _registerThreadsMap(type, thread) {
         if (!(type && thread && thread.getFirstBlock())) {
             return;
         }
         this._threadsMap[type] = thread;
-    };
+    }
 
-    p._deleteThreadsMap = function(thread) {
+    _deleteThreadsMap(thread) {
         const block = thread && thread.getFirstBlock();
         if (!block) {
             return;
         }
         delete this._threadsMap[block.type];
-    };
+    }
 
-    p.getThreadByBlockKey = function(key) {
+    getThreadByBlockKey(key) {
         return this._threadsMap[key];
-    };
+    }
 
-    p._getThreads = function() {
+    _getThreads() {
         return this.code.getThreads();
-    };
+    }
 
-    p._createThread = function(data, index, keyName) {
+    _createThread(data, index, keyName) {
         if (typeof keyName !== 'string') {
             keyName = undefined;
         }
@@ -1206,18 +1219,7 @@ Entry.BlockMenu = function(dom, align, categoryData, scroll, readOnly) {
         const thread = this.code.createThread(data, index);
         this._registerThreadsMap(keyName, thread);
         return thread;
-    };
-
-    function _buildCategoryCodes(blocks, category) {
-        return blocks.reduce((threads, type) => {
-            const block = Entry.block[type];
-            if (!block || !block.def) {
-                return [...threads, [{ type, category }]];
-            } else {
-                return (block.defs || [block.def]).reduce((threads, d) => {
-                    return [...threads, [Object.assign(d, { category })]];
-                }, threads);
-            }
-        }, []);
     }
-})(Entry.BlockMenu.prototype);
+}
+
+Entry.BlockMenu = BlockMenu;
