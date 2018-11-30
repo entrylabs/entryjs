@@ -72,7 +72,7 @@ Entry.Comment = class Comment {
     }
 
     get thread() {
-        return this._thread;
+        return this._thread || (this.block && this.block.thread);
     }
 
     get code() {
@@ -522,7 +522,7 @@ Entry.Comment = class Comment {
                 },
             };
 
-            const seperate = {
+            const separate = {
                 text: '메모 분리하기',
                 enable: !!comment.block,
                 callback() {
@@ -530,7 +530,7 @@ Entry.Comment = class Comment {
                 },
             };
 
-            const options = [copyAndPaste, copy, remove, toggle, seperate];
+            const options = [copyAndPaste, copy, remove, toggle, separate];
 
             return options;
         }
@@ -860,11 +860,12 @@ Entry.Comment = class Comment {
 
     connectToBlock(block) {
         const data = this.toJSON();
+        const board = this.board;
         delete data.x;
         delete data.y;
         delete data.visible;
-        block.connectComment(new Entry.Comment(data, this.board, block));
         this.destroy();
+        block.connectComment(new Entry.Comment(data, board, block));
     }
 
     separateFromBlock() {
@@ -891,12 +892,29 @@ Entry.Comment = class Comment {
         }
     }
 
+    getBlocksInThreads(threads) {
+        let blockMap = [];
+        for (const thread of threads) {
+            const blocks = thread.getBlocks();
+            for (const block of blocks) {
+                let blocksInStatement = [];
+                if (block.statements) {
+                    blocksInStatement = this.getBlocksInThreads(block.statements);
+                }
+                blockMap = [block, ...blocksInStatement, ...blockMap];
+            }
+        }
+        return blockMap;
+    }
+
     generateCommentableBlocks() {
         this.connectableBlocks = [];
         if (this.block) {
             return;
         }
-        const blockMap = this.code._blockMap;
+
+        const threads = (this.code && this.code.getThreads()) || [];
+        const blockMap = this.getBlocksInThreads(threads);
         for (const index in blockMap) {
             const block = blockMap[index];
             if (block instanceof Entry.Block && !block.comment && block.isCommentable()) {
@@ -981,6 +999,8 @@ Entry.Comment = class Comment {
     toJSON() {
         const json = this._toJSON();
         json.type = 'comment';
+        delete json.parentWidth;
+        delete json.parentHeight;
         return json;
     }
 };
