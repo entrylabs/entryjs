@@ -618,7 +618,7 @@ module.exports = {
                         type: 'Dropdown',
                         options: [
                             [Lang.Blocks.SCENE_start_scene_next, 'next'],
-                            [Lang.Blocks.SCENE_start_scene_pre, 'pre'],
+                            [Lang.Blocks.SCENE_start_scene_pre, 'prev'],
                         ],
                         value: 'next',
                         fontSize: 11,
@@ -688,7 +688,7 @@ module.exports = {
                                         ],
                                         [
                                             Lang.Blocks.SCENE_start_scene_pre,
-                                            'pre',
+                                            'prev',
                                         ],
                                     ],
                                     value: 'next',
