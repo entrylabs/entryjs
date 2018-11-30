@@ -799,8 +799,6 @@ Entry.EntryObject = class {
         }
 
         switch (query.shift()) {
-            case 'editButton':
-                return this.editView_;
             case 'nameInput':
                 return this.nameView_;
             case 'removeButton':
@@ -840,11 +838,6 @@ Entry.EntryObject = class {
         const thumbnailView = this.createThumbnailView();
         this.thumbnailView_ = thumbnailView;
         this.view_.appendChild(thumbnailView);
-
-        //TODO 에딧버튼이 모바일에서 삭제되었습니다.
-        const editView = this.createEditView();
-        this.editView_ = editView;
-        this.view_.appendChild(editView);
 
         if (Entry.objectEditable && Entry.objectDeletable) {
             const deleteView = this.createDeleteView(exceptionsForMouseDown, that);
@@ -1080,21 +1073,6 @@ Entry.EntryObject = class {
             Entry.do('removeObject', this.id);
         });
         return deleteView;
-    }
-
-    createEditView() {
-        const editView = Entry.createElement('div').addClass('entryObjectEditWorkspace');
-        $(editView).mousedown((e) => {
-            e.stopPropagation();
-            Entry.documentMousedown.notify(e);
-            Entry.do('objectEditButtonClick', this.id);
-        });
-
-        $(editView).mouseup((e) => {
-            this.isEditing && this.nameView_.select();
-        });
-
-        return editView;
     }
 
     createNameView() {
