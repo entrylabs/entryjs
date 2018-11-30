@@ -1438,7 +1438,6 @@ Entry.getBrowserType = function() {
 };
 
 Entry.setBasicBrush = function(sprite) {
-    //TODO [박봉배] brushAdaptor 객체를 계속 생성할 필요가 없으나, 어디에서 동적 속성 할당을 할지 몰라서 못하겠음. (ex: brush.stop)
     var brush = new PIXIBrushAdaptor();
     if (sprite.brush) {
         var parentBrush = sprite.brush;
